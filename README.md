@@ -16,17 +16,26 @@ It is **not** a re-host or continuation claim of the older verified SPE proof li
 
 ```
 system-prompt-engine/
-├── schemas/
-├── spe_runtime/
-├── data/
-├── tests/
-├── proofs/
-├── tools/
-├── docs/
+├── schemas/           # JSON Schemas (xcat_envelope real; others stubs)
+├── spe_runtime/       # Runtime packages (xcat kernel first)
+├── data/              # Registry + fixture placeholders
+├── tests/             # unit / integration / mutation / recovery / security / regression
+├── proofs/generated/  # RED/GREEN evidence captures
+├── tools/             # Stub CLI helpers
+├── docs/              # architecture / implementation / runbooks
 ├── SPE-SPEC
 ├── SPE-CHANGELOG
 ├── pyproject.toml
 └── README.md
+```
+
+## Dev setup / tests
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+pytest tests/unit/test_xcat_core.py -v
 ```
 
 ## Next

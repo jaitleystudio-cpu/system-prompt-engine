@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+### 2026-09-15 — merge-gate hardening on feat/xcat-core-s4
+- Wired X05/X06/X07 into validate_handoff (were implemented but not enforced)
+- Added diagnose_refusal_reason for deterministic reason codes
+- Hardened X09 status self-escalation (DENIED→GRANTED)
+- Deep-froze nested envelope mappings (MappingProxyType)
+- Strengthened handoff negative tests (destination in category_trace)
+- Fresh GREEN proof: proofs/generated/xcat_core_GREEN_fresh.txt (45 passed)
+- Historical RED/GREEN preserved untouched
+
+### 2026-09-15 — XCAT core Sprint 1 (feat/xcat-core-s4)
+- Implemented CrossCategoryEnvelope (frozen dataclass) + JSON Schema
+- Implemented X01–X10 invariant validators and validate_handoff
+- Added unit tests with RED→GREEN evidence under proofs/generated/
+- Expanded monorepo layout (schemas stubs, spe_runtime packages, tests/*, tools stubs, docs/*)
+- Lineage remains NEW_IMPLEMENTATION (not the verified 181/69 tree)
+
 ### 2026-09-15 — repository bootstrap
 - Created private GitHub repository `system-prompt-engine`
 - Marked lineage as `NEW_IMPLEMENTATION` (exact 181/69 source unavailable)

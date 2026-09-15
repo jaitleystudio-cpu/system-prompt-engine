@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/xcat_envelope.schema.json",
+  "title": "CrossCategoryEnvelope",
+  "description": "Immutable cross-category semantic envelope (NEW_IMPLEMENTATION XCAT core).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "envelope_id",
+    "goal_identity",
+    "facts",
+    "provenance",
+    "uncertainties",
+    "hard_constraints",
+    "user_preferences",
+    "analysis",
+    "recommendation",
+    "rendering",
+    "authority_state",
+    "execution_grants",
+    "failures",
+    "taint_labels",
+    "sensitivity_labels",
+    "category_trace"
+  ],
+  "properties": {
+    "envelope_id": { "type": "string", "minLength": 1 },
+    "goal_identity": { "type": "string", "minLength": 1 },
+    "facts": {
+      "type": "array",
+      "items": { "type": "object", "required": ["fact_id", "statement"], "properties": {
+        "fact_id": { "type": "string" },
+        "statement": { "type": "string" },
+        "provenance_ids": { "type": "array", "items": { "type": "string" } }
+      }, "additionalProperties": true }
+    },
+    "provenance": {
+      "type": "array",
+      "items": { "type": "object", "required": ["provenance_id", "source"], "properties": {
+        "provenance_id": { "type": "string" },
+        "source": { "type": "string" }
+      }, "additionalProperties": true }
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": { "type": "object", "required": ["uncertainty_id", "description"], "properties": {
+        "uncertainty_id": { "type": "string" },
+        "description": { "type": "string" }
+      }, "additionalProperties": true }
+    },
+    "hard_constraints": {
+      "type": "array",
+      "items": { "type": "object", "required": ["constraint_id", "statement"], "properties": {
+        "constraint_id": { "type": "string" },
+        "statement": { "type": "string" },
+        "strength": { "type": "string", "enum": ["HARD", "SOFT"] }
+      }, "additionalProperties": true }
+    },
+    "user_preferences": {
+      "type": "array",
+      "items": { "type": "object", "required": ["preference_id", "statement"], "properties": {
+        "preference_id": { "type": "string" },
+        "statement": { "type": "string" }
+      }, "additionalProperties": true }
+    },
+    "analysis": { "type": ["object", "null"] },
+    "recommendation": { "type": ["object", "null"] },
+    "rendering": { "type": ["object", "null"] },
+    "authority_state": {
+      "type": "object",
+      "required": ["level", "status"],
+      "properties": {
+        "level": { "type": "integer", "minimum": 0 },
+        "status": { "type": "string", "enum": ["NONE", "GRANTED", "DENIED", "PENDING"] },
+        "grants": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "execution_grants": {
+      "type": "array",
+      "items": { "type": "object", "required": ["grant_id"], "properties": {
+        "grant_id": { "type": "string" },
+        "scope": { "type": "string" }
+      }, "additionalProperties": true }
+    },
+    "failures": {
+      "type": "array",
+      "items": { "type": "object", "required": ["failure_id", "status"], "properties": {
+        "failure_id": { "type": "string" },
+        "status": { "type": "string", "enum": ["FAIL", "UNKNOWN", "PASS"] },
+        "message": { "type": "string" }
+      }, "additionalProperties": true }
+    },
+    "taint_labels": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "sensitivity_labels": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "category_trace": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^CAT:C(0[1-9]|1[0-2])$"
+      }
+    }
+  }
+}
