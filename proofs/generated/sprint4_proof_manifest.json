@@ -1,0 +1,37 @@
+{
+  "sprint": 4,
+  "title": "Universal Portability + Conformance Foundation",
+  "not_a_release": true,
+  "abi_id": "spe.universal-abi.v1",
+  "abi_version": {"major": 1, "minor": 0, "patch": 0},
+  "network_mode": "NONE",
+  "cost_law": {
+    "paid_package": false,
+    "paid_api": false,
+    "hosting": false,
+    "owner_spend_inr": 0
+  },
+  "lineage": "NEW_IMPLEMENTATION",
+  "proofs": {
+    "red": "proofs/generated/sprint4_portability_RED.txt",
+    "green": "proofs/generated/sprint4_portability_GREEN.txt"
+  },
+  "conformance": {
+    "manifest": "data/conformance/universal_manifest_v1.json",
+    "positives": "data/conformance/universal_core_v1.jsonl",
+    "negatives": "data/conformance/universal_negative_v1.jsonl"
+  },
+  "forbidden_in_sprint4": [
+    "Android",
+    "iOS",
+    "desktop",
+    "web",
+    "PWA",
+    "extension",
+    "Rust kernel",
+    "WASM",
+    "MCP",
+    "AI plugin apps"
+  ],
+  "critical_escapes": 0
+}

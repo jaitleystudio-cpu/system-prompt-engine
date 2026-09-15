@@ -1,0 +1,168 @@
+FFF..F.F.F.FFF....FFFFFFFFFF...FFFFFF...FFFF..FFFF                       [100%]
+=================================== FAILURES ===================================
+E   AssertionError: assert 'spe.broken-abi.v0' == 'spe.universal-abi.v1'
+      
+      - spe.universal-abi.v1
+      + spe.broken-abi.v0
+/workspace/system-prompt-engine/tests/portability/test_abi.py:26: AssertionError: assert 'spe.broken-abi.v0' == 'spe.universal-abi.v1'
+E   assert 0 == 1
+/workspace/system-prompt-engine/tests/portability/test_abi.py:30: assert 0 == 1
+E   AssertionError: assert 'spe.broken-abi.v0' == 'spe.universal-abi.v1'
+      
+      - spe.universal-abi.v1
+      + spe.broken-abi.v0
+/workspace/system-prompt-engine/tests/portability/test_abi.py:39: AssertionError: assert 'spe.broken-abi.v0' == 'spe.universal-abi.v1'
+E   assert '{"b":1,"a":2}' == '{"a":2,"b":1}'
+      
+      - {"a":2,"b":1}
+      + {"b":1,"a":2}
+/workspace/system-prompt-engine/tests/portability/test_canonical.py:20: assert '{"b":1,"a":2}' == '{"a":2,"b":1}'
+E   AssertionError: assert False
+     +  where False = isinstance(('a', 'b'), list)
+/workspace/system-prompt-engine/tests/portability/test_canonical.py:35: AssertionError: assert False
+E   assert '{"z":[{"b":1...4}],"y":true}' == '{"y":true,"z...c":4,"d":3}]}'
+      
+      - {"y":true,"z":[{"a":2,"b":1},{"c":4,"d":3}]}
+      + {"z":[{"b":1,"a":2},{"d":3,"c":4}],"y":true}
+/workspace/system-prompt-engine/tests/portability/test_canonical.py:52: assert '{"z":[{"b":1...4}],"y":true}' == '{"y":true,"z...c":4,"d":3}]}'
+E   AssertionError: assert <CapabilitySt...: 'AVAILABLE'> == <CapabilitySt...NG: 'MISSING'>
+      
+      - MISSING
+      + AVAILABLE
+/workspace/system-prompt-engine/tests/portability/test_capability.py:41: AssertionError: assert <CapabilitySt...: 'AVAILABLE'> == <CapabilitySt...NG: 'MISSING'>
+E   AssertionError: assert <CapabilitySt...: 'AVAILABLE'> == <CapabilitySt...ED: 'BLOCKED'>
+      
+      - BLOCKED
+      + AVAILABLE
+/workspace/system-prompt-engine/tests/portability/test_capability.py:53: AssertionError: assert <CapabilitySt...: 'AVAILABLE'> == <CapabilitySt...ED: 'BLOCKED'>
+E   AssertionError: assert <CapabilitySt...: 'AVAILABLE'> == <CapabilitySt...EFER: 'DEFER'>
+      
+      - DEFER
+      + AVAILABLE
+/workspace/system-prompt-engine/tests/portability/test_capability.py:64: AssertionError: assert <CapabilitySt...: 'AVAILABLE'> == <CapabilitySt...EFER: 'DEFER'>
+E   AssertionError: assert 'REQUIRED' == 'NONE'
+      
+      - NONE
+      + REQUIRED
+/workspace/system-prompt-engine/tests/portability/test_conformance_suite.py:60: AssertionError: assert 'REQUIRED' == 'NONE'
+E   AssertionError: ('NEG-001', None, 'P_PROVENANCE_REMOVED')
+    assert None == 'P_PROVENANCE_REMOVED'
+/workspace/system-prompt-engine/tests/portability/test_conformance_suite.py:86: AssertionError: ('NEG-001', None, 'P_PROVENANCE_REMOVED')
+E   AssertionError: escape:provenance_drop got=None
+    assert None == 'P_PROVENANCE_REMOVED'
+/workspace/system-prompt-engine/tests/portability/test_mutation_controls.py:84: AssertionError: escape:provenance_drop got=None
+E   AssertionError: escape:unknown_null got=None
+    assert None == 'P_UNKNOWN_NULLIFIED'
+/workspace/system-prompt-engine/tests/portability/test_mutation_controls.py:84: AssertionError: escape:unknown_null got=None
+E   AssertionError: escape:hard_to_pref got=None
+    assert None == 'P_HARD_TO_PREFERENCE'
+/workspace/system-prompt-engine/tests/portability/test_mutation_controls.py:84: AssertionError: escape:hard_to_pref got=None
+E   AssertionError: escape:denied_granted got=None
+    assert None == 'P_DENIED_TO_GRANTED'
+/workspace/system-prompt-engine/tests/portability/test_mutation_controls.py:84: AssertionError: escape:denied_granted got=None
+E   AssertionError: escape:private_public got=None
+    assert None == 'P_PRIVACY_ESCALATION'
+/workspace/system-prompt-engine/tests/portability/test_mutation_controls.py:84: AssertionError: escape:private_public got=None
+E   AssertionError: escape:untrusted_trusted got=None
+    assert None == 'P_TRUST_ESCALATION'
+/workspace/system-prompt-engine/tests/portability/test_mutation_controls.py:84: AssertionError: escape:untrusted_trusted got=None
+E   AssertionError: critical_escapes=['provenance_drop', 'unknown_null', 'hard_to_pref', 'denied_granted', 'private_public', 'untrusted_trusted']
+    assert ['provenance_...sted_trusted'] == []
+      
+      Left contains 6 more items, first extra item: 'provenance_drop'
+      Use -v to get more diff
+/workspace/system-prompt-engine/tests/portability/test_mutation_controls.py:96: AssertionError: critical_escapes=['provenance_drop', 'unknown_null', 'hard_to_pref', 'denied_granted', 'private_public', 'untrusted_trusted']
+E   AssertionError: assert 'REQUIRED' == 'NONE'
+      
+      - NONE
+      + REQUIRED
+/workspace/system-prompt-engine/tests/portability/test_offline_and_cost.py:30: AssertionError: assert 'REQUIRED' == 'NONE'
+E   AssertionError: assert 'RELEASED' in {'CONFORMANCE_PARTIAL', 'IMPLEMENTING'}
+/workspace/system-prompt-engine/tests/portability/test_platform_registry.py:29: AssertionError: assert 'RELEASED' in {'CONFORMANCE_PARTIAL', 'IMPLEMENTING'}
+E   AssertionError: PLATFORM:RUST_KERNEL
+    assert 'RELEASED' == 'PLANNED'
+      
+      - PLANNED
+      + RELEASED
+/workspace/system-prompt-engine/tests/portability/test_platform_registry.py:40: AssertionError: PLATFORM:RUST_KERNEL
+E   AssertionError: assert True is False
+     +  where True = semantic_equivalent({'sensitivity_labels': ['USER_PRIVATE'], 'taint_labels': [], 'authority_state': {'status': 'NONE', 'level': 0, 'grants': []}, 'provenance': [], ...}, {'sensitivity_labels': ['PUBLIC'], 'taint_labels': [], 'authority_state': {'status': 'NONE', 'level': 0, 'grants': []}, 'provenance': [], ...})
+/workspace/system-prompt-engine/tests/portability/test_privacy_portability.py:23: AssertionError: assert True is False
+E   AssertionError: assert True is False
+     +  where True = semantic_equivalent({'sensitivity_labels': ['USER_PRIVATE'], 'taint_labels': ['external_untrusted'], 'authority_state': {'status': 'NONE', 'level': 0, 'grants': []}, 'provenance': [], ...}, {'sensitivity_labels': ['USER_PRIVATE'], 'taint_labels': [], 'authority_state': {'status': 'NONE', 'level': 0, 'grants': []}, 'provenance': [], ...})
+/workspace/system-prompt-engine/tests/portability/test_privacy_portability.py:41: AssertionError: assert True is False
+E   AssertionError: assert True is False
+     +  where True = semantic_equivalent({'sensitivity_labels': [], 'taint_labels': [], 'authority_state': {'status': 'DENIED', 'level': 0, 'grants': []}, 'provenance': [], ...}, {'sensitivity_labels': [], 'taint_labels': [], 'authority_state': {'status': 'GRANTED', 'level': 1, 'grants': ['g']}, 'provenance': [], ...})
+/workspace/system-prompt-engine/tests/portability/test_privacy_portability.py:59: AssertionError: assert True is False
+E   AssertionError: assert 'REQUIRED' == 'NONE'
+      
+      - NONE
+      + REQUIRED
+/workspace/system-prompt-engine/tests/portability/test_reference_runtime.py:37: AssertionError: assert 'REQUIRED' == 'NONE'
+E   AssertionError: assert None == 'P_PROVENANCE_REMOVED'
+     +  where None = detect_attack({'provenance': [{'provenance_id': 'p1', 'source': 's'}], 'facts': [{'fact_id': 'f1', 'statement': 's', 'provenance_ids': ['p1']}], 'authority_state': {'status': 'NONE', 'level': 0, 'grants': []}, 'hard_constraints': [], ...}, {'provenance': [], 'facts': [{'fact_id': 'f1', 'statement': 's', 'provenance_ids': ['p1']}], 'authority_state': {'status': 'NONE', 'level': 0, 'grants': []}, 'hard_constraints': [], ...})
+     +  and   'P_PROVENANCE_REMOVED' = <PortabilityReason.PROVENANCE_REMOVED: 'P_PROVENANCE_REMOVED'>.value
+     +    where <PortabilityReason.PROVENANCE_REMOVED: 'P_PROVENANCE_REMOVED'> = PortabilityReason.PROVENANCE_REMOVED
+/workspace/system-prompt-engine/tests/portability/test_round_trip_attacks.py:38: AssertionError: assert None == 'P_PROVENANCE_REMOVED'
+E   AssertionError: assert None == 'P_UNKNOWN_NULLIFIED'
+     +  where None = detect_attack({'provenance': [], 'facts': [], 'authority_state': {'status': 'NONE', 'level': 0, 'grants': []}, 'hard_constraints': [], ...}, {'provenance': [], 'facts': [], 'authority_state': {'status': 'NONE', 'level': 0, 'grants': []}, 'hard_constraints': [], ...})
+     +  and   'P_UNKNOWN_NULLIFIED' = <PortabilityReason.UNKNOWN_NULLIFIED: 'P_UNKNOWN_NULLIFIED'>.value
+     +    where <PortabilityReason.UNKNOWN_NULLIFIED: 'P_UNKNOWN_NULLIFIED'> = PortabilityReason.UNKNOWN_NULLIFIED
+/workspace/system-prompt-engine/tests/portability/test_round_trip_attacks.py:55: AssertionError: assert None == 'P_UNKNOWN_NULLIFIED'
+E   AssertionError: assert None == 'P_HARD_TO_PREFERENCE'
+     +  where None = detect_attack({'provenance': [], 'facts': [], 'authority_state': {'status': 'NONE', 'level': 0, 'grants': []}, 'hard_constraints': [{'constraint_id': 'c1', 'statement': 'no', 'strength': 'HARD'}], ...}, {'provenance': [], 'facts': [], 'authority_state': {'status': 'NONE', 'level': 0, 'grants': []}, 'hard_constraints': [], ...})
+     +  and   'P_HARD_TO_PREFERENCE' = <PortabilityReason.HARD_TO_PREFERENCE: 'P_HARD_TO_PREFERENCE'>.value
+     +    where <PortabilityReason.HARD_TO_PREFERENCE: 'P_HARD_TO_PREFERENCE'> = PortabilityReason.HARD_TO_PREFERENCE
+/workspace/system-prompt-engine/tests/portability/test_round_trip_attacks.py:75: AssertionError: assert None == 'P_HARD_TO_PREFERENCE'
+E   AssertionError: assert None == 'P_DENIED_TO_GRANTED'
+     +  where None = detect_attack({'provenance': [], 'facts': [], 'authority_state': {'status': 'DENIED', 'level': 0, 'grants': []}, 'hard_constraints': [], ...}, {'provenance': [], 'facts': [], 'authority_state': {'status': 'GRANTED', 'level': 1, 'grants': ['g']}, 'hard_constraints': [], ...})
+     +  and   'P_DENIED_TO_GRANTED' = <PortabilityReason.DENIED_TO_GRANTED: 'P_DENIED_TO_GRANTED'>.value
+     +    where <PortabilityReason.DENIED_TO_GRANTED: 'P_DENIED_TO_GRANTED'> = PortabilityReason.DENIED_TO_GRANTED
+/workspace/system-prompt-engine/tests/portability/test_round_trip_attacks.py:92: AssertionError: assert None == 'P_DENIED_TO_GRANTED'
+E   AssertionError: assert True is False
+     +  where True = semantic_equivalent({'envelope_id': 'e1', 'goal_identity': 'g1', 'facts': [{'fact_id': 'f1', 'statement': 's', 'provenance_ids': ['p1']}], 'provenance': [{'provenance_id': 'p1', 'source': 'src'}], ...}, {'envelope_id': 'e1', 'goal_identity': 'g1', 'facts': [{'fact_id': 'f1', 'statement': 's', 'provenance_ids': ['p1']}], 'provenance': [], ...})
+/workspace/system-prompt-engine/tests/portability/test_semantic_equivalent.py:42: AssertionError: assert True is False
+E   AssertionError: assert True is False
+     +  where True = semantic_equivalent({'envelope_id': 'e1', 'goal_identity': 'g1', 'facts': [{'fact_id': 'f1', 'statement': 's', 'provenance_ids': ['p1']}], 'provenance': [{'provenance_id': 'p1', 'source': 'src'}], ...}, {'envelope_id': 'e1', 'goal_identity': 'g1', 'facts': [{'fact_id': 'f1', 'statement': 's', 'provenance_ids': ['p1']}], 'provenance': [{'provenance_id': 'p1', 'source': 'src'}], ...})
+/workspace/system-prompt-engine/tests/portability/test_semantic_equivalent.py:49: AssertionError: assert True is False
+E   AssertionError: assert True is False
+     +  where True = semantic_equivalent({'envelope_id': 'e1', 'goal_identity': 'g1', 'facts': [{'fact_id': 'f1', 'statement': 's', 'provenance_ids': ['p1']}], 'provenance': [{'provenance_id': 'p1', 'source': 'src'}], ...}, {'envelope_id': 'e1', 'goal_identity': 'g1', 'facts': [{'fact_id': 'f1', 'statement': 's', 'provenance_ids': ['p1']}], 'provenance': [{'provenance_id': 'p1', 'source': 'src'}], ...})
+/workspace/system-prompt-engine/tests/portability/test_semantic_equivalent.py:65: AssertionError: assert True is False
+E   AssertionError: assert True is False
+     +  where True = semantic_equivalent({'envelope_id': 'e1', 'goal_identity': 'g1', 'facts': [{'fact_id': 'f1', 'statement': 's', 'provenance_ids': ['p1']}], 'provenance': [{'provenance_id': 'p1', 'source': 'src'}], ...}, {'envelope_id': 'e1', 'goal_identity': 'g1', 'facts': [{'fact_id': 'f1', 'statement': 's', 'provenance_ids': ['p1']}], 'provenance': [{'provenance_id': 'p1', 'source': 'src'}], ...})
+/workspace/system-prompt-engine/tests/portability/test_semantic_equivalent.py:72: AssertionError: assert True is False
+=========================== short test summary info ============================
+FAILED tests/portability/test_abi.py::test_abi_id_is_spe_universal_abi_v1 - A...
+FAILED tests/portability/test_abi.py::test_abi_semver_major_minor_patch - ass...
+FAILED tests/portability/test_abi.py::test_reference_declaration_honest_status_and_offline
+FAILED tests/portability/test_canonical.py::test_stable_key_order - assert '{...
+FAILED tests/portability/test_canonical.py::test_no_python_tuple_leak - Asser...
+FAILED tests/portability/test_canonical.py::test_nested_determinism - assert ...
+FAILED tests/portability/test_capability.py::test_missing_never_fakes_success
+FAILED tests/portability/test_capability.py::test_blocked_never_fakes_success
+FAILED tests/portability/test_capability.py::test_defer_never_fakes_success
+FAILED tests/portability/test_conformance_suite.py::test_run_conformance_suite_green
+FAILED tests/portability/test_conformance_suite.py::test_negatives_detect_exact_reasons
+FAILED tests/portability/test_mutation_controls.py::test_critical_mutation_detected[provenance_drop-before_part0-after_part0-P_PROVENANCE_REMOVED]
+FAILED tests/portability/test_mutation_controls.py::test_critical_mutation_detected[unknown_null-before_part1-after_part1-P_UNKNOWN_NULLIFIED]
+FAILED tests/portability/test_mutation_controls.py::test_critical_mutation_detected[hard_to_pref-before_part2-after_part2-P_HARD_TO_PREFERENCE]
+FAILED tests/portability/test_mutation_controls.py::test_critical_mutation_detected[denied_granted-before_part3-after_part3-P_DENIED_TO_GRANTED]
+FAILED tests/portability/test_mutation_controls.py::test_critical_mutation_detected[private_public-before_part4-after_part4-P_PRIVACY_ESCALATION]
+FAILED tests/portability/test_mutation_controls.py::test_critical_mutation_detected[untrusted_trusted-before_part5-after_part5-P_TRUST_ESCALATION]
+FAILED tests/portability/test_mutation_controls.py::test_critical_escapes_zero
+FAILED tests/portability/test_offline_and_cost.py::test_sprint4_network_none
+FAILED tests/portability/test_platform_registry.py::test_python_reference_honest
+FAILED tests/portability/test_platform_registry.py::test_non_python_are_planned_not_released
+FAILED tests/portability/test_privacy_portability.py::test_user_private_not_public
+FAILED tests/portability/test_privacy_portability.py::test_untrusted_not_trusted
+FAILED tests/portability/test_privacy_portability.py::test_denied_not_granted
+FAILED tests/portability/test_reference_runtime.py::test_offline_network_none
+FAILED tests/portability/test_round_trip_attacks.py::test_attack_provenance_remove
+FAILED tests/portability/test_round_trip_attacks.py::test_attack_unknown_to_null
+FAILED tests/portability/test_round_trip_attacks.py::test_attack_hard_to_preference
+FAILED tests/portability/test_round_trip_attacks.py::test_attack_denied_to_granted
+FAILED tests/portability/test_semantic_equivalent.py::test_provenance_remove_not_equivalent
+FAILED tests/portability/test_semantic_equivalent.py::test_unknown_to_null_not_equivalent
+FAILED tests/portability/test_semantic_equivalent.py::test_hard_to_preference_not_equivalent
+FAILED tests/portability/test_semantic_equivalent.py::test_denied_to_granted_not_equivalent
+33 failed, 17 passed in 0.15s
