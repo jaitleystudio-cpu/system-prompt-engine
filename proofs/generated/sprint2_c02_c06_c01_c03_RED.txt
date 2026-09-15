@@ -1,0 +1,16 @@
+FFFFFFFFF.F.FFF.                                                         [100%]
+=========================== short test summary info ============================
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_happy_path_chain_with_handoffs
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c06_cannot_manufacture_recommendation
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c06_output_validator_rejects_recommendation
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c01_cannot_manufacture_authority
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c01_output_validator_rejects_authority_escalation
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c01_cannot_add_execution_grants
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c03_cannot_change_recommendation
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c03_cannot_strengthen_conditional_to_certain
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c03_output_validator_rejects_rec_mutation
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_unknown_not_laundered_to_pass
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_no_category_mints_permits_or_verified_outcomes
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c02_cannot_add_analysis_or_recommendation
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c02_facts_require_provenance
+13 failed, 3 passed in 0.04s

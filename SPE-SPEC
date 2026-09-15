@@ -10,3 +10,9 @@ Canonical engineering home: GitHub repository `system-prompt-engine` (private, d
 - XCAT CrossCategoryEnvelope + invariants X01–X10 + handoff validation
 - Category IDs: CAT:C01 … CAT:C12 only (namespaced)
 - Handoff results: VALID | REFUSE | BLOCKED | REVALIDATION_REQUIRED
+
+## Sprint 2 slice
+- Category chain CAT:C02 Research → CAT:C06 Analyze → CAT:C01 Decide → CAT:C03 Communicate
+- Ownership-enforcing engines + validate_handoff between stages
+- No C07 execution, authority minting, LLM adapters, or UI
+

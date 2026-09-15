@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### 2026-09-15 — Sprint 2 CAT:C02→C06→C01→C03 (feat/xcat-c02-c06-c01-c03)
+- Category engines: Research / Analyze / Decide / Communicate with ownership validators
+- Integration tests prove hard gates (no rec from C06, no authority from C01, no rec rewrite / certainty strengthen from C03)
+- Preservation of constraints, provenance, uncertainty, preferences, taint/sensitivity across stages
+- RED/GREEN proofs under proofs/generated/sprint2_c02_c06_c01_c03_*.txt
+- Lineage remains NEW_IMPLEMENTATION
+
 ### 2026-09-15 — merge-gate hardening on feat/xcat-core-s4
 - Wired X05/X06/X07 into validate_handoff (were implemented but not enforced)
 - Added diagnose_refusal_reason for deterministic reason codes

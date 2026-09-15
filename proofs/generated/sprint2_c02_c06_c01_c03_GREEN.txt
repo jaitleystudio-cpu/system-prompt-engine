@@ -1,0 +1,27 @@
+.............................................................            [100%]
+61 passed in 0.07s
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.6.0 -- /workspace/system-prompt-engine/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/system-prompt-engine
+configfile: pyproject.toml
+collecting ... collected 16 items
+
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_happy_path_chain_with_handoffs PASSED [  6%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_c06_cannot_manufacture_recommendation PASSED [ 12%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_c06_output_validator_rejects_recommendation PASSED [ 18%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_c01_cannot_manufacture_authority PASSED [ 25%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_c01_output_validator_rejects_authority_escalation PASSED [ 31%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_c01_cannot_add_execution_grants PASSED [ 37%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_c03_cannot_change_recommendation PASSED [ 43%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_c03_cannot_strengthen_conditional_to_certain PASSED [ 50%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_c03_output_validator_rejects_rec_mutation PASSED [ 56%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_constraints_provenance_uncertainty_prefs_taint_preserved PASSED [ 62%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_unknown_not_laundered_to_pass PASSED [ 68%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_recommendation_not_execution_across_chain PASSED [ 75%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_no_category_mints_permits_or_verified_outcomes PASSED [ 81%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_c02_cannot_add_analysis_or_recommendation PASSED [ 87%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_c02_facts_require_provenance PASSED [ 93%]
+tests/integration/test_xcat_c02_c06_c01_c03.py::test_category_trace_uses_namespaced_ids PASSED [100%]
+
+============================== 16 passed in 0.02s ==============================
