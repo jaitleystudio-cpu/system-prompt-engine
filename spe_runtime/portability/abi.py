@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from spe_runtime.portability.reasons import PortabilityReason
+
 
 ABI_ID = "spe.universal-abi.v1"
 ABI_MAJOR = 1
@@ -48,6 +50,28 @@ class ImplementationDeclaration:
             "network_mode": self.network_mode,
             "status": self.status,
         }
+
+
+def abi_compatible(
+    peer_abi_id: str,
+    peer_major: int,
+    peer_minor: int = 0,
+    peer_patch: int = 0,
+) -> dict[str, object]:
+    """Fail-closed major mismatch; minor/patch may differ within same major."""
+    if peer_abi_id != ABI_ID or int(peer_major) != ABI_MAJOR:
+        return {
+            "ok": False,
+            "reason": PortabilityReason.ABI_MISMATCH.value,
+            "expected": {"abi_id": ABI_ID, "major": ABI_MAJOR},
+            "got": {
+                "abi_id": peer_abi_id,
+                "major": peer_major,
+                "minor": peer_minor,
+                "patch": peer_patch,
+            },
+        }
+    return {"ok": True, "reason": None}
 
 
 def declare_reference_implementation(

@@ -1,4 +1,4 @@
-"""Capability IDs + downgrade law — never fake success."""
+"""Capability IDs + downgrade/escalation law — never fake success."""
 
 from __future__ import annotations
 
@@ -84,3 +84,20 @@ def evaluate_capability(
         reason=None,
         outcome="SUCCESS",
     )
+
+
+def detect_capability_escalation(
+    source_capabilities: frozenset[str] | set[str],
+    target_capabilities: frozenset[str] | set[str],
+) -> dict[str, object]:
+    """Target may not claim capabilities outside the source allowance."""
+    src = frozenset(source_capabilities)
+    tgt = frozenset(target_capabilities)
+    extra = tgt - src
+    if extra:
+        return {
+            "ok": False,
+            "reason": PortabilityReason.CAPABILITY_ESCALATION.value,
+            "extra": sorted(extra),
+        }
+    return {"ok": True, "reason": None, "extra": []}

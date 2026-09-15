@@ -1,0 +1,26 @@
+SPE SPRINT 4 — PR #4 MERGE-GATE GREEN_FRESH
+Branch: feat/universal-portability-conformance-s4
+Repaired after REVIEW_FAIL against tip 4f49021f292bdd917f054e13ca83b378290f96f0
+COST: paid=NO APIs=NO hosting=NO ₹0
+NEW_IMPLEMENTATION + not_a_release=true preserved
+
+=== A Sprint-4 focused (tests/portability) ===
+65 passed in 0.27s
+
+=== B Sprint-3 regression (test_c07_authority) ===
+36 passed in 0.05s
+
+=== C XCAT core ===
+47 passed in 0.07s
+
+=== D Sprint-2 integration ===
+64 passed in 0.09s
+
+=== E FULL pytest ===
+212 passed in 0.36s
+
+Baseline was 197; denominator increased with merge-gate adversarial tests.
+0 fail / 0 error / 0 critical skip.
+
+Reprobe G3/G4/G5/G6/G7/G9/G14/G19 + conformance suite: all_ok True
+Preserved unchanged: sprint4_portability_RED.txt + sprint4_portability_GREEN.txt

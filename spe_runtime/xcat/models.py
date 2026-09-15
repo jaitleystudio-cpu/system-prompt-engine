@@ -55,7 +55,7 @@ class AuthorityState:
 @dataclass(frozen=True)
 class FailureRecord:
     failure_id: str
-    status: str  # FAIL | UNKNOWN | PASS
+    status: str | None  # FAIL | UNKNOWN | PASS | None (explicit null) | portable absent sentinel
     message: str = ""
 
 

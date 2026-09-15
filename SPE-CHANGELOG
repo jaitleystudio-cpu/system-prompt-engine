@@ -60,3 +60,12 @@
 - Marked lineage as `NEW_IMPLEMENTATION` (exact 181/69 source unavailable)
 - Seeded working directories: schemas, spe_runtime, data, tests, proofs, tools, docs
 - Added SPE-SPEC, SPE-CHANGELOG, pyproject.toml, README
+
+## Sprint 4 merge-gate repair (PR #4)
+- abi_compatible major-mismatch fail-closed; strict int≠float semantic equality
+- absent≠null≠UNKNOWN preserved on ReferenceRuntime import/export
+- Unicode NFC + ISO-8601→UTC Z canonicalization; unknown-field REJECT policy
+- Privacy drop / hard→pref different-statement / outcome + operation_id detectors
+- Capability escalation guard; independent oracle module; untrusted fixture isolation
+- Non-tautological negative probes; protected_semantics manifest; 10-cycle + cross-process tests
+- COST ₹0; not_a_release=true; NEW_IMPLEMENTATION

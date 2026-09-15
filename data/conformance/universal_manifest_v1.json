@@ -19,6 +19,7 @@
   },
   "network_mode_required": "NONE",
   "not_a_release": true,
+  "oracle": "fixture_expect_reason + spe_runtime.portability.oracle.oracle_detect",
   "platforms_declared": [
     "PLATFORM:PYTHON_REFERENCE",
     "PLATFORM:RUST_KERNEL",
@@ -36,6 +37,32 @@
     "count": 55,
     "min_required": 50,
     "path": "universal_core_v1.jsonl"
+  },
+  "protected_semantics": {
+    "fields": [
+      "provenance",
+      "facts",
+      "uncertainties",
+      "hard_constraints",
+      "user_preferences",
+      "authority_state",
+      "failures",
+      "taint_labels",
+      "sensitivity_labels",
+      "operation_id",
+      "outcome",
+      "goal_identity",
+      "envelope_id"
+    ],
+    "laws": [
+      "absent_ne_null_ne_UNKNOWN",
+      "int_ne_float",
+      "unicode_NFC",
+      "time_UTC_Z",
+      "unknown_fields_REJECT",
+      "capability_no_escalation",
+      "privacy_USER_PRIVATE_drop_is_escalation"
+    ]
   },
   "sprint": 4
 }

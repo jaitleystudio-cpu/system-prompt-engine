@@ -1,0 +1,67 @@
+SPE SPRINT 4 — PR #4 MERGE-GATE ADVERSARIAL REVIEW FAIL
+Tip reviewed: 4f49021f292bdd917f054e13ca83b378290f96f0 (feat/universal-portability-conformance-s4)
+Baseline full pytest at tip: 197 expected (pre-repair)
+DO NOT MERGE until repairs + GREEN_fresh.
+COST: paid=NO APIs=NO hosting=NO ₹0
+
+DEFECTS (adversarial; tests were green but gates incomplete/bypassable):
+
+[G3] No abi_compatible / major-mismatch enforcement on import or declaration.
+     Wrong major silently accepted; only const string exists.
+
+[G4] absent≠null≠UNKNOWN collapsed on ReferenceRuntime.import_envelope.
+     failure.status=null coerced to "" (empty string). Null and absent both
+     become indistinguishable from a blank status after round-trip.
+
+[G5] Numbers: semantic_equivalent / canonicalize use Python == which collapses
+     int 1 and float 1.0 (dict equality). canonical_dumps bytes differ
+     ({"n":1} vs {"n":1.0}) but semantic_equivalent returns True — too loose.
+
+[G6] No Unicode normalization policy. NFC vs NFD of the same grapheme produce
+     different canonical bytes → cross-platform drift.
+
+[G7] No portable time law. "2026-09-15T12:00:00Z" ≠ "...+00:00" under
+     semantic_equivalent; no UTC/Z canonicalization.
+
+[G9] Unknown envelope fields silently dropped on import_envelope with no
+     reject/preserve policy (forward-compat + attack surface).
+
+[G11/G12] No protected-semantics manifest. semantic_equivalent is raw
+     structure equality without an allowlist of protected fields; positive
+     controls for "should remain equivalent" (key reorder only) exist via
+     canonicalize, but protected-field contract is undocumented/untested.
+
+[G13] No dedicated operation_id portability attack reason/detector.
+     Outcome PARTIAL→SUCCESS only yields generic P_SEMANTIC_NONEQUIVALENT.
+
+[G14] Capability downgrade OK (MISSING/BLOCKED/DEFER≠SUCCESS) but no
+     capability escalation guard when target claims caps beyond source set.
+
+[G16] Conformance oracle not independent: run_conformance_suite calls the
+     same detect_attack under test. Fixture expect_reason is ground truth for
+     some rows, but ~19 tautological negatives never exercise the detector.
+
+[G18] No untrusted-fixture isolation (size/type/depth guards) for external
+     conformance inputs loaded in-process.
+
+[G19] Detector accuracy / denominator integrity:
+     - Tautological negatives always pass: ROUND_TRIP_FAIL, TUPLE_LEAK,
+       ABI_MISMATCH, FAKE_PLATFORM_STATUS, CANONICAL_DRIFT, NETWORK_FORBIDDEN,
+       OFFLINE_VIOLATION (~19/55) — ok = (expect == constant) without probing.
+     - USER_PRIVATE→[] (drop without PUBLIC) bypasses PRIVACY_ESCALATION
+       (requires PUBLIC replacement); only generic SEMANTIC_NONEQUIVALENT.
+     - HARD→preference same-id + different statement escapes HARD_TO_PREFERENCE
+       and CONSTRAINT_WEAKENED specific detectors (statement equality gate).
+
+[G20] No 10-cycle round-trip campaign test (canonical 10-cycle holds ad-hoc
+      but not in suite; import/export campaign uncovered).
+
+[G21] No cross-process determinism test for canonical_dumps.
+
+PRESERVE unchanged:
+  proofs/generated/sprint4_portability_RED.txt
+  proofs/generated/sprint4_portability_GREEN.txt
+  all older proofs
+
+Next: repair on feat/universal-portability-conformance-s4 → push →
+      sprint4_merge_gate_GREEN_fresh.txt
