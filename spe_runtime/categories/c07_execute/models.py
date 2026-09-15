@@ -1,0 +1,4 @@
+"""CAT:C07 Execute models."""
+
+CATEGORY_ID = "CAT:C07"
+ALLOWED_ACTION_TYPES = frozenset({"WRITE_LOCAL_TEMP_FILE", "NO_OP"})

@@ -1,0 +1,35 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.6.0 -- /workspace/system-prompt-engine/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/system-prompt-engine
+configfile: pyproject.toml
+collecting ... collected 26 items
+
+tests/unit/test_c07_authority.py::test_01_missing_authority_blocks PASSED [  3%]
+tests/unit/test_c07_authority.py::test_02_capability_mismatch_blocks PASSED [  7%]
+tests/unit/test_c07_authority.py::test_03_target_drift_blocks PASSED     [ 11%]
+tests/unit/test_c07_authority.py::test_04_argument_over_limit_blocks PASSED [ 15%]
+tests/unit/test_c07_authority.py::test_05_expired_grant_blocks PASSED    [ 19%]
+tests/unit/test_c07_authority.py::test_06_revoked_grant_blocks PASSED    [ 23%]
+tests/unit/test_c07_authority.py::test_07_consumed_grant_blocks PASSED   [ 26%]
+tests/unit/test_c07_authority.py::test_08_c07_cannot_mutate_recommendation PASSED [ 30%]
+tests/unit/test_c07_authority.py::test_09_c07_cannot_weaken_constraint PASSED [ 34%]
+tests/unit/test_c07_authority.py::test_10_c07_cannot_create_or_expand_authority PASSED [ 38%]
+tests/unit/test_c07_authority.py::test_11_operation_id_replaced_on_retry_blocked PASSED [ 42%]
+tests/unit/test_c07_authority.py::test_12_unknown_to_failed_blind_retry_blocked PASSED [ 46%]
+tests/unit/test_c07_authority.py::test_13_partial_to_success_blocked PASSED [ 50%]
+tests/unit/test_c07_authority.py::test_14_tool_success_not_verified_success PASSED [ 53%]
+tests/unit/test_c07_authority.py::test_pos_valid_grant_forms_intent PASSED [ 57%]
+tests/unit/test_c07_authority.py::test_pos_target_args_match_and_unexpired PASSED [ 61%]
+tests/unit/test_c07_authority.py::test_pos_authority_unchanged_and_stable_op_id PASSED [ 65%]
+tests/unit/test_c07_authority.py::test_pos_unknown_to_reconciliation_required PASSED [ 69%]
+tests/unit/test_c07_authority.py::test_pos_not_executed_retry_eligible PASSED [ 73%]
+tests/unit/test_c07_authority.py::test_pos_local_temp_file_digest_no_network PASSED [ 76%]
+tests/unit/test_c07_authority.py::test_deep_immutability_grant_and_intent PASSED [ 80%]
+tests/unit/test_c07_authority.py::test_vertical_chain_send_plus_none_authority_blocks_c07 PASSED [ 84%]
+tests/unit/test_c07_authority.py::test_attack_decision_drift_blocks PASSED [ 88%]
+tests/unit/test_c07_authority.py::test_attack_illicit_authority_mint_via_c07 PASSED [ 92%]
+tests/unit/test_c07_authority.py::test_attack_arguments_digest_stable PASSED [ 96%]
+tests/unit/test_c07_authority.py::test_cost_law_no_paid_imports PASSED   [100%]
+
+============================== 26 passed in 0.04s ==============================

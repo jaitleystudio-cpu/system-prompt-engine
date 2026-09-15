@@ -1,0 +1,25 @@
+SPE SPRINT 3 — PR #3 MERGE-GATE GREEN_FRESH
+Branch: feat/xcat-c07-authority-s3
+Repaired after REVIEW_FAIL against tip f8d7bf2
+COST: paid=NO APIs=NO hosting=NO ₹0
+
+=== Sprint-3 focused (test_c07_authority) ===
+....................................                                     [100%]
+36 passed in 0.05s
+
+=== XCAT core ===
+...............................................                          [100%]
+47 passed in 0.07s
+
+=== Sprint-2 integration ===
+................................................................         [100%]
+64 passed in 0.08s
+
+=== FULL pytest ===
+........................................................................ [ 48%]
+........................................................................ [ 97%]
+...                                                                      [100%]
+147 passed in 0.14s
+
+Reprobe gates G2/G5/G6/G8/G15/G16: all_ok True
+Preserved: sprint3_c07_authority_RED.txt + sprint3_c07_authority_GREEN.txt unchanged
