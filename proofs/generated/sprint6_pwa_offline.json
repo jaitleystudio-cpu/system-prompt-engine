@@ -1,0 +1,21 @@
+{
+  "not_a_release": true,
+  "new_implementation": true,
+  "manifest": {
+    "name": "SPE Web/PWA (not a release)",
+    "display": "standalone",
+    "start_url": "/"
+  },
+  "service_worker": "apps/web/public/sw.js",
+  "precache_shell": true,
+  "caches_private_prompts": false,
+  "skips_non_get": true,
+  "dist_built": true,
+  "sw_copied_to_dist": true,
+  "wasm_in_dist": true,
+  "session_local_only": true,
+  "analytics": false,
+  "accounts": false,
+  "history_store": false,
+  "status": "PWA_BUILD_VERIFIED_LOCAL"
+}

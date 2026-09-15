@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### 2026-09-15 — Sprint 6 Web + PWA Universal Client Foundation (feat/web-pwa-foundation-s6)
+- `apps/web` Vite + React + TypeScript workbench (not chatbot): Composer, Compile, Engine status, Result, Trust, Privacy, Offline/Error, Footer
+- Real path: UI → Web Worker → actual `spe_wasm.wasm` → spe-core-rs; ENGINE_UNAVAILABLE on WASM failure; no TS semantic fallback; no Python in browser path
+- Design tokens obsidian/platinum; system fonts; responsive 320–1920; a11y focus/keyboard/reduced-motion
+- PWA manifest + service worker offline shell; never cache private prompts; session-local only; zero analytics/login/history
+- Scripts: copy-wasm, eval-fixture, audit-deps, measure-assets, egress-proof; free npm deps + lockfile; CSP notes
+- Proofs: sprint6_web_pwa_{RED,GREEN}.txt, sprint6_wasm_browser_conformance.json, sprint6_network_egress.json, sprint6_pwa_offline.json, sprint6_web_asset_budget.json, sprint6_proof_summary.json
+- Status WEB_CLIENT_VERIFIED_LOCAL / PWA_BUILD_VERIFIED_LOCAL; not_a_release=true; NEW_IMPLEMENTATION; COST ₹0
+- Out of scope: 3D/Three.js, native, extensions, MCP, deploy, Sprint 7
+
 ### 2026-09-15 — Sprint 5 Portable Rust Kernel + WASM (feat/portable-kernel-wasm-s5)
 - `portable/spe-core-rs` deterministic kernel: ABI transport, protected-semantic compare, capability containment
 - `portable/spe-wasm` thin JSON-in/JSON-out wrapper over spe-core-rs (no duplicated validators)

@@ -1,0 +1,49 @@
+{
+  "abi": "spe.universal-abi.v1",
+  "not_a_release": true,
+  "new_implementation": true,
+  "network_mode": "NONE",
+  "host": "apps/web/src/engine/wasm-host.mjs",
+  "worker": "apps/web/src/engine/engine.worker.ts",
+  "wasm_path": "apps/web/public/spe_wasm.wasm",
+  "wasm_sha256": "74a12864ffc205ca2b3880b5f3740bf374621808aff55b2876f8e89d8db27e69",
+  "wasm_bytes": 252714,
+  "imports": 0,
+  "cases": {
+    "POS-001": {
+      "status": "VALID",
+      "disposition": "VALID",
+      "error": null,
+      "phases": [
+        "loading_wasm",
+        "verifying_integrity",
+        "instantiating",
+        "ready",
+        "evaluating"
+      ]
+    },
+    "NEG-001": {
+      "status": "INVALID",
+      "disposition": "INVALID",
+      "reason_code": "P_PROVENANCE_REMOVED",
+      "error": null,
+      "phases": [
+        "loading_wasm",
+        "verifying_integrity",
+        "instantiating",
+        "ready",
+        "evaluating"
+      ]
+    },
+    "integrity_mismatch": {
+      "error_code": "WASM_INTEGRITY_MISMATCH",
+      "used_ts_fallback": false
+    },
+    "missing_wasm": {
+      "error_code": "ENGINE_UNAVAILABLE",
+      "used_ts_fallback": false
+    }
+  },
+  "conformance": "WASM_BROWSER_HOST_CONFORMANCE_PROVEN_LOCAL",
+  "ts_semantic_fallback": false
+}

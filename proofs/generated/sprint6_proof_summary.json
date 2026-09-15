@@ -1,0 +1,31 @@
+{
+  "abi": "spe.universal-abi.v1",
+  "additional_owner_cost_inr": 0,
+  "claims": {
+    "RELEASED": false,
+    "number_one": false,
+    "world_leadership": false,
+    "WEB_CLIENT_VERIFIED_LOCAL": true,
+    "PWA_BUILD_VERIFIED_LOCAL": true
+  },
+  "evidence": {
+    "red": "proofs/generated/sprint6_web_pwa_RED.txt",
+    "green": "proofs/generated/sprint6_web_pwa_GREEN.txt",
+    "wasm_browser_conformance": "proofs/generated/sprint6_wasm_browser_conformance.json",
+    "network_egress": "proofs/generated/sprint6_network_egress.json",
+    "pwa_offline": "proofs/generated/sprint6_pwa_offline.json",
+    "asset_budget": "proofs/generated/sprint6_web_asset_budget.json",
+    "wasm_sha256": "74a12864ffc205ca2b3880b5f3740bf374621808aff55b2876f8e89d8db27e69"
+  },
+  "network_required": false,
+  "new_hosting_required": false,
+  "new_implementation": true,
+  "not_a_release": true,
+  "paid_api_required": false,
+  "status": "WEB_CLIENT_VERIFIED_LOCAL",
+  "pwa_status": "PWA_BUILD_VERIFIED_LOCAL",
+  "full_pytest": "443 passed",
+  "web_pytest": "30 passed",
+  "architecture": "UI\u2192WebWorker\u2192spe_wasm.wasm\u2192spe-core-rs",
+  "ts_semantic_fallback": false
+}

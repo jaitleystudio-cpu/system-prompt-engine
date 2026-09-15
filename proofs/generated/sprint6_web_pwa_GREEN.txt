@@ -1,0 +1,16 @@
+SPE SPRINT 6 — WEB/PWA FOUNDATION GREEN
+Branch: feat/web-pwa-foundation-s6
+Base main: 931128b384c3055ecef876124f787e5b8e67651b
+RED preserved: proofs/generated/sprint6_web_pwa_RED.txt
+COST ₹0. NEW_IMPLEMENTATION. not_a_release=true.
+Architecture: UI → Web Worker → spe_wasm.wasm → spe-core-rs (no TS semantic fallback).
+Claims earned locally: WEB_CLIENT_VERIFIED_LOCAL, PWA_BUILD_VERIFIED_LOCAL.
+
+........................................................................ [ 16%]
+........................................................................ [ 32%]
+........................................................................ [ 48%]
+........................................................................ [ 65%]
+........................................................................ [ 81%]
+........................................................................ [ 97%]
+...........                                                              [100%]
+443 passed in 105.48s (0:01:45)

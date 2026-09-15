@@ -23,7 +23,7 @@ No Android / iOS / desktop / web / PWA / extension / Rust kernel / WASM / MCP / 
 | `PLATFORM:SWIFT_IOS` | PLANNED | NOT_RUN | Store client — forbidden in Sprint 4 |
 | `PLATFORM:WASM` | PLANNED | NOT_RUN | Forbidden in Sprint 4 |
 | `PLATFORM:DESKTOP_NATIVE` | PLANNED | NOT_RUN | Forbidden in Sprint 4 |
-| `PLATFORM:WEB_PWA` | PLANNED | NOT_RUN | Forbidden in Sprint 4 |
+| `PLATFORM:WEB_PWA` | IMPLEMENTING / CONFORMANCE_PARTIAL | PARTIAL | Sprint 6 Web/PWA foundation (not released; not_a_release=true) |
 | `PLATFORM:BROWSER_EXTENSION` | PLANNED | NOT_RUN | Forbidden in Sprint 4 |
 | `PLATFORM:MCP_SERVER` | PLANNED | NOT_RUN | Forbidden in Sprint 4 |
 | `PLATFORM:AI_PLUGIN` | PLANNED | NOT_RUN | Forbidden in Sprint 4 |
