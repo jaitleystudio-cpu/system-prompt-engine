@@ -23,3 +23,11 @@ Canonical engineering home: GitHub repository `system-prompt-engine` (private, d
 - Optional local WRITE_LOCAL_TEMP_FILE adapter (digest, no network)
 - No paid deps/APIs/hosting; C07 never mints authority
 
+## Sprint 4 slice
+- Universal SPE ABI `spe.universal-abi.v1` + MAJOR/MINOR/PATCH declaration
+- Portability package: capability model, canonical JSON, conformance harness, ReferenceRuntime
+- Conformance fixtures (>=50 positive / >=50 negative) under `data/conformance/`
+- Offline-first (`network_mode=NONE`); honest platform registry (no fake RELEASED/PASS)
+- Docs: UNIVERSAL_PLATFORM_ROADMAP, ZERO_COST_PRODUCT_LAW, FUTURE_LANGUAGE_QUALIFICATION
+- No platform clients (Android/iOS/desktop/web/PWA/extension/Rust/WASM/MCP/AI plugins)
+

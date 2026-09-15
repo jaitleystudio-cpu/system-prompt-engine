@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/spe_universal_abi.schema.json",
+  "title": "SPE Universal ABI v1",
+  "description": "Contract-only universal ABI for SPE portability + conformance (Sprint 4). No platform clients.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "abi_id",
+    "major",
+    "minor",
+    "patch",
+    "implementation",
+    "capabilities",
+    "network_mode",
+    "payload"
+  ],
+  "properties": {
+    "abi_id": {
+      "type": "string",
+      "const": "spe.universal-abi.v1"
+    },
+    "major": { "type": "integer", "minimum": 1 },
+    "minor": { "type": "integer", "minimum": 0 },
+    "patch": { "type": "integer", "minimum": 0 },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "implementation_id",
+        "platform_id",
+        "status",
+        "network_mode",
+        "capabilities"
+      ],
+      "properties": {
+        "implementation_id": { "type": "string", "minLength": 1 },
+        "platform_id": {
+          "type": "string",
+          "pattern": "^PLATFORM:[A-Z0-9_]+$"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PLANNED",
+            "IMPLEMENTING",
+            "CONFORMANCE_PARTIAL",
+            "CONFORMANCE_PASS",
+            "STORE_PENDING",
+            "RELEASED"
+          ]
+        },
+        "network_mode": {
+          "type": "string",
+          "enum": ["NONE", "OPTIONAL", "REQUIRED"]
+        },
+        "capabilities": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "CORE_CONTRACT",
+          "XCAT_HANDOFF",
+          "C02_RESEARCH",
+          "C06_ANALYZE",
+          "C01_DECIDE",
+          "C03_COMMUNICATE",
+          "C07_EXECUTION_INTENT",
+          "AUTHORITY_VALIDATION",
+          "PROVENANCE",
+          "UNCERTAINTY",
+          "PRIVACY_LABELS",
+          "PROOF_RECEIPTS",
+          "LOCAL_STORAGE",
+          "LOCAL_EXECUTION",
+          "NETWORK_OPTIONAL",
+          "OFFLINE_MODE"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "network_mode": {
+      "type": "string",
+      "enum": ["NONE", "OPTIONAL", "REQUIRED"]
+    },
+    "payload": {
+      "type": "object",
+      "description": "Portable semantic payload (typically CrossCategoryEnvelope.to_dict())."
+    },
+    "privacy": {
+      "type": "object",
+      "properties": {
+        "sensitivity": {
+          "type": "string",
+          "enum": ["PUBLIC", "USER_PRIVATE", "RESTRICTED"]
+        },
+        "trust": {
+          "type": "string",
+          "enum": ["TRUSTED", "UNTRUSTED", "UNKNOWN"]
+        },
+        "authority": {
+          "type": "string",
+          "enum": ["NONE", "GRANTED", "DENIED", "PENDING"]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
