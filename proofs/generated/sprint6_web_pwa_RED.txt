@@ -1,0 +1,108 @@
+SPE SPRINT 6 — WEB/PWA FOUNDATION RED
+Branch: feat/web-pwa-foundation-s6
+Base main: 931128b384c3055ecef876124f787e5b8e67651b
+Intentional failing contracts before apps/web exists.
+COST ₹0. NEW_IMPLEMENTATION. not_a_release=true.
+
+FFFF.FF.FF.FFFFFFFFF..FFFF.FF.                                           [100%]
+=================================== FAILURES ===================================
+E   AssertionError: no Web Worker source under apps/web/src
+    assert []
+/workspace/system-prompt-engine/tests/web/test_web_architecture_gates.py:40: AssertionError: no Web Worker source under apps/web/src
+E   AssertionError: release WASM not shipped into web public/
+    assert False
+     +  where False = is_file()
+     +    where is_file = PosixPath('/workspace/system-prompt-engine/apps/web/public/spe_wasm.wasm').is_file
+/workspace/system-prompt-engine/tests/web/test_web_architecture_gates.py:51: AssertionError: release WASM not shipped into web public/
+E   AssertionError: apps/web/src/engine missing
+    assert False
+     +  where False = is_dir()
+     +    where is_dir = PosixPath('/workspace/system-prompt-engine/apps/web/src/engine').is_dir
+/workspace/system-prompt-engine/tests/web/test_web_architecture_gates.py:30: AssertionError: apps/web/src/engine missing
+E   AssertionError: assert 'ENGINE_UNAVAILABLE' in ''
+/workspace/system-prompt-engine/tests/web/test_web_architecture_gates.py:95: AssertionError: assert 'ENGINE_UNAVAILABLE' in ''
+E   AssertionError: apps/web/src/engine missing
+    assert False
+     +  where False = is_dir()
+     +    where is_dir = PosixPath('/workspace/system-prompt-engine/apps/web/src/engine').is_dir
+/workspace/system-prompt-engine/tests/web/test_web_architecture_gates.py:30: AssertionError: apps/web/src/engine missing
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web/package.json'
+/usr/lib/python3.13/pathlib/_local.py:539: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web/package.json'
+E   AssertionError: assert False
+     +  where False = is_file()
+     +    where is_file = ((PosixPath('/workspace/system-prompt-engine/apps/web') / 'scripts') / 'audit-deps.mjs').is_file
+/workspace/system-prompt-engine/tests/web/test_web_cost_and_scope.py:25: AssertionError: assert False
+E   AssertionError: package-lock.json missing (reproducible free install)
+    assert False
+     +  where False = is_file()
+     +    where is_file = PosixPath('/workspace/system-prompt-engine/apps/web/package-lock.json').is_file
+/workspace/system-prompt-engine/tests/web/test_web_cost_and_scope.py:33: AssertionError: package-lock.json missing (reproducible free install)
+E   AssertionError: apps/web/scripts/eval-fixture.mjs missing
+    assert False
+     +  where False = is_file()
+     +    where is_file = PosixPath('/workspace/system-prompt-engine/apps/web/scripts/eval-fixture.mjs').is_file
+/workspace/system-prompt-engine/tests/web/test_web_engine_path.py:15: AssertionError: apps/web/scripts/eval-fixture.mjs missing
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+/usr/lib/python3.13/subprocess.py:1972: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+/usr/lib/python3.13/subprocess.py:1972: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+/usr/lib/python3.13/subprocess.py:1972: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+/usr/lib/python3.13/subprocess.py:1972: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+/usr/lib/python3.13/subprocess.py:1972: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+/usr/lib/python3.13/subprocess.py:1972: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web'
+E   AssertionError: PWA manifest missing
+    assert []
+/workspace/system-prompt-engine/tests/web/test_web_privacy_pwa.py:13: AssertionError: PWA manifest missing
+E   AssertionError: no service worker files
+    assert []
+/workspace/system-prompt-engine/tests/web/test_web_privacy_pwa.py:39: AssertionError: no service worker files
+E   AssertionError: assert 'obsidian' in ''
+     +  where '' = <built-in method lower of str object at 0xa47de8>()
+     +    where <built-in method lower of str object at 0xa47de8> = ''.lower
+/workspace/system-prompt-engine/tests/web/test_web_privacy_pwa.py:85: AssertionError: assert 'obsidian' in ''
+E   AssertionError: assert 'prefers-reduced-motion' in ''
+/workspace/system-prompt-engine/tests/web/test_web_privacy_pwa.py:104: AssertionError: assert 'prefers-reduced-motion' in ''
+E   AssertionError: assert ('PrivacyIndicator' in '' or 'privacy' in '')
+     +  where '' = <built-in method lower of str object at 0xa47de8>()
+     +    where <built-in method lower of str object at 0xa47de8> = ''.lower
+/workspace/system-prompt-engine/tests/web/test_web_privacy_pwa.py:119: AssertionError: assert ('PrivacyIndicator' in '' or 'privacy' in '')
+E   AssertionError: CSP notes missing
+    assert False
+     +  where False = any(<generator object test_csp_notes_exist.<locals>.<genexpr> at 0x7f1b996b24d0>)
+/workspace/system-prompt-engine/tests/web/test_web_privacy_pwa.py:134: AssertionError: CSP notes missing
+E   AssertionError: apps/web/package.json missing
+    assert False
+     +  where False = is_file()
+     +    where is_file = (PosixPath('/workspace/system-prompt-engine/apps/web') / 'package.json').is_file
+/workspace/system-prompt-engine/tests/web/test_web_pwa_scaffold.py:11: AssertionError: apps/web/package.json missing
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web/package.json'
+/usr/lib/python3.13/pathlib/_local.py:539: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/system-prompt-engine/apps/web/package.json'
+=========================== short test summary info ============================
+FAILED tests/web/test_web_architecture_gates.py::test_web_worker_loads_actual_wasm_not_ts_kernel
+FAILED tests/web/test_web_architecture_gates.py::test_shipped_release_wasm_matches_kernel_artifact_hash
+FAILED tests/web/test_web_architecture_gates.py::test_ts_does_not_duplicate_semantic_detectors
+FAILED tests/web/test_web_architecture_gates.py::test_engine_unavailable_on_wasm_failure_no_ts_fallback
+FAILED tests/web/test_web_architecture_gates.py::test_wasm_integrity_checked_before_instantiate
+FAILED tests/web/test_web_cost_and_scope.py::test_not_a_release_and_new_implementation_declared
+FAILED tests/web/test_web_cost_and_scope.py::test_dep_audit_script_and_asset_budget_script_exist
+FAILED tests/web/test_web_cost_and_scope.py::test_package_lock_has_no_paid_registry
+FAILED tests/web/test_web_engine_path.py::test_eval_script_exists - Assertion...
+FAILED tests/web/test_web_engine_path.py::test_positive_flow_pos001_via_web_wasm_host
+FAILED tests/web/test_web_engine_path.py::test_attack_flow_neg001_exact_reason_via_web_wasm_host
+FAILED tests/web/test_web_engine_path.py::test_wasm_integrity_mismatch_is_typed_not_ts_fallback
+FAILED tests/web/test_web_engine_path.py::test_missing_wasm_engine_unavailable
+FAILED tests/web/test_web_engine_path.py::test_compile_phases_are_real_transitions
+FAILED tests/web/test_web_engine_path.py::test_no_network_during_evaluate - F...
+FAILED tests/web/test_web_privacy_pwa.py::test_pwa_manifest_and_service_worker_exist
+FAILED tests/web/test_web_privacy_pwa.py::test_service_worker_does_not_cache_private_prompts
+FAILED tests/web/test_web_privacy_pwa.py::test_design_tokens_obsidian_platinum_system_fonts
+FAILED tests/web/test_web_privacy_pwa.py::test_responsive_and_a11y_source_contracts
+FAILED tests/web/test_web_privacy_pwa.py::test_privacy_indicator_and_trust_panel_present
+FAILED tests/web/test_web_privacy_pwa.py::test_csp_notes_exist - AssertionErr...
+FAILED tests/web/test_web_pwa_scaffold.py::test_apps_web_vite_react_ts_scaffold_exists
+FAILED tests/web/test_web_pwa_scaffold.py::test_package_json_is_vite_react_typescript_free_stack
+23 failed, 7 passed in 0.07s
