@@ -1,0 +1,19 @@
+{
+  "name": "SPE Web/PWA (not a release)",
+  "short_name": "SPE",
+  "description": "Local-only System Prompt Engine compiler. Session-local. No accounts. No analytics. not_a_release=true.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07080a",
+  "theme_color": "#0e1014",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

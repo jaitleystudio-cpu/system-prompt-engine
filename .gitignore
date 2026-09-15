@@ -222,3 +222,7 @@ __marimo__/
 # Rust portable kernel (Sprint 5)
 target/
 **/*.rs.bk
+
+# Node / Web PWA (Sprint 6)
+node_modules/
+apps/web/dist/

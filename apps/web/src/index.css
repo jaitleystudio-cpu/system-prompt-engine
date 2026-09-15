@@ -1,0 +1,260 @@
+/* SPE Web/PWA design tokens: obsidian + platinum. System fonts only. */
+:root {
+  --obsidian-950: #07080a;
+  --obsidian-900: #0e1014;
+  --obsidian-800: #161922;
+  --obsidian-700: #1e2330;
+  --platinum-50: #f4f5f7;
+  --platinum-100: #e8eaee;
+  --platinum-200: #d5d8de;
+  --platinum-400: #a8adb8;
+  --platinum-600: #7b818c;
+  --danger: #c45c5c;
+  --ok: #8aa58a;
+  --warn: #c4a35c;
+  --focus: #d5d8de;
+  --radius: 0.5rem;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--obsidian-950);
+  color: var(--platinum-100);
+  line-height: 1.45;
+  font-size: 1rem;
+}
+
+a {
+  color: var(--platinum-200);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: -3rem;
+  background: var(--obsidian-800);
+  color: var(--platinum-50);
+  padding: 0.4rem 0.7rem;
+  z-index: 10;
+}
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+.app-header,
+.app-main,
+.app-footer {
+  width: min(90rem, 100%);
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-block: 1rem 0.75rem;
+  border-bottom: 1px solid var(--obsidian-700);
+}
+
+.brand {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: var(--platinum-50);
+}
+
+.meta {
+  color: var(--platinum-400);
+  font-size: 0.85rem;
+}
+
+.app-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding-block: 1rem 2rem;
+}
+
+@media (min-width: 960px) {
+  .app-main {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+@media (max-width: 320px) {
+  body {
+    font-size: 0.95rem;
+  }
+  .app-header,
+  .app-main,
+  .app-footer {
+    padding-inline: 0.6rem;
+  }
+}
+
+.panel {
+  background: var(--obsidian-900);
+  border: 1px solid var(--obsidian-700);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  min-width: 0;
+}
+
+.panel h2,
+.panel h3 {
+  margin: 0 0 0.6rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--platinum-400);
+  font-weight: 650;
+}
+
+textarea {
+  width: 100%;
+  min-height: 16rem;
+  resize: vertical;
+  background: var(--obsidian-950);
+  color: var(--platinum-100);
+  border: 1px solid var(--obsidian-700);
+  border-radius: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 0.7rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+
+button {
+  font-family: var(--font);
+  background: var(--obsidian-800);
+  color: var(--platinum-50);
+  border: 1px solid var(--platinum-600);
+  border-radius: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+}
+button:hover {
+  background: var(--obsidian-700);
+}
+button.primary {
+  background: var(--platinum-200);
+  color: var(--obsidian-950);
+  border-color: var(--platinum-200);
+  font-weight: 650;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.phase {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--platinum-200);
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.pill {
+  border: 1px solid var(--platinum-600);
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.75rem;
+  color: var(--platinum-200);
+}
+.pill.warn {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+.pill.ok {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.pill.danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+dl.kv {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: 0.25rem 0.7rem;
+  margin: 0;
+  font-size: 0.85rem;
+}
+dl.kv dt {
+  color: var(--platinum-400);
+}
+dl.kv dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+pre.result {
+  overflow: auto;
+  max-height: 18rem;
+  background: var(--obsidian-950);
+  padding: 0.6rem;
+  border-radius: 0.35rem;
+  font-size: 0.75rem;
+  font-family: var(--mono);
+}
+
+.app-footer {
+  padding-bottom: 1.5rem;
+  color: var(--platinum-600);
+  font-size: 0.8rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (min-resolution: 2x) {
+  body {
+    -webkit-font-smoothing: antialiased;
+  }
+}
