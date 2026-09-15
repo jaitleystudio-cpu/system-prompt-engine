@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### 2026-09-15 — Sprint 5 Portable Rust Kernel + WASM (feat/portable-kernel-wasm-s5)
+- `portable/spe-core-rs` deterministic kernel: ABI transport, protected-semantic compare, capability containment
+- `portable/spe-wasm` thin JSON-in/JSON-out wrapper over spe-core-rs (no duplicated validators)
+- Python remains the oracle; native subprocess harness `tools/sprint5_conformance.py`
+- Frozen corpus 55/55 positive semantic-equivalent, 55/55 negative exact-reason; mutation escapes 0
+- WASM `wasm32-unknown-unknown` release artifact hashed locally
+- Proofs: sprint5_portable_kernel_{RED,GREEN}.txt, sprint5_cross_language_conformance.json, sprint5_proof_summary.json
+- Status VERIFIED_LOCAL_PORTABLE_SUBSET; not_a_release=true; NEW_IMPLEMENTATION; COST ₹0
+- No website/PWA/mobile/desktop/extension/MCP/provider/billing/ads/deployment
+
 ### 2026-09-15 — Sprint 4 Universal Portability + Conformance (feat/universal-portability-conformance-s4)
 - ABI `spe.universal-abi.v1` schema + ImplementationDeclaration (honest CONFORMANCE_PARTIAL)
 - `spe_runtime/portability/` canonical JSON, capabilities, reasons, conformance, ReferenceRuntime
