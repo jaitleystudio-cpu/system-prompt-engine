@@ -10,3 +10,7 @@ Lineage: NEW_IMPLEMENTATION
 
 ## Scope
 CrossCategoryEnvelope, X01–X10, validate_handoff. No C07 dispatch, LLM adapters, or UI.
+
+## Merge-gate follow-up
+- X05–X07 enforced in handoff; nested freeze; fresh proof `xcat_core_GREEN_fresh.txt` (45 passed).
+- Historical RED/GREEN unchanged.

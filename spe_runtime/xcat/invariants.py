@@ -104,6 +104,9 @@ def validate_sensitivity_preservation(
     return set(before.sensitivity_labels) <= set(after.sensitivity_labels)
 
 
+_STATUS_RANK = {"DENIED": 0, "NONE": 1, "PENDING": 2, "GRANTED": 3}
+
+
 def validate_authority_non_escalation(
     before: CrossCategoryEnvelope,
     after: CrossCategoryEnvelope,
@@ -116,10 +119,12 @@ def validate_authority_non_escalation(
     a = after.authority_state
     if a.level > b.level:
         return False
-    if not set(b.grants) <= set(a.grants):
-        # Losing grants is OK; gaining grants without event is escalation
-        pass
+    # Losing grants is OK; gaining grants without event is escalation
     if not set(a.grants) <= set(b.grants):
+        return False
+    b_rank = _STATUS_RANK.get(str(b.status), -1)
+    a_rank = _STATUS_RANK.get(str(a.status), -1)
+    if a_rank > b_rank:
         return False
     return True
 

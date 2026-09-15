@@ -12,13 +12,20 @@ from pathlib import Path
 
 import pytest
 
-from spe_runtime.xcat.handoff import HandoffResult, validate_handoff
+from spe_runtime.xcat.handoff import (
+    HandoffResult,
+    diagnose_refusal_reason,
+    validate_handoff,
+)
 from spe_runtime.xcat.invariants import (
+    validate_analysis_not_recommendation,
     validate_authority_non_escalation,
     validate_constraint_monotonicity,
+    validate_facts_have_provenance,
     validate_failure_preservation,
     validate_preference_immutability,
     validate_provenance_monotonicity,
+    validate_recommendation_not_execution,
     validate_taint_preservation,
     validate_uncertainty_preservation,
 )
@@ -306,29 +313,35 @@ def test_fail_to_pass_laundering_refused_by_handoff():
     result = validate_handoff(
         before, after, source_category="CAT:C06", destination_category="CAT:C01"
     )
-    assert result in (
-        HandoffResult.REFUSE,
-        HandoffResult.BLOCKED,
-        HandoffResult.REVALIDATION_REQUIRED,
-    )
-    assert result != HandoffResult.VALID
-    # Must never invent promotion/execution success codes
+    assert result == HandoffResult.BLOCKED
     assert result.value not in ("PROMOTE", "EXECUTED", "VERIFIED_SUCCESS")
+    assert (
+        diagnose_refusal_reason(
+            before, after, "CAT:C06", "CAT:C01"
+        )
+        == ReasonCode.FAILURE_LAUNDERED
+    )
 
 
 def test_unknown_to_pass_laundering_refused():
     before = _base_envelope(
         failures=(
             FailureRecord(failure_id="u-1", status="UNKNOWN", message="unclear"),
-        )
+        ),
+        category_trace=("CAT:C02",),
     )
     after = _base_envelope(
-        failures=(FailureRecord(failure_id="u-1", status="PASS", message="unclear"),)
+        failures=(FailureRecord(failure_id="u-1", status="PASS", message="unclear"),),
+        category_trace=("CAT:C02", "CAT:C06"),
     )
     result = validate_handoff(
         before, after, source_category="CAT:C02", destination_category="CAT:C06"
     )
-    assert result != HandoffResult.VALID
+    assert result == HandoffResult.BLOCKED
+    assert (
+        diagnose_refusal_reason(before, after, "CAT:C02", "CAT:C06")
+        == ReasonCode.FAILURE_LAUNDERED
+    )
 
 
 def test_clean_handoff_valid():
@@ -341,40 +354,65 @@ def test_clean_handoff_valid():
 
 
 def test_constraint_loss_handoff_refused():
-    before = _base_envelope()
-    after = _base_envelope(hard_constraints=())
+    before = _base_envelope(category_trace=("CAT:C02",))
+    after = _base_envelope(
+        hard_constraints=(),
+        category_trace=("CAT:C02", "CAT:C06"),
+    )
     result = validate_handoff(
         before, after, source_category="CAT:C02", destination_category="CAT:C06"
     )
-    assert result != HandoffResult.VALID
+    assert result == HandoffResult.REFUSE
+    assert (
+        diagnose_refusal_reason(before, after, "CAT:C02", "CAT:C06")
+        == ReasonCode.CONSTRAINT_WEAKENED
+    )
 
 
 def test_provenance_loss_handoff_refused():
-    before = _base_envelope()
-    after = _base_envelope(provenance=())
+    before = _base_envelope(category_trace=("CAT:C02",))
+    # Keep facts empty so X05 does not mask X02; isolate provenance loss.
+    after = _base_envelope(
+        facts=(),
+        provenance=(),
+        category_trace=("CAT:C02", "CAT:C06"),
+    )
     result = validate_handoff(
         before, after, source_category="CAT:C02", destination_category="CAT:C06"
     )
-    assert result != HandoffResult.VALID
+    assert result == HandoffResult.REFUSE
+    assert (
+        diagnose_refusal_reason(before, after, "CAT:C02", "CAT:C06")
+        == ReasonCode.PROVENANCE_LOST
+    )
 
 
 def test_taint_loss_handoff_refused():
-    before = _base_envelope()
-    after = _base_envelope(taint_labels=())
+    before = _base_envelope(category_trace=("CAT:C02",))
+    after = _base_envelope(
+        taint_labels=(),
+        category_trace=("CAT:C02", "CAT:C06"),
+    )
     result = validate_handoff(
         before, after, source_category="CAT:C02", destination_category="CAT:C06"
     )
-    assert result != HandoffResult.VALID
+    assert result == HandoffResult.REFUSE
+    assert (
+        diagnose_refusal_reason(before, after, "CAT:C02", "CAT:C06")
+        == ReasonCode.TAINT_LOST
+    )
 
 
 def test_authority_escalation_handoff_blocked():
     before = _base_envelope(
-        authority_state=AuthorityState(level=1, status="GRANTED", grants=("read",))
+        authority_state=AuthorityState(level=1, status="GRANTED", grants=("read",)),
+        category_trace=("CAT:C01",),
     )
     after = _base_envelope(
         authority_state=AuthorityState(
             level=9, status="GRANTED", grants=("read", "admin")
-        )
+        ),
+        category_trace=("CAT:C01", "CAT:C07"),
     )
     result = validate_handoff(
         before,
@@ -383,7 +421,13 @@ def test_authority_escalation_handoff_blocked():
         destination_category="CAT:C07",
         authority_event=None,
     )
-    assert result in (HandoffResult.REFUSE, HandoffResult.BLOCKED)
+    assert result == HandoffResult.BLOCKED
+    assert (
+        diagnose_refusal_reason(
+            before, after, "CAT:C01", "CAT:C07", authority_event=None
+        )
+        == ReasonCode.AUTHORITY_SELF_ESCALATION
+    )
 
 
 def test_naked_category_handoff_refused():
@@ -393,6 +437,138 @@ def test_naked_category_handoff_refused():
         before, after, source_category="C02", destination_category="C06"
     )
     assert result != HandoffResult.VALID
+
+
+# ---------------------------------------------------------------------------
+# X05 — facts require provenance
+# ---------------------------------------------------------------------------
+
+
+def test_fact_missing_provenance_detected():
+    env = _base_envelope(
+        facts=({"fact_id": "f1", "statement": "sky is blue", "provenance_ids": []},),
+    )
+    assert validate_facts_have_provenance(env) is False
+
+
+def test_fact_unknown_provenance_id_detected():
+    env = _base_envelope(
+        facts=(
+            {
+                "fact_id": "f1",
+                "statement": "sky is blue",
+                "provenance_ids": ["missing"],
+            },
+        ),
+    )
+    assert validate_facts_have_provenance(env) is False
+
+
+def test_facts_with_provenance_ok():
+    env = _base_envelope()
+    assert validate_facts_have_provenance(env) is True
+
+
+def test_fact_missing_provenance_handoff_refused():
+    before = _base_envelope(category_trace=("CAT:C02",))
+    after = _base_envelope(
+        facts=({"fact_id": "f1", "statement": "sky is blue", "provenance_ids": []},),
+        category_trace=("CAT:C02", "CAT:C06"),
+    )
+    result = validate_handoff(
+        before, after, source_category="CAT:C02", destination_category="CAT:C06"
+    )
+    assert result == HandoffResult.REFUSE
+    assert (
+        diagnose_refusal_reason(before, after, "CAT:C02", "CAT:C06")
+        == ReasonCode.FACT_MISSING_PROVENANCE
+    )
+
+
+# ---------------------------------------------------------------------------
+# X06 — analysis != recommendation
+# ---------------------------------------------------------------------------
+
+
+def test_analysis_equals_recommendation_detected():
+    blob = {"summary": "same"}
+    env = _base_envelope(analysis=blob, recommendation=blob)
+    assert validate_analysis_not_recommendation(env) is False
+
+
+def test_analysis_distinct_from_recommendation_ok():
+    env = _base_envelope(
+        analysis={"summary": "a"},
+        recommendation={"action": "b"},
+    )
+    assert validate_analysis_not_recommendation(env) is True
+
+
+# ---------------------------------------------------------------------------
+# X07 — recommendation != execution
+# ---------------------------------------------------------------------------
+
+
+def test_recommendation_copied_into_grant_detected():
+    rec = {"action": "delete_all", "target": "prod"}
+    env = _base_envelope(
+        recommendation=rec,
+        execution_grants=(rec,),
+    )
+    assert validate_recommendation_not_execution(env) is False
+
+
+def test_recommendation_as_unauthorized_grant_detected():
+    env = _base_envelope(
+        recommendation={"action": "ship"},
+        execution_grants=(
+            {"grant_id": "g1", "from_recommendation": True, "authorized": False},
+        ),
+    )
+    assert validate_recommendation_not_execution(env) is False
+
+
+def test_recommendation_not_execution_ok():
+    env = _base_envelope(
+        recommendation={"action": "ship"},
+        execution_grants=({"grant_id": "g1", "scope": "read", "authorized": True},),
+    )
+    assert validate_recommendation_not_execution(env) is True
+
+
+def test_recommendation_as_execution_handoff_refused():
+    rec = {"action": "delete_all"}
+    before = _base_envelope(category_trace=("CAT:C02",))
+    after = _base_envelope(
+        recommendation=rec,
+        execution_grants=(rec,),
+        category_trace=("CAT:C02", "CAT:C06"),
+    )
+    result = validate_handoff(
+        before, after, source_category="CAT:C02", destination_category="CAT:C06"
+    )
+    assert result == HandoffResult.REFUSE
+    assert (
+        diagnose_refusal_reason(before, after, "CAT:C02", "CAT:C06")
+        == ReasonCode.RECOMMENDATION_AS_EXECUTION
+    )
+
+
+# ---------------------------------------------------------------------------
+# X09 — status self-escalation
+# ---------------------------------------------------------------------------
+
+
+def test_authority_status_denied_to_granted_detected():
+    before = _base_envelope(
+        authority_state=AuthorityState(level=1, status="DENIED", grants=())
+    )
+    after = _base_envelope(
+        authority_state=AuthorityState(level=1, status="GRANTED", grants=())
+    )
+    assert (
+        validate_authority_non_escalation(before, after, authority_event=None) is False
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -471,3 +647,11 @@ def test_envelope_is_frozen():
     env = _base_envelope()
     with pytest.raises(Exception):
         env.envelope_id = "mutated"  # type: ignore[misc]
+
+
+def test_envelope_nested_mappings_are_immutable():
+    env = _base_envelope()
+    with pytest.raises(TypeError):
+        env.facts[0]["statement"] = "mutated"  # type: ignore[index]
+    with pytest.raises(TypeError):
+        env.hard_constraints[0]["strength"] = "SOFT"  # type: ignore[index]

@@ -1,6 +1,6 @@
 """XCAT semantic kernel (cross-category envelope)."""
 
-from spe_runtime.xcat.handoff import HandoffResult, validate_handoff
+from spe_runtime.xcat.handoff import HandoffResult, diagnose_refusal_reason, validate_handoff
 from spe_runtime.xcat.models import (
     CATEGORY_IDS,
     AuthorityState,
@@ -16,5 +16,6 @@ __all__ = [
     "FailureRecord",
     "HandoffResult",
     "ReasonCode",
+    "diagnose_refusal_reason",
     "validate_handoff",
 ]
