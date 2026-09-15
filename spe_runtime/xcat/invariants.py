@@ -147,10 +147,21 @@ def validate_facts_have_provenance(envelope: CrossCategoryEnvelope) -> bool:
 
 
 def validate_analysis_not_recommendation(envelope: CrossCategoryEnvelope) -> bool:
-    """X06: analysis != recommendation (fields must remain distinct)."""
+    """X06: analysis != recommendation (fields must remain distinct).
+
+    Also rejects analysis payloads that declare kind=recommendation or that are
+    recommendation-shaped (action + certainty), which would launder Decide work
+    into Analyze.
+    """
+    if envelope.analysis is not None:
+        kind = str(envelope.analysis.get("kind", "") or "").lower()
+        if kind == "recommendation":
+            return False
+        if "action" in envelope.analysis and "certainty" in envelope.analysis:
+            return False
     if envelope.analysis is None or envelope.recommendation is None:
         return True
-    return envelope.analysis != envelope.recommendation
+    return dict(envelope.analysis) != dict(envelope.recommendation)
 
 
 def validate_recommendation_not_execution(envelope: CrossCategoryEnvelope) -> bool:

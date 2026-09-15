@@ -11,16 +11,38 @@ CATEGORY_IDS: frozenset[str] = frozenset(
 )
 
 
+def _deep_freeze(value: Any) -> Any:
+    """Recursively freeze mappings/lists into MappingProxyType / tuples."""
+    if isinstance(value, Mapping):
+        return MappingProxyType({k: _deep_freeze(v) for k, v in value.items()})
+    if isinstance(value, (list, tuple)):
+        return tuple(_deep_freeze(v) for v in value)
+    return value
+
+
+def _deep_unfreeze(value: Any) -> Any:
+    """Recursively convert frozen mappings/tuples back to dict/list for JSON."""
+    if isinstance(value, Mapping):
+        return {k: _deep_unfreeze(v) for k, v in value.items()}
+    if isinstance(value, tuple):
+        return [_deep_unfreeze(v) for v in value]
+    if isinstance(value, list):
+        return [_deep_unfreeze(v) for v in value]
+    return value
+
+
 def _freeze_mapping(value: Mapping[str, Any] | None) -> Mapping[str, Any] | None:
     if value is None:
         return None
-    return MappingProxyType(dict(value))
+    frozen = _deep_freeze(value)
+    assert isinstance(frozen, Mapping)
+    return frozen
 
 
 def _freeze_mapping_tuple(
     items: tuple[Mapping[str, Any], ...] | tuple[dict[str, Any], ...]
 ) -> tuple[Mapping[str, Any], ...]:
-    return tuple(MappingProxyType(dict(item)) for item in items)
+    return tuple(_freeze_mapping(item) for item in items)  # type: ignore[misc]
 
 
 @dataclass(frozen=True)
@@ -87,22 +109,20 @@ class CrossCategoryEnvelope:
         return {
             "envelope_id": self.envelope_id,
             "goal_identity": self.goal_identity,
-            "facts": [dict(x) for x in self.facts],
-            "provenance": [dict(x) for x in self.provenance],
-            "uncertainties": [dict(x) for x in self.uncertainties],
-            "hard_constraints": [dict(x) for x in self.hard_constraints],
-            "user_preferences": [dict(x) for x in self.user_preferences],
-            "analysis": dict(self.analysis) if self.analysis is not None else None,
-            "recommendation": (
-                dict(self.recommendation) if self.recommendation is not None else None
-            ),
-            "rendering": dict(self.rendering) if self.rendering is not None else None,
+            "facts": _deep_unfreeze(self.facts),
+            "provenance": _deep_unfreeze(self.provenance),
+            "uncertainties": _deep_unfreeze(self.uncertainties),
+            "hard_constraints": _deep_unfreeze(self.hard_constraints),
+            "user_preferences": _deep_unfreeze(self.user_preferences),
+            "analysis": _deep_unfreeze(self.analysis),
+            "recommendation": _deep_unfreeze(self.recommendation),
+            "rendering": _deep_unfreeze(self.rendering),
             "authority_state": {
                 "level": self.authority_state.level,
                 "status": self.authority_state.status,
                 "grants": list(self.authority_state.grants),
             },
-            "execution_grants": [dict(x) for x in self.execution_grants],
+            "execution_grants": _deep_unfreeze(self.execution_grants),
             "failures": [
                 {
                     "failure_id": f.failure_id,
