@@ -44,12 +44,9 @@ def validate_c07_output(
         return False
     if not authority_unchanged(before.authority_state, after.authority_state):
         return False
-    # C07 must not expand execution_grants from recommendation alone
-    if len(after.execution_grants) > len(before.execution_grants):
-        for g in after.execution_grants:
-            if g not in before.execution_grants:
-                if g.get("authorized") is not True:
-                    return False
+    # C07 must never mint/broaden/refresh execution_grants (authorized=True is NOT a bypass)
+    if tuple(after.execution_grants) != tuple(before.execution_grants):
+        return False
     if not failures_not_laundered(before.failures, after.failures):
         return False
     if not validate_constraint_monotonicity(before, after):

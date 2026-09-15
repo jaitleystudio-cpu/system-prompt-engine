@@ -15,6 +15,51 @@ def _parse_ts(value: str) -> datetime:
     return datetime.fromisoformat(text)
 
 
+def _amount_value(raw: Any) -> int | None:
+    """Extract comparable int amount; nested mapping uses 'value' or fails closed."""
+    if isinstance(raw, bool):
+        return None
+    if isinstance(raw, int):
+        return raw
+    if isinstance(raw, float):
+        return int(raw)
+    if isinstance(raw, str):
+        try:
+            return int(raw)
+        except ValueError:
+            return None
+    if isinstance(raw, Mapping):
+        if "value" in raw:
+            return _amount_value(raw["value"])
+        if "amount" in raw:
+            return _amount_value(raw["amount"])
+        return None
+    return None
+
+
+def _nested_amounts_within(obj: Any, amount_max: int) -> bool:
+    """Walk nested args; any amount / *_amount field must be <= amount_max."""
+    if isinstance(obj, Mapping):
+        for key, val in obj.items():
+            key_s = str(key)
+            if key_s == "amount" or key_s.endswith("_amount"):
+                parsed = _amount_value(val)
+                if parsed is None or parsed > amount_max:
+                    return False
+            elif isinstance(val, Mapping):
+                if not _nested_amounts_within(val, amount_max):
+                    return False
+            elif isinstance(val, (list, tuple)):
+                for item in val:
+                    if not _nested_amounts_within(item, amount_max):
+                        return False
+    elif isinstance(obj, (list, tuple)):
+        for item in obj:
+            if not _nested_amounts_within(item, amount_max):
+                return False
+    return True
+
+
 def _check_args_against_constraints(
     arguments: Mapping[str, Any], constraints: Mapping[str, Any]
 ) -> bool:
@@ -33,6 +78,22 @@ def _check_args_against_constraints(
                 return False
         except (TypeError, ValueError):
             return False
+
+    # Gate 5: amount <= amount_max (fail closed on unparsable / nested over-limit)
+    amount_max = constraints.get("amount_max", constraints.get("max_amount"))
+    if amount_max is not None:
+        try:
+            limit = int(amount_max)
+        except (TypeError, ValueError):
+            return False
+        if "amount" in arguments:
+            parsed = _amount_value(arguments["amount"])
+            if parsed is None or parsed > limit:
+                return False
+        # nested tricks under other allowed keys
+        if not _nested_amounts_within(arguments, limit):
+            return False
+
     return True
 
 
@@ -56,7 +117,8 @@ def validate_grant_compatibility(
     try:
         now_dt = _parse_ts(now)
         exp_dt = _parse_ts(grant.expires_at)
-        if now_dt > exp_dt:
+        # Fail-closed: exact expiry instant is expired (now >= expires_at)
+        if now_dt >= exp_dt:
             reasons.append(ReasonCode.AUTHORITY_EXPIRED.value)
     except ValueError:
         reasons.append(ReasonCode.AUTHORITY_EXPIRED.value)
@@ -67,6 +129,7 @@ def validate_grant_compatibility(
     if grant.capability != capability:
         reasons.append(ReasonCode.SCOPE_MISMATCH.value)
 
+    # Exact canonical target — case/whitespace/aliases refuse (no normalization bypass)
     if grant.target != target:
         reasons.append(ReasonCode.TARGET_DRIFT.value)
 

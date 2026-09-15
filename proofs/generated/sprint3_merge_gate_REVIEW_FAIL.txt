@@ -1,0 +1,50 @@
+SPE SPRINT 3 — PR #3 MERGE-GATE ADVERSARIAL REVIEW FAIL
+Tip reviewed: f8d7bf2e4edcef112979953351e17669bb3eebef (feat/xcat-c07-authority-s3)
+Baseline full pytest: 137 passed (pre-repair)
+DO NOT MERGE until repairs + GREEN_fresh.
+
+DEFECTS (adversarial; tests were green but gates incomplete/bypassable):
+
+[G2] validate_c07_output allows execution_grants expansion when new grant has
+     authorized=True (C07 must never mint/broaden authority grants on envelope).
+     Probe: before.grants=() → after.grants=({authorized:True,...}) → validator True.
+
+[G5] amount_max / amount<=1000 vs 1001 not enforced.
+     argument_constraints may carry amount_max=1000 but validate_grant_compatibility
+     ignores it; amount=1001 and nested meta.amount=1001 both return ok=True.
+     Only content_b64_len_max + allowed_keys were checked.
+
+[G6] Expiry not fail-closed at exact boundary.
+     Condition was now > expires_at, so now == expires_at still ALLOWED.
+     Fail-closed requires now >= expires_at → AUTHORITY_EXPIRED.
+     Just-before OK / just-after refuse already held.
+
+[G8] Single-use consumption not implemented as a transition.
+     form_execution_intent twice with use_limit=1, uses_consumed=0 both INTENT_FORMED.
+     No consume_grant helper; retry path can re-form forever without consumption.
+     Adapter accepts duplicate writes for same operation_id (side-effect duplication).
+
+[G15] Temp-file sandbox escapable.
+     directory="sandbox/../outside" writes under outside (Path not resolve-bounded).
+     Symlink directory inside sandbox pointing outside → write follows symlink.
+     No sandbox_root / is_relative_to guard after resolve().
+
+[G16] Duplicate-effect campaign → duplicates observed.
+     Two write_local_temp_file calls with same operation_id both status=WRITTEN;
+     final bytes overwritten (duplicate side effect). No effect ledger.
+
+GAPS (coverage; fixed with new adversarial tests, not by weakening):
+- G4 case/whitespace/alias target tricks: exact-match refuse held (OK) — add explicit tests.
+- G3 READ→SEND: capability mismatch held (OK) — add explicit positive-control naming.
+- G12 COMPLETED→redispatch refused (OK) — add explicit test.
+- G17 positive controls incomplete for new refusal classes.
+- G18: validators themselves clean; only adapter does tempfile (OK after sandbox harden).
+
+COST: paid=NO at tip (jsonschema+pytest only). ₹0.
+
+PRESERVE unchanged:
+  proofs/generated/sprint3_c07_authority_RED.txt
+  proofs/generated/sprint3_c07_authority_GREEN.txt
+  all older proofs
+
+Next: repair on feat/xcat-c07-authority-s3 → push → sprint3_merge_gate_GREEN_fresh.txt

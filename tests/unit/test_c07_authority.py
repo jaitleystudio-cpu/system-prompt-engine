@@ -770,3 +770,360 @@ def test_cost_law_no_paid_imports():
     lower = pyproject.lower()
     for name in forbidden:
         assert name not in lower
+
+
+# ---------------------------------------------------------------------------
+# Merge-gate adversarial closures (G2/G3/G4/G5/G6/G8/G12/G15/G16/G17)
+# ---------------------------------------------------------------------------
+
+
+def test_mg_g2_execution_grants_expansion_never_allowed():
+    """authorized=True must NOT bypass C07 ownership — no grant mint/broaden."""
+    from spe_runtime.categories._common import replace_envelope
+
+    before = _envelope_with_send_recommendation()
+    after = replace_envelope(
+        before,
+        category_trace=before.category_trace + ("CAT:C07",),
+        execution_grants=(
+            {"capability": "SEND_EMAIL", "authorized": True, "target": "*"},
+        ),
+    )
+    assert validate_c07_output(before, after) is False
+
+
+def test_mg_g3_read_grant_send_action_refused():
+    grant = _valid_grant(capability="READ")
+    ok, reasons = validate_grant_compatibility(
+        grant,
+        capability="SEND",
+        target=grant.target,
+        arguments={"filename": "a.txt", "content_b64_len_max": 10},
+        now=NOW,
+    )
+    assert ok is False
+    assert ReasonCode.SCOPE_MISMATCH.value in reasons
+
+
+def test_mg_g4_target_case_whitespace_alias_refused():
+    grant = _valid_grant(target="local://tmp/spe-s3/")
+    tricks = [
+        "LOCAL://TMP/SPE-S3/",
+        " local://tmp/spe-s3/ ",
+        "file:///tmp/spe-s3/",
+        "local://tmp/spe-s3",
+        "local://tmp/spe-s3/../spe-s3/",
+    ]
+    for tgt in tricks:
+        ok, reasons = validate_grant_compatibility(
+            grant,
+            capability=grant.capability,
+            target=tgt,
+            arguments={"filename": "a.txt", "content_b64_len_max": 10},
+            now=NOW,
+        )
+        assert ok is False, tgt
+        assert ReasonCode.TARGET_DRIFT.value in reasons
+
+
+def test_mg_g5_amount_1000_ok_1001_refused_nested_extra():
+    grant = _valid_grant(
+        argument_constraints={
+            "allowed_keys": ["filename", "content_b64_len_max", "amount", "meta"],
+            "filename_suffix": ".txt",
+            "content_b64_len_max": 1024,
+            "amount_max": 1000,
+        }
+    )
+    ok1000, _ = validate_grant_compatibility(
+        grant,
+        capability=grant.capability,
+        target=grant.target,
+        arguments={"filename": "a.txt", "content_b64_len_max": 10, "amount": 1000},
+        now=NOW,
+    )
+    assert ok1000 is True
+    ok1001, r1001 = validate_grant_compatibility(
+        grant,
+        capability=grant.capability,
+        target=grant.target,
+        arguments={"filename": "a.txt", "content_b64_len_max": 10, "amount": 1001},
+        now=NOW,
+    )
+    assert ok1001 is False
+    assert ReasonCode.ARGUMENT_DRIFT.value in r1001
+    ok_nest, r_nest = validate_grant_compatibility(
+        grant,
+        capability=grant.capability,
+        target=grant.target,
+        arguments={
+            "filename": "a.txt",
+            "content_b64_len_max": 10,
+            "meta": {"amount": 1001},
+        },
+        now=NOW,
+    )
+    assert ok_nest is False
+    assert ReasonCode.ARGUMENT_DRIFT.value in r_nest
+    ok_extra, r_extra = validate_grant_compatibility(
+        grant,
+        capability=grant.capability,
+        target=grant.target,
+        arguments={
+            "filename": "a.txt",
+            "content_b64_len_max": 10,
+            "amount": 1,
+            "unauthorized": True,
+        },
+        now=NOW,
+    )
+    assert ok_extra is False
+    assert ReasonCode.ARGUMENT_DRIFT.value in r_extra
+
+
+def test_mg_g6_expiry_boundaries_fail_closed():
+    exp = "2026-09-15T12:00:00+00:00"
+    grant = _valid_grant(expires_at=exp, issued_at="2026-09-14T12:00:00+00:00")
+    ok_before, _ = validate_grant_compatibility(
+        grant,
+        capability=grant.capability,
+        target=grant.target,
+        arguments={"filename": "a.txt", "content_b64_len_max": 10},
+        now="2026-09-15T11:59:59+00:00",
+    )
+    assert ok_before is True
+    ok_exact, r_exact = validate_grant_compatibility(
+        grant,
+        capability=grant.capability,
+        target=grant.target,
+        arguments={"filename": "a.txt", "content_b64_len_max": 10},
+        now=exp,
+    )
+    assert ok_exact is False
+    assert ReasonCode.AUTHORITY_EXPIRED.value in r_exact
+    ok_after, r_after = validate_grant_compatibility(
+        grant,
+        capability=grant.capability,
+        target=grant.target,
+        arguments={"filename": "a.txt", "content_b64_len_max": 10},
+        now="2026-09-15T12:00:01+00:00",
+    )
+    assert ok_after is False
+    assert ReasonCode.AUTHORITY_EXPIRED.value in r_after
+
+
+def test_mg_g8_single_use_consume_and_retry_no_double_consume():
+    from spe_runtime.authority.consume import consume_grant
+
+    env = _envelope_with_send_recommendation()
+    grant0 = _valid_grant(use_limit=1, uses_consumed=0)
+    # 0 consumed → eligible
+    first = form_execution_intent(
+        env,
+        grant=grant0,
+        action_type="WRITE_LOCAL_TEMP_FILE",
+        canonical_target=grant0.target,
+        canonical_arguments={"filename": "a.txt", "content_b64_len_max": 10},
+        expected_effect="create local temp file",
+        reversibility_class="REVERSIBLE",
+        now=NOW,
+    )
+    assert first.status == "INTENT_FORMED"
+    ok_c, grant1, _ = consume_grant(grant0)
+    assert ok_c is True and grant1 is not None
+    assert grant1.uses_consumed == 1
+    assert grant0.uses_consumed == 0  # original immutable
+    # 1 consumed → 2nd form refuse
+    second = form_execution_intent(
+        env,
+        grant=grant1,
+        action_type="WRITE_LOCAL_TEMP_FILE",
+        canonical_target=grant1.target,
+        canonical_arguments={"filename": "a.txt", "content_b64_len_max": 10},
+        expected_effect="create local temp file",
+        reversibility_class="REVERSIBLE",
+        now=NOW,
+    )
+    assert second.status == "BLOCKED"
+    codes = set(second.reason_codes)
+    assert ReasonCode.AUTHORITY_CONSUMED.value in codes
+    # further consume refused (no double-consume)
+    ok2, g2, r2 = consume_grant(grant1)
+    assert ok2 is False and g2 is None
+    assert ReasonCode.AUTHORITY_CONSUMED.value in r2
+
+
+def test_mg_g12_completed_zero_redispatch():
+    for proposed in (
+        OutcomeState.DISPATCHING,
+        OutcomeState.NOT_EXECUTED,
+        OutcomeState.FAILED,
+        OutcomeState.PARTIAL,
+    ):
+        ok, _, _ = transition_outcome(OutcomeState.COMPLETED, proposed)
+        assert ok is False
+
+
+def test_mg_g15_sandbox_traversal_symlink_refused(tmp_path: Path):
+    from spe_runtime.execution.effect_ledger import EffectLedger
+
+    sandbox = tmp_path / "sandbox"
+    sandbox.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    env = _envelope_with_send_recommendation()
+    grant = _valid_grant()
+    formed = form_execution_intent(
+        env,
+        grant=grant,
+        action_type="WRITE_LOCAL_TEMP_FILE",
+        canonical_target=grant.target,
+        canonical_arguments={"filename": "x.txt", "content_b64_len_max": 32},
+        expected_effect="create local temp file",
+        reversibility_class="REVERSIBLE",
+        now=NOW,
+    )
+    assert formed.status == "INTENT_FORMED"
+    intent = formed.intent
+
+    # ../ escape via directory
+    trav = str(sandbox / ".." / "outside")
+    r1 = write_local_temp_file(
+        intent=intent,
+        content=b"evil",
+        directory=trav,
+        sandbox_root=str(sandbox),
+        effect_ledger=EffectLedger(),
+    )
+    assert r1.status == "REJECTED"
+    assert ReasonCode.SANDBOX_ESCAPE.value in r1.reason_codes
+
+    # absolute-style filename stripped / confined
+    class AbsIntent:
+        action_type = "WRITE_LOCAL_TEMP_FILE"
+        operation_id = intent.operation_id + "-abs"
+        canonical_arguments = {"filename": str(outside / "abs.txt")}
+
+    r2 = write_local_temp_file(
+        intent=AbsIntent(),
+        content=b"x",
+        directory=str(sandbox),
+        sandbox_root=str(sandbox),
+        effect_ledger=EffectLedger(),
+    )
+    assert r2.status == "WRITTEN"
+    assert Path(r2.path).resolve().is_relative_to(sandbox.resolve())
+
+    # symlink dir pointing outside
+    link = sandbox / "linkdir"
+    link.symlink_to(outside)
+    r3 = write_local_temp_file(
+        intent=intent,
+        content=b"sym",
+        directory=str(link),
+        sandbox_root=str(sandbox),
+        effect_ledger=EffectLedger(),
+    )
+    assert r3.status == "REJECTED"
+    assert ReasonCode.SANDBOX_ESCAPE.value in r3.reason_codes
+
+    # alt separators in filename
+    class AltIntent:
+        action_type = "WRITE_LOCAL_TEMP_FILE"
+        operation_id = intent.operation_id + "-alt"
+        canonical_arguments = {"filename": "..\\..\\evil.txt"}
+
+    r4 = write_local_temp_file(
+        intent=AltIntent(),
+        content=b"x",
+        directory=str(sandbox),
+        sandbox_root=str(sandbox),
+        effect_ledger=EffectLedger(),
+    )
+    # basename after norm → evil.txt inside sandbox OR reject; must not escape
+    if r4.status == "WRITTEN":
+        assert Path(r4.path).resolve().is_relative_to(sandbox.resolve())
+    else:
+        assert ReasonCode.SANDBOX_ESCAPE.value in r4.reason_codes
+
+
+def test_mg_g16_duplicate_effect_campaign_zero_duplicates(tmp_path: Path):
+    from spe_runtime.execution.effect_ledger import EffectLedger
+
+    env = _envelope_with_send_recommendation()
+    grant = _valid_grant()
+    formed = form_execution_intent(
+        env,
+        grant=grant,
+        action_type="WRITE_LOCAL_TEMP_FILE",
+        canonical_target=grant.target,
+        canonical_arguments={"filename": "dup.txt", "content_b64_len_max": 32},
+        expected_effect="create local temp file",
+        reversibility_class="REVERSIBLE",
+        now=NOW,
+    )
+    assert formed.status == "INTENT_FORMED"
+    ledger = EffectLedger()
+    r1 = write_local_temp_file(
+        intent=formed.intent,
+        content=b"one",
+        directory=str(tmp_path),
+        sandbox_root=str(tmp_path),
+        effect_ledger=ledger,
+    )
+    r2 = write_local_temp_file(
+        intent=formed.intent,
+        content=b"two",
+        directory=str(tmp_path),
+        sandbox_root=str(tmp_path),
+        effect_ledger=ledger,
+    )
+    assert r1.status == "WRITTEN"
+    assert r2.status == "REJECTED"
+    assert ReasonCode.DUPLICATE_EFFECT.value in r2.reason_codes
+    assert Path(r1.path).read_bytes() == b"one"
+    assert len(ledger) == 1
+
+
+def test_mg_g17_positive_controls_amount_expiry_sandbox(tmp_path: Path):
+    """Positive controls: lawful amount/target/expiry/sandbox still succeed."""
+    from spe_runtime.execution.effect_ledger import EffectLedger
+
+    grant = _valid_grant(
+        argument_constraints={
+            "allowed_keys": ["filename", "content_b64_len_max", "amount"],
+            "filename_suffix": ".txt",
+            "content_b64_len_max": 1024,
+            "amount_max": 1000,
+        }
+    )
+    ok, _ = validate_grant_compatibility(
+        grant,
+        capability=grant.capability,
+        target=grant.target,
+        arguments={"filename": "ok.txt", "content_b64_len_max": 8, "amount": 1000},
+        now=NOW,
+    )
+    assert ok is True
+    env = _envelope_with_send_recommendation()
+    formed = form_execution_intent(
+        env,
+        grant=grant,
+        action_type="WRITE_LOCAL_TEMP_FILE",
+        canonical_target=grant.target,
+        canonical_arguments={"filename": "ok.txt", "content_b64_len_max": 8, "amount": 500},
+        expected_effect="create local temp file",
+        reversibility_class="REVERSIBLE",
+        now=NOW,
+    )
+    assert formed.status == "INTENT_FORMED"
+    adapter = write_local_temp_file(
+        intent=formed.intent,
+        content=b"pos",
+        directory=str(tmp_path),
+        sandbox_root=str(tmp_path),
+        effect_ledger=EffectLedger(),
+    )
+    assert adapter.status == "WRITTEN"
+    assert adapter.verified_success is False
+    assert adapter.network_used is False

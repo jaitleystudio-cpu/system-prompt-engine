@@ -32,3 +32,10 @@ paid=NO, APIs=NO, hosting=NO, ₹0. pyproject remains jsonschema + pytest.
 
 ## Out of scope
 Provider SDKs, email, payments, browser, cloud mutations, web UI, billing, model integration, Sprint 4.
+
+## Merge-gate repair (PR #3)
+Adversarial review found G2/G5/G6/G8/G15/G16 holes on tip f8d7bf2.
+Repairs: no execution_grants expansion; amount_max nested refuse; expiry `now >= expires`;
+`consume_grant` + `EffectLedger`; sandbox_root resolve confinement.
+Proofs: `sprint3_merge_gate_REVIEW_FAIL.txt` → `sprint3_merge_gate_GREEN_fresh.txt`.
+RED/GREEN sprint3 authority proofs preserved unchanged.
