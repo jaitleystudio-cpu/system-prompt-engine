@@ -1,0 +1,69 @@
+{
+  "abi": "spe.universal-abi.v1",
+  "abi_major": 1,
+  "drift": {
+    "authority": 0,
+    "constraint": 0,
+    "operation_id": 0,
+    "privacy_taint": 0,
+    "provenance": 0,
+    "semantic": 0,
+    "uncertainty": 0,
+    "unknown_to_pass": 0
+  },
+  "environment": {
+    "cwd": "/workspace/system-prompt-engine",
+    "network_mode": "NONE",
+    "platform": "Linux-6.12.94+-x86_64-with-glibc2.41",
+    "python": "3.13.5"
+  },
+  "mutation_escapes": 0,
+  "mutations": {
+    "escapes": 0,
+    "required_controls": 19
+  },
+  "negative": {
+    "exact_reason": true,
+    "failed": [],
+    "passed": 55,
+    "total": 55
+  },
+  "network_mode": "NONE",
+  "new_implementation": true,
+  "not_a_release": true,
+  "positive": {
+    "failed": [],
+    "passed": 55,
+    "total": 55
+  },
+  "python_oracle_fixtures": {
+    "negatives": 55,
+    "positives": 55
+  },
+  "rust": {
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+    "target_native": "x86_64-unknown-linux-gnu",
+    "target_wasm": "wasm32-unknown-unknown",
+    "tests_failed": 0,
+    "tests_passed": 27,
+    "version": "rustc 1.85.1 (4eb161250 2025-03-15)"
+  },
+  "rust_fixtures": {
+    "negatives": 55,
+    "positives": 55
+  },
+  "unknown_to_pass_escapes": 0,
+  "wasm": {
+    "artifact": "portable/spe-wasm/target/wasm32-unknown-unknown/release/spe_wasm.wasm",
+    "build": "cargo build --manifest-path portable/spe-wasm/Cargo.toml --target wasm32-unknown-unknown --release",
+    "bytes": 252714,
+    "ok": true,
+    "sha256": "74a12864ffc205ca2b3880b5f3740bf374621808aff55b2876f8e89d8db27e69"
+  },
+  "wasm_fixtures": {
+    "negatives": 1,
+    "positives": 1,
+    "representative": true,
+    "wrapper_parity_with_core": true
+  }
+}
