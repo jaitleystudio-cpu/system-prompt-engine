@@ -1,0 +1,21 @@
+================================================================================
+POST-MERGE PR #4 — MAIN QUALIFICATION
+================================================================================
+Date: 2026-09-15
+Reviewed PR head (pre-merge): 66c98b5e1439b1e5d54e09750a6c15e0d0b0e974
+Merge commit: b2d4f7701071050fb5792af74cd04526ea048365
+Main after merge: b2d4f7701071050fb5792af74cd04526ea048365
+Merge method: normal merge commit (--merge --delete-branch=false)
+Sprint-4 proofs preserved: sprint4_portability_RED.txt, sprint4_portability_GREEN.txt,
+  sprint4_merge_gate_GREEN_fresh.txt, sprint4_merge_gate_REVIEW_FAIL.txt,
+  sprint4_proof_manifest.json
+Prior proofs preserved: post_merge_pr3_*, sprint3_*, post_merge_pr2_*, sprint2_*, xcat_core_*
+
+Command: python -m pytest -q
+Result:
+212 passed in 0.42s
+EXIT_CODE=0
+collected=212 passed=212 failed=0 errors=0 critical_skips=0 deselected=0
+QUALIFIED: YES
+Sprint 5 / Rust / WASM / clients: NOT started
+================================================================================
