@@ -341,9 +341,57 @@ def run_python_reference_case(case: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _rust_eval_bin() -> Path:
+    """Build (if needed) and return the native spe-core-eval binary."""
+    manifest = REPO / "portable" / "spe-core-rs" / "Cargo.toml"
+    target_debug = REPO / "portable" / "spe-core-rs" / "target" / "debug" / "spe-core-eval"
+    if not target_debug.exists():
+        import subprocess
+
+        proc = subprocess.run(
+            [
+                "cargo",
+                "build",
+                "--manifest-path",
+                str(manifest),
+                "--bin",
+                "spe-core-eval",
+                "--quiet",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if proc.returncode != 0:
+            raise RuntimeError(f"cargo build failed: {proc.stderr}")
+    if not target_debug.exists():
+        raise RuntimeError(f"spe-core-eval missing at {target_debug}")
+    return target_debug
+
+
 def run_rust_case(case: dict[str, Any]) -> dict[str, Any]:
-    """Rust portable kernel runner — deliberately unimplemented in RED."""
-    raise RuntimeError("RUST_KERNEL_NOT_IMPLEMENTED")
+    """Invoke the native Rust kernel via JSON-in/JSON-out subprocess."""
+    import subprocess
+
+    payload = case.get("raw") or case
+    proc = subprocess.run(
+        [str(_rust_eval_bin())],
+        input=json.dumps(payload, ensure_ascii=False),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"RUST_KERNEL_FAILED rc={proc.returncode} stderr={proc.stderr!r} stdout={proc.stdout!r}"
+        )
+    try:
+        result = json.loads(proc.stdout)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"RUST_KERNEL_BAD_JSON stdout={proc.stdout!r}") from exc
+    if not isinstance(result, dict):
+        raise RuntimeError("RUST_KERNEL_NON_OBJECT")
+    return result
 
 
 def protected_drift(a: Any, b: Any) -> dict[str, int]:
