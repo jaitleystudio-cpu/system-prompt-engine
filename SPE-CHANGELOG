@@ -1,0 +1,9 @@
+# SPE-CHANGELOG
+
+## Unreleased
+
+### 2026-09-15 — repository bootstrap
+- Created private GitHub repository `system-prompt-engine`
+- Marked lineage as `NEW_IMPLEMENTATION` (exact 181/69 source unavailable)
+- Seeded working directories: schemas, spe_runtime, data, tests, proofs, tools, docs
+- Added SPE-SPEC, SPE-CHANGELOG, pyproject.toml, README
