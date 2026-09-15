@@ -1,0 +1,63 @@
+//! Reason codes — kernel transport refusals + frozen Sprint-4 detectors.
+
+#[derive(Debug, Clone)]
+pub struct SpeError {
+    pub code: String,
+    pub message: String,
+}
+
+impl SpeError {
+    pub fn new(code: impl Into<String>, message: impl Into<String>) -> Self {
+        Self {
+            code: code.into(),
+            message: message.into(),
+        }
+    }
+
+    pub fn code(&self) -> &str {
+        &self.code
+    }
+}
+
+pub const PORTABILITY_INVALID_FIXTURE: &str = "PORTABILITY_INVALID_FIXTURE";
+pub const PORTABILITY_ABI_UNSUPPORTED: &str = "PORTABILITY_ABI_UNSUPPORTED";
+pub const PORTABILITY_NONPORTABLE_NUMBER: &str = "PORTABILITY_NONPORTABLE_NUMBER";
+pub const PORTABILITY_TIMESTAMP_AMBIGUOUS: &str = "PORTABILITY_TIMESTAMP_AMBIGUOUS";
+pub const PORTABILITY_REQUIRED_CAPABILITY_MISSING: &str =
+    "PORTABILITY_REQUIRED_CAPABILITY_MISSING";
+
+pub const P_CAPABILITY_MISSING: &str = "P_CAPABILITY_MISSING";
+pub const P_CAPABILITY_BLOCKED: &str = "P_CAPABILITY_BLOCKED";
+pub const P_CAPABILITY_DEFER: &str = "P_CAPABILITY_DEFER";
+pub const P_CAPABILITY_ESCALATION: &str = "P_CAPABILITY_ESCALATION";
+pub const P_ROUND_TRIP_FAIL: &str = "P_ROUND_TRIP_FAIL";
+pub const P_CANONICAL_DRIFT: &str = "P_CANONICAL_DRIFT";
+pub const P_TUPLE_LEAK: &str = "P_TUPLE_LEAK";
+pub const P_PRIVACY_ESCALATION: &str = "P_PRIVACY_ESCALATION";
+pub const P_TRUST_ESCALATION: &str = "P_TRUST_ESCALATION";
+pub const P_AUTHORITY_ESCALATION: &str = "P_AUTHORITY_ESCALATION";
+pub const P_OUTCOME_ESCALATION: &str = "P_OUTCOME_ESCALATION";
+pub const P_OPERATION_ID_MUTATION: &str = "P_OPERATION_ID_MUTATION";
+pub const P_NETWORK_FORBIDDEN: &str = "P_NETWORK_FORBIDDEN";
+pub const P_FAKE_PLATFORM_STATUS: &str = "P_FAKE_PLATFORM_STATUS";
+pub const P_ABI_MISMATCH: &str = "P_ABI_MISMATCH";
+pub const P_OFFLINE_VIOLATION: &str = "P_OFFLINE_VIOLATION";
+pub const P_UNKNOWN_NULLIFIED: &str = "P_UNKNOWN_NULLIFIED";
+pub const P_HARD_TO_PREFERENCE: &str = "P_HARD_TO_PREFERENCE";
+pub const P_DENIED_TO_GRANTED: &str = "P_DENIED_TO_GRANTED";
+pub const P_PROVENANCE_REMOVED: &str = "P_PROVENANCE_REMOVED";
+pub const P_SEMANTIC_NONEQUIVALENT: &str = "P_SEMANTIC_NONEQUIVALENT";
+pub const P_UNKNOWN_FIELD_POLICY: &str = "P_UNKNOWN_FIELD_POLICY";
+pub const P_STATUS_COLLAPSE: &str = "P_STATUS_COLLAPSE";
+pub const X01_CONSTRAINT_WEAKENED: &str = "X01_CONSTRAINT_WEAKENED";
+pub const X03_UNCERTAINTY_ERASED: &str = "X03_UNCERTAINTY_ERASED";
+pub const C07_EXECUTION_MISSING_AUTHORITY: &str = "C07_EXECUTION_MISSING_AUTHORITY";
+pub const C07_TARGET_DRIFT: &str = "C07_TARGET_DRIFT";
+pub const C07_ARGUMENT_DRIFT: &str = "C07_ARGUMENT_DRIFT";
+pub const C07_AUTHORITY_EXPIRED: &str = "C07_AUTHORITY_EXPIRED";
+pub const C07_AUTHORITY_REVOKED: &str = "C07_AUTHORITY_REVOKED";
+pub const C07_AUTHORITY_CONSUMED: &str = "C07_AUTHORITY_CONSUMED";
+pub const C07_OPERATION_ID_REPLACED: &str = "C07_OPERATION_ID_REPLACED";
+pub const C07_UNKNOWN_OUTCOME_RETRY: &str = "C07_UNKNOWN_OUTCOME_RETRY";
+pub const C07_PARTIAL_TO_SUCCESS: &str = "C07_PARTIAL_TO_SUCCESS";
+pub const C07_TOOL_SUCCESS_TO_OUTCOME: &str = "C07_TOOL_SUCCESS_TO_OUTCOME";

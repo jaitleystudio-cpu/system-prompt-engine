@@ -1,0 +1,47 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______________ test_rust_runner_is_required_for_positive_cases ________________
+
+    def test_rust_runner_is_required_for_positive_cases():
+        from tools.sprint5_conformance import load_reference_cases, run_rust_case
+    
+        cases = load_reference_cases(kind="positive")
+        assert cases
+>       result = run_rust_case(cases[0])
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/portability/test_rust_reference_conformance.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+case = {'fixture_id': 'POS-001', 'kind': 'positive', 'payload': {'analysis': None, 'authority_state': {'grants': [], 'level':... [], 'envelope_id': 'pos-env-001', ...}, 'capabilities_required': ['CORE_CONTRACT', 'XCAT_HANDOFF', 'PROVENANCE'], ...}
+
+    def run_rust_case(case: dict[str, Any]) -> dict[str, Any]:
+        """Rust portable kernel runner — deliberately unimplemented in RED."""
+>       raise RuntimeError("RUST_KERNEL_NOT_IMPLEMENTED")
+E       RuntimeError: RUST_KERNEL_NOT_IMPLEMENTED
+
+tools/sprint5_conformance.py:346: RuntimeError
+________________ test_rust_runner_reports_exact_negative_reason ________________
+
+    def test_rust_runner_reports_exact_negative_reason():
+        from tools.sprint5_conformance import load_reference_cases, run_rust_case
+    
+        case = load_reference_cases(kind="negative")[0]
+>       result = run_rust_case(case)
+                 ^^^^^^^^^^^^^^^^^^^
+
+tests/portability/test_rust_reference_conformance.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+case = {'fixture_id': 'NEG-001', 'kind': 'negative', 'attack': 'PROVENANCE_REMOVED', 'before': {'analysis': None, 'authority_...{'grants': [], 'level': 0, 'status': 'DENIED'}, 'category_trace': ['CAT:C02'], 'envelope_id': 'neg-env-001', ...}, ...}
+
+    def run_rust_case(case: dict[str, Any]) -> dict[str, Any]:
+        """Rust portable kernel runner — deliberately unimplemented in RED."""
+>       raise RuntimeError("RUST_KERNEL_NOT_IMPLEMENTED")
+E       RuntimeError: RUST_KERNEL_NOT_IMPLEMENTED
+
+tools/sprint5_conformance.py:346: RuntimeError
+=========================== short test summary info ============================
+FAILED tests/portability/test_rust_reference_conformance.py::test_rust_runner_is_required_for_positive_cases
+FAILED tests/portability/test_rust_reference_conformance.py::test_rust_runner_reports_exact_negative_reason
+2 failed in 0.04s

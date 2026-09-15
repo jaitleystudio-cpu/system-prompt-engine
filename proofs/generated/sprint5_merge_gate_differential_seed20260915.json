@@ -1,0 +1,11 @@
+{
+  "agreement": 1000,
+  "failure_samples": [],
+  "failures": 0,
+  "n": 1000,
+  "rust_vs_wasm_agreement": 1000,
+  "seed": 20260915,
+  "sha256_of_record_ok_bits": "8bfa2fa5f43ed4871b718e43594f969c5db8536d61b82a5c6daff150c279a230",
+  "status": "PASS",
+  "wasm_runtime": "node-webassembly"
+}

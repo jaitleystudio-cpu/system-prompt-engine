@@ -31,3 +31,9 @@ Canonical engineering home: GitHub repository `system-prompt-engine` (private, d
 - Docs: UNIVERSAL_PLATFORM_ROADMAP, ZERO_COST_PRODUCT_LAW, FUTURE_LANGUAGE_QUALIFICATION
 - No platform clients (Android/iOS/desktop/web/PWA/extension/Rust/WASM/MCP/AI plugins)
 
+## Sprint 5 slice
+- Portable Rust kernel `spe-core-rs` + WASM wrapper `spe-wasm` over the same crate
+- Python oracle remains authoritative for `spe.universal-abi.v1`
+- Native + wasm32-unknown-unknown; network_mode=NONE; not_a_release=true
+- No website/PWA/Android/iOS/desktop/extension/MCP/plugins/providers/billing
+

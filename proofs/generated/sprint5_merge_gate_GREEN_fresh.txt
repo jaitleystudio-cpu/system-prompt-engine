@@ -1,0 +1,61 @@
+SPE SPRINT 5 — PR #5 MERGE-GATE GREEN_FRESH
+Branch: feat/portable-kernel-wasm-s5
+Repaired after REVIEW_FAIL against tip 09de6f7bf8111287b23f2fd4043618836d37b75a
+COST: paid=NO APIs=NO hosting=NO ₹0
+NEW_IMPLEMENTATION + not_a_release=true preserved
+Node WebAssembly host: tools/spe_wasm_node_host.js (zero npm deps; in-tree)
+
+CRITICAL DISTINCTION (post-repair):
+  RUST_CONFORMANCE_PROVEN = YES (55/55 + 55/55 native spe-core-eval)
+  WASM_BUILDS = YES (spe_wasm.wasm sha256 74a12864…, 252714 bytes, offline rebuild)
+  WASM_RUNTIME_CONFORMANCE_PROVEN = YES (55/55 + 55/55 via Node WebAssembly spe_evaluate)
+  NOT representative substitution.
+
+Repairs:
+  [W1] run_wasm_case now instantiates+executes .wasm via Node (not native Rust)
+  [W2] wasm_fixtures 55/55 + 55/55; representative=false
+  [W3] parametrized full WASM corpus tests
+  [W4] tools/spe_wasm_node_host.js
+  [W5] host-import inspection asserts imports==[]
+  [W6] 1000 generated differential seed 20260915 → agreement 1000/1000
+  [W7] claim posture updated; WASM_RUNTIME_CONFORMANCE_PROVEN
+
+=== Rust spe-core-rs tests (offline) ===
+27 passed; 0 failed
+
+=== spe-wasm wrapper tests (offline) ===
+2 passed; 0 failed
+
+=== WASM release build (offline) ===
+ok; sha256 74a12864ffc205ca2b3880b5f3740bf374621808aff55b2876f8e89d8db27e69; bytes 252714
+
+=== Portability + merge-gate pytest ===
+266 passed
+
+=== Sprint-3 (test_c07_authority) ===
+36 passed
+
+=== XCAT core ===
+47 passed
+
+=== Sprint-2 integration ===
+64 passed
+
+=== FULL pytest ===
+413 passed in ~101s
+0 fail / 0 error / 0 critical skip; exit 0
+
+=== Differential seed 20260915 ===
+1000/1000 agreement (Python↔Rust↔Node-WASM)
+evidence: proofs/generated/sprint5_merge_gate_differential_seed20260915.json
+
+=== Adversarial re-probes ===
+Oracle break control: Python ERROR; Rust+WASM still exact frozen reason
+Fixture file hashes immutable under in-memory mutation
+WASM host imports: 0
+Native Rust monkeypatch cannot satisfy run_wasm_case
+Hostile inputs: refuse without panic (INVALID fixtures / unknown fields / bad ABI)
+
+Preserved unchanged:
+  sprint5_portable_kernel_RED.txt sha256 d4374a79…
+  sprint5_portable_kernel_GREEN.txt sha256 2b0ea75f…

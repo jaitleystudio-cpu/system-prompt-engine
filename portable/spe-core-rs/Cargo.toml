@@ -1,0 +1,20 @@
+[package]
+name = "spe-core-rs"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "SPE portable semantic kernel (Sprint 5). NEW_IMPLEMENTATION, not a release."
+publish = false
+
+[lib]
+name = "spe_core_rs"
+path = "src/lib.rs"
+
+[[bin]]
+name = "spe-core-eval"
+path = "src/bin/spe_core_eval.rs"
+
+[dependencies]
+# Initial Sprint-5 deps: serde + serde_json only. Extra crates require justification.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
