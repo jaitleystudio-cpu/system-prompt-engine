@@ -1,0 +1,36 @@
+================================================================================
+POST-MERGE PR #5 — MAIN QUALIFICATION
+================================================================================
+Date: 2026-09-15
+Reviewed PR head (pre-merge): c64aa1ec676640dfbb36c88b60f3c921f54f78c5
+Merge commit: 605e336a0bb073fb3dbfdb61f086a8fd62d091b0
+Main after merge: 605e336a0bb073fb3dbfdb61f086a8fd62d091b0
+Merge method: normal merge commit (--merge --delete-branch=false)
+Sprint-5 proofs preserved: sprint5_portable_kernel_RED.txt, sprint5_portable_kernel_GREEN.txt,
+  sprint5_merge_gate_GREEN_fresh.txt, sprint5_merge_gate_REVIEW_FAIL.txt,
+  sprint5_cross_language_conformance.json, sprint5_proof_summary.json,
+  sprint5_merge_gate_differential_seed20260915.json, sprint5_merge_gate_perf_size.json
+Prior proofs preserved: post_merge_pr4_*, sprint4_*, post_merge_pr3_*, sprint3_*, post_merge_pr2_*, sprint2_*, xcat_core_*
+
+Command: python -m pytest -q
+Result:
+413 passed in 100.07s (0:01:40)
+EXIT_CODE=0
+collected=413 passed=413 failed=0 errors=0 critical_skips=0 deselected=0
+
+Command: cargo test --manifest-path portable/spe-core-rs/Cargo.toml --locked
+Result:
+27 passed; 0 failed (abi_transport 8, capability_contract 4, negative_mutations 2, semantic_equivalence 13)
+EXIT_CODE=0
+
+Command: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --offline --target wasm32-unknown-unknown --release
+Result: ok
+wasm: portable/spe-wasm/target/wasm32-unknown-unknown/release/spe_wasm.wasm
+sha256 74a12864ffc205ca2b3880b5f3740bf374621808aff55b2876f8e89d8db27e69
+bytes 252714
+rustc 1.85.1 (4eb161250 2025-03-15)
+cargo 1.85.1 (d73d2caf9 2024-12-31)
+
+QUALIFIED: YES
+Sprint 6 / web / PWA / 3D / native / extensions: NOT started at this proof
+================================================================================
