@@ -418,18 +418,53 @@ def ensure_wasm_artifact() -> Path:
     return artifact
 
 
-def run_wasm_case(case: dict[str, Any]) -> dict[str, Any]:
-    """WASM path: require build artifact, evaluate via the wrapped kernel.
+def wasm_node_host_path() -> Path:
+    return REPO / "tools" / "spe_wasm_node_host.js"
 
-    spe-wasm contains no semantic validator of its own; host tests prove
-    evaluate_json == spe_core_rs::evaluate_json_str. The native kernel is
-    therefore the executable semantics of the WASM wrapper.
+
+def run_wasm_case(case: dict[str, Any]) -> dict[str, Any]:
+    """Instantiate and EXECUTE spe_wasm.wasm via Node WebAssembly.
+
+    Forbidden substitutions: native Rust tests as WASM proof; file-exists-only.
+    spe-wasm path-depends on spe-core-rs; this host calls exported spe_evaluate.
     """
-    ensure_wasm_artifact()
-    result = run_rust_case(case)
+    artifact = ensure_wasm_artifact()
+    host = wasm_node_host_path()
+    if not host.exists():
+        raise RuntimeError(f"WASM_HOST_MISSING: {host}")
+    payload = case.get("raw") or case
+    env = dict(os.environ)
+    env["SPE_WASM_META"] = "1"
+    proc = subprocess.run(
+        ["/usr/bin/node", str(host), str(artifact)],
+        input=json.dumps(payload, ensure_ascii=False),
+        capture_output=True,
+        text=True,
+        check=False,
+        env=env,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"WASM_RUNTIME_FAILED rc={proc.returncode} stderr={proc.stderr!r} stdout={proc.stdout!r}"
+        )
+    try:
+        result = json.loads(proc.stdout)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"WASM_RUNTIME_BAD_JSON stdout={proc.stdout!r}") from exc
+    if not isinstance(result, dict):
+        raise RuntimeError("WASM_RUNTIME_NON_OBJECT")
     result = dict(result)
-    result["wasm_artifact"] = str(wasm_artifact_path())
-    result["wrapper"] = "spe-wasm/evaluate_json -> spe_core_rs"
+    result["wasm_artifact"] = str(artifact)
+    result["wrapper"] = "spe-wasm/spe_evaluate"
+    result["runtime"] = "node-webassembly"
+    result["host"] = str(host)
+    # Parse meta from stderr last JSON line if present.
+    meta_line = (proc.stderr or "").strip().splitlines()
+    if meta_line:
+        try:
+            result["wasm_host_meta"] = json.loads(meta_line[-1])
+        except json.JSONDecodeError:
+            pass
     return result
 
 def run_rust_case(case: dict[str, Any]) -> dict[str, Any]:

@@ -1,0 +1,69 @@
+SPE SPRINT 5 — PR #5 MERGE-GATE ADVERSARIAL REVIEW FAIL
+Tip reviewed: 09de6f7bf8111287b23f2fd4043618836d37b75a (feat/portable-kernel-wasm-s5)
+PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/5
+Confirmed via gh pr view 5 + git rev-parse HEAD — tip matches candidate 09de6f7.
+DO NOT MERGE until repairs + GREEN_fresh.
+COST: paid=NO APIs=NO hosting=NO ₹0
+NEW_IMPLEMENTATION + not_a_release must remain true.
+
+CRITICAL DISTINCTION VIOLATED:
+  RUST_CONFORMANCE_PROVEN  — native spe-core-eval 55/55 + 55/55 (appears present)
+  WASM_BUILDS              — spe_wasm.wasm exists, sha256 74a12864…, 252714 bytes (present)
+  WASM_RUNTIME_CONFORMANCE_PROVEN — FAIL: never instantiated/executed in a WASM runtime
+
+DEFECTS (adversarial; prior GREEN claims overstated WASM):
+
+[W1] CRITICAL — run_wasm_case substitutes native Rust for WASM execution.
+     tools/sprint5_conformance.py::run_wasm_case calls ensure_wasm_artifact()
+     then run_rust_case(case). Forbidden: native Rust tests as WASM proof;
+     merely checking .wasm file exists. Must instantiate + EXECUTE .wasm
+     (Node WebAssembly preferred; present at /usr/bin/node v20.19.2).
+
+[W2] CRITICAL — silent representative substitution.
+     sprint5_cross_language_conformance.json wasm_fixtures:
+       positives=1, negatives=1, representative=true
+     Forbidden silent substitute for full 55/55 + 55/55 WASM runtime target.
+     Must prove full corpus through WASM or report WASM_RUNTIME_CONFORMANCE_PARTIAL
+     with exact denominator.
+
+[W3] test_wasm_reference_conformance.py only covers first positive + first
+     negative; no parametrized full-corpus WASM runtime tests.
+
+[W4] No Node WebAssembly (or wasmtime) host harness that loads spe_wasm.wasm
+     exports (spe_alloc/spe_evaluate/spe_free/memory) and returns JSON-out.
+     Manual probe: Module.imports=[] (good); exports present; Node instantiate
+     succeeds and evaluates — but harness does not use this path.
+
+[W5] No automated WASM host-import inspection gate in suite
+     (manual: IMPORTS empty — required for offline sandbox; must be asserted).
+
+[W6] No 1000 generated differential campaign with seed 20260915
+     (Python oracle ↔ Rust ↔ WASM) in merge-gate evidence.
+
+[W7] Claim posture: proof summary status VERIFIED_LOCAL_PORTABLE_SUBSET but
+     wasm_fixtures.representative=true makes WASM portion of that claim false
+     under merge-gate law (WASM_RUNTIME_CONFORMANCE not proven).
+
+ALREADY PASSING (probed; not defects):
+  Tip identity 09de6f7 matches PR #5 head
+  spe-wasm path-depends on spe-core-rs; no duplicated semantic validators in lib.rs
+  Cargo.lock present for both crates; runtime deps = serde + serde_json only
+  Offline cargo test --list succeeds
+  Artifact SHA rebuild deterministic (74a12864… / 252714 bytes)
+  ABSENT≠NULL≠UNKNOWN, int≠float, NFC==NFD, Z≡+00:00 under Python oracle
+  Oracle break control: patching tools.sprint5_conformance.detect_attack →
+    Python ERROR/oracle_mismatch; Rust still returns frozen reason
+  Fixture file hash stable under in-memory mutation
+  Scope: no web/PWA/mobile/desktop/extension/MCP/billing/ads paths vs main
+  Unsafe confined to WASM ABI alloc/free/evaluate (expected); no panic!/todo!
+    in spe-core-rs semantic path (spot audit)
+
+PRESERVE unchanged:
+  proofs/generated/sprint5_portable_kernel_RED.txt
+  proofs/generated/sprint5_portable_kernel_GREEN.txt
+  all older proofs
+
+Next: repair on feat/portable-kernel-wasm-s5 → Node WASM host + full 55/55
+      WASM runtime suite + differential seed 20260915 →
+      sprint5_merge_gate_GREEN_fresh.txt + machine-readable evidence.
+      DO NOT MERGE PR #5 until GREEN_fresh.

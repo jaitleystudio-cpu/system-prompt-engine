@@ -1,0 +1,19 @@
+{
+  "rust_native_55": {
+    "n": 55,
+    "p50_ms": 1.697,
+    "p95_ms": 1.934,
+    "max_ms": 2.187,
+    "mean_ms": 1.713
+  },
+  "wasm_node_55": {
+    "n": 55,
+    "p50_ms": 88.667,
+    "p95_ms": 95.456,
+    "max_ms": 99.577,
+    "mean_ms": 89.263
+  },
+  "wasm_size_bytes": 252714,
+  "wasm_size_truth": "252714 claimed and measured",
+  "budget_note": "local subprocess/Node spawn dominated; informational baseline only"
+}
