@@ -27,6 +27,15 @@ def analyze(
     reject_forbidden_keys(payload, label="C06 analysis")
     if "kind" not in payload:
         payload["kind"] = "analysis"
+    if str(payload.get("kind", "")).lower() == "recommendation":
+        raise ValueError(
+            "C06 ownership violation: analysis kind cannot be recommendation"
+        )
+    if "action" in payload and "certainty" in payload:
+        raise ValueError(
+            "C06 ownership violation: recommendation-shaped analysis "
+            "(action+certainty) not allowed"
+        )
 
     after = replace_envelope(
         envelope,

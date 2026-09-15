@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### 2026-09-15 — PR #2 merge-gate hardening (feat/xcat-c02-c06-c01-c03)
+- Deep-froze nested envelope mappings/lists (MappingProxyType + tuples); to_dict deep-unfreezes for schema JSON
+- Strengthened X06 / C06 ownership: reject analysis kind=recommendation and recommendation-shaped (action+certainty)
+- Added merge-gate integration coverage: S2-01..S2-07, ownership +/- pairs, reason-code determinism, overblocking, side-effects, schema↔model, adversarial 1–15, attack fixtures A–H
+- REVIEW_FAIL preserved: proofs/generated/sprint2_merge_gate_REVIEW_FAIL.txt
+- Fresh GREEN: proofs/generated/sprint2_merge_gate_GREEN_fresh.txt (111 passed)
+- Historical sprint2 RED/GREEN and xcat_core proofs left untouched
+- Lineage remains NEW_IMPLEMENTATION
+
 ### 2026-09-15 — Sprint 2 CAT:C02→C06→C01→C03 (feat/xcat-c02-c06-c01-c03)
 - Category engines: Research / Analyze / Decide / Communicate with ownership validators
 - Integration tests prove hard gates (no rec from C06, no authority from C01, no rec rewrite / certainty strengthen from C03)

@@ -1,0 +1,33 @@
+..........................FF....FFF...................F.......F.         [100%]
+=================================== FAILURES ===================================
+E   Failed: DID NOT RAISE ValueError
+/workspace/system-prompt-engine/tests/integration/test_xcat_c02_c06_c01_c03.py:875: Failed: DID NOT RAISE ValueError
+E   Failed: DID NOT RAISE ValueError
+/workspace/system-prompt-engine/tests/integration/test_xcat_c02_c06_c01_c03.py:889: Failed: DID NOT RAISE ValueError
+E   AssertionError: assert False
+     +  where False = isinstance({'nested': 1}, MappingProxyType)
+/workspace/system-prompt-engine/tests/integration/test_xcat_c02_c06_c01_c03.py:1002: AssertionError: assert False
+E   Failed: DID NOT RAISE TypeError
+/workspace/system-prompt-engine/tests/integration/test_xcat_c02_c06_c01_c03.py:1021: Failed: DID NOT RAISE TypeError
+E   AssertionError: assert <ReasonCode.P...VENANCE_LOST'> == <ReasonCode.F...G_PROVENANCE'>
+      
+      - X05_FACT_MISSING_PROVENANCE
+      + X02_PROVENANCE_LOST
+/workspace/system-prompt-engine/tests/integration/test_xcat_c02_c06_c01_c03.py:1057: AssertionError: assert <ReasonCode.P...VENANCE_LOST'> == <ReasonCode.F...G_PROVENANCE'>
+E   AssertionError: assert False
+     +  where False = isinstance([{'a': 1}], tuple)
+/workspace/system-prompt-engine/tests/integration/test_xcat_c02_c06_c01_c03.py:1573: AssertionError: assert False
+E   AssertionError: assert <ReasonCode.F...G_PROVENANCE'> == <ReasonCode.P...VENANCE_LOST'>
+      
+      - X02_PROVENANCE_LOST
+      + X05_FACT_MISSING_PROVENANCE
+/workspace/system-prompt-engine/tests/integration/test_xcat_c02_c06_c01_c03.py:1812: AssertionError: assert <ReasonCode.F...G_PROVENANCE'> == <ReasonCode.P...VENANCE_LOST'>
+=========================== short test summary info ============================
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c06_ownership_negative_rejects_kind_recommendation
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_c06_ownership_negative_rejects_recommendation_shaped
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_deep_immutability_nested_fact_meta_not_mutable
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_deep_immutability_nested_analysis_details_not_mutable
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_reason_code_determinism_provenance_lost
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_adversarial_15_list_nested_in_analysis_deep_frozen
+FAILED tests/integration/test_xcat_c02_c06_c01_c03.py::test_attack_G_provenance_erasure_across_handoff
+7 failed, 57 passed in 0.13s

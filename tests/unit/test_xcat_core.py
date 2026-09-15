@@ -655,3 +655,29 @@ def test_envelope_nested_mappings_are_immutable():
         env.facts[0]["statement"] = "mutated"  # type: ignore[index]
     with pytest.raises(TypeError):
         env.hard_constraints[0]["strength"] = "SOFT"  # type: ignore[index]
+
+
+def test_envelope_deep_nested_mappings_are_immutable():
+    """Deep freeze: nested dict/list values must not remain mutable."""
+    env = _base_envelope(
+        facts=(
+            {
+                "fact_id": "f1",
+                "statement": "sky is blue",
+                "provenance_ids": ["p1"],
+                "meta": {"nested": 1, "items": [{"a": 1}]},
+            },
+        ),
+        analysis={"summary": "neutral analysis", "details": {"score": 1}},
+    )
+    with pytest.raises(TypeError):
+        env.facts[0]["meta"]["nested"] = 99  # type: ignore[index]
+    with pytest.raises(TypeError):
+        env.facts[0]["meta"]["items"][0]["a"] = 2  # type: ignore[index]
+    with pytest.raises(TypeError):
+        env.analysis["details"]["score"] = 2  # type: ignore[index]
+
+
+def test_analysis_kind_recommendation_rejected_by_x06():
+    env = _base_envelope(analysis={"summary": "x", "kind": "recommendation"})
+    assert validate_analysis_not_recommendation(env) is False
