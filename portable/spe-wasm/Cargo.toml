@@ -1,0 +1,23 @@
+[package]
+name = "spe-wasm"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "Thin WASM wrapper over spe-core-rs. No duplicated semantic validators. NEW_IMPLEMENTATION, not a release."
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# Path dependency only — semantics live in spe-core-rs.
+spe-core-rs = { path = "../spe-core-rs" }
+
+[profile.release]
+lto = true
+opt-level = "s"
+panic = "abort"
+
+[dev-dependencies]
+# Test-only JSON literals for wrapper parity tests.
+serde_json = "1"

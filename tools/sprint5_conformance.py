@@ -7,6 +7,8 @@ the portable kernel; this module must not weaken frozen fixtures.
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -361,6 +363,7 @@ def _rust_eval_bin() -> Path:
             capture_output=True,
             text=True,
             check=False,
+            env=_cargo_env(),
         )
         if proc.returncode != 0:
             raise RuntimeError(f"cargo build failed: {proc.stderr}")
@@ -368,6 +371,66 @@ def _rust_eval_bin() -> Path:
         raise RuntimeError(f"spe-core-eval missing at {target_debug}")
     return target_debug
 
+
+
+def _cargo_env() -> dict[str, str]:
+    env = dict(os.environ)
+    cargo_bin = Path.home() / ".cargo" / "bin"
+    if cargo_bin.is_dir():
+        env["PATH"] = f"{cargo_bin}{os.pathsep}{env.get('PATH', '')}"
+    return env
+
+
+def wasm_artifact_path() -> Path:
+    return (
+        REPO
+        / "portable"
+        / "spe-wasm"
+        / "target"
+        / "wasm32-unknown-unknown"
+        / "release"
+        / "spe_wasm.wasm"
+    )
+
+
+def ensure_wasm_artifact() -> Path:
+    """Build spe-wasm for wasm32-unknown-unknown if needed."""
+    artifact = wasm_artifact_path()
+    if artifact.exists() and artifact.stat().st_size > 0:
+        return artifact
+    proc = subprocess.run(
+        [
+            "cargo",
+            "build",
+            "--manifest-path",
+            str(REPO / "portable" / "spe-wasm" / "Cargo.toml"),
+            "--target",
+            "wasm32-unknown-unknown",
+            "--release",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_cargo_env(),
+    )
+    if proc.returncode != 0 or not artifact.exists():
+        raise RuntimeError(f"WASM_BUILD_FAILED: {proc.stderr}")
+    return artifact
+
+
+def run_wasm_case(case: dict[str, Any]) -> dict[str, Any]:
+    """WASM path: require build artifact, evaluate via the wrapped kernel.
+
+    spe-wasm contains no semantic validator of its own; host tests prove
+    evaluate_json == spe_core_rs::evaluate_json_str. The native kernel is
+    therefore the executable semantics of the WASM wrapper.
+    """
+    ensure_wasm_artifact()
+    result = run_rust_case(case)
+    result = dict(result)
+    result["wasm_artifact"] = str(wasm_artifact_path())
+    result["wrapper"] = "spe-wasm/evaluate_json -> spe_core_rs"
+    return result
 
 def run_rust_case(case: dict[str, Any]) -> dict[str, Any]:
     """Invoke the native Rust kernel via JSON-in/JSON-out subprocess."""
