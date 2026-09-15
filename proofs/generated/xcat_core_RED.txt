@@ -1,0 +1,153 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.6.0 -- /workspace/system-prompt-engine/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /workspace/system-prompt-engine
+configfile: pyproject.toml
+collecting ... collected 33 items
+
+tests/unit/test_xcat_core.py::test_schema_file_exists_and_loads PASSED   [  3%]
+tests/unit/test_xcat_core.py::test_valid_envelope_passes_schema PASSED   [  6%]
+tests/unit/test_xcat_core.py::test_invalid_envelope_missing_required_fails_schema PASSED [  9%]
+tests/unit/test_xcat_core.py::test_category_ids_are_namespaced PASSED    [ 12%]
+tests/unit/test_xcat_core.py::test_schema_rejects_naked_category_in_trace PASSED [ 15%]
+tests/unit/test_xcat_core.py::test_constraint_loss_detected FAILED       [ 18%]
+tests/unit/test_xcat_core.py::test_constraint_preserved_ok PASSED        [ 21%]
+tests/unit/test_xcat_core.py::test_constraint_weakened_strength_detected FAILED [ 24%]
+tests/unit/test_xcat_core.py::test_provenance_loss_detected FAILED       [ 27%]
+tests/unit/test_xcat_core.py::test_provenance_preserved_ok PASSED        [ 30%]
+tests/unit/test_xcat_core.py::test_uncertainty_erasure_detected FAILED   [ 33%]
+tests/unit/test_xcat_core.py::test_uncertainty_preserved_ok PASSED       [ 36%]
+tests/unit/test_xcat_core.py::test_preference_drift_detected FAILED      [ 39%]
+tests/unit/test_xcat_core.py::test_preference_removed_detected FAILED    [ 42%]
+tests/unit/test_xcat_core.py::test_preference_unchanged_ok PASSED        [ 45%]
+tests/unit/test_xcat_core.py::test_taint_loss_detected FAILED            [ 48%]
+tests/unit/test_xcat_core.py::test_taint_preserved_ok PASSED             [ 51%]
+tests/unit/test_xcat_core.py::test_authority_escalation_detected FAILED  [ 54%]
+tests/unit/test_xcat_core.py::test_authority_stable_ok PASSED            [ 57%]
+tests/unit/test_xcat_core.py::test_authority_escalation_with_external_event_allowed PASSED [ 60%]
+tests/unit/test_xcat_core.py::test_fail_to_pass_laundering_blocked_by_invariant FAILED [ 63%]
+tests/unit/test_xcat_core.py::test_fail_to_pass_laundering_refused_by_handoff FAILED [ 66%]
+tests/unit/test_xcat_core.py::test_unknown_to_pass_laundering_refused FAILED [ 69%]
+tests/unit/test_xcat_core.py::test_clean_handoff_valid PASSED            [ 72%]
+tests/unit/test_xcat_core.py::test_constraint_loss_handoff_refused FAILED [ 75%]
+tests/unit/test_xcat_core.py::test_provenance_loss_handoff_refused FAILED [ 78%]
+tests/unit/test_xcat_core.py::test_taint_loss_handoff_refused FAILED     [ 81%]
+tests/unit/test_xcat_core.py::test_authority_escalation_handoff_blocked FAILED [ 84%]
+tests/unit/test_xcat_core.py::test_naked_category_handoff_refused FAILED [ 87%]
+tests/unit/test_xcat_core.py::test_reason_codes_stable PASSED            [ 90%]
+tests/unit/test_xcat_core.py::test_negative_control_always_true_detector_is_insufficient FAILED [ 93%]
+tests/unit/test_xcat_core.py::test_handoff_result_enum_has_no_promote_executed PASSED [ 96%]
+tests/unit/test_xcat_core.py::test_envelope_is_frozen PASSED             [100%]
+
+=================================== FAILURES ===================================
+________________________ test_constraint_loss_detected _________________________
+tests/unit/test_xcat_core.py:123: in test_constraint_loss_detected
+    assert validate_constraint_monotonicity(before, after) is False
+E   AssertionError: assert True is False
+E    +  where True = validate_constraint_monotonicity(CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)), CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=(), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)))
+__________________ test_constraint_weakened_strength_detected __________________
+tests/unit/test_xcat_core.py:151: in test_constraint_weakened_strength_detected
+    assert validate_constraint_monotonicity(before, after) is False
+E   AssertionError: assert True is False
+E    +  where True = validate_constraint_monotonicity(CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)), CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'SOFT'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)))
+________________________ test_provenance_loss_detected _________________________
+tests/unit/test_xcat_core.py:162: in test_provenance_loss_detected
+    assert validate_provenance_monotonicity(before, after) is False
+E   AssertionError: assert True is False
+E    +  where True = validate_provenance_monotonicity(CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)), CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=(), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)))
+______________________ test_uncertainty_erasure_detected _______________________
+tests/unit/test_xcat_core.py:182: in test_uncertainty_erasure_detected
+    assert validate_uncertainty_preservation(before, after) is False
+E   AssertionError: assert True is False
+E    +  where True = validate_uncertainty_preservation(CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)), CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=(), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)))
+________________________ test_preference_drift_detected ________________________
+tests/unit/test_xcat_core.py:203: in test_preference_drift_detected
+    assert validate_preference_immutability(before, after) is False
+E   AssertionError: assert True is False
+E    +  where True = validate_preference_immutability(CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)), CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer verbose answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)))
+_______________________ test_preference_removed_detected _______________________
+tests/unit/test_xcat_core.py:209: in test_preference_removed_detected
+    assert validate_preference_immutability(before, after) is False
+E   AssertionError: assert True is False
+E    +  where True = validate_preference_immutability(CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)), CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=(), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)))
+___________________________ test_taint_loss_detected ___________________________
+tests/unit/test_xcat_core.py:226: in test_taint_loss_detected
+    assert validate_taint_preservation(before, after) is False
+E   AssertionError: assert True is False
+E    +  where True = validate_taint_preservation(CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)), CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=(), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)))
+______________________ test_authority_escalation_detected ______________________
+tests/unit/test_xcat_core.py:251: in test_authority_escalation_detected
+    assert (
+E   AssertionError: assert True is False
+E    +  where True = validate_authority_non_escalation(CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)), CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=5, status='GRANTED', grants=('read', 'execute', 'admin')), execution_grants=(), failures=(), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)), authority_event=None)
+______________ test_fail_to_pass_laundering_blocked_by_invariant _______________
+tests/unit/test_xcat_core.py:294: in test_fail_to_pass_laundering_blocked_by_invariant
+    assert validate_failure_preservation(before, after) is False
+E   AssertionError: assert True is False
+E    +  where True = validate_failure_preservation(CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(FailureRecord(failure_id='fail-1', status='FAIL', message='broke'),), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)), CrossCategoryEnvelope(envelope_id='env-001', goal_identity='goal-alpha', facts=({'fact_id': 'f1', 'statement': 'sky is blue', 'provenance_ids': ['p1']},), provenance=({'provenance_id': 'p1', 'source': 'observation'},), uncertainties=({'uncertainty_id': 'u1', 'description': 'lighting may vary'},), hard_constraints=({'constraint_id': 'c1', 'statement': 'never invent facts', 'strength': 'HARD'},), user_preferences=({'preference_id': 'pref1', 'statement': 'prefer concise answers'},), analysis={'summary': 'neutral analysis'}, recommendation=None, rendering=None, authority_state=AuthorityState(level=1, status='GRANTED', grants=('read',)), execution_grants=(), failures=(FailureRecord(failure_id='fail-1', status='PASS', message='broke'),), taint_labels=('external_untrusted',), sensitivity_labels=('PII_NONE',), category_trace=('CAT:C02',)))
+_______________ test_fail_to_pass_laundering_refused_by_handoff ________________
+tests/unit/test_xcat_core.py:309: in test_fail_to_pass_laundering_refused_by_handoff
+    assert result in (
+E   AssertionError: assert <HandoffResult.VALID: 'VALID'> in (<HandoffResult.REFUSE: 'REFUSE'>, <HandoffResult.BLOCKED: 'BLOCKED'>, <HandoffResult.REVALIDATION_REQUIRED: 'REVALIDATION_REQUIRED'>)
+___________________ test_unknown_to_pass_laundering_refused ____________________
+tests/unit/test_xcat_core.py:331: in test_unknown_to_pass_laundering_refused
+    assert result != HandoffResult.VALID
+E   AssertionError: assert <HandoffResult.VALID: 'VALID'> != <HandoffResult.VALID: 'VALID'>
+E    +  where <HandoffResult.VALID: 'VALID'> = HandoffResult.VALID
+_____________________ test_constraint_loss_handoff_refused _____________________
+tests/unit/test_xcat_core.py:349: in test_constraint_loss_handoff_refused
+    assert result != HandoffResult.VALID
+E   AssertionError: assert <HandoffResult.VALID: 'VALID'> != <HandoffResult.VALID: 'VALID'>
+E    +  where <HandoffResult.VALID: 'VALID'> = HandoffResult.VALID
+_____________________ test_provenance_loss_handoff_refused _____________________
+tests/unit/test_xcat_core.py:358: in test_provenance_loss_handoff_refused
+    assert result != HandoffResult.VALID
+E   AssertionError: assert <HandoffResult.VALID: 'VALID'> != <HandoffResult.VALID: 'VALID'>
+E    +  where <HandoffResult.VALID: 'VALID'> = HandoffResult.VALID
+_______________________ test_taint_loss_handoff_refused ________________________
+tests/unit/test_xcat_core.py:367: in test_taint_loss_handoff_refused
+    assert result != HandoffResult.VALID
+E   AssertionError: assert <HandoffResult.VALID: 'VALID'> != <HandoffResult.VALID: 'VALID'>
+E    +  where <HandoffResult.VALID: 'VALID'> = HandoffResult.VALID
+__________________ test_authority_escalation_handoff_blocked ___________________
+tests/unit/test_xcat_core.py:386: in test_authority_escalation_handoff_blocked
+    assert result in (HandoffResult.REFUSE, HandoffResult.BLOCKED)
+E   AssertionError: assert <HandoffResult.VALID: 'VALID'> in (<HandoffResult.REFUSE: 'REFUSE'>, <HandoffResult.BLOCKED: 'BLOCKED'>)
+_____________________ test_naked_category_handoff_refused ______________________
+tests/unit/test_xcat_core.py:395: in test_naked_category_handoff_refused
+    assert result != HandoffResult.VALID
+E   AssertionError: assert <HandoffResult.VALID: 'VALID'> != <HandoffResult.VALID: 'VALID'>
+E    +  where <HandoffResult.VALID: 'VALID'> = HandoffResult.VALID
+__________ test_negative_control_always_true_detector_is_insufficient __________
+tests/unit/test_xcat_core.py:459: in test_negative_control_always_true_detector_is_insufficient
+    assert failures == [], f"weak detectors fake-passed: {failures}"
+E   AssertionError: weak detectors fake-passed: ['constraint', 'provenance', 'uncertainty', 'preference', 'taint', 'authority', 'failure_launder']
+E   assert ['constraint'...thority', ...] == []
+E     
+E     Left contains 7 more items, first extra item: 'constraint'
+E     
+E     Full diff:
+E     - []
+E     + [
+E     +     'constraint',...
+E     
+E     ...Full output truncated (7 lines hidden), use '-vv' to show
+=========================== short test summary info ============================
+FAILED tests/unit/test_xcat_core.py::test_constraint_loss_detected - Assertio...
+FAILED tests/unit/test_xcat_core.py::test_constraint_weakened_strength_detected
+FAILED tests/unit/test_xcat_core.py::test_provenance_loss_detected - Assertio...
+FAILED tests/unit/test_xcat_core.py::test_uncertainty_erasure_detected - Asse...
+FAILED tests/unit/test_xcat_core.py::test_preference_drift_detected - Asserti...
+FAILED tests/unit/test_xcat_core.py::test_preference_removed_detected - Asser...
+FAILED tests/unit/test_xcat_core.py::test_taint_loss_detected - AssertionErro...
+FAILED tests/unit/test_xcat_core.py::test_authority_escalation_detected - Ass...
+FAILED tests/unit/test_xcat_core.py::test_fail_to_pass_laundering_blocked_by_invariant
+FAILED tests/unit/test_xcat_core.py::test_fail_to_pass_laundering_refused_by_handoff
+FAILED tests/unit/test_xcat_core.py::test_unknown_to_pass_laundering_refused
+FAILED tests/unit/test_xcat_core.py::test_constraint_loss_handoff_refused - A...
+FAILED tests/unit/test_xcat_core.py::test_provenance_loss_handoff_refused - A...
+FAILED tests/unit/test_xcat_core.py::test_taint_loss_handoff_refused - Assert...
+FAILED tests/unit/test_xcat_core.py::test_authority_escalation_handoff_blocked
+FAILED tests/unit/test_xcat_core.py::test_naked_category_handoff_refused - As...
+FAILED tests/unit/test_xcat_core.py::test_negative_control_always_true_detector_is_insufficient
+======================== 17 failed, 16 passed in 0.14s =========================

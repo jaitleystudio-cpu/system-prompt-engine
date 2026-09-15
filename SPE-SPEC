@@ -5,3 +5,8 @@ Provenance: not the verified 181-file / 69-kernel tree
 Start: S0
 
 Canonical engineering home: GitHub repository `system-prompt-engine` (private, default branch `main`).
+
+## Sprint 1 slice
+- XCAT CrossCategoryEnvelope + invariants X01–X10 + handoff validation
+- Category IDs: CAT:C01 … CAT:C12 only (namespaced)
+- Handoff results: VALID | REFUSE | BLOCKED | REVALIDATION_REQUIRED

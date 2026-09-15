@@ -1,0 +1,42 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.6.0 -- /workspace/system-prompt-engine/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /workspace/system-prompt-engine
+configfile: pyproject.toml
+collecting ... collected 33 items
+
+tests/unit/test_xcat_core.py::test_schema_file_exists_and_loads PASSED   [  3%]
+tests/unit/test_xcat_core.py::test_valid_envelope_passes_schema PASSED   [  6%]
+tests/unit/test_xcat_core.py::test_invalid_envelope_missing_required_fails_schema PASSED [  9%]
+tests/unit/test_xcat_core.py::test_category_ids_are_namespaced PASSED    [ 12%]
+tests/unit/test_xcat_core.py::test_schema_rejects_naked_category_in_trace PASSED [ 15%]
+tests/unit/test_xcat_core.py::test_constraint_loss_detected PASSED       [ 18%]
+tests/unit/test_xcat_core.py::test_constraint_preserved_ok PASSED        [ 21%]
+tests/unit/test_xcat_core.py::test_constraint_weakened_strength_detected PASSED [ 24%]
+tests/unit/test_xcat_core.py::test_provenance_loss_detected PASSED       [ 27%]
+tests/unit/test_xcat_core.py::test_provenance_preserved_ok PASSED        [ 30%]
+tests/unit/test_xcat_core.py::test_uncertainty_erasure_detected PASSED   [ 33%]
+tests/unit/test_xcat_core.py::test_uncertainty_preserved_ok PASSED       [ 36%]
+tests/unit/test_xcat_core.py::test_preference_drift_detected PASSED      [ 39%]
+tests/unit/test_xcat_core.py::test_preference_removed_detected PASSED    [ 42%]
+tests/unit/test_xcat_core.py::test_preference_unchanged_ok PASSED        [ 45%]
+tests/unit/test_xcat_core.py::test_taint_loss_detected PASSED            [ 48%]
+tests/unit/test_xcat_core.py::test_taint_preserved_ok PASSED             [ 51%]
+tests/unit/test_xcat_core.py::test_authority_escalation_detected PASSED  [ 54%]
+tests/unit/test_xcat_core.py::test_authority_stable_ok PASSED            [ 57%]
+tests/unit/test_xcat_core.py::test_authority_escalation_with_external_event_allowed PASSED [ 60%]
+tests/unit/test_xcat_core.py::test_fail_to_pass_laundering_blocked_by_invariant PASSED [ 63%]
+tests/unit/test_xcat_core.py::test_fail_to_pass_laundering_refused_by_handoff PASSED [ 66%]
+tests/unit/test_xcat_core.py::test_unknown_to_pass_laundering_refused PASSED [ 69%]
+tests/unit/test_xcat_core.py::test_clean_handoff_valid PASSED            [ 72%]
+tests/unit/test_xcat_core.py::test_constraint_loss_handoff_refused PASSED [ 75%]
+tests/unit/test_xcat_core.py::test_provenance_loss_handoff_refused PASSED [ 78%]
+tests/unit/test_xcat_core.py::test_taint_loss_handoff_refused PASSED     [ 81%]
+tests/unit/test_xcat_core.py::test_authority_escalation_handoff_blocked PASSED [ 84%]
+tests/unit/test_xcat_core.py::test_naked_category_handoff_refused PASSED [ 87%]
+tests/unit/test_xcat_core.py::test_reason_codes_stable PASSED            [ 90%]
+tests/unit/test_xcat_core.py::test_negative_control_always_true_detector_is_insufficient PASSED [ 93%]
+tests/unit/test_xcat_core.py::test_handoff_result_enum_has_no_promote_executed PASSED [ 96%]
+tests/unit/test_xcat_core.py::test_envelope_is_frozen PASSED             [100%]
+
+============================== 33 passed in 0.06s ==============================

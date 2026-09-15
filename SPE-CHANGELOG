@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### 2026-09-15 — XCAT core Sprint 1 (feat/xcat-core-s4)
+- Implemented CrossCategoryEnvelope (frozen dataclass) + JSON Schema
+- Implemented X01–X10 invariant validators and validate_handoff
+- Added unit tests with RED→GREEN evidence under proofs/generated/
+- Expanded monorepo layout (schemas stubs, spe_runtime packages, tests/*, tools stubs, docs/*)
+- Lineage remains NEW_IMPLEMENTATION (not the verified 181/69 tree)
+
 ### 2026-09-15 — repository bootstrap
 - Created private GitHub repository `system-prompt-engine`
 - Marked lineage as `NEW_IMPLEMENTATION` (exact 181/69 source unavailable)
