@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Rust portable kernel (Sprint 5)
+target/
+**/*.rs.bk
