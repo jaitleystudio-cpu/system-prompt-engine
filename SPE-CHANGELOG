@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### 2026-09-15 — Sprint 3 CAT:C07 + Authority (feat/xcat-c07-authority-s3)
+- AuthorityGrant + grant compatibility validation (scope/target/args/expiry/revocation/use-limit)
+- ExecutionIntent with stable operation_id + arguments_digest; deep immutability
+- CAT:C07 engine: form/retry intent; hard-blocks SEND+rendering+authority NONE without grant
+- Outcome transitions: UNKNOWN blind retry / PARTIAL→SUCCESS / tool OK→VERIFIED_SUCCESS blocked
+- Local WRITE_LOCAL_TEMP_FILE adapter (tempfile + SHA-256 digest, network_used=False, verified_success=False)
+- Reason codes C07_*; RED/GREEN proofs under proofs/generated/sprint3_c07_authority_*.txt
+- Lineage remains NEW_IMPLEMENTATION
+
+
 ### 2026-09-15 — PR #2 merge-gate hardening (feat/xcat-c02-c06-c01-c03)
 - Deep-froze nested envelope mappings/lists (MappingProxyType + tuples); to_dict deep-unfreezes for schema JSON
 - Strengthened X06 / C06 ownership: reject analysis kind=recommendation and recommendation-shaped (action+certainty)

@@ -16,3 +16,10 @@ Canonical engineering home: GitHub repository `system-prompt-engine` (private, d
 - Ownership-enforcing engines + validate_handoff between stages
 - No C07 execution, authority minting, LLM adapters, or UI
 
+## Sprint 3 slice
+- AuthorityGrant (immutable) + ExecutionIntent + CAT:C07 engine
+- Authority compatibility: capability/target/args/expiry/revocation/use-limit
+- Outcome states + illegal transitions blocked
+- Optional local WRITE_LOCAL_TEMP_FILE adapter (digest, no network)
+- No paid deps/APIs/hosting; C07 never mints authority
+

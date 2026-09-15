@@ -1,0 +1,105 @@
+FFFFFFFFFFFFFF.....FFFFF..                                               [100%]
+=================================== FAILURES ===================================
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:163: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:183: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:201: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:223: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:241: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:259: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:277: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:300: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:319: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:337: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:364: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   assert True is False
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:375: assert True is False
+E   assert True is False
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:388: assert True is False
+E   AssertionError: assert True is False
+     +  where True = LocalTempFileResult(status='OK', path='/tmp/stub', content_digest=None, network_used=False, verified_success=True, reason_codes=()).verified_success
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:413: AssertionError: assert True is False
+E   AssertionError: assert True is False
+     +  where True = LocalTempFileResult(status='OK', path='/tmp/stub', content_digest=None, network_used=False, verified_success=True, reason_codes=()).verified_success
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:557: AssertionError: assert True is False
+E   Failed: DID NOT RAISE Exception
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:572: Failed: DID NOT RAISE Exception
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:658: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:711: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+E   AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+      
+      - BLOCKED
+      + INTENT_FORMED
+/workspace/system-prompt-engine/tests/unit/test_c07_authority.py:732: AssertionError: assert 'INTENT_FORMED' == 'BLOCKED'
+=========================== short test summary info ============================
+FAILED tests/unit/test_c07_authority.py::test_01_missing_authority_blocks - A...
+FAILED tests/unit/test_c07_authority.py::test_02_capability_mismatch_blocks
+FAILED tests/unit/test_c07_authority.py::test_03_target_drift_blocks - Assert...
+FAILED tests/unit/test_c07_authority.py::test_04_argument_over_limit_blocks
+FAILED tests/unit/test_c07_authority.py::test_05_expired_grant_blocks - Asser...
+FAILED tests/unit/test_c07_authority.py::test_06_revoked_grant_blocks - Asser...
+FAILED tests/unit/test_c07_authority.py::test_07_consumed_grant_blocks - Asse...
+FAILED tests/unit/test_c07_authority.py::test_08_c07_cannot_mutate_recommendation
+FAILED tests/unit/test_c07_authority.py::test_09_c07_cannot_weaken_constraint
+FAILED tests/unit/test_c07_authority.py::test_10_c07_cannot_create_or_expand_authority
+FAILED tests/unit/test_c07_authority.py::test_11_operation_id_replaced_on_retry_blocked
+FAILED tests/unit/test_c07_authority.py::test_12_unknown_to_failed_blind_retry_blocked
+FAILED tests/unit/test_c07_authority.py::test_13_partial_to_success_blocked
+FAILED tests/unit/test_c07_authority.py::test_14_tool_success_not_verified_success
+FAILED tests/unit/test_c07_authority.py::test_pos_local_temp_file_digest_no_network
+FAILED tests/unit/test_c07_authority.py::test_deep_immutability_grant_and_intent
+FAILED tests/unit/test_c07_authority.py::test_vertical_chain_send_plus_none_authority_blocks_c07
+FAILED tests/unit/test_c07_authority.py::test_attack_decision_drift_blocks - ...
+FAILED tests/unit/test_c07_authority.py::test_attack_illicit_authority_mint_via_c07
+19 failed, 7 passed in 0.08s
