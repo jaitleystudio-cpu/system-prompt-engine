@@ -14,11 +14,11 @@
   "repository": {
     "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
     "branch": "cursor/g1r9-k7-qualification-0d6e",
-    "implementation_commit": "1dd587b50c672c7f364209fc875d2d2f7796992e",
-    "implementation_tree": "3e564a633a3452cdd9a92d9a3832b119b21e86ad",
-    "suite_run_commit": "682cc55601f9136a3e41f79fd65d0a43a36711f8",
-    "suite_tree": "a173921f01f33fd46e5cc55154ac22558f18dec0",
-    "tree_hash": "3e564a633a3452cdd9a92d9a3832b119b21e86ad",
+    "implementation_commit": "16ceff3179698224bd9329d97996ed317c68acd1",
+    "implementation_tree": "55f3f0ee1a796856ed7669865d7e6077af1edda7",
+    "suite_run_commit": "16ceff3179698224bd9329d97996ed317c68acd1",
+    "suite_tree": "55f3f0ee1a796856ed7669865d7e6077af1edda7",
+    "tree_hash": "55f3f0ee1a796856ed7669865d7e6077af1edda7",
     "tree_hash_scope": "implementation_suite_tree",
     "python_version": "3.12.3",
     "lineage": "NEW_IMPLEMENTATION",
@@ -26,14 +26,14 @@
   },
   "tests": {
     "implementation_validation": {
-      "collected": 583,
-      "passed": 581,
-      "failed": 2,
+      "collected": 632,
+      "passed": 632,
+      "failed": 0,
       "skipped": 0,
-      "exit_status": 1,
+      "exit_status": 0,
       "duration_s": 0.966,
-      "result_sha256": "e777d708f158ff5d47c8a62eaf052641562440609ed5485a04eb4765a87c8e99",
-      "junit_sha256": "491ef881d7f2d28c03f5ae8d05ad6c77026e065aec306de503b5c446821df13a",
+      "result_sha256": "d06fecee27afa07b05b62ae1e963e80223cc13a0cac741fd4ca41d396396c6cc",
+      "junit_sha256": "be31efe849ed029f2c02f2aa8ddf5944682d69012f1d3306d6627708e7395460",
       "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
       "g1r1": "5/5",
       "g1r2": "27/27",
@@ -44,13 +44,11 @@
       "g1r6": "30/30",
       "g1r6r": "10/10",
       "g1r7": "27/27",
-      "failed_tests": [
-        "tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility",
-        "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
-      ],
+      "failed_tests": [],
       "g1r7r": "26/26",
       "g1r8": "33/33",
-      "g1r8r": "17/17"
+      "g1r8r": "17/17",
+      "g1r9": "49/49"
     },
     "evidence_validation": {
       "reviewed_evidence_head": "EXTERNAL_ONLY"
@@ -112,7 +110,7 @@
     "k7_qualification_gate": "MECHANICAL_GREEN_REVIEW_PENDING"
   },
   "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
-  "conformance_result": "G1R-8R RECHECK_PASS @682cc55601f9 suite 583/581/2. G1R-8 PASS_EXTERNAL. F01 digest↔payload repaired. PORTABLE_SEMANTIC_BINDING_ARTIFACT. K7 RED×2.",
+  "conformance_result": "G1R-9 IMPLEMENTATION_PRESENT_REVIEW_PENDING @16ceff317969 suite 632/632/0. Mechanical UNOWNED=0 MISSING=0. Authoritative G1 remains BOUND_WITH_GAPS pending G1R-9R + G1R-V.",
   "blockers": [
     {
       "id": "G1-B01",
