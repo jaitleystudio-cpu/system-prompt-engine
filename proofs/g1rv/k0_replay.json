@@ -1,0 +1,9 @@
+{
+  "result": "PASS",
+  "invariants": [
+    "INFERRED!=USER_CONFIRMED",
+    "MODEL_PROPOSED!=USER_CONFIRMED",
+    "no_lower_trust_overwrite"
+  ],
+  "suite": "G1R-3"
+}

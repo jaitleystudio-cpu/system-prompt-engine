@@ -1,0 +1,6 @@
+{
+  "DECLARED_EXTERNAL_without_custody": "downgraded_to_INTERNAL",
+  "INDEPENDENT_self_asserted_producer": "K7_INVALID_EVIDENCE",
+  "STRUCTURAL_BOUND": "digest+artifact_ref; not crypto auth",
+  "F02": "FIXED"
+}

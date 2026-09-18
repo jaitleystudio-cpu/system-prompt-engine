@@ -1,0 +1,24 @@
+{
+  "acyclic": true,
+  "canonical_writers": {
+    "CognitivePlan": "spe_runtime/prompt/plan.py::build_cognitive_plan",
+    "PromptArtifact": "spe_runtime/prompt/build.py::build_prompt_artifact",
+    "PromptStrategy": "spe_runtime/prompt/strategy.py::build_prompt_strategy",
+    "TechniqueSelection": "spe_runtime/prompt/techniques.py::select_prompt_techniques"
+  },
+  "counts": {
+    "cognitive_plan": 1,
+    "prompt_artifact": 1,
+    "prompt_strategy": 1,
+    "technique_selection": 1
+  },
+  "duplicate_canonical_semantic_writers": 0,
+  "pipeline_order": [
+    "ProtectedIntentContract",
+    "PlanningHints (constrained)",
+    "CognitivePlan",
+    "TechniqueSelection",
+    "PromptStrategy",
+    "PromptArtifact"
+  ]
+}

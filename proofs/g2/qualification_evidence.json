@@ -1,0 +1,13 @@
+{
+  "subject": "SPELeaseCommit finite TLA+ model",
+  "exact_formal_model_scope": "Ring-0 semantic lease/proof/commit FSM under recorded TLC configurations C0\u2013C7 + C_safety_all",
+  "evidence": [
+    "TLC safety PASS all configs",
+    "TLC liveness PASS C6 under WF_vars(CommitSuccessAction)",
+    "6/6 designed mutants killed",
+    "model/runtime correspondence without safety-critical MISMATCH"
+  ],
+  "earned_claim": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+  "k7_policy": "formal-model-only; must not broaden to Python formally verified",
+  "limitations": "Finite configurations only; abstractions documented; runtime cryptographic issuance stronger than model"
+}

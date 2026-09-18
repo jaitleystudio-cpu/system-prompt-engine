@@ -1,0 +1,15 @@
+{
+  "backend": "Python stdlib sqlite3",
+  "reason": [
+    "local transactional durability",
+    "real multi-process locking",
+    "no external service",
+    "deterministic tests",
+    "stdlib availability"
+  ],
+  "reference_only": true,
+  "not_claimed": [
+    "universal production backend",
+    "physical power-loss proof"
+  ]
+}

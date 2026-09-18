@@ -1,0 +1,30 @@
+{
+  "PRIMARY_KEY": [
+    "missions",
+    "snapshot_binding",
+    "execution_cursor",
+    "worker_lease",
+    "journal(mission,seq)",
+    "effects"
+  ],
+  "UNIQUE": [
+    "effects(mission_id,idempotency_key)"
+  ],
+  "CHECK": [
+    "snapshot_version>=0",
+    "fencing_token>=1",
+    "lease status",
+    "effect state enum"
+  ],
+  "FK": "enabled per-connection PRAGMA foreign_keys=ON",
+  "TRIGGER": [
+    "journal_no_update",
+    "journal_no_delete"
+  ],
+  "application_only": [
+    "CAS predicates",
+    "fence ownership",
+    "effect transition legality",
+    "idempotency digest match"
+  ]
+}

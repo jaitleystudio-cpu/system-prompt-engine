@@ -1,0 +1,497 @@
+{
+  "gate": "G2",
+  "verdict": "G2_MODEL_CHECK_PASS",
+  "entry_count": 98,
+  "entries": [
+    {
+      "path": "formal/SPELeaseCommit.tla",
+      "bytes": 17821,
+      "sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562"
+    },
+    {
+      "path": "formal/cfg/C0_smoke.cfg",
+      "bytes": 180,
+      "sha256": "3ecb9f11ed1d6fef25a11cc7b22df3e531f9dc1565047aae88607fcecb42a0f2"
+    },
+    {
+      "path": "formal/cfg/C1_stale_patch.cfg",
+      "bytes": 218,
+      "sha256": "dccd1b968cd82b7134a662908e2c767532f969eac49fac682f667c7b01ad2260"
+    },
+    {
+      "path": "formal/cfg/C2_competing_patches.cfg",
+      "bytes": 231,
+      "sha256": "9f6d837fb4bcfcafa118e309e9faa402d63694eece24edc3053ebd40878beaf8"
+    },
+    {
+      "path": "formal/cfg/C3_multiple_leases.cfg",
+      "bytes": 247,
+      "sha256": "2de14950ebaba0c3a7181abbe76a282240220871d4f26cf25ad888e2cea6bed8"
+    },
+    {
+      "path": "formal/cfg/C4_obligations_types.cfg",
+      "bytes": 284,
+      "sha256": "89f3170897662e5aae6f1e9badfe4b5bd0ebe1b9e158daf7a82aefacae6527dd"
+    },
+    {
+      "path": "formal/cfg/C5_verdicts.cfg",
+      "bytes": 299,
+      "sha256": "5d9597492fd83539f2a1260d81209d5c26cb26bad219b3f51737e668f38ba994"
+    },
+    {
+      "path": "formal/cfg/C6_liveness.cfg",
+      "bytes": 387,
+      "sha256": "0c5f83f8223b7fb833222635fc2d84f729100f6e49ae91b48128e19566fddb82"
+    },
+    {
+      "path": "formal/cfg/C7_maximal.cfg",
+      "bytes": 214,
+      "sha256": "8235dd4020123ad0d3cabc9643791d0a8a170ff90802d7ec7338f6edee354d15"
+    },
+    {
+      "path": "formal/cfg/C_safety_all.cfg",
+      "bytes": 627,
+      "sha256": "7443e8fae87910e0590a85aee2764976f9f3e532b021ec236cd851e9174ee494"
+    },
+    {
+      "path": "proofs/g2/G2_FINAL_REPORT.md",
+      "bytes": 7500,
+      "sha256": "be9083878867746fa064dcedf028ff58f488b5edc1778a910d8bc9a14b66dbc8"
+    },
+    {
+      "path": "proofs/g2/abstraction_boundary.json",
+      "bytes": 1136,
+      "sha256": "b5f5d40333e56eefe9a3b6a833b9f59442c7347e5dc9dee067527a452f772dc5"
+    },
+    {
+      "path": "proofs/g2/claim_boundary.json",
+      "bytes": 484,
+      "sha256": "19d2f5e4d63154e54e75c6e8bea771b63168dbe2cf49dccca44387a15ae340f3"
+    },
+    {
+      "path": "proofs/g2/commands/C0_smoke.sh",
+      "bytes": 223,
+      "sha256": "37c417a797cc715b0fd3ea6fcc1abd7710ef4c1aea5bc9b816984907cc3bc41e"
+    },
+    {
+      "path": "proofs/g2/commands/C1_stale_patch.sh",
+      "bytes": 229,
+      "sha256": "a4f395eb8a8922317937da67ac79e908ff1d5966b602ba210808fdc45857516e"
+    },
+    {
+      "path": "proofs/g2/commands/C2_competing_patches.sh",
+      "bytes": 235,
+      "sha256": "a144765e5d7d9d6828bd618d73ae9a629ef95d674986573b763eda44b550a41d"
+    },
+    {
+      "path": "proofs/g2/commands/C3_multiple_leases.sh",
+      "bytes": 233,
+      "sha256": "4656b972a788f9e62dbe8e63484a17e627df3874d03ad99e4e81ba2ac2416239"
+    },
+    {
+      "path": "proofs/g2/commands/C4_obligations_types.sh",
+      "bytes": 235,
+      "sha256": "3742eb1902af1b55e51a639d31b19d5ac56275a9cec0b4c9b93c9b164363de07"
+    },
+    {
+      "path": "proofs/g2/commands/C5_verdicts.sh",
+      "bytes": 226,
+      "sha256": "07fefd907ff427379de7cb63501fc0b23008a3831c626e53e9f521f418596bc1"
+    },
+    {
+      "path": "proofs/g2/commands/C6_liveness.sh",
+      "bytes": 226,
+      "sha256": "cc309596f302f96652359ad509798e046d650043a3fae2a3c00e9114c88c50dd"
+    },
+    {
+      "path": "proofs/g2/commands/C7_maximal.sh",
+      "bytes": 225,
+      "sha256": "2b94cae01922b1b1d3032390ea45aa68ddfc2fd748794b8e945f5c665071d689"
+    },
+    {
+      "path": "proofs/g2/commands/C_safety_all.sh",
+      "bytes": 227,
+      "sha256": "8af2a50e49c18b08632402a6118372f26a0edfefe97a8ed5efd50ee0395c7223"
+    },
+    {
+      "path": "proofs/g2/compileall_result.json",
+      "bytes": 108,
+      "sha256": "2e8d32d8e4f99bfd25b4f6f902cdfd428a558a48490f472a5838ddf5dbbe3607"
+    },
+    {
+      "path": "proofs/g2/configuration_matrix.json",
+      "bytes": 5818,
+      "sha256": "55dd5a8be0833b3ad17cbb7b687b0df828f194bdf883ec359e3082cddb1cd68a"
+    },
+    {
+      "path": "proofs/g2/counterexamples/M1_stale_counterexample.log",
+      "bytes": 5327,
+      "sha256": "cdaa0679ed3b9259912b3d5d2a294a698ef299c5fc036bcff86be7c0063d335e"
+    },
+    {
+      "path": "proofs/g2/counterexamples/M2_atomicity_counterexample.log",
+      "bytes": 4705,
+      "sha256": "0628ec0de7894035b0cfdec3b5585d2e43e8ab7283c206153bc9ce4aef85a829"
+    },
+    {
+      "path": "proofs/g2/counterexamples/M3_lease_bind_counterexample.log",
+      "bytes": 8305,
+      "sha256": "a0440af1a0d896a8e6a4c53202b41696566b48cbbb889bd018ad39bb814bd519"
+    },
+    {
+      "path": "proofs/g2/counterexamples/M4_unknown_pass_counterexample.log",
+      "bytes": 5352,
+      "sha256": "865b8562d6aa2d5c50d51501896e41daf41675045be8065ca11c91f49cb01f90"
+    },
+    {
+      "path": "proofs/g2/counterexamples/M5_consumed_reuse_counterexample.log",
+      "bytes": 5647,
+      "sha256": "855e4be23efc766c1d0b2a3fccc2b0597e8ffa1947760c2b3f0c36377e7bf0c6"
+    },
+    {
+      "path": "proofs/g2/counterexamples/M6_liveness_counterexample.log",
+      "bytes": 5103,
+      "sha256": "517161e11142bd19530833bdc8ade436cb74ab572f959dc0837c5b399c3762c7"
+    },
+    {
+      "path": "proofs/g2/coverage.json",
+      "bytes": 5092,
+      "sha256": "ceb1ebfaa4a6868578a5c78195dcc1ebcc50e885d42c58379fc4f96c701ff63c"
+    },
+    {
+      "path": "proofs/g2/fairness_matrix.json",
+      "bytes": 1208,
+      "sha256": "c70fe0e19072fa700892975942aee0080ad676a9a4e7b4a18e6f7b01547f8bd7"
+    },
+    {
+      "path": "proofs/g2/formal_input_manifest.json",
+      "bytes": 2319,
+      "sha256": "c7b56bb795b46204b851088e3fb9241c99e1c96493b4b0ae11dae1848a05ffa5"
+    },
+    {
+      "path": "proofs/g2/formal_surface_inventory.json",
+      "bytes": 2835,
+      "sha256": "106b7f0e60c47c34e19e367f9f22cd8239cafe1586f5c9ae7b65a9985185d21f"
+    },
+    {
+      "path": "proofs/g2/git_status_before.txt",
+      "bytes": 53,
+      "sha256": "2782387375034e6ccf9913ae32afa9afe2208cf9f191b0f3354258ba1af4e0b9"
+    },
+    {
+      "path": "proofs/g2/logs/C0_smoke.log",
+      "bytes": 30057,
+      "sha256": "4866f4735c29e5976ef380d3911caf7e2667de10edb2036e89c9f20614de1acc"
+    },
+    {
+      "path": "proofs/g2/logs/C0_smoke_tlc.log",
+      "bytes": 2359,
+      "sha256": "732136f740096b5702ecd6303928762b7da38cf4972c605656ce9797db9a4d80"
+    },
+    {
+      "path": "proofs/g2/logs/C1_stale_patch.log",
+      "bytes": 30884,
+      "sha256": "231032671195d281b0af614406b1f3e123e5d1e837caca0f77c354d4d8e425a0"
+    },
+    {
+      "path": "proofs/g2/logs/C2_competing_patches.log",
+      "bytes": 31554,
+      "sha256": "e69feb8f6187bb4e7d52a2176df7c1d2d8ec43ec1fb83ed24546c44b92446686"
+    },
+    {
+      "path": "proofs/g2/logs/C3_multiple_leases.log",
+      "bytes": 31808,
+      "sha256": "f0c6756e8cb21e90da42604af68ad6ec9141ca596c75815ae0fe86da649cac39"
+    },
+    {
+      "path": "proofs/g2/logs/C4_obligations_types.log",
+      "bytes": 32602,
+      "sha256": "82d1a5076c8bceba9c039b71eadc009bfffcd4515d600c215c9cb94144c7887c"
+    },
+    {
+      "path": "proofs/g2/logs/C5_verdicts.log",
+      "bytes": 32061,
+      "sha256": "13ea40a4f96b6b0d967fb3f83c4feeb53dc3bc8ea993c1111f71cfa9621a447a"
+    },
+    {
+      "path": "proofs/g2/logs/C6_liveness.log",
+      "bytes": 25634,
+      "sha256": "7a5ce75a989adecc1a703c18f2c9a00c95fe03a20d6b523f1f62e78e7f193cc6"
+    },
+    {
+      "path": "proofs/g2/logs/C7_maximal.log",
+      "bytes": 31715,
+      "sha256": "212158181ca4eefc849f7f369eaef44e8fb6aa2f0c4bed125e66c42a1c358b56"
+    },
+    {
+      "path": "proofs/g2/logs/C_safety_all.log",
+      "bytes": 36789,
+      "sha256": "0056a89b0ae9930cdd18a12177d2ade2152b645d2c984f2c1521a9ccb4dcbff2"
+    },
+    {
+      "path": "proofs/g2/logs/compileall.log",
+      "bytes": 887,
+      "sha256": "91a853beee4f3bf4384377bc0b0530ca6a71336fb3d322e19ea609940587700e"
+    },
+    {
+      "path": "proofs/g2/logs/pytest.log",
+      "bytes": 143455,
+      "sha256": "da4fd336e64df7c455cb5fc57b8a24490306eca6cfe0a125c30ef9f914c4c898"
+    },
+    {
+      "path": "proofs/g2/logs/pytest_authoritative.log",
+      "bytes": 820,
+      "sha256": "cc0cf753551a9d2f24a94866ab29a6e4046f799f683d8fbe8692dd051775e408"
+    },
+    {
+      "path": "proofs/g2/model_runtime_correspondence.json",
+      "bytes": 3208,
+      "sha256": "93b3c5e9a8db3bc3c1c116ab34cbbe21dd3e2754d3d0e0e1a6219df55bf921f0"
+    },
+    {
+      "path": "proofs/g2/model_versioning.json",
+      "bytes": 518,
+      "sha256": "c59e9a48c07c2620b10fd845e8025f66fa55d157e1186a5b6de8337a760496e1"
+    },
+    {
+      "path": "proofs/g2/mutation_results.json",
+      "bytes": 3255,
+      "sha256": "b507c58ea47c35f5225f2fe9b93db1210f82177b68a2f8552fa346ccd5889cb8"
+    },
+    {
+      "path": "proofs/g2/mutations/M1_stale/C1_stale_patch.cfg",
+      "bytes": 218,
+      "sha256": "dccd1b968cd82b7134a662908e2c767532f969eac49fac682f667c7b01ad2260"
+    },
+    {
+      "path": "proofs/g2/mutations/M1_stale/SPELeaseCommit.tla",
+      "bytes": 17492,
+      "sha256": "6445ee157e4e8a876edb26887535bf39214bd82bb849e46debd51bb29b8776b8"
+    },
+    {
+      "path": "proofs/g2/mutations/M1_stale/result.json",
+      "bytes": 445,
+      "sha256": "652cbe0cebfc3c53b77eda7d7cbcdf50e728cb326299aff6f8cfb8adf3a43810"
+    },
+    {
+      "path": "proofs/g2/mutations/M1_stale/tlc.log",
+      "bytes": 5327,
+      "sha256": "cdaa0679ed3b9259912b3d5d2a294a698ef299c5fc036bcff86be7c0063d335e"
+    },
+    {
+      "path": "proofs/g2/mutations/M2_atomicity/C_safety_all.cfg",
+      "bytes": 140,
+      "sha256": "f7dc874aaf6e4e6a2f9bd130bb8baff99b86f483ca02388cfeab99d30172237a"
+    },
+    {
+      "path": "proofs/g2/mutations/M2_atomicity/SPELeaseCommit.tla",
+      "bytes": 17577,
+      "sha256": "198ac07b4222233173c4df006f0764c520768943372a0eb6c901c71dc3ae516f"
+    },
+    {
+      "path": "proofs/g2/mutations/M2_atomicity/result.json",
+      "bytes": 449,
+      "sha256": "28841d3a82cb529169a5b976620f73618aa293eecb5640bb9a2ec8de418b48e8"
+    },
+    {
+      "path": "proofs/g2/mutations/M2_atomicity/tlc.log",
+      "bytes": 4705,
+      "sha256": "0628ec0de7894035b0cfdec3b5585d2e43e8ab7283c206153bc9ce4aef85a829"
+    },
+    {
+      "path": "proofs/g2/mutations/M3_lease_bind/C3_multiple_leases.cfg",
+      "bytes": 247,
+      "sha256": "2de14950ebaba0c3a7181abbe76a282240220871d4f26cf25ad888e2cea6bed8"
+    },
+    {
+      "path": "proofs/g2/mutations/M3_lease_bind/SPELeaseCommit.tla",
+      "bytes": 17559,
+      "sha256": "31f0043e0daa5b48d4fe5cfbbbe2e87ad64e1441e9f4a1eb7111afd7e5b95631"
+    },
+    {
+      "path": "proofs/g2/mutations/M3_lease_bind/result.json",
+      "bytes": 464,
+      "sha256": "f1c220c7b21b0a8ebd9fd8b933a07eded9044107f7aeb103d6a0f322aba423e0"
+    },
+    {
+      "path": "proofs/g2/mutations/M3_lease_bind/tlc.log",
+      "bytes": 8305,
+      "sha256": "a0440af1a0d896a8e6a4c53202b41696566b48cbbb889bd018ad39bb814bd519"
+    },
+    {
+      "path": "proofs/g2/mutations/M4_unknown_pass/C5_verdicts.cfg",
+      "bytes": 299,
+      "sha256": "5d9597492fd83539f2a1260d81209d5c26cb26bad219b3f51737e668f38ba994"
+    },
+    {
+      "path": "proofs/g2/mutations/M4_unknown_pass/SPELeaseCommit.tla",
+      "bytes": 17512,
+      "sha256": "e01842c61497b99fd7812522e4571bf07158e0c49f68f497d476a8e9486df91c"
+    },
+    {
+      "path": "proofs/g2/mutations/M4_unknown_pass/result.json",
+      "bytes": 457,
+      "sha256": "bb43e591fc23dab73786bf53ad25c94cbb9f01a1cb157619a5366898144824cf"
+    },
+    {
+      "path": "proofs/g2/mutations/M4_unknown_pass/tlc.log",
+      "bytes": 5352,
+      "sha256": "865b8562d6aa2d5c50d51501896e41daf41675045be8065ca11c91f49cb01f90"
+    },
+    {
+      "path": "proofs/g2/mutations/M5_consumed_reuse/C2_competing_patches.cfg",
+      "bytes": 231,
+      "sha256": "9f6d837fb4bcfcafa118e309e9faa402d63694eece24edc3053ebd40878beaf8"
+    },
+    {
+      "path": "proofs/g2/mutations/M5_consumed_reuse/SPELeaseCommit.tla",
+      "bytes": 17612,
+      "sha256": "01eedcc46f9bd7eed3e3bef18349054900e05d566b8ede97873d47246fa8d241"
+    },
+    {
+      "path": "proofs/g2/mutations/M5_consumed_reuse/result.json",
+      "bytes": 480,
+      "sha256": "3c16359a83065b48c066397265d12b87477daf23e7b8f32f8b83f1160f91607d"
+    },
+    {
+      "path": "proofs/g2/mutations/M5_consumed_reuse/tlc.log",
+      "bytes": 5647,
+      "sha256": "855e4be23efc766c1d0b2a3fccc2b0597e8ffa1947760c2b3f0c36377e7bf0c6"
+    },
+    {
+      "path": "proofs/g2/mutations/M6_liveness/C6_liveness.cfg",
+      "bytes": 387,
+      "sha256": "0c5f83f8223b7fb833222635fc2d84f729100f6e49ae91b48128e19566fddb82"
+    },
+    {
+      "path": "proofs/g2/mutations/M6_liveness/SPELeaseCommit.tla",
+      "bytes": 17841,
+      "sha256": "ce9d86c20ea46822a2b56adc5099a01cdc3739cd5dc4492c970d5d402ae5e58d"
+    },
+    {
+      "path": "proofs/g2/mutations/M6_liveness/result.json",
+      "bytes": 504,
+      "sha256": "df90e5ca8e264b8edb11afb8d0133bceae370cf72455d5f2d1cedd0e9c51681a"
+    },
+    {
+      "path": "proofs/g2/mutations/M6_liveness/tlc.log",
+      "bytes": 5103,
+      "sha256": "517161e11142bd19530833bdc8ade436cb74ab572f959dc0837c5b399c3762c7"
+    },
+    {
+      "path": "proofs/g2/production_diff_audit.json",
+      "bytes": 127,
+      "sha256": "ea4402252dce4f7075bb8336af1dc99ffd3c88fdbb2881b28495a844b3487651"
+    },
+    {
+      "path": "proofs/g2/promotion_decision.json",
+      "bytes": 645,
+      "sha256": "80b5717c272f2ad40e688ff3acddda20b4daf25e6e8e2ebcabc4f9c8639ad764"
+    },
+    {
+      "path": "proofs/g2/property_catalog.json",
+      "bytes": 11332,
+      "sha256": "3ed1f9f8b2ff5395d5835c86e61b8cc3cff0ab72edb3da8d79773c10f1635dd5"
+    },
+    {
+      "path": "proofs/g2/python_regression.json",
+      "bytes": 543,
+      "sha256": "5926d0fc42319f927b621f18a917b776234b412485f58a120029a1a908efd0fb"
+    },
+    {
+      "path": "proofs/g2/qualification_evidence.json",
+      "bytes": 676,
+      "sha256": "0dd17d9a2c825211d10f23d02197d2091ae71553d8bc48ec27f2948dd7716940"
+    },
+    {
+      "path": "proofs/g2/results/C0_smoke.json",
+      "bytes": 499,
+      "sha256": "ecc78878e33f2a7af1f9b2245990f778750c81cc6a09e00ca623de650522cb49"
+    },
+    {
+      "path": "proofs/g2/results/C1_stale_patch.json",
+      "bytes": 526,
+      "sha256": "fdc1a70b0e4f821b4150e483ff523956c76e06fb7519d1efd34969c82da33d2a"
+    },
+    {
+      "path": "proofs/g2/results/C2_competing_patches.json",
+      "bytes": 552,
+      "sha256": "8eadf1f9143bf9fdcd76b3d982f15b199b929e3e2ec740b694ec099c11faedae"
+    },
+    {
+      "path": "proofs/g2/results/C3_multiple_leases.json",
+      "bytes": 544,
+      "sha256": "3d92e3e2bb432568a9fffa8af02d390dc4a6bcd76f4656fde364914041d14fde"
+    },
+    {
+      "path": "proofs/g2/results/C4_obligations_types.json",
+      "bytes": 554,
+      "sha256": "b6cd3ec6ea7b66efb6ed18d5ad8e327bfbed976dc5144c479365d820c5ec438b"
+    },
+    {
+      "path": "proofs/g2/results/C5_verdicts.json",
+      "bytes": 516,
+      "sha256": "5b5b6f05e366d7c84753322b2e776e3e23398467aa855bb4f9bdbb9e8291d035"
+    },
+    {
+      "path": "proofs/g2/results/C6_liveness.json",
+      "bytes": 836,
+      "sha256": "2c1121d11b450c09584c7dfa45780053b42ccb4f5be8a98d2e75845c1e5b6801"
+    },
+    {
+      "path": "proofs/g2/results/C7_maximal.json",
+      "bytes": 515,
+      "sha256": "8d690183b1d469d875ee303698e4803a6f108ecaf13fec73bf5b7b150b7331bd"
+    },
+    {
+      "path": "proofs/g2/results/C_safety_all.json",
+      "bytes": 522,
+      "sha256": "0706fd2d01e49be2b9c35994c8dc4f614510687640d688807effd596e4c1a71e"
+    },
+    {
+      "path": "proofs/g2/run_mutations.sh",
+      "bytes": 2421,
+      "sha256": "350fc5005f8d7d827d45240b84c58d998983a642a456a9ed188d42a1d296074f"
+    },
+    {
+      "path": "proofs/g2/run_tlc_matrix.sh",
+      "bytes": 3512,
+      "sha256": "01d7c3e6de178a0778503682feb5333bd60e75ec8dc08c94d54b6b40886aa93b"
+    },
+    {
+      "path": "proofs/g2/runtime_correspondence_final.json",
+      "bytes": 1144,
+      "sha256": "94c9e95ab14d0f4bc41881909581c91ae6c3579d6c79be2a4029ec7b462a00a6"
+    },
+    {
+      "path": "proofs/g2/source_identity.json",
+      "bytes": 858,
+      "sha256": "9b280e8c2007d23cb810990cef3a86335b74e16ffa77251b433a0073213baa02"
+    },
+    {
+      "path": "proofs/g2/state_space_summary.json",
+      "bytes": 1866,
+      "sha256": "1289e4b1758683bb24d1c458110b20ebe458c7d4ffe7dd47450cfeb05c9e2609"
+    },
+    {
+      "path": "proofs/g2/toolchain.json",
+      "bytes": 766,
+      "sha256": "3e3b4bd99e9654ad9384590c97a59ca8351ba0cb946f9a82c4d238778df87c10"
+    },
+    {
+      "path": "proofs/g2/vacuity_witnesses.json",
+      "bytes": 861,
+      "sha256": "bae1318a4c617c276e2095bba1469101c12908a54d87b0c7328edc081449305a"
+    },
+    {
+      "path": "proofs/g2/working_contract_integrity.json",
+      "bytes": 318,
+      "sha256": "d6a9ad4e84718f1e8c75d056fcefda295aade6dcb3b30baec0bec9c16e12413c"
+    },
+    {
+      "path": "tools/tlc/fetch_tla2tools.sh",
+      "bytes": 821,
+      "sha256": "236c55682d027fcf9c46a45b471f12f0c098cf7ee6ef0c4a693fceb0894daf57"
+    }
+  ]
+}

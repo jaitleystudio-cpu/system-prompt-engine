@@ -1,0 +1,9 @@
+{
+  "direct_parent": "spe- domain required",
+  "full_ancestry_cycle_detection": "NOT_IMPLEMENTED",
+  "lineage_implies_quality": false,
+  "parent_content_verified": false,
+  "parent_existence_verified": false,
+  "root": "parent_artifact_id=null",
+  "self_parent": "REJECT K6_INVALID_LINEAGE (dedicated check + ID fixed-point infeasible)"
+}

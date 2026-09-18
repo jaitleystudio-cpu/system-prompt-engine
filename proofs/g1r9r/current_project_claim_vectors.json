@@ -1,0 +1,12 @@
+{
+  "G0": "PASS",
+  "G1R7": "PASS_EXTERNAL within K3 scope",
+  "G1R8": "PORTABLE_SEMANTIC_BINDING_ARTIFACT",
+  "G1R9": "PASS_EXTERNAL after this recheck",
+  "Full_Ring0": "IMPLEMENTED_WITHIN_G1_SCOPE / EXTERNAL_K7_RECHECK_COMPLETE",
+  "G1": "BOUND_WITH_GAPS",
+  "Production": "NOT QUALIFIED",
+  "Formal_TLC": "NOT EARNED",
+  "World_1": "NOT PROVEN",
+  "self_qualification_from_local_tests": "NO"
+}

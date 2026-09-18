@@ -1,0 +1,41 @@
+M	SPE_IMPLEMENTATION_BINDING_v2.json
+M	proofs/g1/SPE_IMPLEMENTATION_BINDING_v2.json
+M	proofs/g1/module_disposition.json
+M	proofs/g1/repo_identity.json
+M	proofs/g1/ring0_gap_matrix.json
+M	proofs/g1/runtime_module_inventory.json
+M	proofs/g1/semantic_writer_map.json
+A	proofs/g1r7/git_status_before.txt
+A	proofs/g1r7/head_before.txt
+A	proofs/g1r7/k3_existing_surface.json
+A	proofs/g1r7/red/k3_completeness_gate_red.txt
+A	proofs/g1r7/red/k3_strategy_types_missing.txt
+A	proofs/g1r7/working_contract_integrity.json
+M	spe_runtime/error_registry.py
+M	spe_runtime/prompt/__init__.py
+M	spe_runtime/prompt/build.py
+A	spe_runtime/prompt/hints.py
+M	spe_runtime/prompt/models.py
+A	spe_runtime/prompt/plan.py
+A	spe_runtime/prompt/strategy.py
+A	spe_runtime/prompt/techniques.py
+M	tests/unit/test_g1r6_k3_prompt_artifact.py
+M	tests/unit/test_g1r6r_k3_prompt_recheck.py
+A	tests/unit/test_g1r7_k3_strategy.py
+=== untracked ===
+proofs/g1r7/AUTHORITATIVE_TEST_MANIFEST.json
+proofs/g1r7/SPE_IMPLEMENTATION_BINDING_v2.json
+proofs/g1r7/changed_file_audit.txt
+proofs/g1r7/cognitive_plan_vectors.json
+proofs/g1r7/green/authoritative_suite.txt
+proofs/g1r7/green/g1r7_impl_junit.xml
+proofs/g1r7/k3_determinism.json
+proofs/g1r7/k3_domain_separation.json
+proofs/g1r7/k3_writer_map.json
+proofs/g1r7/manifest.json
+proofs/g1r7/prompt_strategy_vectors.json
+proofs/g1r7/semantic_writer_map.json
+proofs/g1r7/technique_compatibility_matrix.json
+proofs/g1r7/technique_selection_vectors.json
+proofs/g1r7/test_results.json
+PR6 OPEN 4e6c694 undisturbed

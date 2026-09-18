@@ -222,3 +222,14 @@ __marimo__/
 # Rust portable kernel (Sprint 5)
 target/
 **/*.rs.bk
+
+# G2 TLC tooling binary (fetched reproducibly; see tools/tlc/fetch_tla2tools.sh)
+tools/tlc/*.jar
+tools/tlc/*.jar.*
+
+# TLC runtime dumps
+**/states/
+**/*_TTrace_*.tla
+**/*_TTrace_*.bin
+formal/states/
+proofs/g2/mutations/**/states/

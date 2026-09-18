@@ -1,0 +1,19 @@
+{
+  "config_id": "C5_verdicts",
+  "module": "SPELeaseCommit",
+  "cfg_path": "formal/cfg/C5_verdicts.cfg",
+  "command_file": "proofs/g2/commands/C5_verdicts.sh",
+  "log_path": "proofs/g2/logs/C5_verdicts.log",
+  "workers": 4,
+  "heap": "3559m",
+  "elapsed_sec": 0.735,
+  "exit_code": 0,
+  "states_generated": 13440,
+  "distinct_states": 2025,
+  "search_depth": 7,
+  "fingerprint_collision_probability_optimistic": "1.3E-12",
+  "counterexample": "NO",
+  "deadlock": "NO",
+  "no_error_text": true,
+  "status": "PASS"
+}

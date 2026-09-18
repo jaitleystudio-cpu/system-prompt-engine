@@ -1,0 +1,26 @@
+........................................................................ [ 13%]
+........................................................................ [ 27%]
+........................................................................ [ 40%]
+...................................F....FF.............................. [ 54%]
+........................................................................ [ 67%]
+........................................................................ [ 81%]
+........................................................................ [ 94%]
+.............................                                            [100%]
+=================================== FAILURES ===================================
+E   AssertionError: {'unowned_facts': ['spe_artifact_identity', 'qualification_evidence'], 'missing_requirements': ['.spe semantic artifact', 'snapshot binding', 'claim qualification', 'qualification evidence']}
+    assert (['spe_artifac...ion_evidence'] == []
+      
+      Left contains 2 more items, first extra item: 'spe_artifact_identity'
+      Use -v to get more diff)
+/workspace/tests/unit/test_g1_runtime_binding.py:122: AssertionError: {'unowned_facts': ['spe_artifact_identity', 'qualification_evidence'], 'missing_requirements': ['.spe semantic artifact', 'snapshot binding', 'claim qualification', 'qualification evidence']}
+E   AssertionError: K6 .spe artifact identity has no writer
+    assert []
+/workspace/tests/unit/test_g1_runtime_binding.py:183: AssertionError: K6 .spe artifact identity has no writer
+E   AssertionError: K7 qualification evidence has no writer
+    assert []
+/workspace/tests/unit/test_g1_runtime_binding.py:189: AssertionError: K7 qualification evidence has no writer
+=========================== short test summary info ============================
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique
+3 failed, 530 passed in 1.17s

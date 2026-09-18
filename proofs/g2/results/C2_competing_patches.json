@@ -1,0 +1,19 @@
+{
+  "config_id": "C2_competing_patches",
+  "module": "SPELeaseCommit",
+  "cfg_path": "formal/cfg/C2_competing_patches.cfg",
+  "command_file": "proofs/g2/commands/C2_competing_patches.sh",
+  "log_path": "proofs/g2/logs/C2_competing_patches.log",
+  "workers": 4,
+  "heap": "3559m",
+  "elapsed_sec": 0.935,
+  "exit_code": 0,
+  "states_generated": 21785,
+  "distinct_states": 3633,
+  "search_depth": 9,
+  "fingerprint_collision_probability_optimistic": "3.6E-12",
+  "counterexample": "NO",
+  "deadlock": "NO",
+  "no_error_text": true,
+  "status": "PASS"
+}

@@ -1,0 +1,5 @@
+{
+  "one_authoritative_store_per_mission_shard": true,
+  "split_brain_two_copies": "NOT PREVENTED / OUT OF SCOPE",
+  "fencing_safe_only_when": "all workers consult same store"
+}

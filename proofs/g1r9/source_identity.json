@@ -1,0 +1,10 @@
+{
+  "foundational_base": "931128b384c3055ecef876124f787e5b8e67651b",
+  "g1r8_implementation_head": "10de55e",
+  "g1r8r_reviewed_head": "5100c76d70971d1bf37c84747f66e964ff6086d3",
+  "g1r9_branch": "cursor/g1r9-k7-qualification-0d6e",
+  "g1r9_head": "7d618aab03861d5b770eae9f34e5924cf88eff54",
+  "tree": "41e4a1a6ee41ac2c3dc716ba75667ff2082a3e62",
+  "merge_base_with_foundational": "931128b384c3055ecef876124f787e5b8e67651b",
+  "descends_from_g1r8r": true
+}

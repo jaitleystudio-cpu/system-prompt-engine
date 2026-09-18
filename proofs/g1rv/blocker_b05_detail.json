@@ -1,0 +1,60 @@
+{
+  "id": "G1-B05",
+  "original_issue": "PLATFORM_REGISTRY marks RUST_KERNEL/WASM as PLANNED/NOT_RUN despite portable/spe-core-rs and portable/spe-wasm existing",
+  "original_required_action": "Honest registry update post-G1; never mark PASS (G1_FINAL_REPORT.md)",
+  "current_registry": {
+    "PLATFORM:PYTHON_REFERENCE": {
+      "status": "CONFORMANCE_PARTIAL",
+      "conformance": "PARTIAL"
+    },
+    "PLATFORM:RUST_KERNEL": {
+      "status": "PLANNED",
+      "conformance": "NOT_RUN"
+    },
+    "PLATFORM:TYPESCRIPT": {
+      "status": "PLANNED",
+      "conformance": "NOT_RUN"
+    },
+    "PLATFORM:KOTLIN_ANDROID": {
+      "status": "PLANNED",
+      "conformance": "NOT_RUN"
+    },
+    "PLATFORM:SWIFT_IOS": {
+      "status": "PLANNED",
+      "conformance": "NOT_RUN"
+    },
+    "PLATFORM:WASM": {
+      "status": "PLANNED",
+      "conformance": "NOT_RUN"
+    },
+    "PLATFORM:DESKTOP_NATIVE": {
+      "status": "PLANNED",
+      "conformance": "NOT_RUN"
+    },
+    "PLATFORM:WEB_PWA": {
+      "status": "PLANNED",
+      "conformance": "NOT_RUN"
+    },
+    "PLATFORM:BROWSER_EXTENSION": {
+      "status": "PLANNED",
+      "conformance": "NOT_RUN"
+    },
+    "PLATFORM:MCP_SERVER": {
+      "status": "PLANNED",
+      "conformance": "NOT_RUN"
+    },
+    "PLATFORM:AI_PLUGIN": {
+      "status": "PLANNED",
+      "conformance": "NOT_RUN"
+    }
+  },
+  "detect_fake_platform_status": null,
+  "portable_dirs_exist": {
+    "spe-core-rs": true,
+    "spe-wasm": true
+  },
+  "g1_scope": "Python Ring-0 WORKING_CONTRACT_BOUND",
+  "enforced_honesty_tests": "tests/portability/test_platform_registry.py requires non-python PLANNED (anti-fake-PASS)",
+  "status": "ACCEPTED_SCOPED_LIMITATION",
+  "rationale": "G1 binding target is Python Ring-0 under WORKING_CONTRACT_BOUND. Original G1 required action deferred honest registry reclassification to post-G1. Registry correctly refuses RELEASED/PASS (detect_fake_platform_status=None). Marking PLANNED while portable kernels exist is a scoped honesty understatement, not a Ring-0 ownership/authority/qualification defect. Updating to IMPLEMENTING without claiming PASS is post-G1 documentation hygiene, not a G1 open blocker."
+}

@@ -1,0 +1,5 @@
+{
+  "command": "python3 -m compileall spe_runtime",
+  "exit": 0,
+  "log": "proofs/g2/logs/compileall.log"
+}

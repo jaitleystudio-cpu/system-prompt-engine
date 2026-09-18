@@ -1,0 +1,22 @@
+{
+  "lease_race": {
+    "iterations": 1,
+    "winners_expected": 1,
+    "result": "PASS"
+  },
+  "fencing_race": {
+    "iterations": 20,
+    "stale_commits_observed": 0,
+    "winners": 20,
+    "result": "PASS"
+  },
+  "cas_race": {
+    "iterations": 1,
+    "duplicate_authoritative_commits": 0,
+    "result": "PASS"
+  },
+  "heartbeat_reclaim": {
+    "result": "PASS",
+    "note": "not both owners succeed"
+  }
+}
