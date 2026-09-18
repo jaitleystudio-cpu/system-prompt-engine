@@ -280,8 +280,11 @@ print(dumps_spe(art).hex())
 def test_claim_scope_and_gap_state():
     ring = json.loads((ROOT / "proofs/g1/ring0_gap_matrix.json").read_text())
     writers = json.loads((ROOT / "proofs/g1/semantic_writer_map.json").read_text())
+    # Post-G1R-9: K7 gaps closed; no required Ring-0 fact remains unowned/missing.
     missing = [r["requirement"] for r in ring["requirements"] if r["status"] == "MISSING"]
-    assert set(missing) == {"claim qualification", "qualification evidence"}
-    assert writers["unowned_facts"] == ["qualification_evidence"]
+    assert missing == []
+    assert writers["unowned_facts"] == []
     art = next(f for f in writers["facts"] if f["semantic_fact"] == "spe_artifact_identity")
     assert art["writer_modules"] == ["spe_runtime/storage/build.py"]
+    qe = next(f for f in writers["facts"] if f["semantic_fact"] == "qualification_evidence")
+    assert qe["writer_modules"] == ["spe_runtime/qualification/evidence.py"]

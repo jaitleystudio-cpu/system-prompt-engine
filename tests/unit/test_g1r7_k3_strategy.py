@@ -374,6 +374,7 @@ def test_gap_matrix_and_writer_map_k3_complete():
         f = next(x for x in w["facts"] if x["semantic_fact"] == fact)
         assert f["writer_modules"] == [path]
         assert f["duplicate_writer"] is False
-    # Post-G1R-8: spe_artifact_identity owned; only K7 qualification remains unowned.
+    # Post-G1R-9: spe_artifact_identity + qualification_evidence owned; unowned empty.
     assert "spe_artifact_identity" not in w["unowned_facts"]
-    assert w["unowned_facts"] == ["qualification_evidence"]
+    assert "qualification_evidence" not in w["unowned_facts"]
+    assert w["unowned_facts"] == []

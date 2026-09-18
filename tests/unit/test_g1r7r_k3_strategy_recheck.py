@@ -516,17 +516,16 @@ def test_k3_completeness_gate_still_green():
     unowned = writers.get("unowned_facts") or [
         f["semantic_fact"] for f in writers["facts"] if not f["writer_modules"]
     ]
-    # Post-G1R-8: K6 gaps resolved; only K7 remains missing/unowned.
-    assert set(missing) == {
-        "claim qualification",
-        "qualification evidence",
-    }
-    assert set(unowned) == {"qualification_evidence"}
+    # Post-G1R-9: K6+K7 gaps resolved; no required Ring-0 MISSING/UNOWNED remain.
+    assert missing == []
+    assert set(unowned) == set()
     for name in (
         "PromptArtifact",
         "cognitive plan",
         "prompt strategy",
         "technique selection",
+        "claim qualification",
+        "qualification evidence",
     ):
         row = next(r for r in ring["requirements"] if r["requirement"] == name)
         assert row["status"] == "IMPLEMENTED"

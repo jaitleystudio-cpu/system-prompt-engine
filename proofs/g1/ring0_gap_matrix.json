@@ -1,7 +1,7 @@
 {
-  "gate": "G1R-8",
+  "gate": "G1R-9",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "normative_spec": "SPE \u03a9 v2.4.1",
+  "normative_spec": "SPE Ω v2.4.1",
   "spec_present_in_tree": false,
   "requirements": [
     {
@@ -134,7 +134,7 @@
         "tests/integration/test_xcat_c02_c06_c01_c03.py"
       ],
       "status": "PARTIAL",
-      "gap": "facts\u2248claims without claim qualification.",
+      "gap": "facts≈claims without claim qualification.",
       "future_action": "WRAP"
     },
     {
@@ -347,7 +347,7 @@
         "tests/integration/test_xcat_c02_c06_c01_c03.py"
       ],
       "status": "IMPLEMENTED",
-      "gap": "Present as Decide, not as \u03a9 prompt kernel.",
+      "gap": "Present as Decide, not as Ω prompt kernel.",
       "future_action": "WRAP"
     },
     {
@@ -590,11 +590,17 @@
     {
       "requirement": "claim qualification",
       "owner": "K7",
-      "implementation_modules": [],
-      "tests": [],
-      "status": "MISSING",
-      "gap": "No qualification evidence.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "implementation_modules": [
+        "spe_runtime/qualification/evaluate.py",
+        "spe_runtime/qualification/policy.py",
+        "spe_runtime/qualification/models.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r9_k7_qualification.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "RETAIN"
     },
     {
       "requirement": "capability qualification",
@@ -640,17 +646,22 @@
     {
       "requirement": "qualification evidence",
       "owner": "K7",
-      "implementation_modules": [],
-      "tests": [],
-      "status": "MISSING",
-      "gap": "recovery/ empty; recovery_plan.schema.json STUB.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "implementation_modules": [
+        "spe_runtime/qualification/evidence.py",
+        "spe_runtime/qualification/models.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r9_k7_qualification.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "recovery/ remains RETIRE stub; canonical K7 is qualification/",
+      "future_action": "RETAIN"
     }
   ],
   "counts": {
-    "IMPLEMENTED": 27,
-    "PARTIAL": 18,
-    "MISSING": 4,
+    "IMPLEMENTED": 33,
+    "PARTIAL": 16,
+    "MISSING": 0,
     "CONFLICTING": 1
   }
 }

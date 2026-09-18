@@ -1,7 +1,7 @@
 {
-  "gate": "G1R-8R",
+  "gate": "G1R-9",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 93,
+  "module_count": 99,
   "modules": [
     {
       "path": "spe_runtime/__init__.py"
@@ -226,6 +226,24 @@
       "path": "spe_runtime/provenance/rules.py"
     },
     {
+      "path": "spe_runtime/qualification/__init__.py"
+    },
+    {
+      "path": "spe_runtime/qualification/evaluate.py"
+    },
+    {
+      "path": "spe_runtime/qualification/evidence.py"
+    },
+    {
+      "path": "spe_runtime/qualification/models.py"
+    },
+    {
+      "path": "spe_runtime/qualification/policy.py"
+    },
+    {
+      "path": "spe_runtime/qualification/scope.py"
+    },
+    {
       "path": "spe_runtime/recovery/__init__.py"
     },
     {
@@ -250,34 +268,19 @@
       "path": "spe_runtime/storage/__init__.py"
     },
     {
-      "path": "spe_runtime/storage/build.py",
-      "bytes": 6538,
-      "sha256": "85c24abcc1ec7ef7f7e93964cac8c35f429644e6f72012c36a54cbe7423a0516",
-      "role": "k6_spe_artifact"
+      "path": "spe_runtime/storage/build.py"
     },
     {
-      "path": "spe_runtime/storage/models.py",
-      "bytes": 5085,
-      "sha256": "a4761d8855cb12d5b44807d070c066815122c3aeade53d2fa847543db8171e57",
-      "role": "k6_spe_artifact"
+      "path": "spe_runtime/storage/models.py"
     },
     {
-      "path": "spe_runtime/storage/reconstruct.py",
-      "bytes": 5437,
-      "sha256": "1e9e0a747bd9ac0ebb24bb0e43329474293113510817b138a562b49c6c6fd2c0",
-      "role": "k6_spe_artifact"
+      "path": "spe_runtime/storage/reconstruct.py"
     },
     {
-      "path": "spe_runtime/storage/serialize.py",
-      "bytes": 4699,
-      "sha256": "bd2ef46c971d346c4b393b8beea70d75959a494e4b2c56e4614f8b13548ddaf0",
-      "role": "k6_spe_artifact"
+      "path": "spe_runtime/storage/serialize.py"
     },
     {
-      "path": "spe_runtime/storage/validate.py",
-      "bytes": 7374,
-      "sha256": "bd6a5f4adda5eb14bf022d2d269b3ad7616e2e6180c4911b2cf6c171e27553b0",
-      "role": "k6_spe_artifact"
+      "path": "spe_runtime/storage/validate.py"
     },
     {
       "path": "spe_runtime/xcat/__init__.py"

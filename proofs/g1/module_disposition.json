@@ -453,10 +453,46 @@
       "reason": "canonical Ring-0 implementation after G1R recreation"
     },
     {
+      "path": "spe_runtime/qualification/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K7",
+      "reason": "G1R-9 canonical K7 ClaimQualification + QualificationEvidence"
+    },
+    {
+      "path": "spe_runtime/qualification/evaluate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K7",
+      "reason": "G1R-9 canonical K7 ClaimQualification + QualificationEvidence"
+    },
+    {
+      "path": "spe_runtime/qualification/evidence.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K7",
+      "reason": "G1R-9 canonical K7 ClaimQualification + QualificationEvidence"
+    },
+    {
+      "path": "spe_runtime/qualification/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K7",
+      "reason": "G1R-9 canonical K7 ClaimQualification + QualificationEvidence"
+    },
+    {
+      "path": "spe_runtime/qualification/policy.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K7",
+      "reason": "G1R-9 canonical K7 ClaimQualification + QualificationEvidence"
+    },
+    {
+      "path": "spe_runtime/qualification/scope.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K7",
+      "reason": "G1R-9 canonical K7 ClaimQualification + QualificationEvidence"
+    },
+    {
       "path": "spe_runtime/recovery/__init__.py",
       "disposition": "RETIRE",
       "normative_owner": "K7",
-      "reason": "empty stub; future Ring-0 owner"
+      "reason": "empty stub RETIRE; K7 surface is spe_runtime/qualification/ (G1R-9)"
     },
     {
       "path": "spe_runtime/registry/__init__.py",
@@ -501,6 +537,36 @@
       "reason": "G1R-8 K6 SpeArtifact package root"
     },
     {
+      "path": "spe_runtime/storage/build.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 sole SpeArtifact / identity / lineage writer"
+    },
+    {
+      "path": "spe_runtime/storage/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 SpeArtifact model"
+    },
+    {
+      "path": "spe_runtime/storage/reconstruct.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8R reconstruct contract from embedded payload for digest consistency"
+    },
+    {
+      "path": "spe_runtime/storage/serialize.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 .spe dumps/loads/save/load"
+    },
+    {
+      "path": "spe_runtime/storage/validate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 shared SpeArtifact validator"
+    },
+    {
       "path": "spe_runtime/xcat/__init__.py",
       "disposition": "RETAIN",
       "normative_owner": "K1",
@@ -535,36 +601,6 @@
       "disposition": "RETAIN",
       "normative_owner": "K1",
       "reason": "existing sprint runtime retained"
-    },
-    {
-      "path": "spe_runtime/storage/models.py",
-      "disposition": "RETAIN",
-      "normative_owner": "K6",
-      "reason": "G1R-8 SpeArtifact model"
-    },
-    {
-      "path": "spe_runtime/storage/build.py",
-      "disposition": "RETAIN",
-      "normative_owner": "K6",
-      "reason": "G1R-8 sole SpeArtifact / identity / lineage writer"
-    },
-    {
-      "path": "spe_runtime/storage/validate.py",
-      "disposition": "RETAIN",
-      "normative_owner": "K6",
-      "reason": "G1R-8 shared SpeArtifact validator"
-    },
-    {
-      "path": "spe_runtime/storage/serialize.py",
-      "disposition": "RETAIN",
-      "normative_owner": "K6",
-      "reason": "G1R-8 .spe dumps/loads/save/load"
-    },
-    {
-      "path": "spe_runtime/storage/reconstruct.py",
-      "disposition": "RETAIN",
-      "normative_owner": "K6",
-      "reason": "G1R-8R reconstruct contract from embedded payload for digest consistency"
     }
   ]
 }

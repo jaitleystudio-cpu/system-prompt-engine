@@ -29,7 +29,7 @@
       ],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "models.py is the typed AuthorityGrant value object; consume.py uniquely writes uses_consumed. External AuthorityGrant construction is the intentional external-authority injection surface (C07 never mints grants). It is NOT a HIDDEN_AMBIENT_AUTHORITY_PATH \u2014 ambient paths are privilege elevation without a typed grant/event (closed in G1R-2: replace_envelope authority fields, X09). Formal: ambient_authority_paths=0 counts hidden elevation, not the public grant dataclass."
+      "notes": "models.py is the typed AuthorityGrant value object; consume.py uniquely writes uses_consumed. External AuthorityGrant construction is the intentional external-authority injection surface (C07 never mints grants). It is NOT a HIDDEN_AMBIENT_AUTHORITY_PATH — ambient paths are privilege elevation without a typed grant/event (closed in G1R-2: replace_envelope authority fields, X09). Formal: ambient_authority_paths=0 counts hidden elevation, not the public grant dataclass."
     },
     {
       "semantic_fact": "grant_compatibility",
@@ -299,11 +299,16 @@
     {
       "semantic_fact": "qualification_evidence",
       "canonical_owner": "K7",
-      "writer_modules": [],
-      "reader_modules": [],
+      "writer_modules": [
+        "spe_runtime/qualification/evidence.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/qualification/evaluate.py",
+        "tests/unit/test_g1r9_k7_qualification.py"
+      ],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "still unowned after G1R-6"
+      "notes": "G1R-9 sole writer record_qualification_evidence"
     },
     {
       "semantic_fact": "proof_ledger",
@@ -435,13 +440,24 @@
       "duplicate_writer": false,
       "resolution_required": false,
       "notes": "G1R-8 direct parent_artifact_id binding; same writer as spe_artifact_identity; no DAG store"
+    },
+    {
+      "semantic_fact": "claim_qualification",
+      "canonical_owner": "K7",
+      "writer_modules": [
+        "spe_runtime/qualification/evaluate.py"
+      ],
+      "reader_modules": [
+        "tests/unit/test_g1r9_k7_qualification.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-9 sole writer qualify_claim"
     }
   ],
-  "unowned_facts": [
-    "qualification_evidence"
-  ],
+  "unowned_facts": [],
   "ambient_authority_paths": [],
   "ambient_authority_definition": "Hidden privilege elevation without typed AuthorityGrant/AuthorityEvent. Public AuthorityGrant dataclass construction is external injection, not ambient.",
-  "implementation_commit": "pending_g1r8",
-  "evidence_scope": "k6_spe_artifact_lineage"
+  "implementation_commit": "pending_g1r9",
+  "evidence_scope": "k7_claim_qualification"
 }

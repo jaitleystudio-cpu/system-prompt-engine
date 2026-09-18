@@ -400,10 +400,13 @@ def test_gap_matrix_k6_movement():
     for name in (".spe semantic artifact", "snapshot binding"):
         row = next(r for r in ring["requirements"] if r["requirement"] == name)
         assert row["status"] == "IMPLEMENTED", name
+    # Post-G1R-9: K7 claim qualification + qualification evidence owned.
     missing = [r["requirement"] for r in ring["requirements"] if r["status"] == "MISSING"]
-    assert set(missing) == {"claim qualification", "qualification evidence"}
+    assert missing == []
     unowned = writers["unowned_facts"]
-    assert unowned == ["qualification_evidence"]
+    assert unowned == []
     art = next(f for f in writers["facts"] if f["semantic_fact"] == "spe_artifact_identity")
     assert art["writer_modules"] == ["spe_runtime/storage/build.py"]
     assert art["duplicate_writer"] is False
+    qe = next(f for f in writers["facts"] if f["semantic_fact"] == "qualification_evidence")
+    assert qe["writer_modules"] == ["spe_runtime/qualification/evidence.py"]

@@ -2,9 +2,9 @@
   "schema_version": "2.0.0",
   "gate": "G1_RUNTIME_BINDING",
   "status": "BOUND_WITH_GAPS",
-  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_PASS_EXTERNAL; G1R8R_RECHECK_PASS; G1 BOUND_WITH_GAPS",
+  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_PASS_EXTERNAL; G1R8R_RECHECK_PASS; G1R9_IMPLEMENTATION_PRESENT_REVIEW_PENDING; G1 BOUND_WITH_GAPS",
   "normative_spec": {
-    "version": "SPE \u03a9 v2.4.1",
+    "version": "SPE Ω v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
     "present_in_tree": true,
     "path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-    "branch": "cursor/g1r8r-k6-artifact-recheck-0d6e",
+    "branch": "cursor/g1r9-k7-qualification-0d6e",
     "implementation_commit": "1dd587b50c672c7f364209fc875d2d2f7796992e",
     "implementation_tree": "3e564a633a3452cdd9a92d9a3832b119b21e86ad",
     "suite_run_commit": "682cc55601f9136a3e41f79fd65d0a43a36711f8",
@@ -94,8 +94,8 @@
     "g1r7r_passed": 26
   },
   "module_binding": {
-    "module_count": 93,
-    "retain": 88,
+    "module_count": 99,
+    "retain": 94,
     "wrap": 1,
     "migrate": 0,
     "replace": 0,
@@ -103,17 +103,16 @@
   },
   "semantic_binding": {
     "DUPLICATE_CANONICAL_WRITERS": 0,
-    "UNOWNED_RING0_RESPONSIBILITIES": 1,
-    "unowned_facts": [
-      "qualification_evidence"
-    ],
-    "unowned_ring0_requirements_missing": 2,
+    "UNOWNED_RING0_RESPONSIBILITIES": 0,
+    "unowned_facts": [],
+    "unowned_ring0_requirements_missing": 0,
     "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
     "CONFLICTING_RUNTIME_SEMANTICS": 0,
-    "k3_strategy_gate": "PASS"
+    "k3_strategy_gate": "PASS",
+    "k7_qualification_gate": "MECHANICAL_GREEN_REVIEW_PENDING"
   },
   "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
-  "conformance_result": "G1R-8R RECHECK_PASS @682cc55601f9 suite 583/581/2. G1R-8 PASS_EXTERNAL. F01 digest\u2194payload repaired. PORTABLE_SEMANTIC_BINDING_ARTIFACT. K7 RED\u00d72.",
+  "conformance_result": "G1R-8R RECHECK_PASS @682cc55601f9 suite 583/581/2. G1R-8 PASS_EXTERNAL. F01 digest↔payload repaired. PORTABLE_SEMANTIC_BINDING_ARTIFACT. K7 RED×2.",
   "blockers": [
     {
       "id": "G1-B01",
@@ -127,8 +126,8 @@
     },
     {
       "id": "G1-B03",
-      "status": "OPEN",
-      "description": "unowned=['qualification_evidence']; K6 spe_artifact_identity owned; K7 remains."
+      "status": "RESOLVED_MECHANICAL",
+      "description": "qualification_evidence + claim_qualification owned by K7 (G1R-9). Authoritative G1 still BOUND_WITH_GAPS pending G1R-9R + G1R-V."
     },
     {
       "id": "G1-B04",
@@ -167,7 +166,7 @@
     "prompt_content_digest_note": "prompt_content_digest != spe_artifact_identity"
   },
   "captured_at_utc": "2026-09-18T16:33:31Z",
-  "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET",
+  "language_migration_decision": "NO MIGRATION DECISION — NO PERFORMANCE EVIDENCE YET",
   "g1r6r": {
     "task": "INDEPENDENT_PROMPTARTIFACT_RECHECK",
     "verdict": "G1R6_RECHECK_PASS",
@@ -230,5 +229,11 @@
     "promotion": "G1R-8 PASS_EXTERNAL",
     "g1r9_started": false,
     "working_contract_unchanged": true
+  },
+  "g1r9": {
+    "task": "K7_CLAIM_QUALIFICATION",
+    "status": "IMPLEMENTATION_PRESENT_REVIEW_PENDING",
+    "earned_claim": "NONE_PENDING_EXTERNAL_RECHECK",
+    "note": "Mechanical UNOWNED/MISSING closed; do not claim G1_PASS or PASS_EXTERNAL"
   }
 }
