@@ -24,7 +24,7 @@
   "dependency_manifest_hash": "7dafa827ad5e6c9e3d284727a8d58b9767dea1dde36483ef73fbf67b0bafa1aa",
   "source_tree_hash": "1128e9885303af71d99025a9b9e80d21e38873dd7faeb8af05908649db8dbda4",
   "python_used_for_tests": "CPython 3.12.3",
-  "git_tree_sha": "b2680562c7ca1d4c658f41073a5a4c42aeb3517b",
+  "git_tree_sha": "5cfb3f68b327f590f39f95aea022e9f67514e033",
   "spe_spec_file_sha256": "e82d4ca87fa1327af5183d49ac16b5f4a4902139265808b4497e055e99435118",
   "omega_v241_spec_present": false,
   "test_manifest_hash_after_g1": "9a5de8d7ee415c6ae7e69df3f6dc987d9223d61e1649fcc6d65e9b7a4a0b6e9c",
@@ -38,5 +38,5 @@
   "implementation_commit": "1dd587b50c672c7f364209fc875d2d2f7796992e",
   "suite_run_commit": "682cc55601f9136a3e41f79fd65d0a43a36711f8",
   "identity_model": "split_implementation_vs_evidence_validation",
-  "git_head": "c88703a879411198c8dff398eaf7d1657cc9ccd0"
+  "git_head": "8fa1bdab941190e592569a4e97a878c53f4c0cb7"
 }
