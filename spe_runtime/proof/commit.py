@@ -9,7 +9,7 @@ from spe_runtime.proof.ledger import ProofLedger, append_entry
 from spe_runtime.proof.lease import SemanticProofLease, assert_not_authority_grant, consume_lease
 from spe_runtime.proof.obligation import ProofObligation
 from spe_runtime.proof.patch import ProofCarryingPatch, apply_semantic_delta, delta_actions
-from spe_runtime.proof.receipt import VerificationReceipt
+from spe_runtime.proof.receipt import VerificationReceipt, assert_receipt_integrity
 from spe_runtime.proof.snapshot import SemanticSnapshot, make_snapshot
 from spe_runtime.proof.types import LeaseStatus, Verdict, proof_type_compatible
 
@@ -193,12 +193,8 @@ def commit_semantic_patch(
                 f"unsupported verdict {receipt.verdict}",
             )
 
-        # Unrelated evidence: evidence_digest empty / missing binding
-        if not receipt.evidence_digest:
-            raise SpeTypedError(
-                ErrorCode.K2_VERIFICATION_FAILED,
-                "receipt missing evidence digest",
-            )
+        # Content-address + canonical issuance binding (blocks forged PASS)
+        assert_receipt_integrity(receipt)
 
     # Ensure no extra wrong-obligation-only receipts are required — missing covered above.
     # Wrong obligation receipt alone (for a different id) doesn't discharge required ones.

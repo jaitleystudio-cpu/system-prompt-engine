@@ -895,3 +895,205 @@ def test_no_public_mint_pass_receipt():
 
     assert not hasattr(proof_pkg, "mint_pass_receipt")
     assert not hasattr(receipt_mod, "mint_pass_receipt")
+    # Canonical mint is package-private; public API is verify_obligation only.
+    assert "mint_canonical_receipt" not in proof_pkg.__all__
+    assert "_mint_canonical_receipt" not in proof_pkg.__all__
+    assert "mint_canonical_receipt" not in getattr(receipt_mod, "__all__", ())
+    assert "compute_issuance_digest" not in getattr(receipt_mod, "__all__", ())
+    assert not hasattr(proof_pkg, "mint_canonical_receipt")
+    assert not hasattr(proof_pkg, "compute_issuance_digest")
+
+
+# ---------------------------------------------------------------------------
+# G1R-4A: forged / tampered receipt integrity (proof laundering gate)
+# ---------------------------------------------------------------------------
+
+
+def _forge_pass_receipt(
+    *,
+    obligation_id: str,
+    subject_id: str,
+    snapshot_id: str,
+    patch_id: str | None,
+    proof_type: ProofType = ProofType.DETERMINISTIC_INVARIANT,
+    evidence_digest: str = "evd-forged-not-empty",
+    receipt_id: str | None = None,
+    issuance_digest: str = "iss-forged",
+    verdict: Verdict = Verdict.PASS,
+) -> "VerificationReceipt":
+    from spe_runtime.proof.receipt import VerificationReceipt, receipt_identity
+
+    payload = {
+        "obligation_id": obligation_id,
+        "proof_type": proof_type.value,
+        "subject_id": subject_id,
+        "snapshot_id": snapshot_id,
+        "patch_id": patch_id,
+        "verifier_id": "fake",
+        "verdict": verdict.value,
+        "evidence_digest": evidence_digest,
+        "details": None,
+    }
+    rid = receipt_id if receipt_id is not None else receipt_identity(payload)
+    return VerificationReceipt(
+        receipt_id=rid,
+        obligation_id=obligation_id,
+        proof_type=proof_type,
+        subject_id=subject_id,
+        snapshot_id=snapshot_id,
+        patch_id=patch_id,
+        verifier_id="fake",
+        verdict=verdict,
+        evidence_digest=evidence_digest,
+        issuance_digest=issuance_digest,
+        details=None,
+    )
+
+
+def test_directly_forged_pass_receipt_cannot_commit():
+    """Direct VerificationReceipt(...) construction must fail closed at commit."""
+    snap, ledger, lease, patch, _, obl = _commit_bundle()
+    forged = _forge_pass_receipt(
+        obligation_id=obl.obligation_id,
+        subject_id=obl.subject,
+        snapshot_id=snap.snapshot_id,
+        patch_id=patch.patch_id,
+    )
+    with pytest.raises(SpeTypedError) as ei:
+        commit_semantic_patch(snap, ledger, lease, patch, (forged,))
+    assert ei.value.code is ErrorCode.K2_VERIFICATION_FAILED
+    assert "issuance" in str(ei.value).lower() or "forged" in str(ei.value).lower()
+    assert ledger.entries == ()
+    assert snap.version == 0
+    assert lease.status is LeaseStatus.ACTIVE
+
+
+def test_forged_receipt_with_content_addressed_id_still_rejected():
+    """Matching receipt_id alone is insufficient without issuance binding."""
+    from spe_runtime.proof.receipt import receipt_identity
+
+    snap, ledger, lease, patch, _, obl = _commit_bundle()
+    payload = {
+        "obligation_id": obl.obligation_id,
+        "proof_type": ProofType.DETERMINISTIC_INVARIANT.value,
+        "subject_id": obl.subject,
+        "snapshot_id": snap.snapshot_id,
+        "patch_id": patch.patch_id,
+        "verifier_id": "fake",
+        "verdict": Verdict.PASS.value,
+        "evidence_digest": "evd-forged-not-empty",
+        "details": None,
+    }
+    forged = _forge_pass_receipt(
+        obligation_id=obl.obligation_id,
+        subject_id=obl.subject,
+        snapshot_id=snap.snapshot_id,
+        patch_id=patch.patch_id,
+        receipt_id=receipt_identity(payload),
+        issuance_digest="iss-not-from-verify-boundary",
+    )
+    with pytest.raises(SpeTypedError) as ei:
+        commit_semantic_patch(snap, ledger, lease, patch, (forged,))
+    assert ei.value.code is ErrorCode.K2_VERIFICATION_FAILED
+    assert ledger.entries == ()
+
+
+def test_tampered_receipt_id_rejected():
+    from dataclasses import replace
+
+    snap, ledger, lease, patch, receipts, _ = _commit_bundle()
+    good = receipts[0]
+    tampered = replace(good, receipt_id="rcpt-tampered-identity")
+    with pytest.raises(SpeTypedError) as ei:
+        commit_semantic_patch(snap, ledger, lease, patch, (tampered,))
+    assert ei.value.code is ErrorCode.K2_VERIFICATION_FAILED
+    assert "receipt_id" in str(ei.value).lower()
+    assert ledger.entries == ()
+
+
+def test_tampered_evidence_digest_rejected():
+    from dataclasses import replace
+
+    snap, ledger, lease, patch, receipts, _ = _commit_bundle()
+    good = receipts[0]
+    # Keep receipt_id + issuance_digest; change evidence → identity/issuance mismatch
+    tampered = replace(good, evidence_digest="evd-tampered-digest-value")
+    with pytest.raises(SpeTypedError) as ei:
+        commit_semantic_patch(snap, ledger, lease, patch, (tampered,))
+    assert ei.value.code is ErrorCode.K2_VERIFICATION_FAILED
+    assert ledger.entries == ()
+
+
+def test_tampered_issuance_digest_rejected():
+    from dataclasses import replace
+
+    snap, ledger, lease, patch, receipts, _ = _commit_bundle()
+    good = receipts[0]
+    tampered = replace(good, issuance_digest="iss-tampered")
+    with pytest.raises(SpeTypedError) as ei:
+        commit_semantic_patch(snap, ledger, lease, patch, (tampered,))
+    assert ei.value.code is ErrorCode.K2_VERIFICATION_FAILED
+    assert ledger.entries == ()
+
+
+def test_empty_issuance_digest_rejected():
+    from dataclasses import replace
+
+    snap, ledger, lease, patch, receipts, _ = _commit_bundle()
+    good = receipts[0]
+    tampered = replace(good, issuance_digest="")
+    with pytest.raises(SpeTypedError) as ei:
+        commit_semantic_patch(snap, ledger, lease, patch, (tampered,))
+    assert ei.value.code is ErrorCode.K2_VERIFICATION_FAILED
+
+
+def test_canonical_verify_receipt_still_commits():
+    """Legitimate verify_obligation mint path remains the success path."""
+    snap, ledger, lease, patch, receipts, _ = _commit_bundle()
+    result = commit_semantic_patch(snap, ledger, lease, patch, receipts)
+    assert result.new_snapshot.version == 1
+    assert len(result.proof_ledger.entries) == 1
+    assert result.proof_ledger.entries[0].issuance_digest
+    assert result.proof_ledger.entries[0].issuance_digest.startswith("iss-")
+
+
+def test_mutation_removing_receipt_integrity_gate_is_detected():
+    """Static + dynamic mutation: integrity gate must be load-bearing.
+
+    1. commit.py must call assert_receipt_integrity
+    2. If the call is monkeypatched away, a forged PASS would commit —
+       proving the gate is what blocks proof laundering.
+    """
+    from pathlib import Path
+    import spe_runtime.proof.commit as commit_mod
+
+    commit_src = Path(commit_mod.__file__).read_text(encoding="utf-8")
+    assert "assert_receipt_integrity" in commit_src
+    assert "assert_receipt_integrity(receipt)" in commit_src
+
+    snap, ledger, lease, patch, _, obl = _commit_bundle()
+    forged = _forge_pass_receipt(
+        obligation_id=obl.obligation_id,
+        subject_id=obl.subject,
+        snapshot_id=snap.snapshot_id,
+        patch_id=patch.patch_id,
+    )
+
+    # With gate intact: forged FAIL closed
+    with pytest.raises(SpeTypedError):
+        commit_semantic_patch(snap, ledger, lease, patch, (forged,))
+
+    # Mutate: remove issuance validation — forged PASS must then succeed,
+    # demonstrating the gate is necessary (mutation oracle).
+    original = commit_mod.assert_receipt_integrity
+    commit_mod.assert_receipt_integrity = lambda _r: None
+    try:
+        result = commit_semantic_patch(snap, empty_ledger(), lease, patch, (forged,))
+        assert result.new_snapshot.version == 1
+    finally:
+        commit_mod.assert_receipt_integrity = original
+
+    # Restored gate still rejects
+    with pytest.raises(SpeTypedError) as ei:
+        commit_semantic_patch(snap, empty_ledger(), lease, patch, (forged,))
+    assert ei.value.code is ErrorCode.K2_VERIFICATION_FAILED
