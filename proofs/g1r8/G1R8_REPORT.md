@@ -10,7 +10,7 @@
 |-------|-------|
 | Base | `931128b384c3055ecef876124f787e5b8e67651b` |
 | Branch | `cursor/g1r8-k6-spe-artifact-0d6e` |
-| HEAD | `ec5bb711e8f03b97664dc18ea9c6d5122ddbb942` |
+| HEAD | `d75b5cb7d27ad5f63935dee1a9e28ad45951564e` |
 | Working contract SHA | `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3` |
 | PR #6 | OPEN @ `4e6c694` — untouched |
 
