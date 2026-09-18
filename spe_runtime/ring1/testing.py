@@ -14,6 +14,7 @@ class FakeDestination:
     apply_count: dict[str, int] = field(default_factory=dict)
     force_fail_keys: set[str] = field(default_factory=set)
     force_timeout_keys: set[str] = field(default_factory=set)
+    force_reset_keys: set[str] = field(default_factory=set)
     lookup_enabled: bool = True
 
     def lookup(self, idempotency_key: str) -> dict[str, Any] | None:
@@ -24,6 +25,8 @@ class FakeDestination:
     def apply(self, idempotency_key: str, request_digest: str) -> dict[str, Any]:
         if idempotency_key in self.force_timeout_keys:
             raise TimeoutError("simulated destination timeout")
+        if idempotency_key in self.force_reset_keys:
+            raise ConnectionResetError("simulated connection reset after send")
         if idempotency_key in self.force_fail_keys:
             result = {
                 "status": "FAILURE",
