@@ -39,6 +39,16 @@ def verify_obligation(
     K2 owns receipt construction via ``_mint_canonical_receipt``.
     Proof types cannot be silently upgraded — the receipt records the
     verifier-declared type as-is (exact match enforced at commit).
+
+    Trust model (G1R-4 minimum):
+      All in-process verifier callables are trusted K2 code. This boundary
+      protects receipt integrity and semantic binding, not malicious code
+      already executing inside the SPE process. Canonical issuance ≠
+      independently trusted verifier execution.
+
+    For mutation commits, callers MUST supply a concrete ``patch_id``.
+    ``commit_semantic_patch`` requires ``receipt.patch_id == patch.patch_id``
+    exactly — ``None`` does not waive patch binding.
     """
     if not callable(verifier):
         raise SpeTypedError(

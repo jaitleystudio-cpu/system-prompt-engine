@@ -353,6 +353,103 @@ def test_receipt_rejects_wrong_patch():
     assert ledger.entries == ()
 
 
+def test_receipt_rejects_unbound_none_patch_id():
+    """Canonically issued patch_id=None must NOT discharge a mutation commit.
+
+    Issuance integrity authenticates the payload; it does not waive exact
+    patch binding. None must not skip the comparison.
+    """
+    snap, ledger, lease, patch, _, obl = _commit_bundle()
+    cand = {"snapshot_id": snap.snapshot_id}  # no patch_id → None
+    unbound = verify_obligation(obl, cand, _pass_verifier())
+    assert unbound.patch_id is None
+    assert unbound.patch_id != patch.patch_id
+    with pytest.raises(SpeTypedError) as ei:
+        commit_semantic_patch(snap, ledger, lease, patch, (unbound,))
+    assert ei.value.code is ErrorCode.K2_VERIFICATION_FAILED
+    assert "patch_id" in str(ei.value).lower()
+    assert ledger.entries == ()
+    assert snap.version == 0
+    assert lease.status is LeaseStatus.ACTIVE
+
+
+def test_receipt_for_patch_a_cannot_replay_against_patch_b():
+    """Valid receipt bound to Patch A cannot authorize Patch B (same snapshot/obl)."""
+    snap = _snapshot()
+    obl = make_obligation(
+        obligation_type="no_hard_conflict",
+        subject=snap.snapshot_id,
+        required_proof_type=ProofType.DETERMINISTIC_INVARIANT,
+        scope="requirement_graph",
+    )
+    lease = issue_semantic_lease(
+        snapshot=snap,
+        obligations=(obl,),
+        allowed_scope=(DeltaAction.ADD_REQUIREMENT, DeltaAction.CONFIRM_REQUIREMENT),
+    )
+    delta_a = [
+        SemanticDeltaStep(
+            action=DeltaAction.ADD_REQUIREMENT,
+            semantic_key="color",
+            kind=RequirementKind.SHOULD.value,
+            value="blue",
+            provenance=Provenance.MODEL_PROPOSED.value,
+        )
+    ]
+    delta_b = [
+        SemanticDeltaStep(
+            action=DeltaAction.ADD_REQUIREMENT,
+            semantic_key="color",
+            kind=RequirementKind.SHOULD.value,
+            value="red",
+            provenance=Provenance.MODEL_PROPOSED.value,
+        )
+    ]
+    patch_a = make_patch(
+        base_snapshot_id=snap.snapshot_id,
+        base_version=snap.version,
+        lease_id=lease.lease_id,
+        semantic_delta=delta_a,
+        obligation_ids=(obl.obligation_id,),
+    )
+    patch_b = make_patch(
+        base_snapshot_id=snap.snapshot_id,
+        base_version=snap.version,
+        lease_id=lease.lease_id,
+        semantic_delta=delta_b,
+        obligation_ids=(obl.obligation_id,),
+    )
+    assert patch_a.patch_id != patch_b.patch_id
+    receipt_a = verify_obligation(
+        obl,
+        {"snapshot_id": snap.snapshot_id, "patch_id": patch_a.patch_id},
+        _pass_verifier(),
+    )
+    assert receipt_a.patch_id == patch_a.patch_id
+    ledger = empty_ledger()
+    with pytest.raises(SpeTypedError) as ei:
+        commit_semantic_patch(snap, ledger, lease, patch_b, (receipt_a,))
+    assert ei.value.code is ErrorCode.K2_VERIFICATION_FAILED
+    assert ledger.entries == ()
+    assert snap.version == 0
+
+
+def test_mutation_removing_exact_patch_binding_is_detected():
+    """Static gate: commit must require exact patch_id equality (no None skip)."""
+    from pathlib import Path
+    import spe_runtime.proof.commit as commit_mod
+    import re
+
+    src = Path(commit_mod.__file__).read_text(encoding="utf-8")
+    assert "receipt.patch_id != patch.patch_id" in src
+    # Forbidden pattern: only compare when patch_id is not None
+    assert not re.search(
+        r"receipt\.patch_id\s+is\s+not\s+None\s+and\s+receipt\.patch_id\s*!=",
+        src,
+    )
+    assert "must exactly match semantic patch" in src
+
+
 def test_receipt_rejects_wrong_snapshot():
     snap, ledger, lease, patch, _, obl = _commit_bundle()
     cand = {"snapshot_id": "snap-not-current", "patch_id": patch.patch_id}

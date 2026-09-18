@@ -5,9 +5,16 @@ Canonical minting happens only via ``_mint_canonical_receipt``, called
 exclusively from ``verify_obligation``.
 
 Issuance uses a process-local secret so that recomputing
-``receipt_identity`` alone cannot fabricate a commit-valid PASS receipt.
-``commit_semantic_patch`` rejects any receipt that fails
-``assert_receipt_integrity``.
+``receipt_identity`` alone cannot fabricate a commit-valid PASS receipt
+through the public K2 API. ``commit_semantic_patch`` rejects any receipt
+that fails ``assert_receipt_integrity``.
+
+Trust boundary (accurate claim):
+  Prevents ordinary API bypass, direct dataclass receipt fabrication, and
+  accidental proof laundering across the public K2 boundary.
+  Does NOT claim cryptographic isolation against arbitrary hostile Python
+  already executing inside the same process (module underscore privacy is
+  not a security sandbox).
 """
 
 from __future__ import annotations
@@ -20,7 +27,7 @@ from spe_runtime.error_registry import ErrorCode, SpeTypedError
 from spe_runtime.proof.types import ProofType, Verdict, content_digest
 
 # In-process issuance binding — process-local secret (not a durable key).
-# Prevents API bypass / proof laundering by direct dataclass construction.
+# Ordinary public-API forge resistance only; not hostile same-process isolation.
 _ISSUER_ID = "spe_runtime.proof.verify.verify_obligation"
 _ISSUANCE_SECRET = secrets.token_bytes(32)
 

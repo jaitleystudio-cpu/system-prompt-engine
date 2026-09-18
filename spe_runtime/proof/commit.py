@@ -62,6 +62,9 @@ def commit_semantic_patch(
     """Atomic in-process semantic + proof commit (copy-on-write).
 
     On ANY failure: raise SpeTypedError; caller snapshot/ledger objects unchanged.
+
+    Mutation-authorizing obligations require exact patch binding:
+    ``receipt.patch_id == patch.patch_id``. ``None`` does not waive the check.
     """
     assert_not_authority_grant(lease)
     receipt_tuple = tuple(receipts)
@@ -152,10 +155,13 @@ def commit_semantic_patch(
                 ErrorCode.K2_VERIFICATION_FAILED,
                 "receipt snapshot_id does not match current snapshot",
             )
-        if receipt.patch_id is not None and receipt.patch_id != patch.patch_id:
+        # Exact patch binding required for proof-carrying mutation commits.
+        # patch_id=None must NOT skip comparison (replay hole).
+        if receipt.patch_id != patch.patch_id:
             raise SpeTypedError(
                 ErrorCode.K2_VERIFICATION_FAILED,
-                "receipt patch_id does not match patch",
+                "receipt patch_id must exactly match semantic patch "
+                "(None / unbound receipts cannot discharge mutation commits)",
             )
         if receipt.subject_id != obligation.subject and receipt.subject_id != current_snapshot.snapshot_id:
             raise SpeTypedError(
