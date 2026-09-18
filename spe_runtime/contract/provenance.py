@@ -1,10 +1,10 @@
-"""K0 provenance vocabulary and transition rules."""
+"""Thin re-export of K0 provenance — not a second vocabulary owner."""
 
-from spe_runtime.provenance.models import Provenance
-from spe_runtime.provenance.rules import (
+from spe_runtime.provenance import (
     CONFIRMABLE_PROVENANCES,
     LOWER_PROVENANCES,
     PROTECTED_PROVENANCES,
+    Provenance,
     coerce_provenance,
     is_lower,
     is_protected,

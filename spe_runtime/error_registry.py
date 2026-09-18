@@ -69,6 +69,9 @@ class ErrorCode(str, Enum):
     STATUS_COLLAPSE = "P_STATUS_COLLAPSE"
     # G1R-2 — K4 ambient authority mutation
     GENERIC_AUTHORITY_MUTATION = "K4_GENERIC_AUTHORITY_MUTATION"
+    # G1R-3 — K0/K1 semantic foundation
+    K0_INVALID_PROVENANCE_TRANSITION = "K0_INVALID_PROVENANCE_TRANSITION"
+    K1_INVALID_REQUIREMENT = "K1_INVALID_REQUIREMENT"
 
 
 class SpeTypedError(Exception):

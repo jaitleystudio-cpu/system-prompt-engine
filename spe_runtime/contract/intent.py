@@ -1,4 +1,4 @@
-"""K0 protected intent contract package."""
+"""Thin re-export alias — not a second semantic owner."""
 
 from spe_runtime.contract.protected import (
     ContractValidity,
