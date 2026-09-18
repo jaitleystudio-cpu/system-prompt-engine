@@ -2,7 +2,7 @@
   "schema_version": "2.0.0",
   "gate": "G1_RUNTIME_BINDING",
   "status": "BOUND_WITH_GAPS",
-  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_IMPLEMENTATION_PRESENT; G1R6_REVIEW_PENDING_RECHECK; G1 BOUND_WITH_GAPS",
+  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R6R_RECHECK_PASS; G1 BOUND_WITH_GAPS",
   "normative_spec": {
     "version": "SPE Ω v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
@@ -13,28 +13,28 @@
   },
   "repository": {
     "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-    "branch": "cursor/g1r6-k3-prompt-artifact-0d6e",
-    "implementation_commit": "ce279b3705f331e370a231693d2321daabb22e1e",
-    "implementation_tree": "faac7cbc594b9a34d47c2fd5e4d63a6a905bc2b2",
-    "suite_run_commit": "ce279b3705f331e370a231693d2321daabb22e1e",
-    "suite_tree": "faac7cbc594b9a34d47c2fd5e4d63a6a905bc2b2",
-    "tree_hash": "faac7cbc594b9a34d47c2fd5e4d63a6a905bc2b2",
-    "tree_hash_scope": "implementation_suite_tree",
+    "branch": "cursor/g1r6r-prompt-recheck-0d6e",
+    "implementation_commit": "5ebe61e9869d761a364a15e5c624da1418d05002",
+    "implementation_tree": "9b2cf6f2bab2c3c4b538767af30a2f3e69f1e51c",
+    "suite_run_commit": "5ebe61e9869d761a364a15e5c624da1418d05002",
+    "suite_tree": "9b2cf6f2bab2c3c4b538767af30a2f3e69f1e51c",
+    "tree_hash": "9b2cf6f2bab2c3c4b538767af30a2f3e69f1e51c",
+    "tree_hash_scope": "g1r6r_recheck_hardening_suite_tree",
     "python_version": "3.12.3",
     "lineage": "NEW_IMPLEMENTATION",
     "identity_model": "split_implementation_vs_evidence_validation"
   },
   "tests": {
     "implementation_validation": {
-      "collected": 469,
-      "passed": 466,
-      "failed": 3,
+      "collected": 480,
+      "passed": 476,
+      "failed": 4,
       "skipped": 0,
       "exit_status": 1,
-      "duration_s": 0.731,
-      "result_sha256": "76d2a10155a44e09d8b0c31fbc1a22314b6e5619f207e597d2aa6348b2b65d6f",
-      "junit_sha256": "8b5a03df483232807b4b3567bf728eb63c5f8aece350f302462b2ffbe32f4ed8",
-      "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r6_impl_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+      "duration_s": 0.825,
+      "result_sha256": "5a06e667bb595de2b6220da89f812ab2de1f7d1027e0690a2c73e23941a9d8a5",
+      "junit_sha256": "9aac8d8075ca92504819203138039fd52e285a58f8df09c09d552d7de0800d68",
+      "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r6r_impl_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
       "g1r1": "5/5",
       "g1r2": "27/27",
       "g1r3": "37/37",
@@ -42,24 +42,26 @@
       "g1r5": "18/18",
       "g1r5e": "4/4",
       "g1r6": "30/30",
+      "g1r6r": "10/10",
       "failed_tests": [
         "tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility",
+        "tests/unit/test_g1_runtime_binding.py::test_g1_k3_required_responsibilities_complete",
         "tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique",
         "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
       ]
     },
     "evidence_validation": {
-      "note": "G1R-6 evidence pack generated after implementation suite; no separate G1R-6E consistency suite in this commit",
-      "reviewed_evidence_head": "EXTERNAL_ONLY"
+      "reviewed_evidence_head": "EXTERNAL_ONLY",
+      "note": "G1R-6R recheck evidence pack; historical G1R-5E scoped to proofs/g1r5/"
     },
-    "final_collected": 469,
-    "final_passed": 466,
-    "final_failed": 3,
+    "final_collected": 480,
+    "final_passed": 476,
+    "final_failed": 4,
     "final_skipped": 0,
     "final_exit_status": 1,
-    "final_duration_s": 0.731,
-    "result_sha256": "76d2a10155a44e09d8b0c31fbc1a22314b6e5619f207e597d2aa6348b2b65d6f",
-    "junit_sha256": "8b5a03df483232807b4b3567bf728eb63c5f8aece350f302462b2ffbe32f4ed8",
+    "final_duration_s": 0.825,
+    "result_sha256": "5a06e667bb595de2b6220da89f812ab2de1f7d1027e0690a2c73e23941a9d8a5",
+    "junit_sha256": "9aac8d8075ca92504819203138039fd52e285a58f8df09c09d552d7de0800d68",
     "g1r1_collected": 5,
     "g1r1_passed": 5,
     "g1r1_failed": 0,
@@ -78,9 +80,12 @@
     "g1r6_collected": 30,
     "g1r6_passed": 30,
     "g1r6_failed": 0,
-    "g1_binding_collected": 14,
+    "g1r6r_collected": 10,
+    "g1r6r_passed": 10,
+    "g1r6r_failed": 0,
+    "g1_binding_collected": 15,
     "g1_binding_passed": 11,
-    "g1_binding_failed": 3
+    "g1_binding_failed": 4
   },
   "module_binding": {
     "module_count": 84,
@@ -99,10 +104,11 @@
     ],
     "unowned_ring0_requirements_missing": 7,
     "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
-    "CONFLICTING_RUNTIME_SEMANTICS": 0
+    "CONFLICTING_RUNTIME_SEMANTICS": 0,
+    "k3_strategy_gate": "test_g1_k3_required_responsibilities_complete"
   },
-  "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r6_impl_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
-  "conformance_result": "G1R-6 implementation suite @ce279b3705f3 = 469/466/3 (G1R-1..6 5/5,27/27,37/37,44/44,18/18,30/30; G1R-5E historical 4/4). prompt_artifact owner=K3 writers=1 UNOWNED=2. External review PENDING_RECHECK.",
+  "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r6r_impl_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+  "conformance_result": "G1R-6R RECHECK_PASS @5ebe61e9869d suite 480/476/4. G1R-6 PASS_EXTERNAL. K3 strategy gate RED (cognitive plan/prompt strategy/technique selection MISSING). UNOWNED=2. No G1R-7.",
   "blockers": [
     {
       "id": "G1-B01",
@@ -117,7 +123,7 @@
     {
       "id": "G1-B03",
       "status": "OPEN",
-      "description": "unowned=['spe_artifact_identity', 'qualification_evidence']; prompt_artifact owned by K3."
+      "description": "unowned=['spe_artifact_identity', 'qualification_evidence']; prompt_artifact owned by K3; K3 strategy trio still MISSING (mechanical gate RED)."
     },
     {
       "id": "G1-B04",
@@ -151,10 +157,22 @@
     "writers": 1,
     "duplicates": 0,
     "implementation": "PRESENT",
-    "external_review": "REVIEW_PENDING",
+    "external_review": "PASS",
     "working_contract_unchanged": true,
     "prompt_content_digest_note": "prompt_content_digest != spe_artifact_identity"
   },
-  "captured_at_utc": "2026-09-18T14:49:16Z",
-  "language_migration_decision": "NO MIGRATION DECISION — NO PERFORMANCE EVIDENCE YET"
+  "captured_at_utc": "2026-09-18T15:29:16Z",
+  "language_migration_decision": "NO MIGRATION DECISION — NO PERFORMANCE EVIDENCE YET",
+  "g1r6r": {
+    "task": "INDEPENDENT_PROMPTARTIFACT_RECHECK",
+    "verdict": "G1R6_RECHECK_PASS",
+    "findings_closed": [
+      "G1R6R-H01",
+      "G1R6R-H02",
+      "G1R6R-H03"
+    ],
+    "k3_incompleteness_gate": "test_g1_k3_required_responsibilities_complete",
+    "expected_g1_failures": 4,
+    "g1r7_started": false
+  }
 }

@@ -1,8 +1,8 @@
 {
-  "gate": "G1R-6",
+  "gate": "G1R-6R",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "base_sha_short": "931128b",
-  "branch": "cursor/g1r6-k3-prompt-artifact-0d6e",
+  "branch": "cursor/g1r6r-prompt-recheck-0d6e",
   "dirty_before": false,
   "python_version": "3.12.3",
   "platform": "Linux-6.12.8+-x86_64-with-glibc2.36",
@@ -13,7 +13,7 @@
     "portable/spe-wasm/Cargo.toml",
     "portable/spe-wasm/Cargo.lock"
   ],
-  "captured_at_utc": "2026-09-18T14:49:16Z",
+  "captured_at_utc": "2026-09-18T15:29:16Z",
   "source_file_count": 188,
   "runtime_file_count": 68,
   "test_file_count": 29,
@@ -24,7 +24,7 @@
   "dependency_manifest_hash": "7dafa827ad5e6c9e3d284727a8d58b9767dea1dde36483ef73fbf67b0bafa1aa",
   "source_tree_hash": "1128e9885303af71d99025a9b9e80d21e38873dd7faeb8af05908649db8dbda4",
   "python_used_for_tests": "CPython 3.12.3",
-  "git_tree_sha": "faac7cbc594b9a34d47c2fd5e4d63a6a905bc2b2",
+  "git_tree_sha": "9b2cf6f2bab2c3c4b538767af30a2f3e69f1e51c",
   "spe_spec_file_sha256": "e82d4ca87fa1327af5183d49ac16b5f4a4902139265808b4497e055e99435118",
   "omega_v241_spec_present": false,
   "test_manifest_hash_after_g1": "9a5de8d7ee415c6ae7e69df3f6dc987d9223d61e1649fcc6d65e9b7a4a0b6e9c",
@@ -35,7 +35,7 @@
     "tests/unit/test_g1_runtime_binding.py",
     "G1_FINAL_REPORT.md"
   ],
-  "implementation_commit": "ce279b3705f331e370a231693d2321daabb22e1e",
-  "suite_run_commit": "ce279b3705f331e370a231693d2321daabb22e1e",
+  "implementation_commit": "5ebe61e9869d761a364a15e5c624da1418d05002",
+  "suite_run_commit": "5ebe61e9869d761a364a15e5c624da1418d05002",
   "identity_model": "split_implementation_vs_evidence_validation"
 }
