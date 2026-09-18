@@ -1,9 +1,9 @@
 {
-  "gate": "G1R-6",
+  "gate": "G1R-7",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 84,
+  "module_count": 88,
   "counts": {
-    "RETAIN": 78,
+    "RETAIN": 82,
     "WRAP": 1,
     "MIGRATE": 0,
     "REPLACE": 0,
@@ -338,19 +338,43 @@
       "path": "spe_runtime/prompt/__init__.py",
       "disposition": "RETAIN",
       "normative_owner": "K3",
-      "reason": "G1R-6 PromptArtifact canonical owner K3"
+      "reason": "G1R-7 K3 PromptArtifact + strategy intelligence"
     },
     {
       "path": "spe_runtime/prompt/build.py",
       "disposition": "RETAIN",
       "normative_owner": "K3",
-      "reason": "G1R-6 PromptArtifact canonical owner K3"
+      "reason": "G1R-7 K3 PromptArtifact + strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/prompt/hints.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 strategy intelligence"
     },
     {
       "path": "spe_runtime/prompt/models.py",
       "disposition": "RETAIN",
       "normative_owner": "K3",
-      "reason": "G1R-6 PromptArtifact canonical owner K3"
+      "reason": "G1R-7 K3 PromptArtifact + strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/prompt/plan.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/prompt/strategy.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/prompt/techniques.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 strategy intelligence"
     },
     {
       "path": "spe_runtime/proof/__init__.py",

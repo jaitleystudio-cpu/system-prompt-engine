@@ -1,5 +1,5 @@
 {
-  "gate": "G1R-6",
+  "gate": "G1R-7",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "normative_spec": "SPE Ω v2.4.1",
   "spec_present_in_tree": false,
@@ -273,35 +273,48 @@
     {
       "requirement": "cognitive plan",
       "owner": "K3",
-      "implementation_modules": [],
-      "tests": [],
-      "status": "MISSING",
-      "gap": "No planner.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "implementation_modules": [
+        "spe_runtime/prompt/plan.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "prompt strategy",
       "owner": "K3",
-      "implementation_modules": [],
-      "tests": [],
-      "status": "MISSING",
-      "gap": "No prompt module.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "implementation_modules": [
+        "spe_runtime/prompt/strategy.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "technique selection",
       "owner": "K3",
-      "implementation_modules": [],
-      "tests": [],
-      "status": "MISSING",
-      "gap": "No techniques.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "implementation_modules": [
+        "spe_runtime/prompt/techniques.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "PromptArtifact",
       "owner": "K3",
       "implementation_modules": [
         "spe_runtime/prompt/build.py",
+        "spe_runtime/prompt/hints.py",
         "spe_runtime/prompt/models.py"
       ],
       "tests": [
@@ -624,9 +637,9 @@
     }
   ],
   "counts": {
-    "IMPLEMENTED": 24,
+    "IMPLEMENTED": 27,
     "PARTIAL": 18,
-    "MISSING": 7,
+    "MISSING": 4,
     "CONFLICTING": 1
   }
 }

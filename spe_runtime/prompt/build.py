@@ -37,6 +37,10 @@ _SEC_CONTEXT_OPEN = "===SPE_CONTEXT_DATA_V1==="
 _SEC_CONTEXT_CLOSE = "===END_SPE_CONTEXT_DATA_V1==="
 _SEC_TARGET_OPEN = "===SPE_TARGET_PROFILE_V1==="
 _SEC_TARGET_CLOSE = "===END_SPE_TARGET_PROFILE_V1==="
+_SEC_STRATEGY_OPEN = "===SPE_STRATEGY_V1==="
+_SEC_STRATEGY_CLOSE = "===END_SPE_STRATEGY_V1==="
+_SEC_TECHNIQUE_OPEN = "===SPE_TECHNIQUES_V1==="
+_SEC_TECHNIQUE_CLOSE = "===END_SPE_TECHNIQUES_V1==="
 
 _ALL_SENTINELS = (
     _SEC_PROTECTED_OPEN,
@@ -49,6 +53,10 @@ _ALL_SENTINELS = (
     _SEC_CONTEXT_CLOSE,
     _SEC_TARGET_OPEN,
     _SEC_TARGET_CLOSE,
+    _SEC_STRATEGY_OPEN,
+    _SEC_STRATEGY_CLOSE,
+    _SEC_TECHNIQUE_OPEN,
+    _SEC_TECHNIQUE_CLOSE,
 )
 
 
@@ -140,13 +148,26 @@ def build_prompt_artifact(
     *,
     context_blocks: Mapping[str, Any] | None = None,
     target_profile: str | None = None,
+    planning_hints: Any | None = None,
+    cognitive_plan: Any | None = None,
+    prompt_strategy: Any | None = None,
+    technique_selection: Any | None = None,
 ) -> PromptArtifact:
     """ONE canonical PromptArtifact writer (K3).
 
-    Validates source semantic state, preserves protected K0 requirements and
-    provenance, maintains instruction/data separation, fails closed on HARD
-    conflict, renders deterministically, and never mutates inputs.
+    Pipeline (when strategy inputs omitted, invokes sole K3 writers):
+      ProtectedIntentContract → CognitivePlan → TechniqueSelection
+      → PromptStrategy → PromptArtifact
+
+    Does not create a second PromptArtifact writer. Does not mint authority,
+    proof, qualification, privacy permission, or .spe identity.
     """
+    # Local imports avoid circular init; writers remain canonical sole owners.
+    from spe_runtime.prompt.hints import PlanningHints
+    from spe_runtime.prompt.plan import CognitivePlan, build_cognitive_plan
+    from spe_runtime.prompt.strategy import PromptStrategy, build_prompt_strategy
+    from spe_runtime.prompt.techniques import TechniqueSelection, select_prompt_techniques
+
     if not isinstance(contract, ProtectedIntentContract):
         raise SpeTypedError(
             ErrorCode.K3_PROMPT_INVALID_INPUT,
@@ -160,7 +181,6 @@ def build_prompt_artifact(
             "cannot compile PromptArtifact from CONFLICTED ProtectedIntentContract",
         )
     if validity is ContractValidity.INCOMPLETE:
-        # Conservative: do not manufacture missing intent.
         raise SpeTypedError(
             ErrorCode.K3_PROMPT_INVALID_INPUT,
             "cannot compile PromptArtifact from INCOMPLETE ProtectedIntentContract",
@@ -172,6 +192,57 @@ def build_prompt_artifact(
             "context_blocks must be a mapping or None",
         )
 
+    hints = planning_hints if planning_hints is not None else PlanningHints()
+    if not isinstance(hints, PlanningHints):
+        raise SpeTypedError(
+            ErrorCode.K3_PROMPT_INVALID_INPUT,
+            "planning_hints must be PlanningHints or None",
+        )
+    # Context presence is a structured fact from this call — not invented intent.
+    if context_blocks:
+        hints = PlanningHints(
+            needs_decomposition=hints.needs_decomposition,
+            needs_retrieval=hints.needs_retrieval,
+            needs_comparison=hints.needs_comparison,
+            needs_revision=hints.needs_revision,
+            needs_structured_output=hints.needs_structured_output,
+            needs_examples=hints.needs_examples,
+            needs_execution_prep=hints.needs_execution_prep,
+            has_context=True,
+            role_label=hints.role_label,
+            example_count=hints.example_count,
+            complexity_class=hints.complexity_class,
+        )
+
+    plan: CognitivePlan = (
+        cognitive_plan if cognitive_plan is not None else build_cognitive_plan(contract, hints)
+    )
+    if not isinstance(plan, CognitivePlan):
+        raise SpeTypedError(
+            ErrorCode.K3_PROMPT_INVALID_INPUT,
+            "cognitive_plan must be CognitivePlan or None",
+        )
+    techs: TechniqueSelection = (
+        technique_selection
+        if technique_selection is not None
+        else select_prompt_techniques(contract, plan, hints)
+    )
+    if not isinstance(techs, TechniqueSelection):
+        raise SpeTypedError(
+            ErrorCode.K3_PROMPT_INVALID_INPUT,
+            "technique_selection must be TechniqueSelection or None",
+        )
+    strategy: PromptStrategy = (
+        prompt_strategy
+        if prompt_strategy is not None
+        else build_prompt_strategy(contract, plan, techs, hints)
+    )
+    if not isinstance(strategy, PromptStrategy):
+        raise SpeTypedError(
+            ErrorCode.K3_PROMPT_INVALID_INPUT,
+            "prompt_strategy must be PromptStrategy or None",
+        )
+
     payload = _contract_payload(contract)
     contract_digest = content_digest(payload, prefix="pic-", length=64)
     values_digest = content_digest(
@@ -180,7 +251,6 @@ def build_prompt_artifact(
         length=64,
     )
 
-    # Deterministic requirement order: kind rank, then semantic_key, then requirement_id
     atoms = sorted(
         contract.graph.nodes.values(),
         key=lambda a: (_kind_order(a.kind), a.semantic_key, a.requirement_id),
@@ -214,11 +284,47 @@ def build_prompt_artifact(
         else:
             pref_lines.append(line)
 
-    # Context / data — never promoted to protected instruction or provenance upgrade.
+    # Strategy / technique instructions — never override protected constraints.
+    strategy_line = (
+        f"STRATEGY plan={_escape_structural(plan.plan_kind.value)} "
+        f"instruction={_escape_structural(strategy.instruction_mode)} "
+        f"evidence={_escape_structural(strategy.evidence_mode)} "
+        f"output={_escape_structural(strategy.output_mode)} "
+        f"revision={_escape_structural(strategy.revision_mode)} "
+        f"(does_not_grant_authority_or_network)"
+    )
+    segments.append(
+        PromptSegment(
+            kind=PromptSegmentKind.STRATEGY_INSTRUCTION,
+            requirement_kind=None,
+            text=strategy_line,
+            requirement_ids=(),
+            provenance=Provenance.SYSTEM_REQUIRED.value,
+            semantic_key=None,
+        )
+    )
+    technique_lines: list[str] = []
+    for j in techs.justifications:
+        tl = (
+            f"TECHNIQUE {_escape_structural(j.technique.value)} "
+            f"because={_escape_structural(j.reason_code)} "
+            f"refs={_escape_structural(','.join(j.source_refs))}"
+        )
+        technique_lines.append(tl)
+        segments.append(
+            PromptSegment(
+                kind=PromptSegmentKind.TECHNIQUE_INSTRUCTION,
+                requirement_kind=None,
+                text=tl,
+                requirement_ids=(),
+                provenance=Provenance.SYSTEM_REQUIRED.value,
+                semantic_key=j.technique.value,
+            )
+        )
+
     ctx = dict(context_blocks or {})
     for key in sorted(ctx.keys(), key=str):
         raw = ctx[key]
-        # Encode as canonical JSON then structurally escape sentinels.
         if isinstance(raw, str):
             body = _escape_structural(raw)
         else:
@@ -254,7 +360,6 @@ def build_prompt_artifact(
             )
         )
 
-    # Invariant: every MUST / MUST_NOT from source appears as PROTECTED_CONSTRAINT
     must_ids = {
         a.requirement_id
         for a in atoms
@@ -272,7 +377,6 @@ def build_prompt_artifact(
             "protected MUST/MUST_NOT constraints were not preserved in PromptArtifact",
         )
 
-    # Context segments must never claim protected kinds or upgraded provenance
     for s in segments:
         if s.kind is PromptSegmentKind.CONTEXT_DATA:
             if s.requirement_kind in ("MUST", "MUST_NOT", "USER_CONFIRMED"):
@@ -289,7 +393,6 @@ def build_prompt_artifact(
                     "context/data cannot claim protected provenance",
                 )
 
-    # Deterministic rendered prompt with structural sections
     parts: list[str] = [
         _SEC_PROTECTED_OPEN,
         *protected_lines,
@@ -300,6 +403,12 @@ def build_prompt_artifact(
         _SEC_PREF_OPEN,
         *pref_lines,
         _SEC_PREF_CLOSE,
+        _SEC_STRATEGY_OPEN,
+        strategy_line,
+        _SEC_STRATEGY_CLOSE,
+        _SEC_TECHNIQUE_OPEN,
+        *technique_lines,
+        _SEC_TECHNIQUE_CLOSE,
         _SEC_CONTEXT_OPEN,
     ]
     for s in segments:
@@ -327,6 +436,9 @@ def build_prompt_artifact(
         requirement_kinds=req_kinds,
         requirement_values_digest=values_digest,
         provenance_markers=prov_markers,
+        cognitive_plan_id=plan.plan_id,
+        prompt_strategy_id=strategy.strategy_id,
+        technique_selection_id=techs.selection_id,
     )
 
     artifact_stub = PromptArtifact(
@@ -338,7 +450,6 @@ def build_prompt_artifact(
         target_profile=target_profile,
     )
     digest_payload = artifact_stub.to_canonical_payload()
-    # Exclude placeholder digest field — recompute over semantic content
     digest_payload.pop("prompt_content_digest", None)
     digest_payload["rendered_prompt"] = rendered
     prompt_digest = content_digest(digest_payload, prefix="pad-", length=64)

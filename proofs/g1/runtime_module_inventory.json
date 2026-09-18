@@ -1,7 +1,7 @@
 {
-  "gate": "G1R-6",
+  "gate": "G1R-7",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 84,
+  "module_count": 88,
   "modules": [
     {
       "path": "spe_runtime/__init__.py"
@@ -172,7 +172,19 @@
       "path": "spe_runtime/prompt/build.py"
     },
     {
+      "path": "spe_runtime/prompt/hints.py"
+    },
+    {
       "path": "spe_runtime/prompt/models.py"
+    },
+    {
+      "path": "spe_runtime/prompt/plan.py"
+    },
+    {
+      "path": "spe_runtime/prompt/strategy.py"
+    },
+    {
+      "path": "spe_runtime/prompt/techniques.py"
     },
     {
       "path": "spe_runtime/proof/__init__.py"

@@ -23,6 +23,8 @@ class PromptSegmentKind(str, Enum):
     PREFERENCE = "PREFERENCE"
     CONTEXT_DATA = "CONTEXT_DATA"
     TARGET_PROFILE = "TARGET_PROFILE"
+    STRATEGY_INSTRUCTION = "STRATEGY_INSTRUCTION"
+    TECHNIQUE_INSTRUCTION = "TECHNIQUE_INSTRUCTION"
 
 
 @dataclass(frozen=True, slots=True)
@@ -39,6 +41,9 @@ class PromptSourceBinding:
     requirement_kinds: tuple[str, ...]
     requirement_values_digest: str
     provenance_markers: tuple[str, ...]
+    cognitive_plan_id: str | None = None
+    prompt_strategy_id: str | None = None
+    technique_selection_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -100,6 +105,9 @@ class PromptArtifact:
                 "requirement_kinds": list(self.source_binding.requirement_kinds),
                 "requirement_values_digest": self.source_binding.requirement_values_digest,
                 "provenance_markers": list(self.source_binding.provenance_markers),
+                "cognitive_plan_id": self.source_binding.cognitive_plan_id,
+                "prompt_strategy_id": self.source_binding.prompt_strategy_id,
+                "technique_selection_id": self.source_binding.technique_selection_id,
             },
             "segments": [
                 {

@@ -195,15 +195,20 @@ print(art.rendered_prompt)
     assert r1 == r2
 
 
-def test_gap_matrix_k3_strategy_still_missing():
+def test_gap_matrix_k3_strategy_complete_after_g1r7():
+    """Post-G1R-7: all four K3 responsibilities IMPLEMENTED (was MISSING at G1R-6R)."""
     import json
 
     ring = json.loads((ROOT / "proofs/g1/ring0_gap_matrix.json").read_text())
-    pa = next(r for r in ring["requirements"] if r["requirement"] == "PromptArtifact")
-    assert pa["status"] == "IMPLEMENTED"
-    for name in ("cognitive plan", "prompt strategy", "technique selection"):
+    for name in (
+        "PromptArtifact",
+        "cognitive plan",
+        "prompt strategy",
+        "technique selection",
+    ):
         row = next(r for r in ring["requirements"] if r["requirement"] == name)
-        assert row["status"] == "MISSING"
+        assert row["status"] == "IMPLEMENTED"
+        assert row["implementation_modules"]
 
 
 def test_escape_output_never_equals_sentinel():

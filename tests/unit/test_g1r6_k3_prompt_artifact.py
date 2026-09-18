@@ -475,9 +475,11 @@ def test_gap_matrix_prompt_artifact_implemented():
     pa = next(r for r in ring["requirements"] if r["requirement"] == "PromptArtifact")
     assert pa["status"] == "IMPLEMENTED"
     assert "spe_runtime/prompt/build.py" in pa["implementation_modules"]
+    # G1R-7 closed the sibling K3 strategy gaps; PromptArtifact ownership remains K3.
     for name in ("cognitive plan", "prompt strategy", "technique selection"):
         row = next(r for r in ring["requirements"] if r["requirement"] == name)
-        assert row["status"] == "MISSING"
+        assert row["status"] == "IMPLEMENTED"
+        assert row["owner"] == "K3"
 
 
 def test_c01_c03_unchanged_ownership():

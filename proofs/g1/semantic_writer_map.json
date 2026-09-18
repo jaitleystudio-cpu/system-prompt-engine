@@ -1,5 +1,5 @@
 {
-  "gate": "G1R-6",
+  "gate": "G1R-7",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "facts": [
     {
@@ -276,7 +276,7 @@
       ],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "G1R-6: sole canonical writer build_prompt_artifact in spe_runtime/prompt/build.py. Contract owner K3. C01 recommendation and C03 rendering remain separate facts. prompt_content_digest != spe_artifact_identity."
+      "notes": "G1R-6/G1R-7: sole canonical writer build_prompt_artifact; consumes CognitivePlan/PromptStrategy/TechniqueSelection"
     },
     {
       "semantic_fact": "semantic_snapshot",
@@ -374,6 +374,48 @@
       "reader_modules": [],
       "duplicate_writer": false,
       "resolution_required": false
+    },
+    {
+      "semantic_fact": "cognitive_plan",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/prompt/plan.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/prompt/build.py",
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-7 sole writer build_cognitive_plan"
+    },
+    {
+      "semantic_fact": "prompt_strategy",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/prompt/strategy.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/prompt/build.py",
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-7 sole writer build_prompt_strategy"
+    },
+    {
+      "semantic_fact": "technique_selection",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/prompt/techniques.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/prompt/build.py",
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-7 sole writer select_prompt_techniques"
     }
   ],
   "unowned_facts": [
@@ -382,6 +424,6 @@
   ],
   "ambient_authority_paths": [],
   "ambient_authority_definition": "Hidden privilege elevation without typed AuthorityGrant/AuthorityEvent. Public AuthorityGrant dataclass construction is external injection, not ambient.",
-  "implementation_commit": "ce279b3705f331e370a231693d2321daabb22e1e",
-  "evidence_scope": "prompt_artifact_ownership_at_implementation_commit"
+  "implementation_commit": "PENDING",
+  "evidence_scope": "k3_strategy_intelligence"
 }

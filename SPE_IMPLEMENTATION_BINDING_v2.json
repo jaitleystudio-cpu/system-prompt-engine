@@ -88,8 +88,8 @@
     "g1_binding_failed": 4
   },
   "module_binding": {
-    "module_count": 84,
-    "retain": 78,
+    "module_count": 88,
+    "retain": 82,
     "wrap": 1,
     "migrate": 0,
     "replace": 0,
@@ -102,7 +102,7 @@
       "spe_artifact_identity",
       "qualification_evidence"
     ],
-    "unowned_ring0_requirements_missing": 7,
+    "unowned_ring0_requirements_missing": 4,
     "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
     "CONFLICTING_RUNTIME_SEMANTICS": 0,
     "k3_strategy_gate": "test_g1_k3_required_responsibilities_complete"
