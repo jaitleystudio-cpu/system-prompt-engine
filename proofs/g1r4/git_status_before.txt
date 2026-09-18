@@ -1,0 +1,28 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	proofs/g1r4/
+
+nothing added to commit but untracked files present (use "git add" to track)
+931128b chore: record post-merge PR #5 pytest baseline
+605e336 Merge pull request #5 from jaitleystudio-cpu/feat/portable-kernel-wasm-s5
+c64aa1e fix(sprint5): prove WASM runtime conformance via Node WebAssembly
+09de6f7 docs(sprint5): record portable kernel + WASM slice
+eacc2d8 chore(sprint5): record GREEN proofs and local portable-subset summary
+5d339f6 test(sprint5): cross-process and 10-cycle determinism
+1acfb98 feat(sprint5): WASM thin wrapper over spe-core-rs
+c8fae1d feat(sprint5): cross-language negatives + positive corpus
+791005f feat(sprint5): capability containment + fixture evaluator
+aa9b447 feat(sprint5): protected-semantic equivalence kernel
+---BRANCHES---
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feat/portable-kernel-wasm-s5
+  remotes/origin/feat/universal-portability-conformance-s4
+  remotes/origin/feat/web-pwa-foundation-s6
+  remotes/origin/feat/xcat-c02-c06-c01-c03
+  remotes/origin/feat/xcat-c07-authority-s3
+  remotes/origin/feat/xcat-core-s4
+  remotes/origin/main

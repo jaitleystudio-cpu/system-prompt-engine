@@ -1,0 +1,37 @@
+{
+  "R1_SemanticSnapshot": {
+    "evidence": "no spe_runtime.proof.snapshot; no SemanticSnapshot symbol",
+    "expected": "canonical type",
+    "status": "MISSING"
+  },
+  "R2_ProofObligation": {
+    "evidence": "no spe_runtime.proof.obligation",
+    "expected": "canonical type",
+    "status": "MISSING"
+  },
+  "R3_ProofLedger": {
+    "evidence": "EffectLedger exists but is not ProofLedger",
+    "expected": "canonical owner",
+    "status": "MISSING"
+  },
+  "R4_SemanticLease": {
+    "evidence": "no SemanticLease/SemanticProofLease",
+    "expected": "proof-bound mutation object",
+    "status": "MISSING"
+  },
+  "R5_ProofCarryingPatch": {
+    "evidence": "no ProofCarryingPatch",
+    "expected": "canonical type",
+    "status": "MISSING"
+  },
+  "R6_VerificationReceipt": {
+    "evidence": "proof_receipt.schema.json STUB; issue_receipt.py not implemented",
+    "expected": "canonical minting boundary",
+    "status": "MISSING"
+  },
+  "R7_atomic_semantic_proof_commit": {
+    "evidence": "no commit_semantic_patch",
+    "expected": "state+proof atomic commit",
+    "status": "MISSING"
+  }
+}
