@@ -240,7 +240,7 @@
       ],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "Canonical mint: verify_obligation -> _mint_canonical_receipt. Commit validates receipt_id + process-local issuance_digest via assert_receipt_integrity."
+      "notes": "Canonical mint: verify_obligation -> _mint_canonical_receipt. Commit validates receipt_id + issuance_digest AND exact receipt.patch_id == patch.patch_id (None does not waive)."
     },
     {
       "semantic_fact": "privacy_projection",
@@ -367,7 +367,7 @@
       "resolution_required": false
     }
   ],
-  "head_sha": "08abdb5a91bdba6815f81bc6209b0530d5ee3d65",
+  "head_sha": "6b404e040e9fc8640439cbadda9b57505e6cbdcb",
   "unowned_facts": [
     "privacy_projection",
     "spe_artifact_identity",

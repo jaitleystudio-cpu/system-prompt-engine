@@ -1,19 +1,26 @@
 {
   "gate": "G1R-4A",
+  "identity_model": {
+    "note": "Committed evidence MUST NOT claim its own containing commit is the branch tip. Use implementation/suite commits + content hashes. reviewed_pr_head is recorded externally by reviewer/CI.",
+    "implementation_commit": "6b404e040e9fc8640439cbadda9b57505e6cbdcb",
+    "suite_run_commit": "6b404e040e9fc8640439cbadda9b57505e6cbdcb",
+    "suite_tree": "2ea3d91b49258e093edae0aac7ffa248c32d8517",
+    "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+    "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+    "reviewed_pr_head": null,
+    "reviewed_pr_head_source": "external_reviewer_or_ci_only"
+  },
   "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r4a_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
-  "git_HEAD": "08abdb5a91bdba6815f81bc6209b0530d5ee3d65",
   "git_branch": "cursor/g1r4a-proof-integrity-0d6e",
-  "git_tree": "7d5b3324d49e688b6f7bb9d16abbb508f9f9623f",
-  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "python_version": "3.12.3",
-  "collected": 414,
-  "passed": 411,
+  "collected": 417,
+  "passed": 414,
   "failed": 3,
   "skipped": 0,
   "exit_status": 1,
-  "duration_s": 0.785,
-  "result_sha256": "f21c7e4c0f3664385c3937f27ec9db111888211095b04c5a6c67fa6e9d54ce61",
-  "junit_sha256": "18c865c54b25c8954d0aec90e47c5f1d863be661cc7ca0955e5db07986e622ce",
+  "duration_s": 0.794,
+  "result_sha256": "29f42c4c6ef780d65cc1882320009349efa8bc7b3b3d74385bffaa80fd240c3d",
+  "junit_sha256": "0a29357137a18b35879e2a6801dd9089bdd71ed4e0cf150175a4035898f509fd",
   "gates": {
     "g1r1": {
       "collected": 5,
@@ -37,8 +44,8 @@
       "exit_status": 0
     },
     "g1r4": {
-      "collected": 41,
-      "passed": 41,
+      "collected": 44,
+      "passed": 44,
       "failed": 0,
       "skipped": 0,
       "exit_status": 0
@@ -63,7 +70,16 @@
     "tests/portability/test_sprint5_merge_gate_oracle.py"
   ],
   "exclusion_reason": "WASM/Rust toolchain and Sprint5 cross-language env not available in this agent VM; not G1R-4A regressions.",
-  "captured_at_utc": "2026-09-18T13:24:14Z",
-  "note": "Suite executed at implementation HEAD 08abdb5 (receipt integrity). Evidence/report docs may land in a follow-up commit; denominators are pinned to this run.",
-  "evidence_commit": "1bfba825e59bfd2dfaedbea2045166d3e5c0d6db"
+  "patch_binding": {
+    "rule": "receipt.patch_id == patch.patch_id",
+    "none_waives": false,
+    "none_for_mutation_commit": "REJECTED"
+  },
+  "trust_model": {
+    "verifier_callables": "trusted_in_process_k2_code",
+    "issuance_secret": "ordinary_public_api_forge_resistance_only",
+    "same_process_hostile_python": "OUT_OF_SCOPE"
+  },
+  "captured_at_utc": "2026-09-18T13:38:47Z",
+  "artifact_content_sha256": "962f4935cf95c20181a1d6479e47e4c1bdb41aad743ca5e88859e43f9f5d7293"
 }

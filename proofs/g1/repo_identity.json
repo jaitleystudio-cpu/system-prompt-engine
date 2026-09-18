@@ -24,7 +24,7 @@
   "dependency_manifest_hash": "7dafa827ad5e6c9e3d284727a8d58b9767dea1dde36483ef73fbf67b0bafa1aa",
   "source_tree_hash": "1128e9885303af71d99025a9b9e80d21e38873dd7faeb8af05908649db8dbda4",
   "python_used_for_tests": "CPython 3.12.3",
-  "git_tree_sha": "7d5b3324d49e688b6f7bb9d16abbb508f9f9623f",
+  "git_tree_sha": "2ea3d91b49258e093edae0aac7ffa248c32d8517",
   "spe_spec_file_sha256": "e82d4ca87fa1327af5183d49ac16b5f4a4902139265808b4497e055e99435118",
   "omega_v241_spec_present": false,
   "test_manifest_hash_after_g1": "9a5de8d7ee415c6ae7e69df3f6dc987d9223d61e1649fcc6d65e9b7a4a0b6e9c",
@@ -35,5 +35,8 @@
     "tests/unit/test_g1_runtime_binding.py",
     "G1_FINAL_REPORT.md"
   ],
-  "head_sha": "08abdb5a91bdba6815f81bc6209b0530d5ee3d65"
+  "head_sha": "6b404e040e9fc8640439cbadda9b57505e6cbdcb",
+  "implementation_commit": "6b404e040e9fc8640439cbadda9b57505e6cbdcb",
+  "suite_run_commit": "6b404e040e9fc8640439cbadda9b57505e6cbdcb",
+  "identity_model": "non_self_referential"
 }
