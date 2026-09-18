@@ -1,7 +1,7 @@
 {
-  "gate": "G1R-5",
+  "gate": "G1R-6",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "normative_spec": "SPE \u03a9 v2.4.1",
+  "normative_spec": "SPE Ω v2.4.1",
   "spec_present_in_tree": false,
   "requirements": [
     {
@@ -134,7 +134,7 @@
         "tests/integration/test_xcat_c02_c06_c01_c03.py"
       ],
       "status": "PARTIAL",
-      "gap": "facts\u2248claims without claim qualification.",
+      "gap": "facts≈claims without claim qualification.",
       "future_action": "WRAP"
     },
     {
@@ -300,11 +300,16 @@
     {
       "requirement": "PromptArtifact",
       "owner": "K3",
-      "implementation_modules": [],
-      "tests": [],
-      "status": "MISSING",
-      "gap": "C01/C03 are decide/render, not prompts.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "implementation_modules": [
+        "spe_runtime/prompt/build.py",
+        "spe_runtime/prompt/models.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r6_k3_prompt_artifact.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "capability routing (prompt/strategy)",
@@ -329,7 +334,7 @@
         "tests/integration/test_xcat_c02_c06_c01_c03.py"
       ],
       "status": "IMPLEMENTED",
-      "gap": "Present as Decide, not as \u03a9 prompt kernel.",
+      "gap": "Present as Decide, not as Ω prompt kernel.",
       "future_action": "WRAP"
     },
     {
@@ -619,9 +624,9 @@
     }
   ],
   "counts": {
-    "IMPLEMENTED": 22,
+    "IMPLEMENTED": 24,
     "PARTIAL": 18,
-    "MISSING": 9,
+    "MISSING": 7,
     "CONFLICTING": 1
   }
 }

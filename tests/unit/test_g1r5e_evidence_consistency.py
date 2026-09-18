@@ -1,4 +1,8 @@
-"""G1R-5E/F evidence consistency — split implementation vs evidence validation."""
+"""G1R-5E/F evidence consistency — historical G1R-5 pack only (EXTERNAL_ONLY).
+
+Scoped to proofs/g1r5/* so later gates may advance root/live binding without
+falsely regressing the frozen G1R-5 evidence pack.
+"""
 
 from __future__ import annotations
 
@@ -8,6 +12,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+G1R5 = ROOT / "proofs" / "g1r5"
 IMPL = "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd"
 TREE = "8f53d36a35307c808798b82622713623c772838f"
 WC = "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3"
@@ -25,17 +30,19 @@ def _manifest_content_sha(manifest: dict) -> str:
 
 
 def test_g1r5_binding_copies_byte_identical():
-    a = (ROOT / "SPE_IMPLEMENTATION_BINDING_v2.json").read_bytes()
-    b = (ROOT / "proofs/g1/SPE_IMPLEMENTATION_BINDING_v2.json").read_bytes()
-    c = (ROOT / "proofs/g1r5/SPE_IMPLEMENTATION_BINDING_v2.json").read_bytes()
-    assert a == b == c
+    """Historical G1R-5 binding snapshot is self-consistent (not live root)."""
+    a = (G1R5 / "SPE_IMPLEMENTATION_BINDING_v2.json").read_bytes()
     assert b"PENDING_SUITE" not in a
     assert b'"final_collected": 0' not in a
     assert b'"conformance_command": "PENDING"' not in a
+    b = json.loads(a)
+    assert b["repository"]["implementation_commit"] == IMPL
+    assert b["repository"]["suite_tree"] == TREE
+    assert b["g1r5"]["external_review"] == "PASS"
 
 
 def test_g1r5_manifest_hash_recomputes():
-    m = _load(ROOT / "proofs/g1r5/AUTHORITATIVE_TEST_MANIFEST.json")
+    m = _load(G1R5 / "AUTHORITATIVE_TEST_MANIFEST.json")
     assert m["artifact_content_sha256"] == _manifest_content_sha(m)
     assert m["implementation_identity"]["commit"] == IMPL
     assert m["implementation_identity"]["tree"] == TREE
@@ -53,11 +60,10 @@ def test_g1r5_manifest_hash_recomputes():
 
 
 def test_g1r5_evidence_artifacts_agree():
-    m = _load(ROOT / "proofs/g1r5/AUTHORITATIVE_TEST_MANIFEST.json")
-    b = _load(ROOT / "SPE_IMPLEMENTATION_BINDING_v2.json")
-    w = _load(ROOT / "proofs/g1/semantic_writer_map.json")
-    ring = _load(ROOT / "proofs/g1/ring0_gap_matrix.json")
-    report = (ROOT / "proofs/g1r5/G1R5_REPORT.md").read_text(encoding="utf-8")
+    m = _load(G1R5 / "AUTHORITATIVE_TEST_MANIFEST.json")
+    b = _load(G1R5 / "SPE_IMPLEMENTATION_BINDING_v2.json")
+    w = _load(G1R5 / "semantic_writer_map.json")
+    report = (G1R5 / "G1R5_REPORT.md").read_text(encoding="utf-8")
     iv = m["implementation_validation"]
     ev = m["evidence_validation"]
 
@@ -90,10 +96,6 @@ def test_g1r5_evidence_artifacts_agree():
     assert w.get("unowned_facts") == m["unowned_facts_after"]
     assert "head_sha" not in w
     assert w.get("implementation_commit") == IMPL
-
-    priv = next(r for r in ring["requirements"] if r["requirement"] == "privacy projection")
-    assert priv["owner"] == "K4"
-    assert priv["status"] == "IMPLEMENTED"
 
     assert "G1R5_IMPLEMENTATION_PRESENT" in report
     assert "G1R5_PASS" in report

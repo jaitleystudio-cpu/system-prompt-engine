@@ -1,5 +1,5 @@
 {
-  "gate": "G1R-5",
+  "gate": "G1R-6",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "facts": [
     {
@@ -29,7 +29,7 @@
       ],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "models.py is the typed AuthorityGrant value object; consume.py uniquely writes uses_consumed. External AuthorityGrant construction is the intentional external-authority injection surface (C07 never mints grants). It is NOT a HIDDEN_AMBIENT_AUTHORITY_PATH \u2014 ambient paths are privilege elevation without a typed grant/event (closed in G1R-2: replace_envelope authority fields, X09). Formal: ambient_authority_paths=0 counts hidden elevation, not the public grant dataclass."
+      "notes": "models.py is the typed AuthorityGrant value object; consume.py uniquely writes uses_consumed. External AuthorityGrant construction is the intentional external-authority injection surface (C07 never mints grants). It is NOT a HIDDEN_AMBIENT_AUTHORITY_PATH — ambient paths are privilege elevation without a typed grant/event (closed in G1R-2: replace_envelope authority fields, X09). Formal: ambient_authority_paths=0 counts hidden elevation, not the public grant dataclass."
     },
     {
       "semantic_fact": "grant_compatibility",
@@ -263,16 +263,20 @@
       "reader_modules": [],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "still unowned after G1R-4"
+      "notes": "still unowned after G1R-6"
     },
     {
       "semantic_fact": "prompt_artifact",
       "canonical_owner": "K3",
-      "writer_modules": [],
-      "reader_modules": [],
+      "writer_modules": [
+        "spe_runtime/prompt/build.py"
+      ],
+      "reader_modules": [
+        "tests/unit/test_g1r6_k3_prompt_artifact.py"
+      ],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "still unowned after G1R-4"
+      "notes": "G1R-6: sole canonical writer build_prompt_artifact in spe_runtime/prompt/build.py. Contract owner K3. C01 recommendation and C03 rendering remain separate facts. prompt_content_digest != spe_artifact_identity."
     },
     {
       "semantic_fact": "semantic_snapshot",
@@ -293,7 +297,7 @@
       "reader_modules": [],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "still unowned after G1R-4"
+      "notes": "still unowned after G1R-6"
     },
     {
       "semantic_fact": "proof_ledger",
@@ -374,7 +378,6 @@
   ],
   "unowned_facts": [
     "spe_artifact_identity",
-    "prompt_artifact",
     "qualification_evidence"
   ],
   "ambient_authority_paths": [],

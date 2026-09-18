@@ -2,9 +2,9 @@
   "schema_version": "2.0.0",
   "gate": "G1_RUNTIME_BINDING",
   "status": "BOUND_WITH_GAPS",
-  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1 BOUND_WITH_GAPS",
+  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_IMPLEMENTATION_PRESENT; G1R6_REVIEW_PENDING_RECHECK; G1 BOUND_WITH_GAPS",
   "normative_spec": {
-    "version": "SPE \u03a9 v2.4.1",
+    "version": "SPE Ω v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
     "present_in_tree": true,
     "path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
@@ -13,12 +13,12 @@
   },
   "repository": {
     "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-    "branch": "cursor/g1r5-k3-privacy-projection-0d6e",
-    "implementation_commit": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
-    "implementation_tree": "8f53d36a35307c808798b82622713623c772838f",
-    "suite_run_commit": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
-    "suite_tree": "8f53d36a35307c808798b82622713623c772838f",
-    "tree_hash": "8f53d36a35307c808798b82622713623c772838f",
+    "branch": "cursor/g1r6-k3-prompt-artifact-0d6e",
+    "implementation_commit": "36d5cd17697ce31cad14fc011da8f13e16cdbfcc",
+    "implementation_tree": "1ef42d8d617d2799104ee66b810b6084fec571eb",
+    "suite_run_commit": "36d5cd17697ce31cad14fc011da8f13e16cdbfcc",
+    "suite_tree": "1ef42d8d617d2799104ee66b810b6084fec571eb",
+    "tree_hash": "1ef42d8d617d2799104ee66b810b6084fec571eb",
     "tree_hash_scope": "implementation_suite_tree",
     "python_version": "3.12.3",
     "lineage": "NEW_IMPLEMENTATION",
@@ -82,8 +82,8 @@
     "g1_binding_failed": 3
   },
   "module_binding": {
-    "module_count": 81,
-    "retain": 75,
+    "module_count": 84,
+    "retain": 78,
     "wrap": 1,
     "migrate": 0,
     "replace": 0,
@@ -91,13 +91,12 @@
   },
   "semantic_binding": {
     "DUPLICATE_CANONICAL_WRITERS": 0,
-    "UNOWNED_RING0_RESPONSIBILITIES": 3,
+    "UNOWNED_RING0_RESPONSIBILITIES": 2,
     "unowned_facts": [
       "spe_artifact_identity",
-      "prompt_artifact",
       "qualification_evidence"
     ],
-    "unowned_ring0_requirements_missing": 8,
+    "unowned_ring0_requirements_missing": 7,
     "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
     "CONFLICTING_RUNTIME_SEMANTICS": 0
   },
@@ -117,7 +116,7 @@
     {
       "id": "G1-B03",
       "status": "OPEN",
-      "description": "unowned=['spe_artifact_identity', 'prompt_artifact', 'qualification_evidence']; privacy_projection owned by K4."
+      "description": "unowned=['spe_artifact_identity', 'qualification_evidence']; prompt_artifact owned by K3."
     },
     {
       "id": "G1-B04",
@@ -144,6 +143,16 @@
     "external_review": "PASS",
     "working_contract_unchanged": true
   },
-  "captured_at_utc": "2026-09-18T14:31:24Z",
-  "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET"
+  "captured_at_utc": "2026-09-18T14:44:29Z",
+  "language_migration_decision": "NO MIGRATION DECISION — NO PERFORMANCE EVIDENCE YET",
+  "g1r6": {
+    "task": "K3_PROMPT_ARTIFACT",
+    "contract_owner": "K3",
+    "canonical_writer": "spe_runtime/prompt/build.py::build_prompt_artifact",
+    "writers": 1,
+    "duplicates": 0,
+    "implementation": "PRESENT",
+    "external_review": "REVIEW_PENDING",
+    "working_contract_unchanged": true
+  }
 }

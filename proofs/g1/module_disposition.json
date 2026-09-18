@@ -1,13 +1,13 @@
 {
-  "gate": "G1R-4",
+  "gate": "G1R-6",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 81,
+  "module_count": 84,
   "counts": {
-    "RETAIN": 71,
+    "RETAIN": 78,
     "WRAP": 1,
     "MIGRATE": 0,
     "REPLACE": 0,
-    "RETIRE": 6
+    "RETIRE": 5
   },
   "modules": [
     {
@@ -333,6 +333,24 @@
       "disposition": "RETAIN",
       "normative_owner": "K4",
       "reason": "G1R-5 privacy_projection canonical owner K4"
+    },
+    {
+      "path": "spe_runtime/prompt/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-6 PromptArtifact canonical owner K3"
+    },
+    {
+      "path": "spe_runtime/prompt/build.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-6 PromptArtifact canonical owner K3"
+    },
+    {
+      "path": "spe_runtime/prompt/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-6 PromptArtifact canonical owner K3"
     },
     {
       "path": "spe_runtime/proof/__init__.py",
