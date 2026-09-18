@@ -4,5 +4,8 @@
   "g1r9_implementation_head": "8766bfdc7a8907340b72d81e9c5d1bb82482ce51",
   "g1r9r_branch": "cursor/g1r9r-k7-qualification-recheck-0d6e",
   "g1r9r_head_at_start": "8766bfdc7a8907340b72d81e9c5d1bb82482ce51",
-  "exact_g1r9_bytes": true
+  "exact_g1r9_bytes": true,
+  "g1r9r_review_head": "c88703a879411198c8dff398eaf7d1657cc9ccd0",
+  "g1r9r_tree": "b2680562c7ca1d4c658f41073a5a4c42aeb3517b",
+  "verdict": "G1R9_RECHECK_PASS"
 }

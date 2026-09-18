@@ -1,0 +1,17 @@
+{
+  "fields": [
+    "schema_version",
+    "evidence_kind",
+    "subject_id",
+    "claim_key",
+    "scope",
+    "verdict",
+    "independence",
+    "independence_basis",
+    "producer_class",
+    "artifact_ref",
+    "evidence_digest",
+    "limitations"
+  ],
+  "prefix": "qe-"
+}

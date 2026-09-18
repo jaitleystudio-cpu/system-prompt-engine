@@ -2,7 +2,7 @@
   "schema_version": "2.0.0",
   "gate": "G1_RUNTIME_BINDING",
   "status": "BOUND_WITH_GAPS",
-  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_PASS_EXTERNAL; G1R8R_RECHECK_PASS; G1R9_IMPLEMENTATION_PRESENT_REVIEW_PENDING; G1 BOUND_WITH_GAPS",
+  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_PASS_EXTERNAL; G1R8R_RECHECK_PASS; G1R9_PASS_EXTERNAL; G1R9R_RECHECK_PASS; G1 BOUND_WITH_GAPS (G1R-V pending)",
   "normative_spec": {
     "version": "SPE Ω v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
@@ -13,12 +13,12 @@
   },
   "repository": {
     "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-    "branch": "cursor/g1r9-k7-qualification-0d6e",
-    "implementation_commit": "7d618aab03861d5b770eae9f34e5924cf88eff54",
-    "implementation_tree": "41e4a1a6ee41ac2c3dc716ba75667ff2082a3e62",
-    "suite_run_commit": "7d618aab03861d5b770eae9f34e5924cf88eff54",
-    "suite_tree": "41e4a1a6ee41ac2c3dc716ba75667ff2082a3e62",
-    "tree_hash": "41e4a1a6ee41ac2c3dc716ba75667ff2082a3e62",
+    "branch": "cursor/g1r9r-k7-qualification-recheck-0d6e",
+    "implementation_commit": "c88703a879411198c8dff398eaf7d1657cc9ccd0",
+    "implementation_tree": "b2680562c7ca1d4c658f41073a5a4c42aeb3517b",
+    "suite_run_commit": "c88703a879411198c8dff398eaf7d1657cc9ccd0",
+    "suite_tree": "b2680562c7ca1d4c658f41073a5a4c42aeb3517b",
+    "tree_hash": "b2680562c7ca1d4c658f41073a5a4c42aeb3517b",
     "tree_hash_scope": "implementation_suite_tree",
     "python_version": "3.12.3",
     "lineage": "NEW_IMPLEMENTATION",
@@ -26,14 +26,14 @@
   },
   "tests": {
     "implementation_validation": {
-      "collected": 632,
-      "passed": 632,
+      "collected": 672,
+      "passed": 672,
       "failed": 0,
       "skipped": 0,
       "exit_status": 0,
       "duration_s": 0.966,
-      "result_sha256": "d06fecee27afa07b05b62ae1e963e80223cc13a0cac741fd4ca41d396396c6cc",
-      "junit_sha256": "be31efe849ed029f2c02f2aa8ddf5944682d69012f1d3306d6627708e7395460",
+      "result_sha256": "3b0ed998565e7e4ddf58e8faf37ee1002f6ec3392e78a9b491a64ad2d6e8ba2c",
+      "junit_sha256": "6d7b36d74bfbc92c1b31eeb266bb185e04c00f6ea9b97ad5b2125b7a3356aa9e",
       "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
       "g1r1": "5/5",
       "g1r2": "27/27",
@@ -48,7 +48,8 @@
       "g1r7r": "26/26",
       "g1r8": "33/33",
       "g1r8r": "17/17",
-      "g1r9": "49/49"
+      "g1r9": "pass",
+      "g1r9r": "pass"
     },
     "evidence_validation": {
       "reviewed_evidence_head": "EXTERNAL_ONLY"
@@ -107,10 +108,10 @@
     "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
     "CONFLICTING_RUNTIME_SEMANTICS": 0,
     "k3_strategy_gate": "PASS",
-    "k7_qualification_gate": "MECHANICAL_GREEN_REVIEW_PENDING"
+    "k7_qualification_gate": "PASS_EXTERNAL"
   },
   "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
-  "conformance_result": "G1R-9 IMPLEMENTATION_PRESENT_REVIEW_PENDING @16ceff317969 suite 632/632/0. Mechanical UNOWNED=0 MISSING=0. Authoritative G1 remains BOUND_WITH_GAPS pending G1R-9R + G1R-V.",
+  "conformance_result": "G1R-9R RECHECK_PASS @c88703a87941 suite 672/672/0. G1R-9 PASS_EXTERNAL. F01-F06 claim-laundering fixed. G1 remains BOUND_WITH_GAPS pending G1R-V.",
   "blockers": [
     {
       "id": "G1-B01",
@@ -230,8 +231,8 @@
   },
   "g1r9": {
     "task": "K7_CLAIM_QUALIFICATION",
-    "status": "IMPLEMENTATION_PRESENT_REVIEW_PENDING",
-    "earned_claim": "NONE_PENDING_EXTERNAL_RECHECK",
-    "note": "Mechanical UNOWNED/MISSING closed; do not claim G1_PASS or PASS_EXTERNAL"
+    "status": "PASS_EXTERNAL",
+    "recheck": "G1R9R_RECHECK_PASS",
+    "note": "Authoritative G1 still BOUND_WITH_GAPS until G1R-V"
   }
 }
