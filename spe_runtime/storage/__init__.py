@@ -1,10 +1,14 @@
-"""K6 storage — .spe semantic artifact + lineage (G1R-8).
+"""K6 storage — .spe semantic artifact + lineage (G1R-8 / G1R-8R).
 
 Canonical writers:
   build_spe_artifact  — spe_artifact_identity + direct parent lineage
 
-Import/parse validates content-addressed integrity. It does NOT:
-  grant authority, mint proof, upgrade provenance, or qualify production.
+Earned claim scope:
+  PORTABLE_SEMANTIC_BINDING_ARTIFACT
+  (ProtectedIntent/RequirementGraph embedded; snapshot/prompt/ledger DIGEST_ONLY)
+
+Import/parse validates content-addressed integrity + digest↔payload consistency.
+It does NOT grant authority, mint proof, upgrade provenance, or qualify production.
 """
 
 from spe_runtime.storage.build import build_spe_artifact

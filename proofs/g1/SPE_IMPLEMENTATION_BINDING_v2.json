@@ -93,8 +93,8 @@
     "g1r7r_passed": 26
   },
   "module_binding": {
-    "module_count": 92,
-    "retain": 87,
+    "module_count": 93,
+    "retain": 88,
     "wrap": 1,
     "migrate": 0,
     "replace": 0,

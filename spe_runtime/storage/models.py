@@ -11,9 +11,12 @@ Laws:
   PROMPT ARTIFACT != .spe ARTIFACT
 
 Design (Ring-0 minimum):
-  Embed canonical protected-intent payload for portable self-contained .spe.
-  Bind snapshot / prompt / optional proof-ledger by typed digests (references).
+  PORTABLE_SEMANTIC_BINDING_ARTIFACT (not full self-contained replay).
+  Embeds canonical protected-intent (+ RequirementGraph via payload.graph).
+  Binds snapshot / prompt / optional proof-ledger by typed digests only
+  (REFERENCE_ONLY / DIGEST_ONLY — not reconstructable from .spe alone).
   Direct parent lineage only — no DAG merge / ancestry store.
+  Content-addressed integrity ≠ authenticity, confidentiality, or qualification.
 """
 
 from __future__ import annotations

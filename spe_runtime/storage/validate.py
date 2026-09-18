@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, Mapping
 
 from spe_runtime.error_registry import ErrorCode, SpeTypedError
+from spe_runtime.proof.snapshot import protected_intent_digest, requirement_graph_digest
 from spe_runtime.proof.types import content_digest
 from spe_runtime.storage.models import (
     ALLOWED_TOP_LEVEL_FIELDS,
@@ -19,6 +20,7 @@ from spe_runtime.storage.models import (
     SpeArtifact,
     unfreeze_mapping,
 )
+from spe_runtime.storage.reconstruct import contract_from_embedded_payload
 
 
 def _require_str(value: Any, field: str) -> str:
@@ -62,7 +64,10 @@ def _require_prefix(value: str | None, prefix: str, field: str) -> None:
 
 
 def compute_artifact_id(preimage: Mapping[str, Any]) -> str:
-    """Sole identity derivation: spe- + sha256(canonical identity preimage)."""
+    """Sole identity derivation: spe- + sha256(canonical identity preimage).
+
+    length=64 selects the full SHA-256 hex digest (256 bits = 64 hex chars).
+    """
     return content_digest(dict(preimage), prefix=ARTIFACT_ID_PREFIX, length=64)
 
 
@@ -128,6 +133,26 @@ def validate_spe_artifact(artifact: SpeArtifact, *, recompute_id: bool = True) -
             "contract_validity does not match embedded protected_intent_payload.validity",
         )
 
+    # G1R-8R-F01: digests must match embedded payload (not merely share an ID envelope).
+    contract = contract_from_embedded_payload(payload)
+    expected_pid = protected_intent_digest(contract)
+    expected_rg = requirement_graph_digest(contract)
+    if artifact.protected_intent_digest != expected_pid:
+        raise SpeTypedError(
+            ErrorCode.K6_INVALID_ARTIFACT,
+            "protected_intent_digest does not match embedded protected_intent_payload",
+        )
+    if artifact.requirement_graph_digest != expected_rg:
+        raise SpeTypedError(
+            ErrorCode.K6_INVALID_ARTIFACT,
+            "requirement_graph_digest does not match embedded protected_intent_payload.graph",
+        )
+    if contract.validity.value != artifact.contract_validity:
+        raise SpeTypedError(
+            ErrorCode.K6_INVALID_ARTIFACT,
+            "reconstructed contract validity mismatches contract_validity field",
+        )
+
     if recompute_id:
         expected = compute_artifact_id(artifact.to_identity_preimage())
         if artifact.artifact_id != expected:
@@ -151,7 +176,6 @@ def validate_document_dict(doc: Mapping[str, Any]) -> dict[str, Any]:
             f"unknown semantic fields: {sorted(unknown)}",
         )
     missing = ALLOWED_TOP_LEVEL_FIELDS - keys
-    # All allowed fields are required keys (nullable values allowed for optional digests)
     if missing:
         raise SpeTypedError(
             ErrorCode.K6_INVALID_ARTIFACT,

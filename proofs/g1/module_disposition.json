@@ -1,9 +1,9 @@
 {
-  "gate": "G1R-8",
+  "gate": "G1R-8R",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "module_count": 88,
   "counts": {
-    "RETAIN": 87,
+    "RETAIN": 88,
     "RETIRE": 4,
     "WRAP": 1
   },
@@ -559,6 +559,12 @@
       "disposition": "RETAIN",
       "normative_owner": "K6",
       "reason": "G1R-8 .spe dumps/loads/save/load"
+    },
+    {
+      "path": "spe_runtime/storage/reconstruct.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8R reconstruct contract from embedded payload for digest consistency"
     }
   ]
 }

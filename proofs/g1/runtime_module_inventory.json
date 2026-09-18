@@ -1,7 +1,7 @@
 {
-  "gate": "G1R-8",
+  "gate": "G1R-8R",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 92,
+  "module_count": 93,
   "modules": [
     {
       "path": "spe_runtime/__init__.py"
@@ -259,6 +259,12 @@
       "path": "spe_runtime/storage/models.py",
       "bytes": 5085,
       "sha256": "a4761d8855cb12d5b44807d070c066815122c3aeade53d2fa847543db8171e57",
+      "role": "k6_spe_artifact"
+    },
+    {
+      "path": "spe_runtime/storage/reconstruct.py",
+      "bytes": 5437,
+      "sha256": "1e9e0a747bd9ac0ebb24bb0e43329474293113510817b138a562b49c6c6fd2c0",
       "role": "k6_spe_artifact"
     },
     {

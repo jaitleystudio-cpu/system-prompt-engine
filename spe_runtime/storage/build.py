@@ -114,20 +114,10 @@ def build_spe_artifact(
     )
 
     payload_raw = contract.to_dict()
-    # Stabilize list order for identity (canonicalize sorts dict keys, not list rows).
-    reqs = sorted(
-        payload_raw.get("requirements") or [],
-        key=lambda r: str(r.get("requirement_id", "")),
-    )
-    conflicts = sorted(
-        payload_raw.get("conflicts") or [],
-        key=lambda c: str(c.get("conflict_id", "")),
-    )
-    payload_raw = {
-        **payload_raw,
-        "requirements": reqs,
-        "conflicts": conflicts,
-    }
+    # Do NOT reorder requirements/conflicts lists: protected_intent_digest (pid-)
+    # hashes contract.to_dict() list order. Reordering would desynchronize
+    # embedded payload from the bound pid-/rg- digests (G1R-8R-F01).
+    # canonicalize() still sorts object keys (including graph.nodes).
     payload = canonicalize(payload_raw)
     if not isinstance(payload, dict):
         raise SpeTypedError(
