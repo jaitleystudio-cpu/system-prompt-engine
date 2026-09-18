@@ -1,8 +1,8 @@
 {
   "schema_version": "2.0.0",
   "gate": "G1_RUNTIME_BINDING",
-  "status": "BOUND_WITH_GAPS",
-  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_PASS_EXTERNAL; G1R8R_RECHECK_PASS; G1R9_PASS_EXTERNAL; G1R9R_RECHECK_PASS; G1 BOUND_WITH_GAPS (G1R-V pending)",
+  "status": "BOUND_AND_PASS",
+  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_PASS_EXTERNAL; G1R8R_RECHECK_PASS; G1R9_PASS_EXTERNAL; G1R9R_RECHECK_PASS; G1R-V FINAL_REPLAY_PASS; G1 BOUND_AND_PASS (WORKING_CONTRACT_BOUND)",
   "normative_spec": {
     "version": "SPE Ω v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-    "branch": "cursor/g1r9r-k7-qualification-recheck-0d6e",
+    "branch": "cursor/g1rv-final-binding-replay-0d6e",
     "implementation_commit": "8fa1bdab941190e592569a4e97a878c53f4c0cb7",
     "implementation_tree": "5cfb3f68b327f590f39f95aea022e9f67514e033",
     "suite_run_commit": "8fa1bdab941190e592569a4e97a878c53f4c0cb7",
@@ -32,8 +32,8 @@
       "skipped": 0,
       "exit_status": 0,
       "duration_s": 0.966,
-      "result_sha256": "3b0ed998565e7e4ddf58e8faf37ee1002f6ec3392e78a9b491a64ad2d6e8ba2c",
-      "junit_sha256": "6d7b36d74bfbc92c1b31eeb266bb185e04c00f6ea9b97ad5b2125b7a3356aa9e",
+      "result_sha256": "4067307ba5d5c2b5a5b28921d8772dcd55afad5e354d9ca802571858ce485336",
+      "junit_sha256": "fbd3b3138e3c92a29d173357496d62a6ef0f4b5d663183c9d461e161ea4695c1",
       "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
       "g1r1": "5/5",
       "g1r2": "27/27",
@@ -49,7 +49,8 @@
       "g1r8": "33/33",
       "g1r8r": "17/17",
       "g1r9": "pass",
-      "g1r9r": "pass"
+      "g1r9r": "pass",
+      "g1rv": "pass"
     },
     "evidence_validation": {
       "reviewed_evidence_head": "EXTERNAL_ONLY"
@@ -111,12 +112,12 @@
     "k7_qualification_gate": "PASS_EXTERNAL"
   },
   "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
-  "conformance_result": "G1R-9R RECHECK_PASS @c88703a87941 suite 672/672/0. G1R-9 PASS_EXTERNAL. F01-F06 claim-laundering fixed. G1 remains BOUND_WITH_GAPS pending G1R-V.",
+  "conformance_result": "G1R-V FINAL_REPLAY_PASS suite 672/672/0. G1=BOUND_AND_PASS custody=WORKING_CONTRACT_BOUND. B05 ACCEPTED_SCOPED_LIMITATION. Do not claim production/formal/world#1.",
   "blockers": [
     {
       "id": "G1-B01",
-      "status": "RESOLVED_AS_WORKING_CONTRACT",
-      "description": "Working contract bound."
+      "status": "ACCEPTED_SCOPED_LIMITATION",
+      "description": "WORKING_CONTRACT_BOUND; 181/69 UNAVAILABLE — not claimed recovered."
     },
     {
       "id": "G1-B02",
@@ -125,8 +126,8 @@
     },
     {
       "id": "G1-B03",
-      "status": "RESOLVED_MECHANICAL",
-      "description": "qualification_evidence + claim_qualification owned by K7 (G1R-9). Authoritative G1 still BOUND_WITH_GAPS pending G1R-9R + G1R-V."
+      "status": "RESOLVED",
+      "description": "UNOWNED=0 MISSING=0 after K7 + G1R-V replay."
     },
     {
       "id": "G1-B04",
@@ -135,8 +136,8 @@
     },
     {
       "id": "G1-B05",
-      "status": "OPEN",
-      "description": "PLATFORM_REGISTRY honesty gap."
+      "status": "ACCEPTED_SCOPED_LIMITATION",
+      "description": "PLATFORM_REGISTRY keeps RUST/WASM PLANNED (anti-fake-PASS). Honest IMPLEMENTING reclassification deferred post-G1 per original G1 plan. Not a Python Ring-0 ownership/authority blocker."
     }
   ],
   "g1r4": {
@@ -234,5 +235,11 @@
     "status": "PASS_EXTERNAL",
     "recheck": "G1R9R_RECHECK_PASS",
     "note": "Authoritative G1 still BOUND_WITH_GAPS until G1R-V"
+  },
+  "g1rv": {
+    "verdict": "G1_FINAL_REPLAY_PASS",
+    "status": "BOUND_AND_PASS",
+    "custody": "WORKING_CONTRACT_BOUND",
+    "next": "G2 TLA+/TLC — NOT EXECUTED"
   }
 }

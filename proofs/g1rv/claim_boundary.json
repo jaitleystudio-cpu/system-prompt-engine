@@ -1,0 +1,12 @@
+{
+  "G0": "PASS",
+  "G1": "BOUND_AND_PASS",
+  "custody": "WORKING_CONTRACT_BOUND",
+  "Full_Ring0": "IMPLEMENTED_AND_REPLAYED_WITHIN_G1_SCOPE",
+  "K6": "PORTABLE_SEMANTIC_BINDING_ARTIFACT",
+  "Production": "NOT QUALIFIED",
+  "Formal_TLC": "NOT EARNED",
+  "World_1": "NOT PROVEN",
+  "G3_durable": "NOT IMPLEMENTED",
+  "canonical_181_69_recovered": false
+}

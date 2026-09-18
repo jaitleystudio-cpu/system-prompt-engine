@@ -1,0 +1,26 @@
+{
+  "blockers": {
+    "G1-B01": {
+      "status": "ACCEPTED_SCOPED_LIMITATION",
+      "evidence": "WORKING_CONTRACT_BOUND sha68bac38\u2026; 181/69 UNAVAILABLE; not claimed recovered"
+    },
+    "G1-B02": {
+      "status": "RESOLVED",
+      "evidence": "duplicate writers=0 in live writer_audit"
+    },
+    "G1-B03": {
+      "status": "RESOLVED",
+      "evidence": "UNOWNED=0 MISSING=0 after K0\u2013K7"
+    },
+    "G1-B04": {
+      "status": "RESOLVED",
+      "evidence": "ambient_authority_paths=0; G1R-2/5 suites green"
+    },
+    "G1-B05": {
+      "status": "ACCEPTED_SCOPED_LIMITATION",
+      "evidence": "G1 binding target is Python Ring-0 under WORKING_CONTRACT_BOUND. Original G1 required action deferred honest registry reclassification to post-G1. Registry correctly refuses RELEASED/PASS (detect_fake_platform_status=None). Marking PLANNED while portable kernels exist is a scoped honesty understatement, not a Ring-0 ownership/authority/qualification defect. Updating to IMPLEMENTING without claiming PASS is post-G1 documentation hygiene, not a G1 open blocker."
+    }
+  },
+  "OPEN_BLOCKER": [],
+  "any_open": false
+}
