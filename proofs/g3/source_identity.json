@@ -14,6 +14,7 @@
   "g2_formal_sha256_expected": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
   "working_contract_path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
   "working_contract_sha256_expected": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
-  "pr6": "OPEN @ 4e6c694 — UNTOUCHED",
-  "historical_181_69": "UNAVAILABLE"
+  "pr6": "OPEN @ 4e6c694 \u2014 UNTOUCHED",
+  "historical_181_69": "UNAVAILABLE",
+  "g3_head": "798927d87d77ba2870d908a166e8c8e976f353fd"
 }
