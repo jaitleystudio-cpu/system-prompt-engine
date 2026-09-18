@@ -1,5 +1,5 @@
 {
-  "gate": "G1R-4",
+  "gate": "G1R-4A",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "facts": [
     {
@@ -29,7 +29,7 @@
       ],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "models.py constructs; consume.py uniquely writes uses_consumed. No runtime mint gate (external constructor is a documented ambient path)."
+      "notes": "models.py is the typed AuthorityGrant value object; consume.py uniquely writes uses_consumed. External AuthorityGrant construction is the intentional external-authority injection surface (C07 never mints grants). It is NOT a HIDDEN_AMBIENT_AUTHORITY_PATH \u2014 ambient paths are privilege elevation without a typed grant/event (closed in G1R-2: replace_envelope authority fields, X09). Formal: ambient_authority_paths=0 counts hidden elevation, not the public grant dataclass."
     },
     {
       "semantic_fact": "grant_compatibility",
@@ -239,7 +239,8 @@
         "spe_runtime/proof/ledger.py"
       ],
       "duplicate_writer": false,
-      "resolution_required": false
+      "resolution_required": false,
+      "notes": "Canonical mint: verify_obligation -> _mint_canonical_receipt. Commit validates receipt_id + process-local issuance_digest via assert_receipt_integrity."
     },
     {
       "semantic_fact": "privacy_projection",
@@ -365,5 +366,14 @@
       "duplicate_writer": false,
       "resolution_required": false
     }
-  ]
+  ],
+  "head_sha": "08abdb5a91bdba6815f81bc6209b0530d5ee3d65",
+  "unowned_facts": [
+    "privacy_projection",
+    "spe_artifact_identity",
+    "prompt_artifact",
+    "qualification_evidence"
+  ],
+  "ambient_authority_paths": [],
+  "ambient_authority_definition": "Hidden privilege elevation without typed AuthorityGrant/AuthorityEvent. Public AuthorityGrant dataclass construction is external injection, not ambient."
 }

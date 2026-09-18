@@ -1,0 +1,52 @@
+{
+  "collected": 414,
+  "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r4a_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+  "duration_s": 0.785,
+  "exit_status": 1,
+  "failed": 3,
+  "failed_tests": [
+    "tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
+  ],
+  "gates": {
+    "g1_binding": {
+      "collected": 14,
+      "exit_status": 1,
+      "failed": 3,
+      "passed": 11,
+      "skipped": 0
+    },
+    "g1r1": {
+      "collected": 5,
+      "exit_status": 0,
+      "failed": 0,
+      "passed": 5,
+      "skipped": 0
+    },
+    "g1r2": {
+      "collected": 27,
+      "exit_status": 0,
+      "failed": 0,
+      "passed": 27,
+      "skipped": 0
+    },
+    "g1r3": {
+      "collected": 37,
+      "exit_status": 0,
+      "failed": 0,
+      "passed": 37,
+      "skipped": 0
+    },
+    "g1r4": {
+      "collected": 41,
+      "exit_status": 0,
+      "failed": 0,
+      "passed": 41,
+      "skipped": 0
+    }
+  },
+  "head": "08abdb5a91bdba6815f81bc6209b0530d5ee3d65",
+  "passed": 411,
+  "skipped": 0
+}
