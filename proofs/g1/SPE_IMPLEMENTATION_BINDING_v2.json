@@ -2,7 +2,7 @@
   "schema_version": "2.0.0",
   "gate": "G1_RUNTIME_BINDING",
   "status": "BOUND_WITH_GAPS",
-  "review_state": "G1R4_PASS_EXTERNAL; G1R5_IMPLEMENTATION_PRESENT_PENDING_RECHECK",
+  "review_state": "G1R4_PASS; G1R5_IMPLEMENTATION_PRESENT_PENDING_RECHECK",
   "normative_spec": {
     "version": "SPE \u03a9 v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
@@ -14,10 +14,10 @@
   "repository": {
     "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
     "branch": "cursor/g1r5-k3-privacy-projection-0d6e",
-    "implementation_commit": "PENDING_SUITE",
-    "suite_run_commit": "PENDING_SUITE",
-    "suite_tree": "PENDING_SUITE",
-    "tree_hash": "2ea3d91b49258e093edae0aac7ffa248c32d8517",
+    "implementation_commit": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
+    "suite_run_commit": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
+    "suite_tree": "8f53d36a35307c808798b82622713623c772838f",
+    "tree_hash": "8f53d36a35307c808798b82622713623c772838f",
     "tree_hash_scope": "suite_run_commit_tree",
     "python_version": "3.12.3",
     "lineage": "NEW_IMPLEMENTATION",
@@ -25,12 +25,32 @@
   },
   "tests": {
     "authoritative_suite": "python_excluding_wasm_rust_sprint5_env",
-    "final_collected": 0,
-    "final_passed": 0,
-    "final_failed": 0,
+    "final_collected": 435,
+    "final_passed": 432,
+    "final_failed": 3,
     "final_skipped": 0,
-    "g1r4_pass_external": true,
-    "g1r5_implementation_present": true
+    "final_exit_status": 1,
+    "final_duration_s": 0.825,
+    "result_sha256": "e8f7a503e85e32b44298187a7a75c7ab26c2e4432750158258bf2fabdb2d5283",
+    "junit_sha256": "e7f286a06a839e13c0cca0009f5075e8c3c21b2eb5548c56eae9ce95405fa523",
+    "g1_binding_collected": 14,
+    "g1_binding_passed": 11,
+    "g1_binding_failed": 3,
+    "g1r1_collected": 5,
+    "g1r1_passed": 5,
+    "g1r1_failed": 0,
+    "g1r2_collected": 27,
+    "g1r2_passed": 27,
+    "g1r2_failed": 0,
+    "g1r3_collected": 37,
+    "g1r3_passed": 37,
+    "g1r3_failed": 0,
+    "g1r4_collected": 44,
+    "g1r4_passed": 44,
+    "g1r4_failed": 0,
+    "g1r5_collected": 18,
+    "g1r5_passed": 18,
+    "g1r5_failed": 0
   },
   "module_binding": {
     "module_count": 81,
@@ -52,9 +72,35 @@
     "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
     "CONFLICTING_RUNTIME_SEMANTICS": 0
   },
-  "conformance_command": "PENDING",
-  "conformance_result": "PENDING",
-  "blockers": [],
+  "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r5_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+  "conformance_result": "G1R-5 @ce0d9f7250d0: 435/432/3. G1R-4=44/44 (external PASS retained). G1R-5=18/18. privacy_projection owned by K4. unowned=3. Expected 3 G1-B03 failures.",
+  "blockers": [
+    {
+      "id": "G1-B01",
+      "status": "RESOLVED_AS_WORKING_CONTRACT",
+      "description": "Working contract bound; 181/69 UNAVAILABLE."
+    },
+    {
+      "id": "G1-B02",
+      "status": "RESOLVED",
+      "description": "Duplicate canonical writers = 0."
+    },
+    {
+      "id": "G1-B03",
+      "status": "OPEN",
+      "description": "unowned=['spe_artifact_identity', 'prompt_artifact', 'qualification_evidence']; missing=8. privacy_projection now owned by K4."
+    },
+    {
+      "id": "G1-B04",
+      "status": "RESOLVED",
+      "description": "Ambient authority paths = 0."
+    },
+    {
+      "id": "G1-B05",
+      "status": "OPEN",
+      "description": "PLATFORM_REGISTRY RUST/WASM honesty gap."
+    }
+  ],
   "g1r4": {
     "external_review": "PASS",
     "working_contract_unchanged": true
@@ -62,10 +108,24 @@
   "g1r5": {
     "task": "PRIVACY_PROJECTION_OWNERSHIP",
     "contract_owner": "K4",
-    "task_label_note": "Brief said K3; RING0_WORKING_CONTRACT assigns privacy projection to K4 \u2014 contract wins",
+    "task_label_note": "Brief said K3; contract assigns privacy projection to K4",
     "canonical_writer": "spe_runtime/privacy/project.py::project_privacy",
+    "writers": 1,
+    "duplicates": 0,
+    "implementation": "PRESENT",
     "review": "PENDING_RECHECK",
-    "implementation": "PRESENT"
+    "working_contract_unchanged": true
   },
-  "captured_at_utc": "2026-09-18T13:57:01Z"
+  "g1r3": {
+    "working_contract_unchanged": true
+  },
+  "g1r2": {
+    "ambient_authority_paths": 0,
+    "working_contract_unchanged": true
+  },
+  "g1r1": {
+    "working_contract_unchanged": true
+  },
+  "captured_at_utc": "2026-09-18T13:58:01Z",
+  "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET"
 }
