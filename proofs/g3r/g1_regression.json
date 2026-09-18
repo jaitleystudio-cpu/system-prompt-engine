@@ -1,9 +1,11 @@
 {
-  "pre_g3r_baseline": 714,
-  "post_g3r": {
-    "passed": 738,
-    "failed": 0,
-    "exit": 0
-  },
-  "delta": "+24 G3R adversarial/mutation tests (approx)"
+  "pre_g3_reported_baseline": 714,
+  "command": "pytest tests/unit + G3/G3R suites; ignore tests/portability (wasm target absent)",
+  "unit_passed": 547,
+  "ignore_portability_passed": 611,
+  "g3_plus_g3r_suite_passed": 82,
+  "g3r_adversarial_mutations_passed": 40,
+  "failed": 0,
+  "wasm_portability": "OUT OF SCOPE / env missing wasm32-unknown-unknown",
+  "exit": 0
 }

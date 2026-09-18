@@ -1,7 +1,7 @@
 {
   "open_existing_missing": "G3_STORE_UNAVAILABLE",
-  "create_new_exists": "G3_STORE_ALREADY_EXISTS",
-  "memory_fallback": false,
-  "corrupt": "fail closed",
-  "future_schema": "G3_SCHEMA_MISMATCH"
+  "create_new_overwrite": "G3_STORE_ALREADY_EXISTS",
+  "corrupt_bytes": "fail closed",
+  "create_True_hazard": "documented; recovery must use open_existing_mission_store",
+  "memory_fallback": false
 }

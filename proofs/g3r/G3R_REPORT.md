@@ -3,11 +3,13 @@
 ## FINAL VERDICT
 G3R_RECHECK_PASS
 
+Five-surface independent harden: fencing writers · SIGKILL atomicity · SENT_UNKNOWN windows · lost/corrupt store · Barrier multiprocess races.
+
 ## SOURCE CUSTODY
 G1R-V HEAD: `8e8b028ab399a9194e7dc54f71ae006ed938d491`
 G2 HEAD: `1c32235f95c27761bc82d4116c741c09eb804910`
 G3 implementation HEAD: `95a6d0b0882cfd66f9da332bdeb024397d0c6c1f`
-G3R review HEAD: `7022c78ae013a15c1e4f711c6bc038617fe26f56`
+G3R review HEAD: `cf1e6c715ca3a06a0bb7f4ad8cb07087d9e7bdcf`
 Branch: `cursor/g3r-durable-ring1-recheck-0d6e`
 PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/23
 PR #6: OPEN @ 4e6c694 — UNTOUCHED
@@ -102,7 +104,7 @@ M1–M12 applicable mutants killed · Attempted ≥12 · Survived 0
 | G3R-F03 | HIGH | idempotency digest conflict |
 
 ## G1 REGRESSION
-738 passed / 0 failed · compileall exit 0
+611 passed (ignore portability/wasm) · 82 G3+G3R · 40 G3R adversarial/mutation · 0 failed · compileall exit 0
 
 ## G2 REGRESSION
 Model hash unchanged · MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE

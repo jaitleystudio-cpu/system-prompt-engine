@@ -1,5 +1,6 @@
 {
-  "expected": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
-  "actual": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
-  "changed": false
+  "expected_model_hash": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "actual_model_hash": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "changed": false,
+  "status": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE"
 }
