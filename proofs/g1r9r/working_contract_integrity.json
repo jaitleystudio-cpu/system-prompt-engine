@@ -1,0 +1,6 @@
+{
+  "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "expected": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "match": true,
+  "custody": "WORKING_CONTRACT_BOUND"
+}

@@ -1,0 +1,8 @@
+{
+  "foundational_base": "931128b384c3055ecef876124f787e5b8e67651b",
+  "g1r8r_reviewed_head": "5100c76d70971d1bf37c84747f66e964ff6086d3",
+  "g1r9_implementation_head": "8766bfdc7a8907340b72d81e9c5d1bb82482ce51",
+  "g1r9r_branch": "cursor/g1r9r-k7-qualification-recheck-0d6e",
+  "g1r9r_head_at_start": "8766bfdc7a8907340b72d81e9c5d1bb82482ce51",
+  "exact_g1r9_bytes": true
+}

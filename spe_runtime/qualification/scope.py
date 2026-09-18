@@ -1,4 +1,7 @@
-"""K7 scope containment — CLAIM SCOPE <= EVIDENCE SCOPE."""
+"""K7 scope containment — CLAIM SCOPE <= EVIDENCE SCOPE.
+
+UNBOUND != ALL. Missing claim dimensions must not broaden coverage.
+"""
 
 from __future__ import annotations
 
@@ -9,8 +12,9 @@ def scope_covers(evidence_scope: ClaimScope, claim_scope: ClaimScope) -> bool:
     """True iff evidence scope is sufficient to cover the claimed scope.
 
     Narrow evidence cannot qualify broader claims.
-    Each claim dimension must equal the evidence dimension
-    (or claim revision is None while evidence may carry a revision).
+    Exact match per dimension. Revision: both must match exactly —
+    claim.revision=None does NOT wildcard over evidence.revision=SHA
+    (UNBOUND != ALL). Both-None is allowed as mutually unbound.
     """
     if evidence_scope.component != claim_scope.component:
         return False
@@ -20,8 +24,8 @@ def scope_covers(evidence_scope: ClaimScope, claim_scope: ClaimScope) -> bool:
         return False
     if evidence_scope.environment != claim_scope.environment:
         return False
-    # Revision: if claim binds a revision, evidence must match exactly.
-    if claim_scope.revision is not None and evidence_scope.revision != claim_scope.revision:
+    # Revision: exact equality including None—None. No omission broadening.
+    if evidence_scope.revision != claim_scope.revision:
         return False
     return True
 

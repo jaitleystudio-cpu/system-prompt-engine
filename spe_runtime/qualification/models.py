@@ -7,6 +7,8 @@ Laws:
   ARTIFACT HASH != QUALIFICATION
   PROOF RECEIPT != QUALIFICATION
   TEST PASS != PRODUCTION QUALIFICATION
+  CALLER POLICY != POLICY AUTHORITY
+  INDEPENDENCE ENUM != INDEPENDENT REALITY
 
 K7 does not mint K2 proof, K4 authority, K6 identity, or mutate K0/K1/K3.
 """
@@ -64,11 +66,24 @@ class EvidenceKind(str, Enum):
 
 
 class IndependenceClass(str, Enum):
-    """Semantic independence — not path/process/branch coincidence."""
+    """Declared independence class — not path/process/branch coincidence."""
 
     INTERNAL = "INTERNAL"
     EXTERNAL = "EXTERNAL"
     INDEPENDENT = "INDEPENDENT"
+
+
+class IndependenceBasis(str, Enum):
+    """How independence was established.
+
+    DECLARED: caller supplied the enum only — never satisfies EXTERNAL/INDEPENDENT
+              obligations for qualification.
+    STRUCTURAL_BOUND: digest + artifact_ref present. Structural custody only —
+              NOT cryptographically authenticated reviewer identity.
+    """
+
+    DECLARED = "DECLARED"
+    STRUCTURAL_BOUND = "STRUCTURAL_BOUND"
 
 
 class EvidenceVerdict(str, Enum):
@@ -92,6 +107,8 @@ UNSUPPORTED_MARKETING_CLAIM_KEYS: frozenset[str] = frozenset(
         "WORLD_1",
         "WORLD_NUMBER_ONE",
         "BEST_PROMPT_ENGINE",
+        "BEST_IN_WORLD",
+        "GLOBAL_BEST",
         "UNBEATABLE",
         "GLOBAL_LEADER",
         "TEN_OUT_OF_TEN",
@@ -99,16 +116,44 @@ UNSUPPORTED_MARKETING_CLAIM_KEYS: frozenset[str] = frozenset(
         "PRODUCTION_READY",
         "SECURE_UNHACKABLE",
         "BULLETPROOF",
+        "UNHACKABLE",
         "FORMALLY_VERIFIED",
+        "FORMAL_MODEL_VERIFIED",
         "TLC_PASS",
         "SELF_CONTAINED_FULL_REPLAY",
+        "SUPER_GOD_MODE_VERIFIED",
     }
 )
+
+# Environments that are never production (non-local ≠ production).
+NON_PRODUCTION_ENVIRONMENTS: frozenset[str] = frozenset(
+    {
+        "local",
+        "unit_test",
+        "staging",
+        "remote_ci",
+        "ci",
+        "qa",
+        "preview",
+        "test",
+        "test_server",
+        "dev_cloud",
+        "developer_cloud_vm",
+        "unspecified",
+    }
+)
+
+# Exact production environment token required for PRODUCTION_OBSERVATION PASS.
+PRODUCTION_ENVIRONMENT = "production"
 
 
 @dataclass(frozen=True, slots=True)
 class ClaimScope:
-    """Deterministic claim/evidence scope boundary."""
+    """Deterministic claim/evidence scope boundary.
+
+    UNBOUND (None revision / unspecified dims) != ALL.
+    Missing candidate dimensions must not broaden evidence coverage.
+    """
 
     component: str
     platform: str = "unspecified"
@@ -154,19 +199,29 @@ class QualificationEvidence:
     scope: ClaimScope
     verdict: EvidenceVerdict
     independence: IndependenceClass
+    independence_basis: IndependenceBasis
     producer_class: str
     artifact_ref: str | None = None
     evidence_digest: str | None = None
     limitations: tuple[str, ...] = ()
-    schema_version: str = "qualification_evidence.v1"
+    schema_version: str = "qualification_evidence.v2"
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "evidence_kind", EvidenceKind(self.evidence_kind))
         object.__setattr__(self, "verdict", EvidenceVerdict(self.verdict))
         object.__setattr__(self, "independence", IndependenceClass(self.independence))
+        object.__setattr__(self, "independence_basis", IndependenceBasis(self.independence_basis))
         object.__setattr__(self, "limitations", tuple(self.limitations))
         if not self.evidence_id.startswith("qe-"):
             raise ValueError("evidence_id must use qe- prefix")
+
+    def source_key(self) -> str | None:
+        """Underlying source identity for anti-wrapper-diversity checks."""
+        if self.evidence_digest:
+            return f"digest:{self.evidence_digest}"
+        if self.artifact_ref:
+            return f"ref:{self.artifact_ref}"
+        return None
 
     def to_identity_preimage(self) -> dict[str, Any]:
         return {
@@ -177,6 +232,7 @@ class QualificationEvidence:
             "scope": self.scope.to_canonical_dict(),
             "verdict": self.verdict.value,
             "independence": self.independence.value,
+            "independence_basis": self.independence_basis.value,
             "producer_class": self.producer_class,
             "artifact_ref": self.artifact_ref,
             "evidence_digest": self.evidence_digest,
@@ -234,9 +290,12 @@ __all__ = [
     "stage_rank",
     "EvidenceKind",
     "IndependenceClass",
+    "IndependenceBasis",
     "EvidenceVerdict",
     "QualificationVerdict",
     "UNSUPPORTED_MARKETING_CLAIM_KEYS",
+    "NON_PRODUCTION_ENVIRONMENTS",
+    "PRODUCTION_ENVIRONMENT",
     "ClaimScope",
     "ClaimCandidate",
     "QualificationEvidence",
