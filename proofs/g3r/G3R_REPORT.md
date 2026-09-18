@@ -7,9 +7,9 @@ G3R_RECHECK_PASS
 G1R-V HEAD: `8e8b028ab399a9194e7dc54f71ae006ed938d491`
 G2 HEAD: `1c32235f95c27761bc82d4116c741c09eb804910`
 G3 implementation HEAD: `95a6d0b0882cfd66f9da332bdeb024397d0c6c1f`
-G3R review HEAD: `11c43dcb01209d6d9eb5a1b4925fe1434c73dcc3`
+G3R review HEAD: `dffcb71852658161417915dadccd768fa8ac45cd`
 Branch: `cursor/g3r-durable-ring1-recheck-0d6e`
-PR: _(opened by agent)_
+PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/23
 PR #6: OPEN @ 4e6c694 — UNTOUCHED
 Working contract SHA: `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3`
 G2 model SHA: `15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562`

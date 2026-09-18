@@ -11,5 +11,6 @@
   "g1_status": "BOUND_AND_PASS",
   "g2_status": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
   "g3_pre_review_status": "IMPLEMENTATION_PRESENT / REVIEW_PENDING",
-  "g3r_head": "11c43dcb01209d6d9eb5a1b4925fe1434c73dcc3"
+  "g3r_head": "dffcb71852658161417915dadccd768fa8ac45cd",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/23"
 }
