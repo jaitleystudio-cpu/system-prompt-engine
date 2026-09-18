@@ -7,7 +7,7 @@ G3R_RECHECK_PASS
 G1R-V HEAD: `8e8b028ab399a9194e7dc54f71ae006ed938d491`
 G2 HEAD: `1c32235f95c27761bc82d4116c741c09eb804910`
 G3 implementation HEAD: `95a6d0b0882cfd66f9da332bdeb024397d0c6c1f`
-G3R review HEAD: 
+G3R review HEAD: `11c43dcb01209d6d9eb5a1b4925fe1434c73dcc3`
 Branch: `cursor/g3r-durable-ring1-recheck-0d6e`
 PR: _(opened by agent)_
 PR #6: OPEN @ 4e6c694 — UNTOUCHED
