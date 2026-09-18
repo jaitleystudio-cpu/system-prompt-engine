@@ -1,4 +1,7 @@
 {
-  "status": "GENERATED_STUB",
-  "note": "filled for completeness"
+  "G1R-7": "PASS_EXTERNAL",
+  "G1R-8": "PASS_EXTERNAL @5100c76d70971d1bf37c84747f66e964ff6086d3",
+  "G1R-9": "PASS_EXTERNAL",
+  "G1R-9R": "RECHECK_PASS @7edd0d55568514767d0ce0f4d641658dd0520dcf",
+  "replay_contains_all": true
 }
