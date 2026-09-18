@@ -8,7 +8,9 @@ Paste this whole file into ChatGPT.
 - Repair PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/10
 - Prior PR #9 (`cursor/g1r4-k2-proof-tx-0d6e`): superseded for integrity repair; do not treat its PASS claim as current
 - Working contract SHA: `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3`
-- Base: `931128b384c3055ecef876124f787e5b8e67651b`
+- Base: 
+- Evidence commit: 
+- Implementation HEAD (suite): `931128b384c3055ecef876124f787e5b8e67651b`
 
 ## External review response
 

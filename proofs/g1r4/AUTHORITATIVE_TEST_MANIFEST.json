@@ -64,5 +64,6 @@
   ],
   "exclusion_reason": "WASM/Rust toolchain and Sprint5 cross-language env not available in this agent VM; not G1R-4A regressions.",
   "captured_at_utc": "2026-09-18T13:24:14Z",
-  "note": "Suite executed at implementation HEAD 08abdb5 (receipt integrity). Evidence/report docs may land in a follow-up commit; denominators are pinned to this run."
+  "note": "Suite executed at implementation HEAD 08abdb5 (receipt integrity). Evidence/report docs may land in a follow-up commit; denominators are pinned to this run.",
+  "evidence_commit": "3f9712993f5f147613e2986ac6e41e3a5a36dd21"
 }
