@@ -1,0 +1,75 @@
+{
+  "gate": "G1R-8",
+  "packages": [
+    {
+      "path": "spe_runtime/storage/",
+      "symbol": "__init__",
+      "current_responsibility": "empty K6 stub",
+      "identity_behavior": "none",
+      "serialization_behavior": "none",
+      "writer_behavior": "none",
+      "tests": [],
+      "disposition": "RETIRE → reactivate RETAIN for SpeArtifact"
+    },
+    {
+      "path": "spe_runtime/proof/snapshot.py",
+      "symbol": "SemanticSnapshot / make_snapshot",
+      "current_responsibility": "K2 snapshot identity (snap-)",
+      "identity_behavior": "content_digest prefix snap-",
+      "serialization_behavior": "to_identity_payload",
+      "writer_behavior": "sole K2 snapshot writer",
+      "tests": ["tests/unit/test_g1r4*"],
+      "disposition": "RETAIN — K6 binds, does not rewrite"
+    },
+    {
+      "path": "spe_runtime/prompt/build.py",
+      "symbol": "build_prompt_artifact / pad-",
+      "current_responsibility": "K3 prompt content digest",
+      "identity_behavior": "pad- != spe-",
+      "serialization_behavior": "PromptArtifact.to_canonical_payload",
+      "writer_behavior": "sole K3 prompt writer",
+      "tests": ["tests/unit/test_g1r6*"],
+      "disposition": "RETAIN — referenced by K6 only"
+    },
+    {
+      "path": "spe_runtime/portability/canonical.py",
+      "symbol": "canonical_dumps",
+      "current_responsibility": "K5 canonical JSON",
+      "identity_behavior": "shared digest preimage encoding",
+      "serialization_behavior": "sorted compact UTF-8 NFC",
+      "writer_behavior": "utility only",
+      "tests": [],
+      "disposition": "RETAIN — reuse, do not fork"
+    },
+    {
+      "path": "spe_runtime/adapters/local_temp_file.py",
+      "symbol": "temp file SHA",
+      "current_responsibility": "PARTIAL raw byte hash",
+      "identity_behavior": "not spe_artifact_identity",
+      "serialization_behavior": "raw sha256",
+      "writer_behavior": "adapter only",
+      "tests": [],
+      "disposition": "RETAIN — not K6 canonical writer"
+    },
+    {
+      "path": "spe_runtime/xcat/models.py",
+      "symbol": "category_trace",
+      "current_responsibility": "PARTIAL category lineage",
+      "identity_behavior": "not artifact lineage",
+      "serialization_behavior": "n/a",
+      "writer_behavior": "xcat",
+      "tests": [],
+      "disposition": "RETAIN — not competing K6 lineage"
+    }
+  ],
+  "missing_symbols": [
+    "SpeArtifact",
+    "build_spe_artifact",
+    "validate_spe_artifact",
+    "dumps_spe",
+    "loads_spe",
+    "spe_artifact_identity writer"
+  ],
+  "recommended_location": "spe_runtime/storage/",
+  "competing_owners": []
+}

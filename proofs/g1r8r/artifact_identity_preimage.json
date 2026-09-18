@@ -1,0 +1,27 @@
+{
+  "algorithm": "SHA-256",
+  "canonical_id_function": "spe_runtime/storage/validate.py::compute_artifact_id",
+  "digest_bits": 256,
+  "domain_discriminator": {
+    "format": "spe",
+    "format_version": "1"
+  },
+  "hex_characters": 64,
+  "identity_bearing_fields": [
+    "contract_validity",
+    "format",
+    "format_version",
+    "parent_artifact_id",
+    "prompt_content_digest",
+    "proof_ledger_digest",
+    "protected_intent_digest",
+    "protected_intent_payload",
+    "requirement_graph_digest",
+    "snapshot_id",
+    "snapshot_version"
+  ],
+  "non_identity_fields": [],
+  "note": "length=64 is full SHA-256 hex, not truncation of a longer encoding",
+  "prefix": "spe-",
+  "self_hash_excluded": true
+}
