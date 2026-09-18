@@ -18,7 +18,7 @@
     "python_version": "3.12.3",
     "lineage": "NEW_IMPLEMENTATION",
     "tree_hash_scope": "implementation_commit_before_evidence_docs",
-    "evidence_commit": "3f9712993f5f147613e2986ac6e41e3a5a36dd21"
+    "evidence_commit": "1bfba825e59bfd2dfaedbea2045166d3e5c0d6db"
   },
   "tests": {
     "authoritative_suite": "python_excluding_wasm_rust_sprint5_env",

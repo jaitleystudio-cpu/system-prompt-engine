@@ -9,7 +9,7 @@ Paste this whole file into ChatGPT.
 - Prior PR #9 (`cursor/g1r4-k2-proof-tx-0d6e`): superseded for integrity repair; do not treat its PASS claim as current
 - Working contract SHA: `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3`
 - Base: `931128b384c3055ecef876124f787e5b8e67651b`
-- Evidence commit: `6b16290` (branch tip; see manifest `evidence_commit`)
+- Evidence commit: `1bfba825e59bfd2dfaedbea2045166d3e5c0d6db`
 - Implementation HEAD (suite): `08abdb5a91bdba6815f81bc6209b0530d5ee3d65`
 
 ## External review response
