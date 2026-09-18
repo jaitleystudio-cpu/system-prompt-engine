@@ -1,0 +1,10 @@
+{
+  "cross_process": "PASS",
+  "id_prefixes": [
+    "cplan-",
+    "pstrategy-",
+    "tsel-",
+    "pad-"
+  ],
+  "no_uuid_random_time": true
+}
