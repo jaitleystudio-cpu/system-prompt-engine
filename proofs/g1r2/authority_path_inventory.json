@@ -1,0 +1,117 @@
+{
+  "gate": "G1R-2",
+  "paths": [
+    {
+      "path": "spe_runtime/categories/_common.py",
+      "function_or_class": "replace_envelope",
+      "reads_authority": false,
+      "writes_authority": false,
+      "creates_authority": false,
+      "consumes_authority": false,
+      "authority_input_type": "kwargs",
+      "validation": "rejects AUTHORITY_CONTROLLED_FIELDS",
+      "risk": "closed"
+    },
+    {
+      "path": "spe_runtime/authority/apply.py",
+      "function_or_class": "apply_authority_event",
+      "reads_authority": true,
+      "writes_authority": true,
+      "creates_authority": false,
+      "consumes_authority": false,
+      "authority_input_type": "AuthorityEvent",
+      "validation": "validate_authority_event",
+      "risk": "canonical writer"
+    },
+    {
+      "path": "spe_runtime/authority/event_validate.py",
+      "function_or_class": "validate_authority_event",
+      "reads_authority": true,
+      "writes_authority": false,
+      "creates_authority": false,
+      "consumes_authority": false,
+      "authority_input_type": "AuthorityEvent",
+      "validation": "typed fail-closed",
+      "risk": "checker"
+    },
+    {
+      "path": "spe_runtime/xcat/invariants.py",
+      "function_or_class": "validate_authority_non_escalation",
+      "reads_authority": true,
+      "writes_authority": false,
+      "creates_authority": false,
+      "consumes_authority": false,
+      "authority_input_type": "AuthorityEvent|object|None",
+      "validation": "delegates to validate_authority_event on escalation",
+      "risk": "X09 consumer"
+    },
+    {
+      "path": "spe_runtime/authority/models.py",
+      "function_or_class": "AuthorityGrant",
+      "reads_authority": false,
+      "writes_authority": false,
+      "creates_authority": true,
+      "consumes_authority": false,
+      "authority_input_type": "constructor fields",
+      "validation": "none (mint gap, not G1-B04)",
+      "risk": "grant type"
+    },
+    {
+      "path": "spe_runtime/authority/validate.py",
+      "function_or_class": "validate_grant_compatibility",
+      "reads_authority": true,
+      "writes_authority": false,
+      "creates_authority": false,
+      "consumes_authority": false,
+      "authority_input_type": "AuthorityGrant",
+      "validation": "capability/target/args/expiry/revocation",
+      "risk": "grant checker"
+    },
+    {
+      "path": "spe_runtime/authority/consume.py",
+      "function_or_class": "consume_grant",
+      "reads_authority": true,
+      "writes_authority": false,
+      "creates_authority": false,
+      "consumes_authority": true,
+      "authority_input_type": "AuthorityGrant",
+      "validation": "revoked/consumed",
+      "risk": "use-count writer"
+    },
+    {
+      "path": "spe_runtime/xcat/models.py",
+      "function_or_class": "CrossCategoryEnvelope",
+      "reads_authority": true,
+      "writes_authority": false,
+      "creates_authority": true,
+      "consumes_authority": false,
+      "authority_input_type": "AuthorityState field",
+      "validation": "constructor materialization",
+      "risk": "initial value"
+    },
+    {
+      "path": "spe_runtime/xcat/handoff.py",
+      "function_or_class": "validate_handoff",
+      "reads_authority": true,
+      "writes_authority": false,
+      "creates_authority": false,
+      "consumes_authority": false,
+      "authority_input_type": "authority_event object|None",
+      "validation": "calls X09",
+      "risk": "handoff consumer"
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/engine.py",
+      "function_or_class": "form_execution_intent",
+      "reads_authority": true,
+      "writes_authority": false,
+      "creates_authority": false,
+      "consumes_authority": false,
+      "authority_input_type": "AuthorityGrant",
+      "validation": "validate_grant_compatibility; never mints envelope authority",
+      "risk": "C07 consume-only"
+    }
+  ],
+  "additional_ambient_paths_found": [],
+  "epoch_not_invented": true
+}

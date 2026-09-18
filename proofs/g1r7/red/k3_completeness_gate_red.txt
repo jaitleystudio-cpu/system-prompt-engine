@@ -1,0 +1,11 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+E   AssertionError: {'reason': 'K3_MISSING_REQUIREMENTS_NOT_COMPLETE', 'incomplete': [{'requirement': 'cognitive plan', 'status': 'MISSING..._modules': []}], 'note': 'PromptArtifact IMPLEMENTED does not satisfy CognitivePlan/PromptStrategy/TechniqueSelection'}
+    assert [{'requiremen...modules': []}] == []
+      
+      Left contains 3 more items, first extra item: {'requirement': 'cognitive plan', 'status': 'MISSING', 'implementation_modules': []}
+      Use -v to get more diff
+/workspace/tests/unit/test_g1_runtime_binding.py:149: AssertionError: {'reason': 'K3_MISSING_REQUIREMENTS_NOT_COMPLETE', 'incomplete': [{'requirement': 'cognitive plan', 'status': 'MISSING..._modules': []}], 'note': 'PromptArtifact IMPLEMENTED does not satisfy CognitivePlan/PromptStrategy/TechniqueSelection'}
+=========================== short test summary info ============================
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_k3_required_responsibilities_complete
+1 failed in 0.01s

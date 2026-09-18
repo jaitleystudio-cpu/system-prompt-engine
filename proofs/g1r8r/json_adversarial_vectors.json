@@ -1,0 +1,6 @@
+{
+  "duplicate_keys": "REJECT",
+  "snapshot_version_string": "REJECT",
+  "unknown_qualified_true": "REJECT",
+  "wrong_format": "REJECT"
+}

@@ -1,0 +1,48 @@
+{
+  "gate": "G1R-4",
+  "surface": [
+    {
+      "path": "spe_runtime/proof/__init__.py",
+      "symbol": "(empty)",
+      "notes": "G1 RETIRE empty package",
+      "disposition": "RETAIN after populate"
+    },
+    {
+      "path": "spe_runtime/execution/effect_ledger.py",
+      "symbol": "EffectLedger",
+      "notes": "operation_id duplicate guard, not K2 ProofLedger",
+      "disposition": "RETAIN as WRAP relative to K2"
+    },
+    {
+      "path": "spe_runtime/execution/outcomes.py",
+      "symbol": "transition_outcome",
+      "notes": "execution outcome, not verification verdict",
+      "disposition": "RETAIN"
+    },
+    {
+      "path": "spe_runtime/portability/canonical.py",
+      "symbol": "canonical_dumps",
+      "notes": "reuse for K2 identity",
+      "disposition": "RETAIN"
+    },
+    {
+      "path": "spe_runtime/contract/protected.py",
+      "symbol": "ProtectedIntentContract",
+      "notes": "K0 state payload for snapshots; K2 must apply via this API",
+      "disposition": "RETAIN"
+    },
+    {
+      "path": "spe_runtime/authority/apply.py",
+      "symbol": "apply_authority_event",
+      "notes": "K4 writer; K2 must not call it",
+      "disposition": "RETAIN"
+    },
+    {
+      "path": "schemas/proof_receipt.schema.json",
+      "symbol": "STUB",
+      "notes": "schema stub additionalProperties true",
+      "disposition": "WRAP later"
+    }
+  ],
+  "k2_types_present": false
+}

@@ -1,0 +1,4 @@
+MUST_segments= 1
+MUST_NOT_segments= 1
+all_protected= True
+PASS

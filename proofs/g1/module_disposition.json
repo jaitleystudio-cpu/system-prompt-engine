@@ -1,0 +1,570 @@
+{
+  "gate": "G1R-8R",
+  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+  "module_count": 88,
+  "counts": {
+    "RETAIN": 88,
+    "RETIRE": 4,
+    "WRAP": 1
+  },
+  "modules": [
+    {
+      "path": "spe_runtime/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "package export surface"
+    },
+    {
+      "path": "spe_runtime/adapters/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/adapters/local_temp_file.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/authority/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/authority/apply.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/authority/consume.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/authority/event.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/authority/event_validate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/authority/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/authority/validate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/capabilities/__init__.py",
+      "disposition": "RETIRE",
+      "normative_owner": "K3",
+      "reason": "empty stub; future Ring-0 owner"
+    },
+    {
+      "path": "spe_runtime/categories/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "package export surface"
+    },
+    {
+      "path": "spe_runtime/categories/_common.py",
+      "disposition": "WRAP",
+      "normative_owner": "K1",
+      "reason": "thin wrapper; authority writes blocked; X10 re-export"
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "package export surface"
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/engine.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/validate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "package export surface"
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/engine.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/validate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "package export surface"
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/engine.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/validate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "package export surface"
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/engine.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/validate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/engine.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/validate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/cli/__init__.py",
+      "disposition": "RETIRE",
+      "normative_owner": null,
+      "reason": "empty stub; future Ring-0 owner"
+    },
+    {
+      "path": "spe_runtime/contract/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K0",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/contract/intent.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K0",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/contract/protected.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K0",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/contract/provenance.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K0",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/error_registry.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K5",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/execution/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/execution/effect_ledger.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/execution/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/execution/outcomes.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/portability/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K5",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/portability/abi.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K5",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/portability/canonical.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K5",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/portability/capability.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K5",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/portability/conformance.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K5",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/portability/oracle.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K5",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/portability/reasons.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K5",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/privacy/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "G1R-5 privacy_projection canonical owner K4"
+    },
+    {
+      "path": "spe_runtime/privacy/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "G1R-5 privacy_projection canonical owner K4"
+    },
+    {
+      "path": "spe_runtime/privacy/project.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "G1R-5 privacy_projection canonical owner K4"
+    },
+    {
+      "path": "spe_runtime/privacy/types.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "G1R-5 privacy_projection canonical owner K4"
+    },
+    {
+      "path": "spe_runtime/prompt/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 PromptArtifact + strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/prompt/build.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 PromptArtifact + strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/prompt/hints.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/prompt/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 PromptArtifact + strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/prompt/plan.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/prompt/strategy.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/prompt/techniques.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K3",
+      "reason": "G1R-7 K3 strategy intelligence"
+    },
+    {
+      "path": "spe_runtime/proof/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K2",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/proof/commit.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K2",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/proof/lease.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K2",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/proof/ledger.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K2",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/proof/obligation.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K2",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/proof/patch.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K2",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/proof/receipt.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K2",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/proof/snapshot.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K2",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/proof/types.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K2",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/proof/verify.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K2",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/provenance/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K0",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/provenance/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K0",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/provenance/rules.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K0",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/recovery/__init__.py",
+      "disposition": "RETIRE",
+      "normative_owner": "K7",
+      "reason": "empty stub; future Ring-0 owner"
+    },
+    {
+      "path": "spe_runtime/registry/__init__.py",
+      "disposition": "RETIRE",
+      "normative_owner": "K5",
+      "reason": "empty stub; future Ring-0 owner"
+    },
+    {
+      "path": "spe_runtime/requirements/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/requirements/conflicts.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/requirements/graph.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/requirements/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/spec_binding.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K5",
+      "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/storage/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 K6 SpeArtifact package root"
+    },
+    {
+      "path": "spe_runtime/xcat/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/xcat/handoff.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/xcat/invariants.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/xcat/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/xcat/reasons.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/xcat/validator.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K1",
+      "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/storage/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 SpeArtifact model"
+    },
+    {
+      "path": "spe_runtime/storage/build.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 sole SpeArtifact / identity / lineage writer"
+    },
+    {
+      "path": "spe_runtime/storage/validate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 shared SpeArtifact validator"
+    },
+    {
+      "path": "spe_runtime/storage/serialize.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 .spe dumps/loads/save/load"
+    },
+    {
+      "path": "spe_runtime/storage/reconstruct.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8R reconstruct contract from embedded payload for digest consistency"
+    }
+  ]
+}

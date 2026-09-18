@@ -1,0 +1,6 @@
+{
+  "covered_by_snapshot_binding": "also bound via rg- digest + snap-",
+  "independent_top_level_field": false,
+  "mode": "EMBEDDED via protected_intent_payload.graph (+ requirements list)",
+  "reconstructable_from_spe_alone": true
+}

@@ -1,0 +1,4 @@
+privacy_projection writers=[]
+canonical_owner='K4'  # contract owner is K4
+unowned_facts=['privacy_projection', 'spe_artifact_identity', 'prompt_artifact', 'qualification_evidence']
+unowned_count=4

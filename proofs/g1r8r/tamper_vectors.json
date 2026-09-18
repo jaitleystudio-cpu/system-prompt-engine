@@ -1,0 +1,8 @@
+{
+  "authenticity": false,
+  "confidentiality": false,
+  "content_integrity": true,
+  "digest_payload_mismatch_recomputed_id": "K6_INVALID_ARTIFACT (F01)",
+  "identity_bearing_field_change_old_id": "K6_ARTIFACT_ID_MISMATCH",
+  "signature": false
+}
