@@ -18,7 +18,7 @@ G1 remains **BOUND_WITH_GAPS**. G1R-5 / G2 / G3 were not started.
 | PR #6 | OPEN, tip `4e6c694`, unmodified |
 | Custody | WORKING_CONTRACT_BOUND |
 
-Authoritative HEAD / tree / test denominators: `proofs/g1r4/AUTHORITATIVE_TEST_MANIFEST.json` (regenerated each evidence commit).
+Evidence commit tip: see branch HEAD. Suite denominators pinned to implementation HEAD `08abdb5` in `proofs/g1r4/AUTHORITATIVE_TEST_MANIFEST.json`.
 
 ## G1R-4A PROOF-INTEGRITY REPAIR
 
