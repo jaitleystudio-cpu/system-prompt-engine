@@ -35,7 +35,6 @@
     "tests/unit/test_g1_runtime_binding.py",
     "G1_FINAL_REPORT.md"
   ],
-  "head_sha": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
   "implementation_commit": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
   "suite_run_commit": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
   "identity_model": "non_self_referential"

@@ -2,14 +2,15 @@
   "implementation_commit": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
   "suite_run_commit": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
   "suite_tree": "8f53d36a35307c808798b82622713623c772838f",
-  "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r5_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+  "note": "spe_runtime/tests identical to implementation commit; evidence consistency tests added in docs tip only.",
+  "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r5e_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
   "python_version": "3.12.3",
-  "collected": 435,
-  "passed": 432,
+  "collected": 439,
+  "passed": 436,
   "failed": 3,
   "skipped": 0,
   "exit_status": 1,
-  "duration_s": 0.825,
+  "duration_s": 0.827,
   "gates": {
     "g1r1": {
       "collected": 5,
@@ -46,6 +47,13 @@
       "skipped": 0,
       "exit_status": 0
     },
+    "g1r5e": {
+      "collected": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "exit_status": 0
+    },
     "g1_binding": {
       "collected": 14,
       "passed": 11,
@@ -59,6 +67,6 @@
     "tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique",
     "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
   ],
-  "junit_sha256": "e7f286a06a839e13c0cca0009f5075e8c3c21b2eb5548c56eae9ce95405fa523",
-  "result_sha256": "e8f7a503e85e32b44298187a7a75c7ab26c2e4432750158258bf2fabdb2d5283"
+  "junit_sha256": "ae8aaae17f6f418a3a1354ea38d48eb5fa0ad0cb9314d979ef9b7514361cc6e8",
+  "result_sha256": "eeff72a95c02937ba59d6ac2eb7b26f8e6c9b5f3201c9896896932c2ebfd6a2d"
 }

@@ -2,7 +2,7 @@
   "schema_version": "2.0.0",
   "gate": "G1_RUNTIME_BINDING",
   "status": "BOUND_WITH_GAPS",
-  "review_state": "G1R4_PASS; G1R5_IMPLEMENTATION_PRESENT_PENDING_RECHECK",
+  "review_state": "G1R4_PASS_EXTERNAL; G1R5_IMPLEMENTATION_PRESENT; G1R5_REVIEW_PENDING_RECHECK",
   "normative_spec": {
     "version": "SPE \u03a9 v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
@@ -18,21 +18,21 @@
     "suite_run_commit": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
     "suite_tree": "8f53d36a35307c808798b82622713623c772838f",
     "tree_hash": "8f53d36a35307c808798b82622713623c772838f",
-    "tree_hash_scope": "suite_run_commit_tree",
+    "tree_hash_scope": "implementation_suite_tree",
     "python_version": "3.12.3",
     "lineage": "NEW_IMPLEMENTATION",
     "identity_model": "non_self_referential"
   },
   "tests": {
     "authoritative_suite": "python_excluding_wasm_rust_sprint5_env",
-    "final_collected": 435,
-    "final_passed": 432,
+    "final_collected": 439,
+    "final_passed": 436,
     "final_failed": 3,
     "final_skipped": 0,
     "final_exit_status": 1,
-    "final_duration_s": 0.825,
-    "result_sha256": "e8f7a503e85e32b44298187a7a75c7ab26c2e4432750158258bf2fabdb2d5283",
-    "junit_sha256": "e7f286a06a839e13c0cca0009f5075e8c3c21b2eb5548c56eae9ce95405fa523",
+    "final_duration_s": 0.827,
+    "result_sha256": "eeff72a95c02937ba59d6ac2eb7b26f8e6c9b5f3201c9896896932c2ebfd6a2d",
+    "junit_sha256": "ae8aaae17f6f418a3a1354ea38d48eb5fa0ad0cb9314d979ef9b7514361cc6e8",
     "g1_binding_collected": 14,
     "g1_binding_passed": 11,
     "g1_binding_failed": 3,
@@ -50,7 +50,10 @@
     "g1r4_failed": 0,
     "g1r5_collected": 18,
     "g1r5_passed": 18,
-    "g1r5_failed": 0
+    "g1r5_failed": 0,
+    "g1r5e_collected": 4,
+    "g1r5e_passed": 4,
+    "g1r5e_failed": 0
   },
   "module_binding": {
     "module_count": 81,
@@ -72,33 +75,33 @@
     "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
     "CONFLICTING_RUNTIME_SEMANTICS": 0
   },
-  "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r5_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
-  "conformance_result": "G1R-5 @ce0d9f7250d0: 435/432/3. G1R-4=44/44 (external PASS retained). G1R-5=18/18. privacy_projection owned by K4. unowned=3. Expected 3 G1-B03 failures.",
+  "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r5e_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+  "conformance_result": "G1R-5E evidence closure: impl/suite=ce0d9f7250d0 tree=8f53d36a3530 collected=439 passed=436 failed=3. G1R-5 privacy=18/18; G1R-5E consistency=4/4. privacy owner=K4 writers=1 UNOWNED=3. External review PENDING_RECHECK.",
   "blockers": [
     {
       "id": "G1-B01",
       "status": "RESOLVED_AS_WORKING_CONTRACT",
-      "description": "Working contract bound; 181/69 UNAVAILABLE."
+      "description": "Working contract bound."
     },
     {
       "id": "G1-B02",
       "status": "RESOLVED",
-      "description": "Duplicate canonical writers = 0."
+      "description": "Duplicate writers=0."
     },
     {
       "id": "G1-B03",
       "status": "OPEN",
-      "description": "unowned=['spe_artifact_identity', 'prompt_artifact', 'qualification_evidence']; missing=8. privacy_projection now owned by K4."
+      "description": "unowned=['spe_artifact_identity', 'prompt_artifact', 'qualification_evidence']; privacy_projection owned by K4."
     },
     {
       "id": "G1-B04",
       "status": "RESOLVED",
-      "description": "Ambient authority paths = 0."
+      "description": "Ambient=0."
     },
     {
       "id": "G1-B05",
       "status": "OPEN",
-      "description": "PLATFORM_REGISTRY RUST/WASM honesty gap."
+      "description": "PLATFORM_REGISTRY honesty gap."
     }
   ],
   "g1r4": {
@@ -108,24 +111,13 @@
   "g1r5": {
     "task": "PRIVACY_PROJECTION_OWNERSHIP",
     "contract_owner": "K4",
-    "task_label_note": "Brief said K3; contract assigns privacy projection to K4",
     "canonical_writer": "spe_runtime/privacy/project.py::project_privacy",
     "writers": 1,
     "duplicates": 0,
     "implementation": "PRESENT",
-    "review": "PENDING_RECHECK",
+    "external_review": "PENDING_RECHECK",
     "working_contract_unchanged": true
   },
-  "g1r3": {
-    "working_contract_unchanged": true
-  },
-  "g1r2": {
-    "ambient_authority_paths": 0,
-    "working_contract_unchanged": true
-  },
-  "g1r1": {
-    "working_contract_unchanged": true
-  },
-  "captured_at_utc": "2026-09-18T13:58:01Z",
+  "captured_at_utc": "2026-09-18T14:15:15Z",
   "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET"
 }

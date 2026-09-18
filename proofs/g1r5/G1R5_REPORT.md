@@ -4,9 +4,9 @@
 
 **G1R5_IMPLEMENTATION_PRESENT**
 
-**G1R5_REVIEW_PENDING** (do not self-promote)
+**G1R5_REVIEW_PENDING**
 
-G1R-4 remains **PASS** (external). G1 remains **BOUND_WITH_GAPS**.
+Do not self-promote to external PASS.
 
 ## SOURCE IDENTITY
 
@@ -17,51 +17,29 @@ G1R-4 remains **PASS** (external). G1 remains **BOUND_WITH_GAPS**.
 | implementation_commit | `ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd` |
 | suite_run_commit | `ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd` |
 | suite_tree | `8f53d36a35307c808798b82622713623c772838f` |
-| Working contract SHA | `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3` (unchanged) |
+| Working contract SHA | `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3` |
+
+Evidence/docs commits may follow the implementation commit. They must not rewrite suite identity.
 
 ## WORKING CONTRACT INTEGRITY
 
-SHA matches required `68bac38…`. Bytes not edited.
+SHA unchanged. Bytes not edited.
 
-## K3 RESPONSIBILITY — CONTRACT CORRECTION
+## CONTRACT CORRECTION
 
-Task brief labeled this “K3 privacy projection”.  
-`RING0_WORKING_CONTRACT.json` assigns **privacy projection → K4**.  
-K3 remains Strategy + Prompt. **Contract wins.** Implementation owned by **K4**.
+Task brief initially called privacy_projection **K3**.  
+Working Ring-0 contract assigns privacy_projection to **K4**.  
+**Contract won.** No contract bytes were changed. K3 remains Strategy + Prompt.
 
-## K3 TYPES (implemented under K4 package)
+## K4 RESPONSIBILITY
 
-PrivacyClass · ProjectionAction · ProjectionScope · PrivacyDirective · PrivacyProjectionEntry · PrivacyProjection
+Deterministic privacy projection read-model from authoritative fields. Not semantic truth. Not authority.
 
-## CANONICAL PRIVACY PROJECTION WRITER
+## CANONICAL WRITER
 
-`spe_runtime/privacy/project.py::project_privacy` — writers = **1**, duplicates = **0**.
+`spe_runtime/privacy/project.py::project_privacy` — writers=1 · duplicates=0
 
-## PRIVACY/TRUTH BOUNDARY
-
-Projection is a view. Source `ProtectedIntentContract` / field maps unchanged after projection.
-
-## PRIVACY/AUTHORITY BOUNDARY
-
-Returns `PrivacyProjection` only. Cannot mint `AuthorityGrant` / widen capability.
-
-## PROVENANCE BOUNDARY
-
-Entries carry source provenance; no upgrade MODEL_PROPOSED → USER_EXPLICIT.
-
-## DETERMINISM / COPY-ON-WRITE / NON-INTERFERENCE
-
-Same input → same `projection_id`. Nested source digests unchanged. Hidden sentinel leak count = 0 for EXPORT OMIT.
-
-## ADVERSARIAL TESTS
-
-`tests/unit/test_g1r5_k3_privacy_projection.py` — 18/18 PASS.
-
-## WRITER AUDIT
-
-See `proofs/g1r5/green/privacy_projection_writer_audit.txt`.
-
-## TEST DENOMINATORS
+## TEST DENOMINATORS (executed)
 
 | Suite | Result |
 |---|---|
@@ -69,19 +47,19 @@ See `proofs/g1r5/green/privacy_projection_writer_audit.txt`.
 | G1R-2 | 27/27 |
 | G1R-3 | 37/37 |
 | G1R-4 | 44/44 |
-| G1R-5 | 18/18 |
-| Authoritative Python | 435 collected / 432 passed / 3 failed |
+| G1R-5 privacy | 18/18 |
+| G1R-5E evidence consistency | 4/4 |
+| Authoritative Python | 439 collected / 436 passed / 3 failed |
 
-## OWNERSHIP BEFORE/AFTER
+## OWNERSHIP
 
-Before: 4 — privacy_projection, spe_artifact_identity, prompt_artifact, qualification_evidence  
-After: **3** — spe_artifact_identity, prompt_artifact, qualification_evidence
+Before UNOWNED=4 · After UNOWNED=**3**: spe_artifact_identity, prompt_artifact, qualification_evidence
 
-## EXPECTED REMAINING G1 FAILURES
+## EXPECTED REMAINING FAILURES
 
-1. `test_g1_no_unowned_required_ring0_responsibility`
-2. `test_g1_artifact_lineage_owner_unique`
-3. `test_g1_qualification_owner_unique`
+1. `tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility`
+2. `tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique`
+3. `tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique`
 
 ## BOUNDARY
 
@@ -89,4 +67,4 @@ G0 PASS · G1 BOUND_WITH_GAPS · G1R-1 COMPLETE · G1R-2 PASS · G1R-3 PASS · G
 
 ## NOT STARTED
 
-prompt_artifact · spe_artifact_identity · qualification_evidence · G2 · G3 · PR #6 merge · Sprint 7 · `spe_runtime/omega/`
+G1R-6 · PromptArtifact · .spe · K7 · G2 · G3 · PR #6 · Sprint 7 · omega/
