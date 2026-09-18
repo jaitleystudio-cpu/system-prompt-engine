@@ -1,4 +1,4 @@
-"""G1R-5E evidence consistency — stale PENDING_SUITE / denominator drift must fail."""
+"""G1R-5E/F evidence consistency — split implementation vs evidence validation."""
 
 from __future__ import annotations
 
@@ -37,13 +37,19 @@ def test_g1r5_binding_copies_byte_identical():
 def test_g1r5_manifest_hash_recomputes():
     m = _load(ROOT / "proofs/g1r5/AUTHORITATIVE_TEST_MANIFEST.json")
     assert m["artifact_content_sha256"] == _manifest_content_sha(m)
-    assert m["identity_model"]["implementation_commit"] == IMPL
-    assert m["identity_model"]["suite_run_commit"] == IMPL
-    assert m["identity_model"]["suite_tree"] == TREE
-    assert m["identity_model"]["working_contract_sha256"] == WC
-    assert m["identity_model"]["reviewed_pr_head"] is None
+    assert m["implementation_identity"]["commit"] == IMPL
+    assert m["implementation_identity"]["tree"] == TREE
+    assert m["implementation_identity"]["working_contract_sha256"] == WC
+    assert m["implementation_validation"]["collected"] == 435
+    assert m["implementation_validation"]["passed"] == 432
+    assert m["implementation_validation"]["failed"] == 3
+    assert m["implementation_validation"]["g1r5"] == "18/18"
+    assert m["evidence_validation"]["g1r5e"] == "4/4"
+    assert m["evidence_validation"]["reviewed_evidence_head"] == "EXTERNAL_ONLY"
     assert m["g1r5_external_review"] != "PASS"
     assert m["g1r5_implementation"] == "PRESENT"
+    # Forbidden: merged 439 attributed to implementation tree
+    assert m["implementation_validation"]["collected"] != 439
 
 
 def test_g1r5_evidence_artifacts_agree():
@@ -52,23 +58,24 @@ def test_g1r5_evidence_artifacts_agree():
     w = _load(ROOT / "proofs/g1/semantic_writer_map.json")
     ring = _load(ROOT / "proofs/g1/ring0_gap_matrix.json")
     report = (ROOT / "proofs/g1r5/G1R5_REPORT.md").read_text(encoding="utf-8")
+    iv = m["implementation_validation"]
+    ev = m["evidence_validation"]
 
     assert b["status"] == "BOUND_WITH_GAPS"
     assert b["normative_spec"]["sha256"] == WC
     assert b["repository"]["implementation_commit"] == IMPL
     assert b["repository"]["suite_run_commit"] == IMPL
     assert b["repository"]["suite_tree"] == TREE
-    assert b["tests"]["final_collected"] == m["collected"]
-    assert b["tests"]["final_passed"] == m["passed"]
-    assert b["tests"]["final_failed"] == m["failed"]
-    assert b["tests"]["g1r1_passed"] == m["gates"]["g1r1"]["passed"]
-    assert b["tests"]["g1r2_passed"] == m["gates"]["g1r2"]["passed"]
-    assert b["tests"]["g1r3_passed"] == m["gates"]["g1r3"]["passed"]
-    assert b["tests"]["g1r4_passed"] == m["gates"]["g1r4"]["passed"]
-    assert b["tests"]["g1r5_passed"] == m["gates"]["g1r5"]["passed"]
-    assert b["tests"]["g1r1_collected"] == m["gates"]["g1r1"]["collected"]
-    assert b["tests"]["g1r4_collected"] == m["gates"]["g1r4"]["collected"]
-    assert b["tests"]["g1r5_collected"] == m["gates"]["g1r5"]["collected"]
+    assert b["tests"]["final_collected"] == iv["collected"] == 435
+    assert b["tests"]["final_passed"] == iv["passed"] == 432
+    assert b["tests"]["final_failed"] == iv["failed"] == 3
+    assert b["tests"]["implementation_validation"]["collected"] == 435
+    assert b["tests"]["evidence_validation"]["g1r5e"] == "4/4"
+    assert b["tests"]["g1r1_passed"] == 5
+    assert b["tests"]["g1r2_passed"] == 27
+    assert b["tests"]["g1r3_passed"] == 37
+    assert b["tests"]["g1r4_passed"] == 44
+    assert b["tests"]["g1r5_passed"] == 18
     assert b["semantic_binding"]["UNOWNED_RING0_RESPONSIBILITIES"] == 3
     assert b["semantic_binding"]["unowned_facts"] == m["unowned_facts_after"]
     assert b["g1r5"]["external_review"] != "PASS"
@@ -90,18 +97,16 @@ def test_g1r5_evidence_artifacts_agree():
 
     assert "G1R5_IMPLEMENTATION_PRESENT" in report
     assert "G1R5_REVIEW_PENDING" in report
-    assert "Contract won" in report or "contract won" in report.lower() or "Contract won" in report
+    assert "Contract won" in report
     assert IMPL in report
     assert TREE in report
     assert WC in report
     assert re.search(r"18/18", report)
     assert re.search(r"44/44", report)
-    assert str(m["collected"]) in report
-    assert str(m["passed"]) in report
-    assert str(m["failed"]) in report
-    assert m["collected"] == b["tests"]["final_collected"]
-    assert m["passed"] == b["tests"]["final_passed"]
-    assert m["failed"] == b["tests"]["final_failed"]
+    assert "435" in report and "432" in report
+    assert "439" not in report
+    assert "EVIDENCE VALIDATION" in report
+    assert ev["g1r5e"] == "4/4"
 
 
 def test_g1r5_working_contract_sha_frozen():

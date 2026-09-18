@@ -6,8 +6,6 @@
 
 **G1R5_REVIEW_PENDING**
 
-Do not self-promote to external PASS.
-
 ## SOURCE IDENTITY
 
 | Field | Value |
@@ -15,11 +13,8 @@ Do not self-promote to external PASS.
 | Base | `931128b384c3055ecef876124f787e5b8e67651b` |
 | Branch | `cursor/g1r5-k3-privacy-projection-0d6e` |
 | implementation_commit | `ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd` |
-| suite_run_commit | `ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd` |
-| suite_tree | `8f53d36a35307c808798b82622713623c772838f` |
+| implementation_tree | `8f53d36a35307c808798b82622713623c772838f` |
 | Working contract SHA | `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3` |
-
-Evidence/docs commits may follow the implementation commit. They must not rewrite suite identity.
 
 ## WORKING CONTRACT INTEGRITY
 
@@ -29,17 +24,9 @@ SHA unchanged. Bytes not edited.
 
 Task brief initially called privacy_projection **K3**.  
 Working Ring-0 contract assigns privacy_projection to **K4**.  
-**Contract won.** No contract bytes were changed. K3 remains Strategy + Prompt.
+**Contract won.** No contract bytes were changed.
 
-## K4 RESPONSIBILITY
-
-Deterministic privacy projection read-model from authoritative fields. Not semantic truth. Not authority.
-
-## CANONICAL WRITER
-
-`spe_runtime/privacy/project.py::project_privacy` — writers=1 · duplicates=0
-
-## TEST DENOMINATORS (executed)
+## IMPLEMENTATION VALIDATION (tree ce0d9f7 / 8f53d36 only)
 
 | Suite | Result |
 |---|---|
@@ -48,14 +35,23 @@ Deterministic privacy projection read-model from authoritative fields. Not seman
 | G1R-3 | 37/37 |
 | G1R-4 | 44/44 |
 | G1R-5 privacy | 18/18 |
-| G1R-5E evidence consistency | 4/4 |
-| Authoritative Python | 439 collected / 436 passed / 3 failed |
+| Authoritative implementation Python | **435 collected / 432 passed / 3 failed** |
+
+## EVIDENCE VALIDATION (separate; not attributed to ce0d9f7)
+
+| Suite | Result |
+|---|---|
+| G1R-5E evidence consistency | **4/4** |
+| reviewed_evidence_head | EXTERNAL_ONLY |
+
+`test_g1r5e_evidence_consistency.py` was added after `ce0d9f7` and must not inflate the implementation suite denominator.
 
 ## OWNERSHIP
 
-Before UNOWNED=4 · After UNOWNED=**3**: spe_artifact_identity, prompt_artifact, qualification_evidence
+Before UNOWNED=4 · After UNOWNED=**3**: spe_artifact_identity, prompt_artifact, qualification_evidence  
+privacy_projection owner=K4 · writers=1 · duplicates=0 · ambient=0
 
-## EXPECTED REMAINING FAILURES
+## EXPECTED REMAINING FAILURES (implementation suite)
 
 1. `tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility`
 2. `tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique`
