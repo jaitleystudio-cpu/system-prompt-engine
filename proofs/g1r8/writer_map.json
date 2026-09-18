@@ -1,0 +1,8 @@
+{
+  "artifact_lineage": "spe_runtime/storage/build.py::build_spe_artifact",
+  "duplicate_canonical_writers": 0,
+  "prompt_content_digest": "spe_runtime/prompt/build.py::build_prompt_artifact",
+  "qualification_evidence": "UNOWNED",
+  "snapshot_identity": "spe_runtime/proof/snapshot.py::make_snapshot",
+  "spe_artifact_identity": "spe_runtime/storage/build.py::build_spe_artifact"
+}

@@ -1,0 +1,10 @@
+{
+  "authenticity": false,
+  "content_integrity_check": true,
+  "hash_equals_truth": false,
+  "import_grants_authority": false,
+  "import_mints_proof": false,
+  "import_mints_qualification": false,
+  "lineage_equals_better": false,
+  "signature": false
+}

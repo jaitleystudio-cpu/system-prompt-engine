@@ -1,0 +1,9 @@
+{
+  "K3_to_K2_proof": false,
+  "K3_to_K4_authority": false,
+  "K3_to_network_permission": false,
+  "K3_to_K7_qualification": false,
+  "K3_to_K6_artifact_identity": false,
+  "RETRIEVE_REASON_grants_network": false,
+  "PLAN_THEN_EXECUTE_grants_execution": false
+}

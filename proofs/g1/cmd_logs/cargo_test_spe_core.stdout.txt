@@ -1,0 +1,62 @@
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 8 tests
+test preserves_multilingual_utf8 ... ok
+test json_str_malformed_is_invalid_fixture ... ok
+test rejects_non_object_fixture_root ... ok
+test rejects_naive_authority_timestamps ... ok
+test rejects_nonportable_numeric_representation ... ok
+test unknown_abi_major_is_unsupported ... ok
+test unknown_remains_distinct_from_absent_and_null ... ok
+test timezone_aware_authority_timestamp_is_accepted ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 4 tests
+test cannot_infer_authority_validation_from_os_language_library ... ok
+test core_contract_runtime_cannot_run_local_execution ... ok
+test missing_never_fakes_success ... ok
+test exactly_satisfied_capability_sets_pass ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test constructed_mutations_do_not_escape ... ok
+test all_frozen_negatives_report_exact_reason ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+
+running 13 tests
+test conditional_vs_unconditional_recommendation ... ok
+test denied_vs_granted_not_equivalent ... ok
+test different_authority_argument_bounds ... ok
+test different_authority_target ... ok
+test different_hard_constraint ... ok
+test different_operation_id ... ok
+test different_provenance_origin ... ok
+test different_recommended_option ... ok
+test different_sensitivity_privacy ... ok
+test different_taint ... ok
+test fail_vs_pass_not_equivalent ... ok
+test map_key_order_is_incidental ... ok
+test unknown_vs_pass_not_equivalent ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

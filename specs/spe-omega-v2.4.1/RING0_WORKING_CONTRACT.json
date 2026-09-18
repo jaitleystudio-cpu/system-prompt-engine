@@ -1,0 +1,230 @@
+{
+  "custody": {
+    "not_a_rewrite_of_181_69": true,
+    "source": "G1 reverse-mapped Ring-0 architecture frozen for G1R-1. The verified 181-file / 69-kernel tree is not in GitHub custody for this owner and is not invented here.",
+    "status": "WORKING_CONTRACT_BOUND",
+    "verified_181_69_tree": "UNAVAILABLE"
+  },
+  "document": "RING0_WORKING_CONTRACT",
+  "kernel_owners": {
+    "K0": "Constitution + Intent",
+    "K1": "Requirements + Epistemic State",
+    "K2": "Proof Transaction",
+    "K3": "Strategy + Prompt",
+    "K4": "Authority + Privacy",
+    "K5": "ABI + Schema + Errors",
+    "K6": "Artifact + Lineage",
+    "K7": "Qualification + Lifecycle"
+  },
+  "laws": [
+    "A semantic fact has exactly one canonical writer.",
+    "DATA != AUTHORITY: generic envelope mutation must not write authority_state.",
+    "Typed error codes have a single K5 owner (ErrorRegistry / ErrorCode).",
+    "Failure-laundering (X10) has a single K1 writer (xcat.invariants.failures_not_laundered).",
+    "Python is the portable semantic oracle; Rust/WASM are replicas.",
+    "Binding sha256 is the sha256 of this file's exact bytes. Changing these bytes without updating SPE_IMPLEMENTATION_BINDING_v2.json.normative_spec.sha256 is a test failure."
+  ],
+  "ring0_requirements": [
+    {
+      "owner": "K0",
+      "requirement": "human sovereignty"
+    },
+    {
+      "owner": "K0",
+      "requirement": "protected user intent"
+    },
+    {
+      "owner": "K0",
+      "requirement": "explicit vs inferred distinction"
+    },
+    {
+      "owner": "K0",
+      "requirement": "must / must-not"
+    },
+    {
+      "owner": "K0",
+      "requirement": "user-confirmed requirements"
+    },
+    {
+      "owner": "K0",
+      "requirement": "intent integrity"
+    },
+    {
+      "owner": "K0",
+      "requirement": "intent contract schema"
+    },
+    {
+      "owner": "K1",
+      "requirement": "requirement graph"
+    },
+    {
+      "owner": "K1",
+      "requirement": "ambiguity"
+    },
+    {
+      "owner": "K1",
+      "requirement": "conflict"
+    },
+    {
+      "owner": "K1",
+      "requirement": "claims"
+    },
+    {
+      "owner": "K1",
+      "requirement": "evidence relationships"
+    },
+    {
+      "owner": "K1",
+      "requirement": "uncertainty"
+    },
+    {
+      "owner": "K1",
+      "requirement": "analysis vs recommendation ownership"
+    },
+    {
+      "owner": "K2",
+      "requirement": "SemanticSnapshot"
+    },
+    {
+      "owner": "K2",
+      "requirement": "proof obligations"
+    },
+    {
+      "owner": "K2",
+      "requirement": "Proof Ledger"
+    },
+    {
+      "owner": "K2",
+      "requirement": "Semantic Lease"
+    },
+    {
+      "owner": "K2",
+      "requirement": "proof-carrying patch"
+    },
+    {
+      "owner": "K2",
+      "requirement": "verification receipt"
+    },
+    {
+      "owner": "K2",
+      "requirement": "atomic semantic/proof commit"
+    },
+    {
+      "owner": "K2",
+      "requirement": "operation identity + outcome transitions"
+    },
+    {
+      "owner": "K3",
+      "requirement": "cognitive plan"
+    },
+    {
+      "owner": "K3",
+      "requirement": "prompt strategy"
+    },
+    {
+      "owner": "K3",
+      "requirement": "technique selection"
+    },
+    {
+      "owner": "K3",
+      "requirement": "PromptArtifact"
+    },
+    {
+      "owner": "K3",
+      "requirement": "capability routing (prompt/strategy)"
+    },
+    {
+      "owner": "K3",
+      "requirement": "recommendation ownership (Decide)"
+    },
+    {
+      "owner": "K4",
+      "requirement": "grants"
+    },
+    {
+      "owner": "K4",
+      "requirement": "permission scope"
+    },
+    {
+      "owner": "K4",
+      "requirement": "revocation epoch"
+    },
+    {
+      "owner": "K4",
+      "requirement": "privacy projection"
+    },
+    {
+      "owner": "K4",
+      "requirement": "egress decisions"
+    },
+    {
+      "owner": "K4",
+      "requirement": "capability != authority enforcement"
+    },
+    {
+      "owner": "K5",
+      "requirement": "canonical wire representation"
+    },
+    {
+      "owner": "K5",
+      "requirement": "schema registry"
+    },
+    {
+      "owner": "K5",
+      "requirement": "validation"
+    },
+    {
+      "owner": "K5",
+      "requirement": "typed error vocabulary"
+    },
+    {
+      "owner": "K5",
+      "requirement": "guard predicates"
+    },
+    {
+      "owner": "K5",
+      "requirement": "error precedence"
+    },
+    {
+      "owner": "K6",
+      "requirement": ".spe semantic artifact"
+    },
+    {
+      "owner": "K6",
+      "requirement": "artifact identity"
+    },
+    {
+      "owner": "K6",
+      "requirement": "lineage"
+    },
+    {
+      "owner": "K6",
+      "requirement": "import/export identity"
+    },
+    {
+      "owner": "K6",
+      "requirement": "snapshot binding"
+    },
+    {
+      "owner": "K7",
+      "requirement": "claim qualification"
+    },
+    {
+      "owner": "K7",
+      "requirement": "capability qualification"
+    },
+    {
+      "owner": "K7",
+      "requirement": "lifecycle state"
+    },
+    {
+      "owner": "K7",
+      "requirement": "promotion/revocation"
+    },
+    {
+      "owner": "K7",
+      "requirement": "qualification evidence"
+    }
+  ],
+  "version": "SPE Ω v2.4.1"
+}

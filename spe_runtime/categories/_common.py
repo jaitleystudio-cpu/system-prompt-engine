@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from spe_runtime.xcat.models import AuthorityState, CrossCategoryEnvelope, FailureRecord
+from spe_runtime.error_registry import ErrorCode, SpeTypedError
+from spe_runtime.xcat.invariants import failures_not_laundered
+from spe_runtime.xcat.models import AuthorityState, CrossCategoryEnvelope
 
 # Fields no category may introduce on recommendation/analysis/rendering payloads.
 FORBIDDEN_PAYLOAD_KEYS = frozenset(
@@ -20,6 +22,18 @@ FORBIDDEN_PAYLOAD_KEYS = frozenset(
         "EXECUTED",
         "VERIFIED_SUCCESS",
         "PROMOTE",
+    }
+)
+
+# DATA != AUTHORITY: generic mutator must not write these.
+AUTHORITY_CONTROLLED_FIELDS = frozenset(
+    {
+        "authority_state",
+        "authority_event",
+        "grant",
+        "permission",
+        "consent",
+        "execution_grants",
     }
 )
 
@@ -42,7 +56,18 @@ def replace_envelope(
     envelope: CrossCategoryEnvelope,
     **changes: Any,
 ) -> CrossCategoryEnvelope:
-    """Build a new frozen envelope from an existing one with field overrides."""
+    """Build a new frozen envelope from an existing one with field overrides.
+
+    Rejects authority-controlled kwargs. Authority mutations must go through
+    spe_runtime.authority.apply.apply_authority_event.
+    """
+    controlled = AUTHORITY_CONTROLLED_FIELDS & set(changes.keys())
+    if controlled:
+        raise SpeTypedError(
+            ErrorCode.GENERIC_AUTHORITY_MUTATION,
+            f"replace_envelope cannot write authority-controlled fields: "
+            f"{sorted(controlled)}",
+        )
     data = {
         "envelope_id": envelope.envelope_id,
         "goal_identity": envelope.goal_identity,
@@ -73,25 +98,21 @@ def authority_unchanged(before: AuthorityState, after: AuthorityState) -> bool:
     )
 
 
-def failures_not_laundered(
-    before: tuple[FailureRecord, ...], after: tuple[FailureRecord, ...]
-) -> bool:
-    before_map = {f.failure_id: f for f in before}
-    after_map = {f.failure_id: f for f in after}
-    if not before_map.keys() <= after_map.keys():
-        return False
-    for fid, b in before_map.items():
-        a = after_map[fid]
-        if b.status in ("FAIL", "UNKNOWN") and a.status == "PASS":
-            return False
-        if b.status == "FAIL" and a.status == "UNKNOWN":
-            return False
-    return True
-
-
 def mapping_equal(a: Mapping[str, Any] | None, b: Mapping[str, Any] | None) -> bool:
     if a is None and b is None:
         return True
     if a is None or b is None:
         return False
     return dict(a) == dict(b)
+
+
+__all__ = [
+    "FORBIDDEN_PAYLOAD_KEYS",
+    "AUTHORITY_CONTROLLED_FIELDS",
+    "certainty_rank",
+    "reject_forbidden_keys",
+    "replace_envelope",
+    "authority_unchanged",
+    "failures_not_laundered",
+    "mapping_equal",
+]

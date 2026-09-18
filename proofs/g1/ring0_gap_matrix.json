@@ -1,0 +1,656 @@
+{
+  "gate": "G1R-8",
+  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+  "normative_spec": "SPE \u03a9 v2.4.1",
+  "spec_present_in_tree": false,
+  "requirements": [
+    {
+      "requirement": "human sovereignty",
+      "owner": "K0",
+      "implementation_modules": [
+        "spe_runtime/contract/protected.py",
+        "spe_runtime/provenance/rules.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "protected user intent",
+      "owner": "K0",
+      "implementation_modules": [
+        "spe_runtime/contract/protected.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "explicit vs inferred distinction",
+      "owner": "K0",
+      "implementation_modules": [
+        "spe_runtime/provenance/rules.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "must / must-not",
+      "owner": "K0",
+      "implementation_modules": [
+        "spe_runtime/requirements/models.py",
+        "spe_runtime/requirements/conflicts.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "user-confirmed requirements",
+      "owner": "K0",
+      "implementation_modules": [
+        "spe_runtime/contract/protected.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "intent integrity",
+      "owner": "K0",
+      "implementation_modules": [
+        "spe_runtime/contract/protected.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "intent contract schema",
+      "owner": "K0",
+      "implementation_modules": [
+        "spe_runtime/contract/__init__.py"
+      ],
+      "tests": [],
+      "status": "PARTIAL",
+      "gap": "schemas/intent_contract.schema.json still stub",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "requirement graph",
+      "owner": "K1",
+      "implementation_modules": [
+        "spe_runtime/requirements/graph.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "ambiguity",
+      "owner": "K1",
+      "implementation_modules": [
+        "spe_runtime/xcat/models.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "uncertainties exist as IDs; no ambiguity type.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "conflict",
+      "owner": "K1",
+      "implementation_modules": [
+        "spe_runtime/requirements/conflicts.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "claims",
+      "owner": "K1",
+      "implementation_modules": [
+        "spe_runtime/categories/c02_research/engine.py"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "facts\u2248claims without claim qualification.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "evidence relationships",
+      "owner": "K1",
+      "implementation_modules": [
+        "spe_runtime/xcat/invariants.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "facts.provenance_ids only.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "uncertainty",
+      "owner": "K1",
+      "implementation_modules": [
+        "spe_runtime/xcat/invariants.py",
+        "spe_runtime/categories/c02_research/engine.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "X03 preservation + C02 writer.",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "analysis vs recommendation ownership",
+      "owner": "K1",
+      "implementation_modules": [
+        "spe_runtime/xcat/invariants.py",
+        "spe_runtime/categories/c06_analyze/engine.py"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "SemanticSnapshot",
+      "owner": "K2",
+      "implementation_modules": [
+        "spe_runtime/proof/snapshot.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "proof obligations",
+      "owner": "K2",
+      "implementation_modules": [
+        "spe_runtime/proof/obligation.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "Proof Ledger",
+      "owner": "K2",
+      "implementation_modules": [
+        "spe_runtime/proof/ledger.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "Semantic Lease",
+      "owner": "K2",
+      "implementation_modules": [
+        "spe_runtime/proof/lease.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "proof-carrying patch",
+      "owner": "K2",
+      "implementation_modules": [
+        "spe_runtime/proof/patch.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "verification receipt",
+      "owner": "K2",
+      "implementation_modules": [
+        "spe_runtime/proof/receipt.py",
+        "spe_runtime/proof/verify.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "atomic semantic/proof commit",
+      "owner": "K2",
+      "implementation_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "tests": [],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "operation identity + outcome transitions",
+      "owner": "K2",
+      "implementation_modules": [
+        "spe_runtime/execution/models.py",
+        "spe_runtime/execution/outcomes.py"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "Execution planning exists; not a proof transaction.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "cognitive plan",
+      "owner": "K3",
+      "implementation_modules": [
+        "spe_runtime/prompt/plan.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "prompt strategy",
+      "owner": "K3",
+      "implementation_modules": [
+        "spe_runtime/prompt/strategy.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "technique selection",
+      "owner": "K3",
+      "implementation_modules": [
+        "spe_runtime/prompt/techniques.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "PromptArtifact",
+      "owner": "K3",
+      "implementation_modules": [
+        "spe_runtime/prompt/build.py",
+        "spe_runtime/prompt/hints.py",
+        "spe_runtime/prompt/models.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r6_k3_prompt_artifact.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "capability routing (prompt/strategy)",
+      "owner": "K3",
+      "implementation_modules": [
+        "spe_runtime/portability/capability.py"
+      ],
+      "tests": [
+        "tests/portability/test_capability.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "Capability IDs exist for categories; not prompt routing.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "recommendation ownership (Decide)",
+      "owner": "K3",
+      "implementation_modules": [
+        "spe_runtime/categories/c01_decide/engine.py"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "Present as Decide, not as \u03a9 prompt kernel.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "grants",
+      "owner": "K4",
+      "implementation_modules": [
+        "spe_runtime/authority/models.py",
+        "spe_runtime/authority/validate.py",
+        "spe_runtime/authority/consume.py"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "No mint gate; constructors are ambient.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "permission scope",
+      "owner": "K4",
+      "implementation_modules": [
+        "spe_runtime/authority/validate.py"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "revocation epoch",
+      "owner": "K4",
+      "implementation_modules": [
+        "spe_runtime/authority/models.py"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "revocation_state only; no epoch counter.",
+      "future_action": "MIGRATE"
+    },
+    {
+      "requirement": "privacy projection",
+      "owner": "K4",
+      "implementation_modules": [
+        "spe_runtime/privacy/project.py",
+        "spe_runtime/privacy/models.py",
+        "spe_runtime/privacy/types.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r5_k3_privacy_projection.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "egress decisions",
+      "owner": "K4",
+      "implementation_modules": [
+        "spe_runtime/portability/abi.py",
+        "spe_runtime/adapters/local_temp_file.py"
+      ],
+      "tests": [
+        "tests/portability/test_offline_and_cost.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "network_mode=NONE and adapter network_used=False; no general egress oracle.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "capability != authority enforcement",
+      "owner": "K4",
+      "implementation_modules": [
+        "spe_runtime/portability/capability.py",
+        "spe_runtime/authority/validate.py"
+      ],
+      "tests": [
+        "tests/portability/test_capability.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "Separate modules (good) but no single enforcement that AVAILABLE cannot mint GRANTED. X09 bypass via authority_event.",
+      "future_action": "MIGRATE"
+    },
+    {
+      "requirement": "canonical wire representation",
+      "owner": "K5",
+      "implementation_modules": [
+        "spe_runtime/portability/canonical.py",
+        "spe_runtime/portability/abi.py"
+      ],
+      "tests": [
+        "tests/portability/test_canonical.py",
+        "tests/portability/test_abi.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "Second digest in execution/models.py.",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "schema registry",
+      "owner": "K5",
+      "implementation_modules": [
+        "spe_runtime/xcat/validator.py",
+        "spe_runtime/registry/__init__.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "9/11 schemas are STUBs with additionalProperties true. registry package empty.",
+      "future_action": "NEW_IMPLEMENTATION"
+    },
+    {
+      "requirement": "validation",
+      "owner": "K5",
+      "implementation_modules": [
+        "spe_runtime/xcat/validator.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "Envelope only.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "typed error vocabulary",
+      "owner": "K5",
+      "implementation_modules": [
+        "spe_runtime/xcat/reasons.py",
+        "spe_runtime/portability/reasons.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "CONFLICTING",
+      "gap": "Two enums.",
+      "future_action": "MIGRATE"
+    },
+    {
+      "requirement": "guard predicates",
+      "owner": "K5",
+      "implementation_modules": [
+        "spe_runtime/xcat/invariants.py",
+        "spe_runtime/portability/conformance.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py",
+        "tests/portability/"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
+    },
+    {
+      "requirement": "error precedence",
+      "owner": "K5",
+      "implementation_modules": [
+        "spe_runtime/xcat/handoff.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "Handoff diagnose order only; not global K5 precedence.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": ".spe semantic artifact",
+      "owner": "K6",
+      "implementation_modules": [
+        "spe_runtime/storage/models.py",
+        "spe_runtime/storage/build.py",
+        "spe_runtime/storage/serialize.py",
+        "spe_runtime/storage/validate.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r8_k6_spe_artifact.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "RETAIN"
+    },
+    {
+      "requirement": "artifact identity",
+      "owner": "K6",
+      "implementation_modules": [
+        "spe_runtime/storage/build.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r8_k6_spe_artifact.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "Canonical spe- identity via build_spe_artifact; temp-file SHA is not the owner.",
+      "future_action": "RETAIN"
+    },
+    {
+      "requirement": "lineage",
+      "owner": "K6",
+      "implementation_modules": [
+        "spe_runtime/storage/build.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r8_k6_spe_artifact.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "Direct parent_artifact_id only; full ancestry-cycle detection out of scope.",
+      "future_action": "RETAIN"
+    },
+    {
+      "requirement": "import/export identity",
+      "owner": "K6",
+      "implementation_modules": [
+        "spe_runtime/portability/conformance.py"
+      ],
+      "tests": [
+        "tests/portability/test_reference_runtime.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "ReferenceRuntime import/export envelopes, not .spe artifacts.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "snapshot binding",
+      "owner": "K6",
+      "implementation_modules": [
+        "spe_runtime/storage/build.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r8_k6_spe_artifact.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "Binds K2 SemanticSnapshot id/version; does not own snapshot identity.",
+      "future_action": "RETAIN"
+    },
+    {
+      "requirement": "claim qualification",
+      "owner": "K7",
+      "implementation_modules": [],
+      "tests": [],
+      "status": "MISSING",
+      "gap": "No qualification evidence.",
+      "future_action": "NEW_IMPLEMENTATION"
+    },
+    {
+      "requirement": "capability qualification",
+      "owner": "K7",
+      "implementation_modules": [
+        "spe_runtime/portability/capability.py"
+      ],
+      "tests": [
+        "tests/portability/test_capability.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "AVAILABLE/MISSING only; not qualification evidence.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "lifecycle state",
+      "owner": "K7",
+      "implementation_modules": [
+        "spe_runtime/execution/outcomes.py",
+        "spe_runtime/portability/abi.py"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "OutcomeState + CONFORMANCE_PARTIAL declaration; no SPE lifecycle.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "promotion/revocation",
+      "owner": "K7",
+      "implementation_modules": [
+        "spe_runtime/xcat/handoff.py",
+        "spe_runtime/authority/models.py"
+      ],
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "status": "PARTIAL",
+      "gap": "Promotion forbidden (good). Grant REVOKED flag exists; no epoch/lifecycle machine.",
+      "future_action": "WRAP"
+    },
+    {
+      "requirement": "qualification evidence",
+      "owner": "K7",
+      "implementation_modules": [],
+      "tests": [],
+      "status": "MISSING",
+      "gap": "recovery/ empty; recovery_plan.schema.json STUB.",
+      "future_action": "NEW_IMPLEMENTATION"
+    }
+  ],
+  "counts": {
+    "IMPLEMENTED": 27,
+    "PARTIAL": 18,
+    "MISSING": 4,
+    "CONFLICTING": 1
+  }
+}
