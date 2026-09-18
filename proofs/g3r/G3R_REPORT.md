@@ -9,7 +9,7 @@ Five-surface independent harden: fencing writers · SIGKILL atomicity · SENT_UN
 G1R-V HEAD: `8e8b028ab399a9194e7dc54f71ae006ed938d491`
 G2 HEAD: `1c32235f95c27761bc82d4116c741c09eb804910`
 G3 implementation HEAD: `95a6d0b0882cfd66f9da332bdeb024397d0c6c1f`
-G3R review HEAD: `cf1e6c715ca3a06a0bb7f4ad8cb07087d9e7bdcf`
+G3R review HEAD: `857350e24760a892d973a6322036a0abaf39f0eb`
 Branch: `cursor/g3r-durable-ring1-recheck-0d6e`
 PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/23
 PR #6: OPEN @ 4e6c694 — UNTOUCHED
