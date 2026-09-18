@@ -7,9 +7,9 @@ G3_IMPLEMENTATION_PASS
 G1R-V HEAD: `8e8b028ab399a9194e7dc54f71ae006ed938d491`
 G2 HEAD: `1c32235f95c27761bc82d4116c741c09eb804910`
 G3 base HEAD: `1c32235f95c27761bc82d4116c741c09eb804910`
-G3 HEAD: `5da46868014aa7913a678fe4e9310f2cb9209548`
+G3 HEAD: `bd1738709df32fc5a687b3c3f98c52b87d690900`
 Branch: `cursor/g3-durable-ring1-0d6e`
-PR: _(opened by agent)_
+PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/22
 PR #6: OPEN @ 4e6c694 — UNTOUCHED
 Working contract SHA: `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3`
 
