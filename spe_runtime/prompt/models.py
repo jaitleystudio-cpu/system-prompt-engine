@@ -25,11 +25,12 @@ class PromptSegmentKind(str, Enum):
     TARGET_PROFILE = "TARGET_PROFILE"
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class PromptSourceBinding:
     """Deterministic binding to source ProtectedIntentContract semantics.
 
     Binds to content digests / requirement IDs — never Python object ids.
+    slots=True blocks __dict__ mutation bypass of frozen=.
     """
 
     contract_content_digest: str
@@ -40,7 +41,7 @@ class PromptSourceBinding:
     provenance_markers: tuple[str, ...]
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class PromptSegment:
     """One ordered, immutable prompt segment with categorical provenance."""
 
@@ -58,7 +59,7 @@ class PromptSegment:
             raise TypeError("PromptSegment.text must be str")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class PromptArtifact:
     """Immutable, content-addressed K3 PromptArtifact.
 

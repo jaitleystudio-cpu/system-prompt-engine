@@ -125,6 +125,34 @@ def test_g1_no_unowned_required_ring0_responsibility():
     }
 
 
+def test_g1_k3_required_responsibilities_complete():
+    """Dedicated K3 strategy completeness gate — RED until G1R-7.
+
+    PromptArtifact alone must not make K3 look complete. Cognitive plan,
+    prompt strategy, and technique selection remain required Ring-0
+    responsibilities and must be IMPLEMENTED with real modules before this
+    gate can pass. Audit hardening (G1R-6R-H01); do not implement G1R-7 here.
+    """
+    ring = _load(G1 / "ring0_gap_matrix.json")
+    required = ("cognitive plan", "prompt strategy", "technique selection")
+    incomplete = []
+    for name in required:
+        row = next(r for r in ring["requirements"] if r["requirement"] == name)
+        if row["status"] != "IMPLEMENTED" or not row.get("implementation_modules"):
+            incomplete.append(
+                {
+                    "requirement": name,
+                    "status": row["status"],
+                    "implementation_modules": row.get("implementation_modules") or [],
+                }
+            )
+    assert incomplete == [], {
+        "reason": "K3_MISSING_REQUIREMENTS_NOT_COMPLETE",
+        "incomplete": incomplete,
+        "note": "PromptArtifact IMPLEMENTED does not satisfy CognitivePlan/PromptStrategy/TechniqueSelection",
+    }
+
+
 def test_g1_authority_owner_unique():
     writers = _load(G1 / "semantic_writer_map.json")
     grant = next(f for f in writers["facts"] if f["semantic_fact"] == "grant_compatibility")

@@ -13,7 +13,7 @@ from typing import Any, Mapping
 
 from spe_runtime.contract.protected import ContractValidity, ProtectedIntentContract
 from spe_runtime.error_registry import ErrorCode, SpeTypedError
-from spe_runtime.portability.canonical import canonical_dumps
+from spe_runtime.portability.canonical import canonicalize, canonical_dumps
 from spe_runtime.proof.types import content_digest
 from spe_runtime.prompt.models import (
     PromptArtifact,
@@ -57,10 +57,18 @@ def _escape_structural(text: str) -> str:
 
     Replaces sentinel substrings with a length-tagged escaped form that cannot
     equal any open/close marker used by the renderer.
+
+    Input strings are NFC-canonicalized first so equivalent Unicode forms cannot
+    produce divergent rendered bytes while sharing a content digest.
+    Encoding is intentionally one-way for sentinel-bearing inputs; escaped form
+    never equals a structural sentinel (hex alphabet + length tag).
     """
     if not isinstance(text, str):
         text = str(text)
-    out = text
+    # Reuse K5 canonicalize for NFC (and ISO-8601 string norms if present).
+    out = canonicalize(text)
+    if not isinstance(out, str):
+        out = str(out)
     for sentinel in _ALL_SENTINELS:
         if sentinel in out:
             # Escape each occurrence; escaped form never equals a sentinel.
