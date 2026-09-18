@@ -1,0 +1,47 @@
+{
+  "all_pass": true,
+  "vectors": [
+    {
+      "expected": "DIRECT",
+      "name": "simple_direct",
+      "pass": true,
+      "plan_kind": "DIRECT"
+    },
+    {
+      "expected": "DECOMPOSE",
+      "name": "decompose",
+      "pass": true,
+      "plan_kind": "DECOMPOSE"
+    },
+    {
+      "expected": "RETRIEVE_THEN_REASON",
+      "name": "retrieve",
+      "pass": true,
+      "plan_kind": "RETRIEVE_THEN_REASON"
+    },
+    {
+      "expected": "COMPARE",
+      "name": "compare",
+      "pass": true,
+      "plan_kind": "COMPARE"
+    },
+    {
+      "expected": "CRITIQUE_REVISE",
+      "name": "critique",
+      "pass": true,
+      "plan_kind": "CRITIQUE_REVISE"
+    },
+    {
+      "expected": "PLAN_THEN_EXECUTE",
+      "name": "plan_exec",
+      "pass": true,
+      "plan_kind": "PLAN_THEN_EXECUTE"
+    },
+    {
+      "expected": "STRUCTURED_ANALYSIS",
+      "name": "structured",
+      "pass": true,
+      "plan_kind": "STRUCTURED_ANALYSIS"
+    }
+  ]
+}

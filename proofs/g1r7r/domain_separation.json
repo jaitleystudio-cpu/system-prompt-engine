@@ -1,0 +1,9 @@
+{
+  "K3_to_K2_proof": false,
+  "K3_to_K4_authority": false,
+  "K3_to_K6_identity": false,
+  "K3_to_K7_qualification": false,
+  "K3_to_PrivacyProjection_mutation": false,
+  "K3_to_network_permission": false,
+  "K3_to_world1_status": false
+}

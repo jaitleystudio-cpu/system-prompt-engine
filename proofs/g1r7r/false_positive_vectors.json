@@ -1,0 +1,40 @@
+{
+  "all_pass": true,
+  "vectors": [
+    {
+      "goal": "Write a long poem about research.",
+      "must_not": "RETRIEVE_THEN_REASON",
+      "name": "poem_research",
+      "pass": true,
+      "plan_kind": "DIRECT"
+    },
+    {
+      "goal": "Compare this paragraph with itself.",
+      "must_not": "COMPARE",
+      "name": "compare_self",
+      "pass": true,
+      "plan_kind": "DIRECT"
+    },
+    {
+      "goal": "Plan my birthday message.",
+      "must_not": "PLAN_THEN_EXECUTE",
+      "name": "birthday_plan",
+      "pass": true,
+      "plan_kind": "DIRECT"
+    },
+    {
+      "goal": "Review my favorite movie.",
+      "must_not": "CRITIQUE_REVISE",
+      "name": "review_movie",
+      "pass": true,
+      "plan_kind": "DIRECT"
+    },
+    {
+      "goal": "Give me JSON-looking prose.",
+      "must_not": "STRUCTURED_ANALYSIS",
+      "name": "json_prose",
+      "pass": true,
+      "plan_kind": "DIRECT"
+    }
+  ]
+}

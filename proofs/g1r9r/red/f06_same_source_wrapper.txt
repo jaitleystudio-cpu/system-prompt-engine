@@ -1,0 +1,3 @@
+G1R9R-F06 HIGH SAME_SOURCE_WRAPPER_INDEPENDENCE
+Same evidence_digest wrapped as EXTERNAL_REVIEW and INDEPENDENT_REPLICATION
+yields two qe- IDs; second can impersonate independent replication.
