@@ -1,5 +1,5 @@
 {
-  "gate": "G1R-7R",
+  "gate": "G1R-8",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "normative_spec": "SPE \u03a9 v2.4.1",
   "spec_present_in_tree": false,
@@ -522,37 +522,44 @@
     {
       "requirement": ".spe semantic artifact",
       "owner": "K6",
-      "implementation_modules": [],
-      "tests": [],
-      "status": "MISSING",
-      "gap": "No artifact format.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "implementation_modules": [
+        "spe_runtime/storage/models.py",
+        "spe_runtime/storage/build.py",
+        "spe_runtime/storage/serialize.py",
+        "spe_runtime/storage/validate.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r8_k6_spe_artifact.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "RETAIN"
     },
     {
       "requirement": "artifact identity",
       "owner": "K6",
       "implementation_modules": [
-        "spe_runtime/adapters/local_temp_file.py"
+        "spe_runtime/storage/build.py"
       ],
       "tests": [
-        "tests/unit/test_c07_authority.py"
+        "tests/unit/test_g1r8_k6_spe_artifact.py"
       ],
-      "status": "PARTIAL",
-      "gap": "content SHA-256 of temp file only.",
-      "future_action": "WRAP"
+      "status": "IMPLEMENTED",
+      "gap": "Canonical spe- identity via build_spe_artifact; temp-file SHA is not the owner.",
+      "future_action": "RETAIN"
     },
     {
       "requirement": "lineage",
       "owner": "K6",
       "implementation_modules": [
-        "spe_runtime/xcat/models.py"
+        "spe_runtime/storage/build.py"
       ],
       "tests": [
-        "tests/unit/test_xcat_core.py"
+        "tests/unit/test_g1r8_k6_spe_artifact.py"
       ],
-      "status": "PARTIAL",
-      "gap": "category_trace is not artifact lineage.",
-      "future_action": "WRAP"
+      "status": "IMPLEMENTED",
+      "gap": "Direct parent_artifact_id only; full ancestry-cycle detection out of scope.",
+      "future_action": "RETAIN"
     },
     {
       "requirement": "import/export identity",
@@ -570,11 +577,15 @@
     {
       "requirement": "snapshot binding",
       "owner": "K6",
-      "implementation_modules": [],
-      "tests": [],
-      "status": "MISSING",
-      "gap": "No snapshot.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "implementation_modules": [
+        "spe_runtime/storage/build.py"
+      ],
+      "tests": [
+        "tests/unit/test_g1r8_k6_spe_artifact.py"
+      ],
+      "status": "IMPLEMENTED",
+      "gap": "Binds K2 SemanticSnapshot id/version; does not own snapshot identity.",
+      "future_action": "RETAIN"
     },
     {
       "requirement": "claim qualification",

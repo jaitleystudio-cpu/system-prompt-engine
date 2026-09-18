@@ -1,13 +1,11 @@
 {
-  "gate": "G1R-7",
+  "gate": "G1R-8",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "module_count": 88,
   "counts": {
-    "RETAIN": 82,
-    "WRAP": 1,
-    "MIGRATE": 0,
-    "REPLACE": 0,
-    "RETIRE": 5
+    "RETAIN": 87,
+    "RETIRE": 4,
+    "WRAP": 1
   },
   "modules": [
     {
@@ -498,9 +496,9 @@
     },
     {
       "path": "spe_runtime/storage/__init__.py",
-      "disposition": "RETIRE",
+      "disposition": "RETAIN",
       "normative_owner": "K6",
-      "reason": "empty stub; future Ring-0 owner"
+      "reason": "G1R-8 K6 SpeArtifact package root"
     },
     {
       "path": "spe_runtime/xcat/__init__.py",
@@ -537,6 +535,30 @@
       "disposition": "RETAIN",
       "normative_owner": "K1",
       "reason": "existing sprint runtime retained"
+    },
+    {
+      "path": "spe_runtime/storage/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 SpeArtifact model"
+    },
+    {
+      "path": "spe_runtime/storage/build.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 sole SpeArtifact / identity / lineage writer"
+    },
+    {
+      "path": "spe_runtime/storage/validate.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 shared SpeArtifact validator"
+    },
+    {
+      "path": "spe_runtime/storage/serialize.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K6",
+      "reason": "G1R-8 .spe dumps/loads/save/load"
     }
   ]
 }
