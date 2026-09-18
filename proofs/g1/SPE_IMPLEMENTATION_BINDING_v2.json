@@ -2,7 +2,7 @@
   "schema_version": "2.0.0",
   "gate": "G1_RUNTIME_BINDING",
   "status": "BOUND_WITH_GAPS",
-  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_IMPLEMENTATION_PRESENT; G1R8_REVIEW_PENDING; G1 BOUND_WITH_GAPS",
+  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_PASS_EXTERNAL; G1R8R_RECHECK_PASS; G1 BOUND_WITH_GAPS",
   "normative_spec": {
     "version": "SPE \u03a9 v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
@@ -13,10 +13,10 @@
   },
   "repository": {
     "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-    "branch": "cursor/g1r8-k6-spe-artifact-0d6e",
+    "branch": "cursor/g1r8r-k6-artifact-recheck-0d6e",
     "implementation_commit": "1dd587b50c672c7f364209fc875d2d2f7796992e",
     "implementation_tree": "3e564a633a3452cdd9a92d9a3832b119b21e86ad",
-    "suite_run_commit": "ec5bb711e8f03b97664dc18ea9c6d5122ddbb942",
+    "suite_run_commit": "682cc55601f9136a3e41f79fd65d0a43a36711f8",
     "suite_tree": "a173921f01f33fd46e5cc55154ac22558f18dec0",
     "tree_hash": "3e564a633a3452cdd9a92d9a3832b119b21e86ad",
     "tree_hash_scope": "implementation_suite_tree",
@@ -26,14 +26,14 @@
   },
   "tests": {
     "implementation_validation": {
-      "collected": 566,
-      "passed": 564,
+      "collected": 583,
+      "passed": 581,
       "failed": 2,
       "skipped": 0,
       "exit_status": 1,
       "duration_s": 0.966,
-      "result_sha256": "a9dc7027b7dba54890aa5f779ee79eac8fb081220ccdbf1becc2fc49871e80a0",
-      "junit_sha256": "06445052a9d268f2811f63b0c711983d011d5a51322f415fdb3ca06c529b4432",
+      "result_sha256": "e777d708f158ff5d47c8a62eaf052641562440609ed5485a04eb4765a87c8e99",
+      "junit_sha256": "491ef881d7f2d28c03f5ae8d05ad6c77026e065aec306de503b5c446821df13a",
       "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
       "g1r1": "5/5",
       "g1r2": "27/27",
@@ -49,7 +49,8 @@
         "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
       ],
       "g1r7r": "26/26",
-      "g1r8": "33/33"
+      "g1r8": "33/33",
+      "g1r8r": "17/17"
     },
     "evidence_validation": {
       "reviewed_evidence_head": "EXTERNAL_ONLY"
@@ -112,7 +113,7 @@
     "k3_strategy_gate": "PASS"
   },
   "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
-  "conformance_result": "G1R-8 @ec5bb711e8f0 suite 566/564/2. artifact_lineage gate GREEN. UNOWNED 2\u21921. MISSING 4\u21922. External review PENDING.",
+  "conformance_result": "G1R-8R RECHECK_PASS @682cc55601f9 suite 583/581/2. G1R-8 PASS_EXTERNAL. F01 digest\u2194payload repaired. PORTABLE_SEMANTIC_BINDING_ARTIFACT. K7 RED\u00d72.",
   "blockers": [
     {
       "id": "G1-B01",
@@ -165,7 +166,7 @@
     "working_contract_unchanged": true,
     "prompt_content_digest_note": "prompt_content_digest != spe_artifact_identity"
   },
-  "captured_at_utc": "2026-09-18T16:21:36Z",
+  "captured_at_utc": "2026-09-18T16:33:31Z",
   "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET",
   "g1r6r": {
     "task": "INDEPENDENT_PROMPTARTIFACT_RECHECK",
@@ -213,8 +214,21 @@
     "writers": 1,
     "duplicates": 0,
     "implementation": "PRESENT",
-    "external_review": "REVIEW_PENDING",
+    "external_review": "PASS",
     "working_contract_unchanged": true,
-    "rust_wasm": "RUST_WASM_NOT_REBUILT"
+    "rust_wasm": "RUST_WASM_NOT_REBUILT",
+    "promotion": "PASS_EXTERNAL",
+    "portability_claim": "PORTABLE_SEMANTIC_BINDING_ARTIFACT"
+  },
+  "g1r8r": {
+    "task": "INDEPENDENT_K6_ARTIFACT_RECHECK",
+    "verdict": "G1R8_RECHECK_PASS",
+    "findings_closed": [
+      "G1R8R-F01",
+      "G1R8R-F02"
+    ],
+    "promotion": "G1R-8 PASS_EXTERNAL",
+    "g1r9_started": false,
+    "working_contract_unchanged": true
   }
 }
