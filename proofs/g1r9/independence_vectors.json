@@ -1,0 +1,14 @@
+[
+  {
+    "case": "same_reviewer_duplicated",
+    "result": "not_INDEPENDENTLY_REPLICATED"
+  },
+  {
+    "case": "external_review",
+    "result": "not_automatically_independent_replication"
+  },
+  {
+    "case": "INDEPENDENT_REPLICATION_with_EXTERNAL_indep",
+    "result": "K7_INVALID_EVIDENCE"
+  }
+]

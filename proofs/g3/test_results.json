@@ -1,0 +1,10 @@
+{
+  "g3_suite": {
+    "passed": 42,
+    "failed": 0
+  },
+  "full_authoritative": {
+    "passed": 714,
+    "failed": 0
+  }
+}

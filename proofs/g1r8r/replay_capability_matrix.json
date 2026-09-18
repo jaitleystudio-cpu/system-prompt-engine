@@ -1,0 +1,10 @@
+{
+  "DirectLineage": "EMBEDDED field (parent_artifact_id); PARENT ID BOUND not PARENT VERIFIED",
+  "PromptArtifact": "DIGEST_ONLY (prompt_content_digest)",
+  "ProofLedger": "DIGEST_ONLY / ABSENT",
+  "ProtectedIntent": "EMBEDDED / RECONSTRUCTABLE",
+  "RequirementGraph": "EMBEDDED / RECONSTRUCTABLE",
+  "SemanticSnapshot": "DIGEST_ONLY (snapshot_id + snapshot_version)",
+  "earned_portability_claim": "PORTABLE_SEMANTIC_BINDING_ARTIFACT",
+  "not_earned": "SELF_CONTAINED_REPLAY_ARTIFACT"
+}

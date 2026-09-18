@@ -1,0 +1,39 @@
+{
+  "R1": {
+    "claim": "no authoritative durable Ring-1 store",
+    "pre_g3": true,
+    "evidence": "spe_runtime/storage is SpeArtifact serialize only; no sqlite mission store"
+  },
+  "R2": {
+    "claim": "no WorkerExecutionLease/fencing",
+    "pre_g3": true,
+    "evidence": "only K2 SemanticProofLease in spe_runtime/proof/lease.py"
+  },
+  "R3": {
+    "claim": "no durable CAS semantic commit",
+    "pre_g3": true,
+    "evidence": "commit_semantic_patch is in-memory COW"
+  },
+  "R4": {
+    "claim": "no append-only durable journal",
+    "pre_g3": true
+  },
+  "R5": {
+    "claim": "no crash replay",
+    "pre_g3": true,
+    "evidence": "spe_runtime/recovery/__init__.py empty"
+  },
+  "R6": {
+    "claim": "no durable effect state machine",
+    "pre_g3": true,
+    "evidence": "EffectLedger in-process set only"
+  },
+  "R7": {
+    "claim": "no SENT_UNKNOWN reconciliation",
+    "pre_g3": true
+  },
+  "R8": {
+    "claim": "no multiprocess stale-worker proof",
+    "pre_g3": true
+  }
+}

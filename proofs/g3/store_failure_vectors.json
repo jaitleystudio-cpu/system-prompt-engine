@@ -1,0 +1,6 @@
+{
+  "unavailable": "PASS",
+  "corrupt": "PASS",
+  "unknown_schema": "PASS",
+  "memory_fallback": "NO"
+}

@@ -1,0 +1,11 @@
+{
+  "worker_execution_lease": "spe_runtime.ring1.lease",
+  "fencing_token": "spe_runtime.ring1.lease (acquire/reclaim)",
+  "durable_snapshot_binding": "spe_runtime.ring1.commit.commit_durable_semantic_transaction",
+  "durable_proof_binding": "spe_runtime.ring1.commit (proof_ledger_digest column)",
+  "execution_cursor": "spe_runtime.ring1.commit",
+  "journal": "spe_runtime.ring1.store.Ring1Store.append_journal",
+  "effect_state": "spe_runtime.ring1.effects",
+  "recovery": "spe_runtime.ring1.recovery.recover_mission",
+  "duplicate_durable_semantic_writers": 0
+}

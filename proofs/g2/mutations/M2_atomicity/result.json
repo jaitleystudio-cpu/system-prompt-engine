@@ -1,0 +1,16 @@
+{
+  "mutation_id": "M2_atomicity",
+  "directory": "proofs/g2/mutations/M2_atomicity",
+  "cfg": "C_safety_all.cfg",
+  "expected_violated_property": "StateProofAtomicity",
+  "exit_code": 12,
+  "elapsed_sec": 0.418,
+  "invariants_violated": [
+    "StateProofAtomicity"
+  ],
+  "temporal_violation": false,
+  "deadlock": false,
+  "killed": true,
+  "counterexample_log": "proofs/g2/counterexamples/M2_atomicity_counterexample.log",
+  "status": "KILLED"
+}

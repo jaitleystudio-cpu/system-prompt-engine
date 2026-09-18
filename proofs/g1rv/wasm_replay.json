@@ -1,0 +1,6 @@
+{
+  "status": "NOT_RUN_IN_G1RV_STANDARD_SUITE",
+  "g1_pass_requirement": false,
+  "portable_spe_wasm_exists": true,
+  "pr6": "OPEN untouched @4e6c694"
+}

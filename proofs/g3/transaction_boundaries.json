@@ -1,0 +1,28 @@
+{
+  "T1_lease_acquire_reclaim": [
+    "worker_lease",
+    "journal LEASE_*"
+  ],
+  "T2_heartbeat": [
+    "worker_lease.deadline",
+    "journal LEASE_HEARTBEAT"
+  ],
+  "T3_semantic_commit": [
+    "snapshot_binding",
+    "execution_cursor",
+    "journal SEMANTIC_COMMITTED"
+  ],
+  "T4_effect_intent": [
+    "effects NOT_SENT",
+    "journal EFFECT_PREPARED"
+  ],
+  "T5_effect_sent_unknown": [
+    "effects SENT_UNKNOWN",
+    "journal EFFECT_SENT_UNKNOWN"
+  ],
+  "T6_reconciliation": [
+    "effects KNOWN_*",
+    "journal EFFECT_KNOWN_*"
+  ],
+  "universal_distributed_2pc": false
+}

@@ -1,0 +1,25 @@
+{
+  "note": "Antecedents/adversarial states shown reachable via action coverage + LiveSpec path",
+  "witnesses": [
+    {
+      "predicate": "Witness_StalePatchExists",
+      "evidence": "ProposeStalePatch coverage C1/C5 > 0"
+    },
+    {
+      "predicate": "Witness_FailReceipt / Witness_UnknownReceipt",
+      "evidence": "Verify action with FAIL/UNKNOWN in C5; FailNeverCommits/UnknownNeverCommits exercised"
+    },
+    {
+      "predicate": "Witness_ValidCommitEnabled",
+      "evidence": "C6 LiveSpec 5-state path reaches ValidCommit before CommitSuccess; L1 non-vacuous (M6 kills when fairness removed)"
+    },
+    {
+      "predicate": "Witness_RevokedLease",
+      "evidence": "RevokeLease coverage C5 968 executions"
+    },
+    {
+      "predicate": "Witness_ConsumedLease",
+      "evidence": "CommitSuccess leaves CONSUMED; coverage non-zero"
+    }
+  ]
+}

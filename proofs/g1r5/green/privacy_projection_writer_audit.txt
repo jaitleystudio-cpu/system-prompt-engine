@@ -1,0 +1,7 @@
+=== spe_runtime/privacy/__init__.py ===
+=== spe_runtime/privacy/models.py ===
+=== spe_runtime/privacy/types.py ===
+=== spe_runtime/privacy/project.py ===
+CANONICAL_WRITER project_privacy FOUND
+writer_modules=[spe_runtime/privacy/project.py]
+duplicate_search: mint_/build_/create_ privacy helpers absent from package exports

@@ -1,0 +1,16 @@
+{
+  "denominator_note": "566\u2192583: +G1R-8R adversarial tests",
+  "expected_red": [
+    "test_g1_no_unowned_required_ring0_responsibility",
+    "test_g1_qualification_owner_unique"
+  ],
+  "full_python": {
+    "collected": 583,
+    "failed": 2,
+    "passed": 581,
+    "skipped": 0
+  },
+  "g1r8": 33,
+  "g1r8r": 17,
+  "junit_sha256": "491ef881d7f2d28c03f5ae8d05ad6c77026e065aec306de503b5c446821df13a"
+}
