@@ -1,0 +1,2515 @@
+{
+  "gate": "G1",
+  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+  "module_count": 60,
+  "modules": [
+    {
+      "path": "spe_runtime/__init__.py",
+      "sha256": "aef22fd8214a5b3e1476fb60837a483cd5c0917f3066f3128931a403b214ca8b",
+      "loc": 3,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Package version marker for NEW_IMPLEMENTATION runtime.",
+      "tests": [
+        "import spe_runtime"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [
+        "__version__"
+      ],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/adapters/__init__.py",
+      "sha256": "02cb42338a7877c70b9dfc020c719ecedb9797540a692038d15aec249773b743",
+      "loc": 5,
+      "public_api": [],
+      "imports": [
+        "spe_runtime.adapters.local_temp_file"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Re-export local temp-file adapter.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/adapters/local_temp_file.py",
+      "sha256": "937af2ecb3d2809db4d5bc56e8ddb1f1f97cdcc1f2ec38d57a24d370fab8f7a9",
+      "loc": 188,
+      "public_api": [
+        "LocalTempFileResult",
+        "write_local_temp_file"
+      ],
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "hashlib",
+        "pathlib",
+        "spe_runtime.execution.effect_ledger",
+        "spe_runtime.xcat.reasons",
+        "tempfile",
+        "typing"
+      ],
+      "classes": [
+        "LocalTempFileResult"
+      ],
+      "functions": [
+        "_safe_filename",
+        "_confine",
+        "write_local_temp_file"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "WRITE_LOCAL_TEMP_FILE sandbox write; digest; never verified_success.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "ExecutionIntent",
+        "sandbox_root"
+      ],
+      "writes": [
+        "local temp file bytes"
+      ],
+      "semantic_facts_written": [
+        "content_digest",
+        "network_used=False",
+        "verified_success=False"
+      ],
+      "authority_effects": [
+        "rejects wrong action_type"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [
+        "SCOPE_MISMATCH",
+        "DUPLICATE_EFFECT",
+        "SANDBOX_ESCAPE"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none (hard False)",
+      "clock_random_behavior": "tempfile.mkdtemp if directory omitted",
+      "state_owned": [],
+      "state_mutated": [
+        "local temp file bytes"
+      ]
+    },
+    {
+      "path": "spe_runtime/authority/__init__.py",
+      "sha256": "053909b175f53fd35e3c9a44539809f7c3d31895a829539cf7fde5efa82afbcd",
+      "loc": 7,
+      "public_api": [],
+      "imports": [
+        "spe_runtime.authority.consume",
+        "spe_runtime.authority.models",
+        "spe_runtime.authority.validate"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Re-export AuthorityGrant + validate/consume.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/authority/apply.py",
+      "sha256": "9daffe45f8499cb2674a0b488acc134d96c82b7f11f7f8ede0fff713af6c1819",
+      "loc": 64,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "G1R-1/G1R-2 module: spe_runtime/authority/apply.py",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/authority/consume.py",
+      "sha256": "20c9ad2194f8679f8b48747328488f5601ec47c75e11c8975501abd0dbf1f6fe",
+      "loc": 32,
+      "public_api": [
+        "consume_grant"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.authority.models",
+        "spe_runtime.xcat.reasons"
+      ],
+      "classes": [],
+      "functions": [
+        "consume_grant"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Immutable uses_consumed increment.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "AuthorityGrant"
+      ],
+      "writes": [
+        "new AuthorityGrant.uses_consumed"
+      ],
+      "semantic_facts_written": [
+        "grant_uses_consumed"
+      ],
+      "authority_effects": [
+        "consumes one use"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [
+        "AUTHORITY_REVOKED",
+        "AUTHORITY_CONSUMED"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": [
+        "new AuthorityGrant.uses_consumed"
+      ]
+    },
+    {
+      "path": "spe_runtime/authority/event.py",
+      "sha256": "a33645f14bb420628992b92129ffd218623177464a406e006c63b2ab1147005b",
+      "loc": 23,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "G1R-1/G1R-2 module: spe_runtime/authority/event.py",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/authority/event_validate.py",
+      "sha256": "7923c05ece75b8821d8944d628359d01c2bef5361c05c7d138e2428c386557f8",
+      "loc": 53,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "G1R-1/G1R-2 module: spe_runtime/authority/event_validate.py",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/authority/models.py",
+      "sha256": "aab834bf715bec0d54083fddff3c6ed7d142cbbd8e9c824221d974f8a0c15cd0",
+      "loc": 43,
+      "public_api": [
+        "AuthorityGrant"
+      ],
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "types",
+        "typing"
+      ],
+      "classes": [
+        "AuthorityGrant"
+      ],
+      "functions": [
+        "_deep_freeze"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Immutable AuthorityGrant.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [
+        "AuthorityGrant fields on construction"
+      ],
+      "semantic_facts_written": [
+        "authority_grant"
+      ],
+      "authority_effects": [
+        "defines grant"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none (timestamps are strings supplied by caller)",
+      "state_owned": [
+        "AuthorityGrant"
+      ],
+      "state_mutated": [
+        "AuthorityGrant fields on construction"
+      ]
+    },
+    {
+      "path": "spe_runtime/authority/validate.py",
+      "sha256": "382c899e4803ed1c0485f3c7af4424de657247192c6c3aa298d013de444a2f8e",
+      "loc": 141,
+      "public_api": [
+        "validate_grant_compatibility"
+      ],
+      "imports": [
+        "__future__",
+        "datetime",
+        "spe_runtime.authority.models",
+        "spe_runtime.xcat.reasons",
+        "typing"
+      ],
+      "classes": [],
+      "functions": [
+        "_parse_ts",
+        "_amount_value",
+        "_nested_amounts_within",
+        "_check_args_against_constraints",
+        "validate_grant_compatibility"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Grant compatibility: scope/target/args/expiry/revocation/use-limit.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "AuthorityGrant",
+        "arguments",
+        "now"
+      ],
+      "writes": [
+        "grant_compatibility verdict"
+      ],
+      "semantic_facts_written": [
+        "grant_compatibility"
+      ],
+      "authority_effects": [
+        "allow/deny action under grant"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [
+        "C07_* ReasonCodes"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "parses caller-supplied ISO timestamps; no system clock",
+      "state_owned": [],
+      "state_mutated": [
+        "grant_compatibility verdict"
+      ]
+    },
+    {
+      "path": "spe_runtime/capabilities/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loc": 0,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": true,
+      "is_stub_comment": false,
+      "purpose": "Placeholder; real capability IDs live in portability/capability.py.",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/__init__.py",
+      "sha256": "dfa46f326c56844d5fc340a812f62d50145bcd7dcae5f07b2f3fbe849fe2a028",
+      "loc": 1,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Categories package marker.",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/_common.py",
+      "sha256": "3993f54f9f74dbaeb07c960eb3b5a211eaa7acd8c1315f3b790ac740ed0283de",
+      "loc": 97,
+      "public_api": [
+        "FORBIDDEN_PAYLOAD_KEYS",
+        "_CERTAINTY_RANK",
+        "authority_unchanged",
+        "certainty_rank",
+        "failures_not_laundered",
+        "mapping_equal",
+        "reject_forbidden_keys",
+        "replace_envelope"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.xcat.models",
+        "typing"
+      ],
+      "classes": [],
+      "functions": [
+        "certainty_rank",
+        "reject_forbidden_keys",
+        "replace_envelope",
+        "authority_unchanged",
+        "failures_not_laundered",
+        "mapping_equal"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Shared envelope replace + forbidden keys + duplicated failure/authority helpers.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "CrossCategoryEnvelope"
+      ],
+      "writes": [
+        "new CrossCategoryEnvelope via replace_envelope"
+      ],
+      "semantic_facts_written": [
+        "envelope field overrides (generic)"
+      ],
+      "authority_effects": [
+        "can write authority_state if passed"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [
+        "ValueError on forbidden keys"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": [
+        "new CrossCategoryEnvelope via replace_envelope"
+      ]
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/__init__.py",
+      "sha256": "69d2629df727ed6b4c88f356db62de54342bb9d91106d5631e0633c5b3bbde2a",
+      "loc": 5,
+      "public_api": [],
+      "imports": [
+        "spe_runtime.categories.c01_decide.engine"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Re-export CAT:C01 engine/validate.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/engine.py",
+      "sha256": "0c45c1e172acc581fc403def1fe69552912a66cd0b32ef09ba5a713c2e68bc67",
+      "loc": 40,
+      "public_api": [
+        "CATEGORY_ID",
+        "decide"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.categories._common",
+        "spe_runtime.categories.c01_decide.validate",
+        "spe_runtime.xcat.models",
+        "typing"
+      ],
+      "classes": [],
+      "functions": [
+        "decide"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "C01 writes recommendation only.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "CrossCategoryEnvelope"
+      ],
+      "writes": [
+        "recommendation",
+        "category_trace"
+      ],
+      "semantic_facts_written": [
+        "recommendation"
+      ],
+      "authority_effects": [
+        "refuses to mint"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [
+        "ValueError ownership"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": [
+        "recommendation",
+        "category_trace"
+      ]
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/models.py",
+      "sha256": "94a498bf1ebaa300ca901f3ef88b3f7a5e8aaa66209004f998522ec74ed69f60",
+      "loc": 4,
+      "public_api": [
+        "ALLOWED_FIELDS",
+        "CATEGORY_ID"
+      ],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "CAT:C01 ALLOWED_FIELDS constant.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/validate.py",
+      "sha256": "cca8550aa2f67eab52f23f8195cd2ce2732c49cad8b90e497a9f011b1f3ecdf4",
+      "loc": 73,
+      "public_api": [
+        "CATEGORY_ID",
+        "validate_c01_output"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.categories._common",
+        "spe_runtime.xcat.invariants",
+        "spe_runtime.xcat.models"
+      ],
+      "classes": [],
+      "functions": [
+        "validate_c01_output"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "C01 output ownership validator.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "before/after envelopes"
+      ],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [
+        "rejects authority change"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/__init__.py",
+      "sha256": "5fab1f7edba2acc9d0985a3fbc77d4f111e57a00285dbc22eb93f39e0a08925d",
+      "loc": 5,
+      "public_api": [],
+      "imports": [
+        "spe_runtime.categories.c02_research.engine"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Re-export CAT:C02 engine/validate.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/engine.py",
+      "sha256": "cd989467b2d591216aceeb374b275fcfef4719043940223b02b495ebb9af8800",
+      "loc": 55,
+      "public_api": [
+        "CATEGORY_ID",
+        "research"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.categories._common",
+        "spe_runtime.categories.c02_research.validate",
+        "spe_runtime.xcat.models",
+        "typing"
+      ],
+      "classes": [],
+      "functions": [
+        "research"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "C02 appends facts, provenance, uncertainties.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "envelope"
+      ],
+      "writes": [
+        "facts",
+        "provenance",
+        "uncertainties",
+        "category_trace"
+      ],
+      "semantic_facts_written": [
+        "facts",
+        "provenance",
+        "uncertainties"
+      ],
+      "authority_effects": [
+        "refuses"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [
+        "ValueError"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": [
+        "facts",
+        "provenance",
+        "uncertainties",
+        "category_trace"
+      ]
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/models.py",
+      "sha256": "0f3778d76164915dcc73cd3c021cdc6ab565ff7b99816d498b6f8e95caa5466e",
+      "loc": 4,
+      "public_api": [
+        "ALLOWED_FIELDS",
+        "CATEGORY_ID"
+      ],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "CAT:C02 ALLOWED_FIELDS constant.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/validate.py",
+      "sha256": "1ef4ba68cfbd65735cc6099ebe3265dec95a6484eaa0df2587a03b9a033fccb6",
+      "loc": 66,
+      "public_api": [
+        "CATEGORY_ID",
+        "validate_c02_output"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.categories._common",
+        "spe_runtime.xcat.invariants",
+        "spe_runtime.xcat.models"
+      ],
+      "classes": [],
+      "functions": [
+        "validate_c02_output"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "C02 ownership validator.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "envelopes"
+      ],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [
+        "rejects change"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/__init__.py",
+      "sha256": "b4ae2057185c05b8194fa51d6b17e82f066b8e8a5f805206bf3c3b9ea70f1887",
+      "loc": 5,
+      "public_api": [],
+      "imports": [
+        "spe_runtime.categories.c03_communicate.engine"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Re-export CAT:C03 engine/validate.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/engine.py",
+      "sha256": "db2ab3df5798ce5ec65091d3b1805396fc46440466c8be9638492a3155e14674",
+      "loc": 49,
+      "public_api": [
+        "CATEGORY_ID",
+        "communicate"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.categories._common",
+        "spe_runtime.categories.c03_communicate.validate",
+        "spe_runtime.xcat.models",
+        "typing"
+      ],
+      "classes": [],
+      "functions": [
+        "communicate"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "C03 writes rendering; cannot strengthen certainty.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "envelope.recommendation"
+      ],
+      "writes": [
+        "rendering",
+        "category_trace"
+      ],
+      "semantic_facts_written": [
+        "rendering"
+      ],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [
+        "ValueError"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": [
+        "rendering",
+        "category_trace"
+      ]
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/models.py",
+      "sha256": "0724355e7ab8b5a590c5319394938930645531fcc91575ae86f0758e432063fb",
+      "loc": 4,
+      "public_api": [
+        "ALLOWED_FIELDS",
+        "CATEGORY_ID"
+      ],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "CAT:C03 ALLOWED_FIELDS constant.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/validate.py",
+      "sha256": "ed4958bbaf0976f99e8f8e335bb1be062aff6798301f3dd9f7bf74aa8be39345",
+      "loc": 74,
+      "public_api": [
+        "CATEGORY_ID",
+        "validate_c03_output"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.categories._common",
+        "spe_runtime.xcat.invariants",
+        "spe_runtime.xcat.models"
+      ],
+      "classes": [],
+      "functions": [
+        "validate_c03_output"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "C03 ownership validator.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "envelopes"
+      ],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [
+        "rejects change"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/__init__.py",
+      "sha256": "2f6bb3861188177cb547e67f656bf6a55ba2a6cc32eb310cc68ab044797fd313",
+      "loc": 5,
+      "public_api": [],
+      "imports": [
+        "spe_runtime.categories.c06_analyze.engine"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Re-export CAT:C06 engine/validate.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/engine.py",
+      "sha256": "f12bfa3e585a1ebf4fdd4dbeff9fa909c59429c5c81f8563df52af8c6f42bbc4",
+      "loc": 47,
+      "public_api": [
+        "CATEGORY_ID",
+        "analyze"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.categories._common",
+        "spe_runtime.categories.c06_analyze.validate",
+        "spe_runtime.xcat.models",
+        "typing"
+      ],
+      "classes": [],
+      "functions": [
+        "analyze"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "C06 writes analysis only; rejects recommendation-shaped payloads.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "envelope"
+      ],
+      "writes": [
+        "analysis",
+        "category_trace"
+      ],
+      "semantic_facts_written": [
+        "analysis"
+      ],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [
+        "ValueError"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": [
+        "analysis",
+        "category_trace"
+      ]
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/models.py",
+      "sha256": "e45c05221ac4e1c8705951bcbbbe1405201bb1d53c94a25abe5b2b663743a331",
+      "loc": 4,
+      "public_api": [
+        "ALLOWED_FIELDS",
+        "CATEGORY_ID"
+      ],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "CAT:C06 ALLOWED_FIELDS constant.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/validate.py",
+      "sha256": "be4759c8fbbf75b008afc6868064568059dbcdced78bd65203d7d9aa7f525fa7",
+      "loc": 70,
+      "public_api": [
+        "CATEGORY_ID",
+        "validate_c06_output"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.categories._common",
+        "spe_runtime.xcat.invariants",
+        "spe_runtime.xcat.models"
+      ],
+      "classes": [],
+      "functions": [
+        "validate_c06_output"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "C06 ownership validator.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "envelopes"
+      ],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [
+        "rejects change"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/__init__.py",
+      "sha256": "c16e5d7b3ed566c060417c6a13fd535587502cabc6abb78701830c9e13ea760b",
+      "loc": 15,
+      "public_api": [],
+      "imports": [
+        "spe_runtime.categories.c07_execute.engine",
+        "spe_runtime.categories.c07_execute.validate"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Re-export CAT:C07 engine/validate.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/engine.py",
+      "sha256": "192d2bed6edd283a90e66baa4f2b1e19163395582b52528b9cd4ec3a4d805c16",
+      "loc": 223,
+      "public_api": [
+        "C07Result",
+        "CATEGORY_ID",
+        "form_execution_intent",
+        "retry_form_execution_intent"
+      ],
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "spe_runtime.authority.models",
+        "spe_runtime.authority.validate",
+        "spe_runtime.categories._common",
+        "spe_runtime.categories.c07_execute.validate",
+        "spe_runtime.execution.models",
+        "spe_runtime.xcat.models",
+        "spe_runtime.xcat.reasons",
+        "typing"
+      ],
+      "classes": [
+        "C07Result"
+      ],
+      "functions": [
+        "_decision_matches",
+        "form_execution_intent",
+        "retry_form_execution_intent"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Form ExecutionIntent under grant; never mint authority; never execute.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "envelope",
+        "AuthorityGrant"
+      ],
+      "writes": [
+        "C07Result",
+        "category_trace on success"
+      ],
+      "semantic_facts_written": [
+        "execution_intent (plan only)"
+      ],
+      "authority_effects": [
+        "consumes K4 verdict; never mints"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [
+        "C07_* codes"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "caller now or epoch default",
+      "state_owned": [
+        "C07Result"
+      ],
+      "state_mutated": [
+        "C07Result",
+        "category_trace on success"
+      ]
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/models.py",
+      "sha256": "8a62f07f5821bddad18420231678b69baf7ee1aaf603e9e93a2be59f56a00d9d",
+      "loc": 4,
+      "public_api": [
+        "ALLOWED_ACTION_TYPES",
+        "CATEGORY_ID"
+      ],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "CAT:C07 ALLOWED_FIELDS constant.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/validate.py",
+      "sha256": "a260fafe8dad132f4201a534cd396445057ecb45376bc90d0b80e696d2a8bc71",
+      "loc": 72,
+      "public_api": [
+        "CATEGORY_ID",
+        "validate_c07_output"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.categories._common",
+        "spe_runtime.xcat.invariants",
+        "spe_runtime.xcat.models"
+      ],
+      "classes": [],
+      "functions": [
+        "validate_c07_output"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "C07 must not mutate rec/constraints/authority/grants.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "envelopes"
+      ],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [
+        "rejects escalation"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/cli/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loc": 0,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": true,
+      "is_stub_comment": false,
+      "purpose": "Placeholder CLI package.",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/contract/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loc": 0,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": true,
+      "is_stub_comment": false,
+      "purpose": "Placeholder for intent contract.",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/error_registry.py",
+      "sha256": "0eadc38071bc531f9efb9a8cafd6ceada8f643587380002c9a3e5beba92f939e",
+      "loc": 82,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "G1R-1/G1R-2 module: spe_runtime/error_registry.py",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/execution/__init__.py",
+      "sha256": "0e84d573b94ea58d02ef40f9681126987c064870a5505194c8370dfe1cba3d33",
+      "loc": 20,
+      "public_api": [],
+      "imports": [
+        "spe_runtime.execution.effect_ledger",
+        "spe_runtime.execution.models",
+        "spe_runtime.execution.outcomes"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Re-export execution intent/outcomes/ledger.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/execution/effect_ledger.py",
+      "sha256": "c95baf3f77c060cbffed5b27f61c835660ea6bd1ca7e12574b175ac8516d4010",
+      "loc": 25,
+      "public_api": [
+        "EffectLedger"
+      ],
+      "imports": [
+        "__future__"
+      ],
+      "classes": [
+        "EffectLedger"
+      ],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "In-process duplicate side-effect guard by operation_id.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [
+        "claimed operation_id set"
+      ],
+      "semantic_facts_written": [
+        "effect_claimed"
+      ],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [
+        "EffectLedger._claimed"
+      ],
+      "state_mutated": [
+        "claimed operation_id set"
+      ]
+    },
+    {
+      "path": "spe_runtime/execution/models.py",
+      "sha256": "9b04ce7b3da172dbd7fe977e48928e4f560d4349f557c56b9e697051ae653f62",
+      "loc": 76,
+      "public_api": [
+        "ExecutionIntent",
+        "OutcomeState",
+        "canonical_arguments_digest",
+        "stable_operation_id"
+      ],
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "enum",
+        "hashlib",
+        "json",
+        "types",
+        "typing"
+      ],
+      "classes": [
+        "OutcomeState",
+        "ExecutionIntent"
+      ],
+      "functions": [
+        "_deep_freeze",
+        "canonical_arguments_digest",
+        "stable_operation_id"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "ExecutionIntent + OutcomeState + argument digest + operation_id.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [],
+      "writes": [
+        "ExecutionIntent",
+        "operation_id",
+        "arguments_digest"
+      ],
+      "semantic_facts_written": [
+        "operation_id",
+        "arguments_digest",
+        "outcome_state_enum"
+      ],
+      "authority_effects": [
+        "stores authority_grant_ref only"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none (sha256 of material)",
+      "state_owned": [
+        "ExecutionIntent",
+        "OutcomeState"
+      ],
+      "state_mutated": [
+        "ExecutionIntent",
+        "operation_id",
+        "arguments_digest"
+      ]
+    },
+    {
+      "path": "spe_runtime/execution/outcomes.py",
+      "sha256": "fe46535b6cd8e52d0cae0eddbf5de86862fbce4223015861e91caaaebdb6bb26",
+      "loc": 106,
+      "public_api": [
+        "_ALLOWED",
+        "retry_eligible",
+        "transition_outcome"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.execution.models",
+        "spe_runtime.xcat.reasons",
+        "typing"
+      ],
+      "classes": [],
+      "functions": [
+        "retry_eligible",
+        "transition_outcome"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Outcome transition table; bans UNKNOWN blind retry and PARTIAL\u2192SUCCESS.",
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "reads": [
+        "OutcomeState",
+        "evidence dict"
+      ],
+      "writes": [
+        "outcome transition verdict"
+      ],
+      "semantic_facts_written": [
+        "outcome_transition"
+      ],
+      "authority_effects": [],
+      "proof_effects": [
+        "blocks tool-OK to verified success"
+      ],
+      "errors_emitted": [
+        "C07_UNKNOWN_OUTCOME_RETRY",
+        "C07_PARTIAL_TO_SUCCESS",
+        "C07_TOOL_SUCCESS_TO_OUTCOME"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": [
+        "outcome transition verdict"
+      ]
+    },
+    {
+      "path": "spe_runtime/portability/__init__.py",
+      "sha256": "05da1701225ad1189a467118c832bca64af7d7ea0c3729a9a7acb2d5d4c11896",
+      "loc": 70,
+      "public_api": [],
+      "imports": [
+        "__future__",
+        "spe_runtime.portability.abi",
+        "spe_runtime.portability.canonical",
+        "spe_runtime.portability.capability",
+        "spe_runtime.portability.conformance",
+        "spe_runtime.portability.oracle",
+        "spe_runtime.portability.reasons"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Portability public API.",
+      "tests": [
+        "tests/portability/"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11",
+        "jsonschema"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/portability/abi.py",
+      "sha256": "be2e800a2cf90be5f5f2fba22f1e4bc837f92a4acf1a16fafcae4537b524202f",
+      "loc": 89,
+      "public_api": [
+        "ABI_ID",
+        "ABI_MAJOR",
+        "ABI_MINOR",
+        "ABI_PATCH",
+        "AbiVersion",
+        "ImplementationDeclaration",
+        "abi_compatible",
+        "declare_reference_implementation"
+      ],
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "spe_runtime.portability.reasons"
+      ],
+      "classes": [
+        "AbiVersion",
+        "ImplementationDeclaration"
+      ],
+      "functions": [
+        "abi_compatible",
+        "declare_reference_implementation"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "ABI version + honest implementation declaration.",
+      "tests": [
+        "tests/portability/test_abi.py",
+        "tests/portability/test_merge_gate_adversarial.py",
+        "tests/portability/test_offline_and_cost.py"
+      ],
+      "reads": [],
+      "writes": [
+        "ImplementationDeclaration"
+      ],
+      "semantic_facts_written": [
+        "abi_version",
+        "implementation_status"
+      ],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [
+        "P_ABI_MISMATCH"
+      ],
+      "environment_dependencies": [
+        "python>=3.11",
+        "jsonschema"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [
+        "ABI_ID/MAJOR/MINOR/PATCH"
+      ],
+      "state_mutated": [
+        "ImplementationDeclaration"
+      ]
+    },
+    {
+      "path": "spe_runtime/portability/canonical.py",
+      "sha256": "4c4fa62a4a3e12d658711f9a61822a4356c4286936509328535c499d097d00b1",
+      "loc": 94,
+      "public_api": [
+        "_ISO_OFFSET",
+        "canonical_dumps",
+        "canonical_loads",
+        "canonicalize",
+        "strict_equal"
+      ],
+      "imports": [
+        "__future__",
+        "datetime",
+        "enum",
+        "json",
+        "re",
+        "typing",
+        "unicodedata"
+      ],
+      "classes": [],
+      "functions": [
+        "_normalize_str",
+        "canonicalize",
+        "canonical_dumps",
+        "canonical_loads",
+        "strict_equal"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "NFC + UTC-Z + sorted-key portable JSON + strict_equal.",
+      "tests": [
+        "tests/portability/test_canonical.py",
+        "tests/portability/test_merge_gate_adversarial.py",
+        "tests/portability/test_round_trip_attacks.py"
+      ],
+      "reads": [],
+      "writes": [
+        "canonical JSON"
+      ],
+      "semantic_facts_written": [
+        "portable_canonical_json"
+      ],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [
+        "TypeError/ValueError"
+      ],
+      "environment_dependencies": [
+        "python>=3.11",
+        "jsonschema"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": [
+        "canonical JSON"
+      ]
+    },
+    {
+      "path": "spe_runtime/portability/capability.py",
+      "sha256": "e80d24c715dabd19c2d6da01fc151137b8ab2e7f934dadfe2aaf0eeb45752dbe",
+      "loc": 103,
+      "public_api": [
+        "CAPABILITY_IDS",
+        "CapabilityDecision",
+        "CapabilityId",
+        "CapabilityStatus",
+        "detect_capability_escalation",
+        "evaluate_capability"
+      ],
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "enum",
+        "spe_runtime.portability.reasons"
+      ],
+      "classes": [
+        "CapabilityId",
+        "CapabilityStatus",
+        "CapabilityDecision"
+      ],
+      "functions": [
+        "evaluate_capability",
+        "detect_capability_escalation"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Capability IDs + missing\u2260success + escalation detect.",
+      "tests": [
+        "tests/portability/test_capability.py",
+        "tests/portability/test_conformance_suite.py"
+      ],
+      "reads": [
+        "available/blocked/defer sets"
+      ],
+      "writes": [
+        "CapabilityDecision"
+      ],
+      "semantic_facts_written": [
+        "capability_status"
+      ],
+      "authority_effects": [
+        "none (capability only)"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [
+        "P_CAPABILITY_*"
+      ],
+      "environment_dependencies": [
+        "python>=3.11",
+        "jsonschema"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [
+        "CAPABILITY_IDS"
+      ],
+      "state_mutated": [
+        "CapabilityDecision"
+      ]
+    },
+    {
+      "path": "spe_runtime/portability/conformance.py",
+      "sha256": "587d709f9bd22511ce2def163314dad2303f052d75431cff19ca4219ee69835b",
+      "loc": 620,
+      "public_api": [
+        "PLATFORM_REGISTRY",
+        "ReferenceRuntime",
+        "STATUS_ABSENT",
+        "_ENVELOPE_KEYS",
+        "_MAX_FIXTURE_BYTES",
+        "_MAX_FIXTURE_DEPTH",
+        "_MAX_FIXTURE_ROWS",
+        "_OUTCOME_RANK",
+        "detect_attack",
+        "detect_fake_platform_status",
+        "run_conformance_suite",
+        "semantic_equivalent",
+        "validate_round_trip"
+      ],
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "json",
+        "pathlib",
+        "spe_runtime.portability.abi",
+        "spe_runtime.portability.canonical",
+        "spe_runtime.portability.capability",
+        "spe_runtime.portability.reasons",
+        "spe_runtime.xcat.handoff",
+        "spe_runtime.xcat.models",
+        "typing",
+        "unicodedata"
+      ],
+      "classes": [
+        "ReferenceRuntime"
+      ],
+      "functions": [
+        "_planned",
+        "_as_dict",
+        "_get_auth",
+        "_ids",
+        "detect_fake_platform_status",
+        "detect_attack",
+        "semantic_equivalent",
+        "validate_round_trip",
+        "_depth",
+        "_load_jsonl_isolated",
+        "run_conformance_suite"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "ReferenceRuntime + detect_attack + semantic_equivalent + platform registry.",
+      "tests": [
+        "tests/portability/test_conformance_suite.py",
+        "tests/portability/test_cross_language_determinism.py",
+        "tests/portability/test_merge_gate_adversarial.py",
+        "tests/portability/test_mutation_controls.py",
+        "tests/portability/test_offline_and_cost.py",
+        "tests/portability/test_platform_registry.py",
+        "tests/portability/test_privacy_portability.py",
+        "tests/portability/test_reference_runtime.py",
+        "tests/portability/test_round_trip_attacks.py",
+        "tests/portability/test_semantic_equivalent.py"
+      ],
+      "reads": [
+        "envelopes",
+        "fixtures"
+      ],
+      "writes": [
+        "attack reason",
+        "semantic_equivalent bool",
+        "imported envelope"
+      ],
+      "semantic_facts_written": [
+        "semantic_equivalence_verdict",
+        "platform_registry_status"
+      ],
+      "authority_effects": [
+        "reconstructs AuthorityState on import"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [
+        "PortabilityReason",
+        "ValueError"
+      ],
+      "environment_dependencies": [
+        "python>=3.11",
+        "jsonschema"
+      ],
+      "network_behavior": "none (network_mode=NONE)",
+      "clock_random_behavior": "none",
+      "state_owned": [
+        "PLATFORM_REGISTRY",
+        "ReferenceRuntime"
+      ],
+      "state_mutated": [
+        "attack reason",
+        "semantic_equivalent bool",
+        "imported envelope"
+      ]
+    },
+    {
+      "path": "spe_runtime/portability/oracle.py",
+      "sha256": "261c10313931804a7e864c347b062baceee3abd3cb90e47ce5bd846723634d3d",
+      "loc": 130,
+      "public_api": [
+        "oracle_detect"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.portability.canonical",
+        "spe_runtime.portability.reasons",
+        "typing"
+      ],
+      "classes": [],
+      "functions": [
+        "_ids",
+        "_auth",
+        "oracle_detect"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Independent structural oracle for merge-gate tests.",
+      "tests": [
+        "tests/portability/test_merge_gate_adversarial.py"
+      ],
+      "reads": [
+        "payloads"
+      ],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [
+        "PortabilityReason predictions"
+      ],
+      "environment_dependencies": [
+        "python>=3.11",
+        "jsonschema"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/portability/reasons.py",
+      "sha256": "41947dc5fd46aa034b603ea49d31bdd8788770b1efbe2b5286bd548531d87a07",
+      "loc": 44,
+      "public_api": [
+        "PortabilityReason"
+      ],
+      "imports": [
+        "__future__",
+        "enum",
+        "spe_runtime.xcat.reasons"
+      ],
+      "classes": [
+        "PortabilityReason"
+      ],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Portability reason enum aliasing XCAT plus P_* codes.",
+      "tests": [
+        "tests/portability/test_privacy_portability.py",
+        "tests/portability/test_semantic_equivalent.py"
+      ],
+      "reads": [
+        "ReasonCode"
+      ],
+      "writes": [
+        "PortabilityReason values"
+      ],
+      "semantic_facts_written": [
+        "typed_error_code (portability subset)"
+      ],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [
+        "PortabilityReason"
+      ],
+      "environment_dependencies": [
+        "python>=3.11",
+        "jsonschema"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [
+        "PortabilityReason"
+      ],
+      "state_mutated": [
+        "PortabilityReason values"
+      ]
+    },
+    {
+      "path": "spe_runtime/privacy/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loc": 0,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": true,
+      "is_stub_comment": false,
+      "purpose": "Placeholder for privacy projection.",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/proof/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loc": 0,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": true,
+      "is_stub_comment": false,
+      "purpose": "Placeholder for proof ledger/receipts.",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/provenance/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loc": 0,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": true,
+      "is_stub_comment": false,
+      "purpose": "Placeholder for provenance records; real provenance lives on CrossCategoryEnvelope.",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/recovery/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loc": 0,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": true,
+      "is_stub_comment": false,
+      "purpose": "Placeholder for recovery/lifecycle.",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/registry/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loc": 0,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": true,
+      "is_stub_comment": false,
+      "purpose": "Placeholder schema/category registry package.",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/spec_binding.py",
+      "sha256": "c4360d22118c8a287d6a4c775f691bf2f61736199028cd69a3a4aa2a70f64557",
+      "loc": 51,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "G1R-1/G1R-2 module: spe_runtime/spec_binding.py",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/storage/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "loc": 0,
+      "public_api": [],
+      "imports": [],
+      "classes": [],
+      "functions": [],
+      "is_empty": true,
+      "is_stub_comment": false,
+      "purpose": "Placeholder artifact storage.",
+      "tests": [],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/xcat/__init__.py",
+      "sha256": "e331e8f605621eb409764907573a20513431b068460cbb361fdcad0b2d740e80",
+      "loc": 21,
+      "public_api": [],
+      "imports": [
+        "spe_runtime.xcat.handoff",
+        "spe_runtime.xcat.models",
+        "spe_runtime.xcat.reasons"
+      ],
+      "classes": [],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "XCAT public surface (envelope, handoff, reason codes).",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "reads": [],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/xcat/handoff.py",
+      "sha256": "52d9cb9910aee396135f43345fecfda172c71220b9feecd428d760c20f4d0ad6",
+      "loc": 123,
+      "public_api": [
+        "HandoffResult",
+        "diagnose_refusal_reason",
+        "validate_handoff"
+      ],
+      "imports": [
+        "__future__",
+        "enum",
+        "spe_runtime.xcat.invariants",
+        "spe_runtime.xcat.models",
+        "spe_runtime.xcat.reasons"
+      ],
+      "classes": [
+        "HandoffResult"
+      ],
+      "functions": [
+        "validate_handoff",
+        "diagnose_refusal_reason"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Cross-category handoff result: VALID|REFUSE|BLOCKED|REVALIDATION_REQUIRED.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "reads": [
+        "CrossCategoryEnvelope"
+      ],
+      "writes": [
+        "HandoffResult"
+      ],
+      "semantic_facts_written": [
+        "handoff_result",
+        "handoff_reason_code"
+      ],
+      "authority_effects": [
+        "BLOCKED on self-escalation"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [
+        "ReasonCode via diagnose_refusal_reason"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [
+        "HandoffResult"
+      ],
+      "state_mutated": [
+        "HandoffResult"
+      ]
+    },
+    {
+      "path": "spe_runtime/xcat/invariants.py",
+      "sha256": "07c930afaa665fa9a0a407edc028bce87757ad01c7d7ee7e3830b7d857e4176e",
+      "loc": 194,
+      "public_api": [
+        "_STATUS_RANK",
+        "_STRENGTH_RANK",
+        "validate_analysis_not_recommendation",
+        "validate_authority_non_escalation",
+        "validate_category_ownership",
+        "validate_constraint_monotonicity",
+        "validate_facts_have_provenance",
+        "validate_failure_preservation",
+        "validate_no_semantic_rewrite",
+        "validate_preference_immutability",
+        "validate_provenance_monotonicity",
+        "validate_recommendation_not_execution",
+        "validate_sensitivity_preservation",
+        "validate_taint_preservation",
+        "validate_uncertainty_preservation"
+      ],
+      "imports": [
+        "__future__",
+        "spe_runtime.xcat.models",
+        "typing"
+      ],
+      "classes": [],
+      "functions": [
+        "_ids",
+        "_by_id",
+        "validate_constraint_monotonicity",
+        "validate_provenance_monotonicity",
+        "validate_uncertainty_preservation",
+        "validate_preference_immutability",
+        "validate_failure_preservation",
+        "validate_taint_preservation",
+        "validate_sensitivity_preservation",
+        "validate_authority_non_escalation",
+        "validate_category_ownership",
+        "validate_facts_have_provenance",
+        "validate_analysis_not_recommendation",
+        "validate_recommendation_not_execution",
+        "validate_no_semantic_rewrite"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "X01\u2013X10 invariant predicates.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "reads": [
+        "CrossCategoryEnvelope"
+      ],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [
+        "guards non-escalation (bypassable)"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    },
+    {
+      "path": "spe_runtime/xcat/models.py",
+      "sha256": "35aa9adc76ce07ba45d708f0a625d8f547a44c2dde4c81a1760a8ef275454cb6",
+      "loc": 137,
+      "public_api": [
+        "AuthorityState",
+        "CATEGORY_IDS",
+        "CrossCategoryEnvelope",
+        "FailureRecord"
+      ],
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "types",
+        "typing"
+      ],
+      "classes": [
+        "AuthorityState",
+        "FailureRecord",
+        "CrossCategoryEnvelope"
+      ],
+      "functions": [
+        "_deep_freeze",
+        "_deep_unfreeze",
+        "_freeze_mapping",
+        "_freeze_mapping_tuple"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "Immutable CrossCategoryEnvelope + AuthorityState + FailureRecord.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "reads": [],
+      "writes": [
+        "CrossCategoryEnvelope fields"
+      ],
+      "semantic_facts_written": [
+        "envelope_id",
+        "goal_identity",
+        "facts",
+        "provenance",
+        "uncertainties",
+        "hard_constraints",
+        "user_preferences",
+        "analysis",
+        "recommendation",
+        "rendering",
+        "authority_state",
+        "execution_grants",
+        "failures",
+        "taint_labels",
+        "sensitivity_labels",
+        "category_trace"
+      ],
+      "authority_effects": [
+        "stores AuthorityState summary"
+      ],
+      "proof_effects": [],
+      "errors_emitted": [],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [
+        "CrossCategoryEnvelope"
+      ],
+      "state_mutated": [
+        "CrossCategoryEnvelope fields"
+      ]
+    },
+    {
+      "path": "spe_runtime/xcat/reasons.py",
+      "sha256": "d76fd26f7dce111e84df66ec26cfcefc6baa440215762cf56a435e386f93f346",
+      "loc": 40,
+      "public_api": [
+        "ReasonCode"
+      ],
+      "imports": [
+        "__future__",
+        "enum"
+      ],
+      "classes": [
+        "ReasonCode"
+      ],
+      "functions": [],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "XCAT + C07 reason-code enum.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "reads": [],
+      "writes": [
+        "ReasonCode values"
+      ],
+      "semantic_facts_written": [
+        "typed_error_code (XCAT/C07 subset)"
+      ],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [
+        "ReasonCode"
+      ],
+      "environment_dependencies": [
+        "python>=3.11"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [
+        "ReasonCode"
+      ],
+      "state_mutated": [
+        "ReasonCode values"
+      ]
+    },
+    {
+      "path": "spe_runtime/xcat/validator.py",
+      "sha256": "7257d37daa1ad5e7ec3f6721a6dfed3735551ddfb882cc95d6f2b776c3715fe9",
+      "loc": 25,
+      "public_api": [
+        "_SCHEMA_PATH",
+        "load_envelope_schema",
+        "validate_envelope_dict"
+      ],
+      "imports": [
+        "__future__",
+        "json",
+        "jsonschema",
+        "pathlib",
+        "typing"
+      ],
+      "classes": [],
+      "functions": [
+        "load_envelope_schema",
+        "validate_envelope_dict"
+      ],
+      "is_empty": false,
+      "is_stub_comment": false,
+      "purpose": "JSON Schema validation of envelope dicts.",
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "reads": [
+        "schemas/xcat_envelope.schema.json"
+      ],
+      "writes": [],
+      "semantic_facts_written": [],
+      "authority_effects": [],
+      "proof_effects": [],
+      "errors_emitted": [
+        "jsonschema error messages"
+      ],
+      "environment_dependencies": [
+        "python>=3.11",
+        "jsonschema"
+      ],
+      "network_behavior": "none",
+      "clock_random_behavior": "none",
+      "state_owned": [],
+      "state_mutated": []
+    }
+  ]
+}

@@ -1,0 +1,1785 @@
+{
+  "gate": "G1",
+  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+  "module_count": 55,
+  "counts": {
+    "RETAIN": 31,
+    "WRAP": 7,
+    "MIGRATE": 3,
+    "REPLACE": 0,
+    "RETIRE": 14
+  },
+  "modules": [
+    {
+      "path": "spe_runtime/__init__.py",
+      "sha256": "aef22fd8214a5b3e1476fb60837a483cd5c0917f3066f3128931a403b214ca8b",
+      "current_responsibility": "Package identity (__version__=0.1.0).",
+      "normative_owner": null,
+      "normative_contracts": [],
+      "tests": [
+        "import spe_runtime"
+      ],
+      "current_strengths": [
+        "Honest version, no hidden semantics."
+      ],
+      "semantic_gaps": [
+        "Does not expose K0\u2013K7 kernel surface."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Harmless package marker; tests import spe_runtime.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "import spe_runtime"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/adapters/__init__.py",
+      "sha256": "02cb42338a7877c70b9dfc020c719ecedb9797540a692038d15aec249773b743",
+      "current_responsibility": "Adapter facade.",
+      "normative_owner": "K6",
+      "normative_contracts": [],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Single export."
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Facade.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/adapters/local_temp_file.py",
+      "sha256": "937af2ecb3d2809db4d5bc56e8ddb1f1f97cdcc1f2ec38d57a24d370fab8f7a9",
+      "current_responsibility": "Local side-effect adapter (network_used=False).",
+      "normative_owner": "K6",
+      "normative_contracts": [
+        "sandbox confinement",
+        "tool OK \u2260 VERIFIED_SUCCESS"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "path confinement vs sandbox_root",
+        "symlink/.. rejection",
+        "duplicate effect via ledger",
+        "verified_success always False"
+      ],
+      "semantic_gaps": [
+        "Filesystem write is not a .spe artifact.",
+        "No lineage record."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [
+        "Does not re-check grant; relies on caller having formed intent under K4."
+      ],
+      "privacy_risks": [
+        "Writes caller bytes to local disk."
+      ],
+      "proof_risks": [
+        "content_digest is bytes hash, not a proof receipt."
+      ],
+      "disposition": "RETAIN",
+      "reason": "Tested local adapter matching Sprint 3 law; unique file-write path.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/authority/__init__.py",
+      "sha256": "053909b175f53fd35e3c9a44539809f7c3d31895a829539cf7fde5efa82afbcd",
+      "current_responsibility": "K4 public facade.",
+      "normative_owner": "K4",
+      "normative_contracts": [
+        "AuthorityGrant"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Does not mint grants."
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Exports grant + AuthorityEvent/apply/validate.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/authority/apply.py",
+      "current_responsibility": "Sole writer of envelope authority_state via apply_authority_event.",
+      "normative_owner": "K4",
+      "normative_contracts": [
+        "authority_state_mutation"
+      ],
+      "tests": [
+        "tests/unit/test_g1r2_authority.py"
+      ],
+      "current_strengths": [
+        "Canonical writer; validates before commit"
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "G1R-2 canonical authority writer.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/unit/test_g1r2_authority.py"
+      ],
+      "risk": "LOW",
+      "sha256": "9daffe45f8499cb2674a0b488acc134d96c82b7f11f7f8ede0fff713af6c1819"
+    },
+    {
+      "path": "spe_runtime/authority/consume.py",
+      "sha256": "20c9ad2194f8679f8b48747328488f5601ec47c75e11c8975501abd0dbf1f6fe",
+      "current_responsibility": "Unique writer of grant use-count.",
+      "normative_owner": "K4",
+      "normative_contracts": [
+        "use-limit consumption"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Does not mutate input; does not broaden capability/target/expiry."
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Single writer of uses_consumed.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/authority/event.py",
+      "current_responsibility": "Typed AuthorityEvent frozen dataclass.",
+      "normative_owner": "K4",
+      "normative_contracts": [
+        "authority_event"
+      ],
+      "tests": [
+        "tests/unit/test_g1r2_authority.py"
+      ],
+      "current_strengths": [
+        "EXTERNAL_GRANT kind allowlist"
+      ],
+      "semantic_gaps": [
+        "No epoch"
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "G1R-2 typed event.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/unit/test_g1r2_authority.py"
+      ],
+      "risk": "LOW",
+      "sha256": "a33645f14bb420628992b92129ffd218623177464a406e006c63b2ab1147005b"
+    },
+    {
+      "path": "spe_runtime/authority/event_validate.py",
+      "current_responsibility": "Canonical validate_authority_event fail-closed checker.",
+      "normative_owner": "K4",
+      "normative_contracts": [
+        "authority_event_validation"
+      ],
+      "tests": [
+        "tests/unit/test_g1r2_authority.py"
+      ],
+      "current_strengths": [
+        "Rejects nontyped objects"
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "G1R-2 X09 validator.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/unit/test_g1r2_authority.py"
+      ],
+      "risk": "LOW",
+      "sha256": "7923c05ece75b8821d8944d628359d01c2bef5361c05c7d138e2428c386557f8"
+    },
+    {
+      "path": "spe_runtime/authority/models.py",
+      "sha256": "aab834bf715bec0d54083fddff3c6ed7d142cbbd8e9c824221d974f8a0c15cd0",
+      "current_responsibility": "Canonical grant object (distinct from envelope AuthorityState).",
+      "normative_owner": "K4",
+      "normative_contracts": [
+        "grants",
+        "permission scope",
+        "revocation_state",
+        "use_limit"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "frozen; C07 comment: never mints; argument_constraints frozen"
+      ],
+      "semantic_gaps": [
+        "No revocation epoch (only ACTIVE|REVOKED).",
+        "No privacy projection fields."
+      ],
+      "duplicate_owner_conflicts": [
+        "Envelope AuthorityState is a different fact; must not be confused."
+      ],
+      "authority_risks": [
+        "Anyone can construct an AuthorityGrant in-process (no mint gate in runtime)."
+      ],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Tested grant model; unique K4 object type.",
+      "required_change": "Later add mint boundary; not G1.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/authority/validate.py",
+      "sha256": "382c899e4803ed1c0485f3c7af4424de657247192c6c3aa298d013de444a2f8e",
+      "current_responsibility": "Canonical K4 decision: whether a grant covers a proposed action.",
+      "normative_owner": "K4",
+      "normative_contracts": [
+        "capability != grant check",
+        "expiry fail-closed",
+        "exact target"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "never mints",
+        "exact target (no alias/case fold)",
+        "nested amount walk fail-closed",
+        "now >= expires_at is expired"
+      ],
+      "semantic_gaps": [
+        "Clock is caller-supplied string (testable; ambient clock not used)."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [
+        "Caller-supplied `now` can be forged if a higher layer lies \u2014 that layer must be K4-bound."
+      ],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Unique writer of grant-compatibility verdict; extensively tested in C07 suite.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/capabilities/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current_responsibility": "Empty package placeholder. Not an implementation.",
+      "normative_owner": "K7",
+      "normative_contracts": [],
+      "tests": [],
+      "current_strengths": [
+        "Honestly empty; does not fake semantics."
+      ],
+      "semantic_gaps": [
+        "Required Ring-0 responsibility for K7 is unimplemented."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Empty duplicate of portability.capability; retire this package name, keep portability capability module.",
+      "required_change": "NEW_IMPLEMENTATION under the named owner after G1; do not fill in G1.",
+      "acceptance_tests": [],
+      "risk": "HIGH"
+    },
+    {
+      "path": "spe_runtime/categories/__init__.py",
+      "sha256": "dfa46f326c56844d5fc340a812f62d50145bcd7dcae5f07b2f3fbe849fe2a028",
+      "current_responsibility": "Namespace only.",
+      "normative_owner": null,
+      "normative_contracts": [],
+      "tests": [],
+      "current_strengths": [],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Package marker.",
+      "required_change": "None.",
+      "acceptance_tests": [],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/_common.py",
+      "sha256": "3993f54f9f74dbaeb07c960eb3b5a211eaa7acd8c1315f3b790ac740ed0283de",
+      "current_responsibility": "Category engine helper; replace_envelope can override any field.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "forbidden payload keys",
+        "certainty rank"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "FORBIDDEN_PAYLOAD_KEYS blocks permit/receipt/PROMOTE/VERIFIED_SUCCESS."
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [
+        "replace_envelope is a hidden ambient authority path if a caller passes authority_state"
+      ],
+      "privacy_risks": [
+        "can overwrite sensitivity_labels"
+      ],
+      "proof_risks": [],
+      "disposition": "WRAP",
+      "reason": "G1R-2: replace_envelope rejects authority-controlled fields; re-exports failures_not_laundered.",
+      "required_change": "None for G1R-2.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "HIGH"
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/__init__.py",
+      "sha256": "69d2629df727ed6b4c88f356db62de54342bb9d91106d5631e0633c5b3bbde2a",
+      "current_responsibility": "CAT:C01 package facade.",
+      "normative_owner": "K3",
+      "normative_contracts": [
+        "CAT:C01"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Facade.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/engine.py",
+      "sha256": "0c45c1e172acc581fc403def1fe69552912a66cd0b32ef09ba5a713c2e68bc67",
+      "current_responsibility": "Unique writer of envelope.recommendation.",
+      "normative_owner": "K3",
+      "normative_contracts": [
+        "recommendation ownership"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "rejects kwargs/authority; forbidden keys; kind\u2260analysis"
+      ],
+      "semantic_gaps": [
+        "K3 in \u03a9 is strategy+prompt; this is Decide, not PromptArtifact",
+        "No technique selection / prompt construction"
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [
+        "Hard-refuses authority kwargs (good)."
+      ],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "WRAP",
+      "reason": "Correct Decide ownership, but it is not the \u03a9 K3 prompt/strategy kernel. Wrap as Decide stage; K3 prompt remains missing.",
+      "required_change": "Do not treat as PromptArtifact writer.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/models.py",
+      "sha256": "94a498bf1ebaa300ca901f3ef88b3f7a5e8aaa66209004f998522ec74ed69f60",
+      "current_responsibility": "Documents owned fields; not used as a gate by engines (engines hardcode).",
+      "normative_owner": "K3",
+      "normative_contracts": [],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Declares ownership intent."
+      ],
+      "semantic_gaps": [
+        "Not imported by engine/validate \u2014 dead documentation-as-code."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Unused constants; engines/validators are the real owners. Do not count as implementation.",
+      "required_change": "Leave unused; do not delete in G1 (would be production cleanup).",
+      "acceptance_tests": [],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c01_decide/validate.py",
+      "sha256": "cca8550aa2f67eab52f23f8195cd2ce2732c49cad8b90e497a9f011b1f3ecdf4",
+      "current_responsibility": "Guard: C01 may not write authority/facts/analysis/rendering.",
+      "normative_owner": "K3",
+      "normative_contracts": [
+        "C01 ownership"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "authority_unchanged; recommendation required"
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Ownership guard with tests.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/__init__.py",
+      "sha256": "5fab1f7edba2acc9d0985a3fbc77d4f111e57a00285dbc22eb93f39e0a08925d",
+      "current_responsibility": "CAT:C02 package facade.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "CAT:C02"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Facade.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/engine.py",
+      "sha256": "cd989467b2d591216aceeb374b275fcfef4719043940223b02b495ebb9af8800",
+      "current_responsibility": "Unique writer of new facts/provenance/research uncertainties.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "facts require provenance_ids"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "rejects analysis/recommendation/authority kwargs",
+        "unknown provenance_id refused"
+      ],
+      "semantic_gaps": [
+        "Not a requirement graph.",
+        "No explicit vs inferred."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Tested unique writer for research facts.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/models.py",
+      "sha256": "0f3778d76164915dcc73cd3c021cdc6ab565ff7b99816d498b6f8e95caa5466e",
+      "current_responsibility": "Documents owned fields; not used as a gate by engines (engines hardcode).",
+      "normative_owner": "K1",
+      "normative_contracts": [],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Declares ownership intent."
+      ],
+      "semantic_gaps": [
+        "Not imported by engine/validate \u2014 dead documentation-as-code."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Unused constants; engines/validators are the real owners. Do not count as implementation.",
+      "required_change": "Leave unused; do not delete in G1 (would be production cleanup).",
+      "acceptance_tests": [],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c02_research/validate.py",
+      "sha256": "1ef4ba68cfbd65735cc6099ebe3265dec95a6484eaa0df2587a03b9a033fccb6",
+      "current_responsibility": "Guard C02 field writes.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "C02 ownership"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "cannot introduce analysis/recommendation/rendering"
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Ownership guard.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/__init__.py",
+      "sha256": "b4ae2057185c05b8194fa51d6b17e82f066b8e8a5f805206bf3c3b9ea70f1887",
+      "current_responsibility": "CAT:C03 package facade.",
+      "normative_owner": "K3",
+      "normative_contracts": [
+        "CAT:C03"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Facade.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/engine.py",
+      "sha256": "db2ab3df5798ce5ec65091d3b1805396fc46440466c8be9638492a3155e14674",
+      "current_responsibility": "Unique writer of rendering.",
+      "normative_owner": "K3",
+      "normative_contracts": [
+        "rendering ownership",
+        "no certainty upgrade"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "cannot mutate recommendation; certainty rank guard"
+      ],
+      "semantic_gaps": [
+        "Not prompt construction.",
+        "Rendering is presentation, not PromptArtifact."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [
+        "rendering could echo sensitive content \u2014 no projection."
+      ],
+      "proof_risks": [],
+      "disposition": "WRAP",
+      "reason": "Correct communicate ownership; not \u03a9 K3 prompt strategy.",
+      "required_change": "Keep as presentation stage.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/models.py",
+      "sha256": "0724355e7ab8b5a590c5319394938930645531fcc91575ae86f0758e432063fb",
+      "current_responsibility": "Documents owned fields; not used as a gate by engines (engines hardcode).",
+      "normative_owner": "K3",
+      "normative_contracts": [],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Declares ownership intent."
+      ],
+      "semantic_gaps": [
+        "Not imported by engine/validate \u2014 dead documentation-as-code."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Unused constants; engines/validators are the real owners. Do not count as implementation.",
+      "required_change": "Leave unused; do not delete in G1 (would be production cleanup).",
+      "acceptance_tests": [],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c03_communicate/validate.py",
+      "sha256": "ed4958bbaf0976f99e8f8e335bb1be062aff6798301f3dd9f7bf74aa8be39345",
+      "current_responsibility": "Guard rendering-only writes + certainty.",
+      "normative_owner": "K3",
+      "normative_contracts": [
+        "C03 ownership"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "recommendation immutable here"
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Ownership guard.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/__init__.py",
+      "sha256": "2f6bb3861188177cb547e67f656bf6a55ba2a6cc32eb310cc68ab044797fd313",
+      "current_responsibility": "CAT:C06 package facade.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "CAT:C06"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Facade.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/engine.py",
+      "sha256": "f12bfa3e585a1ebf4fdd4dbeff9fa909c59429c5c81f8563df52af8c6f42bbc4",
+      "current_responsibility": "Unique writer of analysis.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "analysis \u2260 recommendation"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "kind=recommendation refused; action+certainty refused"
+      ],
+      "semantic_gaps": [
+        "Analysis is not a claim/evidence graph."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Tested unique analysis writer.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/models.py",
+      "sha256": "e45c05221ac4e1c8705951bcbbbe1405201bb1d53c94a25abe5b2b663743a331",
+      "current_responsibility": "Documents owned fields; not used as a gate by engines (engines hardcode).",
+      "normative_owner": "K1",
+      "normative_contracts": [],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Declares ownership intent."
+      ],
+      "semantic_gaps": [
+        "Not imported by engine/validate \u2014 dead documentation-as-code."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Unused constants; engines/validators are the real owners. Do not count as implementation.",
+      "required_change": "Leave unused; do not delete in G1 (would be production cleanup).",
+      "acceptance_tests": [],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c06_analyze/validate.py",
+      "sha256": "be4759c8fbbf75b008afc6868064568059dbcdced78bd65203d7d9aa7f525fa7",
+      "current_responsibility": "Guard analysis-only writes.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "C06 ownership"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "cannot introduce recommendation"
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Ownership guard.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/__init__.py",
+      "sha256": "c16e5d7b3ed566c060417c6a13fd535587502cabc6abb78701830c9e13ea760b",
+      "current_responsibility": "CAT:C07 package facade.",
+      "normative_owner": "K4",
+      "normative_contracts": [
+        "CAT:C07"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Facade.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/engine.py",
+      "sha256": "192d2bed6edd283a90e66baa4f2b1e19163395582b52528b9cd4ec3a4d805c16",
+      "current_responsibility": "C07 intent formation + attack-kwargs always BLOCKED.",
+      "normative_owner": "K4",
+      "normative_contracts": [
+        "C07 never mints authority",
+        "intent \u2260 success"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "uses validate_grant_compatibility",
+        "attack kwargs blocked without mutation",
+        "retry preserves operation_id",
+        "outcome remains NOT_EXECUTED"
+      ],
+      "semantic_gaps": [
+        "Does not write a proof transaction.",
+        "Delegates grant decision to K4 validate (good)."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [
+        "Caller-supplied `now` forwarded to K4."
+      ],
+      "privacy_risks": [],
+      "proof_risks": [
+        "INTENT_FORMED can be mistaken for success \u2014 status string is explicit."
+      ],
+      "disposition": "RETAIN",
+      "reason": "C07 consumes K4; does not mint; tests prove SEND+rendering+NONE blocks.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/models.py",
+      "sha256": "8a62f07f5821bddad18420231678b69baf7ee1aaf603e9e93a2be59f56a00d9d",
+      "current_responsibility": "Documents owned fields; not used as a gate by engines (engines hardcode).",
+      "normative_owner": "K4",
+      "normative_contracts": [],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Declares ownership intent."
+      ],
+      "semantic_gaps": [
+        "Not imported by engine/validate \u2014 dead documentation-as-code."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Unused constants; engines/validators are the real owners. Do not count as implementation.",
+      "required_change": "Leave unused; do not delete in G1 (would be production cleanup).",
+      "acceptance_tests": [],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/categories/c07_execute/validate.py",
+      "sha256": "a260fafe8dad132f4201a534cd396445057ecb45376bc90d0b80e696d2a8bc71",
+      "current_responsibility": "C07 ownership guard.",
+      "normative_owner": "K4",
+      "normative_contracts": [
+        "C07 ownership"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "hard_constraints exact equality; grants frozen"
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Ownership guard.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/cli/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current_responsibility": "Empty package placeholder. Not an implementation.",
+      "normative_owner": null,
+      "normative_contracts": [],
+      "tests": [],
+      "current_strengths": [
+        "Honestly empty; does not fake semantics."
+      ],
+      "semantic_gaps": [
+        "Required Ring-0 responsibility for None is unimplemented."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Zero-byte/empty module is not implementation. Counting it as IMPLEMENTED would game G1.",
+      "required_change": "NEW_IMPLEMENTATION under the named owner after G1; do not fill in G1.",
+      "acceptance_tests": [],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/contract/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current_responsibility": "Empty package placeholder. Not an implementation.",
+      "normative_owner": "K0",
+      "normative_contracts": [],
+      "tests": [],
+      "current_strengths": [
+        "Honestly empty; does not fake semantics."
+      ],
+      "semantic_gaps": [
+        "Required Ring-0 responsibility for K0 is unimplemented."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Zero-byte/empty module is not implementation. Counting it as IMPLEMENTED would game G1.",
+      "required_change": "NEW_IMPLEMENTATION under the named owner after G1; do not fill in G1.",
+      "acceptance_tests": [],
+      "risk": "HIGH"
+    },
+    {
+      "path": "spe_runtime/error_registry.py",
+      "current_responsibility": "Canonical K5 ErrorCode registry and SpeTypedError.",
+      "normative_owner": "K5",
+      "normative_contracts": [
+        "typed_error_code"
+      ],
+      "tests": [
+        "tests/unit/test_g1r1_ownership.py"
+      ],
+      "current_strengths": [
+        "Single ErrorCode enum; ReasonCode/PortabilityReason aliases"
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "G1R-1: single K5 error owner.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/unit/test_g1r1_ownership.py"
+      ],
+      "risk": "LOW",
+      "sha256": "0eadc38071bc531f9efb9a8cafd6ceada8f643587380002c9a3e5beba92f939e"
+    },
+    {
+      "path": "spe_runtime/execution/__init__.py",
+      "sha256": "0e84d573b94ea58d02ef40f9681126987c064870a5505194c8370dfe1cba3d33",
+      "current_responsibility": "Execution planning facade (not success).",
+      "normative_owner": "K2",
+      "normative_contracts": [
+        "ExecutionIntent",
+        "OutcomeState"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Narrow exports."
+      ],
+      "semantic_gaps": [
+        "Not a proof transaction."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Facade.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/execution/effect_ledger.py",
+      "sha256": "c95baf3f77c060cbffed5b27f61c835660ea6bd1ca7e12574b175ac8516d4010",
+      "current_responsibility": "At-most-once effect claim.",
+      "normative_owner": "K6",
+      "normative_contracts": [
+        "one operation_id \u2192 one effect"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Simple claim set; used by local adapter."
+      ],
+      "semantic_gaps": [
+        "Not durable. Not an artifact lineage store. Process-local only."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "WRAP",
+      "reason": "Correct local guard; wrap into K6 lineage later. Do not treat as artifact store.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/execution/models.py",
+      "sha256": "9b04ce7b3da172dbd7fe977e48928e4f560d4349f557c56b9e697051ae653f62",
+      "current_responsibility": "Canonical execution-plan identity.",
+      "normative_owner": "K2",
+      "normative_contracts": [
+        "operation_id stability",
+        "arguments_digest"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "frozen intent; stable operation_id material; forming intent \u2260 success"
+      ],
+      "semantic_gaps": [
+        "canonical_arguments_digest uses json.dumps default=str without NFC/UTC canonicalization (unlike portability.canonical)",
+        "Not a SemanticSnapshot or proof-carrying patch"
+      ],
+      "duplicate_owner_conflicts": [
+        "Second canonicalization algorithm vs spe_runtime/portability/canonical.py \u2014 different fact if kept as op-id, conflict if used as portable identity"
+      ],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [
+        "operation_id is not a verification receipt."
+      ],
+      "disposition": "WRAP",
+      "reason": "Sound execution identity; wrap as K2 obligation id, do not conflate with K5 portable canonical JSON.",
+      "required_change": "Keep digest local to operation identity; portable hashing stays in K5.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/execution/outcomes.py",
+      "sha256": "fe46535b6cd8e52d0cae0eddbf5de86862fbce4223015861e91caaaebdb6bb26",
+      "current_responsibility": "Canonical outcome-state transition writer.",
+      "normative_owner": "K2",
+      "normative_contracts": [
+        "outcome transitions",
+        "tool OK \u2260 VERIFIED_SUCCESS"
+      ],
+      "tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "current_strengths": [
+        "Explicit illegal patterns with reason codes.",
+        "retry_eligible only NOT_EXECUTED."
+      ],
+      "semantic_gaps": [
+        "COMPLETED is not a proof receipt.",
+        "No Semantic Lease."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [
+        "COMPLETED can be reached with evidence.verified=True supplied by caller."
+      ],
+      "disposition": "RETAIN",
+      "reason": "Unique transition table; tests cover illegal promotions.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/portability/__init__.py",
+      "sha256": "05da1701225ad1189a467118c832bca64af7d7ea0c3729a9a7acb2d5d4c11896",
+      "current_responsibility": "Facade for ABI/canonical/capability/conformance.",
+      "normative_owner": "K5",
+      "normative_contracts": [
+        "spe.universal-abi.v1"
+      ],
+      "tests": [
+        "tests/portability/"
+      ],
+      "current_strengths": [
+        "Explicit exports."
+      ],
+      "semantic_gaps": [],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Facade.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/portability/"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/portability/abi.py",
+      "sha256": "be2e800a2cf90be5f5f2fba22f1e4bc837f92a4acf1a16fafcae4537b524202f",
+      "current_responsibility": "Canonical ABI identity writer.",
+      "normative_owner": "K5",
+      "normative_contracts": [
+        "spe.universal-abi.v1",
+        "fail-closed major mismatch"
+      ],
+      "tests": [
+        "tests/portability/test_abi.py",
+        "tests/portability/test_merge_gate_adversarial.py",
+        "tests/portability/test_offline_and_cost.py"
+      ],
+      "current_strengths": [
+        "never fakes RELEASED/PASS",
+        "network_mode=NONE",
+        "CONFORMANCE_PARTIAL"
+      ],
+      "semantic_gaps": [
+        "\u03a9 v2.4.1 kernel ABI is not this envelope ABI."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Unique ABI declaration; tests lock major mismatch.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/portability/test_abi.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/portability/canonical.py",
+      "sha256": "4c4fa62a4a3e12d658711f9a61822a4356c4286936509328535c499d097d00b1",
+      "current_responsibility": "Canonical portable byte/structure writer (K5).",
+      "normative_owner": "K5",
+      "normative_contracts": [
+        "canonical JSON",
+        "int\u2260float",
+        "absent\u2260null"
+      ],
+      "tests": [
+        "tests/portability/test_canonical.py",
+        "tests/portability/test_merge_gate_adversarial.py",
+        "tests/portability/test_round_trip_attacks.py"
+      ],
+      "current_strengths": [
+        "NFC, ISO-8601\u2192Z, reject non-finite, type-strict equality"
+      ],
+      "semantic_gaps": [
+        "Not used by execution.canonical_arguments_digest."
+      ],
+      "duplicate_owner_conflicts": [
+        "execution/models.py uses a weaker json.dumps digest"
+      ],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "This is the portable canonicalizer; the digest is a different fact.",
+      "required_change": "Keep as sole K5 canonical JSON writer.",
+      "acceptance_tests": [
+        "tests/portability/test_canonical.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/portability/capability.py",
+      "sha256": "e80d24c715dabd19c2d6da01fc151137b8ab2e7f934dadfe2aaf0eeb45752dbe",
+      "current_responsibility": "Capability availability decisions (not authority).",
+      "normative_owner": "K7",
+      "normative_contracts": [
+        "capability != authority",
+        "no fake success"
+      ],
+      "tests": [
+        "tests/portability/test_capability.py",
+        "tests/portability/test_conformance_suite.py"
+      ],
+      "current_strengths": [
+        "MISSING/BLOCKED/DEFER never SUCCESS",
+        "escalation extra caps refused"
+      ],
+      "semantic_gaps": [
+        "PROOF_RECEIPTS listed as CapabilityId but proof/ is empty",
+        "Not claim qualification"
+      ],
+      "duplicate_owner_conflicts": [
+        "Empty spe_runtime/capabilities/ package name collision"
+      ],
+      "authority_risks": [
+        "Capability AVAILABLE is not a grant \u2014 callers must not treat it as K4."
+      ],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Unique capability evaluator; explicitly not authority.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/portability/test_capability.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/portability/conformance.py",
+      "sha256": "587d709f9bd22511ce2def163314dad2303f052d75431cff19ca4219ee69835b",
+      "current_responsibility": "Python oracle for portable semantic equivalence + honest registry.",
+      "normative_owner": "K5",
+      "normative_contracts": [
+        "semantic_equivalent",
+        "round-trip",
+        "unknown-field REJECT",
+        "offline NONE"
+      ],
+      "tests": [
+        "tests/portability/test_conformance_suite.py",
+        "tests/portability/test_cross_language_determinism.py",
+        "tests/portability/test_merge_gate_adversarial.py",
+        "tests/portability/test_mutation_controls.py",
+        "tests/portability/test_offline_and_cost.py",
+        "tests/portability/test_platform_registry.py",
+        "tests/portability/test_privacy_portability.py",
+        "tests/portability/test_reference_runtime.py",
+        "tests/portability/test_round_trip_attacks.py",
+        "tests/portability/test_semantic_equivalent.py"
+      ],
+      "current_strengths": [
+        "Python declared oracle vs Rust replica",
+        "PLATFORM_REGISTRY does not fake PASS",
+        "unknown fields rejected",
+        "privacy/trust/authority attack detectors"
+      ],
+      "semantic_gaps": [
+        "PLATFORM:RUST_KERNEL/WASM still PLANNED in this module even though portable/ exists \u2014 honest vs stale registry",
+        "PROOF_RECEIPTS capability claimed via CapabilityId import in ReferenceRuntime declaration (all CapabilityId values)"
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [
+        "import_envelope can construct AuthorityState from untrusted dict (gated by schema/unknown-field)."
+      ],
+      "privacy_risks": [
+        "detects USER_PRIVATE drop but does not project."
+      ],
+      "proof_risks": [],
+      "disposition": "WRAP",
+      "reason": "Oracle is sound for spe.universal-abi.v1; registry still lists RUST/WASM as PLANNED (stale vs Sprint 5 tree). Wrap/update registry later \u2014 not a G1 production fix.",
+      "required_change": "Do not silently mark platforms PASS. Registry honesty vs Sprint-5 presence is a documented gap.",
+      "acceptance_tests": [
+        "tests/portability/"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/portability/oracle.py",
+      "sha256": "261c10313931804a7e864c347b062baceee3abd3cb90e47ce5bd846723634d3d",
+      "current_responsibility": "Test-only checker; must not import SUT detector.",
+      "normative_owner": "K5",
+      "normative_contracts": [
+        "independent oracle"
+      ],
+      "tests": [
+        "tests/portability/test_merge_gate_adversarial.py"
+      ],
+      "current_strengths": [
+        "Explicitly independent of conformance.detect_attack"
+      ],
+      "semantic_gaps": [
+        "Not a production writer."
+      ],
+      "duplicate_owner_conflicts": [
+        "Implements similar predicates as detect_attack by design (independence, not dual production writer)"
+      ],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Checker, not canonical production writer. Tests forbid importing conformance.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/portability/test_merge_gate_adversarial.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/portability/reasons.py",
+      "sha256": "41947dc5fd46aa034b603ea49d31bdd8788770b1efbe2b5286bd548531d87a07",
+      "current_responsibility": "Second error vocabulary.",
+      "normative_owner": "K5",
+      "normative_contracts": [
+        "typed errors"
+      ],
+      "tests": [
+        "tests/portability/test_privacy_portability.py",
+        "tests/portability/test_semantic_equivalent.py"
+      ],
+      "current_strengths": [
+        "Reuses XCAT values where applicable."
+      ],
+      "semantic_gaps": [
+        "Forked enum vs xcat.reasons.ReasonCode"
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "WRAP",
+      "reason": "G1R-1: re-exports ErrorCode alias; not a writer.",
+      "required_change": "Unify error owner post-G1.",
+      "acceptance_tests": [
+        "tests/portability/"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/privacy/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current_responsibility": "Empty package placeholder. Not an implementation.",
+      "normative_owner": "K4",
+      "normative_contracts": [],
+      "tests": [],
+      "current_strengths": [
+        "Honestly empty; does not fake semantics."
+      ],
+      "semantic_gaps": [
+        "Required Ring-0 responsibility for K4 is unimplemented."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Zero-byte/empty module is not implementation. Counting it as IMPLEMENTED would game G1.",
+      "required_change": "NEW_IMPLEMENTATION under the named owner after G1; do not fill in G1.",
+      "acceptance_tests": [],
+      "risk": "HIGH"
+    },
+    {
+      "path": "spe_runtime/proof/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current_responsibility": "Empty package placeholder. Not an implementation.",
+      "normative_owner": "K2",
+      "normative_contracts": [],
+      "tests": [],
+      "current_strengths": [
+        "Honestly empty; does not fake semantics."
+      ],
+      "semantic_gaps": [
+        "Required Ring-0 responsibility for K2 is unimplemented."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Zero-byte/empty module is not implementation. Counting it as IMPLEMENTED would game G1.",
+      "required_change": "NEW_IMPLEMENTATION under the named owner after G1; do not fill in G1.",
+      "acceptance_tests": [],
+      "risk": "HIGH"
+    },
+    {
+      "path": "spe_runtime/provenance/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current_responsibility": "Empty package placeholder. Not an implementation.",
+      "normative_owner": "K1",
+      "normative_contracts": [],
+      "tests": [],
+      "current_strengths": [
+        "Honestly empty; does not fake semantics."
+      ],
+      "semantic_gaps": [
+        "Required Ring-0 responsibility for K1 is unimplemented."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Zero-byte/empty module is not implementation. Counting it as IMPLEMENTED would game G1.",
+      "required_change": "NEW_IMPLEMENTATION under the named owner after G1; do not fill in G1.",
+      "acceptance_tests": [],
+      "risk": "HIGH"
+    },
+    {
+      "path": "spe_runtime/recovery/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current_responsibility": "Empty package placeholder. Not an implementation.",
+      "normative_owner": "K7",
+      "normative_contracts": [],
+      "tests": [],
+      "current_strengths": [
+        "Honestly empty; does not fake semantics."
+      ],
+      "semantic_gaps": [
+        "Required Ring-0 responsibility for K7 is unimplemented."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Zero-byte/empty module is not implementation. Counting it as IMPLEMENTED would game G1.",
+      "required_change": "NEW_IMPLEMENTATION under the named owner after G1; do not fill in G1.",
+      "acceptance_tests": [],
+      "risk": "HIGH"
+    },
+    {
+      "path": "spe_runtime/registry/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current_responsibility": "Empty package placeholder. Not an implementation.",
+      "normative_owner": "K5",
+      "normative_contracts": [],
+      "tests": [],
+      "current_strengths": [
+        "Honestly empty; does not fake semantics."
+      ],
+      "semantic_gaps": [
+        "Required Ring-0 responsibility for K5 is unimplemented."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Zero-byte/empty module is not implementation. Counting it as IMPLEMENTED would game G1.",
+      "required_change": "NEW_IMPLEMENTATION under the named owner after G1; do not fill in G1.",
+      "acceptance_tests": [],
+      "risk": "HIGH"
+    },
+    {
+      "path": "spe_runtime/spec_binding.py",
+      "current_responsibility": "Working Ring-0 contract path + sha256 verify.",
+      "normative_owner": "K5",
+      "normative_contracts": [
+        "working_contract_binding"
+      ],
+      "tests": [
+        "tests/unit/test_g1r1_ownership.py"
+      ],
+      "current_strengths": [
+        "Hash-bound WORKING_CONTRACT"
+      ],
+      "semantic_gaps": [
+        "181/69 unavailable"
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "G1R-1: binds working contract hash.",
+      "required_change": "None.",
+      "acceptance_tests": [
+        "tests/unit/test_g1r1_ownership.py"
+      ],
+      "risk": "LOW",
+      "sha256": "c4360d22118c8a287d6a4c775f691bf2f61736199028cd69a3a4aa2a70f64557"
+    },
+    {
+      "path": "spe_runtime/storage/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "current_responsibility": "Empty package placeholder. Not an implementation.",
+      "normative_owner": "K6",
+      "normative_contracts": [],
+      "tests": [],
+      "current_strengths": [
+        "Honestly empty; does not fake semantics."
+      ],
+      "semantic_gaps": [
+        "Required Ring-0 responsibility for K6 is unimplemented."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETIRE",
+      "reason": "Zero-byte/empty module is not implementation. Counting it as IMPLEMENTED would game G1.",
+      "required_change": "NEW_IMPLEMENTATION under the named owner after G1; do not fill in G1.",
+      "acceptance_tests": [],
+      "risk": "HIGH"
+    },
+    {
+      "path": "spe_runtime/xcat/__init__.py",
+      "sha256": "e331e8f605621eb409764907573a20513431b068460cbb361fdcad0b2d740e80",
+      "current_responsibility": "Re-export XCAT kernel types.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "CrossCategoryEnvelope",
+        "validate_handoff"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "current_strengths": [
+        "Narrow public API."
+      ],
+      "semantic_gaps": [
+        "Does not implement SPE \u03a9 K0 constitution objects."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Facade only; implementation lives in sibling modules.",
+      "required_change": "None for G1.",
+      "acceptance_tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "risk": "LOW"
+    },
+    {
+      "path": "spe_runtime/xcat/handoff.py",
+      "sha256": "52d9cb9910aee396135f43345fecfda172c71220b9feecd428d760c20f4d0ad6",
+      "current_responsibility": "Canonical handoff verdict writer.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "handoff result enum",
+        "no PROMOTE/EXECUTED"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "current_strengths": [
+        "Explicitly forbids PROMOTE/EXECUTED/VERIFIED_SUCCESS",
+        "Deterministic diagnose_refusal_reason order"
+      ],
+      "semantic_gaps": [
+        "Not a proof transaction (K2).",
+        "No promotion lifecycle (K7 by design)."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [
+        "Passes authority_event through to X09 bypass."
+      ],
+      "privacy_risks": [],
+      "proof_risks": [
+        "Verdict is not a verification receipt."
+      ],
+      "disposition": "RETAIN",
+      "reason": "Unique writer of handoff result; tests prove negatives.",
+      "required_change": "None for G1. Later wrap as K2 obligation trigger only.",
+      "acceptance_tests": [
+        "tests/unit/test_xcat_core.py",
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/xcat/invariants.py",
+      "sha256": "07c930afaa665fa9a0a407edc028bce87757ad01c7d7ee7e3830b7d857e4176e",
+      "current_responsibility": "Canonical XCAT preservation/ownership guards.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "X01-X10",
+        "taint/sensitivity preservation"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "current_strengths": [
+        "constraint/provenance/uncertainty/preference monotonicity",
+        "facts require provenance",
+        "analysis\u2260recommendation",
+        "recommendation\u2260execution",
+        "authority non-escalation without event"
+      ],
+      "semantic_gaps": [
+        "X09 bypass if authority_event is any non-None object",
+        "No must/must-not constitution checks"
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [
+        "validate_authority_non_escalation short-circuits True when authority_event is not None"
+      ],
+      "privacy_risks": [
+        "sensitivity preservation is set-superset only; no projection."
+      ],
+      "proof_risks": [],
+      "disposition": "RETAIN",
+      "reason": "Tested XCAT kernel invariants; X09 bypass is a documented gap not a reason to replace. G1R-1: sole X10 writer; G1R-2: X09 delegates to validate_authority_event.",
+      "required_change": "MIGRATE X09 event typing in a later gate; do not implement in G1.",
+      "acceptance_tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "risk": "HIGH"
+    },
+    {
+      "path": "spe_runtime/xcat/models.py",
+      "sha256": "35aa9adc76ce07ba45d708f0a625d8f547a44c2dde4c81a1760a8ef275454cb6",
+      "current_responsibility": "Canonical in-memory semantic envelope.",
+      "normative_owner": "K1",
+      "normative_contracts": [
+        "envelope identity",
+        "goal_identity",
+        "facts/provenance/uncertainty"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "current_strengths": [
+        "frozen dataclass + deep MappingProxyType freeze",
+        "category IDs CAT:C01\u2013C12 only",
+        "to_dict for schema JSON"
+      ],
+      "semantic_gaps": [
+        "Not SemanticSnapshot (K2)",
+        "No explicit vs inferred distinction (K0)",
+        "No requirement graph (K1)",
+        "AuthorityState is a summary, not K4 grant"
+      ],
+      "duplicate_owner_conflicts": [
+        "_deep_freeze duplicated in authority/models.py and execution/models.py (helper, not semantic fact)"
+      ],
+      "authority_risks": [
+        "AuthorityState can be constructed with GRANTED without a grant object."
+      ],
+      "privacy_risks": [
+        "sensitivity_labels are opaque strings, no projection."
+      ],
+      "proof_risks": [
+        "No snapshot hash / proof binding on envelope."
+      ],
+      "disposition": "WRAP",
+      "reason": "Sound XCAT envelope; needs adapter to SPE \u03a9 SemanticSnapshot + constitution fields without rewriting tests.",
+      "required_change": "Wrap as K1 carrier; do not treat as K2 snapshot.",
+      "acceptance_tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/xcat/reasons.py",
+      "sha256": "d76fd26f7dce111e84df66ec26cfcefc6baa440215762cf56a435e386f93f346",
+      "current_responsibility": "Primary typed error vocabulary for XCAT/C07.",
+      "normative_owner": "K5",
+      "normative_contracts": [
+        "typed error vocabulary"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "current_strengths": [
+        "Stable string values; tests lock codes."
+      ],
+      "semantic_gaps": [
+        "C07 codes live here rather than a K5 registry.",
+        "No precedence table."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "WRAP",
+      "reason": "G1R-1: re-exports ErrorCode alias; not a writer.",
+      "required_change": "Unify under K5 schema registry later; keep values stable.",
+      "acceptance_tests": [
+        "tests/unit/test_xcat_core.py::test_reason_codes_stable"
+      ],
+      "risk": "MEDIUM"
+    },
+    {
+      "path": "spe_runtime/xcat/validator.py",
+      "sha256": "7257d37daa1ad5e7ec3f6721a6dfed3735551ddfb882cc95d6f2b776c3715fe9",
+      "current_responsibility": "Wire validation for xcat_envelope.schema.json.",
+      "normative_owner": "K5",
+      "normative_contracts": [
+        "schema validation"
+      ],
+      "tests": [
+        "tests/integration/test_xcat_c02_c06_c01_c03.py",
+        "tests/unit/test_xcat_core.py"
+      ],
+      "current_strengths": [
+        "Draft 2020-12 via jsonschema."
+      ],
+      "semantic_gaps": [
+        "Only one real schema; other schemas are stubs.",
+        "No schema registry object."
+      ],
+      "duplicate_owner_conflicts": [],
+      "authority_risks": [],
+      "privacy_risks": [],
+      "proof_risks": [],
+      "disposition": "WRAP",
+      "reason": "Correct validator for one schema; needs K5 registry wrap for remaining stubs.",
+      "required_change": "Do not expand schema silently in G1.",
+      "acceptance_tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "risk": "LOW"
+    }
+  ]
+}
