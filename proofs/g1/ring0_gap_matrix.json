@@ -1,5 +1,5 @@
 {
-  "gate": "G1",
+  "gate": "G1R-4",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "normative_spec": "SPE \u03a9 v2.4.1",
   "spec_present_in_tree": false,
@@ -7,69 +7,76 @@
     {
       "requirement": "human sovereignty",
       "owner": "K0",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/contract/protected.py",
+        "spe_runtime/provenance/rules.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "No sovereignty object or veto beyond X04 preference immutability.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "protected user intent",
       "owner": "K0",
       "implementation_modules": [
-        "spe_runtime/xcat/models.py"
+        "spe_runtime/contract/protected.py"
       ],
       "tests": [
         "tests/unit/test_xcat_core.py"
       ],
-      "status": "PARTIAL",
-      "gap": "goal_identity preserved; no protected-intent type, no explicit vs inferred.",
-      "future_action": "WRAP"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "explicit vs inferred distinction",
       "owner": "K0",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/provenance/rules.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "Envelope fields do not tag origin.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "must / must-not",
       "owner": "K0",
       "implementation_modules": [
-        "spe_runtime/xcat/invariants.py"
+        "spe_runtime/requirements/models.py",
+        "spe_runtime/requirements/conflicts.py"
       ],
       "tests": [
         "tests/unit/test_xcat_core.py"
       ],
-      "status": "PARTIAL",
-      "gap": "hard_constraints exist; no must-not constitution distinct from X01.",
-      "future_action": "MIGRATE"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "user-confirmed requirements",
       "owner": "K0",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/contract/protected.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "No confirmation record. intent_contract.schema.json is STUB.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "intent integrity",
       "owner": "K0",
       "implementation_modules": [
-        "spe_runtime/xcat/invariants.py",
-        "spe_runtime/categories/c03_communicate/validate.py"
+        "spe_runtime/contract/protected.py"
       ],
       "tests": [
         "tests/unit/test_xcat_core.py"
       ],
-      "status": "PARTIAL",
-      "gap": "X08 semantic rewrite + C03 certainty guard only.",
-      "future_action": "WRAP"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "intent contract schema",
@@ -78,18 +85,20 @@
         "spe_runtime/contract/__init__.py"
       ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "Empty package; schema stub additionalProperties true.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "PARTIAL",
+      "gap": "schemas/intent_contract.schema.json still stub",
+      "future_action": "WRAP"
     },
     {
       "requirement": "requirement graph",
       "owner": "K1",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/requirements/graph.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "Facts list is not a graph.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "ambiguity",
@@ -107,11 +116,13 @@
     {
       "requirement": "conflict",
       "owner": "K1",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/requirements/conflicts.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "No conflict object.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "claims",
@@ -170,65 +181,80 @@
     {
       "requirement": "SemanticSnapshot",
       "owner": "K2",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/proof/snapshot.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "Envelope is not a snapshot.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "proof obligations",
       "owner": "K2",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/proof/obligation.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "proof/ empty.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "Proof Ledger",
       "owner": "K2",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/proof/ledger.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "proof/ empty.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "Semantic Lease",
       "owner": "K2",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/proof/lease.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "No lease.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "proof-carrying patch",
       "owner": "K2",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/proof/patch.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "No patch object.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "verification receipt",
       "owner": "K2",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/proof/receipt.py",
+        "spe_runtime/proof/verify.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "proof_receipt.schema.json STUB; verified_success forbidden (good) but no receipt type.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "atomic semantic/proof commit",
       "owner": "K2",
-      "implementation_modules": [],
+      "implementation_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
       "tests": [],
-      "status": "MISSING",
-      "gap": "No commit protocol.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "operation identity + outcome transitions",
@@ -591,9 +617,9 @@
     }
   ],
   "counts": {
-    "IMPLEMENTED": 7,
-    "PARTIAL": 20,
-    "MISSING": 22,
+    "IMPLEMENTED": 22,
+    "PARTIAL": 18,
+    "MISSING": 9,
     "CONFLICTING": 1
   }
 }

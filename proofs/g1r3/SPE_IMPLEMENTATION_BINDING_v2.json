@@ -8,12 +8,15 @@
     "present_in_tree": true,
     "path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
     "custody": "WORKING_CONTRACT_BOUND",
-    "verified_181_69_tree": "UNAVAILABLE"
+    "verified_181_69_tree": "UNAVAILABLE",
+    "repo_spec_file": "SPE-SPEC",
+    "repo_spec_sha256": "e82d4ca87fa1327af5183d49ac16b5f4a4902139265808b4497e055e99435118",
+    "repo_spec_status": "NEW_IMPLEMENTATION slices S1\u2013S5 remain; working Ring-0 contract is bound. Not the verified 181/69 tree."
   },
   "repository": {
     "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-    "branch": "cursor/g1r4-k2-proof-tx-0d6e",
-    "tree_hash": "3e505a60bd0a0c9c21ce5c9d74ba65ef9b85448a",
+    "branch": "feat/g1-runtime-binding-v241",
+    "tree_hash": "efa9026169deee29f529cbab5c3bb73f59808c36",
     "source_manifest_hash": "b2d00759d5741012b8cfadd2e1feb518e3802676dd3ace1f601105e3c6d8b13f",
     "python_version": "3.11.2",
     "dependency_manifest_hash": "7dafa827ad5e6c9e3d284727a8d58b9767dea1dde36483ef73fbf67b0bafa1aa",
@@ -27,8 +30,8 @@
     "g1_binding_collected": 14,
     "g1_binding_passed": 10,
     "g1_binding_failed": 4,
-    "final_collected": 455,
-    "final_passed": 451,
+    "final_collected": 492,
+    "final_passed": 488,
     "final_failed": 4,
     "final_skipped": 0,
     "test_manifest_hash": "74f5256c2e87d1d5ce75b4100c37436fe390af0fe041f23b6d954c62f38798d6",
@@ -39,32 +42,35 @@
     "g1r1_failed": 0,
     "g1r2_collected": 23,
     "g1r2_passed": 23,
-    "g1r2_failed": 0
+    "g1r2_failed": 0,
+    "g1r3_collected": 37,
+    "g1r3_passed": 37,
+    "g1r3_failed": 0
   },
   "module_binding": {
-    "module_count": 78,
-    "retain": 71,
-    "wrap": 1,
+    "module_count": 68,
+    "inventory_hash": "65f146d39e772ea803a8ab4e3b8b352917b4afa415c653435e5be4eb6aeddde3",
+    "disposition_hash": "6fdf0083faf2fe3ddc818346dbb9c1308108709be676971db7cbc67595ead7f3",
+    "writer_map_hash": "2ccfca7447fa41101215bcb597ee26ff55d4715afb7814024a93204b3b95edfd",
+    "ring0_hash": "0430f3804b48210a16ceb268e8f7b581d06d6d001ec5ac143e5605d15c2365f4",
+    "retain": 46,
+    "wrap": 10,
     "migrate": 0,
     "replace": 0,
-    "retire": 6
+    "retire": 12
   },
   "semantic_binding": {
     "DUPLICATE_CANONICAL_WRITERS": 0,
-    "UNOWNED_RING0_RESPONSIBILITIES": 5,
-    "unowned_facts": [
-      "privacy_projection",
-      "spe_artifact_identity",
-      "prompt_artifact",
-      "qualification_evidence",
-      "protected_user_intent"
-    ],
-    "unowned_ring0_requirements_missing": 9,
+    "UNOWNED_RING0_RESPONSIBILITIES": 6,
+    "CONFLICTING_RUNTIME_SEMANTICS": 0,
+    "LEGACY_SEMANTICS_TO_RETIRE": 14,
     "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
-    "CONFLICTING_RUNTIME_SEMANTICS": 0
+    "unowned_ring0_requirements_missing": 16,
+    "conflicting_runtime_semantics": 0,
+    "unresolved_ownership_cycles": 0
   },
-  "conformance_command": "python3 -m pytest -q",
-  "conformance_result": "G1R-1..G1R-4 recreated from Grok reports; K2 implemented; G1 remains BOUND_WITH_GAPS",
+  "conformance_command": "/opt/spe-g1-venv/bin/python -m pytest -q",
+  "conformance_result": "G1R-3: 492 collected, 488 passed, 4 failed (G1-B03 K2/K6/K7 + remaining MISSING). K0/K1 minimum foundation present. Working contract unchanged.",
   "blockers": [
     {
       "id": "G1-B01",
@@ -84,10 +90,10 @@
     },
     {
       "id": "G1-B03",
-      "description": "G1-B03 reduced after G1R-4: unowned=['privacy_projection', 'spe_artifact_identity', 'prompt_artifact', 'qualification_evidence', 'protected_user_intent']; missing=9",
+      "description": "G1R-3 reduced K0/K1 gaps. unowned facts=6; MISSING requirements=16. K2/K3/K4 privacy/K6/K7 remain.",
       "owner": "K0-K7",
       "evidence": "proofs/g1/ring0_gap_matrix.json",
-      "required_next_action": "G2+ NEW_IMPLEMENTATION for missing K0/K2/K3/K6/K7 surfaces. Do not create spe_runtime/omega/ in G1.",
+      "required_next_action": "G1R-4 K2 proof transaction (not this task).",
       "status": "OPEN"
     },
     {
@@ -108,7 +114,7 @@
     }
   ],
   "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET",
-  "captured_at_utc": "2026-09-18T10:31:33Z",
+  "captured_at_utc": "2026-09-18T10:47:11Z",
   "g1r1": {
     "task": "NORMATIVE_SPEC_BINDING_AND_OWNERSHIP_REPAIR",
     "production_source_changed": true,
@@ -127,6 +133,21 @@
     "task": "AUTHORITY_HARDENING",
     "ambient_authority_paths": 0,
     "authority_canonical_writers": 1,
+    "working_contract_unchanged": true
+  },
+  "g1r3": {
+    "task": "K0_K1_MINIMUM_SEMANTIC_FOUNDATION",
+    "k0_implemented": [
+      "human sovereignty",
+      "explicit vs inferred",
+      "user-confirmed",
+      "ProtectedIntentContract",
+      "must/must-not"
+    ],
+    "k1_implemented": [
+      "RequirementGraph",
+      "conflict"
+    ],
     "working_contract_unchanged": true
   }
 }

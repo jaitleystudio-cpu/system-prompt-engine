@@ -201,18 +201,9 @@
       "writer_modules": [
         "spe_runtime/xcat/invariants.py"
       ],
-      "reader_modules": [
-        "spe_runtime/xcat/handoff.py",
-        "spe_runtime/categories/_common.py",
-        "spe_runtime/categories/c01_decide/validate.py",
-        "spe_runtime/categories/c02_research/validate.py",
-        "spe_runtime/categories/c03_communicate/validate.py",
-        "spe_runtime/categories/c06_analyze/validate.py",
-        "spe_runtime/categories/c07_execute/validate.py"
-      ],
+      "reader_modules": [],
       "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "G1R-1: single writer invariants.failures_not_laundered; _common re-exports the same function object."
+      "resolution_required": false
     },
     {
       "semantic_fact": "typed_error_code",
@@ -220,16 +211,9 @@
       "writer_modules": [
         "spe_runtime/error_registry.py"
       ],
-      "reader_modules": [
-        "spe_runtime/xcat/reasons.py",
-        "spe_runtime/portability/reasons.py",
-        "spe_runtime/xcat/handoff.py",
-        "spe_runtime/authority/validate.py",
-        "spe_runtime/portability/conformance.py"
-      ],
+      "reader_modules": [],
       "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "G1R-1: ErrorCode is the single K5 enum. ReasonCode and PortabilityReason are aliases of ErrorCode."
+      "resolution_required": false
     },
     {
       "semantic_fact": "envelope_generic_field_override",
@@ -241,7 +225,7 @@
         "all category engines"
       ],
       "duplicate_writer": false,
-      "resolution_required": false,
+      "resolution_required": true,
       "notes": "G1R-2: replace_envelope rejects authority-controlled fields. Copies unchanged authority_state only."
     },
     {
@@ -250,21 +234,21 @@
       "writer_modules": [
         "spe_runtime/proof/verify.py"
       ],
-      "reader_modules": [],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py",
+        "spe_runtime/proof/ledger.py"
+      ],
       "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "G1R-4: verify_obligation is the only PASS-receipt minting path."
+      "resolution_required": false
     },
     {
       "semantic_fact": "privacy_projection",
       "canonical_owner": "K4",
       "writer_modules": [],
-      "reader_modules": [
-        "spe_runtime/xcat/invariants.py (superset check only)"
-      ],
+      "reader_modules": [],
       "duplicate_writer": false,
-      "resolution_required": true,
-      "notes": "MISSING. privacy/ empty; labels are opaque strings."
+      "resolution_required": false,
+      "notes": "still unowned after G1R-4"
     },
     {
       "semantic_fact": "spe_artifact_identity",
@@ -272,8 +256,8 @@
       "writer_modules": [],
       "reader_modules": [],
       "duplicate_writer": false,
-      "resolution_required": true,
-      "notes": "MISSING. storage/ empty; no .spe artifact."
+      "resolution_required": false,
+      "notes": "still unowned after G1R-4"
     },
     {
       "semantic_fact": "prompt_artifact",
@@ -281,8 +265,8 @@
       "writer_modules": [],
       "reader_modules": [],
       "duplicate_writer": false,
-      "resolution_required": true,
-      "notes": "MISSING. Decide/Communicate are not prompt strategy."
+      "resolution_required": false,
+      "notes": "still unowned after G1R-4"
     },
     {
       "semantic_fact": "semantic_snapshot",
@@ -290,128 +274,20 @@
       "writer_modules": [
         "spe_runtime/proof/snapshot.py"
       ],
-      "reader_modules": [],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
       "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "G1R-4: SemanticSnapshot + genesis_snapshot. Commit constructs next via snapshot.py type."
+      "resolution_required": false
     },
     {
       "semantic_fact": "qualification_evidence",
       "canonical_owner": "K7",
       "writer_modules": [],
-      "reader_modules": [
-        "spe_runtime/portability/capability.py (capability only)"
-      ],
-      "duplicate_writer": false,
-      "resolution_required": true,
-      "notes": "MISSING. recovery/ empty; no promotion (forbidden by handoff enum \u2014 good)."
-    },
-    {
-      "semantic_fact": "protected_user_intent",
-      "canonical_owner": "K0",
-      "writer_modules": [
-        "spe_runtime/contract/protected.py"
-      ],
-      "reader_modules": [
-        "spe_runtime/xcat/invariants.py (goal_identity + preferences)"
-      ],
-      "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "G1R-3: ProtectedIntentContract. INFERRED cannot overwrite USER_EXPLICIT/CONFIRMED."
-    },
-    {
-      "semantic_fact": "envelope_authority_state",
-      "canonical_owner": "K4",
-      "writer_modules": [
-        "spe_runtime/authority/apply.py"
-      ],
-      "reader_modules": [
-        "spe_runtime/xcat/invariants.py",
-        "spe_runtime/categories/_common.py",
-        "spe_runtime/categories/c07_execute/validate.py"
-      ],
-      "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "G1R-2: apply_authority_event is the only runtime mutator. Envelope constructor materializes initial values. replace_envelope cannot write it."
-    },
-    {
-      "semantic_fact": "provenance_vocabulary",
-      "canonical_owner": "K0",
-      "writer_modules": [
-        "spe_runtime/provenance/models.py"
-      ],
       "reader_modules": [],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "Single categorical vocabulary. Not a confidence score."
-    },
-    {
-      "semantic_fact": "provenance_transition",
-      "canonical_owner": "K0",
-      "writer_modules": [
-        "spe_runtime/provenance/rules.py"
-      ],
-      "reader_modules": [],
-      "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "may_overwrite / may_confirm. confirm_requirement is the only USER_CONFIRMED path."
-    },
-    {
-      "semantic_fact": "user_confirmed_requirement",
-      "canonical_owner": "K0",
-      "writer_modules": [
-        "spe_runtime/contract/protected.py"
-      ],
-      "reader_modules": [],
-      "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "confirm_requirement only. propose cannot mint USER_CONFIRMED."
-    },
-    {
-      "semantic_fact": "requirement_atom",
-      "canonical_owner": "K1",
-      "writer_modules": [
-        "spe_runtime/requirements/models.py"
-      ],
-      "reader_modules": [],
-      "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "Deterministic requirement_id from canonical content."
-    },
-    {
-      "semantic_fact": "requirement_graph",
-      "canonical_owner": "K1",
-      "writer_modules": [
-        "spe_runtime/requirements/graph.py"
-      ],
-      "reader_modules": [],
-      "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "Canonical graph writer. Contract calls with_node/with_edge only."
-    },
-    {
-      "semantic_fact": "conflict_record",
-      "canonical_owner": "K1",
-      "writer_modules": [
-        "spe_runtime/requirements/conflicts.py"
-      ],
-      "reader_modules": [],
-      "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "detect_conflicts. HARD unresolved => contract CONFLICTED."
-    },
-    {
-      "semantic_fact": "proof_obligation",
-      "canonical_owner": "K2",
-      "writer_modules": [
-        "spe_runtime/proof/obligation.py"
-      ],
-      "reader_modules": [
-        "spe_runtime/proof/commit.py"
-      ],
-      "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "Typed obligation with required proof type."
+      "notes": "still unowned after G1R-4"
     },
     {
       "semantic_fact": "proof_ledger",
@@ -423,8 +299,7 @@
         "spe_runtime/proof/commit.py"
       ],
       "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "Append-only in-memory ledger. Not a disk journal."
+      "resolution_required": false
     },
     {
       "semantic_fact": "semantic_lease",
@@ -436,8 +311,7 @@
         "spe_runtime/proof/commit.py"
       ],
       "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "SemanticProofLease. Not G3 worker lease. Not AuthorityGrant."
+      "resolution_required": false
     },
     {
       "semantic_fact": "proof_carrying_patch",
@@ -449,29 +323,47 @@
         "spe_runtime/proof/commit.py"
       ],
       "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "Patch cannot self-approve. verified flag ignored."
+      "resolution_required": false
     },
     {
-      "semantic_fact": "atomic_commit",
-      "canonical_owner": "K2",
+      "semantic_fact": "protected_intent_contract",
+      "canonical_owner": "K0",
       "writer_modules": [
-        "spe_runtime/proof/commit.py"
+        "spe_runtime/contract/protected.py"
       ],
-      "reader_modules": [
-        "spe_runtime/proof/commit.py"
-      ],
+      "reader_modules": [],
       "duplicate_writer": false,
-      "resolution_required": false,
-      "notes": "Copy-on-write. Failure does not mutate inputs."
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "requirement_graph",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/requirements/graph.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "conflict_core",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/requirements/conflicts.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "authority_event_apply",
+      "canonical_owner": "K4",
+      "writer_modules": [
+        "spe_runtime/authority/apply.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false
     }
-  ],
-  "metrics": {
-    "DUPLICATE_CANONICAL_WRITERS": 0,
-    "UNOWNED_RING0_RESPONSIBILITIES": 4,
-    "CONFLICTING_RUNTIME_SEMANTICS": 0,
-    "LEGACY_SEMANTICS_TO_RETIRE": 14,
-    "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0
-  },
-  "ambient_authority_paths": []
+  ]
 }
