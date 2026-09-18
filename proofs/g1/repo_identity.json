@@ -1,8 +1,8 @@
 {
-  "gate": "G1R-7R",
+  "gate": "G1R-8",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "base_sha_short": "931128b",
-  "branch": "cursor/g1r7r-k3-strategy-recheck-0d6e",
+  "branch": "cursor/g1r8-k6-spe-artifact-0d6e",
   "dirty_before": false,
   "python_version": "3.12.3",
   "platform": "Linux-6.12.8+-x86_64-with-glibc2.36",
@@ -13,7 +13,7 @@
     "portable/spe-wasm/Cargo.toml",
     "portable/spe-wasm/Cargo.lock"
   ],
-  "captured_at_utc": "2026-09-18T16:03:16Z",
+  "captured_at_utc": "2026-09-18T16:21:36Z",
   "source_file_count": 188,
   "runtime_file_count": 68,
   "test_file_count": 29,
@@ -36,6 +36,6 @@
     "G1_FINAL_REPORT.md"
   ],
   "implementation_commit": "1dd587b50c672c7f364209fc875d2d2f7796992e",
-  "suite_run_commit": "a6b7e572b66632aab3837242983afec96672c148",
+  "suite_run_commit": "ec5bb711e8f03b97664dc18ea9c6d5122ddbb942",
   "identity_model": "split_implementation_vs_evidence_validation"
 }

@@ -516,13 +516,12 @@ def test_k3_completeness_gate_still_green():
     unowned = writers.get("unowned_facts") or [
         f["semantic_fact"] for f in writers["facts"] if not f["writer_modules"]
     ]
+    # Post-G1R-8: K6 gaps resolved; only K7 remains missing/unowned.
     assert set(missing) == {
-        ".spe semantic artifact",
-        "snapshot binding",
         "claim qualification",
         "qualification evidence",
     }
-    assert set(unowned) == {"spe_artifact_identity", "qualification_evidence"}
+    assert set(unowned) == {"qualification_evidence"}
     for name in (
         "PromptArtifact",
         "cognitive plan",

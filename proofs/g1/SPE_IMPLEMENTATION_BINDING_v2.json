@@ -2,7 +2,7 @@
   "schema_version": "2.0.0",
   "gate": "G1_RUNTIME_BINDING",
   "status": "BOUND_WITH_GAPS",
-  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R7R_RECHECK_PASS; G1 BOUND_WITH_GAPS",
+  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_IMPLEMENTATION_PRESENT; G1R8_REVIEW_PENDING; G1 BOUND_WITH_GAPS",
   "normative_spec": {
     "version": "SPE \u03a9 v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
@@ -13,11 +13,11 @@
   },
   "repository": {
     "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-    "branch": "cursor/g1r7r-k3-strategy-recheck-0d6e",
+    "branch": "cursor/g1r8-k6-spe-artifact-0d6e",
     "implementation_commit": "1dd587b50c672c7f364209fc875d2d2f7796992e",
     "implementation_tree": "3e564a633a3452cdd9a92d9a3832b119b21e86ad",
-    "suite_run_commit": "a6b7e572b66632aab3837242983afec96672c148",
-    "suite_tree": "83678fcab1bafc75126dadce9c4d9daec3f5d859",
+    "suite_run_commit": "ec5bb711e8f03b97664dc18ea9c6d5122ddbb942",
+    "suite_tree": "a173921f01f33fd46e5cc55154ac22558f18dec0",
     "tree_hash": "3e564a633a3452cdd9a92d9a3832b119b21e86ad",
     "tree_hash_scope": "implementation_suite_tree",
     "python_version": "3.12.3",
@@ -26,14 +26,14 @@
   },
   "tests": {
     "implementation_validation": {
-      "collected": 533,
-      "passed": 530,
-      "failed": 3,
+      "collected": 566,
+      "passed": 564,
+      "failed": 2,
       "skipped": 0,
       "exit_status": 1,
       "duration_s": 0.966,
-      "result_sha256": "bea0d925efa33b86286774a3673e8998bfeda2139fd3a0f81ab4ecefb0f68c7a",
-      "junit_sha256": "f5122154fa657786e3b849d7fb2696f978cc780ab20077420c7c7a1b9256e69d",
+      "result_sha256": "a9dc7027b7dba54890aa5f779ee79eac8fb081220ccdbf1becc2fc49871e80a0",
+      "junit_sha256": "06445052a9d268f2811f63b0c711983d011d5a51322f415fdb3ca06c529b4432",
       "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
       "g1r1": "5/5",
       "g1r2": "27/27",
@@ -46,10 +46,10 @@
       "g1r7": "27/27",
       "failed_tests": [
         "tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility",
-        "tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique",
         "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
       ],
-      "g1r7r": "26/26"
+      "g1r7r": "26/26",
+      "g1r8": "33/33"
     },
     "evidence_validation": {
       "reviewed_evidence_head": "EXTERNAL_ONLY"
@@ -93,27 +93,26 @@
     "g1r7r_passed": 26
   },
   "module_binding": {
-    "module_count": 88,
-    "retain": 82,
+    "module_count": 92,
+    "retain": 87,
     "wrap": 1,
     "migrate": 0,
     "replace": 0,
-    "retire": 5
+    "retire": 4
   },
   "semantic_binding": {
     "DUPLICATE_CANONICAL_WRITERS": 0,
-    "UNOWNED_RING0_RESPONSIBILITIES": 2,
+    "UNOWNED_RING0_RESPONSIBILITIES": 1,
     "unowned_facts": [
-      "spe_artifact_identity",
       "qualification_evidence"
     ],
-    "unowned_ring0_requirements_missing": 4,
+    "unowned_ring0_requirements_missing": 2,
     "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
     "CONFLICTING_RUNTIME_SEMANTICS": 0,
     "k3_strategy_gate": "PASS"
   },
   "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
-  "conformance_result": "G1R-7R RECHECK_PASS @a6b7e572b666 suite 533/530/3. G1R-7 PASS_EXTERNAL. Strength-aware technique budget. K3 completeness GREEN. MISSING=4 UNOWNED=2. No K6/K7.",
+  "conformance_result": "G1R-8 @ec5bb711e8f0 suite 566/564/2. artifact_lineage gate GREEN. UNOWNED 2\u21921. MISSING 4\u21922. External review PENDING.",
   "blockers": [
     {
       "id": "G1-B01",
@@ -128,7 +127,7 @@
     {
       "id": "G1-B03",
       "status": "OPEN",
-      "description": "unowned=['spe_artifact_identity','qualification_evidence']; K3 PromptArtifact+CognitivePlan+PromptStrategy+TechniqueSelection owned; K6/K7 remain."
+      "description": "unowned=['qualification_evidence']; K6 spe_artifact_identity owned; K7 remains."
     },
     {
       "id": "G1-B04",
@@ -166,7 +165,7 @@
     "working_contract_unchanged": true,
     "prompt_content_digest_note": "prompt_content_digest != spe_artifact_identity"
   },
-  "captured_at_utc": "2026-09-18T16:03:16Z",
+  "captured_at_utc": "2026-09-18T16:21:36Z",
   "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET",
   "g1r6r": {
     "task": "INDEPENDENT_PROMPTARTIFACT_RECHECK",
@@ -207,5 +206,15 @@
     "expected_g1_failures": 3,
     "g1r8_started": false,
     "working_contract_unchanged": true
+  },
+  "g1r8": {
+    "task": "K6_SPE_ARTIFACT_LINEAGE",
+    "canonical_writer": "spe_runtime/storage/build.py::build_spe_artifact",
+    "writers": 1,
+    "duplicates": 0,
+    "implementation": "PRESENT",
+    "external_review": "REVIEW_PENDING",
+    "working_contract_unchanged": true,
+    "rust_wasm": "RUST_WASM_NOT_REBUILT"
   }
 }

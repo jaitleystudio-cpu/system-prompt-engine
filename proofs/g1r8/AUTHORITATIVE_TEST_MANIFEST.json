@@ -1,0 +1,15 @@
+{
+  "gate": "G1R-8",
+  "verdict": "G1R8_PASS",
+  "external_review": "REVIEW_PENDING",
+  "promotion": "G1R8_IMPLEMENTATION_PRESENT",
+  "head": "ec5bb711e8f03b97664dc18ea9c6d5122ddbb942",
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "full_python": {
+    "collected": 566,
+    "passed": 564,
+    "failed": 2
+  },
+  "unowned": 1,
+  "missing": 2
+}
