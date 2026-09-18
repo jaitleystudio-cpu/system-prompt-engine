@@ -96,7 +96,7 @@ def test_g1r5_evidence_artifacts_agree():
     assert priv["status"] == "IMPLEMENTED"
 
     assert "G1R5_IMPLEMENTATION_PRESENT" in report
-    assert "G1R5_REVIEW_PENDING" in report
+    assert "G1R5_PASS" in report
     assert "Contract won" in report
     assert IMPL in report
     assert TREE in report
