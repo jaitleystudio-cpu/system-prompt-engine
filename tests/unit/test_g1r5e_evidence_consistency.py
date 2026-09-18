@@ -46,7 +46,7 @@ def test_g1r5_manifest_hash_recomputes():
     assert m["implementation_validation"]["g1r5"] == "18/18"
     assert m["evidence_validation"]["g1r5e"] == "4/4"
     assert m["evidence_validation"]["reviewed_evidence_head"] == "EXTERNAL_ONLY"
-    assert m["g1r5_external_review"] != "PASS"
+    assert m["g1r5_external_review"] == "PASS"
     assert m["g1r5_implementation"] == "PRESENT"
     # Forbidden: merged 439 attributed to implementation tree
     assert m["implementation_validation"]["collected"] != 439
@@ -78,7 +78,7 @@ def test_g1r5_evidence_artifacts_agree():
     assert b["tests"]["g1r5_passed"] == 18
     assert b["semantic_binding"]["UNOWNED_RING0_RESPONSIBILITIES"] == 3
     assert b["semantic_binding"]["unowned_facts"] == m["unowned_facts_after"]
-    assert b["g1r5"]["external_review"] != "PASS"
+    assert b["g1r5"]["external_review"] == "PASS"
     assert b["g1r5"]["implementation"] == "PRESENT"
     assert b["g1r5"]["contract_owner"] == "K4"
     assert b["g1r4"]["external_review"] == "PASS"

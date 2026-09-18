@@ -104,8 +104,8 @@
   "g1_status": "BOUND_WITH_GAPS",
   "g1r4_external_review": "PASS",
   "g1r5_implementation": "PRESENT",
-  "g1r5_external_review": "PENDING_RECHECK",
+  "g1r5_external_review": "PASS",
   "git_branch": "cursor/g1r5-k3-privacy-projection-0d6e",
   "captured_at_utc": "2026-09-18T14:26:06Z",
-  "artifact_content_sha256": "6752840e9195a40f605f61ea0cf19aeeba49a715ace1d555e0746de1f382ed12"
+  "artifact_content_sha256": "db72dedf1f6d54680159f2819f78946f215af34acc1318c90e030d5e2ecd6f19"
 }

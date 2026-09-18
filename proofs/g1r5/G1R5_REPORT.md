@@ -4,7 +4,9 @@
 
 **G1R5_IMPLEMENTATION_PRESENT**
 
-**G1R5_REVIEW_PENDING**
+**G1R5_PASS** (external)
+
+Previously PENDING; external review approved.
 
 ## SOURCE IDENTITY
 

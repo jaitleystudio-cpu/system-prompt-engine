@@ -2,7 +2,7 @@
   "schema_version": "2.0.0",
   "gate": "G1_RUNTIME_BINDING",
   "status": "BOUND_WITH_GAPS",
-  "review_state": "G1R4_PASS_EXTERNAL; G1R5_IMPLEMENTATION_PRESENT; G1R5_REVIEW_PENDING_RECHECK",
+  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1 BOUND_WITH_GAPS",
   "normative_spec": {
     "version": "SPE \u03a9 v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
@@ -141,9 +141,9 @@
     "writers": 1,
     "duplicates": 0,
     "implementation": "PRESENT",
-    "external_review": "PENDING_RECHECK",
+    "external_review": "PASS",
     "working_contract_unchanged": true
   },
-  "captured_at_utc": "2026-09-18T14:26:06Z",
+  "captured_at_utc": "2026-09-18T14:31:24Z",
   "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET"
 }
