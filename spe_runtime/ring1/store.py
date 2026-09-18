@@ -278,7 +278,37 @@ def open_mission_store(
     clock: Clock | None = None,
     create: bool = True,
 ) -> Ring1Store:
+    """Low-level open.
+
+    Prefer :func:`create_new_mission_store` / :func:`open_existing_mission_store`
+    at call sites. ``create=True`` on a missing path creates a fresh empty store —
+    that must never be used as recovery for a lost authoritative store.
+    """
     return Ring1Store(path, clock=clock, create=create)
+
+
+def create_new_mission_store(
+    path: str | Path,
+    *,
+    clock: Clock | None = None,
+) -> Ring1Store:
+    """Intentionally create a NEW mission shard. Fails if path already exists."""
+    p = Path(path)
+    if p.exists():
+        raise SpeTypedError(
+            ErrorCode.G3_STORE_ALREADY_EXISTS,
+            f"refuse to create over existing authoritative store: {p}",
+        )
+    return Ring1Store(p, clock=clock, create=True)
+
+
+def open_existing_mission_store(
+    path: str | Path,
+    *,
+    clock: Clock | None = None,
+) -> Ring1Store:
+    """Open an EXISTING mission shard. Fails closed if missing/corrupt."""
+    return Ring1Store(path, clock=clock, create=False)
 
 
 def create_mission(store: Ring1Store, mission_id: str) -> None:
@@ -312,6 +342,8 @@ __all__ = [
     "Ring1Store",
     "SqlitePragmas",
     "open_mission_store",
+    "create_new_mission_store",
+    "open_existing_mission_store",
     "create_mission",
     "DEFAULT_BUSY_TIMEOUT_MS",
     "DEFAULT_RETRY_BUDGET",

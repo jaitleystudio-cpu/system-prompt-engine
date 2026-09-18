@@ -23,13 +23,16 @@ from spe_runtime.ring1.lease import (
 )
 from spe_runtime.ring1.models import DurableMissionState, WorkerLeaseView
 from spe_runtime.ring1.recovery import recover_mission
-from spe_runtime.ring1.store import Ring1Store, open_mission_store
+from spe_runtime.ring1.store import Ring1Store, open_mission_store, create_new_mission_store, open_existing_mission_store
+
 
 __all__ = [
     "Clock",
     "SystemClock",
     "Ring1Store",
     "open_mission_store",
+    "create_new_mission_store",
+    "open_existing_mission_store",
     "acquire_worker_lease",
     "heartbeat_worker_lease",
     "reclaim_worker_lease",

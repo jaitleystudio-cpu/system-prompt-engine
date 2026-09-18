@@ -1,0 +1,6 @@
+{
+  "idempotent": true,
+  "auto_dispatch": false,
+  "preserves_SENT_UNKNOWN_across_reclaim": true,
+  "new_owner_reconciles_same_effect_id": true
+}

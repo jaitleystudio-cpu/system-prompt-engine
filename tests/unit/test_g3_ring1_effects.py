@@ -219,7 +219,7 @@ def test_cancellation_does_not_erase_sent_unknown(tmp_path, clock):
             fencing_token=lease.fencing_token,
             effect_id="eff-5",
         )
-        cancel_mission(store, "m1")
+        cancel_mission(store, "m1", owner_id="A", fencing_token=lease.fencing_token)
         state = recover_mission(store, "m1")
         assert state.cancelled
         assert get_effect(store, "eff-5").state is EffectState.SENT_UNKNOWN

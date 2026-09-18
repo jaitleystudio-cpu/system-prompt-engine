@@ -1,0 +1,9 @@
+{
+  "pre_g3r_baseline": 714,
+  "post_g3r": {
+    "passed": 738,
+    "failed": 0,
+    "exit": 0
+  },
+  "delta": "+24 G3R adversarial/mutation tests (approx)"
+}

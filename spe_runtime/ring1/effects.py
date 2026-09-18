@@ -95,7 +95,17 @@ def create_effect_intent(
             (mission_id, idempotency_key),
         ).fetchone()
         if existing:
-            # Preserve key — do not mint a new logical effect
+            # Same logical effect: key must bind the same request digest.
+            if existing["request_digest"] != request_digest:
+                raise SpeTypedError(
+                    ErrorCode.G3_IDEMPOTENCY_CONFLICT,
+                    "idempotency key already bound to a different request_digest",
+                )
+            if existing["operation_kind"] != operation_kind:
+                raise SpeTypedError(
+                    ErrorCode.G3_IDEMPOTENCY_CONFLICT,
+                    "idempotency key already bound to a different operation_kind",
+                )
             return _row_to_effect(existing)
 
         conn.execute(

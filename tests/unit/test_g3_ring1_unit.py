@@ -184,7 +184,7 @@ def test_cancellation_durable(db_path, clock):
     with open_mission_store(db_path, clock=clock) as store:
         create_mission(store, "m1")
         lease = acquire_worker_lease(store, mission_id="m1", owner_id="A", ttl_ms=10_000)
-        cancel_mission(store, "m1")
+        cancel_mission(store, "m1", owner_id="A", fencing_token=lease.fencing_token)
         with pytest.raises(SpeTypedError) as ei:
             _commit(store, "m1", "A", lease.fencing_token)
         assert ei.value.code is ErrorCode.G3_MISSION_CANCELLED

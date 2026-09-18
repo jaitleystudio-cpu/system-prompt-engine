@@ -1,0 +1,9 @@
+{
+  "dispatch_order": "SENT_UNKNOWN durable before apply",
+  "request_escaped_while_NOT_SENT": false,
+  "timeout": "SENT_UNKNOWN",
+  "applied_lost_response": "SENT_UNKNOWN \u2192 reconcile \u2192 KNOWN_SUCCESS count=1",
+  "response_crash_before_success": "SENT_UNKNOWN",
+  "unreconcilable": "SENT_UNKNOWN retained",
+  "exactly_once_universal": false
+}

@@ -1,0 +1,8 @@
+{
+  "reclaim_race_iterations": 30,
+  "double_winners": 0,
+  "fence_race_stale_commits": 0,
+  "cas_race": "PASS",
+  "heartbeat_reclaim": "PASS",
+  "orchestration": "multiprocessing.Barrier (not sleep-only)"
+}

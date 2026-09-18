@@ -258,8 +258,27 @@ def _assert_mission_active(conn: sqlite3.Connection, mission_id: str) -> None:
         raise SpeTypedError(ErrorCode.G3_MISSION_CANCELLED, "mission cancelled/stopped")
 
 
-def cancel_mission(store: Ring1Store, mission_id: str) -> None:
+def cancel_mission(
+    store: Ring1Store,
+    mission_id: str,
+    *,
+    owner_id: str,
+    fencing_token: int,
+) -> None:
+    """Cancel mission under current worker ownership (fence required).
+
+    Stale workers after reclaim cannot cancel. Cancellation does not erase
+    SENT_UNKNOWN effect uncertainty.
+    """
+
     def _tx(conn: sqlite3.Connection) -> None:
+        assert_fence_owner(
+            conn,
+            mission_id=mission_id,
+            owner_id=owner_id,
+            fencing_token=fencing_token,
+            now_ms=store.clock.now_ms(),
+        )
         cur = conn.execute(
             "UPDATE missions SET cancelled = 1, stop_requested = 1 WHERE mission_id = ?",
             (mission_id,),
@@ -270,7 +289,9 @@ def cancel_mission(store: Ring1Store, mission_id: str) -> None:
             conn,
             mission_id=mission_id,
             event_kind="MISSION_CANCELLED",
+            fencing_token=int(fencing_token),
             content_digest=f"cancel:{mission_id}",
+            payload={"owner_id": owner_id, "fencing_token": int(fencing_token)},
         )
 
     store.transactional(_tx)

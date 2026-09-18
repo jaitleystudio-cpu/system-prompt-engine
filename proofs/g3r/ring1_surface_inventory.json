@@ -1,0 +1,15 @@
+{
+  "package": "spe_runtime/ring1",
+  "modules": {
+    "store.py": "Ring1Store, open/create APIs, BEGIN IMMEDIATE, PRAGMAs",
+    "schema.py": "schema v1 + journal append-only triggers",
+    "lease.py": "acquire/reclaim/heartbeat/cancel + assert_fence_owner",
+    "commit.py": "commit_durable_semantic_transaction CAS+fence",
+    "effects.py": "effect FSM + dispatch pre-SENT_UNKNOWN + reconcile",
+    "recovery.py": "recover_mission inspect-only",
+    "failpoints.py": "SIGKILL injection",
+    "testing.py": "FakeDestination",
+    "clock.py": "injectable clock",
+    "models.py": "WorkerLeaseView etc."
+  }
+}

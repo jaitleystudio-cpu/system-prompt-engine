@@ -1,0 +1,7 @@
+{
+  "path": "formal/SPELeaseCommit.tla",
+  "expected_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "actual_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "match": true,
+  "changed": false
+}

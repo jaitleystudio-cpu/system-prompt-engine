@@ -1,0 +1,11 @@
+{
+  "kill_mechanism": "SIGKILL via failpoint",
+  "physical_power_loss": "NOT TESTED",
+  "machine_reboot": "NOT TESTED",
+  "cases": {
+    "C1-C7_pre_commit": "PASS rollback",
+    "C8_post_commit": "PASS persist",
+    "C10_applied_lost_reply": "PASS SENT_UNKNOWN",
+    "C11_response_before_success_durability": "PASS SENT_UNKNOWN (G3R replay)"
+  }
+}
