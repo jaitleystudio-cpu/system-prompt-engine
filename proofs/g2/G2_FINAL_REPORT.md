@@ -6,8 +6,8 @@ G2_MODEL_CHECK_PASS
 ## SOURCE CUSTODY
 G1R-V HEAD: `8e8b028ab399a9194e7dc54f71ae006ed938d491`
 G2 branch: `cursor/g2-tla-tlc-modelcheck-0d6e`
-G2 HEAD: _(see git after commit; pinned in source_identity.json / manifest)_
-PR: _(opened by agent)_
+G2 HEAD: `c55cb2c20dea66b4bec3e4ec9295bd69b0efab5e`
+PR: draft (this branch)
 PR #6: OPEN @ 4e6c694 — **UNTOUCHED**
 Working contract SHA: `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3`
 G1 status: **BOUND_AND_PASS** (custody WORKING_CONTRACT_BOUND; qualification VERIFIED_WITHIN_SCOPE)

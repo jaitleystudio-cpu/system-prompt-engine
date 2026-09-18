@@ -12,7 +12,9 @@
   "g1_custody": "WORKING_CONTRACT_BOUND",
   "g1_qualification": "VERIFIED_WITHIN_SCOPE",
   "working_contract_path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
-  "pr6": "OPEN @ 4e6c694 — UNTOUCHED",
+  "pr6": "OPEN @ 4e6c694 \u2014 UNTOUCHED",
   "historical_181_69_source": "UNAVAILABLE",
-  "custody_upgrade": "NONE — DO NOT UPGRADE"
+  "custody_upgrade": "NONE \u2014 DO NOT UPGRADE",
+  "g2_head": "c55cb2c20dea66b4bec3e4ec9295bd69b0efab5e",
+  "g2_evidence_commit": "c55cb2c20dea66b4bec3e4ec9295bd69b0efab5e"
 }
