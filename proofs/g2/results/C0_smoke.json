@@ -1,0 +1,19 @@
+{
+  "config_id": "C0_smoke",
+  "module": "SPELeaseCommit",
+  "cfg_path": "formal/cfg/C0_smoke.cfg",
+  "command_file": "proofs/g2/commands/C0_smoke.sh",
+  "log_path": "proofs/g2/logs/C0_smoke.log",
+  "workers": 4,
+  "heap": "3559m",
+  "elapsed_sec": 0.406,
+  "exit_code": 0,
+  "states_generated": 91,
+  "distinct_states": 28,
+  "search_depth": 5,
+  "fingerprint_collision_probability_optimistic": "9.6E-17",
+  "counterexample": "NO",
+  "deadlock": "NO",
+  "no_error_text": true,
+  "status": "PASS"
+}

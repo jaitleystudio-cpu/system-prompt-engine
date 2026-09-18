@@ -1,0 +1,19 @@
+{
+  "config_id": "C3_multiple_leases",
+  "module": "SPELeaseCommit",
+  "cfg_path": "formal/cfg/C3_multiple_leases.cfg",
+  "command_file": "proofs/g2/commands/C3_multiple_leases.sh",
+  "log_path": "proofs/g2/logs/C3_multiple_leases.log",
+  "workers": 4,
+  "heap": "3559m",
+  "elapsed_sec": 1.228,
+  "exit_code": 0,
+  "states_generated": 37681,
+  "distinct_states": 6113,
+  "search_depth": 9,
+  "fingerprint_collision_probability_optimistic": "1.0E-11",
+  "counterexample": "NO",
+  "deadlock": "NO",
+  "no_error_text": true,
+  "status": "PASS"
+}
