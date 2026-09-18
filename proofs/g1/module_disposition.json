@@ -1,7 +1,7 @@
 {
   "gate": "G1R-8R",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 88,
+  "module_count": 110,
   "counts": {
     "RETAIN": 88,
     "RETIRE": 4,
@@ -523,6 +523,72 @@
       "disposition": "RETAIN",
       "normative_owner": "K1",
       "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/ring1/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
+    },
+    {
+      "path": "spe_runtime/ring1/clock.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
+    },
+    {
+      "path": "spe_runtime/ring1/commit.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
+    },
+    {
+      "path": "spe_runtime/ring1/effects.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
+    },
+    {
+      "path": "spe_runtime/ring1/failpoints.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
+    },
+    {
+      "path": "spe_runtime/ring1/lease.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
+    },
+    {
+      "path": "spe_runtime/ring1/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
+    },
+    {
+      "path": "spe_runtime/ring1/recovery.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
+    },
+    {
+      "path": "spe_runtime/ring1/schema.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
+    },
+    {
+      "path": "spe_runtime/ring1/store.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
+    },
+    {
+      "path": "spe_runtime/ring1/testing.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G3 Ring-1 durable execution substrate (WorkerExecutionLease \u2260 K2 SemanticProofLease)"
     },
     {
       "path": "spe_runtime/spec_binding.py",

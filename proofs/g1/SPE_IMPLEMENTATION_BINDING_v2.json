@@ -4,7 +4,7 @@
   "status": "BOUND_AND_PASS",
   "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_PASS_EXTERNAL; G1R8R_RECHECK_PASS; G1R9_PASS_EXTERNAL; G1R9R_RECHECK_PASS; G1R-V FINAL_REPLAY_PASS; G1 BOUND_AND_PASS (WORKING_CONTRACT_BOUND)",
   "normative_spec": {
-    "version": "SPE Ω v2.4.1",
+    "version": "SPE \u03a9 v2.4.1",
     "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
     "present_in_tree": true,
     "path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
@@ -94,8 +94,8 @@
     "g1r7r_passed": 26
   },
   "module_binding": {
-    "module_count": 99,
-    "retain": 94,
+    "module_count": 110,
+    "retain": 105,
     "wrap": 1,
     "migrate": 0,
     "replace": 0,
@@ -117,7 +117,7 @@
     {
       "id": "G1-B01",
       "status": "ACCEPTED_SCOPED_LIMITATION",
-      "description": "WORKING_CONTRACT_BOUND; 181/69 UNAVAILABLE — not claimed recovered."
+      "description": "WORKING_CONTRACT_BOUND; 181/69 UNAVAILABLE \u2014 not claimed recovered."
     },
     {
       "id": "G1-B02",
@@ -166,7 +166,7 @@
     "prompt_content_digest_note": "prompt_content_digest != spe_artifact_identity"
   },
   "captured_at_utc": "2026-09-18T16:33:31Z",
-  "language_migration_decision": "NO MIGRATION DECISION — NO PERFORMANCE EVIDENCE YET",
+  "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET",
   "g1r6r": {
     "task": "INDEPENDENT_PROMPTARTIFACT_RECHECK",
     "verdict": "G1R6_RECHECK_PASS",
@@ -240,6 +240,6 @@
     "verdict": "G1_FINAL_REPLAY_PASS",
     "status": "BOUND_AND_PASS",
     "custody": "WORKING_CONTRACT_BOUND",
-    "next": "G2 TLA+/TLC — NOT EXECUTED"
+    "next": "G2 TLA+/TLC \u2014 NOT EXECUTED"
   }
 }

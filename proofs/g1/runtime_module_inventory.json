@@ -1,7 +1,7 @@
 {
   "gate": "G1R-9",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 99,
+  "module_count": 110,
   "modules": [
     {
       "path": "spe_runtime/__init__.py"
@@ -260,6 +260,39 @@
     },
     {
       "path": "spe_runtime/requirements/models.py"
+    },
+    {
+      "path": "spe_runtime/ring1/__init__.py"
+    },
+    {
+      "path": "spe_runtime/ring1/clock.py"
+    },
+    {
+      "path": "spe_runtime/ring1/commit.py"
+    },
+    {
+      "path": "spe_runtime/ring1/effects.py"
+    },
+    {
+      "path": "spe_runtime/ring1/failpoints.py"
+    },
+    {
+      "path": "spe_runtime/ring1/lease.py"
+    },
+    {
+      "path": "spe_runtime/ring1/models.py"
+    },
+    {
+      "path": "spe_runtime/ring1/recovery.py"
+    },
+    {
+      "path": "spe_runtime/ring1/schema.py"
+    },
+    {
+      "path": "spe_runtime/ring1/store.py"
+    },
+    {
+      "path": "spe_runtime/ring1/testing.py"
     },
     {
       "path": "spe_runtime/spec_binding.py"
