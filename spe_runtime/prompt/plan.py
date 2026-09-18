@@ -9,7 +9,7 @@ from typing import Any
 from spe_runtime.contract.protected import ContractValidity, ProtectedIntentContract
 from spe_runtime.error_registry import ErrorCode, SpeTypedError
 from spe_runtime.proof.types import content_digest
-from spe_runtime.prompt.hints import PlanningHints
+from spe_runtime.prompt.hints import PlanningHints, constrain_hints_to_contract
 from spe_runtime.requirements.models import RequirementKind
 
 
@@ -112,6 +112,7 @@ def build_cognitive_plan(
             ErrorCode.K3_STRATEGY_INVALID_INPUT,
             "hints must be PlanningHints or None",
         )
+    h = constrain_hints_to_contract(contract, h)
 
     kind, reasons = _select_kind(h)
     req_ids = tuple(sorted(contract.graph.nodes.keys()))

@@ -163,7 +163,7 @@ def build_prompt_artifact(
     proof, qualification, privacy permission, or .spe identity.
     """
     # Local imports avoid circular init; writers remain canonical sole owners.
-    from spe_runtime.prompt.hints import PlanningHints
+    from spe_runtime.prompt.hints import PlanningHints, constrain_hints_to_contract
     from spe_runtime.prompt.plan import CognitivePlan, build_cognitive_plan
     from spe_runtime.prompt.strategy import PromptStrategy, build_prompt_strategy
     from spe_runtime.prompt.techniques import TechniqueSelection, select_prompt_techniques
@@ -199,6 +199,7 @@ def build_prompt_artifact(
             "planning_hints must be PlanningHints or None",
         )
     # Context presence is a structured fact from this call — not invented intent.
+    # Untrusted context keys/values never become PlanningHints semantic flags.
     if context_blocks:
         hints = PlanningHints(
             needs_decomposition=hints.needs_decomposition,
@@ -213,6 +214,7 @@ def build_prompt_artifact(
             example_count=hints.example_count,
             complexity_class=hints.complexity_class,
         )
+    hints = constrain_hints_to_contract(contract, hints)
 
     plan: CognitivePlan = (
         cognitive_plan if cognitive_plan is not None else build_cognitive_plan(contract, hints)
