@@ -1,21 +1,21 @@
 {
-  "gate": "G1R-7R",
-  "verdict": "G1R7_RECHECK_PASS",
-  "promotion": "G1R-7 PASS_EXTERNAL",
-  "review_head": "a6b7e572b66632aab3837242983afec96672c148",
-  "implementation_head": "1dd587b50c672c7f364209fc875d2d2f7796992e",
-  "full_python": {
-    "collected": 533,
-    "passed": 530,
-    "failed": 3,
-    "skipped": 0
-  },
-  "g1r7": "27/27",
-  "g1r7r": "26/26",
   "expected_red": [
     "test_g1_no_unowned_required_ring0_responsibility",
     "test_g1_artifact_lineage_owner_unique",
     "test_g1_qualification_owner_unique"
   ],
+  "full_python": {
+    "collected": 533,
+    "failed": 3,
+    "passed": 530,
+    "skipped": 0
+  },
+  "g1r7": "27/27",
+  "g1r7r": "26/26",
+  "gate": "G1R-7R",
+  "implementation_head": "1dd587b50c672c7f364209fc875d2d2f7796992e",
+  "promotion": "G1R-7 PASS_EXTERNAL",
+  "review_head": "98b85be87fbb68cb516d634a7ae9b2f0c36eff51",
+  "verdict": "G1R7_RECHECK_PASS",
   "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3"
 }

@@ -12,7 +12,7 @@ Finding F01 (strength-blind budget truncation) was real and was repaired during 
 |-------|-------|
 | Base | `931128b384c3055ecef876124f787e5b8e67651b` |
 | Implementation HEAD | `1dd587b50c672c7f364209fc875d2d2f7796992e` |
-| Review HEAD | `a6b7e572b66632aab3837242983afec96672c148` |
+| Review HEAD | `98b85be87fbb68cb516d634a7ae9b2f0c36eff51` |
 | Branch | `cursor/g1r7r-k3-strategy-recheck-0d6e` |
 | Working contract SHA | `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3` — MATCH |
 | PR #6 | OPEN @ `4e6c694b5d8b9379c5acfbaac416dcfa89b1768e` — undisturbed |
