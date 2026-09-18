@@ -1,7 +1,7 @@
 {
   "gate": "G1",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 78,
+  "module_count": 81,
   "modules": [
     {
       "path": "spe_runtime/__init__.py"
@@ -155,6 +155,15 @@
     },
     {
       "path": "spe_runtime/privacy/__init__.py"
+    },
+    {
+      "path": "spe_runtime/privacy/models.py"
+    },
+    {
+      "path": "spe_runtime/privacy/project.py"
+    },
+    {
+      "path": "spe_runtime/privacy/types.py"
     },
     {
       "path": "spe_runtime/proof/__init__.py"

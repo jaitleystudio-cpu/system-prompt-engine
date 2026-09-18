@@ -1,7 +1,7 @@
 {
   "gate": "G1R-4",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 78,
+  "module_count": 81,
   "counts": {
     "RETAIN": 71,
     "WRAP": 1,
@@ -312,9 +312,27 @@
     },
     {
       "path": "spe_runtime/privacy/__init__.py",
-      "disposition": "RETIRE",
+      "disposition": "RETAIN",
       "normative_owner": "K4",
-      "reason": "empty stub; future Ring-0 owner"
+      "reason": "G1R-5 privacy_projection canonical owner K4"
+    },
+    {
+      "path": "spe_runtime/privacy/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "G1R-5 privacy_projection canonical owner K4"
+    },
+    {
+      "path": "spe_runtime/privacy/project.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "G1R-5 privacy_projection canonical owner K4"
+    },
+    {
+      "path": "spe_runtime/privacy/types.py",
+      "disposition": "RETAIN",
+      "normative_owner": "K4",
+      "reason": "G1R-5 privacy_projection canonical owner K4"
     },
     {
       "path": "spe_runtime/proof/__init__.py",

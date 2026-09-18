@@ -1,5 +1,5 @@
 {
-  "gate": "G1R-4A",
+  "gate": "G1R-5",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "facts": [
     {
@@ -245,11 +245,16 @@
     {
       "semantic_fact": "privacy_projection",
       "canonical_owner": "K4",
-      "writer_modules": [],
-      "reader_modules": [],
+      "writer_modules": [
+        "spe_runtime/privacy/project.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/privacy/__init__.py",
+        "tests/unit/test_g1r5_k3_privacy_projection.py"
+      ],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "still unowned after G1R-4"
+      "notes": "G1R-5: sole canonical writer project_privacy in spe_runtime/privacy/project.py. Contract owner K4. Projection is read-model only; does not mint authority or mutate K0/K1."
     },
     {
       "semantic_fact": "spe_artifact_identity",
@@ -369,7 +374,6 @@
   ],
   "head_sha": "6b404e040e9fc8640439cbadda9b57505e6cbdcb",
   "unowned_facts": [
-    "privacy_projection",
     "spe_artifact_identity",
     "prompt_artifact",
     "qualification_evidence"

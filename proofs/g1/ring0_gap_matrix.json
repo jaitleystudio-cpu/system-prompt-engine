@@ -1,5 +1,5 @@
 {
-  "gate": "G1R-4",
+  "gate": "G1R-5",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "normative_spec": "SPE \u03a9 v2.4.1",
   "spec_present_in_tree": false,
@@ -377,14 +377,16 @@
       "requirement": "privacy projection",
       "owner": "K4",
       "implementation_modules": [
-        "spe_runtime/privacy/__init__.py"
+        "spe_runtime/privacy/project.py",
+        "spe_runtime/privacy/models.py",
+        "spe_runtime/privacy/types.py"
       ],
       "tests": [
-        "tests/portability/test_privacy_portability.py"
+        "tests/unit/test_g1r5_k3_privacy_projection.py"
       ],
-      "status": "MISSING",
-      "gap": "Empty package. Portability detects USER_PRIVATE drop only.",
-      "future_action": "NEW_IMPLEMENTATION"
+      "status": "IMPLEMENTED",
+      "gap": "",
+      "future_action": "NONE"
     },
     {
       "requirement": "egress decisions",
