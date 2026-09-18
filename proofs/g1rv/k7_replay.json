@@ -1,0 +1,28 @@
+{
+  "F01": "PASS_REJECTED",
+  "F02": "PASS_REJECTED",
+  "F03": "PASS",
+  "F04": "PASS_REJECTED",
+  "F05": "PASS_REJECTED",
+  "F06": "PASS",
+  "claim_WORLD_1": "UNQUALIFIABLE_UNDER_POLICY",
+  "claim_PRODUCTION_READY": "UNQUALIFIABLE_UNDER_POLICY",
+  "claim_FORMALLY_VERIFIED": "UNQUALIFIABLE_UNDER_POLICY",
+  "claim_SELF_CONTAINED_FULL_REPLAY": "UNQUALIFIABLE_UNDER_POLICY",
+  "final_g1_qualification": {
+    "earned_stage": "VERIFIED_WITHIN_SCOPE",
+    "verdict": "EARNED",
+    "qualification_id": "qual-9ca5d58c0bcec1a9195bab934c7792d8108fc61392ad4e4d0bf875cf585983eb",
+    "limitations": [
+      "independence_structurally_bound_not_cryptographically_authenticated"
+    ],
+    "scope": "G1 Python Ring-0 WORKING_CONTRACT_BOUND only",
+    "not_earned": [
+      "PRODUCTION_OBSERVED",
+      "INDEPENDENTLY_REPLICATED",
+      "WORLD_1",
+      "FORMALLY_VERIFIED"
+    ]
+  },
+  "all_f_pass": true
+}

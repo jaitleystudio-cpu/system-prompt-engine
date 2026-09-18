@@ -1,0 +1,19 @@
+{
+  "config_id": "C4_obligations_types",
+  "module": "SPELeaseCommit",
+  "cfg_path": "formal/cfg/C4_obligations_types.cfg",
+  "command_file": "proofs/g2/commands/C4_obligations_types.sh",
+  "log_path": "proofs/g2/logs/C4_obligations_types.log",
+  "workers": 4,
+  "heap": "3559m",
+  "elapsed_sec": 3.893,
+  "exit_code": 0,
+  "states_generated": 857546,
+  "distinct_states": 137505,
+  "search_depth": 9,
+  "fingerprint_collision_probability_optimistic": "5.4E-9",
+  "counterexample": "NO",
+  "deadlock": "NO",
+  "no_error_text": true,
+  "status": "PASS"
+}

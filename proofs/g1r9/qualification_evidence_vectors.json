@@ -1,0 +1,23 @@
+{
+  "canonical_builder": "record_qualification_evidence",
+  "id_format": "qe-<sha256>",
+  "kinds": [
+    "SPECIFICATION",
+    "IMPLEMENTATION_BINDING",
+    "TEST_RESULT",
+    "VERIFICATION_RECEIPT",
+    "EXTERNAL_REVIEW",
+    "USER_VALIDATION",
+    "PRODUCTION_OBSERVATION",
+    "INDEPENDENT_REPLICATION",
+    "SECURITY_REVIEW",
+    "FORMAL_MODEL_CHECK",
+    "BENCHMARK_RESULT"
+  ],
+  "independence": [
+    "INTERNAL",
+    "EXTERNAL",
+    "INDEPENDENT"
+  ],
+  "duplicate_boost": "UNCHANGED"
+}

@@ -1,0 +1,10 @@
+{
+  "earned_claim": "PORTABLE_SEMANTIC_BINDING_ARTIFACT",
+  "self_contained_full_replay": false,
+  "content_integrity": true,
+  "authenticity": false,
+  "signature": false,
+  "confidentiality": false,
+  "canonical_builder": "spe_runtime/storage/build.py::build_spe_artifact",
+  "result": "PASS_SCOPED"
+}

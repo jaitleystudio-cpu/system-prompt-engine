@@ -1,0 +1,12 @@
+{
+  "binds": [
+    "snapshot_id",
+    "snapshot_version",
+    "pid-",
+    "rg-"
+  ],
+  "build_time_digest_check": "K6_SNAPSHOT_BINDING_MISMATCH if snapshot digests disagree with contract",
+  "k6_mints_snap": false,
+  "mismatch_on_load_without_live_object": "ID mismatch if version/id field tampered; live object equality only at build time",
+  "snapshot_owner": "K2 make_snapshot"
+}

@@ -1,0 +1,9 @@
+{
+  "remote_ci": "REJECTED",
+  "qa": "REJECTED",
+  "preview": "REJECTED",
+  "staging": "REJECTED",
+  "production_label_alone": "REJECTED",
+  "production_with_custody": "ACCEPTED_WITH_LIMITATION",
+  "F04": "FIXED"
+}

@@ -1,0 +1,13 @@
+{
+  "weak_TEST_RESULT_only_policy": "K7_INVALID_POLICY",
+  "floors": {
+    "SPECIFIED": true,
+    "IMPLEMENTED": true,
+    "TESTED": true,
+    "VERIFIED_WITHIN_SCOPE": true,
+    "QUALIFIED": true,
+    "VALIDATED_WITH_USERS": true,
+    "PRODUCTION_OBSERVED": true,
+    "INDEPENDENTLY_REPLICATED": true
+  }
+}

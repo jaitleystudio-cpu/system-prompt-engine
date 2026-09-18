@@ -1,0 +1,48 @@
+{
+  "policies": [
+    "default_ring0",
+    "subsystem_pass_external"
+  ],
+  "policy_writer": "spe_runtime/qualification/policy.py",
+  "unsupported_claim_keys": [
+    "10_OUT_OF_10",
+    "BEST_PROMPT_ENGINE",
+    "BULLETPROOF",
+    "FORMALLY_VERIFIED",
+    "GLOBAL_LEADER",
+    "PRODUCTION_READY",
+    "SECURE_UNHACKABLE",
+    "SELF_CONTAINED_FULL_REPLAY",
+    "TEN_OUT_OF_TEN",
+    "TLC_PASS",
+    "UNBEATABLE",
+    "WORLD_1",
+    "WORLD_NUMBER_ONE"
+  ],
+  "obligations_per_stage": {
+    "SPECIFIED": [
+      "NEED_SPECIFICATION"
+    ],
+    "IMPLEMENTED": [
+      "NEED_IMPLEMENTATION_BINDING"
+    ],
+    "TESTED": [
+      "NEED_TEST_RESULT"
+    ],
+    "VERIFIED_WITHIN_SCOPE": [
+      "NEED_SCOPED_VERIFICATION"
+    ],
+    "QUALIFIED": [
+      "NEED_QUALIFICATION_REVIEW"
+    ],
+    "VALIDATED_WITH_USERS": [
+      "NEED_USER_VALIDATION"
+    ],
+    "PRODUCTION_OBSERVED": [
+      "NEED_PRODUCTION_OBSERVATION"
+    ],
+    "INDEPENDENTLY_REPLICATED": [
+      "NEED_INDEPENDENT_REPLICATION"
+    ]
+  }
+}

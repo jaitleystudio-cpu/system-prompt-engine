@@ -1,0 +1,19 @@
+{
+  "HISTORICAL_BRANCH_TEST_COUNT": 443,
+  "G1_MAIN_TEST_COUNT": 413,
+  "DELTA": -30,
+  "classification": "PR6_ONLY_WEB_PWA_TESTS",
+  "evidence": {
+    "sprint6_proof_summary.json": "full_pytest=443 passed; web_pytest=30 passed",
+    "pr6_added_files": [
+      "tests/web/test_web_architecture_gates.py",
+      "tests/web/test_web_cost_and_scope.py",
+      "tests/web/test_web_engine_path.py",
+      "tests/web/test_web_privacy_pwa.py",
+      "tests/web/test_web_pwa_scaffold.py"
+    ],
+    "pr6_web_test_def_count": 30,
+    "main_test_files_unchanged": true,
+    "not_a_regression": true
+  }
+}

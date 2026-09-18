@@ -1,0 +1,40 @@
+7edd0d5 (HEAD -> cursor/g1rv-final-binding-replay-0d6e, origin/cursor/g1r9r-k7-qualification-recheck-0d6e, cursor/g1r9r-k7-qualification-recheck-0d6e) docs(g1r9r): pin evidence review HEAD to promotion commit
+8fa1bda docs(g1r9r): evidence pack + G1R-9 PASS_EXTERNAL promotion
+c88703a fix(g1r9r): harden K7 against policy/independence/reuse/production laundering
+8766bfd (origin/cursor/g1r9-k7-qualification-0d6e, cursor/g1r9-k7-qualification-0d6e) docs(g1r9): pin evidence HEAD to tip
+7d618aa docs(g1r9): evidence pack + binding sync; IMPLEMENTATION_PRESENT / REVIEW_PENDING
+16ceff3 feat(g1r9): K7 ClaimQualification + QualificationEvidence
+5100c76 (origin/cursor/g1r8r-k6-artifact-recheck-0d6e, cursor/g1r8r-k6-artifact-recheck-0d6e) docs(g1r8r): evidence pack + G1R-8 PASS_EXTERNAL promotion
+682cc55 fix(g1r8r): reject digest↔payload mismatch; honest binding claim scope
+10de55e (origin/cursor/g1r8-k6-spe-artifact-0d6e, cursor/g1r8-k6-spe-artifact-0d6e) docs(g1r8): pin evidence HEAD to tip
+d75b5cb docs(g1r8): evidence pack + inventory sync; G1R8_PASS pending external
+ec5bb71 feat(g1r8): K6 SpeArtifact identity, snapshot binding, lineage
+45cf495 (origin/cursor/g1r7r-k3-strategy-recheck-0d6e, cursor/g1r7r-k3-strategy-recheck-0d6e) docs(g1r7r): pin evidence review HEAD to promotion commit
+98b85be docs(g1r7r): evidence pack + G1R-7 PASS_EXTERNAL promotion
+a6b7e57 fix(g1r7r): strength-aware technique budget + PlanningHints trust
+0531105 (origin/cursor/g1r7-k3-strategy-0d6e, cursor/g1r7-k3-strategy-0d6e) docs(g1r7): add G1R7_REPORT.md
+7da9404 docs(g1r7): authoritative K3 strategy evidence pack
+1dd587b feat(g1r7): K3 CognitivePlan + PromptStrategy + TechniqueSelection
+2d64dad (origin/cursor/g1r6r-prompt-recheck-0d6e, cursor/g1r6r-prompt-recheck-0d6e) docs(g1r6r): independent PromptArtifact recheck PASS_EXTERNAL
+5ebe61e fix(g1r6r): harden PromptArtifact recheck + K3 incompleteness gate
+3e64172 (origin/cursor/g1r6-k3-prompt-artifact-0d6e, cursor/g1r6-k3-prompt-artifact-0d6e) docs(g1r6): authoritative evidence pack; G1R-5 PASS retained
+ce279b3 feat(g1r6): own prompt_artifact under K3 with PromptArtifact
+f3a7302 (origin/cursor/g1r5-k3-privacy-projection-0d6e, cursor/g1r5-k3-privacy-projection-0d6e) fix(g1r5): align consistency tests with external G1R5_PASS
+66f8a02 docs(g1r5): record external G1R5_PASS in synchronized evidence
+08187ec docs(g1r5f): split implementation suite 435 from G1R-5E 4/4 evidence
+9533ff3 chore: remove ChatGPT review-pack markdown files
+25c9472 docs(g1r5e): close evidence sync — no PENDING_SUITE; consistency tests
+ebd950b docs(g1r5): authoritative evidence pack; G1R-4 PASS retained
+ce0d9f7 feat(g1r5): own privacy_projection under K4 with project_privacy
+9302db4 (origin/cursor/g1r4a-proof-integrity-0d6e, cursor/g1r4a-proof-integrity-0d6e) docs(g1r4a): exact-patch evidence pack with non-self-ref identity
+6b404e0 fix(g1r4a): require exact patch_id binding; reject None replay
+7cdeb16 docs(g1r4a): set evidence_commit to branch tip
+1bfba82 docs(g1r4a): fix review pack identity fields after shell expansion glitch
+6b16290 docs(g1r4a): pin evidence commit SHA on synchronized artifacts
+3f97129 docs(g1r4a): sync binding, report, and authoritative test manifest
+08abdb5 fix(g1r4a): bind receipt issuance; reject forged PASS at commit
+9d04404 (origin/cursor/g1r4-k2-proof-tx-0d6e, cursor/g1r4-k2-proof-tx-0d6e) docs(g1r4): add ChatGPT review pack for one-tap raw copy
+07391e3 feat(g1r4): recreate G1R-1..G1R-4 and land K2 proof transactions
+26988da feat(g1r4): implement K2 proof transaction minimum foundation
+3f0847d (origin/cursor/g1r3-k0-k1-foundation-73a4, cursor/g1r3-k0-k1-foundation-73a4) feat(g1r3): implement K0/K1 provenance, protected intent, and conflicts
+77f1c3c chore(g1): track remaining G1 proof inputs for binding tests

@@ -1,0 +1,5 @@
+{
+  "frozen_slots": true,
+  "nested_mapping_proxy": true,
+  "raw_dataclass_without_validate": "RAW_DATA_OBJECT \u2014 not canonical until validate_spe_artifact"
+}
