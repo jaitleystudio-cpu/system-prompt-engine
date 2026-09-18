@@ -16,5 +16,6 @@
   "working_contract_sha256_expected": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
   "pr6": "OPEN @ 4e6c694 \u2014 UNTOUCHED",
   "historical_181_69": "UNAVAILABLE",
-  "g3_head": "798927d87d77ba2870d908a166e8c8e976f353fd"
+  "g3_head": "5da46868014aa7913a678fe4e9310f2cb9209548",
+  "g3_implementation_commit": "798927d"
 }
