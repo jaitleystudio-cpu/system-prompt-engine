@@ -2,9 +2,13 @@
 
 ## FINAL VERDICT
 
-**G1R7_PASS** (implementation complete; external review pending for formal PASS_EXTERNAL)
+**G1R7_IMPLEMENTATION_PRESENT / REVIEW_PENDING** (corrected custody)
 
-Self-claim for binding: `G1R7_IMPLEMENTATION_PRESENT` / `G1R7_REVIEW_PENDING` until external promotion.
+> Custody correction: an earlier draft of this report incorrectly printed `G1R7_PASS`
+> as FINAL VERDICT while the claim boundary said REVIEW_PENDING. Those cannot both
+> be authoritative. Until G1R-7R completed, the authoritative state was
+> `IMPLEMENTATION_PRESENT / REVIEW_PENDING`. See `proofs/g1r7r/G1R7R_REPORT.md`
+> for independent recheck and `PASS_EXTERNAL` promotion.
 
 ## SOURCE IDENTITY
 

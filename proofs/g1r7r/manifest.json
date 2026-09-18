@@ -1,0 +1,32 @@
+{
+  "files": [
+    "G1R7R_REPORT.md",
+    "changed_file_audit.txt",
+    "determinism.json",
+    "domain_separation.json",
+    "false_positive_vectors.json",
+    "plan_vectors.json",
+    "planning_hints_audit.json",
+    "promptartifact_regression.json",
+    "source_identity.json",
+    "source_scope.json",
+    "technique_minimality.json",
+    "technique_priority.json",
+    "test_results.json",
+    "working_contract_integrity.json",
+    "writer_audit.json",
+    "green/authoritative_suite.txt",
+    "green/g1r7r_junit.xml"
+  ],
+  "full_python": {
+    "collected": 533,
+    "failed": 3,
+    "passed": 530
+  },
+  "gate": "G1R-7R",
+  "implementation_head": "1dd587b50c672c7f364209fc875d2d2f7796992e",
+  "promotion": "G1R-7 PASS_EXTERNAL",
+  "review_head": "a6b7e572b66632aab3837242983afec96672c148",
+  "verdict": "G1R7_RECHECK_PASS",
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3"
+}

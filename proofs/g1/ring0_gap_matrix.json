@@ -1,7 +1,7 @@
 {
-  "gate": "G1R-7",
+  "gate": "G1R-7R",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "normative_spec": "SPE Ω v2.4.1",
+  "normative_spec": "SPE \u03a9 v2.4.1",
   "spec_present_in_tree": false,
   "requirements": [
     {
@@ -134,7 +134,7 @@
         "tests/integration/test_xcat_c02_c06_c01_c03.py"
       ],
       "status": "PARTIAL",
-      "gap": "facts≈claims without claim qualification.",
+      "gap": "facts\u2248claims without claim qualification.",
       "future_action": "WRAP"
     },
     {
@@ -347,7 +347,7 @@
         "tests/integration/test_xcat_c02_c06_c01_c03.py"
       ],
       "status": "IMPLEMENTED",
-      "gap": "Present as Decide, not as Ω prompt kernel.",
+      "gap": "Present as Decide, not as \u03a9 prompt kernel.",
       "future_action": "WRAP"
     },
     {

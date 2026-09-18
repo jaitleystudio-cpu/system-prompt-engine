@@ -1,0 +1,26 @@
+{
+  "budget_truncated": true,
+  "deferred": [
+    "ROLE_PERSONA",
+    "STEP_BACK",
+    "ZERO_SHOT"
+  ],
+  "kept": [
+    {
+      "strength": "MUST",
+      "technique": "RETRIEVE_REASON"
+    },
+    {
+      "strength": "MUST",
+      "technique": "STRUCTURED_OUTPUT"
+    },
+    {
+      "strength": "SHOULD",
+      "technique": "CRITIQUE_REVISE"
+    }
+  ],
+  "must_retrieve_kept": true,
+  "must_structured_kept": true,
+  "pass": true,
+  "preference_role_deferred": true
+}

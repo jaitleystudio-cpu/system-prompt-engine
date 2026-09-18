@@ -1,5 +1,5 @@
 {
-  "gate": "G1R-7",
+  "gate": "G1R-7R",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
   "facts": [
     {
@@ -29,7 +29,7 @@
       ],
       "duplicate_writer": false,
       "resolution_required": false,
-      "notes": "models.py is the typed AuthorityGrant value object; consume.py uniquely writes uses_consumed. External AuthorityGrant construction is the intentional external-authority injection surface (C07 never mints grants). It is NOT a HIDDEN_AMBIENT_AUTHORITY_PATH — ambient paths are privilege elevation without a typed grant/event (closed in G1R-2: replace_envelope authority fields, X09). Formal: ambient_authority_paths=0 counts hidden elevation, not the public grant dataclass."
+      "notes": "models.py is the typed AuthorityGrant value object; consume.py uniquely writes uses_consumed. External AuthorityGrant construction is the intentional external-authority injection surface (C07 never mints grants). It is NOT a HIDDEN_AMBIENT_AUTHORITY_PATH \u2014 ambient paths are privilege elevation without a typed grant/event (closed in G1R-2: replace_envelope authority fields, X09). Formal: ambient_authority_paths=0 counts hidden elevation, not the public grant dataclass."
     },
     {
       "semantic_fact": "grant_compatibility",
