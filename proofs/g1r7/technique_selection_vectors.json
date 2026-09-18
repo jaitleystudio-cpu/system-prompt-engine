@@ -1,0 +1,45 @@
+[
+  {
+    "name": "simple",
+    "techniques": [
+      "ZERO_SHOT"
+    ],
+    "notes": [],
+    "budget_truncated": false,
+    "deferred": []
+  },
+  {
+    "name": "research",
+    "techniques": [
+      "RETRIEVE_REASON",
+      "STRUCTURED_OUTPUT",
+      "STEP_BACK"
+    ],
+    "notes": [
+      "BUDGET_TRUNCATED_MAX_3"
+    ],
+    "budget_truncated": true,
+    "deferred": [
+      "ZERO_SHOT"
+    ]
+  },
+  {
+    "name": "writing",
+    "techniques": [
+      "CONTEXTUAL",
+      "ZERO_SHOT"
+    ],
+    "notes": [],
+    "budget_truncated": false,
+    "deferred": []
+  },
+  {
+    "name": "few_shot",
+    "techniques": [
+      "FEW_SHOT"
+    ],
+    "notes": [],
+    "budget_truncated": false,
+    "deferred": []
+  }
+]

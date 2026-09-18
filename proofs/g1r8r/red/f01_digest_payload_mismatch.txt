@@ -1,0 +1,3 @@
+BEFORE repair: loads_spe accepted tampered protected_intent_payload values
+while keeping old pid-/rg- digests and recomputing artifact_id to match the
+inconsistent envelope. AFTER: K6_INVALID_ARTIFACT (digest↔payload mismatch).

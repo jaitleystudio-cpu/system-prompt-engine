@@ -1,0 +1,11 @@
+Changed since G1R-8 tip 10de55ea3d8649ab701f185d6492ac73402b9711:
+SPE_IMPLEMENTATION_BINDING_v2.json
+proofs/g1/SPE_IMPLEMENTATION_BINDING_v2.json
+proofs/g1/module_disposition.json
+proofs/g1/runtime_module_inventory.json
+spe_runtime/storage/__init__.py
+spe_runtime/storage/build.py
+spe_runtime/storage/models.py
+spe_runtime/storage/reconstruct.py
+spe_runtime/storage/validate.py
+tests/unit/test_g1r8r_k6_artifact_recheck.py

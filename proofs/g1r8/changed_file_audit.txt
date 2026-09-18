@@ -1,0 +1,25 @@
+Changed for G1R-8 (committed + pending):
+proofs/g1/module_disposition.json
+proofs/g1/ring0_gap_matrix.json
+proofs/g1/semantic_writer_map.json
+proofs/g1r8/git_status_before.txt
+proofs/g1r8/head_before.txt
+proofs/g1r8/k6_existing_surface.json
+proofs/g1r8/red/g1_gates_before.txt
+proofs/g1r8/red/no_spe_artifact_api.txt
+proofs/g1r8/working_contract_integrity.json
+spe_runtime/error_registry.py
+spe_runtime/storage/__init__.py
+spe_runtime/storage/build.py
+spe_runtime/storage/models.py
+spe_runtime/storage/serialize.py
+spe_runtime/storage/validate.py
+tests/unit/test_g1r8_k6_spe_artifact.py
+
+WIP:
+M SPE_IMPLEMENTATION_BINDING_v2.json
+ M proofs/g1/SPE_IMPLEMENTATION_BINDING_v2.json
+ M proofs/g1/runtime_module_inventory.json
+ M tests/unit/test_g1r7_k3_strategy.py
+ M tests/unit/test_g1r7r_k3_strategy_recheck.py
+?? proofs/g1r8/green/

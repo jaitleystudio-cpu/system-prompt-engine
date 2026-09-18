@@ -1,0 +1,11 @@
+{
+  "K7_to_K0_mutation": false,
+  "K7_to_K1_mutation": false,
+  "K7_to_K2_proof": false,
+  "K7_to_K3_prompt_mutation": false,
+  "K7_to_K4_authority": false,
+  "K7_to_K6_artifact_identity": false,
+  "K7_to_network_authority": false,
+  "K7_to_execution_authority": false,
+  "note": "K7 is epistemic claim state only"
+}

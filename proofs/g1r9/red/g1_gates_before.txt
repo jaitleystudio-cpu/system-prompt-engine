@@ -1,0 +1,15 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+E   AssertionError: K7 qualification evidence has no writer
+    assert []
+/workspace/tests/unit/test_g1_runtime_binding.py:189: AssertionError: K7 qualification evidence has no writer
+E   AssertionError: {'unowned_facts': ['qualification_evidence'], 'missing_requirements': ['claim qualification', 'qualification evidence']}
+    assert (['qualification_evidence'] == []
+      
+      Left contains one more item: 'qualification_evidence'
+      Use -v to get more diff)
+/workspace/tests/unit/test_g1_runtime_binding.py:122: AssertionError: {'unowned_facts': ['qualification_evidence'], 'missing_requirements': ['claim qualification', 'qualification evidence']}
+=========================== short test summary info ============================
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility
+2 failed in 0.01s

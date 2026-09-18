@@ -1,0 +1,8 @@
+{
+  "authority_level": "NON_AUTHORITATIVE_HINT",
+  "constrain_fn": "spe_runtime/prompt/hints.py::constrain_hints_to_contract",
+  "execution_prep_mints_authority": false,
+  "producer": "caller-supplied structured PlanningHints; has_context may be set by build_prompt_artifact when context_blocks present",
+  "retrieval_mints_network": false,
+  "untrusted_context_can_alter_protected_semantics": false
+}

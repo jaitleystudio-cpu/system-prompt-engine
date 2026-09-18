@@ -1,0 +1,13 @@
+{
+  "foundational_base": "931128b384c3055ecef876124f787e5b8e67651b",
+  "g1r9_implementation_head": "8766bfdc7a8907340b72d81e9c5d1bb82482ce51",
+  "g1r9r_reviewed_head": "7edd0d55568514767d0ce0f4d641658dd0520dcf",
+  "g1rv_replay_head": "7edd0d55568514767d0ce0f4d641658dd0520dcf",
+  "g1rv_tree": "4ab45a392387a72f31bab04665b878e4114a6f0a",
+  "branch": "cursor/g1rv-final-binding-replay-0d6e",
+  "exact_g1r9r_bytes": true,
+  "pr6_in_ancestry": false,
+  "g1rv_evidence_head": "c7004940e930e7b0d39e7094c269564b246f9f05",
+  "g1rv_evidence_tree": "c5caf0cabe1edb2bba6d7dc1ffb4061231d252b5",
+  "verdict": "G1_FINAL_REPLAY_PASS"
+}

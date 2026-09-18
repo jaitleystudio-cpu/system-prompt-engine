@@ -1,0 +1,33 @@
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded itoa v1.0.18
+  Downloaded serde_json v1.0.151
+  Downloaded quote v1.0.47
+  Downloaded zmij v1.0.23
+  Downloaded proc-macro2 v1.0.107
+  Downloaded unicode-ident v1.0.24
+  Downloaded serde_derive v1.0.229
+  Downloaded serde v1.0.229
+  Downloaded serde_core v1.0.229
+  Downloaded memchr v2.8.3
+  Downloaded syn v3.0.5
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling syn v3.0.5
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling serde_derive v1.0.229
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling spe-core-rs v0.1.0 (/opt/spe-g1-runtime-binding-v241/portable/spe-core-rs)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.64s
+     Running unittests src/lib.rs (portable/spe-core-rs/target/debug/deps/spe_core_rs-fce9ab3b14b6989b)
+     Running unittests src/bin/spe_core_eval.rs (portable/spe-core-rs/target/debug/deps/spe_core_eval-f00635404dee437c)
+     Running tests/abi_transport.rs (portable/spe-core-rs/target/debug/deps/abi_transport-4ae1b3034a6088f1)
+     Running tests/capability_contract.rs (portable/spe-core-rs/target/debug/deps/capability_contract-2ed262df0d391fee)
+     Running tests/negative_mutations.rs (portable/spe-core-rs/target/debug/deps/negative_mutations-d51f6f2acc87c42d)
+     Running tests/semantic_equivalence.rs (portable/spe-core-rs/target/debug/deps/semantic_equivalence-805768b98a13aa4e)
+   Doc-tests spe_core_rs
