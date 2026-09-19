@@ -97,5 +97,6 @@
     }
   ],
   "details_count": 115,
-  "environmental_only_pass": true
+  "environmental_only_pass": true,
+  "freeze_nuance": "Classify the prior 115 as environment/toolchain-prerequisite failures for the complete chain (missing wasm32-unknown-unknown → after install, secondary missing /usr/bin/node exposed → Node install → green). Do not permanently attribute the entire causal chain solely to the WASM target alone."
 }

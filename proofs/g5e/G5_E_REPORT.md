@@ -24,28 +24,25 @@ Preserved at:
 
 (of the preserved prior RED 115 — traceback/signature based, not filename alone)
 
-missing wasm32 target:
-115
+Prior RED signatures:
+missing wasm32 target: 115
+real assertion failures: 0
+other: 0
+unknown: 0
 
-real assertion failures:
-0
+Freeze nuance — complete environmental dependency chain (not sole permanent attribution to WASM target alone):
 
-other:
-0
+```
+missing wasm32-unknown-unknown
+        ↓  installed for ₹0
+secondary missing /usr/bin/node exposed
+        ↓  Node installed for ₹0
+120/120 targeted WASM tests PASS
+        ↓
+986/986 repository-wide tests PASS
+```
 
-unknown:
-0
-
-environmental_only_pass:
-YES
-
-After `rustup target add wasm32-unknown-unknown`, a residual environment layer appeared:
-
-FileNotFoundError: /usr/bin/node
-(harness runtime: node-webassembly)
-
-This was not present in the prior RED signatures (build failed before node invoke).
-Zero-cost unblock: `apt-get install -y nodejs` → `/usr/bin/node` present.
+Classification of the 115: environment/toolchain-prerequisite failures.
 
 ## TOOLCHAIN BEFORE
 

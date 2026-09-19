@@ -338,7 +338,7 @@ G5-E closed the remaining full-regression blocker (wasm32 target + residual Node
 
 ## EXACT EARNED CLAIM
 
-The zero-cost SPE core preserved the tested semantic, artifact-integrity, bounded-repair, offline, and fail-closed properties under the recorded local input, storage, process-crash, concurrency, and resource-fault scenarios, without mandatory network access, provider credentials, or paid API calls.
+The zero-cost SPE core preserved the tested semantic, artifact-integrity, offline, fail-closed, concurrency, and bounded-execution properties under the recorded local input, storage, process-crash, resource, network-loss, and corruption scenarios, with the complete repository regression passing after satisfying the recorded zero-cost local toolchain prerequisites.
 
 ## NEXT TASK
 
