@@ -147,7 +147,7 @@ export function ScrollStory({
               <li><i className="shape-open" />Dashed span · unresolved</li>
               <li><i className="shape-bend" />Angled seam · preference</li>
             </ul>
-          </div>
+          </header>
         </div>
       </section>
 
