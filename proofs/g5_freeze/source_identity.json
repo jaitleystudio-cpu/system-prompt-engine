@@ -1,0 +1,34 @@
+{
+  "forbidden_paths_absent": [
+    "spe_runtime/omega/"
+  ],
+  "g2_model_path": "formal/SPELeaseCommit.tla",
+  "g2_model_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "git_tag": "spe-v2.4.1-g5-qualified",
+  "pack": "G5-FREEZE",
+  "pr6": {
+    "head": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+    "must_remain": [
+      "UNTOUCHED",
+      "UNMERGED"
+    ],
+    "number": 6,
+    "state": "OPEN",
+    "status": "UNTOUCHED / UNMERGED"
+  },
+  "qualification_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "qualification_head_full": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "recorded_at_utc": "2026-09-19T05:58:40Z",
+  "working_contract_path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "zero_cost": {
+    "api_keys_required": 0,
+    "evidence": "proofs/g5zc/zero_cost_audit.json",
+    "external_spend_inr": 0,
+    "external_spend_usd": 0,
+    "live_provider_requests": 0,
+    "mandatory_network": 0,
+    "paid_provider_calls": 0,
+    "provider_requirement": "NONE"
+  }
+}
