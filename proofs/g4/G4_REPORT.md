@@ -11,7 +11,7 @@ G3R reviewed HEAD: `a021aed067541ef1e9b38b3be911595129e44cdf`
 G4 base HEAD: `a021aed067541ef1e9b38b3be911595129e44cdf`
 G4 HEAD: `8f062b8697b73dd3f2037d5f34034f15e94ff6e9`
 Branch: `cursor/g4-live-provider-conformance-0d6e`
-PR: (pending)
+PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/24
 PR #6: OPEN @ 4e6c694 — UNTOUCHED
 Working contract SHA: `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3`
 G2 model SHA: `15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562`
