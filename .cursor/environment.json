@@ -1,6 +1,6 @@
 {
   "name": "SPE Ω — G6-H blind evaluator",
-  "install": "test -f evaluations/g6zc/blind_evaluator.html\ntest -f evaluations/g6zc/blind_pairs.json\nchmod +x tools/g6h_serve.sh\npython3 -c \"import http.server; print('g6h-evaluator-ready')\"",
+  "install": "chmod +x tools/g6h_serve.sh 2>/dev/null || true\npython3 -c \"import http.server; print('http.server-ok')\"\nif [ -f evaluations/g6zc/blind_evaluator.html ] && [ -f evaluations/g6zc/blind_pairs.json ]; then\n  echo g6h-evaluator-ready\nelse\n  echo 'WARN: g6h evaluator not on this git ref yet — merge cursor/g6h-evaluator-env-0d6e'\nfi",
   "start": "python3 -m http.server 8765 --bind 0.0.0.0",
   "ports": [
     {
