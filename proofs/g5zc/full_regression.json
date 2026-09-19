@@ -1,0 +1,13 @@
+{
+  "scope": "tests/unit (portability/wasm excluded \u2014 env missing wasm32; same discipline as G4-ZC)",
+  "unit_collected": 653,
+  "unit_passed": 653,
+  "unit_failed": 0,
+  "unit_skipped": 0,
+  "unit_exit": 0,
+  "full_repo_pytest_note": "python -m pytest \u2192 868 passed, 115 failed (all wasm32-unknown-unknown missing target); not G5 regressions",
+  "full_repo_passed": 868,
+  "full_repo_failed": 115,
+  "denominator_change": "G4-ZC unit 606 \u2192 G5-ZC unit 653 (+47 G5 chaos/mutation tests)",
+  "exit_unit": 0
+}

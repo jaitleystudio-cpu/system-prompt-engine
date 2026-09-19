@@ -2,8 +2,9 @@
   "branch": "cursor/g5zc-local-chaos-0d6e",
   "g4zc_base_head": "c3450c4add1329eeaba28eadcaf36c1cdf94d57b",
   "g5_base_head": "c3450c4add1329eeaba28eadcaf36c1cdf94d57b",
-  "g5_head": "c3450c4add1329eeaba28eadcaf36c1cdf94d57b",
+  "g5_head": "314b5ad540f9c7293287305a23a7254a5ec10267",
   "gate": "G5-ZC",
-  "recorded_at_utc": "2026-09-19T04:27:06.394060+00:00",
-  "repository": "jaitleystudio-cpu/system-prompt-engine"
+  "recorded_at_utc": "2026-09-19T04:28:29.711254+00:00",
+  "repository": "jaitleystudio-cpu/system-prompt-engine",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/26"
 }
