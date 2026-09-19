@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPE G6-ZC Blind Prompt Evaluator (local)</title>
+  <style>
+    :root { --fg:#1a1a1a; --bg:#f7f5f0; --accent:#0b5; --focus:#06c; --muted:#555; --card:#fff; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: "IBM Plex Sans", "Segoe UI", sans-serif; background:var(--bg); color:var(--fg); line-height:1.45; }
+    header { padding:1rem 1.25rem; background:#111; color:#f5f5f5; }
+    header h1 { margin:0; font-size:1.15rem; font-weight:600; letter-spacing:0.02em; }
+    header p { margin:0.35rem 0 0; font-size:0.9rem; color:#bbb; }
+    main { max-width:1100px; margin:0 auto; padding:1rem 1.25rem 3rem; }
+    .bar { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin:1rem 0; }
+    label { font-size:0.85rem; color:var(--muted); }
+    input, select, button, textarea { font:inherit; }
+    input[type=text], select { padding:0.4rem 0.55rem; border:1px solid #bbb; border-radius:4px; background:#fff; }
+    button { padding:0.45rem 0.9rem; border:1px solid #222; background:#222; color:#fff; border-radius:4px; cursor:pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline:3px solid var(--focus); outline-offset:2px;
+    }
+    button.secondary { background:#fff; color:#111; }
+    button:disabled { opacity:0.45; cursor:not-allowed; }
+    .progress { flex:1; min-width:160px; height:0.55rem; background:#ddd; border-radius:99px; overflow:hidden; }
+    .progress > span { display:block; height:100%; background:var(--accent); width:0%; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    @media (max-width:800px) { .grid { grid-template-columns:1fr; } }
+    .pane { background:var(--card); border:1px solid #ccc; border-radius:6px; padding:0.85rem; min-height:220px; }
+    .pane h2 { margin:0 0 0.5rem; font-size:0.95rem; }
+    .pane pre { white-space:pre-wrap; word-break:break-word; font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:0.82rem; margin:0; max-height:340px; overflow:auto; }
+    .meta { font-size:0.85rem; color:var(--muted); margin-bottom:0.75rem; }
+    fieldset { border:1px solid #ccc; border-radius:6px; margin:1rem 0; padding:0.75rem 1rem; background:var(--card); }
+    legend { padding:0 0.35rem; font-weight:600; }
+    .dims { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:0.5rem 1rem; }
+    .dims label { display:flex; justify-content:space-between; gap:0.5rem; color:var(--fg); }
+    .pref { display:flex; flex-wrap:wrap; gap:1rem; align-items:center; }
+    .pref label { color:var(--fg); display:flex; gap:0.35rem; align-items:center; }
+    textarea { width:100%; min-height:70px; padding:0.5rem; border:1px solid #bbb; border-radius:4px; }
+    .status { font-size:0.9rem; margin-top:0.5rem; }
+    .warn { color:#8a4b00; background:#fff6e5; padding:0.6rem 0.8rem; border-radius:4px; border:1px solid #e6c88a; }
+    footer { font-size:0.8rem; color:var(--muted); margin-top:1.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>G6-ZC Blind Prompt Evaluator</h1>
+    <p>Local only · no telemetry · sides are unlabeled · load <code>blind_pairs.json</code></p>
+  </header>
+  <main>
+    <div class="warn" role="status">
+      Do not infer which side is SPE. Score independently. Export JSON when finished. Ratings are stored in this browser only until you download them.
+    </div>
+    <div class="bar">
+      <label for="file">Pairs JSON</label>
+      <input id="file" type="file" accept="application/json,.json" />
+      <button type="button" class="secondary" id="loadServer" title="Fetch blind_pairs.json from this server">Load server pairs</button>
+      <label for="evalId">Evaluator ID</label>
+      <input id="evalId" type="text" placeholder="e.g. E001" autocomplete="off" />
+      <div class="progress" aria-label="Progress"><span id="prog"></span></div>
+      <span id="progText" class="status">0 / 0</span>
+    </div>
+
+    <div class="meta" id="taskMeta">Load a pairs file to begin.</div>
+    <div class="grid">
+      <section class="pane" aria-labelledby="leftTitle">
+        <h2 id="leftTitle">LEFT</h2>
+        <pre id="leftText" tabindex="0"></pre>
+      </section>
+      <section class="pane" aria-labelledby="rightTitle">
+        <h2 id="rightTitle">RIGHT</h2>
+        <pre id="rightText" tabindex="0"></pre>
+      </section>
+    </div>
+
+    <fieldset>
+      <legend>Rubric scores (0–4)</legend>
+      <div class="dims" id="dims"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Preference</legend>
+      <div class="pref">
+        <label><input type="radio" name="pref" value="LEFT" /> Prefer LEFT</label>
+        <label><input type="radio" name="pref" value="RIGHT" /> Prefer RIGHT</label>
+        <label><input type="radio" name="pref" value="TIE" /> Tie</label>
+        <label for="conf">Confidence</label>
+        <select id="conf">
+          <option>LOW</option>
+          <option selected>MEDIUM</option>
+          <option>HIGH</option>
+        </select>
+      </div>
+      <label for="comment">Comment (optional)</label>
+      <textarea id="comment" maxlength="2000"></textarea>
+    </fieldset>
+
+    <div class="bar">
+      <button type="button" class="secondary" id="prev" disabled>Back</button>
+      <button type="button" id="saveNext">Save &amp; Next</button>
+      <button type="button" class="secondary" id="exportBtn">Download ratings JSON</button>
+    </div>
+    <p class="status" id="msg" role="status"></p>
+    <footer>
+      Keyboard: Tab moves focus; Back/Save buttons are reachable. No analytics. No cloud upload.
+    </footer>
+  </main>
+  <script>
+    const DIMS = [
+      ['V1_intent_fidelity','V1 Intent fidelity'],
+      ['V2_constraint_coverage','V2 Constraint coverage'],
+      ['V3_missing_requirement_handling','V3 Missing-requirement handling'],
+      ['V4_conflict_handling','V4 Conflict handling'],
+      ['V5_executability','V5 Executability'],
+      ['V6_output_clarity','V6 Output clarity'],
+      ['V7_verification_testability','V7 Verification/testability'],
+      ['V8_portability','V8 Portability'],
+      ['V9_unnecessary_complexity','V9 Unnecessary complexity (4=minimal)'],
+      ['V10_overall_usefulness','V10 Overall usefulness'],
+    ];
+    const dimsEl = document.getElementById('dims');
+    DIMS.forEach(([id, label]) => {
+      const lab = document.createElement('label');
+      lab.innerHTML = `<span>${label}</span>`;
+      const sel = document.createElement('select');
+      sel.id = id; sel.setAttribute('aria-label', label);
+      for (let i=0;i<=4;i++){ const o=document.createElement('option'); o.value=i; o.textContent=i; if(i===2)o.selected=true; sel.appendChild(o); }
+      lab.appendChild(sel); dimsEl.appendChild(lab);
+    });
+
+    let pairs = [];
+    let idx = 0;
+    const ratings = {};
+    const storageKey = 'g6zc_blind_ratings_v1';
+
+    function loadStored() {
+      try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { return {}; }
+    }
+    function saveStored() {
+      localStorage.setItem(storageKey, JSON.stringify(ratings));
+    }
+    Object.assign(ratings, loadStored());
+
+    function setMsg(t){ document.getElementById('msg').textContent = t; }
+
+    function applyPairsData(data, label) {
+      pairs = data.pairs || data;
+      if (!Array.isArray(pairs)) throw new Error('pairs must be an array');
+      idx = 0;
+      render();
+      setMsg(`Loaded ${pairs.length} pairs${label ? ' (' + label + ')' : ''}.`);
+    }
+
+    async function loadServerPairs() {
+      const candidates = [
+        'blind_pairs.json',
+        './blind_pairs.json',
+        '/evaluations/g6zc/blind_pairs.json',
+      ];
+      let lastErr = null;
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) throw new Error(url + ' HTTP ' + res.status);
+          const data = await res.json();
+          applyPairsData(data, url);
+          return;
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      setMsg('Could not load server pairs. Use file picker or serve from repo root. ' + (lastErr && lastErr.message ? lastErr.message : ''));
+    }
+
+    document.getElementById('loadServer').addEventListener('click', () => {
+      loadServerPairs();
+    });
+
+    document.getElementById('file').addEventListener('change', async (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      const text = await f.text();
+      const data = JSON.parse(text);
+      applyPairsData(data, f.name);
+    });
+
+    // When opened via http.server, auto-load same-origin pairs (mobile-friendly).
+    if (location.protocol === 'http:' || location.protocol === 'https:') {
+      loadServerPairs();
+    }
+
+    function currentScores() {
+      const scores = {};
+      DIMS.forEach(([id]) => { scores[id] = Number(document.getElementById(id).value); });
+      const pref = [...document.querySelectorAll('input[name=pref]')].find(x => x.checked);
+      return {
+        task_id: pairs[idx].task_id,
+        blinded_side_preference: pref ? pref.value : null,
+        rubric_scores: scores,
+        confidence: document.getElementById('conf').value,
+        comment: document.getElementById('comment').value.trim(),
+        evaluator_id: document.getElementById('evalId').value.trim() || 'anonymous',
+        timestamp_local: new Date().toISOString(),
+      };
+    }
+
+    function fillForm(r) {
+      if (!r) {
+        DIMS.forEach(([id]) => { document.getElementById(id).value = 2; });
+        document.querySelectorAll('input[name=pref]').forEach(x => x.checked = false);
+        document.getElementById('conf').value = 'MEDIUM';
+        document.getElementById('comment').value = '';
+        return;
+      }
+      DIMS.forEach(([id]) => { document.getElementById(id).value = r.rubric_scores?.[id] ?? 2; });
+      document.querySelectorAll('input[name=pref]').forEach(x => { x.checked = x.value === r.blinded_side_preference; });
+      document.getElementById('conf').value = r.confidence || 'MEDIUM';
+      document.getElementById('comment').value = r.comment || '';
+    }
+
+    function render() {
+      const n = pairs.length;
+      const pct = n ? ((idx) / n) * 100 : 0;
+      document.getElementById('prog').style.width = pct + '%';
+      document.getElementById('progText').textContent = n ? `${Math.min(idx+1,n)} / ${n}` : '0 / 0';
+      document.getElementById('prev').disabled = idx <= 0 || n === 0;
+      if (!n) return;
+      const p = pairs[idx];
+      document.getElementById('taskMeta').textContent = `Task ${p.task_id} · category ${p.category} · language ${p.language}`;
+      document.getElementById('leftText').textContent = p.left;
+      document.getElementById('rightText').textContent = p.right;
+      fillForm(ratings[p.task_id]);
+    }
+
+    document.getElementById('saveNext').addEventListener('click', () => {
+      if (!pairs.length) { setMsg('Load pairs first.'); return; }
+      const r = currentScores();
+      if (!r.blinded_side_preference) { setMsg('Select a preference (LEFT / RIGHT / TIE).'); return; }
+      if (!r.evaluator_id || r.evaluator_id === 'anonymous') {
+        // allow but warn
+        setMsg('Tip: set a stable evaluator ID for multi-rater analysis.');
+      }
+      ratings[r.task_id] = r;
+      saveStored();
+      if (idx < pairs.length - 1) { idx += 1; render(); setMsg('Saved.'); }
+      else { setMsg('Saved. End of list — download ratings JSON.'); }
+    });
+    document.getElementById('prev').addEventListener('click', () => {
+      if (idx > 0) { idx -= 1; render(); }
+    });
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const payload = {
+        schema: 'g6zc.human_ratings.v1',
+        evaluator_id: document.getElementById('evalId').value.trim() || 'anonymous',
+        n_ratings: Object.keys(ratings).length,
+        ratings: Object.values(ratings),
+        note: 'Blinded preferences are LEFT/RIGHT/TIE. Mapping to SPE/RAW is offline after evaluation.',
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `g6zc_ratings_${payload.evaluator_id}.json`;
+      a.click();
+    });
+  </script>
+</body>
+</html>

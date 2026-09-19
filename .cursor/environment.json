@@ -1,0 +1,11 @@
+{
+  "name": "SPE Ω — G6-H blind evaluator",
+  "install": "test -f evaluations/g6zc/blind_evaluator.html\ntest -f evaluations/g6zc/blind_pairs.json\nchmod +x tools/g6h_serve.sh\npython3 -c \"import http.server; print('g6h-evaluator-ready')\"",
+  "start": "python3 -m http.server 8765 --bind 0.0.0.0",
+  "ports": [
+    {
+      "name": "g6h-evaluator",
+      "port": 8765
+    }
+  ]
+}
