@@ -13,7 +13,7 @@ G6 base:
 99173c2f700508c6c958b5d79e8bc17418f9bfd6
 
 G6 HEAD:
-(see tip after docs pin)
+3748f01b69e6845ce2a146eee15d6cdcec1e5818
 
 Branch:
 cursor/g6zc-product-value-0d6e
