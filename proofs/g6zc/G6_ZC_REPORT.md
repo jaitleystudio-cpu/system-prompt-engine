@@ -13,13 +13,13 @@ G6 base:
 99173c2f700508c6c958b5d79e8bc17418f9bfd6
 
 G6 HEAD:
-3748f01b69e6845ce2a146eee15d6cdcec1e5818
+41846835e8b0500f9272b19399876e589f380e05
 
 Branch:
 cursor/g6zc-product-value-0d6e
 
 PR:
-(see PR after open)
+https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/28
 
 PR #6:
 OPEN @ 4e6c694 — UNTOUCHED / UNMERGED
