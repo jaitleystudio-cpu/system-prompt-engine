@@ -1,0 +1,81 @@
+{
+  "gate": "G6-H",
+  "mission": "HUMAN_EVALUATOR_ACCESS_PROMOTION",
+  "final_verdict": "G6H_HUMAN_COLLECTION_READY",
+  "recorded_at_utc": "2026-09-19T13:25:43.300115+00:00",
+  "do_not_fabricate": true,
+  "genuine_ratings": 0,
+  "human_results": "NO_RATINGS_YET",
+  "pr34_merged": false,
+  "pr6_untouched": true,
+  "local_url": "http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html",
+  "files": [
+    {
+      "path": "proofs/g6h/access/G6H_HUMAN_ACCESS_REPORT.md",
+      "size": 2255,
+      "sha256": "134b0fc978bde4ce89ea64a67c90d0afd90a5ebd2985fd05b782cc6a78c3862b"
+    },
+    {
+      "path": "proofs/g6h/access/accessibility_smoke.json",
+      "size": 1325,
+      "sha256": "e16a54c3b6f89e07a16f68fc707877e0e3051eaf8a4d178ca7681599ff7f80d6"
+    },
+    {
+      "path": "proofs/g6h/access/blinding_audit.json",
+      "size": 838,
+      "sha256": "1923476ed82a5fbe43fca9058ab389cb908a17f7f02908ff9a420fa9b803c888"
+    },
+    {
+      "path": "proofs/g6h/access/connection_diagnosis.json",
+      "size": 1008,
+      "sha256": "00917bc8a4ec6bf731319b5a6029493fed32d393b6c380c40bcf4e5d47415d4d"
+    },
+    {
+      "path": "proofs/g6h/access/coordinator_handoff.md",
+      "size": 1666,
+      "sha256": "204f441466e97937e79cd0016e879319cc22b2c14e64deef3258d16837d74b2c"
+    },
+    {
+      "path": "proofs/g6h/access/frozen_hash_check.json",
+      "size": 2080,
+      "sha256": "6448ffa6f46936f29c76f079396bbc55ac4b7638556d594d6aa0a13732d6103b"
+    },
+    {
+      "path": "proofs/g6h/access/lock_unblind_validation.json",
+      "size": 868,
+      "sha256": "9f9aaa9c843031c422cec399dec3b384467e857941958f16ab3aa03d0679a58b"
+    },
+    {
+      "path": "proofs/g6h/access/network_audit.json",
+      "size": 768,
+      "sha256": "b86f01f9a7ac298e8914430ddc515783fce17f7944c54084c2f297bd2715d079"
+    },
+    {
+      "path": "proofs/g6h/access/post_merge_verification.json",
+      "size": 1267,
+      "sha256": "167874dc6bb6a41f0ab6d882feb104f28fa2cfe8c99edb7169c421473fe701c3"
+    },
+    {
+      "path": "proofs/g6h/access/pr34_inspection.json",
+      "size": 1828,
+      "sha256": "2d8b396c8e4eb3960b869a0e59c81c091facd10f00e44b18ce3bad1bba9485b8"
+    },
+    {
+      "path": "proofs/g6h/access/serve_smoke.json",
+      "size": 998,
+      "sha256": "21563f14e8eb5e1262f6b87fcdc202f4dc185c2aaeba4318cbce60b92212c7b4"
+    },
+    {
+      "path": "proofs/g6h/access/source_identity.json",
+      "size": 628,
+      "sha256": "3ba42bd103c747aee2ad544e9eb6186060e6abf013b67afecdda9ef000995ae8"
+    },
+    {
+      "path": "proofs/g6h/access/access_manifest.json",
+      "size": 2584,
+      "sha256": "cfdc394ab00ee56b30341601a769415eb45bdbe6426de92d9078fe76592a2483"
+    }
+  ],
+  "count": 13,
+  "connection_diagnosis": "proofs/g6h/access/connection_diagnosis.json"
+}

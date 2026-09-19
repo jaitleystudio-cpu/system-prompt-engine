@@ -1,0 +1,27 @@
+{
+  "recorded_at_utc": "2026-09-19T13:25:43.300115+00:00",
+  "browser_symptom": {
+    "url": "http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html",
+    "category": "Connection failure",
+    "error": "Connection was reset / ERR_EMPTY_RESPONSE",
+    "error_code": -324
+  },
+  "most_likely_cause": "Nothing listening on port 8765 \u2014 http.server was stopped after smoke tests (or never started).",
+  "evidence_at_diagnosis": {
+    "listener_on_8765_before_restart": false,
+    "curl_before_restart": "connection refused / fail"
+  },
+  "fastest_checks": [
+    "./tools/g6h_serve_status.sh",
+    "./tools/g6h_serve.sh  # leave running",
+    "curl -I http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html"
+  ],
+  "after_fix": {
+    "server": "tmux session g6h-evaluator-8765 \u00b7 python3 -m http.server 8765 --bind 0.0.0.0",
+    "status_script": "tools/g6h_serve_status.sh",
+    "curl_html": 200,
+    "curl_pairs": 200
+  },
+  "not_a_frozen_artifact_change": true,
+  "human_ratings_created": 0
+}

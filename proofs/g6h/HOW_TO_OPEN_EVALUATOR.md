@@ -29,8 +29,11 @@ g6h_coordinator_checklist  → READINESS: PASS
 
 ## Fastest way (same computer)
 
+Keep the server **running** in a terminal (do not kill it after a smoke test):
+
 ```bash
-python -m http.server 8765 --bind 127.0.0.1
+./tools/g6h_serve.sh
+# or: python3 -m http.server 8765 --bind 127.0.0.1
 ```
 
 Open:
@@ -39,13 +42,28 @@ Open:
 http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html
 ```
 
-The page **auto-loads** `blind_pairs.json` over HTTP. You can also tap **Load server pairs** (no file picker needed on mobile).
+Health check (diagnoses `ERR_EMPTY_RESPONSE` / connection reset):
 
-Optional one-liner: `./tools/g6h_serve.sh`
+```bash
+./tools/g6h_serve_status.sh
+```
+
+The page **auto-loads** `blind_pairs.json` over HTTP. You can also tap **Load server pairs** (no file picker needed on mobile).
 
 You should see the task plus **LEFT / RIGHT** candidates, without knowing which is RAW or SPE.
 
-Stop the server afterward with `Ctrl+C`.
+Stop the server afterward with `Ctrl+C` in that terminal.
+
+### Browser: `ERR_EMPTY_RESPONSE` / Connection reset
+
+Most likely cause: **nothing is listening on port 8765** (server never started, or it was stopped/killed).
+
+Fastest checks:
+
+1. `./tools/g6h_serve_status.sh` — if it says nothing listening, start `./tools/g6h_serve.sh`
+2. From the **same machine** that runs the server: `curl -I http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html` → expect `HTTP/1.0 200`
+3. Confirm the URL is exact (no `https://`, no mangled host)
+4. If status PASSes but your laptop browser still fails, you are probably not on the serve machine — use that machine’s browser, or Cursor’s forwarded port for this cloud agent, not a random other host’s `127.0.0.1`
 
 ## Rate from iPhone (same Wi‑Fi only)
 

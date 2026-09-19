@@ -1,0 +1,47 @@
+{
+  "recorded_at_utc": "2026-09-19T13:19:42.516609+00:00",
+  "keyboard_navigable": true,
+  "focus_visible_css": true,
+  "semantic_labels": true,
+  "aria_labels_present": [
+    "Progress",
+    "V1 Intent fidelity",
+    "V2 Constraint coverage",
+    "V3 Missing-requirement handling",
+    "V4 Conflict handling",
+    "V5 Executability",
+    "V6 Output clarity",
+    "V7 Verification/testability",
+    "V8 Portability",
+    "V9 Unnecessary complexity (4=minimal)",
+    "V10 Overall usefulness"
+  ],
+  "fieldset_legends": [
+    "Rubric scores (0\u20134)",
+    "Preference"
+  ],
+  "left_pane_tabindex": 0,
+  "controls_without_mouse": "PASS (Tab + radios + selects + buttons)",
+  "ui_smoke": {
+    "page_loads": true,
+    "pairs_auto_load": true,
+    "rubric_dims": 10,
+    "evaluator_id_field": true,
+    "preference_LEFT_RIGHT_TIE": [
+      "LEFT",
+      "RIGHT",
+      "TIE"
+    ],
+    "export_download": true,
+    "progress": "1 / 120",
+    "local_persistence_key_cleared_after_smoke": true,
+    "skip_button_in_ui": false,
+    "invalid_button_in_ui": false,
+    "skip_invalid_path": "tools/g6h_lock_ratings.py --skipped / --invalid (skip \u2260 tie enforced)",
+    "save_clicked": false,
+    "human_evidence": false
+  },
+  "blocking_a11y_bug": false,
+  "verdict": "PASS",
+  "note": "No frozen UI redesign \u2014 smoke only"
+}

@@ -1,0 +1,30 @@
+{
+  "recorded_at_utc": "2026-09-19T13:19:42.516609+00:00",
+  "ui_exposes_raw_side": false,
+  "ui_exposes_spe_side": false,
+  "ui_fetches_randomization_manifest": false,
+  "pairs_metadata_suspicious_keys": [],
+  "pairs_fields": [
+    "task_id",
+    "category",
+    "language",
+    "left",
+    "right"
+  ],
+  "preference_controls": [
+    "LEFT",
+    "RIGHT",
+    "TIE"
+  ],
+  "structural_blinding": "PASS",
+  "content_note": "Frozen candidate text may contain SPE_PROTECTED markers on one side \u2014 inherent to SPE vs RAW prompts. UI does not label SPE/RAW. Do not change frozen pairs for this mission.",
+  "content_marker_counts_observed": {
+    "left_only_marker": 60,
+    "right_only_marker": 53,
+    "both": 0,
+    "neither": 7,
+    "n": 120
+  },
+  "RAW_SPE_identity_exposed_by_ui_labels": "NO",
+  "randomization_map_exposed": "NO"
+}

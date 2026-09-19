@@ -1,0 +1,37 @@
+{
+  "recorded_at_utc": "2026-09-19T13:19:42.516609+00:00",
+  "empty_lock_refused": true,
+  "empty_lock_message": "NO_RATINGS_YET \u2014 refusing empty lock (NO_RATINGS \u2260 ZERO)",
+  "skip_ne_tie_enforced": true,
+  "invalid_ne_tie": {
+    "design": "invalid tracked in separate --invalid file; never converted to preference TIE in ratings",
+    "status": "PASS"
+  },
+  "synthetic_unblind": {
+    "human_evidence": false,
+    "reverse_map_detected": true,
+    "counts": {
+      "SPE": 6,
+      "RAW": 3,
+      "TIE": 3
+    },
+    "reversed_counts": {
+      "SPE": 3,
+      "RAW": 6,
+      "TIE": 3
+    },
+    "expected_forward": {
+      "SPE": 6,
+      "RAW": 3,
+      "TIE": 3
+    },
+    "expected_reverse": {
+      "SPE": 3,
+      "RAW": 6,
+      "TIE": 3
+    },
+    "match_expected": true
+  },
+  "real_unblind_executed": false,
+  "human_results_unchanged": true
+}

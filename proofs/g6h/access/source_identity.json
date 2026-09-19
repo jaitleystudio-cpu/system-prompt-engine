@@ -1,0 +1,16 @@
+{
+  "gate": "G6-H",
+  "mission": "HUMAN_EVALUATOR_ACCESS_PROMOTION",
+  "recorded_at_utc": "2026-09-19T13:19:42.516609+00:00",
+  "working_branch": "cursor/g6h-human-access-0d6e",
+  "working_head": "3a4357b5a1008e78237ba142ed5486c8038baeca",
+  "frozen_evaluator_sha256": "d7f7474dc2e4a353a749c188901ab0fb956555f8fdc27ec53ef3679ccd9f9bcc",
+  "do_not_fabricate": true,
+  "ratings_status": "NO_RATINGS_YET",
+  "claim_boundary": {
+    "G6": "HUMAN_VALUE_EVIDENCE_PENDING",
+    "INDEPENDENTLY_REPLICATED": "NOT_PROVEN",
+    "WORLD_1": "NOT_PROVEN",
+    "strongest_allowed": "G6-H evaluator access is ready under frozen custody."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "recorded_at_utc": "2026-09-19T13:19:42.516609+00:00",
+  "required_internet": "NO",
+  "analytics": "NO",
+  "telemetry": "NO",
+  "remote_ratings_upload": "NO",
+  "external_scripts": [],
+  "external_stylesheets": [],
+  "fetch_occurrences": [
+    {
+      "kind": "same_origin_static",
+      "purpose": "load blind_pairs.json candidates only",
+      "urls_tried": [
+        "blind_pairs.json",
+        "./blind_pairs.json",
+        "/evaluations/g6zc/blind_pairs.json"
+      ],
+      "acceptable": true
+    }
+  ],
+  "literal_mentions": {
+    "telemetry": "header copy: \"no telemetry\"",
+    "analytics": "footer copy: \"No analytics. No cloud upload.\""
+  },
+  "local_persistence": "localStorage key g6zc_blind_ratings_v1 until human Download",
+  "verdict": "PASS"
+}
