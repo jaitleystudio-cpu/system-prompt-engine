@@ -14,9 +14,12 @@ All must PASS / READINESS: PASS. `human_results` must remain `NO_RATINGS_YET`.
 
 ## Serve (local)
 
+Leave the server running while humans rate (stopping it → browser `ERR_EMPTY_RESPONSE`):
+
 ```bash
-python3 -m http.server 8765 --bind 127.0.0.1
-# or: ./tools/g6h_serve.sh
+./tools/g6h_serve.sh
+# or: python3 -m http.server 8765 --bind 127.0.0.1
+./tools/g6h_serve_status.sh   # expect PASS + HTTP 200
 ```
 
 Open:
@@ -28,7 +31,7 @@ http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html
 Optional same-Wi‑Fi LAN (coordinator machine only):
 
 ```bash
-python3 -m http.server 8765 --bind 0.0.0.0
+G6H_BIND=0.0.0.0 ./tools/g6h_serve.sh
 # http://<LOCAL-LAN-IP>:8765/evaluations/g6zc/blind_evaluator.html
 ```
 

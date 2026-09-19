@@ -1,7 +1,7 @@
 {
   "name": "SPE Ω — G6-H blind evaluator",
-  "install": "chmod +x tools/g6h_serve.sh 2>/dev/null || true\npython3 -c \"import http.server; print('http.server-ok')\"\nif [ -f evaluations/g6zc/blind_evaluator.html ] && [ -f evaluations/g6zc/blind_pairs.json ]; then\n  echo g6h-evaluator-ready\nelse\n  echo 'WARN: g6h evaluator not on this git ref yet — merge cursor/g6h-evaluator-env-0d6e'\nfi",
-  "start": "python3 -m http.server 8765 --bind 0.0.0.0",
+  "install": "chmod +x tools/g6h_serve.sh tools/g6h_serve_status.sh 2>/dev/null || true\npython3 -c \"import http.server; print('http.server-ok')\"\nif [ -f evaluations/g6zc/blind_evaluator.html ] && [ -f evaluations/g6zc/blind_pairs.json ]; then\n  echo g6h-evaluator-ready\nelse\n  echo 'WARN: g6h evaluator not on this git ref yet — merge evaluator/custody branches'\nfi",
+  "start": "chmod +x tools/g6h_serve.sh tools/g6h_serve_status.sh 2>/dev/null || true\nif [ -f evaluations/g6zc/blind_evaluator.html ]; then\n  echo \"G6-H OPEN http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html\"\n  exec python3 -m http.server 8765 --bind 0.0.0.0\nelse\n  echo 'WARN: evaluator missing on this ref'; sleep infinity\nfi",
   "ports": [
     {
       "name": "g6h-evaluator",

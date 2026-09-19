@@ -37,3 +37,14 @@ Replace with your real IP — never the literal text `<your-LAN-IP>`.
 - Export ratings JSON → `tools/g6h_lock_ratings.py` → only then unblind
 
 Files: `blind_evaluator.html` · `blind_pairs.json` (120 pairs)
+
+## Troubleshooting (`ERR_EMPTY_RESPONSE` / connection reset)
+
+Most likely: the local server is **not running**.
+
+```bash
+./tools/g6h_serve_status.sh   # diagnoses listener + HTTP 200
+./tools/g6h_serve.sh          # start and leave running
+```
+
+Expect `HTTP 200` for the evaluator URL. Do not kill the server while rating.
