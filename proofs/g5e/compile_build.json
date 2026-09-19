@@ -1,0 +1,10 @@
+{
+  "compileall": {
+    "command": "python3 -m compileall spe_runtime -q",
+    "exit": 0
+  },
+  "rust_wasm": {
+    "note": "exercised via portability wasm conformance / merge-gate tests (cargo build for wasm32 + node host)",
+    "result": "PASS"
+  }
+}

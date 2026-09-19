@@ -1,0 +1,7 @@
+ M SPE_IMPLEMENTATION_BINDING_v2.json
+ M proofs/g1/module_disposition.json
+ M proofs/g1/runtime_module_inventory.json
+?? proofs/g4zc/
+?? spe_runtime/core/
+?? tests/unit/test_g4zc_mutations.py
+?? tests/unit/test_g4zc_zerocost_core.py

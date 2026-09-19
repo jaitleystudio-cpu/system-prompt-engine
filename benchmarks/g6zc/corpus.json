@@ -1,0 +1,3627 @@
+{
+  "benchmark_version": "g6zc.v1",
+  "created_utc": "2026-09-19T00:00:00Z",
+  "seed": 20260919,
+  "tasks": [
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "email",
+      "expected_unknowns": [
+        "dates",
+        "manager_name",
+        "reason"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "write leave email",
+      "tags": [
+        "one_line",
+        "realistic"
+      ],
+      "task_id": "C01-01"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [
+          "professional tone",
+          "Monday",
+          "Tuesday"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "email",
+      "expected_unknowns": [
+        "manager_name"
+      ],
+      "language": "en",
+      "must": [
+        "professional tone",
+        "Monday",
+        "Tuesday"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Write a professional leave email for next Monday and Tuesday.",
+      "tags": [
+        "hard_constraint"
+      ],
+      "task_id": "C01-02"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [
+          "150-word",
+          "Tuesday",
+          "Professional tone"
+        ],
+        "must_not": [
+          "apologize"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "email",
+      "expected_unknowns": [
+        "recipient",
+        "subject_topic"
+      ],
+      "language": "en",
+      "must": [
+        "150-word",
+        "Tuesday",
+        "Professional tone"
+      ],
+      "must_not": [
+        "apologize"
+      ],
+      "preferences": [],
+      "raw_request": "Write a 150-word email. Must mention Tuesday. Must not apologize. Professional tone.",
+      "tags": [
+        "hard_constraint",
+        "length"
+      ],
+      "task_id": "C01-03"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [
+          "polite"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "email",
+      "expected_unknowns": [
+        "client_name",
+        "original_ask"
+      ],
+      "language": "en",
+      "must": [
+        "polite"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Draft a polite follow-up to a client who has not replied in two weeks.",
+      "tags": [],
+      "task_id": "C01-04"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [
+          "clarity"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "prose",
+      "expected_unknowns": [
+        "thing",
+        "deadline"
+      ],
+      "language": "en",
+      "must": [
+        "clarity"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Rewrite this more clearly: We need the thing ASAP if possible maybe.",
+      "tags": [],
+      "task_id": "C01-05"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [
+          "short"
+        ],
+        "must_not": [
+          "criticize the company"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "letter",
+      "expected_unknowns": [
+        "last_day",
+        "role"
+      ],
+      "language": "en",
+      "must": [
+        "short"
+      ],
+      "must_not": [
+        "criticize the company"
+      ],
+      "preferences": [],
+      "raw_request": "Write a resignation letter. Keep it short. Do not criticize the company.",
+      "tags": [
+        "hard_constraint"
+      ],
+      "task_id": "C01-06"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [
+          "Empathetic",
+          "concrete next step"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "email",
+      "expected_unknowns": [
+        "order_id",
+        "new_eta"
+      ],
+      "language": "en",
+      "must": [
+        "Empathetic",
+        "concrete next step"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Customer complaint response: delayed shipment. Empathetic. Offer a concrete next step.",
+      "tags": [],
+      "task_id": "C01-07"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [
+          "agenda placeholders"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "invite",
+      "expected_unknowns": [
+        "date",
+        "attendees"
+      ],
+      "language": "en",
+      "must": [
+        "agenda placeholders"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Meeting invite for project kickoff. Include agenda placeholders only.",
+      "tags": [],
+      "task_id": "C01-08"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [
+          "revolutionary"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "social",
+      "expected_unknowns": [
+        "product_name",
+        "date"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [
+        "revolutionary"
+      ],
+      "preferences": [],
+      "raw_request": "LinkedIn post announcing a product launch. No hype adjectives like revolutionary.",
+      "tags": [
+        "hard_constraint"
+      ],
+      "task_id": "C01-09"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [
+          "short paragraph"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "note",
+      "expected_unknowns": [
+        "interviewer",
+        "role"
+      ],
+      "language": "en",
+      "must": [
+        "short paragraph"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Thank-you note after an interview. One short paragraph.",
+      "tags": [
+        "negative_control_candidate"
+      ],
+      "task_id": "C01-10"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [
+          "Bullet points"
+        ],
+        "must_not": [
+          "blame"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "email",
+      "expected_unknowns": [
+        "project_status_facts"
+      ],
+      "language": "en",
+      "must": [
+        "Bullet points"
+      ],
+      "must_not": [
+        "blame"
+      ],
+      "preferences": [],
+      "raw_request": "Status update email to stakeholders. Bullet points. No blame language.",
+      "tags": [],
+      "task_id": "C01-11"
+    },
+    {
+      "category": "C01",
+      "category_name": "Writing / Communication",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "trivial",
+      "expected_conflicts": [],
+      "expected_output_form": "short_answer",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Return 2+2.",
+      "tags": [
+        "anti_gaming",
+        "trivial"
+      ],
+      "task_id": "C01-12"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "code",
+      "expected_unknowns": [
+        "directory",
+        "pattern",
+        "new_names"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "make python script rename files",
+      "tags": [
+        "one_line",
+        "realistic"
+      ],
+      "task_id": "C02-01"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [
+          "Python",
+          "CSV",
+          "valid emails only"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "code",
+      "expected_unknowns": [
+        "validation_rules"
+      ],
+      "language": "en",
+      "must": [
+        "Python",
+        "CSV",
+        "valid emails only"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Write a Python function that parses a CSV of names and emails and returns valid emails only.",
+      "tags": [],
+      "task_id": "C02-02"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [
+          "Bash",
+          "*.log",
+          "No network"
+        ],
+        "must_not": [
+          "curl",
+          "wget"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "code",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "Bash",
+        "*.log",
+        "No network"
+      ],
+      "must_not": [
+        "curl",
+        "wget"
+      ],
+      "preferences": [],
+      "raw_request": "Bash one-liner to count lines in all *.log files. No network tools.",
+      "tags": [
+        "hard_constraint"
+      ],
+      "task_id": "C02-03"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [
+          "unit-tested",
+          "Fibonacci",
+          "No third-party deps"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "code+tests",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "unit-tested",
+        "Fibonacci",
+        "No third-party deps"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Create a unit-tested Python function for Fibonacci. Include tests. No third-party deps.",
+      "tags": [],
+      "task_id": "C02-04"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [
+          "Python 3"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "code",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "Python 3"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Fix this: for i in range(10) print(i)  # make it Python 3 valid",
+      "tags": [
+        "negative_control_candidate"
+      ],
+      "task_id": "C02-05"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [
+          "90 days",
+          "customers",
+          "orders"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "sql",
+      "expected_unknowns": [
+        "dialect"
+      ],
+      "language": "en",
+      "must": [
+        "90 days",
+        "customers",
+        "orders"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "SQL query: list customers with no orders in 90 days. Assume tables customers(id), orders(customer_id, created_at).",
+      "tags": [],
+      "task_id": "C02-06"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [
+          "IPv4",
+          "limitations"
+        ],
+        "must_not": [
+          "public reachability"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "regex+prose",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "IPv4",
+        "limitations"
+      ],
+      "must_not": [
+        "public reachability"
+      ],
+      "preferences": [],
+      "raw_request": "Write a regex for IPv4 addresses. Explain limitations. Do not claim it validates public reachability.",
+      "tags": [],
+      "task_id": "C02-07"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [
+          "invent performance numbers"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "checklist",
+      "expected_unknowns": [
+        "script_content"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [
+        "invent performance numbers"
+      ],
+      "preferences": [],
+      "raw_request": "Refactor checklist for a 200-line Python script. Do not invent performance numbers.",
+      "tags": [],
+      "task_id": "C02-08"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [
+          "id",
+          "title",
+          "done",
+          "JSON schema"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "json_schema",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "id",
+        "title",
+        "done",
+        "JSON schema"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Generate JSON schema for a Todo item with id, title, done. Required fields only those three.",
+      "tags": [
+        "structured"
+      ],
+      "task_id": "C02-09"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [
+          "Postgres",
+          "local"
+        ],
+        "must_not": [
+          "cloud"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "yaml",
+      "expected_unknowns": [
+        "version",
+        "password_policy"
+      ],
+      "language": "en",
+      "must": [
+        "Postgres",
+        "local"
+      ],
+      "must_not": [
+        "cloud"
+      ],
+      "preferences": [],
+      "raw_request": "Docker Compose for a local Postgres only. No cloud services. No images besides postgres.",
+      "tags": [],
+      "task_id": "C02-10"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [
+          "Big-O",
+          "binary search",
+          "one paragraph"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "prose",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "Big-O",
+        "binary search",
+        "one paragraph"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Explain Big-O of binary search in one paragraph.",
+      "tags": [
+        "negative_control_candidate"
+      ],
+      "task_id": "C02-11"
+    },
+    {
+      "category": "C02",
+      "category_name": "Coding / Engineering",
+      "compile_kwargs": {
+        "must": [
+          "integer 42"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "trivial",
+      "expected_conflicts": [],
+      "expected_output_form": "short_answer",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "integer 42"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Return only the integer 42.",
+      "tags": [
+        "anti_gaming",
+        "trivial"
+      ],
+      "task_id": "C02-12"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "research_plan",
+      "expected_unknowns": [
+        "chemistry_focus",
+        "time_horizon",
+        "use_case"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "research battery technology",
+      "tags": [
+        "one_line",
+        "realistic"
+      ],
+      "task_id": "C03-01"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [
+          "lithium-ion",
+          "sodium-ion",
+          "grid storage",
+          "uncertainties"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [],
+      "expected_output_form": "research_plan",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "lithium-ion",
+        "sodium-ion",
+        "grid storage",
+        "uncertainties"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Compare lithium-ion vs sodium-ion batteries for grid storage. Require evidence standards and uncertainties.",
+      "tags": [],
+      "task_id": "C03-02"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [
+          "competing explanations"
+        ],
+        "must_not": [
+          "proven truth"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [],
+      "expected_output_form": "research_brief",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "competing explanations"
+      ],
+      "must_not": [
+        "proven truth"
+      ],
+      "preferences": [],
+      "raw_request": "What caused the 2008 financial crisis? Summarize competing explanations. Do not pick one as proven truth.",
+      "tags": [],
+      "task_id": "C03-03"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [
+          "question decomposition"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "research_plan",
+      "expected_unknowns": [
+        "definition_of_innovation"
+      ],
+      "language": "en",
+      "must": [
+        "question decomposition"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Literature-style question decomposition for: Does remote work reduce innovation?",
+      "tags": [],
+      "task_id": "C03-04"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [
+          "verification checklist"
+        ],
+        "must_not": [
+          "medical advice"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "checklist",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "verification checklist"
+      ],
+      "must_not": [
+        "medical advice"
+      ],
+      "preferences": [],
+      "raw_request": "Sources checklist for verifying a health claim about vitamin D. No medical advice.",
+      "tags": [],
+      "task_id": "C03-05"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [
+          "unknowns"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [],
+      "expected_output_form": "research_plan",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "unknowns"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Map open questions about CRISPR gene editing ethics. Label unknowns explicitly.",
+      "tags": [],
+      "task_id": "C03-06"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [
+          "2018-2024",
+          "uncertain dates as unknown"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "timeline",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "2018-2024",
+        "uncertain dates as unknown"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Timeline of major LLM releases 2018-2024. Mark uncertain dates as unknown.",
+      "tags": [],
+      "task_id": "C03-07"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [
+          "HTTPS",
+          "failure modes"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "explanation",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "HTTPS",
+        "failure modes"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "How does HTTPS certificate validation work? Include common failure modes.",
+      "tags": [],
+      "task_id": "C03-08"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [
+          "Pros/cons"
+        ],
+        "must_not": [
+          "recommend one"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "table",
+      "expected_unknowns": [
+        "project_context"
+      ],
+      "language": "en",
+      "must": [
+        "Pros/cons"
+      ],
+      "must_not": [
+        "recommend one"
+      ],
+      "preferences": [],
+      "raw_request": "Pros/cons table template for evaluating open-source licenses. Do not recommend one.",
+      "tags": [],
+      "task_id": "C03-09"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [
+          "contradictions",
+          "both sides"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "analysis",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "contradictions",
+        "both sides"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Identify contradictions between two claims: A) remote work boosts productivity; B) remote work always hurts culture. Keep both sides.",
+      "tags": [],
+      "task_id": "C03-10"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "explanation",
+      "expected_unknowns": [
+        "audience_level"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "What is photosynthesis?",
+      "tags": [
+        "negative_control_candidate"
+      ],
+      "task_id": "C03-11"
+    },
+    {
+      "category": "C03",
+      "category_name": "Research",
+      "compile_kwargs": {
+        "must": [
+          "one word"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "trivial",
+      "expected_conflicts": [],
+      "expected_output_form": "short_answer",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "one word"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Name the capital of France in one word.",
+      "tags": [
+        "anti_gaming",
+        "trivial"
+      ],
+      "task_id": "C03-12"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "plan_outline",
+      "expected_unknowns": [
+        "industry",
+        "budget",
+        "market",
+        "team"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "create a business plan",
+      "tags": [
+        "one_line",
+        "realistic"
+      ],
+      "task_id": "C04-01"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [
+          "bakery",
+          "ASSUMPTION"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "plan_outline",
+      "expected_unknowns": [
+        "capital",
+        "rent"
+      ],
+      "language": "en",
+      "must": [
+        "bakery",
+        "ASSUMPTION"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "One-page business plan outline for a neighborhood bakery. Assumptions labeled ASSUMPTION.",
+      "tags": [],
+      "task_id": "C04-02"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [
+          "$0",
+          "freemium",
+          "paid-only"
+        ],
+        "must_not": [
+          "invent revenue forecasts"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [],
+      "expected_output_form": "options",
+      "expected_unknowns": [
+        "product_details"
+      ],
+      "language": "en",
+      "must": [
+        "$0",
+        "freemium",
+        "paid-only"
+      ],
+      "must_not": [
+        "invent revenue forecasts"
+      ],
+      "preferences": [],
+      "raw_request": "Pricing strategy options for a SaaS tool at $0 vs freemium vs paid-only. Do not invent revenue forecasts.",
+      "tags": [],
+      "task_id": "C04-03"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [
+          "Risk register",
+          "UNKNOWN"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "table",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "Risk register",
+        "UNKNOWN"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Risk register template for a software launch. Include likelihood as UNKNOWN unless given.",
+      "tags": [],
+      "task_id": "C04-04"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "map",
+      "expected_unknowns": [
+        "org_structure"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Stakeholder map for adopting an internal wiki. No vendor names unless asked.",
+      "tags": [],
+      "task_id": "C04-05"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [
+          "KPI"
+        ],
+        "must_not": [
+          "industry benchmarks"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "definitions",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "KPI"
+      ],
+      "must_not": [
+        "industry benchmarks"
+      ],
+      "preferences": [],
+      "raw_request": "KPI definitions for support quality. Do not claim industry benchmarks.",
+      "tags": [],
+      "task_id": "C04-06"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [
+          "ethical"
+        ],
+        "must_not": [
+          "deception"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "talking_points",
+      "expected_unknowns": [
+        "current_price"
+      ],
+      "language": "en",
+      "must": [
+        "ethical"
+      ],
+      "must_not": [
+        "deception"
+      ],
+      "preferences": [],
+      "raw_request": "Negotiation talking points for a vendor discount. Keep ethical; no deception.",
+      "tags": [],
+      "task_id": "C04-07"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [
+          "Go/no-go"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "checklist",
+      "expected_unknowns": [
+        "finances",
+        "location"
+      ],
+      "language": "en",
+      "must": [
+        "Go/no-go"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Go/no-go checklist for opening a second cafe location.",
+      "tags": [],
+      "task_id": "C04-08"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [
+          "build vs buy",
+          "decision criteria",
+          "unknowns"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [],
+      "expected_output_form": "comparison",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "build vs buy",
+        "decision criteria",
+        "unknowns"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Compare build vs buy for a CRM. Require explicit decision criteria and unknowns.",
+      "tags": [],
+      "task_id": "C04-09"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [
+          "OKRs",
+          "Q3"
+        ],
+        "must_not": [
+          "invent current metrics"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "okrs",
+      "expected_unknowns": [
+        "baseline_metrics"
+      ],
+      "language": "en",
+      "must": [
+        "OKRs",
+        "Q3"
+      ],
+      "must_not": [
+        "invent current metrics"
+      ],
+      "preferences": [],
+      "raw_request": "Write OKRs for a Q3 content team. Do not invent current metrics.",
+      "tags": [],
+      "task_id": "C04-10"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [
+          "SWOT",
+          "speculative"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "swot",
+      "expected_unknowns": [
+        "local_market_facts"
+      ],
+      "language": "en",
+      "must": [
+        "SWOT",
+        "speculative"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "SWOT for a local bookstore. Mark speculative items clearly.",
+      "tags": [],
+      "task_id": "C04-11"
+    },
+    {
+      "category": "C04",
+      "category_name": "Business / Strategy",
+      "compile_kwargs": {
+        "must": [
+          "three"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "trivial",
+      "expected_conflicts": [],
+      "expected_output_form": "list",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "three"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "List three generic business risks.",
+      "tags": [
+        "anti_gaming",
+        "trivial"
+      ],
+      "task_id": "C04-12"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "explanation",
+      "expected_unknowns": [
+        "audience_level"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "explain photosynthesis",
+      "tags": [
+        "one_line",
+        "realistic"
+      ],
+      "task_id": "C05-01"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [
+          "10-year-old",
+          "analogy"
+        ],
+        "must_not": [
+          "advanced biochemistry"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "explanation",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "10-year-old",
+        "analogy"
+      ],
+      "must_not": [
+        "advanced biochemistry"
+      ],
+      "preferences": [],
+      "raw_request": "Explain photosynthesis to a 10-year-old. Use a simple analogy. No advanced biochemistry terms.",
+      "tags": [],
+      "task_id": "C05-02"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [
+          "fractions",
+          "grade 4",
+          "practice problems"
+        ],
+        "must_not": [
+          "curriculum standards codes"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "lesson",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "fractions",
+        "grade 4",
+        "practice problems"
+      ],
+      "must_not": [
+        "curriculum standards codes"
+      ],
+      "preferences": [],
+      "raw_request": "Lesson outline: fractions for grade 4. Include practice problems. Do not invent curriculum standards codes.",
+      "tags": [],
+      "task_id": "C05-03"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [
+          "30 days",
+          "30 minutes/day"
+        ],
+        "must_not": [
+          "paid tools"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "plan",
+      "expected_unknowns": [
+        "prior_experience"
+      ],
+      "language": "en",
+      "must": [
+        "30 days",
+        "30 minutes/day"
+      ],
+      "must_not": [
+        "paid tools"
+      ],
+      "preferences": [],
+      "raw_request": "Study plan for learning SQL in 30 days, 30 minutes/day. No paid tools required.",
+      "tags": [],
+      "task_id": "C05-04"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [
+          "5",
+          "multiple-choice",
+          "HTTP methods",
+          "answer key"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "quiz",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "5",
+        "multiple-choice",
+        "HTTP methods",
+        "answer key"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Quiz: 5 multiple-choice questions on HTTP methods. Provide answer key separately.",
+      "tags": [],
+      "task_id": "C05-05"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [
+          "recursion",
+          "Python",
+          "worked example"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "explanation",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "recursion",
+        "Python",
+        "worked example"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Explain recursion with one worked example in Python. Avoid jargon where possible.",
+      "tags": [],
+      "task_id": "C05-06"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [
+          "8 cards",
+          "-ar verbs"
+        ],
+        "must_not": [
+          "pronunciation audio"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "flashcards",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "8 cards",
+        "-ar verbs"
+      ],
+      "must_not": [
+        "pronunciation audio"
+      ],
+      "preferences": [],
+      "raw_request": "Flashcards for Spanish present-tense -ar verbs. 8 cards. No pronunciation audio claims.",
+      "tags": [],
+      "task_id": "C05-07"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [
+          "Socratic"
+        ],
+        "must_not": [
+          "lecture first"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [],
+      "expected_output_form": "questions",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "Socratic"
+      ],
+      "must_not": [
+        "lecture first"
+      ],
+      "preferences": [],
+      "raw_request": "Socratic questions to help a student discover why 0.1+0.2 is weird in floating point. Do not lecture first.",
+      "tags": [],
+      "task_id": "C05-08"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [
+          "Rubric"
+        ],
+        "must_not": [
+          "sample scores"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "rubric",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "Rubric"
+      ],
+      "must_not": [
+        "sample scores"
+      ],
+      "preferences": [],
+      "raw_request": "Rubric for grading a short essay on climate change. Criteria only; no sample scores.",
+      "tags": [],
+      "task_id": "C05-09"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [
+          "5 bullet points",
+          "water cycle"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "bullets",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "5 bullet points",
+        "water cycle"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Explain the water cycle in 5 bullet points.",
+      "tags": [
+        "negative_control_candidate"
+      ],
+      "task_id": "C05-10"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [
+          "precision",
+          "recall",
+          "spam-filter"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "explanation",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "precision",
+        "recall",
+        "spam-filter"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Differentiate precision vs recall with a spam-filter example.",
+      "tags": [],
+      "task_id": "C05-11"
+    },
+    {
+      "category": "C05",
+      "category_name": "Education / Learning",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "trivial",
+      "expected_conflicts": [],
+      "expected_output_form": "short_answer",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "What is 7 times 8?",
+      "tags": [
+        "anti_gaming",
+        "trivial"
+      ],
+      "task_id": "C05-12"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "comparison",
+      "expected_unknowns": [
+        "plan_a_content",
+        "plan_b_content",
+        "criteria"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "compare these two plans",
+      "tags": [
+        "one_line",
+        "realistic"
+      ],
+      "task_id": "C06-01"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [
+          "Plan A",
+          "Plan B",
+          "cost",
+          "speed",
+          "risk",
+          "unknown"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "comparison",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "Plan A",
+        "Plan B",
+        "cost",
+        "speed",
+        "risk",
+        "unknown"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Compare Plan A (cheap, slow) vs Plan B (expensive, fast) for shipping. Criteria: cost, speed, risk. Mark unknown data.",
+      "tags": [],
+      "task_id": "C06-02"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [
+          "Root-cause"
+        ],
+        "must_not": [
+          "invent the root cause"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "template",
+      "expected_unknowns": [
+        "incident_facts"
+      ],
+      "language": "en",
+      "must": [
+        "Root-cause"
+      ],
+      "must_not": [
+        "invent the root cause"
+      ],
+      "preferences": [],
+      "raw_request": "Root-cause analysis template for a website outage. Do not invent the root cause.",
+      "tags": [],
+      "task_id": "C06-03"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [
+          "junior",
+          "contractor",
+          "UNKNOWN"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [],
+      "expected_output_form": "matrix",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "junior",
+        "contractor",
+        "UNKNOWN"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Decision matrix: hire junior vs contractor for a 6-week spike. Weights left as UNKNOWN.",
+      "tags": [],
+      "task_id": "C06-04"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [
+          "assumptions"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "analysis",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "assumptions"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Identify assumptions in: We will double revenue by next quarter by posting more on social media.",
+      "tags": [],
+      "task_id": "C06-05"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [
+          "consistency",
+          "availability",
+          "both sides"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [],
+      "expected_output_form": "analysis",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "consistency",
+        "availability",
+        "both sides"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Tradeoff analysis: consistency vs availability in distributed systems. Keep both sides.",
+      "tags": [],
+      "task_id": "C06-06"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [
+          "logical gaps"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "critique",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "logical gaps"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Critique this argument for logical gaps: All successful startups use AI, so we must use AI.",
+      "tags": [],
+      "task_id": "C06-07"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [
+          "5 features",
+          "unknowns"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "prioritization",
+      "expected_unknowns": [
+        "feature_list"
+      ],
+      "language": "en",
+      "must": [
+        "5 features",
+        "unknowns"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Prioritize a backlog of 5 features using RICE-like fields with blanks for unknowns.",
+      "tags": [],
+      "task_id": "C06-08"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [
+          "Sensitivity"
+        ],
+        "must_not": [
+          "fabricate elasticities"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [],
+      "expected_output_form": "outline",
+      "expected_unknowns": [
+        "model_params"
+      ],
+      "language": "en",
+      "must": [
+        "Sensitivity"
+      ],
+      "must_not": [
+        "fabricate elasticities"
+      ],
+      "preferences": [],
+      "raw_request": "Sensitivity analysis outline for a pricing model. Do not fabricate elasticities.",
+      "tags": [],
+      "task_id": "C06-09"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [
+          "qualitative",
+          "quantitative"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "comparison",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "qualitative",
+        "quantitative"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Compare qualitative vs quantitative user research methods briefly.",
+      "tags": [
+        "negative_control_candidate"
+      ],
+      "task_id": "C06-10"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [
+          "overfitting",
+          "short paragraph"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "prose",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "overfitting",
+        "short paragraph"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "List risks of overfitting a model in one short paragraph.",
+      "tags": [],
+      "task_id": "C06-11"
+    },
+    {
+      "category": "C06",
+      "category_name": "Analysis / Reasoning",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "trivial",
+      "expected_conflicts": [],
+      "expected_output_form": "short_answer",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Which is larger: 9 or 10?",
+      "tags": [
+        "anti_gaming",
+        "trivial"
+      ],
+      "task_id": "C06-12"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "JSON"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "json",
+      "expected_unknowns": [
+        "status_meaning",
+        "count_source"
+      ],
+      "language": "en",
+      "must": [
+        "JSON"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Return JSON status and count.",
+      "tags": [
+        "structured",
+        "realistic"
+      ],
+      "task_id": "C07-01"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "name",
+          "email",
+          "phone",
+          "JSON",
+          "null",
+          "No invented values"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "json",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "name",
+        "email",
+        "phone",
+        "JSON",
+        "null",
+        "No invented values"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Extract fields name, email, phone from free text into JSON. If missing, use null. No invented values.",
+      "tags": [
+        "structured"
+      ],
+      "task_id": "C07-02"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "ONLY valid JSON",
+          "ok",
+          "items"
+        ],
+        "must_not": [
+          "prose"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "json",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "ONLY valid JSON",
+        "ok",
+        "items"
+      ],
+      "must_not": [
+        "prose"
+      ],
+      "preferences": [],
+      "raw_request": "Output ONLY valid JSON matching {\"ok\": boolean, \"items\": string[]}. No prose.",
+      "tags": [
+        "structured",
+        "hard_constraint"
+      ],
+      "task_id": "C07-03"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "sku",
+          "qty",
+          "location",
+          "CSV"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "csv",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "sku",
+        "qty",
+        "location",
+        "CSV"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "CSV header and two example rows for inventory: sku,qty,location.",
+      "tags": [
+        "structured"
+      ],
+      "task_id": "C07-04"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "YAML",
+          "name",
+          "port",
+          "integer"
+        ],
+        "must_not": [
+          "secrets"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "yaml",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "YAML",
+        "name",
+        "port",
+        "integer"
+      ],
+      "must_not": [
+        "secrets"
+      ],
+      "preferences": [],
+      "raw_request": "YAML config for app name and port. No secrets. Port as integer.",
+      "tags": [
+        "structured"
+      ],
+      "task_id": "C07-05"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "JSON Schema",
+          "name",
+          "age"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "json_schema",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "JSON Schema",
+        "name",
+        "age"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "JSON Schema for a Person with required name and optional age >= 0.",
+      "tags": [
+        "structured"
+      ],
+      "task_id": "C07-06"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "line1",
+          "city",
+          "region",
+          "postal",
+          "null"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "json",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "line1",
+        "city",
+        "region",
+        "postal",
+        "null"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Normalize address components into JSON keys: line1, city, region, postal. Unknowns as null.",
+      "tags": [
+        "structured"
+      ],
+      "task_id": "C07-07"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "JSON",
+          "plain prose only"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [
+        "JSON vs plain prose only"
+      ],
+      "expected_output_form": "conflict",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "JSON",
+        "plain prose only"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "MUST output JSON. MUST output plain prose only.",
+      "tags": [
+        "conflict"
+      ],
+      "task_id": "C07-08"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "markdown table",
+          "capital",
+          "currency",
+          "three"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "table",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "markdown table",
+        "capital",
+        "currency",
+        "three"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Tabulate three countries with capital and currency as markdown table only.",
+      "tags": [
+        "structured"
+      ],
+      "task_id": "C07-09"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "ISO-8601",
+          "date-only",
+          "JSON array"
+        ],
+        "must_not": [
+          "times"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "json",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "ISO-8601",
+        "date-only",
+        "JSON array"
+      ],
+      "must_not": [
+        "times"
+      ],
+      "preferences": [],
+      "raw_request": "Parse dates to ISO-8601 date-only. Reject times. Return JSON array.",
+      "tags": [
+        "structured"
+      ],
+      "task_id": "C07-10"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "JSON object"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "trivial",
+      "expected_conflicts": [],
+      "expected_output_form": "json",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "JSON object"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Emit an empty JSON object.",
+      "tags": [
+        "anti_gaming",
+        "trivial",
+        "structured"
+      ],
+      "task_id": "C07-11"
+    },
+    {
+      "category": "C07",
+      "category_name": "Structured Data / Extraction",
+      "compile_kwargs": {
+        "must": [
+          "JSON only",
+          "sum"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "trivial",
+      "expected_conflicts": [],
+      "expected_output_form": "json",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "JSON only",
+        "sum"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Return {\"sum\": 5} for inputs 2 and 3. JSON only.",
+      "tags": [
+        "anti_gaming",
+        "trivial",
+        "structured"
+      ],
+      "task_id": "C07-12"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "children's story",
+          "lighthouse"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "story",
+      "expected_unknowns": [
+        "length_preference"
+      ],
+      "language": "en",
+      "must": [
+        "children's story",
+        "lighthouse"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Write a short children's story about a lighthouse.",
+      "tags": [
+        "realistic"
+      ],
+      "task_id": "C08-01"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "under 100 words",
+          "night market"
+        ],
+        "must_not": [
+          "violence"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "story",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "under 100 words",
+        "night market"
+      ],
+      "must_not": [
+        "violence"
+      ],
+      "preferences": [],
+      "raw_request": "Microfiction under 100 words set in a night market. No violence.",
+      "tags": [],
+      "task_id": "C08-02"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "museum guide",
+          "in character"
+        ],
+        "must_not": [
+          "fake historical citations"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "roleplay",
+      "expected_unknowns": [
+        "exhibit"
+      ],
+      "language": "en",
+      "must": [
+        "museum guide",
+        "in character"
+      ],
+      "must_not": [
+        "fake historical citations"
+      ],
+      "preferences": [],
+      "raw_request": "Roleplay as a museum guide for one exhibit. Stay in character. Do not invent fake historical citations.",
+      "tags": [],
+      "task_id": "C08-03"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "Poem",
+          "rain",
+          "free verse"
+        ],
+        "must_not": [
+          "forced rhymes"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "poem",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "Poem",
+        "rain",
+        "free verse"
+      ],
+      "must_not": [
+        "forced rhymes"
+      ],
+      "preferences": [],
+      "raw_request": "Poem about rain in free verse. No forced rhymes.",
+      "tags": [],
+      "task_id": "C08-04"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "cafe",
+          "player agency"
+        ],
+        "must_not": [
+          "railroad"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "scene",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "cafe",
+        "player agency"
+      ],
+      "must_not": [
+        "railroad"
+      ],
+      "preferences": [],
+      "raw_request": "Describe a cozy cafe scene for a game setting. Keep player agency open. Do not railroad choices.",
+      "tags": [],
+      "task_id": "C08-05"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "8",
+          "tea"
+        ],
+        "must_not": [
+          "trademark claims"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "list",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "8",
+        "tea"
+      ],
+      "must_not": [
+        "trademark claims"
+      ],
+      "preferences": [],
+      "raw_request": "Brainstorm 8 product names for a tea brand. No trademark claims.",
+      "tags": [],
+      "task_id": "C08-06"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "dialogue",
+          "Balanced"
+        ],
+        "must_not": [
+          "winner declared"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "dialogue",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "dialogue",
+        "Balanced"
+      ],
+      "must_not": [
+        "winner declared"
+      ],
+      "preferences": [],
+      "raw_request": "Write dialogue between a skeptic and an optimist about AI. Balanced. No winner declared.",
+      "tags": [],
+      "task_id": "C08-07"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "3 sentences",
+          "Stop"
+        ],
+        "must_not": [
+          "finish the story"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "story",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "3 sentences",
+        "Stop"
+      ],
+      "must_not": [
+        "finish the story"
+      ],
+      "preferences": [],
+      "raw_request": "Fairy tale opening only (3 sentences). Stop. Do not finish the story.",
+      "tags": [
+        "hard_constraint"
+      ],
+      "task_id": "C08-08"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "5",
+          "watercolor"
+        ],
+        "must_not": [
+          "copyrighted character"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "list",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "5",
+        "watercolor"
+      ],
+      "must_not": [
+        "copyrighted character"
+      ],
+      "preferences": [],
+      "raw_request": "Creative prompt ideas for watercolor practice. 5 ideas. No copyrighted character names.",
+      "tags": [],
+      "task_id": "C08-09"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "Haiku",
+          "software bugs"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "poem",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "Haiku",
+        "software bugs"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Haiku about software bugs.",
+      "tags": [
+        "negative_control_candidate"
+      ],
+      "task_id": "C08-10"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "city district",
+          "UNKNOWN"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "worldbuilding",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "city district",
+        "UNKNOWN"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Worldbuilding note: one city district. Leave magic system UNKNOWN.",
+      "tags": [],
+      "task_id": "C08-11"
+    },
+    {
+      "category": "C08",
+      "category_name": "Creative / Story / Roleplay",
+      "compile_kwargs": {
+        "must": [
+          "one sentence"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "trivial",
+      "expected_conflicts": [],
+      "expected_output_form": "short_answer",
+      "expected_unknowns": [],
+      "language": "en",
+      "must": [
+        "one sentence"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Say hello creatively in one sentence.",
+      "tags": [
+        "anti_gaming",
+        "trivial"
+      ],
+      "task_id": "C08-12"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "announcement",
+      "expected_unknowns": [
+        "event",
+        "date",
+        "place"
+      ],
+      "language": "te",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "write Telugu church announcement",
+      "tags": [
+        "one_line",
+        "realistic",
+        "multilingual"
+      ],
+      "task_id": "C09-01"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "వృత్తిపరమైన"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "email",
+      "expected_unknowns": [
+        "dates"
+      ],
+      "language": "te",
+      "must": [
+        "వృత్తిపరమైన"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "తెలుగులో సెలవు ఈమెయిల్ రాయండి. వృత్తిపరమైన స్వరం ఉండాలి.",
+      "tags": [
+        "multilingual"
+      ],
+      "task_id": "C09-02"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "औपचारिक"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "note",
+      "expected_unknowns": [
+        "recipient"
+      ],
+      "language": "hi",
+      "must": [
+        "औपचारिक"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "हिंदी में एक छोटा धन्यवाद संदेश लिखें। औपचारिक रहें।",
+      "tags": [
+        "multilingual"
+      ],
+      "task_id": "C09-03"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "Hindi",
+          "Tuesday"
+        ],
+        "must_not": [
+          "apologize"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "email",
+      "expected_unknowns": [],
+      "language": "hi",
+      "must": [
+        "Hindi",
+        "Tuesday"
+      ],
+      "must_not": [
+        "apologize"
+      ],
+      "preferences": [],
+      "raw_request": "Write a professional leave email in Hindi. Must mention Tuesday. Must not apologize.",
+      "tags": [
+        "multilingual",
+        "hard_constraint"
+      ],
+      "task_id": "C09-04"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "பள்ளி"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "announcement",
+      "expected_unknowns": [
+        "date"
+      ],
+      "language": "ta",
+      "must": [
+        "பள்ளி"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "தமிழில் ஒரு குறுகிய அறிவிப்பு எழுதுங்கள். பள்ளி நிகழ்வு.",
+      "tags": [
+        "multilingual"
+      ],
+      "task_id": "C09-05"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "Tamil",
+          "middle-school"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [],
+      "expected_output_form": "explanation",
+      "expected_unknowns": [],
+      "language": "ta",
+      "must": [
+        "Tamil",
+        "middle-school"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Explain photosynthesis in Tamil at a middle-school level. Keep scientific accuracy. Do not mix English except for unavoidable terms labeled.",
+      "tags": [
+        "multilingual"
+      ],
+      "task_id": "C09-06"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "Telugu",
+          "Friday",
+          "3pm"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "translation",
+      "expected_unknowns": [],
+      "language": "te",
+      "must": [
+        "Telugu",
+        "Friday",
+        "3pm"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Translate to Telugu: The meeting is on Friday at 3pm. Preserve numbers and day.",
+      "tags": [
+        "multilingual"
+      ],
+      "task_id": "C09-07"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "español",
+          "martes"
+        ],
+        "must_not": [
+          "disculpes"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "email",
+      "expected_unknowns": [],
+      "language": "es",
+      "must": [
+        "español",
+        "martes"
+      ],
+      "must_not": [
+        "disculpes"
+      ],
+      "preferences": [],
+      "raw_request": "Escribe un correo de ausencia profesional en español. Menciona el martes. No te disculpes.",
+      "tags": [
+        "multilingual",
+        "hard_constraint"
+      ],
+      "task_id": "C09-08"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "same language",
+          "Short"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "note",
+      "expected_unknowns": [],
+      "language": "fr",
+      "must": [
+        "same language",
+        "Short"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Reply in the same language as the user: \"merci pour votre aide\". Short thanks.",
+      "tags": [
+        "multilingual"
+      ],
+      "task_id": "C09-09"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "5",
+          "EN/TE"
+        ],
+        "must_not": [
+          "invent theology"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "medium",
+      "difficulty": "medium",
+      "expected_conflicts": [],
+      "expected_output_form": "glossary",
+      "expected_unknowns": [],
+      "language": "en+te",
+      "must": [
+        "5",
+        "EN/TE"
+      ],
+      "must_not": [
+        "invent theology"
+      ],
+      "preferences": [],
+      "raw_request": "Bilingual EN/TE glossary of 5 church service terms. Do not invent theology.",
+      "tags": [
+        "multilingual"
+      ],
+      "task_id": "C09-10"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "that language only"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "greeting",
+      "expected_unknowns": [],
+      "language": "hi",
+      "must": [
+        "that language only"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Detect language of: \"नमस्ते\" and greet back in that language only.",
+      "tags": [
+        "multilingual"
+      ],
+      "task_id": "C09-11"
+    },
+    {
+      "category": "C09",
+      "category_name": "Multilingual",
+      "compile_kwargs": {
+        "must": [
+          "Telugu script only"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "trivial",
+      "expected_conflicts": [],
+      "expected_output_form": "short_answer",
+      "expected_unknowns": [],
+      "language": "te",
+      "must": [
+        "Telugu script only"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Say the number five in Telugu script only.",
+      "tags": [
+        "anti_gaming",
+        "trivial",
+        "multilingual"
+      ],
+      "task_id": "C09-12"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "clarifying_prompt",
+      "expected_unknowns": [
+        "platform",
+        "budget",
+        "framework",
+        "authentication",
+        "database",
+        "audience"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "build me an app",
+      "tags": [
+        "one_line",
+        "ambiguous",
+        "realistic"
+      ],
+      "task_id": "C10-01"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "clarifying_prompt",
+      "expected_unknowns": [
+        "menu",
+        "location",
+        "tech_stack",
+        "hosting"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "make website for my restaurant",
+      "tags": [
+        "one_line",
+        "ambiguous",
+        "realistic"
+      ],
+      "task_id": "C10-02"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "clarifying_prompt",
+      "expected_unknowns": [
+        "thing"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Help with the thing.",
+      "tags": [
+        "ambiguous"
+      ],
+      "task_id": "C10-03"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "clarifying_prompt",
+      "expected_unknowns": [
+        "workflow",
+        "tools",
+        "constraints"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Automate my workflow somehow.",
+      "tags": [
+        "ambiguous"
+      ],
+      "task_id": "C10-04"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [
+          "concise",
+          "exhaustive",
+          "every detail"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [
+        "concise vs exhaustive"
+      ],
+      "expected_output_form": "conflict",
+      "expected_unknowns": [
+        "topic"
+      ],
+      "language": "en",
+      "must": [
+        "concise",
+        "exhaustive",
+        "every detail"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "MUST be concise. MUST be exhaustive and cover every detail.",
+      "tags": [
+        "conflict"
+      ],
+      "task_id": "C10-05"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [
+          "Python"
+        ],
+        "must_not": [
+          "Python"
+        ],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [
+        "Python vs not Python"
+      ],
+      "expected_output_form": "conflict",
+      "expected_unknowns": [
+        "task"
+      ],
+      "language": "en",
+      "must": [
+        "Python"
+      ],
+      "must_not": [
+        "Python"
+      ],
+      "preferences": [],
+      "raw_request": "Use Python. Do not use Python.",
+      "tags": [
+        "conflict"
+      ],
+      "task_id": "C10-06"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [
+          "tomorrow",
+          "perfect quality",
+          "as long as needed"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [
+        "tomorrow vs as long as needed"
+      ],
+      "expected_output_form": "conflict",
+      "expected_unknowns": [
+        "deliverable"
+      ],
+      "language": "en",
+      "must": [
+        "tomorrow",
+        "perfect quality",
+        "as long as needed"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Ship tomorrow. Also take as long as needed for perfect quality.",
+      "tags": [
+        "conflict"
+      ],
+      "task_id": "C10-07"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [
+          "kids",
+          "PhD audience",
+          "advanced jargon"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [
+        "kids vs PhD audience"
+      ],
+      "expected_output_form": "conflict",
+      "expected_unknowns": [
+        "topic"
+      ],
+      "language": "en",
+      "must": [
+        "kids",
+        "PhD audience",
+        "advanced jargon"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Target kids. Use advanced jargon and assume PhD audience.",
+      "tags": [
+        "conflict"
+      ],
+      "task_id": "C10-08"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [
+          "Private",
+          "confidential",
+          "publish everything publicly"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [
+        "private vs public"
+      ],
+      "expected_output_form": "conflict",
+      "expected_unknowns": [
+        "content"
+      ],
+      "language": "en",
+      "must": [
+        "Private",
+        "confidential",
+        "publish everything publicly"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Private and confidential. Also publish everything publicly.",
+      "tags": [
+        "conflict"
+      ],
+      "task_id": "C10-09"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "clarifying_prompt",
+      "expected_unknowns": [
+        "business",
+        "problem",
+        "constraints",
+        "success_metric"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Do something cool with AI for my business.",
+      "tags": [
+        "ambiguous"
+      ],
+      "task_id": "C10-10"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "simple",
+      "difficulty": "easy",
+      "expected_conflicts": [],
+      "expected_output_form": "clarifying_prompt",
+      "expected_unknowns": [
+        "it",
+        "metric",
+        "constraints"
+      ],
+      "language": "en",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "Optimize it.",
+      "tags": [
+        "ambiguous"
+      ],
+      "task_id": "C10-11"
+    },
+    {
+      "category": "C10",
+      "category_name": "Ambiguous / Conflict-heavy",
+      "compile_kwargs": {
+        "must": [
+          "English only",
+          "Telugu only"
+        ],
+        "must_not": [],
+        "preferences": []
+      },
+      "complexity_class": "complex",
+      "difficulty": "hard",
+      "expected_conflicts": [
+        "English only vs Telugu only"
+      ],
+      "expected_output_form": "conflict",
+      "expected_unknowns": [
+        "question"
+      ],
+      "language": "en",
+      "must": [
+        "English only",
+        "Telugu only"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "raw_request": "MUST answer in English only. MUST answer in Telugu only.",
+      "tags": [
+        "conflict",
+        "multilingual"
+      ],
+      "task_id": "C10-12"
+    }
+  ],
+  "total_tasks": 120
+}

@@ -1,0 +1,5 @@
+{
+  "frozen_slots": true,
+  "nested_tuples": true,
+  "copy_on_write": true
+}

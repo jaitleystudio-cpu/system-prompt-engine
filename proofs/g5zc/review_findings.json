@@ -1,0 +1,18 @@
+{
+  "findings": [
+    {
+      "claim_impact": "storage fault class strengthened; no semantic redesign",
+      "failing_invariant": "partial in-place overwrite must not destroy complete existing .spe",
+      "green_reproduction": "test_g5zc_f7_disk_write_failure_injected + G5M4/G5M8",
+      "id": "G5ZC-F01",
+      "minimal_repair": "temp sibling + os.replace; OSError \u2192 SpeTypedError; best-effort tmp cleanup",
+      "red_reproduction": "Pre-harden save_spe used Path.write_bytes directly; first-run suite green because overwrite default refused and truncate-load tests covered load path",
+      "regression_evidence": "tests/unit/test_g5zc_chaos.py + test_g5zc_mutations.py",
+      "root_cause": "non-atomic write on overwrite=True path",
+      "severity": "MEDIUM",
+      "status": "FIXED"
+    }
+  ],
+  "first_run_was": "GREEN",
+  "note": "F01 discovered by deeper overwrite-injection beyond initial suite; repaired before final qualification evidence"
+}

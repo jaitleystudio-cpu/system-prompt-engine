@@ -1,0 +1,21 @@
+{
+  "gate": "G1R-7",
+  "task": "K3_STRATEGY_INTELLIGENCE",
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "predecessor": "G1R-6 PASS_EXTERNAL / G1R-6R RECHECK_PASS",
+  "existing_prompt_package": [
+    "spe_runtime/prompt/__init__.py",
+    "spe_runtime/prompt/models.py",
+    "spe_runtime/prompt/build.py"
+  ],
+  "prompt_artifact_writer": "spe_runtime/prompt/build.py::build_prompt_artifact",
+  "cognitive_plan_exists": false,
+  "prompt_strategy_exists": false,
+  "technique_selection_exists": false,
+  "c01_boundary": "recommendation — not K3 planning owner",
+  "c03_boundary": "rendering/presentation — not K3 planning owner",
+  "k3_completeness_gate": "test_g1_k3_required_responsibilities_complete",
+  "k3_completeness_gate_state_before": "RED",
+  "unowned_before": ["spe_artifact_identity", "qualification_evidence"],
+  "missing_k3_before": ["cognitive plan", "prompt strategy", "technique selection"]
+}

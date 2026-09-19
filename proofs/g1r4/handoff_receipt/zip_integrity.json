@@ -1,0 +1,17 @@
+{
+  "path": "/home/ubuntu/.cursor/projects/workspace/uploads/SPE_OMEGA_V2_4_1_HANDOFF_FULL_3318.zip",
+  "sha256": "f2080d0750c3d47175e97dd8778a88aa77949127f5f0d4142790762f31470813",
+  "expected_sha256": "f2080d0750c3d47175e97dd8778a88aa77949127f5f0d4142790762f31470813",
+  "match": true,
+  "contains": [
+    "g0-replay-only",
+    "g0-hermetic-pack",
+    "spe-project",
+    "docs"
+  ],
+  "is_grok_g1r123_runtime": false,
+  "is_g0_handoff_pack": true,
+  "proof_type_system": "handoff/g0-replay-only/SPE_PROOF_TYPE_SYSTEM_v1.json",
+  "binding_status": "UNBOUND",
+  "note": "Useful normative K2 proof-class vocabulary; does NOT replace missing Grok G1R-1/2/3 working contract SHA 68bac38\u2026"
+}

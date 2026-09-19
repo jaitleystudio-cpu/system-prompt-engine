@@ -1,0 +1,14 @@
+{
+  "collected": 672,
+  "passed": 672,
+  "failed": 0,
+  "skipped": 0,
+  "exit": 0,
+  "junit_sha256": "fbd3b3138e3c92a29d173357496d62a6ef0f4b5d663183c9d461e161ea4695c1",
+  "result_sha256": "4067307ba5d5c2b5a5b28921d8772dcd55afad5e354d9ca802571858ce485336",
+  "baseline_g1r9r": {
+    "collected": 672,
+    "passed": 672
+  },
+  "delta": 0
+}

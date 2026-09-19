@@ -1,0 +1,11 @@
+On branch cursor/g1r9-k7-qualification-0d6e
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   spe_runtime/error_registry.py
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	proofs/g1r9/
+
+no changes added to commit (use "git add" and/or "git commit -a")

@@ -1,0 +1,11 @@
+{
+  "mode": "BEGIN IMMEDIATE \u2026 COMMIT",
+  "isolation_level": "None (manual)",
+  "semantic_commit_atomic": true,
+  "fields_in_T3": [
+    "snapshot_binding",
+    "execution_cursor",
+    "journal SEMANTIC_COMMITTED"
+  ],
+  "autocommit_hazard": false
+}

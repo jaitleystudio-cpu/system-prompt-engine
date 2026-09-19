@@ -1,0 +1,24 @@
+{
+  "full_python": {
+    "collected": 632,
+    "passed": 632,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "duration_note": "see green/authoritative_suite.txt",
+    "junit_sha256": "be31efe849ed029f2c02f2aa8ddf5944682d69012f1d3306d6627708e7395460",
+    "baseline_pre_g1r9": {
+      "collected": 583,
+      "passed": 581,
+      "failed": 2
+    },
+    "delta_collected": 49,
+    "delta_explanation": "49 new G1R-9 K7 tests; 2 prior G1 RED gates now GREEN"
+  },
+  "g1r9": {
+    "collected": 49,
+    "passed": 49
+  },
+  "compileall": "ok",
+  "rust_wasm": "RUST_WASM_NOT_REBUILT; NO_SHARED_ABI_CHANGE"
+}

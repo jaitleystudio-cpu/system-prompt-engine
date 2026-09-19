@@ -1,0 +1,20 @@
+{
+  "fields": [
+    "schema_version",
+    "claim_key",
+    "subject_id",
+    "scope",
+    "requested_stage",
+    "earned_stage",
+    "evidence_ids",
+    "unmet_requirements",
+    "limitations",
+    "verdict",
+    "policy_id@version"
+  ],
+  "excludes": [
+    "wall_clock",
+    "filesystem_paths",
+    "uuid"
+  ]
+}

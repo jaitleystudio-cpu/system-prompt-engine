@@ -1,0 +1,10 @@
+{
+  "rustc": "rustc 1.83.0 (90b35a623 2024-11-26)",
+  "cargo": "cargo 1.83.0 (5ffbef321 2024-10-29)",
+  "rustup": "rustup 1.29.0 (28d1352db 2026-03-05)",
+  "rustup_show": "Default host: x86_64-unknown-linux-gnu\nrustup home:  /usr/local/rustup\n\ninstalled toolchains\n--------------------\n1.83.0-x86_64-unknown-linux-gnu (active, default)\n\nactive toolchain\n----------------\nname: 1.83.0-x86_64-unknown-linux-gnu\nactive because: it's the default toolchain\ninstalled targets:\n  x86_64-unknown-linux-gnu\n",
+  "installed_targets": [
+    "x86_64-unknown-linux-gnu"
+  ],
+  "wasm32-unknown-unknown": "ABSENT"
+}

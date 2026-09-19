@@ -1,0 +1,7 @@
+{
+  "python_version": "3.12.3",
+  "pytest_version": "9.1.1",
+  "collected": 672,
+  "filters": "ignore wasm/rust/sprint5 merge-gate (documented G1 suite)",
+  "hidden_k_or_m": false
+}

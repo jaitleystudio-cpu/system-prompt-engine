@@ -1,0 +1,13 @@
+{
+  "core_packages_forbidden_imports": [
+    "requests",
+    "httpx",
+    "aiohttp",
+    "urllib3",
+    "openai",
+    "anthropic"
+  ],
+  "core_result": "CLEAN",
+  "providers_package": "stdlib urllib \u2014 OPTIONAL interoperability only",
+  "network_kill_test": "PASS \u2014 compile succeeds with socket.connect killed"
+}

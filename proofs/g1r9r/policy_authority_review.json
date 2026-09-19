@@ -1,0 +1,8 @@
+{
+  "caller_ClaimPolicy_accepted": false,
+  "registered_policy_id_only": true,
+  "STAGE_FLOORS_enforced": true,
+  "default_ring0_max_stage": "VERIFIED_WITHIN_SCOPE",
+  "subsystem_pass_external_max_stage": "QUALIFIED",
+  "F01": "FIXED"
+}

@@ -1,0 +1,7 @@
+{
+  "SemanticProofLease": "Ring-0/K2 semantic patch authorization",
+  "WorkerExecutionLease": "Ring-1/G3 durable mission ownership epoch",
+  "same_object": false,
+  "safety": "fencing token monotonic; stale fence cannot mutate",
+  "clock_role": "when reclaim may occur (liveness); fencing is safety after reassignment"
+}

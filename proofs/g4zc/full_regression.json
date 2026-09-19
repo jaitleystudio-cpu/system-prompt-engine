@@ -1,0 +1,5 @@
+{
+  "unit_passed": 606,
+  "unit_failed": 0,
+  "note": "tests/unit; portability/wasm excluded (env missing wasm32) \u2014 same scope discipline as prior gates"
+}

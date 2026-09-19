@@ -1,0 +1,10 @@
+{
+  "G7": "SECURITY_PRIVACY_RED_TEAM_VERIFIED_WITHIN_TESTED_SCOPE",
+  "not_earned": [
+    "PRODUCTION_SECURITY_CERTIFICATION",
+    "PENTEST_COMPLETE",
+    "MALWARE_SAFE",
+    "ALL_THREAT_MODELS"
+  ],
+  "note": "Local adversarial suite within tested surfaces; not a substitute for independent professional pentest"
+}

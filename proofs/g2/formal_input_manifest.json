@@ -1,0 +1,75 @@
+{
+  "inputs": [
+    {
+      "path": "formal/SPELeaseCommit.tla",
+      "bytes": 17821,
+      "sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562"
+    },
+    {
+      "path": "formal/cfg/C0_smoke.cfg",
+      "bytes": 180,
+      "sha256": "3ecb9f11ed1d6fef25a11cc7b22df3e531f9dc1565047aae88607fcecb42a0f2"
+    },
+    {
+      "path": "formal/cfg/C1_stale_patch.cfg",
+      "bytes": 218,
+      "sha256": "dccd1b968cd82b7134a662908e2c767532f969eac49fac682f667c7b01ad2260"
+    },
+    {
+      "path": "formal/cfg/C2_competing_patches.cfg",
+      "bytes": 231,
+      "sha256": "9f6d837fb4bcfcafa118e309e9faa402d63694eece24edc3053ebd40878beaf8"
+    },
+    {
+      "path": "formal/cfg/C3_multiple_leases.cfg",
+      "bytes": 247,
+      "sha256": "2de14950ebaba0c3a7181abbe76a282240220871d4f26cf25ad888e2cea6bed8"
+    },
+    {
+      "path": "formal/cfg/C4_obligations_types.cfg",
+      "bytes": 284,
+      "sha256": "89f3170897662e5aae6f1e9badfe4b5bd0ebe1b9e158daf7a82aefacae6527dd"
+    },
+    {
+      "path": "formal/cfg/C5_verdicts.cfg",
+      "bytes": 299,
+      "sha256": "5d9597492fd83539f2a1260d81209d5c26cb26bad219b3f51737e668f38ba994"
+    },
+    {
+      "path": "formal/cfg/C6_liveness.cfg",
+      "bytes": 387,
+      "sha256": "0c5f83f8223b7fb833222635fc2d84f729100f6e49ae91b48128e19566fddb82"
+    },
+    {
+      "path": "formal/cfg/C7_maximal.cfg",
+      "bytes": 214,
+      "sha256": "8235dd4020123ad0d3cabc9643791d0a8a170ff90802d7ec7338f6edee354d15"
+    },
+    {
+      "path": "formal/cfg/C_safety_all.cfg",
+      "bytes": 627,
+      "sha256": "7443e8fae87910e0590a85aee2764976f9f3e532b021ec236cd851e9174ee494"
+    },
+    {
+      "path": "proofs/g2/run_tlc_matrix.sh",
+      "bytes": 3512,
+      "sha256": "01d7c3e6de178a0778503682feb5333bd60e75ec8dc08c94d54b6b40886aa93b"
+    },
+    {
+      "path": "proofs/g2/run_mutations.sh",
+      "bytes": 2421,
+      "sha256": "350fc5005f8d7d827d45240b84c58d998983a642a456a9ed188d42a1d296074f"
+    },
+    {
+      "path": "tools/tlc/fetch_tla2tools.sh",
+      "bytes": 821,
+      "sha256": "236c55682d027fcf9c46a45b471f12f0c098cf7ee6ef0c4a693fceb0894daf57"
+    },
+    {
+      "path": "tools/tlc/tla2tools.jar",
+      "bytes": 4492966,
+      "sha256": "9d36716ffb5e49d1ba8fae4651eba59f3189887e12eb90e204a42d2e6e993fef",
+      "committed": false
+    }
+  ]
+}

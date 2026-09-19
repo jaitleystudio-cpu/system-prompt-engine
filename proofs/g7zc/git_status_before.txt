@@ -1,0 +1,3 @@
+?? proofs/g7zc/
+?? tests/security/test_g7zc_redteam.py
+?? tests/unit/test_g7zc_mutations.py

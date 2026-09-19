@@ -1,0 +1,845 @@
+{
+  "pairs": [
+    {
+      "task_id": "C01-01",
+      "category": "C01",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=write leave email | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-91559a54919f1d5f1385c173e12fe37c3008ef3a13d0c8a848446892be50c518\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "write leave email"
+    },
+    {
+      "task_id": "C01-02",
+      "category": "C01",
+      "language": "en",
+      "left": "Write a professional leave email for next Monday and Tuesday.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Write a professional leave email for next Monday and Tuesday. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=professional tone | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Monday | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=Tuesday | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-6b32085dcded239ba084ac90ff2ceec1c7b4e55ee172baebe0103cbe7abb1fa4\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C01-03",
+      "category": "C01",
+      "language": "en",
+      "left": "Write a 150-word email. Must mention Tuesday. Must not apologize. Professional tone.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Write a 150-word email. Must mention Tuesday. Must not apologize. Professional tone. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=150-word | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Tuesday | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=Professional tone | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=apologize | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-8c2fd15ffb0bbf9f391ca7619d318af47899592d2ad166807b4f3aa3bc104f8b\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C01-04",
+      "category": "C01",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Draft a polite follow-up to a client who has not replied in two weeks. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=polite | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-8717f5c0c9b4452c3306bbf0ff6fd13bd73855dc75700007e7d557beec7a5391\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Draft a polite follow-up to a client who has not replied in two weeks."
+    },
+    {
+      "task_id": "C01-05",
+      "category": "C01",
+      "language": "en",
+      "left": "Rewrite this more clearly: We need the thing ASAP if possible maybe.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Rewrite this more clearly: We need the thing ASAP if possible maybe. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=clarity | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-a30761a1805eb32ac079071e1e8d54659f10f1681b6e6f94e2e694fd35a13a69\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C01-06",
+      "category": "C01",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Write a resignation letter. Keep it short. Do not criticize the company. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=short | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=criticize the company | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-a5849c5d760e453eeed15ae5ea98dfa9a49e67d7dc071a982466e50d7de8f740\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Write a resignation letter. Keep it short. Do not criticize the company."
+    },
+    {
+      "task_id": "C01-07",
+      "category": "C01",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Customer complaint response: delayed shipment. Empathetic. Offer a concrete next step. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Empathetic | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=concrete next step | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-79e99cd383956db6800ca9152999e6731c5fdce89c947c4a288fc74274922d7b\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Customer complaint response: delayed shipment. Empathetic. Offer a concrete next step."
+    },
+    {
+      "task_id": "C01-08",
+      "category": "C01",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Meeting invite for project kickoff. Include agenda placeholders only. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=agenda placeholders | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-78835a97788247f81c1b4d45f4895e4b8879b754ac0f928200174bbee6967a4b\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Meeting invite for project kickoff. Include agenda placeholders only."
+    },
+    {
+      "task_id": "C01-09",
+      "category": "C01",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=LinkedIn post announcing a product launch. No hype adjectives like revolutionary. | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=revolutionary | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-9688799579e9efc183791e0d30fae709491e4c6a011675ed1a6d0bd1d177f9e1\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "LinkedIn post announcing a product launch. No hype adjectives like revolutionary."
+    },
+    {
+      "task_id": "C01-10",
+      "category": "C01",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Thank-you note after an interview. One short paragraph. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=short paragraph | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-1c2d7db6aa30e27dc71605b78a7ecb5cfd21322255a3238232bc92c36415a002\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Thank-you note after an interview. One short paragraph."
+    },
+    {
+      "task_id": "C01-11",
+      "category": "C01",
+      "language": "en",
+      "left": "Status update email to stakeholders. Bullet points. No blame language.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Status update email to stakeholders. Bullet points. No blame language. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Bullet points | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=blame | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-c095b1ee18f8d9f530c1f3b72f9709af28accb260005dbc394e946cf2be461d5\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C01-12",
+      "category": "C01",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Return 2+2. | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-21bfc42a4bf3f83e56f43c068215e08aaab0fdf88c9f628ba5927168f572efbc\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Return 2+2."
+    },
+    {
+      "task_id": "C02-01",
+      "category": "C02",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=make python script rename files | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-0a760b4d0fd983e61155b9935d5623ae372af24110481b509ec8b096219b2148\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "make python script rename files"
+    },
+    {
+      "task_id": "C02-02",
+      "category": "C02",
+      "language": "en",
+      "left": "Write a Python function that parses a CSV of names and emails and returns valid emails only.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Write a Python function that parses a CSV of names and emails and returns valid emails only. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Python | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=CSV | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=valid emails only | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-911eaf6a57c4db6445dbcc8736b4a9fbc3829f6a88432afd3af057f1cc286151\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C02-03",
+      "category": "C02",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Bash one-liner to count lines in all *.log files. No network tools. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Bash | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=*.log | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=No network | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=curl | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.1 | value=wget | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-b73fcf0301fb4fcb4afed9a440b1be36328cb40f5dca3723672f9dfec2ecbcf7\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Bash one-liner to count lines in all *.log files. No network tools."
+    },
+    {
+      "task_id": "C02-04",
+      "category": "C02",
+      "language": "en",
+      "left": "Create a unit-tested Python function for Fibonacci. Include tests. No third-party deps.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Create a unit-tested Python function for Fibonacci. Include tests. No third-party deps. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=unit-tested | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Fibonacci | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=No third-party deps | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-00bf0c2519d31a9598d6070bcdbeab449d771f8b7f3cf8d5861ccdd3bcc3453d\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C02-05",
+      "category": "C02",
+      "language": "en",
+      "left": "Fix this: for i in range(10) print(i)  # make it Python 3 valid",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Fix this: for i in range(10) print(i)  # make it Python 3 valid | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Python 3 | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-bc58fbe251fc238b846f9942831accc9fbba66fb78e0a86b3eb63c31b26299f3\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C02-06",
+      "category": "C02",
+      "language": "en",
+      "left": "SQL query: list customers with no orders in 90 days. Assume tables customers(id), orders(customer_id, created_at).",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=SQL query: list customers with no orders in 90 days. Assume tables customers(id), orders(customer_id, created_at). | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=90 days | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=customers | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=orders | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-7ad3a09a53efc170eb0b853a332d9e24b39ad745009cbf5cdea7cde800bfbf20\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C02-07",
+      "category": "C02",
+      "language": "en",
+      "left": "Write a regex for IPv4 addresses. Explain limitations. Do not claim it validates public reachability.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Write a regex for IPv4 addresses. Explain limitations. Do not claim it validates public reachability. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=IPv4 | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=limitations | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=public reachability | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-a132cdef835fdf64f543a00d79c6e3155cf96f7695a9422473adbf7e05c44340\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C02-08",
+      "category": "C02",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Refactor checklist for a 200-line Python script. Do not invent performance numbers. | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=invent performance numbers | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-0feb7c3bc5565e0989284a45b213b0e16ee84034d2a36de66368c6535f77213b\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Refactor checklist for a 200-line Python script. Do not invent performance numbers."
+    },
+    {
+      "task_id": "C02-09",
+      "category": "C02",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Generate JSON schema for a Todo item with id, title, done. Required fields only those three. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=id | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=title | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=done | provenance=USER_EXPLICIT\nMUST | key=must.3 | value=JSON schema | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-91ac79e248cd93160a7685d927fa524611862fa3b398ce249f9935982fca7ed9\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Generate JSON schema for a Todo item with id, title, done. Required fields only those three."
+    },
+    {
+      "task_id": "C02-10",
+      "category": "C02",
+      "language": "en",
+      "left": "Docker Compose for a local Postgres only. No cloud services. No images besides postgres.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Docker Compose for a local Postgres only. No cloud services. No images besides postgres. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Postgres | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=local | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=cloud | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-3b69f5a5003fe15f3e52a63c824653a51fa87392b998ea6be70149a32a41be5e\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C02-11",
+      "category": "C02",
+      "language": "en",
+      "left": "Explain Big-O of binary search in one paragraph.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Explain Big-O of binary search in one paragraph. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Big-O | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=binary search | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=one paragraph | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-58394b6291a4dd38d2e59e704ee4df480d858e72013c20d437b257adf7bbd3a4\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C02-12",
+      "category": "C02",
+      "language": "en",
+      "left": "Return only the integer 42.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Return only the integer 42. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=integer 42 | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-28907b0af11a6a31ca4e5378fddbbfae379b0dc588471fa676cb67eaf4613d1a\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C03-01",
+      "category": "C03",
+      "language": "en",
+      "left": "research battery technology",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=research battery technology | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-10bb4612f088c59902ab966d57761c77c2a5e98d688719aa637ddf2c78900f40\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C03-02",
+      "category": "C03",
+      "language": "en",
+      "left": "Compare lithium-ion vs sodium-ion batteries for grid storage. Require evidence standards and uncertainties.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Compare lithium-ion vs sodium-ion batteries for grid storage. Require evidence standards and uncertainties. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=lithium-ion | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=sodium-ion | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=grid storage | provenance=USER_EXPLICIT\nMUST | key=must.3 | value=uncertainties | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-51bd8cf38862bf406bafadd48d57019d824ebdcbec4ccd9ca59b7e93d15f000c\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C03-03",
+      "category": "C03",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=What caused the 2008 financial crisis? Summarize competing explanations. Do not pick one as proven truth. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=competing explanations | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=proven truth | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-7fc1c7753a3fd6924ad36fa3d53a3255a016d732702ba94f9b7e92a2fe01c474\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "What caused the 2008 financial crisis? Summarize competing explanations. Do not pick one as proven truth."
+    },
+    {
+      "task_id": "C03-04",
+      "category": "C03",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Literature-style question decomposition for: Does remote work reduce innovation? | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=question decomposition | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-69e8baddec592c5099cd374829817fd94cea5181da867ab0ad0a9acda8d3a535\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Literature-style question decomposition for: Does remote work reduce innovation?"
+    },
+    {
+      "task_id": "C03-05",
+      "category": "C03",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Sources checklist for verifying a health claim about vitamin D. No medical advice. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=verification checklist | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=medical advice | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-31364fbf4c9688985e76ad62c1c3af2623e2625342009e4879d78b3c9431ed49\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Sources checklist for verifying a health claim about vitamin D. No medical advice."
+    },
+    {
+      "task_id": "C03-06",
+      "category": "C03",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Map open questions about CRISPR gene editing ethics. Label unknowns explicitly. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=unknowns | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-1e0b107e138c7c971b25a792c6f81ea53a5ab4fff0fb07c7f8fc3052f2f34cb8\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Map open questions about CRISPR gene editing ethics. Label unknowns explicitly."
+    },
+    {
+      "task_id": "C03-07",
+      "category": "C03",
+      "language": "en",
+      "left": "Timeline of major LLM releases 2018-2024. Mark uncertain dates as unknown.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Timeline of major LLM releases 2018-2024. Mark uncertain dates as unknown. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=2018-2024 | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=uncertain dates as unknown | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-3033cc8cc25ffe684491939d1dfda50e252356ab51912c1e82b8c5efc31f9516\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C03-08",
+      "category": "C03",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=How does HTTPS certificate validation work? Include common failure modes. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=HTTPS | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=failure modes | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-ea93b9fb09eee6dd8b06ddf72ead7926a48ae248041142c0c0891ecddf53c99b\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "How does HTTPS certificate validation work? Include common failure modes."
+    },
+    {
+      "task_id": "C03-09",
+      "category": "C03",
+      "language": "en",
+      "left": "Pros/cons table template for evaluating open-source licenses. Do not recommend one.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Pros/cons table template for evaluating open-source licenses. Do not recommend one. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Pros/cons | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=recommend one | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-97157381d3bf54800e7bc11895e55ce6eea4100191abc2adc52eb3dc7cb2fb67\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C03-10",
+      "category": "C03",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Identify contradictions between two claims: A) remote work boosts productivity; B) remote work always hurts culture. Keep both sides. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=contradictions | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=both sides | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-265314feb04749a4bd1104ccff36480f4012759d9494aee2e1488ce0f57da9ea\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Identify contradictions between two claims: A) remote work boosts productivity; B) remote work always hurts culture. Keep both sides."
+    },
+    {
+      "task_id": "C03-11",
+      "category": "C03",
+      "language": "en",
+      "left": "What is photosynthesis?",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=What is photosynthesis? | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-24809a3fb6c90f8fb8d580882375166ba09af548e89c72c6a0990fb2d509a613\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C03-12",
+      "category": "C03",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Name the capital of France in one word. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=one word | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-ca02ab615ad1a8b77bb111fdf05f93642cff90ca12375e1bcd2c0e6c664eeb24\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Name the capital of France in one word."
+    },
+    {
+      "task_id": "C04-01",
+      "category": "C04",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=create a business plan | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-28af8ae37a3ba1d7b9ed316eb421f2754127ee8fadd86a206371e0439f510c0d\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "create a business plan"
+    },
+    {
+      "task_id": "C04-02",
+      "category": "C04",
+      "language": "en",
+      "left": "One-page business plan outline for a neighborhood bakery. Assumptions labeled ASSUMPTION.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=One-page business plan outline for a neighborhood bakery. Assumptions labeled ASSUMPTION. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=bakery | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=ASSUMPTION | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-82a14ca969504c8ae2d8e7005553ac523735247a01fb9d9bac9cacdcc61b5faa\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C04-03",
+      "category": "C04",
+      "language": "en",
+      "left": "Pricing strategy options for a SaaS tool at $0 vs freemium vs paid-only. Do not invent revenue forecasts.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Pricing strategy options for a SaaS tool at $0 vs freemium vs paid-only. Do not invent revenue forecasts. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=$0 | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=freemium | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=paid-only | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=invent revenue forecasts | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-b096af6db67e364a58d0d86fd1088961a9cb9e9b6deb4ce49774788765a0ad15\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C04-04",
+      "category": "C04",
+      "language": "en",
+      "left": "Risk register template for a software launch. Include likelihood as UNKNOWN unless given.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Risk register template for a software launch. Include likelihood as UNKNOWN unless given. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Risk register | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=UNKNOWN | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-ccbe06118a467a6b73d20536790dd3c2f9d05bffeeed88ddaf64c942c86b7672\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C04-05",
+      "category": "C04",
+      "language": "en",
+      "left": "Stakeholder map for adopting an internal wiki. No vendor names unless asked.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Stakeholder map for adopting an internal wiki. No vendor names unless asked. | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-ebbf8e1f3d44b48dd7cc86bf1ae7ed9d151f266ce2b5a5901a38f9cccaa25dc7\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C04-06",
+      "category": "C04",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=KPI definitions for support quality. Do not claim industry benchmarks. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=KPI | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=industry benchmarks | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-0958b1d3edeb2144bb7193673dcbdf1288552bfc2ad402504f6109efc833d755\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "KPI definitions for support quality. Do not claim industry benchmarks."
+    },
+    {
+      "task_id": "C04-07",
+      "category": "C04",
+      "language": "en",
+      "left": "Negotiation talking points for a vendor discount. Keep ethical; no deception.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Negotiation talking points for a vendor discount. Keep ethical; no deception. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=ethical | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=deception | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-9c639aaaf42ad11f21c101c57dceb57534b19f74a40c81efa5c2da5979deb5af\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C04-08",
+      "category": "C04",
+      "language": "en",
+      "left": "Go/no-go checklist for opening a second cafe location.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Go/no-go checklist for opening a second cafe location. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Go/no-go | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-6bb549129be2224ad6389ce82b789acdf390ead093cfcef5bb2e39e13fbf0c58\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C04-09",
+      "category": "C04",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Compare build vs buy for a CRM. Require explicit decision criteria and unknowns. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=build vs buy | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=decision criteria | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=unknowns | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-1a646fbce82e6dd8ae53de34b2d57c3414066b8a10a269a670411d3421b41cf3\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Compare build vs buy for a CRM. Require explicit decision criteria and unknowns."
+    },
+    {
+      "task_id": "C04-10",
+      "category": "C04",
+      "language": "en",
+      "left": "Write OKRs for a Q3 content team. Do not invent current metrics.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Write OKRs for a Q3 content team. Do not invent current metrics. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=OKRs | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Q3 | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=invent current metrics | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-fe3e4c23328d3d1b93fa06a64cd7be720227a60f3b23b272d6d2c49c12865cd8\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C04-11",
+      "category": "C04",
+      "language": "en",
+      "left": "SWOT for a local bookstore. Mark speculative items clearly.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=SWOT for a local bookstore. Mark speculative items clearly. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=SWOT | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=speculative | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-59a42be06d62c0d62c8c2f700b628e13f7bb74aa15fbe94383775a8720ffbed1\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C04-12",
+      "category": "C04",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=List three generic business risks. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=three | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-0dd0696ebeced87f0c9fb939144db7a209c3109a42a0bea37f4f581a8cbd6f33\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "List three generic business risks."
+    },
+    {
+      "task_id": "C05-01",
+      "category": "C05",
+      "language": "en",
+      "left": "explain photosynthesis",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=explain photosynthesis | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-5baf330bcbe1a0f30019c180d09d2ac280cfcf29ab9a6f6b1e6fe6112aff0a29\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C05-02",
+      "category": "C05",
+      "language": "en",
+      "left": "Explain photosynthesis to a 10-year-old. Use a simple analogy. No advanced biochemistry terms.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Explain photosynthesis to a 10-year-old. Use a simple analogy. No advanced biochemistry terms. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=10-year-old | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=analogy | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=advanced biochemistry | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-6866adf1c26a2cf918060e96b8b322b7d172bd2d709459bf3936d0b43a1d4a4a\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C05-03",
+      "category": "C05",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Lesson outline: fractions for grade 4. Include practice problems. Do not invent curriculum standards codes. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=fractions | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=grade 4 | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=practice problems | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=curriculum standards codes | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-a0a3193c56d30bbdf2cfffe247eb9937fb93bd7ab4c603105682ed5bd09ca733\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Lesson outline: fractions for grade 4. Include practice problems. Do not invent curriculum standards codes."
+    },
+    {
+      "task_id": "C05-04",
+      "category": "C05",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Study plan for learning SQL in 30 days, 30 minutes/day. No paid tools required. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=30 days | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=30 minutes/day | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=paid tools | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-c9c5d985b549ff8313b8d1f489365b1b2af08b884807d2fb4e36c2a44fdf4a05\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Study plan for learning SQL in 30 days, 30 minutes/day. No paid tools required."
+    },
+    {
+      "task_id": "C05-05",
+      "category": "C05",
+      "language": "en",
+      "left": "Quiz: 5 multiple-choice questions on HTTP methods. Provide answer key separately.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Quiz: 5 multiple-choice questions on HTTP methods. Provide answer key separately. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=5 | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=multiple-choice | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=HTTP methods | provenance=USER_EXPLICIT\nMUST | key=must.3 | value=answer key | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-16374cb9cac1d9b295006855850f4e1ddcb6b30297987a34825efbc8dd26c9a1\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C05-06",
+      "category": "C05",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Explain recursion with one worked example in Python. Avoid jargon where possible. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=recursion | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Python | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=worked example | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-27f4ee546abfba79142c7474357a2ab4fc7b74da73f5ce490402fcd426d6d383\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Explain recursion with one worked example in Python. Avoid jargon where possible."
+    },
+    {
+      "task_id": "C05-07",
+      "category": "C05",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Flashcards for Spanish present-tense -ar verbs. 8 cards. No pronunciation audio claims. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=8 cards | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=-ar verbs | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=pronunciation audio | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-23d15928d5ff28635fbfb4de3ae87192aa6b1d19bae1204351893fab080a30c7\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Flashcards for Spanish present-tense -ar verbs. 8 cards. No pronunciation audio claims."
+    },
+    {
+      "task_id": "C05-08",
+      "category": "C05",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Socratic questions to help a student discover why 0.1+0.2 is weird in floating point. Do not lecture first. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Socratic | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=lecture first | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-7c2ee187c700984aff2f33ced380de5aee13f2f05ab3deeca5e6918d815fefaf\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Socratic questions to help a student discover why 0.1+0.2 is weird in floating point. Do not lecture first."
+    },
+    {
+      "task_id": "C05-09",
+      "category": "C05",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Rubric for grading a short essay on climate change. Criteria only; no sample scores. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Rubric | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=sample scores | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-ee1390df626330b3cf02fafb5614777826266efe3af0b9cf3ad5a7c22504ded2\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Rubric for grading a short essay on climate change. Criteria only; no sample scores."
+    },
+    {
+      "task_id": "C05-10",
+      "category": "C05",
+      "language": "en",
+      "left": "Explain the water cycle in 5 bullet points.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Explain the water cycle in 5 bullet points. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=5 bullet points | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=water cycle | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-4ee8918c09c0a4767ec4435a50346c0970d4701495262f74e418f23352447be9\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C05-11",
+      "category": "C05",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Differentiate precision vs recall with a spam-filter example. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=precision | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=recall | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=spam-filter | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-17ab57f71cc43351c70ebf4ad7839be1fbbffa7d8ece8e7a9c9685029cb6caab\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Differentiate precision vs recall with a spam-filter example."
+    },
+    {
+      "task_id": "C05-12",
+      "category": "C05",
+      "language": "en",
+      "left": "What is 7 times 8?",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=What is 7 times 8? | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-71a3379483033b50951c0bcdb659eb8a721ed770d4f36f17894ac7add77e0f31\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C06-01",
+      "category": "C06",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=compare these two plans | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-1d5ef20e2e5572a8a7fe94e24411aaff9a8454bd47af7bce130fa454a1df222c\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "compare these two plans"
+    },
+    {
+      "task_id": "C06-02",
+      "category": "C06",
+      "language": "en",
+      "left": "Compare Plan A (cheap, slow) vs Plan B (expensive, fast) for shipping. Criteria: cost, speed, risk. Mark unknown data.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Compare Plan A (cheap, slow) vs Plan B (expensive, fast) for shipping. Criteria: cost, speed, risk. Mark unknown data. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Plan A | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Plan B | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=cost | provenance=USER_EXPLICIT\nMUST | key=must.3 | value=speed | provenance=USER_EXPLICIT\nMUST | key=must.4 | value=risk | provenance=USER_EXPLICIT\nMUST | key=must.5 | value=unknown | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-027a7bee017a7ff270925b1993a8540359def7d6044ef43cb4ee71df6e38bbd6\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C06-03",
+      "category": "C06",
+      "language": "en",
+      "left": "Root-cause analysis template for a website outage. Do not invent the root cause.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Root-cause analysis template for a website outage. Do not invent the root cause. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Root-cause | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=invent the root cause | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-c570faeb05e0f4a147dcca09347c6b28514aa0f30d14671d20b3938ab243ece2\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C06-04",
+      "category": "C06",
+      "language": "en",
+      "left": "Decision matrix: hire junior vs contractor for a 6-week spike. Weights left as UNKNOWN.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Decision matrix: hire junior vs contractor for a 6-week spike. Weights left as UNKNOWN. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=junior | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=contractor | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=UNKNOWN | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-6482c22ed63b273c9dec598b1431eeffb3ae087b2dbce6f1253dc2596e1afdcc\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C06-05",
+      "category": "C06",
+      "language": "en",
+      "left": "Identify assumptions in: We will double revenue by next quarter by posting more on social media.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Identify assumptions in: We will double revenue by next quarter by posting more on social media. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=assumptions | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-6ac9bbf465bd02bafbf8eaec9cef358649aed242443e07bbb2158687670bc8e7\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C06-06",
+      "category": "C06",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Tradeoff analysis: consistency vs availability in distributed systems. Keep both sides. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=consistency | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=availability | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=both sides | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-332f6d44572b553edf18273e4db5e2f4ccd61a6971e4a7d878e445ef716eaf65\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Tradeoff analysis: consistency vs availability in distributed systems. Keep both sides."
+    },
+    {
+      "task_id": "C06-07",
+      "category": "C06",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Critique this argument for logical gaps: All successful startups use AI, so we must use AI. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=logical gaps | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-d8bcbf80ecd01c3310fd995ff16b47cc93da2b1a6c030d2b991d0deb7a9d5757\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Critique this argument for logical gaps: All successful startups use AI, so we must use AI."
+    },
+    {
+      "task_id": "C06-08",
+      "category": "C06",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Prioritize a backlog of 5 features using RICE-like fields with blanks for unknowns. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=5 features | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=unknowns | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-e4f23785602c5b3b0edd6504d2491a96122ab189208805fa857c474f58217ff5\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Prioritize a backlog of 5 features using RICE-like fields with blanks for unknowns."
+    },
+    {
+      "task_id": "C06-09",
+      "category": "C06",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Sensitivity analysis outline for a pricing model. Do not fabricate elasticities. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Sensitivity | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=fabricate elasticities | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-d810cb5110f1805550bd4944a90c714ea8c589697b69e13c85d94f4d70d108c3\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Sensitivity analysis outline for a pricing model. Do not fabricate elasticities."
+    },
+    {
+      "task_id": "C06-10",
+      "category": "C06",
+      "language": "en",
+      "left": "Compare qualitative vs quantitative user research methods briefly.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Compare qualitative vs quantitative user research methods briefly. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=qualitative | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=quantitative | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-e4f26e7c55aa2bf719856280cef0091ca2c9fed33491909643ea140237e45b1a\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C06-11",
+      "category": "C06",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=List risks of overfitting a model in one short paragraph. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=overfitting | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=short paragraph | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-649209e4a3fa129ce45d128cfbfc3963394812b4890964981a0b4c905de02998\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "List risks of overfitting a model in one short paragraph."
+    },
+    {
+      "task_id": "C06-12",
+      "category": "C06",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Which is larger: 9 or 10? | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-b90cf3ce3e3571c48c828f0a06e9bb722b00869b9a298f231935768448f97cae\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Which is larger: 9 or 10?"
+    },
+    {
+      "task_id": "C07-01",
+      "category": "C07",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Return JSON status and count. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=JSON | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-4679d6f4cd7c727665343dcded421b43d97e58cc5dabfbba590d39a96c433c32\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Return JSON status and count."
+    },
+    {
+      "task_id": "C07-02",
+      "category": "C07",
+      "language": "en",
+      "left": "Extract fields name, email, phone from free text into JSON. If missing, use null. No invented values.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Extract fields name, email, phone from free text into JSON. If missing, use null. No invented values. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=name | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=email | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=phone | provenance=USER_EXPLICIT\nMUST | key=must.3 | value=JSON | provenance=USER_EXPLICIT\nMUST | key=must.4 | value=null | provenance=USER_EXPLICIT\nMUST | key=must.5 | value=No invented values | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-b351a77e1790dc8af0ebc4488214edd86518b6648e77e4f7519dcf97856517b1\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C07-03",
+      "category": "C07",
+      "language": "en",
+      "left": "Output ONLY valid JSON matching {\"ok\": boolean, \"items\": string[]}. No prose.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Output ONLY valid JSON matching {\"ok\": boolean, \"items\": string[]}. No prose. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=ONLY valid JSON | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=ok | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=items | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=prose | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-4527c3ff27d5ece0c2e5d4ad2e73b5c70aa5e9750f9e9204707afec46167843a\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C07-04",
+      "category": "C07",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=CSV header and two example rows for inventory: sku,qty,location. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=sku | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=qty | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=location | provenance=USER_EXPLICIT\nMUST | key=must.3 | value=CSV | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-e62edf13cc9a8ab744d7b589807676d1aeaf6c7ccd3aaab1f398ece61caa62d2\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "CSV header and two example rows for inventory: sku,qty,location."
+    },
+    {
+      "task_id": "C07-05",
+      "category": "C07",
+      "language": "en",
+      "left": "YAML config for app name and port. No secrets. Port as integer.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=YAML config for app name and port. No secrets. Port as integer. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=YAML | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=name | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=port | provenance=USER_EXPLICIT\nMUST | key=must.3 | value=integer | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=secrets | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-7dd417dbcf74cc7ab560ed1f1f6449be95a0944f2bfa3c4c3bc38dd215d7c7e4\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C07-06",
+      "category": "C07",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=JSON Schema for a Person with required name and optional age >= 0. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=JSON Schema | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=name | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=age | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-173e1a1b822225c541d3ba74c35b5dc35a50fb36a676648d66aa4df1a6873332\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "JSON Schema for a Person with required name and optional age >= 0."
+    },
+    {
+      "task_id": "C07-07",
+      "category": "C07",
+      "language": "en",
+      "left": "Normalize address components into JSON keys: line1, city, region, postal. Unknowns as null.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Normalize address components into JSON keys: line1, city, region, postal. Unknowns as null. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=line1 | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=city | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=region | provenance=USER_EXPLICIT\nMUST | key=must.3 | value=postal | provenance=USER_EXPLICIT\nMUST | key=must.4 | value=null | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-a989fdf96cc9cbebc52928cb1402f92dba5fd653ad6d4f6f7de80625dc7ec14f\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C07-08",
+      "category": "C07",
+      "language": "en",
+      "left": "MUST output JSON. MUST output plain prose only.",
+      "right": "[COMPILE_FAILED:K3_PROMPT_CONFLICTED_SOURCE]"
+    },
+    {
+      "task_id": "C07-09",
+      "category": "C07",
+      "language": "en",
+      "left": "Tabulate three countries with capital and currency as markdown table only.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Tabulate three countries with capital and currency as markdown table only. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=markdown table | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=capital | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=currency | provenance=USER_EXPLICIT\nMUST | key=must.3 | value=three | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-d25ae21f31c13b18cc96be28259e28225b71d3142e91b324039f37917c34eb60\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C07-10",
+      "category": "C07",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Parse dates to ISO-8601 date-only. Reject times. Return JSON array. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=ISO-8601 | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=date-only | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=JSON array | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=times | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-ad8d3b9a0bffc79af901e0668e39b6b675a1c212aaf76625bedfbec770cc0969\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Parse dates to ISO-8601 date-only. Reject times. Return JSON array."
+    },
+    {
+      "task_id": "C07-11",
+      "category": "C07",
+      "language": "en",
+      "left": "Emit an empty JSON object.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Emit an empty JSON object. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=JSON object | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-1d12ef390a1c16c1adfa67c35b9b1954aa5121dccd177463cbfd552422a0d352\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C07-12",
+      "category": "C07",
+      "language": "en",
+      "left": "Return {\"sum\": 5} for inputs 2 and 3. JSON only.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Return {\"sum\": 5} for inputs 2 and 3. JSON only. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=JSON only | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=sum | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-43b774fef36bcfbcc09549b8627f0ff0f55c7a71703f1a6f2b6b349f8d5c8016\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C08-01",
+      "category": "C08",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Write a short children's story about a lighthouse. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=children's story | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=lighthouse | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-85250e792ac9840f97f212c0c9be11083c810c0076127eb296f1b3b637e9fd0b\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Write a short children's story about a lighthouse."
+    },
+    {
+      "task_id": "C08-02",
+      "category": "C08",
+      "language": "en",
+      "left": "Microfiction under 100 words set in a night market. No violence.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Microfiction under 100 words set in a night market. No violence. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=under 100 words | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=night market | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=violence | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-25160139e25ec283816f8eadc008572b40ca59c669308a54c49619ffdeeffc82\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C08-03",
+      "category": "C08",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Roleplay as a museum guide for one exhibit. Stay in character. Do not invent fake historical citations. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=museum guide | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=in character | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=fake historical citations | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-80b9910a83b2b5ace18024f319438b4a79f41e2b1f4ac393ebe292e1b8498580\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Roleplay as a museum guide for one exhibit. Stay in character. Do not invent fake historical citations."
+    },
+    {
+      "task_id": "C08-04",
+      "category": "C08",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Poem about rain in free verse. No forced rhymes. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Poem | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=rain | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=free verse | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=forced rhymes | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-fde411c8df9102f4ac5bfb420e0101606cef209645f786a167972fd09af7081e\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Poem about rain in free verse. No forced rhymes."
+    },
+    {
+      "task_id": "C08-05",
+      "category": "C08",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Describe a cozy cafe scene for a game setting. Keep player agency open. Do not railroad choices. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=cafe | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=player agency | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=railroad | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-89b1d3715b55f4c35383c6fc34356b35ed666c2f40a784fbfd2415e10bb9a7c0\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Describe a cozy cafe scene for a game setting. Keep player agency open. Do not railroad choices."
+    },
+    {
+      "task_id": "C08-06",
+      "category": "C08",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Brainstorm 8 product names for a tea brand. No trademark claims. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=8 | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=tea | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=trademark claims | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-a0503f889d4b26276e73e26cb906fa3153e22956daa86d02faeee3a0100ebf98\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Brainstorm 8 product names for a tea brand. No trademark claims."
+    },
+    {
+      "task_id": "C08-07",
+      "category": "C08",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Write dialogue between a skeptic and an optimist about AI. Balanced. No winner declared. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=dialogue | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Balanced | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=winner declared | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-1a76008fa5f14fef4671b738175109892c773b49d4ab88ed787bf755a033ba7e\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Write dialogue between a skeptic and an optimist about AI. Balanced. No winner declared."
+    },
+    {
+      "task_id": "C08-08",
+      "category": "C08",
+      "language": "en",
+      "left": "Fairy tale opening only (3 sentences). Stop. Do not finish the story.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Fairy tale opening only (3 sentences). Stop. Do not finish the story. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=3 sentences | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Stop | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=finish the story | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-528769d575c37d41180992b8ae9c6cf33c3ece2fef878c7928fb983dbd56eccf\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C08-09",
+      "category": "C08",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Creative prompt ideas for watercolor practice. 5 ideas. No copyrighted character names. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=5 | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=watercolor | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=copyrighted character | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-da6b5c6c584e39d11e60be9fd6507f9dcf3488f8ff9d59474f5ccc7adb5d11f1\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Creative prompt ideas for watercolor practice. 5 ideas. No copyrighted character names."
+    },
+    {
+      "task_id": "C08-10",
+      "category": "C08",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Haiku about software bugs. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Haiku | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=software bugs | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-228ed1f54c070e9e7003efffe9133ded7781b1aec9b7b7e162e64023338a32fb\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Haiku about software bugs."
+    },
+    {
+      "task_id": "C08-11",
+      "category": "C08",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Worldbuilding note: one city district. Leave magic system UNKNOWN. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=city district | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=UNKNOWN | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-a949ee035ee371dd1dbc9f8d3317c99c2c5784bc5aa39d4d3fcf757fd28089ca\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Worldbuilding note: one city district. Leave magic system UNKNOWN."
+    },
+    {
+      "task_id": "C08-12",
+      "category": "C08",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Say hello creatively in one sentence. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=one sentence | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-4aa039e0a637bf04845e75fabcaf8499f3afe917398aef4ebd334813ad179e3f\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Say hello creatively in one sentence."
+    },
+    {
+      "task_id": "C09-01",
+      "category": "C09",
+      "language": "te",
+      "left": "write Telugu church announcement",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=write Telugu church announcement | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-ac7d9128d0274f9a495aeee08b2fe2ea3040355ba789daa23111f982b92d713b\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C09-02",
+      "category": "C09",
+      "language": "te",
+      "left": "తెలుగులో సెలవు ఈమెయిల్ రాయండి. వృత్తిపరమైన స్వరం ఉండాలి.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=తెలుగులో సెలవు ఈమెయిల్ రాయండి. వృత్తిపరమైన స్వరం ఉండాలి. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=వృత్తిపరమైన | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-58f53b14b9f615726ff6943210a0b528e18036a2cb063372ed21b070caa6086b\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C09-03",
+      "category": "C09",
+      "language": "hi",
+      "left": "हिंदी में एक छोटा धन्यवाद संदेश लिखें। औपचारिक रहें।",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=हिंदी में एक छोटा धन्यवाद संदेश लिखें। औपचारिक रहें। | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=औपचारिक | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-187e26f1ea68238323b751035e8aa18c2be9b4663604e17f8bc51af56ad95594\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C09-04",
+      "category": "C09",
+      "language": "hi",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Write a professional leave email in Hindi. Must mention Tuesday. Must not apologize. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Hindi | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Tuesday | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=apologize | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-ab5a4d9c164f3277e8b19cd061591a2cfba4cab762787286532caf3bc575b9ef\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Write a professional leave email in Hindi. Must mention Tuesday. Must not apologize."
+    },
+    {
+      "task_id": "C09-05",
+      "category": "C09",
+      "language": "ta",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=தமிழில் ஒரு குறுகிய அறிவிப்பு எழுதுங்கள். பள்ளி நிகழ்வு. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=பள்ளி | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-7b77d568992a6e46c510610ef680589344a647ebf59d287b87f6bbf148ee6cd8\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "தமிழில் ஒரு குறுகிய அறிவிப்பு எழுதுங்கள். பள்ளி நிகழ்வு."
+    },
+    {
+      "task_id": "C09-06",
+      "category": "C09",
+      "language": "ta",
+      "left": "Explain photosynthesis in Tamil at a middle-school level. Keep scientific accuracy. Do not mix English except for unavoidable terms labeled.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Explain photosynthesis in Tamil at a middle-school level. Keep scientific accuracy. Do not mix English except for unavoidable terms labeled. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Tamil | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=middle-school | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-faea32a49987743101544eec50289ca8d826568e77cda00e46d5ad0f29189870\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C09-07",
+      "category": "C09",
+      "language": "te",
+      "left": "Translate to Telugu: The meeting is on Friday at 3pm. Preserve numbers and day.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Translate to Telugu: The meeting is on Friday at 3pm. Preserve numbers and day. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Telugu | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Friday | provenance=USER_EXPLICIT\nMUST | key=must.2 | value=3pm | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-0aaef0cef2d41faa89616167f980880377919225ab9a0970ea98e36e70e3ef10\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C09-08",
+      "category": "C09",
+      "language": "es",
+      "left": "Escribe un correo de ausencia profesional en español. Menciona el martes. No te disculpes.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Escribe un correo de ausencia profesional en español. Menciona el martes. No te disculpes. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=español | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=martes | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=disculpes | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-6d7edf518f18be1eda53cdd4731684b4b0ed9efb97aaa7d8cb8ac134aff143c5\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C09-09",
+      "category": "C09",
+      "language": "fr",
+      "left": "Reply in the same language as the user: \"merci pour votre aide\". Short thanks.",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Reply in the same language as the user: \"merci pour votre aide\". Short thanks. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=same language | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=Short | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-af14686fd0aea3d6336b414a49c9a5996490f9522f291b52d119c0c0c8c526be\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C09-10",
+      "category": "C09",
+      "language": "en+te",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Bilingual EN/TE glossary of 5 church service terms. Do not invent theology. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=5 | provenance=USER_EXPLICIT\nMUST | key=must.1 | value=EN/TE | provenance=USER_EXPLICIT\nMUST_NOT | key=must_not.0 | value=invent theology | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-fe60429b542c3f549b7673c1af2db426fa37c311e47fccaa4f5899045a17ee61\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Bilingual EN/TE glossary of 5 church service terms. Do not invent theology."
+    },
+    {
+      "task_id": "C09-11",
+      "category": "C09",
+      "language": "hi",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Detect language of: \"नमस्ते\" and greet back in that language only. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=that language only | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-15f358eca2d08cb748add5d4dc03df4b0fb206396db0f5defe13a2df81d6cf68\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Detect language of: \"नमस्ते\" and greet back in that language only."
+    },
+    {
+      "task_id": "C09-12",
+      "category": "C09",
+      "language": "te",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Say the number five in Telugu script only. | provenance=USER_EXPLICIT\nMUST | key=must.0 | value=Telugu script only | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-b2dc51bd4c4c972c509b57c70ca03a972e284aad15797e7c5fd877bec70a1f95\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Say the number five in Telugu script only."
+    },
+    {
+      "task_id": "C10-01",
+      "category": "C10",
+      "language": "en",
+      "left": "build me an app",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=build me an app | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-68c39c6c709cf15cc0bad0499fb698f85bd544a9b24d6e7392fa1ce42fa2204c\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C10-02",
+      "category": "C10",
+      "language": "en",
+      "left": "make website for my restaurant",
+      "right": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=make website for my restaurant | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-74819fe43189f2dbae256045e01cf91652dd26242d77f87a2b1fd5c7b1b20d97\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1==="
+    },
+    {
+      "task_id": "C10-03",
+      "category": "C10",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Help with the thing. | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-7ce68d38a802e9606d98011056a946d7ffb25dc27ad5247bad0f98fc45563421\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Help with the thing."
+    },
+    {
+      "task_id": "C10-04",
+      "category": "C10",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Automate my workflow somehow. | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-8f922e860917b9cfea5464140c3e9980d3f67106050753d33a60b1792c660b09\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Automate my workflow somehow."
+    },
+    {
+      "task_id": "C10-05",
+      "category": "C10",
+      "language": "en",
+      "left": "MUST be concise. MUST be exhaustive and cover every detail.",
+      "right": "[COMPILE_FAILED:K3_PROMPT_CONFLICTED_SOURCE]"
+    },
+    {
+      "task_id": "C10-06",
+      "category": "C10",
+      "language": "en",
+      "left": "Use Python. Do not use Python.",
+      "right": "[COMPILE_FAILED:K3_PROMPT_CONFLICTED_SOURCE]"
+    },
+    {
+      "task_id": "C10-07",
+      "category": "C10",
+      "language": "en",
+      "left": "[COMPILE_FAILED:K3_PROMPT_CONFLICTED_SOURCE]",
+      "right": "Ship tomorrow. Also take as long as needed for perfect quality."
+    },
+    {
+      "task_id": "C10-08",
+      "category": "C10",
+      "language": "en",
+      "left": "Target kids. Use advanced jargon and assume PhD audience.",
+      "right": "[COMPILE_FAILED:K3_PROMPT_CONFLICTED_SOURCE]"
+    },
+    {
+      "task_id": "C10-09",
+      "category": "C10",
+      "language": "en",
+      "left": "[COMPILE_FAILED:K3_PROMPT_CONFLICTED_SOURCE]",
+      "right": "Private and confidential. Also publish everything publicly."
+    },
+    {
+      "task_id": "C10-10",
+      "category": "C10",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Do something cool with AI for my business. | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-90ebf3bcbbf503c91a85a1daeca60afec4fcad4a670c067387fcd6ee24550c37\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Do something cool with AI for my business."
+    },
+    {
+      "task_id": "C10-11",
+      "category": "C10",
+      "language": "en",
+      "left": "===SPE_PROTECTED_CONSTRAINTS_V1===\nMUST | key=goal | value=Optimize it. | provenance=USER_EXPLICIT\n===END_SPE_PROTECTED_CONSTRAINTS_V1===\n===SPE_SHOULD_V1===\n===END_SPE_SHOULD_V1===\n===SPE_PREFERENCE_V1===\n===END_SPE_PREFERENCE_V1===\n===SPE_STRATEGY_V1===\nSTRATEGY plan=DIRECT instruction=direct_instruction evidence=no_retrieval output=prose_or_unspecified revision=none (does_not_grant_authority_or_network)\n===END_SPE_STRATEGY_V1===\n===SPE_TECHNIQUES_V1===\nTECHNIQUE ZERO_SHOT because=NO_EXAMPLES_REQUIRED refs=plan:cplan-059a3097190defd320500a1b3e844edf4714223843fa3eb25b4ef87a90018056\n===END_SPE_TECHNIQUES_V1===\n===SPE_CONTEXT_DATA_V1===\n===END_SPE_CONTEXT_DATA_V1===\n===SPE_TARGET_PROFILE_V1===\nANY_AI\n===END_SPE_TARGET_PROFILE_V1===",
+      "right": "Optimize it."
+    },
+    {
+      "task_id": "C10-12",
+      "category": "C10",
+      "language": "en",
+      "left": "[COMPILE_FAILED:K3_PROMPT_CONFLICTED_SOURCE]",
+      "right": "MUST answer in English only. MUST answer in Telugu only."
+    }
+  ],
+  "n": 120
+}

@@ -1,0 +1,5 @@
+{
+  "STANDARD_MAX_TECHNIQUES": 3,
+  "simple_vs_complex": "PASS \u2014 complex >= simple, both <= budget",
+  "more_techniques_not_better": true
+}
