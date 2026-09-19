@@ -1,0 +1,10 @@
+f64c42f feat(g8zc): hermetic full-system replay corpus + runner
+6849a9d docs(g7zc): pin PR tip HEAD + record PR #29
+61e3f16 docs(g7zc): pin PR tip HEAD
+822e901 docs(g7zc): pin tip HEAD
+1cca767 feat(g7zc): security/privacy red-team F1–F20 + evidence pack
+bea7097 docs(g6zc): pin PR tip HEAD
+c35dfaa docs(g6zc): record PR #28
+4184683 docs(g6zc): pin tip HEAD
+3748f01 feat(g6zc): product-value harness, corpus, blind evaluator
+99173c2 docs(g5e): pin closure tip HEAD

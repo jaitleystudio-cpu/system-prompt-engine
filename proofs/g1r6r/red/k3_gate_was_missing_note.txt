@@ -1,0 +1,4 @@
+=== custody ===
+68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3  specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json
+=== H01 before: no dedicated K3 gate ===
+128:def test_g1_k3_required_responsibilities_complete():

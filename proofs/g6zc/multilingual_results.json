@@ -1,0 +1,21 @@
+{
+  "languages": [
+    "en",
+    "en+te",
+    "es",
+    "fr",
+    "hi",
+    "ta",
+    "te"
+  ],
+  "tasks_by_language": {
+    "en": 108,
+    "en+te": 1,
+    "es": 1,
+    "fr": 1,
+    "hi": 3,
+    "ta": 2,
+    "te": 4
+  },
+  "note": "Does NOT claim universal multilingual support"
+}

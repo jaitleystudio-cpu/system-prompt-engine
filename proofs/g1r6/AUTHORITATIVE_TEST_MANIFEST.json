@@ -1,0 +1,83 @@
+{
+  "gate": "G1R-6",
+  "task": "K3_PROMPT_ARTIFACT",
+  "starting_tip": "f3a7302f97a469f7369270c6198118b26ab72497",
+  "starting_tree": "1e79fcc17527052a36c8e1dcd3b2f7dc0f29868c",
+  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "python_version": "3.12.3",
+  "exact_test_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r6_impl_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+  "implementation_identity": {
+    "commit": "ce279b3705f331e370a231693d2321daabb22e1e",
+    "tree": "faac7cbc594b9a34d47c2fd5e4d63a6a905bc2b2",
+    "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3"
+  },
+  "implementation_validation": {
+    "suite_run_commit": "ce279b3705f331e370a231693d2321daabb22e1e",
+    "suite_tree": "faac7cbc594b9a34d47c2fd5e4d63a6a905bc2b2",
+    "collected": 469,
+    "passed": 466,
+    "failed": 3,
+    "skipped": 0,
+    "exit_status": 1,
+    "duration_s": 0.731,
+    "result_sha256": "76d2a10155a44e09d8b0c31fbc1a22314b6e5619f207e597d2aa6348b2b65d6f",
+    "junit_sha256": "8b5a03df483232807b4b3567bf728eb63c5f8aece350f302462b2ffbe32f4ed8",
+    "g1r1": "5/5",
+    "g1r2": "27/27",
+    "g1r3": "37/37",
+    "g1r4": "44/44",
+    "g1r5": "18/18",
+    "g1r5e_historical": "4/4",
+    "g1r6": "30/30",
+    "g1_binding": "11/14",
+    "failed_tests": [
+      "tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility",
+      "tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique",
+      "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
+    ]
+  },
+  "evidence_validation": {
+    "reviewed_evidence_head": "EXTERNAL_ONLY",
+    "note": "Evidence artifacts after implementation suite; not attributed as extra implementation tests"
+  },
+  "collected": 469,
+  "passed": 466,
+  "failed": 3,
+  "skipped": 0,
+  "exit_status": 1,
+  "duration": 0.731,
+  "G1R-1_result": "5/5",
+  "G1R-2_result": "27/27",
+  "G1R-3_result": "37/37",
+  "G1R-4_result": "44/44",
+  "G1R-5_result": "18/18",
+  "G1R-6_result": "30/30",
+  "G1_binding_result": "11/14",
+  "exact_failed_test_names": [
+    "tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
+  ],
+  "UNOWNED_before": 3,
+  "UNOWNED_after": 2,
+  "unowned_facts_after": [
+    "spe_artifact_identity",
+    "qualification_evidence"
+  ],
+  "prompt_artifact_owner": "K3",
+  "canonical_prompt_artifact_writers": 1,
+  "duplicate_prompt_artifact_writers": 0,
+  "duplicate_canonical_writers_global": 0,
+  "ambient_authority_paths": 0,
+  "result_sha256": "76d2a10155a44e09d8b0c31fbc1a22314b6e5619f207e597d2aa6348b2b65d6f",
+  "junit_sha256": "8b5a03df483232807b4b3567bf728eb63c5f8aece350f302462b2ffbe32f4ed8",
+  "hash_algorithm": {
+    "artifact_content_sha256": "SHA-256 over UTF-8 canonical JSON (json.dumps sort_keys=True indent=2) excluding artifact_content_sha256 field itself"
+  },
+  "self_verdict": [
+    "G1R6_IMPLEMENTATION_PRESENT",
+    "G1R6_REVIEW_PENDING"
+  ],
+  "artifact_content_sha256": "f2d30398ea4a07e6bc8d7202498e7b5d91bfcad77405b6a91bca7f7d620a599b"
+}

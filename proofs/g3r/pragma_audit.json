@@ -1,0 +1,8 @@
+{
+  "every_connection_applies": true,
+  "foreign_keys": "ON",
+  "journal_mode": "DELETE",
+  "synchronous": "FULL",
+  "busy_timeout_ms": 5000,
+  "verified_on_reopen": true
+}

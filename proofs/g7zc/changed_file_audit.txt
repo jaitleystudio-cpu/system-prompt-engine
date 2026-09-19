@@ -1,0 +1,6 @@
+tests/security/test_g7zc_redteam.py
+tests/unit/test_g7zc_mutations.py
+proofs/g7zc/*
+NO spe_runtime/omega/
+NO PR #6 merge
+NO paid provider keys required

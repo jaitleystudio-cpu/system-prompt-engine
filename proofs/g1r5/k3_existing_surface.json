@@ -1,0 +1,48 @@
+{
+  "gate": "G1R-5",
+  "task": "PRIVACY_PROJECTION_OWNERSHIP",
+  "contract_note": "RING0_WORKING_CONTRACT assigns privacy projection to K4 (not K3 Strategy+Prompt). Implementation follows contract ownership = K4. Task label G1R-5/K3 in brief is corrected to K4 for this responsibility.",
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "contract_owner_for_privacy_projection": "K4",
+  "existing_modules": [
+    {
+      "path": "spe_runtime/privacy/__init__.py",
+      "status": "EMPTY_PACKAGE",
+      "bytes": 0
+    },
+    {
+      "path": "schemas/privacy_label.schema.json",
+      "status": "STUB",
+      "description": "STUB — not yet implemented (NEW_IMPLEMENTATION)"
+    },
+    {
+      "path": "tests/portability/test_privacy_portability.py",
+      "status": "PORTABILITY_ONLY",
+      "semantics": "Detects USER_PRIVATE→PUBLIC as PRIVACY_ESCALATION; not a projection writer"
+    },
+    {
+      "path": "spe_runtime/portability/conformance.py",
+      "status": "READER_DETECTOR",
+      "semantics": "Attack detector for sensitivity_labels escalation"
+    }
+  ],
+  "writers_before": [],
+  "readers_before": [
+    "spe_runtime/portability/conformance.py",
+    "tests/portability/test_privacy_portability.py"
+  ],
+  "schemas": ["schemas/privacy_label.schema.json"],
+  "placeholders": ["spe_runtime/privacy/", "schemas/privacy_label.schema.json"],
+  "contract_requirements_related": [
+    {"owner": "K4", "requirement": "privacy projection"},
+    {"owner": "K4", "requirement": "egress decisions"},
+    {"owner": "K3", "requirement": "PromptArtifact", "note": "NOT in G1R-5 scope"},
+    {"owner": "K3", "requirement": "prompt strategy", "note": "NOT in G1R-5 scope"}
+  ],
+  "overlapping_owners": {
+    "K3": "Strategy + Prompt — must NOT own privacy_projection under current contract",
+    "K4": "grants + privacy projection + egress — canonical owner"
+  },
+  "partial_existing_semantics": "Portability labels USER_PRIVATE / PUBLIC only. No projection API.",
+  "duplicate_subsystem_risk": "none — package empty; implement in spe_runtime/privacy/"
+}

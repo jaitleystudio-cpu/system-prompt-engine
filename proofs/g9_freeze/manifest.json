@@ -1,0 +1,21 @@
+{
+  "gate": "G9-FREEZE",
+  "files": [
+    "FREEZE.md",
+    "G6H_PROTOCOL.md",
+    "G9_FREEZE_REPORT.md",
+    "INTEGRITY.json",
+    "QUALIFICATION_MANIFEST.json",
+    "QUALIFICATION_MANIFEST.sha256",
+    "claim_boundary.json",
+    "full_regression.json",
+    "manifest.json",
+    "pr6_untouched.json",
+    "source_identity.json",
+    "verifier_results.json",
+    "zero_cost_audit.json"
+  ],
+  "count": 13,
+  "freeze_head": "480ee2bdc95fa7cf768aa94737660e43f6072af3",
+  "freeze_pack_head": "8b2b4beabe7e2d210904ddff04b6715ed6d5e727"
+}

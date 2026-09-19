@@ -1,0 +1,13 @@
+=== prompt_artifact writer audit (RED) ===
+{
+  "canonical_owner": "K3",
+  "duplicate_writer": false,
+  "notes": "still unowned after G1R-4",
+  "reader_modules": [],
+  "resolution_required": false,
+  "semantic_fact": "prompt_artifact",
+  "writer_modules": []
+}
+writer_modules= []
+unowned_facts= ['spe_artifact_identity', 'prompt_artifact', 'qualification_evidence']
+UNOWNED_COUNT= 3

@@ -1,0 +1,35 @@
+{
+  "code_markers": {
+    "G1R6R_NFC_escape": true,
+    "G1R6R_slots": true,
+    "G1R6R_k3_gate": true,
+    "G1R7R_strength_priority": true,
+    "G1R8_spe_artifact": true,
+    "G1R9_qualification": true,
+    "G1R9R_reject_ClaimPolicy": true,
+    "G1R9R_IndependenceBasis": true,
+    "G1R9R_evidence_consume": true,
+    "G1R9R_production_allowlist": true,
+    "G1R9R_revision_unbound_ne_all": true,
+    "G1R9R_source_key": true
+  },
+  "all_present": true,
+  "ancestors": {
+    "g1r7r_tip": {
+      "sha": "45cf495",
+      "is_ancestor": true
+    },
+    "g1r8r": {
+      "sha": "5100c76d70971d1bf37c84747f66e964ff6086d3",
+      "is_ancestor": true
+    },
+    "g1r9": {
+      "sha": "8766bfdc7a8907340b72d81e9c5d1bb82482ce51",
+      "is_ancestor": true
+    },
+    "g1r9r": {
+      "sha": "7edd0d55568514767d0ce0f4d641658dd0520dcf",
+      "is_ancestor": true
+    }
+  }
+}

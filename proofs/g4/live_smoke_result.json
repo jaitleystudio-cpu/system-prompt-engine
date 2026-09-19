@@ -1,0 +1,5 @@
+{
+  "attempted": false,
+  "reason": "authorization gate failed before smoke call",
+  "authenticated_live_request": false
+}

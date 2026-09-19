@@ -1,0 +1,3 @@
+G1R9R-F04 HIGH NON_LOCAL_AS_PRODUCTION
+remote_ci / qa / preview accepted as PRODUCTION_OBSERVATION PASS.
+Only local/unit_test/staging blocked. production label alone also accepted.

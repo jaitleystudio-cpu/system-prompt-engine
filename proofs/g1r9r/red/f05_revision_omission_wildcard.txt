@@ -1,0 +1,2 @@
+G1R9R-F05 MEDIUM REVISION_OMISSION_WILDCARD
+claim.revision=None covered by evidence.revision=SHA_A — None acts as ALL.

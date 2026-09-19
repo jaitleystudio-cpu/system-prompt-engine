@@ -1,0 +1,11 @@
+{
+  "rustc": "rustc 1.83.0 (90b35a623 2024-11-26)",
+  "cargo": "cargo 1.83.0 (5ffbef321 2024-10-29)",
+  "rustup": "rustup 1.29.0 (28d1352db 2026-03-05)",
+  "installed_targets": [
+    "wasm32-unknown-unknown",
+    "x86_64-unknown-linux-gnu"
+  ],
+  "wasm32-unknown-unknown": "PRESENT",
+  "node": "v18.19.1"
+}

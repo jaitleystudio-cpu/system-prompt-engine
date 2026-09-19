@@ -1,0 +1,8 @@
+{
+  "pass": true,
+  "simple_task_technique_count": 1,
+  "simple_techniques": [
+    "ZERO_SHOT"
+  ],
+  "standard_max": 3
+}

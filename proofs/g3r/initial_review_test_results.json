@@ -1,0 +1,9 @@
+{
+  "against_head": "95a6d0b0882cfd66f9da332bdeb024397d0c6c1f",
+  "note": "First adversarial suite recorded RED behaviors for F01\u2013F03 as passing assertions of unsafe outcomes; then repaired.",
+  "findings_discovered": [
+    "G3R-F01",
+    "G3R-F02",
+    "G3R-F03"
+  ]
+}

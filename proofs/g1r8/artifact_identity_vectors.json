@@ -1,0 +1,9 @@
+{
+  "child_id": "spe-9389419c6d3055435f2f804f0d987a0836e77e2cacc1fd7f27f0e881cff3a784",
+  "child_parent": "spe-e3569f39e9e424fc5f04f9290da5e854c20b82537005f4201440bd0eaa6ef3ba",
+  "domains_distinct": true,
+  "prompt_digest": "pad-4a583570315c3437e139f051b0e9ca884180427dce4b3c2ccd11bd95ef1e21c8",
+  "root_id": "spe-e3569f39e9e424fc5f04f9290da5e854c20b82537005f4201440bd0eaa6ef3ba",
+  "root_parent": null,
+  "snapshot_id": "snap-8428b5ee745fc6881d13be17f6c26f2c"
+}

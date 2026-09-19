@@ -1,0 +1,4 @@
+{
+  "note": "K3 conflict fails closed without cloud repair loop; technique budget truncates at 3",
+  "unbounded_repair": false
+}

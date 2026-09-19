@@ -1,0 +1,133 @@
+{
+  "custody": {
+    "g2_model_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+    "g6_corpus_tasks": 120,
+    "g6_rubric_sha256": "6456af82732fd6169a7eb1336deeaa2c48b2383d25b586093fe802e4928e3c6b",
+    "g6_thresholds_sha256": "8e7074a6e5f25a3961b83be0ad2a94357b7948170a353f7bf403b2b81ed5eff4",
+    "pr6_head": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+    "pr6_state": "OPEN",
+    "pr6_status": "UNTOUCHED / UNMERGED",
+    "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3"
+  },
+  "enforced_corrections": [
+    "G9 PASS does not imply World #1",
+    "1041/1041 tests demonstrate internal conformance, not market superiority",
+    "Hermetic replay by same agent/team \u2260 independent replication",
+    "G7\u2013G9 do not satisfy G6 human-value evidence"
+  ],
+  "evidence_files_sha256": {
+    "benchmarks/g6zc/corpus.json": "0e80007e9efdd06f6aea4f14e98504876772020cf7757ab58112d7dce2cbea34",
+    "benchmarks/g6zc/randomization_manifest.json": "0b4ecfce57a5a21dee6f6614c16a5cf706354408a8d354b6a748e848ded198de",
+    "benchmarks/g6zc/rubric.json": "6456af82732fd6169a7eb1336deeaa2c48b2383d25b586093fe802e4928e3c6b",
+    "benchmarks/g6zc/rubric_sha256.txt": "654dfa269adced42b18276665cb00551e982b48c3e94690c8c02813a61ffb2a7",
+    "benchmarks/g6zc/thresholds.json": "8e7074a6e5f25a3961b83be0ad2a94357b7948170a353f7bf403b2b81ed5eff4",
+    "benchmarks/g6zc/thresholds_sha256.txt": "d405af3a63b0870e585d345b6eff9cd426433572376450b1acbf35ca00f889a5",
+    "evaluations/g6zc/blind_evaluator.html": "a36475571cbe1e86ef520d927e376b5a164a4fdc2763b2b38a7b947abf73c123",
+    "evaluations/g6zc/blind_pairs.json": "cff89a32712c1451f4eb528b9ba8de5577135b3817d4f622c94092846633698f",
+    "formal/SPELeaseCommit.tla": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+    "proofs/g6zc/G6_ZC_REPORT.md": "a0943efb281a27cd27a0845f6744d735ac85b5cfc93c4b78a3f58eb2f3f9b6b3",
+    "proofs/g6zc/claim_boundary.json": "717e122a19401a24f35dfa45556805c72f12e3bd3a912fceca8188a5a553cf46",
+    "proofs/g6zc/human_evaluator_design.json": "0d257cf5732e2c16b9dcb54b341410c99ea7bbd091d428e051d96edf2e280f0a",
+    "proofs/g6zc/human_results.json": "6986cd8847247a58bae7eb57dc50558a534834277929845a242da1a58f58908b",
+    "proofs/g7zc/G7_ZC_REPORT.md": "b0b5f961360931fe7d4388ec40ca7f878e61f19ab9ee2c752c863328ad2c6737",
+    "proofs/g7zc/full_regression.json": "bbea2451ea3328f77f57aa4e677bb137d6c4df678c9fd2f0ece4d3e894716552",
+    "proofs/g8zc/G8_ZC_REPORT.md": "aaba31f348f9dd6a94f2bc314ef52fd0ebf3cb218d15d53392434fda942dfef0",
+    "proofs/g8zc/full_regression.json": "b2a164e1a29ec7d92b7fa05d2dc29ccb73576a6cede155d8958c9b4ed5030b6b",
+    "proofs/g9zc/G9_ZC_REPORT.md": "316a43ab3051b53c7d0ad06cea1c5d096971b884f076808c3b1082a029d22ea2",
+    "proofs/g9zc/QUALIFICATION_MANIFEST.json": "7b29864efa95af482b76068a0d4b9c6bb314693e1040328c01e7333f1cfe5261",
+    "proofs/g9zc/full_regression.json": "27cd5bd62fbb389bb2f4fd0cc03db4d85bcbd5da87a41d008ae3d05661cfb5ed",
+    "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+    "tools/g8zc_replay.py": "baa51ef7c2b53520dfc85362a1ba90dfe450315a5eea53a80c9383341a3007f8",
+    "tools/verify_g9_checkpoint.py": "b54767ca292636ff1167385b3d64ecde0d02f645859788d8f3d8af65a352dc99"
+  },
+  "exact_earned_claims": [
+    "SECURITY_PRIVACY_RED_TEAM_VERIFIED_WITHIN_TESTED_SCOPE",
+    "ZERO_COST_HERMETIC_CORE_REPLAY_VERIFIED_WITHIN_TESTED_SCOPE",
+    "ZERO_COST_STACK_CUSTODY_PACKAGED_WITHIN_TESTED_SCOPE",
+    "G9_FREEZE_G6H_HANDOFF_RECORDED"
+  ],
+  "exact_forbidden_claims": [
+    "WORLD_1",
+    "WORLD_1_PROVEN",
+    "INDEPENDENTLY_REPLICATED",
+    "REAL_USER_PRODUCT_VALUE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G9_PASS_IMPLIES_WORLD_1",
+    "1041_TESTS_IMPLIES_WORLD_1",
+    "HERMETIC_REPLAY_EQUALS_INDEPENDENT_REPLICATION",
+    "FABRICATED_HUMAN_RATINGS"
+  ],
+  "forbidden_paths": [
+    "spe_runtime/omega"
+  ],
+  "freeze_head": "480ee2bdc95fa7cf768aa94737660e43f6072af3",
+  "freeze_pack_head": "8b2b4beabe7e2d210904ddff04b6715ed6d5e727",
+  "g5_qualified_baseline": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "g6h_handoff": {
+    "do_not_fabricate_ratings": true,
+    "frozen_artifacts": {
+      "blind_pairs": "evaluations/g6zc/blind_pairs.json",
+      "blind_ui": "evaluations/g6zc/blind_evaluator.html",
+      "corpus": "benchmarks/g6zc/corpus.json",
+      "randomization_map": "benchmarks/g6zc/randomization_manifest.json",
+      "reveal_rule": "unblind ONLY after all ratings complete",
+      "rubric": "benchmarks/g6zc/rubric.json",
+      "thresholds": "benchmarks/g6zc/thresholds.json"
+    },
+    "human_results_present": {
+      "RAW_preferred": null,
+      "SPE_preferred": null,
+      "do_not_fabricate": true,
+      "evaluators": 0,
+      "limitation": "SINGLE_EVALUATOR_LIMITATION / PRODUCT_VALUE_REVIEW_PENDING until blinded ratings exist",
+      "paired_evaluations": 0,
+      "status": "NO_RATINGS_YET",
+      "ties": null
+    },
+    "status": "EXTERNAL_NEXT",
+    "target_claim_if_earned": "REAL_USER_PRODUCT_VALUE_VERIFIED_WITHIN_TESTED_SCOPE"
+  },
+  "gates": {
+    "G1": "BOUND_AND_PASS",
+    "G1_G5": "PREVIOUSLY_FROZEN_PRESERVED",
+    "G2": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+    "G3": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE",
+    "G4": "ZERO_COST_CORE_ENGINE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G4X": "OPTIONAL / DEFERRED",
+    "G5": "ZERO_COST_LOCAL_FAULT_RESILIENCE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G6": "HUMAN_VALUE_EVIDENCE_PENDING",
+    "G6_detail": "G6_HARNESS_IMPLEMENTATION_PASS / PRODUCT_VALUE_REVIEW_PENDING \u2014 no fabricated ratings",
+    "G7": "SECURITY_PRIVACY_RED_TEAM_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G8": "ZERO_COST_HERMETIC_CORE_REPLAY_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G9": "ZERO_COST_STACK_CUSTODY_PACKAGED_WITHIN_TESTED_SCOPE",
+    "INDEPENDENT_REPLICATION": "NOT_PROVEN",
+    "WORLD_1": "NOT_PROVEN"
+  },
+  "git_tag_proposed": "spe-v2.4.1-g9-frozen-g6h-pending",
+  "pack": "G9-FREEZE-G6H-HANDOFF",
+  "promotion_ladder_next": [
+    "G6-H blinded humans \u2192 possible REAL_USER_PRODUCT_VALUE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G8-X independent second party \u2192 possible INDEPENDENTLY_REPLICATED",
+    "competitive benchmark campaign \u2192 World #1 consideration only if evidence warrants"
+  ],
+  "recorded_at_utc": "2026-09-19T08:22:43.142375+00:00",
+  "regression": {
+    "command": "python -m pytest",
+    "exit": 0,
+    "failed": 0,
+    "freeze_guard_passed": 1050,
+    "note": "1041/1041 = G9 internal conformance checkpoint; 1050 includes freeze-guard tests \u2014 neither implies World #1",
+    "passed": 1041,
+    "source": "proofs/g9zc/full_regression.json"
+  },
+  "schema": "g9-freeze-g6h-v1",
+  "stop": {
+    "next_battle": "humans, not more self-certification",
+    "no_cursor_make_spe_better_until_g6h": true,
+    "no_more_self_certifying_engineering_missions": true
+  },
+  "zero_cost": {
+    "keys_required": 0,
+    "provider_calls": 0,
+    "spend_inr": 0
+  }
+}

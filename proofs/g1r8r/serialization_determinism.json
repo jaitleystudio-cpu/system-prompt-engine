@@ -1,0 +1,8 @@
+{
+  "cross_process": "PASS",
+  "duplicate_keys": "REJECT",
+  "encoding": "UTF-8 canonical JSON",
+  "noncanonical_whitespace": "accept parse \u2192 canonical re-export",
+  "unicode": "NFC via canonicalize on semantic strings",
+  "unknown_fields": "REJECT"
+}
