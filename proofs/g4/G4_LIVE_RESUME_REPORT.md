@@ -6,7 +6,7 @@ G4_BLOCKED_NO_LIVE_PROVIDER
 ## SOURCE CUSTODY
 G3R HEAD: `a021aed067541ef1e9b38b3be911595129e44cdf`
 Blocked G4 HEAD: `fb7131f3920e15cc29a6d01ed73ed9d3a1d7e708`
-Resume HEAD: (pin after commit)
+Resume HEAD: `ab1b90c17c072c585b60f90fb57ddae83b6a73ae`
 Branch: `cursor/g4-live-provider-conformance-0d6e`
 PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/24
 PR #6: OPEN @ 4e6c694 — UNTOUCHED
