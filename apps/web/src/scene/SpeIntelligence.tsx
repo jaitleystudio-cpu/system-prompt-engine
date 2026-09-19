@@ -116,15 +116,16 @@ function ForgeWorld({
     const page = document.documentElement;
     const scrollRange = Math.max(1, page.scrollHeight - window.innerHeight);
     const progress = THREE.MathUtils.clamp(window.scrollY / scrollRange, 0, 1);
-    const targetX = THREE.MathUtils.lerp(-6.6, 8.8, progress);
+    const portrait = window.innerWidth < 768;
+    const targetX = THREE.MathUtils.lerp(portrait ? -4.25 : -6.6, portrait ? 9.4 : 8.8, progress);
     const pointerScale = window.matchMedia("(pointer: coarse)").matches ? 0 : 1;
     const targetY =
       0.34 + Math.sin(progress * Math.PI * 3) * 0.28 + pointer.current.y * 0.24 * pointerScale;
-    const targetZ = 6.4 + Math.sin(progress * Math.PI) * 0.8;
+    const targetZ = (portrait ? 9.1 : 6.4) + Math.sin(progress * Math.PI) * 0.8;
     camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX + pointer.current.x * 0.3, 3.4, delta);
     camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY, 3.4, delta);
     camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 3.4, delta);
-    camera.lookAt(targetX + 1.15, 0, 0);
+    camera.lookAt(targetX + (portrait ? 2.15 : 1.15), 0, 0);
 
     const energy = STATE_ENERGY[state];
     if (strategy.current) {
