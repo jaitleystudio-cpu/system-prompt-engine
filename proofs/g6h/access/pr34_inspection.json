@@ -1,0 +1,49 @@
+{
+  "pr": 34,
+  "url": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/34",
+  "state_before": "OPEN",
+  "is_draft": false,
+  "base": "main",
+  "head": "cursor/g6h-evaluator-env-0d6e",
+  "head_sha": "8c231d1a292228929aef3cfb8daba011f60d0f13",
+  "mergeable": "MERGEABLE",
+  "changed_files": [
+    ".cursor/environment.json",
+    "evaluations/g6zc/README.md",
+    "evaluations/g6zc/blind_evaluator.html",
+    "evaluations/g6zc/blind_pairs.json",
+    "tools/g6h_serve.sh"
+  ],
+  "additions": 1177,
+  "deletions": 0,
+  "allowlist_ok": true,
+  "touches_pr6": false,
+  "creates_spe_runtime_omega": false,
+  "evaluator_byte_identical_to_frozen": true,
+  "pairs_byte_identical_to_frozen": true,
+  "network_or_telemetry_introduced": false,
+  "checks_observed": {
+    "Cursor Approval Agent": "pass",
+    "Cursor Security Agent": "pass",
+    "Cursor Bugbot": "skipping"
+  },
+  "merged": false,
+  "merge_sha": null,
+  "merge_rationale": "PR #34 inspected and byte-identical to frozen evaluator/pairs; MERGEABLE and allowlist-clean. Left deliberately open: (1) cloud agent gh is read-only / no merge API; (2) main currently lacks proofs/g6h + verify_g9_freeze \u2014 post-merge custody re-check would need #33 or equivalent. Owner may merge #34 safely for evaluator access on default branch.",
+  "all_merge_gates": {
+    "prestudy_verifier_pass": true,
+    "coordinator_readiness_pass": true,
+    "human_results_no_ratings_yet": true,
+    "frozen_evaluator_hash_exact": true,
+    "blind_pair_hash_exact": true,
+    "rubric_hash_exact": true,
+    "threshold_hash_exact": true,
+    "randomization_hash_exact": true,
+    "evaluator_remains_blinded": true,
+    "no_telemetry_remote_upload": true,
+    "pr6_untouched": true,
+    "no_spe_runtime_omega": true,
+    "pr34_byte_compatible": true
+  },
+  "merge_gates_all_true": true
+}

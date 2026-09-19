@@ -1,0 +1,25 @@
+{
+  "recorded_at_utc": "2026-09-19T13:19:42.516609+00:00",
+  "pr34_merged": false,
+  "reason": "PR #34 inspected and byte-identical to frozen evaluator/pairs; MERGEABLE and allowlist-clean. Left deliberately open: (1) cloud agent gh is read-only / no merge API; (2) main currently lacks proofs/g6h + verify_g9_freeze \u2014 post-merge custody re-check would need #33 or equivalent. Owner may merge #34 safely for evaluator access on default branch.",
+  "main_currently_missing": [
+    "tools/verify_g9_freeze.py",
+    "tools/verify_g6h_prestudy.py",
+    "proofs/g6h/prestudy_manifest.json",
+    "proofs/g9_freeze/QUALIFICATION_MANIFEST.json",
+    "evaluations/g6zc/blind_evaluator.html",
+    "evaluations/g6zc/blind_pairs.json"
+  ],
+  "custody_branch_verification": {
+    "branch": "cursor/g6h-human-access-0d6e",
+    "verify_g9_freeze": "PASS",
+    "verify_g6h_prestudy": "PASS",
+    "coordinator_checklist": "READINESS: PASS",
+    "human_results": "NO_RATINGS_YET"
+  },
+  "owner_action_if_merging_34": [
+    "Merge PR #34 only (not PR #6)",
+    "Optionally merge/land G6-H custody pack (#33) so main can re-run freeze/prestudy verifiers",
+    "Re-run verify_g9_freeze + verify_g6h_prestudy + checklist on a tree that contains both evaluator and custody pack"
+  ]
+}

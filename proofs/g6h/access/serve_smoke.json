@@ -1,0 +1,30 @@
+{
+  "recorded_at_utc": "2026-09-19T13:19:42.516609+00:00",
+  "bind": "127.0.0.1",
+  "port": 8765,
+  "command": "python3 -m http.server 8765 --bind 127.0.0.1",
+  "results": {
+    "/": {
+      "http_status": 200
+    },
+    "/evaluations/g6zc/blind_evaluator.html": {
+      "http_status": 200,
+      "bytes": 12393,
+      "sha256": "d7f7474dc2e4a353a749c188901ab0fb956555f8fdc27ec53ef3679ccd9f9bcc",
+      "matches_repo": true
+    },
+    "/evaluations/g6zc/blind_pairs.json": {
+      "http_status": 200,
+      "bytes": 131210,
+      "sha256": "cff89a32712c1451f4eb528b9ba8de5577135b3817d4f622c94092846633698f",
+      "matches_repo": true
+    }
+  },
+  "local_url": "http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html",
+  "lan_optional": {
+    "serve": "python3 -m http.server 8765 --bind 0.0.0.0",
+    "url_template": "http://<LOCAL-LAN-IP>:8765/evaluations/g6zc/blind_evaluator.html",
+    "note": "Coordinator LAN only \u2014 no public internet exposure by Cursor"
+  },
+  "verdict": "PASS"
+}

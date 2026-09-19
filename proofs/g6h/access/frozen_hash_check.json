@@ -1,0 +1,37 @@
+{
+  "recorded_at_utc": "2026-09-19T13:19:42.516609+00:00",
+  "verdict": "PASS",
+  "artifacts": {
+    "evaluations/g6zc/blind_evaluator.html": {
+      "bytes_sha256": "d7f7474dc2e4a353a749c188901ab0fb956555f8fdc27ec53ef3679ccd9f9bcc",
+      "prestudy_manifest_sha256": "d7f7474dc2e4a353a749c188901ab0fb956555f8fdc27ec53ef3679ccd9f9bcc",
+      "qualification_manifest_sha256": "d7f7474dc2e4a353a749c188901ab0fb956555f8fdc27ec53ef3679ccd9f9bcc",
+      "match": true
+    },
+    "evaluations/g6zc/blind_pairs.json": {
+      "bytes_sha256": "cff89a32712c1451f4eb528b9ba8de5577135b3817d4f622c94092846633698f",
+      "prestudy_manifest_sha256": "cff89a32712c1451f4eb528b9ba8de5577135b3817d4f622c94092846633698f",
+      "qualification_manifest_sha256": "cff89a32712c1451f4eb528b9ba8de5577135b3817d4f622c94092846633698f",
+      "match": true
+    },
+    "benchmarks/g6zc/rubric.json": {
+      "bytes_sha256": "6456af82732fd6169a7eb1336deeaa2c48b2383d25b586093fe802e4928e3c6b",
+      "prestudy_manifest_sha256": "6456af82732fd6169a7eb1336deeaa2c48b2383d25b586093fe802e4928e3c6b",
+      "qualification_manifest_sha256": "6456af82732fd6169a7eb1336deeaa2c48b2383d25b586093fe802e4928e3c6b",
+      "match": true
+    },
+    "benchmarks/g6zc/thresholds.json": {
+      "bytes_sha256": "8e7074a6e5f25a3961b83be0ad2a94357b7948170a353f7bf403b2b81ed5eff4",
+      "prestudy_manifest_sha256": "8e7074a6e5f25a3961b83be0ad2a94357b7948170a353f7bf403b2b81ed5eff4",
+      "qualification_manifest_sha256": "8e7074a6e5f25a3961b83be0ad2a94357b7948170a353f7bf403b2b81ed5eff4",
+      "match": true
+    },
+    "benchmarks/g6zc/randomization_manifest.json": {
+      "bytes_sha256": "0b4ecfce57a5a21dee6f6614c16a5cf706354408a8d354b6a748e848ded198de",
+      "prestudy_manifest_sha256": "0b4ecfce57a5a21dee6f6614c16a5cf706354408a8d354b6a748e848ded198de",
+      "qualification_manifest_sha256": "0b4ecfce57a5a21dee6f6614c16a5cf706354408a8d354b6a748e848ded198de",
+      "match": true
+    }
+  },
+  "note": "Exact SHA-256 resolved from prestudy_manifest + QUALIFICATION_MANIFEST; recomputed from bytes; equality required."
+}
