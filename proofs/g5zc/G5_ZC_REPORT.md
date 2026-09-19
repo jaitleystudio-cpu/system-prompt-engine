@@ -13,7 +13,7 @@ G5 base HEAD:
 c3450c4add1329eeaba28eadcaf36c1cdf94d57b
 
 G5 HEAD:
-(see tip after this docs pin commit)
+7076f367c8fa6c7b623c22779e1bc2b298575f3d
 
 Branch:
 cursor/g5zc-local-chaos-0d6e
