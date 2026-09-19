@@ -1,0 +1,69 @@
+{
+  "gate": "G1R-6",
+  "task": "K3_PROMPT_ARTIFACT",
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "contract_owner_for_prompt_artifact": "K3",
+  "contract_k3_broader_responsibilities": [
+    "cognitive plan",
+    "prompt strategy",
+    "technique selection",
+    "PromptArtifact",
+    "capability routing (prompt/strategy)",
+    "recommendation ownership (Decide)"
+  ],
+  "g1r6_target_only": "PromptArtifact",
+  "existing_prompt_related_modules": [],
+  "spe_runtime_prompt_package_exists": false,
+  "existing_writers": {
+    "prompt_artifact": [],
+    "recommendation": ["spe_runtime/categories/c01_decide/engine.py"],
+    "rendering": ["spe_runtime/categories/c03_communicate/engine.py"]
+  },
+  "existing_readers": {
+    "recommendation": [
+      "spe_runtime/categories/c03_communicate/engine.py",
+      "spe_runtime/categories/c07_execute/engine.py"
+    ],
+    "rendering": ["spe_runtime/xcat/invariants.py"]
+  },
+  "k3_owned_surfaces_before": [
+    {
+      "semantic_fact": "recommendation",
+      "writer": "spe_runtime/categories/c01_decide/engine.py",
+      "note": "C01 Decide — NOT PromptArtifact"
+    },
+    {
+      "semantic_fact": "rendering",
+      "writer": "spe_runtime/categories/c03_communicate/engine.py",
+      "note": "C03 Communicate user-facing presentation — NOT PromptArtifact"
+    },
+    {
+      "semantic_fact": "prompt_artifact",
+      "writer_modules": [],
+      "status": "UNOWNED"
+    }
+  ],
+  "potential_duplicate_writers": [],
+  "boundaries": {
+    "C01_recommendation": "recommendation writer; must not be repurposed as PromptArtifact",
+    "C03_rendering": "user-facing XCAT presentation writer; must not be repurposed as PromptArtifact",
+    "K0_contract": "ProtectedIntentContract — source of protected intent; must not be mutated by prompt compile",
+    "K1_requirements": "RequirementGraph / RequirementAtom / conflicts — source bindings only",
+    "K4_authority_privacy": "AuthorityGrant and PrivacyProjection remain untouched; PromptArtifact != authority/privacy permission",
+    "K6_artifact": "spe_artifact_identity / lineage / .spe package — not claimed by prompt_content_digest",
+    "K7_qualification": "qualification_evidence — PromptArtifact creation != qualified"
+  },
+  "critical_discovery_fact": "C01 Decide = recommendation writer; C03 Communicate = rendering/presentation writer; Neither is PromptArtifact.",
+  "gap_matrix_prompt_artifact": {
+    "requirement": "PromptArtifact",
+    "owner": "K3",
+    "status": "MISSING",
+    "gap": "C01/C03 are decide/render, not prompts."
+  },
+  "unowned_before": [
+    "prompt_artifact",
+    "spe_artifact_identity",
+    "qualification_evidence"
+  ],
+  "duplicate_subsystem_risk": "none — no spe_runtime/prompt/ package; genuine new Ring-0 ownership surface"
+}

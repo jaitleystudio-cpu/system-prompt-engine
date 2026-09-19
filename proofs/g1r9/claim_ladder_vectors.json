@@ -1,0 +1,22 @@
+[
+  {
+    "requested": "SPECIFIED",
+    "earned": "SPECIFIED",
+    "verdict": "EARNED"
+  },
+  {
+    "requested": "IMPLEMENTED",
+    "earned": "IMPLEMENTED",
+    "verdict": "EARNED"
+  },
+  {
+    "requested": "TESTED",
+    "earned": "TESTED",
+    "verdict": "EARNED"
+  },
+  {
+    "requested": "VERIFIED_WITHIN_SCOPE",
+    "earned": "VERIFIED_WITHIN_SCOPE",
+    "verdict": "EARNED"
+  }
+]

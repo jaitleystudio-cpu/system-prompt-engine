@@ -1,0 +1,102 @@
+{
+  "rows": [
+    {
+      "tla": "curVersion / snapshot binding",
+      "python": "SemanticSnapshot.version / snapshot_id",
+      "owner": "spe_runtime.proof.snapshot",
+      "status": "ABSTRACTED",
+      "notes": "Finite version Nat; snapshot_id content-address abstracted to version equality checks"
+    },
+    {
+      "tla": "leaseStatus / leaseBase / leaseObl / leaseReqType",
+      "python": "SemanticProofLease",
+      "owner": "spe_runtime.proof.lease",
+      "status": "ABSTRACTED",
+      "notes": "One obligation+type per lease in model; runtime allows tuple of obligations/scopes"
+    },
+    {
+      "tla": "IssueLease",
+      "python": "issue_semantic_lease",
+      "owner": "spe_runtime.proof.lease",
+      "status": "ABSTRACTED"
+    },
+    {
+      "tla": "patchExists/Base/Lease/Obl",
+      "python": "ProofCarryingPatch",
+      "owner": "spe_runtime.proof.patch",
+      "status": "ABSTRACTED",
+      "notes": "semantic_delta content abstracted; binding fields exact"
+    },
+    {
+      "tla": "ProposeFreshPatch / ProposeStalePatch",
+      "python": "make_patch",
+      "owner": "spe_runtime.proof.patch",
+      "status": "ABSTRACTED"
+    },
+    {
+      "tla": "receiptVerdict / receiptType / Verify",
+      "python": "VerificationReceipt / verify_obligation",
+      "owner": "spe_runtime.proof.receipt / verify",
+      "status": "ABSTRACTED",
+      "notes": "issuance_digest / content-address NOT_MODELED (cryptographic)"
+    },
+    {
+      "tla": "ValidCommit / CommitSuccess",
+      "python": "commit_semantic_patch",
+      "owner": "spe_runtime.proof.commit",
+      "status": "ABSTRACTED",
+      "notes": "Guards mirror stale/lease/obl/type/PASS; COW atomicity modeled as single action"
+    },
+    {
+      "tla": "CommitReject UNCHANGED",
+      "python": "SpeTypedError raise; inputs unchanged",
+      "owner": "spe_runtime.proof.commit",
+      "status": "ABSTRACTED"
+    },
+    {
+      "tla": "leaseStatus CONSUMED",
+      "python": "consume_lease",
+      "owner": "spe_runtime.proof.lease",
+      "status": "EXACT"
+    },
+    {
+      "tla": "RevokeLease",
+      "python": "LeaseStatus.REVOKED (no dedicated revoke API)",
+      "owner": "spe_runtime.proof.types",
+      "status": "ABSTRACTED",
+      "notes": "Status enum exists; environmental revoke models non-ACTIVE rejection"
+    },
+    {
+      "tla": "ledgerLen",
+      "python": "ProofLedger.append_entry",
+      "owner": "spe_runtime.proof.ledger",
+      "status": "ABSTRACTED"
+    },
+    {
+      "tla": "ProofType exact match",
+      "python": "proof_type_compatible (exact)",
+      "owner": "spe_runtime.proof.types",
+      "status": "EXACT"
+    },
+    {
+      "tla": "FAIL/UNKNOWN cannot commit",
+      "python": "Verdict.FAIL/UNKNOWN raise",
+      "owner": "spe_runtime.proof.commit",
+      "status": "EXACT"
+    },
+    {
+      "tla": "K4 AuthorityGrant",
+      "python": "assert_not_authority_grant",
+      "owner": "spe_runtime.proof.lease",
+      "status": "NOT_MODELED"
+    },
+    {
+      "tla": "K0/K1 conflicts",
+      "python": "apply_semantic_delta / requirements.conflicts",
+      "owner": "spe_runtime.proof.patch",
+      "status": "NOT_MODELED"
+    }
+  ],
+  "safety_critical_mismatch": false,
+  "mismatch_rows": []
+}

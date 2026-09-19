@@ -1,0 +1,65 @@
+{
+  "all_match": true,
+  "fixtures": [
+    {
+      "digest": "pad-571941fe0b0d209cc4a32528514856d7154715b890cfb0b70c781e3f2884c3ba",
+      "fixture": "Write a professional leave email.",
+      "fresh_process_match": true,
+      "sequential_match": true
+    },
+    {
+      "digest": "pad-72eb619a2321b4bf03be89d59fba4208a3aa9f89e5a600b5425427256816fda1",
+      "fixture": "Create a study plan.",
+      "fresh_process_match": true,
+      "sequential_match": true
+    },
+    {
+      "digest": "pad-5474de6ac398e4a06c783238fc9bf4602d74b7aa971ac838fe3671b9c1767a6e",
+      "fixture": "Compile a research mission prompt.",
+      "fresh_process_match": true,
+      "sequential_match": true
+    },
+    {
+      "digest": "pad-01ca1fc78fb0060c273e994d860a45fcc63ca62b6d36401b5f85b45a5fbd3781",
+      "fixture": "Generate a Python CSV parser.",
+      "fresh_process_match": true,
+      "sequential_match": true
+    },
+    {
+      "digest": "pad-da2e3aa2d08e5145175b780fdb671f7e0e07937c280fdb8043f7e0add5c692a0",
+      "fixture": "Compare option A and B.",
+      "fresh_process_match": true,
+      "sequential_match": true
+    },
+    {
+      "digest": "pad-b7ac2627b14b96c870257024c4967ba7eda2a9ace7161a4c7d964ba689757414",
+      "fixture": "Write a short children's story about a lighthous",
+      "fresh_process_match": true,
+      "sequential_match": true
+    },
+    {
+      "digest": "pad-e558f43b8a249ba23fc5bc4972de884d859e0d4212a9669a2611936c90eac50e",
+      "fixture": "Return JSON status and count.",
+      "fresh_process_match": true,
+      "sequential_match": true
+    },
+    {
+      "digest": "pad-58dacc26c4b6dd76645e9116d81fbd547667bd6124fcdbb59c744f45bb21d77e",
+      "fixture": "Escribe un correo de ausencia profesional.",
+      "fresh_process_match": true,
+      "sequential_match": true
+    },
+    {
+      "digest": "pad-0554edbfcb34442f961425858288593b52d8b6716286dd4251b64b7cd874c529",
+      "fixture": "Help with the thing.",
+      "fresh_process_match": true,
+      "sequential_match": true
+    },
+    {
+      "digest": "pad-4283388e7a4cda4bfafaa2ed2ac692abcf1a0537ac508b318bbcb3d1e4dc4f33",
+      "fixture": "Offline portable compile path check.",
+      "fresh_process_match": true,
+      "sequential_match": true
+    }
+  ]
+}

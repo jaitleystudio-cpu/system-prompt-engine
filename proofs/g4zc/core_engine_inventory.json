@@ -1,0 +1,94 @@
+{
+  "stages": [
+    {
+      "name": "ProtectedIntentContract",
+      "owner": "K0/K1",
+      "path": "spe_runtime/contract",
+      "external_dependency": "NONE",
+      "network_dependency": "NONE",
+      "paid_model_dependency": "NONE",
+      "deterministic": true
+    },
+    {
+      "name": "RequirementGraph",
+      "owner": "K1",
+      "path": "spe_runtime/requirements",
+      "external_dependency": "NONE",
+      "network_dependency": "NONE",
+      "paid_model_dependency": "NONE",
+      "deterministic": true
+    },
+    {
+      "name": "CognitivePlan",
+      "owner": "K3",
+      "path": "spe_runtime/prompt/plan.py",
+      "external_dependency": "NONE",
+      "network_dependency": "NONE",
+      "paid_model_dependency": "NONE",
+      "deterministic": true
+    },
+    {
+      "name": "TechniqueSelection",
+      "owner": "K3",
+      "path": "spe_runtime/prompt/techniques.py",
+      "external_dependency": "NONE",
+      "network_dependency": "NONE",
+      "paid_model_dependency": "NONE",
+      "deterministic": true
+    },
+    {
+      "name": "PromptStrategy",
+      "owner": "K3",
+      "path": "spe_runtime/prompt/strategy.py",
+      "external_dependency": "NONE",
+      "network_dependency": "NONE",
+      "paid_model_dependency": "NONE",
+      "deterministic": true
+    },
+    {
+      "name": "PromptArtifact",
+      "owner": "K3",
+      "path": "spe_runtime/prompt/build.py",
+      "external_dependency": "NONE",
+      "network_dependency": "NONE",
+      "paid_model_dependency": "NONE",
+      "deterministic": true
+    },
+    {
+      "name": "SemanticSnapshot",
+      "owner": "K2",
+      "path": "spe_runtime/proof/snapshot.py",
+      "external_dependency": "NONE",
+      "network_dependency": "NONE",
+      "paid_model_dependency": "NONE",
+      "deterministic": true
+    },
+    {
+      "name": "SpeArtifact/.spe",
+      "owner": "K6",
+      "path": "spe_runtime/storage",
+      "external_dependency": "NONE",
+      "network_dependency": "NONE",
+      "paid_model_dependency": "NONE",
+      "deterministic": true
+    },
+    {
+      "name": "ZeroCostCompileEntry",
+      "owner": "G4-ZC fa\u00e7ade",
+      "path": "spe_runtime/core/compile.py",
+      "external_dependency": "NONE",
+      "network_dependency": "NONE",
+      "paid_model_dependency": "NONE",
+      "deterministic": true
+    },
+    {
+      "name": "ProviderAdapters",
+      "owner": "G4X optional",
+      "path": "spe_runtime/providers",
+      "external_dependency": "OPTIONAL",
+      "network_dependency": "OPTIONAL",
+      "paid_model_dependency": "OPTIONAL",
+      "required_for_core": false
+    }
+  ]
+}

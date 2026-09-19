@@ -1,0 +1,12 @@
+{
+  "g3r_head": "a021aed067541ef1e9b38b3be911595129e44cdf",
+  "blocked_g4_head": "fb7131f3920e15cc29a6d01ed73ed9d3a1d7e708",
+  "ancestry_contains_blocked_tip": true,
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "working_contract_match": true,
+  "g2_model_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "g2_match": true,
+  "pr6": "UNTOUCHED",
+  "historical_blocked_verdict_preserved": "G4_BLOCKED_NO_LIVE_PROVIDER",
+  "resume_head": "ab1b90c17c072c585b60f90fb57ddae83b6a73ae"
+}

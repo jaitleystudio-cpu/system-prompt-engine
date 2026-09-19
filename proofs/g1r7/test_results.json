@@ -1,0 +1,19 @@
+{
+  "collected": 507,
+  "passed": 504,
+  "failed": 3,
+  "skipped": 0,
+  "exit_status": 1,
+  "duration_s": 0.966,
+  "failed_tests": [
+    "tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
+  ],
+  "g1r7": "27/27",
+  "g1r6": "30/30",
+  "g1r6r": "10/10",
+  "k3_completeness_gate": "PASS",
+  "result_sha256": "8c0fe6d9084366995cb0b149150d93e5d098b9e0dca7e37258e3046ca60a9f4c",
+  "junit_sha256": "22223a918dda03537fd5b712be487232feca090a1b4d42e1dc2e5dbd4d7e837c"
+}

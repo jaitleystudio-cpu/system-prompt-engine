@@ -1,0 +1,37 @@
+{
+  "G0": {
+    "earned_stage_scope": "fixture_conformance_within_declared_scope",
+    "note": "not broadened"
+  },
+  "G1": {
+    "earned": "TESTED_AT_MOST_UNDER_LOCAL_EVIDENCE",
+    "authoritative": "BOUND_WITH_GAPS",
+    "note": "G1R-9R + G1R-V pending; no BOUND_AND_PASS"
+  },
+  "G1R7": {
+    "earned_scope": "K3_strategy_VERIFIED_WITHIN_SCOPE_PASS_EXTERNAL",
+    "not": "best_prompt_engine"
+  },
+  "G1R8": {
+    "earned": "PORTABLE_SEMANTIC_BINDING_ARTIFACT",
+    "not": "SELF_CONTAINED_FULL_REPLAY"
+  },
+  "Full_Ring0": {
+    "status": "IMPLEMENTATION_PRESENT_REVIEW_PENDING"
+  },
+  "Production_qualified": "NO",
+  "Formal_TLC": "NO",
+  "World_1": "NOT_PROVEN",
+  "anti_laundering": {
+    "local_test_to_production": "BLOCKED_SCOPE_OR_UNQUALIFIABLE",
+    "internal_to_independent": "BLOCKED",
+    "external_review_to_independent_replication": "BLOCKED",
+    "k2_proof_to_qualified": "BLOCKED_PARTIAL_VERIFIED_ONLY",
+    "k6_integrity_to_qualified": "BLOCKED",
+    "user_statement_to_production": "UNQUALIFIABLE_UNDER_POLICY",
+    "model_statement_to_verification": "NOT_EARNED",
+    "prompt_text_to_qualification": "NOT_EARNED",
+    "spe_import_to_qualification": "BLOCKED",
+    "benchmark_to_world_1": "UNQUALIFIABLE_UNDER_POLICY"
+  }
+}

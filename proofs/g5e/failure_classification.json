@@ -1,0 +1,102 @@
+{
+  "total_failed": 115,
+  "probe_failed_observed": 115,
+  "failure_classes": {
+    "missing_wasm32_target": 115,
+    "genuine_test_assertion_failure": 0,
+    "unrelated_environment_failure": 0,
+    "unknown": 0
+  },
+  "signature_counts_in_probe": {
+    "WASM_BUILD_FAILED": 230,
+    "cant_find_crate_core": 115,
+    "cant_find_crate_std": 115,
+    "wasm32-unknown-unknown_mentions": 460
+  },
+  "classification_method": "traceback/root-cause signatures (WASM_BUILD_FAILED + missing wasm32-unknown-unknown), not filename alone",
+  "details_sample": [
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_builds_release_artifact",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_host_import_inspection_zero_imports",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_runtime_does_not_delegate_to_native_rust",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-001]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-002]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-003]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-004]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-005]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-006]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-007]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-008]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-009]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-010]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-011]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-012]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-013]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-014]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-015]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-016]",
+      "class": "missing_wasm32_target"
+    },
+    {
+      "nodeid": "tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-017]",
+      "class": "missing_wasm32_target"
+    }
+  ],
+  "details_count": 115,
+  "environmental_only_pass": true,
+  "freeze_nuance": "Classify the prior 115 as environment/toolchain-prerequisite failures for the complete chain (missing wasm32-unknown-unknown → after install, secondary missing /usr/bin/node exposed → Node install → green). Do not permanently attribute the entire causal chain solely to the WASM target alone."
+}

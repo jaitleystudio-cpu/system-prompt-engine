@@ -1,0 +1,5 @@
+{
+  "SemanticProofLease": "spe_runtime.proof.lease (K2)",
+  "WorkerExecutionLease": "spe_runtime.ring1.lease (G3)",
+  "same_object": false
+}

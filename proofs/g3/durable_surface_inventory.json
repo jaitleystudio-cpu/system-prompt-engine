@@ -1,0 +1,51 @@
+{
+  "searched": [
+    "sqlite",
+    "durable",
+    "lease",
+    "fencing",
+    "SENT_UNKNOWN",
+    "CAS",
+    "journal",
+    "heartbeat",
+    "idempotency"
+  ],
+  "findings": [
+    {
+      "path": "spe_runtime/proof/lease.py",
+      "symbol": "SemanticProofLease",
+      "durable": false,
+      "disposition": "RETAIN_AS_RING0 \u2014 not G3 worker lease"
+    },
+    {
+      "path": "spe_runtime/proof/commit.py",
+      "symbol": "commit_semantic_patch",
+      "durable": false,
+      "disposition": "RETAIN_AS_RING0"
+    },
+    {
+      "path": "spe_runtime/execution/effect_ledger.py",
+      "symbol": "EffectLedger",
+      "durable": false,
+      "disposition": "RETAIN_IN_PROCESS_ONLY"
+    },
+    {
+      "path": "spe_runtime/storage/*",
+      "symbol": "SpeArtifact storage",
+      "durable": false,
+      "disposition": "UNRELATED_TO_RING1"
+    },
+    {
+      "path": "spe_runtime/recovery/__init__.py",
+      "symbol": "(empty)",
+      "durable": false,
+      "disposition": "SUPERSEDED_BY_ring1.recovery"
+    },
+    {
+      "path": "spe_runtime/ring1/*",
+      "symbol": "NEW G3",
+      "durable": true,
+      "disposition": "CANONICAL_RING1"
+    }
+  ]
+}

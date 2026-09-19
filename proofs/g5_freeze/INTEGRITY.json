@@ -1,0 +1,11 @@
+{
+  "algorithm": "SHA-256",
+  "baseline_doc": "proofs/g5_freeze/QUALIFIED_BASELINE.md",
+  "baseline_doc_sha256": "d94bd8329980541854d1e048caca4ff73cef1943e4e4a03a9d7cb4b7b75a6be2",
+  "git_tag": "spe-v2.4.1-g5-qualified",
+  "manifest_path": "proofs/g5_freeze/QUALIFICATION_MANIFEST.json",
+  "manifest_sha256": "1ffdbf730d4a2def28fc8b6dd682b5bcf423c8798213de9a3fa1351ffc88e183",
+  "qualification_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "source_identity_path": "proofs/g5_freeze/source_identity.json",
+  "source_identity_sha256": "9abd5413a2e4f5a26c98e870a782d2f2190ab197259bf59dbab508ab16352391"
+}

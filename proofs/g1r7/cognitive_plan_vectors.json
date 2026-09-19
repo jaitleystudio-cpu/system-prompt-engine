@@ -1,0 +1,58 @@
+[
+  {
+    "name": "simple",
+    "plan_kind": "DIRECT",
+    "plan_id": "cplan-d89654fa687460cba6c369612042f75afe8bca30e916147da800e3758701ac9d",
+    "reasons": [
+      "HINT_DIRECT_DEFAULT"
+    ]
+  },
+  {
+    "name": "decompose",
+    "plan_kind": "DECOMPOSE",
+    "plan_id": "cplan-21b23e14ff78e3bcdfef52f8212daecc3e100411a8aa9393029d0e582efe5cc1",
+    "reasons": [
+      "HINT_NEEDS_DECOMPOSITION"
+    ]
+  },
+  {
+    "name": "retrieve",
+    "plan_kind": "RETRIEVE_THEN_REASON",
+    "plan_id": "cplan-8a4cd9b49649464df1993abb698edba2f0be3b6d59627c28d18a95ff433d6074",
+    "reasons": [
+      "HINT_NEEDS_RETRIEVAL"
+    ]
+  },
+  {
+    "name": "compare",
+    "plan_kind": "COMPARE",
+    "plan_id": "cplan-a452598717c71dd79b6c6539d1519174fd71b61b2d685a33c079877892103156",
+    "reasons": [
+      "HINT_NEEDS_COMPARISON"
+    ]
+  },
+  {
+    "name": "revise",
+    "plan_kind": "CRITIQUE_REVISE",
+    "plan_id": "cplan-6f73fa69485589de108d0483df67463ea0745b085d01f16e12267d728d09e710",
+    "reasons": [
+      "HINT_NEEDS_REVISION"
+    ]
+  },
+  {
+    "name": "structured",
+    "plan_kind": "STRUCTURED_ANALYSIS",
+    "plan_id": "cplan-d4161fe57bf5063c50b783ee60a92560a2025ed9d4d3448b1349fc598f683f64",
+    "reasons": [
+      "HINT_NEEDS_STRUCTURED_OUTPUT"
+    ]
+  },
+  {
+    "name": "exec_prep",
+    "plan_kind": "PLAN_THEN_EXECUTE",
+    "plan_id": "cplan-f2d810e5101c9e2332a3a48356cd75531a9b9f032eb22875b052827d8a471de5",
+    "reasons": [
+      "HINT_NEEDS_EXECUTION_PREP"
+    ]
+  }
+]

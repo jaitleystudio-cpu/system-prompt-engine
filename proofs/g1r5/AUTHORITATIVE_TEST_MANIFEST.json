@@ -1,0 +1,111 @@
+{
+  "gate": "G1R-5",
+  "task": "K4_PRIVACY_PROJECTION",
+  "evidence_identity_repair": "G1R-5F",
+  "task_label_correction": "Brief said K3; contract assigns privacy_projection to K4; bytes unchanged",
+  "implementation_identity": {
+    "commit": "ce0d9f7250d07d22fe8f1722cb5635d0c9fdc4fd",
+    "tree": "8f53d36a35307c808798b82622713623c772838f",
+    "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+    "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+    "parent_g1r4_reviewed": "9302db4a130d109ad355d391f02ddf4e7c0c6d68"
+  },
+  "implementation_validation": {
+    "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r5_impl_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py --ignore=tests/unit/test_g1r5e_evidence_consistency.py",
+    "python_version": "3.12.3",
+    "collected": 435,
+    "passed": 432,
+    "failed": 3,
+    "skipped": 0,
+    "exit_status": 1,
+    "duration_s": 0.816,
+    "result_sha256": "d738193652d876a3f913ce12f0c21e4caf395a8e22a44026c07dfa76c2288a81",
+    "junit_sha256": "764a161cf160ab808ad285f10b828a57bb7b9d2e00dd85e8f483a0a55e2d192d",
+    "g1r1": "5/5",
+    "g1r2": "27/27",
+    "g1r3": "37/37",
+    "g1r4": "44/44",
+    "g1r5": "18/18",
+    "gates": {
+      "g1r1": {
+        "collected": 5,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "exit_status": 0
+      },
+      "g1r2": {
+        "collected": 27,
+        "passed": 27,
+        "failed": 0,
+        "skipped": 0,
+        "exit_status": 0
+      },
+      "g1r3": {
+        "collected": 37,
+        "passed": 37,
+        "failed": 0,
+        "skipped": 0,
+        "exit_status": 0
+      },
+      "g1r4": {
+        "collected": 44,
+        "passed": 44,
+        "failed": 0,
+        "skipped": 0,
+        "exit_status": 0
+      },
+      "g1r5": {
+        "collected": 18,
+        "passed": 18,
+        "failed": 0,
+        "skipped": 0,
+        "exit_status": 0
+      },
+      "g1_binding": {
+        "collected": 14,
+        "passed": 11,
+        "failed": 3,
+        "skipped": 0,
+        "exit_status": 1
+      }
+    },
+    "failed_tests": [
+      "tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility",
+      "tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique",
+      "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
+    ]
+  },
+  "evidence_validation": {
+    "suite": "G1R-5E",
+    "note": "Consistency tests live AFTER implementation tree; do not attribute to ce0d9f7.",
+    "g1r5e": "4/4",
+    "collected": 4,
+    "passed": 4,
+    "failed": 0,
+    "reviewed_evidence_head": "EXTERNAL_ONLY"
+  },
+  "artifact_hash_algorithm": "SHA-256",
+  "artifact_hash_encoding": "UTF-8",
+  "artifact_hash_scope": "canonical JSON sort_keys=True indent=2 UTF-8; exclude key artifact_content_sha256",
+  "artifact_hash_canonicalization": "json.dumps(payload_without_artifact_content_sha256, sort_keys=True, indent=2).encode(\"utf-8\") then sha256",
+  "unowned_ring0_before": 4,
+  "unowned_ring0_after": 3,
+  "unowned_facts_after": [
+    "spe_artifact_identity",
+    "prompt_artifact",
+    "qualification_evidence"
+  ],
+  "privacy_projection_owner": "K4",
+  "canonical_privacy_projection_writers": 1,
+  "privacy_projection_canonical_writer": "spe_runtime/privacy/project.py::project_privacy",
+  "duplicate_canonical_writers": 0,
+  "hidden_ambient_authority_paths": 0,
+  "g1_status": "BOUND_WITH_GAPS",
+  "g1r4_external_review": "PASS",
+  "g1r5_implementation": "PRESENT",
+  "g1r5_external_review": "PASS",
+  "git_branch": "cursor/g1r5-k3-privacy-projection-0d6e",
+  "captured_at_utc": "2026-09-18T14:26:06Z",
+  "artifact_content_sha256": "db72dedf1f6d54680159f2819f78946f215af34acc1318c90e030d5e2ecd6f19"
+}

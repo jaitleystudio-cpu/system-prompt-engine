@@ -1,0 +1,8 @@
+{
+  "led": "optional proof_ledger_digest binding",
+  "pad": "K3 prompt_content_digest",
+  "rcpt": "K2 receipt domain (not used as spe parent)",
+  "result": "DISTINCT \u2014 prefix + domain-bound preimage (format/version in preimage)",
+  "snap": "K2 SemanticSnapshot.snapshot_id",
+  "spe": "K6 SpeArtifact.artifact_id"
+}

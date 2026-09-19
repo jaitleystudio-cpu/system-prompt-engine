@@ -1,0 +1,25 @@
+{
+  "verdict": "NO_LIVE_EXTERNAL_PROVIDER_EXERCISED",
+  "providers": [
+    {
+      "provider": "openai_compat",
+      "live": false,
+      "status": "BLOCKED_NO_CREDENTIAL",
+      "requests": 0,
+      "cost": 0
+    },
+    {
+      "provider": "anthropic_compat",
+      "live": false,
+      "status": "BLOCKED_NO_CREDENTIAL",
+      "requests": 0,
+      "cost": 0
+    },
+    {
+      "provider": "local_ollama",
+      "live": false,
+      "status": "NOT_IMPLEMENTED",
+      "requests": 0
+    }
+  ]
+}

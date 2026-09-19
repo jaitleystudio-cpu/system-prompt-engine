@@ -1,0 +1,9 @@
+{
+  "filesystem": "statvfs_ok_bsize=4096",
+  "kernel": "6.12.94+",
+  "multiprocessing_start_method": "UNKNOWN",
+  "os": "Linux",
+  "platform": "Linux-6.12.94+-x86_64-with-glibc2.39",
+  "python": "3.12.3",
+  "temp_directory": "/tmp"
+}

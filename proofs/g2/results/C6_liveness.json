@@ -1,0 +1,27 @@
+{
+  "config_id": "C6_liveness",
+  "module": "SPELeaseCommit",
+  "cfg_path": "formal/cfg/C6_liveness.cfg",
+  "command_file": "proofs/g2/commands/C6_liveness.sh",
+  "log_path": "proofs/g2/logs/C6_liveness.log",
+  "workers": 4,
+  "heap": "3559m",
+  "elapsed_sec": null,
+  "exit_code": 0,
+  "states_generated": 9,
+  "distinct_states": 5,
+  "search_depth": 5,
+  "fingerprint_collision_probability_optimistic": "1.1E-18",
+  "counterexample": "NO",
+  "deadlock": "NO",
+  "no_error_text": true,
+  "status": "PASS",
+  "temporal_properties": [
+    "ValidContinuouslyEnabledCommitEventuallyResolves",
+    "RevokedLeaseNeverReactivates",
+    "ConsumedLeaseNeverReactivates",
+    "SuccessfulCommitEventuallyConsumesLease"
+  ],
+  "fairness": "WF_vars(CommitSuccessAction)",
+  "note": "L1 uses leads-to ValidCommit ~> patchCommitted under LiveSpec"
+}

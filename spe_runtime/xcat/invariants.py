@@ -74,12 +74,17 @@ def validate_preference_immutability(
     return True
 
 
-def validate_failure_preservation(
-    before: CrossCategoryEnvelope, after: CrossCategoryEnvelope
+def failures_not_laundered(
+    before_failures: Iterable[Any],
+    after_failures: Iterable[Any],
 ) -> bool:
-    """X10 support: FAIL/UNKNOWN cannot become PASS; failures cannot vanish."""
-    before_map = {f.failure_id: f for f in before.failures}
-    after_map = {f.failure_id: f for f in after.failures}
+    """X10 single writer: FAIL/UNKNOWN cannot become PASS; failures cannot vanish.
+
+    Accepts FailureRecord sequences (category validators) or any objects with
+    failure_id / status attributes.
+    """
+    before_map = {f.failure_id: f for f in before_failures}
+    after_map = {f.failure_id: f for f in after_failures}
     if not before_map.keys() <= after_map.keys():
         return False
     for fid, b in before_map.items():
@@ -90,6 +95,13 @@ def validate_failure_preservation(
         if b.status == "FAIL" and a.status == "UNKNOWN":
             return False
     return True
+
+
+def validate_failure_preservation(
+    before: CrossCategoryEnvelope, after: CrossCategoryEnvelope
+) -> bool:
+    """X10 support: FAIL/UNKNOWN cannot become PASS; failures cannot vanish."""
+    return failures_not_laundered(before.failures, after.failures)
 
 
 def validate_taint_preservation(
@@ -112,21 +124,27 @@ def validate_authority_non_escalation(
     after: CrossCategoryEnvelope,
     authority_event: object | None = None,
 ) -> bool:
-    """X09: authority never self-escalates without an external authority event."""
-    if authority_event is not None:
-        return True
+    """X09: authority never self-escalates without a validated AuthorityEvent.
+
+    Arbitrary truthy objects (object(), {}, dicts, strings) do NOT authorize.
+    """
+    from spe_runtime.authority.event_validate import validate_authority_event
+
     b = before.authority_state
     a = after.authority_state
+    escalating = False
     if a.level > b.level:
-        return False
+        escalating = True
     # Losing grants is OK; gaining grants without event is escalation
     if not set(a.grants) <= set(b.grants):
-        return False
+        escalating = True
     b_rank = _STATUS_RANK.get(str(b.status), -1)
     a_rank = _STATUS_RANK.get(str(a.status), -1)
     if a_rank > b_rank:
-        return False
-    return True
+        escalating = True
+    if not escalating:
+        return True
+    return validate_authority_event(authority_event, before, after)
 
 
 def validate_category_ownership(category_id: str) -> bool:

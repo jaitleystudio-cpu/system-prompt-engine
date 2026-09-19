@@ -1,0 +1,12 @@
+{
+  "base": "931128b384c3055ecef876124f787e5b8e67651b",
+  "branch": "cursor/g1r7r-k3-strategy-recheck-0d6e",
+  "implementation_head": "1dd587b50c672c7f364209fc875d2d2f7796992e",
+  "pr6": {
+    "head": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+    "state": "OPEN"
+  },
+  "pr_implementation": 14,
+  "pr_recheck": 15,
+  "review_head": "98b85be87fbb68cb516d634a7ae9b2f0c36eff51"
+}

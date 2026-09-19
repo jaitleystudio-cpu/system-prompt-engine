@@ -1,0 +1,192 @@
+{
+  "custody": {
+    "g2_model_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+    "pr6_head": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+    "pr6_state": "OPEN",
+    "pr6_status": "UNTOUCHED / UNMERGED",
+    "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3"
+  },
+  "evidence_files_sha256": {
+    "formal/SPELeaseCommit.tla": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+    "proofs/g4zc/G4_ZC_REPORT.md": "f65c18964b082ddcde5a07f0eb304bc02b3d6b6b7f9c9497fe3f4aee38463a95",
+    "proofs/g4zc/full_regression.json": "b0d245e4fdf84923827a63c1325ee9ab37ff6765da3832c396b623d1bd6aab87",
+    "proofs/g4zc/mutation_results.json": "94a054e0584a19169c5df096e62ea7a6b28d1f43c161fdb9b2bd6ef9fb40a7ac",
+    "proofs/g4zc/zero_cost_evidence.json": "5a7bf0e4b0e20142c7ee3a7cde6cabbe2d22951e8b076ea58bc6ea4bf163f3ec",
+    "proofs/g5e/G5_E_REPORT.md": "1d0be0546abf87f2228734bf8f8d7b59e5be1689e0b88537767c4134072ace09",
+    "proofs/g5e/compile_build.json": "ab3f49128e47be4b06ad42548e55fded240403a02b7528584f4602a5dfe91255",
+    "proofs/g5e/failure_classification.json": "407afb57a178a93753896d837637557c67767728ed28bac8b51b4f64e22b1461",
+    "proofs/g5e/full_pytest_recheck.txt": "ba06c54f65e23f377f21e737ca272435c38dde56353f9a28181d74db92a9cd10",
+    "proofs/g5e/full_regression_recheck.json": "a1bfdf3bf5b2bf7c6efd2aa654a342ba03666c5d3ca1898396c2f746a20e3bc4",
+    "proofs/g5e/prior_red_run.json": "40c17dd4c06b28f3955554ec183ed1c60fd05ba5e48741b87b1c96d35cda44a2",
+    "proofs/g5e/targeted_wasm_recheck.json": "951ab608c7f3eb0eb7bf6a2ca615aaf3cfa866ae3a5fd94ab01058b6824a232e",
+    "proofs/g5e/targeted_wasm_recheck_after_node.txt": "1c4e54630a46583b8c30da8a12a44a106621070379e209edba5bf8ceb959091a",
+    "proofs/g5e/toolchain_action.json": "aea9c359e6543eaa61a026b84143cf0aec84be8535fcb73378442b8b50ecfcd3",
+    "proofs/g5e/toolchain_after.json": "74d42476e36f87cb23bffbfe71f4ea811dc1ad7e70f1d7f5d405e18c8a24b32c",
+    "proofs/g5e/toolchain_before.json": "35795792f46c884cee536fa12af64b764362c3d6fbdd4b8c7ded46df10b7dae5",
+    "proofs/g5zc/G5_FINAL_CHECKPOINT.json": "cf3fe39ac894dcda11ec863af9a5430ce7ba75b153000f4d1b338909e1d216ea",
+    "proofs/g5zc/G5_FINAL_CHECKPOINT.md": "25d5e5e9c927683318c3632f4ea7b610dee757398909c74a679f9e3e51262c16",
+    "proofs/g5zc/G5_ZC_REPORT.md": "5c25454d9ad2881b97c9106b7c42790c738f4468ae2aad593b50f440241732f7",
+    "proofs/g5zc/claim_boundary.json": "b0063943c79851083c309c4b89f7d72b6b7f639b29a199a510136906dc8496b7",
+    "proofs/g5zc/compileall.json": "12c75abb39e685d7106ff4155a3d2a9234a424b997b731f5bd34c787024477d7",
+    "proofs/g5zc/concurrency_matrix.json": "b0b279f2f7a62c5fb5db73f537fd3d647e079ed338f639198d1656cd052caf94",
+    "proofs/g5zc/corrupt_artifact_matrix.json": "12e152c1a4b91593b57e69d9a1c569eae259438a0161fa0af4d68ca9395d7479",
+    "proofs/g5zc/fault_surface_inventory.json": "a1375c9e44ad116df06471cf6730ff880c48804aa3a41d7ba9d8a40a49505e8e",
+    "proofs/g5zc/fault_taxonomy.json": "b55789eb1e0a3be9b6358ca537d91b96a1e570c8b2df40e9c6024237235a21a2",
+    "proofs/g5zc/full_regression.json": "18bf3feaf439598ffc86a55ca35d29a512b326d94ac90dc38bc3cd044c21898d",
+    "proofs/g5zc/g2_integrity.json": "b7ba80e539ac42c2ccf92beb69cad50992b93f9a44af1ff3b07c30d135b3b6e9",
+    "proofs/g5zc/g4zc_replay.json": "81eabbc79a7f53afc87aaee35b6c25db2854320a3c92d275c98b6a76368904a8",
+    "proofs/g5zc/initial_adversarial_run.json": "705221e89b7d02c445faa6cd43cdb29ba5c412fe494df439a5265f302410b912",
+    "proofs/g5zc/mutation_results.json": "d0860fc729900c753c333ec87a77b4717ea22cf5942c26404e7c4fc850281ad9",
+    "proofs/g5zc/partial_write_matrix.json": "50d8eb44a08dd351cfd878da63dc1644051c577e73fbb4482fa525282330ebbf",
+    "proofs/g5zc/process_kill_matrix.json": "adc3da6215e51fced34457c2e6bf79a4de7408420b3f8687b63299e232a0e808",
+    "proofs/g5zc/repair_bound_confirmation.json": "0121c492dc2b50e5496057b09d80ba4a900873327cc0c228381a02fb9472335b",
+    "proofs/g5zc/working_contract_integrity.json": "fe407f646c5c761c1b633b5936823ebe3c53dd919961b54119a6e8fa29823072",
+    "proofs/g5zc/zero_cost_audit.json": "d57bd93a30f9e5fc81cbad2f89b319259396d7efebb3c26d246d873357b3e667",
+    "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3"
+  },
+  "evidence_roots": [
+    "proofs/g5zc/",
+    "proofs/g5e/",
+    "proofs/g4zc/",
+    "proofs/g5_freeze/"
+  ],
+  "exact_earned_claims": [
+    "ZERO_COST_LOCAL_FAULT_RESILIENCE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "The zero-cost SPE core preserved the tested semantic, artifact-integrity, offline, fail-closed, concurrency, and bounded-execution properties under the recorded local input, storage, process-crash, resource, network-loss, and corruption scenarios, with the complete repository regression passing after satisfying the recorded zero-cost local toolchain prerequisites."
+  ],
+  "exact_forbidden_claims": [
+    "PRODUCTION_READY",
+    "POWER_LOSS_PROVEN",
+    "ALL_FILESYSTEMS_SAFE",
+    "ALL_OPERATING_SYSTEMS_SAFE",
+    "SECURITY_RED_TEAM_PASS",
+    "UNIVERSAL_FAULT_TOLERANCE",
+    "WORLD_1",
+    "physical power-loss durability",
+    "production reliability",
+    "security red-team completion",
+    "competitive / world leadership",
+    "SIGKILL PASS implies physical power-loss proof"
+  ],
+  "gates": {
+    "G1": "BOUND_AND_PASS",
+    "G2": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+    "G3": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE",
+    "G4": "ZERO_COST_CORE_ENGINE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G4X": "OPTIONAL / DEFERRED",
+    "G5": "ZERO_COST_LOCAL_FAULT_RESILIENCE_VERIFIED_WITHIN_TESTED_SCOPE"
+  },
+  "git_tag": "spe-v2.4.1-g5-qualified",
+  "known_limitations": [
+    "Process/SIGKILL fault resilience tested; physical power loss NOT TESTED",
+    "Production deployment NOT QUALIFIED",
+    "Security red-team NOT YET",
+    "All OS/filesystem equivalence NOT PROVEN",
+    "G4X external paid provider qualification OPTIONAL / DEFERRED",
+    "G6 real-user product-value NOT EXECUTED (STOP binding)",
+    "Prior 115 RED failures were environment/toolchain-prerequisite chain, not SPE product defects"
+  ],
+  "pack": "G5-FREEZE",
+  "qualification_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "repair_invariant": {
+    "description": "No validation→repair→revalidate loop exists on the zero-cost PromptArtifact path. CONFLICTED/INCOMPLETE contracts fail closed on the initial gate inside build_prompt_artifact.",
+    "initial_validation_attempts": 1,
+    "maximum_repair_attempts": 0,
+    "maximum_total_attempts": 1,
+    "provider_escalation": false,
+    "recursive_repair": false,
+    "source_of_truth": "spe_runtime/prompt/build.py build_prompt_artifact",
+    "terminal_on_conflict": "K3_PROMPT_CONFLICTED_SOURCE",
+    "third_attempt_possible": false
+  },
+  "schema": "spe.omega.g5.qualification_manifest.v1",
+  "stop": {
+    "NO_G4X_PAID_PROVIDER_REQUIREMENT": true,
+    "NO_G6": true,
+    "NO_PR6_MERGE": true,
+    "NO_spe_runtime_omega": true
+  },
+  "technique_budget": {
+    "is_repair_attempt_bound": false,
+    "name": "STANDARD_MAX_TECHNIQUES",
+    "owns": "TechniqueSelection cardinality only",
+    "value": 3
+  },
+  "tests": {
+    "g5_chaos_mutations": {
+      "attempted": [
+        "G5M1",
+        "G5M2",
+        "G5M3",
+        "G5M4",
+        "G5M5",
+        "G5M6",
+        "G5M7",
+        "G5M8",
+        "G5M9",
+        "G5M10",
+        "G5M11",
+        "G5M12"
+      ],
+      "evidence": "proofs/g5zc/mutation_results.json",
+      "killed": 12,
+      "survived": 0
+    },
+    "g5_fault_surfaces": "F1–F20",
+    "prior_red_preserved": {
+      "classification": "environment/toolchain-prerequisite chain (wasm32 → node)",
+      "collected": 986,
+      "evidence": "proofs/g5e/prior_red_run.json",
+      "exit": 1,
+      "failed": 115,
+      "passed": 871
+    },
+    "repository_wide": {
+      "collected": 986,
+      "command_recorded": "python -m pytest",
+      "evidence": "proofs/g5e/full_regression_recheck.json",
+      "exit": 0,
+      "failed": 0,
+      "log": "proofs/g5e/full_pytest_recheck.txt",
+      "passed": 986,
+      "skipped": 0
+    },
+    "targeted_wasm": {
+      "collected": 120,
+      "evidence": "proofs/g5e/targeted_wasm_recheck.json",
+      "exit": 0,
+      "failed": 0,
+      "passed": 120
+    }
+  },
+  "title": "SPE Ω v2.4.1 — G5 Qualification Manifest",
+  "toolchain_recorded": {
+    "cargo": "cargo 1.83.0 (5ffbef321 2024-10-29)",
+    "installed_targets": [
+      "wasm32-unknown-unknown",
+      "x86_64-unknown-linux-gnu"
+    ],
+    "node": "v18.19.1",
+    "rustc": "rustc 1.83.0 (90b35a623 2024-11-26)",
+    "rustup": "rustup 1.29.0 (28d1352db 2026-03-05)",
+    "wasm32-unknown-unknown": "PRESENT"
+  },
+  "verifier": {
+    "command": "python tools/verify_g5_checkpoint.py",
+    "mode": "verify_recorded_evidence_only",
+    "must_not": [
+      "silently_rerun_pytest",
+      "rewrite_evidence"
+    ]
+  },
+  "zero_cost": {
+    "api_keys_required": 0,
+    "evidence": "proofs/g5zc/zero_cost_audit.json",
+    "external_spend_inr": 0,
+    "external_spend_usd": 0,
+    "live_provider_requests": 0,
+    "mandatory_network": 0,
+    "paid_provider_calls": 0,
+    "provider_requirement": "NONE"
+  }
+}

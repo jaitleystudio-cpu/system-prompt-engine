@@ -1,0 +1,187 @@
+{
+  "gate": "G3R",
+  "verdict": "G3R_RECHECK_PASS",
+  "entry_count": 36,
+  "entries": [
+    {
+      "path": "proofs/g3r/G3R_REPORT.md",
+      "bytes": 4531,
+      "sha256": "ff95087a55c5201ef29303ad2961b82d479a412ee7791b8c224c8b52c5030560"
+    },
+    {
+      "path": "proofs/g3r/authority_boundary.json",
+      "bytes": 129,
+      "sha256": "5563092314b1d9acae72502f422dededf4ec81d6bcc571e7e7a9eb08a82a3e13"
+    },
+    {
+      "path": "proofs/g3r/changed_file_audit.txt",
+      "bytes": 212,
+      "sha256": "4863f8cd15bb2185f204885a5de60ab4152c3feb74123096c04dfdb1ced30368"
+    },
+    {
+      "path": "proofs/g3r/claim_scope.json",
+      "bytes": 238,
+      "sha256": "9cbf2820a859955c17c87c94b11362fe1441c1aa51dcb86723fc5a31da34211b"
+    },
+    {
+      "path": "proofs/g3r/compileall_result.json",
+      "bytes": 16,
+      "sha256": "3e42a2ad3dbeab9d1167d20261ad6305bdea31103ffc09c30f25558345966de2"
+    },
+    {
+      "path": "proofs/g3r/concurrency_matrix.json",
+      "bytes": 208,
+      "sha256": "c3f7733b3e6f9ed6d37995d4a4f8ed9c56f888ade133ff87d8557c321bcefbe7"
+    },
+    {
+      "path": "proofs/g3r/crash_matrix.json",
+      "bytes": 348,
+      "sha256": "96d3ff2d414399f5a2d0435113c2540122df46ef1910922694bfd5b0f2f4ee4c"
+    },
+    {
+      "path": "proofs/g3r/db_invariant_matrix.json",
+      "bytes": 592,
+      "sha256": "7f5915b95084eeba6aca9433a3c52276ba797136bcb04ae1a5206c05969be980"
+    },
+    {
+      "path": "proofs/g3r/effect_replay_matrix.json",
+      "bytes": 352,
+      "sha256": "4dad7899631ec3536558a66fbebe7801d0b2e6205657dbf05cabb4bb3f292898"
+    },
+    {
+      "path": "proofs/g3r/effect_writer_matrix.json",
+      "bytes": 494,
+      "sha256": "6953c2f625066802e76af8b44e58fadb510a71bb46bd6b08d802117efe544ea6"
+    },
+    {
+      "path": "proofs/g3r/fence_writer_matrix.json",
+      "bytes": 1384,
+      "sha256": "50c2e1a6b8582f62edfa58c28df193fae9e959fc6949265bdfb7611078645450"
+    },
+    {
+      "path": "proofs/g3r/g1_regression.json",
+      "bytes": 159,
+      "sha256": "e4f5083192e5ceccdfaec532d1be29bef9730375d8fdf9bced1abafd5f781773"
+    },
+    {
+      "path": "proofs/g3r/g2_model_integrity.json",
+      "bytes": 255,
+      "sha256": "f6d6b6fd3a5c129812ce0b6fbe9aa1184e73974048a67ddbae923ce05b868681"
+    },
+    {
+      "path": "proofs/g3r/g2_regression.json",
+      "bytes": 185,
+      "sha256": "b617aa24135bccba0d838437d6e5e72f5f4e3c25e6caf82c4be3d87a23d51b33"
+    },
+    {
+      "path": "proofs/g3r/git_status_before.txt",
+      "bytes": 15,
+      "sha256": "e6b24239825a4afe16a1d9c5ecb189ce2c2448147bd108d8f45ba523e7ac28ae"
+    },
+    {
+      "path": "proofs/g3r/initial_review_test_results.json",
+      "bytes": 275,
+      "sha256": "a65e446d1b3f7e11ba5b0c557f65e809de0f506ce158a23b5ab01c27fc3e6dcd"
+    },
+    {
+      "path": "proofs/g3r/logs/compileall.log",
+      "bytes": 918,
+      "sha256": "89a039f0655a2305f9128e1e7f4773fec5a7fb2a10d97a5c3dae33d1767ba763"
+    },
+    {
+      "path": "proofs/g3r/logs/full_pytest.log",
+      "bytes": 900,
+      "sha256": "a467ebfcc5ad64636dc65cc30eba26f0daca2146e9d41355c8d5758a3022eccb"
+    },
+    {
+      "path": "proofs/g3r/logs/green_after_repair.txt",
+      "bytes": 99,
+      "sha256": "ee85a7fbc2fa28f7a321b8d83599bff5651f89929ceae08cc5885ceb1e7258ba"
+    },
+    {
+      "path": "proofs/g3r/logs/initial_review_test_results.txt",
+      "bytes": 99,
+      "sha256": "50f5248dc8806b21b235e40d31612f2c691996ab4455de73129a28ebbf7139e9"
+    },
+    {
+      "path": "proofs/g3r/mutation_results.json",
+      "bytes": 152,
+      "sha256": "2c43b77fa8e6c9a320e7fe5e9ec05f7aee42f84c081b5409818681108ee029c8"
+    },
+    {
+      "path": "proofs/g3r/performance_results.json",
+      "bytes": 101,
+      "sha256": "030f942e1960c30ce7cb591d0721927e11eec36d020aa890635475b127ccc902"
+    },
+    {
+      "path": "proofs/g3r/pragma_audit.json",
+      "bytes": 173,
+      "sha256": "e4ad12b6feeba6d0752f6cfc2400ff01bb6fed2399e086cc8b35c069e0255e20"
+    },
+    {
+      "path": "proofs/g3r/promotion_decision.json",
+      "bytes": 168,
+      "sha256": "40e334157dc1787f1ed700addf7f33c8d661cb9a7778d5581296695814ea42a4"
+    },
+    {
+      "path": "proofs/g3r/recovery_matrix.json",
+      "bytes": 147,
+      "sha256": "551fcba71810d1f7ab8ed0790a5105ac3c694168820835e80ccff309cb081c4d"
+    },
+    {
+      "path": "proofs/g3r/review_findings.json",
+      "bytes": 1586,
+      "sha256": "749f156f7e46d9675f6910f693bc30b4bbfe572bb750140df4787fa79f293b29"
+    },
+    {
+      "path": "proofs/g3r/ring1_surface_inventory.json",
+      "bytes": 609,
+      "sha256": "9a5311765aac55d0cefe136fb2e11fcfe82d2799f4339bfa48ff445fa2a9b5ee"
+    },
+    {
+      "path": "proofs/g3r/semantic_vs_worker_lease.json",
+      "bytes": 141,
+      "sha256": "c865d2abdd9997c2e639aae49584dd365197018a6dc8e02546424892d6391574"
+    },
+    {
+      "path": "proofs/g3r/single_store_assumption.json",
+      "bytes": 178,
+      "sha256": "4268cbc27b7a805e9bc8dfa5a0b15652675d9288a425c984de72ed22f5ef1652"
+    },
+    {
+      "path": "proofs/g3r/source_identity.json",
+      "bytes": 627,
+      "sha256": "c56f72a285675a05b66673d7ce57316045772bff234a7d9fae88d5585f5a1702"
+    },
+    {
+      "path": "proofs/g3r/source_scope.json",
+      "bytes": 568,
+      "sha256": "0faa6c3bf45fe26b0e03aa563780c721c43a63c3dcbcb4c415be19ef7346c6a2"
+    },
+    {
+      "path": "proofs/g3r/store_loss_matrix.json",
+      "bytes": 201,
+      "sha256": "49db18c4f31c5e55dd03c0f4cbf465d30688dcbe736c10301cbb64987fc49464"
+    },
+    {
+      "path": "proofs/g3r/test_results.json",
+      "bytes": 120,
+      "sha256": "ee77f49c9b5da5d1b386bba2bc4b6b1267af0d06f5b9ef98617a5cbe4cc26ffd"
+    },
+    {
+      "path": "proofs/g3r/transaction_audit.json",
+      "bytes": 254,
+      "sha256": "29da08cba3b94af786a22325afbd43e3c7390719e3cd9c8c832874c7c47b7af7"
+    },
+    {
+      "path": "proofs/g3r/working_contract_integrity.json",
+      "bytes": 260,
+      "sha256": "5a80726cca4ecc3505aa9104198ee59c53e5d611b303f9d5ca7e8292cee11b2d"
+    },
+    {
+      "path": "proofs/g3r/writer_audit.json",
+      "bytes": 75,
+      "sha256": "e7a20d77541804b79810ce13c8bf6a8f92b05932a8360e28d1ac7a9ed2261be2"
+    }
+  ]
+}

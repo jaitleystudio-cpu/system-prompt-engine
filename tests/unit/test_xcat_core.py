@@ -269,6 +269,8 @@ def test_authority_stable_ok():
 
 
 def test_authority_escalation_with_external_event_allowed():
+    from spe_runtime.authority import AuthorityEvent
+
     before = _base_envelope(
         authority_state=AuthorityState(level=1, status="GRANTED", grants=("read",))
     )
@@ -277,12 +279,17 @@ def test_authority_escalation_with_external_event_allowed():
             level=3, status="GRANTED", grants=("read", "write")
         )
     )
-    # Explicit external authority event may permit escalation
+    # Explicit typed AuthorityEvent may permit escalation (dicts/objects do not)
+    event = AuthorityEvent(
+        kind="EXTERNAL_GRANT",
+        subject="operator",
+        target=before.envelope_id,
+        scope=("write",),
+        max_level=3,
+        revocation_state="ACTIVE",
+    )
     assert (
-        validate_authority_non_escalation(
-            before, after, authority_event={"type": "EXTERNAL_GRANT", "by": "operator"}
-        )
-        is True
+        validate_authority_non_escalation(before, after, authority_event=event) is True
     )
 
 
