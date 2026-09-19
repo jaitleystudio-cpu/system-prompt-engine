@@ -107,7 +107,7 @@ export function Workspace(props: Props) {
         ))}
       </div>
 
-      <div className="spe-ws-grid">
+      <div className="spe-ws-grid" data-mode={mode}>
         <aside className="spe-ws-side">
           <label className="spe-field grow">
             <span>Raw request</span>
@@ -196,26 +196,28 @@ export function Workspace(props: Props) {
           )}
         </div>
 
-        <aside className="spe-ws-rail">
-          {(mode === "inspect" || mode === "pro") && (
-            <PrivacyIndicator
-              sensitivity={privacy.sensitivity}
-              trust={privacy.trust}
-              authority={privacy.authority}
-              online={online}
-            />
-          )}
-          {mode === "pro" && (
-            <TrustPanel sha256={sha256} imports={imports} phase={phase} usedTsFallback={false} />
-          )}
-          {mode === "pro" && (
-            <div className="spe-pro-meta">
-              <p>WASM: {result ? `${result.status}/${result.disposition}` : phase}</p>
-              <p>phases: {phases.join(" → ") || "idle"}</p>
-              <p>not_a_release: true</p>
-            </div>
-          )}
-        </aside>
+        {mode !== "simple" && (
+          <aside className="spe-ws-rail">
+            {(mode === "inspect" || mode === "pro") && (
+              <PrivacyIndicator
+                sensitivity={privacy.sensitivity}
+                trust={privacy.trust}
+                authority={privacy.authority}
+                online={online}
+              />
+            )}
+            {mode === "pro" && (
+              <TrustPanel sha256={sha256} imports={imports} phase={phase} usedTsFallback={false} />
+            )}
+            {mode === "pro" && (
+              <div className="spe-pro-meta">
+                <p>WASM: {result ? `${result.status}/${result.disposition}` : phase}</p>
+                <p>phases: {phases.join(" → ") || "idle"}</p>
+                <p>not_a_release: true</p>
+              </div>
+            )}
+          </aside>
+        )}
       </div>
     </section>
   );
