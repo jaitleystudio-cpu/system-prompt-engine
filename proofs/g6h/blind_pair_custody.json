@@ -1,0 +1,7 @@
+{
+  "path": "evaluations/g6zc/blind_pairs.json",
+  "sha256": "cff89a32712c1451f4eb528b9ba8de5577135b3817d4f622c94092846633698f",
+  "size": 131210,
+  "n_pairs": 120,
+  "rule": "Do not regenerate, normalize, repair labels, or change wording"
+}

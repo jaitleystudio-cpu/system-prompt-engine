@@ -1,0 +1,130 @@
+{
+  "gate": "G6-H",
+  "phase": "PRESTUDY_CUSTODY_ONLY",
+  "mission_class": "EXTERNAL_HUMAN_EVIDENCE_COLLECTION",
+  "ratings_status": "NO_RATINGS_YET",
+  "do_not_fabricate": true,
+  "recorded_at_utc": "2026-09-19T09:41:40.982709+00:00",
+  "freeze_verifier": {
+    "command": "python tools/verify_g9_freeze.py",
+    "exit_code": 0,
+    "verdict": "PASS",
+    "output_sha256": "8f6d2b15d2c4bab7fd5ebe4d0fcddbde56b5c35973d8ffc8ad66d55cc423953e",
+    "artifact": "proofs/g6h/freeze_verifier_result.txt"
+  },
+  "inputs": [
+    {
+      "path": "benchmarks/g6zc/corpus.json",
+      "size": 89304,
+      "sha256": "0e80007e9efdd06f6aea4f14e98504876772020cf7757ab58112d7dce2cbea34",
+      "role": "benchmark_corpus"
+    },
+    {
+      "path": "benchmarks/g6zc/dev_manifest.json",
+      "size": 1433,
+      "sha256": "81f76fb2e51a7a2d3ea0e81f5e2301d4db33265eaa60457df6139dd7d5928527",
+      "role": "development_corpus_manifest"
+    },
+    {
+      "path": "benchmarks/g6zc/holdout_manifest.json",
+      "size": 502,
+      "sha256": "6c1daab07cc8573bdcabfb2d232e7be47d4d0c4efb6075aef0609ddf785ddde0",
+      "role": "holdout_corpus_manifest"
+    },
+    {
+      "path": "benchmarks/g6zc/benchmark_manifest.json",
+      "size": 1187,
+      "sha256": "963d7f67bb9d89e172c2506273ea23fd174124eb291c77612aa6cec7bb651584",
+      "role": "benchmark_manifest"
+    },
+    {
+      "path": "benchmarks/g6zc/rubric.json",
+      "size": 1228,
+      "sha256": "6456af82732fd6169a7eb1336deeaa2c48b2383d25b586093fe802e4928e3c6b",
+      "role": "rubric"
+    },
+    {
+      "path": "benchmarks/g6zc/rubric_sha256.txt",
+      "size": 78,
+      "sha256": "654dfa269adced42b18276665cb00551e982b48c3e94690c8c02813a61ffb2a7",
+      "role": "rubric_sha_pin"
+    },
+    {
+      "path": "benchmarks/g6zc/thresholds.json",
+      "size": 877,
+      "sha256": "8e7074a6e5f25a3961b83be0ad2a94357b7948170a353f7bf403b2b81ed5eff4",
+      "role": "pass_fail_thresholds"
+    },
+    {
+      "path": "benchmarks/g6zc/thresholds_sha256.txt",
+      "size": 82,
+      "sha256": "d405af3a63b0870e585d345b6eff9cd426433572376450b1acbf35ca00f889a5",
+      "role": "thresholds_sha_pin"
+    },
+    {
+      "path": "benchmarks/g6zc/randomization_manifest.json",
+      "size": 11989,
+      "sha256": "0b4ecfce57a5a21dee6f6614c16a5cf706354408a8d354b6a748e848ded198de",
+      "role": "randomization_map_SEALED"
+    },
+    {
+      "path": "evaluations/g6zc/blind_pairs.json",
+      "size": 131210,
+      "sha256": "cff89a32712c1451f4eb528b9ba8de5577135b3817d4f622c94092846633698f",
+      "role": "blind_pair_assignments"
+    },
+    {
+      "path": "evaluations/g6zc/blind_evaluator.html",
+      "size": 11066,
+      "sha256": "a36475571cbe1e86ef520d927e376b5a164a4fdc2763b2b38a7b947abf73c123",
+      "role": "evaluator_ui"
+    },
+    {
+      "path": "proofs/g6zc/human_evaluator_design.json",
+      "size": 417,
+      "sha256": "0d257cf5732e2c16b9dcb54b341410c99ea7bbd091d428e051d96edf2e280f0a",
+      "role": "evaluation_schema_design"
+    },
+    {
+      "path": "proofs/g6zc/human_results.json",
+      "size": 279,
+      "sha256": "6986cd8847247a58bae7eb57dc50558a534834277929845a242da1a58f58908b",
+      "role": "human_results_placeholder"
+    },
+    {
+      "path": "proofs/g6zc/randomization_secret_note.json",
+      "size": 103,
+      "sha256": "c0467bfdaaf01da47a3df661a2579d4eb20cfbaec9112a9b813803d27184c32b",
+      "role": "unblind_after_lock_note"
+    },
+    {
+      "path": "proofs/g9_freeze/G6H_PROTOCOL.md",
+      "size": 2508,
+      "sha256": "b2cb05fb5d3ff0b4a1672447a8f267bb5bee5679afd8606dd47250472a9c1b8f",
+      "role": "prior_g6h_protocol"
+    },
+    {
+      "path": "proofs/g9_freeze/FREEZE.md",
+      "size": 1783,
+      "sha256": "9daf5e98b108d4c79e6d6b177a33b70f905b0c396b8de1458eb82a604c341f63",
+      "role": "g9_freeze_table"
+    },
+    {
+      "path": "tools/verify_g9_freeze.py",
+      "size": 5504,
+      "sha256": "593a91158b49ba3ff3e4d5ca0543a21d4489416d335c22364da7e97983b6a46e",
+      "role": "freeze_verifier"
+    }
+  ],
+  "not_this_mission": [
+    "coding sprint",
+    "benchmark redesign",
+    "corpus regeneration",
+    "prompt rewrite",
+    "Cursor self-evaluation",
+    "LLM-as-judge",
+    "G7/G8/G9 engineering",
+    "independent replication",
+    "World #1 benchmark"
+  ]
+}

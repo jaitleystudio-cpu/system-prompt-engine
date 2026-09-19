@@ -1,0 +1,180 @@
+{
+  "gate": "G6-H",
+  "phase": "PRESTUDY_CUSTODY_ONLY",
+  "files": [
+    {
+      "path": "proofs/g6h/COORDINATOR_HANDOFF.md",
+      "size": 4013,
+      "sha256": "9e18307a97862416349723aff737d717ebcd216f47a249d7fd909f31c2147314"
+    },
+    {
+      "path": "proofs/g6h/G6_H_FINAL_REPORT.md",
+      "size": 2147,
+      "sha256": "7978bc95da008e738d81e90a9377ee54232077c2b2397e34a3f6d89bb3873c85"
+    },
+    {
+      "path": "proofs/g6h/agreement_results.json",
+      "size": 32,
+      "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
+    },
+    {
+      "path": "proofs/g6h/blind_pair_custody.json",
+      "size": 242,
+      "sha256": "4887d76872327171ad3dd016464dec8620a9979e589bd33fa7ce4b4bdb9d67bc"
+    },
+    {
+      "path": "proofs/g6h/category_results.json",
+      "size": 32,
+      "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
+    },
+    {
+      "path": "proofs/g6h/claim_boundary.json",
+      "size": 690,
+      "sha256": "43fc8febf1ca590d393e29ae21a3917cdd9d1a23fe41278c44ed3de5c136194a"
+    },
+    {
+      "path": "proofs/g6h/confidence_results.json",
+      "size": 32,
+      "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
+    },
+    {
+      "path": "proofs/g6h/corpus_custody.json",
+      "size": 281,
+      "sha256": "1ef21c70df97e6f039c492eab68ff120b576db7380a8b9d82dc7edbae41621f2"
+    },
+    {
+      "path": "proofs/g6h/dev_results.json",
+      "size": 32,
+      "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
+    },
+    {
+      "path": "proofs/g6h/evaluator_assignments.json",
+      "size": 59,
+      "sha256": "1da2fb0e7fcd40e8f62d85e056e0062e2a75f9c086c6f461b6aa3f1874832a31"
+    },
+    {
+      "path": "proofs/g6h/evaluator_metadata_minimal.json",
+      "size": 97,
+      "sha256": "ae9e46924f982d988018421d76b5e4f4f435f660891ad5ddb3c3bb66bdcdf55b"
+    },
+    {
+      "path": "proofs/g6h/evaluator_protocol.md",
+      "size": 1059,
+      "sha256": "261ecac56075d7268f432a27b55ec26901b72c1317eb35c1c66c0c3ad41b33a5"
+    },
+    {
+      "path": "proofs/g6h/evaluator_results.json",
+      "size": 32,
+      "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
+    },
+    {
+      "path": "proofs/g6h/failures.json",
+      "size": 47,
+      "sha256": "e63a762eac490049e73f4e730250d801a1bfcf6685b220f1e9c61c71d7a5d72a"
+    },
+    {
+      "path": "proofs/g6h/failures/README.md",
+      "size": 82,
+      "sha256": "cc4268cd0897ff8dee4196f7cec6b332ba78b27d4fc78ff4d055e219f9bea1ea"
+    },
+    {
+      "path": "proofs/g6h/findings.json",
+      "size": 47,
+      "sha256": "e63a762eac490049e73f4e730250d801a1bfcf6685b220f1e9c61c71d7a5d72a"
+    },
+    {
+      "path": "proofs/g6h/freeze_verifier_result.txt",
+      "size": 665,
+      "sha256": "511b75ea601bfcafaca84f96466278a31f1ca7eabf5e88ea128d0f22495d35e2"
+    },
+    {
+      "path": "proofs/g6h/holdout_results.json",
+      "size": 32,
+      "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
+    },
+    {
+      "path": "proofs/g6h/human_results.json",
+      "size": 488,
+      "sha256": "32104ccf9a9812ff288009dca55c20d86e311c2d50df1cb76983f62cf03dd43e"
+    },
+    {
+      "path": "proofs/g6h/invalid_results.json",
+      "size": 47,
+      "sha256": "3c8298de719b068f9579d4c0cee744b3a9e2de6c0f4394a412e6afb52c4b6f29"
+    },
+    {
+      "path": "proofs/g6h/language_results.json",
+      "size": 32,
+      "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
+    },
+    {
+      "path": "proofs/g6h/preference_results.json",
+      "size": 32,
+      "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
+    },
+    {
+      "path": "proofs/g6h/prestudy_manifest.json",
+      "size": 4252,
+      "sha256": "07ab6032f6d21833bd85abca8357e694b3bfcb718ef3c7f63de75b5c45cace84"
+    },
+    {
+      "path": "proofs/g6h/randomization_custody.json",
+      "size": 359,
+      "sha256": "9723ece34cab96441ed2dcc5968ebc12939aff4d52272b4c6b86d2d93c5d2e2f"
+    },
+    {
+      "path": "proofs/g6h/ratings_lock.json",
+      "size": 59,
+      "sha256": "ecef3d10e8102cec98ee96637dd6686fc9c974859756325001f3963c757a9087"
+    },
+    {
+      "path": "proofs/g6h/roles.json",
+      "size": 496,
+      "sha256": "5516f144bc8ee09ffae559c819d82f2c9a97a44a9f5abafdca9e3f2233facc83"
+    },
+    {
+      "path": "proofs/g6h/rubric_custody.json",
+      "size": 594,
+      "sha256": "fee6daa1ec8dc64c65ee65e83a40d11710d416e1c75d18916e433018941be113"
+    },
+    {
+      "path": "proofs/g6h/rubric_dimension_results.json",
+      "size": 32,
+      "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
+    },
+    {
+      "path": "proofs/g6h/skipped_results.json",
+      "size": 47,
+      "sha256": "3c8298de719b068f9579d4c0cee744b3a9e2de6c0f4394a412e6afb52c4b6f29"
+    },
+    {
+      "path": "proofs/g6h/threshold_adjudication.json",
+      "size": 64,
+      "sha256": "4151aad2af7bf2f7feec5c9a379316652cc0da306207518e0a06c0ba7ab973ba"
+    },
+    {
+      "path": "proofs/g6h/threshold_custody.json",
+      "size": 346,
+      "sha256": "ca1cf695340fea21f8cabfbb7ecc39944c8ac1262b0f68ea3af3e55f5c1c376a"
+    },
+    {
+      "path": "proofs/g6h/unblinded_results.json",
+      "size": 61,
+      "sha256": "7b6ddeed1e122c9ac3bfecdc68cd120e71ded4c6e24d54d91da882ed2d1d5d30"
+    },
+    {
+      "path": "proofs/g6h/unblinding_log.json",
+      "size": 69,
+      "sha256": "6ac2f2c265a834a7b53021124dfa5d10d478a05b99da446a026edd241838e1f0"
+    },
+    {
+      "path": "proofs/g6h/zero_cost_audit.json",
+      "size": 66,
+      "sha256": "f9b85ca476aa78f17913d2e4c83560f9003ca6ecda058c8eca902b8a04aaee8c"
+    }
+  ],
+  "count": 34,
+  "do_not_fabricate": true,
+  "ratings_status": "NO_RATINGS_YET",
+  "recorded_at_utc": "2026-09-19T09:42:43.981577+00:00"
+}

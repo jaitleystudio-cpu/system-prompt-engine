@@ -1,0 +1,8 @@
+{
+  "path": "benchmarks/g6zc/thresholds.json",
+  "sha256": "8e7074a6e5f25a3961b83be0ad2a94357b7948170a353f7bf403b2b81ed5eff4",
+  "size": 877,
+  "frozen_before_ratings": true,
+  "rule": "Do not loosen/tighten/reinterpret after any rating observed",
+  "source_note": "Thresholds hashed before human ratings. Do not change after seeing outcomes."
+}

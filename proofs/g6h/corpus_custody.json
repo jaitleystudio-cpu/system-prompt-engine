@@ -1,0 +1,8 @@
+{
+  "path": "benchmarks/g6zc/corpus.json",
+  "sha256": "0e80007e9efdd06f6aea4f14e98504876772020cf7757ab58112d7dce2cbea34",
+  "size": 89304,
+  "total_tasks": 120,
+  "dev_manifest": "benchmarks/g6zc/dev_manifest.json",
+  "holdout_manifest": "benchmarks/g6zc/holdout_manifest.json"
+}

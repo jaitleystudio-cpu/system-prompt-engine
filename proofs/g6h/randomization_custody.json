@@ -1,0 +1,9 @@
+{
+  "path": "benchmarks/g6zc/randomization_manifest.json",
+  "sha256": "0b4ecfce57a5a21dee6f6614c16a5cf706354408a8d354b6a748e848ded198de",
+  "size": 11989,
+  "status": "SEALED",
+  "access": "ROLE D UNBLINDER only after ratings_lock",
+  "reveal_after_evaluation": true,
+  "rule": "Evaluators and mid-study monitors must not inspect A/B\u2192RAW/SPE mapping"
+}
