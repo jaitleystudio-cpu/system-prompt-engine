@@ -249,6 +249,58 @@ for (const item of [
   await context.close();
 }
 
+// Keyboard and focus-order smoke proof.
+{
+  const { context, page } = await openPage({ width: 1280, height: 800 });
+  await page.keyboard.press("Tab");
+  const firstFocus = await page.evaluate(() => ({
+    tag: document.activeElement?.tagName || null,
+    class_name:
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement.className
+        : null,
+    text:
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement.innerText.trim()
+        : null,
+  }));
+  await shot(page, "screenshots/states/keyboard-skip-focus.png");
+  await page.keyboard.press("Enter");
+  await page.waitForTimeout(200);
+  const skipTarget = await page.evaluate(() => location.hash);
+  const controls = await page.evaluate(() =>
+    [...document.querySelectorAll("a[href], button, textarea, select, input")]
+      .filter((node) => !(node instanceof HTMLInputElement && node.type === "hidden"))
+      .map((node) => {
+        const element = node;
+        return {
+          tag: element.tagName,
+          text:
+            (element.getAttribute("aria-label") ||
+              element.textContent ||
+              element.getAttribute("placeholder") ||
+              "").trim(),
+          disabled: "disabled" in element ? Boolean(element.disabled) : false,
+        };
+      }),
+  );
+  await writeFile(
+    resolve(out, "reports/keyboard-navigation.json"),
+    `${JSON.stringify(
+      {
+        first_focus: firstFocus,
+        skip_target: skipTarget,
+        named_controls: controls.filter((item) => item.text.length > 0).length,
+        unnamed_controls: controls.filter((item) => item.text.length === 0),
+        total_controls: controls.length,
+      },
+      null,
+      2,
+    )}\n`,
+  );
+  await context.close();
+}
+
 await writeFile(
   resolve(out, "reports/browser-performance.json"),
   `${JSON.stringify(
