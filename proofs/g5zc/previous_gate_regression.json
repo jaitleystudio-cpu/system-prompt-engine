@@ -1,0 +1,12 @@
+{
+  "G1": "PASS (covered by unit suite; contract/G2 hashes match)",
+  "G2_model_sha": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "G2_match": true,
+  "G3_G3R": "PASS (test_g3r_adversarial + test_g3_ring1_mutations with g4zc prior subset)",
+  "G4_ZC": "PASS (test_g4zc_zerocost_core + mutations + Z1-Z10 network-kill replay)",
+  "PR6": {
+    "state": "OPEN",
+    "head": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+    "merged": false
+  }
+}

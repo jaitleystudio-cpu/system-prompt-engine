@@ -1,0 +1,477 @@
+{
+  "gate": "G1R-4",
+  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+  "facts": [
+    {
+      "semantic_fact": "handoff_result",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/xcat/handoff.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/portability/conformance.py",
+        "tests/unit/test_xcat_core.py",
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "authority_grant",
+      "canonical_owner": "K4",
+      "writer_modules": [
+        "spe_runtime/authority/models.py",
+        "spe_runtime/authority/consume.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/authority/validate.py",
+        "spe_runtime/categories/c07_execute/engine.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "models.py constructs; consume.py uniquely writes uses_consumed. No runtime mint gate (external constructor is a documented ambient path)."
+    },
+    {
+      "semantic_fact": "grant_compatibility",
+      "canonical_owner": "K4",
+      "writer_modules": [
+        "spe_runtime/authority/validate.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/categories/c07_execute/engine.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "grant_uses_consumed",
+      "canonical_owner": "K4",
+      "writer_modules": [
+        "spe_runtime/authority/consume.py"
+      ],
+      "reader_modules": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "recommendation",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/categories/c01_decide/engine.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/categories/c03_communicate/engine.py",
+        "spe_runtime/categories/c07_execute/engine.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "analysis",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/categories/c06_analyze/engine.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/xcat/invariants.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "facts_provenance_uncertainty",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/categories/c02_research/engine.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/xcat/invariants.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "rendering",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/categories/c03_communicate/engine.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/xcat/invariants.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "operation_id",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/execution/models.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/categories/c07_execute/engine.py",
+        "spe_runtime/execution/effect_ledger.py",
+        "spe_runtime/adapters/local_temp_file.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "outcome_transition",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/execution/outcomes.py"
+      ],
+      "reader_modules": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "portable_canonical_json",
+      "canonical_owner": "K5",
+      "writer_modules": [
+        "spe_runtime/portability/canonical.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/portability/conformance.py",
+        "spe_runtime/portability/oracle.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "operation_arguments_digest",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/execution/models.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/categories/c07_execute/engine.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": true,
+      "notes": "Weaker json.dumps digest vs K5 NFC canonicalizer. Distinct fact today; must not be used as portable identity."
+    },
+    {
+      "semantic_fact": "semantic_equivalence_verdict",
+      "canonical_owner": "K5",
+      "writer_modules": [
+        "spe_runtime/portability/conformance.py"
+      ],
+      "reader_modules": [
+        "tools/sprint5_conformance.py",
+        "tests/portability/test_semantic_equivalent.py",
+        "portable/spe-core-rs (replica, not Python writer)"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "Python is the oracle. Rust/WASM are replicas. oracle.py is an independent checker, not a production writer."
+    },
+    {
+      "semantic_fact": "capability_status",
+      "canonical_owner": "K7",
+      "writer_modules": [
+        "spe_runtime/portability/capability.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/portability/conformance.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "abi_version",
+      "canonical_owner": "K5",
+      "writer_modules": [
+        "spe_runtime/portability/abi.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/portability/conformance.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "failure_laundering_predicate",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/xcat/invariants.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/xcat/handoff.py",
+        "spe_runtime/categories/_common.py",
+        "spe_runtime/categories/c01_decide/validate.py",
+        "spe_runtime/categories/c02_research/validate.py",
+        "spe_runtime/categories/c03_communicate/validate.py",
+        "spe_runtime/categories/c06_analyze/validate.py",
+        "spe_runtime/categories/c07_execute/validate.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-1: single writer invariants.failures_not_laundered; _common re-exports the same function object."
+    },
+    {
+      "semantic_fact": "typed_error_code",
+      "canonical_owner": "K5",
+      "writer_modules": [
+        "spe_runtime/error_registry.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/xcat/reasons.py",
+        "spe_runtime/portability/reasons.py",
+        "spe_runtime/xcat/handoff.py",
+        "spe_runtime/authority/validate.py",
+        "spe_runtime/portability/conformance.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-1: ErrorCode is the single K5 enum. ReasonCode and PortabilityReason are aliases of ErrorCode."
+    },
+    {
+      "semantic_fact": "envelope_generic_field_override",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/categories/_common.py"
+      ],
+      "reader_modules": [
+        "all category engines"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-2: replace_envelope rejects authority-controlled fields. Copies unchanged authority_state only."
+    },
+    {
+      "semantic_fact": "proof_receipt",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/verify.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-4: verify_obligation is the only PASS-receipt minting path."
+    },
+    {
+      "semantic_fact": "privacy_projection",
+      "canonical_owner": "K4",
+      "writer_modules": [],
+      "reader_modules": [
+        "spe_runtime/xcat/invariants.py (superset check only)"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": true,
+      "notes": "MISSING. privacy/ empty; labels are opaque strings."
+    },
+    {
+      "semantic_fact": "spe_artifact_identity",
+      "canonical_owner": "K6",
+      "writer_modules": [],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": true,
+      "notes": "MISSING. storage/ empty; no .spe artifact."
+    },
+    {
+      "semantic_fact": "prompt_artifact",
+      "canonical_owner": "K3",
+      "writer_modules": [],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": true,
+      "notes": "MISSING. Decide/Communicate are not prompt strategy."
+    },
+    {
+      "semantic_fact": "semantic_snapshot",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/snapshot.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-4: SemanticSnapshot + genesis_snapshot. Commit constructs next via snapshot.py type."
+    },
+    {
+      "semantic_fact": "qualification_evidence",
+      "canonical_owner": "K7",
+      "writer_modules": [],
+      "reader_modules": [
+        "spe_runtime/portability/capability.py (capability only)"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": true,
+      "notes": "MISSING. recovery/ empty; no promotion (forbidden by handoff enum \u2014 good)."
+    },
+    {
+      "semantic_fact": "protected_user_intent",
+      "canonical_owner": "K0",
+      "writer_modules": [
+        "spe_runtime/contract/protected.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/xcat/invariants.py (goal_identity + preferences)"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-3: ProtectedIntentContract. INFERRED cannot overwrite USER_EXPLICIT/CONFIRMED."
+    },
+    {
+      "semantic_fact": "envelope_authority_state",
+      "canonical_owner": "K4",
+      "writer_modules": [
+        "spe_runtime/authority/apply.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/xcat/invariants.py",
+        "spe_runtime/categories/_common.py",
+        "spe_runtime/categories/c07_execute/validate.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-2: apply_authority_event is the only runtime mutator. Envelope constructor materializes initial values. replace_envelope cannot write it."
+    },
+    {
+      "semantic_fact": "provenance_vocabulary",
+      "canonical_owner": "K0",
+      "writer_modules": [
+        "spe_runtime/provenance/models.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "Single categorical vocabulary. Not a confidence score."
+    },
+    {
+      "semantic_fact": "provenance_transition",
+      "canonical_owner": "K0",
+      "writer_modules": [
+        "spe_runtime/provenance/rules.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "may_overwrite / may_confirm. confirm_requirement is the only USER_CONFIRMED path."
+    },
+    {
+      "semantic_fact": "user_confirmed_requirement",
+      "canonical_owner": "K0",
+      "writer_modules": [
+        "spe_runtime/contract/protected.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "confirm_requirement only. propose cannot mint USER_CONFIRMED."
+    },
+    {
+      "semantic_fact": "requirement_atom",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/requirements/models.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "Deterministic requirement_id from canonical content."
+    },
+    {
+      "semantic_fact": "requirement_graph",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/requirements/graph.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "Canonical graph writer. Contract calls with_node/with_edge only."
+    },
+    {
+      "semantic_fact": "conflict_record",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/requirements/conflicts.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "detect_conflicts. HARD unresolved => contract CONFLICTED."
+    },
+    {
+      "semantic_fact": "proof_obligation",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/obligation.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "Typed obligation with required proof type."
+    },
+    {
+      "semantic_fact": "proof_ledger",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/ledger.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "Append-only in-memory ledger. Not a disk journal."
+    },
+    {
+      "semantic_fact": "semantic_lease",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/lease.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "SemanticProofLease. Not G3 worker lease. Not AuthorityGrant."
+    },
+    {
+      "semantic_fact": "proof_carrying_patch",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/patch.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "Patch cannot self-approve. verified flag ignored."
+    },
+    {
+      "semantic_fact": "atomic_commit",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "Copy-on-write. Failure does not mutate inputs."
+    }
+  ],
+  "metrics": {
+    "DUPLICATE_CANONICAL_WRITERS": 0,
+    "UNOWNED_RING0_RESPONSIBILITIES": 4,
+    "CONFLICTING_RUNTIME_SEMANTICS": 0,
+    "LEGACY_SEMANTICS_TO_RETIRE": 14,
+    "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0
+  },
+  "ambient_authority_paths": []
+}

@@ -1,0 +1,25 @@
+{
+  "pr": 6,
+  "title": "Sprint 6: Web + PWA universal client foundation",
+  "state": "open",
+  "merged": false,
+  "branch": "feat/web-pwa-foundation-s6",
+  "tip": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+  "modified_by_g1": false,
+  "g1_branch": "feat/g1-runtime-binding-v241",
+  "g1_head": "931128b384c3055ecef876124f787e5b8e67651b",
+  "g1_parent": "605e336a0bb073fb3dbfdb61f086a8fd62d091b0",
+  "merge_base_with_pr6": "931128b384c3055ecef876124f787e5b8e67651b",
+  "commits_on_g1_not_in_931128b_at_identity_freeze": 0,
+  "ancestry": "G1 branch created from 931128b, not from 4e6c694",
+  "non_interference_proof": "origin/feat/web-pwa-foundation-s6 still 4e6c694; G1 HEAD is 931128b; no 4e6c694 in G1 ancestry except as merge-base=931128b; PR #6 remains OPEN and unmerged; tests/web and apps/web absent from this worktree.",
+  "pr5": {
+    "merged_on_main": true,
+    "github_api_merged_flag_note": "GitHub list_pull_requests returned merged=false for closed PR #5, but git log on main contains merge commit 605e336 and main is 931128b (post-merge pytest baseline).",
+    "implementation_tip": "c64aa1ec676640dfbb36c88b60f3c921f54f78c5",
+    "merge_commit": "605e336a0bb073fb3dbfdb61f086a8fd62d091b0"
+  },
+  "g1_files_from_pr6": [],
+  "web_client_imported": false,
+  "tests_web_imported": false
+}

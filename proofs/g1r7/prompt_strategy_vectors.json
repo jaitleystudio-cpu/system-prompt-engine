@@ -1,0 +1,34 @@
+[
+  {
+    "name": "simple",
+    "strategy_id": "pstrategy-eace44adfbd8d24093afa99b3a8415d35f76e05aa8ed7ba80487f2a8286e76a5",
+    "instruction_mode": "direct_instruction",
+    "evidence_mode": "no_retrieval",
+    "example_mode": "zero_shot",
+    "output_mode": "prose_or_unspecified"
+  },
+  {
+    "name": "research",
+    "strategy_id": "pstrategy-3dfd88f0a2874b8eea1bc44e1dcd371a7d5afe7d2493edd4c9df3bc56b7e4e0e",
+    "instruction_mode": "evidence_then_synthesize",
+    "evidence_mode": "local_or_supplied_evidence_only",
+    "example_mode": "zero_shot",
+    "output_mode": "structured"
+  },
+  {
+    "name": "writing",
+    "strategy_id": "pstrategy-49fcd19a58622c51010a64cefde263d4c684e38a71bb88ecb43f90fd69cbe43f",
+    "instruction_mode": "direct_instruction",
+    "evidence_mode": "no_retrieval",
+    "example_mode": "zero_shot",
+    "output_mode": "prose_or_unspecified"
+  },
+  {
+    "name": "few_shot",
+    "strategy_id": "pstrategy-f2dcacc512eb3611bea3a7e8aa8dedcadfb147eda647ca9617aef0f225d988a3",
+    "instruction_mode": "direct_instruction",
+    "evidence_mode": "no_retrieval",
+    "example_mode": "few_shot",
+    "output_mode": "prose_or_unspecified"
+  }
+]

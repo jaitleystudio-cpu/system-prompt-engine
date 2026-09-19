@@ -1,0 +1,14 @@
+{
+  "mutation_id": "M6_liveness",
+  "directory": "proofs/g2/mutations/M6_liveness",
+  "cfg": "C6_liveness.cfg",
+  "expected_violated_property": "ValidContinuouslyEnabledCommitEventuallyResolves",
+  "exit_code": 13,
+  "invariants_violated": [],
+  "temporal_violation": true,
+  "deadlock": false,
+  "killed": true,
+  "counterexample_log": "proofs/g2/counterexamples/M6_liveness_counterexample.log",
+  "status": "KILLED",
+  "note": "Fairness removed; TLC finds infinite stutter while ValidCommit enabled"
+}

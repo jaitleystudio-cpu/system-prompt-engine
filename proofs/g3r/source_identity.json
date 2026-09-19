@@ -1,0 +1,17 @@
+{
+  "gate": "G3R",
+  "g1rv_head": "8e8b028ab399a9194e7dc54f71ae006ed938d491",
+  "g2_head": "1c32235f95c27761bc82d4116c741c09eb804910",
+  "g3_implementation_head": "95a6d0b0882cfd66f9da332bdeb024397d0c6c1f",
+  "g3_implementation_branch": "cursor/g3-durable-ring1-0d6e",
+  "g3_implementation_pr": "#22",
+  "g3r_branch": "cursor/g3r-durable-ring1-recheck-0d6e",
+  "g3r_base_head": "95a6d0b0882cfd66f9da332bdeb024397d0c6c1f",
+  "pr6": "OPEN @ 4e6c694 \u2014 UNTOUCHED",
+  "g1_status": "BOUND_AND_PASS",
+  "g2_status": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+  "g3_pre_review_status": "IMPLEMENTATION_PRESENT / REVIEW_PENDING",
+  "g3r_head": "857350e24760a892d973a6322036a0abaf39f0eb",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/23",
+  "g3_post_g3r_status": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE"
+}

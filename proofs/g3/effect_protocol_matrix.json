@@ -1,0 +1,38 @@
+{
+  "rows": [
+    {
+      "pre": "NOT_SENT",
+      "db": "\u2192 SENT_UNKNOWN before dispatch",
+      "world": "may still be unsent",
+      "crash": "after_sent_unknown",
+      "restart": "SENT_UNKNOWN",
+      "next": "reconcile or bounded retry same key"
+    },
+    {
+      "pre": "SENT_UNKNOWN",
+      "db": "unchanged",
+      "world": "applied + lost reply",
+      "crash": "after apply",
+      "restart": "SENT_UNKNOWN",
+      "next": "reconcile via idempotency lookup"
+    },
+    {
+      "pre": "SENT_UNKNOWN",
+      "db": "\u2192 KNOWN_SUCCESS",
+      "world": "confirmed",
+      "crash": "after success commit",
+      "restart": "KNOWN_SUCCESS",
+      "next": "no resend"
+    },
+    {
+      "pre": "SENT_UNKNOWN",
+      "db": "timeout",
+      "world": "unknown",
+      "crash": "n/a",
+      "restart": "SENT_UNKNOWN",
+      "next": "NOT KNOWN_FAILURE"
+    }
+  ],
+  "exactly_once_claimed": false,
+  "universal_2pc": false
+}

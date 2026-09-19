@@ -1,0 +1,10 @@
+{
+  "g2_head": "1c32235f95c27761bc82d4116c741c09eb804910",
+  "formal_model_path": "formal/SPELeaseCommit.tla",
+  "formal_sha256_expected": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "formal_sha256_actual": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "match": true,
+  "changed": false,
+  "g2_claim_remains": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+  "note": "G3 does not modify G2 TLA model; worker fencing is a separate concurrency layer"
+}

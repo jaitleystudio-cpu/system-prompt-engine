@@ -1,0 +1,11 @@
+{
+  "role": "OPTIONAL_EXTERNAL_PROVIDER_QUALIFICATION",
+  "mandatory_core_release_gate": false,
+  "historical_verdict": "G4_BLOCKED_NO_LIVE_PROVIDER",
+  "preserved_paths": [
+    "proofs/g4/G4_REPORT.md",
+    "proofs/g4/G4_LIVE_RESUME_REPORT.md",
+    "proofs/g4/resume2/G4_LIVE_RESUME_REPORT.md"
+  ],
+  "status": "DEFERRED_OPTIONAL_ZERO_OWNER_SPEND"
+}

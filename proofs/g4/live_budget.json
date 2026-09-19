@@ -1,0 +1,9 @@
+{
+  "approved_max_spend_usd": null,
+  "allow_paid": false,
+  "actual_spend_usd": 0.0,
+  "requests_attempted": 0,
+  "requests_successful": 0,
+  "hard_stop_before_ceiling": true,
+  "status": "NO_BUDGET_CONFIGURED"
+}

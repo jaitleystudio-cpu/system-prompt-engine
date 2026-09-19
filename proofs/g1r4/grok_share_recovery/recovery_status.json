@@ -1,0 +1,9 @@
+{
+  "source": "https://grok.com/share/bGVnYWN5_cf9a5a55-0f3d-4823-9e50-1b8e62e916d7",
+  "live_preview": "EXPIRED",
+  "github_push": false,
+  "original_contract_bytes": "UNRECOVERABLE",
+  "expected_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "recovery_plan": "RECONSTRUCT_G1R1_G1R2_G1R3_FROM_REPORTS_THEN_G1R4",
+  "custody_note": "Restored working contract will NOT match original Grok SHA; document as RESTORED_WORKING_CONTRACT"
+}

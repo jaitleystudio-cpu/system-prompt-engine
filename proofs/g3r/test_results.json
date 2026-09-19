@@ -1,0 +1,12 @@
+{
+  "g3r_adversarial": "PASS",
+  "g3r_mutations": "PASS",
+  "g3_suite": "PASS",
+  "five_surface_harden": "PASS",
+  "full_authoritative": {
+    "unit_passed": 547,
+    "g3_g3r_passed": 82,
+    "ignore_portability_passed": 611,
+    "failed": 0
+  }
+}

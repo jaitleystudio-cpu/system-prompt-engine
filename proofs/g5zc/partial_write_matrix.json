@@ -1,0 +1,20 @@
+{
+  "all_rejected": true,
+  "cases": [
+    {
+      "accepted": false,
+      "error": "SpeTypedError",
+      "n": 1
+    },
+    {
+      "accepted": false,
+      "error": "SpeTypedError",
+      "n": 552
+    },
+    {
+      "accepted": false,
+      "error": "SpeTypedError",
+      "n": 1104
+    }
+  ]
+}

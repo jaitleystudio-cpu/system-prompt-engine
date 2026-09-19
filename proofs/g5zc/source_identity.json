@@ -1,0 +1,11 @@
+{
+  "branch": "cursor/g5zc-local-chaos-0d6e",
+  "g4zc_base_head": "c3450c4add1329eeaba28eadcaf36c1cdf94d57b",
+  "g5_base_head": "c3450c4add1329eeaba28eadcaf36c1cdf94d57b",
+  "g5_head": "304efb3dbd4731d932151c467d5f2d33e728815e",
+  "gate": "G5-ZC",
+  "recorded_at_utc": "2026-09-19T05:11:40.762880+00:00",
+  "repository": "jaitleystudio-cpu/system-prompt-engine",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/26",
+  "recheck": "repair_bound_and_denominator"
+}

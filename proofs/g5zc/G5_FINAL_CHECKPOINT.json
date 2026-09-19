@@ -1,0 +1,83 @@
+{
+  "checkpoint": "SPE_OMEGA_V2.4.1_G5_FINAL_CHECKPOINT",
+  "frozen": true,
+  "g5_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "freeze_declaration_head": "181b01057d7dcfa4bce6549b3587714e03801736",
+  "note": "Qualification evidence tip remains 99173c2; 181b010 is docs-only freeze declaration.",
+  "branch": "cursor/g5zc-local-chaos-0d6e",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/26",
+  "gates": {
+    "G1": "BOUND_AND_PASS",
+    "G2": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+    "G3": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE",
+    "G4": "ZERO_COST_CORE_ENGINE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G5": "ZERO_COST_LOCAL_FAULT_RESILIENCE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G4X": "OPTIONAL / DEFERRED"
+  },
+  "custody": {
+    "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+    "working_contract_status": "UNCHANGED",
+    "g2_model_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+    "g2_model_status": "UNCHANGED",
+    "pr6": {
+      "state": "OPEN",
+      "head": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+      "status": "UNTOUCHED / UNMERGED"
+    }
+  },
+  "regression": {
+    "before": {
+      "command": "python -m pytest",
+      "collected": 986,
+      "passed": 871,
+      "failed": 115,
+      "exit": 1,
+      "classification": "environment/toolchain-prerequisite failures (complete chain below)"
+    },
+    "environmental_dependency_chain": [
+      "missing wasm32-unknown-unknown",
+      "installed for ₹0",
+      "secondary missing /usr/bin/node exposed",
+      "Node installed for ₹0",
+      "120/120 targeted WASM tests PASS",
+      "986/986 repository-wide tests PASS"
+    ],
+    "after": {
+      "command": "python -m pytest",
+      "collected": 986,
+      "passed": 986,
+      "failed": 0,
+      "exit": 0
+    },
+    "targeted_wasm": {"passed": 120, "failed": 0},
+    "compileall": "PASS",
+    "additional_owner_spend": "₹0",
+    "provider_requirement": "NONE"
+  },
+  "repair_invariant": {
+    "initial_validation_attempts": 1,
+    "maximum_repair_attempts": 0,
+    "maximum_total_attempts": 1,
+    "third_attempt_possible": false,
+    "recursive_repair": false,
+    "provider_escalation": false,
+    "STANDARD_MAX_TECHNIQUES": 3,
+    "STANDARD_MAX_TECHNIQUES_means": "technique-selection cardinality only — NOT retry/repair cardinality"
+  },
+  "exact_earned_claim": "The zero-cost SPE core preserved the tested semantic, artifact-integrity, offline, fail-closed, concurrency, and bounded-execution properties under the recorded local input, storage, process-crash, resource, network-loss, and corruption scenarios, with the complete repository regression passing after satisfying the recorded zero-cost local toolchain prerequisites.",
+  "explicitly_unproven": [
+    "Physical power-loss durability — NOT TESTED",
+    "Production reliability — NOT QUALIFIED",
+    "Security red-team — NOT YET",
+    "All OS/filesystem equivalence — NOT PROVEN",
+    "Universal fault tolerance — NOT PROVEN",
+    "World #1 — NOT PROVEN",
+    "SIGKILL PASS ≠ physical power-loss proof"
+  ],
+  "stop": {
+    "NO_G6": true,
+    "NO_G4X_PAID_PROVIDER_REQUIREMENT": true,
+    "NO_PR6_MERGE": true,
+    "NO_spe_runtime_omega": true
+  }
+}

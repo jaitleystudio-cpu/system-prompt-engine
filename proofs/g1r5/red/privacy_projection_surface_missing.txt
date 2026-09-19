@@ -1,0 +1,9 @@
+total 12
+drwxr-xr-x  3 ubuntu ubuntu 4096 Sep 18 12:57 .
+drwxr-xr-x 19 ubuntu ubuntu 4096 Sep 18 12:49 ..
+-rw-r--r--  1 ubuntu ubuntu    0 Sep 18 11:26 .gitkeep
+-rw-r--r--  1 ubuntu ubuntu    0 Sep 18 11:26 __init__.py
+drwxr-xr-x  2 ubuntu ubuntu 4096 Sep 18 12:57 __pycache__
+0 spe_runtime/privacy/__init__.py
+exports None
+has project_privacy False

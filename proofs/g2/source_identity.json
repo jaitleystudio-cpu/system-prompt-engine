@@ -1,0 +1,22 @@
+{
+  "gate": "G2",
+  "mission": "TLA+/TLC SAFETY + LIVENESS MODEL CHECK",
+  "repository": "jaitleystudio-cpu/system-prompt-engine",
+  "foundational_base": "931128b384c3055ecef876124f787e5b8e67651b",
+  "g1r9r_reviewed_head": "7edd0d55568514767d0ce0f4d641658dd0520dcf",
+  "g1rv_evidence_head": "8e8b028ab399a9194e7dc54f71ae006ed938d491",
+  "g2_branch": "cursor/g2-tla-tlc-modelcheck-0d6e",
+  "g2_start_head": "8e8b028ab399a9194e7dc54f71ae006ed938d491",
+  "merge_base_with_g1rv": "8e8b028ab399a9194e7dc54f71ae006ed938d491",
+  "g1_status": "BOUND_AND_PASS",
+  "g1_custody": "WORKING_CONTRACT_BOUND",
+  "g1_qualification": "VERIFIED_WITHIN_SCOPE",
+  "working_contract_path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
+  "pr6": "OPEN @ 4e6c694 \u2014 UNTOUCHED",
+  "historical_181_69_source": "UNAVAILABLE",
+  "custody_upgrade": "NONE \u2014 DO NOT UPGRADE",
+  "g2_head": "0bb8099fba85d37da5fbd6fbc8089b6e6ce85fd3",
+  "g2_evidence_commit": "c55cb2c20dea66b4bec3e4ec9295bd69b0efab5e",
+  "g2_model_check_commit": "c55cb2c20dea66b4bec3e4ec9295bd69b0efab5e",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/21"
+}

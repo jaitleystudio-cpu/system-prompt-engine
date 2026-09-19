@@ -1,0 +1,31 @@
+{
+  "properties": [
+    {
+      "property": "ValidContinuouslyEnabledCommitEventuallyResolves",
+      "relevant_action": "CommitSuccessAction",
+      "fairness_assumption": "WF_vars(CommitSuccessAction)",
+      "justification": "Weak fairness is the weakest assumption matching intended progress: if CommitSuccess remains continuously enabled, it is not postponed forever. Strong fairness not required under LiveSpec (no competing disabling infinite enablement cycles)."
+    },
+    {
+      "property": "SuccessfulCommitEventuallyConsumesLease",
+      "relevant_action": "CommitSuccess",
+      "fairness_assumption": "none (atomic post-state)",
+      "justification": "Lease consume is part of the same atomic CommitSuccess action; leads-to holds by construction once committed."
+    },
+    {
+      "property": "RevokedLeaseNeverReactivates / ConsumedLeaseNeverReactivates",
+      "relevant_action": "n/a",
+      "fairness_assumption": "none",
+      "justification": "Safety-shaped temporal invariants; no fairness."
+    }
+  ],
+  "actions_without_fairness": [
+    "IssueLease",
+    "ProposeFreshPatch",
+    "ProposeStalePatch",
+    "Verify",
+    "RevokeLease",
+    "CommitReject",
+    "TerminalStutter"
+  ]
+}
