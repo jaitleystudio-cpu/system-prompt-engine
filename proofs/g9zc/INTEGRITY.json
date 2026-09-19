@@ -1,6 +1,6 @@
 {
-  "manifest_sha256": "2d2913437fd55eca22d297b12c794e1e110b121482f53bb6f8630e6a27bd35d4",
-  "qualification_head": "02dc33daef9776e54b643baa406d826d643196f2",
+  "manifest_sha256": "7b29864efa95af482b76068a0d4b9c6bb314693e1040328c01e7333f1cfe5261",
+  "qualification_head": "19ec6a77881b2392a67665cb8bced1341230a0fe",
   "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
   "g2_model_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
   "world_1": "NOT_PROVEN"
