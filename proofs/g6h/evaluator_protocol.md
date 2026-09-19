@@ -30,5 +30,20 @@ Do not enter legal name, phone, email, or address in the study forms.
 
 ## UI
 
-Open local file: `evaluations/g6zc/blind_evaluator.html`  
-No internet required. No telemetry. Autosave is local only.
+There is **no public URL**. Serve locally:
+
+```bash
+python -m http.server 8765 --bind 127.0.0.1
+```
+
+Open:
+
+```
+http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html
+```
+
+Load `evaluations/g6zc/blind_pairs.json` in the UI.  
+Full instructions: `proofs/g6h/HOW_TO_OPEN_EVALUATOR.md`  
+No internet required for rating after the page loads. No telemetry. Autosave is local only.
+
+**Do not** open `benchmarks/g6zc/randomization_manifest.json` while rating.

@@ -54,9 +54,12 @@ Full hashes: `proofs/g6h/prestudy_manifest.json`
 1. Confirm `python tools/verify_g9_freeze.py` → PASS  
 2. Confirm `python tools/verify_g6h_prestudy.py` → PASS  
 3. Open frozen evaluator UI — **no** corpus/rubric/threshold/pair edits  
-   - File: `evaluations/g6zc/blind_evaluator.html`  
+   - See **`proofs/g6h/HOW_TO_OPEN_EVALUATOR.md`** (local-only; no public URL)  
+   - Serve: `python -m http.server 8765 --bind 127.0.0.1`  
+   - Open: `http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html`  
    - Load: `evaluations/g6zc/blind_pairs.json`  
-4. Real humans rate task + A/B only (never RAW/SPE labels)  
+   - **Do not** open `benchmarks/g6zc/randomization_manifest.json` while rating  
+4. Real humans rate task + LEFT/RIGHT only (never RAW/SPE labels)  
 5. Keep randomization map secret (`benchmarks/g6zc/randomization_manifest.json`)  
 6. Collect complete required ratings → Download ratings JSON from UI  
 7. Lock (skips/invalids explicit; skip ≠ tie):  
