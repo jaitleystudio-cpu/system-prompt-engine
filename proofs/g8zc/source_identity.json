@@ -3,8 +3,9 @@
   "base_head": "6849a9dc2633ec60fe1891b944ab652d3bf856f8",
   "g5_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
   "g7_head": "6849a9dc2633ec60fe1891b944ab652d3bf856f8",
-  "g8_head": "f64c42f00d276c523ef456e643f49eed6c314375",
+  "g8_head": "053053e8fcbf8d760bbfea44aa390895718ce604",
   "branch": "cursor/g8zc-full-replication-0d6e",
   "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/30",
-  "recorded_at_utc": "2026-09-19T07:55:41.656749+00:00"
+  "recorded_at_utc": "2026-09-19T07:55:57.241667+00:00",
+  "head": null
 }

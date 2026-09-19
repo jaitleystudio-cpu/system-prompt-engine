@@ -13,7 +13,7 @@ G7 HEAD (base):
 6849a9dc2633ec60fe1891b944ab652d3bf856f8
 
 G8 HEAD:
-(see source_identity.json after tip pin)
+053053e8fcbf8d760bbfea44aa390895718ce604
 
 Branch:
 cursor/g8zc-full-replication-0d6e
