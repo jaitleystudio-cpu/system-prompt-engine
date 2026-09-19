@@ -6,5 +6,6 @@
   "historical_g4_external": "G4_BLOCKED_NO_LIVE_PROVIDER \u2014 reclassified OPTIONAL_EXTERNAL_PROVIDER_QUALIFICATION (G4X)",
   "branch": "cursor/g4zc-zerocost-core-0d6e",
   "pr6": "OPEN @ 4e6c694 \u2014 UNTOUCHED",
-  "g4zc_head": "b560d2fa72e0575680ab99daf0d68a872641ae64"
+  "g4zc_head": "b560d2fa72e0575680ab99daf0d68a872641ae64",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/25"
 }

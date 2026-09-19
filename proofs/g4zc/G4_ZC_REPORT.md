@@ -7,7 +7,7 @@ G4_ZEROCOST_CORE_PASS
 Base: `86b462b9704a1910880266493c028ce05f64a7f4`
 HEAD: `b560d2fa72e0575680ab99daf0d68a872641ae64`
 Branch: `cursor/g4zc-zerocost-core-0d6e`
-PR: (pending)
+PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/25
 Contract SHA: `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3`
 G2 SHA: `15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562`
 G3 status: DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE
