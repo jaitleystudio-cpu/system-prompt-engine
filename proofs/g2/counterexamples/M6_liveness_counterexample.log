@@ -1,0 +1,107 @@
+TLC2 Version 2026.09.17.032053 (rev: 142d0ba)
+Running breadth-first search Model-Checking with fp 2 and seed -2518508794973899836 with 4 workers on 4 cores with 3164MB heap and 64MB offheap memory [pid: 59615] (Linux 6.12.94+ amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/proofs/g2/mutations/M6_liveness/SPELeaseCommit.tla
+Parsing file /tmp/tlc-1170398007381116158/Naturals.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-1170398007381116158/FiniteSets.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-1170398007381116158/Sequences.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-1170398007381116158/TLC.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-1170398007381116158/_TLCTrace.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-1170398007381116158/TLCExt.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-1170398007381116158/Integers.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module SPELeaseCommit
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module SPELeaseCommit
+Starting... (2026-09-18 18:39:09)
+Implied-temporal checking--satisfiability problem has 4 branches.
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-18 18:39:09.
+Progress(5) at 2026-09-18 18:39:09: 9 states generated, 5 distinct states found, 0 states left on queue.
+Checking 4 branches of temporal properties for the complete state space with 20 total distinct states at (2026-09-18 18:39:09)
+Error: Temporal property ValidContinuouslyEnabledCommitEventuallyResolves was violated.
+
+Error: The following behavior constitutes a counter-example:
+
+State 1: <Initial predicate>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> FALSE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0)
+/\ committedAgainst = (p1 :> 0)
+/\ leaseReqType = (l1 :> "NO_TYPE")
+/\ patchLease = (p1 :> "NO_LEASE")
+/\ patchBase = (p1 :> 0)
+/\ patchObl = (p1 :> "NO_OBL")
+/\ patchCommitted = (p1 :> FALSE)
+/\ receiptType = (p1 :> "NO_TYPE")
+/\ receiptVerdict = (p1 :> "NONE")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> "NO_OBL")
+/\ leaseStatus = (l1 :> "NONE")
+
+State 2: <IssueLease(l1,o1,PT_A) line 141, col 3 to line 151, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> FALSE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0)
+/\ committedAgainst = (p1 :> 0)
+/\ leaseReqType = (l1 :> PT_A)
+/\ patchLease = (p1 :> "NO_LEASE")
+/\ patchBase = (p1 :> 0)
+/\ patchObl = (p1 :> "NO_OBL")
+/\ patchCommitted = (p1 :> FALSE)
+/\ receiptType = (p1 :> "NO_TYPE")
+/\ receiptVerdict = (p1 :> "NONE")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> o1)
+/\ leaseStatus = (l1 :> "ACTIVE")
+
+State 3: <ProposeFreshPatch(p1,l1) line 155, col 3 to line 168, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> TRUE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0)
+/\ committedAgainst = (p1 :> 0)
+/\ leaseReqType = (l1 :> PT_A)
+/\ patchLease = (p1 :> l1)
+/\ patchBase = (p1 :> 0)
+/\ patchObl = (p1 :> o1)
+/\ patchCommitted = (p1 :> FALSE)
+/\ receiptType = (p1 :> "NO_TYPE")
+/\ receiptVerdict = (p1 :> "NONE")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> o1)
+/\ leaseStatus = (l1 :> "ACTIVE")
+
+State 4: <Verify(p1,"PASS",PT_A) line 191, col 3 to line 202, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> TRUE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0)
+/\ committedAgainst = (p1 :> 0)
+/\ leaseReqType = (l1 :> PT_A)
+/\ patchLease = (p1 :> l1)
+/\ patchBase = (p1 :> 0)
+/\ patchObl = (p1 :> o1)
+/\ patchCommitted = (p1 :> FALSE)
+/\ receiptType = (p1 :> PT_A)
+/\ receiptVerdict = (p1 :> "PASS")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> o1)
+/\ leaseStatus = (l1 :> "ACTIVE")
+
+State 5: Stuttering
+Warning: The stuttering counterexample above may be caused by the absence of a fairness constraint in the behavior specification LiveSpec defined at line 307, col 1 to line 307, col 37 of module SPELeaseCommit. To rule out such counterexamples, conjoin a suitable fairness constraint to LiveSpec (compare Chapter 8, page 87ff of Specifying Systems at https://lamport.azurewebsites.net/tla/book.html).
+(Use the -nowarning option to disable this warning.)
+Finished checking temporal properties in 00s at 2026-09-18 18:39:09
+9 states generated, 5 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 5.
+Finished in 00s at (2026-09-18 18:39:09)
+Trace exploration spec path: ./SPELeaseCommit_TTrace_1789756749.tla

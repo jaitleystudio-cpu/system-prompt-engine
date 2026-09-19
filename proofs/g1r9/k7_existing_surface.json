@@ -1,0 +1,18 @@
+{
+  "recommended": "spe_runtime/qualification/ (new dedicated K7 owner)",
+  "recovery_stub": "RETIRE remains for crash-recovery future; not claim qualification",
+  "capabilities_stub": "K3 disposition \u2014 do not use",
+  "missing_symbols": [
+    "ClaimQualification",
+    "QualificationEvidence",
+    "qualify_claim",
+    "record_qualification_evidence"
+  ],
+  "unowned": [
+    "qualification_evidence"
+  ],
+  "missing_requirements": [
+    "claim qualification",
+    "qualification evidence"
+  ]
+}

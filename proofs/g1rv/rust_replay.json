@@ -1,0 +1,6 @@
+{
+  "status": "NOT_RUN_IN_G1RV_STANDARD_SUITE",
+  "g1_pass_requirement": false,
+  "portable_spe_core_rs_exists": true,
+  "note": "NOT A G1 PASS REQUIREMENT under WORKING_CONTRACT_BOUND Python Ring-0 scope"
+}

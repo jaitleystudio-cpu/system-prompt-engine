@@ -1,0 +1,5 @@
+{
+  "cross_process": true,
+  "reorder_stable": true,
+  "no_uuid_random_time": true
+}

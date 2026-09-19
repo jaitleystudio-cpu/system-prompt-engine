@@ -1,0 +1,43 @@
+........................................................................ [ 16%]
+........................................................................ [ 33%]
+........................................................................ [ 50%]
+........................................................................ [ 67%]
+........................................................................ [ 84%]
+............FFF.FFFF...............................................      [100%]
+=================================== FAILURES ===================================
+E   AssertionError: G1-B01: SPE Ω v2.4.1 sha256 is unbound; tree only has SPE-SPEC e82d4ca87fa1327af5183d49ac16b5f4a4902139265808b4497e055e99435118 (NEW_IMPLEMENTATION, not 181/69).
+    assert None
+/opt/spe-g1-runtime-binding-v241/tests/unit/test_g1_runtime_binding.py:105: AssertionError: G1-B01: SPE Ω v2.4.1 sha256 is unbound; tree only has SPE-SPEC e82d4ca87fa1327af5183d49ac16b5f4a4902139265808b4497e055e99435118 (NEW_IMPLEMENTATION, not 181/69).
+E   AssertionError: duplicate canonical writers: ['failure_laundering_predicate', 'typed_error_code']
+    assert [{'semantic_f...ce.py'], ...}] == []
+      
+      Left contains 2 more items, first extra item: {'semantic_fact': 'failure_laundering_predicate', 'canonical_owner': 'K1', 'writer_modules': ['spe_runtime/xcat/invari...validate.py', 'spe_runtime/categories/c06_analyze/validate.py', 'spe_runtime/categories/c07_execute/validate.py'], ...}
+      Use -v to get more diff
+/opt/spe-g1-runtime-binding-v241/tests/unit/test_g1_runtime_binding.py:114: AssertionError: duplicate canonical writers: ['failure_laundering_predicate', 'typed_error_code']
+E   AssertionError: {'unowned_facts': ['proof_receipt', 'privacy_projection', 'spe_artifact_identity', 'prompt_artifact', 'semantic_snapsh... inferred distinction', 'user-confirmed requirements', 'intent contract schema', 'requirement graph', 'conflict', ...]}
+    assert (['proof_recei...vidence', ...] == []
+      
+      Left contains 7 more items, first extra item: 'proof_receipt'
+      Use -v to get more diff)
+/opt/spe-g1-runtime-binding-v241/tests/unit/test_g1_runtime_binding.py:122: AssertionError: {'unowned_facts': ['proof_receipt', 'privacy_projection', 'spe_artifact_identity', 'prompt_artifact', 'semantic_snapsh... inferred distinction', 'user-confirmed requirements', 'intent contract schema', 'requirement graph', 'conflict', ...]}
+E   AssertionError: K2 proof_receipt has no writer (proof/ is empty)
+    assert []
+/opt/spe-g1-runtime-binding-v241/tests/unit/test_g1_runtime_binding.py:140: AssertionError: K2 proof_receipt has no writer (proof/ is empty)
+E   AssertionError: split error vocabulary writers=['spe_runtime/xcat/reasons.py', 'spe_runtime/portability/reasons.py']
+    assert True is False
+/opt/spe-g1-runtime-binding-v241/tests/unit/test_g1_runtime_binding.py:146: AssertionError: split error vocabulary writers=['spe_runtime/xcat/reasons.py', 'spe_runtime/portability/reasons.py']
+E   AssertionError: K6 .spe artifact identity has no writer
+    assert []
+/opt/spe-g1-runtime-binding-v241/tests/unit/test_g1_runtime_binding.py:155: AssertionError: K6 .spe artifact identity has no writer
+E   AssertionError: K7 qualification evidence has no writer
+    assert []
+/opt/spe-g1-runtime-binding-v241/tests/unit/test_g1_runtime_binding.py:161: AssertionError: K7 qualification evidence has no writer
+=========================== short test summary info ============================
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_normative_spec_hash_bound
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_no_duplicate_canonical_writers
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_proof_owner_unique - As...
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_error_owner_unique - As...
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique
+7 failed, 420 passed in 40.25s

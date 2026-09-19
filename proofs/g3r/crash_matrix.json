@@ -1,0 +1,19 @@
+{
+  "kill_mechanism": "SIGKILL via failpoint (os.kill SIGKILL)",
+  "physical_power_loss": "NOT TESTED",
+  "machine_reboot": "NOT TESTED",
+  "independent_g3r_replay": true,
+  "cases": {
+    "C1_before_transaction": "PASS rollback",
+    "C2_after_validation": "PASS rollback",
+    "C3_after_snapshot_write": "PASS rollback",
+    "C4_after_proof_write": "PASS rollback",
+    "C5_after_cursor_write": "PASS rollback",
+    "C6_after_journal_append": "PASS rollback",
+    "C7_before_commit": "PASS rollback",
+    "C8_after_commit": "PASS persist",
+    "C9_before_dispatch_after_SENT_UNKNOWN": "PASS SENT_UNKNOWN",
+    "C10_applied_lost_reply": "PASS SENT_UNKNOWN then reconcile",
+    "C11_response_before_success_durability": "PASS SENT_UNKNOWN"
+  }
+}

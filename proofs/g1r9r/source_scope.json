@@ -1,0 +1,10 @@
+{
+  "expected_production_scope": [
+    "spe_runtime/qualification/*",
+    "spe_runtime/error_registry.py",
+    "proofs/g1 maps",
+    "tests"
+  ],
+  "review_hardening_allowed": "K7 only",
+  "pr6": "untouched"
+}

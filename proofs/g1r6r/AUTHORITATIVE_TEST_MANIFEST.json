@@ -1,0 +1,51 @@
+{
+  "gate": "G1R-6R",
+  "task": "INDEPENDENT_PROMPTARTIFACT_RECHECK",
+  "verdict": "G1R6_RECHECK_PASS",
+  "predecessor_g1r6_tip": "3e64172b3c670b368c135a4a2119443f73c88ff5",
+  "hardening_commit": "5ebe61e9869d761a364a15e5c624da1418d05002",
+  "hardening_tree": "9b2cf6f2bab2c3c4b538767af30a2f3e69f1e51c",
+  "suite_run_commit": "5ebe61e9869d761a364a15e5c624da1418d05002",
+  "suite_tree": "9b2cf6f2bab2c3c4b538767af30a2f3e69f1e51c",
+  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "python_version": "3.12.3",
+  "exact_test_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r6r_impl_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+  "collected": 480,
+  "passed": 476,
+  "failed": 4,
+  "skipped": 0,
+  "exit_status": 1,
+  "duration": 0.825,
+  "G1R-6_result": "30/30",
+  "G1R-6R_result": "10/10",
+  "G1_binding_result": "11/15",
+  "exact_failed_test_names": [
+    "tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_k3_required_responsibilities_complete",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
+  ],
+  "findings_closed": {
+    "G1R6R-H01": "dedicated test_g1_k3_required_responsibilities_complete (RED)",
+    "G1R6R-H02": "NFC canonicalize string context before structural escape",
+    "G1R6R-H03": "slots=True on frozen PromptArtifact models"
+  },
+  "k3_completeness": {
+    "PromptArtifact": "IMPLEMENTED",
+    "cognitive plan": "MISSING",
+    "prompt strategy": "MISSING",
+    "technique selection": "MISSING",
+    "mechanical_gate": "test_g1_k3_required_responsibilities_complete"
+  },
+  "UNOWNED": 2,
+  "MISSING": 7,
+  "promotion": "G1R-6 PASS_EXTERNAL",
+  "g1r7_started": false,
+  "result_sha256": "5a06e667bb595de2b6220da89f812ab2de1f7d1027e0690a2c73e23941a9d8a5",
+  "junit_sha256": "9aac8d8075ca92504819203138039fd52e285a58f8df09c09d552d7de0800d68",
+  "hash_algorithm": {
+    "artifact_content_sha256": "SHA-256 over UTF-8 json.dumps(sort_keys=True, indent=2) excluding artifact_content_sha256"
+  },
+  "artifact_content_sha256": "6e0d4ceec2372f566e8dbcaf9629d606b18458988e5531aaab476415d0e5fd79"
+}

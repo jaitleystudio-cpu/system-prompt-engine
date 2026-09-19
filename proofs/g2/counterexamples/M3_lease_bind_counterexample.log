@@ -1,0 +1,183 @@
+TLC2 Version 2026.09.17.032053 (rev: 142d0ba)
+Running breadth-first search Model-Checking with fp 32 and seed 5257207359451001833 with 4 workers on 4 cores with 3164MB heap and 64MB offheap memory [pid: 59419] (Linux 6.12.94+ amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/proofs/g2/mutations/M3_lease_bind/SPELeaseCommit.tla
+Parsing file /tmp/tlc-14321910321300324159/Naturals.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-14321910321300324159/FiniteSets.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-14321910321300324159/Sequences.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-14321910321300324159/TLC.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-14321910321300324159/_TLCTrace.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-14321910321300324159/TLCExt.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-14321910321300324159/Integers.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module SPELeaseCommit
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module SPELeaseCommit
+Starting... (2026-09-18 18:38:42)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-18 18:38:42.
+Error: Invariant LeaseBindsBaseSnapshot is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> FALSE @@ p2 :> FALSE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0 @@ l2 :> 0)
+/\ committedAgainst = (p1 :> 0 @@ p2 :> 0)
+/\ leaseReqType = (l1 :> "NO_TYPE" @@ l2 :> "NO_TYPE")
+/\ patchLease = (p1 :> "NO_LEASE" @@ p2 :> "NO_LEASE")
+/\ patchBase = (p1 :> 0 @@ p2 :> 0)
+/\ patchObl = (p1 :> "NO_OBL" @@ p2 :> "NO_OBL")
+/\ patchCommitted = (p1 :> FALSE @@ p2 :> FALSE)
+/\ receiptType = (p1 :> "NO_TYPE" @@ p2 :> "NO_TYPE")
+/\ receiptVerdict = (p1 :> "NONE" @@ p2 :> "NONE")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> "NO_OBL" @@ l2 :> "NO_OBL")
+/\ leaseStatus = (l1 :> "NONE" @@ l2 :> "NONE")
+
+State 2: <IssueLease(l1,o1,PT_A) line 142, col 3 to line 152, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> FALSE @@ p2 :> FALSE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0 @@ l2 :> 0)
+/\ committedAgainst = (p1 :> 0 @@ p2 :> 0)
+/\ leaseReqType = (l1 :> PT_A @@ l2 :> "NO_TYPE")
+/\ patchLease = (p1 :> "NO_LEASE" @@ p2 :> "NO_LEASE")
+/\ patchBase = (p1 :> 0 @@ p2 :> 0)
+/\ patchObl = (p1 :> "NO_OBL" @@ p2 :> "NO_OBL")
+/\ patchCommitted = (p1 :> FALSE @@ p2 :> FALSE)
+/\ receiptType = (p1 :> "NO_TYPE" @@ p2 :> "NO_TYPE")
+/\ receiptVerdict = (p1 :> "NONE" @@ p2 :> "NONE")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> o1 @@ l2 :> "NO_OBL")
+/\ leaseStatus = (l1 :> "ACTIVE" @@ l2 :> "NONE")
+
+State 3: <IssueLease(l2,o1,PT_A) line 142, col 3 to line 152, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> FALSE @@ p2 :> FALSE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0 @@ l2 :> 0)
+/\ committedAgainst = (p1 :> 0 @@ p2 :> 0)
+/\ leaseReqType = (l1 :> PT_A @@ l2 :> PT_A)
+/\ patchLease = (p1 :> "NO_LEASE" @@ p2 :> "NO_LEASE")
+/\ patchBase = (p1 :> 0 @@ p2 :> 0)
+/\ patchObl = (p1 :> "NO_OBL" @@ p2 :> "NO_OBL")
+/\ patchCommitted = (p1 :> FALSE @@ p2 :> FALSE)
+/\ receiptType = (p1 :> "NO_TYPE" @@ p2 :> "NO_TYPE")
+/\ receiptVerdict = (p1 :> "NONE" @@ p2 :> "NONE")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> o1 @@ l2 :> o1)
+/\ leaseStatus = (l1 :> "ACTIVE" @@ l2 :> "ACTIVE")
+
+State 4: <ProposeFreshPatch(p2,l1) line 156, col 3 to line 170, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> FALSE @@ p2 :> TRUE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0 @@ l2 :> 0)
+/\ committedAgainst = (p1 :> 0 @@ p2 :> 0)
+/\ leaseReqType = (l1 :> PT_A @@ l2 :> PT_A)
+/\ patchLease = (p1 :> "NO_LEASE" @@ p2 :> l1)
+/\ patchBase = (p1 :> 0 @@ p2 :> 0)
+/\ patchObl = (p1 :> "NO_OBL" @@ p2 :> o1)
+/\ patchCommitted = (p1 :> FALSE @@ p2 :> FALSE)
+/\ receiptType = (p1 :> "NO_TYPE" @@ p2 :> "NO_TYPE")
+/\ receiptVerdict = (p1 :> "NONE" @@ p2 :> "NONE")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> o1 @@ l2 :> o1)
+/\ leaseStatus = (l1 :> "ACTIVE" @@ l2 :> "ACTIVE")
+
+State 5: <ProposeStalePatch(p1,l2,1) line 175, col 3 to line 189, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> TRUE @@ p2 :> TRUE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0 @@ l2 :> 0)
+/\ committedAgainst = (p1 :> 0 @@ p2 :> 0)
+/\ leaseReqType = (l1 :> PT_A @@ l2 :> PT_A)
+/\ patchLease = (p1 :> l2 @@ p2 :> l1)
+/\ patchBase = (p1 :> 1 @@ p2 :> 0)
+/\ patchObl = (p1 :> o1 @@ p2 :> o1)
+/\ patchCommitted = (p1 :> FALSE @@ p2 :> FALSE)
+/\ receiptType = (p1 :> "NO_TYPE" @@ p2 :> "NO_TYPE")
+/\ receiptVerdict = (p1 :> "NONE" @@ p2 :> "NONE")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> o1 @@ l2 :> o1)
+/\ leaseStatus = (l1 :> "ACTIVE" @@ l2 :> "ACTIVE")
+
+State 6: <Verify(p1,"PASS",PT_A) line 193, col 3 to line 204, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> TRUE @@ p2 :> TRUE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0 @@ l2 :> 0)
+/\ committedAgainst = (p1 :> 0 @@ p2 :> 0)
+/\ leaseReqType = (l1 :> PT_A @@ l2 :> PT_A)
+/\ patchLease = (p1 :> l2 @@ p2 :> l1)
+/\ patchBase = (p1 :> 1 @@ p2 :> 0)
+/\ patchObl = (p1 :> o1 @@ p2 :> o1)
+/\ patchCommitted = (p1 :> FALSE @@ p2 :> FALSE)
+/\ receiptType = (p1 :> PT_A @@ p2 :> "NO_TYPE")
+/\ receiptVerdict = (p1 :> "PASS" @@ p2 :> "NONE")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> o1 @@ l2 :> o1)
+/\ leaseStatus = (l1 :> "ACTIVE" @@ l2 :> "ACTIVE")
+
+State 7: <Verify(p2,"PASS",PT_A) line 193, col 3 to line 204, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 0
+/\ patchExists = (p1 :> TRUE @@ p2 :> TRUE)
+/\ commitCount = 0
+/\ leaseBase = (l1 :> 0 @@ l2 :> 0)
+/\ committedAgainst = (p1 :> 0 @@ p2 :> 0)
+/\ leaseReqType = (l1 :> PT_A @@ l2 :> PT_A)
+/\ patchLease = (p1 :> l2 @@ p2 :> l1)
+/\ patchBase = (p1 :> 1 @@ p2 :> 0)
+/\ patchObl = (p1 :> o1 @@ p2 :> o1)
+/\ patchCommitted = (p1 :> FALSE @@ p2 :> FALSE)
+/\ receiptType = (p1 :> PT_A @@ p2 :> PT_A)
+/\ receiptVerdict = (p1 :> "PASS" @@ p2 :> "PASS")
+/\ curVersion = 0
+/\ leaseObl = (l1 :> o1 @@ l2 :> o1)
+/\ leaseStatus = (l1 :> "ACTIVE" @@ l2 :> "ACTIVE")
+
+State 8: <CommitSuccess(p2) line 219, col 3 to line 231, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 1
+/\ patchExists = (p1 :> TRUE @@ p2 :> TRUE)
+/\ commitCount = 1
+/\ leaseBase = (l1 :> 0 @@ l2 :> 0)
+/\ committedAgainst = (p1 :> 0 @@ p2 :> 0)
+/\ leaseReqType = (l1 :> PT_A @@ l2 :> PT_A)
+/\ patchLease = (p1 :> l2 @@ p2 :> l1)
+/\ patchBase = (p1 :> 1 @@ p2 :> 0)
+/\ patchObl = (p1 :> o1 @@ p2 :> o1)
+/\ patchCommitted = (p1 :> FALSE @@ p2 :> TRUE)
+/\ receiptType = (p1 :> PT_A @@ p2 :> PT_A)
+/\ receiptVerdict = (p1 :> "PASS" @@ p2 :> "PASS")
+/\ curVersion = 1
+/\ leaseObl = (l1 :> o1 @@ l2 :> o1)
+/\ leaseStatus = (l1 :> "CONSUMED" @@ l2 :> "ACTIVE")
+
+State 9: <CommitSuccess(p1) line 219, col 3 to line 231, col 7 of module SPELeaseCommit>
+/\ ledgerLen = 2
+/\ patchExists = (p1 :> TRUE @@ p2 :> TRUE)
+/\ commitCount = 2
+/\ leaseBase = (l1 :> 0 @@ l2 :> 0)
+/\ committedAgainst = (p1 :> 1 @@ p2 :> 0)
+/\ leaseReqType = (l1 :> PT_A @@ l2 :> PT_A)
+/\ patchLease = (p1 :> l2 @@ p2 :> l1)
+/\ patchBase = (p1 :> 1 @@ p2 :> 0)
+/\ patchObl = (p1 :> o1 @@ p2 :> o1)
+/\ patchCommitted = (p1 :> TRUE @@ p2 :> TRUE)
+/\ receiptType = (p1 :> PT_A @@ p2 :> PT_A)
+/\ receiptVerdict = (p1 :> "PASS" @@ p2 :> "PASS")
+/\ curVersion = 2
+/\ leaseObl = (l1 :> o1 @@ l2 :> o1)
+/\ leaseStatus = (l1 :> "CONSUMED" @@ l2 :> "CONSUMED")
+
+21646 states generated, 5339 distinct states found, 1908 states left on queue.
+The depth of the complete state graph search is 9.
+Finished in 00s at (2026-09-18 18:38:42)
+Trace exploration spec path: ./SPELeaseCommit_TTrace_1789756722.tla

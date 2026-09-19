@@ -1,0 +1,20 @@
+{
+  "compileall": "PASS",
+  "full_python": {
+    "collected": 533,
+    "denominator_note": "507\u2192533: +26 G1R-7R adversarial tests",
+    "expected_red": [
+      "test_g1_no_unowned_required_ring0_responsibility",
+      "test_g1_artifact_lineage_owner_unique",
+      "test_g1_qualification_owner_unique"
+    ],
+    "failed": 3,
+    "junit_sha256": "f5122154fa657786e3b849d7fb2696f978cc780ab20077420c7c7a1b9256e69d",
+    "passed": 530,
+    "result_sha256": "bea0d925efa33b86286774a3673e8998bfeda2139fd3a0f81ab4ecefb0f68c7a",
+    "skipped": 0
+  },
+  "g1r6_g1r6r_passed": 40,
+  "g1r7_passed": 27,
+  "g1r7r_passed": 26
+}

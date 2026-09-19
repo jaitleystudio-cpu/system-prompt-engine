@@ -1,0 +1,31 @@
+{
+  "findings": [
+    {
+      "id": "G3R-F01",
+      "severity": "HIGH",
+      "problem": "open_mission_store(create=True) on missing path silently creates empty DB \u2014 lost authoritative store can be mistaken for fresh mission if recovery uses create=True",
+      "red": "tests/unit/test_g3r_adversarial.py initial F01 (deleted DB + create=True \u2192 empty rebirth)",
+      "repair": "create_new_mission_store (fail if exists) + open_existing_mission_store (fail if missing); document create=True must not be recovery",
+      "green": "test_g3r_f01_open_existing_fails_when_lost + create_new refuses overwrite",
+      "claim_impact": "store-loss fail-closed boundary clarified"
+    },
+    {
+      "id": "G3R-F02",
+      "severity": "HIGH",
+      "problem": "cancel_mission mutated missions without fence/owner \u2014 stale worker after reclaim could cancel",
+      "red": "stale A cancel succeeded post-reclaim",
+      "repair": "cancel_mission requires owner_id + fencing_token via assert_fence_owner",
+      "green": "test_g3r_f02_stale_worker_cannot_cancel_after_reclaim",
+      "claim_impact": "fence covers cancel writer"
+    },
+    {
+      "id": "G3R-F03",
+      "severity": "HIGH",
+      "problem": "same idempotency key with different request_digest returned existing effect without conflict",
+      "red": "digest-B silently mapped to digest-A effect",
+      "repair": "G3_IDEMPOTENCY_CONFLICT when digest/operation_kind mismatch",
+      "green": "test_g3r_f03_same_key_different_request_digest_rejected",
+      "claim_impact": "idempotency binding integrity"
+    }
+  ]
+}

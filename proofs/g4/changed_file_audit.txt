@@ -1,0 +1,8 @@
+M SPE_IMPLEMENTATION_BINDING_v2.json
+ M proofs/g1/module_disposition.json
+ M proofs/g1/runtime_module_inventory.json
+ M spe_runtime/error_registry.py
+?? proofs/g4/
+?? spe_runtime/providers/
+?? tests/unit/test_g4_provider_mutations.py
+?? tests/unit/test_g4_provider_protocol.py

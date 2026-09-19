@@ -1,0 +1,6 @@
+{
+  "state_reconstruction": "PASS",
+  "recovery_idempotent": "PASS",
+  "does_not_auto_dispatch": "PASS",
+  "half_commit_blocks_recovery": "PASS"
+}

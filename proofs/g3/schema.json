@@ -1,0 +1,16 @@
+{
+  "ring1_schema_version": 1,
+  "tables": [
+    "ring1_meta",
+    "missions",
+    "snapshot_binding",
+    "execution_cursor",
+    "worker_lease",
+    "journal",
+    "effects"
+  ],
+  "append_only_triggers": [
+    "journal_no_update",
+    "journal_no_delete"
+  ]
+}

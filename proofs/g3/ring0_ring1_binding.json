@@ -1,0 +1,34 @@
+{
+  "SemanticSnapshot": {
+    "ring0_owner": "spe_runtime.proof.snapshot",
+    "ring1": "snapshot_binding stores id/version/digests \u2014 does not mint IDs"
+  },
+  "ProofLedger": {
+    "ring0_owner": "spe_runtime.proof.ledger",
+    "ring1": "proof_ledger_digest binding only"
+  },
+  "SemanticProofLease": {
+    "ring0_owner": "spe_runtime.proof.lease",
+    "ring1": "NOT stored as worker lease; still required for semantic authorization"
+  },
+  "WorkerExecutionLease": {
+    "ring0_owner": null,
+    "ring1": "spe_runtime.ring1.lease \u2014 fencing/ownership epoch"
+  },
+  "AuthorityGrant": {
+    "ring0_owner": "spe_runtime.authority",
+    "ring1": "never granted by worker lease or fence"
+  },
+  "reconstruct_on_recovery": [
+    "snapshot_binding",
+    "proof digest",
+    "cursor",
+    "lease view",
+    "effects"
+  ],
+  "never_interpreted_by_ring1": [
+    "prompt text",
+    "K3 strategy",
+    "K7 qualification broadening"
+  ]
+}

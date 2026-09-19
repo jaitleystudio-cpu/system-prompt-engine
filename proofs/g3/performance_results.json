@@ -1,0 +1,23 @@
+{
+  "lease_acquire": {
+    "sample_count": 30,
+    "median_ms": 0.279,
+    "p95_ms": 0.352
+  },
+  "heartbeat": {
+    "sample_count": 30,
+    "median_ms": 0.284,
+    "p95_ms": 1.374
+  },
+  "semantic_commit": {
+    "sample_count": 20,
+    "median_ms": 0.328,
+    "p95_ms": 1.351
+  },
+  "recovery": {
+    "sample_count": 30,
+    "median_ms": 0.092,
+    "p95_ms": 0.133
+  },
+  "note": "local reference measurements only; not a qualification gate"
+}

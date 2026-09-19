@@ -1,0 +1,19 @@
+{
+  "pre_review_baseline": {
+    "collected": 632,
+    "passed": 632,
+    "failed": 0
+  },
+  "post_review": {
+    "collected": 672,
+    "passed": 672,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "junit_sha256": "6d7b36d74bfbc92c1b31eeb266bb185e04c00f6ea9b97ad5b2125b7a3356aa9e",
+    "delta": 40,
+    "delta_explanation": "G1R-9R adversarial tests (+ adjusted G1R-9 suite under hardened semantics)"
+  },
+  "compileall": "ok",
+  "rust_wasm": "RUST_WASM_NOT_REBUILT; NO_SHARED_ABI_CHANGE"
+}
