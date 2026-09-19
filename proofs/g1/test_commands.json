@@ -1,0 +1,82 @@
+{
+  "commands": [
+    {
+      "command": "/opt/spe-g1-venv/bin/python -m compileall spe_runtime",
+      "cwd": "/opt/spe-g1-runtime-binding-v241",
+      "exit_code": 0,
+      "duration_ms": 64,
+      "stdout_file": "proofs/g1/cmd_logs/compileall.stdout.txt",
+      "stderr_file": "proofs/g1/cmd_logs/compileall.stderr.txt"
+    },
+    {
+      "command": "/opt/spe-g1-venv/bin/python -m pytest --collect-only -q",
+      "cwd": "/opt/spe-g1-runtime-binding-v241",
+      "exit_code": 0,
+      "duration_ms": 606,
+      "stdout_file": "proofs/g1/cmd_logs/pytest_collect.stdout.txt",
+      "stderr_file": "proofs/g1/cmd_logs/pytest_collect.stderr.txt"
+    },
+    {
+      "command": "/opt/spe-g1-venv/bin/python -m pytest -q",
+      "cwd": "/opt/spe-g1-runtime-binding-v241",
+      "exit_code": 0,
+      "duration_ms": 52784,
+      "stdout_file": "proofs/g1/cmd_logs/pytest.stdout.txt",
+      "stderr_file": "proofs/g1/cmd_logs/pytest.stderr.txt",
+      "phase": "BASELINE_BEFORE_G1_TESTS",
+      "collected": 413,
+      "passed": 413,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "cargo test --manifest-path portable/spe-core-rs/Cargo.toml --locked",
+      "cwd": "/opt/spe-g1-runtime-binding-v241",
+      "exit_code": 0,
+      "duration_ms": 8834,
+      "stdout_file": "proofs/g1/cmd_logs/cargo_test_spe_core.stdout.txt",
+      "stderr_file": "proofs/g1/cmd_logs/cargo_test_spe_core.stderr.txt",
+      "passed": 27,
+      "failed": 0
+    },
+    {
+      "command": "cargo test --manifest-path portable/spe-wasm/Cargo.toml --locked",
+      "cwd": "/opt/spe-g1-runtime-binding-v241",
+      "exit_code": 0,
+      "duration_ms": null,
+      "stdout_file": "proofs/g1/cmd_logs/cargo_test_spe_wasm.stdout.txt",
+      "stderr_file": "proofs/g1/cmd_logs/cargo_test_spe_wasm.stderr.txt",
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "command": "cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --target wasm32-unknown-unknown --release",
+      "cwd": "/opt/spe-g1-runtime-binding-v241",
+      "exit_code": 0,
+      "duration_ms": null,
+      "stdout_file": "proofs/g1/cmd_logs/cargo_build_wasm.stdout.txt",
+      "stderr_file": "proofs/g1/cmd_logs/cargo_build_wasm.stderr.txt"
+    },
+    {
+      "command": "SPE_WASM_META=1 node tools/spe_wasm_node_host.js portable/spe-wasm/target/wasm32-unknown-unknown/release/spe_wasm.wasm < data/conformance/universal_core_v1.jsonl (first line)",
+      "cwd": "/opt/spe-g1-runtime-binding-v241",
+      "exit_code": 0,
+      "duration_ms": 34,
+      "stdout_file": "proofs/g1/cmd_logs/wasm_node_host.stdout.txt",
+      "stderr_file": "proofs/g1/cmd_logs/wasm_node_host.stderr.txt"
+    },
+    {
+      "command": "/opt/spe-g1-venv/bin/python -m pytest -q --tb=line",
+      "cwd": "/opt/spe-g1-runtime-binding-v241",
+      "exit_code": 1,
+      "duration_ms": 40473,
+      "stdout_file": "proofs/g1/cmd_logs/pytest_final.stdout.txt",
+      "stderr_file": "proofs/g1/cmd_logs/pytest_final.stderr.txt",
+      "phase": "AFTER_G1_BINDING_TESTS",
+      "collected": 427,
+      "passed": 420,
+      "failed": 7,
+      "skipped": 0
+    }
+  ]
+}

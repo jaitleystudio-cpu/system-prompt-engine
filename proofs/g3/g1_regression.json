@@ -1,0 +1,15 @@
+{
+  "command": "pytest with wasm/rust/sprint5 ignores",
+  "baseline_pre_g3": {
+    "passed": 672
+  },
+  "post_g3": {
+    "collected": 714,
+    "passed": 714,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0
+  },
+  "delta": "+42 G3 tests",
+  "compileall_exit": 0
+}

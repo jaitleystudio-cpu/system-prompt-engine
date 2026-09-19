@@ -1,0 +1,15 @@
+{
+  "writers": [
+    "create_effect_intent \u2192 NOT_SENT",
+    "mark_sent_unknown \u2192 SENT_UNKNOWN",
+    "record_known_success \u2192 KNOWN_SUCCESS",
+    "record_known_failure \u2192 KNOWN_FAILURE",
+    "reconcile_effect \u2192 KNOWN_*"
+  ],
+  "forbidden": [
+    "SENT_UNKNOWN\u2192NOT_SENT",
+    "KNOWN_*\u2192NOT_SENT",
+    "timeout\u2192KNOWN_FAILURE"
+  ],
+  "dispatch_ordering": "NOT_SENT \u2192 SENT_UNKNOWN (durable) BEFORE destination.apply(); request-escaped while NOT_SENT: NO"
+}

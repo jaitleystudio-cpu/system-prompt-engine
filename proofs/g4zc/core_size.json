@@ -1,0 +1,30 @@
+{
+  "spe_runtime_py_excluding_providers_bytes": 401637,
+  "providers_py_bytes": 47061,
+  "by_top_level": {
+    "error_registry.py": 7330,
+    "__init__.py": 82,
+    "spec_binding.py": 1520,
+    "cli": 0,
+    "privacy": 14490,
+    "execution": 7250,
+    "categories": 32132,
+    "portability": 39189,
+    "prompt": 54152,
+    "core": 5366,
+    "ring1": 60040,
+    "provenance": 3781,
+    "requirements": 16968,
+    "recovery": 0,
+    "capabilities": 0,
+    "proof": 39266,
+    "storage": 31418,
+    "registry": 0,
+    "authority": 12656,
+    "qualification": 39993,
+    "adapters": 6266,
+    "xcat": 19496,
+    "contract": 10242
+  },
+  "note": "measurement only; no packaging claim manipulation"
+}

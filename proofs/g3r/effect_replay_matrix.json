@@ -1,0 +1,8 @@
+{
+  "dispatch_ordering": "SENT_UNKNOWN durable before destination.apply",
+  "request_escaped_while_NOT_SENT": false,
+  "timeout": "SENT_UNKNOWN",
+  "connection_reset": "SENT_UNKNOWN",
+  "applied_lost_response": "SENT_UNKNOWN \u2192 reconcile \u2192 KNOWN_SUCCESS, application_count=1",
+  "recovery_auto_dispatch": false
+}

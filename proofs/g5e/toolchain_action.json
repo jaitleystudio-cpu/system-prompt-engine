@@ -1,0 +1,17 @@
+{
+  "actions": [
+    {
+      "action": "rustup target add wasm32-unknown-unknown",
+      "exit": 0
+    },
+    {
+      "action": "apt-get install -y nodejs",
+      "exit": 0,
+      "reason": "residual blocker after wasm target: harness requires /usr/bin/node for node-webassembly runtime"
+    }
+  ],
+  "cost_usd": 0,
+  "cost_inr": 0,
+  "spe_source_semantic_changes": "NONE",
+  "note": "Prior RED classified 115/115 as missing wasm32. After target install, residual FileNotFoundError /usr/bin/node; Node installed zero-cost to complete env unblock."
+}

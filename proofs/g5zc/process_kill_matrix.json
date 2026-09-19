@@ -1,0 +1,11 @@
+{
+  "compile_kill": {
+    "mechanism": "SIGKILL",
+    "physical_power_loss": "NOT_TESTED",
+    "result": "PASS"
+  },
+  "write_kill": {
+    "mechanism": "SIGKILL after half write",
+    "result": "PASS_partial_rejected"
+  }
+}

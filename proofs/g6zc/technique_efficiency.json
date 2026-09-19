@@ -1,0 +1,156 @@
+{
+  "STANDARD_MAX_TECHNIQUES": 3,
+  "notes": [
+    {
+      "task_id": "C01-01",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C01-02",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C01-03",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C01-04",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C01-05",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C01-06",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C01-07",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C01-08",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C01-09",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C01-10",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C01-11",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C01-12",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C02-01",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C02-02",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C02-03",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C02-04",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C02-05",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C02-06",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C02-07",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C02-08",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C02-09",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C02-10",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C02-11",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C02-12",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C03-01",
+      "has_technique_section": true,
+      "complexity": "simple"
+    },
+    {
+      "task_id": "C03-02",
+      "has_technique_section": true,
+      "complexity": "complex"
+    },
+    {
+      "task_id": "C03-03",
+      "has_technique_section": true,
+      "complexity": "complex"
+    },
+    {
+      "task_id": "C03-04",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C03-05",
+      "has_technique_section": true,
+      "complexity": "medium"
+    },
+    {
+      "task_id": "C03-06",
+      "has_technique_section": true,
+      "complexity": "complex"
+    }
+  ],
+  "count": 113
+}

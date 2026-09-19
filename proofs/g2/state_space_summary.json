@@ -1,0 +1,68 @@
+{
+  "wording_rule": "TLC exhaustively explored N distinct states for configuration Ci \u2014 not all possible SPE executions",
+  "configs": {
+    "C0_smoke": {
+      "states_generated": 91,
+      "distinct_states": 28,
+      "search_depth": 5,
+      "fp_collision_prob_optimistic": "9.6E-17",
+      "status": "PASS"
+    },
+    "C1_stale_patch": {
+      "states_generated": 2275,
+      "distinct_states": 365,
+      "search_depth": 7,
+      "fp_collision_prob_optimistic": "3.8E-14",
+      "status": "PASS"
+    },
+    "C2_competing_patches": {
+      "states_generated": 21785,
+      "distinct_states": 3633,
+      "search_depth": 9,
+      "fp_collision_prob_optimistic": "3.6E-12",
+      "status": "PASS"
+    },
+    "C3_multiple_leases": {
+      "states_generated": 37681,
+      "distinct_states": 6113,
+      "search_depth": 9,
+      "fp_collision_prob_optimistic": "1.0E-11",
+      "status": "PASS"
+    },
+    "C4_obligations_types": {
+      "states_generated": 857546,
+      "distinct_states": 137505,
+      "search_depth": 9,
+      "fp_collision_prob_optimistic": "5.4E-9",
+      "status": "PASS"
+    },
+    "C5_verdicts": {
+      "states_generated": 13440,
+      "distinct_states": 2025,
+      "search_depth": 7,
+      "fp_collision_prob_optimistic": "1.3E-12",
+      "status": "PASS"
+    },
+    "C6_liveness": {
+      "states_generated": 9,
+      "distinct_states": 5,
+      "search_depth": 5,
+      "fp_collision_prob_optimistic": "1.1E-18",
+      "status": "PASS"
+    },
+    "C7_maximal": {
+      "states_generated": 1507106,
+      "distinct_states": 236513,
+      "search_depth": 9,
+      "fp_collision_prob_optimistic": "1.6E-8",
+      "status": "PASS"
+    },
+    "C_safety_all": {
+      "states_generated": 857546,
+      "distinct_states": 137505,
+      "search_depth": 9,
+      "fp_collision_prob_optimistic": "5.4E-9",
+      "status": "PASS"
+    }
+  }
+}

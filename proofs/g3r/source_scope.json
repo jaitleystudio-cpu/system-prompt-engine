@@ -1,0 +1,21 @@
+{
+  "expected_production": [
+    "spe_runtime/ring1/*",
+    "spe_runtime/error_registry.py (G3/G3R codes)",
+    "tests/unit/test_g3*",
+    "proofs/g3*",
+    "G1 inventory sync"
+  ],
+  "g3r_repairs": [
+    "create_new_mission_store / open_existing_mission_store",
+    "cancel_mission requires owner+fence",
+    "idempotency key binds request_digest (conflict on mismatch)",
+    "G3_STORE_ALREADY_EXISTS / G3_IDEMPOTENCY_CONFLICT error codes"
+  ],
+  "untouched": [
+    "K0-K7 semantic cores",
+    "formal/SPELeaseCommit.tla",
+    "PR #6",
+    "spe_runtime/omega/"
+  ]
+}

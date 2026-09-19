@@ -1,0 +1,5 @@
+{
+  "classification": "immutable registries only in prompt plan/techniques; no request-shared mutable caches in core path",
+  "mutable_module_state_findings": [],
+  "unsafe_request_shared_mutable_state": false
+}

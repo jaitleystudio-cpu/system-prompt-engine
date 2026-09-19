@@ -1,0 +1,2 @@
+/opt/system-prompt-engine         931128b [main]
+/opt/spe-g1-runtime-binding-v241  931128b [feat/g1-runtime-binding-v241]

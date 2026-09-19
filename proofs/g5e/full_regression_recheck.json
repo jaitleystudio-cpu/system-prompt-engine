@@ -1,0 +1,9 @@
+{
+  "command": "python -m pytest",
+  "collected": 986,
+  "passed": 986,
+  "failed": 0,
+  "skipped": 0,
+  "xfailed": 0,
+  "exit": 0
+}

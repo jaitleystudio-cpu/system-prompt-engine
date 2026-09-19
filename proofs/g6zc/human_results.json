@@ -1,0 +1,10 @@
+{
+  "status": "NO_RATINGS_YET",
+  "evaluators": 0,
+  "paired_evaluations": 0,
+  "SPE_preferred": null,
+  "RAW_preferred": null,
+  "ties": null,
+  "limitation": "SINGLE_EVALUATOR_LIMITATION / PRODUCT_VALUE_REVIEW_PENDING until blinded ratings exist",
+  "do_not_fabricate": true
+}

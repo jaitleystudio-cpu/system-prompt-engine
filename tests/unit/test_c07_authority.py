@@ -778,16 +778,33 @@ def test_cost_law_no_paid_imports():
 
 
 def test_mg_g2_execution_grants_expansion_never_allowed():
-    """authorized=True must NOT bypass C07 ownership — no grant mint/broaden."""
-    from spe_runtime.categories._common import replace_envelope
+    """authorized=True must NOT bypass C07 ownership — no grant mint/broaden.
+
+    G1R-2: replace_envelope rejects execution_grants; construct attack envelope
+    via CrossCategoryEnvelope directly (not the generic mutator).
+    """
+    from spe_runtime.xcat.models import CrossCategoryEnvelope
 
     before = _envelope_with_send_recommendation()
-    after = replace_envelope(
-        before,
-        category_trace=before.category_trace + ("CAT:C07",),
+    after = CrossCategoryEnvelope(
+        envelope_id=before.envelope_id,
+        goal_identity=before.goal_identity,
+        facts=before.facts,
+        provenance=before.provenance,
+        uncertainties=before.uncertainties,
+        hard_constraints=before.hard_constraints,
+        user_preferences=before.user_preferences,
+        analysis=before.analysis,
+        recommendation=before.recommendation,
+        rendering=before.rendering,
+        authority_state=before.authority_state,
         execution_grants=(
             {"capability": "SEND_EMAIL", "authorized": True, "target": "*"},
         ),
+        failures=before.failures,
+        taint_labels=before.taint_labels,
+        sensitivity_labels=before.sensitivity_labels,
+        category_trace=before.category_trace + ("CAT:C07",),
     )
     assert validate_c07_output(before, after) is False
 

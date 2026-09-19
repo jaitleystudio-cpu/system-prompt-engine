@@ -1,0 +1,17 @@
+{
+  "frozen_before_ratings": true,
+  "note": "Thresholds hashed before human ratings. Do not change after seeing outcomes.",
+  "primary_endpoints": {
+    "P1_intent_fidelity_noninferiority": "SPE must not show material systematic regression vs RAW on V1",
+    "P2_hard_constraint_preservation": "SPE machine-checkable constraint recall >= RAW baseline",
+    "P3_blind_human_usefulness_preference": "SPE preferred count > RAW preferred count",
+    "P4_machine_checkable_success": "Report separately where available; not required for harness pass"
+  },
+  "suggested_minimum_gate": {
+    "1_intent_fidelity": "no material systematic regression",
+    "2_hard_constraint_preservation": ">= RAW baseline",
+    "3_overall_blinded_usefulness": "SPE preference > RAW preference",
+    "4_no_category_severe_semantic_drift": true,
+    "5_holdout_direction_consistent_with_dev": true
+  }
+}

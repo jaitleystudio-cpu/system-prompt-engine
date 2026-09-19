@@ -1,0 +1,11 @@
+{
+  "command": "python3 -m pytest -q --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py",
+  "filter_note": "Same G1 documented suite filter (ignore wasm/rust/sprint5 merge-gate)",
+  "collected": 672,
+  "passed": 672,
+  "failed": 0,
+  "skipped": 0,
+  "exit": 0,
+  "log": "proofs/g2/logs/pytest_authoritative.log",
+  "baseline_expected": 672
+}

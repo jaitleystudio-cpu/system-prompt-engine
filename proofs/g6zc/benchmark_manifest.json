@@ -1,0 +1,35 @@
+{
+  "benchmark_version": "g6zc.v1",
+  "categories": {
+    "C01": "Writing / Communication",
+    "C02": "Coding / Engineering",
+    "C03": "Research",
+    "C04": "Business / Strategy",
+    "C05": "Education / Learning",
+    "C06": "Analysis / Reasoning",
+    "C07": "Structured Data / Extraction",
+    "C08": "Creative / Story / Roleplay",
+    "C09": "Multilingual",
+    "C10": "Ambiguous / Conflict-heavy"
+  },
+  "corpus_path": "benchmarks/g6zc/corpus.json",
+  "corpus_sha256": "0e80007e9efdd06f6aea4f14e98504876772020cf7757ab58112d7dce2cbea34",
+  "dev_count": 96,
+  "dev_manifest_sha256": "81f76fb2e51a7a2d3ea0e81f5e2301d4db33265eaa60457df6139dd7d5928527",
+  "holdout_count": 24,
+  "holdout_manifest_sha256": "6c1daab07cc8573bdcabfb2d232e7be47d4d0c4efb6075aef0609ddf785ddde0",
+  "languages": [
+    "en",
+    "en+te",
+    "es",
+    "fr",
+    "hi",
+    "ta",
+    "te"
+  ],
+  "randomization_sha256": "0b4ecfce57a5a21dee6f6614c16a5cf706354408a8d354b6a748e848ded198de",
+  "rubric_sha256": "6456af82732fd6169a7eb1336deeaa2c48b2383d25b586093fe802e4928e3c6b",
+  "seed": 20260919,
+  "thresholds_sha256": "8e7074a6e5f25a3961b83be0ad2a94357b7948170a353f7bf403b2b81ed5eff4",
+  "total_tasks": 120
+}

@@ -1,0 +1,12 @@
+{
+  "fields": [
+    "component",
+    "platform",
+    "runtime",
+    "environment",
+    "revision"
+  ],
+  "containment": "exact_match_per_dimension; claim.revision None allows any evidence.revision",
+  "subject_binding": "exact subject_id",
+  "revision_binding": "exact when claim.revision set"
+}

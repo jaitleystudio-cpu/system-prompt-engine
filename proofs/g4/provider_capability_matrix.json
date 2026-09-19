@@ -1,0 +1,16 @@
+{
+  "openai_compat": {
+    "text": "declared",
+    "structured_output": "declared",
+    "tool_calling": "declared",
+    "streaming": "NOT_QUALIFIED",
+    "live_tested": false
+  },
+  "anthropic_compat": {
+    "text": "declared",
+    "structured_output": "CAPABILITY_UNAVAILABLE until live probe",
+    "tool_calling": "declared",
+    "streaming": "NOT_QUALIFIED",
+    "live_tested": false
+  }
+}

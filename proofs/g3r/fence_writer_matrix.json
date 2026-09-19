@@ -1,0 +1,60 @@
+{
+  "writes": [
+    {
+      "surface": "acquire_worker_lease INSERT",
+      "requires_fence": false,
+      "why": "establishes fence"
+    },
+    {
+      "surface": "reclaim_worker_lease UPDATE",
+      "requires_fence": false,
+      "why": "CAS on old fence+expiry; issues new fence"
+    },
+    {
+      "surface": "heartbeat_worker_lease UPDATE",
+      "requires_fence": true,
+      "why": "assert owner+fence"
+    },
+    {
+      "surface": "commit_durable_semantic_transaction",
+      "requires_fence": true,
+      "why": "assert_fence_owner"
+    },
+    {
+      "surface": "create_effect_intent",
+      "requires_fence": true
+    },
+    {
+      "surface": "mark_sent_unknown",
+      "requires_fence": true
+    },
+    {
+      "surface": "record_known_success/failure",
+      "requires_fence": true
+    },
+    {
+      "surface": "reconcile_effect",
+      "requires_fence": true
+    },
+    {
+      "surface": "cancel_mission",
+      "requires_fence": true,
+      "note": "G3R-F02 repair: fence now required"
+    },
+    {
+      "surface": "create_mission INSERT",
+      "requires_fence": false,
+      "why": "mission bootstrap"
+    },
+    {
+      "surface": "append_journal",
+      "requires_fence": "caller-dependent",
+      "why": "only via transactional owners above"
+    },
+    {
+      "surface": "recover_mission",
+      "requires_fence": false,
+      "why": "read-only"
+    }
+  ]
+}

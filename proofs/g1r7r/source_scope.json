@@ -1,0 +1,42 @@
+{
+  "changed_since_impl": [
+    "SPE_IMPLEMENTATION_BINDING_v2.json",
+    "proofs/g1/SPE_IMPLEMENTATION_BINDING_v2.json",
+    "proofs/g1/repo_identity.json",
+    "proofs/g1/semantic_writer_map.json",
+    "proofs/g1r7/AUTHORITATIVE_TEST_MANIFEST.json",
+    "proofs/g1r7/G1R7_REPORT.md",
+    "proofs/g1r7/SPE_IMPLEMENTATION_BINDING_v2.json",
+    "proofs/g1r7/changed_file_audit.txt",
+    "proofs/g1r7/cognitive_plan_vectors.json",
+    "proofs/g1r7/green/authoritative_suite.txt",
+    "proofs/g1r7/green/g1r7_impl_junit.xml",
+    "proofs/g1r7/k3_determinism.json",
+    "proofs/g1r7/k3_domain_separation.json",
+    "proofs/g1r7/k3_writer_map.json",
+    "proofs/g1r7/manifest.json",
+    "proofs/g1r7/prompt_strategy_vectors.json",
+    "proofs/g1r7/semantic_writer_map.json",
+    "proofs/g1r7/technique_compatibility_matrix.json",
+    "proofs/g1r7/technique_selection_vectors.json",
+    "proofs/g1r7/test_results.json",
+    "spe_runtime/prompt/__init__.py",
+    "spe_runtime/prompt/build.py",
+    "spe_runtime/prompt/hints.py",
+    "spe_runtime/prompt/plan.py",
+    "spe_runtime/prompt/techniques.py",
+    "tests/unit/test_g1r7r_k3_strategy_recheck.py"
+  ],
+  "expected_production": [
+    "spe_runtime/prompt/__init__.py",
+    "spe_runtime/prompt/models.py",
+    "spe_runtime/prompt/build.py",
+    "spe_runtime/prompt/hints.py",
+    "spe_runtime/prompt/plan.py",
+    "spe_runtime/prompt/strategy.py",
+    "spe_runtime/prompt/techniques.py",
+    "spe_runtime/error_registry.py"
+  ],
+  "pass": true,
+  "unexpected_k6_k7_g2_g3_production": []
+}

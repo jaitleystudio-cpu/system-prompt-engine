@@ -1,0 +1,9 @@
+{
+  "ollama": false,
+  "llama_cpp": false,
+  "mlx": false,
+  "onnx": false,
+  "available": false,
+  "LOCAL_MODEL_OUTCOME_EVIDENCE": "NOT_AVAILABLE",
+  "required": false
+}

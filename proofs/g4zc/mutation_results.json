@@ -1,0 +1,16 @@
+{
+  "attempted": [
+    "ZCM1",
+    "ZCM2",
+    "ZCM3",
+    "ZCM4",
+    "ZCM5",
+    "ZCM6",
+    "ZCM7",
+    "ZCM8",
+    "ZCM9",
+    "ZCM10"
+  ],
+  "killed": 10,
+  "survived": 0
+}

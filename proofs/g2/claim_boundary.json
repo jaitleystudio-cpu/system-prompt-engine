@@ -1,0 +1,18 @@
+{
+  "earned_if_pass": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+  "not_earned": [
+    "Python implementation formally verified",
+    "distributed durability",
+    "database atomicity",
+    "crash recovery",
+    "network partition safety",
+    "provider exactly-once",
+    "hardware correctness",
+    "all parameter sizes",
+    "production readiness",
+    "full SPE architecture correctness",
+    "security against all attacks",
+    "independent replication",
+    "world #1"
+  ]
+}

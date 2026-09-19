@@ -1,0 +1,122 @@
+{
+  "count": 9,
+  "surfaces": [
+    {
+      "boundary": "input decode",
+      "expected_safe_outcome": "typed SpeTypedError or safe compile; no authority mint",
+      "failure_classes": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "mutable_state": false,
+      "operation": "compile_portable_request",
+      "owner": "spe_runtime.core.compile",
+      "persistent_state": false
+    },
+    {
+      "boundary": "ProtectedIntentContract build",
+      "expected_safe_outcome": "CONFLICTED; no silent laundering",
+      "failure_classes": [
+        "F4"
+      ],
+      "mutable_state": false,
+      "operation": "propose_requirement",
+      "owner": "spe_runtime.contract.protected",
+      "persistent_state": false
+    },
+    {
+      "boundary": "RequirementGraph build",
+      "expected_safe_outcome": "conflict edges retained",
+      "failure_classes": [
+        "F4"
+      ],
+      "mutable_state": false,
+      "operation": "graph mutate via propose",
+      "owner": "spe_runtime.requirements",
+      "persistent_state": false
+    },
+    {
+      "boundary": "CognitivePlan / TechniqueSelection / PromptStrategy / PromptArtifact",
+      "expected_safe_outcome": "fail closed on conflict; technique budget bounded",
+      "failure_classes": [
+        "F4",
+        "F17",
+        "F18"
+      ],
+      "mutable_state": false,
+      "operation": "build_prompt_artifact",
+      "owner": "spe_runtime.prompt.*",
+      "persistent_state": false
+    },
+    {
+      "boundary": "deterministic validation",
+      "expected_safe_outcome": "typed reject; never PASS on validator crash",
+      "failure_classes": [
+        "F9",
+        "F10",
+        "F11",
+        "F12"
+      ],
+      "mutable_state": false,
+      "operation": "validate_spe_artifact / loads_spe",
+      "owner": "spe_runtime.storage.validate",
+      "persistent_state": false
+    },
+    {
+      "boundary": ".spe build / serialization",
+      "expected_safe_outcome": "no fabricated artifact ID; typed failure",
+      "failure_classes": [
+        "F5"
+      ],
+      "mutable_state": false,
+      "operation": "build_spe_artifact + dumps_spe",
+      "owner": "spe_runtime.storage.build / serialize.dumps_spe",
+      "persistent_state": false
+    },
+    {
+      "boundary": "file write / replace",
+      "expected_safe_outcome": "no corrupt authoritative .spe; old survives failed overwrite",
+      "failure_classes": [
+        "F6",
+        "F7",
+        "F8",
+        "F13"
+      ],
+      "mutable_state": false,
+      "operation": "temp write + os.replace",
+      "owner": "spe_runtime.storage.serialize.save_spe",
+      "persistent_state": true
+    },
+    {
+      "boundary": "load / validation after load",
+      "expected_safe_outcome": "reject; current in-memory project unchanged",
+      "failure_classes": [
+        "F8",
+        "F9",
+        "F10",
+        "F12"
+      ],
+      "mutable_state": false,
+      "operation": "read + loads_spe",
+      "owner": "spe_runtime.storage.serialize.load_spe",
+      "persistent_state": true
+    },
+    {
+      "boundary": "process crash / concurrency / network",
+      "expected_safe_outcome": "deterministic restart; no contamination; no mandatory network",
+      "failure_classes": [
+        "F13",
+        "F14",
+        "F15",
+        "F16",
+        "F19",
+        "F20"
+      ],
+      "mutable_state": false,
+      "operation": "SIGKILL / Barrier multiprocess / socket block",
+      "owner": "tests + core (no shared mutable module state)",
+      "persistent_state": "varies"
+    }
+  ]
+}

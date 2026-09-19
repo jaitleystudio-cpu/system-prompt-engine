@@ -1,0 +1,70 @@
+[
+  {
+    "pack": "g1r9r",
+    "status": "OK_WITH_PIN_SUPERSESSION",
+    "mismatches": [
+      {
+        "path": "source_identity.json",
+        "expected": "ca3e8f8e02bb7305\u2026",
+        "actual": "fde882e15ca2308c\u2026"
+      }
+    ],
+    "missing": [],
+    "checked": 47,
+    "note": "source_identity.json intentionally updated by docs pin commit after manifest freeze; not semantic corruption"
+  },
+  {
+    "pack": "g1r9",
+    "status": "OK_WITH_PIN_SUPERSESSION",
+    "mismatches": [
+      {
+        "path": "source_identity.json",
+        "expected": "2631099ee490f761\u2026",
+        "actual": "568302a7fa09f2c8\u2026"
+      }
+    ],
+    "missing": [],
+    "checked": 23,
+    "note": "source_identity.json intentionally updated by docs pin commit after manifest freeze; not semantic corruption"
+  },
+  {
+    "pack": "g1r8r",
+    "status": "OK",
+    "mismatches": [],
+    "missing": [],
+    "checked": 0
+  },
+  {
+    "pack": "g1r8",
+    "status": "OK",
+    "mismatches": [],
+    "missing": [],
+    "checked": 0
+  },
+  {
+    "pack": "g1r7r",
+    "status": "OK",
+    "mismatches": [],
+    "missing": [],
+    "checked": 17
+  },
+  {
+    "pack": "g1r7",
+    "status": "OK",
+    "mismatches": [],
+    "missing": [],
+    "checked": 0
+  },
+  {
+    "pack": "g1r6r",
+    "status": "NO_MANIFEST"
+  },
+  {
+    "pack": "g1r6",
+    "status": "NO_MANIFEST"
+  },
+  {
+    "pack": "g1",
+    "status": "NO_MANIFEST"
+  }
+]
