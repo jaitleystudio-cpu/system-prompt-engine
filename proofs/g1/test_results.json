@@ -1,0 +1,97 @@
+{
+  "baseline": {
+    "phase": "BASELINE_ON_UNTOUCHED_931128b_BEFORE_G1_TESTS",
+    "python": {
+      "collected": 413,
+      "passed": 413,
+      "failed": 0,
+      "skipped": 0,
+      "exit": 0,
+      "duration_ms": 52784,
+      "interpreter": "Python 3.11.2"
+    },
+    "rust": {
+      "tests": 27,
+      "passed": 27,
+      "failed": 0,
+      "exit": 0
+    },
+    "wasm": {
+      "scope": "spe-wasm tests + wasm32-unknown-unknown release + Node WebAssembly host POS-001",
+      "crate_tests_passed": 2,
+      "build_exit": 0,
+      "node_host_exit": 0,
+      "artifact_sha256": "74ae835e150dc3e4b7ab80d30f50a504f363589e7886181ef047a5321ccf4983",
+      "artifact_bytes": 254917,
+      "historical_wasm_sha256": "74a12864ffc205ca2b3880b5f3740bf374621808aff55b2876f8e89d8db27e69",
+      "historical_wasm_bytes": 252714,
+      "note": "SHA/size differ from Sprint-5 historical artifact because rustc 1.98.1 != historical 1.85.1. Source is 931128b.",
+      "result": "OK_TOOLCHAIN_DIVERGENT_ARTIFACT",
+      "exit": 0
+    },
+    "BASELINE_FAILURE": []
+  },
+  "test_denominator": {
+    "HISTORICAL_BRANCH_TEST_COUNT": 443,
+    "G1_MAIN_TEST_COUNT": 413,
+    "DELTA": -30,
+    "classification": "PR6_ONLY_WEB_PWA_TESTS",
+    "evidence": {
+      "sprint6_proof_summary.json": "full_pytest=443 passed; web_pytest=30 passed",
+      "pr6_added_files": [
+        "tests/web/test_web_architecture_gates.py",
+        "tests/web/test_web_cost_and_scope.py",
+        "tests/web/test_web_engine_path.py",
+        "tests/web/test_web_privacy_pwa.py",
+        "tests/web/test_web_pwa_scaffold.py"
+      ],
+      "pr6_web_test_def_count": 30,
+      "main_test_files_unchanged": true,
+      "not_a_regression": true
+    }
+  },
+  "g1_binding_tests": {
+    "file": "tests/unit/test_g1_runtime_binding.py",
+    "collected": 14,
+    "passed": 7,
+    "failed": 7,
+    "skipped": 0,
+    "failed_names": [
+      "test_g1_normative_spec_hash_bound",
+      "test_g1_no_duplicate_canonical_writers",
+      "test_g1_no_unowned_required_ring0_responsibility",
+      "test_g1_proof_owner_unique",
+      "test_g1_error_owner_unique",
+      "test_g1_artifact_lineage_owner_unique",
+      "test_g1_qualification_owner_unique"
+    ],
+    "passed_names": [
+      "test_g1_runtime_inventory_complete",
+      "test_g1_every_module_has_disposition",
+      "test_g1_disposition_enum_valid",
+      "test_g1_ring0_owner_mapping_complete",
+      "test_g1_binding_manifest_complete",
+      "test_g1_repo_tree_hash_bound",
+      "test_g1_authority_owner_unique"
+    ],
+    "note": "Failures are honest G1 gap evidence, not baseline regressions."
+  },
+  "final": {
+    "python": {
+      "collected": 427,
+      "passed": 420,
+      "failed": 7,
+      "skipped": 0,
+      "exit": 1,
+      "duration_ms": 40473
+    },
+    "formula": "413 baseline + 14 G1 binding tests = 427 collected; 413+7 G1 pass = 420 passed; 7 G1 fail",
+    "rust": {
+      "tests": 27,
+      "passed": 27,
+      "failed": 0,
+      "exit": 0
+    },
+    "wasm": "unchanged from baseline (no G1 production source change)"
+  }
+}

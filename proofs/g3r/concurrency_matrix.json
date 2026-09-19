@@ -1,0 +1,10 @@
+{
+  "orchestration": "multiprocessing.Barrier + Process (not sleep-only)",
+  "reclaim_race_iterations": 30,
+  "reclaim_double_winners": 0,
+  "cas_race_iterations": 30,
+  "cas_double_winners": 0,
+  "heartbeat_reclaim_iterations": 30,
+  "heartbeat_reclaim_incoherent": 0,
+  "fence_stale_commits": 0
+}

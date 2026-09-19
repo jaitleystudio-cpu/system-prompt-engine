@@ -1,0 +1,13 @@
+python_version=Python 3.10.21
+platform=Linux hds-26uqgp6rfqv8 6.12.8+ #1 SMP Tue Jul 21 13:56:45 UTC 2026 x86_64 GNU/Linux
+hostname=hds-26uqgp6rfqv8
+pwd=/opt/spe-g1-runtime-binding-v241
+date_utc=2026-09-18T08:26:49Z
+whoami=root
+pip=pip 23.0.1 from /usr/local/lib/python3.10/site-packages/pip (python 3.10)
+pytest=/usr/local/bin/python3: No module named pytest
+rustc=rustc 1.98.1 (48a229cea 2026-09-01)
+cargo=cargo 1.98.1 (797e8a9bc 2026-08-05)
+node=v22.23.2
+wasmtime=--: line 1: wasmtime: command not found
+wasm-pack=--: line 1: wasm-pack: command not found

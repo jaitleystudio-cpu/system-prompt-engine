@@ -1,0 +1,19 @@
+{
+  "config_id": "C7_maximal",
+  "module": "SPELeaseCommit",
+  "cfg_path": "formal/cfg/C7_maximal.cfg",
+  "command_file": "proofs/g2/commands/C7_maximal.sh",
+  "log_path": "proofs/g2/logs/C7_maximal.log",
+  "workers": 4,
+  "heap": "3559m",
+  "elapsed_sec": 4.736,
+  "exit_code": 0,
+  "states_generated": 1507106,
+  "distinct_states": 236513,
+  "search_depth": 9,
+  "fingerprint_collision_probability_optimistic": "1.6E-8",
+  "counterexample": "NO",
+  "deadlock": "NO",
+  "no_error_text": true,
+  "status": "PASS"
+}

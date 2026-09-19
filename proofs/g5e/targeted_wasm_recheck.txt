@@ -1,0 +1,347 @@
+...FF.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF [ 60%]
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.FF.                         [100%]
+=================================== FAILURES ===================================
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+E   FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+/usr/lib/python3.12/subprocess.py:1955: FileNotFoundError: [Errno 2] No such file or directory: '/usr/bin/node'
+=========================== short test summary info ============================
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_host_import_inspection_zero_imports
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_runtime_does_not_delegate_to_native_rust
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-001]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-002]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-003]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-004]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-005]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-006]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-007]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-008]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-009]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-010]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-011]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-012]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-013]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-014]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-015]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-016]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-017]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-018]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-019]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-020]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-021]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-022]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-023]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-024]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-025]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-026]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-027]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-028]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-029]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-030]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-031]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-032]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-033]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-034]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-035]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-036]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-037]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-038]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-039]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-040]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-041]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-042]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-043]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-044]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-045]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-046]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-047]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-048]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-049]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-050]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-051]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-052]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-053]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-054]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_positives_match_python_and_rust[POS-055]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-001]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-002]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-003]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-004]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-005]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-006]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-007]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-008]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-009]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-010]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-011]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-012]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-013]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-014]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-015]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-016]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-017]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-018]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-019]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-020]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-021]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-022]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-023]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-024]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-025]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-026]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-027]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-028]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-029]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-030]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-031]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-032]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-033]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-034]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-035]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-036]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-037]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-038]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-039]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-040]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-041]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-042]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-043]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-044]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-045]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-046]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-047]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-048]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-049]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-050]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-051]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-052]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-053]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-054]
+FAILED tests/portability/test_wasm_reference_conformance.py::test_wasm_all_negatives_exact_reason[NEG-055]
+FAILED tests/portability/test_sprint5_merge_gate_differential.py::test_1000_generated_differential_seed_20260915
+FAILED tests/portability/test_sprint5_merge_gate_oracle.py::test_oracle_break_control_rust_and_wasm_remain_independent
+114 failed, 6 passed in 2.46s

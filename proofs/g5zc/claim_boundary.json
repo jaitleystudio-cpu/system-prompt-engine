@@ -1,0 +1,24 @@
+{
+  "G1": "BOUND_AND_PASS",
+  "G2": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+  "G3": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE",
+  "G4": "ZERO_COST_CORE_ENGINE_VERIFIED_WITHIN_TESTED_SCOPE",
+  "G5_interim_before_recheck": "CHAOS_EVIDENCE_PRESENT / FINAL_FREEZE_PENDING",
+  "G5": "ZERO_COST_LOCAL_FAULT_RESILIENCE_VERIFIED_WITHIN_TESTED_SCOPE",
+  "G4X": "OPTIONAL / DEFERRED",
+  "freeze_gaps_closed": [
+    "repair_attempt_bound_confirmation",
+    "repository_wide_pytest_denominator_confirmation",
+    "wasm_toolchain_and_node_runtime_unblock"
+  ],
+  "not_earned": [
+    "PRODUCTION_READY",
+    "POWER_LOSS_PROVEN",
+    "ALL_FILESYSTEMS_SAFE",
+    "ALL_OPERATING_SYSTEMS_SAFE",
+    "SECURITY_RED_TEAM_PASS",
+    "WORLD_1"
+  ],
+  "G5_interim_before_g5e": "CHAOS_EVIDENCE_PRESENT / REPAIR_BOUND_CONFIRMED / FULL-REGRESSION_BLOCKED_BY_MISSING_WASM_TOOLCHAIN_TARGET",
+  "g5e": "ENVIRONMENTAL_CLOSURE_PASS"
+}

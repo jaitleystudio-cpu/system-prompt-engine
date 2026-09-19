@@ -1,0 +1,14 @@
+{
+  "working_contract_sha": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "g2_model_sha": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "G1": "BOUND_AND_PASS",
+  "G2": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+  "G3": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE",
+  "G4": "ZERO_COST_CORE_ENGINE_VERIFIED_WITHIN_TESTED_SCOPE",
+  "PR6": {
+    "state": "OPEN",
+    "head": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+    "mergedAt": null
+  },
+  "chaos_campaign_rerun": false
+}

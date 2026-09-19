@@ -1,0 +1,32 @@
+{
+  "benchmark_version": "g6zc.v1",
+  "count": 24,
+  "isolation": "Do not inspect holdout expected results during repair.",
+  "split": "holdout",
+  "task_ids": [
+    "C01-01",
+    "C01-07",
+    "C01-12",
+    "C02-03",
+    "C02-11",
+    "C02-12",
+    "C03-07",
+    "C03-09",
+    "C03-10",
+    "C04-03",
+    "C04-04",
+    "C04-05",
+    "C05-03",
+    "C05-09",
+    "C06-07",
+    "C06-08",
+    "C07-06",
+    "C07-08",
+    "C08-05",
+    "C08-07",
+    "C09-10",
+    "C09-11",
+    "C10-01",
+    "C10-07"
+  ]
+}

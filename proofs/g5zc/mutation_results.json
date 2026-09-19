@@ -1,0 +1,32 @@
+{
+  "attempted": [
+    "G5M1",
+    "G5M2",
+    "G5M3",
+    "G5M4",
+    "G5M5",
+    "G5M6",
+    "G5M7",
+    "G5M8",
+    "G5M9",
+    "G5M10",
+    "G5M11",
+    "G5M12"
+  ],
+  "killed": 12,
+  "survived": 0,
+  "details": {
+    "G5M1": "KILLED",
+    "G5M2": "KILLED",
+    "G5M3": "KILLED",
+    "G5M4": "KILLED",
+    "G5M5": "KILLED",
+    "G5M6": "KILLED",
+    "G5M7": "KILLED",
+    "G5M8": "KILLED",
+    "G5M9": "KILLED",
+    "G5M10": "KILLED",
+    "G5M11": "KILLED",
+    "G5M12": "KILLED"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "approved_max_spend_usd": 0.0,
+  "allow_paid": false,
+  "max_live_requests": 0,
+  "providers_permitted": [],
+  "policy_source": "ZERO_COST_PRODUCT_LAW + absent SPE_G4_ALLOW_PAID/SPE_G4_BUDGET_USD",
+  "actual_spend_usd": 0.0,
+  "unexpected_spend": false
+}

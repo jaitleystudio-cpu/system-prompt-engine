@@ -1,0 +1,6 @@
+{
+  "attempted": 12,
+  "killed": 12,
+  "survived": 0,
+  "notes": "M1 fence, M6 no reset, M11 schema, M12 no fallback + prior G3 mutants remain green"
+}

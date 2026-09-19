@@ -1,0 +1,10 @@
+{
+  "NOT_SENT": "PASS",
+  "SENT_UNKNOWN": "PASS",
+  "KNOWN_SUCCESS": "PASS",
+  "KNOWN_FAILURE": "PASS",
+  "timeout_to_SENT_UNKNOWN": "PASS",
+  "idempotent_reconcile_single_apply": "PASS",
+  "unreconcilable_remains_unknown": "PASS",
+  "cancellation_preserves_SENT_UNKNOWN": "PASS"
+}

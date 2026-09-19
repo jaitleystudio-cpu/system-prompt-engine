@@ -1,0 +1,32 @@
+TLC2 Version 2026.09.17.032053 (rev: 142d0ba)
+Running breadth-first search Model-Checking with fp 6 and seed 5208422294746997396 with 1 worker on 4 cores with 3559MB heap and 64MB offheap memory [pid: 58679] (Linux 6.12.94+ amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/formal/SPELeaseCommit.tla
+Parsing file /tmp/tlc-1548362781560315397/Naturals.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-1548362781560315397/FiniteSets.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-1548362781560315397/Sequences.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-1548362781560315397/TLC.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-1548362781560315397/_TLCTrace.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-1548362781560315397/TLCExt.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-1548362781560315397/Integers.tla (jar:file:/workspace/tools/tlc/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module SPELeaseCommit
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module SPELeaseCommit
+Starting... (2026-09-18 18:36:20)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-18 18:36:20.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 9.6E-17
+91 states generated, 28 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 5.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 4 and the 95th percentile is 4).
+Finished in 00s at (2026-09-18 18:36:20)

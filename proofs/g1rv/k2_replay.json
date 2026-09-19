@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "semantic_atomicity": "in_memory",
+  "durable_atomicity": "NOT_CLAIMED",
+  "stale_patch": "rejected",
+  "suite": "G1R-4"
+}

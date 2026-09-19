@@ -1,0 +1,8 @@
+bea7097 docs(g6zc): pin PR tip HEAD
+c35dfaa docs(g6zc): record PR #28
+4184683 docs(g6zc): pin tip HEAD
+3748f01 feat(g6zc): product-value harness, corpus, blind evaluator
+99173c2 docs(g5e): pin closure tip HEAD
+9c129e5 docs(g5e): wasm/node env unblock — full pytest 986/986 green
+39d498c docs(g5zc): pin recheck tip HEAD
+304efb3 docs(g5zc): close repair-bound and pytest denominator gaps

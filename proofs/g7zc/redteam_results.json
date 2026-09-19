@@ -1,0 +1,8 @@
+{
+  "suite": "tests/security/test_g7zc_redteam.py",
+  "passed": 20,
+  "failed": 0,
+  "surfaces": "F1-F20",
+  "recheck": "25 passed including G7M1-G7M5 in 0.09s",
+  "full_repo": "1023 passed in 89.71s"
+}

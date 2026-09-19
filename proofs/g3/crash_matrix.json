@@ -1,0 +1,56 @@
+{
+  "process_crash_tested": true,
+  "physical_power_loss_tested": false,
+  "os_reboot_tested": false,
+  "kill_mechanism": "SIGKILL via failpoint os.kill",
+  "cases": [
+    {
+      "id": "C1",
+      "failpoint": "before_transaction",
+      "expected": "no snapshot",
+      "result": "PASS"
+    },
+    {
+      "id": "C2",
+      "failpoint": "after_validation",
+      "expected": "rollback",
+      "result": "PASS"
+    },
+    {
+      "id": "C3",
+      "failpoint": "after_snapshot_write",
+      "expected": "rollback (uncommitted)",
+      "result": "PASS"
+    },
+    {
+      "id": "C5",
+      "failpoint": "after_cursor_write",
+      "expected": "rollback",
+      "result": "PASS"
+    },
+    {
+      "id": "C6",
+      "failpoint": "after_journal_append",
+      "expected": "rollback",
+      "result": "PASS"
+    },
+    {
+      "id": "C7",
+      "failpoint": "before_commit",
+      "expected": "rollback",
+      "result": "PASS"
+    },
+    {
+      "id": "C8",
+      "failpoint": "after_commit",
+      "expected": "full transaction present",
+      "result": "PASS"
+    },
+    {
+      "id": "C10",
+      "failpoint": "after_sent_unknown",
+      "expected": "SENT_UNKNOWN durable",
+      "result": "PASS"
+    }
+  ]
+}

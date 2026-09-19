@@ -1,0 +1,5 @@
+raw_sentinel_in_context_body= False
+escape_marker_present= True
+context_kinds= ['CONTEXT_DATA']
+protected_still_present= True
+PASS

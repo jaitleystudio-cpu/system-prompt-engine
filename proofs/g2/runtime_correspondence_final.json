@@ -1,0 +1,55 @@
+{
+  "comparison": [
+    {
+      "guard": "stale snapshot/version",
+      "result": "MATCH"
+    },
+    {
+      "guard": "lease ACTIVE",
+      "result": "MATCH"
+    },
+    {
+      "guard": "lease base binding",
+      "result": "MATCH"
+    },
+    {
+      "guard": "receipt verdict PASS-only",
+      "result": "MATCH"
+    },
+    {
+      "guard": "proof type exact",
+      "result": "MATCH"
+    },
+    {
+      "guard": "obligation matching",
+      "result": "ABSTRACTED_EQUIVALENT"
+    },
+    {
+      "guard": "lease consumption",
+      "result": "MATCH"
+    },
+    {
+      "guard": "atomic state/proof output",
+      "result": "ABSTRACTED_EQUIVALENT"
+    },
+    {
+      "guard": "issuance_digest integrity",
+      "result": "RUNTIME_STRONGER"
+    },
+    {
+      "guard": "allowed_scope delta subset",
+      "result": "RUNTIME_STRONGER"
+    },
+    {
+      "guard": "K0/K1 apply_semantic_delta failures",
+      "result": "RUNTIME_STRONGER"
+    },
+    {
+      "guard": "K4 authority separation",
+      "result": "RUNTIME_STRONGER"
+    }
+  ],
+  "safety_critical_mismatch": false,
+  "formal_runtime_gap": false,
+  "model_stronger_than_runtime": false
+}

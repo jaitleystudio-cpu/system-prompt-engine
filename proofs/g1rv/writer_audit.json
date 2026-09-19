@@ -1,0 +1,332 @@
+{
+  "facts": {
+    "handoff_result": {
+      "owner": "K1",
+      "writers": [
+        "spe_runtime/xcat/handoff.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "authority_grant": {
+      "owner": "K4",
+      "writers": [
+        "spe_runtime/authority/models.py",
+        "spe_runtime/authority/consume.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 2
+    },
+    "grant_compatibility": {
+      "owner": "K4",
+      "writers": [
+        "spe_runtime/authority/validate.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "grant_uses_consumed": {
+      "owner": "K4",
+      "writers": [
+        "spe_runtime/authority/consume.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "recommendation": {
+      "owner": "K3",
+      "writers": [
+        "spe_runtime/categories/c01_decide/engine.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "analysis": {
+      "owner": "K1",
+      "writers": [
+        "spe_runtime/categories/c06_analyze/engine.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "facts_provenance_uncertainty": {
+      "owner": "K1",
+      "writers": [
+        "spe_runtime/categories/c02_research/engine.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "rendering": {
+      "owner": "K3",
+      "writers": [
+        "spe_runtime/categories/c03_communicate/engine.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "operation_id": {
+      "owner": "K2",
+      "writers": [
+        "spe_runtime/execution/models.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "outcome_transition": {
+      "owner": "K2",
+      "writers": [
+        "spe_runtime/execution/outcomes.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "portable_canonical_json": {
+      "owner": "K5",
+      "writers": [
+        "spe_runtime/portability/canonical.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "operation_arguments_digest": {
+      "owner": "K2",
+      "writers": [
+        "spe_runtime/execution/models.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "semantic_equivalence_verdict": {
+      "owner": "K5",
+      "writers": [
+        "spe_runtime/portability/conformance.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "capability_status": {
+      "owner": "K7",
+      "writers": [
+        "spe_runtime/portability/capability.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "abi_version": {
+      "owner": "K5",
+      "writers": [
+        "spe_runtime/portability/abi.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "failure_laundering_predicate": {
+      "owner": "K1",
+      "writers": [
+        "spe_runtime/xcat/invariants.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "typed_error_code": {
+      "owner": "K5",
+      "writers": [
+        "spe_runtime/error_registry.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "envelope_generic_field_override": {
+      "owner": "K1",
+      "writers": [
+        "spe_runtime/categories/_common.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "proof_receipt": {
+      "owner": "K2",
+      "writers": [
+        "spe_runtime/proof/verify.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "privacy_projection": {
+      "owner": "K4",
+      "writers": [
+        "spe_runtime/privacy/project.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "spe_artifact_identity": {
+      "owner": "K6",
+      "writers": [
+        "spe_runtime/storage/build.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "prompt_artifact": {
+      "owner": "K3",
+      "writers": [
+        "spe_runtime/prompt/build.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "semantic_snapshot": {
+      "owner": "K2",
+      "writers": [
+        "spe_runtime/proof/snapshot.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "qualification_evidence": {
+      "owner": "K7",
+      "writers": [
+        "spe_runtime/qualification/evidence.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "proof_ledger": {
+      "owner": "K2",
+      "writers": [
+        "spe_runtime/proof/ledger.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "semantic_lease": {
+      "owner": "K2",
+      "writers": [
+        "spe_runtime/proof/lease.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "proof_carrying_patch": {
+      "owner": "K2",
+      "writers": [
+        "spe_runtime/proof/patch.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "protected_intent_contract": {
+      "owner": "K0",
+      "writers": [
+        "spe_runtime/contract/protected.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "requirement_graph": {
+      "owner": "K1",
+      "writers": [
+        "spe_runtime/requirements/graph.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "conflict_core": {
+      "owner": "K1",
+      "writers": [
+        "spe_runtime/requirements/conflicts.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "authority_event_apply": {
+      "owner": "K4",
+      "writers": [
+        "spe_runtime/authority/apply.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "cognitive_plan": {
+      "owner": "K3",
+      "writers": [
+        "spe_runtime/prompt/plan.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "prompt_strategy": {
+      "owner": "K3",
+      "writers": [
+        "spe_runtime/prompt/strategy.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "technique_selection": {
+      "owner": "K3",
+      "writers": [
+        "spe_runtime/prompt/techniques.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "artifact_lineage": {
+      "owner": "K6",
+      "writers": [
+        "spe_runtime/storage/build.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    },
+    "claim_qualification": {
+      "owner": "K7",
+      "writers": [
+        "spe_runtime/qualification/evaluate.py"
+      ],
+      "duplicate": false,
+      "modules_exist": true,
+      "writer_count": 1
+    }
+  },
+  "duplicates": [],
+  "unowned": [],
+  "GLOBAL_DUPLICATE_CANONICAL_WRITERS": 0
+}

@@ -1,0 +1,15 @@
+{
+  "java_vendor": "Ubuntu OpenJDK",
+  "java_version": "21.0.10+7-Ubuntu-124.04",
+  "tla_tools_version": "TLC2 Version 2026.09.17.032053 (rev: 142d0ba) / tla2tools release v1.8.0 jar",
+  "tla2tools_jar_path": "tools/tlc/tla2tools.jar",
+  "tla2tools_jar_sha256": "9d36716ffb5e49d1ba8fae4651eba59f3189887e12eb90e204a42d2e6e993fef",
+  "download_url": "https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar",
+  "fetch_script": "tools/tlc/fetch_tla2tools.sh",
+  "workers_default": 4,
+  "heap_default": "3559m",
+  "fp_settings": "TLC defaults (fp index reported per run)",
+  "deadlock_checking": "ENABLED (default; TerminalStutter handles intentional terminals)",
+  "jar_committed": false,
+  "note": "Binary not committed; fetch script pins SHA-256"
+}

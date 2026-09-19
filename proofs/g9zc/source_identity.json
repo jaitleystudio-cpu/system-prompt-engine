@@ -1,0 +1,10 @@
+{
+  "gate": "G9-ZC",
+  "pack": "G9-ZC-RELEASE-CUSTODY",
+  "base_head": "69429fca372d1cd84ec92612b1350dc95579e84d",
+  "g5_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "g9_head": "19ec6a77881b2392a67665cb8bced1341230a0fe",
+  "branch": "cursor/g9zc-release-custody-0d6e",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/31",
+  "recorded_at_utc": "2026-09-19T08:00:24.424126+00:00"
+}

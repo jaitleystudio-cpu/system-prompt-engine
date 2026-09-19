@@ -1,0 +1,6 @@
+{
+  "concurrent_export": "PASS_distinct_paths",
+  "different_input_contamination": "NONE",
+  "same_input_iterations": 20,
+  "same_input_result": "PASS"
+}

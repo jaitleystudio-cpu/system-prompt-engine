@@ -1,0 +1,10 @@
+{
+  "corpus": "/workspace/benchmarks/g8zc/golden_corpus.json",
+  "corpus_sha256": "64b2fa80b1145776f64f62fc8c1d8ad792974ede4319aa9754202fc35c71a8c5",
+  "total": 34,
+  "passed": 34,
+  "failed": 0,
+  "failures": [],
+  "exit": 0,
+  "claim_note": "Hermetic local full-system replay within tested corpus \u2014 NOT K7 INDEPENDENTLY_REPLICATED / NOT World #1"
+}

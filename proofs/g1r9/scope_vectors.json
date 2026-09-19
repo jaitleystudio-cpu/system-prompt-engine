@@ -1,0 +1,27 @@
+[
+  {
+    "evidence": "python local",
+    "claim": "all_platforms",
+    "result": "K7_SCOPE_MISMATCH"
+  },
+  {
+    "evidence": "node-wasm",
+    "claim": "browser-wasm",
+    "result": "K7_SCOPE_MISMATCH"
+  },
+  {
+    "evidence": "k6-spe-artifact",
+    "claim": "full-ring0",
+    "result": "K7_SCOPE_MISMATCH"
+  },
+  {
+    "evidence": "rev-a",
+    "claim": "rev-b",
+    "result": "K7_SCOPE_MISMATCH"
+  },
+  {
+    "evidence": "artifact-A",
+    "claim": "artifact-B",
+    "result": "K7_SUBJECT_MISMATCH"
+  }
+]

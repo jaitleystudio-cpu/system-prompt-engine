@@ -1,0 +1,6 @@
+{
+  "no_stage_skip": true,
+  "INDEPENDENT_alone": "NEED_SPECIFICATION",
+  "PRODUCTION_alone": "NEED_SPECIFICATION",
+  "PASS_EXTERNAL_maps_to": "VERIFIED_WITHIN_SCOPE"
+}

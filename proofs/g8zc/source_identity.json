@@ -1,0 +1,11 @@
+{
+  "gate": "G8-ZC",
+  "base_head": "6849a9dc2633ec60fe1891b944ab652d3bf856f8",
+  "g5_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "g7_head": "6849a9dc2633ec60fe1891b944ab652d3bf856f8",
+  "g8_head": "f54e6db6bf6bab72a3eefb7877a81c808a190a9e",
+  "branch": "cursor/g8zc-full-replication-0d6e",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/30",
+  "recorded_at_utc": "2026-09-19T07:56:06.722423+00:00",
+  "head": null
+}

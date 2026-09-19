@@ -1,0 +1,100 @@
+{
+  "G1R-1": {
+    "exit": 0,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "tail": ".....                                                                    [100%]\n5 passed in 0.02s"
+  },
+  "G1R-2": {
+    "exit": 0,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "tail": "...........................                                              [100%]\n27 passed in 0.03s"
+  },
+  "G1R-3": {
+    "exit": 0,
+    "passed": 37,
+    "failed": 0,
+    "skipped": 0,
+    "tail": ".....................................                                    [100%]\n37 passed in 0.04s"
+  },
+  "G1R-4": {
+    "exit": 0,
+    "passed": 44,
+    "failed": 0,
+    "skipped": 0,
+    "tail": "............................................                             [100%]\n44 passed in 0.06s"
+  },
+  "G1R-5": {
+    "exit": 0,
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0,
+    "tail": "..................                                                       [100%]\n18 passed in 0.04s"
+  },
+  "G1R-5E": {
+    "exit": 0,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "tail": "....                                                                     [100%]\n4 passed in 0.01s"
+  },
+  "G1R-6": {
+    "exit": 0,
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0,
+    "tail": "..............................                                           [100%]\n30 passed in 0.06s"
+  },
+  "G1R-6R": {
+    "exit": 0,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "tail": "..........                                                               [100%]\n10 passed in 0.16s"
+  },
+  "G1R-7": {
+    "exit": 0,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "tail": "...........................                                              [100%]\n27 passed in 0.17s"
+  },
+  "G1R-7R": {
+    "exit": 0,
+    "passed": 26,
+    "failed": 0,
+    "skipped": 0,
+    "tail": "..........................                                               [100%]\n26 passed in 0.17s"
+  },
+  "G1R-8": {
+    "exit": 0,
+    "passed": 33,
+    "failed": 0,
+    "skipped": 0,
+    "tail": ".................................                                        [100%]\n33 passed in 0.21s"
+  },
+  "G1R-8R": {
+    "exit": 0,
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "tail": ".................                                                        [100%]\n17 passed in 0.18s"
+  },
+  "G1R-9": {
+    "exit": 0,
+    "passed": 53,
+    "failed": 0,
+    "skipped": 0,
+    "tail": ".....................................................                    [100%]\n53 passed in 0.18s"
+  },
+  "G1R-9R": {
+    "exit": 0,
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0,
+    "tail": "....................................                                     [100%]\n36 passed in 0.05s"
+  }
+}

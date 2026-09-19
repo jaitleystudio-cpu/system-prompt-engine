@@ -1,0 +1,318 @@
+{
+  "C0_smoke": {
+    "IssueLease": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    },
+    "ProposeFreshPatch": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    },
+    "ProposeStalePatch": {
+      "coverage_pair": [
+        "2",
+        "2"
+      ],
+      "raw_matches": 1
+    },
+    "Verify": {
+      "coverage_pair": [
+        "10",
+        "18"
+      ],
+      "raw_matches": 1
+    },
+    "RevokeLease": {
+      "coverage_pair": [
+        "12",
+        "13"
+      ],
+      "raw_matches": 1
+    },
+    "CommitSuccess": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    },
+    "CommitReject": {
+      "coverage_pair": [
+        "0",
+        "23"
+      ],
+      "raw_matches": 1
+    },
+    "TerminalStutter": {
+      "coverage_pair": [
+        "0",
+        "31"
+      ],
+      "raw_matches": 1
+    },
+    "Init": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    }
+  },
+  "C1_stale_patch": {
+    "IssueLease": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    },
+    "ProposeFreshPatch": {
+      "coverage_pair": [
+        "3",
+        "26"
+      ],
+      "raw_matches": 1
+    },
+    "ProposeStalePatch": {
+      "coverage_pair": [
+        "13",
+        "52"
+      ],
+      "raw_matches": 1
+    },
+    "Verify": {
+      "coverage_pair": [
+        "167",
+        "486"
+      ],
+      "raw_matches": 1
+    },
+    "RevokeLease": {
+      "coverage_pair": [
+        "157",
+        "169"
+      ],
+      "raw_matches": 1
+    },
+    "CommitSuccess": {
+      "coverage_pair": [
+        "23",
+        "26"
+      ],
+      "raw_matches": 1
+    },
+    "CommitReject": {
+      "coverage_pair": [
+        "0",
+        "622"
+      ],
+      "raw_matches": 1
+    },
+    "TerminalStutter": {
+      "coverage_pair": [
+        "0",
+        "892"
+      ],
+      "raw_matches": 1
+    },
+    "Init": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    }
+  },
+  "C5_verdicts": {
+    "IssueLease": {
+      "coverage_pair": [
+        "2",
+        "2"
+      ],
+      "raw_matches": 1
+    },
+    "ProposeFreshPatch": {
+      "coverage_pair": [
+        "8",
+        "88"
+      ],
+      "raw_matches": 1
+    },
+    "ProposeStalePatch": {
+      "coverage_pair": [
+        "40",
+        "176"
+      ],
+      "raw_matches": 1
+    },
+    "Verify": {
+      "coverage_pair": [
+        "948",
+        "3240"
+      ],
+      "raw_matches": 1
+    },
+    "RevokeLease": {
+      "coverage_pair": [
+        "940",
+        "968"
+      ],
+      "raw_matches": 1
+    },
+    "CommitSuccess": {
+      "coverage_pair": [
+        "86",
+        "88"
+      ],
+      "raw_matches": 1
+    },
+    "CommitReject": {
+      "coverage_pair": [
+        "0",
+        "3692"
+      ],
+      "raw_matches": 1
+    },
+    "TerminalStutter": {
+      "coverage_pair": [
+        "0",
+        "5185"
+      ],
+      "raw_matches": 1
+    },
+    "Init": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    }
+  },
+  "C6_liveness": {
+    "IssueLease": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    },
+    "ProposeFreshPatch": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    },
+    "ProposeStalePatch": {
+      "first_count": 0,
+      "raw_matches": 0
+    },
+    "Verify": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    },
+    "RevokeLease": {
+      "first_count": 0,
+      "raw_matches": 0
+    },
+    "CommitSuccess": {
+      "coverage_pair": [
+        "1",
+        "2"
+      ],
+      "raw_matches": 1
+    },
+    "CommitReject": {
+      "first_count": 0,
+      "raw_matches": 0
+    },
+    "TerminalStutter": {
+      "coverage_pair": [
+        "0",
+        "22"
+      ],
+      "raw_matches": 1
+    },
+    "Init": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    }
+  },
+  "C_safety_all": {
+    "IssueLease": {
+      "coverage_pair": [
+        "1435",
+        "32392"
+      ],
+      "raw_matches": 1
+    },
+    "ProposeFreshPatch": {
+      "coverage_pair": [
+        "259",
+        "5920"
+      ],
+      "raw_matches": 1
+    },
+    "ProposeStalePatch": {
+      "coverage_pair": [
+        "1187",
+        "11968"
+      ],
+      "raw_matches": 1
+    },
+    "Verify": {
+      "coverage_pair": [
+        "34092",
+        "220320"
+      ],
+      "raw_matches": 1
+    },
+    "RevokeLease": {
+      "coverage_pair": [
+        "94774",
+        "127712"
+      ],
+      "raw_matches": 1
+    },
+    "CommitSuccess": {
+      "coverage_pair": [
+        "5757",
+        "5920"
+      ],
+      "raw_matches": 1
+    },
+    "CommitReject": {
+      "coverage_pair": [
+        "0",
+        "251120"
+      ],
+      "raw_matches": 1
+    },
+    "TerminalStutter": {
+      "coverage_pair": [
+        "0",
+        "202193"
+      ],
+      "raw_matches": 1
+    },
+    "Init": {
+      "coverage_pair": [
+        "1",
+        "1"
+      ],
+      "raw_matches": 1
+    }
+  }
+}

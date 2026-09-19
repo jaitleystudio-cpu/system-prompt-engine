@@ -1,0 +1,19 @@
+{
+  "K7 qualification": "NO",
+  "authenticity": "NO",
+  "confidentiality": "NO",
+  "content-addressed identity": "YES",
+  "direct parent binding": "YES",
+  "full ancestry cycle prevention": "NO (OUT OF SCOPE)",
+  "parent existence verification": "NO",
+  "prompt-content binding": "YES (digest)",
+  "proof-ledger binding": "YES (optional digest)",
+  "self-contained PromptArtifact replay": "NO",
+  "self-contained ProofLedger replay": "NO",
+  "self-contained ProtectedIntent replay": "YES",
+  "self-contained RequirementGraph replay": "YES",
+  "self-contained SemanticSnapshot replay": "NO",
+  "signature verification": "NO",
+  "snapshot binding": "YES (id+version + digests)",
+  "tamper mismatch detection": "YES"
+}
