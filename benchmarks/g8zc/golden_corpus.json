@@ -1,0 +1,594 @@
+{
+  "fail_closed_count": 6,
+  "gate": "G8-ZC",
+  "schema": "g8zc-golden-v1",
+  "success_count": 28,
+  "task_count": 34,
+  "tasks": [
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Write a short status update.",
+      "id": "G8-001",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": "pad-57e3121675f680fcabc1ca6d0fcb7dfd86864e5192f0022f551b19cef3dde75b",
+      "should": [],
+      "spe_artifact_id": "spe-c94eeafb908673ec5ac84aac98594f10b12699626997cf89d094e31de2f348b0"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Draft a polite email reply.",
+      "id": "G8-002",
+      "must": [
+        "under 120 words"
+      ],
+      "must_not": [
+        "apologize excessively"
+      ],
+      "preferences": [
+        "neutral tone"
+      ],
+      "prompt_content_digest": "pad-d945ac7b6543d9bb99535d34fcdb16c907e9738a2eb73a0557963e98cc6d0586",
+      "should": [
+        "acknowledge receipt"
+      ],
+      "spe_artifact_id": "spe-1415d77d2998cadc19bb126718e39a451430aa89438eee9eade2179a262bd197"
+    },
+    {
+      "context": {
+        "notes": "Alpha shipped. Beta delayed."
+      },
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Summarize the notes.",
+      "id": "G8-003",
+      "must": [
+        "bullet list"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": "pad-c49aa1d51aca2c085e81f9e5d220b2bee14d9208695ee20133a5c7a2a9d53d5e",
+      "should": [],
+      "spe_artifact_id": "spe-10995f8815643e4031c774654345c5530775c9777faf1982d8c31edfce6c7d7d"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Translate to Telugu politely.",
+      "id": "G8-004",
+      "must": [
+        "preserve meaning"
+      ],
+      "must_not": [
+        "add slang"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-2bf2688e4b5f060473058f7e1ba0285a8c3b2a369701db34a05a161567003eed",
+      "should": [],
+      "spe_artifact_id": "spe-79ec199d8f07a152faee0cc5efd58cc96113d53f7533f0dd7cafa2378fd684d5"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Explain recursion simply.",
+      "id": "G8-005",
+      "must": [
+        "one analogy"
+      ],
+      "must_not": [
+        "code dump"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-200c3fd6c07a27893cca0fef46b92bf49937221688a3c1d79e22dadec8535dab",
+      "should": [
+        "short"
+      ],
+      "spe_artifact_id": "spe-44332fb8efbeab54b3dba2ea6ea96cae86ead32dcab567bd38d7044e2310979e"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Create a checklist for deploy.",
+      "id": "G8-006",
+      "must": [
+        "rollback step"
+      ],
+      "must_not": [
+        "skip tests"
+      ],
+      "preferences": [
+        "ops-friendly"
+      ],
+      "prompt_content_digest": "pad-6dc6b083cfa481617913e542200083a5d48976bcf77511ae513d47decff0a395",
+      "should": [],
+      "spe_artifact_id": "spe-03324c6af98e51a685c78ab0c929deac756784f16bdf2af3b067b2cdeaa04cfd"
+    },
+    {
+      "context": {
+        "changes": "API rename /v1\to/v2"
+      },
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Write release notes.",
+      "id": "G8-007",
+      "must": [
+        "mention breaking changes section"
+      ],
+      "must_not": [
+        "hype language"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-998d7b9c2ad87a83a67c33cfcaaac6da14b5a00694e45d1cdaaa40df990ddd36",
+      "should": [],
+      "spe_artifact_id": "spe-c853beec966cb181938013e2753b12f3c1273bf221244a932ba7b3b162f9d267"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Plan a study session.",
+      "id": "G8-008",
+      "must": [
+        "include breaks"
+      ],
+      "must_not": [
+        "all-nighter advice"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-e3f103892de8369f368f3beac3830b158703bb1096cf1f7bce36f8936eccbb21",
+      "should": [
+        "pomodoro"
+      ],
+      "spe_artifact_id": "spe-680bae8f09c66d79c508eaca76f171f7ba1e3674932bf97009daa0f9ecce3b81"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Draft SQL for monthly revenue.",
+      "id": "G8-009",
+      "must": [
+        "read-only"
+      ],
+      "must_not": [
+        "DROP",
+        "DELETE"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-58d419ecabc6d744bf2a660fc70e22bb4e487c5c426af25fd23873072f18013c",
+      "should": [],
+      "spe_artifact_id": "spe-f360d972410a3c76e3928bbb10998443504b8c64af2e2d32d784997a14e5393a"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Write a unit test outline.",
+      "id": "G8-010",
+      "must": [
+        "happy path",
+        "edge case"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": "pad-e56c66787c8586275015e4107de2fbc62f22098e73d2cacf89298f4db1fc9841",
+      "should": [],
+      "spe_artifact_id": "spe-924153c500c84955610408c212cc6fdb7e2bab51ba046f64351e451644de3b84"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Propose meeting agenda.",
+      "id": "G8-011",
+      "must": [
+        "timeboxes"
+      ],
+      "must_not": [
+        "open-ended venting"
+      ],
+      "preferences": [
+        "async-first"
+      ],
+      "prompt_content_digest": "pad-3229dcbc724f4cfff4afacc8d2f0b0a41718937954685241e967d4568459eccf",
+      "should": [],
+      "spe_artifact_id": "spe-41ad1312a7fe78e242b945413c386c12f7280d057a8474879388744caf1ac718"
+    },
+    {
+      "context": {
+        "draft": "We maybe shipped roughly 10ish features."
+      },
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Rewrite for clarity.",
+      "id": "G8-012",
+      "must": [
+        "keep facts"
+      ],
+      "must_not": [
+        "invent numbers"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-3e461a9e141b02f1d2bf41b2363d2966592eb67e824f04142960fcc22bfd0411",
+      "should": [],
+      "spe_artifact_id": "spe-c127333b8d96e432d52c908e638dcebc24500f5a6bc8ca8f736b338daa401fa9"
+    },
+    {
+      "context": {
+        "diff": "add save_spe atomic replace"
+      },
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Generate commit message.",
+      "id": "G8-013",
+      "must": [
+        "conventional commits style"
+      ],
+      "must_not": [
+        "emoji"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-6761d10a22207f6d645f465a652546541d50f4b05179f7eec9e9bc1bba514164",
+      "should": [],
+      "spe_artifact_id": "spe-1c98f9533d011ec82be469aa162cbf070e1b94a2602684462064e306328d5b87"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "List risks for migration.",
+      "id": "G8-014",
+      "must": [
+        "data loss risk"
+      ],
+      "must_not": [
+        "guarantee zero downtime"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-9fd33a25644ba8ee1f4883dd14d7f206ca3740d65c29d7c2c7be04d5948bd729",
+      "should": [],
+      "spe_artifact_id": "spe-444183faad2ff85208cc4725454473af4e39a6ab9db7c48be7e0001c743ac832"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Write onboarding steps.",
+      "id": "G8-015",
+      "must": [
+        "prerequisites"
+      ],
+      "must_not": [
+        "assume admin"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-30b72ebe3143c39291255fcfe944ec16a3e2d15545cbf7762d2669de14973adb",
+      "should": [
+        "verify install"
+      ],
+      "spe_artifact_id": "spe-de3f87e507efff510ea467563ebc5c7396893e444e025e0a3a20f7b9f2734b80"
+    },
+    {
+      "context": {
+        "q": "Does core need API keys?"
+      },
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Draft FAQ answer.",
+      "id": "G8-016",
+      "must": [
+        "direct answer first"
+      ],
+      "must_not": [
+        "upsell"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-3e9fa2dd3cba163435198b420fb49cdfbd472775fd805930dc252ed69cbe98cf",
+      "should": [],
+      "spe_artifact_id": "spe-be9289dca81613bb6c800fba6f24dbf7a2ed480ca89f610ebaa5fa98e2570403"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Create a severity rubric.",
+      "id": "G8-017",
+      "must": [
+        "P0-P3"
+      ],
+      "must_not": [
+        "subjective vibes only"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-e0dddfda8c4012ce87d7f5a69d8542e280d662eb9039c56d9983713331e1560d",
+      "should": [],
+      "spe_artifact_id": "spe-eefd4d14ec38bcb8babe427d9a19d9d3a290e50d62e2f1cb952ec05adb5306e7"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Write a privacy notice blurb.",
+      "id": "G8-018",
+      "must": [
+        "no sale of PII"
+      ],
+      "must_not": [
+        "claim certification"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-9c36b79f957c2c6849ce313ae1056bdec7ca19efe8447ffb14d65f96065f0675",
+      "should": [],
+      "spe_artifact_id": "spe-c028a6e6f603472258290337af3dca0927b3ffe861633caf3bb03d584efc27bf"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Outline chaos test matrix.",
+      "id": "G8-019",
+      "must": [
+        "process kill",
+        "partial write"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": "pad-7924c983477e36cb844a5b5af2b8f5b96fe4c89c27543f5bb93d86157937dd45",
+      "should": [],
+      "spe_artifact_id": "spe-9297c592dc7e83514fc15f5c30a79ae9cef2e990d867fb8d11912d284bdb3a9f"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Draft bilingual greeting en+hi.",
+      "id": "G8-020",
+      "must": [
+        "both languages"
+      ],
+      "must_not": [
+        "machine-garbled script"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-ddbee6d0dd476033990603d89d6926d60c18255858993d6abbfff2046c224c7e",
+      "should": [],
+      "spe_artifact_id": "spe-b8fd5aa8e1e261a308360b370cbefde4d1143fa7d2aed801b434dabc32714f91"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Explain content-addressed .spe.",
+      "id": "G8-021",
+      "must": [
+        "digest identity"
+      ],
+      "must_not": [
+        "path as identity"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-6f2f2da07db601a82d3fb69d669d47678f15c7240b1b2c030c1ca49608a210da",
+      "should": [],
+      "spe_artifact_id": "spe-98aa4ec07a158a8416b0e6b7c47996e0fc065d53341a200f38271c90d06b8523"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Write fail-closed policy note.",
+      "id": "G8-022",
+      "must": [
+        "unknown != pass"
+      ],
+      "must_not": [
+        "silent drop"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-00bb5242eda1f04f7f47d66b8f7368236eac8441e15f6877ed1050eb836c9aae",
+      "should": [],
+      "spe_artifact_id": "spe-07a76e9bd600b1f89d29e76fe8a64243df4a5bb1920764ddd2e526763227e2dc"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Produce a smoke checklist.",
+      "id": "G8-023",
+      "must": [
+        "compile",
+        "persist",
+        "reload"
+      ],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": "pad-924e573e1ad87b8b014c6f3b7852783b580c489672764ceb2d0d2e2362f7952d",
+      "should": [],
+      "spe_artifact_id": "spe-c01fc2a35e7cfa993e0ca608b686f20e94316220d22efbbd2340cb99256363ac"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Document zero-cost boundary.",
+      "id": "G8-024",
+      "must": [
+        "no paid APIs required"
+      ],
+      "must_not": [
+        "claim free forever hosting"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-b76c8d7cd64ddcdd1ed5ccb6d20d2eef748f3bbad4238eecfe3aad2d5c2c4e99",
+      "should": [],
+      "spe_artifact_id": "spe-8875d5884724a17470558b3ba6c16b8a9690c1555250a2c3ab8791e1ad476a33"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Write a sandbox escape refusal note.",
+      "id": "G8-025",
+      "must": [
+        "reject traversal"
+      ],
+      "must_not": [
+        "suggest chmod 777"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-c61d14d1bc09a97bce3536585df6f4934f607072ca0150c654ab17fce30856ea",
+      "should": [],
+      "spe_artifact_id": "spe-0a34bec34e2e2de451357b190b2077be457425c422a652d2fe51cd503b3936ed"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Describe Ring-0 vs Ring-1 boundary.",
+      "id": "G8-026",
+      "must": [
+        "core has no ring1 import"
+      ],
+      "must_not": [
+        "mint authority in compile"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-cafb73a1b7acf322c6719b9fb4d527a8d87cb554f0f5dd2420b9e79d052a315c",
+      "should": [],
+      "spe_artifact_id": "spe-726389a28a1216899468feddeca110b0933afb91b84f22027473f08998bee7fc"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Draft incident timeline template.",
+      "id": "G8-027",
+      "must": [
+        "UTC timestamps"
+      ],
+      "must_not": [
+        "blame individuals"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-97a43fffc7d9596dde7c5dd88114ee140fd6e1a72701b40863ceca5bdd314039",
+      "should": [],
+      "spe_artifact_id": "spe-1e64fb1cf85cd012e250471f95891ae91df06b3bdf9e0d183b5ff9137f2e5dc6"
+    },
+    {
+      "context": null,
+      "contract_validity": "VALID",
+      "expect": "success",
+      "goal": "Write Tamil greeting with care.",
+      "id": "G8-028",
+      "must": [
+        "respectful register"
+      ],
+      "must_not": [
+        "latin-only fake tamil"
+      ],
+      "preferences": [],
+      "prompt_content_digest": "pad-7e247b0b9761f7654c147277739432bd7e7846f41dd32b5ecf774d54e18fa232",
+      "should": [],
+      "spe_artifact_id": "spe-90ae25fef3d5eb8e08600b99b268ae3f6e8b94247554e590e2521dc9795d3751"
+    },
+    {
+      "context": null,
+      "contract_validity": "CONFLICTED",
+      "error_code": "K3_PROMPT_CONFLICTED_SOURCE",
+      "expect": "conflict",
+      "goal": null,
+      "id": "G8-C01",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": null,
+      "semantic_key": "network",
+      "should": [],
+      "spe_artifact_id": null,
+      "value": "use network"
+    },
+    {
+      "context": null,
+      "contract_validity": "CONFLICTED",
+      "error_code": "K3_PROMPT_CONFLICTED_SOURCE",
+      "expect": "conflict",
+      "goal": null,
+      "id": "G8-C02",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": null,
+      "semantic_key": "secrets",
+      "should": [],
+      "spe_artifact_id": null,
+      "value": "include api keys"
+    },
+    {
+      "context": null,
+      "contract_validity": "CONFLICTED",
+      "error_code": "K3_PROMPT_CONFLICTED_SOURCE",
+      "expect": "conflict",
+      "goal": null,
+      "id": "G8-C03",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": null,
+      "semantic_key": "format",
+      "should": [],
+      "spe_artifact_id": null,
+      "value": "json only"
+    },
+    {
+      "context": null,
+      "contract_validity": "CONFLICTED",
+      "error_code": "K3_PROMPT_CONFLICTED_SOURCE",
+      "expect": "conflict",
+      "goal": null,
+      "id": "G8-C04",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": null,
+      "semantic_key": "ship",
+      "should": [],
+      "spe_artifact_id": null,
+      "value": "ship immediately"
+    },
+    {
+      "context": null,
+      "contract_validity": null,
+      "error_code": "K3_PROMPT_INVALID_INPUT",
+      "expect": "invalid",
+      "goal": "   ",
+      "id": "G8-E01",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": null,
+      "should": [],
+      "spe_artifact_id": null
+    },
+    {
+      "context": null,
+      "contract_validity": null,
+      "error_code": "K3_PROMPT_INVALID_INPUT",
+      "expect": "invalid",
+      "goal": "",
+      "id": "G8-E02",
+      "must": [],
+      "must_not": [],
+      "preferences": [],
+      "prompt_content_digest": null,
+      "should": [],
+      "spe_artifact_id": null
+    }
+  ]
+}
