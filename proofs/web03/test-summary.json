@@ -1,0 +1,89 @@
+{
+  "captured_at": "2026-09-19T17:05:30Z",
+  "fresh": true,
+  "results": [
+    {
+      "command": "python3 -m pytest -q",
+      "exit_status": 0,
+      "passed": 450,
+      "failed": 0,
+      "duration_seconds": 80.0,
+      "log": "proofs/web03/logs/full-python.txt"
+    },
+    {
+      "command": "python3 -m pytest tests/web -q",
+      "exit_status": 0,
+      "passed": 37,
+      "failed": 0,
+      "duration_seconds": 1.38,
+      "log": "proofs/web03/logs/web-tests.txt"
+    },
+    {
+      "command": "cargo test --manifest-path portable/spe-core-rs/Cargo.toml --locked --offline",
+      "exit_status": 0,
+      "passed": 27,
+      "failed": 0,
+      "log": "proofs/web03/logs/rust-core-tests.txt"
+    },
+    {
+      "command": "cargo test --manifest-path portable/spe-wasm/Cargo.toml --locked --offline",
+      "exit_status": 0,
+      "passed": 2,
+      "failed": 0,
+      "log": "proofs/web03/logs/wasm-tests.txt"
+    },
+    {
+      "command": "cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --offline --target wasm32-unknown-unknown --release",
+      "exit_status": 0,
+      "log": "proofs/web03/logs/wasm-release-build.txt"
+    },
+    {
+      "command": "npm run build",
+      "working_directory": "apps/web",
+      "exit_status": 0,
+      "modules_transformed": 74,
+      "log": "proofs/web03/logs/web-production-build.txt"
+    },
+    {
+      "command": "npm run audit:deps",
+      "working_directory": "apps/web",
+      "exit_status": 0,
+      "package_count": 10,
+      "banned_hits": [],
+      "log": "proofs/web03/logs/dependency-audit.txt"
+    },
+    {
+      "command": "SPE_PROOF_OUT=/workspace/proofs/web03/asset-budget.json npm run audit:assets",
+      "working_directory": "apps/web",
+      "exit_status": 0,
+      "within_budget": true,
+      "dist_js_css_bytes": 1062638,
+      "wasm_bytes": 249893,
+      "log": "proofs/web03/logs/asset-audit.txt"
+    },
+    {
+      "command": "SPE_PROOF_OUT=/workspace/proofs/web03/egress-proof.json npm run audit:egress",
+      "working_directory": "apps/web",
+      "exit_status": 0,
+      "zero_egress": true,
+      "used_ts_fallback": false,
+      "log": "proofs/web03/logs/egress-audit.txt"
+    },
+    {
+      "command": "python3 -m pytest tests/portability/test_offline_and_cost.py tests/web/test_web_pwa_scaffold.py tests/web/test_web_privacy_pwa.py tests/web/test_web_architecture_gates.py tests/web/test_web_engine_path.py -q",
+      "exit_status": 0,
+      "passed": 28,
+      "failed": 0,
+      "duration_seconds": 0.95,
+      "log": "proofs/web03/logs/offline-pwa-integrity-gates.txt"
+    },
+    {
+      "command": "BASE_URL=http://127.0.0.1:4180/ node tools/web03_browser_proof.mjs",
+      "exit_status": 0,
+      "scripted_screenshots": 24,
+      "traces": 1,
+      "console_errors": 0,
+      "page_errors": 0
+    }
+  ]
+}

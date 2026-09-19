@@ -1,14 +1,14 @@
 {
-  "captured_at": "2026-09-19T16:59:53.247Z",
-  "base_url": "http://127.0.0.1:4174/",
+  "captured_at": "2026-09-19T17:04:55.513Z",
+  "base_url": "http://127.0.0.1:4180/",
   "observations": [
     {
       "label": "desktop-1440x900-interaction",
-      "url": "http://127.0.0.1:4174/",
+      "url": "http://127.0.0.1:4180/",
       "title": "System Prompt Engine — Semantic Forge",
       "visual_tier": "CINEMATIC",
       "reduced_motion": false,
-      "dom_nodes": 340,
+      "dom_nodes": 338,
       "canvas": {
         "css_width": 1440,
         "css_height": 900,
@@ -16,22 +16,22 @@
         "pixel_height": 900
       },
       "navigation": {
-        "dom_content_loaded_ms": 85,
-        "load_ms": 85,
-        "transfer_bytes": 1288,
-        "decoded_body_bytes": 988
+        "dom_content_loaded_ms": 25,
+        "load_ms": 25,
+        "transfer_bytes": 1115,
+        "decoded_body_bytes": 815
       },
-      "resource_count": 37,
-      "resource_transfer_bytes": 3855951,
+      "resource_count": 5,
+      "resource_transfer_bytes": 294020,
       "external_hosts": []
     },
     {
       "label": "1920x1080-hero",
-      "url": "http://127.0.0.1:4174/",
+      "url": "http://127.0.0.1:4180/",
       "title": "System Prompt Engine — Semantic Forge",
       "visual_tier": "CINEMATIC",
       "reduced_motion": false,
-      "dom_nodes": 331,
+      "dom_nodes": 329,
       "canvas": {
         "css_width": 1920,
         "css_height": 1080,
@@ -39,22 +39,22 @@
         "pixel_height": 1080
       },
       "navigation": {
-        "dom_content_loaded_ms": 62,
-        "load_ms": 63,
-        "transfer_bytes": 1288,
-        "decoded_body_bytes": 988
+        "dom_content_loaded_ms": 24,
+        "load_ms": 24,
+        "transfer_bytes": 1115,
+        "decoded_body_bytes": 815
       },
-      "resource_count": 34,
-      "resource_transfer_bytes": 3825177,
+      "resource_count": 4,
+      "resource_transfer_bytes": 292391,
       "external_hosts": []
     },
     {
       "label": "2560x1440-hero",
-      "url": "http://127.0.0.1:4174/",
+      "url": "http://127.0.0.1:4180/",
       "title": "System Prompt Engine — Semantic Forge",
       "visual_tier": "CINEMATIC",
       "reduced_motion": false,
-      "dom_nodes": 331,
+      "dom_nodes": 329,
       "canvas": {
         "css_width": 2560,
         "css_height": 1440,
@@ -62,22 +62,22 @@
         "pixel_height": 1440
       },
       "navigation": {
-        "dom_content_loaded_ms": 59,
-        "load_ms": 60,
-        "transfer_bytes": 1288,
-        "decoded_body_bytes": 988
+        "dom_content_loaded_ms": 21,
+        "load_ms": 21,
+        "transfer_bytes": 1115,
+        "decoded_body_bytes": 815
       },
-      "resource_count": 34,
-      "resource_transfer_bytes": 3825177,
+      "resource_count": 4,
+      "resource_transfer_bytes": 292391,
       "external_hosts": []
     },
     {
       "label": "768x1024-hero",
-      "url": "http://127.0.0.1:4174/",
+      "url": "http://127.0.0.1:4180/",
       "title": "System Prompt Engine — Semantic Forge",
       "visual_tier": "CINEMATIC",
       "reduced_motion": false,
-      "dom_nodes": 331,
+      "dom_nodes": 329,
       "canvas": {
         "css_width": 768,
         "css_height": 1024,
@@ -85,22 +85,22 @@
         "pixel_height": 1024
       },
       "navigation": {
-        "dom_content_loaded_ms": 89,
-        "load_ms": 90,
-        "transfer_bytes": 1288,
-        "decoded_body_bytes": 988
+        "dom_content_loaded_ms": 19,
+        "load_ms": 20,
+        "transfer_bytes": 1115,
+        "decoded_body_bytes": 815
       },
-      "resource_count": 34,
-      "resource_transfer_bytes": 3825177,
+      "resource_count": 4,
+      "resource_transfer_bytes": 292391,
       "external_hosts": []
     },
     {
       "label": "1024x768-hero",
-      "url": "http://127.0.0.1:4174/",
+      "url": "http://127.0.0.1:4180/",
       "title": "System Prompt Engine — Semantic Forge",
       "visual_tier": "CINEMATIC",
       "reduced_motion": false,
-      "dom_nodes": 331,
+      "dom_nodes": 329,
       "canvas": {
         "css_width": 1024,
         "css_height": 768,
@@ -108,22 +108,22 @@
         "pixel_height": 768
       },
       "navigation": {
-        "dom_content_loaded_ms": 57,
-        "load_ms": 58,
-        "transfer_bytes": 1288,
-        "decoded_body_bytes": 988
+        "dom_content_loaded_ms": 18,
+        "load_ms": 18,
+        "transfer_bytes": 1115,
+        "decoded_body_bytes": 815
       },
-      "resource_count": 34,
-      "resource_transfer_bytes": 3825177,
+      "resource_count": 4,
+      "resource_transfer_bytes": 292391,
       "external_hosts": []
     },
     {
       "label": "390x844-hero",
-      "url": "http://127.0.0.1:4174/",
+      "url": "http://127.0.0.1:4180/",
       "title": "System Prompt Engine — Semantic Forge",
       "visual_tier": "STANDARD",
       "reduced_motion": false,
-      "dom_nodes": 331,
+      "dom_nodes": 329,
       "canvas": {
         "css_width": 390,
         "css_height": 844,
@@ -131,22 +131,22 @@
         "pixel_height": 844
       },
       "navigation": {
-        "dom_content_loaded_ms": 61,
-        "load_ms": 62,
-        "transfer_bytes": 1288,
-        "decoded_body_bytes": 988
+        "dom_content_loaded_ms": 20,
+        "load_ms": 20,
+        "transfer_bytes": 1115,
+        "decoded_body_bytes": 815
       },
-      "resource_count": 34,
-      "resource_transfer_bytes": 3825177,
+      "resource_count": 4,
+      "resource_transfer_bytes": 292391,
       "external_hosts": []
     },
     {
       "label": "360x800-hero",
-      "url": "http://127.0.0.1:4174/",
+      "url": "http://127.0.0.1:4180/",
       "title": "System Prompt Engine — Semantic Forge",
       "visual_tier": "STANDARD",
       "reduced_motion": false,
-      "dom_nodes": 331,
+      "dom_nodes": 329,
       "canvas": {
         "css_width": 360,
         "css_height": 800,
@@ -154,22 +154,22 @@
         "pixel_height": 800
       },
       "navigation": {
-        "dom_content_loaded_ms": 56,
-        "load_ms": 57,
-        "transfer_bytes": 1288,
-        "decoded_body_bytes": 988
+        "dom_content_loaded_ms": 18,
+        "load_ms": 18,
+        "transfer_bytes": 1115,
+        "decoded_body_bytes": 815
       },
-      "resource_count": 34,
-      "resource_transfer_bytes": 3825177,
+      "resource_count": 4,
+      "resource_transfer_bytes": 292391,
       "external_hosts": []
     },
     {
       "label": "320x568-hero",
-      "url": "http://127.0.0.1:4174/",
+      "url": "http://127.0.0.1:4180/",
       "title": "System Prompt Engine — Semantic Forge",
       "visual_tier": "STANDARD",
       "reduced_motion": false,
-      "dom_nodes": 331,
+      "dom_nodes": 329,
       "canvas": {
         "css_width": 320,
         "css_height": 568,
@@ -177,49 +177,49 @@
         "pixel_height": 568
       },
       "navigation": {
-        "dom_content_loaded_ms": 57,
-        "load_ms": 57,
-        "transfer_bytes": 1288,
-        "decoded_body_bytes": 988
+        "dom_content_loaded_ms": 18,
+        "load_ms": 19,
+        "transfer_bytes": 1115,
+        "decoded_body_bytes": 815
       },
-      "resource_count": 34,
-      "resource_transfer_bytes": 3825177,
+      "resource_count": 4,
+      "resource_transfer_bytes": 292391,
       "external_hosts": []
     },
     {
       "label": "desktop-reduced-motion",
-      "url": "http://127.0.0.1:4174/",
+      "url": "http://127.0.0.1:4180/",
       "title": "System Prompt Engine — Semantic Forge",
       "visual_tier": "LITE",
       "reduced_motion": true,
-      "dom_nodes": 338,
+      "dom_nodes": 336,
       "canvas": null,
       "navigation": {
-        "dom_content_loaded_ms": 60,
-        "load_ms": 61,
-        "transfer_bytes": 1288,
-        "decoded_body_bytes": 988
+        "dom_content_loaded_ms": 22,
+        "load_ms": 22,
+        "transfer_bytes": 1115,
+        "decoded_body_bytes": 815
       },
-      "resource_count": 34,
-      "resource_transfer_bytes": 3825177,
+      "resource_count": 4,
+      "resource_transfer_bytes": 292391,
       "external_hosts": []
     },
     {
       "label": "desktop-forced-lite",
-      "url": "http://127.0.0.1:4174/",
+      "url": "http://127.0.0.1:4180/",
       "title": "System Prompt Engine — Semantic Forge",
       "visual_tier": "LITE",
       "reduced_motion": false,
-      "dom_nodes": 338,
+      "dom_nodes": 336,
       "canvas": null,
       "navigation": {
-        "dom_content_loaded_ms": 60,
-        "load_ms": 61,
-        "transfer_bytes": 1288,
-        "decoded_body_bytes": 988
+        "dom_content_loaded_ms": 23,
+        "load_ms": 23,
+        "transfer_bytes": 1115,
+        "decoded_body_bytes": 815
       },
-      "resource_count": 34,
-      "resource_transfer_bytes": 3825177,
+      "resource_count": 4,
+      "resource_transfer_bytes": 292391,
       "external_hosts": []
     }
   ],

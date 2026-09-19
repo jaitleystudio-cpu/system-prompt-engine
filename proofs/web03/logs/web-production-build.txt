@@ -1,0 +1,26 @@
+
+> spe-web@0.3.0 build
+> npm run copy-wasm && tsc --noEmit && vite build
+
+
+> spe-web@0.3.0 copy-wasm
+> node scripts/copy-wasm.mjs
+
+copy-wasm: wrote /workspace/apps/web/public/spe_wasm.wasm (249893 bytes, sha256=8e535b8a6972a2af1505000d43b570b2966ed6950777fbb705dccc2e74655129)
+vite v5.4.21 building for production...
+transforming...
+[plugin:vite:resolve] [plugin vite:resolve] Module "node:crypto" has been externalized for browser compatibility, imported by "/workspace/apps/web/src/engine/wasm-host.mjs". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+✓ 74 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                            0.81 kB │ gzip:   0.43 kB
+dist/assets/engine.worker-CvEdeILB.js      3.21 kB
+dist/assets/index-DpOpVkVq.css            45.53 kB │ gzip:   9.40 kB
+dist/assets/index-DsnViQxw.js            182.56 kB │ gzip:  57.72 kB
+dist/assets/SpeIntelligence-B8qzPL9Q.js  829.41 kB │ gzip: 223.62 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.52s

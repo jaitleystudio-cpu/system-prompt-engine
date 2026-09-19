@@ -1,0 +1,21 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running unittests src/lib.rs (portable/spe-wasm/target/debug/deps/spe_wasm-f30c6e7a4701974b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/wrapper_conformance.rs (portable/spe-wasm/target/debug/deps/wrapper_conformance-2b89bda23ddb2582)
+
+running 2 tests
+test wrapper_matches_core_on_negative ... ok
+test wrapper_matches_core_on_positive ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests spe_wasm
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

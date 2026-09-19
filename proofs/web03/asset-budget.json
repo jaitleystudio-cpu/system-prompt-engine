@@ -1,0 +1,15 @@
+{
+  "not_a_release": true,
+  "new_implementation": true,
+  "network_mode": "NONE",
+  "wasm_bytes": 249893,
+  "wasm_sha256": "8e535b8a6972a2af1505000d43b570b2966ed6950777fbb705dccc2e74655129",
+  "dist_file_count": 10,
+  "dist_total_bytes": 1315196,
+  "dist_js_css_bytes": 1062638,
+  "budgets": {
+    "wasm_max_bytes": 2000000,
+    "dist_js_css_max_bytes": 1500000
+  },
+  "within_budget": true
+}

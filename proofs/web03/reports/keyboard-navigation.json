@@ -1,0 +1,11 @@
+{
+  "first_focus": {
+    "tag": "A",
+    "class_name": "skip-link",
+    "text": "SKIP TO MAIN CONTENT"
+  },
+  "skip_target": "#main",
+  "named_controls": 13,
+  "unnamed_controls": [],
+  "total_controls": 13
+}

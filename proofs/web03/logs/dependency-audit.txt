@@ -1,0 +1,16 @@
+
+> spe-web@0.3.0 audit:deps
+> node scripts/audit-deps.mjs
+
+{
+  "ok": true,
+  "free_deps_only": true,
+  "not_a_release": true,
+  "new_implementation": true,
+  "package_count": 10,
+  "allowed_visual": [
+    "three",
+    "@react-three/fiber"
+  ],
+  "banned_hits": []
+}
