@@ -149,7 +149,7 @@ NO
 ## SOURCE CUSTODY
 
 G5 HEAD:
-(see tip after G5-E docs pin)
+9c129e5f5cbaea55e10333ce7eeba3f1fa843942
 
 Contract SHA:
 68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3

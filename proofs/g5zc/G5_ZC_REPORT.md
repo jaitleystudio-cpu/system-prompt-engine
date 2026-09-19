@@ -13,7 +13,7 @@ G5 base HEAD:
 c3450c4add1329eeaba28eadcaf36c1cdf94d57b
 
 G5 HEAD:
-304efb3dbd4731d932151c467d5f2d33e728815e
+9c129e5f5cbaea55e10333ce7eeba3f1fa843942
 
 Branch:
 cursor/g5zc-local-chaos-0d6e
