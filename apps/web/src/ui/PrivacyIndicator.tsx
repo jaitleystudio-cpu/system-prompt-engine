@@ -8,14 +8,12 @@ type Props = {
 /** PrivacyIndicator — labels from envelope privacy only; never inferred. */
 export function PrivacyIndicator({ sensitivity, trust, authority, online }: Props) {
   return (
-    <div className="header-meta" aria-label="Privacy status">
-      <span className={`pill ${online ? "ok" : "warn"}`}>
-        {online ? "online shell" : "offline shell"}
-      </span>
-      <span className="pill">sensitivity: {sensitivity ?? "—"}</span>
-      <span className="pill">trust: {trust ?? "—"}</span>
-      <span className="pill">authority: {authority ?? "—"}</span>
-      <span className="pill">compile: local · no cloud</span>
-    </div>
+    <dl className="forge-privacy-indicator" aria-label="Privacy status">
+      <div><dt>shell</dt><dd data-state={online ? "ok" : "warn"}>{online ? "online" : "offline"}</dd></div>
+      <div><dt>sensitivity</dt><dd>{sensitivity ?? "—"}</dd></div>
+      <div><dt>trust</dt><dd>{trust ?? "—"}</dd></div>
+      <div><dt>authority</dt><dd>{authority ?? "—"}</dd></div>
+      <div><dt>compile</dt><dd>local · no cloud</dd></div>
+    </dl>
   );
 }

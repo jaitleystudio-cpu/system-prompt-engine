@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.3.0",
   "type": "module",
-  "description": "SPE-WEB-02 premium cinematic 3D product experience. Real WASM path. COST \u20b90. not_a_release=true.",
+  "description": "SPE-WEB-03 Semantic Forge cinematic spatial compiler. Real WASM path. COST \u20b90. not_a_release=true.",
   "license": "MIT OR Apache-2.0",
   "scripts": {
     "copy-wasm": "node scripts/copy-wasm.mjs",

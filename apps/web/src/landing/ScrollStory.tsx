@@ -1,188 +1,303 @@
-import { CATEGORIES, TARGETS } from "@spe/web-runtime";
+import {
+  TARGETS,
+  type CategoryId,
+  type IntentAtom,
+  type SpeArtifactV1,
+  type TargetId,
+} from "@spe/web-runtime";
+import type { CSSProperties } from "react";
 
 type Props = {
   onOpenWorkspace: () => void;
   demoRequest: string;
   demoPrompt: string | null;
+  category: CategoryId;
+  target: TargetId;
+  intent: {
+    confirmed: IntentAtom[];
+    assumed: IntentAtom[];
+    unknowns: IntentAtom[];
+    conflicts: IntentAtom[];
+  };
+  techniques: string[];
+  artifact: SpeArtifactV1 | null;
+  privacy: {
+    sensitivity: string | null;
+    trust: string | null;
+    authority: string | null;
+  };
+  online: boolean;
 };
 
-export function ScrollStory({ onOpenWorkspace, demoRequest, demoPrompt }: Props) {
+const MISSION_STAGE = [
+  ["Text → Prompt", "CURRENT"],
+  ["Image → Prompt", "PLANNED"],
+  ["Screenshot → Code", "PLANNED"],
+  ["Website → X-Ray", "PLANNED"],
+  ["Audio → Prompt", "PLANNED"],
+  ["Video → Prompt", "PLANNED"],
+] as const;
+
+export function ScrollStory({
+  onOpenWorkspace,
+  demoRequest,
+  demoPrompt,
+  category,
+  target,
+  intent,
+  techniques,
+  artifact,
+  privacy,
+  online,
+}: Props) {
+  const targetLabel = TARGETS.find((item) => item.id === target)?.label ?? "Any AI";
+  const semanticRows = [
+    {
+      id: "goal",
+      label: "GOAL",
+      value: intent.confirmed.find((item) => item.label === "Goal")?.text || "Not supplied",
+      behavior: "LOCK",
+      status: intent.confirmed.length ? "confirmed" : "unavailable",
+    },
+    {
+      id: "context",
+      label: "CONTEXT",
+      value: "No explicit context field supplied",
+      behavior: "GROUND",
+      status: "unavailable",
+    },
+    {
+      id: "constraint",
+      label: "CONSTRAINT",
+      value: intent.conflicts[0]?.text || "No explicit conflict supplied",
+      behavior: "REPEL",
+      status: intent.conflicts.length ? "conflict" : "unavailable",
+    },
+    {
+      id: "unknown",
+      label: "UNKNOWN",
+      value: intent.unknowns[0]?.text || "No unresolved question supplied",
+      behavior: "REMAIN OPEN",
+      status: intent.unknowns.length ? "unknown" : "unavailable",
+    },
+    {
+      id: "preference",
+      label: "PREFERENCE",
+      value: intent.assumed[0]?.text || "No preference supplied",
+      behavior: "BEND",
+      status: intent.assumed.length ? "assumed" : "unavailable",
+    },
+    {
+      id: "output",
+      label: "OUTPUT",
+      value: `${category} route · ${targetLabel}`,
+      behavior: "SHAPE",
+      status: "route",
+    },
+  ] as const;
+
   return (
-    <div className="spe-story">
-      <section className="spe-section" id="problem" aria-labelledby="problem-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">The problem</p>
-          <h2 id="problem-title">AI receives a sentence. SPE sees a system.</h2>
-          <div className="spe-split">
-            <article className="spe-glass-card">
-              <h3>You</h3>
-              <p className="spe-quote">“make a website for my restaurant”</p>
-              <p className="spe-muted">Underspecified. Easy to misread.</p>
-            </article>
-            <article className="spe-glass-card emphasis">
-              <h3>SPE sees</h3>
-              <ul className="spe-chip-row" aria-label="Semantic decomposition">
-                {["goal", "audience", "requirements", "unknowns", "constraints", "success"].map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="spe-section" id="intent" aria-labelledby="intent-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">Intent engine</p>
-          <h2 id="intent-title">Meaning, protected in space.</h2>
-          <div className="spe-nodes" role="list">
-            {[
-              ["GOAL", "confirmed"],
-              ["MUST", "confirmed"],
-              ["MUST NOT", "conflict"],
-              ["UNKNOWN", "unknown"],
-              ["CONFLICT", "conflict"],
-              ["PREFERENCE", "assumed"],
-            ].map(([label, kind]) => (
-              <div key={label} className="spe-node" data-kind={kind} role="listitem">
-                <span className="spe-node-icon" aria-hidden="true" />
-                <strong>{label}</strong>
-              </div>
-            ))}
-          </div>
-          <p className="spe-muted center">SPE protects meaning — it does not invent obligations.</p>
-        </div>
-      </section>
-
-      <section className="spe-section" id="strategy" aria-labelledby="strategy-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">Strategy engine</p>
-          <h2 id="strategy-title">Not longer. Sufficient.</h2>
-          <div className="spe-chip-row large">
-            {["Context", "Structure", "Examples", "Verification", "Output Contract"].map((t) => (
-              <span key={t} className="spe-pill">{t}</span>
-            ))}
-          </div>
-          <p className="spe-lead">SPE does not make prompts longer. SPE makes them sufficient.</p>
-        </div>
-      </section>
-
-      <section className="spe-section reveal" id="reveal" aria-labelledby="reveal-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">The reveal</p>
-          <h2 id="reveal-title">One line becomes an instruction.</h2>
-          <div className="spe-compare">
-            <div>
-              <p className="spe-label">You said</p>
-              <p className="spe-quote">{demoRequest || "write leave email"}</p>
-            </div>
-            <div className="spe-compare-arrow" aria-hidden="true">→</div>
-            <div>
-              <p className="spe-label">SPE built</p>
-              <ul>
-                <li>role</li>
-                <li>goal</li>
-                <li>context</li>
-                <li>constraints</li>
-                <li>missing information</li>
-                <li>output contract</li>
-              </ul>
-            </div>
-          </div>
-          {demoPrompt && (
-            <pre className="spe-prompt-preview">{demoPrompt.slice(0, 520)}{demoPrompt.length > 520 ? "…" : ""}</pre>
-          )}
-          <div className="spe-actions">
-            <button type="button" className="spe-build" onClick={onOpenWorkspace}>
-              Open in workspace
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section className="spe-section" id="any-ai" aria-labelledby="any-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">Any AI</p>
-          <h2 id="any-title">Intent stays. Rendering changes.</h2>
-          <div className="spe-constellation" role="list">
-            <div className="spe-constellation-core" role="listitem">Any AI</div>
-            {TARGETS.filter((t) => t.id !== "any").map((t) => (
-              <div key={t.id} className="spe-constellation-node" role="listitem">
-                {t.label}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="spe-section" id="artifact-story" aria-labelledby="spefile-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">.spe</p>
-          <h2 id="spefile-title">Your prompt becomes a portable semantic project.</h2>
-          <div className="spe-artifact-visual" aria-hidden="true">
-            {["intent", "requirements", "strategy", "prompt", "lineage"].map((x) => (
-              <span key={x}>{x}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="spe-section" id="moonshot" aria-labelledby="moon-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">Moonshot</p>
-          <h2 id="moon-title">Beyond text.</h2>
-          <div className="spe-moon-grid">
-            {[
-              ["Text → Prompt", "LIVE"],
-              ["Image → Prompt", "COMING"],
-              ["Screenshot → Code", "PLANNED"],
-              ["Website → X-Ray", "PLANNED"],
-              ["Audio → Prompt", "PLANNED"],
-              ["Video → Prompt", "PLANNED"],
-              ["3D Website Lab", "PLANNED"],
-            ].map(([title, status]) => (
-              <article key={title} className="spe-moon-card" data-status={status}>
-                <h3>{title}</h3>
-                <span>{status}</span>
+    <div className="forge-story">
+      <section className="forge-act story-extract" id="act-extract" aria-labelledby="extract-title">
+        <div className="forge-story-grid">
+          <header className="forge-story-copy">
+            <p className="forge-stage-label"><span>ACT II</span><span>EXTRACT</span></p>
+            <h2 id="extract-title">One thought. Six roles. Nothing silently filled in.</h2>
+            <p>
+              The workpiece separates into named semantic filaments. Values come
+              only from the current request, selected route, and editable Intent Lens.
+            </p>
+          </header>
+          <div className="semantic-specimen" role="list" aria-label="Current semantic specimen">
+            <p className="semantic-raw"><span>RAW THOUGHT</span>{demoRequest || "Not supplied"}</p>
+            {semanticRows.map((row, index) => (
+              <article
+                key={row.id}
+                className={`semantic-rail semantic-${row.id}`}
+                data-status={row.status}
+                role="listitem"
+                style={{ "--rail-order": index } as CSSProperties}
+              >
+                <header><strong>{row.label}</strong><span>{row.behavior}</span></header>
+                <p>{row.value}</p>
               </article>
             ))}
           </div>
-          <p className="spe-muted">Categories ready for routing: {CATEGORIES.slice(0, 6).join(" · ")}…</p>
         </div>
       </section>
 
-      <section className="spe-section" id="daily" aria-labelledby="daily-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">Daily Lab</p>
-          <h2 id="daily-title">Something new to build every day.</h2>
-          <div className="spe-daily-stage">
-            <p>Daily drops arrive here — cinematic specimens, not ads.</p>
-            <span className="spe-pill">PLANNED</span>
+      <section className="forge-act story-behavior" id="act-behavior" aria-labelledby="behavior-title">
+        <div className="forge-story-grid reverse">
+          <div className="behavior-field" aria-hidden="true">
+            <div className="behavior-stop"><span>CONSTRAINT</span></div>
+            <div className="behavior-lock"><span>GOAL</span></div>
+            <div className="behavior-gap"><span>UNKNOWN</span></div>
+            <div className="behavior-bend"><span>PREFERENCE</span></div>
+          </div>
+          <header className="forge-story-copy">
+            <p className="forge-stage-label"><span>ACT III</span><span>RESOLVE</span></p>
+            <h2 id="behavior-title">Different meaning receives different physics.</h2>
+            <p>
+              Goals lock the datum. Constraints stop incompatible movement.
+              Unknowns stay visibly unresolved. Preferences guide without becoming obligations.
+            </p>
+            <ul className="forge-legend">
+              <li><i className="shape-lock" />Solid edge · locked</li>
+              <li><i className="shape-stop" />Double edge · stop</li>
+              <li><i className="shape-open" />Dashed span · unresolved</li>
+              <li><i className="shape-bend" />Angled seam · preference</li>
+            </ul>
           </div>
         </div>
       </section>
 
-      <section className="spe-section" id="privacy" aria-labelledby="privacy-title">
-        <div className="spe-section-inner narrow">
-          <p className="spe-kicker">Privacy</p>
-          <h2 id="privacy-title">Everything collapses back to your device.</h2>
-          <ul className="spe-privacy-list">
-            <li><strong>Core compile</strong> LOCAL</li>
-            <li><strong>Mandatory account</strong> NO</li>
-            <li><strong>Mandatory provider</strong> NO</li>
-            <li><strong>Prompt analytics</strong> NO</li>
-          </ul>
+      <section className="forge-act story-structure" id="act-structure" aria-labelledby="structure-title">
+        <div className="forge-story-grid">
+          <header className="forge-story-copy">
+            <p className="forge-stage-label"><span>ACT IV</span><span>STRUCTURE</span></p>
+            <h2 id="structure-title">Index meaning into a load-bearing scaffold.</h2>
+            <p>
+              Smoked-titanium gates align roles without flattening their differences.
+              Open questions stay open while confirmed input keeps its provenance.
+            </p>
+          </header>
+          <div className="structure-gates" aria-hidden="true">
+            <i /><i /><i />
+            {semanticRows.map((row) => <b key={row.id} data-kind={row.id} />)}
+          </div>
         </div>
       </section>
 
-      <section className="spe-section final-cta" id="final-cta" aria-labelledby="final-title">
-        <div className="spe-section-inner">
-          <h2 id="final-title">What do you want to build?</h2>
-          <button type="button" className="spe-build" onClick={() => {
-            document.getElementById("spe-one-line")?.focus();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}>
-            Return to command
+      <section className="forge-act story-strategy" id="act-strategy" aria-labelledby="strategy-title">
+        <div className="strategy-frame">
+          <header className="forge-story-copy">
+            <p className="forge-stage-label"><span>ACT V</span><span>STRATEGIZE</span></p>
+            <h2 id="strategy-title">Strategy connects only after meaning is explicit.</h2>
+            <p>The warm datum sequences the scaffold; it does not replace the user's intent.</p>
+          </header>
+          <ol className="strategy-spine">
+            {(techniques.length ? techniques : [
+              "Await a valid compile result",
+            ]).map((technique, index) => (
+              <li key={technique}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{technique}</strong>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="forge-act story-artifact" id="act-artifact" aria-labelledby="artifact-story-title">
+        <div className="artifact-stage">
+          <header className="forge-story-copy">
+            <p className="forge-stage-label"><span>ACT VI</span><span>RENDER</span></p>
+            <h2 id="artifact-story-title">The Prompt Artifact closes around real structure.</h2>
+          </header>
+          <article className="artifact-sheet" aria-label="Prompt Artifact preview">
+            <header>
+              <div><span>Prompt Artifact</span><strong>{targetLabel}</strong></div>
+              <span>{demoPrompt ? "Rendered from current compile" : "Unavailable"}</span>
+            </header>
+            <pre>{demoPrompt || "Compile a raw thought to render the current Prompt Artifact."}</pre>
+            <footer>
+              <span>Goal</span><span>Constraints</span><span>Preferences</span><span>Unknowns</span>
+            </footer>
+          </article>
+        </div>
+      </section>
+
+      <section className="forge-act story-routing" id="act-routing" aria-labelledby="routing-title">
+        <div className="forge-story-grid reverse">
+          <div className="routing-loom" role="list" aria-label="Available target renderers">
+            <div className="routing-source">Protected intent</div>
+            {TARGETS.map((item, index) => (
+              <div
+                key={item.id}
+                className="routing-target"
+                data-active={item.id === target}
+                role="listitem"
+                style={{ "--route-order": index } as CSSProperties}
+              >
+                {item.label}
+              </div>
+            ))}
+          </div>
+          <header className="forge-story-copy">
+            <p className="forge-stage-label"><span>ACT VII</span><span>ROUTE</span></p>
+            <h2 id="routing-title">Intent stays. Rendering routes to the selected AI.</h2>
+            <p>
+              Target adapters change presentation language only. The current selection is
+              {" "}<strong>{targetLabel}</strong>.
+            </p>
+          </header>
+        </div>
+      </section>
+
+      <section className="forge-act story-portable" id="act-portable" aria-labelledby="portable-title">
+        <div className="forge-story-grid">
+          <header className="forge-story-copy">
+            <p className="forge-stage-label"><span>ACT VIII</span><span>CARRY</span></p>
+            <h2 id="portable-title">The instruction becomes a portable semantic folio.</h2>
+            <p>
+              The `.spe` artifact keeps intent, requirements, strategy, prompt, and lineage
+              as distinct inspectable layers.
+            </p>
+            <button type="button" className="forge-secondary" onClick={onOpenWorkspace}>
+              {artifact ? "Inspect current .spe" : "Open workbench"}
+            </button>
+          </header>
+          <div className="spe-folio" data-ready={Boolean(artifact)} aria-label={artifact ? "Current .spe artifact available" : "No .spe artifact rendered"}>
+            {["Lineage", "Prompt", "Strategy", "Requirements", "Intent"].map((layer, index) => (
+              <div key={layer} style={{ "--folio-layer": index } as CSSProperties}>
+                <span>{layer}</span>
+                {index === 4 && <strong>.spe</strong>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="forge-act story-daily" id="act-daily" aria-labelledby="daily-title">
+        <div className="daily-stage">
+          <header className="forge-story-copy">
+            <p className="forge-stage-label"><span>ACT IX</span><span>EXPAND / DAILY LAB</span></p>
+            <h2 id="daily-title">A stage for future inputs—clearly labeled, never implied.</h2>
+            <p>Text compilation is current. Other input routes remain planned.</p>
+          </header>
+          <div className="moonshot-constellation" role="list">
+            {MISSION_STAGE.map(([label, status], index) => (
+              <div key={label} role="listitem" data-status={status} style={{ "--mission-order": index } as CSSProperties}>
+                <span>{status}</span><strong>{label}</strong>
+              </div>
+            ))}
+          </div>
+          <div className="daily-bench">
+            <span>DAILY LAB / PLANNED</span>
+            <p>No feed or release cadence is claimed.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="forge-act story-privacy" id="act-privacy" aria-labelledby="privacy-title">
+        <div className="privacy-inversion">
+          <header className="forge-story-copy">
+            <p className="forge-stage-label"><span>ACT X</span><span>RETURN</span></p>
+            <h2 id="privacy-title">The forge collapses back to this device.</h2>
+            <p>
+              Runtime labels below are shown only when available. Local history remains opt-in.
+            </p>
+          </header>
+          <dl className="privacy-ledger">
+            <div><dt>Compile path</dt><dd>UI → Worker → WASM</dd></div>
+            <div><dt>Network mode</dt><dd>NONE during evaluate</dd></div>
+            <div><dt>Shell</dt><dd>{online ? "Online" : "Offline"}</dd></div>
+            <div><dt>Sensitivity</dt><dd>{privacy.sensitivity ?? "Unavailable"}</dd></div>
+            <div><dt>Trust</dt><dd>{privacy.trust ?? "Unavailable"}</dd></div>
+            <div><dt>Authority</dt><dd>{privacy.authority ?? "Unavailable"}</dd></div>
+          </dl>
+          <button type="button" className="forge-primary" onClick={onOpenWorkspace}>
+            Enter the workbench
           </button>
         </div>
       </section>

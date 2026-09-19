@@ -1,4 +1,4 @@
-export type VisualQuality = "HIGH" | "BALANCED" | "LITE";
+export type VisualQuality = "CINEMATIC" | "STANDARD" | "LITE";
 
 export function detectVisualQuality(): VisualQuality {
   if (typeof window === "undefined") return "LITE";
@@ -12,8 +12,8 @@ export function detectVisualQuality(): VisualQuality {
     canvas.getContext("webgl") ||
     canvas.getContext("experimental-webgl");
   if (!gl) return "LITE";
-  if (narrow || coarse) return "BALANCED";
+  if (narrow || coarse) return "STANDARD";
   const mem = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
-  if (typeof mem === "number" && mem <= 4) return "BALANCED";
-  return "HIGH";
+  if (typeof mem === "number" && mem <= 4) return "STANDARD";
+  return "CINEMATIC";
 }

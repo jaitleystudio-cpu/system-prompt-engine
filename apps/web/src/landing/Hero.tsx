@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import type { SceneState } from "../scene/SpeIntelligence";
 import type { VisualQuality } from "../scene/quality";
-import { Logo } from "../brand/Logo";
+import { LogoLockup } from "../brand/Logo";
 
 const SpeIntelligence = lazy(() =>
   import("../scene/SpeIntelligence").then((m) => ({ default: m.SpeIntelligence })),
@@ -16,27 +16,16 @@ type Props = {
   quality: VisualQuality;
 };
 
-const CAPABILITIES = [
-  ["Research", "Expand perspectives"],
-  ["Analyze", "Find what matters"],
-  ["Decide", "Weigh and choose"],
-  ["Write", "Shape with precision"],
-  ["Code", "Turn ideas into systems"],
-  ["Communicate", "Adapt for any audience"],
-  ["Proof", "Verify and ground"],
-  ["Privacy", "Your intent stays yours"],
-] as const;
-
 export function Hero({ value, onChange, onBuild, busy, sceneState, quality }: Props) {
   return (
-    <section className="spe-hero" id="top" aria-labelledby="hero-title">
-      <div className="spe-hero-atmosphere" aria-hidden="true" />
-
-      <div className="spe-hero-stage" aria-hidden="true">
+    <section className="forge-act forge-act-receive" id="top" aria-labelledby="hero-title">
+      <div className="forge-world" aria-hidden="true">
         <Suspense
           fallback={
-            <div className="spe-intel-fallback" data-state={sceneState}>
-              <div className="spe-intel-core spe-intel-crystal" />
+            <div className="forge-lite-plate" data-state={sceneState}>
+              <div className="forge-lite-raw" />
+              <div className="forge-lite-gates" />
+              <div className="forge-lite-artifact" />
             </div>
           }
         >
@@ -44,27 +33,50 @@ export function Hero({ value, onChange, onBuild, busy, sceneState, quality }: Pr
         </Suspense>
       </div>
 
-      <div className="spe-hero-copy">
-        <Logo size="hero" wordmark={false} />
-        <h1 id="hero-title" className="visually-hidden">
-          System Prompt Engine
-        </h1>
-        <p className="spe-hero-line">Turn thought into precision.</p>
-        <p className="spe-hero-sub">One line in. A complete AI instruction out.</p>
+      <div className="forge-act-frame">
+        <div className="forge-act-copy">
+          <div className="forge-mobile-lockup">
+            <LogoLockup size={34} compact />
+          </div>
+          <p className="forge-stage-label">
+            <span>ACT I</span>
+            <span>RECEIVE / READ</span>
+          </p>
+          <p className="forge-eyebrow">Semantic Forge</p>
+          <h1 id="hero-title">Give thought a structure it can travel in.</h1>
+          <p className="forge-hero-lede">
+            Raw language enters as one graphite workpiece. Meaning stays visible
+            while structure, strategy, and a portable prompt artifact take form.
+          </p>
+          <dl className="forge-runtime-line" aria-label="Runtime profile">
+            <div>
+              <dt>Engine</dt>
+              <dd>Local WASM</dd>
+            </div>
+            <div>
+              <dt>Visual tier</dt>
+              <dd>{quality}</dd>
+            </div>
+            <div>
+              <dt>Provider spend</dt>
+              <dd>₹0</dd>
+            </div>
+          </dl>
+        </div>
 
-        <ul className="spe-capability-arc" aria-label="What SPE is for">
-          {CAPABILITIES.map(([title, blurb]) => (
-            <li key={title}>
-              <strong>{title}</strong>
-              <span>{blurb}</span>
-            </li>
-          ))}
-        </ul>
-
-        <div className="spe-command spe-command-pill" role="search">
-          <label htmlFor="spe-one-line" className="visually-hidden">
-            What do you want to accomplish?
-          </label>
+        <form
+          className="forge-intake"
+          role="search"
+          aria-label="Raw thought composer"
+          onSubmit={(event) => {
+            event.preventDefault();
+            onBuild();
+          }}
+        >
+          <header>
+            <label htmlFor="spe-one-line">Raw thought</label>
+            <span>INTAKE / 01</span>
+          </header>
           <textarea
             id="spe-one-line"
             placeholder="What do you want to accomplish?"
@@ -78,25 +90,29 @@ export function Hero({ value, onChange, onBuild, busy, sceneState, quality }: Pr
             }}
             rows={2}
           />
-          <div className="spe-command-row">
-            <div className="spe-command-meta" aria-hidden="true">
-              <span>⌘/Ctrl + Enter</span>
-              <span className="spe-afford">mic · image · file</span>
-            </div>
+          <div className="forge-intake-actions">
+            <span>⌘ / CTRL + ENTER</span>
             <button
+              id="hero-compile-button"
               type="button"
-              className="spe-build spe-build-intent"
+              className="forge-primary"
               disabled={busy}
               aria-busy={busy}
               onClick={onBuild}
             >
-              {busy ? "Compiling…" : "Compile Intent →"}
+              {busy ? "Compiling intent…" : "Compile intent"}
             </button>
           </div>
-        </div>
-
-        <p className="spe-hero-trust">Local-first · Any AI · Free core</p>
+          <p className="forge-state-live" role="status" aria-live="polite">
+            Forge state: {sceneState.toLowerCase()}
+          </p>
+        </form>
       </div>
+
+      <a className="forge-scroll-cue" href="#act-extract">
+        <span>Continue through the forge</span>
+        <i aria-hidden="true" />
+      </a>
     </section>
   );
 }

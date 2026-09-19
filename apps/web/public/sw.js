@@ -4,7 +4,7 @@
  * Skip POST (and any non-GET). Do not cache user compile payloads.
  * No Python in the browser path. not_a_release. NEW_IMPLEMENTATION.
  */
-const CACHE = "spe-web-shell-v2";
+const CACHE = "spe-web-shell-v3";
 const PRECACHE = [
   "/",
   "/index.html",

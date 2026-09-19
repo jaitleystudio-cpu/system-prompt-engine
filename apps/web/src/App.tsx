@@ -299,6 +299,13 @@ export default function App() {
               onOpenWorkspace={() => setView("workspace")}
               demoRequest={userRequest || "write leave email"}
               demoPrompt={rendered?.finalPrompt ?? null}
+              category={category}
+              target={target}
+              intent={intent}
+              techniques={rendered?.techniques ?? []}
+              artifact={artifact}
+              privacy={privacy}
+              online={online}
             />
           </>
         )}
@@ -336,9 +343,12 @@ export default function App() {
               setLens={setLens}
             />
 
-            <section className="spe-workspace" aria-labelledby="hist-mini">
-              <h2 id="hist-mini" className="spe-kicker">Local history</h2>
-              <label className="spe-field">
+            <section className="forge-history" aria-labelledby="hist-mini">
+              <header>
+                <p>LOCAL MATERIAL DRAWER</p>
+                <h2 id="hist-mini">History stays closed until you opt in.</h2>
+              </header>
+              <label className="forge-history-optin">
                 <span>
                   <input
                     type="checkbox"
@@ -352,17 +362,17 @@ export default function App() {
                   Enable local history on this device
                 </span>
               </label>
-              <div className="spe-actions">
-                <button type="button" className="spe-ghost" disabled={!historyOptIn} onClick={() => { clearHistory(); setHistory([]); }}>
+              <div className="forge-actions">
+                <button type="button" className="forge-secondary" disabled={!historyOptIn} onClick={() => { clearHistory(); setHistory([]); }}>
                   Clear history
                 </button>
               </div>
-              <div className="spe-moon-grid" style={{ marginTop: "0.75rem" }}>
+              <div className="forge-history-list">
                 {history.map((h) => (
                   <button
                     key={h.id}
                     type="button"
-                    className="spe-moon-card"
+                    className="forge-history-item"
                     onClick={() => {
                       setUserRequest(h.user_request);
                       setCategory((h.category as CategoryId) || "Writing");
@@ -380,10 +390,11 @@ export default function App() {
         )}
       </main>
 
-      <footer className="spe-footer">
-        <div>System Prompt Engine — free core · portable .spe · offline deterministic compile</div>
-        <div className="claim-strip">
-          IMPLEMENTATION_PRESENT / REVIEW_PENDING · production NOT QUALIFIED · World #1 NOT PROVEN · not_a_release=true
+      <footer className="forge-footer">
+        <div>System Prompt Engine / Semantic Forge</div>
+        <div>Raw thought → Structure → Strategy → Prompt Artifact → .spe</div>
+        <div className="forge-disclosure">
+          IMPLEMENTATION_PRESENT / REVIEW_PENDING · production NOT QUALIFIED · not_a_release=true
         </div>
       </footer>
     </>

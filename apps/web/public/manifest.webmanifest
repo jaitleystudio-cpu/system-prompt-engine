@@ -1,11 +1,11 @@
 {
   "name": "System Prompt Engine",
   "short_name": "SPE",
-  "description": "Local-first System Prompt Engine — compile prompts offline through spe_wasm.wasm.",
+  "description": "Semantic Forge for local-first prompt compilation through spe_wasm.wasm.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#07090d",
-  "theme_color": "#07090d",
+  "background_color": "#080908",
+  "theme_color": "#080908",
   "lang": "en",
   "icons": [
     {
