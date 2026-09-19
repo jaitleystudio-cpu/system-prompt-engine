@@ -1,0 +1,9 @@
+{
+  "gate": "G9-ZC",
+  "pack": "G9-ZC-RELEASE-CUSTODY",
+  "base_head": "69429fca372d1cd84ec92612b1350dc95579e84d",
+  "g5_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "g9_head": "69429fca372d1cd84ec92612b1350dc95579e84d",
+  "branch": "cursor/g9zc-release-custody-0d6e",
+  "recorded_at_utc": "2026-09-19T07:56:50.862448+00:00"
+}

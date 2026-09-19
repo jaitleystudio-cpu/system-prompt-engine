@@ -1,0 +1,97 @@
+{
+  "custody": {
+    "g2_model_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+    "g8_corpus_sha256": "64b2fa80b1145776f64f62fc8c1d8ad792974ede4319aa9754202fc35c71a8c5",
+    "pr6_head": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+    "pr6_state": "OPEN",
+    "pr6_status": "UNTOUCHED / UNMERGED",
+    "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3"
+  },
+  "evidence_files_sha256": {
+    "benchmarks/g8zc/golden_corpus.json": "64b2fa80b1145776f64f62fc8c1d8ad792974ede4319aa9754202fc35c71a8c5",
+    "benchmarks/g8zc/golden_corpus.sha256": "3831c51205e9febb8236d4becad5c176e495a4f2482fbbcaeccb6b2eef3a7250",
+    "formal/SPELeaseCommit.tla": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+    "proofs/g4zc/G4_ZC_REPORT.md": "f65c18964b082ddcde5a07f0eb304bc02b3d6b6b7f9c9497fe3f4aee38463a95",
+    "proofs/g5e/G5_E_REPORT.md": "6761d1cd2b5ba90e5a0805234e28138442da49845f3ca56ab1d27a25541328d1",
+    "proofs/g5zc/G5_ZC_REPORT.md": "b0420991037c9e1c7d470897ea9f76b4677ae3fbd09c18cdf2ee184d22d3b1cc",
+    "proofs/g6zc/G6_ZC_REPORT.md": "a0943efb281a27cd27a0845f6744d735ac85b5cfc93c4b78a3f58eb2f3f9b6b3",
+    "proofs/g7zc/G7_ZC_REPORT.md": "b0b5f961360931fe7d4388ec40ca7f878e61f19ab9ee2c752c863328ad2c6737",
+    "proofs/g7zc/full_regression.json": "bbea2451ea3328f77f57aa4e677bb137d6c4df678c9fd2f0ece4d3e894716552",
+    "proofs/g8zc/G8_ZC_REPORT.md": "aaba31f348f9dd6a94f2bc314ef52fd0ebf3cb218d15d53392434fda942dfef0",
+    "proofs/g8zc/full_regression.json": "b2a164e1a29ec7d92b7fa05d2dc29ccb73576a6cede155d8958c9b4ed5030b6b",
+    "proofs/g8zc/replay_results.json": "4eaa17d63074664f380587c49dbc8983898e9665327eaa57c93c3036d4438d8f",
+    "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+    "tests/security/test_g7zc_redteam.py": "1ebb8dbc7c00745d6d3d93086793375cbae6fac74dd2fe421e728639ead4ec6a",
+    "tests/unit/test_g8zc_replication.py": "5dba6172dadf32208445645aa3927dd1c13c27dca32d131c55cf7b398b595098",
+    "tools/g8zc_replay.py": "baa51ef7c2b53520dfc85362a1ba90dfe450315a5eea53a80c9383341a3007f8"
+  },
+  "evidence_roots": [
+    "proofs/g4zc/",
+    "proofs/g5zc/",
+    "proofs/g5e/",
+    "proofs/g6zc/",
+    "proofs/g7zc/",
+    "proofs/g8zc/",
+    "proofs/g9zc/",
+    "benchmarks/g8zc/"
+  ],
+  "exact_earned_claims": [
+    "ZERO_COST_STACK_CUSTODY_PACKAGED_WITHIN_TESTED_SCOPE",
+    "G1\u2013G8 tested-scope claims packaged with content-addressed evidence hashes for external custody review"
+  ],
+  "exact_forbidden_claims": [
+    "WORLD_1",
+    "WORLD_1_PROVEN",
+    "INDEPENDENTLY_REPLICATED",
+    "PRODUCTION_READY",
+    "PRODUCTION_OBSERVED",
+    "PENTEST_COMPLETE",
+    "REAL_USER_PRODUCT_VALUE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "POWER_LOSS_PROVEN",
+    "ALL_THREAT_MODELS",
+    "competitive / world leadership"
+  ],
+  "forbidden_paths": [
+    "spe_runtime/omega"
+  ],
+  "g5_qualified_baseline": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "gates": {
+    "G1": "BOUND_AND_PASS",
+    "G2": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+    "G3": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE",
+    "G4": "ZERO_COST_CORE_ENGINE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G4X": "OPTIONAL / DEFERRED",
+    "G5": "ZERO_COST_LOCAL_FAULT_RESILIENCE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G6": "G6_HARNESS_IMPLEMENTATION_PASS / PRODUCT_VALUE_REVIEW_PENDING",
+    "G7": "SECURITY_PRIVACY_RED_TEAM_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G8": "ZERO_COST_HERMETIC_CORE_REPLAY_VERIFIED_WITHIN_TESTED_SCOPE",
+    "G9": "ZERO_COST_STACK_CUSTODY_PACKAGED_WITHIN_TESTED_SCOPE"
+  },
+  "git_tag_proposed": "spe-v2.4.1-g9-custody",
+  "known_limitations": [
+    "World #1 NOT PROVEN \u2014 requires external independent replication beyond local hermetic replay",
+    "G6 human product-value ratings still PENDING (harness only)",
+    "G7 is local adversarial suite, not professional pentest",
+    "G8 is hermetic local replay, not K7 INDEPENDENTLY_REPLICATED",
+    "Physical power loss NOT TESTED",
+    "Production deployment NOT QUALIFIED",
+    "PR #6 remains OPEN / unmerged by design"
+  ],
+  "pack": "G9-ZC-RELEASE-CUSTODY",
+  "qualification_head": "69429fca372d1cd84ec92612b1350dc95579e84d",
+  "recorded_at_utc": "2026-09-19T07:56:50.862202+00:00",
+  "regression": {
+    "command": "python -m pytest",
+    "exit": 0,
+    "failed": 0,
+    "passed": 1033,
+    "recorded_in": "proofs/g8zc/full_regression.json",
+    "skipped": 0
+  },
+  "schema": "g9zc-custody-v1",
+  "zero_cost": {
+    "keys_required": 0,
+    "provider_calls": 0,
+    "spend_inr": 0
+  }
+}
