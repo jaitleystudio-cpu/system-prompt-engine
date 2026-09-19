@@ -1,0 +1,18 @@
+{
+  "attempt": "G4-U LIVE PROVIDER UNBLOCK",
+  "timestamp_utc": "2026-09-19T01:48:54.311807+00:00",
+  "credential_present": false,
+  "credential_openai_present": false,
+  "credential_anthropic_present": false,
+  "credential_ollama_present": false,
+  "credential_source": null,
+  "credential_exposed": false,
+  "credential_values_recorded": false,
+  "budget_present": false,
+  "SPE_G4_ALLOW_PAID": false,
+  "SPE_G4_BUDGET_USD_present": false,
+  "SPE_G4_MAX_REQUESTS_present": false,
+  "approved_max_spend_usd": null,
+  "live_requests_attempted": 0,
+  "verdict_reason": "No owner-supplied credential in local environment; budget also absent"
+}

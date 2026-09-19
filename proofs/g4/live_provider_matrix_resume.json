@@ -1,0 +1,26 @@
+{
+  "historical_blocked_matrix": "live_provider_matrix.json (preserved)",
+  "resume_attempt": {
+    "verdict": "STILL_NO_LIVE_EXTERNAL_PROVIDER",
+    "providers": [
+      {
+        "provider": "openai_compat",
+        "live": false,
+        "status": "BLOCKED_NO_CREDENTIAL",
+        "requests": 0
+      },
+      {
+        "provider": "anthropic_compat",
+        "live": false,
+        "status": "BLOCKED_NO_CREDENTIAL",
+        "requests": 0
+      },
+      {
+        "provider": "local_ollama",
+        "live": false,
+        "status": "NOT_IMPLEMENTED",
+        "requests": 0
+      }
+    ]
+  }
+}
