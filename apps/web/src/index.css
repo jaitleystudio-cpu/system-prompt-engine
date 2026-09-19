@@ -1149,29 +1149,22 @@ summary:focus-visible {
 
 .artifact-sheet {
   position: relative;
+  z-index: 0;
+  isolation: isolate;
   transform: perspective(1000px) rotateY(-3deg) rotateZ(-0.7deg);
   border: 1px solid rgba(255, 255, 255, 0.32);
   background: linear-gradient(125deg, var(--forge-paper), var(--forge-ceramic) 42%, #b9b5ab);
-  box-shadow: -40px 58px 110px rgba(0, 0, 0, 0.72);
+  box-shadow:
+    14px 14px 0 var(--forge-titanium-hi),
+    28px 28px 0 var(--forge-graphite),
+    -40px 58px 110px rgba(0, 0, 0, 0.72);
   color: var(--forge-deep);
   padding: clamp(1.5rem, 4vw, 3.5rem);
 }
 
 .artifact-sheet::before,
 .artifact-sheet::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 2.5% -2.4% -2.5% 2.4%;
-  transform: rotate(1.2deg);
-  border: 1px solid rgba(233, 230, 222, 0.22);
-  background: var(--forge-titanium);
-}
-
-.artifact-sheet::after {
-  inset: 5% -4.8% -5% 4.8%;
-  transform: rotate(2.2deg);
-  background: var(--forge-graphite);
+  display: none;
 }
 
 .artifact-sheet header {
@@ -2721,6 +2714,43 @@ summary:focus-visible {
 
   .forge-actions .forge-primary {
     grid-column: auto;
+  }
+}
+
+@media (max-width: 767px) and (max-height: 650px) {
+  .forge-act-receive {
+    padding-top: 4.3rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .forge-act-frame {
+    gap: 0.65rem;
+  }
+
+  .forge-stage-label {
+    margin-bottom: 0.55rem;
+  }
+
+  .forge-eyebrow {
+    margin-bottom: 0.55rem;
+  }
+
+  .forge-act h1 {
+    font-size: clamp(2.55rem, 13vw, 3.25rem);
+    line-height: 0.92;
+  }
+
+  .forge-hero-lede,
+  .forge-runtime-line {
+    display: none;
+  }
+
+  .forge-intake textarea {
+    min-height: 90px;
+  }
+
+  .forge-intake-actions {
+    min-height: 58px;
   }
 }
 
