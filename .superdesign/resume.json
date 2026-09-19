@@ -24,7 +24,7 @@
         "apps/web/src/workspace/Workspace.tsx",
         "apps/web/src/ui/PrivacyIndicator.tsx",
         "apps/web/src/ui/TrustPanel.tsx",
-        "apps/web/src/index.css",
+        "apps/web/src/index.css:1:2500",
         "packages/design-system/src/tokens.css"
       ],
       "fingerprints": {
@@ -63,7 +63,7 @@
           "currentVersion": 1
         }
       },
-      "updatedAt": "2026-09-19T17:05:30Z"
+      "updatedAt": "2026-09-19T17:35:00Z"
     }
   }
 }

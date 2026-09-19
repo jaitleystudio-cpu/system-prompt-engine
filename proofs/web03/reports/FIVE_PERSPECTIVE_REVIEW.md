@@ -30,6 +30,6 @@ Physical mobile screen-reader testing remains unavailable.
 
 ## Panel conclusion
 
-The implementation clears the requested design, product, engineering, accessibility, and trust thresholds without claiming perfection or release qualification. The remaining issues are bounded polish/optimization items.
+The latest audit found serious visual doubt between the approved Direction A refinement targets and the current runtime implementation. Engineering, accessibility, and trust evidence remain on record, but visual rebuild against the refined draft is required before any award-caliber visual claim.
 
-**Verdict: SPE_WEB03_AWARD_CALIBER_TARGET_PASS**
+**Verdict: SPE_WEB03_VISUAL_REBUILD_REQUIRED**

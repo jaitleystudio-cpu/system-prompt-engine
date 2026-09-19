@@ -2,9 +2,9 @@
 
 ## Verdict
 
-**PASS — `SPE_WEB03_AWARD_CALIBER_TARGET_PASS`**
+**`SPE_WEB03_VISUAL_REBUILD_REQUIRED`**
 
-This verdict is conservative and describes the requested design target; it does not claim an award, 10/10, release qualification, or field performance. Fresh code, browser, accessibility, and visual evidence all passed the defined gates. Remaining defects are non-blocking and listed below.
+Pending implementation of the refined Direction A — Semantic Forge draft (`37b1b004-d170-48e9-bb08-eca7922fdf28`). The latest audit found serious visual doubt in the current runtime implementation relative to the approved cinematic workpiece, match-cut act structure, readable semantic annotations, and material-authority targets. Prior code, browser, accessibility, and test evidence remain recorded below for reference; they do not constitute visual approval of the refined draft.
 
 ## Implemented result
 
