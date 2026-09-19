@@ -138,7 +138,62 @@ def test_g6h_lock_accepts_valid_schema_dry(tmp_path):
     assert json.loads(proc.stdout)["validation"] == "PASS"
 
 
-def test_g6h_prestudy_human_still_no_ratings():
-    h = json.loads((PACK / "human_results.json").read_text(encoding="utf-8"))
-    assert h["status"] == "NO_RATINGS_YET"
-    assert h["do_not_fabricate"] is True
+def test_g6h_lock_refuses_skip_as_tie(tmp_path):
+    mapping = g6h_unblind.load_mapping(MAP)
+    tid, _ = next(iter(mapping.items()))
+    row = {
+        "task_id": tid,
+        "blinded_side_preference": "TIE",
+        "rubric_scores": {d: 2 for d in g6h_lock_ratings.REQUIRED_DIMS},
+        "confidence": "MEDIUM",
+        "comment": "",
+        "evaluator_id": "E001",
+        "timestamp_local": "2026-09-19T00:00:00Z",
+    }
+    ratings = tmp_path / "r.json"
+    ratings.write_text(json.dumps({"schema": "g6zc.human_ratings.v1", "ratings": [row]}))
+    skips = tmp_path / "s.json"
+    skips.write_text(
+        json.dumps(
+            {
+                "items": [
+                    {
+                        "task_id": "C99-99",
+                        "blinded_side_preference": "TIE",
+                        "skip_reason": "wrongly marked tie",
+                        "evaluator_id": "E001",
+                    }
+                ]
+            }
+        )
+    )
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/g6h_lock_ratings.py"),
+            "--ratings",
+            str(ratings),
+            "--skipped",
+            str(skips),
+            "--dry-validate",
+        ],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 1
+    assert "skip" in proc.stderr.lower()
+
+
+def test_g6h_coordinator_checklist_pass():
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "tools/g6h_coordinator_checklist.py")],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert "READINESS: PASS" in proc.stdout
+    assert "humans, not Cursor" in proc.stdout

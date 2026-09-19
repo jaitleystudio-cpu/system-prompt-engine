@@ -59,13 +59,21 @@ Full hashes: `proofs/g6h/prestudy_manifest.json`
 4. Real humans rate task + A/B only (never RAW/SPE labels)  
 5. Keep randomization map secret (`benchmarks/g6zc/randomization_manifest.json`)  
 6. Collect complete required ratings → Download ratings JSON from UI  
-7. Lock:  
-   `python tools/g6h_lock_ratings.py --ratings PATH/to/export.json --expected 120`  
+7. Lock (skips/invalids explicit; skip ≠ tie):  
+   `python tools/g6h_lock_ratings.py --ratings PATH/to/export.json --expected 120 \`  
+   `  [--skipped skips.json] [--invalid invalids.json]`  
 8. Unblind mechanically (only after lock):  
    `python tools/g6h_unblind.py --ratings proofs/g6h/human_results_locked_bytes.json --allow-real --json-out proofs/g6h/unblinded_results.json`  
 9. Apply **pre-frozen** thresholds (ROLE E)  
 10. Write `G6_H_FINAL_REPORT.md` (wins, losses, ties, failures)  
 11. **STOP** — return evidence to owner  
+
+### Readiness (Cursor/self-check — not human evidence)
+
+```bash
+python tools/g6h_coordinator_checklist.py
+# READINESS: PASS — then humans, not Cursor
+```
 
 ### Plumbing self-check (not human evidence)
 

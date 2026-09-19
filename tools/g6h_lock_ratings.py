@@ -2,6 +2,8 @@
 
 Validates exported evaluator JSON schema, writes ratings_lock.json,
 and refuses empty / synthetic / premature locks.
+
+Optional --skipped / --invalid JSON preserve skips without converting to TIE.
 """
 
 from __future__ import annotations
@@ -34,6 +36,32 @@ VALID_CONF = {"LOW", "MEDIUM", "HIGH"}
 
 def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _load_list_file(path: Path | None, label: str) -> tuple[list[dict[str, Any]], list[str]]:
+    if path is None:
+        return [], []
+    if not path.is_file():
+        return [], [f"missing {label} file: {path}"]
+    data = json.loads(path.read_text(encoding="utf-8"))
+    items = data.get("items", data if isinstance(data, list) else None)
+    if not isinstance(items, list):
+        return [], [f"{label} must be list or {{items: [...]}}"]
+    errs: list[str] = []
+    for i, row in enumerate(items):
+        if not isinstance(row, dict):
+            errs.append(f"{label}[{i}] must be object")
+            continue
+        if not row.get("task_id"):
+            errs.append(f"{label}[{i}] missing task_id")
+        if label == "skipped" and row.get("blinded_side_preference") == "TIE":
+            errs.append(
+                f"{label}[{i}] skip must not be recorded as TIE "
+                "(skip ≠ tie)"
+            )
+        if not row.get("reason") and not row.get("invalid_reason") and not row.get("skip_reason"):
+            errs.append(f"{label}[{i}] missing reason / skip_reason / invalid_reason")
+    return items, errs
 
 
 def validate_rating(r: dict[str, Any], *, idx: int) -> list[str]:
@@ -88,6 +116,8 @@ def validate_payload(payload: dict[str, Any]) -> list[str]:
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--ratings", type=Path, required=True, help="Exported ratings JSON from UI")
+    p.add_argument("--skipped", type=Path, default=None, help="Optional skipped_results.json")
+    p.add_argument("--invalid", type=Path, default=None, help="Optional invalid_results.json")
     p.add_argument("--expected", type=int, default=None, help="Optional expected valid count")
     p.add_argument(
         "--out-dir",
@@ -109,6 +139,10 @@ def main(argv: list[str] | None = None) -> int:
     raw = args.ratings.read_bytes()
     payload = json.loads(raw.decode("utf-8"))
     errs = validate_payload(payload)
+    skipped, e1 = _load_list_file(args.skipped, "skipped")
+    invalid, e2 = _load_list_file(args.invalid, "invalid")
+    errs.extend(e1)
+    errs.extend(e2)
     if errs:
         sys.stderr.write("VALIDATION_FAIL\n")
         for e in errs:
@@ -116,7 +150,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     ratings = payload["ratings"]
-    evaluators = sorted({r["evaluator_id"] for r in ratings})
+    evaluators = sorted({str(r["evaluator_id"]) for r in ratings})
     lock = {
         "status": "LOCKED",
         "locked_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -125,12 +159,13 @@ def main(argv: list[str] | None = None) -> int:
         "byte_size": len(raw),
         "total_valid": len(ratings),
         "total_expected": args.expected,
-        "skipped": 0,
-        "invalid": 0,
+        "skipped": len(skipped),
+        "invalid": len(invalid),
         "evaluator_count": len(evaluators),
         "evaluators": evaluators,
         "schema": payload.get("schema", "g6zc.human_ratings.v1"),
         "do_not_fabricate": True,
+        "human_evidence": True,
         "note": "Lock precedes unblinding. Do not modify ratings after this digest.",
     }
     if args.expected is not None and len(ratings) < args.expected:
@@ -149,6 +184,7 @@ def main(argv: list[str] | None = None) -> int:
     human = {
         "status": "RATINGS_LOCKED",
         "do_not_fabricate": True,
+        "human_evidence": True,
         "schema": payload.get("schema", "g6zc.human_ratings.v1"),
         "evaluators": len(evaluators),
         "paired_evaluations": len(ratings),
@@ -161,8 +197,15 @@ def main(argv: list[str] | None = None) -> int:
     }
     (out / "human_results.json").write_text(json.dumps(human, indent=2) + "\n", encoding="utf-8")
     (out / "ratings_lock.json").write_text(json.dumps(lock, indent=2) + "\n", encoding="utf-8")
-    # copy immutable bytes
     (out / "human_results_locked_bytes.json").write_bytes(raw)
+    (out / "skipped_results.json").write_text(
+        json.dumps({"status": "RECORDED", "items": skipped}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    (out / "invalid_results.json").write_text(
+        json.dumps({"status": "RECORDED", "items": invalid}, indent=2) + "\n",
+        encoding="utf-8",
+    )
     return 0
 
 
