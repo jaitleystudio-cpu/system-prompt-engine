@@ -1,0 +1,12 @@
+{
+  "gate": "G4",
+  "g1": "BOUND_AND_PASS",
+  "g2": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+  "g3": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE",
+  "g3_implementation_head": "95a6d0b0882cfd66f9da332bdeb024397d0c6c1f",
+  "g3r_reviewed_head": "a021aed067541ef1e9b38b3be911595129e44cdf",
+  "g4_base_head": "a021aed067541ef1e9b38b3be911595129e44cdf",
+  "g4_branch": "cursor/g4-live-provider-conformance-0d6e",
+  "pr6": "OPEN @ 4e6c694 \u2014 UNTOUCHED",
+  "final_verdict": "G4_BLOCKED_NO_LIVE_PROVIDER"
+}

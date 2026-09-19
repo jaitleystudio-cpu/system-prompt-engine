@@ -1,7 +1,7 @@
 {
   "gate": "G1R-9",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 110,
+  "module_count": 122,
   "modules": [
     {
       "path": "spe_runtime/__init__.py"
@@ -224,6 +224,66 @@
     },
     {
       "path": "spe_runtime/provenance/rules.py"
+    },
+    {
+      "path": "spe_runtime/providers/__init__.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/anthropic_compat.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/boundary.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/credentials.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/live_gate.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/models.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/normalize.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/openai_compat.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/privacy.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/protocol_fixture.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/registry.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
+    },
+    {
+      "path": "spe_runtime/providers/transport.py",
+      "package": "spe_runtime.providers",
+      "role": "g4_provider"
     },
     {
       "path": "spe_runtime/qualification/__init__.py"

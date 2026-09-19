@@ -1,0 +1,16 @@
+{
+  "label": "PROTOCOL_CONFORMANCE",
+  "not": "LIVE_EXTERNAL_PROVIDER",
+  "vectors": {
+    "L1": "PASS",
+    "L2": "PASS",
+    "L3": "PASS",
+    "L4": "PASS",
+    "L5": "PASS",
+    "L6": "PASS",
+    "L7": "NOT_RUN_LIVE",
+    "L8": "NOT_SUPPORTED",
+    "L9": "PASS",
+    "L10": "NOT_SUPPORTED"
+  }
+}

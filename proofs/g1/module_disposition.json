@@ -1,7 +1,7 @@
 {
   "gate": "G1R-8R",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 110,
+  "module_count": 122,
   "counts": {
     "RETAIN": 88,
     "RETIRE": 4,
@@ -451,6 +451,78 @@
       "disposition": "RETAIN",
       "normative_owner": "K0",
       "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/providers/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 provider package export"
+    },
+    {
+      "path": "spe_runtime/providers/anthropic_compat.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 Anthropic-compatible adapter"
+    },
+    {
+      "path": "spe_runtime/providers/boundary.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 authority/qualification boundary"
+    },
+    {
+      "path": "spe_runtime/providers/credentials.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 credential presence (no secret logging)"
+    },
+    {
+      "path": "spe_runtime/providers/live_gate.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 live-call budget/credential gate"
+    },
+    {
+      "path": "spe_runtime/providers/models.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 provider domain models"
+    },
+    {
+      "path": "spe_runtime/providers/normalize.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 provider response normalizer"
+    },
+    {
+      "path": "spe_runtime/providers/openai_compat.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 OpenAI-compatible adapter"
+    },
+    {
+      "path": "spe_runtime/providers/privacy.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 egress/privacy canary enforcement"
+    },
+    {
+      "path": "spe_runtime/providers/protocol_fixture.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 local protocol fixture (not live)"
+    },
+    {
+      "path": "spe_runtime/providers/registry.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 provider surface registry"
+    },
+    {
+      "path": "spe_runtime/providers/transport.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4 stdlib HTTP transport + redaction"
     },
     {
       "path": "spe_runtime/qualification/__init__.py",
