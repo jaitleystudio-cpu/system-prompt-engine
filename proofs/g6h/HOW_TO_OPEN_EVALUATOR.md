@@ -39,7 +39,9 @@ Open:
 http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html
 ```
 
-In the UI, load `blind_pairs.json` (via the file picker — or fetch from the same origin after placing/selecting the pairs file).
+The page **auto-loads** `blind_pairs.json` over HTTP. You can also tap **Load server pairs** (no file picker needed on mobile).
+
+Optional one-liner: `./tools/g6h_serve.sh`
 
 You should see the task plus **LEFT / RIGHT** candidates, without knowing which is RAW or SPE.
 
