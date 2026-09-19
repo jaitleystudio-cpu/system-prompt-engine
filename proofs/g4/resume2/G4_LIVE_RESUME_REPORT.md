@@ -7,7 +7,7 @@ G4_BLOCKED_NO_LIVE_PROVIDER
 G3R HEAD: `a021aed067541ef1e9b38b3be911595129e44cdf`
 Prior blocked G4 HEAD: `fb7131f3920e15cc29a6d01ed73ed9d3a1d7e708`
 Prior resume HEAD: `f240ee30a8e6feb10a01d93ada0f35bef90b4ef0`
-Current HEAD: `f240ee30a8e6feb10a01d93ada0f35bef90b4ef0`
+Current HEAD: `b38ad6c49de13c591498a281897b1208ab08dbb6`
 Branch: `cursor/g4-live-provider-conformance-0d6e`
 PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/24
 PR #6: OPEN @ 4e6c694 — UNTOUCHED
