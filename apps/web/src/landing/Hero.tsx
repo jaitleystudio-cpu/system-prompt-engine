@@ -100,7 +100,7 @@ export function Hero({ value, onChange, onBuild, busy, sceneState, quality }: Pr
               aria-busy={busy}
               onClick={onBuild}
             >
-              {busy ? "Compiling intent…" : "Compile intent"}
+              {busy ? "Compiling intent…" : "Compile Intent"}
             </button>
           </div>
           <p className="forge-state-live" role="status" aria-live="polite">

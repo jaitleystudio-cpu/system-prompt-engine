@@ -94,7 +94,7 @@ export function Workspace(props: Props) {
           </select>
         </label>
         <button type="button" className="forge-primary" disabled={busy} onClick={onCompile}>
-          {busy ? "Compiling intent…" : "Compile intent"}
+          {busy ? "Compiling intent…" : "Compile Intent"}
         </button>
       </div>
 
