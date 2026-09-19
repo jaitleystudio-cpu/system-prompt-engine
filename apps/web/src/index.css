@@ -415,8 +415,8 @@ summary:focus-visible {
 }
 
 .forge-act h1 {
-  max-width: 8.6ch;
-  font-size: var(--spe-fs-3xl);
+  max-width: 10.2ch;
+  font-size: clamp(3.7rem, 6.5vw, 6.8rem);
 }
 
 .forge-hero-lede {

@@ -276,7 +276,7 @@ export function SpeIntelligence({ state, quality, className = "" }: Props) {
           powerPreference: "high-performance",
         }}
       >
-        <color attach="background" args={["#00000000"]} />
+        <color attach="background" args={["#080908"]} />
         <ambientLight intensity={0.42} color="#c8c4ba" />
         <directionalLight position={[-5, 4, 5]} intensity={2.1} color="#e9e6de" />
         <pointLight position={[3, 2.5, 3]} intensity={2.4} color="#e1b978" distance={12} />
