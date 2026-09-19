@@ -9,7 +9,7 @@ G2 HEAD: `1c32235f95c27761bc82d4116c741c09eb804910`
 G3 implementation HEAD: `95a6d0b0882cfd66f9da332bdeb024397d0c6c1f`
 G3R reviewed HEAD: `a021aed067541ef1e9b38b3be911595129e44cdf`
 G4 base HEAD: `a021aed067541ef1e9b38b3be911595129e44cdf`
-G4 HEAD: (pin after commit)
+G4 HEAD: `8f062b8697b73dd3f2037d5f34034f15e94ff6e9`
 Branch: `cursor/g4-live-provider-conformance-0d6e`
 PR: (pending)
 PR #6: OPEN @ 4e6c694 — UNTOUCHED
