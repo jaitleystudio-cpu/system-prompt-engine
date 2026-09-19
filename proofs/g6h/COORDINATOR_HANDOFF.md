@@ -52,15 +52,27 @@ Full hashes: `proofs/g6h/prestudy_manifest.json`
 ## Exact order
 
 1. Confirm `python tools/verify_g9_freeze.py` → PASS  
-2. Open frozen evaluator UI — **no** corpus/rubric/threshold/pair edits  
-3. Real humans rate task + A/B only (never RAW/SPE labels)  
-4. Keep randomization map secret  
-5. Collect complete required ratings  
-6. Lock + hash `human_results.json` → `ratings_lock.json`  
-7. Unblind mechanically  
-8. Apply **pre-frozen** thresholds  
-9. Write `G6_H_FINAL_REPORT.md` (wins, losses, ties, failures)  
-10. **STOP** — return evidence to owner  
+2. Confirm `python tools/verify_g6h_prestudy.py` → PASS  
+3. Open frozen evaluator UI — **no** corpus/rubric/threshold/pair edits  
+   - File: `evaluations/g6zc/blind_evaluator.html`  
+   - Load: `evaluations/g6zc/blind_pairs.json`  
+4. Real humans rate task + A/B only (never RAW/SPE labels)  
+5. Keep randomization map secret (`benchmarks/g6zc/randomization_manifest.json`)  
+6. Collect complete required ratings → Download ratings JSON from UI  
+7. Lock:  
+   `python tools/g6h_lock_ratings.py --ratings PATH/to/export.json --expected 120`  
+8. Unblind mechanically (only after lock):  
+   `python tools/g6h_unblind.py --ratings proofs/g6h/human_results_locked_bytes.json --allow-real --json-out proofs/g6h/unblinded_results.json`  
+9. Apply **pre-frozen** thresholds (ROLE E)  
+10. Write `G6_H_FINAL_REPORT.md` (wins, losses, ties, failures)  
+11. **STOP** — return evidence to owner  
+
+### Plumbing self-check (not human evidence)
+
+```bash
+python tools/g6h_unblind.py --synthetic
+# must print reverse_map_detected: true  AND human_evidence: false
+```
 
 ## Roles
 

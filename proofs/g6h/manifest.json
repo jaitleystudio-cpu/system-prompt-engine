@@ -4,8 +4,8 @@
   "files": [
     {
       "path": "proofs/g6h/COORDINATOR_HANDOFF.md",
-      "size": 4013,
-      "sha256": "9e18307a97862416349723aff737d717ebcd216f47a249d7fd909f31c2147314"
+      "size": 4632,
+      "sha256": "6ae39252f135bd67b713f2846d605a005ae07408895ed712a9f6779f485d86a0"
     },
     {
       "path": "proofs/g6h/G6_H_FINAL_REPORT.md",
@@ -108,6 +108,16 @@
       "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
     },
     {
+      "path": "proofs/g6h/manifest.json",
+      "size": 5801,
+      "sha256": "4c84a95e0f2485c84d6acdf41689ef1924b469571bc5ca1c2796e73023cbd03f"
+    },
+    {
+      "path": "proofs/g6h/plumbing_status.json",
+      "size": 395,
+      "sha256": "d4a636b0cf684774a85a090f2cd35789e33686967958736746adc20e5881bb14"
+    },
+    {
       "path": "proofs/g6h/preference_results.json",
       "size": 32,
       "sha256": "57907d54e670565286b4a5ba90c79d7082892211c2181e97c3a3df9b80a290ee"
@@ -148,6 +158,11 @@
       "sha256": "3c8298de719b068f9579d4c0cee744b3a9e2de6c0f4394a412e6afb52c4b6f29"
     },
     {
+      "path": "proofs/g6h/synthetic_unblind_control.json",
+      "size": 399,
+      "sha256": "1d883317339a268b0d429d5a386007f007ac70612f2aab87364c7a225159b3fc"
+    },
+    {
       "path": "proofs/g6h/threshold_adjudication.json",
       "size": 64,
       "sha256": "4151aad2af7bf2f7feec5c9a379316652cc0da306207518e0a06c0ba7ab973ba"
@@ -173,8 +188,9 @@
       "sha256": "f9b85ca476aa78f17913d2e4c83560f9003ca6ecda058c8eca902b8a04aaee8c"
     }
   ],
-  "count": 34,
+  "count": 37,
   "do_not_fabricate": true,
   "ratings_status": "NO_RATINGS_YET",
-  "recorded_at_utc": "2026-09-19T09:42:43.981577+00:00"
+  "plumbing": "unblind+lock ready",
+  "recorded_at_utc": "2026-09-19T09:46:08.132311+00:00"
 }
