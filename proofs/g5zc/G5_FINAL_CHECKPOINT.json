@@ -2,6 +2,8 @@
   "checkpoint": "SPE_OMEGA_V2.4.1_G5_FINAL_CHECKPOINT",
   "frozen": true,
   "g5_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "freeze_declaration_head": "181b01057d7dcfa4bce6549b3587714e03801736",
+  "note": "Qualification evidence tip remains 99173c2; 181b010 is docs-only freeze declaration.",
   "branch": "cursor/g5zc-local-chaos-0d6e",
   "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/26",
   "gates": {
