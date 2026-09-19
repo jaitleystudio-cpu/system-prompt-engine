@@ -13,6 +13,9 @@ Implementation freeze. Next battle: humans (G6-H), not more self-certification.
 Branch:
 cursor/g9-freeze-g6h-handoff-0d6e
 
+PR:
+https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/32
+
 ## CANONICAL CHECKPOINT
 
 SPE Ω v2.4.1
@@ -27,7 +30,10 @@ G9:
 ZERO_COST_STACK_CUSTODY_PACKAGED_WITHIN_TESTED_SCOPE
 
 Latest reported regression:
-1041/1041 PASS
+1041/1041 PASS (G9 checkpoint)
+
+Freeze-guard regression:
+1050/1050 PASS (1041 + 9 freeze guards — still not World #1)
 
 ₹0 mandatory provider spend
 

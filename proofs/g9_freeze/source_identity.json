@@ -3,5 +3,7 @@
   "pack": "G9-FREEZE-G6H-HANDOFF",
   "freeze_head": "480ee2bdc95fa7cf768aa94737660e43f6072af3",
   "branch": "cursor/g9-freeze-g6h-handoff-0d6e",
-  "recorded_at_utc": "2026-09-19T08:22:43.142890+00:00"
+  "recorded_at_utc": "2026-09-19T08:25:26.108802+00:00",
+  "g9_freeze_head": "d982f1b2d922ae0b5c1b002f6cb65afd97ec8475",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/32"
 }

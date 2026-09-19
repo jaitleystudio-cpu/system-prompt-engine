@@ -60,6 +60,7 @@
     "spe_runtime/omega"
   ],
   "freeze_head": "480ee2bdc95fa7cf768aa94737660e43f6072af3",
+  "freeze_pack_head": "d982f1b2d922ae0b5c1b002f6cb65afd97ec8475",
   "g5_qualified_baseline": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
   "g6h_handoff": {
     "do_not_fabricate_ratings": true,
@@ -113,7 +114,8 @@
     "command": "python -m pytest",
     "exit": 0,
     "failed": 0,
-    "note": "1041/1041 = internal conformance \u2014 NOT World #1",
+    "freeze_guard_passed": 1050,
+    "note": "1041/1041 = G9 internal conformance checkpoint; 1050 includes freeze-guard tests \u2014 neither implies World #1",
     "passed": 1041,
     "source": "proofs/g9zc/full_regression.json"
   },

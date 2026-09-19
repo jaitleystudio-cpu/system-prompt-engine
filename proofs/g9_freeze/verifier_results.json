@@ -1,0 +1,7 @@
+{
+  "command": "python tools/verify_g9_freeze.py",
+  "exit": 0,
+  "verdict": "PASS",
+  "g6_human_value": "PENDING",
+  "world_1": "NOT_PROVEN"
+}
