@@ -1,0 +1,7 @@
+{
+  "path": "benchmarks/g8zc/golden_corpus.json",
+  "sha256": "64b2fa80b1145776f64f62fc8c1d8ad792974ede4319aa9754202fc35c71a8c5",
+  "task_count": 34,
+  "success_count": 28,
+  "fail_closed_count": 6
+}

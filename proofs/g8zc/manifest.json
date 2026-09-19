@@ -1,0 +1,21 @@
+{
+  "gate": "G8-ZC",
+  "files": [
+    "ancestry.txt",
+    "claim_boundary.json",
+    "compileall.json",
+    "contract_integrity.json",
+    "corpus_manifest.json",
+    "full_regression.json",
+    "g2_integrity.json",
+    "mutation_results.json",
+    "pr6_untouched.json",
+    "previous_gate_status.json",
+    "replay_results.json",
+    "source_identity.json",
+    "zero_cost_audit.json"
+  ],
+  "count": 13,
+  "head": "f64c42f00d276c523ef456e643f49eed6c314375",
+  "corpus_sha256": "64b2fa80b1145776f64f62fc8c1d8ad792974ede4319aa9754202fc35c71a8c5"
+}

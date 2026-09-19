@@ -1,0 +1,10 @@
+{
+  "G8": "ZERO_COST_HERMETIC_CORE_REPLAY_VERIFIED_WITHIN_TESTED_SCOPE",
+  "not_earned": [
+    "INDEPENDENTLY_REPLICATED",
+    "SELF_CONTAINED_FULL_REPLAY_QUALIFIED",
+    "WORLD_1_PROVEN",
+    "PRODUCTION_OBSERVED"
+  ],
+  "note": "Local hermetic digest replay; not independent second-party replication"
+}
