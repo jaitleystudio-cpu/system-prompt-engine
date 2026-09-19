@@ -15,10 +15,19 @@ def test_not_a_release_and_new_implementation_declared():
     assert "NEW_IMPLEMENTATION" in blob or "new_implementation" in blob.lower()
 
 
-def test_no_three_js_or_webgl_3d():
+def test_three_js_must_be_locally_bundled_not_cdn():
+    """SPE-WEB-02 allows cinematic 3D via locally bundled three/R3F only."""
     text = web_source_text()
-    for token in ("three.js", "from 'three'", 'from "three"', "WebGLRenderer", "THREE."):
-        assert token not in text, token
+    lock = (WEB / "package-lock.json").read_text(encoding="utf-8")
+    pkg = json.loads((WEB / "package.json").read_text(encoding="utf-8"))
+    deps = {**(pkg.get("dependencies") or {}), **(pkg.get("devDependencies") or {})}
+    # CDN / remote three is forbidden.
+    assert "unpkg.com/three" not in lock
+    assert "cdn.jsdelivr.net/npm/three" not in lock
+    assert "fonts.googleapis" not in lock
+    # If three is used, it must be a declared local dependency.
+    if "from 'three'" in text or 'from "three"' in text or "WebGLRenderer" in text:
+        assert "three" in deps
 
 
 def test_dep_audit_script_and_asset_budget_script_exist():

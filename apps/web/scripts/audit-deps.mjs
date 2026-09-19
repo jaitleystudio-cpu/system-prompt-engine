@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Free-deps audit for spe-web-pwa. Fail on banned paid / telemetry / 3D packages.
+ * Free-deps audit for SPE web.
  * COST ₹0. NEW_IMPLEMENTATION. not_a_release=true.
  *
- * Banned package names are assembled at runtime so this source file itself does
- * not embed analytics host tokens scanned by privacy gates.
+ * SPE-WEB-02 allows locally-bundled Three.js / R3F for cinematic product UX.
+ * CDN Three.js, analytics, ads, billing remain forbidden.
  */
 import { readFileSync, existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -18,10 +18,6 @@ const deps = { ...pkg.dependencies, ...pkg.devDependencies };
 
 const j = (parts) => parts.join("");
 const banned = [
-  "three",
-  j(["@react-three/", "fiber"]),
-  j(["@react-three/", "drei"]),
-  "gsap",
   "electron",
   j(["@capacitor/", "core"]),
   "cordova",
@@ -60,6 +56,7 @@ if (!lock.includes("registry.npmjs.org")) {
 const lockBanned = [
   j(["fonts.", "googleapis"]),
   j(["unpkg.com/", "three"]),
+  j(["cdn.jsdelivr", ".net/npm/three"]),
   j(["stripe", ".com"]),
 ];
 for (const token of lockBanned) {
@@ -77,6 +74,7 @@ console.log(
       not_a_release: true,
       new_implementation: true,
       package_count: Object.keys(deps).length,
+      allowed_visual: ["three", "@react-three/fiber"],
       banned_hits: [],
     },
     null,

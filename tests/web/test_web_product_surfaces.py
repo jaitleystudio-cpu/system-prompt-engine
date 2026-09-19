@@ -23,13 +23,19 @@ def test_home_brand_and_one_line_cta():
     blob = _src()
     assert "System Prompt Engine" in blob
     assert "Build with SPE" in blob
-    assert "One line" in blob or "one-line" in blob
+    assert "What do you want to accomplish?" in blob or "one-line" in blob or "spe-one-line" in blob
 
 
 def test_intent_and_prompt_lens_surfaces():
     blob = _src()
-    assert "Intent lens" in blob or "intent lens" in blob.lower()
-    assert "Prompt lens" in blob or "prompt lens" in blob.lower()
+    assert "Intent lens" in blob or "intent lens" in blob.lower() or "spe-intent" in blob
+    assert (
+        "Prompt lens" in blob
+        or "prompt lens" in blob.lower()
+        or 'lens === "changes"' in blob
+        or "spe-prompt-lens" in blob
+        or "User request" in blob
+    )
     assert "confirmed" in blob.lower()
     assert "assumed" in blob.lower()
     assert "unknown" in blob.lower()

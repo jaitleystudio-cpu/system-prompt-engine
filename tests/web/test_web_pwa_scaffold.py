@@ -23,9 +23,9 @@ def test_package_json_is_vite_react_typescript_free_stack():
     assert "react" in deps
     assert "react-dom" in deps
     assert "typescript" in deps
+    # SPE-WEB-02: locally bundled three / @react-three/fiber are allowed.
+    # CDN three, analytics, native shells, billing remain banned.
     banned = [
-        "three",
-        "@react-three/fiber",
         "@react-three/drei",
         "gsap",
         "electron",
@@ -49,6 +49,15 @@ def test_package_json_is_vite_react_typescript_free_stack():
     ]
     for name in banned:
         assert name not in deps, name
+    # If cinematic 3D is present, it must be declared locally (not CDN).
+    src = "\n".join(
+        p.read_text(encoding="utf-8")
+        for p in (WEB / "src").rglob("*")
+        if p.suffix in {".ts", ".tsx"} and p.is_file()
+    )
+    if "from 'three'" in src or 'from "three"' in src or "@react-three/fiber" in src:
+        assert "three" in deps
+        assert "@react-three/fiber" in deps
 
 
 def test_no_android_ios_desktop_extension_mcp_clients():
