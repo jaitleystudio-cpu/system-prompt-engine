@@ -1,0 +1,21 @@
+{
+  "gate": "G9-ZC",
+  "files": [
+    "G9_ZC_REPORT.md",
+    "INTEGRITY.json",
+    "QUALIFICATION_MANIFEST.json",
+    "QUALIFICATION_MANIFEST.sha256",
+    "RELEASE_BOUNDARY.md",
+    "claim_boundary.json",
+    "compileall.json",
+    "full_regression.json",
+    "mutation_results.json",
+    "pr6_untouched.json",
+    "previous_gate_status.json",
+    "source_identity.json",
+    "verifier_results.json",
+    "zero_cost_audit.json"
+  ],
+  "count": 14,
+  "head": "305360708aa23d6930e9ee8587519866ec39d979"
+}

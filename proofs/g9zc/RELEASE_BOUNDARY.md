@@ -1,7 +1,7 @@
 # SPE Ω v2.4.1 — G9 RELEASE BOUNDARY
 
 **Pack:** G9-ZC-RELEASE-CUSTODY  
-**Qualification HEAD:** (pinned in `source_identity.json`)  
+**Qualification HEAD:** `305360708aa23d6930e9ee8587519866ec39d979`  
 **Proposed tag:** `spe-v2.4.1-g9-custody`  
 **Manifest:** `proofs/g9zc/QUALIFICATION_MANIFEST.json`  
 **Verify:** `python tools/verify_g9_checkpoint.py`
