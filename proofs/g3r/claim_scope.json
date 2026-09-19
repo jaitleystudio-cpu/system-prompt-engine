@@ -1,0 +1,11 @@
+{
+  "target_if_pass": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE",
+  "not_earned": [
+    "POWER_LOSS_SAFE",
+    "UNIVERSALLY_CRASH_SAFE",
+    "EXACTLY_ONCE",
+    "DISTRIBUTED_CONSENSUS",
+    "PRODUCTION_READY",
+    "WORLD_1"
+  ]
+}

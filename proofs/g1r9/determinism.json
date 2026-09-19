@@ -1,0 +1,8 @@
+{
+  "evidence_id_stable": true,
+  "evidence_id_prefix": "qe-",
+  "qualification_id_prefix": "qual-",
+  "reorder_stable": true,
+  "cross_process": true,
+  "no_uuid_random_time": true
+}

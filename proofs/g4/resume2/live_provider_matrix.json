@@ -1,0 +1,16 @@
+{
+  "verdict": "NO_LIVE_EXTERNAL_PROVIDER_EXERCISED",
+  "live_requests": 0,
+  "providers": [
+    {
+      "provider": "openai_compat",
+      "status": "BLOCKED_NO_CREDENTIAL",
+      "requests": 0
+    },
+    {
+      "provider": "anthropic_compat",
+      "status": "BLOCKED_NO_CREDENTIAL",
+      "requests": 0
+    }
+  ]
+}

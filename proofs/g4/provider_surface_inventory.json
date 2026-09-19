@@ -1,0 +1,48 @@
+{
+  "discovered_prior_to_g4": "none",
+  "adapters_added": [
+    "spe_runtime.providers.openai_compat.OpenAICompatAdapter",
+    "spe_runtime.providers.anthropic_compat.AnthropicCompatAdapter"
+  ],
+  "canonical_owner": "spe_runtime.providers",
+  "transport": "stdlib urllib",
+  "providers": [
+    {
+      "provider": "openai_compat",
+      "adapter_path": "spe_runtime.providers.openai_compat.OpenAICompatAdapter",
+      "canonical_owner": "spe_runtime.providers.openai_compat.OpenAICompatAdapter",
+      "transport": "stdlib_urllib",
+      "endpoint_class": "openai_chat_completions",
+      "credential_present": false,
+      "credential_source": "env",
+      "status": "SUPPORTED_BUT_NO_CREDENTIAL"
+    },
+    {
+      "provider": "anthropic_compat",
+      "adapter_path": "spe_runtime.providers.anthropic_compat.AnthropicCompatAdapter",
+      "canonical_owner": "spe_runtime.providers.anthropic_compat.AnthropicCompatAdapter",
+      "transport": "stdlib_urllib",
+      "endpoint_class": "anthropic_messages",
+      "credential_present": false,
+      "credential_source": "env",
+      "status": "SUPPORTED_BUT_NO_CREDENTIAL"
+    },
+    {
+      "provider": "local_ollama",
+      "adapter_path": null,
+      "canonical_owner": null,
+      "transport": null,
+      "endpoint_class": "ollama",
+      "credential_present": false,
+      "credential_source": "OLLAMA_HOST",
+      "status": "NOT_IMPLEMENTED",
+      "note": "No local endpoint detected in G4 environment"
+    }
+  ],
+  "local_live_provider": "NOT_RUN",
+  "network_probe": {
+    "api.openai.com": "reachable_http_401_without_key",
+    "api.anthropic.com": "reachable_http_405_without_key",
+    "127.0.0.1:11434": "unavailable"
+  }
+}

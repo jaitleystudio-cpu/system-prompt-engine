@@ -1,0 +1,7 @@
+{
+  "MUST": "preserved",
+  "MUST_NOT": "preserved",
+  "PREFERENCE": "preserved",
+  "UNKNOWN": "not invented",
+  "CONFLICT": "fail-closed K3_PROMPT_CONFLICTED_SOURCE"
+}

@@ -1,0 +1,17 @@
+{
+  "canonical_owner": "K3",
+  "duplicate_writer": false,
+  "notes": "G1R-6: sole canonical writer build_prompt_artifact in spe_runtime/prompt/build.py. Contract owner K3. C01 recommendation and C03 rendering remain separate facts. prompt_content_digest != spe_artifact_identity.",
+  "reader_modules": [
+    "tests/unit/test_g1r6_k3_prompt_artifact.py"
+  ],
+  "resolution_required": false,
+  "semantic_fact": "prompt_artifact",
+  "writer_modules": [
+    "spe_runtime/prompt/build.py"
+  ]
+}
+unowned_facts= ['spe_artifact_identity', 'qualification_evidence']
+UNOWNED= 2
+duplicate_writers= 0
+ambient= []

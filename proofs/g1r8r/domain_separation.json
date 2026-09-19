@@ -1,0 +1,9 @@
+{
+  "hash_equals_truth": false,
+  "import_mints_k2_proof": false,
+  "import_mints_k4_authority": false,
+  "import_mints_k7_qualification": false,
+  "import_mutates_k0_k1": false,
+  "lineage_equals_quality": false,
+  "proof_digest_equals_pass": false
+}

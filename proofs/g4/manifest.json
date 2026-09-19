@@ -1,0 +1,33 @@
+{
+  "gate": "G4",
+  "final_verdict": "G4_BLOCKED_NO_LIVE_PROVIDER",
+  "generated_at": "2026-09-19T01:20:31.867956+00:00",
+  "files": [
+    "changed_file_audit.txt",
+    "claim_boundary.json",
+    "compileall_result.json",
+    "cost_results.json",
+    "credential_inventory_redacted.json",
+    "error_mapping_results.json",
+    "g1_g3_regression.json",
+    "g1_status.json",
+    "g2_integrity.json",
+    "g3_status.json",
+    "live_provider_matrix.json",
+    "logs/g4_tests.txt",
+    "logs/unit_suite.txt",
+    "mutation_results.json",
+    "performance_results.json",
+    "portable_baseline_results.json",
+    "privacy_egress_results.json",
+    "provider_capability_matrix.json",
+    "provider_surface_inventory.json",
+    "secret_canary_results.json",
+    "source_identity.json",
+    "specialized_adapter_results.json",
+    "structured_output_results.json",
+    "test_budget.json",
+    "tool_boundary_results.json",
+    "working_contract_integrity.json"
+  ]
+}

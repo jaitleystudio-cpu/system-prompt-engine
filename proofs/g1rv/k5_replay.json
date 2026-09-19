@@ -1,0 +1,6 @@
+{
+  "result": "PASS",
+  "error_owner_unique": true,
+  "B05": "ACCEPTED_SCOPED_LIMITATION",
+  "suite": "G1 binding + portability registry honesty"
+}

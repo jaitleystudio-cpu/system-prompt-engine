@@ -1,0 +1,245 @@
+{
+  "schema_version": "2.0.0",
+  "gate": "G1_RUNTIME_BINDING",
+  "status": "BOUND_AND_PASS",
+  "review_state": "G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1R6_PASS_EXTERNAL; G1R7_PASS_EXTERNAL; G1R8_PASS_EXTERNAL; G1R8R_RECHECK_PASS; G1R9_PASS_EXTERNAL; G1R9R_RECHECK_PASS; G1R-V FINAL_REPLAY_PASS; G1 BOUND_AND_PASS (WORKING_CONTRACT_BOUND)",
+  "normative_spec": {
+    "version": "SPE \u03a9 v2.4.1",
+    "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+    "present_in_tree": true,
+    "path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
+    "custody": "WORKING_CONTRACT_BOUND",
+    "verified_181_69_tree": "UNAVAILABLE"
+  },
+  "repository": {
+    "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+    "branch": "cursor/g1rv-final-binding-replay-0d6e",
+    "implementation_commit": "c7004940e930e7b0d39e7094c269564b246f9f05",
+    "implementation_tree": "c5caf0cabe1edb2bba6d7dc1ffb4061231d252b5",
+    "suite_run_commit": "c7004940e930e7b0d39e7094c269564b246f9f05",
+    "suite_tree": "c5caf0cabe1edb2bba6d7dc1ffb4061231d252b5",
+    "tree_hash": "c5caf0cabe1edb2bba6d7dc1ffb4061231d252b5",
+    "tree_hash_scope": "implementation_suite_tree",
+    "python_version": "3.12.3",
+    "lineage": "NEW_IMPLEMENTATION",
+    "identity_model": "split_implementation_vs_evidence_validation"
+  },
+  "tests": {
+    "implementation_validation": {
+      "collected": 672,
+      "passed": 672,
+      "failed": 0,
+      "skipped": 0,
+      "exit_status": 0,
+      "duration_s": 0.966,
+      "result_sha256": "4067307ba5d5c2b5a5b28921d8772dcd55afad5e354d9ca802571858ce485336",
+      "junit_sha256": "fbd3b3138e3c92a29d173357496d62a6ef0f4b5d663183c9d461e161ea4695c1",
+      "command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+      "g1r1": "5/5",
+      "g1r2": "27/27",
+      "g1r3": "37/37",
+      "g1r4": "44/44",
+      "g1r5": "18/18",
+      "g1r5e": "4/4",
+      "g1r6": "30/30",
+      "g1r6r": "10/10",
+      "g1r7": "27/27",
+      "failed_tests": [],
+      "g1r7r": "26/26",
+      "g1r8": "33/33",
+      "g1r8r": "17/17",
+      "g1r9": "pass",
+      "g1r9r": "pass",
+      "g1rv": "pass"
+    },
+    "evidence_validation": {
+      "reviewed_evidence_head": "EXTERNAL_ONLY"
+    },
+    "final_collected": 507,
+    "final_passed": 504,
+    "final_failed": 3,
+    "final_skipped": 0,
+    "final_exit_status": 1,
+    "final_duration_s": 0.966,
+    "result_sha256": "8c0fe6d9084366995cb0b149150d93e5d098b9e0dca7e37258e3046ca60a9f4c",
+    "junit_sha256": "22223a918dda03537fd5b712be487232feca090a1b4d42e1dc2e5dbd4d7e837c",
+    "g1r1_collected": 5,
+    "g1r1_passed": 5,
+    "g1r1_failed": 0,
+    "g1r2_collected": 27,
+    "g1r2_passed": 27,
+    "g1r2_failed": 0,
+    "g1r3_collected": 37,
+    "g1r3_passed": 37,
+    "g1r3_failed": 0,
+    "g1r4_collected": 44,
+    "g1r4_passed": 44,
+    "g1r4_failed": 0,
+    "g1r5_collected": 18,
+    "g1r5_passed": 18,
+    "g1r5_failed": 0,
+    "g1r6_collected": 30,
+    "g1r6_passed": 30,
+    "g1r6_failed": 0,
+    "g1r6r_collected": 10,
+    "g1r6r_passed": 10,
+    "g1r6r_failed": 0,
+    "g1r7_collected": 27,
+    "g1r7_passed": 27,
+    "g1r7_failed": 0,
+    "g1_binding_collected": 15,
+    "g1_binding_passed": 12,
+    "g1_binding_failed": 3,
+    "g1r7r_collected": 26,
+    "g1r7r_passed": 26
+  },
+  "module_binding": {
+    "module_count": 124,
+    "retain": 119,
+    "wrap": 1,
+    "migrate": 0,
+    "replace": 0,
+    "retire": 4
+  },
+  "semantic_binding": {
+    "DUPLICATE_CANONICAL_WRITERS": 0,
+    "UNOWNED_RING0_RESPONSIBILITIES": 0,
+    "unowned_facts": [],
+    "unowned_ring0_requirements_missing": 0,
+    "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
+    "CONFLICTING_RUNTIME_SEMANTICS": 0,
+    "k3_strategy_gate": "PASS",
+    "k7_qualification_gate": "PASS_EXTERNAL"
+  },
+  "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7r_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+  "conformance_result": "G1R-V FINAL_REPLAY_PASS suite 672/672/0. G1=BOUND_AND_PASS custody=WORKING_CONTRACT_BOUND. B05 ACCEPTED_SCOPED_LIMITATION. Do not claim production/formal/world#1.",
+  "blockers": [
+    {
+      "id": "G1-B01",
+      "status": "ACCEPTED_SCOPED_LIMITATION",
+      "description": "WORKING_CONTRACT_BOUND; 181/69 UNAVAILABLE \u2014 not claimed recovered."
+    },
+    {
+      "id": "G1-B02",
+      "status": "RESOLVED",
+      "description": "Duplicate writers=0."
+    },
+    {
+      "id": "G1-B03",
+      "status": "RESOLVED",
+      "description": "UNOWNED=0 MISSING=0 after K7 + G1R-V replay."
+    },
+    {
+      "id": "G1-B04",
+      "status": "RESOLVED",
+      "description": "Ambient=0."
+    },
+    {
+      "id": "G1-B05",
+      "status": "ACCEPTED_SCOPED_LIMITATION",
+      "description": "PLATFORM_REGISTRY keeps RUST/WASM PLANNED (anti-fake-PASS). Honest IMPLEMENTING reclassification deferred post-G1 per original G1 plan. Not a Python Ring-0 ownership/authority blocker."
+    }
+  ],
+  "g1r4": {
+    "external_review": "PASS",
+    "working_contract_unchanged": true
+  },
+  "g1r5": {
+    "task": "PRIVACY_PROJECTION_OWNERSHIP",
+    "contract_owner": "K4",
+    "canonical_writer": "spe_runtime/privacy/project.py::project_privacy",
+    "writers": 1,
+    "duplicates": 0,
+    "implementation": "PRESENT",
+    "external_review": "PASS",
+    "working_contract_unchanged": true
+  },
+  "g1r6": {
+    "task": "K3_PROMPT_ARTIFACT",
+    "contract_owner": "K3",
+    "canonical_writer": "spe_runtime/prompt/build.py::build_prompt_artifact",
+    "writers": 1,
+    "duplicates": 0,
+    "implementation": "PRESENT",
+    "external_review": "PASS",
+    "working_contract_unchanged": true,
+    "prompt_content_digest_note": "prompt_content_digest != spe_artifact_identity"
+  },
+  "captured_at_utc": "2026-09-18T16:33:31Z",
+  "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET",
+  "g1r6r": {
+    "task": "INDEPENDENT_PROMPTARTIFACT_RECHECK",
+    "verdict": "G1R6_RECHECK_PASS",
+    "findings_closed": [
+      "G1R6R-H01",
+      "G1R6R-H02",
+      "G1R6R-H03"
+    ],
+    "k3_incompleteness_gate": "test_g1_k3_required_responsibilities_complete",
+    "expected_g1_failures": 4,
+    "g1r7_started": false
+  },
+  "g1r7": {
+    "task": "K3_STRATEGY_INTELLIGENCE",
+    "canonical_writers": {
+      "cognitive_plan": "spe_runtime/prompt/plan.py::build_cognitive_plan",
+      "technique_selection": "spe_runtime/prompt/techniques.py::select_prompt_techniques",
+      "prompt_strategy": "spe_runtime/prompt/strategy.py::build_prompt_strategy",
+      "prompt_artifact": "spe_runtime/prompt/build.py::build_prompt_artifact"
+    },
+    "implementation": "PRESENT",
+    "external_review": "PASS",
+    "k3_completeness_gate": "PASS",
+    "rust_wasm": "RUST_WASM_NOT_REBUILT",
+    "working_contract_unchanged": true,
+    "promotion": "PASS_EXTERNAL"
+  },
+  "g1r7r": {
+    "task": "INDEPENDENT_K3_STRATEGY_RECHECK",
+    "verdict": "G1R7_RECHECK_PASS",
+    "findings_closed": [
+      "G1R7R-F01",
+      "G1R7R-F02",
+      "G1R7R-F03"
+    ],
+    "promotion": "G1R-7 PASS_EXTERNAL",
+    "expected_g1_failures": 3,
+    "g1r8_started": false,
+    "working_contract_unchanged": true
+  },
+  "g1r8": {
+    "task": "K6_SPE_ARTIFACT_LINEAGE",
+    "canonical_writer": "spe_runtime/storage/build.py::build_spe_artifact",
+    "writers": 1,
+    "duplicates": 0,
+    "implementation": "PRESENT",
+    "external_review": "PASS",
+    "working_contract_unchanged": true,
+    "rust_wasm": "RUST_WASM_NOT_REBUILT",
+    "promotion": "PASS_EXTERNAL",
+    "portability_claim": "PORTABLE_SEMANTIC_BINDING_ARTIFACT"
+  },
+  "g1r8r": {
+    "task": "INDEPENDENT_K6_ARTIFACT_RECHECK",
+    "verdict": "G1R8_RECHECK_PASS",
+    "findings_closed": [
+      "G1R8R-F01",
+      "G1R8R-F02"
+    ],
+    "promotion": "G1R-8 PASS_EXTERNAL",
+    "g1r9_started": false,
+    "working_contract_unchanged": true
+  },
+  "g1r9": {
+    "task": "K7_CLAIM_QUALIFICATION",
+    "status": "PASS_EXTERNAL",
+    "recheck": "G1R9R_RECHECK_PASS",
+    "note": "Authoritative G1 still BOUND_WITH_GAPS until G1R-V"
+  },
+  "g1rv": {
+    "verdict": "G1_FINAL_REPLAY_PASS",
+    "status": "BOUND_AND_PASS",
+    "custody": "WORKING_CONTRACT_BOUND",
+    "next": "G2 TLA+/TLC \u2014 NOT EXECUTED"
+  }
+}

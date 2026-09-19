@@ -1,0 +1,242 @@
+{
+  "gate": "G3",
+  "verdict": "G3_IMPLEMENTATION_PASS",
+  "entry_count": 47,
+  "entries": [
+    {
+      "path": "proofs/g3/G3_REPORT.md",
+      "bytes": 4252,
+      "sha256": "20b44c52b31978d177c68cdae01b82bd090764da6ac7a2e8f62ef3fa57cdea50"
+    },
+    {
+      "path": "proofs/g3/backend_decision.json",
+      "bytes": 330,
+      "sha256": "2082fc26cacc0ce17a8a5b8ed0c0007ac96dd15f150b6e622c511e5d04927877"
+    },
+    {
+      "path": "proofs/g3/changed_file_audit.txt",
+      "bytes": 184,
+      "sha256": "2aa1c3adb8fae64167c427440436a0cb3b91424ab643fe95c32388b2fb1d8a48"
+    },
+    {
+      "path": "proofs/g3/claim_boundary.json",
+      "bytes": 328,
+      "sha256": "e63d98c7ed77f95fc4d529ba64ab394b7d0642e22633231d27cfe7aedae1a5a6"
+    },
+    {
+      "path": "proofs/g3/concurrency_matrix.json",
+      "bytes": 410,
+      "sha256": "95e7ddce4180cacb2e50df4e33c9d8b2f830a994588d3a972454cc06fdfa3949"
+    },
+    {
+      "path": "proofs/g3/crash_matrix.json",
+      "bytes": 1210,
+      "sha256": "7a8f2b8c80e09beb7f16150215b4f0376849cb9949ca197256ba4bfbc25cceb5"
+    },
+    {
+      "path": "proofs/g3/durable_surface_inventory.json",
+      "bytes": 1161,
+      "sha256": "9d45b4750fd9f9b91de95cad12cb3955b6a55e89f78f545759609714ca1bc9b3"
+    },
+    {
+      "path": "proofs/g3/effect_protocol_matrix.json",
+      "bytes": 930,
+      "sha256": "0d466ede760ec6b23d149a588fe008f495544a0a408968eaa3acf12755816733"
+    },
+    {
+      "path": "proofs/g3/effect_vectors.json",
+      "bytes": 282,
+      "sha256": "1d7b891b2b8bbb464bb1faae80e3c5448466f84b462702ce38778a42ab385c66"
+    },
+    {
+      "path": "proofs/g3/environment.json",
+      "bytes": 327,
+      "sha256": "de2489643aa9a9e42ec8149cd4831e264ee919da2f4013c98fd6ba72b6cd22b9"
+    },
+    {
+      "path": "proofs/g3/g1_regression.json",
+      "bytes": 264,
+      "sha256": "9a9ff9cfe6fd9c5f5a1eecff2feedebce114f44c5a7acb64191ccbdb4e567a9d"
+    },
+    {
+      "path": "proofs/g3/g2_custody.json",
+      "bytes": 500,
+      "sha256": "ea7da81a56a5cf78c2e454b616bffef3e58ffa22eda7a6d6f81a72349bd2a479"
+    },
+    {
+      "path": "proofs/g3/g2_regression.json",
+      "bytes": 280,
+      "sha256": "90fa84ea7b3c1a5298a3a8d3dc72256ff374f6f7510cf900a57db812e2a680fa"
+    },
+    {
+      "path": "proofs/g3/git_status_before.txt",
+      "bytes": 14,
+      "sha256": "e0acdad312718ad22aa638a7acf8aba2631f62a0dc72ba9ecbcdaeff149af8ed"
+    },
+    {
+      "path": "proofs/g3/lease_fencing_model.json",
+      "bytes": 321,
+      "sha256": "7b4d027ba81590e73d4d434a05a5a50324a68b9e77858e3a669ce5c74a279a01"
+    },
+    {
+      "path": "proofs/g3/logs/baseline_pytest.log",
+      "bytes": 820,
+      "sha256": "01830c5fd121caab30e4f8cf475275c4774d294a53c5120020d65a4b922b1b48"
+    },
+    {
+      "path": "proofs/g3/logs/compileall.log",
+      "bytes": 918,
+      "sha256": "89a039f0655a2305f9128e1e7f4773fec5a7fb2a10d97a5c3dae33d1767ba763"
+    },
+    {
+      "path": "proofs/g3/logs/full_pytest.log",
+      "bytes": 820,
+      "sha256": "4af13019063b1fa6adf46adeada7e1e545698ba25fd6b187183fd601ed1bc7a8"
+    },
+    {
+      "path": "proofs/g3/logs/g3_all_classes.log",
+      "bytes": 620,
+      "sha256": "baa3fba8aa10ed0cbc801671289f47fa6de867e929cc6e04fa4d33039eb6fe02"
+    },
+    {
+      "path": "proofs/g3/logs/g3_mp_crash.log",
+      "bytes": 99,
+      "sha256": "a0584ab9a9bf51d0dc9910e73f866b592027fd98b58d4fa09a10f6372b51b252"
+    },
+    {
+      "path": "proofs/g3/logs/g3_suite.log",
+      "bytes": 99,
+      "sha256": "eb45c0cfc3dfe224d4e4f3456c779cef284ee019b53b1a592e113f7bb4ac5291"
+    },
+    {
+      "path": "proofs/g3/logs/unit_effects_mutations.log",
+      "bytes": 1642,
+      "sha256": "2ea33fd73dc457c1901be40f64e813d6c8b9f85f2bf99d2e632ff232d7876539"
+    },
+    {
+      "path": "proofs/g3/mutation_results.json",
+      "bytes": 344,
+      "sha256": "d32473f3e9a92084b41a310f9191ce5176278edaebb97aecbadc98bfcbdf7bf9"
+    },
+    {
+      "path": "proofs/g3/performance_results.json",
+      "bytes": 445,
+      "sha256": "e4ac5da45cd78ae58c4038d0e5f87fcc4712113e760ac6c58a8b7266f3a6a20a"
+    },
+    {
+      "path": "proofs/g3/promotion_decision.json",
+      "bytes": 167,
+      "sha256": "8f0bf82356be9d3bcea97c2413e8210c6b1f014d063b42e07bbda98883bfbead"
+    },
+    {
+      "path": "proofs/g3/recovery_matrix.json",
+      "bytes": 147,
+      "sha256": "ad21fcd50959b8b25d90ffbc8d0f6fb452939109fd5f0ca78ed1b7d451ccd2e6"
+    },
+    {
+      "path": "proofs/g3/red/absence_evidence.json",
+      "bytes": 987,
+      "sha256": "59a8271452335421383bd5dbc2038f446e8a94dfe7e1767a8e9b7bcc4eb5880c"
+    },
+    {
+      "path": "proofs/g3/ring0_ring1_binding.json",
+      "bytes": 935,
+      "sha256": "fcd794acfd562452c11e0cf41a95130bfd37a6942ccb27780662734230fffc0e"
+    },
+    {
+      "path": "proofs/g3/schema.json",
+      "bytes": 264,
+      "sha256": "0a5e9ec10c8f59ce51f43ba9b717680d6b066d0d83a631b1a8828b07b52f3f51"
+    },
+    {
+      "path": "proofs/g3/source_identity.json",
+      "bytes": 951,
+      "sha256": "b4c6ed8ad66e6e8317244b193ce298dc5288d210858b58aec0c24e932fb60a55"
+    },
+    {
+      "path": "proofs/g3/sqlite_pragmas.json",
+      "bytes": 397,
+      "sha256": "aab0c6d36671646b59cd5b8d965a73dee52f7a03c08dba209c3223c9008e2c38"
+    },
+    {
+      "path": "proofs/g3/store_failure_vectors.json",
+      "bytes": 104,
+      "sha256": "4675ba34c94b566edcf34dd857101abd9514f3905269fd02ed780c9c284892df"
+    },
+    {
+      "path": "proofs/g3/test_results.json",
+      "bytes": 124,
+      "sha256": "227b416bf91fa162350af8e3f77f5347862ee92566a6f179aa992796348fc05d"
+    },
+    {
+      "path": "proofs/g3/transaction_boundaries.json",
+      "bytes": 578,
+      "sha256": "a09537db25ec151682e0ff52f6946c1469725135c50d353d13cfef5e8abe7110"
+    },
+    {
+      "path": "proofs/g3/working_contract_integrity.json",
+      "bytes": 285,
+      "sha256": "6057cebc4434ee475a12e99df2717c3488c54988e872a967f8ad296ef75baa9b"
+    },
+    {
+      "path": "proofs/g3/writer_audit.json",
+      "bytes": 566,
+      "sha256": "d7f0dfc0c6370d2ed254da882354461ca2fc19201936f62c8c8d779807371563"
+    },
+    {
+      "path": "spe_runtime/ring1/__init__.py",
+      "bytes": 1321,
+      "sha256": "778a72a485cf0375ef57c7c43706b09532e43c7e2ae8150666ddc7b5757df57d"
+    },
+    {
+      "path": "spe_runtime/ring1/clock.py",
+      "bytes": 728,
+      "sha256": "bcc5d357be425751812e8d88ca43bd423089181010fbf2314c4bcdb9b0342dc4"
+    },
+    {
+      "path": "spe_runtime/ring1/commit.py",
+      "bytes": 6523,
+      "sha256": "da01d8bc321778bae830e9370a82b66917324a674459aa5b78e71887e2b53cf4"
+    },
+    {
+      "path": "spe_runtime/ring1/effects.py",
+      "bytes": 15634,
+      "sha256": "9839056d5294eb9a6fecc1e2961a33c29fd0ea10ce34e819b8ae3ed0b35e4e22"
+    },
+    {
+      "path": "spe_runtime/ring1/failpoints.py",
+      "bytes": 1059,
+      "sha256": "edf018335e8e986fa78c82d9283c10c9a6d3daaad00b6f0b57da21f9ed915b08"
+    },
+    {
+      "path": "spe_runtime/ring1/lease.py",
+      "bytes": 9805,
+      "sha256": "4c8adf99ab28cbfdca2f4d5fe0d42213ad78b2a0dd78b315135ede22b4d0ca37"
+    },
+    {
+      "path": "spe_runtime/ring1/models.py",
+      "bytes": 2623,
+      "sha256": "5f4e88867d6c66c5f485a119de0277db1abadd4cce664c76a0948d47bfa09a3a"
+    },
+    {
+      "path": "spe_runtime/ring1/recovery.py",
+      "bytes": 4287,
+      "sha256": "ffe63887c8ebcf8cf74f675344558ebe70947c8c432774181e8bb3aa367ce43b"
+    },
+    {
+      "path": "spe_runtime/ring1/schema.py",
+      "bytes": 2705,
+      "sha256": "f8e0c11cd8719fa1fd4c1f849d0b0a6d5f9afcc98af812662f091fe19621923d"
+    },
+    {
+      "path": "spe_runtime/ring1/store.py",
+      "bytes": 10761,
+      "sha256": "5f9f59f972125877597968dbf626ff68500d6d0626e4037ca9e95d00d960fd6f"
+    },
+    {
+      "path": "spe_runtime/ring1/testing.py",
+      "bytes": 2155,
+      "sha256": "035ed7cb60672647b30e74f285c0a98fce322723501f7eaba86075bfd004f587"
+    }
+  ]
+}

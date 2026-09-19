@@ -1,0 +1,17 @@
+{
+  "attempted": 10,
+  "killed": 10,
+  "survived": 0,
+  "mutations": [
+    "M1_stale_fence",
+    "M2_cas",
+    "M3_half_commit",
+    "M5_timeout_as_failure",
+    "M6_sent_unknown_reset",
+    "M7_new_idempotency_key",
+    "M8_auto_resend",
+    "M9_journal_update",
+    "M10_success_without_evidence",
+    "M4_covered_by_stale_worker_unit"
+  ]
+}

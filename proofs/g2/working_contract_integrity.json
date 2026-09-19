@@ -1,0 +1,8 @@
+{
+  "path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
+  "expected_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "actual_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "match": true,
+  "status": "UNCHANGED",
+  "g2_blocked_if_changed": true
+}

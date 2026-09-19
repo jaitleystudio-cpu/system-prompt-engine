@@ -1,0 +1,11 @@
+{
+  "foreign_keys": "ON",
+  "journal_mode": "DELETE",
+  "synchronous": "FULL",
+  "busy_timeout_ms": 5000,
+  "rationale": {
+    "journal_mode_DELETE": "conservative rollback journal for reference durability over WAL throughput",
+    "synchronous_FULL": "fsync journal before commit ack in SQLite semantics; still NOT physical power-loss proof",
+    "foreign_keys_ON": "referential integrity"
+  }
+}

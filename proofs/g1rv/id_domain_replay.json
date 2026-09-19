@@ -1,0 +1,14 @@
+{
+  "prefixes_observed": [
+    "req-",
+    "snap-",
+    "rcpt-",
+    "pad-",
+    "spe-",
+    "qe-",
+    "qual-",
+    "cplan-"
+  ],
+  "cross_domain_substitution": "rejected where typed validation exists",
+  "result": "PASS"
+}

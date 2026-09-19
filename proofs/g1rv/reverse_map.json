@@ -1,0 +1,10 @@
+{
+  "UNOWNED": 0,
+  "unowned_facts": [],
+  "MISSING": 0,
+  "missing_requirements": [],
+  "IMPLEMENTED": 33,
+  "PARTIAL": 16,
+  "CONFLICTING": 1,
+  "source": "proofs/g1/ring0_gap_matrix.json + semantic_writer_map.json (live HEAD)"
+}

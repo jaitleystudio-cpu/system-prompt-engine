@@ -1,0 +1,9 @@
+=== G1 binding before G1R-6 ===
+status= BOUND_WITH_GAPS
+review_state= G1R4_PASS_EXTERNAL; G1R5_PASS_EXTERNAL; G1 BOUND_WITH_GAPS
+UNOWNED= 3
+unowned_facts= ['spe_artifact_identity', 'prompt_artifact', 'qualification_evidence']
+missing_count= 8
+HEAD= f3a7302f97a469f7369270c6198118b26ab72497
+TREE= 1e79fcc17527052a36c8e1dcd3b2f7dc0f29868c
+68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3  specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json

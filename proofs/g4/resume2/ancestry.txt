@@ -1,0 +1,31 @@
+f240ee30a8e6feb10a01d93ada0f35bef90b4ef0
+f240ee3 (HEAD -> cursor/g4-live-provider-conformance-0d6e, origin/cursor/g4-live-provider-conformance-0d6e) docs(g4u): pin resume HEAD
+ab1b90c docs(g4u): resume attempt still BLOCKED — no credential/budget
+fb7131f docs(g4): correct tip HEAD pin
+654c577 docs(g4): record PR #24
+ff4d90c docs(g4): pin evidence HEAD for blocked live-provider gate
+8f062b8 feat(g4): provider boundary + protocol tests; live blocked (no credentials)
+a021aed (origin/cursor/g3r-durable-ring1-recheck-0d6e, cursor/g3r-durable-ring1-recheck-0d6e) docs(g3r): pin review HEAD after harden evidence
+857350e docs(g3r): evidence for five-surface independent recheck harden
+cf1e6c7 test(g3r): harden five-surface adversarial Ring-1 recheck
+8a6c197 docs(g3r): correct tip HEAD pin
+7022c78 docs(g3r): pin review HEAD to tip
+a264c9c docs(g3r): record PR #23
+dffcb71 docs(g3r): correct tip HEAD pin
+11c43dc docs(g3r): pin review HEAD
+d179205 fix(g3r): adversarial Ring-1 recheck — fence cancel, store open boundary, idempotency
+95a6d0b (origin/cursor/g3-durable-ring1-0d6e, cursor/g3-durable-ring1-0d6e) docs(g3): record PR #22
+bd17387 docs(g3): correct tip HEAD pin
+5da4686 docs(g3): pin evidence HEAD
+798927d feat(g3): durable Ring-1 SQLite store with fencing, crash, and effect recovery
+1c32235 (origin/cursor/g2-tla-tlc-modelcheck-0d6e, cursor/g2-tla-tlc-modelcheck-0d6e) docs(g2): record PR #21 URL and tip HEAD
+0bb8099 docs(g2): pin evidence HEAD to model-check commit
+c55cb2c feat(g2): TLA+/TLC safety+liveness model-check for Ring-0 lease/commit FSM
+8e8b028 (origin/cursor/g1rv-final-binding-replay-0d6e, cursor/g1rv-final-binding-replay-0d6e) docs(g1rv): complete evidence vectors + pin replay identity
+c700494 docs(g1rv): final G1 binding replay — BOUND_AND_PASS (WORKING_CONTRACT_BOUND)
+7edd0d5 (origin/cursor/g1r9r-k7-qualification-recheck-0d6e, cursor/g1r9r-k7-qualification-recheck-0d6e) docs(g1r9r): pin evidence review HEAD to promotion commit
+8fa1bda docs(g1r9r): evidence pack + G1R-9 PASS_EXTERNAL promotion
+c88703a fix(g1r9r): harden K7 against policy/independence/reuse/production laundering
+8766bfd (origin/cursor/g1r9-k7-qualification-0d6e, cursor/g1r9-k7-qualification-0d6e) docs(g1r9): pin evidence HEAD to tip
+7d618aa docs(g1r9): evidence pack + binding sync; IMPLEMENTATION_PRESENT / REVIEW_PENDING
+16ceff3 feat(g1r9): K7 ClaimQualification + QualificationEvidence

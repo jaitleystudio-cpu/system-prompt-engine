@@ -1,0 +1,5 @@
+SPE_IMPLEMENTATION_BINDING_v2.json
+proofs/g1/SPE_IMPLEMENTATION_BINDING_v2.json
+proofs/g1/module_disposition.json
+proofs/g1/runtime_module_inventory.json
+spe_runtime/error_registry.py
