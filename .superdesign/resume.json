@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "/": {
+      "targetKind": "existing-ui",
+      "projectId": "66b50960-2798-4bf8-b166-dd1400c66fdb",
+      "baselineDraftId": "cb9fd147-cf42-4a89-baf0-8e8e7234bab3",
+      "activeDraftId": "37b1b004-d170-48e9-bb08-eca7922fdf28",
+      "designSystemPath": ".superdesign/design-system.md",
+      "referenceIds": [
+        "bfc1c565-bd14-494f-af4e-3c181325d621",
+        "9a5362b3-5754-4c91-a680-ee35185216a6"
+      ],
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        "docs/web03/SPE_VISUAL_DIRECTION.md",
+        "docs/web03/ORIGINALITY_REVIEW.md",
+        "apps/web/src/App.tsx",
+        "apps/web/src/layout/Nav.tsx",
+        "apps/web/src/brand/Logo.tsx",
+        "apps/web/src/landing/Hero.tsx",
+        "apps/web/src/landing/ScrollStory.tsx",
+        "apps/web/src/scene/SpeIntelligence.tsx",
+        "apps/web/src/workspace/Workspace.tsx",
+        "apps/web/src/ui/PrivacyIndicator.tsx",
+        "apps/web/src/ui/TrustPanel.tsx",
+        "apps/web/src/index.css:1:2500",
+        "packages/design-system/src/tokens.css"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "0a0981c227375acb6fc0951ececd7e60de0a68cfb3c3e6018dfc716fa1ef5bcf",
+        "docs/web03/SPE_VISUAL_DIRECTION.md": "6011f42444be3352c9b260f969245ffecabbe6a59b06d5df325111a988be6a16",
+        "docs/web03/ORIGINALITY_REVIEW.md": "ec26d7b36cfdf8c290fcfdd4d73e537d1e1a583c8316acc3f55985845b750944",
+        "apps/web/src/App.tsx": "7b2bcf74f5b67c54613e8a966ae9377ef74305e12b650d989486f8df690472c4",
+        "apps/web/src/layout/Nav.tsx": "e6c1eaa47c8f6d527fd9705b6adfccdadb30f3a826328d98dfbd1edf4efd8be6",
+        "apps/web/src/brand/Logo.tsx": "189681b5acd5957ffe67df639da27ad34ce5564e6ed17d16c55109b7bfe36940",
+        "apps/web/src/landing/Hero.tsx": "d540f4a2d670220cb811f2f9705d8c99347bde3184f0f74015b8d739f8fe66e9",
+        "apps/web/src/landing/ScrollStory.tsx": "d2f1cb0917086cacf8aeebc8fae9e4013568f7b0fc4fa239a1b4e2d1b31aee9f",
+        "apps/web/src/scene/SpeIntelligence.tsx": "be60df2431997619f80268a514baa0696292eba412f8b041423f17f9e34b24c3",
+        "apps/web/src/workspace/Workspace.tsx": "ccf3d2ba45e0b2c510657c7bd155dbca003a13c4ccf7dd483d716ed347946f67",
+        "apps/web/src/ui/PrivacyIndicator.tsx": "fd82e6d153c905609cda7d05de50986a9631229e8eacdd5ae24933a0f0a784e5",
+        "apps/web/src/ui/TrustPanel.tsx": "a2c266c185d48ec5925f6ecfcffd8f940a0ba466094525a8381557581c5dad8c",
+        "apps/web/src/index.css": "9ab2eb9aa5752e6c483d79ff3f695d5d86ebceda88df391c02f6cff4c2fbddf9",
+        "packages/design-system/src/tokens.css": "25813d7b15131bfb20b77f760124eb447205dfff8dbf675bc58c4c48bdfa6ca2"
+      },
+      "components": [],
+      "drafts": {
+        "cb9fd147-cf42-4a89-baf0-8e8e7234bab3": {
+          "title": "System Prompt Engine — Current Interface",
+          "visualDirection": "Pixel-faithful SPE-WEB-02 reproduction baseline",
+          "currentVersion": 1
+        },
+        "37b1b004-d170-48e9-bb08-eca7922fdf28": {
+          "title": "System Prompt Engine — Semantic Forge",
+          "visualDirection": "Direction A — cinematic spatial compiler, physical materiality, continuous act structure",
+          "parentDraftId": "cb9fd147-cf42-4a89-baf0-8e8e7234bab3",
+          "currentVersion": 1
+        },
+        "ab65ed74-8481-4c18-9a1f-1e4ee5267a61": {
+          "title": "Semantic Observatory — System Prompt Engine",
+          "visualDirection": "Direction B — editorial data-spatial semantic specimen, macro inspection structure",
+          "parentDraftId": "cb9fd147-cf42-4a89-baf0-8e8e7234bab3",
+          "currentVersion": 1
+        }
+      },
+      "updatedAt": "2026-09-19T17:35:00Z"
+    }
+  }
+}

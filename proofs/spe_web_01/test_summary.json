@@ -1,0 +1,70 @@
+{
+  "mission": "SPE-WEB-01",
+  "recorded_at_utc": "2026-09-19T14:04:18.854723+00:00",
+  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+  "branch": "cursor/spe-web-01-foundation-0d6e",
+  "working_tree_note": "commit pending",
+  "pr6": {
+    "inspected": true,
+    "merged": false,
+    "file": "proofs/spe_web_01/pr6_inspection.json"
+  },
+  "engine": {
+    "real_wasm": true,
+    "worker": true,
+    "ts_fallback": false,
+    "offline": true,
+    "integrity_gate": "WASM_INTEGRITY_MISMATCH",
+    "wasm_sha256": "8e535b8a6972a2af1505000d43b570b2966ed6950777fbb705dccc2e74655129",
+    "wasm_bytes": 249893
+  },
+  "tests": {
+    "pytest_web_passed": 37,
+    "pytest_web_failed": 0,
+    "pytest_web_exit": 0,
+    "rust_core": "27 passed (suite totals from cargo test)",
+    "rust_wasm": "2 passed",
+    "wasm_release_build_exit": 0,
+    "web_production_build": "PASS",
+    "engine_eval_pos001": "PASS",
+    "audit_deps": "PASS",
+    "audit_egress": {
+      "not_a_release": true,
+      "new_implementation": true,
+      "network_mode": "NONE",
+      "fixture_id": "POS-001",
+      "fetch_during_evaluate": 0,
+      "websocket_during_evaluate": 0,
+      "external_hosts": [],
+      "zero_egress": true,
+      "engine_error": null,
+      "used_ts_fallback": false
+    },
+    "audit_assets": {
+      "not_a_release": true,
+      "new_implementation": true,
+      "network_mode": "NONE",
+      "wasm_bytes": 249893,
+      "wasm_sha256": "8e535b8a6972a2af1505000d43b570b2966ed6950777fbb705dccc2e74655129",
+      "dist_file_count": 9,
+      "dist_total_bytes": 433717,
+      "dist_js_css_bytes": 181823,
+      "budgets": {
+        "wasm_max_bytes": 2000000,
+        "dist_js_css_max_bytes": 1500000
+      },
+      "within_budget": true
+    },
+    "compileall_exit": 0,
+    "pytest_all_passed": 450,
+    "pytest_all_failed": 0,
+    "pytest_all_exit": 0
+  },
+  "g6h_frozen": "YES",
+  "claim_boundary": {
+    "website_implementation": "IMPLEMENTATION_PRESENT / REVIEW_PENDING",
+    "production": "NOT QUALIFIED",
+    "world_1": "NOT PROVEN"
+  },
+  "head": "442b765bd7ef3ea8a09a4723823245b1fa2e2ec3"
+}

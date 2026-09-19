@@ -1,0 +1,80 @@
+/** SPE-WEB-03 Semantic Forge — graphite, titanium, ceramic, warm metal. */
+:root {
+  --forge-void: #080908;
+  --forge-graphite: #111310;
+  --forge-graphite-2: #171915;
+  --forge-panel: rgba(30, 32, 29, 0.9);
+  --forge-titanium: #373a36;
+  --forge-titanium-hi: #777b74;
+  --forge-ceramic: #e9e6de;
+  --forge-paper: #c8c4ba;
+  --forge-muted: #93968f;
+  --forge-deep: #171815;
+  --forge-line: rgba(176, 180, 169, 0.24);
+  --forge-line-soft: rgba(176, 180, 169, 0.12);
+  --forge-smoke: rgba(115, 121, 112, 0.1);
+
+  --forge-warm-dark: #8d6337;
+  --forge-warm: #b98a4e;
+  --forge-warm-hi: #e1b978;
+
+  --semantic-goal: #c59a5c;
+  --semantic-constraint: #b85d43;
+  --semantic-context: #63806a;
+  --semantic-unknown: #8c9691;
+  --semantic-preference: #a7786b;
+  --semantic-output: #d7d0be;
+
+  --forge-ok: #748f72;
+  --forge-danger: #b85d43;
+
+  /* Legacy gate aliases: obsidian / platinum names remain test-compatible. */
+  --spe-obsidian: var(--forge-void);
+  --spe-obsidian-elevated: var(--forge-graphite);
+  --spe-obsidian-panel: var(--forge-panel);
+  --spe-platinum: var(--forge-ceramic);
+  --spe-platinum-muted: var(--forge-muted);
+  --spe-ink: var(--forge-paper);
+
+  --spe-space-1: 0.25rem;
+  --spe-space-2: 0.5rem;
+  --spe-space-3: 0.75rem;
+  --spe-space-4: 1rem;
+  --spe-space-5: 1.5rem;
+  --spe-space-6: 2rem;
+  --spe-space-7: 3rem;
+  --spe-space-8: 5rem;
+  --spe-space-9: 7rem;
+
+  --spe-font-display: "Arial Narrow", "Aptos Display", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --spe-font-body: "Aptos", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --spe-font-ui: "Arial Narrow", "Aptos", "Segoe UI", system-ui, sans-serif;
+  --spe-font-mono: "SFMono-Regular", "Cascadia Mono", Consolas, ui-monospace, monospace;
+
+  --spe-fs-xs: 0.72rem;
+  --spe-fs-sm: 0.875rem;
+  --spe-fs-md: 1.05rem;
+  --spe-fs-lg: 1.35rem;
+  --spe-fs-xl: clamp(1.8rem, 3vw, 2.6rem);
+  --spe-fs-2xl: clamp(2.8rem, 6vw, 5.75rem);
+  --spe-fs-3xl: clamp(3.7rem, 9vw, 8.5rem);
+
+  --spe-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spe-ease-mass: cubic-bezier(0.2, 0.72, 0.24, 1);
+  --spe-dur-fast: 140ms;
+  --spe-dur-med: 420ms;
+  --spe-dur-slow: 1100ms;
+  --spe-focus: 0 0 0 2px var(--forge-void), 0 0 0 4px var(--forge-warm-hi);
+
+  color-scheme: dark;
+  background: var(--forge-void);
+  color: var(--forge-ceramic);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --spe-dur-fast: 0ms;
+    --spe-dur-med: 0ms;
+    --spe-dur-slow: 0ms;
+  }
+}
