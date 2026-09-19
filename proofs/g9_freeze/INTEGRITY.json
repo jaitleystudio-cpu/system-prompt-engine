@@ -1,5 +1,5 @@
 {
-  "manifest_sha256": "07a8dfe50134f6a16d533e521d3f810a03f59ff074a8da40273e90530c9e0ee1",
+  "manifest_sha256": "c388037b7a22212ca4a240f4203133b564b2996c2357918320672539c5dc0b05",
   "freeze_head": "480ee2bdc95fa7cf768aa94737660e43f6072af3",
   "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
   "g2_model_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
@@ -7,5 +7,5 @@
   "independently_replicated": "NOT_PROVEN",
   "g6_human_value": "PENDING",
   "do_not_fabricate_ratings": true,
-  "freeze_pack_head": "d982f1b2d922ae0b5c1b002f6cb65afd97ec8475"
+  "freeze_pack_head": "8b2b4beabe7e2d210904ddff04b6715ed6d5e727"
 }
