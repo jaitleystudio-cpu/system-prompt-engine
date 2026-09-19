@@ -20,7 +20,7 @@
     "proofs/g8zc/G8_ZC_REPORT.md": "aaba31f348f9dd6a94f2bc314ef52fd0ebf3cb218d15d53392434fda942dfef0",
     "proofs/g8zc/full_regression.json": "b2a164e1a29ec7d92b7fa05d2dc29ccb73576a6cede155d8958c9b4ed5030b6b",
     "proofs/g8zc/replay_results.json": "4eaa17d63074664f380587c49dbc8983898e9665327eaa57c93c3036d4438d8f",
-    "proofs/g9zc/G9_ZC_REPORT.md": "b9ed51d723ddcd41ab63385f13741f7adef535a1909e4b2e066a1f88c55ba6f9",
+    "proofs/g9zc/G9_ZC_REPORT.md": "6b4fc25f4a87459b9b811e81b649cc8881512383d9d5aa89c01754d714288b61",
     "proofs/g9zc/RELEASE_BOUNDARY.md": "fbe365f2ab47bdfba4d11149b9ffb1ce23a13bc2801685ef66c2444e8c157375",
     "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
     "tests/security/test_g7zc_redteam.py": "1ebb8dbc7c00745d6d3d93086793375cbae6fac74dd2fe421e728639ead4ec6a",
@@ -82,7 +82,7 @@
     "PR #6 remains OPEN / unmerged by design"
   ],
   "pack": "G9-ZC-RELEASE-CUSTODY",
-  "qualification_head": "305360708aa23d6930e9ee8587519866ec39d979",
+  "qualification_head": "02dc33daef9776e54b643baa406d826d643196f2",
   "recorded_at_utc": "2026-09-19T07:59:57.984919+00:00",
   "regression": {
     "command": "python -m pytest",

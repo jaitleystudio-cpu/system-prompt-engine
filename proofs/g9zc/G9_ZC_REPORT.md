@@ -16,7 +16,7 @@ G8 HEAD (base):
 69429fca372d1cd84ec92612b1350dc95579e84d
 
 G9 HEAD:
-(see source_identity.json after tip pin)
+02dc33daef9776e54b643baa406d826d643196f2
 
 Branch:
 cursor/g9zc-release-custody-0d6e
