@@ -5,7 +5,7 @@ G4_ZEROCOST_CORE_PASS
 
 ## SOURCE CUSTODY
 Base: `86b462b9704a1910880266493c028ce05f64a7f4`
-HEAD: (pin after commit)
+HEAD: `b560d2fa72e0575680ab99daf0d68a872641ae64`
 Branch: `cursor/g4zc-zerocost-core-0d6e`
 PR: (pending)
 Contract SHA: `68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3`
