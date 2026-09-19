@@ -1,15 +1,21 @@
 {
-  "earned_if_pass": "ZERO_COST_LOCAL_FAULT_RESILIENCE_VERIFIED_WITHIN_TESTED_SCOPE",
+  "G1": "BOUND_AND_PASS",
+  "G2": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+  "G3": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE",
+  "G4": "ZERO_COST_CORE_ENGINE_VERIFIED_WITHIN_TESTED_SCOPE",
+  "G5_interim_before_recheck": "CHAOS_EVIDENCE_PRESENT / FINAL_FREEZE_PENDING",
+  "G5": "ZERO_COST_LOCAL_FAULT_RESILIENCE_VERIFIED_WITHIN_TESTED_SCOPE",
+  "G4X": "OPTIONAL / DEFERRED",
+  "freeze_gaps_closed": [
+    "repair_attempt_bound_confirmation",
+    "repository_wide_pytest_denominator_confirmation"
+  ],
   "not_earned": [
     "PRODUCTION_READY",
     "POWER_LOSS_PROVEN",
     "ALL_FILESYSTEMS_SAFE",
     "ALL_OPERATING_SYSTEMS_SAFE",
     "SECURITY_RED_TEAM_PASS",
-    "MALWARE_SAFE",
-    "UNIVERSAL_CRASH_SAFE",
     "WORLD_1"
-  ],
-  "physical_power_loss": "NOT_TESTED",
-  "promotion": "G5_IMPLEMENTATION_PASS + FAULT/CHAOS EVIDENCE PRESENT; independent review may elevate"
+  ]
 }

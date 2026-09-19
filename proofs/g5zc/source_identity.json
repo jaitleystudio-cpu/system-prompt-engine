@@ -4,7 +4,8 @@
   "g5_base_head": "c3450c4add1329eeaba28eadcaf36c1cdf94d57b",
   "g5_head": "dbd7ef878087e6848069793c2419c7bc03354a13",
   "gate": "G5-ZC",
-  "recorded_at_utc": "2026-09-19T04:28:29.711254+00:00",
+  "recorded_at_utc": "2026-09-19T05:11:40.762880+00:00",
   "repository": "jaitleystudio-cpu/system-prompt-engine",
-  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/26"
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/26",
+  "recheck": "repair_bound_and_denominator"
 }

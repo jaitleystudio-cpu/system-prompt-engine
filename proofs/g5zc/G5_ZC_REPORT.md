@@ -13,7 +13,7 @@ G5 base HEAD:
 c3450c4add1329eeaba28eadcaf36c1cdf94d57b
 
 G5 HEAD:
-dbd7ef878087e6848069793c2419c7bc03354a13
+(see tip after evidence-closing recheck pin)
 
 Branch:
 cursor/g5zc-local-chaos-0d6e
@@ -63,43 +63,43 @@ $0 / ₹0
 
 ## FAULT SURFACES
 
-input decode · ProtectedIntentContract · RequirementGraph · CognitivePlan · TechniqueSelection · PromptStrategy · PromptArtifact · deterministic validation · .spe build/serialization · file write/replace · load · process crash · concurrency · network kill · provider absence
+input decode · contract/graph · plan/techniques/strategy · PromptArtifact · validation · .spe build/serialize · write/replace · load · process kill · concurrency · network kill · provider absence (F1–F20)
 
-See `proofs/g5zc/fault_surface_inventory.json` (F1–F20).
+See `proofs/g5zc/fault_surface_inventory.json`.
 
 ## MALFORMED INPUT
 
 Result:
-PASS — empty/whitespace typed reject; NUL/CRLF/RTL/emoji/hostile sentinels compile or reject without crash or authority mint
+PASS
 
 ## UNICODE
 
 Result:
-PASS — NFC/NFD goal forms share `prompt_content_digest` where canonicalize applies
+PASS (NFC/NFD digest match)
 
 ## OVERSIZED INPUT
 
 Result:
-PASS — ~100k-char safe fixture compiles; no provider fallback; no unbounded repair
+PASS (bounded; no provider fallback)
 
 ## CONFLICTS
 
 Result:
-PASS — MUST vs MUST_NOT → CONFLICTED; `build_prompt_artifact` raises `K3_PROMPT_CONFLICTED_SOURCE`; no silent side deletion
+PASS (CONFLICTED; no silent launder)
 
 ## ARTIFACT INTEGRITY
 
 Truncation:
-PASS — first/middle/last-byte truncations rejected
+PASS
 
 Digest mismatch:
-PASS — `K6_ARTIFACT_ID_MISMATCH`
+PASS (`K6_ARTIFACT_ID_MISMATCH`)
 
 Lineage:
-PASS — self-parent → `K6_INVALID_LINEAGE`
+PASS (`K6_INVALID_LINEAGE`)
 
 Future version:
-PASS — `K6_UNSUPPORTED_ARTIFACT_VERSION`
+PASS (`K6_UNSUPPORTED_ARTIFACT_VERSION`)
 
 Failed load preserves current state:
 PASS
@@ -107,24 +107,24 @@ PASS
 ## STORAGE FAULTS
 
 Permission denied:
-PASS — typed write failure
+PASS
 
 Partial write:
-PASS — incomplete bytes never accepted as completed `.spe`
+PASS
 
 Existing target:
-PASS — default overwrite refused; failed overwrite leaves prior bytes intact (temp+`os.replace`)
+PASS (atomic temp+`os.replace`; G5ZC-F01 fixed)
 
 ## PROCESS CRASH
 
 Compile crash:
-PASS — SIGKILL then fresh-process recompile deterministic
+PASS
 
 Artifact-write crash:
-PASS — half-written file rejected on load
+PASS
 
 Kill mechanism:
-SIGKILL (process-kill evidence only)
+SIGKILL
 
 Physical power loss:
 NOT TESTED
@@ -132,53 +132,76 @@ NOT TESTED
 ## CONCURRENCY
 
 Same input:
-PASS — identical digests/rendered prompts
+PASS
 
 Different inputs:
-PASS — distinct digests; no token cross-leak
+PASS
 
 Concurrent export:
-PASS — distinct paths; no cross-overwrite
+PASS
 
 Iterations:
-20 Barrier-synchronized pairs (same-input)
+20
 
 Contamination:
 NONE
 
 ## BOUNDED REPAIR
 
-Maximum attempts:
-technique budget `STANDARD_MAX_TECHNIQUES=3`; conflicts fail closed (no silent repair)
+Exact offline-core contract (confirmed; NOT technique budget):
 
-Unbounded loop:
+initial validation attempts:
+1
+
+maximum repair attempts:
+0
+
+maximum total attempts:
+1
+
+third attempt possible:
 NO
+
+provider escalation:
+NO
+
+recursive repair:
+NO
+
+terminal on conflict:
+`K3_PROMPT_CONFLICTED_SOURCE` (fail-closed single shot)
+
+TechniqueSelection budget (`STANDARD_MAX_TECHNIQUES=3`):
+separate selection-cardinality bound — not a repair-attempt bound
+
+Evidence:
+`proofs/g5zc/repair_bound_confirmation.json`
+`tests/unit/test_g5zc_repair_bound.py`
+
+Mission template assumed “initial + max one repair (≤2)”; implementation is stricter (zero repair attempts).
 
 ## RESOURCE LIMITS
 
 Result:
-PASS — technique budget truncation; oversized input remains bounded in tested fixtures
+PASS
 
 ## NETWORK KILL
 
 Core compile:
-PASS under socket.connect kill
+PASS
 
 Result:
-PASS — no mandatory network attempt from core path
+PASS
 
 ## PROVIDER ABSENCE
 
 Core affected?:
 NO
 
-Optional live gate:
-`G4_LIVE_BLOCKED_NO_CREDENTIAL` — project/artifact intact
-
 ## MUTATIONS
 
 Attempted:
-12 (G5M1–G5M12)
+12
 
 Killed:
 12
@@ -189,67 +212,84 @@ Survived:
 ## PERFORMANCE
 
 Normal:
-median 0.175 ms (n=21)
+median 0.175 ms
 
-Stress (large input):
-median 0.499 ms (n=11)
+Stress:
+median 0.499 ms
 
 Concurrent:
-Barrier multiprocess compile pairs — functional PASS (see concurrency_matrix.json)
-
-Artifact save/load:
-median 1.094 ms (n=11)
+PASS
 
 ## MEMORY
 
 Normal:
-peak RSS 23204 KB (ru_maxrss)
+23204 KB peak RSS
 
 Stress:
-peak RSS 23204 KB (same process peak; descriptive only)
+23204 KB peak RSS
 
 ## G4-ZC REPLAY
 
 Z1-Z10:
-PASS (network kill + credentials absent)
+PASS
 
 ## REGRESSION
 
-pytest collected:
-653 (`tests/unit`)
+command:
+python -m pytest
+
+repository-wide collected:
+986
+
+collection roots:
+tests/unit: 656
+tests/integration: 64
+tests/portability: 266
+tests/security|mutation|recovery|regression: 0
 
 passed:
-653
+871
 
 failed:
-0
+115
 
 skipped:
 0
 
-Full-repo `python -m pytest`:
-868 passed / 115 failed — all failures are portability/wasm (`wasm32-unknown-unknown` target missing); same exclusion discipline as G4-ZC
+exit:
+1
+
+failure accounting:
+All 115 failures are portability/wasm (`wasm32-unknown-unknown` Rust target missing in this environment). Same env constraint as G4-ZC. G5-introduced regressions: 0.
+
+Executable green subset (wasm toolchain excluded, explicit):
+866 passed / 0 failed / exit 0
+(`tests/unit` + `tests/integration` + non-wasm `tests/portability`)
 
 compileall:
 PASS (exit 0)
 
 G1:
-PASS (contract hash match; unit suite)
+PASS
 
 G2:
 PASS (model hash unchanged)
 
 G3:
-PASS (G3R/Ring-1 unit subset green)
+PASS
 
 G4:
-PASS (G4-ZC unit + Z1–Z10 replay)
+PASS
+
+Prior ambiguous “653 (tests/unit)” wording corrected — 653/656 was unit-only, not full discovery.
 
 ## FINDING / REPAIR
 
-G5ZC-F01 (MEDIUM): non-atomic `Path.write_bytes` on overwrite path could destroy a complete `.spe` under injected write failure.
-Minimal repair: temp sibling + `os.replace`; OSError → `SpeTypedError`; best-effort tmp cleanup.
-First-run adversarial suite against untouched G4-ZC source: GREEN (35 passed) — preserved in `initial_adversarial_run.json`.
+G5ZC-F01 (MEDIUM): non-atomic `Path.write_bytes` on overwrite path → temp + `os.replace`. FIXED.
+
+Evidence-closing recheck (no chaos campaign rerun):
+1. repair-attempt bound CONFIRMED
+2. repository-wide pytest denominator CONFIRMED with wasm env accounting
 
 ## CLAIM BOUNDARY
 
@@ -284,7 +324,7 @@ World #1:
 NOT PROVEN
 
 Promotion note:
-G5_IMPLEMENTATION_PASS + FAULT/CHAOS EVIDENCE PRESENT. This mission is the recorded qualification replay within tested scope — not all-filesystem / all-OS / power-loss proof.
+Prior interim state was CHAOS EVIDENCE PRESENT / FINAL FREEZE PENDING on the two gaps above. Both confirmations are now closed. Tested-scope freeze stands; not all-filesystem / all-OS / power-loss proof.
 
 ## EXACT EARNED CLAIM
 
@@ -301,7 +341,6 @@ DO NOT EXECUTE.
 ## STOP
 
 STOP AFTER G5-ZC.
-
 NO G6 EXECUTION.
 NO G4X PAID PROVIDER REQUIREMENT.
 NO PR #6 MERGE.

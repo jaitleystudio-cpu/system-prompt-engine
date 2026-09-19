@@ -1,6 +1,7 @@
 {
   "gate": "G5-ZC",
   "files": [
+    "G5_ZC_REPORT.md",
     "ancestry.txt",
     "changed_file_audit.txt",
     "claim_boundary.json",
@@ -34,6 +35,7 @@
     "process_kill_matrix.json",
     "randomness_clock_audit.json",
     "repair/results.json",
+    "repair_bound_confirmation.json",
     "resource_limits/results.json",
     "review_findings.json",
     "serialization/results.json",
@@ -43,6 +45,6 @@
     "working_contract_integrity.json",
     "zero_cost_audit.json"
   ],
-  "count": 41,
-  "head": "314b5ad540f9c7293287305a23a7254a5ec10267"
+  "count": 43,
+  "note": "includes evidence-closing recheck"
 }
