@@ -1,0 +1,4 @@
+G1R9R-F01 CRITICAL POLICY_DOWNGRADE_LAUNDERING
+qualify_claim accepts arbitrary ClaimPolicy.
+Malicious policy with TEST_RESULT-only obligations for all stages
+→ earned INDEPENDENTLY_REPLICATED with one unit test.

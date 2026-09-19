@@ -1,0 +1,15 @@
+{
+  "suite": "F18",
+  "status": "PASS",
+  "max_technique_budget": 3,
+  "technique_budget_is_repair_bound": false,
+  "repair_contract": {
+    "initial_validation_attempts": 1,
+    "maximum_repair_attempts": 0,
+    "maximum_total_attempts": 1,
+    "third_attempt_possible": false,
+    "provider_escalation": false,
+    "recursive_repair": false
+  },
+  "evidence": "proofs/g5zc/repair_bound_confirmation.json"
+}

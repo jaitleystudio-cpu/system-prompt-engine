@@ -1,0 +1,9 @@
+{
+  "approved_ceiling_usd": null,
+  "SPE_G4_ALLOW_PAID": false,
+  "requests_sent": 0,
+  "estimated_spend_usd": 0.0,
+  "actual_spend_usd": 0.0,
+  "remaining_budget_usd": null,
+  "status": "NO_BUDGET_NO_CREDENTIAL"
+}

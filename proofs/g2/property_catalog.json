@@ -1,0 +1,375 @@
+{
+  "properties": [
+    {
+      "property_id": "S1",
+      "name": "TypeOK",
+      "type": "INVARIANT",
+      "formal_symbol": "TypeOK",
+      "human_meaning": "Variables in declared domains",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": null,
+      "status": "PASS"
+    },
+    {
+      "property_id": "S2",
+      "name": "SnapshotVersionMonotonic",
+      "type": "INVARIANT",
+      "formal_symbol": "SnapshotVersionMonotonic",
+      "human_meaning": "Commit does not decrease version",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": null,
+      "status": "PASS"
+    },
+    {
+      "property_id": "S3",
+      "name": "StalePatchNeverCommits",
+      "type": "INVARIANT",
+      "formal_symbol": "StalePatchNeverCommits",
+      "human_meaning": "patchCommitted => committedAgainst=patchBase",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": "M1_stale",
+      "status": "PASS"
+    },
+    {
+      "property_id": "S4",
+      "name": "LeaseBindsBaseSnapshot",
+      "type": "INVARIANT",
+      "formal_symbol": "LeaseBindsBaseSnapshot",
+      "human_meaning": "Committed patch/lease base match commit version",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": "M3_lease_bind",
+      "status": "PASS"
+    },
+    {
+      "property_id": "S5",
+      "name": "OnlyActiveLeaseCommits",
+      "type": "INVARIANT",
+      "formal_symbol": "OnlyActiveLeaseCommits",
+      "human_meaning": "Committed => lease CONSUMED (was ACTIVE)",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": "M5_consumed_reuse",
+      "status": "PASS"
+    },
+    {
+      "property_id": "S6",
+      "name": "RequiredObligationsSatisfied",
+      "type": "INVARIANT",
+      "formal_symbol": "RequiredObligationsSatisfied",
+      "human_meaning": "lease obl = patch obl at commit",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": null,
+      "status": "PASS"
+    },
+    {
+      "property_id": "S7",
+      "name": "RequiredProofTypeMatches",
+      "type": "INVARIANT",
+      "formal_symbol": "RequiredProofTypeMatches",
+      "human_meaning": "exact proof type",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": null,
+      "status": "PASS"
+    },
+    {
+      "property_id": "S8",
+      "name": "FailNeverCommits",
+      "type": "INVARIANT",
+      "formal_symbol": "FailNeverCommits",
+      "human_meaning": "FAIL receipt => not committed",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": null,
+      "status": "PASS"
+    },
+    {
+      "property_id": "S9",
+      "name": "UnknownNeverCommits",
+      "type": "INVARIANT",
+      "formal_symbol": "UnknownNeverCommits",
+      "human_meaning": "UNKNOWN receipt => not committed",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": "M4_unknown_pass",
+      "status": "PASS"
+    },
+    {
+      "property_id": "S10",
+      "name": "StateProofAtomicity",
+      "type": "INVARIANT",
+      "formal_symbol": "StateProofAtomicity",
+      "human_meaning": "curVersion=ledgerLen=commitCount",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": "M2_atomicity",
+      "status": "PASS"
+    },
+    {
+      "property_id": "S11",
+      "name": "FailedCommitNoMutation",
+      "type": "INVARIANT",
+      "formal_symbol": "FailedCommitNoMutation",
+      "human_meaning": "equiv StateProofAtomicity + CommitReject UNCHANGED",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": null,
+      "status": "PASS"
+    },
+    {
+      "property_id": "S12",
+      "name": "LeaseConsumedAfterCommit",
+      "type": "INVARIANT",
+      "formal_symbol": "LeaseConsumedAfterCommit",
+      "human_meaning": "commit consumes lease",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": "M5_consumed_reuse",
+      "status": "PASS"
+    },
+    {
+      "property_id": "S13",
+      "name": "ConsumedLeaseCannotReuse",
+      "type": "INVARIANT",
+      "formal_symbol": "ConsumedLeaseCannotReuse",
+      "human_meaning": "CONSUMED lease cannot ValidCommit",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": null,
+      "status": "PASS"
+    },
+    {
+      "property_id": "S14",
+      "name": "NoDoubleCommit",
+      "type": "INVARIANT",
+      "formal_symbol": "NoDoubleCommit",
+      "human_meaning": "<=1 committed patch per lease",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": "M5_consumed_reuse",
+      "status": "PASS"
+    },
+    {
+      "property_id": "S15",
+      "name": "PatchCannotSelfVerify",
+      "type": "INVARIANT",
+      "formal_symbol": "PatchCannotSelfVerify",
+      "human_meaning": "commit requires PASS receipt from Verify",
+      "runtime_correspondence": "commit_semantic_patch / related K2 types",
+      "tlc_configs": [
+        "C0_smoke",
+        "C1_stale_patch",
+        "C2_competing_patches",
+        "C3_multiple_leases",
+        "C4_obligations_types",
+        "C5_verdicts",
+        "C7_maximal",
+        "C_safety_all"
+      ],
+      "fairness_assumptions": null,
+      "mutation_test_id": null,
+      "status": "PASS"
+    },
+    {
+      "property_id": "L1",
+      "name": "ValidContinuouslyEnabledCommitEventuallyResolves",
+      "type": "TEMPORAL",
+      "formal_symbol": "ValidCommit(p) ~> patchCommitted[p]",
+      "human_meaning": "Valid enabled commit eventually resolves under LiveSpec+WF",
+      "runtime_correspondence": "K2 lease/commit semantics",
+      "tlc_configs": [
+        "C6_liveness"
+      ],
+      "fairness_assumptions": "WF_vars(CommitSuccessAction)",
+      "mutation_test_id": "M6_liveness",
+      "status": "PASS"
+    },
+    {
+      "property_id": "L2",
+      "name": "SuccessfulCommitEventuallyConsumesLease",
+      "type": "TEMPORAL",
+      "formal_symbol": "patchCommitted ~> lease CONSUMED",
+      "human_meaning": "Successful commit consumes lease",
+      "runtime_correspondence": "K2 lease/commit semantics",
+      "tlc_configs": [
+        "C6_liveness"
+      ],
+      "fairness_assumptions": "WF not required (atomic with commit)",
+      "mutation_test_id": null,
+      "status": "PASS"
+    },
+    {
+      "property_id": "L3",
+      "name": "RevokedLeaseNeverReactivates",
+      "type": "TEMPORAL",
+      "formal_symbol": "REVOKED => []REVOKED",
+      "human_meaning": "Revoked lease never returns ACTIVE",
+      "runtime_correspondence": "K2 lease/commit semantics",
+      "tlc_configs": [
+        "C6_liveness"
+      ],
+      "fairness_assumptions": "none (safety-like temporal)",
+      "mutation_test_id": null,
+      "status": "PASS"
+    },
+    {
+      "property_id": "L4",
+      "name": "ConsumedLeaseNeverReactivates",
+      "type": "TEMPORAL",
+      "formal_symbol": "CONSUMED => []CONSUMED",
+      "human_meaning": "Consumed lease never returns ACTIVE",
+      "runtime_correspondence": "K2 lease/commit semantics",
+      "tlc_configs": [
+        "C6_liveness"
+      ],
+      "fairness_assumptions": "none (safety-like temporal)",
+      "mutation_test_id": null,
+      "status": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "after_large_compile_peak": 23204,
+  "after_normal_compile_peak": 23204,
+  "baseline_before": 23204,
+  "note": "process peak RSS via getrusage; not device-wide claim",
+  "unit": "KB_ru_maxrss"
+}

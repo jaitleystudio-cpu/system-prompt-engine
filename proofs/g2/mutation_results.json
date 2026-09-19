@@ -1,0 +1,101 @@
+{
+  "attempted": 6,
+  "killed": 6,
+  "survived": 0,
+  "mutations": [
+    {
+      "mutation_id": "M1_stale",
+      "directory": "proofs/g2/mutations/M1_stale",
+      "cfg": "C1_stale_patch.cfg",
+      "expected_violated_property": "StalePatchNeverCommits",
+      "exit_code": 12,
+      "elapsed_sec": 0.452,
+      "invariants_violated": [
+        "StalePatchNeverCommits"
+      ],
+      "temporal_violation": false,
+      "deadlock": false,
+      "killed": true,
+      "counterexample_log": "proofs/g2/counterexamples/M1_stale_counterexample.log",
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "M2_atomicity",
+      "directory": "proofs/g2/mutations/M2_atomicity",
+      "cfg": "C_safety_all.cfg",
+      "expected_violated_property": "StateProofAtomicity",
+      "exit_code": 12,
+      "elapsed_sec": 0.418,
+      "invariants_violated": [
+        "StateProofAtomicity"
+      ],
+      "temporal_violation": false,
+      "deadlock": false,
+      "killed": true,
+      "counterexample_log": "proofs/g2/counterexamples/M2_atomicity_counterexample.log",
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "M3_lease_bind",
+      "directory": "proofs/g2/mutations/M3_lease_bind",
+      "cfg": "C3_multiple_leases.cfg",
+      "expected_violated_property": "LeaseBindsBaseSnapshot",
+      "exit_code": 12,
+      "elapsed_sec": 0.725,
+      "invariants_violated": [
+        "LeaseBindsBaseSnapshot"
+      ],
+      "temporal_violation": false,
+      "deadlock": false,
+      "killed": true,
+      "counterexample_log": "proofs/g2/counterexamples/M3_lease_bind_counterexample.log",
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "M4_unknown_pass",
+      "directory": "proofs/g2/mutations/M4_unknown_pass",
+      "cfg": "C5_verdicts.cfg",
+      "expected_violated_property": "UnknownNeverCommits",
+      "exit_code": 12,
+      "elapsed_sec": 0.453,
+      "invariants_violated": [
+        "UnknownNeverCommits"
+      ],
+      "temporal_violation": false,
+      "deadlock": false,
+      "killed": true,
+      "counterexample_log": "proofs/g2/counterexamples/M4_unknown_pass_counterexample.log",
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "M5_consumed_reuse",
+      "directory": "proofs/g2/mutations/M5_consumed_reuse",
+      "cfg": "C2_competing_patches.cfg",
+      "expected_violated_property": "OnlyActiveLeaseCommits/NoDoubleCommit",
+      "exit_code": 12,
+      "elapsed_sec": 0.448,
+      "invariants_violated": [
+        "AllSafety"
+      ],
+      "temporal_violation": false,
+      "deadlock": false,
+      "killed": true,
+      "counterexample_log": "proofs/g2/counterexamples/M5_consumed_reuse_counterexample.log",
+      "status": "KILLED"
+    },
+    {
+      "mutation_id": "M6_liveness",
+      "directory": "proofs/g2/mutations/M6_liveness",
+      "cfg": "C6_liveness.cfg",
+      "expected_violated_property": "ValidContinuouslyEnabledCommitEventuallyResolves",
+      "exit_code": 13,
+      "invariants_violated": [],
+      "temporal_violation": true,
+      "deadlock": false,
+      "killed": true,
+      "counterexample_log": "proofs/g2/counterexamples/M6_liveness_counterexample.log",
+      "status": "KILLED",
+      "note": "Fairness removed; TLC finds infinite stutter while ValidCommit enabled"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "artifact_save_load": {
+    "max_ms": 1.176,
+    "median_ms": 1.094,
+    "min_ms": 1.042,
+    "n": 11,
+    "p95_ms": 1.175
+  },
+  "large_input_compile": {
+    "max_ms": 0.506,
+    "median_ms": 0.499,
+    "min_ms": 0.486,
+    "n": 11,
+    "p95_ms": 0.505
+  },
+  "normal_compile": {
+    "max_ms": 0.227,
+    "median_ms": 0.175,
+    "min_ms": 0.167,
+    "n": 21,
+    "p95_ms": 0.189
+  }
+}

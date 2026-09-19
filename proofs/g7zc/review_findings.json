@@ -1,0 +1,9 @@
+{
+  "blocker_findings": [],
+  "non_blocker_notes": [
+    "F5 assertion is structural (PrivacyProjection type) \u2014 does not prove all future privacy APIs cannot mint grants",
+    "F12 live-gate codes may vary by env; test accepts blocked family",
+    "Network kill via socket.connect monkeypatch covers core compile path only"
+  ],
+  "severity_count": 0
+}

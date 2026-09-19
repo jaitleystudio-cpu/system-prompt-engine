@@ -1,0 +1,4 @@
+{
+  "command": "python3 -m compileall spe_runtime -q",
+  "exit": 0
+}

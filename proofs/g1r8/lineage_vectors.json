@@ -1,0 +1,6 @@
+{
+  "child_parent": "spe-e3569f39e9e424fc5f04f9290da5e854c20b82537005f4201440bd0eaa6ef3ba",
+  "full_ancestry_cycle_detection": "NOT_IMPLEMENTED / OUT_OF_SCOPE",
+  "root_parent": null,
+  "self_parent_prevented": true
+}

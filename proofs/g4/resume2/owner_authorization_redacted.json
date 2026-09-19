@@ -1,0 +1,9 @@
+{
+  "credential_present": false,
+  "credential_value_exposed": false,
+  "SPE_G4_ALLOW_PAID_authorized": false,
+  "SPE_G4_BUDGET_USD_present": false,
+  "budget_positive_finite": false,
+  "approved_maximum_budget_usd": null,
+  "gate": "BLOCKED_NO_LIVE_PROVIDER"
+}

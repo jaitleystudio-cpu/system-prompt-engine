@@ -1,0 +1,5 @@
+{
+  "openai_compat_max_retries": 2,
+  "auth_failure_retries": 0,
+  "unbounded": false
+}

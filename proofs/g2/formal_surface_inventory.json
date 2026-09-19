@@ -1,0 +1,104 @@
+{
+  "search_roots": [
+    ".",
+    "specs/",
+    "formal/",
+    "model/",
+    "proofs/",
+    "tools/",
+    "tests/"
+  ],
+  "prior_artifact_name": "SPELeaseCommit.tla",
+  "found_at_g1rv_head": false,
+  "created_for_g2": true,
+  "reason": "No *.tla/*.cfg existed in repository at G1R-V HEAD; G2 authored finite Ring-0 model bound to K2 commit_semantic_patch",
+  "modules": [
+    {
+      "path": "formal/SPELeaseCommit.tla",
+      "module_name": "SPELeaseCommit",
+      "purpose": "Finite TLA+ model of Ring-0 semantic lease/proof/commit FSM",
+      "last_known_scope": "K2 SemanticSnapshot / SemanticProofLease / ProofCarryingPatch / VerificationReceipt / ProofLedger",
+      "constants": [
+        "Lease",
+        "Patch",
+        "Obl",
+        "ProofType",
+        "MaxVersion"
+      ],
+      "variables": [
+        "curVersion",
+        "leaseStatus",
+        "leaseBase",
+        "leaseObl",
+        "leaseReqType",
+        "patchExists",
+        "patchBase",
+        "patchLease",
+        "patchObl",
+        "patchCommitted",
+        "committedAgainst",
+        "receiptVerdict",
+        "receiptType",
+        "ledgerLen",
+        "commitCount"
+      ],
+      "actions": [
+        "IssueLease",
+        "ProposeFreshPatch",
+        "ProposeStalePatch",
+        "Verify",
+        "RevokeLease",
+        "CommitSuccess",
+        "CommitReject",
+        "TerminalStutter"
+      ],
+      "invariants": [
+        "TypeOK",
+        "SnapshotVersionMonotonic",
+        "StalePatchNeverCommits",
+        "LeaseBindsBaseSnapshot",
+        "OnlyActiveLeaseCommits",
+        "RequiredObligationsSatisfied",
+        "RequiredProofTypeMatches",
+        "FailNeverCommits",
+        "UnknownNeverCommits",
+        "StateProofAtomicity",
+        "FailedCommitNoMutation",
+        "LeaseConsumedAfterCommit",
+        "ConsumedLeaseCannotReuse",
+        "NoDoubleCommit",
+        "PatchCannotSelfVerify",
+        "AllSafety"
+      ],
+      "temporal_properties": [
+        "ValidContinuouslyEnabledCommitEventuallyResolves",
+        "SuccessfulCommitEventuallyConsumesLease",
+        "RevokedLeaseNeverReactivates",
+        "ConsumedLeaseNeverReactivates"
+      ],
+      "configuration_files": [
+        "formal/cfg/C0_smoke.cfg",
+        "formal/cfg/C1_stale_patch.cfg",
+        "formal/cfg/C2_competing_patches.cfg",
+        "formal/cfg/C3_multiple_leases.cfg",
+        "formal/cfg/C4_obligations_types.cfg",
+        "formal/cfg/C5_verdicts.cfg",
+        "formal/cfg/C6_liveness.cfg",
+        "formal/cfg/C7_maximal.cfg",
+        "formal/cfg/C_safety_all.cfg"
+      ],
+      "tool_assumptions": [
+        "Java 21+",
+        "tla2tools.jar TLC2",
+        "finite constants only"
+      ]
+    }
+  ],
+  "non_modeled": [
+    "K4 AuthorityGrant",
+    "K0/K1 conflict preservation",
+    "G3 worker leases",
+    "SHA-256",
+    "durable storage"
+  ]
+}

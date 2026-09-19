@@ -1,0 +1,35 @@
+{
+  "gate": "G5-ZC",
+  "phase": "evidence_closing_recheck",
+  "question": "Is the repair-attempt bound distinct from TechniqueSelection budget, and what is the exact contract?",
+  "technique_budget": {
+    "name": "STANDARD_MAX_TECHNIQUES",
+    "value": 3,
+    "owns": "TechniqueSelection cardinality only",
+    "is_repair_attempt_bound": false
+  },
+  "actual_repair_contract_offline_core": {
+    "description": "No validation→repair→revalidate loop exists on the zero-cost PromptArtifact path. CONFLICTED/INCOMPLETE contracts fail closed on the initial gate inside build_prompt_artifact.",
+    "initial_validation_attempts": 1,
+    "maximum_repair_attempts": 0,
+    "maximum_total_attempts": 1,
+    "third_attempt_possible": false,
+    "provider_escalation": false,
+    "recursive_repair": false,
+    "terminal_on_conflict": "K3_PROMPT_CONFLICTED_SOURCE",
+    "source_of_truth": "spe_runtime/prompt/build.py build_prompt_artifact"
+  },
+  "mission_template_vs_implementation": {
+    "mission_assumed": "initial attempt + maximum one repair (total <= 2)",
+    "implementation": "fail-closed with zero repair attempts (total == 1)",
+    "compatibility": "stricter than mission template; does not weaken G5 invariants"
+  },
+  "tests": [
+    "tests/unit/test_g5zc_repair_bound.py::test_g5zc_repair_bound_conflict_is_single_shot_fail_closed",
+    "tests/unit/test_g5zc_repair_bound.py::test_g5zc_repair_bound_no_repair_loop_in_build_module",
+    "tests/unit/test_g5zc_repair_bound.py::test_g5zc_technique_budget_is_not_repair_bound"
+  ],
+  "result": "CONFIRMED",
+  "prior_ambiguous_report_language": "technique budget 3; conflicts fail closed",
+  "corrected_language": "repair attempts max 0 (fail-closed single shot); technique budget 3 is a separate selection bound"
+}

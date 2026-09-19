@@ -1,0 +1,17 @@
+{
+  "attempted": [
+    "M1_scope",
+    "M2_policy",
+    "M3_UNKNOWN",
+    "M4_dedupe",
+    "M5_EXTERNAL_as_INDEPENDENT",
+    "M6_staging_as_prod",
+    "M7_subject",
+    "M8_revision",
+    "M9_reuse",
+    "M10_self_qual"
+  ],
+  "killed": 10,
+  "survived": 0,
+  "note": "Focused K7 adversarial tests; not full repo mutation suite"
+}

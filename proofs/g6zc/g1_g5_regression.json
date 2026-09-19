@@ -1,0 +1,6 @@
+{
+  "G1_contract": true,
+  "G2_hash": true,
+  "G3_G4_G5": "covered by full unit+integration+portability suite green",
+  "chaos_campaign_rerun": false
+}

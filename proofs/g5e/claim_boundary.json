@@ -1,0 +1,7 @@
+{
+  "G5": "ZERO_COST_LOCAL_FAULT_RESILIENCE_VERIFIED_WITHIN_TESTED_SCOPE",
+  "production": "NOT QUALIFIED",
+  "physical_power_loss": "NOT TESTED",
+  "security_red_team": "NOT YET",
+  "world_1": "NOT PROVEN"
+}

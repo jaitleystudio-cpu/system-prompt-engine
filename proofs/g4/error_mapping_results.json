@@ -1,0 +1,8 @@
+{
+  "401": "G4_AUTHENTICATION_FAILURE",
+  "429": "G4_RATE_LIMITED",
+  "timeout": "G4_TIMEOUT",
+  "transport": "G4_TRANSPORT_FAILURE",
+  "malformed": "G4_INVALID_PROVIDER_RESPONSE",
+  "unsupported_capability": "G4_CAPABILITY_UNAVAILABLE"
+}

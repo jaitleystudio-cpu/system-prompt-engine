@@ -1,0 +1,28 @@
+{
+  "before_hash": null,
+  "after_hash": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "model_changed": true,
+  "reason": "No prior TLA sources in repo; authored SPELeaseCommit.tla bound to G1 K2 semantics",
+  "runtime_correspondence_affected": "all K2 commit guards",
+  "properties_added": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9",
+    "S10",
+    "S11",
+    "S12",
+    "S13",
+    "S14",
+    "S15",
+    "L1",
+    "L2",
+    "L3",
+    "L4"
+  ]
+}

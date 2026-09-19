@@ -1,0 +1,6 @@
+{
+  "result": "PASS",
+  "pipeline": "CognitivePlan\u2192TechniqueSelection\u2192PromptStrategy\u2192PromptArtifact",
+  "priority": "MUST>SHOULD>PREFERENCE>HINT/PLAN",
+  "suite": "G1R-7/G1R-7R"
+}

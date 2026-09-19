@@ -1,0 +1,22 @@
+{
+  "gate": "G3",
+  "repository": "jaitleystudio-cpu/system-prompt-engine",
+  "g1rv_head": "8e8b028ab399a9194e7dc54f71ae006ed938d491",
+  "g2_head_short": "1c32235",
+  "g2_head": "1c32235f95c27761bc82d4116c741c09eb804910",
+  "g3_branch": "cursor/g3-durable-ring1-0d6e",
+  "g3_base_head": "1c32235f95c27761bc82d4116c741c09eb804910",
+  "merge_base_with_g2": "1c32235f95c27761bc82d4116c741c09eb804910",
+  "g1_status": "BOUND_AND_PASS",
+  "g1_custody": "WORKING_CONTRACT_BOUND",
+  "g2_status": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+  "g2_formal_model": "formal/SPELeaseCommit.tla",
+  "g2_formal_sha256_expected": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "working_contract_path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
+  "working_contract_sha256_expected": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "pr6": "OPEN @ 4e6c694 \u2014 UNTOUCHED",
+  "historical_181_69": "UNAVAILABLE",
+  "g3_head": "bd1738709df32fc5a687b3c3f98c52b87d690900",
+  "g3_implementation_commit": "798927d",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/22"
+}
