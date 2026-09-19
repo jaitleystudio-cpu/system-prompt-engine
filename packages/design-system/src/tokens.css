@@ -10,24 +10,30 @@
   --spe-platinum-muted: #9aa3b2;
   --spe-ink: #c8c2b4;
 
-  /* Warm brass + cool mist — not purple neon */
+  /* Cyan ↔ amber Intent Core palette (north-star) */
   --spe-brass: #c4a574;
   --spe-brass-bright: #e2c89a;
+  --spe-amber: #ff9a3c;
+  --spe-cyan: #3db8ff;
   --spe-mist: #7eb8c9;
   --spe-mist-dim: #3d6f7d;
   --spe-ember: #d9896a;
   --spe-ok: #6fbf9a;
   --spe-danger: #d97a7a;
+  --spe-metal: #c9d0da;
+  --spe-metal-deep: #6d7584;
 
   --spe-status-confirmed: #6fbf9a;
   --spe-status-assumed: #c4a574;
   --spe-status-unknown: #7eb8c9;
   --spe-status-conflict: #d97a7a;
 
-  --spe-glass: rgba(255, 255, 255, 0.045);
-  --spe-glass-border: rgba(242, 238, 230, 0.12);
-  --spe-glow-brass: 0 0 60px rgba(196, 165, 116, 0.22);
-  --spe-glow-mist: 0 0 80px rgba(126, 184, 201, 0.18);
+  --spe-glass: rgba(255, 255, 255, 0.055);
+  --spe-glass-strong: rgba(18, 28, 42, 0.55);
+  --spe-glass-border: rgba(180, 210, 240, 0.16);
+  --spe-glow-brass: 0 0 60px rgba(255, 154, 60, 0.22);
+  --spe-glow-mist: 0 0 90px rgba(61, 184, 255, 0.22);
+  --spe-glow-cyan: 0 0 40px rgba(61, 184, 255, 0.45);
 
   --spe-space-1: 0.25rem;
   --spe-space-2: 0.5rem;

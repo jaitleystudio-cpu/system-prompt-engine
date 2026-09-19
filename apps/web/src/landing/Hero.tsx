@@ -16,14 +16,27 @@ type Props = {
   quality: VisualQuality;
 };
 
+const CAPABILITIES = [
+  ["Research", "Expand perspectives"],
+  ["Analyze", "Find what matters"],
+  ["Decide", "Weigh and choose"],
+  ["Write", "Shape with precision"],
+  ["Code", "Turn ideas into systems"],
+  ["Communicate", "Adapt for any audience"],
+  ["Proof", "Verify and ground"],
+  ["Privacy", "Your intent stays yours"],
+] as const;
+
 export function Hero({ value, onChange, onBuild, busy, sceneState, quality }: Props) {
   return (
     <section className="spe-hero" id="top" aria-labelledby="hero-title">
+      <div className="spe-hero-atmosphere" aria-hidden="true" />
+
       <div className="spe-hero-stage" aria-hidden="true">
         <Suspense
           fallback={
             <div className="spe-intel-fallback" data-state={sceneState}>
-              <div className="spe-intel-core" />
+              <div className="spe-intel-core spe-intel-crystal" />
             </div>
           }
         >
@@ -33,12 +46,22 @@ export function Hero({ value, onChange, onBuild, busy, sceneState, quality }: Pr
 
       <div className="spe-hero-copy">
         <Logo size="hero" wordmark={false} />
-        <p className="spe-kicker">SPE</p>
-        <h1 id="hero-title">System Prompt Engine</h1>
+        <h1 id="hero-title" className="visually-hidden">
+          System Prompt Engine
+        </h1>
         <p className="spe-hero-line">Turn thought into precision.</p>
         <p className="spe-hero-sub">One line in. A complete AI instruction out.</p>
 
-        <div className="spe-command" role="search">
+        <ul className="spe-capability-arc" aria-label="What SPE is for">
+          {CAPABILITIES.map(([title, blurb]) => (
+            <li key={title}>
+              <strong>{title}</strong>
+              <span>{blurb}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="spe-command spe-command-pill" role="search">
           <label htmlFor="spe-one-line" className="visually-hidden">
             What do you want to accomplish?
           </label>
@@ -55,19 +78,21 @@ export function Hero({ value, onChange, onBuild, busy, sceneState, quality }: Pr
             }}
             rows={2}
           />
-          <div className="spe-command-meta" aria-hidden="true">
-            <span>⌘/Ctrl + Enter</span>
-            <span className="spe-afford">mic · image · file</span>
+          <div className="spe-command-row">
+            <div className="spe-command-meta" aria-hidden="true">
+              <span>⌘/Ctrl + Enter</span>
+              <span className="spe-afford">mic · image · file</span>
+            </div>
+            <button
+              type="button"
+              className="spe-build spe-build-intent"
+              disabled={busy}
+              aria-busy={busy}
+              onClick={onBuild}
+            >
+              {busy ? "Compiling…" : "Compile Intent →"}
+            </button>
           </div>
-          <button
-            type="button"
-            className="spe-build"
-            disabled={busy}
-            aria-busy={busy}
-            onClick={onBuild}
-          >
-            {busy ? "Building…" : "Build with SPE"}
-          </button>
         </div>
 
         <p className="spe-hero-trust">Local-first · Any AI · Free core</p>

@@ -22,7 +22,7 @@ def _src() -> str:
 def test_home_brand_and_one_line_cta():
     blob = _src()
     assert "System Prompt Engine" in blob
-    assert "Build with SPE" in blob
+    assert "Build with SPE" in blob or "Compile Intent" in blob
     assert "What do you want to accomplish?" in blob or "one-line" in blob or "spe-one-line" in blob
 
 

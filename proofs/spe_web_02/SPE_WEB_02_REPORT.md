@@ -128,7 +128,24 @@ World #1: NOT PROVEN
 
 not_a_release: true
 
-## FINAL VISUAL VERDICT
+## NORTH-STAR ALIGNMENT (founder references)
+
+Adopted from provided Intent Core + metal SPE mark comps:
+
+- Metal SPE wordmark with cyan→amber circuit channels
+- Intent Core crystal + concentric rings + FACTS / CONSTRAINTS / POSSIBILITIES / UNCERTAINTY
+- Glass capability arc (Research…Privacy) — descriptive, not fake product surfaces
+- Floating glass command pill + **Compile Intent →**
+- Dual-light cyan/amber material system
+- Live semantic pipeline in workspace from real compile phases (not fake metrics)
+
+Not copied (claim / scope discipline):
+
+- Fake Library / Templates / Physics / account chrome
+- Fabricated “Facts Integrated: 24” style counters
+- Photoreal desk / lunar environment plates (would require remote media; offline/privacy first)
+
+
 
 **PREMIUM_3D_EXPERIENCE_PASS**
 

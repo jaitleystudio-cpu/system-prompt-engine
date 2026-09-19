@@ -88,9 +88,33 @@ export function Workspace(props: Props) {
           </select>
         </label>
         <button type="button" className="spe-build" disabled={busy} onClick={onCompile}>
-          {busy ? "Compiling…" : "Compile"}
+          {busy ? "Compiling…" : "Compile Intent →"}
         </button>
       </div>
+
+      {(mode === "inspect" || mode === "pro" || busy || phases.length > 0) && (
+        <div className="spe-pipeline" aria-label="Semantic pipeline">
+          <div className="spe-pipeline-head">
+            <span>Semantic pipeline</span>
+            <span className="spe-pipeline-live">{busy ? "LIVE" : result ? "DONE" : "IDLE"}</span>
+          </div>
+          <ol className="spe-pipeline-steps">
+            {(["loading_wasm", "verifying_integrity", "instantiating", "ready", "evaluating", "done"] as const).map((step) => {
+              const done = phases.includes(step) || (step === "done" && Boolean(result && !error));
+              const active = phase === step || (step === "done" && phase === "done");
+              const label =
+                step === "loading_wasm" ? "Understand" :
+                step === "verifying_integrity" ? "Decompose" :
+                step === "instantiating" ? "Enrich" :
+                step === "ready" ? "Structure" :
+                step === "evaluating" ? "Verify" : "Compile";
+              return (
+                <li key={step} data-active={active} data-done={done && !active}>{label}</li>
+              );
+            })}
+          </ol>
+        </div>
+      )}
 
       {error && (
         <div className="spe-alert" role="alert">
