@@ -1,0 +1,6 @@
+{
+  "portable_without_provider": true,
+  "deterministic_digest": true,
+  "grants_authority": false,
+  "mints_qualification": false
+}

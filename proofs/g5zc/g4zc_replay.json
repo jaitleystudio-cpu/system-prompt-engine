@@ -1,0 +1,7 @@
+{
+  "Z1_Z10": "PASS",
+  "network_kill": true,
+  "credentials_absent": true,
+  "command": "pytest tests/unit/test_g5zc_chaos.py::test_g5zc_z1_z10_replay_network_kill + test_g4zc_*",
+  "result": "PASS"
+}

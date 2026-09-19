@@ -1,0 +1,30 @@
+{
+  "abstracted_away": [
+    "SHA-256 / content_digest computation",
+    "Full JSON payloads / prompt text / ProtectedIntentContract body",
+    "Filesystem paths",
+    "Python object identity / dataclass representation",
+    "Cryptographic collision behavior",
+    "issuance_digest / process-local receipt secret",
+    "Wall-clock time",
+    "Network / distributed persistence",
+    "G3 worker heartbeat/fencing",
+    "Multiple obligations per lease (modeled as single obl)",
+    "Delta action scope subset checks (assumed in-scope when patchObl matches)"
+  ],
+  "preserved_for_checked_properties": [
+    "Snapshot version monotonicity on commit",
+    "Stale base_version rejection",
+    "Lease ACTIVE/CONSUMED/REVOKED authorization",
+    "Lease/patch base binding agreement",
+    "Exact proof-type match",
+    "PASS-only commit; FAIL/UNKNOWN blocked",
+    "Atomic snapshot+ledger+consume",
+    "No double-commit per lease",
+    "No patch self-verification"
+  ],
+  "not_reasonable_to_abstract": [
+    "Must not eliminate snapshot-version mismatch while claiming stale-patch safety",
+    "Must not collapse FAIL/UNKNOWN into PASS"
+  ]
+}

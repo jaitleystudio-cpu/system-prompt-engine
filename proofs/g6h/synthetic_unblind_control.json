@@ -1,0 +1,18 @@
+{
+  "mode": "SYNTHETIC_FIXTURE_ONLY",
+  "human_evidence": false,
+  "mapping_sha256": "0b4ecfce57a5a21dee6f6614c16a5cf706354408a8d354b6a748e848ded198de",
+  "n": 12,
+  "counts": {
+    "SPE": 6,
+    "RAW": 3,
+    "TIE": 3
+  },
+  "reversed_counts": {
+    "SPE": 3,
+    "RAW": 6,
+    "TIE": 3
+  },
+  "reverse_map_detected": true,
+  "note": "Synthetic plumbing test \u2014 does NOT mint G6 human value"
+}

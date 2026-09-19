@@ -1,0 +1,55 @@
+{
+  "facts": {
+    "grant_compatibility": {
+      "owner": "K4",
+      "writers": [
+        "spe_runtime/authority/validate.py"
+      ],
+      "duplicate": false
+    },
+    "proof_receipt": {
+      "owner": "K2",
+      "writers": [
+        "spe_runtime/proof/verify.py"
+      ],
+      "duplicate": false
+    },
+    "spe_artifact_identity": {
+      "owner": "K6",
+      "writers": [
+        "spe_runtime/storage/build.py"
+      ],
+      "duplicate": false
+    },
+    "prompt_artifact": {
+      "owner": "K3",
+      "writers": [
+        "spe_runtime/prompt/build.py"
+      ],
+      "duplicate": false
+    },
+    "qualification_evidence": {
+      "owner": "K7",
+      "writers": [
+        "spe_runtime/qualification/evidence.py"
+      ],
+      "duplicate": false
+    },
+    "artifact_lineage": {
+      "owner": "K6",
+      "writers": [
+        "spe_runtime/storage/build.py"
+      ],
+      "duplicate": false
+    },
+    "claim_qualification": {
+      "owner": "K7",
+      "writers": [
+        "spe_runtime/qualification/evaluate.py"
+      ],
+      "duplicate": false
+    }
+  },
+  "unowned_facts": [],
+  "global_duplicates": 0
+}

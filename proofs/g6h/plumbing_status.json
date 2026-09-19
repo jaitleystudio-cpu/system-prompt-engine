@@ -1,0 +1,10 @@
+{
+  "unblind_tool": "tools/g6h_unblind.py",
+  "lock_tool": "tools/g6h_lock_ratings.py",
+  "synthetic_control": "proofs/g6h/synthetic_unblind_control.json",
+  "synthetic_reverse_map_detected": true,
+  "human_evidence": false,
+  "ratings_status": "NO_RATINGS_YET",
+  "note": "Plumbing ready for coordinator; does not mint G6 human value",
+  "recorded_at_utc": "2026-09-19T09:46:08.130758+00:00"
+}

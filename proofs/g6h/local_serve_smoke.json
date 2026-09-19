@@ -1,0 +1,13 @@
+{
+  "command": "python3 -m http.server 8765 --bind 127.0.0.1",
+  "url": "http://127.0.0.1:8765/evaluations/g6zc/blind_evaluator.html",
+  "pairs_url": "http://127.0.0.1:8765/evaluations/g6zc/blind_pairs.json",
+  "http_status_html": 200,
+  "http_status_pairs": 200,
+  "html_sha256": "d7f7474dc2e4a353a749c188901ab0fb956555f8fdc27ec53ef3679ccd9f9bcc",
+  "pairs_sha256": "cff89a32712c1451f4eb528b9ba8de5577135b3817d4f622c94092846633698f",
+  "bytes_match_repo": true,
+  "public_internet_url": null,
+  "note": "Local-only serve smoke \u2014 not a public website; no ratings collected",
+  "recorded_at_utc": "2026-09-19T13:03:25.718183+00:00"
+}

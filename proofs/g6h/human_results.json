@@ -1,0 +1,14 @@
+{
+  "status": "NO_RATINGS_YET",
+  "evaluators": 0,
+  "paired_evaluations": 0,
+  "SPE_preferred": null,
+  "RAW_preferred": null,
+  "ties": null,
+  "limitation": "SINGLE_EVALUATOR_LIMITATION / PRODUCT_VALUE_REVIEW_PENDING until blinded ratings exist",
+  "do_not_fabricate": true,
+  "g6h_phase": "PRESTUDY",
+  "note": "Replace NO_RATINGS_YET only when genuine human ratings exist",
+  "copied_from": "proofs/g6zc/human_results.json",
+  "recorded_at_utc": "2026-09-19T09:41:40.982709+00:00"
+}

@@ -1,0 +1,30 @@
+{
+  "gate": "G7-ZC",
+  "files": [
+    "G7_ZC_REPORT.md",
+    "ancestry.txt",
+    "attack_surface_map.json",
+    "changed_file_audit.txt",
+    "claim_boundary.json",
+    "compileall.json",
+    "contract_integrity.json",
+    "environment.json",
+    "fault_taxonomy.json",
+    "findings.json",
+    "full_regression.json",
+    "g1_g6_regression.json",
+    "g2_integrity.json",
+    "git_status_before.txt",
+    "mutation_results.json",
+    "pr6_untouched.json",
+    "previous_gate_status.json",
+    "redteam_results.json",
+    "review_findings.json",
+    "source_identity.json",
+    "zero_cost_audit.json"
+  ],
+  "count": 21,
+  "base_head": "bea709761729f5315d602874f45a06cd49a1f78d",
+  "g5_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
+  "head": "61e3f16d475d430ea9be58e27f31e8e635f303b9"
+}

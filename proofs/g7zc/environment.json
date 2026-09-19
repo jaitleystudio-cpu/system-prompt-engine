@@ -1,0 +1,7 @@
+{
+  "python": "3.12",
+  "pytest": "9.1.1",
+  "paid_providers": false,
+  "network_required_for_core": false,
+  "os": "linux"
+}

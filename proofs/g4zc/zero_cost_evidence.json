@@ -1,0 +1,10 @@
+{
+  "external_api_calls": 0,
+  "paid_requests": 0,
+  "actual_external_spend_usd": 0,
+  "actual_external_spend_inr": 0,
+  "required_subscription": "NONE",
+  "required_api_credential": "NONE",
+  "required_cloud_account": "NONE",
+  "core_prompt_compilation_completed": true
+}

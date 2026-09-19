@@ -1,0 +1,19 @@
+{
+  "g9_checkpoint_regression": {
+    "passed": 1041,
+    "failed": 0,
+    "note": "G9 custody tip \u2014 canonical freeze baseline cited by founder"
+  },
+  "freeze_pack_regression": {
+    "command": "python -m pytest",
+    "collected": 1050,
+    "passed": 1050,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "duration_s": 90.35,
+    "denominator_note": "G9 baseline 1041 + 9 G9-FREEZE guard tests = 1050",
+    "not_world_1": true,
+    "not_g6_human_value": true
+  }
+}

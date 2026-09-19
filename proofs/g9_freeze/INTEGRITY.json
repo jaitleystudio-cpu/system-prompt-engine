@@ -1,0 +1,11 @@
+{
+  "manifest_sha256": "009a50a09cdd6442c7b03a0085241517489af983add1a216292d699416433dff",
+  "freeze_head": "480ee2bdc95fa7cf768aa94737660e43f6072af3",
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "g2_model_sha256": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "world_1": "NOT_PROVEN",
+  "independently_replicated": "NOT_PROVEN",
+  "g6_human_value": "PENDING",
+  "do_not_fabricate_ratings": true,
+  "freeze_pack_head": "8b2b4beabe7e2d210904ddff04b6715ed6d5e727"
+}

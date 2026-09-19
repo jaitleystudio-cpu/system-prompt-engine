@@ -1,0 +1,45 @@
+{
+  "status": "PENDING_HUMAN_EVIDENCE",
+  "automated_compile_by_category": {
+    "C01": {
+      "n": 12,
+      "compile_ok": 12
+    },
+    "C02": {
+      "n": 12,
+      "compile_ok": 12
+    },
+    "C03": {
+      "n": 12,
+      "compile_ok": 12
+    },
+    "C04": {
+      "n": 12,
+      "compile_ok": 12
+    },
+    "C05": {
+      "n": 12,
+      "compile_ok": 12
+    },
+    "C06": {
+      "n": 12,
+      "compile_ok": 12
+    },
+    "C07": {
+      "n": 12,
+      "compile_ok": 11
+    },
+    "C08": {
+      "n": 12,
+      "compile_ok": 12
+    },
+    "C09": {
+      "n": 12,
+      "compile_ok": 12
+    },
+    "C10": {
+      "n": 12,
+      "compile_ok": 6
+    }
+  }
+}

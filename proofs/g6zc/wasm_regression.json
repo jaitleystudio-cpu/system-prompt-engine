@@ -1,0 +1,4 @@
+{
+  "note": "Repository-wide pytest includes portability/wasm; full suite 998 passed exit 0 on this environment",
+  "result": "PASS_VIA_FULL_PYTEST"
+}

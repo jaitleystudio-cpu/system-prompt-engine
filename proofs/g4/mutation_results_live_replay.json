@@ -1,0 +1,4 @@
+{
+  "note": "Live matrix not run; protocol M1-M10 replay deferred to when live unlock succeeds",
+  "replayed_in_this_resume": false
+}

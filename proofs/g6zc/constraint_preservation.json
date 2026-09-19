@@ -1,0 +1,6 @@
+{
+  "MUST_SPE_recall": 92.02,
+  "MUST_RAW_recall": 90.61,
+  "MUST_NOT_SPE_recall": 100.0,
+  "note": "Substring recall of declared constraint atoms in prompt text; conflicts handled separately"
+}

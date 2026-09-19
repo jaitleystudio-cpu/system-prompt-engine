@@ -1,0 +1,15 @@
+=== PromptArtifact surface / package missing (RED) ===
+{
+  "future_action": "NEW_IMPLEMENTATION",
+  "gap": "C01/C03 are decide/render, not prompts.",
+  "implementation_modules": [],
+  "owner": "K3",
+  "requirement": "PromptArtifact",
+  "status": "MISSING",
+  "tests": []
+}
+status= MISSING
+spe_runtime/prompt exists= False
+prompt py modules= []
+PromptArtifact/build hits: (none)
+ls: cannot access 'spe_runtime/prompt': No such file or directory

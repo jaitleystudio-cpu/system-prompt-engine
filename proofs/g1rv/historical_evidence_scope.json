@@ -1,0 +1,21 @@
+{
+  "packs_present": [
+    "g1",
+    "g1r1",
+    "g1r2",
+    "g1r3",
+    "g1r4",
+    "g1r5",
+    "g1r6",
+    "g1r6r",
+    "g1r7",
+    "g1r7r",
+    "g1r8",
+    "g1r8r",
+    "g1r9",
+    "g1r9r",
+    "g1rv"
+  ],
+  "retroactive_scope_inflation": false,
+  "note": "Historical packs remain bound to original revision/subject/scope"
+}

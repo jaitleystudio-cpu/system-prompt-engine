@@ -1,0 +1,606 @@
+{
+  "mapping": {
+    "C01-01": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C01-02": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C01-03": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C01-04": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C01-05": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C01-06": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C01-07": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C01-08": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C01-09": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C01-10": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C01-11": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C01-12": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C02-01": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C02-02": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C02-03": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C02-04": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C02-05": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C02-06": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C02-07": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C02-08": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C02-09": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C02-10": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C02-11": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C02-12": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C03-01": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C03-02": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C03-03": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C03-04": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C03-05": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C03-06": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C03-07": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C03-08": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C03-09": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C03-10": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C03-11": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C03-12": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C04-01": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C04-02": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C04-03": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C04-04": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C04-05": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C04-06": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C04-07": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C04-08": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C04-09": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C04-10": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C04-11": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C04-12": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C05-01": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C05-02": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C05-03": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C05-04": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C05-05": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C05-06": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C05-07": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C05-08": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C05-09": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C05-10": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C05-11": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C05-12": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C06-01": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C06-02": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C06-03": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C06-04": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C06-05": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C06-06": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C06-07": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C06-08": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C06-09": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C06-10": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C06-11": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C06-12": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C07-01": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C07-02": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C07-03": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C07-04": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C07-05": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C07-06": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C07-07": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C07-08": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C07-09": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C07-10": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C07-11": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C07-12": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C08-01": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C08-02": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C08-03": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C08-04": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C08-05": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C08-06": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C08-07": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C08-08": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C08-09": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C08-10": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C08-11": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C08-12": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C09-01": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C09-02": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C09-03": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C09-04": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C09-05": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C09-06": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C09-07": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C09-08": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C09-09": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C09-10": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C09-11": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C09-12": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C10-01": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C10-02": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C10-03": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C10-04": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C10-05": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C10-06": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C10-07": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C10-08": {
+      "raw_side": "LEFT",
+      "seed": 20260919,
+      "spe_side": "RIGHT"
+    },
+    "C10-09": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C10-10": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C10-11": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    },
+    "C10-12": {
+      "raw_side": "RIGHT",
+      "seed": 20260919,
+      "spe_side": "LEFT"
+    }
+  },
+  "note": "Do not reveal to evaluators until evaluation complete.",
+  "seed": 20260919
+}

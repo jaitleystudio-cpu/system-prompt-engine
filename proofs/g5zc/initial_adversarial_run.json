@@ -1,0 +1,19 @@
+{
+  "gate": "G5-ZC",
+  "phase": "initial_adversarial_run",
+  "against_source": "untouched G4-ZC HEAD c3450c4add1329eeaba28eadcaf36c1cdf94d57b",
+  "command": "python3 -m pytest tests/unit/test_g5zc_chaos.py -q --tb=line",
+  "timestamp_utc": "2026-09-19T04:24:01.823037Z",
+  "result": "GREEN",
+  "passed": 35,
+  "failed": 0,
+  "skipped": 0,
+  "collected": 35,
+  "exit_code": 0,
+  "findings_at_first_run": [],
+  "stdout_tail": [
+    "...................................                                      [100%]",
+    "35 passed in 0.35s"
+  ],
+  "note": "First-run against untouched G4-ZC source. No repairs applied before this capture."
+}

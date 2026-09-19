@@ -1,0 +1,8 @@
+{
+  "ROLE_A_CUSTODY_VERIFIER": "verifies freeze pack; never changes benchmark",
+  "ROLE_B_STUDY_COORDINATOR": "distributes blind tasks; tracks completion; does not reveal mappings",
+  "ROLE_C_HUMAN_EVALUATOR": "judges A/B; does not know which is SPE",
+  "ROLE_D_UNBLINDER": "accesses randomization map only after collection lock",
+  "ROLE_E_ADJUDICATOR": "applies frozen thresholds after unblinding",
+  "disclosure": "One person may hold multiple roles; resulting limitation must be disclosed"
+}

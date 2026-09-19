@@ -1,0 +1,23 @@
+{
+  "path": "benchmarks/g6zc/rubric.json",
+  "sha256": "6456af82732fd6169a7eb1336deeaa2c48b2383d25b586093fe802e4928e3c6b",
+  "size": 1228,
+  "dimensions": [
+    "V10_overall_usefulness",
+    "V1_intent_fidelity",
+    "V2_constraint_coverage",
+    "V3_missing_requirement_handling",
+    "V4_conflict_handling",
+    "V5_executability",
+    "V6_output_clarity",
+    "V7_verification_testability",
+    "V8_portability",
+    "V9_unnecessary_complexity"
+  ],
+  "confidence": [
+    "LOW",
+    "MEDIUM",
+    "HIGH"
+  ],
+  "rule": "Use EXACTLY this frozen rubric; do not replace with mission wording"
+}

@@ -1,0 +1,429 @@
+{
+  "gate": "G1R-7",
+  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+  "facts": [
+    {
+      "semantic_fact": "handoff_result",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/xcat/handoff.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/portability/conformance.py",
+        "tests/unit/test_xcat_core.py",
+        "tests/integration/test_xcat_c02_c06_c01_c03.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "authority_grant",
+      "canonical_owner": "K4",
+      "writer_modules": [
+        "spe_runtime/authority/models.py",
+        "spe_runtime/authority/consume.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/authority/validate.py",
+        "spe_runtime/categories/c07_execute/engine.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "models.py is the typed AuthorityGrant value object; consume.py uniquely writes uses_consumed. External AuthorityGrant construction is the intentional external-authority injection surface (C07 never mints grants). It is NOT a HIDDEN_AMBIENT_AUTHORITY_PATH — ambient paths are privilege elevation without a typed grant/event (closed in G1R-2: replace_envelope authority fields, X09). Formal: ambient_authority_paths=0 counts hidden elevation, not the public grant dataclass."
+    },
+    {
+      "semantic_fact": "grant_compatibility",
+      "canonical_owner": "K4",
+      "writer_modules": [
+        "spe_runtime/authority/validate.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/categories/c07_execute/engine.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "grant_uses_consumed",
+      "canonical_owner": "K4",
+      "writer_modules": [
+        "spe_runtime/authority/consume.py"
+      ],
+      "reader_modules": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "recommendation",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/categories/c01_decide/engine.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/categories/c03_communicate/engine.py",
+        "spe_runtime/categories/c07_execute/engine.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "analysis",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/categories/c06_analyze/engine.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/xcat/invariants.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "facts_provenance_uncertainty",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/categories/c02_research/engine.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/xcat/invariants.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "rendering",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/categories/c03_communicate/engine.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/xcat/invariants.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "operation_id",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/execution/models.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/categories/c07_execute/engine.py",
+        "spe_runtime/execution/effect_ledger.py",
+        "spe_runtime/adapters/local_temp_file.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "outcome_transition",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/execution/outcomes.py"
+      ],
+      "reader_modules": [
+        "tests/unit/test_c07_authority.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "portable_canonical_json",
+      "canonical_owner": "K5",
+      "writer_modules": [
+        "spe_runtime/portability/canonical.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/portability/conformance.py",
+        "spe_runtime/portability/oracle.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "operation_arguments_digest",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/execution/models.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/categories/c07_execute/engine.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": true,
+      "notes": "Weaker json.dumps digest vs K5 NFC canonicalizer. Distinct fact today; must not be used as portable identity."
+    },
+    {
+      "semantic_fact": "semantic_equivalence_verdict",
+      "canonical_owner": "K5",
+      "writer_modules": [
+        "spe_runtime/portability/conformance.py"
+      ],
+      "reader_modules": [
+        "tools/sprint5_conformance.py",
+        "tests/portability/test_semantic_equivalent.py",
+        "portable/spe-core-rs (replica, not Python writer)"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "Python is the oracle. Rust/WASM are replicas. oracle.py is an independent checker, not a production writer."
+    },
+    {
+      "semantic_fact": "capability_status",
+      "canonical_owner": "K7",
+      "writer_modules": [
+        "spe_runtime/portability/capability.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/portability/conformance.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "abi_version",
+      "canonical_owner": "K5",
+      "writer_modules": [
+        "spe_runtime/portability/abi.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/portability/conformance.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "failure_laundering_predicate",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/xcat/invariants.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "typed_error_code",
+      "canonical_owner": "K5",
+      "writer_modules": [
+        "spe_runtime/error_registry.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "envelope_generic_field_override",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/categories/_common.py"
+      ],
+      "reader_modules": [
+        "all category engines"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": true,
+      "notes": "G1R-2: replace_envelope rejects authority-controlled fields. Copies unchanged authority_state only."
+    },
+    {
+      "semantic_fact": "proof_receipt",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/verify.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py",
+        "spe_runtime/proof/ledger.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "Canonical mint: verify_obligation -> _mint_canonical_receipt. Commit validates receipt_id + issuance_digest AND exact receipt.patch_id == patch.patch_id (None does not waive)."
+    },
+    {
+      "semantic_fact": "privacy_projection",
+      "canonical_owner": "K4",
+      "writer_modules": [
+        "spe_runtime/privacy/project.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/privacy/__init__.py",
+        "tests/unit/test_g1r5_k3_privacy_projection.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-5: sole canonical writer project_privacy in spe_runtime/privacy/project.py. Contract owner K4. Projection is read-model only; does not mint authority or mutate K0/K1."
+    },
+    {
+      "semantic_fact": "spe_artifact_identity",
+      "canonical_owner": "K6",
+      "writer_modules": [],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "still unowned after G1R-6"
+    },
+    {
+      "semantic_fact": "prompt_artifact",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/prompt/build.py"
+      ],
+      "reader_modules": [
+        "tests/unit/test_g1r6_k3_prompt_artifact.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-6/G1R-7: sole canonical writer build_prompt_artifact; consumes CognitivePlan/PromptStrategy/TechniqueSelection"
+    },
+    {
+      "semantic_fact": "semantic_snapshot",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/snapshot.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "qualification_evidence",
+      "canonical_owner": "K7",
+      "writer_modules": [],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "still unowned after G1R-6"
+    },
+    {
+      "semantic_fact": "proof_ledger",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/ledger.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "semantic_lease",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/lease.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "proof_carrying_patch",
+      "canonical_owner": "K2",
+      "writer_modules": [
+        "spe_runtime/proof/patch.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/proof/commit.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "protected_intent_contract",
+      "canonical_owner": "K0",
+      "writer_modules": [
+        "spe_runtime/contract/protected.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "requirement_graph",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/requirements/graph.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "conflict_core",
+      "canonical_owner": "K1",
+      "writer_modules": [
+        "spe_runtime/requirements/conflicts.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "authority_event_apply",
+      "canonical_owner": "K4",
+      "writer_modules": [
+        "spe_runtime/authority/apply.py"
+      ],
+      "reader_modules": [],
+      "duplicate_writer": false,
+      "resolution_required": false
+    },
+    {
+      "semantic_fact": "cognitive_plan",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/prompt/plan.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/prompt/build.py",
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-7 sole writer build_cognitive_plan"
+    },
+    {
+      "semantic_fact": "prompt_strategy",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/prompt/strategy.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/prompt/build.py",
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-7 sole writer build_prompt_strategy"
+    },
+    {
+      "semantic_fact": "technique_selection",
+      "canonical_owner": "K3",
+      "writer_modules": [
+        "spe_runtime/prompt/techniques.py"
+      ],
+      "reader_modules": [
+        "spe_runtime/prompt/build.py",
+        "tests/unit/test_g1r7_k3_strategy.py"
+      ],
+      "duplicate_writer": false,
+      "resolution_required": false,
+      "notes": "G1R-7 sole writer select_prompt_techniques"
+    }
+  ],
+  "unowned_facts": [
+    "spe_artifact_identity",
+    "qualification_evidence"
+  ],
+  "ambient_authority_paths": [],
+  "ambient_authority_definition": "Hidden privilege elevation without typed AuthorityGrant/AuthorityEvent. Public AuthorityGrant dataclass construction is external injection, not ambient.",
+  "implementation_commit": "1dd587b50c672c7f364209fc875d2d2f7796992e",
+  "evidence_scope": "k3_strategy_intelligence"
+}

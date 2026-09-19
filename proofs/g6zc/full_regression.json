@@ -1,0 +1,9 @@
+{
+  "command": "python -m pytest",
+  "collected": 998,
+  "passed": 998,
+  "failed": 0,
+  "skipped": 0,
+  "exit": 0,
+  "denominator_note": "G5 baseline 986 + 12 G6 mutation tests = 998"
+}

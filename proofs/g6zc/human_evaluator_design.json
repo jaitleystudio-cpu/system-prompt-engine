@@ -1,0 +1,8 @@
+{
+  "ui": "evaluations/g6zc/blind_evaluator.html",
+  "pairs": "evaluations/g6zc/blind_pairs.json",
+  "blinding": "LEFT/RIGHT randomized; mapping in benchmarks/g6zc/randomization_manifest.json only",
+  "storage": "browser localStorage until download; no telemetry",
+  "accessibility": "keyboard focus-visible, semantic labels, no mouse-only",
+  "privacy": "local only; no analytics; no email/phone capture required"
+}

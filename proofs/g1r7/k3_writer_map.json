@@ -1,0 +1,62 @@
+{
+  "cognitive_plan": {
+    "semantic_fact": "cognitive_plan",
+    "canonical_owner": "K3",
+    "writer_modules": [
+      "spe_runtime/prompt/plan.py"
+    ],
+    "reader_modules": [
+      "spe_runtime/prompt/build.py",
+      "tests/unit/test_g1r7_k3_strategy.py"
+    ],
+    "duplicate_writer": false,
+    "resolution_required": false,
+    "notes": "G1R-7 sole writer build_cognitive_plan"
+  },
+  "prompt_strategy": {
+    "semantic_fact": "prompt_strategy",
+    "canonical_owner": "K3",
+    "writer_modules": [
+      "spe_runtime/prompt/strategy.py"
+    ],
+    "reader_modules": [
+      "spe_runtime/prompt/build.py",
+      "tests/unit/test_g1r7_k3_strategy.py"
+    ],
+    "duplicate_writer": false,
+    "resolution_required": false,
+    "notes": "G1R-7 sole writer build_prompt_strategy"
+  },
+  "technique_selection": {
+    "semantic_fact": "technique_selection",
+    "canonical_owner": "K3",
+    "writer_modules": [
+      "spe_runtime/prompt/techniques.py"
+    ],
+    "reader_modules": [
+      "spe_runtime/prompt/build.py",
+      "tests/unit/test_g1r7_k3_strategy.py"
+    ],
+    "duplicate_writer": false,
+    "resolution_required": false,
+    "notes": "G1R-7 sole writer select_prompt_techniques"
+  },
+  "prompt_artifact": {
+    "semantic_fact": "prompt_artifact",
+    "canonical_owner": "K3",
+    "writer_modules": [
+      "spe_runtime/prompt/build.py"
+    ],
+    "reader_modules": [
+      "tests/unit/test_g1r6_k3_prompt_artifact.py"
+    ],
+    "duplicate_writer": false,
+    "resolution_required": false,
+    "notes": "G1R-6/G1R-7: sole canonical writer build_prompt_artifact; consumes CognitivePlan/PromptStrategy/TechniqueSelection"
+  },
+  "unowned_facts": [
+    "spe_artifact_identity",
+    "qualification_evidence"
+  ],
+  "duplicate_writers": 0
+}

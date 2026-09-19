@@ -1,0 +1,4 @@
+ M .gitignore
+?? formal/
+?? proofs/g2/
+?? tools/tlc/

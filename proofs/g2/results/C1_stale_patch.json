@@ -1,0 +1,19 @@
+{
+  "config_id": "C1_stale_patch",
+  "module": "SPELeaseCommit",
+  "cfg_path": "formal/cfg/C1_stale_patch.cfg",
+  "command_file": "proofs/g2/commands/C1_stale_patch.sh",
+  "log_path": "proofs/g2/logs/C1_stale_patch.log",
+  "workers": 4,
+  "heap": "3559m",
+  "elapsed_sec": 0.551,
+  "exit_code": 0,
+  "states_generated": 2275,
+  "distinct_states": 365,
+  "search_depth": 7,
+  "fingerprint_collision_probability_optimistic": "3.8E-14",
+  "counterexample": "NO",
+  "deadlock": "NO",
+  "no_error_text": true,
+  "status": "PASS"
+}

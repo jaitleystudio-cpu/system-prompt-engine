@@ -1,0 +1,13 @@
+{
+  "G1": "BOUND_AND_PASS",
+  "G2": "MODEL_CHECKED_WITHIN_DECLARED_FINITE_SCOPE",
+  "G3": "IMPLEMENTATION_PRESENT / REVIEW_PENDING",
+  "not_earned": [
+    "DURABLE_RING1_VERIFIED (needs G3R)",
+    "physical power-loss",
+    "universal exactly-once",
+    "distributed consensus",
+    "production qualified",
+    "world #1"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "command": "python tools/verify_g9_checkpoint.py",
+  "exit": 0,
+  "verdict": "PASS",
+  "world_1": "NOT_PROVEN"
+}

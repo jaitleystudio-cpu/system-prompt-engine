@@ -1,0 +1,29 @@
+{
+  "phase": "PRESTUDY_CUSTODY_ONLY",
+  "G6": "HUMAN_VALUE_EVIDENCE_PENDING",
+  "not_earned": [
+    "REAL_USER_PRODUCT_VALUE_VERIFIED_WITHIN_TESTED_SCOPE",
+    "INDEPENDENTLY_REPLICATED",
+    "WORLD_1"
+  ],
+  "laws": {
+    "NO_RATINGS": "!= ZERO",
+    "NOT_COLLECTED": "!= FAIL",
+    "AUTOMATED_PASS": "!= HUMAN_PREFERENCE",
+    "G9": "\u219b WORLD_1",
+    "1041_tests": "\u219b WORLD_1",
+    "hermetic_replay": "\u2260 independent replication",
+    "G7_G9": "\u2260 G6"
+  },
+  "cursor_may": [
+    "verify freeze",
+    "hash inputs",
+    "package coordinator handoff"
+  ],
+  "cursor_may_not": [
+    "be study population",
+    "invent ratings",
+    "LLM-as-judge",
+    "mint World #1"
+  ]
+}
