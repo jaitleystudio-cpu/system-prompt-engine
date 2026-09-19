@@ -1,7 +1,7 @@
 {
   "gate": "G1R-8R",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 122,
+  "module_count": 124,
   "counts": {
     "RETAIN": 88,
     "RETIRE": 4,
@@ -235,6 +235,18 @@
       "disposition": "RETAIN",
       "normative_owner": "K0",
       "reason": "canonical Ring-0 implementation after G1R recreation"
+    },
+    {
+      "path": "spe_runtime/core/__init__.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4-ZC zero-cost core package export"
+    },
+    {
+      "path": "spe_runtime/core/compile.py",
+      "disposition": "RETAIN",
+      "normative_owner": null,
+      "reason": "G4-ZC offline portable compile entry (no network/providers)"
     },
     {
       "path": "spe_runtime/error_registry.py",

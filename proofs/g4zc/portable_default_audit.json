@@ -1,0 +1,5 @@
+{
+  "default_target_profile": "ANY_AI",
+  "provider_lock_in": false,
+  "openai_formatting_required": false
+}

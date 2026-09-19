@@ -1,0 +1,9 @@
+{
+  "gate": "G4-ZC",
+  "base_head": "86b462b9704a1910880266493c028ce05f64a7f4",
+  "g3": "DURABLE_RING1_VERIFIED_WITHIN_TESTED_LOCAL_SCOPE",
+  "g3r_head": "a021aed067541ef1e9b38b3be911595129e44cdf",
+  "historical_g4_external": "G4_BLOCKED_NO_LIVE_PROVIDER \u2014 reclassified OPTIONAL_EXTERNAL_PROVIDER_QUALIFICATION (G4X)",
+  "branch": "cursor/g4zc-zerocost-core-0d6e",
+  "pr6": "OPEN @ 4e6c694 \u2014 UNTOUCHED"
+}

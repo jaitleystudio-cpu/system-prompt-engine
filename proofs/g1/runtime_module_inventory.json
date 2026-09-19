@@ -1,7 +1,7 @@
 {
   "gate": "G1R-9",
   "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
-  "module_count": 122,
+  "module_count": 124,
   "modules": [
     {
       "path": "spe_runtime/__init__.py"
@@ -116,6 +116,16 @@
     },
     {
       "path": "spe_runtime/contract/provenance.py"
+    },
+    {
+      "path": "spe_runtime/core/__init__.py",
+      "package": "spe_runtime.core",
+      "role": "g4zc_core"
+    },
+    {
+      "path": "spe_runtime/core/compile.py",
+      "package": "spe_runtime.core",
+      "role": "g4zc_core"
     },
     {
       "path": "spe_runtime/error_registry.py"
