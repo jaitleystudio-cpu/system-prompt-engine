@@ -21,6 +21,7 @@ import {
 import { Nav } from "./layout/Nav";
 import { Hero } from "./landing/Hero";
 import { ScrollStory } from "./landing/ScrollStory";
+import { MachineryDrawer } from "./landing/MachineryDrawer";
 import { Workspace } from "./workspace/Workspace";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
@@ -143,7 +144,7 @@ export default function App() {
     setArtifact(null);
     setPhases([]);
     setPhase("loading_wasm");
-    setView("workspace");
+    // Stay on the Intent theater; machinery drawer reveals the compile.
     setLens("prompt");
 
     let fixture: Record<string, unknown>;
@@ -294,6 +295,18 @@ export default function App() {
               busy={busy}
               sceneState={sceneState}
               quality={quality}
+            />
+            <MachineryDrawer
+              phases={phases}
+              phase={phase}
+              busy={busy}
+              prompt={rendered?.finalPrompt ?? null}
+              techniques={rendered?.techniques.length ?? 0}
+              unknowns={intent.unknowns.length}
+              confirmed={intent.confirmed.length}
+              ready={Boolean(result && !error)}
+              onCopy={() => void onCopy()}
+              onOpenWorkspace={() => setView("workspace")}
             />
             <ScrollStory
               onOpenWorkspace={() => setView("workspace")}
