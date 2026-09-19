@@ -31,17 +31,17 @@
         ".superdesign/design-system.md": "0a0981c227375acb6fc0951ececd7e60de0a68cfb3c3e6018dfc716fa1ef5bcf",
         "docs/web03/SPE_VISUAL_DIRECTION.md": "6011f42444be3352c9b260f969245ffecabbe6a59b06d5df325111a988be6a16",
         "docs/web03/ORIGINALITY_REVIEW.md": "ec26d7b36cfdf8c290fcfdd4d73e537d1e1a583c8316acc3f55985845b750944",
-        "apps/web/src/App.tsx": "40c1c2eb767cac66d54a31d8f8cd806de64f7775cafc8277486176e081ae0996",
-        "apps/web/src/layout/Nav.tsx": "8dfd4f708cb66d083cdd216600a95f134b7b5880a830edd48ed3641ff1c5af9b",
-        "apps/web/src/brand/Logo.tsx": "f078d9990511506b5ce56273dad9fd02f9653fe07c858ab3b42bfd96693142a1",
-        "apps/web/src/landing/Hero.tsx": "4a3d4903420ea918e6e3a5acea92e7d8d8193fa163a992e62f6dfd8f12122b78",
-        "apps/web/src/landing/ScrollStory.tsx": "47ba87b9ccdbc5758c848c168cdff356870d48e5fcad86a6d62de8f011b34e0c",
-        "apps/web/src/scene/SpeIntelligence.tsx": "03675a2b8e1ef5304757fe277e13bc078a5d9f219ee43c97f61023e1eab624df",
-        "apps/web/src/workspace/Workspace.tsx": "3c7a6d50544f7a288d8913dd72dded7466f8d7bc662873f994799e113dafcc3d",
-        "apps/web/src/ui/PrivacyIndicator.tsx": "a12e7d8da34b0e94046155f14decd0008de6d529cef6b5492c65784e380ec972",
-        "apps/web/src/ui/TrustPanel.tsx": "cc59e8cd8b6168f3577b8ba2aca506d25217ce179d0757e0bbb4725320b484e4",
-        "apps/web/src/index.css": "2fea5b0042a75f52300dd5dc6b298f1eb5c3416c1f871f9a95f0e9183ebb4cfe",
-        "packages/design-system/src/tokens.css": "779e27c2f4c626e5c28338f46aaeb844d75a52cfbef7b8cc3dcb24d9fe23693d"
+        "apps/web/src/App.tsx": "7b2bcf74f5b67c54613e8a966ae9377ef74305e12b650d989486f8df690472c4",
+        "apps/web/src/layout/Nav.tsx": "e6c1eaa47c8f6d527fd9705b6adfccdadb30f3a826328d98dfbd1edf4efd8be6",
+        "apps/web/src/brand/Logo.tsx": "189681b5acd5957ffe67df639da27ad34ce5564e6ed17d16c55109b7bfe36940",
+        "apps/web/src/landing/Hero.tsx": "d540f4a2d670220cb811f2f9705d8c99347bde3184f0f74015b8d739f8fe66e9",
+        "apps/web/src/landing/ScrollStory.tsx": "d2f1cb0917086cacf8aeebc8fae9e4013568f7b0fc4fa239a1b4e2d1b31aee9f",
+        "apps/web/src/scene/SpeIntelligence.tsx": "be60df2431997619f80268a514baa0696292eba412f8b041423f17f9e34b24c3",
+        "apps/web/src/workspace/Workspace.tsx": "ccf3d2ba45e0b2c510657c7bd155dbca003a13c4ccf7dd483d716ed347946f67",
+        "apps/web/src/ui/PrivacyIndicator.tsx": "fd82e6d153c905609cda7d05de50986a9631229e8eacdd5ae24933a0f0a784e5",
+        "apps/web/src/ui/TrustPanel.tsx": "a2c266c185d48ec5925f6ecfcffd8f940a0ba466094525a8381557581c5dad8c",
+        "apps/web/src/index.css": "9ab2eb9aa5752e6c483d79ff3f695d5d86ebceda88df391c02f6cff4c2fbddf9",
+        "packages/design-system/src/tokens.css": "25813d7b15131bfb20b77f760124eb447205dfff8dbf675bc58c4c48bdfa6ca2"
       },
       "components": [],
       "drafts": {
@@ -63,7 +63,7 @@
           "currentVersion": 1
         }
       },
-      "updatedAt": "2026-09-19T16:38:00Z"
+      "updatedAt": "2026-09-19T17:05:30Z"
     }
   }
 }
