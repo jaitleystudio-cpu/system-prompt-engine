@@ -1,0 +1,21 @@
+{
+  "n_tasks": 120,
+  "compile_success": 113,
+  "compile_typed_fail": 7,
+  "MUST_preservation_SPE_hits": 196,
+  "MUST_preservation_RAW_hits": 193,
+  "MUST_total_atoms": 213,
+  "MUST_SPE_recall": 92.02,
+  "MUST_RAW_recall": 90.61,
+  "MUST_NOT_SPE_hits": 38,
+  "MUST_NOT_total": 38,
+  "MUST_NOT_SPE_recall": 100.0,
+  "conflict_tasks": 7,
+  "conflict_fail_closed": 7,
+  "conflict_preservation_rate": 100.0,
+  "unknown_tasks": 53,
+  "unknown_no_invent_flags": 53,
+  "unknown_preservation_rate": 100.0,
+  "drift_findings_count": 0,
+  "STANDARD_MAX_TECHNIQUES": 3
+}

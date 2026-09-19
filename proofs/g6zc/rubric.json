@@ -1,0 +1,55 @@
+{
+  "confidence": [
+    "LOW",
+    "MEDIUM",
+    "HIGH"
+  ],
+  "dimensions": {
+    "V10_overall_usefulness": {
+      "desc": "Overall usefulness for the task"
+    },
+    "V1_intent_fidelity": {
+      "anchors": {
+        "0": "changes goal",
+        "4": "exact preservation"
+      },
+      "desc": "Preserve user goal"
+    },
+    "V2_constraint_coverage": {
+      "desc": "MUST/MUST_NOT coverage"
+    },
+    "V3_missing_requirement_handling": {
+      "desc": "UNKNOWN handling without invention"
+    },
+    "V4_conflict_handling": {
+      "desc": "Explicit conflict vs silent selection"
+    },
+    "V5_executability": {
+      "desc": "Actionable/executable prompt"
+    },
+    "V6_output_clarity": {
+      "desc": "Clear structure and wording"
+    },
+    "V7_verification_testability": {
+      "desc": "Testable success criteria"
+    },
+    "V8_portability": {
+      "desc": "Provider-agnostic portable prompt"
+    },
+    "V9_unnecessary_complexity": {
+      "desc": "REVERSE: 4=minimal justified; 0=severe bloat"
+    }
+  },
+  "preference": [
+    "LEFT",
+    "RIGHT",
+    "TIE"
+  ],
+  "rubric_version": "g6zc.rubric.v1",
+  "scale": {
+    "max": 4,
+    "min": 0,
+    "type": "integer"
+  },
+  "weights": "NONE_FROZEN_UNWEIGHTED"
+}
