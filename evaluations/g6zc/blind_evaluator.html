@@ -54,8 +54,9 @@
     <div class="bar">
       <label for="file">Pairs JSON</label>
       <input id="file" type="file" accept="application/json,.json" />
+      <button type="button" class="secondary" id="loadServer" title="Fetch blind_pairs.json from this server">Load server pairs</button>
       <label for="evalId">Evaluator ID</label>
-      <input id="evalId" type="text" placeholder="e.g. eval-01" autocomplete="off" />
+      <input id="evalId" type="text" placeholder="e.g. E001" autocomplete="off" />
       <div class="progress" aria-label="Progress"><span id="prog"></span></div>
       <span id="progText" class="status">0 / 0</span>
     </div>
@@ -142,16 +143,51 @@
 
     function setMsg(t){ document.getElementById('msg').textContent = t; }
 
+    function applyPairsData(data, label) {
+      pairs = data.pairs || data;
+      if (!Array.isArray(pairs)) throw new Error('pairs must be an array');
+      idx = 0;
+      render();
+      setMsg(`Loaded ${pairs.length} pairs${label ? ' (' + label + ')' : ''}.`);
+    }
+
+    async function loadServerPairs() {
+      const candidates = [
+        'blind_pairs.json',
+        './blind_pairs.json',
+        '/evaluations/g6zc/blind_pairs.json',
+      ];
+      let lastErr = null;
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) throw new Error(url + ' HTTP ' + res.status);
+          const data = await res.json();
+          applyPairsData(data, url);
+          return;
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      setMsg('Could not load server pairs. Use file picker or serve from repo root. ' + (lastErr && lastErr.message ? lastErr.message : ''));
+    }
+
+    document.getElementById('loadServer').addEventListener('click', () => {
+      loadServerPairs();
+    });
+
     document.getElementById('file').addEventListener('change', async (e) => {
       const f = e.target.files[0];
       if (!f) return;
       const text = await f.text();
       const data = JSON.parse(text);
-      pairs = data.pairs || data;
-      idx = 0;
-      render();
-      setMsg(`Loaded ${pairs.length} pairs.`);
+      applyPairsData(data, f.name);
     });
+
+    // When opened via http.server, auto-load same-origin pairs (mobile-friendly).
+    if (location.protocol === 'http:' || location.protocol === 'https:') {
+      loadServerPairs();
+    }
 
     function currentScores() {
       const scores = {};
