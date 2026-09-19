@@ -13,7 +13,7 @@ G7 HEAD (base):
 6849a9dc2633ec60fe1891b944ab652d3bf856f8
 
 G8 HEAD:
-053053e8fcbf8d760bbfea44aa390895718ce604
+f54e6db6bf6bab72a3eefb7877a81c808a190a9e
 
 Branch:
 cursor/g8zc-full-replication-0d6e
