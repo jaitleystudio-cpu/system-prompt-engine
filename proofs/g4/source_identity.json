@@ -9,6 +9,6 @@
   "g4_branch": "cursor/g4-live-provider-conformance-0d6e",
   "pr6": "OPEN @ 4e6c694 \u2014 UNTOUCHED",
   "final_verdict": "G4_BLOCKED_NO_LIVE_PROVIDER",
-  "g4_head": "8f062b8697b73dd3f2037d5f34034f15e94ff6e9",
+  "g4_head": "654c577e47739246dca1bf8804841cdc6e108046",
   "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/24"
 }
