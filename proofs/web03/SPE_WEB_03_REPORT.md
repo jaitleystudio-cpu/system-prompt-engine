@@ -1,10 +1,10 @@
-# SPE-WEB-03 implementation report
+# SPE-WEB-03 WORLD-CLASS CINEMATIC 3D REPORT
 
 ## Verdict
 
-**PASS — `SPE_WEB03_PASS`**
+**PASS — `SPE_WEB03_AWARD_CALIBER_TARGET_PASS`**
 
-This verdict is conservative and does not claim 10/10, release qualification, or field performance. Fresh code, browser, accessibility, and visual evidence all passed the defined gates. Remaining defects are non-blocking and listed below.
+This verdict is conservative and describes the requested design target; it does not claim an award, 10/10, release qualification, or field performance. Fresh code, browser, accessibility, and visual evidence all passed the defined gates. Remaining defects are non-blocking and listed below.
 
 ## Implemented result
 

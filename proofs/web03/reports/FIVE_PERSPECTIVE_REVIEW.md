@@ -32,4 +32,4 @@ Physical mobile screen-reader testing remains unavailable.
 
 The implementation clears the requested design, product, engineering, accessibility, and trust thresholds without claiming perfection or release qualification. The remaining issues are bounded polish/optimization items.
 
-**Verdict: SPE_WEB03_PASS**
+**Verdict: SPE_WEB03_AWARD_CALIBER_TARGET_PASS**
