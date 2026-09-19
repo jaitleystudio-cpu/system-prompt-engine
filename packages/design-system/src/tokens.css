@@ -1,0 +1,91 @@
+/**
+ * SPE design system — cinematic technical tokens.
+ * Names preserve Sprint-6 obsidian/platinum heritage; palette is SPE product.
+ */
+:root {
+  /* Brand surfaces */
+  --spe-obsidian: #07090d;
+  --spe-obsidian-elevated: #0e131b;
+  --spe-obsidian-panel: #121821;
+  --spe-platinum: #e8edf5;
+  --spe-platinum-muted: #a7b0c0;
+  --spe-ink: #9eb0c8;
+
+  /* Accents — copper signal, cyan instrument (not purple SaaS) */
+  --spe-signal: #d4a26a;
+  --spe-signal-strong: #e8b87a;
+  --spe-instrument: #3ecfcf;
+  --spe-instrument-dim: #1a8f8f;
+  --spe-danger: #e06b6b;
+  --spe-ok: #5fbf8a;
+  --spe-warn: #d4a26a;
+
+  /* Semantic status */
+  --spe-status-confirmed: #5fbf8a;
+  --spe-status-assumed: #d4a26a;
+  --spe-status-unknown: #9eb0c8;
+  --spe-status-conflict: #e06b6b;
+
+  /* Spacing scale */
+  --spe-space-1: 0.25rem;
+  --spe-space-2: 0.5rem;
+  --spe-space-3: 0.75rem;
+  --spe-space-4: 1rem;
+  --spe-space-5: 1.5rem;
+  --spe-space-6: 2rem;
+  --spe-space-7: 3rem;
+  --spe-space-8: 4.5rem;
+
+  /* Type scale */
+  --spe-font-display: "Syne", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --spe-font-body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --spe-font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --spe-fs-xs: 0.75rem;
+  --spe-fs-sm: 0.875rem;
+  --spe-fs-md: 1rem;
+  --spe-fs-lg: 1.25rem;
+  --spe-fs-xl: 1.75rem;
+  --spe-fs-2xl: clamp(2rem, 4vw, 3.25rem);
+  --spe-fs-3xl: clamp(2.5rem, 6vw, 4.5rem);
+  --spe-lh-tight: 1.1;
+  --spe-lh-body: 1.55;
+
+  /* Motion */
+  --spe-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spe-dur-fast: 140ms;
+  --spe-dur-med: 280ms;
+  --spe-dur-slow: 520ms;
+
+  /* Breakpoints (documented; used in media queries) */
+  --spe-bp-xs: 320px;
+  --spe-bp-sm: 640px;
+  --spe-bp-md: 900px;
+  --spe-bp-lg: 1200px;
+
+  /* Focus */
+  --spe-focus: 0 0 0 3px color-mix(in srgb, var(--spe-instrument) 65%, transparent);
+
+  color-scheme: dark;
+  background: var(--spe-obsidian);
+  color: var(--spe-platinum);
+}
+
+[data-theme="light"] {
+  --spe-obsidian: #f3f5f8;
+  --spe-obsidian-elevated: #ffffff;
+  --spe-obsidian-panel: #e8edf5;
+  --spe-platinum: #10141c;
+  --spe-platinum-muted: #4a5568;
+  --spe-ink: #3a4658;
+  --spe-signal: #9a6b35;
+  --spe-instrument: #0f7f7f;
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --spe-dur-fast: 0ms;
+    --spe-dur-med: 0ms;
+    --spe-dur-slow: 0ms;
+  }
+}

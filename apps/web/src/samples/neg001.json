@@ -1,0 +1,145 @@
+{
+  "after": {
+    "analysis": null,
+    "authority_state": {
+      "grants": [],
+      "level": 0,
+      "status": "DENIED"
+    },
+    "category_trace": [
+      "CAT:C02"
+    ],
+    "envelope_id": "neg-env-001",
+    "execution_grants": [],
+    "facts": [
+      {
+        "fact_id": "nf-1",
+        "provenance_ids": [],
+        "statement": "neg fact 1"
+      }
+    ],
+    "failures": [
+      {
+        "failure_id": "fail-1",
+        "message": "unk",
+        "status": "UNKNOWN"
+      }
+    ],
+    "goal_identity": "goal-neg-001",
+    "hard_constraints": [
+      {
+        "constraint_id": "nc-1",
+        "statement": "must not weaken",
+        "strength": "HARD"
+      }
+    ],
+    "provenance": [],
+    "recommendation": null,
+    "rendering": null,
+    "sensitivity_labels": [
+      "USER_PRIVATE"
+    ],
+    "taint_labels": [
+      "external_untrusted"
+    ],
+    "uncertainties": [
+      {
+        "description": "maybe",
+        "status": "UNKNOWN",
+        "uncertainty_id": "nu-1"
+      }
+    ],
+    "user_preferences": [
+      {
+        "preference_id": "npref-1",
+        "statement": "concise"
+      }
+    ]
+  },
+  "attack": "PROVENANCE_REMOVED",
+  "available_capabilities": [
+    "CORE_CONTRACT"
+  ],
+  "before": {
+    "analysis": null,
+    "authority_state": {
+      "grants": [],
+      "level": 0,
+      "status": "DENIED"
+    },
+    "category_trace": [
+      "CAT:C02"
+    ],
+    "envelope_id": "neg-env-001",
+    "execution_grants": [],
+    "facts": [
+      {
+        "fact_id": "nf-1",
+        "provenance_ids": [
+          "np-1"
+        ],
+        "statement": "neg fact 1"
+      }
+    ],
+    "failures": [
+      {
+        "failure_id": "fail-1",
+        "message": "unk",
+        "status": "UNKNOWN"
+      }
+    ],
+    "goal_identity": "goal-neg-001",
+    "hard_constraints": [
+      {
+        "constraint_id": "nc-1",
+        "statement": "must not weaken",
+        "strength": "HARD"
+      }
+    ],
+    "provenance": [
+      {
+        "provenance_id": "np-1",
+        "source": "src"
+      }
+    ],
+    "recommendation": null,
+    "rendering": null,
+    "sensitivity_labels": [
+      "USER_PRIVATE"
+    ],
+    "taint_labels": [
+      "external_untrusted"
+    ],
+    "uncertainties": [
+      {
+        "description": "maybe",
+        "status": "UNKNOWN",
+        "uncertainty_id": "nu-1"
+      }
+    ],
+    "user_preferences": [
+      {
+        "preference_id": "npref-1",
+        "statement": "concise"
+      }
+    ]
+  },
+  "blocked_capabilities": [],
+  "capability": "CORE_CONTRACT",
+  "defer_capabilities": [],
+  "expect_reason": "P_PROVENANCE_REMOVED",
+  "id": "NEG-001",
+  "kind": "negative",
+  "network_mode": "NONE",
+  "note": "remove provenance",
+  "privacy_after": {
+    "authority": "DENIED",
+    "sensitivity": "USER_PRIVATE",
+    "trust": "UNTRUSTED"
+  },
+  "privacy_before": {
+    "authority": "DENIED",
+    "sensitivity": "USER_PRIVATE",
+    "trust": "UNTRUSTED"
+  }
+}
