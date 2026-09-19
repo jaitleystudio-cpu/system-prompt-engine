@@ -16,10 +16,13 @@ G7 base:
 bea709761729f5315d602874f45a06cd49a1f78d
 
 G7 HEAD:
-822e901b82aa66100fdd5772d787487720e36ee8
+61e3f16d475d430ea9be58e27f31e8e635f303b9
 
 Branch:
 cursor/g7zc-security-redteam-0d6e
+
+PR:
+https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/29
 
 PR #6:
 OPEN @ 4e6c694 — UNTOUCHED / UNMERGED

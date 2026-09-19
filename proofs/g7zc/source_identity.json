@@ -2,7 +2,7 @@
   "gate": "G7-ZC",
   "base_head": "bea709761729f5315d602874f45a06cd49a1f78d",
   "g5_head": "99173c2f700508c6c958b5d79e8bc17418f9bfd6",
-  "g7_head": "822e901b82aa66100fdd5772d787487720e36ee8",
+  "g7_head": "61e3f16d475d430ea9be58e27f31e8e635f303b9",
   "branch": "cursor/g7zc-security-redteam-0d6e",
-  "recorded_at_utc": "2026-09-19T07:49:45.625125+00:00"
+  "recorded_at_utc": "2026-09-19T07:49:54.043825+00:00"
 }
