@@ -16,7 +16,7 @@ G7 base:
 bea709761729f5315d602874f45a06cd49a1f78d
 
 G7 HEAD:
-(see source_identity.json after tip pin)
+1cca7673f883d3a76447eb71a41f1e419f601546
 
 Branch:
 cursor/g7zc-security-redteam-0d6e
