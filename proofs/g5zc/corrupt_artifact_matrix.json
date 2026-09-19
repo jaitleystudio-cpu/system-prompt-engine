@@ -1,0 +1,25 @@
+{
+  "all_rejected": true,
+  "cases": [
+    {
+      "accepted": false,
+      "code": "K6_ARTIFACT_ID_MISMATCH",
+      "name": "wrong_id"
+    },
+    {
+      "accepted": false,
+      "code": "K6_UNSUPPORTED_ARTIFACT_VERSION",
+      "name": "future_version"
+    },
+    {
+      "accepted": false,
+      "code": "K6_INVALID_ARTIFACT",
+      "name": "unknown_field"
+    },
+    {
+      "accepted": false,
+      "code": "K6_ARTIFACT_ID_MISMATCH",
+      "name": "wrong_digest"
+    }
+  ]
+}

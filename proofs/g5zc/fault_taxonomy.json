@@ -1,0 +1,102 @@
+{
+  "F1": {
+    "expected": "no crash",
+    "injection": "pytest params",
+    "name": "MALFORMED_INPUT"
+  },
+  "F10": {
+    "expected": "K6_ARTIFACT_ID_MISMATCH",
+    "injection": "swap id",
+    "name": "WRONG_ARTIFACT_ID"
+  },
+  "F11": {
+    "expected": "K6_INVALID_LINEAGE",
+    "injection": "self-parent",
+    "name": "WRONG_LINEAGE_BINDING"
+  },
+  "F12": {
+    "expected": "reject",
+    "injection": "format_version=999",
+    "name": "UNSUPPORTED_ARTIFACT_VERSION"
+  },
+  "F13": {
+    "expected": "reject partial",
+    "injection": "SIGKILL mid write",
+    "name": "PROCESS_KILL_DURING_WRITE"
+  },
+  "F14": {
+    "expected": "fresh OK",
+    "injection": "SIGKILL after compile",
+    "name": "PROCESS_KILL_DURING_COMPILE"
+  },
+  "F15": {
+    "expected": "identical digests",
+    "injection": "Barrier\u00d72 \u00d720",
+    "name": "CONCURRENT_COMPILE"
+  },
+  "F16": {
+    "expected": "no overwrite",
+    "injection": "two paths",
+    "name": "CONCURRENT_EXPORT"
+  },
+  "F17": {
+    "expected": "bounded",
+    "injection": "technique budget",
+    "name": "RESOURCE_BUDGET_EXHAUSTION"
+  },
+  "F18": {
+    "expected": "no silent repair",
+    "injection": "conflict no launder",
+    "name": "REPAIR_LOOP_FAULT"
+  },
+  "F19": {
+    "expected": "core OK",
+    "injection": "socket.connect boom",
+    "name": "NETWORK_ATTEMPT"
+  },
+  "F2": {
+    "expected": "same digest",
+    "injection": "NFC/NFD fixtures",
+    "name": "INVALID_UNICODE"
+  },
+  "F20": {
+    "expected": "core OK + CAP unavailable",
+    "injection": "delenv keys",
+    "name": "PROVIDER_UNAVAILABLE"
+  },
+  "F3": {
+    "expected": "bounded compile",
+    "injection": "100k chars",
+    "name": "OVERSIZED_INPUT"
+  },
+  "F4": {
+    "expected": "CONFLICTED",
+    "injection": "MUST vs MUST_NOT",
+    "name": "CONFLICTED_REQUIREMENTS"
+  },
+  "F5": {
+    "expected": "typed fail",
+    "injection": "validate before write",
+    "name": "SERIALIZATION_FAILURE"
+  },
+  "F6": {
+    "expected": "SpeTypedError",
+    "injection": "chmod 0555 dir",
+    "name": "FILE_PERMISSION_DENIED"
+  },
+  "F7": {
+    "expected": "no target",
+    "injection": "monkeypatch write_bytes",
+    "name": "DISK_WRITE_FAILURE"
+  },
+  "F8": {
+    "expected": "load reject",
+    "injection": "truncated bytes",
+    "name": "PARTIAL_ARTIFACT_WRITE"
+  },
+  "F9": {
+    "expected": "K6 reject",
+    "injection": "field mutations",
+    "name": "CORRUPT_ARTIFACT"
+  }
+}

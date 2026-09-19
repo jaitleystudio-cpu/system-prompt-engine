@@ -1,0 +1,9 @@
+{
+  "branch": "cursor/g5zc-local-chaos-0d6e",
+  "g4zc_base_head": "c3450c4add1329eeaba28eadcaf36c1cdf94d57b",
+  "g5_base_head": "c3450c4add1329eeaba28eadcaf36c1cdf94d57b",
+  "g5_head": "c3450c4add1329eeaba28eadcaf36c1cdf94d57b",
+  "gate": "G5-ZC",
+  "recorded_at_utc": "2026-09-19T04:27:06.394060+00:00",
+  "repository": "jaitleystudio-cpu/system-prompt-engine"
+}

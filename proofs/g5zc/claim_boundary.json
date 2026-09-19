@@ -1,0 +1,15 @@
+{
+  "earned_if_pass": "ZERO_COST_LOCAL_FAULT_RESILIENCE_VERIFIED_WITHIN_TESTED_SCOPE",
+  "not_earned": [
+    "PRODUCTION_READY",
+    "POWER_LOSS_PROVEN",
+    "ALL_FILESYSTEMS_SAFE",
+    "ALL_OPERATING_SYSTEMS_SAFE",
+    "SECURITY_RED_TEAM_PASS",
+    "MALWARE_SAFE",
+    "UNIVERSAL_CRASH_SAFE",
+    "WORLD_1"
+  ],
+  "physical_power_loss": "NOT_TESTED",
+  "promotion": "G5_IMPLEMENTATION_PASS + FAULT/CHAOS EVIDENCE PRESENT; independent review may elevate"
+}

@@ -12,6 +12,7 @@ Policy:
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -109,16 +110,40 @@ def save_spe(
     *,
     overwrite: bool = False,
 ) -> Path:
-    """Write canonical .spe bytes to caller-specified path. Path does not affect identity."""
+    """Write canonical .spe bytes via temp+replace so partial writes never replace a good file.
+
+    Path does not affect artifact identity. On OSError the typed error is raised and any
+    temp sibling is best-effort removed. Existing complete targets survive failed overwrite.
+    """
     target = Path(path)
     if target.exists() and not overwrite:
         raise SpeTypedError(
             ErrorCode.K6_INVALID_ARTIFACT,
             f"refusing to overwrite existing file: {target}",
         )
-    target.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        target.parent.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        raise SpeTypedError(
+            ErrorCode.K6_INVALID_ARTIFACT,
+            f"cannot create .spe parent directory: {target.parent}",
+        ) from exc
+
     data = dumps_spe(artifact)
-    target.write_bytes(data)
+    tmp = target.with_name(f".{target.name}.{os.getpid()}.spe.tmp")
+    try:
+        tmp.write_bytes(data)
+        os.replace(tmp, target)
+    except OSError as exc:
+        try:
+            if tmp.exists():
+                tmp.unlink()
+        except OSError:
+            pass
+        raise SpeTypedError(
+            ErrorCode.K6_INVALID_ARTIFACT,
+            f"cannot write .spe path: {target}",
+        ) from exc
     return target
 
 

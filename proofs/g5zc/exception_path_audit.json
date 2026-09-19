@@ -1,0 +1,5 @@
+{
+  "broad_except_in_core_prompt_storage_contract": [],
+  "dangerous_false_pass_observed": false,
+  "note": "serialize maps OSError/JSON/Unicode to SpeTypedError; no success-on-except in core path"
+}
