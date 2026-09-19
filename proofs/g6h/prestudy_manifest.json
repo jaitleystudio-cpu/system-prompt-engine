@@ -4,7 +4,7 @@
   "mission_class": "EXTERNAL_HUMAN_EVIDENCE_COLLECTION",
   "ratings_status": "NO_RATINGS_YET",
   "do_not_fabricate": true,
-  "recorded_at_utc": "2026-09-19T09:41:40.982709+00:00",
+  "recorded_at_utc": "2026-09-19T13:03:25.718183+00:00",
   "freeze_verifier": {
     "command": "python tools/verify_g9_freeze.py",
     "exit_code": 0,
@@ -75,8 +75,8 @@
     },
     {
       "path": "evaluations/g6zc/blind_evaluator.html",
-      "size": 11066,
-      "sha256": "a36475571cbe1e86ef520d927e376b5a164a4fdc2763b2b38a7b947abf73c123",
+      "size": 12393,
+      "sha256": "d7f7474dc2e4a353a749c188901ab0fb956555f8fdc27ec53ef3679ccd9f9bcc",
       "role": "evaluator_ui"
     },
     {

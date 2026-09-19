@@ -22,7 +22,7 @@
     "benchmarks/g6zc/rubric_sha256.txt": "654dfa269adced42b18276665cb00551e982b48c3e94690c8c02813a61ffb2a7",
     "benchmarks/g6zc/thresholds.json": "8e7074a6e5f25a3961b83be0ad2a94357b7948170a353f7bf403b2b81ed5eff4",
     "benchmarks/g6zc/thresholds_sha256.txt": "d405af3a63b0870e585d345b6eff9cd426433572376450b1acbf35ca00f889a5",
-    "evaluations/g6zc/blind_evaluator.html": "a36475571cbe1e86ef520d927e376b5a164a4fdc2763b2b38a7b947abf73c123",
+    "evaluations/g6zc/blind_evaluator.html": "d7f7474dc2e4a353a749c188901ab0fb956555f8fdc27ec53ef3679ccd9f9bcc",
     "evaluations/g6zc/blind_pairs.json": "cff89a32712c1451f4eb528b9ba8de5577135b3817d4f622c94092846633698f",
     "formal/SPELeaseCommit.tla": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
     "proofs/g6zc/G6_ZC_REPORT.md": "a0943efb281a27cd27a0845f6744d735ac85b5cfc93c4b78a3f58eb2f3f9b6b3",

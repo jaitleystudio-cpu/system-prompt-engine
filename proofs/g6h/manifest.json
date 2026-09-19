@@ -4,8 +4,8 @@
   "files": [
     {
       "path": "proofs/g6h/COORDINATOR_HANDOFF.md",
-      "size": 4632,
-      "sha256": "6ae39252f135bd67b713f2846d605a005ae07408895ed712a9f6779f485d86a0"
+      "size": 5143,
+      "sha256": "b0cf20e32df7c11d74af40106553412d2680c542fd7c5fb59ff8ab582c4e9013"
     },
     {
       "path": "proofs/g6h/G6_H_FINAL_REPORT.md",
@@ -59,8 +59,8 @@
     },
     {
       "path": "proofs/g6h/evaluator_protocol.md",
-      "size": 1059,
-      "sha256": "261ecac56075d7268f432a27b55ec26901b72c1317eb35c1c66c0c3ad41b33a5"
+      "size": 1399,
+      "sha256": "564fbd18e1ce401b438d07da272e7f2298938c22d167cf2379db7ddb62c553cc"
     },
     {
       "path": "proofs/g6h/evaluator_results.json",
@@ -85,7 +85,7 @@
     {
       "path": "proofs/g6h/freeze_verifier_result.txt",
       "size": 665,
-      "sha256": "511b75ea601bfcafaca84f96466278a31f1ca7eabf5e88ea128d0f22495d35e2"
+      "sha256": "f2582e8b12ab6eb5b10bff6d1693383fb7a92bd72a8a989f4d6d15b5b125d2db"
     },
     {
       "path": "proofs/g6h/holdout_results.json",
@@ -109,8 +109,8 @@
     },
     {
       "path": "proofs/g6h/manifest.json",
-      "size": 5801,
-      "sha256": "4c84a95e0f2485c84d6acdf41689ef1924b469571bc5ca1c2796e73023cbd03f"
+      "size": 6330,
+      "sha256": "dd87a9d384680f380829b938a7235ac80c6949e2387548d8bef1591470194c16"
     },
     {
       "path": "proofs/g6h/plumbing_status.json",
@@ -125,7 +125,7 @@
     {
       "path": "proofs/g6h/prestudy_manifest.json",
       "size": 4252,
-      "sha256": "07ab6032f6d21833bd85abca8357e694b3bfcb718ef3c7f63de75b5c45cace84"
+      "sha256": "784fbb3ea64aaf77b0e2a833a7b13e3a9492ede13791bc9af04c1b08991ea708"
     },
     {
       "path": "proofs/g6h/randomization_custody.json",
@@ -192,5 +192,5 @@
   "do_not_fabricate": true,
   "ratings_status": "NO_RATINGS_YET",
   "plumbing": "unblind+lock ready",
-  "recorded_at_utc": "2026-09-19T09:46:08.132311+00:00"
+  "recorded_at_utc": "2026-09-19T13:03:25.718183+00:00"
 }
