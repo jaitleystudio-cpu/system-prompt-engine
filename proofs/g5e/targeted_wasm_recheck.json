@@ -1,0 +1,13 @@
+{
+  "command": "python -m pytest tests/portability/test_wasm_reference_conformance.py tests/portability/test_sprint5_merge_gate_differential.py tests/portability/test_sprint5_merge_gate_oracle.py",
+  "collected": 120,
+  "passed": 120,
+  "failed": 0,
+  "skipped": 0,
+  "exit": 0,
+  "intermediate_after_wasm_only": {
+    "result": "114 failed \u2014 FileNotFoundError /usr/bin/node",
+    "log": "proofs/g5e/targeted_wasm_recheck.txt"
+  },
+  "final_after_node": "proofs/g5e/targeted_wasm_recheck_after_node.txt"
+}

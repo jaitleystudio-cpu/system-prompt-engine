@@ -235,17 +235,13 @@ PASS
 
 ## REGRESSION
 
+### Prior RED (preserved — not overwritten)
+
 command:
 python -m pytest
 
-repository-wide collected:
+collected:
 986
-
-collection roots:
-tests/unit: 656
-tests/integration: 64
-tests/portability: 266
-tests/security|mutation|recovery|regression: 0
 
 passed:
 871
@@ -253,18 +249,31 @@ passed:
 failed:
 115
 
+exit:
+1
+
+classification:
+115/115 missing wasm32-unknown-unknown (see proofs/g5e/)
+
+### G5-E environmental closure (green)
+
+command:
+python -m pytest
+
+collected:
+986
+
+passed:
+986
+
+failed:
+0
+
 skipped:
 0
 
 exit:
-1
-
-failure accounting:
-All 115 failures are portability/wasm (`wasm32-unknown-unknown` Rust target missing in this environment). Same env constraint as G4-ZC. G5-introduced regressions: 0.
-
-Executable green subset (wasm toolchain excluded, explicit):
-866 passed / 0 failed / exit 0
-(`tests/unit` + `tests/integration` + non-wasm `tests/portability`)
+0
 
 compileall:
 PASS (exit 0)
@@ -281,7 +290,8 @@ PASS
 G4:
 PASS
 
-Prior ambiguous “653 (tests/unit)” wording corrected — 653/656 was unit-only, not full discovery.
+G5-E report:
+proofs/g5e/G5_E_REPORT.md
 
 ## FINDING / REPAIR
 
@@ -324,7 +334,7 @@ World #1:
 NOT PROVEN
 
 Promotion note:
-Prior interim state was CHAOS EVIDENCE PRESENT / FINAL FREEZE PENDING on the two gaps above. Both confirmations are now closed. Tested-scope freeze stands; not all-filesystem / all-OS / power-loss proof.
+G5-E closed the remaining full-regression blocker (wasm32 target + residual Node WASM host). Repository-wide pytest now exit 0. Chaos evidence reused (not rerun). Tested-scope freeze stands; not all-filesystem / all-OS / power-loss proof.
 
 ## EXACT EARNED CLAIM
 

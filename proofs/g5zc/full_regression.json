@@ -3,7 +3,9 @@
   "phase": "evidence_closing_recheck",
   "command": "python -m pytest",
   "pytest_config": {
-    "pyproject_tool_pytest_ini_options_testpaths": ["tests"]
+    "pyproject_tool_pytest_ini_options_testpaths": [
+      "tests"
+    ]
   },
   "repository_wide_collected": 986,
   "collection_roots": {
@@ -21,7 +23,7 @@
   "skipped": 0,
   "exit": 1,
   "failure_accounting": {
-    "all_115_failures": "tests/portability — require wasm32-unknown-unknown Rust target (WASM_BUILD_FAILED / missing rustup target)",
+    "all_115_failures": "tests/portability \u2014 require wasm32-unknown-unknown Rust target (WASM_BUILD_FAILED / missing rustup target)",
     "wasm_conformance_file_collected": 117,
     "merge_gate_tests_also_blocked_by_same_wasm_build": [
       "tests/portability/test_sprint5_merge_gate_differential.py::test_1000_generated_differential_seed_20260915",
@@ -36,7 +38,7 @@
     "failed": 0,
     "skipped": 0,
     "exit": 0,
-    "note": "Explicit accounting of wasm-dependent portability tests excluded by environment — not silent omission of tests/unit-only as 'full suite'"
+    "note": "Explicit accounting of wasm-dependent portability tests excluded by environment \u2014 not silent omission of tests/unit-only as 'full suite'"
   },
   "prior_ambiguous_report": {
     "said": "pytest collected: 653 (tests/unit)",
@@ -54,5 +56,14 @@
     "command": "python3 -m compileall spe_runtime -q",
     "exit": 0
   },
-  "result": "DENOMINATOR_CONFIRMED_WITH_WASM_ENV_ACCOUNTING"
+  "result": "REPOSITORY_WIDE_GREEN_AFTER_G5E",
+  "prior_red_preserved": "proofs/g5e/prior_red_run.json",
+  "g5e_green_recheck": {
+    "command": "python -m pytest",
+    "collected": 986,
+    "passed": 986,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0
+  }
 }

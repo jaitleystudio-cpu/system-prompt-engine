@@ -1,0 +1,9 @@
+{
+  "gate": "G5-E",
+  "branch": "cursor/g5zc-local-chaos-0d6e",
+  "g5_head_pre_g5e": "39d498c79e884c94673af540e0ed4176ae9e7eed",
+  "contract_sha": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "g2_sha": "15b20a8532d3375c2d59dc8608c9c8854ff5ec7ecfcdefdb32902f0e6127e562",
+  "pr": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/26",
+  "recorded_at_utc": "2026-09-19T05:20:27.113111+00:00"
+}
