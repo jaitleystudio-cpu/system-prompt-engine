@@ -1,10 +1,11 @@
-/** Register PWA service worker — shell + WASM only; no prompt bodies. */
+/** Register once even when React mounts after the document load event. */
 export function registerServiceWorker(): void {
-  if (typeof window === "undefined") return;
-  if (!("serviceWorker" in navigator)) return;
-  window.addEventListener("load", () => {
-    void navigator.serviceWorker.register("/sw.js").catch(() => {
-      /* offline install optional */
+  if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
+  const register = () => {
+    void navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" }).catch(() => {
+      /* A failed install never substitutes a remote compiler. */
     });
-  });
+  };
+  if (document.readyState === "complete") register();
+  else window.addEventListener("load", register, { once: true });
 }

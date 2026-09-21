@@ -13,6 +13,7 @@ export const TARGETS = [
 export type TargetId = (typeof TARGETS)[number]["id"];
 
 export const CATEGORIES = [
+  "AI Assistant",
   "Writing",
   "Coding",
   "Research",

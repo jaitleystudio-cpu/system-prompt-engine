@@ -1,191 +1,241 @@
-import { CATEGORIES, TARGETS } from "@spe/web-runtime";
-
-type Props = {
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { StaticPress } from "../scene/StaticPress";
+const Scene = lazy(() =>
+  import("../scene/SpeIntelligence").then((m) => ({
+    default: m.SpeIntelligence,
+  })),
+);
+export function ScrollStory({
+  onOpenWorkspace,
+  demoPrompt,
+}: {
   onOpenWorkspace: () => void;
   demoRequest: string;
   demoPrompt: string | null;
-};
-
-export function ScrollStory({ onOpenWorkspace, demoRequest, demoPrompt }: Props) {
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [reduced, setReduced] = useState(true);
+  useEffect(() => {
+    const mq = matchMedia(
+      "(prefers-reduced-motion: reduce), (max-width: 700px)",
+    );
+    const update = () => setReduced(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    let frame = 0;
+    const scroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        if (ref.current) {
+          const r = ref.current.getBoundingClientRect();
+          setProgress(
+            Math.max(0, Math.min(1, -r.top / (r.height - innerHeight))),
+          );
+        }
+      });
+    };
+    window.addEventListener("scroll", scroll, { passive: true });
+    scroll();
+    return () => {
+      mq.removeEventListener("change", update);
+      window.removeEventListener("scroll", scroll);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
   return (
-    <div className="spe-story">
-      <section className="spe-section" id="problem" aria-labelledby="problem-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">The problem</p>
-          <h2 id="problem-title">AI receives a sentence. SPE sees a system.</h2>
-          <div className="spe-split">
-            <article className="spe-glass-card">
-              <h3>You</h3>
-              <p className="spe-quote">“make a website for my restaurant”</p>
-              <p className="spe-muted">Underspecified. Easy to misread.</p>
-            </article>
-            <article className="spe-glass-card emphasis">
-              <h3>SPE sees</h3>
-              <ul className="spe-chip-row" aria-label="Semantic decomposition">
-                {["goal", "audience", "requirements", "unknowns", "constraints", "success"].map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </article>
-          </div>
-        </div>
+    <>
+      <section className="process-intro" id="how-it-works">
+        <p className="eyebrow">01 — FROM THOUGHT TO STRUCTURE</p>
+        <h2>
+          Good instructions
+          <br />
+          have an <em>inner architecture.</em>
+        </h2>
+        <p>
+          A goal. The things that must hold true. The questions still open.
+          <br />
+          SPE gives each one a place.
+        </p>
       </section>
-
-      <section className="spe-section" id="intent" aria-labelledby="intent-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">Intent engine</p>
-          <h2 id="intent-title">Meaning, protected in space.</h2>
-          <div className="spe-nodes" role="list">
-            {[
-              ["GOAL", "confirmed"],
-              ["MUST", "confirmed"],
-              ["MUST NOT", "conflict"],
-              ["UNKNOWN", "unknown"],
-              ["CONFLICT", "conflict"],
-              ["PREFERENCE", "assumed"],
-            ].map(([label, kind]) => (
-              <div key={label} className="spe-node" data-kind={kind} role="listitem">
-                <span className="spe-node-icon" aria-hidden="true" />
-                <strong>{label}</strong>
-              </div>
-            ))}
-          </div>
-          <p className="spe-muted center">SPE protects meaning — it does not invent obligations.</p>
-        </div>
-      </section>
-
-      <section className="spe-section" id="strategy" aria-labelledby="strategy-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">Strategy engine</p>
-          <h2 id="strategy-title">Not longer. Sufficient.</h2>
-          <div className="spe-chip-row large">
-            {["Context", "Structure", "Examples", "Verification", "Output Contract"].map((t) => (
-              <span key={t} className="spe-pill">{t}</span>
-            ))}
-          </div>
-          <p className="spe-lead">SPE does not make prompts longer. SPE makes them sufficient.</p>
-        </div>
-      </section>
-
-      <section className="spe-section reveal" id="reveal" aria-labelledby="reveal-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">The reveal</p>
-          <h2 id="reveal-title">One line becomes an instruction.</h2>
-          <div className="spe-compare">
-            <div>
-              <p className="spe-label">You said</p>
-              <p className="spe-quote">{demoRequest || "write leave email"}</p>
-            </div>
-            <div className="spe-compare-arrow" aria-hidden="true">→</div>
-            <div>
-              <p className="spe-label">SPE built</p>
-              <ul>
-                <li>role</li>
-                <li>goal</li>
-                <li>context</li>
-                <li>constraints</li>
-                <li>missing information</li>
-                <li>output contract</li>
-              </ul>
+      <section
+        className="scroll-process"
+        ref={ref}
+        aria-label="How SPE structures a request"
+      >
+        <div className="process-visual">
+          <div className="process-visual-inner">
+            <span className="eyebrow">THE INTENT CORE / ILLUSTRATION</span>
+            {reduced ? (
+              <StaticPress />
+            ) : (
+              <Suspense fallback={<StaticPress />}>
+                <Scene state="IDLE" quality="BALANCED" progress={progress} />
+              </Suspense>
+            )}
+            <div className="process-index">
+              <span>
+                {progress < 0.33
+                  ? "01 / ARTICULATE"
+                  : progress < 0.66
+                    ? "02 / ORGANIZE"
+                    : "03 / CARRY FORWARD"}
+              </span>
+              <span>FORM FOLLOWS INTENT</span>
             </div>
           </div>
-          {demoPrompt && (
-            <pre className="spe-prompt-preview">{demoPrompt.slice(0, 520)}{demoPrompt.length > 520 ? "…" : ""}</pre>
-          )}
-          <div className="spe-actions">
-            <button type="button" className="spe-build" onClick={onOpenWorkspace}>
-              Open in workspace
+        </div>
+        <div className="process-steps">
+          <article>
+            <span className="step-number">01</span>
+            <h3>
+              Start with
+              <br />
+              what you mean.
+            </h3>
+            <p>
+              Your request becomes the goal. Add your role, audience and requirements in
+              the brief, and keep assumptions visible.
+            </p>
+            <div className="specimen">
+              <span>YOUR WORDS</span>
+              <p>“Help me plan a thoughtful launch.”</p>
+            </div>
+          </article>
+          <article>
+            <span className="step-number">02</span>
+            <h3>
+              Make room
+              <br />
+              for the unknown.
+            </h3>
+            <p>
+              The local engine evaluates the structured envelope. Supplied
+              facts, protected constraints, and open questions stay distinct.
+            </p>
+            <div className="structure-legend">
+              <span>
+                <i /> Goal & facts
+              </span>
+              <span>
+                <i /> Constraints
+              </span>
+              <span>
+                <i /> Preferences
+              </span>
+              <span>
+                <i /> Open unknowns
+              </span>
+            </div>
+          </article>
+          <article>
+            <span className="step-number">03</span>
+            <h3>
+              Take your intent
+              <br />
+              anywhere.
+            </h3>
+            <p>
+              Review the prompt. Choose your target. Copy it into your AI, or
+              keep the portable .spe artifact with its structure intact.
+            </p>
+            <button className="text-link" onClick={onOpenWorkspace}>
+              Explore your workspace <span>↗</span>
             </button>
-          </div>
+          </article>
         </div>
       </section>
-
-      <section className="spe-section" id="any-ai" aria-labelledby="any-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">Any AI</p>
-          <h2 id="any-title">Intent stays. Rendering changes.</h2>
-          <div className="spe-constellation" role="list">
-            <div className="spe-constellation-core" role="listitem">Any AI</div>
-            {TARGETS.filter((t) => t.id !== "any").map((t) => (
-              <div key={t.id} className="spe-constellation-node" role="listitem">
-                {t.label}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="spe-section" id="artifact-story" aria-labelledby="spefile-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">.spe</p>
-          <h2 id="spefile-title">Your prompt becomes a portable semantic project.</h2>
-          <div className="spe-artifact-visual" aria-hidden="true">
-            {["intent", "requirements", "strategy", "prompt", "lineage"].map((x) => (
-              <span key={x}>{x}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="spe-section" id="moonshot" aria-labelledby="moon-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">Moonshot</p>
-          <h2 id="moon-title">Beyond text.</h2>
-          <div className="spe-moon-grid">
-            {[
-              ["Text → Prompt", "LIVE"],
-              ["Image → Prompt", "COMING"],
-              ["Screenshot → Code", "PLANNED"],
-              ["Website → X-Ray", "PLANNED"],
-              ["Audio → Prompt", "PLANNED"],
-              ["Video → Prompt", "PLANNED"],
-              ["3D Website Lab", "PLANNED"],
-            ].map(([title, status]) => (
-              <article key={title} className="spe-moon-card" data-status={status}>
-                <h3>{title}</h3>
-                <span>{status}</span>
-              </article>
-            ))}
-          </div>
-          <p className="spe-muted">Categories ready for routing: {CATEGORIES.slice(0, 6).join(" · ")}…</p>
-        </div>
-      </section>
-
-      <section className="spe-section" id="daily" aria-labelledby="daily-title">
-        <div className="spe-section-inner">
-          <p className="spe-kicker">Daily Lab</p>
-          <h2 id="daily-title">Something new to build every day.</h2>
-          <div className="spe-daily-stage">
-            <p>Daily drops arrive here — cinematic specimens, not ads.</p>
-            <span className="spe-pill">PLANNED</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="spe-section" id="privacy" aria-labelledby="privacy-title">
-        <div className="spe-section-inner narrow">
-          <p className="spe-kicker">Privacy</p>
-          <h2 id="privacy-title">Everything collapses back to your device.</h2>
-          <ul className="spe-privacy-list">
-            <li><strong>Core compile</strong> LOCAL</li>
-            <li><strong>Mandatory account</strong> NO</li>
-            <li><strong>Mandatory provider</strong> NO</li>
-            <li><strong>Prompt analytics</strong> NO</li>
-          </ul>
-        </div>
-      </section>
-
-      <section className="spe-section final-cta" id="final-cta" aria-labelledby="final-title">
-        <div className="spe-section-inner">
-          <h2 id="final-title">What do you want to build?</h2>
-          <button type="button" className="spe-build" onClick={() => {
-            document.getElementById("spe-one-line")?.focus();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}>
-            Return to command
+      <section className="artifact-story" id="artifact-story">
+        <div>
+          <p className="eyebrow">02 — A FILE THAT CARRIES YOUR THINKING</p>
+          <h2>
+            More than text.
+            <br />
+            <em>Your intent, intact.</em>
+          </h2>
+          <p>
+            A prompt you can use. A structure you can inspect.
+            <br />A portable artifact you can keep.
+          </p>
+          <button className="spe-build" onClick={onOpenWorkspace}>
+            Make it yours <span>↗</span>
           </button>
+          <div className="target-line">
+            ChatGPT / Claude / Gemini / Copilot / Local AI
+          </div>
+        </div>
+        <div className="artifact-object">
+          <div className="artifact-sheet">
+            <span>SPE / PROMPT ARTIFACT</span>
+            <div className="sheet-rule" />
+            <h3>
+              {demoPrompt
+                ? "Your compiled intent"
+                : "A place for every detail."}
+            </h3>
+            {demoPrompt ? (
+              <pre>{demoPrompt.slice(0, 450)}</pre>
+            ) : (
+              <>
+                <p>01 &nbsp; The goal you set</p>
+                <p>02 &nbsp; Constraints to preserve</p>
+                <p>03 &nbsp; Preferences to respect</p>
+                <p>04 &nbsp; Questions left open</p>
+              </>
+            )}
+            <div className="sheet-footer">
+              <strong>.spe</strong>
+              <span>{demoPrompt ? "YOUR LIVE RESULT" : "FORMAT PREVIEW"}</span>
+            </div>
+          </div>
         </div>
       </section>
-    </div>
+      <section className="privacy-story" id="privacy">
+        <p className="eyebrow">03 — PRIVATE BY DESIGN</p>
+        <h2>
+          The idea is yours.
+          <br />
+          <em>So is the space to think.</em>
+        </h2>
+        <div className="privacy-principles">
+          <div>
+            <span>01 / LOCAL</span>
+            <h3>Your device is the engine.</h3>
+            <p>
+              Compilation runs locally. After the app is cached, you can keep
+              working offline.
+            </p>
+          </div>
+          <div>
+            <span>02 / INDEPENDENT</span>
+            <h3>No provider required.</h3>
+            <p>
+              No account or paid model is needed to compile. Choose where your
+              finished prompt goes.
+            </p>
+          </div>
+          <div>
+            <span>03 / YOUR CHOICE</span>
+            <h3>History, only if you want it.</h3>
+            <p>
+              No analytics. Saving history is optional, on this device, with a
+              clear control to delete it.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section className="closing">
+        <p className="eyebrow">LESS GUESSWORK. MORE INTENT.</p>
+        <h2>
+          What’s on
+          <br />
+          <em>your mind?</em>
+        </h2>
+        <a className="spe-build" href="#prompt-studio">
+          Give it structure <span>↗</span>
+        </a>
+        <span className="closing-wordmark" aria-hidden="true" />
+      </section>
+    </>
   );
 }

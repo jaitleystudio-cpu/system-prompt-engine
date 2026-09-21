@@ -26,8 +26,12 @@ if (!existsSync(src)) {
 }
 
 mkdirSync(publicDir, { recursive: true });
+const bytes = readFileSync(src);
+// Do not publish developer home paths embedded by Rust panic/debug metadata.
+if (["/Users/", "/home/", ".codex/", ".chatgpt-projects/"].some((marker) => bytes.includes(Buffer.from(marker)))) {
+  throw new Error("WASM contains developer home paths. Rebuild with Rust --remap-path-prefix before packaging.");
+}
 copyFileSync(src, dest);
-const bytes = readFileSync(dest);
 const sha256 = createHash("sha256").update(bytes).digest("hex");
 const meta = {
   algorithm: "SHA-256",

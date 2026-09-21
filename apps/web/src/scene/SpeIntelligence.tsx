@@ -1,8 +1,17 @@
-import { useMemo, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  Component,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { StaticPress } from "./StaticPress";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import type { VisualQuality } from "./quality";
-
+import { semanticGroups } from "./semantic";
 export type SceneState =
   | "IDLE"
   | "LISTENING"
@@ -10,170 +19,237 @@ export type SceneState =
   | "STRUCTURING"
   | "COMPILING"
   | "READY";
-
 type Props = {
   state: SceneState;
   quality: VisualQuality;
   className?: string;
+  output?: unknown;
+  paused?: boolean;
+  progress?: number;
 };
-
-const STATE_TINT: Record<SceneState, [string, string]> = {
-  IDLE: ["#3db8ff", "#7eb8c9"],
-  LISTENING: ["#5ec8ff", "#ff9a3c"],
-  UNDERSTANDING: ["#3db8ff", "#e2c89a"],
-  STRUCTURING: ["#7eb8c9", "#ff9a3c"],
-  COMPILING: ["#ff9a3c", "#3db8ff"],
-  READY: ["#6fbf9a", "#3db8ff"],
-};
-
-const SEMANTIC_LABELS = ["FACTS", "CONSTRAINTS", "POSSIBILITIES", "UNCERTAINTY"] as const;
-
-function IntentCoreMesh({ state, quality }: { state: SceneState; quality: VisualQuality }) {
+class SceneBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? <StaticPress /> : this.props.children;
+  }
+}
+function Studio() {
+  const { gl, scene } = useThree();
+  useEffect(() => {
+    const room = new RoomEnvironment();
+    const pmrem = new THREE.PMREMGenerator(gl);
+    const env = pmrem.fromScene(room, 0.04);
+    scene.environment = env.texture;
+    return () => {
+      scene.environment = null;
+      env.dispose();
+      pmrem.dispose();
+      room.dispose();
+    };
+  }, [gl, scene]);
+  return null;
+}
+function OpticalCore({
+  state,
+  output,
+  progress = 0,
+}: {
+  state: SceneState;
+  output?: unknown;
+  progress?: number;
+}) {
   const group = useRef<THREE.Group>(null);
-  const ringA = useRef<THREE.Mesh>(null);
-  const ringB = useRef<THREE.Mesh>(null);
-  const ringC = useRef<THREE.Mesh>(null);
-  const [c0, c1] = STATE_TINT[state];
-  const colorA = useMemo(() => new THREE.Color(c0), [c0]);
-  const colorB = useMemo(() => new THREE.Color(c1), [c1]);
-
-  const shardCount = quality === "HIGH" ? 14 : 8;
-  const shards = useMemo(() => {
-    const arr: THREE.Vector3[] = [];
-    for (let i = 0; i < shardCount; i++) {
-      const a = (i / shardCount) * Math.PI * 2;
-      const r = 1.55 + (i % 3) * 0.22;
-      arr.push(new THREE.Vector3(Math.cos(a) * r, Math.sin(a * 1.7) * 0.55, Math.sin(a) * r * 0.85));
+  const rotor = useRef<THREE.Group>(null);
+  const { pointer } = useThree();
+  const groups = useMemo(() => semanticGroups(output), [output]);
+  const nodes = useMemo(
+    () =>
+      groups
+        .flatMap((g, type) => g.items.map((_, i) => ({ type, i })))
+        .slice(0, 24),
+    [groups],
+  );
+  useFrame(({ clock }, dt) => {
+    const k = 1 - Math.exp(-Math.min(dt, 0.05) * 3);
+    if (group.current) {
+      group.current.rotation.y = THREE.MathUtils.lerp(
+        group.current.rotation.y,
+        pointer.x * 0.16 + progress * 0.65,
+        k,
+      );
+      group.current.rotation.x = THREE.MathUtils.lerp(
+        group.current.rotation.x,
+        -0.12 - pointer.y * 0.1,
+        k,
+      );
     }
-    return arr;
-  }, [shardCount]);
-
-  const lineGeom = useMemo(() => {
-    const positions: number[] = [];
-    for (const p of shards) positions.push(0, 0, 0, p.x, p.y, p.z);
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-    return g;
-  }, [shards]);
-
-  useFrame((_, dt) => {
-    if (!group.current) return;
-    const speed =
-      state === "COMPILING" ? 1.05 : state === "READY" ? 0.22 : state === "IDLE" ? 0.14 : 0.48;
-    group.current.rotation.y += dt * speed;
-    if (ringA.current) ringA.current.rotation.z += dt * 0.42;
-    if (ringB.current) ringB.current.rotation.x -= dt * 0.31;
-    if (ringC.current) ringC.current.rotation.y += dt * 0.25;
+    if (rotor.current)
+      rotor.current.rotation.z =
+        clock.elapsedTime * (state === "COMPILING" ? 0.16 : 0.025);
   });
-
   return (
-    <group ref={group} position={[0, 0.1, 0]}>
-      {/* Crystal intent nucleus */}
+    <group ref={group} rotation={[-0.12, 0, 0]}>
       <mesh>
-        <octahedronGeometry args={[0.48, 0]} />
-        <meshStandardMaterial
-          color={colorA}
-          emissive={colorA}
-          emissiveIntensity={0.85}
-          metalness={0.75}
-          roughness={0.18}
-          transparent
-          opacity={0.95}
+        <sphereGeometry args={[1.18, 64, 48]} />
+        <meshPhysicalMaterial
+          color="#2b4267"
+          metalness={0}
+          roughness={0.025}
+          transmission={1}
+          thickness={1.3}
+          ior={1.45}
+          clearcoat={0.3}
+          envMapIntensity={0.45}
         />
       </mesh>
-      <mesh rotation={[0, Math.PI / 4, 0]} scale={0.72}>
-        <octahedronGeometry args={[0.48, 0]} />
-        <meshStandardMaterial
-          color={colorB}
-          emissive={colorB}
-          emissiveIntensity={0.45}
-          metalness={0.6}
-          roughness={0.25}
-          transparent
-          opacity={0.55}
-        />
+      <mesh>
+        <sphereGeometry args={[0.16, 24, 24]} />
+        <meshBasicMaterial color="#d8f7ff" />
       </mesh>
-
-      {/* Concentric engine rings */}
-      <mesh ref={ringA} rotation={[Math.PI / 2.2, 0, 0]}>
-        <torusGeometry args={[1.15, 0.018, 10, 128]} />
-        <meshStandardMaterial color="#9eb0c4" metalness={0.9} roughness={0.25} emissive="#3db8ff" emissiveIntensity={0.25} />
-      </mesh>
-      <mesh ref={ringB} rotation={[0.55, 0.35, 0.2]}>
-        <torusGeometry args={[1.45, 0.012, 10, 128]} />
-        <meshStandardMaterial color="#c9d0da" metalness={0.85} roughness={0.3} emissive="#ff9a3c" emissiveIntensity={0.18} />
-      </mesh>
-      <mesh ref={ringC} rotation={[1.1, -0.2, 0.6]}>
-        <torusGeometry args={[1.75, 0.008, 8, 96]} />
-        <meshBasicMaterial color="#3db8ff" transparent opacity={0.35} />
-      </mesh>
-
-      <lineSegments geometry={lineGeom}>
-        <lineBasicMaterial color="#9ec9e8" transparent opacity={0.28} />
-      </lineSegments>
-
-      {shards.map((p, i) => (
-        <mesh key={i} position={p} rotation={[i * 0.3, i * 0.5, 0]}>
-          <octahedronGeometry args={[0.055 + (i % 3) * 0.02, 0]} />
+      <pointLight color="#77bdff" intensity={3} distance={4} />
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+        <mesh key={i} position={[0, 0, (i - 3) * 0.22]}>
+          <torusGeometry
+            args={[Math.sqrt(1.28 - (i - 3) * (i - 3) * 0.065), 0.018, 8, 96]}
+          />
           <meshStandardMaterial
-            color={i % 2 ? "#ff9a3c" : "#3db8ff"}
-            emissive={i % 2 ? "#ff9a3c" : "#3db8ff"}
-            emissiveIntensity={0.8}
-            metalness={0.7}
-            roughness={0.2}
+            metalness={0.8}
+            roughness={0.16}
+            color="#a9cbea"
+            emissive="#3d608a"
+            emissiveIntensity={0.22}
           />
         </mesh>
       ))}
+      <group ref={rotor}>
+        {[
+          [-0.38, 0.75, 0.2],
+          [0.9, -0.5, -0.55],
+          [0.35, 0.35, 1.15],
+        ].map((r, i) => (
+          <group key={i} rotation={r as [number, number, number]}>
+            <mesh scale={[1, 1, 0.34]}>
+              <torusGeometry args={[1.43 + i * 0.17, 0.08, 12, 144]} />
+              <meshPhysicalMaterial
+                color={i === 1 ? "#647392" : "#818da5"}
+                metalness={1}
+                roughness={0.17}
+                clearcoat={0.4}
+                envMapIntensity={0.65}
+              />
+            </mesh>
+            <mesh
+              position={[1.43 + i * 0.17, 0, 0]}
+              rotation={[Math.PI / 2, 0, 0]}
+            >
+              <cylinderGeometry args={[0.15, 0.15, 0.13, 32]} />
+              <meshStandardMaterial
+                color="#aebed5"
+                metalness={1}
+                roughness={0.2}
+              />
+            </mesh>
+            <mesh scale={[1, 1, 0.4]}>
+              <torusGeometry args={[1.44 + i * 0.17, 0.012, 8, 144]} />
+              <meshBasicMaterial color={i === 1 ? "#afa1ff" : "#a4e1ff"} />
+            </mesh>
+          </group>
+        ))}
+      </group>
+      {nodes.map((n, i) => {
+        const angle = (i / Math.max(nodes.length, 1)) * Math.PI * 2;
+        const radius = n.type === 3 ? 2.13 : 1.93;
+        return (
+          <mesh
+            key={i}
+            position={[Math.cos(angle) * radius, Math.sin(angle) * radius, 0.3]}
+          >
+            <sphereGeometry args={[0.045, 12, 12]} />
+            <meshBasicMaterial
+              color={["#d8edff", "#9eacff", "#86dbc9", "#e4b981"][n.type]}
+            />
+          </mesh>
+        );
+      })}
     </group>
   );
 }
-
-/** Living SPE Intent Core — states map to product compile phases. */
-export function SpeIntelligence({ state, quality, className = "" }: Props) {
-  const labels = (
-    <ul className="spe-core-labels" aria-hidden="true" data-state={state}>
-      {SEMANTIC_LABELS.map((label) => (
-        <li key={label} data-label={label}>
-          {label}
-        </li>
-      ))}
-    </ul>
-  );
-
-  if (quality === "LITE") {
-    return (
-      <div className={`spe-intel-fallback ${className}`} data-state={state} aria-hidden="true">
-        <div className="spe-intel-pedestal" />
-        <div className="spe-intel-core spe-intel-crystal" />
-        <div className="spe-intel-ring r1" />
-        <div className="spe-intel-ring r2" />
-        <div className="spe-intel-ring r3" />
-        <div className="spe-intel-orbit o1" />
-        <div className="spe-intel-orbit o2" />
-        <div className="spe-intel-orbit o3" />
-        {labels}
-      </div>
+export function SpeIntelligence({
+  state,
+  quality,
+  className = "",
+  output,
+  paused = false,
+  progress = 0,
+}: Props) {
+  const host = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
+  const [lost, setLost] = useState(false);
+  useEffect(() => {
+    const e = host.current;
+    if (!e) return;
+    let intersect = true;
+    const update = () => setVisible(intersect && !document.hidden);
+    const io = new IntersectionObserver(
+      ([v]) => {
+        intersect = v.isIntersecting;
+        update();
+      },
+      { rootMargin: "80px" },
     );
-  }
-
-  const dpr = quality === "HIGH" ? ([1, 1.75] as [number, number]) : ([1, 1.25] as [number, number]);
-
+    io.observe(e);
+    document.addEventListener("visibilitychange", update);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", update);
+    };
+  }, []);
   return (
-    <div className={`spe-intel-canvas ${className}`} aria-hidden="true" data-state={state}>
-      <Canvas
-        dpr={dpr}
-        camera={{ position: [0, 0.55, 4.4], fov: 40 }}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      >
-        <color attach="background" args={["#00000000"]} />
-        <ambientLight intensity={0.28} />
-        <pointLight position={[3.2, 2.4, 4]} intensity={1.35} color="#3db8ff" />
-        <pointLight position={[-3.2, -0.6, -2]} intensity={1.05} color="#ff9a3c" />
-        <spotLight position={[0, 4, 2]} intensity={0.55} color="#dfe6ef" angle={0.5} penumbra={0.6} />
-        <IntentCoreMesh state={state} quality={quality} />
-      </Canvas>
-      {labels}
-      <p className="spe-core-caption">Intent Core · human intent → structured intelligence</p>
+    <div
+      ref={host}
+      className={`press-canvas ${className}`}
+      aria-hidden="true"
+      data-renderer={quality === "LITE" || lost ? "static" : "webgl"}
+    >
+      {quality === "LITE" || lost ? (
+        <StaticPress />
+      ) : (
+        <SceneBoundary>
+          <Canvas
+            frameloop={visible && !paused ? "always" : "demand"}
+            dpr={quality === "HIGH" ? [1, 2] : 1}
+            camera={{ position: [0, 0.15, 7.6], fov: 37 }}
+            gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
+            onCreated={({ gl, camera }) => {
+              camera.lookAt(0, 0, 0);
+              gl.domElement.addEventListener(
+                "webglcontextlost",
+                (e) => {
+                  e.preventDefault();
+                  setLost(true);
+                },
+                { once: true },
+              );
+            }}
+          >
+            <Studio />
+            <ambientLight intensity={0.4} />
+            <directionalLight
+              position={[-4, 7, 5]}
+              intensity={1.7}
+              color="#dfeaff"
+            />
+            <pointLight position={[3, 2, -2]} intensity={25} color="#818dff" />
+            <OpticalCore state={state} output={output} progress={progress} />
+          </Canvas>
+        </SceneBoundary>
+      )}
     </div>
   );
 }

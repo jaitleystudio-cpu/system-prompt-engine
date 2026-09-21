@@ -1,4 +1,10 @@
-import type { CompilePhase, EngineError, EngineSuccessBody, WorkerRequest, WorkerResponse } from "./types";
+import type {
+  CompilePhase,
+  EngineError,
+  EngineSuccessBody,
+  WorkerRequest,
+  WorkerResponse,
+} from "./types";
 
 export type CompileOutcome = {
   error: EngineError | null;
@@ -29,8 +35,22 @@ export class EngineClient {
   ): Promise<CompileOutcome> {
     const id = `req-${++this.seq}`;
     return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => {
+      const cleanup = () => {
+        clearTimeout(timer);
         this.worker.removeEventListener("message", onMsg);
+        this.worker.removeEventListener("error", onError);
+        this.worker.removeEventListener("messageerror", onMessageError);
+      };
+      const onError = (ev: ErrorEvent) => {
+        cleanup();
+        reject(new Error(ev.message || "The local worker could not start."));
+      };
+      const onMessageError = () => {
+        cleanup();
+        reject(new Error("The local worker returned an unreadable response."));
+      };
+      const timer = setTimeout(() => {
+        cleanup();
         reject(new Error("WORKER_TIMEOUT"));
       }, 20_000);
       const onMsg = (ev: MessageEvent<WorkerResponse>) => {
@@ -39,8 +59,7 @@ export class EngineClient {
           onPhase(ev.data.phase);
           return;
         }
-        clearTimeout(timer);
-        this.worker.removeEventListener("message", onMsg);
+        cleanup();
         resolve({
           error: ev.data.error,
           result: ev.data.result,
@@ -51,8 +70,15 @@ export class EngineClient {
         });
       };
       this.worker.addEventListener("message", onMsg);
+      this.worker.addEventListener("error", onError);
+      this.worker.addEventListener("messageerror", onMessageError);
       const req: WorkerRequest = { id, type: "evaluate", jsonText };
-      this.worker.postMessage(req);
+      try {
+        this.worker.postMessage(req);
+      } catch (err) {
+        cleanup();
+        reject(err);
+      }
     });
   }
 }

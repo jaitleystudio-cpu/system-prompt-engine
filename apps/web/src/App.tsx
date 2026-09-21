@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EngineClient } from "./engine/client";
-import type { CompilePhase, EngineError, EngineSuccessBody } from "./engine/types";
+import type {
+  CompilePhase,
+  EngineError,
+  EngineSuccessBody,
+} from "./engine/types";
 import {
   buildAbiFixture,
   buildSpeArtifact,
@@ -12,6 +16,7 @@ import {
   renderPromptArtifact,
   saveHistoryItem,
   setHistoryOptIn,
+  verifySpeArtifact,
   type CategoryId,
   type HistoryItem,
   type IntentAtom,
@@ -49,10 +54,15 @@ function privacyFromEnvelope(env: unknown): {
   }
 }
 
-function phaseToScene(phase: CompilePhase, busy: boolean, hasResult: boolean): SceneState {
+function phaseToScene(
+  phase: CompilePhase,
+  busy: boolean,
+  hasResult: boolean,
+): SceneState {
   if (hasResult && !busy) return "READY";
   if (phase === "evaluating" || phase === "instantiating") return "COMPILING";
-  if (phase === "verifying_integrity" || phase === "loading_wasm") return "STRUCTURING";
+  if (phase === "verifying_integrity" || phase === "loading_wasm")
+    return "STRUCTURING";
   if (busy) return "UNDERSTANDING";
   if (phase === "ready") return "LISTENING";
   return "IDLE";
@@ -60,12 +70,15 @@ function phaseToScene(phase: CompilePhase, busy: boolean, hasResult: boolean): S
 
 export default function App() {
   const clientRef = useRef<EngineClient | null>(null);
+  const revision = useRef(0);
   const [view, setView] = useState<View>("home");
+  const [notice, setNotice] = useState("");
+  const [updateAvailable, setUpdateAvailable] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [quality, setQuality] = useState<VisualQuality>("LITE");
   const [userRequest, setUserRequest] = useState("");
-  const [category, setCategory] = useState<CategoryId>("Writing");
+  const [category, setCategory] = useState<CategoryId>("AI Assistant");
   const [target, setTarget] = useState<TargetId>("any");
   const [intent, setIntent] = useState(() => defaultIntentLens(""));
   const [phase, setPhase] = useState<CompilePhase>("idle");
@@ -76,17 +89,35 @@ export default function App() {
   const [sha256, setSha256] = useState<string | null>(null);
   const [imports, setImports] = useState<number | null>(null);
   const [envelope, setEnvelope] = useState<unknown>(null);
-  const [rendered, setRendered] = useState<ReturnType<typeof renderPromptArtifact> | null>(null);
+  const [rendered, setRendered] = useState<ReturnType<
+    typeof renderPromptArtifact
+  > | null>(null);
   const [artifact, setArtifact] = useState<SpeArtifactV1 | null>(null);
   const [historyOptIn, setHistoryOptInState] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [mode, setMode] = useState<Mode>("simple");
   const [lens, setLens] = useState<Lens>("prompt");
-  const [online, setOnline] = useState(typeof navigator === "undefined" ? true : navigator.onLine);
+  const [online, setOnline] = useState(
+    typeof navigator === "undefined" ? true : navigator.onLine,
+  );
 
   useEffect(() => {
     registerServiceWorker();
+    let hadController = Boolean(navigator.serviceWorker?.controller);
+    const onControllerChange = () => {
+      if (hadController) setUpdateAvailable(true);
+      hadController = true;
+    };
+    navigator.serviceWorker?.addEventListener(
+      "controllerchange",
+      onControllerChange,
+    );
     setQuality(detectVisualQuality());
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateQuality = () => setQuality(detectVisualQuality());
+    motion.addEventListener("change", updateQuality);
+    const narrow = window.matchMedia("(max-width: 720px)");
+    narrow.addEventListener("change", updateQuality);
     setHistoryOptInState(isHistoryOptIn());
     setHistory(loadHistory());
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -97,6 +128,12 @@ export default function App() {
     window.addEventListener("offline", off);
     onScroll();
     return () => {
+      navigator.serviceWorker?.removeEventListener(
+        "controllerchange",
+        onControllerChange,
+      );
+      motion.removeEventListener("change", updateQuality);
+      narrow.removeEventListener("change", updateQuality);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("online", on);
       window.removeEventListener("offline", off);
@@ -104,6 +141,11 @@ export default function App() {
       clientRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    document.getElementById("main")?.focus({ preventScroll: true });
+  }, [view]);
 
   const privacy = useMemo(() => privacyFromEnvelope(envelope), [envelope]);
   const sceneState = phaseToScene(phase, busy, Boolean(result && !error));
@@ -113,130 +155,173 @@ export default function App() {
     return clientRef.current;
   };
 
+  const invalidate = () => {
+    revision.current += 1;
+    setResult(null);
+    setRendered(null);
+    setArtifact(null);
+    setError(null);
+    setEnvelope(null);
+    setPhases([]);
+    setBusy(false);
+    setPhase("idle");
+  };
+
   const updateIntentField = (
     bucket: keyof typeof intent,
     id: string,
     text: string,
   ) => {
+    invalidate();
     setIntent((prev) => ({
       ...prev,
-      [bucket]: prev[bucket].map((a: IntentAtom) => (a.id === id ? { ...a, text } : a)),
+      [bucket]: prev[bucket].map((a: IntentAtom) =>
+        a.id === id ? { ...a, text } : a,
+      ),
     }));
   };
 
-  const compile = useCallback(async (requestText?: string) => {
-    const goal = (requestText ?? userRequest).trim();
-    if (!goal) {
-      setError({ code: "INVALID_JSON", message: "Enter what you want SPE to build." });
-      return;
-    }
-    const lensState = requestText ? defaultIntentLens(goal) : intent;
-    if (requestText) {
-      setUserRequest(goal);
-      setIntent(lensState);
-    }
-
-    setBusy(true);
-    setError(null);
-    setResult(null);
-    setRendered(null);
-    setArtifact(null);
-    setPhases([]);
-    setPhase("loading_wasm");
-    setView("workspace");
-    setLens("prompt");
-
-    let fixture: Record<string, unknown>;
-    try {
-      fixture = buildAbiFixture({
-        userRequest: goal,
-        category,
-        target,
-        confirmed: lensState.confirmed,
-        assumed: lensState.assumed,
-        unknowns: lensState.unknowns,
-        conflicts: lensState.conflicts,
-      });
-      setEnvelope(fixture);
-    } catch (err) {
-      setError({
-        code: "INVALID_JSON",
-        message: String(err instanceof Error ? err.message : err),
-      });
-      setBusy(false);
-      setPhase("unavailable");
-      return;
-    }
-
-    try {
-      const client = ensureClient();
-      const out = await client.compile(JSON.stringify(fixture), (p) => {
-        setPhase(p);
-        setPhases((prev) => (prev.includes(p) ? prev : [...prev, p]));
-      });
-      setError(out.error);
-      setResult(out.result);
-      setPhases(out.phases);
-      setSha256(out.sha256);
-      setImports(out.imports);
-      setPhase(out.error ? "unavailable" : "done");
-
-      if (!out.error && out.result) {
-        const prompt = renderPromptArtifact({
-          userRequest: goal,
-          target,
-          envelopeOutput: out.result.output,
+  const compile = useCallback(
+    async (requestText?: string) => {
+      const goal = (requestText ?? userRequest).trim();
+      if (!goal) {
+        setError({
+          code: "INVALID_JSON",
+          message: "Enter what you want SPE to build.",
         });
-        setRendered(prompt);
-        const spe = await buildSpeArtifact({
-          user_request: goal,
+        return;
+      }
+      const lensState = requestText ? defaultIntentLens(goal) : intent;
+      if (requestText) {
+        setUserRequest(goal);
+        setIntent(lensState);
+      }
+
+      const requestRevision = ++revision.current;
+      setBusy(true);
+      setError(null);
+      setResult(null);
+      setRendered(null);
+      setArtifact(null);
+      setPhases([]);
+      setPhase("loading_wasm");
+      setLens("prompt");
+
+      let fixture: Record<string, unknown>;
+      try {
+        fixture = buildAbiFixture({
+          userRequest: goal,
           category,
           target,
-          envelope: fixture,
-          wasm: {
-            status: out.result.status,
-            disposition: out.result.disposition,
-            reason_code: out.result.reason_code,
-            sha256: out.sha256,
-            imports: out.imports,
-            network_mode: "NONE",
-            used_ts_fallback: false,
-          },
-          rendered_prompt: prompt.finalPrompt,
-          intent: {
-            confirmed: lensState.confirmed,
-            assumed: lensState.assumed,
-            unknowns: lensState.unknowns,
-            conflicts: lensState.conflicts,
-          },
+          confirmed: lensState.confirmed,
+          assumed: lensState.assumed,
+          unknowns: lensState.unknowns,
+          conflicts: lensState.conflicts,
         });
-        setArtifact(spe);
-        if (isHistoryOptIn()) {
-          saveHistoryItem({
-            id: spe.integrity.content_sha256.slice(0, 16),
-            saved_at_utc: spe.created_at_utc,
+        setEnvelope(fixture);
+      } catch (err) {
+        setError({
+          code: "INVALID_JSON",
+          message: String(err instanceof Error ? err.message : err),
+        });
+        setBusy(false);
+        setPhase("unavailable");
+        return;
+      }
+
+      try {
+        const client = ensureClient();
+        const out = await client.compile(JSON.stringify(fixture), (p) => {
+          if (requestRevision !== revision.current) return;
+          setPhase(p);
+          setPhases((prev) => (prev.includes(p) ? prev : [...prev, p]));
+        });
+        if (requestRevision !== revision.current) return;
+        if (
+          !out.error &&
+          out.result &&
+          (out.result.status !== "VALID" || out.result.disposition !== "VALID")
+        ) {
+          throw new Error(
+            `Engine rejected the brief: ${out.result.reason_code ?? out.result.status}`,
+          );
+        }
+        setError(out.error);
+        setResult(out.result);
+        setPhases(out.phases);
+        setSha256(out.sha256);
+        setImports(out.imports);
+        setPhase(out.error ? "unavailable" : "done");
+
+        if (!out.error && out.result) {
+          const prompt = renderPromptArtifact({
+            userRequest: goal,
+            target,
+            category,
+            envelopeOutput: out.result.output,
+          });
+          setRendered(prompt);
+          const spe = await buildSpeArtifact({
             user_request: goal,
             category,
             target,
-            prompt_preview: prompt.finalPrompt.slice(0, 240),
+            envelope: fixture,
+            wasm: {
+              status: out.result.status,
+              disposition: out.result.disposition,
+              reason_code: out.result.reason_code,
+              sha256: out.sha256,
+              imports: out.imports,
+              network_mode: "NONE",
+              used_ts_fallback: false,
+            },
+            rendered_prompt: prompt.finalPrompt,
+            intent: {
+              confirmed: lensState.confirmed,
+              assumed: lensState.assumed,
+              unknowns: lensState.unknowns,
+              conflicts: lensState.conflicts,
+            },
           });
-          setHistory(loadHistory());
+          if (requestRevision !== revision.current) return;
+          setArtifact(spe);
+          if (isHistoryOptIn()) {
+            saveHistoryItem({
+              id: spe.integrity.content_sha256.slice(0, 16),
+              saved_at_utc: spe.created_at_utc,
+              user_request: goal,
+              category,
+              target,
+              prompt_preview: prompt.finalPrompt.slice(0, 240),
+            });
+            setHistory(loadHistory());
+          }
         }
+      } catch (err) {
+        if (requestRevision !== revision.current) return;
+        clientRef.current?.terminate();
+        clientRef.current = null;
+        setResult(null); setRendered(null); setArtifact(null);
+        setError({
+          code: "ENGINE_UNAVAILABLE",
+          message: String(err instanceof Error ? err.message : err),
+        });
+        setPhase("unavailable");
+      } finally {
+        if (requestRevision === revision.current) setBusy(false);
       }
-    } catch (err) {
-      setError({
-        code: "ENGINE_UNAVAILABLE",
-        message: String(err instanceof Error ? err.message : err),
-      });
-      setPhase("unavailable");
-    } finally {
-      setBusy(false);
-    }
-  }, [userRequest, intent, category, target]);
+    },
+    [userRequest, intent, category, target],
+  );
 
   const onCopy = async () => {
     if (!rendered?.finalPrompt) return;
-    await navigator.clipboard.writeText(rendered.finalPrompt);
+    try {
+      await navigator.clipboard.writeText(rendered.finalPrompt);
+      setNotice("Prompt copied.");
+    } catch {
+      setNotice("Copy unavailable. Select the prompt text to copy it.");
+    }
   };
 
   const onExportSpe = () => {
@@ -250,26 +335,71 @@ export default function App() {
   };
 
   const onImportSpe = async (file: File) => {
-    const text = await file.text();
-    const parsed = JSON.parse(text) as SpeArtifactV1;
-    setArtifact(parsed);
-    setUserRequest(parsed.user_request);
-    setCategory((parsed.category as CategoryId) || "Writing");
-    setTarget((parsed.target as TargetId) || "any");
-    setRendered({
-      userRequest: parsed.user_request,
-      speAdded: [],
-      finalPrompt: parsed.rendered_prompt,
-      techniques: [],
-    });
-    setEnvelope(parsed.envelope);
-    setView("workspace");
-    setLens("artifact");
+    try {
+      const parsed = JSON.parse(await file.text()) as SpeArtifactV1;
+      if (
+        parsed.spe_format !== "spe.artifact.v1" ||
+        typeof parsed.user_request !== "string" ||
+        typeof parsed.rendered_prompt !== "string" ||
+        !parsed.integrity?.content_sha256 ||
+        !parsed.intent ||
+        !["confirmed", "assumed", "unknowns", "conflicts"].every((k) =>
+          Array.isArray(parsed.intent[k as keyof typeof parsed.intent]),
+        )
+      )
+        throw new Error("This is not a supported .spe artifact.");
+      const verified = await verifySpeArtifact(parsed);
+      if (verified.integrity.state === "MISMATCH")
+        throw new Error(
+          "The artifact was changed after export. Integrity verification failed.",
+        );
+      invalidate();
+      setArtifact(verified);
+      setUserRequest(parsed.user_request);
+      setCategory((parsed.category as CategoryId) || "Writing");
+      setTarget((parsed.target as TargetId) || "any");
+      setIntent(
+        Object.fromEntries(
+          Object.entries(parsed.intent).map(([k, values]) => [
+            k,
+            values.map((a) => ({
+              ...a,
+              kind:
+                k === "unknowns"
+                  ? "unknown"
+                  : k === "conflicts"
+                    ? "conflict"
+                    : k === "assumed"
+                      ? "assumed"
+                      : "confirmed",
+            })),
+          ]),
+        ) as typeof intent,
+      );
+      setRendered({
+        userRequest: parsed.user_request,
+        speAdded: [],
+        finalPrompt: parsed.rendered_prompt,
+        techniques: [],
+      });
+      setEnvelope(parsed.envelope);
+      setView("workspace");
+      setLens("artifact");
+      setNotice(
+        "Artifact integrity verified. Recompile to evaluate the brief again.",
+      );
+    } catch (err) {
+      setNotice(
+        err instanceof Error ? err.message : "Could not open this artifact.",
+      );
+    }
   };
 
   return (
     <>
-      <a className="skip-link" href="#main">Skip to main content</a>
+      <a className="skip-link" href="#main">
+        Skip to main content
+      </a>
       <Nav
         scrolled={scrolled || view === "workspace"}
         view={view}
@@ -283,17 +413,42 @@ export default function App() {
         {view === "home" && (
           <>
             <Hero
+              onReset={() => {
+                invalidate();
+                setUserRequest("");
+                setIntent(defaultIntentLens(""));
+              }}
               value={userRequest}
               onChange={(v) => {
+                invalidate();
                 setUserRequest(v);
-                setIntent(defaultIntentLens(v));
-                if (v.trim()) setPhase("ready");
-                else setPhase("idle");
               }}
+              category={category}
+              onCategory={(v) => {
+                invalidate();
+                setCategory(v);
+              }}
+              target={target}
+              onTarget={(v) => {
+                invalidate();
+                setTarget(v);
+              }}
+              intent={intent}
+              onIntent={updateIntentField}
               onBuild={() => void compile()}
               busy={busy}
               sceneState={sceneState}
               quality={quality}
+              result={result}
+              error={error}
+              phase={phase}
+              prompt={rendered?.finalPrompt ?? null}
+              onOpen={() => {
+                setView("workspace");
+                window.scrollTo(0, 0);
+              }}
+              onCopy={() => void onCopy()}
+              onExport={onExportSpe}
             />
             <ScrollStory
               onOpenWorkspace={() => setView("workspace")}
@@ -307,11 +462,20 @@ export default function App() {
           <>
             <Workspace
               userRequest={userRequest}
-              setUserRequest={setUserRequest}
+              setUserRequest={(v) => {
+                invalidate();
+                setUserRequest(v);
+              }}
               category={category}
-              setCategory={setCategory}
+              setCategory={(v) => {
+                invalidate();
+                setCategory(v);
+              }}
               target={target}
-              setTarget={setTarget}
+              setTarget={(v) => {
+                invalidate();
+                setTarget(v);
+              }}
               intent={intent}
               updateIntentField={updateIntentField}
               rendered={rendered}
@@ -337,7 +501,9 @@ export default function App() {
             />
 
             <section className="spe-workspace" aria-labelledby="hist-mini">
-              <h2 id="hist-mini" className="spe-kicker">Local history</h2>
+              <h2 id="hist-mini" className="spe-kicker">
+                Local history
+              </h2>
               <label className="spe-field">
                 <span>
                   <input
@@ -353,7 +519,15 @@ export default function App() {
                 </span>
               </label>
               <div className="spe-actions">
-                <button type="button" className="spe-ghost" disabled={!historyOptIn} onClick={() => { clearHistory(); setHistory([]); }}>
+                <button
+                  type="button"
+                  className="spe-ghost"
+                  disabled={!historyOptIn}
+                  onClick={() => {
+                    clearHistory();
+                    setHistory([]);
+                  }}
+                >
                   Clear history
                 </button>
               </div>
@@ -364,6 +538,7 @@ export default function App() {
                     type="button"
                     className="spe-moon-card"
                     onClick={() => {
+                      invalidate();
                       setUserRequest(h.user_request);
                       setCategory((h.category as CategoryId) || "Writing");
                       setTarget((h.target as TargetId) || "any");
@@ -380,10 +555,39 @@ export default function App() {
         )}
       </main>
 
+      {updateAvailable && (
+        <div className="update-notice" role="status">
+          A newer version is ready. Export your brief before reloading.
+          <button onClick={() => window.location.reload()}>
+            Reload update
+          </button>
+          <button
+            aria-label="Dismiss update notice"
+            onClick={() => setUpdateAvailable(false)}
+          >
+            ×
+          </button>
+        </div>
+      )}
+      {notice && (
+        <div className="toast" role="status">
+          {notice}
+          <button
+            onClick={() => setNotice("")}
+            aria-label="Dismiss notification"
+          >
+            ×
+          </button>
+        </div>
+      )}
       <footer className="spe-footer">
-        <div>System Prompt Engine — free core · portable .spe · offline deterministic compile</div>
+        <div>
+          <strong>SPE</strong> System Prompt Engine · Your intent, carried
+          forward.
+        </div>
         <div className="claim-strip">
-          IMPLEMENTATION_PRESENT / REVIEW_PENDING · production NOT QUALIFIED · World #1 NOT PROVEN · not_a_release=true
+          Research preview · Production not qualified · Human-value evidence
+          pending
         </div>
       </footer>
     </>

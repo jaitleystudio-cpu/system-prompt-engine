@@ -8,6 +8,7 @@ Target: full 55/55 positives + 55/55 negatives through WASM runtime.
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 
 import pytest
@@ -74,7 +75,7 @@ WebAssembly.compile(buf).then(mod => {
 }).catch(e => { console.error(e); process.exit(1); });
 """
     proc = subprocess.run(
-        ["/usr/bin/node", "-e", script, str(artifact)],
+        [(shutil.which("node") or "node"), "-e", script, str(artifact)],
         capture_output=True,
         text=True,
         check=False,

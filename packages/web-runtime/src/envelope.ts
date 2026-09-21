@@ -26,34 +26,44 @@ export type BuildEnvelopeInput = {
 };
 
 function slug(s: string): string {
-  return s
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 48) || "request";
+  return (
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 48) || "request"
+  );
 }
 
-export function buildAbiFixture(input: BuildEnvelopeInput): Record<string, unknown> {
+export function buildAbiFixture(
+  input: BuildEnvelopeInput,
+): Record<string, unknown> {
   const goal = input.userRequest.trim();
   if (!goal) {
     throw new Error("user request required");
   }
   const id = `web-${slug(goal)}-${Date.now().toString(36)}`;
-  const hard = (input.confirmed ?? []).map((a, i) => ({
-    constraint_id: a.id || `c-${i + 1}`,
-    statement: a.text,
-    strength: "HARD",
-  }));
-  const prefs = (input.assumed ?? []).map((a, i) => ({
-    preference_id: a.id || `pref-${i + 1}`,
-    statement: a.text,
-  }));
-  const uncertainties = (input.unknowns ?? []).map((a, i) => ({
-    uncertainty_id: a.id || `u-${i + 1}`,
-    description: a.text,
-  }));
+  const hard = (input.confirmed ?? [])
+    .filter((a) => a.text.trim())
+    .map((a, i) => ({
+      constraint_id: a.id || `c-${i + 1}`,
+      statement: a.text,
+      strength: "HARD",
+    }));
+  const prefs = (input.assumed ?? [])
+    .filter((a) => a.text.trim())
+    .map((a, i) => ({
+      preference_id: a.id || `pref-${i + 1}`,
+      statement: a.text,
+    }));
+  const uncertainties = (input.unknowns ?? [])
+    .filter((a) => a.text.trim())
+    .map((a, i) => ({
+      uncertainty_id: a.id || `u-${i + 1}`,
+      description: a.text,
+    }));
   // Conflicts are surfaced in UI; envelope carries them as hard constraints tagged in statement.
-  for (const c of input.conflicts ?? []) {
+  for (const c of (input.conflicts ?? []).filter((a) => a.text.trim())) {
     hard.push({
       constraint_id: c.id || `conflict-${hard.length + 1}`,
       statement: `[CONFLICT] ${c.text}`,
@@ -92,7 +102,8 @@ export function buildAbiFixture(input: BuildEnvelopeInput): Record<string, unkno
         : [
             {
               constraint_id: "c-preserve-intent",
-              statement: "Preserve the user's stated goal without inventing obligations",
+              statement:
+                "Preserve the user's stated goal without inventing obligations",
               strength: "HARD",
             },
           ],
@@ -104,14 +115,7 @@ export function buildAbiFixture(input: BuildEnvelopeInput): Record<string, unkno
       },
       sensitivity_labels: ["USER_PRIVATE"],
       taint_labels: [],
-      uncertainties: uncertainties.length
-        ? uncertainties
-        : [
-            {
-              uncertainty_id: "u-audience",
-              description: "Audience / success criteria not fully specified",
-            },
-          ],
+      uncertainties,
       user_preferences: prefs.length
         ? prefs
         : [
@@ -129,42 +133,38 @@ export function buildAbiFixture(input: BuildEnvelopeInput): Record<string, unkno
   };
 }
 
-export function defaultIntentLens(userRequest: string): {
+export function defaultIntentLens(_userRequest: string): {
   confirmed: IntentAtom[];
   assumed: IntentAtom[];
   unknowns: IntentAtom[];
   conflicts: IntentAtom[];
 } {
-  const goal = userRequest.trim();
   return {
     confirmed: [
       {
-        id: "confirmed-goal",
+        id: "confirmed-boundaries",
         kind: "confirmed",
-        label: "Goal",
-        text: goal || "(empty)",
+        label: "Must follow",
+        text: "",
       },
     ],
     assumed: [
+      { id: "brief-role", kind: "assumed", label: "Role", text: "" },
+      { id: "brief-audience", kind: "assumed", label: "Audience", text: "" },
+      { id: "brief-format", kind: "assumed", label: "Deliverable", text: "" },
       {
-        id: "assumed-clarity",
+        id: "assumed-context",
         kind: "assumed",
-        label: "Clarity",
-        text: "Prefer clear, executable instructions for the selected target AI",
+        label: "Context and preferences",
+        text: "",
       },
     ],
     unknowns: [
       {
-        id: "unknown-audience",
+        id: "unknown-questions",
         kind: "unknown",
-        label: "Audience",
-        text: "Who is the primary audience?",
-      },
-      {
-        id: "unknown-success",
-        kind: "unknown",
-        label: "Success",
-        text: "What does a good result look like?",
+        label: "Questions to resolve",
+        text: "",
       },
     ],
     conflicts: [],
