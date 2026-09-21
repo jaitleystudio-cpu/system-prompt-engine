@@ -355,11 +355,23 @@ export function Hero(p: Props) {
             </div>
             {p.error ? (
               <div className="spe-alert" role="alert">
-                <h3>We couldn’t compile this brief.</h3>
+                <h3>
+                  {p.error.code === "BRIEF_NEEDS_REVIEW"
+                    ? "One detail needs your review."
+                    : "We couldn’t compile this brief."}
+                </h3>
                 <p>{p.error.message}</p>
                 <code>{p.error.code}</code>
-                <button type="button" className="spe-ghost" onClick={p.onBuild}>
-                  Try again
+                <button
+                  type="button"
+                  className="spe-ghost"
+                  onClick={
+                    p.error.code === "BRIEF_NEEDS_REVIEW" ? p.onOpen : p.onBuild
+                  }
+                >
+                  {p.error.code === "BRIEF_NEEDS_REVIEW"
+                    ? "Review brief"
+                    : "Try again"}
                 </button>
               </div>
             ) : p.prompt && p.result ? (

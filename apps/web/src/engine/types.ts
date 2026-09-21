@@ -9,6 +9,7 @@ export type CompilePhase =
   | "done";
 
 export type EngineErrorCode =
+  | "BRIEF_NEEDS_REVIEW"
   | "ENGINE_UNAVAILABLE"
   | "WASM_INTEGRITY_MISMATCH"
   | "WASM_HOST_IMPORTS_FORBIDDEN"

@@ -14,6 +14,7 @@ import {
   isHistoryOptIn,
   loadHistory,
   renderPromptArtifact,
+  PromptBriefError,
   saveHistoryItem,
   setHistoryOptIn,
   verifySpeArtifact,
@@ -246,6 +247,8 @@ export default function App() {
             `Engine rejected the brief: ${out.result.reason_code ?? out.result.status}`,
           );
         }
+        if (!out.error && !out.result)
+          throw new Error("The engine returned no result. Please retry.");
         setError(out.error);
         setResult(out.result);
         setPhases(out.phases);
@@ -299,11 +302,18 @@ export default function App() {
         }
       } catch (err) {
         if (requestRevision !== revision.current) return;
-        clientRef.current?.terminate();
-        clientRef.current = null;
-        setResult(null); setRendered(null); setArtifact(null);
+        if (!(err instanceof PromptBriefError)) {
+          clientRef.current?.terminate();
+          clientRef.current = null;
+        }
+        setResult(null);
+        setRendered(null);
+        setArtifact(null);
         setError({
-          code: "ENGINE_UNAVAILABLE",
+          code:
+            err instanceof PromptBriefError
+              ? "BRIEF_NEEDS_REVIEW"
+              : "ENGINE_UNAVAILABLE",
           message: String(err instanceof Error ? err.message : err),
         });
         setPhase("unavailable");

@@ -42,3 +42,9 @@ Based on requested upstream commit 0730cfb1f2013490bbd08dcde35193feed684603. No 
 GitHub submission uses the genuine upstream commit as parent. The original local checkout used a synthetic snapshot commit. Large historical captures are retained locally rather than duplicated in the GitHub source submission. The private Sites deployment retains owner-only access. Its packaging helper disappeared from the installed plugin cache, so deployment packaging uses the validated static dist output and existing hosting configuration.
 
 Publication privacy check: the new WASM contains zero `/Users/` or `/home/` markers. Packaging now rejects binaries that contain developer home paths. Build with `RUSTFLAGS="--remap-path-prefix=$HOME=/rust-deps --remap-path-prefix=$PWD=/spe-source" cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --offline --target wasm32-unknown-unknown --release`.
+
+## Reply-engine follow-up, 22 September 2026
+
+A real-WASM regression reproduced selection of the wrong objective when returned facts were reordered. The renderer now identifies the request by its stable fact ID, verifies it against the current input, and retains every additional returned fact. Previously dropped extra brief fields (such as brief-tone) are retained. Explicitly marked unresolved conflicts block a ready prompt and request review; this does not claim automatic contradiction detection. Missing engine results are errors, and an unknown template falls back to the general assistant rather than Writing. Role instructions are preserved without forced "You are ..." wrapping.
+
+Validation: real-WASM category and custom-brief regression passed, including reordered facts, extra preferences, mismatched request rejection, explicit conflict blocking, and artifact tampering. The web suite passed 37 tests. Full 450-test evidence above predates this renderer-only follow-up. No underlying model-generated answers are added; SPE remains a local prompt compiler.

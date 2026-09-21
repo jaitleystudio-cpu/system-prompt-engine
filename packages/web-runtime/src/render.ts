@@ -155,7 +155,11 @@ function atoms(v: unknown, field: string): { id: string; text: string }[] {
           ? [
               {
                 id: String(
-                  a.preference_id ?? a.constraint_id ?? a.uncertainty_id ?? "",
+                  a.fact_id ??
+                    a.preference_id ??
+                    a.constraint_id ??
+                    a.uncertainty_id ??
+                    "",
                 ),
                 text: text.trim(),
               },
@@ -164,31 +168,68 @@ function atoms(v: unknown, field: string): { id: string; text: string }[] {
       })
     : [];
 }
+export class PromptBriefError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PromptBriefError";
+  }
+}
 export function renderPromptArtifact(input: RenderInput) {
   const output = record(input.envelopeOutput);
   if (!Array.isArray(output.facts))
     throw new Error(
       "A returned engine envelope is required to render a prompt.",
     );
-  const goal = atoms(output.facts, "statement")[0]?.text;
-  if (!goal) throw new Error("The returned envelope contains no request.");
-  const recipe = RECIPES[String(input.category)] ?? RECIPES.Writing;
+  const facts = atoms(output.facts, "statement");
+  const requestedGoal = input.userRequest.trim();
+  const goalAtom =
+    facts.find((a) => a.id === "f-user-request") ??
+    facts.find((a) => a.text === requestedGoal);
+  if (!goalAtom || goalAtom.text !== requestedGoal)
+    throw new Error(
+      "The returned engine request does not match the current brief. Please compile again.",
+    );
+  const goal = goalAtom.text;
+  const contextFacts = facts.filter((a) => a !== goalAtom && a.text !== goal);
+  const category = Object.hasOwn(RECIPES, String(input.category))
+    ? String(input.category)
+    : "AI Assistant";
+  const recipe = RECIPES[category];
   const constraints = atoms(output.hard_constraints, "statement").filter(
     (a) => a.text !== goal,
   );
+  const conflicts = constraints.filter((a) => a.text.startsWith("[CONFLICT]"));
+  if (conflicts.length) {
+    throw new PromptBriefError(
+      "Resolve the marked conflict before building a prompt: " +
+        conflicts
+          .map((a) => a.text.slice("[CONFLICT]".length).trim())
+          .join("; "),
+    );
+  }
   const prefs = atoms(output.user_preferences, "statement");
   const unknowns = atoms(output.uncertainties, "description");
-  const brief = (id: string) => prefs.find((a) => a.id === id)?.text;
+  const brief = (id: string) =>
+    prefs
+      .filter((a) => a.id === id)
+      .map((a) => a.text)
+      .join("\n") || undefined;
   const role = brief("brief-role") ?? recipe.role,
     audience = brief("brief-audience"),
     format = brief("brief-format") ?? recipe.output;
   const other = prefs.filter(
-    (a) => !a.id.startsWith("brief-") && !a.id.startsWith("pref-clarity"),
+    (a) => !["brief-role", "brief-audience", "brief-format"].includes(a.id),
   );
   const sections = [
-    `You are ${role}.`,
+    "## Role\n" + role,
     "## Objective\n" + goal,
     ...(audience ? ["## Audience\n" + audience] : []),
+    ...(contextFacts.length
+      ? [
+          "## Supplied facts\n" +
+            contextFacts.map((a) => `- ${a.text}`).join("\n"),
+        ]
+      : []),
     ...(other.length
       ? [
           "## Context and preferences\n" +
@@ -211,13 +252,14 @@ export function renderPromptArtifact(input: RenderInput) {
   const techniques = input.techniques ?? [
     "Original request preserved",
     "Explicit requirements",
-    `${input.category ?? "Writing"} working template`,
+    `${category} working template`,
     "Output specification",
   ];
   return {
     userRequest: goal,
     speAdded: [
-      `Template: ${input.category ?? "Writing"} (editorial defaults, not inferred understanding)`,
+      `Template: ${category} (editorial defaults, not inferred understanding)`,
+      ...contextFacts.map((a) => `Supplied fact: ${a.text}`),
       ...constraints.map((a) => `Requirement: ${a.text}`),
       ...prefs.map((a) => `Supplied detail: ${a.text}`),
       ...unknowns.map((a) => `Open question: ${a.text}`),
