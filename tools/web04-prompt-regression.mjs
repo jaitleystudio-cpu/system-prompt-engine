@@ -87,6 +87,11 @@ for (const [category, userRequest] of cases) {
       rendered.finalPrompt.includes("fail before the fix and pass after it"),
     );
     assert.ok(!rendered.finalPrompt.includes("A concise solution"));
+    assert.ok(
+      rendered.finalPrompt.includes(
+        "For a review, report findings and proposed fixes without assuming permission to edit.",
+      ),
+    );
   }
   if (category === "Structured Data")
     assert.ok(
@@ -94,6 +99,16 @@ for (const [category, userRequest] of cases) {
         "Keep explanatory prose, Markdown fences and extra keys out",
       ),
     );
+  assert.equal(rendered.review.goal, userRequest);
+  assert.equal(
+    rendered.review.decisions.find((d) => d.title === "Role").source,
+    "Working default",
+  );
+  assert.deepEqual(
+    rendered.review.questions,
+    [],
+    "do not invent unanswered questions",
+  );
   results.push({
     category,
     userRequest,
@@ -123,12 +138,29 @@ const o = await loadAndEvaluate({
   jsonText: JSON.stringify(f),
 });
 assert.equal(o.result.status, "VALID");
-const prompt = api.renderPromptArtifact({
+const reviewed = api.renderPromptArtifact({
   userRequest: "Assist clothing store customers.",
   category: "AI Assistant",
   target: "claude",
   envelopeOutput: o.result.output,
-}).finalPrompt;
+});
+const prompt = reviewed.finalPrompt;
+assert.equal(
+  reviewed.review.decisions.find((d) => d.title === "Role").source,
+  "Your brief",
+);
+assert.equal(
+  reviewed.review.decisions.find((d) => d.title === "Deliverable").detail,
+  "A concise reply and one next step",
+);
+assert.ok(
+  reviewed.review.decisions.some(
+    (d) =>
+      d.source === "Your brief" &&
+      d.detail.includes("Never invent refund policies"),
+  ),
+);
+assert.deepEqual(reviewed.review.questions, ["Which policy version applies?"]);
 for (const phrase of [
   "a customer support assistant",
   "Never invent refund policies",

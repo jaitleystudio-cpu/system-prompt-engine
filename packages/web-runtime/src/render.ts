@@ -8,6 +8,16 @@ export type RenderInput = {
   envelopeOutput: unknown;
   techniques?: string[];
 };
+export type PromptReview = {
+  goal: string;
+  decisions: {
+    title: string;
+    source: "Your brief" | "Working default";
+    detail: string;
+    why: string;
+  }[];
+  questions: string[];
+};
 type Recipe = { role: string; steps: string[]; output: string };
 const RECIPES: Record<string, Recipe> = {
   "AI Assistant": {
@@ -35,12 +45,12 @@ const RECIPES: Record<string, Recipe> = {
     role: "a senior software engineer",
     steps: [
       "Inspect the supplied code, environment and requirements before proposing changes.",
-      "Implement the smallest complete solution consistent with the existing architecture.",
+      "When implementation is requested, implement the smallest complete solution consistent with the existing architecture. For a review, report findings and proposed fixes without assuming permission to edit.",
       "Consider failure cases, security and compatibility where applicable.",
       "Describe validation performed. Never claim to have run checks you did not run.",
     ],
     output:
-      "A complete solution, implementation or patch, with integration instructions, relevant verification results and remaining limitations.",
+      "The requested technical deliverable: evidence-backed findings for a review, an explanation for a question, or a complete implementation for a change request. Include relevant verification and limitations; provide integration instructions when delivering code.",
   },
   Research: {
     role: "a rigorous research analyst",
@@ -275,6 +285,47 @@ export function renderPromptArtifact(input: RenderInput) {
       `Target: ${input.target} (portable plain text)`,
     ],
     finalPrompt: sections.join("\n\n"),
+    review: {
+      goal,
+      decisions: [
+        {
+          title: "Role",
+          source: brief("brief-role") ? "Your brief" : "Working default",
+          detail: role,
+          why: "Establishes the perspective and expertise the response should use.",
+        },
+        ...constraints.map((constraint, index) => ({
+          title: `Boundary ${index + 1}`,
+          source:
+            constraint.id === "c-preserve-intent" &&
+            constraint.text ===
+              "Preserve the user's stated goal without inventing obligations"
+              ? ("Working default" as const)
+              : ("Your brief" as const),
+          detail: constraint.text,
+          why: "Keeps a restriction visible alongside the task so a proposed answer can be checked for compliance.",
+        })),
+        {
+          title: "Working approach",
+          source: "Working default",
+          detail: `${category}: ${recipe.steps.length + guidance.execution.length} steps covering approach and execution.`,
+          why: "Turns a broad request into concrete actions. These suggestions remain subordinate to your brief.",
+        },
+        {
+          title: "Deliverable",
+          source: brief("brief-format") ? "Your brief" : "Working default",
+          detail: format,
+          why: "Makes the expected result explicit so the response can be checked against it.",
+        },
+        {
+          title: "Quality checks",
+          source: "Working default",
+          detail: guidance.checks.join(" "),
+          why: "Provides task-specific review criteria without claiming the resulting answer is correct.",
+        },
+      ],
+      questions: unknowns.map((a) => a.text),
+    } as PromptReview | null,
     techniques,
   };
 }

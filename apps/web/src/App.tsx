@@ -390,6 +390,7 @@ export default function App() {
         userRequest: parsed.user_request,
         speAdded: [],
         finalPrompt: parsed.rendered_prompt,
+        review: null,
         techniques: [],
       });
       setEnvelope(parsed.envelope);
@@ -453,6 +454,7 @@ export default function App() {
               error={error}
               phase={phase}
               prompt={rendered?.finalPrompt ?? null}
+              review={rendered?.review ?? null}
               onOpen={() => {
                 setView("workspace");
                 window.scrollTo(0, 0);

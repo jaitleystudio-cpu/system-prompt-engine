@@ -22,7 +22,7 @@ export const PROMPT_GUIDANCE: Record<
       "Choose regression checks that would fail before the fix and pass after it. Separate tests actually run from proposed commands, include their outcomes, and identify remaining environment or coverage limitations.",
     ],
     checks: [
-      "Does the implementation address the reproduced cause and relevant failure cases?",
+      "Does the review, explanation or implementation address the actual requested task and relevant failure cases?",
       "Are setup, behavior changes and verification reproducible without guessing missing steps?",
     ],
   },

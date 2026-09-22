@@ -5,6 +5,7 @@ import {
   type CategoryId,
   type TargetId,
   type IntentAtom,
+  type PromptReview,
 } from "@spe/web-runtime";
 import type { SceneState } from "../scene/SpeIntelligence";
 import type { VisualQuality } from "../scene/quality";
@@ -38,6 +39,7 @@ type Props = {
   error: EngineError | null;
   phase: CompilePhase;
   prompt: string | null;
+  review: PromptReview | null;
   onOpen: () => void;
   onCopy: () => void;
   onExport: () => void;
@@ -78,7 +80,9 @@ const PHASES: Record<string, string> = {
 export function Hero(p: Props) {
   const [paused, setPaused] = useState(false),
     [explore, setExplore] = useState(false),
-    [resultTab, setResultTab] = useState<"prompt" | "structure">("prompt");
+    [resultTab, setResultTab] = useState<"prompt" | "structure" | "review">(
+      "prompt",
+    );
   const resultRef = useRef<HTMLElement>(null);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const useStatic = p.quality === "LITE" && (!explore || reduced);
@@ -389,6 +393,14 @@ export function Hero(p: Props) {
                     >
                       Prompt
                     </button>
+                    {p.review && (
+                      <button
+                        aria-pressed={resultTab === "review"}
+                        onClick={() => setResultTab("review")}
+                      >
+                        Why this prompt
+                      </button>
+                    )}
                     <button
                       aria-pressed={resultTab === "structure"}
                       onClick={() => setResultTab("structure")}
@@ -405,6 +417,54 @@ export function Hero(p: Props) {
                   >
                     {p.prompt}
                   </pre>
+                ) : resultTab === "review" && p.review ? (
+                  <div className="prompt-review">
+                    <div className="review-intent">
+                      <span className="eyebrow">YOUR ORIGINAL GOAL</span>
+                      <p>{p.review.goal}</p>
+                    </div>
+                    <p className="review-intro">
+                      Your brief sets the direction. The additions below make
+                      the instructions explicit and reviewable.
+                    </p>
+                    <ol className="review-decisions">
+                      {p.review.decisions.map((decision, index) => (
+                        <li key={decision.title}>
+                          <span className="review-number">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <div>
+                            <div className="review-title">
+                              <h4>{decision.title}</h4>
+                              <span>{decision.source}</span>
+                            </div>
+                            <p>{decision.detail}</p>
+                            <p className="review-reason">{decision.why}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                    <div className="review-questions">
+                      <h4>Questions you flagged</h4>
+                      {p.review.questions.length ? (
+                        <ul>
+                          {p.review.questions.map((q, i) => (
+                            <li key={i}>{q}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>
+                          No open questions supplied. This does not mean the
+                          brief contains everything needed for the task.
+                        </p>
+                      )}
+                    </div>
+                    <p className="review-intro">
+                      Want a different direction? Refine your role, boundaries
+                      or deliverable, then rebuild. SPE uses your explicit
+                      choices before template defaults.
+                    </p>
+                  </div>
                 ) : (
                   <div className="semantic-readout">
                     {groups.map((g) => (

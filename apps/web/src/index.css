@@ -1509,3 +1509,86 @@ em {
     min-height: 44px;
   }
 }
+
+/* Traceable prompt review: readable at mobile widths without quality scores. */
+.prompt-review {
+  padding: 1.5rem;
+  overflow-wrap: anywhere;
+}
+.review-intent {
+  padding: 1.25rem;
+  border-left: 2px solid #a7b7ff;
+  background: #171d32;
+  border-radius: 0 0.7rem 0.7rem 0;
+}
+.review-intent p {
+  margin: 0.8rem 0 0;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.review-intro {
+  color: #b9c2da;
+  line-height: 1.7;
+  font-size: 0.9rem;
+}
+.review-decisions {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+.review-decisions li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.8rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid #2a3148;
+}
+.review-number {
+  color: #adbcff;
+  font-size: 0.75rem;
+  padding-top: 0.3rem;
+}
+.review-title {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.review-title h4,
+.review-questions h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+.review-title span {
+  font-size: 0.7rem;
+  color: #c1ccf0;
+  border: 1px solid #3a4564;
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.25rem;
+}
+.review-decisions p,
+.review-questions p,
+.review-questions li {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+.review-reason {
+  color: #b9c2da;
+}
+.review-questions {
+  padding: 1.25rem;
+  border: 1px solid #323c57;
+  border-radius: 0.7rem;
+}
+.output-tabs {
+  flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+  .prompt-review {
+    padding: 1rem;
+  }
+  .review-title {
+    gap: 0.4rem;
+  }
+}
