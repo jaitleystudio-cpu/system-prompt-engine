@@ -18,6 +18,17 @@ const expectedSha256 = JSON.parse(
   readFileSync("apps/web/public/spe_wasm.sha256.json"),
 ).sha256;
 const cases = [
+  ["AI Assistant", "Support customers using only the supplied store policy."],
+  ["Analysis", "Analyze the supplied survey without inferring causation."],
+  ["Creative", "Write an original short story about a lighthouse."],
+  [
+    "Multilingual",
+    "Translate the supplied letter into Telugu without commentary.",
+  ],
+  [
+    "Website / 3D",
+    "Build an accessible offline portfolio with reduced motion.",
+  ],
   ["Writing", "Write a concise leave request email for Friday."],
   [
     "Coding",
@@ -61,6 +72,28 @@ for (const [category, userRequest] of cases) {
   assert.ok(!rendered.finalPrompt.includes("## Techniques"));
   assert.ok(!rendered.finalPrompt.includes("Who is the primary audience?"));
   assert.ok(rendered.finalPrompt.includes("## Deliverable"));
+  assert.ok(
+    rendered.finalPrompt.split(/\s+/).length >= 350,
+    "expanded prompt should provide substantial working detail",
+  );
+  assert.ok(rendered.finalPrompt.includes("## Acceptance checks"));
+  assert.ok(
+    rendered.finalPrompt.includes("fixed schema"),
+    "expanded instructions must preserve concise or schema-only output requirements",
+  );
+  if (category === "Coding") {
+    assert.ok(rendered.finalPrompt.includes("expected versus actual behavior"));
+    assert.ok(
+      rendered.finalPrompt.includes("fail before the fix and pass after it"),
+    );
+    assert.ok(!rendered.finalPrompt.includes("A concise solution"));
+  }
+  if (category === "Structured Data")
+    assert.ok(
+      rendered.finalPrompt.includes(
+        "Keep explanatory prose, Markdown fences and extra keys out",
+      ),
+    );
   results.push({
     category,
     userRequest,

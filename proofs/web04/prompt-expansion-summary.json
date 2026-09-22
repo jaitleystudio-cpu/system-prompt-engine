@@ -1,0 +1,58 @@
+{
+  "allCategoriesPassed": 13,
+  "wordsByCategory": {
+    "AI Assistant": {
+      "before": null,
+      "after": 486
+    },
+    "Analysis": {
+      "before": null,
+      "after": 367
+    },
+    "Creative": {
+      "before": null,
+      "after": 371
+    },
+    "Multilingual": {
+      "before": null,
+      "after": 371
+    },
+    "Website / 3D": {
+      "before": null,
+      "after": 433
+    },
+    "Writing": {
+      "before": 133,
+      "after": 390
+    },
+    "Coding": {
+      "before": 145,
+      "after": 468
+    },
+    "Research": {
+      "before": 125,
+      "after": 371
+    },
+    "Business": {
+      "before": 129,
+      "after": 377
+    },
+    "Education": {
+      "before": 124,
+      "after": 380
+    },
+    "Structured Data": {
+      "before": 125,
+      "after": 396
+    },
+    "Image": {
+      "before": 129,
+      "after": 382
+    },
+    "Video": {
+      "before": 129,
+      "after": 388
+    }
+  },
+  "note": "Word counts measure expansion, not independent quality ratings."
+}

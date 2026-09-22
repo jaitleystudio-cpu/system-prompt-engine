@@ -1,5 +1,6 @@
 /** Editorial prompt templates; semantic evaluation remains exclusively in WASM. */
 import type { CategoryId, TargetId } from "./targets";
+import { PROMPT_GUIDANCE } from "./promptGuidance";
 export type RenderInput = {
   userRequest: string;
   target: TargetId | string;
@@ -18,7 +19,7 @@ const RECIPES: Record<string, Recipe> = {
       "Respond directly in the requested format. If a request cannot be fulfilled, explain the limitation and offer a concrete next step.",
     ],
     output:
-      "A useful, concise response to the current user request, in the form and tone specified by the brief.",
+      "A complete, useful response to the current user request, with the depth, form and tone specified by the brief.",
   },
   Writing: {
     role: "a precise writer and editor",
@@ -39,7 +40,7 @@ const RECIPES: Record<string, Recipe> = {
       "Describe validation performed. Never claim to have run checks you did not run.",
     ],
     output:
-      "A concise solution, implementation or patch, and relevant verification steps.",
+      "A complete solution, implementation or patch, with integration instructions, relevant verification results and remaining limitations.",
   },
   Research: {
     role: "a rigorous research analyst",
@@ -195,6 +196,7 @@ export function renderPromptArtifact(input: RenderInput) {
     ? String(input.category)
     : "AI Assistant";
   const recipe = RECIPES[category];
+  const guidance = PROMPT_GUIDANCE[category];
   const constraints = atoms(output.hard_constraints, "statement").filter(
     (a) => a.text !== goal,
   );
@@ -240,7 +242,14 @@ export function renderPromptArtifact(input: RenderInput) {
       ? ["## Requirements\n" + constraints.map((a) => `- ${a.text}`).join("\n")]
       : []),
     "## Approach\n" + recipe.steps.map((s, i) => `${i + 1}. ${s}`).join("\n"),
+    "## Execution details\n" +
+      guidance.execution.map((s, i) => `${i + 1}. ${s}`).join("\n"),
+    "## Handling missing information\nUse the supplied facts, context and requirements as the basis for the work. Identify missing information that would change correctness or feasibility. Ask a focused question only when it blocks progress; otherwise proceed with clearly labeled, limited assumptions. Do not invent access to tools, source documents, test results or external evidence.",
     "## Deliverable\n" + format,
+    "## Output depth and structure\nMake the result complete enough to use without reconstructing omitted steps. Develop important points with concrete instructions, relevant examples and explanations of consequential choices. Prefer useful detail over repetition. Follow the user's exact length, language and output-format requirements; detailed working instructions do not authorize a longer final answer when the brief requests brevity or a fixed schema. Add headings or supporting notes only when the requested format permits them.",
+    "## Acceptance checks\n" +
+      guidance.checks.map((s) => `- ${s}`).join("\n") +
+      "\n- Is every explicit requirement addressed, with no unrelated obligations added?\n- Have unsupported claims and contradictory instructions been removed? Review these checks before responding; include a checklist only if requested.",
     ...(unknowns.length
       ? [
           "## Questions to resolve\n" +
