@@ -1,0 +1,34 @@
+{
+  "name": "spe-web",
+  "private": true,
+  "version": "0.3.0",
+  "type": "module",
+  "description": "SPE-WEB-03 semantic press research preview. Real local WASM compiler.",
+  "license": "MIT OR Apache-2.0",
+  "scripts": {
+    "copy-wasm": "node scripts/copy-wasm.mjs",
+    "dev": "npm run copy-wasm && vite",
+    "build": "npm run spe:copy-check && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "test:engine": "node scripts/eval-fixture.mjs",
+    "audit:deps": "node scripts/audit-deps.mjs",
+    "audit:assets": "node scripts/measure-assets.mjs",
+    "audit:egress": "node scripts/egress-proof.mjs",
+    "spe:copy-check": "node ../../tools/copy-check.mjs",
+    "test:copy": "cd ../.. && node tests/copy/golden-and-adversarial.mjs"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^8.17.10",
+    "@types/three": "^0.170.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}

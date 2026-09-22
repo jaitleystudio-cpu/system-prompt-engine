@@ -7,6 +7,7 @@ the portable kernel; this module must not weaken frozen fixtures.
 from __future__ import annotations
 
 import json
+import shutil
 import os
 import subprocess
 from pathlib import Path
@@ -436,7 +437,7 @@ def run_wasm_case(case: dict[str, Any]) -> dict[str, Any]:
     env = dict(os.environ)
     env["SPE_WASM_META"] = "1"
     proc = subprocess.run(
-        ["/usr/bin/node", str(host), str(artifact)],
+        [(shutil.which("node") or "node"), str(host), str(artifact)],
         input=json.dumps(payload, ensure_ascii=False),
         capture_output=True,
         text=True,

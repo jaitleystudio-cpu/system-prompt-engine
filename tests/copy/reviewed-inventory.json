@@ -1,0 +1,2679 @@
+{
+  "version": 1,
+  "review_kind": "assistant editorial review; not participant research",
+  "review_date": "2026-09-22",
+  "constitution": "docs/human-perspective/CONSTITUTION.md",
+  "scope": "Static source candidates are conservative and include some non-visible selector literals. User-authored text and generated professional prompts are excluded.",
+  "perspective_matrix": {
+    "first_time": "Heading is an invitation; support and CTA explain prompt preparation. No automatic comprehension is promised.",
+    "returning": "Only a completed action in this session selects returning copy. No elapsed-time or personal profile inference.",
+    "non_native_english": "Short familiar verbs; shape is a metaphor grounded by explicit prompt wording. Native-speaker localization remains pending.",
+    "creator": "Creative task selection picks editorial copy without flattering talent.",
+    "developer": "Exact execution and integrity details remain under inspection/proof.",
+    "business": "Goal, resources and boundaries are explicit; no ROI promise.",
+    "skeptical_expert": "Editable-template operation and pending independent qualification are disclosed.",
+    "privacy_conscious": "Core input stays on device during preparation; hosting sign-in and downstream AI use are distinguished.",
+    "mobile": "Short action profiles; hero layout requires visual review at breakpoints.",
+    "screen_reader": "Labels name the action; technical details use native disclosure controls. Accessibility certification is not claimed."
+  },
+  "entries": [
+    {
+      "id": "52ecf64fcc14b7858f5a",
+      "file": "apps/web/index.html",
+      "depth": "EXPERIENCE",
+      "text": "Start with an idea. SPE helps shape your request into a detailed prompt, with your goals, boundaries and open questions in view."
+    },
+    {
+      "id": "cc9f02c3e5640c8c8bac",
+      "file": "apps/web/index.html",
+      "depth": "EXPERIENCE",
+      "text": "SPE — System Prompt Engine"
+    },
+    {
+      "id": "1385e86c402c1f7e1333",
+      "file": "apps/web/public/manifest.webmanifest",
+      "depth": "EXPERIENCE",
+      "text": "Shape your ideas into prompts. Keep your goals, details and instructions together."
+    },
+    {
+      "id": "446088623ea6d9a59723",
+      "file": "apps/web/public/manifest.webmanifest",
+      "depth": "EXPERIENCE",
+      "text": "System Prompt Engine"
+    },
+    {
+      "id": "483d2f3f92b6a948e420",
+      "file": "apps/web/public/manifest.webmanifest",
+      "depth": "EXPERIENCE",
+      "text": "SPE"
+    },
+    {
+      "id": "0deca2045b162f505085",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Dismiss update notice"
+    },
+    {
+      "id": "136c897f42cefe08e4cd",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "BRIEF_NEEDS_REVIEW"
+    },
+    {
+      "id": "16ae6d4eb5d8b9c1d6ea",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "spe-export-"
+    },
+    {
+      "id": "1717cd34ada03fbd5700",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "This SPE file has changed since export. Its integrity check failed."
+    },
+    {
+      "id": "1a75ab3c94d3a5d4a75d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "instantiating"
+    },
+    {
+      "id": "1c7415bd4b9b596dcac4",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "(max-width: 720px)"
+    },
+    {
+      "id": "1d5f994ce41adb92241e",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "NONE"
+    },
+    {
+      "id": "211b636cea6708982dbf",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "offline"
+    },
+    {
+      "id": "2465005d52115ee9e64d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "VALID"
+    },
+    {
+      "id": "2c9f934faf82d9a37e95",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "artifact-"
+    },
+    {
+      "id": "2d6fff4e9aeb889337c3",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "The engine returned no result. Please retry."
+    },
+    {
+      "id": "30a90d7fe52b77030460",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PROOF",
+      "text": "About this preview"
+    },
+    {
+      "id": "30fd9e5012c5647e24bd",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "prompt"
+    },
+    {
+      "id": "3b9119bb88ee18235de8",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "INVALID_JSON"
+    },
+    {
+      "id": "4184c6163db701d04adc",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "spe.artifact.v1"
+    },
+    {
+      "id": "44de4510e3fe368e0715",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Skip to main content"
+    },
+    {
+      "id": "45a3c28e9df5d58dc969",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "This file is not in a supported SPE format."
+    },
+    {
+      "id": "4bf88485a045346d867a",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "IDLE"
+    },
+    {
+      "id": "5af658f6d7e3b12ec337",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy unavailable. Select the prompt text to copy it."
+    },
+    {
+      "id": "5fac66bc68641de542a8",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "System Prompt Engine · Your intent, carried forward."
+    },
+    {
+      "id": "62e2c1907783212490df",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "(prefers-reduced-motion: reduce)"
+    },
+    {
+      "id": "66a954092762b8ab233e",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "LISTENING"
+    },
+    {
+      "id": "68a282da41cff2aa1727",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "conflicts"
+    },
+    {
+      "id": "6aa1d5ccad83c04e3a8c",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Reload update"
+    },
+    {
+      "id": "6de317d56a17e9319d82",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "online"
+    },
+    {
+      "id": "6f43dfca874aeb0dc6e1",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE"
+    },
+    {
+      "id": "71af13a0371c9efd4ab7",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "ready"
+    },
+    {
+      "id": "7342825789b2abf4fbfc",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": ".spe.json"
+    },
+    {
+      "id": "73589dae05e93b2cb08d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "742009ac6bb4c5f67b82",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "READY"
+    },
+    {
+      "id": "746878a55fb633ff8f05",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "instant"
+    },
+    {
+      "id": "75cd0142d0a8f31d73f7",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "change"
+    },
+    {
+      "id": "75ed13f574d6e235dc8d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "main"
+    },
+    {
+      "id": "823f03b421b90d36fd1f",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "AI Assistant"
+    },
+    {
+      "id": "8246c5dded2a1bc7cb65",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "controllerchange"
+    },
+    {
+      "id": "8282123dc640b5dbf266",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "We could not open this SPE file."
+    },
+    {
+      "id": "833b976d5cfda43df48c",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "MISMATCH"
+    },
+    {
+      "id": "87ce9786d07d83a04b79",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "conflict"
+    },
+    {
+      "id": "89fd992b199fb1e27dd9",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "workspace"
+    },
+    {
+      "id": "8b36024c56f6b23075df",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Writing"
+    },
+    {
+      "id": "8d53bf5ccf5bf7df5aa0",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "STRUCTURING"
+    },
+    {
+      "id": "8e6b6d0f32e511b8150f",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "home"
+    },
+    {
+      "id": "8f659189392fffdfa675",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "artifact"
+    },
+    {
+      "id": "9420a6109331f59249d1",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "unknowns"
+    },
+    {
+      "id": "97501902140656c3aa63",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Your SPE file passed its integrity check. Shape the prompt again to review its current details."
+    },
+    {
+      "id": "9d4be5c857acb2f93e42",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "simple"
+    },
+    {
+      "id": "a29844962efa06681eeb",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt copied."
+    },
+    {
+      "id": "a9e070cad101b053b347",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "ENGINE_UNAVAILABLE"
+    },
+    {
+      "id": "adb32d0cef1e94c9da77",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "done"
+    },
+    {
+      "id": "aeb8b354bf552273c7cc",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "COMPILING"
+    },
+    {
+      "id": "b2986d15545f2376d918",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Saved ideas"
+    },
+    {
+      "id": "b2a8c64ef8383dfc5e62",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "idle"
+    },
+    {
+      "id": "bd1870c81582b1573a91",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "undefined"
+    },
+    {
+      "id": "c0171b6e6cc6709e6819",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "A newer version is ready. Export your brief before reloading."
+    },
+    {
+      "id": "c51aaefc50ae619ca102",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "assumed"
+    },
+    {
+      "id": "ca1a6a4329f12f7febec",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "inspect"
+    },
+    {
+      "id": "cc1ff5690c856d0d01ee",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "evaluating"
+    },
+    {
+      "id": "cc2c394f171e51c45b33",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "LITE"
+    },
+    {
+      "id": "cfb32307522ec7cd4dae",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Enter what you want SPE to build."
+    },
+    {
+      "id": "cfe83315e00808ba25e9",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "scroll"
+    },
+    {
+      "id": "d08d106e85c61688df65",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Clear history"
+    },
+    {
+      "id": "d4f0d2473e60f60b72cc",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Save a history of ideas on this device"
+    },
+    {
+      "id": "e208fa85190884b744d9",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "unavailable"
+    },
+    {
+      "id": "e3d7385394987b26545d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "unknown"
+    },
+    {
+      "id": "e4998ad893f8019180e1",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Engine rejected the brief:"
+    },
+    {
+      "id": "e4b1d1d0de721eb5997c",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Dismiss notification"
+    },
+    {
+      "id": "e553179282841c4d78d0",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "UNDERSTANDING"
+    },
+    {
+      "id": "ec352b07416677b6dded",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "loading_wasm"
+    },
+    {
+      "id": "eed9b3db55d07c282ff5",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "any"
+    },
+    {
+      "id": "f91f818acee56d15057d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "verifying_integrity"
+    },
+    {
+      "id": "fc16b54827cff6d00cdb",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "confirmed"
+    },
+    {
+      "id": "fd42c4a5230da0cea712",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": ".json"
+    },
+    {
+      "id": "57ca44474f9663f6e921",
+      "file": "apps/web/src/brand/Logo.tsx",
+      "depth": "PRODUCT",
+      "text": "md"
+    },
+    {
+      "id": "7230b4e270770fa43b84",
+      "file": "apps/web/src/brand/Logo.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE"
+    },
+    {
+      "id": "817f82e18fb78a295b4a",
+      "file": "apps/web/src/brand/Logo.tsx",
+      "depth": "PRODUCT",
+      "text": "speMark-"
+    },
+    {
+      "id": "8c70822b0778af9b21e3",
+      "file": "apps/web/src/brand/Logo.tsx",
+      "depth": "PRODUCT",
+      "text": "hero"
+    },
+    {
+      "id": "91fc0a49ca093093b843",
+      "file": "apps/web/src/brand/Logo.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE — System Prompt Engine"
+    },
+    {
+      "id": "b627746f9f44a29b6624",
+      "file": "apps/web/src/brand/Logo.tsx",
+      "depth": "PRODUCT",
+      "text": "System Prompt Engine"
+    },
+    {
+      "id": "dbc85c16f739ff54dba8",
+      "file": "apps/web/src/brand/Logo.tsx",
+      "depth": "PRODUCT",
+      "text": "sm"
+    },
+    {
+      "id": "e1d8992d293fd7325988",
+      "file": "apps/web/src/brand/Logo.tsx",
+      "depth": "PRODUCT",
+      "text": "SYSTEM PROMPT ENGINE"
+    },
+    {
+      "id": "02c7b7f9e0360d14bd3d",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Your words. A considered structure."
+    },
+    {
+      "id": "05340632c275c61c9c39",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Awaiting your brief"
+    },
+    {
+      "id": "088e5ef087046b037d88",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. Warm, direct tone. Use the supplied policy document."
+    },
+    {
+      "id": "0bf8927a61f2fd0ffb84",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Role · audience · requirements"
+    },
+    {
+      "id": "0cf29832f0025f23186d",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "instant"
+    },
+    {
+      "id": "0e0db0b3c69f75597652",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "New brief"
+    },
+    {
+      "id": "100d85170c8d22ba7962",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Explain how a neural network learns to a curious 14-year-old. Use one everyday analogy, a worked example and three questions to check understanding."
+    },
+    {
+      "id": "120f25efc71972df7145",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Why this prompt"
+    },
+    {
+      "id": "18eed55c1cc52024de47",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "No analytics"
+    },
+    {
+      "id": "19e2c9e86784cc7134d2",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Optional: questions the AI should clarify"
+    },
+    {
+      "id": "1a6ec50a370d263d1bac",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Ready to use"
+    },
+    {
+      "id": "1b9090276ba989961620",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Education"
+    },
+    {
+      "id": "1be6c09ccdd372659045",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Describe the task"
+    },
+    {
+      "id": "1d4b655c6dbfcf34c246",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "review"
+    },
+    {
+      "id": "216da228b349900323ca",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Pause motion"
+    },
+    {
+      "id": "26990443068134c5b548",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Questions you flagged"
+    },
+    {
+      "id": "299cdee1921fc1c01546",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Choose a template and refine"
+    },
+    {
+      "id": "2c1d668003e4b72de887",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "BRIEF_NEEDS_REVIEW"
+    },
+    {
+      "id": "3b8d292aafcfb7f6d167",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Use with"
+    },
+    {
+      "id": "3dff568e2145a4b775f2",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Runs locally"
+    },
+    {
+      "id": "3ed023f68952c8057690",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "YOUR ORIGINAL GOAL"
+    },
+    {
+      "id": "430a6ce489a735b4af70",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "FROM A THOUGHT TO A PRECISE BRIEF"
+    },
+    {
+      "id": "4427e2367b1217f5a07a",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "direction."
+    },
+    {
+      "id": "469ed739de81325628ed",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "YOUR PROMPT"
+    },
+    {
+      "id": "4e9c1c93899cb007548a",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Stays on this device"
+    },
+    {
+      "id": "5455316d73ec57f4f32b",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "brief-format"
+    },
+    {
+      "id": "558d9710e23be051cea7",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "THE SPACE TO SHAPE YOUR IDEA"
+    },
+    {
+      "id": "5727d64cfc9cbfd1caec",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Result view"
+    },
+    {
+      "id": "5b72aab73fa87ff8e316",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Your prompt will appear here—with a role, a focused objective, a working approach and a defined deliverable."
+    },
+    {
+      "id": "5d80e6279eb941ec8ef9",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Role"
+    },
+    {
+      "id": "60491d4b249e67ed2f8b",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "confirmed"
+    },
+    {
+      "id": "62f9f23fcb9a5f74aae3",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "unknown-questions"
+    },
+    {
+      "id": "64c05284caf914e35469",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "02 / YOUR PROMPT"
+    },
+    {
+      "id": "660132e00c7373ef3309",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "brief-audience"
+    },
+    {
+      "id": "6f1b159ebd1235be9679",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "YOURS TO REFINE. YOURS TO KEEP."
+    },
+    {
+      "id": "6f622bb0851ab4ca696c",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Explore live 3D"
+    },
+    {
+      "id": "71b391fe9bbaec45f969",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "unknowns"
+    },
+    {
+      "id": "727a23085936fb21b4c0",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt"
+    },
+    {
+      "id": "77f26eac08a7464bce5a",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Try again"
+    },
+    {
+      "id": "784a6158dd206098ce5d",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. Never invent refund policies. Ask for the order number first."
+    },
+    {
+      "id": "7a005f80f9abaa670100",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. customers checking returns and delivery"
+    },
+    {
+      "id": "7b060606a40760292c2a",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Describe the task. Include what matters, what to avoid, and what a good result looks like…"
+    },
+    {
+      "id": "7bfbb67f4e73115f93e8",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "SCROLL TO CREATE ↓"
+    },
+    {
+      "id": "7eb6266256a9ef7cc8d0",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "assumed-context"
+    },
+    {
+      "id": "80180d237bb95377e67c",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "SYSTEM PROMPT ENGINE / 03"
+    },
+    {
+      "id": "826ff29a9650ad26d4eb",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Your brief sets the direction. The additions below make the instructions explicit and reviewable."
+    },
+    {
+      "id": "82a785a48aa3f330e0c2",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "smooth"
+    },
+    {
+      "id": "8399592328309be21bae",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Want a different direction? Refine your role, boundaries or deliverable, then rebuild. SPE uses your explicit choices before template defaults."
+    },
+    {
+      "id": "854a7278d1e1d34d6c20",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "assumed"
+    },
+    {
+      "id": "866e5cee82f90a813650",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Launch a product"
+    },
+    {
+      "id": "8ab79f193fb5e07a3844",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "YOUR IDEA"
+    },
+    {
+      "id": "8d9c9d8abc7901e4145b",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "01 / YOUR BRIEF"
+    },
+    {
+      "id": "917b4acafa92ce0c0a10",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Coding"
+    },
+    {
+      "id": "93e785714c82bf7b7a0b",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "LITE"
+    },
+    {
+      "id": "95a4c8e24ddb4ececc50",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "confirmed-boundaries"
+    },
+    {
+      "id": "95b23665ceb94862e52a",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Review code"
+    },
+    {
+      "id": "9655e197ff985179a6e7",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Structure"
+    },
+    {
+      "id": "983ef107dfb11fcf0db8",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "prompt"
+    },
+    {
+      "id": "9bb8127f8d8d22fab841",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "/ YOUR PROMPT"
+    },
+    {
+      "id": "a5a0b5be3d2e7db9cc4e",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "A prompt you can take anywhere."
+    },
+    {
+      "id": "aa2bdbc59dad69fa5665",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Works offline once cached"
+    },
+    {
+      "id": "aa4c44d05f6e63184909",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. concise replies with one next step"
+    },
+    {
+      "id": "b1b22b598f96cbf5e759",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Reduced motion"
+    },
+    {
+      "id": "b34b7ada50e893378e10",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Audience"
+    },
+    {
+      "id": "b6c61a26027582a7d573",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "start"
+    },
+    {
+      "id": "b80f6a40dababbd20503",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE"
+    },
+    {
+      "id": "b876da618884fd1c2960",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "PRIVATE BY DESIGN. OPEN BY NATURE."
+    },
+    {
+      "id": "bcbf54164968190b5c94",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Download .spe"
+    },
+    {
+      "id": "c054bdca7270f66ce97f",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "(prefers-reduced-motion: reduce)"
+    },
+    {
+      "id": "c21bbe8bf1aba6d82c52",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Shape, review, take it with you"
+    },
+    {
+      "id": "c69120a0817c736601dd",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Give the thought"
+    },
+    {
+      "id": "c7ddef189f6caa3252ee",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. a customer support assistant for our clothing store"
+    },
+    {
+      "id": "c8eb49c35698f462318f",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Must follow"
+    },
+    {
+      "id": "cad6ade0f31fb0f81cde",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "ONE BRIEF. ANY AI."
+    },
+    {
+      "id": "cd5d2f0a25decb10e581",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy prompt"
+    },
+    {
+      "id": "cf66f2b801c0b585481a",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Review the code I provide for correctness, security and maintainability. Rank findings by severity and include the affected code and a concrete fix. Do not invent files or executed tests."
+    },
+    {
+      "id": "cf785f0e584b01239783",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "A stronger direction."
+    },
+    {
+      "id": "d10c8f7bd0f1c7798950",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "⌘ / Ctrl + Enter"
+    },
+    {
+      "id": "d5b17b2bcacf226a5f4d",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Review brief"
+    },
+    {
+      "id": "d62e64eb840e7e95bca9",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Teach an idea"
+    },
+    {
+      "id": "d695285857e00999ac1e",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "A clear starting point."
+    },
+    {
+      "id": "dc22532afc926d096fb1",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "No open questions supplied. This does not mean the brief contains everything needed for the task."
+    },
+    {
+      "id": "dd507819449c0a296338",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Refine the brief"
+    },
+    {
+      "id": "e19cd6e37f422ab38889",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "None supplied."
+    },
+    {
+      "id": "e2c690999ac46a1992af",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Portable .spe files"
+    },
+    {
+      "id": "e5b210d84f7af884b852",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Plan a four-week launch for an offline writing app. Our team has two people and a $2,000 budget. Prioritize practical steps and avoid paid influencer campaigns."
+    },
+    {
+      "id": "e610ca0c4b12e08e15bb",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Working template"
+    },
+    {
+      "id": "e8da7ee6c0aa79dd6c65",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Business"
+    },
+    {
+      "id": "e9a4455b6d9e99b7be03",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Desired output"
+    },
+    {
+      "id": "ec7907c324a80b9f2f56",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "brief-role"
+    },
+    {
+      "id": "f201ceabdd5cec471659",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "YOUR BOUNDARIES"
+    },
+    {
+      "id": "f5eeb3029c3727029182",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Resume motion"
+    },
+    {
+      "id": "f8959a359d4efc439143",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Your prompt"
+    },
+    {
+      "id": "fa95ee135231ea89ad9e",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Questions to resolve"
+    },
+    {
+      "id": "fb35f758da746474d584",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Context and preferences"
+    },
+    {
+      "id": "0014fed211f55a770c35",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "03 — PRIVATE BY DESIGN"
+    },
+    {
+      "id": "085c859eccf0cab71581",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "INSPECT",
+      "text": "Your work stays with you."
+    },
+    {
+      "id": "08dac17664a536b25a1c",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "FORMAT PREVIEW"
+    },
+    {
+      "id": "0b530219d5049af7aeef",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Make it yours"
+    },
+    {
+      "id": "12e54e99f0e518ce4415",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Take your intent"
+    },
+    {
+      "id": "13dfd57ffeff068e4ea0",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Keep the facts you know, the boundaries that matter and the questions still open in view. Add the details yourself, and review SPE’s suggestions."
+    },
+    {
+      "id": "1a710a2637f69190eb84",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "what you mean."
+    },
+    {
+      "id": "1cff01f7dd6ab437950f",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "(prefers-reduced-motion: reduce), (max-width: 700px)"
+    },
+    {
+      "id": "2044a7f4b904abc063a6",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "INSPECT",
+      "text": "02 / INDEPENDENT"
+    },
+    {
+      "id": "2208aaa490305a8a0356",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "04 &nbsp; Questions left open"
+    },
+    {
+      "id": "2932aff264217deaf07a",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Goal & facts"
+    },
+    {
+      "id": "2f2968d4616ac203c5a8",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Explore your workspace"
+    },
+    {
+      "id": "3134adbeb65660ddda34",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "for the unknown."
+    },
+    {
+      "id": "34f2a92cf5dfaf128882",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "03 / CARRY FORWARD"
+    },
+    {
+      "id": "35df9c9ea5cb220911fa",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Preferences"
+    },
+    {
+      "id": "3bd66e7e8a16723bb506",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "ChatGPT / Claude / Gemini / Copilot / Local AI"
+    },
+    {
+      "id": "3c591a0a44de3d586425",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "inner architecture."
+    },
+    {
+      "id": "3c8de00db05c33e64417",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "A goal. The things that must hold true. The questions still open."
+    },
+    {
+      "id": "40844dd3b852e111c06a",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "INSPECT",
+      "text": "Preparing a prompt does not require a paid AI provider. This private preview may require sign-in; sending your finished prompt to another AI is your choice."
+    },
+    {
+      "id": "41df461181747b0d18f4",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "02 / ORGANIZE"
+    },
+    {
+      "id": "41fac3af962443b621b0",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "A place for every detail."
+    },
+    {
+      "id": "4ce31670ad5adaf0d717",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Your request becomes the goal. Add your role, audience and requirements in the brief, and keep assumptions visible."
+    },
+    {
+      "id": "51491a1ed195298eb4ce",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Your prompt"
+    },
+    {
+      "id": "53a4fc50a136fefaa183",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Start with"
+    },
+    {
+      "id": "571c00babc14caddd9cd",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "YOUR LIVE RESULT"
+    },
+    {
+      "id": "590dd784ff1e0c602c5f",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "01 — FROM THOUGHT TO STRUCTURE"
+    },
+    {
+      "id": "591864a7f9d1d704b5fa",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "LESS GUESSWORK. MORE INTENT."
+    },
+    {
+      "id": "6249c77c8849bea3c23f",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "your mind?"
+    },
+    {
+      "id": "63fafa2a581570396cc0",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE / YOUR PROMPT"
+    },
+    {
+      "id": "65c8a0b963a141dab66b",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "change"
+    },
+    {
+      "id": "65cfd427730813ad65f6",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "THE INTENT CORE / ILLUSTRATION"
+    },
+    {
+      "id": "65f6f0f34773d4f9830f",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "How SPE structures a request"
+    },
+    {
+      "id": "6e7ab39b6d1beea90352",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Good instructions"
+    },
+    {
+      "id": "6f852e67432ed1996e1d",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "INSPECT",
+      "text": "Your brief stays on this device while SPE prepares your prompt. Offline use is available after the site and engine files are cached."
+    },
+    {
+      "id": "72e995342fd99e7cc19d",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Boundaries"
+    },
+    {
+      "id": "7896cc819621d3471124",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "anywhere."
+    },
+    {
+      "id": "7ed160660c0f2d661694",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "“Help me plan a thoughtful launch.”"
+    },
+    {
+      "id": "8578a708d102c73c6b6b",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "scroll"
+    },
+    {
+      "id": "8b71fd1849218b8b4383",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": ".spe"
+    },
+    {
+      "id": "8b75348e597a8cefab7c",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "FORM FOLLOWS INTENT"
+    },
+    {
+      "id": "8eeaad818023dcdca25f",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "INSPECT",
+      "text": "01 / LOCAL"
+    },
+    {
+      "id": "8f69676ee5354603e0d5",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "INSPECT",
+      "text": "History, only if you want it."
+    },
+    {
+      "id": "97752628295c91011757",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "02 &nbsp; Boundaries to keep"
+    },
+    {
+      "id": "9e9906de50d89e66eaf5",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Give it structure"
+    },
+    {
+      "id": "9f706f63eb15c5055a46",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "INSPECT",
+      "text": "Choose the AI you use."
+    },
+    {
+      "id": "a2ec126620aa5dee2f0e",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "INSPECT",
+      "text": "03 / YOUR CHOICE"
+    },
+    {
+      "id": "b9ff26500c5e00f9ed00",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "have an"
+    },
+    {
+      "id": "bb5d1746d109b6ad2cc1",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Make room"
+    },
+    {
+      "id": "bb61fa6c86c5cc3ebcd3",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE gives each one a place."
+    },
+    {
+      "id": "bd71882d81529e957af2",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "What’s on"
+    },
+    {
+      "id": "bea8a1e681e8363935e2",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "01 &nbsp; The goal you set"
+    },
+    {
+      "id": "c1dc4c14eec0a9d9df84",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "INSPECT",
+      "text": "No analytics. Saving history is optional, on this device, with a clear control to delete it."
+    },
+    {
+      "id": "c3ce5e1b02af8ba64733",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "03 &nbsp; Preferences to respect"
+    },
+    {
+      "id": "ccd97f71984555440f32",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Open questions"
+    },
+    {
+      "id": "e108d93f25b97600b536",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Review your prompt, then choose where to use it. Keep an SPE file to bring your prompt and its details back together."
+    },
+    {
+      "id": "f09b976808bd196f2a38",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "YOUR WORDS"
+    },
+    {
+      "id": "f26cad3eb2438999c6e3",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "01 / ARTICULATE"
+    },
+    {
+      "id": "faa7942c64ee6134c311",
+      "file": "apps/web/src/landing/ScrollStory.tsx",
+      "depth": "PRODUCT",
+      "text": "02 — A FILE THAT CARRIES YOUR THINKING"
+    },
+    {
+      "id": "5114e45591c12be9c0a9",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE"
+    },
+    {
+      "id": "5dd13c3ddc34f4bcb19c",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE — System Prompt Engine home"
+    },
+    {
+      "id": "5e1a43fa973b29834dab",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Open workspace"
+    },
+    {
+      "id": "6f95f2ebb9d3d26b52ee",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Primary"
+    },
+    {
+      "id": "87bae8fd1bf66a041cd1",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Your SPE file"
+    },
+    {
+      "id": "9a05e3f3a6826d05593d",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Your privacy"
+    },
+    {
+      "id": "9b2af3b680fb4703cf69",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Menu"
+    },
+    {
+      "id": "b7f1e96a9f3858221cc3",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "The process"
+    },
+    {
+      "id": "b854e1fb76b581a7b497",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "SYSTEM"
+    },
+    {
+      "id": "f8aa67a11f5d7fb07f96",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "PROMPT ENGINE"
+    },
+    {
+      "id": "95a47d5284b232421522",
+      "file": "apps/web/src/main.tsx",
+      "depth": "PRODUCT",
+      "text": "root"
+    },
+    {
+      "id": "280b8b152bb0e32fda99",
+      "file": "apps/web/src/pwa.ts",
+      "depth": "PRODUCT",
+      "text": "undefined"
+    },
+    {
+      "id": "6b4d9435e98e33161a96",
+      "file": "apps/web/src/pwa.ts",
+      "depth": "PRODUCT",
+      "text": "none"
+    },
+    {
+      "id": "bfb9bf0caadb829bafaa",
+      "file": "apps/web/src/pwa.ts",
+      "depth": "PRODUCT",
+      "text": "serviceWorker"
+    },
+    {
+      "id": "c45ae2963726404882ba",
+      "file": "apps/web/src/pwa.ts",
+      "depth": "PRODUCT",
+      "text": "load"
+    },
+    {
+      "id": "dbb928cfae2c0b2a7936",
+      "file": "apps/web/src/pwa.ts",
+      "depth": "PRODUCT",
+      "text": "/sw.js"
+    },
+    {
+      "id": "eac4826d19fc0b5ce9e9",
+      "file": "apps/web/src/pwa.ts",
+      "depth": "PRODUCT",
+      "text": "complete"
+    },
+    {
+      "id": "2ce1001805826e77795c",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "BALANCED"
+    },
+    {
+      "id": "5212e8cdad0c1b6a45a8",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "LITE"
+    },
+    {
+      "id": "7268f2f8b4b19f237fd1",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "(max-width: 720px)"
+    },
+    {
+      "id": "7a1c5be289f534917eda",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "webgl"
+    },
+    {
+      "id": "7b9aa6ed56ae12905f99",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "canvas"
+    },
+    {
+      "id": "8b4c4d231b9b983814db",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "HIGH"
+    },
+    {
+      "id": "a8a23995788674d387be",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "experimental-webgl"
+    },
+    {
+      "id": "afd3826f194e5cd865ea",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "number"
+    },
+    {
+      "id": "b5c937dacea4d10a43b5",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "webgl2"
+    },
+    {
+      "id": "e8fccc0de099093618ac",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "undefined"
+    },
+    {
+      "id": "ed4182bafb000de14cd3",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "(prefers-reduced-motion: reduce)"
+    },
+    {
+      "id": "fb8f9a140b5f09a76317",
+      "file": "apps/web/src/scene/quality.ts",
+      "depth": "PRODUCT",
+      "text": "(pointer: coarse)"
+    },
+    {
+      "id": "147f868cdd00ed259007",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "Your preferences"
+    },
+    {
+      "id": "39669955daa5a1f84507",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "uncertainties"
+    },
+    {
+      "id": "7d531983be4194137b14",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "92bf59796b6ef2b288e2",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "b0022d77ec2b43ace1f2",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "What you supplied"
+    },
+    {
+      "id": "be8cf4d848ff1c07d41c",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "hard_constraints"
+    },
+    {
+      "id": "d0ba937900cde842d007",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "facts"
+    },
+    {
+      "id": "d3f330c64f7e3194ee3f",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "user_preferences"
+    },
+    {
+      "id": "dfecbe6fcb42d0a8d848",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "What must stay true"
+    },
+    {
+      "id": "e2ed9b82fea8d6940dbf",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "Questions still open"
+    },
+    {
+      "id": "e3d919b295cbe8810e4e",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "description"
+    },
+    {
+      "id": "fe7050fc02928e6bd5d5",
+      "file": "apps/web/src/scene/semantic.ts",
+      "depth": "PRODUCT",
+      "text": "statement"
+    },
+    {
+      "id": "4cb1c298031c67d85ec8",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "COMPILING"
+    },
+    {
+      "id": "83e430442f1167452cd3",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "80px"
+    },
+    {
+      "id": "a0dc8ea24bb4eb4e5343",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "visibilitychange"
+    },
+    {
+      "id": "ca1359387f0b7ebc5792",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "LITE"
+    },
+    {
+      "id": "50df04cb50d9d5fa0bab",
+      "file": "apps/web/src/ui/PrivacyIndicator.tsx",
+      "depth": "PROOF",
+      "text": "Privacy status"
+    },
+    {
+      "id": "54a70bc50c6c2ad1601a",
+      "file": "apps/web/src/ui/PrivacyIndicator.tsx",
+      "depth": "PROOF",
+      "text": "authority:"
+    },
+    {
+      "id": "819812bcefb76dc8760d",
+      "file": "apps/web/src/ui/PrivacyIndicator.tsx",
+      "depth": "PROOF",
+      "text": "compile: local · no cloud"
+    },
+    {
+      "id": "88055ebd5600ac94a4b9",
+      "file": "apps/web/src/ui/PrivacyIndicator.tsx",
+      "depth": "PROOF",
+      "text": "trust:"
+    },
+    {
+      "id": "903b902a3a72b054f67b",
+      "file": "apps/web/src/ui/PrivacyIndicator.tsx",
+      "depth": "PROOF",
+      "text": "offline shell"
+    },
+    {
+      "id": "bdc576caf28607ac9311",
+      "file": "apps/web/src/ui/PrivacyIndicator.tsx",
+      "depth": "PROOF",
+      "text": "online shell"
+    },
+    {
+      "id": "c35ed223e8d63e2de626",
+      "file": "apps/web/src/ui/PrivacyIndicator.tsx",
+      "depth": "PROOF",
+      "text": "sensitivity:"
+    },
+    {
+      "id": "0603c1e182164693babe",
+      "file": "apps/web/src/ui/TrustPanel.tsx",
+      "depth": "PROOF",
+      "text": "phase:"
+    },
+    {
+      "id": "17aca1e17ef129e5572f",
+      "file": "apps/web/src/ui/TrustPanel.tsx",
+      "depth": "PROOF",
+      "text": "network_mode: NONE"
+    },
+    {
+      "id": "4577416b8eee6e6fb8d3",
+      "file": "apps/web/src/ui/TrustPanel.tsx",
+      "depth": "PROOF",
+      "text": "claim: IMPLEMENTATION_PRESENT / REVIEW_PENDING · World #1 NOT PROVEN"
+    },
+    {
+      "id": "54cac0714db79308b8d9",
+      "file": "apps/web/src/ui/TrustPanel.tsx",
+      "depth": "PROOF",
+      "text": "wasm sha256:"
+    },
+    {
+      "id": "714ab0cdf980cc66a004",
+      "file": "apps/web/src/ui/TrustPanel.tsx",
+      "depth": "PROOF",
+      "text": "used_ts_fallback:"
+    },
+    {
+      "id": "aa43fabaa55c3043585c",
+      "file": "apps/web/src/ui/TrustPanel.tsx",
+      "depth": "PROOF",
+      "text": "not_a_release: true"
+    },
+    {
+      "id": "cb91ddd6f67a5d8fb44d",
+      "file": "apps/web/src/ui/TrustPanel.tsx",
+      "depth": "PROOF",
+      "text": "Engine trust"
+    },
+    {
+      "id": "d024cc084b1e439619f7",
+      "file": "apps/web/src/ui/TrustPanel.tsx",
+      "depth": "PROOF",
+      "text": "path: UI → Web Worker → spe_wasm.wasm → spe-core-rs"
+    },
+    {
+      "id": "d05f149fba475c79b227",
+      "file": "apps/web/src/ui/TrustPanel.tsx",
+      "depth": "PROOF",
+      "text": "wasm imports:"
+    },
+    {
+      "id": "003429b23257bd47062e",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "verifying_integrity"
+    },
+    {
+      "id": "0c2158ad10971eaebcb7",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "confirmed"
+    },
+    {
+      "id": "0d641e3d83a706d6f3d7",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Context and preferences"
+    },
+    {
+      "id": "0e406b99a557b6149fa9",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "File details"
+    },
+    {
+      "id": "0fc538fdab387747598d",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Prepared on this device"
+    },
+    {
+      "id": "1002a3b185b50e8ba7df",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "What must stay true"
+    },
+    {
+      "id": "138186346d488b8c21fa",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Import .spe file"
+    },
+    {
+      "id": "1657d0fb083039f464fe",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Your idea"
+    },
+    {
+      "id": "1823500d53308dbd441e",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Portable"
+    },
+    {
+      "id": "1cafbee1c1268b8cb220",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "A space for your next idea"
+    },
+    {
+      "id": "1f25434653b78161d86e",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "not_a_release: true"
+    },
+    {
+      "id": "1fdee9c62c707e42b060",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Inspect"
+    },
+    {
+      "id": "22344c76a00f42924964",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "conflicts"
+    },
+    {
+      "id": "23fd310b4c11e6efda87",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "idle"
+    },
+    {
+      "id": "244504728965ed585259",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "Initialize"
+    },
+    {
+      "id": "31109ed27c55c6909cfd",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "done"
+    },
+    {
+      "id": "348fdbf63bbc335b41a2",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "simple"
+    },
+    {
+      "id": "36c789fc68cbefd4a10a",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Depth"
+    },
+    {
+      "id": "3a42521d9987d4cf590a",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "JSON"
+    },
+    {
+      "id": "3b8c39dfe22672eb2bdb",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "LIVE"
+    },
+    {
+      "id": "4af355d3c915b82bba15",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Download .spe"
+    },
+    {
+      "id": "508db06b7ae3c7c978b4",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Lenses"
+    },
+    {
+      "id": "5718dcbd4705da847fff",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "lineage:"
+    },
+    {
+      "id": "5aa8787f74ea571e9e81",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Target:"
+    },
+    {
+      "id": "614f1aab6ade6b04bd28",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "Load engine"
+    },
+    {
+      "id": "63361e2b76e3bcbeae47",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Target AI"
+    },
+    {
+      "id": "645a33642bc2b983f920",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Workspace"
+    },
+    {
+      "id": "6b92a1480cc96f5b78ff",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "changes"
+    },
+    {
+      "id": "6e48315bea4d0f1b2867",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Your prompt"
+    },
+    {
+      "id": "6e6a77f2ecdd12bbc9b8",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt ready"
+    },
+    {
+      "id": "704e34f1d38801ebb86c",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "What changed"
+    },
+    {
+      "id": "8265329299004c9ef2fc",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "prompt"
+    },
+    {
+      "id": "8320b7ec9aa03fd171c4",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "assumed"
+    },
+    {
+      "id": "844b169192750754879e",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Questions still open"
+    },
+    {
+      "id": "86e4b1e4bc7e6e79f292",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "DONE"
+    },
+    {
+      "id": "875fb569521d143a7b65",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Shape your prompt to see the approach"
+    },
+    {
+      "id": "889b7bbfaecaac917492",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "IDLE"
+    },
+    {
+      "id": "8bcdd847af72109680af",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "integrity:"
+    },
+    {
+      "id": "91c75408c928e9f47711",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "Complete"
+    },
+    {
+      "id": "92368a49973284426445",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "inspect"
+    },
+    {
+      "id": "9601bc675323c7f1414d",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "ready"
+    },
+    {
+      "id": "96de23aaaae04f5cf578",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Approach"
+    },
+    {
+      "id": "9b10b02992f2af6417ec",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "Preparation stages"
+    },
+    {
+      "id": "a139fff7174d27173d20",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "inspect"
+    },
+    {
+      "id": "a4981f9941c396b7673b",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Final prompt"
+    },
+    {
+      "id": "aa7d30d078646c24a7da",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "User request"
+    },
+    {
+      "id": "ac68c4b84a874b07a8d4",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "Ready"
+    },
+    {
+      "id": "ae262e8ce3dd1be843f8",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "intent"
+    },
+    {
+      "id": "b5adb81e62460149e310",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "artifact"
+    },
+    {
+      "id": "bee45f3cf70ed5ff7a69",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Shape your prompt to see it here."
+    },
+    {
+      "id": "c276774c1189ca3e4f22",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Create"
+    },
+    {
+      "id": "c35dfe47275ae5810259",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Import .spe"
+    },
+    {
+      "id": "c51430e5f9d397e2902b",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "evaluating"
+    },
+    {
+      "id": "c576ae468b159221bbf4",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "WASM:"
+    },
+    {
+      "id": "c7c747acd662eec39399",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Details to resolve"
+    },
+    {
+      "id": "c8fe57c22f60bab3d724",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "techniques"
+    },
+    {
+      "id": "ccbf78b224198224b66c",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "sha256:"
+    },
+    {
+      "id": "d2a6b1bf6f04b3a39338",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "loading_wasm"
+    },
+    {
+      "id": "d47381706e815c8280f8",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE added"
+    },
+    {
+      "id": "d75fe0a420947d9754a4",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Proof"
+    },
+    {
+      "id": "d91d619cdaa70741d2f8",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy Prompt"
+    },
+    {
+      "id": "dbb9c95f6f57e577e887",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Your prompt starts here"
+    },
+    {
+      "id": "dd8d2d74dffb2dcb882f",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "phases:"
+    },
+    {
+      "id": "de946b67451fee0113ce",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "Check integrity"
+    },
+    {
+      "id": "e12fcae33095dcd9f502",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "pro"
+    },
+    {
+      "id": "e14c78ef7b2a0c622258",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "pro"
+    },
+    {
+      "id": "e8d911d8d998be18a17c",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "open questions"
+    },
+    {
+      "id": "ef41013b88f3e7ece301",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "unknowns"
+    },
+    {
+      "id": "f091e7bececf68f25249",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Add what matters to your idea. Keep your requirements, preferences and open questions distinct."
+    },
+    {
+      "id": "f1edd170ce1bde7d3288",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "format:"
+    },
+    {
+      "id": "f33078afd69b8c1db9fa",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "instantiating"
+    },
+    {
+      "id": "f836a7867fdb26875d06",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "INSPECT",
+      "text": "Evaluate"
+    },
+    {
+      "id": "fa2156e4cd75d22d84af",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Your details"
+    },
+    {
+      "id": "fe3e4db6141b73112d45",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Category"
+    },
+    {
+      "id": "0063989fecfcb0bba9fb",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Start with what you want to do. SPE helps shape your request into a prompt, with your details and boundaries in view."
+    },
+    {
+      "id": "0247ecd950d735c7def1",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Choose what you keep, where your work goes, and which AI you use."
+    },
+    {
+      "id": "03b01fb89a6e02af3e6c",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Take your thinking with you."
+    },
+    {
+      "id": "06cd9d7751a005fdf621",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Your words set the direction. Add the details that matter, then review what SPE suggests."
+    },
+    {
+      "id": "072cd3d05470051bca9f",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Review brief"
+    },
+    {
+      "id": "151d8d23e4bf843bd77c",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "A detail needs your review."
+    },
+    {
+      "id": "154da759af16e1532510",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "room to take shape."
+    },
+    {
+      "id": "22d997cf8b4cef154f23",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Your thinking is yours."
+    },
+    {
+      "id": "244a4255cf716904aef3",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Your brief is still here."
+    },
+    {
+      "id": "250a187073d914d9e80b",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Start with curiosity."
+    },
+    {
+      "id": "27ea3912ce9c576c4185",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Ready for your idea"
+    },
+    {
+      "id": "2acf53b26cebaa90b5f4",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Image"
+    },
+    {
+      "id": "2bdb8f90eba5ce036c43",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Something interrupted preparation. Review the details below, then try again."
+    },
+    {
+      "id": "2e79f8d7803c095b27be",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Business"
+    },
+    {
+      "id": "2e86a3e4c50baa7e4247",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "clearer today?"
+    },
+    {
+      "id": "301981b59ae4b311eb3f",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Resolve the conflict marked in your brief, then shape your prompt again."
+    },
+    {
+      "id": "31cb5b7f49b2bfd6fc93",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Giving your brief structure…"
+    },
+    {
+      "id": "38ef7d54274e58b2ad43",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "The engine file could not be verified. Reload the latest version before trying again."
+    },
+    {
+      "id": "3e6a2afbdf53ac989098",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Start with the idea exactly as it comes to you."
+    },
+    {
+      "id": "474e8d2867a00e0174ed",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Preparation was interrupted"
+    },
+    {
+      "id": "54ed330c8e50e7a8f797",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "SPE uses editable templates, not a generative AI model. Preparing a prompt happens on this device; using it with another AI is your choice."
+    },
+    {
+      "id": "58bf432a834c5a98d7c2",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Checking that preparation can begin…"
+    },
+    {
+      "id": "5d8f83c6537b62835021",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "What’s worth making"
+    },
+    {
+      "id": "5ed395285755d193b89a",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Website / 3D"
+    },
+    {
+      "id": "60c36f390b893d34af38",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Try again"
+    },
+    {
+      "id": "62c22f305f4159df959f",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Good ideas deserve"
+    },
+    {
+      "id": "6446537807e0dbcf09d8",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "a clearer direction."
+    },
+    {
+      "id": "7078b33d110ad23a18e6",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Analysis"
+    },
+    {
+      "id": "728d42d3a9558fea58d8",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Shape my idea"
+    },
+    {
+      "id": "7b5f3fc27ad19330635b",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Bring your goal, resources and limits. Shape a prompt with a practical path to the result you need."
+    },
+    {
+      "id": "7c6784e7fe799a047d2e",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Production qualification and independent human-value evaluation are pending."
+    },
+    {
+      "id": "81717c26abe36a6998d7",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Some ideas arrive"
+    },
+    {
+      "id": "876708fc0a95ad9c8d64",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Shape my prompt"
+    },
+    {
+      "id": "88a54e24a1c02b2c2dc5",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "See the details"
+    },
+    {
+      "id": "8dca891e91c2e7190401",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "WORKER_TIMEOUT"
+    },
+    {
+      "id": "8e2f7cd6803a5cc795af",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Give your idea"
+    },
+    {
+      "id": "9be1d3529af9e9bc8cad",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "before the words do."
+    },
+    {
+      "id": "9c05e2ca23080abf2f88",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Bring the thought, the mood, the details that matter. Shape a prompt that keeps them in view."
+    },
+    {
+      "id": "9c50640061d1cabd6557",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Video"
+    },
+    {
+      "id": "9ee364948ca41111f3fe",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Explore a template, add what matters to you, and review the instructions before you use them."
+    },
+    {
+      "id": "a96762ad998a96c1a34c",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "WASM_INTEGRITY_MISMATCH"
+    },
+    {
+      "id": "aa902f23c1a8547bcc9e",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Give it a direction."
+    },
+    {
+      "id": "ab8c19e6acb7cec7165e",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "A thoughtful question"
+    },
+    {
+      "id": "acb9b00da40f5fc772d6",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Shaping your prompt…"
+    },
+    {
+      "id": "b34042b3bfa5e0bad915",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Bring your idea and the details that matter. Shape a prompt you can review, refine and use."
+    },
+    {
+      "id": "b53d0383c530b900221d",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Improve with SPE"
+    },
+    {
+      "id": "bc0b754e9fc7abcdb77e",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Your idea, given structure."
+    },
+    {
+      "id": "bf9b8c67149f0c66e64a",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Bring your next idea. Shape the details, review the prompt, and choose where to use it."
+    },
+    {
+      "id": "c110f5a1f582dcf28045",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Writing"
+    },
+    {
+      "id": "c1983f2a54336e99529c",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "is a place to begin."
+    },
+    {
+      "id": "cb45bddaa2c5fba42f05",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Start with an idea"
+    },
+    {
+      "id": "cea963dc616379b2ab08",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Preparation took too long. Your brief remains on this page. Try again."
+    },
+    {
+      "id": "d14da93e9361c1d78518",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Turn this into a prompt"
+    },
+    {
+      "id": "d9c44f0724454a021ced",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Creative"
+    },
+    {
+      "id": "d9da99ce70149e5ca2bc",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Give the next move"
+    },
+    {
+      "id": "daae912720a133bf0353",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "a clear way forward."
+    },
+    {
+      "id": "e27dc1efd77c256e494c",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Turn your requirements into a detailed prompt. Keep the boundaries visible and the next steps concrete."
+    },
+    {
+      "id": "e46c4932b2f62139d159",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Your SPE file keeps your goal, details and prompt together, ready to reopen when you need them."
+    },
+    {
+      "id": "e590b32cd6c4d1ff4127",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Coding"
+    },
+    {
+      "id": "e7cfd4fd7457d3052471",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Set the question, evidence needs and open uncertainties. Shape a prompt you can review before taking it further."
+    },
+    {
+      "id": "e9803088741fbfb79a04",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "BRIEF_NEEDS_REVIEW"
+    },
+    {
+      "id": "e984e4ac356336537838",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Research"
+    },
+    {
+      "id": "ea38d3ade8befa8759c5",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Preparation stopped to protect your work."
+    },
+    {
+      "id": "eaf56c4ab2d5ee8a303a",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Your prompt is ready"
+    },
+    {
+      "id": "eafb97313accc064f201",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Technical details"
+    },
+    {
+      "id": "ecb537a70eca04d5dfe9",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Preparing your workspace…"
+    },
+    {
+      "id": "f1311481ede1dc47f8f2",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Getting ready…"
+    },
+    {
+      "id": "f3dc84a093d4bfa51741",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "How preparation works"
+    },
+    {
+      "id": "f4ebdb8d0d137e6ea031",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Shape a build-ready prompt"
+    },
+    {
+      "id": "f64963fd566d43e012b5",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Research preview. Review generated prompts before using them."
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "mission": "SPE-WEB-01",
+  "pr": 6,
+  "url": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/6",
+  "head": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+  "inspected": true,
+  "merged": false,
+  "rationale": "PR #6 is ABI workbench (JSON composer\u2192WASM). Compatible engine path retained; product UI rewritten for systempromptengine.com surfaces. Not blindly merged.",
+  "classification": {
+    "RETAIN": [
+      "apps/web/src/engine/* (wasm-host, worker, client, integrity gate)",
+      "apps/web/scripts/copy-wasm.mjs,eval-fixture.mjs,audit-*.mjs,egress-proof.mjs",
+      "apps/web/public/sw.js (shell+WASM cache only; no prompt bodies)",
+      "apps/web/public/manifest.webmanifest (rebase brand)",
+      "tests/web architecture/privacy/engine-path gates (extend)",
+      "docs/implementation/WEB_CSP.md"
+    ],
+    "REBASE": [
+      "apps/web/package.json (rename product scripts)",
+      "apps/web/index.html (brand, fonts)",
+      "apps/web/public/manifest.webmanifest (System Prompt Engine)",
+      "tests/web assertions for new surfaces"
+    ],
+    "REWRITE": [
+      "apps/web/src/App.tsx and all ui/* \u2192 product Home/Workspace/Lenses/Targets/.spe/History/PWA shell",
+      "apps/web/src/index.css \u2192 design-system tokens (cinematic, not workbench-only)"
+    ],
+    "DISCARD": [
+      "JSON-only Composer as primary UX",
+      "SPE Workbench naming as product brand",
+      "session-only ban on opt-in local history (superseded by SPE-WEB-01 local-first history with explicit opt-in)",
+      "proofs/generated/sprint6_* as current evidence (historical; new spe_web_01 proofs)"
+    ]
+  },
+  "g6h_isolation": "website branch from main; does not modify benchmarks/g6zc or evaluations/g6zc",
+  "recorded_at_utc": "2026-09-19T13:56:52.292620+00:00"
+}
