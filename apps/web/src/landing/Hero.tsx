@@ -1,3 +1,5 @@
+import { ui, selectHero } from "@spe/human-perspective";
+import { HumanError } from "../ui/HumanError";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import {
   CATEGORIES,
@@ -67,17 +69,8 @@ const EXAMPLES = [
     text: "Explain how a neural network learns to a curious 14-year-old. Use one everyday analogy, a worked example and three questions to check understanding.",
   },
 ] as const;
-const PHASES: Record<string, string> = {
-  loading_wasm: "Loading the local engine…",
-  verifying_integrity: "Verifying engine integrity…",
-  instantiating: "Starting the engine…",
-  ready: "Engine ready",
-  evaluating: "Evaluating your brief…",
-  done: "Compiled on your device",
-  unavailable: "Compilation could not complete",
-  idle: "Ready for your brief",
-};
 export function Hero(p: Props) {
+  const hero = selectHero(p.category, Boolean(p.result));
   const [paused, setPaused] = useState(false),
     [explore, setExplore] = useState(false),
     [resultTab, setResultTab] = useState<"prompt" | "structure" | "review">(
@@ -128,17 +121,15 @@ export function Hero(p: Props) {
         <div className="hero-copy">
           <p className="eyebrow">FROM A THOUGHT TO A PRECISE BRIEF</p>
           <h1 id="hero-title">
-            Great outcomes.
+            {hero.title}
             <br />
-            <em>Begin with intent.</em>
+            <em>{hero.accent}</em>
           </h1>
           <p className="hero-description">
-            Give your AI a clearer brief.
-            <br />
-            Shape the role, the boundaries, the result.
+            {p.quality === "LITE" ? ui.mobileHeroSupport : hero.support}
           </p>
           <a className="hero-start" href="#prompt-studio">
-            Create your prompt <span>↗</span>
+            {ui.start} <span>↗</span>
           </a>
         </div>
         <div className="hero-stage">
@@ -160,13 +151,13 @@ export function Hero(p: Props) {
             )}
           </div>
           <div className="orbit-label orbit-one">
-            <span>01</span> YOUR INTENT
+            <span>01</span> YOUR IDEA
           </div>
           <div className="orbit-label orbit-two">
             <span>02</span> YOUR BOUNDARIES
           </div>
           <div className="orbit-label orbit-three">
-            <span>03</span> YOUR OUTPUT
+            <span>03</span> YOUR PROMPT
           </div>
         </div>
         <div className="theater-bottom">
@@ -199,9 +190,9 @@ export function Hero(p: Props) {
       >
         <div className="studio-heading">
           <div>
-            <p className="eyebrow">THE PROMPT STUDIO</p>
+            <p className="eyebrow">THE SPACE TO SHAPE YOUR IDEA</p>
             <h2 id="studio-title">
-              Make yourself <em>clear.</em>
+              Give the thought <em>direction.</em>
             </h2>
           </div>
           <p>
@@ -227,7 +218,7 @@ export function Hero(p: Props) {
               </span>
             </div>
             <label className="request-label" htmlFor="spe-one-line">
-              What do you want to accomplish?
+              {ui.input}
             </label>
             <textarea
               id="spe-one-line"
@@ -331,15 +322,16 @@ export function Hero(p: Props) {
                 disabled={p.busy || !p.value.trim()}
                 aria-busy={p.busy}
               >
-                {p.busy ? "Compiling…" : "Build my prompt"}
+                {p.busy ? ui.working : ui.build}
                 <span>↗</span>
               </button>
               <span>⌘ / Ctrl + Enter</span>
             </div>
-            <p className="compiler-note">
-              Local compiler + editable templates. No model call. The template
-              supplies working suggestions; your explicit brief takes priority.
-            </p>
+            <p className="compiler-note">{ui.note}</p>
+            <details className="compiler-note" data-copy-depth="INSPECT">
+              <summary>{ui.howItWorks}</summary>
+              <p>{ui.exactNote}</p>
+            </details>
           </form>
           <section
             ref={resultRef}
@@ -351,21 +343,15 @@ export function Hero(p: Props) {
               <span>02 / YOUR PROMPT</span>
               <span className="compile-status" role="status">
                 {p.busy
-                  ? PHASES[p.phase]
+                  ? ui.phases[p.phase]
                   : p.prompt
                     ? "Ready to use"
                     : "Awaiting your brief"}
               </span>
             </div>
             {p.error ? (
-              <div className="spe-alert" role="alert">
-                <h3>
-                  {p.error.code === "BRIEF_NEEDS_REVIEW"
-                    ? "One detail needs your review."
-                    : "We couldn’t compile this brief."}
-                </h3>
-                <p>{p.error.message}</p>
-                <code>{p.error.code}</code>
+              <div>
+                <HumanError error={p.error} />
                 <button
                   type="button"
                   className="spe-ghost"
@@ -381,7 +367,7 @@ export function Hero(p: Props) {
             ) : p.prompt && p.result ? (
               <>
                 <div className="output-heading">
-                  <h3 id="result-title">Your intent. In writing.</h3>
+                  <h3 id="result-title">{ui.ready}</h3>
                   <div
                     className="output-tabs"
                     role="group"
@@ -413,7 +399,7 @@ export function Hero(p: Props) {
                   <pre
                     className="prompt-document"
                     tabIndex={0}
-                    aria-label="Compiled prompt"
+                    aria-label="Your prompt"
                   >
                     {p.prompt}
                   </pre>
@@ -490,18 +476,15 @@ export function Hero(p: Props) {
                     Download .spe
                   </button>
                   <button className="spe-ghost" onClick={p.onOpen}>
-                    Inspect
+                    {ui.inspect}
                   </button>
                 </div>
-                <p className="output-footnote">
-                  Structure validated by SPE. Quality and factual correctness
-                  still need your review.
-                </p>
+                <p className="output-footnote">{ui.claim}</p>
               </>
             ) : (
               <div className="output-empty">
                 <span className="document-mark">
-                  SPE<span> / INTENT DOCUMENT</span>
+                  SPE<span> / YOUR PROMPT</span>
                 </span>
                 <h3 id="result-title">
                   A clear starting point.
@@ -509,8 +492,8 @@ export function Hero(p: Props) {
                   <em>A stronger direction.</em>
                 </h3>
                 <p>
-                  Your compiled prompt will appear here—with a role, a focused
-                  objective, a working approach and a defined deliverable.
+                  Your prompt will appear here—with a role, a focused objective,
+                  a working approach and a defined deliverable.
                 </p>
                 <ol>
                   <li>
@@ -520,7 +503,7 @@ export function Hero(p: Props) {
                     <span>02</span> Choose a template and refine
                   </li>
                   <li>
-                    <span>03</span> Compile, review, take it with you
+                    <span>03</span> Shape, review, take it with you
                   </li>
                 </ol>
                 <div className="empty-footer">

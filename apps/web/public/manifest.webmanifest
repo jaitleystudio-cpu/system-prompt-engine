@@ -1,7 +1,7 @@
 {
   "name": "System Prompt Engine",
   "short_name": "SPE",
-  "description": "Local-first System Prompt Engine — compile prompts offline through spe_wasm.wasm.",
+  "description": "Shape your ideas into prompts. Keep your goals, details and instructions together.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#07090d",

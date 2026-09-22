@@ -1,3 +1,5 @@
+import { ui } from "@spe/human-perspective";
+import { HumanError } from "../ui/HumanError";
 import type { IntentAtom } from "@spe/web-runtime";
 import {
   CATEGORIES,
@@ -103,18 +105,25 @@ export function Workspace(props: Props) {
       <header className="spe-ws-head">
         <div>
           <p className="spe-kicker">Workspace</p>
-          <h1 id="ws-title">Prompt instrument</h1>
+          <h1 id="ws-title">A space for your next idea</h1>
         </div>
         <div className="spe-mode-switch" role="group" aria-label="Depth">
           {(["simple", "inspect", "pro"] as Mode[]).map((m) => (
             <button
-              key={m}
+              key={{ simple: "Create", inspect: "Inspect", pro: "Proof" }[m]}
               type="button"
 
               aria-pressed={mode === m}
-              onClick={() => setMode(m)}
+              onClick={() => {
+                setMode(m);
+                if (
+                  m === "simple" &&
+                  (lens === "artifact" || lens === "techniques")
+                )
+                  setLens("prompt");
+              }}
             >
-              {m}
+              {{ simple: "Create", inspect: "Inspect", pro: "Proof" }[m]}
             </button>
           ))}
         </div>
@@ -153,14 +162,18 @@ export function Workspace(props: Props) {
           disabled={busy}
           onClick={onCompile}
         >
-          {busy ? "Compiling…" : "Compile Intent →"}
+          {busy ? ui.working : ui.build}
         </button>
       </div>
 
-      {(mode === "inspect" || mode === "pro" || busy || phases.length > 0) && (
-        <div className="spe-pipeline" aria-label="Semantic pipeline">
+      {(mode === "inspect" || mode === "pro") && (
+        <div
+          className="spe-pipeline"
+          data-copy-depth="INSPECT"
+          aria-label="Preparation stages"
+        >
           <div className="spe-pipeline-head">
-            <span>Semantic pipeline</span>
+            <span>Preparation stages</span>
             <span className="spe-pipeline-live">
               {busy ? "LIVE" : result ? "DONE" : "IDLE"}
             </span>
@@ -203,18 +216,19 @@ export function Workspace(props: Props) {
         </div>
       )}
 
-      {error && (
-        <div className="spe-alert" role="alert">
-          {error.code}: {error.message}
-          {error.code === "WASM_INTEGRITY_MISMATCH"
-            ? " — fail closed. No TypeScript semantic fallback."
-            : ""}
-        </div>
-      )}
+      {error && <HumanError error={error} />}
 
       <div className="spe-ws-lenses" role="group" aria-label="Lenses">
         {(
-          ["prompt", "intent", "changes", "techniques", "artifact"] as Lens[]
+          (mode === "simple"
+            ? ["prompt", "intent", "changes"]
+            : [
+                "prompt",
+                "intent",
+                "changes",
+                "techniques",
+                "artifact",
+              ]) as Lens[]
         ).map((l) => (
           <button
             key={l}
@@ -222,7 +236,15 @@ export function Workspace(props: Props) {
             aria-pressed={lens === l}
             onClick={() => setLens(l)}
           >
-            {l}
+            {
+              {
+                prompt: "Your prompt",
+                intent: "Your details",
+                changes: "What changed",
+                techniques: "Approach",
+                artifact: "File details",
+              }[l]
+            }
           </button>
         ))}
       </div>
@@ -230,7 +252,7 @@ export function Workspace(props: Props) {
       <div className="spe-ws-grid" data-mode={mode}>
         <aside className="spe-ws-side">
           <label className="spe-field grow">
-            <span>Raw request</span>
+            <span>Your idea</span>
             <textarea
               value={userRequest}
               onChange={(e) => setUserRequest(e.target.value)}
@@ -239,8 +261,8 @@ export function Workspace(props: Props) {
           </label>
 
           {(mode !== "simple" || lens === "intent") && (
-            <div className="spe-intent" aria-label="Intent lens">
-              <h2>Intent lens</h2>
+            <div className="spe-intent" aria-label="Your details">
+              <h2>Your details</h2>
               {(["confirmed", "assumed", "unknowns", "conflicts"] as const).map(
                 (bucket) => (
                   <div
@@ -256,7 +278,16 @@ export function Workspace(props: Props) {
                   >
                     <header>
                       <span className="spe-node-icon" aria-hidden="true" />
-                      <strong>{bucket}</strong>
+                      <strong>
+                        {
+                          {
+                            confirmed: "What must stay true",
+                            assumed: "Context and preferences",
+                            unknowns: "Questions still open",
+                            conflicts: "Details to resolve",
+                          }[bucket]
+                        }
+                      </strong>
                     </header>
                     {intent[bucket].map((atom) => (
                       <label key={atom.id} className="spe-field">
@@ -287,18 +318,20 @@ export function Workspace(props: Props) {
                 <p>Target: {TARGETS.find((t) => t.id === target)?.label}</p>
                 <ul className="spe-chip-row">
                   <li>Portable</li>
-                  <li>Local compile</li>
+                  <li>Prepared on this device</li>
                   <li>{rendered?.techniques.length ?? 0} techniques</li>
-                  <li>{intent.unknowns.filter((item) => item.text.trim()).length} unresolved questions</li>
+                  <li>
+                    {intent.unknowns.filter((item) => item.text.trim()).length}{" "}
+                    open questions
+                  </li>
                 </ul>
               </div>
               <pre
                 className="spe-prompt-body"
                 tabIndex={0}
-                aria-label="Compiled prompt"
+                aria-label="Your prompt"
               >
-                {rendered?.finalPrompt ||
-                  "Compile to reveal the Prompt Artifact."}
+                {rendered?.finalPrompt || "Shape your prompt to see it here."}
               </pre>
               <div className="spe-actions">
                 <button
@@ -317,14 +350,16 @@ export function Workspace(props: Props) {
                 >
                   Download .spe
                 </button>
-                <button
-                  type="button"
-                  className="spe-ghost"
-                  disabled={!artifact}
-                  onClick={onExportJson}
-                >
-                  JSON
-                </button>
+                {mode !== "simple" && (
+                  <button
+                    type="button"
+                    className="spe-ghost"
+                    disabled={!artifact}
+                    onClick={onExportJson}
+                  >
+                    JSON
+                  </button>
+                )}
                 <label className="spe-ghost file">
                   Import .spe
                   <input
@@ -361,23 +396,25 @@ export function Workspace(props: Props) {
 
           {lens === "techniques" && (
             <ul className="spe-tech-list">
-              {(rendered?.techniques || ["Compile to list techniques"]).map(
-                (t) => (
-                  <li key={t}>{t}</li>
-                ),
-              )}
+              {(
+                rendered?.techniques || [
+                  "Shape your prompt to see the approach",
+                ]
+              ).map((t) => (
+                <li key={t}>{t}</li>
+              ))}
             </ul>
           )}
 
           {lens === "intent" && (
             <p className="spe-muted">
-              Edit semantic meaning on the left. Internal IR JSON stays hidden
-              in Simple mode.
+              Add what matters to your idea. Keep your requirements, preferences
+              and open questions distinct.
             </p>
           )}
 
           {lens === "artifact" && artifact && (
-            <div className="spe-artifact-inspect">
+            <div className="spe-artifact-inspect" data-copy-depth="PROOF">
               <p>format: {artifact.spe_format}</p>
               <p>integrity: {artifact.integrity.state}</p>
               <p>sha256: {artifact.integrity.content_sha256}</p>
@@ -387,7 +424,7 @@ export function Workspace(props: Props) {
         </div>
 
         {mode !== "simple" && (
-          <aside className="spe-ws-rail">
+          <aside className="spe-ws-rail" data-copy-depth="PROOF">
             {(mode === "inspect" || mode === "pro") && (
               <PrivacyIndicator
                 sensitivity={privacy.sensitivity}

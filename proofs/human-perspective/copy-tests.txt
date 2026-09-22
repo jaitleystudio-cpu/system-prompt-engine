@@ -1,0 +1,2 @@
+{"passed":true,"adversarialCases":9,"surfaceFixtures":13,"heroVariants":7,"localeFallbackExplicit":true,"diagnosticsContextSensitive":true}
+PASS: build gate rejects unreviewed public strings and prohibited claims.

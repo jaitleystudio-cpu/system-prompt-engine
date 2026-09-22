@@ -60,7 +60,7 @@ export function Nav(p: Props) {
             p.setMenuOpen(false);
           }}
         >
-          The artifact
+          Your SPE file
         </a>
         <a
           href="#privacy"

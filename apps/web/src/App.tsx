@@ -1,3 +1,4 @@
+import { ui } from "@spe/human-perspective";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EngineClient } from "./engine/client";
 import type {
@@ -357,11 +358,11 @@ export default function App() {
           Array.isArray(parsed.intent[k as keyof typeof parsed.intent]),
         )
       )
-        throw new Error("This is not a supported .spe artifact.");
+        throw new Error("This file is not in a supported SPE format.");
       const verified = await verifySpeArtifact(parsed);
       if (verified.integrity.state === "MISMATCH")
         throw new Error(
-          "The artifact was changed after export. Integrity verification failed.",
+          "This SPE file has changed since export. Its integrity check failed.",
         );
       invalidate();
       setArtifact(verified);
@@ -395,13 +396,14 @@ export default function App() {
       });
       setEnvelope(parsed.envelope);
       setView("workspace");
+      setMode("inspect");
       setLens("artifact");
       setNotice(
-        "Artifact integrity verified. Recompile to evaluate the brief again.",
+        "Your SPE file passed its integrity check. Shape the prompt again to review its current details.",
       );
     } catch (err) {
       setNotice(
-        err instanceof Error ? err.message : "Could not open this artifact.",
+        err instanceof Error ? err.message : "We could not open this SPE file.",
       );
     }
   };
@@ -514,7 +516,7 @@ export default function App() {
 
             <section className="spe-workspace" aria-labelledby="hist-mini">
               <h2 id="hist-mini" className="spe-kicker">
-                Local history
+                Saved ideas
               </h2>
               <label className="spe-field">
                 <span>
@@ -527,7 +529,7 @@ export default function App() {
                       setHistory(e.target.checked ? loadHistory() : []);
                     }}
                   />{" "}
-                  Enable local history on this device
+                  Save a history of ideas on this device
                 </span>
               </label>
               <div className="spe-actions">
@@ -598,8 +600,11 @@ export default function App() {
           forward.
         </div>
         <div className="claim-strip">
-          Research preview · Production not qualified · Human-value evidence
-          pending
+          {ui.claim}
+          <details data-copy-depth="PROOF">
+            <summary>About this preview</summary>
+            <p>{ui.claimDetail}</p>
+          </details>
         </div>
       </footer>
     </>

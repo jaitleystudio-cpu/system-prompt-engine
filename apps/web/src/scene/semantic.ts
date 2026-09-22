@@ -6,10 +6,10 @@ export function semanticGroups(output: unknown): SemanticGroup[] {
       ? (output as Record<string, unknown>)
       : {};
   return [
-    ["Facts", "facts", "statement"],
-    ["Constraints", "hard_constraints", "statement"],
-    ["Preferences", "user_preferences", "statement"],
-    ["Unknowns", "uncertainties", "description"],
+    ["What you supplied", "facts", "statement"],
+    ["What must stay true", "hard_constraints", "statement"],
+    ["Your preferences", "user_preferences", "statement"],
+    ["Questions still open", "uncertainties", "description"],
   ].map(([label, key, field]) => ({
     label,
     key,

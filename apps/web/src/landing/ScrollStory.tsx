@@ -1,3 +1,4 @@
+import { ui } from "@spe/human-perspective";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { StaticPress } from "../scene/StaticPress";
 const Scene = lazy(() =>
@@ -94,8 +95,8 @@ export function ScrollStory({
               what you mean.
             </h3>
             <p>
-              Your request becomes the goal. Add your role, audience and requirements in
-              the brief, and keep assumptions visible.
+              Your request becomes the goal. Add your role, audience and
+              requirements in the brief, and keep assumptions visible.
             </p>
             <div className="specimen">
               <span>YOUR WORDS</span>
@@ -110,21 +111,22 @@ export function ScrollStory({
               for the unknown.
             </h3>
             <p>
-              The local engine evaluates the structured envelope. Supplied
-              facts, protected constraints, and open questions stay distinct.
+              Keep the facts you know, the boundaries that matter and the
+              questions still open in view. Add the details yourself, and review
+              SPE’s suggestions.
             </p>
             <div className="structure-legend">
               <span>
                 <i /> Goal & facts
               </span>
               <span>
-                <i /> Constraints
+                <i /> Boundaries
               </span>
               <span>
                 <i /> Preferences
               </span>
               <span>
-                <i /> Open unknowns
+                <i /> Open questions
               </span>
             </div>
           </article>
@@ -136,8 +138,8 @@ export function ScrollStory({
               anywhere.
             </h3>
             <p>
-              Review the prompt. Choose your target. Copy it into your AI, or
-              keep the portable .spe artifact with its structure intact.
+              Review your prompt, then choose where to use it. Keep an SPE file
+              to bring your prompt and its details back together.
             </p>
             <button className="text-link" onClick={onOpenWorkspace}>
               Explore your workspace <span>↗</span>
@@ -148,15 +150,8 @@ export function ScrollStory({
       <section className="artifact-story" id="artifact-story">
         <div>
           <p className="eyebrow">02 — A FILE THAT CARRIES YOUR THINKING</p>
-          <h2>
-            More than text.
-            <br />
-            <em>Your intent, intact.</em>
-          </h2>
-          <p>
-            A prompt you can use. A structure you can inspect.
-            <br />A portable artifact you can keep.
-          </p>
+          <h2>{ui.fileTitle}</h2>
+          <p>{ui.fileSupport}</p>
           <button className="spe-build" onClick={onOpenWorkspace}>
             Make it yours <span>↗</span>
           </button>
@@ -166,19 +161,15 @@ export function ScrollStory({
         </div>
         <div className="artifact-object">
           <div className="artifact-sheet">
-            <span>SPE / PROMPT ARTIFACT</span>
+            <span>SPE / YOUR PROMPT</span>
             <div className="sheet-rule" />
-            <h3>
-              {demoPrompt
-                ? "Your compiled intent"
-                : "A place for every detail."}
-            </h3>
+            <h3>{demoPrompt ? "Your prompt" : "A place for every detail."}</h3>
             {demoPrompt ? (
               <pre>{demoPrompt.slice(0, 450)}</pre>
             ) : (
               <>
                 <p>01 &nbsp; The goal you set</p>
-                <p>02 &nbsp; Constraints to preserve</p>
+                <p>02 &nbsp; Boundaries to keep</p>
                 <p>03 &nbsp; Preferences to respect</p>
                 <p>04 &nbsp; Questions left open</p>
               </>
@@ -192,26 +183,25 @@ export function ScrollStory({
       </section>
       <section className="privacy-story" id="privacy">
         <p className="eyebrow">03 — PRIVATE BY DESIGN</p>
-        <h2>
-          The idea is yours.
-          <br />
-          <em>So is the space to think.</em>
-        </h2>
-        <div className="privacy-principles">
+        <h2>{ui.privacyTitle}</h2>
+        <p>{ui.privacyIntro}</p>
+        <div className="privacy-principles" data-copy-depth="INSPECT">
           <div>
             <span>01 / LOCAL</span>
-            <h3>Your device is the engine.</h3>
+            <h3>Your work stays with you.</h3>
             <p>
-              Compilation runs locally. After the app is cached, you can keep
-              working offline.
+              Your brief stays on this device while SPE prepares your prompt.
+              Offline use is available after the site and engine files are
+              cached.
             </p>
           </div>
           <div>
             <span>02 / INDEPENDENT</span>
-            <h3>No provider required.</h3>
+            <h3>Choose the AI you use.</h3>
             <p>
-              No account or paid model is needed to compile. Choose where your
-              finished prompt goes.
+              Preparing a prompt does not require a paid AI provider. This
+              private preview may require sign-in; sending your finished prompt
+              to another AI is your choice.
             </p>
           </div>
           <div>

@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      "@spe/human-perspective": fileURLToPath(new URL("../../packages/human-perspective/src/index.ts", import.meta.url)),
       "@spe/web-runtime": fileURLToPath(
         new URL("../../packages/web-runtime/src/index.ts", import.meta.url),
       ),
