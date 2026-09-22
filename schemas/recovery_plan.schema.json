@@ -1,1 +1,27 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"recovery_plan","description":"STUB — not yet implemented (NEW_IMPLEMENTATION)","type":"object","additionalProperties":true}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jaitleystudio-cpu/system-prompt-engine/schemas/recovery_plan.schema.json",
+  "title": "recovery_plan",
+  "description": "K7 — durable Ring-1 recovery plan. Reconstructs per-op outcome state from the journal and refuses blind retry.",
+  "type": "object",
+  "properties": {
+    "plan_id": { "type": "string", "pattern": "^rp-[0-9a-f]{12}$" },
+    "created_at_utc": { "type": "string", "format": "date-time" },
+    "journal_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "ops": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "operation_id": { "type": "string", "minLength": 1 },
+          "observed_outcome": { "type": "string", "enum": ["NOT_EXECUTED", "DISPATCHING", "OUTCOME_UNKNOWN", "PARTIAL", "COMPLETED", "FAILED", "RECONCILIATION_REQUIRED"] },
+          "required_action": { "type": "string", "enum": ["NONE", "RETRY", "RECONCILE", "FAIL", "RESOLVE_WITH_EVIDENCE"] }
+        },
+        "required": ["operation_id", "observed_outcome", "required_action"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["plan_id", "created_at_utc", "journal_sha256", "ops"],
+  "additionalProperties": false
+}
