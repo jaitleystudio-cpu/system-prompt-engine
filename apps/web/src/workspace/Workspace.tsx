@@ -1,3 +1,4 @@
+import { SpeechInput } from "../input/SpeechInput";
 import { ui } from "@spe/human-perspective";
 import { HumanError } from "../ui/HumanError";
 import type { IntentAtom } from "@spe/web-runtime";
@@ -260,6 +261,8 @@ export function Workspace(props: Props) {
             />
           </label>
 
+          <SpeechInput disabled={busy} onInsert={text => setUserRequest([userRequest.trim(), text].filter(Boolean).join("\n\n"))} />
+
           {(mode !== "simple" || lens === "intent") && (
             <div className="spe-intent" aria-label="Your details">
               <h2>Your details</h2>
@@ -416,7 +419,7 @@ export function Workspace(props: Props) {
           {lens === "artifact" && artifact && (
             <div className="spe-artifact-inspect" data-copy-depth="PROOF">
               <p>format: {artifact.spe_format}</p>
-              <p>integrity: {artifact.integrity.state}</p>
+              <p>Checksum: {artifact.integrity.state === "VERIFIED" ? "matches" : artifact.integrity.state.toLowerCase()}. This checks file consistency, not authorship or trust.</p>
               <p>sha256: {artifact.integrity.content_sha256}</p>
               <p>lineage: {artifact.lineage.engine}</p>
             </div>

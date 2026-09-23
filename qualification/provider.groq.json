@@ -1,0 +1,6 @@
+{
+  "implementation_id": "provider.groq.gpt-oss-20b",
+  "platform_id": "PLATFORM:GROQ_CHAT",
+  "capabilities": ["CORE_CONTRACT", "C02_RESEARCH", "C03_COMMUNICATE", "UNCERTAINTY"],
+  "model": "openai/gpt-oss-20b"
+}

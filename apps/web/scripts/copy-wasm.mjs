@@ -4,7 +4,7 @@
  * COST ₹0. NEW_IMPLEMENTATION. not_a_release=true. No network.
  */
 import { createHash } from "node:crypto";
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -32,6 +32,7 @@ if (["/Users/", "/home/", ".codex/", ".chatgpt-projects/"].some((marker) => byte
   throw new Error("WASM contains developer home paths. Rebuild with Rust --remap-path-prefix before packaging.");
 }
 copyFileSync(src, dest);
+chmodSync(dest, 0o644);
 const sha256 = createHash("sha256").update(bytes).digest("hex");
 const meta = {
   algorithm: "SHA-256",

@@ -1,0 +1,18 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 91 and seed 2343710177190256342 with 1 worker on 8 cores with 2048MB heap and 64MB offheap memory [pid: 43757] (Mac OS X 27.2 aarch64, Eclipse Adoptium 21.0.7 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Users/prawinpalisetty/spe-g2/SPE_LEASE_RECOVERY.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module SPE_LEASE_RECOVERY
+Starting... (2026-09-23 01:42:16)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-23 01:42:17.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 6.5E-12
+27577 states generated, 5432 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 16.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 11 and the 95th percentile is 4).
+Finished in 00s at (2026-09-23 01:42:17)

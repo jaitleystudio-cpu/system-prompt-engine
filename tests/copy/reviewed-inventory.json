@@ -2674,6 +2674,180 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
       "text": "Research preview. Review generated prompts before using them."
+    },
+    {
+      "id": "063b3ea2f233e4012efb",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Add transcript to idea"
+    },
+    {
+      "id": "2889107c1ed8ae626636",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "en-IN"
+    },
+    {
+      "id": "41053e93db1b9a0768f6",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Stop microphone"
+    },
+    {
+      "id": "48597ce5c0d1f341fb44",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Start microphone"
+    },
+    {
+      "id": "49f0cb1a009f6778a281",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Spanish"
+    },
+    {
+      "id": "4e66c71f169c0f87ff7c",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Microphone or speech access was denied. Allow access in your browser, or type your idea."
+    },
+    {
+      "id": "51a3df0d33d277bfa020",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Hindi"
+    },
+    {
+      "id": "54f9b04004bc2c87fdbb",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Listening… Stop the microphone when you finish."
+    },
+    {
+      "id": "58b3c919ea4b4b7788fd",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Tamil"
+    },
+    {
+      "id": "6021699983c88c54953f",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Speak your idea"
+    },
+    {
+      "id": "6186afed1f0a2d0e0b33",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "service-not-allowed"
+    },
+    {
+      "id": "7224ab83fa6d0c7afc27",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Speech could not start. Try again, or type your idea."
+    },
+    {
+      "id": "7ad62960a4a3b830d876",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "No speech was detected. Try again, or type your idea."
+    },
+    {
+      "id": "8cd619073cdd3681689e",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "English (India)"
+    },
+    {
+      "id": "95ab3defc36d028a4f22",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Speech recognition stopped. Check your microphone and connection, or type your idea."
+    },
+    {
+      "id": "9917d3e8503d6722fb18",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Telugu"
+    },
+    {
+      "id": "a8e881e1977f276d068a",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Spoken language"
+    },
+    {
+      "id": "ab89163c5d57e7ac3326",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Allow browser speech recognition for this session"
+    },
+    {
+      "id": "bbc23d765d7d319a0577",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "no-speech"
+    },
+    {
+      "id": "bcf65062ea6ab4ef3749",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "English (US)"
+    },
+    {
+      "id": "c2606ad8994827bca33e",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "not-allowed"
+    },
+    {
+      "id": "e36f047a69944cbaca0b",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Dictate, review the text, then add it to your idea. Your browser may send audio to its speech service. SPE does not save audio."
+    },
+    {
+      "id": "e3c41cf380d8c2fbf6ea",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Review your transcript"
+    },
+    {
+      "id": "f7055c052c1628d70f8d",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Speech recognition is unavailable in this browser. You can still type or paste a transcript into your idea."
+    },
+    {
+      "id": "fa5f0614ec00ef60b7e2",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Microphone stopped."
+    },
+    {
+      "id": "7ae902e2249041aba3e1",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "VERIFIED"
+    },
+    {
+      "id": "b75af9f1a9eff9293df2",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": ". This checks file consistency, not authorship or trust."
+    },
+    {
+      "id": "e287f0bd1cc91fe0f52e",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "matches"
+    },
+    {
+      "id": "e35d09eb5208b7846fba",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "Checksum:"
     }
   ]
 }

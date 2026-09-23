@@ -29,7 +29,7 @@ export async function loadAndEvaluate(args) {
   try {
     note("verifying_integrity");
     const actual = await sha256Hex(wasmBytes);
-    if (expectedSha256 && actual !== expectedSha256) {
+    if (typeof expectedSha256 !== "string" || !/^[a-f0-9]{64}$/.test(expectedSha256) || actual !== expectedSha256) {
       return {
         error: {
           code: "WASM_INTEGRITY_MISMATCH",

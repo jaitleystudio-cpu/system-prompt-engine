@@ -1,36 +1,9 @@
-# SPE Web/PWA Content Security Policy notes
+# Web content security policy
 
-**Status:** foundation notes for Sprint 6 (`not_a_release=true`).  
-**NEW_IMPLEMENTATION.** COST ₹0. No paid CDN. No analytics.
+The production HTML now includes a CSP meta policy. Static hosts that support `_headers` also receive the equivalent response policy plus `frame-ancestors 'none'`, nosniff and no-referrer. A host that ignores `_headers` must configure those response headers separately; deployment enforcement must be verified on the actual host.
 
-## Baseline (shipped in `apps/web/index.html`)
+Scripts are same-origin. `wasm-unsafe-eval` permits the real local WASM engine without enabling arbitrary JavaScript eval. Inline styles remain allowed because React and the Three.js scene set dynamic styles. Objects are disabled; connections are same-origin. Images may use local data/blob previews. No analytics are added.
 
-```
-default-src 'self';
-script-src 'self';
-worker-src 'self' blob:;
-style-src 'self';
-img-src 'self' data:;
-connect-src 'self';
-font-src 'self';
-object-src 'none';
-base-uri 'self';
-form-action 'self';
-frame-ancestors 'none';
-```
+Frame protection cannot be expressed through a meta policy. Browser speech recognition is an explicitly opted-in browser service and may use a vendor network service outside the page's fetch path; do not describe speech as guaranteed offline.
 
-## Rationale
-
-- All compile/evaluate work is local: UI → Web Worker → `spe_wasm.wasm`.
-- `worker-src` allows module workers (Vite may use `blob:` URLs in dev).
-- No `unsafe-inline` / `unsafe-eval` in the foundation baseline.
-- System fonts only — no `fonts.googleapis.com` / `fonts.gstatic.com`.
-- `connect-src 'self'` — zero third-party egress during compile.
-
-## Service worker
-
-Precache app shell + WASM bytes only. Never cache private prompts or POST bodies.
-
-## Deployment note
-
-Hosting CSP headers (when a host exists later) should mirror this document. Sprint 6 does not deploy.
+Navigation requests use the network first and fall back to the installed shell offline. Arbitrary navigation responses are not written to the cache. Asset requests respect Vary and use the current cache only. The build generates the shell asset list and version.

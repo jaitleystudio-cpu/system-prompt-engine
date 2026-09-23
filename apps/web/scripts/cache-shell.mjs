@@ -15,6 +15,8 @@ const list = [
 ];
 const digest = createHash("sha256")
   .update(JSON.stringify(list))
+  .update(readFileSync(new URL("index.html", root)))
+  .update(readFileSync(new URL("sw.js", root)))
   .update(readFileSync(new URL("art/intent-core.webp", root)))
   .update(readFileSync(new URL("spe_wasm.sha256.json", root)))
   .digest("hex")
