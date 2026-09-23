@@ -23,6 +23,7 @@ ALLOWED_ENDPOINTS = {
     GROQ_ENDPOINT: ('Groq', 'GROQ_API_KEY', 'PLATFORM:GROQ_CHAT'),
 }
 MAX_BODY = 65536
+USER_AGENT = 'spe-qualify-g4/1.0'  # Edge CDNs 403 the default Python-urllib UA.
 
 def endpoint_adapter(url):
     # Exact URLs also reject plaintext HTTP, credentials, ports, queries and alternate paths.
@@ -95,13 +96,17 @@ def probe_live(endpoint_url, api_key, model):
     else:
         data.update(max_tokens=4)
     payload = json.dumps(data).encode()
-    req = urllib.request.Request(endpoint_url, data=payload, headers={'Content-Type':'application/json','Authorization':'Bearer '+api_key})
+    req = urllib.request.Request(endpoint_url, data=payload, headers={
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+api_key,
+        'User-Agent':USER_AGENT})
     started = time.monotonic()
     body = b''
     status = None
     failure = None
     provider_error_code = None
     provider_error_type = None
+    error_body_kind = None
     body_truncated = False
     try:
         with urllib.request.build_opener(NoRedirect()).open(req, timeout=30) as response:
@@ -128,6 +133,7 @@ def probe_live(endpoint_url, api_key, model):
                 body = body[:MAX_BODY]
             else:
                 error = json.loads(body).get('error', {})
+                error_body_kind = 'json'
                 # Only known enum values are emitted; never echo free-form provider text.
                 known = {'insufficient_quota', 'rate_limit_exceeded', 'rate_limit_error',
                          'slow_down', 'billing_not_active', 'billing_hard_limit_reached',
@@ -137,7 +143,9 @@ def probe_live(endpoint_url, api_key, model):
                     code, kind = error.get('code'), error.get('type')
                     provider_error_code = code if isinstance(code, str) and code in known else None
                     provider_error_type = kind if isinstance(kind, str) and kind in known else None
-        except (OSError, ValueError, AttributeError, TypeError):
+        except ValueError:
+            error_body_kind = 'non_json'  # Edge/CDN block page, not a provider JSON error.
+        except (OSError, AttributeError, TypeError):
             pass
         finally:
             exc.close()
@@ -148,6 +156,7 @@ def probe_live(endpoint_url, api_key, model):
             'response_sha256':hashlib.sha256(body).hexdigest() if body else None,
             'verdict':'FAIL' if failure else 'PASS', 'failure_code':failure,
             'provider_error_code':provider_error_code, 'provider_error_type':provider_error_type,
+            'error_body_kind':error_body_kind,
             'response_body_truncated':body_truncated}
 
 
