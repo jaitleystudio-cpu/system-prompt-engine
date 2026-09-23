@@ -97,3 +97,43 @@ def test_bounded_http_error_diagnostics(body,expected,monkeypatch):
     assert result['response_sha256']==hashlib.sha256(body[:g4.MAX_BODY]).hexdigest()
     assert result['response_body_truncated']==(len(body)>g4.MAX_BODY)
     assert 'secret' not in json.dumps(result)
+
+
+@pytest.mark.parametrize('url',[
+    'http://api.groq.com/openai/v1/chat/completions',
+    'https://api.groq.com.attacker.invalid/openai/v1/chat/completions',
+    'https://user@api.groq.com/openai/v1/chat/completions',
+    'https://api.groq.com:444/openai/v1/chat/completions',
+    'https://api.groq.com/openai/v1/chat/completions?key=secret',
+    'https://api.groq.com/other',
+])
+def test_strict_provider_endpoint(url):
+    with pytest.raises(g4.QualificationError,match='ENDPOINT_NOT_ALLOWED'):
+        g4.endpoint_adapter(url)
+
+def test_provider_keys_are_isolated(monkeypatch):
+    monkeypatch.delenv('GROQ_API_KEY',raising=False)
+    monkeypatch.delenv('SPE_PROVIDER_KEY',raising=False)
+    monkeypatch.setenv('OPENAI_API_KEY','sk-test')
+    with pytest.raises(g4.QualificationError,match='NO_API_KEY'):
+        g4.provider_key(g4.GROQ_ENDPOINT)
+    monkeypatch.setenv('SPE_PROVIDER_KEY','sk-test')
+    with pytest.raises(g4.QualificationError,match='KEY_PROVIDER_MISMATCH'):
+        g4.provider_key(g4.GROQ_ENDPOINT)
+    monkeypatch.setenv('GROQ_API_KEY','gsk_test')
+    assert g4.provider_key(g4.GROQ_ENDPOINT)=='gsk_test'
+    assert g4.provider_key(g4.ENDPOINT)=='sk-test'
+
+def test_groq_request_and_receipt(monkeypatch):
+    class Opener:
+        def open(self,req,timeout):
+            assert req.full_url==g4.GROQ_ENDPOINT
+            data=json.loads(req.data)
+            assert data['max_completion_tokens']==256
+            assert data['reasoning_effort']=='low'
+            assert data['include_reasoning'] is False
+            assert 'max_tokens' not in data
+            return Response(b'{"choices":[{"message":{"content":"ACK"}}]}')
+    monkeypatch.setattr(g4.urllib.request,'build_opener',lambda *a:Opener())
+    result=g4.probe_live(g4.GROQ_ENDPOINT,'gsk_test','openai/gpt-oss-20b')
+    assert result['provider']=='Groq' and result['verdict']=='PASS'

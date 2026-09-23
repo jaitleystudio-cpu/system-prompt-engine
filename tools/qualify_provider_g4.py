@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate ABI claim names offline; optionally probe OpenAI once using an env-only key.
+"""Validate ABI claim names offline; optionally probe OpenAI or Groq once using an env-only key.
 
 Usage: qualify_provider_g4.py offline|live provider.json [endpoint] [model]
 A passing probe is not evidence of full ABI/provider conformance.
@@ -17,7 +17,27 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / 'schemas/spe_universal_abi.schema.json'
 ENDPOINT = 'https://api.openai.com/v1/chat/completions'
+GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions'
+ALLOWED_ENDPOINTS = {
+    ENDPOINT: ('OpenAI', 'OPENAI_API_KEY', 'PLATFORM:OPENAI_CHAT'),
+    GROQ_ENDPOINT: ('Groq', 'GROQ_API_KEY', 'PLATFORM:GROQ_CHAT'),
+}
 MAX_BODY = 65536
+
+def endpoint_adapter(url):
+    # Exact URLs also reject plaintext HTTP, credentials, ports, queries and alternate paths.
+    if url not in ALLOWED_ENDPOINTS:
+        raise QualificationError('ENDPOINT_NOT_ALLOWED', 'unsupported chat-completions endpoint')
+    return ALLOWED_ENDPOINTS[url]
+
+def provider_key(url):
+    name, env_name, _ = endpoint_adapter(url)
+    key = os.environ.get(env_name) or os.environ.get('SPE_PROVIDER_KEY')
+    if not key:
+        raise QualificationError('NO_API_KEY', 'set the provider API key in the environment')
+    if (name == 'Groq' and not key.startswith('gsk_')) or (name == 'OpenAI' and key.startswith('gsk_')):
+        raise QualificationError('KEY_PROVIDER_MISMATCH', 'credential does not match provider')
+    return key
 
 class QualificationError(Exception):
     def __init__(self, code, reason):
@@ -62,13 +82,19 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def probe_live(endpoint_url, api_key, model):
-    if endpoint_url != ENDPOINT:
-        raise QualificationError('ENDPOINT_NOT_ALLOWED', 'this probe supports the exact OpenAI endpoint only')
+    provider_name, _, _ = endpoint_adapter(endpoint_url)
     if not isinstance(model, str) or not model.strip() or len(model) > 200:
         raise QualificationError('BAD_MODEL', 'a model name is required')
     if not isinstance(api_key, str) or not api_key or any(c in api_key for c in '\r\n'):
         raise QualificationError('NO_API_KEY', 'set an API key in the environment')
-    payload = json.dumps({'model': model, 'messages': [{'role':'user','content':'Reply with the single word: ACK'}], 'max_tokens':4}).encode()
+    data = {'model': model, 'messages': [{'role':'user','content':'Reply with the single word: ACK'}]}
+    if provider_name == 'Groq':
+        data.update(max_completion_tokens=256)
+        if model in ('openai/gpt-oss-20b', 'openai/gpt-oss-120b'):
+            data.update(reasoning_effort='low', include_reasoning=False)
+    else:
+        data.update(max_tokens=4)
+    payload = json.dumps(data).encode()
     req = urllib.request.Request(endpoint_url, data=payload, headers={'Content-Type':'application/json','Authorization':'Bearer '+api_key})
     started = time.monotonic()
     body = b''
@@ -117,7 +143,7 @@ def probe_live(endpoint_url, api_key, model):
             exc.close()
     except (urllib.error.URLError, OSError, ValueError):
         failure = 'NETWORK_ERROR'  # Do not echo exception text or provider error bodies.
-    return {'checked':'minimal_ack_probe_only', 'endpoint':endpoint_url, 'model':model,
+    return {'checked':'minimal_ack_probe_only', 'provider':provider_name, 'endpoint':endpoint_url, 'model':model,
             'http_status':status, 'latency_ms':int((time.monotonic()-started)*1000),
             'response_sha256':hashlib.sha256(body).hexdigest() if body else None,
             'verdict':'FAIL' if failure else 'PASS', 'failure_code':failure,
@@ -152,9 +178,10 @@ def main(argv=None):
         if phase == 'offline':
             result = {'checked':'claim_names_against_repository_abi_enum', 'claims':claims, 'verdict':'PASS'}
         else:
-            key = os.environ.get('SPE_PROVIDER_KEY') or os.environ.get('OPENAI_API_KEY')
-            if not key:
-                raise QualificationError('NO_API_KEY', 'set an API key in the environment')
+            _, _, platform = endpoint_adapter(args[2])
+            if provider.get('platform_id') not in (None, platform):
+                raise QualificationError('PROVIDER_MISMATCH', 'manifest and endpoint disagree')
+            key = provider_key(args[2])
             # Prevent user-controlled manifest fields from copying the credential into receipts.
             if key in json.dumps(provider) or any(key in a for a in args):
                 raise QualificationError('SECRET_IN_INPUT', 'credential must appear only in the environment')
