@@ -96,7 +96,14 @@ def test_zero_analytics_and_no_ads_billing():
 
 
 def test_design_tokens_obsidian_platinum_system_fonts():
-    css_files = list(WEB.rglob("*.css")) if WEB.exists() else []
+    from tests.web.paths import REPO
+
+    # The web entry imports shared tokens through the Vite alias.
+    entry = (WEB / "src" / "index.css").read_text(encoding="utf-8")
+    assert '@import "@spe/design-system"' in entry
+    tokens = REPO / "packages" / "design-system" / "src" / "tokens.css"
+    assert tokens.is_file()
+    css_files = [tokens, *WEB.rglob("*.css")]
     css = "\n".join(p.read_text(encoding="utf-8") for p in css_files if "node_modules" not in str(p))
     assert "obsidian" in css.lower()
     assert "platinum" in css.lower()
