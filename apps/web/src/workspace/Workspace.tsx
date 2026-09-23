@@ -1,3 +1,4 @@
+import { SpeechInput } from "../input/SpeechInput";
 import { ui } from "@spe/human-perspective";
 import { HumanError } from "../ui/HumanError";
 import type { IntentAtom } from "@spe/web-runtime";
@@ -259,6 +260,8 @@ export function Workspace(props: Props) {
               rows={5}
             />
           </label>
+
+          <SpeechInput disabled={busy} onInsert={text => setUserRequest([userRequest.trim(), text].filter(Boolean).join("\n\n"))} />
 
           {(mode !== "simple" || lens === "intent") && (
             <div className="spe-intent" aria-label="Your details">

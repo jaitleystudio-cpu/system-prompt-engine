@@ -217,3 +217,10 @@
   width: 100%;
   cursor: pointer;
 }
+
+.spe-speech { border: 1px solid var(--spe-line, #394147); border-radius: 16px; padding: 1rem; margin-block: 1rem; }
+.spe-speech summary { cursor: pointer; font-weight: 600; }
+.spe-speech p { font-size: .85rem; line-height: 1.6; }
+.spe-speech label { display: block; margin-block: .75rem; }
+.spe-speech button { min-height: 44px; margin: .3rem .4rem .3rem 0; padding: .6rem .85rem; }
+.spe-speech textarea { width: 100%; box-sizing: border-box; }
