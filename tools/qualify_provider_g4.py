@@ -74,6 +74,9 @@ def probe_live(endpoint_url, api_key, model):
     body = b''
     status = None
     failure = None
+    provider_error_code = None
+    provider_error_type = None
+    body_truncated = False
     try:
         with urllib.request.build_opener(NoRedirect()).open(req, timeout=30) as response:
             status = response.status
@@ -91,14 +94,35 @@ def probe_live(endpoint_url, api_key, model):
                 failure = 'INVALID_RESPONSE'
     except urllib.error.HTTPError as exc:
         status = exc.code
-        exc.close()
         failure = 'HTTP_ERROR'
+        try:
+            body = exc.read(MAX_BODY + 1)
+            body_truncated = len(body) > MAX_BODY
+            if body_truncated:
+                body = body[:MAX_BODY]
+            else:
+                error = json.loads(body).get('error', {})
+                # Only known enum values are emitted; never echo free-form provider text.
+                known = {'insufficient_quota', 'rate_limit_exceeded', 'rate_limit_error',
+                         'slow_down', 'billing_not_active', 'billing_hard_limit_reached',
+                         'organization_spend_limit_exceeded', 'organization_usage_limit_exceeded',
+                         'invalid_api_key', 'invalid_request_error', 'tokens', 'requests'}
+                if isinstance(error, dict):
+                    code, kind = error.get('code'), error.get('type')
+                    provider_error_code = code if isinstance(code, str) and code in known else None
+                    provider_error_type = kind if isinstance(kind, str) and kind in known else None
+        except (OSError, ValueError, AttributeError, TypeError):
+            pass
+        finally:
+            exc.close()
     except (urllib.error.URLError, OSError, ValueError):
         failure = 'NETWORK_ERROR'  # Do not echo exception text or provider error bodies.
     return {'checked':'minimal_ack_probe_only', 'endpoint':endpoint_url, 'model':model,
             'http_status':status, 'latency_ms':int((time.monotonic()-started)*1000),
             'response_sha256':hashlib.sha256(body).hexdigest() if body else None,
-            'verdict':'FAIL' if failure else 'PASS', 'failure_code':failure}
+            'verdict':'FAIL' if failure else 'PASS', 'failure_code':failure,
+            'provider_error_code':provider_error_code, 'provider_error_type':provider_error_type,
+            'response_body_truncated':body_truncated}
 
 
 def write_receipt(path, provider, phase, result):

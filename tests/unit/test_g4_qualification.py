@@ -74,3 +74,26 @@ def test_receipt_is_real_and_ignored_location(tmp_path,monkeypatch,capsys):
     assert json.loads(receipt)['result']['verdict']=='PASS'
     assert 'test-secret' not in receipt+capsys.readouterr().out
     assert receipts[0].stat().st_mode & 0o777 == 0o600
+
+
+@pytest.mark.parametrize('body,expected', [
+    (b'{"error":{"code":"insufficient_quota","type":"insufficient_quota","message":"secret"}}','insufficient_quota'),
+    (b'{"error":{"code":"rate_limit_exceeded"}}','rate_limit_exceeded'),
+    (b'{"error":{"code":"test-secret","message":"test-secret"}}',None),
+    (b'{"error":{"code":{},"type":[]}}',None),
+    (b'not json',None),
+    (b'x'*65537,None),
+])
+def test_bounded_http_error_diagnostics(body,expected,monkeypatch):
+    import io
+    import hashlib
+    class Opener:
+        def open(self,req,timeout):
+            raise urllib.error.HTTPError(g4.ENDPOINT,429,'secret',{},io.BytesIO(body))
+    monkeypatch.setattr(g4.urllib.request,'build_opener',lambda *args:Opener())
+    result=g4.probe_live(g4.ENDPOINT,'test-secret','test-model')
+    assert result['verdict']=='FAIL'
+    assert result['provider_error_code']==expected
+    assert result['response_sha256']==hashlib.sha256(body[:g4.MAX_BODY]).hexdigest()
+    assert result['response_body_truncated']==(len(body)>g4.MAX_BODY)
+    assert 'secret' not in json.dumps(result)
