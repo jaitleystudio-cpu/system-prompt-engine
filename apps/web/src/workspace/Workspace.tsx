@@ -419,7 +419,7 @@ export function Workspace(props: Props) {
           {lens === "artifact" && artifact && (
             <div className="spe-artifact-inspect" data-copy-depth="PROOF">
               <p>format: {artifact.spe_format}</p>
-              <p>integrity: {artifact.integrity.state}</p>
+              <p>Checksum: {artifact.integrity.state === "VERIFIED" ? "matches" : artifact.integrity.state.toLowerCase()}. This checks file consistency, not authorship or trust.</p>
               <p>sha256: {artifact.integrity.content_sha256}</p>
               <p>lineage: {artifact.lineage.engine}</p>
             </div>

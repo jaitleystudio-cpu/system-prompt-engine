@@ -18,6 +18,8 @@ export type CompileOutcome = {
 export class EngineClient {
   private worker: Worker;
   private seq = 0;
+  private closed = false;
+  private pending = new Set<(error: Error) => void>();
 
   constructor() {
     this.worker = new Worker(new URL("./engine.worker.ts", import.meta.url), {
@@ -25,22 +27,28 @@ export class EngineClient {
     });
   }
 
-  terminate(): void {
+  terminate(error = new Error("ENGINE_UNAVAILABLE")): void {
+    if (this.closed) return;
+    this.closed = true;
     this.worker.terminate();
+    for (const cancel of [...this.pending]) cancel(error);
   }
 
   compile(
     jsonText: string,
     onPhase: (phase: CompilePhase) => void,
   ): Promise<CompileOutcome> {
+    if (this.closed) return Promise.reject(new Error("ENGINE_UNAVAILABLE"));
     const id = `req-${++this.seq}`;
     return new Promise((resolve, reject) => {
       const cleanup = () => {
         clearTimeout(timer);
+        this.pending.delete(cancel);
         this.worker.removeEventListener("message", onMsg);
         this.worker.removeEventListener("error", onError);
         this.worker.removeEventListener("messageerror", onMessageError);
       };
+      const cancel = (error: Error) => { cleanup(); reject(error); };
       const onError = (ev: ErrorEvent) => {
         cleanup();
         reject(new Error(ev.message || "The local worker could not start."));
@@ -50,8 +58,7 @@ export class EngineClient {
         reject(new Error("The local worker returned an unreadable response."));
       };
       const timer = setTimeout(() => {
-        cleanup();
-        reject(new Error("WORKER_TIMEOUT"));
+        this.terminate(new Error("WORKER_TIMEOUT"));
       }, 20_000);
       const onMsg = (ev: MessageEvent<WorkerResponse>) => {
         if (ev.data.id !== id) return;
@@ -69,6 +76,7 @@ export class EngineClient {
           used_ts_fallback: false,
         });
       };
+      this.pending.add(cancel);
       this.worker.addEventListener("message", onMsg);
       this.worker.addEventListener("error", onError);
       this.worker.addEventListener("messageerror", onMessageError);

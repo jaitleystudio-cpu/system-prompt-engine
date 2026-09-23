@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from decimal import Decimal, InvalidOperation
 from typing import Any, Mapping
 
 from spe_runtime.authority.models import AuthorityGrant
@@ -10,34 +11,31 @@ from spe_runtime.xcat.reasons import ReasonCode
 
 
 def _parse_ts(value: str) -> datetime:
-    # Accept trailing Z
-    text = value.replace("Z", "+00:00")
-    return datetime.fromisoformat(text)
+    if not isinstance(value, str):
+        raise ValueError("timestamp must be a string")
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError("timestamp requires an offset")
+    return parsed
 
 
-def _amount_value(raw: Any) -> int | None:
-    """Extract comparable int amount; nested mapping uses 'value' or fails closed."""
-    if isinstance(raw, bool):
-        return None
-    if isinstance(raw, int):
-        return raw
-    if isinstance(raw, float):
-        return int(raw)
-    if isinstance(raw, str):
-        try:
-            return int(raw)
-        except ValueError:
-            return None
+def _amount_value(raw: Any) -> Decimal | None:
+    """Compare finite decimal values without truncating fractional amounts."""
     if isinstance(raw, Mapping):
-        if "value" in raw:
-            return _amount_value(raw["value"])
-        if "amount" in raw:
-            return _amount_value(raw["amount"])
+        for key in ("value", "amount"):
+            if key in raw:
+                return _amount_value(raw[key])
         return None
-    return None
+    if isinstance(raw, bool) or not isinstance(raw, (int, float, str, Decimal)):
+        return None
+    try:
+        value = Decimal(str(raw))
+        return value if value.is_finite() else None
+    except (InvalidOperation, ValueError):
+        return None
 
 
-def _nested_amounts_within(obj: Any, amount_max: int) -> bool:
+def _nested_amounts_within(obj: Any, amount_max: Decimal) -> bool:
     """Walk nested args; any amount / *_amount field must be <= amount_max."""
     if isinstance(obj, Mapping):
         for key, val in obj.items():
@@ -72,24 +70,26 @@ def _check_args_against_constraints(
         if not str(arguments["filename"]).endswith(str(suffix)):
             return False
     max_len = constraints.get("content_b64_len_max")
-    if max_len is not None and "content_b64_len_max" in arguments:
-        try:
-            if int(arguments["content_b64_len_max"]) > int(max_len):
-                return False
-        except (TypeError, ValueError):
+    if max_len is not None:
+        limit = _amount_value(max_len)
+        if limit is None or limit < 0 or limit != limit.to_integral_value():
             return False
+        if "content_b64" in arguments:
+            content = arguments["content_b64"]
+            if not isinstance(content, str) or len(content) > limit:
+                return False
+        # Preserve the legacy declared bound, but never use it to override actual content.
+        if "content_b64_len_max" in arguments:
+            declared = _amount_value(arguments["content_b64_len_max"])
+            if declared is None or declared < 0 or declared != declared.to_integral_value() or declared > limit:
+                return False
 
     # Gate 5: amount <= amount_max (fail closed on unparsable / nested over-limit)
     amount_max = constraints.get("amount_max", constraints.get("max_amount"))
     if amount_max is not None:
-        try:
-            limit = int(amount_max)
-        except (TypeError, ValueError):
+        limit = _amount_value(amount_max)
+        if limit is None:
             return False
-        if "amount" in arguments:
-            parsed = _amount_value(arguments["amount"])
-            if parsed is None or parsed > limit:
-                return False
         # nested tricks under other allowed keys
         if not _nested_amounts_within(arguments, limit):
             return False

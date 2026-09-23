@@ -39,3 +39,11 @@ The design-token source test now reads the shared stylesheet imported by the app
 - Frozen G6-H paths: no changes in this integration.
 
 The WASM artifact was rebuilt from the unchanged Rust source using the local toolchain with path remapping. Its new SHA-256 is `95cf51ceab7b51ab2a459ec8a32d51e182749f8f3b51cf29c69de675a2fd0a80`; size 237900 bytes. The matching metadata is included. This is not a production qualification or a live speech/provider certification.
+
+## Security and duplicate cleanup
+
+Additional fixes: finite decimal authority limits without truncation; offset-required expiry timestamps; actual base64 content-length checking; mandatory WASM digest; worker termination on timeout with pending-request cleanup; network-first navigation with offline shell fallback and Vary handling; HTML CSP and static-host response-header template; explicit checksum-versus-authorship wording. Shell cache versioning now includes HTML and service-worker source. The WASM copy script normalizes asset permissions.
+
+Removed duplicate .gitignore rules and redundant top-level amount validation. Exact-byte inspection found no duplicate tracked Python/TypeScript/JavaScript/CSS source files of at least 200 bytes. Shared branch ancestry and historical proof artifacts were not treated as disposable duplicates.
+
+Validation after authority fixes: 502 Python tests passed. Browser WASM compilation under CSP passed. Digest rejection, worker timeout/pending-request cleanup, and service-worker navigation regression checks passed. Build passed. Header enforcement on the hosted site, live speech, media analysis, and competing design reconciliation remain separate outstanding work. Opt-in local history remains plaintext browser storage; no encryption claim is made.

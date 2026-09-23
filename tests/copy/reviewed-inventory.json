@@ -2824,6 +2824,30 @@
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
       "text": "Microphone stopped."
+    },
+    {
+      "id": "7ae902e2249041aba3e1",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "VERIFIED"
+    },
+    {
+      "id": "b75af9f1a9eff9293df2",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": ". This checks file consistency, not authorship or trust."
+    },
+    {
+      "id": "e287f0bd1cc91fe0f52e",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "matches"
+    },
+    {
+      "id": "e35d09eb5208b7846fba",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "Checksum:"
     }
   ]
 }
