@@ -231,3 +231,6 @@ apps/web/dist/
 apps/web/node_modules/
 apps/web/dist/
 
+
+# Local provider qualification evidence
+qualification/*_receipt.json

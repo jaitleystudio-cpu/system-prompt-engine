@@ -1,0 +1,6 @@
+{
+  "implementation_id": "provider.openai.gpt-4o-mini",
+  "platform_id": "PLATFORM:OPENAI_CHAT",
+  "capabilities": ["CORE_CONTRACT", "C02_RESEARCH", "C03_COMMUNICATE", "UNCERTAINTY"],
+  "model": "gpt-4o-mini"
+}
