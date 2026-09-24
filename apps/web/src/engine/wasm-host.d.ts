@@ -22,10 +22,20 @@ export type EngineError = {
   message: string;
 };
 
+/** Mirrored transport enums — values are interpreted only inside Rust/WASM. */
+export type SourceMode = "AUTO" | "ON" | "OFF";
+export type RequestedDepth = "AUTO" | "FAST" | "SMART" | "DEEP";
+export type CapabilityProfileMode = "CONDITIONAL" | "DECLARED" | "NONE";
+
 export type EngineSuccessBody = {
   status: string;
   disposition: string;
   reason_code: string | null;
+  /**
+   * For spe_api=context_protocol op=compile, output carries:
+   * source_mode, requested_depth, resolved_depth, context_summary,
+   * execution_contract, quality_record, capability_profile_mode.
+   */
   output: unknown;
 };
 
@@ -38,6 +48,10 @@ export type HostResult = {
   imports: number | null;
 };
 
+/**
+ * Load spe_wasm.wasm, verify integrity, call spe_evaluate.
+ * Never synthesizes context_summary / execution_contract / quality_record in JS.
+ */
 export function loadAndEvaluate(args: {
   wasmBytes: Uint8Array;
   expectedSha256: string | null;

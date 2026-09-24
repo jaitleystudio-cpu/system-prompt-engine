@@ -3,9 +3,16 @@
  * Web Worker: load actual spe_wasm.wasm, verify SHA-256, call spe_evaluate.
  * Uses WebAssembly via wasm-host (exports: memory, spe_alloc, spe_evaluate, spe_free).
  * No SPE semantic detectors. No TypeScript fallback. No Python. No fallback evaluator.
+ * Context-protocol compile is transport-only: JSON in → WASM → JSON out.
  */
 import { loadAndEvaluate } from "./wasm-host.mjs";
-import type { CompilePhase, EngineError, EngineSuccessBody, WorkerRequest, WorkerResponse } from "./types";
+import type {
+  CompilePhase,
+  EngineError,
+  EngineSuccessBody,
+  WorkerRequest,
+  WorkerResponse,
+} from "./types";
 
 const ctx = self as DedicatedWorkerGlobalScope;
 
@@ -27,6 +34,15 @@ async function readWasm(): Promise<{ bytes: Uint8Array; sha: string }> {
   return { bytes, sha: meta.sha256 };
 }
 
+function requestJsonText(msg: WorkerRequest): string {
+  if (msg.type === "init") return "{}";
+  if (msg.type === "context_protocol") {
+    // Transport only — do not interpret or synthesize protocol fields here.
+    return JSON.stringify(msg.request);
+  }
+  return msg.jsonText;
+}
+
 ctx.onmessage = async (ev: MessageEvent<WorkerRequest>) => {
   const msg = ev.data;
   const onPhase = (phase: string) => {
@@ -35,29 +51,11 @@ ctx.onmessage = async (ev: MessageEvent<WorkerRequest>) => {
   try {
     post({ id: msg.id, type: "status", phase: "loading_wasm" });
     const { bytes, sha } = await readWasm();
-    if (msg.type === "init") {
-      const out = await loadAndEvaluate({
-        wasmBytes: bytes,
-        expectedSha256: sha,
-        jsonText: "{}",
-        onPhase,
-      });
-      post({
-        id: msg.id,
-        type: "done",
-        error: out.error as EngineError | null,
-        result: out.result as EngineSuccessBody | null,
-        phases: ["loading_wasm", ...out.phases],
-        sha256: out.sha256,
-        imports: out.imports,
-        used_ts_fallback: false,
-      });
-      return;
-    }
+    const jsonText = requestJsonText(msg);
     const out = await loadAndEvaluate({
       wasmBytes: bytes,
       expectedSha256: sha,
-      jsonText: msg.jsonText,
+      jsonText,
       onPhase,
     });
     post({

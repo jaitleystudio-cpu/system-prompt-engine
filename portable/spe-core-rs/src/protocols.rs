@@ -792,11 +792,187 @@ pub fn evaluate_context_protocol(input: &Value) -> Result<Value, SpeError> {
             )?;
             Ok(json!({"graph": load_protocol(domain_id, depth)?.to_value()}))
         }
+        "compile" => compile_web_request(input),
         other => Err(SpeError::new(
             PORTABILITY_INVALID_FIXTURE,
             format!("unknown context_protocol op: {other}"),
         )),
     }
+}
+
+/// Public web controls: source_mode AUTO/ON/OFF, requested_depth AUTO/FAST/SMART/DEEP.
+/// Maps onto Task 11 core depth/need APIs. Produced only in Rust (WASM path).
+fn map_requested_depth(requested: &str, signals: Option<DepthSignals>) -> Result<ProtocolDepth, SpeError> {
+    match requested {
+        "AUTO" => Ok(signals
+            .map(select_protocol_depth)
+            .unwrap_or(ProtocolDepth::Standard)),
+        "FAST" => Ok(ProtocolDepth::Quick),
+        "SMART" => Ok(ProtocolDepth::Standard),
+        "DEEP" => Ok(ProtocolDepth::Deep),
+        other => Err(SpeError::new(
+            PORTABILITY_INVALID_FIXTURE,
+            format!("invalid requested_depth: {other}; expected AUTO|FAST|SMART|DEEP"),
+        )),
+    }
+}
+
+fn parse_source_mode(raw: &str) -> Result<&'static str, SpeError> {
+    match raw {
+        "AUTO" => Ok("AUTO"),
+        "ON" => Ok("ON"),
+        "OFF" => Ok("OFF"),
+        other => Err(SpeError::new(
+            PORTABILITY_INVALID_FIXTURE,
+            format!("invalid source_mode: {other}; expected AUTO|ON|OFF"),
+        )),
+    }
+}
+
+fn capability_profile_mode(profile: Option<&CapabilityProfile>) -> &'static str {
+    match profile {
+        None => "CONDITIONAL",
+        Some(p) if p.available.is_empty() => "NONE",
+        Some(_) => "DECLARED",
+    }
+}
+
+fn compile_web_request(input: &Value) -> Result<Value, SpeError> {
+    let request_text = input
+        .get("request_text")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
+    let source_mode = parse_source_mode(
+        input
+            .get("source_mode")
+            .and_then(|v| v.as_str())
+            .unwrap_or("AUTO"),
+    )?;
+    let requested_depth = input
+        .get("requested_depth")
+        .and_then(|v| v.as_str())
+        .unwrap_or("AUTO");
+    let signals = match input.get("signals") {
+        None | Some(Value::Null) => None,
+        Some(v) => Some(DepthSignals::from_value(v)?),
+    };
+    let resolved_depth = map_requested_depth(requested_depth, signals)?;
+
+    let mut flags = Map::new();
+    match source_mode {
+        "OFF" => {
+            flags.insert("recipe_id".into(), json!("recipe.none.local_only"));
+            flags.insert("domain_id".into(), json!("writing_communication"));
+            flags.insert("max_sources".into(), json!(0));
+            flags.insert("max_context_bytes".into(), json!(0));
+        }
+        "ON" => {
+            flags.insert("max_sources".into(), json!(12));
+        }
+        _ => {}
+    }
+    if let Some(d) = input.get("domain_id").and_then(|v| v.as_str()) {
+        if source_mode != "OFF" {
+            flags.insert("domain_id".into(), json!(d));
+        }
+    }
+    if let Some(r) = input.get("recipe_id").and_then(|v| v.as_str()) {
+        if source_mode != "OFF" {
+            flags.insert("recipe_id".into(), json!(r));
+        }
+    }
+    let flags_val = if flags.is_empty() {
+        None
+    } else {
+        Some(Value::Object(flags))
+    };
+    let need = crate::grounding::compile_context_need(request_text, flags_val.as_ref())?;
+
+    let domain_ids: Vec<String> = if let Some(arr) = input.get("domain_ids").and_then(|v| v.as_array()) {
+        arr.iter()
+            .map(|v| {
+                v.as_str()
+                    .map(|s| s.to_string())
+                    .ok_or_else(|| {
+                        SpeError::new(PORTABILITY_INVALID_FIXTURE, "domain_id must be string")
+                    })
+            })
+            .collect::<Result<Vec<_>, _>>()?
+    } else {
+        need.domain_tags.clone()
+    };
+    if domain_ids.is_empty() {
+        return Err(SpeError::new(
+            PORTABILITY_INVALID_FIXTURE,
+            "domain_ids required (or request_text must route to a domain)",
+        ));
+    }
+
+    let profile = match input.get("capability_profile") {
+        None | Some(Value::Null) => None,
+        Some(v) => Some(CapabilityProfile::from_value(v)?),
+    };
+    let profile_mode = capability_profile_mode(profile.as_ref());
+    let contract = compile_execution_contract(&domain_ids, resolved_depth, profile)?;
+    let adapter = input
+        .get("adapter_id")
+        .and_then(|v| v.as_str())
+        .unwrap_or("ANY_AI");
+    let rendered = render_execution_contract(&contract, adapter)?;
+    let prompt_digest = crate::sha256_lite::sha256_hex(rendered.as_bytes());
+
+    let required_nodes: Vec<String> = contract
+        .graph
+        .nodes
+        .iter()
+        .filter(|n| n.required_at_depth.rank() <= resolved_depth.rank())
+        .map(|n| n.node_id.clone())
+        .collect();
+
+    let context_summary = json!({
+        "need_id": need.need_id,
+        "domain_tags": need.domain_tags,
+        "context_types": need.context_types.iter().map(|t| t.as_str()).collect::<Vec<_>>(),
+        "freshness_required": need.freshness_required,
+        "max_sources": need.max_sources,
+        "reason_codes": need.reason_codes,
+        "source_mode": source_mode,
+    });
+
+    let quality_record = json!({
+        "protocol_id": contract.protocol_id(),
+        "protocol_version": contract.graph.version,
+        "depth": resolved_depth.as_str(),
+        "required_nodes": required_nodes.clone(),
+        "completed_nodes": [],
+        "skipped_nodes": [],
+        "failed_nodes": [],
+        "unknown_nodes": required_nodes,
+        "context_capsule_ids": [],
+        "evaluator_results": [],
+        "unverified_claims": [],
+        "known_limitations": if profile_mode == "CONDITIONAL" {
+            vec!["Target capability inventory unknown; auto-route rendered conditionally.".to_string()]
+        } else if profile_mode == "NONE" {
+            vec!["No declared capabilities; continue without tool routing.".to_string()]
+        } else {
+            vec![]
+        },
+        "freshness_state": if need.freshness_required { "REQUIRED" } else { "NOT_REQUIRED" },
+        "adapter_id": adapter,
+        "prompt_digest": prompt_digest,
+    });
+
+    Ok(json!({
+        "source_mode": source_mode,
+        "requested_depth": requested_depth,
+        "resolved_depth": resolved_depth.as_str(),
+        "context_summary": context_summary,
+        "execution_contract": contract.to_value(),
+        "quality_record": quality_record,
+        "capability_profile_mode": profile_mode,
+        "rendered": rendered,
+    }))
 }
 
 fn str_field(obj: &Map<String, Value>, key: &str) -> Result<String, SpeError> {

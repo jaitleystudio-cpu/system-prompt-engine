@@ -3,6 +3,9 @@
  *
  * UI → Worker → actual spe_wasm.wasm → spe-core-rs.
  * No SPE semantic detectors. No TypeScript fallback. No fallback. No Python in the browser path.
+ * Context-protocol fields (source_mode, requested_depth, context_summary,
+ * execution_contract, quality_record, capability_profile_mode) are produced only
+ * by Rust through spe_evaluate — this host never synthesizes them locally.
  * NEW_IMPLEMENTATION. not_a_release=true.
  */
 
