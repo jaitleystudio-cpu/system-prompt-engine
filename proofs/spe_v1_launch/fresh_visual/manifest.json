@@ -1,5 +1,5 @@
 {
-  "testedSha": "3d50f162c441dfcfa6f6ddd1b7f8e5c30b2e5eb5",
+  "testedSha": "9a19bcf90a1713e2eae9a005af8b81ca0458f6dd",
   "capturedAtIst": "24/9/2026, 10:57:39 am",
   "shots": [
     {
@@ -106,5 +106,6 @@
       "h": 900,
       "reducedMotion": true
     }
-  ]
+  ],
+  "note": "Screenshots captured from production build including hero/privacy polish committed as this SHA."
 }
