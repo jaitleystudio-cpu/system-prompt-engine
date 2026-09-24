@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - chatgpt/context-protocol-compiler-design-20260924
+  pull_request:
+    branches:
+      - grok/spe-v1-launch-20260924
   workflow_dispatch:
 
 permissions:
