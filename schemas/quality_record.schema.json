@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/quality_record.schema.json",
+  "title": "QualityRecord",
+  "description": "Auditable protocol quality record. XCAT-adjacent serialized field name is quality_record, never receipt. Does not mint authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_id",
+    "protocol_version",
+    "depth",
+    "required_nodes",
+    "completed_nodes",
+    "skipped_nodes",
+    "failed_nodes",
+    "unknown_nodes",
+    "context_capsule_ids",
+    "evaluator_results",
+    "unverified_claims",
+    "known_limitations",
+    "freshness_state",
+    "adapter_id",
+    "prompt_digest"
+  ],
+  "properties": {
+    "protocol_id": { "type": "string", "minLength": 1 },
+    "protocol_version": { "type": "string", "minLength": 1 },
+    "depth": {
+      "type": "string",
+      "enum": ["QUICK", "STANDARD", "DEEP", "CRITICAL"]
+    },
+    "required_nodes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "completed_nodes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "skipped_nodes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "failed_nodes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "unknown_nodes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "context_capsule_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "evaluator_results": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evaluator_result" }
+    },
+    "unverified_claims": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "known_limitations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "freshness_state": { "type": "string" },
+    "adapter_id": { "type": "string" },
+    "prompt_digest": { "type": "string" }
+  },
+  "$defs": {
+    "evaluator_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["criterion_id", "status"],
+      "properties": {
+        "criterion_id": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "FAIL", "UNKNOWN", "NOT_APPLICABLE"]
+        },
+        "evidence_ref": { "type": ["string", "null"] },
+        "measurement": {},
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

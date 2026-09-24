@@ -2282,3 +2282,121 @@ em {
 .spe-create-thought {
   color: #b7c6ea;
 }
+
+
+/* ——— Context protocol controls (Task 13) ——— */
+.spe-ctx-protocol {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0.85rem 0 0.35rem;
+  padding: 0.95rem 1rem;
+  border-radius: 14px;
+  border: 1px solid color-mix(in oklab, var(--spe-line, #2a3140) 85%, transparent);
+  background: color-mix(in oklab, var(--spe-panel, #12151c) 94%, transparent);
+}
+.spe-ctx-protocol-lead {
+  margin: 0;
+  opacity: 0.82;
+  font-size: 0.95rem;
+}
+.spe-ctx-protocol-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+.spe-ctx-protocol-options {
+  display: grid;
+  gap: 0.45rem;
+}
+.spe-ctx-protocol-options--compact {
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+}
+.spe-ctx-protocol-option {
+  display: grid;
+  gap: 0.15rem;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 12px;
+  border: 1px solid color-mix(in oklab, var(--spe-line, #2a3140) 80%, transparent);
+  background: color-mix(in oklab, #0e1117 92%, transparent);
+  padding: 0.65rem 0.85rem;
+  min-height: 44px;
+  min-width: 44px;
+}
+.spe-ctx-protocol-option:hover:not(:disabled) {
+  border-color: color-mix(in oklab, var(--spe-accent, #7dd3fc) 45%, #2a3140);
+}
+.spe-ctx-protocol-option[aria-checked="true"] {
+  border-color: color-mix(in oklab, var(--spe-accent, #7dd3fc) 60%, #2a3140);
+  background: color-mix(in oklab, var(--spe-accent, #7dd3fc) 16%, #12151c);
+}
+.spe-ctx-protocol-option:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--spe-accent, #7dd3fc) 70%, white);
+  outline-offset: 2px;
+}
+.spe-ctx-protocol-option:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.spe-ctx-protocol-option-title {
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+.spe-ctx-protocol-option-hint {
+  font-size: 0.8rem;
+  opacity: 0.68;
+  line-height: 1.3;
+}
+.spe-ctx-refresh {
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in oklab, #fbbf24 35%, #2a3140);
+  background: color-mix(in oklab, #fbbf24 10%, #12151c);
+  color: #fde68a;
+}
+.spe-ctx-inspect {
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid color-mix(in oklab, var(--spe-line, #2a3140) 70%, transparent);
+}
+.spe-ctx-inspect h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 560;
+}
+.spe-ctx-inspect-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.spe-ctx-inspect-list li {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  background: color-mix(in oklab, #0a0c10 88%, transparent);
+}
+.spe-ctx-inspect-list span {
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+.spe-ctx-inspect-list strong {
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+@media (max-width: 720px) {
+  .spe-ctx-protocol-options--compact {
+    grid-template-columns: 1fr 1fr;
+  }
+}

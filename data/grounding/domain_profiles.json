@@ -1,0 +1,547 @@
+{
+  "profiles": [
+    {
+      "domain_id": "research",
+      "preferred_source_classes": [
+        "peer_reviewed",
+        "systematic_review",
+        "preprint",
+        "replication"
+      ],
+      "disallowed_source_classes": [
+        "social_rumor",
+        "anonymous_forum"
+      ],
+      "freshness_policy": "publication_and_retraction_bound",
+      "contradiction_policy": "surface_contradictions",
+      "citation_policy": "required",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "abstain_if_insufficient",
+      "default_protocol_id": "protocol.research.critical",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.research.v1"
+    },
+    {
+      "domain_id": "coding",
+      "preferred_source_classes": [
+        "official_docs",
+        "official_repo",
+        "release_notes",
+        "standards",
+        "trusted_community"
+      ],
+      "disallowed_source_classes": [
+        "unattributed_gist"
+      ],
+      "freshness_policy": "prefer_current_major",
+      "contradiction_policy": "prefer_official",
+      "citation_policy": "link_docs",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_stale",
+      "default_protocol_id": "protocol.coding.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.coding.v1"
+    },
+    {
+      "domain_id": "debugging",
+      "preferred_source_classes": [
+        "official_docs",
+        "issue_tracker",
+        "trusted_community"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "prefer_current_major",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.debugging.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.debugging.v1"
+    },
+    {
+      "domain_id": "cybersecurity",
+      "preferred_source_classes": [
+        "vendor_advisory",
+        "cve",
+        "standards",
+        "official_docs"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "advisory_bound",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "abstain_if_insufficient",
+      "default_protocol_id": "protocol.cybersecurity.critical",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.cybersecurity.v1"
+    },
+    {
+      "domain_id": "data_statistics",
+      "preferred_source_classes": [
+        "primary_dataset",
+        "peer_reviewed",
+        "official_stats"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "dataset_version_bound",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.data_statistics.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.data_statistics.v1"
+    },
+    {
+      "domain_id": "math_engineering",
+      "preferred_source_classes": [
+        "deterministic_computation",
+        "standards",
+        "peer_reviewed"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "version_insensitive",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.math_engineering.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.math_engineering.v1"
+    },
+    {
+      "domain_id": "health_information",
+      "preferred_source_classes": [
+        "guideline",
+        "regulator",
+        "systematic_review",
+        "primary_study"
+      ],
+      "disallowed_source_classes": [
+        "anecdote",
+        "social_rumor"
+      ],
+      "freshness_policy": "guideline_bound",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "required",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "abstain_if_insufficient",
+      "default_protocol_id": "protocol.health.critical",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.health.v1"
+    },
+    {
+      "domain_id": "legal_information",
+      "preferred_source_classes": [
+        "statute",
+        "regulation",
+        "case_law",
+        "official_guidance"
+      ],
+      "disallowed_source_classes": [
+        "anonymous_forum"
+      ],
+      "freshness_policy": "jurisdiction_version_bound",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "required",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "abstain_if_insufficient",
+      "default_protocol_id": "protocol.legal.critical",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.legal.v1"
+    },
+    {
+      "domain_id": "finance",
+      "preferred_source_classes": [
+        "regulator",
+        "official_filings",
+        "market_data"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "market_clock_bound",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "abstain_if_stale",
+      "default_protocol_id": "protocol.finance.critical",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.finance.v1"
+    },
+    {
+      "domain_id": "business_strategy",
+      "preferred_source_classes": [
+        "market_data",
+        "official_filings",
+        "analyst_report"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "prefer_current",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.business.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.business.v1"
+    },
+    {
+      "domain_id": "marketing_growth",
+      "preferred_source_classes": [
+        "platform_docs",
+        "case_study",
+        "benchmark"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "prefer_current",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.marketing.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.marketing.v1"
+    },
+    {
+      "domain_id": "product_management",
+      "preferred_source_classes": [
+        "user_research",
+        "market_data",
+        "official_docs"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "prefer_current",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.product.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.product.v1"
+    },
+    {
+      "domain_id": "ux_ui_web_design",
+      "preferred_source_classes": [
+        "design_system",
+        "accessibility_standard",
+        "official_docs"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "prefer_current",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.ux.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.ux.v1"
+    },
+    {
+      "domain_id": "writing_communication",
+      "preferred_source_classes": [],
+      "disallowed_source_classes": [],
+      "freshness_policy": "not_required",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "never_required",
+      "default_protocol_id": "protocol.writing.light",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.writing.v1"
+    },
+    {
+      "domain_id": "education",
+      "preferred_source_classes": [
+        "curriculum",
+        "peer_reviewed",
+        "textbook"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "prefer_current",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.education.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.education.v1"
+    },
+    {
+      "domain_id": "shopping",
+      "preferred_source_classes": [
+        "manufacturer_spec",
+        "live_price",
+        "warranty",
+        "independent_review"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "price_clock_bound",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.shopping.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.shopping.v1"
+    },
+    {
+      "domain_id": "travel_local",
+      "preferred_source_classes": [
+        "official_tourism",
+        "live_schedule",
+        "map_data"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "schedule_bound",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.travel.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.travel.v1"
+    },
+    {
+      "domain_id": "news_current",
+      "preferred_source_classes": [
+        "wire_service",
+        "primary_outlet",
+        "official_statement"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "news_clock_bound",
+      "contradiction_policy": "surface_contradictions",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.news.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.news.v1"
+    },
+    {
+      "domain_id": "creative_media",
+      "preferred_source_classes": [],
+      "disallowed_source_classes": [],
+      "freshness_policy": "not_required",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.creative.light",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.creative.v1"
+    },
+    {
+      "domain_id": "image_generation",
+      "preferred_source_classes": [
+        "model_card",
+        "license_terms"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "model_version_bound",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.image_gen.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.image_gen.v1"
+    },
+    {
+      "domain_id": "video_generation",
+      "preferred_source_classes": [
+        "model_card",
+        "license_terms"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "model_version_bound",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.video_gen.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.video_gen.v1"
+    },
+    {
+      "domain_id": "translation_localization",
+      "preferred_source_classes": [
+        "terminology_glossary",
+        "style_guide"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "glossary_version_bound",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.translation.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.translation.v1"
+    },
+    {
+      "domain_id": "career",
+      "preferred_source_classes": [
+        "job_listing",
+        "labor_stats",
+        "company_official"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "prefer_current",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.career.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.career.v1"
+    },
+    {
+      "domain_id": "personal_planning",
+      "preferred_source_classes": [],
+      "disallowed_source_classes": [],
+      "freshness_policy": "not_required",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "never_required",
+      "default_protocol_id": "protocol.personal.light",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.personal.v1"
+    },
+    {
+      "domain_id": "prompt_engineering",
+      "preferred_source_classes": [
+        "model_docs",
+        "official_docs"
+      ],
+      "disallowed_source_classes": [],
+      "freshness_policy": "prefer_current_major",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "warn_if_missing",
+      "default_protocol_id": "protocol.prompt_engineering.standard",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.prompt_engineering.v1"
+    },
+    {
+      "domain_id": "general",
+      "preferred_source_classes": [],
+      "disallowed_source_classes": [],
+      "freshness_policy": "not_required",
+      "contradiction_policy": "note_if_present",
+      "citation_policy": "optional",
+      "license_policy": "respect_source_license",
+      "abstention_policy": "never_required",
+      "default_protocol_id": "protocol.general.light",
+      "allowed_protocol_depths": [
+        "LIGHT",
+        "STANDARD",
+        "CRITICAL"
+      ],
+      "evaluator_id": "eval.general.v1"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 {
   "version": 1,
-  "note": "Refreshed 2026-09-24 SPE V1 rebuild: visitor Rich Human English for URL/CORS; image/video/code instrument panels; My Work empty state; Dawn coil specimen.",
+  "note": "Refreshed 2026-09-24 Task 13: Simple/Inspect grounding and depth controls (human-facing copy).",
+  "generatedAt": "2026-09-24T11:09:24.917Z",
   "entries": [
     {
       "id": "0014fed211f55a770c35",
@@ -489,6 +490,12 @@
       "text": "hover-explode"
     },
     {
+      "id": "0d03b4a73d8570ac6d68",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Use the best available tools when they help."
+    },
+    {
       "id": "0d0cca583d42074e481f",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -685,6 +692,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "gal-06"
+    },
+    {
+      "id": "108c9fb3bb87c85d5d46",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Sources and depth"
     },
     {
       "id": "10b1899b4e6e06ad5c40",
@@ -1143,6 +1156,12 @@
       "text": "soft north"
     },
     {
+      "id": "1bd7c48af8009c11aaf2",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "AUTO"
+    },
+    {
       "id": "1be6c09ccdd372659045",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -1303,6 +1322,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "Write a 150-word grant abstract for a community tool library. Problem, approach, impact, and how success is measured."
+    },
+    {
+      "id": "1f69549b21a17e269dc9",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "Contradictions / unverified"
     },
     {
       "id": "1f9d7c7ad67cbdfba804",
@@ -1479,6 +1504,12 @@
       "text": "<div class=\"spe-toolbar\" role=\"toolbar\" data-structure=\"toolbar-list\" data-hierarchy=\"2\" data-zone=\"top-center\">Toolbar</div>"
     },
     {
+      "id": "235dd79c41170b761a0b",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Fast"
+    },
+    {
       "id": "23fd310b4c11e6efda87",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PROOF",
@@ -1519,6 +1550,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "UI critique"
+    },
+    {
+      "id": "24c3abbf08cbbbb1b35a",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "Limitations"
     },
     {
       "id": "24e0caef2315837c2c99",
@@ -1657,6 +1694,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Meta description:"
+    },
+    {
+      "id": "297b383fec4023e9ff40",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Deep"
     },
     {
       "id": "298462c826d19556e6de",
@@ -1831,6 +1874,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "The engine returned no result. Please retry."
+    },
+    {
+      "id": "2d7181374f9753d2f2e2",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "inspect"
     },
     {
       "id": "2e0616564df5237db683",
@@ -2047,6 +2096,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "caption"
+    },
+    {
+      "id": "336c6814c94dc5ce90e7",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Some saved context may be out of date. Refresh sources when you are ready — your request stays the same."
     },
     {
       "id": "33828e97f596eb94da54",
@@ -2505,6 +2560,18 @@
       "text": "There's more in your idea"
     },
     {
+      "id": "3eedba7293f798714771",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "Selected protocol"
+    },
+    {
+      "id": "3f22efa79ed31b678f55",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "Quality checks"
+    },
+    {
       "id": "3f2abe40ba72721bf8b8",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -2631,6 +2698,12 @@
       "text": "bytes)"
     },
     {
+      "id": "4380006cc0496e97abe5",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "SMART"
+    },
+    {
       "id": "43cfc8df378b2426d854",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -2719,6 +2792,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "high"
+    },
+    {
+      "id": "459cc1212ac8c025573b",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "No sources"
     },
     {
       "id": "45a3c28e9df5d58dc969",
@@ -3057,6 +3136,12 @@
       "text": "s"
     },
     {
+      "id": "4dd666bfabbb487728c3",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "· contract"
+    },
+    {
       "id": "4dfccc9cad478898c84a",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
@@ -3079,6 +3164,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Write a short description of the site"
+    },
+    {
+      "id": "4e179abeae5cf330bf2b",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "OFF"
     },
     {
       "id": "4e50e7fc5d9d9d53dddf",
@@ -3343,6 +3434,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "brief-format"
+    },
+    {
+      "id": "54981dbdb42d8bc69825",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "mode"
     },
     {
       "id": "54a70bc50c6c2ad1601a",
@@ -3621,6 +3718,12 @@
       "text": "flutter"
     },
     {
+      "id": "5a57e1d0e70039ec65c0",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "Context details"
+    },
+    {
       "id": "5a86fd32d74c86d46cd0",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -3727,6 +3830,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "form["
+    },
+    {
+      "id": "5cd8dcdb955dc8d01c05",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Automatic"
     },
     {
       "id": "5cfff70168816dd5700e",
@@ -4179,6 +4288,12 @@
       "text": "LISTENING"
     },
     {
+      "id": "66a9a2a58d414e021d54",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
       "id": "66d09a4b2fa48a9fd982",
       "file": "apps/web/src/media/limits.ts",
       "depth": "PRODUCT",
@@ -4527,6 +4642,12 @@
       "text": "A realistic week plan."
     },
     {
+      "id": "7012a44d1980778961d4",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "ON"
+    },
+    {
       "id": "704252ee59987d46b6fc",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -4827,6 +4948,12 @@
       "text": "Explain simply"
     },
     {
+      "id": "76a1d0e37943d22cd8cf",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "Capability profile"
+    },
+    {
       "id": "76f2f7597bdd6d6c23c3",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
@@ -5007,6 +5134,12 @@
       "text": "}\n    }\n    .background(Color.black)\n  }\n}"
     },
     {
+      "id": "7afde56135a2364ed450",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "ANY_AI"
+    },
+    {
       "id": "7b060606a40760292c2a",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -5157,6 +5290,12 @@
       "text": "“Help me plan a thoughtful launch.”"
     },
     {
+      "id": "7ee3a464eb6740dcd3cc",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Prefer grounded context for this request."
+    },
+    {
       "id": "7ef6882a37201f790da6",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -5173,6 +5312,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "#7dd3fc"
+    },
+    {
+      "id": "7f8eb5bc0f77ddcfc4e6",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "DEEP"
     },
     {
       "id": "7fc1face1cbfcb5a943f",
@@ -5457,6 +5602,18 @@
       "text": "scroll"
     },
     {
+      "id": "8608d4424ddba029bc58",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Take more care with evidence."
+    },
+    {
+      "id": "861e4c8376dd86d93a24",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "simple"
+    },
+    {
       "id": "866e5cee82f90a813650",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -5505,10 +5662,22 @@
       "text": "No audio transcription."
     },
     {
+      "id": "86f6ce879568ad71674a",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Add sources"
+    },
+    {
       "id": "873b4fa4c45229a6fbc0",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "gal-10"
+    },
+    {
+      "id": "87463b8758c9d837999a",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "compile"
     },
     {
       "id": "875fb569521d143a7b65",
@@ -5593,6 +5762,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Headings:"
+    },
+    {
+      "id": "8915232b29d50fc065b8",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "Sources"
     },
     {
       "id": "89f44d68898c21d3f8ff",
@@ -5725,6 +5900,12 @@
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
       "text": "English (India)"
+    },
+    {
+      "id": "8cf050cf7352f80368ed",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Sources"
     },
     {
       "id": "8d38a2fd7b804c1b9039",
@@ -6003,6 +6184,12 @@
       "text": "brightens"
     },
     {
+      "id": "92a51a8cff7b83fa9558",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "context_protocol"
+    },
+    {
       "id": "92bf59796b6ef2b288e2",
       "file": "apps/web/src/scene/semantic.ts",
       "depth": "PRODUCT",
@@ -6183,6 +6370,12 @@
       "text": "Jetpack Compose"
     },
     {
+      "id": "96a1d82c290794d1a06b",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "VERSION_BOUND"
+    },
+    {
       "id": "96b75558513607e44ff3",
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PROOF",
@@ -6297,6 +6490,12 @@
       "text": "under header"
     },
     {
+      "id": "99b097b8ea4c004768c7",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "STALE"
+    },
+    {
       "id": "99e4a07be7497c46a397",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
@@ -6331,6 +6530,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Reading screenshot (UI IR)…"
+    },
+    {
+      "id": "9ae74cf53354fb8c78b5",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "NO_SOURCES"
     },
     {
       "id": "9b030b71dfbe8c20841f",
@@ -6543,6 +6748,18 @@
       "text": "ok"
     },
     {
+      "id": "9f14856cb5e14fd12d38",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "completed"
+    },
+    {
+      "id": "9f53d046d3320c816f32",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Add context only when it improves the answer."
+    },
+    {
       "id": "9f65059cad7d314fc79c",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -6553,6 +6770,12 @@
       "file": "apps/web/src/landing/ScrollStory.tsx",
       "depth": "INSPECT",
       "text": "Choose the AI you use."
+    },
+    {
+      "id": "9fa93f08cecd6fa24896",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "Context and protocol details"
     },
     {
       "id": "9fb90a58d73651057573",
@@ -6703,6 +6926,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "<footer class=\"spe-foot\" role=\"contentinfo\" data-zone=\"bottom-center\" data-hierarchy=\"2\">"
+    },
+    {
+      "id": "a377cc51faa4d227bc6f",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Stay with what you already provided."
     },
     {
       "id": "a37aa6593d7a9c0f2040",
@@ -7209,10 +7438,22 @@
       "text": "hover-explode"
     },
     {
+      "id": "aeb80a34b7c8967467e2",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "ADD_SOURCES"
+    },
+    {
       "id": "aeb8b354bf552273c7cc",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "COMPILING"
+    },
+    {
+      "id": "aeefdb481a86471ef81b",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "None listed"
     },
     {
       "id": "af04b7b4f69048122543",
@@ -7273,6 +7514,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "sunrise"
+    },
+    {
+      "id": "b06b57f5992d335d7b2e",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "· up to"
     },
     {
       "id": "b09a8d864f2661403d18",
@@ -7459,6 +7706,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "URL"
+    },
+    {
+      "id": "b488ed93f3f0c2b419fc",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "pro"
     },
     {
       "id": "b4cc1ffca8c34be1a729",
@@ -7819,6 +8072,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "<h2>Dialog</h2>"
+    },
+    {
+      "id": "bd14c54daf2ac2571e3f",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "· resolved"
     },
     {
       "id": "bd1870c81582b1573a91",
@@ -8223,6 +8482,12 @@
       "text": "ecommerce"
     },
     {
+      "id": "c47709ed389fffe5fc4a",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Smart"
+    },
+    {
       "id": "c49baadd0cdaf3cb6ec2",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
@@ -8299,6 +8564,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "Constellation of orbs with focus states and reduced-motion static layout."
+    },
+    {
+      "id": "c6bcb751990440264831",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "FAST"
     },
     {
       "id": "c6cf446c1e53af37fb66",
@@ -8383,6 +8654,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "; pairs="
+    },
+    {
+      "id": "c92ae87ef24e5424f50e",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Match depth to the job."
     },
     {
       "id": "c9969056f66d9f50c145",
@@ -8499,6 +8776,12 @@
       "text": "Engine trust"
     },
     {
+      "id": "cb93b9bef5e3ef765b84",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "· still open"
+    },
+    {
       "id": "cba1ed428bb903268dbb",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -8545,6 +8828,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "region-form"
+    },
+    {
+      "id": "cc935a1d13493c6a1675",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "SUGGEST_CONTEXT_REFRESH"
     },
     {
       "id": "cc9f02c3e5640c8c8bac",
@@ -8895,6 +9184,12 @@
       "text": "HTML file is too large (max"
     },
     {
+      "id": "d463ba109939c2eb1163",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Keep the path short."
+    },
+    {
       "id": "d47381706e815c8280f8",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -9115,6 +9410,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "const regions ="
+    },
+    {
+      "id": "d94b745309d8327d52cf",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "AUTO"
     },
     {
       "id": "d958f7e72bcfed66364b",
@@ -9393,6 +9694,12 @@
       "text": "create"
     },
     {
+      "id": "e04819aee89defdfba93",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Use current sources when they help."
+    },
+    {
       "id": "e0665be0ff6d8799459b",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
@@ -9513,6 +9820,12 @@
       "text": "meta[property=\"og:description\"]"
     },
     {
+      "id": "e1f8698af108bfda3299",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "Freshness"
+    },
+    {
       "id": "e208fa85190884b744d9",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -9565,6 +9878,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "Portable .spe files"
+    },
+    {
+      "id": "e2d8fa08e2e167fbc963",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "object"
     },
     {
       "id": "e2ed9b82fea8d6940dbf",
@@ -9909,6 +10228,12 @@
       "text": "There&apos;s more in your idea than fits in one sentence."
     },
     {
+      "id": "e9704ba2aeb629ec219b",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "INSPECT",
+      "text": "No extra limitations recorded."
+    },
+    {
       "id": "e97be3c39b6a591e9c42",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -10185,6 +10510,12 @@
       "text": "webgl-3d"
     },
     {
+      "id": "f0e1688941912c459af7",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Balanced care and speed."
+    },
+    {
       "id": "f0e9d45d2971217fe646",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -10357,6 +10688,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "class ScreenFromScreenshot extends StatelessWidget {\n  const ScreenFromScreenshot({super.key});\n  @override\n  Widget build(BuildContext context) {\n    final size = MediaQuery.of(context).size;\n    return Scaffold(\n      backgroundColor: const Color(0xFF0B0D10),\n      body: Stack(children: ["
+    },
+    {
+      "id": "f5c0cdedcdd0415b9fb3",
+      "file": "apps/web/src/composer/ContextProtocolControls.tsx",
+      "depth": "PRODUCT",
+      "text": "Depth"
     },
     {
       "id": "f5d73bc3abce010008fe",
@@ -10730,6 +11067,5 @@
       "depth": "PRODUCT",
       "text": "my-work"
     }
-  ],
-  "generatedAt": "2026-09-24T08:49:41.458Z"
+  ]
 }

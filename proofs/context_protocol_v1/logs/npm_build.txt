@@ -1,0 +1,46 @@
+
+> spe-web@0.3.0 build
+> npm run spe:copy-check && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs
+
+
+> spe-web@0.3.0 spe:copy-check
+> node ../../tools/copy-check.mjs
+
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 1843,
+  "unreviewed": 0,
+  "violations": [],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}
+
+> spe-web@0.3.0 copy-wasm
+> node scripts/copy-wasm.mjs
+
+copy-wasm: wrote /workspace/system-prompt-engine/apps/web/public/spe_wasm.wasm (671614 bytes, sha256=8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830)
+vite v5.4.21 building for production...
+transforming...
+[plugin:vite:resolve] [plugin vite:resolve] Module "node:crypto" has been externalized for browser compatibility, imported by "/workspace/system-prompt-engine/apps/web/src/engine/wasm-host.mjs". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+✓ 107 modules transformed.
+node_modules/onnxruntime-web/dist/ort.bundle.min.mjs (6:96476): Use of eval in "node_modules/onnxruntime-web/dist/ort.bundle.min.mjs" is strongly discouraged as it poses security risks and may cause issues with minification.
+rendering chunks...
+[plugin:vite:reporter] [plugin vite:reporter] 
+(!) /workspace/system-prompt-engine/apps/web/src/media/limits.ts is dynamically imported by /workspace/system-prompt-engine/apps/web/src/media/semanticPipeline.ts but also statically imported by /workspace/system-prompt-engine/apps/web/src/composer/UnifiedComposer.tsx, /workspace/system-prompt-engine/apps/web/src/media/imageObserve.ts, /workspace/system-prompt-engine/apps/web/src/media/urlIngest.ts, /workspace/system-prompt-engine/apps/web/src/media/videoSample.ts, dynamic import will not move module into another chunk.
+
+computing gzip size...
+dist/index.html                                        1.30 kB │ gzip:   0.66 kB
+dist/assets/engine.worker-BRhc7cig.js                  3.10 kB
+dist/assets/ort-wasm-simd-threaded-BQQNiIPt.wasm  11,246.03 kB
+dist/assets/index-DgzaCFIv.css                        45.09 kB │ gzip:  10.94 kB
+dist/assets/SpeIntelligence-7qSWiF3K.js                3.94 kB │ gzip:   1.81 kB
+dist/assets/LabStage-rQWknjNC.js                       5.24 kB │ gzip:   1.64 kB
+dist/assets/index-DAxrJW2A.js                        315.75 kB │ gzip: 103.37 kB
+dist/assets/ort-wasm-juE7TTNY.js                     464.10 kB │ gzip: 109.92 kB
+dist/assets/r3f-BB1YTSQJ.js                          833.22 kB │ gzip: 224.11 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 21.22s
+Precached 15 same-origin shell assets; no user data.

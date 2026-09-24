@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/spe_artifact.schema.json",
+  "title": "SPE portable .spe artifact",
+  "description": "Portable .spe artifact. spe.artifact.v1 is legacy (context_protocol optional). spe.artifact.v2 requires context_protocol lineage. quality_record never renamed to receipt. intent is ProtectedIntent and must not be silently rewritten.",
+  "type": "object",
+  "required": [
+    "spe_format",
+    "created_at_utc",
+    "user_request",
+    "category",
+    "target",
+    "envelope",
+    "wasm",
+    "rendered_prompt",
+    "intent",
+    "lineage",
+    "integrity"
+  ],
+  "properties": {
+    "spe_format": {
+      "type": "string",
+      "enum": ["spe.artifact.v1", "spe.artifact.v2"]
+    },
+    "created_at_utc": { "type": "string", "minLength": 1 },
+    "user_request": { "type": "string" },
+    "category": { "type": "string" },
+    "target": { "type": "string" },
+    "envelope": {},
+    "wasm": { "type": "object" },
+    "rendered_prompt": { "type": "string" },
+    "intent": {
+      "type": "object",
+      "description": "ProtectedIntent surface — immutable under refresh/migration.",
+      "required": ["confirmed", "assumed", "unknowns", "conflicts"],
+      "properties": {
+        "confirmed": { "type": "array" },
+        "assumed": { "type": "array" },
+        "unknowns": { "type": "array" },
+        "conflicts": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "engine": { "type": "string" },
+        "abi": { "type": "string" },
+        "ui": { "type": "string" },
+        "not_a_release": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["algorithm", "content_sha256", "state"],
+      "properties": {
+        "algorithm": { "type": "string", "const": "SHA-256" },
+        "content_sha256": { "type": "string", "minLength": 1 },
+        "state": {
+          "type": "string",
+          "enum": ["COMPUTED", "VERIFIED", "MISMATCH"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "context_protocol": { "$ref": "#/$defs/context_protocol_lineage" },
+    "quality_record": {
+      "description": "Optional top-level alias for Inspect; preferred nest is context_protocol.quality_record. Never named receipt.",
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "spe_format": { "const": "spe.artifact.v2" } },
+        "required": ["spe_format"]
+      },
+      "then": {
+        "required": ["context_protocol"]
+      }
+    }
+  ],
+  "additionalProperties": true,
+  "$defs": {
+    "context_protocol_lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_snapshot_ids",
+        "protocol_id",
+        "protocol_version",
+        "depth",
+        "adapter_id",
+        "freshness_state",
+        "quality_record",
+        "prompt_digest"
+      ],
+      "properties": {
+        "context_snapshot_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "protocol_id": { "type": "string", "minLength": 1 },
+        "protocol_version": { "type": "string", "minLength": 1 },
+        "depth": {
+          "type": "string",
+          "enum": ["QUICK", "STANDARD", "DEEP", "CRITICAL"]
+        },
+        "adapter_id": { "type": "string" },
+        "freshness_state": { "type": "string" },
+        "quality_record": {
+          "type": "object",
+          "description": "Auditable quality_record body; key must never be receipt."
+        },
+        "prompt_digest": { "type": "string" },
+        "prompt_lineage": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["node_id", "kind", "prompt_digest"],
+            "properties": {
+              "node_id": { "type": "string" },
+              "kind": { "type": "string" },
+              "prompt_digest": { "type": "string" },
+              "created_at_utc": { "type": "string" },
+              "from_snapshot_id": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}

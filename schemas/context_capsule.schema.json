@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/context_capsule.schema.json",
+  "title": "ContextCapsule",
+  "description": "Normalized immutable context object with provenance and taint (grounding contract).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "capsule_id",
+    "domain_id",
+    "context_type",
+    "claim_or_observation",
+    "value",
+    "source_id",
+    "source_class",
+    "authority_class",
+    "retrieved_at",
+    "valid_as_of",
+    "fresh_until",
+    "license",
+    "allowed_use",
+    "confidence",
+    "support_status",
+    "contradiction_group",
+    "provenance_digest",
+    "taint_labels",
+    "sensitivity_labels"
+  ],
+  "properties": {
+    "capsule_id": { "type": "string", "minLength": 1 },
+    "domain_id": { "type": "string", "minLength": 1 },
+    "context_type": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "STATIC_REFERENCE",
+        "CURRENT_FACTS",
+        "SCHOLARLY_EVIDENCE",
+        "OFFICIAL_DOCUMENTATION",
+        "USER_DATA",
+        "LIVE_DATA",
+        "MEDIA_OBSERVATION",
+        "DETERMINISTIC_COMPUTATION",
+        "LOCAL_INFORMATION",
+        "REGULATORY_SOURCE",
+        "COMPARATIVE_MARKET_DATA"
+      ]
+    },
+    "claim_or_observation": { "type": "string" },
+    "value": { "type": "string" },
+    "source_id": { "type": "string", "minLength": 1 },
+    "source_class": { "type": "string", "minLength": 1 },
+    "authority_class": { "type": "string", "minLength": 1 },
+    "retrieved_at": { "type": "string", "minLength": 1 },
+    "valid_as_of": { "type": "string", "minLength": 1 },
+    "fresh_until": { "type": ["string", "null"] },
+    "license": { "type": "string" },
+    "allowed_use": { "type": "string" },
+    "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "support_status": {
+      "type": "string",
+      "enum": [
+        "SUPPORTED",
+        "PARTIALLY_SUPPORTED",
+        "CONTRADICTED",
+        "MIXED",
+        "INSUFFICIENT",
+        "PREPRINT_ONLY",
+        "UNVERIFIED"
+      ]
+    },
+    "contradiction_group": { "type": ["string", "null"] },
+    "provenance_digest": { "type": "string", "minLength": 1 },
+    "taint_labels": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "sensitivity_labels": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+PASS simple_copy — Use current sources when they help.
+PASS simple_copy — Use the best available tools when they help.
+PASS public_control — AUTO
+PASS public_control — ADD_SOURCES
+PASS public_control — NO_SOURCES
+PASS public_control — FAST
+PASS public_control — SMART
+PASS public_control — DEEP
+PASS simple_no_jargon — visitor labels clean
+PASS a11y_radiogroup — keyboard-reachable radios
+PASS app_wired — controls + compileContextProtocol
+PASS source_mapping — ADD_SOURCES→ON NO_SOURCES→OFF
+PASS simple_no_unnecessary_grounding — ["NO_EXTERNAL_CONTEXT_REQUIRED"]
+PASS research_sources_auto_deep — depth=DEEP contract=DEEP max=12
+PASS research_auto_critical_internal — CRITICAL
+PASS no_tools_conditional_or_limited — No declared capabilities; continue without tool routing.
+PASS conditional_prompt_rule — CONDITIONAL
+PASS source_off_no_external_context — max_sources=0
+PASS stale_spe_refresh_no_intent_mutation — Some saved context may be out of date. Refresh sources when you are ready — your
+PASS stale_spe_fresh_noop — no suggestion when fresh
+PASS fail_closed_without_wasm — ENGINE_UNAVAILABLE
+{
+  "gate": "E2E_CONTEXT_PROTOCOL",
+  "passed": 21,
+  "failed": 0,
+  "failedNames": []
+}

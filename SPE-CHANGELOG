@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### 2026-09-24 — Context Protocol v1 verification (Task 15)
+- Fresh regression on HEAD `23e65f4ecb48067f22185160fa6e9af3baee107d` (branch `chatgpt/context-protocol-compiler-design-20260924`)
+- Suites: pytest 641; focused 641; spe-core-rs cargo 38; spe-wasm cargo 4; `npm run test:engine` + `npm run build`; e2e-context-protocol 21; fixture-only benchmark PASS; adversarial 35
+- Proof pack: `proofs/context_protocol_v1/{CONTEXT_PROTOCOL_V1_REPORT.md,manifest.json,logs/}`
+- Verdicts: `CONTEXT_PROTOCOL_IMPLEMENTATION_PRESENT`; `CONTEXT_PROTOCOL_TESTED_WITHIN_DECLARED_SCOPE`; `WORLD #1 = NOT_PROVEN`; `INDEPENDENTLY_REPLICATED = NOT_PROVEN`
+- Hosting: `HOSTING = FORBIDDEN_PENDING_FOUNDER_10_10_ACCEPTANCE` (engineering/candidate ready ≠ hosting approval)
+- Deviations noted: empty `tests/mutation/`; Task 14 new `spe_artifact` serializer; no WASM rebuild (digest `8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830`); local commit only — no push
+- COST ₹0; no hosting/DNS/workflows/PR#6/G6-H
+
 ### 2026-09-15 — Sprint 5 Portable Rust Kernel + WASM (feat/portable-kernel-wasm-s5)
 - `portable/spe-core-rs` deterministic kernel: ABI transport, protected-semantic compare, capability containment
 - `portable/spe-wasm` thin JSON-in/JSON-out wrapper over spe-core-rs (no duplicated validators)

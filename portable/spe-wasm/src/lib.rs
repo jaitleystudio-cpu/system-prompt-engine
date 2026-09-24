@@ -2,6 +2,16 @@
 //!
 //! This crate must not contain semantic detectors, reason tables, or
 //! protected-field logic. All evaluation delegates to the portable kernel.
+//!
+//! Context-protocol web compile (Task 12) is exposed only through the same
+//! `evaluate_json` → `spe_core_rs::evaluate_json_str` path:
+//!   spe_api = "context_protocol", op = "compile"
+//! Request fields (Rust-owned): source_mode AUTO|ON|OFF,
+//! requested_depth AUTO|FAST|SMART|DEEP, capability_profile (optional).
+//! Response fields (Rust-owned): context_summary, execution_contract,
+//! quality_record, capability_profile_mode, resolved_depth.
+//! The web TypeScript layer only transports/renders these results and must
+//! fail closed when WASM is unavailable (no local protocol synthesis).
 
 /// Evaluate a UTF-8 JSON fixture by delegating to `spe-core-rs`.
 pub fn evaluate_json(input: &str) -> String {
