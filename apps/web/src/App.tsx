@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EngineClient } from "./engine/client";
 import type {
   CompilePhase,
+  ContextProtocolCompileOutput,
   EngineError,
   EngineSuccessBody,
 } from "./engine/types";
@@ -31,6 +32,13 @@ import { Hero } from "./landing/Hero";
 import { ScrollStory } from "./landing/ScrollStory";
 import { Workspace } from "./workspace/Workspace";
 import { UnifiedComposer } from "./composer/UnifiedComposer";
+import {
+  ContextProtocolControls,
+  mapPublicSourceToWasm,
+  suggestStaleContextRefresh,
+  type PublicDepthControl,
+  type PublicSourceControl,
+} from "./composer/ContextProtocolControls";
 import { DailyLab } from "./lab/DailyLab";
 import { MyWork } from "./pages/MyWork";
 import { PrivacyProof } from "./pages/PrivacyProof";
@@ -124,6 +132,15 @@ export default function App() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [mode, setMode] = useState<Mode>("simple");
   const [lens, setLens] = useState<Lens>("prompt");
+  const [publicSource, setPublicSource] =
+    useState<PublicSourceControl>("AUTO");
+  const [publicDepth, setPublicDepth] =
+    useState<PublicDepthControl>("AUTO");
+  const [contextProtocol, setContextProtocol] =
+    useState<ContextProtocolCompileOutput | null>(null);
+  const [contextRefreshNotice, setContextRefreshNotice] = useState<string | null>(
+    null,
+  );
   const [online, setOnline] = useState(
     typeof navigator === "undefined" ? true : navigator.onLine,
   );
@@ -192,6 +209,8 @@ export default function App() {
     setPhases([]);
     setBusy(false);
     setPhase("idle");
+    setContextProtocol(null);
+    setContextRefreshNotice(null);
   };
 
   const updateIntentField = (
@@ -275,6 +294,31 @@ export default function App() {
           setPhases((prev) => (prev.includes(p) ? prev : [...prev, p]));
         });
         if (requestRevision !== revision.current) return;
+
+        // Context / grounding protocol — WASM only (fail closed; no TS synthesis).
+        try {
+          const proto = await client.compileContextProtocol(
+            {
+              spe_api: "context_protocol",
+              op: "compile",
+              request_text: goal,
+              source_mode: mapPublicSourceToWasm(publicSource),
+              requested_depth: publicDepth,
+              adapter_id: "ANY_AI",
+            },
+            () => {},
+          );
+          if (requestRevision !== revision.current) return;
+          if (!proto.error && proto.result?.output) {
+            setContextProtocol(
+              proto.result.output as ContextProtocolCompileOutput,
+            );
+          } else {
+            setContextProtocol(null);
+          }
+        } catch {
+          if (requestRevision === revision.current) setContextProtocol(null);
+        }
         if (
           !out.error &&
           out.result &&
@@ -358,7 +402,7 @@ export default function App() {
         if (requestRevision === revision.current) setBusy(false);
       }
     },
-    [userRequest, intent, category, target],
+    [userRequest, intent, category, target, publicSource, publicDepth],
   );
 
   const onCopy = async () => {
@@ -402,6 +446,21 @@ export default function App() {
         );
       invalidate();
       setArtifact(verified);
+      // Stale context may suggest refresh; never mutate ProtectedIntent here.
+      const ext = parsed as SpeArtifactV1 & {
+        context_protocol?: { freshness_state?: string };
+        quality_record?: { freshness_state?: string };
+      };
+      const freshness =
+        ext.context_protocol?.freshness_state ??
+        ext.quality_record?.freshness_state ??
+        null;
+      const refresh = suggestStaleContextRefresh({
+        freshness_state: freshness,
+        user_request: parsed.user_request,
+        protected_intent: parsed.intent,
+      });
+      setContextRefreshNotice(refresh?.message ?? null);
       setUserRequest(parsed.user_request);
       setCategory((parsed.category as CategoryId) || "Writing");
       setTarget((parsed.target as TargetId) || "any");
@@ -539,6 +598,22 @@ export default function App() {
                 applyUserRequestChange(prompt);
               }}
             />
+            <ContextProtocolControls
+              source={publicSource}
+              depth={publicDepth}
+              onSourceChange={(v) => {
+                invalidate();
+                setPublicSource(v);
+              }}
+              onDepthChange={(v) => {
+                invalidate();
+                setPublicDepth(v);
+              }}
+              uiMode={mode}
+              disabled={busy}
+              inspectOutput={contextProtocol}
+              refreshNotice={contextRefreshNotice}
+            />
             <div className="compile-row">
               <button
                 type="button"
@@ -643,6 +718,22 @@ export default function App() {
 
         {view === "workspace" && (
           <>
+            <ContextProtocolControls
+              source={publicSource}
+              depth={publicDepth}
+              onSourceChange={(v) => {
+                invalidate();
+                setPublicSource(v);
+              }}
+              onDepthChange={(v) => {
+                invalidate();
+                setPublicDepth(v);
+              }}
+              uiMode={mode}
+              disabled={busy}
+              inspectOutput={contextProtocol}
+              refreshNotice={contextRefreshNotice}
+            />
             <Workspace
               userRequest={userRequest}
               setUserRequest={(v) => {
