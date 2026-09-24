@@ -23,7 +23,7 @@ This pass closed several evidence gaps without claiming production readiness:
 | Token | SHA |
 | --- | --- |
 | START_HEAD (this pass) | `8502fcb78da873ee7d7a7099fe98a686fa1f9059` |
-| CURRENT_PR_HEAD | `DOCS_TIP_PENDING` |
+| CURRENT_PR_HEAD | `643c20c6c0cd769a48d6a400b73b363bbc0e0234` |
 | MAIN | `646d3765153f66c3951d812b8adfd87fcbf766b1` |
 
 ## 3. Capability matrix (truthful)
