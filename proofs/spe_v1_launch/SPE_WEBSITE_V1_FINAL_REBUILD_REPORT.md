@@ -18,10 +18,10 @@ Product rebuild closed the named QUALITY_GAP / PRODUCT_DIRECTION_MISMATCH work f
 | --- | --- | --- |
 | MAIN | origin/main | `646d3765153f66c3951d812b8adfd87fcbf766b1` |
 | START_HEAD | branch tip at mission start | `20c8d9710f41c537ee0a969e27869f73eb8849fd` |
-| IMPLEMENTATION_TESTED_SHA | Suites green through rebuild (fill at commit) | _(post-commit tip)_ |
-| VISUAL_EVIDENCE_SHA | final_visual round-1..3 | _(same tip)_ |
-| REPORT_SHA | this report body | _(tip-pointer commit; avoid self-hash chase)_ |
-| CURRENT_PR_HEAD | PR #41 tip after push | _(post-push)_ |
+| IMPLEMENTATION_TESTED_SHA | Suites green through rebuild (fill at commit) | `157600afaa827ff08cc4496dc831edfa8ee54a14` |
+| VISUAL_EVIDENCE_SHA | final_visual round-1..3 | `157600afaa827ff08cc4496dc831edfa8ee54a14` |
+| REPORT_SHA | this report body | `157600afaa827ff08cc4496dc831edfa8ee54a14` (body; tip may gain pointer commit) |
+| CURRENT_PR_HEAD | PR #41 tip after push | `157600afaa827ff08cc4496dc831edfa8ee54a14` (pre-push; update after push if tip moves) |
 
 ## 3. Capability matrix (truthful)
 
