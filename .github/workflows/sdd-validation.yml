@@ -36,8 +36,10 @@ jobs:
         run: rustup target list --installed
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e '.[dev]'
-      - name: Build spe-wasm release artifact for browser verification
-        run: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --target wasm32-unknown-unknown --release
+      - name: Clean and build release WASM for browser validation
+        run: |
+          cargo clean --manifest-path portable/spe-wasm/Cargo.toml
+          cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --target wasm32-unknown-unknown --release
       - name: Refresh shipped web WASM payload
         working-directory: apps/web
         run: |
