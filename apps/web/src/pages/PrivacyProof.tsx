@@ -33,8 +33,7 @@ export function PrivacyProof() {
           <h2>Speech is optional</h2>
           <p>
             Dictation uses your browser&apos;s own speech tools when available.
-            SPE does not store audio. You can always type instead. Device support
-            varies — treat speech as best-effort until qualified on your hardware.
+            SPE does not store audio. You can always type instead. Speech support varies by browser. If listening is unavailable, typing always works.
           </p>
         </article>
         <article>

@@ -7341,6 +7341,12 @@
       "text": "(prefers-reduced-motion: reduce)"
     },
     {
+      "id": "b79061819769e3933ad1",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Dictation uses your browser&apos;s own speech tools when available. SPE does not store audio. You can always type instead. Speech support varies by browser. If listening is unavailable, typing always works."
+    },
+    {
       "id": "b7b372dcc6ba463292c4",
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
