@@ -1,0 +1,54 @@
+name: SDD Context Protocol Validation
+
+on:
+  push:
+    branches:
+      - chatgpt/context-protocol-compiler-design-20260924
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e '.[dev]'
+      - run: python -m pytest -q
+
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: spe-core-rs tests
+        working-directory: portable/spe-core-rs
+        run: cargo test --all-targets
+      - name: spe-wasm tests
+        working-directory: portable/spe-wasm
+        run: cargo test --all-targets
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: install
+        working-directory: apps/web
+        run: npm ci
+      - name: engine tests
+        working-directory: apps/web
+        run: npm run test:engine
+      - name: build
+        working-directory: apps/web
+        run: npm run build
