@@ -391,7 +391,7 @@ export async function ingestUrl(
         status: "network_error",
         url: parsed.toString(),
         finalUrl,
-        message: `The site responded with HTTP ${res.status}. SPE did not use a proxy.`,
+        message: `The site responded with HTTP ${res.status}. Try uploading the page HTML or a screenshot instead.`,
         fallbacks: FALLBACKS,
       };
     }
@@ -412,8 +412,8 @@ export async function ingestUrl(
         textExcerpt: brief.textExcerpt,
         buildBrief: brief.buildBrief,
         notes: [
-          "Fetched directly from your browser (CORS permitted).",
-          "No CORS proxy was used.",
+          "Fetched directly in this browser.",
+          "Read without going through another website.",
           `Final URL: ${finalUrl}`,
           `Content-Type: ${ctype || "unknown"}`,
           `Bytes read (bounded): ${limited.length}`,
@@ -430,7 +430,7 @@ export async function ingestUrl(
       buildBrief: null,
       notes: [
         "Fetched as non-HTML text.",
-        "No CORS proxy was used.",
+        "Read without going through another website.",
         `Final URL: ${finalUrl}`,
       ],
     };
@@ -444,7 +444,7 @@ export async function ingestUrl(
         status: timedOut ? "timeout" : "aborted",
         url: parsed.toString(),
         message: timedOut
-          ? `Fetch timed out after ${timeoutMs}ms. SPE did not use a proxy.`
+          ? `The page took too long to respond after ${timeoutMs}ms. Try uploading the page HTML or a screenshot instead.`
           : "Fetch was cancelled.",
         fallbacks: FALLBACKS,
       };
@@ -453,7 +453,7 @@ export async function ingestUrl(
       status: "cors_blocked",
       url: parsed.toString(),
       message:
-        "This browser could not read that URL (likely CORS or network). SPE will not use a paid proxy.",
+        "This browser could not read that page. Some websites don't allow direct reading from another site. Upload the page HTML or a screenshot instead.",
       fallbacks: FALLBACKS,
     };
   } finally {

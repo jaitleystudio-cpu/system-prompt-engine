@@ -6,6 +6,7 @@ type Props = {
   history: HistoryItem[];
   onClear: () => void;
   onOpen: (item: HistoryItem) => void;
+  onStartCreate?: () => void;
 };
 
 export function MyWork({
@@ -14,6 +15,7 @@ export function MyWork({
   history,
   onClear,
   onOpen,
+  onStartCreate,
 }: Props) {
   return (
     <section className="spe-mywork" aria-labelledby="mywork-title">
@@ -40,7 +42,19 @@ export function MyWork({
       </div>
       <div className="spe-moon-grid">
         {history.length === 0 ? (
-          <p role="status">No saved ideas yet.</p>
+          <div className="spe-empty-work" role="status">
+            <p className="spe-empty-kicker">Quiet shelf</p>
+            <h2>Nothing saved here yet</h2>
+            <p>
+              When you choose to keep an idea, it stays on this device only —
+              ready to reopen, export, or clear.
+            </p>
+            {onStartCreate && (
+              <button type="button" className="spe-build" onClick={onStartCreate}>
+                Start with an idea <span>↗</span>
+              </button>
+            )}
+          </div>
         ) : (
           history.map((h) => (
             <button

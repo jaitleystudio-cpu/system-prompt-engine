@@ -1600,7 +1600,8 @@ em {
 .spe-composer-modes button {
   border: 1px solid color-mix(in oklab, var(--spe-line, #2a3140) 80%, transparent);
   background: color-mix(in oklab, var(--spe-panel, #12151c) 92%, transparent);
-  color: inherit; border-radius: 999px; padding: 0.4rem 0.85rem; font: inherit; cursor: pointer;
+  color: inherit; border-radius: 999px; padding: 0.55rem 0.95rem; font: inherit; cursor: pointer;
+  min-height: 44px; min-width: 44px;
 }
 .spe-composer-modes button.is-active,
 .spe-composer-modes button[aria-selected="true"] {
@@ -1650,7 +1651,7 @@ em {
 .spe-field.inline { display: inline-flex; gap: 0.5rem; align-items: center; }
 .spe-linkish { background: none; border: 0; color: #7dd3fc; cursor: pointer; font: inherit; text-decoration: underline; }
 @media (max-width: 390px) {
-  .spe-composer-modes button { padding: 0.35rem 0.65rem; font-size: 0.86rem; }
+  .spe-composer-modes button { font-size: 0.86rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .spe-lab-card, .spe-composer-preview img { transition: none; }
@@ -1703,8 +1704,8 @@ em {
 .spe-create-head .spe-kicker { letter-spacing: 0.14em; opacity: 0.7; }
 .spe-create-head p { max-width: 40rem; line-height: 1.55; }
 @media (max-width: 390px) {
-  .spe-composer-modes { gap: 0.28rem; }
-  .spe-composer-modes button { padding: 0.3rem 0.55rem; font-size: 0.8rem; }
+  .spe-composer-modes { gap: 0.35rem; }
+  .spe-composer-modes button { font-size: 0.84rem; }
   .spe-create { margin-top: 4.5rem; }
 }
 
@@ -1814,4 +1815,88 @@ em {
   .spe-hero h1 {
     line-height: 1.2;
   }
+}
+
+
+/* ——— SPE V1 rebuild polish ——— */
+.spe-composer {
+  padding: 1.1rem 1.15rem 1.25rem;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(125, 211, 252, 0.14);
+  background:
+    linear-gradient(165deg, rgba(18, 24, 34, 0.92), rgba(8, 10, 14, 0.96));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+.spe-panel-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.62;
+}
+.spe-obs-panel, .spe-structure-panel, .spe-video-timeline {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.85rem 0.95rem;
+  background: rgba(8, 10, 14, 0.72);
+  display: grid;
+  gap: 0.45rem;
+}
+.spe-obs-body { margin: 0; white-space: pre-wrap; line-height: 1.45; opacity: 0.92; }
+.spe-structure-panel ul, .spe-scene-list {
+  margin: 0; padding-left: 1.1rem; opacity: 0.88; font-size: 0.9rem;
+}
+.spe-timeline-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1a2230, #2a3548);
+  margin: 0.35rem 0 0.55rem;
+}
+.spe-timeline-mark {
+  position: absolute;
+  top: -3px;
+  width: 8px;
+  height: 16px;
+  margin-left: -4px;
+  border-radius: 999px;
+  background: #7dd3fc;
+  box-shadow: 0 0 0 2px rgba(7, 9, 13, 0.85);
+}
+.spe-scaffold-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.spe-empty-work {
+  grid-column: 1 / -1;
+  border-radius: 1.15rem;
+  padding: 1.6rem 1.4rem;
+  border: 1px dashed rgba(125, 211, 252, 0.28);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(125, 211, 252, 0.08), transparent 55%),
+    #0c1016;
+  display: grid;
+  gap: 0.65rem;
+  max-width: 34rem;
+}
+.spe-empty-kicker {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.spe-empty-work h2 { margin: 0; font-weight: 560; letter-spacing: -0.02em; }
+.spe-empty-work p { margin: 0; opacity: 0.88; line-height: 1.5; max-width: 28rem; }
+.spe-composer-url-note { opacity: 0.82; line-height: 1.5; margin: 0; max-width: 40rem; }
+.spe-scaffold-tabs button, .spe-ghost, .file-btn, .spe-build {
+  min-height: 44px;
+}
+@media (max-width: 800px) {
+  .spe-scaffold-compare { grid-template-columns: 1fr; }
+}
+@media (max-width: 393px) {
+  .spe-composer { padding: 0.9rem; }
+  .spe-composer-modes button { min-height: 44px; }
 }

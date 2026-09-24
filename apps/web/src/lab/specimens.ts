@@ -316,11 +316,11 @@ export const DAILY_3D_QUEUE: LabSpecimen[] = [
   {
     id: "d3d-14",
     title: "Dawn coil",
-    blurb: "A helix greeting the next day.",
+    blurb: "Soft-metal beads rising into morning light.",
     editorialStory:
-      "The fourteenth piece closes the curated set: a dawn-lit coil that promises a new rotation tomorrow — still fourteen, still finite, still honest.",
+      "Fourteen gold beads climb a quiet helix. Sunrise warms the metal; mist holds the gaps. Tomorrow the same fixed set turns again — fourteen pieces, nothing endless claimed.",
     seedIdea:
-      "Dawn helix closing a 14-day curated Daily 3D Lab queue with honest finite promise.",
+      "A dawn-lit helix of soft-metal beads with sunrise lighting and three calm scroll chapters.",
     category: "Website / 3D",
     accent: "#fde047",
     publishDate: "2026-09-24",
@@ -330,7 +330,7 @@ export const DAILY_3D_QUEUE: LabSpecimen[] = [
     materials: { primary: "dawn gold", secondary: "mist", finish: "soft metal" },
     lighting: { key: "sunrise", fill: "peach", rim: "gold" },
     buildPrompt:
-      "Dawn coil with finite-queue honesty copy and Open in SPE clean state.",
+      "Build a dawn-lit helix of soft-metal beads with sunrise lighting, three scroll chapters, and a calm Open in SPE handoff.",
     speArtifact: "spe:daily3d:dawn-coil",
     status: "published",
     shape: "helix",

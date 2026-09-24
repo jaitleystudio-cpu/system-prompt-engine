@@ -114,7 +114,8 @@ try {
 
   await modeTab(page, "URL");
   const urlCopy = await page.locator(".spe-create").innerText();
-  if (/CORS|proxy|Paste|screenshot|HTML/i.test(urlCopy)) pass("url_cors_honesty", "fallbacks");
+  if (/upload the page HTML|screenshot|don.t allow direct reading|HTML/i.test(urlCopy))
+    pass("url_cors_honesty", "human fallbacks");
   else fail("url_cors_honesty", "missing");
 
   await nav(page, "Daily Lab");

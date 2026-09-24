@@ -43,14 +43,14 @@ type Props = {
 const MODES: { id: ComposerMode; label: string; hint: string }[] = [
   { id: "text", label: "Text", hint: "Type or paste your idea" },
   { id: "speech", label: "Speech", hint: "Dictate, then review" },
-  { id: "image", label: "Image", hint: "Local observations → prompt" },
+  { id: "image", label: "Image", hint: "Preview the picture, then review separate notes" },
   {
     id: "screenshot",
     label: "Screenshot → code",
-    hint: "UI scaffold + prompt",
+    hint: "Source, layout, target, scaffold, compare",
   },
-  { id: "video", label: "Video", hint: "Scene-aware frame sampling" },
-  { id: "url", label: "URL", hint: "CORS-honest fetch + fallbacks" },
+  { id: "video", label: "Video", hint: "Preview, timeline, and scenes — no invented audio" },
+  { id: "url", label: "URL", hint: "Read a page here, or upload if blocked" },
 ];
 
 export function UnifiedComposer({
@@ -68,6 +68,14 @@ export function UnifiedComposer({
   const [urlResult, setUrlResult] = useState<UrlIngestResult | null>(null);
   const [scaffolds, setScaffolds] = useState<CodeScaffold[]>([]);
   const [codeTarget, setCodeTarget] = useState<CodeTarget>("react");
+  const [compareTarget, setCompareTarget] = useState<CodeTarget | null>(null);
+  const [mediaNotes, setMediaNotes] = useState<string>("");
+  const [structureLines, setStructureLines] = useState<string[]>([]);
+  const [videoScenes, setVideoScenes] = useState<{
+    durationSec: number;
+    times: number[];
+    summary: string;
+  } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const valueRef = useRef(value);
   const opIdRef = useRef(0);
@@ -115,6 +123,10 @@ export function UnifiedComposer({
     replacePreview(null);
     setScaffolds([]);
     setUrlResult(null);
+    setMediaNotes("");
+    setStructureLines([]);
+    setVideoScenes(null);
+    setCompareTarget(null);
     setError("");
     setStatus("");
   }, [replacePreview]);
@@ -203,6 +215,25 @@ export function UnifiedComposer({
           if (!isCurrent()) return;
           const { scaffolds: built } = screenshotIRToCodePackage(ir);
           setScaffolds(built);
+          setCompareTarget(
+            (built.find((s) => s.target !== codeTarget) ?? built[0])
+              ?.target as CodeTarget,
+          );
+          const regionLines = ir.regions.slice(0, 8).map(
+            (r) =>
+              `${r.roleGuess} · ${r.confidence}${r.evidence ? ` — ${r.evidence.slice(0, 72)}` : ""}`,
+          );
+          setStructureLines([
+            `Source ${ir.viewport.sourceWidth}×${ir.viewport.sourceHeight}`,
+            `Layout guess ${ir.columns} columns × ${ir.rows} rows`,
+            ...regionLines,
+          ]);
+          setMediaNotes(
+            [
+              "Layout notes from this screenshot (uncertain — verify against the image):",
+              ...regionLines,
+            ].join("\n"),
+          );
           const chosen =
             built.find((s) => s.target === codeTarget) ?? built[0];
           const request = [
@@ -216,7 +247,7 @@ export function UnifiedComposer({
           valueRef.current = request;
           onScaffoldPrompt?.(chosen.prompt, chosen.target as CodeTarget);
           setStatus(
-            `Screenshot observation ready (${ir.viewport.sourceWidth}×${ir.viewport.sourceHeight}; layout guess ${ir.columns}×${ir.rows}).`,
+            `Screenshot ready — source, layout, and ${built.length} scaffolds to compare.`,
           );
         } finally {
           URL.revokeObjectURL(url);
@@ -231,6 +262,9 @@ export function UnifiedComposer({
         });
         if (!isCurrent()) return;
         const block = semanticToPromptBlock(sem);
+        setMediaNotes(sem.humanSummary || "Picture notes are ready below.");
+        setStructureLines([]);
+        setVideoScenes(null);
         appendBlock(
           [
             "Image → prompt request:",
@@ -239,9 +273,7 @@ export function UnifiedComposer({
             block,
           ].join("\n"),
         );
-        setStatus(
-          `Image observation ready: ${sem.humanSummary.slice(0, 140)}…`,
-        );
+        setStatus("Picture notes ready — review them beside your idea.");
       }
     } catch (e) {
       if (!isCurrent()) return;
@@ -262,6 +294,18 @@ export function UnifiedComposer({
         tier: "LITE",
       });
       if (!isCurrent()) return;
+      setVideoScenes({
+        durationSec: obs.durationSec,
+        times: obs.sampleTimesSec,
+        summary: obs.sequenceSummary,
+      });
+      setMediaNotes(
+        [
+          obs.sequenceSummary,
+          "No audio is transcribed or invented — scenes come from sampled frames only.",
+        ].join("\n"),
+      );
+      setStructureLines([]);
       appendBlock(
         [
           "Video → prompt request:",
@@ -271,7 +315,7 @@ export function UnifiedComposer({
         ].join("\n"),
       );
       setStatus(
-        `Sampled ${obs.frames.length} distinct frames across ${obs.durationSec}s. Added to your idea.`,
+        `Sampled ${obs.frames.length} scenes across ${obs.durationSec}s. Timeline updated.`,
       );
     } catch (e) {
       if (!isCurrent()) return;
@@ -466,7 +510,8 @@ export function UnifiedComposer({
             </label>
           )}
           {previewUrl && (
-            <div className="spe-composer-preview">
+            <div className="spe-composer-preview" data-panel="source">
+              <p className="spe-panel-label">Source</p>
               {mode === "video" ? (
                 <video src={previewUrl} controls preload="metadata" />
               ) : (
@@ -474,9 +519,60 @@ export function UnifiedComposer({
               )}
             </div>
           )}
+          {mode === "video" && videoScenes && (
+            <div className="spe-video-timeline" aria-label="Scene timeline">
+              <p className="spe-panel-label">Timeline · scenes</p>
+              <div
+                className="spe-timeline-track"
+                role="img"
+                aria-label={`${videoScenes.times.length} scenes across ${videoScenes.durationSec} seconds`}
+              >
+                {videoScenes.times.map((t, i) => {
+                  const pct =
+                    videoScenes.durationSec > 0
+                      ? Math.min(100, Math.max(0, (t / videoScenes.durationSec) * 100))
+                      : 0;
+                  return (
+                    <span
+                      key={`${t}-${i}`}
+                      className="spe-timeline-mark"
+                      style={{ left: `${pct}%` }}
+                      title={`Scene ${i + 1} @ ${t.toFixed(1)}s`}
+                    />
+                  );
+                })}
+              </div>
+              <ul className="spe-scene-list">
+                {videoScenes.times.map((t, i) => (
+                  <li key={`${t}-li-${i}`}>
+                    Scene {i + 1} · {t.toFixed(1)}s
+                  </li>
+                ))}
+              </ul>
+              <p className="spe-muted">No audio is transcribed or invented.</p>
+            </div>
+          )}
+          {structureLines.length > 0 && mode === "screenshot" && (
+            <div className="spe-structure-panel" data-panel="structure">
+              <p className="spe-panel-label">Structure</p>
+              <ul>
+                {structureLines.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {mediaNotes && mode !== "screenshot" && (
+            <aside className="spe-obs-panel" aria-label="Notes from media">
+              <p className="spe-panel-label">
+                {mode === "image" ? "Notes from this picture" : "Notes from this video"}
+              </p>
+              <p className="spe-obs-body">{mediaNotes}</p>
+            </aside>
+          )}
           {scaffolds.length > 0 && (
             <div className="spe-scaffolds">
-              <h3>Scaffolds (uncertain layout — honest starters)</h3>
+              <h3>Scaffolds (honest starters — not pixel-perfect)</h3>
               <div className="spe-scaffold-tabs" role="group" aria-label="Framework">
                 {scaffolds.map((s) => (
                   <button
@@ -489,12 +585,52 @@ export function UnifiedComposer({
                   </button>
                 ))}
               </div>
-              <pre className="spe-scaffold-code" tabIndex={0}>
-                {
-                  (scaffolds.find((s) => s.target === codeTarget) ??
-                    scaffolds[0]).code
-                }
-              </pre>
+              <div className="spe-scaffold-compare">
+                <div>
+                  <p className="spe-panel-label">
+                    Target · {CODE_TARGET_LABELS[codeTarget]}
+                  </p>
+                  <pre className="spe-scaffold-code" tabIndex={0}>
+                    {
+                      (scaffolds.find((s) => s.target === codeTarget) ??
+                        scaffolds[0]).code
+                    }
+                  </pre>
+                </div>
+                <div>
+                  <label className="spe-field inline">
+                    <span>Compare</span>
+                    <select
+                      value={compareTarget ?? ""}
+                      disabled={disabled}
+                      onChange={(e) =>
+                        setCompareTarget(
+                          (e.target.value || null) as CodeTarget | null,
+                        )
+                      }
+                    >
+                      <option value="">Choose…</option>
+                      {scaffolds
+                        .filter((s) => s.target !== codeTarget)
+                        .map((s) => (
+                          <option key={s.target} value={s.target}>
+                            {s.label}
+                          </option>
+                        ))}
+                    </select>
+                  </label>
+                  {compareTarget && (
+                    <pre className="spe-scaffold-code" tabIndex={0}>
+                      {
+                        (
+                          scaffolds.find((s) => s.target === compareTarget) ??
+                          scaffolds[0]
+                        ).code
+                      }
+                    </pre>
+                  )}
+                </div>
+              </div>
               <button
                 type="button"
                 className="spe-ghost"
@@ -505,7 +641,11 @@ export function UnifiedComposer({
             </div>
           )}
           <label className="spe-field grow">
-            <span>Your idea (with observations)</span>
+            <span>
+              {mode === "image" || mode === "video"
+                ? "Your idea"
+                : "Your idea (with layout notes)"}
+            </span>
             <textarea
               rows={8}
               value={value}
@@ -558,9 +698,9 @@ export function UnifiedComposer({
             </label>
           </div>
           <p className="spe-composer-url-note">
-            SPE never uses a paid CORS proxy. If the site blocks the browser, use
-            HTML upload, a screenshot, or a short description. Failures stay in
-            this panel — they are not added to your idea.
+            Some websites don&apos;t allow direct reading from another site. If
+            that happens, upload the page HTML or a screenshot instead.
+            Failures stay in this panel — they are not added to your idea.
           </p>
           {urlResult && urlResult.status !== "ok" && (
             <ul className="spe-fallbacks">

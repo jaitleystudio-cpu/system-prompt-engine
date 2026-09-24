@@ -120,21 +120,57 @@ function SpecimenMesh({ specimen, reduced }: { specimen: LabSpecimen; reduced: b
           </mesh>
         </group>
       )}
-      {geom === "helix" &&
-        Array.from({ length: 12 }, (_, i) => {
-          const t = i / 12;
-          const a = t * Math.PI * 4;
-          return (
-            <mesh
-              key={i}
-              position={[Math.cos(a) * 0.9, t * 2 - 1, Math.sin(a) * 0.9]}
-              castShadow
-            >
-              <sphereGeometry args={[0.14, 16, 16]} />
-              <meshStandardMaterial color={matColor} metalness={0.55} roughness={0.3} />
-            </mesh>
-          );
-        })}
+      {geom === "helix" && (
+        <group>
+          {Array.from({ length: 14 }, (_, i) => {
+            const u = i / 13;
+            const a = u * Math.PI * 4.2;
+            const r = 0.85 + Math.sin(u * Math.PI) * 0.08;
+            const y = u * 2.15 - 1.05;
+            return (
+              <mesh
+                key={`bead-${i}`}
+                position={[Math.cos(a) * r, y, Math.sin(a) * r]}
+                castShadow
+              >
+                <sphereGeometry args={[0.11 + (i % 3) * 0.02, 20, 20]} />
+                <meshStandardMaterial
+                  color={matColor}
+                  emissive={matColor}
+                  emissiveIntensity={0.18 + u * 0.12}
+                  metalness={0.62}
+                  roughness={0.28}
+                />
+              </mesh>
+            );
+          })}
+          {Array.from({ length: 48 }, (_, i) => {
+            const u = i / 47;
+            const a = u * Math.PI * 4.2;
+            const r = 0.85 + Math.sin(u * Math.PI) * 0.08;
+            const y = u * 2.15 - 1.05;
+            return (
+              <mesh
+                key={`spine-${i}`}
+                position={[Math.cos(a) * r, y, Math.sin(a) * r]}
+              >
+                <sphereGeometry args={[0.035, 8, 8]} />
+                <meshStandardMaterial
+                  color="#fff7d6"
+                  emissive="#fdba74"
+                  emissiveIntensity={0.35}
+                  metalness={0.2}
+                  roughness={0.55}
+                  transparent
+                  opacity={0.55}
+                />
+              </mesh>
+            );
+          })}
+          <pointLight position={[0.4, 1.2, 0.6]} intensity={0.55} color="#fdba74" distance={5} />
+          <pointLight position={[-0.6, -0.4, -0.4]} intensity={0.25} color="#9ecbff" distance={4} />
+        </group>
+      )}
     </group>
   );
 }

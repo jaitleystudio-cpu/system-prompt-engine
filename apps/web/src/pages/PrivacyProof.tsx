@@ -39,8 +39,8 @@ export function PrivacyProof() {
         <article>
           <h2>Website fetch is honest</h2>
           <p>
-            If a site blocks the browser, SPE shows clear fallbacks (HTML upload,
-            screenshot, or a short description) and never a paid proxy.
+            If a site blocks the browser, SPE shows clear fallbacks — upload the
+            page HTML, a screenshot, or a short description.
           </p>
         </article>
         <article>

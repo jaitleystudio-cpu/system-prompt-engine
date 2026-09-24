@@ -519,8 +519,8 @@ export default function App() {
               </h1>
               <p>
                 {view === "code"
-                  ? "Code is Screenshot→code: observed layout regions with evidence, then starter scaffolds for HTML/CSS/JavaScript, React, SwiftUI, Jetpack Compose, Flutter, and React Native."
-                  : "Create is the premium instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."}
+                  ? "Upload a screenshot. SPE notes the layout it can see, then offers starter scaffolds you can compare — HTML, React, SwiftUI, Jetpack Compose, Flutter, or React Native."
+                  : "Create is the instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."}
               </p>
             </header>
             <UnifiedComposer
@@ -615,6 +615,10 @@ export default function App() {
             onClear={() => {
               clearHistory();
               setHistory([]);
+            }}
+            onStartCreate={() => {
+              invalidate();
+              setView("create");
             }}
             onOpen={(h) => {
               invalidate();

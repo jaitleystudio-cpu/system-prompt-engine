@@ -72,6 +72,7 @@ const shots = [
   { name: "daily-lab-1440", view: "Daily Lab", mode: null, w: 1440, h: 900 },
   { name: "my-work-1440", view: "My Work", mode: null, w: 1440, h: 900 },
   { name: "privacy-1440", view: "Privacy", mode: null, w: 1440, h: 900 },
+  { name: "create-393", view: "Create", mode: null, w: 393, h: 852 },
   { name: "create-390", view: "Create", mode: null, w: 390, h: 844 },
   { name: "create-360", view: "Create", mode: null, w: 360, h: 740 },
   { name: "create-320", view: "Create", mode: null, w: 320, h: 680 },
