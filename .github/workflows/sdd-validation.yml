@@ -21,6 +21,12 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
+
+      - name: install Rust toolchain for WASM conformance tests
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e '.[dev]'
       - run: python -m pytest -q
@@ -41,17 +47,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: install Rust toolchain for WASM build
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
+
       - name: install
         working-directory: apps/web
         run: npm ci
+
+      - name: build WASM artifact
+        run: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --target wasm32-unknown-unknown --release
+
       - name: engine tests
         working-directory: apps/web
         run: npm run test:engine
+
       - name: build
         working-directory: apps/web
         run: npm run build
