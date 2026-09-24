@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/context_need.schema.json",
+  "title": "ContextNeed",
+  "description": "Immutable request for context acquisition (grounding contract).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "need_id",
+    "domain_tags",
+    "context_types",
+    "freshness_required",
+    "risk_level",
+    "privacy_class",
+    "query_minimization_required",
+    "required_source_classes",
+    "optional_source_classes",
+    "max_sources",
+    "max_context_bytes",
+    "abstain_if_missing",
+    "reason_codes"
+  ],
+  "properties": {
+    "need_id": { "type": "string", "minLength": 1 },
+    "domain_tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "context_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "NONE",
+          "STATIC_REFERENCE",
+          "CURRENT_FACTS",
+          "SCHOLARLY_EVIDENCE",
+          "OFFICIAL_DOCUMENTATION",
+          "USER_DATA",
+          "LIVE_DATA",
+          "MEDIA_OBSERVATION",
+          "DETERMINISTIC_COMPUTATION",
+          "LOCAL_INFORMATION",
+          "REGULATORY_SOURCE",
+          "COMPARATIVE_MARKET_DATA"
+        ]
+      }
+    },
+    "freshness_required": { "type": "boolean" },
+    "risk_level": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH"]
+    },
+    "privacy_class": {
+      "type": "string",
+      "enum": ["PUBLIC", "PRIVATE", "SENSITIVE"]
+    },
+    "query_minimization_required": { "type": "boolean" },
+    "required_source_classes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "optional_source_classes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "max_sources": { "type": "integer", "minimum": 0 },
+    "max_context_bytes": { "type": "integer", "minimum": 0 },
+    "abstain_if_missing": { "type": "boolean" },
+    "reason_codes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}
