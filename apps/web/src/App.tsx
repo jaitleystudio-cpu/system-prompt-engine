@@ -25,15 +25,19 @@ import {
   type SpeArtifactV1,
   type TargetId,
 } from "@spe/web-runtime";
-import { Nav } from "./layout/Nav";
+import { Nav, type AppView } from "./layout/Nav";
 import { Hero } from "./landing/Hero";
 import { ScrollStory } from "./landing/ScrollStory";
 import { Workspace } from "./workspace/Workspace";
+import { UnifiedComposer } from "./composer/UnifiedComposer";
+import { DailyLab } from "./lab/DailyLab";
+import { MyWork } from "./pages/MyWork";
+import { PrivacyProof } from "./pages/PrivacyProof";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
 import { registerServiceWorker } from "./pwa";
 
-type View = "home" | "workspace";
+type View = AppView;
 type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
 
@@ -414,10 +418,9 @@ export default function App() {
         Skip to main content
       </a>
       <Nav
-        scrolled={scrolled || view === "workspace"}
+        scrolled={scrolled || view !== "home"}
         view={view}
         onNavigate={setView}
-        onOpenSpe={() => setView("workspace")}
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
       />
@@ -471,6 +474,115 @@ export default function App() {
             />
           </>
         )}
+
+        {(view === "create" || view === "code") && (
+          <section className="spe-create" aria-labelledby="create-title">
+            <header className="spe-create-head">
+              <p className="spe-kicker">{view === "code" ? "Code" : "Create"}</p>
+              <h1 id="create-title">
+                {view === "code"
+                  ? "Screenshot to code"
+                  : "Build a clearer prompt"}
+              </h1>
+              <p>
+                {view === "code"
+                  ? "Upload a UI screenshot. SPE adds local layout observations and scaffolds for HTML, React, SwiftUI, Compose, Flutter, and React Native — with uncertainty labeled."
+                  : "Start with text, speech, an image, a video, or a URL. Everything feeds the same local engine."}
+              </p>
+            </header>
+            <UnifiedComposer
+              value={userRequest}
+              onChange={(v) => {
+                invalidate();
+                setUserRequest(v);
+              }}
+              disabled={busy}
+              onScaffoldPrompt={(prompt) => {
+                invalidate();
+                setUserRequest(prompt);
+              }}
+            />
+            <div className="compile-row" style={{ marginTop: "1rem" }}>
+              <button
+                type="button"
+                className="spe-build"
+                disabled={busy || !userRequest.trim()}
+                aria-busy={busy}
+                onClick={() => void compile()}
+              >
+                {busy ? ui.working : ui.build}
+                <span>↗</span>
+              </button>
+            </div>
+            {error && <p role="alert">{error.message}</p>}
+            {rendered?.finalPrompt && (
+              <section className="spe-create-result" aria-label="Your prompt">
+                <h2>Your prompt</h2>
+                <pre tabIndex={0}>{rendered.finalPrompt}</pre>
+                <div className="spe-actions">
+                  <button type="button" className="spe-build" onClick={() => void onCopy()}>
+                    Copy prompt
+                  </button>
+                  <button type="button" className="spe-ghost" onClick={onExportSpe}>
+                    Download .spe
+                  </button>
+                  <button
+                    type="button"
+                    className="spe-ghost"
+                    onClick={() => setView("workspace")}
+                  >
+                    Open workspace
+                  </button>
+                </div>
+              </section>
+            )}
+          </section>
+        )}
+
+        {view === "lab" && (
+          <DailyLab
+            onOpenInSpe={(s) => {
+              invalidate();
+              setUserRequest(s.seedIdea);
+              setView("create");
+              window.scrollTo(0, 0);
+            }}
+            onCopyIdea={async (s) => {
+              try {
+                await navigator.clipboard.writeText(s.seedIdea);
+                setNotice("Idea copied.");
+              } catch {
+                setNotice("Copy unavailable. Select the idea text to copy it.");
+              }
+            }}
+          />
+        )}
+
+        {view === "my-work" && (
+          <MyWork
+            historyOptIn={historyOptIn}
+            setHistoryOptIn={(v) => {
+              setHistoryOptIn(v);
+              setHistoryOptInState(v);
+              setHistory(v ? loadHistory() : []);
+            }}
+            history={history}
+            onClear={() => {
+              clearHistory();
+              setHistory([]);
+            }}
+            onOpen={(h) => {
+              invalidate();
+              setUserRequest(h.user_request);
+              setCategory((h.category as CategoryId) || "Writing");
+              setTarget((h.target as TargetId) || "any");
+              setIntent(defaultIntentLens(h.user_request));
+              setView("create");
+            }}
+          />
+        )}
+
+        {view === "privacy" && <PrivacyProof />}
 
         {view === "workspace" && (
           <>

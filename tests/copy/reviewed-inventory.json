@@ -1,7 +1,7 @@
 {
   "version": 1,
   "review_kind": "assistant editorial review; not participant research",
-  "review_date": "2026-09-22",
+  "review_date": "2026-09-24",
   "constitution": "docs/human-perspective/CONSTITUTION.md",
   "scope": "Static source candidates are conservative and include some non-visible selector literals. User-authored text and generated professional prompts are excluded.",
   "perspective_matrix": {
@@ -48,6 +48,12 @@
       "text": "SPE"
     },
     {
+      "id": "0bb0ee26a0422a7e6086",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "create"
+    },
+    {
       "id": "0deca2045b162f505085",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -76,6 +82,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "instantiating"
+    },
+    {
+      "id": "1b9a0a4e64265e0a5e09",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Your prompt"
     },
     {
       "id": "1c7415bd4b9b596dcac4",
@@ -162,6 +174,12 @@
       "text": "Copy unavailable. Select the prompt text to copy it."
     },
     {
+      "id": "5e19e9b1bfe1fd06d402",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Screenshot to code"
+    },
+    {
       "id": "5fac66bc68641de542a8",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -172,6 +190,18 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "(prefers-reduced-motion: reduce)"
+    },
+    {
+      "id": "6353301a567ad50ead96",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy prompt"
+    },
+    {
+      "id": "640c99c5fcdd82dbb015",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Upload a UI screenshot. SPE adds local layout observations and scaffolds for HTML, React, SwiftUI, Compose, Flutter, and React Native — with uncertainty labeled."
     },
     {
       "id": "66a954092762b8ab233e",
@@ -246,6 +276,18 @@
       "text": "main"
     },
     {
+      "id": "77af3a8ba6ce5dd5c29c",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "lab"
+    },
+    {
+      "id": "805a78c34f49e090e945",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Code"
+    },
+    {
       "id": "823f03b421b90d36fd1f",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -268,6 +310,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "MISMATCH"
+    },
+    {
+      "id": "8440fbfcb7fa59706339",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Start with text, speech, an image, a video, or a URL. Everything feeds the same local engine."
     },
     {
       "id": "87ce9786d07d83a04b79",
@@ -306,6 +354,18 @@
       "text": "artifact"
     },
     {
+      "id": "92caed13497691d46be9",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "code"
+    },
+    {
+      "id": "93eeda9e0a5c995f3379",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Create"
+    },
+    {
       "id": "9420a6109331f59249d1",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -318,6 +378,12 @@
       "text": "Your SPE file passed its integrity check. Shape the prompt again to review its current details."
     },
     {
+      "id": "985bf221171bdfb48453",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "privacy"
+    },
+    {
       "id": "9d4be5c857acb2f93e42",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -328,6 +394,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Prompt copied."
+    },
+    {
+      "id": "a610ba31f63c599c6333",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Download .spe"
     },
     {
       "id": "a9e070cad101b053b347",
@@ -364,6 +436,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "undefined"
+    },
+    {
+      "id": "be3405770af64faefa5c",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Open workspace"
     },
     {
       "id": "c0171b6e6cc6709e6819",
@@ -412,6 +490,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Clear history"
+    },
+    {
+      "id": "d4d1eea7ba9e33d2d9f5",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Build a clearer prompt"
     },
     {
       "id": "d4f0d2473e60f60b72cc",
@@ -480,6 +564,12 @@
       "text": ".json"
     },
     {
+      "id": "ff9246c59928e9d2d455",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "my-work"
+    },
+    {
       "id": "57ca44474f9663f6e921",
       "file": "apps/web/src/brand/Logo.tsx",
       "depth": "PRODUCT",
@@ -526,6 +616,1668 @@
       "file": "apps/web/src/brand/Logo.tsx",
       "depth": "PRODUCT",
       "text": "SYSTEM PROMPT ENGINE"
+    },
+    {
+      "id": "041a6d3ac863715a4c15",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "URL content added (direct fetch)."
+    },
+    {
+      "id": "101fbd410e9992594095",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Local HTML file added. No network request."
+    },
+    {
+      "id": "118efa9a29e306a65bc0",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "). Scaffolds ready — uncertainty labeled."
+    },
+    {
+      "id": "13c7885c346112423b02",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Your idea (with URL notes)"
+    },
+    {
+      "id": "198be810a2b13f666220",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Screenshot → code"
+    },
+    {
+      "id": "1d6dbd97b7d51e08775d",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "CORS-honest fetch + fallbacks"
+    },
+    {
+      "id": "2270d01c6b0162173dac",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Sampled"
+    },
+    {
+      "id": "267860b821c5bbbe90ae",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Fetch in browser"
+    },
+    {
+      "id": "2e459fa70fd24cb94fd1",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "speech"
+    },
+    {
+      "id": "320887265e1ce81f001a",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "UI scaffold + prompt"
+    },
+    {
+      "id": "371fba881c7abca26a2a",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Reading screenshot…"
+    },
+    {
+      "id": "3b0bcc56ae27f6a07ecc",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Local observations → prompt"
+    },
+    {
+      "id": "44ed76b2f4d70d89ca41",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Describe the task. Include what matters, what to avoid, and what good looks like…"
+    },
+    {
+      "id": "461f084e7a8f05a1efbf",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "s. Added to your idea."
+    },
+    {
+      "id": "46ef9695e0d1edc3d7cf",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Fetching URL in this browser…"
+    },
+    {
+      "id": "4901c9fdd90429fb2635",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Screenshot observed ("
+    },
+    {
+      "id": "4a7af6d55a92c5357909",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "https://example.com"
+    },
+    {
+      "id": "534046a0f1ec9700d6cd",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Choose video"
+    },
+    {
+      "id": "5790ddcd4cb788fdf14f",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Using the bounded frame observations below, help me write a strong prompt about this video."
+    },
+    {
+      "id": "5a11e36d5ae85200796a",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Choose screenshot"
+    },
+    {
+      "id": "62e28b5b6d12ef4a891e",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Dictate, then review"
+    },
+    {
+      "id": "704252ee59987d46b6fc",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Image"
+    },
+    {
+      "id": "7159bde870b80c472f99",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "video"
+    },
+    {
+      "id": "77eeb64e2eaa1e33efdb",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Sampling video frames…"
+    },
+    {
+      "id": "7960805dfc1dfd06a51c",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Reading image…"
+    },
+    {
+      "id": "79f05ef1463462e1a7e6",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Type or paste your idea"
+    },
+    {
+      "id": "82bcb9e515ed6c9c7cdf",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE never uses a paid CORS proxy. If the site blocks the browser, use HTML upload, a screenshot, or a short description."
+    },
+    {
+      "id": "8aeb45e6d55322dddf4e",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy scaffold"
+    },
+    {
+      "id": "985345a6d3b2a9b93bd5",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Code target"
+    },
+    {
+      "id": "9c08b38d5c51707355e7",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Your idea"
+    },
+    {
+      "id": "9d136443551ad2cab6a9",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "url"
+    },
+    {
+      "id": "9d50351a26d45deaf2de",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Image → prompt request:"
+    },
+    {
+      "id": "a386916bb9e7effcceea",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "react"
+    },
+    {
+      "id": "b44786aaddc97216b810",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Bounded frame sampling"
+    },
+    {
+      "id": "b47844c70f469fb8cce0",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "URL"
+    },
+    {
+      "id": "ba4ed4cdf2532e2abc75",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Your idea (with observations)"
+    },
+    {
+      "id": "bbffbfadd92150d36c9c",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Could not read this video."
+    },
+    {
+      "id": "bf1666c7ed7df38164b2",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "). Added to your idea."
+    },
+    {
+      "id": "c86bcc4f6cd0dedae60b",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Upload HTML"
+    },
+    {
+      "id": "cab510421da8d3f9d592",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "text"
+    },
+    {
+      "id": "cad3477de104bbcd92f3",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Screenshot → code request:"
+    },
+    {
+      "id": "cca1dbf69d5f13df80f1",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "ok"
+    },
+    {
+      "id": "cd10f18c90262e541246",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Input mode"
+    },
+    {
+      "id": "ce6c1ab99de704dbee6d",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Could not read this file."
+    },
+    {
+      "id": "cefd713b97accded229c",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Using only the grounded observations below, help me write a strong prompt about this image."
+    },
+    {
+      "id": "cf3842f4d241e6d27b40",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "video/*"
+    },
+    {
+      "id": "d24c5558cdb223fbc87a",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Video"
+    },
+    {
+      "id": "d34f41e2311933e6e8b3",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": ".html,text/html"
+    },
+    {
+      "id": "d468dbd3e7dbd7cd0668",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Image observed ("
+    },
+    {
+      "id": "d89f5b56d25607dda20c",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "URL could not be read — fallbacks listed in your idea."
+    },
+    {
+      "id": "da617667df05d1d3a948",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Scaffolds (uncertain layout)"
+    },
+    {
+      "id": "daae220e61a07a07136b",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Website URL"
+    },
+    {
+      "id": "dcff84e37cbb4671605c",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "screenshot"
+    },
+    {
+      "id": "dfb10b7e8ada0861f225",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "image"
+    },
+    {
+      "id": "e1a24d3fc54aa39756da",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Selected media preview"
+    },
+    {
+      "id": "e60dd016ae1baf21f2c7",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Choose image"
+    },
+    {
+      "id": "e8d7e1fe2cc86433d901",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "image/*"
+    },
+    {
+      "id": "ed2daaa969797e2a7ed8",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Speech"
+    },
+    {
+      "id": "f2c5c040623319e97e52",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Text"
+    },
+    {
+      "id": "f341de64e71eaf9cd0d2",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Rebuild the UI shown in this screenshot. Treat region roles as uncertain."
+    },
+    {
+      "id": "f7edb072076034fd90a4",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "frames across"
+    },
+    {
+      "id": "fbcf22c3bb4ca538ddc9",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Video → prompt request:"
+    },
+    {
+      "id": "063b3ea2f233e4012efb",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Add transcript to idea"
+    },
+    {
+      "id": "2889107c1ed8ae626636",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "en-IN"
+    },
+    {
+      "id": "41053e93db1b9a0768f6",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Stop microphone"
+    },
+    {
+      "id": "48597ce5c0d1f341fb44",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Start microphone"
+    },
+    {
+      "id": "49f0cb1a009f6778a281",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Spanish"
+    },
+    {
+      "id": "4e66c71f169c0f87ff7c",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Microphone or speech access was denied. Allow access in your browser, or type your idea."
+    },
+    {
+      "id": "51a3df0d33d277bfa020",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Hindi"
+    },
+    {
+      "id": "54f9b04004bc2c87fdbb",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Listening… Stop the microphone when you finish."
+    },
+    {
+      "id": "58b3c919ea4b4b7788fd",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Tamil"
+    },
+    {
+      "id": "6021699983c88c54953f",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Speak your idea"
+    },
+    {
+      "id": "6186afed1f0a2d0e0b33",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "service-not-allowed"
+    },
+    {
+      "id": "7224ab83fa6d0c7afc27",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Speech could not start. Try again, or type your idea."
+    },
+    {
+      "id": "7ad62960a4a3b830d876",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "No speech was detected. Try again, or type your idea."
+    },
+    {
+      "id": "8cd619073cdd3681689e",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "English (India)"
+    },
+    {
+      "id": "95ab3defc36d028a4f22",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Speech recognition stopped. Check your microphone and connection, or type your idea."
+    },
+    {
+      "id": "9917d3e8503d6722fb18",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Telugu"
+    },
+    {
+      "id": "a8e881e1977f276d068a",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Spoken language"
+    },
+    {
+      "id": "ab89163c5d57e7ac3326",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Allow browser speech recognition for this session"
+    },
+    {
+      "id": "bbc23d765d7d319a0577",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "no-speech"
+    },
+    {
+      "id": "bcf65062ea6ab4ef3749",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "English (US)"
+    },
+    {
+      "id": "c2606ad8994827bca33e",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "not-allowed"
+    },
+    {
+      "id": "e36f047a69944cbaca0b",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Dictate, review the text, then add it to your idea. Your browser may send audio to its speech service. SPE does not save audio."
+    },
+    {
+      "id": "e3c41cf380d8c2fbf6ea",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Review your transcript"
+    },
+    {
+      "id": "f7055c052c1628d70f8d",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Speech recognition is unavailable in this browser. You can still type or paste a transcript into your idea."
+    },
+    {
+      "id": "fa5f0614ec00ef60b7e2",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Microphone stopped."
+    },
+    {
+      "id": "0355b298b8187a7d68ac",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": ". No network fetch."
+    },
+    {
+      "id": "149c2601b462cec78d27",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Six ideas for"
+    },
+    {
+      "id": "4b7cc2dba4bdcac154b2",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy idea"
+    },
+    {
+      "id": "a1d28cd30c79eb0f4c5a",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Daily Lab"
+    },
+    {
+      "id": "bbc12029a8a4afaa7ca2",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Full library ("
+    },
+    {
+      "id": "bf4f308c20f325eece86",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Today&apos;s specimens"
+    },
+    {
+      "id": "c5f6b18f83d4730c916d",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Open"
+    },
+    {
+      "id": "e054e448eff46f0e9678",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": ". Same date, same set — chosen on your device from a fixed library of"
+    },
+    {
+      "id": "e2af8f117e93de3d4027",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Open in SPE"
+    },
+    {
+      "id": "024f38163ffe372ae694",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Story spark"
+    },
+    {
+      "id": "04ef77ab4363a5f2c3f4",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-04"
+    },
+    {
+      "id": "06aa324f0f1652b69731",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Study plan"
+    },
+    {
+      "id": "07ccd80cc8be1b468628",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Plain-language policy notes."
+    },
+    {
+      "id": "08d9c198becd5faf2c6d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Localization notes"
+    },
+    {
+      "id": "0d5edd455c49dd341959",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Meeting agenda"
+    },
+    {
+      "id": "0e1a6f055518c24ee27d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#c4b5fd"
+    },
+    {
+      "id": "101c04566b43b27c6a90",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Describe a visual for generation."
+    },
+    {
+      "id": "11544e7807e9255b0062",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Build a 30-minute product sync agenda with outcomes, timeboxes, and one decision to make. Avoid status theater."
+    },
+    {
+      "id": "11e831e13885d8ce8a0f",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-03"
+    },
+    {
+      "id": "193c8e4c69beeebe3eff",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A realistic week plan."
+    },
+    {
+      "id": "194a3b957f171f62be5e",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-21"
+    },
+    {
+      "id": "1a6f794aefab16a03c79",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#fde68a"
+    },
+    {
+      "id": "1a8caf227e47f96a5d31",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Write a 12-line poem about rain on metal roofs. Exact rhyme scheme AABB. No archaic diction."
+    },
+    {
+      "id": "1c73123a903bb45527f3",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A realistic one-day plan."
+    },
+    {
+      "id": "1c960161992857737a95",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Write a polite leave-of-absence email for two days next week. Keep it under 120 words. No medical details."
+    },
+    {
+      "id": "1d163ee60ae231e2e016",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-11"
+    },
+    {
+      "id": "2047b55baa2d8711f846",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "SQL helper"
+    },
+    {
+      "id": "20a54e4a57e4710d8e0d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Turn a vague bug into a crisp report."
+    },
+    {
+      "id": "20fcd66ce05d151223cb",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Ask for a safe query."
+    },
+    {
+      "id": "21fa8aecc49196688b40",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-14"
+    },
+    {
+      "id": "22cb50d03ed4a9334725",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Draft a vendor negotiation email asking for a 12% discount on annual SaaS. Firm but respectful. Offer a multi-year term."
+    },
+    {
+      "id": "232b46dad86833320f89",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#fb7185"
+    },
+    {
+      "id": "28c31d63859e1d5744ac",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Write first-run onboarding copy for SPE: three screens, no jargon, clear privacy line, one primary action each."
+    },
+    {
+      "id": "2904d44316cbb042b1d4",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Product FAQ"
+    },
+    {
+      "id": "29240cb34d9cb54af623",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#fdba74"
+    },
+    {
+      "id": "29b64d098e591776da05",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Design a coaching prompt that helps me prepare a difficult feedback conversation. Ask clarifying questions before advice."
+    },
+    {
+      "id": "2c2157225ff8ffd06bcc",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A calm vendor email."
+    },
+    {
+      "id": "2cce2045f8eff6d2af8d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-20"
+    },
+    {
+      "id": "2ea2a25d2561000406ac",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-16"
+    },
+    {
+      "id": "3321f00f8170516bbd90",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Review this English UI string list for localization hazards: concatenated sentences, humor, gender, and date formats."
+    },
+    {
+      "id": "346f75d2262d2ab33162",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-33"
+    },
+    {
+      "id": "34b90ae98d74b646b37c",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-26"
+    },
+    {
+      "id": "36bf263ad42f12be72e0",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Frame a design case study."
+    },
+    {
+      "id": "37eb5f183e8bd0beb1f3",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#fcd34d"
+    },
+    {
+      "id": "3905ad891b9a26a78d96",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Coding"
+    },
+    {
+      "id": "3ab905f794bd05d54ca4",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Research"
+    },
+    {
+      "id": "3af9c8d6cb4f44337f86",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A week of focused study."
+    },
+    {
+      "id": "3b05b9df684b9693c5b6",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Explain simply"
+    },
+    {
+      "id": "3b99ed0f7bb675374bd5",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "API design"
+    },
+    {
+      "id": "3fa97094b3a212d39252",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-13"
+    },
+    {
+      "id": "3ff8a9432691682a13af",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#a7f3d0"
+    },
+    {
+      "id": "40d028066d992f7c7bbd",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Education"
+    },
+    {
+      "id": "41471163981a603eb956",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-36"
+    },
+    {
+      "id": "41bde999a4b35e082ea8",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-18"
+    },
+    {
+      "id": "41daea2bb00d493d9f94",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#fdbA74"
+    },
+    {
+      "id": "449acddbf1d1a03fe494",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Help me prepare STAR answers for a product designer interview about conflict with engineering. Keep answers under 90 seconds spoken."
+    },
+    {
+      "id": "476d575582a765a8d1a4",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#67e8f9"
+    },
+    {
+      "id": "48dd133c82342fed0656",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-07"
+    },
+    {
+      "id": "4a7fc0dfecfffdd4dbd1",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-09"
+    },
+    {
+      "id": "4ab9948bd8b53f56ede3",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Data caveats"
+    },
+    {
+      "id": "4ad74808b1e7bbf5bce5",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-24"
+    },
+    {
+      "id": "4c67b50be4a815aba610",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "IA for a small app."
+    },
+    {
+      "id": "50297104977cd327ee50",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Summarize a remote-work policy for employees in plain English. Separate must / should / may. Flag ambiguities."
+    },
+    {
+      "id": "509f207cb42cea1e4e1c",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A coach that asks well."
+    },
+    {
+      "id": "52a711492caa50958c18",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Threat-model a browser extension that reads page text to build prompts. Assets, attackers, mitigations. Stay proportional."
+    },
+    {
+      "id": "5392769885e7ec76f620",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-35"
+    },
+    {
+      "id": "5742acaa99166ae1a8ec",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-12"
+    },
+    {
+      "id": "5cf325f4f2d76dc600a8",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Critique this mobile UI for clarity, hierarchy, and accessibility. List five concrete improvements. Mark uncertainty."
+    },
+    {
+      "id": "5d4b99cd2bb61996b4ab",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#6ee7b7"
+    },
+    {
+      "id": "60e2d1d6e2ffdecc6da8",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A safe stepwise refactor."
+    },
+    {
+      "id": "616d20f469c559fde49a",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Outline a 60-second explainer video on password managers. Beats, on-screen text, and one call to action. No fearmongering."
+    },
+    {
+      "id": "620f796de9b535000b84",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "UI critique"
+    },
+    {
+      "id": "622c94c9ccbd9d19e048",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Warm, bounded customer care."
+    },
+    {
+      "id": "6581413c496b5bdc0833",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-31"
+    },
+    {
+      "id": "65e3b3045bb56c5ff287",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Scope a careful literature look."
+    },
+    {
+      "id": "66205eae0c5dc73815ff",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-10"
+    },
+    {
+      "id": "6634a5d65414a5d6517e",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#5eead4"
+    },
+    {
+      "id": "6bcb43f6475b1ee24a0b",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Refactor plan"
+    },
+    {
+      "id": "6bf2253fcd3bb26e98b2",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#fbcfe8"
+    },
+    {
+      "id": "6d355cba6e92f1215cf1",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-32"
+    },
+    {
+      "id": "6d42fd3f0e46c1009cee",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Explain how HTTPS keeps a connection private to a curious 14-year-old. One analogy, one worked example, three check questions."
+    },
+    {
+      "id": "6dd79a1f3c529e9cd215",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Travel day"
+    },
+    {
+      "id": "6e4fb34548c9524f1c1a",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Ask before you plot."
+    },
+    {
+      "id": "72747dea6156fc9ddaae",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Form first, feeling second."
+    },
+    {
+      "id": "7287a35a6479636cdba8",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "numeric"
+    },
+    {
+      "id": "7450ee8191f424df29ab",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Image"
+    },
+    {
+      "id": "752004e83554963804b0",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-34"
+    },
+    {
+      "id": "76c105cb2851ec271d99",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Privacy notice"
+    },
+    {
+      "id": "77471e3a1723a06030be",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-01"
+    },
+    {
+      "id": "77b58270b3bc6deb8bcc",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Plan a one-day walking itinerary in Lisbon for two people who dislike crowds. Include food breaks and rain backup."
+    },
+    {
+      "id": "78c4880de035231dea03",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Write a 150-word grant abstract for a community tool library. Problem, approach, impact, and how success is measured."
+    },
+    {
+      "id": "7987e0ce91be3331a1a3",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Creative"
+    },
+    {
+      "id": "7a22bf33b81b2de1a04a",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Review for safety and clarity."
+    },
+    {
+      "id": "7a60d277a9d44c1bf819",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A kitchen-table experiment."
+    },
+    {
+      "id": "7a74665f2a3bda79a84a",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A concept for a curious teen."
+    },
+    {
+      "id": "7c2628905e3e7e0da2cf",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Turn this into a bug report with steps, expected vs actual, and severity: sign-in button sometimes does nothing on mobile Safari."
+    },
+    {
+      "id": "7c38f68b9c5bad5e4b2b",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Design a safe kitchen experiment to show density for kids age 8–10. Materials list, steps, and what we hope to observe."
+    },
+    {
+      "id": "7c61918dd6907d6eb78e",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-22"
+    },
+    {
+      "id": "7d861b3680f8763f6867",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Draft a blameless incident postmortem template filled for a 22-minute API outage caused by a bad config push."
+    },
+    {
+      "id": "7dbeed5d957f907f30de",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A tight funding abstract."
+    },
+    {
+      "id": "7e2746d5740850b65059",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Threat model"
+    },
+    {
+      "id": "838c8f1e1888d687063d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Draft FAQ answers for an offline writing app: pricing, offline mode, export formats, and privacy. No marketing fluff."
+    },
+    {
+      "id": "846b5f135a4fcf0a3dcb",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Structure a portfolio case study for a banking app redesign: problem, constraints, process, outcome, and what I'd redo."
+    },
+    {
+      "id": "84821b1ba5b03f0384b6",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#99f6e4"
+    },
+    {
+      "id": "84e2ff59dc818fb2b0df",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Negotiation note"
+    },
+    {
+      "id": "8578b37c2782febf9646",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Policy summary"
+    },
+    {
+      "id": "881e5c2b1889e4b70114",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#fda4af"
+    },
+    {
+      "id": "898ff0eb367ed0981ec9",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Dataset questions"
+    },
+    {
+      "id": "8a10f018827d85295ca7",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-28"
+    },
+    {
+      "id": "8aa2eca8bf87bbdceaea",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#fca5a5"
+    },
+    {
+      "id": "8accd02b6b92dc82191a",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#d8b4fe"
+    },
+    {
+      "id": "8b4f238fac9f1158d2dc",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Onboarding"
+    },
+    {
+      "id": "8c0c132b6d1f810fc6ae",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Writing"
+    },
+    {
+      "id": "8cc388a2f5ca11cca165",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Help me plan a low-energy work week with two deep-work blocks and hard stops. Chronic fatigue friendly. No hustle tone."
+    },
+    {
+      "id": "8d6ab875b37e7f164934",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Analysis"
+    },
+    {
+      "id": "8e3b97293dbc85f52650",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-02"
+    },
+    {
+      "id": "8ebb216230114bfd8c92",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A short, clear leave email."
+    },
+    {
+      "id": "906c763f77f0ce3e47cd",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-27"
+    },
+    {
+      "id": "9073f9f384c439f6d0fe",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Honest product privacy copy."
+    },
+    {
+      "id": "9332c09310c840d90de6",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "List ten questions I should ask before analyzing a city open-data CSV of building permits. Cover quality, bias, and privacy."
+    },
+    {
+      "id": "957cfdbaad13b0f20343",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#a5b4fc"
+    },
+    {
+      "id": "961263a498532fe1ce8b",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "long"
+    },
+    {
+      "id": "9c295eb7628bf5297fee",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "First-run copy that respects people."
+    },
+    {
+      "id": "9ef6577752fd72483241",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-17"
+    },
+    {
+      "id": "a07d9999278eaaedd89c",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#e9d5ff"
+    },
+    {
+      "id": "a170b58f46c2d13634c8",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Open a short story in a coastal town at dawn. Two characters, one secret. 200 words. No twist ending yet."
+    },
+    {
+      "id": "a18df429d389092839d2",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-30"
+    },
+    {
+      "id": "a1ea89652c79ba5d4d97",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-29"
+    },
+    {
+      "id": "a273b6e40173553f5efc",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Copy that travels."
+    },
+    {
+      "id": "a371ad755c24bda5df91",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Rewrite this chart caption so it states the sample, the window, and what it does not prove. Avoid causal language."
+    },
+    {
+      "id": "a6f4e4c0453e3bf6d30d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Find a11y gaps in a flow."
+    },
+    {
+      "id": "a8aeff278b44a44d84e5",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Research brief"
+    },
+    {
+      "id": "a8d4fb1dba7cdd493d37",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Code review"
+    },
+    {
+      "id": "a8da67fc756804536978",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "3D scene brief"
+    },
+    {
+      "id": "afebf429f58ca7acd297",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Interview prep"
+    },
+    {
+      "id": "b1bdbf9ca192275e68d6",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#f9a8d4"
+    },
+    {
+      "id": "b3007aa3f5e4b557c25d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Video"
+    },
+    {
+      "id": "b5022ece13bbdb315342",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Poem constraint"
+    },
+    {
+      "id": "b556bd145981e8e42564",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Support reply"
+    },
+    {
+      "id": "b712a0dc7ca1b7ea2dfc",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Website / 3D"
+    },
+    {
+      "id": "b95198db32e6f3b89891",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Draft a support reply for a late shipment. Empathize, give two options, never invent tracking numbers."
+    },
+    {
+      "id": "bb7be59e3b8c4e4f4c00",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Brief a 3D still-life: brushed metal ring, frosted glass sphere, soft north light, graphite pedestal. Camera 50mm, f/4."
+    },
+    {
+      "id": "bd9b2abdd020c2ba520e",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Answer shopper questions honestly."
+    },
+    {
+      "id": "c0e335e9f053da617849",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Portfolio case"
+    },
+    {
+      "id": "c1c05c88827d1d40ebe0",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Blameless and useful."
+    },
+    {
+      "id": "c27a5ed65ec6339a62ab",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-05"
+    },
+    {
+      "id": "c28cdffd81384396c3c9",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#93c5fd"
+    },
+    {
+      "id": "c4c0dc66557647cb6e16",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Outline a research brief on urban heat islands and tree canopy. List questions, evidence needs, and what would falsify the claim."
+    },
+    {
+      "id": "c50efe706fc68350d798",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Incident postmortem"
+    },
+    {
+      "id": "c8190e6f969692c7d051",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Write an image-generation brief for a quiet ceramic workshop at dusk. Specify lighting, lens, palette, and what to avoid."
+    },
+    {
+      "id": "c95da6ae8a6cba7cc0e6",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Honest notes on a screenshot."
+    },
+    {
+      "id": "cbcdf04e4667c8ca7053",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-23"
+    },
+    {
+      "id": "cbe59b4b029d6cb25879",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Name risks without panic."
+    },
+    {
+      "id": "d094aa23d2ef091f9d03",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#bbf7d0"
+    },
+    {
+      "id": "d0bb1468c0c7d5a02de9",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A quiet still-life stage."
+    },
+    {
+      "id": "d475aec72e29ad6ba38b",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-15"
+    },
+    {
+      "id": "d48e4d9656a355b52ffc",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Energy budget"
+    },
+    {
+      "id": "d4cae425a9fa5a8e4152",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Mobile nav"
+    },
+    {
+      "id": "d6520842fbb0f9844527",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Grant abstract"
+    },
+    {
+      "id": "d781578ddd06c2ca549e",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Review the TypeScript I paste for correctness, security, and maintainability. Rank findings by severity with concrete fixes. Do not invent files."
+    },
+    {
+      "id": "d8effa8d5579179f8933",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#7dd3fc"
+    },
+    {
+      "id": "da3e27b770e0a54483ab",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A 60-second explainer."
+    },
+    {
+      "id": "db814aea326131ea80e1",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#86efac"
+    },
+    {
+      "id": "dba53c7a2cfe15804035",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Science demo"
+    },
+    {
+      "id": "dc247880e13ea8b693c4",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-19"
+    },
+    {
+      "id": "df8fd7d18397503edcad",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A 30-minute agenda that respects time."
+    },
+    {
+      "id": "e16f5bb2d349c7edd856",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Create a 7-day study plan for introductory statistics. 45 minutes a day. Include one practice problem each day."
+    },
+    {
+      "id": "e2a8d61ccac91efbef4d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Propose information architecture for a habit tracker with five primary destinations. Justify what is not in the tab bar."
+    },
+    {
+      "id": "e2ae3450e95096cb0e4a",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Propose a stepwise refactor plan for a legacy React class component to hooks. Preserve behavior. List risks and tests."
+    },
+    {
+      "id": "e54905dc7603c1a516b8",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Video outline"
+    },
+    {
+      "id": "e5815f03dcf893bdf4c2",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#fde047"
+    },
+    {
+      "id": "e588b69b65b2d7a28f0a",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Help me write a PostgreSQL query for monthly active users with clear assumptions and indexes to consider. No destructive statements."
+    },
+    {
+      "id": "e5ac36601de71d64282f",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Review this checkout flow description for WCAG-minded gaps: focus order, labels, errors, and color-only cues. Prioritize fixes."
+    },
+    {
+      "id": "e7e46357473bb8e19552",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Leave note"
+    },
+    {
+      "id": "e915b8e0fee5b177168d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A small, honest API sketch."
+    },
+    {
+      "id": "ec63ce250356c18f137c",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Business"
+    },
+    {
+      "id": "ed63c76c52f22536643b",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Image brief"
+    },
+    {
+      "id": "ed9371cf874f2b85caee",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "#bef264"
+    },
+    {
+      "id": "ef0be3d4cef52ac1a5be",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Chart claims with humility."
+    },
+    {
+      "id": "f001e59d0ec73b72c806",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Bug report"
+    },
+    {
+      "id": "f0d9684b3cd948f3c24f",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Write a short privacy notice for a local-first prompt tool: what stays on device, what never leaves, and what is optional."
+    },
+    {
+      "id": "f11745d8c1c47ed03b8c",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Sketch a REST API for a personal notes app: resources, auth assumptions, error shapes. No implementation code yet."
+    },
+    {
+      "id": "f45650ef8cc03c714d00",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Coach prompt"
+    },
+    {
+      "id": "f7b7afc183e932f77bb9",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "A scene start, not a novel."
+    },
+    {
+      "id": "f87ec4f6778d5249f530",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Practice answers with structure."
+    },
+    {
+      "id": "f8dd7356faef8b5f6724",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-25"
+    },
+    {
+      "id": "f91b6767facd431b2895",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Accessibility pass"
+    },
+    {
+      "id": "fb151ac6cb990dc0f45b",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-08"
+    },
+    {
+      "id": "fc322effad6ce85989f9",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "AI Assistant"
+    },
+    {
+      "id": "fd9f11362128b8fd5c89",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "lab-06"
     },
     {
       "id": "02c7b7f9e0360d14bd3d",
@@ -1446,10 +3198,46 @@
       "text": "02 — A FILE THAT CARRIES YOUR THINKING"
     },
     {
+      "id": "04b6e3d606482fde201f",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "my-work"
+    },
+    {
+      "id": "35c061562a2ccf6fcd63",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "lab"
+    },
+    {
+      "id": "43cfc8df378b2426d854",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "My Work"
+    },
+    {
+      "id": "472ac9784b2866e42c15",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Build my prompt"
+    },
+    {
       "id": "5114e45591c12be9c0a9",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "SPE"
+    },
+    {
+      "id": "52f09444f570baa8e3fd",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Create"
+    },
+    {
+      "id": "563b20b9de1e48924424",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Privacy / Proof"
     },
     {
       "id": "5dd13c3ddc34f4bcb19c",
@@ -1458,28 +3246,28 @@
       "text": "SPE — System Prompt Engine home"
     },
     {
-      "id": "5e1a43fa973b29834dab",
-      "file": "apps/web/src/layout/Nav.tsx",
-      "depth": "PRODUCT",
-      "text": "Open workspace"
-    },
-    {
       "id": "6f95f2ebb9d3d26b52ee",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Primary"
     },
     {
-      "id": "87bae8fd1bf66a041cd1",
+      "id": "71b2962114e58d47d0f6",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
-      "text": "Your SPE file"
+      "text": "Home"
     },
     {
-      "id": "9a05e3f3a6826d05593d",
+      "id": "89f66e6d41ee400a3693",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
-      "text": "Your privacy"
+      "text": "home"
+    },
+    {
+      "id": "9787deb15b8e52f36a46",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "code"
     },
     {
       "id": "9b2af3b680fb4703cf69",
@@ -1488,16 +3276,34 @@
       "text": "Menu"
     },
     {
-      "id": "b7f1e96a9f3858221cc3",
-      "file": "apps/web/src/layout/Nav.tsx",
-      "depth": "PRODUCT",
-      "text": "The process"
-    },
-    {
       "id": "b854e1fb76b581a7b497",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "SYSTEM"
+    },
+    {
+      "id": "c296e124963f0a6136d9",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Code"
+    },
+    {
+      "id": "e03d4bad802a20c99d67",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "create"
+    },
+    {
+      "id": "ee7b2a2be92353c9fc05",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Daily Lab"
+    },
+    {
+      "id": "f43dbdb3b8c29c96c90a",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "privacy"
     },
     {
       "id": "f8aa67a11f5d7fb07f96",
@@ -1510,6 +3316,1110 @@
       "file": "apps/web/src/main.tsx",
       "depth": "PRODUCT",
       "text": "root"
+    },
+    {
+      "id": "02cde16a3d60f7def9de",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "canvas"
+    },
+    {
+      "id": "07704d0dc2141de162b3",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "n/a"
+    },
+    {
+      "id": "17b27b21c424852d8f69",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "- Notes:"
+    },
+    {
+      "id": "18828acc71ebd9c89b2d",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "px ("
+    },
+    {
+      "id": "33447e8ffcd98cc31c79",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "- File:"
+    },
+    {
+      "id": "43418063c28faa84f550",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "bytes)"
+    },
+    {
+      "id": "49151deed0e40f30ac06",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "- 3×3 brightness grid:"
+    },
+    {
+      "id": "4b41683129637614178b",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "image"
+    },
+    {
+      "id": "4cb68bb2b9e23e39ae28",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "Image analysis runs in your browser with pixel sampling only. No cloud vision API. Models are not downloaded unless you opt into an optional local pack (none required for V1)."
+    },
+    {
+      "id": "6e8eab673c5f44edcb2b",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "% / light"
+    },
+    {
+      "id": "70b031edc73257250cb4",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "Overall bright frame."
+    },
+    {
+      "id": "88339df2421cd267e2e4",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "- Uncertainty:"
+    },
+    {
+      "id": "8840ad963da3f9d500d8",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "2d"
+    },
+    {
+      "id": "89f44d68898c21d3f8ff",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "Canvas is unavailable in this browser."
+    },
+    {
+      "id": "8ba096dabe3d9896c478",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "Mostly flat or soft regions (low edge density)."
+    },
+    {
+      "id": "8c8e908b91f31741232e",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "Image observations (browser-local, not a vision model):"
+    },
+    {
+      "id": "90d3a36817a36e1bf01f",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "High-resolution source."
+    },
+    {
+      "id": "aae886b90cda4eaf6b57",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "Could not decode this image."
+    },
+    {
+      "id": "acadd8f632d78748be05",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "r"
+    },
+    {
+      "id": "b5890560dcf8c571acfe",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "MP)"
+    },
+    {
+      "id": "b991a08b5f2d77cbcedb",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "- Method:"
+    },
+    {
+      "id": "be952952111e2bcafc04",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "- Size:"
+    },
+    {
+      "id": "c43331de2737c2b0719a",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "- Brightness mean:"
+    },
+    {
+      "id": "ccb812b4cba669a55fe6",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "(dark"
+    },
+    {
+      "id": "d01c9f453214d6900d04",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "- Edge density:"
+    },
+    {
+      "id": "d5f605c596920471f560",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "c"
+    },
+    {
+      "id": "daeb0006f0e977555c08",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "Overall dark frame."
+    },
+    {
+      "id": "de7eced61c5d646e1cdf",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "Colors are quantized samples, not a calibrated color profile."
+    },
+    {
+      "id": "e8a149fae86b231f625c",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "Busy visual structure (higher edge density)."
+    },
+    {
+      "id": "eb5be1c14df30145bae0",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "- Dominant colors:"
+    },
+    {
+      "id": "f1b694a3422a8e31a0a5",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "Object identity, text OCR, faces, and brand logos are not detected in V1."
+    },
+    {
+      "id": "ff7e0759b5216c60e922",
+      "file": "apps/web/src/media/imageObserve.ts",
+      "depth": "PRODUCT",
+      "text": "async"
+    },
+    {
+      "id": "0b157eaf82db50ce4baa",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Flutter"
+    },
+    {
+      "id": "1070f58a0dc20a802592",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Side rail / panel"
+    },
+    {
+      "id": "235260beaf3cd8588c2d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "medium"
+    },
+    {
+      "id": "26df5ebbc4bf09c7a916",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</ScrollView>\n  );\n}"
+    },
+    {
+      "id": "2ccb5321440074be58b4",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "main"
+    },
+    {
+      "id": "2d405034ca9ae3101478",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ". May be footer, tabs, or empty space."
+    },
+    {
+      "id": "2ea3fc463cdb465f5877",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</Text></View>"
+    },
+    {
+      "id": "2ffd6680a6935290246a",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<View style={{ padding: 16 }}><Text style={{ color: \"#fff\", fontSize: 18 }}>"
+    },
+    {
+      "id": "3434f597ba7f1156ce33",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "top-bar"
+    },
+    {
+      "id": "34bc16a568d21f37ada4",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "}.padding()\n    }.background(Color.black)\n  }\n}"
+    },
+    {
+      "id": "3504dc2832a7473d385d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "import SwiftUI\nstruct ScreenFromScreenshot: View {\n  var body: some View {\n    ScrollView {\n      VStack(alignment: .leading, spacing: 16) {"
+    },
+    {
+      "id": "372342b12eccbb7b239d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ". Primary body region guess."
+    },
+    {
+      "id": "374b7cfc02dbf73aadda",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "side-rail"
+    },
+    {
+      "id": "3a3051f9d9c643dedf60",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ". Likely navigation or title band."
+    },
+    {
+      "id": "3ac9dc7c9a7f088dafb7",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "import { ScrollView, Text, View } from \"react-native\";\nexport default function ScreenFromScreenshot() {\n  return (\n    <ScrollView style={{ flex: 1, backgroundColor: \""
+    },
+    {
+      "id": "3fddeb5d001a4ccc3c18",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "--></section>"
+    },
+    {
+      "id": "408c173fe88483d3bf85",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "import 'package:flutter/material.dart';\nclass ScreenFromScreenshot extends StatelessWidget {\n  const ScreenFromScreenshot({super.key});\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(body: ListView(padding: const EdgeInsets.all(16), children: ["
+    },
+    {
+      "id": "4656676b09e15418c3b5",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "react-native"
+    },
+    {
+      "id": "4e0c977a8ab953bdf612",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "React"
+    },
+    {
+      "id": "509953dafde57b0cedab",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Region roles are brightness heuristics, not ML detection."
+    },
+    {
+      "id": "5a5741ea29217f288696",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "flutter"
+    },
+    {
+      "id": "5a9671648071339d5d6a",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Possible sidebar + content columns (uncertain)"
+    },
+    {
+      "id": "68d29a6394df35c51606",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "}\nbody{margin:0;font:16px/1.45 system-ui,sans-serif;background:#0b0d10;color:#e8eaed}\n.top-bar{min-height:56px;background:var(--c1,#222)}\n.main{min-height:50vh;background:var(--c2,#111);padding:1.25rem}\n.bottom{min-height:64px;background:var(--c3,#1a1a1a)}\n.side-rail{min-height:40vh;background:var(--c4,#161616)}\n</style></head><body>"
+    },
+    {
+      "id": "69dadca4898c2acc99f1",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "html"
+    },
+    {
+      "id": "7857e3e988f471a71839",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Main content"
+    },
+    {
+      "id": "797e02eb22d9dd821212",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Stacked top / main / bottom bands (uncertain)"
+    },
+    {
+      "id": "7a61bc4a6b5132fe8d94",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<section class=\""
+    },
+    {
+      "id": "7e975e60efa7858be512",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "#0b0d10"
+    },
+    {
+      "id": "8296775bcf5d41b5b99a",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Rebuild this UI in"
+    },
+    {
+      "id": "8377877f5b5ee71cfcbc",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</h2>\n      </section>"
+    },
+    {
+      "id": "8e97d8ded7c7b124b2e0",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "export default function ScreenFromScreenshot() {\n  return (\n    <div style={{ fontFamily: \"system-ui\", background: \""
+    },
+    {
+      "id": "91b9edd80a778d4ab7bb",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "SwiftUI"
+    },
+    {
+      "id": "921d47dab3d7184a5889",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "@Composable\nfun ScreenFromScreenshot() {\n  Column(Modifier.fillMaxSize().padding(16.dp)) {"
+    },
+    {
+      "id": "926ecf1feccf66fd3ac1",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Typography, icons, and exact spacing are not measured."
+    },
+    {
+      "id": "9677dda37b68644ff515",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Jetpack Compose"
+    },
+    {
+      "id": "9678ccc8724b4f23f0ab",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "HTML / CSS / JS"
+    },
+    {
+      "id": "98bed804f03330a90966",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Left/right brightness diverge — possible sidebar. Uncertain."
+    },
+    {
+      "id": "9ba1a1daa4bc3a135211",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Top bar / header"
+    },
+    {
+      "id": "9cd8fb98da9ef735c61d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "swiftui"
+    },
+    {
+      "id": "9de9ba0aa739562bed52",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</div>\n  );\n}"
+    },
+    {
+      "id": "a27e5bef8fab3eff621e",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Mean brightness"
+    },
+    {
+      "id": "a3e7ac0b367ac5646bba",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Text(\""
+    },
+    {
+      "id": "a7ee6785659a87c832fb",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Starter scaffold:"
+    },
+    {
+      "id": "aa8668c1c21b31003487",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n<title>SPE UI scaffold</title>\n<style>\n:root {"
+    },
+    {
+      "id": "b11dec29d2cfee796711",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Text('"
+    },
+    {
+      "id": "b33c46739edd9d9b4264",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "html-css-js"
+    },
+    {
+      "id": "c25038f73a0786915bce",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<section aria-label=\""
+    },
+    {
+      "id": "c70345f9b53d65abff6f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</body></html>"
+    },
+    {
+      "id": "c7f2f61de82373f71163",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "compose"
+    },
+    {
+      "id": "ca41a6f8ee2bf8afc1ec",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "kotlin"
+    },
+    {
+      "id": "cb684231a531cdb1e788",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "dart"
+    },
+    {
+      "id": "cf0aee47914b9af95e80",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "bottom"
+    },
+    {
+      "id": "cf9039971245b42a1d92",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "tsx"
+    },
+    {
+      "id": "d2303b9ea7bd357b6a0c",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "--c"
+    },
+    {
+      "id": "d33bfd81781ea06a5474",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Footer / actions"
+    },
+    {
+      "id": "d4132fae73f664c7cecb",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "swift"
+    },
+    {
+      "id": "d53aee47e71f25b67bec",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "React Native"
+    },
+    {
+      "id": "de6cfd6610808db208b1",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Treat region roles as uncertain screenshot guesses — verify against the image."
+    },
+    {
+      "id": "de8571e808ab1dedc0ea",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" style={{ padding: 16 }}>\n        {/*"
+    },
+    {
+      "id": "e142112bb09c1bb27174",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "*/}\n        <h2>"
+    },
+    {
+      "id": "e5d37067547c0e7af3e9",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "react"
+    },
+    {
+      "id": "ebe61d8aa3433890636d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "low"
+    },
+    {
+      "id": "f3ffcfd3bdaa00a1254b",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\", color: \"#f5f5f5\", minHeight: \"100vh\" }}>"
+    },
+    {
+      "id": "f5d73bc3abce010008fe",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Layout guess:"
+    },
+    {
+      "id": "f7fd50e7ce624b4226c8",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" data-confidence=\""
+    },
+    {
+      "id": "04b04643ebccfe905ad1",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Content-Type:"
+    },
+    {
+      "id": "052339ebe1a264aeb65b",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Upload a screenshot of the page"
+    },
+    {
+      "id": "0989256688bf962f9d1a",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "invalid_url"
+    },
+    {
+      "id": "0dcf2085313cbeff0bd6",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "- Notes:"
+    },
+    {
+      "id": "177bbb46541451e80e4e",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "http:"
+    },
+    {
+      "id": "1f4fde8b7bcd1309e038",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "- Fallbacks:"
+    },
+    {
+      "id": "210f6212673976abd258",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "- Description:"
+    },
+    {
+      "id": "2a67762b39287ff82da6",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "- Message:"
+    },
+    {
+      "id": "2b86fa59b0be98ec705d",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "- Status:"
+    },
+    {
+      "id": "4864529d0c00e61ba2b0",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": ". SPE did not use a proxy."
+    },
+    {
+      "id": "487727befe1d582fcae8",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Fetched directly from your browser (CORS permitted)."
+    },
+    {
+      "id": "49c9646a00c4b5e07c3c",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Loaded from a local HTML file upload."
+    },
+    {
+      "id": "4e1240c78aecc8ee2c72",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Write a short description of the site"
+    },
+    {
+      "id": "52aaac2db8b9c67c88a4",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "https:"
+    },
+    {
+      "id": "59ad671040a45b2a34c3",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "https://"
+    },
+    {
+      "id": "764cf357af9974cdf3a9",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "This browser could not read that URL (likely CORS or network). SPE will not use a paid proxy."
+    },
+    {
+      "id": "781929195e69a6f575fd",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "URL observations (direct browser fetch, no proxy):"
+    },
+    {
+      "id": "7990bed1c206f5bcfb97",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Enter a full http(s) URL."
+    },
+    {
+      "id": "8665c645f385e08cb7c6",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "- Title:"
+    },
+    {
+      "id": "8a1d756759db81390db1",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "GET"
+    },
+    {
+      "id": "8d71672460bda8e84b51",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "content-type"
+    },
+    {
+      "id": "9f0c89b077ce4762ccc0",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "ok"
+    },
+    {
+      "id": "a0cf228e2f089210f75d",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "URL ingest could not complete:"
+    },
+    {
+      "id": "a0d87284837fa1a52e1e",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "- URL:"
+    },
+    {
+      "id": "a93f7a5ab77d69f2bda7",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "cors"
+    },
+    {
+      "id": "b2437e7f546604ac83d7",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Fetched as non-HTML text."
+    },
+    {
+      "id": "b6ae9295d25d3e654e6a",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "The site responded with HTTP"
+    },
+    {
+      "id": "c0cd77468f50c551f6a1",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "- Excerpt:"
+    },
+    {
+      "id": "c63fe1fc3eb26d077a5c",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "No CORS proxy was used."
+    },
+    {
+      "id": "d206f8f55db775e7d51a",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "network_error"
+    },
+    {
+      "id": "d4dda364aacf4c528fca",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "omit"
+    },
+    {
+      "id": "dfabfe6059d2662fb832",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Paste the page text into the composer"
+    },
+    {
+      "id": "dff05261b57d5042cf9d",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Upload a saved HTML file"
+    },
+    {
+      "id": "e02c4a8a0d117bdef2ae",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "No network request was made."
+    },
+    {
+      "id": "e65be038387dcaf052e4",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "file://"
+    },
+    {
+      "id": "e82dad3ef4b8b4af197d",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "cors_blocked"
+    },
+    {
+      "id": "edfc8d78e06767308ed0",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "text/html,text/plain;q=0.9,*/*;q=0.1"
+    },
+    {
+      "id": "f2f4a238ab4c2e18967f",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "unknown"
+    },
+    {
+      "id": "054d936967153bf255f4",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "image/frame"
+    },
+    {
+      "id": "1098b0d18f43927f1249",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Motion and object tracking are not performed — only sparse frame observations."
+    },
+    {
+      "id": "1d322187533a38ab33c6",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "error"
+    },
+    {
+      "id": "22a164593bc67281e73d",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "- Bytes:"
+    },
+    {
+      "id": "22bf016418e341ad931c",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "src"
+    },
+    {
+      "id": "367a9f5e8fa7d5d5ccbe",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Could not decode this video."
+    },
+    {
+      "id": "3dfe77f99eb78a9b7856",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Canvas is unavailable in this browser."
+    },
+    {
+      "id": "4acd53b4b8e4f7c0a146",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "- Notes:"
+    },
+    {
+      "id": "4c41a5aadc79c0af1416",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "seeked"
+    },
+    {
+      "id": "52c37e2a071556bb09d2",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "- File:"
+    },
+    {
+      "id": "5debc73810b6aadedcf0",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "frames across"
+    },
+    {
+      "id": "6bd2798a4f03217bb4c6",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Frame"
+    },
+    {
+      "id": "6ee8d73373679312c97c",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "auto"
+    },
+    {
+      "id": "70f51362387c6160c4a6",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Could not seek in this video."
+    },
+    {
+      "id": "9a30ba7e9ff9ace5468f",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "s)"
+    },
+    {
+      "id": "a3146791a92dcd449c17",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Video observations (browser-local bounded sampling):"
+    },
+    {
+      "id": "a6e3cd7950fe9f9bb1e7",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "- Sample times (s):"
+    },
+    {
+      "id": "abc7601fc893a271374f",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "canvas"
+    },
+    {
+      "id": "b021fbd6dcfe1d4c89af",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "s"
+    },
+    {
+      "id": "b20e2bd3400b0f051983",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "s (bounded, local)."
+    },
+    {
+      "id": "cf8e8565c13015c32f63",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Sampled"
+    },
+    {
+      "id": "f1099671b0cdfe71de44",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Audio is not transcribed."
+    },
+    {
+      "id": "f26c4c77612abbcd8eac",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "video"
+    },
+    {
+      "id": "f456e524f80c629291d7",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "- Uncertainty:"
+    },
+    {
+      "id": "fa298266ab2cf4b15839",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "2d"
+    },
+    {
+      "id": "2182298013ca0a2bedc8",
+      "file": "apps/web/src/pages/MyWork.tsx",
+      "depth": "PRODUCT",
+      "text": "Clear history"
+    },
+    {
+      "id": "2f0b9ae2994117ca6b23",
+      "file": "apps/web/src/pages/MyWork.tsx",
+      "depth": "PRODUCT",
+      "text": "History is optional and stored only in this browser. Turn it off anytime. Export a"
+    },
+    {
+      "id": "3b0e0cf6b347a8dd7336",
+      "file": "apps/web/src/pages/MyWork.tsx",
+      "depth": "PRODUCT",
+      "text": "No saved ideas yet."
+    },
+    {
+      "id": "b0c706e7517f537e298b",
+      "file": "apps/web/src/pages/MyWork.tsx",
+      "depth": "PRODUCT",
+      "text": "file when you want a portable copy."
+    },
+    {
+      "id": "c64e13ad27bee2fd3d5e",
+      "file": "apps/web/src/pages/MyWork.tsx",
+      "depth": "PRODUCT",
+      "text": ".spe"
+    },
+    {
+      "id": "e70915ec111f2a236178",
+      "file": "apps/web/src/pages/MyWork.tsx",
+      "depth": "PRODUCT",
+      "text": "My Work"
+    },
+    {
+      "id": "e7a102faf6c83ca38cd0",
+      "file": "apps/web/src/pages/MyWork.tsx",
+      "depth": "PRODUCT",
+      "text": "Save a history of ideas on this device"
+    },
+    {
+      "id": "ec22d1e2f7d4a7053541",
+      "file": "apps/web/src/pages/MyWork.tsx",
+      "depth": "PRODUCT",
+      "text": "Ideas on this device"
+    },
+    {
+      "id": "0063ba5de0a72f3cc8f8",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Website fetch uses your browser&apos;s network rules. If CORS blocks a site, SPE shows fallbacks — HTML upload, screenshot, or description — and never a paid proxy."
+    },
+    {
+      "id": "0771c7deac3fdc9f3af4",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Optional speech recognition uses your browser&apos;s own service. SPE does not store audio. You can always type instead."
+    },
+    {
+      "id": "1727ded30cb5c40abe52",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "URL honesty"
+    },
+    {
+      "id": "187138176767f046aa46",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "The engine file is checked before use. If the check fails, preparation stops safely — SPE does not fall back to a pretend engine."
+    },
+    {
+      "id": "18a881f9957687b91c3c",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Image, screenshot, and video observations are computed on this device with pixel sampling. No paid vision API is required."
+    },
+    {
+      "id": "56f860c4b103e6f8cd0c",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Privacy / Proof"
+    },
+    {
+      "id": "5b39d3183ed98e63c4ad",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "What stays on your device"
+    },
+    {
+      "id": "8da0235d7effb59f7633",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Static"
+    },
+    {
+      "id": "8e0c0a47d4a165b3731a",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "_headers"
+    },
+    {
+      "id": "8f1de9c4a947ebfa3399",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Headers on deploy"
+    },
+    {
+      "id": "940e8cb92bc820dd9985",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "ship Content-Security-Policy, X-Content-Type-Options, and Referrer-Policy for hosts that honor them. Apex parking pages are not the SPE app — do not treat their headers as SPE proof until curl shows them on the real app origin."
+    },
+    {
+      "id": "b32808923fe68da6eb3a",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Preparation is local"
+    },
+    {
+      "id": "bdbfc32b9b8fa1d75156",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Integrity before work"
+    },
+    {
+      "id": "cffb3fb9a80fe0d7fbaf",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE shapes prompts with a WebAssembly engine that runs in your browser. Your idea is not sent to SPE servers to prepare a prompt."
+    },
+    {
+      "id": "e13648ce83d54ab8f227",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Speech is your browser"
+    },
+    {
+      "id": "fd99c0a8ba1722a0ff3f",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Media stays local"
     },
     {
       "id": "280b8b152bb0e32fda99",
@@ -1998,6 +4908,12 @@
       "text": "What changed"
     },
     {
+      "id": "7ae902e2249041aba3e1",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "VERIFIED"
+    },
+    {
       "id": "8265329299004c9ef2fc",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -2032,12 +4948,6 @@
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "INSPECT",
       "text": "IDLE"
-    },
-    {
-      "id": "8bcdd847af72109680af",
-      "file": "apps/web/src/workspace/Workspace.tsx",
-      "depth": "PROOF",
-      "text": "integrity:"
     },
     {
       "id": "91c75408c928e9f47711",
@@ -2104,6 +5014,12 @@
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
       "text": "artifact"
+    },
+    {
+      "id": "b75af9f1a9eff9293df2",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": ". This checks file consistency, not authorship or trust."
     },
     {
       "id": "bee45f3cf70ed5ff7a69",
@@ -2208,6 +5124,18 @@
       "text": "pro"
     },
     {
+      "id": "e287f0bd1cc91fe0f52e",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "matches"
+    },
+    {
+      "id": "e35d09eb5208b7846fba",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PROOF",
+      "text": "Checksum:"
+    },
+    {
       "id": "e8d911d8d998be18a17c",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -2256,12 +5184,6 @@
       "text": "Category"
     },
     {
-      "id": "0063989fecfcb0bba9fb",
-      "file": "packages/human-perspective/src/copy.ts",
-      "depth": "EXPERIENCE",
-      "text": "Start with what you want to do. SPE helps shape your request into a prompt, with your details and boundaries in view."
-    },
-    {
       "id": "0247ecd950d735c7def1",
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
@@ -2284,6 +5206,12 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
       "text": "Review brief"
+    },
+    {
+      "id": "0e64aef4bfaa7e4aaae8",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "PRODUCT",
+      "text": "Build my prompt"
     },
     {
       "id": "151d8d23e4bf843bd77c",
@@ -2376,6 +5304,12 @@
       "text": "Preparation was interrupted"
     },
     {
+      "id": "49a4c0a9961ab595affe",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "Start with what you want to do. SPE brings the request into focus — goals, boundaries, and open questions — so you leave with a clearer prompt."
+    },
+    {
       "id": "54ed330c8e50e7a8f797",
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
@@ -2400,6 +5334,12 @@
       "text": "Website / 3D"
     },
     {
+      "id": "5f9cc2e3975e08838ab1",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "than one sentence holds."
+    },
+    {
       "id": "60c36f390b893d34af38",
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
@@ -2416,6 +5356,12 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "EXPERIENCE",
       "text": "a clearer direction."
+    },
+    {
+      "id": "6f5b47aa448d255b9a4e",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "There is more in the idea"
     },
     {
       "id": "7078b33d110ad23a18e6",
@@ -2442,18 +5388,6 @@
       "text": "Production qualification and independent human-value evaluation are pending."
     },
     {
-      "id": "81717c26abe36a6998d7",
-      "file": "packages/human-perspective/src/copy.ts",
-      "depth": "EXPERIENCE",
-      "text": "Some ideas arrive"
-    },
-    {
-      "id": "876708fc0a95ad9c8d64",
-      "file": "packages/human-perspective/src/copy.ts",
-      "depth": "PRODUCT",
-      "text": "Shape my prompt"
-    },
-    {
       "id": "88a54e24a1c02b2c2dc5",
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
@@ -2470,12 +5404,6 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "EXPERIENCE",
       "text": "Give your idea"
-    },
-    {
-      "id": "9be1d3529af9e9bc8cad",
-      "file": "packages/human-perspective/src/copy.ts",
-      "depth": "EXPERIENCE",
-      "text": "before the words do."
     },
     {
       "id": "9c05e2ca23080abf2f88",
@@ -2512,12 +5440,6 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "EXPERIENCE",
       "text": "A thoughtful question"
-    },
-    {
-      "id": "acb9b00da40f5fc772d6",
-      "file": "packages/human-perspective/src/copy.ts",
-      "depth": "PRODUCT",
-      "text": "Shaping your prompt…"
     },
     {
       "id": "b34042b3bfa5e0bad915",
@@ -2676,178 +5598,10 @@
       "text": "Research preview. Review generated prompts before using them."
     },
     {
-      "id": "063b3ea2f233e4012efb",
-      "file": "apps/web/src/input/SpeechInput.tsx",
+      "id": "fd0ec8821bdb1c317ec1",
+      "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
-      "text": "Add transcript to idea"
-    },
-    {
-      "id": "2889107c1ed8ae626636",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "en-IN"
-    },
-    {
-      "id": "41053e93db1b9a0768f6",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Stop microphone"
-    },
-    {
-      "id": "48597ce5c0d1f341fb44",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Start microphone"
-    },
-    {
-      "id": "49f0cb1a009f6778a281",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Spanish"
-    },
-    {
-      "id": "4e66c71f169c0f87ff7c",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Microphone or speech access was denied. Allow access in your browser, or type your idea."
-    },
-    {
-      "id": "51a3df0d33d277bfa020",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Hindi"
-    },
-    {
-      "id": "54f9b04004bc2c87fdbb",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Listening… Stop the microphone when you finish."
-    },
-    {
-      "id": "58b3c919ea4b4b7788fd",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Tamil"
-    },
-    {
-      "id": "6021699983c88c54953f",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Speak your idea"
-    },
-    {
-      "id": "6186afed1f0a2d0e0b33",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "service-not-allowed"
-    },
-    {
-      "id": "7224ab83fa6d0c7afc27",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Speech could not start. Try again, or type your idea."
-    },
-    {
-      "id": "7ad62960a4a3b830d876",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "No speech was detected. Try again, or type your idea."
-    },
-    {
-      "id": "8cd619073cdd3681689e",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "English (India)"
-    },
-    {
-      "id": "95ab3defc36d028a4f22",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Speech recognition stopped. Check your microphone and connection, or type your idea."
-    },
-    {
-      "id": "9917d3e8503d6722fb18",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Telugu"
-    },
-    {
-      "id": "a8e881e1977f276d068a",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Spoken language"
-    },
-    {
-      "id": "ab89163c5d57e7ac3326",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Allow browser speech recognition for this session"
-    },
-    {
-      "id": "bbc23d765d7d319a0577",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "no-speech"
-    },
-    {
-      "id": "bcf65062ea6ab4ef3749",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "English (US)"
-    },
-    {
-      "id": "c2606ad8994827bca33e",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "not-allowed"
-    },
-    {
-      "id": "e36f047a69944cbaca0b",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Dictate, review the text, then add it to your idea. Your browser may send audio to its speech service. SPE does not save audio."
-    },
-    {
-      "id": "e3c41cf380d8c2fbf6ea",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Review your transcript"
-    },
-    {
-      "id": "f7055c052c1628d70f8d",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Speech recognition is unavailable in this browser. You can still type or paste a transcript into your idea."
-    },
-    {
-      "id": "fa5f0614ec00ef60b7e2",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Microphone stopped."
-    },
-    {
-      "id": "7ae902e2249041aba3e1",
-      "file": "apps/web/src/workspace/Workspace.tsx",
-      "depth": "PROOF",
-      "text": "VERIFIED"
-    },
-    {
-      "id": "b75af9f1a9eff9293df2",
-      "file": "apps/web/src/workspace/Workspace.tsx",
-      "depth": "PROOF",
-      "text": ". This checks file consistency, not authorship or trust."
-    },
-    {
-      "id": "e287f0bd1cc91fe0f52e",
-      "file": "apps/web/src/workspace/Workspace.tsx",
-      "depth": "PROOF",
-      "text": "matches"
-    },
-    {
-      "id": "e35d09eb5208b7846fba",
-      "file": "apps/web/src/workspace/Workspace.tsx",
-      "depth": "PROOF",
-      "text": "Checksum:"
+      "text": "Building your prompt…"
     }
   ]
 }

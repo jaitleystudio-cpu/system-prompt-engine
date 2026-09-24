@@ -1,18 +1,37 @@
+export type AppView =
+  | "home"
+  | "create"
+  | "code"
+  | "lab"
+  | "my-work"
+  | "privacy"
+  | "workspace";
+
 type Props = {
   scrolled: boolean;
-  view: "home" | "workspace";
-  onNavigate: (v: "home" | "workspace") => void;
-  onOpenSpe: () => void;
+  view: AppView;
+  onNavigate: (v: AppView) => void;
   menuOpen: boolean;
   setMenuOpen: (v: boolean) => void;
 };
+
+const LINKS: { id: AppView; label: string }[] = [
+  { id: "home", label: "Home" },
+  { id: "create", label: "Create" },
+  { id: "code", label: "Code" },
+  { id: "lab", label: "Daily Lab" },
+  { id: "my-work", label: "My Work" },
+  { id: "privacy", label: "Privacy / Proof" },
+];
+
 export function Nav(p: Props) {
   return (
     <header className={`spe-nav ${p.scrolled ? "is-scrolled" : ""}`}>
       <a
         className="spe-nav-brand"
         href="#top"
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
           p.onNavigate("home");
           p.setMenuOpen(false);
         }}
@@ -44,41 +63,29 @@ export function Nav(p: Props) {
         className={`spe-nav-links ${p.menuOpen ? "open" : ""}`}
         aria-label="Primary"
       >
-        <a
-          href="#how-it-works"
-          onClick={() => {
-            p.onNavigate("home");
-            p.setMenuOpen(false);
-          }}
-        >
-          The process
-        </a>
-        <a
-          href="#artifact-story"
-          onClick={() => {
-            p.onNavigate("home");
-            p.setMenuOpen(false);
-          }}
-        >
-          Your SPE file
-        </a>
-        <a
-          href="#privacy"
-          onClick={() => {
-            p.onNavigate("home");
-            p.setMenuOpen(false);
-          }}
-        >
-          Your privacy
-        </a>
+        {LINKS.map((link) => (
+          <button
+            key={link.id}
+            type="button"
+            className={p.view === link.id ? "is-active" : ""}
+            aria-current={p.view === link.id ? "page" : undefined}
+            onClick={() => {
+              p.onNavigate(link.id);
+              p.setMenuOpen(false);
+            }}
+          >
+            {link.label}
+          </button>
+        ))}
         <button
           className="spe-nav-cta"
+          type="button"
           onClick={() => {
-            p.onOpenSpe();
+            p.onNavigate("create");
             p.setMenuOpen(false);
           }}
         >
-          Open workspace <span>↗</span>
+          Build my prompt <span>↗</span>
         </button>
       </nav>
     </header>

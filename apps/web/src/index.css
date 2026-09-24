@@ -1592,3 +1592,65 @@ em {
     gap: 0.4rem;
   }
 }
+
+/* ——— SPE V1 multimodal + lab ——— */
+.spe-composer { display: grid; gap: 0.85rem; margin-top: 1rem; }
+.spe-composer-modes { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.spe-composer-modes button {
+  border: 1px solid color-mix(in oklab, var(--spe-line, #2a3140) 80%, transparent);
+  background: color-mix(in oklab, var(--spe-panel, #12151c) 92%, transparent);
+  color: inherit; border-radius: 999px; padding: 0.4rem 0.85rem; font: inherit; cursor: pointer;
+}
+.spe-composer-modes button.is-active,
+.spe-composer-modes button[aria-selected="true"] {
+  background: color-mix(in oklab, var(--spe-accent, #7dd3fc) 22%, #12151c);
+  border-color: color-mix(in oklab, var(--spe-accent, #7dd3fc) 55%, #2a3140);
+}
+.spe-composer-hint { opacity: 0.72; margin: 0; font-size: 0.92rem; }
+.spe-composer-media, .spe-composer-url { display: grid; gap: 0.75rem; }
+.spe-composer-preview img, .spe-composer-preview video {
+  max-width: min(100%, 420px); border-radius: 12px; border: 1px solid #2a3140;
+}
+.spe-scaffolds { display: grid; gap: 0.6rem; }
+.spe-scaffold-tabs { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.spe-scaffold-tabs button { font: inherit; cursor: pointer; border-radius: 8px; padding: 0.35rem 0.65rem; border: 1px solid #2a3140; background: #0e1117; color: inherit; }
+.spe-scaffold-tabs button.is-active { border-color: #7dd3fc; }
+.spe-scaffold-code {
+  max-height: 240px; overflow: auto; padding: 0.85rem; border-radius: 12px;
+  background: #0a0c10; border: 1px solid #2a3140; font-size: 0.82rem; white-space: pre-wrap;
+}
+.spe-composer-status { color: #a7f3d0; }
+.spe-composer-error { color: #fda4af; }
+.spe-fallbacks { margin: 0; padding-left: 1.1rem; opacity: 0.85; }
+.spe-create, .spe-lab, .spe-mywork, .spe-privacy-page {
+  width: min(1100px, calc(100% - 2rem)); margin: 5.5rem auto 3rem; display: grid; gap: 1.25rem;
+}
+.spe-create-head h1, .spe-lab-head h1, .spe-mywork h1, .spe-privacy-page h1 {
+  font-family: var(--spe-display, inherit); font-weight: 550; letter-spacing: -0.02em; margin: 0.2rem 0;
+}
+.spe-lab-grid, .spe-privacy-grid, .spe-moon-grid {
+  display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.spe-lab-card {
+  border: 1px solid color-mix(in oklab, var(--lab-accent, #7dd3fc) 35%, #2a3140);
+  border-radius: 16px; padding: 1rem; background: #0f131a; display: grid; gap: 0.75rem;
+}
+.spe-lab-cat { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7; }
+.spe-lab-seed {
+  margin: 0; white-space: pre-wrap; font-size: 0.86rem; opacity: 0.9;
+  background: #0a0c10; border-radius: 10px; padding: 0.75rem; border: 1px solid #232833;
+}
+.spe-lab-actions, .spe-actions, .compile-row, .spe-composer-url-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.spe-nav-links button {
+  background: transparent; border: 0; color: inherit; font: inherit; cursor: pointer; padding: 0.35rem 0.5rem;
+}
+.spe-nav-links button.is-active { color: var(--spe-accent, #7dd3fc); }
+.file-btn { display: inline-flex; align-items: center; cursor: pointer; }
+.spe-field.inline { display: inline-flex; gap: 0.5rem; align-items: center; }
+.spe-linkish { background: none; border: 0; color: #7dd3fc; cursor: pointer; font: inherit; text-decoration: underline; }
+@media (max-width: 390px) {
+  .spe-composer-modes button { padding: 0.35rem 0.65rem; font-size: 0.86rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spe-lab-card, .spe-composer-preview img { transition: none; }
+}
