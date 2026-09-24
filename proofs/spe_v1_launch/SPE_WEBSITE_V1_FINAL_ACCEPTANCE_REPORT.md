@@ -15,13 +15,16 @@ Close the product cohesion gap: Home already felt premium; Create / Code / URL /
 
 | Token | SHA | Notes |
 | --- | --- | --- |
-| FINAL_IMPLEMENTATION_SHA |  | Cohesion CSS/TSX + Lab lighting + copy inventory | Cohesion CSS/TSX + Lab lighting + copy inventory |
-| FINAL_TESTED_SHA |  | Suites green on this tree (pre-commit run + rebuild at tip) | Suites green on this tree (pre-commit run + rebuild at tip) |
-| FINAL_VISUAL_TARGET_SHA |  | Round-3 manifest / fresh_visual testedSha | Round-3 manifest `visualTargetSha` / fresh_visual `testedSha` |
-| REPORT_SHA |  | Docs + Round-3 visuals | Docs + Round-3 visuals |
-| LIVE_PR_HEAD |  | After push; never merge | After push; never merge |
+| FINAL_IMPLEMENTATION_SHA | `affee12eb63f2b4f474a1b0742e427591be38959` | Cohesion CSS/TSX + Lab lighting + copy inventory |
+| FINAL_TESTED_SHA | `affee12eb63f2b4f474a1b0742e427591be38959` | Suites green on this tree (pre-commit run + rebuild at tip) |
+| FINAL_VISUAL_TARGET_SHA | `affee12eb63f2b4f474a1b0742e427591be38959` | Round-3 manifest visualTargetSha / fresh_visual testedSha |
+| REPORT_SHA | `d18e61a1a1567f475c67bac4e58ce740657b271c` | Docs + Round-3 visuals (docs trail) |
+| LIVE_PR_HEAD | `d18e61a1a1567f475c67bac4e58ce740657b271c` | After push; never merge |
 
-Ideal equality **FINAL_IMPLEMENTATION_SHA = FINAL_TESTED_SHA = FINAL_VISUAL_TARGET_SHA** holds at `affee12`.
+Ideal equality **FINAL_IMPLEMENTATION_SHA = FINAL_TESTED_SHA = FINAL_VISUAL_TARGET_SHA** holds at `affee12eb63f2b4f474a1b0742e427591be38959`.
+
+REPORT / LIVE tip `d18e61a1a1567f475c67bac4e58ce740657b271c` is a **proven docs-only trail** after implementation.
+
 
 ## C. Fresh mergeability (pre-push check)
 
