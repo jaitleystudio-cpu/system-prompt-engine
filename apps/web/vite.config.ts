@@ -25,8 +25,16 @@ export default defineConfig({
         entryFileNames: "assets/[name]-[hash].js",
         chunkFileNames: "assets/[name]-[hash].js",
         assetFileNames: "assets/[name]-[hash][extname]",
+        manualChunks(id) {
+          if (id.includes("onnxruntime-web")) return "ort-wasm";
+          if (id.includes("react-three-fiber") || id.includes("/three/"))
+            return "r3f";
+        },
       },
     },
+  },
+  optimizeDeps: {
+    exclude: ["onnxruntime-web"],
   },
   preview: { host: "127.0.0.1", port: 4173 },
   server: { host: "127.0.0.1", port: 5173 },

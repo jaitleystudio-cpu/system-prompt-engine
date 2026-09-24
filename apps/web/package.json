@@ -15,11 +15,15 @@
     "audit:assets": "node scripts/measure-assets.mjs",
     "audit:egress": "node scripts/egress-proof.mjs",
     "spe:copy-check": "node ../../tools/copy-check.mjs",
-    "test:copy": "cd ../.. && node tests/copy/golden-and-adversarial.mjs"
+    "test:copy": "cd ../.. && node tests/copy/golden-and-adversarial.mjs",
+    "test:media": "node scripts/test-media-observe.mjs",
+    "test:adversarial": "node scripts/test-adversarial-v1.mjs",
+    "test:e2e:v1": "node scripts/e2e-v1-capabilities.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",
     "@types/three": "^0.170.0",
+    "onnxruntime-web": "^1.20.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.170.0"
