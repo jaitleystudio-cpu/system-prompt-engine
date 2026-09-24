@@ -15,10 +15,10 @@ P0 correctness defects from the defect-closure brief were closed on this branch 
 
 | Token | Meaning | SHA |
 | --- | --- | --- |
-| IMPLEMENTATION_TESTED_SHA | Last implementation commit with suites green | _(see section 12)_ |
-| VISUAL_EVIDENCE_SHA | Commit containing round-3 screenshots + reviews | _(see section 12)_ |
-| REPORT_SHA | Commit that authors/updates this report | _(see section 12)_ |
-| CURRENT_PR_HEAD | Tip of `grok/spe-v1-launch-20260924` after push | _(see section 12)_ |
+| IMPLEMENTATION_TESTED_SHA | Suites green through copy gate + media + web pytest | `c889e2c9d7b7cf893951fc8ea0c96a628cb297ec` |
+| VISUAL_EVIDENCE_SHA | Round-3 screenshots + reviews committed | `a86a04f4116b7881f4eea0bd153b42015e81aaf6` |
+| REPORT_SHA | This report tip-pointer commit | `0bf19773c943a715a181d5ff981f9780068ff74a` |
+| CURRENT_PR_HEAD | Branch tip after push | `0bf19773c943a715a181d5ff981f9780068ff74a` |
 
 ## 3. Product law compliance
 
@@ -120,9 +120,9 @@ Uniqueness: 03≠04 and 06≠07 verified each capture.
 - Did **not** fabricate READY / production qualification / apex header proof
 - Did **not** spend owner ₹ on paid vision/proxy APIs
 
-## 12. Branch / tip (updated at report commit)
+## 12. Branch / tip
 
-See git tip after this file is committed and pushed. Parent agent should treat `CURRENT_PR_HEAD` as `git rev-parse origin/grok/spe-v1-launch-20260924` post-push.
+PR #41 tip after push equals CURRENT_PR_HEAD / REPORT_SHA below (single tip-pointer commit). DO NOT MERGE.
 
 ## 13. Final token
 
