@@ -1696,3 +1696,13 @@ em {
   .hero-copy h1 { font-size: clamp(2.1rem, 10vw, 3.2rem); }
   .edition { display: none; }
 }
+
+
+/* visual round 2 — denser composer chips + softer create head */
+.spe-create-head .spe-kicker { letter-spacing: 0.14em; opacity: 0.7; }
+.spe-create-head p { max-width: 40rem; line-height: 1.55; }
+@media (max-width: 390px) {
+  .spe-composer-modes { gap: 0.28rem; }
+  .spe-composer-modes button { padding: 0.3rem 0.55rem; font-size: 0.8rem; }
+  .spe-create { margin-top: 4.5rem; }
+}

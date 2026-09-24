@@ -8,9 +8,11 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { chromium } = await import(
+const pwMod = await import(
   process.env.SPE_PLAYWRIGHT_MODULE || "playwright"
 );
+const chromium = pwMod.chromium ?? pwMod.default?.chromium;
+if (!chromium) throw new Error("playwright chromium export missing");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, "screenshots");
@@ -86,13 +88,11 @@ try {
     await ta.fill(BRIEF);
     // Click the studio form build button (not nav CTA)
     await page.locator("#prompt-studio form.spe-command button.spe-build").click();
-    await page.waitForFunction(
-      () => {
-        const status = document.querySelector("#prompt-studio .compile-status");
-        return status && status.textContent.includes("Ready to use");
-      },
-      { timeout: 90000 },
-    );
+    // CSP forbids string-eval waitForFunction; use locator text wait instead.
+    await page
+      .locator("#prompt-studio .compile-status")
+      .filter({ hasText: "Ready to use" })
+      .waitFor({ state: "visible", timeout: 90000 });
     await page.locator("#prompt-studio .studio-output.live-result").scrollIntoViewIfNeeded();
     await page.waitForTimeout(600);
     // Frame both panels if possible
