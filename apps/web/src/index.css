@@ -1716,3 +1716,82 @@ em {
   .spe-privacy-lede { font-size: 0.95rem; }
   .spe-lab-card { padding: 0.85rem; }
 }
+
+/* —— Daily 3D Lab stage —— */
+.spe-lab-3d .spe-lab-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  margin: 1.25rem 0 1.5rem;
+  align-items: stretch;
+}
+.spe-lab-stage {
+  position: relative;
+  min-height: 420px;
+  border-radius: 1.1rem;
+  overflow: hidden;
+  background: #07090d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.spe-lab-stage canvas { width: 100% !important; height: 100% !important; }
+.spe-lab-stage-fallback {
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.65);
+}
+.spe-lab-stage-caption {
+  position: absolute;
+  left: 0.85rem;
+  bottom: 0.65rem;
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: rgba(232, 234, 237, 0.72);
+  pointer-events: none;
+}
+.spe-lab-editorial {
+  border-radius: 1.1rem;
+  padding: 1.15rem 1.2rem;
+  background: color-mix(in srgb, var(--lab-accent, #9ecbff) 10%, #0e1218);
+  border: 1px solid color-mix(in srgb, var(--lab-accent, #9ecbff) 35%, transparent);
+}
+.spe-lab-story { line-height: 1.55; opacity: 0.92; }
+.spe-lab-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem 0.85rem;
+  margin: 0.85rem 0;
+  font-size: 0.86rem;
+}
+.spe-lab-meta dt { opacity: 0.6; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.spe-lab-meta dd { margin: 0.1rem 0 0; }
+.spe-lab-previews {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.spe-lab-preview {
+  text-align: left;
+  border-radius: 0.85rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0c1016;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.spe-lab-preview.is-active {
+  border-color: color-mix(in srgb, var(--lab-accent, #9ecbff) 70%, white);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lab-accent, #9ecbff) 40%, transparent);
+}
+.spe-lab-preview em { font-style: normal; opacity: 0.55; font-size: 0.78rem; }
+.spe-prompt-gallery { margin-top: 1.5rem; }
+.spe-prompt-gallery ul { padding-left: 1.1rem; }
+@media (max-width: 900px) {
+  .spe-lab-3d .spe-lab-feature { grid-template-columns: 1fr; }
+  .spe-lab-previews { grid-template-columns: 1fr; }
+  .spe-lab-stage { min-height: 300px; }
+}

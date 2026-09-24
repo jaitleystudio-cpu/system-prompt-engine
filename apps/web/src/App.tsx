@@ -519,16 +519,18 @@ export default function App() {
               </h1>
               <p>
                 {view === "code"
-                  ? "Upload a UI screenshot. SPE adds local layout observations and honest starter scaffolds for HTML/CSS/JavaScript, React, SwiftUI, Jetpack Compose, Flutter, and React Native — with uncertainty labeled."
-                  : "Start with text, speech, an image, a video, or a website. Review what SPE prepares, then take the prompt where you need it."}
+                  ? "Code is Screenshot→code: UIObservationIR regions with evidence, then scaffolds for HTML/CSS/JavaScript, React, SwiftUI, Jetpack Compose, Flutter, and React Native."
+                  : "Create is the premium instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."}
               </p>
             </header>
             <UnifiedComposer
+              key={view === "code" ? "code" : "create"}
               value={userRequest}
               onChange={(v) => {
                 applyUserRequestChange(v);
               }}
               disabled={busy}
+              initialMode={view === "code" ? "screenshot" : "text"}
               onScaffoldPrompt={(prompt) => {
                 applyUserRequestChange(prompt);
               }}
@@ -574,9 +576,13 @@ export default function App() {
           <DailyLab
             onOpenInSpe={(s) => {
               invalidate();
-              setUserRequest(s.seedIdea);
+              const idea =
+                ("buildPrompt" in s && s.buildPrompt) ||
+                ("seedIdea" in s && s.seedIdea) ||
+                "";
+              setUserRequest(String(idea));
               setCategory(mapLabCategory(s.category));
-              setIntent(defaultIntentLens(s.seedIdea));
+              setIntent(defaultIntentLens(String(idea)));
               setIntentProvenance("AUTO_DERIVED_INTENT");
               setMode("simple");
               setView("create");
@@ -584,7 +590,11 @@ export default function App() {
             }}
             onCopyIdea={async (s) => {
               try {
-                await navigator.clipboard.writeText(s.seedIdea);
+                const idea =
+                  ("buildPrompt" in s && s.buildPrompt) ||
+                  ("seedIdea" in s && s.seedIdea) ||
+                  "";
+                await navigator.clipboard.writeText(String(idea));
                 setNotice("Idea copied.");
               } catch {
                 setNotice("Copy unavailable. Select the idea text to copy it.");

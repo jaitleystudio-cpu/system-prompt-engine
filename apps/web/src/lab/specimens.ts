@@ -1,65 +1,359 @@
+export type LabInteraction = "orbit" | "scroll-story" | "parallax" | "hover-explode";
+
 export type LabSpecimen = {
   id: string;
   title: string;
   blurb: string;
+  /** Editorial story shown on the stage. */
+  editorialStory: string;
   seedIdea: string;
   category: string;
   accent: string;
+  publishDate: string; // YYYY-MM-DD
+  interaction: LabInteraction;
+  camera: { fov: number; position: [number, number, number]; target: [number, number, number] };
+  scroll: { chapters: number; parallax: number };
+  materials: { primary: string; secondary: string; finish: string };
+  lighting: { key: string; fill: string; rim: string };
+  buildPrompt: string;
+  speArtifact: string;
+  status: "published" | "preview";
+  /** Shape hint for the stage preview. */
+  shape: "torus" | "icosa" | "ribbon" | "pillars" | "orb-field" | "helix";
 };
 
-/** 36 curated static specimens — no network, no generative fill. */
-export const LAB_SPECIMENS: LabSpecimen[] = [
-  { id: "lab-01", title: "Leave note", blurb: "A short, clear leave email.", seedIdea: "Write a polite leave-of-absence email for two days next week. Keep it under 120 words. No medical details.", category: "Writing", accent: "#7dd3fc" },
-  { id: "lab-02", title: "Bug report", blurb: "Turn a vague bug into a crisp report.", seedIdea: "Turn this into a bug report with steps, expected vs actual, and severity: sign-in button sometimes does nothing on mobile Safari.", category: "Coding", accent: "#a7f3d0" },
-  { id: "lab-03", title: "Study plan", blurb: "A week of focused study.", seedIdea: "Create a 7-day study plan for introductory statistics. 45 minutes a day. Include one practice problem each day.", category: "Education", accent: "#fde68a" },
-  { id: "lab-04", title: "Product FAQ", blurb: "Answer shopper questions honestly.", seedIdea: "Draft FAQ answers for an offline writing app: pricing, offline mode, export formats, and privacy. No marketing fluff.", category: "Business", accent: "#fbcfe8" },
-  { id: "lab-05", title: "Code review", blurb: "Review for safety and clarity.", seedIdea: "Review the TypeScript I paste for correctness, security, and maintainability. Rank findings by severity with concrete fixes. Do not invent files.", category: "Coding", accent: "#c4b5fd" },
-  { id: "lab-06", title: "Meeting agenda", blurb: "A 30-minute agenda that respects time.", seedIdea: "Build a 30-minute product sync agenda with outcomes, timeboxes, and one decision to make. Avoid status theater.", category: "Business", accent: "#99f6e4" },
-  { id: "lab-07", title: "Explain simply", blurb: "A concept for a curious teen.", seedIdea: "Explain how HTTPS keeps a connection private to a curious 14-year-old. One analogy, one worked example, three check questions.", category: "Education", accent: "#fdba74" },
-  { id: "lab-08", title: "UI critique", blurb: "Honest notes on a screenshot.", seedIdea: "Critique this mobile UI for clarity, hierarchy, and accessibility. List five concrete improvements. Mark uncertainty.", category: "Website / 3D", accent: "#bef264" },
-  { id: "lab-09", title: "Story spark", blurb: "A scene start, not a novel.", seedIdea: "Open a short story in a coastal town at dawn. Two characters, one secret. 200 words. No twist ending yet.", category: "Creative", accent: "#fda4af" },
-  { id: "lab-10", title: "Research brief", blurb: "Scope a careful literature look.", seedIdea: "Outline a research brief on urban heat islands and tree canopy. List questions, evidence needs, and what would falsify the claim.", category: "Research", accent: "#93c5fd" },
-  { id: "lab-11", title: "SQL helper", blurb: "Ask for a safe query.", seedIdea: "Help me write a PostgreSQL query for monthly active users with clear assumptions and indexes to consider. No destructive statements.", category: "Coding", accent: "#6ee7b7" },
-  { id: "lab-12", title: "Support reply", blurb: "Warm, bounded customer care.", seedIdea: "Draft a support reply for a late shipment. Empathize, give two options, never invent tracking numbers.", category: "Business", accent: "#f9a8d4" },
-  { id: "lab-13", title: "Interview prep", blurb: "Practice answers with structure.", seedIdea: "Help me prepare STAR answers for a product designer interview about conflict with engineering. Keep answers under 90 seconds spoken.", category: "Education", accent: "#fcd34d" },
-  { id: "lab-14", title: "Accessibility pass", blurb: "Find a11y gaps in a flow.", seedIdea: "Review this checkout flow description for WCAG-minded gaps: focus order, labels, errors, and color-only cues. Prioritize fixes.", category: "Website / 3D", accent: "#a5b4fc" },
-  { id: "lab-15", title: "Data caveats", blurb: "Chart claims with humility.", seedIdea: "Rewrite this chart caption so it states the sample, the window, and what it does not prove. Avoid causal language.", category: "Analysis", accent: "#5eead4" },
-  { id: "lab-16", title: "Travel day", blurb: "A realistic one-day plan.", seedIdea: "Plan a one-day walking itinerary in Lisbon for two people who dislike crowds. Include food breaks and rain backup.", category: "Creative", accent: "#fb7185" },
-  { id: "lab-17", title: "API design", blurb: "A small, honest API sketch.", seedIdea: "Sketch a REST API for a personal notes app: resources, auth assumptions, error shapes. No implementation code yet.", category: "Coding", accent: "#86efac" },
-  { id: "lab-18", title: "Policy summary", blurb: "Plain-language policy notes.", seedIdea: "Summarize a remote-work policy for employees in plain English. Separate must / should / may. Flag ambiguities.", category: "Business", accent: "#e9d5ff" },
-  { id: "lab-19", title: "Image brief", blurb: "Describe a visual for generation.", seedIdea: "Write an image-generation brief for a quiet ceramic workshop at dusk. Specify lighting, lens, palette, and what to avoid.", category: "Image", accent: "#fde047" },
-  { id: "lab-20", title: "Video outline", blurb: "A 60-second explainer.", seedIdea: "Outline a 60-second explainer video on password managers. Beats, on-screen text, and one call to action. No fearmongering.", category: "Video", accent: "#67e8f9" },
-  { id: "lab-21", title: "Refactor plan", blurb: "A safe stepwise refactor.", seedIdea: "Propose a stepwise refactor plan for a legacy React class component to hooks. Preserve behavior. List risks and tests.", category: "Coding", accent: "#c4b5fd" },
-  { id: "lab-22", title: "Negotiation note", blurb: "A calm vendor email.", seedIdea: "Draft a vendor negotiation email asking for a 12% discount on annual SaaS. Firm but respectful. Offer a multi-year term.", category: "Business", accent: "#fca5a5" },
-  { id: "lab-23", title: "Science demo", blurb: "A kitchen-table experiment.", seedIdea: "Design a safe kitchen experiment to show density for kids age 8–10. Materials list, steps, and what we hope to observe.", category: "Education", accent: "#bbf7d0" },
-  { id: "lab-24", title: "Portfolio case", blurb: "Frame a design case study.", seedIdea: "Structure a portfolio case study for a banking app redesign: problem, constraints, process, outcome, and what I'd redo.", category: "Website / 3D", accent: "#fdbA74" },
-  { id: "lab-25", title: "Threat model", blurb: "Name risks without panic.", seedIdea: "Threat-model a browser extension that reads page text to build prompts. Assets, attackers, mitigations. Stay proportional.", category: "Coding", accent: "#fda4af" },
-  { id: "lab-26", title: "Grant abstract", blurb: "A tight funding abstract.", seedIdea: "Write a 150-word grant abstract for a community tool library. Problem, approach, impact, and how success is measured.", category: "Writing", accent: "#93c5fd" },
-  { id: "lab-27", title: "Onboarding", blurb: "First-run copy that respects people.", seedIdea: "Write first-run onboarding copy for SPE: three screens, no jargon, clear privacy line, one primary action each.", category: "Website / 3D", accent: "#a7f3d0" },
-  { id: "lab-28", title: "Incident postmortem", blurb: "Blameless and useful.", seedIdea: "Draft a blameless incident postmortem template filled for a 22-minute API outage caused by a bad config push.", category: "Business", accent: "#fde68a" },
-  { id: "lab-29", title: "Poem constraint", blurb: "Form first, feeling second.", seedIdea: "Write a 12-line poem about rain on metal roofs. Exact rhyme scheme AABB. No archaic diction.", category: "Creative", accent: "#fbcfe8" },
-  { id: "lab-30", title: "Dataset questions", blurb: "Ask before you plot.", seedIdea: "List ten questions I should ask before analyzing a city open-data CSV of building permits. Cover quality, bias, and privacy.", category: "Analysis", accent: "#99f6e4" },
-  { id: "lab-31", title: "Mobile nav", blurb: "IA for a small app.", seedIdea: "Propose information architecture for a habit tracker with five primary destinations. Justify what is not in the tab bar.", category: "Website / 3D", accent: "#d8b4fe" },
-  { id: "lab-32", title: "Coach prompt", blurb: "A coach that asks well.", seedIdea: "Design a coaching prompt that helps me prepare a difficult feedback conversation. Ask clarifying questions before advice.", category: "AI Assistant", accent: "#6ee7b7" },
-  { id: "lab-33", title: "Localization notes", blurb: "Copy that travels.", seedIdea: "Review this English UI string list for localization hazards: concatenated sentences, humor, gender, and date formats.", category: "Writing", accent: "#fdba74" },
-  { id: "lab-34", title: "Energy budget", blurb: "A realistic week plan.", seedIdea: "Help me plan a low-energy work week with two deep-work blocks and hard stops. Chronic fatigue friendly. No hustle tone.", category: "Business", accent: "#bef264" },
-  { id: "lab-35", title: "3D scene brief", blurb: "A quiet still-life stage.", seedIdea: "Brief a 3D still-life: brushed metal ring, frosted glass sphere, soft north light, graphite pedestal. Camera 50mm, f/4.", category: "Website / 3D", accent: "#7dd3fc" },
-  { id: "lab-36", title: "Privacy notice", blurb: "Honest product privacy copy.", seedIdea: "Write a short privacy notice for a local-first prompt tool: what stays on device, what never leaves, and what is optional.", category: "Writing", accent: "#c4b5fd" },
+/**
+ * Curated static queue of 14 premium daily 3D / interactive specimens.
+ * Honest promise: 14 days — not endless. Rotation is local-date deterministic.
+ */
+export const DAILY_3D_QUEUE: LabSpecimen[] = [
+  {
+    id: "d3d-01",
+    title: "Brushed orbit",
+    blurb: "A metal ring that remembers your scroll.",
+    editorialStory:
+      "A single brushed-steel torus hangs in soft north light. Scroll to orbit; the rim catches a cool highlight while the void stays matte graphite.",
+    seedIdea:
+      "Design a quiet premium hero: brushed metal torus, soft north light, scroll-orbit interaction, restrained type. No stock photos.",
+    category: "Website / 3D",
+    accent: "#9ecbff",
+    publishDate: "2026-09-11",
+    interaction: "orbit",
+    camera: { fov: 42, position: [2.4, 1.2, 3.2], target: [0, 0, 0] },
+    scroll: { chapters: 3, parallax: 0.35 },
+    materials: { primary: "brushed steel", secondary: "graphite", finish: "satin" },
+    lighting: { key: "soft north", fill: "cool grey", rim: "cyan edge" },
+    buildPrompt:
+      "Build a WebGL/Three hero with a brushed torus, scroll-linked orbit, and editorial caption. Prefer understated motion.",
+    speArtifact: "spe:daily3d:brushed-orbit",
+    status: "published",
+    shape: "torus",
+  },
+  {
+    id: "d3d-02",
+    title: "Glass chapters",
+    blurb: "Frosted panes that page as you scroll.",
+    editorialStory:
+      "Four frosted glass plates stack in depth. Each scroll chapter brings one pane forward while type stays razor-thin and honest.",
+    seedIdea:
+      "Create a scroll-story landing with frosted glass panels, four chapters, and calm typography about local-first tools.",
+    category: "Website / 3D",
+    accent: "#b8f0e0",
+    publishDate: "2026-09-12",
+    interaction: "scroll-story",
+    camera: { fov: 40, position: [0, 0.4, 4.2], target: [0, 0, 0] },
+    scroll: { chapters: 4, parallax: 0.55 },
+    materials: { primary: "frosted glass", secondary: "opal white", finish: "translucent" },
+    lighting: { key: "diffuse sky", fill: "warm bounce", rim: "soft white" },
+    buildPrompt:
+      "Implement a scroll-driven chapter story with translucent planes and reduced-motion fallback.",
+    speArtifact: "spe:daily3d:glass-chapters",
+    status: "published",
+    shape: "ribbon",
+  },
+  {
+    id: "d3d-03",
+    title: "Icosa seed",
+    blurb: "A crystal that explodes into facets on hover.",
+    editorialStory:
+      "An icosahedron waits in dusk indigo. Hover and facets peel outward — a metaphor for ideas taking structure.",
+    seedIdea:
+      "IDEA→MEANING→STRUCTURE→PROMPT as a hover-explode icosahedron with indigo dusk lighting.",
+    category: "Website / 3D",
+    accent: "#c4b5fd",
+    publishDate: "2026-09-13",
+    interaction: "hover-explode",
+    camera: { fov: 38, position: [1.8, 1.4, 2.8], target: [0, 0.1, 0] },
+    scroll: { chapters: 2, parallax: 0.2 },
+    materials: { primary: "crystal violet", secondary: "obsidian", finish: "clear-coat" },
+    lighting: { key: "dusk indigo", fill: "violet bounce", rim: "magenta" },
+    buildPrompt:
+      "Hover explodes an icosahedron into labeled facets: Idea, Meaning, Structure, Prompt.",
+    speArtifact: "spe:daily3d:icosa-seed",
+    status: "published",
+    shape: "icosa",
+  },
+  {
+    id: "d3d-04",
+    title: "Pillar grid",
+    blurb: "Editorial columns you can parallax.",
+    editorialStory:
+      "Seven matte pillars stand like a type specimen. Parallax scroll shifts depth; captions name weight, leading, and quiet confidence.",
+    seedIdea:
+      "A typographic 3D specimen site: pillars as letterforms, parallax depth, editorial captions on craft.",
+    category: "Website / 3D",
+    accent: "#fde68a",
+    publishDate: "2026-09-14",
+    interaction: "parallax",
+    camera: { fov: 45, position: [0, 1.6, 5], target: [0, 0.8, 0] },
+    scroll: { chapters: 3, parallax: 0.7 },
+    materials: { primary: "matte clay", secondary: "ink black", finish: "flat" },
+    lighting: { key: "gallery spot", fill: "warm wall", rim: "amber" },
+    buildPrompt:
+      "Parallax pillar field with editorial type annotations and accessible scroll alternate.",
+    speArtifact: "spe:daily3d:pillar-grid",
+    status: "published",
+    shape: "pillars",
+  },
+  {
+    id: "d3d-05",
+    title: "Orb constellation",
+    blurb: "Soft orbs that map a product story.",
+    editorialStory:
+      "A field of luminous orbs drifts slowly. Each orb is a product beat — privacy, craft, review — linked by faint threads.",
+    seedIdea:
+      "Product story as an orb constellation with gentle drift and click-to-focus captions.",
+    category: "Website / 3D",
+    accent: "#7dd3fc",
+    publishDate: "2026-09-15",
+    interaction: "orbit",
+    camera: { fov: 50, position: [0, 0, 4.5], target: [0, 0, 0] },
+    scroll: { chapters: 5, parallax: 0.4 },
+    materials: { primary: "emissive glass", secondary: "deep navy", finish: "glow" },
+    lighting: { key: "ambient glow", fill: "blue night", rim: "sky cyan" },
+    buildPrompt:
+      "Constellation of orbs with focus states and reduced-motion static layout.",
+    speArtifact: "spe:daily3d:orb-constellation",
+    status: "published",
+    shape: "orb-field",
+  },
+  {
+    id: "d3d-06",
+    title: "Helix brief",
+    blurb: "A climbing helix for process narrative.",
+    editorialStory:
+      "A copper helix climbs through charcoal space. Scroll advances the narrative rung by rung — research, shape, prove, ship.",
+    seedIdea:
+      "Process narrative on a copper helix with scroll scrubbing and honest status labels.",
+    category: "Website / 3D",
+    accent: "#fdba74",
+    publishDate: "2026-09-16",
+    interaction: "scroll-story",
+    camera: { fov: 36, position: [2.2, 2.0, 3.6], target: [0, 0.6, 0] },
+    scroll: { chapters: 4, parallax: 0.45 },
+    materials: { primary: "copper", secondary: "charcoal", finish: "patina" },
+    lighting: { key: "warm key", fill: "brown bounce", rim: "orange" },
+    buildPrompt:
+      "Scroll-scrubbed helix with four process chapters and keyboard access.",
+    speArtifact: "spe:daily3d:helix-brief",
+    status: "published",
+    shape: "helix",
+  },
+  {
+    id: "d3d-07",
+    title: "Soft machine",
+    blurb: "Rounded modules that dock on hover.",
+    editorialStory:
+      "Pastel modules float like a soft machine. Hover docks them into a tidy instrument — Create as craft, not a form.",
+    seedIdea:
+      "Soft-machine UI metaphor in 3D: rounded modules dock into a Create instrument on hover.",
+    category: "Website / 3D",
+    accent: "#fbcfe8",
+    publishDate: "2026-09-17",
+    interaction: "hover-explode",
+    camera: { fov: 40, position: [1.5, 1.2, 3.4], target: [0, 0, 0] },
+    scroll: { chapters: 2, parallax: 0.25 },
+    materials: { primary: "pastel resin", secondary: "chalk", finish: "soft gloss" },
+    lighting: { key: "studio softbox", fill: "pink bounce", rim: "lavender" },
+    buildPrompt:
+      "Docking pastel modules with hover assembly and a clear Open in SPE CTA.",
+    speArtifact: "spe:daily3d:soft-machine",
+    status: "published",
+    shape: "orb-field",
+  },
+  {
+    id: "d3d-08",
+    title: "Night ledger",
+    blurb: "Dark UI slabs with moon rim light.",
+    editorialStory:
+      "Three dark slabs hold a ledger of intentions. Moon rim light skims edges; scroll reveals assumptions vs confirmed goals.",
+    seedIdea:
+      "Dark editorial 3D ledger for prompt intentions with moon rim lighting and scroll reveals.",
+    category: "Website / 3D",
+    accent: "#a5b4fc",
+    publishDate: "2026-09-18",
+    interaction: "scroll-story",
+    camera: { fov: 44, position: [0, 1.0, 4.0], target: [0, 0.2, 0] },
+    scroll: { chapters: 3, parallax: 0.5 },
+    materials: { primary: "obsidian UI", secondary: "silver hairline", finish: "matte" },
+    lighting: { key: "moon rim", fill: "deep blue", rim: "cool white" },
+    buildPrompt:
+      "Night ledger slabs with intention categories and accessible text equivalents.",
+    speArtifact: "spe:daily3d:night-ledger",
+    status: "published",
+    shape: "pillars",
+  },
+  {
+    id: "d3d-09",
+    title: "Paper fold",
+    blurb: "Origami planes for IA storytelling.",
+    editorialStory:
+      "Folded paper planes unfold an information architecture. Each fold is a destination — Home, Create, Lab — without jargon.",
+    seedIdea:
+      "Origami IA story: folded planes reveal product destinations with human labels only.",
+    category: "Website / 3D",
+    accent: "#bef264",
+    publishDate: "2026-09-19",
+    interaction: "parallax",
+    camera: { fov: 42, position: [1.2, 1.8, 3.8], target: [0, 0.3, 0] },
+    scroll: { chapters: 4, parallax: 0.6 },
+    materials: { primary: "warm paper", secondary: "ink", finish: "fiber" },
+    lighting: { key: "window light", fill: "cream", rim: "sun edge" },
+    buildPrompt:
+      "Folding paper IA with parallax and a reduced-motion flat map fallback.",
+    speArtifact: "spe:daily3d:paper-fold",
+    status: "published",
+    shape: "ribbon",
+  },
+  {
+    id: "d3d-10",
+    title: "Signal ring",
+    blurb: "A privacy-forward pulse ring.",
+    editorialStory:
+      "A single ring pulses only when you ask it to analyze media — a reminder that vision packs stay at zero bytes until invited.",
+    seedIdea:
+      "Privacy pulse ring visualizing on-demand local vision with zero homepage model bytes.",
+    category: "Website / 3D",
+    accent: "#6ee7b7",
+    publishDate: "2026-09-20",
+    interaction: "orbit",
+    camera: { fov: 35, position: [0, 0.2, 3.0], target: [0, 0, 0] },
+    scroll: { chapters: 2, parallax: 0.15 },
+    materials: { primary: "anodized teal", secondary: "black", finish: "metal" },
+    lighting: { key: "spot teal", fill: "dim", rim: "green" },
+    buildPrompt:
+      "Pulse ring tied to user-initiated analysis; document zero silent egress.",
+    speArtifact: "spe:daily3d:signal-ring",
+    status: "published",
+    shape: "torus",
+  },
+  {
+    id: "d3d-11",
+    title: "Workshop table",
+    blurb: "Tools arranged for craft, not dashboards.",
+    editorialStory:
+      "A low table holds calm instruments — lens, slate, thread. The scene argues Create is a workshop, not a settings panel.",
+    seedIdea:
+      "3D workshop table metaphor for Create: craft tools, soft light, no dashboard chrome.",
+    category: "Website / 3D",
+    accent: "#f9a8d4",
+    publishDate: "2026-09-21",
+    interaction: "parallax",
+    camera: { fov: 48, position: [2.0, 2.2, 3.0], target: [0, 0.2, 0] },
+    scroll: { chapters: 3, parallax: 0.4 },
+    materials: { primary: "oak", secondary: "linen", finish: "oil" },
+    lighting: { key: "warm workshop", fill: "amber", rim: "gold" },
+    buildPrompt:
+      "Workshop still-life with parallax and captions that avoid infrastructure jargon.",
+    speArtifact: "spe:daily3d:workshop-table",
+    status: "published",
+    shape: "pillars",
+  },
+  {
+    id: "d3d-12",
+    title: "Tide ribbon",
+    blurb: "A flowing ribbon for narrative pacing.",
+    editorialStory:
+      "A silk ribbon flows left to right like tide lines. Scroll pacing matches the copy rhythm — slow where meaning gathers.",
+    seedIdea:
+      "Narrative ribbon with scroll-linked pacing and tide-inspired materials.",
+    category: "Website / 3D",
+    accent: "#67e8f9",
+    publishDate: "2026-09-22",
+    interaction: "scroll-story",
+    camera: { fov: 40, position: [0, 0.6, 4.4], target: [0, 0, 0] },
+    scroll: { chapters: 5, parallax: 0.65 },
+    materials: { primary: "silk cyan", secondary: "foam white", finish: "cloth" },
+    lighting: { key: "overcast", fill: "sea green", rim: "white foam" },
+    buildPrompt:
+      "Ribbon path with chapter markers and keyboard chapter jumps.",
+    speArtifact: "spe:daily3d:tide-ribbon",
+    status: "published",
+    shape: "ribbon",
+  },
+  {
+    id: "d3d-13",
+    title: "Facet mirror",
+    blurb: "Mirrored facets reflecting intent atoms.",
+    editorialStory:
+      "Mirrored facets catch fragments of a prompt — goals, limits, unknowns. Turn the piece; nothing leaves the device.",
+    seedIdea:
+      "Mirrored icosahedron reflecting intent atoms with orbit controls and privacy caption.",
+    category: "Website / 3D",
+    accent: "#e9d5ff",
+    publishDate: "2026-09-23",
+    interaction: "orbit",
+    camera: { fov: 37, position: [2.0, 1.0, 2.6], target: [0, 0, 0] },
+    scroll: { chapters: 2, parallax: 0.2 },
+    materials: { primary: "mirror chrome", secondary: "violet gel", finish: "reflect" },
+    lighting: { key: "studio array", fill: "purple", rim: "specular" },
+    buildPrompt:
+      "Orbit mirror facets labeled with intent buckets; on-device only caption.",
+    speArtifact: "spe:daily3d:facet-mirror",
+    status: "published",
+    shape: "icosa",
+  },
+  {
+    id: "d3d-14",
+    title: "Dawn coil",
+    blurb: "A helix greeting the next day.",
+    editorialStory:
+      "The fourteenth piece closes the curated set: a dawn-lit coil that promises a new rotation tomorrow — still fourteen, still finite, still honest.",
+    seedIdea:
+      "Dawn helix closing a 14-day curated Daily 3D Lab queue with honest finite promise.",
+    category: "Website / 3D",
+    accent: "#fde047",
+    publishDate: "2026-09-24",
+    interaction: "scroll-story",
+    camera: { fov: 39, position: [1.6, 1.8, 3.5], target: [0, 0.5, 0] },
+    scroll: { chapters: 3, parallax: 0.5 },
+    materials: { primary: "dawn gold", secondary: "mist", finish: "soft metal" },
+    lighting: { key: "sunrise", fill: "peach", rim: "gold" },
+    buildPrompt:
+      "Dawn coil with finite-queue honesty copy and Open in SPE clean state.",
+    speArtifact: "spe:daily3d:dawn-coil",
+    status: "published",
+    shape: "helix",
+  },
 ];
 
-/** Local-date deterministic pick of `count` specimens. */
-export function specimensForDate(date = new Date(), count = 6): LabSpecimen[] {
-  const key = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-  let hash = 0;
-  for (let i = 0; i < key.length; i++) hash = (hash * 33 + key.charCodeAt(i)) >>> 0;
-  const pool = [...LAB_SPECIMENS];
-  const picked: LabSpecimen[] = [];
-  for (let i = 0; i < Math.min(count, pool.length); i++) {
-    hash = (hash * 1664525 + 1013904223) >>> 0;
-    const idx = hash % pool.length;
-    picked.push(pool.splice(idx, 1)[0]);
+/** @deprecated use DAILY_3D_QUEUE — kept for gallery migration aliases */
+export const LAB_SPECIMENS = DAILY_3D_QUEUE;
+
+export const DAILY_QUEUE_DAYS = DAILY_3D_QUEUE.length; // 14 — do not claim endless
+
+/** Local-date pick: one featured specimen + two neighbors from the finite queue. */
+export function specimensForDate(date = new Date(), count = 3): LabSpecimen[] {
+  const start = new Date(DAILY_3D_QUEUE[0].publishDate + "T00:00:00");
+  const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const dayMs = 86400000;
+  const diff = Math.max(0, Math.floor((today.getTime() - start.getTime()) / dayMs));
+  const idx = diff % DAILY_3D_QUEUE.length;
+  const out: LabSpecimen[] = [];
+  for (let i = 0; i < Math.min(count, DAILY_3D_QUEUE.length); i++) {
+    out.push(DAILY_3D_QUEUE[(idx + i) % DAILY_3D_QUEUE.length]);
   }
-  return picked;
+  return out;
 }
 
 export function todaysLabDateLabel(date = new Date()): string {
@@ -69,4 +363,8 @@ export function todaysLabDateLabel(date = new Date()): string {
     month: "long",
     day: "numeric",
   });
+}
+
+export function queueHonestyLine(): string {
+  return `Curated queue of ${DAILY_QUEUE_DAYS} daily 3D experiences — not an endless feed. Today's piece is chosen on your device from this fixed set.`;
 }
