@@ -68,17 +68,20 @@ Evidence files: `proofs/spe_v1_launch/apex_headers.txt`, `lander_headers.txt`.
 
 ## 8. Visual QA (≥3 rounds)
 
-Screenshots under `proofs/spe_v1_launch/screenshots/`:
+Screenshots under `proofs/spe_v1_launch/screenshots/` (recaptured 2026-09-24; prior `03`/`04` and `06`/`07` pairs were byte-identical and replaced):
 
-1. `01-home-1440.png` — human hero + nav
-2. `02-create-1440.png` — multimodal composer
-3. `03-text-prompt-result-1440.png` — WASM result Ready to use
-4. `04-daily-lab-1440.png` — Daily Lab
-5. `05-daily-lab-390.png` — mobile lab
-6. `06-privacy-390.png` — Privacy / Proof
-7. `07-privacy-320.png` — 320px
+1. `01-home-1440.png` — human hero + nav (1440×900)
+2. `02-create-1440.png` — multimodal composer (1440×900)
+3. `03-text-prompt-result-1440.png` — homepage studio Text→Prompt WASM result (**Ready to use** / final prompt); not Daily Lab
+4. `04-daily-lab-1440.png` — Daily Lab (1440×900)
+5. `05-daily-lab-390.png` — mobile lab (390×844)
+6. `06-privacy-390.png` — Privacy / Proof (390×844)
+7. `07-privacy-320.png` — Privacy / Proof (320×720; distinct width from `06`)
+8. `08-create-390.png` — Create / unified composer (390×844)
 
-Rounds: desktop home → create → compile → lab; mobile lab → privacy; 320 privacy.
+Rounds: desktop home → create → homepage-studio compile → lab; mobile lab → privacy@390 → privacy@320 → create@390.
+
+Capture helper: `proofs/spe_v1_launch/capture-screenshots.mjs` (Playwright + Chrome channel against local `vite preview`).
 
 ## 9. Known limitations
 
