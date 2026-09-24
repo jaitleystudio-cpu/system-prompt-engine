@@ -53,3 +53,31 @@ def research(
     if not validate_c02_output(envelope, after):
         raise ValueError("C02 ownership/validation failed")
     return after
+
+
+def research_from_grounding(
+    envelope: CrossCategoryEnvelope,
+    bundle: Any,
+) -> CrossCategoryEnvelope:
+    """Apply a GroundingBundle through C02 ownership — no authority bypass.
+
+    Conversion lives in the grounding compiler; this entry point only forwards
+    the resulting facts/provenance/uncertainties into ``research`` so all C02
+    invariants (provenance linkage, forbidden keys, authority freeze) still run.
+    """
+    # Local import keeps grounding optional for pure C02 call sites and avoids
+    # an import cycle if grounding ever needs category helpers.
+    from spe_runtime.grounding.compiler import (
+        GroundingBundle,
+        research_capsules_to_c02_inputs,
+    )
+
+    if not isinstance(bundle, GroundingBundle):
+        raise TypeError("bundle must be a GroundingBundle")
+    facts, provenance, uncertainties = research_capsules_to_c02_inputs(bundle)
+    return research(
+        envelope,
+        facts=facts,
+        provenance=provenance,
+        uncertainties=uncertainties,
+    )

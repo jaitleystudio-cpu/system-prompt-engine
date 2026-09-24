@@ -1,5 +1,10 @@
-"""Context grounding contracts — immutable need/capsule models + need compiler."""
+"""Context grounding contracts — immutable need/capsule models + compilers."""
 
+from spe_runtime.grounding.compiler import (
+    GroundingBundle,
+    compile_context,
+    research_capsules_to_c02_inputs,
+)
 from spe_runtime.grounding.firewall import sanitize_external_payload
 from spe_runtime.grounding.freshness import (
     FreshnessState,
@@ -27,11 +32,13 @@ __all__ = [
     "ContextType",
     "DomainProfile",
     "FreshnessState",
+    "GroundingBundle",
     "MinimizedQuery",
     "PrivacyClass",
     "RefreshPlan",
     "SourcePolicy",
     "SupportStatus",
+    "compile_context",
     "compile_context_need",
     "freshness_state",
     "get_context_recipe",
@@ -39,5 +46,6 @@ __all__ = [
     "get_source_policy",
     "minimize_public_query",
     "plan_refresh",
+    "research_capsules_to_c02_inputs",
     "sanitize_external_payload",
 ]
