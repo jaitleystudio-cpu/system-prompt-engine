@@ -39,7 +39,13 @@ assert.equal(
   "review",
 );
 
-// SpeechInput source contracts
+assert.equal(mod.listeningAfterSpeechFailure(true, true), false);
+assert.equal(mod.listeningAfterSpeechFailure(false, true), false);
+assert.equal(mod.listeningAfterSpeechFailure(true, false), true);
+assert.match(mod.speechUnsupportedMessage(), /not available|Type your idea/i);
+assert.match(mod.SPEECH_VISITOR_HELP, /typing always works/i);
+
+// SpeechInput source contracts — visitor chrome must stay Rich Human English
 const speechUi = readFileSync(join(dir, "SpeechInput.tsx"), "utf8");
 assert.match(speechUi, /data-testid="speech-start"/);
 assert.match(speechUi, /data-testid="speech-stop"/);
@@ -47,7 +53,11 @@ assert.match(speechUi, /data-testid="speech-transcript"/);
 assert.match(speechUi, /cleanupRecognition|active\.abort/);
 assert.match(speechUi, /mergeTranscript/);
 assert.match(speechUi, /mapSpeechError/);
-assert.match(speechUi, /DEVICE_QUALIFICATION_PENDING/);
-assert.match(speechUi, /mixed speech \+ typing|speech and typing mix/i);
+assert.match(speechUi, /SPEECH_VISITOR_HELP|speechUnsupportedMessage/);
+assert.match(speechUi, /mixed speech \+ typing|speech and typing mix|mixed speech \+ typing/i);
+assert.doesNotMatch(speechUi, /DEVICE_QUALIFICATION_PENDING/);
+assert.doesNotMatch(speechUi, /\bNOT_TESTED\b/);
+assert.doesNotMatch(speechUi, /IMPLEMENTATION_PRESENT/);
+assert.match(speechUi, /data-speech-fallback="graceful"|data-speech-fallback-hint/);
 
-console.log(JSON.stringify({ ok: true, cases: ["error-map", "merge", "phase", "ui-contracts"] }));
+console.log(JSON.stringify({ ok: true, cases: ["error-map", "merge", "phase", "fallback-contract", "ui-contracts"] }));

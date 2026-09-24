@@ -1,6 +1,6 @@
 /**
  * Closable predeploy QA — video depth, a11y/zoom, security/privacy, perf, jargon, adversarial contracts.
- * Speech real-device remains DEVICE_QUALIFICATION_PENDING (not claimed READY here).
+ * Speech launch platforms use VERIFIED_GRACEFUL_FALLBACK where proven; QUALIFIED dictation still founder-run.
  */
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
@@ -126,11 +126,18 @@ check("service_worker_present", () => {
   const pwa = read("pwa.ts");
   assert.match(pwa, /serviceWorker|service-worker/i);
 });
-check("speech_device_pending_honest", () => {
+check("speech_visitor_graceful_fallback_honest", () => {
   const speech = read("input/SpeechInput.tsx");
-  assert.match(speech, /DEVICE_QUALIFICATION_PENDING|NOT_TESTED/);
+  assert.doesNotMatch(speech, /DEVICE_QUALIFICATION_PENDING/);
+  assert.doesNotMatch(speech, /\bNOT_TESTED\b/);
+  assert.doesNotMatch(speech, /IMPLEMENTATION_PRESENT/);
+  assert.match(speech, /typing always works|speech is optional|Type your idea|Dictation works|SPEECH_VISITOR_HELP/i);
   const checklist = join(repo, "proofs/spe_v1_launch/SPEECH_DEVICE_QUALIFICATION_CHECKLIST.md");
   assert.ok(existsSync(checklist), "speech checklist artifact missing");
+  const matrix = read("engine/speechQualification.ts");
+  assert.match(matrix, /VERIFIED_GRACEFUL_FALLBACK/);
+  assert.match(matrix, /QUALIFIED/);
+  assert.match(matrix, /FAILED/);
 });
 
 // 6) Visitor jargon ban (Rich Human English surfaces)

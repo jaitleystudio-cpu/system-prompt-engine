@@ -91,8 +91,10 @@ try {
   if (await summary.count()) await summary.click();
   await page.waitForTimeout(200);
   const speech = await page.locator("details.spe-speech").innerText();
-  if (/NOT_TESTED|on-device|device-qualified|device qualification/i.test(speech))
-    pass("speech_honesty", "qualification honesty visible");
+  if (/DEVICE_QUALIFICATION_PENDING|\bNOT_TESTED\b|IMPLEMENTATION_PRESENT/i.test(speech))
+    fail("speech_honesty", "engineering tokens leaked to visitor: " + speech.slice(0, 200));
+  else if (/typing|optional|Dictation|browser/i.test(speech))
+    pass("speech_honesty", "visitor-safe speech copy");
   else fail("speech_honesty", speech.slice(0, 200));
 
   await modeTab(page, "Image");

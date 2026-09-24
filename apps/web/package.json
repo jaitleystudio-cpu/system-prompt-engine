@@ -23,7 +23,11 @@
     "test:screenshot-fidelity": "node scripts/test-screenshot-fidelity.mjs",
     "test:video-scenes": "node scripts/test-video-scenes.mjs",
     "bench:vision-browser": "node scripts/bench-standard-vs-lite-browser.mjs",
-    "test:predeploy-qa": "node scripts/test-predeploy-qa.mjs"
+    "test:predeploy-qa": "node scripts/test-predeploy-qa.mjs",
+    "test:speech-fallback": "node scripts/test-speech-fallback-contract.mjs",
+    "bench:vision-human": "node scripts/bench-standard-vs-lite-human.mjs",
+    "test:screenshot-real": "node scripts/test-screenshot-real-fidelity.mjs",
+    "capture:real-ui": "node scripts/capture-real-ui-fixtures.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",
@@ -38,6 +42,7 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "playwright": "^1.49.1",
+    "pngjs": "^7.0.0",
     "typescript": "^5.6.3",
     "vite": "^5.4.11"
   }

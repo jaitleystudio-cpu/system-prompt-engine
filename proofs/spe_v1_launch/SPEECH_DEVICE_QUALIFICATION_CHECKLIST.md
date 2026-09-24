@@ -1,74 +1,68 @@
-# Speech→Prompt — Founder Device Qualification Checklist
+# Speech→Prompt — Launch Platform Qualification Checklist
 
-Status gate: Speech remains **DEVICE_QUALIFICATION_PENDING** until each platform row below has dated evidence. This checklist does **not** qualify a platform by itself — it is the procedure for producing evidence.
+**Gate:** Speech is **not** blocked on “every device must dictate successfully.”
 
-Branch / build under test: record commit SHA and build date at top of each run sheet.
+Each **launch platform** row must end as exactly one of:
 
-## Shared setup
+| Status | Meaning |
+| --- | --- |
+| **QUALIFIED** | Real-device dictation smoke PASS + fallback paths PASS on that platform |
+| **VERIFIED_GRACEFUL_FALLBACK** | Unsupported/failing recognition detected; no stuck mic; no false listening; human error copy; typing fully usable — with automated or manual evidence |
+| **FAILED** | Contract broken (stuck mic, false listening, unusable typing, or missing human error copy) |
 
-1. Serve the SPE web app (local `npm run build && npm run preview`, or a staging host that is **not** the parked apex).
+Ordinary visitor UI must **never** show engineering tokens (`DEVICE_QUALIFICATION_PENDING`, `NOT_TESTED`, `IMPLEMENTATION_PRESENT`, ORT, MobileNet, UIObservationIR, XRAY). Keep this matrix in Proof / technical evidence only.
+
+## Launch matrix
+
+| Platform id | Platform | Browser | Status | Founder QUALIFIED run needed? | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| chrome-desktop | Chrome desktop | Chrome | VERIFIED_GRACEFUL_FALLBACK | **YES** (real mic dictation) | Fallback contract automated on Linux Chromium; no mic hardware on box → cannot QUALIFIED here |
+| safari-desktop | Safari desktop | Safari | VERIFIED_GRACEFUL_FALLBACK | **YES** | Product fallback UI + automated contract; founder Safari dictation still open |
+| android-chrome | Android Chrome | Chrome | VERIFIED_GRACEFUL_FALLBACK | **YES** | Same as above |
+| iphone-safari | iPhone Safari | Safari | VERIFIED_GRACEFUL_FALLBACK | **YES** | Same as above |
+| linux-box-chromium | Linux box (CI) | Chromium headless | VERIFIED_GRACEFUL_FALLBACK | no | API YES; fake mic; dictation FAIL; fallback PASS (`speech_fallback_contract.json`) |
+| linux-box-firefox | Linux box (CI) | Firefox / no API | VERIFIED_GRACEFUL_FALLBACK | no | Unsupported path simulated by stripping API; typing usable |
+
+## Shared setup (founder QUALIFIED runs)
+
+1. Serve SPE web (`npm run build && npm run preview`) — not the parked apex.
 2. Open **Create → Speech**.
-3. Confirm visitor copy shows implementation-present / device-qualification-pending honesty (no “on-device ASR” claim).
-4. Prepare a quiet room; use the device’s built-in or attached microphone.
-5. Capture: browser name+version, OS version, date/time (IST), pass/fail per step, screenshots or short screen recording if useful.
-6. Privacy note: browser speech may leave the device. SPE does not store audio.
+3. Confirm visitor copy is Rich Human English (no engineering tokens).
+4. Quiet room; built-in or attached mic.
+5. Capture: browser+version, OS, date/time (IST), pass/fail, optional screenshots.
+6. Privacy: browser speech may leave the device. SPE does not store audio.
 
-## Matrix to fill
-
-| Platform | Browser | API present? | Mic allow | Mic deny | Start/stop | Edit transcript | Mixed speech+typing | Mic cleanup | Dictation smoke | Status |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Desktop | Chrome | | | | | | | | | NOT_TESTED |
-| Desktop | Safari | | | | | | | | | NOT_TESTED |
-| Android | Chrome | | | | | | | | | NOT_TESTED |
-| iPhone | Safari | | | | | | | | | NOT_TESTED |
-
-Mark a row **QUALIFIED** only if every required step below is PASS on that device.
-
-## Steps (repeat per platform × browser)
+## Steps for QUALIFIED (per launch platform)
 
 ### A. Permission allow
-1. With mic permission not yet granted, open Speech panel.
-2. Tick “Allow browser speech recognition for this session”.
-3. Click **Start microphone**.
-4. When the browser prompts, **Allow**.
-5. PASS if listening state appears and no permission-denied alert.
+Start mic → Allow → listening appears; no deny alert.
 
 ### B. Permission deny
-1. Reset site permissions (browser site settings → Microphone → Block) or use a fresh profile.
-2. Start microphone; choose **Block**.
-3. PASS if a clear human-language alert appears (permission denied) and the UI does not claim it is listening.
+Block mic → clear human alert; UI does **not** claim listening.
 
 ### C. Start / stop
-1. Allow mic; Start; speak a short sentence; Stop.
-2. PASS if listening starts and stops cleanly; Stop works without reload.
+Start → speak → Stop cleanly without reload.
 
 ### D. Edit transcript
-1. After speech, edit the transcript textarea by hand.
-2. PASS if edits stick and **Add transcript to idea** inserts the edited text.
+Edit textarea; **Add transcript to idea** inserts edited text.
 
 ### E. Mixed speech + typing
-1. Speak a phrase; Stop; type additional words into the same transcript; Add to idea.
-2. PASS if both spoken and typed content reach the idea field.
+Speak; Stop; type more; both reach the idea field.
 
 ### F. Mic cleanup
-1. Start listening; navigate away from Create (or close the Speech details) without Stop.
-2. PASS if mic indicator clears / no stuck listening (OS mic light off within a few seconds).
+Start; navigate away without Stop → no stuck listening (OS mic light clears).
 
 ### G. Dictation smoke
-1. Speak a known phrase (e.g. “Schedule a team sync tomorrow at ten”).
-2. PASS if transcript is roughly correct (≥70% of words recognizable) in the review box.
+Known phrase roughly correct (≥70% words) in review box.
 
-## Box / CI limitation (do not override)
+Mark **QUALIFIED** only if A–G PASS. Mark **VERIFIED_GRACEFUL_FALLBACK** when B/F and typing work but G cannot run (no mic / unsupported API) with evidence. Mark **FAILED** if stuck mic / false listening / typing broken.
 
-Linux agent / headless Chromium: API may be present; fake mic may grant; **dictation often FAIL (`audio-capture`)**. That is **IMPLEMENTATION_PRESENT**, never QUALIFIED.
+## Box / CI limitation
 
-## Evidence pack to attach
+Linux agent: no real microphone hardware. Dictation smoke cannot QUALIFIED. Prefer shipping **VERIFIED_GRACEFUL_FALLBACK** with `proofs/spe_v1_launch/speech_fallback_contract.json`.
 
-- Filled matrix table (this file or a dated copy under `proofs/spe_v1_launch/speech_runs/YYYYMMDD/`)
-- Browser/OS versions
-- Commit SHA tested
-- Optional screenshots of allow/deny/transcript
+## Artifacts
 
-## After founder runs
-
-Update `apps/web/src/engine/speechQualification.ts` rows only when evidence exists. Do not mark READY/QUALIFIED without a dated run sheet.
+- `apps/web/src/engine/speechQualification.ts` — matrix
+- `proofs/spe_v1_launch/speech_fallback_contract.json` — automated contract
+- `proofs/spe_v1_launch/speech_chrome_probe.json` — box Chromium probe

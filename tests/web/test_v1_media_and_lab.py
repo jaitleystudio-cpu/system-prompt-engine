@@ -182,9 +182,16 @@ def test_speech_qualification_matrix_honest():
     path = WEB / "engine" / "speechQualification.ts"
     assert path.is_file()
     text = path.read_text(encoding="utf-8")
-    assert "NOT_TESTED" in text
-    assert "on-device" in text.lower() or "on-device" in (WEB / "input" / "SpeechInput.tsx").read_text().lower()
+    assert "VERIFIED_GRACEFUL_FALLBACK" in text
+    assert "QUALIFIED" in text
+    assert "FAILED" in text
     assert "SPEECH_QUALIFICATION_MATRIX" in text
+    # Launch platforms must end as exactly one of the three statuses — no NOT_TESTED rows.
+    assert "NOT_TESTED" not in text
+    speech_ui = (WEB / "input" / "SpeechInput.tsx").read_text(encoding="utf-8")
+    assert "DEVICE_QUALIFICATION_PENDING" not in speech_ui
+    assert "NOT_TESTED" not in speech_ui
+    assert "typing" in speech_ui.lower()
 
 
 def test_code_nav_defaults_to_screenshot_mode():

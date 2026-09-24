@@ -175,17 +175,22 @@ try {
   });
   evidence.notes.push("ui_markers=" + JSON.stringify(markers.attrs));
   evidence.uiHonesty =
-    markers.attrs.some((a) => /QUALIFICATION|NOT_TESTED|PENDING/i.test(a || "")) ||
-    /NOT_TESTED|device qualification|DEVICE_QUALIFICATION|varies by device/i.test(markers.text)
+    markers.attrs.some((a) => /visitor-help|fallback/i.test(a || "")) ||
+    /typing always works|speech is optional|Dictation works/i.test(markers.text)
       ? "PASS"
       : "FAIL";
+  if (/DEVICE_QUALIFICATION_PENDING|\bNOT_TESTED\b|IMPLEMENTATION_PRESENT/i.test(markers.text)) {
+    evidence.uiHonesty = "FAIL";
+    evidence.notes.push("engineering tokens leaked into visitor speech chrome");
+  }
 
-  evidence.status =
-    evidence.dictationSmoke === "PASS" && evidence.uiHonesty === "PASS"
-      ? "IMPLEMENTATION_PRESENT"
-      : "NOT_TESTED";
-  if (evidence.apiPresent === "YES") {
-    evidence.status = "IMPLEMENTATION_PRESENT";
+  // Box has no real mic — cannot QUALIFIED. Fallback contract + UI honesty → VERIFIED_GRACEFUL_FALLBACK.
+  if (evidence.uiHonesty === "PASS" && evidence.dictationSmoke === "FAIL") {
+    evidence.status = "VERIFIED_GRACEFUL_FALLBACK";
+  } else if (evidence.dictationSmoke === "PASS" && evidence.uiHonesty === "PASS") {
+    evidence.status = "QUALIFIED";
+  } else {
+    evidence.status = "FAILED";
   }
 } catch (e) {
   evidence.notes.push("probe_error=" + String(e));

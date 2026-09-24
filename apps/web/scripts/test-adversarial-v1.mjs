@@ -24,7 +24,9 @@ assert.match(composer, /revokeObjectURL|URL\.revokeObjectURL/);
 
 const speech = readFileSync(join(webSrc, "input/SpeechInput.tsx"), "utf8");
 assert.match(speech, /\.abort\(/);
-assert.match(speech, /DEVICE_QUALIFICATION_PENDING|NOT_TESTED/);
+assert.doesNotMatch(speech, /DEVICE_QUALIFICATION_PENDING/);
+assert.doesNotMatch(speech, /\bNOT_TESTED\b/);
+assert.match(speech, /typing always works|speech is optional|Type your idea|Dictation works/i);
 assert.match(speech, /mapSpeechError/);
 assert.match(speech, /data-testid="speech-stop"/);
 

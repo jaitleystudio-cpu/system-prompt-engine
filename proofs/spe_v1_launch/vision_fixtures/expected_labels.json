@@ -1,0 +1,240 @@
+{
+  "schema": "spe.v1.human_grounded_vision_bench",
+  "scoring": {
+    "notes": "Longer STANDARD prompt is NOT an improvement. Score correct / missed / hallucinated vs human labels.",
+    "invalid_prior_metric": "MobileNet conf>=0.05 AND STANDARD chars > LITE+40 \u2014 DROPPED as invalid"
+  },
+  "fixtures": [
+    {
+      "id": "black_puppy",
+      "file": "black_puppy.jpg",
+      "important": [
+        "dog",
+        "puppy",
+        "labrador",
+        "black dog"
+      ],
+      "acceptable": [
+        "animal",
+        "pet",
+        "canine",
+        "wooden floor",
+        "looking up"
+      ],
+      "forbid_confident": [
+        "car",
+        "strawberry",
+        "laptop",
+        "piano"
+      ],
+      "tolerated_imagenet_near_misses": [
+        "labrador retriever",
+        "flat-coated retriever",
+        "newfoundland",
+        "kuvasz"
+      ]
+    },
+    {
+      "id": "strawberries",
+      "file": "strawberries.jpg",
+      "important": [
+        "strawberry",
+        "strawberries",
+        "fruit",
+        "berries"
+      ],
+      "acceptable": [
+        "red",
+        "basket",
+        "produce",
+        "food"
+      ],
+      "forbid_confident": [
+        "dog",
+        "car",
+        "laptop"
+      ],
+      "tolerated_imagenet_near_misses": [
+        "strawberry",
+        "custard apple",
+        "pomegranate"
+      ]
+    },
+    {
+      "id": "camera_piano",
+      "file": "camera_piano.jpg",
+      "important": [
+        "camera",
+        "piano",
+        "lens"
+      ],
+      "acceptable": [
+        "zeiss",
+        "keyboard",
+        "musical instrument",
+        "vintage",
+        "chrome"
+      ],
+      "forbid_confident": [
+        "dog",
+        "strawberry",
+        "fjord"
+      ],
+      "tolerated_imagenet_near_misses": [
+        "reflex camera",
+        "polaroid camera",
+        "loudspeaker",
+        "remote control"
+      ]
+    },
+    {
+      "id": "desk_laptop",
+      "file": "desk_laptop.jpg",
+      "important": [
+        "laptop",
+        "desk",
+        "glasses",
+        "mouse"
+      ],
+      "acceptable": [
+        "notebook",
+        "computer",
+        "eyeglasses",
+        "workspace",
+        "wood"
+      ],
+      "forbid_confident": [
+        "dog",
+        "strawberry",
+        "canyon"
+      ],
+      "tolerated_imagenet_near_misses": [
+        "notebook",
+        "laptop",
+        "desk",
+        "mouse",
+        "sunglass",
+        "loupe"
+      ]
+    },
+    {
+      "id": "vintage_car",
+      "file": "vintage_car.jpg",
+      "important": [
+        "car",
+        "automobile",
+        "vehicle"
+      ],
+      "acceptable": [
+        "classic car",
+        "chrome",
+        "grille",
+        "street",
+        "lowrider",
+        "vintage"
+      ],
+      "forbid_confident": [
+        "dog",
+        "strawberry",
+        "piano"
+      ],
+      "tolerated_imagenet_near_misses": [
+        "convertible",
+        "sports car",
+        "racer",
+        "grille",
+        "limousine",
+        "beach wagon"
+      ]
+    },
+    {
+      "id": "fjord_cliff_people",
+      "file": "fjord_cliff_people.jpg",
+      "important": [
+        "cliff",
+        "mountain",
+        "water",
+        "people",
+        "landscape"
+      ],
+      "acceptable": [
+        "fjord",
+        "rock",
+        "sky",
+        "tourists",
+        "valley",
+        "nature"
+      ],
+      "forbid_confident": [
+        "strawberry",
+        "laptop",
+        "piano"
+      ],
+      "tolerated_imagenet_near_misses": [
+        "alp",
+        "valley",
+        "lakeside",
+        "promontory",
+        "cliff",
+        "seashore"
+      ]
+    },
+    {
+      "id": "canyon_sunset",
+      "file": "canyon_sunset.jpg",
+      "important": [
+        "canyon",
+        "rock",
+        "cliff",
+        "landscape"
+      ],
+      "acceptable": [
+        "sunset",
+        "desert",
+        "orange",
+        "sky",
+        "wilderness",
+        "sandstone"
+      ],
+      "forbid_confident": [
+        "dog",
+        "laptop",
+        "strawberry"
+      ],
+      "tolerated_imagenet_near_misses": [
+        "cliff",
+        "valley",
+        "alp",
+        "promontory"
+      ]
+    },
+    {
+      "id": "mountain_road",
+      "file": "mountain_road.jpg",
+      "important": [
+        "road",
+        "mountain",
+        "hill",
+        "landscape"
+      ],
+      "acceptable": [
+        "mist",
+        "guardrail",
+        "valley",
+        "grass",
+        "overcast"
+      ],
+      "forbid_confident": [
+        "strawberry",
+        "piano",
+        "puppy"
+      ],
+      "tolerated_imagenet_near_misses": [
+        "valley",
+        "alp",
+        "lakeside",
+        "mountain tent"
+      ]
+    }
+  ]
+}

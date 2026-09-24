@@ -76,3 +76,17 @@ export function nextSpeechPhase(input: {
   if (input.transcript.trim()) return "review";
   return "idle";
 }
+
+/** Visitor-facing help — Rich Human English only (no engineering tokens). */
+export const SPEECH_VISITOR_HELP =
+  "Dictation works in some browsers. If listening is unavailable or permission is denied, type your idea — typing always works." as const;
+
+export function speechUnsupportedMessage(): string {
+  return "Speech recognition is not available in this browser. Type your idea in the box below — typing always works.";
+}
+
+/** Contract helper: after any error or unsupported path, listening must be false. */
+export function listeningAfterSpeechFailure(listening: boolean, hadErrorOrUnsupported: boolean): boolean {
+  if (hadErrorOrUnsupported) return false;
+  return listening;
+}

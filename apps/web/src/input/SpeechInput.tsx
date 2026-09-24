@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { mapSpeechError, mergeTranscript } from "./speechHelpers";
+import {
+  mapSpeechError,
+  mergeTranscript,
+  SPEECH_VISITOR_HELP,
+  speechUnsupportedMessage,
+} from "./speechHelpers";
 
 type Recognition = {
   lang: string;
@@ -29,7 +34,7 @@ function cleanupRecognition(active: Recognition | null) {
   }
 }
 
-/** Status: IMPLEMENTATION_PRESENT / DEVICE_QUALIFICATION_PENDING — browser speech varies by device. */
+/** Speech→Prompt — Rich Human English for visitors; matrix lives in proofs + speechQualification.ts. */
 export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) => void; disabled: boolean }) {
   const recognition = useRef<Recognition | null>(null);
   const [listening, setListening] = useState(false);
@@ -95,6 +100,15 @@ export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) =
       const mapped = mapSpeechError(event.error);
       setErrorKind(mapped.kind);
       setError(mapped.message);
+      // Never leave a false listening state after an error (graceful-fallback contract).
+      try {
+        active.abort();
+      } catch {
+        /* ignore */
+      }
+      recognition.current = null;
+      setListening(false);
+      setInterim("");
     };
     active.onend = () => {
       if (recognition.current !== active) return;
@@ -116,28 +130,52 @@ export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) =
 
   return (
     <>
-      <p className="spe-muted" data-speech-qualification="DEVICE_QUALIFICATION_PENDING">
-        Speech→Prompt: implementation present; device qualification pending (NOT_TESTED on most platforms).
+      <p className="spe-muted" data-speech-visitor-help="true">
+        {SPEECH_VISITOR_HELP}
       </p>
-      <details className="spe-speech" data-testid="speech-panel">
+      <details
+        className="spe-speech"
+        data-testid="speech-panel"
+        data-speech-supported={Constructor ? "true" : "false"}
+      >
         <summary>Speak your idea</summary>
         <p>
           Dictate, review the text, then add it to your idea. You can also type into the transcript box
           (mixed speech + typing). Your browser may send audio to its speech service. SPE does not save
-          audio and does not claim on-device speech recognition unless a device row is qualified.
+          audio.
         </p>
-        <p
-          className="spe-muted"
-          data-capability-status="IMPLEMENTATION_PRESENT / DEVICE_QUALIFICATION_PENDING"
-        >
-          Speech support varies by device and browser. Implementation is present; device qualification
-          remains NOT_TESTED on this box — type if dictation misbehaves.
+        <p className="spe-muted" data-speech-fallback-hint="true">
+          Prefer typing? The transcript box below always works — speech is optional.
         </p>
         {!Constructor ? (
-          <p role="status">
-            Speech recognition is unavailable in this browser. You can still type or paste a transcript
-            into your idea.
-          </p>
+          <div data-speech-phase="unsupported" data-speech-fallback="graceful">
+            <p role="status" data-testid="speech-unsupported">
+              {speechUnsupportedMessage()}
+            </p>
+            <label className="spe-field">
+              <span>Type your idea here (speech is unavailable in this browser)</span>
+              <textarea
+                rows={4}
+                data-testid="speech-transcript"
+                value={transcript}
+                disabled={disabled}
+                onChange={(event) => setTranscript(event.target.value)}
+              />
+            </label>
+            <button
+              type="button"
+              data-testid="speech-insert"
+              disabled={disabled || !transcript.trim()}
+              onClick={() => {
+                onInsert(transcript.trim());
+                setTranscript("");
+                setError("");
+                setErrorKind("");
+              }}
+            >
+              Add transcript to idea
+            </button>
+          </div>
         ) : (
           <>
             <label className="spe-field">
