@@ -3,130 +3,127 @@
 Date: 2026-09-24 (Asia/Calcutta)
 Branch: `grok/spe-v1-launch-20260924`
 Base: `646d3765153f66c3951d812b8adfd87fcbf766b1` (PR #40)
+PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/41 — **OPEN, DO NOT MERGE**
 
 ## 1. Verdict
 
-**SPE_V1_LAUNCH_CANDIDATE_READY**
+**SPE_V1_REBUILD_REQUIRED**
 
-All seven V1 capabilities are implemented as real local paths (no JS semantic mock; WASM integrity fail-closed). Not a production qualification, World #1, or G6-H claim.
+P0 correctness defects from the defect-closure brief were closed on this branch (intent desync, Daily Lab contamination, async races, URL trust boundary, .spe export, media bounds). Product meaning and visual polish improved honestly. **Launch-candidate READY is blocked** primarily by apex not serving SPE, plus remaining capability quality gaps that must not be marketed as READY.
 
-## 2. Product law compliance
+## 2. Custody SHAs (fill tip after final commit)
+
+| Token | Meaning | SHA |
+| --- | --- | --- |
+| IMPLEMENTATION_TESTED_SHA | Last implementation commit with suites green | _(see section 12)_ |
+| VISUAL_EVIDENCE_SHA | Commit containing round-3 screenshots + reviews | _(see section 12)_ |
+| REPORT_SHA | Commit that authors/updates this report | _(see section 12)_ |
+| CURRENT_PR_HEAD | Tip of `grok/spe-v1-launch-20260924` after push | _(see section 12)_ |
+
+## 3. Product law compliance
 
 | Law | Status |
 | --- | --- |
-| UI → Web Worker → spe_wasm.wasm → spe-core-rs | PASS (E2E browser compile produced prompt; engine fixture VALID) |
-| No JS semantic mock | PASS |
-| WASM integrity fail = safe failure | PASS (existing worker path retained) |
-| Zero mandatory paid APIs/inference/accounts | PASS |
+| UI → Web Worker → spe_wasm.wasm → spe-core-rs | PASS (engine fixture VALID; browser Text→Prompt Ready to use) |
+| Media = observations, not second K3 writer | PASS |
+| No JS semantic mock / WASM integrity fail-closed | PASS |
+| Zero mandatory paid APIs / vision / proxy | PASS |
 | No spe_runtime/omega/ | PASS |
-| No G6-H / World #1 / awards fabricated | PASS |
+| No fabricated READY / G6-H / World #1 | PASS (this report corrects prior inflated READY matrix) |
 
-## 3. Capability matrix
+## 4. Capability matrix (truthful)
 
-| # | Capability | Status | Evidence |
+| # | Capability | Status | Notes |
 | --- | --- | --- | --- |
-| 1 | Text→Prompt (WASM) | READY | Browser E2E: status “Ready to use”, prompt length 2818 |
-| 2 | Speech→Prompt | READY | SpeechInput polished; UnifiedComposer Speech tab; feeds text path |
-| 3 | Image→Prompt | READY | `imageObserve.ts` pixel observations; license/size documented in block |
-| 4 | Screenshot→Code | READY | Six targets: html-css-js, react, swiftui, compose, flutter, react-native; uncertainty labeled |
-| 5 | Video→Prompt | READY | Bounded frame sampling + cleanup in `videoSample.ts` |
-| 6 | URL→Website | READY | CORS-honest fetch; HTML upload / screenshot / description fallbacks; no paid proxy |
-| 7 | 3D Daily Lab /lab | READY | 36 static specimens; date-deterministic; Open in SPE / copy |
+| 1 | Text→Prompt (WASM) | READY_WITHIN_TESTED_SCOPE | Browser E2E + engine fixture VALID |
+| 2 | Speech→Prompt | IMPLEMENTATION_PRESENT / DEVICE_QUALIFICATION_PENDING | Browser speech varies; honesty copy in SpeechInput |
+| 3 | Image→Prompt | IMPLEMENTATION_PRESENT / QUALITY_GAP | Local pixel observations + human summary; no semantic vision |
+| 4 | Screenshot→Code | IMPLEMENTATION_PRESENT / QUALITY_GAP | Six human-labeled targets; brightness IR; honest scaffolds |
+| 5 | Video→Prompt | IMPLEMENTATION_PRESENT / QUALITY_GAP | Bounded sampling, dedupe, sequence summary |
+| 6 | URL→Website | IMPLEMENTATION_PRESENT / QUALITY_GAP | Bounded stream, timeout, finalUrl, DOMParser brief when available; UNTRUSTED_SOURCE |
+| 7 | 3D Daily Lab /lab | PRODUCT_DIRECTION_MISMATCH | Prompt gallery with honesty banner; not premium daily 3D experiences |
 
-## 4. UX
+## 5. P0 fixes landed (Wave 1)
 
-- Unified multimodal composer on Create / Code
-- Human homepage: “There is more in the idea…” + CTA **Build my prompt** / **Start with an idea**
-- No public COMPILE INTENT / RAW THOUGHT / ABI / IR jargon on homepage
-- Nav: Home, Create, Code, Daily Lab, My Work, Privacy / Proof
-- Mobile 320–390 captured; reduced-motion path retained (LITE / static press)
-- 3D code-split (`SpeIntelligence-*.js` separate chunk)
+- **C** Intent: `AUTO_DERIVED_INTENT` vs `USER_EDITED_INTENT`; Create/simple rederives; Inspect/pro preserves edits
+- **D** Daily Lab open resets intent + maps specimen category; mode=simple
+- **E** Screenshot `codeTarget` canonical; changing target updates request; human labels for all 6
+- **F–G** Composer `valueRef` / opId / `AbortController`; ignore stale results
+- **H** Mode switch clears mode-specific state; revoke object URLs
+- **I** Clipboard `await` + real success/fail (App + composer)
+- **J** Export `.spe` (not `.spe.json`); import accept includes `.spe`
+- **K–N** File bounds before decode; source vs analysis dims; alpha-consistent grid; transparent PNG fixture
+- **Y–AB** URL bounded stream read; timeout/abort; final URL; failures **not** appended as user intent
+- **AC–AD** `UNTRUSTED_SOURCE` provenance boundary; adversarial HTML injection tests
 
-## 5. PR #37/#38 reconcile
+## 6. Wave 2–3 product / copy / a11y
 
-See `docs/v1/PR37_PR38_RECONCILE.md` (KEEP / REIMPLEMENT / REJECT / OBSOLETE).
+- Image human summary + diagnostics separated; status stays QUALITY_GAP
+- Screenshot band-contrast confidence; honest scaffold wording
+- Video scene dedupe + sequence summary
+- URL DOMParser website build brief
+- Daily Lab: removed “Same date, same set…”; marked PRODUCT_DIRECTION_MISMATCH gallery
+- Privacy benefit-first; technical proof expandable (`data-copy-depth=PROOF`)
+- Hero IDEA→MEANING→STRUCTURE→PROMPT; Create premium copy
+- Speech qualification honesty; focus-visible + reduced-motion CSS
+- Copy gate: reviewed inventory refreshed (1073 entries, 0 violations)
 
-## 6. Baselines → finals (fresh)
+## 7. Test commands (fresh this session)
 
 | Suite | Command | Result | Exit |
 | --- | --- | --- | --- |
-| Full pytest | `python -m pytest -q` | **508 passed** | 0 |
-| Web gates | `python -m pytest tests/web -q` | **43 passed** | 0 |
-| spe-core-rs | `cargo test --manifest-path portable/spe-core-rs/Cargo.toml --quiet` | **15 passed** (2+13) | 0 |
+| Full pytest | `python -m pytest -q` | **516 passed** | 0 |
+| Web gates | `python -m pytest tests/web -q` | **51 passed** | 0 |
+| spe-core-rs | `cargo test --manifest-path portable/spe-core-rs/Cargo.toml --quiet` | **19 passed** (4+2+13) | 0 |
 | spe-wasm | `cargo test --manifest-path portable/spe-wasm/Cargo.toml --quiet` | **2 passed** | 0 |
-| Engine fixture | `cd apps/web && npm run test:engine` | VALID, no TS fallback | 0 |
+| Engine fixture | `cd apps/web && npm run test:engine` | VALID, `used_ts_fallback: false` | 0 |
 | Production build | `cd apps/web && npm run build` | PASS (copy gate 0 unreviewed) | 0 |
-| Media unit | `node apps/web/scripts/test-media-observe.mjs` | ok | 0 |
+| Media unit | `node apps/web/scripts/test-media-observe.mjs` | ok (alpha, 6 labels, UNTRUSTED, stream bound, dedupe) | 0 |
 
-## 7. Deployed-header honesty
+## 8. Deployed-header honesty
 
-Live apex `https://systempromptengine.com` returns a ~114-byte redirect to `/lander` (parked). **Do not claim CSP / frame-ancestors / nosniff are enforced for the SPE app on apex** until curl on the real app origin shows them.
+Live apex `https://systempromptengine.com` returns **HTTP 200**, `Content-Length: 114` — parked lander-class response, **not** the SPE app.
 
-Static `apps/web/public/_headers` ships CSP (incl. `frame-ancestors 'none'`), `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer` for hosts that honor `_headers`.
+`https://systempromptengine.com/lander` sets `lander_type=parkweb` cookies. **Do not claim SPE CSP / frame-ancestors on apex.**
 
-Evidence files: `proofs/spe_v1_launch/apex_headers.txt`, `lander_headers.txt`.
+Static `apps/web/public/_headers` still ships CSP + nosniff + referrer for hosts that honor `_headers`.
 
-## 8. Visual QA (≥3 rounds)
+Evidence: `proofs/spe_v1_launch/apex_headers.txt`, `lander_headers.txt`.
 
-Screenshots under `proofs/spe_v1_launch/screenshots/` (recaptured 2026-09-24; prior `03`/`04` and `06`/`07` pairs were byte-identical and replaced):
+## 9. Visual QA (3 genuine rounds)
 
-1. `01-home-1440.png` — human hero + nav (1440×900)
-2. `02-create-1440.png` — multimodal composer (1440×900)
-3. `03-text-prompt-result-1440.png` — homepage studio Text→Prompt WASM result (**Ready to use** / final prompt); not Daily Lab
-4. `04-daily-lab-1440.png` — Daily Lab (1440×900)
-5. `05-daily-lab-390.png` — mobile lab (390×844)
-6. `06-privacy-390.png` — Privacy / Proof (390×844)
-7. `07-privacy-320.png` — Privacy / Proof (320×720; distinct width from `06`)
-8. `08-create-390.png` — Create / unified composer (390×844)
+Under `proofs/spe_v1_launch/visual_rounds/`:
 
-Rounds: desktop home → create → homepage-studio compile → lab; mobile lab → privacy@390 → privacy@320 → create@390.
+| Round | Focus | review.md |
+| --- | --- | --- |
+| 1 | Post Wave 1–3 baseline | `round-1/review.md` |
+| 2 | Narrow composer chip density | `round-2/review.md` |
+| 3 | Lab title contrast + privacy lede wrap | `round-3/review.md` |
 
-Capture helper: `proofs/spe_v1_launch/capture-screenshots.mjs` (Playwright + Chrome channel against local `vite preview`).
+Canonical recaptures also in `proofs/spe_v1_launch/screenshots/` (fresh from final implementation; Playwright + system Chrome; CSP-safe waits).
 
-## 9. Known limitations
+Uniqueness: 03≠04 and 06≠07 verified each capture.
 
-- Live apex is a lander parking page; SPE security headers not proven on that host
-- WebGL may fail in headless/llvmpipe environments; LITE/static path used
-- Image/video analysis is grounded pixel observation, not OCR/object detection — uncertainty labeled
-- URL ingest blocked by CORS falls back honestly; no proxy
-- Create-page React controlled input needs user/browser events (home studio path proven E2E)
-- Research preview: not production-qualified
+## 10. Remaining CT blockers
 
-## 10. Test commands (copy-paste)
+1. **Apex does not serve SPE** (`/lander` park) — absolute blocker for LAUNCH_CANDIDATE_READY
+2. Image / Screenshot / Video / URL **QUALITY_GAP** (zero-cost lite path; not semantic READY)
+3. Speech **DEVICE_QUALIFICATION_PENDING**
+4. Daily Lab **PRODUCT_DIRECTION_MISMATCH** vs premium daily 3D website experiences
+5. Founder DNS/hosting required to put SPE on a real production origin
 
-```bash
-python -m pytest -q
-python -m pytest tests/web -q
-cargo test --manifest-path portable/spe-core-rs/Cargo.toml --quiet
-cargo test --manifest-path portable/spe-wasm/Cargo.toml --quiet
-cd apps/web && npm run test:engine && npm run build
-node apps/web/scripts/test-media-observe.mjs
-```
+## 11. What was not done (guardrails)
 
-## 11. Artifacts / paths
+- Did **not** merge PR #41 / #6 / #37 / #38
+- Did **not** create `spe_runtime/omega/`
+- Did **not** rebase for obsolete mergeable=false
+- Did **not** fabricate READY / production qualification / apex header proof
+- Did **not** spend owner ₹ on paid vision/proxy APIs
 
-- Report: `proofs/spe_v1_launch/SPE_WEBSITE_V1_LAUNCH_CANDIDATE_REPORT.md`
-- Screenshots: `proofs/spe_v1_launch/screenshots/`
-- Reconcile: `docs/v1/PR37_PR38_RECONCILE.md`
-- Headers template: `apps/web/public/_headers`
+## 12. Branch / tip (updated at report commit)
 
-## 12. Branch / PR
+See git tip after this file is committed and pushed. Parent agent should treat `CURRENT_PR_HEAD` as `git rev-parse origin/grok/spe-v1-launch-20260924` post-push.
 
-- Branch tip at report authoring time: `ee1730f9b9309f7da98d4f9ed3f77674bb31ba08` (visual QA screenshot fix)
-- One PR to open; **DO NOT MERGE**
+## 13. Final token
 
-## 13. What was not done (guardrails)
-
-- Did not merge PR #6, #37, #38
-- Did not create `spe_runtime/omega/`
-- Did not fabricate G6-H / World #1 / awards / production qualification
-- Did not claim apex headers enforce SPE CSP
-
-## 14. Asset notes
-
-- Production build code-splits 3D (`SpeIntelligence-*.js` ~829KB) away from main index JS (~248KB)
-- Shipped WASM remapped (no home paths); sha256 in `apps/web/public/spe_wasm.sha256.json`
-
-## 15. Final token
-
-**SPE_V1_LAUNCH_CANDIDATE_READY**
+**SPE_V1_REBUILD_REQUIRED**

@@ -1706,3 +1706,13 @@ em {
   .spe-composer-modes button { padding: 0.3rem 0.55rem; font-size: 0.8rem; }
   .spe-create { margin-top: 4.5rem; }
 }
+
+
+/* visual round 3 — lab card title contrast + privacy lede wrap */
+.spe-lab-card h2 { letter-spacing: -0.015em; line-height: 1.2; margin: 0.15rem 0 0.35rem; }
+.spe-lab-card header p { opacity: 0.88; }
+.spe-privacy-lede { font-size: 1.02rem; }
+@media (max-width: 360px) {
+  .spe-privacy-lede { font-size: 0.95rem; }
+  .spe-lab-card { padding: 0.85rem; }
+}
