@@ -426,6 +426,31 @@ export function UnifiedComposer({
         ))}
       </div>
       <p className="spe-composer-hint">{MODES.find((m) => m.id === mode)?.hint}</p>
+      {mode === "screenshot" && (
+        <ol className="spe-code-pipeline" aria-label="Code path">
+          {(
+            [
+              { id: "source" as const, label: "Source", active: !previewUrl },
+              {
+                id: "understand" as const,
+                label: "Understand",
+                active: Boolean(previewUrl) && structureLines.length === 0,
+              },
+              {
+                id: "structure" as const,
+                label: "Structure",
+                active: structureLines.length > 0 && scaffolds.length === 0,
+              },
+              { id: "target" as const, label: "Target", active: scaffolds.length > 0 },
+              { id: "build" as const, label: "Build", active: scaffolds.length > 0 },
+            ]
+          ).map((step) => (
+            <li key={step.id} data-step-active={step.active ? "true" : "false"}>
+              {step.label}
+            </li>
+          ))}
+        </ol>
+      )}
 
       {(mode === "text" || mode === "speech") && (
         <div
@@ -481,15 +506,24 @@ export function UnifiedComposer({
           />
           <button
             type="button"
-            className="spe-ghost"
+            className="spe-upload-premium"
             disabled={disabled}
             onClick={() => fileRef.current?.click()}
           >
-            {mode === "video"
-              ? "Choose video"
-              : mode === "screenshot"
-                ? "Choose screenshot"
-                : "Choose image"}
+            <strong>
+              {mode === "video"
+                ? "Choose video"
+                : mode === "screenshot"
+                  ? "Choose screenshot"
+                  : "Choose image"}
+            </strong>
+            <span>
+              {mode === "screenshot"
+                ? "A clear capture of the screen you want to start from"
+                : mode === "video"
+                  ? "Short clips work best — we sample scenes, not sound"
+                  : "We note what we can see — you keep the meaning"}
+            </span>
           </button>
           {mode === "screenshot" && (
             <label className="spe-field inline">
@@ -678,6 +712,7 @@ export function UnifiedComposer({
             <button
               type="button"
               className="spe-build"
+              data-ready={Boolean(urlInput.trim()) && !disabled ? "true" : "false"}
               disabled={disabled || !urlInput.trim()}
               onClick={() => void onUrlFetch()}
             >
@@ -697,7 +732,7 @@ export function UnifiedComposer({
               />
             </label>
           </div>
-          <p className="spe-composer-url-note">
+          <p className="spe-composer-url-note spe-xray-note">
             Some websites don&apos;t allow direct reading from another site. If
             that happens, upload the page HTML or a screenshot instead.
             Failures stay in this panel — they are not added to your idea.

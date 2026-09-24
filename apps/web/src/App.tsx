@@ -517,12 +517,16 @@ export default function App() {
                   ? "Turn a screenshot into a starting point"
                   : "Shape a prompt you can trust"}
               </h1>
+              {view === "create" ? (
+                <p className="spe-create-thought">There&apos;s more in your idea than fits in one sentence.</p>
+              ) : null}
               <p>
                 {view === "code"
                   ? "Upload a screenshot. SPE notes the layout it can see, then offers starter scaffolds you can compare — HTML, React, SwiftUI, Jetpack Compose, Flutter, or React Native."
                   : "Create is the instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."}
               </p>
             </header>
+            <div className="spe-create-rail">
             <UnifiedComposer
               key={view === "code" ? "code" : "create"}
               value={userRequest}
@@ -535,10 +539,11 @@ export default function App() {
                 applyUserRequestChange(prompt);
               }}
             />
-            <div className="compile-row" style={{ marginTop: "1rem" }}>
+            <div className="compile-row">
               <button
                 type="button"
                 className="spe-build"
+                data-ready={Boolean(userRequest.trim()) && !busy ? "true" : "false"}
                 disabled={busy || !userRequest.trim()}
                 aria-busy={busy}
                 onClick={() => void compile()}
@@ -546,6 +551,7 @@ export default function App() {
                 {busy ? ui.working : ui.build}
                 <span>↗</span>
               </button>
+            </div>
             </div>
             {error && <p role="alert">{error.message}</p>}
             {rendered?.finalPrompt && (
