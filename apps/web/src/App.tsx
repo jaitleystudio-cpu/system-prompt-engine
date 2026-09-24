@@ -514,13 +514,13 @@ export default function App() {
               <p className="spe-kicker">{view === "code" ? "Code" : "Create"}</p>
               <h1 id="create-title">
                 {view === "code"
-                  ? "Screenshot to code"
-                  : "Build a clearer prompt"}
+                  ? "Turn a screenshot into a starting point"
+                  : "Shape a prompt you can trust"}
               </h1>
               <p>
                 {view === "code"
-                  ? "Upload a UI screenshot. SPE adds local layout observations and scaffolds for HTML, React, SwiftUI, Compose, Flutter, and React Native — with uncertainty labeled."
-                  : "Start with text, speech, an image, a video, or a URL. Everything feeds the same local engine."}
+                  ? "Upload a UI screenshot. SPE adds local layout observations and honest starter scaffolds for HTML/CSS/JavaScript, React, SwiftUI, Jetpack Compose, Flutter, and React Native — with uncertainty labeled."
+                  : "Start with text, speech, an image, a video, or a website. Review what SPE prepares, then take the prompt where you need it."}
               </p>
             </header>
             <UnifiedComposer

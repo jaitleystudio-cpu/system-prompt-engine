@@ -1654,3 +1654,45 @@ em {
 @media (prefers-reduced-motion: reduce) {
   .spe-lab-card, .spe-composer-preview img { transition: none; }
 }
+
+
+/* ——— V1 polish: type, a11y, privacy proof ——— */
+.orbit-label.orbit-four {
+  top: 42%;
+  right: -0.5rem;
+}
+.spe-privacy-lede { max-width: 42rem; opacity: 0.88; line-height: 1.55; }
+.spe-privacy-proof {
+  margin-top: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #2a3140;
+  border-radius: 12px;
+  background: #0a0c10;
+}
+.spe-privacy-proof summary { cursor: pointer; font-weight: 560; }
+.spe-privacy-proof ul { margin: 0.75rem 0 0; padding-left: 1.1rem; opacity: 0.85; }
+.spe-privacy-proof li { margin-bottom: 0.45rem; }
+.hero-copy h1 {
+  font-size: clamp(2.4rem, 6vw, 6.5rem);
+  line-height: 0.98;
+  overflow-wrap: balance;
+  text-wrap: balance;
+}
+.spe-composer-modes button:focus-visible,
+.spe-scaffold-tabs button:focus-visible,
+.spe-nav-links button:focus-visible {
+  outline: 2px solid #7dd3fc;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-theater *,
+  .scroll-process *,
+  .spe-lab-card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+@media (max-width: 700px) {
+  .hero-copy h1 { font-size: clamp(2.1rem, 10vw, 3.2rem); }
+  .edition { display: none; }
+}

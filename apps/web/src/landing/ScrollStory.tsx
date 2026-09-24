@@ -66,7 +66,7 @@ export function ScrollStory({
       >
         <div className="process-visual">
           <div className="process-visual-inner">
-            <span className="eyebrow">THE INTENT CORE / ILLUSTRATION</span>
+            <span className="eyebrow">IDEA → MEANING → STRUCTURE → PROMPT</span>
             {reduced ? (
               <StaticPress />
             ) : (
@@ -76,11 +76,13 @@ export function ScrollStory({
             )}
             <div className="process-index">
               <span>
-                {progress < 0.33
-                  ? "01 / ARTICULATE"
-                  : progress < 0.66
-                    ? "02 / ORGANIZE"
-                    : "03 / CARRY FORWARD"}
+                {progress < 0.25
+                  ? "01 / IDEA"
+                  : progress < 0.5
+                    ? "02 / MEANING"
+                    : progress < 0.75
+                      ? "03 / STRUCTURE"
+                      : "04 / PROMPT"}
               </span>
               <span>FORM FOLLOWS INTENT</span>
             </div>

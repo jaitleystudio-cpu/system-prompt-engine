@@ -116,7 +116,7 @@ export function Hero(p: Props) {
           <span className="eyebrow">
             <i /> PRIVATE BY DESIGN. OPEN BY NATURE.
           </span>
-          <span className="edition">SYSTEM PROMPT ENGINE / 03</span>
+          <span className="edition">Research preview</span>
         </div>
         <div className="hero-copy">
           <p className="eyebrow">FROM A THOUGHT TO A PRECISE BRIEF</p>
@@ -151,13 +151,16 @@ export function Hero(p: Props) {
             )}
           </div>
           <div className="orbit-label orbit-one">
-            <span>01</span> YOUR IDEA
+            <span>01</span> IDEA
           </div>
           <div className="orbit-label orbit-two">
-            <span>02</span> YOUR BOUNDARIES
+            <span>02</span> MEANING
           </div>
           <div className="orbit-label orbit-three">
-            <span>03</span> YOUR PROMPT
+            <span>03</span> STRUCTURE
+          </div>
+          <div className="orbit-label orbit-four">
+            <span>04</span> PROMPT
           </div>
         </div>
         <div className="theater-bottom">

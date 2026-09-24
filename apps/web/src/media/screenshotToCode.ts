@@ -35,27 +35,32 @@ export function inferUiRegions(obs: ImageObservation): UiRegion[] {
   const bot = obs.grid.filter((g) => g.row === 2);
   const avg = (xs: typeof top) =>
     xs.reduce((s, g) => s + g.meanBrightness, 0) / (xs.length || 1);
+  const topAvg = avg(top);
+  const midAvg = avg(mid);
+  const botAvg = avg(bot);
+  const topContrast = Math.abs(topAvg - midAvg);
+  const botContrast = Math.abs(botAvg - midAvg);
   const regions: UiRegion[] = [
     {
       id: "top-bar",
       roleGuess: "Top bar / header",
       bounds: { x: 0, y: 0, w: 1, h: 1 / 3 },
-      confidence: "medium",
-      notes: `Mean brightness ${avg(top).toFixed(0)}. Likely navigation or title band.`,
+      confidence: topContrast > 35 ? "high" : topContrast > 18 ? "medium" : "low",
+      notes: `Mean brightness ${topAvg.toFixed(0)} (Δ vs main ${topContrast.toFixed(0)}). Likely navigation or title band.`,
     },
     {
       id: "main",
       roleGuess: "Main content",
       bounds: { x: 0, y: 1 / 3, w: 1, h: 1 / 3 },
       confidence: "medium",
-      notes: `Mean brightness ${avg(mid).toFixed(0)}. Primary body region guess.`,
+      notes: `Mean brightness ${midAvg.toFixed(0)}. Primary body region guess.`,
     },
     {
       id: "bottom",
       roleGuess: "Footer / actions",
       bounds: { x: 0, y: 2 / 3, w: 1, h: 1 / 3 },
-      confidence: "low",
-      notes: `Mean brightness ${avg(bot).toFixed(0)}. May be footer, tabs, or empty space.`,
+      confidence: botContrast > 35 ? "medium" : "low",
+      notes: `Mean brightness ${botAvg.toFixed(0)} (Δ vs main ${botContrast.toFixed(0)}). May be footer, tabs, or empty space.`,
     },
   ];
   const left = obs.grid.filter((g) => g.col === 0);

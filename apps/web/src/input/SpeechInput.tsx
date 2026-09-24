@@ -16,6 +16,7 @@ type SpeechWindow = Window & {
   webkitSpeechRecognition?: new () => Recognition;
 };
 
+/** Status: IMPLEMENTATION_PRESENT / DEVICE_QUALIFICATION_PENDING — browser speech varies by device. */
 export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) => void; disabled: boolean }) {
   const recognition = useRef<Recognition | null>(null);
   const [listening, setListening] = useState(false);
@@ -84,6 +85,9 @@ export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) =
   return <details className="spe-speech">
     <summary>Speak your idea</summary>
     <p>Dictate, review the text, then add it to your idea. Your browser may send audio to its speech service. SPE does not save audio.</p>
+    <p className="spe-muted" data-capability-status="IMPLEMENTATION_PRESENT / DEVICE_QUALIFICATION_PENDING">
+      Speech support varies by device and browser. This path is implemented but not yet device-qualified — type if dictation misbehaves.
+    </p>
     {!Constructor ? <p role="status">Speech recognition is unavailable in this browser. You can still type or paste a transcript into your idea.</p> : <>
       <label className="spe-field"><span>Spoken language</span>
         <select value={language} disabled={listening} onChange={event => setLanguage(event.target.value)}>

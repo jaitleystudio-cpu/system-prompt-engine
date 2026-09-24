@@ -1,55 +1,77 @@
 export function PrivacyProof() {
   return (
     <section className="spe-privacy-page" aria-labelledby="privacy-title">
-      <p className="spe-kicker">Privacy / Proof</p>
-      <h1 id="privacy-title">What stays on your device</h1>
+      <p className="spe-kicker">Privacy</p>
+      <h1 id="privacy-title">Your thinking stays with you</h1>
+      <p className="spe-privacy-lede">
+        Shape prompts on this device. Choose what you keep, where your work goes,
+        and which AI you use — without sending your idea to SPE to prepare it.
+      </p>
       <div className="spe-privacy-grid">
         <article>
-          <h2>Preparation is local</h2>
+          <h2>Preparation stays local</h2>
           <p>
-            SPE shapes prompts with a WebAssembly engine that runs in your
-            browser. Your idea is not sent to SPE servers to prepare a prompt.
+            Your brief is shaped in the browser. SPE does not need a cloud AI
+            account to prepare a prompt you can review and reuse.
           </p>
         </article>
         <article>
-          <h2>Integrity before work</h2>
+          <h2>You choose the destination</h2>
           <p>
-            The engine file is checked before use. If the check fails, preparation
-            stops safely — SPE does not fall back to a pretend engine.
+            When a prompt is ready, you decide whether to copy it, download a
+            portable <code>.spe</code> file, or take it to another AI yourself.
           </p>
         </article>
         <article>
-          <h2>Speech is your browser</h2>
+          <h2>Media stays on device</h2>
           <p>
-            Optional speech recognition uses your browser&apos;s own service. SPE
-            does not store audio. You can always type instead.
+            Image, screenshot, and video notes are computed here with simple
+            pixel checks. No paid vision service is required for this preview.
           </p>
         </article>
         <article>
-          <h2>Media stays local</h2>
+          <h2>Speech is optional</h2>
           <p>
-            Image, screenshot, and video observations are computed on this device
-            with pixel sampling. No paid vision API is required.
+            Dictation uses your browser&apos;s own speech tools when available.
+            SPE does not store audio. You can always type instead. Device support
+            varies — treat speech as best-effort until qualified on your hardware.
           </p>
         </article>
         <article>
-          <h2>URL honesty</h2>
+          <h2>Website fetch is honest</h2>
           <p>
-            Website fetch uses your browser&apos;s network rules. If CORS blocks a
-            site, SPE shows fallbacks — HTML upload, screenshot, or description —
-            and never a paid proxy.
+            If a site blocks the browser, SPE shows clear fallbacks (HTML upload,
+            screenshot, or a short description) and never a paid proxy.
           </p>
         </article>
         <article>
-          <h2>Headers on deploy</h2>
+          <h2>History only if you ask</h2>
           <p>
-            Static <code>_headers</code> ship Content-Security-Policy,
-            X-Content-Type-Options, and Referrer-Policy for hosts that honor them.
-            Apex parking pages are not the SPE app — do not treat their headers as
-            SPE proof until curl shows them on the real app origin.
+            Optional history stays in this browser. Turn it off or clear it
+            anytime from My Work.
           </p>
         </article>
       </div>
+      <details className="spe-privacy-proof">
+        <summary>Technical proof (for reviewers)</summary>
+        <ul>
+          <li>
+            Engine path: UI → Web Worker → <code>spe_wasm.wasm</code> → spe-core-rs.
+            Integrity failure stops preparation; no pretend engine fallback.
+          </li>
+          <li>
+            Static <code>_headers</code> ship Content-Security-Policy (including{" "}
+            <code>frame-ancestors &apos;none&apos;</code>),{" "}
+            <code>X-Content-Type-Options: nosniff</code>, and{" "}
+            <code>Referrer-Policy: no-referrer</code> for hosts that honor them.
+          </li>
+          <li>
+            Apex parking pages (for example a <code>/lander</code> redirect) are
+            not the SPE app — do not treat their headers as SPE proof until curl
+            shows them on the real app origin.
+          </li>
+        </ul>
+      </details>
     </section>
   );
 }
