@@ -6,7 +6,7 @@
 | --- | --- |
 | Branch | `chatgpt/context-protocol-compiler-design-20260924` |
 | Tested HEAD (Task 14, already on origin) | `23e65f4ecb48067f22185160fa6e9af3baee107d` |
-| Docs commit (this report) | *filled after local commit; see `manifest.json` `docs_commit_sha`* |
+| Docs commit (this report) | `43aab87770544690df1270fff76369b8be46aa8f` |
 | Verified at | 2026-09-24 16:54:43 IST (Asia/Kolkata) |
 | Plan | `docs/superpowers/plans/2026-09-24-context-grounding-category-protocol-implementation.md` Task 15 (~line 800) |
 | Checkout | `/workspace/system-prompt-engine` (existing; not re-cloned) |

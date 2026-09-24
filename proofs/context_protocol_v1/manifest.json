@@ -3,7 +3,7 @@
   "report": "CONTEXT_PROTOCOL_V1_REPORT.md",
   "branch": "chatgpt/context-protocol-compiler-design-20260924",
   "tested_head_sha": "23e65f4ecb48067f22185160fa6e9af3baee107d",
-  "docs_commit_sha": "c771d4952656fef9e92cafff11bf223cf178c6e0",
+  "docs_commit_sha": "43aab87770544690df1270fff76369b8be46aa8f",
   "timezone": "Asia/Kolkata",
   "verified_at": "2026-09-24T16:54:43+0530",
   "verified_at_label": "2026-09-24 16:54:43 IST",
@@ -166,5 +166,6 @@
     "pr_6": "UNTOUCHED",
     "g6h_fabrication": "FORBIDDEN",
     "paid_deps_inr": 0
-  }
+  },
+  "docs_commit_note": "SHA of the local docs commit that introduced this proof pack (may be parent of a later bind-only tweak)."
 }
