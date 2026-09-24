@@ -18,12 +18,12 @@ Close the product cohesion gap: Home already felt premium; Create / Code / URL /
 | FINAL_IMPLEMENTATION_SHA | `affee12eb63f2b4f474a1b0742e427591be38959` | Cohesion CSS/TSX + Lab lighting + copy inventory |
 | FINAL_TESTED_SHA | `affee12eb63f2b4f474a1b0742e427591be38959` | Suites green on this tree (pre-commit run + rebuild at tip) |
 | FINAL_VISUAL_TARGET_SHA | `affee12eb63f2b4f474a1b0742e427591be38959` | Round-3 manifest visualTargetSha / fresh_visual testedSha |
-| REPORT_SHA | `90c5dc80293de69e1ef4ae8d796af9fae959eb5e` | Docs-only tip after implementation (refreshed on independent verify) |
-| LIVE_PR_HEAD | `90c5dc80293de69e1ef4ae8d796af9fae959eb5e` | Fresh `gh` verify 2026-09-24; OPEN / MERGEABLE / CLEAN; never merge |
+| REPORT_SHA | docs tip after `affee12` | Report+screenshots trail; product code unchanged after implementation SHA |
+| LIVE_PR_HEAD | branch tip (docs-only after `affee12`) | Do not freeze tip SHA in-report — re-verify with `gh`; tip advances on docs commits. Independent verify 2026-09-24: OPEN / MERGEABLE / CLEAN / not merged |
 
 Ideal equality **FINAL_IMPLEMENTATION_SHA = FINAL_TESTED_SHA = FINAL_VISUAL_TARGET_SHA** holds at `affee12eb63f2b4f474a1b0742e427591be38959`.
 
-REPORT / LIVE tip `90c5dc80293de69e1ef4ae8d796af9fae959eb5e` is a **proven docs-only trail** after implementation (`git diff affee12..90c5dc8 -- apps/web/src` empty).
+REPORT / LIVE tips after `affee12` are a **proven docs-only trail** (`git diff affee12..<tip> -- apps/web/src` empty). Re-check live tip with `gh` before merge.
 
 
 
