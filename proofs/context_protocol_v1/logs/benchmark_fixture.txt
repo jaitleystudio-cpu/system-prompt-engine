@@ -1,0 +1,26 @@
+context_protocol_benchmark fixture-only PASS
+tasks=15
+arms=5
+records=75
+ablation_rows=13
+human_ratings=NO_RATINGS_YET
+network_used=false
+load_reduction_claimed=false
+note=arms_ok:5
+note=ablation_ok:5
+note=stress_classes_ok:13
+note=routing_tasks:2
+note=tasks:15
+ablation=compact|coding|OK|6->6
+ablation=compact|data_statistics|OK|6->6
+ablation=compact|health_information|OK|6->6
+ablation=compact|research|OK|5->5
+ablation=full|coding|OK|8->8
+ablation=full|data_statistics|OK|8->8
+ablation=full|health_information|OK|8->8
+ablation=full|research|OK|20->20
+ablation=no_contradiction|research|OK|20->18
+ablation=no_hypothesis|research|OK|20->19
+ablation=no_verification|coding|OK|8->7
+ablation=no_verification|data_statistics|OK|8->7
+ablation=no_verification|research|OK|20->16

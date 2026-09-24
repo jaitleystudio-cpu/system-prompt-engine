@@ -1,0 +1,170 @@
+{
+  "artifact": "CONTEXT_PROTOCOL_V1",
+  "report": "CONTEXT_PROTOCOL_V1_REPORT.md",
+  "branch": "chatgpt/context-protocol-compiler-design-20260924",
+  "tested_head_sha": "23e65f4ecb48067f22185160fa6e9af3baee107d",
+  "docs_commit_sha": "c771d4952656fef9e92cafff11bf223cf178c6e0",
+  "timezone": "Asia/Kolkata",
+  "verified_at": "2026-09-24T16:54:43+0530",
+  "verified_at_label": "2026-09-24 16:54:43 IST",
+  "claim_vocabulary": {
+    "CONTEXT_PROTOCOL_IMPLEMENTATION_PRESENT": true,
+    "CONTEXT_PROTOCOL_TESTED_WITHIN_DECLARED_SCOPE": true,
+    "WORLD_NUMBER_1": "NOT_PROVEN",
+    "INDEPENDENTLY_REPLICATED": "NOT_PROVEN",
+    "HOSTING": "FORBIDDEN_PENDING_FOUNDER_10_10_ACCEPTANCE"
+  },
+  "status_tiers": {
+    "IMPLEMENTED": true,
+    "TESTED": true,
+    "VERIFIED_WITHIN_TESTED_SCOPE": true,
+    "NOT_PROVEN": [
+      "WORLD #1",
+      "INDEPENDENTLY_REPLICATED",
+      "HOSTING / production deploy",
+      "external multi-machine replication",
+      "human ratings / load-reduction claims",
+      "mutation suite (directory empty)"
+    ]
+  },
+  "wasm": {
+    "apps_web_public_sha256": "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830",
+    "release_target_sha256": "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830",
+    "rebuilt_during_task15": false,
+    "note": "cargo test used debug profile; npm copy-wasm wrote existing release artifact unchanged (same sha256)"
+  },
+  "suites": [
+    {
+      "id": "full_pytest",
+      "command": "python -m pytest -q",
+      "cwd": ".",
+      "exit_code": 0,
+      "passed": 641,
+      "failed": 0,
+      "duration_note": "118.81s",
+      "log": "logs/full_pytest.txt"
+    },
+    {
+      "id": "focused_pytest",
+      "command": "python -m pytest tests/unit tests/integration tests/security tests/mutation tests/regression tests/portability tests/web -q",
+      "cwd": ".",
+      "exit_code": 0,
+      "passed": 641,
+      "failed": 0,
+      "duration_note": "123.05s",
+      "log": "logs/focused_pytest.txt",
+      "notes": [
+        "tests/mutation contains only .gitkeep \u2014 0 mutation tests collected"
+      ]
+    },
+    {
+      "id": "cargo_spe_core_rs",
+      "command": "cargo test --manifest-path portable/spe-core-rs/Cargo.toml",
+      "cwd": ".",
+      "exit_code": 0,
+      "passed": 38,
+      "failed": 0,
+      "breakdown": {
+        "lib_unit": 1,
+        "spe_core_eval_bin": 0,
+        "abi_transport": 8,
+        "capability_contract": 4,
+        "context_protocol": 10,
+        "negative_mutations": 2,
+        "semantic_equivalence": 13,
+        "doc_tests": 0
+      },
+      "log": "logs/cargo_spe_core_rs.txt"
+    },
+    {
+      "id": "cargo_spe_wasm",
+      "command": "cargo test --manifest-path portable/spe-wasm/Cargo.toml",
+      "cwd": ".",
+      "exit_code": 0,
+      "passed": 4,
+      "failed": 0,
+      "breakdown": {
+        "lib_unit": 0,
+        "context_protocol_web": 2,
+        "wrapper_conformance": 2,
+        "doc_tests": 0
+      },
+      "log": "logs/cargo_spe_wasm.txt"
+    },
+    {
+      "id": "npm_test_engine",
+      "command": "npm run test:engine",
+      "cwd": "apps/web",
+      "exit_code": 0,
+      "passed": 1,
+      "failed": 0,
+      "notes": [
+        "eval-fixture.mjs; used_ts_fallback=false; disposition VALID"
+      ],
+      "log": "logs/npm_test_engine.txt"
+    },
+    {
+      "id": "npm_build",
+      "command": "npm run build",
+      "cwd": "apps/web",
+      "exit_code": 0,
+      "passed": 1,
+      "failed": 0,
+      "notes": [
+        "spe:copy-check + copy-wasm + tsc --noEmit + vite build + cache-shell"
+      ],
+      "log": "logs/npm_build.txt"
+    },
+    {
+      "id": "e2e_context_protocol",
+      "command": "node apps/web/scripts/e2e-context-protocol.mjs",
+      "cwd": ".",
+      "exit_code": 0,
+      "passed": 21,
+      "failed": 0,
+      "log": "logs/e2e_context_protocol.txt"
+    },
+    {
+      "id": "benchmark_fixture_only",
+      "command": "python tools/run_context_protocol_benchmark.py --fixture-only",
+      "cwd": ".",
+      "exit_code": 0,
+      "passed": 1,
+      "failed": 0,
+      "details": {
+        "tasks": 15,
+        "arms": 5,
+        "records": 75,
+        "ablation_rows": 13,
+        "human_ratings": "NO_RATINGS_YET",
+        "network_used": false,
+        "load_reduction_claimed": false
+      },
+      "log": "logs/benchmark_fixture.txt"
+    },
+    {
+      "id": "adversarial",
+      "command": "python -m pytest tests/security/test_context_protocol_adversarial.py -q",
+      "cwd": ".",
+      "exit_code": 0,
+      "passed": 35,
+      "failed": 0,
+      "duration_note": "0.06s",
+      "log": "logs/adversarial.txt"
+    }
+  ],
+  "deviations": [
+    "tests/mutation/ contains only .gitkeep \u2014 zero mutation tests collected under focused suite path",
+    "Task 14 discovered new Python serializer spe_runtime/portability/spe_artifact.py (historical browser serializer packages/web-runtime/src/speArtifact.ts); no prior Python .spe serializer under spe_runtime/portability/",
+    "focused pytest pass count equals full pytest (641) \u2014 scoped dirs currently cover the whole Python suite present on disk",
+    "Task 14 HEAD already on origin; Task 15 is local docs commit only \u2014 NEVER git push"
+  ],
+  "hard_locks": {
+    "git_push": "FORBIDDEN",
+    "hosting_deploy_dns": "FORBIDDEN",
+    "github_workflows": "UNTOUCHED",
+    "pr_6": "UNTOUCHED",
+    "g6h_fabrication": "FORBIDDEN",
+    "paid_deps_inr": 0
+  }
+}
