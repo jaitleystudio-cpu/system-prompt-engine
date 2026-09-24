@@ -20,7 +20,7 @@ Speech stays **VERIFIED_GRACEFUL_FALLBACK** on launch platforms. Founder **QUALI
 | IMPLEMENTATION_TESTED_SHA | `d0808965a16ea03a30311698ce150f037c1b851f` | Jargon + instrument repairs; suites green |
 | VISUAL_EVIDENCE_SHA | `ba6cea30740dca0bb79cae84593c0184bc269d93` | Fresh visual pass; manifest `testedSha` = implementation SHA |
 | REPORT_AUTHORED_AT_SHA | `fe0af1a5d1671c7d420e6dd5ff678a7492ec7908` | Commit that authored this report |
-| CURRENT_PR_HEAD | `8c5cfd203e220b503408db27e21ce2a6cf43889a` | PR tip after custody bind |
+| CURRENT_PR_HEAD | `0e477fbd96b0e4334a791f67a4c83d09524a6ff2` | PR tip after custody bind |
 
 BASE: `646d3765153f66c3951d812b8adfd87fcbf766b1`
 
