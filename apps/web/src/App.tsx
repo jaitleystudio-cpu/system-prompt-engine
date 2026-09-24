@@ -27,7 +27,15 @@ import {
   type SpeArtifactV1,
   type TargetId,
 } from "@spe/web-runtime";
-import { Nav, type AppView } from "./layout/Nav";
+import { Nav } from "./layout/Nav";
+import {
+  navigateTo,
+  pathForView,
+  viewFromPath,
+  type AppView,
+} from "./routing";
+import { SeoHead } from "./ui/SeoHead";
+import { SeoContent } from "./landing/SeoContent";
 import { Hero } from "./landing/Hero";
 import { ScrollStory } from "./landing/ScrollStory";
 import { Workspace } from "./workspace/Workspace";
@@ -104,7 +112,13 @@ function phaseToScene(
 export default function App() {
   const clientRef = useRef<EngineClient | null>(null);
   const revision = useRef(0);
-  const [view, setView] = useState<View>("home");
+  const [view, setViewState] = useState<View>(() =>
+    typeof window === "undefined" ? "home" : viewFromPath(window.location.pathname),
+  );
+  const setView = useCallback((next: View, opts: { replace?: boolean } = {}) => {
+    setViewState(next);
+    navigateTo(next, opts);
+  }, []);
   const [notice, setNotice] = useState("");
   const [updateAvailable, setUpdateAvailable] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -144,6 +158,13 @@ export default function App() {
   const [online, setOnline] = useState(
     typeof navigator === "undefined" ? true : navigator.onLine,
   );
+
+  useEffect(() => {
+    navigateTo(viewFromPath(window.location.pathname), { replace: true });
+    const onPop = () => setViewState(viewFromPath(window.location.pathname));
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
 
   useEffect(() => {
     registerServiceWorker();
@@ -506,9 +527,19 @@ export default function App() {
 
   return (
     <>
-      <a className="skip-link" href="#main">
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(e) => {
+          e.preventDefault();
+          const main = document.getElementById("main");
+          main?.focus({ preventScroll: false });
+          main?.scrollIntoView();
+        }}
+      >
         Skip to main content
       </a>
+      <SeoHead view={view} />
       <Nav
         scrolled={scrolled || view !== "home"}
         view={view}
@@ -564,6 +595,7 @@ export default function App() {
               demoRequest={userRequest || "write leave email"}
               demoPrompt={rendered?.finalPrompt ?? null}
             />
+            <SeoContent />
           </>
         )}
 
@@ -859,6 +891,14 @@ export default function App() {
           <strong>SPE</strong> System Prompt Engine · Your intent, carried
           forward.
         </div>
+        <nav className="spe-footer-links" aria-label="Footer">
+          <a href={pathForView("home")}>Home</a>
+          <a href={pathForView("create")}>Create</a>
+          <a href={pathForView("code")}>Code</a>
+          <a href={pathForView("lab")}>Daily Lab</a>
+          <a href={pathForView("my-work")}>My Work</a>
+          <a href={pathForView("privacy")}>Privacy</a>
+        </nav>
         <div className="claim-strip">
           {ui.claim}
           <details data-copy-depth="PROOF">

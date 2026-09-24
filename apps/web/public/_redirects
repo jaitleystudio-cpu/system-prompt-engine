@@ -1,0 +1,5 @@
+# SPA History API fallback — do not apply to WASM/models/ort.
+ /models/*  /models/:splat  200
+ /ort/*     /ort/:splat     200
+ /assets/*  /assets/:splat  200
+ /*         /index.html     200

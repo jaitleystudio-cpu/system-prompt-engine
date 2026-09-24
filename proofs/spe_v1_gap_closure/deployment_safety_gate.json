@@ -1,0 +1,65 @@
+{
+  "gate": "deployment-safety",
+  "HOSTING": "FORBIDDEN",
+  "WORLD_NUMBER_1": "NOT_PROVEN",
+  "fail_closed": true,
+  "would_allow_deploy": false,
+  "checks": [
+    {
+      "id": "ddos_protection",
+      "ok": false,
+      "detail": "Requires SPE_DDOS_PROTECTION_PROVEN=1 with provider evidence"
+    },
+    {
+      "id": "bandwidth_spend_ceiling",
+      "ok": false,
+      "detail": "Requires SPE_BANDWIDTH_CEILING_PROVEN=1 hard cap evidence"
+    },
+    {
+      "id": "tls",
+      "ok": false,
+      "detail": "Requires SPE_TLS_PROVEN=1 for apex HTTPS"
+    },
+    {
+      "id": "security_headers_artifact",
+      "ok": true,
+      "detail": "apps/web/public/_headers present with CSP/frame-ancestors/nosniff"
+    },
+    {
+      "id": "security_headers_live",
+      "ok": false,
+      "detail": "Requires SPE_SECURITY_HEADERS_PROVEN=1 live response proof"
+    },
+    {
+      "id": "cache_policy",
+      "ok": false,
+      "detail": "Requires SPE_CACHE_POLICY_PROVEN=1 (shell vs immutable assets)"
+    },
+    {
+      "id": "abuse_protection",
+      "ok": false,
+      "detail": "Requires SPE_ABUSE_PROTECTION_PROVEN=1 (rate limits / WAF)"
+    },
+    {
+      "id": "no_unlimited_billing",
+      "ok": false,
+      "detail": "Requires SPE_NO_UNLIMITED_BILLING_PROVEN=1 spend ceiling"
+    },
+    {
+      "id": "founder_unlock",
+      "ok": false,
+      "detail": "Requires SPE_FOUNDER_HOSTING_UNLOCK=1 — default FORBIDDEN"
+    }
+  ],
+  "failed": [
+    "ddos_protection",
+    "bandwidth_spend_ceiling",
+    "tls",
+    "security_headers_live",
+    "cache_policy",
+    "abuse_protection",
+    "no_unlimited_billing",
+    "founder_unlock"
+  ],
+  "at": "2026-09-24T19:20:11.147Z"
+}

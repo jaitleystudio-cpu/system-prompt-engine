@@ -1,0 +1,1 @@
+PASS: fresh navigation, offline shell, no navigation caching, POST/external bypass, Vary respected.

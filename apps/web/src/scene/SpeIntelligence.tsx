@@ -55,6 +55,16 @@ function Studio() {
   }, [gl, scene]);
   return null;
 }
+/** Map compile scene → pipeline stage index (0 IDEA … 3 PROMPT). */
+function stageIndex(state: SceneState): number {
+  if (state === "READY" || state === "COMPILING") return 3;
+  if (state === "STRUCTURING") return 2;
+  if (state === "UNDERSTANDING") return 1;
+  return 0;
+}
+
+const STAGE_COLORS = ["#d8edff", "#9eacff", "#86dbc9", "#e4b981"] as const;
+
 function OpticalCore({
   state,
   output,
@@ -68,6 +78,7 @@ function OpticalCore({
   const rotor = useRef<THREE.Group>(null);
   const { pointer } = useThree();
   const groups = useMemo(() => semanticGroups(output), [output]);
+  const active = stageIndex(state);
   const nodes = useMemo(
     () =>
       groups
@@ -112,7 +123,7 @@ function OpticalCore({
         <sphereGeometry args={[0.16, 24, 24]} />
         <meshBasicMaterial color="#d8f7ff" />
       </mesh>
-      <pointLight color="#77bdff" intensity={3} distance={4} />
+      <pointLight color={STAGE_COLORS[active]} intensity={3 + active * 0.35} distance={4} />
       {[0, 1, 2, 3, 4, 5, 6].map((i) => (
         <mesh key={i} position={[0, 0, (i - 3) * 0.22]}>
           <torusGeometry
@@ -172,7 +183,9 @@ function OpticalCore({
           >
             <sphereGeometry args={[0.045, 12, 12]} />
             <meshBasicMaterial
-              color={["#d8edff", "#9eacff", "#86dbc9", "#e4b981"][n.type]}
+              color={STAGE_COLORS[n.type]}
+              transparent
+              opacity={n.type === active ? 1 : 0.45}
             />
           </mesh>
         );
@@ -215,6 +228,7 @@ export function SpeIntelligence({
       ref={host}
       className={`press-canvas ${className}`}
       aria-hidden="true"
+      data-pipeline-stage={["idea", "meaning", "structure", "prompt"][stageIndex(state)]}
       data-renderer={quality === "LITE" || lost ? "static" : "webgl"}
     >
       {quality === "LITE" || lost ? (
