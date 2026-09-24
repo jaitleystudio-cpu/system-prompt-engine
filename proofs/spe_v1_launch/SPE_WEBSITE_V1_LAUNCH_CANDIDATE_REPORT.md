@@ -109,7 +109,7 @@ node apps/web/scripts/test-media-observe.mjs
 
 ## 12. Branch / PR
 
-- Branch tip at report authoring time: will be updated after final commit/push
+- Branch tip at report authoring time: `2c543dd13750b83bbac7092e998823a22083e2ba`
 - One PR to open; **DO NOT MERGE**
 
 ## 13. What was not done (guardrails)
