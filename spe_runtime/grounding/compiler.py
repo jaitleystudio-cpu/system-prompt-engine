@@ -30,6 +30,8 @@ _UNCERTAIN_SUPPORT = frozenset(
     }
 )
 
+_RETRACTED_TAINT = "RETRACTED"
+
 
 @dataclass(frozen=True)
 class GroundingBundle:
@@ -56,6 +58,17 @@ class GroundingBundle:
         }
 
 
+def _capsule_text_bytes(capsule: ContextCapsule) -> int:
+    """Approximate UTF-8 byte size of capsule textual payload."""
+    parts = (
+        str(capsule.claim_or_observation),
+        str(capsule.value),
+        str(capsule.source_id),
+        str(capsule.provenance_digest),
+    )
+    return sum(len(p.encode("utf-8")) for p in parts)
+
+
 def _validate_capsule(capsule: ContextCapsule) -> None:
     """Reject capsules that violate provenance, source, firewall, or taint law."""
     if not isinstance(capsule, ContextCapsule):
@@ -73,6 +86,13 @@ def _validate_capsule(capsule: ContextCapsule) -> None:
         raise ValueError(
             f"capsule authority_class {capsule.authority_class!r} violates "
             "firewall DATA-only law (allowed: REFERENCE/DATA/OBSERVATION/NONE)"
+        )
+
+    labels = {str(x).upper() for x in capsule.taint_labels}
+    if _RETRACTED_TAINT in labels:
+        raise ValueError(
+            "retracted source rejected: capsule carries RETRACTED taint "
+            f"(capsule_id={capsule.capsule_id!r})"
         )
 
     # External / non-user capsules must already carry UNTRUSTED_SOURCE taint
@@ -94,22 +114,74 @@ def _validate_capsule(capsule: ContextCapsule) -> None:
 def compile_context(
     request_text: str,
     capsules: tuple[ContextCapsule, ...],
+    *,
+    max_context_bytes: int | None = None,
+    max_sources: int | None = None,
 ) -> GroundingBundle:
     """Validate and freeze capsules into an immutable grounding bundle.
 
     Rejects capsules whose source/provenance identifiers are missing or whose
-    taint/authority metadata violates the source firewall. Does not own
-    authority, K3, or category write-sets.
+    taint/authority metadata violates the source firewall. Suppresses duplicate
+    source spam, flags conflicting contradiction groups, and enforces optional
+    size / source caps. Does not own authority, K3, or category write-sets.
     """
     if not isinstance(capsules, tuple):
         capsules = tuple(capsules)
-
-    accepted: list[ContextCapsule] = []
-    for capsule in capsules:
-        _validate_capsule(capsule)
-        accepted.append(capsule)
+    if max_context_bytes is not None and int(max_context_bytes) < 0:
+        raise ValueError("max_context_bytes must be >= 0")
+    if max_sources is not None and int(max_sources) < 0:
+        raise ValueError("max_sources must be >= 0")
 
     reason_codes: list[str] = []
+    accepted: list[ContextCapsule] = []
+    seen_sources: set[str] = set()
+    total_bytes = 0
+
+    for capsule in capsules:
+        _validate_capsule(capsule)
+
+        size = _capsule_text_bytes(capsule)
+        if max_context_bytes is not None and total_bytes + size > int(max_context_bytes):
+            raise ValueError(
+                f"oversized context: adding capsule {capsule.capsule_id!r} "
+                f"exceeds max_context_bytes={max_context_bytes}"
+            )
+
+        source_key = str(capsule.source_id).strip()
+        if source_key in seen_sources:
+            if "DUPLICATE_SOURCE_SPAM_SUPPRESSED" not in reason_codes:
+                reason_codes.append("DUPLICATE_SOURCE_SPAM_SUPPRESSED")
+            continue
+
+        if max_sources is not None and len(accepted) >= int(max_sources):
+            if "MAX_SOURCES_EXCEEDED" not in reason_codes:
+                reason_codes.append("MAX_SOURCES_EXCEEDED")
+            continue
+
+        seen_sources.add(source_key)
+        accepted.append(capsule)
+        total_bytes += size
+
+    # Conflicting sources: shared contradiction_group with >1 member, or any
+    # CONTRADICTED/MIXED retained alongside peers in the same group.
+    groups: dict[str, list[ContextCapsule]] = {}
+    for capsule in accepted:
+        group = capsule.contradiction_group
+        if group:
+            groups.setdefault(str(group), []).append(capsule)
+    for group_caps in groups.values():
+        if len(group_caps) > 1:
+            if "CONFLICTING_SOURCES" not in reason_codes:
+                reason_codes.append("CONFLICTING_SOURCES")
+            break
+        if group_caps and group_caps[0].support_status in {
+            SupportStatus.CONTRADICTED,
+            SupportStatus.MIXED,
+        }:
+            # Single capsule already marked conflicted — still surface the flag.
+            if "CONFLICTING_SOURCES" not in reason_codes:
+                reason_codes.append("CONFLICTING_SOURCES")
+
     if not accepted:
         reason_codes.append("NO_CAPSULES_ACCEPTED")
     else:

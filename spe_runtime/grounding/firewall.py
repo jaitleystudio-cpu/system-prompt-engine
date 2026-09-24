@@ -7,6 +7,20 @@ from typing import Any, Mapping
 
 from spe_runtime.categories._common import FORBIDDEN_PAYLOAD_KEYS
 
+# Citation / authority forgery keys that must never survive retrieval ingest.
+_CITATION_FORGERY_KEYS = frozenset(
+    {
+        "verified_citation",
+        "citation_authority",
+        "authority_label",
+        "mint_authority",
+        "peer_review_badge",
+        "is_authoritative",
+    }
+)
+
+GROUNDING_FORBIDDEN_KEYS = FORBIDDEN_PAYLOAD_KEYS | _CITATION_FORGERY_KEYS
+
 # Unicode controls (Cc) except common whitespace; also strip zero-width (Cf) junk.
 _CONTROL_RE = re.compile(
     r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f\u200b-\u200f\u202a-\u202e\u2060-\u206f\ufeff]"
@@ -17,7 +31,7 @@ _TAG_RE = re.compile(r"</?[a-zA-Z][^>]*>")
 
 def _walk_forbidden(obj: object, *, path: str = "") -> None:
     if isinstance(obj, Mapping):
-        bad = FORBIDDEN_PAYLOAD_KEYS & set(obj.keys())
+        bad = GROUNDING_FORBIDDEN_KEYS & set(obj.keys())
         if bad:
             loc = f" at {path}" if path else ""
             raise ValueError(
@@ -56,9 +70,10 @@ def sanitize_external_payload(payload: Mapping[str, object]) -> Mapping[str, obj
     """Validate and sanitize an external retrieval payload.
 
     Forbidden structural keys (authority, PROMOTE, VERIFIED_SUCCESS, grants,
-    receipts, …) are rejected. HTML/script and unicode controls are stripped
-    from text. Surviving content is marked UNTRUSTED_SOURCE — DATA only; it
-    must never mutate ProtectedIntent, K3, authority, or proof state.
+    receipts, fake citation/authority labels, …) are rejected. HTML/script and
+    unicode controls are stripped from text. Surviving content is marked
+    UNTRUSTED_SOURCE — DATA only; it must never mutate ProtectedIntent, K3,
+    authority, or proof state.
     """
     if not isinstance(payload, Mapping):
         raise TypeError("payload must be a mapping")

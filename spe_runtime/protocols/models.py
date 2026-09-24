@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Iterable, Sequence
+from typing import Any, Iterable, Mapping, Sequence
+
+from spe_runtime.categories._common import FORBIDDEN_PAYLOAD_KEYS
 
 
 class ProtocolDepth(str, Enum):
@@ -101,7 +103,14 @@ class ProtocolNode:
         }
 
     @classmethod
-    def from_dict(cls, raw: dict[str, Any]) -> ProtocolNode:
+    def from_dict(cls, raw: dict[str, Any] | Mapping[str, Any]) -> ProtocolNode:
+        if not isinstance(raw, Mapping):
+            raise TypeError("protocol node payload must be a mapping")
+        bad = FORBIDDEN_PAYLOAD_KEYS & set(raw.keys())
+        if bad:
+            raise ValueError(
+                f"protocol node payload contains forbidden keys: {sorted(bad)}"
+            )
         return cls(
             node_id=str(raw["node_id"]),
             stage=str(raw["stage"]),
