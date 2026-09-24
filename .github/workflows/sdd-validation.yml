@@ -12,6 +12,13 @@ on:
 permissions:
   contents: read
 
+env:
+  # Keep absolute runner paths out of the packaged WASM binary. The packaging
+  # check rejects developer/runner home paths from Rust metadata.
+  RUSTFLAGS: >-
+    --remap-path-prefix=/home/runner=/rustc
+    --remap-path-prefix=/home=/rustc
+
 jobs:
   python:
     runs-on: ubuntu-latest
@@ -59,8 +66,12 @@ jobs:
       - name: install
         working-directory: apps/web
         run: npm ci
-      - name: build WASM artifact
+      - name: clean WASM build outputs
+        run: cargo clean --manifest-path portable/spe-wasm/Cargo.toml
+      - name: build WASM artifact with remapped paths
         run: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --target wasm32-unknown-unknown --release
+      - name: verify WASM artifact
+        run: test -s portable/spe-wasm/target/wasm32-unknown-unknown/release/spe_wasm.wasm
       - name: engine tests
         working-directory: apps/web
         run: npm run test:engine
