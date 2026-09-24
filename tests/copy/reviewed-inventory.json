@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "Refreshed 2026-09-24 SPE V1 predeploy pass3 (screenshot structure fidelity)",
+  "note": "Refreshed 2026-09-24 SPE V1 predeploy pass4 (video/a11y/security/jargon)",
   "entries": [
     {
       "id": "52ecf64fcc14b7858f5a",
@@ -255,12 +255,6 @@
       "text": "lab"
     },
     {
-      "id": "7d57c72d2b5c42673998",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "Code is Screenshot→code: UIObservationIR regions with evidence, then scaffolds for HTML/CSS/JavaScript, React, SwiftUI, Jetpack Compose, Flutter, and React Native."
-    },
-    {
       "id": "805a78c34f49e090e945",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -439,6 +433,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "undefined"
+    },
+    {
+      "id": "bd9cc2a1964df736ecef",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Code is Screenshot→code: observed layout regions with evidence, then starter scaffolds for HTML/CSS/JavaScript, React, SwiftUI, Jetpack Compose, Flutter, and React Native."
     },
     {
       "id": "be3405770af64faefa5c",
@@ -633,16 +633,16 @@
       "text": "URL content added (direct fetch)."
     },
     {
-      "id": "0be3708b86c44346a1bc",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "Image semantic"
-    },
-    {
       "id": "101fbd410e9992594095",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Local HTML file added. No network request."
+    },
+    {
+      "id": "127abb43b92c67fb94a7",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Observed layout regions include evidence and confidence — verify them against the image."
     },
     {
       "id": "13c7885c346112423b02",
@@ -673,6 +673,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "CORS-honest fetch + fallbacks"
+    },
+    {
+      "id": "2166b709b385ab889976",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Image observation ready:"
     },
     {
       "id": "225228b229b53ed6a24d",
@@ -765,12 +771,6 @@
       "text": "https://example.com"
     },
     {
-      "id": "52a5ecf6f392e7797130",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "layout guess, tier"
-    },
-    {
       "id": "534046a0f1ec9700d6cd",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -781,12 +781,6 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "STANDARD"
-    },
-    {
-      "id": "56f4d8236b1ebd5167be",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "… (modelBytes="
     },
     {
       "id": "5790ddcd4cb788fdf14f",
@@ -825,12 +819,6 @@
       "text": "Using the local HTML observations below (untrusted data), help me plan a clearer rebuild."
     },
     {
-      "id": "6b1f024cade9fc866d8d",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": ", modelBytes="
-    },
-    {
       "id": "704252ee59987d46b6fc",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -841,12 +829,6 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "video"
-    },
-    {
-      "id": "71d491d44e1cae3cac23",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "Screenshot IR ready ("
     },
     {
       "id": "71f09df62de9387891c9",
@@ -909,12 +891,6 @@
       "text": "Code target"
     },
     {
-      "id": "987d80fc4c40e15da949",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "UIObservationIR regions include evidence + confidence — verify against the image."
-    },
-    {
       "id": "9a8dee9a33b86cc88652",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -955,6 +931,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "react"
+    },
+    {
+      "id": "aca604e8113630e450c9",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Screenshot observation ready ("
     },
     {
       "id": "b2113be7c353f07e149c",
@@ -1033,6 +1015,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "ok"
+    },
+    {
+      "id": "cd10a4a5be29012a10c2",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "; layout guess"
     },
     {
       "id": "cd10f18c90262e541246",
@@ -8745,6 +8733,12 @@
       "text": "after scene-change + dedupe across"
     },
     {
+      "id": "468431b490c4d174f193",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "t="
+    },
+    {
       "id": "4ae4fcb2254ca29c2841",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -8787,6 +8781,12 @@
       "text": "Frame"
     },
     {
+      "id": "6c393b7398ef784647ed",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "gains detail"
+    },
+    {
       "id": "6ee8d73373679312c97c",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -8811,10 +8811,28 @@
       "text": "abort"
     },
     {
+      "id": "7c8d0c185708b0ce07a7",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "end@"
+    },
+    {
+      "id": "86a2cb95a83ae5447fe0",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "start@"
+    },
+    {
       "id": "86f532ed9092c25dc713",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "No audio transcription."
+    },
+    {
+      "id": "9257833931fc496b8dee",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "brightens"
     },
     {
       "id": "9a30ba7e9ff9ace5468f",
@@ -8827,6 +8845,12 @@
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "Notes:"
+    },
+    {
+      "id": "9b5f0b958ec9693408b4",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "loses detail"
     },
     {
       "id": "9cd9cf42dc7066915bcd",
@@ -8857,6 +8881,12 @@
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "quick shift at"
+    },
+    {
+      "id": "aacbe9a60940024dc940",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "darkens"
     },
     {
       "id": "abc7601fc893a271374f",
@@ -8913,6 +8943,12 @@
       "text": "frames, kept"
     },
     {
+      "id": "ca024ad59882d7454b08",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "palette shift"
+    },
+    {
       "id": "cf8e8565c13015c32f63",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -8929,6 +8965,18 @@
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "File:"
+    },
+    {
+      "id": "e1a3f8f52685d663cdf3",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Scene changes:"
+    },
+    {
+      "id": "e53534163b4d243d4fb3",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Key moments:"
     },
     {
       "id": "e561481059eb69909cc1",
@@ -8953,6 +9001,12 @@
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "Uncertainty:"
+    },
+    {
+      "id": "eef71ce38004971993c6",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "mid@"
     },
     {
       "id": "f1099671b0cdfe71de44",

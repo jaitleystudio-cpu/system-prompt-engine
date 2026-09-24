@@ -65,6 +65,8 @@ assert.match(stage, /prefers-reduced-motion|reduced|matchMedia/);
 const checklist = join(root, "../../proofs/spe_v1_launch/SPEECH_DEVICE_QUALIFICATION_CHECKLIST.md");
 assert.ok(existsSync(checklist), "speech checklist missing");
 
+run("test-predeploy-qa.mjs");
+
 console.log(JSON.stringify({
   ok: true,
   cases: [
@@ -83,5 +85,6 @@ console.log(JSON.stringify({
     "onnx_browser_only_guard",
     "lab_reduced_motion_contract",
     "speech_device_checklist_artifact",
+    "predeploy_qa_suite",
   ],
 }));

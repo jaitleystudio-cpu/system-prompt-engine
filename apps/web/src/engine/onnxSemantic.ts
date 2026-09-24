@@ -57,11 +57,12 @@ async function loadOrt(): Promise<OrtModule> {
   return ortPromise;
 }
 
-async function loadLabels(): Promise<string[]> {
+async function loadLabels(signal?: AbortSignal): Promise<string[]> {
   if (!labelsPromise) {
     labelsPromise = (async () => {
       const res = await fetch("/models/imagenet_classes.txt", {
         credentials: "omit",
+        signal,
       });
       if (!res.ok) throw new Error(`labels HTTP ${res.status}`);
       const text = await res.text();
@@ -78,14 +79,14 @@ async function loadLabels(): Promise<string[]> {
   return labelsPromise;
 }
 
-async function loadSession(): Promise<
+async function loadSession(signal?: AbortSignal): Promise<
   import("onnxruntime-web").InferenceSession
 > {
   if (!sessionPromise) {
     sessionPromise = (async () => {
       const ort = await loadOrt();
       const modelUrl = "/models/mobilenetv2-12-int8.onnx";
-      const res = await fetch(modelUrl, { credentials: "omit" });
+      const res = await fetch(modelUrl, { credentials: "omit", signal });
       if (!res.ok) throw new Error(`model HTTP ${res.status}`);
       const buf = await res.arrayBuffer();
       recordVisionAssetLoad(
@@ -174,8 +175,8 @@ export async function classifySubjectsMobileNet(
   try {
     lastError = null;
     const [session, labels, ort] = await Promise.all([
-      loadSession(),
-      loadLabels(),
+      loadSession(signal),
+      loadLabels(signal),
       loadOrt(),
     ]);
     if (signal?.aborted) throw new DOMException("Aborted", "AbortError");

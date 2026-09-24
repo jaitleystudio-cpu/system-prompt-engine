@@ -3,7 +3,6 @@ import { SpeechInput } from "../input/SpeechInput";
 import {
   observeImageFileSemantic,
   semanticToPromptBlock,
-  getVisionModelBytes,
 } from "../media/semanticPipeline";
 import {
   observeVideoFileSemantic,
@@ -209,7 +208,7 @@ export function UnifiedComposer({
           const request = [
             "Screenshot → code request:",
             `Rebuild the UI shown in this screenshot for ${CODE_TARGET_LABELS[chosen.target as CodeTarget]}.`,
-            "UIObservationIR regions include evidence + confidence — verify against the image.",
+            "Observed layout regions include evidence and confidence — verify them against the image.",
             "",
             chosen?.prompt ?? "",
           ].join("\n");
@@ -217,7 +216,7 @@ export function UnifiedComposer({
           valueRef.current = request;
           onScaffoldPrompt?.(chosen.prompt, chosen.target as CodeTarget);
           setStatus(
-            `Screenshot IR ready (${ir.viewport.sourceWidth}×${ir.viewport.sourceHeight}, ${ir.columns}×${ir.rows} layout guess, tier ${ir.semantic.tier}, modelBytes=${getVisionModelBytes()}).`,
+            `Screenshot observation ready (${ir.viewport.sourceWidth}×${ir.viewport.sourceHeight}; layout guess ${ir.columns}×${ir.rows}).`,
           );
         } finally {
           URL.revokeObjectURL(url);
@@ -241,7 +240,7 @@ export function UnifiedComposer({
           ].join("\n"),
         );
         setStatus(
-          `Image semantic ${sem.tier}: ${sem.humanSummary.slice(0, 120)}… (modelBytes=${sem.modelBytesLoaded})`,
+          `Image observation ready: ${sem.humanSummary.slice(0, 140)}…`,
         );
       }
     } catch (e) {

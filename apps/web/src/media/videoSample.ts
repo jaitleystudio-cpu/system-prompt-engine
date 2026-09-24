@@ -159,11 +159,42 @@ export function summarizeSequence(
       : cuts / Math.max(1, durationSec) < 0.05
         ? "slow / continuous"
         : "moderate pacing";
+
+  // Per-transition change signals (skip near-no-ops so summary stays lean).
+  const changes: string[] = [];
+  for (let i = 1; i < frames.length; i++) {
+    const a = frames[i - 1];
+    const b = frames[i];
+    const dB = b.brightness.mean - a.brightness.mean;
+    const dE = b.edgeDensity - a.edgeDensity;
+    const bits: string[] = [];
+    if (Math.abs(dB) >= 18) bits.push(dB > 0 ? "brightens" : "darkens");
+    if (Math.abs(dE) >= 0.08) bits.push(dE > 0 ? "gains detail" : "loses detail");
+    const hexA = a.dominantColors[0]?.hex ?? "";
+    const hexB = b.dominantColors[0]?.hex ?? "";
+    if (hexA && hexB && hexA !== hexB) bits.push("palette shift");
+    if (bits.length) {
+      changes.push(`t=${(times[i] ?? 0).toFixed(1)}s ${bits.join(", ")}`);
+    }
+  }
+
+  // Unique pacing cues only (no duplicate bloat).
+  const uniqueCues = [...new Set(pacingCues.map((c) => c.trim()).filter(Boolean))];
+
+  const mid = times[Math.floor(times.length / 2)];
+  const keyMoments = [
+    `start@${(times[0] ?? 0).toFixed(1)}s`,
+    times.length > 2 ? `mid@${(mid ?? 0).toFixed(1)}s` : null,
+    `end@${(times[times.length - 1] ?? 0).toFixed(1)}s`,
+  ].filter(Boolean);
+
   return [
     `Sequence across ${durationSec}s with ${frames.length} scene-aware keyframes (${cuts} transitions, ${pace}).`,
     `Brightness trend: ${brightShift > 12 ? "brightening" : brightShift < -12 ? "darkening" : "stable"} (${first.brightness.mean.toFixed(0)} → ${last.brightness.mean.toFixed(0)}).`,
     `Structure trend: ${edgeShift > 0.08 ? "more detail appears" : edgeShift < -0.08 ? "simplifies" : "similar complexity"}.`,
-    pacingCues.length ? `Pacing cues: ${pacingCues.join("; ")}.` : null,
+    changes.length ? `Scene changes: ${changes.join("; ")}.` : null,
+    `Key moments: ${keyMoments.join(", ")}.`,
+    uniqueCues.length ? `Pacing cues: ${uniqueCues.join("; ")}.` : null,
     `Keyframe times (s): ${times.join(", ")}.`,
     "Audio is not transcribed.",
   ]

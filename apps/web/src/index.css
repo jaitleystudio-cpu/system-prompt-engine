@@ -1795,3 +1795,22 @@ em {
   .spe-lab-previews { grid-template-columns: 1fr; }
   .spe-lab-stage { min-height: 300px; }
 }
+
+
+/* ——— Zoom / large text safety (≈200% browser zoom) ——— */
+@media (min-resolution: 1.5dppx) {
+  .spe-create-head p,
+  .spe-hero p,
+  .spe-ws-lenses,
+  .spe-create-result pre,
+  .spe-prompt-out {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+@media (max-width: 900px) {
+  .spe-create-head h1,
+  .spe-hero h1 {
+    line-height: 1.2;
+  }
+}
