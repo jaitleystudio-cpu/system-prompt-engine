@@ -19,8 +19,8 @@ Speech stays **VERIFIED_GRACEFUL_FALLBACK** on launch platforms. Founder **QUALI
 | --- | --- | --- |
 | IMPLEMENTATION_TESTED_SHA | `d0808965a16ea03a30311698ce150f037c1b851f` | Jargon + instrument repairs; suites green |
 | VISUAL_EVIDENCE_SHA | `ba6cea30740dca0bb79cae84593c0184bc269d93` | Fresh visual pass; manifest `testedSha` = implementation SHA |
-| REPORT_AUTHORED_AT_SHA | `REPORT_COMMIT_PLACEHOLDER` | Commit that authored this report |
-| CURRENT_PR_HEAD | `REPORT_COMMIT_PLACEHOLDER` | PR tip at authorship (same as report commit unless a tip-only follow-up lands) |
+| REPORT_AUTHORED_AT_SHA | `fe0af1a5d1671c7d420e6dd5ff678a7492ec7908` | Commit that authored this report |
+| CURRENT_PR_HEAD | `fe0af1a5d1671c7d420e6dd5ff678a7492ec7908` | PR tip at authorship (same as report commit unless a tip-only follow-up lands) |
 
 BASE: `646d3765153f66c3951d812b8adfd87fcbf766b1`
 
