@@ -20,7 +20,7 @@ Speech is **not** gated on “every device must dictate successfully.” Launch 
 | IMPLEMENTATION_TESTED_SHA | `3d50f162c441dfcfa6f6ddd1b7f8e5c30b2e5eb5` | Gap-closure implementation green (speech/vision/screenshot/tests) |
 | VISUAL_EVIDENCE_SHA | `9a19bcf90a1713e2eae9a005af8b81ca0458f6dd` | Fresh visual pass + hero/privacy polish; screenshot manifest records this build |
 | REPORT_AUTHORED_AT_SHA | `2a708329ce409d31ef218f21923394c6d31e0601` | Commit that authored this report |
-| CURRENT_PR_HEAD | `fbfb1326a398cdddeaacb23cc08a4a442e3f6b15` | PR tip at review time |
+| CURRENT_PR_HEAD | `be49d267296da764097f54b8d0f3aeda731ffb5d` | PR tip at review time |
 
 MAIN: `646d3765153f66c3951d812b8adfd87fcbf766b1`
 
