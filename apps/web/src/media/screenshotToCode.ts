@@ -193,21 +193,23 @@ function swiftui(spec: UiSpec): string {
   return `import SwiftUI
 struct ScreenFromScreenshot: View {
   var body: some View {
-    ZStack(alignment: .topLeading) {
+    GeometryReader { geo in
+      ZStack(alignment: .topLeading) {
 ${spec.regions
   .map(
-    (r) => `      VStack(alignment: .leading) {
-        Text("${r.roleGuess}")
-          .font(.headline)
-        Text("${r.confidence}: ${r.notes.replace(/"/g, "'").slice(0, 80)}")
-          .font(.caption2)
-          .foregroundStyle(.secondary)
-      }
-      .padding(12)
-      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-      // bounds x=${r.bounds.x.toFixed(2)} y=${r.bounds.y.toFixed(2)} w=${r.bounds.w.toFixed(2)} h=${r.bounds.h.toFixed(2)}`,
+    (r) => `        VStack(alignment: .leading) {
+          Text("${r.roleGuess}")
+            .font(.headline)
+          Text("${r.confidence}: ${r.notes.replace(/"/g, "'").slice(0, 80)}")
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+        }
+        .padding(12)
+        .frame(width: geo.size.width * ${r.bounds.w.toFixed(3)}, height: geo.size.height * ${r.bounds.h.toFixed(3)}, alignment: .topLeading)
+        .offset(x: geo.size.width * ${r.bounds.x.toFixed(3)}, y: geo.size.height * ${r.bounds.y.toFixed(3)})`,
   )
   .join("\n")}
+      }
     }
     .background(Color.black)
   }
@@ -218,14 +220,19 @@ ${spec.regions
 function compose(spec: UiSpec): string {
   return `@Composable
 fun ScreenFromScreenshot() {
-  Box(Modifier.fillMaxSize().background(Color(0xFF0B0D10))) {
+  BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF0B0D10))) {
 ${spec.regions
   .map(
-    (r) => `    Column(Modifier.padding(12.dp)) {
+    (r) => `    Column(
+      Modifier
+        .offset(x = maxWidth * ${r.bounds.x.toFixed(3)}f, y = maxHeight * ${r.bounds.y.toFixed(3)}f)
+        .width(maxWidth * ${r.bounds.w.toFixed(3)}f)
+        .height(maxHeight * ${r.bounds.h.toFixed(3)}f)
+        .padding(12.dp)
+    ) {
       Text("${r.roleGuess}")
       Text("${r.confidence}: ${r.notes.replace(/"/g, "'").slice(0, 72)}")
-    }
-    // bounds ${r.bounds.x.toFixed(2)},${r.bounds.y.toFixed(2)} ${r.bounds.w.toFixed(2)}x${r.bounds.h.toFixed(2)}`,
+    }`,
   )
   .join("\n")}
   }

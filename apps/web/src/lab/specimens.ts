@@ -19,7 +19,7 @@ export type LabSpecimen = {
   speArtifact: string;
   status: "published" | "preview";
   /** Shape hint for the stage preview. */
-  shape: "torus" | "icosa" | "ribbon" | "pillars" | "orb-field" | "helix";
+  shape: "torus" | "icosa" | "ribbon" | "pillars" | "orb-field" | "helix" | "modules" | "slabs" | "folds" | "table";
 };
 
 /**
@@ -179,7 +179,7 @@ export const DAILY_3D_QUEUE: LabSpecimen[] = [
       "Docking pastel modules with hover assembly and a clear Open in SPE CTA.",
     speArtifact: "spe:daily3d:soft-machine",
     status: "published",
-    shape: "orb-field",
+    shape: "modules",
   },
   {
     id: "d3d-08",
@@ -201,7 +201,7 @@ export const DAILY_3D_QUEUE: LabSpecimen[] = [
       "Night ledger slabs with intention categories and accessible text equivalents.",
     speArtifact: "spe:daily3d:night-ledger",
     status: "published",
-    shape: "pillars",
+    shape: "slabs",
   },
   {
     id: "d3d-09",
@@ -223,7 +223,7 @@ export const DAILY_3D_QUEUE: LabSpecimen[] = [
       "Folding paper IA with parallax and a reduced-motion flat map fallback.",
     speArtifact: "spe:daily3d:paper-fold",
     status: "published",
-    shape: "ribbon",
+    shape: "folds",
   },
   {
     id: "d3d-10",
@@ -267,7 +267,7 @@ export const DAILY_3D_QUEUE: LabSpecimen[] = [
       "Workshop still-life with parallax and captions that avoid infrastructure jargon.",
     speArtifact: "spe:daily3d:workshop-table",
     status: "published",
-    shape: "pillars",
+    shape: "table",
   },
   {
     id: "d3d-12",

@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "chromeDesktopProbe": {
+    "platform": "Linux box (agent)",
+    "browser": "Chromium headless (Chrome channel)",
+    "apiPresent": "YES",
+    "micPermission": "YES",
+    "dictationSmoke": "FAIL",
+    "uiHonesty": "PASS",
+    "notes": [
+      "SpeechRecognition=true webkit=true mediaDevices=true",
+      "mic_deny_probe=granted",
+      "mic_allow_fake={\"ok\":true,\"tracks\":1}",
+      "dictation={\"started\":true,\"reason\":\"error:audio-capture\",\"result\":null}",
+      "Recognition started but no usable transcript on this headless box",
+      "ui_markers=[\"IMPLEMENTATION_PRESENT / DEVICE_QUALIFICATION_PENDING\"]"
+    ],
+    "status": "IMPLEMENTATION_PRESENT"
+  }
+}

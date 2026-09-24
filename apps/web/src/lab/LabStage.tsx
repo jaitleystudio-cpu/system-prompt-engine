@@ -66,6 +66,60 @@ function SpecimenMesh({ specimen, reduced }: { specimen: LabSpecimen; reduced: b
             />
           </mesh>
         ))}
+      {geom === "modules" &&
+        [
+          [-0.9, 0.2, 0],
+          [0, 0.35, 0.2],
+          [0.9, 0.15, -0.15],
+          [-0.3, -0.4, 0.25],
+          [0.45, -0.35, -0.2],
+        ].map((p, i) => (
+          <mesh key={i} position={p as [number, number, number]} castShadow>
+            <boxGeometry args={[0.55, 0.35, 0.55]} />
+            <meshStandardMaterial color={matColor} metalness={0.05} roughness={0.55} />
+          </mesh>
+        ))}
+      {geom === "slabs" &&
+        [-0.85, 0, 0.85].map((x, i) => (
+          <mesh key={i} position={[x, 0.35 + i * 0.12, 0]} castShadow>
+            <boxGeometry args={[0.7, 1.1 + i * 0.1, 0.12]} />
+            <meshStandardMaterial color={matColor} metalness={0.15} roughness={0.65} />
+          </mesh>
+        ))}
+      {geom === "folds" &&
+        [-0.7, 0, 0.7].map((x, i) => (
+          <mesh key={i} position={[x, 0.1, i * 0.15]} rotation={[0.2, 0.4 * i, 0.15]} castShadow>
+            <boxGeometry args={[1.1, 0.04, 1.4]} />
+            <meshStandardMaterial color={matColor} metalness={0.02} roughness={0.85} />
+          </mesh>
+        ))}
+      {geom === "table" && (
+        <group>
+          <mesh position={[0, -0.2, 0]} castShadow>
+            <boxGeometry args={[2.2, 0.08, 1.2]} />
+            <meshStandardMaterial color={matColor} metalness={0.05} roughness={0.75} />
+          </mesh>
+          {[
+            [-0.9, -0.7, -0.45],
+            [0.9, -0.7, -0.45],
+            [-0.9, -0.7, 0.45],
+            [0.9, -0.7, 0.45],
+          ].map((p, i) => (
+            <mesh key={i} position={p as [number, number, number]} castShadow>
+              <cylinderGeometry args={[0.05, 0.05, 0.9, 12]} />
+              <meshStandardMaterial color={matColor} metalness={0.1} roughness={0.7} />
+            </mesh>
+          ))}
+          <mesh position={[-0.5, 0.05, 0.1]} castShadow>
+            <boxGeometry args={[0.35, 0.12, 0.5]} />
+            <meshStandardMaterial color={matColor} metalness={0.2} roughness={0.4} />
+          </mesh>
+          <mesh position={[0.45, 0.08, -0.15]} castShadow>
+            <sphereGeometry args={[0.16, 16, 16]} />
+            <meshStandardMaterial color={matColor} metalness={0.3} roughness={0.35} />
+          </mesh>
+        </group>
+      )}
       {geom === "helix" &&
         Array.from({ length: 12 }, (_, i) => {
           const t = i / 12;

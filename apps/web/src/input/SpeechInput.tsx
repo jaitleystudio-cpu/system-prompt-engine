@@ -82,7 +82,10 @@ export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) =
     }
   }
 
-  return <details className="spe-speech">
+  return (
+    <>
+    <p className="spe-muted" data-speech-qualification="DEVICE_QUALIFICATION_PENDING">Speech→Prompt: implementation present; device qualification pending (NOT_TESTED on most platforms).</p>
+    <details className="spe-speech">
     <summary>Speak your idea</summary>
     <p>Dictate, review the text, then add it to your idea. Your browser may send audio to its speech service. SPE does not save audio and does not claim on-device speech recognition unless a device row is qualified.</p>
     <p className="spe-muted" data-capability-status="IMPLEMENTATION_PRESENT / DEVICE_QUALIFICATION_PENDING">
@@ -107,5 +110,7 @@ export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) =
       <label className="spe-field"><span>Review your transcript</span><textarea rows={4} value={transcript} disabled={listening} onChange={event => setTranscript(event.target.value)} /></label>
       <button type="button" disabled={disabled || listening || !transcript.trim()} onClick={() => { onInsert(transcript.trim()); setTranscript(""); }}>Add transcript to idea</button>
     </>}
-  </details>;
+  </details>
+    </>
+  );
 }

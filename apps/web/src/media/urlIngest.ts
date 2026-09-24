@@ -86,6 +86,62 @@ export async function readResponseBounded(
 }
 
 /** Build a website brief from HTML when DOMParser is available. */
+
+export type SiteClass =
+  | "static-marketing"
+  | "react-spa"
+  | "editorial"
+  | "portfolio"
+  | "ecommerce"
+  | "webgl-3d"
+  | "animation-heavy"
+  | "unknown";
+
+/** Heuristic site class from HTML — page copy is never treated as authority. */
+export function classifySiteClass(html: string): { siteClass: SiteClass; signals: string[] } {
+  const signals: string[] = [];
+  const lower = html.toLowerCase();
+  const hit = (re: RegExp, label: string) => {
+    if (re.test(html) || re.test(lower)) {
+      signals.push(label);
+      return true;
+    }
+    return false;
+  };
+  const spa =
+    hit(/data-reactroot|__NEXT_DATA__|ng-version|webpackJsonp|parcelRequire/i, "spa-framework-markers") ||
+    hit(/id=["']root["']|id=["']app["']|id=["']__next["']/i, "spa-mount");
+  const ecom =
+    hit(/add to cart|add-to-cart|product-price|shopify|woocommerce|data-product/i, "commerce-markers") ||
+    hit(/itemtype=["']https?:\/\/schema\.org\/Product/i, "product-schema");
+  const webgl = hit(
+    /webgl|three\.js|babylon\.js|getContext\(\s*['"]webgl/i,
+    "webgl-markers",
+  );
+  const anim =
+    hit(/@keyframes|animation-timeline|lottie|gsap|framer-motion/i, "animation-markers") ||
+    (lower.match(/animation\s*:/g) || []).length >= 4;
+  const editorial =
+    hit(/<article\b|itemtype=["']https?:\/\/schema\.org\/Article/i, "article-markers") ||
+    hit(/rel=["']author["']|class=["'][^"']*byline/i, "byline");
+  const portfolio =
+    hit(/portfolio|selected work|case study|case-study/i, "portfolio-copy") ||
+    hit(/itemtype=["']https?:\/\/schema\.org\/CreativeWork/i, "creativework-schema");
+  const marketing =
+    hit(/pricing|get started|book a demo|\bhero\b|landing/i, "marketing-copy");
+
+  let siteClass: SiteClass = "unknown";
+  if (webgl) siteClass = "webgl-3d";
+  else if (ecom) siteClass = "ecommerce";
+  else if (spa && anim) siteClass = "animation-heavy";
+  else if (spa) siteClass = "react-spa";
+  else if (anim && !editorial) siteClass = "animation-heavy";
+  else if (editorial) siteClass = "editorial";
+  else if (portfolio) siteClass = "portfolio";
+  else if (marketing) siteClass = "static-marketing";
+  return { siteClass, signals: signals.slice(0, 12) };
+}
+
 export function buildWebsiteBriefFromHtml(
   html: string,
   finalUrl: string,
@@ -95,6 +151,8 @@ export function buildWebsiteBriefFromHtml(
   textExcerpt: string;
   buildBrief: string;
 } {
+  const site = classifySiteClass(html);
+
   let title: string | null = null;
   let description: string | null = null;
   let headings: string[] = [];
@@ -176,6 +234,7 @@ export function buildWebsiteBriefFromHtml(
         .slice(0, 4000);
       const buildBrief = [
         `Website X-Ray build brief for ${finalUrl}`,
+        `Site class: ${site.siteClass} (signals: ${site.signals.join(", ") || "none"})`,
         title ? `Title: ${title}` : null,
         description ? `Meta description: ${description}` : null,
         lang ? `Language: ${lang}` : null,
@@ -265,6 +324,7 @@ export function buildWebsiteBriefFromHtml(
     .slice(0, 12);
   const buildBrief = [
     `Website X-Ray build brief for ${finalUrl}`,
+        `Site class: ${site.siteClass} (signals: ${site.signals.join(", ") || "none"})`,
     title ? `Title: ${title}` : null,
     description ? `Meta description: ${description}` : null,
     landmarkTags.length

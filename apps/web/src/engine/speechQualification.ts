@@ -17,11 +17,30 @@ export type SpeechQualRow = {
 export const SPEECH_QUALIFICATION_MATRIX: SpeechQualRow[] = [
   {
     platform: "Linux box (CI / agent)",
-    browser: "Chromium headless",
+    browser: "Chromium headless (Chrome)",
+    apiPresent: "YES",
+    micPermission: "YES",
+    dictationSmoke: "FAIL",
+    privacyNote:
+      "2026-09-24 probe: SpeechRecognition API present; fake mic permission YES; dictation error=audio-capture (no real mic). Web Speech may proxy to a browser service. NOT QUALIFIED for production speech claims.",
+    status: "IMPLEMENTATION_PRESENT",
+  },
+  {
+    platform: "Chrome desktop (real device)",
+    browser: "Chrome",
     apiPresent: "UNKNOWN",
     micPermission: "NOT_TESTED",
     dictationSmoke: "NOT_TESTED",
-    privacyNote: "No mic hardware in this environment; Web Speech may proxy to a browser service.",
+    privacyNote: "Requires founder/device run — box probe is not a substitute for real Chrome desktop qualification.",
+    status: "NOT_TESTED",
+  },
+  {
+    platform: "Safari desktop",
+    browser: "Safari",
+    apiPresent: "UNKNOWN",
+    micPermission: "NOT_TESTED",
+    dictationSmoke: "NOT_TESTED",
+    privacyNote: "NOT_TESTED in this session.",
     status: "NOT_TESTED",
   },
   {

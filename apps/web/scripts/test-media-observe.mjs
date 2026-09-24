@@ -203,6 +203,57 @@ const limited = await url.readResponseBounded({
 }, 150);
 assert.ok(limited.length <= 150);
 
+
+// --- PREDEPLOY: all 6 scaffolds must encode numeric region bounds ---
+for (const s of pkg.scaffolds) {
+  assert.match(s.code, /0\.\d{2,}|bounds\.x|geo\.size\.width\s*\*|maxWidth\s*\*|size\.width\s*\*/, `bounds missing in ${s.target || s.label}`);
+  // Generic full-bleed-only scaffolds without region geometry must fail
+  assert.ok(
+    /0\.\d/.test(s.code) || /bounds/.test(s.code),
+    `scaffold ${s.label} lacks numeric layout geometry`,
+  );
+}
+// Left-rail fixture must surface region-rail in at least one scaffold prompt
+const railBand = new Uint8ClampedArray(96 * 96 * 4);
+for (let y = 0; y < 96; y++) {
+  for (let x = 0; x < 96; x++) {
+    const i = (y * 96 + x) * 4;
+    const left = x < 28;
+    const v = left ? 40 : 180;
+    railBand[i] = railBand[i + 1] = railBand[i + 2] = v;
+    railBand[i + 3] = 255;
+  }
+}
+const railIr = ui.observeScreenshotIRLite(new ImageData(railBand, 96, 96));
+const railPkg = shot.screenshotIRToCodePackage(railIr);
+assert.ok(
+  railPkg.scaffolds.some((s) => /rail|sidebar|side/i.test(s.code + s.prompt)),
+  "left-rail fixture should mention rail/sidebar in scaffolds",
+);
+assert.ok(
+  railPkg.scaffolds.every((s) => /0\.\d/.test(s.code) || /bounds/.test(s.code)),
+  "rail scaffolds must keep numeric bounds",
+);
+
+// --- PREDEPLOY: URL site classes ---
+const classes = [
+  { html: `<html><body><h1>Pricing</h1><a href="/demo">Book a demo</a><section class="hero">Landing</section></body></html>`, expect: /static-marketing|marketing/ },
+  { html: `<html><body><div id="root"></div><script>window.__NEXT_DATA__={}</script></body></html>`, expect: /react-spa|spa/ },
+  { html: `<html><body><article><h1>Story</h1></article><a rel="author" href="/a">Byline</a></body></html>`, expect: /editorial/ },
+  { html: `<html><body><h1>Portfolio</h1><p>Selected work and case study</p></body></html>`, expect: /portfolio/ },
+  { html: `<html><body><button class="add-to-cart">Add to cart</button><span class="product-price">$12</span></body></html>`, expect: /ecommerce|commerce/ },
+  { html: `<html><body><canvas></canvas><script>const gl=c.getContext("webgl");three.js</script></body></html>`, expect: /webgl/ },
+  { html: `<html><style>@keyframes spin{to{transform:rotate(1turn)}} .a{animation:spin 1s}.b{animation:spin 2s}.c{animation:spin 3s}.d{animation:spin 4s}</style><body></body></html>`, expect: /animation/ },
+];
+assert.equal(typeof url.classifySiteClass, "function");
+for (const c of classes) {
+  const r = url.classifySiteClass(c.html);
+  assert.match(r.siteClass, c.expect, `siteClass ${r.siteClass} vs ${c.expect}`);
+  const brief = url.buildWebsiteBriefFromHtml(c.html, "https://example.test/");
+  assert.match(brief.buildBrief, /Site class:/);
+  assert.match(brief.buildBrief, /UNTRUSTED_SOURCE|not executed/i);
+}
+
 console.log(JSON.stringify({
   ok: true,
   colors: obs.dominantColors.length,
