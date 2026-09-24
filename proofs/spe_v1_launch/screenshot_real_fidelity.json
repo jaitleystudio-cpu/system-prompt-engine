@@ -1,0 +1,297 @@
+{
+  "ok": true,
+  "mode": "real-ui-screenshots",
+  "fixtureCount": 6,
+  "targets": [
+    "html-css-js",
+    "react",
+    "swiftui",
+    "compose",
+    "flutter",
+    "react-native"
+  ],
+  "rows": [
+    {
+      "id": "desktop-landing",
+      "regionCount": 3,
+      "roleHit": true,
+      "textHintHit": false,
+      "structureHit": true,
+      "seriousHallucination": false,
+      "targets": {
+        "html-css-js": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 2661
+        },
+        "react": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 3751
+        },
+        "swiftui": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1544
+        },
+        "compose": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1021
+        },
+        "flutter": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 1579
+        },
+        "react-native": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1649
+        }
+      },
+      "honesty": "structure resemblance / OBSERVATION scaffold — not pixel-perfect"
+    },
+    {
+      "id": "mobile-app",
+      "regionCount": 3,
+      "roleHit": true,
+      "textHintHit": false,
+      "structureHit": true,
+      "seriousHallucination": false,
+      "targets": {
+        "html-css-js": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 2660
+        },
+        "react": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 3778
+        },
+        "swiftui": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1544
+        },
+        "compose": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1021
+        },
+        "flutter": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 1579
+        },
+        "react-native": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1677
+        }
+      },
+      "honesty": "structure resemblance / OBSERVATION scaffold — not pixel-perfect"
+    },
+    {
+      "id": "form",
+      "regionCount": 3,
+      "roleHit": false,
+      "textHintHit": false,
+      "structureHit": true,
+      "seriousHallucination": false,
+      "targets": {
+        "html-css-js": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 2661
+        },
+        "react": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 3779
+        },
+        "swiftui": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1544
+        },
+        "compose": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1021
+        },
+        "flutter": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 1579
+        },
+        "react-native": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1677
+        }
+      },
+      "honesty": "structure resemblance / OBSERVATION scaffold — not pixel-perfect"
+    },
+    {
+      "id": "dashboard-sidebar",
+      "regionCount": 4,
+      "roleHit": true,
+      "textHintHit": false,
+      "structureHit": true,
+      "seriousHallucination": false,
+      "targets": {
+        "html-css-js": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 2890
+        },
+        "react": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 4023
+        },
+        "swiftui": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1962
+        },
+        "compose": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1287
+        },
+        "flutter": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 1952
+        },
+        "react-native": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1784
+        }
+      },
+      "honesty": "structure resemblance / OBSERVATION scaffold — not pixel-perfect"
+    },
+    {
+      "id": "card-grid",
+      "regionCount": 3,
+      "roleHit": false,
+      "textHintHit": false,
+      "structureHit": true,
+      "seriousHallucination": false,
+      "targets": {
+        "html-css-js": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 2661
+        },
+        "react": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 3783
+        },
+        "swiftui": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1547
+        },
+        "compose": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1024
+        },
+        "flutter": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 1579
+        },
+        "react-native": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1680
+        }
+      },
+      "honesty": "structure resemblance / OBSERVATION scaffold — not pixel-perfect"
+    },
+    {
+      "id": "dark-difficult",
+      "regionCount": 3,
+      "roleHit": false,
+      "textHintHit": false,
+      "structureHit": true,
+      "seriousHallucination": false,
+      "targets": {
+        "html-css-js": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 2660
+        },
+        "react": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 3781
+        },
+        "swiftui": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1548
+        },
+        "compose": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1025
+        },
+        "flutter": {
+          "useful": true,
+          "hasHierarchy": true,
+          "hasPaletteOrLayout": true,
+          "bytes": 1579
+        },
+        "react-native": {
+          "useful": true,
+          "hasHierarchy": false,
+          "hasPaletteOrLayout": true,
+          "bytes": 1679
+        }
+      },
+      "honesty": "structure resemblance / OBSERVATION scaffold — not pixel-perfect"
+    }
+  ]
+}

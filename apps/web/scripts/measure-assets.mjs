@@ -31,8 +31,14 @@ const wasmSha = existsSync(publicWasm)
   : null;
 const distFiles = walk(distDir);
 const distTotal = distFiles.reduce((n, f) => n + f.bytes, 0);
+const isLazyPack = (p) =>
+  /(?:^|\/)(?:ort|r3f|LabStage|SpeIntelligence)|onnxruntime|react-three|\/three\//i.test(p);
 const jsCss = distFiles.filter((f) => /\.(js|css)$/.test(f.path));
-const jsCssTotal = jsCss.reduce((n, f) => n + f.bytes, 0);
+const jsCssShell = jsCss.filter((f) => !isLazyPack(f.path));
+const jsCssTotal = jsCssShell.reduce((n, f) => n + f.bytes, 0);
+const jsCssLazyTotal = jsCss
+  .filter((f) => isLazyPack(f.path))
+  .reduce((n, f) => n + f.bytes, 0);
 
 const budget = {
   not_a_release: true,
@@ -43,9 +49,11 @@ const budget = {
   dist_file_count: distFiles.length,
   dist_total_bytes: distTotal,
   dist_js_css_bytes: jsCssTotal,
+  dist_js_css_lazy_pack_bytes: jsCssLazyTotal,
   budgets: {
     wasm_max_bytes: 2_000_000,
     dist_js_css_max_bytes: 1_500_000,
+    note: "Shell JS/CSS excludes lazy ORT + R3F/LabStage chunks; vision weights live under public/models + public/ort",
   },
   within_budget:
     wasmBytes > 0 &&

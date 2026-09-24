@@ -1,10 +1,10 @@
 /** Curated English source voice. Selection uses explicit task choice/current-session completion only. */
 export const heroLibrary = {
   first: {
-    title: "Some ideas arrive",
-    accent: "before the words do.",
+    title: "There's more in your idea",
+    accent: "than fits in one sentence.",
     support:
-      "Start with what you want to do. SPE helps shape your request into a prompt, with your details and boundaries in view.",
+      "Start with what you want to do. SPE brings the request into focus — goals, boundaries, and open questions — so you leave with a clearer prompt.",
   },
   returning: {
     title: "What’s worth making",
@@ -58,8 +58,8 @@ export const ui = {
     "Bring your idea and the details that matter. Shape a prompt you can review, refine and use.",
   start: "Start with an idea",
   input: "Start with the idea exactly as it comes to you.",
-  build: "Shape my prompt",
-  working: "Shaping your prompt…",
+  build: "Build my prompt",
+  working: "Building your prompt…",
   ready: "Your idea, given structure.",
   note: "Your words set the direction. Add the details that matter, then review what SPE suggests.",
   exactNote:

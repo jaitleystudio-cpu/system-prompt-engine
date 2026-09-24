@@ -1,0 +1,130 @@
+{
+  "ok": true,
+  "mode": "synthetic-benchmark",
+  "onnxRuntimeInvoked": false,
+  "note": "Node has no window — STANDARD ONNX not invoked; subjects simulated. Browser path remains lazy ONNX with LITE fallback.",
+  "improvedCount": 6,
+  "noGainCount": 6,
+  "rows": [
+    {
+      "kind": "people",
+      "liteChars": 2332,
+      "standardChars": 2343,
+      "standardSubjects": [
+        "person"
+      ],
+      "improved": true,
+      "noGain": false,
+      "note": "STANDARD subjects enrich final prompt block"
+    },
+    {
+      "kind": "product",
+      "liteChars": 2303,
+      "standardChars": 2324,
+      "standardSubjects": [
+        "loudspeaker"
+      ],
+      "improved": true,
+      "noGain": false,
+      "note": "STANDARD subjects enrich final prompt block"
+    },
+    {
+      "kind": "interior",
+      "liteChars": 2319,
+      "standardChars": 2342,
+      "standardSubjects": [
+        "dining table"
+      ],
+      "improved": true,
+      "noGain": false,
+      "note": "STANDARD subjects enrich final prompt block"
+    },
+    {
+      "kind": "nature",
+      "liteChars": 2319,
+      "standardChars": 2334,
+      "standardSubjects": [
+        "seashore"
+      ],
+      "improved": true,
+      "noGain": false,
+      "note": "STANDARD subjects enrich final prompt block"
+    },
+    {
+      "kind": "screenshot",
+      "liteChars": 2310,
+      "standardChars": 2325,
+      "standardSubjects": [
+        "web site"
+      ],
+      "improved": true,
+      "noGain": false,
+      "note": "STANDARD subjects enrich final prompt block"
+    },
+    {
+      "kind": "diagram",
+      "liteChars": 2357,
+      "standardChars": 2372,
+      "standardSubjects": [
+        "envelope"
+      ],
+      "improved": true,
+      "noGain": false,
+      "note": "STANDARD subjects enrich final prompt block"
+    },
+    {
+      "kind": "text-heavy",
+      "liteChars": 2246,
+      "standardChars": 2267,
+      "standardSubjects": [],
+      "improved": false,
+      "noGain": true,
+      "note": "No confident STANDARD subjects — LITE remains appropriate"
+    },
+    {
+      "kind": "complex",
+      "liteChars": 2330,
+      "standardChars": 2351,
+      "standardSubjects": [],
+      "improved": false,
+      "noGain": true,
+      "note": "No confident STANDARD subjects — LITE remains appropriate"
+    },
+    {
+      "kind": "dark",
+      "liteChars": 2306,
+      "standardChars": 2327,
+      "standardSubjects": [],
+      "improved": false,
+      "noGain": true,
+      "note": "No confident STANDARD subjects — LITE remains appropriate"
+    },
+    {
+      "kind": "bright",
+      "liteChars": 2327,
+      "standardChars": 2348,
+      "standardSubjects": [],
+      "improved": false,
+      "noGain": true,
+      "note": "No confident STANDARD subjects — LITE remains appropriate"
+    },
+    {
+      "kind": "wide",
+      "liteChars": 2265,
+      "standardChars": 2286,
+      "standardSubjects": [],
+      "improved": false,
+      "noGain": true,
+      "note": "No confident STANDARD subjects — LITE remains appropriate"
+    },
+    {
+      "kind": "ambiguous",
+      "liteChars": 2285,
+      "standardChars": 2306,
+      "standardSubjects": [],
+      "improved": false,
+      "noGain": true,
+      "note": "No confident STANDARD subjects — LITE remains appropriate"
+    }
+  ]
+}

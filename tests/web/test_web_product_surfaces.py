@@ -22,7 +22,7 @@ def _src() -> str:
 def test_home_brand_and_one_line_cta():
     blob = _src()
     assert "System Prompt Engine" in blob
-    assert "Shape my prompt" in blob
+    assert "Build my prompt" in blob
     assert "ui.build" in (WEB / "src" / "landing" / "Hero.tsx").read_text()
     assert "ui.build" in (WEB / "src" / "workspace" / "Workspace.tsx").read_text()
     assert "What do you want to accomplish?" in blob or "one-line" in blob or "spe-one-line" in blob

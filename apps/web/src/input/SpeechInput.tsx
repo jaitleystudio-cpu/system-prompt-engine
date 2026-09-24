@@ -1,4 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  mapSpeechError,
+  mergeTranscript,
+  SPEECH_VISITOR_HELP,
+  speechUnsupportedMessage,
+} from "./speechHelpers";
 
 type Recognition = {
   lang: string;
@@ -16,26 +22,54 @@ type SpeechWindow = Window & {
   webkitSpeechRecognition?: new () => Recognition;
 };
 
+function cleanupRecognition(active: Recognition | null) {
+  if (!active) return;
+  active.onresult = null;
+  active.onerror = null;
+  active.onend = null;
+  try {
+    active.abort();
+  } catch {
+    /* already stopped */
+  }
+}
+
+/** Speech→Prompt — Rich Human English for visitors; matrix lives in proofs + speechQualification.ts. */
 export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) => void; disabled: boolean }) {
   const recognition = useRef<Recognition | null>(null);
   const [listening, setListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [interim, setInterim] = useState("");
   const [error, setError] = useState("");
+  const [errorKind, setErrorKind] = useState("");
   const [consent, setConsent] = useState(false);
   const [language, setLanguage] = useState("en-IN");
   const speechWindow = window as SpeechWindow;
   const Constructor = speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
 
-  useEffect(() => () => {
+  useEffect(
+    () => () => {
+      cleanupRecognition(recognition.current);
+      recognition.current = null;
+    },
+    [],
+  );
+
+  function stopMic() {
     const active = recognition.current;
-    if (active) {
-      active.onresult = null;
-      active.onerror = null;
-      active.onend = null;
-      active.abort();
+    if (!active) {
+      setListening(false);
+      return;
     }
-  }, []);
+    try {
+      active.stop();
+    } catch {
+      cleanupRecognition(active);
+      recognition.current = null;
+      setListening(false);
+      setInterim("");
+    }
+  }
 
   function start() {
     if (!Constructor || !consent || recognition.current || disabled) return;
@@ -44,26 +78,37 @@ export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) =
     active.lang = language;
     active.continuous = true;
     active.interimResults = true;
-    setTranscript("");
-    setInterim("");
     setError("");
+    setErrorKind("");
+    setInterim("");
     active.onresult = (event) => {
       if (recognition.current !== active) return;
-      const final: string[] = [], pending: string[] = [];
+      const finalParts: string[] = [];
+      const pending: string[] = [];
       for (let i = 0; i < event.results.length; i++) {
         const result = event.results[i];
-        (result.isFinal ? final : pending).push(result[0].transcript);
+        (result.isFinal ? finalParts : pending).push(result[0].transcript);
       }
-      setTranscript(final.join(" "));
+      const spoken = finalParts.join(" ").trim();
+      if (spoken) {
+        setTranscript((prev) => mergeTranscript(prev, spoken));
+      }
       setInterim(pending.join(" "));
     };
     active.onerror = (event) => {
       if (recognition.current !== active) return;
-      setError(event.error === "not-allowed" || event.error === "service-not-allowed"
-        ? "Microphone or speech access was denied. Allow access in your browser, or type your idea."
-        : event.error === "no-speech"
-          ? "No speech was detected. Try again, or type your idea."
-          : "Speech recognition stopped. Check your microphone and connection, or type your idea.");
+      const mapped = mapSpeechError(event.error);
+      setErrorKind(mapped.kind);
+      setError(mapped.message);
+      // Never leave a false listening state after an error (graceful-fallback contract).
+      try {
+        active.abort();
+      } catch {
+        /* ignore */
+      }
+      recognition.current = null;
+      setListening(false);
+      setInterim("");
     };
     active.onend = () => {
       if (recognition.current !== active) return;
@@ -75,33 +120,146 @@ export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) =
       active.start();
       setListening(true);
     } catch {
+      cleanupRecognition(active);
       recognition.current = null;
       setListening(false);
+      setErrorKind("start-failed");
       setError("Speech could not start. Try again, or type your idea.");
     }
   }
 
-  return <details className="spe-speech">
-    <summary>Speak your idea</summary>
-    <p>Dictate, review the text, then add it to your idea. Your browser may send audio to its speech service. SPE does not save audio.</p>
-    {!Constructor ? <p role="status">Speech recognition is unavailable in this browser. You can still type or paste a transcript into your idea.</p> : <>
-      <label className="spe-field"><span>Spoken language</span>
-        <select value={language} disabled={listening} onChange={event => setLanguage(event.target.value)}>
-          <option value="en-IN">English (India)</option><option value="en-US">English (US)</option>
-          <option value="hi-IN">Hindi</option><option value="te-IN">Telugu</option>
-          <option value="ta-IN">Tamil</option><option value="es-ES">Spanish</option>
-        </select>
-      </label>
-      <label><input type="checkbox" checked={consent} disabled={listening} onChange={event => setConsent(event.target.checked)} /> Allow browser speech recognition for this session</label>
-      <div>
-        <button type="button" disabled={disabled || !consent || listening} onClick={start}>Start microphone</button>
-        <button type="button" disabled={!listening} onClick={() => recognition.current?.stop()}>Stop microphone</button>
-      </div>
-      <p role="status">{listening ? "Listening… Stop the microphone when you finish." : "Microphone stopped."}</p>
-      {interim && <p>{interim}</p>}
-      {error && <p role="alert">{error}</p>}
-      <label className="spe-field"><span>Review your transcript</span><textarea rows={4} value={transcript} disabled={listening} onChange={event => setTranscript(event.target.value)} /></label>
-      <button type="button" disabled={disabled || listening || !transcript.trim()} onClick={() => { onInsert(transcript.trim()); setTranscript(""); }}>Add transcript to idea</button>
-    </>}
-  </details>;
+  return (
+    <>
+      <p className="spe-muted" data-speech-visitor-help="true">
+        {SPEECH_VISITOR_HELP}
+      </p>
+      <details
+        className="spe-speech"
+        data-testid="speech-panel"
+        data-speech-supported={Constructor ? "true" : "false"}
+      >
+        <summary>Speak your idea</summary>
+        <p>
+          Dictate, review the text, then add it to your idea. You can also type into the transcript box
+          (mixed speech + typing). Your browser may send audio to its speech service. SPE does not save
+          audio.
+        </p>
+        <p className="spe-muted" data-speech-fallback-hint="true">
+          Prefer typing? The transcript box below always works — speech is optional.
+        </p>
+        {!Constructor ? (
+          <div data-speech-phase="unsupported" data-speech-fallback="graceful">
+            <p role="status" data-testid="speech-unsupported">
+              {speechUnsupportedMessage()}
+            </p>
+            <label className="spe-field">
+              <span>Type your idea here (speech is unavailable in this browser)</span>
+              <textarea
+                rows={4}
+                data-testid="speech-transcript"
+                value={transcript}
+                disabled={disabled}
+                onChange={(event) => setTranscript(event.target.value)}
+              />
+            </label>
+            <button
+              type="button"
+              data-testid="speech-insert"
+              disabled={disabled || !transcript.trim()}
+              onClick={() => {
+                onInsert(transcript.trim());
+                setTranscript("");
+                setError("");
+                setErrorKind("");
+              }}
+            >
+              Add transcript to idea
+            </button>
+          </div>
+        ) : (
+          <>
+            <label className="spe-field">
+              <span>Spoken language</span>
+              <select
+                value={language}
+                disabled={listening}
+                onChange={(event) => setLanguage(event.target.value)}
+              >
+                <option value="en-IN">English (India)</option>
+                <option value="en-US">English (US)</option>
+                <option value="hi-IN">Hindi</option>
+                <option value="te-IN">Telugu</option>
+                <option value="ta-IN">Tamil</option>
+                <option value="es-ES">Spanish</option>
+              </select>
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={consent}
+                disabled={listening}
+                onChange={(event) => setConsent(event.target.checked)}
+              />{" "}
+              Allow browser speech recognition for this session
+            </label>
+            {!consent && (
+              <p className="spe-muted" data-speech-phase="needs-consent">
+                Tick the box above before starting the microphone. You can revoke by refreshing this page.
+              </p>
+            )}
+            <div>
+              <button
+                type="button"
+                data-testid="speech-start"
+                disabled={disabled || !consent || listening}
+                onClick={start}
+              >
+                Start microphone
+              </button>
+              <button
+                type="button"
+                data-testid="speech-stop"
+                disabled={!listening}
+                onClick={stopMic}
+              >
+                Stop microphone
+              </button>
+            </div>
+            <p role="status" data-speech-listening={listening ? "true" : "false"}>
+              {listening ? "Listening… Stop the microphone when you finish." : "Microphone stopped."}
+            </p>
+            {interim && <p data-speech-interim="true">{interim}</p>}
+            {error && (
+              <p role="alert" data-speech-error-kind={errorKind || "unknown"}>
+                {error}
+              </p>
+            )}
+            <label className="spe-field">
+              <span>Review your transcript (edit freely — speech and typing mix)</span>
+              <textarea
+                rows={4}
+                data-testid="speech-transcript"
+                value={transcript}
+                disabled={listening}
+                onChange={(event) => setTranscript(event.target.value)}
+              />
+            </label>
+            <button
+              type="button"
+              data-testid="speech-insert"
+              disabled={disabled || listening || !transcript.trim()}
+              onClick={() => {
+                onInsert(transcript.trim());
+                setTranscript("");
+                setError("");
+                setErrorKind("");
+              }}
+            >
+              Add transcript to idea
+            </button>
+          </>
+        )}
+      </details>
+    </>
+  );
 }

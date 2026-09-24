@@ -19,23 +19,46 @@ import {
   saveHistoryItem,
   setHistoryOptIn,
   verifySpeArtifact,
+  CATEGORIES,
   type CategoryId,
   type HistoryItem,
   type IntentAtom,
   type SpeArtifactV1,
   type TargetId,
 } from "@spe/web-runtime";
-import { Nav } from "./layout/Nav";
+import { Nav, type AppView } from "./layout/Nav";
 import { Hero } from "./landing/Hero";
 import { ScrollStory } from "./landing/ScrollStory";
 import { Workspace } from "./workspace/Workspace";
+import { UnifiedComposer } from "./composer/UnifiedComposer";
+import { DailyLab } from "./lab/DailyLab";
+import { MyWork } from "./pages/MyWork";
+import { PrivacyProof } from "./pages/PrivacyProof";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
 import { registerServiceWorker } from "./pwa";
 
-type View = "home" | "workspace";
+type View = AppView;
 type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
+/** Intent lens provenance — SIMPLE/CREATE rederive; INSPECT/PRO preserve edits. */
+type IntentProvenance = "AUTO_DERIVED_INTENT" | "USER_EDITED_INTENT";
+
+function mapLabCategory(raw: string): CategoryId {
+  return (CATEGORIES as readonly string[]).includes(raw)
+    ? (raw as CategoryId)
+    : "AI Assistant";
+}
+
+function shouldPreserveEditedIntent(
+  mode: Mode,
+  provenance: IntentProvenance,
+): boolean {
+  return (
+    (mode === "inspect" || mode === "pro") &&
+    provenance === "USER_EDITED_INTENT"
+  );
+}
 
 function privacyFromEnvelope(env: unknown): {
   sensitivity: string | null;
@@ -83,6 +106,8 @@ export default function App() {
   const [category, setCategory] = useState<CategoryId>("AI Assistant");
   const [target, setTarget] = useState<TargetId>("any");
   const [intent, setIntent] = useState(() => defaultIntentLens(""));
+  const [intentProvenance, setIntentProvenance] =
+    useState<IntentProvenance>("AUTO_DERIVED_INTENT");
   const [phase, setPhase] = useState<CompilePhase>("idle");
   const [phases, setPhases] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
@@ -175,12 +200,23 @@ export default function App() {
     text: string,
   ) => {
     invalidate();
+    setIntentProvenance("USER_EDITED_INTENT");
     setIntent((prev) => ({
       ...prev,
       [bucket]: prev[bucket].map((a: IntentAtom) =>
         a.id === id ? { ...a, text } : a,
       ),
     }));
+  };
+
+  /** Create/simple/home: rederive intent from request. Inspect/pro: keep human edits. */
+  const applyUserRequestChange = (v: string) => {
+    invalidate();
+    setUserRequest(v);
+    if (!shouldPreserveEditedIntent(mode, intentProvenance)) {
+      setIntent(defaultIntentLens(v));
+      setIntentProvenance("AUTO_DERIVED_INTENT");
+    }
   };
 
   const compile = useCallback(
@@ -337,7 +373,7 @@ export default function App() {
 
   const onExportSpe = () => {
     if (!artifact) return;
-    downloadJson(`artifact-${Date.now()}.spe.json`, artifact);
+    downloadJson(`artifact-${Date.now()}.spe`, artifact);
   };
 
   const onExportJson = () => {
@@ -387,6 +423,7 @@ export default function App() {
           ]),
         ) as typeof intent,
       );
+      setIntentProvenance("USER_EDITED_INTENT");
       setRendered({
         userRequest: parsed.user_request,
         speAdded: [],
@@ -414,10 +451,9 @@ export default function App() {
         Skip to main content
       </a>
       <Nav
-        scrolled={scrolled || view === "workspace"}
+        scrolled={scrolled || view !== "home"}
         view={view}
         onNavigate={setView}
-        onOpenSpe={() => setView("workspace")}
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
       />
@@ -430,11 +466,11 @@ export default function App() {
                 invalidate();
                 setUserRequest("");
                 setIntent(defaultIntentLens(""));
+                setIntentProvenance("AUTO_DERIVED_INTENT");
               }}
               value={userRequest}
               onChange={(v) => {
-                invalidate();
-                setUserRequest(v);
+                applyUserRequestChange(v);
               }}
               category={category}
               onCategory={(v) => {
@@ -472,13 +508,145 @@ export default function App() {
           </>
         )}
 
+        {(view === "create" || view === "code") && (
+          <section className="spe-create" aria-labelledby="create-title">
+            <header className="spe-create-head">
+              <p className="spe-kicker">{view === "code" ? "Code" : "Create"}</p>
+              <h1 id="create-title">
+                {view === "code"
+                  ? "Turn a screenshot into a starting point"
+                  : "Shape a prompt you can trust"}
+              </h1>
+              {view === "create" ? (
+                <p className="spe-create-thought">There&apos;s more in your idea than fits in one sentence.</p>
+              ) : null}
+              <p>
+                {view === "code"
+                  ? "Upload a screenshot. SPE notes the layout it can see, then offers starter scaffolds you can compare — HTML, React, SwiftUI, Jetpack Compose, Flutter, or React Native."
+                  : "Create is the instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."}
+              </p>
+            </header>
+            <div className="spe-create-rail">
+            <UnifiedComposer
+              key={view === "code" ? "code" : "create"}
+              value={userRequest}
+              onChange={(v) => {
+                applyUserRequestChange(v);
+              }}
+              disabled={busy}
+              initialMode={view === "code" ? "screenshot" : "text"}
+              onScaffoldPrompt={(prompt) => {
+                applyUserRequestChange(prompt);
+              }}
+            />
+            <div className="compile-row">
+              <button
+                type="button"
+                className="spe-build"
+                data-ready={Boolean(userRequest.trim()) && !busy ? "true" : "false"}
+                disabled={busy || !userRequest.trim()}
+                aria-busy={busy}
+                onClick={() => void compile()}
+              >
+                {busy ? ui.working : ui.build}
+                <span>↗</span>
+              </button>
+            </div>
+            </div>
+            {error && <p role="alert">{error.message}</p>}
+            {rendered?.finalPrompt && (
+              <section className="spe-create-result" aria-label="Your prompt">
+                <h2>Your prompt</h2>
+                <pre tabIndex={0}>{rendered.finalPrompt}</pre>
+                <div className="spe-actions">
+                  <button type="button" className="spe-build" onClick={() => void onCopy()}>
+                    Copy prompt
+                  </button>
+                  <button type="button" className="spe-ghost" onClick={onExportSpe}>
+                    Download .spe
+                  </button>
+                  <button
+                    type="button"
+                    className="spe-ghost"
+                    onClick={() => setView("workspace")}
+                  >
+                    Open workspace
+                  </button>
+                </div>
+              </section>
+            )}
+          </section>
+        )}
+
+        {view === "lab" && (
+          <DailyLab
+            onOpenInSpe={(s) => {
+              invalidate();
+              const idea =
+                ("buildPrompt" in s && s.buildPrompt) ||
+                ("seedIdea" in s && s.seedIdea) ||
+                "";
+              setUserRequest(String(idea));
+              setCategory(mapLabCategory(s.category));
+              setIntent(defaultIntentLens(String(idea)));
+              setIntentProvenance("AUTO_DERIVED_INTENT");
+              setMode("simple");
+              setView("create");
+              window.scrollTo(0, 0);
+            }}
+            onCopyIdea={async (s) => {
+              try {
+                const idea =
+                  ("buildPrompt" in s && s.buildPrompt) ||
+                  ("seedIdea" in s && s.seedIdea) ||
+                  "";
+                await navigator.clipboard.writeText(String(idea));
+                setNotice("Idea copied.");
+              } catch {
+                setNotice("Copy unavailable. Select the idea text to copy it.");
+              }
+            }}
+          />
+        )}
+
+        {view === "my-work" && (
+          <MyWork
+            historyOptIn={historyOptIn}
+            setHistoryOptIn={(v) => {
+              setHistoryOptIn(v);
+              setHistoryOptInState(v);
+              setHistory(v ? loadHistory() : []);
+            }}
+            history={history}
+            onClear={() => {
+              clearHistory();
+              setHistory([]);
+            }}
+            onStartCreate={() => {
+              invalidate();
+              setView("create");
+            }}
+            onOpen={(h) => {
+              invalidate();
+              setUserRequest(h.user_request);
+              setCategory((h.category as CategoryId) || "Writing");
+              setTarget((h.target as TargetId) || "any");
+              setIntent(defaultIntentLens(h.user_request));
+              setIntentProvenance("AUTO_DERIVED_INTENT");
+              setMode("simple");
+              setView("create");
+            }}
+          />
+        )}
+
+        {view === "privacy" && <PrivacyProof />}
+
         {view === "workspace" && (
           <>
             <Workspace
               userRequest={userRequest}
               setUserRequest={(v) => {
-                invalidate();
-                setUserRequest(v);
+                applyUserRequestChange(v);
               }}
               category={category}
               setCategory={(v) => {
@@ -557,6 +725,7 @@ export default function App() {
                       setCategory((h.category as CategoryId) || "Writing");
                       setTarget((h.target as TargetId) || "any");
                       setIntent(defaultIntentLens(h.user_request));
+                      setIntentProvenance("AUTO_DERIVED_INTENT");
                     }}
                   >
                     <h3>{h.user_request}</h3>

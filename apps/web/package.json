@@ -15,11 +15,24 @@
     "audit:assets": "node scripts/measure-assets.mjs",
     "audit:egress": "node scripts/egress-proof.mjs",
     "spe:copy-check": "node ../../tools/copy-check.mjs",
-    "test:copy": "cd ../.. && node tests/copy/golden-and-adversarial.mjs"
+    "test:copy": "cd ../.. && node tests/copy/golden-and-adversarial.mjs",
+    "test:media": "node scripts/test-media-observe.mjs",
+    "test:adversarial": "node scripts/test-adversarial-v1.mjs",
+    "test:e2e:v1": "node scripts/e2e-v1-capabilities.mjs",
+    "test:speech": "node scripts/test-speech-helpers.mjs",
+    "test:screenshot-fidelity": "node scripts/test-screenshot-fidelity.mjs",
+    "test:video-scenes": "node scripts/test-video-scenes.mjs",
+    "bench:vision-browser": "node scripts/bench-standard-vs-lite-browser.mjs",
+    "test:predeploy-qa": "node scripts/test-predeploy-qa.mjs",
+    "test:speech-fallback": "node scripts/test-speech-fallback-contract.mjs",
+    "bench:vision-human": "node scripts/bench-standard-vs-lite-human.mjs",
+    "test:screenshot-real": "node scripts/test-screenshot-real-fidelity.mjs",
+    "capture:real-ui": "node scripts/capture-real-ui-fixtures.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",
     "@types/three": "^0.170.0",
+    "onnxruntime-web": "^1.20.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.170.0"
@@ -28,6 +41,8 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "playwright": "^1.49.1",
+    "pngjs": "^7.0.0",
     "typescript": "^5.6.3",
     "vite": "^5.4.11"
   }
