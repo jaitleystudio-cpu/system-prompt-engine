@@ -1,10 +1,10 @@
 # SPE WEBSITE V1 PRE-DEPLOY QUALIFICATION REPORT
 
 Date: 2026-09-24 (Asia/Calcutta / IST)
-Branch: 
+Branch: `grok/spe-v1-launch-20260924`
 PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/41 — **OPEN, DO NOT MERGE**
-Base main: 
-Start tip (custody): 
+Base main: `646d3765153f66c3951d812b8adfd87fcbf766b1`
+Start tip (custody): `454c57d3c7194a4e5fa7e3c02d80044f15e145ae`
 
 ## 1. Verdict
 
@@ -16,9 +16,9 @@ Application quality improved in this pass (Screenshot bounds fidelity, Daily Lab
 
 | Token | SHA |
 | --- | --- |
-| START_HEAD |  |
-| CURRENT_PR_HEAD |  |
-| MAIN |  |
+| START_HEAD | `454c57d3c7194a4e5fa7e3c02d80044f15e145ae` |
+| CURRENT_PR_HEAD | `dc783508ec0dca576b730947162ef2398a6475c9` |
+| MAIN | `646d3765153f66c3951d812b8adfd87fcbf766b1` |
 
 ## 3. Capability matrix (truthful)
 
@@ -44,14 +44,14 @@ Application quality improved in this pass (Screenshot bounds fidelity, Daily Lab
 | Windows | Edge/Chrome | UNKNOWN | NOT_TESTED | NOT_TESTED | NOT_TESTED |
 | macOS founder | Safari/Chrome | UNKNOWN | NOT_TESTED | NOT_TESTED | NOT_TESTED |
 
-Artifact: 
+Artifact: `proofs/spe_v1_launch/speech_chrome_probe.json`
 
 ## 5. STANDARD vs LITE evidence summary
 
-Artifact: 
+Artifact: `proofs/spe_v1_launch/standard_vs_lite_bench.json`
 
 - Synthetic kinds: people, product, interior, nature, screenshot, diagram, text-heavy, complex, dark, bright, wide, ambiguous
--  (Node); subjects simulated for prompt-delta measurement
+- onnxRuntimeInvoked: false (Node); subjects simulated for prompt-delta measurement
 - Improved: **6** — people, product, interior, nature, screenshot, diagram
 - No-gain: **6** — text-heavy, complex, dark, bright, wide, ambiguous (LITE remains appropriate)
 - Production: LITE always; STANDARD lazy; homepage vision bytes 0 until requested
@@ -111,7 +111,7 @@ Targets: HTML/CSS/JS, React, SwiftUI, Jetpack Compose, Flutter, React Native.
 
 ## 10. Visual / product-language
 
- — home, create, code, lab, mywork, privacy, mobile-create, lab-reduced-motion.
+`proofs/spe_v1_launch/predeploy_screens/` — home, create, code, lab, mywork, privacy, mobile-create, lab-reduced-motion.
 
 Visitor copy: Rich Human English. Technical tokens kept in Proof/technical views only.
 
@@ -125,10 +125,10 @@ Visitor copy: Rich Human English. Technical tokens kept in Proof/technical views
 ## 12. Guardrails honored
 
 - PR #41 not merged
-- No 
+- No spe_runtime/omega/
 - No DNS / apex hosting changes
 - No fabricated READY / World #1 / production-qualified claims
-- ₹0 extra owner spend
+- Zero extra owner spend
 - UI → Worker → spe_wasm.wasm → spe-core-rs preserved
 
 ## 13. Final token
