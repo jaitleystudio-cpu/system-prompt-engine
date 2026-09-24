@@ -22,8 +22,8 @@ This pass (pass 3) closed the Screenshot→Code structure-resemblance gap for re
 | Token | SHA |
 | --- | --- |
 | START_HEAD (this pass) | `3d7556e54240a9659532a540bdb2caaf9882a695` |
-| CURRENT_PR_HEAD | `TIP_PENDING` |
-| Feature work tip (pass2) | `643c20c6c0cd769a48d6a400b73b363bbc0e0234` |
+| CURRENT_PR_HEAD | `666f58b7f0780c2304d1f08d1405b9a04f5964e0` |
+| Feature work tip (pass3) | `666f58b7f0780c2304d1f08d1405b9a04f5964e0` |
 | MAIN | `646d3765153f66c3951d812b8adfd87fcbf766b1` |
 
 ## 3. Capability matrix (truthful)
