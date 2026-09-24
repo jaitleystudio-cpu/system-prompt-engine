@@ -2,7 +2,8 @@
 
 **Branch:** `grok/spe-v1-gap-closure-20260925`  
 **Base tip:** `61c1c4c71d3ea6eaf5dd7b82888156e35bd17b61` (`chatgpt/context-protocol-compiler-design-20260924`)  
-**Custody SHA:** *(filled after commit — see git tip of this branch)*  
+**Custody SHA (product commit):** `c1592548fdcde479bb850ce12247a07ea410e56f`  
+**Branch tip:** see `git rev-parse grok/spe-v1-gap-closure-20260925` after push/local (docs bind commit follows).  
 **When:** 2026-09-25 01:01 IST  
 **HOSTING:** **FORBIDDEN**  
 **WORLD#1:** **NOT_PROVEN**
