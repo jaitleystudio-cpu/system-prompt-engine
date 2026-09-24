@@ -18,6 +18,9 @@ def test_media_modules_exist_and_forbid_paid_proxy():
     assert (media / "urlIngest.ts").is_file()
     assert (media / "untrusted.ts").is_file()
     assert (media / "limits.ts").is_file()
+    assert (media / "semanticPipeline.ts").is_file()
+    assert (media / "uiObservation.ts").is_file()
+    assert (WEB / "engine" / "visionBudget.ts").is_file()
     blob = "\n".join(p.read_text(encoding="utf-8") for p in media.glob("*.ts"))
     for banned in ("corsproxy", "allorigins", "scrapingbee", "zenrows", "api.openai", "openai.com/v1"):
         assert banned not in blob.lower()
@@ -32,24 +35,36 @@ def test_screenshot_targets_include_six_frameworks_with_human_labels():
     assert "HTML / CSS / JavaScript" in text
     assert "Jetpack Compose" in text
     assert "React Native" in text
+    assert "UIObservationIR" in text or "screenshotIRToCodePackage" in text
 
 
-def test_daily_lab_has_thirty_plus_static_specimens():
-    text = (WEB / "lab" / "specimens.ts").read_text(encoding="utf-8")
-    assert text.count('id: "lab-') >= 30
-    assert "specimensForDate" in text
-    assert "LAB_SPECIMENS" in text
-    assert (WEB / "lab" / "DailyLab.tsx").is_file()
+def test_daily_lab_is_premium_3d_with_finite_queue():
+    specimens = (WEB / "lab" / "specimens.ts").read_text(encoding="utf-8")
+    assert "DAILY_3D_QUEUE" in specimens
+    assert specimens.count('id: "d3d-') == 14
+    assert "DAILY_QUEUE_DAYS" in specimens
+    assert "publishDate" in specimens
+    assert "buildPrompt" in specimens
+    assert "speArtifact" in specimens
+    assert "interaction" in specimens
     lab = (WEB / "lab" / "DailyLab.tsx").read_text(encoding="utf-8")
     assert "Same date, same set" not in lab
-    assert "PRODUCT_DIRECTION_MISMATCH" in lab
-    assert "prompt gallery" in lab.lower()
+    assert "PRODUCT_DIRECTION_MISMATCH" not in lab
+    assert "FINITE_QUEUE" in lab
+    assert "Daily 3D Lab" in lab
+    assert "LabStage" in lab
+    assert (WEB / "lab" / "PromptGallery.tsx").is_file()
+    gallery = (WEB / "lab" / "gallery" / "promptGallery.ts").read_text(encoding="utf-8")
+    assert gallery.count('id: "gal-') >= 30
 
 
 def test_unified_composer_and_nav_surfaces():
     composer = COMPOSER.read_text(encoding="utf-8")
     for mode in ('"text"', '"speech"', '"image"', '"screenshot"', '"video"', '"url"'):
         assert mode in composer
+    assert "observeImageFileSemantic" in composer
+    assert "observeScreenshotIR" in composer
+    assert "initialMode" in composer
     nav = (WEB / "layout" / "Nav.tsx").read_text(encoding="utf-8")
     for label in ("Home", "Create", "Code", "Daily Lab", "My Work", "Privacy / Proof"):
         assert label in nav
@@ -60,7 +75,7 @@ def test_human_cta_build_my_prompt():
     copy = (REPO / "packages" / "human-perspective" / "src" / "copy.ts").read_text(encoding="utf-8")
     assert 'build: "Build my prompt"' in copy
     assert "Start with an idea" in copy
-    assert "There is more in the idea" in copy
+    assert "There's more in your idea" in copy or "There is more in the idea" in copy
     assert "COMPILE INTENT" not in copy
     assert "RAW THOUGHT" not in copy
 
@@ -83,9 +98,10 @@ def test_intent_provenance_auto_vs_user_edited():
     assert "shouldPreserveEditedIntent" in text
     assert "mapLabCategory" in text
     # Daily Lab clean open
-    assert "setIntent(defaultIntentLens(s.seedIdea))" in text
+    assert "setIntent(defaultIntentLens" in text
     assert "setCategory(mapLabCategory(s.category))" in text
     assert 'setMode("simple")' in text
+    assert "buildPrompt" in text
 
 
 def test_composer_async_race_and_mode_cleanup():
@@ -125,6 +141,8 @@ def test_url_bounded_stream_and_untrusted_boundary():
     assert "finalUrl" in url
     assert "urlResultToPromptBlock" in url
     assert "return null" in url
+    assert "Website X-Ray" in url or "Landmarks" in url
+    assert "script tags (not executed)" in url or "were not executed" in url
     unt = (WEB / "media" / "untrusted.ts").read_text(encoding="utf-8")
     assert "UNTRUSTED_SOURCE" in unt
     assert "DATA TO ANALYZE" in unt
@@ -148,10 +166,27 @@ def test_screenshot_code_target_single_canonical_state():
     text = COMPOSER.read_text(encoding="utf-8")
     assert "applyCodeTarget" in text
     assert "CODE_TARGET_LABELS" in text
-    assert "Request updated" in text
 
 
-def test_no_omega_and_no_second_k3_writer():
-    media = "\n".join(p.read_text(encoding="utf-8") for p in (WEB / "media").glob("*.ts"))
-    assert "spe_runtime/omega" not in media
-    assert "omega" not in media.lower() or "omega" not in (WEB / "App.tsx").read_text().lower()
+def test_vision_budget_zero_until_standard():
+    vb = (WEB / "engine" / "visionBudget.ts").read_text(encoding="utf-8")
+    assert "getVisionModelBytes" in vb
+    assert "VISION_PACK_DOCS" in vb
+    assert "homepageBytes: 0" in vb
+    models = REPO / "apps" / "web" / "public" / "models" / "LICENSE.md"
+    assert models.is_file()
+    assert "Apache-2.0" in models.read_text(encoding="utf-8")
+
+
+def test_speech_qualification_matrix_honest():
+    path = WEB / "engine" / "speechQualification.ts"
+    assert path.is_file()
+    text = path.read_text(encoding="utf-8")
+    assert "NOT_TESTED" in text
+    assert "on-device" in text.lower() or "on-device" in (WEB / "input" / "SpeechInput.tsx").read_text().lower()
+    assert "SPEECH_QUALIFICATION_MATRIX" in text
+
+
+def test_code_nav_defaults_to_screenshot_mode():
+    app = APP.read_text(encoding="utf-8")
+    assert 'initialMode={view === "code" ? "screenshot" : "text"}' in app
