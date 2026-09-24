@@ -46,11 +46,22 @@ export function MyWork({
             <p className="spe-empty-kicker">Quiet shelf</p>
             <h2>Nothing saved here yet</h2>
             <p>
-              When you choose to keep an idea, it stays on this device only —
-              ready to reopen, export, or clear.
+              <strong>What:</strong> optional notes of ideas you choose to keep.
+              <br />
+              <strong>Why:</strong> so you can reopen them later — still only on this device.
+              <br />
+              <strong>How:</strong> turn on saving above, then build a prompt in Create.
+            </p>
+            <ol className="spe-empty-steps">
+              <li>Start with an idea in Create</li>
+              <li>Save when you want a return path</li>
+              <li>Export a .spe file if you want a portable copy</li>
+            </ol>
+            <p className="spe-empty-leave">
+              Prefer not to keep history? Leave saving off — SPE still works. Your thinking stays yours.
             </p>
             {onStartCreate && (
-              <button type="button" className="spe-build" onClick={onStartCreate}>
+              <button type="button" className="spe-build" data-ready="true" onClick={onStartCreate}>
                 Start with an idea <span>↗</span>
               </button>
             )}

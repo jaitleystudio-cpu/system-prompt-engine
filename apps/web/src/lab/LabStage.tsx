@@ -189,14 +189,24 @@ export function LabStage({ specimen }: { specimen: LabSpecimen }) {
         }}
         gl={{ antialias: true, alpha: true }}
       >
-        <color attach="background" args={["#07090d"]} />
-        <ambientLight intensity={0.45} />
-        <directionalLight position={[4, 6, 2]} intensity={1.1} castShadow />
-        <directionalLight position={[-3, 2, -2]} intensity={0.35} color="#9ecbff" />
+        <color attach="background" args={["#05070b"]} />
+        <fog attach="fog" args={["#05070b", 6.5, 14]} />
+        <hemisphereLight args={["#c9d6ff", "#1a1208", 0.42]} />
+        <ambientLight intensity={0.22} />
+        <directionalLight position={[3.2, 5.4, 2.4]} intensity={1.35} color="#ffe2bd" castShadow />
+        <directionalLight position={[-3.4, 1.8, -2.2]} intensity={0.42} color="#9ecbff" />
+        <spotLight
+          position={[0.6, 4.2, 1.2]}
+          angle={0.38}
+          penumbra={0.55}
+          intensity={0.55}
+          color="#fdba74"
+          castShadow
+        />
         <SpecimenMesh specimen={specimen} reduced={reduced} />
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.45, 0]} receiveShadow>
-          <circleGeometry args={[3.2, 64]} />
-          <meshStandardMaterial color="#10141c" metalness={0.1} roughness={0.9} />
+          <circleGeometry args={[3.4, 64]} />
+          <meshStandardMaterial color="#0b0f16" metalness={0.18} roughness={0.82} />
         </mesh>
       </Canvas>
       <p className="spe-lab-stage-caption">
