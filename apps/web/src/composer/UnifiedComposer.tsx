@@ -1,20 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SpeechInput } from "../input/SpeechInput";
 import {
-  observeImageFile,
-  observationToPromptBlock,
-} from "../media/imageObserve";
+  observeImageFileSemantic,
+  semanticToPromptBlock,
+  getVisionModelBytes,
+} from "../media/semanticPipeline";
 import {
-  observeVideoFile,
+  observeVideoFileSemantic,
   videoObservationToPromptBlock,
 } from "../media/videoSample";
 import {
   CODE_TARGETS,
   CODE_TARGET_LABELS,
-  buildScaffolds,
-  buildUiSpec,
+  screenshotIRToCodePackage,
   type CodeTarget,
 } from "../media/screenshotToCode";
+import { observeScreenshotIR } from "../media/uiObservation";
+import { MAX_ANALYSIS_SIDE, assertImageFileBounds, assertMegapixelCap } from "../media/limits";
 import {
   ingestHtmlFile,
   ingestUrl,
@@ -35,6 +37,8 @@ type Props = {
   onChange: (v: string) => void;
   disabled?: boolean;
   onScaffoldPrompt?: (prompt: string, target: CodeTarget) => void;
+  /** Code nav opens Screenshot→code; Create keeps last/text. */
+  initialMode?: ComposerMode;
 };
 
 const MODES: { id: ComposerMode; label: string; hint: string }[] = [
@@ -55,8 +59,9 @@ export function UnifiedComposer({
   onChange,
   disabled = false,
   onScaffoldPrompt,
+  initialMode = "text",
 }: Props) {
-  const [mode, setMode] = useState<ComposerMode>("text");
+  const [mode, setMode] = useState<ComposerMode>(initialMode);
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -142,43 +147,101 @@ export function UnifiedComposer({
   const onImageOrScreenshot = async (file: File, asScreenshot: boolean) => {
     const { ac, isCurrent } = beginOp();
     setError("");
-    setStatus(asScreenshot ? "Reading screenshot…" : "Reading image…");
+    setStatus(asScreenshot ? "Reading screenshot (UI IR)…" : "Reading image (semantic)…");
     setScaffolds([]);
     try {
       replacePreview(URL.createObjectURL(file));
-      const obs = await observeImageFile(file, ac.signal);
-      if (!isCurrent()) return;
-      const block = observationToPromptBlock(obs);
       if (asScreenshot) {
-        const spec = buildUiSpec(obs);
-        const built = buildScaffolds(spec);
-        setScaffolds(built);
-        const chosen =
-          built.find((s) => s.target === codeTarget) ?? built[0];
-        const request = [
-          "Screenshot → code request:",
-          `Rebuild the UI shown in this screenshot for ${CODE_TARGET_LABELS[chosen.target as CodeTarget]}.`,
-          "Treat region roles as uncertain.",
-          "",
-          chosen?.prompt ?? block,
-        ].join("\n");
-        onChange(request);
-        valueRef.current = request;
-        onScaffoldPrompt?.(chosen.prompt, chosen.target as CodeTarget);
-        setStatus(
-          `Screenshot observed (source ${obs.sourceWidth}×${obs.sourceHeight}). Scaffolds ready — uncertainty labeled.`,
-        );
+        assertImageFileBounds(file);
+        const url = URL.createObjectURL(file);
+        try {
+          const img = new Image();
+          img.decoding = "async";
+          await new Promise<void>((resolve, reject) => {
+            const onAbort = () => reject(new DOMException("Aborted", "AbortError"));
+            if (ac.signal.aborted) return onAbort();
+            ac.signal.addEventListener("abort", onAbort, { once: true });
+            img.onload = () => {
+              ac.signal.removeEventListener("abort", onAbort);
+              resolve();
+            };
+            img.onerror = () => {
+              ac.signal.removeEventListener("abort", onAbort);
+              reject(new Error("Could not decode this screenshot."));
+            };
+            img.src = url;
+          });
+          assertMegapixelCap(img.naturalWidth, img.naturalHeight);
+          const scale = Math.min(
+            1,
+            MAX_ANALYSIS_SIDE / Math.max(img.naturalWidth, img.naturalHeight),
+          );
+          const w = Math.max(1, Math.round(img.naturalWidth * scale));
+          const h = Math.max(1, Math.round(img.naturalHeight * scale));
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d", { willReadFrequently: true });
+          if (!ctx) throw new Error("Canvas is unavailable in this browser.");
+          ctx.drawImage(img, 0, 0, w, h);
+          const data = ctx.getImageData(0, 0, w, h);
+          const ir = await observeScreenshotIR(
+            data,
+            {
+              fileName: file.name,
+              fileBytes: file.size,
+              mimeType: file.type || null,
+              sourceWidth: img.naturalWidth,
+              sourceHeight: img.naturalHeight,
+            },
+            {
+              signal: ac.signal,
+              onProgress: (p, label) => {
+                if (isCurrent()) setStatus(`${label} (${Math.round(p * 100)}%)`);
+              },
+            },
+          );
+          if (!isCurrent()) return;
+          const { scaffolds: built } = screenshotIRToCodePackage(ir);
+          setScaffolds(built);
+          const chosen =
+            built.find((s) => s.target === codeTarget) ?? built[0];
+          const request = [
+            "Screenshot → code request:",
+            `Rebuild the UI shown in this screenshot for ${CODE_TARGET_LABELS[chosen.target as CodeTarget]}.`,
+            "UIObservationIR regions include evidence + confidence — verify against the image.",
+            "",
+            chosen?.prompt ?? "",
+          ].join("\n");
+          onChange(request);
+          valueRef.current = request;
+          onScaffoldPrompt?.(chosen.prompt, chosen.target as CodeTarget);
+          setStatus(
+            `Screenshot IR ready (${ir.viewport.sourceWidth}×${ir.viewport.sourceHeight}, ${ir.columns}×${ir.rows} layout guess, tier ${ir.semantic.tier}, modelBytes=${getVisionModelBytes()}).`,
+          );
+        } finally {
+          URL.revokeObjectURL(url);
+        }
       } else {
+        const sem = await observeImageFileSemantic(file, {
+          tier: "STANDARD",
+          signal: ac.signal,
+          onProgress: (p, label) => {
+            if (isCurrent()) setStatus(`${label} (${Math.round(p * 100)}%)`);
+          },
+        });
+        if (!isCurrent()) return;
+        const block = semanticToPromptBlock(sem);
         appendBlock(
           [
             "Image → prompt request:",
-            "Using only the grounded observations below, help me write a strong prompt about this image.",
+            "Using only the grounded observations / model judgments below (not verified facts), help me write a strong prompt about this image.",
             "",
             block,
           ].join("\n"),
         );
         setStatus(
-          `Image observed (source ${obs.sourceWidth}×${obs.sourceHeight}). Added to your idea.`,
+          `Image semantic ${sem.tier}: ${sem.humanSummary.slice(0, 120)}… (modelBytes=${sem.modelBytesLoaded})`,
         );
       }
     } catch (e) {
@@ -195,7 +258,10 @@ export function UnifiedComposer({
     setStatus("Sampling video frames…");
     try {
       replacePreview(URL.createObjectURL(file));
-      const obs = await observeVideoFile(file, ac.signal);
+      const obs = await observeVideoFileSemantic(file, {
+        signal: ac.signal,
+        tier: "LITE",
+      });
       if (!isCurrent()) return;
       appendBlock(
         [
