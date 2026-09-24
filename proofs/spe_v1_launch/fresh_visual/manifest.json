@@ -1,0 +1,110 @@
+{
+  "testedSha": "3d50f162c441dfcfa6f6ddd1b7f8e5c30b2e5eb5",
+  "capturedAtIst": "24/9/2026, 10:57:39 am",
+  "shots": [
+    {
+      "file": "home-1440.png",
+      "view": null,
+      "mode": null,
+      "w": 1440,
+      "h": 900,
+      "reducedMotion": false
+    },
+    {
+      "file": "create-1440.png",
+      "view": "Create",
+      "mode": null,
+      "w": 1440,
+      "h": 900,
+      "reducedMotion": false
+    },
+    {
+      "file": "code-1440.png",
+      "view": "Code",
+      "mode": null,
+      "w": 1440,
+      "h": 900,
+      "reducedMotion": false
+    },
+    {
+      "file": "image-flow-1440.png",
+      "view": "Create",
+      "mode": "Image",
+      "w": 1440,
+      "h": 900,
+      "reducedMotion": false
+    },
+    {
+      "file": "video-flow-1440.png",
+      "view": "Create",
+      "mode": "Video",
+      "w": 1440,
+      "h": 900,
+      "reducedMotion": false
+    },
+    {
+      "file": "url-flow-1440.png",
+      "view": "Create",
+      "mode": "URL",
+      "w": 1440,
+      "h": 900,
+      "reducedMotion": false
+    },
+    {
+      "file": "daily-lab-1440.png",
+      "view": "Daily Lab",
+      "mode": null,
+      "w": 1440,
+      "h": 900,
+      "reducedMotion": false
+    },
+    {
+      "file": "my-work-1440.png",
+      "view": "My Work",
+      "mode": null,
+      "w": 1440,
+      "h": 900,
+      "reducedMotion": false
+    },
+    {
+      "file": "privacy-1440.png",
+      "view": "Privacy",
+      "mode": null,
+      "w": 1440,
+      "h": 900,
+      "reducedMotion": false
+    },
+    {
+      "file": "create-390.png",
+      "view": "Create",
+      "mode": null,
+      "w": 390,
+      "h": 844,
+      "reducedMotion": false
+    },
+    {
+      "file": "create-360.png",
+      "view": "Create",
+      "mode": null,
+      "w": 360,
+      "h": 740,
+      "reducedMotion": false
+    },
+    {
+      "file": "create-320.png",
+      "view": "Create",
+      "mode": null,
+      "w": 320,
+      "h": 680,
+      "reducedMotion": false
+    },
+    {
+      "file": "lab-reduced-motion-1440.png",
+      "view": "Daily Lab",
+      "mode": null,
+      "w": 1440,
+      "h": 900,
+      "reducedMotion": true
+    }
+  ]
+}

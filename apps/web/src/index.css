@@ -210,9 +210,9 @@ em {
 }
 .hero-copy {
   position: relative;
-  z-index: 3;
+  z-index: 4;
   padding: 140px 0 0 7%;
-  width: 65%;
+  width: min(52%, 720px);
   pointer-events: none;
 }
 .hero-copy > .eyebrow {
@@ -226,6 +226,7 @@ em {
   line-height: 1.03;
   letter-spacing: -0.065em;
   margin: 0 0 30px;
+  text-shadow: 0 0 24px rgba(5, 8, 18, 0.85), 0 2px 18px rgba(5, 8, 18, 0.7);
 }
 .hero-copy h1 em {
   color: #a9bdf4;
@@ -261,7 +262,7 @@ em {
   top: 0;
   right: -7%;
   z-index: 1;
-  mask-image: linear-gradient(to right, transparent, #000 16%);
+  mask-image: linear-gradient(to right, transparent, #000 28%);
 }
 .hero-scene-inner {
   position: absolute;
