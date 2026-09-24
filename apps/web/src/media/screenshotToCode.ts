@@ -33,10 +33,7 @@ const LABELS = CODE_TARGET_LABELS;
 
 /** Bridge legacy UiRegion API from IR. */
 export function inferUiRegions(obs: ImageObservation): UiRegion[] {
-  const ir = observeScreenshotIRLite(
-    // Synthetic ImageData unavailable here — fall back to brightness bands
-    fakeImageDataFromObs(obs),
-  );
+  const ir = observeScreenshotIRLite(fakeImageDataFromObs(obs));
   return ir.regions.map((r) => ({
     id: r.id,
     roleGuess: r.roleGuess,
@@ -74,7 +71,7 @@ export function buildUiSpec(obs: ImageObservation): UiSpec {
   const regions = inferUiRegions(obs);
   return {
     frameworkTargets: CODE_TARGETS,
-    layout: regions.some((r) => r.id === "region-rail")
+    layout: regions.some((r) => /rail|sidebar/i.test(r.roleGuess))
       ? "Possible sidebar + content columns (uncertain)"
       : "Stacked header / main / footer with projection columns (uncertain)",
     regions,
@@ -105,6 +102,31 @@ export function buildUiSpecFromIR(ir: UIObservationIR): UiSpec {
   };
 }
 
+function hintsOf(spec: UiSpec): string {
+  return [...spec.uncertainty, ...spec.regions.map((r) => r.notes)].join(" ");
+}
+
+function hasHint(spec: UiSpec, re: RegExp): boolean {
+  return re.test(hintsOf(spec)) || spec.regions.some((r) => re.test(r.roleGuess));
+}
+
+function pct(n: number): string {
+  return `${(n * 100).toFixed(1)}%`;
+}
+
+function regionStyle(r: UiRegion): string {
+  const { x, y, w, h } = r.bounds;
+  return `left:${pct(x)};top:${pct(y)};width:${pct(w)};height:${pct(h)}`;
+}
+
+function zoneAttr(r: UiRegion): string {
+  const cx = r.bounds.x + r.bounds.w / 2;
+  const cy = r.bounds.y + r.bounds.h / 2;
+  const hz = cx < 0.33 ? "left" : cx > 0.66 ? "right" : "center";
+  const vz = cy < 0.33 ? "top" : cy > 0.66 ? "bottom" : "mid";
+  return `${vz}-${hz}`;
+}
+
 function paletteCss(obs: ImageObservation): string {
   return obs.dominantColors
     .slice(0, 4)
@@ -112,67 +134,89 @@ function paletteCss(obs: ImageObservation): string {
     .join("\n");
 }
 
-function regionStyle(r: UiRegion): string {
-  const { x, y, w, h } = r.bounds;
-  return `position:absolute;left:${(x * 100).toFixed(1)}%;top:${(y * 100).toFixed(1)}%;width:${(w * 100).toFixed(1)}%;height:${(h * 100).toFixed(1)}%;`;
-}
-
-
-function regionsByRole(spec: UiSpec) {
-  const find = (re: RegExp) => spec.regions.filter((r) => re.test(r.roleGuess));
+function structureFlags(spec: UiSpec) {
   return {
-    header: find(/header|top bar|nav|toolbar/i),
-    rail: find(/rail|sidebar|side/i),
-    main: find(/main|content|hero/i),
-    footer: find(/footer|bottom|action/i),
-    all: spec.regions,
+    rail: hasHint(spec, /rail|sidebar|side rail/i),
+    form: hasHint(spec, /form-panel|Form \/ input/i),
+    cards: hasHint(spec, /card-grid|Card \/ tile/i),
+    modal: hasHint(spec, /modal-or-dialog|Modal \/ dialog/i),
+    hero: hasHint(spec, /nav-hero|Hero \/ featured/i),
+    toolbarList: hasHint(spec, /toolbar-list|Toolbar \/ tool|List \/ stacked|List row/i),
   };
 }
 
-function regionDomId(r: UiRegion): string {
-  return r.id.replace(/[^a-zA-Z0-9_-]/g, "-");
-}
-
-function corpus(spec: UiSpec): string {
-  return spec.regions.map((r) => `${r.roleGuess} ${r.notes}`).join(" ");
-}
-
 function html(spec: UiSpec): string {
-  const by = regionsByRole(spec);
-  const hasRail = by.rail.length > 0;
-  const blob = corpus(spec);
-  const navItems = by.header
-    .map((r) => `      <a href="#${regionDomId(r)}">${r.roleGuess}</a>`)
+  const f = structureFlags(spec);
+  const gridCols = f.rail ? "240px 1fr" : "1fr";
+  const header = spec.regions.filter((r) => /header|top bar|nav/i.test(r.roleGuess));
+  const rail = spec.regions.filter((r) => /rail|sidebar/i.test(r.roleGuess));
+  const footer = spec.regions.filter((r) => /footer|bottom/i.test(r.roleGuess));
+  const main = spec.regions.filter(
+    (r) => !/header|footer|rail|sidebar/i.test(r.roleGuess),
+  );
+  const nav = header
+    .map((r) => `      <a href="#${r.id}" data-zone="${zoneAttr(r)}">${r.roleGuess}</a>`)
     .join("\n");
-  const railLinks = by.rail
-    .map((r) => `    <a href="#${regionDomId(r)}">${r.roleGuess}</a>`)
-    .join("\n");
-  const mainSource = by.main.length
-    ? by.main
-    : by.all.filter((r) => !/header|footer|rail|sidebar/i.test(r.roleGuess));
-  const mainBlocks = mainSource
+  const railHtml = f.rail
+    ? `  <aside class="spe-rail" role="navigation" aria-label="Side rail" data-structure="left-rail">\n` +
+      rail
+        .map((r) => `    <a href="#${r.id}" data-zone="${zoneAttr(r)}">${r.roleGuess}</a>`)
+        .join("\n") +
+      `\n  </aside>`
+    : "  <!-- structure: no side rail -->";
+  const sections = main
     .map(
       (r) =>
-        `    <section id="${regionDomId(r)}" class="${r.id}" style="${regionStyle(r)}" data-role="${r.roleGuess}" data-confidence="${r.confidence}">\n` +
+        `    <section id="${r.id}" class="spe-region" style="position:absolute;${regionStyle(r)}" data-role="${r.roleGuess}" data-zone="${zoneAttr(r)}" data-confidence="${r.confidence}" data-hierarchy="2">\n` +
         `      <h2>${r.roleGuess}</h2>\n` +
         `      <!-- evidence: ${r.notes.replace(/-->/g, "")} -->\n` +
         `    </section>`,
     )
     .join("\n");
-  const formHint = /form|input|search|sign-in|sign in/i.test(blob)
-    ? `    <form class="spe-inferred-form" aria-label="Inferred form from screenshot">\n      <label>Field <input name="field" type="text"/></label>\n      <button type="submit">Continue</button>\n    </form>`
+  const formHtml = f.form
+    ? `    <form class="spe-form" aria-label="Inferred form" data-structure="form" data-hierarchy="2">\n` +
+      `      <label>Field <input name="field" type="text"/></label>\n` +
+      `      <label>Field <input name="field2" type="text"/></label>\n` +
+      `      <button type="submit">Continue</button>\n` +
+      `    </form>`
     : "";
-  const cardHint = /card|grid|tile/i.test(blob)
-    ? `    <div class="spe-card-grid" role="list">\n      <article class="spe-card" role="listitem"><h3>Card A</h3></article>\n      <article class="spe-card" role="listitem"><h3>Card B</h3></article>\n      <article class="spe-card" role="listitem"><h3>Card C</h3></article>\n    </div>`
+  const cardRegions = spec.regions.filter((r) => /Card \/ tile/i.test(r.roleGuess)).slice(0, 6);
+  const cardsHtml = f.cards
+    ? `    <div class="spe-card-grid" role="list" data-structure="card-grid" data-hierarchy="2">\n` +
+      cardRegions
+        .map(
+          (r, i) =>
+            `      <article class="spe to-card" role="listitem" id="${r.id}" data-zone="${zoneAttr(r)}" style="${regionStyle(r)}"><h3>Card ${i + 1}</h3></article>`.replace(
+              "spe to-card",
+              "spe-card",
+            ),
+        )
+        .join("\n") +
+      `\n    </div>`
     : "";
-  const modalHint = /modal|dialog|overlay/i.test(blob)
-    ? `    <div class="spe-modal" role="dialog" aria-modal="true"><h2>Dialog</h2><button type="button">Close</button></div>`
+  const modalHtml = f.modal
+    ? `    <div class="spe-modal" role="dialog" aria-modal="true" data-structure="modal" data-hierarchy="3">\n` +
+      `      <h2>Dialog</h2>\n` +
+      `      <p>Observed modal overlay — verify against screenshot.</p>\n` +
+      `      <button type="button">Close</button>\n` +
+      `    </div>`
     : "";
-  const gridCols = hasRail ? "240px 1fr" : "1fr";
-  const railBlock = hasRail
-    ? `  <aside class="spe-rail" role="navigation" aria-label="Side rail">\n${railLinks}\n  </aside>`
-    : "  <!-- no side rail -->";
-  const footerText = by.footer.map((r) => r.roleGuess).join(" · ") || "Footer";
+  const heroHtml = f.hero
+    ? `    <section class="spe-hero" data-structure="nav-hero" data-hierarchy="2" data-zone="mid-center">\n` +
+      `      <h1>Hero</h1>\n` +
+      `      <p>Featured band under navigation</p>\n` +
+      `    </section>`
+    : "";
+  const listRows = spec.regions.filter((r) => /List row/i.test(r.roleGuess));
+  const listHtml = f.toolbarList
+    ? `    <div class="spe-toolbar" role="toolbar" data-structure="toolbar-list" data-hierarchy="2" data-zone="top-center">Toolbar</div>\n` +
+      `    <ul class="spe-list" data-structure="toolbar-list" data-hierarchy="2">\n` +
+      listRows
+        .map((r) => `      <li data-zone="${zoneAttr(r)}" style="${regionStyle(r)}">${r.roleGuess}</li>`)
+        .join("\n") +
+      `\n    </ul>`
+    : "";
+  const footerText = footer.map((r) => r.roleGuess).join(" · ") || "Footer";
   return (
     `<!doctype html>\n` +
     `<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>\n` +
@@ -183,91 +227,110 @@ function html(spec: UiSpec): string {
     `.shell{display:grid;min-height:100vh;grid-template-columns:${gridCols};grid-template-rows:auto 1fr auto}\n` +
     `header.spe-top{grid-column:1/-1;background:var(--c1,#222);padding:.75rem 1rem;display:flex;gap:1rem;align-items:center}\n` +
     `aside.spe-rail{background:var(--c4,#161616);padding:1rem;display:flex;flex-direction:column;gap:.5rem}\n` +
-    `main.spe-main{position:relative;background:var(--c2,#111);padding:1rem}\n` +
+    `main.spe-main{position:relative;background:var(--c2,#111);padding:1rem;min-height:50vh}\n` +
     `footer.spe-foot{grid-column:1/-1;background:var(--c3,#1a1a1a);padding:.75rem 1rem}\n` +
-    `.spe-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:1rem}\n` +
+    `.spe-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:1rem}\n` +
     `.spe-card{border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:8px}\n` +
-    `.spe-modal{position:fixed;inset:20% 25%;background:#1a1d24;border:1px solid rgba(255,255,255,.2);padding:1rem;z-index:5}\n` +
-    `section{outline:1px dashed rgba(255,255,255,.12);padding:.75rem}\n` +
+    `.spe-modal{position:fixed;inset:18% 22%;background:#1a1d24;border:1px solid rgba(255,255,255,.25);padding:1rem;z-index:5}\n` +
+    `.spe-hero{padding:2rem 1rem;background:rgba(255,255,255,.06);margin-bottom:1rem}\n` +
+    `.spe-toolbar{padding:.5rem .75rem;background:#1c1f26;margin-bottom:.75rem}\n` +
+    `.spe-list{list-style:none;padding:0;margin:0}\n` +
+    `.spe-list li{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.08)}\n` +
+    `.spe-form{display:flex;flex-direction:column;gap:.75rem;max-width:28rem;margin:1rem auto;padding:1rem;background:rgba(255,255,255,.05)}\n` +
+    `.spe-region{outline:1px dashed rgba(255,255,255,.12);padding:.5rem}\n` +
     `</style></head><body>\n` +
-    `<div class="shell">\n` +
-    `  <header class="spe-top" role="banner">\n` +
+    `<!-- OBSERVATION scaffold: structure resemblance, not pixel-perfect reconstruction -->\n` +
+    `<div class="shell" data-hierarchy="1">\n` +
+    `  <header class="spe-top" role="banner" data-zone="top-center" data-hierarchy="2">\n` +
     `    <strong>App</strong>\n` +
-    `    <nav aria-label="Primary">\n${navItems || "      <!-- no header regions -->"}\n` +
+    `    <nav aria-label="Primary">\n${nav || "      <!-- no header regions -->"}\n` +
     `    </nav>\n` +
     `  </header>\n` +
-    `${railBlock}\n` +
-    `  <main class="spe-main" role="main">\n` +
-    `${mainBlocks}\n` +
-    `${formHint}\n` +
-    `${cardHint}\n` +
-    `${modalHint}\n` +
+    `${railHtml}\n` +
+    `  <main class="spe-main" role="main" data-zone="mid-center" data-hierarchy="2">\n` +
+    `${heroHtml}\n` +
+    `${sections}\n` +
+    `${formHtml}\n` +
+    `${cardsHtml}\n` +
+    `${modalHtml}\n` +
+    `${listHtml}\n` +
     `  </main>\n` +
-    `  <footer class="spe-foot" role="contentinfo">${footerText}</footer>\n` +
+    `  <footer class="spe-foot" role="contentinfo" data-zone="bottom-center" data-hierarchy="2">${footerText}</footer>\n` +
     `</div>\n` +
     `</body></html>\n`
   );
 }
 
 function react(spec: UiSpec): string {
-  const by = regionsByRole(spec);
-  const hasRail = by.rail.length > 0;
-  const blob = corpus(spec);
-  const wantsForm = /form|input|search|sign-in|sign in/i.test(blob);
-  const wantsCards = /card|grid|tile/i.test(blob);
-  const wantsModal = /modal|dialog|overlay/i.test(blob);
+  const f = structureFlags(spec);
   const regionJson = JSON.stringify(
     spec.regions.map((r) => ({
       id: r.id,
       role: r.roleGuess,
       confidence: r.confidence,
       bounds: r.bounds,
+      zone: zoneAttr(r),
       evidence: r.notes,
     })),
     null,
     2,
   );
-  const formJsx = wantsForm
-    ? `<form aria-label="Inferred form"><label>Field <input name="field" /></label><button type="submit">Continue</button></form>`
-    : "";
-  const cardsJsx = wantsCards
-    ? `<div role="list" className="spe-card-grid"><article role="listitem">Card A</article><article role="listitem">Card B</article><article role="listitem">Card C</article></div>`
-    : "";
-  const modalJsx = wantsModal
-    ? `<div role="dialog" aria-modal="true"><h2>Dialog</h2><button type="button">Close</button></div>`
-    : "";
   const bg = spec.palette[0]?.hex ?? "#0b0d10";
   return (
     `export default function ScreenFromScreenshot() {\n` +
+    `  // OBSERVATION scaffold — structure resemblance, not pixel-perfect\n` +
     `  const regions = ${regionJson};\n` +
-    `  const hasRail = ${hasRail ? "true" : "false"};\n` +
+    `  const hasRail = ${f.rail ? "true" : "false"};\n` +
+    `  const structure = ${JSON.stringify({
+      form: f.form,
+      cards: f.cards,
+      modal: f.modal,
+      hero: f.hero,
+      toolbarList: f.toolbarList,
+    })};\n` +
     `  return (\n` +
-    `    <div style={{ display: "grid", minHeight: "100vh", gridTemplateColumns: hasRail ? "240px 1fr" : "1fr", gridTemplateRows: "auto 1fr auto", fontFamily: "system-ui", background: "${bg}", color: "#f5f5f5" }}>\n` +
-    `      <header role="banner" style={{ gridColumn: "1 / -1", padding: 12, display: "flex", gap: 12 }}>\n` +
+    `    <div data-hierarchy="1" style={{ display: "grid", minHeight: "100vh", gridTemplateColumns: hasRail ? "240px 1fr" : "1fr", gridTemplateRows: "auto 1fr auto", fontFamily: "system-ui", background: "${bg}", color: "#f5f5f5" }}>\n` +
+    `      <header role="banner" data-zone="top-center" data-hierarchy="2" style={{ gridColumn: "1 / -1", padding: 12, display: "flex", gap: 12 }}>\n` +
     `        <strong>App</strong>\n` +
-    `        <nav aria-label="Primary">{regions.filter((r) => /header|top|nav|toolbar/i.test(r.role)).map((r) => <a key={r.id} href={"#" + r.id}>{r.role}</a>)}</nav>\n` +
+    `        <nav aria-label="Primary">{regions.filter((r) => /header|top|nav|toolbar/i.test(r.role)).map((r) => <a key={r.id} href={"#" + r.id} data-zone={r.zone}>{r.role}</a>)}</nav>\n` +
     `      </header>\n` +
-    `      {hasRail ? <aside role="navigation" aria-label="Side rail" style={{ padding: 12 }}>{regions.filter((r) => /rail|sidebar|side/i.test(r.role)).map((r) => <a key={r.id} href={"#" + r.id}>{r.role}</a>)}</aside> : null}\n` +
-    `      <main role="main" style={{ position: "relative", padding: 12 }}>\n` +
+    `      {hasRail ? <aside role="navigation" aria-label="Side rail" data-structure="left-rail" data-hierarchy="2" style={{ padding: 12 }}>{regions.filter((r) => /rail|sidebar|side/i.test(r.role)).map((r) => <a key={r.id} href={"#" + r.id}>{r.role}</a>)}</aside> : null}\n` +
+    `      <main role="main" data-zone="mid-center" data-hierarchy="2" style={{ position: "relative", padding: 12 }}>\n` +
+    `        {structure.hero ? <section data-structure="nav-hero" data-hierarchy="2"><h1>Hero</h1></section> : null}\n` +
     `        {regions.map((r) => (\n` +
-    `          <section key={r.id} id={r.id} aria-label={r.role} data-confidence={r.confidence} title={r.evidence} style={{ position: "absolute", left: \`\${r.bounds.x * 100}%\`, top: \`\${r.bounds.y * 100}%\`, width: \`\${r.bounds.w * 100}%\`, height: \`\${r.bounds.h * 100}%\`, padding: 12, outline: "1px dashed rgba(255,255,255,0.15)" }}>\n` +
+    `          <section key={r.id} id={r.id} aria-label={r.role} data-zone={r.zone} data-confidence={r.confidence} data-hierarchy="2" title={r.evidence} style={{ position: "absolute", left: \`\${r.bounds.x * 100}%\`, top: \`\${r.bounds.y * 100}%\`, width: \`\${r.bounds.w * 100}%\`, height: \`\${r.bounds.h * 100}%\`, padding: 12, outline: "1px dashed rgba(255,255,255,0.15)" }}>\n` +
     `            <h2 style={{ margin: 0, fontSize: 16 }}>{r.role}</h2>\n` +
     `          </section>\n` +
     `        ))}\n` +
-    `        ${formJsx}\n` +
-    `        ${cardsJsx}\n` +
-    `        ${modalJsx}\n` +
+    `        {structure.form ? <form aria-label="Inferred form" data-structure="form" data-hierarchy="2"><label>Field <input name="field" /></label><button type="submit">Continue</button></form> : null}\n` +
+    `        {structure.cards ? <div role="list" data-structure="card-grid" data-hierarchy="2">{regions.filter((r) => /Card/i.test(r.role)).map((r) => <article key={r.id} role="listitem" data-zone={r.zone}>{r.role}</article>)}</div> : null}\n` +
+    `        {structure.modal ? <div role="dialog" aria-modal="true" data-structure="modal" data-hierarchy="3"><h2>Dialog</h2><button type="button">Close</button></div> : null}\n` +
+    `        {structure.toolbarList ? <><div role="toolbar" data-structure="toolbar-list" data-hierarchy="2">Toolbar</div><ul data-structure="toolbar-list">{regions.filter((r) => /List row/i.test(r.role)).map((r) => <li key={r.id}>{r.role}</li>)}</ul></> : null}\n` +
     `      </main>\n` +
-    `      <footer role="contentinfo" style={{ gridColumn: "1 / -1", padding: 12 }}>Footer</footer>\n` +
+    `      <footer role="contentinfo" data-zone="bottom-center" data-hierarchy="2" style={{ gridColumn: "1 / -1", padding: 12 }}>Footer</footer>\n` +
     `    </div>\n` +
     `  );\n` +
     `}\n`
   );
 }
 
+function structureComments(spec: UiSpec): string {
+  const f = structureFlags(spec);
+  const bits = [
+    f.hero ? "nav-hero" : null,
+    f.form ? "form" : null,
+    f.cards ? "card-grid" : null,
+    f.modal ? "modal" : null,
+    f.rail ? "left-rail" : null,
+    f.toolbarList ? "toolbar-list" : null,
+  ].filter(Boolean);
+  return bits.length ? `// data-structure=${bits.join(",")}` : "// data-structure=generic-stack";
+}
 
 function swiftui(spec: UiSpec): string {
   return `import SwiftUI
+// OBSERVATION scaffold — structure resemblance, not pixel-perfect
+${structureComments(spec)}
 struct ScreenFromScreenshot: View {
   var body: some View {
     GeometryReader { geo in
@@ -277,7 +340,7 @@ ${spec.regions
     (r) => `        VStack(alignment: .leading) {
           Text("${r.roleGuess}")
             .font(.headline)
-          Text("${r.confidence}: ${r.notes.replace(/"/g, "'").slice(0, 80)}")
+          Text("zone=${zoneAttr(r)} ${r.confidence}")
             .font(.caption2)
             .foregroundStyle(.secondary)
         }
@@ -296,6 +359,8 @@ ${spec.regions
 
 function compose(spec: UiSpec): string {
   return `@Composable
+// OBSERVATION scaffold — structure resemblance, not pixel-perfect
+${structureComments(spec)}
 fun ScreenFromScreenshot() {
   BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF0B0D10))) {
 ${spec.regions
@@ -308,7 +373,7 @@ ${spec.regions
         .padding(12.dp)
     ) {
       Text("${r.roleGuess}")
-      Text("${r.confidence}: ${r.notes.replace(/"/g, "'").slice(0, 72)}")
+      Text("zone=${zoneAttr(r)} ${r.confidence}")
     }`,
   )
   .join("\n")}
@@ -319,23 +384,26 @@ ${spec.regions
 
 function flutter(spec: UiSpec): string {
   return `import 'package:flutter/material.dart';
+// OBSERVATION scaffold — structure resemblance, not pixel-perfect
+${structureComments(spec)}
 class ScreenFromScreenshot extends StatelessWidget {
   const ScreenFromScreenshot({super.key});
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xFF0B0D10),
       body: Stack(children: [
 ${spec.regions
   .map(
     (r) => `        Positioned(
-          left: MediaQuery.of(context).size.width * ${r.bounds.x.toFixed(3)},
-          top: MediaQuery.of(context).size.height * ${r.bounds.y.toFixed(3)},
-          width: MediaQuery.of(context).size.width * ${r.bounds.w.toFixed(3)},
-          height: MediaQuery.of(context).size.height * ${r.bounds.h.toFixed(3)},
+          left: size.width * ${r.bounds.x.toFixed(3)},
+          top: size.height * ${r.bounds.y.toFixed(3)},
+          width: size.width * ${r.bounds.w.toFixed(3)},
+          height: size.height * ${r.bounds.h.toFixed(3)},
           child: Padding(
             padding: const EdgeInsets.all(12),
-            child: Text('${r.roleGuess}', style: const TextStyle(color: Colors.white)),
+            child: Text('${r.roleGuess} (zone=${zoneAttr(r)})', style: const TextStyle(color: Colors.white)),
           ),
         ),`,
   )
@@ -348,7 +416,10 @@ ${spec.regions
 }
 
 function rn(spec: UiSpec): string {
+  const f = structureFlags(spec);
   return `import { View, Text, useWindowDimensions } from "react-native";
+// OBSERVATION scaffold — structure resemblance, not pixel-perfect
+${structureComments(spec)}
 export default function ScreenFromScreenshot() {
   const { width, height } = useWindowDimensions();
   const regions = ${JSON.stringify(
@@ -356,11 +427,19 @@ export default function ScreenFromScreenshot() {
       id: r.id,
       role: r.roleGuess,
       bounds: r.bounds,
+      zone: zoneAttr(r),
       confidence: r.confidence,
     })),
   )};
+  const structure = ${JSON.stringify(f)};
   return (
     <View style={{ flex: 1, backgroundColor: "${spec.palette[0]?.hex ?? "#0b0d10"}" }}>
+      {structure.rail ? <Text>left-rail</Text> : null}
+      {structure.form ? <Text>form</Text> : null}
+      {structure.cards ? <Text>card-grid</Text> : null}
+      {structure.modal ? <Text>modal</Text> : null}
+      {structure.toolbarList ? <Text>toolbar-list</Text> : null}
+      {structure.hero ? <Text>nav-hero</Text> : null}
       {regions.map((r) => (
         <View
           key={r.id}
@@ -373,7 +452,7 @@ export default function ScreenFromScreenshot() {
             padding: 12,
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 16 }}>{r.role}</Text>
+          <Text style={{ color: "#fff", fontSize: 16 }}>{r.role} ({r.zone})</Text>
         </View>
       ))}
     </View>
@@ -437,7 +516,7 @@ export function buildScaffolds(
       prompt: [
         `Rebuild this UI in ${LABELS[target]}.`,
         reflects
-          ? "Starter scaffold materially mirrors observed region bounds from UIObservationIR — verify every region against the screenshot."
+          ? "Starter scaffold materially mirrors observed region bounds from UIObservationIR — verify every region against the screenshot. This is structure resemblance, not a pixel-perfect clone."
           : "Honest structured spec + starter: region geometry was weak; treat scaffold as a build prompt seed, not a pixel clone.",
         "",
         structuredSpec,
@@ -447,7 +526,7 @@ export function buildScaffolds(
         `Layout guess: ${spec.layout}`,
         ...spec.regions.map(
           (r) =>
-            `- ${r.id}: ${r.roleGuess} [${r.confidence}] (${r.bounds.x.toFixed(2)},${r.bounds.y.toFixed(2)},${r.bounds.w.toFixed(2)},${r.bounds.h.toFixed(2)}) — ${r.notes}`,
+            `- ${r.id}: ${r.roleGuess} [${r.confidence}] (${r.bounds.x.toFixed(2)},${r.bounds.y.toFixed(2)},${r.bounds.w.toFixed(2)},${r.bounds.h.toFixed(2)}) zone=${zoneAttr(r)} — ${r.notes}`,
         ),
         "",
         "Starter scaffold:",

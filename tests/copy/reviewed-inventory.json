@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "Refreshed 2026-09-24 SPE V1 predeploy pass2 (speech UX, screenshot fidelity, url site-class)",
+  "note": "Refreshed 2026-09-24 SPE V1 predeploy pass3 (screenshot structure fidelity)",
   "entries": [
     {
       "id": "52ecf64fcc14b7858f5a",
@@ -5511,16 +5511,34 @@
       "text": "medium"
     },
     {
-      "id": "068c14a5cf9a2cebd75b",
+      "id": "00c1e1e7e7a81497ca6c",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<main class=\"spe-main\" role=\"main\">"
+      "text": "</form>"
     },
     {
-      "id": "068e4647905f023fb321",
+      "id": "011987fe3469591a804b",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "\" class=\""
+      "text": "mid"
+    },
+    {
+      "id": "042ae20d45defcd7a633",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" class=\"spe-region\" style=\"position:absolute;"
+    },
+    {
+      "id": "07bbce4868b6c3c12887",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Positioned(\n          left: size.width *"
+    },
+    {
+      "id": "07ee42b7e2923111e546",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "left"
     },
     {
       "id": "0a21cfa229b069120311",
@@ -5533,6 +5551,18 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "Flutter"
+    },
+    {
+      "id": "0f3901c382c97086ceca",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<header class=\"spe-top\" role=\"banner\" data-zone=\"top-center\" data-hierarchy=\"2\">"
+    },
+    {
+      "id": "0fe6474d01fd5cfd96ba",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "{structure.hero ? <section data-structure=\"nav-hero\" data-hierarchy=\"2\"><h1>Hero</h1></section> : null}"
     },
     {
       "id": "10e8051febaeb3936363",
@@ -5553,22 +5583,22 @@
       "text": "1fr"
     },
     {
+      "id": "1263fa461c62975ca8e1",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</ul>"
+    },
+    {
       "id": "136f9dc90d08d3fc9a09",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "</section>"
     },
     {
-      "id": "141a8d7d4fc6590c8f4d",
+      "id": "15190ae5dd97ee386d17",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "import 'package:flutter/material.dart';\nclass ScreenFromScreenshot extends StatelessWidget {\n  const ScreenFromScreenshot({super.key});\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      backgroundColor: const Color(0xFF0B0D10),\n      body: Stack(children: ["
-    },
-    {
-      "id": "14a1aa5fd2916ed34687",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "<div class=\"spe-modal\" role=\"dialog\" aria-modal=\"true\"><h2>Dialog</h2><button type=\"button\">Close</button></div>"
+      "text": "<nav aria-label=\"Primary\">{regions.filter((r) => /header|top|nav|toolbar/i.test(r.role)).map((r) => <a key={r.id} href={\"#\" + r.id} data-zone={r.zone}>{r.role}</a>)}</nav>"
     },
     {
       "id": "15ee8b2e5028063cfdbe",
@@ -5595,22 +5625,22 @@
       "text": "<section id=\""
     },
     {
-      "id": "1dc1e88f98670d96868a",
+      "id": "20c3388493c99d47d7bd",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<!-- no side rail -->"
+      "text": ";\n  const structure ="
+    },
+    {
+      "id": "2353588d4d6e6e006e72",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div class=\"spe-toolbar\" role=\"toolbar\" data-structure=\"toolbar-list\" data-hierarchy=\"2\" data-zone=\"top-center\">Toolbar</div>"
     },
     {
       "id": "2408c3928aab2718064a",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "] evidence="
-    },
-    {
-      "id": "268623ce228c88fb7879",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "<aside class=\"spe-rail\" role=\"navigation\" aria-label=\"Side rail\">"
     },
     {
       "id": "268d848dba16c1c16659",
@@ -5625,10 +5655,22 @@
       "text": "return ("
     },
     {
-      "id": "365469331bf1bbea6232",
+      "id": "32baf1534b496b22e2ac",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "main.spe-main{position:relative;background:var(--c2,#111);padding:1rem}"
+      "text": "{structure.modal ? <div role=\"dialog\" aria-modal=\"true\" data-structure=\"modal\" data-hierarchy=\"3\"><h2>Dialog</h2><button type=\"button\">Close</button></div> : null}"
+    },
+    {
+      "id": "32bff42ac6c3d2de1fdd",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "modal"
+    },
+    {
+      "id": "363dc0204ee65b450687",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "main.spe-main{position:relative;background:var(--c2,#111);padding:1rem;min-height:50vh}"
     },
     {
       "id": "3713afc29959e7eea7db",
@@ -5649,30 +5691,6 @@
       "text": "<h2>"
     },
     {
-      "id": "3ba3e92e2dedfc57c0e5",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "position:absolute;left:"
-    },
-    {
-      "id": "3bd9e7c17ded197fb699",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": ".spe-modal{position:fixed;inset:20% 25%;background:#1a1d24;border:1px solid rgba(255,255,255,.2);padding:1rem;z-index:5}"
-    },
-    {
-      "id": "3cc18eba8ed9e0119d1e",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "<nav aria-label=\"Primary\">{regions.filter((r) => /header|top|nav|toolbar/i.test(r.role)).map((r) => <a key={r.id} href={\"#\" + r.id}>{r.role}</a>)}</nav>"
-    },
-    {
-      "id": "3ea5fcee3cce95b405c7",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "\")\n            .font(.headline)\n          Text(\""
-    },
-    {
       "id": "407decd308ea2484dc81",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -5691,10 +5709,40 @@
       "text": ";\n  return (\n    <View style={{ flex: 1, backgroundColor: \""
     },
     {
+      "id": "443225b24d2d94478fda",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "spe to-card"
+    },
+    {
+      "id": "44515008bda598776610",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</h3></article>"
+    },
+    {
+      "id": "449cb9615125df2c20c5",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<section class=\"spe-hero\" data-structure=\"nav-hero\" data-hierarchy=\"2\" data-zone=\"mid-center\">"
+    },
+    {
       "id": "4656676b09e15418c3b5",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "react-native"
+    },
+    {
+      "id": "473c52f1b9b1f77a9eae",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "left:"
+    },
+    {
+      "id": "475ab9c93e931906dfbf",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" data-zone=\""
     },
     {
       "id": "4792948a5fde89effdd9",
@@ -5703,22 +5751,28 @@
       "text": "Stacked header / main / footer with projection columns (uncertain)"
     },
     {
+      "id": "47e0ddc8fdfa5de65733",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "form"
+    },
+    {
       "id": "48131806eacdd7fdf504",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "f, y = maxHeight *"
     },
     {
+      "id": "4923e58c498945afccf1",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<li data-zone=\""
+    },
+    {
       "id": "4948e66502a736276bc7",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "\" style=\""
-    },
-    {
-      "id": "4b7e38cb5de0c4f4b0ea",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": ".spe-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:1rem}"
     },
     {
       "id": "4be55203f2e1af9cfd18",
@@ -5763,22 +5817,28 @@
       "text": "Region roles include evidence strings — verify against screenshot."
     },
     {
+      "id": "4f933685856cdb7b3504",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ",\n          height: size.height *"
+    },
+    {
       "id": "4fe8c1610b30505415d8",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "<strong>App</strong>"
     },
     {
+      "id": "50b4c45ed4c7fe2eec46",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" data-hierarchy=\"2\">"
+    },
+    {
       "id": "5281836c34458e4d057a",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": ",\n          child: Padding(\n            padding: const EdgeInsets.all(12),\n            child: Text('"
-    },
-    {
-      "id": "52ef59e06051dc1b184f",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "<div role=\"dialog\" aria-modal=\"true\"><h2>Dialog</h2><button type=\"button\">Close</button></div>"
     },
     {
       "id": "535db5b75110fedd3278",
@@ -5793,16 +5853,22 @@
       "text": "</footer>"
     },
     {
-      "id": "584ddf10aaeddcb16c4c",
+      "id": "556e472b879cb5a3808d",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "region-rail"
+      "text": ";top:"
     },
     {
-      "id": "59a7a332c722d8258848",
+      "id": "59a8b97cce3c747b63a5",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<form class=\"spe-inferred-form\" aria-label=\"Inferred form from screenshot\">\n      <label>Field <input name=\"field\" type=\"text\"/></label>\n      <button type=\"submit\">Continue</button>\n    </form>"
+      "text": "<!-- structure: no side rail -->"
+    },
+    {
+      "id": "5a277446a069b9cf5e1f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<footer role=\"contentinfo\" data-zone=\"bottom-center\" data-hierarchy=\"2\" style={{ gridColumn: \"1 / -1\", padding: 12 }}>Footer</footer>"
     },
     {
       "id": "5a5741ea29217f288696",
@@ -5817,16 +5883,22 @@
       "text": "Possible sidebar + content columns (uncertain)"
     },
     {
-      "id": "5bd904994b29ba30779c",
+      "id": "5bd60a6f0a4a74961718",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "{hasRail ? <aside role=\"navigation\" aria-label=\"Side rail\" style={{ padding: 12 }}>{regions.filter((r) => /rail|sidebar|side/i.test(r.role)).map((r) => <a key={r.id} href={\"#\" + r.id}>{r.role}</a>)}</aside> : null}"
+      "text": "spe-card"
     },
     {
       "id": "5da5c4f88af369e5d0a6",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "viewport:"
+    },
+    {
+      "id": "5e8b0752e7515a8f7494",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<h1>Hero</h1>"
     },
     {
       "id": "5f589947c7f469b0e569",
@@ -5841,22 +5913,34 @@
       "text": "</aside>"
     },
     {
+      "id": "60e08dda029bd8140d6e",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<ul class=\"spe-list\" data-structure=\"toolbar-list\" data-hierarchy=\"2\">"
+    },
+    {
+      "id": "6149bb871c8c4602f5a8",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<main class=\"spe-main\" role=\"main\" data-zone=\"mid-center\" data-hierarchy=\"2\">"
+    },
+    {
       "id": "62b2befddb0ce77eaed4",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "; images:"
     },
     {
-      "id": "6544223df49061fe64cd",
+      "id": "6439a8dccf36599241cb",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "', style: const TextStyle(color: Colors.white)),\n          ),\n        ),"
+      "text": "\")\n            .font(.headline)\n          Text(\"zone="
     },
     {
-      "id": "659839d85be006164ba8",
+      "id": "65fac4643788d6471119",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<header class=\"spe-top\" role=\"banner\">"
+      "text": "center"
     },
     {
       "id": "683ea1fe4fcbb504ef65",
@@ -5877,16 +5961,28 @@
       "text": "html"
     },
     {
+      "id": "6a4694e8667bfbecb624",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "const structure ="
+    },
+    {
       "id": "6bbd525d886c72dba645",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "<style>\n:root {"
     },
     {
-      "id": "6c471fa3ff7de377c204",
+      "id": "6c6448ec3a1b3192c8a0",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "import { View, Text, useWindowDimensions } from \"react-native\";\nexport default function ScreenFromScreenshot() {\n  const { width, height } = useWindowDimensions();\n  const regions ="
+      "text": "fun ScreenFromScreenshot() {\n  BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF0B0D10))) {"
+    },
+    {
+      "id": "6ceafa336a88ab62a77c",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ";width:"
     },
     {
       "id": "6d0f8722c1fdef7da70f",
@@ -5901,10 +5997,40 @@
       "text": ".shell{display:grid;min-height:100vh;grid-template-columns:"
     },
     {
-      "id": "72b9bc29854827c5bf1a",
+      "id": "6f26a6d2b6072dbe766b",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "%;height:"
+      "text": ".spe-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:1rem}"
+    },
+    {
+      "id": "6f8ceb408aa200c0db56",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<aside class=\"spe-rail\" role=\"navigation\" aria-label=\"Side rail\" data-structure=\"left-rail\">"
+    },
+    {
+      "id": "72faef0b89ab9794cd75",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "top"
+    },
+    {
+      "id": "73e3f853c3953a56e252",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "{hasRail ? <aside role=\"navigation\" aria-label=\"Side rail\" data-structure=\"left-rail\" data-hierarchy=\"2\" style={{ padding: 12 }}>{regions.filter((r) => /rail|sidebar|side/i.test(r.role)).map((r) => <a key={r.id} href={\"#\" + r.id}>{r.role}</a>)}</aside> : null}"
+    },
+    {
+      "id": "78b51a3a5234c22322dc",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ".spe-region{outline:1px dashed rgba(255,255,255,.12);padding:.5rem}"
+    },
+    {
+      "id": "79b22a777747715fb0f6",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "{structure.form ? <form aria-label=\"Inferred form\" data-structure=\"form\" data-hierarchy=\"2\"><label>Field <input name=\"field\" /></label><button type=\"submit\">Continue</button></form> : null}"
     },
     {
       "id": "7aebf2ff89f9bcd09a1e",
@@ -5913,28 +6039,28 @@
       "text": "}\n    }\n    .background(Color.black)\n  }\n}"
     },
     {
-      "id": "7c82b2909a0bb9b0b5fc",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "\" }}>\n      {regions.map((r) => (\n        <View\n          key={r.id}\n          style={{\n            position: \"absolute\",\n            left: width * r.bounds.x,\n            top: height * r.bounds.y,\n            width: width * r.bounds.w,\n            height: height * r.bounds.h,\n            padding: 12,\n          }}\n        >\n          <Text style={{ color: \"#fff\", fontSize: 16 }}>{r.role}</Text>\n        </View>\n      ))}\n    </View>\n  );\n}"
-    },
-    {
-      "id": "7cf5477fbdcdbf19b1fb",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "<div class=\"spe-card-grid\" role=\"list\">\n      <article class=\"spe-card\" role=\"listitem\"><h3>Card A</h3></article>\n      <article class=\"spe-card\" role=\"listitem\"><h3>Card B</h3></article>\n      <article class=\"spe-card\" role=\"listitem\"><h3>Card C</h3></article>\n    </div>"
-    },
-    {
       "id": "7e975e60efa7858be512",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "#0b0d10"
     },
     {
-      "id": "81d8a16db45d7f15cdc2",
+      "id": "7ef6882a37201f790da6",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": ",\n          top: MediaQuery.of(context).size.height *"
+      "text": ",\n          width: size.width *"
+    },
+    {
+      "id": "7f1459dd021792defd67",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ".spe-toolbar{padding:.5rem .75rem;background:#1c1f26;margin-bottom:.75rem}"
+    },
+    {
+      "id": "80b9f8322c838744023f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div class=\"spe-modal\" role=\"dialog\" aria-modal=\"true\" data-structure=\"modal\" data-hierarchy=\"3\">"
     },
     {
       "id": "8296775bcf5d41b5b99a",
@@ -5943,16 +6069,16 @@
       "text": "Rebuild this UI in"
     },
     {
+      "id": "82deaa199bdf0e971d03",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ".spe-modal{position:fixed;inset:18% 22%;background:#1a1d24;border:1px solid rgba(255,255,255,.25);padding:1rem;z-index:5}"
+    },
+    {
       "id": "82e9532018a07c4d02c0",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "</a>"
-    },
-    {
-      "id": "836cdc9a6b04b9dc8da7",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "section{outline:1px dashed rgba(255,255,255,.12);padding:.75rem}"
     },
     {
       "id": "83b1ac333e0fb594c325",
@@ -5961,10 +6087,16 @@
       "text": "IR:"
     },
     {
-      "id": "85ea9f290f00606f6270",
+      "id": "867250aa8b444734daef",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<header role=\"banner\" style={{ gridColumn: \"1 / -1\", padding: 12, display: \"flex\", gap: 12 }}>"
+      "text": "<label>Field <input name=\"field\" type=\"text\"/></label>"
+    },
+    {
+      "id": "8681aae18412917b68c9",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div data-hierarchy=\"1\" style={{ display: \"grid\", minHeight: \"100vh\", gridTemplateColumns: hasRail ? \"240px 1fr\" : \"1fr\", gridTemplateRows: \"auto 1fr auto\", fontFamily: \"system-ui\", background: \""
     },
     {
       "id": "86f1df58072aff9e3f74",
@@ -5973,10 +6105,28 @@
       "text": "<!doctype html>"
     },
     {
+      "id": "888169c82d204dae6d67",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\")\n      Text(\"zone="
+    },
+    {
+      "id": "8d67504d05f0e6774ad7",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<header role=\"banner\" data-zone=\"top-center\" data-hierarchy=\"2\" style={{ gridColumn: \"1 / -1\", padding: 12, display: \"flex\", gap: 12 }}>"
+    },
+    {
       "id": "91b9edd80a778d4ab7bb",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "SwiftUI"
+    },
+    {
+      "id": "9557dd0cee6511d56eed",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</li>"
     },
     {
       "id": "9677dda37b68644ff515",
@@ -5985,16 +6135,34 @@
       "text": "Jetpack Compose"
     },
     {
-      "id": "9679e743ac9fd12eff43",
+      "id": "9726eb05856fc94baa1e",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "@Composable\nfun ScreenFromScreenshot() {\n  BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF0B0D10))) {"
+      "text": "@Composable\n// OBSERVATION scaffold — structure resemblance, not pixel-perfect"
     },
     {
-      "id": "99bd7d63f63af0d811a2",
+      "id": "9a0162ecf3453fd84576",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<form aria-label=\"Inferred form\"><label>Field <input name=\"field\" /></label><button type=\"submit\">Continue</button></form>"
+      "text": "Starter scaffold materially mirrors observed region bounds from UIObservationIR — verify every region against the screenshot. This is structure resemblance, not a pixel-perfect clone."
+    },
+    {
+      "id": "9b2ac0e05415e5e943fb",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<label>Field <input name=\"field2\" type=\"text\"/></label>"
+    },
+    {
+      "id": "9ba26a5b071bb40711b5",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "import SwiftUI\n// OBSERVATION scaffold — structure resemblance, not pixel-perfect"
+    },
+    {
+      "id": "9cc391f4444ca7e765d8",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<article class=\"spe to-card\" role=\"listitem\" id=\""
     },
     {
       "id": "9cd8fb98da9ef735c61d",
@@ -6009,22 +6177,16 @@
       "text": "; confidence"
     },
     {
+      "id": "9ed5388c6652992f33a7",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "// OBSERVATION scaffold — structure resemblance, not pixel-perfect"
+    },
+    {
       "id": "9f65059cad7d314fc79c",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "<a href=\"#"
-    },
-    {
-      "id": "a0013dd10502b55ab393",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": ",\n          height: MediaQuery.of(context).size.height *"
-    },
-    {
-      "id": "a2578953025f41d051f9",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "<div role=\"list\" className=\"spe-card-grid\"><article role=\"listitem\">Card A</article><article role=\"listitem\">Card B</article><article role=\"listitem\">Card C</article></div>"
     },
     {
       "id": "a2b0867b797a23d8044f",
@@ -6033,10 +6195,16 @@
       "text": "</nav>"
     },
     {
-      "id": "a68585623327f201d2c0",
+      "id": "a333c77960879d68ab35",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "%;width:"
+      "text": "<footer class=\"spe-foot\" role=\"contentinfo\" data-zone=\"bottom-center\" data-hierarchy=\"2\">"
+    },
+    {
+      "id": "a620574d99d2896f896e",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ") zone="
     },
     {
       "id": "a7ee6785659a87c832fb",
@@ -6057,22 +6225,34 @@
       "text": "; controls:"
     },
     {
+      "id": "aa6a2534e0dced8a858e",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ".spe-form{display:flex;flex-direction:column;gap:.75rem;max-width:28rem;margin:1rem auto;padding:1rem;background:rgba(255,255,255,.05)}"
+    },
+    {
       "id": "ac2c66fd56b4566fd85c",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "Column(\n      Modifier\n        .offset(x = maxWidth *"
     },
     {
-      "id": "adbac589585c853e84d5",
+      "id": "ac78b2c971079204860e",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "import SwiftUI\nstruct ScreenFromScreenshot: View {\n  var body: some View {\n    GeometryReader { geo in\n      ZStack(alignment: .topLeading) {"
+      "text": ".spe-hero{padding:2rem 1rem;background:rgba(255,255,255,.06);margin-bottom:1rem}"
     },
     {
-      "id": "ae47bc11bc4079996591",
+      "id": "adcf43fd37fd353499b7",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "%;top:"
+      "text": "\" }}>\n      {structure.rail ? <Text>left-rail</Text> : null}\n      {structure.form ? <Text>form</Text> : null}\n      {structure.cards ? <Text>card-grid</Text> : null}\n      {structure.modal ? <Text>modal</Text> : null}\n      {structure.toolbarList ? <Text>toolbar-list</Text> : null}\n      {structure.hero ? <Text>nav-hero</Text> : null}\n      {regions.map((r) => (\n        <View\n          key={r.id}\n          style={{\n            position: \"absolute\",\n            left: width * r.bounds.x,\n            top: height * r.bounds.y,\n            width: width * r.bounds.w,\n            height: height * r.bounds.h,\n            padding: 12,\n          }}\n        >\n          <Text style={{ color: \"#fff\", fontSize: 16 }}>{r.role} ({r.zone})</Text>\n        </View>\n      ))}\n    </View>\n  );\n}"
+    },
+    {
+      "id": "ae704e5cacea6e52a2e9",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ",\n          top: size.height *"
     },
     {
       "id": "b0cadc682e3714a7fc85",
@@ -6111,6 +6291,36 @@
       "text": "\")\n            .font(.caption2)\n            .foregroundStyle(.secondary)\n        }\n        .padding(12)\n        .frame(width: geo.size.width *"
     },
     {
+      "id": "b91ba4572b1b21613fec",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<form class=\"spe-form\" aria-label=\"Inferred form\" data-structure=\"form\" data-hierarchy=\"2\">"
+    },
+    {
+      "id": "b9696680e1d73d5f2c2d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<p>Featured band under navigation</p>"
+    },
+    {
+      "id": "bb350feaadb180a3e2a5",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "{structure.toolbarList ? <><div role=\"toolbar\" data-structure=\"toolbar-list\" data-hierarchy=\"2\">Toolbar</div><ul data-structure=\"toolbar-list\">{regions.filter((r) => /List row/i.test(r.role)).map((r) => <li key={r.id}>{r.role}</li>)}</ul></> : null}"
+    },
+    {
+      "id": "bd0490b56e52c492879d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<h2>Dialog</h2>"
+    },
+    {
+      "id": "bd7bc68423a4f08a8bdc",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "// data-structure="
+    },
+    {
       "id": "bda520762ed49a85ff5d",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -6123,28 +6333,28 @@
       "text": ";grid-template-rows:auto 1fr auto}"
     },
     {
-      "id": "c16f55e61670723795c0",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "<div style={{ display: \"grid\", minHeight: \"100vh\", gridTemplateColumns: hasRail ? \"240px 1fr\" : \"1fr\", gridTemplateRows: \"auto 1fr auto\", fontFamily: \"system-ui\", background: \""
-    },
-    {
       "id": "c20011c2213ee55fcb48",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "header.spe-top{grid-column:1/-1;background:var(--c1,#222);padding:.75rem 1rem;display:flex;gap:1rem;align-items:center}"
     },
     {
-      "id": "c2759b4f13cc620a2b22",
+      "id": "c2e4fafd7f95fa845eaf",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<section key={r.id} id={r.id} aria-label={r.role} data-confidence={r.confidence} title={r.evidence} style={{ position: \"absolute\", left: `${r.bounds.x * 100}%`, top: `${r.bounds.y * 100}%`, width: `${r.bounds.w * 100}%`, height: `${r.bounds.h * 100}%`, padding: 12, outline: \"1px dashed rgba(255,255,255,0.15)\" }}>"
+      "text": ".spe-list li{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.08)}"
     },
     {
-      "id": "c2f3cfb10c70428d6247",
+      "id": "c305737b2f6f98b71675",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "\")\n      Text(\""
+      "text": "<main role=\"main\" data-zone=\"mid-center\" data-hierarchy=\"2\" style={{ position: \"relative\", padding: 12 }}>"
+    },
+    {
+      "id": "c44fdc4af072e4086cca",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<p>Observed modal overlay — verify against screenshot.</p>"
     },
     {
       "id": "c51d1a24d3ef9e033d88",
@@ -6171,10 +6381,10 @@
       "text": "compose"
     },
     {
-      "id": "c9bade393c51f0e672bb",
+      "id": "c8101f3e0ff127eaf0f6",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<footer class=\"spe-foot\" role=\"contentinfo\">"
+      "text": "nav-hero"
     },
     {
       "id": "ca41a6f8ee2bf8afc1ec",
@@ -6183,16 +6393,46 @@
       "text": "kotlin"
     },
     {
+      "id": "ca85f26fe1449b94291d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\"><h3>Card"
+    },
+    {
+      "id": "cac236d93d2619eebae7",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "export default function ScreenFromScreenshot() {\n  const { width, height } = useWindowDimensions();\n  const regions ="
+    },
+    {
       "id": "cb684231a531cdb1e788",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "dart"
     },
     {
-      "id": "cc7a6bac20a3a09bc086",
+      "id": "cd0c54e77706d3dc4497",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<main role=\"main\" style={{ position: \"relative\", padding: 12 }}>"
+      "text": "toolbar-list"
+    },
+    {
+      "id": "cd75a94f84dd3e6ef7f2",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "// data-structure=generic-stack"
+    },
+    {
+      "id": "cea497746ee627374d25",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "(zone="
+    },
+    {
+      "id": "cf0aee47914b9af95e80",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "bottom"
     },
     {
       "id": "cf9039971245b42a1d92",
@@ -6207,22 +6447,46 @@
       "text": "--c"
     },
     {
+      "id": "d2c0e227660d4a03e519",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<button type=\"submit\">Continue</button>"
+    },
+    {
       "id": "d4132fae73f664c7cecb",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "swift"
     },
     {
-      "id": "d47192e7278927d4d6b4",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "<footer role=\"contentinfo\" style={{ gridColumn: \"1 / -1\", padding: 12 }}>Footer</footer>"
-    },
-    {
       "id": "d53aee47e71f25b67bec",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "React Native"
+    },
+    {
+      "id": "d5e67d19f4b3c6b47657",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "{structure.cards ? <div role=\"list\" data-structure=\"card-grid\" data-hierarchy=\"2\">{regions.filter((r) => /Card/i.test(r.role)).map((r) => <article key={r.id} role=\"listitem\" data-zone={r.zone}>{r.role}</article>)}</div> : null}"
+    },
+    {
+      "id": "d617f5c82be8bd00fea3",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<!-- OBSERVATION scaffold: structure resemblance, not pixel-perfect reconstruction -->"
+    },
+    {
+      "id": "d688a55d85665dd6393b",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "card-grid"
+    },
+    {
+      "id": "d836a97aac4c1ab6b98a",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "import 'package:flutter/material.dart';\n// OBSERVATION scaffold — structure resemblance, not pixel-perfect"
     },
     {
       "id": "d91e554dcf0ff85b1111",
@@ -6237,22 +6501,22 @@
       "text": "const regions ="
     },
     {
-      "id": "db961edb785fb70160b8",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "Starter scaffold materially mirrors observed region bounds from UIObservationIR — verify every region against the screenshot."
-    },
-    {
       "id": "dcde0f1c40f709a67762",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "Footer"
     },
     {
-      "id": "ddad2424bfefebf11b48",
+      "id": "e078b8c2867158d83782",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "Positioned(\n          left: MediaQuery.of(context).size.width *"
+      "text": "right"
+    },
+    {
+      "id": "e0a6f6484659a92b6820",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div class=\"shell\" data-hierarchy=\"1\">"
     },
     {
       "id": "e0edacfb1a04c1f6df59",
@@ -6279,6 +6543,18 @@
       "text": "</main>"
     },
     {
+      "id": "e56398d521000721b182",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "import { View, Text, useWindowDimensions } from \"react-native\";\n// OBSERVATION scaffold — structure resemblance, not pixel-perfect"
+    },
+    {
+      "id": "e5d0093dafe71ed970af",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ".spe-list{list-style:none;padding:0;margin:0}"
+    },
+    {
       "id": "e5d37067547c0e7af3e9",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -6297,10 +6573,10 @@
       "text": "aside.spe-rail{background:var(--c4,#161616);padding:1rem;display:flex;flex-direction:column;gap:.5rem}"
     },
     {
-      "id": "e80180b034a49caf120d",
+      "id": "e8b4cf01fbe40d759b92",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": ",\n          width: MediaQuery.of(context).size.width *"
+      "text": "<section key={r.id} id={r.id} aria-label={r.role} data-zone={r.zone} data-confidence={r.confidence} data-hierarchy=\"2\" title={r.evidence} style={{ position: \"absolute\", left: `${r.bounds.x * 100}%`, top: `${r.bounds.y * 100}%`, width: `${r.bounds.w * 100}%`, height: `${r.bounds.h * 100}%`, padding: 12, outline: \"1px dashed rgba(255,255,255,0.15)\" }}>"
     },
     {
       "id": "eace5ff04d8750d99f42",
@@ -6315,10 +6591,34 @@
       "text": "footer.spe-foot{grid-column:1/-1;background:var(--c3,#1a1a1a);padding:.75rem 1rem}"
     },
     {
-      "id": "f2e85bc630540784ec80",
+      "id": "ed4da9c7ca9b4d4a43fd",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<div class=\"shell\">"
+      "text": ")', style: const TextStyle(color: Colors.white)),\n          ),\n        ),"
+    },
+    {
+      "id": "ee5b9ce7f2f0674dff7d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "left-rail"
+    },
+    {
+      "id": "eed2f6d89e18612a3c5f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "struct ScreenFromScreenshot: View {\n  var body: some View {\n    GeometryReader { geo in\n      ZStack(alignment: .topLeading) {"
+    },
+    {
+      "id": "ef0f401faf6775c55d66",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<button type=\"button\">Close</button>"
+    },
+    {
+      "id": "f0454171d8ecdced4a1b",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div class=\"spe-card-grid\" role=\"list\" data-structure=\"card-grid\" data-hierarchy=\"2\">"
     },
     {
       "id": "f2ef04471a07aa94024f",
@@ -6331,6 +6631,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "(analysis"
+    },
+    {
+      "id": "f599a0297856deafbe26",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "class ScreenFromScreenshot extends StatelessWidget {\n  const ScreenFromScreenshot({super.key});\n  @override\n  Widget build(BuildContext context) {\n    final size = MediaQuery.of(context).size;\n    return Scaffold(\n      backgroundColor: const Color(0xFF0B0D10),\n      body: Stack(children: ["
     },
     {
       "id": "f5d73bc3abce010008fe",
@@ -6355,6 +6661,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "<!-- no header regions -->"
+    },
+    {
+      "id": "fe4f08d7be7254de5604",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ";height:"
     },
     {
       "id": "07bd3063e92c14ec670a",
@@ -6903,10 +7215,10 @@
       "text": "sparse"
     },
     {
-      "id": "14ad5b8640adb9f8e9d2",
+      "id": "0ec352e24914b4fd9847",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
-      "text": "Inferred from bright form panel geometry"
+      "text": "mid"
     },
     {
       "id": "1844181688e07a716299",
@@ -6933,10 +7245,34 @@
       "text": "; not OCR-verified"
     },
     {
+      "id": "223a0eeba3cd35325538",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Hero band from nav-hero structure hint"
+    },
+    {
+      "id": "282f16aa75dcf7e17ca4",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "region-list-row-"
+    },
+    {
       "id": "29dee46f9e750558af78",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "region-header"
+    },
+    {
+      "id": "2e9345cf558dee871d1e",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "left-rail-candidate"
+    },
+    {
+      "id": "2ede6da3ceb6fc3e6148",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Inferred list row from horizontal striping"
     },
     {
       "id": "3082bb39540cf64ac6b6",
@@ -6957,10 +7293,40 @@
       "text": "caption"
     },
     {
+      "id": "346aff34be94f013080c",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "vs surround"
+    },
+    {
+      "id": "36f6e1a7eb809dd57e29",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Inferred primary action under form panel"
+    },
+    {
       "id": "37e91488b5d496c520f8",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "Band cell brightness"
+    },
+    {
+      "id": "3a6f6b3324010429be18",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Center panel"
+    },
+    {
+      "id": "3d8d0aaa6ffc963ad27c",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Hero / featured band"
+    },
+    {
+      "id": "3fce6b2c4e545e89a2e2",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "; gutters"
     },
     {
       "id": "4599b677a5abf434df2d",
@@ -6999,6 +7365,12 @@
       "text": "text-like bands; spacing unit ~"
     },
     {
+      "id": "4fbf7748977fad92beae",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "top"
+    },
+    {
       "id": "5242da080b3247acdef6",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -7021,6 +7393,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "Footer / bottom actions"
+    },
+    {
+      "id": "5a4250a031e97a44c7f4",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "center"
     },
     {
       "id": "5b1ec1c2476a343abd10",
@@ -7053,6 +7431,24 @@
       "text": "ctrl-form-primary"
     },
     {
+      "id": "6972f82bb97c8464f2fc",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Alternating row brightness"
+    },
+    {
+      "id": "69b925242054a2a32631",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "; bottom"
+    },
+    {
+      "id": "6cafe800646b8f1cb4c4",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "right"
+    },
+    {
       "id": "71a8f976c0ba62c80c57",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -7063,6 +7459,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "region-main"
+    },
+    {
+      "id": "767658a287ee77a14af0",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Full-width bright mid"
     },
     {
       "id": "781d36a1c08abb38ce11",
@@ -7113,6 +7515,12 @@
       "text": "Main content"
     },
     {
+      "id": "8d495cd0939f614fd024",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Dark toolbar strip"
+    },
+    {
       "id": "91d19e517d92332ad56e",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -7125,16 +7533,34 @@
       "text": "Row-0 brightness"
     },
     {
+      "id": "98770c53053ee74c1ce2",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Toolbar / tool row"
+    },
+    {
+      "id": "999d2c43aeda0d3eb7f9",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "under header"
+    },
+    {
+      "id": "9a2e298bdddd541683e1",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "(bottom"
+    },
+    {
       "id": "a1bceb8bd52d5294345d",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "Toolbar control"
     },
     {
-      "id": "a1c3f53b324f896e3111",
+      "id": "acf3fc92c7e1031088ec",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
-      "text": "Bright mid panel"
+      "text": "List row"
     },
     {
       "id": "adde712af6ccd9d56b4f",
@@ -7155,6 +7581,18 @@
       "text": "img-hero-guess"
     },
     {
+      "id": "af6cc30e6a970db8e154",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "region-hero"
+    },
+    {
+      "id": "b1627a8a4222d38108f2",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "nav-hero-candidate"
+    },
+    {
       "id": "b2db7dc3edcc0abd3d74",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -7171,6 +7609,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "region-rail"
+    },
+    {
+      "id": "bb5c95c99dd58f735876",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "toolbar-list-candidate"
     },
     {
       "id": "bd384a096b6f15cf760e",
@@ -7203,10 +7647,16 @@
       "text": "cols≈"
     },
     {
-      "id": "c4379938f885877faa68",
+      "id": "c5234ee63cb05ba8a042",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
-      "text": "in mid frame — possible media block"
+      "text": "Bright inset panel"
+    },
+    {
+      "id": "c906d14028ffababfce1",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "; pairs="
     },
     {
       "id": "cc8c0340ce9dfb5b4928",
@@ -7227,16 +7677,46 @@
       "text": "text-"
     },
     {
+      "id": "dcf309e78eb3bcd7f1a7",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "bottom"
+    },
+    {
+      "id": "e372da99ed5e01d9cf21",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "; zone="
+    },
+    {
+      "id": "e4d1a13ebe3137d40781",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "List / stacked rows"
+    },
+    {
       "id": "e5fb3b8817f7dcab15fd",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "region-footer"
     },
     {
-      "id": "ec926228a0e0fc674669",
+      "id": "eaa6d2228996b325f192",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
-      "text": "Bright center ("
+      "text": "region-toolbar"
+    },
+    {
+      "id": "eb48da63be7372ddfd5e",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "under dark nav"
+    },
+    {
+      "id": "ec1388acae710299b755",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "left"
     },
     {
       "id": "ee4b17e6c6632c639757",
@@ -7245,10 +7725,16 @@
       "text": "px"
     },
     {
-      "id": "f46310e139161d3d7ea6",
+      "id": "f0443c20acada36fa31c",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
-      "text": ") vs border ("
+      "text": "Screenshot→Code scaffolds resemble observed structure; they are not pixel-perfect reconstructions."
+    },
+    {
+      "id": "f26278322ab546877ea1",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "region-list"
     },
     {
       "id": "fc3037b1a11bb962bf11",
