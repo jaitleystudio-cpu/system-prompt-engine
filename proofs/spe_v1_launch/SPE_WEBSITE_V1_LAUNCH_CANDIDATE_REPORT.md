@@ -112,7 +112,7 @@ node apps/web/scripts/test-media-observe.mjs
 
 ## 12. Branch / PR
 
-- Branch tip at report authoring time: `94404bc1e82db3ea1d018de7233463a881f1214c`
+- Branch tip at report authoring time: `ee1730f9b9309f7da98d4f9ed3f77674bb31ba08` (visual QA screenshot fix)
 - One PR to open; **DO NOT MERGE**
 
 ## 13. What was not done (guardrails)
