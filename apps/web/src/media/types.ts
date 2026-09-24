@@ -7,8 +7,12 @@ export type ColorSwatch = {
 
 export type ImageObservation = {
   kind: "image";
+  /** Dimensions used for analysis (may be downscaled). */
   width: number;
   height: number;
+  /** Original source pixel dimensions before analysis downscale. */
+  sourceWidth: number;
+  sourceHeight: number;
   aspectRatio: string;
   megapixels: number;
   fileName: string | null;
@@ -37,6 +41,7 @@ export type VideoObservation = {
   mimeType: string | null;
   sampleTimesSec: number[];
   frames: ImageObservation[];
+  sequenceSummary: string;
   notes: string[];
   uncertainty: string[];
 };
@@ -70,14 +75,17 @@ export type UrlIngestResult =
   | {
       status: "ok";
       url: string;
+      finalUrl: string;
       title: string | null;
       description: string | null;
       textExcerpt: string;
+      buildBrief: string | null;
       notes: string[];
     }
   | {
-      status: "cors_blocked" | "network_error" | "invalid_url";
+      status: "cors_blocked" | "network_error" | "invalid_url" | "timeout" | "aborted";
       url: string;
+      finalUrl?: string;
       message: string;
       fallbacks: string[];
     };

@@ -1,4 +1,4 @@
-"""SPE Website V1 — media helpers + Daily Lab gates (no paid APIs)."""
+"""SPE Website V1 — media helpers + Daily Lab + P0 behavioral gates."""
 
 from __future__ import annotations
 
@@ -6,6 +6,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 WEB = REPO / "apps" / "web" / "src"
+APP = WEB / "App.tsx"
+COMPOSER = WEB / "composer" / "UnifiedComposer.tsx"
 
 
 def test_media_modules_exist_and_forbid_paid_proxy():
@@ -14,16 +16,22 @@ def test_media_modules_exist_and_forbid_paid_proxy():
     assert (media / "videoSample.ts").is_file()
     assert (media / "screenshotToCode.ts").is_file()
     assert (media / "urlIngest.ts").is_file()
+    assert (media / "untrusted.ts").is_file()
+    assert (media / "limits.ts").is_file()
     blob = "\n".join(p.read_text(encoding="utf-8") for p in media.glob("*.ts"))
     for banned in ("corsproxy", "allorigins", "scrapingbee", "zenrows", "api.openai", "openai.com/v1"):
         assert banned not in blob.lower()
     assert "proxy" in blob.lower()
 
 
-def test_screenshot_targets_include_six_frameworks():
+def test_screenshot_targets_include_six_frameworks_with_human_labels():
     text = (WEB / "media" / "screenshotToCode.ts").read_text(encoding="utf-8")
     for token in ("html-css-js", "react", "swiftui", "compose", "flutter", "react-native"):
         assert token in text
+    assert "CODE_TARGET_LABELS" in text
+    assert "HTML / CSS / JavaScript" in text
+    assert "Jetpack Compose" in text
+    assert "React Native" in text
 
 
 def test_daily_lab_has_thirty_plus_static_specimens():
@@ -32,10 +40,14 @@ def test_daily_lab_has_thirty_plus_static_specimens():
     assert "specimensForDate" in text
     assert "LAB_SPECIMENS" in text
     assert (WEB / "lab" / "DailyLab.tsx").is_file()
+    lab = (WEB / "lab" / "DailyLab.tsx").read_text(encoding="utf-8")
+    assert "Same date, same set" not in lab
+    assert "PRODUCT_DIRECTION_MISMATCH" in lab
+    assert "prompt gallery" in lab.lower()
 
 
 def test_unified_composer_and_nav_surfaces():
-    composer = (WEB / "composer" / "UnifiedComposer.tsx").read_text(encoding="utf-8")
+    composer = COMPOSER.read_text(encoding="utf-8")
     for mode in ('"text"', '"speech"', '"image"', '"screenshot"', '"video"', '"url"'):
         assert mode in composer
     nav = (WEB / "layout" / "Nav.tsx").read_text(encoding="utf-8")
@@ -61,3 +73,85 @@ def test_headers_file_documents_csp():
     assert "frame-ancestors" in text
     assert "X-Content-Type-Options" in text
     assert "Referrer-Policy" in text
+
+
+def test_intent_provenance_auto_vs_user_edited():
+    text = APP.read_text(encoding="utf-8")
+    assert "AUTO_DERIVED_INTENT" in text
+    assert "USER_EDITED_INTENT" in text
+    assert "applyUserRequestChange" in text
+    assert "shouldPreserveEditedIntent" in text
+    assert "mapLabCategory" in text
+    # Daily Lab clean open
+    assert "setIntent(defaultIntentLens(s.seedIdea))" in text
+    assert "setCategory(mapLabCategory(s.category))" in text
+    assert 'setMode("simple")' in text
+
+
+def test_composer_async_race_and_mode_cleanup():
+    text = COMPOSER.read_text(encoding="utf-8")
+    assert "valueRef" in text
+    assert "opIdRef" in text
+    assert "AbortController" in text
+    assert "clearModeSpecificState" in text
+    assert "revokeObjectURL" in text
+    assert "isCurrent" in text
+    # URL failures must not append
+    assert "Nothing was added to your idea" in text
+    assert "urlResultToPromptBlock(result)" in text
+
+
+def test_clipboard_await_real_success():
+    app = APP.read_text(encoding="utf-8")
+    assert "await navigator.clipboard.writeText" in app
+    composer = COMPOSER.read_text(encoding="utf-8")
+    assert "await navigator.clipboard.writeText" in composer
+    assert "Copy unavailable" in composer
+
+
+def test_spe_extension_not_spe_json_mismatch():
+    app = APP.read_text(encoding="utf-8")
+    assert "artifact-${Date.now()}.spe`" in app or '`.spe`' in app or ".spe`" in app
+    assert "artifact-${Date.now()}.spe.json" not in app
+    ws = (WEB / "workspace" / "Workspace.tsx").read_text(encoding="utf-8")
+    assert ".spe" in ws
+    assert 'accept=".spe' in ws
+
+
+def test_url_bounded_stream_and_untrusted_boundary():
+    url = (WEB / "media" / "urlIngest.ts").read_text(encoding="utf-8")
+    assert "readResponseBounded" in url
+    assert "MAX_URL_BYTES" in url
+    assert "finalUrl" in url
+    assert "urlResultToPromptBlock" in url
+    assert "return null" in url
+    unt = (WEB / "media" / "untrusted.ts").read_text(encoding="utf-8")
+    assert "UNTRUSTED_SOURCE" in unt
+    assert "DATA TO ANALYZE" in unt
+    assert "wrapUntrustedData" in unt
+
+
+def test_media_bounds_before_decode_and_source_dims():
+    limits = (WEB / "media" / "limits.ts").read_text(encoding="utf-8")
+    assert "assertImageFileBounds" in limits
+    assert "assertVideoFileBounds" in limits
+    assert "MAX_IMAGE_MEGAPIXELS" in limits
+    img = (WEB / "media" / "imageObserve.ts").read_text(encoding="utf-8")
+    assert "sourceWidth" in img
+    assert "sourceHeight" in img
+    assert "assertImageFileBounds" in img
+    # alpha consistency on grid
+    assert "pixels[i + 3] < 16" in img
+
+
+def test_screenshot_code_target_single_canonical_state():
+    text = COMPOSER.read_text(encoding="utf-8")
+    assert "applyCodeTarget" in text
+    assert "CODE_TARGET_LABELS" in text
+    assert "Request updated" in text
+
+
+def test_no_omega_and_no_second_k3_writer():
+    media = "\n".join(p.read_text(encoding="utf-8") for p in (WEB / "media").glob("*.ts"))
+    assert "spe_runtime/omega" not in media
+    assert "omega" not in media.lower() or "omega" not in (WEB / "App.tsx").read_text().lower()

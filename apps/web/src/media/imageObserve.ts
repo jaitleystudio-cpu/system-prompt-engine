@@ -1,3 +1,9 @@
+import {
+  assertImageFileBounds,
+  assertMegapixelCap,
+  MAX_ANALYSIS_SIDE,
+} from "./limits";
+import { wrapUntrustedData } from "./untrusted";
 import type { ColorSwatch, ImageObservation } from "./types";
 
 const LICENSE_NOTE =
@@ -41,6 +47,7 @@ function bucketKey(r: number, g: number, b: number): string {
 /**
  * Pure observation over ImageData — testable without DOM.
  * Samples up to ~12k pixels for color/brightness; scans for simple edges.
+ * Alpha < 16 pixels are skipped for color, brightness, and 3×3 grid (consistent).
  */
 export function observeImageData(
   data: ImageData,
@@ -48,17 +55,26 @@ export function observeImageData(
     fileName?: string | null;
     fileBytes?: number | null;
     mimeType?: string | null;
+    sourceWidth?: number;
+    sourceHeight?: number;
   } = {},
 ): ImageObservation {
   const { width, height } = data;
+  const sourceWidth = meta.sourceWidth ?? width;
+  const sourceHeight = meta.sourceHeight ?? height;
   const pixels = data.data;
   const total = width * height;
   const step = Math.max(1, Math.floor(Math.sqrt(total / 12000)));
-  const votes = new Map<string, { count: number; r: number; g: number; b: number }>();
+  const votes = new Map<
+    string,
+    { count: number; r: number; g: number; b: number }
+  >();
   let sum = 0;
   let dark = 0;
   let light = 0;
   let samples = 0;
+  let transparentHits = 0;
+  let opaqueChecks = 0;
 
   for (let y = 0; y < height; y += step) {
     for (let x = 0; x < width; x += step) {
@@ -67,7 +83,11 @@ export function observeImageData(
         g = pixels[i + 1],
         b = pixels[i + 2],
         a = pixels[i + 3];
-      if (a < 16) continue;
+      opaqueChecks++;
+      if (a < 16) {
+        transparentHits++;
+        continue;
+      }
       const bright = (r * 299 + g * 587 + b * 114) / 1000;
       sum += bright;
       if (bright < 64) dark++;
@@ -92,21 +112,19 @@ export function observeImageData(
       share: samples ? v.count / samples : 0,
     }));
 
-  // Simple horizontal/vertical gradient magnitude as edge proxy (sparse).
   let edgeHits = 0;
   let edgeChecks = 0;
   const edgeStep = Math.max(2, step);
   for (let y = 1; y < height - 1; y += edgeStep) {
     for (let x = 1; x < width - 1; x += edgeStep) {
       const i = (y * width + x) * 4;
-      const right = ((y * width + (x + 1)) * 4);
-      const down = (((y + 1) * width + x) * 4);
-      const c =
-        (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3;
+      if (pixels[i + 3] < 16) continue;
+      const right = (y * width + (x + 1)) * 4;
+      const down = ((y + 1) * width + x) * 4;
+      const c = (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3;
       const cr =
         (pixels[right] + pixels[right + 1] + pixels[right + 2]) / 3;
-      const cd =
-        (pixels[down] + pixels[down + 1] + pixels[down + 2]) / 3;
+      const cd = (pixels[down] + pixels[down + 1] + pixels[down + 2]) / 3;
       const mag = Math.abs(c - cr) + Math.abs(c - cd);
       edgeChecks++;
       if (mag > 48) edgeHits++;
@@ -126,7 +144,10 @@ export function observeImageData(
       for (let y = y0; y < y1; y += step) {
         for (let x = x0; x < x1; x += step) {
           const i = (y * width + x) * 4;
-          gSum += (pixels[i] * 299 + pixels[i + 1] * 587 + pixels[i + 2] * 114) / 1000;
+          if (pixels[i + 3] < 16) continue;
+          gSum +=
+            (pixels[i] * 299 + pixels[i + 1] * 587 + pixels[i + 2] * 114) /
+            1000;
           gN++;
         }
       }
@@ -140,18 +161,34 @@ export function observeImageData(
     "Object identity, text OCR, faces, and brand logos are not detected in V1.",
     "Colors are quantized samples, not a calibrated color profile.",
   ];
-  if (edgeDensity > 0.35) notes.push("Busy visual structure (higher edge density).");
-  else if (edgeDensity < 0.08) notes.push("Mostly flat or soft regions (low edge density).");
+  if (edgeDensity > 0.35)
+    notes.push("Busy visual structure (higher edge density).");
+  else if (edgeDensity < 0.08)
+    notes.push("Mostly flat or soft regions (low edge density).");
   if (mean < 70) notes.push("Overall dark frame.");
   if (mean > 180) notes.push("Overall bright frame.");
-  if (width >= 1800 || height >= 1800) notes.push("High-resolution source.");
+  if (sourceWidth >= 1800 || sourceHeight >= 1800)
+    notes.push("High-resolution source.");
+  const transparentShare = opaqueChecks ? transparentHits / opaqueChecks : 0;
+  if (transparentShare > 0.4)
+    notes.push(
+      `Large transparent regions (~${Math.round(transparentShare * 100)}% of samples).`,
+    );
+  if (sourceWidth !== width || sourceHeight !== height) {
+    notes.push(
+      `Analyzed at ${width}×${height} (source ${sourceWidth}×${sourceHeight}).`,
+    );
+  }
 
   return {
     kind: "image",
     width,
     height,
-    aspectRatio: aspectRatioLabel(width, height),
-    megapixels: Math.round((total / 1_000_000) * 100) / 100,
+    sourceWidth,
+    sourceHeight,
+    aspectRatio: aspectRatioLabel(sourceWidth, sourceHeight),
+    megapixels:
+      Math.round(((sourceWidth * sourceHeight) / 1_000_000) * 100) / 100,
     fileName: meta.fileName ?? null,
     fileBytes: meta.fileBytes ?? null,
     mimeType: meta.mimeType ?? null,
@@ -169,6 +206,34 @@ export function observeImageData(
   };
 }
 
+/** Human-readable summary (not a diagnostic dump). */
+export function humanImageSummary(obs: ImageObservation): string {
+  const colors = obs.dominantColors
+    .slice(0, 3)
+    .map((c) => c.hex)
+    .join(", ");
+  const tone =
+    obs.brightness.mean < 70
+      ? "dark"
+      : obs.brightness.mean > 180
+        ? "bright"
+        : "balanced";
+  const structure =
+    obs.edgeDensity > 0.35
+      ? "busy detail"
+      : obs.edgeDensity < 0.08
+        ? "soft / flat areas"
+        : "moderate structure";
+  return [
+    `A ${obs.sourceWidth}×${obs.sourceHeight} ${obs.aspectRatio} image (${obs.megapixels} MP).`,
+    colors ? `Palette leans ${colors}.` : "Palette unclear (sparse opaque pixels).",
+    `Overall ${tone} lighting with ${structure}.`,
+    obs.notes.length ? obs.notes.join(" ") : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
+
 export function observationToPromptBlock(obs: ImageObservation): string {
   const colors = obs.dominantColors
     .map((c) => `${c.hex} (${Math.round(c.share * 100)}%)`)
@@ -176,35 +241,69 @@ export function observationToPromptBlock(obs: ImageObservation): string {
   const grid = obs.grid
     .map((g) => `r${g.row}c${g.col}:${Math.round(g.meanBrightness)}`)
     .join(" ");
-  return [
-    "Image observations (browser-local, not a vision model):",
-    `- Size: ${obs.width}×${obs.height}px (${obs.aspectRatio}, ${obs.megapixels} MP)`,
-    obs.fileName ? `- File: ${obs.fileName}${obs.fileBytes != null ? ` (${obs.fileBytes} bytes)` : ""}` : null,
-    `- Dominant colors: ${colors || "n/a"}`,
-    `- Brightness mean: ${obs.brightness.mean} (dark ${(obs.brightness.darkShare * 100).toFixed(0)}% / light ${(obs.brightness.lightShare * 100).toFixed(0)}%)`,
-    `- Edge density: ${obs.edgeDensity}`,
-    `- 3×3 brightness grid: ${grid}`,
-    obs.notes.length ? `- Notes: ${obs.notes.join(" ")}` : null,
-    `- Uncertainty: ${obs.uncertainty.join(" ")}`,
-    `- Method: ${obs.licenseNote}`,
+  const summary = humanImageSummary(obs);
+  const diagnostics = [
+    `Size: source ${obs.sourceWidth}×${obs.sourceHeight}px; analysis ${obs.width}×${obs.height}px (${obs.aspectRatio}, ${obs.megapixels} MP)`,
+    obs.fileName
+      ? `File: ${obs.fileName}${obs.fileBytes != null ? ` (${obs.fileBytes} bytes)` : ""}`
+      : null,
+    `Dominant colors: ${colors || "n/a"}`,
+    `Brightness mean: ${obs.brightness.mean} (dark ${(obs.brightness.darkShare * 100).toFixed(0)}% / light ${(obs.brightness.lightShare * 100).toFixed(0)}%)`,
+    `Edge density: ${obs.edgeDensity}`,
+    `3×3 brightness grid: ${grid}`,
+    obs.notes.length ? `Notes: ${obs.notes.join(" ")}` : null,
+    `Uncertainty: ${obs.uncertainty.join(" ")}`,
+    `Method: ${obs.licenseNote}`,
   ]
     .filter(Boolean)
     .join("\n");
+
+  return wrapUntrustedData(
+    "local-image-observation",
+    [
+      "USER-FACING SUMMARY:",
+      summary,
+      "",
+      "OBSERVATIONS (grounded pixel samples — not a vision model):",
+      diagnostics,
+    ].join("\n"),
+  );
 }
 
-
-export async function observeImageFile(file: File): Promise<ImageObservation> {
+export async function observeImageFile(
+  file: File,
+  signal?: AbortSignal,
+): Promise<ImageObservation> {
+  assertImageFileBounds(file);
+  if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
   const url = URL.createObjectURL(file);
   try {
     const img = new Image();
     img.decoding = "async";
     await new Promise<void>((resolve, reject) => {
-      img.onload = () => resolve();
-      img.onerror = () => reject(new Error("Could not decode this image."));
+      const onAbort = () => reject(new DOMException("Aborted", "AbortError"));
+      if (signal) {
+        if (signal.aborted) {
+          onAbort();
+          return;
+        }
+        signal.addEventListener("abort", onAbort, { once: true });
+      }
+      img.onload = () => {
+        signal?.removeEventListener("abort", onAbort);
+        resolve();
+      };
+      img.onerror = () => {
+        signal?.removeEventListener("abort", onAbort);
+        reject(new Error("Could not decode this image."));
+      };
       img.src = url;
     });
-    const maxSide = 1280;
-    const scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
+    assertMegapixelCap(img.naturalWidth, img.naturalHeight);
+    const scale = Math.min(
+      1,
+      MAX_ANALYSIS_SIDE / Math.max(img.naturalWidth, img.naturalHeight),
+    );
     const w = Math.max(1, Math.round(img.naturalWidth * scale));
     const h = Math.max(1, Math.round(img.naturalHeight * scale));
     const canvas = document.createElement("canvas");
@@ -218,6 +317,8 @@ export async function observeImageFile(file: File): Promise<ImageObservation> {
       fileName: file.name,
       fileBytes: file.size,
       mimeType: file.type || null,
+      sourceWidth: img.naturalWidth,
+      sourceHeight: img.naturalHeight,
     });
   } finally {
     URL.revokeObjectURL(url);

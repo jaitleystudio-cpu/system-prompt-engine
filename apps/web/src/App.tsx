@@ -19,6 +19,7 @@ import {
   saveHistoryItem,
   setHistoryOptIn,
   verifySpeArtifact,
+  CATEGORIES,
   type CategoryId,
   type HistoryItem,
   type IntentAtom,
@@ -40,6 +41,24 @@ import { registerServiceWorker } from "./pwa";
 type View = AppView;
 type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
+/** Intent lens provenance — SIMPLE/CREATE rederive; INSPECT/PRO preserve edits. */
+type IntentProvenance = "AUTO_DERIVED_INTENT" | "USER_EDITED_INTENT";
+
+function mapLabCategory(raw: string): CategoryId {
+  return (CATEGORIES as readonly string[]).includes(raw)
+    ? (raw as CategoryId)
+    : "AI Assistant";
+}
+
+function shouldPreserveEditedIntent(
+  mode: Mode,
+  provenance: IntentProvenance,
+): boolean {
+  return (
+    (mode === "inspect" || mode === "pro") &&
+    provenance === "USER_EDITED_INTENT"
+  );
+}
 
 function privacyFromEnvelope(env: unknown): {
   sensitivity: string | null;
@@ -87,6 +106,8 @@ export default function App() {
   const [category, setCategory] = useState<CategoryId>("AI Assistant");
   const [target, setTarget] = useState<TargetId>("any");
   const [intent, setIntent] = useState(() => defaultIntentLens(""));
+  const [intentProvenance, setIntentProvenance] =
+    useState<IntentProvenance>("AUTO_DERIVED_INTENT");
   const [phase, setPhase] = useState<CompilePhase>("idle");
   const [phases, setPhases] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
@@ -179,12 +200,23 @@ export default function App() {
     text: string,
   ) => {
     invalidate();
+    setIntentProvenance("USER_EDITED_INTENT");
     setIntent((prev) => ({
       ...prev,
       [bucket]: prev[bucket].map((a: IntentAtom) =>
         a.id === id ? { ...a, text } : a,
       ),
     }));
+  };
+
+  /** Create/simple/home: rederive intent from request. Inspect/pro: keep human edits. */
+  const applyUserRequestChange = (v: string) => {
+    invalidate();
+    setUserRequest(v);
+    if (!shouldPreserveEditedIntent(mode, intentProvenance)) {
+      setIntent(defaultIntentLens(v));
+      setIntentProvenance("AUTO_DERIVED_INTENT");
+    }
   };
 
   const compile = useCallback(
@@ -341,7 +373,7 @@ export default function App() {
 
   const onExportSpe = () => {
     if (!artifact) return;
-    downloadJson(`artifact-${Date.now()}.spe.json`, artifact);
+    downloadJson(`artifact-${Date.now()}.spe`, artifact);
   };
 
   const onExportJson = () => {
@@ -391,6 +423,7 @@ export default function App() {
           ]),
         ) as typeof intent,
       );
+      setIntentProvenance("USER_EDITED_INTENT");
       setRendered({
         userRequest: parsed.user_request,
         speAdded: [],
@@ -433,11 +466,11 @@ export default function App() {
                 invalidate();
                 setUserRequest("");
                 setIntent(defaultIntentLens(""));
+                setIntentProvenance("AUTO_DERIVED_INTENT");
               }}
               value={userRequest}
               onChange={(v) => {
-                invalidate();
-                setUserRequest(v);
+                applyUserRequestChange(v);
               }}
               category={category}
               onCategory={(v) => {
@@ -493,13 +526,11 @@ export default function App() {
             <UnifiedComposer
               value={userRequest}
               onChange={(v) => {
-                invalidate();
-                setUserRequest(v);
+                applyUserRequestChange(v);
               }}
               disabled={busy}
               onScaffoldPrompt={(prompt) => {
-                invalidate();
-                setUserRequest(prompt);
+                applyUserRequestChange(prompt);
               }}
             />
             <div className="compile-row" style={{ marginTop: "1rem" }}>
@@ -544,6 +575,10 @@ export default function App() {
             onOpenInSpe={(s) => {
               invalidate();
               setUserRequest(s.seedIdea);
+              setCategory(mapLabCategory(s.category));
+              setIntent(defaultIntentLens(s.seedIdea));
+              setIntentProvenance("AUTO_DERIVED_INTENT");
+              setMode("simple");
               setView("create");
               window.scrollTo(0, 0);
             }}
@@ -577,6 +612,8 @@ export default function App() {
               setCategory((h.category as CategoryId) || "Writing");
               setTarget((h.target as TargetId) || "any");
               setIntent(defaultIntentLens(h.user_request));
+              setIntentProvenance("AUTO_DERIVED_INTENT");
+              setMode("simple");
               setView("create");
             }}
           />
@@ -589,8 +626,7 @@ export default function App() {
             <Workspace
               userRequest={userRequest}
               setUserRequest={(v) => {
-                invalidate();
-                setUserRequest(v);
+                applyUserRequestChange(v);
               }}
               category={category}
               setCategory={(v) => {
@@ -669,6 +705,7 @@ export default function App() {
                       setCategory((h.category as CategoryId) || "Writing");
                       setTarget((h.target as TargetId) || "any");
                       setIntent(defaultIntentLens(h.user_request));
+                      setIntentProvenance("AUTO_DERIVED_INTENT");
                     }}
                   >
                     <h3>{h.user_request}</h3>

@@ -367,7 +367,7 @@ export function Workspace(props: Props) {
                   Import .spe
                   <input
                     type="file"
-                    accept="application/json,.json,.spe.json"
+                    accept=".spe,application/json,.json,.spe.json"
                     className="import-file"
                     aria-label="Import .spe file"
                     onChange={(e) => {

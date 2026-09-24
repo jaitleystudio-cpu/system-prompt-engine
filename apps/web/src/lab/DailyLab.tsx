@@ -11,11 +11,15 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
     <section className="spe-lab" aria-labelledby="lab-title">
       <header className="spe-lab-head">
         <p className="spe-kicker">Daily Lab</p>
-        <h1 id="lab-title">Today&apos;s specimens</h1>
+        <h1 id="lab-title">Today&apos;s interactive ideas</h1>
         <p>
-          Six ideas for {todaysLabDateLabel()}. Same date, same set — chosen on
-          your device from a fixed library of {LAB_SPECIMENS.length}. No network
-          fetch.
+          Six curated starting points for {todaysLabDateLabel()}. Open any card
+          in Create to shape a clearer prompt — chosen on your device from a
+          fixed library of {LAB_SPECIMENS.length}. No network fetch.
+        </p>
+        <p className="spe-muted" data-product-status="PRODUCT_DIRECTION_MISMATCH">
+          Note: this library is a prompt gallery for now. A premium daily 3D /
+          interactive website experience is planned separately from these cards.
         </p>
       </header>
       <div className="spe-lab-grid">
@@ -39,7 +43,7 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
         ))}
       </div>
       <details className="spe-lab-library">
-        <summary>Full library ({LAB_SPECIMENS.length})</summary>
+        <summary>Full prompt gallery ({LAB_SPECIMENS.length})</summary>
         <ul>
           {LAB_SPECIMENS.map((s) => (
             <li key={s.id}>

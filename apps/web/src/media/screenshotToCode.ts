@@ -17,14 +17,17 @@ export const CODE_TARGETS = [
 
 export type CodeTarget = (typeof CODE_TARGETS)[number];
 
-const LABELS: Record<CodeTarget, string> = {
-  "html-css-js": "HTML / CSS / JS",
+export const CODE_TARGET_LABELS: Record<CodeTarget, string> = {
+  "html-css-js": "HTML / CSS / JavaScript",
   react: "React",
   swiftui: "SwiftUI",
   compose: "Jetpack Compose",
   flutter: "Flutter",
   "react-native": "React Native",
 };
+
+/** @deprecated use CODE_TARGET_LABELS */
+const LABELS = CODE_TARGET_LABELS;
 
 export function inferUiRegions(obs: ImageObservation): UiRegion[] {
   const top = obs.grid.filter((g) => g.row === 0);
@@ -82,6 +85,7 @@ export function buildUiSpec(obs: ImageObservation): UiSpec {
     uncertainty: [
       ...obs.uncertainty,
       "Region roles are brightness heuristics, not ML detection.",
+      "Scaffolds are honest starters — verify every region against the screenshot.",
       "Typography, icons, and exact spacing are not measured.",
     ],
   };
