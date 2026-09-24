@@ -52,7 +52,7 @@ export function PrivacyProof() {
           </p>
         </article>
       </div>
-      <details className="spe-privacy-proof">
+      <details className="spe-privacy-proof" data-copy-depth="PROOF">
         <summary>Technical proof (for reviewers)</summary>
         <ul>
           <li>
