@@ -26,8 +26,8 @@ This pass (pass 4) closed remaining **app-side** closable gaps without claiming 
 | Token | SHA |
 | --- | --- |
 | START_HEAD (this pass) | `2bf8552df49e41a2242c81c429f5af79f9d5fa33` |
-| CURRENT_PR_HEAD | `TIP_PENDING` |
-| Feature work tip (pass4 pending) | `666f58b7f0780c2304d1f08d1405b9a04f5964e0` |
+| CURRENT_PR_HEAD | `6a3e89300161906874f49f88dbec3649875a54e7` |
+| Feature work tip (pass4) | `6a3e89300161906874f49f88dbec3649875a54e7` |
 | MAIN | `646d3765153f66c3951d812b8adfd87fcbf766b1` |
 
 ## 3. Capability matrix (truthful)
