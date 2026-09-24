@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>SPE vision bench (local)</title>
+</head>
+<body>
+  <h1>SPE STANDARD vs LITE browser bench</h1>
+  <pre id="out">boot…</pre>
+  <script src="/vendor/ort.wasm.min.js"></script>
+  <script>
+    const out = document.getElementById("out");
+    const log = (x) => { out.textContent = typeof x === "string" ? x : JSON.stringify(x, null, 2); };
+
+    function makeImage(kind) {
+      const w = 224, h = 224;
+      const c = document.createElement("canvas");
+      c.width = w; c.height = h;
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      if (kind === "people") {
+        ctx.fillStyle = "#304060"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#d2a082"; ctx.beginPath(); ctx.ellipse(112, 90, 40, 55, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#1a1a1a"; ctx.fillRect(70, 20, 84, 30);
+      } else if (kind === "product") {
+        ctx.fillStyle = "#f0f0f5"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#222"; ctx.fillRect(70, 60, 84, 110);
+        ctx.fillStyle = "#888"; ctx.fillRect(90, 80, 44, 12);
+      } else if (kind === "nature") {
+        const g = ctx.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, "#78b4e6"); g.addColorStop(0.45, "#78b4e6");
+        g.addColorStop(0.45, "#3a8f4a"); g.addColorStop(1, "#2d6b38");
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+      } else if (kind === "interior") {
+        ctx.fillStyle = "#c8b8a0"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#e8eef5"; ctx.fillRect(0, 0, w, 70);
+        ctx.fillStyle = "#6a5a4a"; ctx.fillRect(0, 0, 28, h); ctx.fillRect(w - 28, 0, 28, h);
+      } else if (kind === "screenshot") {
+        ctx.fillStyle = "#f5f5f8"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#222830"; ctx.fillRect(0, 0, w, 28);
+        ctx.fillStyle = "#3a4050"; ctx.fillRect(0, 28, 48, h - 28);
+        ctx.fillStyle = "#111"; ctx.fillRect(60, 48, 140, 10);
+      } else if (kind === "diagram") {
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = "#1450c8"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(20, 112); ctx.lineTo(204, 112); ctx.moveTo(112, 20); ctx.lineTo(112, 204); ctx.stroke();
+        ctx.fillStyle = "#c82828"; ctx.beginPath(); ctx.arc(112, 112, 28, 0, Math.PI * 2); ctx.fill();
+      } else if (kind === "text-heavy") {
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#111";
+        for (let y = 20; y < h; y += 14) ctx.fillRect(16, y, w - 32, 6);
+      } else if (kind === "complex") {
+        for (let y = 0; y < h; y += 2) for (let x = 0; x < w; x += 2) {
+          ctx.fillStyle = `rgb(${(x * 3) % 255},${(y * 5) % 255},${(x * y) % 255})`;
+          ctx.fillRect(x, y, 2, 2);
+        }
+      } else if (kind === "dark") {
+        ctx.fillStyle = "#0a0a0a"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#501414"; ctx.beginPath(); ctx.arc(112, 112, 40, 0, Math.PI * 2); ctx.fill();
+      } else if (kind === "bright") {
+        ctx.fillStyle = "#f5f5f5"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#ffdc28"; ctx.fillRect(120, 120, 80, 80);
+      } else if (kind === "unusual") {
+        ctx.fillStyle = "#204060"; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#f0a040"; ctx.fillRect(0, 80, w, 40);
+      } else {
+        ctx.fillStyle = "#808080"; ctx.fillRect(0, 0, w, h);
+        for (let i = 0; i < 40; i++) {
+          ctx.fillStyle = "#c8c832";
+          ctx.fillRect((i * 37) % w, (i * 53) % h, 3, 3);
+        }
+      }
+      return ctx.getImageData(0, 0, w, h);
+    }
+
+    function liteSummary(img) {
+      const { data, width, height } = img;
+      let sum = 0, dark = 0, light = 0, n = 0;
+      const step = 8;
+      for (let y = 0; y < height; y += step) {
+        for (let x = 0; x < width; x += step) {
+          const i = (y * width + x) * 4;
+          if (data[i + 3] < 16) continue;
+          const b = (data[i] * 299 + data[i + 1] * 587 + data[i + 2] * 114) / 1000;
+          sum += b; n++;
+          if (b < 64) dark++;
+          if (b > 200) light++;
+        }
+      }
+      const mean = n ? sum / n : 0;
+      return {
+        tier: "LITE",
+        meanBrightness: Math.round(mean),
+        prompt: `LITE observation: brightness≈${mean.toFixed(0)}, darkShare=${(n ? dark / n : 0).toFixed(2)}, lightShare=${(n ? light / n : 0).toFixed(2)}. Subjects: (none — structure/pixel only). UNTRUSTED_SOURCE / MODEL_JUDGMENT.`,
+      };
+    }
+
+    async function runStandard(img) {
+      if (!globalThis.ort) throw new Error("ort global missing");
+      const ort = globalThis.ort;
+      if (ort.env?.wasm) {
+        ort.env.wasm.wasmPaths = "/ort/";
+        ort.env.wasm.numThreads = 1;
+      }
+      const modelBuf = await fetch("/models/mobilenetv2-12-int8.onnx").then((r) => {
+        if (!r.ok) throw new Error("model HTTP " + r.status);
+        return r.arrayBuffer();
+      });
+      const labels = (await fetch("/models/imagenet_classes.txt").then((r) => r.text()))
+        .split("\n").map((l) => l.trim()).filter(Boolean);
+      const session = await ort.InferenceSession.create(modelBuf, { executionProviders: ["wasm"] });
+      const size = 224;
+      const mean = [0.485, 0.456, 0.406];
+      const std = [0.229, 0.224, 0.225];
+      const tensor = new Float32Array(1 * 3 * size * size);
+      const px = img.data;
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const sx = Math.min(img.width - 1, Math.floor((x * img.width) / size));
+          const sy = Math.min(img.height - 1, Math.floor((y * img.height) / size));
+          const i = (sy * img.width + sx) * 4;
+          const a = px[i + 3] / 255;
+          const r = (px[i] / 255) * a + (1 - a);
+          const g = (px[i + 1] / 255) * a + (1 - a);
+          const b = (px[i + 2] / 255) * a + (1 - a);
+          const idx = y * size + x;
+          tensor[0 * size * size + idx] = (r - mean[0]) / std[0];
+          tensor[1 * size * size + idx] = (g - mean[1]) / std[1];
+          tensor[2 * size * size + idx] = (b - mean[2]) / std[2];
+        }
+      }
+      const inputName = session.inputNames[0];
+      const feeds = {};
+      feeds[inputName] = new ort.Tensor("float32", tensor, [1, 3, 224, 224]);
+      const result = await session.run(feeds);
+      const logits = result[session.outputNames[0]].data;
+      let max = -Infinity;
+      for (let i = 0; i < logits.length; i++) max = Math.max(max, logits[i]);
+      const exps = new Float32Array(logits.length);
+      let sum = 0;
+      for (let i = 0; i < logits.length; i++) {
+        const v = Math.exp(logits[i] - max);
+        exps[i] = v; sum += v;
+      }
+      const scored = [];
+      for (let i = 0; i < exps.length; i++) scored.push({ i, p: exps[i] / sum });
+      scored.sort((a, b) => b.p - a.p);
+      const top = scored.slice(0, 5).map((s) => ({
+        label: labels[s.i] || ("class_" + s.i),
+        score: Math.round(s.p * 1000) / 1000,
+      }));
+      return {
+        tier: "STANDARD",
+        subjects: top,
+        prompt: "STANDARD observation (MobileNet INT8, MODEL_JUDGMENT): subjects=" +
+          top.map((t) => t.label + "(" + t.score + ")").join(", ") +
+          ". Use as observation only — never VERIFIED_FACT. UNTRUSTED_SOURCE.",
+      };
+    }
+
+    (async () => {
+      const kinds = ["people","product","interior","nature","screenshot","diagram","text-heavy","complex","dark","bright","unusual","ambiguous"];
+      const rows = [];
+      let onnxRuntimeInvoked = false;
+      let onnxError = null;
+      try {
+        await runStandard(makeImage("product"));
+        onnxRuntimeInvoked = true;
+      } catch (e) {
+        onnxError = String(e && e.message ? e.message : e);
+      }
+      for (const kind of kinds) {
+        const img = makeImage(kind);
+        const lite = liteSummary(img);
+        let standard = null;
+        let improved = false;
+        let note = "";
+        if (onnxRuntimeInvoked) {
+          try {
+            standard = await runStandard(img);
+            const subjectHit = (standard.subjects || []).some((s) => s.score >= 0.05);
+            improved = subjectHit && standard.prompt.length > lite.prompt.length + 40;
+            note = improved
+              ? "STANDARD subjects enrich final prompt"
+              : subjectHit
+                ? "STANDARD ran but weak prompt delta"
+                : "STANDARD ran; low-confidence subjects — LITE still useful";
+          } catch (e) {
+            note = "STANDARD failed for kind — LITE fallback: " + String(e && e.message ? e.message : e);
+            standard = { tier: "LITE_FALLBACK", prompt: lite.prompt, subjects: [] };
+          }
+        } else {
+          note = "STANDARD unavailable — LITE only: " + onnxError;
+          standard = { tier: "LITE_FALLBACK", prompt: lite.prompt, subjects: [] };
+        }
+        rows.push({
+          kind,
+          liteChars: lite.prompt.length,
+          standardChars: (standard.prompt || "").length,
+          standardSubjects: (standard.subjects || []).map((s) => s.label),
+          topScore: (standard.subjects && standard.subjects[0] && standard.subjects[0].score) || 0,
+          improved,
+          note,
+        });
+      }
+      const payload = {
+        ok: true,
+        mode: "browser-onnx-bench",
+        onnxRuntimeInvoked,
+        onnxError,
+        improvedCount: rows.filter((r) => r.improved).length,
+        noGainCount: rows.filter((r) => !r.improved).length,
+        rows,
+      };
+      window.__SPE_VISION_BENCH__ = payload;
+      log(payload);
+    })().catch((e) => {
+      const payload = { ok: false, mode: "browser-onnx-bench", onnxRuntimeInvoked: false, error: String(e && e.message ? e.message : e), rows: [] };
+      window.__SPE_VISION_BENCH__ = payload;
+      log(payload);
+    });
+  </script>
+</body>
+</html>

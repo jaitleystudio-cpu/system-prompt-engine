@@ -148,7 +148,67 @@ export function buildUIObservationIR(
         ? "comfortable"
         : "sparse";
 
-  const confidence =
+  // Structure hints from coarse geometry — used by code scaffolds (form/cards/modal).
+  const structureHints: string[] = [];
+  const midCells = obs.grid.filter((g) => g.row === 1);
+  const midMean =
+    midCells.reduce((s, g) => s + g.meanBrightness, 0) / (midCells.length || 1);
+  const borderMean =
+    obs.grid
+      .filter((g) => g.row === 0 || g.row === 2 || g.col === 0 || g.col === 2)
+      .reduce((s, g) => s + g.meanBrightness, 0) / 8;
+  if (midMean - borderMean > 50 && obs.edgeDensity > 0.08) {
+    structureHints.push("modal-or-dialog-candidate");
+    regions.push({
+      id: "region-modal",
+      roleGuess: "Modal / dialog overlay",
+      bounds: { x: 0.2, y: 0.2, w: 0.6, h: 0.6 },
+      confidence: "low",
+      evidence: `Bright center (${midMean.toFixed(0)}) vs border (${borderMean.toFixed(0)})`,
+    });
+  }
+  const checker =
+    obs.grid.filter((g) => g.meanBrightness > 160).length >= 3 &&
+    obs.grid.filter((g) => g.meanBrightness < 100).length >= 3;
+  if (checker && Math.abs(left - right) < 40) {
+    structureHints.push("card-grid-candidate");
+    for (const g of obs.grid) {
+      if (g.meanBrightness > 160 && g.row >= 0) {
+        regions.push({
+          id: `region-card-r${g.row}c${g.col}`,
+          roleGuess: "Card / tile",
+          bounds: { x: g.col / 3, y: g.row / 3, w: 1 / 3, h: 1 / 3 },
+          confidence: "low",
+          evidence: `Checker brightness ${g.meanBrightness.toFixed(0)}`,
+        });
+      }
+    }
+  }
+  if (
+    midMean > 180 &&
+    top.mean < 80 &&
+    obs.edgeDensity > 0.05 &&
+    Math.abs(left - right) < 35
+  ) {
+    structureHints.push("form-panel-candidate");
+    regions.push({
+      id: "region-form",
+      roleGuess: "Form / input panel",
+      bounds: { x: 0.15, y: 0.25, w: 0.7, h: 0.5 },
+      confidence: "low",
+      evidence: `Bright mid panel ${midMean.toFixed(0)} under dark header`,
+    });
+    controls.push({
+      id: "ctrl-form-primary",
+      roleGuess: "Primary form action",
+      bounds: { x: 0.35, y: 0.65, w: 0.3, h: 0.1 },
+      confidence: "low",
+      evidence: "Inferred from bright form panel geometry",
+      method: "structure-heuristic",
+    });
+  }
+
+    const confidence =
     regions.filter((r) => r.confidence === "high").length >= 1 &&
     layout.columns >= 1
       ? "medium"
@@ -187,6 +247,9 @@ export function buildUIObservationIR(
       ...semantic.uncertainty,
       "UI roles are structure heuristics + optional MobileNet context — verify against the screenshot.",
       "Typography sizes are guessed from band height, not measured fonts.",
+      ...(structureHints.length
+        ? [`Structure hints: ${structureHints.join(", ")}`]
+        : []),
     ],
     semantic,
   };

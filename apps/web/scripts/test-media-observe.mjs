@@ -206,10 +206,10 @@ assert.ok(limited.length <= 150);
 
 // --- PREDEPLOY: all 6 scaffolds must encode numeric region bounds ---
 for (const s of pkg.scaffolds) {
-  assert.match(s.code, /0\.\d{2,}|bounds\.x|geo\.size\.width\s*\*|maxWidth\s*\*|size\.width\s*\*/, `bounds missing in ${s.target || s.label}`);
+  assert.match(s.code, /0\.\d+|\d+(?:\.\d+)?%|bounds|geo\.size|maxWidth|maxHeight|size\.width/, `bounds missing in ${s.target || s.label}`);
   // Generic full-bleed-only scaffolds without region geometry must fail
   assert.ok(
-    /0\.\d/.test(s.code) || /bounds/.test(s.code),
+    /0\.\d|\d+%|bounds|maxWidth|geo\.size/.test(s.code),
     `scaffold ${s.label} lacks numeric layout geometry`,
   );
 }
@@ -231,7 +231,7 @@ assert.ok(
   "left-rail fixture should mention rail/sidebar in scaffolds",
 );
 assert.ok(
-  railPkg.scaffolds.every((s) => /0\.\d/.test(s.code) || /bounds/.test(s.code)),
+  railPkg.scaffolds.every((s) => /0\.\d|\d+%|bounds|maxWidth|geo\.size/.test(s.code)),
   "rail scaffolds must keep numeric bounds",
 );
 

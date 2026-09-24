@@ -117,41 +117,106 @@ function regionStyle(r: UiRegion): string {
   return `position:absolute;left:${(x * 100).toFixed(1)}%;top:${(y * 100).toFixed(1)}%;width:${(w * 100).toFixed(1)}%;height:${(h * 100).toFixed(1)}%;`;
 }
 
-function html(spec: UiSpec): string {
-  return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>SPE UI scaffold from screenshot IR</title>
-<style>
-:root {
-${paletteCss(spec.observations)}
+
+function regionsByRole(spec: UiSpec) {
+  const find = (re: RegExp) => spec.regions.filter((r) => re.test(r.roleGuess));
+  return {
+    header: find(/header|top bar|nav|toolbar/i),
+    rail: find(/rail|sidebar|side/i),
+    main: find(/main|content|hero/i),
+    footer: find(/footer|bottom|action/i),
+    all: spec.regions,
+  };
 }
-*{box-sizing:border-box}
-body{margin:0;font:16px/1.45 system-ui,sans-serif;background:#0b0d10;color:#e8eaed}
-.stage{position:relative;min-height:100vh;background:var(--c2,#111)}
-section{outline:1px dashed rgba(255,255,255,.12);padding:.75rem}
-.region-header{background:var(--c1,#222)}
-.region-main{background:var(--c2,#111)}
-.region-footer{background:var(--c3,#1a1a1a)}
-.region-rail{background:var(--c4,#161616)}
-</style></head><body>
-<div class="stage">
-${spec.regions
-  .map(
-    (r) =>
-      `  <section class="${r.id}" style="${regionStyle(r)}" data-confidence="${r.confidence}" title="${r.notes.replace(/"/g, "'")}">
-    <strong>${r.roleGuess}</strong>
-    <!-- evidence: ${r.notes.replace(/-->/g, "")} -->
-  </section>`,
-  )
-  .join("\n")}
-</div>
-</body></html>
-`;
+
+function regionDomId(r: UiRegion): string {
+  return r.id.replace(/[^a-zA-Z0-9_-]/g, "-");
+}
+
+function corpus(spec: UiSpec): string {
+  return spec.regions.map((r) => `${r.roleGuess} ${r.notes}`).join(" ");
+}
+
+function html(spec: UiSpec): string {
+  const by = regionsByRole(spec);
+  const hasRail = by.rail.length > 0;
+  const blob = corpus(spec);
+  const navItems = by.header
+    .map((r) => `      <a href="#${regionDomId(r)}">${r.roleGuess}</a>`)
+    .join("\n");
+  const railLinks = by.rail
+    .map((r) => `    <a href="#${regionDomId(r)}">${r.roleGuess}</a>`)
+    .join("\n");
+  const mainSource = by.main.length
+    ? by.main
+    : by.all.filter((r) => !/header|footer|rail|sidebar/i.test(r.roleGuess));
+  const mainBlocks = mainSource
+    .map(
+      (r) =>
+        `    <section id="${regionDomId(r)}" class="${r.id}" style="${regionStyle(r)}" data-role="${r.roleGuess}" data-confidence="${r.confidence}">\n` +
+        `      <h2>${r.roleGuess}</h2>\n` +
+        `      <!-- evidence: ${r.notes.replace(/-->/g, "")} -->\n` +
+        `    </section>`,
+    )
+    .join("\n");
+  const formHint = /form|input|search|sign-in|sign in/i.test(blob)
+    ? `    <form class="spe-inferred-form" aria-label="Inferred form from screenshot">\n      <label>Field <input name="field" type="text"/></label>\n      <button type="submit">Continue</button>\n    </form>`
+    : "";
+  const cardHint = /card|grid|tile/i.test(blob)
+    ? `    <div class="spe-card-grid" role="list">\n      <article class="spe-card" role="listitem"><h3>Card A</h3></article>\n      <article class="spe-card" role="listitem"><h3>Card B</h3></article>\n      <article class="spe-card" role="listitem"><h3>Card C</h3></article>\n    </div>`
+    : "";
+  const modalHint = /modal|dialog|overlay/i.test(blob)
+    ? `    <div class="spe-modal" role="dialog" aria-modal="true"><h2>Dialog</h2><button type="button">Close</button></div>`
+    : "";
+  const gridCols = hasRail ? "240px 1fr" : "1fr";
+  const railBlock = hasRail
+    ? `  <aside class="spe-rail" role="navigation" aria-label="Side rail">\n${railLinks}\n  </aside>`
+    : "  <!-- no side rail -->";
+  const footerText = by.footer.map((r) => r.roleGuess).join(" · ") || "Footer";
+  return (
+    `<!doctype html>\n` +
+    `<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>\n` +
+    `<title>SPE UI scaffold from screenshot IR</title>\n` +
+    `<style>\n:root {\n${paletteCss(spec.observations)}\n}\n` +
+    `*{box-sizing:border-box}\n` +
+    `body{margin:0;font:16px/1.45 system-ui,sans-serif;background:#0b0d10;color:#e8eaed}\n` +
+    `.shell{display:grid;min-height:100vh;grid-template-columns:${gridCols};grid-template-rows:auto 1fr auto}\n` +
+    `header.spe-top{grid-column:1/-1;background:var(--c1,#222);padding:.75rem 1rem;display:flex;gap:1rem;align-items:center}\n` +
+    `aside.spe-rail{background:var(--c4,#161616);padding:1rem;display:flex;flex-direction:column;gap:.5rem}\n` +
+    `main.spe-main{position:relative;background:var(--c2,#111);padding:1rem}\n` +
+    `footer.spe-foot{grid-column:1/-1;background:var(--c3,#1a1a1a);padding:.75rem 1rem}\n` +
+    `.spe-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:1rem}\n` +
+    `.spe-card{border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:8px}\n` +
+    `.spe-modal{position:fixed;inset:20% 25%;background:#1a1d24;border:1px solid rgba(255,255,255,.2);padding:1rem;z-index:5}\n` +
+    `section{outline:1px dashed rgba(255,255,255,.12);padding:.75rem}\n` +
+    `</style></head><body>\n` +
+    `<div class="shell">\n` +
+    `  <header class="spe-top" role="banner">\n` +
+    `    <strong>App</strong>\n` +
+    `    <nav aria-label="Primary">\n${navItems || "      <!-- no header regions -->"}\n` +
+    `    </nav>\n` +
+    `  </header>\n` +
+    `${railBlock}\n` +
+    `  <main class="spe-main" role="main">\n` +
+    `${mainBlocks}\n` +
+    `${formHint}\n` +
+    `${cardHint}\n` +
+    `${modalHint}\n` +
+    `  </main>\n` +
+    `  <footer class="spe-foot" role="contentinfo">${footerText}</footer>\n` +
+    `</div>\n` +
+    `</body></html>\n`
+  );
 }
 
 function react(spec: UiSpec): string {
-  return `export default function ScreenFromScreenshot() {
-  const regions = ${JSON.stringify(
+  const by = regionsByRole(spec);
+  const hasRail = by.rail.length > 0;
+  const blob = corpus(spec);
+  const wantsForm = /form|input|search|sign-in|sign in/i.test(blob);
+  const wantsCards = /card|grid|tile/i.test(blob);
+  const wantsModal = /modal|dialog|overlay/i.test(blob);
+  const regionJson = JSON.stringify(
     spec.regions.map((r) => ({
       id: r.id,
       role: r.roleGuess,
@@ -161,33 +226,45 @@ function react(spec: UiSpec): string {
     })),
     null,
     2,
-  )};
+  );
+  const formJsx = wantsForm
+    ? `<form aria-label="Inferred form"><label>Field <input name="field" /></label><button type="submit">Continue</button></form>`
+    : "";
+  const cardsJsx = wantsCards
+    ? `<div role="list" className="spe-card-grid"><article role="listitem">Card A</article><article role="listitem">Card B</article><article role="listitem">Card C</article></div>`
+    : "";
+  const modalJsx = wantsModal
+    ? `<div role="dialog" aria-modal="true"><h2>Dialog</h2><button type="button">Close</button></div>`
+    : "";
+  const bg = spec.palette[0]?.hex ?? "#0b0d10";
   return (
-    <div style={{ position: "relative", minHeight: "100vh", fontFamily: "system-ui", background: "${spec.palette[0]?.hex ?? "#0b0d10"}", color: "#f5f5f5" }}>
-      {regions.map((r) => (
-        <section
-          key={r.id}
-          aria-label={r.role}
-          data-confidence={r.confidence}
-          title={r.evidence}
-          style={{
-            position: "absolute",
-            left: \`\${r.bounds.x * 100}%\`,
-            top: \`\${r.bounds.y * 100}%\`,
-            width: \`\${r.bounds.w * 100}%\`,
-            height: \`\${r.bounds.h * 100}%\`,
-            padding: 12,
-            outline: "1px dashed rgba(255,255,255,0.15)",
-          }}
-        >
-          <h2 style={{ margin: 0, fontSize: 16 }}>{r.role}</h2>
-        </section>
-      ))}
-    </div>
+    `export default function ScreenFromScreenshot() {\n` +
+    `  const regions = ${regionJson};\n` +
+    `  const hasRail = ${hasRail ? "true" : "false"};\n` +
+    `  return (\n` +
+    `    <div style={{ display: "grid", minHeight: "100vh", gridTemplateColumns: hasRail ? "240px 1fr" : "1fr", gridTemplateRows: "auto 1fr auto", fontFamily: "system-ui", background: "${bg}", color: "#f5f5f5" }}>\n` +
+    `      <header role="banner" style={{ gridColumn: "1 / -1", padding: 12, display: "flex", gap: 12 }}>\n` +
+    `        <strong>App</strong>\n` +
+    `        <nav aria-label="Primary">{regions.filter((r) => /header|top|nav|toolbar/i.test(r.role)).map((r) => <a key={r.id} href={"#" + r.id}>{r.role}</a>)}</nav>\n` +
+    `      </header>\n` +
+    `      {hasRail ? <aside role="navigation" aria-label="Side rail" style={{ padding: 12 }}>{regions.filter((r) => /rail|sidebar|side/i.test(r.role)).map((r) => <a key={r.id} href={"#" + r.id}>{r.role}</a>)}</aside> : null}\n` +
+    `      <main role="main" style={{ position: "relative", padding: 12 }}>\n` +
+    `        {regions.map((r) => (\n` +
+    `          <section key={r.id} id={r.id} aria-label={r.role} data-confidence={r.confidence} title={r.evidence} style={{ position: "absolute", left: \`\${r.bounds.x * 100}%\`, top: \`\${r.bounds.y * 100}%\`, width: \`\${r.bounds.w * 100}%\`, height: \`\${r.bounds.h * 100}%\`, padding: 12, outline: "1px dashed rgba(255,255,255,0.15)" }}>\n` +
+    `            <h2 style={{ margin: 0, fontSize: 16 }}>{r.role}</h2>\n` +
+    `          </section>\n` +
+    `        ))}\n` +
+    `        ${formJsx}\n` +
+    `        ${cardsJsx}\n` +
+    `        ${modalJsx}\n` +
+    `      </main>\n` +
+    `      <footer role="contentinfo" style={{ gridColumn: "1 / -1", padding: 12 }}>Footer</footer>\n` +
+    `    </div>\n` +
+    `  );\n` +
+    `}\n`
   );
 }
-`;
-}
+
 
 function swiftui(spec: UiSpec): string {
   return `import SwiftUI

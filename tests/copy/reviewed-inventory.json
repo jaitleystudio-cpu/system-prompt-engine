@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "Refreshed 2026-09-24 SPE V1 final rebuild",
+  "note": "Refreshed 2026-09-24 SPE V1 predeploy pass2 (speech UX, screenshot fidelity, url site-class)",
   "entries": [
     {
       "id": "52ecf64fcc14b7858f5a",
@@ -1143,6 +1143,120 @@
       "text": "Video → prompt request:"
     },
     {
+      "id": "196e1a0d9cef82ec1329",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "unknown"
+    },
+    {
+      "id": "2680204ae1ed1e1ee3ce",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "Microphone or speech access was denied. Allow access in your browser settings, or type your idea."
+    },
+    {
+      "id": "2ea54f7c7b2abe283a9e",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "permission-denied"
+    },
+    {
+      "id": "3fa1bb6e07e5ffb743c0",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "No usable microphone was found. Plug in a mic, check OS privacy settings, or type your idea."
+    },
+    {
+      "id": "45084ec6af0bfcbc752a",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "listening"
+    },
+    {
+      "id": "4834f1cb35a0d28e8ec8",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "service-not-allowed"
+    },
+    {
+      "id": "69c3b0585726b0a28abb",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "no-speech"
+    },
+    {
+      "id": "828453678e339e9b84bc",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "audio-capture"
+    },
+    {
+      "id": "8a5b03d3e91acf83b8ad",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "Speech recognition needs a network connection in this browser. Check connectivity, or type your idea."
+    },
+    {
+      "id": "9ec9d4e98cc95dccd71e",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "network"
+    },
+    {
+      "id": "a0be744b0f3aeca032ee",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "aborted"
+    },
+    {
+      "id": "aa2a21f7d7b3e2d8cc74",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "error"
+    },
+    {
+      "id": "af579e992cd83eb080c1",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "idle"
+    },
+    {
+      "id": "b8f10773e4e8e11ca5a2",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "Listening stopped."
+    },
+    {
+      "id": "c3f66235d9c19a03cb4b",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "not-allowed"
+    },
+    {
+      "id": "caa77a3de0184fb80be0",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "Speech recognition stopped. Check your microphone and connection, or type your idea."
+    },
+    {
+      "id": "dec190c4b013cdfbc421",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "needs-consent"
+    },
+    {
+      "id": "e2852c3c5cd9dd810e51",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "review"
+    },
+    {
+      "id": "f22d6bfca9800688972e",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "No speech was detected. Try again, or type your idea."
+    },
+    {
       "id": "063b3ea2f233e4012efb",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
@@ -1173,12 +1287,6 @@
       "text": "Spanish"
     },
     {
-      "id": "4e66c71f169c0f87ff7c",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Microphone or speech access was denied. Allow access in your browser, or type your idea."
-    },
-    {
       "id": "51a3df0d33d277bfa020",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
@@ -1203,34 +1311,22 @@
       "text": "Speak your idea"
     },
     {
-      "id": "6186afed1f0a2d0e0b33",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "service-not-allowed"
-    },
-    {
       "id": "7224ab83fa6d0c7afc27",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
       "text": "Speech could not start. Try again, or type your idea."
     },
     {
-      "id": "7ad62960a4a3b830d876",
+      "id": "76f2f7597bdd6d6c23c3",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
-      "text": "No speech was detected. Try again, or type your idea."
+      "text": "Tick the box above before starting the microphone. You can revoke by refreshing this page."
     },
     {
       "id": "8cd619073cdd3681689e",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
       "text": "English (India)"
-    },
-    {
-      "id": "95ab3defc36d028a4f22",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Speech recognition stopped. Check your microphone and connection, or type your idea."
     },
     {
       "id": "9917d3e8503d6722fb18",
@@ -1251,16 +1347,10 @@
       "text": "Allow browser speech recognition for this session"
     },
     {
-      "id": "b817f4003a480c167a16",
+      "id": "ae558b87a566c2c58737",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
-      "text": "Dictate, review the text, then add it to your idea. Your browser may send audio to its speech service. SPE does not save audio and does not claim on-device speech recognition unless a device row is qualified."
-    },
-    {
-      "id": "bbc23d765d7d319a0577",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "no-speech"
+      "text": "start-failed"
     },
     {
       "id": "bcf65062ea6ab4ef3749",
@@ -1269,16 +1359,22 @@
       "text": "English (US)"
     },
     {
-      "id": "c2606ad8994827bca33e",
+      "id": "c88c1c089ced82a15bbc",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
-      "text": "not-allowed"
+      "text": "Speech→Prompt: implementation present; device qualification pending (NOT_TESTED on most platforms)."
     },
     {
-      "id": "e3c41cf380d8c2fbf6ea",
+      "id": "cc7a38cb6e7818034de8",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
-      "text": "Review your transcript"
+      "text": "Review your transcript (edit freely — speech and typing mix)"
+    },
+    {
+      "id": "d8b27e10497df25db984",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Dictate, review the text, then add it to your idea. You can also type into the transcript box (mixed speech + typing). Your browser may send audio to its speech service. SPE does not save audio and does not claim on-device speech recognition unless a device row is qualified."
     },
     {
       "id": "ee377cdcb0e2f755876d",
@@ -2493,10 +2589,22 @@
       "text": "3D preview:"
     },
     {
+      "id": "715397968860d790e51e",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "folds"
+    },
+    {
       "id": "718d458cc49f5985a5b2",
       "file": "apps/web/src/lab/LabStage.tsx",
       "depth": "PRODUCT",
       "text": "undefined"
+    },
+    {
+      "id": "a2833c6607a7b3ecdb0d",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "table"
     },
     {
       "id": "b272a6edc08d756f8738",
@@ -2509,6 +2617,12 @@
       "file": "apps/web/src/lab/LabStage.tsx",
       "depth": "PRODUCT",
       "text": "(prefers-reduced-motion: reduce)"
+    },
+    {
+      "id": "c146ed59ad638ba422dc",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "modules"
     },
     {
       "id": "c602efc5a503aab8e743",
@@ -2527,6 +2641,12 @@
       "file": "apps/web/src/lab/LabStage.tsx",
       "depth": "PRODUCT",
       "text": "ribbon"
+    },
+    {
+      "id": "e093ea792603966a0c93",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "slabs"
     },
     {
       "id": "efdcdb83441ae3ace480",
@@ -2563,6 +2683,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "patina"
+    },
+    {
+      "id": "012f8c780a5ec190c28a",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "modules"
     },
     {
       "id": "01b445810ad7b88b09b8",
@@ -3111,6 +3237,12 @@
       "text": "d3d-05"
     },
     {
+      "id": "65f7f1dbe2286a20cfa0",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "slabs"
+    },
+    {
       "id": "67f6d5a6b6337a9b46fb",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
@@ -3175,6 +3307,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "spe:daily3d:brushed-orbit"
+    },
+    {
+      "id": "77a26ade21fdafc418b0",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "table"
     },
     {
       "id": "794aa0571c45546ce074",
@@ -3487,6 +3625,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "sun edge"
+    },
+    {
+      "id": "bd823f0431eb2225633c",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "folds"
     },
     {
       "id": "bdf650340dfef3b83ac8",
@@ -5367,10 +5511,22 @@
       "text": "medium"
     },
     {
-      "id": "039aa84893b21d86d3ba",
+      "id": "068c14a5cf9a2cebd75b",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "\" title=\""
+      "text": "<main class=\"spe-main\" role=\"main\">"
+    },
+    {
+      "id": "068e4647905f023fb321",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" class=\""
+    },
+    {
+      "id": "0a21cfa229b069120311",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "240px 1fr"
     },
     {
       "id": "0b157eaf82db50ce4baa",
@@ -5379,10 +5535,28 @@
       "text": "Flutter"
     },
     {
-      "id": "11f7b57a8deb4466f1b4",
+      "id": "10e8051febaeb3936363",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "\", color: \"#f5f5f5\" }}>\n      {regions.map((r) => (\n        <section\n          key={r.id}\n          aria-label={r.role}\n          data-confidence={r.confidence}\n          title={r.evidence}\n          style={{\n            position: \"absolute\",\n            left: `${r.bounds.x * 100}%`,\n            top: `${r.bounds.y * 100}%`,\n            width: `${r.bounds.w * 100}%`,\n            height: `${r.bounds.h * 100}%`,\n            padding: 12,\n            outline: \"1px dashed rgba(255,255,255,0.15)\",\n          }}\n        >\n          <h2 style={{ margin: 0, fontSize: 16 }}>{r.role}</h2>\n        </section>\n      ))}\n    </div>\n  );\n}"
+      "text": "f)\n        .width(maxWidth *"
+    },
+    {
+      "id": "1142a835bc1f7ebff83b",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "const hasRail ="
+    },
+    {
+      "id": "121dd00456a35cea0fff",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "1fr"
+    },
+    {
+      "id": "136f9dc90d08d3fc9a09",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</section>"
     },
     {
       "id": "141a8d7d4fc6590c8f4d",
@@ -5391,16 +5565,40 @@
       "text": "import 'package:flutter/material.dart';\nclass ScreenFromScreenshot extends StatelessWidget {\n  const ScreenFromScreenshot({super.key});\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      backgroundColor: const Color(0xFF0B0D10),\n      body: Stack(children: ["
     },
     {
+      "id": "14a1aa5fd2916ed34687",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div class=\"spe-modal\" role=\"dialog\" aria-modal=\"true\"><h2>Dialog</h2><button type=\"button\">Close</button></div>"
+    },
+    {
+      "id": "15ee8b2e5028063cfdbe",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ", y: geo.size.height *"
+    },
+    {
       "id": "1680556d0fe2cc5d9939",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "rows; density"
     },
     {
-      "id": "23ba6299569b9ed9c0df",
+      "id": "1d4fb5c515c758f3762f",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "\")\n    }\n    // bounds"
+      "text": "<html lang=\"en\"><head><meta charset=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>"
+    },
+    {
+      "id": "1d64ccdb6dea518750b1",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<section id=\""
+    },
+    {
+      "id": "1dc1e88f98670d96868a",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<!-- no side rail -->"
     },
     {
       "id": "2408c3928aab2718064a",
@@ -5409,28 +5607,34 @@
       "text": "] evidence="
     },
     {
+      "id": "268623ce228c88fb7879",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<aside class=\"spe-rail\" role=\"navigation\" aria-label=\"Side rail\">"
+    },
+    {
       "id": "268d848dba16c1c16659",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "Scaffolds reflect IR structure when strong; otherwise honest starter + build prompt."
     },
     {
-      "id": "29ecce00e81f8b364437",
+      "id": "2e0616564df5237db683",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "@Composable\nfun ScreenFromScreenshot() {\n  Box(Modifier.fillMaxSize().background(Color(0xFF0B0D10))) {"
+      "text": "return ("
     },
     {
-      "id": "2ce5d5a11de1ba2934d4",
+      "id": "365469331bf1bbea6232",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "</strong>\n    <!-- evidence:"
+      "text": "main.spe-main{position:relative;background:var(--c2,#111);padding:1rem}"
     },
     {
-      "id": "2e406b3e8cb83496ac2d",
+      "id": "3713afc29959e7eea7db",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "export default function ScreenFromScreenshot() {\n  const regions ="
+      "text": "true"
     },
     {
       "id": "37b182df7c59c34cfcdd",
@@ -5439,16 +5643,46 @@
       "text": "layout:"
     },
     {
+      "id": "3b00dd9b9376e34fae5f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<h2>"
+    },
+    {
       "id": "3ba3e92e2dedfc57c0e5",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "position:absolute;left:"
     },
     {
-      "id": "413e4b5af781879cb095",
+      "id": "3bd9e7c17ded197fb699",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "w="
+      "text": ".spe-modal{position:fixed;inset:20% 25%;background:#1a1d24;border:1px solid rgba(255,255,255,.2);padding:1rem;z-index:5}"
+    },
+    {
+      "id": "3cc18eba8ed9e0119d1e",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<nav aria-label=\"Primary\">{regions.filter((r) => /header|top|nav|toolbar/i.test(r.role)).map((r) => <a key={r.id} href={\"#\" + r.id}>{r.role}</a>)}</nav>"
+    },
+    {
+      "id": "3ea5fcee3cce95b405c7",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\")\n            .font(.headline)\n          Text(\""
+    },
+    {
+      "id": "407decd308ea2484dc81",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ".spe-card{border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:8px}"
+    },
+    {
+      "id": "41614cb9b8db2e9a3903",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ", alignment: .topLeading)\n        .offset(x: geo.size.width *"
     },
     {
       "id": "42345fa3020d2d4b1c71",
@@ -5469,16 +5703,46 @@
       "text": "Stacked header / main / footer with projection columns (uncertain)"
     },
     {
+      "id": "48131806eacdd7fdf504",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "f, y = maxHeight *"
+    },
+    {
       "id": "4948e66502a736276bc7",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "\" style=\""
     },
     {
+      "id": "4b7e38cb5de0c4f4b0ea",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ".spe-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:1rem}"
+    },
+    {
       "id": "4be55203f2e1af9cfd18",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "palette:"
+    },
+    {
+      "id": "4cb53ab51510b75f2084",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<title>SPE UI scaffold from screenshot IR</title>"
+    },
+    {
+      "id": "4d69742f86db048750e3",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</style></head><body>"
+    },
+    {
+      "id": "4da61e426b8d22ef45b8",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" data-role=\""
     },
     {
       "id": "4e0c977a8ab953bdf612",
@@ -5499,16 +5763,46 @@
       "text": "Region roles include evidence strings — verify against screenshot."
     },
     {
+      "id": "4fe8c1610b30505415d8",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<strong>App</strong>"
+    },
+    {
       "id": "5281836c34458e4d057a",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": ",\n          child: Padding(\n            padding: const EdgeInsets.all(12),\n            child: Text('"
     },
     {
+      "id": "52ef59e06051dc1b184f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div role=\"dialog\" aria-modal=\"true\"><h2>Dialog</h2><button type=\"button\">Close</button></div>"
+    },
+    {
+      "id": "535db5b75110fedd3278",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "{regions.map((r) => ("
+    },
+    {
+      "id": "5414297153ceb8e7647d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</footer>"
+    },
+    {
       "id": "584ddf10aaeddcb16c4c",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "region-rail"
+    },
+    {
+      "id": "59a7a332c722d8258848",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<form class=\"spe-inferred-form\" aria-label=\"Inferred form from screenshot\">\n      <label>Field <input name=\"field\" type=\"text\"/></label>\n      <button type=\"submit\">Continue</button>\n    </form>"
     },
     {
       "id": "5a5741ea29217f288696",
@@ -5523,22 +5817,28 @@
       "text": "Possible sidebar + content columns (uncertain)"
     },
     {
+      "id": "5bd904994b29ba30779c",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "{hasRail ? <aside role=\"navigation\" aria-label=\"Side rail\" style={{ padding: 12 }}>{regions.filter((r) => /rail|sidebar|side/i.test(r.role)).map((r) => <a key={r.id} href={\"#\" + r.id}>{r.role}</a>)}</aside> : null}"
+    },
+    {
       "id": "5da5c4f88af369e5d0a6",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "viewport:"
     },
     {
-      "id": "5ef7ade5bcf3655502f1",
+      "id": "5f589947c7f469b0e569",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "y="
+      "text": "</header>"
     },
     {
-      "id": "60943f933e897d8ffdfe",
+      "id": "6065531a9fd2faa3d214",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "-->\n  </section>"
+      "text": "</aside>"
     },
     {
       "id": "62b2befddb0ce77eaed4",
@@ -5553,10 +5853,34 @@
       "text": "', style: const TextStyle(color: Colors.white)),\n          ),\n        ),"
     },
     {
+      "id": "659839d85be006164ba8",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<header class=\"spe-top\" role=\"banner\">"
+    },
+    {
+      "id": "683ea1fe4fcbb504ef65",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "f)\n        .height(maxHeight *"
+    },
+    {
+      "id": "69c021e18dac81433cbc",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<h2 style={{ margin: 0, fontSize: 16 }}>{r.role}</h2>"
+    },
+    {
       "id": "69dadca4898c2acc99f1",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "html"
+    },
+    {
+      "id": "6bbd525d886c72dba645",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<style>\n:root {"
     },
     {
       "id": "6c471fa3ff7de377c204",
@@ -5565,28 +5889,40 @@
       "text": "import { View, Text, useWindowDimensions } from \"react-native\";\nexport default function ScreenFromScreenshot() {\n  const { width, height } = useWindowDimensions();\n  const regions ="
     },
     {
+      "id": "6d0f8722c1fdef7da70f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "*{box-sizing:border-box}"
+    },
+    {
+      "id": "6d2c91b28e510cc159d9",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ".shell{display:grid;min-height:100vh;grid-template-columns:"
+    },
+    {
       "id": "72b9bc29854827c5bf1a",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "%;height:"
     },
     {
-      "id": "74fc27172f8c28d1d78d",
+      "id": "7aebf2ff89f9bcd09a1e",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "import SwiftUI\nstruct ScreenFromScreenshot: View {\n  var body: some View {\n    ZStack(alignment: .topLeading) {"
-    },
-    {
-      "id": "7a61bc4a6b5132fe8d94",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "<section class=\""
+      "text": "}\n    }\n    .background(Color.black)\n  }\n}"
     },
     {
       "id": "7c82b2909a0bb9b0b5fc",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "\" }}>\n      {regions.map((r) => (\n        <View\n          key={r.id}\n          style={{\n            position: \"absolute\",\n            left: width * r.bounds.x,\n            top: height * r.bounds.y,\n            width: width * r.bounds.w,\n            height: height * r.bounds.h,\n            padding: 12,\n          }}\n        >\n          <Text style={{ color: \"#fff\", fontSize: 16 }}>{r.role}</Text>\n        </View>\n      ))}\n    </View>\n  );\n}"
+    },
+    {
+      "id": "7cf5477fbdcdbf19b1fb",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div class=\"spe-card-grid\" role=\"list\">\n      <article class=\"spe-card\" role=\"listitem\"><h3>Card A</h3></article>\n      <article class=\"spe-card\" role=\"listitem\"><h3>Card B</h3></article>\n      <article class=\"spe-card\" role=\"listitem\"><h3>Card C</h3></article>\n    </div>"
     },
     {
       "id": "7e975e60efa7858be512",
@@ -5607,10 +5943,16 @@
       "text": "Rebuild this UI in"
     },
     {
-      "id": "82f84092193109e8910d",
+      "id": "82e9532018a07c4d02c0",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "}\n    .background(Color.black)\n  }\n}"
+      "text": "</a>"
+    },
+    {
+      "id": "836cdc9a6b04b9dc8da7",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "section{outline:1px dashed rgba(255,255,255,.12);padding:.75rem}"
     },
     {
       "id": "83b1ac333e0fb594c325",
@@ -5619,16 +5961,16 @@
       "text": "IR:"
     },
     {
-      "id": "8aec303d49b9023da9b8",
+      "id": "85ea9f290f00606f6270",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "x"
+      "text": "<header role=\"banner\" style={{ gridColumn: \"1 / -1\", padding: 12, display: \"flex\", gap: 12 }}>"
     },
     {
-      "id": "914eced2397e42d76bf9",
+      "id": "86f1df58072aff9e3f74",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "</div>\n</body></html>"
+      "text": "<!doctype html>"
     },
     {
       "id": "91b9edd80a778d4ab7bb",
@@ -5637,16 +5979,22 @@
       "text": "SwiftUI"
     },
     {
-      "id": "9269aa3b8b9451a74762",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "\")\n          .font(.caption2)\n          .foregroundStyle(.secondary)\n      }\n      .padding(12)\n      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)\n      // bounds x="
-    },
-    {
       "id": "9677dda37b68644ff515",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "Jetpack Compose"
+    },
+    {
+      "id": "9679e743ac9fd12eff43",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "@Composable\nfun ScreenFromScreenshot() {\n  BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF0B0D10))) {"
+    },
+    {
+      "id": "99bd7d63f63af0d811a2",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<form aria-label=\"Inferred form\"><label>Field <input name=\"field\" /></label><button type=\"submit\">Continue</button></form>"
     },
     {
       "id": "9cd8fb98da9ef735c61d",
@@ -5661,10 +6009,28 @@
       "text": "; confidence"
     },
     {
+      "id": "9f65059cad7d314fc79c",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<a href=\"#"
+    },
+    {
       "id": "a0013dd10502b55ab393",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": ",\n          height: MediaQuery.of(context).size.height *"
+    },
+    {
+      "id": "a2578953025f41d051f9",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div role=\"list\" className=\"spe-card-grid\"><article role=\"listitem\">Card A</article><article role=\"listitem\">Card B</article><article role=\"listitem\">Card C</article></div>"
+    },
+    {
+      "id": "a2b0867b797a23d8044f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</nav>"
     },
     {
       "id": "a68585623327f201d2c0",
@@ -5679,16 +6045,28 @@
       "text": "Starter scaffold:"
     },
     {
+      "id": "a8544778df79cb7bf9b0",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<!-- evidence:"
+    },
+    {
       "id": "a9677a45a3c8827df75a",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "; controls:"
     },
     {
-      "id": "ad5d2e56e2b5199b11ce",
+      "id": "ac2c66fd56b4566fd85c",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": ";\n  return (\n    <div style={{ position: \"relative\", minHeight: \"100vh\", fontFamily: \"system-ui\", background: \""
+      "text": "Column(\n      Modifier\n        .offset(x = maxWidth *"
+    },
+    {
+      "id": "adbac589585c853e84d5",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "import SwiftUI\nstruct ScreenFromScreenshot: View {\n  var body: some View {\n    GeometryReader { geo in\n      ZStack(alignment: .topLeading) {"
     },
     {
       "id": "ae47bc11bc4079996591",
@@ -5697,10 +6075,10 @@
       "text": "%;top:"
     },
     {
-      "id": "af07f07262bf83e6d5f4",
+      "id": "b0cadc682e3714a7fc85",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n<title>SPE UI scaffold from screenshot IR</title>\n<style>\n:root {"
+      "text": "VStack(alignment: .leading) {\n          Text(\""
     },
     {
       "id": "b33c46739edd9d9b4264",
@@ -5709,16 +6087,28 @@
       "text": "html-css-js"
     },
     {
+      "id": "b4f814fc518ed8644d40",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</div>"
+    },
+    {
+      "id": "b6105a9d5a6d675bb167",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<nav aria-label=\"Primary\">"
+    },
+    {
       "id": "b7db15c555b01d1543b4",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "Honest structured spec + starter: region geometry was weak; treat scaffold as a build prompt seed, not a pixel clone."
     },
     {
-      "id": "baf155da8de3515606b4",
+      "id": "b8f7f50590e58d62f1c5",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "h="
+      "text": "\")\n            .font(.caption2)\n            .foregroundStyle(.secondary)\n        }\n        .padding(12)\n        .frame(width: geo.size.width *"
     },
     {
       "id": "bda520762ed49a85ff5d",
@@ -5727,16 +6117,28 @@
       "text": "columns ×"
     },
     {
-      "id": "bf53848bb93dcb088cd6",
+      "id": "c1170efe09c13ed17d65",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "\">\n    <strong>"
+      "text": ";grid-template-rows:auto 1fr auto}"
     },
     {
-      "id": "c262de80861dd83e17d0",
+      "id": "c16f55e61670723795c0",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "VStack(alignment: .leading) {\n        Text(\""
+      "text": "<div style={{ display: \"grid\", minHeight: \"100vh\", gridTemplateColumns: hasRail ? \"240px 1fr\" : \"1fr\", gridTemplateRows: \"auto 1fr auto\", fontFamily: \"system-ui\", background: \""
+    },
+    {
+      "id": "c20011c2213ee55fcb48",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "header.spe-top{grid-column:1/-1;background:var(--c1,#222);padding:.75rem 1rem;display:flex;gap:1rem;align-items:center}"
+    },
+    {
+      "id": "c2759b4f13cc620a2b22",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<section key={r.id} id={r.id} aria-label={r.role} data-confidence={r.confidence} title={r.evidence} style={{ position: \"absolute\", left: `${r.bounds.x * 100}%`, top: `${r.bounds.y * 100}%`, width: `${r.bounds.w * 100}%`, height: `${r.bounds.h * 100}%`, padding: 12, outline: \"1px dashed rgba(255,255,255,0.15)\" }}>"
     },
     {
       "id": "c2f3cfb10c70428d6247",
@@ -5745,28 +6147,34 @@
       "text": "\")\n      Text(\""
     },
     {
-      "id": "c350a8caa04e642ef32f",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "Column(Modifier.padding(12.dp)) {\n      Text(\""
-    },
-    {
       "id": "c51d1a24d3ef9e033d88",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "STRUCTURED UI OBSERVATION IR:"
     },
     {
-      "id": "c58e0c11138d1fa4def4",
+      "id": "c64a54ebc594442f2ed8",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "\")\n          .font(.headline)\n        Text(\""
+      "text": "f)\n        .padding(12.dp)\n    ) {\n      Text(\""
+    },
+    {
+      "id": "c70345f9b53d65abff6f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</body></html>"
     },
     {
       "id": "c7f2f61de82373f71163",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "compose"
+    },
+    {
+      "id": "c9bade393c51f0e672bb",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<footer class=\"spe-foot\" role=\"contentinfo\">"
     },
     {
       "id": "ca41a6f8ee2bf8afc1ec",
@@ -5779,6 +6187,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "dart"
+    },
+    {
+      "id": "cc7a6bac20a3a09bc086",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<main role=\"main\" style={{ position: \"relative\", padding: 12 }}>"
     },
     {
       "id": "cf9039971245b42a1d92",
@@ -5799,16 +6213,40 @@
       "text": "swift"
     },
     {
+      "id": "d47192e7278927d4d6b4",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<footer role=\"contentinfo\" style={{ gridColumn: \"1 / -1\", padding: 12 }}>Footer</footer>"
+    },
+    {
       "id": "d53aee47e71f25b67bec",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "React Native"
     },
     {
+      "id": "d91e554dcf0ff85b1111",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "body{margin:0;font:16px/1.45 system-ui,sans-serif;background:#0b0d10;color:#e8eaed}"
+    },
+    {
+      "id": "d94a23363872d107c979",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "const regions ="
+    },
+    {
       "id": "db961edb785fb70160b8",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "Starter scaffold materially mirrors observed region bounds from UIObservationIR — verify every region against the screenshot."
+    },
+    {
+      "id": "dcde0f1c40f709a67762",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Footer"
     },
     {
       "id": "ddad2424bfefebf11b48",
@@ -5823,10 +6261,40 @@
       "text": "textBlocks:"
     },
     {
+      "id": "e157ad151c7c86693b15",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\", color: \"#f5f5f5\" }}>"
+    },
+    {
+      "id": "e28bdc25e9e292a498d5",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</h2>"
+    },
+    {
+      "id": "e372802974b33d101419",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</main>"
+    },
+    {
       "id": "e5d37067547c0e7af3e9",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "react"
+    },
+    {
+      "id": "e68ba1878a7e6a0d95fd",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "false"
+    },
+    {
+      "id": "e7791453c931d2abd628",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "aside.spe-rail{background:var(--c4,#161616);padding:1rem;display:flex;flex-direction:column;gap:.5rem}"
     },
     {
       "id": "e80180b034a49caf120d",
@@ -5835,10 +6303,28 @@
       "text": ",\n          width: MediaQuery.of(context).size.width *"
     },
     {
-      "id": "eb1d257e46a9bfb7dbf9",
+      "id": "eace5ff04d8750d99f42",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "}\n*{box-sizing:border-box}\nbody{margin:0;font:16px/1.45 system-ui,sans-serif;background:#0b0d10;color:#e8eaed}\n.stage{position:relative;min-height:100vh;background:var(--c2,#111)}\nsection{outline:1px dashed rgba(255,255,255,.12);padding:.75rem}\n.region-header{background:var(--c1,#222)}\n.region-main{background:var(--c2,#111)}\n.region-footer{background:var(--c3,#1a1a1a)}\n.region-rail{background:var(--c4,#161616)}\n</style></head><body>\n<div class=\"stage\">"
+      "text": "export default function ScreenFromScreenshot() {"
+    },
+    {
+      "id": "eae9978322a8c531f7e7",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "footer.spe-foot{grid-column:1/-1;background:var(--c3,#1a1a1a);padding:.75rem 1rem}"
+    },
+    {
+      "id": "f2e85bc630540784ec80",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div class=\"shell\">"
+    },
+    {
+      "id": "f2ef04471a07aa94024f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ", height: geo.size.height *"
     },
     {
       "id": "f3ca6cb06cd8a1886933",
@@ -5863,6 +6349,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "HTML / CSS / JavaScript"
+    },
+    {
+      "id": "fcaeb732ee6c49d8f8ef",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<!-- no header regions -->"
     },
     {
       "id": "07bd3063e92c14ec670a",
@@ -6393,6 +6885,12 @@
       "text": "Typography sizes are guessed from band height, not measured fonts."
     },
     {
+      "id": "08b946a1d0507f1d178a",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Structure hints:"
+    },
+    {
       "id": "0b202f8daeb7d22dbffa",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -6403,6 +6901,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "sparse"
+    },
+    {
+      "id": "14ad5b8640adb9f8e9d2",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Inferred from bright form panel geometry"
     },
     {
       "id": "1844181688e07a716299",
@@ -6417,6 +6921,12 @@
       "text": "Header / top bar"
     },
     {
+      "id": "1fbde31d447b2c0d3cef",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "modal-or-dialog-candidate"
+    },
+    {
       "id": "1fceb8142c1c19e5e481",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -6427,6 +6937,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "region-header"
+    },
+    {
+      "id": "3082bb39540cf64ac6b6",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "under dark header"
     },
     {
       "id": "31361c9e13ec02002339",
@@ -6489,6 +7005,12 @@
       "text": "UI roles are structure heuristics + optional MobileNet context — verify against the screenshot."
     },
     {
+      "id": "527dca85d54f62c7ec3a",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Modal / dialog overlay"
+    },
+    {
       "id": "54aa4729e63037272c56",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -6501,6 +7023,18 @@
       "text": "Footer / bottom actions"
     },
     {
+      "id": "5b1ec1c2476a343abd10",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Form / input panel"
+    },
+    {
+      "id": "6028bcf5a00d47fd51f8",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Primary form action"
+    },
+    {
       "id": "62bd3b2c5ff9667dd2fd",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -6511,6 +7045,18 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "body"
+    },
+    {
+      "id": "6531d8a6f00fc1a91127",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "ctrl-form-primary"
+    },
+    {
+      "id": "71a8f976c0ba62c80c57",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Checker brightness"
     },
     {
       "id": "74114de4c3e715b0037c",
@@ -6529,6 +7075,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "; Δ vs mid"
+    },
+    {
+      "id": "818478850d9686d8e6be",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "region-modal"
     },
     {
       "id": "8231f1e687cb860f8fcd",
@@ -6579,6 +7131,24 @@
       "text": "Toolbar control"
     },
     {
+      "id": "a1c3f53b324f896e3111",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Bright mid panel"
+    },
+    {
+      "id": "adde712af6ccd9d56b4f",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "card-grid-candidate"
+    },
+    {
+      "id": "ae169343d9421f544b21",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "region-card-r"
+    },
+    {
       "id": "af04b7b4f69048122543",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -6589,6 +7159,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "unknown"
+    },
+    {
+      "id": "b3d9ad995e1a0fee9431",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "form-panel-candidate"
     },
     {
       "id": "b5fc66dbb72cdeae90e0",
@@ -6633,6 +7209,18 @@
       "text": "in mid frame — possible media block"
     },
     {
+      "id": "cc8c0340ce9dfb5b4928",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "region-form"
+    },
+    {
+      "id": "d5661b7b2ed029c8f265",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Card / tile"
+    },
+    {
       "id": "d779ed18e4b989128fbd",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -6645,10 +7233,22 @@
       "text": "region-footer"
     },
     {
+      "id": "ec926228a0e0fc674669",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Bright center ("
+    },
+    {
       "id": "ee4b17e6c6632c639757",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "px"
+    },
+    {
+      "id": "f46310e139161d3d7ea6",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": ") vs border ("
     },
     {
       "id": "fc3037b1a11bb962bf11",
@@ -6819,6 +7419,12 @@
       "text": "Meta description:"
     },
     {
+      "id": "298462c826d19556e6de",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "creativework-schema"
+    },
+    {
       "id": "2ac0e60de6d14789414b",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -6865,6 +7471,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Layout clues: (none strong in HTML/CSS text)"
+    },
+    {
+      "id": "42fc6ddf6d22d1a6e923",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "editorial"
     },
     {
       "id": "45af2baaa09c5eb0f32f",
@@ -6945,10 +7557,28 @@
       "text": "href"
     },
     {
+      "id": "5578812661ab177b1a01",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "portfolio-copy"
+    },
+    {
       "id": "59ad671040a45b2a34c3",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "https://"
+    },
+    {
+      "id": "5a88a056057c6ab58ad4",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "none"
+    },
+    {
+      "id": "5bcfa4862746f1712b48",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "webgl-markers"
     },
     {
       "id": "5cb10e28cf5368632fc9",
@@ -6967,6 +7597,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Parse mode: DOMParser only — page scripts were not executed."
+    },
+    {
+      "id": "71012a954bf36546c126",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "(signals:"
     },
     {
       "id": "71facaf175882dd877f1",
@@ -7029,6 +7665,12 @@
       "text": "Enter a full http(s) URL."
     },
     {
+      "id": "7ad0407381b31b90fa3c",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "static-marketing"
+    },
+    {
       "id": "7fc1face1cbfcb5a943f",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -7039,6 +7681,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "h1, h2, h3"
+    },
+    {
+      "id": "849d1eae6c7308166679",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "spa-mount"
     },
     {
       "id": "84d9e5fb858ac6db3f3c",
@@ -7119,6 +7767,18 @@
       "text": "input tags)"
     },
     {
+      "id": "a24984b0978e1ee56f28",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "portfolio"
+    },
+    {
+      "id": "a3ec03bea19de625ad27",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "marketing-copy"
+    },
+    {
       "id": "a55a5fdc7b4d92d7cdcb",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -7129,6 +7789,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Nav labels: (none)"
+    },
+    {
+      "id": "a8ab2df477999e343856",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "byline"
     },
     {
       "id": "a93f7a5ab77d69f2bda7",
@@ -7209,6 +7875,18 @@
       "text": "Goal: rebuild a clearer, modern information architecture — not a pixel clone."
     },
     {
+      "id": "bcf9b9baecc0ca956cfb",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "spa-framework-markers"
+    },
+    {
+      "id": "be411ff11e70e17c8062",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "commerce-markers"
+    },
+    {
       "id": "be754162f631be54f5fb",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -7221,10 +7899,22 @@
       "text": "- Excerpt:"
     },
     {
+      "id": "c475ad4e65840bd5126f",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "ecommerce"
+    },
+    {
       "id": "c63fe1fc3eb26d077a5c",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "No CORS proxy was used."
+    },
+    {
+      "id": "c6d425b29d763cc71855",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Site class:"
     },
     {
       "id": "ca0a2fa1eac870ffec96",
@@ -7287,16 +7977,40 @@
       "text": "Headings: (none detected)"
     },
     {
+      "id": "d9270213d862154af167",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "article-markers"
+    },
+    {
       "id": "d958f7e72bcfed66364b",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Title:"
     },
     {
+      "id": "db40d2f25e63c99923cc",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "product-schema"
+    },
+    {
+      "id": "dcc450cf6929e8afc21e",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "react-spa"
+    },
+    {
       "id": "de617ab0b15c47890cd1",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "nav a[href]"
+    },
+    {
+      "id": "dedb99e53a5037246a72",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "animation-heavy"
     },
     {
       "id": "dfabfe6059d2662fb832",
@@ -7353,6 +8067,12 @@
       "text": "text/html,text/plain;q=0.9,*/*;q=0.1"
     },
     {
+      "id": "f09c843ceb0a988fad25",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "webgl-3d"
+    },
+    {
       "id": "f0e9d45d2971217fe646",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -7369,6 +8089,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Fetch timed out after"
+    },
+    {
+      "id": "f8c30dfb6e9ffd6570d1",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "animation-markers"
     },
     {
       "id": "faeb0c74a263ee7b14ef",
