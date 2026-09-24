@@ -1,6 +1,6 @@
 {
-  "testedSha": "9a19bcf90a1713e2eae9a005af8b81ca0458f6dd",
-  "capturedAtIst": "24/9/2026, 10:57:39 am",
+  "testedSha": "d0808965a16ea03a30311698ce150f037c1b851f",
+  "capturedAtIst": "24/9/2026, 11:37:07 am",
   "shots": [
     {
       "file": "home-1440.png",
@@ -75,6 +75,14 @@
       "reducedMotion": false
     },
     {
+      "file": "create-393.png",
+      "view": "Create",
+      "mode": null,
+      "w": 393,
+      "h": 852,
+      "reducedMotion": false
+    },
+    {
       "file": "create-390.png",
       "view": "Create",
       "mode": null,
@@ -107,5 +115,5 @@
       "reducedMotion": true
     }
   ],
-  "note": "Screenshots captured from production build including hero/privacy polish committed as this SHA."
+  "note": "Fresh visual after V1 rebuild: human URL copy, instrument Create, Code structure/compare, My Work empty state, Dawn coil specimen, mobile 393/390/360/320 hit targets. Manifest testedSha is IMPLEMENTATION_TESTED_SHA."
 }
