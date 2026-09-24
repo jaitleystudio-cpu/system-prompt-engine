@@ -1,21 +1,6 @@
 {
   "version": 1,
-  "review_kind": "assistant editorial review; not participant research",
-  "review_date": "2026-09-24",
-  "constitution": "docs/human-perspective/CONSTITUTION.md",
-  "scope": "Static source candidates are conservative and include some non-visible selector literals. User-authored text and generated professional prompts are excluded.",
-  "perspective_matrix": {
-    "first_time": "Heading is an invitation; support and CTA explain prompt preparation. No automatic comprehension is promised.",
-    "returning": "Only a completed action in this session selects returning copy. No elapsed-time or personal profile inference.",
-    "non_native_english": "Short familiar verbs; shape is a metaphor grounded by explicit prompt wording. Native-speaker localization remains pending.",
-    "creator": "Creative task selection picks editorial copy without flattering talent.",
-    "developer": "Exact execution and integrity details remain under inspection/proof.",
-    "business": "Goal, resources and boundaries are explicit; no ROI promise.",
-    "skeptical_expert": "Editable-template operation and pending independent qualification are disclosed.",
-    "privacy_conscious": "Core input stays on device during preparation; hosting sign-in and downstream AI use are distinguished.",
-    "mobile": "Short action profiles; hero layout requires visual review at breakpoints.",
-    "screen_reader": "Labels name the action; technical details use native disclosure controls. Accessibility certification is not claimed."
-  },
+  "note": "Refreshed 2026-09-24 SPE V1 final rebuild",
   "entries": [
     {
       "id": "52ecf64fcc14b7858f5a",
@@ -46,12 +31,6 @@
       "file": "apps/web/public/manifest.webmanifest",
       "depth": "EXPERIENCE",
       "text": "SPE"
-    },
-    {
-      "id": "0b491ae5cf58d937b1a7",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "Upload a UI screenshot. SPE adds local layout observations and honest starter scaffolds for HTML/CSS/JavaScript, React, SwiftUI, Jetpack Compose, Flutter, and React Native — with uncertainty labeled."
     },
     {
       "id": "0bb0ee26a0422a7e6086",
@@ -142,6 +121,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "prompt"
+    },
+    {
+      "id": "3b8d33558b3d8142d86e",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Create is the premium instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."
     },
     {
       "id": "3b9119bb88ee18235de8",
@@ -268,6 +253,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "lab"
+    },
+    {
+      "id": "7d57c72d2b5c42673998",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Code is Screenshot→code: UIObservationIR regions with evidence, then scaffolds for HTML/CSS/JavaScript, React, SwiftUI, Jetpack Compose, Flutter, and React Native."
     },
     {
       "id": "805a78c34f49e090e945",
@@ -564,12 +555,6 @@
       "text": "verifying_integrity"
     },
     {
-      "id": "fb8f5874a4a5df1a0af0",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "Start with text, speech, an image, a video, or a website. Review what SPE prepares, then take the prompt where you need it."
-    },
-    {
       "id": "fc16b54827cff6d00cdb",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -648,16 +633,16 @@
       "text": "URL content added (direct fetch)."
     },
     {
+      "id": "0be3708b86c44346a1bc",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Image semantic"
+    },
+    {
       "id": "101fbd410e9992594095",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Local HTML file added. No network request."
-    },
-    {
-      "id": "118efa9a29e306a65bc0",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "). Scaffolds ready — uncertainty labeled."
     },
     {
       "id": "13c7885c346112423b02",
@@ -672,10 +657,28 @@
       "text": "Screenshot → code"
     },
     {
+      "id": "1ad025e5a95603d05abd",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Reading image (semantic)…"
+    },
+    {
+      "id": "1d64238213089df09062",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "abort"
+    },
+    {
       "id": "1d6dbd97b7d51e08775d",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "CORS-honest fetch + fallbacks"
+    },
+    {
+      "id": "225228b229b53ed6a24d",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Using only the grounded observations / model judgments below (not verified facts), help me write a strong prompt about this image."
     },
     {
       "id": "2270d01c6b0162173dac",
@@ -702,6 +705,12 @@
       "text": "Copy unavailable. Select the scaffold text to copy it."
     },
     {
+      "id": "29d9a55baf9f9458d5d0",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "LITE"
+    },
+    {
       "id": "2e459fa70fd24cb94fd1",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -712,12 +721,6 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "UI scaffold + prompt"
-    },
-    {
-      "id": "371fba881c7abca26a2a",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "Reading screenshot…"
     },
     {
       "id": "37edc6a0c79dbad19e23",
@@ -750,12 +753,6 @@
       "text": "s. Added to your idea."
     },
     {
-      "id": "46bb22d270e786743a91",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "Screenshot observed (source"
-    },
-    {
       "id": "46ef9695e0d1edc3d7cf",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -768,10 +765,28 @@
       "text": "https://example.com"
     },
     {
+      "id": "52a5ecf6f392e7797130",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "layout guess, tier"
+    },
+    {
       "id": "534046a0f1ec9700d6cd",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Choose video"
+    },
+    {
+      "id": "54cc3e9e8dec3ce4676d",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "STANDARD"
+    },
+    {
+      "id": "56f4d8236b1ebd5167be",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "… (modelBytes="
     },
     {
       "id": "5790ddcd4cb788fdf14f",
@@ -786,10 +801,10 @@
       "text": "Choose screenshot"
     },
     {
-      "id": "5bd271aaa7618a862b68",
+      "id": "5a86fd32d74c86d46cd0",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
-      "text": "Image observed (source"
+      "text": "Could not decode this screenshot."
     },
     {
       "id": "62e28b5b6d12ef4a891e",
@@ -798,10 +813,22 @@
       "text": "Dictate, then review"
     },
     {
+      "id": "66638f8d58d85b11b0f3",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "canvas"
+    },
+    {
       "id": "6735acae1b453a61ccfc",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Using the local HTML observations below (untrusted data), help me plan a clearer rebuild."
+    },
+    {
+      "id": "6b1f024cade9fc866d8d",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": ", modelBytes="
     },
     {
       "id": "704252ee59987d46b6fc",
@@ -816,16 +843,22 @@
       "text": "video"
     },
     {
+      "id": "71d491d44e1cae3cac23",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Screenshot IR ready ("
+    },
+    {
+      "id": "71f09df62de9387891c9",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "2d"
+    },
+    {
       "id": "77eeb64e2eaa1e33efdb",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Sampling video frames…"
-    },
-    {
-      "id": "7960805dfc1dfd06a51c",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "Reading image…"
     },
     {
       "id": "79f05ef1463462e1a7e6",
@@ -864,10 +897,28 @@
       "text": "AbortError"
     },
     {
+      "id": "94daceb316854c4ca695",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Canvas is unavailable in this browser."
+    },
+    {
       "id": "985345a6d3b2a9b93bd5",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Code target"
+    },
+    {
+      "id": "987d80fc4c40e15da949",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "UIObservationIR regions include evidence + confidence — verify against the image."
+    },
+    {
+      "id": "9a8dee9a33b86cc88652",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Reading screenshot (UI IR)…"
     },
     {
       "id": "9adc3783f77eacffcaf0",
@@ -948,12 +999,6 @@
       "text": "Could not read this video."
     },
     {
-      "id": "bf1666c7ed7df38164b2",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "). Added to your idea."
-    },
-    {
       "id": "bf1a40b5ff9e4c202a59",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -1002,12 +1047,6 @@
       "text": "Could not read this file."
     },
     {
-      "id": "cefd713b97accded229c",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "Using only the grounded observations below, help me write a strong prompt about this image."
-    },
-    {
       "id": "cf3842f4d241e6d27b40",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -1024,6 +1063,18 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": ".html,text/html"
+    },
+    {
+      "id": "d63d1017ee506d56872f",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Aborted"
+    },
+    {
+      "id": "d8c8eca462b26cdba94f",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "async"
     },
     {
       "id": "da1578de9049e8232aa8",
@@ -1188,12 +1239,6 @@
       "text": "Telugu"
     },
     {
-      "id": "a55a730fffa05203564f",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Speech support varies by device and browser. This path is implemented but not yet device-qualified — type if dictation misbehaves."
-    },
-    {
       "id": "a8e881e1977f276d068a",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
@@ -1204,6 +1249,12 @@
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
       "text": "Allow browser speech recognition for this session"
+    },
+    {
+      "id": "b817f4003a480c167a16",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Dictate, review the text, then add it to your idea. Your browser may send audio to its speech service. SPE does not save audio and does not claim on-device speech recognition unless a device row is qualified."
     },
     {
       "id": "bbc23d765d7d319a0577",
@@ -1224,16 +1275,16 @@
       "text": "not-allowed"
     },
     {
-      "id": "e36f047a69944cbaca0b",
-      "file": "apps/web/src/input/SpeechInput.tsx",
-      "depth": "PRODUCT",
-      "text": "Dictate, review the text, then add it to your idea. Your browser may send audio to its speech service. SPE does not save audio."
-    },
-    {
       "id": "e3c41cf380d8c2fbf6ea",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
       "text": "Review your transcript"
+    },
+    {
+      "id": "ee377cdcb0e2f755876d",
+      "file": "apps/web/src/input/SpeechInput.tsx",
+      "depth": "PRODUCT",
+      "text": "Speech support varies by device and browser. Implementation is present; device qualification remains NOT_TESTED on this box — type if dictation misbehaves."
     },
     {
       "id": "f7055c052c1628d70f8d",
@@ -1248,52 +1299,82 @@
       "text": "Microphone stopped."
     },
     {
-      "id": "0355b298b8187a7d68ac",
+      "id": "10106e496bf9beff2d57",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": ". No network fetch."
+      "text": "— materials, lighting, camera, and a build prompt you can open cleanly in Create."
     },
     {
-      "id": "3684064e1d466d9e0986",
+      "id": "101e29ace0de63d2f2f2",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": ". Open any card in Create to shape a clearer prompt — chosen on your device from a fixed library of"
+      "text": "Today&apos;s staged experience"
     },
     {
-      "id": "4732aa66487dfbfee4dd",
+      "id": "1b8d1f4063a9ed632765",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": "Note: this library is a prompt gallery for now. A premium daily 3D / interactive website experience is planned separately from these cards."
+      "text": "Lighting"
     },
     {
-      "id": "4b7cc2dba4bdcac154b2",
+      "id": "21eeb327943e1445e94a",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": "Copy idea"
+      "text": "Full"
     },
     {
-      "id": "549a9735c67c4ef544df",
+      "id": "229d66d03067451e18b2",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": "Six curated starting points for"
+      "text": "Copy build prompt"
     },
     {
-      "id": "a1d28cd30c79eb0f4c5a",
+      "id": "3b60ec0e03df280530a6",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": "Daily Lab"
+      "text": "Publish date"
     },
     {
-      "id": "c5f6b18f83d4730c916d",
+      "id": "3caf82acbd09b4ae2307",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": "Open"
+      "text": "Daily 3D Lab"
     },
     {
-      "id": "d94e9ea4522f246b4136",
+      "id": "9ba0c1555d3233c0d3d2",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": "Full prompt gallery ("
+      "text": "Loading stage…"
+    },
+    {
+      "id": "ae0cd430e61ab94d0f40",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Status"
+    },
+    {
+      "id": "b22360636fe2da99f688",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Today's queue previews"
+    },
+    {
+      "id": "b4cc1ffca8c34be1a729",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Interaction"
+    },
+    {
+      "id": "c34192b954b96b5ce45d",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Materials"
+    },
+    {
+      "id": "e24730b7dd0f5a104886",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "A large interactive stage for"
     },
     {
       "id": "e2af8f117e93de3d4027",
@@ -1302,46 +1383,1252 @@
       "text": "Open in SPE"
     },
     {
-      "id": "f34206582a446f797c2b",
+      "id": "f9764a93490315552ffb",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": "Today&apos;s interactive ideas"
+      "text": "-day curated queue"
     },
     {
-      "id": "024f38163ffe372ae694",
-      "file": "apps/web/src/lab/specimens.ts",
+      "id": "01d9fae9d8acfc9f5b27",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#5eead4"
+    },
+    {
+      "id": "027b27adf487a3220a0d",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Research"
+    },
+    {
+      "id": "049441dab84918e0feaf",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "Story spark"
     },
     {
-      "id": "04ef77ab4363a5f2c3f4",
-      "file": "apps/web/src/lab/specimens.ts",
+      "id": "04b5db9c1a269fab198b",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
-      "text": "lab-04"
+      "text": "Sketch a REST API for a personal notes app: resources, auth assumptions, error shapes. No implementation code yet."
     },
     {
-      "id": "06aa324f0f1652b69731",
-      "file": "apps/web/src/lab/specimens.ts",
+      "id": "06958a57d87fcc08d53f",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
-      "text": "Study plan"
+      "text": "SQL helper"
     },
     {
-      "id": "07ccd80cc8be1b468628",
-      "file": "apps/web/src/lab/specimens.ts",
+      "id": "06b2f55152fde97964fa",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-14"
+    },
+    {
+      "id": "07834aa17d364a7a614c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Draft a support reply for a late shipment. Empathize, give two options, never invent tracking numbers."
+    },
+    {
+      "id": "0abd2b68a13496b29621",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A 30-minute agenda that respects time."
+    },
+    {
+      "id": "0aecc5ddbb5632bde96a",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Find a11y gaps in a flow."
+    },
+    {
+      "id": "0f12b264dbe6b95e98dd",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-11"
+    },
+    {
+      "id": "0ff34eabc7b546cee09b",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-22"
+    },
+    {
+      "id": "105fb3e46b755e59c1ff",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-06"
+    },
+    {
+      "id": "10b1899b4e6e06ad5c40",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Incident postmortem"
+    },
+    {
+      "id": "1227c4593f09c4bb4255",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Write a polite leave-of-absence email for two days next week. Keep it under 120 words. No medical details."
+    },
+    {
+      "id": "1385f3807abe1895070b",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-24"
+    },
+    {
+      "id": "171b47a0508087f6cda0",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Ask before you plot."
+    },
+    {
+      "id": "17384f30918b2d90ea8a",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Explain how HTTPS keeps a connection private to a curious 14-year-old. One analogy, one worked example, three check questions."
+    },
+    {
+      "id": "17e63dd90ba9abe591f1",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Data caveats"
+    },
+    {
+      "id": "1a2c959646a6cb56db0f",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Propose a stepwise refactor plan for a legacy React class component to hooks. Preserve behavior. List risks and tests."
+    },
+    {
+      "id": "1b65b8435186c4f3ae79",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-21"
+    },
+    {
+      "id": "1d3525c3673e8643f1da",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A tight funding abstract."
+    },
+    {
+      "id": "1dc9891ad535e33bcfa1",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#86efac"
+    },
+    {
+      "id": "1ec569ad9dd43cf81525",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-03"
+    },
+    {
+      "id": "1eef8538761d543bf2cf",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Review the TypeScript I paste for correctness, security, and maintainability. Rank findings by severity with concrete fixes. Do not invent files."
+    },
+    {
+      "id": "1eff0edafeb0d2b80231",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Practice answers with structure."
+    },
+    {
+      "id": "1f4900dd91ec78df45a3",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Write a 150-word grant abstract for a community tool library. Problem, approach, impact, and how success is measured."
+    },
+    {
+      "id": "201443bc1e2a438eec78",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Review for safety and clarity."
+    },
+    {
+      "id": "208c5c83f263750c0fbf",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Answer shopper questions honestly."
+    },
+    {
+      "id": "2338583c0d88f48345b9",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A 60-second explainer."
+    },
+    {
+      "id": "24af94e9073e22d117df",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "UI critique"
+    },
+    {
+      "id": "27af4c73fd02fd40ddcf",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Copy that travels."
+    },
+    {
+      "id": "2a6522917e1d35e85494",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-29"
+    },
+    {
+      "id": "2b07382db0db861a2e60",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Business"
+    },
+    {
+      "id": "2b95e15fa919adfe9028",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Describe a visual for generation."
+    },
+    {
+      "id": "2cbd27b3ba4d032cb970",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#e9d5ff"
+    },
+    {
+      "id": "2cf2287c3da0e4a4cb1a",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "Plain-language policy notes."
     },
     {
-      "id": "08d9c198becd5faf2c6d",
-      "file": "apps/web/src/lab/specimens.ts",
+      "id": "30ba2c145af2945671ba",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Warm, bounded customer care."
+    },
+    {
+      "id": "32da4f689451d9902197",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Website / 3D"
+    },
+    {
+      "id": "352b8af17a95ae39e7c8",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Frame a design case study."
+    },
+    {
+      "id": "35588151089971cf30f9",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A calm vendor email."
+    },
+    {
+      "id": "356b8745e2d3ea586112",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Onboarding"
+    },
+    {
+      "id": "36cf1eaacd0f4712e4fd",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Travel day"
+    },
+    {
+      "id": "395660d3fb31cc87e4a5",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-08"
+    },
+    {
+      "id": "39851c2198717930014c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Coach prompt"
+    },
+    {
+      "id": "3ad9adabc95facbdba3e",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-28"
+    },
+    {
+      "id": "3c5f46e743a155d1e37b",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Help me write a PostgreSQL query for monthly active users with clear assumptions and indexes to consider. No destructive statements."
+    },
+    {
+      "id": "3db49112dbdb2098e7a3",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Video"
+    },
+    {
+      "id": "41bcaa38acf3b8036825",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-15"
+    },
+    {
+      "id": "4290bb41964d17693646",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-07"
+    },
+    {
+      "id": "43e71f424e90df6c44b2",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Writing"
+    },
+    {
+      "id": "46f56ee71e8d7800d00c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#a5b4fc"
+    },
+    {
+      "id": "4877493af016aa662691",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#67e8f9"
+    },
+    {
+      "id": "4aaf27b0303396f6a249",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Leave note"
+    },
+    {
+      "id": "4c2b531ec901569f10af",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Support reply"
+    },
+    {
+      "id": "4cdc0fa3692818514a9e",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A coach that asks well."
+    },
+    {
+      "id": "4da84ba8c4e9eed8312c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Poem constraint"
+    },
+    {
+      "id": "4ea81ef9ec366ccb122a",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Name risks without panic."
+    },
+    {
+      "id": "4f611e58a40e05e8c790",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#fdba74"
+    },
+    {
+      "id": "50389b694175e494f6b6",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-19"
+    },
+    {
+      "id": "52a51ef0fc8e3abed2ee",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Review this checkout flow description for WCAG-minded gaps: focus order, labels, errors, and color-only cues. Prioritize fixes."
+    },
+    {
+      "id": "534ad9d8e0458fbfc757",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Summarize a remote-work policy for employees in plain English. Separate must / should / may. Flag ambiguities."
+    },
+    {
+      "id": "55a4839648b33060fcd0",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#d8b4fe"
+    },
+    {
+      "id": "55be2a0721ce4d48b4ef",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Ask for a safe query."
+    },
+    {
+      "id": "592bca95d89d88f4e8d0",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Write a 12-line poem about rain on metal roofs. Exact rhyme scheme AABB. No archaic diction."
+    },
+    {
+      "id": "59bffbc85ff200ff7781",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Science demo"
+    },
+    {
+      "id": "5d3d3e51f4eed9254910",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-33"
+    },
+    {
+      "id": "5e08e1dae9362f3bff80",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#fca5a5"
+    },
+    {
+      "id": "5e31b46a9dd9469a708d",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Create a 7-day study plan for introductory statistics. 45 minutes a day. Include one practice problem each day."
+    },
+    {
+      "id": "5ef0e65de38a55ddcf67",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-05"
+    },
+    {
+      "id": "61148663df1b22d8d95b",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-30"
+    },
+    {
+      "id": "61710c2588b21896ba68",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#fde047"
+    },
+    {
+      "id": "63fa343c00fd8c3dc342",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Build a 30-minute product sync agenda with outcomes, timeboxes, and one decision to make. Avoid status theater."
+    },
+    {
+      "id": "658007d7744038e5ccee",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A short, clear leave email."
+    },
+    {
+      "id": "662e722852a5afcbd497",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Outline a 60-second explainer video on password managers. Beats, on-screen text, and one call to action. No fearmongering."
+    },
+    {
+      "id": "6640640474af7bcd16c8",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Write first-run onboarding copy for SPE: three screens, no jargon, clear privacy line, one primary action each."
+    },
+    {
+      "id": "69fa1c58d893819650dd",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Accessibility pass"
+    },
+    {
+      "id": "6acf0afd0ed77552126c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-17"
+    },
+    {
+      "id": "6c26b34c239c7edfa6d5",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-35"
+    },
+    {
+      "id": "6c4f247064861ab36606",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#c4b5fd"
+    },
+    {
+      "id": "6e997e81ddcc7db96a1c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Interview prep"
+    },
+    {
+      "id": "6f5742f77e1016978edf",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Image"
+    },
+    {
+      "id": "6fbf997f8b17fe9afa51",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Education"
+    },
+    {
+      "id": "6fdfca56fd3b64b97383",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A realistic week plan."
+    },
+    {
+      "id": "744ecd302dbf565c6089",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Turn this into a bug report with steps, expected vs actual, and severity: sign-in button sometimes does nothing on mobile Safari."
+    },
+    {
+      "id": "7681b272b951c8fd12fc",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Explain simply"
+    },
+    {
+      "id": "79d4d00b0d07227f786e",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-01"
+    },
+    {
+      "id": "79d69f441b184c33e79e",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#99f6e4"
+    },
+    {
+      "id": "7b3382df279cc5108d1d",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#a7f3d0"
+    },
+    {
+      "id": "7cd549975b05dd9e8fd8",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Policy summary"
+    },
+    {
+      "id": "7cd932084d38cc87d207",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-20"
+    },
+    {
+      "id": "7d76db8a0163a9cc3667",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-18"
+    },
+    {
+      "id": "7d807a8c38bfe0cc906d",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-12"
+    },
+    {
+      "id": "7f3e64a9714c4a16e727",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#7dd3fc"
+    },
+    {
+      "id": "80525117e9592a40e4be",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "IA for a small app."
+    },
+    {
+      "id": "819d53866313c7552c9b",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Design a safe kitchen experiment to show density for kids age 8–10. Materials list, steps, and what we hope to observe."
+    },
+    {
+      "id": "81b9ba12111124aa0aeb",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Open a short story in a coastal town at dawn. Two characters, one secret. 200 words. No twist ending yet."
+    },
+    {
+      "id": "8479fdd08867ed2cc393",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Help me plan a low-energy work week with two deep-work blocks and hard stops. Chronic fatigue friendly. No hustle tone."
+    },
+    {
+      "id": "84cd621a85d8bb6e1212",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-25"
+    },
+    {
+      "id": "853c65c9df68d29cd0bf",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A realistic one-day plan."
+    },
+    {
+      "id": "873b4fa4c45229a6fbc0",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-10"
+    },
+    {
+      "id": "8801b1bbb05c41e83bda",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Turn a vague bug into a crisp report."
+    },
+    {
+      "id": "8888d389f7738c7b81c4",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#f9a8d4"
+    },
+    {
+      "id": "8b37f6af441eb7e86078",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Review this English UI string list for localization hazards: concatenated sentences, humor, gender, and date formats."
+    },
+    {
+      "id": "8b9d34021775531a73a4",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Write a short privacy notice for a local-first prompt tool: what stays on device, what never leaves, and what is optional."
+    },
+    {
+      "id": "8bc79f6a1d5fe53b8e71",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Help me prepare STAR answers for a product designer interview about conflict with engineering. Keep answers under 90 seconds spoken."
+    },
+    {
+      "id": "8cc4463dabb4ac751ce7",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Critique this mobile UI for clarity, hierarchy, and accessibility. List five concrete improvements. Mark uncertainty."
+    },
+    {
+      "id": "8dfda71dea96adbf57bd",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Honest product privacy copy."
+    },
+    {
+      "id": "8e162f4d1116525e4add",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A concept for a curious teen."
+    },
+    {
+      "id": "8f29d4f274510ff09594",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#bef264"
+    },
+    {
+      "id": "8faabe6c7d5f667dc07c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A small, honest API sketch."
+    },
+    {
+      "id": "8fc85f67caa5280bfe4c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Privacy notice"
+    },
+    {
+      "id": "90b3d132e97c58b810a4",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Coding"
+    },
+    {
+      "id": "90c3f8048cf9cf689410",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Code review"
+    },
+    {
+      "id": "92e557c0dcb5c6b0f6ce",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-26"
+    },
+    {
+      "id": "930bb2a7402c3f44df5c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Draft a blameless incident postmortem template filled for a 22-minute API outage caused by a bad config push."
+    },
+    {
+      "id": "93888ed0dd63a30ac35d",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Dataset questions"
+    },
+    {
+      "id": "93cf478f555a12e4b204",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Form first, feeling second."
+    },
+    {
+      "id": "957856d7633d349d7265",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#fde68a"
+    },
+    {
+      "id": "975cd45761571bc1a91e",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#93c5fd"
+    },
+    {
+      "id": "98fb1033898a6f1f0b8f",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A kitchen-table experiment."
+    },
+    {
+      "id": "99e4a07be7497c46a397",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Meeting agenda"
+    },
+    {
+      "id": "99f5a01ec3dd25974a89",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#6ee7b7"
+    },
+    {
+      "id": "9bfcf6ac948b509fadde",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Creative"
+    },
+    {
+      "id": "9c2db04c32912ce8f188",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-23"
+    },
+    {
+      "id": "9ef5f6993602e1d1cf6b",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "AI Assistant"
+    },
+    {
+      "id": "9fce002d573ded4fbb5b",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A week of focused study."
+    },
+    {
+      "id": "a16773a2244363375796",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Grant abstract"
+    },
+    {
+      "id": "a17aa259bf01f1ea5a94",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A quiet still-life stage."
+    },
+    {
+      "id": "a1a251daa4925e99359b",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-04"
+    },
+    {
+      "id": "a1ab759dc7875103f190",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Structure a portfolio case study for a banking app redesign: problem, constraints, process, outcome, and what I'd redo."
+    },
+    {
+      "id": "a56d1a76318397eaf86c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Mobile nav"
+    },
+    {
+      "id": "a8486408f3515a35b297",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A safe stepwise refactor."
+    },
+    {
+      "id": "a9de75a7e5babf7f4e3a",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Honest notes on a screenshot."
+    },
+    {
+      "id": "ab4edce6af831c348957",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Energy budget"
+    },
+    {
+      "id": "ab4f300cc331e878a2b6",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Rewrite this chart caption so it states the sample, the window, and what it does not prove. Avoid causal language."
+    },
+    {
+      "id": "ac3beb460915b86a3737",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Portfolio case"
+    },
+    {
+      "id": "b3204a00faa0270d5df3",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Propose information architecture for a habit tracker with five primary destinations. Justify what is not in the tab bar."
+    },
+    {
+      "id": "b344c235180227514b6a",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Image brief"
+    },
+    {
+      "id": "b9a9809448eb89211c49",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-09"
+    },
+    {
+      "id": "bd41fb08d1c74f2b9a04",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Plan a one-day walking itinerary in Lisbon for two people who dislike crowds. Include food breaks and rain backup."
+    },
+    {
+      "id": "becb714e87fffc02c374",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-27"
+    },
+    {
+      "id": "c051c5169ff3b73c379b",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-13"
+    },
+    {
+      "id": "c2a694fab7bd33594300",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Product FAQ"
+    },
+    {
+      "id": "ca67fd95597f8ff23205",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "A scene start, not a novel."
+    },
+    {
+      "id": "cc3f9fe6bb7b2102a513",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-16"
+    },
+    {
+      "id": "ce44b251b55266f8dd12",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "List ten questions I should ask before analyzing a city open-data CSV of building permits. Cover quality, bias, and privacy."
+    },
+    {
+      "id": "d180e2c902899db40c95",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Blameless and useful."
+    },
+    {
+      "id": "d1f1943049f1b2c33ba2",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-36"
+    },
+    {
+      "id": "d4235dadb68a5096ceb9",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Threat model"
+    },
+    {
+      "id": "d47dc9d6f839dafa43e8",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-02"
+    },
+    {
+      "id": "d5cdff62bad5361f5ab0",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Threat-model a browser extension that reads page text to build prompts. Assets, attackers, mitigations. Stay proportional."
+    },
+    {
+      "id": "d66cddaa1fc2a97caad2",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Outline a research brief on urban heat islands and tree canopy. List questions, evidence needs, and what would falsify the claim."
+    },
+    {
+      "id": "d749b9807c15b948ce54",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Video outline"
+    },
+    {
+      "id": "dd8d37dde7075729ff73",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Write an image-generation brief for a quiet ceramic workshop at dusk. Specify lighting, lens, palette, and what to avoid."
+    },
+    {
+      "id": "de33ba3935bccbd6fdf9",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Bug report"
+    },
+    {
+      "id": "df349693023294f7b19f",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#fcd34d"
+    },
+    {
+      "id": "e3e1771352001d9af620",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Study plan"
+    },
+    {
+      "id": "e426455707ca9698e315",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Draft FAQ answers for an offline writing app: pricing, offline mode, export formats, and privacy. No marketing fluff."
+    },
+    {
+      "id": "e49af188b4820bedd8cc",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-34"
+    },
+    {
+      "id": "e5362bf8d8861658526d",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "API design"
+    },
+    {
+      "id": "e679090919f1890f205d",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Chart claims with humility."
+    },
+    {
+      "id": "e6a21e7e7c57eef609b3",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-32"
+    },
+    {
+      "id": "e917f32cd981e04c9624",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Negotiation note"
+    },
+    {
+      "id": "eb34fec7742d06994940",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Analysis"
+    },
+    {
+      "id": "eeba90cf920391b46b52",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Refactor plan"
+    },
+    {
+      "id": "ef3cf125ebcfa65dd332",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "gal-31"
+    },
+    {
+      "id": "f18b77be54c70e6696fe",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Scope a careful literature look."
+    },
+    {
+      "id": "f20327bccdc54dea1763",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Draft a vendor negotiation email asking for a 12% discount on annual SaaS. Firm but respectful. Offer a multi-year term."
+    },
+    {
+      "id": "f530b9f2854ea2ba45f1",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "First-run copy that respects people."
+    },
+    {
+      "id": "f55a126064c1698d393c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "3D scene brief"
+    },
+    {
+      "id": "f606c8711f547db28214",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Brief a 3D still-life: brushed metal ring, frosted glass sphere, soft north light, graphite pedestal. Camera 50mm, f/4."
+    },
+    {
+      "id": "f877c56ee75b9a47c7c3",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Design a coaching prompt that helps me prepare a difficult feedback conversation. Ask clarifying questions before advice."
+    },
+    {
+      "id": "f92c38ab2e3bf88fbf50",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "Localization notes"
     },
     {
-      "id": "0d5edd455c49dd341959",
+      "id": "fa8dd71b775055377779",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#bbf7d0"
+    },
+    {
+      "id": "fb54d3822b0518b9e44a",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#fb7185"
+    },
+    {
+      "id": "fc1a3ed225d47daca665",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#fda4af"
+    },
+    {
+      "id": "fd84f949178dc72dac8c",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "#fbcfe8"
+    },
+    {
+      "id": "fe29d3efbb54e63bb160",
+      "file": "apps/web/src/lab/gallery/promptGallery.ts",
+      "depth": "PRODUCT",
+      "text": "Research brief"
+    },
+    {
+      "id": "0cfb92da067fbae9bdf9",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "hover-explode"
+    },
+    {
+      "id": "0d948d2e2d8e9bb6def1",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "orbit"
+    },
+    {
+      "id": "0deb7ac7279590e0c2a8",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "· motion reduced"
+    },
+    {
+      "id": "0febfd879606df6b03ee",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "scroll-story"
+    },
+    {
+      "id": "3385730b6ad814621ac5",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "orb-field"
+    },
+    {
+      "id": "6cb668e50de0d1f78acd",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "3D preview:"
+    },
+    {
+      "id": "718d458cc49f5985a5b2",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "undefined"
+    },
+    {
+      "id": "b272a6edc08d756f8738",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "helix"
+    },
+    {
+      "id": "b771dc7a38ea70d1ed41",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "(prefers-reduced-motion: reduce)"
+    },
+    {
+      "id": "c602efc5a503aab8e743",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "icosa"
+    },
+    {
+      "id": "cbe1556bf355730cfeb3",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "pillars"
+    },
+    {
+      "id": "db44b4ca0302591f6e7c",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "ribbon"
+    },
+    {
+      "id": "efdcdb83441ae3ace480",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "torus"
+    },
+    {
+      "id": "8ee84f1049e0f1dc83db",
+      "file": "apps/web/src/lab/PromptGallery.tsx",
+      "depth": "PRODUCT",
+      "text": "Open in SPE"
+    },
+    {
+      "id": "cdeea4048bc288668db4",
+      "file": "apps/web/src/lab/PromptGallery.tsx",
+      "depth": "PRODUCT",
+      "text": "These are starting ideas for Create — separate from the Daily 3D Lab stage experiences above."
+    },
+    {
+      "id": "e471050a6f3caa107d10",
+      "file": "apps/web/src/lab/PromptGallery.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt Gallery ("
+    },
+    {
+      "id": "e67588cae23c0f062794",
+      "file": "apps/web/src/lab/PromptGallery.tsx",
+      "depth": "PRODUCT",
+      "text": "ordinary prompt cards)"
+    },
+    {
+      "id": "0105e462c3877502b93d",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Meeting agenda"
+      "text": "patina"
+    },
+    {
+      "id": "01b445810ad7b88b09b8",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "flat"
+    },
+    {
+      "id": "022863bd9f2873563418",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "crystal violet"
+    },
+    {
+      "id": "04a1ef174b706035b1d8",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "violet bounce"
+    },
+    {
+      "id": "04e72267e6f09bb7ae39",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "IDEA→MEANING→STRUCTURE→PROMPT as a hover-explode icosahedron with indigo dusk lighting."
+    },
+    {
+      "id": "07a60402192e2cd75168",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "d3d-12"
+    },
+    {
+      "id": "082a45fba472de254958",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Signal ring"
+    },
+    {
+      "id": "085648285ddd1087c780",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "ink"
+    },
+    {
+      "id": "0898babe7379c96fdd39",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Dark UI slabs with moon rim light."
+    },
+    {
+      "id": "0ab7390495bf119db590",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "daily 3D experiences — not an endless feed. Today's piece is chosen on your device from this fixed set."
+    },
+    {
+      "id": "0cea09eedb858f73993b",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "obsidian UI"
+    },
+    {
+      "id": "0d6a502cd14be60caf42",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "d3d-02"
     },
     {
       "id": "0e1a6f055518c24ee27d",
@@ -1350,34 +2637,64 @@
       "text": "#c4b5fd"
     },
     {
-      "id": "101c04566b43b27c6a90",
+      "id": "0e4caae90f64cd20379c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Describe a visual for generation."
+      "text": "Build a WebGL/Three hero with a brushed torus, scroll-linked orbit, and editorial caption. Prefer understated motion."
     },
     {
-      "id": "11544e7807e9255b0062",
+      "id": "0e8fccd162fcfdd1f4db",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Build a 30-minute product sync agenda with outcomes, timeboxes, and one decision to make. Avoid status theater."
+      "text": "Privacy pulse ring visualizing on-demand local vision with zero homepage model bytes."
     },
     {
-      "id": "11e831e13885d8ce8a0f",
+      "id": "13091a1d1d371fbb4c08",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-03"
+      "text": "clear-coat"
     },
     {
-      "id": "193c8e4c69beeebe3eff",
+      "id": "1339b03a5ed062c4e23a",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A realistic week plan."
+      "text": "dusk indigo"
     },
     {
-      "id": "194a3b957f171f62be5e",
+      "id": "13d1a42f4fa7383b95ba",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-21"
+      "text": "d3d-11"
+    },
+    {
+      "id": "175683ee1964f4c337a5",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "amber"
+    },
+    {
+      "id": "178f2f3a6f14bb5bbb43",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "orange"
+    },
+    {
+      "id": "1798adf3a80c870e6638",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "warm paper"
+    },
+    {
+      "id": "17b16d28258b46799a6a",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Facet mirror"
+    },
+    {
+      "id": "1a5921a4444448ad4c19",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Workshop table"
     },
     {
       "id": "1a6f794aefab16a03c79",
@@ -1386,76 +2703,82 @@
       "text": "#fde68a"
     },
     {
-      "id": "1a8caf227e47f96a5d31",
+      "id": "1abf1cd22c9ec77979c4",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Write a 12-line poem about rain on metal roofs. Exact rhyme scheme AABB. No archaic diction."
+      "text": "Origami planes for IA storytelling."
     },
     {
-      "id": "1c73123a903bb45527f3",
+      "id": "1ae3e558dad32d3dbff6",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A realistic one-day plan."
+      "text": "Create a scroll-story landing with frosted glass panels, four chapters, and calm typography about local-first tools."
     },
     {
-      "id": "1c960161992857737a95",
+      "id": "1b3ebb4d6e736585904b",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Write a polite leave-of-absence email for two days next week. Keep it under 120 words. No medical details."
+      "text": "deep navy"
     },
     {
-      "id": "1d163ee60ae231e2e016",
+      "id": "1b856208614313326479",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-11"
+      "text": "Dawn helix closing a 14-day curated Daily 3D Lab queue with honest finite promise."
     },
     {
-      "id": "2047b55baa2d8711f846",
+      "id": "1bb69841c79f5f5953a4",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "SQL helper"
+      "text": "soft north"
     },
     {
-      "id": "20a54e4a57e4710d8e0d",
+      "id": "1bef8f2fee1069ff377c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Turn a vague bug into a crisp report."
+      "text": "silk cyan"
     },
     {
-      "id": "20fcd66ce05d151223cb",
+      "id": "1c1ad6291fb758441e9c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Ask for a safe query."
+      "text": "Pastel modules float like a soft machine. Hover docks them into a tidy instrument — Create as craft, not a form."
     },
     {
-      "id": "21fa8aecc49196688b40",
+      "id": "1e638919e08be9c6e5cf",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-14"
+      "text": "studio array"
     },
     {
-      "id": "22cb50d03ed4a9334725",
+      "id": "1f9d7c7ad67cbdfba804",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Draft a vendor negotiation email asking for a 12% discount on annual SaaS. Firm but respectful. Offer a multi-year term."
+      "text": "specular"
     },
     {
-      "id": "232b46dad86833320f89",
+      "id": "202e06acb77d25a62ac7",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#fb7185"
+      "text": "soft gloss"
     },
     {
-      "id": "28c31d63859e1d5744ac",
+      "id": "2092b627be79892237e7",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Write first-run onboarding copy for SPE: three screens, no jargon, clear privacy line, one primary action each."
+      "text": "gold"
     },
     {
-      "id": "2904d44316cbb042b1d4",
+      "id": "2419ff2590f71e394051",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Product FAQ"
+      "text": "spe:daily3d:glass-chapters"
+    },
+    {
+      "id": "26b9e3427818f14270ae",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "published"
     },
     {
       "id": "29240cb34d9cb54af623",
@@ -1464,130 +2787,142 @@
       "text": "#fdba74"
     },
     {
-      "id": "29b64d098e591776da05",
+      "id": "29f2805382db956e94ca",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Design a coaching prompt that helps me prepare a difficult feedback conversation. Ask clarifying questions before advice."
+      "text": "A crystal that explodes into facets on hover."
     },
     {
-      "id": "2c2157225ff8ffd06bcc",
+      "id": "2a2ab31b1f5200e9d5a7",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A calm vendor email."
+      "text": "oak"
     },
     {
-      "id": "2cce2045f8eff6d2af8d",
+      "id": "2a67156286bd7a55b76f",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-20"
+      "text": "opal white"
     },
     {
-      "id": "2ea2a25d2561000406ac",
+      "id": "2ae3adff30a5ffbafcad",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-16"
+      "text": "spot teal"
     },
     {
-      "id": "3321f00f8170516bbd90",
+      "id": "2d6103eadce855ae6cf6",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Review this English UI string list for localization hazards: concatenated sentences, humor, gender, and date formats."
+      "text": "cool grey"
     },
     {
-      "id": "346f75d2262d2ab33162",
+      "id": "2f5c612eb7c2f422cab1",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-33"
+      "text": "sky cyan"
     },
     {
-      "id": "34b90ae98d74b646b37c",
+      "id": "31393daf187857b415da",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-26"
+      "text": "foam white"
     },
     {
-      "id": "36bf263ad42f12be72e0",
+      "id": "31dc93b119eec39e134c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Frame a design case study."
+      "text": "spe:daily3d:pillar-grid"
     },
     {
-      "id": "37eb5f183e8bd0beb1f3",
+      "id": "31fde72b4dcf53021d25",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#fcd34d"
+      "text": "violet gel"
     },
     {
-      "id": "3905ad891b9a26a78d96",
+      "id": "32bdcfd097b58b3a4db9",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Coding"
+      "text": "Tide ribbon"
     },
     {
-      "id": "3ab905f794bd05d54ca4",
+      "id": "33828e97f596eb94da54",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Research"
+      "text": "gallery spot"
     },
     {
-      "id": "3af9c8d6cb4f44337f86",
+      "id": "34a710fdb1b63557919c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A week of focused study."
+      "text": "Parallax pillar field with editorial type annotations and accessible scroll alternate."
     },
     {
-      "id": "3b05b9df684b9693c5b6",
+      "id": "350c9a50ccaad504ce4e",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Explain simply"
+      "text": "Hover explodes an icosahedron into labeled facets: Idea, Meaning, Structure, Prompt."
     },
     {
-      "id": "3b99ed0f7bb675374bd5",
+      "id": "35b68c67266ca3d6ace6",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "API design"
+      "text": "Dawn coil with finite-queue honesty copy and Open in SPE clean state."
     },
     {
-      "id": "3fa97094b3a212d39252",
+      "id": "36769b002af72a5d01a8",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-13"
+      "text": "spe:daily3d:orb-constellation"
     },
     {
-      "id": "3ff8a9432691682a13af",
+      "id": "39e47b3d436cf99eccda",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#a7f3d0"
+      "text": "d3d-10"
     },
     {
-      "id": "40d028066d992f7c7bbd",
+      "id": "3a1867ec3819d4a8e060",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Education"
+      "text": "Mirrored icosahedron reflecting intent atoms with orbit controls and privacy caption."
     },
     {
-      "id": "41471163981a603eb956",
+      "id": "3ba3fec4910eb33baee3",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-36"
+      "text": "Origami IA story: folded planes reveal product destinations with human labels only."
     },
     {
-      "id": "41bde999a4b35e082ea8",
+      "id": "3f81caad0a22d5eeb42f",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-18"
+      "text": "#9ecbff"
     },
     {
-      "id": "41daea2bb00d493d9f94",
+      "id": "41ecb274268495a3071b",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#fdbA74"
+      "text": "spe:daily3d:icosa-seed"
     },
     {
-      "id": "449acddbf1d1a03fe494",
+      "id": "446c6e123876b3bfa7d7",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Help me prepare STAR answers for a product designer interview about conflict with engineering. Keep answers under 90 seconds spoken."
+      "text": "Night ledger slabs with intention categories and accessible text equivalents."
+    },
+    {
+      "id": "455116b052cfc3dded2d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "icosa"
+    },
+    {
+      "id": "4663232b9a7d5acea577",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "emissive glass"
     },
     {
       "id": "476d575582a765a8d1a4",
@@ -1596,70 +2931,112 @@
       "text": "#67e8f9"
     },
     {
-      "id": "48dd133c82342fed0656",
+      "id": "47a0ded0573a7450ba81",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-07"
+      "text": "Frosted panes that page as you scroll."
     },
     {
-      "id": "4a7fc0dfecfffdd4dbd1",
+      "id": "47c32e1591e6348a307d",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-09"
+      "text": "A single brushed-steel torus hangs in soft north light. Scroll to orbit; the rim catches a cool highlight while the void stays matte graphite."
     },
     {
-      "id": "4ab9948bd8b53f56ede3",
+      "id": "4a8b28b5acd252e8d402",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Data caveats"
+      "text": "A silk ribbon flows left to right like tide lines. Scroll pacing matches the copy rhythm — slow where meaning gathers."
     },
     {
-      "id": "4ad74808b1e7bbf5bce5",
+      "id": "4dfccc9cad478898c84a",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-24"
+      "text": "Mirrored facets reflecting intent atoms."
     },
     {
-      "id": "4c67b50be4a815aba610",
+      "id": "4fb9586477fec64c90ef",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "IA for a small app."
+      "text": "Pulse ring tied to user-initiated analysis; document zero silent egress."
     },
     {
-      "id": "50297104977cd327ee50",
+      "id": "5056b9a86dd750b20812",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Summarize a remote-work policy for employees in plain English. Separate must / should / may. Flag ambiguities."
+      "text": "spe:daily3d:helix-brief"
     },
     {
-      "id": "509f207cb42cea1e4e1c",
+      "id": "5206647835631be70889",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A coach that asks well."
+      "text": "Brushed orbit"
     },
     {
-      "id": "52a711492caa50958c18",
+      "id": "53ea8532bee85b133f47",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Threat-model a browser extension that reads page text to build prompts. Assets, attackers, mitigations. Stay proportional."
+      "text": "charcoal"
     },
     {
-      "id": "5392769885e7ec76f620",
+      "id": "569959f227f99ec80421",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-35"
+      "text": "parallax"
     },
     {
-      "id": "5742acaa99166ae1a8ec",
+      "id": "56a20ed5280057b4e049",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-12"
+      "text": "torus"
     },
     {
-      "id": "5cf325f4f2d76dc600a8",
+      "id": "56ebb263778ad533f527",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Critique this mobile UI for clarity, hierarchy, and accessibility. List five concrete improvements. Mark uncertainty."
+      "text": "reflect"
+    },
+    {
+      "id": "5aad825f123cfbebddb6",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "glow"
+    },
+    {
+      "id": "5ac47ca592fa6787bbb3",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "obsidian"
+    },
+    {
+      "id": "5b475c5d7fd1c1743cde",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Night ledger"
+    },
+    {
+      "id": "5bd1324787047e355c6d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "graphite"
+    },
+    {
+      "id": "5bd9fedbd3fb44b4574b",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Soft orbs that map a product story."
+    },
+    {
+      "id": "5bed4b0e71d0851cabdb",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "matte clay"
+    },
+    {
+      "id": "5cfff70168816dd5700e",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "d3d-14"
     },
     {
       "id": "5d4b99cd2bb61996b4ab",
@@ -1668,58 +3045,76 @@
       "text": "#6ee7b7"
     },
     {
-      "id": "60e2d1d6e2ffdecc6da8",
+      "id": "5d88394d02dcd22f7957",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A safe stepwise refactor."
+      "text": "Rounded modules that dock on hover."
     },
     {
-      "id": "616d20f469c559fde49a",
+      "id": "5fca24841ec74b4fa222",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Outline a 60-second explainer video on password managers. Beats, on-screen text, and one call to action. No fearmongering."
+      "text": "peach"
     },
     {
-      "id": "620f796de9b535000b84",
+      "id": "610400c5298505989350",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "UI critique"
+      "text": "spe:daily3d:signal-ring"
     },
     {
-      "id": "622c94c9ccbd9d19e048",
+      "id": "611675e1efa5e3901c5a",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Warm, bounded customer care."
+      "text": "A single ring pulses only when you ask it to analyze media — a reminder that vision packs stay at zero bytes until invited."
     },
     {
-      "id": "6581413c496b5bdc0833",
+      "id": "61b4951a234275717435",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-31"
+      "text": "d3d-07"
     },
     {
-      "id": "65e3b3045bb56c5ff287",
+      "id": "628fd0e4ad485a8009d7",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Scope a careful literature look."
+      "text": "#b8f0e0"
     },
     {
-      "id": "66205eae0c5dc73815ff",
+      "id": "630df3c6e57bd8a6f881",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-10"
+      "text": "satin"
     },
     {
-      "id": "6634a5d65414a5d6517e",
+      "id": "63818083315f1282696c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#5eead4"
+      "text": "Pillar grid"
     },
     {
-      "id": "6bcb43f6475b1ee24a0b",
+      "id": "63ac6b6ef2ac06c1d355",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Refactor plan"
+      "text": "silver hairline"
+    },
+    {
+      "id": "645f206a05b3cf4f8654",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Ribbon path with chapter markers and keyboard chapter jumps."
+    },
+    {
+      "id": "653b239bcff6da1c5ef1",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "d3d-05"
+    },
+    {
+      "id": "67f6d5a6b6337a9b46fb",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "blue night"
     },
     {
       "id": "6bf2253fcd3bb26e98b2",
@@ -1728,34 +3123,34 @@
       "text": "#fbcfe8"
     },
     {
-      "id": "6d355cba6e92f1215cf1",
+      "id": "6cff56d4e94c28fb425f",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-32"
+      "text": "linen"
     },
     {
-      "id": "6d42fd3f0e46c1009cee",
+      "id": "6e9ab11e150605341031",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Explain how HTTPS keeps a connection private to a curious 14-year-old. One analogy, one worked example, three check questions."
+      "text": "Folding paper IA with parallax and a reduced-motion flat map fallback."
     },
     {
-      "id": "6dd79a1f3c529e9cd215",
+      "id": "6efcadf39bf9b6b12eff",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Travel day"
+      "text": "Implement a scroll-driven chapter story with translucent planes and reduced-motion fallback."
     },
     {
-      "id": "6e4fb34548c9524f1c1a",
+      "id": "6fbabbfee6809caca41f",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Ask before you plot."
+      "text": "black"
     },
     {
-      "id": "72747dea6156fc9ddaae",
+      "id": "718c06412c54042570cf",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Form first, feeling second."
+      "text": "A field of luminous orbs drifts slowly. Each orb is a product beat — privacy, craft, review — linked by faint threads."
     },
     {
       "id": "7287a35a6479636cdba8",
@@ -1764,214 +3159,166 @@
       "text": "numeric"
     },
     {
-      "id": "7450ee8191f424df29ab",
+      "id": "72b1d6c6c81e53ffc319",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Image"
+      "text": "3D workshop table metaphor for Create: craft tools, soft light, no dashboard chrome."
     },
     {
-      "id": "752004e83554963804b0",
+      "id": "754191205024081a7b8a",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-34"
+      "text": "lavender"
     },
     {
-      "id": "76c105cb2851ec271d99",
+      "id": "7629e349d08f4767dd30",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Privacy notice"
+      "text": "spe:daily3d:brushed-orbit"
     },
     {
-      "id": "77471e3a1723a06030be",
+      "id": "794aa0571c45546ce074",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-01"
+      "text": "Dark editorial 3D ledger for prompt intentions with moon rim lighting and scroll reveals."
     },
     {
-      "id": "77b58270b3bc6deb8bcc",
+      "id": "79ccabe28269042e3be3",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Plan a one-day walking itinerary in Lisbon for two people who dislike crowds. Include food breaks and rain backup."
+      "text": "frosted glass"
     },
     {
-      "id": "78c4880de035231dea03",
+      "id": "7b1ceb94fef446286aad",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Write a 150-word grant abstract for a community tool library. Problem, approach, impact, and how success is measured."
+      "text": "pink bounce"
     },
     {
-      "id": "7987e0ce91be3331a1a3",
+      "id": "7c23c2fd114921c73191",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Creative"
+      "text": "pillars"
     },
     {
-      "id": "7a22bf33b81b2de1a04a",
+      "id": "7d7efbe57e8113ef8921",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Review for safety and clarity."
+      "text": "brushed steel"
     },
     {
-      "id": "7a60d277a9d44c1bf819",
+      "id": "7d9b2fe4e04f898a02ee",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A kitchen-table experiment."
+      "text": "Design a quiet premium hero: brushed metal torus, soft north light, scroll-orbit interaction, restrained type. No stock photos."
     },
     {
-      "id": "7a74665f2a3bda79a84a",
+      "id": "81801d9d102fd1952d6f",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A concept for a curious teen."
+      "text": "d3d-06"
     },
     {
-      "id": "7c2628905e3e7e0da2cf",
+      "id": "82d49a5083067611bedc",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Turn this into a bug report with steps, expected vs actual, and severity: sign-in button sometimes does nothing on mobile Safari."
+      "text": "warm key"
     },
     {
-      "id": "7c38f68b9c5bad5e4b2b",
+      "id": "82ff9e2318189c5aad31",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Design a safe kitchen experiment to show density for kids age 8–10. Materials list, steps, and what we hope to observe."
+      "text": "anodized teal"
     },
     {
-      "id": "7c61918dd6907d6eb78e",
+      "id": "8329da6f52d388abe810",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-22"
+      "text": "spe:daily3d:tide-ribbon"
     },
     {
-      "id": "7d861b3680f8763f6867",
+      "id": "8423f2a7c064c3a930dc",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Draft a blameless incident postmortem template filled for a 22-minute API outage caused by a bad config push."
+      "text": "helix"
     },
     {
-      "id": "7dbeed5d957f907f30de",
+      "id": "854b5ab68852464cd752",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A tight funding abstract."
+      "text": "warm bounce"
     },
     {
-      "id": "7e2746d5740850b65059",
+      "id": "88d92787842558ef666a",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Threat model"
+      "text": "spe:daily3d:night-ledger"
     },
     {
-      "id": "838c8f1e1888d687063d",
+      "id": "8a9e6ce038f7daf9c229",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Draft FAQ answers for an offline writing app: pricing, offline mode, export formats, and privacy. No marketing fluff."
+      "text": "pastel resin"
     },
     {
-      "id": "846b5f135a4fcf0a3dcb",
+      "id": "8b02d835f216d27360b3",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Structure a portfolio case study for a banking app redesign: problem, constraints, process, outcome, and what I'd redo."
+      "text": "dim"
     },
     {
-      "id": "84821b1ba5b03f0384b6",
+      "id": "8efba7ded24e82ff5f91",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#99f6e4"
+      "text": "purple"
     },
     {
-      "id": "84e2ff59dc818fb2b0df",
+      "id": "8f14577638765810f3db",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Negotiation note"
+      "text": "An icosahedron waits in dusk indigo. Hover and facets peel outward — a metaphor for ideas taking structure."
     },
     {
-      "id": "8578b37c2782febf9646",
+      "id": "8f1e67cf608a3445bc56",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Policy summary"
+      "text": "Tools arranged for craft, not dashboards."
     },
     {
-      "id": "881e5c2b1889e4b70114",
+      "id": "8ffaed69cd98b1a98041",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#fda4af"
+      "text": "A climbing helix for process narrative."
     },
     {
-      "id": "898ff0eb367ed0981ec9",
+      "id": "90c162dbca5d6e445836",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Dataset questions"
+      "text": "A privacy-forward pulse ring."
     },
     {
-      "id": "8a10f018827d85295ca7",
+      "id": "90c94ad113accb205b9a",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-28"
+      "text": "oil"
     },
     {
-      "id": "8aa2eca8bf87bbdceaea",
+      "id": "948590ed318022da05f0",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#fca5a5"
+      "text": "Four frosted glass plates stack in depth. Each scroll chapter brings one pane forward while type stays razor-thin and honest."
     },
     {
-      "id": "8accd02b6b92dc82191a",
+      "id": "94ed00b1ae713792f3d5",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#d8b4fe"
+      "text": "spe:daily3d:workshop-table"
     },
     {
-      "id": "8b4f238fac9f1158d2dc",
+      "id": "956663fb5695d4e9f340",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Onboarding"
-    },
-    {
-      "id": "8c0c132b6d1f810fc6ae",
-      "file": "apps/web/src/lab/specimens.ts",
-      "depth": "PRODUCT",
-      "text": "Writing"
-    },
-    {
-      "id": "8cc388a2f5ca11cca165",
-      "file": "apps/web/src/lab/specimens.ts",
-      "depth": "PRODUCT",
-      "text": "Help me plan a low-energy work week with two deep-work blocks and hard stops. Chronic fatigue friendly. No hustle tone."
-    },
-    {
-      "id": "8d6ab875b37e7f164934",
-      "file": "apps/web/src/lab/specimens.ts",
-      "depth": "PRODUCT",
-      "text": "Analysis"
-    },
-    {
-      "id": "8e3b97293dbc85f52650",
-      "file": "apps/web/src/lab/specimens.ts",
-      "depth": "PRODUCT",
-      "text": "lab-02"
-    },
-    {
-      "id": "8ebb216230114bfd8c92",
-      "file": "apps/web/src/lab/specimens.ts",
-      "depth": "PRODUCT",
-      "text": "A short, clear leave email."
-    },
-    {
-      "id": "906c763f77f0ce3e47cd",
-      "file": "apps/web/src/lab/specimens.ts",
-      "depth": "PRODUCT",
-      "text": "lab-27"
-    },
-    {
-      "id": "9073f9f384c439f6d0fe",
-      "file": "apps/web/src/lab/specimens.ts",
-      "depth": "PRODUCT",
-      "text": "Honest product privacy copy."
-    },
-    {
-      "id": "9332c09310c840d90de6",
-      "file": "apps/web/src/lab/specimens.ts",
-      "depth": "PRODUCT",
-      "text": "List ten questions I should ask before analyzing a city open-data CSV of building permits. Cover quality, bias, and privacy."
+      "text": "moon rim"
     },
     {
       "id": "957cfdbaad13b0f20343",
@@ -1986,16 +3333,16 @@
       "text": "long"
     },
     {
-      "id": "9c295eb7628bf5297fee",
+      "id": "9bcdf5256a44ec97da60",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "First-run copy that respects people."
+      "text": "Soft-machine UI metaphor in 3D: rounded modules dock into a Create instrument on hover."
     },
     {
-      "id": "9ef6577752fd72483241",
+      "id": "9d1c01ece0d6e9e8eebc",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-17"
+      "text": "warm wall"
     },
     {
       "id": "a07d9999278eaaedd89c",
@@ -2004,64 +3351,76 @@
       "text": "#e9d5ff"
     },
     {
-      "id": "a170b58f46c2d13634c8",
+      "id": "a37aa6593d7a9c0f2040",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Open a short story in a coastal town at dawn. Two characters, one secret. 200 words. No twist ending yet."
+      "text": "deep blue"
     },
     {
-      "id": "a18df429d389092839d2",
+      "id": "a3fc1cc5b53ad4646488",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-30"
+      "text": "sea green"
     },
     {
-      "id": "a1ea89652c79ba5d4d97",
+      "id": "a429b5eb41d7278911a1",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-29"
+      "text": "chalk"
     },
     {
-      "id": "a273b6e40173553f5efc",
+      "id": "a450bc5f59c3fe22d94c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Copy that travels."
+      "text": "d3d-03"
     },
     {
-      "id": "a371ad755c24bda5df91",
+      "id": "a800076fead455af9926",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Rewrite this chart caption so it states the sample, the window, and what it does not prove. Avoid causal language."
+      "text": "Scroll-scrubbed helix with four process chapters and keyboard access."
     },
     {
-      "id": "a6f4e4c0453e3bf6d30d",
+      "id": "acab985b223d5b05a7c2",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Find a11y gaps in a flow."
+      "text": "d3d-09"
     },
     {
-      "id": "a8aeff278b44a44d84e5",
+      "id": "add587e9008793fac80c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Research brief"
+      "text": "spe:daily3d:soft-machine"
     },
     {
-      "id": "a8d4fb1dba7cdd493d37",
+      "id": "ae3d959b6704445983cc",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Code review"
+      "text": "Icosa seed"
     },
     {
-      "id": "a8da67fc756804536978",
+      "id": "aeb7673b1120aabe39c0",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "3D scene brief"
+      "text": "hover-explode"
     },
     {
-      "id": "afebf429f58ca7acd297",
+      "id": "af0c5df07fffc2214dd5",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Interview prep"
+      "text": "cloth"
+    },
+    {
+      "id": "b04861cf57423eb111f1",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "sunrise"
+    },
+    {
+      "id": "b0d5d5ac89346b148b4b",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "T00:00:00"
     },
     {
       "id": "b1bdbf9ca192275e68d6",
@@ -2070,22 +3429,28 @@
       "text": "#f9a8d4"
     },
     {
-      "id": "b3007aa3f5e4b557c25d",
+      "id": "b29e7b5aedc11627d5a5",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Video"
+      "text": "matte"
     },
     {
-      "id": "b5022ece13bbdb315342",
+      "id": "b355709f5bc6a8630123",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Poem constraint"
+      "text": "A flowing ribbon for narrative pacing."
     },
     {
-      "id": "b556bd145981e8e42564",
+      "id": "b3c8cad56edd5f919d01",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Support reply"
+      "text": "warm workshop"
+    },
+    {
+      "id": "b6953141669dad3244d1",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "spe:daily3d:paper-fold"
     },
     {
       "id": "b712a0dc7ca1b7ea2dfc",
@@ -2094,124 +3459,166 @@
       "text": "Website / 3D"
     },
     {
-      "id": "b95198db32e6f3b89891",
+      "id": "b7f7a68ef057cf69bccb",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Draft a support reply for a late shipment. Empathize, give two options, never invent tracking numbers."
+      "text": "ambient glow"
     },
     {
-      "id": "bb7be59e3b8c4e4f4c00",
+      "id": "b8e774cfee6f2106ba5b",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Brief a 3D still-life: brushed metal ring, frosted glass sphere, soft north light, graphite pedestal. Camera 50mm, f/4."
+      "text": "Dawn coil"
     },
     {
-      "id": "bd9b2abdd020c2ba520e",
+      "id": "b9952e0f2231499755f6",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Answer shopper questions honestly."
+      "text": "orb-field"
     },
     {
-      "id": "c0e335e9f053da617849",
+      "id": "ba45f7d81a2b2da47510",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Portfolio case"
+      "text": "A helix greeting the next day."
     },
     {
-      "id": "c1c05c88827d1d40ebe0",
+      "id": "bb2d7a929041f00bb6e6",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Blameless and useful."
+      "text": "sun edge"
     },
     {
-      "id": "c27a5ed65ec6339a62ab",
+      "id": "bdf650340dfef3b83ac8",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-05"
+      "text": "Product story as an orb constellation with gentle drift and click-to-focus captions."
     },
     {
-      "id": "c28cdffd81384396c3c9",
+      "id": "bf807ae922c067f5850c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#93c5fd"
+      "text": "Soft machine"
     },
     {
-      "id": "c4c0dc66557647cb6e16",
+      "id": "c053738a904eca254892",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Outline a research brief on urban heat islands and tree canopy. List questions, evidence needs, and what would falsify the claim."
+      "text": "Narrative ribbon with scroll-linked pacing and tide-inspired materials."
     },
     {
-      "id": "c50efe706fc68350d798",
+      "id": "c31bbe7a47247af3ca8e",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Incident postmortem"
+      "text": "magenta"
     },
     {
-      "id": "c8190e6f969692c7d051",
+      "id": "c49baadd0cdaf3cb6ec2",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Write an image-generation brief for a quiet ceramic workshop at dusk. Specify lighting, lens, palette, and what to avoid."
+      "text": "A metal ring that remembers your scroll."
     },
     {
-      "id": "c95da6ae8a6cba7cc0e6",
+      "id": "c695e7ebcdbedacfa6c0",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Honest notes on a screenshot."
+      "text": "Constellation of orbs with focus states and reduced-motion static layout."
     },
     {
-      "id": "cbcdf04e4667c8ca7053",
+      "id": "c8346d6c356e2c134678",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-23"
+      "text": "metal"
     },
     {
-      "id": "cbe59b4b029d6cb25879",
+      "id": "c9969056f66d9f50c145",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Name risks without panic."
+      "text": "fiber"
     },
     {
-      "id": "d094aa23d2ef091f9d03",
+      "id": "cb59a7f80ba2966bc90c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#bbf7d0"
+      "text": "diffuse sky"
     },
     {
-      "id": "d0bb1468c0c7d5a02de9",
+      "id": "cc5731bd127336d7f4b7",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A quiet still-life stage."
+      "text": "Three dark slabs hold a ledger of intentions. Moon rim light skims edges; scroll reveals assumptions vs confirmed goals."
     },
     {
-      "id": "d475aec72e29ad6ba38b",
+      "id": "cce6cac43ca8415a7e0e",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-15"
+      "text": "soft metal"
     },
     {
-      "id": "d48e4d9656a355b52ffc",
+      "id": "cd3fb4276b3636c725ad",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Energy budget"
+      "text": "studio softbox"
     },
     {
-      "id": "d4cae425a9fa5a8e4152",
+      "id": "cde1a5a9d694d4c4ae64",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Mobile nav"
+      "text": "Workshop still-life with parallax and captions that avoid infrastructure jargon."
     },
     {
-      "id": "d6520842fbb0f9844527",
+      "id": "ceeda7763bdacc55f3b4",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Grant abstract"
+      "text": "copper"
     },
     {
-      "id": "d781578ddd06c2ca549e",
+      "id": "cf87b20e32da783360da",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Review the TypeScript I paste for correctness, security, and maintainability. Rank findings by severity with concrete fixes. Do not invent files."
+      "text": "Folded paper planes unfold an information architecture. Each fold is a destination — Home, Create, Lab — without jargon."
+    },
+    {
+      "id": "d0a8239edc87381f75fe",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "d3d-04"
+    },
+    {
+      "id": "d1baae3f036d3be11a53",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "overcast"
+    },
+    {
+      "id": "d245f759dfd67ef2133d",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Helix brief"
+    },
+    {
+      "id": "d2e09f4688b555604746",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Orbit mirror facets labeled with intent buckets; on-device only caption."
+    },
+    {
+      "id": "d385635b9ed79b20fdbc",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "spe:daily3d:facet-mirror"
+    },
+    {
+      "id": "d51c56cf9de85be5001a",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "d3d-08"
+    },
+    {
+      "id": "d6027d26c18a53fe8fc3",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "green"
     },
     {
       "id": "d8effa8d5579179f8933",
@@ -2220,58 +3627,70 @@
       "text": "#7dd3fc"
     },
     {
-      "id": "da3e27b770e0a54483ab",
+      "id": "d99e968e7b55c1dfad9d",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A 60-second explainer."
+      "text": "d3d-01"
     },
     {
-      "id": "db814aea326131ea80e1",
+      "id": "db63ab5e6008ac68a8b9",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "#86efac"
+      "text": "ink black"
     },
     {
-      "id": "dba53c7a2cfe15804035",
+      "id": "dbc179ac4fe438939c20",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Science demo"
+      "text": "d3d-13"
     },
     {
-      "id": "dc247880e13ea8b693c4",
+      "id": "dbc347c8f4daf4a190ff",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-19"
+      "text": "Seven matte pillars stand like a type specimen. Parallax scroll shifts depth; captions name weight, leading, and quiet confidence."
     },
     {
-      "id": "df8fd7d18397503edcad",
+      "id": "dd048a14c58adfc63e1c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A 30-minute agenda that respects time."
+      "text": "orbit"
     },
     {
-      "id": "e16f5bb2d349c7edd856",
+      "id": "dd0e4523971d1db0a6f9",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Create a 7-day study plan for introductory statistics. 45 minutes a day. Include one practice problem each day."
+      "text": "soft white"
     },
     {
-      "id": "e2a8d61ccac91efbef4d",
+      "id": "de6e2b391ae4354b86e9",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Propose information architecture for a habit tracker with five primary destinations. Justify what is not in the tab bar."
+      "text": "scroll-story"
     },
     {
-      "id": "e2ae3450e95096cb0e4a",
+      "id": "dfcee2a7c86edb01cb26",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Propose a stepwise refactor plan for a legacy React class component to hooks. Preserve behavior. List risks and tests."
+      "text": "A typographic 3D specimen site: pillars as letterforms, parallax depth, editorial captions on craft."
     },
     {
-      "id": "e54905dc7603c1a516b8",
+      "id": "e0871e2375b3173b656d",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Video outline"
+      "text": "A low table holds calm instruments — lens, slate, thread. The scene argues Create is a workshop, not a settings panel."
+    },
+    {
+      "id": "e0874eca33df9f5a6cb3",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Editorial columns you can parallax."
+    },
+    {
+      "id": "e46440ae87d599eeb01b",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Mirrored facets catch fragments of a prompt — goals, limits, unknowns. Turn the piece; nothing leaves the device."
     },
     {
       "id": "e5815f03dcf893bdf4c2",
@@ -2280,40 +3699,34 @@
       "text": "#fde047"
     },
     {
-      "id": "e588b69b65b2d7a28f0a",
+      "id": "e60b391d0064ca6b6cec",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Help me write a PostgreSQL query for monthly active users with clear assumptions and indexes to consider. No destructive statements."
+      "text": "mirror chrome"
     },
     {
-      "id": "e5ac36601de71d64282f",
+      "id": "e618ce9efb1608628804",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Review this checkout flow description for WCAG-minded gaps: focus order, labels, errors, and color-only cues. Prioritize fixes."
+      "text": "Process narrative on a copper helix with scroll scrubbing and honest status labels."
     },
     {
-      "id": "e7e46357473bb8e19552",
+      "id": "e76d99ed4e0c402a6655",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Leave note"
+      "text": "white foam"
     },
     {
-      "id": "e915b8e0fee5b177168d",
+      "id": "e836f02ccedfa6e29a22",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A small, honest API sketch."
+      "text": "Docking pastel modules with hover assembly and a clear Open in SPE CTA."
     },
     {
-      "id": "ec63ce250356c18f137c",
+      "id": "e92a7f504bab6f573d51",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Business"
-    },
-    {
-      "id": "ed63c76c52f22536643b",
-      "file": "apps/web/src/lab/specimens.ts",
-      "depth": "PRODUCT",
-      "text": "Image brief"
+      "text": "A copper helix climbs through charcoal space. Scroll advances the narrative rung by rung — research, shape, prove, ship."
     },
     {
       "id": "ed9371cf874f2b85caee",
@@ -2322,76 +3735,94 @@
       "text": "#bef264"
     },
     {
-      "id": "ef0be3d4cef52ac1a5be",
+      "id": "efdeb9a9c3be01d523fe",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Chart claims with humility."
+      "text": "The fourteenth piece closes the curated set: a dawn-lit coil that promises a new rotation tomorrow — still fourteen, still finite, still honest."
     },
     {
-      "id": "f001e59d0ec73b72c806",
+      "id": "f13fca79188f10ffbd93",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Bug report"
+      "text": "Glass chapters"
     },
     {
-      "id": "f0d9684b3cd948f3c24f",
+      "id": "f14ca25e3bc3405c8c2e",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Write a short privacy notice for a local-first prompt tool: what stays on device, what never leaves, and what is optional."
+      "text": "Curated queue of"
     },
     {
-      "id": "f11745d8c1c47ed03b8c",
+      "id": "f288ff1cbca3a484c207",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Sketch a REST API for a personal notes app: resources, auth assumptions, error shapes. No implementation code yet."
+      "text": "cyan edge"
     },
     {
-      "id": "f45650ef8cc03c714d00",
+      "id": "f4a67c582a9360190f38",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Coach prompt"
+      "text": "ribbon"
     },
     {
-      "id": "f7b7afc183e932f77bb9",
+      "id": "f604d1ee4a8ddf591bbc",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "A scene start, not a novel."
+      "text": "cream"
     },
     {
-      "id": "f87ec4f6778d5249f530",
+      "id": "faba8756c5b6d006318e",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Practice answers with structure."
+      "text": "cool white"
     },
     {
-      "id": "f8dd7356faef8b5f6724",
+      "id": "fb9d1d19746ae5ad417e",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-25"
+      "text": "translucent"
     },
     {
-      "id": "f91b6767facd431b2895",
+      "id": "fba89c9757bd4484531a",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "Accessibility pass"
+      "text": "mist"
     },
     {
-      "id": "fb151ac6cb990dc0f45b",
+      "id": "fe3e29eda6942ebc8f7d",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-08"
+      "text": "spe:daily3d:dawn-coil"
     },
     {
-      "id": "fc322effad6ce85989f9",
+      "id": "fe7fa2c6ecd50e7678ee",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "AI Assistant"
+      "text": "window light"
     },
     {
-      "id": "fd9f11362128b8fd5c89",
+      "id": "fe8286416f80b1117abb",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
-      "text": "lab-06"
+      "text": "dawn gold"
+    },
+    {
+      "id": "fe8e6f41f06374d090a0",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Paper fold"
+    },
+    {
+      "id": "ff349df504aeaa496f8e",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "Orb constellation"
+    },
+    {
+      "id": "ff3a7c8f6f8f51078132",
+      "file": "apps/web/src/lab/specimens.ts",
+      "depth": "PRODUCT",
+      "text": "brown bounce"
     },
     {
       "id": "02c7b7f9e0360d14bd3d",
@@ -3900,10 +5331,46 @@
       "text": "Unsupported video type:"
     },
     {
-      "id": "025211747744cbfcaa96",
+      "id": "314a5841590b4105eb06",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "[text-like band ~"
+    },
+    {
+      "id": "3582180250eff0bf74b7",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "ocr-textlikeness"
+    },
+    {
+      "id": "74a961d6c28a6d9583fc",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "UNTRUSTED_SOURCE"
+    },
+    {
+      "id": "908c39ec7280cbdd6944",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "low"
+    },
+    {
+      "id": "accff5eb2a405d10262a",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "textlike-"
+    },
+    {
+      "id": "c3de45d7c6b29d10a2da",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "medium"
+    },
+    {
+      "id": "039aa84893b21d86d3ba",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "). May be footer, tabs, or empty space."
+      "text": "\" title=\""
     },
     {
       "id": "0b157eaf82db50ce4baa",
@@ -3912,88 +5379,82 @@
       "text": "Flutter"
     },
     {
-      "id": "1070f58a0dc20a802592",
+      "id": "11f7b57a8deb4466f1b4",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "Side rail / panel"
+      "text": "\", color: \"#f5f5f5\" }}>\n      {regions.map((r) => (\n        <section\n          key={r.id}\n          aria-label={r.role}\n          data-confidence={r.confidence}\n          title={r.evidence}\n          style={{\n            position: \"absolute\",\n            left: `${r.bounds.x * 100}%`,\n            top: `${r.bounds.y * 100}%`,\n            width: `${r.bounds.w * 100}%`,\n            height: `${r.bounds.h * 100}%`,\n            padding: 12,\n            outline: \"1px dashed rgba(255,255,255,0.15)\",\n          }}\n        >\n          <h2 style={{ margin: 0, fontSize: 16 }}>{r.role}</h2>\n        </section>\n      ))}\n    </div>\n  );\n}"
     },
     {
-      "id": "235260beaf3cd8588c2d",
+      "id": "141a8d7d4fc6590c8f4d",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "medium"
+      "text": "import 'package:flutter/material.dart';\nclass ScreenFromScreenshot extends StatelessWidget {\n  const ScreenFromScreenshot({super.key});\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      backgroundColor: const Color(0xFF0B0D10),\n      body: Stack(children: ["
     },
     {
-      "id": "26df5ebbc4bf09c7a916",
+      "id": "1680556d0fe2cc5d9939",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "</ScrollView>\n  );\n}"
+      "text": "rows; density"
     },
     {
-      "id": "2ccb5321440074be58b4",
+      "id": "23ba6299569b9ed9c0df",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "main"
+      "text": "\")\n    }\n    // bounds"
     },
     {
-      "id": "2ea3fc463cdb465f5877",
+      "id": "2408c3928aab2718064a",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "</Text></View>"
+      "text": "] evidence="
     },
     {
-      "id": "2ffd6680a6935290246a",
+      "id": "268d848dba16c1c16659",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<View style={{ padding: 16 }}><Text style={{ color: \"#fff\", fontSize: 18 }}>"
+      "text": "Scaffolds reflect IR structure when strong; otherwise honest starter + build prompt."
     },
     {
-      "id": "3434f597ba7f1156ce33",
+      "id": "29ecce00e81f8b364437",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "top-bar"
+      "text": "@Composable\nfun ScreenFromScreenshot() {\n  Box(Modifier.fillMaxSize().background(Color(0xFF0B0D10))) {"
     },
     {
-      "id": "34bc16a568d21f37ada4",
+      "id": "2ce5d5a11de1ba2934d4",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "}.padding()\n    }.background(Color.black)\n  }\n}"
+      "text": "</strong>\n    <!-- evidence:"
     },
     {
-      "id": "3504dc2832a7473d385d",
+      "id": "2e406b3e8cb83496ac2d",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "import SwiftUI\nstruct ScreenFromScreenshot: View {\n  var body: some View {\n    ScrollView {\n      VStack(alignment: .leading, spacing: 16) {"
+      "text": "export default function ScreenFromScreenshot() {\n  const regions ="
     },
     {
-      "id": "372342b12eccbb7b239d",
+      "id": "37b182df7c59c34cfcdd",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": ". Primary body region guess."
+      "text": "layout:"
     },
     {
-      "id": "374b7cfc02dbf73aadda",
+      "id": "3ba3e92e2dedfc57c0e5",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "side-rail"
+      "text": "position:absolute;left:"
     },
     {
-      "id": "3ac9dc7c9a7f088dafb7",
+      "id": "413e4b5af781879cb095",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "import { ScrollView, Text, View } from \"react-native\";\nexport default function ScreenFromScreenshot() {\n  return (\n    <ScrollView style={{ flex: 1, backgroundColor: \""
+      "text": "w="
     },
     {
-      "id": "3fddeb5d001a4ccc3c18",
+      "id": "42345fa3020d2d4b1c71",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "--></section>"
-    },
-    {
-      "id": "408c173fe88483d3bf85",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "import 'package:flutter/material.dart';\nclass ScreenFromScreenshot extends StatelessWidget {\n  const ScreenFromScreenshot({super.key});\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(body: ListView(padding: const EdgeInsets.all(16), children: ["
+      "text": ";\n  return (\n    <View style={{ flex: 1, backgroundColor: \""
     },
     {
       "id": "4656676b09e15418c3b5",
@@ -4002,16 +5463,52 @@
       "text": "react-native"
     },
     {
+      "id": "4792948a5fde89effdd9",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Stacked header / main / footer with projection columns (uncertain)"
+    },
+    {
+      "id": "4948e66502a736276bc7",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" style=\""
+    },
+    {
+      "id": "4be55203f2e1af9cfd18",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "palette:"
+    },
+    {
       "id": "4e0c977a8ab953bdf612",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "React"
     },
     {
-      "id": "509953dafde57b0cedab",
+      "id": "4e50e7fc5d9d9d53dddf",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "Region roles are brightness heuristics, not ML detection."
+      "text": "cols ×"
+    },
+    {
+      "id": "4e6ebf9f609aadda516d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Region roles include evidence strings — verify against screenshot."
+    },
+    {
+      "id": "5281836c34458e4d057a",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ",\n          child: Padding(\n            padding: const EdgeInsets.all(12),\n            child: Text('"
+    },
+    {
+      "id": "584ddf10aaeddcb16c4c",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "region-rail"
     },
     {
       "id": "5a5741ea29217f288696",
@@ -4026,16 +5523,34 @@
       "text": "Possible sidebar + content columns (uncertain)"
     },
     {
-      "id": "5b13c63c72be2e0195c0",
+      "id": "5da5c4f88af369e5d0a6",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "high"
+      "text": "viewport:"
     },
     {
-      "id": "68d29a6394df35c51606",
+      "id": "5ef7ade5bcf3655502f1",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "}\nbody{margin:0;font:16px/1.45 system-ui,sans-serif;background:#0b0d10;color:#e8eaed}\n.top-bar{min-height:56px;background:var(--c1,#222)}\n.main{min-height:50vh;background:var(--c2,#111);padding:1.25rem}\n.bottom{min-height:64px;background:var(--c3,#1a1a1a)}\n.side-rail{min-height:40vh;background:var(--c4,#161616)}\n</style></head><body>"
+      "text": "y="
+    },
+    {
+      "id": "60943f933e897d8ffdfe",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "-->\n  </section>"
+    },
+    {
+      "id": "62b2befddb0ce77eaed4",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "; images:"
+    },
+    {
+      "id": "6544223df49061fe64cd",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "', style: const TextStyle(color: Colors.white)),\n          ),\n        ),"
     },
     {
       "id": "69dadca4898c2acc99f1",
@@ -4044,16 +5559,22 @@
       "text": "html"
     },
     {
-      "id": "7857e3e988f471a71839",
+      "id": "6c471fa3ff7de377c204",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "Main content"
+      "text": "import { View, Text, useWindowDimensions } from \"react-native\";\nexport default function ScreenFromScreenshot() {\n  const { width, height } = useWindowDimensions();\n  const regions ="
     },
     {
-      "id": "797e02eb22d9dd821212",
+      "id": "72b9bc29854827c5bf1a",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "Stacked top / main / bottom bands (uncertain)"
+      "text": "%;height:"
+    },
+    {
+      "id": "74fc27172f8c28d1d78d",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "import SwiftUI\nstruct ScreenFromScreenshot: View {\n  var body: some View {\n    ZStack(alignment: .topLeading) {"
     },
     {
       "id": "7a61bc4a6b5132fe8d94",
@@ -4062,10 +5583,22 @@
       "text": "<section class=\""
     },
     {
+      "id": "7c82b2909a0bb9b0b5fc",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" }}>\n      {regions.map((r) => (\n        <View\n          key={r.id}\n          style={{\n            position: \"absolute\",\n            left: width * r.bounds.x,\n            top: height * r.bounds.y,\n            width: width * r.bounds.w,\n            height: height * r.bounds.h,\n            padding: 12,\n          }}\n        >\n          <Text style={{ color: \"#fff\", fontSize: 16 }}>{r.role}</Text>\n        </View>\n      ))}\n    </View>\n  );\n}"
+    },
+    {
       "id": "7e975e60efa7858be512",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "#0b0d10"
+    },
+    {
+      "id": "81d8a16db45d7f15cdc2",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": ",\n          top: MediaQuery.of(context).size.height *"
     },
     {
       "id": "8296775bcf5d41b5b99a",
@@ -4074,22 +5607,28 @@
       "text": "Rebuild this UI in"
     },
     {
-      "id": "8377877f5b5ee71cfcbc",
+      "id": "82f84092193109e8910d",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "</h2>\n      </section>"
+      "text": "}\n    .background(Color.black)\n  }\n}"
     },
     {
-      "id": "83f19b42c2cbf89ed9f2",
+      "id": "83b1ac333e0fb594c325",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "(Δ vs main"
+      "text": "IR:"
     },
     {
-      "id": "8e97d8ded7c7b124b2e0",
+      "id": "8aec303d49b9023da9b8",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "export default function ScreenFromScreenshot() {\n  return (\n    <div style={{ fontFamily: \"system-ui\", background: \""
+      "text": "x"
+    },
+    {
+      "id": "914eced2397e42d76bf9",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</div>\n</body></html>"
     },
     {
       "id": "91b9edd80a778d4ab7bb",
@@ -4098,16 +5637,10 @@
       "text": "SwiftUI"
     },
     {
-      "id": "921d47dab3d7184a5889",
+      "id": "9269aa3b8b9451a74762",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "@Composable\nfun ScreenFromScreenshot() {\n  Column(Modifier.fillMaxSize().padding(16.dp)) {"
-    },
-    {
-      "id": "926ecf1feccf66fd3ac1",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "Typography, icons, and exact spacing are not measured."
+      "text": "\")\n          .font(.caption2)\n          .foregroundStyle(.secondary)\n      }\n      .padding(12)\n      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)\n      // bounds x="
     },
     {
       "id": "9677dda37b68644ff515",
@@ -4116,40 +5649,28 @@
       "text": "Jetpack Compose"
     },
     {
-      "id": "98bed804f03330a90966",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "Left/right brightness diverge — possible sidebar. Uncertain."
-    },
-    {
-      "id": "9ba1a1daa4bc3a135211",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "Top bar / header"
-    },
-    {
       "id": "9cd8fb98da9ef735c61d",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "swiftui"
     },
     {
-      "id": "9de9ba0aa739562bed52",
+      "id": "9d546b8ae501fbabc618",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "</div>\n  );\n}"
+      "text": "; confidence"
     },
     {
-      "id": "a27e5bef8fab3eff621e",
+      "id": "a0013dd10502b55ab393",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "Mean brightness"
+      "text": ",\n          height: MediaQuery.of(context).size.height *"
     },
     {
-      "id": "a3e7ac0b367ac5646bba",
+      "id": "a68585623327f201d2c0",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "Text(\""
+      "text": "%;width:"
     },
     {
       "id": "a7ee6785659a87c832fb",
@@ -4158,22 +5679,28 @@
       "text": "Starter scaffold:"
     },
     {
-      "id": "aa8668c1c21b31003487",
+      "id": "a9677a45a3c8827df75a",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n<title>SPE UI scaffold</title>\n<style>\n:root {"
+      "text": "; controls:"
     },
     {
-      "id": "ab4c14fd79df981a7ca4",
+      "id": "ad5d2e56e2b5199b11ce",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "Scaffolds are honest starters — verify every region against the screenshot."
+      "text": ";\n  return (\n    <div style={{ position: \"relative\", minHeight: \"100vh\", fontFamily: \"system-ui\", background: \""
     },
     {
-      "id": "b11dec29d2cfee796711",
+      "id": "ae47bc11bc4079996591",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "Text('"
+      "text": "%;top:"
+    },
+    {
+      "id": "af07f07262bf83e6d5f4",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n<title>SPE UI scaffold from screenshot IR</title>\n<style>\n:root {"
     },
     {
       "id": "b33c46739edd9d9b4264",
@@ -4182,22 +5709,58 @@
       "text": "html-css-js"
     },
     {
-      "id": "c25038f73a0786915bce",
+      "id": "b7db15c555b01d1543b4",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "<section aria-label=\""
+      "text": "Honest structured spec + starter: region geometry was weak; treat scaffold as a build prompt seed, not a pixel clone."
     },
     {
-      "id": "c25427a2c25d60c0af77",
+      "id": "baf155da8de3515606b4",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "). Likely navigation or title band."
+      "text": "h="
     },
     {
-      "id": "c70345f9b53d65abff6f",
+      "id": "bda520762ed49a85ff5d",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "</body></html>"
+      "text": "columns ×"
+    },
+    {
+      "id": "bf53848bb93dcb088cd6",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\">\n    <strong>"
+    },
+    {
+      "id": "c262de80861dd83e17d0",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "VStack(alignment: .leading) {\n        Text(\""
+    },
+    {
+      "id": "c2f3cfb10c70428d6247",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\")\n      Text(\""
+    },
+    {
+      "id": "c350a8caa04e642ef32f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "Column(Modifier.padding(12.dp)) {\n      Text(\""
+    },
+    {
+      "id": "c51d1a24d3ef9e033d88",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "STRUCTURED UI OBSERVATION IR:"
+    },
+    {
+      "id": "c58e0c11138d1fa4def4",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\")\n          .font(.headline)\n        Text(\""
     },
     {
       "id": "c7f2f61de82373f71163",
@@ -4218,12 +5781,6 @@
       "text": "dart"
     },
     {
-      "id": "cf0aee47914b9af95e80",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "bottom"
-    },
-    {
       "id": "cf9039971245b42a1d92",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -4234,12 +5791,6 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "--c"
-    },
-    {
-      "id": "d33bfd81781ea06a5474",
-      "file": "apps/web/src/media/screenshotToCode.ts",
-      "depth": "PRODUCT",
-      "text": "Footer / actions"
     },
     {
       "id": "d4132fae73f664c7cecb",
@@ -4254,22 +5805,22 @@
       "text": "React Native"
     },
     {
-      "id": "de6cfd6610808db208b1",
+      "id": "db961edb785fb70160b8",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "Treat region roles as uncertain screenshot guesses — verify against the image."
+      "text": "Starter scaffold materially mirrors observed region bounds from UIObservationIR — verify every region against the screenshot."
     },
     {
-      "id": "de8571e808ab1dedc0ea",
+      "id": "ddad2424bfefebf11b48",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "\" style={{ padding: 16 }}>\n        {/*"
+      "text": "Positioned(\n          left: MediaQuery.of(context).size.width *"
     },
     {
-      "id": "e142112bb09c1bb27174",
+      "id": "e0edacfb1a04c1f6df59",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "*/}\n        <h2>"
+      "text": "textBlocks:"
     },
     {
       "id": "e5d37067547c0e7af3e9",
@@ -4278,16 +5829,22 @@
       "text": "react"
     },
     {
-      "id": "ebe61d8aa3433890636d",
+      "id": "e80180b034a49caf120d",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "low"
+      "text": ",\n          width: MediaQuery.of(context).size.width *"
     },
     {
-      "id": "f3ffcfd3bdaa00a1254b",
+      "id": "eb1d257e46a9bfb7dbf9",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
-      "text": "\", color: \"#f5f5f5\", minHeight: \"100vh\" }}>"
+      "text": "}\n*{box-sizing:border-box}\nbody{margin:0;font:16px/1.45 system-ui,sans-serif;background:#0b0d10;color:#e8eaed}\n.stage{position:relative;min-height:100vh;background:var(--c2,#111)}\nsection{outline:1px dashed rgba(255,255,255,.12);padding:.75rem}\n.region-header{background:var(--c1,#222)}\n.region-main{background:var(--c2,#111)}\n.region-footer{background:var(--c3,#1a1a1a)}\n.region-rail{background:var(--c4,#161616)}\n</style></head><body>\n<div class=\"stage\">"
+    },
+    {
+      "id": "f3ca6cb06cd8a1886933",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "(analysis"
     },
     {
       "id": "f5d73bc3abce010008fe",
@@ -4306,6 +5863,798 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "HTML / CSS / JavaScript"
+    },
+    {
+      "id": "07bd3063e92c14ec670a",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "Style:"
+    },
+    {
+      "id": "0a2f4cefbcf452fda371",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "(none)"
+    },
+    {
+      "id": "0e1f6350553f0dfe15c4",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "| modelBytesLoaded:"
+    },
+    {
+      "id": "0f3210a46328f4533c67",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "OCR / TEXT-LIKE (UNTRUSTED_SOURCE):"
+    },
+    {
+      "id": "147a326b6d84a2c64cf6",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "semantic-image"
+    },
+    {
+      "id": "1833930894fef79a626c",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "; orientation"
+    },
+    {
+      "id": "353ed0aaf6f437f71417",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "rows (heuristic)."
+    },
+    {
+      "id": "3b4a882162a2069265db",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "Subject/object labels are MODEL_JUDGMENT — not VERIFIED_FACT."
+    },
+    {
+      "id": "4fc2dc9289b6620697b9",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "; symmetry"
+    },
+    {
+      "id": "6751abf6106a028b77b3",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "Projection layout guess: ~"
+    },
+    {
+      "id": "6fb73a7151d83071c501",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "STANDARD ONNX pack not loaded; structure heuristics only."
+    },
+    {
+      "id": "8074b70a8e0ff5edf627",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "visionModelBytes="
+    },
+    {
+      "id": "906cee62fb8b9484c9c3",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "USER-FACING SUMMARY:"
+    },
+    {
+      "id": "93a369cf4558ec85b83e",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "Uncertainty:"
+    },
+    {
+      "id": "9bacf66f19dccef269c0",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "LITE DIAGNOSTICS:"
+    },
+    {
+      "id": "a12ea20c0c23a9a0d7c5",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "LITE"
+    },
+    {
+      "id": "a591cfdfe34222f9c468",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "local-semantic-image-observation"
+    },
+    {
+      "id": "ab51a387072811f33eed",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "SEMANTIC OBSERVATIONS (MODEL_JUDGMENT / structure — not VERIFIED_FACT):"
+    },
+    {
+      "id": "ac10297fc42e8b02b89c",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "Methods:"
+    },
+    {
+      "id": "af3917b0cb7bd68a19a2",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "columns ×"
+    },
+    {
+      "id": "af662eaa66e1d97bbfc1",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "tier="
+    },
+    {
+      "id": "b25fee9f5e1e27e285a8",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "OCR / text-like bands are UNTRUSTED_SOURCE."
+    },
+    {
+      "id": "bdaa7ecc9c6be681cf35",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "Subjects: (none)"
+    },
+    {
+      "id": "c2ce98f9661ded7b136d",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "Lighting:"
+    },
+    {
+      "id": "c4531c6d5657642e41c8",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "Subjects:"
+    },
+    {
+      "id": "ce07f3a82663aacbddb5",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "| elapsedMs:"
+    },
+    {
+      "id": "e90d4ca7a5a22d94d331",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "Composition:"
+    },
+    {
+      "id": "ef06dff128fedd5494ac",
+      "file": "apps/web/src/media/semanticCompose.ts",
+      "depth": "PRODUCT",
+      "text": "Tier:"
+    },
+    {
+      "id": "012adb3b74903ff80edf",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "async"
+    },
+    {
+      "id": "0ce3381c8454aa57fe1e",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "structure-heuristic composition/style"
+    },
+    {
+      "id": "29c9fda5a2b05353f0e8",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "Summarizing"
+    },
+    {
+      "id": "38d93c2b40de68578aae",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "no session"
+    },
+    {
+      "id": "3c954301e06ab84b2bf4",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "no DOM — LITE only"
+    },
+    {
+      "id": "3d5d84ceb91be41a064a",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "canvas"
+    },
+    {
+      "id": "42f20cb1d49e48d46c31",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "STANDARD model unavailable — LITE fallback ("
+    },
+    {
+      "id": "56b278d6acf22b4e3e6f",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "mobilenet-v2-int8 subjects"
+    },
+    {
+      "id": "581eea37cf38dcaf872a",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "Done"
+    },
+    {
+      "id": "59f2398b57c02d197695",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "2d"
+    },
+    {
+      "id": "5ee8b59f3896160ae7c6",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "Decoding"
+    },
+    {
+      "id": "7d45d74cf1ccb1163f66",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "AbortError"
+    },
+    {
+      "id": "9311e5f574c3d9d5bf30",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "Could not decode this image."
+    },
+    {
+      "id": "9d426dba198db0a6962a",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "abort"
+    },
+    {
+      "id": "ab22aa9a9080a50babbe",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "LITE pixel pass"
+    },
+    {
+      "id": "b5cd5b560cdf19c6b60c",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "LITE"
+    },
+    {
+      "id": "ba67dd5614342b3f4807",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "undefined"
+    },
+    {
+      "id": "bbeda9b1043f9437f3b9",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "Aborted"
+    },
+    {
+      "id": "c4600142d4462168821d",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "Canvas is unavailable in this browser."
+    },
+    {
+      "id": "d6a627549d774e080b16",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "STANDARD"
+    },
+    {
+      "id": "dbff1848d3e63f6bb079",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "Loading STANDARD model pack (lazy)"
+    },
+    {
+      "id": "e2aa0d0fbcd1f6832e91",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "Structure semantics"
+    },
+    {
+      "id": "f6ef0a4eed81a80fc054",
+      "file": "apps/web/src/media/semanticPipeline.ts",
+      "depth": "PRODUCT",
+      "text": "STANDARD skipped (requested LITE or non-browser)"
+    },
+    {
+      "id": "040fac65ad16267d98c8",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "with"
+    },
+    {
+      "id": "1892fc6fc402a4da2df3",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "high-key"
+    },
+    {
+      "id": "1c3afee34d3bd675f668",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "Visible text-like regions hint at:"
+    },
+    {
+      "id": "2127408539c2cafeb380",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "Mass distributed across frame"
+    },
+    {
+      "id": "29123dc3b6e929f26c36",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "image."
+    },
+    {
+      "id": "35917918c2bb6b4fcd33",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "dark"
+    },
+    {
+      "id": "3ba4867b58640bca7359",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "left"
+    },
+    {
+      "id": "3bb83b550516112d4888",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "graphic"
+    },
+    {
+      "id": "3bd2fea9c7b60879341a",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "Likely subjects (model judgment):"
+    },
+    {
+      "id": "3c2621937aa355db2c1d",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "photograph"
+    },
+    {
+      "id": "57121589c6a46ad06e21",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "Dominant"
+    },
+    {
+      "id": "584ffa6e99a5799a4c83",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "portrait"
+    },
+    {
+      "id": "604aa02db1750e069308",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "right"
+    },
+    {
+      "id": "65db1ea98c47bc562dcc",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "A"
+    },
+    {
+      "id": "790edc6f45698d99a05a",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "illustration"
+    },
+    {
+      "id": "7a539171900c147461c2",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "square"
+    },
+    {
+      "id": "86b1aa30d2cf9b8cb147",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "landscape"
+    },
+    {
+      "id": "998f91b29642dfc7c07b",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "Sparse opaque palette"
+    },
+    {
+      "id": "a478c65142e12a859002",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "dim"
+    },
+    {
+      "id": "abf4f8f7a7f802b073c7",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "center"
+    },
+    {
+      "id": "b85a1be46c60c40dd71d",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "unknown"
+    },
+    {
+      "id": "ccc1e733699c888a5b83",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "ui-screenshot"
+    },
+    {
+      "id": "d65a8b989f5ecb9e0aa1",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "Subject labels unavailable (LITE path)."
+    },
+    {
+      "id": "d7e2bbb8694f81a828f0",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "low-key"
+    },
+    {
+      "id": "d912be78719f9d441f2e",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "Palette leans"
+    },
+    {
+      "id": "dc5e145fd9dc6ae92dc8",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "low"
+    },
+    {
+      "id": "dd10c82a3895ca586142",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "lite-pixel"
+    },
+    {
+      "id": "de214141b70f4812f0c5",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "structure-heuristic"
+    },
+    {
+      "id": "e19c9ac18824c0bac9c7",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "Reads as"
+    },
+    {
+      "id": "ea33da609b8a0c71e181",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "balanced"
+    },
+    {
+      "id": "eddc688faeff119e6b68",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "bright"
+    },
+    {
+      "id": "f6bedef49cc06375a961",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "high"
+    },
+    {
+      "id": "f8520f7af85867c61699",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "Visual weight leans"
+    },
+    {
+      "id": "fe2662fbab177bcbac9d",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "lighting."
+    },
+    {
+      "id": "fe8991425e0e30356097",
+      "file": "apps/web/src/media/structureSemantics.ts",
+      "depth": "PRODUCT",
+      "text": "medium"
+    },
+    {
+      "id": "039fedb14879c3abd499",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Bottom brightness"
+    },
+    {
+      "id": "05fda2f8e49579987356",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Typography sizes are guessed from band height, not measured fonts."
+    },
+    {
+      "id": "0b202f8daeb7d22dbffa",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "L/R brightness"
+    },
+    {
+      "id": "0d0cca583d42074e481f",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "sparse"
+    },
+    {
+      "id": "1844181688e07a716299",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "STANDARD"
+    },
+    {
+      "id": "1e16c365183ddb0a1950",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Header / top bar"
+    },
+    {
+      "id": "1fceb8142c1c19e5e481",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "; not OCR-verified"
+    },
+    {
+      "id": "29dee46f9e750558af78",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "region-header"
+    },
+    {
+      "id": "31361c9e13ec02002339",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Text-likeness HF projection ("
+    },
+    {
+      "id": "3344222a3c346ac74e7d",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "caption"
+    },
+    {
+      "id": "37e91488b5d496c520f8",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Band cell brightness"
+    },
+    {
+      "id": "4599b677a5abf434df2d",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "high"
+    },
+    {
+      "id": "4825eaedacc54083c301",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "display"
+    },
+    {
+      "id": "485e8ce8f5a0a1d02096",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "; edgeDensity"
+    },
+    {
+      "id": "4b9384db27d1032d82b0",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "medium"
+    },
+    {
+      "id": "4e0ec7c1077464584969",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "ui-ir-lite"
+    },
+    {
+      "id": "4f5f6fbe03a363f2ae8c",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "text-like bands; spacing unit ~"
+    },
+    {
+      "id": "5242da080b3247acdef6",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "UI roles are structure heuristics + optional MobileNet context — verify against the screenshot."
+    },
+    {
+      "id": "54aa4729e63037272c56",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Side rail / navigation"
+    },
+    {
+      "id": "5586d0c222331b3657b3",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Footer / bottom actions"
+    },
+    {
+      "id": "62bd3b2c5ff9667dd2fd",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "LITE"
+    },
+    {
+      "id": "636cfb0954a9ed5dfbaa",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "body"
+    },
+    {
+      "id": "74114de4c3e715b0037c",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "region-main"
+    },
+    {
+      "id": "781d36a1c08abb38ce11",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Central band; projection rows≈"
+    },
+    {
+      "id": "7e3399d4a5a525ef65bd",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "; Δ vs mid"
+    },
+    {
+      "id": "8231f1e687cb860f8fcd",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Elevated edge density"
+    },
+    {
+      "id": "83040ed49f9a51f5517d",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "structure-heuristic"
+    },
+    {
+      "id": "84ad93c8cfd482fc09d2",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "ctrl-r"
+    },
+    {
+      "id": "85322e42f344e7535971",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Action / tab"
+    },
+    {
+      "id": "8d38a2fd7b804c1b9039",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Main content"
+    },
+    {
+      "id": "91d19e517d92332ad56e",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "comfortable"
+    },
+    {
+      "id": "91dfac1a23c06a52fd70",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Row-0 brightness"
+    },
+    {
+      "id": "a1bceb8bd52d5294345d",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Toolbar control"
+    },
+    {
+      "id": "af04b7b4f69048122543",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "img-hero-guess"
+    },
+    {
+      "id": "b2db7dc3edcc0abd3d74",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "unknown"
+    },
+    {
+      "id": "b5fc66dbb72cdeae90e0",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "region-rail"
+    },
+    {
+      "id": "bd384a096b6f15cf760e",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "low"
+    },
+    {
+      "id": "bf2d579f9fc5d06a0e1e",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "vs"
+    },
+    {
+      "id": "c17eaa65eb93712e7195",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "dense"
+    },
+    {
+      "id": "c25085b9ca91423e1b27",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "ui-observation"
+    },
+    {
+      "id": "c3a90192d8a2b15fc86c",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "cols≈"
+    },
+    {
+      "id": "c4379938f885877faa68",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "in mid frame — possible media block"
+    },
+    {
+      "id": "d779ed18e4b989128fbd",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "text-"
+    },
+    {
+      "id": "e5fb3b8817f7dcab15fd",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "region-footer"
+    },
+    {
+      "id": "ee4b17e6c6632c639757",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "px"
+    },
+    {
+      "id": "fc3037b1a11bb962bf11",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "c"
     },
     {
       "id": "1590d09ef4f9bd919992",
@@ -4332,6 +6681,12 @@
       "text": "=== END UNTRUSTED_SOURCE ==="
     },
     {
+      "id": "032a786768346bde1db4",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "CSS variables: (none found in snippet)"
+    },
+    {
       "id": "04b04643ebccfe905ad1",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -4344,10 +6699,28 @@
       "text": "Upload a screenshot of the page"
     },
     {
+      "id": "05f97007d0cc204ef259",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "input, textarea, select"
+    },
+    {
+      "id": "09122e6d63a24acb5aa5",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "form"
+    },
+    {
       "id": "0989256688bf962f9d1a",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "invalid_url"
+    },
+    {
+      "id": "0a473cda34e1232cbee2",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "script tags (not executed):"
     },
     {
       "id": "0a4fe854e5d252134e44",
@@ -4372,6 +6745,18 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "- Notes:"
+    },
+    {
+      "id": "0f36b8be199ec1d85670",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "name"
+    },
+    {
+      "id": "10c6f42eba722a723589",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Forms:"
     },
     {
       "id": "17475ea47dd2e6d12b7a",
@@ -4410,10 +6795,22 @@
       "text": "url-ingest"
     },
     {
+      "id": "21807d44ca6ff854abd9",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "[style]"
+    },
+    {
       "id": "2500c37a01dcb969266d",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Language:"
+    },
+    {
+      "id": "27f9051720af28cddd75",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Font hints: (none)"
     },
     {
       "id": "295bd9005350b86d454c",
@@ -4422,22 +6819,64 @@
       "text": "Meta description:"
     },
     {
+      "id": "2ac0e60de6d14789414b",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "nav"
+    },
+    {
       "id": "2b652a022ce452be0f81",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Description:"
     },
     {
-      "id": "339577b984405d519189",
+      "id": "3476f2d24e7ee0ab2d24",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
-      "text": "Parsed without full DOM (regex fallback)."
+      "text": "Forms: (none)"
     },
     {
       "id": "35529b53055a8ee3a5f8",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Fetch was cancelled."
+    },
+    {
+      "id": "35db4947dde465d646b8",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "\\b"
+    },
+    {
+      "id": "3724b9d1e49ff83bf64f",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "CSS variables (sample):"
+    },
+    {
+      "id": "378d9a16afde2ffecf68",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "transforms"
+    },
+    {
+      "id": "412db9968a59a498b188",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Layout clues: (none strong in HTML/CSS text)"
+    },
+    {
+      "id": "45af2baaa09c5eb0f32f",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Website X-Ray build brief for"
+    },
+    {
+      "id": "482b2e0048c0d42619de",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "responsive-media-queries"
     },
     {
       "id": "48640c3648c905b10c99",
@@ -4470,10 +6909,40 @@
       "text": "Write a short description of the site"
     },
     {
+      "id": "4f0f2f404200bddc0cb2",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "style"
+    },
+    {
+      "id": "4fbbc79865523b1c33e7",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "id"
+    },
+    {
+      "id": "52723fe268d32d028f22",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "script"
+    },
+    {
       "id": "52aaac2db8b9c67c88a4",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "https:"
+    },
+    {
+      "id": "544b282abed6821161dd",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "@keyframes present"
+    },
+    {
+      "id": "54d99fd0d999c3de87c8",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "href"
     },
     {
       "id": "59ad671040a45b2a34c3",
@@ -4482,10 +6951,58 @@
       "text": "https://"
     },
     {
+      "id": "5cb10e28cf5368632fc9",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "form["
+    },
+    {
+      "id": "69fa17d636111876ab75",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Trust: all fetched HTML is UNTRUSTED_SOURCE."
+    },
+    {
+      "id": "6e23e4ec001e04c5d025",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Parse mode: DOMParser only — page scripts were not executed."
+    },
+    {
+      "id": "71facaf175882dd877f1",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Animation clues: (none)"
+    },
+    {
+      "id": "725066ddb89841912ecb",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "gi"
+    },
+    {
+      "id": "72b12507f42840b6f5a0",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Landmarks: (none detected)"
+    },
+    {
       "id": "739d64a903aaa885efcf",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Aborted"
+    },
+    {
+      "id": "74038dcd36e4db9bc3d8",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Layout clues:"
+    },
+    {
+      "id": "757368494176e55169e5",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "transitions"
     },
     {
       "id": "764cf357af9974cdf3a9",
@@ -4494,16 +7011,16 @@
       "text": "This browser could not read that URL (likely CORS or network). SPE will not use a paid proxy."
     },
     {
-      "id": "76f31b3f2910fd3d8203",
-      "file": "apps/web/src/media/urlIngest.ts",
-      "depth": "PRODUCT",
-      "text": "Goal: rebuild a clearer, modern version of this page's information architecture — not a pixel clone."
-    },
-    {
       "id": "77165d36feebb37bb851",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "TimeoutError"
+    },
+    {
+      "id": "793cb22044fcaed9d7f5",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Forms: detected ("
     },
     {
       "id": "7990bed1c206f5bcfb97",
@@ -4516,6 +7033,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "; images:"
+    },
+    {
+      "id": "83c0cf19523e40d8998e",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "h1, h2, h3"
     },
     {
       "id": "84d9e5fb858ac6db3f3c",
@@ -4542,22 +7065,40 @@
       "text": "content-type"
     },
     {
+      "id": "8e71502fdf4c12e510ee",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "aside"
+    },
+    {
+      "id": "8ef4b419732ba7b7cd08",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "stylesheet:"
+    },
+    {
+      "id": "9640ae30038c67b665d8",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Landmarks:"
+    },
+    {
       "id": "96deab3017a05b638431",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "abort"
     },
     {
+      "id": "975239dfd0eee5015696",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "; script tags (not executed):"
+    },
+    {
       "id": "9bacd54bdbeee47e911c",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Goal: rebuild a clearer information architecture from the available excerpt."
-    },
-    {
-      "id": "9c4b1b176b23c2e49908",
-      "file": "apps/web/src/media/urlIngest.ts",
-      "depth": "PRODUCT",
-      "text": "Website build brief for"
     },
     {
       "id": "9e32a0beda6df4f01c6c",
@@ -4572,10 +7113,34 @@
       "text": "ok"
     },
     {
+      "id": "a217fe0a50afbc9450fb",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "input tags)"
+    },
+    {
+      "id": "a55a5fdc7b4d92d7cdcb",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "] fields="
+    },
+    {
+      "id": "a638b7729659ab936e44",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Nav labels: (none)"
+    },
+    {
       "id": "a93f7a5ab77d69f2bda7",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "cors"
+    },
+    {
+      "id": "aa580b69f210d996483c",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Parse mode: regex fallback — page scripts were not executed."
     },
     {
       "id": "aa8dcb7f819748b56a9f",
@@ -4590,10 +7155,22 @@
       "text": "meta[name=\"description\"]"
     },
     {
-      "id": "b18fce2391953d7fcc03",
+      "id": "acf4d8464f6817774181",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
-      "text": "h1, h2"
+      "text": "type"
+    },
+    {
+      "id": "adb1d78bedb9b0511203",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "main"
+    },
+    {
+      "id": "adf59db9f87001b59f97",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "flexbox"
     },
     {
       "id": "b2437e7f546604ac83d7",
@@ -4608,10 +7185,34 @@
       "text": "The site responded with HTTP"
     },
     {
+      "id": "b94fc3e0507338ba5c6f",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "link[rel=\"stylesheet\"][href]"
+    },
+    {
+      "id": "ba86a3a3d8afeae5cc37",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Animation clues:"
+    },
+    {
       "id": "bb01e1e49c33788a5cb3",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Constraints: keep claims humble; do not invent brand assets or legal copy."
+    },
+    {
+      "id": "bc2f855137ca6a36fd84",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Goal: rebuild a clearer, modern information architecture — not a pixel clone."
+    },
+    {
+      "id": "be754162f631be54f5fb",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Nav labels:"
     },
     {
       "id": "c0cd77468f50c551f6a1",
@@ -4632,6 +7233,24 @@
       "text": "img[src]"
     },
     {
+      "id": "cab1be9b676d2eac5ead",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "footer"
+    },
+    {
+      "id": "cba1ed428bb903268dbb",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "(none)"
+    },
+    {
+      "id": "ce108c6c27581defd18a",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "header"
+    },
+    {
       "id": "d206f8f55db775e7d51a",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -4650,6 +7269,18 @@
       "text": "omit"
     },
     {
+      "id": "d6aef43f3a5a1310a6b7",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "animation properties"
+    },
+    {
+      "id": "d70c5e43ceb51c9758d2",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "Font hints:"
+    },
+    {
       "id": "d7bd620ab2bf896684b4",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -4660,6 +7291,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Title:"
+    },
+    {
+      "id": "de617ab0b15c47890cd1",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "nav a[href]"
     },
     {
       "id": "dfabfe6059d2662fb832",
@@ -4740,10 +7377,22 @@
       "text": "undefined"
     },
     {
+      "id": "faf009a232bcf5ad60c1",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "css-grid"
+    },
+    {
       "id": "054d936967153bf255f4",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "image/frame"
+    },
+    {
+      "id": "0eab74f2cd6ca16325ff",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "held scene until"
     },
     {
       "id": "1052be45ae0eae0122b4",
@@ -4752,22 +7401,34 @@
       "text": "similar complexity"
     },
     {
-      "id": "1098b0d18f43927f1249",
+      "id": "15ec96eb0f46b676faa2",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
-      "text": "Motion and object tracking are not performed — only sparse frame observations."
+      "text": "Motion tracking is not performed — sparse scene-aware keyframes only."
+    },
+    {
+      "id": "19214bd38d73fe07d596",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "scene-aware keyframes ("
+    },
+    {
+      "id": "1c184fb80e0e7330f366",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Pacing cues:"
+    },
+    {
+      "id": "1c549f331ce0c2ed1917",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "moderate pacing"
     },
     {
       "id": "1d322187533a38ab33c6",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "error"
-    },
-    {
-      "id": "215909f218e82629feff",
-      "file": "apps/web/src/media/videoSample.ts",
-      "depth": "PRODUCT",
-      "text": "Sample times (s):"
     },
     {
       "id": "22bf016418e341ad931c",
@@ -4830,6 +7491,12 @@
       "text": "Video is too long (max"
     },
     {
+      "id": "39a66103e8945bd6f06a",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Scene boundaries use brightness/edge/grid signatures, not a dedicated shot-boundary network."
+    },
+    {
       "id": "39adca50d195bcd34392",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -4860,6 +7527,18 @@
       "text": "brightening"
     },
     {
+      "id": "44eb2a2bc738c11ffec3",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "after scene-change + dedupe across"
+    },
+    {
+      "id": "4ae4fcb2254ca29c2841",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "KEYFRAME SEMANTIC OBSERVATIONS (bounded — not 8× diagnostic dumps):"
+    },
+    {
       "id": "4c41a5aadc79c0af1416",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -4872,10 +7551,22 @@
       "text": "Brightness trend:"
     },
     {
-      "id": "62024c4ad24d04f46aa5",
+      "id": "4fd2bbb2963e18f3d1a3",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
-      "text": "Scene boundaries are brightness/edge heuristics, not ML shot detection."
+      "text": "STANDARD deferred per-frame to bound memory — sequence uses structure+OCR-likeness"
+    },
+    {
+      "id": "5793744f8f37f1870755",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "Keyframe"
+    },
+    {
+      "id": "5b03ed4531a737aa9bde",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "STANDARD"
     },
     {
       "id": "6bd2798a4f03217bb4c6",
@@ -4896,16 +7587,22 @@
       "text": "Could not seek in this video."
     },
     {
+      "id": "71b59036437b0c13da45",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "LITE frame semantics"
+    },
+    {
       "id": "758a2107c5273161b274",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "abort"
     },
     {
-      "id": "97d109333d4fdc318618",
+      "id": "86f532ed9092c25dc713",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
-      "text": "FRAME OBSERVATIONS:"
+      "text": "No audio transcription."
     },
     {
       "id": "9a30ba7e9ff9ace5468f",
@@ -4926,16 +7623,28 @@
       "text": "Seek timed out after"
     },
     {
+      "id": "9d92f4ac665b4c014570",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "fast cuts"
+    },
+    {
+      "id": "9fef21529f93e383247c",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "transitions,"
+    },
+    {
       "id": "a11c5326292b8196d561",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "AbortError"
     },
     {
-      "id": "a36a545c7d8306934942",
+      "id": "a52db55d13a776657c62",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
-      "text": "after scene dedupe across"
+      "text": "quick shift at"
     },
     {
       "id": "abc7601fc893a271374f",
@@ -4956,6 +7665,12 @@
       "text": "s (bounded, local)."
     },
     {
+      "id": "b52bb01c24a379af6a06",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "video-keyframe"
+    },
+    {
       "id": "bf2c5e540432eab63dc1",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -4974,6 +7689,12 @@
       "text": "s with"
     },
     {
+      "id": "c67d73700ba5248eedf4",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "LITE"
+    },
+    {
       "id": "c6cf446c1e53af37fb66",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -4986,16 +7707,22 @@
       "text": "Sampled"
     },
     {
+      "id": "cfd2362a391ba121c073",
+      "file": "apps/web/src/media/videoSample.ts",
+      "depth": "PRODUCT",
+      "text": "slow / continuous"
+    },
+    {
       "id": "d69ac0d59c226fb19bbc",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "File:"
     },
     {
-      "id": "e3a17b6626afc9165003",
+      "id": "e561481059eb69909cc1",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
-      "text": "distinct samples."
+      "text": "Keyframe times (s):"
     },
     {
       "id": "e5afd3bde5a388cf239e",
@@ -6150,6 +8877,12 @@
       "text": "Start with the idea exactly as it comes to you."
     },
     {
+      "id": "3ee2452a54839c07dbfc",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "There's more in your idea"
+    },
+    {
       "id": "474e8d2867a00e0174ed",
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
@@ -6186,12 +8919,6 @@
       "text": "Website / 3D"
     },
     {
-      "id": "5f9cc2e3975e08838ab1",
-      "file": "packages/human-perspective/src/copy.ts",
-      "depth": "EXPERIENCE",
-      "text": "than one sentence holds."
-    },
-    {
       "id": "60c36f390b893d34af38",
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
@@ -6208,12 +8935,6 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "EXPERIENCE",
       "text": "a clearer direction."
-    },
-    {
-      "id": "6f5b47aa448d255b9a4e",
-      "file": "packages/human-perspective/src/copy.ts",
-      "depth": "EXPERIENCE",
-      "text": "There is more in the idea"
     },
     {
       "id": "7078b33d110ad23a18e6",
@@ -6292,6 +9013,12 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "EXPERIENCE",
       "text": "A thoughtful question"
+    },
+    {
+      "id": "aced3741839ef9ac54dd",
+      "file": "packages/human-perspective/src/copy.ts",
+      "depth": "EXPERIENCE",
+      "text": "than fits in one sentence."
     },
     {
       "id": "b34042b3bfa5e0bad915",

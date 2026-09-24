@@ -1,8 +1,8 @@
 /** Curated English source voice. Selection uses explicit task choice/current-session completion only. */
 export const heroLibrary = {
   first: {
-    title: "There is more in the idea",
-    accent: "than one sentence holds.",
+    title: "There's more in your idea",
+    accent: "than fits in one sentence.",
     support:
       "Start with what you want to do. SPE brings the request into focus — goals, boundaries, and open questions — so you leave with a clearer prompt.",
   },
