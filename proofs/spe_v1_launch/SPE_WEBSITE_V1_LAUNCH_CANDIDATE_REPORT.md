@@ -16,9 +16,9 @@ P0 correctness defects from the defect-closure brief were closed on this branch 
 | Token | Meaning | SHA |
 | --- | --- | --- |
 | IMPLEMENTATION_TESTED_SHA | Suites green through copy gate + media + web pytest | `c889e2c9d7b7cf893951fc8ea0c96a628cb297ec` |
-| VISUAL_EVIDENCE_SHA | Round-3 screenshots + reviews committed | `a86a04f4116b7881f4eea0bd153b42015e81aaf6` |
-| REPORT_SHA | This report tip-pointer commit | `0bf19773c943a715a181d5ff981f9780068ff74a` |
-| CURRENT_PR_HEAD | Branch tip after push | `0bf19773c943a715a181d5ff981f9780068ff74a` |
+| VISUAL_EVIDENCE_SHA | Round-3 screenshots + reviews | `a86a04f4116b7881f4eea0bd153b42015e81aaf6` |
+| REPORT_SHA | Report body authored (avoid tip self-hash chase) | `a86a04f4116b7881f4eea0bd153b42015e81aaf6` |
+| CURRENT_PR_HEAD | Recorded in PR #41 body after push (single update) | _(post-push tip)_ |
 
 ## 3. Product law compliance
 
