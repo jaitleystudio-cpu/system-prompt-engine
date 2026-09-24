@@ -44,7 +44,7 @@ jobs:
           import hashlib
           import json
           import shutil
-                   from pathlib import Path
+          from pathlib import Path
 
           repo = Path.cwd()
           src = repo / "portable/spe-wasm/target/wasm32-unknown-unknown/release/spe_wasm.wasm"
