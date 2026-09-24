@@ -12,6 +12,13 @@ on:
 permissions:
   contents: read
 
+env:
+  # Keep absolute runner paths out of the packaged WASM binary. The packaging
+  # check rejects developer/runner home paths from Rust metadata.
+  RUSTFLAGS: >-
+    --remap-path-prefix=/home/runner=/rustc
+    --remap-path-prefix=/home=/rustc
+
 jobs:
   python:
     runs-on: ubuntu-latest
@@ -21,14 +28,19 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-
-      - name: install Rust toolchain for WASM conformance tests
+      - name: Install Rust toolchain and WASM target
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
-
+      - name: Verify WASM target
+        run: rustup target list --installed
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e '.[dev]'
+      - name: Build spe-wasm release artifact for browser verification
+        run: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --target wasm32-unknown-unknown --release
+      - name: Refresh shipped web WASM payload
+        working-directory: apps/web
+        run: npm ci && npm run copy-wasm
       - run: python -m pytest -q
 
   rust:
@@ -47,29 +59,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: install Rust toolchain for WASM build
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
-
       - name: install
         working-directory: apps/web
         run: npm ci
-
-      - name: build WASM artifact
+      - name: clean WASM build outputs
+        run: cargo clean --manifest-path portable/spe-wasm/Cargo.toml
+      - name: build WASM artifact with remapped paths
         run: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --target wasm32-unknown-unknown --release
-
+      - name: verify WASM artifact
+        run: test -s portable/spe-wasm/target/wasm32-unknown-unknown/release/spe_wasm.wasm
+      - name: refresh shipped web WASM metadata
+        working-directory: apps/web
+        run: npm run copy-wasm
       - name: engine tests
         working-directory: apps/web
         run: npm run test:engine
-
       - name: build
         working-directory: apps/web
         run: npm run build

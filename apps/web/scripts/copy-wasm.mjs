@@ -4,7 +4,14 @@
  * COST ₹0. NEW_IMPLEMENTATION. not_a_release=true. No network.
  */
 import { createHash } from "node:crypto";
-import { chmodSync, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -21,15 +28,23 @@ const metaPath = join(publicDir, "spe_wasm.sha256.json");
 
 if (!existsSync(src)) {
   console.error(`copy-wasm: missing release artifact at ${src}`);
-  console.error("Build first: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --offline --target wasm32-unknown-unknown --release");
+  console.error(
+    "Build first: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --offline --target wasm32-unknown-unknown --release",
+  );
   process.exit(1);
 }
 
 mkdirSync(publicDir, { recursive: true });
 const bytes = readFileSync(src);
 // Do not publish developer home paths embedded by Rust panic/debug metadata.
-if (["/Users/", "/home/", ".codex/", ".chatgpt-projects/"].some((marker) => bytes.includes(Buffer.from(marker)))) {
-  throw new Error("WASM contains developer home paths. Rebuild with Rust --remap-path-prefix before packaging.");
+if (
+  ["/Users/", "/home/", ".codex/", ".chatgpt-projects/"].some((marker) =>
+    bytes.includes(Buffer.from(marker)),
+  )
+) {
+  throw new Error(
+    "WASM contains developer home paths. Rebuild with Rust --remap-path-prefix before packaging.",
+  );
 }
 copyFileSync(src, dest);
 chmodSync(dest, 0o644);
