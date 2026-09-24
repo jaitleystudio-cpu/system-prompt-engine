@@ -18,12 +18,13 @@ Close the product cohesion gap: Home already felt premium; Create / Code / URL /
 | FINAL_IMPLEMENTATION_SHA | `affee12eb63f2b4f474a1b0742e427591be38959` | Cohesion CSS/TSX + Lab lighting + copy inventory |
 | FINAL_TESTED_SHA | `affee12eb63f2b4f474a1b0742e427591be38959` | Suites green on this tree (pre-commit run + rebuild at tip) |
 | FINAL_VISUAL_TARGET_SHA | `affee12eb63f2b4f474a1b0742e427591be38959` | Round-3 manifest visualTargetSha / fresh_visual testedSha |
-| REPORT_SHA | `d18e61a1a1567f475c67bac4e58ce740657b271c` | Docs + Round-3 visuals (docs trail) |
-| LIVE_PR_HEAD | `d18e61a1a1567f475c67bac4e58ce740657b271c` | After push; never merge |
+| REPORT_SHA | `27d0318d67401b5eb1ff5e2030e883b212ec1e14` | Docs trail after implementation |
+| LIVE_PR_HEAD | `27d0318d67401b5eb1ff5e2030e883b212ec1e14` | After push; never merge |
 
 Ideal equality **FINAL_IMPLEMENTATION_SHA = FINAL_TESTED_SHA = FINAL_VISUAL_TARGET_SHA** holds at `affee12eb63f2b4f474a1b0742e427591be38959`.
 
-REPORT / LIVE tip `d18e61a1a1567f475c67bac4e58ce740657b271c` is a **proven docs-only trail** after implementation.
+REPORT / LIVE tip `27d0318d67401b5eb1ff5e2030e883b212ec1e14` is a **proven docs-only trail** after implementation.
+
 
 
 ## C. Fresh mergeability (pre-push check)
