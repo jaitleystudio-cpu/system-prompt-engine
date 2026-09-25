@@ -11780,6 +11780,264 @@
       "file": "apps/web/src/ui/SeoHead.tsx",
       "depth": "PRODUCT",
       "text": "og:description"
+    },
+    {
+      "id": "0069a9f6e94710a68dfb",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "change"
+    },
+    {
+      "id": "29fba1b27961b966c8d2",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Pause story"
+    },
+    {
+      "id": "ecb0b545cc09afc1a1de",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Resume story"
+    },
+    {
+      "id": "05b003cf84765af53cdf",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Need this to feel clear…"
+    },
+    {
+      "id": "0f1d441e4d358eb1ecf8",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "prompt"
+    },
+    {
+      "id": "153fd940bc8069550005",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE transforms messy human thought into an idea, meaning, structure, and a finished system prompt."
+    },
+    {
+      "id": "1b6e8f9db45f2d7d8c16",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "ROLE"
+    },
+    {
+      "id": "248e782338a55d077b5e",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "ALIGN"
+    },
+    {
+      "id": "252d27294a41027dbfd4",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "engine"
+    },
+    {
+      "id": "27593400b70c819832d1",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "structure"
+    },
+    {
+      "id": "2e8b44287348a8f9d34b",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "thought"
+    },
+    {
+      "id": "31cbddddebf52fec7222",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "GOAL"
+    },
+    {
+      "id": "330920994780ea8bed7b",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "READY"
+    },
+    {
+      "id": "33d85847e516b3e92593",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "PARSE"
+    },
+    {
+      "id": "3466afa018dff93fb0aa",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "NOTE"
+    },
+    {
+      "id": "38c6eb664c64a3b49d4e",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "MESSY HUMAN THOUGHT"
+    },
+    {
+      "id": "3ea840b1bec24b113f4d",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "DOCUMENT"
+    },
+    {
+      "id": "49cf26338759c491b2b2",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE transformation: messy thought to idea, meaning, semantic engine, structure, and system prompt"
+    },
+    {
+      "id": "4adc033b85d52eb94926",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "QUESTION"
+    },
+    {
+      "id": "51a448474a394f7c17df",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SEMANTIC ENGINE"
+    },
+    {
+      "id": "5c3b8207c83bf50e2067",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "BOUNDARY"
+    },
+    {
+      "id": "64d6b4d59136a88f1025",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "OBJECTIVE"
+    },
+    {
+      "id": "6e6f74eb3dffe1e5bc66",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "IDEA"
+    },
+    {
+      "id": "79dfd20ab4d9c1bcca06",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "IMAGE"
+    },
+    {
+      "id": "7c426e72b297670e9855",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "OUTPUT"
+    },
+    {
+      "id": "7ebbf9ddacb45a39968b",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "FORM FOLLOWS INTENT"
+    },
+    {
+      "id": "81c47340f177f3a221e6",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "meaning"
+    },
+    {
+      "id": "862108c4fb97d756711b",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "CONSTRAINTS"
+    },
+    {
+      "id": "8b62c9bf898a3d161fde",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "idea"
+    },
+    {
+      "id": "8c76755fbe82ad6a6235",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "CONTEXT"
+    },
+    {
+      "id": "95e61e0e3f043cd6bc10",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "MEANING"
+    },
+    {
+      "id": "9bb5c64c3abb50befe2c",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "WAVEFORM"
+    },
+    {
+      "id": "9e16d0a2cede99423ba4",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "URL"
+    },
+    {
+      "id": "aa6734f8fbb453869345",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "COMPILE"
+    },
+    {
+      "id": "b70e6ace0eeb6adc1f2e",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Launch with clarity"
+    },
+    {
+      "id": "bea8b225274e768c6069",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Human fragments become an idea, meaning, and a structured prompt through the compact SPE semantic engine."
+    },
+    {
+      "id": "bec0aa6a8f300bf4cfbe",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE / 01"
+    },
+    {
+      "id": "c434fc111a04c050017c",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Launch strategist"
+    },
+    {
+      "id": "ce79ba16d181e3536a4b",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SEMANTIC COMPILE / LIVE MODEL"
+    },
+    {
+      "id": "d1f95585cbc48ee8a6dc",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "STRUCTURE"
+    },
+    {
+      "id": "e11115016bd73e23bdd7",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "CODE"
+    },
+    {
+      "id": "ead612f5f4987cd452ac",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SYSTEM PROMPT"
+    },
+    {
+      "id": "f2743cf0382136dd114b",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE"
     }
   ]
 }
