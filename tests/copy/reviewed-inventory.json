@@ -12710,6 +12710,60 @@
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "PASS ·"
+    },
+    {
+      "id": "0da7a7d23171dd5b801c",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "EXECUTE"
+    },
+    {
+      "id": "15c45ec74e9cadd252fa",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Planned contract stages only. None are executed by this local dry-run."
+    },
+    {
+      "id": "15db249d954a132f5e82",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "VERIFY · PLANNED"
+    },
+    {
+      "id": "1dbb3a9c1ba048adc36b",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Contract instruction ·"
+    },
+    {
+      "id": "23b1a035f1f301fa42a0",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "EXECUTE · PLANNED"
+    },
+    {
+      "id": "33630465969a3746b3c6",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "DELIVER · PLANNED"
+    },
+    {
+      "id": "86f274b582911f2cd5da",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "DELIVER"
+    },
+    {
+      "id": "9fd1519b2ed5643ff5f3",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "VERIFY"
+    },
+    {
+      "id": "a207e376a7d1f948808b",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Run local dry-run again"
     }
   ]
 }

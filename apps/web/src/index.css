@@ -4500,6 +4500,11 @@ html[data-theme="dark"] .spe-create input::placeholder {
   padding: 0;
   list-style: none;
 }
+.spe-contract-stage-note {
+  margin: 0 0 0.55rem;
+  color: #aab7ce;
+  font-size: 0.76rem;
+}
 .spe-contract-stages li {
   display: grid;
   gap: 0.25rem;
@@ -4641,6 +4646,14 @@ html[data-theme="light"] .spe-contract-stages li {
 html[data-theme="light"] .spe-authority-law {
   color: #6d5128 !important;
 }
+html[data-theme="light"] .spe-contract-label,
+html[data-theme="light"] .spe-contract-stages span,
+html[data-theme="light"] .spe-contract-card > ul strong {
+  color: #6d5128;
+}
+html[data-theme="light"] .spe-contract-stage-note {
+  color: var(--muted);
+}
 @media (max-width: 720px) {
   .spe-execution-contract {
     padding: 0.9rem;
@@ -4661,5 +4674,19 @@ html[data-theme="light"] .spe-authority-law {
   .spe-contract-card dl,
   .spe-run-record dl {
     grid-template-columns: 1fr;
+  }
+  .spe-contract-label,
+  .spe-contract-stages span,
+  .spe-conformance > ul li > span {
+    font-size: 0.68rem;
+  }
+  .spe-contract-stages strong,
+  .spe-contract-card dt,
+  .spe-run-record dt {
+    font-size: 0.72rem;
+  }
+  .spe-contract-stages small,
+  .spe-conformance li p {
+    font-size: 0.74rem;
   }
 }

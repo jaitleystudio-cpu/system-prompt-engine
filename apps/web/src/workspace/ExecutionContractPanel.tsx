@@ -34,6 +34,14 @@ function shortDigest(value: string | null | undefined): string {
     : value;
 }
 
+function plannedStageLabel(stage: unknown): string {
+  const value = String(stage ?? "STAGE");
+  if (value === "EXECUTE") return "EXECUTE · PLANNED";
+  if (value === "VERIFY") return "VERIFY · PLANNED";
+  if (value === "DELIVER") return "DELIVER · PLANNED";
+  return value;
+}
+
 export function ExecutionContractPanel({
   protocolOutput,
   artifact,
@@ -92,7 +100,11 @@ export function ExecutionContractPanel({
           aria-busy={busy}
           onClick={onRunDry}
         >
-          {busy ? "Checking locally…" : record ? "Run dry-run again" : "Run local dry-run"}
+          {busy
+            ? "Checking locally…"
+            : record
+              ? "Run local dry-run again"
+              : "Run local dry-run"}
         </button>
       </header>
 
@@ -183,15 +195,23 @@ export function ExecutionContractPanel({
       </div>
 
       {stages.length ? (
-        <ol className="spe-contract-stages" aria-label="Contract stages">
-          {stages.map((stage, index) => (
-            <li key={String(stage.node_id ?? index)}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{String(stage.stage ?? "STAGE")}</strong>
-              <small>{String(stage.title ?? "")}</small>
-            </li>
-          ))}
-        </ol>
+        <div>
+          <p className="spe-contract-stage-note">
+            Planned contract stages only. None are executed by this local
+            dry-run.
+          </p>
+          <ol className="spe-contract-stages" aria-label="Contract stages">
+            {stages.map((stage, index) => (
+              <li key={String(stage.node_id ?? index)}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{plannedStageLabel(stage.stage)}</strong>
+                <small>
+                  Contract instruction · {String(stage.title ?? "")}
+                </small>
+              </li>
+            ))}
+          </ol>
+        </div>
       ) : null}
 
       {record ? (
