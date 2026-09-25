@@ -12392,6 +12392,24 @@
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
       "text": "Import .spe or JSON file"
+    },
+    {
+      "id": "01da372c42a0a646505f",
+      "file": "apps/web/src/ui/DotPattern.tsx",
+      "depth": "PRODUCT",
+      "text": "spe-dot-pattern"
+    },
+    {
+      "id": "4a9e6f980bb7629c3224",
+      "file": "apps/web/src/ui/DotPattern.tsx",
+      "depth": "PRODUCT",
+      "text": "spe-dot-pattern--"
+    },
+    {
+      "id": "eee281b5d1337c918b22",
+      "file": "apps/web/src/ui/DotPattern.tsx",
+      "depth": "PRODUCT",
+      "text": "hero"
     }
   ]
 }

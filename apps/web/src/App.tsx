@@ -37,6 +37,7 @@ import {
   type AppView,
 } from "./routing";
 import { SeoHead } from "./ui/SeoHead";
+import { DotPattern } from "./ui/DotPattern";
 import { SeoContent } from "./landing/SeoContent";
 import { Hero } from "./landing/Hero";
 import { ScrollStory } from "./landing/ScrollStory";
@@ -721,6 +722,7 @@ export default function App() {
 
         {(view === "create" || view === "code") && (
           <section className="spe-create" aria-labelledby="create-title">
+            <DotPattern surface="create" />
             <header className="spe-create-head">
               <p className="spe-kicker">{view === "code" ? "Code" : "Create"}</p>
               <h1 id="create-title">
