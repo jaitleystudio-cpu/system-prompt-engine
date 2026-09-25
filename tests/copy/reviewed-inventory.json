@@ -12410,6 +12410,306 @@
       "file": "apps/web/src/ui/DotPattern.tsx",
       "depth": "PRODUCT",
       "text": "hero"
+    },
+    {
+      "id": "15ad76e750cd4890d5f2",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "FAIL"
+    },
+    {
+      "id": "4f4728bc1eee36750dfe",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Local checks found a blocked contract. Nothing was executed."
+    },
+    {
+      "id": "99c4a677356750745abe",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "The local dry-run could not be recorded."
+    },
+    {
+      "id": "d807a15be4ee53d3a14a",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Local dry-run recorded. No target task or side effect was executed."
+    },
+    {
+      "id": "03e7fa777687e2d258f4",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "recommend ≠ authorize ≠ execute"
+    },
+    {
+      "id": "11277e125abafcb09817",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Executed"
+    },
+    {
+      "id": "15e88ddaa4f05234280f",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Prepared locally with no side effects. This records contract checks, not target execution or verified success."
+    },
+    {
+      "id": "20e81af8a577593b130a",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Build tip"
+    },
+    {
+      "id": "23cbbeaf6da740188597",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "NONE"
+    },
+    {
+      "id": "2709fa5c3fbb285f16c7",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Example handling"
+    },
+    {
+      "id": "2927ea02aafede5afed1",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Grants"
+    },
+    {
+      "id": "332d630c68656ffa9a52",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Recorded"
+    },
+    {
+      "id": "378a2dc56eaf9a72b8b4",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Level"
+    },
+    {
+      "id": "3ac18b36ff5eb528722c",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "STAGE"
+    },
+    {
+      "id": "3c7a9b39b9f4566c8eb4",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "No user example supplied."
+    },
+    {
+      "id": "3e4446308922d487dd34",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Contract stages"
+    },
+    {
+      "id": "40fd9b3902ce893326f2",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Record digest"
+    },
+    {
+      "id": "46f3b54e4bcf732d4ed0",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "FAIL ·"
+    },
+    {
+      "id": "499d22b0196100b5045d",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local preparation"
+    },
+    {
+      "id": "4c27453d1428079943da",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Execution Contract"
+    },
+    {
+      "id": "5277d1cf680b6a0ae012",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Run local dry-run"
+    },
+    {
+      "id": "52d62122301b4081014e",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "No local run record yet. Running the dry-run checks the prepared contract only; it will not execute the task."
+    },
+    {
+      "id": "56129796582e42dba1a1",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Acceptance criteria"
+    },
+    {
+      "id": "5ade973d349680849e3c",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Overall:"
+    },
+    {
+      "id": "6361540449b71dc38340",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "AUTHORITY"
+    },
+    {
+      "id": "70f4fd52f2391753471f",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "CONTRACT"
+    },
+    {
+      "id": "784935f2e3e5c8b36b05",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "No additional hard constraints were supplied."
+    },
+    {
+      "id": "853d456215413b4cc058",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "What is authorized"
+    },
+    {
+      "id": "879989d79459d929bbc1",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Hard constraints"
+    },
+    {
+      "id": "8a710a37f008fce8db2c",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "desired-example"
+    },
+    {
+      "id": "8bbcfb44cad9e18212c3",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "LOCAL RUN RECORD"
+    },
+    {
+      "id": "9a57fe444f8d2cba2217",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Bound to your protected brief. This prepares and checks a local run; it does not run a target AI or side-effect tool."
+    },
+    {
+      "id": "a78b2e31961227ff7e93",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Side effects"
+    },
+    {
+      "id": "aab0afacbd38d321c456",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "ae1fe8c0619c10cb96b2",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Checking locally…"
+    },
+    {
+      "id": "b71dd23c49f9a81be933",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "CONFORMANCE"
+    },
+    {
+      "id": "b88a493e5481a956c651",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "HARD"
+    },
+    {
+      "id": "c53679dd890dab4ac037",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "c963846786dd5d970a8a",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "PASS applies only to the listed local check. UNKNOWN is not PASS."
+    },
+    {
+      "id": "cca95a1dd9e16f31d581",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Input artifact"
+    },
+    {
+      "id": "d3049c99d87c0a48da59",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "desired-output"
+    },
+    {
+      "id": "d3887c7ad33b088cfc13",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "EXAMPLE / USER_SUPPLIED · NON-AUTHORITATIVE"
+    },
+    {
+      "id": "d411c654f6493038e953",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Protocol"
+    },
+    {
+      "id": "e2f33cca50ebfc7ba330",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "NO"
+    },
+    {
+      "id": "e43fa6d8ea0e59843930",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Depth"
+    },
+    {
+      "id": "e488c70d50d8c40d97be",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Run dry-run again"
+    },
+    {
+      "id": "e8f297fa2a466916ff78",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "What is prepared"
+    },
+    {
+      "id": "f0428417064450769307",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Goal"
+    },
+    {
+      "id": "f21fb47a9a8e36d7d402",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Status"
+    },
+    {
+      "id": "f91ae1d9ea8b12cb2f0e",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "PASS ·"
     }
   ]
 }

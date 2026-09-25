@@ -9,6 +9,7 @@ import type {
 } from "./engine/types";
 import {
   buildAbiFixture,
+  buildLocalExecutionRecord,
   buildSpeArtifact,
   clearHistory,
   defaultIntentLens,
@@ -25,6 +26,7 @@ import {
   type CategoryId,
   type HistoryItem,
   type IntentAtom,
+  type LocalExecutionRecord,
   type ReconstructionReport,
   type SpeArtifactV1,
   type TargetId,
@@ -43,6 +45,7 @@ import { Hero } from "./landing/Hero";
 import { ScrollStory } from "./landing/ScrollStory";
 import { Workspace } from "./workspace/Workspace";
 import { ReconstructionSummary } from "./workspace/ReconstructionSummary";
+import { ExecutionContractPanel } from "./workspace/ExecutionContractPanel";
 import { UnifiedComposer } from "./composer/UnifiedComposer";
 import {
   ContextProtocolControls,
@@ -209,6 +212,9 @@ export default function App() {
     useState<PublicDepthControl>("AUTO");
   const [contextProtocol, setContextProtocol] =
     useState<ContextProtocolCompileOutput | null>(null);
+  const [executionRecord, setExecutionRecord] =
+    useState<LocalExecutionRecord | null>(null);
+  const [dryRunBusy, setDryRunBusy] = useState(false);
   const [contextRefreshNotice, setContextRefreshNotice] = useState<string | null>(
     null,
   );
@@ -290,6 +296,8 @@ export default function App() {
     setBusy(false);
     setPhase("idle");
     setContextProtocol(null);
+    setExecutionRecord(null);
+    setDryRunBusy(false);
     setContextRefreshNotice(null);
   };
 
@@ -528,6 +536,7 @@ export default function App() {
   ) => {
     invalidate();
     setArtifact(restoredArtifact);
+    setExecutionRecord(restoredArtifact.execution_record ?? null);
     const ext = restoredArtifact as SpeArtifactV1 & {
       context_protocol?: { freshness_state?: string };
       quality_record?: { freshness_state?: string };
@@ -644,6 +653,56 @@ export default function App() {
     setMode("simple");
     setView("create");
     setNotice("Older history item reopened with limited details.");
+  };
+
+  const onRunLocalDry = async () => {
+    if (!artifact || !contextProtocol || dryRunBusy) return;
+    setDryRunBusy(true);
+    try {
+      const record = await buildLocalExecutionRecord({
+        artifact,
+        protocolOutput: contextProtocol,
+        buildSha: __SPE_BUILD_SHA__,
+      });
+      const updatedArtifact = await buildSpeArtifact({
+        user_request: artifact.user_request,
+        category: artifact.category,
+        target: artifact.target,
+        envelope: artifact.envelope,
+        wasm: artifact.wasm,
+        rendered_prompt: artifact.rendered_prompt,
+        intent: artifact.intent,
+        execution_record: record,
+        created_at_utc: artifact.created_at_utc,
+      });
+      setExecutionRecord(record);
+      setArtifact(updatedArtifact);
+      if (isHistoryOptIn()) {
+        saveHistoryItem({
+          id: updatedArtifact.integrity.content_sha256.slice(0, 16),
+          saved_at_utc: updatedArtifact.created_at_utc,
+          user_request: updatedArtifact.user_request,
+          category: updatedArtifact.category,
+          target: updatedArtifact.target,
+          prompt_preview: updatedArtifact.rendered_prompt.slice(0, 240),
+          artifact: updatedArtifact,
+        });
+        setHistory(loadHistory());
+      }
+      setNotice(
+        record.conformance.overall === "FAIL"
+          ? "Local checks found a blocked contract. Nothing was executed."
+          : "Local dry-run recorded. No target task or side effect was executed.",
+      );
+    } catch (runError) {
+      setNotice(
+        runError instanceof Error
+          ? runError.message
+          : "The local dry-run could not be recorded.",
+      );
+    } finally {
+      setDryRunBusy(false);
+    }
   };
 
   return (
@@ -831,6 +890,15 @@ export default function App() {
                 </div>
               </section>
             )}
+            {view === "create" && (contextProtocol || executionRecord) && (
+              <ExecutionContractPanel
+                protocolOutput={contextProtocol}
+                artifact={artifact}
+                record={executionRecord}
+                busy={dryRunBusy}
+                onRunDry={() => void onRunLocalDry()}
+              />
+            )}
           </section>
         )}
 
@@ -906,6 +974,17 @@ export default function App() {
               inspectOutput={contextProtocol}
               refreshNotice={contextRefreshNotice}
             />
+            {(contextProtocol || executionRecord) && (
+              <section className="spe-workspace">
+                <ExecutionContractPanel
+                  protocolOutput={contextProtocol}
+                  artifact={artifact}
+                  record={executionRecord}
+                  busy={dryRunBusy}
+                  onRunDry={() => void onRunLocalDry()}
+                />
+              </section>
+            )}
             <Workspace
               userRequest={userRequest}
               setUserRequest={(v) => {

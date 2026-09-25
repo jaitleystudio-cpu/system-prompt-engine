@@ -1,6 +1,7 @@
 /**
  * .spe portable artifact — open / inspect / export / import / lineage / integrity.
  */
+import type { LocalExecutionRecord } from "./executionRecord";
 
 export type SpeArtifactV1 = {
   spe_format: "spe.artifact.v1";
@@ -19,6 +20,7 @@ export type SpeArtifactV1 = {
     used_ts_fallback: false;
   };
   rendered_prompt: string;
+  execution_record?: LocalExecutionRecord;
   intent: {
     confirmed: { id: string; label: string; text: string }[];
     assumed: { id: string; label: string; text: string }[];
@@ -67,7 +69,7 @@ export class SpeArtifactImportError extends Error {
   }
 }
 
-async function sha256Hex(text: string): Promise<string> {
+export async function sha256Hex(text: string): Promise<string> {
   const data = new TextEncoder().encode(text);
   const buf = await crypto.subtle.digest("SHA-256", data);
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -87,6 +89,9 @@ export async function buildSpeArtifact(
     envelope: partial.envelope,
     wasm: partial.wasm,
     rendered_prompt: partial.rendered_prompt,
+    ...(partial.execution_record
+      ? { execution_record: partial.execution_record }
+      : {}),
     intent: partial.intent,
     lineage: {
       engine: "spe_wasm.wasm → spe-core-rs" as const,
@@ -141,6 +146,42 @@ function validIntentAtoms(value: unknown): boolean {
   );
 }
 
+function validExecutionRecord(value: unknown): boolean {
+  if (value === undefined) return true;
+  const executionRecord = record(value);
+  const conformance = record(executionRecord?.conformance);
+  const checks = Array.isArray(executionRecord?.checks)
+    ? executionRecord.checks.flatMap((item) => {
+        const check = record(item);
+        return check ? [check] : [];
+      })
+    : [];
+  if (
+    !executionRecord ||
+    executionRecord.record_format !== "spe.local-execution-record.v1" ||
+    executionRecord.executed !== false ||
+    executionRecord.side_effects !== "NONE" ||
+    !conformance ||
+    checks.length !== (executionRecord.checks as unknown[]).length
+  ) {
+    return false;
+  }
+  const statuses = checks.map((check) => String(check.status));
+  if (
+    statuses.some(
+      (status) => !["PASS", "FAIL", "UNKNOWN"].includes(status),
+    )
+  ) {
+    return false;
+  }
+  const expectedOverall = statuses.includes("FAIL")
+    ? "FAIL"
+    : statuses.includes("UNKNOWN")
+      ? "UNKNOWN"
+      : "PASS";
+  return conformance.overall === expectedOverall;
+}
+
 function reconstructionReport(artifact: SpeArtifactV1): ReconstructionReport {
   const intentCount = Object.values(artifact.intent).reduce(
     (count, atoms) => count + atoms.filter((atom) => atom.text.trim()).length,
@@ -172,6 +213,9 @@ function reconstructionReport(artifact: SpeArtifactV1): ReconstructionReport {
       "Rendered prompt",
       "Input envelope and provenance",
       "Artifact lineage and matching integrity",
+      ...(artifact.execution_record
+        ? ["Local run record and conformance checks"]
+        : []),
     ],
     notRestored: [
       "Live engine session and progress",
@@ -246,7 +290,8 @@ export async function parseSpeArtifactText(text: string): Promise<{
     !validIntentAtoms(intent.confirmed) ||
     !validIntentAtoms(intent.assumed) ||
     !validIntentAtoms(intent.unknowns) ||
-    !validIntentAtoms(intent.conflicts)
+    !validIntentAtoms(intent.conflicts) ||
+    !validExecutionRecord(candidate.execution_record)
   ) {
     throw new SpeArtifactImportError(
       "MISSING_FIELDS",
@@ -302,6 +347,7 @@ export function artifactPrintHtml(artifact: SpeArtifactV1): string {
   const openQuestions = artifact.intent.unknowns.filter((atom) =>
     atom.text.trim(),
   );
+  const executionRecord = artifact.execution_record;
   const section = (title: string, body: string) =>
     `<section><h2>${escapeHtml(title)}</h2><div class="content">${escapeHtml(body)}</div></section>`;
   return `<!doctype html>
@@ -344,6 +390,22 @@ export function artifactPrintHtml(artifact: SpeArtifactV1): string {
       ? section(
           "Open questions",
           openQuestions.map((atom) => `• ${atom.text}`).join("\n"),
+        )
+      : ""
+  }
+  ${
+    executionRecord
+      ? section(
+          "Local run record",
+          [
+            `Outcome: ${executionRecord.outcome}`,
+            `Executed: ${executionRecord.executed ? "YES" : "NO"}`,
+            `Side effects: ${executionRecord.side_effects}`,
+            `Conformance: ${executionRecord.conformance.overall}`,
+            `Build tip: ${executionRecord.build_sha}`,
+            `Record digest: ${executionRecord.digests.record_sha256}`,
+            "This record covers local preparation checks only, not target execution or verified success.",
+          ].join("\n"),
         )
       : ""
   }

@@ -4357,3 +4357,309 @@ html[data-theme="dark"] .spe-create input::placeholder {
     animation: none !important;
   }
 }
+
+/* ——— SPE Ω Batch D: contract, local run record, conformance ——— */
+.spe-execution-contract {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding: 1.2rem;
+  border: 1px solid rgba(197, 212, 255, 0.16);
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 8% 0%, rgba(199, 174, 122, 0.1), transparent 46%),
+    linear-gradient(155deg, rgba(17, 24, 38, 0.96), rgba(7, 11, 19, 0.98));
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+.spe-execution-contract > header,
+.spe-conformance > header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+.spe-execution-contract h2,
+.spe-execution-contract h3,
+.spe-execution-contract h4,
+.spe-conformance h3 {
+  margin: 0;
+}
+.spe-execution-contract h2 {
+  margin-top: 0.3rem;
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+}
+.spe-execution-contract > header p:last-child {
+  max-width: 42rem;
+  margin: 0.7rem 0 0;
+  color: #aab7ce;
+  font-size: 0.88rem;
+}
+.spe-contract-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+.spe-contract-card,
+.spe-run-record,
+.spe-conformance {
+  padding: 1rem;
+  border: 1px solid rgba(183, 200, 255, 0.14);
+  border-radius: 14px;
+  background: rgba(8, 12, 20, 0.72);
+}
+.spe-contract-card[data-section="authority"] {
+  border-color: rgba(199, 174, 122, 0.25);
+}
+.spe-contract-label {
+  color: #d8b779;
+  font: 0.62rem/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.12em;
+}
+.spe-contract-card h3,
+.spe-run-record h3,
+.spe-conformance h3 {
+  margin-top: 0.45rem;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+.spe-contract-card h4 {
+  margin-top: 1rem;
+  color: #c9d4e8;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.spe-contract-card dl,
+.spe-run-record dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0.9rem 0 0;
+}
+.spe-contract-card dl > div,
+.spe-run-record dl > div {
+  padding: 0.55rem;
+  border: 1px solid rgba(183, 200, 255, 0.1);
+  border-radius: 8px;
+  min-width: 0;
+}
+.spe-contract-card dt,
+.spe-run-record dt {
+  color: #8f9db6;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.spe-contract-card dd,
+.spe-run-record dd {
+  margin: 0.25rem 0 0;
+  color: #dce5f5;
+  font: 0.75rem/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow-wrap: anywhere;
+}
+.spe-contract-card > ul {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0.65rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.spe-contract-card > ul li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: start;
+  padding: 0.55rem;
+  border-left: 2px solid rgba(199, 174, 122, 0.62);
+  background: rgba(255, 255, 255, 0.025);
+  color: #b7c4d9;
+  font-size: 0.76rem;
+}
+.spe-contract-card > ul strong {
+  color: #e1c48b;
+  font-size: 0.62rem;
+}
+.spe-contract-card > p {
+  color: #aab7ce;
+  font-size: 0.8rem;
+}
+.spe-authority-law {
+  padding: 0.7rem;
+  border-left: 2px solid rgba(199, 174, 122, 0.7);
+  color: #e6d5b4 !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.03em;
+}
+.spe-contract-stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.spe-contract-stages li {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.65rem;
+  border-top: 1px solid rgba(199, 174, 122, 0.35);
+  background: rgba(255, 255, 255, 0.02);
+}
+.spe-contract-stages span {
+  color: #d8b779;
+  font: 0.58rem ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.spe-contract-stages strong {
+  color: #d9e2f1;
+  font-size: 0.7rem;
+}
+.spe-contract-stages small {
+  color: #8f9db6;
+  line-height: 1.35;
+}
+.spe-run-record {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 1rem;
+  border-color: rgba(122, 196, 158, 0.24);
+}
+.spe-run-record p,
+.spe-contract-before-run,
+.spe-conformance-law {
+  color: #aab7ce;
+  font-size: 0.8rem;
+}
+.spe-conformance {
+  display: grid;
+  gap: 0.75rem;
+}
+.spe-conformance[data-overall="pass"] {
+  border-color: rgba(122, 196, 158, 0.4);
+}
+.spe-conformance[data-overall="unknown"] {
+  border-color: rgba(199, 174, 122, 0.42);
+}
+.spe-conformance[data-overall="fail"] {
+  border-color: rgba(253, 164, 175, 0.44);
+}
+.spe-conformance > header > p {
+  margin: 0;
+  color: #b9c7dc;
+  font: 0.7rem ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.spe-conformance-law {
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(199, 174, 122, 0.08);
+}
+.spe-conformance > ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.spe-conformance > ul li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.65rem;
+  padding: 0.7rem;
+  border: 1px solid rgba(183, 200, 255, 0.1);
+  border-radius: 8px;
+}
+.spe-conformance > ul li > span {
+  align-self: start;
+  padding: 0.25rem 0.4rem;
+  border-radius: 999px;
+  font: 0.56rem ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.spe-conformance [data-status="pass"] > span {
+  background: rgba(122, 196, 158, 0.16);
+  color: #a7e2c3;
+}
+.spe-conformance [data-status="unknown"] > span {
+  background: rgba(199, 174, 122, 0.16);
+  color: #e5c98f;
+}
+.spe-conformance [data-status="fail"] > span {
+  background: rgba(253, 164, 175, 0.15);
+  color: #ffc0ca;
+}
+.spe-conformance li strong {
+  color: #dce5f5;
+  font-size: 0.78rem;
+}
+.spe-conformance li p {
+  margin: 0.25rem 0 0;
+  color: #99a8c0;
+  font-size: 0.72rem;
+}
+html[data-theme="light"] .spe-execution-contract {
+  background:
+    radial-gradient(ellipse at 8% 0%, rgba(156, 117, 64, 0.09), transparent 46%),
+    var(--surface-elevated);
+  border-color: var(--seo-border);
+  color: var(--paper);
+  box-shadow: 0 18px 50px rgba(20, 24, 32, 0.08);
+}
+html[data-theme="light"] .spe-contract-card,
+html[data-theme="light"] .spe-run-record,
+html[data-theme="light"] .spe-conformance {
+  background: #f7f4ee;
+  border-color: var(--seo-border);
+}
+html[data-theme="light"] .spe-execution-contract > header p:last-child,
+html[data-theme="light"] .spe-contract-card > p,
+html[data-theme="light"] .spe-run-record p,
+html[data-theme="light"] .spe-contract-before-run,
+html[data-theme="light"] .spe-conformance-law,
+html[data-theme="light"] .spe-conformance li p {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-contract-card dd,
+html[data-theme="light"] .spe-run-record dd,
+html[data-theme="light"] .spe-contract-stages strong,
+html[data-theme="light"] .spe-conformance li strong {
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-contract-card h4,
+html[data-theme="light"] .spe-contract-stages small,
+html[data-theme="light"] .spe-contract-card dt,
+html[data-theme="light"] .spe-run-record dt,
+html[data-theme="light"] .spe-conformance > header > p {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-contract-card > ul li,
+html[data-theme="light"] .spe-contract-stages li {
+  background: #ffffff;
+  color: #465164;
+}
+html[data-theme="light"] .spe-authority-law {
+  color: #6d5128 !important;
+}
+@media (max-width: 720px) {
+  .spe-execution-contract {
+    padding: 0.9rem;
+  }
+  .spe-execution-contract > header,
+  .spe-conformance > header {
+    flex-direction: column;
+  }
+  .spe-execution-contract > header .spe-build {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .spe-contract-grid,
+  .spe-run-record,
+  .spe-conformance > ul {
+    grid-template-columns: 1fr;
+  }
+  .spe-contract-card dl,
+  .spe-run-record dl {
+    grid-template-columns: 1fr;
+  }
+}

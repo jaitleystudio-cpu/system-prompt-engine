@@ -14,6 +14,7 @@
     "test:engine": "node scripts/eval-fixture.mjs",
     "test:create-intent": "node scripts/test-create-intent.mjs",
     "test:dot-pattern": "node scripts/test-dot-pattern.mjs",
+    "test:execution-contract": "node scripts/test-execution-contract.mjs",
     "test:hero-story": "node scripts/test-hero-story.mjs",
     "audit:deps": "node scripts/audit-deps.mjs",
     "audit:assets": "node scripts/measure-assets.mjs",
