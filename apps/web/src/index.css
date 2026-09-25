@@ -4176,9 +4176,9 @@ html[data-theme="light"] .spe-workspace .spe-field textarea {
 
 /* ——— SPE atmospheric field: native layered SVG DotPattern ——— */
 .spe-dot-pattern {
-  --spe-dot-primary: rgba(222, 188, 119, 0.34);
-  --spe-dot-secondary: rgba(146, 170, 214, 0.22);
-  --spe-dot-tertiary: rgba(238, 225, 195, 0.16);
+  --spe-dot-primary: rgba(225, 187, 111, 0.46);
+  --spe-dot-secondary: rgba(136, 164, 214, 0.32);
+  --spe-dot-tertiary: rgba(244, 218, 162, 0.24);
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -4200,19 +4200,25 @@ html[data-theme="light"] .spe-workspace .spe-field textarea {
 }
 .spe-dot-pattern__layer--primary {
   color: var(--spe-dot-primary);
-  mask-image: radial-gradient(ellipse 62% 70% at 26% 46%, #000 0 26%, transparent 74%);
+  mask-image: radial-gradient(ellipse 56% 66% at 24% 44%, #000 0 30%, transparent 72%);
   animation: spe-dot-drift-primary 42s ease-in-out infinite alternate;
 }
 .spe-dot-pattern__layer--secondary {
   color: var(--spe-dot-secondary);
-  mask-image:
-    radial-gradient(ellipse 54% 62% at 83% 63%, #000 0 20%, transparent 72%),
-    linear-gradient(132deg, transparent 12%, #000 48%, transparent 84%);
+  opacity: 0.72;
+  mask-image: linear-gradient(132deg, transparent 18%, #000 42% 58%, transparent 82%);
+  transform: rotate(-7deg) scale(1.035);
+  transform-origin: 52% 50%;
+  filter: drop-shadow(0 0 4px rgba(136, 164, 214, 0.2));
   animation: spe-dot-drift-secondary 58s ease-in-out infinite alternate;
 }
 .spe-dot-pattern__layer--tertiary {
   color: var(--spe-dot-tertiary);
-  mask-image: radial-gradient(ellipse 78% 42% at 52% 2%, #000 0 18%, transparent 76%);
+  opacity: 0.58;
+  mask-image: radial-gradient(ellipse 42% 52% at 86% 78%, #000 0 24%, transparent 74%);
+  transform: rotate(4deg) scale(1.02);
+  transform-origin: 74% 66%;
+  filter: drop-shadow(0 0 5px rgba(225, 187, 111, 0.2));
   animation: spe-dot-drift-tertiary 72s linear infinite;
 }
 .spe-dot-pattern__haze,
@@ -4222,8 +4228,9 @@ html[data-theme="light"] .spe-workspace .spe-field textarea {
 }
 .spe-dot-pattern__haze {
   background:
-    radial-gradient(ellipse 38% 34% at 18% 52%, rgba(202, 169, 104, 0.08), transparent 72%),
-    radial-gradient(ellipse 44% 38% at 82% 55%, rgba(113, 139, 185, 0.08), transparent 75%);
+    radial-gradient(ellipse 38% 34% at 18% 52%, rgba(215, 173, 92, 0.13), transparent 72%),
+    radial-gradient(ellipse 40% 36% at 84% 66%, rgba(102, 132, 190, 0.1), transparent 74%),
+    conic-gradient(from 218deg at 48% 46%, transparent 0 24%, rgba(215, 173, 92, 0.06) 30%, transparent 38% 100%);
 }
 .spe-dot-pattern__vignette {
   box-shadow:
@@ -4237,11 +4244,12 @@ html[data-theme="light"] .spe-workspace .spe-field textarea {
   mask-image: radial-gradient(ellipse 48% 72% at 18% 48%, #000 0 22%, transparent 76%);
 }
 .hero-theater > .spe-dot-pattern .spe-dot-pattern__layer--secondary {
-  opacity: 0.56;
-  mask-image: radial-gradient(ellipse 34% 54% at 94% 74%, #000 0 18%, transparent 78%);
+  opacity: 0.62;
+  mask-image: linear-gradient(128deg, transparent 36%, #000 51% 65%, transparent 82%);
 }
 .hero-theater > .spe-dot-pattern .spe-dot-pattern__layer--tertiary {
-  opacity: 0.45;
+  opacity: 0.58;
+  mask-image: radial-gradient(ellipse 34% 48% at 92% 76%, #000 0 20%, transparent 76%);
 }
 .hero-topline {
   z-index: 5;
@@ -4262,21 +4270,22 @@ html[data-theme="light"] .spe-workspace .spe-field textarea {
   mask-image: radial-gradient(ellipse 48% 50% at 10% 18%, #000 0 18%, transparent 74%);
 }
 .spe-create > .spe-dot-pattern .spe-dot-pattern__layer--secondary {
-  mask-image: radial-gradient(ellipse 48% 60% at 88% 58%, #000 0 18%, transparent 78%);
+  opacity: 0.68;
+  mask-image: linear-gradient(132deg, transparent 24%, #000 44% 58%, transparent 78%);
 }
 .spe-create > .spe-dot-pattern .spe-dot-pattern__layer--tertiary {
-  opacity: 0.42;
-  mask-image: linear-gradient(138deg, transparent 8%, #000 46%, transparent 84%);
+  opacity: 0.54;
+  mask-image: radial-gradient(ellipse 40% 56% at 92% 42%, #000 0 20%, transparent 74%);
 }
 .spe-create > :not(.spe-dot-pattern) {
   position: relative;
   z-index: 1;
 }
 html[data-theme="light"] .spe-dot-pattern {
-  --spe-dot-primary: rgba(102, 76, 40, 0.28);
-  --spe-dot-secondary: rgba(47, 77, 140, 0.16);
-  --spe-dot-tertiary: rgba(56, 64, 78, 0.12);
-  opacity: 0.58;
+  --spe-dot-primary: rgba(113, 79, 34, 0.34);
+  --spe-dot-secondary: rgba(43, 68, 116, 0.24);
+  --spe-dot-tertiary: rgba(47, 54, 66, 0.2);
+  opacity: 0.62;
 }
 html[data-theme="light"] .spe-dot-pattern__vignette {
   box-shadow:
@@ -4285,20 +4294,38 @@ html[data-theme="light"] .spe-dot-pattern__vignette {
 }
 html[data-theme="light"] .spe-dot-pattern__haze {
   background:
-    radial-gradient(ellipse 38% 34% at 18% 52%, rgba(174, 135, 71, 0.08), transparent 72%),
-    radial-gradient(ellipse 44% 38% at 82% 55%, rgba(73, 101, 156, 0.08), transparent 75%);
+    radial-gradient(ellipse 38% 34% at 18% 52%, rgba(174, 127, 52, 0.1), transparent 72%),
+    radial-gradient(ellipse 38% 34% at 86% 68%, rgba(73, 94, 132, 0.06), transparent 74%),
+    conic-gradient(from 218deg at 48% 46%, transparent 0 24%, rgba(174, 127, 52, 0.045) 30%, transparent 38% 100%);
+}
+html[data-theme="dark"] .hero-story-label strong {
+  color: #f0f3f8;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
+}
+html[data-theme="dark"] .hero-story-label span,
+html[data-theme="dark"] .fragments-kicker {
+  color: #e4c98f;
+}
+html[data-theme="dark"] .spe-create-head > p,
+html[data-theme="dark"] .spe-create .spe-composer-hint,
+html[data-theme="dark"] .spe-create .spe-field span {
+  color: #acbad2;
+}
+html[data-theme="dark"] .spe-create textarea::placeholder,
+html[data-theme="dark"] .spe-create input::placeholder {
+  color: #8f9eb7;
 }
 @keyframes spe-dot-drift-primary {
   from { transform: translate3d(-0.6%, -0.35%, 0); }
   to { transform: translate3d(0.8%, 0.5%, 0); }
 }
 @keyframes spe-dot-drift-secondary {
-  from { transform: translate3d(0.7%, -0.45%, 0) scale(1); }
-  to { transform: translate3d(-0.7%, 0.45%, 0) scale(1.008); }
+  from { transform: translate3d(0.7%, -0.45%, 0) rotate(-7deg) scale(1.035); }
+  to { transform: translate3d(-0.7%, 0.45%, 0) rotate(-5.5deg) scale(1.045); }
 }
 @keyframes spe-dot-drift-tertiary {
-  from { transform: translate3d(-0.35%, 0, 0); }
-  to { transform: translate3d(0.65%, 0.25%, 0); }
+  from { transform: translate3d(-0.35%, 0, 0) rotate(4deg) scale(1.02); }
+  to { transform: translate3d(0.65%, 0.25%, 0) rotate(5deg) scale(1.035); }
 }
 @media (max-width: 700px) {
   .spe-dot-pattern {
@@ -4306,16 +4333,17 @@ html[data-theme="light"] .spe-dot-pattern__haze {
   }
   .hero-theater > .spe-dot-pattern,
   .spe-create > .spe-dot-pattern {
-    opacity: 0.3;
+    opacity: 0.38;
   }
   .spe-dot-pattern__layer--primary {
     opacity: 0.64;
   }
   .spe-dot-pattern__layer--secondary {
-    opacity: 0.42;
+    opacity: 0.48;
   }
   .spe-dot-pattern__layer--tertiary {
-    display: none;
+    display: block;
+    opacity: 0.18;
   }
   .spe-dot-pattern__vignette {
     box-shadow: inset 0 0 72px rgba(2, 5, 12, 0.35);
@@ -4327,6 +4355,5 @@ html[data-theme="light"] .spe-dot-pattern__haze {
   .spe-dot-pattern__layer--secondary,
   .spe-dot-pattern__layer--tertiary {
     animation: none !important;
-    transform: none !important;
   }
 }

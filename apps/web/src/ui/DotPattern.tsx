@@ -96,7 +96,7 @@ export function DotPattern({
         y={y + height * 0.3}
         cx={cx}
         cy={cy}
-        cr={Math.max(0.7, cr * 0.82)}
+        cr={Math.max(1.15, cr * 1.18)}
       />
       <PatternLayer
         id={`${seed}-tertiary`}
@@ -107,7 +107,7 @@ export function DotPattern({
         y={y + height * 0.72}
         cx={cx}
         cy={cy}
-        cr={Math.max(0.62, cr * 0.68)}
+        cr={Math.max(1.6, cr * 1.55)}
       />
       <span className="spe-dot-pattern__haze" />
       <span className="spe-dot-pattern__vignette" />
