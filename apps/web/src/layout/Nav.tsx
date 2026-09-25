@@ -1,11 +1,5 @@
-export type AppView =
-  | "home"
-  | "create"
-  | "code"
-  | "lab"
-  | "my-work"
-  | "privacy"
-  | "workspace";
+import { pathForView, type AppView } from "../routing";
+import { ThemeToggle } from "../ui/ThemeToggle";
 
 type Props = {
   scrolled: boolean;
@@ -24,12 +18,14 @@ const LINKS: { id: AppView; label: string }[] = [
   { id: "privacy", label: "Privacy / Proof" },
 ];
 
+export type { AppView };
+
 export function Nav(p: Props) {
   return (
     <header className={`spe-nav ${p.scrolled ? "is-scrolled" : ""}`}>
       <a
         className="spe-nav-brand"
-        href="#top"
+        href={pathForView("home")}
         onClick={(e) => {
           e.preventDefault();
           p.onNavigate("home");
@@ -49,6 +45,7 @@ export function Nav(p: Props) {
         <br />
         PROMPT ENGINE
       </span>
+      <ThemeToggle />
       <button
         className="spe-nav-burger"
         aria-label="Menu"
@@ -64,29 +61,31 @@ export function Nav(p: Props) {
         aria-label="Primary"
       >
         {LINKS.map((link) => (
-          <button
+          <a
             key={link.id}
-            type="button"
+            href={pathForView(link.id)}
             className={p.view === link.id ? "is-active" : ""}
             aria-current={p.view === link.id ? "page" : undefined}
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               p.onNavigate(link.id);
               p.setMenuOpen(false);
             }}
           >
             {link.label}
-          </button>
+          </a>
         ))}
-        <button
+        <a
           className="spe-nav-cta"
-          type="button"
-          onClick={() => {
+          href={pathForView("create")}
+          onClick={(e) => {
+            e.preventDefault();
             p.onNavigate("create");
             p.setMenuOpen(false);
           }}
         >
           Build my prompt <span>↗</span>
-        </button>
+        </a>
       </nav>
     </header>
   );

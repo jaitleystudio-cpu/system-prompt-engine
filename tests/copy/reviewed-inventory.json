@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "note": "Refreshed 2026-09-24 Task 13: Simple/Inspect grounding and depth controls (human-facing copy).",
-  "generatedAt": "2026-09-24T11:09:24.917Z",
+  "note": "Refreshed 2026-09-25 SPE V1 gap-closure (theme, routes, SEO, pipeline).",
+  "generatedAt": "2026-09-24T19:28:52.244Z",
   "entries": [
     {
       "id": "0014fed211f55a770c35",
@@ -92,6 +92,12 @@
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
       "text": "canvas"
+    },
+    {
+      "id": "03021ee0bc1c547e6861",
+      "file": "apps/web/src/ui/ThemeToggle.tsx",
+      "depth": "PRODUCT",
+      "text": "). Activate to switch."
     },
     {
       "id": "032a786768346bde1db4",
@@ -358,6 +364,18 @@
       "text": "form"
     },
     {
+      "id": "0925f550a6654bfe02e6",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "og:image"
+    },
+    {
+      "id": "09626bd448b61b8e4519",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Goals, boundaries, questions"
+    },
+    {
       "id": "0989256688bf962f9d1a",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -442,6 +460,12 @@
       "text": "title"
     },
     {
+      "id": "0b6d7b829d82999c0e07",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "#e4b981"
+    },
+    {
       "id": "0bb0ee26a0422a7e6086",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -464,6 +488,12 @@
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
       "text": "confirmed"
+    },
+    {
+      "id": "0cc0d50455294102d4e8",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE — System Prompt Engine"
     },
     {
       "id": "0ce3381c8454aa57fe1e",
@@ -682,6 +712,12 @@
       "text": "Local HTML file added. No network request."
     },
     {
+      "id": "10353fed4bd72cee0966",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "SPE — System Prompt Engine"
+    },
+    {
       "id": "1052be45ae0eae0122b4",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -692,6 +728,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "gal-06"
+    },
+    {
+      "id": "1064c2fd2eb326ddaac6",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "A FREE PROMPT ENGINEERING TOOL"
     },
     {
       "id": "108c9fb3bb87c85d5d46",
@@ -814,6 +856,12 @@
       "text": "Timeline · scenes"
     },
     {
+      "id": "139718c609e002ca9ebe",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "meta["
+    },
+    {
       "id": "13c7885c346112423b02",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -830,6 +878,12 @@
       "file": "apps/web/src/landing/ScrollStory.tsx",
       "depth": "PRODUCT",
       "text": "Keep the facts you know, the boundaries that matter and the questions still open in view. Add the details yourself, and review SPE’s suggestions."
+    },
+    {
+      "id": "1473bb71d26d03c3e0f0",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Home"
     },
     {
       "id": "147a326b6d84a2c64cf6",
@@ -878,6 +932,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": ", y: geo.size.height *"
+    },
+    {
+      "id": "1607cf214aba648ceb3f",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "Dark"
     },
     {
       "id": "1657d0fb083039f464fe",
@@ -1108,6 +1168,12 @@
       "text": "Create a scroll-story landing with frosted glass panels, four chapters, and calm typography about local-first tools."
     },
     {
+      "id": "1b26cedeb539232ff3e8",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "Screenshot-to-code prompt engineering tool"
+    },
+    {
       "id": "1b3ebb4d6e736585904b",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
@@ -1306,6 +1372,12 @@
       "text": "Practice answers with structure."
     },
     {
+      "id": "1f1c312cd00d758493dc",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "IDEA → MEANING → STRUCTURE → PROMPT"
+    },
+    {
       "id": "1f25434653b78161d86e",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PROOF",
@@ -1340,6 +1412,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "modal-or-dialog-candidate"
+    },
+    {
+      "id": "1fc065b3b7d282aa59d4",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": ", arrange"
     },
     {
       "id": "1fceb8142c1c19e5e481",
@@ -1528,6 +1606,12 @@
       "text": "spe:daily3d:glass-chapters"
     },
     {
+      "id": "24429aa3e0fae95b50e8",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "https://schema.org"
+    },
+    {
       "id": "244504728965ed585259",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "INSPECT",
@@ -1582,6 +1666,12 @@
       "text": "Start with curiosity."
     },
     {
+      "id": "262c22eb2a7090b167ec",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Browse daily prompt engineering specimens and open them in SPE’s free prompt builder."
+    },
+    {
       "id": "267860b821c5bbbe90ae",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -1618,10 +1708,34 @@
       "text": "published"
     },
     {
+      "id": "270165b033ee43ff34f0",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/code"
+    },
+    {
+      "id": "2702b5bca5bf856c953b",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "you can use with any model."
+    },
+    {
+      "id": "27206e80f9c4293248b5",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "My Work — prompts saved on device"
+    },
+    {
       "id": "273b5561e07d80d69eec",
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
       "text": "Aborted"
+    },
+    {
+      "id": "27aa1174cc3174f9d18a",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/privacy"
     },
     {
       "id": "27af4c73fd02fd40ddcf",
@@ -1690,6 +1804,12 @@
       "text": "Goal & facts"
     },
     {
+      "id": "295b7b2e930ee97ea790",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Daily Lab"
+    },
+    {
       "id": "295bd9005350b86d454c",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -1712,6 +1832,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "Choose a template and refine"
+    },
+    {
+      "id": "29a3255d668cc80b531c",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "Light"
     },
     {
       "id": "29be4ddccba39e5e0c74",
@@ -1810,6 +1936,12 @@
       "text": "Sequence across"
     },
     {
+      "id": "2b394cfd43bd99e020ce",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": ", and take a clear"
+    },
+    {
       "id": "2b652a022ce452be0f81",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -1880,6 +2012,12 @@
       "file": "apps/web/src/composer/ContextProtocolControls.tsx",
       "depth": "PRODUCT",
       "text": "inspect"
+    },
+    {
+      "id": "2d9ba13eae749c5ebc41",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Privacy & Proof — Local System Prompt Engine | SPE"
     },
     {
       "id": "2e0616564df5237db683",
@@ -2146,6 +2284,12 @@
       "text": "Hover explodes an icosahedron into labeled facets: Idea, Meaning, Structure, Prompt."
     },
     {
+      "id": "3510942a502791ac594e",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "data-theme"
+    },
+    {
       "id": "352b8af17a95ae39e7c8",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
@@ -2296,16 +2440,34 @@
       "text": "VIDEO SEQUENCE SUMMARY:"
     },
     {
+      "id": "382865668ea416655786",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "twitter:image"
+    },
+    {
       "id": "388fba4f122249b88a6c",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "URL could not be read — try a fallback below. Nothing was added to your idea."
     },
     {
+      "id": "38c3d0fbe85522296082",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "https://systempromptengine.com"
+    },
+    {
       "id": "38d93c2b40de68578aae",
       "file": "apps/web/src/media/semanticPipeline.ts",
       "depth": "PRODUCT",
       "text": "no session"
+    },
+    {
+      "id": "38e40d086c9483321a9b",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Workspace — Inspect & Refine Prompts | SPE"
     },
     {
       "id": "38ef7d54274e58b2ad43",
@@ -2500,6 +2662,12 @@
       "text": "Daily 3D Lab"
     },
     {
+      "id": "3caf8833e9820e67fe54",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "System prompt generator for ideas that need structure"
+    },
+    {
       "id": "3cb58211bfa19e7bcb17",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -2528,6 +2696,12 @@
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PROOF",
       "text": "frame-ancestors &apos;none&apos;"
+    },
+    {
+      "id": "3de4ab1d0664ce023002",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "READY"
     },
     {
       "id": "3dfe77f99eb78a9b7856",
@@ -2638,6 +2812,12 @@
       "text": "spe.artifact.v1"
     },
     {
+      "id": "4193780d6e489a2e5bd7",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Upload a UI screenshot and get starter scaffolds and a structured prompt for HTML, React, SwiftUI, Flutter, and more."
+    },
+    {
       "id": "41bcaa38acf3b8036825",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
@@ -2716,6 +2896,18 @@
       "text": "Writing"
     },
     {
+      "id": "4404ace4824043a1f912",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "Unlike cloud-only prompt apps, your brief is prepared on this device. Optional website or media helpers only run when you ask — never as a silent background service."
+    },
+    {
+      "id": "440591195474b28273ce",
+      "file": "apps/web/src/ui/ThemeToggle.tsx",
+      "depth": "PRODUCT",
+      "text": "(resolved"
+    },
+    {
       "id": "4427e2367b1217f5a07a",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -2786,6 +2978,12 @@
       "file": "apps/web/src/ui/TrustPanel.tsx",
       "depth": "PROOF",
       "text": "claim: IMPLEMENTATION_PRESENT / REVIEW_PENDING · World #1 NOT PROVEN"
+    },
+    {
+      "id": "458995f05c7d07437a83",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "popstate"
     },
     {
       "id": "4599b677a5abf434df2d",
@@ -2902,6 +3100,12 @@
       "text": "A single brushed-steel torus hangs in soft north light. Scroll to orbit; the rim catches a cool highlight while the void stays matte graphite."
     },
     {
+      "id": "47c5a06a55e71d8aa5a1",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/my-work"
+    },
+    {
       "id": "47e0ddc8fdfa5de65733",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -2956,6 +3160,12 @@
       "text": "; edgeDensity"
     },
     {
+      "id": "485f12958c846be81144",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "system"
+    },
+    {
       "id": "48640c3648c905b10c99",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -2996,6 +3206,12 @@
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
       "text": "Spanish"
+    },
+    {
+      "id": "4a1fb9fc55369db0daae",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "#9eacff"
     },
     {
       "id": "4a7af6d55a92c5357909",
@@ -3212,6 +3428,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "#fdba74"
+    },
+    {
+      "id": "4f7adff7820e09cb3554",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Your rough thought"
     },
     {
       "id": "4f933685856cdb7b3504",
@@ -3484,6 +3706,12 @@
       "text": "Listening… Stop the microphone when you finish."
     },
     {
+      "id": "55089e52ec3170928270",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "My Work — Saved Prompts on This Device | SPE"
+    },
+    {
       "id": "556e472b879cb5a3808d",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -3596,6 +3824,12 @@
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "Keyframe"
+    },
+    {
+      "id": "579761d1a3ead01a5d7e",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE is a free system prompt generator and AI prompt builder that runs in your browser. Start with a rough idea; SPE helps you shape"
     },
     {
       "id": "57ca44474f9663f6e921",
@@ -3758,6 +3992,18 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "obsidian"
+    },
+    {
+      "id": "5ac6bb6b6f758345ecc4",
+      "file": "apps/web/src/ui/ThemeToggle.tsx",
+      "depth": "PRODUCT",
+      "text": "Theme:"
+    },
+    {
+      "id": "5adc4aaf0cfa996bb3b5",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "canonical"
     },
     {
       "id": "5af658f6d7e3b12ec337",
@@ -4066,6 +4312,12 @@
       "text": "your mind?"
     },
     {
+      "id": "626598a8aed16f778099",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "link[rel=\""
+    },
+    {
       "id": "62751be6a05be161a877",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -4120,6 +4372,12 @@
       "text": "satin"
     },
     {
+      "id": "63117129453115da36b4",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Daily Lab — SPE AI Prompt Generator Ideas"
+    },
+    {
       "id": "63361e2b76e3bcbeae47",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -4148,6 +4406,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "silver hairline"
+    },
+    {
+      "id": "63cb36e1e81f1bb43c0a",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "DeveloperApplication"
     },
     {
       "id": "63d96432b28099dd8d63",
@@ -4232,6 +4496,12 @@
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
       "text": "dark"
+    },
+    {
+      "id": "65e5b6ebe5768cc3d353",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "og:title"
     },
     {
       "id": "65eba4ae403ebe054120",
@@ -4324,6 +4594,12 @@
       "text": "blue night"
     },
     {
+      "id": "683c8be24a9fe0a38e47",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "og:type"
+    },
+    {
       "id": "683ea1fe4fcbb504ef65",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -4348,6 +4624,12 @@
       "text": "Alternating row brightness"
     },
     {
+      "id": "69a2b710569776a27810",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/workspace"
+    },
+    {
       "id": "69b925242054a2a32631",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -4370,6 +4652,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "html"
+    },
+    {
+      "id": "69f1e73c695216f7aba9",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "A brief you can take anywhere"
     },
     {
       "id": "69fa17d636111876ab75",
@@ -4402,6 +4690,12 @@
       "text": "gal-17"
     },
     {
+      "id": "6aea0bfb59dfb84f9b0c",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Footer"
+    },
+    {
       "id": "6b4d9435e98e33161a96",
       "file": "apps/web/src/pwa.ts",
       "depth": "PRODUCT",
@@ -4430,6 +4724,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "#fbcfe8"
+    },
+    {
+      "id": "6bf9ba62168bb10de8a8",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE transformation: Idea to Meaning to Structure to Prompt"
     },
     {
       "id": "6c26b34c239c7edfa6d5",
@@ -4492,6 +4792,12 @@
       "text": ".shell{display:grid;min-height:100vh;grid-template-columns:"
     },
     {
+      "id": "6dbccaa17a8ee82f4484",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "dark"
+    },
+    {
       "id": "6de317d56a17e9319d82",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -4502,6 +4808,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "No audio is transcribed or invented."
+    },
+    {
+      "id": "6e12998fac617dd6da2f",
+      "file": "apps/web/src/ui/ThemeToggle.tsx",
+      "depth": "PRODUCT",
+      "text": "(prefers-color-scheme: light)"
     },
     {
       "id": "6e23e4ec001e04c5d025",
@@ -4792,6 +5104,12 @@
       "text": "(max-width: 720px)"
     },
     {
+      "id": "727448779c2c6cce03e0",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Shape text, speech, image, video, or a website into a clear system prompt. Your brief stays on this device."
+    },
+    {
       "id": "727a23085936fb21b4c0",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -4888,6 +5206,12 @@
       "text": "instant"
     },
     {
+      "id": "748b2447a9713113b2eb",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "idea"
+    },
+    {
       "id": "74a961d6c28a6d9583fc",
       "file": "apps/web/src/media/ocrLite.ts",
       "depth": "PRODUCT",
@@ -4978,6 +5302,12 @@
       "text": "lab"
     },
     {
+      "id": "77c5dad659858d158b4f",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "System"
+    },
+    {
       "id": "77eeb64e2eaa1e33efdb",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -5002,6 +5332,12 @@
       "text": "e.g. Never invent refund policies. Ask for the order number first."
     },
     {
+      "id": "786f3e319efda746e08e",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "structure"
+    },
+    {
       "id": "7885a644efd50bb48c77",
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
@@ -5024,6 +5360,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": ".spe-region{outline:1px dashed rgba(255,255,255,.12);padding:.5rem}"
+    },
+    {
+      "id": "78e0ddcbbfc8b226a1c7",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "pushState"
     },
     {
       "id": "790edc6f45698d99a05a",
@@ -5192,6 +5534,12 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
       "text": "Production qualification and independent human-value evaluation are pending."
+    },
+    {
+      "id": "7c88d3d0ba6eb775cdcc",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "Browse Daily Lab prompt ideas"
     },
     {
       "id": "7c8d0c185708b0ce07a7",
@@ -5452,6 +5800,12 @@
       "text": "smooth"
     },
     {
+      "id": "82b14c26e4d85afcd97a",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "replaceState"
+    },
+    {
       "id": "82d49a5083067611bedc",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
@@ -5572,6 +5926,12 @@
       "text": "Bytes read (bounded):"
     },
     {
+      "id": "8501f5602cb78d04d107",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE transforms an idea into meaning, then structure, then a usable prompt."
+    },
+    {
       "id": "85322e42f344e7535971",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -5680,6 +6040,12 @@
       "text": "compile"
     },
     {
+      "id": "87476b72cd6b8e80be5c",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "website"
+    },
+    {
       "id": "875fb569521d143a7b65",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -5770,6 +6136,12 @@
       "text": "Sources"
     },
     {
+      "id": "89ae63ecc272ca09d610",
+      "file": "apps/web/src/ui/ThemeToggle.tsx",
+      "depth": "PRODUCT",
+      "text": "undefined"
+    },
+    {
       "id": "89f44d68898c21d3f8ff",
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
@@ -5800,10 +6172,22 @@
       "text": "Speech recognition needs a network connection in this browser. Check connectivity, or type your idea."
     },
     {
+      "id": "8a5d2b25cae1955f066a",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "content"
+    },
+    {
       "id": "8a9e6ce038f7daf9c229",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "pastel resin"
+    },
+    {
+      "id": "8aa98dbc414aea19b5df",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "UNDERSTANDING"
     },
     {
       "id": "8adf9f36fd8f48874ab2",
@@ -5816,6 +6200,18 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Copy scaffold"
+    },
+    {
+      "id": "8afcb28aa0e43850283f",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "script"
+    },
+    {
+      "id": "8afe5095a0e39a54655e",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "SPE — System Prompt Engine | Free System Prompt Generator"
     },
     {
       "id": "8b02d835f216d27360b3",
@@ -5944,6 +6340,12 @@
       "text": "content-type"
     },
     {
+      "id": "8d8b42616aadb0aef531",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "prompt"
+    },
+    {
       "id": "8d9c9d8abc7901e4145b",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -5966,6 +6368,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "A concept for a curious teen."
+    },
+    {
+      "id": "8e197d7a9026708f1932",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "twitter:title"
     },
     {
       "id": "8e2f7cd6803a5cc795af",
@@ -6190,6 +6598,12 @@
       "text": "context_protocol"
     },
     {
+      "id": "92bd5fe174ee589bfa67",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "light"
+    },
+    {
       "id": "92bf59796b6ef2b288e2",
       "file": "apps/web/src/scene/semantic.ts",
       "depth": "PRODUCT",
@@ -6254,6 +6668,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Create"
+    },
+    {
+      "id": "94057f3f770a9363e191",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "#f4f1ea"
     },
     {
       "id": "9420a6109331f59249d1",
@@ -6334,6 +6754,12 @@
       "text": "This browser could not read that page. Some websites don't allow direct reading from another site. Upload the page HTML or a screenshot instead."
     },
     {
+      "id": "95d2e341616aae5fab6b",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "STRUCTURING"
+    },
+    {
       "id": "95ef1a6ba873f9e0f4f0",
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PRODUCT",
@@ -6344,6 +6770,12 @@
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "INSPECT",
       "text": "ready"
+    },
+    {
+      "id": "9611f6ff4a893924a378",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "og:url"
     },
     {
       "id": "961263a498532fe1ce8b",
@@ -6466,6 +6898,12 @@
       "text": "Toolbar / tool row"
     },
     {
+      "id": "98f45ff95534410bd681",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "spe-theme"
+    },
+    {
       "id": "98fb1033898a6f1f0b8f",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
@@ -6482,6 +6920,12 @@
       "file": "apps/web/src/media/structureSemantics.ts",
       "depth": "PRODUCT",
       "text": "Sparse opaque palette"
+    },
+    {
+      "id": "999226d405c23398fd44",
+      "file": "apps/web/index.html",
+      "depth": "EXPERIENCE",
+      "text": "SPE — System Prompt Engine | Free System Prompt Generator"
     },
     {
       "id": "999d2c43aeda0d3eb7f9",
@@ -6530,6 +6974,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Reading screenshot (UI IR)…"
+    },
+    {
+      "id": "9ab48f4d0dcdbba689d3",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "meaning"
     },
     {
       "id": "9ae74cf53354fb8c78b5",
@@ -6656,6 +7106,12 @@
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
       "text": "Seek timed out after"
+    },
+    {
+      "id": "9ce69ce2df3e5a5dc3f4",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "USD"
     },
     {
       "id": "9d136443551ad2cab6a9",
@@ -7006,6 +7462,18 @@
       "text": "ship Content-Security-Policy (including"
     },
     {
+      "id": "a4f0c943649291b69162",
+      "file": "apps/web/index.html",
+      "depth": "EXPERIENCE",
+      "text": "Free system prompt generator and AI prompt builder. Turn an idea into meaning, structure, and a precise prompt — privately on this device."
+    },
+    {
+      "id": "a51d7a98afaf3f6c83c0",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "#86dbc9"
+    },
+    {
       "id": "a52db55d13a776657c62",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -7160,6 +7628,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "ENGINE_UNAVAILABLE"
+    },
+    {
+      "id": "aa1c506f7a3720a6ebf9",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "How SPE prepares prompts on this device, with honest privacy claims for this research preview."
     },
     {
       "id": "aa2a21f7d7b3e2d8cc74",
@@ -7468,6 +7942,12 @@
       "text": "cloth"
     },
     {
+      "id": "af35e130fd1b22458bf3",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "#d8edff"
+    },
+    {
       "id": "af3917b0cb7bd68a19a2",
       "file": "apps/web/src/media/semanticCompose.ts",
       "depth": "PRODUCT",
@@ -7478,6 +7958,12 @@
       "file": "apps/web/src/input/speechHelpers.ts",
       "depth": "PRODUCT",
       "text": "idle"
+    },
+    {
+      "id": "af6325bcc74f9ba71337",
+      "file": "apps/web/src/ui/ThemeToggle.tsx",
+      "depth": "PRODUCT",
+      "text": "change"
     },
     {
       "id": "af662eaa66e1d97bbfc1",
@@ -7502,6 +7988,12 @@
       "file": "apps/web/src/scene/semantic.ts",
       "depth": "PRODUCT",
       "text": "What you supplied"
+    },
+    {
+      "id": "b018aed2eeb632969675",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "application/ld+json"
     },
     {
       "id": "b021fbd6dcfe1d4c89af",
@@ -7574,6 +8066,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "#f9a8d4"
+    },
+    {
+      "id": "b1c230213e58d349dda1",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "property"
     },
     {
       "id": "b20e2bd3400b0f051983",
@@ -7912,6 +8410,12 @@
       "text": "<form class=\"spe-form\" aria-label=\"Inferred form\" data-structure=\"form\" data-hierarchy=\"2\">"
     },
     {
+      "id": "b946e97518bc98ab2b7a",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "summary_large_image"
+    },
+    {
       "id": "b94fc3e0507338ba5c6f",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -8008,6 +8512,12 @@
       "text": "SPE gives each one a place."
     },
     {
+      "id": "bb99e2aef6ac02d92c6f",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "twitter:card"
+    },
+    {
       "id": "bbe850d10a65edcd590b",
       "file": "apps/web/src/media/limits.ts",
       "depth": "PRODUCT",
@@ -8042,6 +8552,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Goal: rebuild a clearer, modern information architecture — not a pixel clone."
+    },
+    {
+      "id": "bc3b1ec376938e3876a2",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "meta"
     },
     {
       "id": "bcba7bc59d7567a722f3",
@@ -8128,6 +8644,12 @@
       "text": "Subjects: (none)"
     },
     {
+      "id": "bdb8daebbbbbbf617ae6",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "meta[name=\"theme-color\"]"
+    },
+    {
       "id": "bdc576caf28607ac9311",
       "file": "apps/web/src/ui/PrivacyIndicator.tsx",
       "depth": "PROOF",
@@ -8176,6 +8698,12 @@
       "text": "hard_constraints"
     },
     {
+      "id": "be9be8adf5f83326d168",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Screenshot to Code Prompt — SPE Prompt Engineering Tool"
+    },
+    {
       "id": "bea8a1e681e8363935e2",
       "file": "apps/web/src/landing/ScrollStory.tsx",
       "depth": "PRODUCT",
@@ -8212,6 +8740,12 @@
       "text": "vs"
     },
     {
+      "id": "bf683158b1aa9b06a9d7",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "name"
+    },
+    {
       "id": "bf807ae922c067f5850c",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
@@ -8240,6 +8774,12 @@
       "file": "apps/web/src/pwa.ts",
       "depth": "PRODUCT",
       "text": "serviceWorker"
+    },
+    {
+      "id": "bfe36eb8b0d1998df1de",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Inspect intent, structure, and your finished prompt. Refine and export a portable .spe file."
     },
     {
       "id": "c007b2bb62163f983214",
@@ -8410,6 +8950,12 @@
       "text": "Materials"
     },
     {
+      "id": "c35580724bd8cd2d270a",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Free system prompt generator and AI prompt builder. Turn an idea into meaning, structure, and a precise prompt — privately on this device."
+    },
+    {
       "id": "c35dfe47275ae5810259",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -8518,10 +9064,22 @@
       "text": "Bright inset panel"
     },
     {
+      "id": "c5492aeaf407a946fff4",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "My Work"
+    },
+    {
       "id": "c576ae468b159221bbf4",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PROOF",
       "text": "WASM:"
+    },
+    {
+      "id": "c5dadd6dc5ff23f12b4c",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Roles and sections take shape"
     },
     {
       "id": "c602efc5a503aab8e743",
@@ -8590,6 +9148,12 @@
       "text": "</body></html>"
     },
     {
+      "id": "c72b3698d655c48e1528",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "description"
+    },
+    {
       "id": "c7c747acd662eec39399",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -8606,6 +9170,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "compose"
+    },
+    {
+      "id": "c7f5a4d2690fa31c7ce6",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "spe-jsonld-app"
     },
     {
       "id": "c8101f3e0ff127eaf0f6",
@@ -8770,6 +9340,18 @@
       "text": "dart"
     },
     {
+      "id": "cb72847ee85c10378cd7",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "og:site_name"
+    },
+    {
+      "id": "cb783c3fef3238530634",
+      "file": "apps/web/src/ui/ThemeToggle.tsx",
+      "depth": "PRODUCT",
+      "text": "dark"
+    },
+    {
       "id": "cb91ddd6f67a5d8fb44d",
       "file": "apps/web/src/ui/TrustPanel.tsx",
       "depth": "PROOF",
@@ -8786,6 +9368,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "(none)"
+    },
+    {
+      "id": "cbcf5874663a36ec1035",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Create a Prompt — SPE Free Prompt Builder"
     },
     {
       "id": "cbe1556bf355730cfeb3",
@@ -9364,10 +9952,22 @@
       "text": "low-key"
     },
     {
+      "id": "d81e31b0c17f6c3e4d5f",
+      "file": "apps/web/src/ui/ThemeToggle.tsx",
+      "depth": "PRODUCT",
+      "text": "system"
+    },
+    {
       "id": "d836a97aac4c1ab6b98a",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "import 'package:flutter/material.dart';\n// OBSERVATION scaffold — structure resemblance, not pixel-perfect"
+    },
+    {
+      "id": "d8be38fcf03ce12cb08b",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "link"
     },
     {
       "id": "d8c8eca462b26cdba94f",
@@ -9446,6 +10046,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "URL → website request:"
+    },
+    {
+      "id": "da193a7d7acd0397ac23",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Offer"
     },
     {
       "id": "daae220e61a07a07136b",
@@ -9640,10 +10246,28 @@
       "text": "animation-heavy"
     },
     {
+      "id": "df332df94ae7272f4c4e",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Web Browser"
+    },
+    {
+      "id": "df3495f6f5bf7ef325d4",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "twitter:description"
+    },
+    {
       "id": "df349693023294f7b19f",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "#fcd34d"
+    },
+    {
+      "id": "df3553eafbc1aa77ad75",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Privacy"
     },
     {
       "id": "df62980077c61db21d8f",
@@ -9940,6 +10564,12 @@
       "text": "Draft FAQ answers for an offline writing app: pricing, offline mode, export formats, and privacy. No marketing fluff."
     },
     {
+      "id": "e43dd71a8fb97f89de0c",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "meaning"
+    },
+    {
       "id": "e46440ae87d599eeb01b",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
@@ -9950,6 +10580,12 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
       "text": "Your SPE file keeps your goal, details and prompt together, ready to reopen when you need them."
+    },
+    {
+      "id": "e46c58519ee495e17d89",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/daily-lab"
     },
     {
       "id": "e471050a6f3caa107d10",
@@ -10118,6 +10754,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "gal-32"
+    },
+    {
+      "id": "e6dffb6bf8492f8380ab",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "structure"
     },
     {
       "id": "e70915ec111f2a236178",
@@ -10306,6 +10948,12 @@
       "text": "Technical details"
     },
     {
+      "id": "eb27a2f18ce1a4ed0aca",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "Open the free prompt builder (Create)"
+    },
+    {
       "id": "eb34fec7742d06994940",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
@@ -10480,6 +11128,12 @@
       "text": "torus"
     },
     {
+      "id": "f021fa54333eda616d19",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/create"
+    },
+    {
       "id": "f0443c20acada36fa31c",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -10588,6 +11242,12 @@
       "text": "No speech was detected. Try again, or type your idea."
     },
     {
+      "id": "f261cb5147157498b84a",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "(prefers-color-scheme: light)"
+    },
+    {
       "id": "f26278322ab546877ea1",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -10612,6 +11272,12 @@
       "text": "Text"
     },
     {
+      "id": "f2cdd956da68d266f602",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Free system prompt generator and prompt engineering tool. Turns ideas into structured prompts in your browser."
+    },
+    {
       "id": "f2ef04471a07aa94024f",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -10628,6 +11294,12 @@
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "INSPECT",
       "text": "instantiating"
+    },
+    {
+      "id": "f36084398eb349740c5d",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "Natural uses: system prompt generator · AI prompt generator · prompt engineering tool · free prompt builder · local prompt compiler."
     },
     {
       "id": "f399dd10a45431ce4fd3",
@@ -10664,6 +11336,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "ribbon"
+    },
+    {
+      "id": "f4e9d1080fc1f9382392",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "Privacy proof — what stays on this device"
     },
     {
       "id": "f4ebdb8d0d137e6ea031",
@@ -10724,6 +11402,12 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
       "text": "Research preview. Review generated prompts before using them."
+    },
+    {
+      "id": "f6ae3eca3429b6e8a28b",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "undefined"
     },
     {
       "id": "f6bedef49cc06375a961",
@@ -10834,6 +11518,12 @@
       "text": "Microphone stopped."
     },
     {
+      "id": "fa60577a2bd4e9cb2dff",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Optional on-device history of ideas and prompts. Nothing is uploaded; SPE keeps your work local."
+    },
+    {
       "id": "fa8dd71b775055377779",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
@@ -10876,6 +11566,12 @@
       "text": "css-grid"
     },
     {
+      "id": "fb0f0636bcb030051f66",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "/art/intent-core.webp"
+    },
+    {
       "id": "fb35f758da746474d584",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -10886,6 +11582,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "#fb7185"
+    },
+    {
+      "id": "fb7247795a35bf9c16f7",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "WebApplication"
     },
     {
       "id": "fb8f9a140b5f09a76317",
@@ -10916,6 +11618,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Video → prompt request:"
+    },
+    {
+      "id": "fc03ed137655494c215e",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "home"
     },
     {
       "id": "fc16b54827cff6d00cdb",
@@ -11066,6 +11774,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "my-work"
+    },
+    {
+      "id": "ffa143ddbf4f931aa86a",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "og:description"
     }
   ]
 }

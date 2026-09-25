@@ -1,0 +1,5 @@
+
+> spe-web@0.3.0 test:engine
+> node scripts/eval-fixture.mjs
+
+{"error":null,"result":{"disposition":"VALID","output":{"analysis":null,"authority_state":{"grants":[],"level":0,"status":"NONE"},"category_trace":[],"envelope_id":"pos-env-001","execution_grants":[],"facts":[{"fact_id":"f-1","provenance_ids":["p-1"],"statement":"fact statement 1"}],"failures":[],"goal_identity":"goal-pos-001","hard_constraints":[{"constraint_id":"c-1","statement":"hard constraint 1","strength":"HARD"}],"provenance":[{"provenance_id":"p-1","source":"src-1"}],"recommendation":null,"rendering":null,"sensitivity_labels":["USER_PRIVATE"],"taint_labels":[],"uncertainties":[{"description":"uncertain 1","uncertainty_id":"u-1"}],"user_preferences":[{"preference_id":"pref-1","statement":"prefer 1"}]},"reason_code":null,"status":"VALID"},"phases":["loading_wasm","verifying_integrity","instantiating","ready","evaluating"],"used_ts_fallback":false,"sha256":"8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830","imports":0}

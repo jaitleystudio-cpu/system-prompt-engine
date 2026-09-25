@@ -150,18 +150,50 @@ export function Hero(p: Props) {
               </Suspense>
             )}
           </div>
-          <div className="orbit-label orbit-one">
-            <span>01</span> IDEA
-          </div>
-          <div className="orbit-label orbit-two">
-            <span>02</span> MEANING
-          </div>
-          <div className="orbit-label orbit-three">
-            <span>03</span> STRUCTURE
-          </div>
-          <div className="orbit-label orbit-four">
-            <span>04</span> PROMPT
-          </div>
+          <ol
+            className={`spe-pipeline ${p.sceneState.toLowerCase()}`}
+            aria-label="SPE transformation: Idea to Meaning to Structure to Prompt"
+            data-active-stage={
+              p.sceneState === "READY" || p.sceneState === "COMPILING"
+                ? "prompt"
+                : p.sceneState === "STRUCTURING"
+                  ? "structure"
+                  : p.sceneState === "UNDERSTANDING"
+                    ? "meaning"
+                    : "idea"
+            }
+          >
+            {(
+              [
+                ["idea", "01", "IDEA", "Your rough thought"],
+                ["meaning", "02", "MEANING", "Goals, boundaries, questions"],
+                ["structure", "03", "STRUCTURE", "Roles and sections take shape"],
+                ["prompt", "04", "PROMPT", "A brief you can take anywhere"],
+              ] as const
+            ).map(([id, num, label, hint], index) => (
+              <li
+                key={id}
+                className={`orbit-label orbit-${["one", "two", "three", "four"][index]} pipeline-stage`}
+                data-stage={id}
+              >
+                <span className="pipeline-num" aria-hidden="true">
+                  {num}
+                </span>
+                <span className="pipeline-label">{label}</span>
+                <span className="visually-hidden">{hint}</span>
+                {index < 3 ? (
+                  <span className="pipeline-connector" aria-hidden="true" />
+                ) : null}
+              </li>
+            ))}
+          </ol>
+          <p className="pipeline-caption" id="pipeline-caption">
+            <span aria-hidden="true">IDEA → MEANING → STRUCTURE → PROMPT</span>
+            <span className="visually-hidden">
+              SPE transforms an idea into meaning, then structure, then a usable
+              prompt.
+            </span>
+          </p>
         </div>
         <div className="theater-bottom">
           <span>ONE BRIEF. ANY AI.</span>

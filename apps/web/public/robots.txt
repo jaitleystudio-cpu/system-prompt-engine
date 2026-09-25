@@ -1,0 +1,14 @@
+# SPE — System Prompt Engine
+# HOSTING remains founder-gated; this file ships with the static build.
+User-agent: *
+Allow: /
+Allow: /create
+Allow: /code
+Allow: /daily-lab
+Allow: /my-work
+Allow: /privacy
+Disallow: /workspace
+Disallow: /models/
+Disallow: /ort/
+
+Sitemap: https://systempromptengine.com/sitemap.xml

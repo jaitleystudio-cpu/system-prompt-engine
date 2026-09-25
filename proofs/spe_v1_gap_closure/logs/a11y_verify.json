@@ -1,0 +1,84 @@
+{
+  "standard": "WCAG 2.2 oriented",
+  "HOSTING": "FORBIDDEN",
+  "results": [
+    {
+      "id": "skip_link_present",
+      "result": "PASS",
+      "detail": "skip link in DOM"
+    },
+    {
+      "id": "skip_link_focus",
+      "result": "PASS",
+      "detail": "skip link reachable via Tab"
+    },
+    {
+      "id": "skip_link_target",
+      "result": "PASS",
+      "detail": "skip focuses #main"
+    },
+    {
+      "id": "landmarks",
+      "result": "PASS",
+      "detail": "{\"header\":true,\"nav\":true,\"main\":true,\"footer\":true}"
+    },
+    {
+      "id": "pipeline_aria",
+      "result": "PASS",
+      "detail": "SPE transformation: Idea to Meaning to Structure to Prompt"
+    },
+    {
+      "id": "theme_keyboard_focus",
+      "result": "PASS",
+      "detail": "theme toggle focusable"
+    },
+    {
+      "id": "theme_aria",
+      "result": "PASS",
+      "detail": "Theme: Dark (resolved dark). Activate to switch."
+    },
+    {
+      "id": "nav_real_links",
+      "result": "PASS",
+      "detail": "/, /create, /code, /daily-lab, /my-work, /privacy, /create"
+    },
+    {
+      "id": "route_create_reload",
+      "result": "PASS",
+      "detail": "create h1 present"
+    },
+    {
+      "id": "route_privacy_reload",
+      "result": "PASS",
+      "detail": "privacy main text"
+    },
+    {
+      "id": "keyboard_no_obvious_trap",
+      "result": "PASS",
+      "detail": "unique focus targets=10"
+    },
+    {
+      "id": "reduced_motion_control",
+      "result": "PASS",
+      "detail": "Reduced motion"
+    },
+    {
+      "id": "zoom_200_usable",
+      "result": "PASS",
+      "detail": "document roughly fits zoomed viewport heuristic"
+    },
+    {
+      "id": "decorative_scene",
+      "result": "PASS",
+      "detail": "{\"canvases\":0,\"statics\":2,\"canvasOk\":true,\"staticOk\":true}"
+    },
+    {
+      "id": "mobile_burger_aria",
+      "result": "PASS",
+      "detail": "burger aria-expanded + aria-controls"
+    }
+  ],
+  "pass": true,
+  "failed": [],
+  "at": "2026-09-25T10:49:52.573Z"
+}
