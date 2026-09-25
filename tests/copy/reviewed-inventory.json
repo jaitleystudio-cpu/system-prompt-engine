@@ -12038,6 +12038,36 @@
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
       "text": "SPE"
+    },
+    {
+      "id": "3933b2d58146ff3443fc",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE transformation: messy human fragments to idea, meaning, semantic engine, structure, and perfect system prompt"
+    },
+    {
+      "id": "58480053c49ed91cf5dd",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "PROMPT"
+    },
+    {
+      "id": "80fbdd84d7f9ad3f35d8",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "MESSY HUMAN FRAGMENTS"
+    },
+    {
+      "id": "b927e8d02e0001d1c568",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "PERFECT SYSTEM PROMPT"
+    },
+    {
+      "id": "edb38ae67e01292ca12b",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE transforms messy human fragments into an idea, meaning, structure, and a perfect system prompt."
     }
   ]
 }
