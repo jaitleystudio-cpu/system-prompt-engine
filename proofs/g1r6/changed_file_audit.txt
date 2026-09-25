@@ -1,0 +1,34 @@
+=== vs starting tip f3a7302 (committed+staged+untracked relative to tip) ===
+M	SPE_IMPLEMENTATION_BINDING_v2.json
+M	proofs/g1/SPE_IMPLEMENTATION_BINDING_v2.json
+M	proofs/g1/module_disposition.json
+M	proofs/g1/repo_identity.json
+M	proofs/g1/ring0_gap_matrix.json
+M	proofs/g1/runtime_module_inventory.json
+M	proofs/g1/semantic_writer_map.json
+A	proofs/g1r6/k3_prompt_existing_surface.json
+A	proofs/g1r6/red/g1_binding_before.txt
+A	proofs/g1r6/red/prompt_artifact_owner_missing.txt
+A	proofs/g1r6/red/prompt_artifact_surface_missing.txt
+M	spe_runtime/error_registry.py
+A	spe_runtime/prompt/__init__.py
+A	spe_runtime/prompt/build.py
+A	spe_runtime/prompt/models.py
+M	tests/unit/test_g1r5e_evidence_consistency.py
+A	tests/unit/test_g1r6_k3_prompt_artifact.py
+=== untracked ===
+proofs/g1r6/AUTHORITATIVE_TEST_MANIFEST.json
+proofs/g1r6/G1R6_REPORT.md
+proofs/g1r6/SPE_IMPLEMENTATION_BINDING_v2.json
+proofs/g1r6/changed_file_audit.txt
+proofs/g1r6/green/authoritative_suite.txt
+proofs/g1r6/green/g1_binding_after.txt
+proofs/g1r6/green/g1r6_impl_junit.xml
+proofs/g1r6/green/g1r6_tests.txt
+proofs/g1r6/green/prompt_injection_boundary.txt
+proofs/g1r6/green/prompt_writer_audit.txt
+proofs/g1r6/green/protected_constraint_preservation.txt
+proofs/g1r6/green/source_immutability.txt
+proofs/g1r6/semantic_writer_map.json
+=== forbidden path touches (must be empty) ===
+(empty above = PASS)
