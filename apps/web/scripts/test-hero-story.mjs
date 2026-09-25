@@ -54,6 +54,10 @@ assert.match(
 );
 assert.match(
   css,
+  /@media \(max-width: 700px\)[\s\S]*\.hero-theater\s*\{[\s\S]*max-height:\s*none/,
+);
+assert.match(
+  css,
   /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.hero-story[\s\S]*animation:\s*none/,
 );
 

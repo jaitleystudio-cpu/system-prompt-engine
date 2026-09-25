@@ -3463,6 +3463,7 @@ html[data-theme="light"] .structure-stack span {
   .hero-theater {
     height: auto;
     min-height: 0;
+    max-height: none;
     padding-bottom: 0;
     background:
       radial-gradient(ellipse at 50% 45%, rgba(105, 132, 184, 0.14), transparent 42%),
