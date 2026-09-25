@@ -3978,3 +3978,84 @@ html[data-theme="light"] .glass-filter-stack > span {
     stroke-dasharray: none;
   }
 }
+
+/* ——— SPE Ω Batch B: Desired Output + user-supplied Example ——— */
+.spe-output-controls,
+.spe-example-panel {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem;
+  border: 1px solid rgba(197, 212, 255, 0.14);
+  border-radius: 14px;
+  background:
+    linear-gradient(150deg, rgba(183, 200, 255, 0.07), transparent 55%),
+    rgba(8, 12, 20, 0.72);
+}
+.spe-output-controls p,
+.spe-example-note {
+  margin: 0;
+  color: #9eabc2;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.spe-example-panel {
+  border-color: rgba(199, 174, 122, 0.24);
+}
+.spe-example-note {
+  padding-left: 0.8rem;
+  border-left: 2px solid rgba(199, 174, 122, 0.48);
+}
+html[data-theme="light"] .spe-output-controls,
+html[data-theme="light"] .spe-example-panel {
+  background: #efeae1;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-output-controls p,
+html[data-theme="light"] .spe-example-note {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-upload-premium {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(61, 90, 154, 0.08), transparent 60%),
+    #f7f4ee;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-upload-premium strong {
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-upload-premium span {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-composer-status {
+  color: #25634f;
+}
+html[data-theme="light"] .spe-composer-error {
+  color: #9f2942;
+}
+@media (max-width: 720px) {
+  .spe-composer-modes {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+  .spe-composer-modes button {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0.5rem 0.35rem;
+    font-size: 0.72rem;
+    line-height: 1.2;
+    white-space: normal;
+  }
+  .spe-output-controls,
+  .spe-example-panel {
+    padding: 0.85rem;
+  }
+}
+@media (max-width: 360px) {
+  .spe-composer-modes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

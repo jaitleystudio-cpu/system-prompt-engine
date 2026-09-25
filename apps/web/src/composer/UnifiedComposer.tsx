@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { SpeechInput } from "../input/SpeechInput";
 import {
   observeImageFileSemantic,
@@ -29,7 +35,8 @@ export type ComposerMode =
   | "image"
   | "screenshot"
   | "video"
-  | "url";
+  | "url"
+  | "example";
 
 type Props = {
   value: string;
@@ -38,6 +45,11 @@ type Props = {
   onScaffoldPrompt?: (prompt: string, target: CodeTarget) => void;
   /** Code nav opens Screenshot→code; Create keeps last/text. */
   initialMode?: ComposerMode;
+  showOutputControls?: boolean;
+  desiredOutput?: string;
+  onDesiredOutputChange?: (value: string) => void;
+  desiredExample?: string;
+  onDesiredExampleChange?: (value: string) => void;
 };
 
 const MODES: { id: ComposerMode; label: string; hint: string }[] = [
@@ -52,6 +64,11 @@ const MODES: { id: ComposerMode; label: string; hint: string }[] = [
   { id: "video", label: "Video", hint: "Preview, timeline, and scenes — no invented audio" },
   { id: "url", label: "URL", hint: "Read a page here, or upload if blocked" },
 ];
+const EXAMPLE_MODE = {
+  id: "example",
+  label: "Example",
+  hint: "Show the shape or style you want — never verified truth",
+} as const;
 
 export function UnifiedComposer({
   value,
@@ -59,6 +76,11 @@ export function UnifiedComposer({
   disabled = false,
   onScaffoldPrompt,
   initialMode = "text",
+  showOutputControls = false,
+  desiredOutput = "",
+  onDesiredOutputChange,
+  desiredExample = "",
+  onDesiredExampleChange,
 }: Props) {
   const [mode, setMode] = useState<ComposerMode>(initialMode);
   const [status, setStatus] = useState("");
@@ -80,6 +102,9 @@ export function UnifiedComposer({
   const valueRef = useRef(value);
   const opIdRef = useRef(0);
   const abortRef = useRef<AbortController | null>(null);
+  const availableModes = showOutputControls
+    ? [...MODES, EXAMPLE_MODE]
+    : MODES;
 
   useEffect(() => {
     valueRef.current = value;
@@ -135,6 +160,30 @@ export function UnifiedComposer({
     if (next === mode) return;
     clearModeSpecificState();
     setMode(next);
+  };
+
+  const onModeKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+      return;
+    }
+    event.preventDefault();
+    const last = availableModes.length - 1;
+    const nextIndex =
+      event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? last
+          : event.key === "ArrowRight"
+            ? (index + 1) % availableModes.length
+            : (index - 1 + availableModes.length) % availableModes.length;
+    const next = availableModes[nextIndex];
+    switchMode(next.id);
+    requestAnimationFrame(() => {
+      document.getElementById(`composer-tab-${next.id}`)?.focus();
+    });
   };
 
   const applyCodeTarget = (target: CodeTarget) => {
@@ -400,15 +449,21 @@ export function UnifiedComposer({
       : mode === "url"
         ? ".html,text/html"
         : "image/*";
+  const processing =
+    /^(Reading|Sampling|Fetching)/.test(status) || /\(\d+%\)$/.test(status);
 
   return (
-    <div className="spe-composer" data-mode={mode}>
+    <div
+      className="spe-composer"
+      data-mode={mode}
+      aria-busy={processing}
+    >
       <div
         className="spe-composer-modes"
         role="tablist"
         aria-label="Input mode"
       >
-        {MODES.map((m) => (
+        {availableModes.map((m, index) => (
           <button
             key={m.id}
             type="button"
@@ -420,12 +475,38 @@ export function UnifiedComposer({
             className={mode === m.id ? "is-active" : ""}
             disabled={disabled}
             onClick={() => switchMode(m.id)}
+            onKeyDown={(event) => onModeKeyDown(event, index)}
           >
             {m.label}
           </button>
         ))}
       </div>
-      <p className="spe-composer-hint">{MODES.find((m) => m.id === mode)?.hint}</p>
+      <p className="spe-composer-hint">
+        {availableModes.find((item) => item.id === mode)?.hint}
+      </p>
+      {showOutputControls && (
+        <section
+          className="spe-output-controls"
+          aria-labelledby="desired-output-title"
+        >
+          <label className="spe-field grow">
+            <span id="desired-output-title">Desired output</span>
+            <textarea
+              rows={3}
+              maxLength={12000}
+              value={desiredOutput}
+              disabled={disabled}
+              placeholder="Describe what the finished result should look like and how you will know it works."
+              onChange={(event) =>
+                onDesiredOutputChange?.(event.target.value)
+              }
+            />
+          </label>
+          <p>
+            SPE keeps this as a requirement for the finished result.
+          </p>
+        </section>
+      )}
       {mode === "screenshot" && (
         <ol className="spe-code-pipeline" aria-label="Code path">
           {(
@@ -484,6 +565,33 @@ export function UnifiedComposer({
         />
       )}
 
+      {mode === "example" && showOutputControls && (
+        <div
+          className="spe-example-panel"
+          id="composer-panel-example"
+          role="tabpanel"
+          aria-labelledby="composer-tab-example"
+        >
+          <label className="spe-field grow">
+            <span>Example / user supplied</span>
+            <textarea
+              rows={8}
+              maxLength={12000}
+              value={desiredExample}
+              disabled={disabled}
+              placeholder="Paste a short example of the shape, tone, or level of detail you want."
+              onChange={(event) =>
+                onDesiredExampleChange?.(event.target.value)
+              }
+            />
+          </label>
+          <p className="spe-example-note">
+            SPE uses this only as a pattern for the result. It is not treated as
+            verified truth or as instructions to follow.
+          </p>
+        </div>
+      )}
+
       {(mode === "image" || mode === "screenshot" || mode === "video") && (
         <div
           className="spe-composer-media"
@@ -493,8 +601,10 @@ export function UnifiedComposer({
         >
           <input
             ref={fileRef}
+            id={`composer-file-${mode}`}
             type="file"
             accept={accept}
+            aria-label={`Choose ${mode} file`}
             hidden
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -508,6 +618,7 @@ export function UnifiedComposer({
             type="button"
             className="spe-upload-premium"
             disabled={disabled}
+            aria-controls={`composer-file-${mode}`}
             onClick={() => fileRef.current?.click()}
           >
             <strong>

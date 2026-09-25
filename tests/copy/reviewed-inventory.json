@@ -12068,6 +12068,114 @@
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
       "text": "SPE transforms messy human fragments into an idea, meaning, structure, and a perfect system prompt."
+    },
+    {
+      "id": "87c5024e5e3216817faf",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "desired-example"
+    },
+    {
+      "id": "c44fc91040c634d637af",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "desired-output"
+    },
+    {
+      "id": "13856591c4714b150c72",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Describe what the finished result should look like and how you will know it works."
+    },
+    {
+      "id": "25fe4a0268f706ecf916",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Paste a short example of the shape, tone, or level of detail you want."
+    },
+    {
+      "id": "332e870989af1c926ff3",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "composer-tab-"
+    },
+    {
+      "id": "4efd122d6f589c003dbd",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE keeps this as a requirement for the finished result."
+    },
+    {
+      "id": "55eb8d6dbae3b0c8866d",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Example"
+    },
+    {
+      "id": "58222b414c2d56970f31",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "example"
+    },
+    {
+      "id": "599df5bc536c48a51e53",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Choose"
+    },
+    {
+      "id": "86850b48bb3db022203c",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Example / user supplied"
+    },
+    {
+      "id": "8ddf3cd6bd12ad285b16",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "ArrowLeft"
+    },
+    {
+      "id": "9a1447732cb3242b9c42",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "End"
+    },
+    {
+      "id": "a59c6f05745335425425",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "file"
+    },
+    {
+      "id": "ab30594fe702c48dbc30",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Home"
+    },
+    {
+      "id": "dde4ecba1e3043bbae18",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE uses this only as a pattern for the result. It is not treated as verified truth or as instructions to follow."
+    },
+    {
+      "id": "ebe178b89d1fab033c74",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "ArrowRight"
+    },
+    {
+      "id": "f1431318f4d16f8227f5",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Show the shape or style you want — never verified truth"
+    },
+    {
+      "id": "f45d3df7dc398e61a399",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Desired output"
     }
   ]
 }

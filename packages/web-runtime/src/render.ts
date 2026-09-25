@@ -228,10 +228,27 @@ export function renderPromptArtifact(input: RenderInput) {
       .join("\n") || undefined;
   const role = brief("brief-role") ?? recipe.role,
     audience = brief("brief-audience"),
-    format = brief("brief-format") ?? recipe.output;
+    desiredOutput = constraints.find((a) => a.id === "desired-output")?.text,
+    format = desiredOutput ?? brief("brief-format") ?? recipe.output,
+    desiredExample = brief("desired-example");
   const other = prefs.filter(
-    (a) => !["brief-role", "brief-audience", "brief-format"].includes(a.id),
+    (a) =>
+      ![
+        "brief-role",
+        "brief-audience",
+        "brief-format",
+        "desired-example",
+      ].includes(a.id),
   );
+  const requirements = constraints.filter((a) => a.id !== "desired-output");
+  const acceptance = [
+    ...(desiredOutput
+      ? [`Does the result satisfy this user-supplied outcome: ${desiredOutput}`]
+      : []),
+    ...guidance.checks,
+    "Is every explicit requirement addressed, with no unrelated obligations added?",
+    "Have unsupported claims and contradictory instructions been removed?",
+  ];
   const sections = [
     "## Role\n" + role,
     "## Objective\n" + goal,
@@ -248,18 +265,24 @@ export function renderPromptArtifact(input: RenderInput) {
             other.map((a) => `- ${a.text}`).join("\n"),
         ]
       : []),
-    ...(constraints.length
-      ? ["## Requirements\n" + constraints.map((a) => `- ${a.text}`).join("\n")]
+    ...(requirements.length
+      ? ["## Requirements\n" + requirements.map((a) => `- ${a.text}`).join("\n")]
       : []),
     "## Approach\n" + recipe.steps.map((s, i) => `${i + 1}. ${s}`).join("\n"),
     "## Execution details\n" +
       guidance.execution.map((s, i) => `${i + 1}. ${s}`).join("\n"),
     "## Handling missing information\nUse the supplied facts, context and requirements as the basis for the work. Identify missing information that would change correctness or feasibility. Ask a focused question only when it blocks progress; otherwise proceed with clearly labeled, limited assumptions. Do not invent access to tools, source documents, test results or external evidence.",
     "## Deliverable\n" + format,
+    ...(desiredExample
+      ? [
+          "## User-supplied example (non-authoritative)\n" +
+            desiredExample,
+        ]
+      : []),
     "## Output depth and structure\nMake the result complete enough to use without reconstructing omitted steps. Develop important points with concrete instructions, relevant examples and explanations of consequential choices. Prefer useful detail over repetition. Follow the user's exact length, language and output-format requirements; detailed working instructions do not authorize a longer final answer when the brief requests brevity or a fixed schema. Add headings or supporting notes only when the requested format permits them.",
     "## Acceptance checks\n" +
-      guidance.checks.map((s) => `- ${s}`).join("\n") +
-      "\n- Is every explicit requirement addressed, with no unrelated obligations added?\n- Have unsupported claims and contradictory instructions been removed? Review these checks before responding; include a checklist only if requested.",
+      acceptance.map((s) => `- ${s}`).join("\n") +
+      "\nReview these checks before responding; include a checklist only if requested.",
     ...(unknowns.length
       ? [
           "## Questions to resolve\n" +
@@ -295,7 +318,10 @@ export function renderPromptArtifact(input: RenderInput) {
           why: "Establishes the perspective and expertise the response should use.",
         },
         ...constraints.map((constraint, index) => ({
-          title: `Boundary ${index + 1}`,
+          title:
+            constraint.id === "desired-output"
+              ? "Desired output"
+              : `Boundary ${index + 1}`,
           source:
             constraint.id === "c-preserve-intent" &&
             constraint.text ===
@@ -303,8 +329,21 @@ export function renderPromptArtifact(input: RenderInput) {
               ? ("Working default" as const)
               : ("Your brief" as const),
           detail: constraint.text,
-          why: "Keeps a restriction visible alongside the task so a proposed answer can be checked for compliance.",
+          why:
+            constraint.id === "desired-output"
+              ? "Makes the finished result and its success criteria explicit."
+              : "Keeps a restriction visible alongside the task so a proposed answer can be checked for compliance.",
         })),
+        ...(desiredExample
+          ? [
+              {
+                title: "User-supplied example",
+                source: "Your brief" as const,
+                detail: desiredExample,
+                why: "Keeps the example available as a pattern while marking it as non-authoritative.",
+              },
+            ]
+          : []),
         {
           title: "Working approach",
           source: "Working default",
@@ -313,7 +352,10 @@ export function renderPromptArtifact(input: RenderInput) {
         },
         {
           title: "Deliverable",
-          source: brief("brief-format") ? "Your brief" : "Working default",
+          source:
+            desiredOutput || brief("brief-format")
+              ? "Your brief"
+              : "Working default",
           detail: format,
           why: "Makes the expected result explicit so the response can be checked against it.",
         },

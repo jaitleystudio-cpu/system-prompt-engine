@@ -59,6 +59,38 @@ type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
 /** Intent lens provenance — SIMPLE/CREATE rederive; INSPECT/PRO preserve edits. */
 type IntentProvenance = "AUTO_DERIVED_INTENT" | "USER_EDITED_INTENT";
+type IntentLensState = ReturnType<typeof defaultIntentLens>;
+
+const CREATE_INTENT_FIELD_IDS = new Set(["desired-output", "desired-example"]);
+
+function preserveCreateIntentFields(
+  current: IntentLensState,
+  next: IntentLensState,
+): IntentLensState {
+  const preserved = new Map(
+    [...current.confirmed, ...current.assumed]
+      .filter((atom) => CREATE_INTENT_FIELD_IDS.has(atom.id))
+      .map((atom) => [atom.id, atom.text]),
+  );
+  const merge = (atoms: IntentAtom[]) =>
+    atoms.map((atom) =>
+      preserved.has(atom.id)
+        ? { ...atom, text: preserved.get(atom.id) ?? "" }
+        : atom,
+    );
+  return {
+    ...next,
+    confirmed: merge(next.confirmed),
+    assumed: merge(next.assumed),
+  };
+}
+
+function hasCreateIntentFields(intent: IntentLensState): boolean {
+  return [...intent.confirmed, ...intent.assumed].some(
+    (atom) =>
+      CREATE_INTENT_FIELD_IDS.has(atom.id) && Boolean(atom.text.trim()),
+  );
+}
 
 function mapLabCategory(raw: string): CategoryId {
   return (CATEGORIES as readonly string[]).includes(raw)
@@ -254,8 +286,13 @@ export default function App() {
     invalidate();
     setUserRequest(v);
     if (!shouldPreserveEditedIntent(mode, intentProvenance)) {
-      setIntent(defaultIntentLens(v));
-      setIntentProvenance("AUTO_DERIVED_INTENT");
+      const keepsCreateFields = hasCreateIntentFields(intent);
+      setIntent(
+        preserveCreateIntentFields(intent, defaultIntentLens(v)),
+      );
+      setIntentProvenance(
+        keepsCreateFields ? "USER_EDITED_INTENT" : "AUTO_DERIVED_INTENT",
+      );
     }
   };
 
@@ -626,6 +663,21 @@ export default function App() {
               }}
               disabled={busy}
               initialMode={view === "code" ? "screenshot" : "text"}
+              showOutputControls={view === "create"}
+              desiredOutput={
+                intent.confirmed.find((atom) => atom.id === "desired-output")
+                  ?.text ?? ""
+              }
+              onDesiredOutputChange={(value) =>
+                updateIntentField("confirmed", "desired-output", value)
+              }
+              desiredExample={
+                intent.assumed.find((atom) => atom.id === "desired-example")
+                  ?.text ?? ""
+              }
+              onDesiredExampleChange={(value) =>
+                updateIntentField("assumed", "desired-example", value)
+              }
               onScaffoldPrompt={(prompt) => {
                 applyUserRequestChange(prompt);
               }}
