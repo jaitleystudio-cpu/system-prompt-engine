@@ -1,0 +1,5 @@
+612443c73331ef78fef96c3fb9fe5369bf26c86d1c7e0fb868577d24c8d383e2  portable/spe-core-rs/Cargo.lock
+6d62162be5062145d38ef2cb15d8d6073fe244ba1179d4a53a870a7d8d321d69  portable/spe-core-rs/Cargo.toml
+f7d262321e41b5b9b2b495040663d92f98e03e2894b95238891bfe39ab3a56e3  portable/spe-wasm/Cargo.lock
+2bee7cbbf07dab553aeb9cbc58f542943b32023b6ad331ff4c5c1413d5a879b5  portable/spe-wasm/Cargo.toml
+5e7d46c6758d4ffd17301ad0d622e4d2aa03b361c95a90d1072e1decba7b0952  pyproject.toml

@@ -1,0 +1,1 @@
+RED: prior to G1R-4, proofobligation was absent from spe_runtime.proof

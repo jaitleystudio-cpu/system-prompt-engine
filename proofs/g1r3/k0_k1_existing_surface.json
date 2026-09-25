@@ -1,0 +1,67 @@
+{
+  "gate": "G1R-3",
+  "surface": [
+    {
+      "path": "spe_runtime/xcat/models.py",
+      "symbol": "CrossCategoryEnvelope.user_preferences",
+      "responsibility": "opaque preference mappings",
+      "current_provenance_behavior": "untagged",
+      "current_writer_behavior": "copied via replace_envelope",
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "potential_disposition": "WRAP"
+    },
+    {
+      "path": "spe_runtime/xcat/models.py",
+      "symbol": "CrossCategoryEnvelope.hard_constraints",
+      "responsibility": "opaque constraint mappings / X01",
+      "current_provenance_behavior": "untagged",
+      "current_writer_behavior": "X01 monotonicity only",
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "potential_disposition": "WRAP"
+    },
+    {
+      "path": "spe_runtime/xcat/models.py",
+      "symbol": "CrossCategoryEnvelope.goal_identity",
+      "responsibility": "goal string",
+      "current_provenance_behavior": "untagged",
+      "current_writer_behavior": "constructor / replace_envelope",
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "potential_disposition": "WRAP"
+    },
+    {
+      "path": "spe_runtime/xcat/invariants.py",
+      "symbol": "validate_preference_immutability",
+      "responsibility": "X04 preference immutability",
+      "current_provenance_behavior": "no origin distinction",
+      "current_writer_behavior": "predicate",
+      "tests": [
+        "tests/unit/test_xcat_core.py"
+      ],
+      "potential_disposition": "RETAIN"
+    },
+    {
+      "path": "spe_runtime/contract/__init__.py",
+      "symbol": "(empty)",
+      "responsibility": "none",
+      "current_provenance_behavior": "n/a",
+      "current_writer_behavior": "n/a",
+      "tests": [],
+      "potential_disposition": "RETAIN after populate"
+    },
+    {
+      "path": "spe_runtime/provenance/__init__.py",
+      "symbol": "(empty)",
+      "responsibility": "none",
+      "current_provenance_behavior": "n/a",
+      "current_writer_behavior": "n/a",
+      "tests": [],
+      "potential_disposition": "RETAIN after populate"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+?? G1_FINAL_REPORT.md
+?? SPE_IMPLEMENTATION_BINDING_v2.json
+?? proofs/g1/
+?? tests/unit/test_g1_runtime_binding.py
