@@ -4132,6 +4132,34 @@ html[data-theme="light"] .spe-reconstruction ul,
 html[data-theme="light"] .spe-portable-note {
   color: var(--muted);
 }
+html[data-theme="light"] .spe-reveal-card,
+html[data-theme="light"] .spe-prompt-lens,
+html[data-theme="light"] .spe-artifact-inspect,
+html[data-theme="light"] .spe-pro-meta {
+  background: var(--surface-elevated);
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-prompt-body,
+html[data-theme="light"] .spe-prompt-lens pre {
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-reveal-meta,
+html[data-theme="light"] .spe-chip-row,
+html[data-theme="light"] .spe-workspace .spe-field {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-chip-row li,
+html[data-theme="light"] .spe-mode-switch button,
+html[data-theme="light"] .spe-ws-lenses button {
+  border-color: var(--seo-border);
+}
+html[data-theme="light"] .spe-workspace .spe-field select,
+html[data-theme="light"] .spe-workspace .spe-field textarea {
+  background: #ffffff;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
 @media (max-width: 720px) {
   .spe-reconstruction {
     grid-template-columns: 1fr;
