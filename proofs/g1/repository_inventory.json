@@ -1,0 +1,56 @@
+{
+  "python_runtime_present": true,
+  "rust_core_present": true,
+  "wasm_present": true,
+  "web_client_present_on_this_base": false,
+  "runtime_module_count": 55,
+  "test_file_count": 23,
+  "schema_file_count": 11,
+  "proof_file_count": 30,
+  "top_level": [
+    ".gitignore",
+    ".pytest_cache",
+    "README.md",
+    "SPE-CHANGELOG",
+    "SPE-SPEC",
+    "data",
+    "docs",
+    "portable",
+    "proofs",
+    "pyproject.toml",
+    "schemas",
+    "spe_runtime",
+    "system_prompt_engine.egg-info",
+    "tests",
+    "tools"
+  ],
+  "note": "Sprint-6 web/PWA files are intentionally absent on 931128b (PR #6 excluded).",
+  "schema_stubs": [
+    "authority_state",
+    "capability_manifest",
+    "category_registry",
+    "execution_grant",
+    "intent_contract",
+    "privacy_label",
+    "proof_receipt",
+    "provenance_record",
+    "recovery_plan"
+  ],
+  "real_schemas": [
+    "spe_universal_abi",
+    "xcat_envelope"
+  ],
+  "empty_runtime_packages": [
+    "spe_runtime/privacy",
+    "spe_runtime/proof",
+    "spe_runtime/provenance",
+    "spe_runtime/contract",
+    "spe_runtime/capabilities",
+    "spe_runtime/cli",
+    "spe_runtime/recovery",
+    "spe_runtime/registry",
+    "spe_runtime/storage"
+  ],
+  "omega_package_present": false,
+  "lineage": "NEW_IMPLEMENTATION (not verified 181/69 tree)"
+}

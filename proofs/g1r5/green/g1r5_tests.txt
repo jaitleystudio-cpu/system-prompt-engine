@@ -1,0 +1,26 @@
+......................F...F...FF........................................ [ 49%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+=================================== FAILURES ===================================
+E   AssertionError: assert 78 == 81
+     +  where 81 = len(['spe_runtime/__init__.py', 'spe_runtime/adapters/__init__.py', 'spe_runtime/adapters/local_temp_file.py', 'spe_runtime/authority/__init__.py', 'spe_runtime/authority/apply.py', 'spe_runtime/authority/consume.py', ...])
+     +    where ['spe_runtime/__init__.py', 'spe_runtime/adapters/__init__.py', 'spe_runtime/adapters/local_temp_file.py', 'spe_runtime/authority/__init__.py', 'spe_runtime/authority/apply.py', 'spe_runtime/authority/consume.py', ...] = _py_modules()
+/workspace/tests/unit/test_g1_runtime_binding.py:86: AssertionError: assert 78 == 81
+E   AssertionError: {'unowned_facts': ['spe_artifact_identity', 'prompt_artifact', 'qualification_evidence'], 'missing_requirements': ['co... plan', 'prompt strategy', 'technique selection', 'PromptArtifact', '.spe semantic artifact', 'snapshot binding', ...]}
+    assert (['spe_artifac...ion_evidence'] == []
+      
+      Left contains 3 more items, first extra item: 'spe_artifact_identity'
+      Use -v to get more diff)
+/workspace/tests/unit/test_g1_runtime_binding.py:122: AssertionError: {'unowned_facts': ['spe_artifact_identity', 'prompt_artifact', 'qualification_evidence'], 'missing_requirements': ['co... plan', 'prompt strategy', 'technique selection', 'PromptArtifact', '.spe semantic artifact', 'snapshot binding', ...]}
+E   AssertionError: K6 .spe artifact identity has no writer
+    assert []
+/workspace/tests/unit/test_g1_runtime_binding.py:155: AssertionError: K6 .spe artifact identity has no writer
+E   AssertionError: K7 qualification evidence has no writer
+    assert []
+/workspace/tests/unit/test_g1_runtime_binding.py:161: AssertionError: K7 qualification evidence has no writer
+=========================== short test summary info ============================
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_binding_manifest_complete
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique
+FAILED tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique
+4 failed, 141 passed in 0.12s
