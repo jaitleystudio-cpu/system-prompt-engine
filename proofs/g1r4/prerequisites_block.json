@@ -1,0 +1,23 @@
+{
+  "actual_head": "931128b384c3055ecef876124f787e5b8e67651b",
+  "base_match": true,
+  "branch_present": false,
+  "claimed_gate_state": "G1 = BOUND_WITH_GAPS",
+  "contract_present": false,
+  "expected_base": "931128b384c3055ecef876124f787e5b8e67651b",
+  "expected_contract_path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
+  "expected_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "expected_working_branch": "feat/g1r1-spec-binding-ownership-repair",
+  "g1r1_complete": false,
+  "g1r2_pass": false,
+  "g1r3_pass": false,
+  "observed_gate_state": "G1_ARTIFACTS_ABSENT \u2014 SPE-SPEC status NEW_IMPLEMENTATION through Sprint 5 only",
+  "pr_6": {
+    "state": "OPEN",
+    "tip": "4e6c694b5d8b9379c5acfbaac416dcfa89b1768e",
+    "title": "Sprint 6: Web + PWA universal client foundation",
+    "untouched": true
+  },
+  "stop_reason": "WORKING_CONTRACT_MISSING and G1R-1/2/3 lineage absent; cannot implement K2 against nonexistent K0/K1 APIs without forging custody",
+  "verdict": "G1R4_BLOCKED"
+}

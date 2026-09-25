@@ -1,0 +1,42 @@
+{
+  "spe_runtime.contract.protected_intent": {
+    "error": "ModuleNotFoundError: No module named 'spe_runtime.contract.protected_intent'",
+    "importable": false
+  },
+  "spe_runtime.error_registry": {
+    "error": "ModuleNotFoundError: No module named 'spe_runtime.error_registry'",
+    "importable": false
+  },
+  "spe_runtime.proof.commit": {
+    "error": "ModuleNotFoundError: No module named 'spe_runtime.proof.commit'",
+    "importable": false
+  },
+  "spe_runtime.proof.lease": {
+    "error": "ModuleNotFoundError: No module named 'spe_runtime.proof.lease'",
+    "importable": false
+  },
+  "spe_runtime.proof.ledger": {
+    "error": "ModuleNotFoundError: No module named 'spe_runtime.proof.ledger'",
+    "importable": false
+  },
+  "spe_runtime.proof.obligation": {
+    "error": "ModuleNotFoundError: No module named 'spe_runtime.proof.obligation'",
+    "importable": false
+  },
+  "spe_runtime.proof.patch": {
+    "error": "ModuleNotFoundError: No module named 'spe_runtime.proof.patch'",
+    "importable": false
+  },
+  "spe_runtime.proof.receipt": {
+    "error": "ModuleNotFoundError: No module named 'spe_runtime.proof.receipt'",
+    "importable": false
+  },
+  "spe_runtime.proof.snapshot": {
+    "error": "ModuleNotFoundError: No module named 'spe_runtime.proof.snapshot'",
+    "importable": false
+  },
+  "spe_runtime.provenance.requirement_graph": {
+    "error": "ModuleNotFoundError: No module named 'spe_runtime.provenance.requirement_graph'",
+    "importable": false
+  }
+}

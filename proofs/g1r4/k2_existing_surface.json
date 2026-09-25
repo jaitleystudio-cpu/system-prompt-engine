@@ -1,0 +1,102 @@
+{
+  "blocker": "G1R-1/2/3 lineage and RING0_WORKING_CONTRACT missing on this checkout; G1R-4 STOP per \u00a75",
+  "conflict_core": "ABSENT",
+  "error_registry": "ABSENT",
+  "g1r1_branch_exists": false,
+  "g1r1_g1r2_g1r3_artifacts": "ABSENT",
+  "head": "931128b384c3055ecef876124f787e5b8e67651b",
+  "k2_types": {
+    "ProofCarryingPatch": "ABSENT",
+    "ProofLedger": "ABSENT",
+    "ProofObligation": "ABSENT",
+    "SemanticLease": "ABSENT",
+    "SemanticSnapshot": "ABSENT",
+    "VerificationReceipt": "ABSENT",
+    "commit_semantic_patch": "ABSENT"
+  },
+  "keyword_hits": {
+    "schemas/proof_receipt.schema.json": [
+      "proof",
+      "receipt"
+    ],
+    "spe_runtime/adapters/local_temp_file.py": [
+      "ledger"
+    ],
+    "spe_runtime/categories/_common.py": [
+      "receipt"
+    ],
+    "spe_runtime/execution/__init__.py": [
+      "ledger"
+    ],
+    "spe_runtime/execution/effect_ledger.py": [
+      "ledger"
+    ],
+    "spe_runtime/execution/outcomes.py": [
+      "evidence",
+      "promote"
+    ],
+    "spe_runtime/portability/conformance.py": [
+      "proof"
+    ],
+    "spe_runtime/xcat/handoff.py": [
+      "receipt",
+      "promote"
+    ],
+    "tests/integration/test_xcat_c02_c06_c01_c03.py": [
+      "receipt"
+    ],
+    "tests/portability/test_conformance_suite.py": [
+      "lease"
+    ],
+    "tests/portability/test_merge_gate_adversarial.py": [
+      "lease"
+    ],
+    "tests/portability/test_platform_registry.py": [
+      "lease"
+    ],
+    "tests/portability/test_sprint5_merge_gate_differential.py": [
+      "proof",
+      "evidence"
+    ],
+    "tests/portability/test_wasm_reference_conformance.py": [
+      "proof",
+      "lease"
+    ],
+    "tests/unit/test_c07_authority.py": [
+      "proof",
+      "verification",
+      "evidence",
+      "ledger"
+    ],
+    "tests/unit/test_xcat_core.py": [
+      "evidence",
+      "promote"
+    ],
+    "tools/issue_receipt.py": [
+      "receipt"
+    ],
+    "tools/sprint5_conformance.py": [
+      "proof",
+      "lease"
+    ]
+  },
+  "keyword_hits_sample_count": 18,
+  "proof_package": {
+    "disposition_pre_g1r4": "RETIRE_OR_EMPTY",
+    "empty": true,
+    "path": "spe_runtime/proof/__init__.py",
+    "size": 0
+  },
+  "protected_intent_contract": "ABSENT",
+  "requirement_graph": "ABSENT",
+  "reusable_near_misses": {
+    "AuthorityGrant": "spe_runtime/authority/models.py \u2014 MUST NOT be minted by K2",
+    "EffectLedger": "spe_runtime/execution/effect_ledger.py \u2014 duplicate-effect guard, NOT ProofLedger",
+    "HandoffResult": "spe_runtime/xcat/handoff.py \u2014 category handoff, not K2 verdict",
+    "OutcomeState": "spe_runtime/execution/models.py \u2014 execution outcomes, not verification receipts",
+    "canonical_dumps": "spe_runtime/portability/canonical.py \u2014 reusable for K2 ids",
+    "proof_receipt.schema.json": "STUB only",
+    "tools/issue_receipt.py": "STUB not implemented"
+  },
+  "working_contract_exists": false
+}
