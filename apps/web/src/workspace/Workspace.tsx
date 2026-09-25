@@ -1,7 +1,11 @@
 import { SpeechInput } from "../input/SpeechInput";
 import { ui } from "@spe/human-perspective";
 import { HumanError } from "../ui/HumanError";
-import type { IntentAtom } from "@spe/web-runtime";
+import type {
+  IntentAtom,
+  ReconstructionReport,
+  SpeArtifactV1,
+} from "@spe/web-runtime";
 import {
   CATEGORIES,
   TARGETS,
@@ -15,7 +19,7 @@ import type {
 } from "../engine/types";
 import { PrivacyIndicator } from "../ui/PrivacyIndicator";
 import { TrustPanel } from "../ui/TrustPanel";
-import type { SpeArtifactV1 } from "@spe/web-runtime";
+import { ReconstructionSummary } from "./ReconstructionSummary";
 
 type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
@@ -56,7 +60,10 @@ type Props = {
   onCopy: () => void;
   onExportSpe: () => void;
   onExportJson: () => void;
+  onExportPdf: () => void;
   onImportSpe: (file: File) => void;
+  reconstruction: ReconstructionReport | null;
+  onDismissReconstruction: () => void;
   privacy: {
     sensitivity: string | null;
     trust: string | null;
@@ -92,7 +99,10 @@ export function Workspace(props: Props) {
     onCopy,
     onExportSpe,
     onExportJson,
+    onExportPdf,
     onImportSpe,
+    reconstruction,
+    onDismissReconstruction,
     privacy,
     online,
     mode,
@@ -129,6 +139,13 @@ export function Workspace(props: Props) {
           ))}
         </div>
       </header>
+
+      {reconstruction && (
+        <ReconstructionSummary
+          report={reconstruction}
+          onDismiss={onDismissReconstruction}
+        />
+      )}
 
       <div className="spe-ws-toolbar">
         <label className="spe-field">
@@ -353,30 +370,41 @@ export function Workspace(props: Props) {
                 >
                   Download .spe
                 </button>
-                {mode !== "simple" && (
-                  <button
-                    type="button"
-                    className="spe-ghost"
-                    disabled={!artifact}
-                    onClick={onExportJson}
-                  >
-                    JSON
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className="spe-ghost"
+                  disabled={!artifact}
+                  onClick={onExportJson}
+                >
+                  Download JSON
+                </button>
+                <button
+                  type="button"
+                  className="spe-ghost"
+                  disabled={!artifact}
+                  onClick={onExportPdf}
+                >
+                  Print / Save PDF
+                </button>
                 <label className="spe-ghost file">
-                  Import .spe
+                  Import .spe / JSON
                   <input
                     type="file"
                     accept=".spe,application/json,.json,.spe.json"
                     className="import-file"
-                    aria-label="Import .spe file"
+                    aria-label="Import .spe or JSON file"
                     onChange={(e) => {
                       const f = e.target.files?.[0];
+                      e.target.value = "";
                       if (f) onImportSpe(f);
                     }}
                   />
                 </label>
               </div>
+              <p className="spe-portable-note">
+                PDF is export-only in this preview. Use .spe or JSON to restore
+                protected details.
+              </p>
             </div>
           )}
 

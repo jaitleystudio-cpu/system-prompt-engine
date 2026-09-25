@@ -15,15 +15,17 @@ import {
   downloadJson,
   isHistoryOptIn,
   loadHistory,
+  openArtifactPrintView,
+  parseSpeArtifactText,
   renderPromptArtifact,
   PromptBriefError,
   saveHistoryItem,
   setHistoryOptIn,
-  verifySpeArtifact,
   CATEGORIES,
   type CategoryId,
   type HistoryItem,
   type IntentAtom,
+  type ReconstructionReport,
   type SpeArtifactV1,
   type TargetId,
 } from "@spe/web-runtime";
@@ -39,6 +41,7 @@ import { SeoContent } from "./landing/SeoContent";
 import { Hero } from "./landing/Hero";
 import { ScrollStory } from "./landing/ScrollStory";
 import { Workspace } from "./workspace/Workspace";
+import { ReconstructionSummary } from "./workspace/ReconstructionSummary";
 import { UnifiedComposer } from "./composer/UnifiedComposer";
 import {
   ContextProtocolControls,
@@ -90,6 +93,27 @@ function hasCreateIntentFields(intent: IntentLensState): boolean {
     (atom) =>
       CREATE_INTENT_FIELD_IDS.has(atom.id) && Boolean(atom.text.trim()),
   );
+}
+
+function intentFromArtifact(
+  artifactIntent: SpeArtifactV1["intent"],
+): IntentLensState {
+  return Object.fromEntries(
+    Object.entries(artifactIntent).map(([bucket, values]) => [
+      bucket,
+      values.map((atom) => ({
+        ...atom,
+        kind:
+          bucket === "unknowns"
+            ? "unknown"
+            : bucket === "conflicts"
+              ? "conflict"
+              : bucket === "assumed"
+                ? "assumed"
+                : "confirmed",
+      })),
+    ]),
+  ) as IntentLensState;
 }
 
 function mapLabCategory(raw: string): CategoryId {
@@ -187,6 +211,8 @@ export default function App() {
   const [contextRefreshNotice, setContextRefreshNotice] = useState<string | null>(
     null,
   );
+  const [reconstruction, setReconstruction] =
+    useState<ReconstructionReport | null>(null);
   const [online, setOnline] = useState(
     typeof navigator === "undefined" ? true : navigator.onLine,
   );
@@ -435,6 +461,7 @@ export default function App() {
               category,
               target,
               prompt_preview: prompt.finalPrompt.slice(0, 240),
+              artifact: spe,
             });
             setHistory(loadHistory());
           }
@@ -483,83 +510,139 @@ export default function App() {
     downloadJson(`spe-export-${Date.now()}.json`, artifact);
   };
 
+  const onExportPdf = () => {
+    if (!artifact) return;
+    const opened = openArtifactPrintView(artifact);
+    setNotice(
+      opened
+        ? "Print view opened. Choose Save as PDF in your browser."
+        : "The print view was blocked. Allow pop-ups, then try again.",
+    );
+  };
+
+  const restorePortableArtifact = (
+    restoredArtifact: SpeArtifactV1,
+    report: ReconstructionReport,
+    destination: "workspace" | "create",
+  ) => {
+    invalidate();
+    setArtifact(restoredArtifact);
+    const ext = restoredArtifact as SpeArtifactV1 & {
+      context_protocol?: { freshness_state?: string };
+      quality_record?: { freshness_state?: string };
+    };
+    const freshness =
+      ext.context_protocol?.freshness_state ??
+      ext.quality_record?.freshness_state ??
+      null;
+    const refresh = suggestStaleContextRefresh({
+      freshness_state: freshness,
+      user_request: restoredArtifact.user_request,
+      protected_intent: restoredArtifact.intent,
+    });
+    setContextRefreshNotice(refresh?.message ?? null);
+    setUserRequest(restoredArtifact.user_request);
+    setCategory((restoredArtifact.category as CategoryId) || "Writing");
+    setTarget((restoredArtifact.target as TargetId) || "any");
+    setIntent(intentFromArtifact(restoredArtifact.intent));
+    setIntentProvenance("USER_EDITED_INTENT");
+    setRendered({
+      userRequest: restoredArtifact.user_request,
+      speAdded: [],
+      finalPrompt: restoredArtifact.rendered_prompt,
+      review: null,
+      techniques: [],
+    });
+    setEnvelope(restoredArtifact.envelope);
+    setReconstruction(report);
+    setView(destination);
+    setMode(destination === "workspace" ? "inspect" : "simple");
+    setLens(destination === "workspace" ? "artifact" : "prompt");
+    setNotice(
+      "Portable details restored. Review the summary before rebuilding.",
+    );
+  };
+
   const onImportSpe = async (file: File) => {
+    if (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) {
+      const message =
+        "PDF import is not supported. Use a .spe file or SPE JSON export to restore protected details.";
+      setReconstruction({
+        status: "error",
+        title: "PDF import not supported",
+        message,
+        restored: [],
+        notRestored: ["Request, protected details, prompt, and provenance"],
+        warnings: ["Nothing from the PDF was treated as structured SPE data."],
+      });
+      setNotice(message);
+      return;
+    }
     try {
-      const parsed = JSON.parse(await file.text()) as SpeArtifactV1;
-      if (
-        parsed.spe_format !== "spe.artifact.v1" ||
-        typeof parsed.user_request !== "string" ||
-        typeof parsed.rendered_prompt !== "string" ||
-        !parsed.integrity?.content_sha256 ||
-        !parsed.intent ||
-        !["confirmed", "assumed", "unknowns", "conflicts"].every((k) =>
-          Array.isArray(parsed.intent[k as keyof typeof parsed.intent]),
-        )
-      )
-        throw new Error("This file is not in a supported SPE format.");
-      const verified = await verifySpeArtifact(parsed);
-      if (verified.integrity.state === "MISMATCH")
-        throw new Error(
-          "This SPE file has changed since export. Its integrity check failed.",
-        );
-      invalidate();
-      setArtifact(verified);
-      // Stale context may suggest refresh; never mutate ProtectedIntent here.
-      const ext = parsed as SpeArtifactV1 & {
-        context_protocol?: { freshness_state?: string };
-        quality_record?: { freshness_state?: string };
-      };
-      const freshness =
-        ext.context_protocol?.freshness_state ??
-        ext.quality_record?.freshness_state ??
-        null;
-      const refresh = suggestStaleContextRefresh({
-        freshness_state: freshness,
-        user_request: parsed.user_request,
-        protected_intent: parsed.intent,
-      });
-      setContextRefreshNotice(refresh?.message ?? null);
-      setUserRequest(parsed.user_request);
-      setCategory((parsed.category as CategoryId) || "Writing");
-      setTarget((parsed.target as TargetId) || "any");
-      setIntent(
-        Object.fromEntries(
-          Object.entries(parsed.intent).map(([k, values]) => [
-            k,
-            values.map((a) => ({
-              ...a,
-              kind:
-                k === "unknowns"
-                  ? "unknown"
-                  : k === "conflicts"
-                    ? "conflict"
-                    : k === "assumed"
-                      ? "assumed"
-                      : "confirmed",
-            })),
-          ]),
-        ) as typeof intent,
-      );
-      setIntentProvenance("USER_EDITED_INTENT");
-      setRendered({
-        userRequest: parsed.user_request,
-        speAdded: [],
-        finalPrompt: parsed.rendered_prompt,
-        review: null,
-        techniques: [],
-      });
-      setEnvelope(parsed.envelope);
-      setView("workspace");
-      setMode("inspect");
-      setLens("artifact");
-      setNotice(
-        "Your SPE file passed its integrity check. Shape the prompt again to review its current details.",
+      const restored = await parseSpeArtifactText(await file.text());
+      restorePortableArtifact(
+        restored.artifact,
+        restored.report,
+        "workspace",
       );
     } catch (err) {
-      setNotice(
-        err instanceof Error ? err.message : "We could not open this SPE file.",
-      );
+      const message =
+        err instanceof Error
+          ? err.message
+          : "This file could not be restored. Nothing was changed.";
+      setReconstruction({
+        status: "error",
+        title: "Nothing was restored",
+        message,
+        restored: [],
+        notRestored: ["Request, protected details, prompt, and provenance"],
+        warnings: ["The current work remains unchanged."],
+      });
+      setNotice(message);
     }
+  };
+
+  const onOpenHistoryItem = async (item: HistoryItem) => {
+    if (item.artifact) {
+      try {
+        const restored = await parseSpeArtifactText(
+          JSON.stringify(item.artifact),
+        );
+        restorePortableArtifact(
+          restored.artifact,
+          restored.report,
+          "create",
+        );
+        return;
+      } catch {
+        // Fall through to the bounded legacy restore below.
+      }
+    }
+    invalidate();
+    setUserRequest(item.user_request);
+    setCategory((item.category as CategoryId) || "Writing");
+    setTarget((item.target as TargetId) || "any");
+    setIntent(defaultIntentLens(item.user_request));
+    setIntentProvenance("AUTO_DERIVED_INTENT");
+    setReconstruction({
+      status: "partial",
+      title: "Idea reopened with limits",
+      message:
+        "This older local history item contains the request, category, and target only. Review and rebuild before using it.",
+      restored: ["Original request", "Category", "Target"],
+      notRestored: [
+        "Protected details, including Desired Output and Example",
+        "Rendered prompt",
+        "Envelope, provenance, lineage, and integrity",
+        "Media previews or uploaded files",
+      ],
+      warnings: [
+        "Missing fields were left empty. SPE did not infer them from the saved preview.",
+      ],
+    });
+    setMode("simple");
+    setView("create");
+    setNotice("Older history item reopened with limited details.");
   };
 
   return (
@@ -654,6 +737,12 @@ export default function App() {
                   : "Create is the instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."}
               </p>
             </header>
+            {reconstruction && (
+              <ReconstructionSummary
+                report={reconstruction}
+                onDismiss={() => setReconstruction(null)}
+              />
+            )}
             <div className="spe-create-rail">
             <UnifiedComposer
               key={view === "code" ? "code" : "create"}
@@ -724,6 +813,12 @@ export default function App() {
                   <button type="button" className="spe-ghost" onClick={onExportSpe}>
                     Download .spe
                   </button>
+                  <button type="button" className="spe-ghost" onClick={onExportJson}>
+                    Download JSON
+                  </button>
+                  <button type="button" className="spe-ghost" onClick={onExportPdf}>
+                    Print / Save PDF
+                  </button>
                   <button
                     type="button"
                     className="spe-ghost"
@@ -785,16 +880,7 @@ export default function App() {
               invalidate();
               setView("create");
             }}
-            onOpen={(h) => {
-              invalidate();
-              setUserRequest(h.user_request);
-              setCategory((h.category as CategoryId) || "Writing");
-              setTarget((h.target as TargetId) || "any");
-              setIntent(defaultIntentLens(h.user_request));
-              setIntentProvenance("AUTO_DERIVED_INTENT");
-              setMode("simple");
-              setView("create");
-            }}
+            onOpen={(item) => void onOpenHistoryItem(item)}
           />
         )}
 
@@ -848,7 +934,10 @@ export default function App() {
               onCopy={() => void onCopy()}
               onExportSpe={onExportSpe}
               onExportJson={onExportJson}
+              onExportPdf={onExportPdf}
               onImportSpe={(f) => void onImportSpe(f)}
+              reconstruction={reconstruction}
+              onDismissReconstruction={() => setReconstruction(null)}
               privacy={privacy}
               online={online}
               mode={mode}
@@ -894,14 +983,7 @@ export default function App() {
                     key={h.id}
                     type="button"
                     className="spe-moon-card"
-                    onClick={() => {
-                      invalidate();
-                      setUserRequest(h.user_request);
-                      setCategory((h.category as CategoryId) || "Writing");
-                      setTarget((h.target as TargetId) || "any");
-                      setIntent(defaultIntentLens(h.user_request));
-                      setIntentProvenance("AUTO_DERIVED_INTENT");
-                    }}
+                    onClick={() => void onOpenHistoryItem(h)}
                   >
                     <h3>{h.user_request}</h3>
                     <span>{h.category}</span>

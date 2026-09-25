@@ -10,6 +10,7 @@
     "dev": "npm run copy-wasm && vite",
     "build": "npm run spe:copy-check && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "test:artifact": "node scripts/test-artifact-reconstruction.mjs",
     "test:engine": "node scripts/eval-fixture.mjs",
     "test:create-intent": "node scripts/test-create-intent.mjs",
     "test:hero-story": "node scripts/test-hero-story.mjs",

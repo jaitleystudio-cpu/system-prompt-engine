@@ -12176,6 +12176,222 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Desired output"
+    },
+    {
+      "id": "03887d7b637372c1788e",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "PDF import is not supported. Use a .spe file or SPE JSON export to restore protected details."
+    },
+    {
+      "id": "0e2622f5d768f15d203d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Target"
+    },
+    {
+      "id": "1c80502160c2503011b8",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Missing fields were left empty. SPE did not infer them from the saved preview."
+    },
+    {
+      "id": "1f284de03e46a024e278",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Protected details, including Desired Output and Example"
+    },
+    {
+      "id": "1f3dbd3a01254269214c",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Category"
+    },
+    {
+      "id": "213bfec4bd385b90d9a7",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Older history item reopened with limited details."
+    },
+    {
+      "id": "2d2582cea0e8f47d8cc5",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "error"
+    },
+    {
+      "id": "2f3f3bbfb2c1db561b91",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "The print view was blocked. Allow pop-ups, then try again."
+    },
+    {
+      "id": "42d1cf5f9e4067be6509",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Rendered prompt"
+    },
+    {
+      "id": "4f542b1508c9702d769b",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Idea reopened with limits"
+    },
+    {
+      "id": "6444faeffc5d2f8e5bb9",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Portable details restored. Review the summary before rebuilding."
+    },
+    {
+      "id": "658ac960cc6d17c9514d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "PDF import not supported"
+    },
+    {
+      "id": "6eb84d35b048a457eb40",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Request, protected details, prompt, and provenance"
+    },
+    {
+      "id": "6fecf83d8ec04f2f90ae",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Nothing was restored"
+    },
+    {
+      "id": "752eb67cf68a25b73ab8",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "application/pdf"
+    },
+    {
+      "id": "77f0feb184cd712d9bf8",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Print view opened. Choose Save as PDF in your browser."
+    },
+    {
+      "id": "8503c6e695de845a6656",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "partial"
+    },
+    {
+      "id": "aa5ae613022365101502",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Nothing from the PDF was treated as structured SPE data."
+    },
+    {
+      "id": "b22c35e74191357e511d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Print / Save PDF"
+    },
+    {
+      "id": "b276a96800dabfdd3b60",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "The current work remains unchanged."
+    },
+    {
+      "id": "bf3633fbf1e035ef06b5",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "This file could not be restored. Nothing was changed."
+    },
+    {
+      "id": "bfe807453c9690494d61",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Envelope, provenance, lineage, and integrity"
+    },
+    {
+      "id": "c33cfbad84779ac61895",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Original request"
+    },
+    {
+      "id": "c6c9dfcdee1fad75cfe8",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "This older local history item contains the request, category, and target only. Review and rebuild before using it."
+    },
+    {
+      "id": "c7cc42d128b4e0b9c023",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Download JSON"
+    },
+    {
+      "id": "f0d5e5569a075d7741e4",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Media previews or uploaded files"
+    },
+    {
+      "id": "5102fe50e123fcde23d6",
+      "file": "apps/web/src/workspace/ReconstructionSummary.tsx",
+      "depth": "PRODUCT",
+      "text": "Dismiss"
+    },
+    {
+      "id": "5946c14a53041b07c513",
+      "file": "apps/web/src/workspace/ReconstructionSummary.tsx",
+      "depth": "PRODUCT",
+      "text": "Restored"
+    },
+    {
+      "id": "65773e872ce8e62ffa3f",
+      "file": "apps/web/src/workspace/ReconstructionSummary.tsx",
+      "depth": "PRODUCT",
+      "text": "Not restored"
+    },
+    {
+      "id": "d94178f47f155ab5af84",
+      "file": "apps/web/src/workspace/ReconstructionSummary.tsx",
+      "depth": "PRODUCT",
+      "text": "Restore summary"
+    },
+    {
+      "id": "f55395bfd27b2b6dcc0e",
+      "file": "apps/web/src/workspace/ReconstructionSummary.tsx",
+      "depth": "PRODUCT",
+      "text": "Review"
+    },
+    {
+      "id": "002235e1a9710f61517e",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Import .spe / JSON"
+    },
+    {
+      "id": "2cd261307c83876835e2",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "PDF is export-only in this preview. Use .spe or JSON to restore protected details."
+    },
+    {
+      "id": "2d938d816c92f06b61b4",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Download JSON"
+    },
+    {
+      "id": "4f237c09f06d9240b4af",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Print / Save PDF"
+    },
+    {
+      "id": "a011dd2a7a3ddcc0b342",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Import .spe or JSON file"
     }
   ]
 }
