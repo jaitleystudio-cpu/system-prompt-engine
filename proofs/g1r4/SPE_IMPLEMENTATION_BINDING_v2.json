@@ -1,0 +1,150 @@
+{
+  "schema_version": "2.0.0",
+  "gate": "G1_RUNTIME_BINDING",
+  "status": "BOUND_WITH_GAPS",
+  "review_state": "G1R4A_PATCH_BINDING_REPAIRED_PENDING_RECHECK",
+  "normative_spec": {
+    "version": "SPE \u03a9 v2.4.1",
+    "sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+    "present_in_tree": true,
+    "path": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
+    "custody": "WORKING_CONTRACT_BOUND",
+    "verified_181_69_tree": "UNAVAILABLE"
+  },
+  "repository": {
+    "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+    "branch": "cursor/g1r4a-proof-integrity-0d6e",
+    "implementation_commit": "6b404e040e9fc8640439cbadda9b57505e6cbdcb",
+    "suite_run_commit": "6b404e040e9fc8640439cbadda9b57505e6cbdcb",
+    "suite_tree": "2ea3d91b49258e093edae0aac7ffa248c32d8517",
+    "tree_hash": "2ea3d91b49258e093edae0aac7ffa248c32d8517",
+    "tree_hash_scope": "suite_run_commit_tree",
+    "python_version": "3.12.3",
+    "lineage": "NEW_IMPLEMENTATION",
+    "identity_model": "non_self_referential"
+  },
+  "tests": {
+    "authoritative_suite": "python_excluding_wasm_rust_sprint5_env",
+    "final_collected": 417,
+    "final_passed": 414,
+    "final_failed": 3,
+    "final_skipped": 0,
+    "final_exit_status": 1,
+    "final_duration_s": 0.794,
+    "result_sha256": "29f42c4c6ef780d65cc1882320009349efa8bc7b3b3d74385bffaa80fd240c3d",
+    "junit_sha256": "0a29357137a18b35879e2a6801dd9089bdd71ed4e0cf150175a4035898f509fd",
+    "g1_binding_collected": 14,
+    "g1_binding_passed": 11,
+    "g1_binding_failed": 3,
+    "g1r1_collected": 5,
+    "g1r1_passed": 5,
+    "g1r1_failed": 0,
+    "g1r2_collected": 27,
+    "g1r2_passed": 27,
+    "g1r2_failed": 0,
+    "g1r3_collected": 37,
+    "g1r3_passed": 37,
+    "g1r3_failed": 0,
+    "g1r4_collected": 44,
+    "g1r4_passed": 44,
+    "g1r4_failed": 0
+  },
+  "module_binding": {
+    "module_count": 78,
+    "retain": 71,
+    "wrap": 1,
+    "migrate": 0,
+    "replace": 0,
+    "retire": 6
+  },
+  "semantic_binding": {
+    "DUPLICATE_CANONICAL_WRITERS": 0,
+    "UNOWNED_RING0_RESPONSIBILITIES": 4,
+    "unowned_facts": [
+      "privacy_projection",
+      "spe_artifact_identity",
+      "prompt_artifact",
+      "qualification_evidence"
+    ],
+    "unowned_ring0_requirements_missing": 9,
+    "HIDDEN_AMBIENT_AUTHORITY_PATHS": 0,
+    "ambient_authority_definition": "Hidden privilege elevation without typed AuthorityGrant/AuthorityEvent. Public AuthorityGrant construction is external injection, not ambient.",
+    "CONFLICTING_RUNTIME_SEMANTICS": 0
+  },
+  "conformance_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r4a_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+  "conformance_result": "G1R-4A @6b404e040e9f: collected=417 passed=414 failed=3. G1R-4=44/44. Exact patch binding required. Expected 3 G1-B03 failures. WASM/Rust/Sprint5 env excluded.",
+  "blockers": [
+    {
+      "id": "G1-B01",
+      "description": "Working Ring-0 contract bound; 181/69 UNAVAILABLE.",
+      "owner": "K5/K0",
+      "evidence": "specs/spe-omega-v2.4.1/RING0_WORKING_CONTRACT.json",
+      "required_next_action": "Import 181/69 bytes if available; do not invent.",
+      "status": "RESOLVED_AS_WORKING_CONTRACT"
+    },
+    {
+      "id": "G1-B02",
+      "description": "Duplicate canonical writers = 0.",
+      "owner": "K1/K5",
+      "evidence": "proofs/g1/semantic_writer_map.json",
+      "required_next_action": "None.",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "G1-B03",
+      "description": "unowned=['privacy_projection', 'spe_artifact_identity', 'prompt_artifact', 'qualification_evidence']; missing=9.",
+      "owner": "K0-K7",
+      "evidence": "proofs/g1/ring0_gap_matrix.json",
+      "required_next_action": "G1R-5 K3 (not this task).",
+      "status": "OPEN"
+    },
+    {
+      "id": "G1-B04",
+      "description": "Ambient authority paths = 0 (hidden elevation). External AuthorityGrant construction is intentional injection.",
+      "owner": "K4",
+      "evidence": "proofs/g1/semantic_writer_map.json authority_grant notes",
+      "required_next_action": "None.",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "G1-B05",
+      "description": "PLATFORM_REGISTRY RUST/WASM honesty gap.",
+      "owner": "K7",
+      "evidence": "spe_runtime/portability/conformance.py",
+      "required_next_action": "Honest registry update post-G1.",
+      "status": "OPEN"
+    }
+  ],
+  "g1r4a": {
+    "task": "PROOF_INTEGRITY_AND_EXACT_PATCH_BINDING",
+    "receipt_issuance_bound": true,
+    "forged_pass_rejected": true,
+    "exact_patch_binding": true,
+    "none_patch_id_waives": false,
+    "sole_mint_path": "verify_obligation -> _mint_canonical_receipt",
+    "trusted_verifier_model": "in_process_callables_trusted",
+    "issuance_secret_claim": "ordinary_public_api_forge_resistance_only",
+    "durable_atomicity": "NOT_IMPLEMENTED",
+    "working_contract_unchanged": true
+  },
+  "g1r4": {
+    "task": "K2_PROOF_TRANSACTION_MINIMUM",
+    "durable_atomicity": "NOT_IMPLEMENTED",
+    "working_contract_unchanged": true
+  },
+  "g1r3": {
+    "task": "K0_K1_MINIMUM_SEMANTIC_FOUNDATION",
+    "working_contract_unchanged": true
+  },
+  "g1r2": {
+    "task": "AUTHORITY_HARDENING",
+    "ambient_authority_paths": 0,
+    "working_contract_unchanged": true
+  },
+  "g1r1": {
+    "task": "NORMATIVE_SPEC_BINDING_AND_OWNERSHIP_REPAIR",
+    "working_contract_unchanged": true
+  },
+  "captured_at_utc": "2026-09-18T13:38:47Z",
+  "language_migration_decision": "NO MIGRATION DECISION \u2014 NO PERFORMANCE EVIDENCE YET"
+}
