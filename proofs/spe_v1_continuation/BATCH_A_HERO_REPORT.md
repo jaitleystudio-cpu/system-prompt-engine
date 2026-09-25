@@ -109,3 +109,44 @@ through the SYSTEM PROMPT artifact before the prompt studio begins.
 ## Explicit stop
 
 Batch A is complete. Batches B–I were not started.
+
+## Founder HOLD repair — desktop story clarity
+
+**Tested repair tip SHA:** `b2447eb2d086a2d994da3060ad54a962723eb817`
+**Target:** the three founder-supplied cinematic glass references, interpreted
+without tracing foreign branding.
+
+- Replaced the dense six-column board with five prominent numbered stages:
+  `IDEA → MEANING → SPE → STRUCTURE → PROMPT`.
+- Kept messy notes, question, image, code, document, waveform, and URL fragments
+  visible inside IDEA, resolving through warm-gold flow lines.
+- Added translucent MEANING filter panes; kept the compact rectangular SPE
+  semantic engine specifically between MEANING and STRUCTURE.
+- Increased stage hierarchy, removed competing desktop micro-chrome and the
+  orb-like IDEA mark, and strengthened the organized cards and illuminated
+  `PERFECT SYSTEM PROMPT` artifact.
+- Light mode uses the same hierarchy with restrained warm graphite/gold
+  contrast. Reduced motion keeps a static equivalent. Mobile remains a complete
+  unclipped vertical story.
+
+| HOLD-repair check | Exit |
+|---|---:|
+| `cd apps/web && npm run build` | `0` |
+| `cd apps/web && npm run test:hero-story` | `0` |
+| `cd apps/web && node scripts/test-theme-routes.mjs` | `0` |
+| `node proofs/spe_v1_gap_closure/a11y_verify.mjs` | `0` |
+| `cd apps/web && npm run test:predeploy-qa` | `0` |
+| `node tools/copy-check.mjs` | `0` |
+| `node proofs/spe_v1_continuation/batch_a/capture_hero.mjs` | `0` |
+| `node tools/deployment-safety-gate.mjs` | **`2`** (expected fail-closed) |
+
+Fresh captures:
+
+- `proofs/spe_v1_continuation/batch_a/home-dark.png`
+- `proofs/spe_v1_continuation/batch_a/home-light.png`
+- `proofs/spe_v1_continuation/batch_a/reduced-motion.png`
+
+Residuals: founder visual acceptance remains pending; the references are a
+directional target, not a claim of pixel equivalence. Aikido was invoked again
+for the repair files but remains blocked on integration authentication.
+`HOSTING=FORBIDDEN`; `WORLD #1=NOT_PROVEN`; Batches B–I were not started.

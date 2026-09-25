@@ -55,7 +55,7 @@ for (const theme of ["dark", "light"]) {
     height: 900,
   });
   const name = `home-${theme}.png`;
-  const artifactName = `spe_batch_a_home_${theme}_final.png`;
+  const artifactName = `spe_batch_a_home_${theme}_hold_repair.png`;
   await page.screenshot({ path: join(here, name) });
   await page.screenshot({ path: join(artifacts, artifactName) });
   captures.push({ name, artifactName, viewport: "1440x900", theme });
@@ -72,25 +72,32 @@ for (const theme of ["dark", "light"]) {
     .locator(".hero-story-label strong")
     .evaluateAll((labels) => labels.map((label) => label.textContent?.trim()));
   const expected = [
-    "MESSY HUMAN THOUGHT",
     "IDEA",
     "MEANING",
     "SPE",
     "STRUCTURE",
-    "SYSTEM PROMPT",
+    "PROMPT",
   ];
   if (JSON.stringify(order) !== JSON.stringify(expected)) {
     throw new Error(`Mobile story order mismatch: ${JSON.stringify(order)}`);
+  }
+  const fragments = (
+    await page.locator(".fragments-kicker").innerText()
+  ).trim();
+  if (fragments !== "MESSY HUMAN FRAGMENTS") {
+    throw new Error(`Mobile fragments label mismatch: ${fragments}`);
   }
   await page
     .locator(".hero-theater")
     .screenshot({ path: join(here, "mobile-home.png") });
   await page
     .locator(".hero-theater")
-    .screenshot({ path: join(artifacts, "spe_batch_a_mobile_home_final.png") });
+    .screenshot({
+      path: join(artifacts, "spe_batch_a_mobile_home_hold_repair.png"),
+    });
   captures.push({
     name: "mobile-home.png",
-    artifactName: "spe_batch_a_mobile_home_final.png",
+    artifactName: "spe_batch_a_mobile_home_hold_repair.png",
     viewport: "390x844",
     theme: "dark",
     order,
@@ -111,11 +118,11 @@ for (const theme of ["dark", "light"]) {
   }
   await page.screenshot({ path: join(here, "reduced-motion.png") });
   await page.screenshot({
-    path: join(artifacts, "spe_batch_a_reduced_motion_final.png"),
+    path: join(artifacts, "spe_batch_a_reduced_motion_hold_repair.png"),
   });
   captures.push({
     name: "reduced-motion.png",
-    artifactName: "spe_batch_a_reduced_motion_final.png",
+    artifactName: "spe_batch_a_reduced_motion_hold_repair.png",
     viewport: "1440x900",
     theme: "dark",
     control,
