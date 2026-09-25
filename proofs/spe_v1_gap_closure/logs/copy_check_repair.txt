@@ -1,0 +1,7 @@
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 1960,
+  "unreviewed": 0,
+  "violations": [],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}

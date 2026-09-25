@@ -299,7 +299,10 @@ em {
   line-height: 1.03;
   letter-spacing: -0.065em;
   margin: 0 0 30px;
-  text-shadow: 0 0 24px rgba(5, 8, 18, 0.85), 0 2px 18px rgba(5, 8, 18, 0.7);
+  text-shadow: none;
+}
+html[data-theme="dark"] .hero-copy h1 {
+  text-shadow: 0 0 18px rgba(5, 8, 18, 0.55), 0 2px 12px rgba(5, 8, 18, 0.4);
 }
 .hero-copy h1 em {
   color: #a9bdf4;
@@ -2711,4 +2714,304 @@ html[data-theme="light"] .studio-output {
   background: var(--surface-elevated);
   border-color: var(--seo-border);
   color: var(--paper);
+}
+
+/* ——— PR43 defect repair: light contrast + hero process readability ——— */
+
+/* (2) Light hero headline: remove heavy dark blur so type stays sharp */
+html[data-theme="light"] .hero-copy h1 {
+  text-shadow: none;
+}
+html[data-theme="dark"] .hero-copy h1,
+:root .hero-copy h1 {
+  text-shadow: 0 0 18px rgba(5, 8, 18, 0.55), 0 2px 12px rgba(5, 8, 18, 0.4);
+}
+
+/* (4) Nav CTA: beat `.spe-nav-links a` specificity — inverse fg on dark pill */
+html[data-theme="light"] .spe-nav-links a.spe-nav-cta,
+html[data-theme="light"] a.spe-nav-cta {
+  background: var(--hero-cta-bg) !important;
+  color: var(--hero-cta-fg) !important;
+  opacity: 1 !important;
+  border: 1px solid #141820;
+}
+html[data-theme="light"] .spe-nav-links a.spe-nav-cta span {
+  color: var(--hero-cta-fg);
+}
+
+/* (3) Daily Lab info panels → theme tokens (stage canvas may stay dark) */
+html[data-theme="light"] .spe-lab,
+html[data-theme="light"] .spe-lab-head,
+html[data-theme="light"] .spe-lab-head h1,
+html[data-theme="light"] .spe-lab-story,
+html[data-theme="light"] .spe-lab-meta,
+html[data-theme="light"] .spe-lab-meta dd {
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-lab-meta dt {
+  color: var(--muted);
+  opacity: 1;
+}
+html[data-theme="light"] .spe-lab-card {
+  background: var(--surface-elevated);
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-lab-seed {
+  background: #efeae1;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-lab-editorial {
+  background: var(--surface-elevated);
+  border: 1px solid var(--seo-border);
+  color: var(--paper);
+  background-image: none;
+}
+html[data-theme="light"] .spe-lab-preview {
+  background: #efeae1;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-lab-preview.is-active {
+  border-color: var(--mint);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mint) 35%, transparent);
+}
+html[data-theme="light"] .spe-lab-preview em {
+  color: var(--muted);
+  opacity: 1;
+}
+html[data-theme="light"] .spe-lab-stage-caption {
+  color: rgba(244, 241, 234, 0.88);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
+}
+html[data-theme="light"] .spe-lab-cat {
+  color: var(--muted);
+  opacity: 1;
+}
+html[data-theme="light"] .spe-prompt-gallery {
+  color: var(--paper);
+}
+
+/* Create light: token surfaces (no redesign) */
+html[data-theme="light"] .spe-create,
+html[data-theme="light"] .spe-create-head,
+html[data-theme="light"] .spe-create-head h1,
+html[data-theme="light"] .spe-mywork,
+html[data-theme="light"] .spe-privacy-page {
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-create-thought {
+  color: #2a3f72;
+}
+html[data-theme="light"] .spe-create-head > p:not(.spe-kicker):not(.spe-create-thought),
+html[data-theme="light"] .spe-composer-hint,
+html[data-theme="light"] .spe-field span,
+html[data-theme="light"] .spe-panel-label,
+html[data-theme="light"] .spe-kicker {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-create-rail,
+html[data-theme="light"] .spe-create-result,
+html[data-theme="light"] .spe-empty-work {
+  background: var(--surface-elevated);
+  border-color: var(--seo-border);
+  color: var(--paper);
+  box-shadow: 0 12px 40px rgba(20, 24, 32, 0.08);
+  background-image: none;
+}
+html[data-theme="light"] .spe-composer-modes button {
+  background: #efeae1;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-composer-modes button:hover:not(:disabled) {
+  border-color: var(--mint);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-composer-modes button.is-active,
+html[data-theme="light"] .spe-composer-modes button[aria-selected="true"] {
+  background: #e4ecf8;
+  border-color: var(--mint);
+  color: #141820;
+}
+html[data-theme="light"] .spe-field textarea,
+html[data-theme="light"] .spe-field input[type="url"],
+html[data-theme="light"] .spe-field input[type="text"],
+html[data-theme="light"] .spe-field select,
+html[data-theme="light"] .request-input {
+  background: #ffffff;
+  color: var(--paper);
+  border-color: var(--seo-border);
+}
+html[data-theme="light"] .spe-linkish {
+  color: #2a4a8a;
+}
+html[data-theme="light"] .spe-scaffold-tabs button {
+  background: #efeae1;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-scaffold-tabs button.is-active {
+  border-color: var(--mint);
+}
+html[data-theme="light"] .spe-create-result pre,
+html[data-theme="light"] .spe-prompt-out,
+html[data-theme="light"] .spe-scaffold-preview {
+  background: #f7f4ee;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-empty-work .spe-empty-steps,
+html[data-theme="light"] .spe-empty-work .spe-empty-leave {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-nav-links a.is-active,
+html[data-theme="light"] .spe-nav-links a[aria-current="page"] {
+  color: #2a4a8a;
+}
+
+/* Static / reduced-motion process strip on hero art */
+.static-core {
+  position: relative;
+}
+.static-process {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 0.55rem;
+  margin: 0;
+  padding: 0.4rem 0.65rem;
+  list-style: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-elevated) 78%, transparent);
+  border: 1px solid var(--pipeline-line);
+  color: var(--pipeline-active);
+  font: 0.55rem/1 monospace;
+  letter-spacing: 0.12em;
+  z-index: 3;
+  pointer-events: none;
+}
+.static-process li:not(:last-child)::after {
+  content: "→";
+  margin-left: 0.55rem;
+  opacity: 0.65;
+  color: var(--pipeline-fg);
+}
+html[data-theme="light"] .static-process {
+  background: rgba(255, 255, 255, 0.88);
+  color: #141820;
+  border-color: #c9c2b4;
+}
+@media (prefers-reduced-motion: reduce) {
+  .static-process {
+    /* always visible; no animation */
+    animation: none;
+  }
+}
+
+/* Light headline: solid accent (no soft gradient fill) + no residual blur */
+html[data-theme="light"] .hero-copy h1 {
+  text-shadow: none !important;
+  filter: none;
+}
+html[data-theme="light"] .hero-copy h1 em {
+  background: none;
+  -webkit-text-fill-color: #2f4d8c;
+  color: #2f4d8c;
+  text-shadow: none;
+}
+
+/* Pipeline connectors: directional process ticks (static under reduced-motion) */
+.pipeline-connector {
+  overflow: visible;
+}
+.pipeline-connector::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  border-radius: 50%;
+  background: var(--pipeline-active);
+  opacity: 0.75;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .spe-pipeline .pipeline-connector::after {
+    animation: spe-process-tick 1.8s ease-in-out infinite;
+  }
+}
+@keyframes spe-process-tick {
+  0% { opacity: 0.25; transform: translateX(-10px) scale(0.7); }
+  50% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 0.25; transform: translateX(8px) scale(0.7); }
+}
+
+/* Create Context Protocol + media panels — light tokens only */
+html[data-theme="light"] .spe-ctx-protocol {
+  background: #efeae1;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-ctx-protocol-lead,
+html[data-theme="light"] .spe-ctx-protocol-label,
+html[data-theme="light"] .spe-ctx-protocol-option-hint {
+  color: var(--muted);
+  opacity: 1;
+}
+html[data-theme="light"] .spe-ctx-protocol-option {
+  background: var(--surface-elevated);
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-ctx-protocol-option[aria-checked="true"] {
+  background: #e4ecf8;
+  border-color: var(--mint);
+  color: #141820;
+}
+html[data-theme="light"] .spe-ctx-protocol-option-title {
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-ctx-refresh {
+  background: #fff8e8;
+  border-color: #e0c070;
+  color: #5a4510;
+}
+html[data-theme="light"] .spe-obs-panel,
+html[data-theme="light"] .spe-structure-panel,
+html[data-theme="light"] .spe-video-timeline,
+html[data-theme="light"] .spe-scaffolds,
+html[data-theme="light"] .spe-composer-preview,
+html[data-theme="light"] .spe-ctx-inspect {
+  background: #efeae1;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-timeline-track {
+  background: linear-gradient(90deg, #d8d2c6, #c5c0b4);
+}
+html[data-theme="light"] .spe-xray-note {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-scaffold-code {
+  background: #f7f4ee;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+
+/* Force CTA inverse fg even if a later nav-link rule tightens */
+html[data-theme="light"] header.spe-nav a.spe-nav-cta,
+html[data-theme="light"] header.spe-nav a.spe-nav-cta:visited,
+html[data-theme="light"] header.spe-nav a.spe-nav-cta:hover,
+html[data-theme="light"] header.spe-nav a.spe-nav-cta:focus {
+  background-color: #141820 !important;
+  color: #f4f1ea !important;
+  -webkit-text-fill-color: #f4f1ea !important;
+  opacity: 1 !important;
 }

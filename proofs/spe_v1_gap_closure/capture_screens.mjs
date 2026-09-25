@@ -81,6 +81,8 @@ try {
   // Theme → light (cycle: dark→light)
   await page.locator(".spe-theme-toggle").click();
   await page.waitForTimeout(400);
+  await page.waitForSelector("canvas", { timeout: 15000 }).catch(() => {});
+  await page.waitForTimeout(1600);
   await page.screenshot({
     path: join(outDir, "home-light.png"),
     fullPage: false,
@@ -98,6 +100,11 @@ try {
     waitUntil: "networkidle",
     timeout: 60000,
   });
+  await page.evaluate(() => {
+    localStorage.setItem("spe-theme", "light");
+    document.documentElement.setAttribute("data-theme", "light");
+  });
+  await page.waitForTimeout(300);
   await page.screenshot({
     path: join(outDir, "route-create.png"),
     fullPage: false,
@@ -108,6 +115,11 @@ try {
     waitUntil: "networkidle",
     timeout: 60000,
   });
+  await page.evaluate(() => {
+    localStorage.setItem("spe-theme", "light");
+    document.documentElement.setAttribute("data-theme", "light");
+  });
+  await page.waitForTimeout(500);
   await page.screenshot({
     path: join(outDir, "route-daily-lab.png"),
     fullPage: false,

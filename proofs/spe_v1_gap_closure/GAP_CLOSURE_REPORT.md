@@ -129,3 +129,10 @@ Do not invent PASS — deployment gate correctly fails closed.
 - Did **not** edit `.github/workflows/**`  
 - Did **not** touch `spe_runtime/omega/`  
 - Did **not** add paid / mandatory cloud LLM deps  
+
+
+---
+
+## Defect repair pass (2026-09-25 IST)
+
+Founder visual/theme defects on PR #43 tip repaired without architecture changes. See `DEFECT_REPAIR_REPORT.md`. HOSTING still **FORBIDDEN**; deployment gate still exit **2**.
