@@ -1,0 +1,49 @@
+{
+  "gate": "G1R-7",
+  "task": "K3_STRATEGY_INTELLIGENCE",
+  "verdict": "G1R7_IMPLEMENTATION_PRESENT",
+  "starting_tip": "2d64dadacc665df60e966c804e875d2d2f7796992e",
+  "implementation_commit": "1dd587b50c672c7f364209fc875d2d2f7796992e",
+  "implementation_tree": "3e564a633a3452cdd9a92d9a3832b119b21e86ad",
+  "suite_run_commit": "1dd587b50c672c7f364209fc875d2d2f7796992e",
+  "suite_tree": "3e564a633a3452cdd9a92d9a3832b119b21e86ad",
+  "base_sha": "931128b384c3055ecef876124f787e5b8e67651b",
+  "working_contract_sha256": "68bac38afe3f38e85da38a359ed482ace07166fbf64c2d89dca3e499e41424f3",
+  "python_version": "3.12.3",
+  "exact_test_command": "python3 -m pytest -q --tb=no --junitxml=/tmp/g1r7_impl_junit.xml --ignore=tests/portability/test_wasm_reference_conformance.py --ignore=tests/portability/test_rust_reference_conformance.py --ignore=tests/portability/test_sprint5_merge_gate_differential.py --ignore=tests/portability/test_sprint5_merge_gate_oracle.py",
+  "collected": 507,
+  "passed": 504,
+  "failed": 3,
+  "skipped": 0,
+  "exit_status": 1,
+  "duration": 0.966,
+  "exact_failed_test_names": [
+    "tests/unit/test_g1_runtime_binding.py::test_g1_no_unowned_required_ring0_responsibility",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_artifact_lineage_owner_unique",
+    "tests/unit/test_g1_runtime_binding.py::test_g1_qualification_owner_unique"
+  ],
+  "UNOWNED_before": 2,
+  "UNOWNED_after": 2,
+  "MISSING_before": 7,
+  "MISSING_after": 4,
+  "remaining_missing": [
+    ".spe semantic artifact",
+    "snapshot binding",
+    "claim qualification",
+    "qualification evidence"
+  ],
+  "k3_completeness_gate": "PASS",
+  "prompt_artifact_writers": 1,
+  "cognitive_plan_writers": 1,
+  "prompt_strategy_writers": 1,
+  "technique_selection_writers": 1,
+  "duplicate_canonical_writers": 0,
+  "ambient_authority_paths": 0,
+  "rust_wasm": "RUST_WASM_NOT_REBUILT",
+  "result_sha256": "8c0fe6d9084366995cb0b149150d93e5d098b9e0dca7e37258e3046ca60a9f4c",
+  "junit_sha256": "22223a918dda03537fd5b712be487232feca090a1b4d42e1dc2e5dbd4d7e837c",
+  "hash_algorithm": {
+    "artifact_content_sha256": "SHA-256 UTF-8 json.dumps(sort_keys=True,indent=2) excluding artifact_content_sha256"
+  },
+  "artifact_content_sha256": "672444075d2e5853600f320418d9bc43900fcf9dc507ae569fde50d7317466d5"
+}

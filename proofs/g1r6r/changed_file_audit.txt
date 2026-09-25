@@ -1,0 +1,23 @@
+M	SPE_IMPLEMENTATION_BINDING_v2.json
+M	proofs/g1/SPE_IMPLEMENTATION_BINDING_v2.json
+M	proofs/g1/repo_identity.json
+M	proofs/g1r6/SPE_IMPLEMENTATION_BINDING_v2.json
+M	spe_runtime/prompt/build.py
+M	spe_runtime/prompt/models.py
+M	tests/unit/test_g1_runtime_binding.py
+A	tests/unit/test_g1r6r_k3_prompt_recheck.py
+
+--- untracked at evidence time ---
+proofs/g1r6r/AUTHORITATIVE_TEST_MANIFEST.json
+proofs/g1r6r/G1R6R_RECHECK_REPORT.md
+proofs/g1r6r/SPE_IMPLEMENTATION_BINDING_v2.json
+proofs/g1r6r/changed_file_audit.txt
+proofs/g1r6r/green/authoritative_suite.txt
+proofs/g1r6r/green/g1_binding_after.txt
+proofs/g1r6r/green/g1r5e_replay.txt
+proofs/g1r6r/green/g1r6_replay.txt
+proofs/g1r6r/green/g1r6r_junit.xml
+proofs/g1r6r/green/g1r6r_tests.txt
+proofs/g1r6r/red/k3_gate_was_missing_note.txt
+
+PR6 OPEN 4e6c694 — undisturbed
