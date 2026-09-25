@@ -1,0 +1,7 @@
+GREEN atomic commit
+prev snap-cb6ebb98bb2c109b1f6aa88602cedd96
+next snap-87d4dc318f5d4d258832a3a81f5b6489 v 1
+lease CONSUMED
+ledger led-62f040871e36b64ad81cdf33ac505e02
+unchanged_input_version 0
+unchanged_input_lease ACTIVE

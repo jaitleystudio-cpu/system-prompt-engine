@@ -1,0 +1,21 @@
+{
+  "gate": "G1R-2",
+  "envelope_authority_state": {
+    "canonical_owner": "K4",
+    "writer_modules": [
+      "spe_runtime/authority/apply.py"
+    ],
+    "readers": [
+      "spe_runtime/xcat/invariants.py",
+      "spe_runtime/authority/event_validate.py",
+      "spe_runtime/categories/_common.py"
+    ],
+    "generic_envelope_writer_owns_authority": false,
+    "x09_role": "consumer/checker not minter"
+  },
+  "AUTHORITY_CANONICAL_WRITERS": 1,
+  "AMBIENT_AUTHORITY_PATHS": 0,
+  "DUPLICATE_TYPED_ERROR_WRITERS": 0,
+  "canonical_error_owner": "spe_runtime/error_registry.py",
+  "notes": "CrossCategoryEnvelope constructor materializes initial AuthorityState for tests/import; it is not a hidden generic mutator. AuthorityGrant constructor mint-gap is G1 historical, not G1-B04."
+}

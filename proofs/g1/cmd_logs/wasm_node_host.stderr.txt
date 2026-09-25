@@ -1,0 +1,1 @@
+{"runtime":"node-webassembly","node":"v22.23.2","wasm_path":"portable/spe-wasm/target/wasm32-unknown-unknown/release/spe_wasm.wasm","imports":0,"exports":["memory","spe_alloc","spe_evaluate","spe_free"],"input_bytes":894,"output_bytes":731}

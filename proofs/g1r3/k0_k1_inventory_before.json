@@ -1,0 +1,8 @@
+{
+  "protected_intent_contract": false,
+  "requirement_graph": false,
+  "conflict_core": false,
+  "confirm_requirement": false,
+  "provenance_vocabulary": false,
+  "envelope_preferences_tagged": false
+}
