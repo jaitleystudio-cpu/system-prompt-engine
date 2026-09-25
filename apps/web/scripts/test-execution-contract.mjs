@@ -203,6 +203,18 @@ const durable = await runtime.buildSpeArtifact({
 const roundTrip = await runtime.parseSpeArtifactText(JSON.stringify(durable));
 assert.equal(roundTrip.artifact.execution_record.digests.record_sha256, recordA.digests.record_sha256);
 
+const launderedRecord = structuredClone(recordA);
+launderedRecord.conformance.overall = "PASS";
+const launderedArtifact = await runtime.buildSpeArtifact({
+  ...artifact,
+  execution_record: launderedRecord,
+  created_at_utc: artifact.created_at_utc,
+});
+await assert.rejects(
+  runtime.parseSpeArtifactText(JSON.stringify(launderedArtifact)),
+  (error) => error.code === "MISSING_FIELDS",
+);
+
 const panel = readFileSync(
   join(root, "src/workspace/ExecutionContractPanel.tsx"),
   "utf8",
