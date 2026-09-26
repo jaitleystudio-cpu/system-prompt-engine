@@ -7,7 +7,7 @@
 | | |
 |---|---|
 | **Before SHA** | `800c06a5519d9c63d1e304197579a3207c86caac` |
-| **Tip SHA** | `9b434f2c6498edc32f14d968125b152f1452481f` |
+| **Tip SHA** | `c63efa36c17c499a226341fb43a5a79a4c5ccc54` |
 | **Branch** | `grok/spe-v1-full-product-continuation-20260925` (PR #44) |
 | **Route** | B local Mac only — NO CloudAgent |
 | **HOSTING** | **FORBIDDEN** |
