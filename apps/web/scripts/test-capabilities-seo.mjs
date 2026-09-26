@@ -33,6 +33,8 @@ assert.match(page, /Execution Contract/);
 assert.match(page, /provider profiles/i);
 assert.match(page, /local-first/i);
 assert.match(page, /id="faq"/);
+assert.match(page, /spe-capabilities-atlas/);
+assert.match(page, /spe-atlas-outcome/);
 assert.match(page, /not proven/i);
 assert.doesNotMatch(page, /SPE is the world'?s best/i);
 assert.doesNotMatch(page, /award-winning|guaranteed results/i);

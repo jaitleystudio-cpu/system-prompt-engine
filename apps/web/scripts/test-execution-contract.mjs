@@ -262,6 +262,15 @@ assert.match(panel, /LOCAL RUN RECORD/);
 assert.match(panel, /recommend ≠ authorize ≠ execute/);
 assert.match(panel, /selection ≠ authority grant/);
 assert.match(panel, /Run local dry-run/);
+assert.match(panel, /aria-pressed=\{presentation === "simple"\}/);
+assert.match(panel, /aria-pressed=\{presentation === "inspect"\}/);
+assert.match(panel, /spe-contract-simple/);
+assert.match(panel, /Goal preserved/);
+assert.match(panel, /Hard constraints preserved/);
+assert.match(panel, /No authority granted/);
+assert.match(panel, /No side effects authorized/);
+assert.match(panel, /UNKNOWN is never treated as/);
+assert.match(panel, /data-status=\{conformanceTone\}/);
 
 // Mirror helper: EXTERNAL_OPTIONAL never silently selected
 const blocked = runtime.selectMirroredProfile({ allow_external: false });

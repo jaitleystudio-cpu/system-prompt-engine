@@ -1,0 +1,111 @@
+{
+  "tip_sha_at_capture": "bafcb11db8c2075fcd7fa49e66c3906bde13878c",
+  "note": "tip_sha updated after commit/push to final craft tip",
+  "captured_at": "2026-09-26T22:14:29.990222+05:30",
+  "HOSTING": "FORBIDDEN",
+  "WORLD_1": "NOT_PROVEN",
+  "HUMAN_SCREEN_READER": "NOT_PROVEN",
+  "shots": [
+    {
+      "name": "capabilities-dark-desktop.png",
+      "bytes": 315492,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/capabilities-dark-desktop.png"
+    },
+    {
+      "name": "capabilities-dark-mobile.png",
+      "bytes": 289268,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/capabilities-dark-mobile.png"
+    },
+    {
+      "name": "capabilities-light-desktop.png",
+      "bytes": 321211,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/capabilities-light-desktop.png"
+    },
+    {
+      "name": "capabilities-light-mobile.png",
+      "bytes": 293103,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/capabilities-light-mobile.png"
+    },
+    {
+      "name": "contract-desktop-inspect.png",
+      "bytes": 423258,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/contract-desktop-inspect.png"
+    },
+    {
+      "name": "contract-desktop-simple.png",
+      "bytes": 210496,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/contract-desktop-simple.png"
+    },
+    {
+      "name": "contract-desktop-unknown.png",
+      "bytes": 210658,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/contract-desktop-unknown.png"
+    },
+    {
+      "name": "contract-mobile-inspect.png",
+      "bytes": 369419,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/contract-mobile-inspect.png"
+    },
+    {
+      "name": "contract-mobile-simple.png",
+      "bytes": 143491,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/contract-mobile-simple.png"
+    },
+    {
+      "name": "contract-mobile-unknown.png",
+      "bytes": 143458,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/contract-mobile-unknown.png"
+    },
+    {
+      "name": "create-dark-desktop.png",
+      "bytes": 570114,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/create-dark-desktop.png"
+    },
+    {
+      "name": "create-light-desktop.png",
+      "bytes": 552903,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/create-light-desktop.png"
+    },
+    {
+      "name": "create-mobile-advanced-expanded.png",
+      "bytes": 272896,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/create-mobile-advanced-expanded.png"
+    },
+    {
+      "name": "create-mobile-collapsed.png",
+      "bytes": 209303,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/create-mobile-collapsed.png"
+    },
+    {
+      "name": "create-mobile-focus.png",
+      "bytes": 210060,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/create-mobile-focus.png"
+    },
+    {
+      "name": "home-dark-desktop.png",
+      "bytes": 560254,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/home-dark-desktop.png"
+    },
+    {
+      "name": "home-dark-mobile.png",
+      "bytes": 842787,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/home-dark-mobile.png"
+    },
+    {
+      "name": "home-light-desktop.png",
+      "bytes": 695265,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/home-light-desktop.png"
+    },
+    {
+      "name": "home-light-mobile.png",
+      "bytes": 835440,
+      "path": "/Users/prawinpalisetty/system-prompt-engine/proofs/spe_v1_continuation/final_craft/home-light-mobile.png"
+    }
+  ],
+  "contract_states_captured": [
+    "simple",
+    "inspect",
+    "unknown"
+  ],
+  "blocked_failure_fixture": "NOT_CAPTURED_NO_FAIL_FIXTURE_IN_UI_PATH"
+}

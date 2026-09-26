@@ -4788,3 +4788,408 @@ html[data-theme="light"] .spe-acquisition-chip {
   border-color: color-mix(in oklab, #2563eb 28%, #cbd5e1);
   background: color-mix(in oklab, #2563eb 8%, #f8fafc);
 }
+
+
+/* ——— SPE Ω FINAL CRAFT CLOSURE ——— */
+/* Informed by ADS: semantic HTML disclosure, visible focus, stack rhythm,
+   prefer borders/whitespace over raised SaaS card grids; paper/editorial. */
+
+/* 1. HERO — soften diagram-frame; editorial motion; Prompt as reward */
+@media (min-width: 701px) {
+  .hero-story::after {
+    height: 12%;
+    opacity: 0.55;
+    border-bottom-color: rgba(216, 183, 121, 0.06);
+    background: radial-gradient(
+      ellipse at 62% 100%,
+      rgba(216, 183, 121, 0.08),
+      transparent 70%
+    );
+  }
+  .hero-story-stage::after {
+    width: clamp(0.4rem, 0.7vw, 0.75rem);
+    height: 1px;
+    box-shadow: none;
+    background: linear-gradient(
+      90deg,
+      rgba(216, 183, 121, 0.45),
+      rgba(216, 183, 121, 0.08)
+    );
+  }
+  .hero-story-stage::before {
+    width: 5px;
+    height: 5px;
+    opacity: 0.7;
+  }
+  .hero-flow-lines {
+    inset: 18% 2% 16%;
+    opacity: 0.55;
+  }
+  .hero-flow-lines > path {
+    stroke-width: 1;
+    filter: none;
+  }
+  .hero-story-flow.spe-pipeline {
+    inset: 7% 1.5% 9%;
+    gap: clamp(0.55rem, 0.95vw, 1.05rem);
+  }
+  .hero-engine {
+    max-width: 6.6rem;
+    box-shadow:
+      0 14px 28px rgba(0, 0, 0, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  }
+  .hero-prompt-artifact {
+    min-height: 68%;
+    padding: clamp(0.9rem, 1.4vw, 1.35rem);
+    box-shadow:
+      4px 5px 0 #6f7681,
+      0 0 28px rgba(232, 199, 134, 0.18),
+      14px 18px 36px rgba(0, 0, 0, 0.32);
+  }
+  .prompt-artifact-head {
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+  .prompt-artifact-head strong {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+  }
+  .prompt-artifact-head span {
+    padding: 0.2rem 0.45rem;
+    border: 1px solid rgba(75, 105, 94, 0.45);
+    border-radius: 999px;
+    font-size: 0.48rem;
+    font-weight: 600;
+  }
+  .hero-prompt-artifact h2 {
+    font-size: clamp(1.05rem, 1.35vw, 1.4rem);
+    margin: 0.9rem 0 0.55rem;
+  }
+  .hero-prompt-artifact > p {
+    font-size: 0.42rem;
+  }
+  .hero-prompt-artifact > i {
+    height: 3px;
+    opacity: 0.72;
+  }
+  .meaning-clusters span {
+    min-height: 1.85rem;
+  }
+}
+
+html[data-theme="light"] .hero-flow-lines {
+  opacity: 0.42;
+}
+html[data-theme="light"] .hero-engine {
+  box-shadow:
+    0 12px 24px rgba(40, 45, 54, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* 2. CREATE — Sources & depth progressive disclosure */
+.spe-create-rail > .compile-row {
+  position: relative;
+  z-index: 2;
+}
+.spe-create-sources-depth {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  border: 1px solid rgba(197, 212, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(8, 12, 20, 0.45);
+}
+.spe-create-sources-summary {
+  list-style: none;
+  cursor: pointer;
+  display: grid;
+  gap: 0.28rem;
+  padding: 0.85rem 1rem;
+  color: #d7dfed;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+.spe-create-sources-summary::-webkit-details-marker {
+  display: none;
+}
+.spe-create-sources-summary::before {
+  content: "▸";
+  display: inline-block;
+  margin-right: 0.45rem;
+  color: #d8b779;
+  transition: transform 160ms ease;
+}
+.spe-create-sources-depth[open] > .spe-create-sources-summary::before {
+  transform: rotate(90deg);
+}
+.spe-create-sources-title {
+  font-weight: 560;
+  letter-spacing: 0.01em;
+}
+.spe-create-sources-hint {
+  display: block;
+  margin-left: 1.1rem;
+  color: #8f9db6;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+.spe-create-sources-summary:focus-visible {
+  outline: 2px solid #bbceff;
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.spe-create-sources-body {
+  padding: 0 0.85rem 0.95rem;
+}
+@media (min-width: 901px) {
+  .spe-create-sources-depth {
+    border-color: rgba(197, 212, 255, 0.1);
+    background: transparent;
+  }
+  .spe-create-sources-summary {
+    padding-bottom: 0.45rem;
+  }
+}
+html[data-theme="light"] .spe-create-sources-depth {
+  background: rgba(247, 244, 238, 0.72);
+  border-color: var(--seo-border);
+}
+html[data-theme="light"] .spe-create-sources-summary {
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-create-sources-hint {
+  color: var(--muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  .spe-create-sources-summary::before {
+    transition: none;
+  }
+}
+
+/* 3. CAPABILITIES — editorial atlas (not SaaS card grid) */
+.spe-capabilities-atlas {
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+}
+.spe-atlas-entry {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem 1.25rem;
+  padding: 1.35rem 0 1.45rem;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+.spe-atlas-mark {
+  font: 0.72rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.14em;
+  color: #d8b779;
+  padding-top: 0.35rem;
+}
+.spe-atlas-body h2 {
+  margin: 0 0 0.45rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+  letter-spacing: -0.02em;
+}
+.spe-atlas-outcome {
+  margin: 0 0 0.55rem;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  max-width: 40rem;
+}
+.spe-atlas-detail {
+  margin: 0;
+  max-width: 42rem;
+  opacity: 0.82;
+  line-height: 1.55;
+  font-size: 0.94rem;
+}
+@media (min-width: 901px) {
+  .spe-capabilities-atlas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2.5rem;
+    border-top: 0;
+  }
+  .spe-atlas-entry:nth-child(odd) {
+    border-right: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+    padding-right: 1.5rem;
+  }
+  .spe-atlas-entry:nth-child(-n + 2) {
+    border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  }
+}
+html[data-theme="light"] .spe-atlas-mark {
+  color: #6d5128;
+}
+
+/* Hide legacy grid if present; atlas is the owner */
+.spe-capabilities-page .spe-capabilities-grid {
+  display: none;
+}
+
+/* 4. EXECUTION CONTRACT — Simple / Inspect dual presentation */
+.spe-contract-toolbar {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: end;
+  align-content: start;
+}
+.spe-contract-presentation {
+  display: inline-flex;
+  gap: 0.35rem;
+  padding: 0.2rem;
+  border: 1px solid rgba(183, 200, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(8, 12, 20, 0.55);
+}
+.spe-contract-presentation-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #aab7ce;
+  font: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  cursor: pointer;
+  min-height: 36px;
+}
+.spe-contract-presentation-btn[aria-pressed="true"] {
+  background: rgba(231, 237, 255, 0.12);
+  color: #eef2ff;
+}
+.spe-contract-presentation-btn:focus-visible {
+  outline: 2px solid #bbceff;
+  outline-offset: 2px;
+}
+.spe-contract-simple {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid rgba(183, 200, 255, 0.14);
+  border-radius: 14px;
+  background: rgba(8, 12, 20, 0.72);
+}
+.spe-contract-simple-status {
+  margin: 0;
+  color: #e8eefc;
+  font-size: 1.05rem;
+  font-weight: 560;
+  letter-spacing: 0.02em;
+}
+.spe-contract-simple-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.spe-contract-simple-list li {
+  display: grid;
+  grid-template-columns: 1.2rem minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: start;
+  color: #c9d4e8;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.spe-contract-simple-list li > span:first-child {
+  color: #d8b779;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.spe-contract-simple-list li[data-ok="true"] > span:first-child {
+  color: #8fd6b0;
+}
+.spe-contract-simple-list li[data-ok="false"] > span:first-child {
+  color: #fda4af;
+}
+.spe-contract-simple-list li[data-kind="conformance"][data-status="unknown"] {
+  color: #e6d5b4;
+}
+.spe-contract-simple-list li[data-kind="conformance"][data-status="unknown"] > span:first-child {
+  color: #d8b779;
+}
+.spe-contract-simple-list li[data-kind="conformance"][data-status="pass"] {
+  color: #a7f3d0;
+}
+.spe-contract-simple-list li[data-kind="conformance"][data-status="fail"] {
+  color: #fda4af;
+}
+.spe-contract-simple[data-conformance="unknown"] {
+  border-color: rgba(199, 174, 122, 0.42);
+}
+.spe-contract-simple[data-conformance="pass"] {
+  border-color: rgba(122, 196, 158, 0.4);
+}
+.spe-contract-simple[data-conformance="fail"] {
+  border-color: rgba(253, 164, 175, 0.44);
+}
+.spe-contract-simple-goal {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(183, 200, 255, 0.1);
+  color: #aab7ce;
+  font-size: 0.88rem;
+}
+.spe-contract-simple-goal strong {
+  color: #8f9db6;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.spe-contract-simple-law {
+  margin: 0;
+  color: #8f9db6;
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+html[data-theme="light"] .spe-contract-presentation {
+  background: #efeae1;
+  border-color: var(--seo-border);
+}
+html[data-theme="light"] .spe-contract-presentation-btn {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-contract-presentation-btn[aria-pressed="true"] {
+  background: #fff;
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-contract-simple {
+  background: #f7f4ee;
+  border-color: var(--seo-border);
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-contract-simple-status,
+html[data-theme="light"] .spe-contract-simple-list li {
+  color: var(--paper);
+}
+html[data-theme="light"] .spe-contract-simple-goal,
+html[data-theme="light"] .spe-contract-simple-law {
+  color: var(--muted);
+}
+@media (max-width: 720px) {
+  .spe-contract-toolbar {
+    width: 100%;
+    justify-items: stretch;
+  }
+  .spe-contract-presentation {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .spe-contract-presentation-btn {
+    flex: 1;
+  }
+  .spe-atlas-entry {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 1.1rem 0;
+  }
+}

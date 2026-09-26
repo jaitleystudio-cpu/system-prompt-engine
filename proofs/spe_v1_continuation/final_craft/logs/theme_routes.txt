@@ -1,0 +1,5 @@
+
+> spe-web@0.3.0 test:theme-routes
+> node scripts/test-theme-routes.mjs
+
+PASS theme+routes smoke

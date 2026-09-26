@@ -47,6 +47,7 @@ import { Workspace } from "./workspace/Workspace";
 import { ReconstructionSummary } from "./workspace/ReconstructionSummary";
 import { ExecutionContractPanel } from "./workspace/ExecutionContractPanel";
 import { UnifiedComposer } from "./composer/UnifiedComposer";
+import { SourcesDepthDisclosure } from "./composer/SourcesDepthDisclosure";
 import {
   ContextProtocolControls,
   mapPublicSourceToWasm,
@@ -895,22 +896,6 @@ export default function App() {
                 applyUserRequestChange(prompt);
               }}
             />
-            <ContextProtocolControls
-              source={publicSource}
-              depth={publicDepth}
-              onSourceChange={(v) => {
-                invalidate();
-                setPublicSource(v);
-              }}
-              onDepthChange={(v) => {
-                invalidate();
-                setPublicDepth(v);
-              }}
-              uiMode={mode}
-              disabled={busy}
-              inspectOutput={contextProtocol}
-              refreshNotice={contextRefreshNotice}
-            />
             <div className="compile-row">
               <button
                 type="button"
@@ -924,6 +909,24 @@ export default function App() {
                 <span>↗</span>
               </button>
             </div>
+            <SourcesDepthDisclosure progressive={view === "create"}>
+              <ContextProtocolControls
+                source={publicSource}
+                depth={publicDepth}
+                onSourceChange={(v) => {
+                  invalidate();
+                  setPublicSource(v);
+                }}
+                onDepthChange={(v) => {
+                  invalidate();
+                  setPublicDepth(v);
+                }}
+                uiMode={mode}
+                disabled={busy}
+                inspectOutput={contextProtocol}
+                refreshNotice={contextRefreshNotice}
+              />
+            </SourcesDepthDisclosure>
             </div>
             {error && <p role="alert">{error.message}</p>}
             {rendered?.finalPrompt && (
@@ -960,6 +963,7 @@ export default function App() {
                 record={executionRecord}
                 busy={dryRunBusy}
                 onRunDry={() => void onRunLocalDry()}
+                initialPresentation={mode === "simple" ? "simple" : "inspect"}
               />
             )}
           </section>
@@ -1036,6 +1040,7 @@ export default function App() {
                   record={executionRecord}
                   busy={dryRunBusy}
                   onRunDry={() => void onRunLocalDry()}
+                  initialPresentation={mode === "simple" ? "simple" : "inspect"}
                 />
               </section>
             )}
