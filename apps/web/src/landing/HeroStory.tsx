@@ -43,6 +43,7 @@ const FRAGMENTS = [
   <span className="fragment fragment-url" key="url">URL</span>,
 ] as const;
 
+/** Quiet whisper only — form carries story; numbers not required to read. */
 function StoryLabel({
   number,
   label,
@@ -52,16 +53,17 @@ function StoryLabel({
 }) {
   return (
     <div className="hero-story-label">
-      <span>{number}</span>
+      <span aria-hidden="true">{number}</span>
       <strong>{label}</strong>
     </div>
   );
 }
 
 /**
- * Continuous editorial transformation (not flowchart stations).
+ * Award-craft continuous editorial transformation (not flowchart stations).
  * Form carries IDEA → MEANING → SPE → STRUCTURE → PROMPT.
- * Labels are quiet reinforcement only.
+ * FX adapted from fx.statico.io (Unlicense): electron-lines, resend-conic-border,
+ * meshy-grid motes — restrained to SPE ink/ivory/blue/champagne.
  */
 export function HeroStory({ state, paused }: Props) {
   const activeStage = ACTIVE_STAGE[state];
@@ -73,6 +75,13 @@ export function HeroStory({ state, paused }: Props) {
       data-paused={paused ? "true" : "false"}
       aria-label="SPE transforms messy human fragments into an idea, meaning, structure, and a perfect system prompt."
     >
+      {/* Subtle dust/mote atmosphere — meshy-grid technique, SPE palette (not lime) */}
+      <div className="hero-story-motes" aria-hidden="true">
+        {Array.from({ length: 18 }, (_, i) => (
+          <i key={i} className={`hero-mote hero-mote-${i + 1}`} />
+        ))}
+      </div>
+
       <svg
         className="hero-flow-lines"
         viewBox="0 0 1000 520"
@@ -82,22 +91,83 @@ export function HeroStory({ state, paused }: Props) {
         <defs>
           <linearGradient id="story-flow-gold" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor="#8b714c" stopOpacity="0.05" />
-            <stop offset="0.35" stopColor="#d8b779" stopOpacity="0.5" />
-            <stop offset="0.62" stopColor="#f0d7a4" stopOpacity="0.35" />
-            <stop offset="1" stopColor="#92aad6" stopOpacity="0.12" />
+            <stop offset="0.35" stopColor="#d8b779" stopOpacity="0.55" />
+            <stop offset="0.62" stopColor="#f0d7a4" stopOpacity="0.38" />
+            <stop offset="1" stopColor="#92aad6" stopOpacity="0.14" />
           </linearGradient>
           <linearGradient id="story-flow-blue" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0" stopColor="#92aad6" stopOpacity="0.08" />
-            <stop offset="0.5" stopColor="#d8b779" stopOpacity="0.32" />
-            <stop offset="1" stopColor="#f0ecdf" stopOpacity="0.2" />
+            <stop offset="0" stopColor="#92aad6" stopOpacity="0.1" />
+            <stop offset="0.5" stopColor="#d8b779" stopOpacity="0.34" />
+            <stop offset="1" stopColor="#f0ecdf" stopOpacity="0.22" />
           </linearGradient>
+          {/* Electron-lines glow (fx.statico.io / Schematic) — champagne bloom, not cyan */}
+          <filter id="story-pulse-glow" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur stdDeviation="2.4" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
         {/* Organic filaments — continuous tissue, not booth arrows */}
-        <path d="M70 170 C190 130 280 210 360 235 S470 255 520 248" />
-        <path d="M85 265 C200 290 290 255 370 245 S470 240 520 248" />
-        <path d="M95 355 C210 340 300 295 385 265 S480 245 520 248" />
-        <path d="M580 248 C660 235 740 200 820 175 S910 150 960 145" />
-        <path d="M580 255 C670 275 750 310 840 340 S920 370 965 380" />
+        <path
+          id="story-path-a"
+          d="M70 170 C190 130 280 210 360 235 S470 255 520 248"
+        />
+        <path
+          id="story-path-b"
+          d="M85 265 C200 290 290 255 370 245 S470 240 520 248"
+        />
+        <path
+          id="story-path-c"
+          d="M95 355 C210 340 300 295 385 265 S480 245 520 248"
+        />
+        <path
+          id="story-path-d"
+          d="M580 248 C660 235 740 200 820 175 S910 150 960 145"
+        />
+        <path
+          id="story-path-e"
+          d="M580 255 C670 275 750 310 840 340 S920 370 965 380"
+        />
+        {/* Electron pulses along Bézier paths (Meaning ↔ SPE ↔ Structure) */}
+        <g className="hero-electron-pulses" filter="url(#story-pulse-glow)">
+          <circle className="hero-electron" r="3.2" fill="#f0ecdf" opacity="0.92">
+            <animateMotion dur="5.2s" repeatCount="indefinite" begin="0s">
+              <mpath href="#story-path-a" />
+            </animateMotion>
+          </circle>
+          <circle className="hero-electron" r="2.4" fill="#d8b779" opacity="0.75">
+            <animateMotion dur="6.1s" repeatCount="indefinite" begin="-1.4s">
+              <mpath href="#story-path-b" />
+            </animateMotion>
+          </circle>
+          <circle className="hero-electron" r="2.1" fill="#92aad6" opacity="0.7">
+            <animateMotion dur="5.8s" repeatCount="indefinite" begin="-2.6s">
+              <mpath href="#story-path-c" />
+            </animateMotion>
+          </circle>
+          <circle className="hero-electron" r="2.8" fill="#f0d7a4" opacity="0.85">
+            <animateMotion dur="4.8s" repeatCount="indefinite" begin="-0.8s">
+              <mpath href="#story-path-d" />
+            </animateMotion>
+          </circle>
+          <circle className="hero-electron" r="2.2" fill="#92aad6" opacity="0.68">
+            <animateMotion dur="5.5s" repeatCount="indefinite" begin="-3.2s">
+              <mpath href="#story-path-e" />
+            </animateMotion>
+          </circle>
+          <circle className="hero-electron hero-electron-trail" r="1.6" fill="#c7ae7a" opacity="0.45">
+            <animateMotion dur="5.2s" repeatCount="indefinite" begin="-0.35s">
+              <mpath href="#story-path-a" />
+            </animateMotion>
+          </circle>
+          <circle className="hero-electron hero-electron-trail" r="1.5" fill="#92aad6" opacity="0.4">
+            <animateMotion dur="4.8s" repeatCount="indefinite" begin="-1.15s">
+              <mpath href="#story-path-d" />
+            </animateMotion>
+          </circle>
+        </g>
       </svg>
 
       <ol
@@ -152,6 +222,8 @@ export function HeroStory({ state, paused }: Props) {
         >
           <StoryLabel {...STORY_STAGES[2]} />
           <div className="hero-engine" aria-hidden="true">
+            {/* Soft conic border-sweep — resend technique, SPE palette only */}
+            <span className="engine-conic-sweep" aria-hidden="true" />
             <div className="engine-seal" aria-hidden="true">
               <span className="engine-seal-ring engine-seal-ring-outer" />
               <span className="engine-seal-ring" />
@@ -179,18 +251,21 @@ export function HeroStory({ state, paused }: Props) {
         <li className="hero-story-stage hero-prompt-stage" data-stage="prompt">
           <StoryLabel {...STORY_STAGES[4]} />
           <div className="hero-prompt-artifact" aria-hidden="true">
-            <div className="prompt-artifact-head">
-              <strong>PERFECT SYSTEM PROMPT</strong>
-              <span>READY</span>
+            <span className="prompt-conic-sweep" aria-hidden="true" />
+            <div className="prompt-artifact-inner">
+              <div className="prompt-artifact-head">
+                <strong>PERFECT SYSTEM PROMPT</strong>
+                <span>READY</span>
+              </div>
+              <h2>Launch strategist</h2>
+              <p>OBJECTIVE</p>
+              <i />
+              <i />
+              <p>CONSTRAINTS</p>
+              <i />
+              <i />
+              <div className="prompt-artifact-seal">SPE / 01</div>
             </div>
-            <h2>Launch strategist</h2>
-            <p>OBJECTIVE</p>
-            <i />
-            <i />
-            <p>CONSTRAINTS</p>
-            <i />
-            <i />
-            <div className="prompt-artifact-seal">SPE / 01</div>
           </div>
         </li>
       </ol>
