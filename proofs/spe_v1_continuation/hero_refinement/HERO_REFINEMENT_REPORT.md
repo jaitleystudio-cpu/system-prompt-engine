@@ -3,7 +3,7 @@
 **Scope:** Hero illustration craft only — remove remaining flowchart/diagram-canvas feeling.  
 **Not Batch J.** Create / Capabilities / Execution Contract remain PASS FREEZE.  
 **Before SHA (required):** `d01489e958554706fbbfccdeb91fbf49957687b2`  
-**Final tip SHA:** `9a557794d15775e5044435803e4fefb3e63bbb72`  
+**Final tip SHA:** `ce47ac2f87225f6211e35249bb44aea1395264cd`  
 **Branch:** `grok/spe-v1-full-product-continuation-20260925` (PR #44)  
 **Route:** B local Mac only — NO CloudAgent  
 **HOSTING:** **FORBIDDEN**  

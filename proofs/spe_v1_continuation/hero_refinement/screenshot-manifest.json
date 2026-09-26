@@ -1,6 +1,6 @@
 {
-  "tipShaAtCapture": "9a557794d15775e5044435803e4fefb3e63bbb72",
-  "note": "Bound to post-commit tip SHA after hero refinement commit.",
+  "tipShaAtCapture": "ce47ac2f87225f6211e35249bb44aea1395264cd",
+  "note": "Bound to craft tip ce47ac2 (hero refinement implementation). Follow-up chore commit only updates this bind text.",
   "captures": [
     {
       "name": "home-hero-dark-desktop.png",
