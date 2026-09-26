@@ -1,5 +1,5 @@
 {
-  "tipShaAtCapture": "e1a5a354bbf32b94edaba5358bee018a971a38f5",
+  "tipShaAtCapture": "d82ab9209ec76b96a2cfa2582b4782db4482443b",
   "note": "Bound after commit via re-run or SHA rewrite in report tip.",
   "captures": [
     {
@@ -39,6 +39,7 @@
       "motionControl": "Reduced motion"
     }
   ],
-  "story": "IDEA → MEANING → SPE → STRUCTURE → PROMPT",
-  "motion": "CSS/SVG motion present; reduced-motion verified via control label and capture. Do not claim 10/10 craft from motion alone."
+  "story": "IDEA \u2192 MEANING \u2192 SPE \u2192 STRUCTURE \u2192 PROMPT",
+  "motion": "CSS/SVG motion present; reduced-motion verified via control label and capture. Do not claim 10/10 craft from motion alone.",
+  "beforeSha": "e1a5a354bbf32b94edaba5358bee018a971a38f5"
 }
