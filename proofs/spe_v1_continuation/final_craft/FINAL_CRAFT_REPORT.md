@@ -3,7 +3,7 @@
 **Scope:** Four visual craft closures only (Hero, Create mobile disclosure, Capabilities atlas, Execution Contract Simple/Inspect).  
 **Not Batch J.** A–I remain complete; no new architecture/features.  
 **Baseline SHA (custody):** `bafcb11db8c2075fcd7fa49e66c3906bde13878c`  
-**Final tip SHA:** `75d139adbebaad5d265c6275c67ea709e0ca382a`  
+**Final tip SHA:** `beb60a73556f6bea95c6692842aeb726f0c27558`  
 **Branch:** `grok/spe-v1-full-product-continuation-20260925` (PR #44)  
 **PR #44 base:** `9d5a37a913b5a30122d19734af106f5c85b085cb`  
 **HOSTING:** **FORBIDDEN**  
