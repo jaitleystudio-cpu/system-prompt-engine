@@ -58,6 +58,11 @@ function StoryLabel({
   );
 }
 
+/**
+ * Continuous editorial transformation (not flowchart stations).
+ * Form carries IDEA → MEANING → SPE → STRUCTURE → PROMPT.
+ * Labels are quiet reinforcement only.
+ */
 export function HeroStory({ state, paused }: Props) {
   const activeStage = ACTIVE_STAGE[state];
 
@@ -70,20 +75,29 @@ export function HeroStory({ state, paused }: Props) {
     >
       <svg
         className="hero-flow-lines"
-        viewBox="0 0 1000 500"
+        viewBox="0 0 1000 520"
         preserveAspectRatio="none"
         aria-hidden="true"
       >
         <defs>
-          <linearGradient id="story-flow-gold" x1="0" x2="1">
-            <stop offset="0" stopColor="#8b714c" stopOpacity="0.08" />
-            <stop offset="0.4" stopColor="#d8b779" stopOpacity="0.55" />
-            <stop offset="1" stopColor="#f0d7a4" stopOpacity="0.18" />
+          <linearGradient id="story-flow-gold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#8b714c" stopOpacity="0.05" />
+            <stop offset="0.35" stopColor="#d8b779" stopOpacity="0.5" />
+            <stop offset="0.62" stopColor="#f0d7a4" stopOpacity="0.35" />
+            <stop offset="1" stopColor="#92aad6" stopOpacity="0.12" />
+          </linearGradient>
+          <linearGradient id="story-flow-blue" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stopColor="#92aad6" stopOpacity="0.08" />
+            <stop offset="0.5" stopColor="#d8b779" stopOpacity="0.32" />
+            <stop offset="1" stopColor="#f0ecdf" stopOpacity="0.2" />
           </linearGradient>
         </defs>
-        <path d="M70 210 C220 198 310 240 420 236 S580 210 700 228 S860 250 950 236" />
-        <path d="M90 268 C250 278 340 300 450 288 S620 250 740 268 S870 290 950 278" />
-        <path d="M110 330 C270 340 360 320 470 318 S640 300 760 312 S880 330 950 320" />
+        {/* Organic filaments — continuous tissue, not booth arrows */}
+        <path d="M70 170 C190 130 280 210 360 235 S470 255 520 248" />
+        <path d="M85 265 C200 290 290 255 370 245 S470 240 520 248" />
+        <path d="M95 355 C210 340 300 295 385 265 S480 245 520 248" />
+        <path d="M580 248 C660 235 740 200 820 175 S910 150 960 145" />
+        <path d="M580 255 C670 275 750 310 840 340 S920 370 965 380" />
       </svg>
 
       <ol
@@ -139,6 +153,7 @@ export function HeroStory({ state, paused }: Props) {
           <StoryLabel {...STORY_STAGES[2]} />
           <div className="hero-engine" aria-hidden="true">
             <div className="engine-seal" aria-hidden="true">
+              <span className="engine-seal-ring engine-seal-ring-outer" />
               <span className="engine-seal-ring" />
               <span className="engine-seal-core">
                 <i className="engine-seal-glyph" />
@@ -147,13 +162,6 @@ export function HeroStory({ state, paused }: Props) {
             <div className="engine-cap">
               <strong>SPE</strong>
               <span>SEMANTIC ENGINE</span>
-            </div>
-            <div className="engine-compiler">
-              <span>PARSE</span>
-              <i />
-              <span>ALIGN</span>
-              <i />
-              <span>COMPILE</span>
             </div>
           </div>
         </li>
