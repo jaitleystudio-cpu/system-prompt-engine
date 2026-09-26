@@ -7,6 +7,7 @@
 | | |
 |---|---|
 | **Before SHA** | `e1a5a354bbf32b94edaba5358bee018a971a38f5` |
+| **Tip SHA** | `05289e779d328a8fc5e343293e919dae9498e423` |
 | **Branch** | `grok/spe-v1-full-product-continuation-20260925` (PR #44) |
 | **Route** | B local Mac only — NO CloudAgent |
 | **HOSTING** | **FORBIDDEN** |
@@ -14,7 +15,7 @@
 | **Machine** | Mac `0d308a2c-330c-430b-85e3-74d647e69e59` |
 | **Checkout** | `/Users/prawinpalisetty/system-prompt-engine` |
 
-Tip SHA bound after push in `screenshot-manifest.json` + this report.
+Tip SHA bound in this report and `screenshot-manifest.json`.
 
 ## References consulted
 
