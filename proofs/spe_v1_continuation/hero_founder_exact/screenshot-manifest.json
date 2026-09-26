@@ -1,6 +1,6 @@
 {
-  "tipShaAtCapture": "facf35a1b991f7d1e75560621029a877cd4a727f",
-  "note": "Bound to branch tip after bind commit.",
+  "tipShaAtCapture": "29d234e516df113e1a65e7e404cb43b0ed0658e1",
+  "note": "tipShaAtCapture = implementation fix commit; branchTip = HEAD after bind.",
   "founderPngSha256": "fb7edd8fbb1e197fed417a5866441ee950c58600b0c805aa7377d2bc06a6da93",
   "founderPngPath": "apps/web/public/hero/founder-hero-story.png",
   "story": "IDEA \u2192 MEANING \u2192 SPE \u2192 STRUCTURE \u2192 PROMPT (in founder PNG, not DOM)",
@@ -37,5 +37,6 @@
       "artSrc": "http://127.0.0.1:4231/hero/founder-hero-story.png",
       "artNatural": "1376x768"
     }
-  ]
+  ],
+  "branchTip": "8ea361c498f391dc33e79820335f4da1669cbcbe"
 }
