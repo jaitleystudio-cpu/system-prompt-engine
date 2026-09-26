@@ -1,0 +1,41 @@
+{
+  "tipShaAtCapture": "5d9b5cb9f304d5a6e00c27eafa09ee090ac37164",
+  "note": "Bind tip SHA after commit via report rewrite.",
+  "founderPngSha256": "fb7edd8fbb1e197fed417a5866441ee950c58600b0c805aa7377d2bc06a6da93",
+  "founderPngPath": "apps/web/public/hero/founder-hero-story.png",
+  "story": "IDEA → MEANING → SPE → STRUCTURE → PROMPT (in founder PNG, not DOM)",
+  "captures": [
+    {
+      "name": "home-hero-dark-desktop.png",
+      "bytes": 816384,
+      "viewport": "1440x900",
+      "theme": "dark",
+      "artSrc": "http://127.0.0.1:4231/hero/founder-hero-story.png",
+      "artNatural": "1376x768"
+    },
+    {
+      "name": "home-hero-light-desktop.png",
+      "bytes": 938945,
+      "viewport": "1440x900",
+      "theme": "light",
+      "artSrc": "http://127.0.0.1:4231/hero/founder-hero-story.png",
+      "artNatural": "1376x768"
+    },
+    {
+      "name": "home-hero-dark-mobile.png",
+      "bytes": 147636,
+      "viewport": "390x844",
+      "theme": "dark",
+      "artSrc": "http://127.0.0.1:4231/hero/founder-hero-story.png",
+      "artNatural": "1376x768"
+    },
+    {
+      "name": "home-hero-light-mobile.png",
+      "bytes": 166957,
+      "viewport": "390x844",
+      "theme": "light",
+      "artSrc": "http://127.0.0.1:4231/hero/founder-hero-story.png",
+      "artNatural": "1376x768"
+    }
+  ]
+}

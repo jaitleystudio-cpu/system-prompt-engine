@@ -1,79 +1,77 @@
 #!/usr/bin/env node
+/**
+ * Hero contract: founder PNG verbatim as right-side art.
+ * Story semantics IDEA→MEANING→SPE→STRUCTURE→PROMPT live in the image.
+ */
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const hero = readFileSync(join(root, "src/landing/Hero.tsx"), "utf8");
 const story = readFileSync(join(root, "src/landing/HeroStory.tsx"), "utf8");
 const css = readFileSync(join(root, "src/index.css"), "utf8");
+const asset = join(root, "public/hero/founder-hero-story.png");
 
-const orderedStages = [
-  "IDEA",
-  "MEANING",
-  "SPE",
-  "STRUCTURE",
-  "PROMPT",
-];
+assert.ok(existsSync(asset), "founder-hero-story.png must exist in public/hero");
+const bytes = readFileSync(asset);
+assert.ok(bytes.length > 100_000, "founder PNG should be substantial");
+const sha = createHash("sha256").update(bytes).digest("hex");
+assert.equal(
+  sha,
+  "fb7edd8fbb1e197fed417a5866441ee950c58600b0c805aa7377d2bc06a6da93",
+  "founder PNG must match known attachment SHA-256",
+);
+assert.ok(statSync(asset).size === bytes.length);
 
-assert.match(story, />MESSY HUMAN FRAGMENTS</);
-assert.match(story, /hero-idea-stage[\s\S]*chaos-to-idea/);
-let cursor = -1;
-for (const stage of orderedStages) {
-  const next = story.indexOf(`label: "${stage}"`);
-  assert.ok(next > cursor, `${stage} must appear in approved semantic order`);
-  cursor = next;
-}
-
-for (const fragment of [
-  "NOTE",
-  "QUESTION",
-  "IMAGE",
-  "CODE",
-  "DOCUMENT",
-  "WAVEFORM",
-  "URL",
-]) {
-  assert.match(story, new RegExp(`>${fragment}<`), `missing ${fragment} fragment`);
-}
-
-assert.match(story, /aria-label="SPE transforms messy human fragments/);
-assert.match(story, /className="hero-story-flow spe-pipeline"/);
-assert.match(story, />PERFECT SYSTEM PROMPT</);
-assert.match(story, /className="glass-filter-stack"/);
-assert.match(story, /className="hero-flow-lines"/);
-assert.match(story, /className="hero-engine"/);
-assert.match(story, /className="hero-prompt-artifact"/);
-assert.match(story, /className="idea-brief"/);
-assert.doesNotMatch(story, /idea-pulse/);
-assert.doesNotMatch(story, /hero-story-heading/);
+assert.match(story, /founder-hero-story\.png/);
+assert.match(story, /src="\/hero\/founder-hero-story\.png"/);
+assert.match(story, /className="hero-story-art"/);
+assert.match(
+  story,
+  /alt="SPE transformation story:[\s\S]*IDEA[\s\S]*MEANING[\s\S]*SPE[\s\S]*STRUCTURE[\s\S]*PROMPT/,
+);
+assert.match(
+  story,
+  /aria-label="SPE transforms messy human fragments[\s\S]*IDEA[\s\S]*PROMPT/,
+);
+assert.match(story, /className="hero-story spe-pipeline"/);
+assert.doesNotMatch(story, /hero-story-flow/);
+assert.doesNotMatch(story, /hero-flow-lines/);
+assert.doesNotMatch(story, /hero-story-stage/);
+assert.doesNotMatch(story, /chaos-to-idea/);
+assert.doesNotMatch(story, /glass-filter-stack/);
+assert.doesNotMatch(story, /hero-engine/);
+assert.doesNotMatch(story, /MESSY HUMAN FRAGMENTS/);
 assert.doesNotMatch(story, /\b(orb|reactor|turbine|atom)\b/i);
+assert.doesNotMatch(story, /<svg[\s\S]*hero-flow/);
 
-assert.match(hero, /<HeroStory/);
+assert.match(hero, /<HeroStory\s*\/>/);
+assert.doesNotMatch(hero, /Pause story/);
+assert.doesNotMatch(hero, /Resume story/);
+assert.doesNotMatch(hero, /motion-button/);
 assert.doesNotMatch(hero, /import\("\.\.\/scene\/SpeIntelligence"\)/);
 assert.doesNotMatch(hero, /<Scene/);
 
-assert.match(css, /\.hero-story-flow\.spe-pipeline\s*\{[\s\S]*grid-template-columns:/);
+assert.match(css, /\.hero-story-art\s*\{[\s\S]*object-fit:\s*contain/);
+assert.match(css, /\.hero-story-plate\s*\{/);
 assert.match(
   css,
-  /@media \(min-width: 701px\)[\s\S]*\.hero-topline \.edition[\s\S]*display:\s*none/,
-);
-assert.match(
-  css,
-  /@media \(min-width: 701px\)[\s\S]*\.hero-story-label strong\s*\{[\s\S]*font-size:\s*clamp\(0\.68rem/,
-);
-assert.match(
-  css,
-  /@media \(max-width: 700px\)[\s\S]*\.hero-story-flow\.spe-pipeline\s*\{[\s\S]*grid-template-columns:\s*1fr/,
-);
-assert.match(
-  css,
-  /@media \(max-width: 700px\)[\s\S]*\.hero-theater\s*\{[\s\S]*max-height:\s*none/,
+  /html\[data-theme="light"\]\s*\.hero-story-plate\s*\{/,
 );
 assert.match(
   css,
   /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.hero-story[\s\S]*animation:\s*none/,
 );
+assert.match(
+  css,
+  /\.hero-stage\s*\{[\s\S]*width:\s*58%/,
+);
+assert.match(
+  css,
+  /@media \(min-width: 701px\)[\s\S]*\.hero-copy\s*\{[\s\S]*width:\s*42%/,
+);
 
-console.log("PASS hero semantic story contract");
+console.log("PASS hero founder-PNG contract", sha.slice(0, 12));

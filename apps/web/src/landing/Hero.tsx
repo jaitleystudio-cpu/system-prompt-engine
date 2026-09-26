@@ -67,8 +67,7 @@ const EXAMPLES = [
 ] as const;
 export function Hero(p: Props) {
   const hero = selectHero(p.category, Boolean(p.result));
-  const [paused, setPaused] = useState(false),
-    [reduced, setReduced] = useState(() =>
+  const [reduced, setReduced] = useState(() =>
       matchMedia("(prefers-reduced-motion: reduce)").matches,
     ),
     [resultTab, setResultTab] = useState<"prompt" | "structure" | "review">(
@@ -136,25 +135,10 @@ export function Hero(p: Props) {
           </a>
         </div>
         <div className="hero-stage">
-          <HeroStory state={p.sceneState} paused={paused || reduced} />
+          <HeroStory />
         </div>
         <div className="theater-bottom">
           <span>ONE BRIEF. ANY AI.</span>
-          <button
-            className="motion-button"
-            type="button"
-            disabled={reduced}
-            aria-pressed={paused}
-            onClick={() => {
-              setPaused(!paused);
-            }}
-          >
-            {reduced
-              ? "Reduced motion"
-              : paused
-                ? "Resume story"
-                : "Pause story"}
-          </button>
           <a href="#prompt-studio">SCROLL TO CREATE ↓</a>
         </div>
       </div>

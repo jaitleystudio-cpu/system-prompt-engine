@@ -1,6 +1,6 @@
 {
-  "generated": "2026-09-26T16:40:00.000Z",
-  "tipNote": "final_craft presentation closures",
+  "generated": "2026-09-26T18:07:43.821Z",
+  "tipNote": "Emergency hero fix: founder PNG verbatim; inventory merged for HeroStory alt/aria.",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -2005,6 +2005,132 @@
       "text": "Video → prompt request:"
     },
     {
+      "id": "07babf811441bc02fb42",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "Dictation works in some browsers. If listening is unavailable or permission is denied, type your idea — typing always works."
+    },
+    {
+      "id": "196e1a0d9cef82ec1329",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "unknown"
+    },
+    {
+      "id": "2680204ae1ed1e1ee3ce",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "Microphone or speech access was denied. Allow access in your browser settings, or type your idea."
+    },
+    {
+      "id": "2ea54f7c7b2abe283a9e",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "permission-denied"
+    },
+    {
+      "id": "3fa1bb6e07e5ffb743c0",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "No usable microphone was found. Plug in a mic, check OS privacy settings, or type your idea."
+    },
+    {
+      "id": "45084ec6af0bfcbc752a",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "listening"
+    },
+    {
+      "id": "4834f1cb35a0d28e8ec8",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "service-not-allowed"
+    },
+    {
+      "id": "69c3b0585726b0a28abb",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "no-speech"
+    },
+    {
+      "id": "828453678e339e9b84bc",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "audio-capture"
+    },
+    {
+      "id": "8a5b03d3e91acf83b8ad",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "Speech recognition needs a network connection in this browser. Check connectivity, or type your idea."
+    },
+    {
+      "id": "932ff61735e65373c398",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "Speech recognition is not available in this browser. Type your idea in the box below — typing always works."
+    },
+    {
+      "id": "9ec9d4e98cc95dccd71e",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "network"
+    },
+    {
+      "id": "a0be744b0f3aeca032ee",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "aborted"
+    },
+    {
+      "id": "aa2a21f7d7b3e2d8cc74",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "error"
+    },
+    {
+      "id": "af579e992cd83eb080c1",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "idle"
+    },
+    {
+      "id": "b8f10773e4e8e11ca5a2",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "Listening stopped."
+    },
+    {
+      "id": "c3f66235d9c19a03cb4b",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "not-allowed"
+    },
+    {
+      "id": "caa77a3de0184fb80be0",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "Speech recognition stopped. Check your microphone and connection, or type your idea."
+    },
+    {
+      "id": "dec190c4b013cdfbc421",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "needs-consent"
+    },
+    {
+      "id": "e2852c3c5cd9dd810e51",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "review"
+    },
+    {
+      "id": "f22d6bfca9800688972e",
+      "file": "apps/web/src/input/speechHelpers.ts",
+      "depth": "PRODUCT",
+      "text": "No speech was detected. Try again, or type your idea."
+    },
+    {
       "id": "063b3ea2f233e4012efb",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
@@ -2137,132 +2263,6 @@
       "text": "Prefer typing? The transcript box below always works — speech is optional."
     },
     {
-      "id": "07babf811441bc02fb42",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "Dictation works in some browsers. If listening is unavailable or permission is denied, type your idea — typing always works."
-    },
-    {
-      "id": "196e1a0d9cef82ec1329",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "unknown"
-    },
-    {
-      "id": "2680204ae1ed1e1ee3ce",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "Microphone or speech access was denied. Allow access in your browser settings, or type your idea."
-    },
-    {
-      "id": "2ea54f7c7b2abe283a9e",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "permission-denied"
-    },
-    {
-      "id": "3fa1bb6e07e5ffb743c0",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "No usable microphone was found. Plug in a mic, check OS privacy settings, or type your idea."
-    },
-    {
-      "id": "45084ec6af0bfcbc752a",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "listening"
-    },
-    {
-      "id": "4834f1cb35a0d28e8ec8",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "service-not-allowed"
-    },
-    {
-      "id": "69c3b0585726b0a28abb",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "no-speech"
-    },
-    {
-      "id": "828453678e339e9b84bc",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "audio-capture"
-    },
-    {
-      "id": "8a5b03d3e91acf83b8ad",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "Speech recognition needs a network connection in this browser. Check connectivity, or type your idea."
-    },
-    {
-      "id": "932ff61735e65373c398",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "Speech recognition is not available in this browser. Type your idea in the box below — typing always works."
-    },
-    {
-      "id": "9ec9d4e98cc95dccd71e",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "network"
-    },
-    {
-      "id": "a0be744b0f3aeca032ee",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "aborted"
-    },
-    {
-      "id": "aa2a21f7d7b3e2d8cc74",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "error"
-    },
-    {
-      "id": "af579e992cd83eb080c1",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "idle"
-    },
-    {
-      "id": "b8f10773e4e8e11ca5a2",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "Listening stopped."
-    },
-    {
-      "id": "c3f66235d9c19a03cb4b",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "not-allowed"
-    },
-    {
-      "id": "caa77a3de0184fb80be0",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "Speech recognition stopped. Check your microphone and connection, or type your idea."
-    },
-    {
-      "id": "dec190c4b013cdfbc421",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "needs-consent"
-    },
-    {
-      "id": "e2852c3c5cd9dd810e51",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "review"
-    },
-    {
-      "id": "f22d6bfca9800688972e",
-      "file": "apps/web/src/input/speechHelpers.ts",
-      "depth": "PRODUCT",
-      "text": "No speech was detected. Try again, or type your idea."
-    },
-    {
       "id": "10106e496bf9beff2d57",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
@@ -2351,156 +2351,6 @@
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
       "text": "-day curated queue"
-    },
-    {
-      "id": "0cfb92da067fbae9bdf9",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "hover-explode"
-    },
-    {
-      "id": "0d948d2e2d8e9bb6def1",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "orbit"
-    },
-    {
-      "id": "0deb7ac7279590e0c2a8",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "· motion reduced"
-    },
-    {
-      "id": "0febfd879606df6b03ee",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "scroll-story"
-    },
-    {
-      "id": "3385730b6ad814621ac5",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "orb-field"
-    },
-    {
-      "id": "6cb668e50de0d1f78acd",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "3D preview:"
-    },
-    {
-      "id": "715397968860d790e51e",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "folds"
-    },
-    {
-      "id": "718d458cc49f5985a5b2",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "undefined"
-    },
-    {
-      "id": "a2833c6607a7b3ecdb0d",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "table"
-    },
-    {
-      "id": "b272a6edc08d756f8738",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "helix"
-    },
-    {
-      "id": "b771dc7a38ea70d1ed41",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "(prefers-reduced-motion: reduce)"
-    },
-    {
-      "id": "c146ed59ad638ba422dc",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "modules"
-    },
-    {
-      "id": "c602efc5a503aab8e743",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "icosa"
-    },
-    {
-      "id": "cbe1556bf355730cfeb3",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "pillars"
-    },
-    {
-      "id": "db44b4ca0302591f6e7c",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "ribbon"
-    },
-    {
-      "id": "e093ea792603966a0c93",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "slabs"
-    },
-    {
-      "id": "efdcdb83441ae3ace480",
-      "file": "apps/web/src/lab/LabStage.tsx",
-      "depth": "PRODUCT",
-      "text": "torus"
-    },
-    {
-      "id": "340cd2a2a543c3a47318",
-      "file": "apps/web/src/lab/LabStageBoundary.tsx",
-      "depth": "PRODUCT",
-      "text": "3D preview unavailable",
-      "reviewed": true,
-      "batch": "batch_g"
-    },
-    {
-      "id": "61a5b200aa54b8733f25",
-      "file": "apps/web/src/lab/LabStageBoundary.tsx",
-      "depth": "PRODUCT",
-      "text": "3D preview unavailable:",
-      "reviewed": true,
-      "batch": "batch_g"
-    },
-    {
-      "id": "e0f80104c61b36ca99f4",
-      "file": "apps/web/src/lab/LabStageBoundary.tsx",
-      "depth": "PRODUCT",
-      "text": "3D preview unavailable on this device — the build prompt below still opens in Create.",
-      "reviewed": true,
-      "batch": "batch_g"
-    },
-    {
-      "id": "8ee84f1049e0f1dc83db",
-      "file": "apps/web/src/lab/PromptGallery.tsx",
-      "depth": "PRODUCT",
-      "text": "Open in SPE"
-    },
-    {
-      "id": "cdeea4048bc288668db4",
-      "file": "apps/web/src/lab/PromptGallery.tsx",
-      "depth": "PRODUCT",
-      "text": "These are starting ideas for Create — separate from the Daily 3D Lab stage experiences above."
-    },
-    {
-      "id": "e471050a6f3caa107d10",
-      "file": "apps/web/src/lab/PromptGallery.tsx",
-      "depth": "PRODUCT",
-      "text": "Prompt Gallery ("
-    },
-    {
-      "id": "e67588cae23c0f062794",
-      "file": "apps/web/src/lab/PromptGallery.tsx",
-      "depth": "PRODUCT",
-      "text": "ordinary prompt cards)"
     },
     {
       "id": "01d9fae9d8acfc9f5b27",
@@ -3665,6 +3515,156 @@
       "text": "From Daily Lab:",
       "reviewed": true,
       "batch": "batch_g"
+    },
+    {
+      "id": "0cfb92da067fbae9bdf9",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "hover-explode"
+    },
+    {
+      "id": "0d948d2e2d8e9bb6def1",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "orbit"
+    },
+    {
+      "id": "0deb7ac7279590e0c2a8",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "· motion reduced"
+    },
+    {
+      "id": "0febfd879606df6b03ee",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "scroll-story"
+    },
+    {
+      "id": "3385730b6ad814621ac5",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "orb-field"
+    },
+    {
+      "id": "6cb668e50de0d1f78acd",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "3D preview:"
+    },
+    {
+      "id": "715397968860d790e51e",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "folds"
+    },
+    {
+      "id": "718d458cc49f5985a5b2",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "undefined"
+    },
+    {
+      "id": "a2833c6607a7b3ecdb0d",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "table"
+    },
+    {
+      "id": "b272a6edc08d756f8738",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "helix"
+    },
+    {
+      "id": "b771dc7a38ea70d1ed41",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "(prefers-reduced-motion: reduce)"
+    },
+    {
+      "id": "c146ed59ad638ba422dc",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "modules"
+    },
+    {
+      "id": "c602efc5a503aab8e743",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "icosa"
+    },
+    {
+      "id": "cbe1556bf355730cfeb3",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "pillars"
+    },
+    {
+      "id": "db44b4ca0302591f6e7c",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "ribbon"
+    },
+    {
+      "id": "e093ea792603966a0c93",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "slabs"
+    },
+    {
+      "id": "efdcdb83441ae3ace480",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "torus"
+    },
+    {
+      "id": "340cd2a2a543c3a47318",
+      "file": "apps/web/src/lab/LabStageBoundary.tsx",
+      "depth": "PRODUCT",
+      "text": "3D preview unavailable",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "61a5b200aa54b8733f25",
+      "file": "apps/web/src/lab/LabStageBoundary.tsx",
+      "depth": "PRODUCT",
+      "text": "3D preview unavailable:",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "e0f80104c61b36ca99f4",
+      "file": "apps/web/src/lab/LabStageBoundary.tsx",
+      "depth": "PRODUCT",
+      "text": "3D preview unavailable on this device — the build prompt below still opens in Create.",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "8ee84f1049e0f1dc83db",
+      "file": "apps/web/src/lab/PromptGallery.tsx",
+      "depth": "PRODUCT",
+      "text": "Open in SPE"
+    },
+    {
+      "id": "cdeea4048bc288668db4",
+      "file": "apps/web/src/lab/PromptGallery.tsx",
+      "depth": "PRODUCT",
+      "text": "These are starting ideas for Create — separate from the Daily 3D Lab stage experiences above."
+    },
+    {
+      "id": "e471050a6f3caa107d10",
+      "file": "apps/web/src/lab/PromptGallery.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt Gallery ("
+    },
+    {
+      "id": "e67588cae23c0f062794",
+      "file": "apps/web/src/lab/PromptGallery.tsx",
+      "depth": "PRODUCT",
+      "text": "ordinary prompt cards)"
     },
     {
       "id": "0105e462c3877502b93d",
@@ -5545,6 +5545,12 @@
       "text": "structure"
     },
     {
+      "id": "2f43d809be84900ecb3e",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE transformation story: messy human fragments become an idea; meaning is clarified; the SPE semantic engine structures it into role, objective, constraints, and output; a perfect system prompt emerges. Stages: IDEA, MEANING, SPE, STRUCTURE, PROMPT."
+    },
+    {
       "id": "31cbddddebf52fec7222",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
@@ -5617,6 +5623,12 @@
       "text": "IDEA"
     },
     {
+      "id": "777c585b3d401999c15b",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE transforms messy human fragments into an idea, meaning, structure, and a perfect system prompt: IDEA, MEANING, SPE, STRUCTURE, PROMPT."
+    },
+    {
       "id": "79dfd20ab4d9c1bcca06",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
@@ -5675,6 +5687,12 @@
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
       "text": "URL"
+    },
+    {
+      "id": "9e661e2f017c01c162a3",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Founder illustration of the SPE journey: IDEA to MEANING to SPE to STRUCTURE to PROMPT."
     },
     {
       "id": "aa6734f8fbb453869345",
@@ -11305,72 +11323,6 @@
       "text": "home"
     },
     {
-      "id": "0b6d7b829d82999c0e07",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "#e4b981"
-    },
-    {
-      "id": "3de4ab1d0664ce023002",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "READY"
-    },
-    {
-      "id": "4a1fb9fc55369db0daae",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "#9eacff"
-    },
-    {
-      "id": "4cb1c298031c67d85ec8",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "COMPILING"
-    },
-    {
-      "id": "83e430442f1167452cd3",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "80px"
-    },
-    {
-      "id": "8aa98dbc414aea19b5df",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "UNDERSTANDING"
-    },
-    {
-      "id": "95d2e341616aae5fab6b",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "STRUCTURING"
-    },
-    {
-      "id": "a0dc8ea24bb4eb4e5343",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "visibilitychange"
-    },
-    {
-      "id": "a51d7a98afaf3f6c83c0",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "#86dbc9"
-    },
-    {
-      "id": "af35e130fd1b22458bf3",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "#d8edff"
-    },
-    {
-      "id": "ca1359387f0b7ebc5792",
-      "file": "apps/web/src/scene/SpeIntelligence.tsx",
-      "depth": "PRODUCT",
-      "text": "LITE"
-    },
-    {
       "id": "2ce1001805826e77795c",
       "file": "apps/web/src/scene/quality.ts",
       "depth": "PRODUCT",
@@ -11513,6 +11465,72 @@
       "file": "apps/web/src/scene/semantic.ts",
       "depth": "PRODUCT",
       "text": "statement"
+    },
+    {
+      "id": "0b6d7b829d82999c0e07",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "#e4b981"
+    },
+    {
+      "id": "3de4ab1d0664ce023002",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "READY"
+    },
+    {
+      "id": "4a1fb9fc55369db0daae",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "#9eacff"
+    },
+    {
+      "id": "4cb1c298031c67d85ec8",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "COMPILING"
+    },
+    {
+      "id": "83e430442f1167452cd3",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "80px"
+    },
+    {
+      "id": "8aa98dbc414aea19b5df",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "UNDERSTANDING"
+    },
+    {
+      "id": "95d2e341616aae5fab6b",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "STRUCTURING"
+    },
+    {
+      "id": "a0dc8ea24bb4eb4e5343",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "visibilitychange"
+    },
+    {
+      "id": "a51d7a98afaf3f6c83c0",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "#86dbc9"
+    },
+    {
+      "id": "af35e130fd1b22458bf3",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "#d8edff"
+    },
+    {
+      "id": "ca1359387f0b7ebc5792",
+      "file": "apps/web/src/scene/SpeIntelligence.tsx",
+      "depth": "PRODUCT",
+      "text": "LITE"
     },
     {
       "id": "01da372c42a0a646505f",
@@ -11743,6 +11761,84 @@
       "text": "og:description"
     },
     {
+      "id": "1607cf214aba648ceb3f",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "Dark"
+    },
+    {
+      "id": "29a3255d668cc80b531c",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "Light"
+    },
+    {
+      "id": "3510942a502791ac594e",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "data-theme"
+    },
+    {
+      "id": "485f12958c846be81144",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "system"
+    },
+    {
+      "id": "6dbccaa17a8ee82f4484",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "dark"
+    },
+    {
+      "id": "77c5dad659858d158b4f",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "System"
+    },
+    {
+      "id": "8a5d2b25cae1955f066a",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "content"
+    },
+    {
+      "id": "92bd5fe174ee589bfa67",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "light"
+    },
+    {
+      "id": "94057f3f770a9363e191",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "#f4f1ea"
+    },
+    {
+      "id": "98f45ff95534410bd681",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "spe-theme"
+    },
+    {
+      "id": "bdb8daebbbbbbf617ae6",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "meta[name=\"theme-color\"]"
+    },
+    {
+      "id": "f261cb5147157498b84a",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "(prefers-color-scheme: light)"
+    },
+    {
+      "id": "f6ae3eca3429b6e8a28b",
+      "file": "apps/web/src/ui/theme.ts",
+      "depth": "PRODUCT",
+      "text": "undefined"
+    },
+    {
       "id": "03021ee0bc1c547e6861",
       "file": "apps/web/src/ui/ThemeToggle.tsx",
       "depth": "PRODUCT",
@@ -11849,84 +11945,6 @@
       "file": "apps/web/src/ui/TrustPanel.tsx",
       "depth": "PROOF",
       "text": "wasm imports:"
-    },
-    {
-      "id": "1607cf214aba648ceb3f",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "Dark"
-    },
-    {
-      "id": "29a3255d668cc80b531c",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "Light"
-    },
-    {
-      "id": "3510942a502791ac594e",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "data-theme"
-    },
-    {
-      "id": "485f12958c846be81144",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "system"
-    },
-    {
-      "id": "6dbccaa17a8ee82f4484",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "dark"
-    },
-    {
-      "id": "77c5dad659858d158b4f",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "System"
-    },
-    {
-      "id": "8a5d2b25cae1955f066a",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "content"
-    },
-    {
-      "id": "92bd5fe174ee589bfa67",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "light"
-    },
-    {
-      "id": "94057f3f770a9363e191",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "#f4f1ea"
-    },
-    {
-      "id": "98f45ff95534410bd681",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "spe-theme"
-    },
-    {
-      "id": "bdb8daebbbbbbf617ae6",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "meta[name=\"theme-color\"]"
-    },
-    {
-      "id": "f261cb5147157498b84a",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "(prefers-color-scheme: light)"
-    },
-    {
-      "id": "f6ae3eca3429b6e8a28b",
-      "file": "apps/web/src/ui/theme.ts",
-      "depth": "PRODUCT",
-      "text": "undefined"
     },
     {
       "id": "0075562266d288d9e8b5",

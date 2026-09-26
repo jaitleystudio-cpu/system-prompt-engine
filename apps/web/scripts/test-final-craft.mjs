@@ -36,8 +36,9 @@ assert.match(css, /\.spe-create-sources-depth/);
 assert.match(css, /\.spe-capabilities-atlas/);
 assert.match(css, /\.spe-contract-simple/);
 assert.match(css, /\[data-kind="conformance"\]\[data-status="unknown"\]/);
-assert.match(hero, /label: "IDEA"/);
-assert.match(hero, /label: "PROMPT"/);
+assert.match(hero, /founder-hero-story\.png/);
+assert.match(hero, /IDEA[\s\S]*MEANING[\s\S]*SPE[\s\S]*STRUCTURE[\s\S]*PROMPT/);
 assert.doesNotMatch(hero, /\b(orb|reactor|turbine|atom)\b/i);
+assert.doesNotMatch(hero, /hero-story-flow|chaos-to-idea|hero-flow-lines/);
 
 console.log("PASS final craft presentation contracts");

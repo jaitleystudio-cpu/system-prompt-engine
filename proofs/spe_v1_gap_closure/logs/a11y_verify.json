@@ -25,7 +25,7 @@
     {
       "id": "pipeline_aria",
       "result": "PASS",
-      "detail": "SPE transformation: messy human fragments to idea, meaning, semantic engine, structure, and perfect system prompt"
+      "detail": "SPE transforms messy human fragments into an idea, meaning, structure, and a perfect system prompt: IDEA, MEANING, SPE, STRUCTURE, PROMPT."
     },
     {
       "id": "theme_keyboard_focus",
@@ -60,7 +60,7 @@
     {
       "id": "reduced_motion_control",
       "result": "PASS",
-      "detail": "Reduced motion"
+      "detail": "founder-art=1 animNone=true (Pause control removed; image hero)"
     },
     {
       "id": "zoom_200_usable",
@@ -80,5 +80,5 @@
   ],
   "pass": true,
   "failed": [],
-  "at": "2026-09-26T16:40:02.902Z"
+  "at": "2026-09-26T18:10:31.259Z"
 }
