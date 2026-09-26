@@ -1,9 +1,9 @@
 {
-  "tipShaAtCapture": "5d9b5cb9f304d5a6e00c27eafa09ee090ac37164",
-  "note": "Bind tip SHA after commit via report rewrite.",
+  "tipShaAtCapture": "29d234e516df113e1a65e7e404cb43b0ed0658e1",
+  "note": "Bound to post-commit tip SHA.",
   "founderPngSha256": "fb7edd8fbb1e197fed417a5866441ee950c58600b0c805aa7377d2bc06a6da93",
   "founderPngPath": "apps/web/public/hero/founder-hero-story.png",
-  "story": "IDEA → MEANING → SPE → STRUCTURE → PROMPT (in founder PNG, not DOM)",
+  "story": "IDEA \u2192 MEANING \u2192 SPE \u2192 STRUCTURE \u2192 PROMPT (in founder PNG, not DOM)",
   "captures": [
     {
       "name": "home-hero-dark-desktop.png",

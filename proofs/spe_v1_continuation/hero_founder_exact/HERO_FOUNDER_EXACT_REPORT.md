@@ -2,7 +2,8 @@
 
 **Scope:** Replace failed DOM/SVG/award-craft hero diagram with the founder-supplied PNG as the live right-side hero art.  
 **Branch:** `grok/spe-v1-full-product-continuation-20260925`  
-**Base tip before work:** `5d9b5cb9f304d5a6e00c27eafa09ee090ac37164`  
+**Base tip before work:**   
+**Implementation tip SHA:** `5d9b5cb9f304d5a6e00c27eafa09ee090ac37164`  
 **PR:** #44  
 **HOSTING:** **FORBIDDEN** · **WORLD #1:** **NOT_PROVEN** · **₹0** · No CloudAgent · Route B Mac
 
