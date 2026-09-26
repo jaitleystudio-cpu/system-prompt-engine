@@ -1,6 +1,4 @@
 {
-  "tip_sha_at_capture": "bafcb11db8c2075fcd7fa49e66c3906bde13878c",
-  "note": "tip_sha updated after commit/push to final craft tip",
   "captured_at": "2026-09-26T22:14:29.990222+05:30",
   "HOSTING": "FORBIDDEN",
   "WORLD_1": "NOT_PROVEN",
@@ -107,5 +105,7 @@
     "inspect",
     "unknown"
   ],
-  "blocked_failure_fixture": "NOT_CAPTURED_NO_FAIL_FIXTURE_IN_UI_PATH"
+  "blocked_failure_fixture": "NOT_CAPTURED_NO_FAIL_FIXTURE_IN_UI_PATH",
+  "tip_sha": "75d139adbebaad5d265c6275c67ea709e0ca382a",
+  "baseline_sha": "bafcb11db8c2075fcd7fa49e66c3906bde13878c"
 }
