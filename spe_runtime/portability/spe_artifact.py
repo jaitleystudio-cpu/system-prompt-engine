@@ -184,6 +184,16 @@ def build_spe_artifact(
         ),
     }
 
+    # Optional Batch D/E durable local run record (provider-profile lineage lives here).
+    # Backward compatible: omit when absent; never invent ProofReceipt / receipt.
+    if "execution_record" in partial and partial["execution_record"] is not None:
+        er = partial["execution_record"]
+        if not isinstance(er, Mapping):
+            raise TypeError("execution_record must be a mapping when provided")
+        if "receipt" in er:
+            raise ValueError("execution_record must never use key 'receipt'")
+        base["execution_record"] = canonicalize(dict(er))
+
     cp = context_protocol
     if cp is None and CONTEXT_PROTOCOL_LINEAGE_KEY in partial:
         cp = partial[CONTEXT_PROTOCOL_LINEAGE_KEY]  # type: ignore[assignment]
@@ -352,17 +362,20 @@ def refresh_stale_context(
         prompt_lineage=prompt_lineage,
     )
 
+    refresh_partial: dict[str, Any] = {
+        "user_request": src["user_request"],
+        "category": src["category"],
+        "target": src["target"],
+        "envelope": src["envelope"],
+        "wasm": src["wasm"],
+        "rendered_prompt": src["rendered_prompt"],
+        "intent": src["intent"],  # ProtectedIntent — copied, never rewritten
+        "lineage": src["lineage"],
+    }
+    if "execution_record" in src and src["execution_record"] is not None:
+        refresh_partial["execution_record"] = src["execution_record"]
     rebuilt = build_spe_artifact(
-        {
-            "user_request": src["user_request"],
-            "category": src["category"],
-            "target": src["target"],
-            "envelope": src["envelope"],
-            "wasm": src["wasm"],
-            "rendered_prompt": src["rendered_prompt"],
-            "intent": src["intent"],  # ProtectedIntent — copied, never rewritten
-            "lineage": src["lineage"],
-        },
+        refresh_partial,
         spe_format=SPE_FORMAT_V2,
         context_protocol=lineage_block,
         created_at_utc=str(now_iso),

@@ -4398,7 +4398,7 @@ html[data-theme="dark"] .spe-create input::placeholder {
 }
 .spe-contract-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.8rem;
 }
 .spe-contract-card,
@@ -4411,6 +4411,26 @@ html[data-theme="dark"] .spe-create input::placeholder {
 }
 .spe-contract-card[data-section="authority"] {
   border-color: rgba(199, 174, 122, 0.25);
+}
+.spe-contract-card[data-section="active-profile"] {
+  border-color: rgba(120, 180, 200, 0.35);
+}
+.spe-profile-law,
+.spe-profile-owner {
+  margin: 0.75rem 0 0;
+  color: #9eb0c8;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+.spe-profile-law {
+  color: #8fc4d4;
+  font: 0.68rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (max-width: 1100px) {
+  .spe-contract-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .spe-contract-label {
   color: #d8b779;

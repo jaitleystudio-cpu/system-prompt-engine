@@ -117,6 +117,20 @@ assert.equal(recordA.contract.authority.status, "NONE");
 assert.equal(recordA.contract.authority.level, 0);
 assert.equal(recordA.contract.example.classification, "EXAMPLE / USER_SUPPLIED");
 assert.equal(recordA.contract.example.non_authoritative, true);
+assert.equal(recordA.contract.provider_profile_id, "DETERMINISTIC");
+assert.equal(recordA.contract.profile_version, "1.0.0");
+assert.equal(
+  recordA.contract.provider_profile_digest,
+  "241a3cd79fbfe921dc84835145e89639a8c90703574b87f77d06b158a93afe8d",
+);
+assert.equal(recordA.contract.profile_selection_status, "SELECTED");
+assert.match(recordA.contract.profile_selection_reason, /local-first/);
+assert.equal(recordA.contract.profile_display_source, "ts_mirror");
+assert.equal(recordA.contract.profile_authority_granted, false);
+assert.equal(
+  recordA.checks.find((check) => check.id === "profile-not-authority").status,
+  "PASS",
+);
 assert.match(
   recordA.contract.hard_constraints.find(
     (constraint) => constraint.id === "desired-output",
@@ -170,6 +184,14 @@ assert.equal(
   ).status,
   "FAIL",
 );
+assert.equal(
+  escalatedRecord.checks.find(
+    (check) => check.id === "profile-not-authority",
+  ).status,
+  "FAIL",
+  "profile bind must not launder escalated authority into PASS",
+);
+assert.equal(escalatedRecord.contract.profile_authority_granted, false);
 
 const promoted = structuredClone(artifact);
 promoted.envelope.payload.hard_constraints.push({
@@ -202,6 +224,19 @@ const durable = await runtime.buildSpeArtifact({
 });
 const roundTrip = await runtime.parseSpeArtifactText(JSON.stringify(durable));
 assert.equal(roundTrip.artifact.execution_record.digests.record_sha256, recordA.digests.record_sha256);
+assert.equal(
+  roundTrip.artifact.execution_record.contract.provider_profile_id,
+  "DETERMINISTIC",
+);
+assert.equal(
+  roundTrip.artifact.execution_record.contract.profile_version,
+  "1.0.0",
+);
+assert.equal(
+  roundTrip.artifact.execution_record.contract.provider_profile_digest,
+  recordA.contract.provider_profile_digest,
+);
+assert.equal(roundTrip.artifact.execution_record.conformance.overall, "UNKNOWN");
 
 const launderedRecord = structuredClone(recordA);
 launderedRecord.conformance.overall = "PASS";
@@ -221,9 +256,20 @@ const panel = readFileSync(
 );
 assert.match(panel, /Execution Contract/);
 assert.match(panel, /CONTRACT/);
+assert.match(panel, /ACTIVE PROFILE/);
 assert.match(panel, /AUTHORITY/);
 assert.match(panel, /LOCAL RUN RECORD/);
 assert.match(panel, /recommend ≠ authorize ≠ execute/);
+assert.match(panel, /selection ≠ authority grant/);
 assert.match(panel, /Run local dry-run/);
 
-console.log("PASS execution contract + local record + conformance laws");
+// Mirror helper: EXTERNAL_OPTIONAL never silently selected
+const blocked = runtime.selectMirroredProfile({ allow_external: false });
+assert.equal(blocked.profile_id, "DETERMINISTIC");
+assert.equal(blocked.authority_granted, false);
+const external = runtime.selectMirroredProfile({ allow_external: true });
+// local-first still prefers DETERMINISTIC when available
+assert.equal(external.profile_id, "DETERMINISTIC");
+assert.equal(external.authority_granted, false);
+
+console.log("PASS execution contract + profile bind + local record + conformance laws");

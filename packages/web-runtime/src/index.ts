@@ -4,3 +4,4 @@ export * from "./render";
 export * from "./speArtifact";
 export * from "./history";
 export * from "./executionRecord";
+export * from "./providerProfiles";

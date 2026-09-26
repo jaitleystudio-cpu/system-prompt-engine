@@ -161,6 +161,50 @@ export function ExecutionContractPanel({
           ) : null}
         </article>
 
+        <article className="spe-contract-card" data-section="active-profile">
+          <span className="spe-contract-label">ACTIVE PROFILE</span>
+          <h3>What is selected</h3>
+          <dl>
+            <div>
+              <dt>Profile</dt>
+              <dd>
+                {record?.contract.provider_profile_id ??
+                  "— (run local dry-run to bind)"}
+              </dd>
+            </div>
+            <div>
+              <dt>Version</dt>
+              <dd>{record?.contract.profile_version ?? "—"}</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd>
+                {record?.contract.profile_selection_status ?? "UNBOUND"}
+              </dd>
+            </div>
+            <div>
+              <dt>Digest</dt>
+              <dd>
+                {shortDigest(record?.contract.provider_profile_digest)}
+              </dd>
+            </div>
+          </dl>
+          <p className="spe-profile-law">
+            selection ≠ authority grant · display:{" "}
+            {record?.contract.profile_display_source ?? "ts_mirror"}
+          </p>
+          <h4>Selection reason</h4>
+          <p>
+            {record?.contract.profile_selection_reason ??
+              "No provider profile bound yet. Local dry-run binds a local-first profile into the run record without minting authority."}
+          </p>
+          <p className="spe-profile-owner">
+            Semantic owner:{" "}
+            {record?.contract.profile_semantic_owner ??
+              "spe_runtime.providers.profiles+adapter"}
+          </p>
+        </article>
+
         <article className="spe-contract-card" data-section="authority">
           <span className="spe-contract-label">AUTHORITY</span>
           <h3>What is authorized</h3>
@@ -249,6 +293,17 @@ export function ExecutionContractPanel({
               <div>
                 <dt>Side effects</dt>
                 <dd>{record.side_effects}</dd>
+              </div>
+              <div>
+                <dt>Provider profile</dt>
+                <dd>
+                  {record.contract.provider_profile_id ?? "—"} ·{" "}
+                  {record.contract.profile_version ?? "—"}
+                </dd>
+              </div>
+              <div>
+                <dt>Profile digest</dt>
+                <dd>{shortDigest(record.contract.provider_profile_digest)}</dd>
               </div>
             </dl>
           </div>

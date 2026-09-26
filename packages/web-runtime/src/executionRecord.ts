@@ -2,6 +2,12 @@ import {
   sha256Hex,
   type SpeArtifactV1,
 } from "./speArtifact";
+import {
+  PROVIDER_PROFILE_DISPLAY_SOURCE,
+  PROVIDER_PROFILE_SEMANTIC_OWNER,
+  selectMirroredProfile,
+  type ProfileSelectionMirror,
+} from "./providerProfiles";
 
 export type ConformanceStatus = "PASS" | "FAIL" | "UNKNOWN";
 
@@ -34,6 +40,16 @@ export type BoundExecutionContract = {
     classification: "EXAMPLE / USER_SUPPLIED";
     non_authoritative: true;
   };
+  /** Bound provider profile identity — observational; not an AuthorityGrant. */
+  provider_profile_id: string | null;
+  profile_version: string | null;
+  provider_profile_digest: string | null;
+  profile_selection_status: "SELECTED" | "BLOCKED" | "UNAVAILABLE";
+  profile_selection_reason: string;
+  profile_display_source: typeof PROVIDER_PROFILE_DISPLAY_SOURCE;
+  profile_semantic_owner: typeof PROVIDER_PROFILE_SEMANTIC_OWNER;
+  /** Hard false — profile bind never mints authority. */
+  profile_authority_granted: false;
 };
 
 export type LocalExecutionRecord = {
@@ -75,6 +91,9 @@ type BuildLocalExecutionRecordInput = {
   protocolOutput: ProtocolOutputLike;
   buildSha: string;
   recordedAtUtc?: string;
+  /** Optional override; default = local-first mirror (allow_external=false). */
+  profileSelection?: ProfileSelectionMirror;
+  allowExternal?: boolean;
 };
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -124,7 +143,12 @@ export async function buildLocalExecutionRecord({
   protocolOutput,
   buildSha,
   recordedAtUtc = new Date().toISOString(),
+  profileSelection,
+  allowExternal = false,
 }: BuildLocalExecutionRecordInput): Promise<LocalExecutionRecord> {
+  const selection =
+    profileSelection ??
+    selectMirroredProfile({ allow_external: allowExternal });
   const envelope = asRecord(artifact.envelope);
   const payload = asRecord(envelope?.payload);
   const hardConstraints = asRecords(payload?.hard_constraints).map(
@@ -257,6 +281,24 @@ export async function buildLocalExecutionRecord({
             ? "At least one protocol node or evaluator failed."
             : "Required protocol nodes remain open; no target execution was claimed.",
     },
+    {
+      id: "profile-not-authority",
+      label: "Provider profile does not escalate authority",
+      status:
+        selection.authority_granted === false &&
+        selection.network_enabled === false &&
+        selection.credentials_released === false &&
+        authoritySafe
+          ? "PASS"
+          : "FAIL",
+      detail:
+        selection.authority_granted === false &&
+        selection.network_enabled === false &&
+        selection.credentials_released === false &&
+        authoritySafe
+          ? `Profile bind is observational (${selection.status}: ${selection.profile_id ?? "none"}); no AuthorityGrant, network, or credentials.`
+          : "Provider profile selection attempted to escalate authority, network, or credentials.",
+    },
   ];
   const statuses = checks.map((check) => check.status);
   const overall = summarizeConformance(statuses);
@@ -297,6 +339,14 @@ export async function buildLocalExecutionRecord({
         classification: "EXAMPLE / USER_SUPPLIED" as const,
         non_authoritative: true as const,
       },
+      provider_profile_id: selection.profile_id,
+      profile_version: selection.profile_version,
+      provider_profile_digest: selection.profile_digest,
+      profile_selection_status: selection.status,
+      profile_selection_reason: selection.reason,
+      profile_display_source: PROVIDER_PROFILE_DISPLAY_SOURCE,
+      profile_semantic_owner: PROVIDER_PROFILE_SEMANTIC_OWNER,
+      profile_authority_granted: false as const,
     },
     quality_record: protocolOutput.quality_record,
     checks,
