@@ -1,0 +1,177 @@
+{
+  "results": [
+    {
+      "name": "dark-desktop",
+      "errors": [],
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-BVNQ_Pwb.js",
+          "bytes": 119852
+        },
+        {
+          "name": "/assets/index-DVW6-6Cy.css",
+          "bytes": 28985
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/hero/founder-hero-story.png",
+          "bytes": 1270110
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        },
+        {
+          "name": "/assets/SpeIntelligence-CuANrzfo.js",
+          "bytes": 2519
+        }
+      ],
+      "domNodes": 331,
+      "overflow": false
+    },
+    {
+      "name": "light-desktop",
+      "errors": [],
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-BVNQ_Pwb.js",
+          "bytes": 119852
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/assets/index-DVW6-6Cy.css",
+          "bytes": 28985
+        },
+        {
+          "name": "/hero/founder-hero-story.png",
+          "bytes": 1270110
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        },
+        {
+          "name": "/assets/SpeIntelligence-CuANrzfo.js",
+          "bytes": 2519
+        }
+      ],
+      "domNodes": 331,
+      "overflow": false
+    },
+    {
+      "name": "mobile",
+      "errors": [],
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-BVNQ_Pwb.js",
+          "bytes": 119852
+        },
+        {
+          "name": "/assets/index-DVW6-6Cy.css",
+          "bytes": 28985
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/hero/founder-hero-story.png",
+          "bytes": 1270110
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        }
+      ],
+      "domNodes": 328,
+      "overflow": false
+    },
+    {
+      "name": "reduced-motion",
+      "errors": [],
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-BVNQ_Pwb.js",
+          "bytes": 119852
+        },
+        {
+          "name": "/assets/index-DVW6-6Cy.css",
+          "bytes": 28985
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/hero/founder-hero-story.png",
+          "bytes": 1270110
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        }
+      ],
+      "domNodes": 328,
+      "overflow": false
+    }
+  ],
+  "assets": [
+    {
+      "name": "LabStage-rQWknjNC.js",
+      "bytes": 5244,
+      "gzip": 1644
+    },
+    {
+      "name": "SpeIntelligence-CuANrzfo.js",
+      "bytes": 5669,
+      "gzip": 2519
+    },
+    {
+      "name": "engine.worker-BRhc7cig.js",
+      "bytes": 3104,
+      "gzip": 1378
+    },
+    {
+      "name": "index-BVNQ_Pwb.js",
+      "bytes": 370558,
+      "gzip": 119852
+    },
+    {
+      "name": "index-DVW6-6Cy.css",
+      "bytes": 142554,
+      "gzip": 28985
+    },
+    {
+      "name": "ort-wasm-juE7TTNY.js",
+      "bytes": 464100,
+      "gzip": 110351
+    },
+    {
+      "name": "r3f-BB1YTSQJ.js",
+      "bytes": 833216,
+      "gzip": 225120
+    }
+  ]
+}

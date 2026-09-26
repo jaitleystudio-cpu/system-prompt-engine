@@ -1,0 +1,58 @@
+PASS theme dark/dark 
+PASS all five stages dark/dark 
+PASS six real fragments dark/dark 
+PASS no production PNG or canvas dark/dark 
+PASS PNG not requested dark/dark 
+PASS reduced motion static dark/dark 
+PASS complete readable prompt dark/dark 
+PASS semantic equivalent dark/dark 
+PASS axe hero dark/dark []
+PASS no runtime errors dark/dark 
+PASS theme light/dark 
+PASS all five stages light/dark 
+PASS six real fragments light/dark 
+PASS no production PNG or canvas light/dark 
+PASS PNG not requested light/dark 
+PASS reduced motion static light/dark 
+PASS complete readable prompt light/dark 
+PASS semantic equivalent light/dark 
+PASS axe hero light/dark []
+PASS no runtime errors light/dark 
+PASS theme system/dark 
+PASS all five stages system/dark 
+PASS six real fragments system/dark 
+PASS no production PNG or canvas system/dark 
+PASS PNG not requested system/dark 
+PASS reduced motion static system/dark 
+PASS complete readable prompt system/dark 
+PASS semantic equivalent system/dark 
+PASS axe hero system/dark []
+PASS system live switch dark 
+PASS no runtime errors system/dark 
+PASS theme system/light 
+PASS all five stages system/light 
+PASS six real fragments system/light 
+PASS no production PNG or canvas system/light 
+PASS PNG not requested system/light 
+PASS reduced motion static system/light 
+PASS complete readable prompt system/light 
+PASS semantic equivalent system/light 
+PASS axe hero system/light []
+PASS system live switch light 
+PASS no runtime errors system/light 
+PASS keyboard pause 
+PASS pause freezes timeline 
+PASS resume advances timeline 
+PASS live reduced motion change 
+PASS finite story settles 
+PASS replay restarts 
+PASS offscreen animation paused 
+PASS responsive 320 {"overflow":false,"visible":true,"vertical":true}
+PASS responsive 390 {"overflow":false,"visible":true,"vertical":true}
+PASS responsive 700 {"overflow":false,"visible":true,"vertical":true}
+PASS responsive 768 {"overflow":false,"visible":true,"vertical":false}
+PASS responsive 1024 {"overflow":false,"visible":true,"vertical":false}
+PASS responsive 1440 {"overflow":false,"visible":true,"vertical":false}
+PASS responsive 1920 {"overflow":false,"visible":true,"vertical":false}
+PASS 200% zoom no horizontal overflow 
+57 hero checks passed
