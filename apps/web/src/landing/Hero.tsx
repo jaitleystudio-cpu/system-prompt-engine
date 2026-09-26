@@ -1,6 +1,6 @@
 import { ui, selectHero } from "@spe/human-perspective";
 import { HumanError } from "../ui/HumanError";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CATEGORIES,
   TARGETS,
@@ -16,13 +16,9 @@ import type {
   EngineSuccessBody,
   CompilePhase,
 } from "../engine/types";
-import { StaticPress } from "../scene/StaticPress";
 import { semanticGroups } from "../scene/semantic";
-const Scene = lazy(() =>
-  import("../scene/SpeIntelligence").then((m) => ({
-    default: m.SpeIntelligence,
-  })),
-);
+import { DotPattern } from "../ui/DotPattern";
+import { HeroStory } from "./HeroStory";
 type Intent = {
   confirmed: IntentAtom[];
   assumed: IntentAtom[];
@@ -71,15 +67,20 @@ const EXAMPLES = [
 ] as const;
 export function Hero(p: Props) {
   const hero = selectHero(p.category, Boolean(p.result));
-  const [paused, setPaused] = useState(false),
-    [explore, setExplore] = useState(false),
+  const [reduced, setReduced] = useState(() =>
+      matchMedia("(prefers-reduced-motion: reduce)").matches,
+    ),
     [resultTab, setResultTab] = useState<"prompt" | "structure" | "review">(
       "prompt",
     );
   const resultRef = useRef<HTMLElement>(null);
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const useStatic = p.quality === "LITE" && (!explore || reduced);
   const groups = semanticGroups(p.result?.output);
+  useEffect(() => {
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
   useEffect(() => {
     if (p.prompt) {
       setResultTab("prompt");
@@ -112,6 +113,7 @@ export function Hero(p: Props) {
   return (
     <section className="spe-hero" id="top" aria-labelledby="hero-title">
       <div className="hero-theater">
+        <DotPattern surface="hero" />
         <div className="hero-topline">
           <span className="eyebrow">
             <i /> PRIVATE BY DESIGN. OPEN BY NATURE.
@@ -133,88 +135,10 @@ export function Hero(p: Props) {
           </a>
         </div>
         <div className="hero-stage">
-          <div
-            className="hero-scene-inner"
-            data-renderer={useStatic ? "static" : "webgl"}
-          >
-            {useStatic ? (
-              <StaticPress output={p.result?.output} />
-            ) : (
-              <Suspense fallback={<StaticPress />}>
-                <Scene
-                  state={p.sceneState}
-                  quality={p.quality === "LITE" ? "BALANCED" : p.quality}
-                  output={p.result?.output}
-                  paused={paused}
-                />
-              </Suspense>
-            )}
-          </div>
-          <ol
-            className={`spe-pipeline ${p.sceneState.toLowerCase()}`}
-            aria-label="SPE transformation: Idea to Meaning to Structure to Prompt"
-            data-active-stage={
-              p.sceneState === "READY" || p.sceneState === "COMPILING"
-                ? "prompt"
-                : p.sceneState === "STRUCTURING"
-                  ? "structure"
-                  : p.sceneState === "UNDERSTANDING"
-                    ? "meaning"
-                    : "idea"
-            }
-          >
-            {(
-              [
-                ["idea", "01", "IDEA", "Your rough thought"],
-                ["meaning", "02", "MEANING", "Goals, boundaries, questions"],
-                ["structure", "03", "STRUCTURE", "Roles and sections take shape"],
-                ["prompt", "04", "PROMPT", "A brief you can take anywhere"],
-              ] as const
-            ).map(([id, num, label, hint], index) => (
-              <li
-                key={id}
-                className={`orbit-label orbit-${["one", "two", "three", "four"][index]} pipeline-stage`}
-                data-stage={id}
-              >
-                <span className="pipeline-num" aria-hidden="true">
-                  {num}
-                </span>
-                <span className="pipeline-label">{label}</span>
-                <span className="visually-hidden">{hint}</span>
-                {index < 3 ? (
-                  <span className="pipeline-connector" aria-hidden="true" />
-                ) : null}
-              </li>
-            ))}
-          </ol>
-          <p className="pipeline-caption" id="pipeline-caption">
-            <span aria-hidden="true">IDEA → MEANING → STRUCTURE → PROMPT</span>
-            <span className="visually-hidden">
-              SPE transforms an idea into meaning, then structure, then a usable
-              prompt.
-            </span>
-          </p>
+          <HeroStory />
         </div>
         <div className="theater-bottom">
           <span>ONE BRIEF. ANY AI.</span>
-          <button
-            className="motion-button"
-            type="button"
-            disabled={reduced}
-            aria-pressed={paused}
-            onClick={() => {
-              if (useStatic && !reduced) setExplore(true);
-              else setPaused(!paused);
-            }}
-          >
-            {reduced
-              ? "Reduced motion"
-              : useStatic
-                ? "Explore live 3D"
-                : paused
-                  ? "Resume motion"
-                  : "Pause motion"}
-          </button>
           <a href="#prompt-studio">SCROLL TO CREATE ↓</a>
         </div>
       </div>

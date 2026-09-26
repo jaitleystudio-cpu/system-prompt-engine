@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import {
   absoluteUrl,
+  jsonLdCapabilitiesFaq,
+  jsonLdCapabilitiesWebPage,
   jsonLdSoftwareApplication,
   ROUTE_META,
   type AppView,
@@ -41,6 +43,10 @@ function upsertJsonLd(id: string, data: Record<string, unknown>) {
   el.textContent = JSON.stringify(data);
 }
 
+function removeJsonLd(id: string) {
+  document.getElementById(id)?.remove();
+}
+
 export function SeoHead({ view }: { view: AppView }) {
   useEffect(() => {
     const meta = ROUTE_META[view];
@@ -67,6 +73,13 @@ export function SeoHead({ view }: { view: AppView }) {
       absoluteUrl("/art/intent-core.webp"),
     );
     upsertJsonLd("spe-jsonld-app", jsonLdSoftwareApplication());
+    if (view === "capabilities") {
+      upsertJsonLd("spe-jsonld-capabilities-page", jsonLdCapabilitiesWebPage());
+      upsertJsonLd("spe-jsonld-capabilities-faq", jsonLdCapabilitiesFaq());
+    } else {
+      removeJsonLd("spe-jsonld-capabilities-page");
+      removeJsonLd("spe-jsonld-capabilities-faq");
+    }
   }, [view]);
   return null;
 }

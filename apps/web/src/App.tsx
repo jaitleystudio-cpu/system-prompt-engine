@@ -9,21 +9,25 @@ import type {
 } from "./engine/types";
 import {
   buildAbiFixture,
+  buildLocalExecutionRecord,
   buildSpeArtifact,
   clearHistory,
   defaultIntentLens,
   downloadJson,
   isHistoryOptIn,
   loadHistory,
+  openArtifactPrintView,
+  parseSpeArtifactText,
   renderPromptArtifact,
   PromptBriefError,
   saveHistoryItem,
   setHistoryOptIn,
-  verifySpeArtifact,
   CATEGORIES,
   type CategoryId,
   type HistoryItem,
   type IntentAtom,
+  type LocalExecutionRecord,
+  type ReconstructionReport,
   type SpeArtifactV1,
   type TargetId,
 } from "@spe/web-runtime";
@@ -35,11 +39,15 @@ import {
   type AppView,
 } from "./routing";
 import { SeoHead } from "./ui/SeoHead";
+import { DotPattern } from "./ui/DotPattern";
 import { SeoContent } from "./landing/SeoContent";
 import { Hero } from "./landing/Hero";
 import { ScrollStory } from "./landing/ScrollStory";
 import { Workspace } from "./workspace/Workspace";
+import { ReconstructionSummary } from "./workspace/ReconstructionSummary";
+import { ExecutionContractPanel } from "./workspace/ExecutionContractPanel";
 import { UnifiedComposer } from "./composer/UnifiedComposer";
+import { SourcesDepthDisclosure } from "./composer/SourcesDepthDisclosure";
 import {
   ContextProtocolControls,
   mapPublicSourceToWasm,
@@ -48,8 +56,13 @@ import {
   type PublicSourceControl,
 } from "./composer/ContextProtocolControls";
 import { DailyLab } from "./lab/DailyLab";
+import {
+  acquisitionSeedFromLabItem,
+  type LabAcquisitionSeed,
+} from "./lab/labAcquisition";
 import { MyWork } from "./pages/MyWork";
 import { PrivacyProof } from "./pages/PrivacyProof";
+import { Capabilities } from "./pages/Capabilities";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
 import { registerServiceWorker } from "./pwa";
@@ -59,6 +72,59 @@ type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
 /** Intent lens provenance — SIMPLE/CREATE rederive; INSPECT/PRO preserve edits. */
 type IntentProvenance = "AUTO_DERIVED_INTENT" | "USER_EDITED_INTENT";
+type IntentLensState = ReturnType<typeof defaultIntentLens>;
+
+const CREATE_INTENT_FIELD_IDS = new Set(["desired-output", "desired-example"]);
+
+function preserveCreateIntentFields(
+  current: IntentLensState,
+  next: IntentLensState,
+): IntentLensState {
+  const preserved = new Map(
+    [...current.confirmed, ...current.assumed]
+      .filter((atom) => CREATE_INTENT_FIELD_IDS.has(atom.id))
+      .map((atom) => [atom.id, atom.text]),
+  );
+  const merge = (atoms: IntentAtom[]) =>
+    atoms.map((atom) =>
+      preserved.has(atom.id)
+        ? { ...atom, text: preserved.get(atom.id) ?? "" }
+        : atom,
+    );
+  return {
+    ...next,
+    confirmed: merge(next.confirmed),
+    assumed: merge(next.assumed),
+  };
+}
+
+function hasCreateIntentFields(intent: IntentLensState): boolean {
+  return [...intent.confirmed, ...intent.assumed].some(
+    (atom) =>
+      CREATE_INTENT_FIELD_IDS.has(atom.id) && Boolean(atom.text.trim()),
+  );
+}
+
+function intentFromArtifact(
+  artifactIntent: SpeArtifactV1["intent"],
+): IntentLensState {
+  return Object.fromEntries(
+    Object.entries(artifactIntent).map(([bucket, values]) => [
+      bucket,
+      values.map((atom) => ({
+        ...atom,
+        kind:
+          bucket === "unknowns"
+            ? "unknown"
+            : bucket === "conflicts"
+              ? "conflict"
+              : bucket === "assumed"
+                ? "assumed"
+                : "confirmed",
+      })),
+    ]),
+  ) as IntentLensState;
+}
 
 function mapLabCategory(raw: string): CategoryId {
   return (CATEGORIES as readonly string[]).includes(raw)
@@ -152,15 +218,32 @@ export default function App() {
     useState<PublicDepthControl>("AUTO");
   const [contextProtocol, setContextProtocol] =
     useState<ContextProtocolCompileOutput | null>(null);
+  const [executionRecord, setExecutionRecord] =
+    useState<LocalExecutionRecord | null>(null);
+  const [dryRunBusy, setDryRunBusy] = useState(false);
   const [contextRefreshNotice, setContextRefreshNotice] = useState<string | null>(
     null,
   );
+  const [reconstruction, setReconstruction] =
+    useState<ReconstructionReport | null>(null);
+  const [labAcquisition, setLabAcquisition] =
+    useState<LabAcquisitionSeed | null>(null);
   const [online, setOnline] = useState(
     typeof navigator === "undefined" ? true : navigator.onLine,
   );
 
   useEffect(() => {
-    navigateTo(viewFromPath(window.location.pathname), { replace: true });
+    // Sync history state without wiping ?specimen= (Batch G deep-link).
+    const pathView = viewFromPath(window.location.pathname);
+    if (window.location.pathname !== pathForView(pathView)) {
+      navigateTo(pathView, { replace: true });
+    } else {
+      window.history.replaceState(
+        { view: pathView },
+        "",
+        window.location.pathname + window.location.search,
+      );
+    }
     const onPop = () => setViewState(viewFromPath(window.location.pathname));
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
@@ -231,7 +314,37 @@ export default function App() {
     setBusy(false);
     setPhase("idle");
     setContextProtocol(null);
+    setExecutionRecord(null);
+    setDryRunBusy(false);
     setContextRefreshNotice(null);
+  };
+
+  /** Daily Lab / Prompt Gallery → Create: single acquisition apply path. */
+  const applyLabAcquisition = (item: Parameters<typeof acquisitionSeedFromLabItem>[0]) => {
+    const seed = acquisitionSeedFromLabItem(item);
+    invalidate();
+    setUserRequest(seed.userRequest);
+    setCategory(mapLabCategory(seed.categoryRaw));
+    let lens = defaultIntentLens(seed.userRequest);
+    if (seed.desiredOutputSeed) {
+      const existing = lens.confirmed.find((a) => a.id === "desired-output")?.text?.trim();
+      if (!existing) {
+        lens = {
+          ...lens,
+          confirmed: lens.confirmed.map((a) =>
+            a.id === "desired-output"
+              ? { ...a, text: seed.desiredOutputSeed as string }
+              : a,
+          ),
+        };
+      }
+    }
+    setIntent(lens);
+    setIntentProvenance(seed.intentProvenance);
+    setMode(seed.mode);
+    setLabAcquisition(seed);
+    setView("create");
+    window.scrollTo(0, 0);
   };
 
   const updateIntentField = (
@@ -254,8 +367,13 @@ export default function App() {
     invalidate();
     setUserRequest(v);
     if (!shouldPreserveEditedIntent(mode, intentProvenance)) {
-      setIntent(defaultIntentLens(v));
-      setIntentProvenance("AUTO_DERIVED_INTENT");
+      const keepsCreateFields = hasCreateIntentFields(intent);
+      setIntent(
+        preserveCreateIntentFields(intent, defaultIntentLens(v)),
+      );
+      setIntentProvenance(
+        keepsCreateFields ? "USER_EDITED_INTENT" : "AUTO_DERIVED_INTENT",
+      );
     }
   };
 
@@ -398,6 +516,7 @@ export default function App() {
               category,
               target,
               prompt_preview: prompt.finalPrompt.slice(0, 240),
+              artifact: spe,
             });
             setHistory(loadHistory());
           }
@@ -446,82 +565,189 @@ export default function App() {
     downloadJson(`spe-export-${Date.now()}.json`, artifact);
   };
 
+  const onExportPdf = () => {
+    if (!artifact) return;
+    const opened = openArtifactPrintView(artifact);
+    setNotice(
+      opened
+        ? "Print view opened. Choose Save as PDF in your browser."
+        : "The print view was blocked. Allow pop-ups, then try again.",
+    );
+  };
+
+  const restorePortableArtifact = (
+    restoredArtifact: SpeArtifactV1,
+    report: ReconstructionReport,
+    destination: "workspace" | "create",
+  ) => {
+    invalidate();
+    setArtifact(restoredArtifact);
+    setExecutionRecord(restoredArtifact.execution_record ?? null);
+    const ext = restoredArtifact as SpeArtifactV1 & {
+      context_protocol?: { freshness_state?: string };
+      quality_record?: { freshness_state?: string };
+    };
+    const freshness =
+      ext.context_protocol?.freshness_state ??
+      ext.quality_record?.freshness_state ??
+      null;
+    const refresh = suggestStaleContextRefresh({
+      freshness_state: freshness,
+      user_request: restoredArtifact.user_request,
+      protected_intent: restoredArtifact.intent,
+    });
+    setContextRefreshNotice(refresh?.message ?? null);
+    setUserRequest(restoredArtifact.user_request);
+    setCategory((restoredArtifact.category as CategoryId) || "Writing");
+    setTarget((restoredArtifact.target as TargetId) || "any");
+    setIntent(intentFromArtifact(restoredArtifact.intent));
+    setIntentProvenance("USER_EDITED_INTENT");
+    setRendered({
+      userRequest: restoredArtifact.user_request,
+      speAdded: [],
+      finalPrompt: restoredArtifact.rendered_prompt,
+      review: null,
+      techniques: [],
+    });
+    setEnvelope(restoredArtifact.envelope);
+    setReconstruction(report);
+    setView(destination);
+    setMode(destination === "workspace" ? "inspect" : "simple");
+    setLens(destination === "workspace" ? "artifact" : "prompt");
+    setNotice(
+      "Portable details restored. Review the summary before rebuilding.",
+    );
+  };
+
   const onImportSpe = async (file: File) => {
+    if (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) {
+      const message =
+        "PDF import is not supported. Use a .spe file or SPE JSON export to restore protected details.";
+      setReconstruction({
+        status: "error",
+        title: "PDF import not supported",
+        message,
+        restored: [],
+        notRestored: ["Request, protected details, prompt, and provenance"],
+        warnings: ["Nothing from the PDF was treated as structured SPE data."],
+      });
+      setNotice(message);
+      return;
+    }
     try {
-      const parsed = JSON.parse(await file.text()) as SpeArtifactV1;
-      if (
-        parsed.spe_format !== "spe.artifact.v1" ||
-        typeof parsed.user_request !== "string" ||
-        typeof parsed.rendered_prompt !== "string" ||
-        !parsed.integrity?.content_sha256 ||
-        !parsed.intent ||
-        !["confirmed", "assumed", "unknowns", "conflicts"].every((k) =>
-          Array.isArray(parsed.intent[k as keyof typeof parsed.intent]),
-        )
-      )
-        throw new Error("This file is not in a supported SPE format.");
-      const verified = await verifySpeArtifact(parsed);
-      if (verified.integrity.state === "MISMATCH")
-        throw new Error(
-          "This SPE file has changed since export. Its integrity check failed.",
-        );
-      invalidate();
-      setArtifact(verified);
-      // Stale context may suggest refresh; never mutate ProtectedIntent here.
-      const ext = parsed as SpeArtifactV1 & {
-        context_protocol?: { freshness_state?: string };
-        quality_record?: { freshness_state?: string };
-      };
-      const freshness =
-        ext.context_protocol?.freshness_state ??
-        ext.quality_record?.freshness_state ??
-        null;
-      const refresh = suggestStaleContextRefresh({
-        freshness_state: freshness,
-        user_request: parsed.user_request,
-        protected_intent: parsed.intent,
-      });
-      setContextRefreshNotice(refresh?.message ?? null);
-      setUserRequest(parsed.user_request);
-      setCategory((parsed.category as CategoryId) || "Writing");
-      setTarget((parsed.target as TargetId) || "any");
-      setIntent(
-        Object.fromEntries(
-          Object.entries(parsed.intent).map(([k, values]) => [
-            k,
-            values.map((a) => ({
-              ...a,
-              kind:
-                k === "unknowns"
-                  ? "unknown"
-                  : k === "conflicts"
-                    ? "conflict"
-                    : k === "assumed"
-                      ? "assumed"
-                      : "confirmed",
-            })),
-          ]),
-        ) as typeof intent,
-      );
-      setIntentProvenance("USER_EDITED_INTENT");
-      setRendered({
-        userRequest: parsed.user_request,
-        speAdded: [],
-        finalPrompt: parsed.rendered_prompt,
-        review: null,
-        techniques: [],
-      });
-      setEnvelope(parsed.envelope);
-      setView("workspace");
-      setMode("inspect");
-      setLens("artifact");
-      setNotice(
-        "Your SPE file passed its integrity check. Shape the prompt again to review its current details.",
+      const restored = await parseSpeArtifactText(await file.text());
+      restorePortableArtifact(
+        restored.artifact,
+        restored.report,
+        "workspace",
       );
     } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "This file could not be restored. Nothing was changed.";
+      setReconstruction({
+        status: "error",
+        title: "Nothing was restored",
+        message,
+        restored: [],
+        notRestored: ["Request, protected details, prompt, and provenance"],
+        warnings: ["The current work remains unchanged."],
+      });
+      setNotice(message);
+    }
+  };
+
+  const onOpenHistoryItem = async (item: HistoryItem) => {
+    if (item.artifact) {
+      try {
+        const restored = await parseSpeArtifactText(
+          JSON.stringify(item.artifact),
+        );
+        restorePortableArtifact(
+          restored.artifact,
+          restored.report,
+          "create",
+        );
+        return;
+      } catch {
+        // Fall through to the bounded legacy restore below.
+      }
+    }
+    invalidate();
+    setUserRequest(item.user_request);
+    setCategory((item.category as CategoryId) || "Writing");
+    setTarget((item.target as TargetId) || "any");
+    setIntent(defaultIntentLens(item.user_request));
+    setIntentProvenance("AUTO_DERIVED_INTENT");
+    setReconstruction({
+      status: "partial",
+      title: "Idea reopened with limits",
+      message:
+        "This older local history item contains the request, category, and target only. Review and rebuild before using it.",
+      restored: ["Original request", "Category", "Target"],
+      notRestored: [
+        "Protected details, including Desired Output and Example",
+        "Rendered prompt",
+        "Envelope, provenance, lineage, and integrity",
+        "Media previews or uploaded files",
+      ],
+      warnings: [
+        "Missing fields were left empty. SPE did not infer them from the saved preview.",
+      ],
+    });
+    setMode("simple");
+    setView("create");
+    setNotice("Older history item reopened with limited details.");
+  };
+
+  const onRunLocalDry = async () => {
+    if (!artifact || !contextProtocol || dryRunBusy) return;
+    setDryRunBusy(true);
+    try {
+      const record = await buildLocalExecutionRecord({
+        artifact,
+        protocolOutput: contextProtocol,
+        buildSha: __SPE_BUILD_SHA__,
+      });
+      const updatedArtifact = await buildSpeArtifact({
+        user_request: artifact.user_request,
+        category: artifact.category,
+        target: artifact.target,
+        envelope: artifact.envelope,
+        wasm: artifact.wasm,
+        rendered_prompt: artifact.rendered_prompt,
+        intent: artifact.intent,
+        execution_record: record,
+        created_at_utc: artifact.created_at_utc,
+      });
+      setExecutionRecord(record);
+      setArtifact(updatedArtifact);
+      if (isHistoryOptIn()) {
+        saveHistoryItem({
+          id: updatedArtifact.integrity.content_sha256.slice(0, 16),
+          saved_at_utc: updatedArtifact.created_at_utc,
+          user_request: updatedArtifact.user_request,
+          category: updatedArtifact.category,
+          target: updatedArtifact.target,
+          prompt_preview: updatedArtifact.rendered_prompt.slice(0, 240),
+          artifact: updatedArtifact,
+        });
+        setHistory(loadHistory());
+      }
       setNotice(
-        err instanceof Error ? err.message : "We could not open this SPE file.",
+        record.conformance.overall === "FAIL"
+          ? "Local checks found a blocked contract. Nothing was executed."
+          : "Local dry-run recorded. No target task or side effect was executed.",
       );
+    } catch (runError) {
+      setNotice(
+        runError instanceof Error
+          ? runError.message
+          : "The local dry-run could not be recorded.",
+      );
+    } finally {
+      setDryRunBusy(false);
     }
   };
 
@@ -601,6 +827,7 @@ export default function App() {
 
         {(view === "create" || view === "code") && (
           <section className="spe-create" aria-labelledby="create-title">
+            <DotPattern surface="create" />
             <header className="spe-create-head">
               <p className="spe-kicker">{view === "code" ? "Code" : "Create"}</p>
               <h1 id="create-title">
@@ -617,6 +844,30 @@ export default function App() {
                   : "Create is the instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."}
               </p>
             </header>
+            {view === "create" && labAcquisition && (
+              <div
+                className="spe-acquisition-chip"
+                role="status"
+                data-acquisition-source={labAcquisition.source}
+                data-acquisition-id={labAcquisition.id}
+              >
+                <span>{labAcquisition.provenanceLabel}</span>
+                <button
+                  type="button"
+                  className="spe-acquisition-dismiss"
+                  aria-label="Dismiss acquisition note"
+                  onClick={() => setLabAcquisition(null)}
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
+            {reconstruction && (
+              <ReconstructionSummary
+                report={reconstruction}
+                onDismiss={() => setReconstruction(null)}
+              />
+            )}
             <div className="spe-create-rail">
             <UnifiedComposer
               key={view === "code" ? "code" : "create"}
@@ -626,25 +877,24 @@ export default function App() {
               }}
               disabled={busy}
               initialMode={view === "code" ? "screenshot" : "text"}
+              showOutputControls={view === "create"}
+              desiredOutput={
+                intent.confirmed.find((atom) => atom.id === "desired-output")
+                  ?.text ?? ""
+              }
+              onDesiredOutputChange={(value) =>
+                updateIntentField("confirmed", "desired-output", value)
+              }
+              desiredExample={
+                intent.assumed.find((atom) => atom.id === "desired-example")
+                  ?.text ?? ""
+              }
+              onDesiredExampleChange={(value) =>
+                updateIntentField("assumed", "desired-example", value)
+              }
               onScaffoldPrompt={(prompt) => {
                 applyUserRequestChange(prompt);
               }}
-            />
-            <ContextProtocolControls
-              source={publicSource}
-              depth={publicDepth}
-              onSourceChange={(v) => {
-                invalidate();
-                setPublicSource(v);
-              }}
-              onDepthChange={(v) => {
-                invalidate();
-                setPublicDepth(v);
-              }}
-              uiMode={mode}
-              disabled={busy}
-              inspectOutput={contextProtocol}
-              refreshNotice={contextRefreshNotice}
             />
             <div className="compile-row">
               <button
@@ -659,6 +909,24 @@ export default function App() {
                 <span>↗</span>
               </button>
             </div>
+            <SourcesDepthDisclosure progressive={view === "create"}>
+              <ContextProtocolControls
+                source={publicSource}
+                depth={publicDepth}
+                onSourceChange={(v) => {
+                  invalidate();
+                  setPublicSource(v);
+                }}
+                onDepthChange={(v) => {
+                  invalidate();
+                  setPublicDepth(v);
+                }}
+                uiMode={mode}
+                disabled={busy}
+                inspectOutput={contextProtocol}
+                refreshNotice={contextRefreshNotice}
+              />
+            </SourcesDepthDisclosure>
             </div>
             {error && <p role="alert">{error.message}</p>}
             {rendered?.finalPrompt && (
@@ -672,6 +940,12 @@ export default function App() {
                   <button type="button" className="spe-ghost" onClick={onExportSpe}>
                     Download .spe
                   </button>
+                  <button type="button" className="spe-ghost" onClick={onExportJson}>
+                    Download JSON
+                  </button>
+                  <button type="button" className="spe-ghost" onClick={onExportPdf}>
+                    Print / Save PDF
+                  </button>
                   <button
                     type="button"
                     className="spe-ghost"
@@ -682,24 +956,23 @@ export default function App() {
                 </div>
               </section>
             )}
+            {view === "create" && (contextProtocol || executionRecord) && (
+              <ExecutionContractPanel
+                protocolOutput={contextProtocol}
+                artifact={artifact}
+                record={executionRecord}
+                busy={dryRunBusy}
+                onRunDry={() => void onRunLocalDry()}
+                initialPresentation={mode === "simple" ? "simple" : "inspect"}
+              />
+            )}
           </section>
         )}
 
         {view === "lab" && (
           <DailyLab
             onOpenInSpe={(s) => {
-              invalidate();
-              const idea =
-                ("buildPrompt" in s && s.buildPrompt) ||
-                ("seedIdea" in s && s.seedIdea) ||
-                "";
-              setUserRequest(String(idea));
-              setCategory(mapLabCategory(s.category));
-              setIntent(defaultIntentLens(String(idea)));
-              setIntentProvenance("AUTO_DERIVED_INTENT");
-              setMode("simple");
-              setView("create");
-              window.scrollTo(0, 0);
+              applyLabAcquisition(s);
             }}
             onCopyIdea={async (s) => {
               try {
@@ -731,21 +1004,14 @@ export default function App() {
             }}
             onStartCreate={() => {
               invalidate();
+              setLabAcquisition(null);
               setView("create");
             }}
-            onOpen={(h) => {
-              invalidate();
-              setUserRequest(h.user_request);
-              setCategory((h.category as CategoryId) || "Writing");
-              setTarget((h.target as TargetId) || "any");
-              setIntent(defaultIntentLens(h.user_request));
-              setIntentProvenance("AUTO_DERIVED_INTENT");
-              setMode("simple");
-              setView("create");
-            }}
+            onOpen={(item) => void onOpenHistoryItem(item)}
           />
         )}
 
+        {view === "capabilities" && <Capabilities />}
         {view === "privacy" && <PrivacyProof />}
 
         {view === "workspace" && (
@@ -766,6 +1032,18 @@ export default function App() {
               inspectOutput={contextProtocol}
               refreshNotice={contextRefreshNotice}
             />
+            {(contextProtocol || executionRecord) && (
+              <section className="spe-workspace">
+                <ExecutionContractPanel
+                  protocolOutput={contextProtocol}
+                  artifact={artifact}
+                  record={executionRecord}
+                  busy={dryRunBusy}
+                  onRunDry={() => void onRunLocalDry()}
+                  initialPresentation={mode === "simple" ? "simple" : "inspect"}
+                />
+              </section>
+            )}
             <Workspace
               userRequest={userRequest}
               setUserRequest={(v) => {
@@ -796,7 +1074,10 @@ export default function App() {
               onCopy={() => void onCopy()}
               onExportSpe={onExportSpe}
               onExportJson={onExportJson}
+              onExportPdf={onExportPdf}
               onImportSpe={(f) => void onImportSpe(f)}
+              reconstruction={reconstruction}
+              onDismissReconstruction={() => setReconstruction(null)}
               privacy={privacy}
               online={online}
               mode={mode}
@@ -842,14 +1123,7 @@ export default function App() {
                     key={h.id}
                     type="button"
                     className="spe-moon-card"
-                    onClick={() => {
-                      invalidate();
-                      setUserRequest(h.user_request);
-                      setCategory((h.category as CategoryId) || "Writing");
-                      setTarget((h.target as TargetId) || "any");
-                      setIntent(defaultIntentLens(h.user_request));
-                      setIntentProvenance("AUTO_DERIVED_INTENT");
-                    }}
+                    onClick={() => void onOpenHistoryItem(h)}
                   >
                     <h3>{h.user_request}</h3>
                     <span>{h.category}</span>
@@ -897,6 +1171,7 @@ export default function App() {
           <a href={pathForView("code")}>Code</a>
           <a href={pathForView("lab")}>Daily Lab</a>
           <a href={pathForView("my-work")}>My Work</a>
+          <a href={pathForView("capabilities")}>Capabilities</a>
           <a href={pathForView("privacy")}>Privacy</a>
         </nav>
         <div className="claim-strip">

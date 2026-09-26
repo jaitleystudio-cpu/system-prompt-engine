@@ -3,6 +3,8 @@
 from spe_runtime.protocols.capability_routing import (
     CapabilityProfile,
     build_auto_route_node,
+    build_auto_route_node_for_provider,
+    capability_profile_for_provider,
 )
 from spe_runtime.protocols.compiler import (
     ExecutionContract,
@@ -43,6 +45,8 @@ __all__ = [
     "ProtocolNode",
     "QualityRecord",
     "build_auto_route_node",
+    "build_auto_route_node_for_provider",
+    "capability_profile_for_provider",
     "compile_execution_contract",
     "evaluate_result",
     "list_evaluator_domains",

@@ -1,0 +1,5 @@
+
+> spe-web@0.3.0 test:lab-acquisition
+> node scripts/test-lab-acquisition.mjs
+
+{"ok":true,"cases":["finite_14_queue_honesty","gallery_separated","handoff_seed_specimen","handoff_seed_gallery","deep_link_specimen_parse","app_wires_applyLabAcquisition","acquisition_chip_css","reduced_motion_stage"]}

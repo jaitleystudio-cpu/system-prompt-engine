@@ -1,0 +1,30 @@
+{
+  "tipAtCapture": "90adbaedba8afcd9b1d48cad7d10b7d21c865e40",
+  "route": "/daily-lab",
+  "shots": [
+    {
+      "name": "daily-lab-dark.png",
+      "sha256": "52f093a427d748fc53a8b655fa464eb614caa53994b26a1d696d86419cb3f313",
+      "bytes": 361850
+    },
+    {
+      "name": "create-from-lab-provenance.png",
+      "sha256": "8ed5fb3780cf67d1911c00f42c4abfa1ec34b5a50601f165739f05f4de3756b5",
+      "bytes": 538806
+    },
+    {
+      "name": "daily-lab-light.png",
+      "sha256": "dc118265614eb3ef81df5cf7369925fab7a032a79c47c29390b6dad72e9c248a",
+      "bytes": 154985
+    },
+    {
+      "name": "daily-lab-mobile.png",
+      "sha256": "748ecb6b1e7a98958f3310204aca215f0c97cdce1f01d201ea9a814d2a085155",
+      "bytes": 190709
+    }
+  ],
+  "notes": [
+    "daily-lab dark/light/mobile",
+    "create-from-lab-provenance shows From Daily Lab chip after Open in SPE"
+  ]
+}

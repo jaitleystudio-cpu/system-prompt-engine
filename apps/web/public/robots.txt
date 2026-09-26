@@ -7,6 +7,7 @@ Allow: /code
 Allow: /daily-lab
 Allow: /my-work
 Allow: /privacy
+Allow: /capabilities
 Disallow: /workspace
 Disallow: /models/
 Disallow: /ort/
