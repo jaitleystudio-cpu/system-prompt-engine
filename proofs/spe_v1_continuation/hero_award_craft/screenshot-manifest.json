@@ -1,6 +1,6 @@
 {
-  "tipShaAtCapture": "800c06a5519d9c63d1e304197579a3207c86caac",
-  "note": "Bound after commit via re-run or SHA rewrite in report tip.",
+  "tipShaAtCapture": "4ad690432dc8239c4479abad78f71d2fd8d238d1",
+  "note": "Tip SHA bound after award-craft commit.",
   "captures": [
     {
       "name": "home-hero-dark-desktop.png",
@@ -39,6 +39,7 @@
       "motionControl": "Reduced motion"
     }
   ],
-  "story": "IDEA → MEANING → SPE → STRUCTURE → PROMPT",
-  "motion": "CSS/SVG motion present; reduced-motion verified via control label and capture. Do not claim 10/10 craft from motion alone."
+  "story": "IDEA \u2192 MEANING \u2192 SPE \u2192 STRUCTURE \u2192 PROMPT",
+  "motion": "CSS/SVG motion present; reduced-motion verified via control label and capture. Do not claim 10/10 craft from motion alone.",
+  "craft": "electron-lines + resend-conic (SPE palette) + meshy motes; labels optically removed on desktop"
 }
