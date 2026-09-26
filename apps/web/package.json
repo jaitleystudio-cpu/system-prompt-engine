@@ -34,7 +34,8 @@
     "test:speech-fallback": "node scripts/test-speech-fallback-contract.mjs",
     "bench:vision-human": "node scripts/bench-standard-vs-lite-human.mjs",
     "test:screenshot-real": "node scripts/test-screenshot-real-fidelity.mjs",
-    "capture:real-ui": "node scripts/capture-real-ui-fixtures.mjs"
+    "capture:real-ui": "node scripts/capture-real-ui-fixtures.mjs",
+    "test:lab-acquisition": "node scripts/test-lab-acquisition.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",

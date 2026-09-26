@@ -4745,3 +4745,46 @@ html[data-theme="light"] .spe-contract-stage-note {
     font-size: 0.74rem;
   }
 }
+
+
+/* ——— SPE Ω Batch G: Daily Lab acquisition provenance chip ——— */
+.spe-acquisition-chip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1rem;
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.65rem;
+  border: 1px solid color-mix(in oklab, var(--spe-accent, #9ecbff) 35%, transparent);
+  background: color-mix(in oklab, var(--spe-accent, #9ecbff) 12%, transparent);
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+.spe-acquisition-chip[data-acquisition-source="prompt_gallery"] {
+  border-color: color-mix(in oklab, #a7f3d0 40%, transparent);
+  background: color-mix(in oklab, #a7f3d0 10%, transparent);
+}
+.spe-acquisition-dismiss {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  opacity: 0.75;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  padding: 0.15rem 0.25rem;
+}
+.spe-acquisition-dismiss:hover,
+.spe-acquisition-dismiss:focus-visible {
+  opacity: 1;
+  outline: 2px solid color-mix(in oklab, var(--spe-accent, #9ecbff) 55%, transparent);
+  outline-offset: 2px;
+}
+html[data-theme="light"] .spe-acquisition-chip {
+  border-color: color-mix(in oklab, #2563eb 28%, #cbd5e1);
+  background: color-mix(in oklab, #2563eb 8%, #f8fafc);
+}

@@ -55,6 +55,10 @@ import {
   type PublicSourceControl,
 } from "./composer/ContextProtocolControls";
 import { DailyLab } from "./lab/DailyLab";
+import {
+  acquisitionSeedFromLabItem,
+  type LabAcquisitionSeed,
+} from "./lab/labAcquisition";
 import { MyWork } from "./pages/MyWork";
 import { PrivacyProof } from "./pages/PrivacyProof";
 import { Capabilities } from "./pages/Capabilities";
@@ -221,12 +225,24 @@ export default function App() {
   );
   const [reconstruction, setReconstruction] =
     useState<ReconstructionReport | null>(null);
+  const [labAcquisition, setLabAcquisition] =
+    useState<LabAcquisitionSeed | null>(null);
   const [online, setOnline] = useState(
     typeof navigator === "undefined" ? true : navigator.onLine,
   );
 
   useEffect(() => {
-    navigateTo(viewFromPath(window.location.pathname), { replace: true });
+    // Sync history state without wiping ?specimen= (Batch G deep-link).
+    const pathView = viewFromPath(window.location.pathname);
+    if (window.location.pathname !== pathForView(pathView)) {
+      navigateTo(pathView, { replace: true });
+    } else {
+      window.history.replaceState(
+        { view: pathView },
+        "",
+        window.location.pathname + window.location.search,
+      );
+    }
     const onPop = () => setViewState(viewFromPath(window.location.pathname));
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
@@ -300,6 +316,34 @@ export default function App() {
     setExecutionRecord(null);
     setDryRunBusy(false);
     setContextRefreshNotice(null);
+  };
+
+  /** Daily Lab / Prompt Gallery → Create: single acquisition apply path. */
+  const applyLabAcquisition = (item: Parameters<typeof acquisitionSeedFromLabItem>[0]) => {
+    const seed = acquisitionSeedFromLabItem(item);
+    invalidate();
+    setUserRequest(seed.userRequest);
+    setCategory(mapLabCategory(seed.categoryRaw));
+    let lens = defaultIntentLens(seed.userRequest);
+    if (seed.desiredOutputSeed) {
+      const existing = lens.confirmed.find((a) => a.id === "desired-output")?.text?.trim();
+      if (!existing) {
+        lens = {
+          ...lens,
+          confirmed: lens.confirmed.map((a) =>
+            a.id === "desired-output"
+              ? { ...a, text: seed.desiredOutputSeed as string }
+              : a,
+          ),
+        };
+      }
+    }
+    setIntent(lens);
+    setIntentProvenance(seed.intentProvenance);
+    setMode(seed.mode);
+    setLabAcquisition(seed);
+    setView("create");
+    window.scrollTo(0, 0);
   };
 
   const updateIntentField = (
@@ -799,6 +843,24 @@ export default function App() {
                   : "Create is the instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."}
               </p>
             </header>
+            {view === "create" && labAcquisition && (
+              <div
+                className="spe-acquisition-chip"
+                role="status"
+                data-acquisition-source={labAcquisition.source}
+                data-acquisition-id={labAcquisition.id}
+              >
+                <span>{labAcquisition.provenanceLabel}</span>
+                <button
+                  type="button"
+                  className="spe-acquisition-dismiss"
+                  aria-label="Dismiss acquisition note"
+                  onClick={() => setLabAcquisition(null)}
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
             {reconstruction && (
               <ReconstructionSummary
                 report={reconstruction}
@@ -906,18 +968,7 @@ export default function App() {
         {view === "lab" && (
           <DailyLab
             onOpenInSpe={(s) => {
-              invalidate();
-              const idea =
-                ("buildPrompt" in s && s.buildPrompt) ||
-                ("seedIdea" in s && s.seedIdea) ||
-                "";
-              setUserRequest(String(idea));
-              setCategory(mapLabCategory(s.category));
-              setIntent(defaultIntentLens(String(idea)));
-              setIntentProvenance("AUTO_DERIVED_INTENT");
-              setMode("simple");
-              setView("create");
-              window.scrollTo(0, 0);
+              applyLabAcquisition(s);
             }}
             onCopyIdea={async (s) => {
               try {
@@ -949,6 +1000,7 @@ export default function App() {
             }}
             onStartCreate={() => {
               invalidate();
+              setLabAcquisition(null);
               setView("create");
             }}
             onOpen={(item) => void onOpenHistoryItem(item)}

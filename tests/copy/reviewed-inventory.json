@@ -1,7 +1,6 @@
 {
-  "version": 1,
-  "note": "Refreshed 2026-09-26 SPE V1 continuation Batch F (capabilities SEO/AEO).",
-  "generatedAt": "2026-09-26T14:38:50.844Z",
+  "generated": "2026-09-26T15:04:52.048Z",
+  "tipNote": "batch_g acquisition + stage boundary",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -224,6 +223,14 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "popstate"
+    },
+    {
+      "id": "478fb383375e8dd87a1f",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Dismiss",
+      "reviewed": true,
+      "batch": "batch_g"
     },
     {
       "id": "4bf88485a045346d867a",
@@ -710,6 +717,14 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Local dry-run recorded. No target task or side effect was executed."
+    },
+    {
+      "id": "db1642150df07ac5afeb",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Dismiss acquisition note",
+      "reviewed": true,
+      "batch": "batch_g"
     },
     {
       "id": "df3553eafbc1aa77ad75",
@@ -3376,6 +3391,102 @@
       "text": "Research brief"
     },
     {
+      "id": "0d27cdc97adf75a05e52",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "From Prompt Gallery:",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "233b99ba2119827fac35",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "buildPrompt",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "2962b740ff68dc53feca",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "string",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "31126061929058273f16",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "AUTO_DERIVED_INTENT",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "39faf2e9f76e04d350ec",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "undefined",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "3d1fe332d8cb173c8e56",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "simple",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "631168b90393b38991a0",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "editorialStory",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "7277aa69f4b1d8683e2c",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "/daily-lab",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "9cec933b1df6ee774a6a",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "specimen",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "e3b1806156dd157af1cb",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "prompt_gallery",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "f557444daf908c4528a9",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "daily_3d",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "fc05fd8dfb19e5bb3889",
+      "file": "apps/web/src/lab/labAcquisition.ts",
+      "depth": "PRODUCT",
+      "text": "From Daily Lab:",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
       "id": "0cfb92da067fbae9bdf9",
       "file": "apps/web/src/lab/LabStage.tsx",
       "depth": "PRODUCT",
@@ -3476,6 +3587,30 @@
       "file": "apps/web/src/lab/LabStage.tsx",
       "depth": "PRODUCT",
       "text": "torus"
+    },
+    {
+      "id": "340cd2a2a543c3a47318",
+      "file": "apps/web/src/lab/LabStageBoundary.tsx",
+      "depth": "PRODUCT",
+      "text": "3D preview unavailable",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "61a5b200aa54b8733f25",
+      "file": "apps/web/src/lab/LabStageBoundary.tsx",
+      "depth": "PRODUCT",
+      "text": "3D preview unavailable:",
+      "reviewed": true,
+      "batch": "batch_g"
+    },
+    {
+      "id": "e0f80104c61b36ca99f4",
+      "file": "apps/web/src/lab/LabStageBoundary.tsx",
+      "depth": "PRODUCT",
+      "text": "3D preview unavailable on this device — the build prompt below still opens in Create.",
+      "reviewed": true,
+      "batch": "batch_g"
     },
     {
       "id": "8ee84f1049e0f1dc83db",

@@ -54,6 +54,11 @@ assert.match(ui, /card-grid-candidate|modal-or-dialog-candidate|form-panel-candi
 
 const lab = readFileSync(join(webSrc, "lab/specimens.ts"), "utf8");
 assert.equal((lab.match(/id: "d3d-/g) || []).length, 14);
+assert.ok(existsSync(join(webSrc, "lab/labAcquisition.ts")));
+const acq = readFileSync(join(webSrc, "lab/labAcquisition.ts"), "utf8");
+assert.match(acq, /acquisitionSeedFromLabItem/);
+assert.match(acq, /FROM_DAILY|From Daily Lab|provenanceLabel/);
+
 assert.match(lab, /modules|slabs|folds|table/);
 
 const onnx = readFileSync(join(webSrc, "engine/onnxSemantic.ts"), "utf8");

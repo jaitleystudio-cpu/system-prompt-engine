@@ -97,11 +97,13 @@ def test_intent_provenance_auto_vs_user_edited():
     assert "applyUserRequestChange" in text
     assert "shouldPreserveEditedIntent" in text
     assert "mapLabCategory" in text
-    # Daily Lab clean open
-    assert "setIntent(defaultIntentLens" in text
-    assert "setCategory(mapLabCategory(s.category))" in text
-    assert 'setMode("simple")' in text
+    # Daily Lab clean open (Batch G: single acquisition owner)
+    assert "applyLabAcquisition" in text
+    assert "acquisitionSeedFromLabItem" in text
+    assert "setCategory(mapLabCategory(seed.categoryRaw))" in text
+    assert "setMode(seed.mode)" in text or 'setMode("simple")' in text
     assert "buildPrompt" in text
+    assert (WEB / "lab" / "labAcquisition.ts").is_file()
 
 
 def test_composer_async_race_and_mode_cleanup():
