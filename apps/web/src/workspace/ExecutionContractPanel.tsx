@@ -2,6 +2,7 @@ import type {
   LocalExecutionRecord,
   SpeArtifactV1,
 } from "@spe/web-runtime";
+import { getMirroredProviderProfile } from "@spe/web-runtime";
 import type { ContextProtocolCompileOutput } from "../engine/types";
 
 type Props = {
@@ -188,9 +189,24 @@ export function ExecutionContractPanel({
                 {shortDigest(record?.contract.provider_profile_digest)}
               </dd>
             </div>
+            <div>
+              <dt>Capabilities</dt>
+              <dd>
+                {(() => {
+                  const pid = record?.contract.provider_profile_id;
+                  const mirrored = pid
+                    ? getMirroredProviderProfile(pid)
+                    : null;
+                  if (!mirrored?.capabilities?.length) {
+                    return "— (run local dry-run to bind)";
+                  }
+                  return mirrored.capabilities.join(", ");
+                })()}
+              </dd>
+            </div>
           </dl>
           <p className="spe-profile-law">
-            selection ≠ authority grant · display:{" "}
+            selection ≠ authority grant · env tags are declarations only · display:{" "}
             {record?.contract.profile_display_source ?? "ts_mirror"}
           </p>
           <h4>Selection reason</h4>

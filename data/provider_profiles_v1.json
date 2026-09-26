@@ -1,20 +1,22 @@
 {
   "registry_id": "provider_profiles",
-  "registry_version": "1.0.0",
+  "registry_version": "1.1.0",
   "schema": "provider_profile.schema.json",
   "profiles": [
     {
       "profile_id": "LOCAL_WASM",
       "provider": "spe.local_wasm",
       "model_id": null,
-      "profile_version": "1.0.0",
-      "effective_from": "2026-09-25T00:00:00Z",
+      "profile_version": "1.1.0",
+      "effective_from": "2026-09-26T00:00:00Z",
       "verified_at": null,
       "capabilities": [
         "local_inference",
         "wasm_runtime",
         "deterministic_fixture",
-        "offline"
+        "offline",
+        "file_access",
+        "repository_access"
       ],
       "privacy_behavior": {
         "data_leaves_device": false,
@@ -30,7 +32,8 @@
       "known_limitations": [
         "No live model weights bundled; depends on host WASM runtime availability",
         "Does not mint or escalate AuthorityGrant",
-        "Throughput and model quality bounded by local runtime"
+        "Throughput and model quality bounded by local runtime",
+        "file_access / repository_access are read/inspect declarations only — not execute, not network git, not side-effect auto-enable"
       ]
     },
     {
@@ -69,13 +72,14 @@
       "profile_id": "EXTERNAL_OPTIONAL",
       "provider": "spe.external_optional",
       "model_id": null,
-      "profile_version": "1.0.0",
-      "effective_from": "2026-09-25T00:00:00Z",
+      "profile_version": "1.1.0",
+      "effective_from": "2026-09-26T00:00:00Z",
       "verified_at": null,
       "capabilities": [
         "external_optional",
         "network_optional",
-        "compat_adapter"
+        "compat_adapter",
+        "browser_computer_use"
       ],
       "privacy_behavior": {
         "data_leaves_device": true,
@@ -93,7 +97,8 @@
         "Network and credentials required; never auto-enabled",
         "Does not mint AuthorityGrant or self-escalate",
         "Live pricing unknown in this registry snapshot — do not fabricate",
-        "Availability depends on external provider and user opt-in"
+        "Availability depends on external provider and user opt-in",
+        "browser_computer_use is a capability declaration for environments that expose browser/computer-use tools — not an SPE desktop automation agent; never auto-grants side effects"
       ]
     }
   ]

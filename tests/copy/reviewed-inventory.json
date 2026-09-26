@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-26T15:04:52.048Z",
+  "generated": "2026-09-26T15:31:13.577Z",
   "tipNote": "batch_g acquisition + stage boundary",
   "entries": [
     {
@@ -12073,12 +12073,6 @@
       "text": "LOCAL RUN RECORD"
     },
     {
-      "id": "8d007897e5b8f083c503",
-      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "selection ≠ authority grant · display:"
-    },
-    {
       "id": "9a57fe444f8d2cba2217",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
@@ -13157,6 +13151,18 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
       "text": "Building your prompt…"
+    },
+    {
+      "id": "b9001059019c0cbcdc8e",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Capabilities"
+    },
+    {
+      "id": "e9e4748874017753b1a9",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "selection ≠ authority grant · env tags are declarations only · display:"
     }
   ]
 }

@@ -11,6 +11,15 @@ export const PROVIDER_PROFILE_DISPLAY_SOURCE = "ts_mirror" as const;
 export const PROVIDER_PROFILE_SEMANTIC_OWNER =
   "spe_runtime.providers.profiles+adapter" as const;
 
+/** Batch H environment capability tags — mirrored for UI honesty (Python owns semantics). */
+export const ENVIRONMENT_CAPABILITY_TAGS = [
+  "repository_access",
+  "file_access",
+  "browser_computer_use",
+] as const;
+export type EnvironmentCapabilityTag =
+  (typeof ENVIRONMENT_CAPABILITY_TAGS)[number];
+
 export type MirroredProviderProfile = {
   profile_id: string;
   provider: string;
@@ -32,7 +41,7 @@ const LOCAL_FIRST_ORDER = [
 ] as const;
 
 /**
- * Static mirror of data/provider_profiles_v1.json (registry_version 1.0.0).
+ * Static mirror of data/provider_profiles_v1.json (registry_version 1.1.0).
  * Digests verified against Python provider_profile_digest at Turn 4 bind time.
  */
 export const MIRRORED_PROVIDER_PROFILES: readonly MirroredProviderProfile[] = [
@@ -56,7 +65,7 @@ export const MIRRORED_PROVIDER_PROFILES: readonly MirroredProviderProfile[] = [
   {
     profile_id: "LOCAL_WASM",
     provider: "spe.local_wasm",
-    profile_version: "1.0.0",
+    profile_version: "1.1.0",
     local_or_external: "local",
     requires_network: false,
     requires_credentials: false,
@@ -65,15 +74,17 @@ export const MIRRORED_PROVIDER_PROFILES: readonly MirroredProviderProfile[] = [
       "wasm_runtime",
       "deterministic_fixture",
       "offline",
+      "file_access",
+      "repository_access",
     ],
     authority_capabilities: [],
     profile_digest:
-      "9006c8cb48f2b8669dfeb397515ec4b51d4e08916b7dc1f96b4d0276192ccb5d",
+      "f21bf3293f8facbbea23bd8e70c6fc5452eeff53d4d7c86c5ec143c1d5eeb71b",
   },
   {
     profile_id: "EXTERNAL_OPTIONAL",
     provider: "spe.external_optional",
-    profile_version: "1.0.0",
+    profile_version: "1.1.0",
     local_or_external: "external",
     requires_network: true,
     requires_credentials: true,
@@ -81,10 +92,11 @@ export const MIRRORED_PROVIDER_PROFILES: readonly MirroredProviderProfile[] = [
       "external_optional",
       "network_optional",
       "compat_adapter",
+      "browser_computer_use",
     ],
     authority_capabilities: [],
     profile_digest:
-      "c26a83d0fa23638c968d1a67f8fd9153ecf91c17aef9abceee6b1f29b219aa59",
+      "abfd8e8ebaeadc17ab92198bbe00dce2de4734fe907fb1c28ca0680b6645b639",
   },
 ] as const;
 
