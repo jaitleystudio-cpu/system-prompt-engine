@@ -76,37 +76,14 @@ export function HeroStory({ state, paused }: Props) {
       >
         <defs>
           <linearGradient id="story-flow-gold" x1="0" x2="1">
-            <stop offset="0" stopColor="#8b714c" stopOpacity="0.15" />
-            <stop offset="0.45" stopColor="#d8b779" stopOpacity="0.92" />
-            <stop offset="1" stopColor="#f0d7a4" stopOpacity="0.46" />
+            <stop offset="0" stopColor="#8b714c" stopOpacity="0.08" />
+            <stop offset="0.4" stopColor="#d8b779" stopOpacity="0.55" />
+            <stop offset="1" stopColor="#f0d7a4" stopOpacity="0.18" />
           </linearGradient>
-          <marker
-            id="story-arrow"
-            markerWidth="8"
-            markerHeight="8"
-            refX="7"
-            refY="4"
-            orient="auto"
-          >
-            <path d="M0,0 L8,4 L0,8 Z" fill="#d8b779" opacity="0.72" />
-          </marker>
         </defs>
-        <path
-          d="M55 138 C210 138 210 238 360 238 S525 180 650 218 S820 220 958 188"
-          markerEnd="url(#story-arrow)"
-        />
-        <path
-          d="M38 224 C182 224 238 280 365 266 S508 226 648 246 S815 246 958 224"
-          markerEnd="url(#story-arrow)"
-        />
-        <path
-          d="M68 318 C210 318 246 295 372 292 S510 274 648 272 S820 278 958 270"
-          markerEnd="url(#story-arrow)"
-        />
-        <path
-          d="M120 384 C245 376 282 324 390 318 S526 316 650 310 S826 324 958 316"
-          markerEnd="url(#story-arrow)"
-        />
+        <path d="M70 210 C220 198 310 240 420 236 S580 210 700 228 S860 250 950 236" />
+        <path d="M90 268 C250 278 340 300 450 288 S620 250 740 268 S870 290 950 278" />
+        <path d="M110 330 C270 340 360 320 470 318 S640 300 760 312 S880 330 950 320" />
       </svg>
 
       <ol
@@ -131,11 +108,24 @@ export function HeroStory({ state, paused }: Props) {
         <li className="hero-story-stage hero-meaning-stage" data-stage="meaning">
           <StoryLabel {...STORY_STAGES[1]} />
           <div className="glass-filter-stack" aria-hidden="true">
-            <span />
-            <span />
-            <span />
+            <div className="meaning-family" data-family="goal">
+              <span className="meaning-form meaning-form-goal" />
+              <strong>GOAL</strong>
+            </div>
+            <div className="meaning-family" data-family="context">
+              <span className="meaning-form meaning-form-context">
+                <i />
+                <i />
+                <i />
+              </span>
+              <strong>CONTEXT</strong>
+            </div>
+            <div className="meaning-family" data-family="boundary">
+              <span className="meaning-form meaning-form-boundary" />
+              <strong>BOUNDARY</strong>
+            </div>
           </div>
-          <div className="meaning-clusters" aria-hidden="true">
+          <div className="meaning-clusters visually-hidden" aria-hidden="true">
             <span>GOAL</span>
             <span>CONTEXT</span>
             <span>BOUNDARY</span>
@@ -148,6 +138,12 @@ export function HeroStory({ state, paused }: Props) {
         >
           <StoryLabel {...STORY_STAGES[2]} />
           <div className="hero-engine" aria-hidden="true">
+            <div className="engine-seal" aria-hidden="true">
+              <span className="engine-seal-ring" />
+              <span className="engine-seal-core">
+                <i className="engine-seal-glyph" />
+              </span>
+            </div>
             <div className="engine-cap">
               <strong>SPE</strong>
               <span>SEMANTIC ENGINE</span>
@@ -164,11 +160,11 @@ export function HeroStory({ state, paused }: Props) {
 
         <li className="hero-story-stage hero-structure-stage" data-stage="structure">
           <StoryLabel {...STORY_STAGES[3]} />
-          <div className="structure-stack" aria-hidden="true">
-            <span><i>01</i>ROLE</span>
-            <span><i>02</i>OBJECTIVE</span>
-            <span><i>03</i>CONSTRAINTS</span>
-            <span><i>04</i>OUTPUT</span>
+          <div className="structure-stack structure-assemble" aria-hidden="true">
+            <span data-row="role"><i>01</i>ROLE</span>
+            <span data-row="objective"><i>02</i>OBJECTIVE</span>
+            <span data-row="constraints"><i>03</i>CONSTRAINTS</span>
+            <span data-row="output"><i>04</i>OUTPUT</span>
           </div>
         </li>
 
