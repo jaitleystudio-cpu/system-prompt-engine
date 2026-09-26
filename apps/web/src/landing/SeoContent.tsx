@@ -39,6 +39,11 @@ export function SeoContent() {
             <a href={pathForView("lab")}>Browse Daily Lab prompt ideas</a>
           </li>
           <li>
+            <a href={pathForView("capabilities")}>
+              SPE capabilities — local contracts and portability
+            </a>
+          </li>
+          <li>
             <a href={pathForView("privacy")}>
               Privacy proof — what stays on this device
             </a>

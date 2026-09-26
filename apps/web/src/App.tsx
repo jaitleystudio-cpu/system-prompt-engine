@@ -57,6 +57,7 @@ import {
 import { DailyLab } from "./lab/DailyLab";
 import { MyWork } from "./pages/MyWork";
 import { PrivacyProof } from "./pages/PrivacyProof";
+import { Capabilities } from "./pages/Capabilities";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
 import { registerServiceWorker } from "./pwa";
@@ -954,6 +955,7 @@ export default function App() {
           />
         )}
 
+        {view === "capabilities" && <Capabilities />}
         {view === "privacy" && <PrivacyProof />}
 
         {view === "workspace" && (
@@ -1112,6 +1114,7 @@ export default function App() {
           <a href={pathForView("code")}>Code</a>
           <a href={pathForView("lab")}>Daily Lab</a>
           <a href={pathForView("my-work")}>My Work</a>
+          <a href={pathForView("capabilities")}>Capabilities</a>
           <a href={pathForView("privacy")}>Privacy</a>
         </nav>
         <div className="claim-strip">

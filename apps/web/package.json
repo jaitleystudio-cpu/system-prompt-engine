@@ -16,6 +16,8 @@
     "test:dot-pattern": "node scripts/test-dot-pattern.mjs",
     "test:execution-contract": "node scripts/test-execution-contract.mjs",
     "test:hero-story": "node scripts/test-hero-story.mjs",
+    "test:theme-routes": "node scripts/test-theme-routes.mjs",
+    "test:capabilities-seo": "node scripts/test-capabilities-seo.mjs",
     "audit:deps": "node scripts/audit-deps.mjs",
     "audit:assets": "node scripts/measure-assets.mjs",
     "audit:egress": "node scripts/egress-proof.mjs",

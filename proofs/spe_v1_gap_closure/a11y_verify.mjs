@@ -84,7 +84,7 @@ try {
   check("theme_aria", Boolean(aria && /theme/i.test(aria)), aria || "missing");
 
   const hrefs = await page.locator("#spe-primary-nav a").evaluateAll((as) => as.map((a) => a.getAttribute("href")));
-  const needed = ["/", "/create", "/code", "/daily-lab", "/my-work", "/privacy"];
+  const needed = ["/", "/create", "/code", "/daily-lab", "/my-work", "/privacy", "/capabilities"];
   check("nav_real_links", needed.every((p) => hrefs.includes(p)), hrefs.join(", "));
 
   await page.goto("http://127.0.0.1:4188/create", { waitUntil: "domcontentloaded", timeout: 60000 });

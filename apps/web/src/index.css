@@ -1783,13 +1783,13 @@ html[data-theme="dark"] .hero-copy h1 {
 .spe-composer-status { color: #a7f3d0; }
 .spe-composer-error { color: #fda4af; }
 .spe-fallbacks { margin: 0; padding-left: 1.1rem; opacity: 0.85; }
-.spe-create, .spe-lab, .spe-mywork, .spe-privacy-page {
+.spe-create, .spe-lab, .spe-mywork, .spe-privacy-page, .spe-capabilities-page {
   width: min(1100px, calc(100% - 2rem)); margin: 5.5rem auto 3rem; display: grid; gap: 1.25rem;
 }
-.spe-create-head h1, .spe-lab-head h1, .spe-mywork h1, .spe-privacy-page h1 {
+.spe-create-head h1, .spe-lab-head h1, .spe-mywork h1, .spe-privacy-page h1, .spe-capabilities-page h1 {
   font-family: var(--spe-display, inherit); font-weight: 550; letter-spacing: -0.02em; margin: 0.2rem 0;
 }
-.spe-lab-grid, .spe-privacy-grid, .spe-moon-grid {
+.spe-lab-grid, .spe-privacy-grid, .spe-capabilities-grid, .spe-moon-grid {
   display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 .spe-lab-card {
@@ -2798,6 +2798,41 @@ html[data-theme="light"] .spe-create,
 html[data-theme="light"] .spe-create-head,
 html[data-theme="light"] .spe-create-head h1,
 html[data-theme="light"] .spe-mywork,
+
+/* ——— Batch F: capabilities / AEO FAQ ——— */
+.spe-capabilities-faq {
+  margin-top: 2.25rem;
+  max-width: 42rem;
+}
+.spe-capabilities-faq h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.85rem;
+}
+.spe-faq-list {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+.spe-faq-list > div {
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  background: color-mix(in srgb, currentColor 4%, transparent);
+}
+.spe-faq-list dt {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+.spe-faq-list dd {
+  margin: 0;
+  opacity: 0.88;
+  line-height: 1.55;
+}
+.spe-capabilities-links {
+  margin-top: 1.75rem;
+}
+html[data-theme="light"] .spe-capabilities-page,
 html[data-theme="light"] .spe-privacy-page {
   color: var(--paper);
 }
