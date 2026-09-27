@@ -1,4 +1,4 @@
-import { ui, selectHero } from "@spe/human-perspective";
+import { ui } from "@spe/human-perspective";
 import { HumanError } from "../ui/HumanError";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -17,7 +17,7 @@ import type {
   CompilePhase,
 } from "../engine/types";
 import { semanticGroups } from "../scene/semantic";
-import { DotPattern } from "../ui/DotPattern";
+import { useDailyHero } from "./useDailyHero";
 import { HeroStory } from "./HeroStory";
 type Intent = {
   confirmed: IntentAtom[];
@@ -66,7 +66,7 @@ const EXAMPLES = [
   },
 ] as const;
 export function Hero(p: Props) {
-  const hero = selectHero(p.category, Boolean(p.result));
+  const hero = useDailyHero();
   const [reduced, setReduced] = useState(() =>
       matchMedia("(prefers-reduced-motion: reduce)").matches,
     ),
@@ -113,33 +113,33 @@ export function Hero(p: Props) {
   return (
     <section className="spe-hero" id="top" aria-labelledby="hero-title">
       <div className="hero-theater">
-        <DotPattern surface="hero" />
         <div className="hero-topline">
           <span className="eyebrow">
-            <i /> PRIVATE BY DESIGN. OPEN BY NATURE.
+            <i /> YOUR IDEAS. YOUR WORDS.
           </span>
-          <span className="edition">Research preview</span>
+          <span className="edition">A fresh start, every day.</span>
         </div>
         <div className="hero-copy">
-          <p className="eyebrow">FROM A THOUGHT TO A PRECISE BRIEF</p>
-          <h1 id="hero-title">
+          <p className="eyebrow">A CLEAR START FOR ANY AI</p>
+          <h1 id="hero-title" data-daily-title={hero.index}>
             {hero.title}
             <br />
             <em>{hero.accent}</em>
           </h1>
           <p className="hero-description">
-            {p.quality === "LITE" ? ui.mobileHeroSupport : hero.support}
+            Turn your ideas into clear prompts for any AI.
+            Start with a few words. Add what matters.
           </p>
           <a className="hero-start" href="#prompt-studio">
-            {ui.start} <span>↗</span>
+            Make my prompt <span aria-hidden="true">↗</span>
           </a>
         </div>
         <div className="hero-stage">
           <HeroStory />
         </div>
         <div className="theater-bottom">
-          <span>ONE BRIEF. ANY AI.</span>
-          <a href="#prompt-studio">SCROLL TO CREATE ↓</a>
+          <span>YOUR IDEA → YOUR PROMPT</span>
+          <a href="#prompt-studio">TRY IT BELOW ↓</a>
         </div>
       </div>
       <section

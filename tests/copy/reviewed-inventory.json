@@ -1,6 +1,6 @@
 {
-  "generated": "2026-09-26T18:07:43.821Z",
-  "tipNote": "Emergency hero fix: founder PNG verbatim; inventory merged for HeroStory alt/aria.",
+  "generated": "2026-09-27T16:35:38.527Z",
+  "tipNote": "Hero-only plain-English editorial review and daily headlines; non-hero copy preserved. Founder visual acceptance pending.",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -4957,6 +4957,378 @@
       "text": "brown bounce"
     },
     {
+      "id": "05d79b52298550ae1ed5",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "What do you want"
+    },
+    {
+      "id": "0af2b6a61dd12dbb90af",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Think it through."
+    },
+    {
+      "id": "0af30d5b6060b6b75208",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Make your prompt."
+    },
+    {
+      "id": "0c45b3f3f818b208476c",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "A clear prompt"
+    },
+    {
+      "id": "0f5e21c7a36d1ae6cb66",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "to a clear task."
+    },
+    {
+      "id": "128e62885f08480a8abc",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "SPE helps you explain it."
+    },
+    {
+      "id": "137424b6c886d4363f23",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Your words."
+    },
+    {
+      "id": "19566481d1693f00d575",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Big idea?"
+    },
+    {
+      "id": "1a1ecc1545f8fe6acf41",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Start here."
+    },
+    {
+      "id": "1b5b512168926f5e1a9d",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Less guesswork."
+    },
+    {
+      "id": "21ccf63954b6d024f902",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "One idea."
+    },
+    {
+      "id": "254b7cc292b95590ee9b",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Make your thoughts"
+    },
+    {
+      "id": "2c590a63fa61aa2ab6c7",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Build a clear prompt."
+    },
+    {
+      "id": "30215a9b2590c111e6fc",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "A prompt you can use."
+    },
+    {
+      "id": "33f07eb7aa18936d6463",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Bring your idea."
+    },
+    {
+      "id": "3492ff577ef220149d70",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Your next project"
+    },
+    {
+      "id": "3621b37f2c576386ff05",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "to a clear prompt."
+    },
+    {
+      "id": "3dbe57aa72c8ca949789",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "A clear next step."
+    },
+    {
+      "id": "43b5b78909487e312382",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "a clear starting point."
+    },
+    {
+      "id": "49aa61e3ed3a45556a81",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Bring the details."
+    },
+    {
+      "id": "4d04c2f3a436a0ab3bc2",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "More than a thought."
+    },
+    {
+      "id": "4de8d88f86af7cb62a38",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Let’s make it clear."
+    },
+    {
+      "id": "4eccc20a95fc9058130d",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Make it clear."
+    },
+    {
+      "id": "4f6f658fdebb9a86e1c5",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "starts with an idea."
+    },
+    {
+      "id": "556708ae090a60d9af70",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Start with your words."
+    },
+    {
+      "id": "56d7e5fca4792a85891e",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "A better starting point."
+    },
+    {
+      "id": "5ac2b7a9fb26cd291658",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "easy to explain."
+    },
+    {
+      "id": "63161f10803232d9a6ab",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "A few words."
+    },
+    {
+      "id": "6500339856a636db6577",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "one step further."
+    },
+    {
+      "id": "682594d971ad623eb8fa",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "to make today?"
+    },
+    {
+      "id": "6ad89bb5b7bc1ef21d00",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Keep the details."
+    },
+    {
+      "id": "720370115277674ba883",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "starts with you."
+    },
+    {
+      "id": "75ea025437ec517f8750",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Keep your idea clear."
+    },
+    {
+      "id": "790ffc046036e80a1f76",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Make room"
+    },
+    {
+      "id": "7a6abea87124c8fa6c49",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Have an idea?"
+    },
+    {
+      "id": "7f179302a04cf3e7c8e6",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "into a clear prompt."
+    },
+    {
+      "id": "87eefed99b2e648fadff",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Tell AI what matters."
+    },
+    {
+      "id": "8805207265f8e798565d",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Take your idea"
+    },
+    {
+      "id": "8b9c4dad2963f5c4a77f",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Your idea."
+    },
+    {
+      "id": "8d5a0bd1aa623675ede1",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Start with an idea."
+    },
+    {
+      "id": "8fc20235736fe10b8252",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "From your words"
+    },
+    {
+      "id": "953ec4e2b3e855aaa920",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Start with a prompt."
+    },
+    {
+      "id": "9884af4b9627e8ee0344",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Make your idea clear."
+    },
+    {
+      "id": "98b736afdd6214a1590f",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Give your idea"
+    },
+    {
+      "id": "9f08b1ce6d42ee00d126",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Start small."
+    },
+    {
+      "id": "a0c1a0b888952e2bf3c6",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Make your next idea"
+    },
+    {
+      "id": "a6d40ef6f52b6d73f482",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "What’s on your mind?"
+    },
+    {
+      "id": "a89fb2a060708459fb7a",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Turn your notes"
+    },
+    {
+      "id": "aee76fa88e318ce2be6d",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "You bring the idea."
+    },
+    {
+      "id": "c0402339207c90288d4e",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "easy to follow."
+    },
+    {
+      "id": "c34368747ffe00105244",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Build from there."
+    },
+    {
+      "id": "ca24d14a24610c9be04d",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Ready for your next idea."
+    },
+    {
+      "id": "d19726e79adbffbcb85f",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "for your next idea."
+    },
+    {
+      "id": "d4b61232ad1a202b9d6c",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "One clear prompt."
+    },
+    {
+      "id": "d847f9683bddaea0d1ac",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "From a quick thought"
+    },
+    {
+      "id": "dc766f850370cd390ca6",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "A clear prompt."
+    },
+    {
+      "id": "dcaebb04679e4aa9e2a2",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Say what you need."
+    },
+    {
+      "id": "f5c784d738a405cc14fe",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Clearer prompts."
+    },
+    {
+      "id": "f62d44d9b083ff7a8296",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "A place to start."
+    },
+    {
+      "id": "f7d913a2a03e80d61850",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Your ideas matter."
+    },
+    {
+      "id": "fd4aec1f4dce6e5a8686",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Give AI a clear task."
+    },
+    {
+      "id": "fd6158b05b1d4f525c91",
+      "file": "apps/web/src/landing/dailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "Find the right words."
+    },
+    {
       "id": "0069a9f6e94710a68dfb",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -5005,6 +5377,12 @@
       "text": "Explain how a neural network learns to a curious 14-year-old. Use one everyday analogy, a worked example and three questions to check understanding."
     },
     {
+      "id": "11408089a9deb8174ed1",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "YOUR IDEAS. YOUR WORDS."
+    },
+    {
       "id": "120f25efc71972df7145",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -5047,6 +5425,12 @@
       "text": "review"
     },
     {
+      "id": "25320605e99e2cf8f118",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "A CLEAR START FOR ANY AI"
+    },
+    {
       "id": "26990443068134c5b548",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -5059,16 +5443,16 @@
       "text": "Choose a template and refine"
     },
     {
-      "id": "29fba1b27961b966c8d2",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "Pause story"
-    },
-    {
       "id": "2c1d668003e4b72de887",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "BRIEF_NEEDS_REVIEW"
+    },
+    {
+      "id": "320e74e4abc1cdab4a7c",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Make my prompt"
     },
     {
       "id": "3b8d292aafcfb7f6d167",
@@ -5087,12 +5471,6 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "YOUR ORIGINAL GOAL"
-    },
-    {
-      "id": "430a6ce489a735b4af70",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "FROM A THOUGHT TO A PRECISE BRIEF"
     },
     {
       "id": "4427e2367b1217f5a07a",
@@ -5167,12 +5545,6 @@
       "text": "YOURS TO REFINE. YOURS TO KEEP."
     },
     {
-      "id": "7185888d3adf77a9bf22",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "Research preview"
-    },
-    {
       "id": "71b391fe9bbaec45f969",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -5207,12 +5579,6 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "Describe the task. Include what matters, what to avoid, and what a good result looks like…"
-    },
-    {
-      "id": "7bfbb67f4e73115f93e8",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "SCROLL TO CREATE ↓"
     },
     {
       "id": "7eb6266256a9ef7cc8d0",
@@ -5263,10 +5629,10 @@
       "text": "Coding"
     },
     {
-      "id": "93e785714c82bf7b7a0b",
+      "id": "94b481e6bbf44837d7a8",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
-      "text": "LITE"
+      "text": "TRY IT BELOW ↓"
     },
     {
       "id": "95a4c8e24ddb4ececc50",
@@ -5317,10 +5683,10 @@
       "text": "e.g. concise replies with one next step"
     },
     {
-      "id": "b1b22b598f96cbf5e759",
+      "id": "b25ef8728f154891ad40",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
-      "text": "Reduced motion"
+      "text": "Turn your ideas into clear prompts for any AI. Start with a few words. Add what matters."
     },
     {
       "id": "b34b7ada50e893378e10",
@@ -5339,12 +5705,6 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "SPE"
-    },
-    {
-      "id": "b876da618884fd1c2960",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "PRIVATE BY DESIGN. OPEN BY NATURE."
     },
     {
       "id": "bcbf54164968190b5c94",
@@ -5383,10 +5743,10 @@
       "text": "Must follow"
     },
     {
-      "id": "cad6ade0f31fb0f81cde",
+      "id": "cd4f0ca5cf6b5f426dff",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
-      "text": "ONE BRIEF. ANY AI."
+      "text": "A fresh start, every day."
     },
     {
       "id": "cd5d2f0a25decb10e581",
@@ -5485,10 +5845,10 @@
       "text": "brief-role"
     },
     {
-      "id": "ecb0b545cc09afc1a1de",
+      "id": "f6653bdf410a8228ad5a",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
-      "text": "Resume story"
+      "text": "YOUR IDEA → YOUR PROMPT"
     },
     {
       "id": "f8959a359d4efc439143",
@@ -5509,16 +5869,64 @@
       "text": "Context and preferences"
     },
     {
-      "id": "05b003cf84765af53cdf",
+      "id": "0045fa099f26e032e62f",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "Need this to feel clear…"
+      "text": "No paid ads."
     },
     {
-      "id": "0f1d441e4d358eb1ecf8",
+      "id": "06452ee97e017fd2b5e1",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "prompt"
+      "text": "your app."
+    },
+    {
+      "id": "06627406ba198bb0f245",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "See how an idea becomes a prompt. This is an example."
+    },
+    {
+      "id": "07555cb1d79aed645053",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Your idea stays at the heart of the prompt."
+    },
+    {
+      "id": "0b882162c78713a48468",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "I have an idea"
+    },
+    {
+      "id": "0c80e4da140cbabc1c71",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Launch my app"
+    },
+    {
+      "id": "0e55816730628567b816",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "2 people"
+    },
+    {
+      "id": "111bdc29ec458da48b84",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Start with messy thoughts: a note, question, image, document, voice note or link."
+    },
+    {
+      "id": "12a523ec99b17a163a61",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "for an app."
+    },
+    {
+      "id": "165aff09728c63d23cd3",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "my-app.example"
     },
     {
       "id": "1b6e8f9db45f2d7d8c16",
@@ -5527,28 +5935,52 @@
       "text": "ROLE"
     },
     {
-      "id": "248e782338a55d077b5e",
+      "id": "1bd9da30c9f250e33871",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "ALIGN"
+      "text": "Aa"
     },
     {
-      "id": "252d27294a41027dbfd4",
+      "id": "1f1ae620179d2d49aab2",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "engine"
+      "text": "4 weeks"
     },
     {
-      "id": "27593400b70c819832d1",
+      "id": "20d153df431fe1df0a4e",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "structure"
+      "text": "Read it. Make it yours. Use it with any AI."
     },
     {
-      "id": "2f43d809be84900ecb3e",
+      "id": "21f55c22cff1da4ee7e1",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "SPE transformation story: messy human fragments become an idea; meaning is clarified; the SPE semantic engine structures it into role, objective, constraints, and output; a perfect system prompt emerges. Stages: IDEA, MEANING, SPE, STRUCTURE, PROMPT."
+      "text": "A role. A goal. Clear limits. A useful result."
+    },
+    {
+      "id": "23fdd69a302d8752ca26",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Play story"
+    },
+    {
+      "id": "2b074acb1e5fbba0fb8e",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Give each detail a place."
+    },
+    {
+      "id": "2df9fcbf0becae7325bd",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "A plan for each week"
+    },
+    {
+      "id": "2f0c0b46b92756170469",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SYSTEM PROMPT ENGINE"
     },
     {
       "id": "31cbddddebf52fec7222",
@@ -5557,52 +5989,64 @@
       "text": "GOAL"
     },
     {
-      "id": "330920994780ea8bed7b",
+      "id": "3727002d885dd6eb5c62",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "READY"
+      "text": "Create a four-week plan for my app."
     },
     {
-      "id": "33d85847e516b3e92593",
+      "id": "372cbb0c7dda16e460b5",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "PARSE"
+      "text": "A four-week launch"
     },
     {
-      "id": "3466afa018dff93fb0aa",
+      "id": "3d95683e78a5d58aa0d6",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "NOTE"
+      "text": "Question"
     },
     {
-      "id": "3933b2d58146ff3443fc",
+      "id": "40d62db7459e9925462f",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "SPE transformation: messy human fragments to idea, meaning, semantic engine, structure, and perfect system prompt"
+      "text": "Pause story"
     },
     {
-      "id": "3ea840b1bec24b113f4d",
+      "id": "43476b4e7d40d0992814",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "DOCUMENT"
+      "text": "“No paid ads.”"
     },
     {
-      "id": "4adc033b85d52eb94926",
+      "id": "4835ece60f69f7987625",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "QUESTION"
+      "text": "YOURS TO REVIEW"
     },
     {
-      "id": "51a448474a394f7c17df",
+      "id": "493bcd9bfe9092fcc0a5",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "SEMANTIC ENGINE"
+      "text": "SPE puts your idea together."
     },
     {
-      "id": "58480053c49ed91cf5dd",
+      "id": "4d931731db85386a64a4",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "PROMPT"
+      "text": "It starts with what’s on your mind."
+    },
+    {
+      "id": "4f1d2a7acd1e108e26ab",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Let SPE put it together."
+    },
+    {
+      "id": "51e55a085a56b2edf079",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Keep it within $2,000, with two people and no paid ads."
     },
     {
       "id": "5c3b8207c83bf50e2067",
@@ -5611,28 +6055,52 @@
       "text": "BOUNDARY"
     },
     {
+      "id": "62140194ecb4c01d9832",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "A note. A link. A question. Bring it all."
+    },
+    {
       "id": "64d6b4d59136a88f1025",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
       "text": "OBJECTIVE"
     },
     {
-      "id": "6e6f74eb3dffe1e5bc66",
+      "id": "65384c03749efa27594a",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "IDEA"
+      "text": "Show"
     },
     {
-      "id": "777c585b3d401999c15b",
+      "id": "6eec2a1f9927daa3d46a",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "SPE transforms messy human fragments into an idea, meaning, structure, and a perfect system prompt: IDEA, MEANING, SPE, STRUCTURE, PROMPT."
+      "text": "Example prompt: Act as a product launch planner. Create a four-week plan for my app. Keep it within $2,000, with two people and no paid ads. Give me tasks and a goal for each week."
     },
     {
-      "id": "79dfd20ab4d9c1bcca06",
+      "id": "6f03a6c46a3f452c30e9",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "IMAGE"
+      "text": "Replay story"
+    },
+    {
+      "id": "73deb46e233922d703ba",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "How do I"
+    },
+    {
+      "id": "74e76640fe8ed0869ead",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "What you want. What you know. What to avoid."
+    },
+    {
+      "id": "7892a436d52d9dee2588",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "YOUR PROMPT"
     },
     {
       "id": "7c426e72b297670e9855",
@@ -5641,16 +6109,10 @@
       "text": "OUTPUT"
     },
     {
-      "id": "80fbdd84d7f9ad3f35d8",
+      "id": "7e101a8056fc0cf5a82d",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "MESSY HUMAN FRAGMENTS"
-    },
-    {
-      "id": "81c47340f177f3a221e6",
-      "file": "apps/web/src/landing/HeroStory.tsx",
-      "depth": "PRODUCT",
-      "text": "meaning"
+      "text": "Keep the things that matter."
     },
     {
       "id": "862108c4fb97d756711b",
@@ -5659,100 +6121,190 @@
       "text": "CONSTRAINTS"
     },
     {
-      "id": "8b62c9bf898a3d161fde",
-      "file": "apps/web/src/landing/HeroStory.tsx",
-      "depth": "PRODUCT",
-      "text": "idea"
-    },
-    {
       "id": "8c76755fbe82ad6a6235",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
       "text": "CONTEXT"
     },
     {
-      "id": "95e61e0e3f043cd6bc10",
+      "id": "8e56c03229b75597660e",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "MEANING"
+      "text": "Find the meaning: your goal, the details and what to avoid."
     },
     {
-      "id": "9bb5c64c3abb50befe2c",
+      "id": "9301df1354908919014c",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "WAVEFORM"
+      "text": "Note"
     },
     {
-      "id": "9e16d0a2cede99423ba4",
+      "id": "941b88d16347b7dbf043",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "URL"
+      "text": "Prompt"
     },
     {
-      "id": "9e661e2f017c01c162a3",
+      "id": "97185972ee726deb4e00",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "Founder illustration of the SPE journey: IDEA to MEANING to SPE to STRUCTURE to PROMPT."
+      "text": "visibilitychange"
     },
     {
-      "id": "aa6734f8fbb453869345",
+      "id": "97758ab363ca0144e4c6",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "COMPILE"
+      "text": "Let’s launch"
     },
     {
-      "id": "b70e6ace0eeb6adc1f2e",
+      "id": "987ba90bf85635fb1c7e",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "Launch with clarity"
+      "text": "Act as a product launch planner."
     },
     {
-      "id": "b927e8d02e0001d1c568",
+      "id": "98bdcd6bb7b6f8d57c24",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "PERFECT SYSTEM PROMPT"
+      "text": "Steps from idea to prompt"
     },
     {
-      "id": "bea8b225274e768c6069",
+      "id": "99248b6a012a337c8d9e",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "Human fragments become an idea, meaning, and a structured prompt through the compact SPE semantic engine."
+      "text": "(prefers-reduced-motion: reduce)"
     },
     {
-      "id": "bec0aa6a8f300bf4cfbe",
+      "id": "a47d68fdf252abecff9b",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "SPE / 01"
+      "text": "Ideas"
     },
     {
-      "id": "c434fc111a04c050017c",
+      "id": "b009fde01af0c2f3bf98",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "Launch strategist"
+      "text": "What matters"
     },
     {
-      "id": "d1f95585cbc48ee8a6dc",
+      "id": "b054f3136c1ac9096aa0",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "STRUCTURE"
+      "text": "change"
     },
     {
-      "id": "e11115016bd73e23bdd7",
+      "id": "b098d33e00e7d6c10644",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "CODE"
+      "text": "My notes"
     },
     {
-      "id": "edb38ae67e01292ca12b",
+      "id": "b147c7619f5dfa442d12",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
-      "text": "SPE transforms messy human fragments into an idea, meaning, structure, and a perfect system prompt."
+      "text": "Ω"
+    },
+    {
+      "id": "b312b114aec348cf6558",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "SEE AN EXAMPLE"
+    },
+    {
+      "id": "b5b97d4fe729737bfe87",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Meaning"
+    },
+    {
+      "id": "c43c560530a8f8c086f1",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Add structure: a role, an objective, constraints and the output you want."
+    },
+    {
+      "id": "ca08004eec564355f543",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Motion off"
+    },
+    {
+      "id": "cc03c6ec41682a2801fc",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Plan"
+    },
+    {
+      "id": "d0bccfc7c68f73fe0869",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "step"
+    },
+    {
+      "id": "d19e6ea026d80fac85c1",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Two people. Four weeks."
+    },
+    {
+      "id": "d3ac72e25978efef182a",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Read your finished prompt, edit it and use it with any AI."
+    },
+    {
+      "id": "db6dc66b462dab185251",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "My moodboard"
+    },
+    {
+      "id": "e67a0abcd73bb8c10ce6",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Two people · $2,000"
+    },
+    {
+      "id": "ed02f691b679e7a7d5d1",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "How SPE works"
+    },
+    {
+      "id": "edb66f00388b55fbfe35",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Launch planner"
+    },
+    {
+      "id": "efa16348847e091ea785",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Give me tasks and a goal for each week."
     },
     {
       "id": "f2743cf0382136dd114b",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
       "text": "SPE"
+    },
+    {
+      "id": "f7e2089e64e42a98fad8",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "get started?"
+    },
+    {
+      "id": "f99fa19df6b4357722ac",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "Your prompt. Ready to use."
+    },
+    {
+      "id": "fb00aa7d6e6305682b5e",
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "depth": "PRODUCT",
+      "text": "YOUR IDEA, CONNECTED"
     },
     {
       "id": "0014fed211f55a770c35",
@@ -6209,6 +6761,24 @@
       "file": "apps/web/src/landing/SeoContent.tsx",
       "depth": "PRODUCT",
       "text": "Privacy proof — what stays on this device"
+    },
+    {
+      "id": "66c2cdc59507ad611362",
+      "file": "apps/web/src/landing/useDailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "focus"
+    },
+    {
+      "id": "867c59f43ba01aa18ac1",
+      "file": "apps/web/src/landing/useDailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "visibilitychange"
+    },
+    {
+      "id": "a6269ea845ffd5e47421",
+      "file": "apps/web/src/landing/useDailyHero.ts",
+      "depth": "PRODUCT",
+      "text": "pageshow"
     },
     {
       "id": "04b6e3d606482fde201f",

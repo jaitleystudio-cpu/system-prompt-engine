@@ -1,0 +1,162 @@
+{
+  "note": "Local Chromium samples, not field Core Web Vitals or a low-end device guarantee. Whole-app bundles include unchanged non-hero code. Frame samples precede the tablet-only reflow; desktop rules are unchanged. Bundle sizes reflect the final build.",
+  "bundleGzip": {
+    "originalPR": 489849,
+    "rejected": 493267,
+    "current": 495193,
+    "deltaFromRejected": 1926,
+    "deltaFromPR": 5344
+  },
+  "assets": [
+    {
+      "name": "LabStage-rQWknjNC.js",
+      "bytes": 5244,
+      "gzip": 1644
+    },
+    {
+      "name": "SpeIntelligence-54f46twJ.js",
+      "bytes": 5669,
+      "gzip": 2517
+    },
+    {
+      "name": "engine.worker-BRhc7cig.js",
+      "bytes": 3104,
+      "gzip": 1378
+    },
+    {
+      "name": "index-CGYs9uDN.css",
+      "bytes": 157643,
+      "gzip": 32280
+    },
+    {
+      "name": "index-KNxeIQrT.js",
+      "bytes": 377630,
+      "gzip": 121903
+    },
+    {
+      "name": "ort-wasm-juE7TTNY.js",
+      "bytes": 464100,
+      "gzip": 110351
+    },
+    {
+      "name": "r3f-BB1YTSQJ.js",
+      "bytes": 833216,
+      "gzip": 225120
+    }
+  ],
+  "runs": [
+    {
+      "p95FrameIntervalMs": 16.700000000000728,
+      "maxFrameIntervalMs": 16.800000000000182,
+      "CLS": 0,
+      "longTasks": [
+        196,
+        104,
+        100
+      ],
+      "heroNodes": 154,
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-DW1W1uuf.js",
+          "bytes": 121904
+        },
+        {
+          "name": "/assets/index-Cd8ySvvX.css",
+          "bytes": 32263
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        },
+        {
+          "name": "/assets/SpeIntelligence-DWxSURQg.js",
+          "bytes": 2517
+        }
+      ]
+    },
+    {
+      "p95FrameIntervalMs": 16.799999999999727,
+      "maxFrameIntervalMs": 166.70000000000005,
+      "CLS": 0,
+      "longTasks": [
+        75,
+        121,
+        102,
+        73
+      ],
+      "heroNodes": 154,
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-Cd8ySvvX.css",
+          "bytes": 32263
+        },
+        {
+          "name": "/assets/index-DW1W1uuf.js",
+          "bytes": 121904
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        },
+        {
+          "name": "/assets/SpeIntelligence-DWxSURQg.js",
+          "bytes": 2517
+        }
+      ]
+    },
+    {
+      "p95FrameIntervalMs": 16.700000000000273,
+      "maxFrameIntervalMs": 16.800000000000182,
+      "CLS": 0,
+      "longTasks": [
+        115,
+        52,
+        140,
+        78
+      ],
+      "heroNodes": 154,
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-DW1W1uuf.js",
+          "bytes": 121904
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/assets/index-Cd8ySvvX.css",
+          "bytes": 32263
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        },
+        {
+          "name": "/assets/SpeIntelligence-DWxSURQg.js",
+          "bytes": 2517
+        }
+      ]
+    }
+  ]
+}

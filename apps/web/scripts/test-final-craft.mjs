@@ -37,7 +37,7 @@ assert.match(css, /\.spe-capabilities-atlas/);
 assert.match(css, /\.spe-contract-simple/);
 assert.match(css, /\[data-kind="conformance"\]\[data-status="unknown"\]/);
 assert.doesNotMatch(hero, /src=["']\/hero\/founder-hero-story/);
-assert.match(hero, /MESSY HUMAN THOUGHT → MEANING → SPE → STRUCTURE → PERFECT PROMPT/);
+assert.match(hero, /How SPE works/);
 assert.doesNotMatch(hero, /\b(orb|reactor|turbine|atom)\b/i);
 assert.doesNotMatch(hero, /hero-story-flow|chaos-to-idea|hero-flow-lines/);
 
