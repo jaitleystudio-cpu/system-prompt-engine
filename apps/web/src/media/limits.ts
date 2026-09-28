@@ -3,7 +3,13 @@
 export const MAX_IMAGE_BYTES = 25 * 1024 * 1024;
 export const MAX_VIDEO_BYTES = 120 * 1024 * 1024;
 export const MAX_HTML_BYTES = 2 * 1024 * 1024;
+/** Byte budget for URL/HTML page text used in briefs (not a silent drop). */
 export const MAX_URL_BYTES = 200_000;
+export {
+  HOME_QUICK_START_MAX_CHARS,
+  DESIRED_OUTPUT_MAX_CHARS,
+  EXAMPLE_MAX_CHARS,
+} from "../input/boundedText";
 export const MAX_IMAGE_MEGAPIXELS = 40;
 export const MAX_ANALYSIS_SIDE = 1280;
 export const MAX_VIDEO_DURATION_SEC = 180;

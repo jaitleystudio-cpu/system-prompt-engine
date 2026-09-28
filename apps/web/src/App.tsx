@@ -856,14 +856,15 @@ export default function App() {
                     can see and offers starter scaffolds you can compare.
                   </li>
                   <li>
-                    <strong>What you receive.</strong> A prompt and starter
-                    code. These are starting points, not a finished app.
+                    <strong>What you receive.</strong> An implementation prompt
+                    and structured starter scaffolds for a coding AI or tool —
+                    starting points, not a finished or compiled app.
                   </li>
                 </ol>
               )}
               <p>
                 {view === "code"
-                  ? "Targets you can compare: HTML, React, SwiftUI, Jetpack Compose, Flutter, or React Native."
+                  ? "Targets you can compare as prompt scaffolds: HTML, React, SwiftUI, Jetpack Compose, Flutter, or React Native. SPE does not compile these targets in-product."
                   : "You can type, speak, add a picture, a short video, or a web page. Your words stay in the idea while you switch."}
               </p>
             </header>

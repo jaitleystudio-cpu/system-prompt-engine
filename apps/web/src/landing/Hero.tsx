@@ -20,6 +20,12 @@ import { semanticGroups } from "../scene/semantic";
 import { DotPattern } from "../ui/DotPattern";
 import { useDailyHero } from "./useDailyHero";
 import { HeroStory } from "./HeroStory";
+import {
+  HOME_QUICK_START_MAX_CHARS,
+  applyTextBound,
+  formatCharCount,
+  nearLimit,
+} from "../input/boundedText";
 type Intent = {
   confirmed: IntentAtom[];
   assumed: IntentAtom[];
@@ -73,7 +79,8 @@ export function Hero(p: Props) {
     ),
     [resultTab, setResultTab] = useState<"prompt" | "structure" | "review">(
       "prompt",
-    );
+    ),
+    [boundNotice, setBoundNotice] = useState<string | null>(null);
   const resultRef = useRef<HTMLElement>(null);
   const groups = semanticGroups(p.result?.output);
   useEffect(() => {
@@ -185,10 +192,17 @@ export function Hero(p: Props) {
               id="spe-one-line"
               className="request-input"
               rows={5}
-              maxLength={20000}
+              aria-describedby="spe-one-line-meter spe-one-line-limit-help"
               placeholder="Describe the task. Include what matters, what to avoid, and what a good result looks like…"
               value={p.value}
-              onChange={(e) => p.onChange(e.target.value)}
+              onChange={(e) => {
+                const next = applyTextBound(e.target.value, HOME_QUICK_START_MAX_CHARS, {
+                  createHint: true,
+                  fieldLabel: "Home quick-start",
+                });
+                p.onChange(next.value);
+                setBoundNotice(next.notice);
+              }}
               onKeyDown={(e) => {
                 if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
                   e.preventDefault();
@@ -196,6 +210,25 @@ export function Hero(p: Props) {
                 }
               }}
             />
+            <div className="spe-bound-row" id="spe-one-line-meter">
+              <p
+                className={`spe-bound-meter${nearLimit(p.value.length, HOME_QUICK_START_MAX_CHARS) ? " is-near" : ""}`}
+                aria-live="polite"
+              >
+                {formatCharCount(p.value.length)} /{" "}
+                {formatCharCount(HOME_QUICK_START_MAX_CHARS)} characters
+              </p>
+              <p id="spe-one-line-limit-help" className="spe-bound-hint">
+                Quick-start limit {formatCharCount(HOME_QUICK_START_MAX_CHARS)}.
+                For longer material, use{" "}
+                <a href="/create">Create</a>.
+              </p>
+            </div>
+            {boundNotice && (
+              <p className="spe-bound-notice" role="status" aria-live="assertive">
+                {boundNotice}
+              </p>
+            )}
             <div className="examples">
               {EXAMPLES.map((e) => (
                 <button
