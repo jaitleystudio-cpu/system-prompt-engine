@@ -23,9 +23,12 @@ const LEGACY_SHA256 = "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf9913
 const PREVIOUS_CANONICAL_SHA256 =
   "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6";
 const PREVIOUS_CANONICAL_BYTES = 671621;
-const EXPECTED_CANONICAL_SHA256 =
+const PRE_GRAPH_K3_SHA256 =
   "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f";
-const EXPECTED_CANONICAL_BYTES = 785148;
+const PRE_GRAPH_K3_BYTES = 785148;
+const EXPECTED_CANONICAL_SHA256 =
+  "9cda3a8ef0f314dba152fbd442b8b3c8476d6f2be8b6e3221fb8abcdac6eb686";
+const EXPECTED_CANONICAL_BYTES = 870560;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..");
@@ -301,6 +304,8 @@ function main() {
   process.stdout.write(`legacy_sha256=${LEGACY_SHA256}\n`);
   process.stdout.write(`previous_canonical_sha256=${PREVIOUS_CANONICAL_SHA256}\n`);
   process.stdout.write(`previous_canonical_bytes=${PREVIOUS_CANONICAL_BYTES}\n`);
+  process.stdout.write(`pre_graph_k3_sha256=${PRE_GRAPH_K3_SHA256}\n`);
+  process.stdout.write(`pre_graph_k3_bytes=${PRE_GRAPH_K3_BYTES}\n`);
   process.stdout.write(`canonical_sha256=${EXPECTED_CANONICAL_SHA256}\n`);
 }
 

@@ -150,7 +150,7 @@ fn kind_strength(kind: &str) -> &'static str {
 }
 
 #[derive(Clone)]
-struct Atom {
+pub struct Atom {
     requirement_id: String,
     semantic_key: String,
     kind: String,
@@ -380,6 +380,7 @@ fn envelope(
     protected_binding: Value,
     inputs_digest: String,
     task_resolved: Value,
+    requirement_graph: Value,
 ) -> Value {
     json!({
         "schema_version": SCHEMA_VERSION,
@@ -404,6 +405,7 @@ fn envelope(
         "protected_binding": protected_binding,
         "inputs_digest": inputs_digest,
         "task_resolved": task_resolved,
+        "requirement_graph": requirement_graph,
     })
 }
 
@@ -414,6 +416,7 @@ fn closed(
     protected_binding: Value,
     inputs_digest: String,
     task_resolved: Value,
+    requirement_graph: &Value,
 ) -> Result<Value, SpeError> {
     let note_values: Vec<Value> = notes.iter().map(|n| Value::String((*n).to_string())).collect();
     let payload = json!({
@@ -441,6 +444,7 @@ fn closed(
         protected_binding,
         inputs_digest,
         task_resolved,
+        requirement_graph.clone(),
     ))
 }
 
@@ -562,6 +566,10 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
     let task_map = obj(&Value::Object(root), "task");
     let domains: BTreeSet<String> = list_protocol_domains().into_iter().collect();
     let binding = protected_view(&protected);
+    let requirement_graph = crate::requirements::build(
+        &Value::Object(protected.clone()),
+        &Value::Object(category.clone()),
+    )?;
     let context = resolve_category(&category, &domains);
     let xcat = context.get("xcat_id").and_then(|v| v.as_str()).map(|s| s.to_string());
     let resolved_for_digest = resolve_task(&task_map, xcat.as_deref());
@@ -579,6 +587,7 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
                 binding,
                 inputs_digest,
                 json!({}),
+                &requirement_graph,
             );
         }
     }
@@ -592,9 +601,12 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
             binding,
             inputs_digest,
             json!({}),
+            &requirement_graph,
         );
     }
-    if has_conflict(&protected) {
+    if has_conflict(&protected)
+        || requirement_graph.get("validity").and_then(|v| v.as_str()) == Some("CONFLICTED")
+    {
         return closed(
             "UNKNOWN",
             &["UNKNOWN", "CONFLICTING_INPUTS"],
@@ -602,15 +614,16 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
             binding,
             inputs_digest,
             json!({}),
+            &requirement_graph,
         );
     }
 
     let resolved = resolve_task(&task_map, xcat.as_deref());
     if task_bool(&resolved, "ambiguous") {
-        return closed("UNKNOWN", &["UNKNOWN", "AMBIGUOUS_TASK"], context, binding, inputs_digest, resolved);
+        return closed("UNKNOWN", &["UNKNOWN", "AMBIGUOUS_TASK"], context, binding, inputs_digest, resolved, &requirement_graph);
     }
     if task_bool(&resolved, "force_zero_shot") && task_bool(&resolved, "needs_examples") {
-        return closed("UNKNOWN", &["UNKNOWN", "CONFLICTING_INPUTS"], context, binding, inputs_digest, resolved);
+        return closed("UNKNOWN", &["UNKNOWN", "CONFLICTING_INPUTS"], context, binding, inputs_digest, resolved, &requirement_graph);
     }
 
     let atoms = atoms_from(&task_map);
@@ -646,13 +659,13 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
             continue;
         }
         if priority(&tech) == 100 {
-            return closed("UNKNOWN", &["UNKNOWN", "INVALID_TECHNIQUE"], context, binding, inputs_digest, resolved);
+            return closed("UNKNOWN", &["UNKNOWN", "INVALID_TECHNIQUE"], context, binding, inputs_digest, resolved, &requirement_graph);
         }
         seen.insert(tech);
         unique.push(item);
     }
     if seen.contains("ZERO_SHOT") && seen.contains("FEW_SHOT") {
-        return closed("UNKNOWN", &["UNKNOWN", "K3_TECHNIQUE_INCOMPATIBLE"], context, binding, inputs_digest, resolved);
+        return closed("UNKNOWN", &["UNKNOWN", "K3_TECHNIQUE_INCOMPATIBLE"], context, binding, inputs_digest, resolved, &requirement_graph);
     }
     unique.sort_by(|a, b| {
         let sa = a.get("strength").and_then(|v| v.as_str()).unwrap_or("");
@@ -669,7 +682,7 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
         let kept_ranks: Vec<i32> = kept.iter().filter_map(|item| item.get("strength").and_then(|v| v.as_str()).map(strength_rank)).collect();
         for item in unique.iter().skip(STANDARD_MAX) {
             if item.get("strength").and_then(|v| v.as_str()) == Some("MUST") && kept_ranks.iter().any(|rank| *rank > strength_rank("MUST")) {
-                return closed("UNKNOWN", &["UNKNOWN", "K3_STRATEGY_INVARIANT_VIOLATION"], context, binding, inputs_digest, resolved);
+                return closed("UNKNOWN", &["UNKNOWN", "K3_STRATEGY_INVARIANT_VIOLATION"], context, binding, inputs_digest, resolved, &requirement_graph);
             }
         }
     }
@@ -678,7 +691,7 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
         let mut notes = vec!["UNKNOWN".to_string()];
         notes.extend(extra_notes);
         let note_refs: Vec<&str> = notes.iter().map(|s| s.as_str()).collect();
-        return closed("UNKNOWN", &note_refs, context, binding, inputs_digest, resolved);
+        return closed("UNKNOWN", &note_refs, context, binding, inputs_digest, resolved, &requirement_graph);
     }
     let safe = plan_kind == "DIRECT"
         && techniques.len() == 1
@@ -720,6 +733,7 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
         binding,
         inputs_digest,
         resolved,
+        requirement_graph,
     ))
 }
 

@@ -26,4 +26,5 @@ def compile_with_k3(
     return {
         "execution_contract": contract.to_dict(),
         "technique_selection": selection,
+        "requirement_graph": selection["requirement_graph"],
     }
