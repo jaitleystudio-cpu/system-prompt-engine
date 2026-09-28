@@ -6,7 +6,7 @@
 - BASE BRANCH: cursor/spe-k3-effect-binding-20260929
 - BASE SHA: 04bc003ce358fc72279ce40cb96fa2990f8033c6
 - WORK BRANCH: cursor/spe-xcat-v1-closure-20260929
-- FINAL SHA: 3dc72b46b6caf1f295ce1efe1e3989af658d5230
+- FINAL SHA: 53a75a21ff940d1bb0d42582c7f6d50c11e2c559
 - DATE: 2026-09-29 Asia/Calcutta
 
 ## FINAL
