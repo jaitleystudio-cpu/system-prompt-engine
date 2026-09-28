@@ -13,7 +13,7 @@ candidate into `apps/web/public/`, plus official build-pipeline closure so
 | SEMANTIC SOURCE SHA | `e0497f79898689a00a30abeab67652d5f6a9193c` |
 | TASK A RECIPE SHA | `96ce1ceb000ff04d8fcd324de1da5dfe0d70c909` |
 | TASK B INDEPENDENT REPRODUCTION SHA | `c0959b9e73c45a342fc3a90e890e4a49a1fbe0e2` |
-| TASK C PROMOTION BRANCH tip (pre-commit) | `c0959b9e73c45a342fc3a90e890e4a49a1fbe0e2` + promotion commits |
+| TASK C PROMOTION SHA | `81408afb6e6e6683fa60761c8347ed1d0a9f36b4` |
 
 The new public WASM does **not** represent new semantic source. Semantic
 engines remain frozen at `e0497f7`. Task A added deterministic release
