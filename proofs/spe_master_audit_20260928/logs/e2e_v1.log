@@ -1,0 +1,20 @@
+
+> spe-web@0.3.0 test:e2e:v1
+> node scripts/e2e-v1-capabilities.mjs
+
+{
+  "passed": false,
+  "results": [
+    {
+      "name": "homepage_vision_bytes_zero",
+      "ok": true,
+      "detail": "no ort/onnx fetch on home"
+    },
+    {
+      "name": "e2e_crash",
+      "ok": false,
+      "detail": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#spe-primary-nav').getByRole('button', { name: 'Create', exact: true })\n"
+    }
+  ]
+}
+

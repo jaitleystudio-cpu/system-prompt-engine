@@ -1,0 +1,6 @@
+
+> spe-web@0.3.0 test:create-intent
+> node scripts/test-create-intent.mjs
+
+PASS Create Desired Output + Example intent contract
+

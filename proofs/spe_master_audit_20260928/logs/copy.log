@@ -1,0 +1,7 @@
+
+> spe-web@0.3.0 test:copy
+> cd ../.. && node tests/copy/golden-and-adversarial.mjs
+
+{"passed":true,"adversarialCases":9,"surfaceFixtures":13,"heroVariants":7,"localeFallbackExplicit":true,"diagnosticsContextSensitive":true}
+PASS: build gate rejects unreviewed public strings and prohibited claims.
+

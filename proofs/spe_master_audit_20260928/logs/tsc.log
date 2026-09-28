@@ -1,0 +1,4 @@
+error TS6053: File '/workspace/apps/web/src/CopyGateProbe.tsx' not found.
+  The file is in the program because:
+    Matched by include pattern 'src' in '/workspace/apps/web/tsconfig.json'
+

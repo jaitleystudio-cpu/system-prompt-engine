@@ -1,0 +1,6 @@
+
+> spe-web@0.3.0 test:speech
+> node scripts/test-speech-helpers.mjs
+
+{"ok":true,"cases":["error-map","merge","phase","fallback-contract","ui-contracts"]}
+
