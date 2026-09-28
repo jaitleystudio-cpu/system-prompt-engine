@@ -2,7 +2,9 @@
 
 BASE SHA: `e0497f79898689a00a30abeab67652d5f6a9193c`
 
-FINAL SHA: recorded in git after this proof commit. The parent of the proof commit is the frozen product SHA. No production source commit sits between them.
+FINAL SHA: `1c36c03769f6fcbeb70a3af8c3f54c8d6622e2ed`
+
+That commit’s parent is the frozen product SHA. It contains the test-contract edit and these proofs. No production source commit sits between them. A later stamp commit may record this hash inside the report; it does not change the test or the WASM.
 
 ## Test drift
 
