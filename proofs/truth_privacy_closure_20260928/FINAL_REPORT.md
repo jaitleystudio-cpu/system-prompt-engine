@@ -2,12 +2,11 @@
 
 ## Custody
 
-- BASE SHA: `cab1e5e241e6e793f7fa20999bbced5298209a44`
-- Implementation SHA (on origin): `b9739307953a149aa0aa9827f55f22009c36825c`
-- Final SHA (local tip): `1d220e64f87580f3d395cb7a4bfd028e30a23874`
-- Branch: `cursor/spe-truth-privacy-closure-20260928`
+- BASE SHA: 
+- Implementation SHA (on origin): 
+- Final SHA: 
+- Branch: 
 - Draft PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/52
-- Note: if origin tip is still `b973930`, proofs commits are pending push due to expired GitHub write token.
 
 ## Closure
 
@@ -23,11 +22,24 @@ Semantic engines (Python/Rust/WASM), canonical WASM recipe/public artifact, K3, 
 
 ## Public WASM
 
-`9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6`
+
 
 ## Deployment
 
-`node tools/deployment-safety-gate.mjs` → exit 2, `HOSTING=FORBIDDEN`
+{
+  "ok": false,
+  "failed": [
+    "ddos_protection",
+    "bandwidth_spend_ceiling",
+    "tls",
+    "security_headers_live",
+    "cache_policy",
+    "abuse_protection",
+    "no_unlimited_billing",
+    "founder_unlock"
+  ],
+  "HOSTING": "FORBIDDEN"
+} → exit 2, 
 
 ## Verdict
 
