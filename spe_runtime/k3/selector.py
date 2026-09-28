@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 from typing import Any, Mapping
 
+from spe_runtime.k3.effect import bind_prompt_effects
 from spe_runtime.k3.registry import (
     DISPLAY_LABEL_PROTOCOL,
     DISPLAY_LABEL_XCAT,
@@ -476,7 +477,7 @@ def _envelope(
     task_resolved: dict[str, Any],
     requirement_graph: Mapping[str, Any],
 ) -> dict[str, Any]:
-    return {
+    body = {
         "schema_version": SCHEMA_VERSION,
         "selector_version": SELECTOR_VERSION,
         "selection_id": selection_id,
@@ -501,6 +502,8 @@ def _envelope(
         "task_resolved": task_resolved,
         "requirement_graph": dict(requirement_graph),
     }
+    body["prompt_effect_plan"] = bind_prompt_effects(body)
+    return body
 
 
 def select_prompt_techniques(

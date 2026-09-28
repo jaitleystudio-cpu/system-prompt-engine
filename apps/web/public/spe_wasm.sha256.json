@@ -1,7 +1,7 @@
 {
   "algorithm": "SHA-256",
-  "sha256": "9cda3a8ef0f314dba152fbd442b8b3c8476d6f2be8b6e3221fb8abcdac6eb686",
-  "bytes": 870560,
+  "sha256": "48ad95f5873bd7fb7933354d93fbbe732c57bc6f85956f64762fe1f5f44f2c33",
+  "bytes": 937763,
   "source": "portable/spe-wasm/target-canonical/wasm32-unknown-unknown/release/spe_wasm.wasm",
   "crate": "spe-wasm",
   "kernel": "spe-core-rs",
@@ -13,8 +13,10 @@
   "legacy_bytes": 671614,
   "previous_canonical_sha256": "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6",
   "previous_canonical_bytes": 671621,
-  "semantic_source_sha": "ae54a1a5a17d8d568b00e94f3d128d2858c60fd8",
-  "semantic_source_note": "Requirement graph closure on base ae54a1a. Pre-graph K3 WASM remains pre_graph_k3_sha256.",
+  "semantic_source_sha": "54a211b7888b7fee3b362f6e0ce3c9770f68cc84",
+  "semantic_source_note": "K3 effect binding on base 54a211b. Graph-closure WASM remains graph_closure_sha256. Pre-graph K3 WASM remains pre_graph_k3_sha256.",
+  "graph_closure_sha256": "9cda3a8ef0f314dba152fbd442b8b3c8476d6f2be8b6e3221fb8abcdac6eb686",
+  "graph_closure_bytes": 870560,
   "pre_graph_k3_sha256": "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f",
   "pre_graph_k3_bytes": 785148,
   "build_command": "node tools/wasm_canonical_build.mjs"

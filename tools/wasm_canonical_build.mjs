@@ -27,8 +27,8 @@ const PRE_GRAPH_K3_SHA256 =
   "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f";
 const PRE_GRAPH_K3_BYTES = 785148;
 const EXPECTED_CANONICAL_SHA256 =
-  "9cda3a8ef0f314dba152fbd442b8b3c8476d6f2be8b6e3221fb8abcdac6eb686";
-const EXPECTED_CANONICAL_BYTES = 870560;
+  "48ad95f5873bd7fb7933354d93fbbe732c57bc6f85956f64762fe1f5f44f2c33";
+const EXPECTED_CANONICAL_BYTES = 937763;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..");

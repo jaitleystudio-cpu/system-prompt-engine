@@ -1,8 +1,8 @@
 import type { EngineClient } from "./client";
 
 /**
- * Transport and display for technique ids chosen by WASM.
- * This module does not select techniques.
+ * Transport for technique ids and the effect plan chosen by WASM.
+ * This module does not select techniques or effect operations.
  */
 const TECHNIQUE_LABELS: Record<string, string> = {
   ZERO_SHOT: "Direct instruction",
@@ -16,46 +16,104 @@ const TECHNIQUE_LABELS: Record<string, string> = {
   STRUCTURED_OUTPUT: "Structured output",
 };
 
+export type EffectPlan = {
+  disposition?: string;
+  renderable?: boolean;
+  compiled_prompt?: string | null;
+  operations?: unknown;
+  techniques?: unknown;
+  notes?: unknown;
+  protected_fields?: {
+    goal?: unknown;
+    hard_constraints?: unknown;
+    budget?: unknown;
+    facts?: unknown;
+    provenance?: unknown;
+    authority_state?: unknown;
+  };
+};
+
+export type K3Binding = {
+  techniques: string[];
+  effectPlan: EffectPlan | null;
+};
+
 export function techniqueLabel(id: string): string {
   return TECHNIQUE_LABELS[id] ?? id;
 }
 
-export async function requestTechniqueIds(
+function record(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
+function protectedFromFixture(
+  fixture: unknown,
+  goal: string,
+): Record<string, unknown> {
+  const payload = record(record(fixture).payload);
+  const constraints = Array.isArray(payload.hard_constraints)
+    ? payload.hard_constraints
+    : [];
+  const desired = constraints
+    .map((item) => record(item))
+    .find((item) => item.constraint_id === "desired-output");
+  const desiredText =
+    desired && typeof desired.statement === "string" && desired.statement.trim()
+      ? desired.statement
+      : null;
+  return {
+    ...payload,
+    goal,
+    budget: payload.budget ?? null,
+    desired_output: desiredText,
+  };
+}
+
+export async function requestK3Binding(
   client: EngineClient,
-  protectedPayload: unknown,
+  fixture: unknown,
   displayLabel: string,
-): Promise<string[]> {
+  goal: string,
+): Promise<K3Binding> {
   try {
     const outcome = await client.compile(
       JSON.stringify({
         spe_api: "k3",
         op: "select",
-        protected: protectedPayload,
+        protected: protectedFromFixture(fixture, goal),
         category: { display_label: displayLabel },
         task: {},
       }),
       () => {},
     );
-    const output = outcome.result?.output as
-      | {
-          techniques?: unknown;
-          disposition?: unknown;
-          claims_pass?: unknown;
-        }
-      | undefined;
-    const ids = Array.isArray(output?.techniques)
+    const output = record(outcome.result?.output);
+    const ids = Array.isArray(output.techniques)
       ? output.techniques.filter((item): item is string => typeof item === "string")
       : [];
-    if (
+    const effectPlan = record(output.prompt_effect_plan);
+    const plan = Object.keys(effectPlan).length ? (effectPlan as EffectPlan) : null;
+    const lawful =
       !outcome.error &&
       outcome.result?.status === "VALID" &&
-      output?.claims_pass === false &&
-      (output.disposition === "SELECTED" || output.disposition === "SAFE_DEFAULT")
-    ) {
-      return ids;
-    }
+      output.claims_pass === false &&
+      (output.disposition === "SELECTED" || output.disposition === "SAFE_DEFAULT");
+    return {
+      techniques: lawful ? ids : [],
+      effectPlan: plan,
+    };
   } catch {
-    return [];
+    return { techniques: [], effectPlan: null };
   }
-  return [];
+}
+
+export async function requestTechniqueIds(
+  client: EngineClient,
+  fixture: unknown,
+  displayLabel: string,
+  goal = "",
+): Promise<string[]> {
+  const binding = await requestK3Binding(client, fixture, displayLabel, goal);
+  return binding.techniques;
 }
