@@ -1,0 +1,38 @@
+HERO exit 0
+62 PASS, 0 FAIL
+node apps/web/scripts/test-hero-story.mjs
+
+DAILY TITLE exit 0
+PASS 9635 daily-title assertions: stable day, new next day, year/month/leap boundaries, four timezones and DST.
+
+COPY GATE exit 0
+candidateCount 2361, unreviewed 0, violations 0
+
+COPY GOLDEN exit 0
+TSC exit 0
+VITE BUILD exit 0
+OFFICIAL npm run build exit 1
+copy-wasm: missing release artifact at portable/spe-wasm/target/wasm32-unknown-unknown/release/spe_wasm.wasm
+
+test:artifact exit 0
+test:create-intent exit 0
+test:execution-contract exit 0
+test:final-craft exit 0
+test:theme-routes exit 0
+test:capabilities-seo exit 0
+test:media exit 0
+test:adversarial exit 0
+test:speech exit 0
+test:lab-acquisition exit 0
+test:video-scenes exit 0
+test:predeploy-qa exit 0
+test:screenshot-fidelity exit 0
+test:copy exit 0
+test:speech-fallback exit 0 VERIFIED_GRACEFUL_FALLBACK
+test:dot-pattern exit 1 pre-existing missing DotPattern surface=hero
+
+deployment-safety-gate exit 2 HOSTING=FORBIDDEN
+
+axe violations 0 on home create code daily-lab my-work privacy features workspace
+overflow fails []
+user flow tabPersistence true, budget reopen true
