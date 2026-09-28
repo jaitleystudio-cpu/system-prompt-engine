@@ -4,7 +4,7 @@
 
 - BASE SHA: cab1e5e241e6e793f7fa20999bbced5298209a44
 - Implementation SHA (on origin): b9739307953a149aa0aa9827f55f22009c36825c
-- Final SHA: see git tip of branch cursor/spe-truth-privacy-closure-20260928
+- Final SHA: 1e82c072e4e9d344372101f79ba5f7777f423cab
 - Branch: cursor/spe-truth-privacy-closure-20260928
 - Draft PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/52
 
