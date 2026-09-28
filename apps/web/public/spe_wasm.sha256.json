@@ -13,7 +13,7 @@
   "legacy_bytes": 671614,
   "previous_canonical_sha256": "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6",
   "previous_canonical_bytes": 671621,
-  "semantic_source_sha": "98632cfb712d20eb7f7f6962a09f6326d7e942f6",
-  "semantic_source_note": "K3 selector commit is recorded in proofs/k3_runtime_closure_20260929/WASM_PROVENANCE.md after this tree is committed.",
+  "semantic_source_sha": "98bc160184afa0cf95f17ff23392645c16ccc516",
+  "semantic_source_note": "K3 selector implementation commit. WASM bytes were built from that tree before this proof-SHA record.",
   "build_command": "node tools/wasm_canonical_build.mjs"
 }

@@ -1,7 +1,7 @@
 # SPE K3 runtime closure
 
 BASE SHA: `98632cfb712d20eb7f7f6962a09f6326d7e942f6`
-FINAL SHA: pending the implementation commit; updated in the following proof commit if this line is still pending.
+FINAL SHA: `98bc160184afa0cf95f17ff23392645c16ccc516`
 
 K3 contract source: G1R-7R `a6b7e572b66632aab3837242983afec96672c148` (`select_prompt_techniques`), kept as the existing selector by the 2026-09-24 context-grounding design. Requirement-graph inputs were not ported.
 

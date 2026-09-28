@@ -14,4 +14,5 @@ Reproduction, same toolchain `1.98.1` commit `48a229ceaefd4985c50990b14116b6d856
 - After the pin update: default `target-canonical` and `/tmp/spe-k3-wasm-c` both `canonical-wasm: ok`, imports 0, exports `memory,spe_alloc,spe_evaluate,spe_free`.
 - Public `apps/web/public/spe_wasm.wasm` was written by `node apps/web/scripts/copy-wasm.mjs` after the candidate matched the new pin.
 
-Parent semantic tree: `98632cfb712d20eb7f7f6962a09f6326d7e942f6`. The committing SHA for this selector is recorded in `FINAL_REPORT.md`.
+Parent tree: `98632cfb712d20eb7f7f6962a09f6326d7e942f6`.
+Selector implementation commit: `98bc160184afa0cf95f17ff23392645c16ccc516`.
