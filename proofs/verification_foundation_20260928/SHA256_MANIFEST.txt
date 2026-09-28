@@ -1,0 +1,9 @@
+# SHA-256 manifest — SPE verification foundation 2026-09-28
+# Base SHA e0497f79898689a00a30abeab67652d5f6a9193c
+# Tracked public WASM was not overwritten.
+
+8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830  671614  apps/web/public/spe_wasm.wasm
+c5d4c55574a2077bc02cbd5df8356e589e94bd5984583d11623ebc0b1e6e126d     344  apps/web/public/spe_wasm.sha256.json
+27c73e9024b5fbf1933c5c7a37d4655ad2be623b8e75d9791c50ffef4f92bc91  677268  local rustc 1.83.0 wasm32 release (not promoted)
+86fc0dc78fe5fa33bbfdc028fc0caef236e6eb5e8f2987d7cf89dff7e02eafe2  671711  local rustc 1.98.1 wasm32 release, no remap (not promoted)
+55d611717a7d42771ad1d524c45fb4b5966ac520c4febf75f3152fb50b28e0a6  671613  local rustc 1.98.1 wasm32 release, path remap, two clean builds (not promoted)
