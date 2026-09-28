@@ -56,20 +56,21 @@ def test_shipped_release_wasm_matches_kernel_artifact_hash():
     digest = hashlib.sha256(public_wasm.read_bytes()).hexdigest()
     assert meta["sha256"] == digest
     assert meta["bytes"] == public_wasm.stat().st_size
-    assert public_wasm.stat().st_size > 100_000
-    # Prefer matching the Sprint-5 release artifact when present.
+    assert public_wasm.stat().st_size == 671621
+    assert digest == "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6"
+    # Prefer matching the canonical release candidate when present.
     rust_wasm = (
         REPO
         / "portable"
         / "spe-wasm"
-        / "target"
+        / "target-canonical"
         / "wasm32-unknown-unknown"
         / "release"
         / "spe_wasm.wasm"
     )
     if rust_wasm.is_file():
         rust_digest = hashlib.sha256(rust_wasm.read_bytes()).hexdigest()
-        assert digest == rust_digest, "web WASM is not the spe-wasm release artifact"
+        assert digest == rust_digest, "web WASM is not the canonical spe-wasm release artifact"
 
 
 def test_ts_does_not_duplicate_semantic_detectors():
