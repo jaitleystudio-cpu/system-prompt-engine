@@ -1,0 +1,6 @@
+
+> spe-web@0.3.0 test:video-scenes
+> node scripts/test-video-scenes.mjs
+
+{"ok":true,"inputFrames":5,"deduped":4,"sceneKeyframes":5,"summaryChars":442,"hasChangeSignals":true,"hasKeyMoments":true}
+

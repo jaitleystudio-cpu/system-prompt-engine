@@ -1,0 +1,6 @@
+
+> spe-web@0.3.0 test:media
+> node scripts/test-media-observe.mjs
+
+{"ok":true,"colors":1,"scaffolds":6,"labels":["HTML / CSS / JavaScript","React","SwiftUI","Jetpack Compose","Flutter","React Native"],"deduped":2,"transparentGridOk":true,"irRegions":11,"sceneFrames":3,"visionHomepageBytes":0}
+

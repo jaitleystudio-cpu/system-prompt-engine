@@ -1,0 +1,5 @@
+error: no matching package named `serde_json` found
+location searched: registry `crates-io`
+required by package `spe-core-rs v0.1.0 (/workspace/portable/spe-core-rs)`
+As a reminder, you're using offline mode (--offline) which can sometimes cause surprising resolution failures, if this error is too confusing you may wish to retry without the offline flag.
+CARGO_EXIT:101

@@ -1,0 +1,97 @@
+
+> spe-web@0.3.0 test:screenshot-fidelity
+> node scripts/test-screenshot-fidelity.mjs
+
+{
+  "ok": true,
+  "honesty": "STRUCTURE_SCAFFOLD resemblance across 6 targets — not pixel-perfect reconstruction",
+  "fixtures": [
+    {
+      "kind": "nav-hero",
+      "regions": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions",
+        "Hero / featured band"
+      ],
+      "targets": 6,
+      "structure": [
+        "nav-hero-candidate"
+      ]
+    },
+    {
+      "kind": "form",
+      "regions": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions",
+        "Form / input panel"
+      ],
+      "targets": 6,
+      "structure": [
+        "form-panel-candidate"
+      ]
+    },
+    {
+      "kind": "card-grid",
+      "regions": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions",
+        "Card / tile",
+        "Card / tile",
+        "Card / tile",
+        "Card / tile",
+        "Card / tile"
+      ],
+      "targets": 6,
+      "structure": [
+        "card-grid-candidate"
+      ]
+    },
+    {
+      "kind": "modal",
+      "regions": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions",
+        "Modal / dialog overlay"
+      ],
+      "targets": 6,
+      "structure": [
+        "modal-or-dialog-candidate"
+      ]
+    },
+    {
+      "kind": "left-rail",
+      "regions": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions",
+        "Side rail / navigation"
+      ],
+      "targets": 6,
+      "structure": [
+        "left-rail-candidate"
+      ]
+    },
+    {
+      "kind": "toolbar-list",
+      "regions": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions",
+        "Toolbar / tool row",
+        "List / stacked rows",
+        "List row",
+        "List row",
+        "List row"
+      ],
+      "targets": 6,
+      "structure": [
+        "toolbar-list-candidate"
+      ]
+    }
+  ]
+}
+

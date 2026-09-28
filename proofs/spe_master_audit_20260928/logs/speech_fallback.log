@@ -1,0 +1,30 @@
+{
+  "wrote": "/workspace/proofs/spe_v1_launch/speech_fallback_contract.json",
+  "ok": true,
+  "testedSha": null,
+  "cases": {
+    "unsupported": {
+      "pass": true,
+      "humanCopy": true,
+      "typingUsable": true,
+      "noStuckListening": true
+    },
+    "permissionDeny": {
+      "pass": true,
+      "humanCopy": true,
+      "typingUsable": true,
+      "noStuckListening": true
+    },
+    "audioCaptureFail": {
+      "pass": true,
+      "humanCopy": true,
+      "typingUsable": true,
+      "noStuckListening": true
+    }
+  },
+  "notes": [
+    "Contract verified in Chromium. Safari/Android/iPhone product behavior shares this UI; founder QUALIFIED dictation still open."
+  ],
+  "status": "VERIFIED_GRACEFUL_FALLBACK"
+}
+SPEECH_FB_EXIT:0

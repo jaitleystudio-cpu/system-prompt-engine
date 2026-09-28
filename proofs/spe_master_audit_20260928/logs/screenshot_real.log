@@ -1,0 +1,11 @@
+
+> spe-web@0.3.0 test:screenshot-real
+> node scripts/test-screenshot-real-fidelity.mjs
+
+{
+  "ok": true,
+  "wrote": "/workspace/proofs/spe_v1_launch/screenshot_real_fidelity.json",
+  "fixtureCount": 6,
+  "targets": 6
+}
+

@@ -1,0 +1,22 @@
+
+> spe-web@0.3.0 build
+> npm run spe:copy-check && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs
+
+
+> spe-web@0.3.0 spe:copy-check
+> node ../../tools/copy-check.mjs
+
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 2361,
+  "unreviewed": 0,
+  "violations": [],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}
+
+> spe-web@0.3.0 copy-wasm
+> node scripts/copy-wasm.mjs
+
+copy-wasm: missing release artifact at /workspace/portable/spe-wasm/target/wasm32-unknown-unknown/release/spe_wasm.wasm
+Build first: cargo build --manifest-path portable/spe-wasm/Cargo.toml --locked --offline --target wasm32-unknown-unknown --release
+OFFICIAL_EXIT:1

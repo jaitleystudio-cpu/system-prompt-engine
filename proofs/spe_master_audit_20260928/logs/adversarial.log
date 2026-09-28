@@ -1,0 +1,6 @@
+
+> spe-web@0.3.0 test:adversarial
+> node scripts/test-adversarial-v1.mjs
+
+{"ok":true,"cases":["media_unit_suite","speech_helpers_and_ux_contracts","screenshot_fidelity_landmarks","video_scene_dedupe","stale_mode_abort_cleanup","speech_mic_cleanup_abort","service_worker_present","media_limits_present","untrusted_boundary_present","screenshot_semantic_scaffolds","ui_structure_hints","daily_lab_14_distinct_shapes","onnx_browser_only_guard","lab_reduced_motion_contract","speech_device_checklist_artifact","predeploy_qa_suite"]}
+
