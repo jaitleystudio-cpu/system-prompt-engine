@@ -27,6 +27,7 @@ from spe_runtime.k3.registry import (
 )
 from spe_runtime.portability.canonical import canonical_dumps
 from spe_runtime.protocols.registry import list_protocol_domains
+from spe_runtime.requirements.project import build_requirement_graph
 
 _PROTOCOL_DOMAINS = frozenset(list_protocol_domains())
 _COMPLEXITY = frozenset({"SIMPLE", "STANDARD", "COMPLEX"})
@@ -394,6 +395,33 @@ def _strategy(
     }
 
 
+def _graph_hint_atoms(requirement_graph: Mapping[str, Any]) -> tuple[dict[str, str], ...]:
+    """Graph atoms participate in strength only when their key matches KEY_HINTS.
+
+    Role keys (goal, budget, hard_constraint, and the other projection keys)
+    are requirement context. They are not technique tokens and are not scanned
+    from prose.
+    """
+    nodes = requirement_graph.get("graph", {}).get("nodes", {})
+    if not isinstance(nodes, Mapping):
+        return ()
+    found: list[dict[str, str]] = []
+    for node in nodes.values():
+        if not isinstance(node, Mapping):
+            continue
+        key = str(node.get("semantic_key") or "")
+        kind = str(node.get("kind") or "")
+        rid = str(node.get("requirement_id") or "")
+        if not rid or not key or kind not in {"MUST", "MUST_NOT", "SHOULD", "PREFERENCE"}:
+            continue
+        lowered = key.lower()
+        if not any(token in lowered for tokens in KEY_HINTS.values() for token in tokens):
+            continue
+        found.append({"requirement_id": rid, "semantic_key": key, "kind": kind})
+    found.sort(key=lambda atom: atom["requirement_id"])
+    return tuple(found)
+
+
 def _closed(
     *,
     disposition: str,
@@ -402,6 +430,7 @@ def _closed(
     protected_binding: dict[str, Any],
     inputs_digest: str,
     task_resolved: dict[str, Any] | None,
+    requirement_graph: Mapping[str, Any],
 ) -> dict[str, Any]:
     payload = {
         "schema_version": SCHEMA_VERSION,
@@ -426,6 +455,7 @@ def _closed(
         protected_binding=protected_binding,
         inputs_digest=inputs_digest,
         task_resolved=task_resolved or {},
+        requirement_graph=requirement_graph,
     )
 
 
@@ -444,6 +474,7 @@ def _envelope(
     protected_binding: dict[str, Any],
     inputs_digest: str,
     task_resolved: dict[str, Any],
+    requirement_graph: Mapping[str, Any],
 ) -> dict[str, Any]:
     return {
         "schema_version": SCHEMA_VERSION,
@@ -468,6 +499,7 @@ def _envelope(
         "protected_binding": protected_binding,
         "inputs_digest": inputs_digest,
         "task_resolved": task_resolved,
+        "requirement_graph": dict(requirement_graph),
     }
 
 
@@ -481,6 +513,7 @@ def select_prompt_techniques(
     category_in = _mapping(category)
     task_in = _mapping(task)
     binding = _protected_view(protected_in)
+    requirement_graph = build_requirement_graph(protected_in, category_in)
     context = _resolve_category(category_in)
     inputs_digest = _digest(
         {"category": context, "task": _public_task_for_digest(task_in, context["xcat_id"])},
@@ -496,6 +529,7 @@ def select_prompt_techniques(
             protected_binding=binding,
             inputs_digest=inputs_digest,
             task_resolved={},
+            requirement_graph=requirement_graph,
         )
     if context["protocol_domain_id"] is not None and context["protocol_domain_known"] is False:
         return _closed(
@@ -505,8 +539,9 @@ def select_prompt_techniques(
             protected_binding=binding,
             inputs_digest=inputs_digest,
             task_resolved={},
+            requirement_graph=requirement_graph,
         )
-    if _has_conflict(protected_in):
+    if _has_conflict(protected_in) or requirement_graph.get("validity") == "CONFLICTED":
         return _closed(
             disposition="UNKNOWN",
             notes=["UNKNOWN", "CONFLICTING_INPUTS"],
@@ -514,6 +549,7 @@ def select_prompt_techniques(
             protected_binding=binding,
             inputs_digest=inputs_digest,
             task_resolved={},
+            requirement_graph=requirement_graph,
         )
 
     resolved = _resolve_task(task_in, xcat)
@@ -525,6 +561,7 @@ def select_prompt_techniques(
             protected_binding=binding,
             inputs_digest=inputs_digest,
             task_resolved=resolved,
+            requirement_graph=requirement_graph,
         )
     if resolved["force_zero_shot"] and resolved["needs_examples"]:
         return _closed(
@@ -534,9 +571,14 @@ def select_prompt_techniques(
             protected_binding=binding,
             inputs_digest=inputs_digest,
             task_resolved=resolved,
+            requirement_graph=requirement_graph,
         )
 
-    atoms = tuple(resolved["semantic_atoms"])
+    hint_atoms = _graph_hint_atoms(requirement_graph)
+    seen_ids = {atom["requirement_id"] for atom in resolved["semantic_atoms"]}
+    atoms = tuple(resolved["semantic_atoms"]) + tuple(
+        atom for atom in hint_atoms if atom["requirement_id"] not in seen_ids
+    )
     plan_kind, plan_reason = _select_kind(resolved)
     req_ids = [a["requirement_id"] for a in atoms]
     protected_ids = [a["requirement_id"] for a in atoms if a["kind"] in {"MUST", "MUST_NOT"}]
@@ -577,6 +619,7 @@ def select_prompt_techniques(
                 protected_binding=binding,
                 inputs_digest=inputs_digest,
                 task_resolved=resolved,
+                requirement_graph=requirement_graph,
             )
         seen.add(tech)
         unique.append(item)
@@ -588,6 +631,7 @@ def select_prompt_techniques(
             protected_binding=binding,
             inputs_digest=inputs_digest,
             task_resolved=resolved,
+            requirement_graph=requirement_graph,
         )
 
     unique.sort(
@@ -612,6 +656,7 @@ def select_prompt_techniques(
                     protected_binding=binding,
                     inputs_digest=inputs_digest,
                     task_resolved=resolved,
+                    requirement_graph=requirement_graph,
                 )
 
     techniques = [item["technique"] for item in kept]
@@ -624,6 +669,7 @@ def select_prompt_techniques(
             protected_binding=binding,
             inputs_digest=inputs_digest,
             task_resolved=resolved,
+            requirement_graph=requirement_graph,
         )
 
     safe = (
@@ -659,6 +705,7 @@ def select_prompt_techniques(
         protected_binding=binding,
         inputs_digest=inputs_digest,
         task_resolved=resolved,
+        requirement_graph=requirement_graph,
     )
 
 
