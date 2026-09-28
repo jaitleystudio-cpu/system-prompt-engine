@@ -6,7 +6,7 @@
 - BASE BRANCH: cursor/spe-k3-effect-binding-20260929
 - BASE SHA: 04bc003ce358fc72279ce40cb96fa2990f8033c6
 - WORK BRANCH: cursor/spe-xcat-v1-closure-20260929
-- FINAL SHA: 53a75a21ff940d1bb0d42582c7f6d50c11e2c559
+- FINAL SHA: 06dcb59d76c195d564105adff6d6234fb3ed74aa (proof-pack custody commit; branch tip may include stamp commits)
 - DATE: 2026-09-29 Asia/Calcutta
 
 ## FINAL
