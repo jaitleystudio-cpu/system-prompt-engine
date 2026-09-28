@@ -4,7 +4,7 @@
 
 - BASE SHA: `cab1e5e241e6e793f7fa20999bbced5298209a44`
 - Implementation SHA (on origin): `b9739307953a149aa0aa9827f55f22009c36825c`
-- Final SHA (local tip): `PLACEHOLDER_TIP`
+- Final SHA (local tip): `1d220e64f87580f3d395cb7a4bfd028e30a23874`
 - Branch: `cursor/spe-truth-privacy-closure-20260928`
 - Draft PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/52
 - Note: if origin tip is still `b973930`, proofs commits are pending push due to expired GitHub write token.
