@@ -17,6 +17,7 @@ import type {
   CompilePhase,
 } from "../engine/types";
 import { semanticGroups } from "../scene/semantic";
+import { DotPattern } from "../ui/DotPattern";
 import { useDailyHero } from "./useDailyHero";
 import { HeroStory } from "./HeroStory";
 type Intent = {
@@ -113,6 +114,7 @@ export function Hero(p: Props) {
   return (
     <section className="spe-hero" id="top" aria-labelledby="hero-title">
       <div className="hero-theater">
+        <DotPattern surface="hero" />
         <div className="hero-topline">
           <span className="eyebrow">
             <i /> YOUR IDEAS. YOUR WORDS.
