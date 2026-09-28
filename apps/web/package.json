@@ -8,8 +8,8 @@
   "scripts": {
     "copy-wasm": "node scripts/copy-wasm.mjs",
     "wasm:build-canonical": "node ../../tools/wasm_canonical_build.mjs",
-    "dev": "npm run copy-wasm && vite",
-    "build": "npm run spe:copy-check && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs",
+    "dev": "npm run wasm:build-canonical && npm run copy-wasm && vite",
+    "build": "npm run spe:copy-check && npm run wasm:build-canonical && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
     "test:artifact": "node scripts/test-artifact-reconstruction.mjs",
     "test:engine": "node scripts/eval-fixture.mjs",

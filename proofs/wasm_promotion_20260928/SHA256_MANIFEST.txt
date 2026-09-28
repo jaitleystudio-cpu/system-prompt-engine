@@ -1,0 +1,38 @@
+SHA256 MANIFEST — SPE WASM Promotion 2026-09-28
+================================================
+
+SEMANTIC SOURCE SHA
+  e0497f79898689a00a30abeab67652d5f6a9193c
+
+TASK A RECIPE SHA
+  96ce1ceb000ff04d8fcd324de1da5dfe0d70c909
+
+TASK B INDEPENDENT REPRODUCTION SHA
+  c0959b9e73c45a342fc3a90e890e4a49a1fbe0e2
+
+LEGACY PUBLIC WASM (historical)
+  size=671614
+  sha256=8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830
+  introduction_commit=04bc493656aa03d648c7cd9ff220d3716cae7683
+  provenance=PARTIAL
+
+CANONICAL PUBLIC WASM (promoted)
+  size=671621
+  sha256=9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6
+
+PUBLIC HASH MANIFEST FILE
+  apps/web/public/spe_wasm.sha256.json
+  content_sha256=4ae1002a139a135752b9de9e5105b070d146c6e321b56ec6b2d54ea41c544bc3
+
+CANDIDATE MANIFEST (Task A, historical recipe evidence)
+  proofs/wasm_rebaseline_candidate_20260928/candidate-manifest.json
+  artifact_sha256=9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6
+
+TOOLCHAIN
+  rustc=1.98.1
+  rustc_commit=48a229ceaefd4985c50990b14116b6d856af0985
+  cargo=1.98.1 (797e8a9bc 2026-08-05)
+  target=wasm32-unknown-unknown
+
+BUILD COMMAND
+  node tools/wasm_canonical_build.mjs

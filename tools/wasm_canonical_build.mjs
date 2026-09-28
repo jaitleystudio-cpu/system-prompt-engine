@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * Canonical SPE WASM release-candidate build.
+ * Canonical SPE WASM release build.
  *
- * Builds a deterministic wasm artifact. Never copies it into
- * apps/web/public. Promotion is a separate action and is not implemented.
+ * Builds a deterministic wasm artifact under portable/spe-wasm/target-canonical.
+ * Never copies into apps/web/public. The separate copy-wasm npm script performs
+ * fail-closed promotion of a hash-verified candidate after this build.
  *
  *   npm run wasm:build-canonical
  *   node tools/wasm_canonical_build.mjs
@@ -19,13 +20,16 @@ const EXPECTED_CHANNEL = "1.98.1";
 const EXPECTED_COMMIT = "48a229ceaefd4985c50990b14116b6d856af0985";
 const EXPECTED_TARGET = "wasm32-unknown-unknown";
 const LEGACY_SHA256 = "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830";
+const EXPECTED_CANONICAL_SHA256 =
+  "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6";
+const EXPECTED_CANONICAL_BYTES = 671621;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..");
 const wrapperPath = join(here, "spe_wasm_rustc_wrapper.mjs");
 const publicWasm = join(repoRoot, "apps/web/public/spe_wasm.wasm");
 const defaultTarget = join(repoRoot, "portable/spe-wasm/target-canonical");
-const copyWasmSource = join(repoRoot, "portable/spe-wasm/target");
+const arbitraryTarget = join(repoRoot, "portable/spe-wasm/target");
 const publicDir = join(repoRoot, "apps/web/public");
 
 function policy(message) {
@@ -156,8 +160,9 @@ function assertCompiler(env) {
 function resolveTargetDir() {
   const override = process.env.SPE_WASM_CANDIDATE_TARGET_DIR;
   const targetDir = override && override.length > 0 ? resolve(override) : defaultTarget;
-  if (underDir(targetDir, copyWasmSource)) {
-    policy("target dir overlaps the copy-wasm source; canonical output must stay off the promotion path");
+  // Reject the historical arbitrary cargo target used by the broken copy path.
+  if (resolve(targetDir) === resolve(arbitraryTarget) || underDir(targetDir, arbitraryTarget)) {
+    policy("target dir overlaps the arbitrary cargo target; canonical output must use target-canonical or an external clean dir");
   }
   if (underDir(targetDir, publicDir)) {
     policy("target dir is inside apps/web/public; build does not promote");
@@ -212,8 +217,10 @@ function main() {
   const env = baseEnv();
   const compiler = assertCompiler(env);
   const before = sha256File(publicWasm);
-  if (before !== LEGACY_SHA256) {
-    policy("tracked public WASM is not the frozen legacy artifact; refusing to build beside a replaced file");
+  if (before !== EXPECTED_CANONICAL_SHA256) {
+    policy(
+      `tracked public WASM must be the reviewed canonical artifact (${EXPECTED_CANONICAL_SHA256}); refusing to build beside a divergent file`,
+    );
   }
 
   rmSync(targetDir, { recursive: true, force: true });
@@ -254,12 +261,22 @@ function main() {
   const bytes = readFileSync(artifact);
   assertNoAbsoluteMarkers(bytes, home);
   const digest = createHash("sha256").update(bytes).digest("hex");
+  if (bytes.length !== EXPECTED_CANONICAL_BYTES) {
+    fail(`canonical candidate size ${bytes.length} != expected ${EXPECTED_CANONICAL_BYTES}`);
+  }
+  if (digest !== EXPECTED_CANONICAL_SHA256) {
+    fail(`canonical candidate sha256 ${digest} != expected ${EXPECTED_CANONICAL_SHA256}`);
+  }
   const inspected = inspectModule(artifact);
   if (inspected.imports.length !== 0) policy(`imports must be 0, found ${inspected.imports.length}`);
 
   const after = sha256File(publicWasm);
-  if (after !== before || after !== LEGACY_SHA256) {
+  if (after !== before || after !== EXPECTED_CANONICAL_SHA256) {
     policy("tracked public WASM changed during candidate build");
+  }
+  // Legacy bytes remain in git history only; they must not equal the canonical artifact.
+  if (digest === LEGACY_SHA256) {
+    fail("canonical candidate unexpectedly equals legacy public bytes");
   }
 
   const label = artifactLabel(targetDir, artifact);
@@ -275,6 +292,8 @@ function main() {
   process.stdout.write(`active_toolchain=${compiler.active}\n`);
   process.stdout.write(`target=${EXPECTED_TARGET}\n`);
   process.stdout.write(`promoted=no\n`);
+  process.stdout.write(`legacy_sha256=${LEGACY_SHA256}\n`);
+  process.stdout.write(`canonical_sha256=${EXPECTED_CANONICAL_SHA256}\n`);
 }
 
 main();
