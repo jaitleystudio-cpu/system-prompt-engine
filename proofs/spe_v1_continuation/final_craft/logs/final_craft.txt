@@ -1,0 +1,5 @@
+
+> spe-web@0.3.0 test:final-craft
+> node scripts/test-final-craft.mjs
+
+PASS final craft presentation contracts

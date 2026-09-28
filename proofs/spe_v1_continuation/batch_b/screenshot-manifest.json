@@ -1,0 +1,36 @@
+{
+  "baseSha": "e4db0f41623c773fcdc23d2d94370a826470b2b4",
+  "testedTipSha": "63452ce39174ec590eeaebdbd880d92beb6c2a5f",
+  "HOSTING": "FORBIDDEN",
+  "WORLD_NUMBER_1": "NOT_PROVEN",
+  "captures": [
+    {
+      "name": "create-dark.png",
+      "artifactName": "spe_batch_b_create_dark.png",
+      "viewport": "1440x1000",
+      "theme": "dark"
+    },
+    {
+      "name": "create-desired-output.png",
+      "artifactName": "spe_batch_b_create_desired_output.png",
+      "field": "Desired output"
+    },
+    {
+      "name": "create-example-mode.png",
+      "artifactName": "spe_batch_b_create_example_mode.png",
+      "field": "Example / user supplied"
+    },
+    {
+      "name": "create-light.png",
+      "artifactName": "spe_batch_b_create_light.png",
+      "viewport": "1440x1000",
+      "theme": "light"
+    },
+    {
+      "name": "create-mobile.png",
+      "artifactName": "spe_batch_b_create_mobile.png",
+      "viewport": "390x844",
+      "gridColumns": "78.2031px 78.2031px 78.2031px 78.2188px"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "baseSha": "d50aaeca62c510c083223c461032a1471745cd46",
+  "testedTipSha": "461eb65073fdec6b24867554db87cc90ac015c86",
+  "HOSTING": "FORBIDDEN",
+  "WORLD_NUMBER_1": "NOT_PROVEN",
+  "captures": [
+    {
+      "name": "export-panel-dark.png",
+      "artifactName": "spe_batch_c_export_panel_dark_evidence_final.png",
+      "theme": "dark"
+    },
+    {
+      "name": "export-pdf.png",
+      "artifactName": "spe_batch_c_export_pdf_evidence_final.png",
+      "surface": "browser print view"
+    },
+    {
+      "name": "export-panel-light.png",
+      "artifactName": "spe_batch_c_export_panel_light_evidence_final.png",
+      "theme": "light"
+    },
+    {
+      "name": "reconstruct-success.png",
+      "artifactName": "spe_batch_c_reconstruct_success_evidence_final.png",
+      "result": "restored with explicit limits"
+    },
+    {
+      "name": "reconstruct-partial-or-fail.png",
+      "artifactName": "spe_batch_c_reconstruct_fail_evidence_final.png",
+      "result": "fail closed on truncated file"
+    },
+    {
+      "name": "workspace-mobile.png",
+      "artifactName": "spe_batch_c_workspace_mobile_evidence_final.png",
+      "viewport": "390x844"
+    }
+  ]
+}

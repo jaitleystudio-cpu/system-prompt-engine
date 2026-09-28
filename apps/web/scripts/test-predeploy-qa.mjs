@@ -89,9 +89,15 @@ check("clipboard_deny_message", () => {
   assert.match(app, /Copy unavailable|Select the prompt text to copy/i);
 });
 check("spe_corrupt_reject", () => {
-  const app = read("App.tsx");
-  assert.match(app, /spe_format/);
-  assert.match(app, /not in a supported SPE format|supported SPE format/i);
+  const artifact = readFileSync(
+    join(repo, "packages/web-runtime/src/speArtifact.ts"),
+    "utf8",
+  );
+  assert.match(artifact, /parseSpeArtifactText/);
+  assert.match(artifact, /spe_format/);
+  assert.match(artifact, /TRUNCATED_JSON/);
+  assert.match(artifact, /INTEGRITY_MISMATCH/);
+  assert.match(artifact, /EXAMPLE_AUTHORITY/);
 });
 check("onnx_download_abortable", () => {
   const onnx = read("engine/onnxSemantic.ts");

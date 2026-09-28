@@ -1,0 +1,61 @@
+{
+  "baseline": "1ff61b1b236971a30492a923c28d3d65a7cd9458",
+  "originalCheckoutHead": "1ff61b1b236971a30492a923c28d3d65a7cd9458",
+  "branch": "grok/spe-v1-full-product-continuation-20260925",
+  "PR": 44,
+  "PRState": "OPEN DRAFT",
+  "PRHeadRechecked": "1ff61b1b236971a30492a923c28d3d65a7cd9458",
+  "HOSTING": "FORBIDDEN",
+  "deploymentGateExit": 2,
+  "changedTrackedFiles": [
+    "apps/web/scripts/test-final-craft.mjs",
+    "apps/web/scripts/test-hero-story.mjs",
+    "apps/web/src/index.css",
+    "apps/web/src/landing/HeroStory.tsx"
+  ],
+  "newSourceFile": "apps/web/src/landing/hero-native.css",
+  "protectedChecks": [
+    {
+      "path": "apps/web/package.json",
+      "sha256": "a1363339207aa433ddf23b7ac431b837a30a71589febd75e99aa41c155dd395f",
+      "unchanged": true
+    },
+    {
+      "path": "apps/web/package-lock.json",
+      "sha256": "92bf48d1e54cefa593577140a274eb8d7371693fe7b0689d50b8af77e739fef4",
+      "unchanged": true
+    },
+    {
+      "path": "apps/web/src/landing/Hero.tsx",
+      "sha256": "7ed1395f942731aac1f591774a38b6ff3bdeaa3e9c18207f58bdf4562b8bf2e0",
+      "unchanged": true
+    },
+    {
+      "path": "apps/web/src/ui/theme.ts",
+      "sha256": "ed1a0da7be59512af5a44373205a53dd328e7cd454b90a51b34694beb9a65438",
+      "unchanged": true
+    },
+    {
+      "path": "apps/web/src/routing.ts",
+      "sha256": "f080ac96e2963886cf68fbd80e2abfceffcc00fb306708b1dad7ddb36efab598",
+      "unchanged": true
+    },
+    {
+      "path": "tools/deployment-safety-gate.mjs",
+      "sha256": "7682e95d8f9fb67978969fea1cd0b1746b5a3f00c95840028929dc81ef128203",
+      "unchanged": true
+    },
+    {
+      "path": "apps/web/public/hero/founder-hero-story.png",
+      "sha256": "fb7edd8fbb1e197fed417a5866441ee950c58600b0c805aa7377d2bc06a6da93",
+      "unchanged": true
+    }
+  ],
+  "testedSourceHashes": {
+    "apps/web/scripts/test-final-craft.mjs": "70bfcdf795522a67899d2ba910a08fd92fadafb168a4e560154d2667f1eb62c4",
+    "apps/web/src/index.css": "de91b218cd55cd8a454d70ae32baaebac53176dc8d29f13a756bbf02ab6f2116",
+    "apps/web/src/landing/hero-native.css": "21f737d4ed3818596004d40b829b1a602ddeacfc72fef4ede84501d1130a66b2",
+    "apps/web/scripts/test-hero-story.mjs": "17f748580c7e37735adbc847b74783bad0da0fd93f3d110ef70213ac39a57852",
+    "apps/web/src/landing/HeroStory.tsx": "1572df0ea7dcfc310cc2e7dbfd3ff6d16355276fdb468a1ffb7c5498ee3354bc"
+  }
+}

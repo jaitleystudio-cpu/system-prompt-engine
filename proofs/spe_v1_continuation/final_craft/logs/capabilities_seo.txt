@@ -1,0 +1,5 @@
+
+> spe-web@0.3.0 test:capabilities-seo
+> node scripts/test-capabilities-seo.mjs
+
+PASS capabilities SEO/AEO smoke

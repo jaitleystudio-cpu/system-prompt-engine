@@ -1,0 +1,149 @@
+[
+  {
+    "name": "dark-desktop",
+    "errors": [],
+    "title": "Have an idea?\nLet’s make it clear.",
+    "requests": [
+      {
+        "name": "/art/intent-core.webp",
+        "bytes": 50306
+      },
+      {
+        "name": "/assets/index-KNxeIQrT.js",
+        "bytes": 121903
+      },
+      {
+        "name": "/assets/index-CGYs9uDN.css",
+        "bytes": 32280
+      },
+      {
+        "name": "/assets/r3f-BB1YTSQJ.js",
+        "bytes": 225120
+      },
+      {
+        "name": "/icon.svg",
+        "bytes": 420
+      },
+      {
+        "name": "/assets/SpeIntelligence-54f46twJ.js",
+        "bytes": 2517
+      }
+    ]
+  },
+  {
+    "name": "light-desktop",
+    "errors": [],
+    "title": "Have an idea?\nLet’s make it clear.",
+    "requests": [
+      {
+        "name": "/art/intent-core.webp",
+        "bytes": 50306
+      },
+      {
+        "name": "/assets/index-KNxeIQrT.js",
+        "bytes": 121903
+      },
+      {
+        "name": "/assets/r3f-BB1YTSQJ.js",
+        "bytes": 225120
+      },
+      {
+        "name": "/assets/index-CGYs9uDN.css",
+        "bytes": 32280
+      },
+      {
+        "name": "/icon.svg",
+        "bytes": 420
+      },
+      {
+        "name": "/assets/SpeIntelligence-54f46twJ.js",
+        "bytes": 2517
+      }
+    ]
+  },
+  {
+    "name": "mobile",
+    "errors": [],
+    "title": "Have an idea?\nLet’s make it clear.",
+    "requests": [
+      {
+        "name": "/art/intent-core.webp",
+        "bytes": 50306
+      },
+      {
+        "name": "/assets/index-KNxeIQrT.js",
+        "bytes": 121903
+      },
+      {
+        "name": "/assets/r3f-BB1YTSQJ.js",
+        "bytes": 225120
+      },
+      {
+        "name": "/assets/index-CGYs9uDN.css",
+        "bytes": 32280
+      },
+      {
+        "name": "/icon.svg",
+        "bytes": 420
+      }
+    ]
+  },
+  {
+    "name": "tablet",
+    "errors": [],
+    "title": "Have an idea?\nLet’s make it clear.",
+    "requests": [
+      {
+        "name": "/art/intent-core.webp",
+        "bytes": 50306
+      },
+      {
+        "name": "/assets/index-KNxeIQrT.js",
+        "bytes": 121903
+      },
+      {
+        "name": "/assets/r3f-BB1YTSQJ.js",
+        "bytes": 225120
+      },
+      {
+        "name": "/assets/index-CGYs9uDN.css",
+        "bytes": 32280
+      },
+      {
+        "name": "/icon.svg",
+        "bytes": 420
+      },
+      {
+        "name": "/assets/SpeIntelligence-54f46twJ.js",
+        "bytes": 2517
+      }
+    ]
+  },
+  {
+    "name": "reduced-motion",
+    "errors": [],
+    "title": "Have an idea?\nLet’s make it clear.",
+    "requests": [
+      {
+        "name": "/art/intent-core.webp",
+        "bytes": 50306
+      },
+      {
+        "name": "/assets/index-KNxeIQrT.js",
+        "bytes": 121903
+      },
+      {
+        "name": "/assets/index-CGYs9uDN.css",
+        "bytes": 32280
+      },
+      {
+        "name": "/assets/r3f-BB1YTSQJ.js",
+        "bytes": 225120
+      },
+      {
+        "name": "/icon.svg",
+        "bytes": 420
+      }
+    ]
+  }
+]

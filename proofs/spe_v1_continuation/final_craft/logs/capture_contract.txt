@@ -1,0 +1,30 @@
+{
+  "tip_sha": "bafcb11db8c2075fcd7fa49e66c3906bde13878c",
+  "captured_at_local": "2026-09-26T16:42:59.332Z",
+  "HOSTING": "FORBIDDEN",
+  "WORLD_1": "NOT_PROVEN",
+  "shots": [
+    {
+      "name": "contract-mobile-simple.png",
+      "bytes": 143482
+    },
+    {
+      "name": "contract-mobile-inspect.png",
+      "bytes": 369409
+    },
+    {
+      "name": "contract-mobile-unknown.png",
+      "bytes": 143434
+    },
+    {
+      "note": "conformance_attr",
+      "overall": "unknown"
+    }
+  ],
+  "failures": [
+    {
+      "prefix": "contract-desktop",
+      "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('button.spe-build[data-ready=\\'true\\']')\n    - locator resolved to <button type=\"button\" class=\"spe-build\" data-ready=\"true\" aria-busy=\"false\">…</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <summary class=\"spe-create-sources-summary\">…</summary> from <details open=\"\" class=\"spe-create-sources-depth\">…</details> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <summary class=\"spe-create-sources-summary\">…</summary> from <details open=\"\" class=\"spe-create-sources-depth\">…</details> subtree intercepts pointer events\n  2 × retrying click action\n      - waiting 100ms\n      - waiting for element to be visible, enabled and stable\n      - element is not stable\n  21 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <summary class=\"spe-create-sources-summary\">…</summary> from <details open=\"\" class=\"spe-create-sources-depth\">…</details> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  22 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <summary class=\"spe-create-sources-summary\">…</summary> from <details open=\"\" class=\"spe-create-sources-depth\">…</details> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n"
+    }
+  ]
+}

@@ -22,8 +22,9 @@ export function MyWork({
       <p className="spe-kicker">My Work</p>
       <h1 id="mywork-title">Ideas on this device</h1>
       <p>
-        History is optional and stored only in this browser. Turn it off anytime.
-        Export a <code>.spe</code> file when you want a portable copy.
+        My saved work stays on this device unless I choose to export a file.
+        Saving is off until you turn it on. You can turn it off or clear it
+        anytime.
       </p>
       <label className="spe-field">
         <span>
@@ -46,11 +47,9 @@ export function MyWork({
             <p className="spe-empty-kicker">Quiet shelf</p>
             <h2>Nothing saved here yet</h2>
             <p>
-              <strong>What:</strong> optional notes of ideas you choose to keep.
-              <br />
-              <strong>Why:</strong> so you can reopen them later — still only on this device.
-              <br />
-              <strong>How:</strong> turn on saving above, then build a prompt in Create.
+              Nothing is stored until you turn saving on. When you do, those
+              notes stay in this browser. Export a .spe file only if you want a
+              copy you can move.
             </p>
             <ol className="spe-empty-steps">
               <li>Start with an idea in Create</li>

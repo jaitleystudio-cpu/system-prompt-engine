@@ -1,0 +1,14 @@
+{
+  "ok": false,
+  "failed": [
+    "ddos_protection",
+    "bandwidth_spend_ceiling",
+    "tls",
+    "security_headers_live",
+    "cache_policy",
+    "abuse_protection",
+    "no_unlimited_billing",
+    "founder_unlock"
+  ],
+  "HOSTING": "FORBIDDEN"
+}

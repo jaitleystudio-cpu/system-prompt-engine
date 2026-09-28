@@ -1,0 +1,21 @@
+
+> spe-web@0.3.0 audit:assets
+> node scripts/measure-assets.mjs
+
+{
+  "not_a_release": true,
+  "new_implementation": true,
+  "network_mode": "NONE",
+  "wasm_bytes": 671614,
+  "wasm_sha256": "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830",
+  "dist_file_count": 26,
+  "dist_total_bytes": 28801331,
+  "dist_js_css_bytes": 483757,
+  "dist_js_css_lazy_pack_bytes": 1357255,
+  "budgets": {
+    "wasm_max_bytes": 2000000,
+    "dist_js_css_max_bytes": 1500000,
+    "note": "Shell JS/CSS excludes lazy ORT + R3F/LabStage chunks; vision weights live under public/models + public/ort"
+  },
+  "within_budget": true
+}

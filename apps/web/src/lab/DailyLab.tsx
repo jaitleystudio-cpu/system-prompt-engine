@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { PromptGallery } from "./PromptGallery";
 import {
   DAILY_3D_QUEUE,
@@ -8,6 +8,11 @@ import {
   type LabSpecimen,
 } from "./specimens";
 import type { GalleryCard } from "./gallery/promptGallery";
+import {
+  replaceLabSpecimenParam,
+  specimenIdFromSearch,
+} from "./labAcquisition";
+import { LabStageBoundary } from "./LabStageBoundary";
 
 const LabStage = lazy(() =>
   import("./LabStage").then((m) => ({ default: m.LabStage })),
@@ -20,17 +25,30 @@ type Props = {
 
 export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
   const todaySet = useMemo(() => specimensForDate(new Date(), 3), []);
-  const [activeId, setActiveId] = useState(todaySet[0]?.id);
+  const [paused, setPaused] = useState(false);
+  const [activeId, setActiveId] = useState(
+    () => specimenIdFromSearch() ?? todaySet[0]?.id,
+  );
   const active = DAILY_3D_QUEUE.find((s) => s.id === activeId) ?? todaySet[0];
+
+  useEffect(() => {
+    if (active?.id) replaceLabSpecimenParam(active.id);
+  }, [active?.id]);
+
+  const selectSpecimen = (id: string) => {
+    setActiveId(id);
+    replaceLabSpecimenParam(id);
+  };
 
   return (
     <section className="spe-lab spe-lab-3d" aria-labelledby="lab-title">
       <header className="spe-lab-head">
-        <p className="spe-kicker">Daily 3D Lab</p>
-        <h1 id="lab-title">Today&apos;s staged experience</h1>
+        <p className="spe-kicker">Daily Lab</p>
+        <h1 id="lab-title">Today&apos;s prompt, {todaysLabDateLabel()}</h1>
         <p>
-          A large interactive stage for {todaysLabDateLabel()} — materials,
-          lighting, camera, and a build prompt you can open cleanly in Create.
+          A small preview and a prompt seed you can open in Create. The same
+          short list repeats on a schedule. It is not a new random scene each
+          visit.
         </p>
         <p className="spe-muted" data-product-status="FINITE_QUEUE">
           {queueHonestyLine()}
@@ -44,7 +62,19 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
               <div className="spe-lab-stage spe-lab-stage-fallback">Loading stage…</div>
             }
           >
-            <LabStage specimen={active} />
+            <LabStageBoundary title={active.title}>
+              <div className="spe-lab-stage-frame">
+                <LabStage specimen={active} paused={paused} />
+                <button
+                  type="button"
+                  className="spe-lab-pause"
+                  aria-pressed={paused}
+                  onClick={() => setPaused((value) => !value)}
+                >
+                  {paused ? "Play preview" : "Pause preview"}
+                </button>
+              </div>
+            </LabStageBoundary>
           </Suspense>
           <article className="spe-lab-editorial" style={{ ["--lab-accent" as string]: active.accent }}>
             <span className="spe-lab-cat">{active.category}</span>
@@ -103,7 +133,7 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
             type="button"
             className={`spe-lab-preview ${s.id === active?.id ? "is-active" : ""}`}
             style={{ ["--lab-accent" as string]: s.accent }}
-            onClick={() => setActiveId(s.id)}
+            onClick={() => selectSpecimen(s.id)}
             aria-pressed={s.id === active?.id}
           >
             <strong>{s.title}</strong>
@@ -123,7 +153,7 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
                 type="button"
                 className="spe-linkish"
                 onClick={() => {
-                  setActiveId(s.id);
+                  selectSpecimen(s.id);
                   onOpenInSpe(s);
                 }}
               >

@@ -64,6 +64,10 @@
       },
       "additionalProperties": false
     },
+    "execution_record": {
+      "description": "Optional Batch D+ local dry-run record (spe.local-execution-record.v1). May bind provider_profile_id / profile_version / digest. Never a ProofReceipt; never uses key receipt. Backward compatible when omitted.",
+      "type": "object"
+    },
     "context_protocol": { "$ref": "#/$defs/context_protocol_lineage" },
     "quality_record": {
       "description": "Optional top-level alias for Inspect; preferred nest is context_protocol.quality_record. Never named receipt.",

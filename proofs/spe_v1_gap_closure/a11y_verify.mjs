@@ -84,7 +84,7 @@ try {
   check("theme_aria", Boolean(aria && /theme/i.test(aria)), aria || "missing");
 
   const hrefs = await page.locator("#spe-primary-nav a").evaluateAll((as) => as.map((a) => a.getAttribute("href")));
-  const needed = ["/", "/create", "/code", "/daily-lab", "/my-work", "/privacy"];
+  const needed = ["/", "/create", "/code", "/daily-lab", "/my-work", "/privacy", "/capabilities"];
   check("nav_real_links", needed.every((p) => hrefs.includes(p)), hrefs.join(", "));
 
   await page.goto("http://127.0.0.1:4188/create", { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -111,8 +111,20 @@ try {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForTimeout(400);
-  const motionBtn = await page.locator(".motion-button").innerText();
-  check("reduced_motion_control", /reduced motion/i.test(motionBtn), motionBtn.trim());
+  // Hero uses founder PNG (no Pause story control). Verify art present + reduced-motion CSS honored.
+  const heroArt = page.locator(".hero-story-art");
+  const artCount = await heroArt.count();
+  const animNone = await page.evaluate(() => {
+    const el = document.querySelector(".hero-story-plate, .hero-story-art, .hero-story");
+    if (!el) return false;
+    const cs = getComputedStyle(el);
+    return cs.animationName === "none" || cs.animationDuration === "0s";
+  });
+  check(
+    "reduced_motion_control",
+    artCount === 1 && animNone,
+    `founder-art=${artCount} animNone=${animNone} (Pause control removed; image hero)`,
+  );
 
   await page.setViewportSize({ width: 640, height: 400 });
   await page.evaluate(() => { document.documentElement.style.zoom = "2"; });

@@ -1,0 +1,85 @@
+{
+  "note": "Three local headless Chrome runs each. Animation-start sample, not a device or field performance guarantee.",
+  "results": [
+    {
+      "phase": "before",
+      "run": 1,
+      "samples": 152,
+      "p95FrameIntervalMs": 16.700000000000728,
+      "maxFrameIntervalMs": 33.400000000000546,
+      "CLS": 0,
+      "longTasks": [
+        2135,
+        67,
+        530,
+        411,
+        1639
+      ]
+    },
+    {
+      "phase": "before",
+      "run": 2,
+      "samples": 151,
+      "p95FrameIntervalMs": 16.799999999999727,
+      "maxFrameIntervalMs": 16.800000000000182,
+      "CLS": 0,
+      "longTasks": [
+        130,
+        100,
+        85,
+        392
+      ]
+    },
+    {
+      "phase": "before",
+      "run": 3,
+      "samples": 151,
+      "p95FrameIntervalMs": 16.700000000000273,
+      "maxFrameIntervalMs": 16.800000000000182,
+      "CLS": 0,
+      "longTasks": [
+        152,
+        194,
+        76
+      ]
+    },
+    {
+      "phase": "after",
+      "run": 1,
+      "samples": 152,
+      "p95FrameIntervalMs": 16.700000000000273,
+      "maxFrameIntervalMs": 16.799999999999955,
+      "CLS": 0.0002225563557942708,
+      "longTasks": [
+        1097,
+        71,
+        73
+      ]
+    },
+    {
+      "phase": "after",
+      "run": 2,
+      "samples": 152,
+      "p95FrameIntervalMs": 16.799999999999955,
+      "maxFrameIntervalMs": 16.800000000000182,
+      "CLS": 0.0002225563557942708,
+      "longTasks": [
+        70,
+        65
+      ]
+    },
+    {
+      "phase": "after",
+      "run": 3,
+      "samples": 151,
+      "p95FrameIntervalMs": 16.700000000000273,
+      "maxFrameIntervalMs": 16.800000000000182,
+      "CLS": 0.0002225563557942708,
+      "longTasks": [
+        126,
+        94,
+        68
+      ]
+    }
+  ]
+}

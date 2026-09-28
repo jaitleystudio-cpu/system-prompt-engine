@@ -1,0 +1,45 @@
+{
+  "tipShaAtCapture": "c63efa36c17c499a226341fb43a5a79a4c5ccc54",
+  "note": "Tip SHA bound after award-craft commit.",
+  "captures": [
+    {
+      "name": "home-hero-dark-desktop.png",
+      "bytes": 634914,
+      "viewport": "1440x900",
+      "theme": "dark",
+      "reducedMotion": "no-preference"
+    },
+    {
+      "name": "home-hero-light-desktop.png",
+      "bytes": 743474,
+      "viewport": "1440x900",
+      "theme": "light",
+      "reducedMotion": "no-preference"
+    },
+    {
+      "name": "home-hero-dark-mobile.png",
+      "bytes": 165398,
+      "viewport": "390x844",
+      "theme": "dark",
+      "reducedMotion": "no-preference"
+    },
+    {
+      "name": "home-hero-light-mobile.png",
+      "bytes": 183445,
+      "viewport": "390x844",
+      "theme": "light",
+      "reducedMotion": "no-preference"
+    },
+    {
+      "name": "home-hero-dark-desktop-reduced-motion.png",
+      "bytes": 620306,
+      "viewport": "1440x900",
+      "theme": "dark",
+      "reducedMotion": "reduce",
+      "motionControl": "Reduced motion"
+    }
+  ],
+  "story": "IDEA \u2192 MEANING \u2192 SPE \u2192 STRUCTURE \u2192 PROMPT",
+  "motion": "CSS/SVG motion present; reduced-motion verified via control label and capture. Do not claim 10/10 craft from motion alone.",
+  "craft": "electron-lines + resend-conic (SPE palette) + meshy motes; labels optically removed on desktop"
+}

@@ -1,7 +1,11 @@
 import { SpeechInput } from "../input/SpeechInput";
 import { ui } from "@spe/human-perspective";
 import { HumanError } from "../ui/HumanError";
-import type { IntentAtom } from "@spe/web-runtime";
+import type {
+  IntentAtom,
+  ReconstructionReport,
+  SpeArtifactV1,
+} from "@spe/web-runtime";
 import {
   CATEGORIES,
   TARGETS,
@@ -15,7 +19,7 @@ import type {
 } from "../engine/types";
 import { PrivacyIndicator } from "../ui/PrivacyIndicator";
 import { TrustPanel } from "../ui/TrustPanel";
-import type { SpeArtifactV1 } from "@spe/web-runtime";
+import { ReconstructionSummary } from "./ReconstructionSummary";
 
 type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
@@ -56,7 +60,10 @@ type Props = {
   onCopy: () => void;
   onExportSpe: () => void;
   onExportJson: () => void;
+  onExportPdf: () => void;
   onImportSpe: (file: File) => void;
+  reconstruction: ReconstructionReport | null;
+  onDismissReconstruction: () => void;
   privacy: {
     sensitivity: string | null;
     trust: string | null;
@@ -92,7 +99,10 @@ export function Workspace(props: Props) {
     onCopy,
     onExportSpe,
     onExportJson,
+    onExportPdf,
     onImportSpe,
+    reconstruction,
+    onDismissReconstruction,
     privacy,
     online,
     mode,
@@ -130,42 +140,12 @@ export function Workspace(props: Props) {
         </div>
       </header>
 
-      <div className="spe-ws-toolbar">
-        <label className="spe-field">
-          <span>Category</span>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value as CategoryId)}
-          >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="spe-field">
-          <span>Target AI</span>
-          <select
-            value={target}
-            onChange={(e) => setTarget(e.target.value as TargetId)}
-          >
-            {TARGETS.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button
-          type="button"
-          className="spe-build"
-          disabled={busy}
-          onClick={onCompile}
-        >
-          {busy ? ui.working : ui.build}
-        </button>
-      </div>
+      {reconstruction && (
+        <ReconstructionSummary
+          report={reconstruction}
+          onDismiss={onDismissReconstruction}
+        />
+      )}
 
       {(mode === "inspect" || mode === "pro") && (
         <div
@@ -251,7 +231,7 @@ export function Workspace(props: Props) {
       </div>
 
       <div className="spe-ws-grid" data-mode={mode}>
-        <aside className="spe-ws-side">
+        <div className="spe-ws-side">
           <label className="spe-field grow">
             <span>Your idea</span>
             <textarea
@@ -262,6 +242,14 @@ export function Workspace(props: Props) {
           </label>
 
           <SpeechInput disabled={busy} onInsert={text => setUserRequest([userRequest.trim(), text].filter(Boolean).join("\n\n"))} />
+          <button
+            type="button"
+            className="spe-build"
+            disabled={busy}
+            onClick={onCompile}
+          >
+            {busy ? ui.working : ui.build}
+          </button>
 
           {(mode !== "simple" || lens === "intent") && (
             <div className="spe-intent" aria-label="Your details">
@@ -309,7 +297,7 @@ export function Workspace(props: Props) {
               )}
             </div>
           )}
-        </aside>
+        </div>
 
         <div className="spe-ws-main">
           {lens === "prompt" && (
@@ -343,7 +331,7 @@ export function Workspace(props: Props) {
                   disabled={!rendered}
                   onClick={onCopy}
                 >
-                  Copy Prompt
+                  Copy
                 </button>
                 <button
                   type="button"
@@ -351,32 +339,49 @@ export function Workspace(props: Props) {
                   disabled={!artifact}
                   onClick={onExportSpe}
                 >
-                  Download .spe
+                  .spe
                 </button>
-                {mode !== "simple" && (
-                  <button
-                    type="button"
-                    className="spe-ghost"
-                    disabled={!artifact}
-                    onClick={onExportJson}
-                  >
-                    JSON
-                  </button>
-                )}
+                <button
+                  type="button"
+                  className="spe-ghost"
+                  disabled={!artifact}
+                  onClick={onExportJson}
+                >
+                  JSON
+                </button>
+                <button
+                  type="button"
+                  className="spe-ghost"
+                  disabled={!artifact}
+                  onClick={onExportPdf}
+                >
+                  PDF
+                </button>
                 <label className="spe-ghost file">
-                  Import .spe
+                  Import .spe / JSON
                   <input
                     type="file"
                     accept=".spe,application/json,.json,.spe.json"
                     className="import-file"
-                    aria-label="Import .spe file"
+                    aria-label="Import .spe or JSON file"
                     onChange={(e) => {
                       const f = e.target.files?.[0];
+                      e.target.value = "";
                       if (f) onImportSpe(f);
                     }}
                   />
                 </label>
               </div>
+              <ul className="spe-export-help">
+                <li>Copy puts the prompt on your clipboard.</li>
+                <li>.spe saves a file you can reopen here later.</li>
+                <li>JSON saves the same work as plain data.</li>
+                <li>
+                  Print / Save PDF is for printing. PDF is export-only in this
+                  preview and does not restore the prompt. Use .spe or JSON to
+                  restore protected details.
+                </li>
+              </ul>
             </div>
           )}
 
@@ -427,7 +432,7 @@ export function Workspace(props: Props) {
         </div>
 
         {mode !== "simple" && (
-          <aside className="spe-ws-rail" data-copy-depth="PROOF">
+          <div className="spe-ws-rail" data-copy-depth="PROOF">
             {(mode === "inspect" || mode === "pro") && (
               <PrivacyIndicator
                 sensitivity={privacy.sensitivity}
@@ -454,9 +459,45 @@ export function Workspace(props: Props) {
                 <p>not_a_release: true</p>
               </div>
             )}
-          </aside>
+          </div>
         )}
       </div>
+
+      <details className="spe-ws-advanced">
+        <summary>Advanced settings</summary>
+        <div className="spe-ws-toolbar">
+          <label className="spe-field">
+            <span>Category</span>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value as CategoryId)}
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="spe-field">
+            <span>Target AI</span>
+            <select
+              value={target}
+              onChange={(e) => setTarget(e.target.value as TargetId)}
+            >
+              {TARGETS.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <p className="spe-muted">
+          These settings change how the prompt is shaped. They do not run a
+          task or grant permission.
+        </p>
+      </details>
     </section>
   );
 }

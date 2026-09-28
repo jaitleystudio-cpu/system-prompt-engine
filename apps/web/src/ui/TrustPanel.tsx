@@ -19,6 +19,10 @@ export function TrustPanel({ sha256, imports, phase, usedTsFallback }: Props) {
         <div>wasm imports: {imports === null ? "—" : imports}</div>
         <div>wasm sha256: {sha256 ? `${sha256.slice(0, 16)}…` : "—"}</div>
         <div>claim: IMPLEMENTATION_PRESENT / REVIEW_PENDING · World #1 NOT PROVEN</div>
+        <div>
+          provider_profile: bind on execution_record · display ts_mirror ·
+          selection ≠ authority
+        </div>
       </div>
     </section>
   );

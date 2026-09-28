@@ -2,6 +2,7 @@
  * Opt-in local history — local-first, no accounts required.
  * Disabled by default. Service worker never sees these bodies.
  */
+import type { SpeArtifactV1 } from "./speArtifact";
 
 export const HISTORY_OPT_IN_KEY = "spe.web.history.opt_in.v1";
 export const HISTORY_ITEMS_KEY = "spe.web.history.items.v1";
@@ -13,6 +14,7 @@ export type HistoryItem = {
   category: string;
   target: string;
   prompt_preview: string;
+  artifact?: SpeArtifactV1;
 };
 
 export function isHistoryOptIn(): boolean {

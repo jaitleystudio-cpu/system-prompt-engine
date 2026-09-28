@@ -1,0 +1,161 @@
+{
+  "results": [
+    {
+      "name": "dark-desktop",
+      "errors": [],
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-DrUnHk40.js",
+          "bytes": 121383
+        },
+        {
+          "name": "/assets/index-Dgx4H8qj.css",
+          "bytes": 30874
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/assets/SpeIntelligence-Dx4Vk-ny.js",
+          "bytes": 2517
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        }
+      ],
+      "domNodes": 450,
+      "overflow": false
+    },
+    {
+      "name": "light-desktop",
+      "errors": [],
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-DrUnHk40.js",
+          "bytes": 121383
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/assets/index-Dgx4H8qj.css",
+          "bytes": 30874
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        },
+        {
+          "name": "/assets/SpeIntelligence-Dx4Vk-ny.js",
+          "bytes": 2517
+        }
+      ],
+      "domNodes": 450,
+      "overflow": false
+    },
+    {
+      "name": "reduced-motion",
+      "errors": [],
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-Dgx4H8qj.css",
+          "bytes": 30874
+        },
+        {
+          "name": "/assets/index-DrUnHk40.js",
+          "bytes": 121383
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        }
+      ],
+      "domNodes": 447,
+      "overflow": false
+    },
+    {
+      "name": "mobile",
+      "errors": [],
+      "resources": [
+        {
+          "name": "/art/intent-core.webp",
+          "bytes": 50306
+        },
+        {
+          "name": "/assets/index-DrUnHk40.js",
+          "bytes": 121383
+        },
+        {
+          "name": "/assets/r3f-BB1YTSQJ.js",
+          "bytes": 225120
+        },
+        {
+          "name": "/assets/index-Dgx4H8qj.css",
+          "bytes": 30874
+        },
+        {
+          "name": "/icon.svg",
+          "bytes": 420
+        }
+      ],
+      "domNodes": 447,
+      "overflow": false
+    }
+  ],
+  "assets": [
+    {
+      "name": "LabStage-rQWknjNC.js",
+      "bytes": 5244,
+      "gzip": 1644
+    },
+    {
+      "name": "SpeIntelligence-Dx4Vk-ny.js",
+      "bytes": 5669,
+      "gzip": 2517
+    },
+    {
+      "name": "engine.worker-BRhc7cig.js",
+      "bytes": 3104,
+      "gzip": 1378
+    },
+    {
+      "name": "index-Dgx4H8qj.css",
+      "bytes": 150673,
+      "gzip": 30874
+    },
+    {
+      "name": "index-DrUnHk40.js",
+      "bytes": 376174,
+      "gzip": 121383
+    },
+    {
+      "name": "ort-wasm-juE7TTNY.js",
+      "bytes": 464100,
+      "gzip": 110351
+    },
+    {
+      "name": "r3f-BB1YTSQJ.js",
+      "bytes": 833216,
+      "gzip": 225120
+    }
+  ]
+}

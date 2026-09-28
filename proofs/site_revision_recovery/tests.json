@@ -1,0 +1,28 @@
+{
+  "hero": { "command": "CHROME_PATH=/usr/local/bin/google-chrome HERO_URL=http://127.0.0.1:4194 node apps/web/scripts/test-hero-story.mjs", "pass": 62, "fail": 0, "exit": 0 },
+  "dailyTitle": { "command": "node apps/web/scripts/test-daily-hero.mjs", "result": "PASS 9635 daily-title assertions", "exit": 0 },
+  "copyGate": { "command": "node tools/copy-check.mjs", "candidates": 2361, "unreviewed": 0, "violations": 0, "exit": 0 },
+  "copyGolden": { "command": "npm run test:copy", "exit": 0 },
+  "typescript": { "command": "npx tsc --noEmit", "exit": 0 },
+  "viteBuild": { "command": "npx vite build", "exit": 0 },
+  "officialBuild": { "command": "npm run build", "exit": 1, "reason": "copy-wasm: missing release artifact at portable/spe-wasm/target/wasm32-unknown-unknown/release/spe_wasm.wasm" },
+  "artifact": { "command": "npm run test:artifact", "exit": 0 },
+  "createIntent": { "command": "npm run test:create-intent", "exit": 0 },
+  "executionContract": { "command": "npm run test:execution-contract", "exit": 0 },
+  "finalCraft": { "command": "npm run test:final-craft", "exit": 0 },
+  "themeRoutes": { "command": "npm run test:theme-routes", "exit": 0 },
+  "capabilitiesSeo": { "command": "npm run test:capabilities-seo", "exit": 0 },
+  "labAcquisition": { "command": "npm run test:lab-acquisition", "exit": 0 },
+  "speechFallback": { "command": "CHROME_PATH=/usr/local/bin/google-chrome node apps/web/scripts/test-speech-fallback-contract.mjs", "status": "VERIFIED_GRACEFUL_FALLBACK", "exit": 0 },
+  "dotPattern": { "command": "npm run test:dot-pattern", "exit": 1, "reason": "Pre-existing on ba116076: Hero.tsx has no DotPattern surface=hero. Native hero was not edited." },
+  "deploymentGate": { "command": "node tools/deployment-safety-gate.mjs", "exit": 2, "HOSTING": "FORBIDDEN" },
+  "axe": { "routes": ["home", "create", "code", "daily-lab", "my-work", "privacy", "features", "workspace"], "violations": 0 },
+  "overflow": { "widths": [320, 390, 768, 1024, 1440, 1920], "homeZoom200": true, "fails": [] },
+  "userFlow": {
+    "tabPersistence": true,
+    "compiled": true,
+    "speDownload": "artifact-1790566962366.spe",
+    "dryRun": "Local dry-run recorded. No target task or side effect was executed.",
+    "reopenedBudget": true
+  }
+}

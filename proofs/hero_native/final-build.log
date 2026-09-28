@@ -1,0 +1,291 @@
+
+> spe-web@0.3.0 build
+> npm run spe:copy-check && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs
+
+
+> spe-web@0.3.0 spe:copy-check
+> node ../../tools/copy-check.mjs
+
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 2250,
+  "unreviewed": 52,
+  "violations": [
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "$2,000 limit",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Replay story ↺",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "ILLUSTRATIVE EXAMPLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "READY TO REVIEW",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "MESSY HUMAN THOUGHT → MEANING → SPE → STRUCTURE → PERFECT PROMPT. Notes, a question, an image, a document, voice and a URL become a goal, context and boundary. SPE organizes these into role, objective, constraints and output, then assembles a prompt for you to review. This is an illustrative example, not a live compilation.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "MESSY HUMAN THOUGHT → MEANING → SPE → STRUCTURE → PERFECT PROMPT. Notes, a question, an image, a document, voice and a URL become a goal, context and boundary. SPE organizes these into role, objective, constraints and output, then assembles a prompt for you to review. This is an illustrative example, not a live compilation.",
+      "reason": "CLAIM_OVERREACH"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Resume story",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "SYSTEM PROMPT ENGINE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Work with two people and $2,000. No paid ads.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Plan a four-week launch",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Review the prompt before using it.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Pause story",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "A launch with intention.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Your thought, carried through.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Weekly actions & success measures",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Assembled example prompt",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "From a messy human idea to meaning, SPE, structure, and a perfect prompt. Illustrative example.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "From a messy human idea to meaning, SPE, structure, and a perfect prompt. Illustrative example.",
+      "reason": "CLAIM_OVERREACH"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Perfect prompt",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Perfect prompt",
+      "reason": "CLAIM_OVERREACH"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Two people · $2,000 · no paid ads",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Return weekly actions and success measures.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Keep what matters.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Given structure.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Replay story",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "our-app.example ↗",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "THE SHAPE OF AN IDEA",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Product launch strategist",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Structure",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "“Two people. No paid ads.”",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "A place for every detail.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "visibilitychange",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Let’s launch",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "VOICE NOTE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "(prefers-reduced-motion: reduce)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Resume story ▷",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Launch the app",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Plan a four-week launch for our writing app.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "change",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Ω",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Meaning",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Your intent.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Launch the writing app",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Where do we start?",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Stay within $2,000",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Pause story Ⅱ",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Complete story · motion off",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Two people. Four weeks.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "something good.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Two people",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Launch brief",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "SPE / YOUR PROMPT",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Messy human thought",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "Act as a product launch strategist.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "file": "apps/web/src/landing/HeroStory.tsx",
+      "text": "SPE transformation",
+      "reason": "UNREVIEWED_COPY"
+    }
+  ],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}

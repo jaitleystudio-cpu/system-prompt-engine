@@ -1,0 +1,9 @@
+{
+  "before_js_css": 471203,
+  "after_js_css": 483757,
+  "delta_js_css": 12554,
+  "before_css_note": "batch_i baseline",
+  "after_wasm": 671614,
+  "before_wasm": 671614,
+  "within_budget": true
+}

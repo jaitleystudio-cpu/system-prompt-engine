@@ -1,0 +1,44 @@
+{
+  "tipShaAtCapture": "ce47ac2f87225f6211e35249bb44aea1395264cd",
+  "note": "Bound to craft tip ce47ac2 (hero refinement implementation). Follow-up chore commit only updates this bind text.",
+  "captures": [
+    {
+      "name": "home-hero-dark-desktop.png",
+      "bytes": 572843,
+      "viewport": "1440x900",
+      "theme": "dark",
+      "reducedMotion": "no-preference"
+    },
+    {
+      "name": "home-hero-light-desktop.png",
+      "bytes": 692605,
+      "viewport": "1440x900",
+      "theme": "light",
+      "reducedMotion": "no-preference"
+    },
+    {
+      "name": "home-hero-dark-mobile.png",
+      "bytes": 161355,
+      "viewport": "390x844",
+      "theme": "dark",
+      "reducedMotion": "no-preference"
+    },
+    {
+      "name": "home-hero-light-mobile.png",
+      "bytes": 178442,
+      "viewport": "390x844",
+      "theme": "light",
+      "reducedMotion": "no-preference"
+    },
+    {
+      "name": "home-hero-dark-desktop-reduced-motion.png",
+      "bytes": 565606,
+      "viewport": "1440x900",
+      "theme": "dark",
+      "reducedMotion": "reduce",
+      "motionControl": "Reduced motion"
+    }
+  ],
+  "story": "IDEA \u2192 MEANING \u2192 SPE \u2192 STRUCTURE \u2192 PROMPT",
+  "motion": "CSS/SVG motion present; reduced-motion verified via control label and capture. Do not claim 10/10 craft from motion alone."
+}

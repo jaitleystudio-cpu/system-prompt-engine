@@ -4,8 +4,9 @@ export function PrivacyProof() {
       <p className="spe-kicker">Privacy</p>
       <h1 id="privacy-title">Your thinking stays with you</h1>
       <p className="spe-privacy-lede">
-        Shape prompts on this device. Choose what you keep, where your work goes,
-        and which AI you use — without sending your idea to SPE to prepare it.
+        SPE writes the prompt in this browser. It does not send your idea to an
+        AI company to prepare it. A few optional steps can reach something else
+        only when you ask — and those steps are named below.
       </p>
       <div className="spe-privacy-grid">
         <article>
@@ -48,6 +49,30 @@ export function PrivacyProof() {
           <p>
             Optional history stays in this browser. Turn it off or clear it
             anytime from My Work.
+          </p>
+        </article>
+        <article>
+          <h2>No ads, no sale, no silent tracking</h2>
+          <p>
+            This preview does not include analytics, ad tracking, or a sale of
+            your prompts. SPE does not use your idea to target you.
+          </p>
+        </article>
+        <article>
+          <h2>Nothing runs unless you start it</h2>
+          <p>
+            A local check looks at the prompt on this device. It does not call
+            an outside AI, and it does not grant permission to act for you.
+          </p>
+        </article>
+        <article>
+          <h2>When something can leave this page</h2>
+          <p>
+            Reading a website contacts the address you type. Speech uses your
+            browser&apos;s own listening tools, which may use that browser&apos;s
+            service. SPE does not keep the audio. If you copy a prompt into
+            another product, that product&apos;s rules apply — SPE does not send
+            it for you.
           </p>
         </article>
       </div>

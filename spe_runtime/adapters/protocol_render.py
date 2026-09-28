@@ -68,3 +68,26 @@ def render_execution_contract(contract: ExecutionContract, adapter_id: str) -> s
     ]
     body = [_render_node(node, i) for i, node in enumerate(nodes, start=1)]
     return _compact("\n".join(header_lines) + "\n\n".join(body))
+
+
+def render_with_environment_capability_clause(
+    contract: ExecutionContract,
+    adapter_id: str,
+    *,
+    tag: str | None = None,
+    known_inventory: list[str] | tuple[str, ...] | None = None,
+) -> str:
+    """Render contract then append a portable Batch H environment-capability clause.
+
+    Keeps ANY_AI portable: conditional "If your environment provides…" when inventory
+    is unknown. Does not name unavailable products or mint authority.
+    """
+    from spe_runtime.adapters.environment_capabilities import (
+        conditional_capability_prompt_clause,
+    )
+
+    base = render_execution_contract(contract, adapter_id)
+    clause = conditional_capability_prompt_clause(
+        tag, known_inventory=known_inventory
+    )
+    return _compact(base.rstrip() + "\n\n## Environment capabilities (portable)\n\n" + clause)

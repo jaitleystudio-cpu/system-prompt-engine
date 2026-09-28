@@ -124,3 +124,35 @@ def build_auto_route_node(
         failure_behavior="STATE_LIMITATION",
         merge_key=AUTO_ROUTE_MERGE_KEY,
     )
+
+
+def capability_profile_for_provider(
+    profile_id: str,
+) -> CapabilityProfile:
+    """DATA-only inventory from Turn 2 provider registry — not an authority grant.
+
+    Thin wrap over ``get_provider_profile``; does not select, mint, or route.
+    Unknown ``profile_id`` raises ``KeyError`` (truthful rejection).
+    """
+    from spe_runtime.providers.profiles import get_provider_profile
+
+    provider = get_provider_profile(profile_id)
+    return CapabilityProfile(available=provider.capabilities)
+
+
+def build_auto_route_node_for_provider(
+    profile_id: str | None,
+    *,
+    task_benefits_from_tools: bool,
+) -> ProtocolNode | None:
+    """Wrap ``build_auto_route_node`` with provider-registry inventory (DATA only).
+
+    When ``profile_id`` is None, behaves like an unknown capability profile.
+    Does not call ``select_profile`` — caller must already have chosen (or not).
+    """
+    if profile_id is None:
+        return build_auto_route_node(None, task_benefits_from_tools=task_benefits_from_tools)
+    return build_auto_route_node(
+        capability_profile_for_provider(profile_id),
+        task_benefits_from_tools=task_benefits_from_tools,
+    )

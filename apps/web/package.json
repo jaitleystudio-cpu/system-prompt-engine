@@ -10,7 +10,15 @@
     "dev": "npm run copy-wasm && vite",
     "build": "npm run spe:copy-check && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "test:artifact": "node scripts/test-artifact-reconstruction.mjs",
     "test:engine": "node scripts/eval-fixture.mjs",
+    "test:create-intent": "node scripts/test-create-intent.mjs",
+    "test:dot-pattern": "node scripts/test-dot-pattern.mjs",
+    "test:execution-contract": "node scripts/test-execution-contract.mjs",
+    "test:hero-story": "node scripts/test-hero-story.mjs",
+    "test:final-craft": "node scripts/test-final-craft.mjs",
+    "test:theme-routes": "node scripts/test-theme-routes.mjs",
+    "test:capabilities-seo": "node scripts/test-capabilities-seo.mjs",
     "audit:deps": "node scripts/audit-deps.mjs",
     "audit:assets": "node scripts/measure-assets.mjs",
     "audit:egress": "node scripts/egress-proof.mjs",
@@ -27,7 +35,8 @@
     "test:speech-fallback": "node scripts/test-speech-fallback-contract.mjs",
     "bench:vision-human": "node scripts/bench-standard-vs-lite-human.mjs",
     "test:screenshot-real": "node scripts/test-screenshot-real-fidelity.mjs",
-    "capture:real-ui": "node scripts/capture-real-ui-fixtures.mjs"
+    "capture:real-ui": "node scripts/capture-real-ui-fixtures.mjs",
+    "test:lab-acquisition": "node scripts/test-lab-acquisition.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",

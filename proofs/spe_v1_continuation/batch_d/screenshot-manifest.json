@@ -1,0 +1,40 @@
+{
+  "baseSha": "709e75c57e706b6991521ba733d22a10be033316",
+  "testedTipSha": "f62b8e0106cfa61ce3021ce94ed7b816ee9ec539",
+  "HOSTING": "FORBIDDEN",
+  "WORLD_NUMBER_1": "NOT_PROVEN",
+  "proofReceiptImplemented": false,
+  "serializedReceiptKey": false,
+  "captures": [
+    {
+      "name": "create-contract-dark.png",
+      "artifactName": "spe_batch_d_create_contract_dark_final.png",
+      "theme": "dark"
+    },
+    {
+      "name": "create-contract-light.png",
+      "artifactName": "spe_batch_d_create_contract_light_final.png",
+      "theme": "light"
+    },
+    {
+      "name": "receipt-after-run.png",
+      "artifactName": "spe_batch_d_local_run_record_final.png",
+      "surface": "local run record; no serialized receipt key"
+    },
+    {
+      "name": "conformance-pass.png",
+      "artifactName": "spe_batch_d_conformance_pass_final.png",
+      "status": "PASS for one listed local check only"
+    },
+    {
+      "name": "conformance-blocked-or-unknown.png",
+      "artifactName": "spe_batch_d_conformance_unknown_final.png",
+      "status": "UNKNOWN; not PASS"
+    },
+    {
+      "name": "mobile-contract.png",
+      "artifactName": "spe_batch_d_mobile_contract_final.png",
+      "viewport": "390x844"
+    }
+  ]
+}

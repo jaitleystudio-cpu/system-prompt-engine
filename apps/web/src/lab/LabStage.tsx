@@ -1,5 +1,5 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Group, Mesh } from "three";
 import type { LabSpecimen } from "./specimens";
 
@@ -175,13 +175,35 @@ function SpecimenMesh({ specimen, reduced }: { specimen: LabSpecimen; reduced: b
   );
 }
 
-export function LabStage({ specimen }: { specimen: LabSpecimen }) {
-  const reduced =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+export function LabStage({
+  specimen,
+  paused = false,
+}: {
+  specimen: LabSpecimen;
+  paused?: boolean;
+}) {
+  const [osReduced, setOsReduced] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setOsReduced(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+  const reduced = paused || osReduced;
   return (
-    <div className="spe-lab-stage" aria-label={`3D preview: ${specimen.title}`}>
+    <div
+      className="spe-lab-stage"
+      data-paused={paused ? "true" : "false"}
+      data-reduced-motion={osReduced ? "true" : "false"}
+      aria-label={`3D preview: ${specimen.title}`}
+    >
       <Canvas
+        frameloop={reduced ? "demand" : "always"}
         dpr={[1, 1.75]}
         camera={{
           fov: specimen.camera.fov,

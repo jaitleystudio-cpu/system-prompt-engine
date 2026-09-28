@@ -53,7 +53,10 @@ async function openSpeech(page) {
     const expanded = await burger.getAttribute("aria-expanded");
     if (expanded !== "true") await burger.click().catch(() => {});
   }
-  const create = page.getByRole("button", { name: /Create|Compose/i }).first();
+  const create = page
+    .getByRole("link", { name: /Create|Compose/i })
+    .or(page.getByRole("button", { name: /Create|Compose/i }))
+    .first();
   if (await create.count()) await create.click();
   await page.waitForTimeout(300);
   const speechTab = page.getByRole("tab", { name: /Speech/i });

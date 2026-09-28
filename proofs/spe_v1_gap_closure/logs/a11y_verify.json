@@ -25,7 +25,7 @@
     {
       "id": "pipeline_aria",
       "result": "PASS",
-      "detail": "SPE transformation: Idea to Meaning to Structure to Prompt"
+      "detail": "SPE transforms messy human fragments into an idea, meaning, structure, and a perfect system prompt: IDEA, MEANING, SPE, STRUCTURE, PROMPT."
     },
     {
       "id": "theme_keyboard_focus",
@@ -40,7 +40,7 @@
     {
       "id": "nav_real_links",
       "result": "PASS",
-      "detail": "/, /create, /code, /daily-lab, /my-work, /privacy, /create"
+      "detail": "/, /create, /code, /daily-lab, /my-work, /capabilities, /privacy, /create"
     },
     {
       "id": "route_create_reload",
@@ -60,7 +60,7 @@
     {
       "id": "reduced_motion_control",
       "result": "PASS",
-      "detail": "Reduced motion"
+      "detail": "founder-art=1 animNone=true (Pause control removed; image hero)"
     },
     {
       "id": "zoom_200_usable",
@@ -70,7 +70,7 @@
     {
       "id": "decorative_scene",
       "result": "PASS",
-      "detail": "{\"canvases\":0,\"statics\":2,\"canvasOk\":true,\"staticOk\":true}"
+      "detail": "{\"canvases\":0,\"statics\":1,\"canvasOk\":true,\"staticOk\":true}"
     },
     {
       "id": "mobile_burger_aria",
@@ -80,5 +80,5 @@
   ],
   "pass": true,
   "failed": [],
-  "at": "2026-09-25T10:49:52.573Z"
+  "at": "2026-09-26T18:10:31.259Z"
 }
