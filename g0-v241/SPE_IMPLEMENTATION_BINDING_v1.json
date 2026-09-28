@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "status": "UNBOUND",
+  "reason": "No current spe_runtime repository tree is mounted in this execution environment.",
+  "required_for_release_not_design_fixture_conformance": true,
+  "fields": {
+    "spec_sha256": null,
+    "repo_url_or_identity": "https://github.com/jaitleystudio-cpu/system-prompt-engine",
+    "repo_tree_hash": null,
+    "kernel_module_paths": [],
+    "conformance_command": null,
+    "integration_test_manifest_hash": null,
+    "build_environment_hash": null,
+    "provider_fixture_hashes": []
+  },
+  "promotion_rule": "Release qualification is impossible while status != BOUND_AND_PASS."
+}
