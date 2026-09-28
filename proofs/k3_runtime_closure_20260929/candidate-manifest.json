@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "qualification": "k3-runtime-selector",
+  "promoted": true,
+  "source_git_sha": "98632cfb712d20eb7f7f6962a09f6326d7e942f6",
+  "source_note": "Built from the K3 selector tree whose parent is 98632cf. The committing SHA is recorded in WASM_PROVENANCE.md. Proof markdown is not a build input. The pre-K3 canonical hash remains in proofs/wasm_rebaseline_candidate_20260928/candidate-manifest.json.",
+  "rustc_version": "1.98.1",
+  "rustc_commit": "48a229ceaefd4985c50990b14116b6d856af0985",
+  "target_triple": "wasm32-unknown-unknown",
+  "profile": {
+    "name": "release",
+    "declared": {
+      "lto": true,
+      "opt-level": "s",
+      "panic": "abort"
+    }
+  },
+  "build_command": "node tools/wasm_canonical_build.mjs",
+  "npm_script": "npm run wasm:build-canonical",
+  "artifact_size": 785148,
+  "artifact_sha256": "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f",
+  "build_a_sha256": "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f",
+  "build_b_sha256": "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f",
+  "build_a_size": 785148,
+  "build_b_size": 785148,
+  "previous_canonical_sha256": "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6",
+  "previous_canonical_bytes": 671621,
+  "legacy_sha256": "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830",
+  "legacy_size": 671614,
+  "byte_equal_to_previous_canonical": false,
+  "imports": 0,
+  "exports": ["memory", "spe_alloc", "spe_evaluate", "spe_free"],
+  "k3_vector_mismatches": 0
+}

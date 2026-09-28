@@ -11,6 +11,7 @@ pub mod value;
 pub mod sha256_lite;
 pub mod grounding;
 pub mod protocols;
+pub mod k3;
 
 use serde::Serialize;
 use serde_json::Value;
@@ -68,6 +69,12 @@ pub fn evaluate_json_str(input: &str) -> String {
     }
     if parsed.get("spe_api").and_then(|v| v.as_str()) == Some("grounding") {
         return match grounding::evaluate_grounding(&parsed) {
+            Ok(output) => wrap_raw_output(output),
+            Err(err) => wrap_error(err.code(), &err.message),
+        };
+    }
+    if parsed.get("spe_api").and_then(|v| v.as_str()) == Some("k3") {
+        return match k3::evaluate(&parsed) {
             Ok(output) => wrap_raw_output(output),
             Err(err) => wrap_error(err.code(), &err.message),
         };

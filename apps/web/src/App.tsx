@@ -1,6 +1,7 @@
 import { ui } from "@spe/human-perspective";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EngineClient } from "./engine/client";
+import { requestTechniqueIds } from "./engine/k3Transport";
 import type {
   CompilePhase,
   ContextProtocolCompileOutput,
@@ -477,11 +478,13 @@ export default function App() {
         setPhase(out.error ? "unavailable" : "done");
 
         if (!out.error && out.result) {
+          const k3Techniques = await requestTechniqueIds(client, fixture, category);
           const prompt = renderPromptArtifact({
             userRequest: goal,
             target,
             category,
             envelopeOutput: out.result.output,
+            techniques: k3Techniques,
           });
           setRendered(prompt);
           const spe = await buildSpeArtifact({

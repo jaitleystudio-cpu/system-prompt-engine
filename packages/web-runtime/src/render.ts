@@ -291,12 +291,8 @@ export function renderPromptArtifact(input: RenderInput) {
       : []),
     "## Final check\nFollow the explicit brief wherever it differs from these default working suggestions. Preserve every stated restriction. Do not invent facts, completed actions or unavailable evidence. Ask a focused question only when missing information blocks a correct response; otherwise proceed and label necessary assumptions.",
   ];
-  const techniques = input.techniques ?? [
-    "Original request preserved",
-    "Explicit requirements",
-    `${category} working template`,
-    "Output specification",
-  ];
+  // Technique ids are supplied by the WASM K3 selector. This renderer does not choose them.
+  const techniques = input.techniques ?? [];
   return {
     userRequest: goal,
     speAdded: [
