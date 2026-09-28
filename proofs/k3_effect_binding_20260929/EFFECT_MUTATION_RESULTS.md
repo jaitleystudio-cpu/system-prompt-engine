@@ -14,9 +14,10 @@ These ten mutants are local to the effect binder. They are not a repository-wide
 | M8 | STRUCTURED_OUTPUT invents a schema | yes |
 | M9 | UNKNOWN renders a success prompt | yes |
 | M10 | a caller replaces the engine technique list | yes |
+| M11 | K3 request fails and the renderer emits a fallback prompt | yes |
 
-defined: 10
-killed: 10
+defined: 11
+killed: 11
 survived: 0
 
 `effect_plan_is_lawful` accepts only the canonical `bind_prompt_effects` JSON for that selection. Each mutant changes that JSON. The renderer also rejects a technique list that does not match the plan, which is the M10 path at the TypeScript boundary.

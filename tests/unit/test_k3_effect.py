@@ -472,6 +472,29 @@ def _mutant_ts_selector(selection: dict) -> dict:
     return plan
 
 
+def _mutant_k3_failure_still_renders(_selection: dict) -> dict:
+    """M11: K3 request failed, but a renderer still emits a fallback prompt."""
+    return {
+        "schema_version": "prompt_effect_plan.v1",
+        "effect_version": "k3.effect.g1r7r",
+        "selection_id": "tsel-fallback",
+        "disposition": "BOUND",
+        "operations": ["DIRECT"],
+        "blocked_operations": [],
+        "sections": [{"code": "DIRECT", "text": "TypeScript fallback prompt"}],
+        "protected_binding_digest": "pbind-fallback",
+        "requirement_graph_digest": "",
+        "protected_fields": {},
+        "renderable": True,
+        "claims_pass": False,
+        "notes": ["BOUND"],
+        "deferred_techniques": [],
+        "techniques": ["ZERO_SHOT"],
+        "compiled_prompt": "TypeScript fallback prompt",
+        "authority_escalation": False,
+    }
+
+
 MUTANTS = {
     "M1": _mutant_ignore,
     "M2": _mutant_always_direct,
@@ -483,6 +506,7 @@ MUTANTS = {
     "M8": _mutant_invent_schema,
     "M9": _mutant_unknown_success,
     "M10": _mutant_ts_selector,
+    "M11": _mutant_k3_failure_still_renders,
 }
 
 

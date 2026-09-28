@@ -154,4 +154,94 @@ assert.throws(
   /did not authorize/,
 );
 
+const baseInput = {
+  userRequest: protectedBody.goal,
+  category: "Writing",
+  target: "any",
+  envelopeOutput: envelope(),
+};
+
+function assertNoPrompt(effectPlan) {
+  assert.throws(
+    () => runtime.renderPromptArtifact({ ...baseInput, effectPlan }),
+    (error) => {
+      assert.equal(error.name, "PromptBriefError");
+      assert.equal("finalPrompt" in error, false);
+      return true;
+    },
+  );
+}
+
+assertNoPrompt(null);
+assertNoPrompt(undefined);
+assertNoPrompt({});
+assertNoPrompt({ disposition: "UNKNOWN", renderable: true, compiled_prompt: "Success." });
+assertNoPrompt({ disposition: "REFUSED", renderable: false, compiled_prompt: null });
+assertNoPrompt({ disposition: "DEFERRED", renderable: false, compiled_prompt: null });
+assertNoPrompt({ disposition: "BOUND", renderable: false, compiled_prompt: direct.compiled_prompt });
+assertNoPrompt({ disposition: "BOUND", renderable: true, compiled_prompt: null });
+assertNoPrompt({ disposition: "BOUND", renderable: true });
+assertNoPrompt("not-a-plan");
+
+const transportBundle = await build({
+  entryPoints: [join(root, "src/engine/k3Transport.ts")],
+  bundle: true,
+  write: false,
+  format: "esm",
+  platform: "node",
+});
+const transport = await import(
+  `data:text/javascript;base64,${Buffer.from(transportBundle.outputFiles[0].text).toString("base64")}`
+);
+const thrown = await transport.requestK3Binding(
+  { compile: async () => { throw new Error("wasm down"); } },
+  { payload: {} },
+  "Writing",
+  protectedBody.goal,
+);
+assert.equal(thrown.status, "UNAVAILABLE");
+assert.equal(thrown.effectPlan, null);
+assert.throws(() => transport.requireBoundEffectPlan(thrown), /effect plan/);
+const missingPlan = await transport.requestK3Binding(
+  {
+    compile: async () => ({
+      error: null,
+      result: {
+        status: "VALID",
+        output: {
+          disposition: "SAFE_DEFAULT",
+          techniques: ["ZERO_SHOT"],
+          claims_pass: false,
+        },
+      },
+    }),
+  },
+  { payload: {} },
+  "Writing",
+  protectedBody.goal,
+);
+assert.equal(missingPlan.status, "MISSING_EFFECT_PLAN");
+assert.throws(() => transport.requireBoundEffectPlan(missingPlan), /effect plan/);
+
+function mutantM11(input) {
+  try {
+    return runtime.renderPromptArtifact(input);
+  } catch {
+    return { finalPrompt: "TypeScript fallback prompt" };
+  }
+}
+const missingInput = { ...baseInput, effectPlan: null };
+let productionPrompt = null;
+try {
+  productionPrompt = runtime.renderPromptArtifact(missingInput).finalPrompt;
+} catch {
+  productionPrompt = null;
+}
+assert.equal(productionPrompt, null);
+assert.equal(mutantM11(missingInput).finalPrompt, "TypeScript fallback prompt");
+
+const appSource = readFileSync(join(root, "src/App.tsx"), "utf8");
+assert.equal(appSource.includes("renderNonProductionEnvelopePreview"), false);
+assert.match(appSource, /requireBoundEffectPlan\(k3\)/);
+
 console.log("PASS k3 effect prompt render");

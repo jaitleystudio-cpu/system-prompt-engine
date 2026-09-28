@@ -33,10 +33,24 @@ export type EffectPlan = {
   };
 };
 
-export type K3Binding = {
-  techniques: string[];
-  effectPlan: EffectPlan | null;
-};
+export type K3Binding =
+  | {
+      status: "PLAN";
+      techniques: string[];
+      effectPlan: EffectPlan;
+    }
+  | {
+      status: "UNAVAILABLE" | "MISSING_EFFECT_PLAN";
+      techniques: [];
+      effectPlan: null;
+    };
+
+export class K3EffectUnavailableError extends Error {
+  constructor(message = "The strategy engine did not return an effect plan.") {
+    super(message);
+    this.name = "K3EffectUnavailableError";
+  }
+}
 
 export function techniqueLabel(id: string): string {
   return TECHNIQUE_LABELS[id] ?? id;
@@ -93,19 +107,32 @@ export async function requestK3Binding(
       ? output.techniques.filter((item): item is string => typeof item === "string")
       : [];
     const effectPlan = record(output.prompt_effect_plan);
-    const plan = Object.keys(effectPlan).length ? (effectPlan as EffectPlan) : null;
+    if (!Object.keys(effectPlan).length) {
+      return { status: "MISSING_EFFECT_PLAN", techniques: [], effectPlan: null };
+    }
     const lawful =
       !outcome.error &&
       outcome.result?.status === "VALID" &&
       output.claims_pass === false &&
       (output.disposition === "SELECTED" || output.disposition === "SAFE_DEFAULT");
     return {
+      status: "PLAN",
       techniques: lawful ? ids : [],
-      effectPlan: plan,
+      effectPlan: effectPlan as EffectPlan,
     };
   } catch {
-    return { techniques: [], effectPlan: null };
+    return { status: "UNAVAILABLE", techniques: [], effectPlan: null };
   }
+}
+
+export function requireBoundEffectPlan(binding: K3Binding): {
+  effectPlan: EffectPlan;
+  techniques: string[];
+} {
+  if (binding.status !== "PLAN" || !binding.effectPlan) {
+    throw new K3EffectUnavailableError();
+  }
+  return { effectPlan: binding.effectPlan, techniques: binding.techniques };
 }
 
 export async function requestTechniqueIds(
@@ -114,6 +141,8 @@ export async function requestTechniqueIds(
   displayLabel: string,
   goal = "",
 ): Promise<string[]> {
-  const binding = await requestK3Binding(client, fixture, displayLabel, goal);
-  return binding.techniques;
+  const bound = requireBoundEffectPlan(
+    await requestK3Binding(client, fixture, displayLabel, goal),
+  );
+  return bound.techniques;
 }
