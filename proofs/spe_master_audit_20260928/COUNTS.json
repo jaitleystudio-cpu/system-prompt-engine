@@ -1,0 +1,19 @@
+{
+  "sha": "e0497f79898689a00a30abeab67652d5f6a9193c",
+  "counts": {
+    "PROVEN": 69,
+    "PARTIAL": 197,
+    "NOT_FOUND": 42,
+    "SPECIFIED_ONLY": 6,
+    "IMPLEMENTED_UNPROVEN": 41,
+    "EXTERNAL_VALIDATION_REQUIRED": 12,
+    "BLOCKED": 3
+  },
+  "severity": {
+    "P1": 85,
+    "P2": 191,
+    "P3": 25
+  },
+  "founder_missing": 48,
+  "total": 370
+}
