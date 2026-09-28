@@ -2578,20 +2578,34 @@ html[data-theme="dark"] .hero-copy h1 {
   opacity: 1;
 }
 .spe-seo-content {
-  padding: 4.5rem 5% 5rem;
-  border-top: 1px solid var(--seo-border);
-  background: var(--surface-elevated);
+  padding: 0 1.5rem 4.75rem;
+  background: transparent;
+  color: var(--paper);
 }
 .spe-seo-inner {
-  max-width: 42rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding-top: 2.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+.spe-seo-content .eyebrow {
+  margin: 0 0 0.9rem;
+  color: var(--muted);
+  letter-spacing: 0.16em;
 }
 .spe-seo-content h2 {
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  margin-bottom: 1rem;
+  max-width: 18ch;
+  font-size: clamp(1.85rem, 3.1vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  margin: 0 0 1rem;
 }
 .spe-seo-content p {
-  color: var(--muted);
-  margin-bottom: 1rem;
+  max-width: 40rem;
+  margin: 0 0 0.35rem;
+  color: var(--paper);
+  font-size: 1.02rem;
+  line-height: 1.6;
 }
 .spe-seo-content strong {
   color: var(--paper);
@@ -2602,17 +2616,47 @@ html[data-theme="dark"] .hero-copy h1 {
   padding-left: 1.1rem;
   color: var(--paper);
 }
+.spe-seo-content .spe-seo-links {
+  list-style: none;
+  margin: 1.65rem 0 1.35rem;
+  padding: 0;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
+.spe-seo-content .spe-seo-links li {
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
 .spe-seo-links a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+.spe-seo-content .spe-seo-links a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 0.78rem 0;
+  text-decoration: none;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
+}
 .spe-seo-links a:hover {
   opacity: 0.85;
+}
+.spe-seo-content .spe-seo-links a:hover {
+  opacity: 1;
 }
 .spe-seo-phrases {
   font: 0.72rem/1.55 monospace;
   letter-spacing: 0.04em;
   opacity: 0.75;
+}
+.spe-seo-content .spe-seo-phrases {
+  max-width: 46rem;
+  margin: 0.35rem 0 0;
+  font: 0.68rem/1.65 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.045em;
+  color: var(--muted);
+  opacity: 1;
 }
 .spe-footer-links {
   display: flex;
@@ -2688,6 +2732,7 @@ html[data-theme="light"] .eyebrow {
 }
 html[data-theme="light"] .spe-nav-links a {
   color: #3a4250;
+  opacity: 0.8;
 }
 html[data-theme="light"] .spe-nav-cta {
   background: #141820;
@@ -2697,6 +2742,9 @@ html[data-theme="light"] .spe-footer {
   background: var(--surface-elevated);
   color: var(--paper);
   border-top: 1px solid var(--seo-border);
+}
+html[data-theme="light"] .spe-footer strong {
+  color: var(--muted);
 }
 html[data-theme="light"] .prompt-studio,
 html[data-theme="light"] .spe-seo-content,
@@ -2904,6 +2952,7 @@ html[data-theme="light"] .spe-empty-work .spe-empty-leave {
 html[data-theme="light"] .spe-nav-links a.is-active,
 html[data-theme="light"] .spe-nav-links a[aria-current="page"] {
   color: #2a4a8a;
+  opacity: 1;
 }
 
 /* Static / reduced-motion process strip on hero art */
@@ -7201,4 +7250,85 @@ html[data-theme="light"] .spe-lab-preview em {
   .spe-contract-presentation-btn {
     min-height: 44px;
   }
+}
+
+/* Light prompt-studio result surface: secondary copy and paper edges.
+   Ivory and ink stay the same palette. Dark surfaces are unchanged. */
+html[data-theme="light"] .prompt-studio .studio-heading > p,
+html[data-theme="light"] .prompt-studio .studio-panel-head,
+html[data-theme="light"] .prompt-studio .compiler-note,
+html[data-theme="light"] .prompt-studio .compile-status,
+html[data-theme="light"] .prompt-studio .document-mark > span,
+html[data-theme="light"] .prompt-studio .output-empty > p,
+html[data-theme="light"] .prompt-studio .output-empty ol,
+html[data-theme="light"] .prompt-studio .output-empty li span,
+html[data-theme="light"] .prompt-studio .empty-footer,
+html[data-theme="light"] .prompt-studio .output-tabs button,
+html[data-theme="light"] .prompt-studio .examples button,
+html[data-theme="light"] .prompt-studio .brief-field,
+html[data-theme="light"] .prompt-studio .brief-details summary > span,
+html[data-theme="light"] .prompt-studio .compile-row > span,
+html[data-theme="light"] .prompt-studio .new-brief,
+html[data-theme="light"] .prompt-studio .output-footnote,
+html[data-theme="light"] .prompt-studio .studio-trust,
+html[data-theme="light"] .prompt-studio .studio-trust span:before,
+html[data-theme="light"] .prompt-studio .semantic-readout summary span,
+html[data-theme="light"] .prompt-studio .semantic-readout p,
+html[data-theme="light"] .prompt-studio .review-intro,
+html[data-theme="light"] .prompt-studio .review-reason,
+html[data-theme="light"] .prompt-studio .review-title span,
+html[data-theme="light"] .prompt-studio .review-number {
+  color: #4e5868;
+}
+html[data-theme="light"] .prompt-studio .document-mark,
+html[data-theme="light"] .prompt-studio .output-tabs [aria-pressed="true"],
+html[data-theme="light"] .prompt-studio .prompt-document,
+html[data-theme="light"] .prompt-studio .request-input,
+html[data-theme="light"] .prompt-studio .brief-field select,
+html[data-theme="light"] .prompt-studio .brief-field textarea {
+  color: #141820;
+}
+html[data-theme="light"] .prompt-studio .output-tabs [aria-pressed="true"] {
+  border-bottom-color: #3d5a9a;
+}
+html[data-theme="light"] .prompt-studio .studio-shell,
+html[data-theme="light"] .prompt-studio .studio-output,
+html[data-theme="light"] .prompt-studio .request-input,
+html[data-theme="light"] .prompt-studio .brief-field select,
+html[data-theme="light"] .prompt-studio .brief-field textarea,
+html[data-theme="light"] .prompt-studio .examples button,
+html[data-theme="light"] .prompt-studio .new-brief,
+html[data-theme="light"] .prompt-studio .spe-ghost {
+  border-color: #b7af9f;
+}
+html[data-theme="light"] .prompt-studio .studio-output {
+  background: #f7f4ee;
+}
+html[data-theme="light"] .prompt-studio .output-empty li,
+html[data-theme="light"] .prompt-studio .empty-footer,
+html[data-theme="light"] .prompt-studio .output-tabs,
+html[data-theme="light"] .prompt-studio .brief-details,
+html[data-theme="light"] .prompt-studio .semantic-readout details,
+html[data-theme="light"] .prompt-studio .review-decisions li {
+  border-color: #c4bbaa;
+}
+html[data-theme="light"] .prompt-studio .semantic-readout p {
+  border-left-color: #b7af9f;
+}
+html[data-theme="light"] .prompt-studio .request-input,
+html[data-theme="light"] .prompt-studio .brief-field select,
+html[data-theme="light"] .prompt-studio .brief-field textarea {
+  background: #fffcf7;
+}
+html[data-theme="light"] .prompt-studio .request-input::placeholder,
+html[data-theme="light"] .prompt-studio .brief-field textarea::placeholder {
+  color: #5c6573;
+}
+html[data-theme="light"] .prompt-studio .review-intent {
+  background: #f3eee4;
+  border-left-color: #3d5a9a;
+}
+html[data-theme="light"] .prompt-studio .review-questions {
+  background: transparent;
+  border-color: #c4bbaa;
 }

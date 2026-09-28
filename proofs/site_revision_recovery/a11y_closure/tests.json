@@ -1,0 +1,45 @@
+{
+  "base": "670db9dfa9e61f4ef65ece4cf4e6a3fc88692ba2",
+  "mode": "SURGICAL ACCESSIBILITY FIX ONLY",
+  "nav": {
+    "before": { "painted": "#6e737b", "background": "#f4f1ea", "opacity": 0.72, "ratio": 4.23 },
+    "after": { "painted": "#5f656f", "background": "#f4f1ea", "opacity": 0.8, "ratio": 5.204 },
+    "active": { "painted": "#2a4a8a", "background": "#f4f1ea", "opacity": 1, "ratio": 7.614 }
+  },
+  "footer": {
+    "before": { "painted": "#e8eefc", "background": "#ffffff", "ratio": 1.162 },
+    "after": { "painted": "#5b6472", "background": "#ffffff", "ratio": 5.982 }
+  },
+  "axe": {
+    "home-light-page": [],
+    "home-dark-page": []
+  },
+  "commands": {
+    "test:hero-story": "62 hero checks passed",
+    "test:dot-pattern": "PASS native layered DotPattern contract",
+    "test:theme-routes": "PASS theme+routes smoke",
+    "test:final-craft": "PASS final craft presentation contracts",
+    "copy-check": { "candidates": 2361, "unreviewed": 0, "violations": [] },
+    "tsc": "npx tsc --noEmit exit 0",
+    "vite-build": "exit 0"
+  },
+  "overflow": [
+    { "theme": "light", "width": 320, "overflow": false },
+    { "theme": "light", "width": 390, "overflow": false },
+    { "theme": "light", "width": 768, "overflow": false },
+    { "theme": "light", "width": 1024, "overflow": false },
+    { "theme": "light", "width": 1440, "overflow": false },
+    { "theme": "light", "width": 1920, "overflow": false },
+    { "theme": "dark", "width": 320, "overflow": false },
+    { "theme": "dark", "width": 390, "overflow": false },
+    { "theme": "dark", "width": 768, "overflow": false },
+    { "theme": "dark", "width": 1024, "overflow": false },
+    { "theme": "dark", "width": 1440, "overflow": false },
+    { "theme": "dark", "width": 1920, "overflow": false }
+  ],
+  "zoom200": [
+    { "theme": "light", "overflow": false },
+    { "theme": "dark", "overflow": false }
+  ],
+  "protectedLogic": "UNCHANGED"
+}
