@@ -27,7 +27,9 @@ export function PrivacyProof() {
           <h2>Media stays on device</h2>
           <p>
             Image, screenshot, and video notes are computed here with simple
-            pixel checks. No paid vision service is required for this preview.
+            pixel checks. Optional same-origin model packs may load from this
+            site when you use image helpers — no paid vision service is
+            required for this preview.
           </p>
         </article>
         <article>
@@ -38,17 +40,19 @@ export function PrivacyProof() {
           </p>
         </article>
         <article>
-          <h2>Website fetch is honest</h2>
+          <h2>Website input is honest</h2>
           <p>
-            If a site blocks the browser, SPE shows clear fallbacks — upload the
-            page HTML, a screenshot, or a short description.
+            Remote website addresses are kept as references under this product&apos;s
+            same-origin network policy — SPE does not fetch arbitrary remote page
+            HTML. Upload page HTML, a screenshot, or a short description when you
+            need grounding.
           </p>
         </article>
         <article>
           <h2>History only if you ask</h2>
           <p>
-            Optional history stays in this browser. Turn it off or clear it
-            anytime from My Work.
+            Optional history stays in this browser&apos;s storage. Turn it off or clear it
+            anytime from My Work. Theme preference may also be stored locally.
           </p>
         </article>
         <article>
@@ -68,11 +72,11 @@ export function PrivacyProof() {
         <article>
           <h2>When something can leave this page</h2>
           <p>
-            Reading a website contacts the address you type. Speech uses your
-            browser&apos;s own listening tools, which may use that browser&apos;s
-            service. SPE does not keep the audio. If you copy a prompt into
-            another product, that product&apos;s rules apply — SPE does not send
-            it for you.
+            Network use stays same-origin for this product — the local engine and
+            optional model packs on this site. Speech uses your browser&apos;s
+            own listening tools, which may use that browser&apos;s service. SPE does
+            not keep the audio. If you copy a prompt into another product, that
+            product&apos;s rules apply — SPE does not send it for you.
           </p>
         </article>
       </div>
@@ -85,9 +89,11 @@ export function PrivacyProof() {
           </li>
           <li>
             Static <code>_headers</code> ship Content-Security-Policy (including{" "}
+            <code>connect-src &apos;self&apos;</code>,{" "}
             <code>frame-ancestors &apos;none&apos;</code>),{" "}
             <code>X-Content-Type-Options: nosniff</code>, and{" "}
             <code>Referrer-Policy: no-referrer</code> for hosts that honor them.
+            Remote website HTML fetch is therefore not generally authorized.
           </li>
           <li>
             Apex parking pages (for example a <code>/lander</code> redirect) are

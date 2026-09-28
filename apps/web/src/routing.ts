@@ -76,7 +76,7 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     path: "/code",
     title: "Screenshot to Code Prompt — SPE Prompt Engineering Tool",
     description:
-      "Upload a UI screenshot and get starter scaffolds and a structured prompt for HTML, React, SwiftUI, Flutter, and more.",
+      "Upload a UI screenshot and get an implementation prompt plus starter scaffolds for HTML, React, SwiftUI, Flutter, and more — for use with a coding AI, not an in-product compiler.",
   },
   lab: {
     path: "/daily-lab",

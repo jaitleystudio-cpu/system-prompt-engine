@@ -37,7 +37,9 @@
     "bench:vision-human": "node scripts/bench-standard-vs-lite-human.mjs",
     "test:screenshot-real": "node scripts/test-screenshot-real-fidelity.mjs",
     "capture:real-ui": "node scripts/capture-real-ui-fixtures.mjs",
-    "test:lab-acquisition": "node scripts/test-lab-acquisition.mjs"
+    "test:lab-acquisition": "node scripts/test-lab-acquisition.mjs",
+    "test:truth-privacy": "node scripts/test-truth-privacy-closure.mjs",
+    "test:home-bound": "node scripts/test-home-bound-browser.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",

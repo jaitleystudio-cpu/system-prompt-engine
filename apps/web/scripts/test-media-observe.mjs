@@ -182,6 +182,13 @@ assert.match(
     status: "ok", url: "https://example.test", finalUrl: "https://example.test/x",
     title: brief.title, description: null, textExcerpt: brief.textExcerpt,
     buildBrief: brief.buildBrief, notes: ["n"],
+    sourceBounds: {
+      original_size: 100,
+      used_size: 100,
+      truncated: false,
+      limit: 200_000,
+      reason: null,
+    },
   }),
   /UNTRUSTED_SOURCE/,
 );
@@ -200,8 +207,10 @@ const limited = await url.readResponseBounded({
       };
     },
   },
+  headers: { get() { return null; } },
 }, 150);
-assert.ok(limited.length <= 150);
+assert.ok(limited.text.length <= 150);
+assert.ok(limited.usedBytes <= 150);
 
 
 // --- PREDEPLOY: all 6 scaffolds must encode numeric region bounds ---

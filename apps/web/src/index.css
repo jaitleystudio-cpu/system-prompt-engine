@@ -557,6 +557,48 @@ html[data-theme="dark"] .hero-copy h1 {
 .request-input::placeholder {
   color: #92a1bc;
 }
+.spe-bound-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  margin: 0.45rem 0 0.85rem;
+}
+.spe-bound-meter {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #9eabc2;
+}
+.spe-bound-meter.is-near {
+  color: #e8c27a;
+}
+.spe-bound-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #8b98b0;
+}
+.spe-bound-hint a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.spe-bound-notice {
+  margin: 0.35rem 0 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #e8c27a;
+}
+html[data-theme="light"] .spe-bound-meter,
+html[data-theme="light"] .spe-bound-hint {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-bound-meter.is-near,
+html[data-theme="light"] .spe-bound-notice {
+  color: #8a5a12;
+}
 .examples {
   display: flex;
   gap: 6px;

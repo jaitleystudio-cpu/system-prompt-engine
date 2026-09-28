@@ -71,6 +71,15 @@ export type CodeScaffold = {
   prompt: string;
 };
 
+/** Provenance for intentionally bounded URL/HTML source material. */
+export type SourceBounds = {
+  original_size: number;
+  used_size: number;
+  truncated: boolean;
+  limit: number;
+  reason: string | null;
+};
+
 export type UrlIngestResult =
   | {
       status: "ok";
@@ -81,6 +90,15 @@ export type UrlIngestResult =
       textExcerpt: string;
       buildBrief: string | null;
       notes: string[];
+      sourceBounds: SourceBounds;
+    }
+  | {
+      /** Remote page HTML was not read; URL kept as a reference only. */
+      status: "url_reference_only";
+      url: string;
+      message: string;
+      reason: "csp_connect_src_self" | "remote_fetch_unavailable";
+      fallbacks: string[];
     }
   | {
       status: "cors_blocked" | "network_error" | "invalid_url" | "timeout" | "aborted";

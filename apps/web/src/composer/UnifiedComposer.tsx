@@ -28,6 +28,13 @@ import {
   urlResultToPromptBlock,
 } from "../media/urlIngest";
 import type { CodeScaffold, UrlIngestResult } from "../media/types";
+import {
+  DESIRED_OUTPUT_MAX_CHARS,
+  EXAMPLE_MAX_CHARS,
+  applyTextBound,
+  formatCharCount,
+  nearLimit,
+} from "../input/boundedText";
 
 export type ComposerMode =
   | "text"
@@ -59,10 +66,14 @@ const MODES: { id: ComposerMode; label: string; hint: string }[] = [
   {
     id: "screenshot",
     label: "Screenshot → code",
-    hint: "Source, layout, target, scaffold, compare",
+    hint: "Build an implementation prompt and starter scaffolds for a coding AI — not an in-product compiler",
   },
   { id: "video", label: "Video", hint: "Preview, timeline, and scenes — no invented audio" },
-  { id: "url", label: "URL", hint: "Read a page here, or upload if blocked" },
+  {
+    id: "url",
+    label: "URL",
+    hint: "Keep a URL as a reference, or upload HTML when you need page grounding",
+  },
 ];
 const EXAMPLE_MODE = {
   id: "example",
@@ -377,10 +388,28 @@ export function UnifiedComposer({
   const onUrlFetch = async () => {
     const { ac, isCurrent } = beginOp();
     setError("");
-    setStatus("Fetching URL in this browser…");
+    setStatus("Checking URL against this browser’s network policy…");
     const result = await ingestUrl(urlInput, { signal: ac.signal });
     if (!isCurrent()) return;
     setUrlResult(result);
+    if (result.status === "url_reference_only") {
+      const block = urlResultToPromptBlock(result);
+      if (block) {
+        appendBlock(
+          [
+            "URL → reference request:",
+            "Treat the URL below as a reference only. Page content was not read. Do not invent the page.",
+            "",
+            block,
+          ].join("\n"),
+        );
+      }
+      setError("");
+      setStatus(
+        "URL kept as a reference — remote page content was not read. Upload HTML or a screenshot for grounding.",
+      );
+      return;
+    }
     if (result.status !== "ok") {
       setError(result.message);
       setStatus("URL could not be read — try a fallback below. Nothing was added to your idea.");
@@ -398,9 +427,11 @@ export function UnifiedComposer({
       );
     }
     setStatus(
-      result.finalUrl !== result.url
-        ? `URL content added (followed to ${result.finalUrl}).`
-        : "URL content added (direct fetch).",
+      result.sourceBounds.truncated
+        ? `URL notes added with a bounded excerpt (${result.sourceBounds.used_size} of ${result.sourceBounds.original_size} bytes).`
+        : result.finalUrl !== result.url
+          ? `URL content added (followed to ${result.finalUrl}).`
+          : "URL content added (allowed same-origin fetch).",
     );
   };
 
@@ -422,7 +453,11 @@ export function UnifiedComposer({
           ].join("\n"),
         );
       }
-      setStatus("Local HTML file added. No network request.");
+      setStatus(
+        result.status === "ok" && result.sourceBounds.truncated
+          ? `Local HTML added with a bounded excerpt (${result.sourceBounds.used_size} of ${result.sourceBounds.original_size} bytes). No network request.`
+          : "Local HTML file added. No network request.",
+      );
     } catch (e) {
       if (!isCurrent()) return;
       setError(e instanceof Error ? e.message : "Could not read this HTML file.");
@@ -553,15 +588,29 @@ export function UnifiedComposer({
             <span>Example / user supplied</span>
             <textarea
               rows={8}
-              maxLength={12000}
+              aria-describedby="example-bound-meter"
               value={desiredExample}
               disabled={disabled}
               placeholder="Paste a short example of the shape, tone, or level of detail you want."
-              onChange={(event) =>
-                onDesiredExampleChange?.(event.target.value)
-              }
+              onChange={(event) => {
+                const next = applyTextBound(
+                  event.target.value,
+                  EXAMPLE_MAX_CHARS,
+                  { fieldLabel: "Example" },
+                );
+                onDesiredExampleChange?.(next.value);
+                if (next.notice) setStatus(next.notice);
+              }}
             />
           </label>
+          <p
+            id="example-bound-meter"
+            className={`spe-bound-meter${nearLimit(desiredExample.length, EXAMPLE_MAX_CHARS) ? " is-near" : ""}`}
+            aria-live="polite"
+          >
+            {formatCharCount(desiredExample.length)} /{" "}
+            {formatCharCount(EXAMPLE_MAX_CHARS)} characters
+          </p>
           <p className="spe-example-note">
             SPE uses this only as a pattern for the result. It is not treated as
             verified truth or as instructions to follow.
@@ -695,6 +744,11 @@ export function UnifiedComposer({
           {scaffolds.length > 0 && (
             <div className="spe-scaffolds">
               <h3>Scaffolds (honest starters — not pixel-perfect)</h3>
+              <p className="spe-example-note">
+                SPE produces an implementation prompt and starter scaffolds for a
+                coding AI or tool. It does not compile or run the target app in
+                this product.
+              </p>
               <div className="spe-scaffold-tabs" role="group" aria-label="Framework">
                 {scaffolds.map((s) => (
                   <button
@@ -804,7 +858,7 @@ export function UnifiedComposer({
               disabled={disabled || !urlInput.trim()}
               onClick={() => void onUrlFetch()}
             >
-              Fetch in browser
+              Use URL reference
             </button>
             <label className="spe-ghost file-btn">
               Upload HTML
@@ -821,11 +875,38 @@ export function UnifiedComposer({
             </label>
           </div>
           <p className="spe-composer-url-note spe-xray-note">
-            Some websites don&apos;t allow direct reading from another site. If
-            that happens, upload the page HTML or a screenshot instead.
-            Failures stay in this panel — they are not added to your idea.
+            Under this product&apos;s same-origin network policy, SPE does not
+            fetch arbitrary remote page HTML. A URL is kept as a reference so you
+            can still build a prompt. Upload page HTML or a screenshot when you
+            need grounding. Failures stay in this panel unless a reference is
+            added.
           </p>
-          {urlResult && urlResult.status !== "ok" && (
+          {urlResult && urlResult.status === "url_reference_only" && (
+            <p className="spe-bound-notice" role="status" aria-live="polite">
+              URL reference only — remote page content was not read.
+            </p>
+          )}
+          {urlResult &&
+            urlResult.status === "ok" &&
+            urlResult.sourceBounds.truncated && (
+              <p className="spe-bound-notice" role="status" aria-live="polite">
+                Only the first {formatCharCount(urlResult.sourceBounds.used_size)}{" "}
+                of {formatCharCount(urlResult.sourceBounds.original_size)} bytes
+                were used for this source (limit{" "}
+                {formatCharCount(urlResult.sourceBounds.limit)}). Full source was
+                not preserved.
+              </p>
+            )}
+          {urlResult &&
+            urlResult.status !== "ok" &&
+            urlResult.status !== "url_reference_only" && (
+            <ul className="spe-fallbacks">
+              {urlResult.fallbacks.map((f) => (
+                <li key={f}>{f}</li>
+              ))}
+            </ul>
+          )}
+          {urlResult && urlResult.status === "url_reference_only" && (
             <ul className="spe-fallbacks">
               {urlResult.fallbacks.map((f) => (
                 <li key={f}>{f}</li>
@@ -853,15 +934,29 @@ export function UnifiedComposer({
             <span id="desired-output-title">Desired output</span>
             <textarea
               rows={3}
-              maxLength={12000}
+              aria-describedby="desired-bound-meter"
               value={desiredOutput}
               disabled={disabled}
               placeholder="Describe what the finished result should look like and how you will know it works."
-              onChange={(event) =>
-                onDesiredOutputChange?.(event.target.value)
-              }
+              onChange={(event) => {
+                const next = applyTextBound(
+                  event.target.value,
+                  DESIRED_OUTPUT_MAX_CHARS,
+                  { fieldLabel: "Desired output" },
+                );
+                onDesiredOutputChange?.(next.value);
+                if (next.notice) setStatus(next.notice);
+              }}
             />
           </label>
+          <p
+            id="desired-bound-meter"
+            className={`spe-bound-meter${nearLimit(desiredOutput.length, DESIRED_OUTPUT_MAX_CHARS) ? " is-near" : ""}`}
+            aria-live="polite"
+          >
+            {formatCharCount(desiredOutput.length)} /{" "}
+            {formatCharCount(DESIRED_OUTPUT_MAX_CHARS)} characters
+          </p>
           <p>SPE keeps this as a requirement for the finished result.</p>
         </section>
       )}
