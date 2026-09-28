@@ -12,6 +12,7 @@ pub mod sha256_lite;
 pub mod grounding;
 pub mod protocols;
 pub mod k3;
+pub mod effect;
 pub mod requirements;
 
 use serde::Serialize;

@@ -381,8 +381,8 @@ fn envelope(
     inputs_digest: String,
     task_resolved: Value,
     requirement_graph: Value,
-) -> Value {
-    json!({
+) -> Result<Value, SpeError> {
+    let mut body = json!({
         "schema_version": SCHEMA_VERSION,
         "selector_version": SELECTOR_VERSION,
         "selection_id": selection_id,
@@ -406,7 +406,12 @@ fn envelope(
         "inputs_digest": inputs_digest,
         "task_resolved": task_resolved,
         "requirement_graph": requirement_graph,
-    })
+    });
+    let plan = crate::effect::bind(&body)?;
+    body.as_object_mut()
+        .expect("envelope object")
+        .insert("prompt_effect_plan".to_string(), plan);
+    Ok(body)
 }
 
 fn closed(
@@ -430,7 +435,7 @@ fn closed(
     });
     let selection_id = digest(&payload, "tsel-")?;
     let notes_out = payload.get("notes").and_then(|v| v.as_array()).cloned().unwrap_or_default();
-    Ok(envelope(
+    envelope(
         disposition,
         selection_id,
         Value::Null,
@@ -445,7 +450,7 @@ fn closed(
         inputs_digest,
         task_resolved,
         requirement_graph.clone(),
-    ))
+    )
 }
 
 fn strategy_of(
@@ -719,7 +724,7 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
     let techniques_out = payload.get("techniques").and_then(|v| v.as_array()).cloned().unwrap_or_default();
     let just_out = payload.get("justifications").and_then(|v| v.as_array()).cloned().unwrap_or_default();
     let deferred_out = payload.get("deferred_techniques").and_then(|v| v.as_array()).cloned().unwrap_or_default();
-    Ok(envelope(
+    envelope(
         disposition,
         selection_id,
         Value::String(plan_id),
@@ -734,12 +739,15 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
         inputs_digest,
         resolved,
         requirement_graph,
-    ))
+    )
 }
 
 pub fn evaluate(input: &Value) -> Result<Value, SpeError> {
     if !input.is_object() {
         return Err(SpeError::new("PORTABILITY_INVALID_FIXTURE", "k3 input must be an object"));
+    }
+    if input.get("op").and_then(|v| v.as_str()) == Some("bind") {
+        return crate::effect::bind(input.get("selection").unwrap_or(&Value::Null));
     }
     select(input)
 }

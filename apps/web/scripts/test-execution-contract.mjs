@@ -32,7 +32,7 @@ const envelope = runtime.buildAbiFixture({
   unknowns: lens.unknowns,
   conflicts: lens.conflicts,
 });
-const rendered = runtime.renderPromptArtifact({
+const rendered = runtime.renderNonProductionEnvelopePreview({
   userRequest: "Plan a careful product launch.",
   category: "Business",
   target: "any",

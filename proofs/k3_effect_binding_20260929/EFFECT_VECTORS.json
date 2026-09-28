@@ -1,0 +1,994 @@
+[
+  {
+    "id": "N01",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "DIRECT"
+    ],
+    "sections": [
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N02",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "USE_USER_EXAMPLES"
+    ],
+    "sections": [
+      "USE_USER_EXAMPLES"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-84163cffe156a5b3f73580377c9085e018a0fd19f297b074c91160a977cc9e51",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N03",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "ROLE_CALIBRATION"
+    ],
+    "sections": [
+      "ROLE_CALIBRATION"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-81a169b5220f2f4ebfff8df8c8361e491d42491fdb413a3bd2ab041403a0df51",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N04",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "ROLE_CALIBRATION"
+    ],
+    "sections": [
+      "ROLE_CALIBRATION"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N05",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "USE_CONTEXT"
+    ],
+    "sections": [
+      "USE_CONTEXT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N06",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "STEP_BACK"
+    ],
+    "sections": [
+      "STEP_BACK"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N07",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "DECOMPOSE"
+    ],
+    "sections": [
+      "DECOMPOSE"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N08",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "ADD_GROUNDING_CONTRACT"
+    ],
+    "sections": [
+      "ADD_GROUNDING_CONTRACT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N09",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "CRITIQUE_REVISE_ONCE"
+    ],
+    "sections": [
+      "CRITIQUE_REVISE_ONCE"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N10",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "STRUCTURED_OUTPUT"
+    ],
+    "sections": [
+      "STRUCTURED_OUTPUT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-c3bbacbac821804be39352508b4eebe23ce4f4e8a6a329654c4dce17c5f96603",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N11",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "USE_CONTEXT",
+      "DIRECT"
+    ],
+    "sections": [
+      "USE_CONTEXT",
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N12",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "DECOMPOSE",
+      "DIRECT"
+    ],
+    "sections": [
+      "DECOMPOSE",
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N13",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "CRITIQUE_REVISE_ONCE",
+      "DIRECT"
+    ],
+    "sections": [
+      "CRITIQUE_REVISE_ONCE",
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N14",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "ADD_GROUNDING_CONTRACT",
+      "STEP_BACK",
+      "DIRECT"
+    ],
+    "sections": [
+      "ADD_GROUNDING_CONTRACT",
+      "STEP_BACK",
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N15",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "STRUCTURED_OUTPUT",
+      "DIRECT"
+    ],
+    "sections": [
+      "STRUCTURED_OUTPUT",
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-c3bbacbac821804be39352508b4eebe23ce4f4e8a6a329654c4dce17c5f96603",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N16",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "ROLE_CALIBRATION",
+      "STEP_BACK",
+      "DIRECT"
+    ],
+    "sections": [
+      "ROLE_CALIBRATION",
+      "STEP_BACK",
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-81a169b5220f2f4ebfff8df8c8361e491d42491fdb413a3bd2ab041403a0df51",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N17",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "USE_CONTEXT",
+      "STEP_BACK",
+      "DIRECT"
+    ],
+    "sections": [
+      "USE_CONTEXT",
+      "STEP_BACK",
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N18",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "DECOMPOSE",
+      "CRITIQUE_REVISE_ONCE",
+      "DIRECT"
+    ],
+    "sections": [
+      "DECOMPOSE",
+      "CRITIQUE_REVISE_ONCE",
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N19",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "ADD_GROUNDING_CONTRACT",
+      "STRUCTURED_OUTPUT",
+      "DECOMPOSE"
+    ],
+    "sections": [
+      "ADD_GROUNDING_CONTRACT",
+      "STRUCTURED_OUTPUT",
+      "DECOMPOSE"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-c3bbacbac821804be39352508b4eebe23ce4f4e8a6a329654c4dce17c5f96603",
+    "notes": [
+      "BOUND",
+      "BUDGET_TRUNCATED_MAX_3"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N20",
+    "kind": "normal",
+    "mode": "select",
+    "disposition": "BOUND",
+    "operations": [
+      "DIRECT"
+    ],
+    "sections": [
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N21",
+    "kind": "normal",
+    "mode": "select",
+    "disposition": "BOUND",
+    "operations": [
+      "ADD_GROUNDING_CONTRACT",
+      "STEP_BACK",
+      "DIRECT"
+    ],
+    "sections": [
+      "ADD_GROUNDING_CONTRACT",
+      "STEP_BACK",
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-c1863c5e1b4948f39f0b84864f5b2c7ce44b8abfca4a7b7ef5fe3bc462f63520",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N22",
+    "kind": "normal",
+    "mode": "select",
+    "disposition": "BOUND",
+    "operations": [
+      "DIRECT"
+    ],
+    "sections": [
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-95a19f9fc5dcb84e45740367ffd66663f14c43d042e12313b204a7f5bc32a533",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N23",
+    "kind": "normal",
+    "mode": "select",
+    "disposition": "BOUND",
+    "operations": [
+      "DIRECT"
+    ],
+    "sections": [
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-1cd357e630402db34e8dff5ca435c668c52a918f347d1dc83bf5287015f9915e",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N24",
+    "kind": "normal",
+    "mode": "select",
+    "disposition": "BOUND",
+    "operations": [
+      "DIRECT"
+    ],
+    "sections": [
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-6b910beba6573a6e892f6f960729c06cc2c8ff451b01e8227b64463b1350b9e8",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N25",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "USE_USER_EXAMPLES",
+      "USE_CONTEXT"
+    ],
+    "sections": [
+      "USE_USER_EXAMPLES",
+      "USE_CONTEXT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-84163cffe156a5b3f73580377c9085e018a0fd19f297b074c91160a977cc9e51",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N26",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "STRUCTURED_OUTPUT",
+      "CRITIQUE_REVISE_ONCE"
+    ],
+    "sections": [
+      "STRUCTURED_OUTPUT",
+      "CRITIQUE_REVISE_ONCE"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-c3bbacbac821804be39352508b4eebe23ce4f4e8a6a329654c4dce17c5f96603",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N27",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "DECOMPOSE",
+      "ADD_GROUNDING_CONTRACT"
+    ],
+    "sections": [
+      "DECOMPOSE",
+      "ADD_GROUNDING_CONTRACT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N28",
+    "kind": "normal",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "STEP_BACK",
+      "USE_CONTEXT",
+      "ROLE_CALIBRATION"
+    ],
+    "sections": [
+      "STEP_BACK",
+      "USE_CONTEXT",
+      "ROLE_CALIBRATION"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-81a169b5220f2f4ebfff8df8c8361e491d42491fdb413a3bd2ab041403a0df51",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N29",
+    "kind": "normal",
+    "mode": "select",
+    "disposition": "BOUND",
+    "operations": [
+      "DIRECT"
+    ],
+    "sections": [
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-c1620efe7ef4a7b24b4ffdb16b3d5ed4a0575d3f870f4b64f06bc3ba9a3f48ab",
+    "requirement_graph_digest": "rg-22b64edc63cad01a7d7727a09db7c6bfce2b7227a2b7804f8eb8a92b527d5e75",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "N30",
+    "kind": "normal",
+    "mode": "select",
+    "disposition": "BOUND",
+    "operations": [
+      "USE_USER_EXAMPLES"
+    ],
+    "sections": [
+      "USE_USER_EXAMPLES"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-84163cffe156a5b3f73580377c9085e018a0fd19f297b074c91160a977cc9e51",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A01",
+    "kind": "adversarial",
+    "mode": "bind",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "REFUSED",
+      "NO_SELECTION"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A02",
+    "kind": "adversarial",
+    "mode": "select",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "REFUSED",
+      "UNKNOWN"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A03",
+    "kind": "adversarial",
+    "mode": "bind",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-67e3a7d5424525a26cbcc21ca64167c4f5541d22e1184a6f48bbe9ed0cac7725",
+    "requirement_graph_digest": "rg-98ab812f7e950e9c16b32340d74356aa581b8b5133fa069054834a828c908b4d",
+    "notes": [
+      "REFUSED",
+      "CONFLICTED_GRAPH"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A04",
+    "kind": "adversarial",
+    "mode": "select",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-f512ec2b75533110a29fecc34ccf2f0a8fdb85eb3d3184db466d6d61189eab8f",
+    "notes": [
+      "REFUSED",
+      "NO_SELECTION"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A05",
+    "kind": "adversarial",
+    "mode": "select",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-dd1607d3bad0ef6694b9e663b769b9aae0c9f8ce66319fe6d58d6d3be17bbda6",
+    "notes": [
+      "REFUSED",
+      "NO_SELECTION"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A06",
+    "kind": "adversarial",
+    "mode": "select",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-3933d3bc70b11d5851f1f02c96a7170e8f145b746aaf1d207909693be93f1bc0",
+    "notes": [
+      "REFUSED",
+      "NO_SELECTION"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A07",
+    "kind": "adversarial",
+    "mode": "select",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-d3af77b5acdecc39c7ee2881d67a489f5e6f102e09ceaa1995ade530bf327d51",
+    "notes": [
+      "REFUSED",
+      "NO_SELECTION"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A08",
+    "kind": "adversarial",
+    "mode": "select",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-b9a1602d7f5530d8c6bd4bc2f60faca53d28fd736c769ce9919f33871173e52b",
+    "notes": [
+      "REFUSED",
+      "NO_SELECTION"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A09",
+    "kind": "adversarial",
+    "mode": "select",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-81816e40745ea21b87301d92294d592af24afb193bde91fd862f0882dae37728",
+    "notes": [
+      "REFUSED",
+      "NO_SELECTION"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A10",
+    "kind": "adversarial",
+    "mode": "select",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-e5e599fbbc67e224d89b8895545d9b8aa98fced0135ed70befa82195a00fc500",
+    "notes": [
+      "REFUSED",
+      "NO_SELECTION"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A11",
+    "kind": "adversarial",
+    "mode": "bind",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "REFUSED",
+      "INVALID_TECHNIQUE"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A12",
+    "kind": "adversarial",
+    "mode": "bind",
+    "disposition": "DEFERRED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "DEFERRED",
+      "EXAMPLES_REQUIRED_BUT_MISSING"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A13",
+    "kind": "adversarial",
+    "mode": "bind",
+    "disposition": "DEFERRED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-1931460ed0c8e2813a592d2b77ce3a09ac0098c468b40a61d51cc052b2a7a6c0",
+    "notes": [
+      "DEFERRED",
+      "STRUCTURED_OUTPUT_UNAUTHORIZED"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A14",
+    "kind": "adversarial",
+    "mode": "bind",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-84163cffe156a5b3f73580377c9085e018a0fd19f297b074c91160a977cc9e51",
+    "notes": [
+      "REFUSED",
+      "INCOMPATIBLE_TECHNIQUES"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A15",
+    "kind": "adversarial",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "ADD_GROUNDING_CONTRACT"
+    ],
+    "sections": [
+      "ADD_GROUNDING_CONTRACT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A16",
+    "kind": "adversarial",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "CRITIQUE_REVISE_ONCE"
+    ],
+    "sections": [
+      "CRITIQUE_REVISE_ONCE"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A17",
+    "kind": "adversarial",
+    "mode": "bind",
+    "disposition": "BOUND",
+    "operations": [
+      "DIRECT"
+    ],
+    "sections": [
+      "DIRECT"
+    ],
+    "renderable": true,
+    "protected_binding_digest": "pbind-9bf99c5c789ae9d17ede6e0b0048ccadcdcc5140ef7d77dfe8708002913c660d",
+    "requirement_graph_digest": "rg-8b1894bf648c381f86b7525d791de533bc6f4f4e0f3695484752f71ad36933f4",
+    "notes": [
+      "BOUND"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A18",
+    "kind": "adversarial",
+    "mode": "bind",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "REFUSED",
+      "INVALID_TECHNIQUE"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A19",
+    "kind": "adversarial",
+    "mode": "select",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-641c49c2f5250cc8cfb89423ee2662e1c088be84b6b4ecd184aee08c39d96c76",
+    "notes": [
+      "REFUSED",
+      "UNKNOWN"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  },
+  {
+    "id": "A20",
+    "kind": "adversarial",
+    "mode": "select",
+    "disposition": "REFUSED",
+    "operations": [],
+    "sections": [],
+    "renderable": false,
+    "protected_binding_digest": "pbind-bf4403e811a1c607f0fe18d55232648e75b58ec32d5a233e91572e763fa177e7",
+    "requirement_graph_digest": "rg-4da25791ad2b9f5f3315c8f5f83734d2fbc6620d05899e1cadcc106e5293106c",
+    "notes": [
+      "REFUSED",
+      "NO_SELECTION"
+    ],
+    "claims_pass": false,
+    "authority_escalation": false
+  }
+]

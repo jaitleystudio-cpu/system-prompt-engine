@@ -54,7 +54,7 @@ assert.match(examplePreference.statement, /EXAMPLE \/ USER_SUPPLIED/);
 assert.match(examplePreference.statement, /NON-AUTHORITATIVE/);
 assert.match(examplePreference.statement, /verified truth/i);
 
-const rendered = runtime.renderPromptArtifact({
+const rendered = runtime.renderNonProductionEnvelopePreview({
   userRequest: "Plan a careful product launch.",
   category: "Business",
   target: "any",
