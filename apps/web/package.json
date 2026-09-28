@@ -7,6 +7,7 @@
   "license": "MIT OR Apache-2.0",
   "scripts": {
     "copy-wasm": "node scripts/copy-wasm.mjs",
+    "wasm:build-canonical": "node ../../tools/wasm_canonical_build.mjs",
     "dev": "npm run copy-wasm && vite",
     "build": "npm run spe:copy-check && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173",

@@ -47,12 +47,25 @@ def test_daily_lab_is_premium_3d_with_finite_queue():
     assert "buildPrompt" in specimens
     assert "speArtifact" in specimens
     assert "interaction" in specimens
+    # Frozen copy contract (1a8ec2e): visible kicker is "Daily Lab".
+    # The 3D stage, 14-day queue, and date-deterministic picker stay.
+    assert "local-date deterministic" in specimens
+    assert "diff % DAILY_3D_QUEUE.length" in specimens
     lab = (WEB / "lab" / "DailyLab.tsx").read_text(encoding="utf-8")
     assert "Same date, same set" not in lab
     assert "PRODUCT_DIRECTION_MISMATCH" not in lab
     assert "FINITE_QUEUE" in lab
-    assert "Daily 3D Lab" in lab
+    assert 'className="spe-kicker">Daily Lab<' in lab
+    assert "Daily 3D Lab" not in lab
+    assert "spe-lab-3d" in lab
+    assert "specimensForDate(new Date(), 3)" in lab
+    assert "queueHonestyLine()" in lab
     assert "LabStage" in lab
+    routing = (WEB / "routing.ts").read_text(encoding="utf-8")
+    assert 'lab: "/daily-lab"' in routing
+    app = APP.read_text(encoding="utf-8")
+    assert 'view === "lab"' in app
+    assert "<DailyLab" in app
     assert (WEB / "lab" / "PromptGallery.tsx").is_file()
     gallery = (WEB / "lab" / "gallery" / "promptGallery.ts").read_text(encoding="utf-8")
     assert gallery.count('id: "gal-') >= 30
@@ -66,8 +79,22 @@ def test_unified_composer_and_nav_surfaces():
     assert "observeScreenshotIR" in composer
     assert "initialMode" in composer
     nav = (WEB / "layout" / "Nav.tsx").read_text(encoding="utf-8")
-    for label in ("Home", "Create", "Code", "Daily Lab", "My Work", "Privacy / Proof"):
+    # Frozen nav contract (1a8ec2e): the privacy destination is labeled "Privacy".
+    # Proof content stays on the privacy page, not in the nav label.
+    for label in ("Home", "Create", "Code", "Daily Lab", "My Work", "Capabilities", "Privacy"):
         assert label in nav
+    assert "Privacy / Proof" not in nav
+    assert '{ id: "privacy", label: "Privacy" }' in nav
+    assert "pathForView(link.id)" in nav
+    routing = (WEB / "routing.ts").read_text(encoding="utf-8")
+    assert 'privacy: "/privacy"' in routing
+    proof = (WEB / "pages" / "PrivacyProof.tsx").read_text(encoding="utf-8")
+    assert "Your thinking stays with you" in proof
+    assert 'className="spe-privacy-proof"' in proof
+    assert 'data-copy-depth="PROOF"' in proof
+    app = APP.read_text(encoding="utf-8")
+    assert 'view === "privacy"' in app
+    assert "<PrivacyProof" in app
     assert "Build my prompt" in nav
 
 
