@@ -10,9 +10,9 @@ export function Capabilities() {
       <p className="spe-kicker">Capabilities</p>
       <h1 id="capabilities-title">What SPE can do on this device</h1>
       <p className="spe-privacy-lede spe-capabilities-lede">
-        SPE is a free system prompt generator that prepares prompts in your
-        browser. These capabilities describe what the research preview actually
-        ships — not unproven ranking claims.
+        SPE prepares a prompt in your browser, then lets you review it. The
+        notes below say what this preview actually does. A worldwide ranking
+        is not proven.
       </p>
 
       <ol className="spe-capabilities-atlas" aria-label="Capability atlas">

@@ -25,6 +25,7 @@ type Props = {
 
 export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
   const todaySet = useMemo(() => specimensForDate(new Date(), 3), []);
+  const [paused, setPaused] = useState(false);
   const [activeId, setActiveId] = useState(
     () => specimenIdFromSearch() ?? todaySet[0]?.id,
   );
@@ -42,11 +43,12 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
   return (
     <section className="spe-lab spe-lab-3d" aria-labelledby="lab-title">
       <header className="spe-lab-head">
-        <p className="spe-kicker">Daily 3D Lab</p>
-        <h1 id="lab-title">Today&apos;s staged experience</h1>
+        <p className="spe-kicker">Daily Lab</p>
+        <h1 id="lab-title">Today&apos;s prompt, {todaysLabDateLabel()}</h1>
         <p>
-          A large interactive stage for {todaysLabDateLabel()} — materials,
-          lighting, camera, and a build prompt you can open cleanly in Create.
+          A small preview and a prompt seed you can open in Create. The same
+          short list repeats on a schedule. It is not a new random scene each
+          visit.
         </p>
         <p className="spe-muted" data-product-status="FINITE_QUEUE">
           {queueHonestyLine()}
@@ -61,7 +63,17 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
             }
           >
             <LabStageBoundary title={active.title}>
-              <LabStage specimen={active} />
+              <div className="spe-lab-stage-frame">
+                <LabStage specimen={active} paused={paused} />
+                <button
+                  type="button"
+                  className="spe-lab-pause"
+                  aria-pressed={paused}
+                  onClick={() => setPaused((value) => !value)}
+                >
+                  {paused ? "Play preview" : "Pause preview"}
+                </button>
+              </div>
             </LabStageBoundary>
           </Suspense>
           <article className="spe-lab-editorial" style={{ ["--lab-accent" as string]: active.accent }}>

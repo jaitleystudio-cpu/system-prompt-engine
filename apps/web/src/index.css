@@ -5288,8 +5288,9 @@ html[data-theme="light"] .hero-engine {
 .spe-create-sources-summary {
   list-style: none;
   cursor: pointer;
-  display: grid;
-  gap: 0.28rem;
+  /* Block, not grid: Chrome expands a grid summary's hit target across the
+     open details and steals clicks from controls above it. */
+  display: block;
   padding: 0.85rem 1rem;
   color: #d7dfed;
   font-size: 0.92rem;
@@ -7027,4 +7028,177 @@ html[data-theme="light"] .meaning-family {
 }
 html[data-theme="light"] .idea-brief {
   background: rgba(255, 252, 245, 0.72);
+}
+
+/* SPE full-site recovery — presentation and plain-English layout only.
+   Document scrolling is instant so the hero can pause as soon as it leaves
+   the screen. The hero's own scrollIntoView still requests smooth motion. */
+html {
+  scroll-behavior: auto;
+}
+html,
+body {
+  overflow-x: clip;
+}
+.spe-home-quiet {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 3rem;
+}
+.spe-home-quiet h2 {
+  max-width: 16ch;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0.4rem 0 1.75rem;
+}
+.spe-home-quiet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem 2rem;
+}
+.spe-home-quiet-grid article {
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+.spe-home-quiet-kicker {
+  margin: 0 0 0.45rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.spe-home-quiet-grid h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+.spe-home-quiet-grid p {
+  margin: 0;
+  color: var(--paper);
+  line-height: 1.55;
+}
+html[data-theme="light"] .spe-home-quiet-grid p {
+  color: #141820;
+}
+.spe-home-quiet-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.spe-code-steps {
+  margin: 0.4rem 0 0.8rem;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+.spe-code-steps li {
+  margin: 0;
+  line-height: 1.45;
+}
+.spe-contract-plain {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1.25rem;
+  margin: 0 0 1rem;
+}
+.spe-contract-plain div {
+  border-top: 1px solid var(--line);
+  padding-top: 0.45rem;
+}
+.spe-contract-plain dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.spe-contract-plain dd {
+  margin: 0.25rem 0 0;
+  line-height: 1.45;
+}
+.spe-export-help {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.spe-ws-advanced {
+  margin: 1.25rem 0 0;
+  border-top: 1px solid var(--line);
+  padding-top: 0.75rem;
+}
+.spe-ws-advanced summary {
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.spe-lab-stage-frame {
+  position: relative;
+}
+.spe-lab-stage {
+  max-height: 42vh;
+  min-height: 240px;
+}
+.spe-lab-preview em {
+  opacity: 1;
+  color: #c5d2e8;
+}
+html[data-theme="light"] .spe-lab-preview em {
+  color: #3a465c;
+}
+.spe-lab-pause {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  z-index: 2;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.45rem 0.8rem;
+}
+@media (max-width: 800px) {
+  .spe-create {
+    margin-top: 1.35rem;
+  }
+  .spe-create-head {
+    gap: 0.4rem;
+  }
+  .spe-create-head h1 {
+    font-size: 1.85rem;
+  }
+  .spe-create-thought,
+  .spe-create-head > p:not(.spe-kicker):not(.spe-create-thought) {
+    font-size: 0.92rem;
+    line-height: 1.4;
+  }
+  .spe-create .spe-field textarea {
+    min-height: 4.5rem;
+    height: 4.5rem;
+  }
+  .spe-create-rail {
+    gap: 0.65rem;
+    padding: 0.85rem;
+  }
+  .spe-home-quiet {
+    padding: 2.5rem 1rem 2rem;
+  }
+  .spe-home-quiet-grid,
+  .spe-contract-plain {
+    grid-template-columns: 1fr;
+  }
+  .spe-home-quiet h2 {
+    max-width: none;
+  }
+}
+@media (max-width: 420px) {
+  .spe-nav-burger,
+  .spe-build,
+  .spe-ghost,
+  .spe-theme-toggle,
+  .spe-lab-pause,
+  .spe-contract-presentation-btn {
+    min-height: 44px;
+  }
 }

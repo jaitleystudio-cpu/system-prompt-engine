@@ -182,6 +182,56 @@ export function ExecutionContractPanel({
           <p className="spe-contract-simple-status">
             {protocolOutput || record ? "Prepared" : "Not prepared"}
           </p>
+          <dl className="spe-contract-plain">
+            <div>
+              <dt>What SPE prepared</dt>
+              <dd>
+                {goalOk
+                  ? "Your goal is kept with this prompt."
+                  : "Add a goal, then build the prompt."}
+              </dd>
+            </div>
+            <div>
+              <dt>What is protected</dt>
+              <dd>
+                {constraintsOk
+                  ? "Limits you wrote stay attached to the prompt."
+                  : "Limits are not verified yet."}
+              </dd>
+            </div>
+            <div>
+              <dt>Permissions</dt>
+              <dd>
+                {authorityNone
+                  ? "Nothing is allowed to run on your behalf."
+                  : `Permission state: ${authority.status}`}
+              </dd>
+            </div>
+            <div>
+              <dt>Did anything run?</dt>
+              <dd>
+                {record?.executed
+                  ? "A run was recorded."
+                  : "Nothing has been executed."}
+              </dd>
+            </div>
+            <div>
+              <dt>Profile</dt>
+              <dd>{profileId}</dd>
+            </div>
+            <div>
+              <dt>Check status</dt>
+              <dd>
+                {conformance === "UNKNOWN"
+                  ? "Not checked yet. Unknown is not a pass."
+                  : conformance === "FAIL"
+                    ? "Blocked. This is not a pass."
+                    : conformance === "PASS"
+                      ? "The local check passed."
+                      : conformance}
+              </dd>
+            </div>
+          </dl>
           <ul className="spe-contract-simple-list">
             <li data-ok={goalOk ? "true" : "false"}>
               <span aria-hidden="true">{mark(goalOk)}</span>

@@ -1,0 +1,312 @@
+[
+  {
+    "name": "theme dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "no PNG or Canvas dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "PNG not fetched dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "six native fragments dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "five text steps dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "complete reduced-motion state dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "prompt visible dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "runtime dark/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "theme light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "no PNG or Canvas light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "PNG not fetched light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "six native fragments light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "five text steps light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "complete reduced-motion state light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "prompt visible light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "runtime light/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "theme system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "no PNG or Canvas system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "PNG not fetched system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "six native fragments system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "five text steps system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "complete reduced-motion state system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "prompt visible system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "system live dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "runtime system/dark",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "theme system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "no PNG or Canvas system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "PNG not fetched system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "six native fragments system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "five text steps system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "complete reduced-motion state system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "prompt visible system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "system live light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "runtime system/light",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "keyboard pause",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "pause freezes motion",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "pause freezes stage",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "play resumes",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "offscreen pauses",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "step navigation ideas",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "step navigation meaning",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "step navigation spe",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "step navigation plan",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "step navigation prompt",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "finite end and replay",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "replay starts at ideas",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "live reduced motion",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "layout 320",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"sceneHeight\":1040,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
+  },
+  {
+    "name": "layout 390",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"sceneHeight\":1040,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
+  },
+  {
+    "name": "layout 700",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"sceneHeight\":1040,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
+  },
+  {
+    "name": "layout 768",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"sceneHeight\":1040,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
+  },
+  {
+    "name": "layout 1024",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"sceneHeight\":1040,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
+  },
+  {
+    "name": "layout 1440",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"sceneHeight\":490,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
+  },
+  {
+    "name": "layout 1920",
+    "pass": true,
+    "detail": "{\"overflow\":false,\"sceneHeight\":570,\"artInHero\":true,\"captionBelowArt\":true,\"ctaInHero\":true}"
+  },
+  {
+    "name": "200% zoom",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "open tab title changes at midnight",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "title stable within same day",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "returning tab refreshes daily title",
+    "pass": true,
+    "detail": ""
+  },
+  {
+    "name": "all 31 headlines fit 320",
+    "pass": true,
+    "detail": "[]"
+  },
+  {
+    "name": "all 31 headlines fit 768",
+    "pass": true,
+    "detail": "[]"
+  },
+  {
+    "name": "all 31 headlines fit 1440",
+    "pass": true,
+    "detail": "[]"
+  },
+  {
+    "name": "all 31 headlines fit 1920",
+    "pass": true,
+    "detail": "[]"
+  }
+]

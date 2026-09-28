@@ -1,0 +1,15 @@
+apps/web/src/App.tsx
+apps/web/src/composer/UnifiedComposer.tsx
+apps/web/src/index.css
+apps/web/src/lab/DailyLab.tsx
+apps/web/src/lab/LabStage.tsx
+apps/web/src/landing/HomeQuiet.tsx
+apps/web/src/landing/SeoContent.tsx
+apps/web/src/layout/Nav.tsx
+apps/web/src/pages/Capabilities.tsx
+apps/web/src/pages/MyWork.tsx
+apps/web/src/pages/PrivacyProof.tsx
+apps/web/src/workspace/ExecutionContractPanel.tsx
+apps/web/src/workspace/Workspace.tsx
+tests/copy/reviewed-inventory.json
+proofs/site_revision_recovery/

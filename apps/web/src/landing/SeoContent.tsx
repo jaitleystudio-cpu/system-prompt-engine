@@ -14,15 +14,9 @@ export function SeoContent() {
           System prompt generator for ideas that need structure
         </h2>
         <p>
-          SPE is a free system prompt generator and AI prompt builder that runs
-          in your browser. Start with a rough idea; SPE helps you shape{" "}
-          <strong>meaning</strong>, arrange <strong>structure</strong>, and take
-          a clear <strong>prompt</strong> you can use with any model.
-        </p>
-        <p>
-          Unlike cloud-only prompt apps, your brief is prepared on this device.
-          Optional website or media helpers only run when you ask — never as a
-          silent background service.
+          SPE is a free system prompt generator. Start with a rough idea, review
+          the prompt, and choose where to use it. Optional website or media
+          helpers run only when you ask.
         </p>
         <ul className="spe-seo-links">
           <li>

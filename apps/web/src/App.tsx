@@ -42,7 +42,7 @@ import { SeoHead } from "./ui/SeoHead";
 import { DotPattern } from "./ui/DotPattern";
 import { SeoContent } from "./landing/SeoContent";
 import { Hero } from "./landing/Hero";
-import { ScrollStory } from "./landing/ScrollStory";
+import { HomeQuiet } from "./landing/HomeQuiet";
 import { Workspace } from "./workspace/Workspace";
 import { ReconstructionSummary } from "./workspace/ReconstructionSummary";
 import { ExecutionContractPanel } from "./workspace/ExecutionContractPanel";
@@ -816,10 +816,15 @@ export default function App() {
               onCopy={() => void onCopy()}
               onExport={onExportSpe}
             />
-            <ScrollStory
-              onOpenWorkspace={() => setView("workspace")}
-              demoRequest={userRequest || "write leave email"}
-              demoPrompt={rendered?.finalPrompt ?? null}
+            <HomeQuiet
+              onCreate={() => {
+                setView("create");
+                window.scrollTo(0, 0);
+              }}
+              onCode={() => {
+                setView("code");
+                window.scrollTo(0, 0);
+              }}
             />
             <SeoContent />
           </>
@@ -832,16 +837,34 @@ export default function App() {
               <p className="spe-kicker">{view === "code" ? "Code" : "Create"}</p>
               <h1 id="create-title">
                 {view === "code"
-                  ? "Turn a screenshot into a starting point"
-                  : "Shape a prompt you can trust"}
+                  ? "Start from a screenshot"
+                  : "Start with your idea"}
               </h1>
               {view === "create" ? (
-                <p className="spe-create-thought">There&apos;s more in your idea than fits in one sentence.</p>
-              ) : null}
+                <p className="spe-create-thought">
+                  Write the task, say what the result should look like, then
+                  build. Extra sources stay optional.
+                </p>
+              ) : (
+                <ol className="spe-code-steps">
+                  <li>
+                    <strong>What you upload.</strong> A clear screenshot of the
+                    screen you want to start from.
+                  </li>
+                  <li>
+                    <strong>What happens next.</strong> SPE notes the layout it
+                    can see and offers starter scaffolds you can compare.
+                  </li>
+                  <li>
+                    <strong>What you receive.</strong> A prompt and starter
+                    code. These are starting points, not a finished app.
+                  </li>
+                </ol>
+              )}
               <p>
                 {view === "code"
-                  ? "Upload a screenshot. SPE notes the layout it can see, then offers starter scaffolds you can compare — HTML, React, SwiftUI, Jetpack Compose, Flutter, or React Native."
-                  : "Create is the instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."}
+                  ? "Targets you can compare: HTML, React, SwiftUI, Jetpack Compose, Flutter, or React Native."
+                  : "You can type, speak, add a picture, a short video, or a web page. Your words stay in the idea while you switch."}
               </p>
             </header>
             {view === "create" && labAcquisition && (
@@ -935,16 +958,16 @@ export default function App() {
                 <pre tabIndex={0}>{rendered.finalPrompt}</pre>
                 <div className="spe-actions">
                   <button type="button" className="spe-build" onClick={() => void onCopy()}>
-                    Copy prompt
+                    Copy
                   </button>
                   <button type="button" className="spe-ghost" onClick={onExportSpe}>
-                    Download .spe
+                    .spe
                   </button>
                   <button type="button" className="spe-ghost" onClick={onExportJson}>
-                    Download JSON
+                    JSON
                   </button>
                   <button type="button" className="spe-ghost" onClick={onExportPdf}>
-                    Print / Save PDF
+                    PDF
                   </button>
                   <button
                     type="button"
@@ -954,6 +977,15 @@ export default function App() {
                     Open workspace
                   </button>
                 </div>
+                <ul className="spe-export-help">
+                  <li>Copy puts the prompt on your clipboard.</li>
+                  <li>.spe saves a file you can reopen here later.</li>
+                  <li>JSON saves the same work as plain data.</li>
+                  <li>
+                    Print / Save PDF is for printing. It does not restore the
+                    prompt.
+                  </li>
+                </ul>
               </section>
             )}
             {view === "create" && (contextProtocol || executionRecord) && (

@@ -484,29 +484,6 @@ export function UnifiedComposer({
       <p className="spe-composer-hint">
         {availableModes.find((item) => item.id === mode)?.hint}
       </p>
-      {showOutputControls && (
-        <section
-          className="spe-output-controls"
-          aria-labelledby="desired-output-title"
-        >
-          <label className="spe-field grow">
-            <span id="desired-output-title">Desired output</span>
-            <textarea
-              rows={3}
-              maxLength={12000}
-              value={desiredOutput}
-              disabled={disabled}
-              placeholder="Describe what the finished result should look like and how you will know it works."
-              onChange={(event) =>
-                onDesiredOutputChange?.(event.target.value)
-              }
-            />
-          </label>
-          <p>
-            SPE keeps this as a requirement for the finished result.
-          </p>
-        </section>
-      )}
       {mode === "screenshot" && (
         <ol className="spe-code-pipeline" aria-label="Code path">
           {(
@@ -865,6 +842,28 @@ export function UnifiedComposer({
             />
           </label>
         </div>
+      )}
+
+      {showOutputControls && mode !== "example" && (
+        <section
+          className="spe-output-controls"
+          aria-labelledby="desired-output-title"
+        >
+          <label className="spe-field grow">
+            <span id="desired-output-title">Desired output</span>
+            <textarea
+              rows={3}
+              maxLength={12000}
+              value={desiredOutput}
+              disabled={disabled}
+              placeholder="Describe what the finished result should look like and how you will know it works."
+              onChange={(event) =>
+                onDesiredOutputChange?.(event.target.value)
+              }
+            />
+          </label>
+          <p>SPE keeps this as a requirement for the finished result.</p>
+        </section>
       )}
 
       {status && (

@@ -1,6 +1,6 @@
 {
-  "generated": "2026-09-27T16:35:38.527Z",
-  "tipNote": "Hero-only plain-English editorial review and daily headlines; non-hero copy preserved. Founder visual acceptance pending.",
+  "generated": "2026-09-28T03:23:00.101Z",
+  "tipNote": "Full-site recovery: plain-English presentation on verified hero baseline ba116076. Founder visual acceptance pending.",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -55,6 +55,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Target"
+    },
+    {
+      "id": "0f9efdfe8ac8896a1ef5",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Start with your idea"
     },
     {
       "id": "136c897f42cefe08e4cd",
@@ -195,10 +201,22 @@
       "text": "prompt"
     },
     {
+      "id": "3aa5e8e1a524f7b5c284",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "A clear screenshot of the screen you want to start from."
+    },
+    {
       "id": "3b9119bb88ee18235de8",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "INVALID_JSON"
+    },
+    {
+      "id": "3df957eef29916124f4b",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "What happens next."
     },
     {
       "id": "3fa3766e0a7b3c1ef12f",
@@ -211,6 +229,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Rendered prompt"
+    },
+    {
+      "id": "44872d1cd4991e5b8c80",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Print / Save PDF is for printing. It does not restore the prompt."
     },
     {
       "id": "44de4510e3fe368e0715",
@@ -228,9 +252,7 @@
       "id": "478fb383375e8dd87a1f",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
-      "text": "Dismiss",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "Dismiss"
     },
     {
       "id": "4bf88485a045346d867a",
@@ -251,16 +273,16 @@
       "text": "Idea reopened with limits"
     },
     {
+      "id": "57bd55c188beb7d44ae5",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "PDF"
+    },
+    {
       "id": "5af658f6d7e3b12ec337",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Copy unavailable. Select the prompt text to copy it."
-    },
-    {
-      "id": "5d5c38df82354904e010",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "Create is the instrument — text, speech, image, video, or a website. Shape meaning, review structure, take a clear prompt with you."
     },
     {
       "id": "5fac66bc68641de542a8",
@@ -269,22 +291,28 @@
       "text": "System Prompt Engine · Your intent, carried forward."
     },
     {
+      "id": "62158bbfda6d631edffb",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE notes the layout it can see and offers starter scaffolds you can compare."
+    },
+    {
       "id": "62e2c1907783212490df",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "(prefers-reduced-motion: reduce)"
     },
     {
-      "id": "6353301a567ad50ead96",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "Copy prompt"
-    },
-    {
       "id": "6444faeffc5d2f8e5bb9",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Portable details restored. Review the summary before rebuilding."
+    },
+    {
+      "id": "648edfa31789543e5c63",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Targets you can compare: HTML, React, SwiftUI, Jetpack Compose, Flutter, or React Native."
     },
     {
       "id": "658ac960cc6d17c9514d",
@@ -353,6 +381,12 @@
       "text": "READY"
     },
     {
+      "id": "7436614a175c66690c27",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy"
+    },
+    {
       "id": "746878a55fb633ff8f05",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -389,10 +423,22 @@
       "text": "Print view opened. Choose Save as PDF in your browser."
     },
     {
+      "id": "7a81523625173229895b",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "JSON"
+    },
+    {
       "id": "7afde56135a2364ed450",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "ANY_AI"
+    },
+    {
+      "id": "7f1bc1bdca184cd33239",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy puts the prompt on your clipboard."
     },
     {
       "id": "805a78c34f49e090e945",
@@ -461,16 +507,16 @@
       "text": "home"
     },
     {
+      "id": "8e77d27d084262f8ca52",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "A prompt and starter code. These are starting points, not a finished app."
+    },
+    {
       "id": "8f659189392fffdfa675",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "artifact"
-    },
-    {
-      "id": "9080bffbad63524e1018",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "Upload a screenshot. SPE notes the layout it can see, then offers starter scaffolds you can compare — HTML, React, SwiftUI, Jetpack Compose, Flutter, or React Native."
     },
     {
       "id": "914e9fc796473af3861c",
@@ -503,12 +549,6 @@
       "text": "unknowns"
     },
     {
-      "id": "971f0ce15d9d65744ddd",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "Shape a prompt you can trust"
-    },
-    {
       "id": "985bf221171bdfb48453",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -527,16 +567,16 @@
       "text": "simple"
     },
     {
+      "id": "9ed5a86f8e551c9c7188",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "What you receive."
+    },
+    {
       "id": "a29844962efa06681eeb",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Prompt copied."
-    },
-    {
-      "id": "a610ba31f63c599c6333",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "Download .spe"
     },
     {
       "id": "a96bd0a6c6b46589f27b",
@@ -569,16 +609,22 @@
       "text": "COMPILING"
     },
     {
-      "id": "b22c35e74191357e511d",
+      "id": "b0e604fb0f4cf7d09def",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
-      "text": "Print / Save PDF"
+      "text": "JSON saves the same work as plain data."
     },
     {
       "id": "b276a96800dabfdd3b60",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "The current work remains unchanged."
+    },
+    {
+      "id": "b286f044e5f2635544c6",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Write the task, say what the result should look like, then build. Extra sources stay optional."
     },
     {
       "id": "b2986d15545f2376d918",
@@ -599,16 +645,22 @@
       "text": "USER_EDITED_INTENT"
     },
     {
-      "id": "b7b3b8dcaf31eb13b8fa",
+      "id": "b4108b58a4edc32aa55e",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
-      "text": "Turn a screenshot into a starting point"
+      "text": "You can type, speak, add a picture, a short video, or a web page. Your words stay in the idea while you switch."
     },
     {
       "id": "bd1870c81582b1573a91",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "undefined"
+    },
+    {
+      "id": "bd33dc91c470c3356ae5",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "What you upload."
     },
     {
       "id": "be3405770af64faefa5c",
@@ -665,10 +717,10 @@
       "text": "This older local history item contains the request, category, and target only. Review and rebuild before using it."
     },
     {
-      "id": "c7cc42d128b4e0b9c023",
+      "id": "c8b4efd8c5fffd7b3afe",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
-      "text": "Download JSON"
+      "text": ".spe saves a file you can reopen here later."
     },
     {
       "id": "ca1a6a4329f12f7febec",
@@ -722,9 +774,13 @@
       "id": "db1642150df07ac5afeb",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
-      "text": "Dismiss acquisition note",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "Dismiss acquisition note"
+    },
+    {
+      "id": "de7f563194709cbb4b78",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Start from a screenshot"
     },
     {
       "id": "df3553eafbc1aa77ad75",
@@ -761,12 +817,6 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "UNDERSTANDING"
-    },
-    {
-      "id": "e96bfb5fae1e342ccec9",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "There&apos;s more in your idea than fits in one sentence."
     },
     {
       "id": "ec352b07416677b6dded",
@@ -2263,18 +2313,6 @@
       "text": "Prefer typing? The transcript box below always works — speech is optional."
     },
     {
-      "id": "10106e496bf9beff2d57",
-      "file": "apps/web/src/lab/DailyLab.tsx",
-      "depth": "PRODUCT",
-      "text": "— materials, lighting, camera, and a build prompt you can open cleanly in Create."
-    },
-    {
-      "id": "101e29ace0de63d2f2f2",
-      "file": "apps/web/src/lab/DailyLab.tsx",
-      "depth": "PRODUCT",
-      "text": "Today&apos;s staged experience"
-    },
-    {
       "id": "1b8d1f4063a9ed632765",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
@@ -2299,16 +2337,34 @@
       "text": "Publish date"
     },
     {
-      "id": "3caf82acbd09b4ae2307",
+      "id": "678e13bcf3e581d6e10f",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": "Daily 3D Lab"
+      "text": "A small preview and a prompt seed you can open in Create. The same short list repeats on a schedule. It is not a new random scene each visit."
+    },
+    {
+      "id": "715159d731f37fb9d4ba",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Play preview"
+    },
+    {
+      "id": "8190ee1c6465b2ca8b6f",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Today&apos;s prompt,"
     },
     {
       "id": "9ba0c1555d3233c0d3d2",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
       "text": "Loading stage…"
+    },
+    {
+      "id": "a1d28cd30c79eb0f4c5a",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Daily Lab"
     },
     {
       "id": "ae0cd430e61ab94d0f40",
@@ -2335,10 +2391,10 @@
       "text": "Materials"
     },
     {
-      "id": "e24730b7dd0f5a104886",
+      "id": "c8f3762ca3652ba80a16",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
-      "text": "A large interactive stage for"
+      "text": "Pause preview"
     },
     {
       "id": "e2af8f117e93de3d4027",
@@ -3424,97 +3480,73 @@
       "id": "0d27cdc97adf75a05e52",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "From Prompt Gallery:",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "From Prompt Gallery:"
     },
     {
       "id": "233b99ba2119827fac35",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "buildPrompt",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "buildPrompt"
     },
     {
       "id": "2962b740ff68dc53feca",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "string",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "string"
     },
     {
       "id": "31126061929058273f16",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "AUTO_DERIVED_INTENT",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "AUTO_DERIVED_INTENT"
     },
     {
       "id": "39faf2e9f76e04d350ec",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "undefined",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "undefined"
     },
     {
       "id": "3d1fe332d8cb173c8e56",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "simple",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "simple"
     },
     {
       "id": "631168b90393b38991a0",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "editorialStory",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "editorialStory"
     },
     {
       "id": "7277aa69f4b1d8683e2c",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "/daily-lab",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "/daily-lab"
     },
     {
       "id": "9cec933b1df6ee774a6a",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "specimen",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "specimen"
     },
     {
       "id": "e3b1806156dd157af1cb",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "prompt_gallery",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "prompt_gallery"
     },
     {
       "id": "f557444daf908c4528a9",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "daily_3d",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "daily_3d"
     },
     {
       "id": "fc05fd8dfb19e5bb3889",
       "file": "apps/web/src/lab/labAcquisition.ts",
       "depth": "PRODUCT",
-      "text": "From Daily Lab:",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "From Daily Lab:"
     },
     {
       "id": "0cfb92da067fbae9bdf9",
@@ -3571,6 +3603,12 @@
       "text": "table"
     },
     {
+      "id": "a92aff081d729eba93e3",
+      "file": "apps/web/src/lab/LabStage.tsx",
+      "depth": "PRODUCT",
+      "text": "change"
+    },
+    {
       "id": "b272a6edc08d756f8738",
       "file": "apps/web/src/lab/LabStage.tsx",
       "depth": "PRODUCT",
@@ -3622,25 +3660,19 @@
       "id": "340cd2a2a543c3a47318",
       "file": "apps/web/src/lab/LabStageBoundary.tsx",
       "depth": "PRODUCT",
-      "text": "3D preview unavailable",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "3D preview unavailable"
     },
     {
       "id": "61a5b200aa54b8733f25",
       "file": "apps/web/src/lab/LabStageBoundary.tsx",
       "depth": "PRODUCT",
-      "text": "3D preview unavailable:",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "3D preview unavailable:"
     },
     {
       "id": "e0f80104c61b36ca99f4",
       "file": "apps/web/src/lab/LabStageBoundary.tsx",
       "depth": "PRODUCT",
-      "text": "3D preview unavailable on this device — the build prompt below still opens in Create.",
-      "reviewed": true,
-      "batch": "batch_g"
+      "text": "3D preview unavailable on this device — the build prompt below still opens in Create."
     },
     {
       "id": "8ee84f1049e0f1dc83db",
@@ -6307,6 +6339,84 @@
       "text": "YOUR IDEA, CONNECTED"
     },
     {
+      "id": "01eb368a1f9ca7147b51",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "Build a prompt in Create, or start from a screenshot in Code. Saved work stays on this device unless you export it."
+    },
+    {
+      "id": "17723802d47c8fbb75dc",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "After the story"
+    },
+    {
+      "id": "2b9838605d74fa12dc4d",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "A clear prompt, without another show."
+    },
+    {
+      "id": "316d162ccb37abeb6494",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "Start the task, or open a saved file later."
+    },
+    {
+      "id": "375edd74becbb0580f73",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "Preparation stays in this browser."
+    },
+    {
+      "id": "3aca70b9b527563617cf",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "Start from a screenshot"
+    },
+    {
+      "id": "554afca47ab24a227f3c",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "What you can do next"
+    },
+    {
+      "id": "5d28b84ee793b932e5ae",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE does not send your idea to an AI company to write the prompt. You decide whether to copy it, save a file, or take it somewhere else yourself."
+    },
+    {
+      "id": "9774ac849204885e9793",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "Build my prompt"
+    },
+    {
+      "id": "a820f1624c4f6dc0374e",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "Why it is different"
+    },
+    {
+      "id": "b000d542a9d797bdcd1c",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "Write what you want to do. SPE keeps your goal, the limits you set, and the questions still open, then shows a prompt you can review before you use it."
+    },
+    {
+      "id": "f6fe085dd6f5d3f0532d",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "What SPE does"
+    },
+    {
+      "id": "fca74a9cb810fed94131",
+      "file": "apps/web/src/landing/HomeQuiet.tsx",
+      "depth": "PRODUCT",
+      "text": "It turns a rough idea into a prompt you can read."
+    },
+    {
       "id": "0014fed211f55a770c35",
       "file": "apps/web/src/landing/ScrollStory.tsx",
       "depth": "PRODUCT",
@@ -6661,6 +6771,12 @@
       "text": "02 — A FILE THAT CARRIES YOUR THINKING"
     },
     {
+      "id": "0e57e55b2a17f50a1858",
+      "file": "apps/web/src/landing/SeoContent.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE is a free system prompt generator. Start with a rough idea, review the prompt, and choose where to use it. Optional website or media helpers run only when you ask."
+    },
+    {
       "id": "1064c2fd2eb326ddaac6",
       "file": "apps/web/src/landing/SeoContent.tsx",
       "depth": "PRODUCT",
@@ -6673,28 +6789,10 @@
       "text": "Screenshot-to-code prompt engineering tool"
     },
     {
-      "id": "1fc065b3b7d282aa59d4",
-      "file": "apps/web/src/landing/SeoContent.tsx",
-      "depth": "PRODUCT",
-      "text": ", arrange"
-    },
-    {
-      "id": "2702b5bca5bf856c953b",
-      "file": "apps/web/src/landing/SeoContent.tsx",
-      "depth": "PRODUCT",
-      "text": "you can use with any model."
-    },
-    {
       "id": "27206e80f9c4293248b5",
       "file": "apps/web/src/landing/SeoContent.tsx",
       "depth": "PRODUCT",
       "text": "My Work — prompts saved on device"
-    },
-    {
-      "id": "2b394cfd43bd99e020ce",
-      "file": "apps/web/src/landing/SeoContent.tsx",
-      "depth": "PRODUCT",
-      "text": ", and take a clear"
     },
     {
       "id": "3caf8833e9820e67fe54",
@@ -6703,40 +6801,10 @@
       "text": "System prompt generator for ideas that need structure"
     },
     {
-      "id": "4404ace4824043a1f912",
-      "file": "apps/web/src/landing/SeoContent.tsx",
-      "depth": "PRODUCT",
-      "text": "Unlike cloud-only prompt apps, your brief is prepared on this device. Optional website or media helpers only run when you ask — never as a silent background service."
-    },
-    {
-      "id": "579761d1a3ead01a5d7e",
-      "file": "apps/web/src/landing/SeoContent.tsx",
-      "depth": "PRODUCT",
-      "text": "SPE is a free system prompt generator and AI prompt builder that runs in your browser. Start with a rough idea; SPE helps you shape"
-    },
-    {
-      "id": "786f3e319efda746e08e",
-      "file": "apps/web/src/landing/SeoContent.tsx",
-      "depth": "PRODUCT",
-      "text": "structure"
-    },
-    {
       "id": "7c88d3d0ba6eb775cdcc",
       "file": "apps/web/src/landing/SeoContent.tsx",
       "depth": "PRODUCT",
       "text": "Browse Daily Lab prompt ideas"
-    },
-    {
-      "id": "8d8b42616aadb0aef531",
-      "file": "apps/web/src/landing/SeoContent.tsx",
-      "depth": "PRODUCT",
-      "text": "prompt"
-    },
-    {
-      "id": "e43dd71a8fb97f89de0c",
-      "file": "apps/web/src/landing/SeoContent.tsx",
-      "depth": "PRODUCT",
-      "text": "meaning"
     },
     {
       "id": "eb27a2f18ce1a4ed0aca",
@@ -6817,12 +6885,6 @@
       "text": "Create"
     },
     {
-      "id": "563b20b9de1e48924424",
-      "file": "apps/web/src/layout/Nav.tsx",
-      "depth": "PRODUCT",
-      "text": "Privacy / Proof"
-    },
-    {
       "id": "5dd13c3ddc34f4bcb19c",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -6857,6 +6919,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Menu"
+    },
+    {
+      "id": "9eeeeabaa502e22034ec",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Privacy"
     },
     {
       "id": "b1655880cfe478e90451",
@@ -10987,12 +11055,6 @@
       "text": "It is the structured contract SPE compiles with your brief — goal, constraints, planned stages, and authority state. A local dry-run can check it without executing side effects."
     },
     {
-      "id": "334f91f6c823cae05db3",
-      "file": "apps/web/src/pages/Capabilities.tsx",
-      "depth": "PRODUCT",
-      "text": "Your brief is shaped in the browser on this device. SPE does not need a cloud AI account to prepare a prompt you can review and reuse. Optional helpers (website fetch, speech) only run when you ask."
-    },
-    {
       "id": "344121675999e16aa70a",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
@@ -11045,12 +11107,6 @@
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
       "text": "No. That ranking claim is not proven. SPE is a research preview with honest local preparation, contracts, and portability — not an independently replicated top ranking."
-    },
-    {
-      "id": "514d2058159e9b9a7f6c",
-      "file": "apps/web/src/pages/Capabilities.tsx",
-      "depth": "PRODUCT",
-      "text": "SPE is a free system prompt generator that prepares prompts in your browser. These capabilities describe what the research preview actually ships — not unproven ranking claims."
     },
     {
       "id": "55be489bb913e83981db",
@@ -11125,12 +11181,6 @@
       "text": "No. Prompt preparation runs locally in your browser. You decide whether to copy, download, or take the finished prompt elsewhere."
     },
     {
-      "id": "945aef13811ba8fbf8f6",
-      "file": "apps/web/src/pages/Capabilities.tsx",
-      "depth": "PRODUCT",
-      "text": "Optional public-source depth controls can enrich a brief when you choose them. Failures stay visible; SPE does not pretend a blocked fetch succeeded."
-    },
-    {
       "id": "9ad45de259ddc9191258",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
@@ -11143,10 +11193,10 @@
       "text": ".spe"
     },
     {
-      "id": "a1e05b33e8b61b157914",
+      "id": "a06dd8c12965f745e938",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
-      "text": "After compile, SPE can show the contract SPE actually produced: goal, protocol depth, hard constraints, planned stages, and authority state. A local dry-run checks those facts without executing side effects."
+      "text": "SPE prepares a prompt in your browser, then lets you review it. The notes below say what this preview actually does. A worldwide ranking is not proven."
     },
     {
       "id": "a43fcea4ef12bc846da1",
@@ -11191,12 +11241,6 @@
       "text": "files"
     },
     {
-      "id": "bd2ccd694cea05720122",
-      "file": "apps/web/src/pages/Capabilities.tsx",
-      "depth": "PRODUCT",
-      "text": "Versioned profiles describe local, deterministic, or optional external routes. Selection is observational routing only — it does not grant authority, enable network, or release credentials. Default policy is local-first and closed."
-    },
-    {
       "id": "c72de72d9290e5c801cc",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
@@ -11215,22 +11259,10 @@
       "text": "Import cannot escalate capabilities beyond what the local registry allows."
     },
     {
-      "id": "cf6b693fe27703a294c4",
-      "file": "apps/web/src/pages/Capabilities.tsx",
-      "depth": "PRODUCT",
-      "text": "Export a portable artifact with integrity metadata so you can reopen intent, structure, and the finished prompt later. Import cannot escalate capabilities beyond what the local registry allows."
-    },
-    {
       "id": "dad150707e14ec59b4fe",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
       "text": "Privacy proof — what stays local"
-    },
-    {
-      "id": "e6f2874aa0f6d0181697",
-      "file": "apps/web/src/pages/Capabilities.tsx",
-      "depth": "PRODUCT",
-      "text": "Explicit constraints and desired output stay bound to the brief. Downstream profile selection, dry-runs, and"
     },
     {
       "id": "f597e1a7925de95afd78",
@@ -11257,34 +11289,16 @@
       "text": "Clear history"
     },
     {
+      "id": "2439c4ee9a3a498ab0f3",
+      "file": "apps/web/src/pages/MyWork.tsx",
+      "depth": "PRODUCT",
+      "text": "Nothing is stored until you turn saving on. When you do, those notes stay in this browser. Export a .spe file only if you want a copy you can move."
+    },
+    {
       "id": "24e0caef2315837c2c99",
       "file": "apps/web/src/pages/MyWork.tsx",
       "depth": "PRODUCT",
       "text": "Save when you want a return path"
-    },
-    {
-      "id": "2a3ae94e44803af3e7d5",
-      "file": "apps/web/src/pages/MyWork.tsx",
-      "depth": "PRODUCT",
-      "text": "How:"
-    },
-    {
-      "id": "2f0b9ae2994117ca6b23",
-      "file": "apps/web/src/pages/MyWork.tsx",
-      "depth": "PRODUCT",
-      "text": "History is optional and stored only in this browser. Turn it off anytime. Export a"
-    },
-    {
-      "id": "38f2d4cb2a7393379aca",
-      "file": "apps/web/src/pages/MyWork.tsx",
-      "depth": "PRODUCT",
-      "text": "optional notes of ideas you choose to keep."
-    },
-    {
-      "id": "5c75638dab854d87d930",
-      "file": "apps/web/src/pages/MyWork.tsx",
-      "depth": "PRODUCT",
-      "text": "turn on saving above, then build a prompt in Create."
     },
     {
       "id": "71a200779b2836f68682",
@@ -11305,40 +11319,16 @@
       "text": "Export a .spe file if you want a portable copy"
     },
     {
-      "id": "a5435f2c3716a7b77b8b",
+      "id": "a16fa5409c001d81ccfc",
       "file": "apps/web/src/pages/MyWork.tsx",
       "depth": "PRODUCT",
-      "text": "so you can reopen them later — still only on this device."
-    },
-    {
-      "id": "ab6493f9cb134d9014a0",
-      "file": "apps/web/src/pages/MyWork.tsx",
-      "depth": "PRODUCT",
-      "text": "Why:"
-    },
-    {
-      "id": "b0bd2475ff6598e61462",
-      "file": "apps/web/src/pages/MyWork.tsx",
-      "depth": "PRODUCT",
-      "text": "What:"
-    },
-    {
-      "id": "b0c706e7517f537e298b",
-      "file": "apps/web/src/pages/MyWork.tsx",
-      "depth": "PRODUCT",
-      "text": "file when you want a portable copy."
+      "text": "My saved work stays on this device unless I choose to export a file. Saving is off until you turn it on. You can turn it off or clear it anytime."
     },
     {
       "id": "bcba7bc59d7567a722f3",
       "file": "apps/web/src/pages/MyWork.tsx",
       "depth": "PRODUCT",
       "text": "Start with an idea in Create"
-    },
-    {
-      "id": "c64e13ad27bee2fd3d5e",
-      "file": "apps/web/src/pages/MyWork.tsx",
-      "depth": "PRODUCT",
-      "text": ".spe"
     },
     {
       "id": "e70915ec111f2a236178",
@@ -11365,6 +11355,12 @@
       "text": "Quiet shelf"
     },
     {
+      "id": "01add7aedb5f03395401",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "This preview does not include analytics, ad tracking, or a sale of your prompts. SPE does not use your idea to target you."
+    },
+    {
       "id": "03748cebd8ed713cdadf",
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PRODUCT",
@@ -11375,6 +11371,12 @@
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PRODUCT",
       "text": "file, or take it to another AI yourself."
+    },
+    {
+      "id": "1468d82e80aac41afe27",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Reading a website contacts the address you type. Speech uses your browser&apos;s own listening tools, which may use that browser&apos;s service. SPE does not keep the audio. If you copy a prompt into another product, that product&apos;s rules apply — SPE does not send it for you."
     },
     {
       "id": "1a6bb9b3b84db94be96c",
@@ -11399,6 +11401,12 @@
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PROOF",
       "text": "frame-ancestors &apos;none&apos;"
+    },
+    {
+      "id": "43521029f77dd86fe95d",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "Nothing runs unless you start it"
     },
     {
       "id": "4639a4626efad5f7e030",
@@ -11473,6 +11481,12 @@
       "text": "Apex parking pages (for example a"
     },
     {
+      "id": "9b562ae38bce14d97cb4",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "A local check looks at the prompt on this device. It does not call an outside AI, and it does not grant permission to act for you."
+    },
+    {
       "id": "9fb90a58d73651057573",
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PRODUCT",
@@ -11485,6 +11499,12 @@
       "text": "ship Content-Security-Policy (including"
     },
     {
+      "id": "a7cf1c8f4a8651d26861",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "No ads, no sale, no silent tracking"
+    },
+    {
       "id": "b09a8d864f2661403d18",
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PRODUCT",
@@ -11495,6 +11515,12 @@
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PROOF",
       "text": "Static"
+    },
+    {
+      "id": "b2431c8e5c7149ff81f6",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE writes the prompt in this browser. It does not send your idea to an AI company to prepare it. A few optional steps can reach something else only when you ask — and those steps are named below."
     },
     {
       "id": "b79061819769e3933ad1",
@@ -11521,12 +11547,6 @@
       "text": "Speech is optional"
     },
     {
-      "id": "c157890fd9b117b66949",
-      "file": "apps/web/src/pages/PrivacyProof.tsx",
-      "depth": "PRODUCT",
-      "text": "Shape prompts on this device. Choose what you keep, where your work goes, and which AI you use — without sending your idea to SPE to prepare it."
-    },
-    {
       "id": "c8eab95841c0d170502a",
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PROOF",
@@ -11543,6 +11563,12 @@
       "file": "apps/web/src/pages/PrivacyProof.tsx",
       "depth": "PRODUCT",
       "text": "Preparation stays local"
+    },
+    {
+      "id": "d6e61d70cb0ea4329331",
+      "file": "apps/web/src/pages/PrivacyProof.tsx",
+      "depth": "PRODUCT",
+      "text": "When something can leave this page"
     },
     {
       "id": "e1deb63c779c07e63222",
@@ -12589,6 +12615,18 @@
       "text": "EXECUTED"
     },
     {
+      "id": "186a74f748e599a42103",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "A run was recorded."
+    },
+    {
+      "id": "19aed323435883bbb94b",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Blocked. This is not a pass."
+    },
+    {
       "id": "1dbb3a9c1ba048adc36b",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
@@ -12667,10 +12705,22 @@
       "text": "DELIVER · PLANNED"
     },
     {
+      "id": "3364e8c427fe566e751d",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "What is protected"
+    },
+    {
       "id": "378a2dc56eaf9a72b8b4",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "Level"
+    },
+    {
+      "id": "3884c28c86003880e82b",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Did anything run?"
     },
     {
       "id": "3ac18b36ff5eb528722c",
@@ -12701,6 +12751,12 @@
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "Record digest"
+    },
+    {
+      "id": "443d5c57729984c2f2f8",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Nothing is allowed to run on your behalf."
     },
     {
       "id": "46f3b54e4bcf732d4ed0",
@@ -12749,6 +12805,12 @@
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "Semantic owner:"
+    },
+    {
+      "id": "5a21a816910c0bb70364",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Check status"
     },
     {
       "id": "5a4df7f66e21f4188d9e",
@@ -12803,6 +12865,12 @@
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "Hard constraints not verified"
+    },
+    {
+      "id": "6fe098cb31c98ac2981f",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "The local check passed."
     },
     {
       "id": "70f4fd52f2391753471f",
@@ -12901,6 +12969,12 @@
       "text": "simple"
     },
     {
+      "id": "9e3de6b59b8968630cd8",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "What SPE prepared"
+    },
+    {
       "id": "9fd1519b2ed5643ff5f3",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
@@ -12911,6 +12985,12 @@
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "Run local dry-run again"
+    },
+    {
+      "id": "a6c4691dee9958827830",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Permissions"
     },
     {
       "id": "a6ea8aae7345f2b00322",
@@ -12947,6 +13027,12 @@
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "ACTIVE PROFILE"
+    },
+    {
+      "id": "b20e90da9b884753c4a5",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Limits are not verified yet."
     },
     {
       "id": "b492d4933b59763420aa",
@@ -13033,16 +13119,46 @@
       "text": "Protocol"
     },
     {
+      "id": "d79903ee12049758a0f7",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Your goal is kept with this prompt."
+    },
+    {
+      "id": "d7bd0ad88cb2f2de4f11",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Permission state:"
+    },
+    {
+      "id": "db122fe139e3bc2ab5ca",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Not checked yet. Unknown is not a pass."
+    },
+    {
       "id": "e2f33cca50ebfc7ba330",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "NO"
     },
     {
+      "id": "e41fb2428143274c3dbb",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Limits you wrote stay attached to the prompt."
+    },
+    {
       "id": "e43fa6d8ea0e59843930",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "Depth"
+    },
+    {
+      "id": "e4d6035c4c5f326bd21d",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Nothing has been executed."
     },
     {
       "id": "e8f297fa2a466916ff78",
@@ -13061,6 +13177,12 @@
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "Goal"
+    },
+    {
+      "id": "f07bdc7ae44752f13b8d",
+      "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Add a goal, then build the prompt."
     },
     {
       "id": "f2172872a2f4c73ea7ea",
@@ -13165,6 +13287,12 @@
       "text": "What must stay true"
     },
     {
+      "id": "135a06e930ad12e3ed49",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "PDF"
+    },
+    {
       "id": "1657d0fb083039f464fe",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -13183,10 +13311,22 @@
       "text": "A space for your next idea"
     },
     {
+      "id": "1cd8bac06ac9b67851c6",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "JSON saves the same work as plain data."
+    },
+    {
       "id": "1f25434653b78161d86e",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PROOF",
       "text": "not_a_release: true"
+    },
+    {
+      "id": "1f9f8830b27027212a6a",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Advanced settings"
     },
     {
       "id": "1fdee9c62c707e42b060",
@@ -13213,18 +13353,6 @@
       "text": "Initialize"
     },
     {
-      "id": "2cd261307c83876835e2",
-      "file": "apps/web/src/workspace/Workspace.tsx",
-      "depth": "PRODUCT",
-      "text": "PDF is export-only in this preview. Use .spe or JSON to restore protected details."
-    },
-    {
-      "id": "2d938d816c92f06b61b4",
-      "file": "apps/web/src/workspace/Workspace.tsx",
-      "depth": "PRODUCT",
-      "text": "Download JSON"
-    },
-    {
       "id": "31109ed27c55c6909cfd",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "INSPECT",
@@ -13243,22 +13371,22 @@
       "text": "Depth"
     },
     {
+      "id": "3a42521d9987d4cf590a",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "JSON"
+    },
+    {
       "id": "3b8c39dfe22672eb2bdb",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "INSPECT",
       "text": "LIVE"
     },
     {
-      "id": "4af355d3c915b82bba15",
+      "id": "44d5405f0796361d317e",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
-      "text": "Download .spe"
-    },
-    {
-      "id": "4f237c09f06d9240b4af",
-      "file": "apps/web/src/workspace/Workspace.tsx",
-      "depth": "PRODUCT",
-      "text": "Print / Save PDF"
+      "text": "Copy"
     },
     {
       "id": "508db06b7ae3c7c978b4",
@@ -13303,6 +13431,12 @@
       "text": "changes"
     },
     {
+      "id": "6c1503f7a4e4290e1ecf",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": ".spe"
+    },
+    {
       "id": "6e48315bea4d0f1b2867",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -13321,6 +13455,12 @@
       "text": "What changed"
     },
     {
+      "id": "78539d8008fa913915a8",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": ".spe saves a file you can reopen here later."
+    },
+    {
       "id": "7ae902e2249041aba3e1",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PROOF",
@@ -13331,6 +13471,12 @@
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
       "text": "prompt"
+    },
+    {
+      "id": "82a4e759fa526eec8531",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy puts the prompt on your clipboard."
     },
     {
       "id": "8320b7ec9aa03fd171c4",
@@ -13387,6 +13533,12 @@
       "text": "Approach"
     },
     {
+      "id": "991ad8fa4498feea41a2",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "These settings change how the prompt is shaped. They do not run a task or grant permission."
+    },
+    {
       "id": "9b10b02992f2af6417ec",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "INSPECT",
@@ -13427,6 +13579,12 @@
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
       "text": "intent"
+    },
+    {
+      "id": "b0b090cdbef15b434dde",
+      "file": "apps/web/src/workspace/Workspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Print / Save PDF is for printing. PDF is export-only in this preview and does not restore the prompt. Use .spe or JSON to restore protected details."
     },
     {
       "id": "b5adb81e62460149e310",
@@ -13499,12 +13657,6 @@
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
       "text": "Proof"
-    },
-    {
-      "id": "d91d619cdaa70741d2f8",
-      "file": "apps/web/src/workspace/Workspace.tsx",
-      "depth": "PRODUCT",
-      "text": "Copy Prompt"
     },
     {
       "id": "dbb9c95f6f57e577e887",
