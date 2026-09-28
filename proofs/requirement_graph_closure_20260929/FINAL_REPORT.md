@@ -3,6 +3,7 @@
 Status: `REQUIREMENT_GRAPH_CLOSURE_PASS`
 
 Base: `ae54a1a5a17d8d568b00e94f3d128d2858c60fd8`
+Implementation commit: `2d0a2d3529177461e4ed307751f22f8634d61fae`
 
 Contract source: G1R-3 `3f0847d`, unchanged at G1R-7R `a6b7e57`.
 Version: `requirement_graph.g1r3`
