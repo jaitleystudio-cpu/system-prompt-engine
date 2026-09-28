@@ -19,6 +19,7 @@ import type {
 } from "../engine/types";
 import { PrivacyIndicator } from "../ui/PrivacyIndicator";
 import { TrustPanel } from "../ui/TrustPanel";
+import { techniqueLabel } from "../engine/k3Transport";
 import { ReconstructionSummary } from "./ReconstructionSummary";
 
 type Mode = "simple" | "inspect" | "pro";
@@ -404,13 +405,13 @@ export function Workspace(props: Props) {
 
           {lens === "techniques" && (
             <ul className="spe-tech-list">
-              {(
-                rendered?.techniques || [
-                  "Shape your prompt to see the approach",
-                ]
-              ).map((t) => (
-                <li key={t}>{t}</li>
-              ))}
+              {(rendered?.techniques ?? []).length === 0 ? (
+                <li>Shape your prompt to see the approach</li>
+              ) : (
+                (rendered?.techniques ?? []).map((t) => (
+                  <li key={t}>{techniqueLabel(t)}</li>
+                ))
+              )}
             </ul>
           )}
 

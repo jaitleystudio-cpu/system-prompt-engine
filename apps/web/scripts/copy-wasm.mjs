@@ -23,8 +23,11 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const EXPECTED_SHA256 =
+  "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f";
+const EXPECTED_BYTES = 785148;
+const PREVIOUS_CANONICAL_SHA256 =
   "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6";
-const EXPECTED_BYTES = 671621;
+const PREVIOUS_CANONICAL_BYTES = 671621;
 const LEGACY_SHA256 =
   "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830";
 const CANONICAL_SOURCE =
@@ -42,6 +45,10 @@ const publicDir = join(webRoot, "public");
 const dest = join(publicDir, "spe_wasm.wasm");
 const metaPath = join(publicDir, "spe_wasm.sha256.json");
 const candidateManifest = join(
+  repoRoot,
+  "proofs/k3_runtime_closure_20260929/candidate-manifest.json",
+);
+const historicalManifest = join(
   repoRoot,
   "proofs/wasm_rebaseline_candidate_20260928/candidate-manifest.json",
 );
@@ -82,7 +89,10 @@ function expectedMeta() {
     qualification: "canonical-v1-promoted",
     legacy_sha256: LEGACY_SHA256,
     legacy_bytes: 671614,
-    semantic_source_sha: "e0497f79898689a00a30abeab67652d5f6a9193c",
+    previous_canonical_sha256: PREVIOUS_CANONICAL_SHA256,
+    previous_canonical_bytes: PREVIOUS_CANONICAL_BYTES,
+    semantic_source_sha: "98bc160184afa0cf95f17ff23392645c16ccc516",
+    semantic_source_note: "K3 selector implementation commit. WASM bytes were built from that tree before this proof-SHA record.",
     build_command: "node tools/wasm_canonical_build.mjs",
   };
 }
@@ -99,6 +109,16 @@ if (!existsSync(src)) {
 
 if (!existsSync(candidateManifest)) {
   fail("candidate manifest missing; cannot verify promotion inputs");
+}
+if (!existsSync(historicalManifest)) {
+  fail("historical canonical manifest missing");
+}
+const historical = JSON.parse(readFileSync(historicalManifest, "utf8"));
+if (historical.artifact_sha256 !== PREVIOUS_CANONICAL_SHA256) {
+  fail("historical canonical manifest no longer records the pre-K3 WASM hash");
+}
+if (historical.artifact_size !== PREVIOUS_CANONICAL_BYTES) {
+  fail("historical canonical manifest size changed");
 }
 
 const manifest = JSON.parse(readFileSync(candidateManifest, "utf8"));

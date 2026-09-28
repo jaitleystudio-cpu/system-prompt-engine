@@ -20,9 +20,12 @@ const EXPECTED_CHANNEL = "1.98.1";
 const EXPECTED_COMMIT = "48a229ceaefd4985c50990b14116b6d856af0985";
 const EXPECTED_TARGET = "wasm32-unknown-unknown";
 const LEGACY_SHA256 = "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830";
-const EXPECTED_CANONICAL_SHA256 =
+const PREVIOUS_CANONICAL_SHA256 =
   "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6";
-const EXPECTED_CANONICAL_BYTES = 671621;
+const PREVIOUS_CANONICAL_BYTES = 671621;
+const EXPECTED_CANONICAL_SHA256 =
+  "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f";
+const EXPECTED_CANONICAL_BYTES = 785148;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..");
@@ -278,6 +281,9 @@ function main() {
   if (digest === LEGACY_SHA256) {
     fail("canonical candidate unexpectedly equals legacy public bytes");
   }
+  if (digest === PREVIOUS_CANONICAL_SHA256) {
+    fail("canonical candidate still matches the pre-K3 semantic WASM");
+  }
 
   const label = artifactLabel(targetDir, artifact);
   process.stdout.write(`canonical-wasm: ok\n`);
@@ -293,6 +299,8 @@ function main() {
   process.stdout.write(`target=${EXPECTED_TARGET}\n`);
   process.stdout.write(`promoted=no\n`);
   process.stdout.write(`legacy_sha256=${LEGACY_SHA256}\n`);
+  process.stdout.write(`previous_canonical_sha256=${PREVIOUS_CANONICAL_SHA256}\n`);
+  process.stdout.write(`previous_canonical_bytes=${PREVIOUS_CANONICAL_BYTES}\n`);
   process.stdout.write(`canonical_sha256=${EXPECTED_CANONICAL_SHA256}\n`);
 }
 

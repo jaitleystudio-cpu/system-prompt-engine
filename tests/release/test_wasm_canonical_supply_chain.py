@@ -20,10 +20,15 @@ WRAPPER = REPO / "tools" / "spe_wasm_rustc_wrapper.mjs"
 COPY = REPO / "apps" / "web" / "scripts" / "copy-wasm.mjs"
 PUBLIC = REPO / "apps" / "web" / "public" / "spe_wasm.wasm"
 PUBLIC_META = REPO / "apps" / "web" / "public" / "spe_wasm.sha256.json"
-MANIFEST = REPO / "proofs" / "wasm_rebaseline_candidate_20260928" / "candidate-manifest.json"
+HISTORICAL_MANIFEST = (
+    REPO / "proofs" / "wasm_rebaseline_candidate_20260928" / "candidate-manifest.json"
+)
+MANIFEST = REPO / "proofs" / "k3_runtime_closure_20260929" / "candidate-manifest.json"
 LEGACY_SHA256 = "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830"
-CANONICAL_SHA256 = "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6"
-CANONICAL_BYTES = 671621
+PREVIOUS_CANONICAL_SHA256 = "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6"
+PREVIOUS_CANONICAL_BYTES = 671621
+CANONICAL_SHA256 = "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f"
+CANONICAL_BYTES = 785148
 CANONICAL_CANDIDATE = (
     REPO
     / "portable"
@@ -141,6 +146,10 @@ def test_dirty_candidate_is_rebuilt_and_not_trusted(tmp_path: Path):
 
 def test_candidate_manifest_matches_artifact_and_hides_absolute_paths():
     assert MANIFEST.is_file(), "candidate manifest must be committed with the recipe"
+    historical = json.loads(HISTORICAL_MANIFEST.read_text(encoding="utf-8"))
+    assert historical["artifact_sha256"] == PREVIOUS_CANONICAL_SHA256
+    assert historical["artifact_size"] == PREVIOUS_CANONICAL_BYTES
+    assert historical["build_a_sha256"] == historical["build_b_sha256"] == PREVIOUS_CANONICAL_SHA256
     payload = json.loads(MANIFEST.read_text(encoding="utf-8"))
     text = MANIFEST.read_text(encoding="utf-8")
     for marker in ("/workspace", "/home/", "/Users/", "/tmp/", ".codex", ".chatgpt-projects"):
