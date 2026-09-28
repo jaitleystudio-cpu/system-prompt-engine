@@ -2,12 +2,12 @@
 
 ## Custody
 
-- BASE SHA: `cab1e5e241e6e793f7fa20999bbced5298209a44`
-- Implementation SHA (on origin): `b9739307953a149aa0aa9827f55f22009c36825c`
-- Final SHA (proofs + reviewed inventory): `6181484e5b314a53a56f8a0f426854933a72c638`
-- Branch: `cursor/spe-truth-privacy-closure-20260928`
+- BASE SHA: 
+- Implementation SHA (on origin): 
+- Final SHA (local tip, proofs + inventory): 
+- Branch: 
 - Draft PR: https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/52
-- Note: if origin tip is still `b973930`, proofs commit is pending push due to expired GitHub write token.
+- Note: if origin tip is still , proofs commits are pending push due to expired GitHub write token.
 
 ## Closure
 
