@@ -15,7 +15,8 @@ export type EngineErrorCode =
   | "WASM_HOST_IMPORTS_FORBIDDEN"
   | "WASM_EXPORTS_MISSING"
   | "INVALID_JSON"
-  | "WORKER_TIMEOUT";
+  | "WORKER_TIMEOUT"
+  | "TRUSTED_QUALITY_PATH_REQUIRED";
 
 export type EngineError = {
   code: EngineErrorCode;
@@ -55,6 +56,16 @@ export type ContextProtocolCompileRequest = {
   adapter_id?: string;
 };
 
+/**
+ * Transport-only quality request. Runtime attestation is supplied by the
+ * Worker after it verifies WASM. Caller proof_class / wasm_sha256 are not evidence.
+ */
+export type QualityCompileRequest = {
+  spe_api: "quality";
+  op: string;
+  [key: string]: unknown;
+};
+
 /** Fields produced by Rust through WASM (render-only on the TS side). */
 export type ContextProtocolCompileOutput = {
   source_mode: SourceMode;
@@ -81,6 +92,11 @@ export type WorkerRequest =
       id: string;
       type: "context_protocol";
       request: ContextProtocolCompileRequest;
+    }
+  | {
+      id: string;
+      type: "quality";
+      request: QualityCompileRequest;
     };
 
 export type WorkerResponse =

@@ -9,11 +9,12 @@ export async function requestQualityReceipt(
   client: EngineClient,
   request: Record<string, unknown>,
 ): Promise<unknown> {
-  const outcome = await client.compile(
-    JSON.stringify({
+  const outcome = await client.compileQuality(
+    {
       ...request,
       spe_api: "quality",
-    }),
+      op: typeof request.op === "string" ? request.op : "",
+    },
     () => {},
   );
   const result = outcome.result;
