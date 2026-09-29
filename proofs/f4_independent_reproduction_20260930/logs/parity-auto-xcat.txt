@@ -1,0 +1,338 @@
+{
+  "cases": 17,
+  "python_rust_mismatch": 0,
+  "rust_wasm_mismatch": 0,
+  "python_wasm_mismatch": 0,
+  "rows": [
+    {
+      "id": "C01",
+      "py": {
+        "primary_category": "CAT:C01",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C01",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C01",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C02",
+      "py": {
+        "primary_category": "CAT:C02",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C02",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C02",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C03",
+      "py": {
+        "primary_category": "CAT:C03",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C03",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C03",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C04",
+      "py": {
+        "primary_category": "CAT:C04",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C04",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C04",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C05",
+      "py": {
+        "primary_category": "CAT:C05",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C05",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C05",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C06",
+      "py": {
+        "primary_category": "CAT:C06",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C06",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C06",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C07",
+      "py": {
+        "primary_category": "CAT:C07",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C07",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C07",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C08",
+      "py": {
+        "primary_category": "CAT:C08",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C08",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C08",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C09",
+      "py": {
+        "primary_category": "CAT:C09",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C09",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C09",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C10",
+      "py": {
+        "primary_category": "CAT:C10",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C10",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C10",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C11",
+      "py": {
+        "primary_category": "CAT:C11",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C11",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C11",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "C12",
+      "py": {
+        "primary_category": "CAT:C12",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C12",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C12",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "ambiguous",
+      "py": {
+        "primary_category": null,
+        "disposition": "NEEDS_DISAMBIGUATION",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": null,
+        "disposition": "NEEDS_DISAMBIGUATION",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": null,
+        "disposition": "NEEDS_DISAMBIGUATION",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "conflicting",
+      "py": {
+        "primary_category": null,
+        "disposition": "UNKNOWN",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": null,
+        "disposition": "UNKNOWN",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": null,
+        "disposition": "UNKNOWN",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "multi-domain",
+      "py": {
+        "primary_category": "CAT:C02",
+        "disposition": "ROUTED",
+        "secondary_categories": [
+          "CAT:C03"
+        ]
+      },
+      "rust": {
+        "primary_category": "CAT:C02",
+        "disposition": "ROUTED",
+        "secondary_categories": [
+          "CAT:C03"
+        ]
+      },
+      "wasm": {
+        "primary_category": "CAT:C02",
+        "disposition": "ROUTED",
+        "secondary_categories": [
+          "CAT:C03"
+        ]
+      },
+      "match": true
+    },
+    {
+      "id": "forged-category",
+      "py": {
+        "primary_category": "CAT:C03",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": "CAT:C03",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": "CAT:C03",
+        "disposition": "ROUTED",
+        "secondary_categories": []
+      },
+      "match": true
+    },
+    {
+      "id": "unknown-evidence",
+      "py": {
+        "primary_category": null,
+        "disposition": "UNKNOWN",
+        "secondary_categories": []
+      },
+      "rust": {
+        "primary_category": null,
+        "disposition": "UNKNOWN",
+        "secondary_categories": []
+      },
+      "wasm": {
+        "primary_category": null,
+        "disposition": "UNKNOWN",
+        "secondary_categories": []
+      },
+      "match": true
+    }
+  ],
+  "wasm": "/workspace/portable/spe-wasm/target-canonical/wasm32-unknown-unknown/release/spe_wasm.wasm"
+}

@@ -1,0 +1,74 @@
+
+> spe-web@0.3.0 build
+> npm run spe:copy-check && npm run wasm:build-canonical && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs
+
+
+> spe-web@0.3.0 spe:copy-check
+> node ../../tools/copy-check.mjs
+
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 2418,
+  "unreviewed": 0,
+  "violations": [],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}
+
+> spe-web@0.3.0 wasm:build-canonical
+> node ../../tools/wasm_canonical_build.mjs
+
+canonical-wasm: ok
+artifact=portable/spe-wasm/target-canonical/wasm32-unknown-unknown/release/spe_wasm.wasm
+bytes=1340112
+sha256=b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b
+imports=0
+exports=memory,spe_alloc,spe_evaluate,spe_free
+rustc=1.98.1
+rustc_commit=48a229ceaefd4985c50990b14116b6d856af0985
+cargo=cargo 1.98.1 (797e8a9bc 2026-08-05)
+active_toolchain=1.98.1 (overridden by repository rust-toolchain.toml)
+target=wasm32-unknown-unknown
+promoted=no
+legacy_sha256=8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830
+previous_canonical_sha256=9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6
+previous_canonical_bytes=671621
+pre_graph_k3_sha256=8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f
+pre_graph_k3_bytes=785148
+xcat_domain_sha256=077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082
+xcat_domain_bytes=1023091
+task57r_hold_sha256=0537fc879b42524d36cf94b965e1234f02cf557c47cc55c7b1612d5643c70fcb
+task57r_hold_bytes=1273629
+task57r_f1_sha256=dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541
+task57r_f1_bytes=1275233
+canonical_sha256=b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b
+
+> spe-web@0.3.0 copy-wasm
+> node scripts/copy-wasm.mjs
+
+copy-wasm: wrote /workspace/apps/web/public/spe_wasm.wasm (1340112 bytes, sha256=b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b, imports=0, verified=canonical)
+vite v5.4.21 building for production...
+transforming...
+[plugin:vite:resolve] [plugin vite:resolve] Module "node:crypto" has been externalized for browser compatibility, imported by "/workspace/apps/web/src/engine/core-b.mjs". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin:vite:resolve] [plugin vite:resolve] Module "node:crypto" has been externalized for browser compatibility, imported by "/workspace/apps/web/src/engine/wasm-host.mjs". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+✓ 129 modules transformed.
+node_modules/onnxruntime-web/dist/ort.bundle.min.mjs (6:96476): Use of eval in "node_modules/onnxruntime-web/dist/ort.bundle.min.mjs" is strongly discouraged as it poses security risks and may cause issues with minification.
+rendering chunks...
+[plugin:vite:reporter] [plugin vite:reporter] 
+(!) /workspace/apps/web/src/media/limits.ts is dynamically imported by /workspace/apps/web/src/media/semanticPipeline.ts but also statically imported by /workspace/apps/web/src/composer/UnifiedComposer.tsx, /workspace/apps/web/src/media/imageObserve.ts, /workspace/apps/web/src/media/urlIngest.ts, /workspace/apps/web/src/media/videoSample.ts, dynamic import will not move module into another chunk.
+
+computing gzip size...
+dist/index.html                                        2.16 kB │ gzip:   0.80 kB
+dist/assets/engine.worker-DW3jy6WS.js                  5.49 kB
+dist/assets/ort-wasm-simd-threaded-BQQNiIPt.wasm  11,246.03 kB
+dist/assets/index-DKhQhNB6.css                       165.18 kB │ gzip:  33.70 kB
+dist/assets/LabStage-MSFi0w1p.js                       5.57 kB │ gzip:   1.78 kB
+dist/assets/index-wfnXA7Nm.js                        372.79 kB │ gzip: 119.85 kB
+dist/assets/ort-wasm-juE7TTNY.js                     464.10 kB │ gzip: 110.35 kB
+dist/assets/r3f-CJQrfxy_.js                          831.35 kB │ gzip: 224.26 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.56s
+Precached 14 same-origin shell assets; no user data.
