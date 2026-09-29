@@ -1,0 +1,3370 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:spe-web-sbom-660786bd85081b47c97f141f530eaef5",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-09-29T18:47:05.999Z",
+    "tools": [
+      {
+        "vendor": "System Prompt Engine",
+        "name": "spe-sbom-generator",
+        "version": "1.0.0"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "name": "spe-web",
+      "version": "0.3.0",
+      "description": "SPE-WEB-03 semantic press research preview. Real local WASM compiler.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT OR Apache-2.0"
+          }
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/code-frame@7.29.7",
+      "name": "@babel/code-frame",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/code-frame@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/compat-data@7.29.7",
+      "name": "@babel/compat-data",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/compat-data@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "locTkQyKvwIEgBzVrn8693ebc97F2U8ZHjbXwDXJ5Fn2TCpNwTlKcaKLkdHop5c/icOFE7qt7Q9JC5hnKNa6Gg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/core@7.29.7",
+      "name": "@babel/core",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/core@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "RgHBCvtjbOK2gXSNBNIkNoEc9qoVEtau3hj8gEqKQuL3HZAibKarWFEI3Lfm6EYKkLalOh8eSrj9b+ch9H/VBA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/generator@7.29.8",
+      "name": "@babel/generator",
+      "version": "7.29.8",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/generator@7.29.8",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "gZbepsdh3WDtgZKWL+vTPh71LSBrm/Y4/QDZBVCcYfmeTEEuoOYwlSy+G1StfJg+/Zy550u/3TATbm7qDbbMtg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/helper-compilation-targets@7.29.7",
+      "name": "@babel/helper-compilation-targets",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/helper-compilation-targets@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "wem6WaBj4NaVYVdNhLPPVacES6ZJ+KBBfSkTMD3YZxbP3rm3Di85tJU5ljaUNhaOynt+Aj0xruhYuzQBt8n71g=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/helper-globals@7.29.7",
+      "name": "@babel/helper-globals",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/helper-globals@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "3nQVUAtvkKH9zahfWgw96Jc/uFOmjACE1kQz82E2lqWmHBgjzbNlsC22nuQTfahmWeQtTq5nQ/4Nnd2A1wj4zA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/helper-module-imports@7.29.7",
+      "name": "@babel/helper-module-imports",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/helper-module-imports@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "ejHwrQQYcm9xnTivShn2IDOlIzInN34AXskvq9QicvCtEzq1Vzclu/tKF8Jq1Cg8JG2GL6/EmjgsCT7lXepE3g=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/helper-module-transforms@7.29.7",
+      "name": "@babel/helper-module-transforms",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/helper-module-transforms@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "UPUVSyXbOh627KiCIGQSgwWzGeBKLkaJ9PJEdrngIwMSzxLR4jS4+f1f1jb7VzBbg8nFLaYotvVPFCTqdrmTAg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/helper-plugin-utils@7.29.7",
+      "name": "@babel/helper-plugin-utils",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/helper-plugin-utils@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "G7sHYigPY17oO5SYWnfD/0MTBwVR781S/JI643e/JhUYgVgWE/61SoW3NH9KWUKyKq5LVh3npif99Wkt6j86Jw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/helper-string-parser@7.29.7",
+      "name": "@babel/helper-string-parser",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/helper-string-parser@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "Pb5ijPrZ89GDH8223L4UP8i6QApWxs04RbPQJTeWDV0/keR2E36MeKnyr6LYmUUvqRRI+Iv87SuF1W6ErINzYw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/helper-validator-identifier@7.29.7",
+      "name": "@babel/helper-validator-identifier",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/helper-validator-identifier@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "qehxGkRj55h/ff8EMaJ+cYhyaKlHIxqYDn682wQD7RNp9UujOQsHog2uS0r2vzr4pW+sXf90NeeayjcNaX3fFg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/helper-validator-option@7.29.7",
+      "name": "@babel/helper-validator-option",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/helper-validator-option@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "N9ZErrD+yW5geCDtBqnOoxmR8+tNKiGuxKlDpuJxfsqpa2dFcexaziGAE/qoHLiDDreVNMupxGmSoNlyvsA3gw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/helpers@7.29.7",
+      "name": "@babel/helpers",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/helpers@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "1k2lAGRMfHTcwuNYcCNUmaUffmQv8KWMfh2iJUUeRlwlwH4FdNG7mfPI10NPfLHJFThE4Tyr4mv7kTNZOiPuBg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/parser@7.29.8",
+      "name": "@babel/parser",
+      "version": "7.29.8",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/parser@7.29.8",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "E8lTAYNB1KW+FH+VGJuZM1ioAx2E6oVlvQFRrf5P8ZZmsiJXYAD9vTFV7yyEURNzgh1dFqMZuO6tUwcARbqFCA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/plugin-transform-react-jsx-self@7.29.7",
+      "name": "@babel/plugin-transform-react-jsx-self",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/plugin-transform-react-jsx-self@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "TL0hMc9xzy86VD31nUiwzd5otRAcyEPcsegCxolO0PvcXuH1v0kECe/UIznYFihpkvU5wg/jk4v0TTEFfm53fw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/plugin-transform-react-jsx-source@7.29.7",
+      "name": "@babel/plugin-transform-react-jsx-source",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/plugin-transform-react-jsx-source@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "06IyK09H3wi4cGbhDBwp5gUGo0IKtnYa8tyTiephirPCK6fbobVGiXMMI5zLQ4aKEYP3wZ3ArU44o+8KMrSG/Q=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/runtime@7.29.7",
+      "name": "@babel/runtime",
+      "version": "7.29.7",
+      "scope": "required",
+      "purl": "pkg:npm/@babel/runtime@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/template@7.29.7",
+      "name": "@babel/template",
+      "version": "7.29.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/template@7.29.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "puq+Gf35oI24FeN11LkoUQFqv9uwNeWpxXZi/Ji3rRIoKAzKnxRaZ+Gkj0vKS9ZCiTESfng1N9LyOyXvo+m+Gg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/traverse@7.29.8",
+      "name": "@babel/traverse",
+      "version": "7.29.8",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/traverse@7.29.8",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "I5z7H3bf/41ktsNVLtpN0wAa336HkqIHQ5BuPLEhTkt1jVSyZpeNKIzTgEWmlxjdg81R0IgUCcaE+Ok3NvrfZg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@babel/types@7.29.8",
+      "name": "@babel/types",
+      "version": "7.29.8",
+      "scope": "optional",
+      "purl": "pkg:npm/@babel/types@7.29.8",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/aix-ppc64@0.21.5",
+      "name": "@esbuild/aix-ppc64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/aix-ppc64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/android-arm@0.21.5",
+      "name": "@esbuild/android-arm",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/android-arm@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "vCPvzSjpPHEi1siZdlvAlsPxXl7WbOVUBBAowWug4rJHb68Ox8KualB+1ocNvT5fjv6wpkX6o/iEpbDrf68zcg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/android-arm64@0.21.5",
+      "name": "@esbuild/android-arm64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/android-arm64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "c0uX9VAUBQ7dTDCjq+wdyGLowMdtR/GoC2U5IYk/7D1H1JYC0qseD7+11iMP2mRLN9RcCMRcjC4YMclCzGwS/A=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/android-x64@0.21.5",
+      "name": "@esbuild/android-x64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/android-x64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "D7aPRUUNHRBwHxzxRvp856rjUHRFW1SdQATKXH2hqA0kAZb1hKmi02OpYRacl0TxIGz/ZmXWlbZgjwWYaCakTA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/darwin-arm64@0.21.5",
+      "name": "@esbuild/darwin-arm64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/darwin-arm64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "DwqXqZyuk5AiWWf3UfLiRDJ5EDd49zg6O9wclZ7kUMv2WRFr4HKjXp/5t8JZ11QbQfUS6/cRCKGwYhtNAY88kQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/darwin-x64@0.21.5",
+      "name": "@esbuild/darwin-x64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/darwin-x64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "se/JjF8NlmKVG4kNIuyWMV/22ZaerB+qaSi5MdrXtd6R08kvs2qCN4C09miupktDitvh8jRFflwGFBQcxZRjbw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/freebsd-arm64@0.21.5",
+      "name": "@esbuild/freebsd-arm64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/freebsd-arm64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "5JcRxxRDUJLX8JXp/wcBCy3pENnCgBR9bN6JsY4OmhfUtIHe3ZW0mawA7+RDAcMLrMIZaf03NlQiX9DGyB8h4g=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/freebsd-x64@0.21.5",
+      "name": "@esbuild/freebsd-x64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/freebsd-x64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "J95kNBj1zkbMXtHVH29bBriQygMXqoVQOQYA+ISs0/2l3T9/kj42ow2mpqerRBxDJnmkUDCaQT/dfNXWX/ZZCQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/linux-arm@0.21.5",
+      "name": "@esbuild/linux-arm",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/linux-arm@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "bPb5AHZtbeNGjCKVZ9UGqGwo8EUu4cLq68E95A53KlxAPRmUyYv2D6F0uUI65XisGOL1hBP5mTronbgo+0bFcA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/linux-arm64@0.21.5",
+      "name": "@esbuild/linux-arm64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/linux-arm64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "ibKvmyYzKsBeX8d8I7MH/TMfWDXBF3db4qM6sy+7re0YXya+K1cem3on9XgdT2EQGMu4hQyZhan7TeQ8XkGp4Q=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/linux-ia32@0.21.5",
+      "name": "@esbuild/linux-ia32",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/linux-ia32@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "YvjXDqLRqPDl2dvRODYmmhz4rPeVKYvppfGYKSNGdyZkA01046pLWyRKKI3ax8fbJoK5QbxblURkwK/MWY18Tg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/linux-loong64@0.21.5",
+      "name": "@esbuild/linux-loong64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/linux-loong64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "uHf1BmMG8qEvzdrzAqg2SIG/02+4/DHB6a9Kbya0XDvwDEKCoC8ZRWI5JJvNdUjtciBGFQ5PuBlpEOXQj+JQSg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/linux-mips64el@0.21.5",
+      "name": "@esbuild/linux-mips64el",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/linux-mips64el@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "IajOmO+KJK23bj52dFSNCMsz1QP1DqM6cwLUv3W1QwyxkyIWecfafnI555fvSGqEKwjMXVLokcV5ygHW5b3Jbg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/linux-ppc64@0.21.5",
+      "name": "@esbuild/linux-ppc64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/linux-ppc64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "1hHV/Z4OEfMwpLO8rp7CvlhBDnjsC3CttJXIhBi+5Aj5r+MBvy4egg7wCbe//hSsT+RvDAG7s81tAvpL2XAE4w=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/linux-riscv64@0.21.5",
+      "name": "@esbuild/linux-riscv64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/linux-riscv64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "2HdXDMd9GMgTGrPWnJzP2ALSokE/0O5HhTUvWIbD3YdjME8JwvSCnNGBnTThKGEB91OZhzrJ4qIIxk/SBmyDDA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/linux-s390x@0.21.5",
+      "name": "@esbuild/linux-s390x",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/linux-s390x@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "zus5sxzqBJD3eXxwvjN1yQkRepANgxE9lgOW2qLnmr8ikMTphkjgXu1HR01K4FJg8h1kEEDAqDcZQtbrRnB41A=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/linux-x64@0.21.5",
+      "name": "@esbuild/linux-x64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/linux-x64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "1rYdTpyv03iycF1+BhzrzQJCdOuAOtaqHTWJZCWvijKD2N5Xu0TtVC8/+1faWqcP9iBCWOmjmhoH94dH82BxPQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/netbsd-x64@0.21.5",
+      "name": "@esbuild/netbsd-x64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/netbsd-x64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "Woi2MXzXjMULccIwMnLciyZH4nCIMpWQAs049KEeMvOcNADVxo0UBIQPfSmxB3CWKedngg7sWZdLvLczpe0tLg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/openbsd-x64@0.21.5",
+      "name": "@esbuild/openbsd-x64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/openbsd-x64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "HLNNw99xsvx12lFBUwoT8EVCsSvRNDVxNpjZ7bPn947b8gJPzeHWyNVhFsaerc0n3TsbOINvRP2byTZ5LKezow=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/sunos-x64@0.21.5",
+      "name": "@esbuild/sunos-x64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/sunos-x64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "6+gjmFpfy0BHU5Tpptkuh8+uw3mnrvgs+dSPQXQOv3ekbordwnzTVEb4qnIvQcYXq6gzkyTnoZ9dZG+D4garKg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/win32-arm64@0.21.5",
+      "name": "@esbuild/win32-arm64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/win32-arm64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "Z0gOTd75VvXqyq7nsl93zwahcTROgqvuAcYDUr+vOv8uHhNSKROyU961kgtCD1e95IqPKSQKH7tBTslnS3tA8A=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/win32-ia32@0.21.5",
+      "name": "@esbuild/win32-ia32",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/win32-ia32@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "SWXFF1CL2RVNMaVs+BBClwtfZSvDgtL//G/smwAc5oVK/UPu2Gu9tIaRgFmYFFKrmg3SyAjSrElf0TiJ1v8fYA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@esbuild/win32-x64@0.21.5",
+      "name": "@esbuild/win32-x64",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@esbuild/win32-x64@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "tQd/1efJuzPC6rCFwEvLtci/xNFcTZknmXs98FYDfGE4wP9ClFV98nyKrzJKVPMhdDnjzLhdUyMX4PsQAPjwIw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@jridgewell/gen-mapping@0.3.13",
+      "name": "@jridgewell/gen-mapping",
+      "version": "0.3.13",
+      "scope": "optional",
+      "purl": "pkg:npm/@jridgewell/gen-mapping@0.3.13",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@jridgewell/remapping@2.3.5",
+      "name": "@jridgewell/remapping",
+      "version": "2.3.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@jridgewell/remapping@2.3.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "LI9u/+laYG4Ds1TDKSJW2YPrIlcVYOwi2fUC6xB43lueCjgxV4lffOCZCtYFiH6TNOX+tQKXx97T4IKHbhyHEQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@jridgewell/resolve-uri@3.1.2",
+      "name": "@jridgewell/resolve-uri",
+      "version": "3.1.2",
+      "scope": "optional",
+      "purl": "pkg:npm/@jridgewell/resolve-uri@3.1.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@jridgewell/sourcemap-codec@1.6.0",
+      "name": "@jridgewell/sourcemap-codec",
+      "version": "1.6.0",
+      "scope": "optional",
+      "purl": "pkg:npm/@jridgewell/sourcemap-codec@1.6.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@jridgewell/trace-mapping@0.3.31",
+      "name": "@jridgewell/trace-mapping",
+      "version": "0.3.31",
+      "scope": "optional",
+      "purl": "pkg:npm/@jridgewell/trace-mapping@0.3.31",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@napi-rs/lzma-linux-x64-gnu@1.5.1",
+      "name": "@napi-rs/lzma-linux-x64-gnu",
+      "version": "1.5.1",
+      "scope": "optional",
+      "purl": "pkg:npm/@napi-rs/lzma-linux-x64-gnu@1.5.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@protobufjs/aspromise@1.1.2",
+      "name": "@protobufjs/aspromise",
+      "version": "1.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/@protobufjs/aspromise@1.1.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@protobufjs/base64@1.1.2",
+      "name": "@protobufjs/base64",
+      "version": "1.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/@protobufjs/base64@1.1.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "AZkcAA5vnN/v4PDqKyMR5lx7hZttPDgClv83E//FMNhR2TMcLUhfRUBHCmSl0oi9zMgDDqRUJkSxO3wm85+XLg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@protobufjs/codegen@2.0.5",
+      "name": "@protobufjs/codegen",
+      "version": "2.0.5",
+      "scope": "required",
+      "purl": "pkg:npm/@protobufjs/codegen@2.0.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "zgXFLzW3Ap33e6d0Wlj4MGIm6Ce8O89n/apUaGNB/jx+hw+ruWEp7EwGUshdLKVRCxZW12fp9r40E1mQrf/34g=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@protobufjs/eventemitter@1.1.1",
+      "name": "@protobufjs/eventemitter",
+      "version": "1.1.1",
+      "scope": "required",
+      "purl": "pkg:npm/@protobufjs/eventemitter@1.1.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "vW1GmwMZNnL+gMRaovlh9yZX74kc+TTU3FObkkurpMaRtBfLP3ldjS9KQWlwZgraRE0+dheEEoAxdzcJQ8eXZg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@protobufjs/fetch@1.1.1",
+      "name": "@protobufjs/fetch",
+      "version": "1.1.1",
+      "scope": "required",
+      "purl": "pkg:npm/@protobufjs/fetch@1.1.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "GpptLrs57adMSuHi3VNj0mAF8dwh36LMaYF6XyJ6JMWlVsc+t42tm1HSEDmOs3A8fC9yyeisgLhsTVQokOZ0zw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@protobufjs/float@1.0.2",
+      "name": "@protobufjs/float",
+      "version": "1.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/@protobufjs/float@1.0.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "Ddb+kVXlXst9d+R9PfTIxh1EdNkgoRe5tOX6t01f1lYWOvJnSPDBlG241QLzcyPdoNTsblLUdujGSE4RzrTZGQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@protobufjs/path@1.1.2",
+      "name": "@protobufjs/path",
+      "version": "1.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/@protobufjs/path@1.1.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "6JOcJ5Tm08dOHAbdR3GrvP+yUUfkjG5ePsHYczMFLq3ZmMkAD98cDgcT2iA1lJ9NVwFd4tH/iSSoe44YWkltEA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@protobufjs/pool@1.1.0",
+      "name": "@protobufjs/pool",
+      "version": "1.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/@protobufjs/pool@1.1.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "0kELaGSIDBKvcgS4zkjz1PeddatrjYcmMWOlAuAPwAeccUrPHdUqo/J6LiymHHEiJT5NrF1UVwxY14f+fy4WQw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@protobufjs/utf8@1.1.2",
+      "name": "@protobufjs/utf8",
+      "version": "1.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/@protobufjs/utf8@1.1.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "b1UQwcEZ4yCnMCD8DAL1VlbvBJE9/IX4FTIp7BG1xYpf29SLazLSrqUkj4w7Y5y7cCVP6E5tcqqcI0xemPkHug=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@react-three/fiber@8.17.10",
+      "name": "@react-three/fiber",
+      "version": "8.17.10",
+      "scope": "required",
+      "purl": "pkg:npm/@react-three/fiber@8.17.10",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "S6bqa4DqUooEkInYv/W+Jklv2zjSYCXAhm6qKpAQyOXhTEt5gBXnA7W6aoJ0bjmp9pAeaSj/AZUoz1HCSof/uA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rolldown/pluginutils@1.0.0-beta.27",
+      "name": "@rolldown/pluginutils",
+      "version": "1.0.0-beta.27",
+      "scope": "optional",
+      "purl": "pkg:npm/@rolldown/pluginutils@1.0.0-beta.27",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-android-arm-eabi@4.63.3",
+      "name": "@rollup/rollup-android-arm-eabi",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-android-arm-eabi@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "w3Jnvi1ocaVm/c7yVPpfB98XeSRBMyzp6njL5MVVbGyXjpmUkN+s6Hp4t0PqhGCCaI1ZHMKXt/w0lA1RCaLVcw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-android-arm64@4.63.3",
+      "name": "@rollup/rollup-android-arm64",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-android-arm64@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "uI/ESiaIbbRYAEhzy8PCUWDp1hB0bjAqM06mW9flOoNO4Q8DQpeoREhBR5Hegfl+wpXiguyJv6XSPzEN7OxyHQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-darwin-arm64@4.63.3",
+      "name": "@rollup/rollup-darwin-arm64",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-darwin-arm64@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "oxhrd1jmXLwWZ83eQYDXxuqRdkqkzrjR3JobKeuUyfdNZo11FuQIvqEOZhyIT7OBHxXoGslDDjN0cQcM6T0TqQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-darwin-x64@4.63.3",
+      "name": "@rollup/rollup-darwin-x64",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-darwin-x64@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "7/YiIMghVE8DrxKvNdorAaJVdriOFgOIpdStnPx8ppx5zfTwC3jBCSEAIzB7JD5404m65THl6H93UTTVUvypmg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-freebsd-arm64@4.63.3",
+      "name": "@rollup/rollup-freebsd-arm64",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-freebsd-arm64@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "GXFZRRoMAytaI5z6N3Zhfw0WL18Q0M8r95D5hlC4GqE/lGk8pbSJNUBoOWDfbm6dTciqHj2nU87tI5f6XhQiOg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-freebsd-x64@4.63.3",
+      "name": "@rollup/rollup-freebsd-x64",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-freebsd-x64@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "77W+8X3ddYgPxUpB8nZFQs2Mq+wc4HVlcSRtApXLjYBcnPMkttrSnU8VwKQjeWYhMsITHFs5cWBQ8vz1Q+5RHQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-arm-gnueabihf@4.63.3",
+      "name": "@rollup/rollup-linux-arm-gnueabihf",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-arm-gnueabihf@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "FVkwK+iUC+mq+GipVK46rRVticfAPtvPUNlqlGXUDxdVk/UGjQiiiUVPUrEXdSpU2ufU0XxLGyTqDtBidDOVmg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-arm-musleabihf@4.63.3",
+      "name": "@rollup/rollup-linux-arm-musleabihf",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-arm-musleabihf@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "+aGU1t3398yQOVj1Bz8o3e+KtswxAPvO+mtxtNdfXYMkXIHu7XhhkCD7/DEH9q8tF8uhDnMWvfpUKI8y1sZJsg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-arm64-gnu@4.63.3",
+      "name": "@rollup/rollup-linux-arm64-gnu",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-arm64-gnu@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "cR0kjpRXR2KJ2oQK8E2KTPtphs+b9hZ8IhTZubNryt/RsqgdOZBQ2Zq0q5UedtiIi0rs3jVhJh55RE1ZHUVGUA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-arm64-musl@4.63.3",
+      "name": "@rollup/rollup-linux-arm64-musl",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-arm64-musl@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "y1RYi4Q3/9ByVWSSt9kX2ustE0B7kFYbJ6zZdVZVyqopZs3yhCTwRfrjIX4vezUJInma/Gs6BOFDJg7yZmJ0IQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-loong64-gnu@4.63.3",
+      "name": "@rollup/rollup-linux-loong64-gnu",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-loong64-gnu@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "DNhEA5viIj3Z5bZLE4z4oV8N5ozWqDwyt7T6KG7VdLDJ0nW+rNOYlphBl4/3HQkK75qipPLsVOfStHHOwN9WSg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-loong64-musl@4.63.3",
+      "name": "@rollup/rollup-linux-loong64-musl",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-loong64-musl@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "17gQCqrIpXBX2Cmi9/TygnVOqGbzsba/iaqcYSL8FY7lNugg+7AiYNs5c5nKWD+NRQha36Sa0CqkJqH4XVHwnQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-ppc64-gnu@4.63.3",
+      "name": "@rollup/rollup-linux-ppc64-gnu",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-ppc64-gnu@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "6LwVnZRIyINpdku/yOcI8Tm9YqLmhHK5emmlOOnW9tO0SYEm1FmKPcsSAGp0NBlqR2P04xaND4jvN6sTHqhq8A=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-ppc64-musl@4.63.3",
+      "name": "@rollup/rollup-linux-ppc64-musl",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-ppc64-musl@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "xMUqkTXlEUtI/p5AAukMwBRr1enU3efsTeF+bskeFfk8t1C9rcC8sLREcZXmTfAXEbvRdJVSonVJez3TMlbR3w=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-riscv64-gnu@4.63.3",
+      "name": "@rollup/rollup-linux-riscv64-gnu",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-riscv64-gnu@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "S3E94co9F9WRRqEaUoQZ38K1gCz6KiM+nL7/3ijq7fDGF3OznjS5TasgYITlvl27GQKtu4lOAOsr5MFwkijvOA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-riscv64-musl@4.63.3",
+      "name": "@rollup/rollup-linux-riscv64-musl",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-riscv64-musl@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "1QtRDwG42x5BJI3s9mxu5rEjDnfbSnk20HQ9/ylTAYnSwYwxMVb+Vgu34wzzTQ7ogqBybebgQNUDAvZVQ38DbA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-s390x-gnu@4.63.3",
+      "name": "@rollup/rollup-linux-s390x-gnu",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-s390x-gnu@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "BQhejF6ZXOpxbngiNTP12GCGQeaDVL2QXGeBVViKIYzFHM5RKxTxwUMB1fr1BeNFphFMpnRqC5QSXFSa4z6UQw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-x64-gnu@4.63.3",
+      "name": "@rollup/rollup-linux-x64-gnu",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-x64-gnu@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "SXagRwnI2Wlwlitllu59UK/nGVbD1CKPcNqDplHwIC4BqJcpXFjD32d1R/RbuISa95HdQrZM3/7v4bKiowFaLA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-linux-x64-musl@4.63.3",
+      "name": "@rollup/rollup-linux-x64-musl",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-linux-x64-musl@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "2IPozoEALRCziGqE8O9KMK60PMu5TS1huv4fwoeCexj+WjmcwFtX9CTOVbfXCUqcELAubEwRFPYlzb/WvwY2HQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-openbsd-x64@4.63.3",
+      "name": "@rollup/rollup-openbsd-x64",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-openbsd-x64@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "AoxqosUHT9IX54hFn2TiN6A7d6ZKTtE6pd2bqWtqkkNJ6HJGaU6FRouGX8L1O7R/ZwsnCnpQrHzb4pDEx+UHRQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-openharmony-arm64@4.63.3",
+      "name": "@rollup/rollup-openharmony-arm64",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-openharmony-arm64@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "d+CaftKgmkFBzCwezMqqy1d0QNNYugqLCMcYVQWBy5SS2YfeMP8Q8ripkgx9O8IyBXXLHrJ+aaCV4U96usv6Yg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-win32-arm64-msvc@4.63.3",
+      "name": "@rollup/rollup-win32-arm64-msvc",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-win32-arm64-msvc@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "xXlDF6nR1eOuXbdDy5Hl5fmtY7teUDevF/k0O7IPoZe4Tpmdv+lgdE5JRsnhQtt37ql9P0VF2kAN9a0OCZdo+Q=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-win32-ia32-msvc@4.63.3",
+      "name": "@rollup/rollup-win32-ia32-msvc",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-win32-ia32-msvc@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "YtXAgLN+JP7Ay6qG3eWhc7IHMQPzLc8r3uvhAvlJIoCz/4Q32+Bl9Fmnywidh8v1GOIMmymjovfqY9ETAtysvA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-win32-x64-gnu@4.63.3",
+      "name": "@rollup/rollup-win32-x64-gnu",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-win32-x64-gnu@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "WuWtSJRNo549vzcfZyEgfqb6zeSgn1F+UE5kQ+BCjzz0W4MGCjntUHkZVc1VRuAM7+ULaSyhiPxD1spyewFvkQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@rollup/rollup-win32-x64-msvc@4.63.3",
+      "name": "@rollup/rollup-win32-x64-msvc",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/@rollup/rollup-win32-x64-msvc@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "+lIKX7O0+IGe7WuhATaAMMeT7B76vfhXH/l9wLQL+nvyhbw2ohYCKIdWL56JfDu75CWt5oKRP4QFH/jkMtBquA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@tweenjs/tween.js@23.1.3",
+      "name": "@tweenjs/tween.js",
+      "version": "23.1.3",
+      "scope": "required",
+      "purl": "pkg:npm/@tweenjs/tween.js@23.1.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "vJmvvwFxYuGnF2axRtPYocag6Clbb5YS7kLL+SO/TeVFzHqDIWrNKYtcsPMibjDx9O+bu+psAy9NKfWklassUA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/babel__core@7.20.5",
+      "name": "@types/babel__core",
+      "version": "7.20.5",
+      "scope": "optional",
+      "purl": "pkg:npm/@types/babel__core@7.20.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/babel__generator@7.27.0",
+      "name": "@types/babel__generator",
+      "version": "7.27.0",
+      "scope": "optional",
+      "purl": "pkg:npm/@types/babel__generator@7.27.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "ufFd2Xi92OAVPYsy+P4n7/U7e68fex0+Ee8gSG9KX7eo084CWiQ4sdxktvdl0bOPupXtVJPY19zk6EwWqUQ8lg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/babel__template@7.4.4",
+      "name": "@types/babel__template",
+      "version": "7.4.4",
+      "scope": "optional",
+      "purl": "pkg:npm/@types/babel__template@7.4.4",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "h/NUaSyG5EyxBIp8YRxo4RMe2/qQgvyowRwVMzhYhBCONbW8PUsg4lkFMrhgZhUe5z3L3MiLDuvyJ/CaPa2A8A=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/babel__traverse@7.28.0",
+      "name": "@types/babel__traverse",
+      "version": "7.28.0",
+      "scope": "optional",
+      "purl": "pkg:npm/@types/babel__traverse@7.28.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/debounce@1.2.4",
+      "name": "@types/debounce",
+      "version": "1.2.4",
+      "scope": "required",
+      "purl": "pkg:npm/@types/debounce@1.2.4",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "jBqiORIzKDOToaF63Fm//haOCHuwQuLa2202RK4MozpA6lh93eCBc+/8+wZn5OzjJt3ySdc+74SXWXB55Ewtyw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/estree@1.0.9",
+      "name": "@types/estree",
+      "version": "1.0.9",
+      "scope": "optional",
+      "purl": "pkg:npm/@types/estree@1.0.9",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/node@26.6.2",
+      "name": "@types/node",
+      "version": "26.6.2",
+      "scope": "required",
+      "purl": "pkg:npm/@types/node@26.6.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "X1P21scMv4zGKLYqjdGjaKa7COa0RKVYYZZN/NfvLQ1JegxFhdhpZG/Lyn8AXx6CDUavKAd11v6BvfpkDByK8g=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/prop-types@15.7.15",
+      "name": "@types/prop-types",
+      "version": "15.7.15",
+      "scope": "required",
+      "purl": "pkg:npm/@types/prop-types@15.7.15",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/react@18.3.31",
+      "name": "@types/react",
+      "version": "18.3.31",
+      "scope": "optional",
+      "purl": "pkg:npm/@types/react@18.3.31",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "vfEqpXTvwT91yhmwdfouStN2hSKwTvyRs8qpLfADyrq/kxDw0hZM7Wk9Ug1FELj8hIby+S/+kQCSRFF32nv2Qw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/react-dom@18.3.7",
+      "name": "@types/react-dom",
+      "version": "18.3.7",
+      "scope": "optional",
+      "purl": "pkg:npm/@types/react-dom@18.3.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/react-reconciler@0.26.7",
+      "name": "@types/react-reconciler",
+      "version": "0.26.7",
+      "scope": "required",
+      "purl": "pkg:npm/@types/react-reconciler@0.26.7",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "mBDYl8x+oyPX/VBb3E638N0B7xG+SPk/EAMcVPeexqus/5aTpTphQi0curhhshOqRrc9t6OPoJfEUkbymse/lQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/react-reconciler@0.28.9",
+      "name": "@types/react-reconciler",
+      "version": "0.28.9",
+      "scope": "required",
+      "purl": "pkg:npm/@types/react-reconciler@0.28.9",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "HHM3nxyUZ3zAylX8ZEyrDNd2XZOnQ0D5XfunJF5FLQnZbHHYq4UWvW1QfelQNXv1ICNkwYhfxjwfnqivYB6bFg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/stats.js@0.17.4",
+      "name": "@types/stats.js",
+      "version": "0.17.4",
+      "scope": "required",
+      "purl": "pkg:npm/@types/stats.js@0.17.4",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "jIBvWWShCvlBqBNIZt0KAshWpvSjhkwkEu4ZUcASoAvhmrgAUI2t1dXrjSL4xXVLB4FznPrIsX3nKXFl/Dt4vA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/three@0.170.0",
+      "name": "@types/three",
+      "version": "0.170.0",
+      "scope": "required",
+      "purl": "pkg:npm/@types/three@0.170.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "CUm2uckq+zkCY7ZbFpviRttY+6f9fvwm6YqSqPfA5K22s9w7R4VnA3rzJse8kHVvuzLcTx+CjNCs2NYe0QFAyg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@types/webxr@0.5.24",
+      "name": "@types/webxr",
+      "version": "0.5.24",
+      "scope": "required",
+      "purl": "pkg:npm/@types/webxr@0.5.24",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "h8fgEd/DpoS9CBrjEQXR+dIDraopAEfu4wYVNY2tEPwk60stPWhvZMf4Foo5FakuQ7HFZoa8WceaWFervK2Ovg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@vitejs/plugin-react@4.7.0",
+      "name": "@vitejs/plugin-react",
+      "version": "4.7.0",
+      "scope": "optional",
+      "purl": "pkg:npm/@vitejs/plugin-react@4.7.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "gUu9hwfWvvEDBBmgtAowQCojwZmJ5mcLn3aufeCsitijs3+f2NsrPtlAWIR6OPiqljl96GVCUbLe0HyqIpVaoA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/@webgpu/types@0.1.74",
+      "name": "@webgpu/types",
+      "version": "0.1.74",
+      "scope": "required",
+      "purl": "pkg:npm/@webgpu/types@0.1.74",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "lgiI4hbuLcI9unnm2cL/tvCaQU45dp0xcLWJh5uB/9MBGvIA4F8XIk7nSiBeg+K4xWGYwgZKn80LmERI5CxoTA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/base64-js@1.5.1",
+      "name": "base64-js",
+      "version": "1.5.1",
+      "scope": "required",
+      "purl": "pkg:npm/base64-js@1.5.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/baseline-browser-mapping@2.11.24",
+      "name": "baseline-browser-mapping",
+      "version": "2.11.24",
+      "scope": "optional",
+      "purl": "pkg:npm/baseline-browser-mapping@2.11.24",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "hYrgxie335U08WqICoGqKRzV1HFXv6zdxwJE4ekCb80CM9a0SVVsN4QPwT67RraRo+9h8IATk6uxHJw7QSkdOg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/browserslist@4.29.0",
+      "name": "browserslist",
+      "version": "4.29.0",
+      "scope": "optional",
+      "purl": "pkg:npm/browserslist@4.29.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "3GSvyjvDI4Dur1Meg2BekJquu5uF+9R9a1+5M1Mde192eZoXbeXjzgOsgqPS2V8D5wrrip0gR5Hf/GhWQ9ZzaA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/buffer@6.0.3",
+      "name": "buffer",
+      "version": "6.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/buffer@6.0.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/caniuse-lite@1.0.30001810",
+      "name": "caniuse-lite",
+      "version": "1.0.30001810",
+      "scope": "optional",
+      "purl": "pkg:npm/caniuse-lite@1.0.30001810",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "TITQPUkaz+aVk5GL6NhOdwk1aEaNTSDPsGFWrTuhKGtjTF70jL/Oht2W4c6rXUe5fu7Ie19VIahAXHIIiWWNeg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/convert-source-map@2.0.0",
+      "name": "convert-source-map",
+      "version": "2.0.0",
+      "scope": "optional",
+      "purl": "pkg:npm/convert-source-map@2.0.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/csstype@3.2.3",
+      "name": "csstype",
+      "version": "3.2.3",
+      "scope": "required",
+      "purl": "pkg:npm/csstype@3.2.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/debounce@1.2.1",
+      "name": "debounce",
+      "version": "1.2.1",
+      "scope": "required",
+      "purl": "pkg:npm/debounce@1.2.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/debug@4.4.3",
+      "name": "debug",
+      "version": "4.4.3",
+      "scope": "optional",
+      "purl": "pkg:npm/debug@4.4.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/electron-to-chromium@1.5.429",
+      "name": "electron-to-chromium",
+      "version": "1.5.429",
+      "scope": "optional",
+      "purl": "pkg:npm/electron-to-chromium@1.5.429",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "/1ENIE3cx4HTIx4IfPZFaOunJmsrSVTnj6coXoRVbiJUbkeTyFkJvBeWGkdgh08OhFbxYLMT1kbkwFVSarq6Ow=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/esbuild@0.21.5",
+      "name": "esbuild",
+      "version": "0.21.5",
+      "scope": "optional",
+      "purl": "pkg:npm/esbuild@0.21.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "mg3OPMV4hXywwpoDxu3Qda5xCKQi+vCTZq8S9J/EpkhB2HzKXq4SNFZE3+NK93JYxc8VMSep+lOUSC/RVKaBqw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/escalade@3.2.0",
+      "name": "escalade",
+      "version": "3.2.0",
+      "scope": "optional",
+      "purl": "pkg:npm/escalade@3.2.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/fflate@0.8.3",
+      "name": "fflate",
+      "version": "0.8.3",
+      "scope": "required",
+      "purl": "pkg:npm/fflate@0.8.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/flatbuffers@1.12.0",
+      "name": "flatbuffers",
+      "version": "1.12.0",
+      "scope": "required",
+      "purl": "pkg:npm/flatbuffers@1.12.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "c7CZADjRcl6j0PlvFy0ZqXQ67qSEZfrVPynmnL+2zPc+NtMvrF8Y0QceMo7QqnSPc7+uWjUIAbvCQ5WIKlMVdQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/fsevents@2.3.3",
+      "name": "fsevents",
+      "version": "2.3.3",
+      "scope": "optional",
+      "purl": "pkg:npm/fsevents@2.3.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/fsevents@2.3.2",
+      "name": "fsevents",
+      "version": "2.3.2",
+      "scope": "optional",
+      "purl": "pkg:npm/fsevents@2.3.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/gensync@1.0.0-beta.2",
+      "name": "gensync",
+      "version": "1.0.0-beta.2",
+      "scope": "optional",
+      "purl": "pkg:npm/gensync@1.0.0-beta.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/guid-typescript@1.0.9",
+      "name": "guid-typescript",
+      "version": "1.0.9",
+      "scope": "required",
+      "purl": "pkg:npm/guid-typescript@1.0.9",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "Y8T4vYhEfwJOTbouREvG+3XDsjr8E3kIr7uf+JZ0BYloFsttiHU0WfvANVsR7TxNUJa/WpCnw/Ino/p+DeBhBQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/ieee754@1.2.1",
+      "name": "ieee754",
+      "version": "1.2.1",
+      "scope": "required",
+      "purl": "pkg:npm/ieee754@1.2.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/its-fine@1.2.5",
+      "name": "its-fine",
+      "version": "1.2.5",
+      "scope": "required",
+      "purl": "pkg:npm/its-fine@1.2.5",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "fXtDA0X0t0eBYAGLVM5YsgJGsJ5jEmqZEPrGbzdf5awjv0xE7nqv3TVnvtUF060Tkes15DbDAKW/I48vsb6SyA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/js-tokens@4.0.0",
+      "name": "js-tokens",
+      "version": "4.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/js-tokens@4.0.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/jsesc@3.1.0",
+      "name": "jsesc",
+      "version": "3.1.0",
+      "scope": "optional",
+      "purl": "pkg:npm/jsesc@3.1.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/json5@2.2.3",
+      "name": "json5",
+      "version": "2.2.3",
+      "scope": "optional",
+      "purl": "pkg:npm/json5@2.2.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/long@5.3.2",
+      "name": "long",
+      "version": "5.3.2",
+      "scope": "required",
+      "purl": "pkg:npm/long@5.3.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "mNAgZ1GmyNhD7AuqnTG3/VQ26o760+ZYBPKjPvugO8+nLbYfX6TVpJPseBvopbdY+qpZ/lKUnmEc1LeZYS3QAA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/loose-envify@1.4.0",
+      "name": "loose-envify",
+      "version": "1.4.0",
+      "scope": "required",
+      "purl": "pkg:npm/loose-envify@1.4.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/lru-cache@5.1.1",
+      "name": "lru-cache",
+      "version": "5.1.1",
+      "scope": "optional",
+      "purl": "pkg:npm/lru-cache@5.1.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/meshoptimizer@0.18.1",
+      "name": "meshoptimizer",
+      "version": "0.18.1",
+      "scope": "required",
+      "purl": "pkg:npm/meshoptimizer@0.18.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "ZhoIoL7TNV4s5B6+rx5mC//fw8/POGyNxS/DZyCJeiZ12ScLfVwRE/GfsxwiTkMYYD5DmK2/JXnEVXqL4rF+Sw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/ms@2.1.3",
+      "name": "ms",
+      "version": "2.1.3",
+      "scope": "optional",
+      "purl": "pkg:npm/ms@2.1.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/nanoid@3.3.19",
+      "name": "nanoid",
+      "version": "3.3.19",
+      "scope": "optional",
+      "purl": "pkg:npm/nanoid@3.3.19",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "Y2tUNy4ouw6tq5oDSKeQYGOyhkUBhNOcGV/02KC+6kd9eDGqdZd++mjMiIDilrBYvjEnCYvVtsuHCuP+okSfug=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/node-releases@2.0.55",
+      "name": "node-releases",
+      "version": "2.0.55",
+      "scope": "optional",
+      "purl": "pkg:npm/node-releases@2.0.55",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "mIrE/Cw9y+9Au6dS5vDKDhQza9YvG6w+ZrS6X+ZzA7yFW/soAeaups4Qzn1bL6g5FVy8WtP79+0j82oPIbqRjQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/onnxruntime-common@1.20.1",
+      "name": "onnxruntime-common",
+      "version": "1.20.1",
+      "scope": "required",
+      "purl": "pkg:npm/onnxruntime-common@1.20.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "YiU0s0IzYYC+gWvqD1HzLc46Du1sXpSiwzKb63PACIJr6LfL27VsXSXQvt68EzD3V0D5Bc0vyJTjmMxp0ylQiw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/onnxruntime-web@1.20.1",
+      "name": "onnxruntime-web",
+      "version": "1.20.1",
+      "scope": "required",
+      "purl": "pkg:npm/onnxruntime-web@1.20.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "TePF6XVpLL1rWVMIl5Y9ACBQcyCNFThZON/jgElNd9Txb73CIEGlklhYR3UEr1cp5r0rbGI6nDwwrs79g7WjoA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/picocolors@1.1.1",
+      "name": "picocolors",
+      "version": "1.1.1",
+      "scope": "optional",
+      "purl": "pkg:npm/picocolors@1.1.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/platform@1.3.6",
+      "name": "platform",
+      "version": "1.3.6",
+      "scope": "required",
+      "purl": "pkg:npm/platform@1.3.6",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "fnWVljUchTro6RiCFvCXBbNhJc2NijN7oIQxbwsyL0buWJPG85v81ehlHI9fXrJsMNgTofEoWIQeClKpgxFLrg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/playwright@1.49.1",
+      "name": "playwright",
+      "version": "1.49.1",
+      "scope": "optional",
+      "purl": "pkg:npm/playwright@1.49.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "VYL8zLoNTBxVOrJBbDuRgDWa3i+mfQgDTrL8Ah9QXZ7ax4Dsj0MSq5bYgytRnDVVe+njoKnfsYkH3HzqVj5UZA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/playwright-core@1.49.1",
+      "name": "playwright-core",
+      "version": "1.49.1",
+      "scope": "optional",
+      "purl": "pkg:npm/playwright-core@1.49.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "BzmpVcs4kE2CH15rWfzpjzVGhWERJfmnXmniSyKeRZUs9Ws65m+RGIi7mjJK/euCegfn3i7jvqWeWyHe9y3Vgg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/pngjs@7.0.0",
+      "name": "pngjs",
+      "version": "7.0.0",
+      "scope": "optional",
+      "purl": "pkg:npm/pngjs@7.0.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/postcss@8.5.28",
+      "name": "postcss",
+      "version": "8.5.28",
+      "scope": "optional",
+      "purl": "pkg:npm/postcss@8.5.28",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "RRuzqDtt5Y9h3quz5hWhK+TPnsmVs6WwSU6LkJMeY4HstUEDuYTG8UJSdawMRzmzAtV+KEoG8N3Qg2qLy5vM/A=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/protobufjs@7.6.6",
+      "name": "protobufjs",
+      "version": "7.6.6",
+      "scope": "required",
+      "purl": "pkg:npm/protobufjs@7.6.6",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "dYDWdjSl5RNb7SgPxGQcRU+GtvP7s2fpkrY0r432PcOIaZ0/rBcxEZnQN67iJhFuQiVw754JDoPruPCNdGsbjg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/react@18.3.1",
+      "name": "react",
+      "version": "18.3.1",
+      "scope": "required",
+      "purl": "pkg:npm/react@18.3.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/react-dom@18.3.1",
+      "name": "react-dom",
+      "version": "18.3.1",
+      "scope": "required",
+      "purl": "pkg:npm/react-dom@18.3.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/react-reconciler@0.27.0",
+      "name": "react-reconciler",
+      "version": "0.27.0",
+      "scope": "required",
+      "purl": "pkg:npm/react-reconciler@0.27.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "HmMDKciQjYmBRGuuhIaKA1ba/7a+UsM5FzOZsMO2JYHt9Jh8reCb7j1eDC95NOyUlKM9KRyvdx0flBuDvYSBoA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/react-refresh@0.17.0",
+      "name": "react-refresh",
+      "version": "0.17.0",
+      "scope": "optional",
+      "purl": "pkg:npm/react-refresh@0.17.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/rollup@4.63.3",
+      "name": "rollup",
+      "version": "4.63.3",
+      "scope": "optional",
+      "purl": "pkg:npm/rollup@4.63.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "1i2XreiAoMMXuPGD6Msj2xWrMMkHojNRKivInxGQcg7/1KuPuYlfUutLyh4drnOxUTHX9cHI4wFoat8D/NKaBw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/scheduler@0.21.0",
+      "name": "scheduler",
+      "version": "0.21.0",
+      "scope": "required",
+      "purl": "pkg:npm/scheduler@0.21.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "1r87x5fz9MXqswA2ERLo0EbOAU74DpIUO090gIasYTqlVoJeMcl+Z1Rg7WHz+qtPujhS/hGIt9kxZOYBV3faRQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/scheduler@0.23.2",
+      "name": "scheduler",
+      "version": "0.23.2",
+      "scope": "required",
+      "purl": "pkg:npm/scheduler@0.23.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/semver@6.3.1",
+      "name": "semver",
+      "version": "6.3.1",
+      "scope": "optional",
+      "purl": "pkg:npm/semver@6.3.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/source-map-js@1.2.1",
+      "name": "source-map-js",
+      "version": "1.2.1",
+      "scope": "optional",
+      "purl": "pkg:npm/source-map-js@1.2.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/suspend-react@0.1.3",
+      "name": "suspend-react",
+      "version": "0.1.3",
+      "scope": "required",
+      "purl": "pkg:npm/suspend-react@0.1.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "aqldKgX9aZqpoDp3e8/BZ8Dm7x1pJl+qI3ZKxDN0i/IQTWUwBx/ManmlVJ3wowqbno6c2bmiIfs+Um6LbsjJyQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/three@0.170.0",
+      "name": "three",
+      "version": "0.170.0",
+      "scope": "required",
+      "purl": "pkg:npm/three@0.170.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "FQK+LEpYc0fBD+J8g6oSEyyNzjp+Q7Ks1C568WWaoMRLW+TkNNWmenWeGgJjV105Gd+p/2ql1ZcjYvNiPZBhuQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/typescript@5.9.3",
+      "name": "typescript",
+      "version": "5.9.3",
+      "scope": "optional",
+      "purl": "pkg:npm/typescript@5.9.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/undici-types@8.9.0",
+      "name": "undici-types",
+      "version": "8.9.0",
+      "scope": "required",
+      "purl": "pkg:npm/undici-types@8.9.0",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/update-browserslist-db@1.3.3",
+      "name": "update-browserslist-db",
+      "version": "1.3.3",
+      "scope": "optional",
+      "purl": "pkg:npm/update-browserslist-db@1.3.3",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "pJ2sYawQS0R/WI928Gj5GlPhTGzbMelq0+4INtSYNDV9ErKJcX6xjGWkoG/VnB3dpUm00zALaqkrUD77pO5TDQ=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/vite@5.4.21",
+      "name": "vite",
+      "version": "5.4.21",
+      "scope": "optional",
+      "purl": "pkg:npm/vite@5.4.21",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "o5a9xKjbtuhY6Bi5S3+HvbRERmouabWbyUcpXXUA1u+GNUKoROi9byOJ8M0nHbHYHkYICiMlqxkg1KkYmm25Sw=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/yallist@3.1.1",
+      "name": "yallist",
+      "version": "3.1.1",
+      "scope": "optional",
+      "purl": "pkg:npm/yallist@3.1.1",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "UNKNOWN"
+          }
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/zustand@3.7.2",
+      "name": "zustand",
+      "version": "3.7.2",
+      "scope": "required",
+      "purl": "pkg:npm/zustand@3.7.2",
+      "hashes": [
+        {
+          "alg": "SHA512",
+          "content": "PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA=="
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ]
+    }
+  ]
+}

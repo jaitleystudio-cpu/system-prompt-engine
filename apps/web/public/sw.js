@@ -39,6 +39,10 @@ self.addEventListener("fetch", (event) => {
     // No third-party fetches in the product path.
     return;
   }
+  if (url.search && url.search.length > 0) {
+    // Never cache requests with query strings to avoid private leakage.
+    return;
+  }
   // Prefer fresh documents; use only the installed public shell when offline.
   // Never persist arbitrary navigation responses (which may contain private data).
   if (req.mode === "navigate") {
@@ -54,14 +58,28 @@ self.addEventListener("fetch", (event) => {
       if (hit) return hit;
       return fetch(req).then((res) => {
         if (!res || !res.ok) return res;
+        const cacheControl = res.headers && typeof res.headers.get === "function" ? res.headers.get("Cache-Control") : null;
+        if (cacheControl && (cacheControl.includes("no-store") || cacheControl.includes("private"))) return res;
+        const vary = res.headers && typeof res.headers.get === "function" ? res.headers.get("Vary") : null;
+        if (vary && vary.includes("*")) return res;
         const dest = req.destination;
+        const pathname = url.pathname;
+        const isStaticAsset =
+          pathname.endsWith(".js") ||
+          pathname.endsWith(".css") ||
+          pathname.endsWith(".wasm") ||
+          pathname.endsWith(".svg") ||
+          pathname.endsWith(".webp") ||
+          pathname.endsWith(".png") ||
+          pathname.endsWith(".ico") ||
+          pathname.endsWith(".webmanifest") ||
+          (pathname.endsWith(".json") && pathname.includes("spe_wasm"));
         const cacheable =
-          dest === "script" ||
+          (dest === "script" ||
           dest === "style" ||
           dest === "worker" ||
           dest === "manifest" ||
-          url.pathname.endsWith(".wasm") ||
-          url.pathname.endsWith(".json") && url.pathname.includes("spe_wasm");
+          isStaticAsset) && isStaticAsset;
         if (cacheable) {
           const copy = res.clone();
           caches.open(CACHE).then((cache) => cache.put(req, copy));

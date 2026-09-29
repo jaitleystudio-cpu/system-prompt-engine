@@ -12,6 +12,9 @@ const navigation={url:'https://spe.test/private',mode:'navigate',method:'GET',de
 assert.equal(await dispatch(navigation),network);assert.equal(writes,0);
 offline=true;assert.equal(await dispatch(navigation),shell);assert.equal(writes,0);
 assert.equal(await dispatch({...navigation,method:'POST'}),undefined);
+assert.equal(await dispatch({...navigation,method:'PUT'}),undefined);
+assert.equal(await dispatch({...navigation,method:'DELETE'}),undefined);
+assert.equal(await dispatch({...navigation,url:'https://spe.test/private?secret=123'}),undefined);
 assert.equal(await dispatch({...navigation,url:'https://other.test/'}),undefined);
 assert(matches.every(([,options])=>!options?.ignoreVary));
-console.log('PASS: fresh navigation, offline shell, no navigation caching, POST/external bypass, Vary respected.');
+console.log('PASS: fresh navigation, offline shell, no navigation caching, POST/PUT/DELETE/query-string/external bypass, Vary respected.');
