@@ -1,0 +1,360 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/scholarly_evidence_package.schema.json",
+  "title": "ScholarlyEvidencePackage",
+  "description": "Lane C research-query evidence package. Not a ContextCapsule and not a K3 prompt.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "package_id",
+    "status",
+    "query",
+    "integration",
+    "sources_requested",
+    "records",
+    "quarantine",
+    "groups",
+    "claim_evidence_graph",
+    "contradiction_map",
+    "gap_unknown_map",
+    "capsule_candidates",
+    "egress",
+    "refusal_reasons"
+  ],
+  "properties": {
+    "package_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "status": { "type": "string", "enum": ["VALID", "PARTIAL", "REFUSED"] },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "as_of", "frontier_years", "max_per_source"],
+      "properties": {
+        "text": { "type": "string" },
+        "as_of": { "type": "string" },
+        "frontier_years": { "type": "integer" },
+        "max_per_source": { "type": "integer" }
+      }
+    },
+    "integration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "later_path",
+        "wired_to_k3",
+        "wired_to_xcat",
+        "wired_to_quality"
+      ],
+      "properties": {
+        "status": { "const": "NOT_WIRED" },
+        "later_path": {
+          "const": "EvidencePackage → ContextCapsule → CategoryProtocol → K3"
+        },
+        "wired_to_k3": { "const": false },
+        "wired_to_xcat": { "const": false },
+        "wired_to_quality": { "const": false }
+      }
+    },
+    "sources_requested": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "records": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/paper" }
+    },
+    "quarantine": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/quarantine" }
+    },
+    "groups": { "$ref": "#/$defs/groups" },
+    "claim_evidence_graph": { "$ref": "#/$defs/graph" },
+    "contradiction_map": { "$ref": "#/$defs/contradictions" },
+    "gap_unknown_map": { "$ref": "#/$defs/gaps" },
+    "capsule_candidates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/capsule" }
+    },
+    "egress": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/egress" }
+    },
+    "refusal_reasons": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "doi",
+        "pmid",
+        "pmcid",
+        "arxiv_id",
+        "arxiv_version",
+        "canonical_key",
+        "status"
+      ],
+      "properties": {
+        "doi": { "type": ["string", "null"] },
+        "pmid": { "type": ["string", "null"] },
+        "pmcid": { "type": ["string", "null"] },
+        "arxiv_id": { "type": ["string", "null"] },
+        "arxiv_version": { "type": ["string", "null"] },
+        "canonical_key": { "type": "string" },
+        "status": { "type": "string", "enum": ["RESOLVED", "UNKNOWN"] }
+      }
+    },
+    "retraction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "notice_ids", "evidence"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "CORRECTION",
+            "EXPRESSION_OF_CONCERN",
+            "WITHDRAWAL",
+            "RETRACTION",
+            "UNKNOWN"
+          ]
+        },
+        "notice_ids": { "type": "array", "items": { "type": "string" } },
+        "evidence": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "paper": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_id",
+        "identity",
+        "title",
+        "abstract",
+        "authors",
+        "year",
+        "venue",
+        "publication_types",
+        "cited_by_count",
+        "is_open_access",
+        "license",
+        "landing_url",
+        "retraction",
+        "source_ids",
+        "primary_source_id",
+        "role",
+        "replication_signal"
+      ],
+      "properties": {
+        "record_id": { "type": "string", "minLength": 1 },
+        "identity": { "$ref": "#/$defs/identity" },
+        "title": { "type": "string", "minLength": 1 },
+        "abstract": { "type": ["string", "null"] },
+        "authors": { "type": "array", "items": { "type": "string" } },
+        "year": { "type": ["integer", "null"] },
+        "venue": { "type": ["string", "null"] },
+        "publication_types": { "type": "array", "items": { "type": "string" } },
+        "cited_by_count": { "type": ["integer", "null"] },
+        "is_open_access": { "type": ["boolean", "null"] },
+        "license": { "type": "string" },
+        "landing_url": { "type": ["string", "null"] },
+        "retraction": { "$ref": "#/$defs/retraction" },
+        "source_ids": { "type": "array", "items": { "type": "string" } },
+        "primary_source_id": { "type": "string" },
+        "role": { "type": "string", "enum": ["work", "notice"] },
+        "replication_signal": {
+          "type": "string",
+          "enum": ["NONE", "STRUCTURED", "TITLE_HEURISTIC"]
+        }
+      }
+    },
+    "quarantine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "source_id", "detail"],
+      "properties": {
+        "reason": { "type": "string" },
+        "source_id": { "type": "string" },
+        "detail": { "type": "string" }
+      }
+    },
+    "member": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_id", "basis"],
+      "properties": {
+        "record_id": { "type": "string" },
+        "basis": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "groups": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["foundational", "frontier", "contradictory", "replication"],
+      "properties": {
+        "foundational": { "type": "array", "items": { "$ref": "#/$defs/member" } },
+        "frontier": { "type": "array", "items": { "$ref": "#/$defs/member" } },
+        "contradictory": { "type": "array", "items": { "$ref": "#/$defs/member" } },
+        "replication": { "type": "array", "items": { "$ref": "#/$defs/member" } }
+      }
+    },
+    "graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "claims", "edges"],
+      "properties": {
+        "status": { "type": "string", "enum": ["VALID", "PARTIAL", "UNKNOWN"] },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claim_id", "text", "origin"],
+            "properties": {
+              "claim_id": { "type": "string" },
+              "text": { "type": "string" },
+              "origin": { "type": "string", "enum": ["QUERY"] }
+            }
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claim_id", "record_id", "polarity", "strength"],
+            "properties": {
+              "claim_id": { "type": "string" },
+              "record_id": { "type": "string" },
+              "polarity": {
+                "type": "string",
+                "enum": ["SUPPORT", "REFUTE", "NEUTRAL", "UNKNOWN"]
+              },
+              "strength": { "type": "string", "enum": ["STRUCTURED", "ABSENT"] }
+            }
+          }
+        }
+      }
+    },
+    "contradictions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason", "pairs"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PRESENT", "UNKNOWN"] },
+        "reason": { "type": "string" },
+        "pairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claim_id", "left_record_id", "right_record_id", "basis"],
+            "properties": {
+              "claim_id": { "type": "string" },
+              "left_record_id": { "type": "string" },
+              "right_record_id": { "type": "string" },
+              "basis": { "const": "OPPOSING_STRUCTURED_POLARITY" }
+            }
+          }
+        }
+      }
+    },
+    "gaps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["code", "subject", "detail", "blocks_valid"],
+            "properties": {
+              "code": { "type": "string" },
+              "subject": { "type": "string" },
+              "detail": { "type": "string" },
+              "blocks_valid": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "capsule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "integration_status",
+        "record_id",
+        "domain_id",
+        "context_type",
+        "claim_or_observation",
+        "value",
+        "source_id",
+        "source_class",
+        "authority_class",
+        "retrieved_at",
+        "valid_as_of",
+        "fresh_until",
+        "license",
+        "allowed_use",
+        "confidence",
+        "support_status",
+        "contradiction_group",
+        "provenance_digest",
+        "taint_labels",
+        "sensitivity_labels"
+      ],
+      "properties": {
+        "candidate_id": { "type": "string" },
+        "integration_status": { "const": "CANDIDATE_NOT_WIRED" },
+        "record_id": { "type": "string" },
+        "domain_id": { "const": "research" },
+        "context_type": { "const": "SCHOLARLY_EVIDENCE" },
+        "claim_or_observation": { "type": "string" },
+        "value": { "type": "string" },
+        "source_id": { "type": "string" },
+        "source_class": { "type": "string" },
+        "authority_class": { "const": "REFERENCE" },
+        "retrieved_at": { "type": "string" },
+        "valid_as_of": { "type": "string" },
+        "fresh_until": { "type": ["string", "null"] },
+        "license": { "type": "string" },
+        "allowed_use": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 0.6 },
+        "support_status": {
+          "type": "string",
+          "enum": [
+            "PARTIALLY_SUPPORTED",
+            "CONTRADICTED",
+            "INSUFFICIENT",
+            "PREPRINT_ONLY",
+            "UNVERIFIED"
+          ]
+        },
+        "contradiction_group": { "type": ["string", "null"] },
+        "provenance_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "taint_labels": { "type": "array", "items": { "type": "string" } },
+        "sensitivity_labels": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "egress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "host", "method", "path", "query_keys", "status"],
+      "properties": {
+        "source_id": { "type": "string" },
+        "host": { "type": "string" },
+        "method": { "const": "GET" },
+        "path": { "type": "string" },
+        "query_keys": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "integer" }
+      }
+    }
+  }
+}
