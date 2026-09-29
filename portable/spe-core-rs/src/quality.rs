@@ -951,7 +951,8 @@ fn evaluate_obligations(subject: &Value) -> Result<Vec<Value>, SpeError> {
             vec!["MISSING_XCAT".into()],
         ));
     } else if xcat.as_ref().and_then(|item| item.get("taxonomy_version")).and_then(|v| v.as_str())
-        == Some("2")
+        == Some(crate::xcat::CURRENT_TAXONOMY_VERSION)
+        && !category.is_empty()
         && xcat
             .as_ref()
             .and_then(|item| item.get("active_category"))
@@ -976,14 +977,7 @@ fn evaluate_obligations(subject: &Value) -> Result<Vec<Value>, SpeError> {
             vec!["CATEGORY_MISMATCH".into()],
         ));
     }
-    let proof_refs = subject.get("proof_refs").and_then(|v| v.as_array());
-    if proof_refs.is_some()
-        && !proof_refs.unwrap().is_empty()
-        && proof_refs
-            .unwrap()
-            .iter()
-            .all(|item| item.as_str().map(|text| !text.is_empty()).unwrap_or(false))
-    {
+    if proof_binding_satisfied(subject)? {
         results.push(obligation(
             "proof:present",
             "PROOF",
@@ -1031,6 +1025,75 @@ fn sorted_unique(mut items: Vec<String>) -> Vec<String> {
 
 fn contains_code(items: &[String], code: &str) -> bool {
     items.iter().any(|item| item == code)
+}
+
+fn governing_proof_refs(subject: &Value) -> Result<Vec<String>, SpeError> {
+    let protected_digest = match full_protected(subject.get("protected_intent")) {
+        Some(value) => digest(&value)?,
+        None => "UNBOUND".into(),
+    };
+    let graph = {
+        let value = graph_digest(subject.get("requirement_graph"));
+        if value.is_empty() { "UNBOUND".into() } else { value }
+    };
+    let xcat = xcat_identity(subject.get("xcat"));
+    let version = xcat
+        .as_ref()
+        .and_then(|item| item.get("taxonomy_version"))
+        .and_then(|item| item.as_str())
+        .filter(|text| !text.is_empty())
+        .unwrap_or("UNBOUND");
+    let category = xcat
+        .as_ref()
+        .and_then(|item| item.get("active_category"))
+        .and_then(|item| item.as_str())
+        .filter(|text| !text.is_empty())
+        .unwrap_or("UNRESOLVED");
+    let k3 = k3_identity(subject.get("k3"));
+    let selection = k3
+        .as_ref()
+        .and_then(|item| item.get("selection_id"))
+        .and_then(|item| item.as_str())
+        .filter(|text| !text.is_empty())
+        .unwrap_or("UNBOUND");
+    let effect_digest = match effect_identity(subject.get("effect_plan")) {
+        Some(value) => digest(&value)?,
+        None => "UNBOUND".into(),
+    };
+    let mut refs = vec![
+        format!("semantic:effect:{effect_digest}"),
+        format!("semantic:graph:{graph}"),
+        format!("semantic:k3:{selection}"),
+        format!("semantic:protected:{protected_digest}"),
+        format!("semantic:xcat:{version}:{category}"),
+    ];
+    refs.sort();
+    Ok(refs)
+}
+
+fn proof_binding_satisfied(subject: &Value) -> Result<bool, SpeError> {
+    let refs = proof_refs(subject);
+    if refs.is_empty() {
+        return Ok(false);
+    }
+    let lowered = refs.join(" ").to_lowercase();
+    for phrase in [
+        "browsing happened",
+        "sources were fetched",
+        "citations exist",
+        "internet access is authorized",
+    ] {
+        if lowered.contains(phrase) {
+            return Ok(false);
+        }
+    }
+    let Some(xcat) = xcat_identity(subject.get("xcat")) else {
+        return Ok(false);
+    };
+    if field_str(&xcat, "taxonomy_version") != crate::xcat::CURRENT_TAXONOMY_VERSION {
+        return Ok(false);
+    }
+    Ok(refs == governing_proof_refs(subject)?)
 }
 
 fn proof_refs(subject: &Value) -> Vec<String> {
@@ -1177,15 +1240,17 @@ fn quality_delta(before: &Value, after: &Value) -> Result<Value, SpeError> {
     } else if !protected_ids.is_empty() || !regressed.is_empty() {
         disposition = "REGRESSED".into();
     } else if !improved.is_empty() {
-        let proof_ok = !proof_refs(before).is_empty() && !proof_refs(after).is_empty();
-        let proof_status = find(&after_obs, "proof:present")
+        let before_proof = find(&before_obs, "proof:present")
+            .map(|item| field_str(&item, "status"))
+            .unwrap_or_default();
+        let after_proof = find(&after_obs, "proof:present")
             .map(|item| field_str(&item, "status"))
             .unwrap_or_default();
         let unknown_laundered = contains_code(&reasons, "UNKNOWN_LAUNDERED");
-        if !proof_ok || proof_status != "SATISFIED" || unknown_laundered {
+        if before_proof != "SATISFIED" || after_proof != "SATISFIED" || unknown_laundered {
             disposition = "UNRESOLVED".into();
             reasons.push(
-                if !proof_ok || proof_status != "SATISFIED" {
+                if before_proof != "SATISFIED" || after_proof != "SATISFIED" {
                     "MISSING_PROOF"
                 } else {
                     "UNKNOWN_LAUNDERED"
@@ -1399,7 +1464,9 @@ fn effect_prompt_authorized(subject: &Value) -> Result<bool, SpeError> {
     let Some(full) = full_protected(subject.get("protected_intent")) else {
         return Ok(false);
     };
-    if xcat.get("active_category") != full.get("category") || field_str(&xcat, "taxonomy_version") != "2" {
+    if xcat.get("active_category") != full.get("category")
+        || field_str(&xcat, "taxonomy_version") != crate::xcat::CURRENT_TAXONOMY_VERSION
+    {
         return Ok(false);
     }
     Ok(true)
@@ -2332,18 +2399,6 @@ fn quality_loop(subject: &Value, mode: &str) -> Result<Value, SpeError> {
     }))
 }
 
-fn string_items(value: Option<&Value>) -> Vec<Value> {
-    value
-        .and_then(|item| item.as_array())
-        .map(|items| {
-            items
-                .iter()
-                .filter_map(|item| item.as_str().map(|text| Value::String(text.to_string())))
-                .collect()
-        })
-        .unwrap_or_default()
-}
-
 fn subject_from_k3(k3_output: &Value, compiled_prompt: &str) -> Result<Value, SpeError> {
     if !k3_output.is_object() {
         return Err(SpeError::new("MALFORMED_K3", "k3 output must be an object"));
@@ -2352,10 +2407,7 @@ fn subject_from_k3(k3_output: &Value, compiled_prompt: &str) -> Result<Value, Sp
         .ok_or_else(|| SpeError::new("MALFORMED_K3", "protected binding missing"))?;
     let context = k3_output.get("category_context").filter(|item| item.is_object());
     let category = normalize_category_id(context.and_then(|item| item.get("xcat_id")));
-    let taxonomy = context
-        .and_then(|item| item.get("taxonomy_version"))
-        .and_then(|item| item.as_str())
-        .unwrap_or("");
+    let taxonomy = crate::xcat::CURRENT_TAXONOMY_VERSION;
     if let Some(obj) = protected.as_object_mut() {
         obj.insert("category".into(), Value::String(category.clone()));
     }
@@ -2380,19 +2432,20 @@ fn subject_from_k3(k3_output: &Value, compiled_prompt: &str) -> Result<Value, Sp
         .filter(|item| item.is_object())
         .cloned()
         .unwrap_or_else(|| json!({}));
-    let proof_refs = string_items(k3_output.get("proof_refs"))
-        .into_iter()
-        .filter(|item| item.as_str().map(|text| !text.is_empty()).unwrap_or(false))
-        .collect::<Vec<_>>();
-    Ok(json!({
+    let mut subject = json!({
         "compiled_prompt": compiled_prompt,
         "effect_plan": effect,
         "k3": {"selection_id": selection, "techniques": techniques},
-        "proof_refs": proof_refs,
         "protected_intent": protected,
         "requirement_graph": graph,
         "xcat": {"active_category": category, "taxonomy_version": taxonomy},
-    }))
+    });
+    let refs = governing_proof_refs(&subject)?
+        .into_iter()
+        .map(Value::String)
+        .collect::<Vec<_>>();
+    subject.as_object_mut().expect("subject object").insert("proof_refs".into(), Value::Array(refs));
+    Ok(subject)
 }
 
 fn evaluate_from_k3(payload: &Value) -> Result<Value, SpeError> {

@@ -23,8 +23,11 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const EXPECTED_SHA256 =
+  "a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf";
+const EXPECTED_BYTES = 1275679;
+const TASK57R_F1_SHA256 =
   "dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541";
-const EXPECTED_BYTES = 1275233;
+const TASK57R_F1_BYTES = 1275233;
 const TASK57R_HOLD_SHA256 =
   "0537fc879b42524d36cf94b965e1234f02cf557c47cc55c7b1612d5643c70fcb";
 const TASK57R_HOLD_BYTES = 1273629;
@@ -111,9 +114,11 @@ function expectedMeta() {
     previous_canonical_sha256: PREVIOUS_CANONICAL_SHA256,
     previous_canonical_bytes: PREVIOUS_CANONICAL_BYTES,
     semantic_source_note:
-      "Task 57R-F1 from_k3 returns reconstruction and validates the kept subject. The Task57R HOLD artifact remains task57r_hold_sha256.",
+      "Task 57R-F3 derives governing proof inside Quality. F1 WASM remains task57r_f1_sha256. The Task57R HOLD artifact remains task57r_hold_sha256.",
     task57r_hold_sha256: TASK57R_HOLD_SHA256,
     task57r_hold_bytes: TASK57R_HOLD_BYTES,
+    task57r_f1_sha256: TASK57R_F1_SHA256,
+    task57r_f1_bytes: TASK57R_F1_BYTES,
     task57_quality_sha256: TASK57_QUALITY_SHA256,
     task57_quality_bytes: TASK57_QUALITY_BYTES,
     xcat_domain_sha256: XCAT_DOMAIN_SHA256,

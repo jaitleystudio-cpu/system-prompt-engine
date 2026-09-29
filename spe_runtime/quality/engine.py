@@ -12,6 +12,7 @@ import re
 from typing import Any, Mapping
 
 from spe_runtime.portability.canonical import canonical_dumps
+from spe_runtime.xcat.migration import CURRENT_TAXONOMY_VERSION
 
 DELTA_VERSION = "spe.quality_delta.v1"
 RECONSTRUCTION_VERSION = "spe.reconstruction_plan.v1"
@@ -194,6 +195,50 @@ def _graph_digest(value: Any) -> str:
         return ""
     digest = raw.get("graph_digest")
     return digest if isinstance(digest, str) else ""
+
+
+_EXTERNAL_PROOF_CLAIMS = (
+    "browsing happened",
+    "sources were fetched",
+    "citations exist",
+    "internet access is authorized",
+)
+
+
+def governing_proof_refs(subject: Mapping[str, Any]) -> list[str]:
+    """Internal proof of the subject's governing state. Not external evidence."""
+    protected = _full_protected(subject.get("protected_intent"))
+    protected_digest = _digest(protected) if protected is not None else "UNBOUND"
+    graph = _graph_digest(subject.get("requirement_graph")) or "UNBOUND"
+    xcat = _xcat_identity(subject.get("xcat")) or {"active_category": "", "taxonomy_version": ""}
+    version = xcat["taxonomy_version"] or "UNBOUND"
+    category = xcat["active_category"] or "UNRESOLVED"
+    k3 = _k3_identity(subject.get("k3")) or {"selection_id": "", "techniques": []}
+    selection = k3["selection_id"] or "UNBOUND"
+    effect = _effect_identity(subject.get("effect_plan"))
+    effect_digest = _digest(effect) if effect is not None else "UNBOUND"
+    return sorted(
+        [
+            f"semantic:effect:{effect_digest}",
+            f"semantic:graph:{graph}",
+            f"semantic:k3:{selection}",
+            f"semantic:protected:{protected_digest}",
+            f"semantic:xcat:{version}:{category}",
+        ]
+    )
+
+
+def proof_binding_satisfied(subject: Mapping[str, Any]) -> bool:
+    refs = _proof_refs(subject)
+    if not refs:
+        return False
+    lowered = " ".join(refs).lower()
+    if any(phrase in lowered for phrase in _EXTERNAL_PROOF_CLAIMS):
+        return False
+    xcat = _xcat_identity(subject.get("xcat"))
+    if xcat is None or xcat["taxonomy_version"] != CURRENT_TAXONOMY_VERSION:
+        return False
+    return refs == governing_proof_refs(subject)
 
 
 def _subject_view(subject: Mapping[str, Any]) -> dict[str, Any]:
@@ -829,7 +874,11 @@ def evaluate_obligations(subject: Mapping[str, Any]) -> list[dict[str, Any]]:
         results.append(
             _obligation("bind:xcat", "XCAT_BINDING", "active_category", "UNKNOWN", ["xcat"], ["MISSING_XCAT"])
         )
-    elif xcat["taxonomy_version"] == "2" and xcat["active_category"] == protected["category"]:
+    elif (
+        xcat["taxonomy_version"] == CURRENT_TAXONOMY_VERSION
+        and xcat["active_category"]
+        and xcat["active_category"] == protected["category"]
+    ):
         results.append(
             _obligation(
                 "bind:xcat",
@@ -852,8 +901,7 @@ def evaluate_obligations(subject: Mapping[str, Any]) -> list[dict[str, Any]]:
             )
         )
 
-    proof_refs = subject.get("proof_refs")
-    if isinstance(proof_refs, list) and proof_refs and all(isinstance(item, str) and item for item in proof_refs):
+    if proof_binding_satisfied(subject):
         results.append(
             _obligation("proof:present", "PROOF", "proof_refs", "SATISFIED", ["proof_refs"], [])
         )
@@ -987,13 +1035,13 @@ def quality_delta(before: Mapping[str, Any], after: Mapping[str, Any]) -> dict[s
     elif protected or regressed:
         disposition = "REGRESSED"
     elif improved:
-        proof_ok = bool(_proof_refs(before) and _proof_refs(after))
-        proof_status = after_map.get("proof:present", {}).get("status")
+        before_proof = before_map.get("proof:present", {}).get("status")
+        after_proof = after_map.get("proof:present", {}).get("status")
         unknown_laundered = "UNKNOWN_LAUNDERED" in reasons
-        if not proof_ok or proof_status != "SATISFIED" or unknown_laundered:
+        if before_proof != "SATISFIED" or after_proof != "SATISFIED" or unknown_laundered:
             disposition = "UNRESOLVED"
             reasons.append(
-                "MISSING_PROOF" if not proof_ok or proof_status != "SATISFIED" else "UNKNOWN_LAUNDERED"
+                "MISSING_PROOF" if before_proof != "SATISFIED" or after_proof != "SATISFIED" else "UNKNOWN_LAUNDERED"
             )
             unresolved.extend(improved)
             improved = []
@@ -1102,7 +1150,7 @@ def _effect_prompt_authorized(subject: Mapping[str, Any]) -> bool:
     full = _full_protected(subject.get("protected_intent"))
     if xcat is None or full is None or xcat["active_category"] != full["category"]:
         return False
-    if xcat["taxonomy_version"] != "2":
+    if xcat["taxonomy_version"] != CURRENT_TAXONOMY_VERSION:
         return False
     return True
 
@@ -1756,32 +1804,28 @@ def subject_from_k3(k3_output: Mapping[str, Any], compiled_prompt: str) -> dict[
     context = k3_output.get("category_context")
     context_map = context if isinstance(context, Mapping) else {}
     category = _normalize_category_id(context_map.get("xcat_id"))
-    taxonomy = context_map.get("taxonomy_version")
     protected["category"] = category
     graph = k3_output.get("requirement_graph")
     techniques_raw = k3_output.get("techniques")
     techniques = [str(item) for item in techniques_raw] if isinstance(techniques_raw, list) else []
     selection = k3_output.get("selection_id")
     effect = k3_output.get("prompt_effect_plan")
-    proof_raw = k3_output.get("proof_refs")
-    proof_refs = (
-        [item for item in proof_raw if isinstance(item, str) and item] if isinstance(proof_raw, list) else []
-    )
-    return {
+    subject = {
         "compiled_prompt": compiled_prompt,
         "effect_plan": dict(effect) if isinstance(effect, Mapping) else None,
         "k3": {
             "selection_id": selection if isinstance(selection, str) else "",
             "techniques": techniques,
         },
-        "proof_refs": proof_refs,
         "protected_intent": protected,
         "requirement_graph": dict(graph) if isinstance(graph, Mapping) else {},
         "xcat": {
             "active_category": category,
-            "taxonomy_version": taxonomy if isinstance(taxonomy, str) else "",
+            "taxonomy_version": CURRENT_TAXONOMY_VERSION,
         },
     }
+    subject["proof_refs"] = governing_proof_refs(subject)
+    return subject
 
 
 def evaluate_from_k3(payload: Mapping[str, Any]) -> dict[str, Any]:

@@ -37,9 +37,12 @@ const TASK57_QUALITY_BYTES = 1229241;
 const TASK57R_HOLD_SHA256 =
   "0537fc879b42524d36cf94b965e1234f02cf557c47cc55c7b1612d5643c70fcb";
 const TASK57R_HOLD_BYTES = 1273629;
-const EXPECTED_CANONICAL_SHA256 =
+const TASK57R_F1_SHA256 =
   "dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541";
-const EXPECTED_CANONICAL_BYTES = 1275233;
+const TASK57R_F1_BYTES = 1275233;
+const EXPECTED_CANONICAL_SHA256 =
+  "a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf";
+const EXPECTED_CANONICAL_BYTES = 1275679;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..");
@@ -340,6 +343,8 @@ function main() {
   process.stdout.write(`xcat_domain_bytes=${XCAT_DOMAIN_BYTES}\n`);
   process.stdout.write(`task57r_hold_sha256=${TASK57R_HOLD_SHA256}\n`);
   process.stdout.write(`task57r_hold_bytes=${TASK57R_HOLD_BYTES}\n`);
+  process.stdout.write(`task57r_f1_sha256=${TASK57R_F1_SHA256}\n`);
+  process.stdout.write(`task57r_f1_bytes=${TASK57R_F1_BYTES}\n`);
   process.stdout.write(`canonical_sha256=${EXPECTED_CANONICAL_SHA256}\n`);
 }
 

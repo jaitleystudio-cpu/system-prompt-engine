@@ -10,6 +10,7 @@ from typing import Any
 import pytest
 
 from spe_runtime.quality.engine import (
+    governing_proof_refs,
     FORBIDDEN_REPAIRS,
     MAX_AUTOMATIC_ATTEMPTS,
     MODES,
@@ -113,7 +114,10 @@ def _subject(protected: dict[str, Any] | None = None, **overrides: Any) -> dict[
         "requirement_graph": {"graph_digest": "gd-1", "validity": "VALID"},
         "xcat": {"active_category": pi["category"], "taxonomy_version": "2"},
     }
+    explicit_proof = "proof_refs" in overrides
     subject.update(overrides)
+    if not explicit_proof:
+        subject["proof_refs"] = governing_proof_refs(subject)
     return subject
 
 

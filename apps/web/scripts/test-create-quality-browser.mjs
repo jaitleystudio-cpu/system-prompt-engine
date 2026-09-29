@@ -154,7 +154,8 @@ async function readSurfaces(page, visible) {
 }
 
 const mutants = killedRepairedBrowserMutants();
-assert.deepEqual(mutants, ["F2-01", "F2-02", "F2-03", "F2-04", "F2-05", "F2-06", "F2-07", "F2-08", "F2-09", "F2-10"]);
+assert.equal(mutants.filter((name) => name.startsWith("F2-")).length, 10);
+assert.ok(mutants.includes("F3-11") && mutants.includes("F3-12"));
 
 if (!existsSync(join(dist, "index.html"))) {
   console.error("browser: dist missing; build the web app first");
@@ -209,7 +210,10 @@ try {
   });
   await installHarness(repairContext, { arm: true });
   const repairPage = await repairContext.newPage();
-  await openCreate(repairPage, base);
+  await repairPage.goto(`${base}/`, { waitUntil: "networkidle" });
+  await repairPage.getByLabel("Working template").selectOption("Research");
+  await repairPage.getByLabel("Primary").getByRole("link", { name: "Create", exact: true }).click();
+  await repairPage.getByRole("textbox", { name: "Your idea" }).waitFor({ state: "visible" });
   const repairBuilt = await compileIdea(repairPage, IDEA);
   const repairSurfaces = await readSurfaces(repairPage, repairBuilt.visible);
   const repairTrace = await repairPage.evaluate(() => window.__speF2);

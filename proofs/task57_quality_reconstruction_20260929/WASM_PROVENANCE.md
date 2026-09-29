@@ -20,4 +20,15 @@ These builds are not a production qualification.
 
 Two measure-only builds, one in the default canonical target and one in a separate target directory, were byte-identical. Imports 0. Exports `memory`, `spe_alloc`, `spe_evaluate`, `spe_free`. The later official `npm run build` reproduced the same digest. This is not a production qualification.
 
-F2 does not change Rust. Two measure-only rebuilds, the default canonical target and a separate target directory, were byte-identical and matched the F1 pin `dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541`, 1275233 bytes, imports 0. No new pin was required.
+F2 does not change Rust. Two measure-only rebuilds, the default canonical target and a separate target directory, were byte-identical and matched the F1 pin `dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541`, 1275233 bytes, imports 0. No new pin was required for F2.
+
+## Task57R-F3
+
+Governing proof changed the Rust quality subject, so the WASM pin moved. Two measure-only builds were byte-identical.
+
+| Generation | sha256 | bytes |
+| --- | --- | --- |
+| F1, now historical | `dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541` | 1275233 |
+| F3 current | `a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf` | 1275679 |
+
+Imports 0. Exports `memory`, `spe_alloc`, `spe_evaluate`, `spe_free`.

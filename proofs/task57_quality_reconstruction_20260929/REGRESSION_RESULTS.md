@@ -42,3 +42,14 @@ No hosting, DNS, or production publish was performed.
 Kernel sources were not changed. Pytest stayed 999 passed, 0 failed. `cargo test --offline` was 41 passed, 0 failed. Web npm scripts, copy, egress, and `tsc --noEmit` exited 0. Egress remained `zero_egress` true.
 
 The repaired browser script exits 2 on purpose. Chrome observed the fault, and the kernel did not accept the repair. That is `HOLD_LIVE_CREATE_REPAIR_NOT_ACCEPTED`, not a repaired PASS.
+
+## Task57R-F3
+
+| Check | Result |
+| --- | --- |
+| pytest | 1005 passed, 0 failed |
+| cargo test --offline | 41 passed, 0 failed |
+| WASM | `a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf`, 1275679 bytes, two builds byte-identical, imports 0 |
+| npm run build | exit 0 |
+| web scripts, copy, egress, tsc | exit 0; `zero_egress` true |
+| repaired browser | exit 0; kept `repaired`, plan `ACCEPTED` |

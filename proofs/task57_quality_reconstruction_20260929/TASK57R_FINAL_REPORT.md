@@ -149,3 +149,11 @@ Chrome fault injection removed one hard-constraint bullet from the real quality 
 Hold: `HOLD_LIVE_CREATE_REPAIR_NOT_ACCEPTED`.
 
 Details: `TASK57R_F2_REAL_REPAIRED_BROWSER.md` and `TASK57R_F2_MUTATION_RESULTS.md`.
+
+## Task57R-F3
+
+F2's hold stays in the record above. F3 does not add caller proof strings. Quality derives governing proof from the protected intent, requirement graph, XCAT category, registry taxonomy version, K3 selection, and effect plan. Caller `proof_refs` are ignored.
+
+Local Chrome, Research template, one removed hard constraint: kept `repaired`, plan `ACCEPTED`, delta `IMPROVED`, receipt `PASS`, one attempt. The visible prompt matched the kernel kept prompt and not the corrupted candidate. Copy, JSON, `.spe`, and history matched it.
+
+A second fresh machine was not run.

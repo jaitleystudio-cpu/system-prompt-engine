@@ -8,7 +8,7 @@ use serde_json::{json, Map, Value};
 use std::collections::{BTreeSet, HashSet};
 
 const TWIN_VERSION: &str = "xcat.router.v1";
-const CURRENT_TAXONOMY_VERSION: &str = "2";
+pub(crate) const CURRENT_TAXONOMY_VERSION: &str = "2";
 const LEGACY_TAXONOMY_VERSION: &str = "1";
 const CANON_CONFIRM_KEY: &str = "confirm_canon_overwrite";
 

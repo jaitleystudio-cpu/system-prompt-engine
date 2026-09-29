@@ -123,6 +123,8 @@ export function killedRepairedBrowserMutants() {
   if (!qualifyRepairedBrowserObservation({ ...base, json: base.corrupted }).pass) killed.push("F2-07");
   if (!qualifyRepairedBrowserObservation({ ...base, spe: base.corrupted }).pass) killed.push("F2-08");
   if (!qualifyRepairedBrowserObservation({ ...base, qualityPosts: 2 }).pass) killed.push("F2-09");
+  if (!qualifyRepairedBrowserObservation({ ...base, visible: base.corrupted }).pass) killed.push("F3-11");
+  if (!qualifyRepairedBrowserObservation({ ...base, json: base.corrupted, spe: base.corrupted }).pass) killed.push("F3-12");
   const drifted = base.visible.replace("## Objective\nShip the note", "## Objective\nOther goal");
   if (!qualifyRepairedBrowserObservation({
     ...base,
