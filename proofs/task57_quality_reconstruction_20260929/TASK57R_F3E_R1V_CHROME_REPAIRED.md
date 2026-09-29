@@ -1,6 +1,7 @@
 # Task57R-F3E-R1V repaired Chrome
 
 **Base SHA:** `f07511d9e2def7aa7129fa2c718b76e4ec9f1407`
+**Evidence SHA:** `ea116665599d9ff1317eeea83a05d649ecc21192`
 **Harness:** `apps/web/scripts/test-create-quality-r1v.mjs`
 **Fault:** the same one-shot worker wrap as F3/F3E. `dropOneHardConstraint` removes the first `- ` bullet under `## Hard constraints`. The fixture supplies `Preserve the user's stated goal without inventing obligations` when the idea has no extra hard-constraint atoms. `max_attempts` stays 1. Production bundles do not contain the fault.
 

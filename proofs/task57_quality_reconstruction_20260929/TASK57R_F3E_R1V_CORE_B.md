@@ -1,6 +1,7 @@
 # Task57R-F3E-R1V Core-B
 
 **Base SHA:** `f07511d9e2def7aa7129fa2c718b76e4ec9f1407`
+**Evidence SHA:** `ea116665599d9ff1317eeea83a05d649ecc21192`
 **Harness:** `apps/web/scripts/test-create-quality-r1v.mjs`
 **Result:** PASS
 

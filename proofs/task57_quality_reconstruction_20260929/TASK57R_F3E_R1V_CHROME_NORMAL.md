@@ -1,6 +1,7 @@
 # Task57R-F3E-R1V normal Chrome
 
 **Base SHA:** `f07511d9e2def7aa7129fa2c718b76e4ec9f1407`
+**Evidence SHA:** `ea116665599d9ff1317eeea83a05d649ecc21192`
 **Harness:** `apps/web/scripts/test-create-quality-r1v.mjs`
 **Browser:** local Playwright `chromium.launch({ channel: "chrome", headless: true })` against the local Vite `dist` static server. Not hosted.
 **UI label:** Create stays on `AI Assistant`. The page does not render the Workspace category select. The rendered prompt line `## Category presentation` is `AI Assistant`. Artifact `category` and history `category` are `AI Assistant`. Kernel `category_context.display_label` is `AI Assistant`. The kernel category is `xcat.active_category` / `category_route.primary_category`.

@@ -3,7 +3,7 @@
 **Base SHA:** `f07511d9e2def7aa7129fa2c718b76e4ec9f1407`
 **Branch:** `cursor/spe-quality-delta-planb-validate-only-20260929`
 **PR:** #57 draft, not merged
-**Evidence SHA:** recorded by the follow-up commit on this branch
+**Evidence SHA:** `ea116665599d9ff1317eeea83a05d649ecc21192`
 **Disposition:** `F3E_R1V_PASS`
 
 R1V re-qualified the F3E tip. It did not add a category, a second router, or a recovered protocol. `AI Assistant` stays a presentation label and AUTO routing mode. Semantic categories remain `CAT:C01`–`CAT:C12`.
