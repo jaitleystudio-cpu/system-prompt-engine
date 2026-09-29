@@ -29,6 +29,17 @@ Governing proof changed the Rust quality subject, so the WASM pin moved. Two mea
 | Generation | sha256 | bytes |
 | --- | --- | --- |
 | F1, now historical | `dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541` | 1275233 |
-| F3 current | `a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf` | 1275679 |
+| F3, now historical | `a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf` | 1275679 |
 
 Imports 0. Exports `memory`, `spe_alloc`, `spe_evaluate`, `spe_free`.
+
+## Task57R-F3E
+
+AUTO-XCAT (`xcat` op `auto_route`) changed the Rust kernel, so the WASM pin moved. A measure-only build and a later pin-checked canonical rebuild were byte-identical.
+
+| Generation | sha256 | bytes |
+| --- | --- | --- |
+| F3, now historical | `a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf` | 1275679 |
+| F3E current | `e527b1f5b35f745c1e7f754a25d128c440326c8a23657453cec62c254ab167f7` | 1301412 |
+
+Imports 0. Exports `memory`, `spe_alloc`, `spe_evaluate`, `spe_free`. This is not a production qualification.

@@ -43,7 +43,7 @@ Hand-built subjects without a receipt keep `UNSATISFIED` / `CATEGORY_MISMATCH`.
 
 ## Claim boundary
 
-Proven only by the tests named in the results note for this commit.
+Proven only by the tests named in `TASK57R_F3E_RESULTS.md`.
 Unrecovered category protocols are not invented.
 No TypeScript semantic brain, no hosting, no deploy, no other-lane edits.
 
