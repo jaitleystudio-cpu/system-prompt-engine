@@ -292,7 +292,7 @@ def test_regressed_render_does_not_replace_original() -> None:
 def test_validate_only_pass_fail_unknown_and_no_execution() -> None:
     good = run_mode({"artifact": _subject(), "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY"})
     assert good["verdict"] == "PASS"
-    assert good["proof_class"] == "ENFORCEMENT_VERIFIED"
+    assert good["proof_class"] == "ENFORCEMENT_AVAILABLE"
     assert good["execution_observed"] is False
     assert good["external_effect"] is False
     assert good["network"] is False

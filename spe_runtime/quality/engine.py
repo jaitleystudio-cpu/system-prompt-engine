@@ -1391,6 +1391,45 @@ def reconstruct(
     return {"kept": "original", "kept_subject": _copy_subject(subject), "plan": plan, "quality_delta": delta}
 
 
+def _sha64(value: Any) -> bool:
+    return isinstance(value, str) and len(value) == 64 and all(char in "0123456789abcdef" for char in value)
+
+
+def _runtime_fields(evidence: Any) -> dict[str, str]:
+    if not isinstance(evidence, Mapping):
+        return {"integrity_state": "ABSENT", "runtime_path": "", "wasm_sha256": ""}
+    sha = evidence.get("wasm_sha256")
+    path = evidence.get("runtime_path")
+    state = evidence.get("integrity_state")
+    return {
+        "integrity_state": state if isinstance(state, str) and state else "ABSENT",
+        "runtime_path": path if isinstance(path, str) else "",
+        "wasm_sha256": sha if _sha64(sha) else "",
+    }
+
+
+def _runtime_verified(evidence: Any) -> bool:
+    if not isinstance(evidence, Mapping):
+        return False
+    fields = _runtime_fields(evidence)
+    return (
+        evidence.get("verified") is True
+        and evidence.get("imports") == 0
+        and fields["integrity_state"] == "VERIFIED"
+        and fields["runtime_path"] == "worker-wasm"
+        and bool(fields["wasm_sha256"])
+    )
+
+
+def _normalize_category_id(value: Any) -> str:
+    if not isinstance(value, str):
+        return ""
+    text = value.strip()
+    if text.startswith("CAT:"):
+        text = text[4:].strip()
+    return text
+
+
 def _receipt(
     *,
     mode: str,
@@ -1399,10 +1438,13 @@ def _receipt(
     proof_class: str,
     reconstruction_eligible: bool,
     quality: dict[str, Any] | None = None,
+    subject_digest_value: str = "",
+    runtime_evidence: Any = None,
 ) -> dict[str, Any]:
     if proof_class == "EXECUTION_OBSERVED":
         proof_class = "DECLARED_POLICY"
         reasons = reasons + ["EXECUTION_OBSERVED_REJECTED"]
+    runtime = _runtime_fields(runtime_evidence)
     return {
         "authority_minted": False,
         "credentials_used": False,
@@ -1410,6 +1452,7 @@ def _receipt(
         "execution_observed": False,
         "external_effect": False,
         "external_write": False,
+        "integrity_state": runtime["integrity_state"],
         "mode": mode,
         "network": False,
         "outcome": "NOT_EXECUTED",
@@ -1417,8 +1460,11 @@ def _receipt(
         "quality_delta": quality,
         "reason_codes": sorted(set(reasons)),
         "reconstruction_eligible": reconstruction_eligible,
+        "runtime_path": runtime["runtime_path"],
+        "subject_digest": subject_digest_value,
         "verdict": verdict,
         "version": RECEIPT_VERSION,
+        "wasm_sha256": runtime["wasm_sha256"],
     }
 
 
@@ -1429,9 +1475,16 @@ def _eligible(subject: Mapping[str, Any]) -> bool:
 
 def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
     """DRY_RUN, VALIDATE_ONLY, and EXECUTE are distinct and non-aliasing."""
+    evidence = request.get("runtime_evidence") if isinstance(request.get("runtime_evidence"), Mapping) else None
+    artifact_for_digest = request.get("artifact")
+    digest = subject_digest(artifact_for_digest) if isinstance(artifact_for_digest, Mapping) else ""
+
+    def emit(**kwargs: Any) -> dict[str, Any]:
+        return _receipt(subject_digest_value=digest, runtime_evidence=evidence, **kwargs)
+
     mode = request.get("mode")
     if mode not in MODES:
-        return _receipt(
+        return emit(
             mode=str(mode) if isinstance(mode, str) else "",
             verdict="FAIL",
             reasons=["UNSUPPORTED_MODE"],
@@ -1440,7 +1493,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
         )
     artifact = request.get("artifact")
     if not isinstance(artifact, Mapping):
-        return _receipt(
+        return emit(
             mode=mode,
             verdict="FAIL",
             reasons=["MALFORMED_ARTIFACT"],
@@ -1459,7 +1512,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
         reasons.extend(f"{item.upper()}_FORBIDDEN" for item in blocked)
         if caller_proof == "EXECUTION_OBSERVED":
             reasons.append("EXECUTION_OBSERVED_REJECTED")
-        return _receipt(
+        return emit(
             mode="EXECUTE",
             verdict="FAIL",
             reasons=reasons,
@@ -1475,7 +1528,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
             reasons.extend(f"{item.upper()}_FORBIDDEN" for item in blocked)
         if caller_proof == "EXECUTION_OBSERVED":
             reasons.append("EXECUTION_OBSERVED_REJECTED")
-        return _receipt(
+        return emit(
             mode="DRY_RUN",
             verdict=verdict,
             reasons=reasons,
@@ -1487,7 +1540,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
     if caller_proof == "EXECUTION_OBSERVED":
         reasons.append("EXECUTION_OBSERVED_REJECTED")
     if enforcement != "AVAILABLE" or wasm_available is False:
-        return _receipt(
+        return emit(
             mode="VALIDATE_ONLY",
             verdict="FAIL",
             reasons=reasons + ["ENFORCEMENT_UNAVAILABLE"],
@@ -1495,7 +1548,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
             reconstruction_eligible=False,
         )
     if blocked:
-        return _receipt(
+        return emit(
             mode="VALIDATE_ONLY",
             verdict="FAIL",
             reasons=reasons + [f"{item.upper()}_FORBIDDEN" for item in blocked],
@@ -1504,7 +1557,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
         )
     obligations = evaluate_obligations(artifact)
     if any(item["obligation_id"] == "artifact:shape" for item in obligations):
-        return _receipt(
+        return emit(
             mode="VALIDATE_ONLY",
             verdict="FAIL",
             reasons=reasons + ["MALFORMED_ARTIFACT"],
@@ -1521,7 +1574,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
         item = by_id.get(obligation_id)
         if item and item["status"] in {"UNSATISFIED", "UNKNOWN"} and code != "K3_MISMATCH":
             if obligation_id == "bind:graph" and item["status"] == "UNKNOWN":
-                return _receipt(
+                return emit(
                     mode="VALIDATE_ONLY",
                     verdict="UNKNOWN",
                     reasons=reasons + ["UNKNOWN_PROOF"],
@@ -1529,7 +1582,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
                     reconstruction_eligible=False,
                 )
             if item["status"] == "UNSATISFIED":
-                return _receipt(
+                return emit(
                     mode="VALIDATE_ONLY",
                     verdict="FAIL",
                     reasons=reasons + [code],
@@ -1537,7 +1590,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
                     reconstruction_eligible=False,
                 )
     if by_id.get("bind:k3", {}).get("status") == "UNSATISFIED":
-        return _receipt(
+        return emit(
             mode="VALIDATE_ONLY",
             verdict="FAIL",
             reasons=reasons + ["K3_MISMATCH"],
@@ -1545,7 +1598,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
             reconstruction_eligible=False,
         )
     if not isinstance(artifact.get("effect_plan"), Mapping):
-        return _receipt(
+        return emit(
             mode="VALIDATE_ONLY",
             verdict="FAIL",
             reasons=reasons + ["MISSING_EFFECT_PLAN"],
@@ -1553,7 +1606,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
             reconstruction_eligible=False,
         )
     if by_id.get("proof:present", {}).get("status") == "UNKNOWN":
-        return _receipt(
+        return emit(
             mode="VALIDATE_ONLY",
             verdict="UNKNOWN",
             reasons=reasons + ["UNKNOWN_PROOF"],
@@ -1561,7 +1614,7 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
             reconstruction_eligible=_eligible(artifact),
         )
     if any(item["status"] == "UNKNOWN" for item in obligations):
-        return _receipt(
+        return emit(
             mode="VALIDATE_ONLY",
             verdict="UNKNOWN",
             reasons=reasons + ["OBLIGATION_UNKNOWN"],
@@ -1569,20 +1622,88 @@ def run_mode(request: Mapping[str, Any]) -> dict[str, Any]:
             reconstruction_eligible=_eligible(artifact),
         )
     if any(item["status"] in {"UNSATISFIED", "CONFLICT"} for item in obligations):
-        return _receipt(
+        return emit(
             mode="VALIDATE_ONLY",
             verdict="FAIL",
             reasons=reasons + ["OBLIGATION_UNSATISFIED"],
             proof_class="ENFORCEMENT_AVAILABLE",
             reconstruction_eligible=_eligible(artifact),
         )
-    return _receipt(
+    verified = _runtime_verified(evidence)
+    return emit(
         mode="VALIDATE_ONLY",
         verdict="PASS",
         reasons=reasons + ["OBLIGATIONS_SATISFIED"],
-        proof_class="ENFORCEMENT_VERIFIED",
+        proof_class="ENFORCEMENT_VERIFIED" if verified else "ENFORCEMENT_AVAILABLE",
         reconstruction_eligible=False,
     )
+
+
+def subject_from_k3(k3_output: Mapping[str, Any], compiled_prompt: str) -> dict[str, Any]:
+    """Build a quality subject from kernel K3 output. Category normalization stays here."""
+    if not isinstance(k3_output, Mapping) or not isinstance(compiled_prompt, str):
+        raise ValueError("MALFORMED_K3")
+    protected = _full_protected(k3_output.get("protected_binding"))
+    if protected is None:
+        raise ValueError("MALFORMED_K3")
+    context = k3_output.get("category_context")
+    context_map = context if isinstance(context, Mapping) else {}
+    category = _normalize_category_id(context_map.get("xcat_id"))
+    taxonomy = context_map.get("taxonomy_version")
+    protected["category"] = category
+    graph = k3_output.get("requirement_graph")
+    techniques_raw = k3_output.get("techniques")
+    techniques = [str(item) for item in techniques_raw] if isinstance(techniques_raw, list) else []
+    selection = k3_output.get("selection_id")
+    effect = k3_output.get("prompt_effect_plan")
+    proof_raw = k3_output.get("proof_refs")
+    proof_refs = (
+        [item for item in proof_raw if isinstance(item, str) and item] if isinstance(proof_raw, list) else []
+    )
+    return {
+        "compiled_prompt": compiled_prompt,
+        "effect_plan": dict(effect) if isinstance(effect, Mapping) else None,
+        "k3": {
+            "selection_id": selection if isinstance(selection, str) else "",
+            "techniques": techniques,
+        },
+        "proof_refs": proof_refs,
+        "protected_intent": protected,
+        "requirement_graph": dict(graph) if isinstance(graph, Mapping) else {},
+        "xcat": {
+            "active_category": category,
+            "taxonomy_version": taxonomy if isinstance(taxonomy, str) else "",
+        },
+    }
+
+
+def evaluate_from_k3(payload: Mapping[str, Any]) -> dict[str, Any]:
+    """Quality over a kernel K3 result. Caller proof flags are not copied."""
+    k3_output = payload.get("k3_output")
+    compiled_prompt = payload.get("compiled_prompt")
+    if not isinstance(k3_output, Mapping) or not isinstance(compiled_prompt, str):
+        return {
+            "receipt": _receipt(
+                mode=payload.get("mode") if isinstance(payload.get("mode"), str) else "",
+                verdict="FAIL",
+                reasons=["MALFORMED_K3"],
+                proof_class="DECLARED_POLICY",
+                reconstruction_eligible=False,
+            ),
+            "subject": None,
+        }
+    subject = subject_from_k3(k3_output, compiled_prompt)
+    mode = payload.get("mode") if isinstance(payload.get("mode"), str) else "VALIDATE_ONLY"
+    evidence = payload.get("runtime_evidence") if isinstance(payload.get("runtime_evidence"), Mapping) else None
+    receipt = run_mode(
+        {
+            "artifact": subject,
+            "enforcement": "AVAILABLE",
+            "mode": mode,
+            "runtime_evidence": evidence,
+        }
+    )
+    return {"receipt": receipt, "subject": subject}
 
 
 def quality_loop(subject: Mapping[str, Any], mode: str = "VALIDATE_ONLY") -> dict[str, Any]:
@@ -1627,6 +1748,8 @@ def evaluate_request(payload: Mapping[str, Any]) -> dict[str, Any]:
         )
     if op == "mode":
         return run_mode(payload)
+    if op == "from_k3":
+        return evaluate_from_k3(payload)
     if op == "loop":
         subject = payload.get("subject")
         if not isinstance(subject, Mapping):

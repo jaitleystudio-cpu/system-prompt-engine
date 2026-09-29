@@ -1834,6 +1834,7 @@ fn receipt(
         "execution_observed": false,
         "external_effect": false,
         "external_write": false,
+        "integrity_state": "ABSENT",
         "mode": mode,
         "network": false,
         "outcome": "NOT_EXECUTED",
@@ -1841,9 +1842,77 @@ fn receipt(
         "quality_delta": quality,
         "reason_codes": sorted_unique(reasons),
         "reconstruction_eligible": reconstruction_eligible,
+        "runtime_path": "",
+        "subject_digest": "",
         "verdict": verdict,
         "version": RECEIPT_VERSION,
+        "wasm_sha256": "",
     })
+}
+
+fn sha64(value: Option<&Value>) -> Option<String> {
+    let text = value.and_then(|item| item.as_str())?;
+    if text.len() == 64 && text.bytes().all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase()) {
+        Some(text.to_string())
+    } else {
+        None
+    }
+}
+
+fn runtime_fields(evidence: Option<&Value>) -> (String, String, String) {
+    let Some(map) = evidence.and_then(|item| item.as_object()) else {
+        return ("ABSENT".to_string(), String::new(), String::new());
+    };
+    let state = map
+        .get("integrity_state")
+        .and_then(|item| item.as_str())
+        .filter(|text| !text.is_empty())
+        .unwrap_or("ABSENT");
+    let path = map.get("runtime_path").and_then(|item| item.as_str()).unwrap_or("");
+    let sha = sha64(map.get("wasm_sha256")).unwrap_or_default();
+    (state.to_string(), path.to_string(), sha)
+}
+
+fn runtime_verified(evidence: Option<&Value>) -> bool {
+    let Some(map) = evidence.and_then(|item| item.as_object()) else {
+        return false;
+    };
+    if map.get("verified").and_then(|item| item.as_bool()) != Some(true) {
+        return false;
+    }
+    if map.get("imports").and_then(|item| item.as_i64()) != Some(0) {
+        return false;
+    }
+    let (state, path, sha) = runtime_fields(evidence);
+    state == "VERIFIED" && path == "worker-wasm" && !sha.is_empty()
+}
+
+fn with_custody(request: &Value, mut body: Value) -> Result<Value, SpeError> {
+    let evidence = request.get("runtime_evidence").filter(|item| item.is_object());
+    let digest = match request.get("artifact").filter(|item| item.is_object()) {
+        Some(artifact) => subject_digest(artifact)?,
+        None => String::new(),
+    };
+    let (state, path, sha) = runtime_fields(evidence);
+    if let Some(map) = body.as_object_mut() {
+        map.insert("integrity_state".into(), Value::String(state));
+        map.insert("runtime_path".into(), Value::String(path));
+        map.insert("subject_digest".into(), Value::String(digest));
+        map.insert("wasm_sha256".into(), Value::String(sha));
+    }
+    Ok(body)
+}
+
+fn normalize_category_id(value: Option<&Value>) -> String {
+    let Some(text) = value.and_then(|item| item.as_str()) else {
+        return String::new();
+    };
+    let trimmed = text.trim();
+    trimmed
+        .strip_prefix("CAT:")
+        .unwrap_or(trimmed)
+        .trim()
+        .to_string()
 }
 
 fn eligible(subject: &Value) -> Result<bool, SpeError> {
@@ -1851,6 +1920,10 @@ fn eligible(subject: &Value) -> Result<bool, SpeError> {
 }
 
 fn run_mode(request: &Value) -> Result<Value, SpeError> {
+    with_custody(request, validate_mode(request)?)
+}
+
+fn validate_mode(request: &Value) -> Result<Value, SpeError> {
     let mode = request.get("mode").and_then(|v| v.as_str());
     if !matches!(mode, Some("DRY_RUN") | Some("VALIDATE_ONLY") | Some("EXECUTE")) {
         return Ok(receipt(
@@ -2037,11 +2110,16 @@ fn run_mode(request: &Value) -> Result<Value, SpeError> {
         ));
     }
     reasons.push("OBLIGATIONS_SATISFIED".into());
+    let proof_class = if runtime_verified(request.get("runtime_evidence")) {
+        "ENFORCEMENT_VERIFIED"
+    } else {
+        "ENFORCEMENT_AVAILABLE"
+    };
     Ok(receipt(
         "VALIDATE_ONLY",
         "PASS",
         reasons,
-        "ENFORCEMENT_VERIFIED",
+        proof_class,
         false,
         Value::Null,
     ))
@@ -2078,6 +2156,92 @@ fn quality_loop(subject: &Value, mode: &str) -> Result<Value, SpeError> {
     }))
 }
 
+fn string_items(value: Option<&Value>) -> Vec<Value> {
+    value
+        .and_then(|item| item.as_array())
+        .map(|items| {
+            items
+                .iter()
+                .filter_map(|item| item.as_str().map(|text| Value::String(text.to_string())))
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+fn subject_from_k3(k3_output: &Value, compiled_prompt: &str) -> Result<Value, SpeError> {
+    if !k3_output.is_object() {
+        return Err(SpeError::new("MALFORMED_K3", "k3 output must be an object"));
+    }
+    let mut protected = full_protected(k3_output.get("protected_binding"))
+        .ok_or_else(|| SpeError::new("MALFORMED_K3", "protected binding missing"))?;
+    let context = k3_output.get("category_context").filter(|item| item.is_object());
+    let category = normalize_category_id(context.and_then(|item| item.get("xcat_id")));
+    let taxonomy = context
+        .and_then(|item| item.get("taxonomy_version"))
+        .and_then(|item| item.as_str())
+        .unwrap_or("");
+    if let Some(obj) = protected.as_object_mut() {
+        obj.insert("category".into(), Value::String(category.clone()));
+    }
+    let selection = k3_output
+        .get("selection_id")
+        .and_then(|item| item.as_str())
+        .unwrap_or("");
+    let techniques = match k3_output.get("techniques").and_then(|item| item.as_array()) {
+        Some(items) => items
+            .iter()
+            .map(|item| Value::String(item.as_str().unwrap_or("").to_string()))
+            .collect::<Vec<_>>(),
+        None => Vec::new(),
+    };
+    let effect = k3_output
+        .get("prompt_effect_plan")
+        .filter(|item| item.is_object())
+        .cloned()
+        .unwrap_or(Value::Null);
+    let graph = k3_output
+        .get("requirement_graph")
+        .filter(|item| item.is_object())
+        .cloned()
+        .unwrap_or_else(|| json!({}));
+    let proof_refs = string_items(k3_output.get("proof_refs"))
+        .into_iter()
+        .filter(|item| item.as_str().map(|text| !text.is_empty()).unwrap_or(false))
+        .collect::<Vec<_>>();
+    Ok(json!({
+        "compiled_prompt": compiled_prompt,
+        "effect_plan": effect,
+        "k3": {"selection_id": selection, "techniques": techniques},
+        "proof_refs": proof_refs,
+        "protected_intent": protected,
+        "requirement_graph": graph,
+        "xcat": {"active_category": category, "taxonomy_version": taxonomy},
+    }))
+}
+
+fn evaluate_from_k3(payload: &Value) -> Result<Value, SpeError> {
+    let compiled = payload.get("compiled_prompt").and_then(|item| item.as_str());
+    let k3_output = payload.get("k3_output");
+    if k3_output.map(|item| item.is_object()) != Some(true) || compiled.is_none() {
+        let mode = payload.get("mode").and_then(|item| item.as_str()).unwrap_or("");
+        return Ok(json!({
+            "receipt": receipt(mode, "FAIL", vec!["MALFORMED_K3".into()], "DECLARED_POLICY", false, Value::Null),
+            "subject": Value::Null,
+        }));
+    }
+    let subject = subject_from_k3(k3_output.expect("checked"), compiled.expect("checked"))?;
+    let mode = payload.get("mode").and_then(|item| item.as_str()).unwrap_or("VALIDATE_ONLY");
+    let mut request = Map::new();
+    request.insert("artifact".into(), subject.clone());
+    request.insert("enforcement".into(), Value::String("AVAILABLE".into()));
+    request.insert("mode".into(), Value::String(mode.to_string()));
+    if let Some(evidence) = payload.get("runtime_evidence").filter(|item| item.is_object()) {
+        request.insert("runtime_evidence".into(), evidence.clone());
+    }
+    let mode_receipt = run_mode(&Value::Object(request))?;
+    Ok(json!({"receipt": mode_receipt, "subject": subject}))
+}
+
 pub fn evaluate(input: &Value) -> Result<Value, SpeError> {
     let op = input.get("op").and_then(|v| v.as_str()).unwrap_or("");
     match op {
@@ -2108,7 +2272,8 @@ pub fn evaluate(input: &Value) -> Result<Value, SpeError> {
             let requested = input.get("requested_repair").and_then(|v| v.as_str());
             reconstruct(subject, attempt, requested)
         }
-        "mode" => run_mode(input),
+        "mode" => validate_mode(input).and_then(|body| with_custody(input, body)),
+        "from_k3" => evaluate_from_k3(input),
         "loop" => {
             let subject = input
                 .get("subject")

@@ -31,9 +31,12 @@ const PRE_XCAT_EFFECT_BINDING_SHA256 =
 const XCAT_DOMAIN_SHA256 =
   "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082";
 const XCAT_DOMAIN_BYTES = 1023091;
-const EXPECTED_CANONICAL_SHA256 =
+const TASK57_QUALITY_SHA256 =
   "dd57eb3ee6eb14297da8d49acb9803cf4853dbb89adcc5ef52f408379d643b22";
-const EXPECTED_CANONICAL_BYTES = 1229241;
+const TASK57_QUALITY_BYTES = 1229241;
+const EXPECTED_CANONICAL_SHA256 =
+  "9448dcb4674b34611e1e864fff98a15cdaad31fdb41772956464b8b93dc8abbc";
+const EXPECTED_CANONICAL_BYTES = 1245878;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..");
@@ -307,6 +310,9 @@ function main() {
   }
   if (digest === XCAT_DOMAIN_SHA256) {
     fail("canonical candidate still matches the Task 56C XCAT DOMAIN WASM");
+  }
+  if (digest === TASK57_QUALITY_SHA256) {
+    fail("canonical candidate still matches the Task 57 quality WASM");
   }
 
   const label = artifactLabel(targetDir, artifact);

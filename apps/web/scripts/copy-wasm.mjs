@@ -23,8 +23,11 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const EXPECTED_SHA256 =
+  "9448dcb4674b34611e1e864fff98a15cdaad31fdb41772956464b8b93dc8abbc";
+const EXPECTED_BYTES = 1245878;
+const TASK57_QUALITY_SHA256 =
   "dd57eb3ee6eb14297da8d49acb9803cf4853dbb89adcc5ef52f408379d643b22";
-const EXPECTED_BYTES = 1229241;
+const TASK57_QUALITY_BYTES = 1229241;
 const XCAT_DOMAIN_SHA256 =
   "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082";
 const XCAT_DOMAIN_BYTES = 1023091;
@@ -105,7 +108,9 @@ function expectedMeta() {
     previous_canonical_sha256: PREVIOUS_CANONICAL_SHA256,
     previous_canonical_bytes: PREVIOUS_CANONICAL_BYTES,
     semantic_source_note:
-      "Task 57 quality delta, bounded reconstruction, and VALIDATE_ONLY. Task 56C XCAT DOMAIN WASM remains xcat_domain_sha256. Pre-XCAT effect-binding WASM remains pre_xcat_effect_binding_sha256.",
+      "Task 57R from_k3 receipt custody. Task 57 quality WASM remains task57_quality_sha256. Task 56C XCAT DOMAIN WASM remains xcat_domain_sha256.",
+    task57_quality_sha256: TASK57_QUALITY_SHA256,
+    task57_quality_bytes: TASK57_QUALITY_BYTES,
     xcat_domain_sha256: XCAT_DOMAIN_SHA256,
     xcat_domain_bytes: XCAT_DOMAIN_BYTES,
     graph_closure_sha256: "9cda3a8ef0f314dba152fbd442b8b3c8476d6f2be8b6e3221fb8abcdac6eb686",
