@@ -1,8 +1,9 @@
 """Aggregate-only analytics types.
 
 Events are counts over closed public buckets. Search Console, Core Web Vitals,
-and revenue stay UNKNOWN until `import_measurement` accepts evidence bytes.
-This module does not fetch, store prompts, or emit a success score.
+revenue, and the pre-aggregated observations stay UNKNOWN until an import
+accepts evidence bytes. This module does not fetch, store prompts, or emit a
+success score. Observations are not semantic authority.
 """
 
 from __future__ import annotations
@@ -15,6 +16,12 @@ from datetime import date
 from types import MappingProxyType
 from typing import Mapping
 
+from spe_runtime.privacy.aggregates import (
+    OBSERVATION_KINDS,
+    AggregateObservation,
+    parse_observation,
+    unknown_observations,
+)
 from spe_runtime.privacy.refusals import (
     UNKNOWN,
     PrivacyRefusal,
@@ -23,6 +30,20 @@ from spe_runtime.privacy.refusals import (
 )
 
 SCHEMA_ID = "spe.privacy-analytics.v1"
+COLLECTOR = "NONE"
+NETWORK_REQUESTS = 0
+OBSERVATION_ONLY = True
+SEMANTIC_AUTHORITY = False
+EXCLUDED_DATA: tuple[str, ...] = (
+    "prompt_contents",
+    "private_projects",
+    "raw_documents",
+    "individual_browsing_history",
+    "fingerprinting",
+    "cross_site_tracking",
+    "advertising_profile",
+    "sale_of_data",
+)
 
 EVENT_KINDS: tuple[str, ...] = ("PAGE_VIEW_BUCKET", "NAVIGATION_BUCKET")
 ROUTE_FAMILIES: tuple[str, ...] = (
@@ -221,11 +242,12 @@ def default_slots() -> tuple[MeasurementSlot, ...]:
 
 @dataclass(frozen=True)
 class PrivacyAnalyticsRegistry:
-    """Admitted aggregate events plus the three measurement slots."""
+    """Admitted aggregate events, measurement slots, and pre-aggregated observations."""
 
     schema_id: str
     events: tuple[AggregateEvent, ...]
     slots: tuple[MeasurementSlot, ...]
+    observations: tuple[AggregateObservation, ...]
 
     def __post_init__(self) -> None:
         if self.schema_id != SCHEMA_ID:
@@ -236,6 +258,12 @@ class PrivacyAnalyticsRegistry:
             raise _refuse(PrivacyRefusal.SCHEMA_INVALID, "events")
         if tuple(slot.slot for slot in self.slots) != SLOT_IDS:
             raise _refuse(PrivacyRefusal.SCHEMA_INVALID, "slots")
+        if type(self.observations) is not tuple or any(
+            not isinstance(item, AggregateObservation) for item in self.observations
+        ):
+            raise _refuse(PrivacyRefusal.SCHEMA_INVALID, "observations")
+        if tuple(item.kind for item in self.observations) != OBSERVATION_KINDS:
+            raise _refuse(PrivacyRefusal.SCHEMA_INVALID, "observations")
 
     def replace_slot(self, slot: MeasurementSlot) -> PrivacyAnalyticsRegistry:
         return PrivacyAnalyticsRegistry(
@@ -243,6 +271,18 @@ class PrivacyAnalyticsRegistry:
             events=self.events,
             slots=tuple(
                 slot if current.slot == slot.slot else current for current in self.slots
+            ),
+            observations=self.observations,
+        )
+
+    def replace_observation(self, observation: AggregateObservation) -> PrivacyAnalyticsRegistry:
+        return PrivacyAnalyticsRegistry(
+            schema_id=self.schema_id,
+            events=self.events,
+            slots=self.slots,
+            observations=tuple(
+                observation if current.kind == observation.kind else current
+                for current in self.observations
             ),
         )
 
@@ -254,6 +294,7 @@ def empty_registry() -> PrivacyAnalyticsRegistry:
         schema_id=SCHEMA_ID,
         events=(),
         slots=default_slots(),
+        observations=unknown_observations(),
     )
 
 
@@ -302,6 +343,7 @@ def record_event(
         schema_id=registry.schema_id,
         events=registry.events + (event,),
         slots=registry.slots,
+        observations=registry.observations,
     )
 
 
@@ -369,6 +411,39 @@ def import_measurement(
         _import_token=_EVIDENCE_GATE,
     )
     return registry.replace_slot(imported)
+
+
+def import_observation(
+    registry: PrivacyAnalyticsRegistry,
+    kind: str,
+    evidence_bytes: bytes,
+    *,
+    artifact_ref: str,
+    imported_on: str,
+) -> PrivacyAnalyticsRegistry:
+    """Record one pre-aggregated observation and discard the evidence bytes."""
+
+    observation = parse_observation(
+        kind,
+        evidence_bytes,
+        artifact_ref=artifact_ref,
+        imported_on=imported_on,
+    )
+    return registry.replace_observation(observation)
+
+
+def data_minimization_proof() -> Mapping[str, str]:
+    """Explicit exclusion list. These categories are not represented as data."""
+
+    return MappingProxyType({name: "EXCLUDED" for name in EXCLUDED_DATA})
+
+
+def network_law() -> Mapping[str, object]:
+    """Collector stays closed. This module does not open a network request."""
+
+    return MappingProxyType(
+        {"collector": COLLECTOR, "network_requests": NETWORK_REQUESTS}
+    )
 
 
 def is_default_slot_document(payload: Mapping[str, object]) -> bool:

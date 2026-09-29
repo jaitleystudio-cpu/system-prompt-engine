@@ -38,6 +38,28 @@ MEASUREMENT_LAWS: tuple[tuple[str, str, str], ...] = (
     ("PA-11", "core_web_vitals", "Core Web Vitals stay UNKNOWN until a real import with evidence."),
     ("PA-12", "revenue", "Revenue stays UNKNOWN until a real import with evidence."),
 )
+OBSERVATION_LAWS: tuple[tuple[str, str, str], ...] = (
+    (
+        "PA-13",
+        "country_aggregate",
+        "Country stays UNKNOWN until a pre-aggregated ISO count import. No per-user country.",
+    ),
+    (
+        "PA-14",
+        "session_aggregate",
+        "Session count stays UNKNOWN until pre-aggregated evidence. No session id.",
+    ),
+    (
+        "PA-15",
+        "referrer_class",
+        "Referrer class counts stay UNKNOWN until a closed-class import. No referring URL.",
+    ),
+    (
+        "PA-16",
+        "feature_adoption",
+        "Feature counts stay UNKNOWN until a closed-id import. No free-text label.",
+    ),
+)
 
 
 @dataclass(frozen=True)
@@ -89,9 +111,17 @@ def qualification_checklist(
     for (item_id, name, law), slot in zip(MEASUREMENT_LAWS, current.slots, strict=True):
         disposition = "UNKNOWN" if slot.status == "UNKNOWN" else "EVIDENCE_RECORDED"
         items.append(ChecklistItem(item_id, name, disposition, law))
+    for (item_id, name, law), observation in zip(
+        OBSERVATION_LAWS, current.observations, strict=True
+    ):
+        disposition = "UNKNOWN" if observation.status == "UNKNOWN" else "EVIDENCE_RECORDED"
+        items.append(ChecklistItem(item_id, name, disposition, law))
+    measured = any(slot.status == "IMPORTED" for slot in current.slots) or any(
+        observation.status == "IMPORTED" for observation in current.observations
+    )
     if refusals:
         verdict = "REFUSED"
-    elif any(slot.status == "IMPORTED" for slot in current.slots):
+    elif measured:
         verdict = "EVIDENCE_RECORDED"
     else:
         verdict = "ARCHITECTURE_HOLD"
@@ -106,6 +136,7 @@ def registry_document(registry: PrivacyAnalyticsRegistry) -> dict[str, object]:
         "schema_id": registry.schema_id,
         "events": [event.to_dict() for event in registry.events],
         "slots": [slot.to_dict() for slot in registry.slots],
+        "observations": [item.to_dict() for item in registry.observations],
         "qualification": report.to_dict(),
     }
 

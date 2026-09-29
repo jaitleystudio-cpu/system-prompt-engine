@@ -1,13 +1,28 @@
 """Aggregate-only privacy analytics. No user-level tracking and no success scores."""
 
+from spe_runtime.privacy.aggregates import (
+    FEATURE_IDS,
+    ISO_COUNTRIES,
+    OBSERVATION_KINDS,
+    REFERRER_CLASSES,
+    AggregateObservation,
+)
 from spe_runtime.privacy.analytics import (
+    COLLECTOR,
+    EXCLUDED_DATA,
+    NETWORK_REQUESTS,
+    OBSERVATION_ONLY,
     SCHEMA_ID,
+    SEMANTIC_AUTHORITY,
     AggregateEvent,
     MeasurementSlot,
     PrivacyAnalyticsRegistry,
     admit_event,
+    data_minimization_proof,
     empty_registry,
     import_measurement,
+    import_observation,
+    network_law,
     record_event,
 )
 from spe_runtime.privacy.checklist import (
@@ -25,9 +40,19 @@ from spe_runtime.privacy.refusals import (
 )
 
 __all__ = (
+    "COLLECTOR",
+    "EXCLUDED_DATA",
+    "FEATURE_IDS",
+    "ISO_COUNTRIES",
+    "NETWORK_REQUESTS",
+    "OBSERVATION_KINDS",
+    "OBSERVATION_ONLY",
+    "REFERRER_CLASSES",
     "SCHEMA_ID",
+    "SEMANTIC_AUTHORITY",
     "UNKNOWN",
     "AggregateEvent",
+    "AggregateObservation",
     "ChecklistItem",
     "MeasurementSlot",
     "PrivacyAnalyticsRegistry",
@@ -36,8 +61,11 @@ __all__ = (
     "QualificationReport",
     "admit_event",
     "collect_refusals",
+    "data_minimization_proof",
     "empty_registry",
     "import_measurement",
+    "import_observation",
+    "network_law",
     "qualification_checklist",
     "record_event",
     "refusal_catalog",

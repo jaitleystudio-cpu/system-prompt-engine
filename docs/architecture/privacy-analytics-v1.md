@@ -23,7 +23,9 @@ import_measurement(slot, evidence bytes)
     status = IMPORTED
 ```
 
-`IMPORTED` means evidence was accepted. It is not a success score.
+`IMPORTED` means evidence was accepted. It is not a success score. Privacy analytics supplies observations only. It does not create semantic authority.
+
+Country, session count, referrer class, and feature adoption are separate pre-aggregated observations. They are not fields on an ordinary event. A per-event `country`, session id, referring URL, or free-text feature label is refused. Missing observations stay `UNKNOWN`.
 
 ## Aggregate event
 
@@ -53,6 +55,17 @@ The registry stores admitted events. It does not sum them into a live total.
 
 Currency is not defaulted. A revenue import that omits currency leaves currency `UNKNOWN`.
 
+## Pre-aggregated observations
+
+| Observation | Stored when evidence is imported | Refused |
+| --- | --- | --- |
+| `COUNTRY_AGGREGATE` | ISO 3166-1 alpha-2 code and a count | per-event country, city, region, postal code, coordinates, IP, user id |
+| `SESSION_AGGREGATE` | `session_count` only | `session_id`, session timeline, per-user session history |
+| `REFERRER_CLASS` | counts for `DIRECT`, `SEARCH`, `SOCIAL`, `REFERRAL`, `INTERNAL`, `OTHER`, `UNKNOWN` | full referring URL, query string, path, click id |
+| `FEATURE_ADOPTION` | counts for the closed public capability ids | arbitrary event names, free-text labels, user journey |
+
+Omitted class or feature counts stay `UNKNOWN`. A zero is stored only when the evidence bytes contain that zero. The collector is `NONE` and this module makes no network request.
+
 ## Qualification checklist
 
 | Id | Name | Disposition before evidence |
@@ -69,6 +82,10 @@ Currency is not defaulted. A revenue import that omits currency leaves currency 
 | PA-10 | search_console | UNKNOWN |
 | PA-11 | core_web_vitals | UNKNOWN |
 | PA-12 | revenue | UNKNOWN |
+| PA-13 | country_aggregate | UNKNOWN |
+| PA-14 | session_aggregate | UNKNOWN |
+| PA-15 | referrer_class | UNKNOWN |
+| PA-16 | feature_adoption | UNKNOWN |
 
 Verdicts are `ARCHITECTURE_HOLD`, `EVIDENCE_RECORDED`, and `REFUSED`. After one real import, that row becomes `EVIDENCE_RECORDED` and the other measurement rows stay `UNKNOWN`.
 
