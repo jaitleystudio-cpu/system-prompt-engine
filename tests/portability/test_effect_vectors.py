@@ -7,7 +7,6 @@ import subprocess
 from pathlib import Path
 
 from spe_runtime.k3.effect import bind_prompt_effects
-from spe_runtime.k3.registry import UNIMPLEMENTED_XCAT
 from spe_runtime.k3.selector import select_prompt_techniques
 from spe_runtime.portability.canonical import canonical_dumps
 from spe_runtime.requirements.project import build_requirement_graph
@@ -226,7 +225,10 @@ def vectors() -> list[dict]:
             ),
         }
     )
-    for index, xcat in enumerate(sorted(UNIMPLEMENTED_XCAT), start=4):
+    for index, xcat in enumerate(
+        ("CAT:C99", "CAT:C13", "CAT:C00", "CAT:C77", "CAT:C88", "CAT:C55", "CAT:C44"),
+        start=4,
+    ):
         rows.append(
             {
                 "id": f"A{index:02d}",
@@ -259,7 +261,7 @@ def vectors() -> list[dict]:
             "kind": "adversarial",
             "mode": "select",
             "protected": _protected(),
-            "category": {"display_label": "Research", "xcat_id": "CAT:C04"},
+            "category": {"display_label": "Research", "xcat_id": "CAT:C99"},
             "task": {},
         }
     )

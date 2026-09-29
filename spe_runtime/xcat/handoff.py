@@ -82,6 +82,43 @@ def validate_handoff(
     return HandoffResult.VALID
 
 
+def record_handoff(
+    before: CrossCategoryEnvelope,
+    after: CrossCategoryEnvelope,
+    source_category: str,
+    destination_category: str,
+    authority_event: object | None = None,
+) -> dict[str, object]:
+    """Thin wrapper: validate handoff and return a receipt dict (never promotes)."""
+    result = validate_handoff(
+        before,
+        after,
+        source_category,
+        destination_category,
+        authority_event=authority_event,
+    )
+    reason = None
+    if result != HandoffResult.VALID:
+        reason = diagnose_refusal_reason(
+            before,
+            after,
+            source_category,
+            destination_category,
+            authority_event=authority_event,
+        )
+    return {
+        "result": result.value if isinstance(result, HandoffResult) else str(result),
+        "source_category": source_category,
+        "destination_category": destination_category,
+        "reason": reason.value if reason is not None else None,
+        "handoff_receipt": {
+            "source_category": source_category,
+            "destination_category": destination_category,
+            "result": result.value if isinstance(result, HandoffResult) else str(result),
+        },
+    }
+
+
 def diagnose_refusal_reason(
     before: CrossCategoryEnvelope,
     after: CrossCategoryEnvelope,

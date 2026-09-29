@@ -86,7 +86,21 @@ fn instruction_mode(kind: &str) -> &'static str {
 }
 
 fn implemented_xcat(id: &str) -> bool {
-    matches!(id, "CAT:C01" | "CAT:C02" | "CAT:C03" | "CAT:C06" | "CAT:C07")
+    matches!(
+        id,
+        "CAT:C01"
+            | "CAT:C02"
+            | "CAT:C03"
+            | "CAT:C04"
+            | "CAT:C05"
+            | "CAT:C06"
+            | "CAT:C07"
+            | "CAT:C08"
+            | "CAT:C09"
+            | "CAT:C10"
+            | "CAT:C11"
+            | "CAT:C12"
+    )
 }
 
 fn display_xcat(label: &str) -> Option<&'static str> {

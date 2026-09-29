@@ -280,8 +280,12 @@ def test_conflicted_graph_refuses_even_if_selection_says_selected() -> None:
     assert "CONFLICTED_GRAPH" in plan["notes"]
 
 
-def test_unimplemented_xcat_has_no_success_prompt() -> None:
-    for xcat in sorted(UNIMPLEMENTED_XCAT):
+def test_unimplemented_xcat_set_is_empty() -> None:
+    assert UNIMPLEMENTED_XCAT == frozenset()
+
+
+def test_unknown_xcat_has_no_success_prompt() -> None:
+    for xcat in ("CAT:C99", "CAT:C13", "CAT:C00"):
         result = select_prompt_techniques(_prot(), {"xcat_id": xcat}, None)
         plan = result["prompt_effect_plan"]
         assert result["disposition"] == "NO_SELECTION"

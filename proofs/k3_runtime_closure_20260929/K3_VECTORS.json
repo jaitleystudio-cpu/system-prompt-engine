@@ -588,9 +588,9 @@
     {
       "id": "A07",
       "class": "adversarial",
-      "name": "c04",
+      "name": "c99-unknown",
       "category": {
-        "xcat_id": "CAT:C04"
+        "xcat_id": "CAT:C99"
       },
       "task": null,
       "expect": {
@@ -603,9 +603,9 @@
     {
       "id": "A08",
       "class": "adversarial",
-      "name": "c05",
+      "name": "c13-unknown",
       "category": {
-        "xcat_id": "CAT:C05"
+        "xcat_id": "CAT:C13"
       },
       "task": null,
       "expect": {
@@ -617,9 +617,9 @@
     {
       "id": "A09",
       "class": "adversarial",
-      "name": "c08",
+      "name": "c00-unknown",
       "category": {
-        "xcat_id": "CAT:C08"
+        "xcat_id": "CAT:C00"
       },
       "task": null,
       "expect": {
@@ -631,9 +631,9 @@
     {
       "id": "A10",
       "class": "adversarial",
-      "name": "c09",
+      "name": "c77-unknown",
       "category": {
-        "xcat_id": "CAT:C09"
+        "xcat_id": "CAT:C77"
       },
       "task": null,
       "expect": {
@@ -645,9 +645,9 @@
     {
       "id": "A11",
       "class": "adversarial",
-      "name": "c10",
+      "name": "c88-unknown",
       "category": {
-        "xcat_id": "CAT:C10"
+        "xcat_id": "CAT:C88"
       },
       "task": null,
       "expect": {
@@ -659,9 +659,9 @@
     {
       "id": "A12",
       "class": "adversarial",
-      "name": "c11",
+      "name": "c55-unknown",
       "category": {
-        "xcat_id": "CAT:C11"
+        "xcat_id": "CAT:C55"
       },
       "task": null,
       "expect": {
@@ -673,9 +673,9 @@
     {
       "id": "A13",
       "class": "adversarial",
-      "name": "c12",
+      "name": "c44-unknown",
       "category": {
-        "xcat_id": "CAT:C12"
+        "xcat_id": "CAT:C44"
       },
       "task": null,
       "expect": {

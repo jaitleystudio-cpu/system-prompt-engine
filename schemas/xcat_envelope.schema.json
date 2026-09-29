@@ -105,6 +105,26 @@
         "type": "string",
         "pattern": "^CAT:C(0[1-9]|1[0-2])$"
       }
+    },
+    "taxonomy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "active_category": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "string",
+          "pattern": "^CAT:C(0[1-9]|1[0-2])$"
+        }
+      ]
+    },
+    "category_payload": {
+      "type": ["object", "null"]
+    },
+    "proof_obligation_proposals": {
+      "type": "array",
+      "items": { "type": "object" }
     }
   }
 }
