@@ -766,6 +766,9 @@ def run_checked(argv: list[str] | None = None) -> int:
 
     if args.fixture_only or args.subject:
         if args.subject:
+            repo_path = str(REPO)
+            if repo_path not in sys.path:
+                sys.path.insert(0, repo_path)
             subject_mod = importlib.import_module("tools.spe_benchmark_python_subject")
             try:
                 captures = subject_mod.invoke_cases(cases)
