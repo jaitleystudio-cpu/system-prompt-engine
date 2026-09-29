@@ -1,0 +1,40 @@
+{
+  "revision": "2026-09-29",
+  "hosting": "NOT_AUTHORIZED",
+  "doNotSubmit": true,
+  "index": [
+    "https://systempromptengine.com/",
+    "https://systempromptengine.com/create",
+    "https://systempromptengine.com/code",
+    "https://systempromptengine.com/daily-lab",
+    "https://systempromptengine.com/capabilities",
+    "https://systempromptengine.com/privacy"
+  ],
+  "noindex": [
+    "https://systempromptengine.com/my-work",
+    "https://systempromptengine.com/workspace"
+  ],
+  "excludedPrefixes": [
+    "/workspace",
+    "/models/",
+    "/ort/",
+    "/search/public-index.json",
+    "/search/private-noindex.json"
+  ],
+  "notFound": {
+    "status": 404,
+    "robots": "noindex, follow",
+    "canonical": null
+  },
+  "removedStructuredData": [
+    "FAQPage"
+  ],
+  "requiredStructuredData": [
+    "WebSite",
+    "Organization",
+    "SoftwareApplication",
+    "WebPage",
+    "BreadcrumbList",
+    "Article"
+  ]
+}

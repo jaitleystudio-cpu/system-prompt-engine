@@ -1,0 +1,53 @@
+{
+  "revision": "2026-09-29",
+  "canonicalHost": "https://systempromptengine.com",
+  "hosting": "NOT_AUTHORIZED",
+  "policy": "noindex and omitted from the sitemap",
+  "routes": [
+    {
+      "id": "my-work",
+      "path": "/my-work",
+      "canonical": "https://systempromptengine.com/my-work",
+      "title": "My Work — Saved Prompts on This Device | SPE",
+      "robots": "noindex, follow",
+      "crawl": "allow",
+      "reason": "On-device history. Crawlable so the noindex directive can be seen."
+    },
+    {
+      "id": "workspace",
+      "path": "/workspace",
+      "canonical": "https://systempromptengine.com/workspace",
+      "title": "Workspace — Inspect & Refine Prompts | SPE",
+      "robots": "noindex, nofollow",
+      "crawl": "disallow",
+      "reason": "Private prompt session."
+    }
+  ],
+  "prefixes": [
+    {
+      "path": "/workspace",
+      "robots": "disallow",
+      "reason": "Private prompt session. noindex, nofollow, omitted from the sitemap."
+    },
+    {
+      "path": "/models/",
+      "robots": "disallow",
+      "reason": "Same-origin model packs. Not documents."
+    },
+    {
+      "path": "/ort/",
+      "robots": "disallow",
+      "reason": "Runtime binaries. Not documents."
+    },
+    {
+      "path": "/search/public-index.json",
+      "robots": "disallow",
+      "reason": "Operator registry. Not a public document."
+    },
+    {
+      "path": "/search/private-noindex.json",
+      "robots": "disallow",
+      "reason": "Operator registry. Not a public document."
+    }
+  ]
+}

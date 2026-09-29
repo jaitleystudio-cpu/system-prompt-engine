@@ -1,0 +1,120 @@
+{
+  "revision": "2026-09-29",
+  "canonicalHost": "https://systempromptengine.com",
+  "hosting": "NOT_AUTHORIZED",
+  "sitemap": "https://systempromptengine.com/sitemap.xml",
+  "robots": "https://systempromptengine.com/robots.txt",
+  "routes": [
+    {
+      "id": "home",
+      "path": "/",
+      "canonical": "https://systempromptengine.com/",
+      "title": "SPE — System Prompt Engine | Free System Prompt Generator",
+      "description": "Free system prompt generator and AI prompt builder. Turn an idea into meaning, structure, and a precise prompt — privately on this device.",
+      "h1": "Turn your ideas into clear prompts for any AI.",
+      "robots": "index, follow",
+      "schemas": [
+        "Organization",
+        "WebSite",
+        "SoftwareApplication",
+        "WebPage",
+        "BreadcrumbList"
+      ],
+      "changefreq": "weekly",
+      "priority": "1.0"
+    },
+    {
+      "id": "create",
+      "path": "/create",
+      "canonical": "https://systempromptengine.com/create",
+      "title": "Create a Prompt — SPE Free Prompt Builder",
+      "description": "Shape text, speech, image, video, or a website into a clear system prompt. Your brief stays on this device.",
+      "h1": "Start with your idea",
+      "robots": "index, follow",
+      "schemas": [
+        "Organization",
+        "WebSite",
+        "SoftwareApplication",
+        "WebPage",
+        "BreadcrumbList"
+      ],
+      "changefreq": "weekly",
+      "priority": "0.9"
+    },
+    {
+      "id": "code",
+      "path": "/code",
+      "canonical": "https://systempromptengine.com/code",
+      "title": "Screenshot to Code Prompt — SPE Prompt Engineering Tool",
+      "description": "Upload a UI screenshot and get an implementation prompt plus starter scaffolds for HTML, React, SwiftUI, Flutter, and more — for use with a coding AI, not an in-product compiler.",
+      "h1": "Start from a screenshot",
+      "robots": "index, follow",
+      "schemas": [
+        "Organization",
+        "WebSite",
+        "SoftwareApplication",
+        "WebPage",
+        "BreadcrumbList"
+      ],
+      "changefreq": "weekly",
+      "priority": "0.8"
+    },
+    {
+      "id": "lab",
+      "path": "/daily-lab",
+      "canonical": "https://systempromptengine.com/daily-lab",
+      "title": "Daily Lab — SPE AI Prompt Generator Ideas",
+      "description": "Browse daily prompt engineering specimens and open them in SPE’s free prompt builder.",
+      "h1": "Today's prompt",
+      "robots": "index, follow",
+      "schemas": [
+        "Organization",
+        "WebSite",
+        "SoftwareApplication",
+        "WebPage",
+        "BreadcrumbList",
+        "Article"
+      ],
+      "changefreq": "daily",
+      "priority": "0.7"
+    },
+    {
+      "id": "capabilities",
+      "path": "/capabilities",
+      "canonical": "https://systempromptengine.com/capabilities",
+      "title": "SPE Capabilities — Local Prompt Engine Features",
+      "description": "Honest SPE capabilities: local-first preparation, ProtectedIntent, Execution Contract, provider profiles, and portable .spe files. Research preview — any worldwide top ranking remains unproven.",
+      "h1": "What SPE can do on this device",
+      "robots": "index, follow",
+      "schemas": [
+        "Organization",
+        "WebSite",
+        "SoftwareApplication",
+        "WebPage",
+        "BreadcrumbList",
+        "Article"
+      ],
+      "changefreq": "weekly",
+      "priority": "0.8"
+    },
+    {
+      "id": "privacy",
+      "path": "/privacy",
+      "canonical": "https://systempromptengine.com/privacy",
+      "title": "Privacy & Proof — Local System Prompt Engine | SPE",
+      "description": "How SPE prepares prompts on this device, with honest privacy claims for this research preview.",
+      "h1": "Your thinking stays with you",
+      "robots": "index, follow",
+      "schemas": [
+        "Organization",
+        "WebSite",
+        "SoftwareApplication",
+        "WebPage",
+        "BreadcrumbList",
+        "Article"
+      ],
+      "changefreq": "monthly",
+      "priority": "0.6"
+    }
+  ]
+}

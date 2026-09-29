@@ -117,56 +117,6 @@ export function Capabilities() {
         </li>
       </ol>
 
-      <section
-        className="spe-capabilities-faq"
-        aria-labelledby="capabilities-faq-title"
-        id="faq"
-      >
-        <h2 id="capabilities-faq-title">Plain answers</h2>
-        <dl className="spe-faq-list">
-          <div>
-            <dt>What is SPE?</dt>
-            <dd>
-              SPE (System Prompt Engine) is a free, browser-based system prompt
-              generator. You start with a rough idea; SPE helps you shape
-              meaning, structure, and a prompt you can take to any model you
-              choose.
-            </dd>
-          </div>
-          <div>
-            <dt>Does SPE send my idea to an AI provider to prepare it?</dt>
-            <dd>
-              No. Prompt preparation runs locally in your browser. You decide
-              whether to copy, download, or take the finished prompt elsewhere.
-            </dd>
-          </div>
-          <div>
-            <dt>What is an Execution Contract in SPE?</dt>
-            <dd>
-              It is the structured contract SPE compiles with your brief — goal,
-              constraints, planned stages, and authority state. A local dry-run
-              can check it without executing side effects.
-            </dd>
-          </div>
-          <div>
-            <dt>Do provider profiles grant SPE permission to call external AI?</dt>
-            <dd>
-              No. Selecting a provider profile is not an authority grant.
-              External routes stay off unless you explicitly allow them; the
-              default is local-first.
-            </dd>
-          </div>
-          <div>
-            <dt>Does SPE claim a worldwide ranking as the top prompt tool?</dt>
-            <dd>
-              No. That ranking claim is not proven. SPE is a research preview
-              with honest local preparation, contracts, and portability — not
-              an independently replicated top ranking.
-            </dd>
-          </div>
-        </dl>
-      </section>
-
       <details className="spe-privacy-proof" data-copy-depth="PROOF">
         <summary>Technical notes (for reviewers)</summary>
         <ul>
@@ -177,10 +127,6 @@ export function Capabilities() {
           <li>
             Provider profile selection is observational only and distinct from
             AuthorityGrant. Network and credentials are never auto-enabled.
-          </li>
-          <li>
-            FAQPage JSON-LD on this route mirrors the plain answers above for
-            answer engines. WORLD ranking claims remain unproven.
           </li>
         </ul>
       </details>

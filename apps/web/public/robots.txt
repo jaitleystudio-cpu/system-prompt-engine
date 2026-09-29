@@ -1,15 +1,18 @@
-# SPE — System Prompt Engine
-# HOSTING remains founder-gated; this file ships with the static build.
+# SPE search foundation. HOSTING IS NOT AUTHORIZED.
+# Public index routes may be crawled. Private sessions and binary packs may not.
+# Disallow lines come first so first-match crawlers still skip private paths.
 User-agent: *
+Disallow: /workspace
+Disallow: /models/
+Disallow: /ort/
+Disallow: /search/public-index.json
+Disallow: /search/private-noindex.json
 Allow: /
 Allow: /create
 Allow: /code
 Allow: /daily-lab
-Allow: /my-work
-Allow: /privacy
 Allow: /capabilities
-Disallow: /workspace
-Disallow: /models/
-Disallow: /ort/
+Allow: /privacy
+Allow: /my-work
 
 Sitemap: https://systempromptengine.com/sitemap.xml

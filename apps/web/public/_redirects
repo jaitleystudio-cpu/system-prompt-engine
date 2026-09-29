@@ -1,5 +1,21 @@
-# SPA History API fallback — do not apply to WASM/models/ort.
- /models/*  /models/:splat  200
- /ort/*     /ort/:splat     200
- /assets/*  /assets/:splat  200
- /*         /index.html     200
+# Future static host map. HOSTING IS NOT AUTHORIZED.
+# Known routes are files emitted at vite build. Unknown URLs return 404.
+# Do not rewrite unknown URLs onto /index.html with status 200.
+/models/*  /models/:splat  200
+/ort/*     /ort/:splat     200
+/assets/*  /assets/:splat  200
+/create    /create/index.html   200
+/create/   /create/index.html   200
+/code    /code/index.html   200
+/code/   /code/index.html   200
+/daily-lab    /daily-lab/index.html   200
+/daily-lab/   /daily-lab/index.html   200
+/capabilities    /capabilities/index.html   200
+/capabilities/   /capabilities/index.html   200
+/privacy    /privacy/index.html   200
+/privacy/   /privacy/index.html   200
+/my-work    /my-work/index.html   200
+/my-work/   /my-work/index.html   200
+/workspace    /workspace/index.html   200
+/workspace/   /workspace/index.html   200
+/*    /404.html   404

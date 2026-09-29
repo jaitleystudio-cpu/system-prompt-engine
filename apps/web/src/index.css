@@ -2713,6 +2713,21 @@ html[data-theme="light"] .spe-bound-notice {
   text-underline-offset: 3px;
   opacity: 0.8;
 }
+.spe-not-found {
+  max-width: 40rem;
+  margin: 2rem auto 3rem;
+  padding: 0 1.25rem;
+}
+.spe-not-found h1 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin: 0 0 0.75rem;
+}
+#spe-crawl {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
 html[data-theme="light"] .spe-nav-cta {
   background: var(--hero-cta-bg);
   color: var(--hero-cta-fg);

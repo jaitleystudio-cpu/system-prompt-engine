@@ -49,11 +49,14 @@ import {
   type TargetId,
 } from "@spe/web-runtime";
 import { Nav } from "./layout/Nav";
+import { SiteFooter } from "./layout/SiteFooter";
 import {
   navigateTo,
+  NOT_FOUND_VIEW,
   pathForView,
   viewFromPath,
   type AppView,
+  type RoutableView,
 } from "./routing";
 import { SeoHead } from "./ui/SeoHead";
 import { DotPattern } from "./ui/DotPattern";
@@ -78,6 +81,7 @@ import {
   type LabAcquisitionSeed,
 } from "./lab/labAcquisition";
 import { MyWork } from "./pages/MyWork";
+import { NotFound } from "./pages/NotFound";
 import { PrivacyProof } from "./pages/PrivacyProof";
 import { Capabilities } from "./pages/Capabilities";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
@@ -198,7 +202,7 @@ export default function App() {
   const [view, setViewState] = useState<View>(() =>
     typeof window === "undefined" ? "home" : viewFromPath(window.location.pathname),
   );
-  const setView = useCallback((next: View, opts: { replace?: boolean } = {}) => {
+  const setView = useCallback((next: RoutableView, opts: { replace?: boolean } = {}) => {
     setViewState(next);
     navigateTo(next, opts);
   }, []);
@@ -257,15 +261,11 @@ export default function App() {
 
   useEffect(() => {
     // Sync history state without wiping ?specimen= (Batch G deep-link).
+    // Unknown paths stay put so a missing URL is a real 404, not the home page.
     const pathView = viewFromPath(window.location.pathname);
-    if (window.location.pathname !== pathForView(pathView)) {
-      navigateTo(pathView, { replace: true });
-    } else {
-      window.history.replaceState(
-        { view: pathView },
-        "",
-        window.location.pathname + window.location.search,
-      );
+    if (pathView !== NOT_FOUND_VIEW) {
+      const next = pathForView(pathView) + window.location.search;
+      window.history.replaceState({ view: pathView }, "", next);
     }
     const onPop = () => setViewState(viewFromPath(window.location.pathname));
     window.addEventListener("popstate", onPop);
@@ -1258,6 +1258,7 @@ export default function App() {
             </section>
           </>
         )}
+        {view === NOT_FOUND_VIEW && <NotFound onNavigate={setView} />}
       </main>
 
       {updateAvailable && (
@@ -1290,15 +1291,7 @@ export default function App() {
           <strong>SPE</strong> System Prompt Engine · Your intent, carried
           forward.
         </div>
-        <nav className="spe-footer-links" aria-label="Footer">
-          <a href={pathForView("home")}>Home</a>
-          <a href={pathForView("create")}>Create</a>
-          <a href={pathForView("code")}>Code</a>
-          <a href={pathForView("lab")}>Daily Lab</a>
-          <a href={pathForView("my-work")}>My Work</a>
-          <a href={pathForView("capabilities")}>Capabilities</a>
-          <a href={pathForView("privacy")}>Privacy</a>
-        </nav>
+        <SiteFooter onNavigate={setView} />
         <div className="claim-strip">
           {ui.claim}
           <details data-copy-depth="PROOF">

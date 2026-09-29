@@ -1,15 +1,15 @@
-import { pathForView, type AppView } from "../routing";
+import { pathForView, type AppView, type RoutableView } from "../routing";
 import { ThemeToggle } from "../ui/ThemeToggle";
 
 type Props = {
   scrolled: boolean;
   view: AppView;
-  onNavigate: (v: AppView) => void;
+  onNavigate: (v: RoutableView) => void;
   menuOpen: boolean;
   setMenuOpen: (v: boolean) => void;
 };
 
-const LINKS: { id: AppView; label: string }[] = [
+const LINKS: { id: RoutableView; label: string }[] = [
   { id: "home", label: "Home" },
   { id: "create", label: "Create" },
   { id: "code", label: "Code" },

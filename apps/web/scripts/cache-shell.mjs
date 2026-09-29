@@ -11,6 +11,7 @@ const list = [
   "/art/intent-core.webp",
   "/spe_wasm.wasm",
   "/spe_wasm.sha256.json",
+  "/collapse-crawl.js",
   ...assets,
 ];
 const digest = createHash("sha256")

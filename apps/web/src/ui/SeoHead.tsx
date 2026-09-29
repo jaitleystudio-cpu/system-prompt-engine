@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import {
-  absoluteUrl,
-  jsonLdCapabilitiesFaq,
-  jsonLdCapabilitiesWebPage,
-  jsonLdSoftwareApplication,
-  ROUTE_META,
-  type AppView,
-} from "../routing";
+  JSONLD_ELEMENT_ID,
+  NOT_FOUND,
+  NOT_FOUND_VIEW,
+  OG_URL_SELECTOR,
+  ROBOTS_META_KEY,
+  jsonLdGraph,
+} from "../search/foundation.mjs";
+import { absoluteUrl, ROUTE_META, type AppView } from "../routing";
 
 function upsertMeta(attr: "name" | "property", key: string, content: string) {
   let el = document.head.querySelector(
@@ -32,6 +33,10 @@ function upsertLink(rel: string, href: string) {
   el.href = href;
 }
 
+function removeLink(rel: string) {
+  document.head.querySelector(`link[rel="${rel}"]`)?.remove();
+}
+
 function upsertJsonLd(id: string, data: Record<string, unknown>) {
   let el = document.getElementById(id) as HTMLScriptElement | null;
   if (!el) {
@@ -43,43 +48,51 @@ function upsertJsonLd(id: string, data: Record<string, unknown>) {
   el.textContent = JSON.stringify(data);
 }
 
-function removeJsonLd(id: string) {
-  document.getElementById(id)?.remove();
-}
+const RETIRED_JSON_LD = [
+  "spe-jsonld-app",
+  "spe-jsonld-capabilities-page",
+  "spe-jsonld-capabilities-faq",
+];
 
 export function SeoHead({ view }: { view: AppView }) {
   useEffect(() => {
-    const meta = ROUTE_META[view];
-    const url = absoluteUrl(meta.path);
+    const missing = view === NOT_FOUND_VIEW;
+    const meta = missing
+      ? {
+          title: NOT_FOUND.title,
+          description: NOT_FOUND.description,
+          robots: NOT_FOUND.robotsMeta,
+          path: "",
+        }
+      : ROUTE_META[view];
+    const url = missing ? "" : absoluteUrl(meta.path);
     document.title = meta.title;
     upsertMeta("name", "description", meta.description);
-    upsertLink("canonical", url);
+    upsertMeta("name", ROBOTS_META_KEY, meta.robots);
+    if (missing) removeLink("canonical");
+    else upsertLink("canonical", url);
     upsertMeta("property", "og:type", "website");
     upsertMeta("property", "og:site_name", "SPE — System Prompt Engine");
     upsertMeta("property", "og:title", meta.title);
     upsertMeta("property", "og:description", meta.description);
-    upsertMeta("property", "og:url", url);
-    upsertMeta(
-      "property",
-      "og:image",
-      absoluteUrl("/art/intent-core.webp"),
-    );
+    if (missing) {
+      document.head.querySelector(OG_URL_SELECTOR)?.remove();
+    } else {
+      upsertMeta("property", "og:url", url);
+      upsertMeta("property", "og:image", absoluteUrl("/art/intent-core.webp"));
+    }
     upsertMeta("name", "twitter:card", "summary_large_image");
     upsertMeta("name", "twitter:title", meta.title);
     upsertMeta("name", "twitter:description", meta.description);
-    upsertMeta(
-      "name",
-      "twitter:image",
-      absoluteUrl("/art/intent-core.webp"),
-    );
-    upsertJsonLd("spe-jsonld-app", jsonLdSoftwareApplication());
-    if (view === "capabilities") {
-      upsertJsonLd("spe-jsonld-capabilities-page", jsonLdCapabilitiesWebPage());
-      upsertJsonLd("spe-jsonld-capabilities-faq", jsonLdCapabilitiesFaq());
-    } else {
-      removeJsonLd("spe-jsonld-capabilities-page");
-      removeJsonLd("spe-jsonld-capabilities-faq");
+    if (!missing) {
+      upsertMeta(
+        "name",
+        "twitter:image",
+        absoluteUrl("/art/intent-core.webp"),
+      );
     }
+    for (const id of RETIRED_JSON_LD) document.getElementById(id)?.remove();
+    upsertJsonLd(JSONLD_ELEMENT_ID, jsonLdGraph(missing ? NOT_FOUND_VIEW : view));
   }, [view]);
   return null;
 }

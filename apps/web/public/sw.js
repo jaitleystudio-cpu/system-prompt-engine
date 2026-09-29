@@ -12,6 +12,7 @@ const PRECACHE = [
   "/icon.svg",
   "/spe_wasm.wasm",
   "/spe_wasm.sha256.json",
+  "/collapse-crawl.js",
 ];
 
 self.addEventListener("install", (event) => {

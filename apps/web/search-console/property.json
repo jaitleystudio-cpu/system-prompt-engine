@@ -1,0 +1,13 @@
+{
+  "property": "https://systempromptengine.com/",
+  "status": "NOT_SUBMITTED",
+  "hosting": "NOT_AUTHORIZED",
+  "verification": null,
+  "doNotSubmit": true,
+  "revision": "2026-09-29",
+  "sitemapPath": "/sitemap.xml",
+  "robotsPath": "/robots.txt",
+  "publicIndexPath": "/search/public-index.json",
+  "privateNoindexPath": "/search/private-noindex.json",
+  "note": "Prepared for a future unlock. Do not add DNS, do not deploy, and do not submit this property."
+}

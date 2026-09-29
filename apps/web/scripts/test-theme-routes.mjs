@@ -19,11 +19,17 @@ for (const p of [
   "/my-work",
   "/privacy",
   "/capabilities",
+  "/workspace",
 ]) {
-  assert.match(routing, new RegExp(p.replace("/", "\\/")));
-  if (p !== "/") assert.match(sitemap, new RegExp(p));
-  assert.match(robots, /Allow:/);
+  assert.match(routing, new RegExp(p.replaceAll("/", "\\/")));
 }
+for (const p of ["/create", "/code", "/daily-lab", "/privacy", "/capabilities"]) {
+  assert.match(sitemap, new RegExp(p));
+}
+assert.doesNotMatch(sitemap, /\/my-work/);
+assert.doesNotMatch(sitemap, /\/workspace/);
+assert.match(robots, /Allow:\s*\/my-work/);
+assert.match(robots, /Disallow:\s*\/workspace/);
 assert.match(robots, /Allow:\s*\/capabilities/);
 assert.match(theme, /ThemePreference/);
 assert.match(theme, /spe-theme/);

@@ -16,3 +16,21 @@
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+/404.html
+  X-Robots-Tag: noindex, follow
+
+/my-work
+  X-Robots-Tag: noindex, follow
+
+/my-work/*
+  X-Robots-Tag: noindex, follow
+
+/workspace
+  X-Robots-Tag: noindex, nofollow
+
+/workspace/*
+  X-Robots-Tag: noindex, nofollow
+
+/search/*
+  X-Robots-Tag: noindex, nofollow
