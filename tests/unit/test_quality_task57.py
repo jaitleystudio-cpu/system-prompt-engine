@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -20,6 +21,7 @@ from spe_runtime.quality.engine import (
 )
 
 DIRECT = "Follow the objective directly. Do not invent examples."
+_VECTOR_DIR = Path(__file__).resolve().parents[2] / "proofs" / "task57_quality_reconstruction_20260929"
 
 
 def _authority_line(auth: dict[str, Any]) -> str:
@@ -365,12 +367,33 @@ def test_vector_floors() -> None:
     quality = _quality_vectors()
     reconstruction = _reconstruction_vectors()
     validate = _validate_vectors()
-    assert sum(1 for row in quality if row["kind"] == "normal") >= 30
-    assert sum(1 for row in quality if row["kind"] == "adversarial") >= 25
-    assert sum(1 for row in reconstruction if row["kind"] == "normal") >= 25
-    assert sum(1 for row in reconstruction if row["kind"] == "adversarial") >= 20
-    assert sum(1 for row in validate if row["kind"] == "normal") >= 20
-    assert sum(1 for row in validate if row["kind"] == "adversarial") >= 20
+    assert not any(row["id"].startswith("q-goal-") for row in quality)
+    assert not any(row["id"].startswith("r-normal-") for row in reconstruction)
+    assert not any(row["id"].startswith("v-normal-") for row in validate)
+    assert not any(row["id"].startswith("a-loop-") for row in reconstruction)
+    required = {
+        "a-missing-constraint",
+        "prefix-constraint-collision",
+        "duplicate-headings",
+        "right-words-wrong-section",
+        "a-unknown-laundered",
+        "a-authority",
+        "a-execute-grant",
+        "a-invented-fact",
+        "a-intent-mismatch",
+        "a-conflict",
+        "a-effect-missing",
+        "a-output-missing",
+        "a-malformed",
+        "a-claim",
+        "q-same",
+        "q-longer",
+        "q-shorter",
+        "repair-scope-escape",
+        "attempt-2",
+    }
+    ids = {row["id"] for row in quality + reconstruction + validate}
+    assert required <= ids
     for row in quality:
         delta = quality_delta(row["before"], row["after"])
         assert delta["disposition"] == row["expect"], row["id"]
@@ -393,463 +416,47 @@ def test_vector_floors() -> None:
 
 
 def _quality_vectors() -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    base = _subject()
-    rows.append({"id": "q-same", "kind": "normal", "before": base, "after": copy.deepcopy(base), "expect": "NON_INFERIOR"})
-    restored_before = _subject(
-        compiled_prompt=_replace_section(base["compiled_prompt"], "Hard constraints", "- other"),
-        plan_prompt=base["compiled_prompt"],
-    )
-    rows.append({"id": "q-restore-constraint", "kind": "normal", "before": restored_before, "after": copy.deepcopy(base), "expect": "IMPROVED"})
-    longer = _subject(compiled_prompt=base["compiled_prompt"] + "\n\n## Notes\npadding", plan_prompt=base["compiled_prompt"])
-    rows.append({"id": "q-longer", "kind": "normal", "before": base, "after": longer, "expect": "NON_INFERIOR"})
-    shorter = _subject()
-    shorter_prompt = _drop_section(shorter["compiled_prompt"] + "\n\n## Notes\npadding", "Notes")
-    rows.append(
-        {
-            "id": "q-shorter",
-            "kind": "normal",
-            "before": _subject(compiled_prompt=base["compiled_prompt"] + "\n\n## Notes\npadding", plan_prompt=base["compiled_prompt"]),
-            "after": _subject(compiled_prompt=shorter_prompt, plan_prompt=base["compiled_prompt"]),
-            "expect": "NON_INFERIOR",
-        }
-    )
-    unknown_pi = _protected(unknowns=[{"uncertainty_id": "u1", "statement": "launch date"}])
-    unknown_good = _subject(unknown_pi)
-    rows.append({"id": "q-unknown-kept", "kind": "normal", "before": unknown_good, "after": copy.deepcopy(unknown_good), "expect": "NON_INFERIOR"})
-    missing_unknown = _subject(
-        unknown_pi,
-        compiled_prompt=_drop_section(unknown_good["compiled_prompt"], "Open questions"),
-        plan_prompt=unknown_good["compiled_prompt"],
-    )
-    rows.append({"id": "q-unknown-restored", "kind": "normal", "before": missing_unknown, "after": unknown_good, "expect": "IMPROVED"})
-    rows.append({"id": "q-output-present", "kind": "normal", "before": base, "after": copy.deepcopy(base), "expect": "NON_INFERIOR"})
-    missing_output = _subject(
-        compiled_prompt=_drop_section(base["compiled_prompt"], "Deliverable"),
-        plan_prompt=base["compiled_prompt"],
-    )
-    rows.append({"id": "q-output-restored", "kind": "normal", "before": missing_output, "after": copy.deepcopy(base), "expect": "IMPROVED"})
-    missing_effect = _subject(
-        compiled_prompt=_drop_section(base["compiled_prompt"], "Effect: DIRECT"),
-        plan_prompt=base["compiled_prompt"],
-    )
-    rows.append({"id": "q-effect-restored", "kind": "normal", "before": missing_effect, "after": copy.deepcopy(base), "expect": "IMPROVED"})
-    for index in range(21):
-        goal = f"Ship note {index}"
-        pi = _protected(goal=goal)
-        subject = _subject(pi)
+    payload = json.loads((_VECTOR_DIR / "QUALITY_VECTORS.json").read_text())
+    rows = []
+    for item in payload["vectors"]:
         rows.append(
             {
-                "id": f"q-goal-{index}",
-                "kind": "normal",
-                "before": subject,
-                "after": copy.deepcopy(subject),
-                "expect": "NON_INFERIOR",
+                "id": item["id"],
+                "kind": item["kind"],
+                "before": item["input"]["before"],
+                "after": item["input"]["after"],
+                "expect": item["expected"]["disposition"],
             }
         )
-    rows.append(
-        {
-            "id": "a-missing-constraint",
-            "kind": "adversarial",
-            "before": base,
-            "after": _subject(
-                compiled_prompt=_replace_section(base["compiled_prompt"], "Hard constraints", "- other"),
-                plan_prompt=base["compiled_prompt"],
-            ),
-            "expect": "REGRESSED",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-unknown-laundered",
-            "kind": "adversarial",
-            "before": unknown_good,
-            "after": _subject(
-                unknown_pi,
-                compiled_prompt=_replace_section(unknown_good["compiled_prompt"], "Open questions", "- launch date [SATISFIED]"),
-                plan_prompt=unknown_good["compiled_prompt"],
-            ),
-            "expect": "REGRESSED",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-authority",
-            "kind": "adversarial",
-            "before": base,
-            "after": _subject(
-                compiled_prompt=_replace_section(base["compiled_prompt"], "Authority", "level=3; status=GRANTED; grants=EXECUTE"),
-                plan_prompt=base["compiled_prompt"],
-            ),
-            "expect": "REGRESSED",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-invented-fact",
-            "kind": "adversarial",
-            "before": base,
-            "after": _subject(
-                compiled_prompt=_replace_section(base["compiled_prompt"], "Facts", "- The user asked for a note\n- secret revenue"),
-                plan_prompt=base["compiled_prompt"],
-            ),
-            "expect": "REGRESSED",
-        }
-    )
-    rows.append({"id": "a-longer", "kind": "adversarial", "before": base, "after": longer, "expect": "NON_INFERIOR"})
-    other = _subject(_protected(goal="Changed goal"))
-    rows.append({"id": "a-intent-mismatch", "kind": "adversarial", "before": base, "after": other, "expect": "UNRESOLVED"})
-    conflicted = copy.deepcopy(base)
-    conflicted["requirement_graph"] = {"graph_digest": "gd-1", "validity": "CONFLICTED"}
-    conflicted_after = copy.deepcopy(conflicted)
-    rows.append({"id": "a-conflict", "kind": "adversarial", "before": conflicted, "after": conflicted_after, "expect": "UNRESOLVED"})
-    malformed = copy.deepcopy(base)
-    malformed["compiled_prompt"] = {"not": "a prompt"}
-    rows.append({"id": "a-malformed", "kind": "adversarial", "before": base, "after": malformed, "expect": "UNRESOLVED"})
-    no_proof = copy.deepcopy(base)
-    no_proof["proof_refs"] = []
-    improved_without_proof = copy.deepcopy(restored_before)
-    improved_without_proof["proof_refs"] = []
-    after_without_proof = copy.deepcopy(base)
-    after_without_proof["proof_refs"] = []
-    rows.append(
-        {
-            "id": "a-missing-proof",
-            "kind": "adversarial",
-            "before": improved_without_proof,
-            "after": after_without_proof,
-            "expect": "UNRESOLVED",
-        }
-    )
-    unbound = copy.deepcopy(base)
-    unbound["effect_plan"] = {**unbound["effect_plan"], "protected_fields": {**unbound["effect_plan"]["protected_fields"], "goal": "other"}}
-    rows.append({"id": "a-unbound", "kind": "adversarial", "before": unbound, "after": copy.deepcopy(unbound), "expect": "NON_INFERIOR"})
-    category = copy.deepcopy(base)
-    category["xcat"] = {"active_category": "C09", "taxonomy_version": "2"}
-    rows.append({"id": "a-category", "kind": "adversarial", "before": base, "after": category, "expect": "UNRESOLVED"})
-    k3 = copy.deepcopy(base)
-    k3["k3"] = {"selection_id": "sel-1", "techniques": ["FEW_SHOT"]}
-    rows.append({"id": "a-k3", "kind": "adversarial", "before": base, "after": k3, "expect": "UNRESOLVED"})
-    rows.append(
-        {
-            "id": "a-output-missing",
-            "kind": "adversarial",
-            "before": base,
-            "after": missing_output,
-            "expect": "REGRESSED",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-effect-missing",
-            "kind": "adversarial",
-            "before": base,
-            "after": missing_effect,
-            "expect": "REGRESSED",
-        }
-    )
-    waived = _subject(
-        compiled_prompt=_replace_section(
-            base["compiled_prompt"],
-            "Hard constraints",
-            "- Do not invent facts\nwaive: Do not invent facts",
-        ),
-        plan_prompt=base["compiled_prompt"],
-    )
-    rows.append({"id": "a-waived", "kind": "adversarial", "before": base, "after": waived, "expect": "REGRESSED"})
-    claim = _subject(
-        compiled_prompt=base["compiled_prompt"] + "\n\n## Notes\nbrowsing happened",
-        plan_prompt=base["compiled_prompt"],
-    )
-    rows.append({"id": "a-claim", "kind": "adversarial", "before": base, "after": claim, "expect": "REGRESSED"})
-    for index in range(10):
-        bad = _subject(
-            compiled_prompt=_replace_section(base["compiled_prompt"], "Objective", f"other {index}"),
-            plan_prompt=base["compiled_prompt"],
-        )
-        rows.append({"id": f"a-goal-drift-{index}", "kind": "adversarial", "before": base, "after": bad, "expect": "REGRESSED"})
     return rows
-
 
 def _reconstruction_vectors() -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    base = _subject()
-    broken = _subject(
-        compiled_prompt=_replace_section(base["compiled_prompt"], "Hard constraints", "- other"),
-        plan_prompt=base["compiled_prompt"],
-    )
-    rows.append({"id": "r-constraint", "kind": "normal", "subject": broken, "expect": "ACCEPTED"})
-    unknown_pi = _protected(unknowns=[{"uncertainty_id": "u1", "statement": "launch date"}])
-    unknown_good = _subject(unknown_pi)
-    missing_unknown = _subject(
-        unknown_pi,
-        compiled_prompt=_drop_section(unknown_good["compiled_prompt"], "Open questions"),
-        plan_prompt=unknown_good["compiled_prompt"],
-    )
-    rows.append({"id": "r-unknown", "kind": "normal", "subject": missing_unknown, "expect": "ACCEPTED"})
-    invented = _subject(
-        compiled_prompt=_replace_section(base["compiled_prompt"], "Facts", "- The user asked for a note\n- secret revenue"),
-        plan_prompt=base["compiled_prompt"],
-    )
-    rows.append({"id": "r-remove-fact", "kind": "normal", "subject": invented, "expect": "ACCEPTED"})
-    missing_effect = _subject(
-        compiled_prompt=_drop_section(base["compiled_prompt"], "Effect: DIRECT"),
-        plan_prompt=base["compiled_prompt"],
-    )
-    rows.append({"id": "r-effect", "kind": "normal", "subject": missing_effect, "expect": "ACCEPTED"})
-    rows.append({"id": "r-noop", "kind": "normal", "subject": base, "expect": "NOT_TRIGGERED"})
-    conflicted = copy.deepcopy(base)
-    conflicted["requirement_graph"] = {"graph_digest": "gd-1", "validity": "CONFLICTED"}
-    rows.append({"id": "r-conflict", "kind": "normal", "subject": conflicted, "expect": "UNRESOLVED"})
-    for index in range(19):
-        pi = _protected(goal=f"Restore {index}")
-        good = _subject(pi)
-        bad = _subject(
-            pi,
-            compiled_prompt=_replace_section(good["compiled_prompt"], "Hard constraints", "- missing"),
-            plan_prompt=good["compiled_prompt"],
-        )
-        rows.append({"id": f"r-normal-{index}", "kind": "normal", "subject": bad, "expect": "ACCEPTED"})
-    rows.append({"id": "a-attempt-2", "kind": "adversarial", "subject": broken, "attempt_index": 2, "expect": "REFUSED"})
-    rows.append(
-        {
-            "id": "a-change-goal",
-            "kind": "adversarial",
-            "subject": broken,
-            "requested_repair": "CHANGE_USER_GOAL",
-            "expect": "REFUSED",
+    payload = json.loads((_VECTOR_DIR / "RECONSTRUCTION_VECTORS.json").read_text())
+    rows = []
+    for item in payload["vectors"]:
+        row = {
+            "id": item["id"],
+            "kind": item["kind"],
+            "subject": item["input"]["subject"],
+            "expect": item["expected"]["disposition"],
+            "attempt_index": item["input"].get("attempt_index", 1),
         }
-    )
-    rows.append(
-        {
-            "id": "a-change-k3",
-            "kind": "adversarial",
-            "subject": broken,
-            "requested_repair": "CHANGE_K3_TECHNIQUE",
-            "expect": "REFUSED",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-invent-example",
-            "kind": "adversarial",
-            "subject": broken,
-            "requested_repair": "INVENT_EXAMPLE",
-            "expect": "REFUSED",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-mint",
-            "kind": "adversarial",
-            "subject": broken,
-            "requested_repair": "MINT_AUTHORITY",
-            "expect": "REFUSED",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-change-category",
-            "kind": "adversarial",
-            "subject": broken,
-            "requested_repair": "CHANGE_CATEGORY",
-            "expect": "REFUSED",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-weaken",
-            "kind": "adversarial",
-            "subject": broken,
-            "requested_repair": "WEAKEN_CONSTRAINT",
-            "expect": "REFUSED",
-        }
-    )
-    worse = _subject(compiled_prompt=_drop_section(base["compiled_prompt"], "Effect: DIRECT"), plan_prompt=_replace_section(base["compiled_prompt"], "Hard constraints", "- other"))
-    worse["effect_plan"]["compiled_prompt"] = _replace_section(base["compiled_prompt"], "Hard constraints", "- other")
-    rows.append({"id": "a-worse-render", "kind": "adversarial", "subject": worse, "expect": "UNRESOLVED"})
-    equal = copy.deepcopy(base)
-    rows.append({"id": "a-equal", "kind": "adversarial", "subject": equal, "expect": "NOT_TRIGGERED"})
-    reentry = copy.deepcopy(broken)
-    reentry["prior_reconstruction_attempts"] = 1
-    rows.append({"id": "a-reentry", "kind": "adversarial", "subject": reentry, "expect": "REFUSED"})
-    for name in ("INVENT_FACT", "INVENT_RETRIEVAL_RESULT", "EXECUTE_TOOL"):
-        rows.append(
-            {
-                "id": f"a-forbidden-{name}",
-                "kind": "adversarial",
-                "subject": broken,
-                "requested_repair": name,
-                "expect": "REFUSED",
-            }
-        )
-    for index in range(7):
-        rows.append(
-            {
-                "id": f"a-loop-{index}",
-                "kind": "adversarial",
-                "subject": broken,
-                "attempt_index": 2 + index,
-                "expect": "REFUSED",
-            }
-        )
+        if item["input"].get("requested_repair"):
+            row["requested_repair"] = item["input"]["requested_repair"]
+        rows.append(row)
     return rows
-
 
 def _validate_vectors() -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    good = {"artifact": _subject(), "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY"}
-    rows.append({"id": "v-pass", "kind": "normal", "request": good, "expect": "PASS"})
-    for index in range(19):
-        pi = _protected(goal=f"Validate {index}")
-        rows.append(
-            {
-                "id": f"v-normal-{index}",
-                "kind": "normal",
-                "request": {"artifact": _subject(pi), "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY"},
-                "expect": "PASS",
-            }
-        )
-    malformed = copy.deepcopy(good)
-    malformed["artifact"] = {**_subject(), "compiled_prompt": None}
-    rows.append({"id": "a-malformed", "kind": "adversarial", "request": malformed, "expect": "FAIL"})
-    unknown = {"artifact": {**_subject(), "proof_refs": []}, "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY"}
-    rows.append({"id": "a-unknown-proof", "kind": "adversarial", "request": unknown, "expect": "UNKNOWN"})
-    rows.append(
+    payload = json.loads((_VECTOR_DIR / "VALIDATE_ONLY_VECTORS.json").read_text())
+    return [
         {
-            "id": "a-enforcement",
-            "kind": "adversarial",
-            "request": {"artifact": _subject(), "enforcement": "UNAVAILABLE", "mode": "VALIDATE_ONLY"},
-            "expect": "FAIL",
+            "id": item["id"],
+            "kind": item["kind"],
+            "request": item["input"]["request"],
+            "expect": item["expected"]["disposition"],
         }
-    )
-    for effect in ("network", "credential", "external_write", "execute"):
-        rows.append(
-            {
-                "id": f"a-{effect}",
-                "kind": "adversarial",
-                "request": {
-                    "artifact": _subject(),
-                    "enforcement": "AVAILABLE",
-                    "mode": "VALIDATE_ONLY",
-                    "requested_effects": [effect],
-                },
-                "expect": "FAIL",
-            }
-        )
-    rows.append(
-        {
-            "id": "a-observed",
-            "kind": "adversarial",
-            "request": {
-                "artifact": _subject(),
-                "enforcement": "AVAILABLE",
-                "mode": "VALIDATE_ONLY",
-                "proof_class": "EXECUTION_OBSERVED",
-                "requested_effects": ["execute"],
-            },
-            "expect": "FAIL",
-        }
-    )
-    rows.append({"id": "a-dry", "kind": "adversarial", "request": {"artifact": _subject(), "mode": "DRY_RUN"}, "expect": "PREVIEW"})
-    rows.append({"id": "a-execute", "kind": "adversarial", "request": {"artifact": _subject(), "mode": "EXECUTE"}, "expect": "FAIL"})
-    rows.append(
-        {
-            "id": "a-missing-plan",
-            "kind": "adversarial",
-            "request": {"artifact": {**_subject(), "effect_plan": None}, "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY"},
-            "expect": "FAIL",
-        }
-    )
-    mismatched = _subject()
-    mismatched["xcat"] = {"active_category": "C02", "taxonomy_version": "2"}
-    rows.append(
-        {
-            "id": "a-category",
-            "kind": "adversarial",
-            "request": {"artifact": mismatched, "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY"},
-            "expect": "FAIL",
-        }
-    )
-    intent = _subject()
-    intent["effect_plan"]["protected_fields"] = {**intent["effect_plan"]["protected_fields"], "goal": "other"}
-    rows.append(
-        {
-            "id": "a-intent",
-            "kind": "adversarial",
-            "request": {"artifact": intent, "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY"},
-            "expect": "FAIL",
-        }
-    )
-    graph = _subject()
-    graph["requirement_graph"] = {"graph_digest": "other", "validity": "VALID"}
-    rows.append(
-        {
-            "id": "a-graph",
-            "kind": "adversarial",
-            "request": {"artifact": graph, "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY"},
-            "expect": "FAIL",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-wasm",
-            "kind": "adversarial",
-            "request": {"artifact": _subject(), "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY", "wasm_available": False},
-            "expect": "FAIL",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-mode",
-            "kind": "adversarial",
-            "request": {"artifact": _subject(), "mode": "MAYBE"},
-            "expect": "FAIL",
-        }
-    )
-    k3 = _subject()
-    k3["k3"] = {"selection_id": "sel-1", "techniques": ["FEW_SHOT"]}
-    rows.append(
-        {
-            "id": "a-k3",
-            "kind": "adversarial",
-            "request": {"artifact": k3, "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY"},
-            "expect": "FAIL",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-dry-network",
-            "kind": "adversarial",
-            "request": {"artifact": _subject(), "mode": "DRY_RUN", "requested_effects": ["network"]},
-            "expect": "REFUSED",
-        }
-    )
-    rows.append(
-        {
-            "id": "a-execute-grant",
-            "kind": "adversarial",
-            "request": {
-                "artifact": _subject(
-                    _protected(authority_state={"grants": ["EXECUTE"], "level": 1, "status": "GRANTED"})
-                ),
-                "mode": "EXECUTE",
-            },
-            "expect": "FAIL",
-        }
-    )
-    dropped = _subject()
-    dropped["compiled_prompt"] = _replace_section(dropped["compiled_prompt"], "Hard constraints", "- other")
-    rows.append(
-        {
-            "id": "a-unsatisfied",
-            "kind": "adversarial",
-            "request": {"artifact": dropped, "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY"},
-            "expect": "FAIL",
-        }
-    )
-    return rows
-
+        for item in payload["vectors"]
+    ]
 
 def test_mutants_killed() -> None:
     """Each mutant is an illegal outcome the real engine must reject."""

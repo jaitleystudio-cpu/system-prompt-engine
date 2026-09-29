@@ -5,13 +5,14 @@ from __future__ import annotations
 from spe_runtime.quality.engine import (
     evaluate_from_k3,
     evaluate_obligations,
+    quality_delta,
     reconstruct,
     repair_is_admissible,
     run_mode,
     subject_digest,
     subject_from_k3,
 )
-from tests.unit.test_quality_task57 import _drop_section, _replace_section, _subject
+from tests.unit.test_quality_task57 import _drop_section, _protected, _replace_section, _subject
 
 
 def _k3_output(subject: dict | None = None) -> dict:
@@ -286,3 +287,65 @@ def test_render_from_bound_plan_requires_final_drift_cause() -> None:
     refused = reconstruct(unauthorized)
     assert refused["plan"]["disposition"] == "UNRESOLVED"
     assert refused["kept"] == "original"
+
+
+def test_task57r_guard_mutants_are_killed() -> None:
+    """Outcome checks for the Task57R guards. A mutant that accepts these is dead."""
+    base = _subject()
+    killed = 0
+    caller = run_mode(
+        {
+            "artifact": base,
+            "enforcement": "AVAILABLE",
+            "mode": "VALIDATE_ONLY",
+            "proof_class": "ENFORCEMENT_VERIFIED",
+            "wasm_available": True,
+        }
+    )
+    assert caller["proof_class"] != "ENFORCEMENT_VERIFIED"
+    killed += 1
+    assert run_mode(
+        {"artifact": base, "enforcement": "AVAILABLE", "mode": "VALIDATE_ONLY", "wasm_available": True}
+    )["proof_class"] != "ENFORCEMENT_VERIFIED"
+    killed += 1
+    expanded = _subject(
+        compiled_prompt=_replace_section(base["compiled_prompt"], "Authority", "level=3; status=GRANTED; grants=EXECUTE"),
+        plan_prompt=base["compiled_prompt"],
+    )
+    assert quality_delta(base, expanded)["disposition"] != "IMPROVED"
+    killed += 1
+    unknown_pi = _protected(unknowns=[{"uncertainty_id": "u1", "statement": "launch date"}])
+    good_unknown = _subject(unknown_pi)
+    laundered = _subject(
+        unknown_pi,
+        compiled_prompt=_replace_section(good_unknown["compiled_prompt"], "Open questions", "- launch date"),
+        plan_prompt=good_unknown["compiled_prompt"],
+    )
+    assert quality_delta(good_unknown, laundered)["disposition"] != "IMPROVED"
+    killed += 1
+    for label, drifted in (
+        ("protected", _subject(_protected(goal="other goal"))),
+        ("graph", {**base, "requirement_graph": {"graph_digest": "other", "validity": "VALID"}}),
+        ("xcat", {**base, "xcat": {"active_category": "C09", "taxonomy_version": "2"}}),
+        ("k3", {**base, "k3": {"selection_id": "sel-9", "techniques": ["FEW_SHOT"]}}),
+    ):
+        assert quality_delta(base, drifted)["disposition"] != "IMPROVED", label
+        killed += 1
+    before = _missing_constraint()
+    escaped = dict(before)
+    escaped["compiled_prompt"] = _replace_section(_subject()["compiled_prompt"], "Objective", "other")
+    assert repair_is_admissible(before, escaped, "RESTORE_MISSING_CONSTRAINT", ["MISSING_CONSTRAINT"], ["hard:c1"]) is False
+    killed += 1
+    assert reconstruct(before, attempt_index=2)["plan"]["disposition"] == "REFUSED"
+    killed += 1
+    longer = _subject(compiled_prompt=base["compiled_prompt"] + "\n\n## Notes\nmore", plan_prompt=base["compiled_prompt"])
+    assert quality_delta(base, longer)["disposition"] != "IMPROVED"
+    killed += 1
+    regressed = _subject(
+        compiled_prompt=_replace_section(base["compiled_prompt"], "Hard constraints", "- other"),
+        plan_prompt=base["compiled_prompt"],
+    )
+    assert quality_delta(base, regressed)["disposition"] != "IMPROVED"
+    killed += 1
+    assert killed == 12
+
