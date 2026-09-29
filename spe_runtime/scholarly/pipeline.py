@@ -44,7 +44,13 @@ from spe_runtime.scholarly.normalize import (
     parse_idconv,
     parse_pubmed_esummary,
 )
-from spe_runtime.scholarly.queries import build_esummary_url, build_idconv_url, build_search_url
+from spe_runtime.scholarly.privacy import minimize_scholarly_query
+from spe_runtime.scholarly.queries import (
+    build_esummary_url,
+    build_idconv_url,
+    build_search_url,
+    outbound_field_names,
+)
 from spe_runtime.scholarly.registry import SourceRegistry, SourceSpec, load_registry
 from spe_runtime.scholarly.transport import AllowlistTransport, HttpResponse, TransportError
 
@@ -113,6 +119,10 @@ def _package(
     capsules: tuple = (),
     egress: tuple[EgressEvent, ...] = (),
     refusal_reasons: tuple[str, ...] = (),
+    outbound_query: str = "",
+    private_withheld: bool = False,
+    withheld_labels: tuple[str, ...] = (),
+    outbound_shapes: tuple[tuple[str, tuple[str, ...]], ...] = (),
 ) -> EvidencePackage:
     built = EvidencePackage(
         package_id="",
@@ -135,6 +145,10 @@ def _package(
         capsule_candidates=capsules,
         egress=egress,
         refusal_reasons=refusal_reasons,
+        outbound_query=outbound_query,
+        private_withheld=private_withheld,
+        withheld_labels=withheld_labels,
+        outbound_shapes=outbound_shapes,
     )
     body = built.to_dict()
     body.pop("package_id")
@@ -224,8 +238,7 @@ def _select_sources(
     registry: SourceRegistry, sources: tuple[str, ...] | None
 ) -> tuple[tuple[SourceSpec, ...], tuple[str, ...]]:
     if sources is None:
-        selected = registry.search_sources()
-        return selected, tuple(source.source_id for source in selected)
+        return registry.search_sources(), ()
     if len(sources) == 0:
         return (), ("SOURCE_LIST_EMPTY",)
     reasons: list[str] = []
@@ -335,6 +348,7 @@ def compile_evidence_package(
     enrich_identity: bool = True,
     contact_email: str | None = None,
     registry: SourceRegistry | None = None,
+    private_context: str | None = None,
 ) -> EvidencePackage:
     """Compile one research query into a scholarly evidence package.
 
@@ -343,7 +357,15 @@ def compile_evidence_package(
     true. Contradiction detection stays UNKNOWN unless structured polarities
     oppose each other.
     """
-    query_text = query.strip()
+    minimized = minimize_scholarly_query(query.strip())
+    withheld = list(minimized.withheld_labels)
+    if private_context and private_context.strip():
+        withheld.append("PRIVATE_CONTEXT")
+        if private_context.casefold() in minimized.outbound_topic.casefold():
+            withheld.append("QUERY_PRIVATE_LEAK")
+    query_text = minimized.outbound_topic
+    private_withheld = bool(withheld)
+    withheld_labels = tuple(dict.fromkeys(withheld))
     reasons = _validate(
         query_text=query_text,
         as_of=as_of,
@@ -354,6 +376,10 @@ def compile_evidence_package(
         allow_network=allow_network,
         transport=transport,
     )
+    if private_withheld and not query_text:
+        reasons.append("QUERY_TOPIC_ABSENT")
+    if "QUERY_PRIVATE_LEAK" in withheld_labels:
+        reasons.append("QUERY_PRIVATE_LEAK")
     try:
         active_registry = registry if registry is not None else load_registry()
     except RegistryError as exc:
@@ -366,6 +392,18 @@ def compile_evidence_package(
         selected, source_reasons = _select_sources(active_registry, sources)
         reasons.extend(source_reasons)
     requested = tuple(spec.source_id for spec in selected)
+    shapes: list[tuple[str, tuple[str, ...]]] = [
+        (spec.source_id, outbound_field_names(spec.source_id)) for spec in selected
+    ]
+    if enrich_identity and not any(reason.startswith("QUERY_") for reason in reasons):
+        shapes.append(("ncbi_idconv", outbound_field_names("ncbi_idconv")))
+    outbound_shapes = tuple(shapes)
+    privacy = {
+        "outbound_query": query_text,
+        "private_withheld": private_withheld,
+        "withheld_labels": withheld_labels,
+        "outbound_shapes": outbound_shapes,
+    }
     if reasons:
         return _package(
             status=PackageStatus.REFUSED,
@@ -375,6 +413,7 @@ def compile_evidence_package(
             max_per_source=max_per_source if isinstance(max_per_source, int) else 0,
             sources_requested=requested,
             refusal_reasons=tuple(reasons),
+            **privacy,
         )
     assert active_registry is not None
     client = transport if transport is not None else AllowlistTransport(active_registry)
@@ -404,39 +443,65 @@ def compile_evidence_package(
             quarantine.extend(rejected)
             gaps.extend(source_gaps)
         if enrich_identity:
-            crosswalk_ids: list[str] = []
+            grouped: dict[str, list[str]] = {"doi": [], "pmid": [], "pmcid": []}
+            seen_ids: dict[str, set[str]] = {"doi": set(), "pmid": set(), "pmcid": set()}
             for draft in drafts:
-                for value in (draft.identity.doi, draft.identity.pmid, draft.identity.pmcid):
-                    if value and value not in crosswalk_ids:
-                        crosswalk_ids.append(value)
-            if len(crosswalk_ids) > _MAX_IDCONV:
+                typed = (
+                    ("doi", draft.identity.doi),
+                    ("pmid", draft.identity.pmid),
+                    ("pmcid", draft.identity.pmcid),
+                )
+                for id_type, value in typed:
+                    if value and value not in seen_ids[id_type]:
+                        seen_ids[id_type].add(value)
+                        grouped[id_type].append(value)
+            crosswalk_count = sum(len(values) for values in grouped.values())
+            if crosswalk_count > _MAX_IDCONV:
                 gaps.append(
                     UnknownItem(
                         "IDCONV_TRUNCATED",
                         "ncbi_idconv",
-                        f"count={len(crosswalk_ids)}",
+                        f"count={crosswalk_count}",
                         True,
                     )
                 )
-            elif crosswalk_ids:
-                id_url = build_idconv_url(
-                    tuple(crosswalk_ids), contact_email=contact_email
-                )
-                try:
-                    id_response = _get(
-                        client,
-                        active_registry,
-                        id_url,
-                        _headers(contact_email, "application/json"),
+            elif crosswalk_count:
+                for id_type in ("doi", "pmid", "pmcid"):
+                    values = grouped[id_type]
+                    if not values:
+                        continue
+                    id_url = build_idconv_url(
+                        tuple(values),
+                        id_type=id_type,
+                        contact_email=contact_email,
                     )
-                    egress.append(_event("ncbi_idconv", id_url, id_response.status))
-                    if id_response.status != 200:
-                        raise ShapeError(f"HTTP_{id_response.status}")
-                    triples = parse_idconv(json.loads(id_response.body.decode("utf-8")))
-                    drafts = _apply_crosswalk(drafts, triples)
-                except (ShapeError, TransportError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-                    code = exc.code if isinstance(exc, ShapeError) else "IDCONV_FAILED"
-                    gaps.append(UnknownItem("IDCONV_UNAVAILABLE", "ncbi_idconv", code, True))
+                    try:
+                        id_response = _get(
+                            client,
+                            active_registry,
+                            id_url,
+                            _headers(contact_email, "application/json"),
+                        )
+                        egress.append(_event("ncbi_idconv", id_url, id_response.status))
+                        if id_response.status != 200:
+                            raise ShapeError(f"HTTP_{id_response.status}")
+                        triples = parse_idconv(json.loads(id_response.body.decode("utf-8")))
+                        drafts = _apply_crosswalk(drafts, triples)
+                    except (
+                        ShapeError,
+                        TransportError,
+                        UnicodeDecodeError,
+                        json.JSONDecodeError,
+                    ) as exc:
+                        code = exc.code if isinstance(exc, ShapeError) else "IDCONV_FAILED"
+                        gaps.append(
+                            UnknownItem(
+                                "IDCONV_UNAVAILABLE",
+                                "ncbi_idconv",
+                                f"{id_type}:{code}",
+                                True,
+                            )
+                        )
         else:
             gaps.append(
                 UnknownItem(
@@ -457,6 +522,7 @@ def compile_evidence_package(
             egress=tuple(egress),
             gaps=tuple(gaps),
             refusal_reasons=(str(exc),),
+            **privacy,
         )
     records, dedup_quarantine, dedup_gaps = deduplicate(tuple(drafts))
     quarantine.extend(dedup_quarantine)
@@ -478,6 +544,51 @@ def compile_evidence_package(
                     record.record_id,
                     ",".join(record.retraction.evidence),
                     True,
+                )
+            )
+        if record.full_text_status != "NOT_RETRIEVED":
+            gaps.append(
+                UnknownItem(
+                    "FULL_TEXT_STATUS_UNKNOWN",
+                    record.record_id,
+                    record.full_text_status,
+                    True,
+                )
+            )
+        else:
+            gaps.append(
+                UnknownItem(
+                    "FULL_TEXT_NOT_RETRIEVED",
+                    record.record_id,
+                    record.access_limitation,
+                    False,
+                )
+            )
+        if record.abstract is None:
+            gaps.append(
+                UnknownItem(
+                    "ABSTRACT_ABSENT",
+                    record.record_id,
+                    "no abstract in source metadata",
+                    False,
+                )
+            )
+        if record.license == "UNKNOWN":
+            gaps.append(
+                UnknownItem(
+                    "LICENSE_UNKNOWN",
+                    record.record_id,
+                    "source did not state a reuse license",
+                    False,
+                )
+            )
+        if record.primary_source_id == "arxiv" or set(record.source_ids) == {"arxiv"}:
+            gaps.append(
+                UnknownItem(
+                    "PEER_REVIEW_STATUS_UNKNOWN",
+                    record.record_id,
+                    "arXiv is a preprint server",
+                    False,
                 )
             )
     graph, contradictions, graph_gaps = build_graphs(
@@ -540,4 +651,5 @@ def compile_evidence_package(
         capsules=capsules,
         egress=tuple(egress),
         refusal_reasons=tuple(refusal),
+        **privacy,
     )

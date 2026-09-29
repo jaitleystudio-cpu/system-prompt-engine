@@ -109,6 +109,10 @@ class PaperRecord:
     primary_source_id: str
     role: str
     replication_signal: str
+    full_text_status: str = "NOT_RETRIEVED"
+    abstract_access: str = "ABSENT"
+    access_limitation: str = "FULL_TEXT_NOT_FETCHED"
+    related_preprint: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -129,6 +133,10 @@ class PaperRecord:
             "primary_source_id": self.primary_source_id,
             "role": self.role,
             "replication_signal": self.replication_signal,
+            "full_text_status": self.full_text_status,
+            "abstract_access": self.abstract_access,
+            "access_limitation": self.access_limitation,
+            "related_preprint": self.related_preprint,
         }
 
 
@@ -189,6 +197,9 @@ class EvidenceEdge:
     record_id: str
     polarity: str
     strength: str
+    source_id: str = ""
+    canonical_key: str = ""
+    metadata_ref: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -196,6 +207,9 @@ class EvidenceEdge:
             "record_id": self.record_id,
             "polarity": self.polarity,
             "strength": self.strength,
+            "source_id": self.source_id,
+            "canonical_key": self.canonical_key,
+            "metadata_ref": self.metadata_ref,
         }
 
 
@@ -378,16 +392,28 @@ class EvidencePackage:
     capsule_candidates: tuple[CapsuleCandidate, ...]
     egress: tuple[EgressEvent, ...]
     refusal_reasons: tuple[str, ...]
+    outbound_query: str = ""
+    private_withheld: bool = False
+    withheld_labels: tuple[str, ...] = ()
+    outbound_shapes: tuple[tuple[str, tuple[str, ...]], ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "package_id": self.package_id,
             "status": self.status.value,
+            "semantic_authority": "NONE",
             "query": {
                 "text": self.query_text,
                 "as_of": self.as_of,
                 "frontier_years": self.frontier_years,
                 "max_per_source": self.max_per_source,
+                "outbound_query": self.outbound_query,
+                "private_withheld": self.private_withheld,
+                "withheld_labels": list(self.withheld_labels),
+                "outbound_shapes": [
+                    {"source_id": source_id, "fields": list(fields)}
+                    for source_id, fields in self.outbound_shapes
+                ],
             },
             "integration": {
                 "status": "NOT_WIRED",
@@ -397,6 +423,7 @@ class EvidencePackage:
                 "wired_to_k3": False,
                 "wired_to_xcat": False,
                 "wired_to_quality": False,
+                "semantic_authority": "NONE",
             },
             "sources_requested": list(self.sources_requested),
             "records": [item.to_dict() for item in self.records],

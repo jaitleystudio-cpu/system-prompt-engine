@@ -192,6 +192,14 @@ def deduplicate(
                 primary_source_id=primary.source_id,
                 role=primary.role,
                 replication_signal=replication,
+                full_text_status="NOT_RETRIEVED",
+                abstract_access="SOURCE_API_ABSTRACT" if abstract else "ABSENT",
+                access_limitation=(
+                    "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED"
+                    if abstract
+                    else "METADATA_ONLY_FULL_TEXT_NOT_FETCHED"
+                ),
+                related_preprint=identity.arxiv_id,
             )
         )
     records.sort(key=lambda item: item.identity.canonical_key)

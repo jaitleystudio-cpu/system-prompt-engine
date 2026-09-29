@@ -33,6 +33,21 @@ class HttpResponse:
     body: bytes
     final_url: str
     content_type: str
+    header_notes: tuple[tuple[str, str], ...] = ()
+
+
+_NOTE_HEADERS = ("Retry-After", "X-RateLimit-Limit", "X-RateLimit-Remaining")
+
+
+def _header_notes(headers: object) -> tuple[tuple[str, str], ...]:
+    if headers is None or not hasattr(headers, "get"):
+        return ()
+    notes: list[tuple[str, str]] = []
+    for name in _NOTE_HEADERS:
+        value = headers.get(name)  # type: ignore[attr-defined]
+        if value:
+            notes.append((name, str(value)[:80]))
+    return tuple(notes)
 
 
 class _AllowlistRedirect(HTTPRedirectHandler):
@@ -79,6 +94,7 @@ class AllowlistTransport:
                 body=raw,
                 final_url=url,
                 content_type=content_type,
+                header_notes=_header_notes(exc.headers),
             )
         except URLError as exc:
             raise TransportError("TRANSPORT_URL_ERROR") from exc
@@ -103,4 +119,5 @@ class AllowlistTransport:
             body=body,
             final_url=str(final_url),
             content_type=str(content_type),
+            header_notes=_header_notes(response.headers),
         )

@@ -26,6 +26,18 @@ _POLARITIES = frozenset({"SUPPORT", "REFUTE", "NEUTRAL"})
 _MAX_PAIRS = 50
 
 
+def _edge(claim_id: str, record: PaperRecord, polarity: str, strength: str) -> EvidenceEdge:
+    return EvidenceEdge(
+        claim_id,
+        record.record_id,
+        polarity,
+        strength,
+        source_id=record.primary_source_id,
+        canonical_key=record.identity.canonical_key,
+        metadata_ref=record.record_id,
+    )
+
+
 def claim_id_for(text: str) -> str:
     digest = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
     return f"claim:{digest}"
@@ -74,9 +86,7 @@ def build_graphs(
             matched_assertions.add(index)
         polarities = {assertion.polarity for _, assertion in hits}
         if not hits:
-            edges.append(
-                EvidenceEdge(claim.claim_id, record.record_id, "UNKNOWN", "ABSENT")
-            )
+            edges.append(_edge(claim.claim_id, record, "UNKNOWN", "ABSENT"))
             gaps.append(
                 UnknownItem(
                     code="CLAIM_POLARITY_UNKNOWN",
@@ -87,9 +97,7 @@ def build_graphs(
             )
             continue
         if len(polarities) != 1 or not polarities <= _POLARITIES:
-            edges.append(
-                EvidenceEdge(claim.claim_id, record.record_id, "UNKNOWN", "STRUCTURED")
-            )
+            edges.append(_edge(claim.claim_id, record, "UNKNOWN", "STRUCTURED"))
             gaps.append(
                 UnknownItem(
                     code="ASSERTION_POLARITY_CONFLICT",
@@ -101,9 +109,7 @@ def build_graphs(
             continue
         polarity = next(iter(polarities))
         polarity_by_record[record.record_id] = polarity
-        edges.append(
-            EvidenceEdge(claim.claim_id, record.record_id, polarity, "STRUCTURED")
-        )
+        edges.append(_edge(claim.claim_id, record, polarity, "STRUCTURED"))
         if polarity == "SUPPORT" and record.retraction.kind.value in {
             "RETRACTION",
             "WITHDRAWAL",
@@ -167,14 +173,14 @@ def build_graphs(
     else:
         contradiction = ContradictionMap(
             "UNKNOWN",
-            "CONTRADICTION_SIGNAL_ABSENT",
+            "NONE_OBSERVED_IN_FETCHED_SET",
             (),
         )
         gaps.append(
             UnknownItem(
-                code="CONTRADICTION_SIGNAL_ABSENT",
+                code="NONE_OBSERVED_IN_FETCHED_SET",
                 subject=claim.claim_id,
-                detail="no structured support/refute pair",
+                detail="no structured support/refute pair in the fetched set",
                 blocks_valid=False,
             )
         )

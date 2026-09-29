@@ -730,6 +730,11 @@ def parse_idconv(payload: object) -> tuple[dict[str, str], ...]:
         entry: dict[str, str] = {}
         for key in ("doi", "pmid", "pmcid"):
             value = record.get(key)
+            if isinstance(value, bool):
+                continue
+            if isinstance(value, int):
+                entry[key] = str(value)
+                continue
             if isinstance(value, str) and value.strip():
                 entry[key] = value.strip()
         if entry:

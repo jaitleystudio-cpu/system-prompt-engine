@@ -24,6 +24,7 @@ from spe_runtime.scholarly.normalize import (
     parse_crossref,
     parse_doaj,
     parse_europepmc,
+    parse_idconv,
     parse_openalex,
     parse_pubmed_esummary,
 )
@@ -91,7 +92,7 @@ def _valid_routes() -> dict[str, tuple[int, bytes]]:
             200,
             _json({"results": [_openalex_work()]}),
         ),
-        "pmc/utils/idconv": (
+        "tools/idconv": (
             200,
             _json(
                 {
@@ -308,7 +309,9 @@ def test_valid_package_closes_identity_retraction_and_polarity():
     assert package.claim_evidence_graph.status == "VALID"
     assert package.claim_evidence_graph.edges[0].polarity == "SUPPORT"
     assert package.contradiction_map.status == "UNKNOWN"
-    assert package.contradiction_map.reason == "CONTRADICTION_SIGNAL_ABSENT"
+    assert package.contradiction_map.reason == "NONE_OBSERVED_IN_FETCHED_SET"
+    assert package.to_dict()["semantic_authority"] == "NONE"
+    assert package.records[0].full_text_status == "NOT_RETRIEVED"
     candidate = package.capsule_candidates[0]
     assert candidate.integration_status == "CANDIDATE_NOT_WIRED"
     assert candidate.support_status == "PARTIALLY_SUPPORTED"
@@ -317,7 +320,7 @@ def test_valid_package_closes_identity_retraction_and_polarity():
     assert "CALLER_ASSERTED" in candidate.taint_labels
     assert package.to_dict()["integration"]["wired_to_k3"] is False
     hosts = {event.host for event in package.egress}
-    assert hosts <= {"api.openalex.org", "www.ncbi.nlm.nih.gov"}
+    assert hosts <= {"api.openalex.org", "pmc.ncbi.nlm.nih.gov"}
     assert all("openalex.org/W1" not in url for url in transport.calls)
     jsonschema.validate(package.to_dict(), SCHEMA)
 
@@ -346,7 +349,7 @@ def test_unknown_retraction_and_missing_polarity_stay_partial():
                     }
                 ),
             ),
-            "pmc/utils/idconv": (200, _json({"status": "ok", "records": []})),
+            "tools/idconv": (200, _json({"status": "ok", "records": []})),
         }
     )
     package = compile_evidence_package(
@@ -375,7 +378,7 @@ def test_opposing_assertions_fill_contradiction_map():
     transport = FixtureTransport(
         {
             "api.openalex.org": (200, _json({"results": [_openalex_work(), second]})),
-            "pmc/utils/idconv": (200, _json({"status": "ok", "records": []})),
+            "tools/idconv": (200, _json({"status": "ok", "records": []})),
         }
     )
     package = compile_evidence_package(
@@ -439,7 +442,7 @@ def test_pubmed_term_is_a_quoted_phrase():
                 200,
                 _json({"esearchresult": {"count": "0", "idlist": []}}),
             ),
-            "pmc/utils/idconv": (200, _json({"status": "ok", "records": []})),
+            "tools/idconv": (200, _json({"status": "ok", "records": []})),
         }
     )
     compile_evidence_package(
@@ -489,3 +492,30 @@ def test_refused_package_matches_schema():
     package = compile_evidence_package("   ", as_of="2026-02-31", transport=FixtureTransport({}))
     assert package.status.value == "REFUSED"
     jsonschema.validate(package.to_dict(), SCHEMA)
+
+
+def test_idconv_keeps_numeric_pmid_and_skips_error_rows():
+    triples = parse_idconv(
+        {
+            "status": "ok",
+            "records": [
+                {
+                    "doi": "10.1038/s41586-021-03819-2",
+                    "pmcid": "PMC8371605",
+                    "pmid": 34265844,
+                },
+                {
+                    "doi": "10.1016/S0140-6736(97)11096-0",
+                    "status": "error",
+                    "errmsg": "Identifier not found in PMC",
+                },
+            ],
+        }
+    )
+    assert triples == (
+        {
+            "doi": "10.1038/s41586-021-03819-2",
+            "pmcid": "PMC8371605",
+            "pmid": "34265844",
+        },
+    )

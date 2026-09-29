@@ -28,7 +28,10 @@ This package does not import or write:
 - Visual IR
 
 `EvidencePackage.integration.status` is `NOT_WIRED`.
+`semantic_authority` is `NONE` on the package and on the integration block.
 `wired_to_k3`, `wired_to_xcat`, and `wired_to_quality` are false.
+
+The outbound scholarly query is the minimized topic. A private prompt, uploaded document, profile, or project context is not sent to a source. Full text is not retrieved. An arXiv-only record stays a preprint.
 
 Later path, not implemented here:
 

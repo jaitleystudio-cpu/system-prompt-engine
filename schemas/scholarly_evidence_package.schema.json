@@ -8,6 +8,7 @@
   "required": [
     "package_id",
     "status",
+    "semantic_authority",
     "query",
     "integration",
     "sources_requested",
@@ -24,15 +25,40 @@
   "properties": {
     "package_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
     "status": { "type": "string", "enum": ["VALID", "PARTIAL", "REFUSED"] },
+    "semantic_authority": { "const": "NONE" },
     "query": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["text", "as_of", "frontier_years", "max_per_source"],
+      "required": [
+        "text",
+        "as_of",
+        "frontier_years",
+        "max_per_source",
+        "outbound_query",
+        "private_withheld",
+        "withheld_labels",
+        "outbound_shapes"
+      ],
       "properties": {
         "text": { "type": "string" },
         "as_of": { "type": "string" },
         "frontier_years": { "type": "integer" },
-        "max_per_source": { "type": "integer" }
+        "max_per_source": { "type": "integer" },
+        "outbound_query": { "type": "string" },
+        "private_withheld": { "type": "boolean" },
+        "withheld_labels": { "type": "array", "items": { "type": "string" } },
+        "outbound_shapes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source_id", "fields"],
+            "properties": {
+              "source_id": { "type": "string" },
+              "fields": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
       }
     },
     "integration": {
@@ -43,7 +69,8 @@
         "later_path",
         "wired_to_k3",
         "wired_to_xcat",
-        "wired_to_quality"
+        "wired_to_quality",
+        "semantic_authority"
       ],
       "properties": {
         "status": { "const": "NOT_WIRED" },
@@ -52,7 +79,8 @@
         },
         "wired_to_k3": { "const": false },
         "wired_to_xcat": { "const": false },
-        "wired_to_quality": { "const": false }
+        "wired_to_quality": { "const": false },
+        "semantic_authority": { "const": "NONE" }
       }
     },
     "sources_requested": {
@@ -147,7 +175,11 @@
         "source_ids",
         "primary_source_id",
         "role",
-        "replication_signal"
+        "replication_signal",
+        "full_text_status",
+        "abstract_access",
+        "access_limitation",
+        "related_preprint"
       ],
       "properties": {
         "record_id": { "type": "string", "minLength": 1 },
@@ -169,7 +201,14 @@
         "replication_signal": {
           "type": "string",
           "enum": ["NONE", "STRUCTURED", "TITLE_HEURISTIC"]
-        }
+        },
+        "full_text_status": { "const": "NOT_RETRIEVED" },
+        "abstract_access": {
+          "type": "string",
+          "enum": ["ABSENT", "SOURCE_API_ABSTRACT"]
+        },
+        "access_limitation": { "type": "string" },
+        "related_preprint": { "type": ["string", "null"] }
       }
     },
     "quarantine": {
@@ -226,16 +265,27 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["claim_id", "record_id", "polarity", "strength"],
-            "properties": {
-              "claim_id": { "type": "string" },
-              "record_id": { "type": "string" },
-              "polarity": {
-                "type": "string",
-                "enum": ["SUPPORT", "REFUTE", "NEUTRAL", "UNKNOWN"]
-              },
-              "strength": { "type": "string", "enum": ["STRUCTURED", "ABSENT"] }
-            }
+              "required": [
+                "claim_id",
+                "record_id",
+                "polarity",
+                "strength",
+                "source_id",
+                "canonical_key",
+                "metadata_ref"
+              ],
+              "properties": {
+                "claim_id": { "type": "string" },
+                "record_id": { "type": "string" },
+                "polarity": {
+                  "type": "string",
+                  "enum": ["SUPPORT", "REFUTE", "NEUTRAL", "UNKNOWN"]
+                },
+                "strength": { "type": "string", "enum": ["STRUCTURED", "ABSENT"] },
+                "source_id": { "type": "string", "minLength": 1 },
+                "canonical_key": { "type": "string", "minLength": 1 },
+                "metadata_ref": { "type": "string", "minLength": 1 }
+              }
           }
         }
       }

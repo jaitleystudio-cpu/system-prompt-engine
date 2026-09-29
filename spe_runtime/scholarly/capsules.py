@@ -29,14 +29,21 @@ def _digest(payload: object) -> str:
 
 
 def _source_class(record: PaperRecord) -> str:
+    """arXiv alone is a preprint. A later journal witness does not erase it."""
     types = set(record.publication_types)
-    if types & _REVIEW_TYPES:
+    sources = set(record.source_ids)
+    publisher = sources - {"arxiv"}
+    if "arxiv" in sources and not publisher:
+        return "preprint"
+    if types & _REVIEW_TYPES and publisher:
         return "systematic_review"
-    if record.replication_signal == "STRUCTURED":
+    if record.replication_signal == "STRUCTURED" and publisher:
         return "replication"
-    if types & _ARTICLE_TYPES:
+    if "preprint" in types and not (types & _ARTICLE_TYPES):
+        return "preprint"
+    if types & _ARTICLE_TYPES and publisher:
         return "peer_reviewed"
-    if "preprint" in types or record.primary_source_id == "arxiv":
+    if record.primary_source_id == "arxiv" or "preprint" in types:
         return "preprint"
     return "unknown"
 
@@ -137,6 +144,8 @@ def build_capsule_candidates(
             taints.append("RETRACTION_STATE_UNKNOWN")
         if source_class == "preprint":
             taints.append("PREPRINT")
+        elif "arxiv" in record.source_ids:
+            taints.append("PREPRINT_PROVENANCE_RETAINED")
         if record.replication_signal == "TITLE_HEURISTIC":
             taints.append("TITLE_HEURISTIC_REPLICATION")
         allowed = (

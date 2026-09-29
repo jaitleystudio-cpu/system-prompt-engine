@@ -98,12 +98,48 @@ def build_esummary_url(
     return f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?{_q(params)}"
 
 
-def build_idconv_url(ids: tuple[str, ...], *, contact_email: str | None) -> str:
+def outbound_field_names(source_id: str) -> tuple[str, ...]:
+    """Query-string fields that carry the scholarly topic or identifiers.
+
+    The NCBI ID converter receives normalized identifiers only. It has no
+    field for the research query.
+    """
+    if source_id in {"pubmed", "pmc"}:
+        return ("term",)
+    if source_id == "europepmc":
+        return ("query",)
+    if source_id == "crossref":
+        return ("query.bibliographic",)
+    if source_id == "doaj":
+        return ("path",)
+    if source_id == "arxiv":
+        return ("search_query",)
+    if source_id == "openalex":
+        return ("search",)
+    if source_id == "ncbi_idconv":
+        return ("ids", "idtype")
+    raise ValueError(f"NO_OUTBOUND_FIELDS:{source_id}")
+
+
+def build_idconv_url(
+    ids: tuple[str, ...], *, id_type: str, contact_email: str | None
+) -> str:
+    """One identifier family per request.
+
+    The live PMC ID Converter rejects a mixed `ids` list. DOI, PMID, and
+    PMCID are sent as separate batches with `idtype`.
+    """
+    if id_type not in {"doi", "pmid", "pmcid"}:
+        raise ValueError("IDCONV_IDTYPE")
     params = [
         ("ids", ",".join(ids)),
+        ("idtype", id_type),
         ("format", "json"),
         ("tool", "spe_scholarly"),
     ]
     if contact_email:
         params.append(("email", contact_email))
-    return f"https://www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/?{_q(params)}"
+    return (
+        "https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/"
+        f"?{_q(params)}"
+    )

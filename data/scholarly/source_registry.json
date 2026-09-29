@@ -123,10 +123,10 @@
       "enabled": true,
       "cost": "INR_0",
       "auth": "none",
-      "hosts": ["www.ncbi.nlm.nih.gov"],
+      "hosts": ["pmc.ncbi.nlm.nih.gov"],
       "method": "GET",
-      "license_note": "NCBI ID Converter maps DOI, PMID, and PMCID. It is not a search index. No API key.",
-      "terms_url": "https://www.ncbi.nlm.nih.gov/pmc/tools/id-converter-api/",
+      "license_note": "NCBI ID Converter maps DOI, PMID, and PMCID. It is not a search index. No API key. Live check 2026-09-29: the former www.ncbi.nlm.nih.gov/pmc/utils/idconv/v1.0/ URL returns HTTPS 301 to pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/. The allowlist follows that permanent contract move.",
+      "terms_url": "https://pmc.ncbi.nlm.nih.gov/tools/id-converter-api/",
       "sends": "Already-normalized DOI, PMID, or PMCID values only. The original query text is not sent again.",
       "retraction_policy": "idconv_not_applicable",
       "identifier_fields": ["doi", "pmid", "pmcid"]
