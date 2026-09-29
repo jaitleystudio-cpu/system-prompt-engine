@@ -37,4 +37,4 @@
 
 - Domain/mutation/vector suites are the primary XCAT evidence.
 - K3 runtime + effect suites confirm 55/55R freeze under expanded `IMPLEMENTED_XCAT`.
-- Full-repo pytest / web regression: see `REGRESSION_RESULTS.md` (partial / TBD where not run).
+- Full-repo pytest: **946 passed**, 0 failed (see `REGRESSION_RESULTS.md`).
