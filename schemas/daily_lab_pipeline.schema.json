@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/daily_lab_pipeline.schema.json",
+  "title": "spe.daily-lab-pipeline.v1",
+  "description": "Local Daily 3D Lab pipeline receipt. Publish stays NOT_AUTHORIZED. This schema is not a release and does not authorize hosting, deployment, network, or live publish.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "not_a_release",
+    "phase",
+    "network_mode",
+    "hosting",
+    "deployment",
+    "automatic_publish",
+    "foundation_grants_publish",
+    "discovery",
+    "generate",
+    "verify",
+    "publish",
+    "refusals"
+  ],
+  "properties": {
+    "contract": { "const": "spe.daily-lab-pipeline.v1" },
+    "not_a_release": { "const": true },
+    "phase": {
+      "enum": [
+        "NOT_STARTED",
+        "DISCOVERY",
+        "GENERATE",
+        "VERIFY",
+        "PUBLISH_HELD",
+        "REFUSED"
+      ]
+    },
+    "network_mode": { "const": "NONE" },
+    "hosting": { "const": false },
+    "deployment": { "const": false },
+    "automatic_publish": { "const": false },
+    "foundation_grants_publish": { "const": false },
+    "discovery": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "network_mode", "candidate_ids", "status"],
+          "properties": {
+            "source": { "const": "LOCAL_FINITE_QUEUE" },
+            "network_mode": { "const": "NONE" },
+            "candidate_ids": {
+              "type": "array",
+              "maxItems": 14,
+              "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$" }
+            },
+            "status": { "enum": ["COMPLETE", "REFUSED"] }
+          }
+        }
+      ]
+    },
+    "generate": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "draft_id",
+            "specimen_id",
+            "artifact_kind",
+            "network_mode",
+            "hosted",
+            "deployed",
+            "status"
+          ],
+          "properties": {
+            "draft_id": { "type": "string" },
+            "specimen_id": { "type": "string" },
+            "artifact_kind": { "const": "LOCAL_DRAFT" },
+            "network_mode": { "const": "NONE" },
+            "hosted": { "const": false },
+            "deployed": { "const": false },
+            "status": { "const": "COMPLETE" }
+          }
+        }
+      ]
+    },
+    "verify": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["draft_id", "verdict", "counts_as_pass", "status"],
+          "properties": {
+            "draft_id": { "type": "string" },
+            "verdict": { "enum": ["NOT_RUN", "UNKNOWN", "FAIL", "PASS"] },
+            "counts_as_pass": { "type": "boolean" },
+            "status": { "enum": ["COMPLETE", "REFUSED"] }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "verdict": { "const": "UNKNOWN" } }, "required": ["verdict"] },
+              "then": { "properties": { "counts_as_pass": { "const": false } } }
+            },
+            {
+              "if": { "properties": { "verdict": { "const": "FAIL" } }, "required": ["verdict"] },
+              "then": { "properties": { "counts_as_pass": { "const": false } } }
+            },
+            {
+              "if": { "properties": { "verdict": { "const": "NOT_RUN" } }, "required": ["verdict"] },
+              "then": { "properties": { "counts_as_pass": { "const": false } } }
+            },
+            {
+              "if": { "properties": { "verdict": { "const": "PASS" } }, "required": ["verdict"] },
+              "then": { "properties": { "counts_as_pass": { "const": true } } }
+            }
+          ]
+        }
+      ]
+    },
+    "publish": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "draft_id",
+        "authorization",
+        "published",
+        "live",
+        "automatic",
+        "hosted",
+        "deployed",
+        "network_mode",
+        "status",
+        "external_approval_required",
+        "external_approval_granted_by_foundation"
+      ],
+      "properties": {
+        "draft_id": { "type": ["string", "null"] },
+        "authorization": { "const": "NOT_AUTHORIZED" },
+        "published": { "const": false },
+        "live": { "const": false },
+        "automatic": { "const": false },
+        "hosted": { "const": false },
+        "deployed": { "const": false },
+        "network_mode": { "const": "NONE" },
+        "status": { "enum": ["NOT_STARTED", "HELD", "REFUSED"] },
+        "external_approval_required": { "const": true },
+        "external_approval_granted_by_foundation": { "const": false }
+      }
+    },
+    "refusals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "stage", "detail"],
+        "properties": {
+          "code": { "type": "string" },
+          "stage": { "enum": ["DISCOVERY", "GENERATE", "VERIFY", "PUBLISH"] },
+          "detail": { "type": "string" }
+        }
+      }
+    }
+  }
+}

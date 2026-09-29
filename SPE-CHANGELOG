@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### 2026-09-30 — Daily 3D Lab pipeline boundary (cursor/spe-daily-lab-v1-20260930)
+- Contract `spe.daily-lab-pipeline.v1`: discovery → generate → verify → publish hold
+- Network mode stays NONE; hosting, deployment, automatic publish, and live publish are refused
+- Verification UNKNOWN is not PASS
+- Publish authorization is only NOT_AUTHORIZED. ExternalHumanApproval is required and this foundation does not grant it
+- Finite queue bound remains 14, matching the existing Daily Lab specimens. XCAT, K3, and Quality were not edited
+- Tests: `tests/unit/test_daily_lab_pipeline.py`
+- COST ₹0; not_a_release=true; no hosting
+
 ### 2026-09-24 — Context Protocol v1 verification (Task 15)
 - Fresh regression on HEAD `23e65f4ecb48067f22185160fa6e9af3baee107d` (branch `chatgpt/context-protocol-compiler-design-20260924`)
 - Suites: pytest 641; focused 641; spe-core-rs cargo 38; spe-wasm cargo 4; `npm run test:engine` + `npm run build`; e2e-context-protocol 21; fixture-only benchmark PASS; adversarial 35
