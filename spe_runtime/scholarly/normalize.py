@@ -340,6 +340,10 @@ def parse_europepmc(
         oa = None
         if oa_raw in ("Y", "N"):
             oa = oa_raw == "Y"
+        license_raw = item.get("license")
+        license_name = "UNKNOWN"
+        if isinstance(license_raw, str) and license_raw.strip():
+            license_name = " ".join(license_raw.split())
         cited = item.get("citedByCount")
         cited_by = cited if isinstance(cited, int) and cited >= 0 else None
         built = _draft(
@@ -358,7 +362,7 @@ def parse_europepmc(
             publication_types=_types(pubtypes),
             cited_by_count=cited_by,
             is_open_access=oa,
-            license_name="UNKNOWN",
+            license_name=license_name,
             landing_url=None,
             retraction=_europe_retraction(item, pubtypes),
             role="work",

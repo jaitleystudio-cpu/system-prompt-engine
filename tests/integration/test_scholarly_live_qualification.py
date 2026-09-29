@@ -76,6 +76,7 @@ def test_live_enabled_sources_are_qualified_without_leaving_the_allowlist() -> N
         allow_network=True,
         max_per_source=3,
         enrich_identity=True,
+        fetch_open_full_text=False,
     )
     _pause()
     dedup = compile_evidence_package(
@@ -85,6 +86,7 @@ def test_live_enabled_sources_are_qualified_without_leaving_the_allowlist() -> N
         sources=("pubmed", "europepmc", "crossref", "openalex"),
         max_per_source=3,
         enrich_identity=True,
+        fetch_open_full_text=False,
     )
     _pause()
     retracted = compile_evidence_package(
@@ -94,6 +96,7 @@ def test_live_enabled_sources_are_qualified_without_leaving_the_allowlist() -> N
         sources=("pubmed", "crossref", "openalex"),
         max_per_source=2,
         enrich_identity=True,
+        fetch_open_full_text=False,
     )
     for package in (topic_package, dedup, retracted):
         assert package.to_dict()["semantic_authority"] == "NONE"

@@ -107,6 +107,7 @@ def build_capsule_candidates(
 ) -> tuple[tuple[CapsuleCandidate, ...], tuple[UnknownItem, ...]]:
     """Build unwired capsule candidates for admitted works."""
     polarity = {edge.record_id: edge.polarity for edge in edges}
+    strength = {edge.record_id: edge.strength for edge in edges}
     contradicted = {
         pair.left_record_id for pair in contradictions.pairs
     } | {pair.right_record_id for pair in contradictions.pairs}
@@ -130,8 +131,10 @@ def build_capsule_candidates(
         edge_polarity = polarity.get(record.record_id, "UNKNOWN")
         kind = record.retraction.kind.value
         taints = ["UNTRUSTED_SOURCE"]
-        if edge_polarity != "UNKNOWN":
+        if edge_polarity != "UNKNOWN" and strength.get(record.record_id) == "STRUCTURED":
             taints.append("CALLER_ASSERTED")
+        elif strength.get(record.record_id) == "TENTATIVE":
+            taints.append("CONTENT_TENTATIVE")
         if kind == "RETRACTION":
             taints.append("RETRACTED")
         elif kind == "WITHDRAWAL":

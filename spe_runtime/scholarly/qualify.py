@@ -149,6 +149,7 @@ def qualify_source(
         sources=(source_id,),
         max_per_source=2,
         enrich_identity=False,
+        fetch_open_full_text=False,
     )
     return _summarize(source_id, package, recorder), package
 

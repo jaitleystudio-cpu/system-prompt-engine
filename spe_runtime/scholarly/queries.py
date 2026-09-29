@@ -6,8 +6,10 @@ widen the search. Landing-page URLs from records are never requested.
 
 from __future__ import annotations
 
+import re
 from urllib.parse import quote, urlencode
 
+from spe_runtime.scholarly.identity import normalize_doi
 from spe_runtime.scholarly.registry import SourceSpec
 
 
@@ -15,6 +17,18 @@ def phrase(text: str) -> str:
     """Quote a query so source-specific operators are not interpreted."""
     cleaned = text.replace('"', " ").strip()
     return f'"{cleaned}"'
+
+
+def europepmc_query(text: str) -> str:
+    """Use a DOI field lookup only when the whole topic is one DOI.
+
+    A quoted prose phrase stays quoted. A DOI buried in a sentence is not
+    promoted into a field query.
+    """
+    doi = normalize_doi(text)
+    if doi is None:
+        return phrase(text)
+    return f'DOI:"{doi}"'
 
 
 def _q(params: list[tuple[str, str]]) -> str:
@@ -45,7 +59,7 @@ def build_search_url(
         return f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?{_q(params)}"
     if source.source_id == "europepmc":
         params = [
-            ("query", quoted),
+            ("query", europepmc_query(query_text)),
             ("format", "json"),
             ("pageSize", str(max_results)),
             ("resultType", "core"),
@@ -143,3 +157,13 @@ def build_idconv_url(
         "https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/"
         f"?{_q(params)}"
     )
+
+
+def build_europepmc_fulltext_url(pmcid: str) -> str:
+    """Europe PMC open full text. The URL carries a PMCID and no query text."""
+    token = pmcid.strip().upper()
+    if not token.startswith("PMC"):
+        token = f"PMC{token}"
+    if re.fullmatch(r"PMC\d{1,10}", token) is None:
+        raise ValueError("BAD_PMCID")
+    return f"https://www.ebi.ac.uk/europepmc/webservices/rest/{token}/fullTextXML"

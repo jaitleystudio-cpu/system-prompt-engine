@@ -31,13 +31,13 @@ This package does not import or write:
 `semantic_authority` is `NONE` on the package and on the integration block.
 `wired_to_k3`, `wired_to_xcat`, and `wired_to_quality` are false.
 
-The outbound scholarly query is the minimized topic. A private prompt, uploaded document, profile, or project context is not sent to a source. Full text is not retrieved. An arXiv-only record stays a preprint.
+The outbound scholarly query is the minimized topic. A private prompt, uploaded document, profile, or project context is not sent to a source, including abstract and full-text requests. Full text is retrieved only when the source and the record lawfully expose it (Europe PMC / PMC open full text). An arXiv-only record stays a preprint and its PDF is not downloaded.
 
 Later path, not implemented here:
 
 `EvidencePackage → ContextCapsule → Category Protocol → K3`
 
-Capsule candidates use `integration_status=CANDIDATE_NOT_WIRED`. Their confidence is capped at 0.6. `support_status` is never `SUPPORTED`, because this lane does not verify full text. Caller assertions are tainted `CALLER_ASSERTED`.
+Capsule candidates use `integration_status=CANDIDATE_NOT_WIRED`. Their confidence is capped at 0.6. `support_status` is never `SUPPORTED`. Caller assertions are tainted `CALLER_ASSERTED`. An abstract or full-text phrase match is `TENTATIVE` and tainted `CONTENT_TENTATIVE`. It does not make the graph `VALID`.
 
 ## Closure rules
 
@@ -46,10 +46,12 @@ Capsule candidates use `integration_status=CANDIDATE_NOT_WIRED`. Their confidenc
 - Retraction omission is `UNKNOWN`, not `NONE`.
 - Positive retraction evidence outranks an explicit `NONE` from another source.
 - `NONE` plus `UNKNOWN` stays `UNKNOWN`.
-- Foundational membership needs a citation count at or above the cohort median, and either an older-than-frontier year or a review / systematic review / meta-analysis type.
-- Frontier membership needs a year inside the caller-supplied window (`as_of` minus `frontier_years`).
-- Replication from a title alone is `TITLE_HEURISTIC`.
-- Contradiction pairs exist only when structured assertions on the same query claim oppose each other (`SUPPORT` and `REFUTE`).
+- Replication from a title alone is `TITLE_HEURISTIC` and does not create a replication-map link. A link requires a structured publication type or an explicit abstract statement, plus the original record when a hint names it. Result relation stays `UNKNOWN` unless the result phrase is in the abstract or lawful full text.
+- Foundational membership is not the oldest paper. It needs a citation count at or above the cohort median and either an older-than-frontier year or a review / systematic review / meta-analysis type. No citation counts yields `FOUNDATIONAL_UNAVAILABLE`.
+- Frontier membership is a verified year inside the caller window. The basis includes `NOT_STRENGTH`. Latest is not strongest.
+- Contradiction pairs keep both sides. `resolution` is `NONE`. A larger paper count is not a winner.
+- Paper type comes from structured publication types. An arXiv-only source is `PREPRINT` and `NOT_PEER_REVIEWED`. A journal article with no mapped type is `OTHER`, and peer-review status stays `UNKNOWN`.
+- An absent abstract on a parsed record is `ABSTRACT_ABSENT`. A parser or transport failure is `SOURCE_UNAVAILABLE` or `SOURCE_SHAPE_UNKNOWN`, not a fake absence. Unknown license stays `UNKNOWN`, not open. An open-access flag is not a license name.
 - `as_of` is caller-supplied `YYYY-MM-DD`. The fabric does not call the clock.
 - `VALID` means the package closed identity, retraction, structured polarity, identity crosswalk, and source fetches. It does not mean the claim is true.
 

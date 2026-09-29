@@ -1,9 +1,9 @@
 """Group admitted works into foundational, frontier, contradictory, and replication sets.
 
-Foundational requires a known citation count at or above the cohort median.
-Frontier requires a known year inside the caller-supplied window. Replication
-from a title alone is labeled TITLE_HEURISTIC. Contradiction membership comes
-only from structured opposing polarities.
+Foundational requires citation evidence plus age or a review type. The oldest
+paper is not foundational by age alone. Frontier is freshness, not strength.
+Replication from a title alone stays TITLE_HEURISTIC and is not a replication
+map link. Contradiction membership comes only from opposing evidence edges.
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ from spe_runtime.scholarly.models import (
 )
 
 _REVIEW_TYPES = frozenset({"review", "systematic-review", "meta-analysis"})
+_REVIEW_PAPER = frozenset({"REVIEW", "SYSTEMATIC_REVIEW", "META_ANALYSIS"})
 
 
 def _median_upper(values: list[int]) -> int:
@@ -68,9 +69,12 @@ def group_records(
                 )
             )
         elif record.year >= frontier_start:
-            frontier.append(
-                GroupMember(record.record_id, (f"YEAR_WITHIN_{frontier_years}",))
-            )
+            basis = [f"YEAR_WITHIN_{frontier_years}", "YEAR_VERIFIED", "NOT_STRENGTH"]
+            if record.paper_type == "PREPRINT" or record.peer_review_status == "NOT_PEER_REVIEWED":
+                basis.append("PREPRINT")
+            if record.peer_review_status == "UNKNOWN":
+                basis.append("PEER_REVIEW_UNCERTAIN")
+            frontier.append(GroupMember(record.record_id, tuple(basis)))
         if record.cited_by_count is None and median is not None:
             gaps.append(
                 UnknownItem(
@@ -80,7 +84,9 @@ def group_records(
                     blocks_valid=False,
                 )
             )
-        review = bool(set(record.publication_types) & _REVIEW_TYPES)
+        review = bool(set(record.publication_types) & _REVIEW_TYPES) or (
+            record.paper_type in _REVIEW_PAPER
+        )
         older = record.year is not None and record.year < frontier_start
         if (
             median is not None
@@ -88,7 +94,7 @@ def group_records(
             and record.cited_by_count >= median
             and (older or review)
         ):
-            basis = ["CITED_AT_OR_ABOVE_MEDIAN"]
+            basis = ["CITED_AT_OR_ABOVE_MEDIAN", "NOT_AGE_ALONE"]
             if older:
                 basis.append("OUTSIDE_FRONTIER_WINDOW")
             if review:
@@ -100,6 +106,8 @@ def group_records(
             )
         if record.replication_signal == "STRUCTURED":
             replication.append(GroupMember(record.record_id, ("STRUCTURED_TYPE",)))
+        elif record.replication_signal == "EXPLICIT_ABSTRACT":
+            replication.append(GroupMember(record.record_id, ("EXPLICIT_ABSTRACT",)))
         elif record.replication_signal == "TITLE_HEURISTIC":
             replication.append(GroupMember(record.record_id, ("TITLE_HEURISTIC",)))
             gaps.append(
@@ -110,6 +118,15 @@ def group_records(
                     blocks_valid=False,
                 )
             )
+    if works and not foundational and median is not None:
+        gaps.append(
+            UnknownItem(
+                code="FOUNDATIONAL_UNKNOWN",
+                subject="package",
+                detail="citation evidence did not meet the foundational rule",
+                blocks_valid=False,
+            )
+        )
     groups = RecordGroups(
         foundational=tuple(foundational),
         frontier=tuple(frontier),

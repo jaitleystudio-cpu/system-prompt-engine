@@ -26,6 +26,7 @@ from spe_runtime.scholarly.models import (
     ClaimAssertion,
     ClaimEvidenceGraph,
     ClaimNode,
+    ContentCue,
     ContradictionMap,
     EgressEvent,
     EvidencePackage,
@@ -34,7 +35,10 @@ from spe_runtime.scholarly.models import (
     PackageStatus,
     PaperDraft,
     QuarantineEntry,
+    RateLimitState,
     RecordGroups,
+    ReplicationHint,
+    ReplicationMap,
     UnknownItem,
 )
 from spe_runtime.scholarly.normalize import (
@@ -45,6 +49,7 @@ from spe_runtime.scholarly.normalize import (
     parse_pubmed_esummary,
 )
 from spe_runtime.scholarly.privacy import minimize_scholarly_query
+from spe_runtime.scholarly.qualify_evidence import build_replication_map, qualify_full_text
 from spe_runtime.scholarly.queries import (
     build_esummary_url,
     build_idconv_url,
@@ -57,6 +62,7 @@ from spe_runtime.scholarly.transport import AllowlistTransport, HttpResponse, Tr
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 _MAX_QUERY = 400
 _MAX_IDCONV = 50
+_MAX_SIBLINGS = 2
 _POLARITIES = frozenset({"SUPPORT", "REFUTE", "NEUTRAL"})
 
 
@@ -79,9 +85,18 @@ def _headers(contact_email: str | None, accept: str) -> dict[str, str]:
     return {"Accept": accept, "User-Agent": user_agent}
 
 
-def _event(source_id: str, url: str, status: int) -> EgressEvent:
+def _event(
+    source_id: str,
+    url: str,
+    status: int,
+    header_notes: tuple[tuple[str, str], ...] = (),
+) -> EgressEvent:
     parts = urlsplit(url)
     keys = tuple(sorted({key for key, _value in parse_qsl(parts.query, keep_blank_values=True)}))
+    retry_after = next(
+        (value for name, value in header_notes if name.lower() == "retry-after"),
+        None,
+    )
     return EgressEvent(
         source_id=source_id,
         host=parts.hostname or "",
@@ -89,6 +104,8 @@ def _event(source_id: str, url: str, status: int) -> EgressEvent:
         path=parts.path,
         query_keys=keys,
         status=status,
+        retry_after=retry_after,
+        attempt=1,
     )
 
 
@@ -123,6 +140,8 @@ def _package(
     private_withheld: bool = False,
     withheld_labels: tuple[str, ...] = (),
     outbound_shapes: tuple[tuple[str, tuple[str, ...]], ...] = (),
+    replication_map: ReplicationMap | None = None,
+    rate_limit: RateLimitState | None = None,
 ) -> EvidencePackage:
     built = EvidencePackage(
         package_id="",
@@ -149,6 +168,9 @@ def _package(
         private_withheld=private_withheld,
         withheld_labels=withheld_labels,
         outbound_shapes=outbound_shapes,
+        replication_map=replication_map,
+        rate_limit=rate_limit
+        or RateLimitState(len(egress), (), "NO_RETRY"),
     )
     body = built.to_dict()
     body.pop("package_id")
@@ -195,6 +217,7 @@ def _validate(
     assertions: tuple[ClaimAssertion, ...],
     allow_network: bool,
     transport: Transport | None,
+    sibling_queries: tuple[str, ...],
 ) -> list[str]:
     reasons: list[str] = []
     if not query_text or len(query_text) > _MAX_QUERY:
@@ -218,6 +241,8 @@ def _validate(
         reasons.append("TRANSPORT_CONFLICT")
     if not allow_network and transport is None:
         reasons.append("NETWORK_NOT_AUTHORIZED")
+    if len(sibling_queries) > _MAX_SIBLINGS:
+        reasons.append("SIBLING_QUERY_LIMIT")
     for assertion in assertions:
         if assertion.claim_text != query_text:
             reasons.append("ASSERTION_CLAIM_MISMATCH")
@@ -289,9 +314,9 @@ def _fetch_search(
         contact_email=contact_email,
     )
     response = _get(transport, registry, url, headers)
-    egress.append(_event(spec.source_id, url, response.status))
+    egress.append(_event(spec.source_id, url, response.status, response.header_notes))
     if response.status != 200:
-        return [], [], [
+        gaps = [
             UnknownItem(
                 "SOURCE_UNAVAILABLE",
                 spec.source_id,
@@ -299,18 +324,45 @@ def _fetch_search(
                 True,
             )
         ]
+        if response.status == 429:
+            retry = next(
+                (
+                    value
+                    for name, value in response.header_notes
+                    if name.lower() == "retry-after"
+                ),
+                "",
+            )
+            gaps.append(
+                UnknownItem(
+                    "RATE_LIMITED",
+                    spec.source_id,
+                    retry or "HTTP_429",
+                    False,
+                )
+            )
+        return [], [], gaps
     try:
         if spec.source_id == "arxiv":
             drafts, rejected = parse_arxiv_atom(response.body)
         elif spec.source_id in {"pubmed", "pmc"}:
             ids = parse_esearch_ids(json.loads(response.body.decode("utf-8")))
             if not ids:
-                return [], [], []
+                return [], [], [
+                    UnknownItem(
+                        "SOURCE_ZERO_RECORDS",
+                        spec.source_id,
+                        "esearch returned no ids",
+                        False,
+                    )
+                ]
             summary_url = build_esummary_url(
                 spec.source_id, ids[:max_per_source], contact_email=contact_email
             )
             summary = _get(transport, registry, summary_url, headers)
-            egress.append(_event(spec.source_id, summary_url, summary.status))
+            egress.append(
+                _event(spec.source_id, summary_url, summary.status, summary.header_notes)
+            )
             if summary.status != 200:
                 return [], [], [
                     UnknownItem(
@@ -332,7 +384,17 @@ def _fetch_search(
     quarantine = [
         QuarantineEntry(item.reason, item.source_id, item.detail) for item in rejected
     ]
-    return drafts, quarantine, []
+    gaps: list[UnknownItem] = []
+    if not drafts and not rejected:
+        gaps.append(
+            UnknownItem(
+                "SOURCE_ZERO_RECORDS",
+                spec.source_id,
+                "source returned no records",
+                False,
+            )
+        )
+    return drafts, quarantine, gaps
 
 
 def compile_evidence_package(
@@ -349,6 +411,10 @@ def compile_evidence_package(
     contact_email: str | None = None,
     registry: SourceRegistry | None = None,
     private_context: str | None = None,
+    sibling_queries: tuple[str, ...] = (),
+    content_cues: ContentCue | None = None,
+    replication_hints: tuple[ReplicationHint, ...] = (),
+    fetch_open_full_text: bool = True,
 ) -> EvidencePackage:
     """Compile one research query into a scholarly evidence package.
 
@@ -375,6 +441,7 @@ def compile_evidence_package(
         assertions=assertions,
         allow_network=allow_network,
         transport=transport,
+        sibling_queries=sibling_queries,
     )
     if private_withheld and not query_text:
         reasons.append("QUERY_TOPIC_ABSENT")
@@ -421,27 +488,45 @@ def compile_evidence_package(
     drafts: list[PaperDraft] = []
     quarantine: list[QuarantineEntry] = []
     gaps: list[UnknownItem] = []
-    try:
-        for spec in selected:
-            try:
-                found, rejected, source_gaps = _fetch_search(
-                    spec=spec,
-                    query_text=query_text,
-                    max_per_source=max_per_source,
-                    contact_email=contact_email,
-                    transport=client,
-                    registry=active_registry,
-                    egress=egress,
+    topics = [query_text]
+    for extra in sibling_queries:
+        extra_min = minimize_scholarly_query(extra.strip())
+        if extra_min.withheld_labels:
+            gaps.append(
+                UnknownItem(
+                    "SIBLING_PRIVATE_WITHHELD",
+                    "query",
+                    ",".join(extra_min.withheld_labels),
+                    True,
                 )
-            except ShapeError as exc:
-                gaps.append(UnknownItem("SOURCE_SHAPE_UNKNOWN", spec.source_id, exc.code, True))
-                continue
-            except TransportError as exc:
-                gaps.append(UnknownItem("SOURCE_UNAVAILABLE", spec.source_id, exc.code, True))
-                continue
-            drafts.extend(found)
-            quarantine.extend(rejected)
-            gaps.extend(source_gaps)
+            )
+            continue
+        if extra_min.outbound_topic and extra_min.outbound_topic not in topics:
+            topics.append(extra_min.outbound_topic)
+    try:
+        for topic in topics:
+            for spec in selected:
+                try:
+                    found, rejected, source_gaps = _fetch_search(
+                        spec=spec,
+                        query_text=topic,
+                        max_per_source=max_per_source,
+                        contact_email=contact_email,
+                        transport=client,
+                        registry=active_registry,
+                        egress=egress,
+                    )
+                except ShapeError as exc:
+                    gaps.append(
+                        UnknownItem("SOURCE_SHAPE_UNKNOWN", spec.source_id, exc.code, True)
+                    )
+                    continue
+                except TransportError as exc:
+                    gaps.append(UnknownItem("SOURCE_UNAVAILABLE", spec.source_id, exc.code, True))
+                    continue
+                drafts.extend(found)
+                quarantine.extend(rejected)
+                gaps.extend(source_gaps)
         if enrich_identity:
             grouped: dict[str, list[str]] = {"doi": [], "pmid": [], "pmcid": []}
             seen_ids: dict[str, set[str]] = {"doi": set(), "pmid": set(), "pmcid": set()}
@@ -527,6 +612,33 @@ def compile_evidence_package(
     records, dedup_quarantine, dedup_gaps = deduplicate(tuple(drafts))
     quarantine.extend(dedup_quarantine)
     gaps.extend(dedup_gaps)
+    for entry in quarantine:
+        if entry.reason in {"IDENTITY_UNKNOWN", "IDENTITY_TITLE_CONFLICT"}:
+            gaps.append(
+                UnknownItem(
+                    "IDENTITY_AMBIGUOUS",
+                    entry.source_id,
+                    entry.detail,
+                    True,
+                )
+            )
+    if fetch_open_full_text and records:
+        records, fulltext_gaps, fulltext_egress = qualify_full_text(
+            records,
+            transport=client,
+            registry=active_registry,
+            as_of=as_of,
+            headers=_headers(contact_email, "application/xml"),
+        )
+        gaps.extend(fulltext_gaps)
+        egress.extend(fulltext_egress)
+    _KNOWN_FULL_TEXT = {
+        "NOT_RETRIEVED",
+        "OPEN_FULL_TEXT",
+        "NOT_PERMITTED",
+        "PDF_METADATA_ONLY",
+        "SOURCE_UNAVAILABLE",
+    }
     for record in records:
         if record.retraction.kind is NoticeKind.UNKNOWN:
             gaps.append(
@@ -546,7 +658,7 @@ def compile_evidence_package(
                     True,
                 )
             )
-        if record.full_text_status != "NOT_RETRIEVED":
+        if record.full_text_status not in _KNOWN_FULL_TEXT:
             gaps.append(
                 UnknownItem(
                     "FULL_TEXT_STATUS_UNKNOWN",
@@ -555,25 +667,34 @@ def compile_evidence_package(
                     True,
                 )
             )
-        else:
+        elif record.full_text_status != "OPEN_FULL_TEXT":
             gaps.append(
                 UnknownItem(
                     "FULL_TEXT_NOT_RETRIEVED",
                     record.record_id,
-                    record.access_limitation,
+                    record.access_limitation or record.full_text_status,
                     False,
                 )
             )
-        if record.abstract is None:
+        if record.abstract_access == "ABSTRACT_ABSENT":
             gaps.append(
                 UnknownItem(
                     "ABSTRACT_ABSENT",
                     record.record_id,
-                    "no abstract in source metadata",
+                    "source record did not include an abstract",
                     False,
                 )
             )
-        if record.license == "UNKNOWN":
+        elif record.abstract_access == "ABSTRACT_NOT_PERMITTED":
+            gaps.append(
+                UnknownItem(
+                    "ABSTRACT_NOT_PERMITTED",
+                    record.record_id,
+                    record.abstract_provenance or "license",
+                    False,
+                )
+            )
+        if record.license_status == "UNKNOWN":
             gaps.append(
                 UnknownItem(
                     "LICENSE_UNKNOWN",
@@ -582,12 +703,21 @@ def compile_evidence_package(
                     False,
                 )
             )
-        if record.primary_source_id == "arxiv" or set(record.source_ids) == {"arxiv"}:
+        if record.peer_review_status == "UNKNOWN":
             gaps.append(
                 UnknownItem(
                     "PEER_REVIEW_STATUS_UNKNOWN",
                     record.record_id,
-                    "arXiv is a preprint server",
+                    record.paper_type,
+                    False,
+                )
+            )
+        if record.paper_type == "UNKNOWN":
+            gaps.append(
+                UnknownItem(
+                    "PAPER_TYPE_UNKNOWN",
+                    record.record_id,
+                    ",".join(record.paper_type_basis),
                     False,
                 )
             )
@@ -595,8 +725,26 @@ def compile_evidence_package(
         query_text=query_text,
         records=records,
         assertions=assertions,
+        content_cues=content_cues,
     )
     gaps.extend(graph_gaps)
+    replication_map, replication_gaps = build_replication_map(records, replication_hints)
+    gaps.extend(replication_gaps)
+    if any(event.attempt != 1 for event in egress):
+        gaps.append(
+            UnknownItem(
+                "RATE_LIMIT_RETRY_STORM",
+                "package",
+                "egress attempt exceeded 1",
+                True,
+            )
+        )
+    retries = tuple(event.retry_after for event in egress if event.retry_after)
+    rate_limit = RateLimitState(
+        request_count=len(egress),
+        retry_after=retries,
+        backoff_state="NO_RETRY",
+    )
     as_of_year = date.fromisoformat(as_of).year
     groups, group_gaps = group_records(
         records,
@@ -651,5 +799,7 @@ def compile_evidence_package(
         capsules=capsules,
         egress=tuple(egress),
         refusal_reasons=tuple(refusal),
+        replication_map=replication_map,
+        rate_limit=rate_limit,
         **privacy,
     )

@@ -17,6 +17,8 @@
     "groups",
     "claim_evidence_graph",
     "contradiction_map",
+    "replication_map",
+    "rate_limit",
     "gap_unknown_map",
     "capsule_candidates",
     "egress",
@@ -98,6 +100,8 @@
     "groups": { "$ref": "#/$defs/groups" },
     "claim_evidence_graph": { "$ref": "#/$defs/graph" },
     "contradiction_map": { "$ref": "#/$defs/contradictions" },
+    "replication_map": { "$ref": "#/$defs/replications" },
+    "rate_limit": { "$ref": "#/$defs/rate_limit" },
     "gap_unknown_map": { "$ref": "#/$defs/gaps" },
     "capsule_candidates": {
       "type": "array",
@@ -179,7 +183,17 @@
         "full_text_status",
         "abstract_access",
         "access_limitation",
-        "related_preprint"
+        "related_preprint",
+        "paper_type",
+        "paper_type_basis",
+        "peer_review_status",
+        "abstract_provenance",
+        "license_status",
+        "full_text_source",
+        "retrieval_method",
+        "content_digest",
+        "full_text_retrieved_at",
+        "full_text_excerpt"
       ],
       "properties": {
         "record_id": { "type": "string", "minLength": 1 },
@@ -200,15 +214,62 @@
         "role": { "type": "string", "enum": ["work", "notice"] },
         "replication_signal": {
           "type": "string",
-          "enum": ["NONE", "STRUCTURED", "TITLE_HEURISTIC"]
+          "enum": ["NONE", "STRUCTURED", "TITLE_HEURISTIC", "EXPLICIT_ABSTRACT"]
         },
-        "full_text_status": { "const": "NOT_RETRIEVED" },
+        "full_text_status": {
+          "type": "string",
+          "enum": [
+            "NOT_RETRIEVED",
+            "OPEN_FULL_TEXT",
+            "NOT_PERMITTED",
+            "PDF_METADATA_ONLY",
+            "SOURCE_UNAVAILABLE"
+          ]
+        },
         "abstract_access": {
           "type": "string",
-          "enum": ["ABSENT", "SOURCE_API_ABSTRACT"]
+          "enum": [
+            "ABSTRACT_AVAILABLE",
+            "ABSTRACT_ABSENT",
+            "ABSTRACT_NOT_PERMITTED",
+            "SOURCE_UNAVAILABLE"
+          ]
         },
         "access_limitation": { "type": "string" },
-        "related_preprint": { "type": ["string", "null"] }
+        "related_preprint": { "type": ["string", "null"] },
+        "paper_type": {
+          "type": "string",
+          "enum": [
+            "SYSTEMATIC_REVIEW",
+            "META_ANALYSIS",
+            "RANDOMIZED_TRIAL",
+            "OBSERVATIONAL",
+            "REPLICATION",
+            "BENCHMARK",
+            "REVIEW",
+            "PREPRINT",
+            "OTHER",
+            "UNKNOWN"
+          ]
+        },
+        "paper_type_basis": { "type": "array", "items": { "type": "string" } },
+        "peer_review_status": {
+          "type": "string",
+          "enum": ["UNKNOWN", "NOT_PEER_REVIEWED", "PEER_REVIEWED"]
+        },
+        "abstract_provenance": { "type": "string" },
+        "license_status": {
+          "type": "string",
+          "enum": ["UNKNOWN", "STATED", "NOT_OPEN"]
+        },
+        "full_text_source": { "type": "string" },
+        "retrieval_method": { "type": "string" },
+        "content_digest": {
+          "type": ["string", "null"],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "full_text_retrieved_at": { "type": ["string", "null"] },
+        "full_text_excerpt": { "type": ["string", "null"] }
       }
     },
     "quarantine": {
@@ -272,7 +333,12 @@
                 "strength",
                 "source_id",
                 "canonical_key",
-                "metadata_ref"
+                "metadata_ref",
+                "evidence_scope",
+                "polarity_basis",
+                "source_ids",
+                "retraction_state",
+                "paper_type"
               ],
               "properties": {
                 "claim_id": { "type": "string" },
@@ -281,10 +347,21 @@
                   "type": "string",
                   "enum": ["SUPPORT", "REFUTE", "NEUTRAL", "UNKNOWN"]
                 },
-                "strength": { "type": "string", "enum": ["STRUCTURED", "ABSENT"] },
+                "strength": {
+                  "type": "string",
+                  "enum": ["STRUCTURED", "ABSENT", "TENTATIVE"]
+                },
                 "source_id": { "type": "string", "minLength": 1 },
                 "canonical_key": { "type": "string", "minLength": 1 },
-                "metadata_ref": { "type": "string", "minLength": 1 }
+                "metadata_ref": { "type": "string", "minLength": 1 },
+                "evidence_scope": {
+                  "type": "string",
+                  "enum": ["ABSTRACT", "FULL_TEXT", "STRUCTURED_METADATA", "NONE", "MIXED"]
+                },
+                "polarity_basis": { "type": "string" },
+                "source_ids": { "type": "array", "items": { "type": "string" } },
+                "retraction_state": { "type": "string" },
+                "paper_type": { "type": "string" }
               }
           }
         }
@@ -293,24 +370,87 @@
     "contradictions": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "reason", "pairs"],
+      "required": ["status", "reason", "pairs", "resolution"],
       "properties": {
         "status": { "type": "string", "enum": ["PRESENT", "UNKNOWN"] },
         "reason": { "type": "string" },
+        "resolution": { "const": "NONE" },
         "pairs": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["claim_id", "left_record_id", "right_record_id", "basis"],
+            "required": [
+              "claim_id",
+              "left_record_id",
+              "right_record_id",
+              "basis",
+              "evidence_scope",
+              "uncertainty",
+              "left_paper_type",
+              "right_paper_type"
+            ],
             "properties": {
               "claim_id": { "type": "string" },
               "left_record_id": { "type": "string" },
               "right_record_id": { "type": "string" },
-              "basis": { "const": "OPPOSING_STRUCTURED_POLARITY" }
+              "basis": {
+                "type": "string",
+                "enum": ["OPPOSING_STRUCTURED_POLARITY", "OPPOSING_CONTENT_POLARITY"]
+              },
+              "evidence_scope": { "type": "string" },
+              "uncertainty": { "const": "UNRESOLVED" },
+              "left_paper_type": { "type": "string" },
+              "right_paper_type": { "type": "string" }
             }
           }
         }
+      }
+    },
+    "replications": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason", "links"],
+      "properties": {
+        "status": { "type": "string", "enum": ["PRESENT", "UNKNOWN"] },
+        "reason": { "type": "string" },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "replication_record_id",
+              "original_record_id",
+              "relationship",
+              "result_relation",
+              "evidence"
+            ],
+            "properties": {
+              "replication_record_id": { "type": "string" },
+              "original_record_id": { "type": ["string", "null"] },
+              "relationship": {
+                "type": "string",
+                "enum": ["STRUCTURED_PUBLICATION_TYPE", "EXPLICIT_ABSTRACT"]
+              },
+              "result_relation": {
+                "type": "string",
+                "enum": ["UNKNOWN", "EXPLICIT_ABSTRACT_RESULT"]
+              },
+              "evidence": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "rate_limit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_count", "retry_after", "backoff_state"],
+      "properties": {
+        "request_count": { "type": "integer", "minimum": 0 },
+        "retry_after": { "type": "array", "items": { "type": "string" } },
+        "backoff_state": { "const": "NO_RETRY" }
       }
     },
     "gaps": {
@@ -396,14 +536,25 @@
     "egress": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source_id", "host", "method", "path", "query_keys", "status"],
+      "required": [
+        "source_id",
+        "host",
+        "method",
+        "path",
+        "query_keys",
+        "status",
+        "retry_after",
+        "attempt"
+      ],
       "properties": {
         "source_id": { "type": "string" },
         "host": { "type": "string" },
         "method": { "const": "GET" },
         "path": { "type": "string" },
         "query_keys": { "type": "array", "items": { "type": "string" } },
-        "status": { "type": "integer" }
+        "status": { "type": "integer" },
+        "retry_after": { "type": ["string", "null"] },
+        "attempt": { "const": 1 }
       }
     }
   }

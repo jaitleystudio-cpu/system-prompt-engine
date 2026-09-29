@@ -11,6 +11,11 @@ import re
 from collections import defaultdict
 
 from spe_runtime.scholarly.identity import merge_identities
+from spe_runtime.scholarly.qualify_evidence import (
+    abstract_replication,
+    classify_paper,
+    license_status_for,
+)
 from spe_runtime.scholarly.models import (
     PaperDraft,
     PaperRecord,
@@ -152,10 +157,17 @@ def deduplicate(
         signals = {item.replication_signal for item in group}
         if "STRUCTURED" in signals:
             replication = "STRUCTURED"
+        elif abstract and abstract_replication(abstract):
+            replication = "EXPLICIT_ABSTRACT"
         elif "TITLE_HEURISTIC" in signals:
             replication = "TITLE_HEURISTIC"
         else:
             replication = "NONE"
+        abstract_source = next((item.source_id for item in ordered if item.abstract), "")
+        paper_type, paper_basis, peer_review = classify_paper(
+            tuple(sorted({item.source_id for item in group})),
+            tuple(sorted(types)),
+        )
         versions = {
             item.identity.arxiv_version
             for item in group
@@ -193,13 +205,18 @@ def deduplicate(
                 role=primary.role,
                 replication_signal=replication,
                 full_text_status="NOT_RETRIEVED",
-                abstract_access="SOURCE_API_ABSTRACT" if abstract else "ABSENT",
+                abstract_access="ABSTRACT_AVAILABLE" if abstract else "ABSTRACT_ABSENT",
                 access_limitation=(
                     "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED"
                     if abstract
                     else "METADATA_ONLY_FULL_TEXT_NOT_FETCHED"
                 ),
                 related_preprint=identity.arxiv_id,
+                paper_type=paper_type,
+                paper_type_basis=paper_basis,
+                peer_review_status=peer_review,
+                abstract_provenance=abstract_source if abstract else "",
+                license_status=license_status_for(license_name, is_open_access=is_oa),
             )
         )
     records.sort(key=lambda item: item.identity.canonical_key)
