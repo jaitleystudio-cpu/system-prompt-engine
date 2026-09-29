@@ -23,7 +23,14 @@ export type { AppView };
 
 export function Nav(p: Props) {
   return (
-    <header className={`spe-nav ${p.scrolled ? "is-scrolled" : ""}`}>
+    <header
+      className={`spe-nav ${p.scrolled ? "is-scrolled" : ""}`}
+      onKeyDown={(e) => {
+        if (e.key === "Escape" && p.menuOpen) {
+          p.setMenuOpen(false);
+        }
+      }}
+    >
       <a
         className="spe-nav-brand"
         href={pathForView("home")}
