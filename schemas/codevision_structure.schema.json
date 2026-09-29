@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/codevision_structure.schema.json",
+  "title": "CodevisionStructureDocument",
+  "description": "Six structure targets compiled from a screenshot observation. Counts are censuses. This schema does not represent visual fidelity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "observation_id",
+    "observation_digest",
+    "structure_digest",
+    "alignment_tolerance_px",
+    "repeat_match",
+    "target_order",
+    "targets"
+  ],
+  "properties": {
+    "schema_version": { "const": "spe.codevision.structure.v1" },
+    "observation_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+    },
+    "observation_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "structure_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "alignment_tolerance_px": { "const": 2 },
+    "repeat_match": { "const": "exact_box_and_kind" },
+    "target_order": {
+      "const": [
+        "region_tree",
+        "element_inventory",
+        "text_runs",
+        "style_observations",
+        "spatial_relations",
+        "repeat_groups"
+      ]
+    },
+    "targets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "region_tree",
+        "element_inventory",
+        "text_runs",
+        "style_observations",
+        "spatial_relations",
+        "repeat_groups"
+      ],
+      "properties": {
+        "region_tree": { "$ref": "#/$defs/region_tree" },
+        "element_inventory": { "$ref": "#/$defs/element_inventory" },
+        "text_runs": { "$ref": "#/$defs/text_runs" },
+        "style_observations": { "$ref": "#/$defs/style_observations" },
+        "spatial_relations": { "$ref": "#/$defs/spatial_relations" },
+        "repeat_groups": { "$ref": "#/$defs/repeat_groups" }
+      }
+    }
+  },
+  "$defs": {
+    "box": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "integer", "minimum": 0 },
+        "y": { "type": "integer", "minimum": 0 },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "region_tree": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root_id", "child_order", "nodes"],
+      "properties": {
+        "root_id": { "type": "string", "minLength": 1 },
+        "child_order": { "const": "y_then_x_then_z_index_then_node_id" },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["node_id", "parent_id", "child_ids", "box", "depth"],
+            "properties": {
+              "node_id": { "type": "string", "minLength": 1 },
+              "parent_id": { "oneOf": [{ "type": "null" }, { "type": "string" }] },
+              "child_ids": { "type": "array", "items": { "type": "string" } },
+              "box": { "$ref": "#/$defs/box" },
+              "depth": { "type": "integer", "minimum": 0, "maximum": 32 }
+            }
+          }
+        }
+      }
+    },
+    "element_inventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["counts_are", "kind_vocabulary", "kind_counts", "nodes"],
+      "properties": {
+        "counts_are": { "const": "supplied_node_census" },
+        "kind_vocabulary": {
+          "const": ["frame", "region", "text", "image", "control", "icon", "unknown"]
+        },
+        "kind_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["frame", "region", "text", "image", "control", "icon", "unknown"],
+          "properties": {
+            "frame": { "type": "integer", "minimum": 0 },
+            "region": { "type": "integer", "minimum": 0 },
+            "text": { "type": "integer", "minimum": 0 },
+            "image": { "type": "integer", "minimum": 0 },
+            "control": { "type": "integer", "minimum": 0 },
+            "icon": { "type": "integer", "minimum": 0 },
+            "unknown": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["node_id", "kind", "parent_id", "box", "z_index"],
+            "properties": {
+              "node_id": { "type": "string" },
+              "kind": {
+                "type": "string",
+                "enum": ["frame", "region", "text", "image", "control", "icon", "unknown"]
+              },
+              "parent_id": { "oneOf": [{ "type": "null" }, { "type": "string" }] },
+              "box": { "$ref": "#/$defs/box" },
+              "z_index": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "text_runs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["order", "runs"],
+      "properties": {
+        "order": { "const": "y_then_x_then_z_index_then_node_id" },
+        "runs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["reading_index", "node_id", "text", "box"],
+            "properties": {
+              "reading_index": { "type": "integer", "minimum": 0 },
+              "node_id": { "type": "string" },
+              "text": { "type": "string", "minLength": 1 },
+              "box": { "$ref": "#/$defs/box" }
+            }
+          }
+        }
+      }
+    },
+    "style_observations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pass_through", "observations"],
+      "properties": {
+        "pass_through": { "const": "supplied_fields_only" },
+        "observations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["node_id"],
+            "properties": {
+              "node_id": { "type": "string" },
+              "fill_hex": { "type": "string", "pattern": "^#[0-9A-F]{6}$" },
+              "border_hex": { "type": "string", "pattern": "^#[0-9A-F]{6}$" },
+              "radius_px": { "type": "integer", "minimum": 0 },
+              "font_size_px": { "type": "integer", "minimum": 1 },
+              "font_weight": {
+                "type": "integer",
+                "enum": [100, 200, 300, 400, 500, 600, 700, 800, 900]
+              }
+            }
+          }
+        }
+      }
+    },
+    "spatial_relations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alignment_tolerance_px",
+        "center_compare",
+        "sibling_scope",
+        "omitted_in_v1",
+        "relations"
+      ],
+      "properties": {
+        "alignment_tolerance_px": { "const": 2 },
+        "center_compare": { "const": "half_pixel_integers" },
+        "sibling_scope": { "const": "direct_siblings_only" },
+        "omitted_in_v1": { "const": ["overlap", "cross_parent_alignment"] },
+        "relations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "source_id", "target_id"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "contains",
+                  "stacked_above",
+                  "beside",
+                  "aligned_x_start",
+                  "aligned_x_center",
+                  "aligned_y_start",
+                  "aligned_y_center"
+                ]
+              },
+              "source_id": { "type": "string" },
+              "target_id": { "type": "string" },
+              "rule_delta_px": { "type": "integer", "minimum": 0, "maximum": 2 },
+              "rule_delta_half_px": { "type": "integer", "minimum": 0, "maximum": 4 }
+            }
+          }
+        }
+      }
+    },
+    "repeat_groups": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["match", "note", "groups"],
+      "properties": {
+        "match": { "const": "exact_box_and_kind" },
+        "note": { "type": "string", "minLength": 1 },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["group_id", "parent_id", "kind", "width", "height", "member_ids"],
+            "properties": {
+              "group_id": { "type": "string" },
+              "parent_id": { "type": "string" },
+              "kind": { "type": "string" },
+              "width": { "type": "integer", "minimum": 1 },
+              "height": { "type": "integer", "minimum": 1 },
+              "member_ids": {
+                "type": "array",
+                "minItems": 2,
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

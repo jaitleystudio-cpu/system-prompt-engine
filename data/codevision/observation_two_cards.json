@@ -1,0 +1,62 @@
+{
+  "schema_version": "spe.codevision.observation.v1",
+  "observation_id": "obs-two-cards",
+  "source_kind": "screenshot_observation",
+  "canvas": { "width": 400, "height": 300 },
+  "nodes": [
+    {
+      "node_id": "root",
+      "parent_id": null,
+      "kind": "frame",
+      "box": { "x": 0, "y": 0, "width": 400, "height": 300 },
+      "text": null,
+      "style": null,
+      "z_index": 0
+    },
+    {
+      "node_id": "header",
+      "parent_id": "root",
+      "kind": "region",
+      "box": { "x": 0, "y": 0, "width": 400, "height": 40 },
+      "text": null,
+      "style": null,
+      "z_index": 1
+    },
+    {
+      "node_id": "title",
+      "parent_id": "header",
+      "kind": "text",
+      "box": { "x": 16, "y": 8, "width": 200, "height": 24 },
+      "text": "Inbox",
+      "style": { "font_size_px": 16, "font_weight": 600 },
+      "z_index": 2
+    },
+    {
+      "node_id": "card_a",
+      "parent_id": "root",
+      "kind": "region",
+      "box": { "x": 16, "y": 64, "width": 160, "height": 80 },
+      "text": null,
+      "style": { "fill_hex": "#aabbcc", "radius_px": 8 },
+      "z_index": 1
+    },
+    {
+      "node_id": "card_b",
+      "parent_id": "root",
+      "kind": "region",
+      "box": { "x": 192, "y": 64, "width": 160, "height": 80 },
+      "text": null,
+      "style": null,
+      "z_index": 1
+    },
+    {
+      "node_id": "card_c",
+      "parent_id": "root",
+      "kind": "region",
+      "box": { "x": 16, "y": 160, "width": 160, "height": 80 },
+      "text": null,
+      "style": null,
+      "z_index": 1
+    }
+  ]
+}

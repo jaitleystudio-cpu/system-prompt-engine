@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/codevision_visual_fidelity_proof.schema.json",
+  "title": "CodevisionVisualFidelityProof",
+  "description": "Proof format for a future visual-fidelity check. v1 can only validate status UNPROVEN. Numeric pixel scores are not a field that can be set.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proof_id",
+    "observation_id",
+    "observation_digest",
+    "structure_digest",
+    "targets_emitted",
+    "target_counts",
+    "counts_are",
+    "visual_fidelity_status",
+    "visual_fidelity_proven",
+    "pixel_comparison",
+    "numeric_fidelity_score",
+    "measured",
+    "unmeasured",
+    "structure_contract_status",
+    "claim_boundary"
+  ],
+  "properties": {
+    "schema_version": { "const": "spe.codevision.visual-fidelity-proof.v1" },
+    "proof_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+    },
+    "observation_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+    },
+    "observation_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "structure_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "targets_emitted": {
+      "const": [
+        "region_tree",
+        "element_inventory",
+        "text_runs",
+        "style_observations",
+        "spatial_relations",
+        "repeat_groups"
+      ]
+    },
+    "target_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "region_tree",
+        "element_inventory",
+        "text_runs",
+        "style_observations",
+        "spatial_relations",
+        "repeat_groups"
+      ],
+      "properties": {
+        "region_tree": { "type": "integer", "minimum": 0 },
+        "element_inventory": { "type": "integer", "minimum": 0 },
+        "text_runs": { "type": "integer", "minimum": 0 },
+        "style_observations": { "type": "integer", "minimum": 0 },
+        "spatial_relations": { "type": "integer", "minimum": 0 },
+        "repeat_groups": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "counts_are": { "const": "structure_emission_census" },
+    "visual_fidelity_status": { "const": "UNPROVEN" },
+    "visual_fidelity_proven": { "const": false },
+    "pixel_comparison": { "type": "null" },
+    "numeric_fidelity_score": { "type": "null" },
+    "measured": { "type": "array", "maxItems": 0 },
+    "unmeasured": {
+      "const": [
+        "pixel_perfect",
+        "perceptual_match",
+        "rendered_rescreenshot_match",
+        "human_visual_rating",
+        "numeric_fidelity_score"
+      ]
+    },
+    "structure_contract_status": { "const": "CHECKED" },
+    "claim_boundary": {
+      "const": "This proof records that a structure document was emitted and schema-checked. It does not measure or prove visual fidelity."
+    }
+  }
+}

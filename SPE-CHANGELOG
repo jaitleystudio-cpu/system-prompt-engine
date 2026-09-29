@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### 2026-09-30 — CODEVISION structure foundation
+- Bounded IR: screenshot observation in, six structure targets out (`region_tree`, `element_inventory`, `text_runs`, `style_observations`, `spatial_relations`, `repeat_groups`)
+- Visual-fidelity proof format stays `UNPROVEN`; numeric pixel scores and image bytes are refused
+- No image decoding, no K3, no semantic-core edits
+- Visual fidelity remains unproven
+
 ### 2026-09-24 — Context Protocol v1 verification (Task 15)
 - Fresh regression on HEAD `23e65f4ecb48067f22185160fa6e9af3baee107d` (branch `chatgpt/context-protocol-compiler-design-20260924`)
 - Suites: pytest 641; focused 641; spe-core-rs cargo 38; spe-wasm cargo 4; `npm run test:engine` + `npm run build`; e2e-context-protocol 21; fixture-only benchmark PASS; adversarial 35
