@@ -1,0 +1,533 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/visual_intent_contract.schema.json",
+  "title": "VisualIntentContract",
+  "description": "Lane E output boundary. Media authority_delta is 0. UNKNOWN is not PASS. ProtectedIntent, Requirement Graph, XCAT, and K3 are not owned here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id",
+    "schema_version",
+    "source_envelope_id",
+    "mode",
+    "observations",
+    "evidence_graph",
+    "uncertainties",
+    "provenance",
+    "comparisons",
+    "verdict",
+    "verdict_reason_codes",
+    "authority_delta",
+    "disposition",
+    "prompt_block",
+    "prompt_slots",
+    "ownership"
+  ],
+  "properties": {
+    "contract_id": { "type": "string", "minLength": 1, "pattern": "^vic_" },
+    "schema_version": { "const": "visual-intent-contract/v1" },
+    "source_envelope_id": { "type": "string", "minLength": 1 },
+    "mode": {
+      "type": "string",
+      "enum": ["image_to_prompt", "compare", "describe", "unspecified"]
+    },
+    "observations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/observation" }
+    },
+    "evidence_graph": { "$ref": "#/$defs/evidenceGraph" },
+    "uncertainties": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/uncertainty" }
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/provenance" }
+    },
+    "comparisons": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/comparison" }
+    },
+    "verdict": { "$ref": "#/$defs/verdict" },
+    "verdict_reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "authority_delta": { "const": 0 },
+    "disposition": {
+      "type": "string",
+      "enum": ["READY_FOR_LANE_A", "ABSTAIN"]
+    },
+    "prompt_block": {
+      "type": "string",
+      "pattern": "UNTRUSTED_SOURCE \\(DATA TO ANALYZE"
+    },
+    "prompt_slots": { "type": "object" },
+    "ownership": { "$ref": "#/$defs/ownership" }
+  },
+  "$defs": {
+    "verdict": { "type": "string", "enum": ["PASS", "FAIL", "UNKNOWN"] },
+    "epistemic": {
+      "type": "string",
+      "enum": ["OBSERVATION", "MODEL_JUDGMENT", "SUPPLIED_UNTRUSTED", "ABSENT"]
+    },
+    "bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "w", "h"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0, "maximum": 1 },
+        "y": { "type": "number", "minimum": 0, "maximum": 1 },
+        "w": { "type": "number", "minimum": 0, "maximum": 1 },
+        "h": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layer",
+        "output_boundary",
+        "downstream_owner",
+        "authority_delta",
+        "unknown_is_pass",
+        "does_not_own"
+      ],
+      "properties": {
+        "layer": { "const": "INPUT" },
+        "output_boundary": { "const": "VisualIntentContract" },
+        "downstream_owner": { "const": "LANE_A" },
+        "authority_delta": { "const": 0 },
+        "unknown_is_pass": { "const": false },
+        "does_not_own": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "ProtectedIntent" },
+            { "const": "RequirementGraph" },
+            { "const": "XCAT" },
+            { "const": "K3" },
+            { "const": "Quality" },
+            { "const": "MassiveIntent" },
+            { "const": "Scholarly" },
+            { "const": "SearchSEO" }
+          ],
+          "items": false,
+          "minItems": 8,
+          "maxItems": 8
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provenance_id",
+        "source_asset_ids",
+        "method",
+        "epistemic_status",
+        "taint_labels",
+        "content_digest",
+        "authority_delta",
+        "note"
+      ],
+      "properties": {
+        "provenance_id": { "type": "string", "minLength": 1 },
+        "source_asset_ids": { "type": "array", "items": { "type": "string" } },
+        "method": { "type": "string" },
+        "epistemic_status": { "$ref": "#/$defs/epistemic" },
+        "taint_labels": {
+          "type": "array",
+          "contains": { "const": "UNTRUSTED_SOURCE" },
+          "items": { "type": "string" }
+        },
+        "content_digest": { "type": "string", "pattern": "^sha256:" },
+        "authority_delta": { "const": 0 },
+        "note": { "type": "string" }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "statement", "severity", "blocks_pass", "related_claim_ids"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "statement": { "type": "string", "minLength": 1 },
+        "severity": { "type": "string", "enum": ["BLOCKING", "ADVISORY"] },
+        "blocks_pass": { "type": "boolean" },
+        "related_claim_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "evidenceNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "claim",
+        "value",
+        "verdict",
+        "epistemic_status",
+        "confidence",
+        "method",
+        "asset_ids",
+        "gates_contract",
+        "provenance_id"
+      ],
+      "properties": {
+        "node_id": { "type": "string", "minLength": 1 },
+        "claim": { "type": "string", "minLength": 1 },
+        "value": { "type": "string" },
+        "verdict": { "$ref": "#/$defs/verdict" },
+        "epistemic_status": { "$ref": "#/$defs/epistemic" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "method": { "type": "string" },
+        "asset_ids": { "type": "array", "items": { "type": "string" } },
+        "gates_contract": { "type": "boolean" },
+        "provenance_id": { "type": "string" }
+      }
+    },
+    "evidenceEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["edge_id", "source_id", "target_id", "relation"],
+      "properties": {
+        "edge_id": { "type": "string" },
+        "source_id": { "type": "string" },
+        "target_id": { "type": "string" },
+        "relation": {
+          "type": "string",
+          "enum": ["informs", "locates", "compares", "contains", "contradicts"]
+        }
+      }
+    },
+    "evidenceGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["graph_id", "nodes", "edges"],
+      "properties": {
+        "graph_id": { "type": "string", "minLength": 1 },
+        "nodes": { "type": "array", "items": { "$ref": "#/$defs/evidenceNode" } },
+        "edges": { "type": "array", "items": { "$ref": "#/$defs/evidenceEdge" } }
+      }
+    },
+    "color": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hex", "share", "verdict", "epistemic_status", "method"],
+      "properties": {
+        "hex": { "type": "string", "pattern": "^#[0-9a-f]{6}$" },
+        "share": { "type": "number" },
+        "verdict": { "$ref": "#/$defs/verdict" },
+        "epistemic_status": { "$ref": "#/$defs/epistemic" },
+        "method": { "type": "string" }
+      }
+    },
+    "gridCell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["row", "col", "mean_brightness", "verdict"],
+      "properties": {
+        "row": { "type": "integer" },
+        "col": { "type": "integer" },
+        "mean_brightness": { "type": ["number", "null"] },
+        "verdict": { "$ref": "#/$defs/verdict" }
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "orientation",
+        "orientation_verdict",
+        "symmetry_score",
+        "symmetry_score_verdict",
+        "symmetry_label",
+        "symmetry_label_verdict",
+        "bias_suggestion",
+        "bias_verdict",
+        "method"
+      ],
+      "properties": {
+        "orientation": { "type": "string" },
+        "orientation_verdict": { "$ref": "#/$defs/verdict" },
+        "symmetry_score": { "type": ["number", "null"] },
+        "symmetry_score_verdict": { "$ref": "#/$defs/verdict" },
+        "symmetry_label": { "type": "string" },
+        "symmetry_label_verdict": { "$ref": "#/$defs/verdict" },
+        "bias_suggestion": { "type": "string" },
+        "bias_verdict": { "$ref": "#/$defs/verdict" },
+        "method": { "type": "string" }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projection_columns",
+        "projection_columns_verdict",
+        "semantic_columns_verdict",
+        "projection_rows",
+        "projection_rows_verdict",
+        "semantic_rows_verdict",
+        "gutters",
+        "row_gaps",
+        "gutter_verdict",
+        "method"
+      ],
+      "properties": {
+        "projection_columns": { "type": ["integer", "null"] },
+        "projection_columns_verdict": { "$ref": "#/$defs/verdict" },
+        "semantic_columns_verdict": { "$ref": "#/$defs/verdict" },
+        "projection_rows": { "type": ["integer", "null"] },
+        "projection_rows_verdict": { "$ref": "#/$defs/verdict" },
+        "semantic_rows_verdict": { "$ref": "#/$defs/verdict" },
+        "gutters": { "type": "array", "items": { "type": "number" } },
+        "row_gaps": { "type": "array", "items": { "type": "number" } },
+        "gutter_verdict": { "$ref": "#/$defs/verdict" },
+        "method": { "type": "string" }
+      }
+    },
+    "visualObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "object_id",
+        "class_label",
+        "class_verdict",
+        "bounds",
+        "area_share",
+        "bounds_verdict",
+        "method"
+      ],
+      "properties": {
+        "object_id": { "type": "string" },
+        "class_label": { "const": "UNKNOWN" },
+        "class_verdict": { "const": "UNKNOWN" },
+        "bounds": { "$ref": "#/$defs/bounds" },
+        "area_share": { "type": "number" },
+        "bounds_verdict": { "$ref": "#/$defs/verdict" },
+        "method": { "type": "string" }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relationship_id",
+        "subject_id",
+        "object_id",
+        "predicate",
+        "verdict",
+        "epistemic_status",
+        "method"
+      ],
+      "properties": {
+        "relationship_id": { "type": "string" },
+        "subject_id": { "type": "string" },
+        "object_id": { "type": "string" },
+        "predicate": {
+          "type": "string",
+          "enum": ["left-of", "right-of", "above", "below", "overlaps", "contains", "near"]
+        },
+        "verdict": { "$ref": "#/$defs/verdict" },
+        "epistemic_status": { "$ref": "#/$defs/epistemic" },
+        "method": { "type": "string" }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "band_count",
+        "band_count_verdict",
+        "coverage",
+        "coverage_verdict",
+        "density_suggestion",
+        "density_verdict",
+        "scale_ratios",
+        "scale_verdict",
+        "method"
+      ],
+      "properties": {
+        "band_count": { "type": "integer", "minimum": 0 },
+        "band_count_verdict": { "$ref": "#/$defs/verdict" },
+        "coverage": { "type": "number" },
+        "coverage_verdict": { "$ref": "#/$defs/verdict" },
+        "density_suggestion": { "type": "string" },
+        "density_verdict": { "const": "UNKNOWN" },
+        "scale_ratios": { "type": "array", "items": { "type": "number" } },
+        "scale_verdict": { "$ref": "#/$defs/verdict" },
+        "method": { "type": "string" }
+      }
+    },
+    "style": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind_suggestion",
+        "kind_verdict",
+        "lighting_suggestion",
+        "lighting_verdict",
+        "brightness_mean",
+        "brightness_verdict",
+        "edge_density",
+        "edge_verdict",
+        "palette_mood",
+        "palette_mood_verdict",
+        "method"
+      ],
+      "properties": {
+        "kind_suggestion": { "type": "string" },
+        "kind_verdict": { "const": "UNKNOWN" },
+        "lighting_suggestion": { "type": "string" },
+        "lighting_verdict": { "const": "UNKNOWN" },
+        "brightness_mean": { "type": ["number", "null"] },
+        "brightness_verdict": { "$ref": "#/$defs/verdict" },
+        "edge_density": { "type": ["number", "null"] },
+        "edge_verdict": { "$ref": "#/$defs/verdict" },
+        "palette_mood": { "type": "string" },
+        "palette_mood_verdict": { "const": "UNKNOWN" },
+        "method": { "type": "string" }
+      }
+    },
+    "hierarchy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "region_id",
+        "rank",
+        "reading_order",
+        "order_verdict",
+        "role_label",
+        "role_verdict",
+        "method"
+      ],
+      "properties": {
+        "item_id": { "type": "string" },
+        "region_id": { "type": "string" },
+        "rank": { "type": "integer" },
+        "reading_order": { "type": "integer" },
+        "order_verdict": { "$ref": "#/$defs/verdict" },
+        "role_label": { "const": "UNKNOWN" },
+        "role_verdict": { "const": "UNKNOWN" },
+        "method": { "type": "string" }
+      }
+    },
+    "ocr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "block_id",
+        "text",
+        "bounds",
+        "decoded",
+        "geometry_verdict",
+        "text_verdict",
+        "method",
+        "provenance"
+      ],
+      "properties": {
+        "block_id": { "type": "string" },
+        "text": { "type": "string" },
+        "bounds": { "anyOf": [{ "$ref": "#/$defs/bounds" }, { "type": "null" }] },
+        "decoded": { "type": "boolean" },
+        "geometry_verdict": { "$ref": "#/$defs/verdict" },
+        "text_verdict": { "const": "UNKNOWN" },
+        "method": { "type": "string" },
+        "provenance": { "const": "UNTRUSTED_SOURCE" }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_id",
+        "asset_id",
+        "kind",
+        "width",
+        "height",
+        "source_width",
+        "source_height",
+        "aspect_ratio",
+        "megapixels",
+        "file_name",
+        "mime_type",
+        "role",
+        "opaque_samples",
+        "colors",
+        "grid",
+        "composition",
+        "layout",
+        "objects",
+        "relationships",
+        "typography",
+        "style",
+        "hierarchy",
+        "ocr_blocks",
+        "uncertainties",
+        "provenance"
+      ],
+      "properties": {
+        "observation_id": { "type": "string" },
+        "asset_id": { "type": "string" },
+        "kind": { "const": "image" },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "source_width": { "type": "integer", "minimum": 1 },
+        "source_height": { "type": "integer", "minimum": 1 },
+        "aspect_ratio": { "type": "string" },
+        "megapixels": { "type": "number" },
+        "file_name": { "type": ["string", "null"] },
+        "mime_type": { "type": ["string", "null"] },
+        "role": { "type": "string" },
+        "opaque_samples": { "type": "integer", "minimum": 0 },
+        "colors": { "type": "array", "items": { "$ref": "#/$defs/color" } },
+        "grid": { "type": "array", "items": { "$ref": "#/$defs/gridCell" } },
+        "composition": { "$ref": "#/$defs/composition" },
+        "layout": { "$ref": "#/$defs/layout" },
+        "objects": { "type": "array", "items": { "$ref": "#/$defs/visualObject" } },
+        "relationships": { "type": "array", "items": { "$ref": "#/$defs/relationship" } },
+        "typography": { "$ref": "#/$defs/typography" },
+        "style": { "$ref": "#/$defs/style" },
+        "hierarchy": { "type": "array", "items": { "$ref": "#/$defs/hierarchy" } },
+        "ocr_blocks": { "type": "array", "items": { "$ref": "#/$defs/ocr" } },
+        "uncertainties": { "type": "array", "items": { "$ref": "#/$defs/uncertainty" } },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "left_asset_id",
+        "right_asset_id",
+        "byte_identical",
+        "byte_identity_verdict",
+        "same_dimensions",
+        "dimension_verdict",
+        "brightness_delta",
+        "brightness_delta_verdict",
+        "palette_distance",
+        "palette_distance_verdict",
+        "semantic_equivalence_verdict",
+        "method"
+      ],
+      "properties": {
+        "left_asset_id": { "type": "string" },
+        "right_asset_id": { "type": "string" },
+        "byte_identical": { "type": "boolean" },
+        "byte_identity_verdict": { "$ref": "#/$defs/verdict" },
+        "same_dimensions": { "type": "boolean" },
+        "dimension_verdict": { "$ref": "#/$defs/verdict" },
+        "brightness_delta": { "type": ["number", "null"] },
+        "brightness_delta_verdict": { "$ref": "#/$defs/verdict" },
+        "palette_distance": { "type": ["number", "null"] },
+        "palette_distance_verdict": { "$ref": "#/$defs/verdict" },
+        "semantic_equivalence_verdict": { "const": "UNKNOWN" },
+        "method": { "type": "string" }
+      }
+    }
+  }
+}
