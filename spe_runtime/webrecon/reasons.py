@@ -1,0 +1,28 @@
+"""Stable reason codes for the WebRecon acquisition and reconstruction boundary."""
+
+from __future__ import annotations
+
+from enum import Enum
+
+
+class ReasonCode(str, Enum):
+    """Policy and observation outcomes. These are not quality scores."""
+
+    URL_UNPARSEABLE = "WR_URL_UNPARSEABLE"
+    SCHEME_REFUSED = "WR_SCHEME_REFUSED"
+    HOST_NOT_ALLOWLISTED = "WR_HOST_NOT_ALLOWLISTED"
+    PRIVATE_HOST_REFUSED = "WR_PRIVATE_HOST_REFUSED"
+    CREDENTIALS_IN_URL = "WR_CREDENTIALS_IN_URL"
+    NETWORK_NOT_AUTHORIZED = "WR_NETWORK_NOT_AUTHORIZED"
+    CAPTURE_REQUIRED = "WR_CAPTURE_REQUIRED"
+    CAPTURE_TOO_LARGE = "WR_CAPTURE_TOO_LARGE"
+    AUTHORIZATION_INVALID = "WR_AUTHORIZATION_INVALID"
+    FORBIDDEN_PAYLOAD = "WR_FORBIDDEN_PAYLOAD"
+    SIDECAR_KEY_REFUSED = "WR_SIDECAR_KEY_REFUSED"
+    SIDECAR_INVALID = "WR_SIDECAR_INVALID"
+    EMPTY_DOCUMENT = "WR_EMPTY_DOCUMENT"
+    OBSERVATION_TRUNCATED = "WR_OBSERVATION_TRUNCATED"
+    CAPTURED_AT_INVALID = "WR_CAPTURED_AT_INVALID"
+
+    def to_dict(self) -> str:
+        return self.value
