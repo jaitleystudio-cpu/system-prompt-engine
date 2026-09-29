@@ -12,9 +12,30 @@ import json
 import re
 from typing import Any, Mapping
 
-from spe_runtime.k3.registry import DISPLAY_LABEL_PROTOCOL, DISPLAY_LABEL_XCAT
 from spe_runtime.xcat.models import CATEGORY_IDS
 from spe_runtime.xcat.router import route_mission_stage
+
+# Mirrors spe_runtime.k3.registry display maps. Tests lock Research/Analysis
+# to DISPLAY_LABEL_XCAT. Writing is receipt-only and is not a K3 xcat bridge.
+_DISPLAY_LABEL_XCAT = {
+    "Research": "CAT:C02",
+    "Analysis": "CAT:C06",
+}
+_DISPLAY_LABEL_PROTOCOL = {
+    "AI Assistant": "general",
+    "Writing": "writing_communication",
+    "Coding": "coding",
+    "Research": "research",
+    "Business": "business_strategy",
+    "Education": "education",
+    "Analysis": "data_statistics",
+    "Structured Data": "data_statistics",
+    "Creative": "creative_media",
+    "Multilingual": "translation_localization",
+    "Website / 3D": "ux_ui_web_design",
+    "Image": "image_generation",
+    "Video": "video_generation",
+}
 
 TWIN_VERSION = "xcat.auto.v1"
 EFFECT_PLAN_SENTINEL = "NO_EFFECT_PLAN"
@@ -116,8 +137,8 @@ def _protocol(category: Mapping[str, Any], display: str | None) -> str | None:
     raw = _strip(category.get("protocol_domain_id"))
     if raw is not None:
         return raw
-    if display is not None and display in DISPLAY_LABEL_PROTOCOL:
-        return DISPLAY_LABEL_PROTOCOL[display]
+    if display is not None and display in _DISPLAY_LABEL_PROTOCOL:
+        return _DISPLAY_LABEL_PROTOCOL[display]
     return None
 
 
@@ -212,8 +233,8 @@ def auto_route_task(
 
     if display == "Writing":
         return finish("CAT:C03", "ROUTED", "RECOVERED", ["AUTO_WRITING_BRIDGE"])
-    if display in DISPLAY_LABEL_XCAT:
-        primary = DISPLAY_LABEL_XCAT[display]
+    if display in _DISPLAY_LABEL_XCAT:
+        primary = _DISPLAY_LABEL_XCAT[display]
         status = "RECOVERED" if primary in RECOVERED_CATEGORY_IDS else "NOT_RECOVERED"
         return finish(primary, "ROUTED", status, ["DISPLAY_LABEL_XCAT"])
 

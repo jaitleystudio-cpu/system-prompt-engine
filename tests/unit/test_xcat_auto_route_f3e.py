@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from spe_runtime.k3.registry import DISPLAY_LABEL_XCAT
+from spe_runtime.k3.registry import DISPLAY_LABEL_PROTOCOL, DISPLAY_LABEL_XCAT
+from spe_runtime.xcat.auto_route import _DISPLAY_LABEL_PROTOCOL, _DISPLAY_LABEL_XCAT
 from spe_runtime.k3.selector import _digest, _public_task_for_digest, _resolve_category, select_prompt_techniques
 from spe_runtime.xcat.auto_route import EFFECT_PLAN_SENTINEL, auto_route_task
 from spe_runtime.xcat.router import route_mission_stage
@@ -22,6 +23,8 @@ def _route(**kwargs: object) -> dict:
 def test_display_bridges_match_k3_registry() -> None:
     assert DISPLAY_LABEL_XCAT["Research"] == "CAT:C02"
     assert DISPLAY_LABEL_XCAT["Analysis"] == "CAT:C06"
+    assert _DISPLAY_LABEL_XCAT == DISPLAY_LABEL_XCAT
+    assert _DISPLAY_LABEL_PROTOCOL == DISPLAY_LABEL_PROTOCOL
     assert "Writing" not in DISPLAY_LABEL_XCAT
     assert "AI Assistant" not in DISPLAY_LABEL_XCAT
 
