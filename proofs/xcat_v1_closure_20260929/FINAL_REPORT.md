@@ -1,107 +1,115 @@
-# SPE XCAT V1 CLOSURE REPORT
+# SPE XCAT V1 CLOSURE REPORT — Task 56B DOMAIN runtime
 
 ## IDENTITY
-- TASK: 56 — XCAT v1 CANONICAL 12-CATEGORY RUNTIME CLOSURE
+- TASK: 56B — XCAT v1 DOMAIN taxonomy + 12-category runtime closure
 - ROUTE: B (local Mac mini executor)
-- BASE BRANCH: cursor/spe-k3-effect-binding-20260929
-- BASE SHA: 04bc003ce358fc72279ce40cb96fa2990f8033c6
-- WORK BRANCH: cursor/spe-xcat-v1-closure-20260929
-- FINAL SHA: 06dcb59d76c195d564105adff6d6234fb3ed74aa (proof-pack custody commit; branch tip may include stamp commits)
+- BASE BRANCH: `cursor/spe-xcat-v1-closure-20260929` (required start after 56A)
+- BASE SHA: `fc0838da6222106e98df9aa96b2f3b4b5be93a42`
+- WORK BRANCH: `cursor/spe-xcat-v1-closure-20260929`
+- RATIFICATION COMMIT: `b208554`
+- DOMAIN RUNTIME COMMIT: `b07ecaa`
+- RUST/WASM/MUTATIONS COMMIT: `a2da6cb`
+- FINAL SHA: bf09fb21811e1436be688c10f94f6c2be989a445
 - DATE: 2026-09-29 Asia/Calcutta
+- PR: **#56 draft — do not merge**
 
 ## FINAL
-**XCAT_CONTRACT_RECOVERY_HOLD_C04_C05_C08_C09_C10_C11_C12**
+**XCAT_V1_DOMAIN_RUNTIME_CLOSURE_PASS** (evidence-scoped)
 
-Truth-preserving outcome. Phase B not entered. No invented category semantics.
+Prior Task 56 HOLD / Task 56A TAXONOMY_AUTHORITY_HOLD remain truthful historical records. They are not rewritten. DOMAIN authority comes from founder ratification 2026-09-29 — **not** from claiming 56A found approval.
 
-## CONTRACT RECOVERY (C01–C12)
+## TAXONOMY / REGISTRY
+- Taxonomy: **DOMAIN**
+- Version: old=`1` → new=`2`
+- Normative names: C01 Advise/Plan/Decide … C12 Creative/Story/Roleplay (`XCAT_V1_CANONICAL_REGISTRY.md`)
+- Legacy v1 names: migration metadata only; `UNKNOWN != SAFE MIGRATION`
+- Reject: `LEGACY_TAXONOMY_UNMIGRATED`
 
-| ID | Name | Status | Contract source (primary) | Source SHA |
-|----|------|--------|---------------------------|------------|
-| CAT:C01 | Decide | RECOVERED | sprint2 doc + c01_decide engine/validate | a8078e8 / 43281c8 |
-| CAT:C02 | Research | RECOVERED | sprint2 doc + c02_research engine/validate | a8078e8 |
-| CAT:C03 | Communicate | RECOVERED | sprint2 doc + c03_communicate engine/validate | a8078e8 / 43281c8 |
-| CAT:C04 | Plan | NOT_RECOVERED | name-only registry | 6c7fa1d |
-| CAT:C05 | Verify | NOT_RECOVERED | name-only registry | 6c7fa1d |
-| CAT:C06 | Analyze | RECOVERED | sprint2 doc + c06_analyze engine/validate | a8078e8 / 43281c8 |
-| CAT:C07 | Execute | RECOVERED | sprint3 doc + c07_execute + AuthorityGrant | f8d7bf2 / 967d2c9 |
-| CAT:C08 | Recover | NOT_RECOVERED | name-only registry | 6c7fa1d |
-| CAT:C09 | Privacy | NOT_RECOVERED | name-only registry; stub schema | 6c7fa1d |
-| CAT:C10 | Authority | NOT_RECOVERED | name-only registry; stub schema | 6c7fa1d |
-| CAT:C11 | Provenance | NOT_RECOVERED | name-only registry; stub schema | 6c7fa1d |
-| CAT:C12 | Capability | NOT_RECOVERED | name-only registry; stub schema | 6c7fa1d |
-
-RECOVERED count: 5  
-NOT_RECOVERED count: 7  
-PARTIAL count: 0
-
-## SOURCES SEARCHED
-- Current tree categories, xcat package, K3 registry/selector, schemas, SPE-SPEC/CHANGELOG
-- docs/implementation/xcat-core-s1.md, xcat-c02-c06-c01-c03-s2.md, xcat-c07-authority-s3.md
-- data/category_registry_v1.json; empty xcat fixtures/mutations
-- git history: spe_runtime/categories; -S CAT:C04..C12; commits a6b7e57, 3f0847d, 931128b, 6c7fa1d, 98bc160, 2d0a2d3, 4b704a4
-- Historical G1 pack @ c700494: G1_FINAL_REPORT, ring0_gap_matrix, module_disposition, semantic_writer_map, RING0_WORKING_CONTRACT
-- Product category-protocol design (2026-09-24) — classified non-XCAT
-- Negative: no historical c04/c05/c08–c12 engine paths ever existed
-
-## CONFLICTS
-See CONTRACT_CONFLICTS.md. Material: C04↔K3 CognitivePlan; C05↔K2 verify; C08↔K7 recovery_plan; C09↔K4 privacy; C10↔K4 authority; C11↔C02/K1 provenance; C12↔K3/K7/providers; display-label≠XCAT; product-protocol≠XCAT.
-
-## REGISTRY
-v1 frozen IDs C01–C12 names only. No C13+. category_registry.schema.json STUB.
-
-## RUNTIME
-Phase B not run. Existing engines C01/C02/C03/C06/C07 unchanged. No new category modules.
-
-## OWNERSHIP / SINGLE WRITER
-Preserved for recovered categories. Missing categories would collide with Ring-0 owners if invented — HOLD prevents duplicate writers.
+## CONTRACT / PROTOCOLS
+- Payload IR list + anti-laundering: `CATEGORY_PROTOCOLS.md`
+- Ownership matrix: `CATEGORY_OWNERSHIP.md` (`duplicate_writers=0`)
+- CATEGORY ≠ KERNEL OWNER preserved
+- C08/C10/C11 proof obligations: global invariants only (no new oracles)
 
 ## ROUTING
-K3 UNIMPLEMENTED_XCAT → NO_SELECTION preserved. No LLM classifier added. No prose-driven category invention.
+- Deterministic mission-stage `CategoryRouterIR`
+- Missing evidence → `NEEDS_DISAMBIGUATION`
+- No LLM classifier
+- No default to C01
+
+## RG BINDING / K3 / EFFECT
+- Chain: ProtectedIntent → RG → `category_ref` → XCAT → K3 (`REQUIREMENT_GRAPH_BINDING.md`)
+- No UI masquerade
+- `IMPLEMENTED_XCAT = C01–C12`; `UNIMPLEMENTED_XCAT = ∅`
+- Technique registry unchanged (55/55R freeze)
+- Effect mutants **11/11** killed; **NO EFFECT PLAN → NO FINAL PROMPT**
+
+## VECTORS / ADVERSARIAL / MUTATION / PARITY
+| Metric | Value |
+|--------|-------|
+| CATEGORY_VECTORS normal | 60 |
+| CATEGORY_VECTORS adversarial | 56 |
+| Mutations M1–M16 | 16/16 killed |
+| Parity Python↔Rust↔WASM | 0 / 0 / 0 mismatches |
 
 ## PYTHON / RUST / WASM
-Not modified for new categories. Parity / new vectors / WASM rebuild: N/A (HOLD).
+| Surface | Result |
+|---------|--------|
+| pytest (domain+vectors+mutations+parity+k3_runtime+k3_effect) | **148 passed** |
+| `cargo test` (`spe-core-rs`) | **41 passed**, 0 failed (observed) |
+| WASM sha256 | `623b7ac4323f63bbb5192b72ca7f442567df31d7ae7680f80c20f8e044ff81d4` |
+| WASM bytes / imports | 1022578 / **0** |
+| Historical WASM | `48ad95f5…` — does **not** prove XCAT (`WASM_PROVENANCE.md`) |
 
-## VECTORS / PARITY / MUTATION
-N/A (HOLD). Prior K3 A07–A13 remain the lawful fail-closed behavior for unimplemented IDs.
+## PERFORMANCE (microbench, 80 iters, ms)
+| Scenario | median | p95 | max |
+|----------|-------:|----:|----:|
+| single-category dispatch | 0.0162 | 0.0210 | 0.0225 |
+| multi-handoff | 0.0537 | 0.0685 | 0.0945 |
+| C04 | 0.0151 | 0.0170 | 0.0205 |
+| C09 | 0.0168 | 0.0212 | 0.0230 |
+| C10 | 0.0149 | 0.0159 | 0.0205 |
+| constraint-heavy | 0.1162 | 0.1415 | 0.2855 |
+| legacy reject | 0.0005 | 0.0006 | 0.0006 |
+| XCAT→K3 route | 0.0046 | 0.0059 | 0.0066 |
 
 ## INVARIANTS X01–X10
-Preserved as recovered; not weakened. No UNKNOWN→PASS path introduced.
+Preserved; mutant suite kills weaken/launder paths.
 
 ## SECURITY GATES
-No implementation changes that could create AUTHORITY_SELF_ESCALATION, CAPABILITY_TO_AUTHORITY, REC→EXEC, EXEC→VERIFIED, laundering, constraint weakening, provenance loss, or network. HOLD = zero new attack surface from guessed protocols.
+No AUTHORITY_SELF_ESCALATION, CAPABILITY_TO_AUTHORITY, REC→EXEC, EXEC→VERIFIED, UNKNOWN→PASS, constraint weakening, provenance loss, or network introduced by DOMAIN engines.
 
-## RG BINDING / K3 / EFFECT REGRESSION
-Untouched. Task 55/55R effect mutants not re-run as part of HOLD (no semantic change). IMPLEMENTED_XCAT set not expanded.
-
-## PERFORMANCE
-N/A (HOLD).
-
-## FULL PYTHON / OFFICIAL BUILD / WEB REGRESSION
-Not required for HOLD beyond custody verification. Working tree at base was clean; only proof artifacts added.
-
-## FILES CHANGED
-- proofs/xcat_v1_closure_20260929/XCAT_CONTRACT.md (new)
-- proofs/xcat_v1_closure_20260929/CONTRACT_SOURCE_INDEX.md (new)
-- proofs/xcat_v1_closure_20260929/CONTRACT_CONFLICTS.md (new)
-- proofs/xcat_v1_closure_20260929/FINAL_REPORT.md (new)
+## REGRESSION
+See `REGRESSION_RESULTS.md`. Filled: focused 148 pytest + rust crate tests. **TBD:** full-repo pytest, web/Playwright, clean independent WASM rebuild in this turn.
 
 ## AUDIT DELTA
-+custody proof pack documenting unrecovered C04/C05/C08–C12. No spe_runtime/apps/portable semantic delta.
+`MASTER_AUDIT_DELTA.md` — promote only proven XCAT DOMAIN rows. Do **not** promote Quality Delta / Plan B / VALIDATE_ONLY / UX / SEO / hosting.
 
 ## DEPLOYMENT GATE
-HOSTING FORBIDDEN. No deploy/DNS. deployment-safety-gate not weakened.
+**HOSTING FORBIDDEN.** No deploy/DNS. Do not start Task 57.
 
-## PR
-DRAFT PR to be opened (base cursor/spe-k3-effect-binding-20260929) for custody evidence only — no guessed semantics. Do not merge.
+## FILES IN THIS PROOF PACK (56B docs)
+- `XCAT_V1_CANONICAL_REGISTRY.md`
+- `XCAT_VERSION_MIGRATION.md`
+- `CATEGORY_ROUTING.md`
+- `CATEGORY_PROTOCOLS.md`
+- `CATEGORY_OWNERSHIP.md`
+- `REQUIREMENT_GRAPH_BINDING.md`
+- `K3_INTEGRATION.md`
+- `PROMPT_EFFECT_REGRESSION.md`
+- `ADVERSARIAL_RESULTS.md`
+- `MUTATION_RESULTS.md`
+- `PARITY_RESULTS.md`
+- `PYTHON_RESULTS.md`
+- `RUST_RESULTS.md`
+- `WASM_RESULTS.md`
+- `WASM_PROVENANCE.md`
+- `DETERMINISM.md`
+- `PERFORMANCE.md`
+- `REGRESSION_RESULTS.md`
+- `MASTER_AUDIT_DELTA.md`
+- `FINAL_REPORT.md` (this file)
+- Appendices on `XCAT_CONTRACT.md`, `CONTRACT_CONFLICTS.md`, `CONTRACT_SOURCE_INDEX.md`, `TAXONOMY_RING0_COLLISION_ANALYSIS.md`
 
 ## ABSOLUTE STOP
-No Quality Delta / Plan B / VALIDATE_ONLY / UX / SEO / deployment continuation.
-
----
-
-## CORRECTION NOTE — Task 56A (2026-09-29)
-
-Task 56 HOLD above remains valid for **unrecovered category protocols** under the current registry names.
-
-Task 56A additionally establishes: the **normative authority of the C01–C12 name table itself** is unresolved (`XCAT_TAXONOMY_AUTHORITY_HOLD`). Primary external package `SPE_OMEGA_V2_4_1_FULL_FINAL_ARCHITECTURE.pdf` was inspected (including attachments); it does **not** contain the alleged domain C04/C05/C08–C12 taxonomy bytes. Claimed master file `SPE_OMEGA_V2_1_MASTER_ARCHITECTURE_DESIGN.md` was **not recovered**. See `TAXONOMY_*.md` in this directory. No runtime changes.
+No merge. No hosting. No Task 57. No Quality Delta / Plan B continuation under this report.

@@ -75,3 +75,25 @@ This supports the **CATEGORY ≠ KERNEL OWNER** law and explains why inventing C
 ## Do-not-promote list
 
 Do **not** treat coherence preference as ratification. Founder must still freeze one taxonomy (or supply master-design bytes that were already frozen).
+
+---
+
+## APPENDIX — Task 56B DOMAIN ratification effect (2026-09-29)
+
+56A concluded domain names were conceptually cleaner **if** payload-only, but **not proven as authority**. That remains historically true for 56A.
+
+**Update:** founder ratification (`XCAT_V1_DOMAIN_TAXONOMY_FOUNDER_RATIFIED`) freezes DOMAIN names. Collision screen for **legacy** names still stands as why those names must not return as canonical writers.
+
+DOMAIN collision screen (payload-only engines):
+
+| ID | DOMAIN name | Duplicate-writer risk vs Ring-0 |
+|----|-------------|----------------------------------|
+| C04 | Translate / Localize | LOW if payload-only (observed) |
+| C05 | Learn | LOW if payload-only |
+| C08 | Business | LOW if payload-only |
+| C09 | Code | LOW if payload-only (≠ Privacy) |
+| C10 | Multimedia | LOW if payload-only (≠ Authority) |
+| C11 | Career | LOW if payload-only |
+| C12 | Creative | LOW if payload-only |
+
+Enforcement: `apply_category_payload` + ownership matrix + mutations M11/M14/M16. `duplicate_writers=0` required and checked in 56B proofs.

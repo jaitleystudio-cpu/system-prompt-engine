@@ -64,3 +64,24 @@ Work branch: `cursor/spe-xcat-v1-closure-20260929`
 ## Negative evidence (important)
 
 `git rev-list --all --objects` found **no** historical paths matching `c04_*`, `c05_*`, `c08_*`…`c12_*` category engines, nor `xcat*contract` protocol docs defining those seven categories' I/O.
+
+---
+
+## APPENDIX — Task 56B DOMAIN sources (2026-09-29)
+
+Additional normative sources after founder ratification (not claimed as 56A findings):
+
+| Source | Role |
+|--------|------|
+| `FOUNDER_XCAT_V1_RATIFICATION.md` | Prospective DOMAIN freeze receipt |
+| `data/category_registry_v1.json` v2 DOMAIN | Canonical ID+name table |
+| `spe_runtime/categories/payloads.py` | Payload IR field sets |
+| `spe_runtime/categories/apply.py` | Ownership + anti-laundering apply gate |
+| `spe_runtime/categories/c04_translate` … `c12_creative` | DOMAIN engines |
+| `spe_runtime/xcat/router.py` | Mission-stage CategoryRouterIR |
+| `spe_runtime/xcat/migration.py` | Legacy reject |
+| `portable/spe-core-rs/src/xcat.rs` | Rust/WASM parity |
+| `CATEGORY_VECTORS.json` | 60 normal / 56 adversarial |
+| Commits | `b208554` ratification; `b07ecaa` domain runtime; `a2da6cb` rust/wasm/mutations |
+
+Negative: 56A still did not recover DOMAIN bytes from the PDF package; ratification is explicit founder act, not PDF discovery.

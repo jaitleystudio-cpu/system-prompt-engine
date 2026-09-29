@@ -75,3 +75,23 @@ Conflicts below are **documented, not silently resolved into invented XCAT engin
 ## Unresolvable without new founder freeze
 
 All conflicts C2–C8 require an explicit normative XCAT protocol (or an explicit “category invokes kernel X as read-only projector” contract) before implementation. None was found in tree or history.
+
+---
+
+## APPENDIX — Task 56B DOMAIN resolution (2026-09-29)
+
+Task 56A / early Task 56 conflicts C1–C8 were correctly **HOLD** under legacy registry names (Plan/Verify/Recover/Privacy/Authority/Provenance/Capability).
+
+**Resolution path (not a silent 56A approval):** founder ratified DOMAIN taxonomy on 2026-09-29. Collision English names are superseded:
+
+| Legacy conflict | DOMAIN resolution |
+|-----------------|-------------------|
+| C04 Plan vs K3 CognitivePlan | C04 = Translate / Localize; CognitivePlan remains K3 |
+| C05 Verify vs K2 | C05 = Learn; verification remains K2 |
+| C08 Recover vs K7 | C08 = Business; recovery remains K7 |
+| C09 Privacy vs K4 | C09 = Code; privacy remains K4 |
+| C10 Authority vs K4 | C10 = Multimedia; authority remains K4 |
+| C11 Provenance vs C02/K1 | C11 = Career; provenance writers unchanged |
+| C12 Capability vs K3/K7 | C12 = Creative; capability registries unchanged |
+
+CATEGORY ≠ KERNEL OWNER preserved. `duplicate_writers=0`. Legacy payloads → migrate or `LEGACY_TAXONOMY_UNMIGRATED`.

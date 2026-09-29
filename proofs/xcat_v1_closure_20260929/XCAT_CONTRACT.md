@@ -257,3 +257,25 @@ See `CONTRACT_CONFLICTS.md` for full table. Material unresolved conflicts all in
 Because C04, C05, C08, C09, C10, C11, C12 are **NOT_RECOVERED**, Phase B (implementation, Rust/WASM port, mutant corpus expansion, K3 IMPLEMENTED_XCAT expansion) is **FORBIDDEN**.
 
 Outcome: **XCAT_CONTRACT_RECOVERY_HOLD_C04_C05_C08_C09_C10_C11_C12** (truth-preserving success).
+
+---
+
+## APPENDIX — Task 56B DOMAIN resolution (2026-09-29)
+
+**Does not rewrite** the Task 56 HOLD body above. Task 56A did **not** approve DOMAIN; approval is the separate founder ratification (`FOUNDER_XCAT_V1_RATIFICATION.md`, commit `b208554`).
+
+| Field | Value |
+|-------|-------|
+| 56B base SHA | `fc0838da6222106e98df9aa96b2f3b4b5be93a42` |
+| Taxonomy | DOMAIN |
+| Registry version | old=`1` → new=`2` |
+| Normative names | See `XCAT_V1_CANONICAL_REGISTRY.md` |
+| Engines | C01–C12 DOMAIN specialty modules present |
+| K3 | `IMPLEMENTED_XCAT=C01–C12`; technique/effect freeze retained |
+| Mutations | M1–M16 killed |
+| Parity | Python↔Rust↔WASM = 0 mismatches |
+| WASM | `623b7ac4…` (1022578 B, imports=0); historical `48ad95f5…` does not prove XCAT |
+| PR | #56 draft — do not merge |
+| Hosting | FORBIDDEN |
+
+Legacy v1 names remain **migration metadata only**. Phase B DOMAIN runtime is authorized by founder ratification + this appendix, not by inventing protocols under the old HOLD names.
