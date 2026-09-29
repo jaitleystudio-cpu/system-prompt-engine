@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/spe_benchmark_dataset.schema.json",
+  "title": "SpeBenchmarkDataset",
+  "description": "Header for the frozen SPE benchmark dataset. Contains no scores.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_id",
+    "description",
+    "cases_file",
+    "label_policy",
+    "measurement_default",
+    "missing_measurement_policy",
+    "pass_requires",
+    "network",
+    "provider_calls",
+    "arms",
+    "measurements"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "spe_benchmark_dataset.v1"
+    },
+    "dataset_id": {
+      "const": "spe-benchmark-qualification-v1"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cases_file": {
+      "const": "cases.jsonl"
+    },
+    "label_policy": {
+      "const": "UNLABELED_FIXTURES_ONLY"
+    },
+    "measurement_default": {
+      "const": "UNKNOWN"
+    },
+    "missing_measurement_policy": {
+      "const": "Stay UNKNOWN. Never infer PASS."
+    },
+    "pass_requires": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        {
+          "const": "evidence_ref"
+        },
+        {
+          "const": "method"
+        },
+        {
+          "const": "measured_at"
+        }
+      ],
+      "items": false
+    },
+    "network": {
+      "const": "NONE"
+    },
+    "provider_calls": {
+      "const": 0
+    },
+    "arms": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "description"
+          ],
+          "properties": {
+            "id": {
+              "const": "RAW"
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "description"
+          ],
+          "properties": {
+            "id": {
+              "const": "SPE"
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ],
+      "items": false
+    },
+    "measurements": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "prefixItems": [
+        {
+          "const": "constraint_preservation"
+        },
+        {
+          "const": "intent_preservation"
+        },
+        {
+          "const": "unknown_preservation"
+        },
+        {
+          "const": "category_accuracy"
+        },
+        {
+          "const": "repair_effectiveness"
+        },
+        {
+          "const": "unsupported_claim_detection"
+        },
+        {
+          "const": "provider_portability"
+        },
+        {
+          "const": "large_input_preservation"
+        },
+        {
+          "const": "grounding_fidelity"
+        },
+        {
+          "const": "latency"
+        },
+        {
+          "const": "browser_qualification"
+        },
+        {
+          "const": "human_blinded_evaluation"
+        }
+      ],
+      "items": false
+    }
+  }
+}

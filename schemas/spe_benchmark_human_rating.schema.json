@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/spe_benchmark_human_rating.schema.json",
+  "title": "SpeBenchmarkHumanRating",
+  "description": "One imported human or blinded rating row. example_only rows are format samples and are rejected at import. Importing a row does not set the case measurement status to PASS.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "arm_id",
+    "rater_id",
+    "blinded",
+    "rating"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "spe_benchmark_human_rating.v1"
+    },
+    "example_only": {
+      "const": true
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^sbq-[a-z0-9-]{1,64}$"
+    },
+    "arm_id": {
+      "enum": [
+        "RAW",
+        "SPE"
+      ]
+    },
+    "rater_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "blinded": {
+      "type": "boolean"
+    },
+    "rating": {
+      "enum": [
+        "UNKNOWN",
+        "PASS",
+        "FAIL",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "evidence_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "method": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "rated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "rating": {
+            "const": "UNKNOWN"
+          }
+        },
+        "required": [
+          "rating"
+        ]
+      },
+      "then": {
+        "properties": {
+          "evidence_ref": {
+            "type": "null"
+          },
+          "method": {
+            "type": "null"
+          },
+          "rated_at": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "rating": {
+            "enum": [
+              "PASS",
+              "FAIL"
+            ]
+          }
+        },
+        "required": [
+          "rating"
+        ]
+      },
+      "then": {
+        "properties": {
+          "blinded": {
+            "const": true
+          },
+          "evidence_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "method": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rated_at": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+          }
+        },
+        "required": [
+          "evidence_ref",
+          "method",
+          "rated_at"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "rating": {
+            "const": "NOT_APPLICABLE"
+          }
+        },
+        "required": [
+          "rating"
+        ]
+      },
+      "then": {
+        "properties": {
+          "notes": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "notes"
+        ]
+      }
+    }
+  ]
+}

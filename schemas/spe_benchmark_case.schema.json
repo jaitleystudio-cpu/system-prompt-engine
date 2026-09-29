@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/spe_benchmark_case.schema.json",
+  "title": "SpeBenchmarkCase",
+  "description": "Unlabeled frozen SPE benchmark case. No verdict is stored. Eligible measurements name a future probe, not a PASS.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "schema_version",
+    "frozen",
+    "label_status",
+    "eligible_measurements",
+    "raw_prompt",
+    "constraints",
+    "intent_summary",
+    "declared_unknowns",
+    "probe_notes"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^sbq-[a-z0-9-]{1,64}$"
+    },
+    "schema_version": {
+      "const": "spe_benchmark_case.v1"
+    },
+    "frozen": {
+      "const": true
+    },
+    "label_status": {
+      "const": "UNLABELED"
+    },
+    "eligible_measurements": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "constraint_preservation",
+          "intent_preservation",
+          "unknown_preservation",
+          "category_accuracy",
+          "repair_effectiveness",
+          "unsupported_claim_detection",
+          "provider_portability",
+          "large_input_preservation",
+          "grounding_fidelity",
+          "latency",
+          "browser_qualification",
+          "human_blinded_evaluation"
+        ]
+      }
+    },
+    "raw_prompt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "intent_summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "declared_unknowns": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "probe_notes": {
+      "const": "Unlabeled fixture. No verdict is stored."
+    },
+    "input_markers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^fixture-source://"
+      }
+    },
+    "provider_slots": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^SLOT_[A-Z0-9_]+$"
+      }
+    },
+    "category_probe": {
+      "const": "UNLABELED"
+    },
+    "repair_input": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
