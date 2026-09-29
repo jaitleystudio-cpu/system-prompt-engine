@@ -61,6 +61,38 @@ html[data-theme="light"] ::selection {
   background: #3d5a9a;
   color: #f4f1ea;
 }
+/* ——— Global RTL & Unicode Foundations ——— */
+html[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+html[dir="rtl"] .spe-nav-links {
+  margin-left: 0;
+  margin-right: auto;
+}
+html[dir="rtl"] .nav-description {
+  border-left: 0;
+  border-right: 1px solid var(--line);
+  padding-left: 0;
+  padding-right: 22px;
+}
+html[dir="rtl"] .studio-output {
+  border-left: 0;
+  border-right: 1px solid #8798b638;
+}
+html[dir="rtl"] .spe-theme-toggle {
+  margin-left: 0;
+  margin-right: auto;
+}
+html[dir="rtl"] .hero-start span,
+html[dir="rtl"] .spe-build span,
+html[dir="rtl"] .spe-nav-cta span {
+  transform: scaleX(-1);
+  display: inline-block;
+}
+bdi {
+  unicode-bidi: isolate;
+}
 * {
   box-sizing: border-box;
 }

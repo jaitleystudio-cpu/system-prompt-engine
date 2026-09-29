@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { applyHreflangTags } from "@spe/web-runtime";
 import {
   absoluteUrl,
   jsonLdCapabilitiesFaq,
@@ -54,6 +55,7 @@ export function SeoHead({ view }: { view: AppView }) {
     document.title = meta.title;
     upsertMeta("name", "description", meta.description);
     upsertLink("canonical", url);
+    applyHreflangTags(document.head, url);
     upsertMeta("property", "og:type", "website");
     upsertMeta("property", "og:site_name", "SPE — System Prompt Engine");
     upsertMeta("property", "og:title", meta.title);
