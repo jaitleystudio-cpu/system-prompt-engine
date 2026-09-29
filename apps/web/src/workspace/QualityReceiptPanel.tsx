@@ -1,17 +1,14 @@
-/**
- * Displays kernel quality words. It does not calculate them.
- */
-type QualityReceiptView = {
-  validation?: string | null;
-  disposition?: string | null;
-  proofClass?: string | null;
-};
+import { receiptWords } from "../engine/quality-request.mjs";
 
 export function QualityReceiptPanel({
   receipt,
   fallback,
 }: {
-  receipt: QualityReceiptView | null;
+  receipt: {
+    validation?: string | null;
+    disposition?: string | null;
+    proofClass?: string | null;
+  } | null;
   fallback: boolean;
 }) {
   if (fallback) {
@@ -26,9 +23,7 @@ export function QualityReceiptPanel({
     );
   }
   if (!receipt) return null;
-  const words = [receipt.disposition, receipt.validation, receipt.proofClass].filter(
-    (item): item is string => typeof item === "string" && item.length > 0,
-  );
+  const words = receiptWords(receipt);
   return (
     <aside className="spe-quality-receipt" aria-label="Quality receipt">
       <h2>Quality receipt</h2>

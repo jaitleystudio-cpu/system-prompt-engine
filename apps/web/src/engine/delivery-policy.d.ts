@@ -17,3 +17,10 @@ export function decideDelivery(event: {
     receipt?: { verdict?: string };
   };
 }): DeliveryDecision;
+
+export function deliveryForBrief(): DeliveryDecision;
+export function deliveryForEngineDown(): DeliveryDecision;
+export function deliveryForK3Down(): DeliveryDecision;
+export function deliveryForQualityMiss(): DeliveryDecision;
+export function deliveryForReceipt(receipt: unknown): DeliveryDecision;
+export function usesRepairedPrompt(decision: DeliveryDecision): boolean;

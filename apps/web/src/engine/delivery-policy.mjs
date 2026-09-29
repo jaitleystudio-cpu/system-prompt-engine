@@ -3,6 +3,30 @@
  * Terminal names are routing labels. Semantic words come from the kernel receipt.
  */
 
+export function deliveryForBrief() {
+  return decideDelivery({ kind: "prompt_brief", hasCanonical: false });
+}
+
+export function deliveryForEngineDown() {
+  return decideDelivery({ kind: "engine_unavailable", hasCanonical: false });
+}
+
+export function deliveryForK3Down() {
+  return decideDelivery({ kind: "k3_unavailable", hasCanonical: false });
+}
+
+export function deliveryForQualityMiss() {
+  return decideDelivery({ kind: "quality_unavailable", hasCanonical: true });
+}
+
+export function deliveryForReceipt(receipt) {
+  return decideDelivery({ kind: "quality_receipt", hasCanonical: true, receipt });
+}
+
+export function usesRepairedPrompt(decision) {
+  return Boolean(decision && decision.terminal === "RECONSTRUCTED_PROMPT" && decision.repairedPrompt);
+}
+
 export function decideDelivery(event) {
   const kind = event && event.kind;
   const hasCanonical = event && event.hasCanonical === true;

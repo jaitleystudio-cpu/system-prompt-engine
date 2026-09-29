@@ -7,7 +7,15 @@ import {
   K3EffectUnavailableError,
 } from "./engine/k3Transport";
 import { requestQualityReceipt } from "./engine/qualityTransport";
-import { decideDelivery } from "./engine/delivery-policy.mjs";
+import {
+  deliveryForBrief,
+  deliveryForEngineDown,
+  deliveryForK3Down,
+  deliveryForQualityMiss,
+  deliveryForReceipt,
+  usesRepairedPrompt,
+} from "./engine/delivery-policy.mjs";
+import { fromK3QualityRequest } from "./engine/quality-request.mjs";
 import { createRawRequestCustody, renderSafeFallbackPrompt } from "./engine/core-b.mjs";
 import { QualityReceiptPanel } from "./workspace/QualityReceiptPanel";
 import type {
@@ -534,31 +542,14 @@ export default function App() {
           });
           if (requestRevision !== revision.current) return;
           setArtifact(spe);
-          const qualityOut = await requestQualityReceipt(client, {
-            op: "from_k3",
-            k3_output: k3.rawOutput,
-            compiled_prompt: prompt.finalPrompt,
-            mode: "VALIDATE_ONLY",
-          });
+          const qualityOut = await requestQualityReceipt(
+            client,
+            fromK3QualityRequest(k3.rawOutput, prompt.finalPrompt),
+          );
           const decision = qualityOut
-            ? decideDelivery({
-                kind: "quality_receipt",
-                hasCanonical: true,
-                receipt: qualityOut as {
-                  reconstruction?: {
-                    kept?: string;
-                    plan?: { disposition?: string };
-                    kept_subject?: { compiled_prompt?: string };
-                  };
-                  receipt?: { verdict?: string; proof_class?: string };
-                  quality_delta?: { disposition?: string };
-                },
-              })
-            : decideDelivery({ kind: "quality_unavailable", hasCanonical: true });
-          if (
-            decision.terminal === "RECONSTRUCTED_PROMPT" &&
-            decision.repairedPrompt
-          ) {
+            ? deliveryForReceipt(qualityOut)
+            : deliveryForQualityMiss();
+          if (usesRepairedPrompt(decision) && decision.repairedPrompt) {
             setRendered({ ...prompt, finalPrompt: decision.repairedPrompt });
           }
           const receiptRecord = (qualityOut ?? {}) as {
@@ -586,15 +577,12 @@ export default function App() {
         }
       } catch (err) {
         if (requestRevision !== revision.current) return;
-        const brief = err instanceof PromptBriefError;
-        const decision = decideDelivery({
-          kind: brief
-            ? "prompt_brief"
+        const decision =
+          err instanceof PromptBriefError
+            ? deliveryForBrief()
             : err instanceof K3EffectUnavailableError
-              ? "k3_unavailable"
-              : "engine_unavailable",
-          hasCanonical: false,
-        });
+              ? deliveryForK3Down()
+              : deliveryForEngineDown();
         if (!(err instanceof PromptBriefError)) {
           clientRef.current?.terminate();
           clientRef.current = null;
@@ -1032,7 +1020,7 @@ export default function App() {
             </div>
             {error && <p role="alert">{error.message}</p>}
             {safeFallback && (
-              <section className="spe-create-result" aria-label="Safe fallback prompt">
+              <section className="spe-create-result" aria-label="Safe fallback">
                 <QualityReceiptPanel receipt={null} fallback />
                 <pre tabIndex={0}>{safeFallback.prompt}</pre>
                 <button

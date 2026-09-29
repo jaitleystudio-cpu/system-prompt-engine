@@ -12,7 +12,7 @@ const panel = readFileSync(
 );
 
 assert.match(app, /requestQualityReceipt\(/);
-assert.match(app, /k3_output: k3\.rawOutput/);
+assert.match(app, /fromK3QualityRequest\(k3\.rawOutput/);
 assert.equal(app.includes("disposition === \"IMPROVED\" ?"), false);
 assert.equal(/function\s+scoreQuality/.test(app), false);
 assert.equal(decideDelivery({ kind: "engine_unavailable", hasCanonical: false }).terminal, "SAFE_FALLBACK_PROMPT");
