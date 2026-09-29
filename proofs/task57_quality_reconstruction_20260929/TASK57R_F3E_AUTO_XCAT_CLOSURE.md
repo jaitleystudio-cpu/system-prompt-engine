@@ -1,7 +1,8 @@
 # Task57R-F3E AUTO XCAT closure
 
 **Base SHA:** `83c354f51af1c4a967811ed03284b4e539925e55`
-**Final SHA:** recorded after the closure commit
+**Implementation commit:** `7e9e104c118d146272ae5c4c784306f54dbd11c6`
+**Final SHA:** branch tip that records this line
 **Branch:** `cursor/spe-quality-delta-planb-validate-only-20260929`
 **PR:** #57 draft, not merged
 **Disposition:** PASS
