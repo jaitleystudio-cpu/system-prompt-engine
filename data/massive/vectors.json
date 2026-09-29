@@ -1,0 +1,302 @@
+{
+  "sha256": {
+    "": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "abc": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "a b": "9507017c6d887511a5a6ac28ea7e3a438882576e1bd76fe3df27a336f49c263b"
+  },
+  "chain": [
+    {
+      "text": "abc",
+      "sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+      "chain": "4f8b42c22dd3729b519ba6f68d2da7cc5b2d606d05daed5ad5128cc03e6c6358"
+    },
+    {
+      "text": "a b",
+      "sha256": "9507017c6d887511a5a6ac28ea7e3a438882576e1bd76fe3df27a336f49c263b",
+      "chain": "6fcfc5227c7bd564ef9f61b919d6fd4adf6e2deea412d8dbaa67f902384d44f3"
+    }
+  ],
+  "words": [
+    {
+      "text": "a b c\n\td",
+      "count": 4,
+      "inside": true,
+      "start_inside": false
+    },
+    {
+      "text": "hello",
+      "count": 1,
+      "inside": true,
+      "start_inside": false
+    },
+    {
+      "text": "   ",
+      "count": 0,
+      "inside": false,
+      "start_inside": false
+    },
+    {
+      "text": "w w w w w ",
+      "count": 5,
+      "inside": false,
+      "start_inside": false
+    },
+    {
+      "text": "🙂x",
+      "count": 1,
+      "inside": true,
+      "start_inside": false
+    },
+    {
+      "text": "xyz",
+      "count": 0,
+      "inside": true,
+      "start_inside": true
+    }
+  ],
+  "chunks": [
+    {
+      "text": "abcdefghij",
+      "target": 4,
+      "hard": 8,
+      "seal": true,
+      "start_inside_word": false,
+      "end": 8
+    },
+    {
+      "text": "one two three",
+      "target": 4,
+      "hard": 16,
+      "seal": false,
+      "start_inside_word": false,
+      "end": 3
+    },
+    {
+      "text": "w w w w w w w w w w w w w w w w w w w w ",
+      "target": 8,
+      "hard": 16,
+      "seal": false,
+      "start_inside_word": false,
+      "end": 7
+    },
+    {
+      "text": "ab cd",
+      "target": 8,
+      "hard": 16,
+      "seal": true,
+      "start_inside_word": false,
+      "end": 5
+    }
+  ],
+  "evidence": [
+    {
+      "text": "You must keep the source.\nYou must not drop words.\nPlease \"include the original wording\" here.\nconstraint: retain every character\nhello",
+      "line_max": 8192,
+      "evidence_status": "PRESENT",
+      "evidence_scan_status": "COMPLETE",
+      "evidence_lines_skipped": 0,
+      "items": [
+        {
+          "rule": "EXPLICIT_MUST",
+          "char_start": 0,
+          "char_end": 25,
+          "text": "You must keep the source."
+        },
+        {
+          "rule": "EXPLICIT_MUST_NOT",
+          "char_start": 26,
+          "char_end": 50,
+          "text": "You must not drop words."
+        },
+        {
+          "rule": "QUOTED_DIRECTIVE",
+          "char_start": 58,
+          "char_end": 88,
+          "text": "\"include the original wording\""
+        },
+        {
+          "rule": "LABELED_CONSTRAINT",
+          "char_start": 95,
+          "char_end": 129,
+          "text": "constraint: retain every character"
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "id": "sess-empty",
+      "parts": [],
+      "word_cap": 5,
+      "target": 8,
+      "hard": 16,
+      "max": 16,
+      "expect": {
+        "status": "READY_FOR_F3E",
+        "word_count": 0,
+        "attempted_word_count": 0,
+        "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "attempted_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "attempted_sha256_status": "KNOWN",
+        "stored_body": true,
+        "silent_truncation": false,
+        "semantic_judgment": "NOT_A_PASS",
+        "evidence_status": "ABSENT",
+        "coverage": "COMPLETE",
+        "chain_sha256": null,
+        "spans": [],
+        "rules": []
+      }
+    },
+    {
+      "id": "sess-words",
+      "parts": [
+        "one two three"
+      ],
+      "word_cap": 5,
+      "target": 8,
+      "hard": 16,
+      "max": 16,
+      "expect": {
+        "status": "READY_FOR_F3E",
+        "word_count": 3,
+        "attempted_word_count": 3,
+        "source_sha256": "6899ee404683a14e8c2a03149860df25d67d34d9cd4dae7350cbe91e4b3976be",
+        "attempted_sha256": "6899ee404683a14e8c2a03149860df25d67d34d9cd4dae7350cbe91e4b3976be",
+        "attempted_sha256_status": "KNOWN",
+        "stored_body": true,
+        "silent_truncation": false,
+        "semantic_judgment": "NOT_A_PASS",
+        "evidence_status": "ABSENT",
+        "coverage": "COMPLETE",
+        "chain_sha256": "2193c91675d6de7fe84e3419696132f8e1a0ba38a7f5f23d139dd089a92017b9",
+        "spans": [
+          {
+            "char_start": 0,
+            "char_end": 7,
+            "sha256": "8ab63e29a4ba14e4e1688f9c15e5af90895421358c945b0431f85d66977bd3d2",
+            "split_inside_word": true
+          },
+          {
+            "char_start": 7,
+            "char_end": 13,
+            "sha256": "d269c1637fe988422654f5843688a753d0e6e411135d466468c2cda6688c4f1d",
+            "split_inside_word": true
+          }
+        ],
+        "rules": []
+      }
+    },
+    {
+      "id": "sess-over",
+      "parts": [
+        "one two three",
+        " four"
+      ],
+      "word_cap": 3,
+      "target": 16,
+      "hard": 32,
+      "max": 32,
+      "expect": {
+        "status": "REFUSED",
+        "word_count": 0,
+        "attempted_word_count": 4,
+        "source_sha256": null,
+        "attempted_sha256": "113f69ccf08f80a63beba2f49218eaa72a183f374065e6cb56ebe9bd68eb79cc",
+        "attempted_sha256_status": "KNOWN",
+        "stored_body": false,
+        "silent_truncation": false,
+        "semantic_judgment": "NOT_A_PASS",
+        "evidence_status": "NOT_SCANNED",
+        "coverage": "REFUSED",
+        "chain_sha256": null,
+        "spans": [],
+        "rules": []
+      }
+    },
+    {
+      "id": "sess-split",
+      "parts": [
+        "abcdefghij"
+      ],
+      "word_cap": 5,
+      "target": 4,
+      "hard": 8,
+      "max": 8,
+      "expect": {
+        "status": "READY_FOR_F3E",
+        "word_count": 1,
+        "attempted_word_count": 1,
+        "source_sha256": "72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0",
+        "attempted_sha256": "72399361da6a7754fec986dca5b7cbaf1c810a28ded4abaf56b2106d06cb78b0",
+        "attempted_sha256_status": "KNOWN",
+        "stored_body": true,
+        "silent_truncation": false,
+        "semantic_judgment": "NOT_A_PASS",
+        "evidence_status": "ABSENT",
+        "coverage": "COMPLETE",
+        "chain_sha256": "78ee9a70d9e50f29d65be01b6443a03092e5c16f98d1ef2db73bbe38e67a5b30",
+        "spans": [
+          {
+            "char_start": 0,
+            "char_end": 8,
+            "sha256": "9c56cc51b374c3ba189210d5b6d4bf57790d351c96c47c02190ecf1e430635ab",
+            "split_inside_word": true
+          },
+          {
+            "char_start": 8,
+            "char_end": 10,
+            "sha256": "c9df9c3f2963b19b9b95f58c4d33b053fa9f8586dd6ee04126e52a868f882108",
+            "split_inside_word": true
+          }
+        ],
+        "rules": []
+      }
+    },
+    {
+      "id": "sess-uni",
+      "parts": [
+        "keep this\nline"
+      ],
+      "word_cap": 10,
+      "target": 8,
+      "hard": 16,
+      "max": 16,
+      "expect": {
+        "status": "READY_FOR_F3E",
+        "word_count": 3,
+        "attempted_word_count": 3,
+        "source_sha256": "16791df79ebf9e6729bd892886620678834b58c29dfbb0d393cd8817964fcc65",
+        "attempted_sha256": "16791df79ebf9e6729bd892886620678834b58c29dfbb0d393cd8817964fcc65",
+        "attempted_sha256_status": "KNOWN",
+        "stored_body": true,
+        "silent_truncation": false,
+        "semantic_judgment": "NOT_A_PASS",
+        "evidence_status": "ABSENT",
+        "coverage": "COMPLETE",
+        "chain_sha256": "1252aa16dd9c09ef5897056b7fb4b780f740890a1634dab491f66846c87f2eab",
+        "spans": [
+          {
+            "char_start": 0,
+            "char_end": 4,
+            "sha256": "6ca7ea2feefc88ecb5ed6356ed963f47dc9137f82526fdd25d618ea626d0803f",
+            "split_inside_word": true
+          },
+          {
+            "char_start": 4,
+            "char_end": 9,
+            "sha256": "2a2a1cb8d98400d5862e23aa125e43ea62db42a52877299bb7eb14ae148ac028",
+            "split_inside_word": true
+          },
+          {
+            "char_start": 9,
+            "char_end": 14,
+            "sha256": "b8d977011c3d9ba6d0df0b54a8cf3ee06d490c531fe7b52b257f7ab382e11769",
+            "split_inside_word": true
+          }
+        ],
+        "rules": []
+      }
+    }
+  ]
+}

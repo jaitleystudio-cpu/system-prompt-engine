@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/massive_source_ir.schema.json",
+  "title": "MassiveSourceIR",
+  "description": "Lossless intake record. READY_FOR_F3E is custody-complete source, not a semantic pass.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ir_version",
+    "session_id",
+    "status",
+    "semantic_engine",
+    "semantic_judgment",
+    "waits_for",
+    "silent_truncation",
+    "truncation_applied",
+    "word_cap",
+    "attempted_word_count",
+    "attempted_char_count",
+    "attempted_sha256",
+    "attempted_sha256_status",
+    "loss_disclosed",
+    "loss_kind",
+    "word_count",
+    "char_count",
+    "byte_count",
+    "source_sha256",
+    "chain_sha256",
+    "stored_body",
+    "accepted_lossless",
+    "intake_complete",
+    "source_complete",
+    "prefix_only",
+    "reconstructable",
+    "source_map",
+    "explicit_evidence",
+    "evidence_status",
+    "evidence_scan_status",
+    "evidence_lines_skipped",
+    "chunk_count",
+    "refusal",
+    "memory"
+  ],
+  "properties": {
+    "ir_version": { "const": "spe.massive-source-ir.v1" },
+    "session_id": { "type": "string", "minLength": 8 },
+    "status": {
+      "enum": [
+        "READY_FOR_F3E",
+        "REFUSED",
+        "INCOMPLETE",
+        "RESUMABLE",
+        "REFUSED_IN_PROGRESS",
+        "CUSTODY_MISMATCH",
+        "MEMORY_PRESSURE_HALTED"
+      ]
+    },
+    "semantic_engine": { "const": "NOT_INTEGRATED" },
+    "semantic_judgment": { "const": "NOT_A_PASS" },
+    "waits_for": { "const": "F3E_FREEZE" },
+    "silent_truncation": { "const": false },
+    "truncation_applied": { "const": false },
+    "word_cap": { "type": "integer", "minimum": 0 },
+    "attempted_word_count": { "type": "integer", "minimum": 0 },
+    "attempted_char_count": { "type": "integer", "minimum": 0 },
+    "attempted_sha256": { "type": ["string", "null"] },
+    "attempted_sha256_status": { "enum": ["KNOWN", "UNKNOWN"] },
+    "loss_disclosed": { "type": "boolean" },
+    "loss_kind": { "type": ["string", "null"] },
+    "word_count": { "type": "integer", "minimum": 0 },
+    "char_count": { "type": "integer", "minimum": 0 },
+    "byte_count": { "type": "integer", "minimum": 0 },
+    "source_sha256": { "type": ["string", "null"] },
+    "chain_sha256": { "type": ["string", "null"] },
+    "stored_body": { "type": "boolean" },
+    "accepted_lossless": { "type": "boolean" },
+    "intake_complete": { "type": "boolean" },
+    "source_complete": { "type": "boolean" },
+    "prefix_only": { "type": "boolean" },
+    "reconstructable": { "type": "boolean" },
+    "chunk_count": { "type": "integer", "minimum": 0 },
+    "evidence_status": { "enum": ["PRESENT", "ABSENT", "NOT_SCANNED"] },
+    "evidence_scan_status": { "enum": ["COMPLETE", "PARTIAL", "NOT_SCANNED"] },
+    "evidence_lines_skipped": { "type": "integer", "minimum": 0 },
+    "explicit_evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence" }
+    },
+    "refusal": {
+      "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/refusal" }]
+    },
+    "memory": { "$ref": "#/$defs/memory" },
+    "source_map": { "$ref": "#/$defs/source_map" }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "rule", "char_start", "char_end", "text", "text_sha256", "chunk_index"],
+      "properties": {
+        "evidence_id": { "type": "string" },
+        "rule": {
+          "enum": ["EXPLICIT_MUST_NOT", "LABELED_CONSTRAINT", "QUOTED_DIRECTIVE", "EXPLICIT_MUST"]
+        },
+        "char_start": { "type": "integer", "minimum": 0 },
+        "char_end": { "type": "integer", "minimum": 0 },
+        "text": { "type": "string" },
+        "text_sha256": { "type": "string" },
+        "chunk_index": { "type": ["integer", "null"] }
+      }
+    },
+    "refusal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "stored_body", "recoverable", "silent_truncation"],
+      "properties": {
+        "code": { "type": "string" },
+        "stored_body": { "type": "boolean" },
+        "recoverable": { "type": "boolean" },
+        "silent_truncation": { "const": false }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_resident_chars", "peak_pending_chars", "pressure_events", "spilled_chunks"],
+      "properties": {
+        "max_resident_chars": { "type": "integer", "minimum": 1 },
+        "peak_pending_chars": { "type": "integer", "minimum": 0 },
+        "spilled_chunks": { "type": "integer", "minimum": 0 },
+        "pressure_events": { "type": "array" }
+      }
+    },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "char_start",
+        "char_end",
+        "byte_start",
+        "byte_end",
+        "word_start",
+        "word_end",
+        "sha256",
+        "begins_inside_word",
+        "ends_inside_word",
+        "split_inside_word"
+      ],
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "char_start": { "type": "integer", "minimum": 0 },
+        "char_end": { "type": "integer", "minimum": 0 },
+        "byte_start": { "type": "integer", "minimum": 0 },
+        "byte_end": { "type": "integer", "minimum": 0 },
+        "word_start": { "type": "integer", "minimum": 0 },
+        "word_end": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": "string" },
+        "begins_inside_word": { "type": "boolean" },
+        "ends_inside_word": { "type": "boolean" },
+        "split_inside_word": { "type": "boolean" }
+      }
+    },
+    "source_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "coverage",
+        "source_sha256",
+        "char_length",
+        "byte_length",
+        "word_count",
+        "chain_sha256",
+        "coordinate_mismatch",
+        "spans",
+        "gaps",
+        "overlaps"
+      ],
+      "properties": {
+        "version": { "const": "spe.source-map.v1" },
+        "coverage": { "enum": ["COMPLETE", "PARTIAL", "REFUSED", "MISMATCH"] },
+        "source_sha256": { "type": ["string", "null"] },
+        "char_length": { "type": "integer", "minimum": 0 },
+        "byte_length": { "type": "integer", "minimum": 0 },
+        "word_count": { "type": "integer", "minimum": 0 },
+        "chain_sha256": { "type": ["string", "null"] },
+        "coordinate_mismatch": { "type": "boolean" },
+        "spans": { "type": "array", "items": { "$ref": "#/$defs/span" } },
+        "gaps": { "type": "array" },
+        "overlaps": { "type": "array" }
+      }
+    }
+  }
+}
