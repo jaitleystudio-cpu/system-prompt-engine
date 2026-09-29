@@ -274,7 +274,7 @@ Outcome: **XCAT_CONTRACT_RECOVERY_HOLD_C04_C05_C08_C09_C10_C11_C12** (truth-pres
 | K3 | `IMPLEMENTED_XCAT=C01–C12`; technique/effect freeze retained |
 | Mutations | M1–M16 killed |
 | Parity | Python↔Rust↔WASM = 0 mismatches |
-| WASM | `623b7ac4…` (1022578 B, imports=0); historical `48ad95f5…` does not prove XCAT |
+| WASM | `d87a9d2c…` (1022683 B, imports=0); historical `48ad95f5…` does not prove XCAT |
 | PR | #56 draft — do not merge |
 | Hosting | FORBIDDEN |
 

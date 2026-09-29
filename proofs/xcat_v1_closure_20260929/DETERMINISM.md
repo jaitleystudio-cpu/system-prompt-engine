@@ -10,7 +10,7 @@
 | `apply_category_payload` | Same envelope+payload → same field writes | unit + parity suites |
 | Migration reject | Legacy v1 reinterpretation always raises | M13, A049, A056 |
 | K3 effect plan | Repeatable bind for same selection | `test_effect_binding_is_repeatable` |
-| WASM | Bit-identical two-path rebuild for `623b7ac4…` | `WASM_RESULTS.md` |
+| WASM | Bit-identical two-path rebuild for `d87a9d2c…` | `WASM_RESULTS.md` |
 | Vectors | Offline, no network | `test_xcat_vectors_56b.py` |
 
 ## Explicit non-claims

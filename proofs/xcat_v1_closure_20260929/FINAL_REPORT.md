@@ -57,8 +57,8 @@ Prior Task 56 HOLD / Task 56A TAXONOMY_AUTHORITY_HOLD remain truthful historical
 |---------|--------|
 | pytest (domain+vectors+mutations+parity+k3_runtime+k3_effect) | **148 passed** |
 | `cargo test` (`spe-core-rs`) | **41 passed**, 0 failed (observed) |
-| WASM sha256 | `623b7ac4323f63bbb5192b72ca7f442567df31d7ae7680f80c20f8e044ff81d4` |
-| WASM bytes / imports | 1022578 / **0** |
+| WASM sha256 | `d87a9d2ce1b2e789e7cb2869c686e6f719b39bdc753df509cb5244a07034b75a` |
+| WASM bytes / imports | 1022683 / **0** |
 | Historical WASM | `48ad95f5…` — does **not** prove XCAT (`WASM_PROVENANCE.md`) |
 
 ## PERFORMANCE (microbench, 80 iters, ms)
@@ -80,13 +80,23 @@ Preserved; mutant suite kills weaken/launder paths.
 No AUTHORITY_SELF_ESCALATION, CAPABILITY_TO_AUTHORITY, REC→EXEC, EXEC→VERIFIED, UNKNOWN→PASS, constraint weakening, provenance loss, or network introduced by DOMAIN engines.
 
 ## REGRESSION
-See `REGRESSION_RESULTS.md`. Filled: focused 148 pytest + rust crate tests. **TBD:** full-repo pytest, web/Playwright, clean independent WASM rebuild in this turn.
+See `REGRESSION_RESULTS.md`.
+
+| Surface | Result |
+|---------|--------|
+| Full-repo pytest | **946 passed**, 0 failed |
+| Rust `spe-core-rs` | **41 passed**, 0 failed |
+| Official `npm run build` | PASS |
+| Web regression npm scripts + `tsc --noEmit` | PASS |
+| Egress audit | zero_egress=true |
+| Deployment safety gate | **exit 2**; HOSTING=FORBIDDEN |
+| Two-path WASM rebuild | identical `d87a9d2c…` / 1022683 / imports=0 |
 
 ## AUDIT DELTA
 `MASTER_AUDIT_DELTA.md` — promote only proven XCAT DOMAIN rows. Do **not** promote Quality Delta / Plan B / VALIDATE_ONLY / UX / SEO / hosting.
 
 ## DEPLOYMENT GATE
-**HOSTING FORBIDDEN.** No deploy/DNS. Do not start Task 57.
+**HOSTING FORBIDDEN.** exit=2. No deploy/DNS. Do not start Task 57.
 
 ## FILES IN THIS PROOF PACK (56B docs)
 - `XCAT_V1_CANONICAL_REGISTRY.md`

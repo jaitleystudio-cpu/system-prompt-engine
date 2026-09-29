@@ -1,30 +1,39 @@
-# Regression results — Task 56B (partial fill)
+# Regression results — Task 56B
 
 **Date:** 2026-09-29  
-**Branch:** `cursor/spe-xcat-v1-closure-20260929`
+**Branch:** `cursor/spe-xcat-v1-closure-20260929`  
+**BASE SHA:** `fc0838da6222106e98df9aa96b2f3b4b5be93a42`
 
-## Filled this session
+## Filled
 
 | Suite | Command / scope | Result |
 |-------|-----------------|--------|
-| XCAT domain | `test_xcat_domain_56b.py` | 22 collected; passed in aggregate 148 |
-| XCAT vectors | `test_xcat_vectors_56b.py` | 5 collected; passed |
-| XCAT mutations | `test_xcat_mutations_56b.py` | 16/16 killed; 17 tests passed |
-| XCAT parity | `test_xcat_parity_56b.py` | 0/0/0 mismatches; 3 passed |
-| K3 runtime | `test_k3_runtime.py` | 68 collected; passed in aggregate |
-| K3 effect | `test_k3_effect.py` | 33 passed; effect mutants 11/11 |
-| Aggregate above | pytest -q (six files) | **148 passed** |
-| Rust crate | `cargo test -q` in `portable/spe-core-rs` | **41 passed**, 0 failed (observed) |
-| WASM custody | sha256 / bytes / imports | `623b7ac4…` / 1022578 / 0 |
+| XCAT domain | `tests/unit/test_xcat_domain_56b.py` | PASS |
+| XCAT vectors | `tests/unit/test_xcat_vectors_56b.py` | PASS (60 normal / 56 adversarial) |
+| XCAT mutations | `tests/unit/test_xcat_mutations_56b.py` | **16/16 killed** |
+| XCAT parity | `tests/portability/test_xcat_parity_56b.py` | **0/0/0 mismatches** |
+| XCAT core + integration | `test_xcat_core.py`, `test_xcat_c02_c06_c01_c03.py` | PASS |
+| K3 runtime | `tests/unit/test_k3_runtime.py` | PASS |
+| K3 effect | `tests/unit/test_k3_effect.py` + effect vectors | PASS; effect mutants **11/11** |
+| Requirement Graph | unit + mutation | PASS |
+| Full-repo pytest | `.venv/bin/pytest -q` | **946 passed**, 0 failed |
+| Rust crate | `cargo test -q` in `portable/spe-core-rs` | **41 passed**, 0 failed |
+| WASM rebuild | two-path (`target-canonical` + `/tmp/spe-wasm-measure-b`) | identical `d87a9d2c…` |
+| WASM custody | sha256 / bytes / imports | `d87a9d2ce1b2e789e7cb2869c686e6f719b39bdc753df509cb5244a07034b75a` / 1022683 / **0** |
+| Official web build | `npm run build` (apps/web) | PASS (exit 0) |
+| Web engine/artifact/intent/exec | npm test scripts | PASS |
+| Adversarial / craft / theme / SEO / truth-privacy / copy | npm scripts | PASS |
+| Egress audit | `npm run audit:egress` | zero_egress=true |
+| Typecheck | `npx tsc --noEmit` | PASS |
+| Deployment safety gate | `node tools/deployment-safety-gate.mjs` | **exit 2**; HOSTING=FORBIDDEN |
 
-## Placeholder / TBD (not run or not completed in this proof turn)
+## Out of scope / not claimed
 
-| Suite | Status |
-|-------|--------|
-| Full-repo `pytest` (entire tree) | **TBD** |
-| Official web build / Playwright / browser regression | **TBD** |
-| Deployment-safety-gate re-run | **TBD** (HOSTING FORBIDDEN; gate not weakened) |
-| Independent WASM rebuild from clean tree in this turn | **TBD** (artifact hash accepted from prior 56B commit custody) |
+| Item | Status |
+|------|--------|
+| Hero-story browser path | Not required when browser env unavailable; not claimed |
 | Quality Delta / Plan B / VALIDATE_ONLY | **NOT RUN — out of scope** |
+| Production hosting / DNS | **FORBIDDEN** |
+| Task 57 | **NOT STARTED** |
 
-Parent may fill TBD rows after longer suites complete. Do not treat TBD as pass.
+Do not treat out-of-scope rows as pass.

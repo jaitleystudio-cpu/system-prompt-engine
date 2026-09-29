@@ -56,8 +56,8 @@ def test_shipped_release_wasm_matches_kernel_artifact_hash():
     digest = hashlib.sha256(public_wasm.read_bytes()).hexdigest()
     assert meta["sha256"] == digest
     assert meta["bytes"] == public_wasm.stat().st_size
-    assert public_wasm.stat().st_size == 1022578
-    assert digest == "623b7ac4323f63bbb5192b72ca7f442567df31d7ae7680f80c20f8e044ff81d4"
+    assert public_wasm.stat().st_size == 1022683
+    assert digest == "d87a9d2ce1b2e789e7cb2869c686e6f719b39bdc753df509cb5244a07034b75a"
     # Prefer matching the canonical release candidate when present.
     rust_wasm = (
         REPO

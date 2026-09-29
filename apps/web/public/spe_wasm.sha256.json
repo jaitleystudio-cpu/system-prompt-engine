@@ -1,7 +1,7 @@
 {
   "algorithm": "SHA-256",
-  "sha256": "623b7ac4323f63bbb5192b72ca7f442567df31d7ae7680f80c20f8e044ff81d4",
-  "bytes": 1022578,
+  "sha256": "d87a9d2ce1b2e789e7cb2869c686e6f719b39bdc753df509cb5244a07034b75a",
+  "bytes": 1022683,
   "source": "portable/spe-wasm/target-canonical/wasm32-unknown-unknown/release/spe_wasm.wasm",
   "crate": "spe-wasm",
   "kernel": "spe-core-rs",
