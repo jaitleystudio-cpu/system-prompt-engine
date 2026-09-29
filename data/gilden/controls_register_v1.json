@@ -1,0 +1,15 @@
+{
+  "contract_id": "spe.gilden.operations.v1",
+  "external_action_default": "NOT_AUTHORIZED",
+  "live_agency": false,
+  "actions": {
+    "ANALYTICS_BEACON": "NOT_AUTHORIZED",
+    "AUTOMATIC_MERGE": "NOT_AUTHORIZED",
+    "DEPLOY": "NOT_AUTHORIZED",
+    "HOST": "NOT_AUTHORIZED",
+    "LIVE_SEARCH": "NOT_AUTHORIZED",
+    "POST": "NOT_AUTHORIZED",
+    "PUBLISH": "NOT_AUTHORIZED",
+    "SEND": "NOT_AUTHORIZED"
+  }
+}

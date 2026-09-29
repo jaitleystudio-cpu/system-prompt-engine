@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/gilden_operations.schema.json",
+  "title": "GildenOperationsDocument",
+  "description": "Local operations contract for Gilden SPE. This schema describes maintenance, search review, research queue, social draft, growth notes, reporting, and controls. It is not a live agency. External actions stay NOT_AUTHORIZED. Reports without accepted evidence stay UNKNOWN. network_mode is NONE.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id",
+    "lineage",
+    "live_agency",
+    "network_mode",
+    "items"
+  ],
+  "properties": {
+    "contract_id": {
+      "type": "string",
+      "const": "spe.gilden.operations.v1"
+    },
+    "lineage": {
+      "type": "string",
+      "const": "NEW_IMPLEMENTATION"
+    },
+    "live_agency": {
+      "type": "boolean",
+      "const": false
+    },
+    "network_mode": {
+      "type": "string",
+      "const": "NONE"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/work_item"
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 81,
+      "pattern": "^[a-z0-9][a-z0-9._:-]{0,80}$"
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "source", "summary", "digest"],
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["LOCAL_FIXTURE", "OPERATOR_NOTE", "PRIOR_LOCAL_RECORD"]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim_id", "statement", "evidence_ids"],
+      "properties": {
+        "claim_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "evidence_ids": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        }
+      }
+    },
+    "work_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "work_id",
+        "kind",
+        "title",
+        "body",
+        "requested_action",
+        "evidence",
+        "claims"
+      ],
+      "properties": {
+        "work_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "MAINTENANCE",
+            "SEARCH_REVIEW",
+            "RESEARCH_QUEUE",
+            "SOCIAL_DRAFT",
+            "GROWTH_NOTES",
+            "REPORTING",
+            "CONTROLS"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "body": {
+          "type": "string",
+          "maxLength": 8000
+        },
+        "requested_action": {
+          "type": "string",
+          "enum": [
+            "RECORD",
+            "ANALYTICS_BEACON",
+            "AUTOMATIC_MERGE",
+            "DEPLOY",
+            "HOST",
+            "LIVE_SEARCH",
+            "POST",
+            "PUBLISH",
+            "SEND"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        },
+        "claims": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/claim"
+          }
+        }
+      }
+    }
+  }
+}
