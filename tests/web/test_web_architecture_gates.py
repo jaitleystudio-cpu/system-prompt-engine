@@ -56,8 +56,8 @@ def test_shipped_release_wasm_matches_kernel_artifact_hash():
     digest = hashlib.sha256(public_wasm.read_bytes()).hexdigest()
     assert meta["sha256"] == digest
     assert meta["bytes"] == public_wasm.stat().st_size
-    assert public_wasm.stat().st_size == 1023091
-    assert digest == "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082"
+    assert public_wasm.stat().st_size == 1229241
+    assert digest == "dd57eb3ee6eb14297da8d49acb9803cf4853dbb89adcc5ef52f408379d643b22"
     # Prefer matching the canonical release candidate when present.
     rust_wasm = (
         REPO
@@ -109,6 +109,15 @@ def test_no_python_in_browser_path():
             assert "pyodide" not in src.lower()
             assert "cpython" not in src.lower()
             assert "/spe_runtime/" not in src
+
+
+def test_ts_quality_transport_does_not_decide_delta():
+    text = (WEB / "src" / "engine" / "qualityTransport.ts").read_text(encoding="utf-8")
+    assert 'spe_api: "quality"' in text
+    assert "IMPROVED" not in text
+    assert "RESTORE_MISSING_CONSTRAINT" not in text
+    assert "quality_percentage" not in text
+    assert "VALIDATE_ONLY" not in text
 
 
 def test_wasm_integrity_checked_before_instantiate():

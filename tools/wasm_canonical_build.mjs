@@ -28,9 +28,12 @@ const PRE_GRAPH_K3_SHA256 =
 const PRE_GRAPH_K3_BYTES = 785148;
 const PRE_XCAT_EFFECT_BINDING_SHA256 =
   "48ad95f5873bd7fb7933354d93fbbe732c57bc6f85956f64762fe1f5f44f2c33";
-const EXPECTED_CANONICAL_SHA256 =
+const XCAT_DOMAIN_SHA256 =
   "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082";
-const EXPECTED_CANONICAL_BYTES = 1023091;
+const XCAT_DOMAIN_BYTES = 1023091;
+const EXPECTED_CANONICAL_SHA256 =
+  "dd57eb3ee6eb14297da8d49acb9803cf4853dbb89adcc5ef52f408379d643b22";
+const EXPECTED_CANONICAL_BYTES = 1229241;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..");
@@ -302,6 +305,9 @@ function main() {
   if (digest === PRE_XCAT_EFFECT_BINDING_SHA256) {
     fail("canonical candidate still matches the pre-XCAT effect-binding WASM");
   }
+  if (digest === XCAT_DOMAIN_SHA256) {
+    fail("canonical candidate still matches the Task 56C XCAT DOMAIN WASM");
+  }
 
   const label = artifactLabel(targetDir, artifact);
   process.stdout.write(`canonical-wasm: ok\n`);
@@ -321,6 +327,8 @@ function main() {
   process.stdout.write(`previous_canonical_bytes=${PREVIOUS_CANONICAL_BYTES}\n`);
   process.stdout.write(`pre_graph_k3_sha256=${PRE_GRAPH_K3_SHA256}\n`);
   process.stdout.write(`pre_graph_k3_bytes=${PRE_GRAPH_K3_BYTES}\n`);
+  process.stdout.write(`xcat_domain_sha256=${XCAT_DOMAIN_SHA256}\n`);
+  process.stdout.write(`xcat_domain_bytes=${XCAT_DOMAIN_BYTES}\n`);
   process.stdout.write(`canonical_sha256=${EXPECTED_CANONICAL_SHA256}\n`);
 }
 
