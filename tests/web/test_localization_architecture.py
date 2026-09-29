@@ -53,3 +53,11 @@ def test_seo_head_injects_hreflangs():
 
     assert "applyHreflangTags" in text
     assert "applyHreflangTags(document.head, url)" in text
+
+
+def test_strict_hreflang_publication_truth():
+    locales_ts = RUNTIME / "src" / "locales.ts"
+    text = locales_ts.read_text(encoding="utf-8")
+
+    assert "PUBLISHED_LOCALES: readonly string[] = [\"en\"]" in text
+    assert "Strict Gate: Registered locale without published route must NEVER emit hreflang" in text

@@ -169,10 +169,34 @@ export interface HreflangAlternate {
 }
 
 /**
- * Generates discovery hreflang alternates adhering to W3C / Search standards.
- * Includes x-default and explicit BCP 47 alternates.
+ * Genuine Publication Truth.
+ * Registered locales in the taxonomy/system != published localized web pages.
+ * A locale is only eligible for hreflang emission if:
+ * 1. The localized route genuinely exists on the host.
+ * 2. Full content translation is present (not fallback).
+ * 3. The canonical localized URL resolves to real published content.
+ *
+ * Current genuinely published web locales: ["en"] only.
  */
-export function buildHreflangAlternates(canonicalBaseUrl: string): HreflangAlternate[] {
+export const PUBLISHED_LOCALES: readonly string[] = ["en"] as const;
+
+export interface HreflangOptions {
+  /** Explicit list of published locales for this specific route/page. Defaults to PUBLISHED_LOCALES. */
+  publishedLocales?: readonly string[];
+  /** Optional route mapper to verify/resolve localized route URL. */
+  resolveLocalizedUrl?: (localeId: string, cleanBase: string) => string | null;
+}
+
+/**
+ * Generates discovery hreflang alternates adhering to W3C / Search standards.
+ * STRICT LAW: Only emits hreflang for genuinely published, existing localized pages.
+ * Unearned / phantom hreflang claims are strictly rejected.
+ */
+export function buildHreflangAlternates(
+  canonicalBaseUrl: string,
+  options: HreflangOptions = {},
+): HreflangAlternate[] {
+  const published = new Set(options.publishedLocales ?? PUBLISHED_LOCALES);
   const url = new URL(canonicalBaseUrl);
   url.searchParams.delete("lang");
   const cleanBase = url.toString();
@@ -181,13 +205,21 @@ export function buildHreflangAlternates(canonicalBaseUrl: string): HreflangAlter
     { hreflang: "x-default", href: cleanBase },
   ];
 
+  if (published.has(DEFAULT_LOCALE.id)) {
+    alternates.push({ hreflang: DEFAULT_LOCALE.id, href: cleanBase });
+  }
+
   for (const loc of SUPPORTED_LOCALES) {
-    if (loc.id === DEFAULT_LOCALE.id) {
-      alternates.push({ hreflang: loc.id, href: cleanBase });
-    } else {
-      const locUrl = new URL(cleanBase);
-      locUrl.searchParams.set("lang", loc.id);
-      alternates.push({ hreflang: loc.id, href: locUrl.toString() });
+    if (loc.id === DEFAULT_LOCALE.id) continue;
+    // Strict Gate: Registered locale without published route must NEVER emit hreflang
+    if (!published.has(loc.id)) continue;
+
+    const locHref = options.resolveLocalizedUrl
+      ? options.resolveLocalizedUrl(loc.id, cleanBase)
+      : null;
+
+    if (locHref) {
+      alternates.push({ hreflang: loc.id, href: locHref });
     }
   }
 
@@ -196,9 +228,24 @@ export function buildHreflangAlternates(canonicalBaseUrl: string): HreflangAlter
 
 /**
  * Injects or updates alternate hreflang tags into the document head.
+ * Enforces removal of any false/unearned hreflang tags.
  */
-export function applyHreflangTags(head: HTMLHeadElement, canonicalBaseUrl: string): void {
-  const alternates = buildHreflangAlternates(canonicalBaseUrl);
+export function applyHreflangTags(
+  head: HTMLHeadElement,
+  canonicalBaseUrl: string,
+  options: HreflangOptions = {},
+): void {
+  const existing = head.querySelectorAll('link[rel="alternate"][hreflang]');
+  const alternates = buildHreflangAlternates(canonicalBaseUrl, options);
+  const targetHreflangs = new Set(alternates.map((a) => a.hreflang));
+
+  existing.forEach((el) => {
+    const hl = el.getAttribute("hreflang");
+    if (hl && !targetHreflangs.has(hl)) {
+      el.remove();
+    }
+  });
+
   for (const alt of alternates) {
     let el = head.querySelector(`link[rel="alternate"][hreflang="${alt.hreflang}"]`) as HTMLLinkElement | null;
     if (!el) {

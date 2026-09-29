@@ -80,14 +80,34 @@ assert.equal(isolated.endsWith(BIDI_PDI), true, "Must end with BIDI_PDI (U+2069)
 assert.equal(isolateBidi(""), "");
 console.log("✓ Bidirectional First Strong Isolation (FSI/PDI) contracts verified.");
 
-// 6. Hreflang Alternates Generator
+// 6. Strict Publication Truth Hreflang Alternates Generator
 const testUrl = "https://systempromptengine.com/create";
-const alternates = buildHreflangAlternates(testUrl);
-assert(alternates.some((a) => a.hreflang === "x-default" && a.href === testUrl));
-assert(alternates.some((a) => a.hreflang === "en" && a.href === testUrl));
-assert(alternates.some((a) => a.hreflang === "ar" && a.href.includes("lang=ar")));
-assert(alternates.some((a) => a.hreflang === "ja" && a.href.includes("lang=ja")));
-console.log("✓ Hreflang discovery links verified (x-default + all supported BCP 47 codes).");
+const defaultAlternates = buildHreflangAlternates(testUrl);
+
+// Assert only genuinely published routes are emitted (currently x-default and en)
+assert.equal(defaultAlternates.length, 2, `Expected 2 alternates (x-default + en), got ${defaultAlternates.length}`);
+assert(defaultAlternates.some((a) => a.hreflang === "x-default" && a.href === testUrl), "Missing x-default");
+assert(defaultAlternates.some((a) => a.hreflang === "en" && a.href === testUrl), "Missing en alternate");
+
+// Strict Negative Assertions: Unpublished registered locales MUST NEVER emit phantom hreflang
+for (const unpublished of ["ar", "ja", "es", "zh-Hans", "hi", "pt-BR", "de", "fr"]) {
+  assert(
+    !defaultAlternates.some((a) => a.hreflang === unpublished),
+    `Violation: Unpublished locale '${unpublished}' must NOT be emitted in hreflang`,
+  );
+}
+console.log("✓ Strict publication truth verified: only published locales (x-default, en) emitted; 0 false hreflangs.");
+
+// Fixture Test: When a localized route is genuinely published, verify hreflang emission
+const fixtureAlternates = buildHreflangAlternates(testUrl, {
+  publishedLocales: ["en", "es", "ja"],
+  resolveLocalizedUrl: (locId, base) => `https://systempromptengine.com/${locId}/create`,
+});
+assert.equal(fixtureAlternates.length, 4, `Expected 4 alternates for fixture (x-default, en, es, ja), got ${fixtureAlternates.length}`);
+assert(fixtureAlternates.some((a) => a.hreflang === "es" && a.href === "https://systempromptengine.com/es/create"));
+assert(fixtureAlternates.some((a) => a.hreflang === "ja" && a.href === "https://systempromptengine.com/ja/create"));
+assert(!fixtureAlternates.some((a) => a.hreflang === "ar"), "Unpublished ar must still be excluded in fixture");
+console.log("✓ Fixture test verified: published localized routes successfully emit hreflang alternates.");
 
 // 7. Message Formatting and Missing Key Fallback
 assert.equal(formatMessage("en", "nav.home"), "Home");
