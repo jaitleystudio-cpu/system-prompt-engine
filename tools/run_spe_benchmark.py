@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""SPE benchmark and qualification harness (foundation).
+"""SPE benchmark and qualification harness.
 
-Records structure for a later measurement run. A missing measurement stays
-UNKNOWN. This tool never invents a PASS.
+Records structure for a measurement run. A missing measurement stays UNKNOWN.
+This tool never invents a PASS.
 
 Fixture mode does not compile prompts, call providers, open a browser, or
-import spe_runtime. XCAT, K3, Quality, Core-B, category protocol, provider
-adapters, and the other product lanes are out of scope.
+import spe_runtime. `--subject python-reference` lazily loads
+tools.spe_benchmark_python_subject and attaches a compiled prompt only when
+the frozen Python reference returns one. That attachment is not a score.
 
 Offline observation and human-rating files can be merged later. PASS and FAIL
 are stored only when that file explicitly supplies them with evidence. Human
@@ -17,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib
 import json
 import re
 import sys
@@ -706,6 +708,18 @@ def run_checked(argv: list[str] | None = None) -> int:
     parser.add_argument("--import-observations", help="Offline observation JSONL to record.")
     parser.add_argument("--import-human-ratings", help="Offline human-rating JSONL to record.")
     parser.add_argument(
+        "--subject",
+        choices=("python-reference",),
+        help=(
+            "Call the frozen Python reference read-only and attach compiled prompts. "
+            "Measurements stay UNKNOWN. This does not score PASS."
+        ),
+    )
+    parser.add_argument(
+        "--subject-trace-out",
+        help="Write the python-reference capture trace JSON. Not a score file.",
+    )
+    parser.add_argument(
         "--live",
         action="store_true",
         help=argparse.SUPPRESS,
@@ -714,13 +728,22 @@ def run_checked(argv: list[str] | None = None) -> int:
 
     if args.live:
         raise BenchmarkReject("live provider and browser runs are refused")
+    if args.subject_trace_out and args.subject != "python-reference":
+        raise BenchmarkReject("--subject-trace-out requires --subject python-reference")
+    if args.subject and (args.import_observations or args.import_human_ratings):
+        raise BenchmarkReject(
+            "python-reference subject does not merge imported observations; measurements stay UNKNOWN"
+        )
+    if args.subject and args.write_manifest:
+        raise BenchmarkReject("the manifest records frozen inputs and does not capture a subject")
     if args.write_manifest and (args.import_observations or args.import_human_ratings):
         raise BenchmarkReject("the manifest hashes frozen inputs and does not record imports")
     if (args.import_observations or args.import_human_ratings) and not args.fixture_only:
         raise BenchmarkReject("imports require --fixture-only; they still do not call providers")
-    if not (args.fixture_only or args.check_hashes or args.write_manifest):
+    if not (args.fixture_only or args.check_hashes or args.write_manifest or args.subject):
         raise BenchmarkReject(
-            "pass --fixture-only, --check-hashes, or --write-manifest. There is no live mode."
+            "pass --fixture-only, --check-hashes, --write-manifest, or --subject python-reference. "
+            "There is no live mode."
         )
 
     load_dataset()
@@ -741,10 +764,42 @@ def run_checked(argv: list[str] | None = None) -> int:
                 "scores_included=false\n"
             )
 
-    if args.fixture_only:
-        observations = _read_import(args.import_observations, kind="observation")
-        human_rows = _read_import(args.import_human_ratings, kind="human-rating")
+    if args.fixture_only or args.subject:
+        if args.subject:
+            subject_mod = importlib.import_module("tools.spe_benchmark_python_subject")
+            try:
+                captures = subject_mod.invoke_cases(cases)
+            except subject_mod.SubjectRefuse as exc:
+                raise BenchmarkReject(str(exc)) from exc
+            observations = subject_mod.observations_for(captures)
+            human_rows = []
+        else:
+            captures = []
+            observations = _read_import(args.import_observations, kind="observation")
+            human_rows = _read_import(args.import_human_ratings, kind="human-rating")
         report = build_report(cases, observations, human_rows)
+        if args.subject:
+            attached = sum(1 for item in captures if item["prompt_attached"])
+            absent = len(captures) - attached
+            if args.format == "text":
+                chunks.append(
+                    "subject=python-reference\n"
+                    "core_entry=spe_runtime.k3.selector.select_prompt_techniques\n"
+                    f"subject_prompts_attached={attached}\n"
+                    f"subject_prompts_absent={absent}\n"
+                    "scores_claimed=false\n"
+                )
+            if args.subject_trace_out:
+                trace = subject_mod.trace_document(captures, marked_pass_count=report["marked_pass_count"])
+                rendered_trace = render_json(trace)
+                if args.subject_trace_out == "-":
+                    if args.format == "json":
+                        raise BenchmarkReject("subject trace on stdout would mix with the JSON report")
+                    chunks.append(rendered_trace)
+                else:
+                    destination = _resolve_comparison_out(args.subject_trace_out)
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    destination.write_text(rendered_trace, encoding="utf-8")
         if args.format == "json":
             chunks.append(render_json(report))
         else:

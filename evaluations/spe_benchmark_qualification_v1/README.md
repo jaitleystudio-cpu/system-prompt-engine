@@ -35,16 +35,35 @@ Human ratings are imported as rows. This harness does not aggregate them into
 a case verdict, so the human measurement status stays `UNKNOWN` even when a
 rater row is present.
 
+## Python reference subject
+
+`--subject python-reference` is the I1 read-only call into the frozen core.
+It invokes `spe_runtime.k3.selector.select_prompt_techniques` once per case.
+The protected envelope uses only fields already on the case:
+
+- `goal` = `raw_prompt`
+- `hard_constraints` = `constraints`
+- `uncertainties` = `declared_unknowns`
+
+Category and task are left empty. The harness does not invent an XCAT id, a
+desired output, a provider call, or a score.
+
+When the core returns a non-empty `prompt_effect_plan.compiled_prompt`, that
+text is attached to the SPE arm with an evidence reference. The comparison
+keeps `raw_prompt` as the baseline side. Every measurement status stays
+`UNKNOWN`. If the core returns no compiled prompt, the SPE prompt slot stays
+`UNKNOWN`. That absence is not `PASS`.
+
+Fixture mode (`--fixture-only`) still does not import `spe_runtime`.
+
 ## What this harness does not do
 
-It does not call a provider, open a browser, compile a prompt, or import
-`spe_runtime`. It does not score XCAT, K3, Quality, Core-B, category protocol,
-provider adapters, Meta-Brain, Failure Atlas, Champion/Challenger, Success
-Genome, Massive Intent, Scholarly Fabric, Search, Visual Intelligence,
-Security, Accessibility, Localization, WebRecon, media intelligence, or the
-desired-output compiler.
-
-There is no live mode.
+It does not call a provider, open a browser, or run a live mode. It does not
+score XCAT, K3, Quality, Core-B, category protocol, provider adapters,
+Meta-Brain, Failure Atlas, Champion/Challenger, Success Genome, Massive
+Intent, Scholarly Fabric, Search, Visual Intelligence, Security,
+Accessibility, Localization, WebRecon, media intelligence, or the
+desired-output compiler. Attaching a compiled prompt is not a quality result.
 
 ## Layout
 
@@ -75,7 +94,9 @@ python3 tools/run_spe_benchmark.py --check-hashes
 python3 tools/run_spe_benchmark.py --fixture-only
 python3 tools/run_spe_benchmark.py --fixture-only --format json
 python3 tools/run_spe_benchmark.py --fixture-only --comparison-out /tmp/spe-bench-comparison.json
+python3 tools/run_spe_benchmark.py --subject python-reference --format json
 pytest tests/regression/test_spe_benchmark_qualification_harness.py -q
+pytest tests/regression/test_spe_benchmark_python_subject.py -q
 ```
 
 `--fixture-only` does not use the network. Two JSON runs on the same frozen
