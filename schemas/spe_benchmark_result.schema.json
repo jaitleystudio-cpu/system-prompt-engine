@@ -1,0 +1,1012 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/spe_benchmark_result.schema.json",
+  "title": "SpeBenchmarkResult",
+  "description": "Offline harness result. harness_invented_scores is always false. UNKNOWN slots have no evidence. PASS requires evidence_ref, method, and measured_at.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "mode",
+    "dataset_id",
+    "network_used",
+    "provider_calls",
+    "harness_invented_scores",
+    "human_ratings_aggregated",
+    "measurement_default",
+    "marked_pass_count",
+    "case_count",
+    "record_count",
+    "records",
+    "comparison"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "spe_benchmark_result.v1"
+    },
+    "mode": {
+      "enum": [
+        "fixture-only",
+        "offline-record"
+      ]
+    },
+    "dataset_id": {
+      "const": "spe-benchmark-qualification-v1"
+    },
+    "network_used": {
+      "const": false
+    },
+    "provider_calls": {
+      "const": 0
+    },
+    "harness_invented_scores": {
+      "const": false
+    },
+    "human_ratings_aggregated": {
+      "const": false
+    },
+    "measurement_default": {
+      "const": "UNKNOWN"
+    },
+    "marked_pass_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "case_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "record_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "case_id",
+          "arm_id",
+          "raw_prompt_sha256",
+          "spe_prompt",
+          "spe_prompt_sha256",
+          "measurements"
+        ],
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "pattern": "^sbq-[a-z0-9-]{1,64}$"
+          },
+          "arm_id": {
+            "enum": [
+              "RAW",
+              "SPE"
+            ]
+          },
+          "raw_prompt_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "spe_prompt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "spe_prompt_sha256": {
+            "anyOf": [
+              {
+                "const": "UNKNOWN"
+              },
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            ]
+          },
+          "measurements": {
+            "$ref": "#/$defs/measurements"
+          }
+        }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "dataset_id",
+        "harness_invented_scores",
+        "measurement_default",
+        "pairs"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "spe_benchmark_comparison.v1"
+        },
+        "dataset_id": {
+          "const": "spe-benchmark-qualification-v1"
+        },
+        "harness_invented_scores": {
+          "const": false
+        },
+        "measurement_default": {
+          "const": "UNKNOWN"
+        },
+        "pairs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "case_id",
+              "raw_prompt",
+              "raw_prompt_sha256",
+              "spe_prompt",
+              "spe_prompt_sha256",
+              "fixture",
+              "arms"
+            ],
+            "properties": {
+              "case_id": {
+                "type": "string",
+                "pattern": "^sbq-[a-z0-9-]{1,64}$"
+              },
+              "raw_prompt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "raw_prompt_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "spe_prompt": {
+                "type": "string",
+                "minLength": 1
+              },
+              "spe_prompt_sha256": {
+                "anyOf": [
+                  {
+                    "const": "UNKNOWN"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                ]
+              },
+              "fixture": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "constraints",
+                  "intent_summary",
+                  "declared_unknowns",
+                  "eligible_measurements"
+                ],
+                "properties": {
+                  "constraints": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "intent_summary": {
+                    "type": "string"
+                  },
+                  "declared_unknowns": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "eligible_measurements": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "enum": [
+                        "constraint_preservation",
+                        "intent_preservation",
+                        "unknown_preservation",
+                        "category_accuracy",
+                        "repair_effectiveness",
+                        "unsupported_claim_detection",
+                        "provider_portability",
+                        "large_input_preservation",
+                        "grounding_fidelity",
+                        "latency",
+                        "browser_qualification",
+                        "human_blinded_evaluation"
+                      ]
+                    }
+                  }
+                }
+              },
+              "arms": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "RAW",
+                  "SPE"
+                ],
+                "properties": {
+                  "RAW": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "measurements"
+                    ],
+                    "properties": {
+                      "measurements": {
+                        "$ref": "#/$defs/measurements"
+                      }
+                    }
+                  },
+                  "SPE": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "measurements"
+                    ],
+                    "properties": {
+                      "measurements": {
+                        "$ref": "#/$defs/measurements"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "verdict_slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "evidence_ref",
+        "method",
+        "measured_at",
+        "notes",
+        "value_ms"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "UNKNOWN",
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "evidence_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "measured_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "UNKNOWN"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidence_ref": {
+                "type": "null"
+              },
+              "method": {
+                "type": "null"
+              },
+              "measured_at": {
+                "type": "null"
+              },
+              "value_ms": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "notes": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_ref": {
+                "type": "null"
+              },
+              "method": {
+                "type": "null"
+              },
+              "measured_at": {
+                "type": "null"
+              },
+              "value_ms": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "notes"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "PASS"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidence_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "measured_at": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+              },
+              "value_ms": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "evidence_ref",
+              "method",
+              "measured_at"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "FAIL"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidence_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "measured_at": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+              },
+              "value_ms": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "evidence_ref",
+              "method",
+              "measured_at"
+            ]
+          }
+        }
+      ]
+    },
+    "latency_slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "evidence_ref",
+        "method",
+        "measured_at",
+        "notes",
+        "value_ms"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "UNKNOWN",
+            "MEASURED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "evidence_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "measured_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "UNKNOWN"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidence_ref": {
+                "type": "null"
+              },
+              "method": {
+                "type": "null"
+              },
+              "measured_at": {
+                "type": "null"
+              },
+              "value_ms": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "notes": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_ref": {
+                "type": "null"
+              },
+              "method": {
+                "type": "null"
+              },
+              "measured_at": {
+                "type": "null"
+              },
+              "value_ms": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "notes"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "MEASURED"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidence_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "measured_at": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+              },
+              "value_ms": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "evidence_ref",
+              "method",
+              "measured_at",
+              "value_ms"
+            ]
+          }
+        }
+      ]
+    },
+    "human_slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "evidence_ref",
+        "method",
+        "measured_at",
+        "notes",
+        "value_ms",
+        "records"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "UNKNOWN",
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "evidence_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "measured_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value_ms": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rater_id",
+              "blinded",
+              "rating",
+              "evidence_ref",
+              "method",
+              "rated_at",
+              "notes"
+            ],
+            "properties": {
+              "rater_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "blinded": {
+                "type": "boolean"
+              },
+              "rating": {
+                "enum": [
+                  "UNKNOWN",
+                  "PASS",
+                  "FAIL",
+                  "NOT_APPLICABLE"
+                ]
+              },
+              "evidence_ref": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "method": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "rated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+              },
+              "notes": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "rating": {
+                      "const": "UNKNOWN"
+                    }
+                  },
+                  "required": [
+                    "rating"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "evidence_ref": {
+                      "type": "null"
+                    },
+                    "method": {
+                      "type": "null"
+                    },
+                    "rated_at": {
+                      "type": "null"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "rating": {
+                      "enum": [
+                        "PASS",
+                        "FAIL"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "rating"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "blinded": {
+                      "const": true
+                    },
+                    "evidence_ref": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "method": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "rated_at": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+                    }
+                  },
+                  "required": [
+                    "evidence_ref",
+                    "method",
+                    "rated_at"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "rating": {
+                      "const": "NOT_APPLICABLE"
+                    }
+                  },
+                  "required": [
+                    "rating"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "notes": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "notes"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "UNKNOWN"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidence_ref": {
+                "type": "null"
+              },
+              "method": {
+                "type": "null"
+              },
+              "measured_at": {
+                "type": "null"
+              },
+              "value_ms": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "notes": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_ref": {
+                "type": "null"
+              },
+              "method": {
+                "type": "null"
+              },
+              "measured_at": {
+                "type": "null"
+              },
+              "value_ms": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "notes"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "PASS"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidence_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "measured_at": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+              },
+              "value_ms": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "evidence_ref",
+              "method",
+              "measured_at"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "FAIL"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidence_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "measured_at": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+              },
+              "value_ms": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "evidence_ref",
+              "method",
+              "measured_at"
+            ]
+          }
+        }
+      ]
+    },
+    "measurements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "constraint_preservation",
+        "intent_preservation",
+        "unknown_preservation",
+        "category_accuracy",
+        "repair_effectiveness",
+        "unsupported_claim_detection",
+        "provider_portability",
+        "large_input_preservation",
+        "grounding_fidelity",
+        "latency",
+        "browser_qualification",
+        "human_blinded_evaluation"
+      ],
+      "properties": {
+        "constraint_preservation": {
+          "$ref": "#/$defs/verdict_slot"
+        },
+        "intent_preservation": {
+          "$ref": "#/$defs/verdict_slot"
+        },
+        "unknown_preservation": {
+          "$ref": "#/$defs/verdict_slot"
+        },
+        "category_accuracy": {
+          "$ref": "#/$defs/verdict_slot"
+        },
+        "repair_effectiveness": {
+          "$ref": "#/$defs/verdict_slot"
+        },
+        "unsupported_claim_detection": {
+          "$ref": "#/$defs/verdict_slot"
+        },
+        "provider_portability": {
+          "$ref": "#/$defs/verdict_slot"
+        },
+        "large_input_preservation": {
+          "$ref": "#/$defs/verdict_slot"
+        },
+        "grounding_fidelity": {
+          "$ref": "#/$defs/verdict_slot"
+        },
+        "latency": {
+          "$ref": "#/$defs/latency_slot"
+        },
+        "browser_qualification": {
+          "$ref": "#/$defs/verdict_slot"
+        },
+        "human_blinded_evaluation": {
+          "$ref": "#/$defs/human_slot"
+        }
+      }
+    }
+  }
+}

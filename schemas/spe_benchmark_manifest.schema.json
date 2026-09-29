@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/spe_benchmark_manifest.schema.json",
+  "title": "SpeBenchmarkManifest",
+  "description": "Content manifest for frozen harness inputs. scores_included is false. measurement_default is UNKNOWN.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_id",
+    "hash_algorithm",
+    "frozen_files",
+    "case_count",
+    "case_ids",
+    "measurements",
+    "scores_included",
+    "measurement_default",
+    "network_used",
+    "provider_calls"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "spe_benchmark_manifest.v1"
+    },
+    "dataset_id": {
+      "const": "spe-benchmark-qualification-v1"
+    },
+    "hash_algorithm": {
+      "const": "sha256"
+    },
+    "frozen_files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256",
+          "role"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "case_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "case_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^sbq-[a-z0-9-]{1,64}$"
+      }
+    },
+    "measurements": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "prefixItems": [
+        {
+          "const": "constraint_preservation"
+        },
+        {
+          "const": "intent_preservation"
+        },
+        {
+          "const": "unknown_preservation"
+        },
+        {
+          "const": "category_accuracy"
+        },
+        {
+          "const": "repair_effectiveness"
+        },
+        {
+          "const": "unsupported_claim_detection"
+        },
+        {
+          "const": "provider_portability"
+        },
+        {
+          "const": "large_input_preservation"
+        },
+        {
+          "const": "grounding_fidelity"
+        },
+        {
+          "const": "latency"
+        },
+        {
+          "const": "browser_qualification"
+        },
+        {
+          "const": "human_blinded_evaluation"
+        }
+      ],
+      "items": false
+    },
+    "scores_included": {
+      "const": false
+    },
+    "measurement_default": {
+      "const": "UNKNOWN"
+    },
+    "network_used": {
+      "const": false
+    },
+    "provider_calls": {
+      "const": 0
+    }
+  }
+}
