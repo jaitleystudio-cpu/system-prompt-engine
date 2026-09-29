@@ -10,6 +10,7 @@ import hashlib
 from typing import Any, Mapping
 
 from spe_runtime.k3.effect import bind_prompt_effects
+from spe_runtime.xcat.auto_route import auto_route_task
 from spe_runtime.k3.registry import (
     DISPLAY_LABEL_PROTOCOL,
     DISPLAY_LABEL_XCAT,
@@ -522,6 +523,7 @@ def select_prompt_techniques(
         {"category": context, "task": _public_task_for_digest(task_in, context["xcat_id"])},
         "idigest-",
     )
+    context["auto_xcat"] = auto_route_task(category_in, task_in, binding["goal"])
 
     xcat = context["xcat_id"]
     if xcat is not None and xcat not in IMPLEMENTED_XCAT:

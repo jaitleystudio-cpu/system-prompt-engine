@@ -960,6 +960,401 @@ fn apply_category_payload(
     Ok(Value::Object(after))
 }
 
+const AUTO_TWIN_VERSION: &str = "xcat.auto.v1";
+const AUTO_EFFECT_PLAN: &str = "NO_EFFECT_PLAN";
+
+fn auto_recovered(category_id: &str) -> bool {
+    matches!(
+        category_id,
+        "CAT:C01" | "CAT:C02" | "CAT:C03" | "CAT:C06" | "CAT:C07"
+    )
+}
+
+fn auto_strip(value: Option<&Value>) -> Option<String> {
+    let text = value?.as_str()?.trim();
+    if text.is_empty() {
+        None
+    } else {
+        Some(text.to_string())
+    }
+}
+
+fn auto_protocol(category: &Map<String, Value>, display: Option<&str>) -> Option<String> {
+    if let Some(raw) = auto_strip(category.get("protocol_domain_id")) {
+        return Some(raw);
+    }
+    match display {
+        Some("AI Assistant") => Some("general".into()),
+        Some("Writing") => Some("writing_communication".into()),
+        Some("Coding") => Some("coding".into()),
+        Some("Research") => Some("research".into()),
+        Some("Business") => Some("business_strategy".into()),
+        Some("Education") => Some("education".into()),
+        Some("Analysis") => Some("data_statistics".into()),
+        Some("Structured Data") => Some("data_statistics".into()),
+        Some("Creative") => Some("creative_media".into()),
+        Some("Multilingual") => Some("translation_localization".into()),
+        Some("Website / 3D") => Some("ux_ui_web_design".into()),
+        Some("Image") => Some("image_generation".into()),
+        Some("Video") => Some("video_generation".into()),
+        _ => None,
+    }
+}
+
+fn auto_display_bridge(display: &str) -> Option<(&'static str, &'static str)> {
+    match display {
+        "Writing" => Some(("CAT:C03", "AUTO_WRITING_BRIDGE")),
+        "Research" => Some(("CAT:C02", "DISPLAY_LABEL_XCAT")),
+        "Analysis" => Some(("CAT:C06", "DISPLAY_LABEL_XCAT")),
+        _ => None,
+    }
+}
+
+fn unrecovered_display(display: &str) -> bool {
+    matches!(
+        display,
+        "Coding" | "Business" | "Education" | "Creative" | "Multilingual" | "Website / 3D" | "Image" | "Video"
+    )
+}
+
+fn unrecovered_protocol(protocol: &str) -> bool {
+    matches!(
+        protocol,
+        "coding"
+            | "business_strategy"
+            | "education"
+            | "creative_media"
+            | "translation_localization"
+            | "ux_ui_web_design"
+            | "image_generation"
+            | "video_generation"
+    )
+}
+
+fn unrecovered_token(token: &str) -> bool {
+    matches!(
+        token,
+        "translate"
+            | "localize"
+            | "learn"
+            | "business"
+            | "code"
+            | "coding"
+            | "multimedia"
+            | "career"
+            | "creative"
+            | "story"
+            | "roleplay"
+            | "image"
+            | "video"
+            | "multilingual"
+            | "education"
+    )
+}
+
+fn goal_tokens(goal: &str) -> Vec<String> {
+    let mut out = Vec::new();
+    let mut cur = String::new();
+    for ch in goal.chars() {
+        if ch.is_ascii_alphanumeric() {
+            cur.push(ch.to_ascii_lowercase());
+        } else if !cur.is_empty() {
+            out.push(std::mem::take(&mut cur));
+        }
+    }
+    if !cur.is_empty() {
+        out.push(cur);
+    }
+    out
+}
+
+fn raw_flag(task: &Map<String, Value>, name: &str) -> Value {
+    match task.get(name) {
+        Some(Value::Bool(value)) => Value::Bool(*value),
+        _ => Value::Null,
+    }
+}
+
+fn flag_true(value: &Value) -> bool {
+    matches!(value, Value::Bool(true))
+}
+
+fn explicit_evidence(category: &Map<String, Value>) -> Map<String, Value> {
+    let mut evidence = Map::new();
+    for key in [
+        "category_ref",
+        "primary_category",
+        "stage_category",
+        "xcat_id",
+        "self_selected_category",
+        "secondary_categories",
+        "category_evidence",
+        "cross_category_dependencies",
+        "stage",
+    ] {
+        if let Some(value) = category.get(key) {
+            evidence.insert(key.to_string(), value.clone());
+        }
+    }
+    evidence
+}
+
+fn auto_receipt(
+    routing_id: &str,
+    primary: Option<&str>,
+    disposition: &str,
+    protocol_status: &str,
+    basis: &[&str],
+    presentation_label: Option<&str>,
+    protocol_domain_id: Option<&str>,
+    rejected_names: &[String],
+) -> Value {
+    json!({
+        "claims_pass": false,
+        "confidence_basis": basis,
+        "disposition": disposition,
+        "effect_plan": AUTO_EFFECT_PLAN,
+        "execution_authorized": false,
+        "presentation_label": presentation_label,
+        "primary_category": primary,
+        "protocol_domain_id": protocol_domain_id,
+        "protocol_status": protocol_status,
+        "rejected_names": rejected_names,
+        "routing_id": routing_id,
+        "twin_version": AUTO_TWIN_VERSION,
+    })
+}
+
+pub(crate) fn auto_route_task(category: &Value, task: &Value, goal: &str) -> Result<Value, SpeError> {
+    let category_map = category.as_object().cloned().unwrap_or_default();
+    let task_map = task.as_object().cloned().unwrap_or_default();
+    let display = auto_strip(category_map.get("display_label"));
+    let protocol = auto_protocol(&category_map, display.as_deref());
+    let evidence = explicit_evidence(&category_map);
+    let retrieval = raw_flag(&task_map, "needs_retrieval");
+    let comparison = raw_flag(&task_map, "needs_comparison");
+    let revision = raw_flag(&task_map, "needs_revision");
+    let execution = raw_flag(&task_map, "needs_execution_prep");
+    let hash_input = json!({
+        "display_label": display,
+        "explicit_evidence": Value::Object(evidence.clone()),
+        "goal": goal,
+        "protocol_domain_id": protocol,
+        "task_flags": {
+            "needs_comparison": comparison,
+            "needs_execution_prep": execution,
+            "needs_retrieval": retrieval,
+            "needs_revision": revision,
+        }
+    });
+    let routing_id = format!("auto-{}", sha256_hex(python_compatible_dumps(&hash_input).as_bytes()));
+    let presentation = display.as_deref();
+    let protocol_ref = protocol.as_deref();
+
+    if !evidence.is_empty() {
+        let routed = route_mission_stage(&Value::Object(evidence))?;
+        let disposition = routed.get("disposition").and_then(|v| v.as_str()).unwrap_or("");
+        if disposition == "ROUTED" {
+            let primary = routed.get("primary_category").and_then(|v| v.as_str()).unwrap_or("");
+            if !category_ids().contains(primary) {
+                return Ok(auto_receipt(
+                    &routing_id,
+                    None,
+                    "UNKNOWN",
+                    "ABSENT",
+                    &["EXPLICIT_CATEGORY_EVIDENCE"],
+                    presentation,
+                    protocol_ref,
+                    &[],
+                ));
+            }
+            let status = if auto_recovered(primary) { "RECOVERED" } else { "NOT_RECOVERED" };
+            return Ok(auto_receipt(
+                &routing_id,
+                Some(primary),
+                "ROUTED",
+                status,
+                &["EXPLICIT_CATEGORY_EVIDENCE"],
+                presentation,
+                protocol_ref,
+                &[],
+            ));
+        }
+        if disposition == "UNKNOWN" {
+            let rejected = routed
+                .get("rejected_categories")
+                .and_then(|v| v.as_array())
+                .map(|items| {
+                    items.iter().map(|item| item.as_str().unwrap_or("").to_string()).collect::<Vec<_>>()
+                })
+                .unwrap_or_default();
+            return Ok(auto_receipt(
+                &routing_id,
+                None,
+                "UNKNOWN",
+                "ABSENT",
+                &["SELF_SELECTED_WITHOUT_EVIDENCE"],
+                presentation,
+                protocol_ref,
+                &rejected,
+            ));
+        }
+    }
+
+    if let Some(label) = presentation {
+        if let Some((primary, basis)) = auto_display_bridge(label) {
+            let status = if auto_recovered(primary) { "RECOVERED" } else { "NOT_RECOVERED" };
+            return Ok(auto_receipt(
+                &routing_id,
+                Some(primary),
+                "ROUTED",
+                status,
+                &[basis],
+                presentation,
+                protocol_ref,
+                &[],
+            ));
+        }
+    }
+
+    let mut rejected_names = Vec::new();
+    if let Some(label) = presentation {
+        if unrecovered_display(label) {
+            rejected_names.push(label.to_string());
+        }
+    }
+    if let Some(id) = protocol_ref {
+        if unrecovered_protocol(id) && !rejected_names.iter().any(|item| item == id) {
+            rejected_names.push(id.to_string());
+        }
+    }
+    if !rejected_names.is_empty() {
+        return Ok(auto_receipt(
+            &routing_id,
+            None,
+            "PROTOCOL_HOLD",
+            "NOT_RECOVERED",
+            &["UNRECOVERED_PROTOCOL_NOT_INFERRED_FROM_NAME"],
+            presentation,
+            protocol_ref,
+            &rejected_names,
+        ));
+    }
+
+    let mut fired = Vec::new();
+    if flag_true(&retrieval) {
+        fired.push("needs_retrieval".to_string());
+    }
+    if flag_true(&comparison) {
+        fired.push("needs_comparison".to_string());
+    }
+    if flag_true(&revision) {
+        fired.push("needs_revision".to_string());
+    }
+    if flag_true(&execution) {
+        fired.push("needs_execution_prep".to_string());
+    }
+    if fired.len() > 1 {
+        return Ok(auto_receipt(
+            &routing_id,
+            None,
+            "NEEDS_DISAMBIGUATION",
+            "ABSENT",
+            &["MULTIPLE_RECOVERED_SIGNALS"],
+            presentation,
+            protocol_ref,
+            &fired,
+        ));
+    }
+    if fired.len() == 1 {
+        let primary = match fired[0].as_str() {
+            "needs_retrieval" => "CAT:C02",
+            "needs_comparison" => "CAT:C06",
+            "needs_revision" => "CAT:C03",
+            "needs_execution_prep" => "CAT:C07",
+            _ => "CAT:C02",
+        };
+        return Ok(auto_receipt(
+            &routing_id,
+            Some(primary),
+            "ROUTED",
+            "RECOVERED",
+            &["STRUCTURED_TASK_FLAG"],
+            presentation,
+            protocol_ref,
+            &[],
+        ));
+    }
+
+    let tokens = goal_tokens(goal);
+    let mut blocked: Vec<String> = tokens
+        .iter()
+        .filter(|token| unrecovered_token(token))
+        .cloned()
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect();
+    blocked.sort();
+    if !blocked.is_empty() {
+        return Ok(auto_receipt(
+            &routing_id,
+            None,
+            "PROTOCOL_HOLD",
+            "NOT_RECOVERED",
+            &["UNRECOVERED_GOAL_TOKEN"],
+            presentation,
+            protocol_ref,
+            &blocked,
+        ));
+    }
+    let groups_spec: [(&str, &[&str]); 4] = [
+        ("CAT:C01", &["decide", "decision", "advise", "recommend"]),
+        ("CAT:C02", &["research"]),
+        ("CAT:C03", &["write", "rewrite", "draft"]),
+        ("CAT:C06", &["analyze", "analyse", "compare", "extract"]),
+    ];
+    let mut groups = Vec::new();
+    for (category_id, words) in groups_spec {
+        if tokens.iter().any(|token| words.contains(&token.as_str())) {
+            groups.push(category_id.to_string());
+        }
+    }
+    if groups.len() == 1 {
+        return Ok(auto_receipt(
+            &routing_id,
+            Some(groups[0].as_str()),
+            "ROUTED",
+            "RECOVERED",
+            &["RECOVERED_GOAL_TOKEN"],
+            presentation,
+            protocol_ref,
+            &[],
+        ));
+    }
+    if groups.len() > 1 {
+        return Ok(auto_receipt(
+            &routing_id,
+            None,
+            "NEEDS_DISAMBIGUATION",
+            "ABSENT",
+            &["NO_RECOVERED_CATEGORY_SIGNAL"],
+            presentation,
+            protocol_ref,
+            &groups,
+        ));
+    }
+    Ok(auto_receipt(
+        &routing_id,
+        None,
+        "NEEDS_DISAMBIGUATION",
+        "ABSENT",
+        &["NO_RECOVERED_CATEGORY_SIGNAL"],
+        presentation,
+        protocol_ref,
+        &[],
+    ))
+}
+
 pub fn evaluate(input: &Value) -> Result<Value, SpeError> {
     if !input.is_object() {
         return Err(SpeError::new(
@@ -989,6 +1384,12 @@ pub fn evaluate(input: &Value) -> Result<Value, SpeError> {
             apply_category_payload(envelope, category_id, payload, proposals)
         }
         "validate_taxonomy" => Ok(validate_taxonomy_version(input.get("taxonomy_version"))),
+        "auto_route" => {
+            let category = input.get("category").cloned().unwrap_or(json!({}));
+            let task = input.get("task").cloned().unwrap_or(json!({}));
+            let goal = input.get("goal").and_then(|v| v.as_str()).unwrap_or("");
+            auto_route_task(&category, &task, goal)
+        }
         other => Err(SpeError::new(
             "PORTABILITY_INVALID_FIXTURE",
             format!("unknown xcat op: {other}"),

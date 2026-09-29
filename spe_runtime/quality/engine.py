@@ -12,6 +12,7 @@ import re
 from typing import Any, Mapping
 
 from spe_runtime.portability.canonical import canonical_dumps
+from spe_runtime.xcat.auto_route import HOLD_DISPOSITIONS, RECOVERED_SHORT_IDS
 from spe_runtime.xcat.migration import CURRENT_TAXONOMY_VERSION
 
 DELTA_VERSION = "spe.quality_delta.v1"
@@ -870,6 +871,15 @@ def evaluate_obligations(subject: Mapping[str, Any]) -> list[dict[str, Any]]:
             )
         )
 
+    raw_xcat = _as_dict(subject.get("xcat"))
+    auto_disposition = ""
+    if raw_xcat is not None and isinstance(raw_xcat.get("auto_disposition"), str):
+        auto_disposition = raw_xcat["auto_disposition"]
+    hold_reasons = {
+        "NEEDS_DISAMBIGUATION": "AUTO_XCAT_NEEDS_DISAMBIGUATION",
+        "PROTOCOL_HOLD": "AUTO_XCAT_PROTOCOL_HOLD",
+        "UNKNOWN": "AUTO_XCAT_UNKNOWN",
+    }
     if xcat is None:
         results.append(
             _obligation("bind:xcat", "XCAT_BINDING", "active_category", "UNKNOWN", ["xcat"], ["MISSING_XCAT"])
@@ -887,6 +897,17 @@ def evaluate_obligations(subject: Mapping[str, Any]) -> list[dict[str, Any]]:
                 "SATISFIED",
                 ["xcat.active_category"],
                 [],
+            )
+        )
+    elif not xcat["active_category"] and auto_disposition in hold_reasons and auto_disposition in HOLD_DISPOSITIONS:
+        results.append(
+            _obligation(
+                "bind:xcat",
+                "XCAT_BINDING",
+                "active_category",
+                "UNKNOWN",
+                ["xcat.auto_disposition"],
+                [hold_reasons[auto_disposition]],
             )
         )
     else:
@@ -1804,6 +1825,18 @@ def subject_from_k3(k3_output: Mapping[str, Any], compiled_prompt: str) -> dict[
     context = k3_output.get("category_context")
     context_map = context if isinstance(context, Mapping) else {}
     category = _normalize_category_id(context_map.get("xcat_id"))
+    auto = context_map.get("auto_xcat") if isinstance(context_map.get("auto_xcat"), Mapping) else None
+    auto_disposition = ""
+    if not category and auto is not None:
+        primary = _normalize_category_id(auto.get("primary_category"))
+        disposition = auto.get("disposition") if isinstance(auto.get("disposition"), str) else ""
+        status = auto.get("protocol_status") if isinstance(auto.get("protocol_status"), str) else ""
+        if disposition == "ROUTED" and status == "RECOVERED" and primary in RECOVERED_SHORT_IDS:
+            category = primary
+        elif disposition in HOLD_DISPOSITIONS:
+            auto_disposition = disposition
+        elif disposition == "ROUTED":
+            auto_disposition = "PROTOCOL_HOLD"
     protected["category"] = category
     graph = k3_output.get("requirement_graph")
     techniques_raw = k3_output.get("techniques")
@@ -1824,6 +1857,8 @@ def subject_from_k3(k3_output: Mapping[str, Any], compiled_prompt: str) -> dict[
             "taxonomy_version": CURRENT_TAXONOMY_VERSION,
         },
     }
+    if auto_disposition:
+        subject["xcat"]["auto_disposition"] = auto_disposition
     subject["proof_refs"] = governing_proof_refs(subject)
     return subject
 

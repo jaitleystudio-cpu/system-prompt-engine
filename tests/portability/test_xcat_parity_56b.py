@@ -13,6 +13,7 @@ from spe_runtime.categories.apply import apply_category_payload
 from spe_runtime.portability.canonical import canonical_dumps
 from spe_runtime.xcat.migration import validate_taxonomy_version
 from spe_runtime.xcat.models import AuthorityState, CrossCategoryEnvelope
+from spe_runtime.xcat.auto_route import auto_route_task
 from spe_runtime.xcat.router import route_mission_stage
 
 REPO = Path(__file__).resolve().parents[2]
@@ -94,6 +95,50 @@ CASES: list[dict[str, Any]] = [
         "id": "route_empty",
         "kind": "success",
         "payload": {"spe_api": "xcat", "op": "route", "evidence": {}},
+    },
+    {
+        "id": "auto_generic_hold",
+        "kind": "success",
+        "payload": {
+            "spe_api": "xcat",
+            "op": "auto_route",
+            "category": {"display_label": "AI Assistant"},
+            "task": {},
+            "goal": "Summarize the supplied notes.",
+        },
+    },
+    {
+        "id": "auto_research_token",
+        "kind": "success",
+        "payload": {
+            "spe_api": "xcat",
+            "op": "auto_route",
+            "category": {"display_label": "AI Assistant"},
+            "task": {},
+            "goal": "Research the archive.",
+        },
+    },
+    {
+        "id": "auto_explicit_c08",
+        "kind": "success",
+        "payload": {
+            "spe_api": "xcat",
+            "op": "auto_route",
+            "category": {"xcat_id": "CAT:C08"},
+            "task": {},
+            "goal": "Write a story.",
+        },
+    },
+    {
+        "id": "auto_coding_hold",
+        "kind": "success",
+        "payload": {
+            "spe_api": "xcat",
+            "op": "auto_route",
+            "category": {"display_label": "Coding"},
+            "task": {"needs_retrieval": True},
+            "goal": "Write a function.",
+        },
     },
     {
         "id": "route_self_selected",
@@ -278,6 +323,15 @@ def _python_eval(case: dict[str, Any]) -> dict[str, Any]:
     op = body["op"]
     if op == "route":
         return {"status": "VALID", "output": route_mission_stage(body["evidence"])}
+    if op == "auto_route":
+        return {
+            "status": "VALID",
+            "output": auto_route_task(
+                body.get("category") or {},
+                body.get("task") or {},
+                body.get("goal") or "",
+            ),
+        }
     if op == "validate_taxonomy":
         return {
             "status": "VALID",

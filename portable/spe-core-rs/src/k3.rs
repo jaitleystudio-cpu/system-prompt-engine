@@ -589,13 +589,22 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
         &Value::Object(protected.clone()),
         &Value::Object(category.clone()),
     )?;
-    let context = resolve_category(&category, &domains);
+    let mut context = resolve_category(&category, &domains);
     let xcat = context.get("xcat_id").and_then(|v| v.as_str()).map(|s| s.to_string());
     let resolved_for_digest = resolve_task(&task_map, xcat.as_deref());
     let inputs_digest = digest(
         &json!({"category": context.clone(), "task": resolved_for_digest}),
         "idigest-",
     )?;
+    let goal = binding.get("goal").and_then(|v| v.as_str()).unwrap_or("");
+    let receipt = crate::xcat::auto_route_task(
+        &Value::Object(category.clone()),
+        &Value::Object(task_map.clone()),
+        goal,
+    )?;
+    if let Some(obj) = context.as_object_mut() {
+        obj.insert("auto_xcat".into(), receipt);
+    }
 
     if let Some(id) = xcat.as_deref() {
         if !implemented_xcat(id) {

@@ -1,5 +1,6 @@
 """XCAT semantic kernel (cross-category envelope)."""
 
+from spe_runtime.xcat.auto_route import auto_route_task
 from spe_runtime.xcat.handoff import (
     HandoffResult,
     diagnose_refusal_reason,
@@ -18,6 +19,7 @@ from spe_runtime.xcat.router import route_mission_stage
 __all__ = [
     "CATEGORY_IDS",
     "AuthorityState",
+    "auto_route_task",
     "CrossCategoryEnvelope",
     "FailureRecord",
     "HandoffResult",

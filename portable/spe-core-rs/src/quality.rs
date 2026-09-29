@@ -941,6 +941,16 @@ fn evaluate_obligations(subject: &Value) -> Result<Vec<Value>, SpeError> {
     }
     let xcat = xcat_identity(subject.get("xcat"));
     let category = protected.get("category").and_then(|v| v.as_str()).unwrap_or("");
+    let auto_disposition = subject
+        .get("xcat")
+        .and_then(|item| item.get("auto_disposition"))
+        .and_then(|item| item.as_str())
+        .unwrap_or("");
+    let active = xcat
+        .as_ref()
+        .and_then(|item| item.get("active_category"))
+        .and_then(|item| item.as_str())
+        .unwrap_or("");
     if xcat.is_none() {
         results.push(obligation(
             "bind:xcat",
@@ -953,11 +963,7 @@ fn evaluate_obligations(subject: &Value) -> Result<Vec<Value>, SpeError> {
     } else if xcat.as_ref().and_then(|item| item.get("taxonomy_version")).and_then(|v| v.as_str())
         == Some(crate::xcat::CURRENT_TAXONOMY_VERSION)
         && !category.is_empty()
-        && xcat
-            .as_ref()
-            .and_then(|item| item.get("active_category"))
-            .and_then(|v| v.as_str())
-            == Some(category)
+        && active == category
     {
         results.push(obligation(
             "bind:xcat",
@@ -966,6 +972,25 @@ fn evaluate_obligations(subject: &Value) -> Result<Vec<Value>, SpeError> {
             "SATISFIED",
             vec!["xcat.active_category".into()],
             vec![],
+        ));
+    } else if active.is_empty()
+        && matches!(
+            auto_disposition,
+            "NEEDS_DISAMBIGUATION" | "PROTOCOL_HOLD" | "UNKNOWN"
+        )
+    {
+        let reason = match auto_disposition {
+            "NEEDS_DISAMBIGUATION" => "AUTO_XCAT_NEEDS_DISAMBIGUATION",
+            "PROTOCOL_HOLD" => "AUTO_XCAT_PROTOCOL_HOLD",
+            _ => "AUTO_XCAT_UNKNOWN",
+        };
+        results.push(obligation(
+            "bind:xcat",
+            "XCAT_BINDING",
+            "active_category",
+            "UNKNOWN",
+            vec!["xcat.auto_disposition".into()],
+            vec![reason.into()],
         ));
     } else {
         results.push(obligation(
@@ -2406,7 +2431,23 @@ fn subject_from_k3(k3_output: &Value, compiled_prompt: &str) -> Result<Value, Sp
     let mut protected = full_protected(k3_output.get("protected_binding"))
         .ok_or_else(|| SpeError::new("MALFORMED_K3", "protected binding missing"))?;
     let context = k3_output.get("category_context").filter(|item| item.is_object());
-    let category = normalize_category_id(context.and_then(|item| item.get("xcat_id")));
+    let mut category = normalize_category_id(context.and_then(|item| item.get("xcat_id")));
+    let mut auto_disposition = String::new();
+    if category.is_empty() {
+        if let Some(auto) = context.and_then(|item| item.get("auto_xcat")).filter(|item| item.is_object()) {
+            let primary = normalize_category_id(auto.get("primary_category"));
+            let disposition = auto.get("disposition").and_then(|item| item.as_str()).unwrap_or("");
+            let status = auto.get("protocol_status").and_then(|item| item.as_str()).unwrap_or("");
+            let recovered = matches!(primary.as_str(), "C01" | "C02" | "C03" | "C06" | "C07");
+            if disposition == "ROUTED" && status == "RECOVERED" && recovered {
+                category = primary;
+            } else if matches!(disposition, "NEEDS_DISAMBIGUATION" | "PROTOCOL_HOLD" | "UNKNOWN") {
+                auto_disposition = disposition.to_string();
+            } else if disposition == "ROUTED" {
+                auto_disposition = "PROTOCOL_HOLD".to_string();
+            }
+        }
+    }
     let taxonomy = crate::xcat::CURRENT_TAXONOMY_VERSION;
     if let Some(obj) = protected.as_object_mut() {
         obj.insert("category".into(), Value::String(category.clone()));
@@ -2440,6 +2481,11 @@ fn subject_from_k3(k3_output: &Value, compiled_prompt: &str) -> Result<Value, Sp
         "requirement_graph": graph,
         "xcat": {"active_category": category, "taxonomy_version": taxonomy},
     });
+    if !auto_disposition.is_empty() {
+        if let Some(xcat) = subject.get_mut("xcat").and_then(|item| item.as_object_mut()) {
+            xcat.insert("auto_disposition".into(), Value::String(auto_disposition));
+        }
+    }
     let refs = governing_proof_refs(&subject)?
         .into_iter()
         .map(Value::String)
