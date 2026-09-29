@@ -2,7 +2,8 @@
 
 **Base SHA:** `83c354f51af1c4a967811ed03284b4e539925e55`
 **Implementation commit:** `7e9e104c118d146272ae5c4c784306f54dbd11c6`
-**Final SHA:** branch tip that records this line
+
+An intermediate branch tip recorded a recovered-only subset (`C01`, `C02`, `C03`, `C06`, `C07`) and a second receipt function. That subset is superseded. The tip keeps one `route_mission_stage` and routes `CAT:C01`–`CAT:C12`.
 **Branch:** `cursor/spe-quality-delta-planb-validate-only-20260929`
 **PR:** #57 draft, not merged
 **Disposition:** PASS
