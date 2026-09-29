@@ -27,6 +27,37 @@ export function usesRepairedPrompt(decision) {
   return Boolean(decision && decision.terminal === "RECONSTRUCTED_PROMPT" && decision.repairedPrompt);
 }
 
+function reconstructionAccepted(reconstruction, receipt) {
+  if (!reconstruction || reconstruction.kept !== "repaired") return false;
+  const plan = reconstruction.plan;
+  const delta = reconstruction.quality_delta;
+  if (!plan || plan.disposition !== "ACCEPTED") return false;
+  if (!delta || delta.disposition !== "IMPROVED") return false;
+  if (!Array.isArray(delta.protected_regressions) || delta.protected_regressions.length !== 0) return false;
+  if (!receipt || receipt.verdict !== "PASS") return false;
+  const prompt = reconstruction.kept_subject && reconstruction.kept_subject.compiled_prompt;
+  return typeof prompt === "string" && prompt.length > 0;
+}
+
+export function selectEffectivePrompt(canonicalPrompt, qualityOut) {
+  if (!qualityOut || !reconstructionAccepted(qualityOut.reconstruction, qualityOut.receipt)) {
+    return canonicalPrompt;
+  }
+  return qualityOut.reconstruction.kept_subject.compiled_prompt;
+}
+
+/** One kernel-selected prompt for display, artifact, history, copy, and export. */
+export function bindEffectiveSurfaces(canonicalPrompt, qualityOut) {
+  const prompt = selectEffectivePrompt(canonicalPrompt, qualityOut);
+  return {
+    display: prompt,
+    artifactPrompt: prompt,
+    historyPreview: typeof prompt === "string" ? prompt.slice(0, 240) : "",
+    exportPrompt: prompt,
+    copyPrompt: prompt,
+  };
+}
+
 export function decideDelivery(event) {
   const kind = event && event.kind;
   const hasCanonical = event && event.hasCanonical === true;
@@ -47,21 +78,20 @@ export function decideDelivery(event) {
   }
   if (kind === "quality_receipt") {
     const reconstruction = event.receipt && event.receipt.reconstruction;
-    const kept = reconstruction && reconstruction.kept;
-    const plan = reconstruction && reconstruction.plan;
-    if (kept === "repaired" && plan && plan.disposition === "ACCEPTED") {
+    const receipt = event.receipt && event.receipt.receipt;
+    const verdict = receipt ? receipt.verdict : null;
+    if (!reconstruction) {
+      return { terminal: "CANONICAL_PROMPT", fallback: false, validation: verdict || "UNKNOWN", repairedPrompt: null };
+    }
+    if (reconstructionAccepted(reconstruction, receipt)) {
       return {
         terminal: "RECONSTRUCTED_PROMPT",
         fallback: false,
-        validation: event.receipt.receipt ? event.receipt.receipt.verdict : null,
-        repairedPrompt:
-          reconstruction.kept_subject && reconstruction.kept_subject.compiled_prompt
-            ? reconstruction.kept_subject.compiled_prompt
-            : null,
+        validation: verdict,
+        repairedPrompt: reconstruction.kept_subject.compiled_prompt,
       };
     }
-    const verdict = event.receipt && event.receipt.receipt ? event.receipt.receipt.verdict : null;
-    return { terminal: "CANONICAL_PROMPT", fallback: false, validation: verdict || "UNKNOWN" };
+    return { terminal: "CANONICAL_PROMPT", fallback: false, validation: verdict || "UNKNOWN", repairedPrompt: null };
   }
   if (hasCanonical) {
     return { terminal: "CANONICAL_PROMPT", fallback: false, validation: null };

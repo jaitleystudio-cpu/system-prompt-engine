@@ -12,8 +12,8 @@ import {
   deliveryForEngineDown,
   deliveryForK3Down,
   deliveryForQualityMiss,
+  bindEffectiveSurfaces,
   deliveryForReceipt,
-  usesRepairedPrompt,
 } from "./engine/delivery-policy.mjs";
 import { fromK3QualityRequest } from "./engine/quality-request.mjs";
 import { createRawRequestCustody, renderSafeFallbackPrompt } from "./engine/core-b.mjs";
@@ -497,7 +497,10 @@ export default function App() {
             `Engine rejected the brief: ${out.result.reason_code ?? out.result.status}`,
           );
         }
-        if (!out.error && !out.result)
+        if (out.error) {
+          throw new Error(out.error.message || "ENGINE_UNAVAILABLE");
+        }
+        if (!out.result)
           throw new Error("The engine returned no result. Please retry.");
         setError(out.error);
         setResult(out.result);
@@ -517,7 +520,21 @@ export default function App() {
             techniques: bound.techniques,
             effectPlan: bound.effectPlan,
           });
-          setRendered(prompt);
+          let qualityOut: unknown = null;
+          try {
+            qualityOut = await requestQualityReceipt(
+              client,
+              fromK3QualityRequest(k3.rawOutput, prompt.finalPrompt),
+            );
+          } catch {
+            qualityOut = null;
+          }
+          const decision = qualityOut
+            ? deliveryForReceipt(qualityOut)
+            : deliveryForQualityMiss();
+          const surfaces = bindEffectiveSurfaces(prompt.finalPrompt, qualityOut);
+          const shown = { ...prompt, finalPrompt: surfaces.display };
+          setRendered(shown);
           const spe = await buildSpeArtifact({
             user_request: goal,
             category,
@@ -532,7 +549,7 @@ export default function App() {
               network_mode: "NONE",
               used_ts_fallback: false,
             },
-            rendered_prompt: prompt.finalPrompt,
+            rendered_prompt: surfaces.artifactPrompt,
             intent: {
               confirmed: lensState.confirmed,
               assumed: lensState.assumed,
@@ -542,16 +559,6 @@ export default function App() {
           });
           if (requestRevision !== revision.current) return;
           setArtifact(spe);
-          const qualityOut = await requestQualityReceipt(
-            client,
-            fromK3QualityRequest(k3.rawOutput, prompt.finalPrompt),
-          );
-          const decision = qualityOut
-            ? deliveryForReceipt(qualityOut)
-            : deliveryForQualityMiss();
-          if (usesRepairedPrompt(decision) && decision.repairedPrompt) {
-            setRendered({ ...prompt, finalPrompt: decision.repairedPrompt });
-          }
           const receiptRecord = (qualityOut ?? {}) as {
             receipt?: { verdict?: string; proof_class?: string };
             quality_delta?: { disposition?: string };
@@ -569,7 +576,7 @@ export default function App() {
               user_request: goal,
               category,
               target,
-              prompt_preview: prompt.finalPrompt.slice(0, 240),
+              prompt_preview: surfaces.historyPreview,
               artifact: spe,
             });
             setHistory(loadHistory());

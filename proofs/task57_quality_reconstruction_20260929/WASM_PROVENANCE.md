@@ -10,3 +10,12 @@
 Build A and build B both produced the Task 57 digest. Imports stayed 0. The public file `apps/web/public/spe_wasm.wasm` matches `apps/web/public/spe_wasm.sha256.json`.
 
 These builds are not a production qualification.
+
+## Task57R-F1
+
+| Generation | sha256 | bytes | Role |
+| --- | --- | --- | --- |
+| Task57R HOLD | `0537fc879b42524d36cf94b965e1234f02cf557c47cc55c7b1612d5643c70fcb` | 1273629 | historical; `from_k3` did not return reconstruction |
+| Task57R-F1 | `dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541` | 1275233 | current canonical |
+
+Two measure-only builds, one in the default canonical target and one in a separate target directory, were byte-identical. Imports 0. Exports `memory`, `spe_alloc`, `spe_evaluate`, `spe_free`. The later official `npm run build` reproduced the same digest. This is not a production qualification.

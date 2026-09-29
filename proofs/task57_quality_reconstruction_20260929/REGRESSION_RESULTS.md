@@ -23,3 +23,16 @@
 | Deployment safety gate | exit 2, `HOSTING=FORBIDDEN` |
 
 No hosting, DNS, or production publish was performed.
+
+## Task57R-F1
+
+| Check | Result |
+| --- | --- |
+| Full-repo pytest | 999 passed, 0 failed, exit 0 |
+| XCAT mutants M1–M23 | still inside that pytest run |
+| Effect mutants M1–M11 | still inside that pytest run |
+| `cargo test --offline` in `spe-core-rs` | 41 passed, 0 failed, exit 0 |
+| `npm run build` | exit 0, reproduced `dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541` |
+| listed web npm scripts, copy, egress, `tsc --noEmit` | exit 0 |
+| `npm run audit:egress` | `zero_egress` true, `external_hosts` empty, `fetch_during_evaluate` 0 |
+| Deployment safety gate | exit 2, `HOSTING=FORBIDDEN` |

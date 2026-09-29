@@ -11,3 +11,13 @@
 Mismatches: 0.
 
 The Rust entry is `spe_api=quality`. WASM uses the existing `spe_evaluate` export. No new WASM import was added.
+
+## Task57R-F1
+
+`tests/portability/test_quality_parity_57r.py` compares the full `from_k3` object, including `reconstruction`, for caller-flag, witnessed, execute, accepted-repair, protected-regression, no-deficit, and unrepairable cases.
+
+| Path | Result |
+| --- | --- |
+| Python ↔ Rust | 0 mismatch |
+| Rust ↔ WASM | 0 mismatch |
+| Python ↔ WASM | 0 mismatch |

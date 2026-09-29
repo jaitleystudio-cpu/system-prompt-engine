@@ -2401,21 +2401,40 @@ fn evaluate_from_k3(payload: &Value) -> Result<Value, SpeError> {
     if k3_output.map(|item| item.is_object()) != Some(true) || compiled.is_none() {
         let mode = payload.get("mode").and_then(|item| item.as_str()).unwrap_or("");
         return Ok(json!({
+            "quality_delta": Value::Null,
             "receipt": receipt(mode, "FAIL", vec!["MALFORMED_K3".into()], "DECLARED_POLICY", false, Value::Null),
+            "reconstruction": Value::Null,
             "subject": Value::Null,
         }));
     }
     let subject = subject_from_k3(k3_output.expect("checked"), compiled.expect("checked"))?;
     let mode = payload.get("mode").and_then(|item| item.as_str()).unwrap_or("VALIDATE_ONLY");
+    let reconstruction = reconstruct(&subject, 1, None)?;
+    let kept = reconstruction
+        .get("kept_subject")
+        .cloned()
+        .unwrap_or(Value::Null);
+    let delta = reconstruction
+        .get("quality_delta")
+        .cloned()
+        .unwrap_or(Value::Null);
     let mut request = Map::new();
-    request.insert("artifact".into(), subject.clone());
+    request.insert("artifact".into(), kept);
     request.insert("enforcement".into(), Value::String("AVAILABLE".into()));
     request.insert("mode".into(), Value::String(mode.to_string()));
     if let Some(evidence) = payload.get("runtime_evidence").filter(|item| item.is_object()) {
         request.insert("runtime_evidence".into(), evidence.clone());
     }
-    let mode_receipt = run_mode(&Value::Object(request))?;
-    Ok(json!({"receipt": mode_receipt, "subject": subject}))
+    let mut mode_receipt = run_mode(&Value::Object(request))?;
+    if let Some(map) = mode_receipt.as_object_mut() {
+        map.insert("quality_delta".into(), delta.clone());
+    }
+    Ok(json!({
+        "quality_delta": delta,
+        "receipt": mode_receipt,
+        "reconstruction": reconstruction,
+        "subject": subject,
+    }))
 }
 
 pub fn evaluate(input: &Value) -> Result<Value, SpeError> {

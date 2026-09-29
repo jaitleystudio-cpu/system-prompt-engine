@@ -135,3 +135,7 @@ No claim of target-model success, human preference superiority, world-outcome co
 
 STOP.
 ```
+
+The report above is the historical Task57R HOLD at `c27b13ae6543ea19125e5a2be419e109f86dfd0b`. It is not rewritten.
+
+Task57R-F1 closes that hold on the same branch. The closure record is `TASK57R_F1_FROM_K3_RECONSTRUCTION.md`, `TASK57R_F1_ARTIFACT_CONSISTENCY.md`, `TASK57R_F1_BROWSER.md`, and `TASK57R_F1_MUTATION_RESULTS.md`.

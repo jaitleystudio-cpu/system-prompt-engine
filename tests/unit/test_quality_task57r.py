@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from spe_runtime.quality.engine import (
     evaluate_from_k3,
     evaluate_obligations,
@@ -348,4 +350,120 @@ def test_task57r_guard_mutants_are_killed() -> None:
     assert quality_delta(base, regressed)["disposition"] != "IMPROVED"
     killed += 1
     assert killed == 12
+
+
+def _from_k3(subject: dict, **extra: object) -> dict:
+    payload = {
+        "compiled_prompt": subject["compiled_prompt"],
+        "k3_output": _k3_output(subject),
+        "mode": "VALIDATE_ONLY",
+        "op": "from_k3",
+        "spe_api": "quality",
+    }
+    payload.update(extra)
+    return evaluate_from_k3(payload)
+
+
+def test_from_k3_returns_accepted_repair_for_missing_constraint() -> None:
+    result = _from_k3(_missing_constraint())
+    reconstruction = result["reconstruction"]
+    assert reconstruction["kept"] == "repaired"
+    assert reconstruction["plan"]["disposition"] == "ACCEPTED"
+    assert reconstruction["quality_delta"]["disposition"] == "IMPROVED"
+    assert reconstruction["quality_delta"]["protected_regressions"] == []
+    assert result["quality_delta"]["disposition"] == "IMPROVED"
+    assert result["receipt"]["subject_digest"] == subject_digest(reconstruction["kept_subject"])
+    assert result["receipt"]["subject_digest"] != subject_digest(result["subject"])
+    assert reconstruction["plan"]["attempt_index"] <= 1
+    assert reconstruction["plan"]["max_attempts"] == 1
+
+
+def test_from_k3_keeps_original_when_repair_regresses() -> None:
+    base = _subject()
+    weakened = _replace_section(base["compiled_prompt"], "Hard constraints", "- other")
+    subject = _subject(
+        compiled_prompt=_drop_section(base["compiled_prompt"], "Effect: DIRECT"),
+        plan_prompt=weakened,
+    )
+    subject["effect_plan"]["compiled_prompt"] = weakened
+    result = _from_k3(subject)
+    reconstruction = result["reconstruction"]
+    assert reconstruction["kept"] == "original"
+    assert reconstruction["plan"]["disposition"] != "ACCEPTED"
+    assert result["receipt"]["subject_digest"] == subject_digest(reconstruction["kept_subject"])
+
+
+def test_from_k3_no_deficit_is_not_triggered() -> None:
+    result = _from_k3(_subject())
+    assert result["reconstruction"]["kept"] == "original"
+    assert result["reconstruction"]["plan"]["disposition"] == "NOT_TRIGGERED"
+    assert result["receipt"]["subject_digest"] == subject_digest(result["subject"])
+
+
+def test_from_k3_unrepairable_deficit_stays_unresolved() -> None:
+    subject = _subject()
+    subject["requirement_graph"] = {"graph_digest": "gd-1", "validity": "CONFLICTED"}
+    result = _from_k3(subject)
+    assert result["reconstruction"]["kept"] == "original"
+    assert result["reconstruction"]["plan"]["disposition"] == "UNRESOLVED"
+
+
+def test_from_k3_reconstructs_once(monkeypatch: pytest.MonkeyPatch) -> None:
+    import spe_runtime.quality.engine as engine
+
+    calls = {"n": 0}
+    real = engine.reconstruct
+
+    def wrapped(subject, **kwargs):
+        calls["n"] += 1
+        return real(subject, **kwargs)
+
+    monkeypatch.setattr(engine, "reconstruct", wrapped)
+    result = _from_k3(_missing_constraint())
+    assert calls["n"] == 1
+    assert result["reconstruction"]["plan"]["attempt_index"] <= 1
+    assert result["reconstruction"]["plan"]["max_attempts"] == 1
+
+
+def test_f1_from_k3_mutants_are_killed(monkeypatch: pytest.MonkeyPatch) -> None:
+    """F1–F3 and F10 are illegal from_k3 outcomes. The real engine must reject them."""
+    import spe_runtime.quality.engine as engine
+
+    killed: list[str] = []
+    repaired = _from_k3(_missing_constraint())
+    assert repaired["reconstruction"]["kept"] == "repaired"
+    assert "reconstruction" in repaired and repaired["reconstruction"]["plan"]["disposition"] == "ACCEPTED"
+    killed.append("F1")
+
+    calls = {"n": 0}
+    real = engine.reconstruct
+
+    def wrapped(subject, **kwargs):
+        calls["n"] += 1
+        return real(subject, **kwargs)
+
+    monkeypatch.setattr(engine, "reconstruct", wrapped)
+    once = _from_k3(_missing_constraint())
+    assert calls["n"] == 1
+    assert once["reconstruction"]["plan"]["max_attempts"] == 1
+    assert once["reconstruction"]["plan"]["attempt_index"] <= 1
+    killed.append("F2")
+
+    assert repaired["receipt"]["subject_digest"] == subject_digest(repaired["reconstruction"]["kept_subject"])
+    assert repaired["receipt"]["subject_digest"] != subject_digest(repaired["subject"])
+    killed.append("F3")
+
+    base = _subject()
+    weakened = _replace_section(base["compiled_prompt"], "Hard constraints", "- other")
+    regressing = _subject(
+        compiled_prompt=_drop_section(base["compiled_prompt"], "Effect: DIRECT"),
+        plan_prompt=weakened,
+    )
+    regressing["effect_plan"]["compiled_prompt"] = weakened
+    blocked = _from_k3(regressing)
+    assert blocked["reconstruction"]["kept"] == "original"
+    assert blocked["reconstruction"]["plan"]["disposition"] != "ACCEPTED"
+    assert blocked["reconstruction"]["quality_delta"]["disposition"] != "IMPROVED" or blocked["reconstruction"]["quality_delta"]["protected_regressions"]
+    killed.append("F10")
+    assert killed == ["F1", "F2", "F3", "F10"]
 

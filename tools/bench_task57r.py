@@ -12,7 +12,7 @@ import statistics
 import time
 
 from spe_runtime.k3.selector import select_prompt_techniques
-from spe_runtime.quality.engine import evaluate_from_k3, reconstruct, subject_from_k3
+from spe_runtime.quality.engine import evaluate_from_k3, subject_from_k3
 
 PROTECTED = {
     "goal": "Ship the note",
@@ -31,7 +31,7 @@ def once() -> None:
     k3 = select_prompt_techniques(PROTECTED, CATEGORY, {})
     plan = k3.get("prompt_effect_plan") or {}
     compiled = plan.get("compiled_prompt") if isinstance(plan.get("compiled_prompt"), str) else ""
-    subject = subject_from_k3(k3, compiled)
+    subject_from_k3(k3, compiled)
     evaluate_from_k3(
         {
             "compiled_prompt": compiled,
@@ -41,7 +41,6 @@ def once() -> None:
             "spe_api": "quality",
         }
     )
-    reconstruct(subject)
 
 
 def main() -> None:

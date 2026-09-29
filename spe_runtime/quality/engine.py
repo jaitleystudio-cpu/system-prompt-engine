@@ -1790,6 +1790,7 @@ def evaluate_from_k3(payload: Mapping[str, Any]) -> dict[str, Any]:
     compiled_prompt = payload.get("compiled_prompt")
     if not isinstance(k3_output, Mapping) or not isinstance(compiled_prompt, str):
         return {
+            "quality_delta": None,
             "receipt": _receipt(
                 mode=payload.get("mode") if isinstance(payload.get("mode"), str) else "",
                 verdict="FAIL",
@@ -1797,20 +1798,29 @@ def evaluate_from_k3(payload: Mapping[str, Any]) -> dict[str, Any]:
                 proof_class="DECLARED_POLICY",
                 reconstruction_eligible=False,
             ),
+            "reconstruction": None,
             "subject": None,
         }
     subject = subject_from_k3(k3_output, compiled_prompt)
     mode = payload.get("mode") if isinstance(payload.get("mode"), str) else "VALIDATE_ONLY"
     evidence = payload.get("runtime_evidence") if isinstance(payload.get("runtime_evidence"), Mapping) else None
+    reconstruction = reconstruct(subject)
+    kept_subject = reconstruction["kept_subject"]
     receipt = run_mode(
         {
-            "artifact": subject,
+            "artifact": kept_subject,
             "enforcement": "AVAILABLE",
             "mode": mode,
             "runtime_evidence": evidence,
         }
     )
-    return {"receipt": receipt, "subject": subject}
+    receipt["quality_delta"] = reconstruction["quality_delta"]
+    return {
+        "quality_delta": reconstruction["quality_delta"],
+        "receipt": receipt,
+        "reconstruction": reconstruction,
+        "subject": subject,
+    }
 
 
 def quality_loop(subject: Mapping[str, Any], mode: str = "VALIDATE_ONLY") -> dict[str, Any]:

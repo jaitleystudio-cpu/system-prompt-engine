@@ -24,3 +24,14 @@ export function deliveryForK3Down(): DeliveryDecision;
 export function deliveryForQualityMiss(): DeliveryDecision;
 export function deliveryForReceipt(receipt: unknown): DeliveryDecision;
 export function usesRepairedPrompt(decision: DeliveryDecision): boolean;
+export function selectEffectivePrompt(canonicalPrompt: string, qualityOut: unknown): string;
+export function bindEffectiveSurfaces(
+  canonicalPrompt: string,
+  qualityOut: unknown,
+): {
+  display: string;
+  artifactPrompt: string;
+  historyPreview: string;
+  exportPrompt: string;
+  copyPrompt: string;
+};
