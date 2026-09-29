@@ -19,3 +19,5 @@ These builds are not a production qualification.
 | Task57R-F1 | `dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541` | 1275233 | current canonical |
 
 Two measure-only builds, one in the default canonical target and one in a separate target directory, were byte-identical. Imports 0. Exports `memory`, `spe_alloc`, `spe_evaluate`, `spe_free`. The later official `npm run build` reproduced the same digest. This is not a production qualification.
+
+F2 does not change Rust. Two measure-only rebuilds, the default canonical target and a separate target directory, were byte-identical and matched the F1 pin `dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541`, 1275233 bytes, imports 0. No new pin was required.

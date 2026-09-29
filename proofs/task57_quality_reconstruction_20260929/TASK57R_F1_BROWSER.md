@@ -11,3 +11,5 @@ Local Google Chrome 154.0.8037.58, headless, against the built `apps/web/dist` o
 | Export consistency | PASS. Visible prompt matched copy, JSON `rendered_prompt`, `.spe` `rendered_prompt`, history artifact prompt, and the history preview prefix. |
 
 The live Create request was: "Write a four-week launch checklist. Budget must remain $2000. Do not invent extra spend." The kernel did not accept a repair for that subject, so the UI correctly did not swap in another prompt. Accepted repair display is covered by the kernel cases and `bindEffectiveSurfaces` tests, not by this click.
+
+This `NOT_OBSERVED` result stays as the F1 historical record. F2 replaced the receipt-text pass with a test-only fault injection. See `TASK57R_F2_REAL_REPAIRED_BROWSER.md`.

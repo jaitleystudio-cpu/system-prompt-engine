@@ -21,3 +21,5 @@ The Rust entry is `spe_api=quality`. WASM uses the existing `spe_evaluate` expor
 | Python ↔ Rust | 0 mismatch |
 | Rust ↔ WASM | 0 mismatch |
 | Python ↔ WASM | 0 mismatch |
+
+F2 does not change the kernel. Those parity figures stay the F1 result. The F2 browser fault is a product observation, not a new semantic payload.

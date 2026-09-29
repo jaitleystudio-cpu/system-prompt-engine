@@ -139,3 +139,13 @@ STOP.
 The report above is the historical Task57R HOLD at `c27b13ae6543ea19125e5a2be419e109f86dfd0b`. It is not rewritten.
 
 Task57R-F1 closes that hold on the same branch. The closure record is `TASK57R_F1_FROM_K3_RECONSTRUCTION.md`, `TASK57R_F1_ARTIFACT_CONSISTENCY.md`, `TASK57R_F1_BROWSER.md`, and `TASK57R_F1_MUTATION_RESULTS.md`.
+
+## Task57R-F2
+
+F2 does not replace the F1 kernel result. The repaired browser path remains open.
+
+Chrome fault injection removed one hard-constraint bullet from the real quality request. WASM kept the original candidate, plan `UNRESOLVED`, delta `UNRESOLVED`, one attempt. The visible prompt stayed canonical and did not match the corrupted candidate. The qualifier refused a repaired PASS. Receipt text is not evidence.
+
+Hold: `HOLD_LIVE_CREATE_REPAIR_NOT_ACCEPTED`.
+
+Details: `TASK57R_F2_REAL_REPAIRED_BROWSER.md` and `TASK57R_F2_MUTATION_RESULTS.md`.

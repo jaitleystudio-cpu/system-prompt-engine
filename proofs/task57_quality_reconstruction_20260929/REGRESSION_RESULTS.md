@@ -36,3 +36,9 @@ No hosting, DNS, or production publish was performed.
 | listed web npm scripts, copy, egress, `tsc --noEmit` | exit 0 |
 | `npm run audit:egress` | `zero_egress` true, `external_hosts` empty, `fetch_during_evaluate` 0 |
 | Deployment safety gate | exit 2, `HOSTING=FORBIDDEN` |
+
+## Task57R-F2
+
+Kernel sources were not changed. Pytest stayed 999 passed, 0 failed. `cargo test --offline` was 41 passed, 0 failed. Web npm scripts, copy, egress, and `tsc --noEmit` exited 0. Egress remained `zero_egress` true.
+
+The repaired browser script exits 2 on purpose. Chrome observed the fault, and the kernel did not accept the repair. That is `HOLD_LIVE_CREATE_REPAIR_NOT_ACCEPTED`, not a repaired PASS.
