@@ -11,11 +11,13 @@ from typing import Any, Callable
 import pytest
 
 from spe_runtime.categories.apply import apply_category_payload
-from spe_runtime.categories.c01_decide import decide
 from spe_runtime.categories.c03_communicate import communicate
-from spe_runtime.categories.c05_learn import learn
 from spe_runtime.categories.c06_analyze import analyze
-from spe_runtime.categories.c09_code import code
+from spe_runtime.categories.domain import (
+    apply_domain_category,
+    domain_production_kernel_bypasses,
+    production_legacy_writer_reachability,
+)
 from spe_runtime.categories._common import replace_envelope
 from spe_runtime.xcat.handoff import HandoffResult, validate_handoff
 from spe_runtime.xcat.invariants import (
@@ -278,19 +280,127 @@ def mutant_m16_category_redefines_kernel_truth() -> bool:
         return False
     if after.authority_state != before.authority_state:
         return False
-    # Also: decide cannot mint execution/authority
-    with_rec = decide(
-        before,
-        recommendation={"kind": "recommendation", "action": "hold", "certainty": "CONDITIONAL"},
-    )
-    if with_rec.execution_grants != before.execution_grants:
-        return False
-    if with_rec.authority_state != before.authority_state:
-        return False
     # Handoff refuses goal rewrite between stages
-    hijack = replace_envelope(with_rec, goal_identity="stolen")
-    handoff = validate_handoff(with_rec, hijack, "CAT:C01", "CAT:C03")
+    hijack = replace_envelope(after, goal_identity="stolen")
+    handoff = validate_handoff(after, hijack, "CAT:C04", "CAT:C03")
     return handoff in {HandoffResult.REFUSE, HandoffResult.BLOCKED}
+
+
+def mutant_m17_c01_commits_recommendation() -> bool:
+    """M17: DOMAIN C01 must not commit envelope.recommendation."""
+    before = _env(recommendation={"kind": "recommendation", "action": "hold"})
+    after = apply_domain_category(
+        before,
+        "CAT:C01",
+        {"options": ["a"], "criteria": ["cost"], "decision_authority": "user"},
+    )
+    if after.recommendation != before.recommendation:
+        return False
+    return _killed_by_raise(
+        lambda: apply_domain_category(
+            before,
+            "CAT:C01",
+            {"options": ["a"], "recommendation": {"action": "ship"}},
+        ),
+        match="unknown fields",
+    )
+
+
+def mutant_m18_c02_appends_fact() -> bool:
+    """M18: DOMAIN C02 must not append canonical facts."""
+    before = _env()
+    after = apply_domain_category(
+        before, "CAT:C02", {"question": "q", "search_strategy": "manual"}
+    )
+    if after.facts != before.facts:
+        return False
+    return _killed_by_raise(
+        lambda: apply_domain_category(
+            before,
+            "CAT:C02",
+            {"question": "q", "facts": [{"fact_id": "x", "statement": "s"}]},
+        ),
+        match="unknown fields",
+    )
+
+
+def mutant_m19_c02_appends_provenance() -> bool:
+    """M19: DOMAIN C02 must not append canonical provenance."""
+    before = _env()
+    after = apply_domain_category(before, "CAT:C02", {"question": "q"})
+    if after.provenance != before.provenance:
+        return False
+    return _killed_by_raise(
+        lambda: apply_domain_category(
+            before, "CAT:C02", {"question": "q", "provenance": [{"provenance_id": "p"}]}
+        ),
+        match="unknown fields",
+    )
+
+
+def mutant_m20_c02_changes_uncertainty() -> bool:
+    """M20: DOMAIN C02 must not change canonical uncertainty."""
+    before = _env()
+    after = apply_domain_category(before, "CAT:C02", {"question": "q", "gaps": ["g"]})
+    if after.uncertainties != before.uncertainties:
+        return False
+    return _killed_by_raise(
+        lambda: apply_domain_category(
+            before, "CAT:C02", {"question": "q", "uncertainties": []}
+        ),
+        match="unknown fields",
+    )
+
+
+def mutant_m21_c03_commits_rendering() -> bool:
+    """M21: DOMAIN C03 must not commit envelope.rendering."""
+    before = _env()
+    after = apply_domain_category(
+        before,
+        "CAT:C03",
+        {"communicative_goal": "inform", "audience": "ops", "voice": "plain"},
+    )
+    if after.rendering != before.rendering:
+        return False
+    return _killed_by_raise(
+        lambda: apply_domain_category(
+            before, "CAT:C03", {"audience": "ops", "rendering": {"text": "hi"}}
+        ),
+        match="unknown fields",
+    )
+
+
+def mutant_m22_c06_commits_analysis() -> bool:
+    """M22: DOMAIN C06 must not commit envelope.analysis."""
+    before = _env(analysis={"summary": "kept", "kind": "analysis"})
+    after = apply_domain_category(
+        before, "CAT:C06", {"source_objects": ["s"], "dimensions": ["d"]}
+    )
+    if after.analysis != before.analysis:
+        return False
+    return _killed_by_raise(
+        lambda: apply_domain_category(
+            before, "CAT:C06", {"dimensions": ["d"], "analysis": {"summary": "new"}}
+        ),
+        match="unknown fields",
+    )
+
+
+def mutant_m23_production_reaches_legacy_writer() -> bool:
+    """M23: DOMAIN production path must not reach legacy direct writers."""
+    if production_legacy_writer_reachability() != 0:
+        return False
+    if domain_production_kernel_bypasses() != 0:
+        return False
+    return _killed_by_raise(
+        lambda: apply_domain_category(
+            _env(),
+            "CAT:C01",
+            {"options": ["a"]},
+            via_legacy="decide",
+        ),
+        match="legacy direct-writer",
+    )
 
 
 MUTANTS: dict[str, Callable[[], bool]] = {
@@ -310,6 +420,13 @@ MUTANTS: dict[str, Callable[[], bool]] = {
     "M14": mutant_m14_category_commits_canonical_state,
     "M15": mutant_m15_routing_ignores_stage_evidence,
     "M16": mutant_m16_category_redefines_kernel_truth,
+    "M17": mutant_m17_c01_commits_recommendation,
+    "M18": mutant_m18_c02_appends_fact,
+    "M19": mutant_m19_c02_appends_provenance,
+    "M20": mutant_m20_c02_changes_uncertainty,
+    "M21": mutant_m21_c03_commits_rendering,
+    "M22": mutant_m22_c06_commits_analysis,
+    "M23": mutant_m23_production_reaches_legacy_writer,
 }
 
 
@@ -318,9 +435,9 @@ def test_mutant_killed(name: str) -> None:
     assert MUTANTS[name]() is True, f"{name} survived"
 
 
-def test_all_sixteen_mutants_killed() -> None:
+def test_all_twenty_three_mutants_killed() -> None:
     killed = [name for name, fn in MUTANTS.items() if fn()]
     survived = [name for name in MUTANTS if name not in killed]
-    assert len(MUTANTS) == 16
+    assert len(MUTANTS) == 23
     assert survived == [], f"survived: {survived}"
     assert killed == list(MUTANTS)

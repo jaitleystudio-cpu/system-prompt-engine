@@ -1,4 +1,9 @@
-"""CAT:C01 Decide — may add recommendation ONLY."""
+"""CAT:C01 legacy compatibility writer.
+
+OWNERSHIP_CLASS = LEGACY_COMPATIBILITY
+DOMAIN v2 production must use spe_runtime.categories.domain.apply_domain_category.
+This function directly commits envelope.recommendation and is not a DOMAIN writer.
+"""
 
 from __future__ import annotations
 
@@ -9,6 +14,8 @@ from spe_runtime.categories.c01_decide.validate import validate_c01_output
 from spe_runtime.xcat.models import CrossCategoryEnvelope
 
 CATEGORY_ID = "CAT:C01"
+OWNERSHIP_CLASS = "LEGACY_COMPATIBILITY"
+DOMAIN_PRODUCTION = False
 
 
 def decide(

@@ -59,8 +59,17 @@ def _reject_unknown_fields(category_id: str, payload: Mapping[str, Any]) -> None
         )
 
 
-def _reject_forbidden_payload_keys(payload: Mapping[str, Any]) -> None:
-    bad = FORBIDDEN_PAYLOAD_KEYS & set(payload.keys())
+def _reject_forbidden_payload_keys(
+    category_id: str, payload: Mapping[str, Any]
+) -> None:
+    """Reject kernel-commit keys unless the name is a ratified payload field.
+
+    C07 WorkExecutionProjectIR includes ``authority`` and ``receipt`` as payload
+    data. Those names stay inside category_payload and never write
+    envelope.authority_state or execution receipts.
+    """
+    allowed = allowed_fields_for(category_id)
+    bad = (FORBIDDEN_PAYLOAD_KEYS & set(payload.keys())) - allowed
     if bad:
         raise ValueError(f"category_payload contains forbidden keys: {sorted(bad)}")
 
@@ -245,7 +254,7 @@ def apply_category_payload(
     working = dict(payload)
     confirm = working.pop(_CANON_CONFIRM_KEY, False) is True
 
-    _reject_forbidden_payload_keys(working)
+    _reject_forbidden_payload_keys(category_id, working)
     _reject_unknown_fields(category_id, working)
     _category_law(category_id, envelope, working, confirm)
 

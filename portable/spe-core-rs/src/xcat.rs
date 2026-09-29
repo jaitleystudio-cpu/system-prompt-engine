@@ -65,26 +65,29 @@ fn allowed_fields(category_id: &str) -> Option<&'static [&'static str]> {
         "CAT:C01" => &[
             "options",
             "criteria",
-            "tradeoffs",
-            "recommendation_rationale",
-            "decision_record",
-            "open_questions",
+            "constraints",
+            "evidence",
+            "uncertainty",
+            "sensitivity",
+            "reversibility",
+            "decision_authority",
         ],
         "CAT:C02" => &[
-            "questions",
-            "sources",
-            "findings",
+            "question",
+            "search_strategy",
+            "source_classes",
+            "freshness",
+            "contradiction_map",
             "gaps",
-            "confidence_notes",
-            "citation_map",
+            "synthesis",
         ],
         "CAT:C03" => &[
+            "communicative_goal",
             "audience",
-            "purpose",
-            "tone",
-            "draft",
-            "revision_goals",
-            "style_constraints",
+            "facts_claims",
+            "voice",
+            "format",
+            "prohibited_claims",
         ],
         "CAT:C04" => &[
             "source_language",
@@ -102,20 +105,22 @@ fn allowed_fields(category_id: &str) -> Option<&'static [&'static str]> {
             "mastery_evidence",
         ],
         "CAT:C06" => &[
-            "subjects",
+            "source_objects",
             "dimensions",
-            "comparisons",
-            "extractions",
-            "limitations",
-            "method_notes",
+            "extraction",
+            "normalization",
+            "calculations",
+            "anomalies",
+            "conclusions",
         ],
         "CAT:C07" => &[
-            "work_items",
-            "preconditions",
-            "execution_plan",
-            "checkpoints",
-            "rollback_notes",
-            "outcome_observations",
+            "desired_action",
+            "authority",
+            "credentials_reference",
+            "reversibility",
+            "approvals",
+            "postconditions",
+            "receipt",
         ],
         "CAT:C08" => &[
             "customer",
@@ -497,11 +502,19 @@ fn reject_unknown_fields(category_id: &str, payload: &Map<String, Value>) -> Res
     Ok(())
 }
 
-fn reject_forbidden_payload_keys(payload: &Map<String, Value>) -> Result<(), SpeError> {
+fn reject_forbidden_payload_keys(
+    category_id: &str,
+    payload: &Map<String, Value>,
+) -> Result<(), SpeError> {
     let forbidden = forbidden_payload_keys();
+    let allowed: HashSet<&str> = allowed_fields(category_id)
+        .unwrap_or(&[])
+        .iter()
+        .copied()
+        .collect();
     let mut bad: BTreeSet<String> = BTreeSet::new();
     for key in payload.keys() {
-        if forbidden.contains(key.as_str()) {
+        if forbidden.contains(key.as_str()) && !allowed.contains(key.as_str()) {
             bad.insert(key.clone());
         }
     }
@@ -882,7 +895,7 @@ fn apply_category_payload(
         .map(|v| v == Value::Bool(true))
         .unwrap_or(false);
 
-    reject_forbidden_payload_keys(&working)?;
+    reject_forbidden_payload_keys(category_id, &working)?;
     reject_unknown_fields(category_id, &working)?;
     category_law(category_id, &before, &working, confirm)?;
 

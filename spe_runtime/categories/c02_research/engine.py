@@ -1,4 +1,13 @@
-"""CAT:C02 Research — may add facts + provenance + research uncertainty ONLY."""
+"""CAT:C02 legacy direct writer plus DOMAIN grounding proposal.
+
+``research`` is LEGACY_COMPATIBILITY: it appends canonical facts, provenance,
+and uncertainties. DOMAIN v2 production must not call it.
+
+``research_from_grounding`` is the DOMAIN bridge: it proposes a
+ResearchProjectIR payload and epistemic candidates. It does not commit
+canonical epistemic state. Commit fails closed — no epistemic owner service
+exists in this runtime.
+"""
 
 from __future__ import annotations
 
@@ -9,6 +18,8 @@ from spe_runtime.categories.c02_research.validate import validate_c02_output
 from spe_runtime.xcat.models import CrossCategoryEnvelope
 
 CATEGORY_ID = "CAT:C02"
+OWNERSHIP_CLASS = "LEGACY_COMPATIBILITY"
+DOMAIN_PRODUCTION = False
 
 
 def research(
@@ -59,14 +70,12 @@ def research_from_grounding(
     envelope: CrossCategoryEnvelope,
     bundle: Any,
 ) -> CrossCategoryEnvelope:
-    """Apply a GroundingBundle through C02 ownership — no authority bypass.
+    """Propose C02 research payload from grounding. Do not commit epistemic state.
 
-    Conversion lives in the grounding compiler; this entry point only forwards
-    the resulting facts/provenance/uncertainties into ``research`` so all C02
-    invariants (provenance linkage, forbidden keys, authority freeze) still run.
+    grounding → ResearchProjectIR + epistemic proposal
+    not grounding → canonical facts/provenance/uncertainty writer.
     """
-    # Local import keeps grounding optional for pure C02 call sites and avoids
-    # an import cycle if grounding ever needs category helpers.
+    from spe_runtime.categories.domain import apply_domain_category
     from spe_runtime.grounding.compiler import (
         GroundingBundle,
         research_capsules_to_c02_inputs,
@@ -75,9 +84,51 @@ def research_from_grounding(
     if not isinstance(bundle, GroundingBundle):
         raise TypeError("bundle must be a GroundingBundle")
     facts, provenance, uncertainties = research_capsules_to_c02_inputs(bundle)
-    return research(
+    source_classes = sorted(
+        {
+            str(item.get("source_class"))
+            for item in provenance
+            if item.get("source_class")
+        }
+    )
+    payload = {
+        "question": str(bundle.request_text),
+        "search_strategy": "grounding_capsules",
+        "source_classes": source_classes,
+        "freshness": "UNCOMMITTED",
+        "contradiction_map": [],
+        "gaps": ["EPISTEMIC_COMMIT_UNAVAILABLE"],
+        "synthesis": "PROPOSAL_ONLY",
+    }
+    proposals = (
+        {
+            "proposal_kind": "EPISTEMIC_CANDIDATE",
+            "facts": [dict(item) for item in facts],
+            "provenance": [dict(item) for item in provenance],
+            "uncertainties": [dict(item) for item in uncertainties],
+            "commit": "NOT_COMMITTED",
+        },
+    )
+    after = apply_domain_category(
         envelope,
-        facts=facts,
-        provenance=provenance,
-        uncertainties=uncertainties,
+        CATEGORY_ID,
+        payload,
+        proof_obligation_proposals=proposals,
+    )
+    if after.facts != envelope.facts or after.provenance != envelope.provenance:
+        raise ValueError("C02 DOMAIN path must not commit canonical epistemic state")
+    if after.uncertainties != envelope.uncertainties:
+        raise ValueError("C02 DOMAIN path must not commit canonical uncertainty")
+    return after
+
+
+def commit_epistemic_proposal(
+    envelope: CrossCategoryEnvelope,
+    proposal: Mapping[str, Any],
+) -> CrossCategoryEnvelope:
+    """Fail closed. No epistemic owner commit service is available."""
+    _ = envelope, proposal
+    raise ValueError(
+        "EPISTEMIC_OWNER_UNAVAILABLE: category cannot commit canonical "
+        "facts, provenance, or uncertainty"
     )

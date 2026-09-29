@@ -97,60 +97,68 @@ C12_CREATIVE_FIELDS: frozenset[str] = frozenset(
     }
 )
 
-# --- Existing category IRs (documented for payload validation when used) ---
+# --- Founder-ratified ProjectIR fields (DOMAIN v2). Not invented for symmetry. ---
+# Pre-56C invented names (tradeoffs, questions, draft, work_items, …) are NOT
+# canonical and are not accepted as silent substitutes. See
+# proofs/xcat_v1_closure_20260929/LEGACY_CATEGORY_CALLSITE_AUDIT.md.
 
 C01_DECISION_FIELDS: frozenset[str] = frozenset(
     {
         "options",
         "criteria",
-        "tradeoffs",
-        "recommendation_rationale",
-        "decision_record",
-        "open_questions",
+        "constraints",
+        "evidence",
+        "uncertainty",
+        "sensitivity",
+        "reversibility",
+        "decision_authority",
     }
 )
 
 C02_RESEARCH_FIELDS: frozenset[str] = frozenset(
     {
-        "questions",
-        "sources",
-        "findings",
+        "question",
+        "search_strategy",
+        "source_classes",
+        "freshness",
+        "contradiction_map",
         "gaps",
-        "confidence_notes",
-        "citation_map",
+        "synthesis",
     }
 )
 
 C03_WRITING_FIELDS: frozenset[str] = frozenset(
     {
+        "communicative_goal",
         "audience",
-        "purpose",
-        "tone",
-        "draft",
-        "revision_goals",
-        "style_constraints",
+        "facts_claims",
+        "voice",
+        "format",
+        "prohibited_claims",
     }
 )
 
 C06_ANALYSIS_FIELDS: frozenset[str] = frozenset(
     {
-        "subjects",
+        "source_objects",
         "dimensions",
-        "comparisons",
-        "extractions",
-        "limitations",
-        "method_notes",
+        "extraction",
+        "normalization",
+        "calculations",
+        "anomalies",
+        "conclusions",
     }
 )
 
 C07_WORK_EXECUTION_FIELDS: frozenset[str] = frozenset(
     {
-        "work_items",
-        "preconditions",
-        "execution_plan",
-        "checkpoints",
-        "rollback_notes",
-        "outcome_observations",
+        "desired_action",
+        "authority",
+        "credentials_reference",
+        "reversibility",
+        "approvals",
+        "postconditions",
+        "receipt",
     }
 )
 

@@ -17,7 +17,7 @@
 | Ownership | Collision risk on legacy names | DOMAIN payload-only; duplicate_writers=0 | `CATEGORY_OWNERSHIP.md` |
 | Mutations | N/A for DOMAIN pack | M1–M16 all killed | `MUTATION_RESULTS.md` |
 | Parity | N/A for DOMAIN xcat | Python↔Rust↔WASM 0 mismatches | `PARITY_RESULTS.md` |
-| WASM | `48ad95f5…` effect-binding | `d87a9d2c…` bytes=1022683 imports=0 | `WASM_RESULTS.md`, `WASM_PROVENANCE.md` |
+| WASM | `48ad95f5…` effect-binding; `d87a9d2c…` 56B | `077a4a39…` bytes=1023091 imports=0 | `WASM_RESULTS.md`, `WASM_PROVENANCE.md` |
 | Effect freeze | 11/11 effect mutants | Still 11/11; NO EFFECT PLAN→NO FINAL PROMPT | `PROMPT_EFFECT_REGRESSION.md` |
 
 ## Do **not** promote

@@ -37,3 +37,18 @@
 | Task 57 | **NOT STARTED** |
 
 Do not treat out-of-scope rows as pass.
+
+## Task 56C (ownership repair)
+
+| Suite | Result |
+|-------|--------|
+| Mutations M1–M23 | **23/23 killed** (full pytest includes this suite) |
+| Parity including C01/C07 payload cases | **0 / 0 / 0** mismatches |
+| Full pytest | **953 passed**, 0 failed |
+| Rust `spe-core-rs` | **41 passed**, 0 failed |
+| Official `npm run build` | PASS (exit 0) |
+| Web regressions + `tsc --noEmit` + egress | PASS; zero_egress=true |
+| Deployment safety gate | **exit 2**; HOSTING=FORBIDDEN |
+| WASM | `077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082` / 1023091 / imports=0; two-path identical |
+| Prior 56B WASM | `d87a9d2c…` does not prove 56C allowlists |
+

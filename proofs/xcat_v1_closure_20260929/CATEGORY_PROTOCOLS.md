@@ -8,23 +8,24 @@
 
 ## Shared laws (all CAT:C01–C12)
 
-- Specialize **`category_payload`** (+ `active_category`, `proof_obligation_proposals`, `category_trace`) only.
-- MUST NOT write: facts, provenance, uncertainties (except historical C02 research append paths), hard_constraints, user_preferences, goal_identity, authority_state, execution_grants.
-- Forbidden payload keys (authority/EXECUTED/VERIFIED_SUCCESS/PROMOTE/…): reject.
+- Specialize **`category_payload`** (+ `active_category`, `proof_obligation_proposals`, `category_trace`) only on the DOMAIN production path.
+- MUST NOT write: facts, provenance, uncertainties, hard_constraints, user_preferences, goal_identity, analysis, recommendation, rendering, authority_state, execution_grants.
+- Legacy `decide` / `research` / `communicate` / `analyze` still exist as `LEGACY_COMPATIBILITY` and are not DOMAIN writers (`LEGACY_CATEGORY_CALLSITE_AUDIT.md`).
+- Forbidden payload keys (`EXECUTED`, `VERIFIED_SUCCESS`, `PROMOTE`, …) are rejected. Ratified C07 field names `authority` and `receipt` are payload data only and do not write kernel authority or receipts.
 - Unknown IR fields: reject.
-- CATEGORY ≠ KERNEL OWNER; `duplicate_writers=0`.
+- CATEGORY ≠ KERNEL OWNER; category direct canonical writers = 0.
 
 ## Payload IR list (writable fields)
 
 | ID | IR name | Allowed `category_payload` fields |
 |----|---------|-----------------------------------|
-| CAT:C01 | DecisionIR | options, criteria, tradeoffs, recommendation_rationale, decision_record, open_questions |
-| CAT:C02 | ResearchIR | questions, sources, findings, gaps, confidence_notes, citation_map |
-| CAT:C03 | WritingIR | audience, purpose, tone, draft, revision_goals, style_constraints |
+| CAT:C01 | DecisionProjectIR | options, criteria, constraints, evidence, uncertainty, sensitivity, reversibility, decision_authority |
+| CAT:C02 | ResearchProjectIR | question, search_strategy, source_classes, freshness, contradiction_map, gaps, synthesis |
+| CAT:C03 | WritingProjectIR | communicative_goal, audience, facts_claims, voice, format, prohibited_claims |
 | CAT:C04 | LanguageTransferIR | source_language, target_language, protected_terms, localization_policy, transliteration_policy, alignment_map |
 | CAT:C05 | LearningIR | learner_state, concept_graph, progression, practice, mastery_evidence |
-| CAT:C06 | AnalysisIR | subjects, dimensions, comparisons, extracted, limitations, method_notes |
-| CAT:C07 | WorkExecutionIR | work_items, preconditions, execution_plan, checkpoints, rollback_notes, outcome_observations |
+| CAT:C06 | AnalysisProjectIR | source_objects, dimensions, extraction, normalization, calculations, anomalies, conclusions |
+| CAT:C07 | WorkExecutionProjectIR | desired_action, authority, credentials_reference, reversibility, approvals, postconditions, receipt |
 | CAT:C08 | BusinessIR | customer, market, offer, channels, pricing, unit_economics, experiments, metrics |
 | CAT:C09 | CodeIR | repository, architecture, interfaces, tests, environment, security_constraints, performance_constraints, rollback, proof_artifacts |
 | CAT:C10 | MultimediaIR | medium, source_assets, storyboard, visual_audio_language, timing, rights_provenance, visual_observations, image_to_prompt_mode, preserve_change_regions, reference_image_roles, target_adapter_requirements |

@@ -3,7 +3,7 @@
 **Date:** 2026-09-29  
 **Suite:** `tests/portability/test_xcat_parity_56b.py`  
 **Rust module:** `portable/spe-core-rs/src/xcat.rs`  
-**WASM artifact:** sha256 `d87a9d2ce1b2e789e7cb2869c686e6f719b39bdc753df509cb5244a07034b75a`
+**WASM artifact:** sha256 `077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082`
 
 ## Mismatches
 

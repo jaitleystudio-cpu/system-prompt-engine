@@ -1,4 +1,12 @@
-"""CAT:C07 Execute — form ExecutionIntent under authority; never mint authority.
+"""CAT:C07 legacy ExecutionIntent proposer.
+
+OWNERSHIP_CLASS = LEGACY_COMPATIBILITY
+DOMAIN v2 production must use apply_domain_category with WorkExecutionProjectIR.
+This module may return a proposed ExecutionIntent and append category_trace.
+It must not mint authority, commit execution success, or perform side effects.
+
+RECOMMEND != AUTHORIZE != EXECUTE
+
 
 Hard law: recommendation SEND + C03 rendering + authority NONE (no grant)
 = BLOCKED. No external side effects here (adapter is separate).
@@ -22,6 +30,8 @@ from spe_runtime.xcat.models import CrossCategoryEnvelope
 from spe_runtime.xcat.reasons import ReasonCode
 
 CATEGORY_ID = "CAT:C07"
+OWNERSHIP_CLASS = "LEGACY_COMPATIBILITY"
+DOMAIN_PRODUCTION = False
 
 
 @dataclass(frozen=True)

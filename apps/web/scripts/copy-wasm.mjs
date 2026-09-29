@@ -23,8 +23,8 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const EXPECTED_SHA256 =
-  "d87a9d2ce1b2e789e7cb2869c686e6f719b39bdc753df509cb5244a07034b75a";
-const EXPECTED_BYTES = 1022683;
+  "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082";
+const EXPECTED_BYTES = 1023091;
 const PRE_XCAT_EFFECT_BINDING_SHA256 =
   "48ad95f5873bd7fb7933354d93fbbe732c57bc6f85956f64762fe1f5f44f2c33";
 const PRE_XCAT_EFFECT_BINDING_BYTES = 937763;

@@ -9,9 +9,13 @@
 - RATIFICATION COMMIT: `b208554`
 - DOMAIN RUNTIME COMMIT: `b07ecaa`
 - RUST/WASM/MUTATIONS COMMIT: `a2da6cb`
-- FINAL SHA: 0992cf23f1ae79d2fa430634c8f0fe99811a2cb3
+- REPORT_BASIS_SHA (56B adjudication head, external): `e1e99b00e8e2848fb9a4e3fce22a3cfb65019031`
+- REPORT_ARTIFACT_COMMIT: not self-certified
+- PR_HEAD_AT_REVIEW: recorded by reviewer, not by a commit that stamps itself
 - DATE: 2026-09-29 Asia/Calcutta
 - PR: **#56 draft — do not merge**
+
+The previous `FINAL SHA` field was a self-referential stamp (`0992cf23…` inside a later commit). It is withdrawn. This file does not claim the hash of the commit that contains it.
 
 ## FINAL
 **XCAT_V1_DOMAIN_RUNTIME_CLOSURE_PASS** (evidence-scoped)
@@ -122,4 +126,37 @@ See `REGRESSION_RESULTS.md`.
 - Appendices on `XCAT_CONTRACT.md`, `CONTRACT_CONFLICTS.md`, `CONTRACT_SOURCE_INDEX.md`, `TAXONOMY_RING0_COLLISION_ANALYSIS.md`
 
 ## ABSOLUTE STOP
-No merge. No hosting. No Task 57. No Quality Delta / Plan B continuation under this report.
+No merge. No hosting. No Task 57.
+
+---
+
+# SPE TASK 56C XCAT OWNERSHIP CLOSURE
+
+## Custody
+- BASE SHA: `e1e99b00e8e2848fb9a4e3fce22a3cfb65019031`
+- REPORT_BASIS_SHA: that same pre-56C head
+- REPORT_ARTIFACT_COMMIT: not self-certified
+- PR_HEAD_AT_REVIEW: external (reviewer / `git rev-parse` after push)
+- FOUNDER_XCAT_V1_RATIFICATION.md: **unchanged**
+
+56B's `direct_kernel_writes=0` claim was not established while `decide` / `research` / `communicate` / `analyze` committed kernel fields. 56C is the ownership repair. The historical 56B taxonomy/runtime evidence above remains; the ownership sentence is superseded by this section.
+
+## Law
+DOMAIN production path writes only `category_payload`, `active_category`, `category_trace`, and `proof_obligation_proposals`.
+Legacy direct writers remain, marked `LEGACY_COMPATIBILITY`, and are not reachable from `spe_runtime.categories.domain`.
+
+## Acceptance (filled after the 56C regression run)
+See `REGRESSION_RESULTS.md` 56C section, `CATEGORY_OWNERSHIP.md`, `MUTATION_RESULTS.md`, `NO_CATEGORY_KERNEL_WRITE_BYPASS.md`.
+
+```
+DOMAIN_CATEGORY_COUNT = 12
+DOMAIN_CATEGORY_PAYLOAD_WRITERS = 12
+CATEGORY_DIRECT_KERNEL_WRITERS = 0
+PRODUCTION_LEGACY_WRITER_REACHABILITY = 0
+DUPLICATE_SEMANTIC_WRITERS = 0
+FOUNDER_RATIFICATION_UNCHANGED = YES
+MUTANTS = 23/23 KILLED
+```
+
+HOSTING FORBIDDEN. Do not merge. Do not start Task 57.
+

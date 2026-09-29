@@ -2,8 +2,8 @@
 
 | Field | Value |
 |-------|-------|
-| sha256 | `d87a9d2ce1b2e789e7cb2869c686e6f719b39bdc753df509cb5244a07034b75a` |
-| bytes | 1022683 |
+| sha256 | `077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082` |
+| bytes | 1023091 |
 | imports | 0 |
 | exports | memory, spe_alloc, spe_evaluate, spe_free |
 | rustc | 1.98.1 / 48a229ceaefd4985c50990b14116b6d856af0985 |

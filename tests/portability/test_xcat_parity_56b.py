@@ -160,6 +160,38 @@ CASES: list[dict[str, Any]] = [
         },
     },
     {
+        "id": "apply_c01_payload_only",
+        "kind": "success",
+        "payload": {
+            "spe_api": "xcat",
+            "op": "apply",
+            "envelope": _env().to_dict(),
+            "category_id": "CAT:C01",
+            "payload": {
+                "options": ["hold", "ship"],
+                "criteria": ["risk"],
+                "decision_authority": "user",
+            },
+            "proof_obligation_proposals": [],
+        },
+    },
+    {
+        "id": "apply_c07_authority_is_payload",
+        "kind": "success",
+        "payload": {
+            "spe_api": "xcat",
+            "op": "apply",
+            "envelope": _env().to_dict(),
+            "category_id": "CAT:C07",
+            "payload": {
+                "desired_action": "draft_note",
+                "authority": "NONE",
+                "reversibility": "REVERSIBLE",
+            },
+            "proof_obligation_proposals": [],
+        },
+    },
+    {
         "id": "validate_current",
         "kind": "success",
         "payload": {

@@ -14,12 +14,12 @@ VECTOR_PATH = REPO / "proofs" / "xcat_v1_closure_20260929" / "CATEGORY_VECTORS.j
 
 MIN_PAYLOAD = {
     "CAT:C01": {"options": ["a"], "criteria": ["cost"]},
-    "CAT:C02": {"questions": ["q1"], "sources": ["s1"]},
-    "CAT:C03": {"audience": "ops", "draft": "hello"},
+    "CAT:C02": {"question": "q1", "search_strategy": "manual"},
+    "CAT:C03": {"communicative_goal": "inform", "audience": "ops"},
     "CAT:C04": {"source_language": "en", "target_language": "es"},
     "CAT:C05": {"learner_state": {"status": "LEARNING"}, "mastery_evidence": {"id": "e1"}},
-    "CAT:C06": {"subjects": ["x"], "dimensions": ["y"]},
-    "CAT:C07": {"work_items": ["w1"], "checkpoints": ["c1"]},
+    "CAT:C06": {"source_objects": ["x"], "dimensions": ["y"]},
+    "CAT:C07": {"desired_action": "draft", "reversibility": "REVERSIBLE"},
     "CAT:C08": {"customer": "c", "offer": "o"},
     "CAT:C09": {"repository": "r", "tests": []},
     "CAT:C10": {"medium": "image", "source_assets": []},
@@ -93,7 +93,7 @@ def test_sample_adversarial_vectors_fail_closed() -> None:
         cat = row["category"]
         if kind == "forbidden_key":
             try:
-                apply_category_payload(_env(), cat, {**MIN_PAYLOAD[cat], "authority": 1})
+                apply_category_payload(_env(), cat, {**MIN_PAYLOAD[cat], "EXECUTED": True})
                 raised = False
             except ValueError:
                 raised = True
