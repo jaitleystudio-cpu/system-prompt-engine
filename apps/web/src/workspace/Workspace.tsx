@@ -451,7 +451,7 @@ export function Workspace(props: Props) {
               />
             )}
             {mode === "pro" && (
-              <div className="spe-pro-meta">
+              <div className="spe-pro-meta" role="status" aria-live="polite">
                 <p>
                   WASM:{" "}
                   {result ? `${result.status}/${result.disposition}` : phase}

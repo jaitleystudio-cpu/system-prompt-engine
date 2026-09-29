@@ -61,6 +61,46 @@ html[data-theme="light"] ::selection {
   background: #3d5a9a;
   color: #f4f1ea;
 }
+html[data-theme="light"] button:focus-visible,
+html[data-theme="light"] a:focus-visible,
+html[data-theme="light"] input:focus-visible,
+html[data-theme="light"] textarea:focus-visible,
+html[data-theme="light"] select:focus-visible,
+html[data-theme="light"] summary:focus-visible,
+html[data-theme="light"] pre:focus-visible {
+  outline: 2px solid #1a3675;
+  outline-offset: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (max-width: 360px) {
+  .spe-nav {
+    padding: 0 12px;
+    gap: 12px;
+  }
+  .spe-nav-brand {
+    font-size: 1.4rem;
+  }
+  .nav-description {
+    display: none;
+  }
+  .spe-workspace,
+  .studio-shell,
+  .brief-fields,
+  .brief-selects {
+    grid-template-columns: 1fr;
+    min-width: 0;
+    max-width: 100%;
+  }
+}
 * {
   box-sizing: border-box;
 }

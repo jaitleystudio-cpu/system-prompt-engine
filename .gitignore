@@ -224,10 +224,12 @@ __marimo__/
 **/*.rs.bk
 
 # Node / Web PWA (Sprint 6)
+node_modules
 node_modules/
 apps/web/dist/
 
 # SPE-WEB-01
+apps/web/node_modules
 apps/web/node_modules/
 
 
