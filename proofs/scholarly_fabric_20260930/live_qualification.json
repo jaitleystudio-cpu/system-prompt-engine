@@ -1,0 +1,2899 @@
+{
+  "recorded_at": "2026-09-29T22:21:10Z",
+  "probes": [
+    {
+      "source_id": "pubmed",
+      "source_status": "QUALIFIED",
+      "failure_class": "NONE",
+      "http_status": 200,
+      "host": "eutils.ncbi.nlm.nih.gov",
+      "method": "GET",
+      "query_fields": [
+        "term"
+      ],
+      "content_type": "application/json",
+      "record_count": 2,
+      "latency_ms": 207,
+      "parse_result": "PARSED",
+      "identity_fields": [
+        "doi",
+        "pmcid",
+        "pmid"
+      ],
+      "rate_limit_notes": [
+        [
+          "X-RateLimit-Limit",
+          "3"
+        ],
+        [
+          "X-RateLimit-Remaining",
+          "2"
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "source_id": "pmc",
+      "source_status": "QUALIFIED",
+      "failure_class": "NONE",
+      "http_status": 200,
+      "host": "eutils.ncbi.nlm.nih.gov",
+      "method": "GET",
+      "query_fields": [
+        "term"
+      ],
+      "content_type": "application/json",
+      "record_count": 2,
+      "latency_ms": 176,
+      "parse_result": "PARSED",
+      "identity_fields": [
+        "doi",
+        "pmcid"
+      ],
+      "rate_limit_notes": [
+        [
+          "X-RateLimit-Limit",
+          "3"
+        ],
+        [
+          "X-RateLimit-Remaining",
+          "2"
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "source_id": "europepmc",
+      "source_status": "QUALIFIED",
+      "failure_class": "NONE",
+      "http_status": 200,
+      "host": "www.ebi.ac.uk",
+      "method": "GET",
+      "query_fields": [
+        "query"
+      ],
+      "content_type": "application/json",
+      "record_count": 2,
+      "latency_ms": 563,
+      "parse_result": "PARSED",
+      "identity_fields": [
+        "doi",
+        "pmcid",
+        "pmid"
+      ],
+      "rate_limit_notes": [],
+      "error": ""
+    },
+    {
+      "source_id": "crossref",
+      "source_status": "QUALIFIED",
+      "failure_class": "NONE",
+      "http_status": 200,
+      "host": "api.crossref.org",
+      "method": "GET",
+      "query_fields": [
+        "query.bibliographic"
+      ],
+      "content_type": "application/json",
+      "record_count": 2,
+      "latency_ms": 138,
+      "parse_result": "PARSED",
+      "identity_fields": [
+        "doi"
+      ],
+      "rate_limit_notes": [],
+      "error": ""
+    },
+    {
+      "source_id": "doaj",
+      "source_status": "QUALIFIED",
+      "failure_class": "NONE",
+      "http_status": 200,
+      "host": "doaj.org",
+      "method": "GET",
+      "query_fields": [
+        "path"
+      ],
+      "content_type": "application/json",
+      "record_count": 1,
+      "latency_ms": 276,
+      "parse_result": "PARSED",
+      "identity_fields": [
+        "doi"
+      ],
+      "rate_limit_notes": [],
+      "error": ""
+    },
+    {
+      "source_id": "arxiv",
+      "source_status": "QUALIFIED",
+      "failure_class": "NONE",
+      "http_status": 200,
+      "host": "export.arxiv.org",
+      "method": "GET",
+      "query_fields": [
+        "search_query"
+      ],
+      "content_type": "application/atom+xml",
+      "record_count": 2,
+      "latency_ms": 265,
+      "parse_result": "PARSED",
+      "identity_fields": [
+        "arxiv_id"
+      ],
+      "rate_limit_notes": [],
+      "error": ""
+    },
+    {
+      "source_id": "openalex",
+      "source_status": "QUALIFIED",
+      "failure_class": "NONE",
+      "http_status": 200,
+      "host": "api.openalex.org",
+      "method": "GET",
+      "query_fields": [
+        "search"
+      ],
+      "content_type": "application/json",
+      "record_count": 2,
+      "latency_ms": 530,
+      "parse_result": "PARSED",
+      "identity_fields": [
+        "doi",
+        "pmid"
+      ],
+      "rate_limit_notes": [
+        [
+          "X-RateLimit-Limit",
+          "1000"
+        ],
+        [
+          "X-RateLimit-Remaining",
+          "789"
+        ]
+      ],
+      "error": ""
+    }
+  ],
+  "hosts": [
+    "api.crossref.org",
+    "api.openalex.org",
+    "doaj.org",
+    "eutils.ncbi.nlm.nih.gov",
+    "export.arxiv.org",
+    "pmc.ncbi.nlm.nih.gov",
+    "www.ebi.ac.uk"
+  ],
+  "unexpected_hosts": [],
+  "topic_package": {
+    "status": "PARTIAL",
+    "semantic_authority": "NONE",
+    "sources_requested": [
+      "pubmed",
+      "pmc",
+      "europepmc",
+      "crossref",
+      "doaj",
+      "arxiv",
+      "openalex"
+    ],
+    "egress": [
+      {
+        "source_id": "pubmed",
+        "host": "eutils.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/entrez/eutils/esearch.fcgi",
+        "query_keys": [
+          "db",
+          "retmax",
+          "retmode",
+          "term",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "pubmed",
+        "host": "eutils.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/entrez/eutils/esummary.fcgi",
+        "query_keys": [
+          "db",
+          "id",
+          "retmode",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "pmc",
+        "host": "eutils.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/entrez/eutils/esearch.fcgi",
+        "query_keys": [
+          "db",
+          "retmax",
+          "retmode",
+          "term",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "pmc",
+        "host": "eutils.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/entrez/eutils/esummary.fcgi",
+        "query_keys": [
+          "db",
+          "id",
+          "retmode",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "europepmc",
+        "host": "www.ebi.ac.uk",
+        "method": "GET",
+        "path": "/europepmc/webservices/rest/search",
+        "query_keys": [
+          "format",
+          "pageSize",
+          "query",
+          "resultType"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "crossref",
+        "host": "api.crossref.org",
+        "method": "GET",
+        "path": "/works",
+        "query_keys": [
+          "query.bibliographic",
+          "rows"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "doaj",
+        "host": "doaj.org",
+        "method": "GET",
+        "path": "/api/search/articles/%22CRISPR%20Cas9%20gene%20editing%22",
+        "query_keys": [
+          "pageSize"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "arxiv",
+        "host": "export.arxiv.org",
+        "method": "GET",
+        "path": "/api/query",
+        "query_keys": [
+          "max_results",
+          "search_query",
+          "start"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "openalex",
+        "host": "api.openalex.org",
+        "method": "GET",
+        "path": "/works",
+        "query_keys": [
+          "per-page",
+          "search"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "ncbi_idconv",
+        "host": "pmc.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/tools/idconv/api/v1/articles/",
+        "query_keys": [
+          "format",
+          "ids",
+          "idtype",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "ncbi_idconv",
+        "host": "pmc.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/tools/idconv/api/v1/articles/",
+        "query_keys": [
+          "format",
+          "ids",
+          "idtype",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "ncbi_idconv",
+        "host": "pmc.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/tools/idconv/api/v1/articles/",
+        "query_keys": [
+          "format",
+          "ids",
+          "idtype",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      }
+    ],
+    "record_count": 19,
+    "source_ids": [
+      [
+        "arxiv"
+      ],
+      [
+        "pmc"
+      ],
+      [
+        "pubmed"
+      ],
+      [
+        "openalex"
+      ],
+      [
+        "crossref"
+      ],
+      [
+        "crossref"
+      ],
+      [
+        "doaj"
+      ],
+      [
+        "pmc"
+      ],
+      [
+        "openalex"
+      ],
+      [
+        "pubmed"
+      ],
+      [
+        "europepmc"
+      ],
+      [
+        "europepmc"
+      ],
+      [
+        "pubmed"
+      ],
+      [
+        "pmc"
+      ],
+      [
+        "crossref"
+      ],
+      [
+        "doaj"
+      ],
+      [
+        "openalex"
+      ],
+      [
+        "doaj"
+      ],
+      [
+        "europepmc"
+      ]
+    ],
+    "identities": [
+      {
+        "doi": null,
+        "pmid": null,
+        "pmcid": null,
+        "arxiv_id": "2607.02622",
+        "arxiv_version": "1",
+        "canonical_key": "arxiv:2607.02622",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1002/anie.9746658",
+        "pmid": "42554310",
+        "pmcid": "PMC13618269",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1002/anie.9746658",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1002/hsr2.73308",
+        "pmid": "42798792",
+        "pmcid": "PMC13613094",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1002/hsr2.73308",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1016/j.jconrel.2017.09.012",
+        "pmid": "28911805",
+        "pmcid": "PMC5723556",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1016/j.jconrel.2017.09.012",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1036/1097-8542.168060",
+        "pmid": null,
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1036/1097-8542.168060",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1036/1097-8542.yb150927",
+        "pmid": null,
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1036/1097-8542.yb150927",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1038/s41419-022-05330-6",
+        "pmid": "36261424",
+        "pmcid": "PMC9581971",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1038/s41419-022-05330-6",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1038/s41467-026-76852-2",
+        "pmid": "42802274",
+        "pmcid": "PMC13616921",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1038/s41467-026-76852-2",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1056/nejmoa2031054",
+        "pmid": "33283989",
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1056/nejmoa2031054",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1080/29947448.2026.2660423",
+        "pmid": "42802750",
+        "pmcid": "PMC13616094",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1080/29947448.2026.2660423",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1093/procel/pwag057",
+        "pmid": "42629331",
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1093/procel/pwag057",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1111/1744-7917.70360",
+        "pmid": "42723398",
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1111/1744-7917.70360",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1111/1744-7917.70370",
+        "pmid": "42806737",
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1111/1744-7917.70370",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1242/dmm.052890",
+        "pmid": "42752001",
+        "pmcid": "PMC13617977",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1242/dmm.052890",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.21275/sr23624231215",
+        "pmid": null,
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.21275/sr23624231215",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.26508/lsa.202402845",
+        "pmid": "39741007",
+        "pmcid": "PMC11707380",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.26508/lsa.202402845",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.3389/fbioe.2023.1143157",
+        "pmid": "36970624",
+        "pmcid": "PMC10034092",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.3389/fbioe.2023.1143157",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.3389/fimmu.2018.00429",
+        "pmid": "29593714",
+        "pmcid": "PMC5854650",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.3389/fimmu.2018.00429",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.3390/v18090972",
+        "pmid": "42797803",
+        "pmcid": "PMC13611976",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.3390/v18090972",
+        "status": "RESOLVED"
+      }
+    ],
+    "retractions": [
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "ARXIV_NO_JOURNAL_RETRACTION_SIGNAL"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "PUBMED_PUBTYPE_ABSENT"
+        ]
+      },
+      {
+        "kind": "NONE",
+        "notice_ids": [],
+        "evidence": [
+          "PUBMED_PUBTYPE_NO_NOTICE"
+        ]
+      },
+      {
+        "kind": "NONE",
+        "notice_ids": [],
+        "evidence": [
+          "OPENALEX_IS_RETRACTED_FALSE"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "CROSSREF_NO_EXPLICIT_SIGNAL"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "CROSSREF_NO_EXPLICIT_SIGNAL"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "DOAJ_NO_RETRACTION_FIELD"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "PUBMED_PUBTYPE_ABSENT"
+        ]
+      },
+      {
+        "kind": "NONE",
+        "notice_ids": [],
+        "evidence": [
+          "OPENALEX_IS_RETRACTED_FALSE"
+        ]
+      },
+      {
+        "kind": "NONE",
+        "notice_ids": [],
+        "evidence": [
+          "PUBMED_PUBTYPE_NO_NOTICE"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "EUROPEPMC_NO_EXPLICIT_SIGNAL"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "EUROPEPMC_NO_EXPLICIT_SIGNAL"
+        ]
+      },
+      {
+        "kind": "NONE",
+        "notice_ids": [],
+        "evidence": [
+          "PUBMED_PUBTYPE_NO_NOTICE"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "PUBMED_PUBTYPE_ABSENT"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "CROSSREF_NO_EXPLICIT_SIGNAL"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "DOAJ_NO_RETRACTION_FIELD"
+        ]
+      },
+      {
+        "kind": "NONE",
+        "notice_ids": [],
+        "evidence": [
+          "OPENALEX_IS_RETRACTED_FALSE"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "DOAJ_NO_RETRACTION_FIELD"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "EUROPEPMC_NO_EXPLICIT_SIGNAL"
+        ]
+      }
+    ],
+    "full_text": [
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED"
+    ],
+    "groups": {
+      "foundational": 2,
+      "frontier": 13,
+      "contradictory": 0,
+      "replication": 0
+    },
+    "graph": {
+      "status": "UNKNOWN",
+      "claims": [
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "text": "CRISPR Cas9 gene editing",
+          "origin": "QUERY"
+        }
+      ],
+      "edges": [
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:2d7d93620a6a91f0",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "arxiv",
+          "canonical_key": "arxiv:2607.02622",
+          "metadata_ref": "paper:2d7d93620a6a91f0",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "arxiv"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "PREPRINT"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:545e891e7a743628",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "pmc",
+          "canonical_key": "doi:10.1002/anie.9746658",
+          "metadata_ref": "paper:545e891e7a743628",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "pmc"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "UNKNOWN"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:ffd19e434c547d52",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "pubmed",
+          "canonical_key": "doi:10.1002/hsr2.73308",
+          "metadata_ref": "paper:ffd19e434c547d52",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "pubmed"
+          ],
+          "retraction_state": "NONE",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:fb844f7d16ca61fa",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "openalex",
+          "canonical_key": "doi:10.1016/j.jconrel.2017.09.012",
+          "metadata_ref": "paper:fb844f7d16ca61fa",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "openalex"
+          ],
+          "retraction_state": "NONE",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:e5fb35e7277d6f01",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "crossref",
+          "canonical_key": "doi:10.1036/1097-8542.168060",
+          "metadata_ref": "paper:e5fb35e7277d6f01",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "crossref"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:94440f832c2be6a6",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "crossref",
+          "canonical_key": "doi:10.1036/1097-8542.yb150927",
+          "metadata_ref": "paper:94440f832c2be6a6",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "crossref"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:5b7d12a461e439ec",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "doaj",
+          "canonical_key": "doi:10.1038/s41419-022-05330-6",
+          "metadata_ref": "paper:5b7d12a461e439ec",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "doaj"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:2a0edfb3f55376e9",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "pmc",
+          "canonical_key": "doi:10.1038/s41467-026-76852-2",
+          "metadata_ref": "paper:2a0edfb3f55376e9",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "pmc"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "UNKNOWN"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:385204458dc893a7",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "openalex",
+          "canonical_key": "doi:10.1056/nejmoa2031054",
+          "metadata_ref": "paper:385204458dc893a7",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "openalex"
+          ],
+          "retraction_state": "NONE",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:0bae376f411b1262",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "pubmed",
+          "canonical_key": "doi:10.1080/29947448.2026.2660423",
+          "metadata_ref": "paper:0bae376f411b1262",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "pubmed"
+          ],
+          "retraction_state": "NONE",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:14885a4770b15d8d",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "europepmc",
+          "canonical_key": "doi:10.1093/procel/pwag057",
+          "metadata_ref": "paper:14885a4770b15d8d",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "europepmc"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:93d181c1a290d1ef",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "europepmc",
+          "canonical_key": "doi:10.1111/1744-7917.70360",
+          "metadata_ref": "paper:93d181c1a290d1ef",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "europepmc"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:b18da7f3243fca3b",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "pubmed",
+          "canonical_key": "doi:10.1111/1744-7917.70370",
+          "metadata_ref": "paper:b18da7f3243fca3b",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "pubmed"
+          ],
+          "retraction_state": "NONE",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:cca25a165d4c3137",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "pmc",
+          "canonical_key": "doi:10.1242/dmm.052890",
+          "metadata_ref": "paper:cca25a165d4c3137",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "pmc"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "UNKNOWN"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:3a9c4c434ef7405d",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "crossref",
+          "canonical_key": "doi:10.21275/sr23624231215",
+          "metadata_ref": "paper:3a9c4c434ef7405d",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "crossref"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:e468e1794db04894",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "doaj",
+          "canonical_key": "doi:10.26508/lsa.202402845",
+          "metadata_ref": "paper:e468e1794db04894",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "doaj"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:c0aea27593c01f5c",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "openalex",
+          "canonical_key": "doi:10.3389/fbioe.2023.1143157",
+          "metadata_ref": "paper:c0aea27593c01f5c",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "openalex"
+          ],
+          "retraction_state": "NONE",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:820a62daf146ce44",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "doaj",
+          "canonical_key": "doi:10.3389/fimmu.2018.00429",
+          "metadata_ref": "paper:820a62daf146ce44",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "doaj"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:0a4b6cb28142268b",
+          "record_id": "paper:0d9cb05dcd588c5e",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "europepmc",
+          "canonical_key": "doi:10.3390/v18090972",
+          "metadata_ref": "paper:0d9cb05dcd588c5e",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "europepmc"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "REVIEW"
+        }
+      ]
+    },
+    "contradiction_map": {
+      "status": "UNKNOWN",
+      "reason": "NONE_OBSERVED_IN_FETCHED_SET",
+      "pairs": [],
+      "resolution": "NONE"
+    },
+    "gaps": [
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:0bae376f411b1262",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:14885a4770b15d8d",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:2a0edfb3f55376e9",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:3a9c4c434ef7405d",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:545e891e7a743628",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:94440f832c2be6a6",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:b18da7f3243fca3b",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:cca25a165d4c3137",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:e5fb35e7277d6f01",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:fb844f7d16ca61fa",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:ffd19e434c547d52",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:0bae376f411b1262",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:2a0edfb3f55376e9",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:2d7d93620a6a91f0",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:545e891e7a743628",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:5b7d12a461e439ec",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:820a62daf146ce44",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:b18da7f3243fca3b",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:cca25a165d4c3137",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:e468e1794db04894",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:ffd19e434c547d52",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:0bae376f411b1262",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:0d9cb05dcd588c5e",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:14885a4770b15d8d",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:2a0edfb3f55376e9",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:2d7d93620a6a91f0",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:385204458dc893a7",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:3a9c4c434ef7405d",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:545e891e7a743628",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:5b7d12a461e439ec",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:820a62daf146ce44",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:93d181c1a290d1ef",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:94440f832c2be6a6",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:b18da7f3243fca3b",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:c0aea27593c01f5c",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:cca25a165d4c3137",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:e468e1794db04894",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:e5fb35e7277d6f01",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:fb844f7d16ca61fa",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:ffd19e434c547d52",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:0bae376f411b1262",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:0d9cb05dcd588c5e",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:14885a4770b15d8d",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:2a0edfb3f55376e9",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:2d7d93620a6a91f0",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:385204458dc893a7",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:3a9c4c434ef7405d",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:545e891e7a743628",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:5b7d12a461e439ec",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:820a62daf146ce44",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:93d181c1a290d1ef",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:94440f832c2be6a6",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:b18da7f3243fca3b",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:c0aea27593c01f5c",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:cca25a165d4c3137",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:e468e1794db04894",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:e5fb35e7277d6f01",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:fb844f7d16ca61fa",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:ffd19e434c547d52",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:0bae376f411b1262",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:2a0edfb3f55376e9",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:385204458dc893a7",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:3a9c4c434ef7405d",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:545e891e7a743628",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:5b7d12a461e439ec",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:820a62daf146ce44",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:94440f832c2be6a6",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:b18da7f3243fca3b",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:cca25a165d4c3137",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:e468e1794db04894",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:e5fb35e7277d6f01",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:fb844f7d16ca61fa",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:ffd19e434c547d52",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "NONE_OBSERVED_IN_FETCHED_SET",
+        "subject": "claim:0a4b6cb28142268b",
+        "detail": "no structured support/refute pair in the fetched set",
+        "blocks_valid": false
+      },
+      {
+        "code": "PAPER_TYPE_UNKNOWN",
+        "subject": "paper:2a0edfb3f55376e9",
+        "detail": "NO_STRUCTURED_TYPE",
+        "blocks_valid": false
+      },
+      {
+        "code": "PAPER_TYPE_UNKNOWN",
+        "subject": "paper:545e891e7a743628",
+        "detail": "NO_STRUCTURED_TYPE",
+        "blocks_valid": false
+      },
+      {
+        "code": "PAPER_TYPE_UNKNOWN",
+        "subject": "paper:cca25a165d4c3137",
+        "detail": "NO_STRUCTURED_TYPE",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:0bae376f411b1262",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:0d9cb05dcd588c5e",
+        "detail": "REVIEW",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:14885a4770b15d8d",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:2a0edfb3f55376e9",
+        "detail": "UNKNOWN",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:385204458dc893a7",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:3a9c4c434ef7405d",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:545e891e7a743628",
+        "detail": "UNKNOWN",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:5b7d12a461e439ec",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:820a62daf146ce44",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:93d181c1a290d1ef",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:94440f832c2be6a6",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:b18da7f3243fca3b",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:c0aea27593c01f5c",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:cca25a165d4c3137",
+        "detail": "UNKNOWN",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:e468e1794db04894",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:e5fb35e7277d6f01",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:fb844f7d16ca61fa",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:ffd19e434c547d52",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "REPLICATION_ABSENT",
+        "subject": "package",
+        "detail": "no structured or explicit-abstract replication in the fetched set",
+        "blocks_valid": false
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:0d9cb05dcd588c5e",
+        "detail": "EUROPEPMC_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:14885a4770b15d8d",
+        "detail": "EUROPEPMC_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:2a0edfb3f55376e9",
+        "detail": "PUBMED_PUBTYPE_ABSENT",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:2d7d93620a6a91f0",
+        "detail": "ARXIV_NO_JOURNAL_RETRACTION_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:3a9c4c434ef7405d",
+        "detail": "CROSSREF_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:545e891e7a743628",
+        "detail": "PUBMED_PUBTYPE_ABSENT",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:5b7d12a461e439ec",
+        "detail": "DOAJ_NO_RETRACTION_FIELD",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:820a62daf146ce44",
+        "detail": "DOAJ_NO_RETRACTION_FIELD",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:93d181c1a290d1ef",
+        "detail": "EUROPEPMC_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:94440f832c2be6a6",
+        "detail": "CROSSREF_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:cca25a165d4c3137",
+        "detail": "PUBMED_PUBTYPE_ABSENT",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:e468e1794db04894",
+        "detail": "DOAJ_NO_RETRACTION_FIELD",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:e5fb35e7277d6f01",
+        "detail": "CROSSREF_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "SOURCE_CLASS_UNKNOWN",
+        "subject": "paper:2a0edfb3f55376e9",
+        "detail": "none",
+        "blocks_valid": true
+      },
+      {
+        "code": "SOURCE_CLASS_UNKNOWN",
+        "subject": "paper:545e891e7a743628",
+        "detail": "none",
+        "blocks_valid": true
+      },
+      {
+        "code": "SOURCE_CLASS_UNKNOWN",
+        "subject": "paper:93d181c1a290d1ef",
+        "detail": "letter",
+        "blocks_valid": true
+      },
+      {
+        "code": "SOURCE_CLASS_UNKNOWN",
+        "subject": "paper:94440f832c2be6a6",
+        "detail": "dataset",
+        "blocks_valid": true
+      },
+      {
+        "code": "SOURCE_CLASS_UNKNOWN",
+        "subject": "paper:cca25a165d4c3137",
+        "detail": "none",
+        "blocks_valid": true
+      },
+      {
+        "code": "SOURCE_CLASS_UNKNOWN",
+        "subject": "paper:e5fb35e7277d6f01",
+        "detail": "dataset",
+        "blocks_valid": true
+      },
+      {
+        "code": "YEAR_UNKNOWN",
+        "subject": "paper:94440f832c2be6a6",
+        "detail": "publication year is absent or conflicted",
+        "blocks_valid": true
+      },
+      {
+        "code": "YEAR_UNKNOWN",
+        "subject": "paper:e5fb35e7277d6f01",
+        "detail": "publication year is absent or conflicted",
+        "blocks_valid": true
+      }
+    ],
+    "refusal_reasons": [],
+    "quarantine": []
+  },
+  "dedup": {
+    "status": "PARTIAL",
+    "semantic_authority": "NONE",
+    "sources_requested": [
+      "pubmed",
+      "europepmc",
+      "crossref",
+      "openalex"
+    ],
+    "egress": [
+      {
+        "source_id": "pubmed",
+        "host": "eutils.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/entrez/eutils/esearch.fcgi",
+        "query_keys": [
+          "db",
+          "retmax",
+          "retmode",
+          "term",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "pubmed",
+        "host": "eutils.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/entrez/eutils/esummary.fcgi",
+        "query_keys": [
+          "db",
+          "id",
+          "retmode",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "europepmc",
+        "host": "www.ebi.ac.uk",
+        "method": "GET",
+        "path": "/europepmc/webservices/rest/search",
+        "query_keys": [
+          "format",
+          "pageSize",
+          "query",
+          "resultType"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "crossref",
+        "host": "api.crossref.org",
+        "method": "GET",
+        "path": "/works",
+        "query_keys": [
+          "query.bibliographic",
+          "rows"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "openalex",
+        "host": "api.openalex.org",
+        "method": "GET",
+        "path": "/works",
+        "query_keys": [
+          "per-page",
+          "search"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "ncbi_idconv",
+        "host": "pmc.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/tools/idconv/api/v1/articles/",
+        "query_keys": [
+          "format",
+          "ids",
+          "idtype",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "ncbi_idconv",
+        "host": "pmc.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/tools/idconv/api/v1/articles/",
+        "query_keys": [
+          "format",
+          "ids",
+          "idtype",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "ncbi_idconv",
+        "host": "pmc.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/tools/idconv/api/v1/articles/",
+        "query_keys": [
+          "format",
+          "ids",
+          "idtype",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      }
+    ],
+    "record_count": 6,
+    "source_ids": [
+      [
+        "europepmc",
+        "openalex",
+        "pubmed"
+      ],
+      [
+        "openalex"
+      ],
+      [
+        "crossref"
+      ],
+      [
+        "crossref"
+      ],
+      [
+        "crossref"
+      ],
+      [
+        "openalex"
+      ]
+    ],
+    "identities": [
+      {
+        "doi": "10.1038/s41586-021-03819-2",
+        "pmid": "34265844",
+        "pmcid": "PMC8371605",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1038/s41586-021-03819-2",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1038/s41594-021-00650-1",
+        "pmid": "34376855",
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1038/s41594-021-00650-1",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.3726/978-3-653-03819-4/10",
+        "pmid": null,
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.3726/978-3-653-03819-4/10",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.3726/978-3-653-03819-4/4",
+        "pmid": null,
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.3726/978-3-653-03819-4/4",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.3726/978-3-653-03819-4/5",
+        "pmid": null,
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.3726/978-3-653-03819-4/5",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.3929/ethz-b-000667478",
+        "pmid": null,
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.3929/ethz-b-000667478",
+        "status": "RESOLVED"
+      }
+    ],
+    "retractions": [
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "PUBMED_PUBTYPE_NO_NOTICE",
+          "EUROPEPMC_NO_EXPLICIT_SIGNAL",
+          "OPENALEX_IS_RETRACTED_FALSE",
+          "EXPLICIT_NONE_WITH_UNKNOWN_WITNESS"
+        ]
+      },
+      {
+        "kind": "NONE",
+        "notice_ids": [],
+        "evidence": [
+          "OPENALEX_IS_RETRACTED_FALSE"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "CROSSREF_NO_EXPLICIT_SIGNAL"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "CROSSREF_NO_EXPLICIT_SIGNAL"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "CROSSREF_NO_EXPLICIT_SIGNAL"
+        ]
+      },
+      {
+        "kind": "NONE",
+        "notice_ids": [],
+        "evidence": [
+          "OPENALEX_IS_RETRACTED_FALSE"
+        ]
+      }
+    ],
+    "full_text": [
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED"
+    ],
+    "groups": {
+      "foundational": 2,
+      "frontier": 1,
+      "contradictory": 0,
+      "replication": 0
+    },
+    "graph": {
+      "status": "UNKNOWN",
+      "claims": [
+        {
+          "claim_id": "claim:2d088b5b0b596cbf",
+          "text": "10.1038/s41586-021-03819-2",
+          "origin": "QUERY"
+        }
+      ],
+      "edges": [
+        {
+          "claim_id": "claim:2d088b5b0b596cbf",
+          "record_id": "paper:e0d5c3805210ed23",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "pubmed",
+          "canonical_key": "doi:10.1038/s41586-021-03819-2",
+          "metadata_ref": "paper:e0d5c3805210ed23",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "europepmc",
+            "openalex",
+            "pubmed"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:2d088b5b0b596cbf",
+          "record_id": "paper:4d249b1a108b084f",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "openalex",
+          "canonical_key": "doi:10.1038/s41594-021-00650-1",
+          "metadata_ref": "paper:4d249b1a108b084f",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "openalex"
+          ],
+          "retraction_state": "NONE",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:2d088b5b0b596cbf",
+          "record_id": "paper:d2e5089293ed02ef",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "crossref",
+          "canonical_key": "doi:10.3726/978-3-653-03819-4/10",
+          "metadata_ref": "paper:d2e5089293ed02ef",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "crossref"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:2d088b5b0b596cbf",
+          "record_id": "paper:2f75445892ea609e",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "crossref",
+          "canonical_key": "doi:10.3726/978-3-653-03819-4/4",
+          "metadata_ref": "paper:2f75445892ea609e",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "crossref"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:2d088b5b0b596cbf",
+          "record_id": "paper:c58ba353d223611d",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "crossref",
+          "canonical_key": "doi:10.3726/978-3-653-03819-4/5",
+          "metadata_ref": "paper:c58ba353d223611d",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "crossref"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:2d088b5b0b596cbf",
+          "record_id": "paper:5bb7122b647e823f",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "openalex",
+          "canonical_key": "doi:10.3929/ethz-b-000667478",
+          "metadata_ref": "paper:5bb7122b647e823f",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "openalex"
+          ],
+          "retraction_state": "NONE",
+          "paper_type": "OTHER"
+        }
+      ]
+    },
+    "contradiction_map": {
+      "status": "UNKNOWN",
+      "reason": "NONE_OBSERVED_IN_FETCHED_SET",
+      "pairs": [],
+      "resolution": "NONE"
+    },
+    "gaps": [
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:2f75445892ea609e",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:4d249b1a108b084f",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:c58ba353d223611d",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:d2e5089293ed02ef",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:2f75445892ea609e",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:4d249b1a108b084f",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:5bb7122b647e823f",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:c58ba353d223611d",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:d2e5089293ed02ef",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:e0d5c3805210ed23",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:2f75445892ea609e",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:4d249b1a108b084f",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:5bb7122b647e823f",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:c58ba353d223611d",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:d2e5089293ed02ef",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:e0d5c3805210ed23",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:2f75445892ea609e",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:c58ba353d223611d",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:d2e5089293ed02ef",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "NONE_OBSERVED_IN_FETCHED_SET",
+        "subject": "claim:2d088b5b0b596cbf",
+        "detail": "no structured support/refute pair in the fetched set",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:2f75445892ea609e",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:4d249b1a108b084f",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:5bb7122b647e823f",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:c58ba353d223611d",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:d2e5089293ed02ef",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:e0d5c3805210ed23",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "REPLICATION_ABSENT",
+        "subject": "package",
+        "detail": "no structured or explicit-abstract replication in the fetched set",
+        "blocks_valid": false
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:2f75445892ea609e",
+        "detail": "CROSSREF_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:c58ba353d223611d",
+        "detail": "CROSSREF_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:d2e5089293ed02ef",
+        "detail": "CROSSREF_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:e0d5c3805210ed23",
+        "detail": "PUBMED_PUBTYPE_NO_NOTICE,EUROPEPMC_NO_EXPLICIT_SIGNAL,OPENALEX_IS_RETRACTED_FALSE,EXPLICIT_NONE_WITH_UNKNOWN_WITNESS",
+        "blocks_valid": true
+      },
+      {
+        "code": "SOURCE_CLASS_UNKNOWN",
+        "subject": "paper:2f75445892ea609e",
+        "detail": "book-chapter",
+        "blocks_valid": true
+      },
+      {
+        "code": "SOURCE_CLASS_UNKNOWN",
+        "subject": "paper:c58ba353d223611d",
+        "detail": "book-chapter",
+        "blocks_valid": true
+      },
+      {
+        "code": "SOURCE_CLASS_UNKNOWN",
+        "subject": "paper:d2e5089293ed02ef",
+        "detail": "book-chapter",
+        "blocks_valid": true
+      },
+      {
+        "code": "YEAR_UNKNOWN",
+        "subject": "paper:2f75445892ea609e",
+        "detail": "publication year is absent or conflicted",
+        "blocks_valid": true
+      },
+      {
+        "code": "YEAR_UNKNOWN",
+        "subject": "paper:c58ba353d223611d",
+        "detail": "publication year is absent or conflicted",
+        "blocks_valid": true
+      },
+      {
+        "code": "YEAR_UNKNOWN",
+        "subject": "paper:d2e5089293ed02ef",
+        "detail": "publication year is absent or conflicted",
+        "blocks_valid": true
+      }
+    ],
+    "refusal_reasons": [],
+    "quarantine": []
+  },
+  "retracted": {
+    "status": "PARTIAL",
+    "semantic_authority": "NONE",
+    "sources_requested": [
+      "pubmed",
+      "crossref",
+      "openalex"
+    ],
+    "egress": [
+      {
+        "source_id": "pubmed",
+        "host": "eutils.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/entrez/eutils/esearch.fcgi",
+        "query_keys": [
+          "db",
+          "retmax",
+          "retmode",
+          "term",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "pubmed",
+        "host": "eutils.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/entrez/eutils/esummary.fcgi",
+        "query_keys": [
+          "db",
+          "id",
+          "retmode",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "crossref",
+        "host": "api.crossref.org",
+        "method": "GET",
+        "path": "/works",
+        "query_keys": [
+          "query.bibliographic",
+          "rows"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "openalex",
+        "host": "api.openalex.org",
+        "method": "GET",
+        "path": "/works",
+        "query_keys": [
+          "per-page",
+          "search"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "ncbi_idconv",
+        "host": "pmc.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/tools/idconv/api/v1/articles/",
+        "query_keys": [
+          "format",
+          "ids",
+          "idtype",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "ncbi_idconv",
+        "host": "pmc.ncbi.nlm.nih.gov",
+        "method": "GET",
+        "path": "/tools/idconv/api/v1/articles/",
+        "query_keys": [
+          "format",
+          "ids",
+          "idtype",
+          "tool"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      }
+    ],
+    "record_count": 5,
+    "source_ids": [
+      [
+        "openalex"
+      ],
+      [
+        "pubmed"
+      ],
+      [
+        "crossref"
+      ],
+      [
+        "crossref"
+      ],
+      [
+        "openalex"
+      ]
+    ],
+    "identities": [
+      {
+        "doi": "10.1016/j.socscimed.2019.112552",
+        "pmid": "31561111",
+        "pmcid": "PMC7117034",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1016/j.socscimed.2019.112552",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1016/s0140-6736(97)11096-0",
+        "pmid": "9500320",
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1016/s0140-6736(97)11096-0",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.1038/scientificamerican04271889-11096asupp",
+        "pmid": null,
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.1038/scientificamerican04271889-11096asupp",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.5270/esa-1dva36n",
+        "pmid": null,
+        "pmcid": null,
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.5270/esa-1dva36n",
+        "status": "RESOLVED"
+      },
+      {
+        "doi": "10.7759/cureus.2919",
+        "pmid": "30186724",
+        "pmcid": "PMC6122668",
+        "arxiv_id": null,
+        "arxiv_version": null,
+        "canonical_key": "doi:10.7759/cureus.2919",
+        "status": "RESOLVED"
+      }
+    ],
+    "retractions": [
+      {
+        "kind": "NONE",
+        "notice_ids": [],
+        "evidence": [
+          "OPENALEX_IS_RETRACTED_FALSE"
+        ]
+      },
+      {
+        "kind": "RETRACTION",
+        "notice_ids": [],
+        "evidence": [
+          "PUBMED_PUBTYPE_RETRACTION"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "CROSSREF_NO_EXPLICIT_SIGNAL"
+        ]
+      },
+      {
+        "kind": "UNKNOWN",
+        "notice_ids": [],
+        "evidence": [
+          "CROSSREF_NO_EXPLICIT_SIGNAL"
+        ]
+      },
+      {
+        "kind": "NONE",
+        "notice_ids": [],
+        "evidence": [
+          "OPENALEX_IS_RETRACTED_FALSE"
+        ]
+      }
+    ],
+    "full_text": [
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED",
+      "NOT_RETRIEVED"
+    ],
+    "groups": {
+      "foundational": 2,
+      "frontier": 0,
+      "contradictory": 0,
+      "replication": 0
+    },
+    "graph": {
+      "status": "UNKNOWN",
+      "claims": [
+        {
+          "claim_id": "claim:e1144ad9cb9780a8",
+          "text": "10.1016/s0140-6736(97)11096-0",
+          "origin": "QUERY"
+        }
+      ],
+      "edges": [
+        {
+          "claim_id": "claim:e1144ad9cb9780a8",
+          "record_id": "paper:f37cdfad40824ee4",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "openalex",
+          "canonical_key": "doi:10.1016/j.socscimed.2019.112552",
+          "metadata_ref": "paper:f37cdfad40824ee4",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "openalex"
+          ],
+          "retraction_state": "NONE",
+          "paper_type": "REVIEW"
+        },
+        {
+          "claim_id": "claim:e1144ad9cb9780a8",
+          "record_id": "paper:a1a327ca750b7668",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "pubmed",
+          "canonical_key": "doi:10.1016/s0140-6736(97)11096-0",
+          "metadata_ref": "paper:a1a327ca750b7668",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "pubmed"
+          ],
+          "retraction_state": "RETRACTION",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:e1144ad9cb9780a8",
+          "record_id": "paper:885c689cd2c21165",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "crossref",
+          "canonical_key": "doi:10.1038/scientificamerican04271889-11096asupp",
+          "metadata_ref": "paper:885c689cd2c21165",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "crossref"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:e1144ad9cb9780a8",
+          "record_id": "paper:4d193dad47aed1c8",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "crossref",
+          "canonical_key": "doi:10.5270/esa-1dva36n",
+          "metadata_ref": "paper:4d193dad47aed1c8",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "crossref"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:e1144ad9cb9780a8",
+          "record_id": "paper:752d4d3d0679ca3c",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "openalex",
+          "canonical_key": "doi:10.7759/cureus.2919",
+          "metadata_ref": "paper:752d4d3d0679ca3c",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "openalex"
+          ],
+          "retraction_state": "NONE",
+          "paper_type": "OTHER"
+        }
+      ]
+    },
+    "contradiction_map": {
+      "status": "UNKNOWN",
+      "reason": "NONE_OBSERVED_IN_FETCHED_SET",
+      "pairs": [],
+      "resolution": "NONE"
+    },
+    "gaps": [
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:4d193dad47aed1c8",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:885c689cd2c21165",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "ABSTRACT_ABSENT",
+        "subject": "paper:a1a327ca750b7668",
+        "detail": "source record did not include an abstract",
+        "blocks_valid": false
+      },
+      {
+        "code": "CITATION_COUNT_UNKNOWN",
+        "subject": "paper:a1a327ca750b7668",
+        "detail": "citation count absent on every witness",
+        "blocks_valid": false
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:4d193dad47aed1c8",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:752d4d3d0679ca3c",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:885c689cd2c21165",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:a1a327ca750b7668",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:f37cdfad40824ee4",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:4d193dad47aed1c8",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:752d4d3d0679ca3c",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:885c689cd2c21165",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:a1a327ca750b7668",
+        "detail": "METADATA_ONLY_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:f37cdfad40824ee4",
+        "detail": "ABSTRACT_FROM_SOURCE_API_FULL_TEXT_NOT_FETCHED",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:4d193dad47aed1c8",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:885c689cd2c21165",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "LICENSE_UNKNOWN",
+        "subject": "paper:a1a327ca750b7668",
+        "detail": "source did not state a reuse license",
+        "blocks_valid": false
+      },
+      {
+        "code": "NONE_OBSERVED_IN_FETCHED_SET",
+        "subject": "claim:e1144ad9cb9780a8",
+        "detail": "no structured support/refute pair in the fetched set",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:4d193dad47aed1c8",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:752d4d3d0679ca3c",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:885c689cd2c21165",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:a1a327ca750b7668",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:f37cdfad40824ee4",
+        "detail": "REVIEW",
+        "blocks_valid": false
+      },
+      {
+        "code": "REPLICATION_ABSENT",
+        "subject": "package",
+        "detail": "no structured or explicit-abstract replication in the fetched set",
+        "blocks_valid": false
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:4d193dad47aed1c8",
+        "detail": "CROSSREF_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:885c689cd2c21165",
+        "detail": "CROSSREF_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "SOURCE_CLASS_UNKNOWN",
+        "subject": "paper:4d193dad47aed1c8",
+        "detail": "dataset",
+        "blocks_valid": true
+      },
+      {
+        "code": "YEAR_UNKNOWN",
+        "subject": "paper:4d193dad47aed1c8",
+        "detail": "publication year is absent or conflicted",
+        "blocks_valid": true
+      }
+    ],
+    "refusal_reasons": [],
+    "quarantine": []
+  },
+  "idconv_paths": [
+    "/tools/idconv/api/v1/articles/",
+    "/tools/idconv/api/v1/articles/",
+    "/tools/idconv/api/v1/articles/"
+  ]
+}
