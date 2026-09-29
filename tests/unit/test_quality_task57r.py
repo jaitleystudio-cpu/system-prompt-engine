@@ -4,11 +4,14 @@ from __future__ import annotations
 
 from spe_runtime.quality.engine import (
     evaluate_from_k3,
+    evaluate_obligations,
+    reconstruct,
+    repair_is_admissible,
     run_mode,
     subject_digest,
     subject_from_k3,
 )
-from tests.unit.test_quality_task57 import _subject
+from tests.unit.test_quality_task57 import _drop_section, _replace_section, _subject
 
 
 def _k3_output(subject: dict | None = None) -> dict:
@@ -162,3 +165,124 @@ def test_execute_never_becomes_observed() -> None:
     )
     assert witnessed["receipt"]["proof_class"] != "EXECUTION_OBSERVED"
     assert witnessed["receipt"]["execution_observed"] is False
+
+
+def _missing_constraint(subject: dict | None = None) -> dict:
+    base = subject if subject is not None else _subject()
+    return _subject(
+        base["protected_intent"],
+        compiled_prompt=_replace_section(base["compiled_prompt"], "Hard constraints", "- other"),
+        plan_prompt=base["compiled_prompt"],
+    )
+
+
+def test_constraint_prefix_collision_is_not_satisfaction() -> None:
+    base = _subject()
+    prompt = _replace_section(base["compiled_prompt"], "Hard constraints", "- Do not invent facts extra")
+    subject = _subject(compiled_prompt=prompt, plan_prompt=base["compiled_prompt"])
+    hard = next(item for item in evaluate_obligations(subject) if item["obligation_id"] == "hard:c1")
+    assert hard["status"] == "UNSATISFIED"
+    result = reconstruct(subject)
+    assert result["plan"]["allowed_sections"] == ["Hard constraints"]
+    assert result["plan"]["disposition"] == "ACCEPTED"
+    hard_body = result["kept_subject"]["compiled_prompt"].split("## Hard constraints\n", 1)[1].split("\n\n", 1)[0]
+    assert "- Do not invent facts" in hard_body.split("\n")
+    assert result["kept_subject"]["compiled_prompt"].split("## Objective\n", 1)[1].startswith(base["protected_intent"]["goal"])
+
+
+def test_duplicate_heading_is_not_a_lawful_repair() -> None:
+    base = _subject()
+    prompt = base["compiled_prompt"] + "\n\n## Hard constraints\n- Do not invent facts"
+    subject = _subject(compiled_prompt=prompt, plan_prompt=base["compiled_prompt"])
+    sections = [item for item in evaluate_obligations(subject) if item["obligation_id"] == "artifact:sections"]
+    assert sections and sections[0]["status"] != "SATISFIED"
+    assert reconstruct(subject)["plan"]["disposition"] != "ACCEPTED"
+
+
+def test_right_constraint_text_in_wrong_section_stays_missing() -> None:
+    base = _subject()
+    prompt = _replace_section(base["compiled_prompt"], "Hard constraints", "- other")
+    prompt = _replace_section(prompt, "Facts", "- The user asked for a note\n- Do not invent facts")
+    subject = _subject(compiled_prompt=prompt, plan_prompt=base["compiled_prompt"])
+    hard = next(item for item in evaluate_obligations(subject) if item["obligation_id"] == "hard:c1")
+    assert hard["status"] == "UNSATISFIED"
+    result = reconstruct(subject)
+    assert result["plan"]["allowed_sections"] == ["Hard constraints"]
+    assert "## Objective\n" + base["protected_intent"]["goal"] in result["kept_subject"]["compiled_prompt"]
+
+
+def test_objective_change_while_fixing_constraint_is_rejected() -> None:
+    before = _missing_constraint()
+    after_prompt = _replace_section(_subject()["compiled_prompt"], "Objective", "A different goal")
+    after = dict(before)
+    after["compiled_prompt"] = after_prompt
+    assert repair_is_admissible(before, after, "RESTORE_MISSING_CONSTRAINT", ["MISSING_CONSTRAINT"], ["hard:c1"]) is False
+
+
+def test_facts_change_while_fixing_output_contract_is_rejected() -> None:
+    base = _subject()
+    before = _subject(
+        compiled_prompt=_drop_section(base["compiled_prompt"], "Deliverable"),
+        plan_prompt=base["compiled_prompt"],
+    )
+    after_prompt = _replace_section(base["compiled_prompt"], "Facts", "- invented revenue")
+    after = dict(before)
+    after["compiled_prompt"] = after_prompt
+    assert (
+        repair_is_admissible(
+            before,
+            after,
+            "RESTORE_AUTHORIZED_OUTPUT_CONTRACT",
+            ["MISSING_OUTPUT_CONTRACT"],
+            ["output:deliverable"],
+        )
+        is False
+    )
+
+
+def test_identity_drift_blocks_an_otherwise_minimal_repair() -> None:
+    before = _missing_constraint()
+    after = dict(before)
+    after["compiled_prompt"] = _subject()["compiled_prompt"]
+    assert repair_is_admissible(before, after, "RESTORE_MISSING_CONSTRAINT", ["MISSING_CONSTRAINT"], ["hard:c1"]) is True
+    for key, value in (
+        ("xcat", {"active_category": "C09", "taxonomy_version": "2"}),
+        ("k3", {"selection_id": "sel-1", "techniques": ["FEW_SHOT"]}),
+    ):
+        drifted = dict(after)
+        drifted[key] = value
+        assert repair_is_admissible(before, drifted, "RESTORE_MISSING_CONSTRAINT", ["MISSING_CONSTRAINT"], ["hard:c1"]) is False
+    authority = dict(after)
+    authority["protected_intent"] = {
+        **after["protected_intent"],
+        "authority_state": {"grants": ["EXECUTE"], "level": 2, "status": "GRANTED"},
+    }
+    assert repair_is_admissible(before, authority, "RESTORE_MISSING_CONSTRAINT", ["MISSING_CONSTRAINT"], ["hard:c1"]) is False
+
+
+def test_unrelated_protected_regression_blocks_repair() -> None:
+    before = _missing_constraint()
+    fixed = _subject()["compiled_prompt"]
+    damaged = _replace_section(fixed, "Facts", "- unrelated invented fact")
+    after = dict(before)
+    after["compiled_prompt"] = damaged
+    assert repair_is_admissible(before, after, "RESTORE_MISSING_CONSTRAINT", ["MISSING_CONSTRAINT"], ["hard:c1"]) is False
+
+
+def test_render_from_bound_plan_requires_final_drift_cause() -> None:
+    base = _subject()
+    missing = _subject(
+        compiled_prompt=_drop_section(base["compiled_prompt"], "Effect: DIRECT"),
+        plan_prompt=base["compiled_prompt"],
+    )
+    result = reconstruct(missing)
+    assert result["plan"]["disposition"] == "ACCEPTED"
+    assert result["plan"]["cause_codes"] == ["FINAL_RENDER_DRIFT_FROM_BOUND_EFFECT_PLAN"]
+    unauthorized = dict(missing)
+    unauthorized["effect_plan"] = {
+        **missing["effect_plan"],
+        "protected_fields": {**missing["effect_plan"]["protected_fields"], "goal": "other"},
+    }
+    refused = reconstruct(unauthorized)
+    assert refused["plan"]["disposition"] == "UNRESOLVED"
+    assert refused["kept"] == "original"

@@ -5,6 +5,7 @@ use crate::reasons::SpeError;
 use crate::sha256_lite::sha256_hex;
 use crate::value::canonical_dumps;
 use serde_json::{json, Map, Value};
+use std::collections::BTreeSet;
 
 const DELTA_VERSION: &str = "spe.quality_delta.v1";
 const RECONSTRUCTION_VERSION: &str = "spe.reconstruction_plan.v1";
@@ -1611,6 +1612,7 @@ fn plan_value(
         "proof_refs": proof_refs(subject),
         "reason_codes": sorted_unique(reasons),
         "repair_operations": operations,
+        "allowed_sections": [],
         "source_artifact_digest": subject_digest(subject)?,
         "triggering_deficit_ids": sorted_unique(deficits),
         "version": RECONSTRUCTION_VERSION,
@@ -1630,6 +1632,128 @@ fn reconstruction_result(
         "plan": plan,
         "quality_delta": delta,
     })
+}
+
+fn changed_headings(before: &str, after: &str) -> Option<BTreeSet<String>> {
+    let left = parse_sections(before)?;
+    let right = parse_sections(after)?;
+    let mut left_map = std::collections::BTreeMap::new();
+    let mut right_map = std::collections::BTreeMap::new();
+    for (heading, body) in left {
+        left_map.insert(heading, body);
+    }
+    for (heading, body) in right {
+        right_map.insert(heading, body);
+    }
+    let mut changed = BTreeSet::new();
+    let mut names = BTreeSet::new();
+    names.extend(left_map.keys().cloned());
+    names.extend(right_map.keys().cloned());
+    for heading in names {
+        if left_map.get(&heading) != right_map.get(&heading) {
+            changed.insert(heading);
+        }
+    }
+    Some(changed)
+}
+
+fn identity_same(before: &Value, after: &Value) -> Result<bool, SpeError> {
+    let same = |left: Value, right: Value| -> Result<bool, SpeError> {
+        Ok(canonical_dumps(&left)? == canonical_dumps(&right)?)
+    };
+    Ok(same(
+        full_protected(before.get("protected_intent")).unwrap_or(json!({})),
+        full_protected(after.get("protected_intent")).unwrap_or(json!({})),
+    )? && same(
+        Value::String(graph_digest(before.get("requirement_graph"))),
+        Value::String(graph_digest(after.get("requirement_graph"))),
+    )? && same(
+        xcat_identity(before.get("xcat")).unwrap_or(json!({})),
+        xcat_identity(after.get("xcat")).unwrap_or(json!({})),
+    )? && same(
+        k3_identity(before.get("k3")).unwrap_or(json!({})),
+        k3_identity(after.get("k3")).unwrap_or(json!({})),
+    )? && same(
+        effect_identity(before.get("effect_plan")).unwrap_or(json!({})),
+        effect_identity(after.get("effect_plan")).unwrap_or(json!({})),
+    )?)
+}
+
+fn repair_sections(operation: &str) -> Option<BTreeSet<String>> {
+    let names: &[&str] = match operation {
+        "RESTORE_MISSING_CONSTRAINT" => &["Hard constraints"],
+        "RESTORE_UNKNOWN_MARKER" => &["Open questions"],
+        "REMOVE_UNAUTHORIZED_ADDITION" => &["Facts", "Authority"],
+        "RESTORE_AUTHORIZED_OUTPUT_CONTRACT" => &["Deliverable", "Effect: STRUCTURED_OUTPUT"],
+        "RESTORE_REQUIRED_SECTION" => &["Objective", "Hard constraints", "Authority"],
+        _ => return None,
+    };
+    Some(names.iter().map(|item| (*item).to_string()).collect())
+}
+
+fn json_string_list(value: Option<&Value>) -> Vec<String> {
+    value
+        .and_then(|item| item.as_array())
+        .map(|items| items.iter().filter_map(|item| item.as_str().map(|text| text.to_string())).collect())
+        .unwrap_or_default()
+}
+
+fn repair_is_admissible(
+    before: &Value,
+    after: &Value,
+    operation: &str,
+    causes: &[String],
+    triggering: &[String],
+) -> Result<bool, SpeError> {
+    if !identity_same(before, after)? {
+        return Ok(false);
+    }
+    let Some(before_prompt) = before.get("compiled_prompt").and_then(|item| item.as_str()) else {
+        return Ok(false);
+    };
+    let Some(after_prompt) = after.get("compiled_prompt").and_then(|item| item.as_str()) else {
+        return Ok(false);
+    };
+    if operation == "RENDER_FROM_BOUND_EFFECT_PLAN" {
+        let bound = before
+            .get("effect_plan")
+            .and_then(|item| item.get("compiled_prompt"))
+            .and_then(|item| item.as_str());
+        if !causes.iter().any(|item| item == "FINAL_RENDER_DRIFT_FROM_BOUND_EFFECT_PLAN")
+            || !effect_prompt_authorized(before)?
+            || Some(after_prompt) != bound
+        {
+            return Ok(false);
+        }
+    } else {
+        let Some(allowed) = repair_sections(operation) else {
+            return Ok(false);
+        };
+        let Some(changed) = changed_headings(before_prompt, after_prompt) else {
+            return Ok(false);
+        };
+        if !changed.is_subset(&allowed) {
+            return Ok(false);
+        }
+    }
+    let delta = quality_delta(before, after)?;
+    if delta.get("disposition").and_then(|item| item.as_str()) != Some("IMPROVED")
+        || !json_string_list(delta.get("protected_regressions")).is_empty()
+    {
+        return Ok(false);
+    }
+    let trigger: BTreeSet<String> = triggering.iter().cloned().collect();
+    if json_string_list(delta.get("regressed_obligation_ids"))
+        .into_iter()
+        .any(|item| !trigger.contains(&item))
+    {
+        return Ok(false);
+    }
+    let improved: BTreeSet<String> = json_string_list(delta.get("improved_obligation_ids")).into_iter().collect();
+    if !trigger.is_empty() && improved.intersection(&trigger).next().is_none() {
+        return Ok(false);
+    }
+    Ok(true)
 }
 
 fn reconstruct(
@@ -1677,7 +1801,7 @@ fn reconstruct(
         }
     }
     let obligations = evaluate_obligations(subject)?;
-    let (operation, deficits, causes) = choose_repair(&obligations);
+    let (operation, deficits, mut causes) = choose_repair(&obligations);
     if operation.is_none() && deficits.is_empty() {
         let plan = plan_value(
             subject,
@@ -1722,6 +1846,31 @@ fn reconstruct(
         ));
     }
     let operation = operation.unwrap();
+    if operation == "RENDER_FROM_BOUND_EFFECT_PLAN" && !effect_prompt_authorized(subject)? {
+        let plan = plan_value(
+            subject,
+            subject,
+            "UNRESOLVED",
+            deficits,
+            vec![
+                "FINAL_RENDER_DRIFT_FROM_BOUND_EFFECT_PLAN".into(),
+                "UNBOUND_EFFECT_PLAN".into(),
+            ],
+            vec![operation],
+            vec!["UNRESOLVED".into(), "UNBOUND_EFFECT_PLAN".into()],
+            1,
+        )?;
+        return Ok(reconstruction_result(
+            subject,
+            subject.clone(),
+            "original",
+            plan,
+            quality_delta(subject, subject)?,
+        ));
+    }
+    if operation == "RENDER_FROM_BOUND_EFFECT_PLAN" {
+        causes = vec!["FINAL_RENDER_DRIFT_FROM_BOUND_EFFECT_PLAN".into()];
+    }
     if let Some(name) = requested_repair {
         if name != operation {
             let plan = plan_value(
@@ -1775,14 +1924,31 @@ fn reconstruct(
         map.insert("prior_reconstruction_attempts".into(), json!(1));
     }
     let delta = quality_delta(subject, &repaired)?;
+    let admissible = repair_is_admissible(subject, &repaired, &operation, &causes, &deficits)?;
+    let mut allowed: Vec<String> = repair_sections(&operation)
+        .map(|items| items.into_iter().collect())
+        .unwrap_or_default();
+    if operation == "RENDER_FROM_BOUND_EFFECT_PLAN" {
+        let bound = subject
+            .get("effect_plan")
+            .and_then(|item| item.get("compiled_prompt"))
+            .and_then(|item| item.as_str())
+            .unwrap_or("");
+        allowed = parse_sections(bound)
+            .map(|sections| sections.into_iter().map(|(heading, _)| heading).collect())
+            .unwrap_or_default();
+    }
+    allowed.sort();
+    allowed.dedup();
     if delta.get("disposition").and_then(|v| v.as_str()) == Some("IMPROVED")
         && delta
             .get("protected_regressions")
             .and_then(|v| v.as_array())
             .map(|items| items.is_empty())
             .unwrap_or(false)
+        && admissible
     {
-        let plan = plan_value(
+        let mut plan = plan_value(
             subject,
             &repaired,
             "ACCEPTED",
@@ -1792,6 +1958,12 @@ fn reconstruct(
             vec!["IMPROVED".into()],
             1,
         )?;
+        if let Some(map) = plan.as_object_mut() {
+            map.insert(
+                "allowed_sections".into(),
+                Value::Array(allowed.into_iter().map(Value::String).collect()),
+            );
+        }
         return Ok(reconstruction_result(subject, repaired, "repaired", plan, delta));
     }
     let delta_disposition = field_str(&delta, "disposition");
@@ -1802,6 +1974,10 @@ fn reconstruct(
     };
     let mut cause = causes;
     cause.push(delta_disposition.clone());
+    let mut reasons = vec![failure.to_string(), delta_disposition];
+    if !admissible {
+        reasons.push("SCOPE_ESCAPE".into());
+    }
     let plan = plan_value(
         subject,
         subject,
@@ -1809,7 +1985,7 @@ fn reconstruct(
         deficits,
         cause,
         vec![operation],
-        vec![failure.into(), delta_disposition],
+        reasons,
         1,
     )?;
     Ok(reconstruction_result(subject, subject.clone(), "original", plan, delta))

@@ -35,8 +35,8 @@ const TASK57_QUALITY_SHA256 =
   "dd57eb3ee6eb14297da8d49acb9803cf4853dbb89adcc5ef52f408379d643b22";
 const TASK57_QUALITY_BYTES = 1229241;
 const EXPECTED_CANONICAL_SHA256 =
-  "9448dcb4674b34611e1e864fff98a15cdaad31fdb41772956464b8b93dc8abbc";
-const EXPECTED_CANONICAL_BYTES = 1245878;
+  "0537fc879b42524d36cf94b965e1234f02cf557c47cc55c7b1612d5643c70fcb";
+const EXPECTED_CANONICAL_BYTES = 1273629;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..");

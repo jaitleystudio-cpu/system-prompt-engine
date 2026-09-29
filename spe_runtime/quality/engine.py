@@ -1107,6 +1107,82 @@ def _effect_prompt_authorized(subject: Mapping[str, Any]) -> bool:
     return True
 
 
+def _changed_headings(before: str, after: str) -> set[str] | None:
+    left = _parse_sections(before)
+    right = _parse_sections(after)
+    if left is None or right is None:
+        return None
+    left_map = _section_map(left)
+    right_map = _section_map(right)
+    changed: set[str] = set()
+    for heading in set(left_map) | set(right_map):
+        if left_map.get(heading) != right_map.get(heading):
+            changed.add(heading)
+    return changed
+
+
+_REPAIR_SECTIONS = {
+    "RESTORE_MISSING_CONSTRAINT": ("Hard constraints",),
+    "RESTORE_UNKNOWN_MARKER": ("Open questions",),
+    "REMOVE_UNAUTHORIZED_ADDITION": ("Facts", "Authority"),
+    "RESTORE_AUTHORIZED_OUTPUT_CONTRACT": ("Deliverable", "Effect: STRUCTURED_OUTPUT"),
+    "RESTORE_REQUIRED_SECTION": ("Objective", "Hard constraints", "Authority"),
+}
+
+
+def _identity_same(before: Mapping[str, Any], after: Mapping[str, Any]) -> bool:
+    return (
+        canonical_dumps(_full_protected(before.get("protected_intent")) or {})
+        == canonical_dumps(_full_protected(after.get("protected_intent")) or {})
+        and _graph_digest(before.get("requirement_graph")) == _graph_digest(after.get("requirement_graph"))
+        and canonical_dumps(_xcat_identity(before.get("xcat")) or {})
+        == canonical_dumps(_xcat_identity(after.get("xcat")) or {})
+        and canonical_dumps(_k3_identity(before.get("k3")) or {}) == canonical_dumps(_k3_identity(after.get("k3")) or {})
+        and canonical_dumps(_effect_identity(before.get("effect_plan")) or {})
+        == canonical_dumps(_effect_identity(after.get("effect_plan")) or {})
+    )
+
+
+def repair_is_admissible(
+    before: Mapping[str, Any],
+    after: Mapping[str, Any],
+    operation: str,
+    causes: list[str],
+    triggering: list[str],
+) -> bool:
+    """A repair is kept only when the diagnosed surface improves and nothing else moves."""
+    if not _identity_same(before, after):
+        return False
+    before_prompt = before.get("compiled_prompt")
+    after_prompt = after.get("compiled_prompt")
+    if not isinstance(before_prompt, str) or not isinstance(after_prompt, str):
+        return False
+    if operation == "RENDER_FROM_BOUND_EFFECT_PLAN":
+        plan = _as_dict(before.get("effect_plan"))
+        bound = plan.get("compiled_prompt") if plan else None
+        if "FINAL_RENDER_DRIFT_FROM_BOUND_EFFECT_PLAN" not in causes:
+            return False
+        if not _effect_prompt_authorized(before) or after_prompt != bound:
+            return False
+    else:
+        allowed = _REPAIR_SECTIONS.get(operation)
+        if allowed is None:
+            return False
+        changed = _changed_headings(before_prompt, after_prompt)
+        if changed is None or not changed <= set(allowed):
+            return False
+    delta = quality_delta(before, after)
+    trigger = set(triggering)
+    if delta["disposition"] != "IMPROVED" or delta["protected_regressions"]:
+        return False
+    if any(item not in trigger for item in delta["regressed_obligation_ids"]):
+        return False
+    improved = set(delta["improved_obligation_ids"])
+    if trigger and not improved.intersection(trigger):
+        return False
+    return True
+
+
 def _apply_repair(operation: str, subject: Mapping[str, Any]) -> str | None:
     prompt = subject.get("compiled_prompt")
     protected = _full_protected(subject.get("protected_intent"))
@@ -1231,6 +1307,7 @@ def _plan(
     operations: list[str],
     reasons: list[str],
     attempt_index: int,
+    allowed_sections: list[str] | None = None,
 ) -> dict[str, Any]:
     return {
         "attempt_index": attempt_index,
@@ -1242,6 +1319,7 @@ def _plan(
         "proof_refs": _proof_refs(subject),
         "reason_codes": sorted(set(reasons)),
         "repair_operations": operations,
+        "allowed_sections": sorted(set(allowed_sections or [])),
         "source_artifact_digest": subject_digest(subject),
         "triggering_deficit_ids": sorted(deficits),
         "version": RECONSTRUCTION_VERSION,
@@ -1345,6 +1423,25 @@ def reconstruct(
         }
 
     repaired_prompt = _apply_repair(operation, subject)
+    if operation == "RENDER_FROM_BOUND_EFFECT_PLAN":
+        if not _effect_prompt_authorized(subject):
+            plan = _plan(
+                subject=subject,
+                kept=subject,
+                disposition="UNRESOLVED",
+                deficits=deficits,
+                causes=["FINAL_RENDER_DRIFT_FROM_BOUND_EFFECT_PLAN", "UNBOUND_EFFECT_PLAN"],
+                operations=[operation],
+                reasons=["UNRESOLVED", "UNBOUND_EFFECT_PLAN"],
+                attempt_index=1,
+            )
+            return {
+                "kept": "original",
+                "kept_subject": _copy_subject(subject),
+                "plan": plan,
+                "quality_delta": quality_delta(subject, subject),
+            }
+        causes = ["FINAL_RENDER_DRIFT_FROM_BOUND_EFFECT_PLAN"]
     if repaired_prompt is None or repaired_prompt == subject.get("compiled_prompt"):
         plan = _plan(
             subject=subject,
@@ -1365,7 +1462,13 @@ def reconstruct(
     repaired = _copy_subject(subject, repaired_prompt)
     repaired["prior_reconstruction_attempts"] = 1
     delta = quality_delta(subject, repaired)
-    if delta["disposition"] == "IMPROVED" and not delta["protected_regressions"]:
+    allowed = list(_REPAIR_SECTIONS.get(operation, ()))
+    if operation == "RENDER_FROM_BOUND_EFFECT_PLAN":
+        bound_prompt = _as_dict(subject.get("effect_plan")) or {}
+        parsed = _parse_sections(bound_prompt.get("compiled_prompt") or "")
+        allowed = [heading for heading, _ in parsed] if parsed else []
+    admissible = repair_is_admissible(subject, repaired, operation, causes, deficits)
+    if delta["disposition"] == "IMPROVED" and not delta["protected_regressions"] and admissible:
         plan = _plan(
             subject=subject,
             kept=repaired,
@@ -1375,9 +1478,13 @@ def reconstruct(
             operations=[operation],
             reasons=["IMPROVED"],
             attempt_index=1,
+            allowed_sections=allowed,
         )
         return {"kept": "repaired", "kept_subject": repaired, "plan": plan, "quality_delta": delta}
     failure = "NO_IMPROVEMENT" if delta["disposition"] == "NON_INFERIOR" else "UNRESOLVED"
+    reasons = [failure, delta["disposition"]]
+    if not admissible:
+        reasons.append("SCOPE_ESCAPE")
     plan = _plan(
         subject=subject,
         kept=subject,
@@ -1385,7 +1492,7 @@ def reconstruct(
         deficits=deficits,
         causes=causes + [delta["disposition"]],
         operations=[operation],
-        reasons=[failure, delta["disposition"]],
+        reasons=reasons,
         attempt_index=1,
     )
     return {"kept": "original", "kept_subject": _copy_subject(subject), "plan": plan, "quality_delta": delta}

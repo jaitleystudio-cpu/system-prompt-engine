@@ -1,7 +1,7 @@
 {
   "algorithm": "SHA-256",
-  "sha256": "9448dcb4674b34611e1e864fff98a15cdaad31fdb41772956464b8b93dc8abbc",
-  "bytes": 1245878,
+  "sha256": "0537fc879b42524d36cf94b965e1234f02cf557c47cc55c7b1612d5643c70fcb",
+  "bytes": 1273629,
   "source": "portable/spe-wasm/target-canonical/wasm32-unknown-unknown/release/spe_wasm.wasm",
   "crate": "spe-wasm",
   "kernel": "spe-core-rs",
@@ -13,7 +13,7 @@
   "legacy_bytes": 671614,
   "previous_canonical_sha256": "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6",
   "previous_canonical_bytes": 671621,
-  "semantic_source_note": "Task 57R from_k3 receipt custody. Task 57 quality WASM remains task57_quality_sha256. Task 56C XCAT DOMAIN WASM remains xcat_domain_sha256.",
+  "semantic_source_note": "Task 57R causal reconstruction and from_k3 receipt custody. Task 57 quality WASM remains task57_quality_sha256.",
   "task57_quality_sha256": "dd57eb3ee6eb14297da8d49acb9803cf4853dbb89adcc5ef52f408379d643b22",
   "task57_quality_bytes": 1229241,
   "xcat_domain_sha256": "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082",
