@@ -14,6 +14,7 @@
     "test:artifact": "node scripts/test-artifact-reconstruction.mjs",
     "test:engine": "node scripts/eval-fixture.mjs",
     "test:create-intent": "node scripts/test-create-intent.mjs",
+    "test:massive": "node scripts/test-massive-ingest.mjs",
     "test:dot-pattern": "node scripts/test-dot-pattern.mjs",
     "test:execution-contract": "node scripts/test-execution-contract.mjs",
     "test:hero-story": "node scripts/test-hero-story.mjs",

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### 2026-09-29 — Massive Intent v1 intake (Lane B)
+- Large Paste custody stops at `MassiveSourceIR` + source map + lexical explicit evidence
+- 1,000,000-word cap seals `READY_FOR_F3E`; one word over refuses and discards the body with `silent_truncation: false`
+- `READY_FOR_F3E` is not a semantic pass. `semantic_judgment` stays `NOT_A_PASS`. Engine integration waits for `F3E_FREEZE`
+- Python oracle `spe_runtime/massive/`; browser OPFS + IndexedDB metadata + `spe.massive-ingest.v1` worker under `apps/web/src/massive/`
+- Not mounted in Home or Create. No XCAT, K3, quality, or PromptEffectPlan changes
+- COST ₹0; no hosting/DNS/deploy
+
 ### 2026-09-24 — Context Protocol v1 verification (Task 15)
 - Fresh regression on HEAD `23e65f4ecb48067f22185160fa6e9af3baee107d` (branch `chatgpt/context-protocol-compiler-design-20260924`)
 - Suites: pytest 641; focused 641; spe-core-rs cargo 38; spe-wasm cargo 4; `npm run test:engine` + `npm run build`; e2e-context-protocol 21; fixture-only benchmark PASS; adversarial 35
