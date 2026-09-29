@@ -168,7 +168,8 @@ const report = {
   mutants_killed: mutants.length,
   canonical: "FAIL",
   repaired: "FAIL",
-  unresolved: "FAIL",
+  normal_default: "FAIL",
+  default_repaired: "FAIL",
   core_b: "FAIL",
   export_consistency: "FAIL",
   hold: null,
@@ -200,9 +201,71 @@ try {
     throw new Error("unarmed Create rewrote the prompt");
   }
   assert.equal(canonicalTrace.observations[0].canonical, canonicalSurfaces.json);
+  const canonicalCategory =
+    canonicalOutput &&
+    canonicalOutput.subject &&
+    canonicalOutput.subject.xcat &&
+    canonicalOutput.subject.xcat.active_category;
+  assert.equal(canonicalCategory, "C03");
+  assert.equal(canonicalOutput.reconstruction.kept, "original");
+  report.canonical_category = canonicalCategory;
   report.canonical = "PASS";
   report.export_consistency = "PASS";
-  report.unresolved = "PASS";
+  report.normal_default = "PASS";
+
+  const defaultRepairContext = await browser.newContext({
+    permissions: ["clipboard-read", "clipboard-write"],
+    serviceWorkers: "block",
+  });
+  await installHarness(defaultRepairContext, { arm: true });
+  const defaultRepairPage = await defaultRepairContext.newPage();
+  await openCreate(defaultRepairPage, base);
+  const defaultRepairBuilt = await compileIdea(defaultRepairPage, IDEA);
+  const defaultRepairSurfaces = await readSurfaces(defaultRepairPage, defaultRepairBuilt.visible);
+  const defaultRepairTrace = await defaultRepairPage.evaluate(() => window.__speF2);
+  const defaultObservation = defaultRepairTrace.observations[0];
+  const defaultOutput = defaultObservation && defaultObservation.output;
+  const defaultReconstruction = defaultOutput && defaultOutput.reconstruction;
+  const defaultQualification = qualifyRepairedBrowserObservation({
+    canonical: defaultObservation && defaultObservation.canonical,
+    corrupted: defaultObservation && defaultObservation.corrupted,
+    removed: defaultObservation && defaultObservation.removed,
+    qualityPosts: defaultRepairTrace.posts,
+    reconstruction: defaultReconstruction,
+    receipt: defaultOutput && defaultOutput.receipt,
+    visible: defaultRepairSurfaces.visible,
+    artifact: defaultRepairSurfaces.history,
+    history: defaultRepairSurfaces.history,
+    copy: defaultRepairSurfaces.copy,
+    json: defaultRepairSurfaces.json,
+    spe: defaultRepairSurfaces.spe,
+    receiptText: defaultRepairBuilt.receipt,
+  });
+  const defaultCategory =
+    defaultOutput &&
+    defaultOutput.subject &&
+    defaultOutput.subject.xcat &&
+    defaultOutput.subject.xcat.active_category;
+  report.default_repaired = {
+    category: defaultCategory,
+    posts: defaultRepairTrace.posts,
+    kept: defaultReconstruction && defaultReconstruction.kept,
+    plan: defaultReconstruction && defaultReconstruction.plan && defaultReconstruction.plan.disposition,
+    delta:
+      defaultReconstruction &&
+      defaultReconstruction.quality_delta &&
+      defaultReconstruction.quality_delta.disposition,
+    attempt_index: defaultReconstruction && defaultReconstruction.plan && defaultReconstruction.plan.attempt_index,
+    verdict: defaultOutput && defaultOutput.receipt && defaultOutput.receipt.verdict,
+    qualification_errors: defaultQualification.errors,
+    visible_equals_kernel: Boolean(
+      defaultReconstruction &&
+        defaultRepairSurfaces.visible === defaultReconstruction.kept_subject.compiled_prompt,
+    ),
+  };
+  assert.equal(defaultCategory, "C03");
+  assert.equal(defaultQualification.pass, true, defaultQualification.errors.join(","));
+  await defaultRepairContext.close();
 
   const repairContext = await browser.newContext({
     permissions: ["clipboard-read", "clipboard-write"],

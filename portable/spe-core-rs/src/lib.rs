@@ -15,6 +15,7 @@ pub mod k3;
 pub mod effect;
 pub mod requirements;
 pub mod xcat;
+pub mod xcat_auto;
 pub mod quality;
 
 use serde::Serialize;
