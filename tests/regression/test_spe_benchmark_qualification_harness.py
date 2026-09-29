@@ -121,8 +121,9 @@ def test_dataset_catalog_matches_runner_and_schemas() -> None:
     assert dataset["provider_calls"] == 0
     result_schema = json.loads((SCHEMA_DIR / "spe_benchmark_result.schema.json").read_text())
     recorded = result_schema["properties"]["records"]["items"]["properties"]["measurements"]
-    assert recorded["required"] == list(MEASUREMENTS)
-    latency_enum = recorded["properties"]["latency"]["properties"]["status"]["enum"]
+    assert recorded == {"$ref": "#/$defs/measurements"}
+    assert result_schema["$defs"]["measurements"]["required"] == list(MEASUREMENTS)
+    latency_enum = result_schema["$defs"]["latency_slot"]["properties"]["status"]["enum"]
     assert "PASS" not in latency_enum
     assert "UNKNOWN" in latency_enum
 

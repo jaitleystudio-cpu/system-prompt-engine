@@ -44,7 +44,7 @@
     {
       "path": "schemas/spe_benchmark_comparison.schema.json",
       "role": "schema_comparison",
-      "sha256": "8bd3910be4e19dba89b9f6416085beb15911b143027360c7536b204276f8c8c2"
+      "sha256": "32a2a68078889a66fc3efbdece1d5d57105ec2dd1b2cf59a7d26866eeeb7277d"
     },
     {
       "path": "schemas/spe_benchmark_dataset.schema.json",
@@ -69,7 +69,7 @@
     {
       "path": "schemas/spe_benchmark_result.schema.json",
       "role": "schema_result",
-      "sha256": "04a01b6cdeedc3660f8d07c7260a07aa2fafd90b560f9d3ccb184641e896c3fd"
+      "sha256": "2dde46db33858f5711771af099099a49254ba274ee01c0e0ff8b457ddc9caf46"
     }
   ],
   "hash_algorithm": "sha256",
