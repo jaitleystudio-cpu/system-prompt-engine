@@ -4,7 +4,12 @@ import { EngineClient } from "./engine/client";
 import {
   requestK3Binding,
   requireBoundEffectPlan,
+  K3EffectUnavailableError,
 } from "./engine/k3Transport";
+import { requestQualityReceipt } from "./engine/qualityTransport";
+import { decideDelivery } from "./engine/delivery-policy.mjs";
+import { createRawRequestCustody, renderSafeFallbackPrompt } from "./engine/core-b.mjs";
+import { QualityReceiptPanel } from "./workspace/QualityReceiptPanel";
 import type {
   CompilePhase,
   ContextProtocolCompileOutput,
@@ -212,6 +217,12 @@ export default function App() {
     typeof renderPromptArtifact
   > | null>(null);
   const [artifact, setArtifact] = useState<SpeArtifactV1 | null>(null);
+  const [safeFallback, setSafeFallback] = useState<{ prompt: string } | null>(null);
+  const [qualityView, setQualityView] = useState<{
+    validation: string | null;
+    disposition: string | null;
+    proofClass: string | null;
+  } | null>(null);
   const [historyOptIn, setHistoryOptInState] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [mode, setMode] = useState<Mode>("simple");
@@ -403,6 +414,8 @@ export default function App() {
       setResult(null);
       setRendered(null);
       setArtifact(null);
+      setSafeFallback(null);
+      setQualityView(null);
       setPhases([]);
       setPhase("loading_wasm");
       setLens("prompt");
@@ -429,7 +442,12 @@ export default function App() {
         return;
       }
 
+      let custody: Awaited<ReturnType<typeof createRawRequestCustody>> | null = null;
       try {
+        custody = await createRawRequestCustody({
+          rawRequest: goal,
+          target: target === "any" ? null : target,
+        });
         const client = ensureClient();
         const out = await client.compile(JSON.stringify(fixture), (p) => {
           if (requestRevision !== revision.current) return;
@@ -516,6 +534,43 @@ export default function App() {
           });
           if (requestRevision !== revision.current) return;
           setArtifact(spe);
+          const qualityOut = await requestQualityReceipt(client, {
+            op: "from_k3",
+            k3_output: k3.rawOutput,
+            compiled_prompt: prompt.finalPrompt,
+            mode: "VALIDATE_ONLY",
+          });
+          const decision = qualityOut
+            ? decideDelivery({
+                kind: "quality_receipt",
+                hasCanonical: true,
+                receipt: qualityOut as {
+                  reconstruction?: {
+                    kept?: string;
+                    plan?: { disposition?: string };
+                    kept_subject?: { compiled_prompt?: string };
+                  };
+                  receipt?: { verdict?: string; proof_class?: string };
+                  quality_delta?: { disposition?: string };
+                },
+              })
+            : decideDelivery({ kind: "quality_unavailable", hasCanonical: true });
+          if (
+            decision.terminal === "RECONSTRUCTED_PROMPT" &&
+            decision.repairedPrompt
+          ) {
+            setRendered({ ...prompt, finalPrompt: decision.repairedPrompt });
+          }
+          const receiptRecord = (qualityOut ?? {}) as {
+            receipt?: { verdict?: string; proof_class?: string };
+            quality_delta?: { disposition?: string };
+          };
+          setQualityView({
+            validation: decision.validation,
+            disposition: receiptRecord.quality_delta?.disposition ?? null,
+            proofClass: receiptRecord.receipt?.proof_class ?? null,
+          });
+          setSafeFallback(null);
           if (isHistoryOptIn()) {
             saveHistoryItem({
               id: spe.integrity.content_sha256.slice(0, 16),
@@ -531,6 +586,15 @@ export default function App() {
         }
       } catch (err) {
         if (requestRevision !== revision.current) return;
+        const brief = err instanceof PromptBriefError;
+        const decision = decideDelivery({
+          kind: brief
+            ? "prompt_brief"
+            : err instanceof K3EffectUnavailableError
+              ? "k3_unavailable"
+              : "engine_unavailable",
+          hasCanonical: false,
+        });
         if (!(err instanceof PromptBriefError)) {
           clientRef.current?.terminate();
           clientRef.current = null;
@@ -538,6 +602,12 @@ export default function App() {
         setResult(null);
         setRendered(null);
         setArtifact(null);
+        setQualityView(null);
+        if (decision.fallback && custody) {
+          setSafeFallback(renderSafeFallbackPrompt(custody, "ENGINE_UNAVAILABLE"));
+        } else {
+          setSafeFallback(null);
+        }
         setError({
           code:
             err instanceof PromptBriefError
@@ -961,15 +1031,34 @@ export default function App() {
             </SourcesDepthDisclosure>
             </div>
             {error && <p role="alert">{error.message}</p>}
+            {safeFallback && (
+              <section className="spe-create-result" aria-label="Safe fallback prompt">
+                <QualityReceiptPanel receipt={null} fallback />
+                <pre tabIndex={0}>{safeFallback.prompt}</pre>
+                <button
+                  type="button"
+                  className="spe-build"
+                  onClick={() => void navigator.clipboard.writeText(safeFallback.prompt)}
+                >
+                  Copy
+                </button>
+              </section>
+            )}
             {rendered?.finalPrompt && (
               <section className="spe-create-result" aria-label="Your prompt">
                 <h2>Your prompt</h2>
                 <pre tabIndex={0}>{rendered.finalPrompt}</pre>
+                <QualityReceiptPanel receipt={qualityView} fallback={false} />
                 <div className="spe-actions">
                   <button type="button" className="spe-build" onClick={() => void onCopy()}>
                     Copy
                   </button>
-                  <button type="button" className="spe-ghost" onClick={onExportSpe}>
+                  <button
+                    type="button"
+                    className="spe-ghost"
+                    onClick={onExportSpe}
+                    disabled={!artifact}
+                  >
                     .spe
                   </button>
                   <button type="button" className="spe-ghost" onClick={onExportJson}>

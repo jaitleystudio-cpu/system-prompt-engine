@@ -41,7 +41,8 @@
     "test:truth-privacy": "node scripts/test-truth-privacy-closure.mjs",
     "test:home-bound": "node scripts/test-home-bound-browser.mjs",
     "test:quality-custody": "node scripts/test-quality-runtime-custody.mjs",
-    "test:core-b": "node scripts/test-core-b-fallback.mjs"
+    "test:core-b": "node scripts/test-core-b-fallback.mjs",
+    "test:quality-wiring": "node scripts/test-quality-product-wiring.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",

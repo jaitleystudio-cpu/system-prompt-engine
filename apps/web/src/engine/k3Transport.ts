@@ -38,11 +38,13 @@ export type K3Binding =
       status: "PLAN";
       techniques: string[];
       effectPlan: EffectPlan;
+      rawOutput: unknown;
     }
   | {
       status: "UNAVAILABLE" | "MISSING_EFFECT_PLAN";
       techniques: [];
       effectPlan: null;
+      rawOutput: null;
     };
 
 export class K3EffectUnavailableError extends Error {
@@ -108,7 +110,7 @@ export async function requestK3Binding(
       : [];
     const effectPlan = record(output.prompt_effect_plan);
     if (!Object.keys(effectPlan).length) {
-      return { status: "MISSING_EFFECT_PLAN", techniques: [], effectPlan: null };
+      return { status: "MISSING_EFFECT_PLAN", techniques: [], effectPlan: null, rawOutput: null };
     }
     const lawful =
       !outcome.error &&
@@ -119,9 +121,10 @@ export async function requestK3Binding(
       status: "PLAN",
       techniques: lawful ? ids : [],
       effectPlan: effectPlan as EffectPlan,
+      rawOutput: outcome.result?.output ?? null,
     };
   } catch {
-    return { status: "UNAVAILABLE", techniques: [], effectPlan: null };
+    return { status: "UNAVAILABLE", techniques: [], effectPlan: null, rawOutput: null };
   }
 }
 
