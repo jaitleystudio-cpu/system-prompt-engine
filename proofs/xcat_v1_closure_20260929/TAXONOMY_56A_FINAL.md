@@ -77,3 +77,23 @@ Either:
 2. Explicitly ratify **CURRENT_REPO** or **DOMAIN** as the normative XCAT C01–C12 taxonomy.
 
 Do not start Task 57 / category engines until ratification.
+
+---
+
+## POST-56A CORRECTION (2026-09-29) — prospective authority only
+
+**Do not rewrite the HOLD above.** Task 56A correctly reported unresolved historical authority at the time of its investigation.
+
+Subsequently:
+
+1. The founder supplied the full text of `SPE_OMEGA_V2_1_MASTER_ARCHITECTURE_DESIGN.md` (SPE Ω v2.1 Master Architecture; L2 §4.1 DOMAIN taxonomy).
+2. The founder **explicitly ratified** the DOMAIN taxonomy as normative SPE XCAT v1 on **2026-09-29**.
+
+Therefore:
+
+- `HISTORICAL_AUTHORITY` during 56A remains **unresolved** (truthful HOLD).
+- `PROSPECTIVE_TAXONOMY_AUTHORITY` is now **resolved** → DOMAIN.
+- Ratification artifact: `FOUNDER_XCAT_V1_RATIFICATION.md`.
+- Implementation continues under Task **56B** on the same PR `#56`.
+
+Never pretend 56A originally found approval.
