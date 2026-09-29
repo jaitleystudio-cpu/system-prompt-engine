@@ -1,0 +1,15 @@
+       Fresh unicode-ident v1.0.24
+       Fresh proc-macro2 v1.0.107
+       Fresh quote v1.0.47
+       Fresh syn v3.0.5
+       Fresh serde_core v1.0.229
+       Fresh serde_derive v1.0.229
+       Fresh zmij v1.0.23
+       Fresh memchr v2.8.3
+       Fresh itoa v1.0.18
+       Fresh serde_json v1.0.151
+       Fresh serde v1.0.229
+   Compiling spe-core-rs v0.1.0 (/workspace/portable/spe-core-rs)
+     Running `/usr/local/rustup/toolchains/1.98.1-x86_64-unknown-linux-gnu/bin/rustc --crate-name spe_core_rs --edition=2021 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=090b455eb1b90140 -C extra-filename=-290c25d40361db25 --out-dir /workspace/portable/spe-core-rs/target/debug/deps -C incremental=/workspace/portable/spe-core-rs/target/debug/incremental -L dependency=/workspace/portable/spe-core-rs/target/debug/deps --extern serde=/workspace/portable/spe-core-rs/target/debug/deps/libserde-3b203464cabd9940.rmeta --extern serde_json=/workspace/portable/spe-core-rs/target/debug/deps/libserde_json-407d1e11c108080b.rmeta`
+     Running `/usr/local/rustup/toolchains/1.98.1-x86_64-unknown-linux-gnu/bin/rustc --crate-name spe_core_eval --edition=2021 src/bin/spe_core_eval.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=78746191f6b5d36f -C extra-filename=-27f4b0f3b7290141 --out-dir /workspace/portable/spe-core-rs/target/debug/deps -C incremental=/workspace/portable/spe-core-rs/target/debug/incremental -L dependency=/workspace/portable/spe-core-rs/target/debug/deps --extern serde=/workspace/portable/spe-core-rs/target/debug/deps/libserde-3b203464cabd9940.rlib --extern serde_json=/workspace/portable/spe-core-rs/target/debug/deps/libserde_json-407d1e11c108080b.rlib --extern spe_core_rs=/workspace/portable/spe-core-rs/target/debug/deps/libspe_core_rs-290c25d40361db25.rlib`
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.44s

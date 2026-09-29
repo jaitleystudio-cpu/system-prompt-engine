@@ -1,0 +1,64 @@
+........................................................................ [  7%]
+........................................................................ [ 14%]
+........................................................................ [ 21%]
+........................................................................ [ 28%]
+........................................................................ [ 35%]
+..........FF............................................................ [ 42%]
+........................................................................ [ 49%]
+........................................................................ [ 56%]
+........................................................................ [ 63%]
+........................................................................ [ 70%]
+........................................................................ [ 77%]
+........................................................................ [ 84%]
+........................................................................ [ 91%]
+........................................................................ [ 99%]
+..........                                                               [100%]
+=================================== FAILURES ===================================
+E   AssertionError: fixture-only failed:
+      STDOUT:
+      
+      STDERR:
+      Traceback (most recent call last):
+        File "/workspace/tools/run_context_protocol_benchmark.py", line 402, in <module>
+          raise SystemExit(main())
+                           ^^^^^^
+        File "/workspace/tools/run_context_protocol_benchmark.py", line 398, in main
+          return run_fixture_only(fmt=args.format)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/workspace/tools/run_context_protocol_benchmark.py", line 321, in run_fixture_only
+          ablation_report = build_ablation_report(arms_payload)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/workspace/tools/run_context_protocol_benchmark.py", line 264, in build_ablation_report
+          report.append(apply_ablation(str(domain_id), ablation))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/workspace/tools/run_context_protocol_benchmark.py", line 197, in apply_ablation
+          from spe_runtime.protocols.models import ProtocolDepth
+      ModuleNotFoundError: No module named 'spe_runtime'
+      
+    assert 1 == 0
+     +  where 1 = CompletedProcess(args=['/tmp/spe-f4-venv/bin/python', '/workspace/tools/run_context_protocol_benchmark.py', '--fixture...n\n    from spe_runtime.protocols.models import ProtocolDepth\nModuleNotFoundError: No module named \'spe_runtime\'\n').returncode
+/workspace/tests/regression/test_context_protocol_benchmark_fixture.py:177: AssertionError: fixture-only failed:
+E   AssertionError: Traceback (most recent call last):
+        File "/workspace/tools/run_context_protocol_benchmark.py", line 402, in <module>
+          raise SystemExit(main())
+                           ^^^^^^
+        File "/workspace/tools/run_context_protocol_benchmark.py", line 398, in main
+          return run_fixture_only(fmt=args.format)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/workspace/tools/run_context_protocol_benchmark.py", line 321, in run_fixture_only
+          ablation_report = build_ablation_report(arms_payload)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/workspace/tools/run_context_protocol_benchmark.py", line 264, in build_ablation_report
+          report.append(apply_ablation(str(domain_id), ablation))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/workspace/tools/run_context_protocol_benchmark.py", line 197, in apply_ablation
+          from spe_runtime.protocols.models import ProtocolDepth
+      ModuleNotFoundError: No module named 'spe_runtime'
+      
+    assert 1 == 0
+     +  where 1 = CompletedProcess(args=['/tmp/spe-f4-venv/bin/python', '/workspace/tools/run_context_protocol_benchmark.py', '--fixture...n\n    from spe_runtime.protocols.models import ProtocolDepth\nModuleNotFoundError: No module named \'spe_runtime\'\n').returncode
+/workspace/tests/regression/test_context_protocol_benchmark_fixture.py:200: AssertionError: Traceback (most recent call last):
+=========================== short test summary info ============================
+FAILED tests/regression/test_context_protocol_benchmark_fixture.py::test_fixture_only_harness_is_deterministic_and_offline
+FAILED tests/regression/test_context_protocol_benchmark_fixture.py::test_fixture_only_emits_machine_readable_per_task_records
+2 failed, 1016 passed in 60.64s (0:01:00)

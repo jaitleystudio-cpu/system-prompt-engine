@@ -1,0 +1,5 @@
+canonical-wasm: measure-only
+bytes=1340112
+sha256=b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b
+imports=0
+exports=memory,spe_alloc,spe_evaluate,spe_free
