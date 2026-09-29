@@ -23,8 +23,11 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const EXPECTED_SHA256 =
+  "623b7ac4323f63bbb5192b72ca7f442567df31d7ae7680f80c20f8e044ff81d4";
+const EXPECTED_BYTES = 1022578;
+const PRE_XCAT_EFFECT_BINDING_SHA256 =
   "48ad95f5873bd7fb7933354d93fbbe732c57bc6f85956f64762fe1f5f44f2c33";
-const EXPECTED_BYTES = 937763;
+const PRE_XCAT_EFFECT_BINDING_BYTES = 937763;
 const PRE_GRAPH_K3_SHA256 =
   "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f";
 const PRE_GRAPH_K3_BYTES = 785148;
@@ -94,12 +97,14 @@ function expectedMeta() {
     legacy_bytes: 671614,
     previous_canonical_sha256: PREVIOUS_CANONICAL_SHA256,
     previous_canonical_bytes: PREVIOUS_CANONICAL_BYTES,
-    semantic_source_sha: "54a211b7888b7fee3b362f6e0ce3c9770f68cc84",
-    semantic_source_note: "K3 effect binding on base 54a211b. Graph-closure WASM remains graph_closure_sha256. Pre-graph K3 WASM remains pre_graph_k3_sha256.",
+    semantic_source_note:
+      "XCAT DOMAIN Rust/WASM parity (Task 56B). Pre-XCAT effect-binding WASM remains pre_xcat_effect_binding_sha256. Graph-closure and pre-graph K3 hashes retained for custody.",
     graph_closure_sha256: "9cda3a8ef0f314dba152fbd442b8b3c8476d6f2be8b6e3221fb8abcdac6eb686",
     graph_closure_bytes: 870560,
     pre_graph_k3_sha256: PRE_GRAPH_K3_SHA256,
     pre_graph_k3_bytes: PRE_GRAPH_K3_BYTES,
+    pre_xcat_effect_binding_sha256: PRE_XCAT_EFFECT_BINDING_SHA256,
+    pre_xcat_effect_binding_bytes: PRE_XCAT_EFFECT_BINDING_BYTES,
     build_command: "node tools/wasm_canonical_build.mjs",
   };
 }
