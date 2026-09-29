@@ -1,0 +1,232 @@
+{
+  "count": 45,
+  "normal": 25,
+  "adversarial": 20,
+  "vectors": [
+    {
+      "id": "r-constraint",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-unknown",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-remove-fact",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-effect",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-noop",
+      "kind": "normal",
+      "expect": "NOT_TRIGGERED"
+    },
+    {
+      "id": "r-conflict",
+      "kind": "normal",
+      "expect": "UNRESOLVED"
+    },
+    {
+      "id": "r-normal-0",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-1",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-2",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-3",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-4",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-5",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-6",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-7",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-8",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-9",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-10",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-11",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-12",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-13",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-14",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-15",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-16",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-17",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "r-normal-18",
+      "kind": "normal",
+      "expect": "ACCEPTED"
+    },
+    {
+      "id": "a-attempt-2",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-change-goal",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-change-k3",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-invent-example",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-mint",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-change-category",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-weaken",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-worse-render",
+      "kind": "adversarial",
+      "expect": "UNRESOLVED"
+    },
+    {
+      "id": "a-equal",
+      "kind": "adversarial",
+      "expect": "NOT_TRIGGERED"
+    },
+    {
+      "id": "a-reentry",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-forbidden-INVENT_FACT",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-forbidden-INVENT_RETRIEVAL_RESULT",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-forbidden-EXECUTE_TOOL",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-loop-0",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-loop-1",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-loop-2",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-loop-3",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-loop-4",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-loop-5",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-loop-6",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    }
+  ]
+}

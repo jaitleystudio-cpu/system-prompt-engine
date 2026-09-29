@@ -1,0 +1,207 @@
+{
+  "count": 40,
+  "normal": 20,
+  "adversarial": 20,
+  "vectors": [
+    {
+      "id": "v-pass",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-0",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-1",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-2",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-3",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-4",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-5",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-6",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-7",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-8",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-9",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-10",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-11",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-12",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-13",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-14",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-15",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-16",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-17",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "v-normal-18",
+      "kind": "normal",
+      "expect": "PASS"
+    },
+    {
+      "id": "a-malformed",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-unknown-proof",
+      "kind": "adversarial",
+      "expect": "UNKNOWN"
+    },
+    {
+      "id": "a-enforcement",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-network",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-credential",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-external_write",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-execute",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-observed",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-dry",
+      "kind": "adversarial",
+      "expect": "PREVIEW"
+    },
+    {
+      "id": "a-execute",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-missing-plan",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-category",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-intent",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-graph",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-wasm",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-mode",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-k3",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-dry-network",
+      "kind": "adversarial",
+      "expect": "REFUSED"
+    },
+    {
+      "id": "a-execute-grant",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    },
+    {
+      "id": "a-unsatisfied",
+      "kind": "adversarial",
+      "expect": "FAIL"
+    }
+  ]
+}

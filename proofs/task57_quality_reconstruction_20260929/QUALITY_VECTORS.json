@@ -1,0 +1,287 @@
+{
+  "count": 56,
+  "normal": 30,
+  "adversarial": 26,
+  "vectors": [
+    {
+      "id": "q-same",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-restore-constraint",
+      "kind": "normal",
+      "expect": "IMPROVED"
+    },
+    {
+      "id": "q-longer",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-shorter",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-unknown-kept",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-unknown-restored",
+      "kind": "normal",
+      "expect": "IMPROVED"
+    },
+    {
+      "id": "q-output-present",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-output-restored",
+      "kind": "normal",
+      "expect": "IMPROVED"
+    },
+    {
+      "id": "q-effect-restored",
+      "kind": "normal",
+      "expect": "IMPROVED"
+    },
+    {
+      "id": "q-goal-0",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-1",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-2",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-3",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-4",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-5",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-6",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-7",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-8",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-9",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-10",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-11",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-12",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-13",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-14",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-15",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-16",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-17",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-18",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-19",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "q-goal-20",
+      "kind": "normal",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "a-missing-constraint",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-unknown-laundered",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-authority",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-invented-fact",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-longer",
+      "kind": "adversarial",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "a-intent-mismatch",
+      "kind": "adversarial",
+      "expect": "UNRESOLVED"
+    },
+    {
+      "id": "a-conflict",
+      "kind": "adversarial",
+      "expect": "UNRESOLVED"
+    },
+    {
+      "id": "a-malformed",
+      "kind": "adversarial",
+      "expect": "UNRESOLVED"
+    },
+    {
+      "id": "a-missing-proof",
+      "kind": "adversarial",
+      "expect": "UNRESOLVED"
+    },
+    {
+      "id": "a-unbound",
+      "kind": "adversarial",
+      "expect": "NON_INFERIOR"
+    },
+    {
+      "id": "a-category",
+      "kind": "adversarial",
+      "expect": "UNRESOLVED"
+    },
+    {
+      "id": "a-k3",
+      "kind": "adversarial",
+      "expect": "UNRESOLVED"
+    },
+    {
+      "id": "a-output-missing",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-effect-missing",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-waived",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-claim",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-goal-drift-0",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-goal-drift-1",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-goal-drift-2",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-goal-drift-3",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-goal-drift-4",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-goal-drift-5",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-goal-drift-6",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-goal-drift-7",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-goal-drift-8",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    },
+    {
+      "id": "a-goal-drift-9",
+      "kind": "adversarial",
+      "expect": "REGRESSED"
+    }
+  ]
+}
