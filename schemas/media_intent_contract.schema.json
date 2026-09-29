@@ -1,0 +1,420 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/media_intent_contract.schema.json",
+  "title": "MediaIntentContract",
+  "description": "Speech and video observation contract. semantic_authority is NONE. Raw audio retention is OFF. Raw video retention is OFF unless explicitly needed. Network authority is NONE. This is not a ProtectedIntent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "alignment",
+    "audio",
+    "contract_id",
+    "evidence_graph",
+    "keyframes",
+    "network_authority",
+    "output_kind",
+    "privacy",
+    "protected_intent",
+    "purpose",
+    "raw_audio_retention",
+    "raw_video_retention",
+    "raw_video_retention_explicitly_needed",
+    "scenes",
+    "schema_version",
+    "semantic_authority",
+    "temporal_events",
+    "transcript",
+    "video"
+  ],
+  "properties": {
+    "alignment": { "$ref": "#/$defs/alignment" },
+    "audio": { "$ref": "#/$defs/audio" },
+    "contract_id": { "$ref": "#/$defs/id" },
+    "evidence_graph": { "$ref": "#/$defs/evidence_graph" },
+    "keyframes": { "type": "array", "items": { "$ref": "#/$defs/keyframe" } },
+    "network_authority": { "const": "NONE" },
+    "output_kind": { "const": "MediaIntentContract" },
+    "privacy": { "$ref": "#/$defs/privacy" },
+    "protected_intent": { "const": null },
+    "purpose": { "type": "string", "minLength": 1 },
+    "raw_audio_retention": { "const": "OFF" },
+    "raw_video_retention": { "enum": ["OFF", "ON"] },
+    "raw_video_retention_explicitly_needed": { "type": "boolean" },
+    "scenes": { "$ref": "#/$defs/scenes" },
+    "schema_version": { "const": "spe.media-intent.v1" },
+    "semantic_authority": { "const": "NONE" },
+    "temporal_events": { "type": "array", "items": { "$ref": "#/$defs/temporal_event" } },
+    "transcript": { "$ref": "#/$defs/transcript" },
+    "video": { "$ref": "#/$defs/video" }
+  },
+  "allOf": [{ "$ref": "#/$defs/video_retention_law" }],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nullable_id": {
+      "anyOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }]
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "network_authority",
+        "raw_audio_retention",
+        "raw_video_retention",
+        "raw_video_retention_explicitly_needed"
+      ],
+      "properties": {
+        "network_authority": { "const": "NONE" },
+        "raw_audio_retention": { "const": "OFF" },
+        "raw_video_retention": { "enum": ["OFF", "ON"] },
+        "raw_video_retention_explicitly_needed": { "type": "boolean" }
+      },
+      "allOf": [{ "$ref": "#/$defs/video_retention_law" }]
+    },
+    "video_retention_law": {
+      "if": {
+        "properties": { "raw_video_retention": { "const": "ON" } },
+        "required": ["raw_video_retention"]
+      },
+      "then": {
+        "properties": { "raw_video_retention_explicitly_needed": { "const": true } }
+      }
+    },
+    "audio": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "channel_count",
+            "content_digest",
+            "declared_byte_length",
+            "duration_ms",
+            "envelope_id",
+            "media_type",
+            "network_authority",
+            "raw_audio_retention",
+            "sample_rate_hz"
+          ],
+          "properties": {
+            "channel_count": { "type": ["integer", "null"], "minimum": 1 },
+            "content_digest": { "$ref": "#/$defs/digest" },
+            "declared_byte_length": { "type": ["integer", "null"], "minimum": 0 },
+            "duration_ms": { "type": "integer", "minimum": 0 },
+            "envelope_id": { "$ref": "#/$defs/id" },
+            "media_type": { "type": "string", "pattern": "^audio/.+" },
+            "network_authority": { "const": "NONE" },
+            "raw_audio_retention": { "const": "OFF" },
+            "sample_rate_hz": { "type": ["integer", "null"], "minimum": 1 }
+          }
+        }
+      ]
+    },
+    "transcript": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "audio_envelope_id",
+            "custody",
+            "language",
+            "network_authority",
+            "raw_audio_retention",
+            "segments",
+            "transcript_id"
+          ],
+          "properties": {
+            "audio_envelope_id": { "$ref": "#/$defs/id" },
+            "custody": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["custody_mode", "identity_retained"],
+              "properties": {
+                "custody_mode": { "const": "SPEAKER_NEUTRAL" },
+                "identity_retained": { "const": false }
+              }
+            },
+            "language": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["language_basis", "language_tag"],
+              "properties": {
+                "language_basis": { "enum": ["DECLARED", "UNSPECIFIED"] },
+                "language_tag": { "type": "string", "minLength": 2 }
+              }
+            },
+            "network_authority": { "const": "NONE" },
+            "raw_audio_retention": { "const": "OFF" },
+            "segments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "end_ms",
+                  "observation_status",
+                  "segment_id",
+                  "speaker_slot",
+                  "start_ms",
+                  "text"
+                ],
+                "properties": {
+                  "end_ms": { "type": "integer", "minimum": 0 },
+                  "observation_status": { "const": "UNVERIFIED" },
+                  "segment_id": { "$ref": "#/$defs/id" },
+                  "speaker_slot": {
+                    "anyOf": [
+                      { "type": "null" },
+                      { "type": "string", "pattern": "^SPEAKER_SLOT_[1-9][0-9]{0,3}$" }
+                    ]
+                  },
+                  "start_ms": { "type": "integer", "minimum": 0 },
+                  "text": { "type": "string", "minLength": 1 }
+                }
+              }
+            },
+            "transcript_id": { "$ref": "#/$defs/id" }
+          }
+        }
+      ]
+    },
+    "video": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "content_digest",
+            "declared_byte_length",
+            "duration_ms",
+            "envelope_id",
+            "height_px",
+            "media_type",
+            "network_authority",
+            "raw_video_retention",
+            "raw_video_retention_explicitly_needed",
+            "width_px"
+          ],
+          "properties": {
+            "content_digest": { "$ref": "#/$defs/digest" },
+            "declared_byte_length": { "type": ["integer", "null"], "minimum": 0 },
+            "duration_ms": { "type": "integer", "minimum": 0 },
+            "envelope_id": { "$ref": "#/$defs/id" },
+            "height_px": { "type": ["integer", "null"], "minimum": 1 },
+            "media_type": { "type": "string", "pattern": "^video/.+" },
+            "network_authority": { "const": "NONE" },
+            "raw_video_retention": { "enum": ["OFF", "ON"] },
+            "raw_video_retention_explicitly_needed": { "type": "boolean" },
+            "width_px": { "type": ["integer", "null"], "minimum": 1 }
+          },
+          "allOf": [{ "$ref": "#/$defs/video_retention_law" }]
+        }
+      ]
+    },
+    "scenes": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scenes", "segmentation_id", "video_envelope_id"],
+          "properties": {
+            "scenes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "boundary_basis",
+                  "end_ms",
+                  "observation_status",
+                  "ordinal",
+                  "scene_id",
+                  "start_ms"
+                ],
+                "properties": {
+                  "boundary_basis": { "const": "TIME_DECLARED" },
+                  "end_ms": { "type": "integer", "minimum": 0 },
+                  "observation_status": { "const": "UNVERIFIED" },
+                  "ordinal": { "type": "integer", "minimum": 0 },
+                  "scene_id": { "$ref": "#/$defs/id" },
+                  "start_ms": { "type": "integer", "minimum": 0 }
+                }
+              }
+            },
+            "segmentation_id": { "$ref": "#/$defs/id" },
+            "video_envelope_id": { "$ref": "#/$defs/id" }
+          }
+        }
+      ]
+    },
+    "keyframe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content_digest",
+        "keyframe_id",
+        "observation_status",
+        "raw_frame_bytes_included",
+        "role",
+        "scene_id",
+        "timestamp_ms"
+      ],
+      "properties": {
+        "content_digest": { "$ref": "#/$defs/digest" },
+        "keyframe_id": { "$ref": "#/$defs/id" },
+        "observation_status": { "const": "UNVERIFIED" },
+        "raw_frame_bytes_included": { "const": false },
+        "role": { "const": "DECLARED" },
+        "scene_id": { "$ref": "#/$defs/nullable_id" },
+        "timestamp_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "alignment": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["alignment_id", "links", "transcript_id", "video_envelope_id"],
+          "properties": {
+            "alignment_id": { "$ref": "#/$defs/id" },
+            "links": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "basis",
+                  "keyframe_id",
+                  "link_id",
+                  "observation_status",
+                  "scene_id",
+                  "transcript_segment_id",
+                  "video_end_ms",
+                  "video_start_ms"
+                ],
+                "properties": {
+                  "basis": { "const": "TIME_DECLARED" },
+                  "keyframe_id": { "$ref": "#/$defs/nullable_id" },
+                  "link_id": { "$ref": "#/$defs/id" },
+                  "observation_status": { "const": "UNVERIFIED" },
+                  "scene_id": { "$ref": "#/$defs/nullable_id" },
+                  "transcript_segment_id": { "$ref": "#/$defs/id" },
+                  "video_end_ms": { "type": "integer", "minimum": 0 },
+                  "video_start_ms": { "type": "integer", "minimum": 0 }
+                }
+              }
+            },
+            "transcript_id": { "$ref": "#/$defs/id" },
+            "video_envelope_id": { "$ref": "#/$defs/id" }
+          }
+        }
+      ]
+    },
+    "temporal_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["end_ms", "event_id", "kind", "observation_status", "ref_id", "start_ms"],
+      "properties": {
+        "end_ms": { "type": ["integer", "null"], "minimum": 0 },
+        "event_id": { "$ref": "#/$defs/id" },
+        "kind": {
+          "enum": ["SPEECH_SPAN", "SCENE_SPAN", "KEYFRAME_MARK", "SILENCE", "DECLARED"]
+        },
+        "observation_status": { "const": "UNVERIFIED" },
+        "ref_id": { "$ref": "#/$defs/nullable_id" },
+        "start_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "evidence_graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edges",
+        "graph_id",
+        "network_authority",
+        "nodes",
+        "raw_audio_retention",
+        "raw_video_retention",
+        "raw_video_retention_explicitly_needed",
+        "semantic_authority"
+      ],
+      "properties": {
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["edge_id", "kind", "source_id", "target_id"],
+            "properties": {
+              "edge_id": { "type": "string", "minLength": 1 },
+              "kind": {
+                "enum": [
+                  "ALIGNMENT_HAS_LINK",
+                  "AUDIO_HAS_TRANSCRIPT",
+                  "CLOCK_HAS_EVENT",
+                  "EVENT_CITES",
+                  "LINK_CITES_KEYFRAME",
+                  "LINK_CITES_SCENE",
+                  "LINK_CITES_SEGMENT",
+                  "SCENE_HAS_KEYFRAME",
+                  "SCENE_TEMPORAL_NEXT",
+                  "SEGMENT_TEMPORAL_NEXT",
+                  "TRANSCRIPT_HAS_SEGMENT",
+                  "VIDEO_HAS_ALIGNMENT",
+                  "VIDEO_HAS_KEYFRAME",
+                  "VIDEO_HAS_SCENE"
+                ]
+              },
+              "source_id": { "type": "string", "minLength": 1 },
+              "target_id": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "graph_id": { "$ref": "#/$defs/id" },
+        "network_authority": { "const": "NONE" },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "node_id", "ref_id"],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "ALIGNMENT",
+                  "ALIGNMENT_LINK",
+                  "AUDIO_ENVELOPE",
+                  "KEYFRAME",
+                  "SCENE",
+                  "TEMPORAL_EVENT",
+                  "TRANSCRIPT",
+                  "TRANSCRIPT_SEGMENT",
+                  "VIDEO_ENVELOPE"
+                ]
+              },
+              "node_id": { "type": "string", "minLength": 1 },
+              "ref_id": { "$ref": "#/$defs/id" }
+            }
+          }
+        },
+        "raw_audio_retention": { "const": "OFF" },
+        "raw_video_retention": { "enum": ["OFF", "ON"] },
+        "raw_video_retention_explicitly_needed": { "type": "boolean" },
+        "semantic_authority": { "const": "NONE" }
+      },
+      "allOf": [{ "$ref": "#/$defs/video_retention_law" }]
+    }
+  }
+}
