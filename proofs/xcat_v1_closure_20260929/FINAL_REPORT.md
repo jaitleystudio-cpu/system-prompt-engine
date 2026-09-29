@@ -97,3 +97,11 @@ DRAFT PR to be opened (base cursor/spe-k3-effect-binding-20260929) for custody e
 
 ## ABSOLUTE STOP
 No Quality Delta / Plan B / VALIDATE_ONLY / UX / SEO / deployment continuation.
+
+---
+
+## CORRECTION NOTE — Task 56A (2026-09-29)
+
+Task 56 HOLD above remains valid for **unrecovered category protocols** under the current registry names.
+
+Task 56A additionally establishes: the **normative authority of the C01–C12 name table itself** is unresolved (`XCAT_TAXONOMY_AUTHORITY_HOLD`). Primary external package `SPE_OMEGA_V2_4_1_FULL_FINAL_ARCHITECTURE.pdf` was inspected (including attachments); it does **not** contain the alleged domain C04/C05/C08–C12 taxonomy bytes. Claimed master file `SPE_OMEGA_V2_1_MASTER_ARCHITECTURE_DESIGN.md` was **not recovered**. See `TAXONOMY_*.md` in this directory. No runtime changes.
