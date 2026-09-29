@@ -1,0 +1,428 @@
+{
+  "recorded_at": "2026-09-29T22:20:06Z",
+  "holds": [],
+  "hosts": [
+    "www.ebi.ac.uk"
+  ],
+  "contradiction": {
+    "status": "PARTIAL",
+    "semantic_authority": "NONE",
+    "wired_to_k3": false,
+    "outbound_query": "10.1001/jama.288.3.321",
+    "private_withheld": true,
+    "egress": [
+      {
+        "source_id": "europepmc",
+        "host": "www.ebi.ac.uk",
+        "method": "GET",
+        "path": "/europepmc/webservices/rest/search",
+        "query_keys": [
+          "format",
+          "pageSize",
+          "query",
+          "resultType"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "europepmc",
+        "host": "www.ebi.ac.uk",
+        "method": "GET",
+        "path": "/europepmc/webservices/rest/search",
+        "query_keys": [
+          "format",
+          "pageSize",
+          "query",
+          "resultType"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      }
+    ],
+    "records": [
+      {
+        "doi": "10.1001/jama.288.3.321",
+        "paper_type": "RANDOMIZED_TRIAL",
+        "peer_review_status": "UNKNOWN",
+        "abstract_access": "ABSTRACT_AVAILABLE",
+        "license_status": "NOT_OPEN",
+        "full_text_status": "NOT_PERMITTED",
+        "full_text_source": "",
+        "retrieval_method": "NOT_FETCHED",
+        "content_digest": null,
+        "retraction": "UNKNOWN",
+        "source_ids": [
+          "europepmc"
+        ]
+      },
+      {
+        "doi": "10.1056/nejm199109123251102",
+        "paper_type": "OTHER",
+        "peer_review_status": "UNKNOWN",
+        "abstract_access": "ABSTRACT_AVAILABLE",
+        "license_status": "NOT_OPEN",
+        "full_text_status": "NOT_PERMITTED",
+        "full_text_source": "",
+        "retrieval_method": "NOT_FETCHED",
+        "content_digest": null,
+        "retraction": "UNKNOWN",
+        "source_ids": [
+          "europepmc"
+        ]
+      }
+    ],
+    "graph": {
+      "status": "PARTIAL",
+      "claims": [
+        {
+          "claim_id": "claim:044a0e0a642c3b88",
+          "text": "10.1001/jama.288.3.321",
+          "origin": "QUERY"
+        }
+      ],
+      "edges": [
+        {
+          "claim_id": "claim:044a0e0a642c3b88",
+          "record_id": "paper:40cda93103572f26",
+          "polarity": "REFUTE",
+          "strength": "TENTATIVE",
+          "source_id": "europepmc",
+          "canonical_key": "doi:10.1001/jama.288.3.321",
+          "metadata_ref": "paper:40cda93103572f26",
+          "evidence_scope": "ABSTRACT",
+          "polarity_basis": "EXPLICIT_ABSTRACT_PHRASE",
+          "source_ids": [
+            "europepmc"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "RANDOMIZED_TRIAL"
+        },
+        {
+          "claim_id": "claim:044a0e0a642c3b88",
+          "record_id": "paper:b22d9aba2e86a270",
+          "polarity": "SUPPORT",
+          "strength": "TENTATIVE",
+          "source_id": "europepmc",
+          "canonical_key": "doi:10.1056/nejm199109123251102",
+          "metadata_ref": "paper:b22d9aba2e86a270",
+          "evidence_scope": "ABSTRACT",
+          "polarity_basis": "EXPLICIT_ABSTRACT_PHRASE",
+          "source_ids": [
+            "europepmc"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        }
+      ]
+    },
+    "contradiction_map": {
+      "status": "PRESENT",
+      "reason": "OPPOSING_CONTENT_POLARITY",
+      "pairs": [
+        {
+          "claim_id": "claim:044a0e0a642c3b88",
+          "left_record_id": "paper:40cda93103572f26",
+          "right_record_id": "paper:b22d9aba2e86a270",
+          "basis": "OPPOSING_CONTENT_POLARITY",
+          "evidence_scope": "ABSTRACT",
+          "uncertainty": "UNRESOLVED",
+          "left_paper_type": "RANDOMIZED_TRIAL",
+          "right_paper_type": "OTHER"
+        }
+      ],
+      "resolution": "NONE"
+    },
+    "replication_map": {
+      "status": "UNKNOWN",
+      "reason": "REPLICATION_ABSENT",
+      "links": []
+    },
+    "rate_limit": {
+      "request_count": 2,
+      "retry_after": [],
+      "backoff_state": "NO_RETRY"
+    },
+    "gaps": [
+      {
+        "code": "CONTENT_POLARITY_TENTATIVE",
+        "subject": "paper:40cda93103572f26",
+        "detail": "EXPLICIT_ABSTRACT_PHRASE",
+        "blocks_valid": false
+      },
+      {
+        "code": "CONTENT_POLARITY_TENTATIVE",
+        "subject": "paper:b22d9aba2e86a270",
+        "detail": "EXPLICIT_ABSTRACT_PHRASE",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:40cda93103572f26",
+        "detail": "OPEN_METADATA_IS_NOT_OPEN_FULL_TEXT",
+        "blocks_valid": false
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:b22d9aba2e86a270",
+        "detail": "OPEN_METADATA_IS_NOT_OPEN_FULL_TEXT",
+        "blocks_valid": false
+      },
+      {
+        "code": "IDENTITY_ENRICHMENT_DISABLED",
+        "subject": "ncbi_idconv",
+        "detail": "enrich_identity is false",
+        "blocks_valid": true
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:40cda93103572f26",
+        "detail": "RANDOMIZED_TRIAL",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:b22d9aba2e86a270",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "REPLICATION_ABSENT",
+        "subject": "package",
+        "detail": "no structured or explicit-abstract replication in the fetched set",
+        "blocks_valid": false
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:40cda93103572f26",
+        "detail": "EUROPEPMC_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:b22d9aba2e86a270",
+        "detail": "EUROPEPMC_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      }
+    ],
+    "capsule_support": [
+      "UNVERIFIED",
+      "UNVERIFIED"
+    ]
+  },
+  "replication": {
+    "status": "PARTIAL",
+    "semantic_authority": "NONE",
+    "wired_to_k3": false,
+    "outbound_query": "10.1371/journal.pone.0033423",
+    "private_withheld": true,
+    "egress": [
+      {
+        "source_id": "europepmc",
+        "host": "www.ebi.ac.uk",
+        "method": "GET",
+        "path": "/europepmc/webservices/rest/search",
+        "query_keys": [
+          "format",
+          "pageSize",
+          "query",
+          "resultType"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "europepmc",
+        "host": "www.ebi.ac.uk",
+        "method": "GET",
+        "path": "/europepmc/webservices/rest/search",
+        "query_keys": [
+          "format",
+          "pageSize",
+          "query",
+          "resultType"
+        ],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      },
+      {
+        "source_id": "europepmc",
+        "host": "www.ebi.ac.uk",
+        "method": "GET",
+        "path": "/europepmc/webservices/rest/PMC3303812/fullTextXML",
+        "query_keys": [],
+        "status": 200,
+        "retry_after": null,
+        "attempt": 1
+      }
+    ],
+    "records": [
+      {
+        "doi": "10.1037/a0021524",
+        "paper_type": "OTHER",
+        "peer_review_status": "UNKNOWN",
+        "abstract_access": "ABSTRACT_AVAILABLE",
+        "license_status": "NOT_OPEN",
+        "full_text_status": "NOT_PERMITTED",
+        "full_text_source": "",
+        "retrieval_method": "NOT_FETCHED",
+        "content_digest": null,
+        "retraction": "UNKNOWN",
+        "source_ids": [
+          "europepmc"
+        ]
+      },
+      {
+        "doi": "10.1371/journal.pone.0033423",
+        "paper_type": "OTHER",
+        "peer_review_status": "UNKNOWN",
+        "abstract_access": "ABSTRACT_AVAILABLE",
+        "license_status": "STATED",
+        "full_text_status": "OPEN_FULL_TEXT",
+        "full_text_source": "europepmc",
+        "retrieval_method": "EUROPEPMC_FULLTEXT_XML",
+        "content_digest": "sha256:697c25feb7852c35194f51ea9c2257c4eaca80c8053379d5eebe552c8e2900d7",
+        "retraction": "UNKNOWN",
+        "source_ids": [
+          "europepmc"
+        ]
+      }
+    ],
+    "graph": {
+      "status": "UNKNOWN",
+      "claims": [
+        {
+          "claim_id": "claim:f65cafb0abec58c8",
+          "text": "10.1371/journal.pone.0033423",
+          "origin": "QUERY"
+        }
+      ],
+      "edges": [
+        {
+          "claim_id": "claim:f65cafb0abec58c8",
+          "record_id": "paper:ffc7fcbb0e34aba4",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "europepmc",
+          "canonical_key": "doi:10.1037/a0021524",
+          "metadata_ref": "paper:ffc7fcbb0e34aba4",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "europepmc"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        },
+        {
+          "claim_id": "claim:f65cafb0abec58c8",
+          "record_id": "paper:b763b5223914c8a6",
+          "polarity": "UNKNOWN",
+          "strength": "ABSENT",
+          "source_id": "europepmc",
+          "canonical_key": "doi:10.1371/journal.pone.0033423",
+          "metadata_ref": "paper:b763b5223914c8a6",
+          "evidence_scope": "NONE",
+          "polarity_basis": "ABSENT",
+          "source_ids": [
+            "europepmc"
+          ],
+          "retraction_state": "UNKNOWN",
+          "paper_type": "OTHER"
+        }
+      ]
+    },
+    "contradiction_map": {
+      "status": "UNKNOWN",
+      "reason": "NONE_OBSERVED_IN_FETCHED_SET",
+      "pairs": [],
+      "resolution": "NONE"
+    },
+    "replication_map": {
+      "status": "PRESENT",
+      "reason": "EVIDENCE_BACKED",
+      "links": [
+        {
+          "replication_record_id": "paper:b763b5223914c8a6",
+          "original_record_id": "paper:ffc7fcbb0e34aba4",
+          "relationship": "EXPLICIT_ABSTRACT",
+          "result_relation": "EXPLICIT_ABSTRACT_RESULT",
+          "evidence": [
+            "EXPLICIT_ABSTRACT",
+            "ORIGINAL_DOI_IN_FETCHED_SET",
+            "RESULT_PHRASE"
+          ]
+        }
+      ]
+    },
+    "rate_limit": {
+      "request_count": 3,
+      "retry_after": [],
+      "backoff_state": "NO_RETRY"
+    },
+    "gaps": [
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:b763b5223914c8a6",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "CLAIM_POLARITY_UNKNOWN",
+        "subject": "paper:ffc7fcbb0e34aba4",
+        "detail": "no structured assertion or explicit content phrase",
+        "blocks_valid": true
+      },
+      {
+        "code": "FULL_TEXT_NOT_RETRIEVED",
+        "subject": "paper:ffc7fcbb0e34aba4",
+        "detail": "OPEN_METADATA_IS_NOT_OPEN_FULL_TEXT",
+        "blocks_valid": false
+      },
+      {
+        "code": "IDENTITY_ENRICHMENT_DISABLED",
+        "subject": "ncbi_idconv",
+        "detail": "enrich_identity is false",
+        "blocks_valid": true
+      },
+      {
+        "code": "NONE_OBSERVED_IN_FETCHED_SET",
+        "subject": "claim:f65cafb0abec58c8",
+        "detail": "no structured support/refute pair in the fetched set",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:b763b5223914c8a6",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "PEER_REVIEW_STATUS_UNKNOWN",
+        "subject": "paper:ffc7fcbb0e34aba4",
+        "detail": "OTHER",
+        "blocks_valid": false
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:b763b5223914c8a6",
+        "detail": "EUROPEPMC_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      },
+      {
+        "code": "RETRACTION_STATE_UNKNOWN",
+        "subject": "paper:ffc7fcbb0e34aba4",
+        "detail": "EUROPEPMC_NO_EXPLICIT_SIGNAL",
+        "blocks_valid": true
+      }
+    ],
+    "capsule_support": [
+      "UNVERIFIED",
+      "UNVERIFIED"
+    ]
+  }
+}
