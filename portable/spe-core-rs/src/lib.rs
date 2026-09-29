@@ -15,6 +15,8 @@ pub mod k3;
 pub mod effect;
 pub mod requirements;
 pub mod xcat;
+pub mod xcat_auto;
+pub mod quality;
 
 use serde::Serialize;
 use serde_json::Value;
@@ -90,6 +92,12 @@ pub fn evaluate_json_str(input: &str) -> String {
     }
     if parsed.get("spe_api").and_then(|v| v.as_str()) == Some("xcat") {
         return match xcat::evaluate(&parsed) {
+            Ok(output) => wrap_raw_output(output),
+            Err(err) => wrap_error(err.code(), &err.message),
+        };
+    }
+    if parsed.get("spe_api").and_then(|v| v.as_str()) == Some("quality") {
+        return match quality::evaluate(&parsed) {
             Ok(output) => wrap_raw_output(output),
             Err(err) => wrap_error(err.code(), &err.message),
         };

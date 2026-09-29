@@ -1,0 +1,37 @@
+export type DeliveryDecision = {
+  terminal: string;
+  fallback: boolean;
+  validation: string | null;
+  repairedPrompt?: string | null;
+};
+
+export function decideDelivery(event: {
+  kind: string;
+  hasCanonical?: boolean;
+  receipt?: {
+    reconstruction?: {
+      kept?: string;
+      plan?: { disposition?: string };
+      kept_subject?: { compiled_prompt?: string };
+    };
+    receipt?: { verdict?: string };
+  };
+}): DeliveryDecision;
+
+export function deliveryForBrief(): DeliveryDecision;
+export function deliveryForEngineDown(): DeliveryDecision;
+export function deliveryForK3Down(): DeliveryDecision;
+export function deliveryForQualityMiss(): DeliveryDecision;
+export function deliveryForReceipt(receipt: unknown): DeliveryDecision;
+export function usesRepairedPrompt(decision: DeliveryDecision): boolean;
+export function selectEffectivePrompt(canonicalPrompt: string, qualityOut: unknown): string;
+export function bindEffectiveSurfaces(
+  canonicalPrompt: string,
+  qualityOut: unknown,
+): {
+  display: string;
+  artifactPrompt: string;
+  historyPreview: string;
+  exportPrompt: string;
+  copyPrompt: string;
+};

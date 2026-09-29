@@ -1,0 +1,2156 @@
+{
+  "adversarial": 12,
+  "count": 18,
+  "normal": 6,
+  "padding_rows": 0,
+  "vectors": [
+    {
+      "expected": {
+        "disposition": "ACCEPTED"
+      },
+      "id": "r-constraint",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "normal"
+    },
+    {
+      "expected": {
+        "disposition": "ACCEPTED"
+      },
+      "id": "r-unknown",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Open questions\n- launch date [UNKNOWN]\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:aaf8b81ffd8531393e08cdad98ea28bb902a23f6ae76776a8597569ec9fd7009",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [
+              {
+                "statement": "launch date",
+                "uncertainty_id": "u1"
+              }
+            ],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "normal"
+    },
+    {
+      "expected": {
+        "disposition": "ACCEPTED"
+      },
+      "id": "r-remove-fact",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n- secret revenue\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "normal"
+    },
+    {
+      "expected": {
+        "disposition": "ACCEPTED"
+      },
+      "id": "r-effect",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "normal"
+    },
+    {
+      "expected": {
+        "disposition": "NOT_TRIGGERED"
+      },
+      "id": "r-noop",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "normal"
+    },
+    {
+      "expected": {
+        "disposition": "UNRESOLVED"
+      },
+      "id": "r-conflict",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "CONFLICTED"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "normal"
+    },
+    {
+      "expected": {
+        "disposition": "ACCEPTED"
+      },
+      "id": "repair-scope-escape",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "REFUSED"
+      },
+      "id": "a-attempt-2",
+      "input": {
+        "attempt_index": 2,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "REFUSED"
+      },
+      "id": "a-change-goal",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": "CHANGE_USER_GOAL",
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "REFUSED"
+      },
+      "id": "a-change-k3",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": "CHANGE_K3_TECHNIQUE",
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "REFUSED"
+      },
+      "id": "a-invent-example",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": "INVENT_EXAMPLE",
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "REFUSED"
+      },
+      "id": "a-mint",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": "MINT_AUTHORITY",
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "REFUSED"
+      },
+      "id": "a-change-category",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": "CHANGE_CATEGORY",
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "REFUSED"
+      },
+      "id": "a-weaken",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": "WEAKEN_CONSTRAINT",
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "UNRESOLVED"
+      },
+      "id": "a-worse-render",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "NOT_TRIGGERED"
+      },
+      "id": "a-equal",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "REFUSED"
+      },
+      "id": "a-reentry",
+      "input": {
+        "attempt_index": 1,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "prior_reconstruction_attempts": 1,
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    },
+    {
+      "expected": {
+        "disposition": "REFUSED"
+      },
+      "id": "attempt-2",
+      "input": {
+        "attempt_index": 2,
+        "requested_repair": null,
+        "subject": {
+          "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- other\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+          "effect_plan": {
+            "blocked_operations": [],
+            "compiled_prompt": "## Objective\nShip the note\n\n## Hard constraints\n- Do not invent facts\n\n## Budget\nnone\n\n## Facts\n- The user asked for a note\n\n## Provenance\n- user\n\n## Authority\nlevel=0; status=NONE; grants=none\n\n## Deliverable\na short note\n\n## Effect: DIRECT\nFollow the objective directly. Do not invent examples.",
+            "disposition": "BOUND",
+            "effect_version": "k3.effect.g1r7r",
+            "operations": [
+              "DIRECT"
+            ],
+            "protected_fields": {
+              "authority_state": {
+                "grants": [],
+                "level": 0,
+                "status": "NONE"
+              },
+              "budget": null,
+              "desired_output": "a short note",
+              "facts": [
+                {
+                  "fact_id": "f1",
+                  "statement": "The user asked for a note"
+                }
+              ],
+              "goal": "Ship the note",
+              "hard_constraints": [
+                {
+                  "constraint_id": "c1",
+                  "statement": "Do not invent facts",
+                  "strength": "HARD"
+                }
+              ],
+              "provenance": [
+                {
+                  "provenance_id": "p1",
+                  "source": "user"
+                }
+              ]
+            },
+            "renderable": true,
+            "requirement_graph_digest": "gd-1",
+            "schema_version": "prompt_effect_plan.v1",
+            "sections": [
+              {
+                "code": "DIRECT",
+                "text": "Follow the objective directly. Do not invent examples."
+              }
+            ],
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "enforcement": "AVAILABLE",
+          "k3": {
+            "selection_id": "sel-1",
+            "techniques": [
+              "ZERO_SHOT"
+            ]
+          },
+          "proof_refs": [
+            "semantic:effect:a4724f815770a63cc11e5e33cdf47d135c1debf16b0375c259f246551bef3944",
+            "semantic:graph:gd-1",
+            "semantic:k3:sel-1",
+            "semantic:protected:b9e20c66bdbab7a9f9bef7adebf53cb827aff919b2ec89d3ba24c339fa965bbb",
+            "semantic:xcat:2:C01"
+          ],
+          "protected_intent": {
+            "authority_state": {
+              "grants": [],
+              "level": 0,
+              "status": "NONE"
+            },
+            "budget": null,
+            "category": "C01",
+            "desired_output": "a short note",
+            "facts": [
+              {
+                "fact_id": "f1",
+                "statement": "The user asked for a note"
+              }
+            ],
+            "goal": "Ship the note",
+            "hard_constraints": [
+              {
+                "constraint_id": "c1",
+                "statement": "Do not invent facts",
+                "strength": "HARD"
+              }
+            ],
+            "provenance": [
+              {
+                "provenance_id": "p1",
+                "source": "user"
+              }
+            ],
+            "unknowns": [],
+            "user_preferences": []
+          },
+          "requirement_graph": {
+            "graph_digest": "gd-1",
+            "validity": "VALID"
+          },
+          "xcat": {
+            "active_category": "C01",
+            "taxonomy_version": "2"
+          }
+        }
+      },
+      "kind": "adversarial"
+    }
+  ]
+}

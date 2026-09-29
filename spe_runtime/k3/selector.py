@@ -7,12 +7,12 @@ Laws: proofs/k3_runtime_closure_20260929/K3_CONTRACT_RECOVERY.md
 from __future__ import annotations
 
 import hashlib
+from contextvars import ContextVar
 from typing import Any, Mapping
 
 from spe_runtime.k3.effect import bind_prompt_effects
 from spe_runtime.k3.registry import (
     DISPLAY_LABEL_PROTOCOL,
-    DISPLAY_LABEL_XCAT,
     IMPLEMENTED_XCAT,
     INSTRUCTION_MODE,
     KEY_HINTS,
@@ -29,6 +29,10 @@ from spe_runtime.k3.registry import (
 from spe_runtime.portability.canonical import canonical_dumps
 from spe_runtime.protocols.registry import list_protocol_domains
 from spe_runtime.requirements.project import build_requirement_graph
+from spe_runtime.xcat.auto_route import AUTO_LABEL, build_auto_evidence
+from spe_runtime.xcat.router import route_mission_stage
+
+_AUTO_ROUTE: ContextVar[dict[str, Any] | None] = ContextVar("spe_k3_auto_route", default=None)
 
 _PROTOCOL_DOMAINS = frozenset(list_protocol_domains())
 _COMPLEXITY = frozenset({"SIMPLE", "STANDARD", "COMPLEX"})
@@ -161,8 +165,10 @@ def _resolve_category(category: Mapping[str, Any]) -> dict[str, Any]:
     display = _strip(category.get("display_label"))
     xcat = _strip(category.get("xcat_id"))
     protocol = _strip(category.get("protocol_domain_id"))
-    if xcat is None and display in DISPLAY_LABEL_XCAT:
-        xcat = DISPLAY_LABEL_XCAT[display]
+    if xcat is None and display and display != AUTO_LABEL:
+        bridged = route_mission_stage({"display_label": display})
+        if bridged.get("disposition") == "ROUTED" and isinstance(bridged.get("primary_category"), str):
+            xcat = bridged["primary_category"]
     if protocol is None and display in DISPLAY_LABEL_PROTOCOL:
         protocol = DISPLAY_LABEL_PROTOCOL[display]
     implemented: bool | None
@@ -503,6 +509,9 @@ def _envelope(
         "requirement_graph": dict(requirement_graph),
     }
     body["prompt_effect_plan"] = bind_prompt_effects(body)
+    route = _AUTO_ROUTE.get()
+    if route is not None:
+        body["category_route"] = route
     return body
 
 
@@ -518,6 +527,39 @@ def select_prompt_techniques(
     binding = _protected_view(protected_in)
     requirement_graph = build_requirement_graph(protected_in, category_in)
     context = _resolve_category(category_in)
+    auto_route: dict[str, Any] | None = None
+    route_token = None
+    if _strip(category_in.get("display_label")) == AUTO_LABEL or category_in.get("routing_mode") == "AUTO":
+        auto_route = route_mission_stage(build_auto_evidence(protected_in, category_in, requirement_graph))
+        if auto_route.get("disposition") == "ROUTED" and isinstance(auto_route.get("primary_category"), str):
+            context["xcat_id"] = auto_route["primary_category"]
+            context["xcat_implemented"] = context["xcat_id"] in IMPLEMENTED_XCAT
+        else:
+            context["xcat_id"] = None
+            context["xcat_implemented"] = None
+        route_token = _AUTO_ROUTE.set(auto_route)
+    try:
+        return _select_resolved(
+            protected_in,
+            task_in,
+            binding,
+            requirement_graph,
+            context,
+            auto_route,
+        )
+    finally:
+        if route_token is not None:
+            _AUTO_ROUTE.reset(route_token)
+
+
+def _select_resolved(
+    protected_in: dict[str, Any],
+    task_in: dict[str, Any],
+    binding: dict[str, Any],
+    requirement_graph: dict[str, Any],
+    context: dict[str, Any],
+    auto_route: dict[str, Any] | None,
+) -> dict[str, Any]:
     inputs_digest = _digest(
         {"category": context, "task": _public_task_for_digest(task_in, context["xcat_id"])},
         "idigest-",
@@ -548,6 +590,22 @@ def select_prompt_techniques(
         return _closed(
             disposition="UNKNOWN",
             notes=["UNKNOWN", "CONFLICTING_INPUTS"],
+            category_context=context,
+            protected_binding=binding,
+            inputs_digest=inputs_digest,
+            task_resolved={},
+            requirement_graph=requirement_graph,
+        )
+    if auto_route is not None and auto_route.get("disposition") == "UNKNOWN":
+        escalation = auto_route.get("escalation_conditions") or []
+        note = (
+            "CONFLICTING_CATEGORY_EVIDENCE"
+            if "CONFLICTING_CATEGORY_EVIDENCE" in escalation
+            else "FORGED_CATEGORY_WITHOUT_EVIDENCE"
+        )
+        return _closed(
+            disposition="UNKNOWN",
+            notes=["UNKNOWN", note],
             category_context=context,
             protected_binding=binding,
             inputs_digest=inputs_digest,

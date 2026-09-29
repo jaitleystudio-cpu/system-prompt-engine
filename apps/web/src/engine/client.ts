@@ -3,6 +3,7 @@ import type {
   ContextProtocolCompileRequest,
   EngineError,
   EngineSuccessBody,
+  QualityCompileRequest,
   WorkerRequest,
   WorkerResponse,
 } from "./types";
@@ -60,6 +61,26 @@ export class EngineClient {
     const req: WorkerRequest = {
       id: "",
       type: "context_protocol",
+      request: payload,
+    };
+    return this.dispatch(req, onPhase);
+  }
+
+  /**
+   * Trusted quality path. The Worker overwrites caller runtime attestation
+   * after verifying the WASM bytes. Generic compile() cannot mint that receipt.
+   */
+  compileQuality(
+    request: QualityCompileRequest,
+    onPhase: (phase: CompilePhase) => void,
+  ): Promise<CompileOutcome> {
+    const payload: QualityCompileRequest = {
+      ...request,
+      spe_api: "quality",
+    };
+    const req: WorkerRequest = {
+      id: "",
+      type: "quality",
       request: payload,
     };
     return this.dispatch(req, onPhase);

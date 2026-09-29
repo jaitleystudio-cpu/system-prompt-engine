@@ -8,7 +8,7 @@ use serde_json::{json, Map, Value};
 use std::collections::{BTreeSet, HashSet};
 
 const TWIN_VERSION: &str = "xcat.router.v1";
-const CURRENT_TAXONOMY_VERSION: &str = "2";
+pub(crate) const CURRENT_TAXONOMY_VERSION: &str = "2";
 const LEGACY_TAXONOMY_VERSION: &str = "1";
 const CANON_CONFIRM_KEY: &str = "confirm_canon_overwrite";
 
@@ -238,7 +238,7 @@ fn write_json_string(s: &str, out: &mut String) {
     out.push('"');
 }
 
-fn routing_id(evidence: &Value) -> String {
+pub(crate) fn routing_id(evidence: &Value) -> String {
     let digest = sha256_hex(python_compatible_dumps(evidence).as_bytes());
     format!("route-{digest}")
 }
@@ -279,10 +279,13 @@ fn collect_evidence_refs(evidence: &Map<String, Value>) -> Vec<Value> {
     refs
 }
 
-fn route_mission_stage(evidence: &Value) -> Result<Value, SpeError> {
+pub(crate) fn route_mission_stage(evidence: &Value) -> Result<Value, SpeError> {
     let evidence_map = evidence.as_object().ok_or_else(|| {
         SpeError::new("PORTABILITY_INVALID_FIXTURE", "evidence must be a mapping")
     })?;
+    if crate::xcat_auto::is_auto(evidence_map) {
+        return crate::xcat_auto::route_auto(evidence);
+    }
     let rid = routing_id(evidence);
     let refs = collect_evidence_refs(evidence_map);
 
@@ -307,6 +310,15 @@ fn route_mission_stage(evidence: &Value) -> Result<Value, SpeError> {
             "routing_receipt": {"routing_id": rid, "basis": "rejected_self_selection"},
             "disposition": "UNKNOWN",
         }));
+    }
+
+    let mut refs = refs;
+    if !crate::xcat_auto::explicit_category_keys_present(evidence_map) {
+        if let Some(label) = evidence_map.get("display_label").and_then(|v| v.as_str()) {
+            if let Some(bridged) = crate::xcat_auto::display_label_bridge(label.trim()) {
+                refs.push(json!({"key": "display_label_bridge", "value": bridged}));
+            }
+        }
     }
 
     let mut candidates: Vec<String> = Vec::new();

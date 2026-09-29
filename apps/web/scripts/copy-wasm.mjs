@@ -23,8 +23,20 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const EXPECTED_SHA256 =
+  "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b";
+const EXPECTED_BYTES = 1340112;
+const TASK57R_F1_SHA256 =
+  "dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541";
+const TASK57R_F1_BYTES = 1275233;
+const TASK57R_HOLD_SHA256 =
+  "0537fc879b42524d36cf94b965e1234f02cf557c47cc55c7b1612d5643c70fcb";
+const TASK57R_HOLD_BYTES = 1273629;
+const TASK57_QUALITY_SHA256 =
+  "dd57eb3ee6eb14297da8d49acb9803cf4853dbb89adcc5ef52f408379d643b22";
+const TASK57_QUALITY_BYTES = 1229241;
+const XCAT_DOMAIN_SHA256 =
   "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082";
-const EXPECTED_BYTES = 1023091;
+const XCAT_DOMAIN_BYTES = 1023091;
 const PRE_XCAT_EFFECT_BINDING_SHA256 =
   "48ad95f5873bd7fb7933354d93fbbe732c57bc6f85956f64762fe1f5f44f2c33";
 const PRE_XCAT_EFFECT_BINDING_BYTES = 937763;
@@ -51,6 +63,10 @@ const publicDir = join(webRoot, "public");
 const dest = join(publicDir, "spe_wasm.wasm");
 const metaPath = join(publicDir, "spe_wasm.sha256.json");
 const candidateManifest = join(
+  repoRoot,
+  "proofs/task57_quality_reconstruction_20260929/candidate-manifest.json",
+);
+const xcatManifest = join(
   repoRoot,
   "proofs/k3_effect_binding_20260929/candidate-manifest.json",
 );
@@ -98,7 +114,15 @@ function expectedMeta() {
     previous_canonical_sha256: PREVIOUS_CANONICAL_SHA256,
     previous_canonical_bytes: PREVIOUS_CANONICAL_BYTES,
     semantic_source_note:
-      "XCAT DOMAIN Rust/WASM parity (Task 56B). Pre-XCAT effect-binding WASM remains pre_xcat_effect_binding_sha256. Graph-closure and pre-graph K3 hashes retained for custody.",
+      "Task 57R-F3E AUTO routing is owned by CategoryRouterIR. AI Assistant is a mode, not a category. F1 WASM remains task57r_f1_sha256. The Task57R HOLD artifact remains task57r_hold_sha256.",
+    task57r_hold_sha256: TASK57R_HOLD_SHA256,
+    task57r_hold_bytes: TASK57R_HOLD_BYTES,
+    task57r_f1_sha256: TASK57R_F1_SHA256,
+    task57r_f1_bytes: TASK57R_F1_BYTES,
+    task57_quality_sha256: TASK57_QUALITY_SHA256,
+    task57_quality_bytes: TASK57_QUALITY_BYTES,
+    xcat_domain_sha256: XCAT_DOMAIN_SHA256,
+    xcat_domain_bytes: XCAT_DOMAIN_BYTES,
     graph_closure_sha256: "9cda3a8ef0f314dba152fbd442b8b3c8476d6f2be8b6e3221fb8abcdac6eb686",
     graph_closure_bytes: 870560,
     pre_graph_k3_sha256: PRE_GRAPH_K3_SHA256,
@@ -121,6 +145,13 @@ if (!existsSync(src)) {
 
 if (!existsSync(candidateManifest)) {
   fail("candidate manifest missing; cannot verify promotion inputs");
+}
+if (!existsSync(xcatManifest)) {
+  fail("Task 56C XCAT manifest missing");
+}
+const xcat = JSON.parse(readFileSync(xcatManifest, "utf8"));
+if (xcat.artifact_sha256 !== XCAT_DOMAIN_SHA256 || xcat.artifact_size !== XCAT_DOMAIN_BYTES) {
+  fail("Task 56C XCAT manifest no longer records the historical DOMAIN WASM");
 }
 if (!existsSync(historicalManifest)) {
   fail("historical canonical manifest missing");

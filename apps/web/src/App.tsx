@@ -4,7 +4,20 @@ import { EngineClient } from "./engine/client";
 import {
   requestK3Binding,
   requireBoundEffectPlan,
+  K3EffectUnavailableError,
 } from "./engine/k3Transport";
+import { requestQualityReceipt } from "./engine/qualityTransport";
+import {
+  deliveryForBrief,
+  deliveryForEngineDown,
+  deliveryForK3Down,
+  deliveryForQualityMiss,
+  bindEffectiveSurfaces,
+  deliveryForReceipt,
+} from "./engine/delivery-policy.mjs";
+import { fromK3QualityRequest } from "./engine/quality-request.mjs";
+import { createRawRequestCustody, renderSafeFallbackPrompt } from "./engine/core-b.mjs";
+import { QualityReceiptPanel } from "./workspace/QualityReceiptPanel";
 import type {
   CompilePhase,
   ContextProtocolCompileOutput,
@@ -212,6 +225,12 @@ export default function App() {
     typeof renderPromptArtifact
   > | null>(null);
   const [artifact, setArtifact] = useState<SpeArtifactV1 | null>(null);
+  const [safeFallback, setSafeFallback] = useState<{ prompt: string } | null>(null);
+  const [qualityView, setQualityView] = useState<{
+    validation: string | null;
+    disposition: string | null;
+    proofClass: string | null;
+  } | null>(null);
   const [historyOptIn, setHistoryOptInState] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [mode, setMode] = useState<Mode>("simple");
@@ -403,6 +422,8 @@ export default function App() {
       setResult(null);
       setRendered(null);
       setArtifact(null);
+      setSafeFallback(null);
+      setQualityView(null);
       setPhases([]);
       setPhase("loading_wasm");
       setLens("prompt");
@@ -429,7 +450,12 @@ export default function App() {
         return;
       }
 
+      let custody: Awaited<ReturnType<typeof createRawRequestCustody>> | null = null;
       try {
+        custody = await createRawRequestCustody({
+          rawRequest: goal,
+          target: target === "any" ? null : target,
+        });
         const client = ensureClient();
         const out = await client.compile(JSON.stringify(fixture), (p) => {
           if (requestRevision !== revision.current) return;
@@ -471,7 +497,10 @@ export default function App() {
             `Engine rejected the brief: ${out.result.reason_code ?? out.result.status}`,
           );
         }
-        if (!out.error && !out.result)
+        if (out.error) {
+          throw new Error(out.error.message || "ENGINE_UNAVAILABLE");
+        }
+        if (!out.result)
           throw new Error("The engine returned no result. Please retry.");
         setError(out.error);
         setResult(out.result);
@@ -491,7 +520,21 @@ export default function App() {
             techniques: bound.techniques,
             effectPlan: bound.effectPlan,
           });
-          setRendered(prompt);
+          let qualityOut: unknown = null;
+          try {
+            qualityOut = await requestQualityReceipt(
+              client,
+              fromK3QualityRequest(k3.rawOutput, prompt.finalPrompt),
+            );
+          } catch {
+            qualityOut = null;
+          }
+          const decision = qualityOut
+            ? deliveryForReceipt(qualityOut)
+            : deliveryForQualityMiss();
+          const surfaces = bindEffectiveSurfaces(prompt.finalPrompt, qualityOut);
+          const shown = { ...prompt, finalPrompt: surfaces.display };
+          setRendered(shown);
           const spe = await buildSpeArtifact({
             user_request: goal,
             category,
@@ -506,7 +549,7 @@ export default function App() {
               network_mode: "NONE",
               used_ts_fallback: false,
             },
-            rendered_prompt: prompt.finalPrompt,
+            rendered_prompt: surfaces.artifactPrompt,
             intent: {
               confirmed: lensState.confirmed,
               assumed: lensState.assumed,
@@ -516,6 +559,16 @@ export default function App() {
           });
           if (requestRevision !== revision.current) return;
           setArtifact(spe);
+          const receiptRecord = (qualityOut ?? {}) as {
+            receipt?: { verdict?: string; proof_class?: string };
+            quality_delta?: { disposition?: string };
+          };
+          setQualityView({
+            validation: decision.validation,
+            disposition: receiptRecord.quality_delta?.disposition ?? null,
+            proofClass: receiptRecord.receipt?.proof_class ?? null,
+          });
+          setSafeFallback(null);
           if (isHistoryOptIn()) {
             saveHistoryItem({
               id: spe.integrity.content_sha256.slice(0, 16),
@@ -523,7 +576,7 @@ export default function App() {
               user_request: goal,
               category,
               target,
-              prompt_preview: prompt.finalPrompt.slice(0, 240),
+              prompt_preview: surfaces.historyPreview,
               artifact: spe,
             });
             setHistory(loadHistory());
@@ -531,6 +584,12 @@ export default function App() {
         }
       } catch (err) {
         if (requestRevision !== revision.current) return;
+        const decision =
+          err instanceof PromptBriefError
+            ? deliveryForBrief()
+            : err instanceof K3EffectUnavailableError
+              ? deliveryForK3Down()
+              : deliveryForEngineDown();
         if (!(err instanceof PromptBriefError)) {
           clientRef.current?.terminate();
           clientRef.current = null;
@@ -538,6 +597,12 @@ export default function App() {
         setResult(null);
         setRendered(null);
         setArtifact(null);
+        setQualityView(null);
+        if (decision.fallback && custody) {
+          setSafeFallback(renderSafeFallbackPrompt(custody, "ENGINE_UNAVAILABLE"));
+        } else {
+          setSafeFallback(null);
+        }
         setError({
           code:
             err instanceof PromptBriefError
@@ -961,15 +1026,34 @@ export default function App() {
             </SourcesDepthDisclosure>
             </div>
             {error && <p role="alert">{error.message}</p>}
+            {safeFallback && (
+              <section className="spe-create-result" aria-label="Safe fallback">
+                <QualityReceiptPanel receipt={null} fallback />
+                <pre tabIndex={0}>{safeFallback.prompt}</pre>
+                <button
+                  type="button"
+                  className="spe-build"
+                  onClick={() => void navigator.clipboard.writeText(safeFallback.prompt)}
+                >
+                  Copy
+                </button>
+              </section>
+            )}
             {rendered?.finalPrompt && (
               <section className="spe-create-result" aria-label="Your prompt">
                 <h2>Your prompt</h2>
                 <pre tabIndex={0}>{rendered.finalPrompt}</pre>
+                <QualityReceiptPanel receipt={qualityView} fallback={false} />
                 <div className="spe-actions">
                   <button type="button" className="spe-build" onClick={() => void onCopy()}>
                     Copy
                   </button>
-                  <button type="button" className="spe-ghost" onClick={onExportSpe}>
+                  <button
+                    type="button"
+                    className="spe-ghost"
+                    onClick={onExportSpe}
+                    disabled={!artifact}
+                  >
                     .spe
                   </button>
                   <button type="button" className="spe-ghost" onClick={onExportJson}>

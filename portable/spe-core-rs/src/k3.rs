@@ -103,14 +103,6 @@ fn implemented_xcat(id: &str) -> bool {
     )
 }
 
-fn display_xcat(label: &str) -> Option<&'static str> {
-    match label {
-        "Research" => Some("CAT:C02"),
-        "Analysis" => Some("CAT:C06"),
-        _ => None,
-    }
-}
-
 fn display_protocol(label: &str) -> Option<&'static str> {
     match label {
         "AI Assistant" => Some("general"),
@@ -290,8 +282,14 @@ fn resolve_category(category: &Map<String, Value>, domains: &BTreeSet<String>) -
     let mut protocol = strip_opt(category.get("protocol_domain_id"));
     if xcat.is_none() {
         if let Some(label) = &display {
-            if let Some(mapped) = display_xcat(label) {
-                xcat = Some(mapped.to_string());
+            if label != "AI Assistant" {
+                if let Ok(routed) = crate::xcat::route_mission_stage(&json!({"display_label": label})) {
+                    if routed.get("disposition").and_then(|v| v.as_str()) == Some("ROUTED") {
+                        if let Some(primary) = routed.get("primary_category").and_then(|v| v.as_str()) {
+                            xcat = Some(primary.to_string());
+                        }
+                    }
+                }
             }
         }
     }
@@ -395,6 +393,7 @@ fn envelope(
     inputs_digest: String,
     task_resolved: Value,
     requirement_graph: Value,
+    category_route: Option<Value>,
 ) -> Result<Value, SpeError> {
     let mut body = json!({
         "schema_version": SCHEMA_VERSION,
@@ -422,9 +421,11 @@ fn envelope(
         "requirement_graph": requirement_graph,
     });
     let plan = crate::effect::bind(&body)?;
-    body.as_object_mut()
-        .expect("envelope object")
-        .insert("prompt_effect_plan".to_string(), plan);
+    let obj = body.as_object_mut().expect("envelope object");
+    obj.insert("prompt_effect_plan".to_string(), plan);
+    if let Some(route) = category_route {
+        obj.insert("category_route".to_string(), route);
+    }
     Ok(body)
 }
 
@@ -436,6 +437,7 @@ fn closed(
     inputs_digest: String,
     task_resolved: Value,
     requirement_graph: &Value,
+    category_route: Option<Value>,
 ) -> Result<Value, SpeError> {
     let note_values: Vec<Value> = notes.iter().map(|n| Value::String((*n).to_string())).collect();
     let payload = json!({
@@ -464,6 +466,7 @@ fn closed(
         inputs_digest,
         task_resolved,
         requirement_graph.clone(),
+        category_route,
     )
 }
 
@@ -589,7 +592,33 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
         &Value::Object(protected.clone()),
         &Value::Object(category.clone()),
     )?;
-    let context = resolve_category(&category, &domains);
+    let mut context = resolve_category(&category, &domains);
+    let display_label = context.get("display_label").and_then(|v| v.as_str()).unwrap_or("");
+    let auto = display_label == "AI Assistant"
+        || category.get("routing_mode").and_then(|v| v.as_str()) == Some("AUTO");
+    let auto_route = if auto {
+        let evidence = crate::xcat_auto::build_auto_evidence(
+            &Value::Object(protected.clone()),
+            &Value::Object(category.clone()),
+            &requirement_graph,
+        )?;
+        let routed = crate::xcat::route_mission_stage(&evidence)?;
+        if routed.get("disposition").and_then(|v| v.as_str()) == Some("ROUTED") {
+            if let Some(primary) = routed.get("primary_category").and_then(|v| v.as_str()) {
+                let implemented = implemented_xcat(primary);
+                if let Some(obj) = context.as_object_mut() {
+                    obj.insert("xcat_id".to_string(), json!(primary));
+                    obj.insert("xcat_implemented".to_string(), json!(implemented));
+                }
+            }
+        } else if let Some(obj) = context.as_object_mut() {
+            obj.insert("xcat_id".to_string(), Value::Null);
+            obj.insert("xcat_implemented".to_string(), Value::Null);
+        }
+        Some(routed)
+    } else {
+        None
+    };
     let xcat = context.get("xcat_id").and_then(|v| v.as_str()).map(|s| s.to_string());
     let resolved_for_digest = resolve_task(&task_map, xcat.as_deref());
     let inputs_digest = digest(
@@ -607,6 +636,7 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
                 inputs_digest,
                 json!({}),
                 &requirement_graph,
+                auto_route.clone(),
             );
         }
     }
@@ -621,6 +651,7 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
             inputs_digest,
             json!({}),
             &requirement_graph,
+            auto_route.clone(),
         );
     }
     if has_conflict(&protected)
@@ -634,15 +665,35 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
             inputs_digest,
             json!({}),
             &requirement_graph,
+            auto_route.clone(),
+        );
+    }
+    if auto_route.as_ref().and_then(|route| route.get("disposition")).and_then(|v| v.as_str()) == Some("UNKNOWN") {
+        let conflict = auto_route
+            .as_ref()
+            .and_then(|route| route.get("escalation_conditions"))
+            .and_then(|v| v.as_array())
+            .map(|items| items.iter().any(|item| item.as_str() == Some("CONFLICTING_CATEGORY_EVIDENCE")))
+            .unwrap_or(false);
+        let note = if conflict { "CONFLICTING_CATEGORY_EVIDENCE" } else { "FORGED_CATEGORY_WITHOUT_EVIDENCE" };
+        return closed(
+            "UNKNOWN",
+            &["UNKNOWN", note],
+            context,
+            binding,
+            inputs_digest,
+            json!({}),
+            &requirement_graph,
+            auto_route.clone(),
         );
     }
 
     let resolved = resolve_task(&task_map, xcat.as_deref());
     if task_bool(&resolved, "ambiguous") {
-        return closed("UNKNOWN", &["UNKNOWN", "AMBIGUOUS_TASK"], context, binding, inputs_digest, resolved, &requirement_graph);
+        return closed("UNKNOWN", &["UNKNOWN", "AMBIGUOUS_TASK"], context, binding, inputs_digest, resolved, &requirement_graph, auto_route.clone());
     }
     if task_bool(&resolved, "force_zero_shot") && task_bool(&resolved, "needs_examples") {
-        return closed("UNKNOWN", &["UNKNOWN", "CONFLICTING_INPUTS"], context, binding, inputs_digest, resolved, &requirement_graph);
+        return closed("UNKNOWN", &["UNKNOWN", "CONFLICTING_INPUTS"], context, binding, inputs_digest, resolved, &requirement_graph, auto_route.clone());
     }
 
     let atoms = atoms_from(&task_map);
@@ -678,13 +729,13 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
             continue;
         }
         if priority(&tech) == 100 {
-            return closed("UNKNOWN", &["UNKNOWN", "INVALID_TECHNIQUE"], context, binding, inputs_digest, resolved, &requirement_graph);
+            return closed("UNKNOWN", &["UNKNOWN", "INVALID_TECHNIQUE"], context, binding, inputs_digest, resolved, &requirement_graph, auto_route.clone());
         }
         seen.insert(tech);
         unique.push(item);
     }
     if seen.contains("ZERO_SHOT") && seen.contains("FEW_SHOT") {
-        return closed("UNKNOWN", &["UNKNOWN", "K3_TECHNIQUE_INCOMPATIBLE"], context, binding, inputs_digest, resolved, &requirement_graph);
+        return closed("UNKNOWN", &["UNKNOWN", "K3_TECHNIQUE_INCOMPATIBLE"], context, binding, inputs_digest, resolved, &requirement_graph, auto_route.clone());
     }
     unique.sort_by(|a, b| {
         let sa = a.get("strength").and_then(|v| v.as_str()).unwrap_or("");
@@ -701,7 +752,7 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
         let kept_ranks: Vec<i32> = kept.iter().filter_map(|item| item.get("strength").and_then(|v| v.as_str()).map(strength_rank)).collect();
         for item in unique.iter().skip(STANDARD_MAX) {
             if item.get("strength").and_then(|v| v.as_str()) == Some("MUST") && kept_ranks.iter().any(|rank| *rank > strength_rank("MUST")) {
-                return closed("UNKNOWN", &["UNKNOWN", "K3_STRATEGY_INVARIANT_VIOLATION"], context, binding, inputs_digest, resolved, &requirement_graph);
+                return closed("UNKNOWN", &["UNKNOWN", "K3_STRATEGY_INVARIANT_VIOLATION"], context, binding, inputs_digest, resolved, &requirement_graph, auto_route.clone());
             }
         }
     }
@@ -710,7 +761,7 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
         let mut notes = vec!["UNKNOWN".to_string()];
         notes.extend(extra_notes);
         let note_refs: Vec<&str> = notes.iter().map(|s| s.as_str()).collect();
-        return closed("UNKNOWN", &note_refs, context, binding, inputs_digest, resolved, &requirement_graph);
+        return closed("UNKNOWN", &note_refs, context, binding, inputs_digest, resolved, &requirement_graph, auto_route.clone());
     }
     let safe = plan_kind == "DIRECT"
         && techniques.len() == 1
@@ -753,6 +804,7 @@ pub fn select(input: &Value) -> Result<Value, SpeError> {
         inputs_digest,
         resolved,
         requirement_graph,
+        auto_route,
     )
 }
 

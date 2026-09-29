@@ -23,13 +23,16 @@ PUBLIC_META = REPO / "apps" / "web" / "public" / "spe_wasm.sha256.json"
 HISTORICAL_MANIFEST = (
     REPO / "proofs" / "wasm_rebaseline_candidate_20260928" / "candidate-manifest.json"
 )
-MANIFEST = REPO / "proofs" / "k3_effect_binding_20260929" / "candidate-manifest.json"
+MANIFEST = REPO / "proofs" / "task57_quality_reconstruction_20260929" / "candidate-manifest.json"
+XCAT_MANIFEST = REPO / "proofs" / "k3_effect_binding_20260929" / "candidate-manifest.json"
 GRAPH_MANIFEST = REPO / "proofs" / "k3_runtime_closure_20260929" / "candidate-manifest.json"
 LEGACY_SHA256 = "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830"
 PREVIOUS_CANONICAL_SHA256 = "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6"
 PREVIOUS_CANONICAL_BYTES = 671621
-CANONICAL_SHA256 = "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082"
-CANONICAL_BYTES = 1023091
+CANONICAL_SHA256 = "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b"
+CANONICAL_BYTES = 1340112
+XCAT_DOMAIN_SHA256 = "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082"
+XCAT_DOMAIN_BYTES = 1023091
 GRAPH_CLOSURE_SHA256 = "9cda3a8ef0f314dba152fbd442b8b3c8476d6f2be8b6e3221fb8abcdac6eb686"
 GRAPH_CLOSURE_BYTES = 870560
 CANONICAL_CANDIDATE = (
@@ -156,6 +159,9 @@ def test_candidate_manifest_matches_artifact_and_hides_absolute_paths():
     graph_manifest = json.loads(GRAPH_MANIFEST.read_text(encoding="utf-8"))
     assert graph_manifest["artifact_sha256"] == GRAPH_CLOSURE_SHA256
     assert graph_manifest["artifact_size"] == GRAPH_CLOSURE_BYTES
+    xcat_manifest = json.loads(XCAT_MANIFEST.read_text(encoding="utf-8"))
+    assert xcat_manifest["artifact_sha256"] == XCAT_DOMAIN_SHA256
+    assert xcat_manifest["artifact_size"] == XCAT_DOMAIN_BYTES
     payload = json.loads(MANIFEST.read_text(encoding="utf-8"))
     text = MANIFEST.read_text(encoding="utf-8")
     for marker in ("/workspace", "/home/", "/Users/", "/tmp/", ".codex", ".chatgpt-projects"):

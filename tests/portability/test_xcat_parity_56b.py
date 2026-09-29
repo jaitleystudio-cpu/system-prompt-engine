@@ -96,6 +96,56 @@ CASES: list[dict[str, Any]] = [
         "payload": {"spe_api": "xcat", "op": "route", "evidence": {}},
     },
     {
+        "id": "route_auto_c03",
+        "kind": "success",
+        "payload": {
+            "spe_api": "xcat",
+            "op": "route",
+            "evidence": {
+                "routing_mode": "AUTO",
+                "display_label": "AI Assistant",
+                "goal": "Write an executive brief about the launch.",
+            },
+        },
+    },
+    {
+        "id": "route_auto_multi",
+        "kind": "success",
+        "payload": {
+            "spe_api": "xcat",
+            "op": "route",
+            "evidence": {
+                "routing_mode": "AUTO",
+                "goal": "Research current accessibility evidence and write an executive brief",
+            },
+        },
+    },
+    {
+        "id": "route_auto_ambiguous",
+        "kind": "success",
+        "payload": {
+            "spe_api": "xcat",
+            "op": "route",
+            "evidence": {
+                "routing_mode": "AUTO",
+                "display_label": "AI Assistant",
+                "goal": "Help with this soon.",
+            },
+        },
+    },
+    {
+        "id": "route_auto_conflict",
+        "kind": "success",
+        "payload": {
+            "spe_api": "xcat",
+            "op": "route",
+            "evidence": {
+                "routing_mode": "AUTO",
+                "goal": "Research the market or code the scraper",
+            },
+        },
+    },
+    {
         "id": "route_self_selected",
         "kind": "success",
         "payload": {

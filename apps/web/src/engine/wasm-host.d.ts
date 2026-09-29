@@ -15,7 +15,8 @@ export type EngineErrorCode =
   | "WASM_HOST_IMPORTS_FORBIDDEN"
   | "WASM_EXPORTS_MISSING"
   | "INVALID_JSON"
-  | "WORKER_TIMEOUT";
+  | "WORKER_TIMEOUT"
+  | "TRUSTED_QUALITY_PATH_REQUIRED";
 
 export type EngineError = {
   code: EngineErrorCode;
@@ -47,6 +48,48 @@ export type HostResult = {
   sha256: string | null;
   imports: number | null;
 };
+
+export type VerifiedWasmSession = {
+  error: EngineError | null;
+  sha256: string | null;
+  imports: number | null;
+  verified: boolean;
+  phases: string[];
+  evaluate: (jsonText: string) => Promise<EngineSuccessBody>;
+};
+
+/**
+ * Compute the actual SHA, compare the manifest, compile, refuse host imports,
+ * and return the actual SHA plus an evaluator.
+ */
+export function createVerifiedWasmSession(args: {
+  wasmBytes: Uint8Array;
+  expectedSha256: string | null;
+  onPhase?: (phase: string) => void;
+}): Promise<VerifiedWasmSession>;
+
+export function sealQualityRequest(
+  request: Record<string, unknown>,
+  session: { verified?: boolean; sha256?: string | null; imports?: number | null },
+): Record<string, unknown> & { runtime_evidence: Record<string, unknown> };
+
+export function resolveQualityRoute(msg: {
+  type?: string;
+  jsonText?: string;
+  request?: Record<string, unknown>;
+}): { trusted: boolean; error: string | null };
+
+export function evaluateTrustedQuality(args: {
+  wasmBytes: Uint8Array;
+  expectedSha256: string | null;
+  request: Record<string, unknown>;
+  onPhase?: (phase: string) => void;
+}): Promise<
+  HostResult & {
+    trusted: boolean;
+    sealed: (Record<string, unknown> & { runtime_evidence?: Record<string, unknown> }) | null;
+  }
+>;
 
 /**
  * Load spe_wasm.wasm, verify integrity, call spe_evaluate.

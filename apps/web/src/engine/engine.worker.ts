@@ -5,7 +5,7 @@
  * No SPE semantic detectors. No TypeScript fallback. No Python. No fallback evaluator.
  * Context-protocol compile is transport-only: JSON in → WASM → JSON out.
  */
-import { loadAndEvaluate } from "./wasm-host.mjs";
+import { evaluateTrustedQuality, loadAndEvaluate, resolveQualityRoute } from "./wasm-host.mjs";
 import type {
   CompilePhase,
   EngineError,
@@ -40,6 +40,7 @@ function requestJsonText(msg: WorkerRequest): string {
     // Transport only — do not interpret or synthesize protocol fields here.
     return JSON.stringify(msg.request);
   }
+  if (msg.type === "quality") return JSON.stringify(msg.request);
   return msg.jsonText;
 }
 
@@ -48,9 +49,51 @@ ctx.onmessage = async (ev: MessageEvent<WorkerRequest>) => {
   const onPhase = (phase: string) => {
     post({ id: msg.id, type: "status", phase: phase as CompilePhase });
   };
+  const route = resolveQualityRoute(
+    msg.type === "quality"
+      ? { type: "quality", request: msg.request }
+      : msg.type === "evaluate"
+        ? { type: "evaluate", jsonText: msg.jsonText }
+        : { type: msg.type },
+  );
+  if (route.error) {
+    post({
+      id: msg.id,
+      type: "done",
+      error: {
+        code: "TRUSTED_QUALITY_PATH_REQUIRED",
+        message: "quality requests require the trusted quality worker path. Caller attestation is ignored.",
+      },
+      result: null,
+      phases: ["unavailable"],
+      sha256: null,
+      imports: null,
+      used_ts_fallback: false,
+    });
+    return;
+  }
   try {
     post({ id: msg.id, type: "status", phase: "loading_wasm" });
     const { bytes, sha } = await readWasm();
+    if (msg.type === "quality") {
+      const out = await evaluateTrustedQuality({
+        wasmBytes: bytes,
+        expectedSha256: sha,
+        request: msg.request,
+        onPhase,
+      });
+      post({
+        id: msg.id,
+        type: "done",
+        error: out.error as EngineError | null,
+        result: out.result as EngineSuccessBody | null,
+        phases: ["loading_wasm", ...out.phases],
+        sha256: out.sha256,
+        imports: out.imports,
+        used_ts_fallback: false,
+      });
+      return;
+    }
     const jsonText = requestJsonText(msg);
     const out = await loadAndEvaluate({
       wasmBytes: bytes,
