@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/candidate_pattern_contract.schema.json",
+  "title": "CandidatePatternContract",
+  "description": "Shape compiled from desired output and a user-supplied example. The example is not authority, not a fact, and not an instruction unless confirmed outside the example text.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "format",
+    "structure",
+    "tone",
+    "style",
+    "required_fields",
+    "ordering",
+    "length",
+    "negative_constraints",
+    "authority_status",
+    "authority_grants",
+    "factual_claims",
+    "instructions",
+    "refusals",
+    "example_present",
+    "example_classification",
+    "example_non_authoritative",
+    "example_is_authority",
+    "example_is_fact",
+    "example_is_instruction"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "spe.candidate-pattern-contract.v1"
+    },
+    "format": { "$ref": "#/$defs/clauses" },
+    "structure": { "$ref": "#/$defs/clauses" },
+    "tone": { "$ref": "#/$defs/clauses" },
+    "style": { "$ref": "#/$defs/clauses" },
+    "required_fields": { "$ref": "#/$defs/clauses" },
+    "ordering": { "$ref": "#/$defs/clauses" },
+    "length": { "$ref": "#/$defs/clauses" },
+    "negative_constraints": { "$ref": "#/$defs/clauses" },
+    "authority_status": { "type": "string", "const": "NONE" },
+    "authority_grants": { "type": "array", "maxItems": 0 },
+    "factual_claims": { "type": "array", "maxItems": 0 },
+    "instructions": { "$ref": "#/$defs/clauses" },
+    "refusals": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "DESIRED_OUTPUT_DOES_NOT_MINT_AUTHORITY",
+          "DESIRED_OUTPUT_UNSUPPORTED",
+          "EXAMPLE_CLASSIFICATION_FORCED",
+          "EXAMPLE_IS_NOT_AUTHORITY",
+          "EXAMPLE_IS_NOT_FACT",
+          "EXAMPLE_IS_NOT_INSTRUCTION",
+          "EXAMPLE_NON_AUTHORITATIVE_FORCED"
+        ]
+      }
+    },
+    "example_present": { "type": "boolean" },
+    "example_classification": {
+      "type": ["string", "null"],
+      "enum": ["EXAMPLE / USER_SUPPLIED", null]
+    },
+    "example_non_authoritative": { "type": "boolean", "const": true },
+    "example_is_authority": { "type": "boolean", "const": false },
+    "example_is_fact": { "type": "boolean", "const": false },
+    "example_is_instruction": { "type": "boolean" }
+  },
+  "$defs": {
+    "clause": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dimension", "value", "binding", "origin", "source_ref"],
+      "properties": {
+        "dimension": {
+          "type": "string",
+          "enum": [
+            "format",
+            "structure",
+            "tone",
+            "style",
+            "required_fields",
+            "ordering",
+            "length",
+            "negative_constraints"
+          ]
+        },
+        "value": { "type": "string", "minLength": 1 },
+        "binding": { "type": "string", "enum": ["CONFIRMED", "CANDIDATE"] },
+        "origin": { "type": "string", "enum": ["desired_output", "example"] },
+        "source_ref": {
+          "type": "string",
+          "enum": ["desired-output", "desired-example"]
+        }
+      }
+    },
+    "clauses": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/clause" }
+    }
+  }
+}
