@@ -26,9 +26,11 @@ const PREVIOUS_CANONICAL_BYTES = 671621;
 const PRE_GRAPH_K3_SHA256 =
   "8b49bf3ce7ee98258f1c13da0253c0b872ff94f6183b3e825108c7022c85653f";
 const PRE_GRAPH_K3_BYTES = 785148;
-const EXPECTED_CANONICAL_SHA256 =
+const PRE_XCAT_EFFECT_BINDING_SHA256 =
   "48ad95f5873bd7fb7933354d93fbbe732c57bc6f85956f64762fe1f5f44f2c33";
-const EXPECTED_CANONICAL_BYTES = 937763;
+const EXPECTED_CANONICAL_SHA256 =
+  "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082";
+const EXPECTED_CANONICAL_BYTES = 1023091;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, "..");
@@ -267,6 +269,16 @@ function main() {
   const bytes = readFileSync(artifact);
   assertNoAbsoluteMarkers(bytes, home);
   const digest = createHash("sha256").update(bytes).digest("hex");
+  // SPE Task 56B rebaseline gate: print measured digest before pin update.
+  if (process.env.SPE_WASM_MEASURE_ONLY === "1") {
+    const inspected = inspectModule(artifact);
+    process.stdout.write(`canonical-wasm: measure-only\n`);
+    process.stdout.write(`bytes=${bytes.length}\n`);
+    process.stdout.write(`sha256=${digest}\n`);
+    process.stdout.write(`imports=${inspected.imports.length}\n`);
+    process.stdout.write(`exports=${inspected.exports.join(",")}\n`);
+    return;
+  }
   if (bytes.length !== EXPECTED_CANONICAL_BYTES) {
     fail(`canonical candidate size ${bytes.length} != expected ${EXPECTED_CANONICAL_BYTES}`);
   }
@@ -286,6 +298,9 @@ function main() {
   }
   if (digest === PREVIOUS_CANONICAL_SHA256) {
     fail("canonical candidate still matches the pre-K3 semantic WASM");
+  }
+  if (digest === PRE_XCAT_EFFECT_BINDING_SHA256) {
+    fail("canonical candidate still matches the pre-XCAT effect-binding WASM");
   }
 
   const label = artifactLabel(targetDir, artifact);

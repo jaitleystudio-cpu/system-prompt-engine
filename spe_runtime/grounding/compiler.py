@@ -203,8 +203,8 @@ def research_capsules_to_c02_inputs(
 ]:
     """Map a grounding bundle to C02-compatible facts/provenance/uncertainties.
 
-    Output is DATA only and must be applied through ``research(...)`` so C02
-    ownership and provenance invariants remain intact.
+    Output is proposal data only. DOMAIN C02 must not commit these records;
+    the epistemic owner is absent and commit fails closed.
     """
     if not isinstance(bundle, GroundingBundle):
         raise TypeError("bundle must be a GroundingBundle")

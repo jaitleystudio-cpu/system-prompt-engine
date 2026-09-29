@@ -28,8 +28,8 @@ GRAPH_MANIFEST = REPO / "proofs" / "k3_runtime_closure_20260929" / "candidate-ma
 LEGACY_SHA256 = "8d482a17404d873a599b6804181d0637ae20a021ffe912ca19fdf99139c52830"
 PREVIOUS_CANONICAL_SHA256 = "9325f9ec82815f1d3e5dbb3923997244e9190755168d23690140944575dbf6c6"
 PREVIOUS_CANONICAL_BYTES = 671621
-CANONICAL_SHA256 = "48ad95f5873bd7fb7933354d93fbbe732c57bc6f85956f64762fe1f5f44f2c33"
-CANONICAL_BYTES = 937763
+CANONICAL_SHA256 = "077a4a399aaf598fd4ed3365f89cf6e32fcf64918a6c5f13319317823b4e3082"
+CANONICAL_BYTES = 1023091
 GRAPH_CLOSURE_SHA256 = "9cda3a8ef0f314dba152fbd442b8b3c8476d6f2be8b6e3221fb8abcdac6eb686"
 GRAPH_CLOSURE_BYTES = 870560
 CANONICAL_CANDIDATE = (
@@ -197,7 +197,9 @@ def test_copy_wasm_rejects_missing_candidate(tmp_path: Path):
         assert PUBLIC_META.read_text(encoding="utf-8") == before_meta
     finally:
         if backup is not None:
-            backup.replace(CANONICAL_CANDIDATE)
+            # shutil.move (not Path.replace) — tmp and repo may be on different volumes.
+            CANONICAL_CANDIDATE.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(backup), str(CANONICAL_CANDIDATE))
 
 
 def test_copy_wasm_rejects_wrong_candidate_hash(tmp_path: Path):

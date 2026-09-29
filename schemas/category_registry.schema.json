@@ -1,1 +1,97 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"category_registry","description":"STUB — not yet implemented (NEW_IMPLEMENTATION)","type":"object","additionalProperties":true}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/category_registry.schema.json",
+  "title": "category_registry",
+  "description": "XCAT domain category registry (taxonomy version 2 — DOMAIN).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "taxonomy",
+    "categories",
+    "supersedes_version",
+    "legacy_taxonomy",
+    "ratification_ref",
+    "ratification_date"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "2"
+    },
+    "taxonomy": {
+      "type": "string",
+      "const": "DOMAIN"
+    },
+    "supersedes_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "ratification_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ratification_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "categories": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^CAT:C(0[1-9]|1[0-2])$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "legacy_taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "status", "categories"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1"
+        },
+        "status": {
+          "type": "string",
+          "const": "MIGRATION_METADATA_ONLY"
+        },
+        "note": {
+          "type": "string"
+        },
+        "categories": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^CAT:C(0[1-9]|1[0-2])$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

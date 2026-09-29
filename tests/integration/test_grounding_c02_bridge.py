@@ -99,9 +99,19 @@ def test_research_from_grounding_preserves_authority(
 ):
     bundle = compile_context("research task", (research_capsule,))
     after = research_from_grounding(base_envelope, bundle)
-    assert after.facts[-1]["provenance_ids"]
+    assert after.facts == base_envelope.facts
+    assert after.provenance == base_envelope.provenance
+    assert after.uncertainties == base_envelope.uncertainties
     assert after.authority_state == base_envelope.authority_state
     assert after.execution_grants == base_envelope.execution_grants
+    assert after.category_payload is not None
+    assert after.category_payload["question"] == "research task"
+    assert after.proof_obligation_proposals
+    assert after.proof_obligation_proposals[0]["commit"] == "NOT_COMMITTED"
+    from spe_runtime.categories.c02_research.engine import commit_epistemic_proposal
+
+    with pytest.raises(ValueError, match="EPISTEMIC_OWNER_UNAVAILABLE"):
+        commit_epistemic_proposal(after, after.proof_obligation_proposals[0])
 
 
 def test_compile_context_rejects_authority_class_violation(research_capsule):

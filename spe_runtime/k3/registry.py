@@ -80,11 +80,9 @@ INSTRUCTION_MODE: dict[str, str] = {
 }
 
 IMPLEMENTED_XCAT: frozenset[str] = frozenset(
-    {"CAT:C01", "CAT:C02", "CAT:C03", "CAT:C06", "CAT:C07"}
+    {f"CAT:C{i:02d}" for i in range(1, 13)}
 )
-UNIMPLEMENTED_XCAT: frozenset[str] = frozenset(
-    {"CAT:C04", "CAT:C05", "CAT:C08", "CAT:C09", "CAT:C10", "CAT:C11", "CAT:C12"}
-)
+UNIMPLEMENTED_XCAT: frozenset[str] = frozenset()
 
 # Explicit product labels only. Not inferred from goal prose.
 DISPLAY_LABEL_XCAT: dict[str, str] = {

@@ -1,4 +1,9 @@
-"""CAT:C06 Analyze — may add analysis ONLY."""
+"""CAT:C06 legacy compatibility writer.
+
+OWNERSHIP_CLASS = LEGACY_COMPATIBILITY
+DOMAIN v2 production must use apply_domain_category.
+This function directly commits envelope.analysis and is not a DOMAIN writer.
+"""
 
 from __future__ import annotations
 
@@ -9,6 +14,8 @@ from spe_runtime.categories.c06_analyze.validate import validate_c06_output
 from spe_runtime.xcat.models import CrossCategoryEnvelope
 
 CATEGORY_ID = "CAT:C06"
+OWNERSHIP_CLASS = "LEGACY_COMPATIBILITY"
+DOMAIN_PRODUCTION = False
 
 
 def analyze(

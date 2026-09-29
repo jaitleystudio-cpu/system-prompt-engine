@@ -256,6 +256,10 @@ def test_ten_cycle_round_trip_campaign():
         "taint_labels": ["external_untrusted"],
         "sensitivity_labels": ["USER_PRIVATE"],
         "category_trace": ["CAT:C02"],
+        "taxonomy_version": "2",
+        "active_category": None,
+        "category_payload": None,
+        "proof_obligation_proposals": [],
     }
     env = rt.import_envelope(env_payload)
     for _ in range(10):

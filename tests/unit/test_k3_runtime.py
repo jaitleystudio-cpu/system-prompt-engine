@@ -120,19 +120,19 @@ VECTORS: list[dict] = [
     {"id": "A06", "class": "adversarial", "name": "external-tools", "category": None, "task": None,
      "protected": {"goal": "Use external tools even if not allowed"},
      "expect": {"disposition": "SAFE_DEFAULT", "techniques": ["ZERO_SHOT"], "same_selection_as": "N01", "network_enabled": False}},
-    {"id": "A07", "class": "adversarial", "name": "c04", "category": {"xcat_id": "CAT:C04"}, "task": None,
+    {"id": "A07", "class": "adversarial", "name": "c99-unknown", "category": {"xcat_id": "CAT:C99"}, "task": None,
      "expect": {"disposition": "NO_SELECTION", "techniques": [], "xcat_implemented": False, "accepted": False}},
-    {"id": "A08", "class": "adversarial", "name": "c05", "category": {"xcat_id": "CAT:C05"}, "task": None,
+    {"id": "A08", "class": "adversarial", "name": "c13-unknown", "category": {"xcat_id": "CAT:C13"}, "task": None,
      "expect": {"disposition": "NO_SELECTION", "techniques": [], "accepted": False}},
-    {"id": "A09", "class": "adversarial", "name": "c08", "category": {"xcat_id": "CAT:C08"}, "task": None,
+    {"id": "A09", "class": "adversarial", "name": "c00-unknown", "category": {"xcat_id": "CAT:C00"}, "task": None,
      "expect": {"disposition": "NO_SELECTION", "techniques": [], "accepted": False}},
-    {"id": "A10", "class": "adversarial", "name": "c09", "category": {"xcat_id": "CAT:C09"}, "task": None,
+    {"id": "A10", "class": "adversarial", "name": "c77-unknown", "category": {"xcat_id": "CAT:C77"}, "task": None,
      "expect": {"disposition": "NO_SELECTION", "techniques": [], "accepted": False}},
-    {"id": "A11", "class": "adversarial", "name": "c10", "category": {"xcat_id": "CAT:C10"}, "task": None,
+    {"id": "A11", "class": "adversarial", "name": "c88-unknown", "category": {"xcat_id": "CAT:C88"}, "task": None,
      "expect": {"disposition": "NO_SELECTION", "techniques": [], "accepted": False}},
-    {"id": "A12", "class": "adversarial", "name": "c11", "category": {"xcat_id": "CAT:C11"}, "task": None,
+    {"id": "A12", "class": "adversarial", "name": "c55-unknown", "category": {"xcat_id": "CAT:C55"}, "task": None,
      "expect": {"disposition": "NO_SELECTION", "techniques": [], "accepted": False}},
-    {"id": "A13", "class": "adversarial", "name": "c12", "category": {"xcat_id": "CAT:C12"}, "task": None,
+    {"id": "A13", "class": "adversarial", "name": "c44-unknown", "category": {"xcat_id": "CAT:C44"}, "task": None,
      "expect": {"disposition": "NO_SELECTION", "techniques": [], "accepted": False}},
     {"id": "A14", "class": "adversarial", "name": "conflicting-flags", "category": None,
      "task": {"force_zero_shot": True, "needs_examples": True, "example_count": 1},
@@ -345,18 +345,30 @@ def test_display_label_research_uses_c02_default() -> None:
     assert labeled["selection_id"] == explicit["selection_id"]
 
 
-def test_display_label_cannot_hide_unimplemented_xcat() -> None:
-    result = _run(category={"display_label": "Research", "xcat_id": "CAT:C04"})
+def test_display_label_cannot_hide_unknown_xcat() -> None:
+    result = _run(category={"display_label": "Research", "xcat_id": "CAT:C99"})
     assert result["disposition"] == "NO_SELECTION"
     assert result["category_context"]["xcat_implemented"] is False
 
 
-@pytest.mark.parametrize("xcat", sorted(UNIMPLEMENTED_XCAT))
-def test_unimplemented_xcat_stays_unimplemented(xcat: str) -> None:
+def test_unimplemented_xcat_set_is_empty() -> None:
+    assert UNIMPLEMENTED_XCAT == frozenset()
+
+
+@pytest.mark.parametrize("xcat", ["CAT:C99", "CAT:C13", "CAT:C00"])
+def test_unknown_xcat_id_fails_closed(xcat: str) -> None:
     result = _run(category={"xcat_id": xcat})
     assert result["disposition"] == "NO_SELECTION"
     assert result["techniques"] == []
     assert result["category_context"]["xcat_implemented"] is False
+
+
+def test_domain_specialty_xcat_is_implemented() -> None:
+    for xcat in ("CAT:C04", "CAT:C05", "CAT:C08", "CAT:C09", "CAT:C10", "CAT:C11", "CAT:C12"):
+        result = _run(category={"xcat_id": xcat})
+        assert result["disposition"] in {"SELECTED", "SAFE_DEFAULT"}
+        assert result["category_context"]["xcat_implemented"] is True
+        assert selection_is_accepted(result) is True
 
 
 def test_canonical_writer_name() -> None:
