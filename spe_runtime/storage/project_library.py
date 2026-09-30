@@ -51,6 +51,27 @@ _IDENTITY_KEYS = frozenset(
 )
 _MISSING = object()
 _DEFAULT_MAX_BODY_BYTES = 1_048_576
+_REVISION_KEYS = frozenset(
+    {
+        "kind",
+        "revision_id",
+        "artifact_id",
+        "project_id",
+        "parent_revision_id",
+        "created_at",
+        "artifact_type",
+        "provider_target",
+        "provenance_refs",
+        "quality_evidence_refs",
+        "body",
+        "body_sha256",
+        "version_label",
+        "branched",
+    }
+)
+_HEAD_MOVE_KEYS = frozenset(
+    {"kind", "project_id", "artifact_id", "revision_id", "created_at", "reason"}
+)
 
 
 class LibraryError(Exception):
@@ -74,6 +95,22 @@ def _line(record: Mapping[str, Any]) -> str:
     return json.dumps(record, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
 
 
+def _write_all(fd: int, payload: bytes) -> None:
+    view = payload
+    while view:
+        written = os.write(fd, view)
+        if written <= 0:
+            raise OSError("short write")
+        view = view[written:]
+
+
+def _close_quietly(fd: int) -> None:
+    try:
+        os.close(fd)
+    except OSError:
+        return
+
+
 def _require_timestamp(value: str) -> str:
     if not isinstance(value, str) or not _TIMESTAMP.fullmatch(value):
         raise LibraryError("CORRUPT_ENTRY", "timestamp is not ISO-8601")
@@ -92,8 +129,8 @@ def _normalize_body(body: Any) -> Any:
     try:
         encoded = _dump_body(body)
         parsed = json.loads(encoded)
-    except (TypeError, ValueError) as exc:
-        raise LibraryError("CORRUPT_ENTRY", "body is not JSON") from exc
+    except (TypeError, ValueError):
+        raise LibraryError("CORRUPT_ENTRY", "body is not JSON") from None
     if isinstance(parsed, (dict, list, str, int, float, bool)):
         return parsed
     raise LibraryError("CORRUPT_ENTRY", "body is not JSON")
@@ -182,21 +219,24 @@ def _public_revision(record: Mapping[str, Any]) -> dict[str, Any]:
 class ProjectLibrary:
     """Private local projects and immutable artifact revisions."""
 
-    def __init__(self, path: str | os.PathLike[str], *, max_body_bytes: int = _DEFAULT_MAX_BODY_BYTES) -> None:
-        if not isinstance(max_body_bytes, int) or isinstance(max_body_bytes, bool) or max_body_bytes < 1:
+    def __init__(self, path: str | os.PathLike[str], *, max_body_bytes: int | None = None) -> None:
+        if max_body_bytes is not None and (
+            not isinstance(max_body_bytes, int) or isinstance(max_body_bytes, bool) or max_body_bytes < 1
+        ):
             raise LibraryError("OVERSIZE_ENTRY", "body limit must be a positive integer")
         self._path = os.fspath(path)
-        self._max_body_bytes = max_body_bytes
+        self._caller_cap = max_body_bytes
+        self._max_body_bytes = max_body_bytes if max_body_bytes is not None else _DEFAULT_MAX_BODY_BYTES
         self._reset()
-        if not os.path.exists(self._path):
+        if not os.path.exists(self._path) or os.path.getsize(self._path) == 0:
             parent = os.path.dirname(self._path)
             if parent:
                 os.makedirs(parent, exist_ok=True)
-            with open(self._path, "w", encoding="utf-8") as handle:
-                handle.write("")
             self._append(self._header_record())
-        else:
-            self._load()
+            return
+        self._load()
+        if self._caller_cap is not None and self._caller_cap != self._max_body_bytes:
+            raise LibraryError("OVERSIZE_ENTRY", "body limit does not match the library")
 
     def create_project(
         self,
@@ -356,7 +396,6 @@ class ProjectLibrary:
     def export_project(self, project_id: str) -> dict[str, Any]:
         project = self.get_project(project_id)
         artifacts = []
-        revisions = []
         for artifact_id in self._artifact_ids:
             artifact = self._artifacts[artifact_id]
             if artifact["project_id"] != project_id:
@@ -369,8 +408,27 @@ class ProjectLibrary:
                     "head_revision_id": artifact["head_revision_id"],
                 }
             )
-            for revision_id in self._rev_ids_by_artifact.get(artifact_id, []):
-                revisions.append(self.get_revision(revision_id))
+        revisions = []
+        history = []
+        for record in self._records:
+            if record.get("project_id") != project_id:
+                continue
+            kind = record.get("kind")
+            if kind == "REVISION":
+                public = _public_revision(record)
+                revisions.append(public)
+                history.append({"kind": "REVISION", **public})
+            elif kind == "HEAD_MOVE":
+                history.append(
+                    {
+                        "kind": "HEAD_MOVE",
+                        "project_id": record["project_id"],
+                        "artifact_id": record["artifact_id"],
+                        "revision_id": record["revision_id"],
+                        "created_at": record["created_at"],
+                        "reason": "ROLLBACK",
+                    }
+                )
         return {
             "schema": LIBRARY_SCHEMA,
             "visibility": "private",
@@ -380,6 +438,7 @@ class ProjectLibrary:
             "project": project,
             "artifacts": artifacts,
             "revisions": revisions,
+            "history": history,
         }
 
     def import_bundle(self, bundle: Mapping[str, Any]) -> dict[str, Any]:
@@ -405,24 +464,10 @@ class ProjectLibrary:
         if project.get("visibility") != "private" or project.get("noindex") is not True:
             raise LibraryError("NOT_PRIVATE", "project is not private")
         name = project.get("name")
-        if not isinstance(name, str) or not name.strip() or len(name) > 200:
+        if not isinstance(name, str) or not name.strip() or len(name) > 200 or "\n" in name:
             raise LibraryError("CORRUPT_ENTRY", "project name is missing")
-        planned = self._plan_import(project_id, artifacts, revisions)
-        self._append(
-            {
-                "schema": RECORD_SCHEMA,
-                "kind": "PROJECT",
-                "project_id": project_id,
-                "name": name,
-                "created_at": _require_timestamp(str(project.get("created_at"))),
-                "visibility": "private",
-                "noindex": True,
-            }
-        )
-        for revision in planned["revisions"]:
-            self._append(revision)
-        for move in planned["moves"]:
-            self._append(move)
+        planned = self._plan_import(project_id, name, project, artifacts, revisions, bundle.get("history"))
+        self._rewrite([*self._records, *planned])
         return self.get_project(project_id)
 
     def export_spe(self, artifact_id: str) -> str:
@@ -431,8 +476,13 @@ class ProjectLibrary:
             loaded = loads_spe_artifact(body)
         except (TypeError, ValueError, KeyError, json.JSONDecodeError):
             raise LibraryError("NOT_YET_BOUND", "revision body is not a canonical spe artifact") from None
-        checked = verify_integrity(loaded)
-        if checked.get("integrity", {}).get("state") != "VERIFIED":
+        try:
+            checked = verify_integrity(loaded)
+        except (TypeError, ValueError):
+            raise LibraryError("INTEGRITY_MISMATCH", "spe integrity digest does not match") from None
+        integrity = checked.get("integrity")
+        state = integrity.get("state") if isinstance(integrity, Mapping) else None
+        if state != "VERIFIED":
             raise LibraryError("INTEGRITY_MISMATCH", "spe integrity digest does not match")
         return dumps_spe_artifact(loaded)
 
@@ -452,78 +502,106 @@ class ProjectLibrary:
     def _plan_import(
         self,
         project_id: str,
+        name: str,
+        project: Mapping[str, Any],
         artifacts: list[Any],
         revisions: list[Any],
-    ) -> dict[str, Any]:
+        history: Any,
+    ) -> list[dict[str, Any]]:
+        if not isinstance(history, list):
+            raise LibraryError("CORRUPT_ENTRY", "bundle is missing project history")
         heads: dict[str, str] = {}
         types: dict[str, str] = {}
         for artifact in artifacts:
             if not isinstance(artifact, Mapping) or artifact.get("project_id") != project_id:
                 raise LibraryError("CORRUPT_ENTRY", "artifact is not in this project")
             artifact_id = _require_id(artifact.get("artifact_id"), "art")
+            if artifact_id in heads:
+                raise LibraryError("CORRUPT_ENTRY", "artifact id repeated")
+            if artifact_id in self._artifacts:
+                raise LibraryError("ID_COLLISION", "artifact already exists")
             artifact_type = artifact.get("artifact_type")
             if artifact_type not in ARTIFACT_TYPES:
                 raise LibraryError("UNKNOWN_ARTIFACT_TYPE", "artifact type is not in the library vocabulary")
             heads[artifact_id] = _require_id(artifact.get("head_revision_id"), "rev")
             types[artifact_id] = str(artifact_type)
-        seen: set[str] = set()
-        parent_of: dict[str, str | None] = {}
-        children: dict[str, int] = {}
-        simulated_head: dict[str, str | None] = {artifact_id: None for artifact_id in heads}
-        stored = []
-        order: dict[str, list[str]] = {artifact_id: [] for artifact_id in heads}
-        for raw in revisions:
+        events: list[dict[str, Any]] = []
+        public_from_history: list[dict[str, Any]] = []
+        for raw in history:
             if not isinstance(raw, Mapping):
-                raise LibraryError("CORRUPT_ENTRY", "revision is not an object")
+                raise LibraryError("CORRUPT_ENTRY", "history entry is not an object")
             self._refuse_identity(raw)
-            revision = self._checked_revision(project_id, raw, types)
-            artifact_id = revision["artifact_id"]
-            if artifact_id not in heads:
-                raise LibraryError("CORRUPT_ENTRY", "revision has no artifact")
-            revision_id = revision["revision_id"]
-            if revision_id in seen:
-                raise LibraryError("ID_COLLISION", "revision id repeated")
-            seen.add(revision_id)
-            parent_id = revision["parent_revision_id"]
-            if parent_id is None:
-                if simulated_head[artifact_id] is not None:
-                    raise LibraryError("CORRUPT_ENTRY", "artifact has two roots")
-            elif parent_id not in seen:
-                raise LibraryError("CORRUPT_ENTRY", "parent revision is missing")
-            branched = False
-            if parent_id is not None:
-                branched = parent_id != simulated_head[artifact_id] or children.get(parent_id, 0) > 0
-            if revision["branched"] is not branched:
-                raise LibraryError("CORRUPT_ENTRY", "branch flag does not match history")
-            if parent_id is not None:
-                children[parent_id] = children.get(parent_id, 0) + 1
-            parent_of[revision_id] = parent_id
-            simulated_head[artifact_id] = revision_id
-            order[artifact_id].append(revision_id)
-            stored.append(
-                {
-                    "schema": RECORD_SCHEMA,
-                    "kind": "REVISION",
-                    **revision,
-                }
-            )
-        moves = []
-        for artifact_id, head_id in heads.items():
-            if head_id not in seen or parent_of.get(head_id, _MISSING) is _MISSING:
-                raise LibraryError("CORRUPT_ENTRY", "head revision is missing")
-            if simulated_head[artifact_id] != head_id:
-                moves.append(
+            kind = raw.get("kind")
+            if kind == "REVISION":
+                if set(raw) - _REVISION_KEYS:
+                    raise LibraryError("CORRUPT_ENTRY", "revision has an unknown field")
+                revision = self._checked_revision(project_id, raw, types)
+                if revision["artifact_id"] not in heads:
+                    raise LibraryError("CORRUPT_ENTRY", "revision has no artifact")
+                if revision["revision_id"] in self._revisions:
+                    raise LibraryError("ID_COLLISION", "revision already exists")
+                public_from_history.append(_public_revision(revision))
+                events.append({"schema": RECORD_SCHEMA, "kind": "REVISION", **revision})
+            elif kind == "HEAD_MOVE":
+                if set(raw) - _HEAD_MOVE_KEYS:
+                    raise LibraryError("CORRUPT_ENTRY", "head move has an unknown field")
+                if raw.get("project_id") != project_id:
+                    raise LibraryError("CORRUPT_ENTRY", "head move is not in this project")
+                if raw.get("reason") != "ROLLBACK":
+                    raise LibraryError("CORRUPT_ENTRY", "head move reason is not recognized")
+                artifact_id = _require_id(raw.get("artifact_id"), "art")
+                if artifact_id not in heads:
+                    raise LibraryError("CORRUPT_ENTRY", "head move has no artifact")
+                events.append(
                     {
                         "schema": RECORD_SCHEMA,
                         "kind": "HEAD_MOVE",
                         "project_id": project_id,
                         "artifact_id": artifact_id,
-                        "revision_id": head_id,
-                        "created_at": stored[-1]["created_at"] if stored else _require_timestamp("1970-01-01T00:00:00Z"),
+                        "revision_id": _require_id(raw.get("revision_id"), "rev"),
+                        "created_at": _require_timestamp(str(raw.get("created_at"))),
                         "reason": "ROLLBACK",
                     }
                 )
-        return {"revisions": stored, "moves": moves}
+            else:
+                raise LibraryError("CORRUPT_ENTRY", "history kind is not recognized")
+        public_from_revisions: list[dict[str, Any]] = []
+        for raw in revisions:
+            if not isinstance(raw, Mapping):
+                raise LibraryError("CORRUPT_ENTRY", "revision is not an object")
+            self._refuse_identity(raw)
+            if set(raw) - (_REVISION_KEYS - {"kind"}):
+                raise LibraryError("CORRUPT_ENTRY", "revision has an unknown field")
+            public_from_revisions.append(_public_revision(self._checked_revision(project_id, raw, types)))
+        if public_from_revisions != public_from_history:
+            raise LibraryError("CORRUPT_ENTRY", "history does not match revisions")
+        records = [
+            {
+                "schema": RECORD_SCHEMA,
+                "kind": "PROJECT",
+                "project_id": project_id,
+                "name": name,
+                "created_at": _require_timestamp(str(project.get("created_at"))),
+                "visibility": "private",
+                "noindex": True,
+            },
+            *events,
+        ]
+        snap = self._capture()
+        try:
+            for record in records:
+                self._apply(dict(record))
+            for artifact_id, head_id in heads.items():
+                current = self._artifacts.get(artifact_id)
+                if current is None or current["head_revision_id"] != head_id:
+                    raise LibraryError("CORRUPT_ENTRY", "head revision does not match history")
+                if current["artifact_type"] != types[artifact_id]:
+                    raise LibraryError("CORRUPT_ENTRY", "artifact type does not match")
+        except Exception:
+            self._restore(snap)
+            raise
+        self._restore(snap)
+        return records
 
     def _checked_revision(
         self,
@@ -672,27 +750,108 @@ class ProjectLibrary:
 
     def _append(self, record: Mapping[str, Any]) -> None:
         stored = dict(record)
-        self._apply(stored)
-        with open(self._path, "a", encoding="utf-8") as handle:
-            handle.write(_line(stored) + "\n")
-            handle.flush()
-            os.fsync(handle.fileno())
+        snap = self._capture()
+        try:
+            self._apply(stored)
+        except Exception:
+            self._restore(snap)
+            raise
+        try:
+            self._write_record(stored)
+        except OSError:
+            self._restore(snap)
+            raise
         self._records.append(stored)
+
+    def _write_record(self, record: Mapping[str, Any]) -> None:
+        payload = (_line(record) + "\n").encode("utf-8")
+        flags = os.O_APPEND | os.O_CREAT | os.O_WRONLY
+        fd = os.open(self._path, flags, 0o600)
+        try:
+            before = os.lseek(fd, 0, os.SEEK_END)
+            try:
+                _write_all(fd, payload)
+                os.fsync(fd)
+                os.fchmod(fd, 0o600)
+            except OSError:
+                try:
+                    os.ftruncate(fd, before)
+                    os.fsync(fd)
+                except OSError:
+                    pass
+                raise
+        finally:
+            _close_quietly(fd)
+        try:
+            self._fsync_parent()
+        except OSError:
+            return
+
+    def _fsync_parent(self) -> None:
+        directory = os.path.dirname(self._path) or "."
+        try:
+            fd = os.open(directory, os.O_RDONLY)
+        except OSError:
+            return
+        try:
+            os.fsync(fd)
+        except OSError:
+            return
+        finally:
+            _close_quietly(fd)
 
     def _rewrite(self, records: list[Mapping[str, Any]]) -> None:
         temporary = self._path + ".tmp"
-        with open(temporary, "w", encoding="utf-8") as handle:
+        if os.path.lexists(temporary):
+            if os.path.islink(temporary):
+                raise LibraryError("CORRUPT_ENTRY", "library temp path is a symlink")
+            os.unlink(temporary)
+        flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        fd = os.open(temporary, flags, 0o600)
+        try:
+            os.fchmod(fd, 0o600)
             for record in records:
-                handle.write(_line(record) + "\n")
-            handle.flush()
-            os.fsync(handle.fileno())
+                _write_all(fd, (_line(dict(record)) + "\n").encode("utf-8"))
+            os.fsync(fd)
+        except Exception:
+            _close_quietly(fd)
+            if os.path.lexists(temporary) and not os.path.islink(temporary):
+                os.unlink(temporary)
+            raise
+        _close_quietly(fd)
         os.replace(temporary, self._path)
+        self._fsync_parent()
         self._reset()
         self._load()
 
+    def _capture(self) -> dict[str, Any]:
+        return {
+            "records": list(self._records),
+            "projects": copy.deepcopy(self._projects),
+            "revisions": copy.deepcopy(self._revisions),
+            "artifacts": copy.deepcopy(self._artifacts),
+            "artifact_ids": list(self._artifact_ids),
+            "rev_ids_by_artifact": copy.deepcopy(self._rev_ids_by_artifact),
+            "max_body_bytes": self._max_body_bytes,
+        }
+
+    def _restore(self, snap: Mapping[str, Any]) -> None:
+        self._records = list(snap["records"])
+        self._projects = snap["projects"]
+        self._revisions = snap["revisions"]
+        self._artifacts = snap["artifacts"]
+        self._artifact_ids = list(snap["artifact_ids"])
+        self._rev_ids_by_artifact = snap["rev_ids_by_artifact"]
+        self._max_body_bytes = snap["max_body_bytes"]
+
     def _load(self) -> None:
-        with open(self._path, "r", encoding="utf-8") as handle:
-            text = handle.read()
+        try:
+            with open(self._path, "r", encoding="utf-8") as handle:
+                text = handle.read()
+        except UnicodeDecodeError:
+            raise LibraryError("CORRUPT_ENTRY", "library file is not valid text") from None
         if text == "":
             raise LibraryError("CORRUPT_ENTRY", "library file is empty")
         parts = text.split("\n")
@@ -715,22 +874,30 @@ class ProjectLibrary:
                 continue
             try:
                 obj = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise LibraryError("CORRUPT_ENTRY", "record is not valid JSON") from exc
+            except json.JSONDecodeError:
+                raise LibraryError("CORRUPT_ENTRY", "record is not valid JSON") from None
             if not isinstance(obj, dict):
                 raise LibraryError("CORRUPT_ENTRY", "record is not an object")
             if obj.get("schema") not in KNOWN_SCHEMAS:
                 raise LibraryError("UNKNOWN_SCHEMA", "record schema is not recognized")
             self._apply(obj)
-            self._records.append(obj)
+            self._records.append(self._durable_record(obj))
         if not self._records or self._records[0].get("kind") != "LIBRARY":
             raise LibraryError("CORRUPT_ENTRY", "library header is missing")
 
     def _apply(self, record: Mapping[str, Any]) -> None:
         kind = record.get("kind")
         if kind == "LIBRARY":
-            if self._records or record.get("visibility") != "private" or record.get("noindex") is not True:
+            if self._records:
+                raise LibraryError("CORRUPT_ENTRY", "library header is not first")
+            if record.get("visibility") != "private" or record.get("noindex") is not True:
                 raise LibraryError("CORRUPT_ENTRY", "library header is not private")
+            if record.get("indexing") != "noindex":
+                raise LibraryError("CORRUPT_ENTRY", "library header is not noindex")
+            cap = record.get("max_body_bytes")
+            if not isinstance(cap, int) or isinstance(cap, bool) or cap < 1:
+                raise LibraryError("CORRUPT_ENTRY", "library body limit is missing")
+            self._max_body_bytes = cap
             return
         if kind == "PROJECT":
             self._apply_project(record)
@@ -752,7 +919,7 @@ class ProjectLibrary:
         if project_id in self._projects:
             raise LibraryError("CORRUPT_ENTRY", "project id repeated")
         name = record.get("name")
-        if not isinstance(name, str) or not name:
+        if not isinstance(name, str) or not name.strip() or len(name) > 200 or "\n" in name:
             raise LibraryError("CORRUPT_ENTRY", "project name is missing")
         self._projects[project_id] = {
             "project_id": project_id,
@@ -779,19 +946,34 @@ class ProjectLibrary:
         parent_id = None if parent is None else _require_id(parent, "rev")
         if parent_id is not None and parent_id not in self._revisions:
             raise LibraryError("CORRUPT_ENTRY", "parent revision is missing")
-        body = record.get("body")
+        try:
+            body = _normalize_body(record.get("body"))
+        except LibraryError:
+            raise LibraryError("CORRUPT_ENTRY", "body is not JSON") from None
         digest = record.get("body_sha256")
         if not isinstance(digest, str) or digest != _hash_body(body):
             raise LibraryError("CORRUPT_ENTRY", "body digest does not match")
-        if record.get("branched") not in (True, False):
-            raise LibraryError("CORRUPT_ENTRY", "branch flag is missing")
+        if artifact_id not in self._artifacts:
+            if parent_id is not None:
+                raise LibraryError("CORRUPT_ENTRY", "first revision has a parent")
+        else:
+            if parent_id is None:
+                raise LibraryError("CORRUPT_ENTRY", "artifact has two roots")
+            if self._revisions[parent_id]["artifact_id"] != artifact_id:
+                raise LibraryError("CORRUPT_ENTRY", "parent revision is not on this artifact")
+        if record.get("branched") is not self._branched(artifact_id, parent_id):
+            raise LibraryError("CORRUPT_ENTRY", "branch flag does not match history")
         try:
             provider_target = _normalize_target(record.get("provider_target"))
             provenance_refs = _normalize_refs(record.get("provenance_refs"))
             quality_refs = _normalize_refs(record.get("quality_evidence_refs"))
             version_label = _normalize_label(record.get("version_label"))
-        except LibraryError as exc:
-            raise LibraryError("CORRUPT_ENTRY", "revision metadata is not a token") from exc
+        except LibraryError:
+            raise LibraryError("CORRUPT_ENTRY", "revision metadata is not a token") from None
+        if version_label is not None:
+            for existing_id in self._rev_ids_by_artifact.get(artifact_id, []):
+                if self._revisions[existing_id]["version_label"] == version_label:
+                    raise LibraryError("CORRUPT_ENTRY", "version label repeated")
         size = len(_dump_body(body).encode("utf-8"))
         if size > self._max_body_bytes:
             raise LibraryError("OVERSIZE_ENTRY", "stored body exceeds the local byte limit")
@@ -838,6 +1020,41 @@ class ProjectLibrary:
         revision = self._revisions.get(revision_id)
         if artifact is None or revision is None or revision["artifact_id"] != artifact_id:
             raise LibraryError("CORRUPT_ENTRY", "head move target is missing")
+        if record.get("project_id") != artifact["project_id"]:
+            raise LibraryError("CORRUPT_ENTRY", "head move project does not match")
         if record.get("reason") != "ROLLBACK":
             raise LibraryError("CORRUPT_ENTRY", "head move reason is not recognized")
+        _require_timestamp(str(record.get("created_at")))
+        if artifact["head_revision_id"] == revision_id:
+            raise LibraryError("CORRUPT_ENTRY", "head move does not change head")
         artifact["head_revision_id"] = revision_id
+
+    def _durable_record(self, record: Mapping[str, Any]) -> dict[str, Any]:
+        kind = record.get("kind")
+        if kind == "LIBRARY":
+            return self._header_record()
+        if kind == "PROJECT":
+            project = self._projects[str(record.get("project_id"))]
+            return {
+                "schema": RECORD_SCHEMA,
+                "kind": "PROJECT",
+                "project_id": project["project_id"],
+                "name": project["name"],
+                "created_at": project["created_at"],
+                "visibility": "private",
+                "noindex": True,
+            }
+        if kind == "REVISION":
+            revision = self._revisions[str(record.get("revision_id"))]
+            return {"schema": RECORD_SCHEMA, "kind": "REVISION", **_public_revision(revision)}
+        if kind == "HEAD_MOVE":
+            return {
+                "schema": RECORD_SCHEMA,
+                "kind": "HEAD_MOVE",
+                "project_id": record["project_id"],
+                "artifact_id": record["artifact_id"],
+                "revision_id": record["revision_id"],
+                "created_at": _require_timestamp(str(record.get("created_at"))),
+                "reason": "ROLLBACK",
+            }
+        raise LibraryError("CORRUPT_ENTRY", "record kind is not recognized")
