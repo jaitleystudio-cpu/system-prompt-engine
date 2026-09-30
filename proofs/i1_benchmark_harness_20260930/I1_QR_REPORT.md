@@ -86,6 +86,24 @@ blob_diffs=0
 BINARY_DIFFERENCE_CLASS=
 UNKNOWN
 
+CURSOR_VERIFIER_SUPERSESSION=
+ce0e2675971fab31482513353706643c72c3eab1
+bytes_in_custody=NO
+verdict=I1_QV_HOLD
+canonical_build_gate_exit=1
+
+G1_WRAPPER_OFF=
+checkout=/tmp/i1qr/runtime-145b844
+RUSTC_WRAPPER=absent
+sha256=326ea6b95a20bc459bd4858946cfc61c2541dcc7a0c08c542fa61ff14dc2e365
+bytes=1340128
+delta_vs_pin=+16
+equals_cursor_931d154a=NO
+changed_section=custom name only (282803 -> 282819)
+code_payload_sha256=unchanged
+data_payload_sha256=unchanged
+applied_to_cursor_gap=NO
+
 PINNED_PARITY=
 PASS
 positive=55
@@ -114,6 +132,8 @@ SOURCE_MODIFIED=NO
 PIN_MODIFIED=NO
 
 I1_QUALIFIED=NO
+I1_FINAL_QUALIFIED=NO
+I2_AUTHORIZED=NO
 
 FINAL:
 I1_QR_HOLD
@@ -309,4 +329,44 @@ Until that evidence exists, I1 stays integration-unqualified and I2 stays unauth
 
 ## 9. Evidence file
 
-`proofs/i1_benchmark_harness_20260930/I1_QR_EVIDENCE.json` stores the rebuild hashes, the parity counters, and the full pinned section payload digests.
+`proofs/i1_benchmark_harness_20260930/I1_QR_EVIDENCE.json` stores the rebuild hashes, the parity counters, the full pinned section payload digests, the Cursor verifier supersession custody, and the wrapper-off negative.
+
+## 10. G1 reinforcement
+
+Additional custody is commit `ce0e2675971fab31482513353706643c72c3eab1` on `cursor/spe-i1-q-20260930` (author Prawin Palisetty, 2026-09-30 07:12:06 +0530, parent `d34d822534d2834b4a5d29742f5b23ff0c628436`). The diff against runtime `145b844d59161d54d8ea58d2586ec2cae16dbe8a` is three files: `MEMORY.md`, `proofs/i1_q_20260930/SPE_I1_QV_HOLD_SUPERSESSION.md`, and `proofs/i1_q_20260930/SPE_I1_Q_REPORT.md`. None of those files contains the rebuilt WASM bytes, a section table, or a `rustc -Vv` dump. Those files were not copied onto this branch.
+
+The supersession note records:
+
+- `d34d822` report = SUPERSEDED, because a canonical WASM clean rebuild mismatch was discovered afterward.
+- Runtime under test stays `145b844d59161d54d8ea58d2586ec2cae16dbe8a`. Runtime modified = NO.
+- Verifier verdict = `I1_QV_HOLD`.
+- Pinned WASM sha256 `b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b`, 1340112 bytes, imports 0.
+- Rebuild A and B sha256 `931d154a2002bb5fa85a00f2b59b966b3bf452821ad47affcb6cb460fea0fad5`, 1339801 bytes, imports 0.
+- A equals B. A and B do not equal the frozen pin.
+- Canonical build gate exit 1.
+- The note does not repair the mismatch, retarget the pin, or authorize I2.
+- `MEMORY.md` from `d34d822` must not be replayed onto the integration line.
+- Canonical owner remains the Grok I1 agent on PR #71.
+- HOSTING forbidden. DEPLOYMENT forbidden. NO MERGE.
+
+The superseded report hashed the tracked public wasm and built the web app without running `tools/wasm_canonical_build.mjs`. That is why the earlier Cursor I1-Q pass did not see the mismatch. The supersession confirms the hash, size, and import count independently. It does not put the Cursor bytes in custody.
+
+Exit-code law in `tools/wasm_canonical_build.mjs`, read and not modified: `policy()` exits 2 before a candidate exists (toolchain, public-pin, and target-dir checks). `assertCompiler` requires live `rustc -Vv` to contain `release: 1.98.1` and `commit-hash: 48a229ceaefd4985c50990b14116b6d856af0985`, and requires cargo 1.98.1 plus the wasm32 target. `fail()` exits 1 after a candidate exists. On the pin-checked path, size is compared before sha256 is printed. A recorded gate exit of 1 is consistent with a candidate that failed the size check (1339801 != 1340112) or a later `fail()`. Their stderr was not observed, so this is not a claim that their log was read. Measure-only mode returns 0 after printing sha256 and would not be exit 1.
+
+### Wrapper omitted on this checkout
+
+A diagnostic cargo build of the same detached worktree omitted `RUSTC_WRAPPER`. It kept the canonical script's remap `RUSTFLAGS`, `CARGO_INCREMENTAL=0`, `--locked`, `--target wasm32-unknown-unknown`, and `--release`. Target directory `/tmp/i1qr/no-wrapper`. The artifact was not copied over the pin and is not committed.
+
+| Field | Pin | Wrapper off |
+| --- | --- | --- |
+| sha256 | `b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b` | `326ea6b95a20bc459bd4858946cfc61c2541dcc7a0c08c542fa61ff14dc2e365` |
+| bytes | 1340112 | 1340128 |
+| equals Cursor `931d154a…` | NO | NO |
+
+Section walk of both modules (version 1, 12 sections, import section absent). Payload sha256 matches the pin for type, function, table, memory, global, export, elem, code (`c374a3f33b680b27106b740e190622aa031124a56e17fb57081c68950af0982d`, 828565 bytes), data (`038ab7d04d3153d5930e0455c410be24f4640d06270d70e53d2d3fd57ee1f6f6`, 226203 bytes), producers, and target_features. The only difference is custom `name`: pin 282803 bytes / `4bcbef50b12a53577f38fcaf8b6eef833931ebd1f15055fc54172e2f565f3d1a`, wrapper-off 282819 bytes / `69c1f407aa6b22cd46957699728b178597476540774fc397f8f57df21397c44a`. First differing byte offset 1057076. 267332 bytes differ inside the overlapping prefix. Tail is +16 bytes.
+
+On this checkout path, omitting the metadata wrapper changes only the name custom section, by 16 bytes, and does not produce `931d154a` or the −311 size. That class is not applied to the Cursor gap. A different checkout path without the wrapper was not measured.
+
+`BINARY_DIFFERENCE_CLASS` of the Cursor artifact versus the pin stays `UNKNOWN`. `ROOT_CAUSE` stays `F. UNRESOLVED`. `FINAL` stays `I1_QR_HOLD`.
+
+STOP. DO NOT START I2. DO NOT MERGE. DO NOT DEPLOY. DO NOT HOST.

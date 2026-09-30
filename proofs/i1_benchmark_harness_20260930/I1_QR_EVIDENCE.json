@@ -74,6 +74,48 @@
     },
     "cursor_931d154a": "UNKNOWN"
   },
+  "g1": {
+    "cursor_verifier_supersession": {
+      "sha": "ce0e2675971fab31482513353706643c72c3eab1",
+      "parent": "d34d822534d2834b4a5d29742f5b23ff0c628436",
+      "branch": "cursor/spe-i1-q-20260930",
+      "files_vs_runtime": [
+        "MEMORY.md",
+        "proofs/i1_q_20260930/SPE_I1_QV_HOLD_SUPERSESSION.md",
+        "proofs/i1_q_20260930/SPE_I1_Q_REPORT.md"
+      ],
+      "wasm_bytes_in_custody": false,
+      "section_table_present": false,
+      "rustc_vv_present": false,
+      "verdict": "I1_QV_HOLD",
+      "canonical_build_gate_exit": 1,
+      "copied_onto_this_branch": false
+    },
+    "wrapper_off": {
+      "checkout": "/tmp/i1qr/runtime-145b844",
+      "runtime_sha": "145b844d59161d54d8ea58d2586ec2cae16dbe8a",
+      "rustc_wrapper": "absent",
+      "target": "/tmp/i1qr/no-wrapper",
+      "sha256": "326ea6b95a20bc459bd4858946cfc61c2541dcc7a0c08c542fa61ff14dc2e365",
+      "bytes": 1340128,
+      "delta_vs_pin": 16,
+      "equals_cursor_931d154a": false,
+      "committed": false,
+      "name_section": {
+        "pin_payload_bytes": 282803,
+        "pin_payload_sha256": "4bcbef50b12a53577f38fcaf8b6eef833931ebd1f15055fc54172e2f565f3d1a",
+        "wrapper_off_payload_bytes": 282819,
+        "wrapper_off_payload_sha256": "69c1f407aa6b22cd46957699728b178597476540774fc397f8f57df21397c44a"
+      },
+      "code_payload_sha256_unchanged": "c374a3f33b680b27106b740e190622aa031124a56e17fb57081c68950af0982d",
+      "data_payload_sha256_unchanged": "038ab7d04d3153d5930e0455c410be24f4640d06270d70e53d2d3fd57ee1f6f6",
+      "first_mismatch_offset": 1057076,
+      "differing_bytes_in_overlapping_prefix": 267332,
+      "applied_to_cursor_gap": false
+    },
+    "root_cause": "F. UNRESOLVED",
+    "final": "I1_QR_HOLD"
+  },
   "pinned_sections_full": [
     {
       "id": 1,
