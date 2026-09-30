@@ -1,0 +1,147 @@
+{
+  "ledger": {
+    "liveSerp": "NO",
+    "searchConsole": "NO",
+    "fieldCwv": "UNKNOWN",
+    "hreflangLiveHost": "UNKNOWN",
+    "lastmodContentAccuracy": "UNKNOWN",
+    "semanticAuthority": "NONE",
+    "indexingClaimed": false,
+    "rankingClaimed": false
+  },
+  "hreflangInRenderedArtifacts": 0,
+  "checks": {
+    "robots_honored": {
+      "pass": true,
+      "failures": []
+    },
+    "malformed_robots_rejected": {
+      "pass": true,
+      "failures": []
+    },
+    "not_found_not_indexable": {
+      "pass": true,
+      "failures": []
+    },
+    "unknown_route_404": {
+      "pass": true,
+      "failures": []
+    },
+    "redirects_not_a_completed_loop": {
+      "pass": true,
+      "failures": []
+    },
+    "canonicals_not_invented": {
+      "pass": true,
+      "failures": []
+    },
+    "malformed_canonicals_rejected": {
+      "pass": true,
+      "failures": []
+    },
+    "sitemap_urls_not_fabricated": {
+      "pass": true,
+      "failures": []
+    },
+    "malformed_sitemap_rejected": {
+      "pass": true,
+      "failures": []
+    },
+    "hreflang_fail_closed": {
+      "pass": true,
+      "failures": []
+    },
+    "metadata_not_invented": {
+      "pass": true,
+      "failures": []
+    },
+    "schema_not_invented": {
+      "pass": true,
+      "failures": []
+    },
+    "cwv_omitted_not_pass": {
+      "pass": true,
+      "failures": []
+    },
+    "cwv_measured_zero_is_a_measurement": {
+      "pass": true,
+      "failures": []
+    },
+    "cwv_slow_sample_fails": {
+      "pass": true,
+      "failures": []
+    },
+    "cwv_null_and_blank_stay_unknown": {
+      "pass": false,
+      "failures": [
+        "OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals(\"\") passed lcp,cls,inp. Number(null) and Number(\"\") are 0, and 0 is inside LCP<=2500, CLS<=0.1, INP<=200, so missing becomes zero and PASS."
+      ]
+    },
+    "cwv_unobserved_not_substituted": {
+      "pass": false,
+      "failures": [
+        "OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in."
+      ]
+    },
+    "field_cwv_not_claimed": {
+      "pass": true,
+      "failures": []
+    },
+    "live_serp_not_claimed": {
+      "pass": true,
+      "failures": []
+    },
+    "search_console_not_claimed": {
+      "pass": true,
+      "failures": []
+    },
+    "network_not_enabled": {
+      "pass": true,
+      "failures": []
+    },
+    "private_url_not_indexed": {
+      "pass": true,
+      "failures": []
+    },
+    "credential_urls_rejected": {
+      "pass": true,
+      "failures": []
+    },
+    "duplicates_not_proven": {
+      "pass": true,
+      "failures": []
+    },
+    "noindex_stays_noindex": {
+      "pass": true,
+      "failures": []
+    },
+    "trailing_slash_identity": {
+      "pass": true,
+      "failures": []
+    },
+    "semantic_authority_none": {
+      "pass": true,
+      "failures": []
+    },
+    "known_gaps_remain": {
+      "pass": true,
+      "failures": []
+    },
+    "hosting_not_authorized": {
+      "pass": true,
+      "failures": []
+    },
+    "ranking_and_indexing_not_claimed": {
+      "pass": true,
+      "failures": []
+    },
+    "emitted_artifacts_match_renderer": {
+      "pass": true,
+      "failures": []
+    },
+    "cwv_uses_inp_thresholds": {
+      "pass": true,
+      "failures": []
+    }
+  }
+}

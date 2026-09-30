@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="ledger keeps missing live data unknown" time="0.000543" classname="test"/>
+	<testcase name="robots_honored" time="0.000388" classname="test"/>
+	<testcase name="malformed_robots_rejected" time="0.000046" classname="test"/>
+	<testcase name="not_found_not_indexable" time="0.000040" classname="test"/>
+	<testcase name="unknown_route_404" time="0.000041" classname="test"/>
+	<testcase name="redirects_not_a_completed_loop" time="0.000041" classname="test"/>
+	<testcase name="canonicals_not_invented" time="0.000036" classname="test"/>
+	<testcase name="malformed_canonicals_rejected" time="0.000031" classname="test"/>
+	<testcase name="sitemap_urls_not_fabricated" time="0.000208" classname="test"/>
+	<testcase name="malformed_sitemap_rejected" time="0.000288" classname="test"/>
+	<testcase name="hreflang_fail_closed" time="0.000090" classname="test"/>
+	<testcase name="metadata_not_invented" time="0.000034" classname="test"/>
+	<testcase name="schema_not_invented" time="0.000644" classname="test"/>
+	<testcase name="cwv_omitted_not_pass" time="0.000040" classname="test"/>
+	<testcase name="cwv_measured_zero_is_a_measurement" time="0.000022" classname="test"/>
+	<testcase name="cwv_slow_sample_fails" time="0.000020" classname="test"/>
+	<testcase name="cwv_null_and_blank_stay_unknown" time="0.000742" classname="test" failure="OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals(&amp;quot;&amp;quot;) passed lcp,cls,inp. Number(null) and Number(&amp;quot;&amp;quot;) are 0, and 0 is inside LCP&lt;=2500, CLS&lt;=0.1, INP&lt;=200, so missing becomes zero and PASS.+ actual - expected+ [+   'OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals(&amp;quot;&amp;quot;) passed lcp,cls,inp. Number(null) and Number(&amp;quot;&amp;quot;) are 0, and 0 is inside LCP&lt;=2500, CLS&lt;=0.1, INP&lt;=200, so missing becomes zero and PASS.'+ ]- []">
+		<failure type="testCodeFailure" message="OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals(&amp;quot;&amp;quot;) passed lcp,cls,inp. Number(null) and Number(&amp;quot;&amp;quot;) are 0, and 0 is inside LCP&lt;=2500, CLS&lt;=0.1, INP&lt;=200, so missing becomes zero and PASS.+ actual - expected+ [+   'OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals(&amp;quot;&amp;quot;) passed lcp,cls,inp. Number(null) and Number(&amp;quot;&amp;quot;) are 0, and 0 is inside LCP&lt;=2500, CLS&lt;=0.1, INP&lt;=200, so missing becomes zero and PASS.'+ ]- []">
+[Error [ERR_TEST_FAILURE]: OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals("") passed lcp,cls,inp. Number(null) and Number("") are 0, and 0 is inside LCP&lt;=2500, CLS&lt;=0.1, INP&lt;=200, so missing becomes zero and PASS.
++ actual - expected
+
++ [
++   'OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals("") passed lcp,cls,inp. Number(null) and Number("") are 0, and 0 is inside LCP&lt;=2500, CLS&lt;=0.1, INP&lt;=200, so missing becomes zero and PASS.'
++ ]
+- []
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals("") passed lcp,cls,inp. Number(null) and Number("") are 0, and 0 is inside LCP&lt;=2500, CLS&lt;=0.1, INP&lt;=200, so missing becomes zero and PASS.
+  + actual - expected
+  
+  + [
+  +   'OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals("") passed lcp,cls,inp. Number(null) and Number("") are 0, and 0 is inside LCP&lt;=2500, CLS&lt;=0.1, INP&lt;=200, so missing becomes zero and PASS.'
+  + ]
+  - []
+  
+      at TestContext.&lt;anonymous> (file:///Volumes/4TB-WD/spe-worktrees/spe-c6-search-r1/tests/search/test_search_r1_qualification.mjs:26:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals("") passed lcp,cls,inp. Number(null) and Number("") are 0, and 0 is inside LCP&lt;=2500, CLS&lt;=0.1, INP&lt;=200, so missing becomes zero and PASS.' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="cwv_unobserved_not_substituted" time="0.000614" classname="test" failure="OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.+ actual - expected+ [+   'OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.'+ ]- []">
+		<failure type="testCodeFailure" message="OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.+ actual - expected+ [+   'OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.'+ ]- []">
+[Error [ERR_TEST_FAILURE]: OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.
++ actual - expected
+
++ [
++   'OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.'
++ ]
+- []
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.
+  + actual - expected
+  
+  + [
+  +   'OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.'
+  + ]
+  - []
+  
+      at TestContext.&lt;anonymous> (file:///Volumes/4TB-WD/spe-worktrees/spe-c6-search-r1/tests/search/test_search_r1_qualification.mjs:26:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="field_cwv_not_claimed" time="0.000046" classname="test"/>
+	<testcase name="live_serp_not_claimed" time="0.000028" classname="test"/>
+	<testcase name="search_console_not_claimed" time="0.000041" classname="test"/>
+	<testcase name="network_not_enabled" time="0.000028" classname="test"/>
+	<testcase name="private_url_not_indexed" time="0.000022" classname="test"/>
+	<testcase name="credential_urls_rejected" time="0.000023" classname="test"/>
+	<testcase name="duplicates_not_proven" time="0.000025" classname="test"/>
+	<testcase name="noindex_stays_noindex" time="0.000022" classname="test"/>
+	<testcase name="trailing_slash_identity" time="0.000021" classname="test"/>
+	<testcase name="semantic_authority_none" time="0.000022" classname="test"/>
+	<testcase name="known_gaps_remain" time="0.000022" classname="test"/>
+	<testcase name="hosting_not_authorized" time="0.000022" classname="test"/>
+	<testcase name="ranking_and_indexing_not_claimed" time="0.000026" classname="test"/>
+	<testcase name="emitted_artifacts_match_renderer" time="0.000025" classname="test"/>
+	<testcase name="cwv_uses_inp_thresholds" time="0.000023" classname="test"/>
+	<!-- tests 33 -->
+	<!-- suites 0 -->
+	<!-- pass 31 -->
+	<!-- fail 2 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 124.262125 -->
+</testsuites>

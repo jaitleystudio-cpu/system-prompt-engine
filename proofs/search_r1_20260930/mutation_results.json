@@ -1,0 +1,317 @@
+{
+  "donor_sha": "975a0793726f4b7741beb19732ac01cea5e13198",
+  "head": "975a0793726f4b7741beb19732ac01cea5e13198",
+  "branch": "cursor/spe-search-r1q-20260930",
+  "defined": 20,
+  "killed": 20,
+  "survived": 0,
+  "broken": 0,
+  "verdict": "HOLD",
+  "ledger": {
+    "liveSerp": "NO",
+    "searchConsole": "NO",
+    "fieldCwv": "UNKNOWN",
+    "hreflangLiveHost": "UNKNOWN",
+    "lastmodContentAccuracy": "UNKNOWN",
+    "semanticAuthority": "NONE",
+    "indexingClaimed": false,
+    "rankingClaimed": false
+  },
+  "baseline_failures": [
+    "cwv_null_and_blank_stay_unknown",
+    "cwv_unobserved_not_substituted"
+  ],
+  "baseline_failure_detail": {
+    "cwv_null_and_blank_stay_unknown": [
+      "OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals(\"\") passed lcp,cls,inp. Number(null) and Number(\"\") are 0, and 0 is inside LCP<=2500, CLS<=0.1, INP<=200, so missing becomes zero and PASS."
+    ],
+    "cwv_unobserved_not_substituted": [
+      "OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in."
+    ]
+  },
+  "baseline_passed": [
+    "canonicals_not_invented",
+    "credential_urls_rejected",
+    "cwv_measured_zero_is_a_measurement",
+    "cwv_omitted_not_pass",
+    "cwv_slow_sample_fails",
+    "cwv_uses_inp_thresholds",
+    "duplicates_not_proven",
+    "emitted_artifacts_match_renderer",
+    "field_cwv_not_claimed",
+    "hosting_not_authorized",
+    "hreflang_fail_closed",
+    "known_gaps_remain",
+    "live_serp_not_claimed",
+    "malformed_canonicals_rejected",
+    "malformed_robots_rejected",
+    "malformed_sitemap_rejected",
+    "metadata_not_invented",
+    "network_not_enabled",
+    "noindex_stays_noindex",
+    "not_found_not_indexable",
+    "private_url_not_indexed",
+    "ranking_and_indexing_not_claimed",
+    "redirects_not_a_completed_loop",
+    "robots_honored",
+    "schema_not_invented",
+    "search_console_not_claimed",
+    "semantic_authority_none",
+    "sitemap_urls_not_fabricated",
+    "trailing_slash_identity",
+    "unknown_route_404"
+  ],
+  "mutants": [
+    {
+      "id": "SR1-01",
+      "defect": "robots ignored",
+      "target": "robots_honored",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "emitted_artifacts_match_renderer",
+        "private_url_not_indexed",
+        "robots_honored"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-02",
+      "defect": "404 treated as indexable",
+      "target": "not_found_not_indexable",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "emitted_artifacts_match_renderer",
+        "not_found_not_indexable"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-03",
+      "defect": "canonical invented",
+      "target": "canonicals_not_invented",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "canonicals_not_invented",
+        "not_found_not_indexable"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-04",
+      "defect": "sitemap URL fabricated",
+      "target": "sitemap_urls_not_fabricated",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "duplicates_not_proven",
+        "emitted_artifacts_match_renderer",
+        "sitemap_urls_not_fabricated"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-05",
+      "defect": "missing metadata becomes a title",
+      "target": "metadata_not_invented",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "metadata_not_invented"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-06",
+      "defect": "schema invented",
+      "target": "schema_not_invented",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "schema_not_invented"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-07",
+      "defect": "CWV missing becomes zero",
+      "target": "cwv_omitted_not_pass",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "cwv_omitted_not_pass"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-08",
+      "defect": "CWV missing becomes PASS",
+      "target": "cwv_slow_sample_fails",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "cwv_omitted_not_pass",
+        "cwv_slow_sample_fails"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-09",
+      "defect": "live SERP claimed",
+      "target": "live_serp_not_claimed",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "emitted_artifacts_match_renderer",
+        "live_serp_not_claimed"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-10",
+      "defect": "Search Console claimed without evidence",
+      "target": "search_console_not_claimed",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "emitted_artifacts_match_renderer",
+        "known_gaps_remain",
+        "search_console_not_claimed"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-11",
+      "defect": "network enabled",
+      "target": "network_not_enabled",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "network_not_enabled"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-12",
+      "defect": "private URL crawled",
+      "target": "private_url_not_indexed",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "duplicates_not_proven",
+        "emitted_artifacts_match_renderer",
+        "metadata_not_invented",
+        "noindex_stays_noindex",
+        "private_url_not_indexed",
+        "robots_honored",
+        "sitemap_urls_not_fabricated"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-13",
+      "defect": "credential URL retained",
+      "target": "credential_urls_rejected",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "canonicals_not_invented",
+        "credential_urls_rejected",
+        "emitted_artifacts_match_renderer",
+        "robots_honored",
+        "sitemap_urls_not_fabricated",
+        "trailing_slash_identity"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-14",
+      "defect": "duplicate URL silently collapsed as proven",
+      "target": "duplicates_not_proven",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "duplicates_not_proven",
+        "emitted_artifacts_match_renderer"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-15",
+      "defect": "noindex becomes index",
+      "target": "noindex_stays_noindex",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "duplicates_not_proven",
+        "emitted_artifacts_match_renderer",
+        "metadata_not_invented",
+        "noindex_stays_noindex",
+        "private_url_not_indexed",
+        "sitemap_urls_not_fabricated"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-16",
+      "defect": "unknown route becomes 200",
+      "target": "unknown_route_404",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "emitted_artifacts_match_renderer",
+        "unknown_route_404"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-17",
+      "defect": "redirect loop marked complete",
+      "target": "redirects_not_a_completed_loop",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "emitted_artifacts_match_renderer",
+        "redirects_not_a_completed_loop"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-18",
+      "defect": "trailing-slash identity forged",
+      "target": "trailing_slash_identity",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "canonicals_not_invented",
+        "emitted_artifacts_match_renderer",
+        "robots_honored",
+        "sitemap_urls_not_fabricated",
+        "trailing_slash_identity"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-19",
+      "defect": "semantic authority elevated",
+      "target": "semantic_authority_none",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "emitted_artifacts_match_renderer",
+        "semantic_authority_none"
+      ],
+      "donor_exhibits_target": false
+    },
+    {
+      "id": "SR1-20",
+      "defect": "gap removed without evidence",
+      "target": "known_gaps_remain",
+      "status": "KILLED",
+      "discriminating_failures": [
+        "emitted_artifacts_match_renderer",
+        "known_gaps_remain",
+        "not_found_not_indexable"
+      ],
+      "donor_exhibits_target": false
+    }
+  ],
+  "existing": {
+    "searchFoundation": 0,
+    "capabilitiesSeo": 0
+  },
+  "qualification": {
+    "tests": 33,
+    "failed": 2,
+    "passed": 31,
+    "exit": 1
+  },
+  "source_runtime_modified": false,
+  "source_runtime_status": [],
+  "live_serp": "NO",
+  "search_console": "NO",
+  "semantic_authority": "NONE"
+}

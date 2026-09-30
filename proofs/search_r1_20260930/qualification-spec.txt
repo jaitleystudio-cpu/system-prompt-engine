@@ -1,0 +1,93 @@
+✔ ledger keeps missing live data unknown (0.542834ms)
+✔ robots_honored (0.388125ms)
+✔ malformed_robots_rejected (0.045834ms)
+✔ not_found_not_indexable (0.040084ms)
+✔ unknown_route_404 (0.041125ms)
+✔ redirects_not_a_completed_loop (0.041167ms)
+✔ canonicals_not_invented (0.035958ms)
+✔ malformed_canonicals_rejected (0.031292ms)
+✔ sitemap_urls_not_fabricated (0.207625ms)
+✔ malformed_sitemap_rejected (0.28775ms)
+✔ hreflang_fail_closed (0.089791ms)
+✔ metadata_not_invented (0.033667ms)
+✔ schema_not_invented (0.644334ms)
+✔ cwv_omitted_not_pass (0.040125ms)
+✔ cwv_measured_zero_is_a_measurement (0.022375ms)
+✔ cwv_slow_sample_fails (0.020042ms)
+✖ cwv_null_and_blank_stay_unknown (0.741917ms)
+✖ cwv_unobserved_not_substituted (0.614125ms)
+✔ field_cwv_not_claimed (0.045875ms)
+✔ live_serp_not_claimed (0.028ms)
+✔ search_console_not_claimed (0.040834ms)
+✔ network_not_enabled (0.027833ms)
+✔ private_url_not_indexed (0.022458ms)
+✔ credential_urls_rejected (0.02325ms)
+✔ duplicates_not_proven (0.024834ms)
+✔ noindex_stays_noindex (0.022291ms)
+✔ trailing_slash_identity (0.0215ms)
+✔ semantic_authority_none (0.021959ms)
+✔ known_gaps_remain (0.022084ms)
+✔ hosting_not_authorized (0.022334ms)
+✔ ranking_and_indexing_not_claimed (0.025667ms)
+✔ emitted_artifacts_match_renderer (0.025209ms)
+✔ cwv_uses_inp_thresholds (0.023333ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 31
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 124.262125
+
+✖ failing tests:
+
+test at tests/search/test_search_r1_qualification.mjs:25:3
+✖ cwv_null_and_blank_stay_unknown (0.741917ms)
+  AssertionError [ERR_ASSERTION]: OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals("") passed lcp,cls,inp. Number(null) and Number("") are 0, and 0 is inside LCP<=2500, CLS<=0.1, INP<=200, so missing becomes zero and PASS.
+  + actual - expected
+  
+  + [
+  +   'OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals("") passed lcp,cls,inp. Number(null) and Number("") are 0, and 0 is inside LCP<=2500, CLS<=0.1, INP<=200, so missing becomes zero and PASS.'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///Volumes/4TB-WD/spe-worktrees/spe-c6-search-r1/tests/search/test_search_r1_qualification.mjs:26:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'OBLIGATION CWV_MISSING_NULL_OR_BLANK: null and blank vitals are missing, not measurements. assessLabVitals(null) passed lcp,cls,inp; assessLabVitals("") passed lcp,cls,inp. Number(null) and Number("") are 0, and 0 is inside LCP<=2500, CLS<=0.1, INP<=200, so missing becomes zero and PASS.' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/search/test_search_r1_qualification.mjs:25:3
+✖ cwv_unobserved_not_substituted (0.614125ms)
+  AssertionError [ERR_ASSERTION]: OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.
+  + actual - expected
+  
+  + [
+  +   'OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///Volumes/4TB-WD/spe-worktrees/spe-c6-search-r1/tests/search/test_search_r1_qualification.mjs:26:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1047:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+      at Test.postRun (node:internal/test_runner/test:1173:19)
+      at Test.run (node:internal/test_runner/test:1101:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:744:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'OBLIGATION CWV_UNOBSERVED_NOT_SUBSTITUTED: an unobserved lab vital must stay UNKNOWN. measure-cwv.mjs replaces falsy lcpMs with Date.now()-started and falsy inpMs with clickMs, then scores that stand-in.' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
