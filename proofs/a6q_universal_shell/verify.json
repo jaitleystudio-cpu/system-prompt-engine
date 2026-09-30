@@ -1,0 +1,70 @@
+{
+  "quiet": {
+    "errors": [],
+    "failed": []
+  },
+  "ctaBox": {
+    "text": "Build my prompt ↗",
+    "color": "rgb(238, 241, 250)",
+    "bg": "rgba(0, 0, 0, 0)",
+    "opacity": "1",
+    "radius": "100px",
+    "x": 1239.90625,
+    "y": 21.5,
+    "w": 128.09375,
+    "h": 44
+  },
+  "ctaLight": {
+    "color": "rgb(244, 241, 234)",
+    "bg": "rgb(20, 24, 32)",
+    "opacity": "1",
+    "theme": "light"
+  },
+  "focusStart": "main",
+  "fwd": [
+    "A Make my prompt ↗",
+    "BUTTON Show ideas step",
+    "BUTTON Show meaning step",
+    "BUTTON Show spe step",
+    "BUTTON Show plan step",
+    "BUTTON Show prompt step"
+  ],
+  "overlap": {
+    "els": [
+      {
+        "t": "SPE",
+        "x": 23,
+        "y": 19,
+        "r": 73,
+        "b": 52
+      },
+      {
+        "t": "☰",
+        "x": 323,
+        "y": 14,
+        "r": 367,
+        "b": 58
+      }
+    ],
+    "pairs": [],
+    "headerH": 72
+  },
+  "esc": "true",
+  "afterClick": {
+    "expanded": "false",
+    "display": "none"
+  },
+  "modes": [
+    "Create",
+    "Inspect",
+    "Proof"
+  ],
+  "alert": "Your brief is still here.\n\nSomething interrupted preparation. Review the details below, then try again.\n\nTechnical details",
+  "diag": "",
+  "diagMsg": "",
+  "seo": {
+    "path": "/create",
+    "type": "navigate",
+    "value": ""
+  }
+}
