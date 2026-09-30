@@ -61,12 +61,88 @@ const metadataResult = await urlMod.ingestUrl("http://169.254.169.254/latest/met
 });
 const metadataFetch = since(cursor).length;
 
-cursor = fetchCalls.length;
-const traversalResult = await urlMod.ingestUrl(
-  "https://systempromptengine.com/../../etc/passwd",
-  { networkPolicy: { pageOrigin: page, connectSrc: selfSrc } },
-);
-const traversalFetch = since(cursor).length;
+const traversalInputs = [
+  ["parent", "https://systempromptengine.com/../etc/passwd"],
+  ["parents", "https://systempromptengine.com/../../etc/passwd"],
+  ["encoded_dots", "https://systempromptengine.com/%2e%2e/%2e%2e/etc/passwd"],
+  ["encoded_dots_upper", "https://systempromptengine.com/%2E%2E/%2E%2E/etc/passwd"],
+  ["encoded_dot_mixed", "https://systempromptengine.com/foo/%2e./bar"],
+  ["encoded_dot_mixed_tail", "https://systempromptengine.com/foo/.%2e/bar"],
+  ["dot_encoded_slash", "https://systempromptengine.com/foo/..%2f..%2fetc/passwd"],
+  ["encoded_dot_slash", "https://systempromptengine.com/%2e%2e%2f%2e%2e%2fetc/passwd"],
+  ["double_encoded", "https://systempromptengine.com/%252e%252e/%252e%252e/etc/passwd"],
+  ["double_encoded_slash", "https://systempromptengine.com/foo/%252e%252e%252fetc/passwd"],
+  ["backslash", "https://systempromptengine.com/foo\\..\\..\\etc\\passwd"],
+  ["mixed_slash", "https://systempromptengine.com/foo/..\\..\\etc\\passwd"],
+];
+const traversalCases = [];
+let traversalResult = { status: "invalid_url" };
+for (const [name, raw] of traversalInputs) {
+  cursor = fetchCalls.length;
+  const result = await urlMod.ingestUrl(raw, {
+    networkPolicy: { pageOrigin: page, connectSrc: selfSrc },
+  });
+  if (name === "parents") traversalResult = result;
+  traversalCases.push({ name, status: result.status, fetch: since(cursor).length });
+}
+const traversalFetch = traversalCases.some((item) => item.fetch > 0);
+
+function authorityStable(raw) {
+  const full = new URL(raw);
+  const bare = new URL(raw.split("#")[0].split("?")[0]);
+  return full.origin === bare.origin && full.host === bare.host;
+}
+
+const authorityInputs = [
+  "https://systempromptengine.com/ok?next=../../etc/passwd",
+  "https://systempromptengine.com/ok#../../etc/passwd",
+  "https://systempromptengine.com/ok?x=%2e%2e%2fetc#frag",
+  "https://systempromptengine.com/docs?redirect=https://evil.example/steal",
+];
+let queryFragmentAuthorityChanged = false;
+let queryFragmentOffOriginFetch = false;
+for (const raw of authorityInputs) {
+  if (!authorityStable(raw)) queryFragmentAuthorityChanged = true;
+  const expected = new URL(raw).origin;
+  cursor = fetchCalls.length;
+  await urlMod.ingestUrl(raw, {
+    networkPolicy: { pageOrigin: page, connectSrc: selfSrc },
+  });
+  for (const called of since(cursor)) {
+    try {
+      if (new URL(called).origin !== expected) queryFragmentOffOriginFetch = true;
+    } catch {
+      queryFragmentOffOriginFetch = true;
+    }
+  }
+}
+
+let defaultSrcFallbackBlocksRemote = false;
+let explicitConnectSrcBeatsDefault = false;
+let missingBothConnectDenied = false;
+if (typeof urlMod.resolveConnectSrc === "function") {
+  const fallback = urlMod.resolveConnectSrc(null, "'self'");
+  defaultSrcFallbackBlocksRemote =
+    urlMod.connectSrcAllowsRemoteHost(
+      fallback,
+      page,
+      new URL("https://evil.example/steal"),
+    ) === false;
+  const explicit = urlMod.resolveConnectSrc("'self'", "*");
+  explicitConnectSrcBeatsDefault =
+    String(explicit).replace(/'/g, "") === "self" &&
+    urlMod.connectSrcAllowsRemoteHost(
+      explicit,
+      page,
+      new URL("https://evil.example/steal"),
+    ) === false;
+  missingBothConnectDenied =
+    urlMod.connectSrcAllowsRemoteHost(
+      urlMod.resolveConnectSrc(null, null),
+      page,
+      new URL("https://evil.example/steal"),
+    ) === false;
+}
 
 cursor = fetchCalls.length;
 const absentResult = await urlMod.ingestUrl("https://evil.example/steal", {
@@ -101,7 +177,13 @@ const report = {
   absent_policy_status: absentResult.status,
   absent_policy_fetch: absentPolicyFetch > 0,
   traversal_status: traversalResult.status,
-  traversal_fetch: traversalFetch > 0,
+  traversal_fetch: traversalFetch,
+  traversal_cases: traversalCases,
+  query_fragment_authority_changed: queryFragmentAuthorityChanged,
+  query_fragment_off_origin_fetch: queryFragmentOffOriginFetch,
+  default_src_fallback_blocks_remote: defaultSrcFallbackBlocksRemote,
+  explicit_connect_src_beats_default: explicitConnectSrcBeatsDefault,
+  missing_both_connect_denied: missingBothConnectDenied,
   authority_outside: authorityOutside,
   secret_query_cached: workerProbe.cached,
   secret_query_fetched: workerProbe.fetched,

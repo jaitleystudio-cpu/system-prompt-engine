@@ -16,7 +16,24 @@ const FALLBACKS = [
 export type BrowserNetworkPolicy = {
   pageOrigin: string | null;
   connectSrc: string | null;
+  defaultSrc?: string | null;
 };
+
+/**
+ * Explicit connect-src wins. If it is absent, connect-src falls back to
+ * default-src. If both are absent, the result is null: CSP states no fetch
+ * restriction, and SPE does not treat that absence as approval.
+ */
+export function resolveConnectSrc(
+  connectSrc: string | null | undefined,
+  defaultSrc?: string | null,
+): string | null {
+  const explicit = connectSrc?.trim() ?? "";
+  if (explicit) return explicit;
+  const fallback = defaultSrc?.trim() ?? "";
+  if (fallback) return fallback;
+  return null;
+}
 
 /** True when CSP connect-src allows a request to the target host. */
 export function connectSrcAllowsRemoteHost(
@@ -24,7 +41,7 @@ export function connectSrcAllowsRemoteHost(
   pageOrigin: string | null,
   target: URL,
 ): boolean {
-  if (!connectSrc) return true;
+  if (!connectSrc) return false;
   const tokens = connectSrc
     .trim()
     .split(/\s+/)
@@ -60,15 +77,15 @@ export function readDocumentNetworkPolicy(): BrowserNetworkPolicy {
   }
   const metas = [...document.querySelectorAll('meta[http-equiv="Content-Security-Policy"]')];
   let connectSrc: string | null = null;
+  let defaultSrc: string | null = null;
   for (const meta of metas) {
     const content = meta.getAttribute("content") || "";
-    const m = content.match(/connect-src\s+([^;]+)/i);
-    if (m?.[1]) {
-      connectSrc = m[1].trim();
-      break;
-    }
+    const connect = content.match(/connect-src\s+([^;]+)/i);
+    const fallback = content.match(/default-src\s+([^;]+)/i);
+    if (connect?.[1] && connectSrc == null) connectSrc = connect[1].trim();
+    if (fallback?.[1] && defaultSrc == null) defaultSrc = fallback[1].trim();
   }
-  return { pageOrigin: location.origin, connectSrc };
+  return { pageOrigin: location.origin, connectSrc, defaultSrc };
 }
 
 function makeSourceBounds(
@@ -460,6 +477,76 @@ export function buildWebsiteBriefFromHtml(
   return { title, description, textExcerpt, buildBrief };
 }
 
+function safeDecode(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    try {
+      return decodeURIComponent(value.replace(/%(?![0-9A-Fa-f]{2})/g, "%25"));
+    } catch {
+      return value;
+    }
+  }
+}
+
+/** Path from the raw URL. Query and fragment are excluded so they cannot retarget the host. */
+function rawRequestPath(raw: string): string {
+  const trimmed = raw.trim();
+  const scheme = trimmed.indexOf("://");
+  const rest = scheme >= 0 ? trimmed.slice(scheme + 3) : trimmed;
+  const sep = rest.search(/[/?#\\]/);
+  if (sep < 0) return "/";
+  let path = rest.slice(sep).replace(/\\/g, "/");
+  const hash = path.indexOf("#");
+  if (hash >= 0) path = path.slice(0, hash);
+  const query = path.indexOf("?");
+  if (query >= 0) path = path.slice(0, query);
+  return path;
+}
+
+function pathForms(path: string): string[] {
+  const forms = [path];
+  let current = path;
+  for (let round = 0; round < 2; round += 1) {
+    const next = safeDecode(current).replace(/\\/g, "/");
+    if (next === current) break;
+    forms.push(next);
+    current = next;
+  }
+  return forms;
+}
+
+/** True when the raw path contains a dot-dot segment, including encodings the parser resolves. */
+export function rawUrlHasPathTraversal(raw: string): boolean {
+  const path = rawRequestPath(raw);
+  for (const form of pathForms(path)) {
+    if (form.split("/").some((segment) => segment === "..")) return true;
+  }
+  return false;
+}
+
+/** Query and fragment must not change the URL authority. */
+export function queryFragmentPreservesAuthority(raw: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(raw);
+  } catch {
+    return false;
+  }
+  const without = raw.split("#")[0].split("?")[0];
+  try {
+    const bare = new URL(without);
+    return bare.origin === parsed.origin && bare.host === parsed.host;
+  } catch {
+    return false;
+  }
+}
+
+function examinedHttpUrl(rawUrl: string): string {
+  const trimmed = rawUrl.trim();
+  return /^(https?:)?\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
 /** CORS-honest ingest. Never uses a paid proxy. Supports abort + timeout.
  * Under CSP connect-src 'self', cross-origin remote HTML is not read —
  * returns url_reference_only so the URL can still ground a prompt as a reference.
@@ -482,9 +569,23 @@ export async function ingestUrl(
     };
   }
 
-  const policy = opts.networkPolicy ?? readDocumentNetworkPolicy();
+  const examined = examinedHttpUrl(rawUrl);
   if (
-    !connectSrcAllowsRemoteHost(policy.connectSrc, policy.pageOrigin, parsed)
+    (parsed.protocol === "http:" || parsed.protocol === "https:") &&
+    (rawUrlHasPathTraversal(examined) || !queryFragmentPreservesAuthority(examined))
+  ) {
+    return {
+      status: "invalid_url",
+      url: rawUrl,
+      message: "That URL is not a fetchable path.",
+      fallbacks: FALLBACKS,
+    };
+  }
+
+  const policy = opts.networkPolicy ?? readDocumentNetworkPolicy();
+  const effectiveConnect = resolveConnectSrc(policy.connectSrc, policy.defaultSrc);
+  if (
+    !connectSrcAllowsRemoteHost(effectiveConnect, policy.pageOrigin, parsed)
   ) {
     return {
       status: "url_reference_only",
@@ -597,7 +698,7 @@ export async function ingestUrl(
       };
     }
     // Prefer honest reference-only when a remote read fails under a strict product.
-    if (policy.connectSrc && /'self'|self/.test(policy.connectSrc)) {
+    if (effectiveConnect && /'self'|self/.test(effectiveConnect)) {
       return {
         status: "url_reference_only",
         url: parsed.toString(),

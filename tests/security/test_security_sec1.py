@@ -45,6 +45,7 @@ STAGED = (
     LOCK,
     SBOM,
     INVENTORY,
+    "spe_runtime",
 )
 DONOR_SHA = "1837e81a0a756182725f6841f77cdcdd0166411a"
 HOLD_REASONS = {
@@ -159,8 +160,8 @@ def _allow_egress_fetch(root: Path) -> None:
     _replace(
         root,
         URL_INGEST,
-        "): boolean {\n  if (!connectSrc) return true;",
-        "): boolean {\n  return true;\n  if (!connectSrc) return true;",
+        "): boolean {\n  if (!connectSrc) return false;",
+        "): boolean {\n  return true;\n  if (!connectSrc) return false;",
     )
 
 
@@ -193,8 +194,8 @@ def _note_traversal(root: Path) -> None:
     _replace(
         root,
         URL_INGEST,
-        "function normalizeUrl(raw: string): URL | null {",
-        "function normalizeUrl(raw: string): URL | null {\n  // SEC1-14 mutant keeps dot-dot paths fetchable.",
+        "rawUrlHasPathTraversal(examined)",
+        "false",
     )
 
 
@@ -202,16 +203,17 @@ def _allow_metadata(root: Path) -> None:
     _replace(
         root,
         URL_INGEST,
-        "  if (!connectSrc) return true;",
-        '  if (target.hostname === "169.254.169.254") return true;\n  if (!connectSrc) return true;',
+        "  if (!connectSrc) return false;",
+        '  if (target.hostname === "169.254.169.254") return true;\n  if (!connectSrc) return false;',
     )
 
 
 def _note_auth_bypass(root: Path) -> None:
-    path = root / AUDIT
-    path.write_text(
-        path.read_text(encoding="utf-8") + "\n// SEC1-16 mutant: auth bypass boolean stays accepted.\n",
-        encoding="utf-8",
+    _replace(
+        root,
+        "spe_runtime/grounding/firewall.py",
+        "        if _is_untrusted_authority_key(name):\n            continue\n",
+        "",
     )
 
 
@@ -229,8 +231,8 @@ def _note_unknown_header(root: Path) -> None:
     _replace(
         root,
         URL_INGEST,
+        "  if (!connectSrc) return false;",
         "  if (!connectSrc) return true;",
-        "  if (!connectSrc) return true; // unknown header treated as pass",
     )
 
 
@@ -284,6 +286,14 @@ def _git_head(repo: Path) -> str:
     ).strip()
 
 
+def _git_branch(repo: Path) -> str:
+    return subprocess.check_output(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=repo,
+        text=True,
+    ).strip()
+
+
 def build_ledger(repo: Path) -> dict[str, object]:
     donor_laws = qualify_root(repo)
     rows: list[dict[str, object]] = []
@@ -310,21 +320,21 @@ def build_ledger(repo: Path) -> dict[str, object]:
             "mutant": mutant_result,
             "status": status,
         }
-        if law in HOLD_REASONS:
+        if status == "DONOR_DEFECT" and law in HOLD_REASONS:
             row["reason"] = HOLD_REASONS[law]
         rows.append(row)
     killed = [row["id"] for row in rows if row["status"] == "KILLED"]
     survived = [row["id"] for row in rows if row["status"] == "SURVIVED"]
     defects = [row["id"] for row in rows if row["status"] == "DONOR_DEFECT"]
     final = (
-        "SECURITY_R1_QUALIFICATION_PASS"
+        "SECURITY_R1_REPAIR_PASS"
         if not survived and not defects and len(killed) == len(LAW_IDS)
         else "HOLD"
     )
     return {
         "donor_sha": DONOR_SHA,
         "tested_head": _git_head(repo),
-        "branch": "cursor/spe-security-r1q-20260930",
+        "branch": _git_branch(repo),
         "pr": "NONE",
         "pr_status": "NOT_OPENED",
         "style_src_unsafe_inline": style_src_unsafe_inline(repo),
@@ -363,8 +373,8 @@ def test_sec1_qualification_ledger() -> None:
     assert ledger["cve_disposition"] == "UNKNOWN"
     assert ledger["pr"] == "NONE"
     assert ledger["survived"] == []
-    assert ledger["donor_defects"] == ["SEC1-14", "SEC1-16", "SEC1-18"]
-    assert ledger["killed"] == 17
+    assert ledger["donor_defects"] == []
+    assert ledger["killed"] == 20
     assert ledger["semantic_authority"] == "NOT_ELEVATED"
-    assert ledger["final"] == "HOLD"
+    assert ledger["final"] == "SECURITY_R1_REPAIR_PASS"
     assert [row["id"] for row in ledger["mutants"]] == list(LAW_IDS)

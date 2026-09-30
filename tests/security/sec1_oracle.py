@@ -10,6 +10,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -74,7 +75,9 @@ def run_runtime(root: Path) -> dict[str, Any]:
             f"security runtime probe failed code={result.returncode}: " + " | ".join(tail)
         )
     try:
-        payload = json.loads(result.stdout[result.stdout.rfind("{") : result.stdout.rfind("}") + 1])
+        start = result.stdout.find("{")
+        end = result.stdout.rfind("}")
+        payload = json.loads(result.stdout[start : end + 1])
     except json.JSONDecodeError as exc:
         raise AssertionError(
             f"security runtime probe returned non-JSON code={result.returncode}"
@@ -209,14 +212,41 @@ def _scan_tree(root: Path, pattern: re.Pattern[str]) -> bool:
     return False
 
 
-def _auth_bypass_accepted() -> bool:
-    from spe_runtime.grounding.firewall import sanitize_external_payload
-
-    for key in BYPASS_KEYS:
-        cleaned = sanitize_external_payload({"claim": "note", key: True})
-        if cleaned.get(key) is True:
-            return True
-    return False
+def _auth_bypass_accepted(root: Path) -> bool:
+    """Score the firewall in the tree under test, including a mutated copy."""
+    keys = ", ".join(repr(key) for key in BYPASS_KEYS)
+    script = (
+        "import sys\n"
+        "sys.path.insert(0, sys.argv[1])\n"
+        "from spe_runtime.grounding.firewall import sanitize_external_payload\n"
+        f"keys = ({keys})\n"
+        "bad = False\n"
+        "for key in keys:\n"
+        "    cleaned = sanitize_external_payload({'claim': 'note', key: True})\n"
+        "    if cleaned.get(key) is True:\n"
+        "        bad = True\n"
+        "        break\n"
+        "sys.stdout.write('1' if bad else '0')\n"
+    )
+    env = {
+        "PATH": os.environ.get("PATH", ""),
+        "HOME": os.environ.get("HOME", ""),
+        "TMPDIR": os.environ.get("TMPDIR", "/tmp"),
+        "PYTHONPATH": str(root),
+        "PYTHONDONTWRITEBYTECODE": "1",
+    }
+    result = subprocess.run(
+        [sys.executable, "-c", script, str(root)],
+        cwd=str(root),
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0 or result.stdout.strip() not in {"0", "1"}:
+        detail = (result.stderr or result.stdout or "").strip().splitlines()
+        raise AssertionError("authority probe failed: " + " | ".join(detail[-8:]))
+    return result.stdout.strip() == "1"
 
 
 def _policy_tokens(directives: dict[str, list[str]], name: str) -> list[str]:
@@ -288,7 +318,7 @@ def qualify_root(root: Path, runtime: dict[str, Any] | None = None) -> dict[str,
         or runtime.get("metadata_status") == "ok"
     ):
         failed.add("SEC1-15")
-    if _auth_bypass_accepted():
+    if _auth_bypass_accepted(root):
         failed.add("SEC1-16")
     if _unpinned(lock) or _unlocked_direct(package_json, lock):
         failed.add("SEC1-17")

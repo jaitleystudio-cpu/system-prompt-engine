@@ -21,6 +21,26 @@ _CITATION_FORGERY_KEYS = frozenset(
 
 GROUNDING_FORBIDDEN_KEYS = FORBIDDEN_PAYLOAD_KEYS | _CITATION_FORGERY_KEYS
 
+# Untrusted payloads may describe authority. These fields must never survive
+# as effective grants. Matching ignores case and separators (isAdmin, is_admin).
+_UNTRUSTED_AUTHORITY_KEYS = frozenset(
+    {
+        "bypass",
+        "authorized",
+        "isadmin",
+        "authbypass",
+    }
+)
+
+
+def _authority_key_norm(key: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", key.casefold())
+
+
+def _is_untrusted_authority_key(key: str) -> bool:
+    return _authority_key_norm(key) in _UNTRUSTED_AUTHORITY_KEYS
+
+
 # Unicode controls (Cc) except common whitespace; also strip zero-width (Cf) junk.
 _CONTROL_RE = re.compile(
     r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f\u200b-\u200f\u202a-\u202e\u2060-\u206f\ufeff]"
@@ -54,11 +74,21 @@ def _sanitize_text(value: str) -> str:
     return cleaned.strip()
 
 
+def _sanitize_mapping(value: Mapping[str, object]) -> dict[str, Any]:
+    cleaned: dict[str, Any] = {}
+    for key, item in value.items():
+        name = str(key)
+        if _is_untrusted_authority_key(name):
+            continue
+        cleaned[name] = _sanitize_value(item)
+    return cleaned
+
+
 def _sanitize_value(value: object) -> object:
     if isinstance(value, str):
         return _sanitize_text(value)
     if isinstance(value, Mapping):
-        return {str(k): _sanitize_value(v) for k, v in value.items()}
+        return _sanitize_mapping(value)
     if isinstance(value, list):
         return [_sanitize_value(v) for v in value]
     if isinstance(value, tuple):
@@ -80,9 +110,7 @@ def sanitize_external_payload(payload: Mapping[str, object]) -> Mapping[str, obj
 
     _walk_forbidden(payload)
 
-    out: dict[str, Any] = {
-        str(k): _sanitize_value(v) for k, v in payload.items()
-    }
+    out: dict[str, Any] = _sanitize_mapping(payload)
 
     existing = out.get("taint_labels", ())
     if isinstance(existing, str):

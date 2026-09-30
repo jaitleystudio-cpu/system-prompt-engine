@@ -1,7 +1,7 @@
 {
   "donor_sha": "1837e81a0a756182725f6841f77cdcdd0166411a",
-  "tested_head": "1837e81a0a756182725f6841f77cdcdd0166411a",
-  "branch": "cursor/spe-security-r1q-20260930",
+  "tested_head": "e696ee39254e1c7e21ab2baf00fc23525f427bbc",
+  "branch": "cursor/spe-security-r1-repair-20260930",
   "pr": "NONE",
   "pr_status": "NOT_OPENED",
   "style_src_unsafe_inline": "STYLE_SRC_DOCUMENTED_EXCEPTION",
@@ -9,14 +9,10 @@
   "semantic_authority": "NOT_ELEVATED",
   "egress": "ZERO",
   "pentest": "NOT_PERFORMED",
-  "killed": 17,
+  "killed": 20,
   "survived": [],
-  "donor_defects": [
-    "SEC1-14",
-    "SEC1-16",
-    "SEC1-18"
-  ],
-  "final": "HOLD",
+  "donor_defects": [],
+  "final": "SECURITY_R1_REPAIR_PASS",
   "mutants": [
     {
       "id": "SEC1-01",
@@ -126,10 +122,9 @@
       "id": "SEC1-14",
       "attack": "path traversal left fetchable",
       "executed": true,
-      "donor": "FAIL",
+      "donor": "PASS",
       "mutant": "FAIL",
-      "status": "DONOR_DEFECT",
-      "reason": "A same-origin URL containing dot-dot segments is normalized and fetch is attempted."
+      "status": "KILLED"
     },
     {
       "id": "SEC1-15",
@@ -143,10 +138,9 @@
       "id": "SEC1-16",
       "attack": "auth bypass boolean left accepted",
       "executed": true,
-      "donor": "FAIL",
+      "donor": "PASS",
       "mutant": "FAIL",
-      "status": "DONOR_DEFECT",
-      "reason": "The grounding firewall keeps bypass, authorized, isAdmin, and auth_bypass booleans."
+      "status": "KILLED"
     },
     {
       "id": "SEC1-17",
@@ -160,10 +154,9 @@
       "id": "SEC1-18",
       "attack": "absent connect-src treated as allow",
       "executed": true,
-      "donor": "FAIL",
+      "donor": "PASS",
       "mutant": "FAIL",
-      "status": "DONOR_DEFECT",
-      "reason": "A missing connect-src policy allows a remote fetch."
+      "status": "KILLED"
     },
     {
       "id": "SEC1-19",
