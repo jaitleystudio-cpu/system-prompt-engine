@@ -126,15 +126,60 @@ const LOCALE_BY_ID = new Map<string, LocaleDefinition>(
   SUPPORTED_LOCALES.map((loc) => [loc.id.toLowerCase(), loc]),
 );
 
-const LOCALE_BY_LANG = new Map<string, LocaleDefinition>(
-  SUPPORTED_LOCALES.map((loc) => [loc.language.toLowerCase(), loc]),
-);
+interface ParsedLocaleTag {
+  readonly language: string;
+  readonly script?: string;
+  readonly region?: string;
+}
+
+function parseLocaleTag(clean: string): ParsedLocaleTag {
+  const parts = clean.split("-").filter((part) => part.length > 0);
+  const language = parts[0] ?? "";
+  let script: string | undefined;
+  let region: string | undefined;
+  for (const part of parts.slice(1)) {
+    if (!script && part.length === 4 && /^[a-z]{4}$/.test(part)) {
+      script = part;
+      continue;
+    }
+    if (!region && (part.length === 2 || /^\d{3}$/.test(part))) {
+      region = part;
+    }
+  }
+  return { language, script, region };
+}
+
+function impliedRegion(locale: LocaleDefinition): string | undefined {
+  if (locale.region) return locale.region.toLowerCase();
+  const parts = locale.numberLocale.toLowerCase().split("-");
+  for (const part of parts.slice(1)) {
+    if (part.length === 2 || /^\d{3}$/.test(part)) return part;
+  }
+  return undefined;
+}
 
 /**
- * Deterministic BCP 47 locale resolution with fallback chain:
- * 1. Exact match (e.g. "pt-BR")
- * 2. Primary language subtag match (e.g. "es-MX" -> "es")
- * 3. Default locale ("en")
+ * Primary-language fallback is allowed only when it keeps the requested
+ * script and region. zh-Hant must not become zh-Hans, pt-PT must not become
+ * pt-BR, and es-MX must not inherit es-ES numbering.
+ */
+function compatibleLocale(clean: string): LocaleDefinition | undefined {
+  const requested = parseLocaleTag(clean);
+  if (!requested.language || (!requested.script && !requested.region)) return undefined;
+  for (const locale of SUPPORTED_LOCALES) {
+    if (locale.language.toLowerCase() !== requested.language) continue;
+    if (requested.script && locale.script.toLowerCase() !== requested.script) continue;
+    if (requested.region && impliedRegion(locale) !== requested.region) continue;
+    return locale;
+  }
+  return undefined;
+}
+
+/**
+ * Deterministic BCP 47 locale resolution:
+ * 1. Exact registered id (e.g. "pt-BR", "zh-Hans")
+ * 2. Primary language only when script and region stay compatible (e.g. "es-ES" -> "es")
+ * 3. Default locale ("en") when a match would change script or region
  */
 export function resolveLocale(rawTag?: string | null): LocaleDefinition {
   if (!rawTag || typeof rawTag !== "string") {
@@ -144,10 +189,8 @@ export function resolveLocale(rawTag?: string | null): LocaleDefinition {
   if (LOCALE_BY_ID.has(clean)) {
     return LOCALE_BY_ID.get(clean)!;
   }
-  const primary = clean.split("-")[0];
-  if (LOCALE_BY_LANG.has(primary)) {
-    return LOCALE_BY_LANG.get(primary)!;
-  }
+  const compatible = compatibleLocale(clean);
+  if (compatible) return compatible;
   return DEFAULT_LOCALE;
 }
 
@@ -160,7 +203,13 @@ export const BIDI_PDI = "\u2069";
 
 export function isolateBidi(text: string): string {
   if (!text) return "";
-  return `${BIDI_FSI}${text}${BIDI_PDI}`;
+  let isolated = "";
+  for (const char of text) {
+    const code = char.codePointAt(0) ?? 0;
+    if (code >= 0x202a && code <= 0x202e) continue;
+    isolated += char;
+  }
+  return `${BIDI_FSI}${isolated}${BIDI_PDI}`;
 }
 
 export interface HreflangAlternate {
@@ -187,10 +236,25 @@ export interface HreflangOptions {
   resolveLocalizedUrl?: (localeId: string, cleanBase: string) => string | null;
 }
 
+function firstPublishedLocalizedHref(
+  published: ReadonlySet<string>,
+  canonicalBase: string,
+  resolveLocalizedUrl: HreflangOptions["resolveLocalizedUrl"],
+): string | null {
+  if (!resolveLocalizedUrl) return null;
+  for (const loc of SUPPORTED_LOCALES) {
+    if (loc.id === DEFAULT_LOCALE.id || !published.has(loc.id)) continue;
+    const href = resolveLocalizedUrl(loc.id, canonicalBase);
+    if (href) return href;
+  }
+  return null;
+}
+
 /**
  * Generates discovery hreflang alternates adhering to W3C / Search standards.
  * STRICT LAW: Only emits hreflang for genuinely published, existing localized pages.
  * Unearned / phantom hreflang claims are strictly rejected.
+ * x-default follows a published locale URL and is withheld when nothing is published.
  */
 export function buildHreflangAlternates(
   canonicalBaseUrl: string,
@@ -199,7 +263,22 @@ export function buildHreflangAlternates(
   const published = new Set(options.publishedLocales ?? PUBLISHED_LOCALES);
   const url = new URL(canonicalBaseUrl);
   url.searchParams.delete("lang");
-  const cleanBase = url.toString();
+  const canonicalBase = url.toString();
+  let cleanBase = canonicalBase;
+
+  if (published.size === 0) {
+    return [];
+  }
+
+  if (!published.has(DEFAULT_LOCALE.id)) {
+    const resolvedHref = firstPublishedLocalizedHref(
+      published,
+      canonicalBase,
+      options.resolveLocalizedUrl,
+    );
+    if (!resolvedHref) return [];
+    cleanBase = resolvedHref;
+  }
 
   const alternates: HreflangAlternate[] = [
     { hreflang: "x-default", href: cleanBase },
@@ -215,7 +294,7 @@ export function buildHreflangAlternates(
     if (!published.has(loc.id)) continue;
 
     const locHref = options.resolveLocalizedUrl
-      ? options.resolveLocalizedUrl(loc.id, cleanBase)
+      ? options.resolveLocalizedUrl(loc.id, canonicalBase)
       : null;
 
     if (locHref) {
@@ -354,18 +433,40 @@ export const MESSAGES: Record<string, Record<string, string>> = {
   },
 };
 
+export interface UntranslatedMessage {
+  readonly status: "untranslated";
+  readonly translated: false;
+}
+
+const UNTRANSLATED_MESSAGE: UntranslatedMessage = {
+  status: "untranslated",
+  translated: false,
+};
+
+function ownCatalog(resolved: LocaleDefinition): Record<string, string> | undefined {
+  return MESSAGES[resolved.id] ?? MESSAGES[resolved.language];
+}
+
 /**
- * Format message with fallback to default locale ("en") and raw key if missing.
+ * A missing key may return the key. An empty catalog value, a region tag,
+ * or a locale without its own translation is not an English success.
  */
-export function formatMessage(localeId: string, key: string): string {
+export function formatMessage(
+  localeId: string,
+  key: string,
+): string | UntranslatedMessage {
   const resolved = resolveLocale(localeId);
-  const table = MESSAGES[resolved.id] || MESSAGES[resolved.language] || MESSAGES[DEFAULT_LOCALE.id];
-  if (table && key in table) {
-    return table[key];
+  if (localeId.trim().toLowerCase() !== resolved.id.toLowerCase()) {
+    return UNTRANSLATED_MESSAGE;
   }
-  const defaultTable = MESSAGES[DEFAULT_LOCALE.id];
-  if (defaultTable && key in defaultTable) {
-    return defaultTable[key];
+  const table = ownCatalog(resolved);
+  if (table && key in table) {
+    const value = table[key];
+    if (value.length > 0) return value;
+    return UNTRANSLATED_MESSAGE;
+  }
+  if (!table && MESSAGES[DEFAULT_LOCALE.id]?.[key]) {
+    return UNTRANSLATED_MESSAGE;
   }
   return key;
 }

@@ -54,12 +54,14 @@ console.log("✓ Reading direction contracts verified (RTL for Arabic, LTR for E
 
 // 4. Fallback Chain Resolution
 const fallbackTests = [
-  { input: "es-MX", expectedId: "es" },
+  { input: "es-MX", expectedId: "en" },
   { input: "es-ES", expectedId: "es" },
   { input: "ar-EG", expectedId: "ar" },
-  { input: "ar-SA", expectedId: "ar" },
+  { input: "ar-SA", expectedId: "en" },
   { input: "pt-BR", expectedId: "pt-BR" },
-  { input: "pt-PT", expectedId: "pt-BR" }, // Primary subtag match to pt
+  { input: "pt-PT", expectedId: "en" },
+  { input: "zh-Hans", expectedId: "zh-Hans" },
+  { input: "zh-Hant", expectedId: "en" },
   { input: "unknown-XYZ", expectedId: "en" },
   { input: "", expectedId: "en" },
   { input: null, expectedId: "en" },
@@ -70,7 +72,15 @@ for (const t of fallbackTests) {
   const res = resolveLocale(t.input);
   assert.equal(res.id, t.expectedId, `resolveLocale("${t.input}") expected ${t.expectedId}, got ${res.id}`);
 }
-console.log("✓ Deterministic fallback resolution chain verified across 10 boundary cases.");
+const traditional = resolveLocale("zh-Hant");
+assert.notEqual(traditional.id, "zh-Hans");
+assert.notEqual(traditional.script, "Hans");
+const portugal = resolveLocale("pt-PT");
+assert.notEqual(portugal.id, "pt-BR");
+assert.notEqual(portugal.region, "BR");
+const mexico = resolveLocale("es-MX");
+assert.ok(!(mexico.id !== "es-MX" && mexico.numberLocale === "es-ES"));
+console.log(`✓ Deterministic fallback resolution chain verified across ${fallbackTests.length} boundary cases.`);
 
 // 5. Bidi First Strong Isolation
 const bidiSample = "مرحبا بالعالم";
@@ -78,6 +88,13 @@ const isolated = isolateBidi(bidiSample);
 assert.equal(isolated.startsWith(BIDI_FSI), true, "Must start with BIDI_FSI (U+2068)");
 assert.equal(isolated.endsWith(BIDI_PDI), true, "Must end with BIDI_PDI (U+2069)");
 assert.equal(isolateBidi(""), "");
+assert.equal(isolateBidi("مرحبا").includes("مرحبا"), true);
+for (const mark of ["\u202A", "\u202B", "\u202C", "\u202D", "\u202E"]) {
+  const isolatedOverride = isolateBidi(`safe${mark}text`);
+  assert.equal(isolatedOverride.includes(mark), false, "bidi override must not be accepted as content");
+  assert.equal(isolatedOverride.startsWith(BIDI_FSI), true);
+  assert.equal(isolatedOverride.endsWith(BIDI_PDI), true);
+}
 console.log("✓ Bidirectional First Strong Isolation (FSI/PDI) contracts verified.");
 
 // 6. Strict Publication Truth Hreflang Alternates Generator
@@ -107,6 +124,21 @@ assert.equal(fixtureAlternates.length, 4, `Expected 4 alternates for fixture (x-
 assert(fixtureAlternates.some((a) => a.hreflang === "es" && a.href === "https://systempromptengine.com/es/create"));
 assert(fixtureAlternates.some((a) => a.hreflang === "ja" && a.href === "https://systempromptengine.com/ja/create"));
 assert(!fixtureAlternates.some((a) => a.hreflang === "ar"), "Unpublished ar must still be excluded in fixture");
+assert.equal(buildHreflangAlternates(testUrl, { publishedLocales: [] }).length, 0);
+const onlySpanish = buildHreflangAlternates(testUrl, {
+  publishedLocales: ["es"],
+  resolveLocalizedUrl: () => "https://systempromptengine.com/es/create",
+});
+assert.equal(
+  onlySpanish.find((item) => item.hreflang === "x-default")?.href,
+  "https://systempromptengine.com/es/create",
+);
+const nullResolver = buildHreflangAlternates(testUrl, {
+  publishedLocales: ["es"],
+  resolveLocalizedUrl: () => null,
+});
+assert.equal(nullResolver.some((item) => item.hreflang === "es"), false);
+assert.equal(nullResolver.some((item) => item.hreflang === "x-default"), false);
 console.log("✓ Fixture test verified: published localized routes successfully emit hreflang alternates.");
 
 // 7. Message Formatting and Missing Key Fallback
@@ -114,7 +146,12 @@ assert.equal(formatMessage("en", "nav.home"), "Home");
 assert.equal(formatMessage("es", "nav.home"), "Inicio");
 assert.equal(formatMessage("ar", "nav.home"), "الرئيسية");
 assert.equal(formatMessage("ja", "nav.home"), "ホーム");
-assert.equal(formatMessage("unknown-lang", "nav.home"), "Home", "Unknown locale must fallback to English");
+const untranslated = { status: "untranslated", translated: false };
+assert.deepEqual(formatMessage("unknown-lang", "nav.home"), untranslated);
+assert.deepEqual(formatMessage("de", "nav.home"), untranslated);
+assert.deepEqual(formatMessage("fr", "nav.home"), untranslated);
+assert.deepEqual(formatMessage("pt-BR", "nav.home"), untranslated);
+assert.deepEqual(formatMessage("BR", "nav.home"), untranslated);
 assert.equal(formatMessage("en", "nonexistent.key"), "nonexistent.key", "Missing key returns raw key string");
 console.log("✓ Translation catalog and key fallback resolution verified.");
 
