@@ -16,16 +16,24 @@ const LCP_MS = 2500;
 const CLS_MAX = 0.1;
 const INP_MS = 200;
 
+function missingLabVital(raw) {
+  return raw === null || raw === "";
+}
+
 export function assessLabVitals(sample) {
   const lcpMs = Number(sample.lcpMs);
   const cls = Number(sample.cls);
   const inpMs = Number(sample.inpMs);
-  return {
+  const scored = {
     lcp: Number.isFinite(lcpMs) && lcpMs <= LCP_MS,
     cls: Number.isFinite(cls) && cls <= CLS_MAX,
     inp: Number.isFinite(inpMs) && inpMs <= INP_MS,
     thresholds: { lcpMs: LCP_MS, cls: CLS_MAX, inpMs: INP_MS },
   };
+  if (missingLabVital(sample.lcpMs)) scored.lcp = "UNKNOWN";
+  if (missingLabVital(sample.cls)) scored.cls = "UNKNOWN";
+  if (missingLabVital(sample.inpMs)) scored.inp = "UNKNOWN";
+  return scored;
 }
 
 function documents() {
@@ -75,7 +83,7 @@ async function measureWithPlaywright(origin, pages) {
     for (const pageInfo of pages) {
       const page = await browser.newPage();
       await page.addInitScript(() => {
-        const marks = { lcpMs: 0, cls: 0, inpMs: 0 };
+        const marks = { lcpMs: null, cls: 0, inpMs: null };
         new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
             marks.lcpMs = entry.startTime;
@@ -88,24 +96,24 @@ async function measureWithPlaywright(origin, pages) {
         }).observe({ type: "layout-shift", buffered: true });
         new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
-            if (entry.interactionId) marks.inpMs = Math.max(marks.inpMs, entry.duration);
+            if (entry.interactionId) {
+              marks.inpMs =
+                marks.inpMs == null ? entry.duration : Math.max(marks.inpMs, entry.duration);
+            }
           }
         }).observe({ type: "event", buffered: true, durationThreshold: 0 });
         window.__speVitals = marks;
       });
-      const started = Date.now();
       await page.goto(`${origin}${pageInfo.path}`, { waitUntil: "load" });
       await page.locator("h1").waitFor();
-      const clickStarted = Date.now();
       await page.locator("h1").click();
-      const clickMs = Date.now() - clickStarted;
       await page.waitForTimeout(50);
       const vitals = await page.evaluate(() => window.__speVitals);
       const sample = {
         id: pageInfo.id,
-        lcpMs: vitals.lcpMs || Date.now() - started,
+        lcpMs: vitals.lcpMs,
         cls: vitals.cls,
-        inpMs: vitals.inpMs || clickMs,
+        inpMs: vitals.inpMs,
       };
       results.push({ ...sample, pass: assessLabVitals(sample) });
       await page.close();
