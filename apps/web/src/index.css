@@ -2047,6 +2047,88 @@ html[data-theme="light"] .spe-bound-notice {
 .spe-structure-panel ul, .spe-scene-list {
   margin: 0; padding-left: 1.1rem; opacity: 0.88; font-size: 0.9rem;
 }
+.spe-candidate {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.85rem 0.95rem;
+  background: rgba(8, 10, 14, 0.72);
+  display: grid;
+  gap: 0.65rem;
+}
+.spe-candidate-summary,
+.spe-candidate-note,
+.spe-truth-statement,
+.spe-truth-refuses {
+  margin: 0;
+  line-height: 1.45;
+}
+.spe-candidate-summary { font-size: 0.95rem; }
+.spe-candidate-note,
+.spe-truth-refuses,
+.spe-truth-epistemic {
+  color: #9aabca;
+  font-size: 0.82rem;
+}
+.spe-truth-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.spe-truth-list li {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+.spe-truth-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  align-items: baseline;
+}
+.spe-truth-axis {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.spe-truth-verdict {
+  font-size: 0.78rem;
+  color: #e4d2b0;
+}
+.spe-truth-statement { font-size: 0.9rem; }
+.spe-candidate-sketch { display: grid; gap: 0.35rem; }
+.spe-candidate-frame {
+  position: relative;
+  width: 100%;
+  min-height: 160px;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px dashed rgba(183, 200, 255, 0.35);
+  background: #070b14;
+}
+.spe-candidate-region {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 4px 6px;
+  border: 1px solid rgba(187, 206, 255, 0.45);
+  background: rgba(187, 206, 255, 0.08);
+  color: #e7ecf7;
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+.spe-candidate-region span { display: block; }
+.spe-candidate-limits,
+.spe-candidate-questions {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.82rem;
+  color: #9aabca;
+}
 .spe-timeline-track {
   position: relative;
   height: 10px;
@@ -3111,6 +3193,7 @@ html[data-theme="light"] .spe-ctx-refresh {
 }
 html[data-theme="light"] .spe-obs-panel,
 html[data-theme="light"] .spe-structure-panel,
+html[data-theme="light"] .spe-candidate,
 html[data-theme="light"] .spe-video-timeline,
 html[data-theme="light"] .spe-scaffolds,
 html[data-theme="light"] .spe-composer-preview,
@@ -3121,6 +3204,29 @@ html[data-theme="light"] .spe-ctx-inspect {
 }
 html[data-theme="light"] .spe-timeline-track {
   background: linear-gradient(90deg, #d8d2c6, #c5c0b4);
+}
+html[data-theme="light"] .spe-candidate-note,
+html[data-theme="light"] .spe-truth-refuses,
+html[data-theme="light"] .spe-truth-epistemic,
+html[data-theme="light"] .spe-candidate-limits,
+html[data-theme="light"] .spe-candidate-questions {
+  color: var(--muted);
+}
+html[data-theme="light"] .spe-truth-list li {
+  background: #f7f4ee;
+  border-color: var(--seo-border);
+}
+html[data-theme="light"] .spe-truth-verdict {
+  color: #6a5430;
+}
+html[data-theme="light"] .spe-candidate-frame {
+  background: #f7f4ee;
+  border-color: #b7c4d6;
+}
+html[data-theme="light"] .spe-candidate-region {
+  color: #141820;
+  background: rgba(80, 110, 160, 0.08);
+  border-color: rgba(60, 90, 140, 0.45);
 }
 html[data-theme="light"] .spe-xray-note {
   color: var(--muted);

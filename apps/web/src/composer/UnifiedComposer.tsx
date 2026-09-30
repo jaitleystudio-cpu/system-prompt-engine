@@ -35,6 +35,12 @@ import {
   formatCharCount,
   nearLimit,
 } from "../input/boundedText";
+import { CandidateUiPanel } from "../visual/CandidateUiPanel";
+import {
+  candidateFromObservationIR,
+  candidateFromSemantic,
+  type CandidateUiView,
+} from "../visual/candidateFoundation";
 
 export type ComposerMode =
   | "text"
@@ -62,11 +68,11 @@ type Props = {
 const MODES: { id: ComposerMode; label: string; hint: string }[] = [
   { id: "text", label: "Text", hint: "Type or paste your idea" },
   { id: "speech", label: "Speech", hint: "Dictate, then review" },
-  { id: "image", label: "Image", hint: "Preview the picture, then review separate notes" },
+  { id: "image", label: "Image", hint: "Preview the picture, then review a visual reading with honest limits" },
   {
     id: "screenshot",
     label: "Screenshot → code",
-    hint: "Build an implementation prompt and starter scaffolds for a coding AI — not an in-product compiler",
+    hint: "Read the screenshot into structure and a candidate layout, plus starter scaffolds for a coding AI — not an in-product compiler",
   },
   { id: "video", label: "Video", hint: "Preview, timeline, and scenes — no invented audio" },
   {
@@ -104,6 +110,7 @@ export function UnifiedComposer({
   const [compareTarget, setCompareTarget] = useState<CodeTarget | null>(null);
   const [mediaNotes, setMediaNotes] = useState<string>("");
   const [structureLines, setStructureLines] = useState<string[]>([]);
+  const [candidate, setCandidate] = useState<CandidateUiView | null>(null);
   const [videoScenes, setVideoScenes] = useState<{
     durationSec: number;
     times: number[];
@@ -161,6 +168,7 @@ export function UnifiedComposer({
     setUrlResult(null);
     setMediaNotes("");
     setStructureLines([]);
+    setCandidate(null);
     setVideoScenes(null);
     setCompareTarget(null);
     setError("");
@@ -218,8 +226,9 @@ export function UnifiedComposer({
   const onImageOrScreenshot = async (file: File, asScreenshot: boolean) => {
     const { ac, isCurrent } = beginOp();
     setError("");
-    setStatus(asScreenshot ? "Reading screenshot (UI IR)…" : "Reading image (semantic)…");
+    setStatus(asScreenshot ? "Reading screenshot…" : "Reading image…");
     setScaffolds([]);
+    setCandidate(null);
     try {
       replacePreview(URL.createObjectURL(file));
       if (asScreenshot) {
@@ -294,6 +303,7 @@ export function UnifiedComposer({
               ...regionLines,
             ].join("\n"),
           );
+          setCandidate(candidateFromObservationIR(ir));
           const chosen =
             built.find((s) => s.target === codeTarget) ?? built[0];
           const request = [
@@ -307,7 +317,7 @@ export function UnifiedComposer({
           valueRef.current = request;
           onScaffoldPrompt?.(chosen.prompt, chosen.target as CodeTarget);
           setStatus(
-            `Screenshot ready — source, layout, and ${built.length} scaffolds to compare.`,
+            `Screenshot ready — structure, a candidate layout, and ${built.length} scaffolds to compare.`,
           );
         } finally {
           URL.revokeObjectURL(url);
@@ -323,6 +333,7 @@ export function UnifiedComposer({
         if (!isCurrent()) return;
         const block = semanticToPromptBlock(sem);
         setMediaNotes(sem.humanSummary || "Picture notes are ready below.");
+        setCandidate(candidateFromSemantic(sem));
         setStructureLines([]);
         setVideoScenes(null);
         appendBlock(
@@ -333,7 +344,7 @@ export function UnifiedComposer({
             block,
           ].join("\n"),
         );
-        setStatus("Picture notes ready — review them beside your idea.");
+        setStatus("Picture notes ready — review the visual reading beside your idea.");
       }
     } catch (e) {
       if (!isCurrent()) return;
@@ -733,7 +744,10 @@ export function UnifiedComposer({
               </ul>
             </div>
           )}
-          {mediaNotes && mode !== "screenshot" && (
+          {candidate && (mode === "image" || mode === "screenshot") && (
+            <CandidateUiPanel view={candidate} />
+          )}
+          {mediaNotes && mode !== "screenshot" && !candidate && (
             <aside className="spe-obs-panel" aria-label="Notes from media">
               <p className="spe-panel-label">
                 {mode === "image" ? "Notes from this picture" : "Notes from this video"}

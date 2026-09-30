@@ -30,6 +30,7 @@
     "test:e2e:v1": "node scripts/e2e-v1-capabilities.mjs",
     "test:speech": "node scripts/test-speech-helpers.mjs",
     "test:screenshot-fidelity": "node scripts/test-screenshot-fidelity.mjs",
+    "test:candidate-ui": "node scripts/test-candidate-ui-foundation.mjs",
     "test:video-scenes": "node scripts/test-video-scenes.mjs",
     "bench:vision-browser": "node scripts/bench-standard-vs-lite-browser.mjs",
     "test:predeploy-qa": "node scripts/test-predeploy-qa.mjs",
