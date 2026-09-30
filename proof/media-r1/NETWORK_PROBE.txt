@@ -1,0 +1,5 @@
+whisper_pid=91961
+lsof_filter=PID 91961 (whisper-cli) during inference
+TCP_UDP_SOCKETS_FOR_WHISPER_CLI=0
+open_files=local dylibs + ggml-small.bin + Metal cache + unix sockets only
+NETWORK_EGRESS=0

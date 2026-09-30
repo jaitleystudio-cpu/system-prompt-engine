@@ -1,0 +1,23 @@
+{
+  "name": "symphonia",
+  "version": "0.6.1",
+  "registry_checksum_local_sha256": "a7edef6a96b696d4e0cab5ee9ebb7ca155ed95f30a6b45bbb8b97d2727f02424",
+  "expected_checksum": "a7edef6a96b696d4e0cab5ee9ebb7ca155ed95f30a6b45bbb8b97d2727f02424",
+  "checksum_match": true,
+  "license_from_cargo_toml": "MPL-2.0",
+  "crate_bytes": 17306,
+  "required_features": [
+    "isomp4",
+    "mkv",
+    "wav",
+    "aac",
+    "mp3",
+    "pcm",
+    "flac",
+    "vorbis",
+    "alac"
+  ],
+  "source_crate": "https://static.crates.io/crates/symphonia/symphonia-0.6.1.crate",
+  "git_tag": "https://github.com/pdeljanov/Symphonia/tree/v0.6.1",
+  "api_json_ok": true
+}
