@@ -1,0 +1,226 @@
+{
+  "donor_sha": "5d6d6c2d4a7abcd219f0edd032a286645a2239ee",
+  "branch": "cursor/spe-daily-lab-r1q-20260930",
+  "final": "DAILY_LAB_R1_QUALIFICATION_PASS",
+  "killed": 20,
+  "survived": [],
+  "mutants": [
+    {
+      "id": "DLR1-01",
+      "law": "UNKNOWN_LAW",
+      "attack": "UNKNOWN counts as PASS",
+      "executed": true,
+      "violations": [
+        "UNKNOWN_LAW",
+        "FAILED_PROTOTYPE"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-02",
+      "law": "PUBLISH_STATE",
+      "attack": "PUBLISH_HELD receipt rewritten to PUBLISHED",
+      "executed": true,
+      "violations": [
+        "PUBLISH_STATE",
+        "STATES",
+        "SCHEMA_RECEIPT"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-03",
+      "law": "NETWORK_MODE",
+      "attack": "network mode other than NONE is accepted",
+      "executed": true,
+      "violations": [
+        "NETWORK_MODE"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-04",
+      "law": "APPROVAL",
+      "attack": "forged approval boolean mints foundation grant",
+      "executed": true,
+      "violations": [
+        "APPROVAL",
+        "SCHEMA_RECEIPT"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-05",
+      "law": "QUEUE_SIZE",
+      "attack": "discovery longer than 14 is accepted",
+      "executed": true,
+      "violations": [
+        "SCHEMA_RECEIPT",
+        "QUEUE_SIZE"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-06",
+      "law": "DUPLICATE",
+      "attack": "duplicate specimen is accepted",
+      "executed": true,
+      "violations": [
+        "DUPLICATE"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-07",
+      "law": "UNBOUNDED_RETRY",
+      "attack": "retry grows the candidate queue past 14",
+      "executed": true,
+      "violations": [
+        "UNBOUNDED_RETRY"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-08",
+      "law": "FAILED_PROTOTYPE",
+      "attack": "FAIL verification is promoted to PASS",
+      "executed": true,
+      "violations": [
+        "FAILED_PROTOTYPE"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-09",
+      "law": "VERIFICATION_SKIPPED",
+      "attack": "verification input is ignored",
+      "executed": true,
+      "violations": [
+        "VERIFICATION_SKIPPED",
+        "FAILED_PROTOTYPE",
+        "MISSING_EVIDENCE"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-10",
+      "law": "MISSING_EVIDENCE",
+      "attack": "empty verification counts as PASS",
+      "executed": true,
+      "violations": [
+        "MISSING_EVIDENCE"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-11",
+      "law": "STALE_EVIDENCE",
+      "attack": "verify draft id does not match the generated draft",
+      "executed": true,
+      "violations": [
+        "STALE_EVIDENCE"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-12",
+      "law": "PUBLISH_INVOKED",
+      "attack": "publish receipt says published",
+      "executed": true,
+      "violations": [
+        "PUBLISH_INVOKED",
+        "SCHEMA_RECEIPT",
+        "MISSING_EVIDENCE",
+        "APPROVAL"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-13",
+      "law": "DEPLOYMENT",
+      "attack": "publish receipt says deployed",
+      "executed": true,
+      "violations": [
+        "DEPLOYMENT",
+        "SCHEMA_RECEIPT"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-14",
+      "law": "SOCIAL",
+      "attack": "receipt claims a social post",
+      "executed": true,
+      "violations": [
+        "SOCIAL",
+        "SCHEMA_RECEIPT"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-15",
+      "law": "ANALYTICS",
+      "attack": "receipt carries an analytics beacon",
+      "executed": true,
+      "violations": [
+        "ANALYTICS",
+        "SCHEMA_RECEIPT"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-16",
+      "law": "EXTERNAL_EFFECT",
+      "attack": "hidden urllib request",
+      "executed": false,
+      "violations": [
+        "EXTERNAL_EFFECT"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-17",
+      "law": "BUDGET_BOUND",
+      "attack": "finite queue budget is ignored",
+      "executed": true,
+      "violations": [
+        "BUDGET_BOUND",
+        "SCHEMA_RECEIPT",
+        "QUEUE_SIZE"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-18",
+      "law": "NO_PROGRESS_LOOP",
+      "attack": "no-progress loop",
+      "executed": false,
+      "violations": [
+        "NO_PROGRESS_LOOP"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-19",
+      "law": "AUTHORITY",
+      "attack": "foundation grants publish authority",
+      "executed": true,
+      "violations": [
+        "AUTHORITY",
+        "SCHEMA_RECEIPT",
+        "APPROVAL"
+      ],
+      "status": "KILLED"
+    },
+    {
+      "id": "DLR1-20",
+      "law": "FAILURE_DISCARDED",
+      "attack": "verification failure drops its refusal",
+      "executed": true,
+      "violations": [
+        "FAILURE_DISCARDED"
+      ],
+      "status": "KILLED"
+    }
+  ]
+}

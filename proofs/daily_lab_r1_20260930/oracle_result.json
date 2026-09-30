@@ -1,0 +1,35 @@
+{
+  "donor_sha": "5d6d6c2d4a7abcd219f0edd032a286645a2239ee",
+  "violations": [],
+  "queue_size": 14,
+  "finite": true,
+  "network_mode": "NONE",
+  "publish_state": "PUBLISH_HELD",
+  "approval": "NOT_GRANTED",
+  "unknown_law": "UNKNOWN_IS_NOT_PASS",
+  "budget_bound": 14,
+  "failure_behavior": "EXPLICIT_HOLD_FAIL_UNKNOWN",
+  "live_search": "NO",
+  "publish": "NO",
+  "deploy": "NO",
+  "semantic_authority": "NONE",
+  "states": [
+    "NOT_STARTED",
+    "DISCOVERY",
+    "GENERATE",
+    "VERIFY",
+    "PUBLISH_HELD",
+    "REFUSED"
+  ],
+  "blocked_states": [
+    "PUBLISHED",
+    "LIVE",
+    "DEPLOYED",
+    "AUTO_APPROVED"
+  ],
+  "file_sha256": {
+    "spe_runtime/lab/contract.py": "b75720bd6cfc2992e254db83f6c4303aecf83ae363feede73829665f72302ec0",
+    "apps/web/src/lab/specimens.ts": "12bab2ecdb3e854f4720827c21544dbaa543cdda5a85a78bfe50a2c84d9125c8",
+    "schemas/daily_lab_pipeline.schema.json": "80c0a7173c3675c6b437b07b0211fff1bcff5b1dc809d4413442b8625be79ccf"
+  }
+}

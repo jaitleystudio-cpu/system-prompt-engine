@@ -1,0 +1,26 @@
+{
+  "contract": "spe.daily-lab-pipeline.v1",
+  "donor_sha": "5d6d6c2d4a7abcd219f0edd032a286645a2239ee",
+  "mutants": [
+    {"id": "DLR1-01", "law": "UNKNOWN_LAW", "attack": "UNKNOWN counts as PASS", "execute": true},
+    {"id": "DLR1-02", "law": "PUBLISH_STATE", "attack": "PUBLISH_HELD receipt rewritten to PUBLISHED", "execute": true},
+    {"id": "DLR1-03", "law": "NETWORK_MODE", "attack": "network mode other than NONE is accepted", "execute": true},
+    {"id": "DLR1-04", "law": "APPROVAL", "attack": "forged approval boolean mints foundation grant", "execute": true},
+    {"id": "DLR1-05", "law": "QUEUE_SIZE", "attack": "discovery longer than 14 is accepted", "execute": true},
+    {"id": "DLR1-06", "law": "DUPLICATE", "attack": "duplicate specimen is accepted", "execute": true},
+    {"id": "DLR1-07", "law": "UNBOUNDED_RETRY", "attack": "retry grows the candidate queue past 14", "execute": true},
+    {"id": "DLR1-08", "law": "FAILED_PROTOTYPE", "attack": "FAIL verification is promoted to PASS", "execute": true},
+    {"id": "DLR1-09", "law": "VERIFICATION_SKIPPED", "attack": "verification input is ignored", "execute": true},
+    {"id": "DLR1-10", "law": "MISSING_EVIDENCE", "attack": "empty verification counts as PASS", "execute": true},
+    {"id": "DLR1-11", "law": "STALE_EVIDENCE", "attack": "verify draft id does not match the generated draft", "execute": true},
+    {"id": "DLR1-12", "law": "PUBLISH_INVOKED", "attack": "publish receipt says published", "execute": true},
+    {"id": "DLR1-13", "law": "DEPLOYMENT", "attack": "publish receipt says deployed", "execute": true},
+    {"id": "DLR1-14", "law": "SOCIAL", "attack": "receipt claims a social post", "execute": true},
+    {"id": "DLR1-15", "law": "ANALYTICS", "attack": "receipt carries an analytics beacon", "execute": true},
+    {"id": "DLR1-16", "law": "EXTERNAL_EFFECT", "attack": "hidden urllib request", "execute": false},
+    {"id": "DLR1-17", "law": "BUDGET_BOUND", "attack": "finite queue budget is ignored", "execute": true},
+    {"id": "DLR1-18", "law": "NO_PROGRESS_LOOP", "attack": "no-progress loop", "execute": false},
+    {"id": "DLR1-19", "law": "AUTHORITY", "attack": "foundation grants publish authority", "execute": true},
+    {"id": "DLR1-20", "law": "FAILURE_DISCARDED", "attack": "verification failure drops its refusal", "execute": true}
+  ]
+}
