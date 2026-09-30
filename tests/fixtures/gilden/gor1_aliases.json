@@ -1,0 +1,10 @@
+{
+  "POST": ["post", "Post", "POST ", "tweet", "share", "broadcast"],
+  "SEND": ["send", "email", "mail", "dm", "notify"],
+  "HOST": ["host", "serve", "bind", "listen"],
+  "DEPLOY": ["deploy", "ship", "release", "rollout"],
+  "ANALYTICS_BEACON": ["beacon", "pixel", "track", "analytics", "telemetry"],
+  "AUTOMATIC_MERGE": ["merge", "automerge", "auto-merge", "land"],
+  "LIVE_SEARCH": ["search", "crawl", "fetch", "live-search", "query"],
+  "PUBLISH": ["publish", "pub", "go-live", "release-public"]
+}
