@@ -1,0 +1,95 @@
+{
+  "case_count": 12,
+  "case_ids": [
+    "sbq-browser-001",
+    "sbq-category-001",
+    "sbq-constraint-001",
+    "sbq-grounding-001",
+    "sbq-human-001",
+    "sbq-intent-001",
+    "sbq-large-input-001",
+    "sbq-latency-001",
+    "sbq-portability-001",
+    "sbq-repair-001",
+    "sbq-unknown-001",
+    "sbq-unsupported-001"
+  ],
+  "dataset_id": "spe-benchmark-qualification-v1",
+  "frozen_files": [
+    {
+      "path": "evaluations/spe_benchmark_qualification_v1/README.md",
+      "role": "reproduction_instructions",
+      "sha256": "a41c06e60105af9052500a299427a95405ac58cc31a9d1f518d29cd6ed8ee02d"
+    },
+    {
+      "path": "evaluations/spe_benchmark_qualification_v1/cases.jsonl",
+      "role": "frozen_cases",
+      "sha256": "1557748d2cdd2d89b1391fa4ba9a859251701753f04c4ef4cc68a599c41069e5"
+    },
+    {
+      "path": "evaluations/spe_benchmark_qualification_v1/dataset.json",
+      "role": "dataset_header",
+      "sha256": "af81c2ca6d1804ab412c46ec4494e18a7cc19b00b851792640ee4103d273ffa9"
+    },
+    {
+      "path": "evaluations/spe_benchmark_qualification_v1/human_ratings.example.jsonl",
+      "role": "human_rating_format_example",
+      "sha256": "6e04604027fbec34afecbb8120b82e87f451b96fd665cfe9bd041bb8bffcbe4c"
+    },
+    {
+      "path": "schemas/spe_benchmark_case.schema.json",
+      "role": "schema_case",
+      "sha256": "319b2a59aa4ac0ecf63be50b93d99b44602cb09874fc620c49319a30b8c2fe07"
+    },
+    {
+      "path": "schemas/spe_benchmark_comparison.schema.json",
+      "role": "schema_comparison",
+      "sha256": "32a2a68078889a66fc3efbdece1d5d57105ec2dd1b2cf59a7d26866eeeb7277d"
+    },
+    {
+      "path": "schemas/spe_benchmark_dataset.schema.json",
+      "role": "schema_dataset",
+      "sha256": "5a689704e085ab221f9345594ee0c3e120bc7a7f2e011c8564c578bd6f1a0957"
+    },
+    {
+      "path": "schemas/spe_benchmark_human_rating.schema.json",
+      "role": "schema_human_rating",
+      "sha256": "b8e55ba5da73ea7aca32f3b82812fb5115c396d5486340a99da524014e22d5f2"
+    },
+    {
+      "path": "schemas/spe_benchmark_manifest.schema.json",
+      "role": "schema_manifest",
+      "sha256": "a0daaf636c158be62f2b5eba0170d989c426d1844a11e7ae91ca2568a85e9fa5"
+    },
+    {
+      "path": "schemas/spe_benchmark_observation.schema.json",
+      "role": "schema_observation",
+      "sha256": "b64e72dd6a7d324c8d773ecb38e4acf0539c1c2876602d7f6bb824e8cbecc004"
+    },
+    {
+      "path": "schemas/spe_benchmark_result.schema.json",
+      "role": "schema_result",
+      "sha256": "2dde46db33858f5711771af099099a49254ba274ee01c0e0ff8b457ddc9caf46"
+    }
+  ],
+  "hash_algorithm": "sha256",
+  "measurement_default": "UNKNOWN",
+  "measurements": [
+    "constraint_preservation",
+    "intent_preservation",
+    "unknown_preservation",
+    "category_accuracy",
+    "repair_effectiveness",
+    "unsupported_claim_detection",
+    "provider_portability",
+    "large_input_preservation",
+    "grounding_fidelity",
+    "latency",
+    "browser_qualification",
+    "human_blinded_evaluation"
+  ],
+  "network_used": false,
+  "provider_calls": 0,
+  "schema_version": "spe_benchmark_manifest.v1",
+  "scores_included": false
+}

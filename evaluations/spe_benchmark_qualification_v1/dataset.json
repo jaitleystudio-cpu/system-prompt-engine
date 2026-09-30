@@ -1,0 +1,40 @@
+{
+  "schema_version": "spe_benchmark_dataset.v1",
+  "dataset_id": "spe-benchmark-qualification-v1",
+  "description": "Frozen unlabeled fixtures for a later SPE benchmark. This file records structure only. It contains no scores.",
+  "cases_file": "cases.jsonl",
+  "label_policy": "UNLABELED_FIXTURES_ONLY",
+  "measurement_default": "UNKNOWN",
+  "missing_measurement_policy": "Stay UNKNOWN. Never infer PASS.",
+  "pass_requires": [
+    "evidence_ref",
+    "method",
+    "measured_at"
+  ],
+  "network": "NONE",
+  "provider_calls": 0,
+  "arms": [
+    {
+      "id": "RAW",
+      "description": "The case raw_prompt as stored. No compilation and no score."
+    },
+    {
+      "id": "SPE",
+      "description": "Reserved for a later SPE-compiled prompt artifact. Fixture runs leave the SPE prompt UNKNOWN."
+    }
+  ],
+  "measurements": [
+    "constraint_preservation",
+    "intent_preservation",
+    "unknown_preservation",
+    "category_accuracy",
+    "repair_effectiveness",
+    "unsupported_claim_detection",
+    "provider_portability",
+    "large_input_preservation",
+    "grounding_fidelity",
+    "latency",
+    "browser_qualification",
+    "human_blinded_evaluation"
+  ]
+}
