@@ -53,7 +53,7 @@ python3 tools/gilden_ops_runner.py --request path/to/operations.json
 
 Omit `--request` to read stdin. Exit 0 means the document was evaluated, including refusals. Exit 2 means the document was rejected. A rejected document still returns a receipt with disposition NOT_AUTHORIZED and report status UNKNOWN.
 
-The runner does not open a socket, send mail, launch a browser, or start a subprocess. Documents larger than 512 KiB are rejected. `work_id` values in one document must be unique.
+The runner does not open a socket, send mail, launch a browser, or start a subprocess. Documents larger than 512 KiB are rejected by `run_text` and by `evaluate` before any local record is written. A schema failure names the field and the schema keyword. It does not copy the rejected value into the receipt. `work_id` values in one document must be unique.
 
 ## Honesty
 

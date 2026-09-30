@@ -9,13 +9,13 @@ Independent donor-foundation qualification. Local contract only. No merge, deplo
 - Qualifier branch: `cursor/spe-gilden-r1q-20260930`
 - Worktree: `/Volumes/4TB-WD/spe-worktrees/spe-c5-gilden-r1`
 - LIVE_AGENCY: NO
-- Runtime files: unchanged
+- Runtime files: `spe_runtime/gilden/validate.py` and `spe_runtime/gilden/runner.py` repaired on this branch
 
 ## Result
 
-HOLD
+GILDEN_OPS_R1_REPAIR_PASS
 
-Two mutants survive. The other eighteen are killed. Donor unit tests pass. This is not a qualification pass.
+GOR1-01 through GOR1-20 are killed. None survived. Donor unit tests pass. External actions stay NOT_AUTHORIZED. `network_used` stays false.
 
 ## ACTION_REGISTRY
 
@@ -57,16 +57,16 @@ Log and file persistence are killed:
 - The runner does not import `logging` or read `os.environ`.
 - Evaluation does not open a file for write.
 
-Echo survives (GOR1-12). `run_text` copies jsonschema messages into `detail` (240 characters). These invalid values are quoted in the receipt:
+Echo is killed (GOR1-12). A schema failure names the field and the schema keyword. The receipt does not copy the invalid value. These values stay out of the receipt:
 
 - `work_id` set to `cred-GOR1-MARKER`
 - `requested_action` set to `cred-GOR1-MARKER`
 - `title` longer than the schema maximum and beginning with `cred-GOR1-MARKER`
 - `body` longer than the schema maximum and beginning with `cred-GOR1-MARKER`
 
-Example detail: `items/0/work_id: 'cred-GOR1-MARKER' does not match '^[a-z0-9][a-z0-9._:-]{0,80}$'`
+Example detail: `items/0/work_id: pattern`
 
-A digest-mismatch evidence summary is not copied into the receipt. That path stays closed.
+An unexpected field is named without its value, so a receipt may still contain the field name `password`. A digest-mismatch evidence summary is not copied into the receipt. That path stays closed.
 
 ## BUDGET
 
@@ -74,7 +74,7 @@ A digest-mismatch evidence summary is not copied into the receipt. That path sta
 
 `budget`, `budget_limit`, and `skip_budget` on a publish attempt are rejected. Unlimited, `10**18`, `-1`, and null do not authorize `PUBLISH`.
 
-GOR1-14 survives on `evaluate()`. A schema-valid document of 2127931 bytes is evaluated. The receipt has `evaluated` true, 32 local records, `posted` false, `network_used` false, `live_agency` false, and an empty `external_effects` list. The register stays `NOT_AUTHORIZED`. The documented size cap does not hold on this public entry.
+GOR1-14 is killed on `evaluate()`. The same schema-valid document, whose default JSON encoding is above `MAX_DOCUMENT_BYTES`, is rejected before local records are built. `evaluated` is false, `disposition` is `NOT_AUTHORIZED`, `network_used` is false, `live_agency` is false, and `external_effects` is empty. The register stays `NOT_AUTHORIZED`. The detail is `document exceeds local size boundary`.
 
 ## IDEMPOTENCY
 
@@ -107,9 +107,9 @@ Armed `socket.socket`, `socket.create_connection`, and `socket.getaddrinfo` reco
 | GOR1-09 | forged approval, admin, signed | KILLED |
 | GOR1-10 | credential log | KILLED |
 | GOR1-11 | credential persist | KILLED |
-| GOR1-12 | credential echo | SURVIVED |
+| GOR1-12 | credential echo | KILLED |
 | GOR1-13 | duplicate job | KILLED |
-| GOR1-14 | budget bypass | SURVIVED |
+| GOR1-14 | budget bypass | KILLED |
 | GOR1-15 | unlimited budget | KILLED |
 | GOR1-16 | retry storm | KILLED |
 | GOR1-17 | missing evidence to completed | KILLED |
@@ -117,7 +117,7 @@ Armed `socket.socket`, `socket.create_connection`, and `socket.getaddrinfo` reco
 | GOR1-19 | destination to authority | KILLED |
 | GOR1-20 | semantic authority and unexpected network | KILLED |
 
-Killed: 18. Survived: 2. Catalog size: 20.
+Killed: 20. Survived: 0. Catalog size: 20.
 
 ## Tests
 
@@ -126,13 +126,10 @@ Command:
 `python -m pytest -q tests/mutation/test_gilden_gor1.py tests/unit/test_gilden_ops.py`
 
 - Donor `tests/unit/test_gilden_ops.py`: 42 passed
-- Qualifier `tests/mutation/test_gilden_gor1.py`: 20 passed, 2 failed
-- Total: 62 passed, 2 failed
+- Qualifier `tests/mutation/test_gilden_gor1.py`: 22 passed, 0 failed
+- Total: 64 passed, 0 failed
 
-Failures:
-
-- `test_gor1_12_credentials_are_not_echoed_in_receipts`
-- `test_gor1_14_budget_cannot_be_bypassed`
+GOR1-01 through GOR1-20 are killed. Survived: 0.
 
 ## Forbidden actions
 
@@ -145,4 +142,4 @@ Failures:
 - LIVE_SEARCH: NOT_AUTHORIZED
 - PUBLISH: NOT_AUTHORIZED
 
-FINAL: HOLD
+FINAL: GILDEN_OPS_R1_REPAIR_PASS

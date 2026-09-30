@@ -1,16 +1,16 @@
 {
   "donor_sha": "d02b4cb89d7501c773ac8356e781bd0252dd08fb",
   "live_agency": false,
-  "qualification": "HOLD",
-  "killed": 18,
-  "survived": 2,
+  "qualification": "GILDEN_OPS_R1_REPAIR_PASS",
+  "killed": 20,
+  "survived": 0,
   "catalog": 20,
   "tests": {
     "donor_passed": 42,
-    "qualifier_passed": 20,
-    "qualifier_failed": 2,
-    "total_passed": 62,
-    "total_failed": 2
+    "qualifier_passed": 22,
+    "qualifier_failed": 0,
+    "total_passed": 64,
+    "total_failed": 0
   },
   "unauthorized_actions": {
     "POST": "NOT_AUTHORIZED",
@@ -34,9 +34,9 @@
     "GOR1-09": "KILLED",
     "GOR1-10": "KILLED",
     "GOR1-11": "KILLED",
-    "GOR1-12": "SURVIVED",
+    "GOR1-12": "KILLED",
     "GOR1-13": "KILLED",
-    "GOR1-14": "SURVIVED",
+    "GOR1-14": "KILLED",
     "GOR1-15": "KILLED",
     "GOR1-16": "KILLED",
     "GOR1-17": "KILLED",
@@ -44,8 +44,5 @@
     "GOR1-19": "KILLED",
     "GOR1-20": "KILLED"
   },
-  "survivors": {
-    "GOR1-12": "schema error detail echoes credential-bearing invalid values",
-    "GOR1-14": "evaluate() accepts a 2127931-byte schema-valid document above MAX_DOCUMENT_BYTES 524288"
-  }
+  "survivors": {}
 }

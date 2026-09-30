@@ -256,16 +256,33 @@ def _evaluate_item(item: Mapping[str, Any]) -> dict[str, Any]:
     return receipt
 
 
+def _encoded_document_bytes(document: Mapping[str, Any]) -> int | None:
+    """UTF-8 size of the default JSON encoding, or None if it cannot be encoded."""
+    try:
+        raw = json.dumps(dict(document))
+    except (TypeError, ValueError):
+        return None
+    return len(raw.encode("utf-8"))
+
+
 def evaluate(document: Mapping[str, Any]) -> dict[str, Any]:
     """Validate and evaluate one operations document.
 
     The receipt never reports an external effect. Caller-supplied authorization
-    fields fail schema validation and stay NOT_AUTHORIZED.
+    fields fail schema validation and stay NOT_AUTHORIZED. A document whose
+    JSON encoding exceeds MAX_DOCUMENT_BYTES is rejected before item records
+    are built.
     """
     if not isinstance(document, Mapping):
         return _rejection(
             (ReasonCode.DOCUMENT_REJECTED.value,),
             "document must be an object",
+        )
+    encoded_bytes = _encoded_document_bytes(document)
+    if encoded_bytes is not None and encoded_bytes > MAX_DOCUMENT_BYTES:
+        return _rejection(
+            (ReasonCode.DOCUMENT_REJECTED.value,),
+            "document exceeds local size boundary",
         )
     errors = schema_errors(dict(document))
     if errors:

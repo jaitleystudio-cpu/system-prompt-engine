@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### 2026-09-30 — Gilden operations R1 repair (credential echo and byte budget)
+- Schema receipts name the field and the schema keyword. They do not copy the rejected value.
+- `evaluate` rejects a JSON encoding above 512 KiB before it writes local records.
+- External actions stay NOT_AUTHORIZED. `network_used` stays false. `live_agency` stays false.
+- Qualification: `GILDEN_OPS_R1_REPAIR_PASS`. GOR1-01 through GOR1-20 killed. 0 survived.
+
 ### 2026-09-30 — Gilden operations contract (local runner, not a live agency)
 - Schema `schemas/gilden_operations.schema.json` and runner `spe_runtime/gilden/` plus `tools/gilden_ops_runner.py`
 - External actions stay NOT_AUTHORIZED: POST, SEND, HOST, DEPLOY, ANALYTICS_BEACON, AUTOMATIC_MERGE, LIVE_SEARCH, PUBLISH
