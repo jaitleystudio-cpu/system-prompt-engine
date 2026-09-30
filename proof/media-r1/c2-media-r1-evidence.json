@@ -1,0 +1,354 @@
+{
+  "lane": "C2",
+  "donor_sha": "32f1ae20347ca728a6a7b062107289b64ed88eed",
+  "branch": "cursor/spe-media-r1q-20260930",
+  "final": "HOLD",
+  "hold_reason": "Raw video retention accepts non-boolean explicitly_needed. bool('false') is True, so retention ON is stored and the compiled contract schema-validates as explicitly_needed true.",
+  "mutation_score": "WITHHELD",
+  "mutation_reason": "baseline qualification is red or the donor tree changed; a kill/survive count would be UNKNOWN and UNKNOWN is not a pass",
+  "killed": null,
+  "survived": null,
+  "mutants_defined": 20,
+  "mutant_ids": [
+    "MR1-01",
+    "MR1-02",
+    "MR1-03",
+    "MR1-04",
+    "MR1-05",
+    "MR1-06",
+    "MR1-07",
+    "MR1-08",
+    "MR1-09",
+    "MR1-10",
+    "MR1-11",
+    "MR1-12",
+    "MR1-13",
+    "MR1-14",
+    "MR1-15",
+    "MR1-16",
+    "MR1-17",
+    "MR1-18",
+    "MR1-19",
+    "MR1-20"
+  ],
+  "patches_ok": true,
+  "patches": [
+    {
+      "id": "MR1-01",
+      "fault": "raw audio retained",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/privacy.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-02",
+      "fault": "raw video default",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/privacy.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-03",
+      "fault": "speaker identity",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/audio.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-04",
+      "fault": "voice biometric",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/_validate.py",
+        "spe_runtime/media/audio.py"
+      ],
+      "edits": 5
+    },
+    {
+      "id": "MR1-05",
+      "fault": "cloud endpoint",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/audio.py"
+      ],
+      "edits": 4
+    },
+    {
+      "id": "MR1-06",
+      "fault": "negative timestamp",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/_validate.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-07",
+      "fault": "reversed timestamp",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/_validate.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-08",
+      "fault": "scene overlap",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/contract.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-09",
+      "fault": "invalid keyframe",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/contract.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-10",
+      "fault": "unknown duration becomes zero",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/audio.py"
+      ],
+      "edits": 2
+    },
+    {
+      "id": "MR1-11",
+      "fault": "missing transcript becomes empty-proof",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/contract.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-12",
+      "fault": "unverified becomes verified",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/audio.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-13",
+      "fault": "confidence fabricated",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/audio.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-14",
+      "fault": "language fabricated",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/audio.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-15",
+      "fault": "bad MIME accepted",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/audio.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-16",
+      "fault": "scene label becomes fact",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/video.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-17",
+      "fault": "transcript becomes identity",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/audio.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-18",
+      "fault": "network upload",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/contract.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-19",
+      "fault": "gap removed",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/audio.py"
+      ],
+      "edits": 1
+    },
+    {
+      "id": "MR1-20",
+      "fault": "semantic authority elevated",
+      "status": "APPLIES_IN_MEMORY",
+      "files": [
+        "spe_runtime/media/contract.py"
+      ],
+      "edits": 1
+    }
+  ],
+  "malformed_explicit_need_findings": [
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "'false'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "'False'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "'no'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "'off'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "'0'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "'yes'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "1",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "' '",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "b'x'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "['x']",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "RawVideoRetentionPolicy",
+      "input": "{'a': 1}",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "explicitly_needed_type": "bool"
+    },
+    {
+      "channel": "video_envelope_from_mapping",
+      "input": "'false'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "schema_errors": [],
+      "video_bytes_key_present": false
+    },
+    {
+      "channel": "video_envelope_from_mapping",
+      "input": "'no'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "schema_errors": [],
+      "video_bytes_key_present": false
+    },
+    {
+      "channel": "video_envelope_from_mapping",
+      "input": "'off'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "schema_errors": [],
+      "video_bytes_key_present": false
+    },
+    {
+      "channel": "video_envelope_from_mapping",
+      "input": "'0'",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "schema_errors": [],
+      "video_bytes_key_present": false
+    },
+    {
+      "channel": "video_envelope_from_mapping",
+      "input": "1",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "schema_errors": [],
+      "video_bytes_key_present": false
+    },
+    {
+      "channel": "video_envelope_from_mapping",
+      "input": "' '",
+      "retention": "ON",
+      "explicitly_needed": true,
+      "schema_errors": [],
+      "video_bytes_key_present": false
+    }
+  ],
+  "pytest": {
+    "exit_code": 1,
+    "stdout": "...............F...................................                      [100%]\n=================================== FAILURES ===================================\n__________________ test_malformed_explicit_need_fails_closed ___________________\ntests/unit/test_media_r1_qualification.py:231: in test_malformed_explicit_need_fails_closed\n    assert malformed_explicit_need_findings() == []\nE   assert [{'channel': ...ue, ...}, ...] == []\nE     \nE     Left contains 17 more items, first extra item: {'channel': 'RawVideoRetentionPolicy', 'input': \"'false'\", 'retention': 'ON', 'explicitly_needed': True, ...}\nE     Use -v to get more diff\n=========================== short test summary info ============================\nFAILED tests/unit/test_media_r1_qualification.py::test_malformed_explicit_need_fails_closed\n1 failed, 50 passed in 24.64s\n",
+    "stderr": ""
+  },
+  "donor_runtime_dirty": [],
+  "stt_implemented": "NO",
+  "video_model_implemented": "NO",
+  "semantic_authority": "NONE"
+}
