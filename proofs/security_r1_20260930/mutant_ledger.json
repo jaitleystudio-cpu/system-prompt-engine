@@ -1,0 +1,185 @@
+{
+  "donor_sha": "1837e81a0a756182725f6841f77cdcdd0166411a",
+  "tested_head": "1837e81a0a756182725f6841f77cdcdd0166411a",
+  "branch": "cursor/spe-security-r1q-20260930",
+  "pr": "NONE",
+  "pr_status": "NOT_OPENED",
+  "style_src_unsafe_inline": "STYLE_SRC_DOCUMENTED_EXCEPTION",
+  "cve_disposition": "UNKNOWN",
+  "semantic_authority": "NOT_ELEVATED",
+  "egress": "ZERO",
+  "pentest": "NOT_PERFORMED",
+  "killed": 17,
+  "survived": [],
+  "donor_defects": [
+    "SEC1-14",
+    "SEC1-16",
+    "SEC1-18"
+  ],
+  "final": "HOLD",
+  "mutants": [
+    {
+      "id": "SEC1-01",
+      "attack": "CSP dropped",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-02",
+      "attack": "unsafe-inline allowed on script-src",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-03",
+      "attack": "unsafe-eval allowed on script-src",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-04",
+      "attack": "frame-ancestors removed",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-05",
+      "attack": "HSTS absent treated as present",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-06",
+      "attack": "dependency CVE marked clean without evidence",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-07",
+      "attack": "SBOM component invented",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-08",
+      "attack": "untrusted HTML assigned to innerHTML",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-09",
+      "attack": "javascript URL allowed",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-10",
+      "attack": "egress fetch allowed under connect-src self",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-11",
+      "attack": "websocket origin allowed",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-12",
+      "attack": "secret logged",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-13",
+      "attack": "secret query persisted by the service worker",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-14",
+      "attack": "path traversal left fetchable",
+      "executed": true,
+      "donor": "FAIL",
+      "mutant": "FAIL",
+      "status": "DONOR_DEFECT",
+      "reason": "A same-origin URL containing dot-dot segments is normalized and fetch is attempted."
+    },
+    {
+      "id": "SEC1-15",
+      "attack": "metadata IP allowed",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-16",
+      "attack": "auth bypass boolean left accepted",
+      "executed": true,
+      "donor": "FAIL",
+      "mutant": "FAIL",
+      "status": "DONOR_DEFECT",
+      "reason": "The grounding firewall keeps bypass, authorized, isAdmin, and auth_bypass booleans."
+    },
+    {
+      "id": "SEC1-17",
+      "attack": "supply-chain integrity pin skipped",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-18",
+      "attack": "absent connect-src treated as allow",
+      "executed": true,
+      "donor": "FAIL",
+      "mutant": "FAIL",
+      "status": "DONOR_DEFECT",
+      "reason": "A missing connect-src policy allows a remote fetch."
+    },
+    {
+      "id": "SEC1-19",
+      "attack": "semantic authority elevated outside the data boundary",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    },
+    {
+      "id": "SEC1-20",
+      "attack": "hosting treated as authorization",
+      "executed": true,
+      "donor": "PASS",
+      "mutant": "FAIL",
+      "status": "KILLED"
+    }
+  ]
+}
