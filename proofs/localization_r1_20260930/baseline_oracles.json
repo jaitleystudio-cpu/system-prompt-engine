@@ -1,0 +1,146 @@
+{
+  "unpublished_registered_locales_omitted": {
+    "pass": true,
+    "failures": []
+  },
+  "published_localized_route_can_emit": {
+    "pass": true,
+    "failures": []
+  },
+  "published_without_resolver_does_not_invent": {
+    "pass": true,
+    "failures": []
+  },
+  "resolver_null_does_not_invent": {
+    "pass": true,
+    "failures": []
+  },
+  "default_alternates_point_at_published_canonical": {
+    "pass": true,
+    "failures": []
+  },
+  "canonical_en_emitted_when_published": {
+    "pass": true,
+    "failures": []
+  },
+  "hreflang_tags_are_registered_or_xdefault": {
+    "pass": true,
+    "failures": []
+  },
+  "hreflang_codes_are_unique": {
+    "pass": true,
+    "failures": []
+  },
+  "publication_registry_is_published_en_only": {
+    "pass": true,
+    "failures": []
+  },
+  "rtl_text_preserved_inside_isolate": {
+    "pass": true,
+    "failures": []
+  },
+  "isolation_wraps_fsi_pdi": {
+    "pass": true,
+    "failures": []
+  },
+  "isolation_uses_fsi_not_override": {
+    "pass": true,
+    "failures": []
+  },
+  "ltr_neighbors_stay_outside_isolate": {
+    "pass": true,
+    "failures": []
+  },
+  "exact_locale_identity_kept": {
+    "pass": true,
+    "failures": []
+  },
+  "translated_catalog_kept": {
+    "pass": true,
+    "failures": []
+  },
+  "missing_key_is_not_empty_string": {
+    "pass": true,
+    "failures": []
+  },
+  "missing_key_is_not_english_gloss": {
+    "pass": true,
+    "failures": []
+  },
+  "semantic_authority_not_elevated": {
+    "pass": true,
+    "failures": []
+  },
+  "fallback_locale_id_is_registered": {
+    "pass": true,
+    "failures": []
+  },
+  "language_is_not_country": {
+    "pass": true,
+    "failures": []
+  },
+  "seo_head_uses_default_publication": {
+    "pass": true,
+    "failures": []
+  },
+  "app_routes_have_no_localized_prefix": {
+    "pass": true,
+    "failures": []
+  },
+  "bdi_isolate_does_not_set_page_ltr_to_rtl": {
+    "pass": true,
+    "failures": []
+  },
+  "untranslated_locale_stays_marked": {
+    "pass": false,
+    "failures": [
+      "de/nav.home returned \"Home\" without {status:\"untranslated\", translated:false}; English gloss is \"Home\"",
+      "fr/nav.home returned \"Home\" without {status:\"untranslated\", translated:false}; English gloss is \"Home\"",
+      "pt-BR/nav.home returned \"Home\" without {status:\"untranslated\", translated:false}; English gloss is \"Home\"",
+      "unknown-lang/nav.home returned \"Home\" without {status:\"untranslated\", translated:false}; English gloss is \"Home\""
+    ]
+  },
+  "empty_catalog_value_is_not_success": {
+    "pass": false,
+    "failures": [
+      "empty catalog value for en/probe.empty.l10n1 returned \"\" and was treated as a translation"
+    ]
+  },
+  "locale_fallback_does_not_change_script_or_region": {
+    "pass": false,
+    "failures": [
+      "zh-Hant resolved to id=zh-Hans script=Hans",
+      "pt-PT resolved to id=pt-BR region=BR",
+      "es-MX resolved to id=es numberLocale=es-ES"
+    ]
+  },
+  "bidi_override_not_accepted_as_content": {
+    "pass": false,
+    "failures": [
+      "U+202A LRE was accepted inside isolate output",
+      "U+202B RLE was accepted inside isolate output",
+      "U+202C PDF was accepted inside isolate output",
+      "U+202D LRO was accepted inside isolate output",
+      "U+202E RLO was accepted inside isolate output"
+    ]
+  },
+  "region_is_not_a_translation": {
+    "pass": false,
+    "failures": [
+      "region tag BR returned \"Home\", the same translation as en",
+      "pt-PT was treated as the pt-BR translation locale"
+    ]
+  },
+  "x_default_withheld_when_nothing_is_published": {
+    "pass": false,
+    "failures": [
+      "empty publication set still emitted [{\"hreflang\":\"x-default\",\"href\":\"https://systempromptengine.com/create\"}]"
+    ]
+  },
+  "x_default_target_is_a_published_locale_url": {
+    "pass": false,
+    "failures": [
+      "x-default href https://systempromptengine.com/create is not the only published route https://systempromptengine.com/es/create"
+    ]
+  }
+}

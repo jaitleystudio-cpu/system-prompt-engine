@@ -1,0 +1,43 @@
+............................FFFFFFF.                                     [100%]
+=================================== FAILURES ===================================
+E   AssertionError: de/nav.home returned "Home" without {status:"untranslated", translated:false}; English gloss is "Home"
+      fr/nav.home returned "Home" without {status:"untranslated", translated:false}; English gloss is "Home"
+      pt-BR/nav.home returned "Home" without {status:"untranslated", translated:false}; English gloss is "Home"
+      unknown-lang/nav.home returned "Home" without {status:"untranslated", translated:false}; English gloss is "Home"
+    assert False is True
+/Volumes/4TB-WD/spe-worktrees/spe-c9-l10n-r1/tests/web/test_localization_r1_qualification.py:78: AssertionError: de/nav.home returned "Home" without {status:"untranslated", translated:false}; English gloss is "Home"
+E   AssertionError: empty catalog value for en/probe.empty.l10n1 returned "" and was treated as a translation
+    assert False is True
+/Volumes/4TB-WD/spe-worktrees/spe-c9-l10n-r1/tests/web/test_localization_r1_qualification.py:78: AssertionError: empty catalog value for en/probe.empty.l10n1 returned "" and was treated as a translation
+E   AssertionError: zh-Hant resolved to id=zh-Hans script=Hans
+      pt-PT resolved to id=pt-BR region=BR
+      es-MX resolved to id=es numberLocale=es-ES
+    assert False is True
+/Volumes/4TB-WD/spe-worktrees/spe-c9-l10n-r1/tests/web/test_localization_r1_qualification.py:78: AssertionError: zh-Hant resolved to id=zh-Hans script=Hans
+E   AssertionError: U+202A LRE was accepted inside isolate output
+      U+202B RLE was accepted inside isolate output
+      U+202C PDF was accepted inside isolate output
+      U+202D LRO was accepted inside isolate output
+      U+202E RLO was accepted inside isolate output
+    assert False is True
+/Volumes/4TB-WD/spe-worktrees/spe-c9-l10n-r1/tests/web/test_localization_r1_qualification.py:78: AssertionError: U+202A LRE was accepted inside isolate output
+E   AssertionError: region tag BR returned "Home", the same translation as en
+      pt-PT was treated as the pt-BR translation locale
+    assert False is True
+/Volumes/4TB-WD/spe-worktrees/spe-c9-l10n-r1/tests/web/test_localization_r1_qualification.py:78: AssertionError: region tag BR returned "Home", the same translation as en
+E   AssertionError: empty publication set still emitted [{"hreflang":"x-default","href":"https://systempromptengine.com/create"}]
+    assert False is True
+/Volumes/4TB-WD/spe-worktrees/spe-c9-l10n-r1/tests/web/test_localization_r1_qualification.py:78: AssertionError: empty publication set still emitted [{"hreflang":"x-default","href":"https://systempromptengine.com/create"}]
+E   AssertionError: x-default href https://systempromptengine.com/create is not the only published route https://systempromptengine.com/es/create
+    assert False is True
+/Volumes/4TB-WD/spe-worktrees/spe-c9-l10n-r1/tests/web/test_localization_r1_qualification.py:78: AssertionError: x-default href https://systempromptengine.com/create is not the only published route https://systempromptengine.com/es/create
+=========================== short test summary info ============================
+FAILED tests/web/test_localization_r1_qualification.py::test_localization_r1_obligation[untranslated_locale_stays_marked]
+FAILED tests/web/test_localization_r1_qualification.py::test_localization_r1_obligation[empty_catalog_value_is_not_success]
+FAILED tests/web/test_localization_r1_qualification.py::test_localization_r1_obligation[locale_fallback_does_not_change_script_or_region]
+FAILED tests/web/test_localization_r1_qualification.py::test_localization_r1_obligation[bidi_override_not_accepted_as_content]
+FAILED tests/web/test_localization_r1_qualification.py::test_localization_r1_obligation[region_is_not_a_translation]
+FAILED tests/web/test_localization_r1_qualification.py::test_localization_r1_obligation[x_default_withheld_when_nothing_is_published]
+FAILED tests/web/test_localization_r1_qualification.py::test_localization_r1_obligation[x_default_target_is_a_published_locale_url]
+7 failed, 29 passed in 0.24s
+
