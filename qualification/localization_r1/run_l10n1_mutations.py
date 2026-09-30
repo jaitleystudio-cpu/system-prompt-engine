@@ -17,7 +17,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PROOF = ROOT / "proofs" / "localization_r1_20260930"
+PROOF = ROOT / "proofs" / "localization_r1_repair_20261001"
 DONOR_SHA = "693030a4419d76d7da6a648eb6af5129fcec81f8"
 LOCALES = ROOT / "packages" / "web-runtime" / "src" / "locales.ts"
 ORACLE = ROOT / "qualification" / "localization_r1" / "oracle.mjs"
@@ -69,7 +69,13 @@ def _patches() -> dict[str, dict[str, object]]:
     if (!published.has(loc.id)) continue;"""
     isolate = """export function isolateBidi(text: string): string {
   if (!text) return "";
-  return `${BIDI_FSI}${text}${BIDI_PDI}`;
+  let isolated = "";
+  for (const char of text) {
+    const code = char.codePointAt(0) ?? 0;
+    if (code >= 0x202a && code <= 0x202e) continue;
+    isolated += char;
+  }
+  return `${BIDI_FSI}${isolated}${BIDI_PDI}`;
 }"""
     xdefault = """    { hreflang: "x-default", href: cleanBase },"""
     en_push = """  if (published.has(DEFAULT_LOCALE.id)) {
@@ -187,7 +193,9 @@ def _patches() -> dict[str, dict[str, object]]:
             "patches": [
                 (
                     """  if (table && key in table) {
-    return table[key];
+    const value = table[key];
+    if (value.length > 0) return value;
+    return UNTRANSLATED_MESSAGE;
   }""",
                     """  if (table && key in table) {
     return resolved.region || resolved.numberLocale;

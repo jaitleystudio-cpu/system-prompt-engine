@@ -1,0 +1,282 @@
+{
+  "head": "eac717e43bd95804309b15a9a6bb2c9c0bcb5c5b",
+  "donor_sha": "693030a4419d76d7da6a648eb6af5129fcec81f8",
+  "defined": 20,
+  "killed": 20,
+  "survived": 0,
+  "broken": 0,
+  "donor_exhibits_target": [],
+  "baseline_failures": {},
+  "baseline_passed": [
+    "app_routes_have_no_localized_prefix",
+    "bdi_isolate_does_not_set_page_ltr_to_rtl",
+    "bidi_override_not_accepted_as_content",
+    "canonical_en_emitted_when_published",
+    "default_alternates_point_at_published_canonical",
+    "empty_catalog_value_is_not_success",
+    "exact_locale_identity_kept",
+    "fallback_locale_id_is_registered",
+    "hreflang_codes_are_unique",
+    "hreflang_tags_are_registered_or_xdefault",
+    "isolation_uses_fsi_not_override",
+    "isolation_wraps_fsi_pdi",
+    "language_is_not_country",
+    "locale_fallback_does_not_change_script_or_region",
+    "ltr_neighbors_stay_outside_isolate",
+    "missing_key_is_not_empty_string",
+    "missing_key_is_not_english_gloss",
+    "publication_registry_is_published_en_only",
+    "published_localized_route_can_emit",
+    "published_without_resolver_does_not_invent",
+    "region_is_not_a_translation",
+    "resolver_null_does_not_invent",
+    "rtl_text_preserved_inside_isolate",
+    "semantic_authority_not_elevated",
+    "seo_head_uses_default_publication",
+    "translated_catalog_kept",
+    "unpublished_registered_locales_omitted",
+    "untranslated_locale_stays_marked",
+    "x_default_target_is_a_published_locale_url",
+    "x_default_withheld_when_nothing_is_published"
+  ],
+  "mutants": [
+    {
+      "id": "L10N1-01",
+      "defect": "hreflang for unpublished locale",
+      "target": "unpublished_registered_locales_omitted",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "default_alternates_point_at_published_canonical",
+        "published_without_resolver_does_not_invent",
+        "unpublished_registered_locales_omitted"
+      ]
+    },
+    {
+      "id": "L10N1-02",
+      "defect": "hreflang for registered-only locale",
+      "target": "unpublished_registered_locales_omitted",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "default_alternates_point_at_published_canonical",
+        "hreflang_codes_are_unique",
+        "published_localized_route_can_emit",
+        "published_without_resolver_does_not_invent",
+        "resolver_null_does_not_invent",
+        "unpublished_registered_locales_omitted"
+      ]
+    },
+    {
+      "id": "L10N1-03",
+      "defect": "alternate URL invented",
+      "target": "published_without_resolver_does_not_invent",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "published_without_resolver_does_not_invent"
+      ]
+    },
+    {
+      "id": "L10N1-04",
+      "defect": "x-default forged",
+      "target": "default_alternates_point_at_published_canonical",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "default_alternates_point_at_published_canonical",
+        "x_default_target_is_a_published_locale_url"
+      ]
+    },
+    {
+      "id": "L10N1-05",
+      "defect": "RTL marks stripped",
+      "target": "rtl_text_preserved_inside_isolate",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "bidi_override_not_accepted_as_content",
+        "rtl_text_preserved_inside_isolate"
+      ]
+    },
+    {
+      "id": "L10N1-06",
+      "defect": "bidi override accepted as content",
+      "target": "bidi_override_not_accepted_as_content",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "bidi_override_not_accepted_as_content",
+        "isolation_uses_fsi_not_override",
+        "isolation_wraps_fsi_pdi",
+        "ltr_neighbors_stay_outside_isolate"
+      ]
+    },
+    {
+      "id": "L10N1-07",
+      "defect": "untranslated becomes translated",
+      "target": "untranslated_locale_stays_marked",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "missing_key_is_not_english_gloss"
+      ]
+    },
+    {
+      "id": "L10N1-08",
+      "defect": "empty string becomes translation",
+      "target": "empty_catalog_value_is_not_success",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "missing_key_is_not_empty_string"
+      ]
+    },
+    {
+      "id": "L10N1-09",
+      "defect": "locale fallback silently changes meaning",
+      "target": "locale_fallback_does_not_change_script_or_region",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "exact_locale_identity_kept",
+        "translated_catalog_kept"
+      ]
+    },
+    {
+      "id": "L10N1-10",
+      "defect": "language tag fabricated",
+      "target": "hreflang_tags_are_registered_or_xdefault",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "hreflang_tags_are_registered_or_xdefault"
+      ]
+    },
+    {
+      "id": "L10N1-11",
+      "defect": "region treated as translation",
+      "target": "region_is_not_a_translation",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "empty_catalog_value_is_not_success",
+        "translated_catalog_kept"
+      ]
+    },
+    {
+      "id": "L10N1-12",
+      "defect": "canonical locale dropped",
+      "target": "canonical_en_emitted_when_published",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "canonical_en_emitted_when_published"
+      ]
+    },
+    {
+      "id": "L10N1-13",
+      "defect": "semantic authority elevated",
+      "target": "semantic_authority_not_elevated",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "semantic_authority_not_elevated"
+      ]
+    },
+    {
+      "id": "L10N1-14",
+      "defect": "hreflang for registered-only locale",
+      "target": "publication_registry_is_published_en_only",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "default_alternates_point_at_published_canonical",
+        "publication_registry_is_published_en_only",
+        "published_without_resolver_does_not_invent",
+        "unpublished_registered_locales_omitted"
+      ]
+    },
+    {
+      "id": "L10N1-15",
+      "defect": "x-default forged",
+      "target": "x_default_target_is_a_published_locale_url",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "default_alternates_point_at_published_canonical",
+        "x_default_target_is_a_published_locale_url"
+      ]
+    },
+    {
+      "id": "L10N1-16",
+      "defect": "RTL marks stripped",
+      "target": "isolation_wraps_fsi_pdi",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "bidi_override_not_accepted_as_content",
+        "isolation_wraps_fsi_pdi",
+        "ltr_neighbors_stay_outside_isolate"
+      ]
+    },
+    {
+      "id": "L10N1-17",
+      "defect": "bidi override accepted as content",
+      "target": "isolation_uses_fsi_not_override",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "bidi_override_not_accepted_as_content",
+        "isolation_uses_fsi_not_override",
+        "isolation_wraps_fsi_pdi",
+        "ltr_neighbors_stay_outside_isolate"
+      ]
+    },
+    {
+      "id": "L10N1-18",
+      "defect": "untranslated becomes translated",
+      "target": "translated_catalog_kept",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "translated_catalog_kept"
+      ]
+    },
+    {
+      "id": "L10N1-19",
+      "defect": "language tag fabricated",
+      "target": "fallback_locale_id_is_registered",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "fallback_locale_id_is_registered"
+      ]
+    },
+    {
+      "id": "L10N1-20",
+      "defect": "semantic authority elevated",
+      "target": "semantic_authority_not_elevated",
+      "status": "KILLED",
+      "donor_exhibits_target": false,
+      "discriminating_failures": [
+        "semantic_authority_not_elevated"
+      ]
+    }
+  ],
+  "pytest_python": "/Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/.venv/bin/python3.14",
+  "pytest": {
+    "collected": 36,
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0,
+    "errors": 0,
+    "exit_code": 0
+  },
+  "source_runtime_modified": false,
+  "source_runtime_status": [],
+  "network_acquisition": "NONE",
+  "live_fetch": false,
+  "k3_integrated": false,
+  "pr_number": null
+}

@@ -1,0 +1,122 @@
+{
+  "unpublished_registered_locales_omitted": {
+    "pass": true,
+    "failures": []
+  },
+  "published_localized_route_can_emit": {
+    "pass": true,
+    "failures": []
+  },
+  "published_without_resolver_does_not_invent": {
+    "pass": true,
+    "failures": []
+  },
+  "resolver_null_does_not_invent": {
+    "pass": true,
+    "failures": []
+  },
+  "default_alternates_point_at_published_canonical": {
+    "pass": true,
+    "failures": []
+  },
+  "canonical_en_emitted_when_published": {
+    "pass": true,
+    "failures": []
+  },
+  "hreflang_tags_are_registered_or_xdefault": {
+    "pass": true,
+    "failures": []
+  },
+  "hreflang_codes_are_unique": {
+    "pass": true,
+    "failures": []
+  },
+  "publication_registry_is_published_en_only": {
+    "pass": true,
+    "failures": []
+  },
+  "rtl_text_preserved_inside_isolate": {
+    "pass": true,
+    "failures": []
+  },
+  "isolation_wraps_fsi_pdi": {
+    "pass": true,
+    "failures": []
+  },
+  "isolation_uses_fsi_not_override": {
+    "pass": true,
+    "failures": []
+  },
+  "ltr_neighbors_stay_outside_isolate": {
+    "pass": true,
+    "failures": []
+  },
+  "exact_locale_identity_kept": {
+    "pass": true,
+    "failures": []
+  },
+  "translated_catalog_kept": {
+    "pass": true,
+    "failures": []
+  },
+  "missing_key_is_not_empty_string": {
+    "pass": true,
+    "failures": []
+  },
+  "missing_key_is_not_english_gloss": {
+    "pass": true,
+    "failures": []
+  },
+  "semantic_authority_not_elevated": {
+    "pass": true,
+    "failures": []
+  },
+  "fallback_locale_id_is_registered": {
+    "pass": true,
+    "failures": []
+  },
+  "language_is_not_country": {
+    "pass": true,
+    "failures": []
+  },
+  "seo_head_uses_default_publication": {
+    "pass": true,
+    "failures": []
+  },
+  "app_routes_have_no_localized_prefix": {
+    "pass": true,
+    "failures": []
+  },
+  "bdi_isolate_does_not_set_page_ltr_to_rtl": {
+    "pass": true,
+    "failures": []
+  },
+  "untranslated_locale_stays_marked": {
+    "pass": true,
+    "failures": []
+  },
+  "empty_catalog_value_is_not_success": {
+    "pass": true,
+    "failures": []
+  },
+  "locale_fallback_does_not_change_script_or_region": {
+    "pass": true,
+    "failures": []
+  },
+  "bidi_override_not_accepted_as_content": {
+    "pass": true,
+    "failures": []
+  },
+  "region_is_not_a_translation": {
+    "pass": true,
+    "failures": []
+  },
+  "x_default_withheld_when_nothing_is_published": {
+    "pass": true,
+    "failures": []
+  },
+  "x_default_target_is_a_published_locale_url": {
+    "pass": true,
+    "failures": []
+  }
+}
