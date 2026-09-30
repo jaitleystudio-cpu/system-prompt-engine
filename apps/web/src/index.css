@@ -1825,10 +1825,10 @@ html[data-theme="light"] .spe-bound-notice {
 .spe-composer-status { color: #a7f3d0; }
 .spe-composer-error { color: #fda4af; }
 .spe-fallbacks { margin: 0; padding-left: 1.1rem; opacity: 0.85; }
-.spe-create, .spe-lab, .spe-mywork, .spe-privacy-page, .spe-capabilities-page {
+.spe-create, .spe-lab, .spe-mywork, .spe-library, .spe-privacy-page, .spe-capabilities-page {
   width: min(1100px, calc(100% - 2rem)); margin: 5.5rem auto 3rem; display: grid; gap: 1.25rem;
 }
-.spe-create-head h1, .spe-lab-head h1, .spe-mywork h1, .spe-privacy-page h1, .spe-capabilities-page h1 {
+.spe-create-head h1, .spe-lab-head h1, .spe-mywork h1, .spe-library h1, .spe-privacy-page h1, .spe-capabilities-page h1 {
   font-family: var(--spe-display, inherit); font-weight: 550; letter-spacing: -0.02em; margin: 0.2rem 0;
 }
 .spe-lab-grid, .spe-privacy-grid, .spe-capabilities-grid, .spe-moon-grid {
@@ -2109,6 +2109,7 @@ html[data-theme="light"] .spe-bound-notice {
 .spe-create,
 .spe-lab,
 .spe-mywork,
+.spe-library,
 .spe-privacy-page {
   width: min(1080px, calc(100% - 2.5rem));
   margin: 4.75rem auto 3.5rem;
@@ -2124,7 +2125,8 @@ html[data-theme="light"] .spe-bound-notice {
 }
 .spe-create-head h1,
 .spe-lab-head h1,
-.spe-mywork h1 {
+.spe-mywork h1,
+.spe-library h1 {
   font-size: clamp(2.35rem, 4.6vw, 3.85rem);
   letter-spacing: -0.045em;
   line-height: 1.05;
@@ -2380,6 +2382,7 @@ html[data-theme="light"] .spe-bound-notice {
   .spe-create,
   .spe-lab,
   .spe-mywork,
+  .spe-library,
   .spe-privacy-page {
     width: min(100% - 1.5rem, 1080px);
     margin-top: 3.25rem;
@@ -2923,7 +2926,8 @@ html[data-theme="light"] .spe-mywork,
   margin-top: 1.75rem;
 }
 html[data-theme="light"] .spe-capabilities-page,
-html[data-theme="light"] .spe-privacy-page {
+html[data-theme="light"] .spe-privacy-page,
+html[data-theme="light"] .spe-library {
   color: var(--paper);
 }
 html[data-theme="light"] .spe-create-thought {

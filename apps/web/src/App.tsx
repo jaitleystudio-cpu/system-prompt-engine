@@ -78,6 +78,7 @@ import {
   type LabAcquisitionSeed,
 } from "./lab/labAcquisition";
 import { MyWork } from "./pages/MyWork";
+import { ProjectLibraryPage } from "./pages/ProjectLibrary";
 import { PrivacyProof } from "./pages/PrivacyProof";
 import { Capabilities } from "./pages/Capabilities";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
@@ -1136,6 +1137,8 @@ export default function App() {
           />
         )}
 
+        {view === "library" && <ProjectLibraryPage />}
+
         {view === "capabilities" && <Capabilities />}
         {view === "privacy" && <PrivacyProof />}
 
@@ -1296,6 +1299,7 @@ export default function App() {
           <a href={pathForView("code")}>Code</a>
           <a href={pathForView("lab")}>Daily Lab</a>
           <a href={pathForView("my-work")}>My Work</a>
+          <a href={pathForView("library")}>Library</a>
           <a href={pathForView("capabilities")}>Capabilities</a>
           <a href={pathForView("privacy")}>Privacy</a>
         </nav>

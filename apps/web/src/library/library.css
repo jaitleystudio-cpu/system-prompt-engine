@@ -1,0 +1,104 @@
+.spe-library-banner,
+.spe-library-panel,
+.spe-library-diff,
+.spe-library-history {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  background: color-mix(in srgb, var(--surface-elevated) 88%, transparent);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.spe-library-banner p,
+.spe-library-panel p,
+.spe-library-note {
+  margin: 0;
+  line-height: 1.5;
+  max-width: 42rem;
+}
+
+.spe-library-contract {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.spe-library-layout {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+}
+
+.spe-library-list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.spe-library-list button {
+  text-align: left;
+  width: 100%;
+}
+
+.spe-library-list button.is-active {
+  border-color: var(--mint);
+}
+
+.spe-library-meta,
+.spe-library-diff li,
+.spe-library-history li {
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.spe-library-meta {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.spe-library-meta div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.spe-library-meta dt {
+  opacity: 0.7;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.spe-library-meta dd,
+.spe-library-diff code,
+.spe-library-history code {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.spe-library-diff ul,
+.spe-library-history ol {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.spe-status-line {
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .spe-library-layout {
+    grid-template-columns: 1fr;
+  }
+}
