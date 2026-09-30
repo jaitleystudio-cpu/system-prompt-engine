@@ -1,0 +1,140 @@
+{
+  "network_none_and_no_socket": {
+    "pass": true,
+    "failures": []
+  },
+  "live_redirect_script_modes_refused": {
+    "pass": true,
+    "failures": []
+  },
+  "unsafe_schemes_and_credentials_refused": {
+    "pass": true,
+    "failures": []
+  },
+  "canonical_private_ips_refused": {
+    "pass": true,
+    "failures": []
+  },
+  "obfuscated_loopback_refused": {
+    "pass": false,
+    "failures": [
+      "URL_SAFETY: obfuscated loopback gained capture authority: http://127.1/ -> ALLOW_CAPTURE () host=127.1",
+      "URL_SAFETY: obfuscated loopback gained capture authority: http://0177.0.0.1/ -> ALLOW_CAPTURE () host=0177.0.0.1",
+      "URL_SAFETY: obfuscated loopback gained capture authority: http://2130706433/ -> ALLOW_CAPTURE () host=2130706433"
+    ]
+  },
+  "active_script_onclick_svg_form_not_executed": {
+    "pass": true,
+    "failures": []
+  },
+  "css_javascript_url_not_activated": {
+    "pass": false,
+    "failures": [
+      "ACTIVE_CONTENT: javascript CSS url residue JSURL_SECRET was copied and resolved",
+      "ACTIVE_CONTENT: javascript URL became same-document asset https://harbor.example/JSURL_SECRET"
+    ]
+  },
+  "css_import_javascript_not_activated": {
+    "pass": false,
+    "failures": [
+      "ACTIVE_CONTENT: CSS import javascript residue IMPORT_SECRET was copied",
+      "ACTIVE_CONTENT: CSS import javascript URL stayed active as IMPORT_SECRET -> https://harbor.example/IMPORT_SECRET same_document=True"
+    ]
+  },
+  "meta_refresh_https_not_fetched": {
+    "pass": true,
+    "failures": []
+  },
+  "meta_refresh_javascript_not_copied": {
+    "pass": false,
+    "failures": [
+      "ACTIVE_CONTENT: meta refresh javascript URL METAREFRESH_SECRET was copied into the contract"
+    ]
+  },
+  "sensitive_control_values_withheld": {
+    "pass": true,
+    "failures": []
+  },
+  "sensitive_textarea_option_withheld": {
+    "pass": false,
+    "failures": [
+      "SENSITIVE_FIELDS: field value TEXTAREA_SECRET was copied through the contract",
+      "SENSITIVE_FIELDS: field value OPTION_SECRET was copied through the contract"
+    ]
+  },
+  "data_payload_not_copied": {
+    "pass": true,
+    "failures": []
+  },
+  "path_literal_relative_not_retained_in_target": {
+    "pass": true,
+    "failures": []
+  },
+  "path_encoded_and_page_url_not_retained": {
+    "pass": false,
+    "failures": [
+      "URL_SAFETY: path traversal retained in url_identity status=ALLOW_CAPTURE identity=https://harbor.example/../../etc/passwd",
+      "URL_SAFETY: path traversal retained in resolved_ref %2e%2e/%2e%2e/etc/passwd -> https://harbor.example/%2e%2e/%2e%2e/etc/passwd same_document=True",
+      "URL_SAFETY: path traversal retained in resolved_ref ..%2fsecret -> https://harbor.example/..%2fsecret same_document=True"
+    ]
+  },
+  "malformed_not_complete": {
+    "pass": false,
+    "failures": [
+      "MALFORMED_INPUT: malformed document became a complete X-Ray status=CONTRACT_READY gaps=() fidelity=[('METADATA', 'OBSERVED'), ('ASSETS', 'OBSERVED'), ('LAYOUT', 'OBSERVED'), ('TYPOGRAPHY', 'OBSERVED'), ('BREAKPOINTS', 'OBSERVED'), ('INTERACTIONS', 'OBSERVED'), ('MOTION', 'OBSERVED'), ('WEBGL', 'OBSERVED')] tags=['#document', 'not-a-document']",
+      "MALFORMED_INPUT: status CONTRACT_READY is a fake complete X-Ray for <<<<not-a-document>>>>"
+    ]
+  },
+  "empty_document_refused": {
+    "pass": true,
+    "failures": []
+  },
+  "determinism": {
+    "pass": true,
+    "failures": []
+  },
+  "webgl_observation_only": {
+    "pass": true,
+    "failures": []
+  },
+  "camera_not_invented": {
+    "pass": true,
+    "failures": []
+  },
+  "missing_css_not_inferred": {
+    "pass": true,
+    "failures": []
+  },
+  "unknown_asset_not_retyped": {
+    "pass": true,
+    "failures": []
+  },
+  "source_order_preserved": {
+    "pass": true,
+    "failures": []
+  },
+  "media_query_not_fabricated": {
+    "pass": true,
+    "failures": []
+  },
+  "duplicate_ids_not_normalized": {
+    "pass": true,
+    "failures": []
+  },
+  "gaps_remain": {
+    "pass": true,
+    "failures": []
+  },
+  "huge_capture_budget": {
+    "pass": true,
+    "failures": []
+  },
+  "semantic_authority_none": {
+    "pass": true,
+    "failures": []
+  },
+  "k3_not_integrated": {
+    "pass": true,
+    "failures": []
+  }
+}
