@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="ledger keeps missing live data unknown" time="0.000604" classname="test"/>
+	<testcase name="robots_honored" time="0.000334" classname="test"/>
+	<testcase name="malformed_robots_rejected" time="0.000042" classname="test"/>
+	<testcase name="not_found_not_indexable" time="0.000038" classname="test"/>
+	<testcase name="unknown_route_404" time="0.000044" classname="test"/>
+	<testcase name="redirects_not_a_completed_loop" time="0.000036" classname="test"/>
+	<testcase name="canonicals_not_invented" time="0.000031" classname="test"/>
+	<testcase name="malformed_canonicals_rejected" time="0.000030" classname="test"/>
+	<testcase name="sitemap_urls_not_fabricated" time="0.000194" classname="test"/>
+	<testcase name="malformed_sitemap_rejected" time="0.000283" classname="test"/>
+	<testcase name="hreflang_fail_closed" time="0.000084" classname="test"/>
+	<testcase name="metadata_not_invented" time="0.000403" classname="test"/>
+	<testcase name="schema_not_invented" time="0.000031" classname="test"/>
+	<testcase name="cwv_omitted_not_pass" time="0.000023" classname="test"/>
+	<testcase name="cwv_measured_zero_is_a_measurement" time="0.000021" classname="test"/>
+	<testcase name="cwv_slow_sample_fails" time="0.000020" classname="test"/>
+	<testcase name="cwv_null_and_blank_stay_unknown" time="0.000020" classname="test"/>
+	<testcase name="cwv_unobserved_not_substituted" time="0.000021" classname="test"/>
+	<testcase name="field_cwv_not_claimed" time="0.000021" classname="test"/>
+	<testcase name="live_serp_not_claimed" time="0.000021" classname="test"/>
+	<testcase name="search_console_not_claimed" time="0.000020" classname="test"/>
+	<testcase name="network_not_enabled" time="0.000020" classname="test"/>
+	<testcase name="private_url_not_indexed" time="0.000021" classname="test"/>
+	<testcase name="credential_urls_rejected" time="0.000021" classname="test"/>
+	<testcase name="duplicates_not_proven" time="0.000019" classname="test"/>
+	<testcase name="noindex_stays_noindex" time="0.000020" classname="test"/>
+	<testcase name="trailing_slash_identity" time="0.000021" classname="test"/>
+	<testcase name="semantic_authority_none" time="0.000019" classname="test"/>
+	<testcase name="known_gaps_remain" time="0.000020" classname="test"/>
+	<testcase name="hosting_not_authorized" time="0.000020" classname="test"/>
+	<testcase name="ranking_and_indexing_not_claimed" time="0.000020" classname="test"/>
+	<testcase name="emitted_artifacts_match_renderer" time="0.000019" classname="test"/>
+	<testcase name="cwv_uses_inp_thresholds" time="0.000023" classname="test"/>
+	<!-- tests 33 -->
+	<!-- suites 0 -->
+	<!-- pass 33 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 92.432916 -->
+</testsuites>

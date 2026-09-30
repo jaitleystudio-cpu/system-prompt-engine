@@ -6,14 +6,15 @@
 - `tests/search/test_cwv_donor_repair.mjs` — created 2026-10-01. Regression for the two Search R1 CWV donor defects.
 - `qualification/search_r1/` — created 2026-09-30. Search R1 qualification oracles, fail-closed linters, malformed-signal fixtures, and the SR1-01..SR1-20 mutation harness. Reads the search foundation. The oracles are unchanged.
 - `tests/search/test_search_r1_qualification.mjs` — created 2026-09-30. Node test entry for the Search R1 oracles.
+- `proofs/search_r1_repair_20261001/` — created 2026-10-01. Repair re-score. Qualification suite 33 passed, 0 failed. SR1-01 through SR1-20 killed 20, survived 0.
 - `proofs/search_r1_20260930/` — created 2026-09-30. Qualification HOLD evidence. Left intact on this repair.
 
 ## Log
 
 ### 2026-10-01 — repair missing and unobserved lab vitals
 - Why: Null and blank CWV samples were scored as a passing zero, and unobserved LCP and INP were replaced with invented durations.
-- Files: `apps/web/scripts/measure-cwv.mjs` (updated), `tests/search/test_cwv_donor_repair.mjs` (created), `MEMORY.md` (updated)
-- Left: re-score SR1-01 through SR1-20 on a clean tree and record the repair proof
+- Files: `apps/web/scripts/measure-cwv.mjs` (updated), `tests/search/test_cwv_donor_repair.mjs` (created), `proofs/search_r1_repair_20261001/` (created), `MEMORY.md` (updated)
+- Left: none
 
 ### 2026-09-30 — qualify the search foundation donor
 - Why: Independent Search R1 qualification of crawl, canonical, sitemap, metadata, schema, and CWV honesty. No live SERP and no Search Console. Donor runtime stays unchanged.
