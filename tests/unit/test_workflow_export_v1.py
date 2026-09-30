@@ -119,7 +119,7 @@ def test_generic_json_preserves_every_facet_and_refuses_authority():
 
 def test_generic_text_round_trips_marker_like_and_unicode_bodies():
     source = copy.deepcopy(PROMPT)
-    source["prompt_body"] = "PROMPT_BODY_END\nnमस्ते\nline"
+    source["prompt_body"] = "PROMPT_BODY_END\nनमस्ते\nline"
     doc = _export("generic_text", source)
     assert doc["loss_state"] == "NONE"
     assert isinstance(doc["target_document"], str)
@@ -294,6 +294,30 @@ def test_mutation_executed_guarantee_is_rejected():
     doc = _export("generic_json")
     doc["guarantees"]["executed"] = True
     with pytest.raises(ExportIntegrityError, match="executed"):
+        audit_export(doc)
+
+
+def test_mutation_preserved_withheld_prompt_is_rejected():
+    leaked = copy.deepcopy(PROMPT)
+    leaked["prompt_body"] = f"token={SECRET} and then the task"
+    doc = _export("generic_json", leaked)
+    for item in doc["fidelity"]:
+        if item["facet"] == "prompt_body":
+            item["state"] = "PRESERVED"
+    doc["loss_state"] = "NONE"
+    with pytest.raises(ExportIntegrityError, match="WITHHELD"):
+        audit_export(doc)
+
+
+def test_mutation_preserved_stripped_variable_is_rejected():
+    source = copy.deepcopy(PROMPT)
+    source["variables"] = {"audience": "operators", "api_key": SECRET}
+    doc = _export("generic_json", source)
+    for item in doc["fidelity"]:
+        if item["facet"] == "variables":
+            item["state"] = "PRESERVED"
+    doc["loss_state"] = "NONE"
+    with pytest.raises(ExportIntegrityError, match="STRIPPED"):
         audit_export(doc)
 
 
