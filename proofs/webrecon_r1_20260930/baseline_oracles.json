@@ -16,51 +16,36 @@
     "failures": []
   },
   "obfuscated_loopback_refused": {
-    "pass": false,
-    "failures": [
-      "URL_SAFETY: obfuscated loopback gained capture authority: http://127.1/ -> ALLOW_CAPTURE () host=127.1",
-      "URL_SAFETY: obfuscated loopback gained capture authority: http://0177.0.0.1/ -> ALLOW_CAPTURE () host=0177.0.0.1",
-      "URL_SAFETY: obfuscated loopback gained capture authority: http://2130706433/ -> ALLOW_CAPTURE () host=2130706433"
-    ]
+    "pass": true,
+    "failures": []
   },
   "active_script_onclick_svg_form_not_executed": {
     "pass": true,
     "failures": []
   },
   "css_javascript_url_not_activated": {
-    "pass": false,
-    "failures": [
-      "ACTIVE_CONTENT: javascript CSS url residue JSURL_SECRET was copied and resolved",
-      "ACTIVE_CONTENT: javascript URL became same-document asset https://harbor.example/JSURL_SECRET"
-    ]
+    "pass": true,
+    "failures": []
   },
   "css_import_javascript_not_activated": {
-    "pass": false,
-    "failures": [
-      "ACTIVE_CONTENT: CSS import javascript residue IMPORT_SECRET was copied",
-      "ACTIVE_CONTENT: CSS import javascript URL stayed active as IMPORT_SECRET -> https://harbor.example/IMPORT_SECRET same_document=True"
-    ]
+    "pass": true,
+    "failures": []
   },
   "meta_refresh_https_not_fetched": {
     "pass": true,
     "failures": []
   },
   "meta_refresh_javascript_not_copied": {
-    "pass": false,
-    "failures": [
-      "ACTIVE_CONTENT: meta refresh javascript URL METAREFRESH_SECRET was copied into the contract"
-    ]
+    "pass": true,
+    "failures": []
   },
   "sensitive_control_values_withheld": {
     "pass": true,
     "failures": []
   },
   "sensitive_textarea_option_withheld": {
-    "pass": false,
-    "failures": [
-      "SENSITIVE_FIELDS: field value TEXTAREA_SECRET was copied through the contract",
-      "SENSITIVE_FIELDS: field value OPTION_SECRET was copied through the contract"
-    ]
+    "pass": true,
+    "failures": []
   },
   "data_payload_not_copied": {
     "pass": true,
@@ -71,19 +56,12 @@
     "failures": []
   },
   "path_encoded_and_page_url_not_retained": {
-    "pass": false,
-    "failures": [
-      "URL_SAFETY: path traversal retained in url_identity status=ALLOW_CAPTURE identity=https://harbor.example/../../etc/passwd",
-      "URL_SAFETY: path traversal retained in resolved_ref %2e%2e/%2e%2e/etc/passwd -> https://harbor.example/%2e%2e/%2e%2e/etc/passwd same_document=True",
-      "URL_SAFETY: path traversal retained in resolved_ref ..%2fsecret -> https://harbor.example/..%2fsecret same_document=True"
-    ]
+    "pass": true,
+    "failures": []
   },
   "malformed_not_complete": {
-    "pass": false,
-    "failures": [
-      "MALFORMED_INPUT: malformed document became a complete X-Ray status=CONTRACT_READY gaps=() fidelity=[('METADATA', 'OBSERVED'), ('ASSETS', 'OBSERVED'), ('LAYOUT', 'OBSERVED'), ('TYPOGRAPHY', 'OBSERVED'), ('BREAKPOINTS', 'OBSERVED'), ('INTERACTIONS', 'OBSERVED'), ('MOTION', 'OBSERVED'), ('WEBGL', 'OBSERVED')] tags=['#document', 'not-a-document']",
-      "MALFORMED_INPUT: status CONTRACT_READY is a fake complete X-Ray for <<<<not-a-document>>>>"
-    ]
+    "pass": true,
+    "failures": []
   },
   "empty_document_refused": {
     "pass": true,

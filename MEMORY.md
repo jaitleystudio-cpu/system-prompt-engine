@@ -21,7 +21,7 @@
 ### 2026-09-30 — WebRecon R1 capture firewall repair
 - Why: The C1 oracles failed because CSS javascript URLs, meta refresh, field text, encoded traversal, obscured loopback, and malformed markup could still enter a complete contract.
 - Files: `spe_runtime/webrecon/` (updated), `qualification/webrecon_r1/run_wr1_mutations.py` (updated), `proofs/webrecon_r1_20260930/` (updated)
-- Left: none in this lane. No live fetch, no K3, no merge.
+- Left: none. Scored at repair `4f5a770`: 37 passed, 0 failed, WR1-01..WR1-20 killed 20, survived 0. No live fetch, no K3, no merge.
 
 ### 2026-09-30 — WebRecon R1 qualification HOLD
 - Why: Qualify supplied capture to Website X-Ray to ReconstructionContract. The donor fails active javascript residue, field text copy, path traversal, obfuscated loopback, and malformed complete X-Ray.

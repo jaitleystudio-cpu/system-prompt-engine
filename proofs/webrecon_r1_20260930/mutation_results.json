@@ -1,52 +1,19 @@
 {
+  "head": "4f5a770f868c13a45848b377a2a3f9551a7a0ae8",
   "donor_sha": "f2f67c0f00982c738485a103de807adde03ea80f",
   "expected_donor_sha": "f2f67c0f00982c738485a103de807adde03ea80f",
   "defined": 20,
   "killed": 20,
   "survived": 0,
   "broken": 0,
-  "donor_exhibits_target": [
-    "WR1-03",
-    "WR1-04",
-    "WR1-07",
-    "WR1-14",
-    "WR1-16"
-  ],
-  "baseline_failures": {
-    "obfuscated_loopback_refused": [
-      "URL_SAFETY: obfuscated loopback gained capture authority: http://127.1/ -> ALLOW_CAPTURE () host=127.1",
-      "URL_SAFETY: obfuscated loopback gained capture authority: http://0177.0.0.1/ -> ALLOW_CAPTURE () host=0177.0.0.1",
-      "URL_SAFETY: obfuscated loopback gained capture authority: http://2130706433/ -> ALLOW_CAPTURE () host=2130706433"
-    ],
-    "css_javascript_url_not_activated": [
-      "ACTIVE_CONTENT: javascript CSS url residue JSURL_SECRET was copied and resolved",
-      "ACTIVE_CONTENT: javascript URL became same-document asset https://harbor.example/JSURL_SECRET"
-    ],
-    "css_import_javascript_not_activated": [
-      "ACTIVE_CONTENT: CSS import javascript residue IMPORT_SECRET was copied",
-      "ACTIVE_CONTENT: CSS import javascript URL stayed active as IMPORT_SECRET -> https://harbor.example/IMPORT_SECRET same_document=True"
-    ],
-    "meta_refresh_javascript_not_copied": [
-      "ACTIVE_CONTENT: meta refresh javascript URL METAREFRESH_SECRET was copied into the contract"
-    ],
-    "sensitive_textarea_option_withheld": [
-      "SENSITIVE_FIELDS: field value TEXTAREA_SECRET was copied through the contract",
-      "SENSITIVE_FIELDS: field value OPTION_SECRET was copied through the contract"
-    ],
-    "path_encoded_and_page_url_not_retained": [
-      "URL_SAFETY: path traversal retained in url_identity status=ALLOW_CAPTURE identity=https://harbor.example/../../etc/passwd",
-      "URL_SAFETY: path traversal retained in resolved_ref %2e%2e/%2e%2e/etc/passwd -> https://harbor.example/%2e%2e/%2e%2e/etc/passwd same_document=True",
-      "URL_SAFETY: path traversal retained in resolved_ref ..%2fsecret -> https://harbor.example/..%2fsecret same_document=True"
-    ],
-    "malformed_not_complete": [
-      "MALFORMED_INPUT: malformed document became a complete X-Ray status=CONTRACT_READY gaps=() fidelity=[('METADATA', 'OBSERVED'), ('ASSETS', 'OBSERVED'), ('LAYOUT', 'OBSERVED'), ('TYPOGRAPHY', 'OBSERVED'), ('BREAKPOINTS', 'OBSERVED'), ('INTERACTIONS', 'OBSERVED'), ('MOTION', 'OBSERVED'), ('WEBGL', 'OBSERVED')] tags=['#document', 'not-a-document']",
-      "MALFORMED_INPUT: status CONTRACT_READY is a fake complete X-Ray for <<<<not-a-document>>>>"
-    ]
-  },
+  "donor_exhibits_target": [],
+  "baseline_failures": {},
   "baseline_passed": [
     "active_script_onclick_svg_form_not_executed",
     "camera_not_invented",
     "canonical_private_ips_refused",
+    "css_import_javascript_not_activated",
+    "css_javascript_url_not_activated",
     "data_payload_not_copied",
     "determinism",
     "duplicate_ids_not_normalized",
@@ -55,13 +22,18 @@
     "huge_capture_budget",
     "k3_not_integrated",
     "live_redirect_script_modes_refused",
+    "malformed_not_complete",
     "media_query_not_fabricated",
     "meta_refresh_https_not_fetched",
+    "meta_refresh_javascript_not_copied",
     "missing_css_not_inferred",
     "network_none_and_no_socket",
+    "obfuscated_loopback_refused",
+    "path_encoded_and_page_url_not_retained",
     "path_literal_relative_not_retained_in_target",
     "semantic_authority_none",
     "sensitive_control_values_withheld",
+    "sensitive_textarea_option_withheld",
     "source_order_preserved",
     "unknown_asset_not_retyped",
     "unsafe_schemes_and_credentials_refused",
@@ -93,9 +65,10 @@
       "defect": "javascript URL active",
       "target": "css_javascript_url_not_activated",
       "status": "KILLED",
-      "donor_exhibits_target": true,
+      "donor_exhibits_target": false,
       "discriminating_failures": [
-        "active_script_onclick_svg_form_not_executed"
+        "active_script_onclick_svg_form_not_executed",
+        "meta_refresh_javascript_not_copied"
       ]
     },
     {
@@ -103,7 +76,7 @@
       "defect": "secret copied",
       "target": "sensitive_textarea_option_withheld",
       "status": "KILLED",
-      "donor_exhibits_target": true,
+      "donor_exhibits_target": false,
       "discriminating_failures": [
         "active_script_onclick_svg_form_not_executed",
         "sensitive_control_values_withheld"
@@ -139,7 +112,7 @@
       "defect": "malformed marked complete",
       "target": "malformed_not_complete",
       "status": "KILLED",
-      "donor_exhibits_target": true,
+      "donor_exhibits_target": false,
       "discriminating_failures": [
         "empty_document_refused"
       ]
@@ -211,9 +184,10 @@
       "defect": "private IP accepted",
       "target": "obfuscated_loopback_refused",
       "status": "KILLED",
-      "donor_exhibits_target": true,
+      "donor_exhibits_target": false,
       "discriminating_failures": [
-        "canonical_private_ips_refused"
+        "canonical_private_ips_refused",
+        "obfuscated_loopback_refused"
       ]
     },
     {
@@ -231,7 +205,7 @@
       "defect": "path traversal retained",
       "target": "path_encoded_and_page_url_not_retained",
       "status": "KILLED",
-      "donor_exhibits_target": true,
+      "donor_exhibits_target": false,
       "discriminating_failures": [
         "path_literal_relative_not_retained_in_target"
       ]
@@ -280,11 +254,11 @@
   ],
   "pytest": {
     "collected": 37,
-    "passed": 30,
-    "failed": 7,
+    "passed": 37,
+    "failed": 0,
     "skipped": 0,
     "errors": 0,
-    "exit_code": 1
+    "exit_code": 0
   },
   "source_runtime_modified": false,
   "source_runtime_status": [],
