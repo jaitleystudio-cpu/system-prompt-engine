@@ -51,4 +51,4 @@ Target policy when nothing is stripped:
 
 - [x] Independent read-only review of the branch diff against this plan
 - [x] Fix important defects
-- [ ] Re-run the new test file on the committed tree before any PASS claim
+- [x] Re-run the new test file on the committed tree before any PASS claim
