@@ -1,0 +1,162 @@
+[
+  {
+    "id": "A11Y1-01",
+    "fault": "skip target keeps outline:none and focus is marked retained",
+    "killed": true,
+    "codes": [
+      "A11Y1-01"
+    ]
+  },
+  {
+    "id": "A11Y1-02",
+    "fault": "injected keyboard trap marked pass",
+    "killed": true,
+    "codes": [
+      "A11Y1-02"
+    ]
+  },
+  {
+    "id": "A11Y1-03",
+    "fault": "skip link removed while the static claim stays asserted",
+    "killed": true,
+    "codes": [
+      "A11Y1-03"
+    ]
+  },
+  {
+    "id": "A11Y1-04",
+    "fault": "unlabeled control marked pass because some aria-label exists",
+    "killed": true,
+    "codes": [
+      "A11Y1-04"
+    ]
+  },
+  {
+    "id": "A11Y1-05",
+    "fault": "contrast ratio invented and marked AAA",
+    "killed": true,
+    "codes": [
+      "A11Y1-05"
+    ]
+  },
+  {
+    "id": "A11Y1-06",
+    "fault": "reduced-motion kill switch removed and the CSS claim kept",
+    "killed": true,
+    "codes": [
+      "A11Y1-06"
+    ]
+  },
+  {
+    "id": "A11Y1-07",
+    "fault": "200% zoom reflow marked pass without a measurement",
+    "killed": true,
+    "codes": [
+      "A11Y1-07"
+    ]
+  },
+  {
+    "id": "A11Y1-08",
+    "fault": "aria-hidden on a focusable control still reported none observed",
+    "killed": true,
+    "codes": [
+      "A11Y1-08"
+    ]
+  },
+  {
+    "id": "A11Y1-09",
+    "fault": "heading order marked pass without an audit",
+    "killed": true,
+    "codes": [
+      "A11Y1-09"
+    ]
+  },
+  {
+    "id": "A11Y1-10",
+    "fault": "missing accessible name marked pass",
+    "killed": true,
+    "codes": [
+      "A11Y1-10"
+    ]
+  },
+  {
+    "id": "A11Y1-11",
+    "fault": "error announcement marked complete without a screen reader",
+    "killed": true,
+    "codes": [
+      "A11Y1-11"
+    ]
+  },
+  {
+    "id": "A11Y1-12",
+    "fault": "story autoplay ignores reduced motion and is marked pass",
+    "killed": true,
+    "codes": [
+      "A11Y1-12"
+    ]
+  },
+  {
+    "id": "A11Y1-13",
+    "fault": "menu control is a div and is marked pass",
+    "killed": true,
+    "codes": [
+      "A11Y1-13"
+    ]
+  },
+  {
+    "id": "A11Y1-14",
+    "fault": "html lang removed and language marked pass",
+    "killed": true,
+    "codes": [
+      "A11Y1-14"
+    ]
+  },
+  {
+    "id": "A11Y1-15",
+    "fault": "human screen-reader session fabricated",
+    "killed": true,
+    "codes": [
+      "A11Y1-15"
+    ]
+  },
+  {
+    "id": "A11Y1-16",
+    "fault": "keyboard trap UNKNOWN promoted to pass",
+    "killed": true,
+    "codes": [
+      "A11Y1-16"
+    ]
+  },
+  {
+    "id": "A11Y1-17",
+    "fault": "semantic authority raised to WCAG_AA",
+    "killed": true,
+    "codes": [
+      "A11Y1-17"
+    ]
+  },
+  {
+    "id": "A11Y1-18",
+    "fault": "WCAG AAA certificate invented",
+    "killed": true,
+    "codes": [
+      "A11Y1-18"
+    ]
+  },
+  {
+    "id": "A11Y1-19",
+    "fault": "donor harness log accepted as a WCAG certificate",
+    "killed": true,
+    "codes": [
+      "A11Y1-19"
+    ]
+  },
+  {
+    "id": "A11Y1-20",
+    "fault": "audit marked complete while the human session was not performed",
+    "killed": true,
+    "codes": [
+      "A11Y1-20"
+    ]
+  }
+]
