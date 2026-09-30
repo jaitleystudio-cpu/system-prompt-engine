@@ -1,13 +1,16 @@
 {
   "lane": "C2",
   "donor_sha": "32f1ae20347ca728a6a7b062107289b64ed88eed",
+  "head": "dd626973185708c46eee59fe2360887a42d330ba",
   "branch": "cursor/spe-media-r1q-20260930",
-  "final": "HOLD",
-  "hold_reason": "Raw video retention accepts non-boolean explicitly_needed. bool('false') is True, so retention ON is stored and the compiled contract schema-validates as explicitly_needed true.",
-  "mutation_score": "WITHHELD",
-  "mutation_reason": "baseline qualification is red or the donor tree changed; a kill/survive count would be UNKNOWN and UNKNOWN is not a pass",
-  "killed": null,
-  "survived": null,
+  "descends_from_donor": true,
+  "final": "MEDIA_R1_REPAIR_PASS",
+  "hold_reason": null,
+  "mutation_score": "20/20",
+  "mutation_reason": "baseline failed=0 and MR1-01 through MR1-20 were killed",
+  "killed": 20,
+  "survived": 0,
+  "failed": 0,
   "mutants_defined": 20,
   "mutant_ids": [
     "MR1-01",
@@ -30,6 +33,208 @@
     "MR1-18",
     "MR1-19",
     "MR1-20"
+  ],
+  "score_rows": [
+    {
+      "id": "MR1-01",
+      "fault": "raw audio retained",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 2,
+        "passed": 49
+      }
+    },
+    {
+      "id": "MR1-02",
+      "fault": "raw video default",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 1,
+        "passed": 50
+      }
+    },
+    {
+      "id": "MR1-03",
+      "fault": "speaker identity",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 4,
+        "passed": 47
+      }
+    },
+    {
+      "id": "MR1-04",
+      "fault": "voice biometric",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 4,
+        "passed": 47
+      }
+    },
+    {
+      "id": "MR1-05",
+      "fault": "cloud endpoint",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 3,
+        "passed": 48
+      }
+    },
+    {
+      "id": "MR1-06",
+      "fault": "negative timestamp",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 1,
+        "passed": 50
+      }
+    },
+    {
+      "id": "MR1-07",
+      "fault": "reversed timestamp",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 1,
+        "passed": 50
+      }
+    },
+    {
+      "id": "MR1-08",
+      "fault": "scene overlap",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 1,
+        "passed": 50
+      }
+    },
+    {
+      "id": "MR1-09",
+      "fault": "invalid keyframe",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 2,
+        "passed": 49
+      }
+    },
+    {
+      "id": "MR1-10",
+      "fault": "unknown duration becomes zero",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 1,
+        "passed": 50
+      }
+    },
+    {
+      "id": "MR1-11",
+      "fault": "missing transcript becomes empty-proof",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 3,
+        "passed": 48
+      }
+    },
+    {
+      "id": "MR1-12",
+      "fault": "unverified becomes verified",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 5,
+        "passed": 46
+      }
+    },
+    {
+      "id": "MR1-13",
+      "fault": "confidence fabricated",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 2,
+        "passed": 49
+      }
+    },
+    {
+      "id": "MR1-14",
+      "fault": "language fabricated",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 2,
+        "passed": 49
+      }
+    },
+    {
+      "id": "MR1-15",
+      "fault": "bad MIME accepted",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 1,
+        "passed": 50
+      }
+    },
+    {
+      "id": "MR1-16",
+      "fault": "scene label becomes fact",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 3,
+        "passed": 48
+      }
+    },
+    {
+      "id": "MR1-17",
+      "fault": "transcript becomes identity",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 3,
+        "passed": 48
+      }
+    },
+    {
+      "id": "MR1-18",
+      "fault": "network upload",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 4,
+        "passed": 47
+      }
+    },
+    {
+      "id": "MR1-19",
+      "fault": "gap removed",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 2,
+        "passed": 49
+      }
+    },
+    {
+      "id": "MR1-20",
+      "fault": "semantic authority elevated",
+      "verdict": "KILLED",
+      "pytest_exit": 1,
+      "counts": {
+        "failed": 15,
+        "passed": 36
+      }
+    }
   ],
   "patches_ok": true,
   "patches": [
@@ -215,137 +420,16 @@
       "edits": 1
     }
   ],
-  "malformed_explicit_need_findings": [
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "'false'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "'False'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "'no'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "'off'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "'0'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "'yes'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "1",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "' '",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "b'x'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "['x']",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "RawVideoRetentionPolicy",
-      "input": "{'a': 1}",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "explicitly_needed_type": "bool"
-    },
-    {
-      "channel": "video_envelope_from_mapping",
-      "input": "'false'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "schema_errors": [],
-      "video_bytes_key_present": false
-    },
-    {
-      "channel": "video_envelope_from_mapping",
-      "input": "'no'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "schema_errors": [],
-      "video_bytes_key_present": false
-    },
-    {
-      "channel": "video_envelope_from_mapping",
-      "input": "'off'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "schema_errors": [],
-      "video_bytes_key_present": false
-    },
-    {
-      "channel": "video_envelope_from_mapping",
-      "input": "'0'",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "schema_errors": [],
-      "video_bytes_key_present": false
-    },
-    {
-      "channel": "video_envelope_from_mapping",
-      "input": "1",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "schema_errors": [],
-      "video_bytes_key_present": false
-    },
-    {
-      "channel": "video_envelope_from_mapping",
-      "input": "' '",
-      "retention": "ON",
-      "explicitly_needed": true,
-      "schema_errors": [],
-      "video_bytes_key_present": false
-    }
-  ],
+  "malformed_explicit_need_findings": [],
   "pytest": {
-    "exit_code": 1,
-    "stdout": "...............F...................................                      [100%]\n=================================== FAILURES ===================================\n__________________ test_malformed_explicit_need_fails_closed ___________________\ntests/unit/test_media_r1_qualification.py:231: in test_malformed_explicit_need_fails_closed\n    assert malformed_explicit_need_findings() == []\nE   assert [{'channel': ...ue, ...}, ...] == []\nE     \nE     Left contains 17 more items, first extra item: {'channel': 'RawVideoRetentionPolicy', 'input': \"'false'\", 'retention': 'ON', 'explicitly_needed': True, ...}\nE     Use -v to get more diff\n=========================== short test summary info ============================\nFAILED tests/unit/test_media_r1_qualification.py::test_malformed_explicit_need_fails_closed\n1 failed, 50 passed in 24.64s\n",
-    "stderr": ""
+    "exit_code": 0,
+    "stdout": "...................................................                      [100%]\n51 passed in 10.75s\n",
+    "stderr": "",
+    "counts": {
+      "failed": 0,
+      "passed": 51
+    },
+    "timed_out": false
   },
   "donor_runtime_dirty": [],
   "stt_implemented": "NO",

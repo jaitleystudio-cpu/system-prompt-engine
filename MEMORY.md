@@ -9,9 +9,14 @@
 - `tests/unit/test_media_r1_qualification.py` — created 2026-09-30 — C2 oracle for retention, identity, network, time, scene, alignment, and authority
 - `tests/qualification/media_r1_mutants.py` — created 2026-09-30 — in-memory MR1-01 through MR1-20 patches; donor files stay untouched
 - `tests/qualification/qualify_media_r1.py` — updated 2026-09-30 — scores MR1-01 through MR1-20 when the media baseline is green
-- `proof/media-r1/c2-media-r1-evidence.json` — created 2026-09-30 — C2 evidence for the media R1 baseline and MR1 mutation score
+- `proof/media-r1/c2-media-r1-evidence.json` — updated 2026-09-30 — C2 evidence: baseline 51 passed, MR1-01 through MR1-20 killed
 
 ## Log
+
+### 2026-09-30 — Media R1 mutation score
+- Why: the green baseline killed every defined media mutant, so the C2 repair can pass
+- Files: `proof/media-r1/c2-media-r1-evidence.json` (updated)
+- Left: none
 
 ### 2026-09-30 — Media R1 explicit-need repair
 - Why: raw video retention treated truthy strings and numbers as boolean True, so retention could turn ON without a real boolean
