@@ -1,0 +1,39 @@
+{
+  "smuggled_authority_check": {
+    "id": "authority-not-escalated",
+    "label": "Authority not escalated",
+    "status": "PASS",
+    "detail": "Authority is NONE; no grants or side-effect permission were created."
+  },
+  "smuggled_displayed_authority": {
+    "status": "NONE",
+    "level": 0,
+    "grants": [],
+    "execution_grants": []
+  },
+  "smuggled_envelope_authority_state": {
+    "status": "NONE",
+    "level": "9",
+    "grants": "PUBLISH",
+    "capability": "EXECUTE",
+    "publish": true,
+    "host": true,
+    "deploy": true,
+    "public_share": true,
+    "validation_is_execution": true
+  },
+  "smuggled_envelope_execution_grants": "PUBLIC_SHARE",
+  "smuggled_privacy_authority": "GRANTED",
+  "smuggled_conformance": "UNKNOWN",
+  "smuggled_executed": false,
+  "smuggled_side_effects": "NONE",
+  "round_trip_ok": "UNKNOWN",
+  "round_trip_privacy_authority": "GRANTED",
+  "typed_grant_check": "FAIL",
+  "inspect_hardcodes_side_effects_none": true,
+  "inspect_hardcodes_executed_no": true,
+  "inspect_hides_public_share": false,
+  "inspect_hides_executed_true": true,
+  "simple_false_side_effect_badge": true,
+  "simple_data_ok_true_for_publish_side_effect": true
+}

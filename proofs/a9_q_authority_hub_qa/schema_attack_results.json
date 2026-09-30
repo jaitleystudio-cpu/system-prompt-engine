@@ -1,0 +1,58 @@
+{
+  "authority_state_stub_accepts_publish_object": {
+    "schema": "schemas/authority_state.schema.json",
+    "errors": []
+  },
+  "authority_state_stub_accepts_empty_object": {
+    "schema": "schemas/authority_state.schema.json",
+    "errors": []
+  },
+  "execution_grant_stub_accepts_publish_object": {
+    "schema": "schemas/execution_grant.schema.json",
+    "errors": []
+  },
+  "execution_grant_stub_accepts_empty_object": {
+    "schema": "schemas/execution_grant.schema.json",
+    "errors": []
+  },
+  "capability_manifest_stub_accepts_authority_and_publish": {
+    "schema": "schemas/capability_manifest.schema.json",
+    "errors": []
+  },
+  "xcat_envelope_accepts_smuggled_publish_on_none_authority": {
+    "schema": "schemas/xcat_envelope.schema.json",
+    "errors": [],
+    "runtime_validator_errors": []
+  },
+  "provider_profile_schema_accepts_publish_host_deploy_share": {
+    "schema": "schemas/provider_profile.schema.json",
+    "errors": []
+  },
+  "provider_profile_schema_accepts_read_publish_prefix": {
+    "schema": "schemas/provider_profile.schema.json",
+    "errors": []
+  },
+  "python_authority_flag_publish": "REJECTED: authority_capabilities must be empty or read-only; got 'publish'",
+  "python_authority_flag_host": "REJECTED: authority_capabilities must be empty or read-only; got 'host'",
+  "python_authority_flag_deploy": "REJECTED: authority_capabilities must be empty or read-only; got 'deploy'",
+  "python_authority_flag_public_share": "REJECTED: authority_capabilities must be empty or read-only; got 'public_share'",
+  "python_authority_flag_read_publish": "ACCEPTED",
+  "python_authority_flag_read_host": "ACCEPTED",
+  "python_authority_flag_read_public_share": "ACCEPTED",
+  "python_validate_profile_publish": "REJECTED: authority_capabilities must be empty or read-only; got 'publish'",
+  "forbidden_flag_set_omits_publish_family": [
+    "admin",
+    "broaden",
+    "consume_grant",
+    "escalate",
+    "execute",
+    "grant",
+    "grant_authority",
+    "mint",
+    "mint_authority",
+    "revoke",
+    "self_escalate",
+    "write_authority"
+  ],
+  "python_validate_profile_read_publish": "ACCEPTED"
+}
