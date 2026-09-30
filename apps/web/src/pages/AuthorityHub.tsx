@@ -46,7 +46,7 @@ export const AuthorityHub: React.FC = () => {
         >
           <div>
             <div style={{ fontSize: "0.75rem", color: "var(--spe-hub-muted)", textTransform: "uppercase" }}>
-              Verified Claims
+              Verified & Replicated Claims
             </div>
             <div style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--spe-hub-success)" }}>
               {EVIDENCE_LEDGER.filter((e) => e.status === "verified").length} / {EVIDENCE_LEDGER.length}

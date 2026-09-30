@@ -155,18 +155,20 @@ export const GuideArticle: React.FC<GuideArticleProps> = ({ document: doc, onBac
                 <div className="spe-evidence-field-label">Evidence Links:</div>
                 <div className="spe-evidence-field-val">
                   <ul style={{ margin: 0, paddingLeft: "16px" }}>
-                    {ev.evidenceLinks.map((link, lIdx) => (
-                      <li key={lIdx}>
-                        <a
-                          href={link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ color: "var(--spe-hub-accent)" }}
-                        >
-                          {link}
-                        </a>
-                      </li>
-                    ))}
+                    {ev.evidenceLinks.map((link, lIdx) => {
+                      const isExternal = link.startsWith("http://") || link.startsWith("https://");
+                      return (
+                        <li key={lIdx}>
+                          <a
+                            href={link}
+                            {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                            style={{ color: "var(--spe-hub-accent)" }}
+                          >
+                            {link}
+                          </a>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
 
