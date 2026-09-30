@@ -41,14 +41,14 @@ Target policy when nothing is stripped:
 - `make`: all six `DEGRADED`; `flow` empty; no connections
 - `zapier`: `required_inputs` and `expected_outputs` `UNSUPPORTED`; the other four `DEGRADED`; `importable` false; `runnable` false; `loss_state` `UNSUPPORTED`
 
-- [ ] **Step 1: Write the failing test** covering preservation, degradation, secrets, artifact non-mutation, and ledger mutations
-- [ ] **Step 2: Run** `python -m pytest tests/unit/test_workflow_export_v1.py -q` and confirm failure because the package is missing
-- [ ] **Step 3: Implement** the extractor, projections, schema, and `audit_export`
-- [ ] **Step 4: Re-run the same test** and confirm pass
-- [ ] **Step 5: Commit**
+- [x] **Step 1: Write the failing test** covering preservation, degradation, secrets, artifact non-mutation, and ledger mutations
+- [x] **Step 2: Run** `python -m pytest tests/unit/test_workflow_export_v1.py -q` and confirm failure because the package is missing
+- [x] **Step 3: Implement** the extractor, projections, schema, and `audit_export`
+- [x] **Step 4: Re-run the same test** and confirm pass
+- [x] **Step 5: Commit**
 
 ### Task 2: Review and fresh verification
 
-- [ ] Independent read-only review of the branch diff against this plan
-- [ ] Fix important defects
+- [x] Independent read-only review of the branch diff against this plan
+- [x] Fix important defects
 - [ ] Re-run the new test file on the committed tree before any PASS claim

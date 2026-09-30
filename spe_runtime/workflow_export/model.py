@@ -58,7 +58,8 @@ _FORBIDDEN_KEYS = frozenset(
     }
 )
 _CREDENTIAL_RE = re.compile(
-    r"(?i)\b(?:api[_-]?key|secret|token|password|bearer|authorization)\b\s*[:=]\s*(\S+)"
+    r"(?i)\b(?:api[_-]?key|secret|password|token|bearer|authorization)\b"
+    r"\s*[:=]\s*(?:bearer\s+)?(\S+)"
 )
 
 
@@ -78,9 +79,9 @@ def _require_string_list(value: Any, field: str) -> list[str]:
     return list(value)
 
 
-def _variables_from(value: Any) -> list[dict[str, str]]:
+def _variables_from(value: Any) -> tuple[list[dict[str, str]], list[str]]:
     if value is None:
-        return []
+        return [], []
     items: list[tuple[str, str]] = []
     if isinstance(value, Mapping):
         for name in sorted(value):
@@ -101,11 +102,14 @@ def _variables_from(value: Any) -> list[dict[str, str]]:
         raise ValueError("variables must be an object or a list")
     seen: set[str] = set()
     normalized: list[dict[str, str]] = []
+    secrets: list[str] = []
     for name, raw in items:
         if name in seen:
             raise ValueError(f"duplicate variable name: {name}")
         seen.add(name)
         stripped = _norm_key(name) in _FORBIDDEN_KEYS
+        if stripped and len(raw) >= 8:
+            secrets.append(raw)
         normalized.append(
             {
                 "name": name,
@@ -113,7 +117,7 @@ def _variables_from(value: Any) -> list[dict[str, str]]:
                 "disposition": "STRIPPED" if stripped else "KEPT",
             }
         )
-    return normalized
+    return normalized, secrets
 
 
 def _collect_forbidden(value: Any, path: tuple[str, ...], found: list[tuple[str, str]]) -> None:
@@ -190,9 +194,10 @@ def extract_contract(source: Mapping[str, Any]) -> Extracted:
     if not isinstance(provider_target, str) or provider_target == "":
         raise ValueError("provider_target is required")
 
-    variables = _variables_from(source.get("variables"))
+    variables, variable_secrets = _variables_from(source.get("variables"))
     lists = {name: _require_string_list(source.get(name), name) for name in _LIST_FACETS}
     paths, secrets = _strip_tree(source)
+    secrets.extend(variable_secrets)
     for variable in variables:
         if variable["disposition"] == "STRIPPED":
             path = f"variables.{variable['name']}"

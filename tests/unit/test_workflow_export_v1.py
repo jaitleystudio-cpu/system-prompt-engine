@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import ast
 import copy
+import hashlib
 import json
 import socket
 import sys
@@ -326,6 +327,104 @@ def test_mutation_loss_none_over_degraded_ledger_is_rejected():
     doc["loss_state"] = "NONE"
     with pytest.raises(ExportIntegrityError, match="loss_state"):
         audit_export(doc)
+
+
+def test_list_form_secret_withholds_prompt_and_stays_out_of_zapier():
+    url = "https://hooks.example.test/abc"
+    source = copy.deepcopy(PROMPT)
+    source["variables"] = [
+        {"name": "api_key", "value": SECRET},
+        {"name": "webhook_url", "value": url},
+    ]
+    source["prompt_body"] = f"Use {SECRET} and {url} only offline."
+    original_body = source["prompt_body"]
+    doc = export_workflow(source, target="zapier")
+    blob = json.dumps(doc)
+    assert SECRET not in blob
+    assert url not in blob
+    assert doc["canonical"]["prompt_body"] == ""
+    assert doc["canonical"]["prompt_body_disposition"] == "WITHHELD_CREDENTIAL"
+    assert doc["canonical"]["prompt_body_sha256"] == hashlib.sha256(original_body.encode("utf-8")).hexdigest()
+    by_name = {item["name"]: item for item in doc["canonical"]["variables"]}
+    assert by_name["api_key"]["disposition"] == "STRIPPED"
+    assert by_name["api_key"]["value"] == ""
+    assert by_name["webhook_url"]["disposition"] == "STRIPPED"
+    assert doc["target_document"]["note"] == "SPE_PROMPT_WITHHELD"
+    assert _facet(doc, "prompt_body")["state"] == "DEGRADED"
+    assert _facet(doc, "variables")["state"] == "DEGRADED"
+
+
+def test_list_form_secret_repeated_in_constraints_fails_closed():
+    source = copy.deepcopy(PROMPT)
+    source["variables"] = [{"name": "api_key", "value": SECRET}]
+    source["constraints"] = [f"never print {SECRET}"]
+    with pytest.raises(RuntimeError, match="stripped secret"):
+        export_workflow(source, target="generic_json")
+
+
+def test_bearer_assignment_tracks_the_token_not_the_scheme_word():
+    token = "bearer-token-value-xyz"
+    source = copy.deepcopy(PROMPT)
+    source["prompt_body"] = f"authorization: Bearer {token}\nSummarize the report."
+    original_body = source["prompt_body"]
+    doc = export_workflow(source, target="generic_json")
+    assert token not in json.dumps(doc)
+    assert "Bearer" not in doc["canonical"]["prompt_body"]
+    assert doc["canonical"]["prompt_body_disposition"] == "WITHHELD_CREDENTIAL"
+    assert doc["canonical"]["prompt_body_sha256"] == hashlib.sha256(original_body.encode("utf-8")).hexdigest()
+
+    leaked = copy.deepcopy(source)
+    leaked["constraints"] = [f"hold {token}"]
+    with pytest.raises(RuntimeError, match="stripped secret"):
+        export_workflow(leaked, target="generic_json")
+
+
+def test_audit_rejects_n8n_connections_credentials_and_executable_meta():
+    connected = _export("n8n")
+    connected["target_document"]["connections"] = {"SPE Prompt": {"main": []}}
+    with pytest.raises(ExportIntegrityError, match="connection"):
+        audit_export(connected)
+
+    credentialed = _export("n8n")
+    credentialed["target_document"]["nodes"][0]["credentials"] = {
+        "httpHeaderAuth": {"id": "1", "name": "header"}
+    }
+    with pytest.raises(ExportIntegrityError, match="credential"):
+        audit_export(credentialed)
+
+    runnable = _export("n8n")
+    runnable["target_document"]["meta"]["executable"] = True
+    with pytest.raises(ExportIntegrityError, match="executable"):
+        audit_export(runnable)
+
+    missing = _export("n8n")
+    del missing["target_document"]["staticData"]
+    with pytest.raises(ExportIntegrityError, match="staticData"):
+        audit_export(missing)
+
+    make_doc = _export("make")
+    del make_doc["target_document"]["metadata"]
+    with pytest.raises(ExportIntegrityError, match="metadata"):
+        audit_export(make_doc)
+
+
+def test_audit_stripped_path_match_is_exact_and_guarantees_are_closed():
+    doc = _export("generic_json")
+    doc["stripped_paths"] = ["webhook_url"]
+    doc["warnings"] = [
+        {
+            "code": "UNSUPPORTED_FEATURE",
+            "facet": None,
+            "message": "credential or execution field stripped at credentials.webhook_url; value not stored",
+        }
+    ]
+    with pytest.raises(ExportIntegrityError, match="webhook_url"):
+        audit_export(doc)
+
+    extra = _export("generic_json")
+    extra["guarantees"]["hosted"] = False
+    with pytest.raises(ExportIntegrityError, match="guarantee"):
+        audit_export(extra)
 
 
 def test_package_has_no_network_or_paid_imports():

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from spe_runtime.workflow_export.model import FACETS, GUARANTEES, WITHHELD_MARKER
@@ -32,6 +33,16 @@ def _prompt_carry(document: dict[str, Any], canonical: dict[str, Any]) -> str:
     return canonical["prompt_body"]
 
 
+def _contains_key(value: Any, key: str) -> bool:
+    if isinstance(value, dict):
+        if key in value:
+            return True
+        return any(_contains_key(child, key) for child in value.values())
+    if isinstance(value, list):
+        return any(_contains_key(child, key) for child in value)
+    return False
+
+
 def _check_target(document: dict[str, Any]) -> None:
     target = document["target"]
     canonical = document["canonical"]
@@ -47,31 +58,44 @@ def _check_target(document: dict[str, Any]) -> None:
         return
     if target == "n8n":
         _require(projected.get("active") is False, "n8n workflow must stay inactive")
+        _require(projected.get("connections") == {}, "n8n connections must stay empty")
+        _require(not _contains_key(projected, "credentials"), "n8n export must not carry credentials")
         nodes = projected.get("nodes")
         _require(
             isinstance(nodes, list)
             and [node.get("type") for node in nodes] == ["n8n-nodes-base.stickyNote"],
             "n8n export may contain only an inactive sticky note",
         )
-        content = nodes[0]["parameters"]["content"]
-        _require(content == _prompt_carry(projected, canonical), "n8n prompt carry mismatch")
+        parameters = nodes[0].get("parameters") if isinstance(nodes[0], dict) else None
+        _require(isinstance(parameters, dict), "n8n sticky note parameters are missing")
         _require(
-            projected["staticData"]["spe_variables"] == canonical["variables"],
+            parameters.get("content") == _prompt_carry(projected, canonical),
+            "n8n prompt carry mismatch",
+        )
+        static_data = projected.get("staticData")
+        _require(isinstance(static_data, dict), "n8n staticData is missing")
+        _require(
+            static_data.get("spe_variables") == canonical["variables"],
             "n8n variables were omitted or changed",
         )
-        carried = projected["staticData"]["spe"]
+        carried = static_data.get("spe")
+        _require(isinstance(carried, dict), "n8n staticData.spe is missing")
         for facet in ("required_inputs", "expected_outputs", "constraints", "provider_target"):
-            _require(carried[facet] == canonical[facet], f"n8n omitted {facet}")
+            _require(carried.get(facet) == canonical[facet], f"n8n omitted {facet}")
         _require(carried.get("executable") is False, "n8n executable flag must stay false")
+        meta = projected.get("meta")
+        _require(
+            isinstance(meta, dict) and meta.get("executable") is False,
+            "n8n executable flag must stay false",
+        )
         return
     if target == "make":
         _require(projected.get("flow") == [], "Make flow must stay empty")
         _require("connections" not in projected, "Make export must not include connections")
-        _require(projected["metadata"].get("executable") is False, "Make executable flag must stay false")
-        _require(
-            projected["metadata"]["spe"] == canonical,
-            "Make metadata.spe omitted canonical fields",
-        )
+        metadata = projected.get("metadata")
+        _require(isinstance(metadata, dict), "Make metadata is missing")
+        _require(metadata.get("executable") is False, "Make executable flag must stay false")
+        _require(metadata.get("spe") == canonical, "Make metadata.spe omitted canonical fields")
         return
     if target == "zapier":
         _require(projected.get("importable") is False, "Zapier descriptor must not be importable")
@@ -139,6 +163,7 @@ def audit_export(document: dict[str, Any]) -> None:
     )
     guarantees = document.get("guarantees")
     _require(isinstance(guarantees, dict), "guarantees are missing")
+    _require(set(guarantees) == set(GUARANTEES), "unexpected guarantee key")
     for key, value in GUARANTEES.items():
         _require(guarantees.get(key) == value, f"guarantees.{key} must be {value!r}")
     warnings = document.get("warnings")
@@ -153,8 +178,9 @@ def audit_export(document: dict[str, Any]) -> None:
     stripped = document.get("stripped_paths")
     _require(isinstance(stripped, list), "stripped_paths is missing")
     for path in stripped:
+        pattern = re.compile(rf"(?<![A-Za-z0-9_.]){re.escape(str(path))}(?![A-Za-z0-9_.])")
         _require(
-            any(path in str(warning.get("message", "")) for warning in warnings),
+            any(pattern.search(str(warning.get("message", ""))) for warning in warnings),
             f"stripped path {path} was not warned",
         )
     _check_target(document)
