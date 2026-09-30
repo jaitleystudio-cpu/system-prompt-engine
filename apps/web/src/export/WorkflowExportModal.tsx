@@ -1,73 +1,87 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
-  type WorkflowPlatform,
-  type PromptExportInput,
-  generateWorkflowExport,
-} from "./workflowExporters";
+  LIVE_IMPORT_STATUS,
+  RUNTIME_BINDING,
+  presentExportDocument,
+  type WorkflowExportView,
+} from "./workflowExportViewModel";
 import "./workflow-export.css";
 
 export interface WorkflowExportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  exportInput: PromptExportInput;
+  /** Already-produced spe.workflow-export.v1 documents. Empty means the runtime is not bound. */
+  documents: readonly unknown[];
 }
 
-const PLATFORM_OPTIONS: Array<{ id: WorkflowPlatform; label: string; badge: string }> = [
-  { id: "n8n", label: "n8n", badge: "Workflow v1.7" },
-  { id: "make", label: "Make", badge: "Blueprint v1" },
-  { id: "zapier", label: "Zapier", badge: "Template 2026" },
-  { id: "generic", label: "Generic", badge: "Pipeline JSON" },
-];
+interface ReadyDocument {
+  view: WorkflowExportView;
+}
+
+interface RejectedDocument {
+  status: "REFUSE" | "UNKNOWN";
+  reason: string;
+}
 
 export const WorkflowExportModal: React.FC<WorkflowExportModalProps> = ({
   isOpen,
   onClose,
-  exportInput,
+  documents,
 }) => {
-  const [selectedPlatform, setSelectedPlatform] = useState<WorkflowPlatform>("n8n");
-  const [copied, setCopied] = useState(false);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const [selectedTarget, setSelectedTarget] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  const receipt = generateWorkflowExport(selectedPlatform, exportInput);
+  const presented = useMemo(() => {
+    const ready: ReadyDocument[] = [];
+    const rejected: RejectedDocument[] = [];
+    for (const document of documents) {
+      const result = presentExportDocument(document);
+      if (result.ok) ready.push({ view: result.view });
+      else rejected.push({ status: result.status, reason: result.reason });
+    }
+    return { ready, rejected };
+  }, [documents]);
+
+  const selected =
+    presented.ready.find((item) => item.view.target === selectedTarget) ??
+    presented.ready[0] ??
+    null;
 
   useEffect(() => {
     if (!isOpen) return;
-
     closeBtnRef.current?.focus();
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
         onClose();
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  const handleCopy = async () => {
+  const copyDocument = async (view: WorkflowExportView) => {
     try {
-      await navigator.clipboard.writeText(receipt.exportPayload);
+      await navigator.clipboard.writeText(view.targetDocumentText);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
+      window.setTimeout(() => setCopied(false), 2500);
     } catch {
-      // Fallback
       setCopied(false);
     }
   };
 
-  const handleDownload = () => {
-    const blob = new Blob([receipt.exportPayload], { type: receipt.mimeType });
+  const downloadDocument = (view: WorkflowExportView) => {
+    const blob = new Blob([view.targetDocumentText], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = receipt.filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = view.filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
     URL.revokeObjectURL(url);
   };
 
@@ -75,8 +89,8 @@ export const WorkflowExportModal: React.FC<WorkflowExportModalProps> = ({
     <div
       className="spe-workflow-modal-overlay"
       role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
       }}
     >
       <div
@@ -85,10 +99,9 @@ export const WorkflowExportModal: React.FC<WorkflowExportModalProps> = ({
         aria-modal="true"
         aria-labelledby="spe-workflow-modal-title"
       >
-        {/* Header */}
         <header className="spe-workflow-modal-header">
           <h2 id="spe-workflow-modal-title" className="spe-workflow-modal-title">
-            Export Prompt Workflow
+            Export receipt
           </h2>
           <button
             ref={closeBtnRef}
@@ -97,168 +110,174 @@ export const WorkflowExportModal: React.FC<WorkflowExportModalProps> = ({
             onClick={onClose}
             aria-label="Close export dialog"
           >
-            ✕
+            Close
           </button>
         </header>
 
-        {/* Platform Tabs */}
-        <nav
-          className="spe-workflow-platforms-bar"
-          role="tablist"
-          aria-label="Target Workflow Platforms"
-        >
-          {PLATFORM_OPTIONS.map((plat) => {
-            const isSelected = selectedPlatform === plat.id;
-            return (
-              <button
-                key={plat.id}
-                type="button"
-                role="tab"
-                className={`spe-workflow-tab ${isSelected ? "active" : ""}`}
-                aria-selected={isSelected}
-                aria-label={`${plat.label} export format`}
-                onClick={() => {
-                  setSelectedPlatform(plat.id);
-                  setCopied(false);
-                }}
-              >
-                <span>{plat.label}</span>
-                <span
-                  style={{
-                    fontSize: "0.6875rem",
-                    padding: "2px 6px",
-                    borderRadius: "4px",
-                    background: isSelected ? "var(--spe-export-accent)" : "rgba(255,255,255,0.08)",
-                    color: "#ffffff",
-                  }}
-                >
-                  {plat.badge}
-                </span>
-              </button>
-            );
-          })}
-        </nav>
+        <p className="spe-receipt-label">
+          Live import status: {LIVE_IMPORT_STATUS}. Runtime binding: {RUNTIME_BINDING}.
+        </p>
 
-        {/* Body Content */}
-        <div className="spe-workflow-stage">
-          {/* Preservation & Degradation Receipt Card */}
-          <section className="spe-receipt-card" aria-label="Preservation and degradation audit">
-            <header className="spe-receipt-header">
-              <div className="spe-receipt-title">
-                <span>Preservation & Degradation Receipt</span>
-              </div>
-              <span className="spe-fidelity-badge">
-                Fidelity Score: {Math.round(receipt.losslessnessScore * 100)}%
-              </span>
-            </header>
+        {presented.ready.length === 0 ? (
+          <div className="spe-workflow-stage">
+            <p>No workflow export document was supplied. This screen does not build one.</p>
+          </div>
+        ) : (
+          <>
+            <nav className="spe-workflow-platforms-bar" role="tablist" aria-label="Supplied export documents">
+              {presented.ready.map((item) => {
+                const isSelected = selected?.view.target === item.view.target;
+                return (
+                  <button
+                    key={item.view.target}
+                    type="button"
+                    role="tab"
+                    className={`spe-workflow-tab ${isSelected ? "active" : ""}`}
+                    aria-selected={isSelected}
+                    onClick={() => {
+                      setSelectedTarget(item.view.target);
+                      setCopied(false);
+                    }}
+                  >
+                    <span>{item.view.target}</span>
+                    <span className="spe-fidelity-badge">{item.view.lossState}</span>
+                  </button>
+                );
+              })}
+            </nav>
 
-            {/* Preserved Fields */}
-            <div className="spe-receipt-section">
-              <div className="spe-receipt-label">Preserved Fields</div>
-              <div className="spe-badge-list">
-                {receipt.preservedFields.map((f, idx) => (
-                  <span key={idx} className="spe-pill preserved">
-                    ✓ {f}
-                  </span>
-                ))}
-              </div>
-            </div>
+            {selected ? (
+              <ExportReceipt
+                view={selected.view}
+                copied={copied}
+                onCopy={() => void copyDocument(selected.view)}
+                onDownload={() => downloadDocument(selected.view)}
+                onClose={onClose}
+              />
+            ) : null}
+          </>
+        )}
 
-            {/* Transformed Fields */}
-            {receipt.transformedFields.length > 0 && (
-              <div className="spe-receipt-section">
-                <div className="spe-receipt-label">Transformed Fields</div>
-                <div className="spe-badge-list">
-                  {receipt.transformedFields.map((tf, idx) => (
-                    <span
-                      key={idx}
-                      className="spe-pill transformed"
-                      title={`${tf.field}: ${tf.from} → ${tf.to} (${tf.explanation})`}
-                    >
-                      ⇄ {tf.field} ({tf.explanation})
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Unsupported Fields */}
-            {receipt.unsupportedFields.length > 0 && (
-              <div className="spe-receipt-section">
-                <div className="spe-receipt-label">Unsupported Fields (Target Platform Boundary)</div>
-                <div className="spe-badge-list">
-                  {receipt.unsupportedFields.map((uf, idx) => (
-                    <span
-                      key={idx}
-                      className="spe-pill unsupported"
-                      title={`${uf.field}: ${uf.reason}`}
-                    >
-                      ⚠ {uf.field}: {uf.reason}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Manual Steps Required */}
-            <div className="spe-receipt-section" style={{ marginBottom: 0 }}>
-              <div className="spe-receipt-label">Manual Steps Required in {selectedPlatform.toUpperCase()}</div>
-              <ol className="spe-steps-list">
-                {receipt.manualStepsRequired.map((step, idx) => (
-                  <li key={idx}>{step}</li>
-                ))}
-              </ol>
-            </div>
+        {presented.rejected.length > 0 ? (
+          <section className="spe-workflow-stage" aria-label="Rejected export documents">
+            <div className="spe-receipt-label">Rejected documents</div>
+            <ul className="spe-steps-list">
+              {presented.rejected.map((item) => (
+                <li key={`${item.status}:${item.reason}`}>
+                  {item.status}: {item.reason}
+                </li>
+              ))}
+            </ul>
           </section>
-
-          {/* Code Payload Preview */}
-          <section aria-label="Workflow Payload Preview">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "6px",
-              }}
-            >
-              <span className="spe-receipt-label">Export Payload Preview</span>
-              <span style={{ fontSize: "0.75rem", color: "var(--spe-export-muted)" }}>
-                {receipt.filename}
-              </span>
-            </div>
-            <pre className="spe-payload-preview" tabIndex={0} aria-label="Export code preview">
-              {receipt.exportPayload}
-            </pre>
-          </section>
-        </div>
-
-        {/* Footer Actions */}
-        <footer className="spe-workflow-modal-footer">
-          <button
-            type="button"
-            className="spe-export-action-btn secondary"
-            onClick={onClose}
-          >
-            Close
-          </button>
-          <button
-            type="button"
-            className="spe-export-action-btn secondary"
-            onClick={handleCopy}
-            aria-label="Copy payload to clipboard"
-          >
-            {copied ? "✓ Copied to Clipboard" : "Copy Payload"}
-          </button>
-          <button
-            type="button"
-            className="spe-export-action-btn primary"
-            onClick={handleDownload}
-            aria-label={`Download ${receipt.filename}`}
-          >
-            Download {receipt.filename.endsWith(".json") ? "JSON" : "File"}
-          </button>
-        </footer>
+        ) : null}
       </div>
     </div>
   );
 };
+
+function ExportReceipt({
+  view,
+  copied,
+  onCopy,
+  onDownload,
+  onClose,
+}: {
+  view: WorkflowExportView;
+  copied: boolean;
+  onCopy: () => void;
+  onDownload: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <>
+      <div className="spe-workflow-stage">
+        <section className="spe-receipt-card" aria-label="Workflow export receipt">
+          <header className="spe-receipt-header">
+            <div className="spe-receipt-title">
+              <span>{view.target}</span>
+            </div>
+            <span className="spe-fidelity-badge">Loss state: {view.lossState}</span>
+          </header>
+
+          <div className="spe-receipt-section">
+            <div className="spe-receipt-label">Fidelity ledger</div>
+            <div className="spe-badge-list">
+              {view.fidelity.map((entry) => (
+                <span key={entry.facet} className="spe-pill preserved" title={entry.reason}>
+                  {entry.facet}: {entry.state}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {view.warnings.length > 0 ? (
+            <div className="spe-receipt-section">
+              <div className="spe-receipt-label">Warnings</div>
+              <ul className="spe-steps-list">
+                {view.warnings.map((warning) => (
+                  <li key={`${warning.code}:${warning.message}`}>{warning.message}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          <div className="spe-receipt-section">
+            <div className="spe-receipt-label">Stripped paths</div>
+            {view.strippedPaths.length === 0 ? (
+              <p>None recorded.</p>
+            ) : (
+              <div className="spe-badge-list">
+                {view.strippedPaths.map((path) => (
+                  <span key={path} className="spe-pill unsupported">
+                    {path}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {view.strippedVariableNames.length > 0 ? (
+            <div className="spe-receipt-section">
+              <div className="spe-receipt-label">Stripped variables</div>
+              <div className="spe-badge-list">
+                {view.strippedVariableNames.map((name) => (
+                  <span key={name} className="spe-pill unsupported">
+                    {name}: withheld
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          <div className="spe-receipt-section">
+            <div className="spe-receipt-label">Prompt</div>
+            <p>
+              {view.promptDisposition === "WITHHELD_CREDENTIAL"
+                ? "Prompt withheld. The value is not shown."
+                : view.promptPreview}
+            </p>
+          </div>
+        </section>
+
+        <section aria-label="Target document preview">
+          <div className="spe-receipt-label">Target document</div>
+          <pre className="spe-payload-preview" tabIndex={0}>
+            {view.previewText}
+          </pre>
+        </section>
+      </div>
+
+      <footer className="spe-workflow-modal-footer">
+        <button type="button" className="spe-export-action-btn secondary" onClick={onClose}>
+          Close
+        </button>
+        <button type="button" className="spe-export-action-btn secondary" onClick={onCopy}>
+          {copied ? "Copied" : "Copy target document"}
+        </button>
+        <button type="button" className="spe-export-action-btn primary" onClick={onDownload}>
+          Download JSON
+        </button>
+      </footer>
+    </>
+  );
+}
