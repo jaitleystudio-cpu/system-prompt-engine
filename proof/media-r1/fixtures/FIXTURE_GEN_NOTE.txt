@@ -1,0 +1,1 @@
+FIXTURE_GEN_NOTE=host ffmpeg/afconvert used only to bake test fixtures; product decode path must not invoke ffmpeg

@@ -1,0 +1,22 @@
+# Symphonia 0.6.1 decoder proof — product path (no ffmpeg)
+# Supported expected PASS
+PASS	en_pcm16.wav	codec=AudioCodecId(264)	frames=42732	sample_rate=16000
+PASS	en.mp3	codec=AudioCodecId(4102)	frames=42732	sample_rate=16000
+PASS	en_aac.m4a	codec=AudioCodecId(4103)	frames=45056	sample_rate=16000
+PASS	en_aac_ffmpeg.m4a	codec=AudioCodecId(4103)	frames=44032	sample_rate=16000
+PASS	en.flac	codec=AudioCodecId(8192)	frames=42732	sample_rate=16000
+PASS	en.ogg	codec=AudioCodecId(4096)	frames=42732	sample_rate=16000
+PASS	en_alac.m4a	codec=AudioCodecId(8195)	frames=42732	sample_rate=16000
+PASS	en_vorbis.mkv	codec=AudioCodecId(4096)	frames=43136	sample_rate=16000
+PASS	en_vorbis.webm	codec=AudioCodecId(4096)	frames=43136	sample_rate=16000
+PASS	jfk.wav	codec=AudioCodecId(264)	frames=176000	sample_rate=16000
+PASS	jfk.mp3	codec=AudioCodecId(4102)	frames=176000	sample_rate=16000
+# Unsupported expected UNSUPPORTED (fail closed, no ffmpeg fallback)
+UNSUPPORTED	en_opus.webm	error=decoder create: unsupported feature: core (codec): unsupported audio codec
+UNSUPPORTED	en.ac3	error=probe: unsupported feature: core (probe): no suitable format reader found
+UNSUPPORTED	en.eac3	error=probe: unsupported feature: core (probe): no suitable format reader found
+UNSUPPORTED	en.dts	error=probe: unexpected end of file
+# whisper miniaudio decode spot-checks
+whisper_miniaudio en.flac: read_audio_data: trying to decode with miniaudio
+whisper_miniaudio en.mp3: read_audio_data: trying to decode with miniaudio
+whisper_miniaudio en_pcm16.wav: read_audio_data: trying to decode with miniaudio

@@ -1,0 +1,24 @@
+# Large / rebuildable local custody artifacts (pins recorded in report + lockfiles)
+models/*.bin
+models/.cache/
+vendor/whisper.cpp/
+vendor/symphonia/*.crate
+build/
+bench/*/
+!bench/STT_METRICS.json
+fixtures/*.wav
+fixtures/*.aiff
+fixtures/*.mp3
+fixtures/*.m4a
+fixtures/*.flac
+fixtures/*.ogg
+fixtures/*.mkv
+fixtures/*.webm
+fixtures/*.ac3
+fixtures/*.eac3
+fixtures/*.dts
+fixtures/ffmpeg_fixture_gen.log
+.venv-fixtures/
+decoder-proof/target/
+decoder-proof/build.log
+decoder-proof/build2.log
