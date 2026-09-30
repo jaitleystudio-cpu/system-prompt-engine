@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/project_library.schema.json",
+  "title": "SPE project library bundle",
+  "description": "Local private export of spe.project-library.v1. The bundle is not a .spe document: spe_contract is NOT_YET_BOUND. Canonical .spe text is a separate export and only when a revision body already matches spe.artifact.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "visibility",
+    "noindex",
+    "indexing",
+    "spe_contract",
+    "project",
+    "artifacts",
+    "revisions",
+    "history"
+  ],
+  "properties": {
+    "schema": { "const": "spe.project-library.v1" },
+    "visibility": { "const": "private" },
+    "noindex": { "const": true },
+    "indexing": { "const": "noindex" },
+    "spe_contract": { "const": "NOT_YET_BOUND" },
+    "project": { "$ref": "#/$defs/project" },
+    "artifacts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/artifact" }
+    },
+    "revisions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/revision" }
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/historyRevision" },
+          { "$ref": "#/$defs/headMove" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project_id", "name", "created_at", "visibility", "noindex"],
+      "properties": {
+        "project_id": { "type": "string", "pattern": "^prj_[0-9a-f]{32}$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "created_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "visibility": { "const": "private" },
+        "noindex": { "const": true }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "project_id", "artifact_type", "head_revision_id"],
+      "properties": {
+        "artifact_id": { "type": "string", "pattern": "^art_[0-9a-f]{32}$" },
+        "project_id": { "type": "string", "pattern": "^prj_[0-9a-f]{32}$" },
+        "artifact_type": {
+          "enum": ["prompt", "transcript", "website", "code", "research_pack", "template"]
+        },
+        "head_revision_id": { "type": "string", "pattern": "^rev_[0-9a-f]{32}$" }
+      }
+    },
+    "revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision_id",
+        "artifact_id",
+        "project_id",
+        "parent_revision_id",
+        "created_at",
+        "artifact_type",
+        "provider_target",
+        "provenance_refs",
+        "quality_evidence_refs",
+        "body",
+        "body_sha256",
+        "version_label",
+        "branched"
+      ],
+      "properties": {
+        "revision_id": { "type": "string", "pattern": "^rev_[0-9a-f]{32}$" },
+        "artifact_id": { "type": "string", "pattern": "^art_[0-9a-f]{32}$" },
+        "project_id": { "type": "string", "pattern": "^prj_[0-9a-f]{32}$" },
+        "parent_revision_id": {
+          "type": ["string", "null"],
+          "pattern": "^rev_[0-9a-f]{32}$"
+        },
+        "created_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "artifact_type": {
+          "enum": ["prompt", "transcript", "website", "code", "research_pack", "template"]
+        },
+        "provider_target": { "type": ["string", "null"], "minLength": 1, "maxLength": 64 },
+        "provenance_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "type": "string", "pattern": "^[A-Za-z0-9:._/-]+$", "maxLength": 128 }
+        },
+        "quality_evidence_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "type": "string", "pattern": "^[A-Za-z0-9:._/-]+$", "maxLength": 128 }
+        },
+        "body": {
+          "oneOf": [
+            { "type": "object" },
+            { "type": "array" },
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
+        },
+        "body_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "version_label": {
+          "type": ["string", "null"],
+          "pattern": "^[A-Za-z0-9._-]{1,64}$"
+        },
+        "branched": { "type": "boolean" },
+        "kind": { "const": "REVISION" }
+      }
+    },
+    "historyRevision": {
+      "allOf": [{ "$ref": "#/$defs/revision" }],
+      "unevaluatedProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "REVISION" }
+      }
+    },
+    "headMove": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "project_id", "artifact_id", "revision_id", "created_at", "reason"],
+      "properties": {
+        "kind": { "const": "HEAD_MOVE" },
+        "project_id": { "type": "string", "pattern": "^prj_[0-9a-f]{32}$" },
+        "artifact_id": { "type": "string", "pattern": "^art_[0-9a-f]{32}$" },
+        "revision_id": { "type": "string", "pattern": "^rev_[0-9a-f]{32}$" },
+        "created_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "reason": { "const": "ROLLBACK" }
+      }
+    }
+  }
+}
