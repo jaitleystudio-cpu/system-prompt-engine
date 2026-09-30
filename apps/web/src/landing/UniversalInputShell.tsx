@@ -294,7 +294,7 @@ export const UniversalInputShell: React.FC<UniversalInputShellProps> = ({
                 Click or drag & drop {activeInputType} files here
               </div>
               <div className="spe-shell-dropzone-subtext">
-                Supported formats depend on media type. Maximum file size 50MB.
+                Supported formats depend on media type. Maximum file size 50MB (subject to local backend capability binding).
               </div>
             </div>
 
