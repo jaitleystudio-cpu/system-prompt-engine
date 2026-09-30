@@ -9,6 +9,7 @@
 - `qualification/localization_r1/oracle.mjs` — created 2026-09-30. Executes the locale module and records pass or failure strings.
 - `qualification/localization_r1/run_l10n1_mutations.py` — updated 2026-10-01. Scores L10N1-01 through L10N1-20 against the repaired module and writes the repair proof.
 - `proofs/localization_r1_20260930/` — created 2026-09-30. Donor HOLD evidence. Left unchanged by the repair.
+- `proofs/localization_r1_repair_20261001/` — created 2026-10-01. Repair pytest, junit, baseline oracles, mutation results, and the pass report.
 
 ## Log
 
@@ -19,5 +20,5 @@
 
 ### 2026-10-01 — Localization R1 donor repair
 - Why: Empty publication still emitted x-default, a published Spanish route left x-default on the English URL, bidi overrides stayed inside the isolate, and missing translations became English or a different script or region.
-- Files: `packages/web-runtime/src/locales.ts` (updated), `apps/web/scripts/test-localization-harness.mjs` (updated), `qualification/localization_r1/run_l10n1_mutations.py` (updated)
-- Left: score L10N1-01 through L10N1-20 and record the repair proof.
+- Files: `packages/web-runtime/src/locales.ts` (updated), `apps/web/scripts/test-localization-harness.mjs` (updated), `qualification/localization_r1/run_l10n1_mutations.py` (updated), `proofs/localization_r1_repair_20261001/` (created)
+- Left: none. L10N1-01 through L10N1-20 killed. Qualification branch stays at `42bede827816e950925138615dc3fcd7dc749500`.
