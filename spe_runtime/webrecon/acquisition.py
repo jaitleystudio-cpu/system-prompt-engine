@@ -7,6 +7,7 @@ only after this boundary accepts the URL. `network_performed` is forced false.
 from __future__ import annotations
 
 import ipaddress
+import re
 from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urlsplit
@@ -26,15 +27,102 @@ def _reason_tuple(codes: list[ReasonCode]) -> tuple[str, ...]:
     return tuple(seen)
 
 
+_PCT_DOT = re.compile(r"%2e", re.IGNORECASE)
+_PCT_SLASH = re.compile(r"%2f", re.IGNORECASE)
+_IPV4_CHARS = frozenset("0123456789abcdefABCDEFxX.")
+
+
+def collapse_path(path: str) -> str:
+    """Decode obscured dots and slashes, then drop `.` and `..` segments.
+
+    This is string normalization. It does not touch the network.
+    """
+
+    decoded = path
+    for _ in range(4):
+        nxt = _PCT_SLASH.sub("/", _PCT_DOT.sub(".", decoded))
+        if nxt == decoded:
+            break
+        decoded = nxt
+    out: list[str] = []
+    for segment in decoded.split("/"):
+        if segment == ".":
+            continue
+        if segment == "..":
+            if out and out[-1] != "":
+                out.pop()
+            continue
+        out.append(segment)
+    return "/".join(out)
+
+
+def _ipv4_part(part: str) -> int | None:
+    lowered = part.lower()
+    try:
+        if lowered.startswith("0x"):
+            if len(part) == 2:
+                return None
+            return int(part, 16)
+        if len(part) > 1 and part[0] == "0":
+            if any(ch not in "01234567" for ch in part):
+                return None
+            return int(part, 8)
+        if not part.isdigit():
+            return None
+        return int(part, 10)
+    except ValueError:
+        return None
+
+
+def _obscured_ipv4(name: str) -> ipaddress.IPv4Address | None:
+    """Parse inet_aton forms that ipaddress rejects: 127.1, 0177.0.0.1, 2130706433."""
+
+    if not name or any(ch not in _IPV4_CHARS for ch in name):
+        return None
+    if "." not in name and not name.isdigit() and not name.lower().startswith("0x"):
+        return None
+    parts = name.split(".")
+    if not 1 <= len(parts) <= 4 or any(part == "" for part in parts):
+        return None
+    numbers: list[int] = []
+    for part in parts:
+        value = _ipv4_part(part)
+        if value is None:
+            return None
+        numbers.append(value)
+    last_bits = 8 * (5 - len(numbers))
+    for index, value in enumerate(numbers):
+        limit = 255 if index < len(numbers) - 1 else (1 << last_bits) - 1
+        if value > limit:
+            return None
+    if len(numbers) == 1:
+        packed = numbers[0]
+    elif len(numbers) == 2:
+        packed = (numbers[0] << 24) | numbers[1]
+    elif len(numbers) == 3:
+        packed = (numbers[0] << 24) | (numbers[1] << 16) | numbers[2]
+    else:
+        packed = (numbers[0] << 24) | (numbers[1] << 16) | (numbers[2] << 8) | numbers[3]
+    if packed > 0xFFFFFFFF:
+        return None
+    return ipaddress.IPv4Address(packed)
+
+
+def _parse_ip(name: str) -> ipaddress.IPv4Address | ipaddress.IPv6Address | None:
+    try:
+        return ipaddress.ip_address(name)
+    except ValueError:
+        return _obscured_ipv4(name)
+
+
 def _restricted_host(host: str) -> bool:
     name = host.lower().rstrip(".")
     if name in _RESTRICTED_NAMES:
         return True
     if name.endswith(".localhost") or name.endswith(".local"):
         return True
-    try:
-        address = ipaddress.ip_address(name)
-    except ValueError:
+    address = _parse_ip(name)
+    if address is None:
         return False
     return bool(
         address.is_private
@@ -220,7 +308,7 @@ def parse_http_url(url: str) -> tuple[ParsedUrl | None, list[ReasonCode]]:
         netloc = bracketed
     else:
         netloc = f"{bracketed}:{port}"
-    path = parts.path or ""
+    path = collapse_path(parts.path or "")
     query = f"?{parts.query}" if parts.query else ""
     identity = f"{scheme}://{netloc}{path}{query}"
     fragment = parts.fragment or None

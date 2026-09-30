@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urljoin, urlsplit
 
+from spe_runtime.webrecon.acquisition import collapse_path
+
 
 @dataclass(frozen=True)
 class Asset:
@@ -62,7 +64,7 @@ def resolve_reference(page_url: str, declared_ref: str) -> tuple[str | None, str
     )
     bracketed = f"[{host}]" if ":" in host else host
     netloc = bracketed if default or port is None else f"{bracketed}:{port}"
-    path = parts.path or ""
+    path = collapse_path(parts.path or "")
     query = f"?{parts.query}" if parts.query else ""
     identity = f"{parts.scheme}://{netloc}{path}{query}"
     page_host = urlsplit(page_url).hostname

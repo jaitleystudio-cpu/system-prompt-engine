@@ -64,6 +64,10 @@ _WEBGL_KEYS = frozenset(
 _CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 _CSS_JS = re.compile(r"javascript\s*:", re.IGNORECASE)
 _CSS_VBS = re.compile(r"vbscript\s*:", re.IGNORECASE)
+_ACTIVE_IMPORT = re.compile(
+    r"""@import\s+(?:url\(\s*(['\"]?)(?:javascript|vbscript)\s*:[^)'\"]*\1\s*\)|(['\"])(?:javascript|vbscript)\s*:[^'\"]*\2)\s*;?""",
+    re.IGNORECASE,
+)
 # Property name is exactly `behavior`, so `scroll-behavior` stays.
 _CSS_BEHAVIOR = re.compile(r"(?<![\w-])behavior\s*:[^;}{]*", re.IGNORECASE)
 _CSS_MOZ = re.compile(r"-moz-binding\s*:[^;}{]*", re.IGNORECASE)
@@ -322,6 +326,73 @@ def _record_cut(
     )
 
 
+def _active_css_scheme(body: str) -> str | None:
+    token = body.strip()
+    if len(token) >= 2 and token[0] == token[-1] and token[0] in "\"'":
+        token = token[1:-1].strip()
+    if re.match(r"javascript\s*:", token, re.IGNORECASE):
+        return "CSS_JAVASCRIPT_URL"
+    if re.match(r"vbscript\s*:", token, re.IGNORECASE):
+        return "CSS_VBSCRIPT_URL"
+    return None
+
+
+def _cut_active_scheme_urls(text: str) -> tuple[str, list[tuple[str, str]]]:
+    """Remove url() calls whose target is javascript: or vbscript:.
+
+    Cutting only the scheme would leave a relative reference. The whole call
+    is digested and dropped so it cannot resolve against the page.
+    """
+
+    lowered = text.lower()
+    pieces: list[str] = []
+    removed: list[tuple[str, str]] = []
+    cursor = 0
+    while True:
+        start = lowered.find("url(", cursor)
+        if start < 0:
+            pieces.append(text[cursor:])
+            break
+        depth = 0
+        end = None
+        for index in range(start + 3, len(text)):
+            char = text[index]
+            if char == "(":
+                depth += 1
+            elif char == ")":
+                depth -= 1
+                if depth == 0:
+                    end = index + 1
+                    break
+        if end is None:
+            pieces.append(text[cursor:])
+            break
+        kind = _active_css_scheme(text[start + 4 : end - 1])
+        if kind:
+            removed.append((kind, text[start:end]))
+            pieces.append(text[cursor:start])
+        else:
+            pieces.append(text[cursor:end])
+        cursor = end
+    return "".join(pieces), removed
+
+
+def _cut_active_imports(text: str) -> tuple[str, list[tuple[str, str]]]:
+    removed: list[tuple[str, str]] = []
+
+    def repl(match: re.Match[str]) -> str:
+        raw = match.group(0)
+        kind = (
+            "CSS_VBSCRIPT_URL"
+            if re.search(r"vbscript\s*:", raw, re.IGNORECASE)
+            else "CSS_JAVASCRIPT_URL"
+        )
+        removed.append((kind, raw))
+        return ""
+
+    return _ACTIVE_IMPORT.sub(repl, text), removed
+
+
 def _cut_data_urls(text: str) -> tuple[str, str | None]:
     """Remove url(data:...) calls. Other url() references stay as observations."""
 
@@ -366,6 +437,12 @@ def sanitize_css(css: str, *, source: str) -> tuple[str, tuple[QuarantineEvent, 
     text = _CONTROL_RE.sub("", css)
     text, payload = _cut_balanced_call(text, "expression")
     _record_cut(events, kind="CSS_EXPRESSION", source=source, payload=payload)
+    text, active_urls = _cut_active_scheme_urls(text)
+    for kind, payload in active_urls:
+        _record_cut(events, kind=kind, source=source, payload=payload)
+    text, active_imports = _cut_active_imports(text)
+    for kind, payload in active_imports:
+        _record_cut(events, kind=kind, source=source, payload=payload)
     text, payload = _cut_pattern(text, _CSS_JS)
     _record_cut(events, kind="CSS_JAVASCRIPT_URL", source=source, payload=payload)
     text, payload = _cut_pattern(text, _CSS_VBS)

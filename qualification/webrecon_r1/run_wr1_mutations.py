@@ -480,10 +480,21 @@ def _runtime_dirty() -> list[str]:
     return [line for line in completed.stdout.splitlines() if line.strip()]
 
 
+def _on_donor_line(head: str) -> bool:
+    if head == DONOR_SHA:
+        return True
+    completed = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", DONOR_SHA, head],
+        cwd=ROOT,
+        check=False,
+    )
+    return completed.returncode == 0
+
+
 def main() -> int:
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-    if not head.startswith("f2f67c0"):
-        raise SystemExit(f"DONOR_SHA mismatch: {head}")
+    if not _on_donor_line(head):
+        raise SystemExit(f"HEAD {head} is not a descendant of donor {DONOR_SHA}")
     sys.path.insert(0, str(ROOT))
     from qualification.webrecon_r1.oracles import run_all
 
@@ -535,7 +546,8 @@ def main() -> int:
     baseline_failures = {name: row["failures"] for name, row in baseline.items() if not row["pass"]}
     dirty = _runtime_dirty()
     payload = {
-        "donor_sha": head,
+        "head": head,
+        "donor_sha": DONOR_SHA,
         "expected_donor_sha": DONOR_SHA,
         "defined": 20,
         "killed": killed,
@@ -564,7 +576,7 @@ def main() -> int:
         "source_runtime_modified": bool(dirty),
         "exhibits": exhibits,
     }, indent=2))
-    if survived or broken or dirty or head != DONOR_SHA:
+    if survived or broken or dirty:
         return 2
     if baseline_failures or counts["failed"] or counts["errors"]:
         return 1

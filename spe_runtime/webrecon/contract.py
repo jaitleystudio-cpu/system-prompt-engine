@@ -22,6 +22,7 @@ from spe_runtime.webrecon.html_css import (
     CustomProperty,
     DocumentMetadata,
     HtmlParse,
+    markup_is_malformed,
     parse_html,
 )
 from spe_runtime.webrecon.interactions import Interaction
@@ -549,6 +550,8 @@ def build_reconstruction_contract(
             network_performed=False,
             k3_integrated=False,
         )
+    if markup_is_malformed(html):
+        return _refuse(decision, (ReasonCode.MALFORMED_DOCUMENT.value,))
 
     page_url = decision.url_identity or url
     parse = parse_html(html, page_url=page_url, limits=bounds)

@@ -198,6 +198,100 @@ def _active_url(value: str) -> bool:
     return stripped.startswith("javascript:") or stripped.startswith("vbscript:")
 
 
+_RAWTEXT_TAGS = frozenset(
+    {
+        "iframe",
+        "noembed",
+        "noscript",
+        "plaintext",
+        "script",
+        "style",
+        "textarea",
+        "title",
+        "xmp",
+    }
+)
+
+
+def _consume_markup_tag(text: str, start: int) -> tuple[str, int] | None:
+    """Return the tag name and the index after `>`, or None when `<` is not a tag."""
+
+    n = len(text)
+    i = start + 1
+    if i >= n:
+        return None
+    nxt = text[i]
+    if nxt in "/!?":
+        end = text.find(">", i)
+        if end < 0:
+            return None
+        return "", end + 1
+    if not nxt.isalpha():
+        return None
+    j = i + 1
+    while j < n and (text[j].isalnum() or text[j] in "-:"):
+        j += 1
+    name = text[i:j].lower()
+    quote = ""
+    while j < n:
+        char = text[j]
+        if quote:
+            if char == quote:
+                quote = ""
+            j += 1
+            continue
+        if char in "\"'":
+            quote = char
+            j += 1
+            continue
+        if char == ">":
+            return name, j + 1
+        j += 1
+    return None
+
+
+def markup_is_malformed(html: str) -> bool:
+    """True when a raw `<` does not open a tag, comment, or declaration.
+
+    `<<<<not-a-document>>>>` is not a document. The data parser would invent
+    an element and report a complete observation.
+    """
+
+    lower = html.lower()
+    i = 0
+    n = len(html)
+    while i < n:
+        if lower.startswith("<!--", i):
+            end = lower.find("-->", i + 4)
+            if end < 0:
+                return True
+            i = end + 3
+            continue
+        if html[i] != "<":
+            i += 1
+            continue
+        consumed = _consume_markup_tag(html, i)
+        if consumed is None:
+            return True
+        name, i = consumed
+        if name not in _RAWTEXT_TAGS:
+            continue
+        if name == "plaintext":
+            return False
+        end = lower.find(f"</{name}", i)
+        if end < 0:
+            return False
+        i = end
+    return False
+
+
+def _refresh_target(content: str) -> str:
+    match = re.search(r"(?i)url\s*=\s*(.*)$", content)
+    if not match:
+        return content.strip()
+    return match.group(1).strip().strip("\"'")
+
+
 def _data_url(value: str) -> bool:
     return value.strip().lower().startswith("data:")
 
@@ -228,6 +322,8 @@ class _CaptureParser(HTMLParser):
         self.in_script = False
         self.in_style = False
         self.in_title = False
+        self.sensitive_depth = 0
+        self.sensitive_buf: list[str] = []
         self.script_buf: list[str] = []
         self.style_buf: list[str] = []
         self.styles: list[tuple[str, str]] = []
@@ -275,6 +371,10 @@ class _CaptureParser(HTMLParser):
         if self.skip_depth:
             self.skip_depth -= 1
             return
+        if lowered in {"textarea", "option"} and self.sensitive_depth:
+            self.sensitive_depth -= 1
+            if self.sensitive_depth == 0:
+                self._finish_sensitive()
         if lowered == "script" and self.in_script:
             self._finish_script()
             return
@@ -300,6 +400,9 @@ class _CaptureParser(HTMLParser):
             return
         if self.in_style:
             self.style_buf.append(data)
+            return
+        if self.sensitive_depth:
+            self.sensitive_buf.append(data)
             return
         if self.in_title:
             self.title_parts.append(data)
@@ -348,6 +451,8 @@ class _CaptureParser(HTMLParser):
                 self.style_buf = []
             elif tag == "title":
                 self.in_title = True
+            elif tag in {"textarea", "option"}:
+                self.sensitive_depth += 1
             elif tag == "form":
                 self._open_forms.append(node_id)
 
@@ -355,7 +460,7 @@ class _CaptureParser(HTMLParser):
         if tag == "html" and self.html_lang is None and attrs.get("lang"):
             self.html_lang = attrs["lang"].strip()[:32] or None
         if tag == "meta":
-            self._meta(attrs)
+            self._meta(node.node_id, attrs)
         if tag == "base" and attrs.get("href") and self.base_href is None:
             resolved, _, _ = resolve_reference(self.page_url, attrs["href"])
             self.base_href = resolved
@@ -421,7 +526,22 @@ class _CaptureParser(HTMLParser):
         node.attributes = kept
         self._interaction(node, tag, attrs)
 
-    def _meta(self, attrs: dict[str, str]) -> None:
+    def _finish_sensitive(self) -> None:
+        payload = "".join(self.sensitive_buf)
+        self.sensitive_buf = []
+        if not payload.strip():
+            return
+        self.events.append(
+            QuarantineEvent(
+                kind="FIELD_VALUE",
+                node_hint=self.stack[-1].node_id if self.stack else None,
+                digest=digest_text(payload),
+                byte_length=len(payload.encode("utf-8")),
+                detail="FIELD_VALUE_WITHHELD",
+            )
+        )
+
+    def _meta(self, node_id: str, attrs: dict[str, str]) -> None:
         if len(self.meta) >= self.limits.max_meta:
             if "META_CAP" not in self.gaps:
                 self.gaps.append("META_CAP")
@@ -437,6 +557,20 @@ class _CaptureParser(HTMLParser):
                 self.charset = match.group(1)[:32]
         if attrs.get("name", "").lower() == "viewport" and content and self.viewport is None:
             self.viewport = " ".join(content.split())[:200]
+        if http_equiv.lower() == "refresh" and content:
+            target = _refresh_target(content)
+            if _active_url(target) or _data_url(target):
+                self.events.append(
+                    QuarantineEvent(
+                        kind="META_REFRESH",
+                        node_hint=node_id,
+                        digest=digest_text(content),
+                        byte_length=len(content.encode("utf-8")),
+                        detail="META_REFRESH_NEUTRALIZED",
+                    )
+                )
+                self.meta.append(MetaObservation("http-equiv", http_equiv[:80], None))
+                return
         if "name" in attrs:
             self.meta.append(
                 MetaObservation("name", attrs["name"][:80], None if content is None else content[:200])
@@ -741,6 +875,8 @@ class _CaptureParser(HTMLParser):
             self._finish_script()
         if self.in_style:
             self._finish_style()
+        if self.sensitive_buf:
+            self._finish_sensitive()
         interactions: list[Interaction] = []
         for item in self.interactions:
             if item.kind == "FORM" and item.node_id in self.form_fields:

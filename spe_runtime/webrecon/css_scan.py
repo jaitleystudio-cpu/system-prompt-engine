@@ -303,10 +303,19 @@ def _font_hint(declarations: list[tuple[str, str]], source: str) -> TypographyHi
     return TypographyHint(source=source, **fields)
 
 
+def _hostile_css_ref(ref: str) -> bool:
+    token = re.sub(r"\s+", "", ref.strip().strip("\"'").strip().lower())
+    return (
+        token.startswith("javascript:")
+        or token.startswith("vbscript:")
+        or token.startswith("data:")
+    )
+
+
 def _collect_urls(text: str, source: str, sink: list[CssUrlRef]) -> None:
     for match in _URL_RE.finditer(text):
         ref = match.group(2).strip()
-        if not ref or ref.lower().startswith("data:"):
+        if not ref or _hostile_css_ref(ref):
             continue
         sink.append(CssUrlRef(declared_ref=ref, source=source))
 
@@ -362,6 +371,8 @@ def _walk(css: str, source: str, builder: _Builder) -> None:
                 _collect_urls(prelude, source, builder.urls)
                 quoted = re.findall(r"""['"]([^'"]+)['"]""", prelude)
                 for ref in quoted:
+                    if _hostile_css_ref(ref):
+                        continue
                     builder.urls.append(CssUrlRef(declared_ref=ref, source=source))
             i += 1
             continue
