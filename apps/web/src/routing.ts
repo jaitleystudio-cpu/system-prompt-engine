@@ -8,7 +8,8 @@ export type AppView =
   | "my-work"
   | "privacy"
   | "capabilities"
-  | "workspace";
+  | "workspace"
+  | "library";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -19,6 +20,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   privacy: "/privacy",
   capabilities: "/capabilities",
   workspace: "/workspace",
+  library: "/library",
 };
 
 const PATH_VIEW: Record<string, AppView> = Object.fromEntries(
@@ -107,6 +109,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Workspace — Inspect & Refine Prompts | SPE",
     description:
       "Inspect intent, structure, and your finished prompt. Refine and export a portable .spe file.",
+  },
+  library: {
+    path: "/library",
+    title: "Project Library — Private on this device | SPE",
+    description:
+      "Private noindex project library. Projects, artifacts, revisions, diffs, and exports stay on this device. No account.",
   },
 };
 

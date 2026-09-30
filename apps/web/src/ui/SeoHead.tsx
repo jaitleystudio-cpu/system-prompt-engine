@@ -72,7 +72,13 @@ export function SeoHead({ view }: { view: AppView }) {
       "twitter:image",
       absoluteUrl("/art/intent-core.webp"),
     );
-    upsertJsonLd("spe-jsonld-app", jsonLdSoftwareApplication());
+    if (view === "library") {
+      upsertMeta("name", "robots", "noindex, nofollow");
+      removeJsonLd("spe-jsonld-app");
+    } else {
+      document.head.querySelector('meta[name="robots"]')?.remove();
+      upsertJsonLd("spe-jsonld-app", jsonLdSoftwareApplication());
+    }
     if (view === "capabilities") {
       upsertJsonLd("spe-jsonld-capabilities-page", jsonLdCapabilitiesWebPage());
       upsertJsonLd("spe-jsonld-capabilities-faq", jsonLdCapabilitiesFaq());

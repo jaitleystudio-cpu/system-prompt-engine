@@ -9,6 +9,7 @@ Allow: /my-work
 Allow: /privacy
 Allow: /capabilities
 Disallow: /workspace
+Disallow: /library
 Disallow: /models/
 Disallow: /ort/
 
