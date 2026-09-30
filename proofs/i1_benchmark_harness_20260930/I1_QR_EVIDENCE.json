@@ -1,0 +1,151 @@
+{
+  "mission": "I1-QR",
+  "runtime_sha": "145b844d59161d54d8ea58d2586ec2cae16dbe8a",
+  "proof_parent": "26bf1eaeef5ad8efd03b39637dd01b06bdd48f03",
+  "frozen_core": "bd4540a9c96801168f2e7363c001a4184bad4311",
+  "f4_proof": "97ef09058b410d938dd18078c467b16e3306d783",
+  "checkout": {
+    "path": "/tmp/i1qr/runtime-145b844",
+    "detached": true,
+    "porcelain_before_build": "empty",
+    "public_wasm_copied_into_result": false,
+    "result_inodes_differ_from_public": true
+  },
+  "grok_rebuild": {
+    "a": {
+      "sha256": "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b",
+      "bytes": 1340112,
+      "imports": 0,
+      "exports": [
+        "memory",
+        "spe_alloc",
+        "spe_evaluate",
+        "spe_free"
+      ],
+      "target": "/tmp/i1qr/runtime-145b844/portable/spe-wasm/target-canonical",
+      "mtime_utc": "2026-09-30T01:47:33Z"
+    },
+    "b": {
+      "sha256": "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b",
+      "bytes": 1340112,
+      "imports": 0,
+      "exports": [
+        "memory",
+        "spe_alloc",
+        "spe_evaluate",
+        "spe_free"
+      ],
+      "target": "/tmp/i1qr/target-b",
+      "mtime_utc": "2026-09-30T01:47:40Z"
+    },
+    "a_equals_b": true,
+    "equals_frozen_pin": true
+  },
+  "cursor_rebuild": {
+    "sha256": "931d154a2002bb5fa85a00f2b59b966b3bf452821ad47affcb6cb460fea0fad5",
+    "bytes": 1339801,
+    "a_equals_b_reported": true,
+    "bytes_in_custody": false,
+    "size_delta_vs_pin_arithmetic": 311,
+    "size_delta_independently_measured": false
+  },
+  "parity": {
+    "tool": "python3 tools/wasm_candidate_vectors.py",
+    "cwd": "/tmp/i1qr/runtime-145b844",
+    "pinned": {
+      "pass": true,
+      "sha256": "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b",
+      "positive_count": 55,
+      "negative_count": 55,
+      "semantic_mismatches": 0,
+      "python_rust_mismatches": 0,
+      "rust_wasm_mismatches": 0,
+      "python_wasm_mismatches": 0
+    },
+    "grok_rebuild_b": {
+      "pass": true,
+      "sha256": "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b",
+      "positive_count": 55,
+      "negative_count": 55,
+      "semantic_mismatches": 0,
+      "python_rust_mismatches": 0,
+      "rust_wasm_mismatches": 0,
+      "python_wasm_mismatches": 0
+    },
+    "cursor_931d154a": "UNKNOWN"
+  },
+  "pinned_sections_full": [
+    {
+      "id": 1,
+      "custom_name": null,
+      "payload_bytes": 361,
+      "payload_sha256": "23af8d23dcf3882b7778ea9cc82d185303d920abe3995874a7ec0ef5af8057b9"
+    },
+    {
+      "id": 3,
+      "custom_name": null,
+      "payload_bytes": 1591,
+      "payload_sha256": "3606aacf3b1a8f17f9a67c08b026e067f6d85b28bb27c828a8dd77c63c9c2053"
+    },
+    {
+      "id": 4,
+      "custom_name": null,
+      "payload_bytes": 7,
+      "payload_sha256": "94ca378d5c3a2e6aa0f37b4e1d6b1baa8d6368c6a46936f06104577fa9a9f6e9"
+    },
+    {
+      "id": 5,
+      "custom_name": null,
+      "payload_bytes": 3,
+      "payload_sha256": "2e2461dd6852f58de2d470cabcf5c41b6e56fdb6ee9169954fe02a13b3ef4bae"
+    },
+    {
+      "id": 6,
+      "custom_name": null,
+      "payload_bytes": 9,
+      "payload_sha256": "da3c74f89a28b8e9a570d349d0f0a216ef8e69818c7226007164845feaceaf63"
+    },
+    {
+      "id": 7,
+      "custom_name": null,
+      "payload_bytes": 48,
+      "payload_sha256": "b869d9a550c8a4cad77ac0389067d0016a6b66caf599b9968a921c42e4d09f1a"
+    },
+    {
+      "id": 9,
+      "custom_name": null,
+      "payload_bytes": 255,
+      "payload_sha256": "071f578d55bad820f33baea404d7d4f1a77803f198a27ecb7587740c4460bdf3"
+    },
+    {
+      "id": 10,
+      "custom_name": null,
+      "payload_bytes": 828565,
+      "payload_sha256": "c374a3f33b680b27106b740e190622aa031124a56e17fb57081c68950af0982d"
+    },
+    {
+      "id": 11,
+      "custom_name": null,
+      "payload_bytes": 226203,
+      "payload_sha256": "038ab7d04d3153d5930e0455c410be24f4640d06270d70e53d2d3fd57ee1f6f6"
+    },
+    {
+      "id": 0,
+      "custom_name": "name",
+      "payload_bytes": 282803,
+      "payload_sha256": "4bcbef50b12a53577f38fcaf8b6eef833931ebd1f15055fc54172e2f565f3d1a"
+    },
+    {
+      "id": 0,
+      "custom_name": "producers",
+      "payload_bytes": 77,
+      "payload_sha256": "5d67a49632a1c5b6a451f6db7067a5e4bd58780d933cf33c3e503dca590b5642"
+    },
+    {
+      "id": 0,
+      "custom_name": "target_features",
+      "payload_bytes": 148,
+      "payload_sha256": "97ceea95e0687b14437e21c205ebb40eea27aa5ecaa971f7d87601e3aa213bfd"
+    }
+  ]
+}
