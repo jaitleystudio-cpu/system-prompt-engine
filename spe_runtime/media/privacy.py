@@ -1,8 +1,8 @@
 """Privacy defaults for speech and video custody.
 
-Raw audio is never retained. Raw video is retained only when a caller sets
-the explicit-need flag and the retention value together. Network authority
-stays NONE. This module does not mint semantic authority.
+Raw audio is never retained. Raw video is retained only when retention is ON
+and explicitly_needed is the boolean True. Network authority stays NONE.
+This module does not mint semantic authority.
 """
 
 from __future__ import annotations
@@ -34,6 +34,18 @@ def _as_network_authority(value: NetworkAuthority | str) -> NetworkAuthority:
     return NetworkAuthority(str(value))
 
 
+def _require_real_bool(value: object, field_name: str) -> bool:
+    """Accept only a real bool. Truthiness is not consent.
+
+    bool("false"), bool("no"), bool("off"), bool("0"), bool(" "),
+    and bool(1) are not boolean True. Strings, numbers, bytes, and blank
+    values are refused.
+    """
+    if type(value) is not bool:
+        raise ValueError(f"{field_name} must be a boolean")
+    return value
+
+
 @dataclass(frozen=True)
 class RawAudioRetentionPolicy:
     """Raw audio retention is OFF. No other value is representable."""
@@ -52,15 +64,15 @@ class RawAudioRetentionPolicy:
 
 @dataclass(frozen=True)
 class RawVideoRetentionPolicy:
-    """Raw video retention is OFF unless explicitly_needed is true."""
+    """Raw video retention is ON only when explicitly_needed is boolean True."""
 
     retention: RawRetention = RawRetention.OFF
     explicitly_needed: bool = False
 
     def __post_init__(self) -> None:
         retention = _as_retention(self.retention)
-        explicitly_needed = bool(self.explicitly_needed)
-        if retention is RawRetention.ON and not explicitly_needed:
+        explicitly_needed = _require_real_bool(self.explicitly_needed, "explicitly_needed")
+        if retention is RawRetention.ON and explicitly_needed is not True:
             raise ValueError("raw video retention is OFF unless explicitly needed")
         object.__setattr__(self, "retention", retention)
         object.__setattr__(self, "explicitly_needed", explicitly_needed)
@@ -102,15 +114,23 @@ def coerce_video_retention(
     explicitly_needed: bool | None = None,
 ) -> RawVideoRetentionPolicy:
     if isinstance(value, RawVideoRetentionPolicy):
-        if explicitly_needed is not None and bool(explicitly_needed) != value.explicitly_needed:
+        if explicitly_needed is None:
+            return value
+        needed = _require_real_bool(explicitly_needed, "explicitly_needed")
+        if needed is not value.explicitly_needed:
             return RawVideoRetentionPolicy(
                 retention=value.retention,
-                explicitly_needed=explicitly_needed,
+                explicitly_needed=needed,
             )
         return value
+    needed = (
+        False
+        if explicitly_needed is None
+        else _require_real_bool(explicitly_needed, "explicitly_needed")
+    )
     return RawVideoRetentionPolicy(
         retention=_as_retention(value),
-        explicitly_needed=bool(explicitly_needed),
+        explicitly_needed=needed,
     )
 
 

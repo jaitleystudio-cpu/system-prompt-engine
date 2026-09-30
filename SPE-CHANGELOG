@@ -4,7 +4,7 @@
 
 ### 2026-09-30 — Speech + Video Intelligence foundation
 - `spe_runtime/media`: audio and video envelopes, speaker-neutral TranscriptIR, scene segmentation, keyframes, transcript alignment, temporal events, VideoEvidenceGraph, MediaIntentContract
-- Privacy defaults are typed: raw audio retention OFF, raw video retention OFF unless explicitly needed, network authority NONE, semantic authority NONE
+- Privacy defaults are typed: raw audio retention OFF, raw video retention OFF unless `explicitly_needed` is the boolean True (strings, numbers, and blanks are refused), network authority NONE, semantic authority NONE
 - Compiler output is MediaIntentContract only. ProtectedIntent is not wired
 - Schema `schemas/media_intent_contract.schema.json`; unit tests in `tests/unit/test_media_intelligence.py`
 - No providers, scores, hosting, or deployment

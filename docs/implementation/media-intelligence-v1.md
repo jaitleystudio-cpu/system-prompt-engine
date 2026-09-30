@@ -22,7 +22,7 @@ Lineage: NEW_IMPLEMENTATION
 ## Privacy defaults
 
 - Raw audio retention is OFF. The audio policy type rejects ON.
-- Raw video retention is OFF unless `explicitly_needed` is true and retention is ON together.
+- Raw video retention is OFF unless retention is ON and `explicitly_needed` is the boolean True. Strings, numbers, bytes, and blank values are refused.
 - Network authority is NONE.
 - The evidence graph `semantic_authority` is NONE.
 - `protected_intent` is null. This package does not write a ProtectedIntent.
