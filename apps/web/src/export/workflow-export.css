@@ -1,0 +1,375 @@
+/**
+ * Workflow Export Modal & Preservation Receipt Styles
+ * Focus: High craft, developer precision, 360px mobile reflow, WCAG accessibility
+ */
+
+:root {
+  --spe-export-bg: #0b1120;
+  --spe-export-surface: #17223b;
+  --spe-export-surface-subtle: #1e293b;
+  --spe-export-border: rgba(255, 255, 255, 0.12);
+  --spe-export-text: #f8fafc;
+  --spe-export-muted: #94a3b8;
+  --spe-export-accent: #6366f1;
+  --spe-export-accent-hover: #4f46e5;
+  --spe-export-success: #10b981;
+  --spe-export-warning: #f59e0b;
+  --spe-export-danger: #ef4444;
+  --spe-export-focus: #818cf8;
+}
+
+/* ==========================================================================
+   Modal Overlay and Layout
+   ========================================================================== */
+
+.spe-workflow-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.spe-workflow-modal-container {
+  width: 100%;
+  max-width: 760px;
+  max-height: 90vh;
+  background: var(--spe-export-bg);
+  border: 1px solid var(--spe-export-border);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: var(--spe-export-text);
+  font-family: inherit;
+}
+
+.spe-workflow-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--spe-export-border);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.spe-workflow-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+.spe-workflow-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--spe-export-muted);
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.spe-workflow-close-btn:hover {
+  color: var(--spe-export-text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================================
+   Platform Navigation Tabs
+   ========================================================================== */
+
+.spe-workflow-platforms-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--spe-export-border);
+  background: rgba(255, 255, 255, 0.02);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.spe-workflow-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--spe-export-surface);
+  border: 1px solid var(--spe-export-border);
+  color: var(--spe-export-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+
+.spe-workflow-tab:hover {
+  color: var(--spe-export-text);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.spe-workflow-tab.active,
+.spe-workflow-tab[aria-selected="true"] {
+  background: rgba(99, 102, 241, 0.18);
+  color: #c7d2fe;
+  border-color: var(--spe-export-accent);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Modal Content Stage & Receipt Cards
+   ========================================================================== */
+
+.spe-workflow-stage {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: calc(90vh - 160px);
+}
+
+.spe-receipt-card {
+  background: var(--spe-export-surface);
+  border: 1px solid var(--spe-export-border);
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.spe-receipt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.spe-receipt-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spe-fidelity-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.spe-receipt-section {
+  margin-bottom: 14px;
+}
+
+.spe-receipt-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--spe-export-muted);
+  margin-bottom: 6px;
+}
+
+.spe-badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.spe-pill {
+  font-size: 0.8125rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.spe-pill.preserved {
+  background: rgba(16, 185, 129, 0.12);
+  color: #a7f3d0;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.spe-pill.transformed {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fde68a;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.spe-pill.unsupported {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.spe-steps-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.875rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.spe-payload-preview {
+  width: 100%;
+  max-height: 180px;
+  background: #060911;
+  border: 1px solid var(--spe-export-border);
+  border-radius: 6px;
+  padding: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+  color: #e2e8f0;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Footer Actions
+   ========================================================================== */
+
+.spe-workflow-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--spe-export-border);
+  background: rgba(0, 0, 0, 0.25);
+  flex-wrap: wrap;
+}
+
+.spe-export-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+
+.spe-export-action-btn.secondary {
+  background: var(--spe-export-surface);
+  border: 1px solid var(--spe-export-border);
+  color: var(--spe-export-text);
+}
+
+.spe-export-action-btn.secondary:hover {
+  background: var(--spe-export-surface-subtle);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.spe-export-action-btn.primary {
+  background: var(--spe-export-accent);
+  border: none;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+.spe-export-action-btn.primary:hover {
+  background: var(--spe-export-accent-hover);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Focus Visible (High Contrast)
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--spe-export-focus) !important;
+  outline-offset: 2px !important;
+}
+
+/* ==========================================================================
+   360px Mobile Reflow Breakpoints
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .spe-workflow-modal-container {
+    max-height: 95vh;
+  }
+
+  .spe-workflow-modal-header {
+    padding: 12px 16px;
+  }
+
+  .spe-workflow-platforms-bar {
+    padding: 10px 16px;
+  }
+
+  .spe-workflow-tab {
+    flex: 1;
+    min-width: 44px;
+    padding: 8px 10px;
+    font-size: 0.8125rem;
+  }
+
+  .spe-workflow-stage {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .spe-workflow-modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 16px;
+  }
+
+  .spe-export-action-btn {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
