@@ -24,28 +24,52 @@ export interface VisualFidelityReceipt {
   timestamp: string;
   referenceSha256: string;
   renderSha256: string;
-  viewport: {
+  referenceSourceSha256?: string;
+  candidateSourceSha256?: string;
+  viewportWidth?: number;
+  viewportHeight?: number;
+  DPR?: number;
+  viewport?: {
     width: number;
     height: number;
     devicePixelRatio: number;
   };
+  comparatorAlgorithm?: string;
+  comparatorVersion?: string;
+  thresholdVersion?: string;
   ssimScore: number;
   pixelDeltaPercentage: number;
+  mismatchedPixelCount?: number;
+  captureEngine?: string;
+  browserVersion?: string;
+  status?: "MEASURED" | "UNPROVEN";
   fidelityStatus: "MEASURED" | "UNPROVEN";
 }
 
 export const SAMPLE_VERIFIED_RECEIPT: VisualFidelityReceipt = {
-  receiptId: "rcpt-2a437bc1f8addca0",
-  timestamp: "2026-10-01T01:32:32.914Z",
+  receiptId: "rcpt-cfd4777ea4bbe0ad",
+  timestamp: "2026-10-01T02:29:14.089Z",
   referenceSha256: "f8e9ab2b584671cb40ac1a1efd3a7b6ce8c2e3ce0212c71551b7f5f0ee028940",
   renderSha256: "f8e9ab2b584671cb40ac1a1efd3a7b6ce8c2e3ce0212c71551b7f5f0ee028940",
+  referenceSourceSha256: "78cf74b603913d926f6ad6446afac37b391c5a3e1c986cbe73d9dc2987cf7fe6",
+  candidateSourceSha256: "78cf74b603913d926f6ad6446afac37b391c5a3e1c986cbe73d9dc2987cf7fe6",
+  viewportWidth: 1280,
+  viewportHeight: 800,
+  DPR: 1.0,
   viewport: {
     width: 1280,
     height: 800,
     devicePixelRatio: 1.0,
   },
+  comparatorAlgorithm: "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+  comparatorVersion: "1.0.0",
+  thresholdVersion: "1.0.0",
   ssimScore: 1.0,
   pixelDeltaPercentage: 0.0,
+  mismatchedPixelCount: 0,
+  captureEngine: "playwright-chromium",
+  browserVersion: "Google Chrome / Playwright Chromium Headless",
+  status: "MEASURED",
   fidelityStatus: "MEASURED",
 };
 
@@ -69,14 +93,20 @@ export function validateFidelityReceipt(data: unknown): { valid: true; receipt: 
   if (typeof d.pixelDeltaPercentage !== "number" || d.pixelDeltaPercentage < 0 || d.pixelDeltaPercentage > 100) {
     return { valid: false, error: "Invalid pixelDeltaPercentage: must be between 0.0 and 100.0." };
   }
-  if (d.fidelityStatus !== "MEASURED" && d.fidelityStatus !== "UNPROVEN") {
-    return { valid: false, error: "fidelityStatus must be either MEASURED or UNPROVEN." };
+
+  const statusVal = (d.status || d.fidelityStatus) as string;
+  if (statusVal !== "MEASURED" && statusVal !== "UNPROVEN") {
+    return { valid: false, error: "status must be either MEASURED or UNPROVEN." };
   }
-  if (d.fidelityStatus === "MEASURED" && (d.ssimScore < 0.95 || d.pixelDeltaPercentage > 5.0)) {
+  if (statusVal === "MEASURED" && (d.ssimScore < 0.95 || d.pixelDeltaPercentage > 5.0)) {
     return { valid: false, error: `Receipt claims MEASURED but metrics fail threshold (SSIM: ${d.ssimScore} < 0.95 or Δ: ${d.pixelDeltaPercentage}% > 5.0%).` };
   }
 
   const vp = (d.viewport && typeof d.viewport === "object") ? (d.viewport as Record<string, unknown>) : {};
+  const width = typeof d.viewportWidth === "number" ? d.viewportWidth : (typeof vp.width === "number" ? vp.width : 1280);
+  const height = typeof d.viewportHeight === "number" ? d.viewportHeight : (typeof vp.height === "number" ? vp.height : 800);
+  const dpr = typeof d.DPR === "number" ? d.DPR : (typeof vp.devicePixelRatio === "number" ? vp.devicePixelRatio : 1.0);
+
   return {
     valid: true,
     receipt: {
@@ -84,14 +114,26 @@ export function validateFidelityReceipt(data: unknown): { valid: true; receipt: 
       timestamp: typeof d.timestamp === "string" ? d.timestamp : new Date().toISOString(),
       referenceSha256: d.referenceSha256,
       renderSha256: d.renderSha256,
+      referenceSourceSha256: typeof d.referenceSourceSha256 === "string" ? d.referenceSourceSha256 : undefined,
+      candidateSourceSha256: typeof d.candidateSourceSha256 === "string" ? d.candidateSourceSha256 : undefined,
+      viewportWidth: width,
+      viewportHeight: height,
+      DPR: dpr,
       viewport: {
-        width: typeof vp.width === "number" ? vp.width : 1280,
-        height: typeof vp.height === "number" ? vp.height : 800,
-        devicePixelRatio: typeof vp.devicePixelRatio === "number" ? vp.devicePixelRatio : 1.0,
+        width,
+        height,
+        devicePixelRatio: dpr,
       },
+      comparatorAlgorithm: typeof d.comparatorAlgorithm === "string" ? d.comparatorAlgorithm : "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+      comparatorVersion: typeof d.comparatorVersion === "string" ? d.comparatorVersion : "1.0.0",
+      thresholdVersion: typeof d.thresholdVersion === "string" ? d.thresholdVersion : "1.0.0",
       ssimScore: d.ssimScore,
       pixelDeltaPercentage: d.pixelDeltaPercentage,
-      fidelityStatus: d.fidelityStatus,
+      mismatchedPixelCount: typeof d.mismatchedPixelCount === "number" ? d.mismatchedPixelCount : 0,
+      captureEngine: typeof d.captureEngine === "string" ? d.captureEngine : "playwright-chromium",
+      browserVersion: typeof d.browserVersion === "string" ? d.browserVersion : "Chrome/Chromium Headless",
+      status: statusVal as "MEASURED" | "UNPROVEN",
+      fidelityStatus: statusVal as "MEASURED" | "UNPROVEN",
     },
   };
 }
@@ -311,7 +353,7 @@ export const VisualScreenshotWorkspace: React.FC = () => {
                     Pixel Delta: <strong>{fidelityReceipt.pixelDeltaPercentage.toFixed(2)}%</strong> (threshold &le; 5.00%)
                   </div>
                   <div style={{ fontFamily: "monospace", color: "var(--spe-vis-muted)" }}>
-                    Viewport: {fidelityReceipt.viewport.width}x{fidelityReceipt.viewport.height} @ {fidelityReceipt.viewport.devicePixelRatio}x DPR
+                    Viewport: {fidelityReceipt.viewport ? `${fidelityReceipt.viewport.width}x${fidelityReceipt.viewport.height} @ ${fidelityReceipt.viewport.devicePixelRatio}x DPR` : `${fidelityReceipt.viewportWidth ?? 1280}x${fidelityReceipt.viewportHeight ?? 800} @ ${fidelityReceipt.DPR ?? 1}x DPR`}
                   </div>
                 </div>
               ) : (
