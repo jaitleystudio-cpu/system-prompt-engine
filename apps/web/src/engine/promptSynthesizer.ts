@@ -170,7 +170,7 @@ const RESEARCH_DEEP_MODULES = [
   {
     heading: "Zero-Cost Open-Access Corpus Protocol",
     lines: [
-      "1. Free Academic Repositories: Prioritize open-access public repositories requiring zero fees, zero API keys, and zero logins (e.g., arXiv.org e-Prints, PubMed Central / NCBI PMC Open Access, OpenAlex, Semantic Scholar Open Research Corpus, DOAJ).",
+      "1. Free Academic Repositories: Prioritize open-access public repositories requiring zero fees, zero API keys, and zero account barriers (e.g., arXiv.org e-Prints, PubMed Central / NCBI PMC Open Access, OpenAlex, Semantic Scholar Open Research Corpus, DOAJ).",
       "2. Primary Corpus Verification: Extract empirical data, benchmark tables, and mathematical formulas directly from open preprint/open-access PDF texts and metadata.",
       "3. Direct Open Identifiers: Guarantee every referenced paper provides an open persistent URL/identifier (e.g., https://arxiv.org/abs/... or https://doi.org/10....).",
       "4. Zero-Paywall Invariant: Never lock verification or reproducibility behind paywalled publisher portals or fee-gated subscription barriers.",
@@ -328,7 +328,7 @@ const DOMAIN_METHODOLOGIES: Record<string, DomainMethodology> = {
       "- Zero fabricated references: Never invent papers, authors, DOIs, or experimental outcomes.",
       "- Uncertainty quantification: Explicitly categorize claims as SUPPORTED, PREPRINT_ONLY, or CONTRADICTED.",
       "- Strict epistemic humility: Clearly separate verified empirical observations from theoretical conjecture.",
-      "- Zero-cost open-access priority: Always ground research assertions in publicly accessible repositories with no paid subscriptions or login walls.",
+      "- Zero-cost open-access priority: Always ground research assertions in publicly accessible repositories with no paid subscriptions or auth gates.",
       "- Deterministic continuation: Ground task corrections in reproducible algorithmic specs and differential patches.",
     ],
     outputStandards: [
