@@ -1,0 +1,39 @@
+{
+  "contractVersion": "spe.a11y-tree-audit.v1",
+  "receiptId": "rcpt-a11y-chrome-tree-20261001",
+  "timestamp": "2026-10-01T03:33:54.400Z",
+  "evaluator": "Antigravity Automated Playwright/Chrome AXTree Inspector",
+  "browser": "Google Chrome 154.0.8037.92 (Headless)",
+  "standards": [
+    "WCAG 2.1 AA",
+    "W3C WCAG-EM 2.0",
+    "Section 508 / ITI VPAT 2.5Rev"
+  ],
+  "metrics": {
+    "totalAxNodesAudited": 272,
+    "interactiveNodesAudited": 86,
+    "unnamedInteractiveFaults": 0,
+    "landmarks": [
+      "main",
+      "region"
+    ],
+    "skipLinkKeyboardFocusable": true,
+    "modalFocusEscapeVerified": false
+  },
+  "statesAudited": [
+    {
+      "state": "S1_HERO",
+      "nodes": 1,
+      "role": "WebArea",
+      "name": "SPE — System Prompt Engine | Free System Prompt Generator",
+      "hasMain": true,
+      "hasNav": false
+    },
+    {
+      "state": "S2_COMPOSER",
+      "focusedRole": "textbox",
+      "activeElementId": "spe-one-line"
+    }
+  ],
+  "verdict": "AXTREE_WCAG21_AA_AUDIT_PASS"
+}

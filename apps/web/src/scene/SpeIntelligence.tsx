@@ -9,6 +9,7 @@ import {
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { StaticPress } from "./StaticPress";
+import { IsometricCanvasFallback } from "./IsometricCanvasFallback";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import type { VisualQuality } from "./quality";
 import { semanticGroups } from "./semantic";
@@ -28,7 +29,7 @@ type Props = {
   progress?: number;
 };
 class SceneBoundary extends Component<
-  { children: ReactNode },
+  { children: ReactNode; fallback?: ReactNode },
   { failed: boolean }
 > {
   state = { failed: false };
@@ -36,7 +37,7 @@ class SceneBoundary extends Component<
     return { failed: true };
   }
   render() {
-    return this.state.failed ? <StaticPress /> : this.props.children;
+    return this.state.failed ? (this.props.fallback ?? <StaticPress />) : this.props.children;
   }
 }
 function Studio() {
@@ -328,12 +329,32 @@ export function SpeIntelligence({
       className={`press-canvas ${className}`}
       aria-hidden="true"
       data-pipeline-stage={["idea", "meaning", "structure", "prompt"][stageIndex(state)]}
-      data-renderer={quality === "LITE" || lost ? "static" : "webgl"}
+      data-renderer={
+        quality === "LITE"
+          ? "static"
+          : lost || quality === "BALANCED"
+            ? "canvas2d"
+            : "webgl"
+      }
     >
-      {quality === "LITE" || lost ? (
-        <StaticPress />
+      {quality === "LITE" ? (
+        <StaticPress output={output} />
+      ) : lost || quality === "BALANCED" ? (
+        <IsometricCanvasFallback
+          state={state}
+          progress={progress}
+          paused={paused || !visible}
+        />
       ) : (
-        <SceneBoundary>
+        <SceneBoundary
+          fallback={
+            <IsometricCanvasFallback
+              state={state}
+              progress={progress}
+              paused={paused || !visible}
+            />
+          }
+        >
           <Canvas
             frameloop={visible && !paused ? "always" : "demand"}
             dpr={quality === "HIGH" ? [1, 2] : 1}

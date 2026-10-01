@@ -1,6 +1,6 @@
 {
   "mission": "A9-LINK-V",
-  "generated_at_ist": "1/10/2026, 8:05:12 am",
+  "generated_at_ist": "1/10/2026, 9:02:23 am",
   "base_sha_a9r": "8ddfe7e630d507ad9c13345e4e2e03120903ea82",
   "verified_tip": "c3698cd87ef100447c044e479dcc16929cd2d165",
   "app_delta_a9r_to_tip": "NONE (PR#90 custody proofs only)",
@@ -62,7 +62,7 @@
     "task57_wasm_provenance.md": "proofs/task57_quality_reconstruction_20260929/WASM_PROVENANCE.md",
     "bench-task57r-wasm.mjs": "apps/web/scripts/bench-task57r-wasm.mjs",
     "truth-privacy-closure.md": "proofs/truth_privacy_closure_20260928/ (dir; no exact .md basename)",
-    "provider_schema_validation.json": "MISSING_IN_REPO"
+    "provider_schema_validation.json": "proofs/provider_schema_validation.json"
   },
   "FINAL": "A9_LINK_RESOLUTION_VERIFIED",
   "MERGED": "NO",
