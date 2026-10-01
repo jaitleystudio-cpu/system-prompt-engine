@@ -73,6 +73,9 @@ export function detectScriptType(
   let telugu = 0;
   let devanagari = 0;
   let tamil = 0;
+  let arabic = 0;
+  let han = 0;
+  let cyrillic = 0;
   let latin = 0;
   let codeSymbols = 0;
 
@@ -81,15 +84,21 @@ export function detectScriptType(
     if (cp >= 0x0c00 && cp <= 0x0c7f) telugu++;
     else if (cp >= 0x0900 && cp <= 0x097f) devanagari++;
     else if (cp >= 0x0b80 && cp <= 0x0bff) tamil++;
+    else if (cp >= 0x0600 && cp <= 0x06ff) arabic++;
+    else if (cp >= 0x4e00 && cp <= 0x9fff) han++;
+    else if (cp >= 0x0400 && cp <= 0x04ff) cyrillic++;
     else if ((cp >= 0x0041 && cp <= 0x005a) || (cp >= 0x0061 && cp <= 0x007a)) latin++;
     else if ("{};()[]=>#$/<>_+=*&|!~`".includes(ch)) codeSymbols++;
   }
 
-  const maxNative = Math.max(telugu, devanagari, tamil);
-  if (latin > 0 && maxNative > 0) return "Mixed";
-  if (telugu > 0 && telugu === maxNative) return "Telugu";
-  if (devanagari > 0 && devanagari === maxNative) return "Devanagari";
-  if (tamil > 0 && tamil === maxNative) return "Tamil";
+  const maxNonLatin = Math.max(telugu, devanagari, tamil, arabic, han, cyrillic);
+  if (latin > 0 && maxNonLatin > 0) return "Mixed";
+  if (arabic > 0 && arabic === maxNonLatin) return "Arabic";
+  if (han > 0 && han === maxNonLatin) return "Han";
+  if (cyrillic > 0 && cyrillic === maxNonLatin) return "Cyrillic";
+  if (telugu > 0 && telugu === maxNonLatin) return "Telugu";
+  if (devanagari > 0 && devanagari === maxNonLatin) return "Devanagari";
+  if (tamil > 0 && tamil === maxNonLatin) return "Tamil";
   if (
     codeSymbols >= 2 &&
     (codeSymbols >= latin * 0.2 ||

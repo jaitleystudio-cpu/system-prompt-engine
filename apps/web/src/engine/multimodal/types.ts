@@ -186,12 +186,24 @@ export interface NormalizedBox {
   h: number; // 0.0 - 1.0
 }
 
+export type ScriptType =
+  | "Latin"
+  | "Devanagari"
+  | "Telugu"
+  | "Tamil"
+  | "Arabic"
+  | "Han"
+  | "Cyrillic"
+  | "Code"
+  | "Mixed"
+  | "Unknown";
+
 export interface OcrRecognizedRegion {
   id: string;
   text: string;
   bounds: NormalizedBox;
   confidence: number;
-  script: "Latin" | "Devanagari" | "Telugu" | "Tamil" | "Code" | "Mixed" | "Unknown";
+  script: ScriptType;
   method: "neural-ocr" | "heuristic-projection" | "sideload-tesseract";
   provenance: "UNTRUSTED_SOURCE";
 }

@@ -48,8 +48,14 @@ import {
   scamAfterglowEngine,
   creatorClipMineEngine,
   marketplaceDisputeEngine,
+  medicineScheduleEngine,
+  parentMentalLoadEngine,
   GLOBAL_LANGUAGES,
 } from "../engine/multimodal/outcomes";
+import {
+  globalPromiseJourneyEngine,
+} from "../engine/multimodal/promiseJourney";
+import type { LocalMediaHandle } from "../engine/multimodal/perceptionJob";
 
 interface Props {
   onClose?: () => void;
@@ -108,12 +114,22 @@ export function MultimodalFabricInspector({ onClose }: Props) {
 
   // Oral Life Outcomes state
   const [outcomeSubTab, setOutcomeSubTab] = useState<
-    "promise" | "care" | "govform" | "scam" | "clipmine" | "dispute" | "languages"
+    | "promise"
+    | "care"
+    | "govform"
+    | "scam"
+    | "clipmine"
+    | "dispute"
+    | "medicine"
+    | "parentload"
+    | "journey"
+    | "languages"
   >("promise");
   const [outcomeResult, setOutcomeResult] = useState<any>(null);
   const [outcomeBusy, setOutcomeBusy] = useState<boolean>(false);
+  const [journeyClarificationAnswers, setJourneyClarificationAnswers] = useState<Record<string, string>>({});
 
-  const handleRunOutcome = () => {
+  const handleRunOutcome = async () => {
     setOutcomeBusy(true);
     try {
       if (outcomeSubTab === "promise") {
@@ -172,6 +188,34 @@ export function MultimodalFabricInspector({ onClose }: Props) {
           deliveryPhotoOcr: "Item condition: Damaged. Scratched screen bezel visible. Torn factory seal.",
         });
         setOutcomeResult(res);
+      } else if (outcomeSubTab === "medicine") {
+        const res = medicineScheduleEngine.createSchedule({
+          prescriptionOcrText: "Rx: Tab Metformin 500mg. Take twice daily after meals (BD). Cap Amoxicillin 250mg thrice daily (TDS).",
+          doctorVoiceTranscript: "Take the Metformin in the morning at 8am and night at 8pm after food. Amoxicillin take every 8 hours with meals.",
+          patientName: "Robert Vance",
+          language: "en",
+        });
+        setOutcomeResult(res);
+      } else if (outcomeSubTab === "parentload") {
+        const res = parentMentalLoadEngine.sortMentalDump(
+          "Baby has a mild fever need to check temperature. Dr Smith pediatrician appointment is on Thursday at 10am. Need to buy more diapers and wipes from Costco. Finish the 4oz formula feed at 3pm. Give 2.5ml infant Tylenol syrup if fever stays above 100.",
+          "en",
+        );
+        setOutcomeResult(res);
+      } else if (outcomeSubTab === "journey") {
+        const dummyAudio = new Uint8Array(16000 * 2);
+        dummyAudio.fill(24);
+        const audioHandle: LocalMediaHandle = {
+          id: "audio-journey-deal",
+          kind: "audio",
+          bytes: dummyAudio,
+          mimeType: "audio/wav",
+          fileName: "contractor_promise.wav",
+          sampleRate: 16000,
+          durationSec: 2,
+        };
+        const session = await globalPromiseJourneyEngine.startJourney(audioHandle, "en");
+        setOutcomeResult(session);
       } else if (outcomeSubTab === "languages") {
         setOutcomeResult(GLOBAL_LANGUAGES);
       }
@@ -1425,7 +1469,10 @@ export function MultimodalFabricInspector({ onClose }: Props) {
               { id: "scam", label: "4. Scam Coercion & Bank Notice" },
               { id: "clipmine", label: "5. Creator Clip Mine" },
               { id: "dispute", label: "6. Marketplace Dispute Pack" },
-              { id: "languages", label: "7. 20 Global Languages Worldwide" },
+              { id: "medicine", label: "7. Medicine Photo + Voice Alarms" },
+              { id: "parentload", label: "8. New-Parent Mental Load Dump" },
+              { id: "journey", label: "9. End-to-End Promise Journey (Prompt Compiler)" },
+              { id: "languages", label: "10. 20 Global Languages Worldwide" },
             ].map((st) => (
               <button
                 key={st.id}
@@ -1666,6 +1713,302 @@ export function MultimodalFabricInspector({ onClose }: Props) {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {outcomeSubTab === "medicine" && (
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+                    <span style={{ fontWeight: 600 }}>
+                      Patient: {outcomeResult.patientName} · {outcomeResult.alarmsCount} Scheduled Alarms
+                    </span>
+                    <span style={{ color: "#34d399", fontWeight: 600, fontSize: "0.75rem" }}>
+                      RAW_USER_DATA_EGRESS = 0 · 100% Confidential
+                    </span>
+                  </div>
+                  <div style={{ fontStyle: "italic", fontSize: "0.8rem", color: "#a5b4fc", marginBottom: "0.5rem" }}>
+                    "{outcomeResult.spokenReminderScript}"
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    {outcomeResult.medications?.map((m: any) => (
+                      <div
+                        key={m.id}
+                        style={{
+                          padding: "0.5rem",
+                          backgroundColor: "rgba(255, 255, 255, 0.03)",
+                          borderRadius: "4px",
+                          border: "1px solid rgba(255, 255, 255, 0.05)",
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                          <strong>{m.name} ({m.dosage})</strong>
+                          <span style={{ color: "#38bdf8", fontSize: "0.75rem" }}>
+                            {m.frequency.replace("_", " ")} · {m.relationToFood.replace("_", " ")}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: "0.75rem", color: "#fbbf24", marginTop: "0.2rem" }}>
+                          Daily Alarms: {m.timingHours.join(", ")}
+                        </div>
+                        <div style={{ fontSize: "0.75rem", opacity: 0.8, marginTop: "0.1rem" }}>
+                          {m.instructionsInLanguage} (Provenance: {m.sourceProvenance})
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {outcomeSubTab === "parentload" && (
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+                    <span style={{ fontWeight: 600 }}>
+                      New-Parent Mental Load: {outcomeResult.totalItems} Items Sorted
+                    </span>
+                    {outcomeResult.urgentCount > 0 && (
+                      <span style={{ color: "#f87171", fontWeight: 600, fontSize: "0.75rem" }}>
+                        ⚠ {outcomeResult.urgentCount} Urgent / Immediate Attention Required
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ fontSize: "0.8rem", color: "#34d399", marginBottom: "0.6rem", fontStyle: "italic" }}>
+                    "{outcomeResult.calmingReadbackText}"
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                    {outcomeResult.urgentOverdue?.length > 0 && (
+                      <div>
+                        <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#f87171", marginBottom: "0.2rem" }}>
+                          🔴 URGENT & OVERDUE
+                        </div>
+                        {outcomeResult.urgentOverdue.map((item: any) => (
+                          <div key={item.id} style={{ padding: "0.35rem 0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", borderRadius: "4px", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                            {item.description}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {outcomeResult.appointments?.length > 0 && (
+                      <div>
+                        <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#fbbf24", marginBottom: "0.2rem" }}>
+                          🟡 APPOINTMENTS & PEDIATRICIAN
+                        </div>
+                        {outcomeResult.appointments.map((item: any) => (
+                          <div key={item.id} style={{ padding: "0.35rem 0.5rem", backgroundColor: "rgba(251, 191, 36, 0.1)", borderRadius: "4px", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                            {item.description}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {outcomeResult.meds?.length > 0 && (
+                      <div>
+                        <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#c084fc", marginBottom: "0.2rem" }}>
+                          🟣 MEDS & VITAMINS
+                        </div>
+                        {outcomeResult.meds.map((item: any) => (
+                          <div key={item.id} style={{ padding: "0.35rem 0.5rem", backgroundColor: "rgba(192, 132, 252, 0.1)", borderRadius: "4px", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                            {item.description}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {outcomeResult.feeds?.length > 0 && (
+                      <div>
+                        <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#60a5fa", marginBottom: "0.2rem" }}>
+                          🔵 FEEDS & NURSING
+                        </div>
+                        {outcomeResult.feeds.map((item: any) => (
+                          <div key={item.id} style={{ padding: "0.35rem 0.5rem", backgroundColor: "rgba(96, 165, 250, 0.1)", borderRadius: "4px", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                            {item.description}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {outcomeResult.supplies?.length > 0 && (
+                      <div>
+                        <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#34d399", marginBottom: "0.2rem" }}>
+                          🟢 RESTOCK & SUPPLIES
+                        </div>
+                        {outcomeResult.supplies.map((item: any) => (
+                          <div key={item.id} style={{ padding: "0.35rem 0.5rem", backgroundColor: "rgba(52, 211, 153, 0.1)", borderRadius: "4px", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                            {item.description}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {outcomeSubTab === "journey" && (
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.4rem" }}>
+                    <span style={{ fontWeight: 600 }}>
+                      Session: {outcomeResult.sessionId}
+                    </span>
+                    <span
+                      style={{
+                        padding: "0.2rem 0.6rem",
+                        borderRadius: "4px",
+                        fontSize: "0.75rem",
+                        fontWeight: 700,
+                        backgroundColor:
+                          outcomeResult.state === "CONFIRMED"
+                            ? "rgba(52, 211, 153, 0.2)"
+                            : outcomeResult.state === "NEEDS_CLARIFICATION"
+                            ? "rgba(251, 191, 36, 0.2)"
+                            : "rgba(99, 102, 241, 0.2)",
+                        color:
+                          outcomeResult.state === "CONFIRMED"
+                            ? "#34d399"
+                            : outcomeResult.state === "NEEDS_CLARIFICATION"
+                            ? "#fbbf24"
+                            : "#a5b4fc",
+                      }}
+                    >
+                      {outcomeResult.state}
+                    </span>
+                  </div>
+
+                  {outcomeResult.rawTranscript && (
+                    <div style={{ fontSize: "0.8rem", marginBottom: "0.4rem" }}>
+                      <strong>Perceived Audio Transcript:</strong> "{outcomeResult.rawTranscript}"
+                    </div>
+                  )}
+
+                  {outcomeResult.readback?.spokenConfirmationPrompt && (
+                    <div style={{ fontSize: "0.8rem", color: "#93c5fd", marginBottom: "0.5rem" }}>
+                      <strong>Spoken Readback Prompt:</strong> "{outcomeResult.readback.spokenConfirmationPrompt}"
+                    </div>
+                  )}
+
+                  {/* Interactive Clarification Questions */}
+                  {outcomeResult.clarifications && outcomeResult.clarifications.length > 0 && (
+                    <div style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                      <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#fbbf24" }}>
+                        Ambiguity Clarification Questions ({outcomeResult.clarifications.filter((c: any) => !c.resolved).length} remaining):
+                      </div>
+                      {outcomeResult.clarifications.map((q: any) => (
+                        <div
+                          key={q.id}
+                          style={{
+                            padding: "0.4rem 0.6rem",
+                            backgroundColor: q.resolved ? "rgba(52, 211, 153, 0.05)" : "rgba(251, 191, 36, 0.08)",
+                            borderRadius: "4px",
+                            border: "1px solid",
+                            borderColor: q.resolved ? "rgba(52, 211, 153, 0.2)" : "rgba(251, 191, 36, 0.2)",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                          }}
+                        >
+                          <div style={{ fontSize: "0.75rem" }}>
+                            <div>{q.questionText}</div>
+                            {q.resolved && (
+                              <span style={{ color: "#34d399", fontWeight: 600 }}>
+                                Resolved: {q.resolvedValue}
+                              </span>
+                            )}
+                          </div>
+                          {!q.resolved && (
+                            <div style={{ display: "flex", gap: "0.3rem" }}>
+                              <input
+                                type="text"
+                                placeholder={q.field === "currency" ? "USD" : q.field === "deadline" ? "2026-10-10" : "Alice, Bob"}
+                                value={journeyClarificationAnswers[q.id] || ""}
+                                onChange={(e) =>
+                                  setJourneyClarificationAnswers({
+                                    ...journeyClarificationAnswers,
+                                    [q.id]: e.target.value,
+                                  })
+                                }
+                                style={{
+                                  padding: "0.2rem 0.4rem",
+                                  fontSize: "0.75rem",
+                                  borderRadius: "4px",
+                                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                                  color: "#fff",
+                                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                                }}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const val =
+                                    journeyClarificationAnswers[q.id] ||
+                                    (q.field === "currency" ? "USD" : "Next Friday");
+                                  const updated = globalPromiseJourneyEngine.resolveClarification(
+                                    outcomeResult,
+                                    q.id,
+                                    val,
+                                  );
+                                  setOutcomeResult({ ...updated });
+                                }}
+                                style={{
+                                  padding: "0.2rem 0.5rem",
+                                  fontSize: "0.75rem",
+                                  backgroundColor: "var(--spe-accent, #6366f1)",
+                                  color: "#fff",
+                                  border: "none",
+                                  borderRadius: "4px",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                Resolve
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Confirmation Button */}
+                  {outcomeResult.state === "READBACK" && (
+                    <div style={{ marginTop: "0.6rem" }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const confirmed = globalPromiseJourneyEngine.confirmLedger(outcomeResult);
+                          setOutcomeResult({ ...confirmed });
+                        }}
+                        style={{
+                          padding: "0.4rem 0.9rem",
+                          borderRadius: "4px",
+                          backgroundColor: "#10b981",
+                          color: "#fff",
+                          border: "none",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        Confirm Oral Agreement & Compile System Prompt
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Compiled SPE System Prompt Output */}
+                  {outcomeResult.compiledPrompt && (
+                    <div style={{ marginTop: "0.75rem" }}>
+                      <div style={{ fontWeight: 600, color: "#34d399", marginBottom: "0.3rem" }}>
+                        ✓ Compiled Authoritative SPE System Prompt (WASM Compiler Compatible)
+                      </div>
+                      <pre
+                        style={{
+                          padding: "0.75rem",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                          borderRadius: "6px",
+                          fontSize: "0.75rem",
+                          overflowX: "auto",
+                          maxHeight: "220px",
+                          whiteSpace: "pre-wrap",
+                          border: "1px solid rgba(52, 211, 153, 0.3)",
+                        }}
+                      >
+                        {outcomeResult.compiledPrompt}
+                      </pre>
+                    </div>
+                  )}
                 </div>
               )}
 
