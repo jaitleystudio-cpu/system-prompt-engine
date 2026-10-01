@@ -27,6 +27,9 @@ export interface AttachedMedia {
   previewUrl?: string;
 }
 
+export const TRANSCRIPTION_STATUS = "UNAVAILABLE" as const;
+export const ROUTE_MOUNT_STATUS = "NOT_INTEGRATED" as const;
+
 export interface UniversalInputShellProps {
   initialAction?: ShellAction;
   initialInputType?: ShellInputType;
@@ -294,9 +297,33 @@ export const UniversalInputShell: React.FC<UniversalInputShellProps> = ({
                 Click or drag & drop {activeInputType} files here
               </div>
               <div className="spe-shell-dropzone-subtext">
-                Supported formats depend on media type. Maximum file size 50MB (subject to local backend capability binding).
+                Supported formats depend on media type. Maximum file size 50MB. Audio/video upload supported for local processing where available.
               </div>
             </div>
+
+            {(activeInputType === "audio" || activeInputType === "video" || activeAction === "transcribe") && (
+              <div
+                className="spe-shell-capability-notice"
+                role="status"
+                style={{
+                  marginTop: "8px",
+                  padding: "8px 12px",
+                  borderRadius: "6px",
+                  backgroundColor: "rgba(245, 158, 11, 0.12)",
+                  border: "1px solid rgba(245, 158, 11, 0.3)",
+                  color: "#f59e0b",
+                  fontSize: "0.75rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
+                <span>⚠️</span>
+                <span>
+                  <strong>TRANSCRIPTION_STATUS=UNAVAILABLE</strong>: Transcription backend not yet integrated. Audio/video upload accepted for local file packaging only.
+                </span>
+              </div>
+            )}
 
             <input
               ref={fileInputRef}

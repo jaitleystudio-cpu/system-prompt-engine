@@ -54,3 +54,11 @@ def test_universal_shell_route_isolation():
 
     assert "UniversalInputShell" not in app_tsx, "UniversalInputShell must not be mounted in App.tsx yet"
     assert "UniversalInputShell" not in routing_ts, "UniversalInputShell must not be referenced in routing.ts yet"
+
+
+def test_transcription_backend_absence_contract():
+    shell_tsx = (WEB / "src" / "landing" / "UniversalInputShell.tsx").read_text(encoding="utf-8")
+    assert 'TRANSCRIPTION_STATUS = "UNAVAILABLE"' in shell_tsx
+    assert "TRANSCRIPTION_STATUS=UNAVAILABLE" in shell_tsx
+    assert "Transcription backend not yet integrated" in shell_tsx
+    assert "local file packaging only" in shell_tsx

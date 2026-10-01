@@ -96,6 +96,13 @@ assert.match(cssSource, /:focus-visible/, "CSS must specify high-contrast :focus
 assert.match(cssSource, /prefers-reduced-motion/, "CSS must honor prefers-reduced-motion");
 assert.match(cssSource, /@media\s*\(max-width:/, "CSS must provide responsive mobile styling down to 360px");
 
+// 5b. Capability Truth & Transcription Backend Status
+console.log("Checking capability truth and transcription status...");
+assert.match(shellSource, /TRANSCRIPTION_STATUS\s*=\s*["']UNAVAILABLE["']/, "Shell must export TRANSCRIPTION_STATUS = UNAVAILABLE");
+assert.match(shellSource, /TRANSCRIPTION_STATUS=UNAVAILABLE/, "Shell must visibly display TRANSCRIPTION_STATUS=UNAVAILABLE");
+assert.match(modalSource, /previousActiveElement/, "Modal must retain previousActiveElement for focus restoration");
+assert.match(modalSource, /e\.key\s*===\s*["']Tab["']/, "Modal must trap Tab key navigation");
+
 // 6. Route Isolation & Integrity (Must NOT be integrated into App.tsx or routing.ts yet)
 console.log("Checking route isolation invariants...");
 const appSource = readFileSync(join(root, "src/App.tsx"), "utf8");
