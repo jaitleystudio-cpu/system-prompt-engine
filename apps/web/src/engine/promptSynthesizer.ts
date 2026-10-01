@@ -163,6 +163,24 @@ const RESEARCH_DEEP_MODULES = [
       "- Epistemic Humility Standard: Use precise probabilistic phrasing rather than absolute assertions when evidence is emerging.",
     ],
   },
+  {
+    heading: "Zero-Cost Open-Access Corpus Protocol",
+    lines: [
+      "1. Free Academic Repositories: Prioritize open-access public repositories requiring zero fees, zero API keys, and zero logins (e.g., arXiv.org e-Prints, PubMed Central / NCBI PMC Open Access, OpenAlex, Semantic Scholar Open Research Corpus, DOAJ).",
+      "2. Primary Corpus Verification: Extract empirical data, benchmark tables, and mathematical formulas directly from open preprint/open-access PDF texts and metadata.",
+      "3. Direct Open Identifiers: Guarantee every referenced paper provides an open persistent URL/identifier (e.g., https://arxiv.org/abs/... or https://doi.org/10....).",
+      "4. Zero-Paywall Invariant: Never lock verification or reproducibility behind paywalled publisher portals or fee-gated subscription barriers.",
+    ],
+  },
+  {
+    heading: "Downstream AI Task Continuation & Defect Remediation",
+    lines: [
+      "1. Execution Telemetry Ingestion: Parse downstream coding AI outputs, test failures, linter reports, stack traces, and benchmark regressions.",
+      "2. Defect & Root-Cause Classification: Classify observed bugs into Algorithmic Inefficiency, Memory Safety, Protocol Desynchronization, or Type Invariants.",
+      "3. Differential Correction Synthesis: Formulate precise surgical diffs and mathematical proofs rather than generic rewrites.",
+      "4. Target Model Calibration: Adapt output syntax for Claude Code (tool-use diffs), GPT-4o (structured boundary assertions), or DeepSeek/Qwen (complete symbol signatures).",
+    ],
+  },
 ];
 
 const WRITING_DEEP_MODULES = [
@@ -306,15 +324,20 @@ const DOMAIN_METHODOLOGIES: Record<string, DomainMethodology> = {
       "- Zero fabricated references: Never invent papers, authors, DOIs, or experimental outcomes.",
       "- Uncertainty quantification: Explicitly categorize claims as SUPPORTED, PREPRINT_ONLY, or CONTRADICTED.",
       "- Strict epistemic humility: Clearly separate verified empirical observations from theoretical conjecture.",
+      "- Zero-cost open-access priority: Always ground research assertions in publicly accessible repositories with no paid subscriptions or login walls.",
+      "- Deterministic continuation: Ground task corrections in reproducible algorithmic specs and differential patches.",
     ],
     outputStandards: [
       "Structure findings into systematic literature matrices, methodology audits, and evidentiary gap analyses.",
       "Include detailed comparative tables with quantitative benchmark figures and confidence bounds.",
+      "Provide machine-executable continuation prompts with concrete acceptance criteria and defect remediation matrices.",
     ],
     checklist: [
-      "- [ ] All substantive claims backed by verifiable primary source citations",
+      "- [ ] All substantive claims backed by verifiable primary source citations with open identifiers",
       "- [ ] Competing hypotheses and counter-evidence explicitly addressed",
       "- [ ] Clear distinction between consensus findings and frontier uncertainties",
+      "- [ ] Downstream model defect signatures mapped directly to theoretical or algorithmic constraints",
+      "- [ ] Next-turn continuation prompt formatted with zero ambiguous directives",
     ],
     deepModules: RESEARCH_DEEP_MODULES,
   },
