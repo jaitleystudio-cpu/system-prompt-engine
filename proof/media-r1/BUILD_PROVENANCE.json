@@ -1,0 +1,17 @@
+{
+  "SOURCE_PIN": "927cfce34f31707e17f2bff35c349632fb9e2c3a",
+  "COMPILER": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+  "BUILD_TYPE": "Release",
+  "BUILD_FLAGS": "-DCMAKE_BUILD_TYPE=Release -DWHISPER_COMMON_FFMPEG=OFF (default OFF; WHISPER_FFMPEG=OFF deprecated alias also passed)",
+  "WHISPER_COMMON_FFMPEG": "UNDEFINED",
+  "BINARY_PATH": "/Volumes/4TB-WD/spe-worktrees/spe-g12c-media-backend-qual-20261001/proof/media-r1/build/whisper-cmake/bin/whisper-cli",
+  "BINARY_SHA256": "784e1cb576b40c08827860779c2c0cc6b17b746171d62ce4fb9ff6ea014193a7",
+  "platform": "arm64",
+  "CPU": "Apple M2",
+  "RAM_BYTES": 8589934592,
+  "RAM_GB": 8,
+  "OS": "macOS 27.2 (26B5091g)",
+  "ncpu": 8,
+  "metal": "included (Metal framework found)",
+  "ffmpeg_product_path": "OFF"
+}
