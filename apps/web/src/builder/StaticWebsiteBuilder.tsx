@@ -4,6 +4,10 @@ import {
   type WebsiteSection,
   DEFAULT_WEBSITE_SPEC,
   compileWebsiteSpecToStaticHtml,
+  toStandaloneDocument,
+  downloadFileNameForPagePath,
+  COMPILER_BINDING,
+  G13_PACKAGE_BOUND,
   AI_GENERATION,
   SCENE_3D,
   SANDBOX,
@@ -13,7 +17,7 @@ import {
 import "./static-builder.css";
 
 type ViewportMode = "desktop" | "tablet" | "mobile";
-type ViewMode = "preview" | "code" | "wireframe_3d";
+type ViewMode = "preview" | "code" | "isometric_2d";
 
 export const WireframeCanvasPreview: React.FC<{ sections: WebsiteSection[] }> = ({ sections }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -102,12 +106,12 @@ export const WireframeCanvasPreview: React.FC<{ sections: WebsiteSection[] }> = 
   }, [sections]);
 
   return (
-    <div className="bld-wireframe-container" aria-label="3D Wireframe Layout Preview">
+    <div className="bld-wireframe-container" aria-label="Isometric 2D layout preview">
       <div className="bld-wireframe-status">
         <strong style={{ color: "var(--bld-warning)", display: "block", marginBottom: "4px" }}>
-          🧊 3D Scene Execution: {SCENE_3D}
+          🧊 3D graphics / WebGL: {SCENE_3D}
         </strong>
-        <span>2D Wireframe Preview rendered via Canvas / WebGL fallback</span>
+        <span>Canvas 2D isometric layout preview (WebGL NOT_AVAILABLE; SCENE_3D={SCENE_3D})</span>
       </div>
       <canvas
         ref={canvasRef}
@@ -182,12 +186,13 @@ export const StaticWebsiteBuilder: React.FC = () => {
 
   // Download Standalone Static HTML File
   const handleDownloadHtml = () => {
-    const standalone = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="utf-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>${activePage.title}</title>\n  <style>${compiled.css}</style>\n</head>\n<body>\n${compiled.html}\n</body>\n</html>`;
+    // compiled.html is already a full document — convert once (inline CSS). Never wrap again.
+    const standalone = toStandaloneDocument(compiled.html, compiled.css);
     const blob = new Blob([standalone], { type: "text/html;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${activePage.path === "/" ? "index" : activePage.path.replace(/\//g, "-")}.html`;
+    a.download = downloadFileNameForPagePath(activePage.path);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -219,9 +224,9 @@ export const StaticWebsiteBuilder: React.FC = () => {
       <header className="bld-header">
         <div className="bld-header-top">
           <div>
-            <h1 className="bld-title">Static Website Builder (G13 Spec Compiler)</h1>
+            <h1 className="bld-title">Static Website Builder (website-spec/1 local TS compiler)</h1>
             <div style={{ fontSize: "0.75rem", color: "var(--bld-muted)", marginTop: "4px" }}>
-              Specification: <code>{spec.spec_version}</code> | Emitter: <code>{spec.emitter}</code> | Offline Static HTML/CSS
+              Specification: <code>{spec.spec_version}</code> | Emitter: <code>{spec.emitter}</code> | Binding: <code>{COMPILER_BINDING}</code> | G13 package bound: <code>{String(G13_PACKAGE_BOUND)}</code> | Offline Static HTML/CSS
             </div>
           </div>
 
@@ -290,7 +295,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
           </div>
         </div>
 
-        {/* View Mode Toggle: Preview vs Code vs 3D Wireframe Fallback */}
+        {/* View Mode Toggle: Preview vs Code vs Isometric 2D Layout Preview (SCENE_3D=NOT_AVAILABLE) */}
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <button
             type="button"
@@ -310,11 +315,11 @@ export const StaticWebsiteBuilder: React.FC = () => {
           </button>
           <button
             type="button"
-            className={`bld-btn ${viewMode === "wireframe_3d" ? "active" : ""}`}
-            onClick={() => setViewMode("wireframe_3d")}
-            aria-pressed={viewMode === "wireframe_3d"}
+            className={`bld-btn ${viewMode === "isometric_2d" ? "active" : ""}`}
+            onClick={() => setViewMode("isometric_2d")}
+            aria-pressed={viewMode === "isometric_2d"}
           >
-            3D Wireframe Fallback
+            Isometric 2D Layout Preview
           </button>
         </div>
       </div>
@@ -456,7 +461,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
               <iframe
                 title="Static Website Preview"
                 className="bld-preview-iframe"
-                srcDoc={`<style>${compiled.css}</style>${compiled.html}`}
+                srcDoc={toStandaloneDocument(compiled.html, compiled.css)}
                 sandbox="allow-same-origin"
               />
             </div>
