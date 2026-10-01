@@ -1,0 +1,163 @@
+{
+  "contractVersion": "spe.media-capability.v1",
+  "receiptId": "rcpt-media-g12-evidence-v1",
+  "timestamp": "2026-10-01T08:00:00.000Z",
+  "backendExecution": "GATED",
+  "liveTranscriptionStatus": "UNAVAILABLE",
+  "hostFfmpegProductPath": "PROHIBITED",
+  "networkEgress": "0",
+  "routeMountStatus": "NOT_INTEGRATED",
+  "metrics": {
+    "peakRssBytes": 826294272,
+    "coldLoadLatencySec": 3.81,
+    "warmMedianRtf": 3.23
+  },
+  "supportedCodecs": [
+    {
+      "format": "WAV / PCM",
+      "mimeTypes": ["audio/wav", "audio/x-wav"],
+      "extensions": [".wav"],
+      "decoderEngine": "Symphonia / PCM",
+      "status": "ACCEPTED",
+      "feedback": "WAV PCM audio ready for offline analysis."
+    },
+    {
+      "format": "MP3",
+      "mimeTypes": ["audio/mpeg"],
+      "extensions": [".mp3"],
+      "decoderEngine": "Symphonia / MP3",
+      "status": "ACCEPTED",
+      "feedback": "MP3 audio ready for offline analysis."
+    },
+    {
+      "format": "AAC / M4A",
+      "mimeTypes": ["audio/aac", "audio/mp4", "audio/x-m4a"],
+      "extensions": [".aac", ".m4a"],
+      "decoderEngine": "Symphonia / AAC",
+      "status": "ACCEPTED",
+      "feedback": "AAC/M4A audio ready for offline analysis."
+    },
+    {
+      "format": "FLAC",
+      "mimeTypes": ["audio/flac"],
+      "extensions": [".flac"],
+      "decoderEngine": "Symphonia / FLAC",
+      "status": "ACCEPTED",
+      "feedback": "Lossless FLAC audio ready for offline analysis."
+    },
+    {
+      "format": "OGG / Vorbis",
+      "mimeTypes": ["audio/ogg"],
+      "extensions": [".ogg"],
+      "decoderEngine": "Symphonia / Vorbis",
+      "status": "ACCEPTED",
+      "feedback": "Ogg Vorbis audio ready for offline analysis."
+    },
+    {
+      "format": "ALAC",
+      "mimeTypes": ["audio/alac"],
+      "extensions": [".caf"],
+      "decoderEngine": "Symphonia / ALAC",
+      "status": "ACCEPTED",
+      "feedback": "Apple Lossless audio ready for offline analysis."
+    },
+    {
+      "format": "MKV / WebM",
+      "mimeTypes": ["video/webm", "video/x-matroska"],
+      "extensions": [".webm", ".mkv"],
+      "decoderEngine": "Symphonia / MKV",
+      "status": "ACCEPTED",
+      "feedback": "Video container audio track accepted."
+    },
+    {
+      "format": "Opus",
+      "mimeTypes": ["audio/opus"],
+      "extensions": [".opus"],
+      "decoderEngine": "Symphonia (Unsupported)",
+      "status": "REJECTED",
+      "feedback": "Opus codec is unsupported in offline mode. Please provide PCM, MP3, or AAC."
+    },
+    {
+      "format": "AC-3 / E-AC-3",
+      "mimeTypes": ["audio/ac3", "audio/eac3"],
+      "extensions": [".ac3", ".eac3"],
+      "decoderEngine": "Symphonia (Unsupported)",
+      "status": "REJECTED",
+      "feedback": "Dolby AC-3 audio is unsupported. Please convert to stereo PCM or AAC."
+    },
+    {
+      "format": "DTS",
+      "mimeTypes": ["audio/vnd.dts"],
+      "extensions": [".dts"],
+      "decoderEngine": "Symphonia (Unsupported)",
+      "status": "REJECTED",
+      "feedback": "DTS audio is unsupported. Please provide standard PCM or MP3."
+    }
+  ],
+  "languageCapabilities": [
+    {
+      "language": "English",
+      "code": "en",
+      "model": "ggml-small.bin",
+      "status": "QUALIFIED",
+      "wer": 0.0,
+      "rtf": 0.41,
+      "evidenceReceipt": "G12-C",
+      "notice": "High-fidelity offline transcription available."
+    },
+    {
+      "language": "Tamil",
+      "code": "ta",
+      "model": "ggml-small.bin",
+      "status": "QUALIFIED",
+      "wer": 0.0,
+      "cer": 0.05,
+      "evidenceReceipt": "G12-C",
+      "notice": "Verified high-accuracy transcription in native script."
+    },
+    {
+      "language": "Hindi",
+      "code": "hi",
+      "model": "ggml-small.bin",
+      "status": "LIMITED_EVIDENCE",
+      "wer": 0.4,
+      "cer": 0.1,
+      "evidenceReceipt": "G12-C",
+      "notice": "High phonetic accuracy; manual editorial review recommended."
+    },
+    {
+      "language": "Spanish",
+      "code": "es",
+      "model": "ggml-small.bin",
+      "status": "UNDER_QUALIFICATION",
+      "wer": 0.75,
+      "cer": 0.22,
+      "evidenceReceipt": "G12-C",
+      "notice": "Moderate error rate observed on complex syntax."
+    },
+    {
+      "language": "Telugu (Baseline ggml-small)",
+      "code": "te-baseline",
+      "model": "ggml-small.bin",
+      "status": "UNSUPPORTED",
+      "wer": 3.571,
+      "cer": 1.833,
+      "scriptPassRatio": "0/10",
+      "evidenceReceipt": "G12-H",
+      "notice": "Script Defect: ggml-small emits Devanagari rather than Telugu script. Baseline unsupported."
+    },
+    {
+      "language": "Telugu (Challenger ggml-te-small)",
+      "code": "te-challenger",
+      "model": "ggml-te-small.bin",
+      "status": "UNDER_QUALIFICATION",
+      "wer": 1.143,
+      "cer": 0.349,
+      "rtf": 0.869,
+      "scriptPassRatio": "10/10",
+      "contentPassRatio": "9/10",
+      "evidenceReceipt": "G12-H",
+      "notice": "Native Telugu script verified (10/10); pending independent cross-agent PR #85 merge."
+    }
+  ]
+}

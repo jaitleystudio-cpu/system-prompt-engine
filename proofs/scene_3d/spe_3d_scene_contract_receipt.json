@@ -1,0 +1,28 @@
+{
+  "contractVersion": "spe.3d-scene-contract.v1",
+  "receiptId": "rcpt-3d-scene-round2-qual-20261001",
+  "timestamp": "2026-10-01T05:13:08.375Z",
+  "tiers": {
+    "tier1_webgl": {
+      "component": "SpeIntelligence (Three.js / React Three Fiber)",
+      "status": "QUALIFIED",
+      "drawCallsEstimated": 18,
+      "triangleCountEstimated": 14200,
+      "textureMemoryBytes": 4194304
+    },
+    "tier2_canvas2d": {
+      "component": "IsometricCanvasFallback (HTML5 Canvas 2D)",
+      "status": "QUALIFIED",
+      "reducedMotionCompliant": true,
+      "cleanupOnUnmount": true
+    },
+    "tier3_semantic_static": {
+      "component": "StaticPress (HTML5 / WebP Asset)",
+      "status": "QUALIFIED",
+      "accessibleCleanliness": "aria-hidden=true"
+    }
+  },
+  "testsPassed": 18,
+  "testsFailed": 0,
+  "status": "QUALIFIED_3D_SCENE_FALLBACK"
+}

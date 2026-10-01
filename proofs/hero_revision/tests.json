@@ -35,11 +35,6 @@
     "detail": ""
   },
   {
-    "name": "axe dark/dark",
-    "pass": true,
-    "detail": "[]"
-  },
-  {
     "name": "runtime dark/dark",
     "pass": true,
     "detail": ""
@@ -80,11 +75,6 @@
     "detail": ""
   },
   {
-    "name": "axe light/dark",
-    "pass": true,
-    "detail": "[]"
-  },
-  {
     "name": "runtime light/dark",
     "pass": true,
     "detail": ""
@@ -123,11 +113,6 @@
     "name": "prompt visible system/dark",
     "pass": true,
     "detail": ""
-  },
-  {
-    "name": "axe system/dark",
-    "pass": true,
-    "detail": "[]"
   },
   {
     "name": "system live dark",
@@ -173,11 +158,6 @@
     "name": "prompt visible system/light",
     "pass": true,
     "detail": ""
-  },
-  {
-    "name": "axe system/light",
-    "pass": true,
-    "detail": "[]"
   },
   {
     "name": "system live light",

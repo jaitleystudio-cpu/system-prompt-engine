@@ -137,6 +137,17 @@ if (src === forbiddenSrc) {
   fail("refusing to publish from the arbitrary default cargo target path");
 }
 
+if (existsSync(dest)) {
+  const currentDest = readFileSync(dest);
+  const destHash = createHash("sha256").update(currentDest).digest("hex");
+  if (destHash === EXPECTED_SHA256 && currentDest.length === EXPECTED_BYTES) {
+    console.log(
+      `copy-wasm: public artifact ${dest} already verified canonical (${EXPECTED_SHA256}, ${EXPECTED_BYTES} bytes)`,
+    );
+    process.exit(0);
+  }
+}
+
 if (!existsSync(src)) {
   fail(
     `missing canonical candidate at ${CANONICAL_SOURCE}. Build first: node tools/wasm_canonical_build.mjs`,

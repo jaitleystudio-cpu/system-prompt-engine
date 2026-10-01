@@ -58,6 +58,135 @@ export function techniqueLabel(id: string): string {
   return TECHNIQUE_LABELS[id] ?? id;
 }
 
+export interface CategoryMeta {
+  displayLabel: string;
+  xcatId: string;
+  domainId: string;
+  defaultRole: string;
+}
+
+export const CATEGORY_MAP: Record<string, CategoryMeta> = {
+  Coding: {
+    displayLabel: "Coding",
+    xcatId: "CAT:C09",
+    domainId: "coding",
+    defaultRole: "Principal Software Architect & Systems Engineer",
+  },
+  Research: {
+    displayLabel: "Research",
+    xcatId: "CAT:C02",
+    domainId: "research",
+    defaultRole: "Rigorous Research Scientist & Evidence Analyst",
+  },
+  Writing: {
+    displayLabel: "Writing",
+    xcatId: "CAT:C03",
+    domainId: "writing_communication",
+    defaultRole: "Expert Technical Writer & Communications Strategist",
+  },
+  Business: {
+    displayLabel: "Business",
+    xcatId: "CAT:C08",
+    domainId: "business_strategy",
+    defaultRole: "Strategic Business Analyst & Operations Architect",
+  },
+  Education: {
+    displayLabel: "Education",
+    xcatId: "CAT:C05",
+    domainId: "education",
+    defaultRole: "Subject-Matter Educator & Curriculum Designer",
+  },
+  Analysis: {
+    displayLabel: "Analysis",
+    xcatId: "CAT:C06",
+    domainId: "data_statistics",
+    defaultRole: "Lead Quantitative Analyst & Data Scientist",
+  },
+  "Structured Data": {
+    displayLabel: "Structured Data",
+    xcatId: "CAT:C06",
+    domainId: "data_statistics",
+    defaultRole: "Data Systems Architect & Schema Specialist",
+  },
+  Creative: {
+    displayLabel: "Creative",
+    xcatId: "CAT:C12",
+    domainId: "creative_media",
+    defaultRole: "Creative Director & Conceptual Writer",
+  },
+  Multilingual: {
+    displayLabel: "Multilingual",
+    xcatId: "CAT:C04",
+    domainId: "translation_localization",
+    defaultRole: "Master Translator & Localization Specialist",
+  },
+  "Website / 3D": {
+    displayLabel: "Website / 3D",
+    xcatId: "CAT:C09",
+    domainId: "ux_ui_web_design",
+    defaultRole: "Principal Frontend Architect & 3D WebGL Specialist",
+  },
+  Image: {
+    displayLabel: "Image",
+    xcatId: "CAT:C10",
+    domainId: "image_generation",
+    defaultRole: "Art Director & Visual Generation Specialist",
+  },
+  Video: {
+    displayLabel: "Video",
+    xcatId: "CAT:C10",
+    domainId: "video_generation",
+    defaultRole: "Director of Cinematography & Video Producer",
+  },
+};
+
+export function detectCategoryFromText(text: string): string {
+  const lower = text.toLowerCase();
+  if (
+    /code|rust|python|typescript|react|sql|function|api|orchestrator|bug|compile|database|sqlite|wasm|backend|frontend|crate|build|saga/.test(
+      lower,
+    )
+  ) {
+    return "Coding";
+  }
+  if (/research|study|paper|literature|citation|evidence|academic|science|comparative/.test(lower)) {
+    return "Research";
+  }
+  if (/data|csv|statistic|distribution|variance|dataset|metric|regression|analytics/.test(lower)) {
+    return "Analysis";
+  }
+  if (/business|market|startup|revenue|pricing|roadmap|product|customer|sales|budget/.test(lower)) {
+    return "Business";
+  }
+  if (/teach|student|course|learn|lesson|exam|tutor|syllabus/.test(lower)) {
+    return "Education";
+  }
+  if (/translate|language|spanish|french|german|telugu|hindi|tamil|japanese|localization/.test(lower)) {
+    return "Multilingual";
+  }
+  if (/story|plot|fiction|poem|novel|character|screenplay|dialogue/.test(lower)) {
+    return "Creative";
+  }
+  if (/3d|threejs|webgl|canvas|shader|viewport|css|responsive/.test(lower)) {
+    return "Website / 3D";
+  }
+  if (/image|photo|illustration|render|lighting|visual prompt|camera/.test(lower)) {
+    return "Image";
+  }
+  if (/video|footage|shot|cinematic|scene|b-roll|timeline|storyboard/.test(lower)) {
+    return "Video";
+  }
+  return "Writing";
+}
+
+export function resolveCategoryMetadata(displayLabel: string, goal: string): CategoryMeta {
+  let label = displayLabel;
+  if (!label || label === "AI Assistant") {
+    label = detectCategoryFromText(goal);
+  }
+  return CATEGORY_MAP[label] || CATEGORY_MAP["Writing"];
+}
+
 function record(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
     ? (value as Record<string, unknown>)

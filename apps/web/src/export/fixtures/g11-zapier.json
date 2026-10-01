@@ -1,0 +1,167 @@
+{
+  "export_contract_version": "spe.workflow-export.v1",
+  "target": "zapier",
+  "loss_state": "UNSUPPORTED",
+  "guarantees": {
+    "network": false,
+    "credentials_stored": false,
+    "executed": false,
+    "published": false,
+    "webhook_triggered": false,
+    "authority": "NONE",
+    "validation_is_not_execution": true,
+    "capability_is_not_authority": true
+  },
+  "canonical": {
+    "prompt_body": "Write a calm status note.",
+    "prompt_body_disposition": "VERBATIM",
+    "prompt_body_sha256": "8ad479d99a7602ac46b6519d08b7f2c024c5796282c6eb51a33e2497a8c4a068",
+    "variables": [
+      {
+        "name": "tone",
+        "value": "calm",
+        "disposition": "KEPT"
+      },
+      {
+        "name": "api_key",
+        "value": "",
+        "disposition": "STRIPPED"
+      }
+    ],
+    "required_inputs": [
+      "topic"
+    ],
+    "expected_outputs": [
+      "note"
+    ],
+    "constraints": [
+      "no network"
+    ],
+    "provider_target": "local"
+  },
+  "fidelity": [
+    {
+      "facet": "prompt_body",
+      "state": "DEGRADED",
+      "code": "NOT_A_NATIVE_ZAP_FIELD",
+      "reason": "Zapier has no offline import contract; prompt_body is copied onto a non-importable descriptor and is not a live Zap field."
+    },
+    {
+      "facet": "variables",
+      "state": "DEGRADED",
+      "code": "VALUE_STRIPPED",
+      "reason": "One or more variables used a credential or webhook name. Those values were removed and the names were kept with disposition STRIPPED."
+    },
+    {
+      "facet": "required_inputs",
+      "state": "UNSUPPORTED",
+      "code": "NO_OFFLINE_ZAP_CONTRACT",
+      "reason": "Zapier required flags and output fields exist only on live app definitions; this offline descriptor cannot represent required_inputs as an enforced Zap contract. The value is listed under review_copy and is not semantic."
+    },
+    {
+      "facet": "expected_outputs",
+      "state": "UNSUPPORTED",
+      "code": "NO_OFFLINE_ZAP_CONTRACT",
+      "reason": "Zapier required flags and output fields exist only on live app definitions; this offline descriptor cannot represent expected_outputs as an enforced Zap contract. The value is listed under review_copy and is not semantic."
+    },
+    {
+      "facet": "constraints",
+      "state": "DEGRADED",
+      "code": "NOT_A_NATIVE_ZAP_FIELD",
+      "reason": "Zapier has no offline import contract; constraints is copied onto a non-importable descriptor and is not a live Zap field."
+    },
+    {
+      "facet": "provider_target",
+      "state": "DEGRADED",
+      "code": "NOT_A_NATIVE_ZAP_FIELD",
+      "reason": "Zapier has no offline import contract; provider_target is copied onto a non-importable descriptor and is not a live Zap field."
+    }
+  ],
+  "warnings": [
+    {
+      "code": "NOT_A_NATIVE_ZAP_FIELD",
+      "facet": "prompt_body",
+      "message": "Zapier has no offline import contract; prompt_body is copied onto a non-importable descriptor and is not a live Zap field."
+    },
+    {
+      "code": "VALUE_STRIPPED",
+      "facet": "variables",
+      "message": "One or more variables used a credential or webhook name. Those values were removed and the names were kept with disposition STRIPPED."
+    },
+    {
+      "code": "NO_OFFLINE_ZAP_CONTRACT",
+      "facet": "required_inputs",
+      "message": "Zapier required flags and output fields exist only on live app definitions; this offline descriptor cannot represent required_inputs as an enforced Zap contract. The value is listed under review_copy and is not semantic."
+    },
+    {
+      "code": "NO_OFFLINE_ZAP_CONTRACT",
+      "facet": "expected_outputs",
+      "message": "Zapier required flags and output fields exist only on live app definitions; this offline descriptor cannot represent expected_outputs as an enforced Zap contract. The value is listed under review_copy and is not semantic."
+    },
+    {
+      "code": "NOT_A_NATIVE_ZAP_FIELD",
+      "facet": "constraints",
+      "message": "Zapier has no offline import contract; constraints is copied onto a non-importable descriptor and is not a live Zap field."
+    },
+    {
+      "code": "NOT_A_NATIVE_ZAP_FIELD",
+      "facet": "provider_target",
+      "message": "Zapier has no offline import contract; provider_target is copied onto a non-importable descriptor and is not a live Zap field."
+    },
+    {
+      "code": "UNSUPPORTED_FEATURE",
+      "facet": null,
+      "message": "credential or execution field stripped at variables.api_key; value not stored"
+    }
+  ],
+  "stripped_paths": [
+    "variables.api_key"
+  ],
+  "target_document": {
+    "format": "zapier.offline-descriptor.v1",
+    "importable": false,
+    "runnable": false,
+    "executable": false,
+    "provider_target": "local",
+    "note": "Write a calm status note.",
+    "variables": [
+      {
+        "name": "tone",
+        "value": "calm",
+        "disposition": "KEPT"
+      },
+      {
+        "name": "api_key",
+        "value": "",
+        "disposition": "STRIPPED"
+      }
+    ],
+    "constraints": [
+      "no network"
+    ],
+    "unsupported": [
+      {
+        "facet": "required_inputs",
+        "reason": "No offline Zap contract can enforce required inputs."
+      },
+      {
+        "facet": "expected_outputs",
+        "reason": "No offline Zap contract can represent expected outputs."
+      }
+    ],
+    "review_copy": {
+      "semantic": false,
+      "required_inputs": [
+        "topic"
+      ],
+      "expected_outputs": [
+        "note"
+      ]
+    }
+  },
+  "source": {
+    "kind": "prompt_contract",
+    "spe_format": null,
+    "contract_version": "spe.prompt-contract.v1"
+  }
+}

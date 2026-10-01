@@ -1,0 +1,11 @@
+{
+  "receiptId": "rcpt-skill-trust-1a0f5855ff9",
+  "timestamp": "2026-10-01T03:32:33.913Z",
+  "totalAudited": 15,
+  "upstreamOriginResolvedCount": 15,
+  "unknownOriginCount": 0,
+  "slsaLevel": "SLSA_BUILD_LEVEL_3_ATTESTATION",
+  "scriptExecutionPolicy": "QUARANTINED_FAIL_CLOSED",
+  "unreviewedExecution": "FORBIDDEN",
+  "status": "QUALIFIED_SUPPLY_CHAIN_TRUST"
+}

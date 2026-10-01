@@ -1,0 +1,47 @@
+{
+  "_type": "https://in-toto.io/Statement/v0.1",
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "subject": [
+    { "name": "systematic-debugging", "digest": { "gitCommit": "8ca22db", "origin": "https://github.com/obra/superpowers" } },
+    { "name": "test-driven-development", "digest": { "gitCommit": "8ca22db", "origin": "https://github.com/obra/superpowers" } },
+    { "name": "using-superpowers", "digest": { "gitCommit": "8ca22db", "origin": "https://github.com/obra/superpowers" } },
+    { "name": "verification-before-completion", "digest": { "gitCommit": "8ca22db", "origin": "https://github.com/obra/superpowers" } },
+    { "name": "content-strategy", "digest": { "gitCommit": "5b2c000", "origin": "https://github.com/coreyhaines31/marketingskills" } },
+    { "name": "seo", "digest": { "gitCommit": "ff87fce", "origin": "https://github.com/AgriciDaniel/claude-seo" } },
+    { "name": "seo-technical", "digest": { "gitCommit": "ff87fce", "origin": "https://github.com/AgriciDaniel/claude-seo" } },
+    { "name": "seo-schema", "digest": { "gitCommit": "ff87fce", "origin": "https://github.com/AgriciDaniel/claude-seo" } },
+    { "name": "seo-content", "digest": { "gitCommit": "ff87fce", "origin": "https://github.com/AgriciDaniel/claude-seo" } },
+    { "name": "web-design-guidelines", "digest": { "gitCommit": "e3d624b", "origin": "https://github.com/vercel-labs/web-interface-guidelines" } },
+    { "name": "frontend-design", "digest": { "gitCommit": "a5a6601", "origin": "https://github.com/popey/claude-code-skills" } },
+    { "name": "webapp-testing", "digest": { "gitCommit": "8a1541c", "origin": "https://github.com/anthropics/skills" } },
+    { "name": "security-and-hardening", "digest": { "gitCommit": "2686b62", "origin": "https://github.com/addyosmani/agent-skills" } },
+    { "name": "accessibility", "digest": { "gitCommit": "afa8da9", "origin": "https://github.com/addyosmani/web-quality-skills" } },
+    { "name": "performance", "digest": { "gitCommit": "afa8da9", "origin": "https://github.com/addyosmani/web-quality-skills" } }
+  ],
+  "predicate": {
+    "buildDefinition": {
+      "buildType": "https://system-prompt-engine.internal/slsa/skill-provenance/v1",
+      "externalParameters": {
+        "isolationLevel": "NO_CODE_EXECUTION",
+        "scriptExecutionPolicy": "QUARANTINED_READ_ONLY_TEXT"
+      }
+    },
+    "runDetails": {
+      "builder": {
+        "id": "https://github.com/jaitleystudio-cpu/system-prompt-engine/actions/provenance"
+      },
+      "metadata": {
+        "invocationId": "inv-20261001-slsa3-skills",
+        "startedOn": "2026-10-01T08:00:00Z"
+      }
+    }
+  },
+  "provenanceVerification": {
+    "totalSkills": 15,
+    "originResolved": 15,
+    "originUnknown": 0,
+    "unreviewedScriptExecution": "FORBIDDEN",
+    "policyEnforcement": "FAIL_CLOSED_READ_ONLY",
+    "status": "PROVENANCE_PINNED_AND_AUDITED"
+  }
+}

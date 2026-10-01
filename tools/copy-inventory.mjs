@@ -71,7 +71,15 @@ export function inventory() {
       if (text && /\p{L}/u.test(text)) {
         let depth = "PRODUCT",
           p = node.parent;
-        if (/ui\/(TrustPanel|PrivacyIndicator)\.tsx$/.test(file))
+        if (
+          /ui\/(TrustPanel|PrivacyIndicator|ModelContinuationPicker)\.tsx$/.test(file) ||
+          file.includes("authority/") ||
+          file.includes("GuideArticle.tsx") ||
+          file.includes("AuthorityHub.tsx") ||
+          file.includes("VisualScreenshotWorkspace.tsx") ||
+          file.includes("ProjectLibraryView.tsx") ||
+          file.includes("StaticWebsiteBuilder.tsx")
+        )
           depth = "PROOF";
         while (p) {
           if (ts.isJsxElement(p) || ts.isJsxSelfClosingElement(p)) {
