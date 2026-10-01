@@ -233,7 +233,7 @@ export const CANONICAL_MEDIA_CAPABILITY_RECEIPT: MediaCapabilityContract = {
       contentPassRatio: "9/10",
       status: "UNDER_QUALIFICATION",
       evidenceReceipt: "G12-H",
-      notice: "Native Telugu script verified (10/10); pending independent cross-agent PR #85 merge.",
+      notice: "Native Telugu script verified (10 of 10 test samples passed); pending independent cross-agent PR #85 merge.",
     },
   ],
 };

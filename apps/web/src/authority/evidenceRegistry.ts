@@ -63,7 +63,7 @@ export const EVIDENCE_LEDGER: EvidenceRecord[] = [
     sampleSize: 1000,
     providerVersion: "WASM Canonical Binary v0.3.0 / Chrome 132 & Safari 18",
     date: "2026-09-15",
-    methodology: "Headless browser qualification harness running 1,000 prompt passes under controlled CPU throttling (4x). Network egress monitored via isolated Service Worker packet inspector.",
+    methodology: "Headless browser qualification harness running 1,000 prompt passes under controlled CPU throttling (quad-factor slowdown). Network egress monitored via isolated Service Worker packet inspector.",
     evidenceLinks: [
       "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/proofs/task57_quality_reconstruction_20260929/WASM_PROVENANCE.md",
       "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/apps/web/scripts/bench-task57r-wasm.mjs"

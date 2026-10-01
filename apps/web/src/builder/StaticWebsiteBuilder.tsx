@@ -4,6 +4,7 @@ import {
   type WebsiteSection,
   DEFAULT_WEBSITE_SPEC,
   compileWebsiteSpecToStaticHtml,
+  sanitizePath,
   AI_GENERATION,
   SCENE_3D,
   SANDBOX,
@@ -107,7 +108,7 @@ export const WireframeCanvasPreview: React.FC<{ sections: WebsiteSection[] }> = 
         <strong style={{ color: "var(--bld-warning)", display: "block", marginBottom: "4px" }}>
           🧊 3D Scene Execution: {SCENE_3D}
         </strong>
-        <span>2D Wireframe Preview rendered via Canvas / WebGL fallback</span>
+        <span>2D Wireframe Preview rendered via Canvas / WebGL fallback (3D Scene Execution: NOT AVAILABLE)</span>
       </div>
       <canvas
         ref={canvasRef}
@@ -182,12 +183,11 @@ export const StaticWebsiteBuilder: React.FC = () => {
 
   // Download Standalone Static HTML File
   const handleDownloadHtml = () => {
-    const standalone = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="utf-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>${activePage.title}</title>\n  <style>${compiled.css}</style>\n</head>\n<body>\n${compiled.html}\n</body>\n</html>`;
-    const blob = new Blob([standalone], { type: "text/html;charset=utf-8" });
+    const blob = new Blob([compiled.html], { type: "text/html;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${activePage.path === "/" ? "index" : activePage.path.replace(/\//g, "-")}.html`;
+    a.download = sanitizePath(activePage.path);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

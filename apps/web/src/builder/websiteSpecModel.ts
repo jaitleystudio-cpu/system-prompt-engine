@@ -95,6 +95,42 @@ export const DEFAULT_WEBSITE_SPEC: WebsiteSpec = {
 };
 
 /**
+/**
+ * HTML entity escaping function conforming to OWASP / standard HTML escaping rules.
+ */
+export function htmlEscape(value: unknown): string {
+  if (value == null) return "";
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/**
+ * Sanitizes href attributes to prevent SSRF and javascript: URL execution.
+ * Allows only same-site fragment identifiers (#...) or relative .html pages.
+ */
+export function sanitizeHref(href?: string): string {
+  if (!href) return "#";
+  const trimmed = href.trim();
+  if (trimmed.startsWith("#")) return trimmed;
+  if (/^[a-z0-9][a-z0-9-]*\.html$/i.test(trimmed)) return trimmed;
+  return "#blocked-unsafe-href";
+}
+
+/**
+ * Validates and normalizes static page paths.
+ */
+export function sanitizePath(path: string): string {
+  const trimmed = path.trim().toLowerCase();
+  if (/^[a-z0-9][a-z0-9-]*\.html$/.test(trimmed)) return trimmed;
+  const cleaned = trimmed.replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+  return `${cleaned || "index"}.html`;
+}
+
+/**
  * Deterministic preview compiler emitting standard HTML and CSS from a WebsiteSpec.
  */
 export function compileWebsiteSpecToStaticHtml(spec: WebsiteSpec, activePagePath = "index.html"): { html: string; css: string } {
@@ -168,48 +204,59 @@ body {
 `.trim();
 
   const sectionsHtml = page.sections.map((sec) => {
+    const headingEscaped = htmlEscape(sec.heading);
+    const bodyEscaped = sec.body ? `<p>${htmlEscape(sec.body)}</p>` : "";
+    const ctaLabelEscaped = sec.cta_label ? htmlEscape(sec.cta_label) : "";
+    const ctaHrefSafe = sanitizeHref(sec.cta_href);
+
     switch (sec.kind) {
       case "hero":
         return `
     <header class="site-section site-hero">
-      <h1>${sec.heading}</h1>
-      ${sec.body ? `<p>${sec.body}</p>` : ""}
-      ${sec.cta_label ? `<a href="${sec.cta_href || "#"}" class="site-cta-btn">${sec.cta_label}</a>` : ""}
+      <h1>${headingEscaped}</h1>
+      ${bodyEscaped}
+      ${ctaLabelEscaped ? `<a href="${ctaHrefSafe}" class="site-cta-btn">${ctaLabelEscaped}</a>` : ""}
     </header>`;
       case "prose":
         return `
     <article class="site-section site-prose">
-      <h2>${sec.heading}</h2>
-      ${sec.body ? `<p>${sec.body}</p>` : ""}
+      <h2>${headingEscaped}</h2>
+      ${bodyEscaped}
     </article>`;
       case "list":
         return `
     <section class="site-section site-list-sec">
-      <h2>${sec.heading}</h2>
-      ${sec.body ? `<p>${sec.body}</p>` : ""}
+      <h2>${headingEscaped}</h2>
+      ${bodyEscaped}
       <ul class="site-list">
-        ${(sec.items || []).map((it) => `<li>${it}</li>`).join("\n        ")}
+        ${(sec.items || []).map((it) => `<li>${htmlEscape(it)}</li>`).join("\n        ")}
       </ul>
     </section>`;
       case "cta":
         return `
     <section class="site-section site-cta">
-      <h2>${sec.heading}</h2>
-      ${sec.body ? `<p>${sec.body}</p>` : ""}
-      ${sec.cta_label ? `<a href="${sec.cta_href || "#"}" class="site-cta-btn">${sec.cta_label}</a>` : ""}
+      <h2>${headingEscaped}</h2>
+      ${bodyEscaped}
+      ${ctaLabelEscaped ? `<a href="${ctaHrefSafe}" class="site-cta-btn">${ctaLabelEscaped}</a>` : ""}
     </section>`;
       default:
         return "";
     }
   }).join("\n");
 
+  const pageTitleEscaped = htmlEscape(page.title);
+  const specTitleEscaped = htmlEscape(spec.title);
+  const specLangEscaped = htmlEscape(spec.language || "en");
+
   const html = `<!DOCTYPE html>
-<html lang="${spec.language || "en"}">
+<html lang="${specLangEscaped}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>${page.title} - ${spec.title}</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>${pageTitleEscaped} - ${specTitleEscaped}</title>
+  <style>
+${css}
+  </style>
 </head>
 <body>
   <div class="site-container">
@@ -220,3 +267,4 @@ ${sectionsHtml}
 
   return { html, css };
 }
+
