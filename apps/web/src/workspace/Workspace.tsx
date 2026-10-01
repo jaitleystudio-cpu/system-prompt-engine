@@ -22,6 +22,7 @@ import { TrustPanel } from "../ui/TrustPanel";
 import { techniqueLabel } from "../engine/k3Transport";
 import { ReconstructionSummary } from "./ReconstructionSummary";
 import { TaskContinuationInspector } from "./TaskContinuationInspector";
+import { MultimodalFabricInspector } from "./MultimodalFabricInspector";
 
 type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
@@ -466,8 +467,9 @@ export function Workspace(props: Props) {
       </div>
 
       {(mode === "inspect" || mode === "pro") && (
-        <div style={{ marginTop: "1.5rem" }}>
+        <div style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           <TaskContinuationInspector baselineSha={sha256} />
+          <MultimodalFabricInspector />
         </div>
       )}
 

@@ -14,7 +14,8 @@ export function inventory() {
       /\.[jt]sx?$/.test(p) &&
       !p.includes("/engine/") &&
       !p.includes("/builder/") &&
-      !p.includes("TaskContinuationInspector"),
+      !p.includes("TaskContinuationInspector") &&
+      !p.includes("MultimodalFabricInspector"),
   );
   paths.push(`${root}/packages/human-perspective/src/copy.ts`);
   const entries = new Map();
