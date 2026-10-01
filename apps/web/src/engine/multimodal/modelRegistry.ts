@@ -18,162 +18,384 @@ import type {
   ModelPack,
   ProvisioningMode,
   OfflineModelPackage,
+  ModelCustodyState,
 } from "./types";
+
+export interface UpstreamModelProvenanceFile {
+  name: string;
+  upstreamUrl: string;
+  expectedSizeBytes: number;
+  expectedSha256: string;
+  isRealBinaryVerified: boolean;
+}
 
 export interface UpstreamModelProvenance {
   modelId: string;
+  baseModel?: string;
   upstreamRepository: string;
   revision: string;
   license: string;
-  files: Array<{
-    name: string;
-    upstreamUrl: string;
-    expectedSizeBytes: number;
-    expectedSha256: string;
-    isRealBinaryVerified: boolean;
-  }>;
+  files: UpstreamModelProvenanceFile[];
   totalSizeBytes: number;
-  custodyStatus: "CUSTODY_PENDING_DOWNLOAD" | "CUSTODY_VERIFIED";
+  custodyState?: ModelCustodyState;
+  custodyStatus: "CUSTODY_PENDING_DOWNLOAD" | "CUSTODY_VERIFIED" | "CUSTODY_PENDING";
 }
 
 export const MODEL_PACK_SIZE_METRICS = {
-  ASR_MODEL_ONLY_BYTES: 39_730_568,
-  ASR_COMPLETE_PACK_BYTES: 39_845_888,
+  ASR_MODEL_ONLY_BYTES: 40_844_231, // encoder (10,124,990) + decoder (30,719,241)
+  ASR_COMPLETE_PACK_BYTES: 43_324_697, // + tokenizer.json (2,480,466)
+  OCR_PADDLE_MODEL_ONLY_BYTES: 10_260_761, // det (2,429,873) + rec_en (7,830,888)
+  OCR_PADDLE_COMPLETE_PACK_BYTES: 10_262_177, // + dict (1,416)
   OCR_MOBILE_MODEL_ONLY_BYTES: 14_160_300,
   OCR_MOBILE_COMPLETE_PACK_BYTES: 14_210_800,
-  OCR_PADDLE_MODEL_ONLY_BYTES: 18_400_000,
-  OCR_PADDLE_COMPLETE_PACK_BYTES: 18_450_000,
   OCR_TROCR_MODEL_ONLY_BYTES: 28_500_000,
   OCR_TROCR_COMPLETE_PACK_BYTES: 28_600_000,
   RUNTIME_SHARED_BYTES: 11_246_030, // ort-wasm-simd-threaded.wasm
 } as const;
 
+export const VERIFIED_UPSTREAM_REPOSITORIES: Record<
+  string,
+  {
+    repoUrl: string;
+    verifiedRevisions: Record<
+      string,
+      {
+        license: string;
+        files: Record<string, { sizeBytes: number; sha256: string }>;
+      }
+    >;
+  }
+> = {
+  "https://huggingface.co/onnx-community/whisper-tiny": {
+    repoUrl: "https://huggingface.co/onnx-community/whisper-tiny",
+    verifiedRevisions: {
+      "6d4fb5abc94227ee92e43fc5091278851eadf8a0": {
+        license: "Apache-2.0",
+        files: {
+          "encoder_model_quantized.onnx": {
+            sizeBytes: 10_124_990,
+            sha256: "2af4a414ca47aa30f61246017e5fe82b0a8d229281d1255ba666a2a7f6b84d19",
+          },
+          "onnx/encoder_model_quantized.onnx": {
+            sizeBytes: 10_124_990,
+            sha256: "2af4a414ca47aa30f61246017e5fe82b0a8d229281d1255ba666a2a7f6b84d19",
+          },
+          "decoder_model_merged_quantized.onnx": {
+            sizeBytes: 30_719_241,
+            sha256: "25e807a962b6349356d0ea5d0dfe530b7e5bf0e2a484aeca0359d03143faddd3",
+          },
+          "onnx/decoder_model_merged_quantized.onnx": {
+            sizeBytes: 30_719_241,
+            sha256: "25e807a962b6349356d0ea5d0dfe530b7e5bf0e2a484aeca0359d03143faddd3",
+          },
+          "tokenizer.json": {
+            sizeBytes: 2_480_466,
+            sha256: "27fc476bfe7f17299480be2273fc0608e4d5a99aba2ab5dec5374b4482d1a566",
+          },
+        },
+      },
+    },
+  },
+  "https://huggingface.co/monkt/paddleocr-onnx": {
+    repoUrl: "https://huggingface.co/monkt/paddleocr-onnx",
+    verifiedRevisions: {
+      "7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65": {
+        license: "Apache-2.0",
+        files: {
+          "detection/v3/det.onnx": {
+            sizeBytes: 2_429_873,
+            sha256: "ee40e80071ba3a320d4efda75f3e22047a7d049e9bf7bcaaf9daea23fc21b935",
+          },
+          "det.onnx": {
+            sizeBytes: 2_429_873,
+            sha256: "ee40e80071ba3a320d4efda75f3e22047a7d049e9bf7bcaaf9daea23fc21b935",
+          },
+          "languages/english/rec.onnx": {
+            sizeBytes: 7_830_888,
+            sha256: "4e16deb22c4da6468bdca539b2cd3c8687825538b67109177c47d359ab994cd7",
+          },
+          "rec.onnx": {
+            sizeBytes: 7_830_888,
+            sha256: "4e16deb22c4da6468bdca539b2cd3c8687825538b67109177c47d359ab994cd7",
+          },
+          "languages/english/dict.txt": {
+            sizeBytes: 1_416,
+            sha256: "e025a66d31f327ba0c232e03f407ae8d105e1e709e7ccb3f408aa778c24e70d6",
+          },
+          "dict.txt": {
+            sizeBytes: 1_416,
+            sha256: "e025a66d31f327ba0c232e03f407ae8d105e1e709e7ccb3f408aa778c24e70d6",
+          },
+          "languages/hindi/rec.onnx": {
+            sizeBytes: 8_980_224,
+            sha256: "43df175fa3c877fbf7bcc4e5bd1e203e24ec450cd3ea96c9e802c86e39a4d4cf",
+          },
+          "languages/telugu/rec.onnx": {
+            sizeBytes: 8_976_064,
+            sha256: "669946d9ad4de93e8d1b13f7e72c59cc2cc2de91bb24e22aad7503a6cc5757ee",
+          },
+          "languages/tamil/rec.onnx": {
+            sizeBytes: 8_970_084,
+            sha256: "fba9a00af746c8f3ef4f091cf966880222cd7245a60f6a953670593630c0ca4f",
+          },
+        },
+      },
+    },
+  },
+};
+
 export const PRODUCTION_MODEL_PROVENANCE: Record<string, UpstreamModelProvenance> = {
   "spe-whisper-tiny-int8": {
     modelId: "spe-whisper-tiny-int8",
-    upstreamRepository: "https://huggingface.co/onnx-community/whisper-tiny-onnx-int8",
-    revision: "a6b8c9d0e1f23456789abcdef0123456789abcde",
-    license: "MIT",
+    baseModel: "openai/whisper-tiny",
+    upstreamRepository: "https://huggingface.co/onnx-community/whisper-tiny",
+    revision: "6d4fb5abc94227ee92e43fc5091278851eadf8a0",
+    license: "Apache-2.0",
     files: [
       {
         name: "encoder_model_quantized.onnx",
-        upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny-onnx-int8/resolve/main/onnx/encoder_model_quantized.onnx",
-        expectedSizeBytes: 15_820_112,
-        expectedSha256: "7d1b3f94a28c460195e8bc4a54c30c8ef2829e0839e1a8bb23126f59b6c00d41",
+        upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny/resolve/6d4fb5abc94227ee92e43fc5091278851eadf8a0/onnx/encoder_model_quantized.onnx",
+        expectedSizeBytes: 10_124_990,
+        expectedSha256: "2af4a414ca47aa30f61246017e5fe82b0a8d229281d1255ba666a2a7f6b84d19",
         isRealBinaryVerified: false,
       },
       {
         name: "decoder_model_merged_quantized.onnx",
-        upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny-onnx-int8/resolve/main/onnx/decoder_model_merged_quantized.onnx",
-        expectedSizeBytes: 23_910_456,
-        expectedSha256: "3f98a1c828e5f20108db28148b301c2ba45e69e0881b2394c8034a719c28e932",
+        upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny/resolve/6d4fb5abc94227ee92e43fc5091278851eadf8a0/onnx/decoder_model_merged_quantized.onnx",
+        expectedSizeBytes: 30_719_241,
+        expectedSha256: "25e807a962b6349356d0ea5d0dfe530b7e5bf0e2a484aeca0359d03143faddd3",
         isRealBinaryVerified: false,
       },
       {
         name: "tokenizer.json",
-        upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny-onnx-int8/resolve/main/tokenizer.json",
-        expectedSizeBytes: 115_320,
-        expectedSha256: "2430f1a2ad2982d0067885488a4c89e21ad1d7c83b115ba8f1b20acc88dfaea8",
+        upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny/resolve/6d4fb5abc94227ee92e43fc5091278851eadf8a0/tokenizer.json",
+        expectedSizeBytes: 2_480_466,
+        expectedSha256: "27fc476bfe7f17299480be2273fc0608e4d5a99aba2ab5dec5374b4482d1a566",
         isRealBinaryVerified: false,
       },
     ],
-    totalSizeBytes: 39_845_888,
-    custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
-  },
-  "spe-ocr-multilingual-int8": {
-    modelId: "spe-ocr-multilingual-int8",
-    upstreamRepository: "https://huggingface.co/onnx-community/mobile-ocr-multilingual-int8",
-    revision: "b7c8d9e0f1a23456789abcdef0123456789abcde",
-    license: "Apache-2.0",
-    files: [
-      {
-        name: "text_det_quantized.onnx",
-        upstreamUrl: "https://huggingface.co/onnx-community/mobile-ocr-multilingual-int8/resolve/main/text_det_quantized.onnx",
-        expectedSizeBytes: 4_510_200,
-        expectedSha256: "cdfe3b6aa0ca4d6c2eba7926f902fc629a311df1488e0540b154015156a148d0",
-        isRealBinaryVerified: false,
-      },
-      {
-        name: "text_rec_multilingual_quantized.onnx",
-        upstreamUrl: "https://huggingface.co/onnx-community/mobile-ocr-multilingual-int8/resolve/main/text_rec_multilingual_quantized.onnx",
-        expectedSizeBytes: 9_650_100,
-        expectedSha256: "fbd1a1a19d580a779c4c291e47117e748de79aafca7ba63c93bf628aa42505f6",
-        isRealBinaryVerified: false,
-      },
-      {
-        name: "character_dict.txt",
-        upstreamUrl: "https://huggingface.co/onnx-community/mobile-ocr-multilingual-int8/resolve/main/character_dict.txt",
-        expectedSizeBytes: 50_500,
-        expectedSha256: "3a1bd46d6016eac2d9e06ebdf8c6e9b79a8618a03e1667727c841b0f9e52a560",
-        isRealBinaryVerified: false,
-      },
-    ],
-    totalSizeBytes: 14_210_800,
+    totalSizeBytes: 43_324_697,
+    custodyState: "DECLARED",
     custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
   },
   "spe-ocr-paddle-int8": {
     modelId: "spe-ocr-paddle-int8",
-    upstreamRepository: "https://huggingface.co/onnx-community/paddleocr-v4-int8",
-    revision: "c8d9e0f1a2b3456789abcdef0123456789abcde",
+    baseModel: "PaddlePaddle/PaddleOCR PP-OCRv3/v4",
+    upstreamRepository: "https://huggingface.co/monkt/paddleocr-onnx",
+    revision: "7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65",
     license: "Apache-2.0",
     files: [
       {
-        name: "paddle_det_int8.onnx",
-        upstreamUrl: "https://huggingface.co/onnx-community/paddleocr-v4-int8/resolve/main/paddle_det_int8.onnx",
-        expectedSizeBytes: 5_200_000,
-        expectedSha256: "6e343541d90999dfee24320c57c31a7d0b1f5d8664e6bf8cd5a048facfce6355",
+        name: "detection/v3/det.onnx",
+        upstreamUrl: "https://huggingface.co/monkt/paddleocr-onnx/resolve/7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65/detection/v3/det.onnx",
+        expectedSizeBytes: 2_429_873,
+        expectedSha256: "ee40e80071ba3a320d4efda75f3e22047a7d049e9bf7bcaaf9daea23fc21b935",
         isRealBinaryVerified: false,
       },
       {
-        name: "paddle_rec_multilingual_int8.onnx",
-        upstreamUrl: "https://huggingface.co/onnx-community/paddleocr-v4-int8/resolve/main/paddle_rec_multilingual_int8.onnx",
-        expectedSizeBytes: 13_200_000,
-        expectedSha256: "cc524679d472774e28bfcad1af305d8e0377e561e809f2a263e905e2516b8978",
+        name: "languages/english/rec.onnx",
+        upstreamUrl: "https://huggingface.co/monkt/paddleocr-onnx/resolve/7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65/languages/english/rec.onnx",
+        expectedSizeBytes: 7_830_888,
+        expectedSha256: "4e16deb22c4da6468bdca539b2cd3c8687825538b67109177c47d359ab994cd7",
         isRealBinaryVerified: false,
       },
       {
-        name: "paddle_dict_multilingual.txt",
-        upstreamUrl: "https://huggingface.co/onnx-community/paddleocr-v4-int8/resolve/main/paddle_dict_multilingual.txt",
-        expectedSizeBytes: 50_000,
-        expectedSha256: "19e46a4c975e00b8047f18e5adae36d903af1da5b626ee4df5576c125800009a",
+        name: "languages/english/dict.txt",
+        upstreamUrl: "https://huggingface.co/monkt/paddleocr-onnx/resolve/7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65/languages/english/dict.txt",
+        expectedSizeBytes: 1_416,
+        expectedSha256: "e025a66d31f327ba0c232e03f407ae8d105e1e709e7ccb3f408aa778c24e70d6",
         isRealBinaryVerified: false,
       },
     ],
-    totalSizeBytes: 18_450_000,
+    totalSizeBytes: 10_262_177,
+    custodyState: "DECLARED",
+    custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
+  },
+  "spe-ocr-multilingual-int8": {
+    modelId: "spe-ocr-multilingual-int8",
+    baseModel: "onnx-community/mobile-ocr-multilingual-int8",
+    upstreamRepository: "UNKNOWN_PENDING_SOURCE_VERIFICATION",
+    revision: "UNKNOWN_PENDING_SOURCE_VERIFICATION",
+    license: "Apache-2.0",
+    files: [],
+    totalSizeBytes: 0,
+    custodyState: "DECLARED",
     custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
   },
   "spe-ocr-trocr-int8": {
     modelId: "spe-ocr-trocr-int8",
-    upstreamRepository: "https://huggingface.co/onnx-community/trocr-small-int8",
-    revision: "d9e0f1a2b3c4456789abcdef0123456789abcde",
+    baseModel: "microsoft/trocr-small-printed",
+    upstreamRepository: "UNKNOWN_PENDING_SOURCE_VERIFICATION",
+    revision: "UNKNOWN_PENDING_SOURCE_VERIFICATION",
     license: "Apache-2.0",
-    files: [
-      {
-        name: "trocr_encoder_int8.onnx",
-        upstreamUrl: "https://huggingface.co/onnx-community/trocr-small-int8/resolve/main/trocr_encoder_int8.onnx",
-        expectedSizeBytes: 12_400_000,
-        expectedSha256: "6e90fb69bf58101b6a07f8017eead48fa7b7eb60b75b2d8115553755c7df5d7b",
-        isRealBinaryVerified: false,
-      },
-      {
-        name: "trocr_decoder_int8.onnx",
-        upstreamUrl: "https://huggingface.co/onnx-community/trocr-small-int8/resolve/main/trocr_decoder_int8.onnx",
-        expectedSizeBytes: 16_100_000,
-        expectedSha256: "ea4fc62d9222b0adfe5e940f9b61b76e0361dd221027334a23833052b665c984",
-        isRealBinaryVerified: false,
-      },
-      {
-        name: "tokenizer.json",
-        upstreamUrl: "https://huggingface.co/onnx-community/trocr-small-int8/resolve/main/tokenizer.json",
-        expectedSizeBytes: 100_000,
-        expectedSha256: "55d26bba1cee2bf6efa67ff04a73ca0bc41f3908ed3d1ccb131390f5d0e394f9",
-        isRealBinaryVerified: false,
-      },
-    ],
-    totalSizeBytes: 28_600_000,
+    files: [],
+    totalSizeBytes: 0,
+    custodyState: "DECLARED",
     custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
   },
 };
+
+/**
+ * Checks if a git commit revision is patterned or fabricated rather than genuine.
+ */
+export function isPatternedRevision(rev: string): boolean {
+  if (!rev || typeof rev !== "string") return true;
+  const r = rev.toLowerCase().trim();
+  if (r.length !== 40 && r.length !== 64) return true;
+  if (!/^[0-9a-f]+$/.test(r)) return true;
+  if (r.includes("0123456789abcdef")) return true;
+  if (/a1b2c3d4|a6b8c9d0|b7c8d9e0|c8d9e0f1|d9e0f1a2|e4f5a6b7|1a2b3c4d|2b3c4d5e|9a0b1c2d|8f901234/.test(r)) return true;
+  if (/^(.)\1{15,}/.test(r)) return true;
+  if (/^0{40}$|^f{40}$/.test(r)) return true;
+  return false;
+}
+
+/**
+ * Validates upstream model provenance against verified repository commits and files.
+ */
+export function validateUpstreamProvenance(prov: UpstreamModelProvenance): {
+  valid: boolean;
+  errors: string[];
+} {
+  const errors: string[] = [];
+  if (!prov) {
+    return { valid: false, errors: ["Missing upstream provenance record"] };
+  }
+
+  // Revision validation
+  if (isPatternedRevision(prov.revision)) {
+    errors.push(`Patterned, fake, or synthetic revision rejected: ${prov.revision}`);
+  }
+
+  // Repository verification
+  const repoEntry = VERIFIED_UPSTREAM_REPOSITORIES[prov.upstreamRepository];
+  if (!repoEntry) {
+    errors.push(
+      `Unverified or nonexistent repository rejected: ${prov.upstreamRepository}`,
+    );
+  } else {
+    // Verified revision check
+    const revEntry = repoEntry.verifiedRevisions[prov.revision];
+    if (!revEntry) {
+      errors.push(
+        `Nonexistent revision, invalid revision, or unverified commit for repository: ${prov.revision}`,
+      );
+    } else {
+      // Upstream file membership verification
+      for (const f of prov.files || []) {
+        const verifiedFile = revEntry.files[f.name];
+        if (!verifiedFile) {
+          errors.push(
+            `Unknown or unverified file '${f.name}' missing from upstream verified revision ${prov.revision}`,
+          );
+        }
+      }
+    }
+  }
+
+  // License verification
+  if (
+    !prov.license ||
+    prov.license.toUpperCase().includes("UNKNOWN") ||
+    prov.license.toUpperCase().includes("INFERRED")
+  ) {
+    errors.push(`Invalid, unverified, or inferred license rejected: ${prov.license}`);
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
+/**
+ * Checks if a byte buffer contains a Git LFS pointer text file instead of actual binary payload.
+ */
+export function isGitLfsPointer(bytes: Uint8Array): boolean {
+  if (!bytes || bytes.length === 0 || bytes.length > 512) return false;
+  try {
+    const text = new TextDecoder().decode(bytes);
+    return (
+      text.startsWith("version https://git-lfs.github.com/spec/v1") &&
+      text.includes("oid sha256:")
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Verifies raw artifact bytes against expected SHA-256 digest and size,
+ * strictly rejecting Git LFS pointer text files.
+ */
+export function verifyArtifactBytes(
+  bytes: Uint8Array,
+  expectedSha256: string,
+  expectedSize?: number,
+): boolean {
+  if (!bytes || bytes.length === 0) {
+    throw new Error("DIGEST_MISMATCH: Empty or zero-byte artifact buffer");
+  }
+  if (isGitLfsPointer(bytes)) {
+    throw new Error(
+      "LFS_POINTER_REJECTED: Git LFS pointer text file cannot be accepted as model binary payload",
+    );
+  }
+  if (expectedSize !== undefined && bytes.length !== expectedSize) {
+    throw new Error(
+      `DIGEST_MISMATCH: Byte size mismatch: expected ${expectedSize}, got ${bytes.length}`,
+    );
+  }
+  const actualSha = computeSha256(bytes);
+  if (actualSha.toLowerCase() !== expectedSha256.toLowerCase()) {
+    throw new Error(
+      `DIGEST_MISMATCH: SHA-256 mismatch: expected ${expectedSha256}, got ${actualSha}`,
+    );
+  }
+  return true;
+}
+
+/**
+ * Enforces that estimated file sizes are not reported as measured unless
+ * binary custody has been verified.
+ */
+export function assertMeasuredSize(file: {
+  name?: string;
+  expectedSizeBytes: number;
+  isRealBinaryVerified?: boolean;
+}): number {
+  if (!file || !file.isRealBinaryVerified) {
+    throw new Error(
+      `ESTIMATED_SIZE_NOT_MEASURED: File '${file?.name || "unnamed"}' is marked isRealBinaryVerified=false. CUSTODY_UNVERIFIED: Estimated size cannot be treated as measured.`,
+    );
+  }
+  return file.expectedSizeBytes;
+}
+
+/**
+ * Checks whether an OCR recognizer supports a specified script.
+ */
+export function isScriptSupportedByRecognizer(
+  recognizer: { supportedScripts?: string[] },
+  script: string,
+): boolean {
+  if (!recognizer?.supportedScripts || !Array.isArray(recognizer.supportedScripts)) {
+    return false;
+  }
+  const target = script.toLowerCase().trim();
+  return recognizer.supportedScripts.some((s) => s.toLowerCase().trim() === target);
+}
+
+/**
+ * Asserts that an OCR recognizer supports a specified script, throwing if unsupported.
+ */
+export function assertScriptSupportedByRecognizer(
+  recognizer: { supportedScripts?: string[]; modelId?: string },
+  script: string,
+): void {
+  if (!isScriptSupportedByRecognizer(recognizer, script)) {
+    throw new Error(
+      `UNSUPPORTED_SCRIPT_FOR_RECOGNIZER: Recognizer '${recognizer?.modelId || "unspecified"}' does not support script '${script}'. Supported scripts: ${recognizer?.supportedScripts?.join(", ") || "none"}`,
+    );
+  }
+}
 
 export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
   "spe-whisper-tiny-int8": {
@@ -566,6 +788,12 @@ export class ModelPackRegistry {
 
         if (fileBytes.length === 0) {
           throw new Error(`Zero-byte model asset rejected for ${reqFile.name}`);
+        }
+
+        if (isGitLfsPointer(fileBytes)) {
+          throw new Error(
+            `LFS_POINTER_REJECTED: Model asset '${reqFile.name}' is a Git LFS pointer text file, not a model binary payload`,
+          );
         }
 
         // Check for partial download (size mismatch)

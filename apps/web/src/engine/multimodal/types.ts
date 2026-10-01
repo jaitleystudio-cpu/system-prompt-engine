@@ -125,6 +125,45 @@ export type CodeSwitchStatus =
   | "BENCHMARKED"
   | "QUALIFIED_WITHIN_TESTED_SCOPE";
 
+export type ModelCustodyState =
+  | "DECLARED"
+  | "SOURCE_VERIFIED"
+  | "DOWNLOADED"
+  | "HASH_VERIFIED"
+  | "RUNTIME_LOADED"
+  | "SESSION_CREATED"
+  | "SESSION_RUN"
+  | "BENCHMARKED"
+  | "FIELD_QUALIFIED";
+
+export const CUSTODY_STATE_ORDER: Record<ModelCustodyState, number> = {
+  DECLARED: 0,
+  SOURCE_VERIFIED: 1,
+  DOWNLOADED: 2,
+  HASH_VERIFIED: 3,
+  RUNTIME_LOADED: 4,
+  SESSION_CREATED: 5,
+  SESSION_RUN: 6,
+  BENCHMARKED: 7,
+  FIELD_QUALIFIED: 8,
+};
+
+export function assertValidCustodyTransition(
+  from: ModelCustodyState,
+  to: ModelCustodyState,
+): void {
+  const fromRank = CUSTODY_STATE_ORDER[from];
+  const toRank = CUSTODY_STATE_ORDER[to];
+  if (fromRank === undefined || toRank === undefined) {
+    throw new Error(`UNKNOWN CUSTODY STATE: ${from} -> ${to}`);
+  }
+  if (toRank > fromRank + 1) {
+    throw new Error(
+      `CUSTODY VIOLATION: Cannot transition from ${from} to ${to} (skipping intermediary custody states is forbidden)`,
+    );
+  }
+}
+
 export interface LanguageQualificationStatus {
   locale: string;
   uiLocaleAvailable: boolean;
