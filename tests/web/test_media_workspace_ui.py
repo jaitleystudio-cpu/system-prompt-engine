@@ -45,12 +45,15 @@ def test_media_workspace_truth_invariants():
     assert re.search(r'format:\s*"Opus".*status:\s*"REJECTED"', model_code, re.DOTALL)
     assert re.search(r'format:\s*"AC-3 / E-AC-3".*status:\s*"REJECTED"', model_code, re.DOTALL)
 
-    # Language support
+    # Language support bound to G12 MediaCapabilityContract
+    assert "MediaCapabilityContract" in model_code
+    assert "validateMediaCapabilityReceipt" in model_code
     assert re.search(r'language:\s*"English".*status:\s*"QUALIFIED"', model_code, re.DOTALL)
     assert re.search(r'language:\s*"Tamil".*status:\s*"QUALIFIED"', model_code, re.DOTALL)
-    assert re.search(r'language:\s*"Hindi".*status:\s*"BETA"', model_code, re.DOTALL)
-    assert re.search(r'language:\s*"Spanish".*status:\s*"EXPERIMENTAL"', model_code, re.DOTALL)
-    assert re.search(r'language:\s*"Telugu".*status:\s*"GATED"', model_code, re.DOTALL)
+    assert re.search(r'language:\s*"Hindi".*status:\s*"LIMITED_EVIDENCE"', model_code, re.DOTALL)
+    assert re.search(r'language:\s*"Spanish".*status:\s*"UNDER_QUALIFICATION"', model_code, re.DOTALL)
+    assert re.search(r'language:\s*"Telugu \(Baseline ggml-small\)".*status:\s*"UNSUPPORTED"', model_code, re.DOTALL)
+    assert re.search(r'language:\s*"Telugu \(Challenger ggml-te-small\)".*status:\s*"UNDER_QUALIFICATION"', model_code, re.DOTALL)
 
     # CSS accessibility
     assert "44px" in css_code

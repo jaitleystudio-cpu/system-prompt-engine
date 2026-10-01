@@ -61,14 +61,20 @@ assert.match(modelSource, /format:\s*"Opus".*status:\s*"REJECTED"/s, "Opus must 
 assert.match(modelSource, /format:\s*"AC-3 \/ E-AC-3".*status:\s*"REJECTED"/s, "AC-3 must be rejected");
 assert.match(modelSource, /format:\s*"DTS".*status:\s*"REJECTED"/s, "DTS must be rejected");
 
-// 3. Language Qualification Matrix
-console.log("Checking language capability matrix...");
+// 3. Language Qualification Matrix (G12 MediaCapabilityContract Binding)
+console.log("Checking language capability matrix & G12 contract binding...");
+assert.match(modelSource, /export interface MediaCapabilityContract/, "Must define MediaCapabilityContract");
+assert.match(modelSource, /export const CANONICAL_MEDIA_CAPABILITY_RECEIPT/, "Must export CANONICAL_MEDIA_CAPABILITY_RECEIPT");
+assert.match(modelSource, /validateMediaCapabilityReceipt/, "Must export validateMediaCapabilityReceipt validator");
+
 assert.match(modelSource, /language:\s*"English".*status:\s*"QUALIFIED"/s, "English must be QUALIFIED");
 assert.match(modelSource, /language:\s*"Tamil".*status:\s*"QUALIFIED"/s, "Tamil must be QUALIFIED");
-assert.match(modelSource, /language:\s*"Hindi".*status:\s*"BETA"/s, "Hindi must be BETA");
-assert.match(modelSource, /language:\s*"Spanish".*status:\s*"EXPERIMENTAL"/s, "Spanish must be EXPERIMENTAL");
-assert.match(modelSource, /language:\s*"Telugu".*status:\s*"GATED"/s, "Telugu must be GATED");
-assert.match(modelSource, /Script Defect.*Devanagari/, "Telugu must cite ggml script defect");
+assert.match(modelSource, /language:\s*"Hindi".*status:\s*"LIMITED_EVIDENCE"/s, "Hindi must be LIMITED_EVIDENCE");
+assert.match(modelSource, /language:\s*"Spanish".*status:\s*"UNDER_QUALIFICATION"/s, "Spanish must be UNDER_QUALIFICATION");
+assert.match(modelSource, /language:\s*"Telugu \(Baseline ggml-small\)".*status:\s*"UNSUPPORTED"/s, "Telugu baseline must be UNSUPPORTED");
+assert.match(modelSource, /language:\s*"Telugu \(Challenger ggml-te-small\)".*status:\s*"UNDER_QUALIFICATION"/s, "Telugu challenger must be UNDER_QUALIFICATION");
+assert.match(modelSource, /Script Defect.*Devanagari/, "Telugu baseline must cite ggml script defect");
+assert.match(modelSource, /evidenceReceipt:\s*"G12-H"/, "Telugu challenger must cite G12-H evidence receipt");
 
 // 4. Hardware Headroom Metrics
 console.log("Checking hardware telemetry metrics...");

@@ -66,11 +66,15 @@ export const MediaWorkspaceView: React.FC = () => {
 
     setBatchQueue((prev) => [...prev, ...newItems]);
   };
-
   const handleExecuteBatch = () => {
-    if (selectedLanguage.status === "GATED") {
+    if (
+      selectedLanguage.status === "UNSUPPORTED" ||
+      selectedLanguage.status === "UNAVAILABLE" ||
+      selectedLanguage.status === "UNKNOWN" ||
+      (selectedLanguage.status as string) === "GATED"
+    ) {
       setProcessedLog(
-        `Execution Gated: ${selectedLanguage.language} transcription is gated pending script defect resolution.`
+        `Execution Gated: ${selectedLanguage.language} transcription is unsupported/gated pending qualification resolution.`
       );
       return;
     }
@@ -289,7 +293,7 @@ export const MediaWorkspaceView: React.FC = () => {
                         marginTop: "2px",
                       }}
                     >
-                      WER: {lang.wer.toFixed(2)}
+                      WER: {lang.wer !== undefined ? lang.wer.toFixed(2) : "N/A"}
                       {lang.cer !== undefined ? ` | CER: ${lang.cer.toFixed(2)}` : ""}
                       {" — "}
                       {lang.notice}
@@ -407,15 +411,21 @@ export const MediaWorkspaceView: React.FC = () => {
               disabled={
                 isProcessing ||
                 batchQueue.filter((b) => b.accepted).length === 0 ||
-                selectedLanguage.status === "GATED"
+                selectedLanguage.status === "UNSUPPORTED" ||
+                selectedLanguage.status === "UNAVAILABLE" ||
+                selectedLanguage.status === "UNKNOWN" ||
+                (selectedLanguage.status as string) === "GATED"
               }
               onClick={handleExecuteBatch}
               aria-label="Process Offline Batch Files"
             >
               {isProcessing
                 ? "Processing..."
-                : selectedLanguage.status === "GATED"
-                ? `Language Gated (${selectedLanguage.language})`
+                : selectedLanguage.status === "UNSUPPORTED" ||
+                  selectedLanguage.status === "UNAVAILABLE" ||
+                  selectedLanguage.status === "UNKNOWN" ||
+                  (selectedLanguage.status as string) === "GATED"
+                ? `Language Unsupported (${selectedLanguage.language})`
                 : `Process ${
                     batchQueue.filter((b) => b.accepted).length
                   } File(s) Locally`}

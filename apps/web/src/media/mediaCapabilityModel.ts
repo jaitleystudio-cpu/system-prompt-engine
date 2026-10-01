@@ -115,60 +115,186 @@ export const CODEC_REGISTRY: CodecDefinition[] = [
   },
 ];
 
-export type LanguageQualificationStatus = "QUALIFIED" | "BETA" | "EXPERIMENTAL" | "GATED";
+export type LanguageQualificationStatus =
+  | "QUALIFIED"
+  | "LIMITED_EVIDENCE"
+  | "UNDER_QUALIFICATION"
+  | "UNSUPPORTED"
+  | "UNAVAILABLE"
+  | "UNKNOWN";
 
 export interface LanguageCapability {
   language: string;
   code: string;
+  model?: string;
   wer: number;
   cer?: number;
   rtf?: number;
+  scriptPassRatio?: string;
+  contentPassRatio?: string;
   status: LanguageQualificationStatus;
+  evidenceReceipt: string;
   notice: string;
 }
 
-export const LANGUAGE_CAPABILITIES: LanguageCapability[] = [
-  {
-    language: "English",
-    code: "en",
-    wer: 0.0,
-    rtf: 0.41,
-    status: "QUALIFIED",
-    notice: "High-fidelity offline transcription available.",
+export interface MediaCapabilityContract {
+  contractVersion: "spe.media-capability.v1";
+  receiptId: string;
+  timestamp: string;
+  backendExecution: "GATED";
+  liveTranscriptionStatus: "UNAVAILABLE";
+  hostFfmpegProductPath: "PROHIBITED";
+  networkEgress: "0";
+  routeMountStatus: "NOT_INTEGRATED";
+  metrics: {
+    peakRssBytes: number;
+    coldLoadLatencySec: number;
+    warmMedianRtf: number;
+  };
+  supportedCodecs: CodecDefinition[];
+  languageCapabilities: LanguageCapability[];
+}
+
+export const CANONICAL_MEDIA_CAPABILITY_RECEIPT: MediaCapabilityContract = {
+  contractVersion: "spe.media-capability.v1",
+  receiptId: "rcpt-media-g12-evidence-v1",
+  timestamp: "2026-10-01T08:00:00.000Z",
+  backendExecution: "GATED",
+  liveTranscriptionStatus: "UNAVAILABLE",
+  hostFfmpegProductPath: "PROHIBITED",
+  networkEgress: "0",
+  routeMountStatus: "NOT_INTEGRATED",
+  metrics: {
+    peakRssBytes: PEAK_RSS_BYTES,
+    coldLoadLatencySec: COLD_LOAD_LATENCY_SEC,
+    warmMedianRtf: WARM_MEDIAN_RTF,
   },
-  {
-    language: "Tamil",
-    code: "ta",
-    wer: 0.0,
-    cer: 0.05,
-    status: "QUALIFIED",
-    notice: "Verified high-accuracy transcription in native script.",
-  },
-  {
-    language: "Hindi",
-    code: "hi",
-    wer: 0.4,
-    cer: 0.1,
-    status: "BETA",
-    notice: "High phonetic accuracy; manual editorial review recommended.",
-  },
-  {
-    language: "Spanish",
-    code: "es",
-    wer: 0.75,
-    cer: 0.22,
-    status: "EXPERIMENTAL",
-    notice: "Moderate error rate observed on complex syntax.",
-  },
-  {
-    language: "Telugu",
-    code: "te",
-    wer: 1.0,
-    cer: 1.0,
-    status: "GATED",
-    notice: "Script Defect: ggml-small emits Devanagari rather than Telugu script. Language gated pending G12-F root-cause resolution.",
-  },
-];
+  supportedCodecs: CODEC_REGISTRY,
+  languageCapabilities: [
+    {
+      language: "English",
+      code: "en",
+      model: "ggml-small.bin",
+      wer: 0.0,
+      rtf: 0.41,
+      status: "QUALIFIED",
+      evidenceReceipt: "G12-C",
+      notice: "High-fidelity offline transcription available.",
+    },
+    {
+      language: "Tamil",
+      code: "ta",
+      model: "ggml-small.bin",
+      wer: 0.0,
+      cer: 0.05,
+      status: "QUALIFIED",
+      evidenceReceipt: "G12-C",
+      notice: "Verified high-accuracy transcription in native script.",
+    },
+    {
+      language: "Hindi",
+      code: "hi",
+      model: "ggml-small.bin",
+      wer: 0.4,
+      cer: 0.1,
+      status: "LIMITED_EVIDENCE",
+      evidenceReceipt: "G12-C",
+      notice: "High phonetic accuracy; manual editorial review recommended.",
+    },
+    {
+      language: "Spanish",
+      code: "es",
+      model: "ggml-small.bin",
+      wer: 0.75,
+      cer: 0.22,
+      status: "UNDER_QUALIFICATION",
+      evidenceReceipt: "G12-C",
+      notice: "Moderate error rate observed on complex syntax.",
+    },
+    {
+      language: "Telugu (Baseline ggml-small)",
+      code: "te-baseline",
+      model: "ggml-small.bin",
+      wer: 3.571,
+      cer: 1.833,
+      scriptPassRatio: "0/10",
+      status: "UNSUPPORTED",
+      evidenceReceipt: "G12-H",
+      notice: "Script Defect: ggml-small emits Devanagari rather than Telugu script. Baseline unsupported.",
+    },
+    {
+      language: "Telugu (Challenger ggml-te-small)",
+      code: "te-challenger",
+      model: "ggml-te-small.bin",
+      wer: 1.143,
+      cer: 0.349,
+      rtf: 0.869,
+      scriptPassRatio: "10/10",
+      contentPassRatio: "9/10",
+      status: "UNDER_QUALIFICATION",
+      evidenceReceipt: "G12-H",
+      notice: "Native Telugu script verified (10/10); pending independent cross-agent PR #85 merge.",
+    },
+  ],
+};
+
+/**
+ * Validates a media capability contract receipt against strict G12 evidence invariants.
+ */
+export function validateMediaCapabilityReceipt(data: unknown): {
+  valid: true;
+  contract: MediaCapabilityContract;
+} | {
+  valid: false;
+  error: string;
+} {
+  if (!data || typeof data !== "object") {
+    return { valid: false, error: "Receipt must be an object" };
+  }
+  const d = data as Record<string, unknown>;
+  if (d.contractVersion !== "spe.media-capability.v1") {
+    return { valid: false, error: "Invalid contractVersion" };
+  }
+  if (d.backendExecution !== "GATED") {
+    return { valid: false, error: "backendExecution must be GATED" };
+  }
+  if (d.liveTranscriptionStatus !== "UNAVAILABLE") {
+    return { valid: false, error: "liveTranscriptionStatus must be UNAVAILABLE" };
+  }
+  if (d.hostFfmpegProductPath !== "PROHIBITED") {
+    return { valid: false, error: "hostFfmpegProductPath must be PROHIBITED" };
+  }
+  if (d.networkEgress !== "0") {
+    return { valid: false, error: "networkEgress must be 0" };
+  }
+  if (!Array.isArray(d.languageCapabilities)) {
+    return { valid: false, error: "languageCapabilities must be an array" };
+  }
+
+  const validStatuses = new Set([
+    "QUALIFIED",
+    "LIMITED_EVIDENCE",
+    "UNDER_QUALIFICATION",
+    "UNSUPPORTED",
+    "UNAVAILABLE",
+    "UNKNOWN",
+  ]);
+
+  for (const item of d.languageCapabilities as Record<string, unknown>[]) {
+    if (!item.language || !item.code || !item.status) {
+      return { valid: false, error: "Language capability items require language, code, and status" };
+    }
+    if (!validStatuses.has(item.status as string)) {
+      return { valid: false, error: `Invalid language status: ${item.status}` };
+    }
+  }
+
+  return { valid: true, contract: data as MediaCapabilityContract };
+}
+
+// Ingest from canonical capability receipt: presentation layer cannot invent statuses
+export const LANGUAGE_CAPABILITIES: LanguageCapability[] =
+  CANONICAL_MEDIA_CAPABILITY_RECEIPT.languageCapabilities;
 
 export function inspectMediaFile(file: File): {
   accepted: boolean;
