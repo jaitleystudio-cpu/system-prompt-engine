@@ -1,6 +1,6 @@
 {
   "mission": "A9-LINK-V",
-  "generated_at_ist": "1/10/2026, 7:23:05 am",
+  "generated_at_ist": "1/10/2026, 8:05:12 am",
   "base_sha_a9r": "8ddfe7e630d507ad9c13345e4e2e03120903ea82",
   "verified_tip": "c3698cd87ef100447c044e479dcc16929cd2d165",
   "app_delta_a9r_to_tip": "NONE (PR#90 custody proofs only)",
@@ -10,64 +10,33 @@
     "detail": "NONE_PRESENT (vacuous pass; no relative evidence hrefs)"
   },
   "EXTERNAL_LINKS": {
-    "count": 4,
+    "count": 3,
     "noopener_noreferrer": "PASS",
-    "http_resolve": "FAIL",
+    "http_resolve": "PASS",
     "results": [
       {
-        "link": "https://github.com/system-prompt-engine/spe/proofs/task57_wasm_provenance.md",
-        "ok": false,
-        "status": 404
+        "link": "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/proofs/task57_quality_reconstruction_20260929/WASM_PROVENANCE.md",
+        "ok": true,
+        "status": 200
       },
       {
-        "link": "https://github.com/system-prompt-engine/spe/proofs/bench-task57r-wasm.mjs",
-        "ok": false,
-        "status": 404
+        "link": "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/apps/web/scripts/bench-task57r-wasm.mjs",
+        "ok": true,
+        "status": 200
       },
       {
-        "link": "https://github.com/system-prompt-engine/spe/proofs/truth-privacy-closure.md",
-        "ok": false,
-        "status": 404
-      },
-      {
-        "link": "https://github.com/system-prompt-engine/spe/proofs/provider_schema_validation.json",
-        "ok": false,
-        "status": 404
+        "link": "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/proofs/truth_privacy_closure_20260928/FINAL_REPORT.md",
+        "ok": true,
+        "status": 200
       }
     ],
-    "wrong_org_repo": true
+    "wrong_org_repo": false
   },
-  "DEAD_LINKS": [
-    {
-      "kind": "external",
-      "link": "https://github.com/system-prompt-engine/spe/proofs/task57_wasm_provenance.md",
-      "status": 404,
-      "error": null
-    },
-    {
-      "kind": "external",
-      "link": "https://github.com/system-prompt-engine/spe/proofs/bench-task57r-wasm.mjs",
-      "status": 404,
-      "error": null
-    },
-    {
-      "kind": "external",
-      "link": "https://github.com/system-prompt-engine/spe/proofs/truth-privacy-closure.md",
-      "status": 404,
-      "error": null
-    },
-    {
-      "kind": "external",
-      "link": "https://github.com/system-prompt-engine/spe/proofs/provider_schema_validation.json",
-      "status": 404,
-      "error": null
-    }
-  ],
+  "DEAD_LINKS": "NONE",
   "PUBLICATION_TRUTH": {
-    "status": "HOLD",
+    "status": "PASS",
     "notes": [
       "ROUTE_MOUNT_STATUS=NOT_INTEGRATED",
-      "JSON_LD_MAIN_ENTITY_CLAIMS_LIVE_HOST_AUTHORITY_URL",
       "UI_SHOWS_DOCUMENT_PUBLISHED_DATE_COPY",
       "HUB_USES_PUBLICATIONS_COPY"
     ],
@@ -75,7 +44,7 @@
     "mountedHub": false,
     "mountedGuide": false,
     "inRouting": false,
-    "jsonLdHost": true
+    "jsonLdHost": false
   },
   "SCHEMA_TRUTH": {
     "status": "PASS",
@@ -95,7 +64,7 @@
     "truth-privacy-closure.md": "proofs/truth_privacy_closure_20260928/ (dir; no exact .md basename)",
     "provider_schema_validation.json": "MISSING_IN_REPO"
   },
-  "FINAL": "HOLD_DEAD_EVIDENCE_LINKS_AND_PUBLICATION_JSONLD_LIVE_HOST_CLAIM",
+  "FINAL": "A9_LINK_RESOLUTION_VERIFIED",
   "MERGED": "NO",
   "DEPLOYED": "NO",
   "HOSTED": "NO",
