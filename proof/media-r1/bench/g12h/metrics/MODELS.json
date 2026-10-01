@@ -1,0 +1,16 @@
+[
+  {
+    "role": "BASELINE",
+    "name": "ggml-small.bin",
+    "path": "/Volumes/4TB-WD/spe-worktrees/spe-g12h-te-indep-qual-20261001/proof/media-r1/models/ggml-small.bin",
+    "expected_sha256": "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b",
+    "sha256_verified": "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b"
+  },
+  {
+    "role": "CHALLENGER_TE",
+    "name": "ggml-te-small.bin",
+    "path": "/Volumes/4TB-WD/spe-worktrees/spe-g12h-te-indep-qual-20261001/proof/media-r1/models/ggml-te-small.bin",
+    "expected_sha256": "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e",
+    "sha256_verified": "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e"
+  }
+]

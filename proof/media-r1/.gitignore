@@ -1,0 +1,12 @@
+models/*.bin
+models/*.download.log
+bench/g12h/logs/
+bench/g12h/hyps/
+__pycache__/
+.venv*/
+fixtures/human/te_dengue_intro_16k.wav
+fixtures/human/te_vizag_dengue_pa.opus
+fixtures/human/*_convert.log
+bench/g12h/logs/
+bench/g12h/hyps/
+__pycache__/

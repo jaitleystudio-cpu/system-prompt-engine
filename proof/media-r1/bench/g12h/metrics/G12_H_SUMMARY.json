@@ -1,0 +1,74 @@
+{
+  "n_cases": 44,
+  "human_derived_explicit_n": 10,
+  "baseline_script_pass": 0,
+  "challenger_script_pass": 10,
+  "challenger_content_pass": 9,
+  "challenger_bad_hall": 0,
+  "BASELINE_WER_MEAN": 3.5714285714285716,
+  "CANDIDATE_WER_MEAN": 1.1428571428571428,
+  "BASELINE_CER_MEAN": 1.8333333333333333,
+  "CANDIDATE_CER_MEAN": 0.3492063492063492,
+  "BASELINE_RTF_MEAN": 5.075047780471733,
+  "CANDIDATE_RTF_MEAN": 0.8691182201263402,
+  "BASELINE_RSS_MAX_MB": 713.34375,
+  "CANDIDATE_RSS_MAX_MB": 507.3125,
+  "BASELINE_LOAD_MS_MEAN": null,
+  "CANDIDATE_LOAD_MS_MEAN": null,
+  "pairwise_ref": [
+    {
+      "id": "te_namaskaramu_human",
+      "base_wer": 1.0,
+      "base_cer": 1.0,
+      "chal_wer": 1.0,
+      "chal_cer": 0.2222222222222222
+    },
+    {
+      "id": "te_amma_human",
+      "base_wer": 11.0,
+      "base_cer": 5.5,
+      "chal_wer": 1.0,
+      "chal_cer": 0.25
+    },
+    {
+      "id": "te_kaalu_human",
+      "base_wer": 1.0,
+      "base_cer": 1.0,
+      "chal_wer": 1.0,
+      "chal_cer": 0.5
+    },
+    {
+      "id": "te_araka_human",
+      "base_wer": 1.0,
+      "base_cer": 1.3333333333333333,
+      "chal_wer": 2.0,
+      "chal_cer": 0.6666666666666666
+    },
+    {
+      "id": "te_kurupam_human",
+      "base_wer": 9.0,
+      "base_cer": 1.5,
+      "chal_wer": 1.0,
+      "chal_cer": 0.3333333333333333
+    },
+    {
+      "id": "te_amma_light_noise",
+      "base_wer": 1.0,
+      "base_cer": 1.5,
+      "chal_wer": 1.0,
+      "chal_cer": 0.25
+    },
+    {
+      "id": "te_namaskaramu_fast",
+      "base_wer": 1.0,
+      "base_cer": 1.0,
+      "chal_wer": 1.0,
+      "chal_cer": 0.2222222222222222
+    }
+  ],
+  "CANDIDATE_LOAD_MS_PROBE": 1381.6,
+  "BASELINE_LOAD_MS_PROBE": 3357.25,
+  "MODEL_SIZE_MB_CANDIDATE": 189.49,
+  "MODEL_SIZE_MB_BASELINE": 487.01,
+  "FINAL": "TELUGU_MODEL_QUALIFIED_FOR_MEDIA_BACKEND"
+}

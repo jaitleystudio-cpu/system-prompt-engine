@@ -1,0 +1,44 @@
+{
+  "gate": "G12-H",
+  "verified_at_local": "2026-10-01 Asia/Calcutta",
+  "independent_of": "G12-G (recomputed on G12-H worktree symlinks)",
+  "MODEL_SOURCE": {
+    "url": "https://huggingface.co/ukta-app/indic-whisper-ggml/resolve/a3d637b81797a1d680e6933b71058ac9e00681fd/ggml-te-small.bin",
+    "hf_repo": "ukta-app/indic-whisper-ggml",
+    "hf_commit": "a3d637b81797a1d680e6933b71058ac9e00681fd",
+    "file": "ggml-te-small.bin"
+  },
+  "SHA256": "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e",
+  "EXPECTED_SHA256": "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e",
+  "BYTES": 190085487,
+  "EXPECTED_BYTES": 190085487,
+  "LICENSE": "Apache-2.0",
+  "LICENSE_SOURCE": "HF README front-matter license: apache-2.0 + repository LICENSE (independently fetched 2026-10-01)",
+  "WHISPER_CPP_COMPAT": true,
+  "WHISPER_CPP_COMPAT_EVIDENCE": "HF README library_name=whisper.cpp; file is q5_1 ggml; require -nt; loads in whisper-cli pin 927cfce",
+  "QUANT": "q5_1",
+  "FINE_TUNE_SOURCE": "vasista22/whisper-telugu-small@717212f9c4c16a78a86ddcb98f93c7f73ef8a5cc",
+  "CROSS_CUSTODY_SECONDARY": {
+    "repo": "bhaskaro/ainotes-whisper-telugu-q5_1",
+    "commit": "11bb1860bf271666c5f3ae709b7414cf993608b4",
+    "file": "ggml-model.bin",
+    "sha256": "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e",
+    "bytes": 190085487
+  },
+  "BASELINE": {
+    "file": "ggml-small.bin",
+    "sha256": "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b",
+    "bytes": 487601967,
+    "expected_sha256": "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b",
+    "match": true
+  },
+  "WHISPER_CLI": {
+    "sha256": "784e1cb576b40c08827860779c2c0cc6b17b746171d62ce4fb9ff6ea014193a7",
+    "expected": "784e1cb576b40c08827860779c2c0cc6b17b746171d62ce4fb9ff6ea014193a7",
+    "match": true,
+    "source_pin": "927cfce34f31707e17f2bff35c349632fb9e2c3a"
+  },
+  "SHA256_MATCH": true,
+  "BYTES_MATCH": true,
+  "SUPPLY_CUSTODY": "PASS"
+}
