@@ -243,6 +243,32 @@ export class DeviceNegotiator {
       }
     }
   }
+
+  /**
+   * Qualifies a browser/OS environment against strict criteria.
+   * If a browser/OS combination lacks required hardware or SIMD capabilities,
+   * it cannot be falsely marked QUALIFIED.
+   */
+  qualifyBrowserEnvironment(env: {
+    browser: "chrome" | "firefox" | "safari" | "edge" | "other";
+    os: "macos" | "windows" | "linux" | "android" | "ios" | "other";
+    hasWebGpu?: boolean;
+    hasWasmSimd?: boolean;
+  }): QualificationStatus {
+    if (env.browser === "other" || (!env.hasWebGpu && !env.hasWasmSimd)) {
+      return "UNAVAILABLE";
+    }
+    const match = BROWSER_QUALIFICATION_MATRIX.find(
+      (m) => m.browser === env.browser && m.os === env.os,
+    );
+    if (!match) {
+      return env.hasWasmSimd ? "FALLBACK" : "UNAVAILABLE";
+    }
+    if (match.wasmStatus === "DEGRADED" || match.webGpuStatus === "DEGRADED") {
+      return "DEGRADED";
+    }
+    return match.wasmStatus === "QUALIFIED" ? "QUALIFIED" : "FALLBACK";
+  }
 }
 
 export const globalDeviceNegotiator = new DeviceNegotiator();

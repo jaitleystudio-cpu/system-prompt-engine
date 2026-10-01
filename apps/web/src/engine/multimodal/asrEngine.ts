@@ -22,7 +22,7 @@ import type {
   InferenceSessionReceipt,
   RuntimeBackend,
 } from "./types";
-import { validateInferenceReceipt } from "./types";
+import { validateInferenceReceipt, validateBenchmarkReport } from "./types";
 
 /**
  * Word Error Rate (WER) via Levenshtein distance on words.
@@ -91,6 +91,11 @@ export interface AudioTranscribeOptions {
   signal?: AbortSignal;
   onProgress?: (ratio: number, phase: string) => void;
   knownTranscript?: string;
+  isMockSession?: boolean;
+  sessionCreateProven?: boolean;
+  sessionRunProven?: boolean;
+  realModelExecuted?: boolean;
+  hasHardcodedTranscript?: boolean;
 }
 
 export class LocalAsrEngine {
@@ -141,6 +146,11 @@ export class LocalAsrEngine {
       signal,
       onProgress,
       knownTranscript,
+      isMockSession,
+      sessionCreateProven: explicitSessionCreate,
+      sessionRunProven: explicitSessionRun,
+      realModelExecuted: explicitRealModel,
+      hasHardcodedTranscript: explicitHardcodedTranscript,
     } = options;
 
     if (signal?.aborted) {
@@ -164,6 +174,9 @@ export class LocalAsrEngine {
         rawUserDataEgress: 0,
         artifactClass: "TEST_FIXTURE",
         productionQualificationAllowed: false,
+        sessionCreateProven: false,
+        sessionRunProven: false,
+        realModelExecuted: false,
         networkTrace: {
           modelDownloadNetworkBytes: 0,
           inferenceNetworkBytes: 0,
@@ -208,6 +221,9 @@ export class LocalAsrEngine {
         rawUserDataEgress: 0,
         artifactClass: pack?.artifactClass || "TEST_FIXTURE",
         productionQualificationAllowed: false,
+        sessionCreateProven: false,
+        sessionRunProven: false,
+        realModelExecuted: false,
         networkTrace: {
           modelDownloadNetworkBytes: 0,
           inferenceNetworkBytes: 0,
@@ -250,8 +266,9 @@ export class LocalAsrEngine {
       const isSilent = maxAmp < 0.005 && rms < 0.001;
 
       const artifactClass = pack.artifactClass ?? "PRODUCTION_RELEASE";
+      const isFixture = artifactClass === "TEST_FIXTURE" || pack.productionQualificationAllowed === false;
       const productionQualificationAllowed =
-        pack.productionQualificationAllowed ?? (artifactClass === "PRODUCTION_RELEASE");
+        isFixture ? false : (pack.productionQualificationAllowed ?? true);
 
       if (isSilent) {
         // Return NO_TRANSCRIPTION honestly for silent audio
@@ -269,6 +286,9 @@ export class LocalAsrEngine {
           rawUserDataEgress: 0,
           artifactClass,
           productionQualificationAllowed,
+          sessionCreateProven: true,
+          sessionRunProven: true,
+          realModelExecuted: !isFixture,
           networkTrace: {
             modelDownloadNetworkBytes: 0,
             inferenceNetworkBytes: 0,
@@ -321,6 +341,11 @@ export class LocalAsrEngine {
 
       onProgress?.(1.0, "Local transcription complete");
 
+      const sessionCreateProven = explicitSessionCreate !== undefined ? explicitSessionCreate : true;
+      const sessionRunProven = explicitSessionRun !== undefined ? explicitSessionRun : !isFixture;
+      const realModelExecuted = explicitRealModel !== undefined ? explicitRealModel : !isFixture;
+      const hasHardcodedTranscript = explicitHardcodedTranscript !== undefined ? explicitHardcodedTranscript : false;
+
       const receipt: InferenceSessionReceipt = {
         sessionId: `asr-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
         modelId: pack.manifest.modelId,
@@ -334,6 +359,12 @@ export class LocalAsrEngine {
         rawUserDataEgress: 0,
         artifactClass,
         productionQualificationAllowed,
+        sessionCreateProven,
+        sessionRunProven,
+        realModelExecuted,
+        isMockSession: Boolean(isMockSession),
+        hasHardcodedTranscript,
+        executionProvider: backend,
         networkTrace: {
           modelDownloadNetworkBytes: 0,
           inferenceNetworkBytes: 0,
@@ -494,7 +525,15 @@ export class LocalAsrEngine {
       totalRtf += res.realTimeFactor;
     }
 
-    return {
+    const pack = globalModelRegistry.getPack(this.activeModelId);
+    const realModelExecuted = Boolean(
+      pack &&
+      pack.state === "READY" &&
+      pack.artifactClass === "PRODUCTION_RELEASE" &&
+      pack.manifest.qualificationState === "QUALIFIED"
+    );
+
+    const report: AsrBenchmarkReport = {
       fixturesEvaluated: runList.length,
       werByLanguage: werMap,
       cerByLanguage: cerMap,
@@ -502,7 +541,11 @@ export class LocalAsrEngine {
       coldLoadSec: 3.81,
       warmLoadMs: 45,
       allLanguagesQualified: Object.values(werMap).every((w) => w <= 0.2),
+      benchmarkClass: realModelExecuted ? "REAL_MODEL_EVALUATION" : "SYNTHETIC_FIXTURE_EVALUATION",
+      realModelExecuted,
     };
+    validateBenchmarkReport(report);
+    return report;
   }
 }
 

@@ -25,7 +25,7 @@ import type {
   OcrRecognizedRegion,
   OcrResult,
 } from "./types";
-import { validateInferenceReceipt } from "./types";
+import { validateInferenceReceipt, validateBenchmarkReport } from "./types";
 
 /**
  * Compute Intersection over Union (IoU) between two normalized boxes.
@@ -164,6 +164,13 @@ export class LocalOcrEngine {
     imageData: ImageData,
     signal?: AbortSignal,
     knownTextLabels?: Array<{ bounds: NormalizedBox; text: string; script?: OcrRecognizedRegion["script"] }>,
+    options?: {
+      isMockSession?: boolean;
+      sessionCreateProven?: boolean;
+      sessionRunProven?: boolean;
+      realModelExecuted?: boolean;
+      hasHardcodedOcrText?: boolean;
+    },
   ): Promise<OcrResult> {
     const startMs = Date.now();
     if (signal?.aborted) {
@@ -242,8 +249,14 @@ export class LocalOcrEngine {
       const elapsedMs = Math.max(1, Date.now() - startMs);
 
       const artifactClass = activeReadyPack.artifactClass ?? "PRODUCTION_RELEASE";
+      const isFixture = artifactClass === "TEST_FIXTURE" || activeReadyPack.productionQualificationAllowed === false;
       const productionQualificationAllowed =
-        activeReadyPack.productionQualificationAllowed ?? (artifactClass === "PRODUCTION_RELEASE");
+        isFixture ? false : (activeReadyPack.productionQualificationAllowed ?? true);
+
+      const sessionCreateProven = options?.sessionCreateProven !== undefined ? options.sessionCreateProven : true;
+      const sessionRunProven = options?.sessionRunProven !== undefined ? options.sessionRunProven : !isFixture;
+      const realModelExecuted = options?.realModelExecuted !== undefined ? options.realModelExecuted : !isFixture;
+      const hasHardcodedOcrText = options?.hasHardcodedOcrText !== undefined ? options.hasHardcodedOcrText : false;
 
       const receipt: InferenceSessionReceipt = {
         sessionId: `ocr-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -258,6 +271,12 @@ export class LocalOcrEngine {
         rawUserDataEgress: 0,
         artifactClass,
         productionQualificationAllowed,
+        sessionCreateProven,
+        sessionRunProven,
+        realModelExecuted,
+        isMockSession: Boolean(options?.isMockSession),
+        hasHardcodedOcrText,
+        executionProvider: activeReadyPack.activeBackend,
         networkTrace: {
           modelDownloadNetworkBytes: 0,
           inferenceNetworkBytes: 0,
@@ -445,8 +464,14 @@ export class LocalOcrEngine {
     }
 
     const pack = globalModelRegistry.getPack(this.activeModelId);
+    const realModelExecuted = Boolean(
+      pack &&
+      pack.state === "READY" &&
+      pack.artifactClass === "PRODUCTION_RELEASE" &&
+      pack.manifest.qualificationState === "QUALIFIED"
+    );
 
-    return {
+    const report: OcrBenchmarkReport = {
       fixturesEvaluated: runList.length,
       cerByScript: cerMap,
       averageWer: Number((totalWer / runList.length).toFixed(3)),
@@ -455,7 +480,11 @@ export class LocalOcrEngine {
       peakMemoryMb: pack?.manifest.minimumMemoryMb ?? 128,
       modelSizeBytes: pack?.manifest.expectedSizeBytes ?? 14210800,
       allScriptsQualified: Object.values(cerMap).every((c) => c <= 0.15),
+      benchmarkClass: realModelExecuted ? "REAL_MODEL_EVALUATION" : "SYNTHETIC_FIXTURE_EVALUATION",
+      realModelExecuted,
     };
+    validateBenchmarkReport(report);
+    return report;
   }
 }
 

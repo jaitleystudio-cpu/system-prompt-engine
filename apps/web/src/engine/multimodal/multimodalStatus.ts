@@ -147,3 +147,13 @@ export class MultimodalStatusModel {
 }
 
 export const globalMultimodalStatusModel = new MultimodalStatusModel();
+
+export const MULTIMODAL_TRUTH_METRICS = {
+  ASR_FIXTURE_LANGUAGES_COVERED: ["en", "te", "hi", "ta"] as const,
+  OCR_FIXTURE_SCRIPTS_COVERED: ["en", "te", "hi", "ta", "Code", "Latin"] as const,
+  ASR_REAL_BENCHMARKED_LANGUAGES: [] as const,
+  OCR_REAL_BENCHMARKED_LANGUAGES: [] as const,
+  REAL_BENCHMARK_EXECUTED: false,
+  REAL_MODEL_BINARIES_IN_GIT: "NOT BUNDLED" as const,
+  REAL_NEURAL_INFERENCE: "HOLD" as const,
+} as const;

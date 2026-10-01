@@ -416,25 +416,55 @@ export function getLanguageQualificationStatus(langCode: string): LanguageQualif
     "en", "es", "zh", "hi", "ar", "bn", "pt", "ru", "ja", "de",
     "fr", "te", "ta", "id", "ur", "ko", "it", "tr", "vi", "mr",
   ].includes(cleanCode);
+  const fixtureCoverage = ["en", "te", "hi", "ta"].includes(cleanCode);
   const asrDeclared = [
     "en", "zh", "de", "es", "ru", "ko", "fr", "ja", "pt", "tr",
     "pl", "ca", "nl", "ar", "sv", "it", "id", "hi", "fi", "vi",
     "he", "uk", "el", "ms", "cs", "ro", "da", "hu", "ta", "te",
   ].includes(cleanCode);
-  const asrBenchmarked = ["en", "te", "hi", "ta"].includes(cleanCode);
   const ocrDeclared = [
     "en", "zh", "de", "es", "ru", "ko", "fr", "ja", "pt", "tr",
     "pl", "nl", "ar", "it", "hi", "vi", "el", "ta", "te", "code",
   ].includes(cleanCode);
-  const ocrBenchmarked = ["en", "te", "hi", "ta"].includes(cleanCode);
 
   return {
     locale: cleanCode,
     uiLocaleAvailable,
     readbackTemplateAvailable: readbackSupported,
     asrModelSupportDeclared: asrDeclared,
-    asrBenchmarked,
+    asrBenchmarked: false, // Epistemic Truth: REAL neural model benchmark is HOLD
     ocrModelSupportDeclared: ocrDeclared,
-    ocrBenchmarked,
+    ocrBenchmarked: false, // Epistemic Truth: REAL neural model benchmark is HOLD
+    fixtureCoverage,
+    modelSupportDeclared: asrDeclared || ocrDeclared,
+    realModelBytesVerified: false,
+    realInferenceExecuted: false,
+    realBenchmarkExecuted: false,
+    codeSwitchStatus: "NOT_TESTED",
   };
+}
+
+/**
+ * Evaluates code-switch qualification status between two languages.
+ * Epistemic Law: Monolingual A PASS + Monolingual B PASS != Code-Switch PASS.
+ * Code-switch capability requires explicit benchmark execution on code-switched audio.
+ */
+export function evaluateCodeSwitchStatus(
+  langA: string,
+  langB: string,
+  monolingualAPass: boolean,
+  monolingualBPass: boolean,
+  codeSwitchBenchmarkReceipt?: {
+    executed: boolean;
+    status: "NOT_TESTED" | "DATASET_READY" | "BENCHMARKED" | "QUALIFIED_WITHIN_TESTED_SCOPE";
+  },
+): "NOT_TESTED" | "DATASET_READY" | "BENCHMARKED" | "QUALIFIED_WITHIN_TESTED_SCOPE" {
+  if (!langA || !langB || !monolingualAPass || !monolingualBPass) {
+    return "NOT_TESTED";
+  }
+  if (!codeSwitchBenchmarkReceipt || !codeSwitchBenchmarkReceipt.executed) {
+    // Epistemic Law: Monolingual A PASS + Monolingual B PASS != Code-Switch PASS
+    return "NOT_TESTED";
+  }
+  return codeSwitchBenchmarkReceipt.status;
 }

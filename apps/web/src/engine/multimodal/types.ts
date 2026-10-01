@@ -119,6 +119,12 @@ export interface NetworkObservabilityTrace {
   telemetryEgressBytes: 0;
 }
 
+export type CodeSwitchStatus =
+  | "NOT_TESTED"
+  | "DATASET_READY"
+  | "BENCHMARKED"
+  | "QUALIFIED_WITHIN_TESTED_SCOPE";
+
 export interface LanguageQualificationStatus {
   locale: string;
   uiLocaleAvailable: boolean;
@@ -127,6 +133,12 @@ export interface LanguageQualificationStatus {
   asrBenchmarked: boolean;
   ocrModelSupportDeclared: boolean;
   ocrBenchmarked: boolean;
+  fixtureCoverage: boolean;
+  modelSupportDeclared: boolean;
+  realModelBytesVerified: boolean;
+  realInferenceExecuted: boolean;
+  realBenchmarkExecuted: boolean;
+  codeSwitchStatus?: CodeSwitchStatus;
 }
 
 export interface DeviceCapability {
@@ -164,6 +176,13 @@ export interface InferenceSessionReceipt {
   artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
   productionQualificationAllowed?: boolean;
   networkTrace?: NetworkObservabilityTrace;
+  sessionCreateProven?: boolean;
+  sessionRunProven?: boolean;
+  executionProvider?: RuntimeBackend;
+  realModelExecuted?: boolean;
+  isMockSession?: boolean;
+  hasHardcodedTranscript?: boolean;
+  hasHardcodedOcrText?: boolean;
 }
 
 export type InferenceReceipt = InferenceSessionReceipt;
@@ -189,6 +208,36 @@ export function validateInferenceReceipt(receipt: InferenceSessionReceipt): bool
       "QUALIFICATION FRAUD: artifactClass TEST_FIXTURE cannot claim productionQualificationAllowed=true",
     );
   }
+  // MM-Q3 Law: Mock session claiming real execution or production qualification is rejected
+  if (receipt.isMockSession && (receipt.sessionRunProven === true || receipt.realModelExecuted === true)) {
+    throw new Error(
+      "EXECUTION INTEGRITY VIOLATION: Mocked session cannot claim sessionRunProven=true or realModelExecuted=true",
+    );
+  }
+  // MM-Q3 Law: Session create proven without session run proven cannot claim production qualification
+  if (receipt.sessionCreateProven === true && receipt.sessionRunProven !== true && receipt.productionQualificationAllowed === true) {
+    throw new Error(
+      "EXECUTION INTEGRITY VIOLATION: session created but session.run was not proven to execute",
+    );
+  }
+  // MM-Q3 Law: Hardcoded transcript claiming production qualification is rejected
+  if (receipt.hasHardcodedTranscript === true && receipt.productionQualificationAllowed === true) {
+    throw new Error(
+      "EPISTEMIC VIOLATION: Hardcoded transcript cannot be claimed as production inference",
+    );
+  }
+  // MM-Q3 Law: Hardcoded OCR text claiming production qualification is rejected
+  if (receipt.hasHardcodedOcrText === true && receipt.productionQualificationAllowed === true) {
+    throw new Error(
+      "EPISTEMIC VIOLATION: Hardcoded OCR text cannot be claimed as production inference",
+    );
+  }
+  // MM-Q3 Law: realModelExecuted must be true to claim production qualification
+  if (receipt.realModelExecuted === false && receipt.productionQualificationAllowed === true) {
+    throw new Error(
+      "QUALIFICATION FRAUD: realModelExecuted must be true to claim productionQualificationAllowed=true",
+    );
+  }
   // Validate network observability trace if attached
   if (receipt.networkTrace) {
     if (receipt.networkTrace.inferenceNetworkBytes !== 0) {
@@ -211,6 +260,27 @@ export function validateInferenceReceipt(receipt: InferenceSessionReceipt): bool
         `PRIVACY VIOLATION: telemetryEgressBytes must be 0, got ${receipt.networkTrace.telemetryEgressBytes}`,
       );
     }
+  }
+  return true;
+}
+
+/**
+ * Validates benchmark report against epistemic laws:
+ * - Real model evaluation cannot be reported if realModelExecuted=false.
+ * - Empty/vacuous benchmark fixture lists cannot report PASS.
+ */
+export function validateBenchmarkReport(report: {
+  fixturesEvaluated: number;
+  benchmarkClass?: "REAL_MODEL_EVALUATION" | "SYNTHETIC_FIXTURE_EVALUATION";
+  realModelExecuted?: boolean;
+}): boolean {
+  if (!report || report.fixturesEvaluated === 0) {
+    throw new Error("VACUOUS BENCHMARK: No fixtures evaluated");
+  }
+  if (report.benchmarkClass === "REAL_MODEL_EVALUATION" && report.realModelExecuted !== true) {
+    throw new Error(
+      "EPISTEMIC VIOLATION: Cannot report REAL_MODEL_EVALUATION when realModelExecuted=false. Fixture evaluation must be labeled SYNTHETIC_FIXTURE_EVALUATION.",
+    );
   }
   return true;
 }
@@ -398,6 +468,8 @@ export interface OcrBenchmarkReport {
   peakMemoryMb: number;
   modelSizeBytes: number;
   allScriptsQualified: boolean;
+  benchmarkClass?: "REAL_MODEL_EVALUATION" | "SYNTHETIC_FIXTURE_EVALUATION";
+  realModelExecuted?: boolean;
 }
 
 export interface AsrBenchmarkFixture {
@@ -417,6 +489,8 @@ export interface AsrBenchmarkReport {
   coldLoadSec: number;
   warmLoadMs: number;
   allLanguagesQualified: boolean;
+  benchmarkClass?: "REAL_MODEL_EVALUATION" | "SYNTHETIC_FIXTURE_EVALUATION";
+  realModelExecuted?: boolean;
 }
 
 

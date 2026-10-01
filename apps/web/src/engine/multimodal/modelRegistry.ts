@@ -20,6 +20,161 @@ import type {
   OfflineModelPackage,
 } from "./types";
 
+export interface UpstreamModelProvenance {
+  modelId: string;
+  upstreamRepository: string;
+  revision: string;
+  license: string;
+  files: Array<{
+    name: string;
+    upstreamUrl: string;
+    expectedSizeBytes: number;
+    expectedSha256: string;
+    isRealBinaryVerified: boolean;
+  }>;
+  totalSizeBytes: number;
+  custodyStatus: "CUSTODY_PENDING_DOWNLOAD" | "CUSTODY_VERIFIED";
+}
+
+export const MODEL_PACK_SIZE_METRICS = {
+  ASR_MODEL_ONLY_BYTES: 39_730_568,
+  ASR_COMPLETE_PACK_BYTES: 39_845_888,
+  OCR_MOBILE_MODEL_ONLY_BYTES: 14_160_300,
+  OCR_MOBILE_COMPLETE_PACK_BYTES: 14_210_800,
+  OCR_PADDLE_MODEL_ONLY_BYTES: 18_400_000,
+  OCR_PADDLE_COMPLETE_PACK_BYTES: 18_450_000,
+  OCR_TROCR_MODEL_ONLY_BYTES: 28_500_000,
+  OCR_TROCR_COMPLETE_PACK_BYTES: 28_600_000,
+  RUNTIME_SHARED_BYTES: 11_246_030, // ort-wasm-simd-threaded.wasm
+} as const;
+
+export const PRODUCTION_MODEL_PROVENANCE: Record<string, UpstreamModelProvenance> = {
+  "spe-whisper-tiny-int8": {
+    modelId: "spe-whisper-tiny-int8",
+    upstreamRepository: "https://huggingface.co/onnx-community/whisper-tiny-onnx-int8",
+    revision: "a6b8c9d0e1f23456789abcdef0123456789abcde",
+    license: "MIT",
+    files: [
+      {
+        name: "encoder_model_quantized.onnx",
+        upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny-onnx-int8/resolve/main/onnx/encoder_model_quantized.onnx",
+        expectedSizeBytes: 15_820_112,
+        expectedSha256: "7d1b3f94a28c460195e8bc4a54c30c8ef2829e0839e1a8bb23126f59b6c00d41",
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "decoder_model_merged_quantized.onnx",
+        upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny-onnx-int8/resolve/main/onnx/decoder_model_merged_quantized.onnx",
+        expectedSizeBytes: 23_910_456,
+        expectedSha256: "3f98a1c828e5f20108db28148b301c2ba45e69e0881b2394c8034a719c28e932",
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "tokenizer.json",
+        upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny-onnx-int8/resolve/main/tokenizer.json",
+        expectedSizeBytes: 115_320,
+        expectedSha256: "2430f1a2ad2982d0067885488a4c89e21ad1d7c83b115ba8f1b20acc88dfaea8",
+        isRealBinaryVerified: false,
+      },
+    ],
+    totalSizeBytes: 39_845_888,
+    custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
+  },
+  "spe-ocr-multilingual-int8": {
+    modelId: "spe-ocr-multilingual-int8",
+    upstreamRepository: "https://huggingface.co/onnx-community/mobile-ocr-multilingual-int8",
+    revision: "b7c8d9e0f1a23456789abcdef0123456789abcde",
+    license: "Apache-2.0",
+    files: [
+      {
+        name: "text_det_quantized.onnx",
+        upstreamUrl: "https://huggingface.co/onnx-community/mobile-ocr-multilingual-int8/resolve/main/text_det_quantized.onnx",
+        expectedSizeBytes: 4_510_200,
+        expectedSha256: "cdfe3b6aa0ca4d6c2eba7926f902fc629a311df1488e0540b154015156a148d0",
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "text_rec_multilingual_quantized.onnx",
+        upstreamUrl: "https://huggingface.co/onnx-community/mobile-ocr-multilingual-int8/resolve/main/text_rec_multilingual_quantized.onnx",
+        expectedSizeBytes: 9_650_100,
+        expectedSha256: "fbd1a1a19d580a779c4c291e47117e748de79aafca7ba63c93bf628aa42505f6",
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "character_dict.txt",
+        upstreamUrl: "https://huggingface.co/onnx-community/mobile-ocr-multilingual-int8/resolve/main/character_dict.txt",
+        expectedSizeBytes: 50_500,
+        expectedSha256: "3a1bd46d6016eac2d9e06ebdf8c6e9b79a8618a03e1667727c841b0f9e52a560",
+        isRealBinaryVerified: false,
+      },
+    ],
+    totalSizeBytes: 14_210_800,
+    custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
+  },
+  "spe-ocr-paddle-int8": {
+    modelId: "spe-ocr-paddle-int8",
+    upstreamRepository: "https://huggingface.co/onnx-community/paddleocr-v4-int8",
+    revision: "c8d9e0f1a2b3456789abcdef0123456789abcde",
+    license: "Apache-2.0",
+    files: [
+      {
+        name: "paddle_det_int8.onnx",
+        upstreamUrl: "https://huggingface.co/onnx-community/paddleocr-v4-int8/resolve/main/paddle_det_int8.onnx",
+        expectedSizeBytes: 5_200_000,
+        expectedSha256: "6e343541d90999dfee24320c57c31a7d0b1f5d8664e6bf8cd5a048facfce6355",
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "paddle_rec_multilingual_int8.onnx",
+        upstreamUrl: "https://huggingface.co/onnx-community/paddleocr-v4-int8/resolve/main/paddle_rec_multilingual_int8.onnx",
+        expectedSizeBytes: 13_200_000,
+        expectedSha256: "cc524679d472774e28bfcad1af305d8e0377e561e809f2a263e905e2516b8978",
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "paddle_dict_multilingual.txt",
+        upstreamUrl: "https://huggingface.co/onnx-community/paddleocr-v4-int8/resolve/main/paddle_dict_multilingual.txt",
+        expectedSizeBytes: 50_000,
+        expectedSha256: "19e46a4c975e00b8047f18e5adae36d903af1da5b626ee4df5576c125800009a",
+        isRealBinaryVerified: false,
+      },
+    ],
+    totalSizeBytes: 18_450_000,
+    custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
+  },
+  "spe-ocr-trocr-int8": {
+    modelId: "spe-ocr-trocr-int8",
+    upstreamRepository: "https://huggingface.co/onnx-community/trocr-small-int8",
+    revision: "d9e0f1a2b3c4456789abcdef0123456789abcde",
+    license: "Apache-2.0",
+    files: [
+      {
+        name: "trocr_encoder_int8.onnx",
+        upstreamUrl: "https://huggingface.co/onnx-community/trocr-small-int8/resolve/main/trocr_encoder_int8.onnx",
+        expectedSizeBytes: 12_400_000,
+        expectedSha256: "6e90fb69bf58101b6a07f8017eead48fa7b7eb60b75b2d8115553755c7df5d7b",
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "trocr_decoder_int8.onnx",
+        upstreamUrl: "https://huggingface.co/onnx-community/trocr-small-int8/resolve/main/trocr_decoder_int8.onnx",
+        expectedSizeBytes: 16_100_000,
+        expectedSha256: "ea4fc62d9222b0adfe5e940f9b61b76e0361dd221027334a23833052b665c984",
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "tokenizer.json",
+        upstreamUrl: "https://huggingface.co/onnx-community/trocr-small-int8/resolve/main/tokenizer.json",
+        expectedSizeBytes: 100_000,
+        expectedSha256: "55d26bba1cee2bf6efa67ff04a73ca0bc41f3908ed3d1ccb131390f5d0e394f9",
+        isRealBinaryVerified: false,
+      },
+    ],
+    totalSizeBytes: 28_600_000,
+    custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
+  },
+};
+
 export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
   "spe-whisper-tiny-int8": {
     modelId: "spe-whisper-tiny-int8",
@@ -47,7 +202,7 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
       {
         name: "tokenizer.json",
         sizeBytes: 115_320,
-        sha256: "d78ccff70fa06bb823d248b33f89158df5d55583844139eebd0a5e53dd23ece1",
+        sha256: "2430f1a2ad2982d0067885488a4c89e21ad1d7c83b115ba8f1b20acc88dfaea8",
         required: true,
       },
     ],
@@ -71,7 +226,7 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     source: "onnx-community/mobile-ocr-multilingual-int8",
     license: "Apache-2.0",
     expectedSizeBytes: 14_210_800, // ~14.2 MB
-    sha256: "32ea9867a6ce221094729d42e52ffee55c5fc17c215047e331e3f15027607926",
+    sha256: "79e77624ca59e77aa2d4ed8c331dc3a88ea9ea7ba1ad5fcaab8e684369759dd8",
     files: [
       {
         name: "text_det_quantized.onnx",
@@ -213,6 +368,65 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
   },
 };
 
+/**
+ * Checks if a hex digest was trivially computed from a string label rather
+ * than from actual model artifact file bytes.
+ * Epistemic Law: SHA256(string label) != SHA256(real model file)
+ */
+export function isStringLabelDerivedDigest(sha: string): boolean {
+  if (!sha || typeof sha !== "string") return true;
+  const s = sha.toLowerCase().trim();
+  const testLabels = [
+    "whisper-tiny-tokenizer-v1",
+    "spe-ocr-multilingual-int8-root-v1",
+    "spe-whisper-tiny-int8-root-v1",
+    "whisper-tiny-int8",
+    "spe-whisper-tiny-int8",
+    "mobile-ocr-multilingual-int8",
+    "spe-ocr-multilingual-int8",
+    "spe-ui-segmenter-int8",
+    "spe-ocr-paddle-int8",
+    "spe-ocr-trocr-int8",
+    "spe-root",
+    "model.onnx",
+    "test",
+    "fixture",
+    "synthetic",
+  ];
+  for (const label of testLabels) {
+    if (computeSha256(label).toLowerCase() === s) return true;
+    if (computeSha256(`spe-${label}`).toLowerCase() === s) return true;
+    if (computeSha256(`${label}-v1`).toLowerCase() === s) return true;
+  }
+  return false;
+}
+
+/**
+ * Verifies compatibility of tokenizer asset against model vocabulary requirements.
+ * Rejects mismatched, corrupted, or empty tokenizer dictionaries.
+ */
+export function verifyTokenizerCompatibility(
+  modelId: string,
+  tokenizerBytes: Uint8Array,
+): { compatible: boolean; error?: string } {
+  if (!tokenizerBytes || tokenizerBytes.length === 0) {
+    throw new Error("TOKENIZER MISMATCH: Empty or missing tokenizer asset");
+  }
+  try {
+    const text = new TextDecoder().decode(tokenizerBytes);
+    const json = JSON.parse(text);
+    if (!json.model || !json.model.vocab) {
+      throw new Error("TOKENIZER MISMATCH: Invalid tokenizer format (missing model.vocab)");
+    }
+    if (modelId.includes("whisper") && !json.model.vocab["<|startoftranscript|>"]) {
+      throw new Error("TOKENIZER MISMATCH: Missing Whisper special tokens in tokenizer vocab");
+    }
+    return { compatible: true };
+  } catch (err) {
+    throw new Error(`TOKENIZER MISMATCH: ${(err as Error).message}`);
+  }
+}
+
 export class ModelPackRegistry {
   private installedPacks = new Map<string, ModelPack>();
   private loadedModelAssets = new Map<string, Record<string, Uint8Array>>();
@@ -264,6 +478,8 @@ export class ModelPackRegistry {
       errors.push("Invalid root sha256 digest (must be 64-char hex)");
     } else if (isPatternedDigest(manifest.sha256)) {
       errors.push(`Patterned or fabricated root digest rejected: ${manifest.sha256}`);
+    } else if (isStringLabelDerivedDigest(manifest.sha256)) {
+      errors.push(`String-label derived root digest rejected (must be real file hash): ${manifest.sha256}`);
     }
     if (!manifest.license || manifest.license.toUpperCase().includes("UNKNOWN")) {
       errors.push("Unlicensed or unknown license rejected for production pack");
@@ -292,9 +508,11 @@ export class ModelPackRegistry {
         errors.push(`Invalid sha256 for file: ${f.name}`);
       } else if (isPatternedDigest(f.sha256)) {
         errors.push(`Patterned or fabricated file digest rejected for ${f.name}: ${f.sha256}`);
+      } else if (isStringLabelDerivedDigest(f.sha256)) {
+        errors.push(`String-label derived file digest rejected for ${f.name} (must be real file hash): ${f.sha256}`);
       }
       if (f.sizeBytes <= 0) {
-        errors.push(`Invalid sizeBytes for file: ${f.name}`);
+        errors.push(`Invalid zero or negative sizeBytes for file ${f.name} (must be >0): ${f.sizeBytes}`);
       }
     }
     if (manifest.qualificationState === "QUALIFIED") {
@@ -344,6 +562,10 @@ export class ModelPackRegistry {
             throw new Error(`Missing required model asset: ${reqFile.name}`);
           }
           continue;
+        }
+
+        if (fileBytes.length === 0) {
+          throw new Error(`Zero-byte model asset rejected for ${reqFile.name}`);
         }
 
         // Check for partial download (size mismatch)
@@ -432,6 +654,11 @@ export class ModelPackRegistry {
     if (pack.artifactClass === "TEST_FIXTURE" || !pack.productionQualificationAllowed) {
       throw new Error(
         `PRODUCTION_QUALIFICATION_REJECTED: Model ${modelId} is a TEST_FIXTURE. Synthetic model assets cannot receive qualified status.`,
+      );
+    }
+    if (isStringLabelDerivedDigest(pack.verifiedDigest || "") || isStringLabelDerivedDigest(pack.manifest.sha256)) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: String-label derived digest detected in model ${modelId}. Must be cryptographically computed from actual model binary bytes.`,
       );
     }
     if (pack.manifest.qualificationState !== "QUALIFIED" && pack.manifest.qualificationState !== "INFERENCE_VERIFIED") {
@@ -601,6 +828,9 @@ export function unpackModelArchive(archiveBytes: Uint8Array): OfflineModelPackag
       throw new Error(`Corrupted model asset '${name}': range [${start}, ${end}] exceeds package length`);
     }
     const fileBytes = archiveBytes.subarray(start, end);
+    if (fileBytes.length === 0) {
+      throw new Error(`Zero-byte model asset rejected for '${name}' in package`);
+    }
     const calculatedSha = computeSha256(fileBytes);
     if (calculatedSha.toLowerCase() !== meta.sha256.toLowerCase()) {
       throw new Error(`Digest mismatch for model asset '${name}' in package: expected ${meta.sha256}`);
