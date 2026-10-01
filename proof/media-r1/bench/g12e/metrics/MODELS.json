@@ -1,0 +1,35 @@
+[
+  {
+    "MODEL_NAME": "ggml-small.bin",
+    "path": "/Volumes/4TB-WD/spe-worktrees/spe-g12e-alt-model-trial-20261001/proof/media-r1/models/ggml-small.bin",
+    "real_path": "/Volumes/4TB-WD/spe-worktrees/spe-g12c-media-backend-qual-20261001/proof/media-r1/models/ggml-small.bin",
+    "MODEL_BYTES": 487601967,
+    "SHA256": "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b",
+    "SOURCE_COMMIT": "5359861c739e955e79d9a303bcbc70fb988958b1",
+    "LICENSE": "MIT (OpenAI Whisper via ggerganov/whisper.cpp ggml)",
+    "EXPECTED_MEMORY_CLASS": "~0.5\u20131.5GB RSS class",
+    "role": "BASELINE"
+  },
+  {
+    "MODEL_NAME": "ggml-medium.bin",
+    "path": "/Volumes/4TB-WD/spe-worktrees/spe-g12e-alt-model-trial-20261001/proof/media-r1/models/ggml-medium.bin",
+    "real_path": "/Volumes/4TB-WD/spe-worktrees/spe-g12e-alt-model-trial-20261001/proof/media-r1/models/ggml-medium.bin",
+    "MODEL_BYTES": 1533763059,
+    "SHA256": "6c14d5adee5f86394037b4e4e8b59f1673b6cee10e3cf0b11bbdbee79c156208",
+    "SOURCE_COMMIT": "5359861c739e955e79d9a303bcbc70fb988958b1",
+    "LICENSE": "MIT (OpenAI Whisper via ggerganov/whisper.cpp ggml)",
+    "EXPECTED_MEMORY_CLASS": "~1.5\u20133.5GB RSS class (8GB RAM tight)",
+    "role": "CHALLENGER"
+  },
+  {
+    "MODEL_NAME": "ggml-medium-q5_0.bin",
+    "path": "/Volumes/4TB-WD/spe-worktrees/spe-g12e-alt-model-trial-20261001/proof/media-r1/models/ggml-medium-q5_0.bin",
+    "real_path": "/Volumes/4TB-WD/spe-worktrees/spe-g12e-alt-model-trial-20261001/proof/media-r1/models/ggml-medium-q5_0.bin",
+    "MODEL_BYTES": 539212467,
+    "SHA256": "19fea4b380c3a618ec4723c3eef2eb785ffba0d0538cf43f8f235e7b3b34220f",
+    "SOURCE_COMMIT": "5359861c739e955e79d9a303bcbc70fb988958b1",
+    "LICENSE": "MIT (OpenAI Whisper via ggerganov/whisper.cpp ggml)",
+    "EXPECTED_MEMORY_CLASS": "~0.8\u20132.0GB RSS class",
+    "role": "CHALLENGER"
+  }
+]

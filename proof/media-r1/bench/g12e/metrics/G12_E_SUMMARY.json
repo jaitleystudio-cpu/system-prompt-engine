@@ -1,0 +1,193 @@
+{
+  "BASELINE_MODEL": "ggml-small.bin",
+  "CHALLENGERS": [
+    "ggml-medium.bin",
+    "ggml-medium-q5_0.bin"
+  ],
+  "models": [
+    {
+      "MODEL_NAME": "ggml-small.bin",
+      "path": "/Volumes/4TB-WD/spe-worktrees/spe-g12e-alt-model-trial-20261001/proof/media-r1/models/ggml-small.bin",
+      "real_path": "/Volumes/4TB-WD/spe-worktrees/spe-g12c-media-backend-qual-20261001/proof/media-r1/models/ggml-small.bin",
+      "MODEL_BYTES": 487601967,
+      "SHA256": "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b",
+      "SOURCE_COMMIT": "5359861c739e955e79d9a303bcbc70fb988958b1",
+      "LICENSE": "MIT (OpenAI Whisper via ggerganov/whisper.cpp ggml)",
+      "EXPECTED_MEMORY_CLASS": "~0.5–1.5GB RSS class",
+      "role": "BASELINE"
+    },
+    {
+      "MODEL_NAME": "ggml-medium.bin",
+      "path": "/Volumes/4TB-WD/spe-worktrees/spe-g12e-alt-model-trial-20261001/proof/media-r1/models/ggml-medium.bin",
+      "real_path": "/Volumes/4TB-WD/spe-worktrees/spe-g12e-alt-model-trial-20261001/proof/media-r1/models/ggml-medium.bin",
+      "MODEL_BYTES": 1533763059,
+      "SHA256": "6c14d5adee5f86394037b4e4e8b59f1673b6cee10e3cf0b11bbdbee79c156208",
+      "SOURCE_COMMIT": "5359861c739e955e79d9a303bcbc70fb988958b1",
+      "LICENSE": "MIT (OpenAI Whisper via ggerganov/whisper.cpp ggml)",
+      "EXPECTED_MEMORY_CLASS": "~1.5–3.5GB RSS class (8GB RAM tight)",
+      "role": "CHALLENGER"
+    },
+    {
+      "MODEL_NAME": "ggml-medium-q5_0.bin",
+      "path": "/Volumes/4TB-WD/spe-worktrees/spe-g12e-alt-model-trial-20261001/proof/media-r1/models/ggml-medium-q5_0.bin",
+      "real_path": "/Volumes/4TB-WD/spe-worktrees/spe-g12e-alt-model-trial-20261001/proof/media-r1/models/ggml-medium-q5_0.bin",
+      "MODEL_BYTES": 539212467,
+      "SHA256": "19fea4b380c3a618ec4723c3eef2eb785ffba0d0538cf43f8f235e7b3b34220f",
+      "SOURCE_COMMIT": "5359861c739e955e79d9a303bcbc70fb988958b1",
+      "LICENSE": "MIT (OpenAI Whisper via ggerganov/whisper.cpp ggml)",
+      "EXPECTED_MEMORY_CLASS": "~0.8–2.0GB RSS class",
+      "role": "CHALLENGER"
+    }
+  ],
+  "resources": {
+    "ggml-small.bin": {
+      "mean_rtf": 0.8758,
+      "max_rss_bytes": 825360384,
+      "mean_load_ms": 2765.8
+    },
+    "ggml-medium.bin": {
+      "mean_rtf": 2.9244,
+      "max_rss_bytes": 2112094208,
+      "mean_load_ms": 9828.2
+    },
+    "ggml-medium-q5_0.bin": {
+      "mean_rtf": 1.86,
+      "max_rss_bytes": 1133395968,
+      "mean_load_ms": 3473.8
+    }
+  },
+  "te_explicit": [
+    {
+      "model": "ggml-small.bin",
+      "tag": "te_human_namaskaramu",
+      "TELUGU_SCRIPT_OUTPUT": "Devanagari",
+      "TELUGU_SCRIPT_CORRECT": false,
+      "wer": 1.0,
+      "cer": 1.0,
+      "hyp": "नमस्कार्म",
+      "rtf": 1.625981109651592,
+      "peak_rss_bytes": 791003136
+    },
+    {
+      "model": "ggml-small.bin",
+      "tag": "te_human_amma",
+      "TELUGU_SCRIPT_OUTPUT": "Devanagari",
+      "TELUGU_SCRIPT_CORRECT": false,
+      "wer": 1.0,
+      "cer": 1.25,
+      "hyp": "अम्मा",
+      "rtf": 2.3986512068149555,
+      "peak_rss_bytes": 786432000
+    },
+    {
+      "model": "ggml-small.bin",
+      "tag": "te_human_dengue_30s",
+      "TELUGU_SCRIPT_OUTPUT": "Telugu",
+      "TELUGU_SCRIPT_CORRECT": true,
+      "wer": null,
+      "cer": null,
+      "hyp": "గార్టార్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల్ల",
+      "rtf": 0.5764065831556503,
+      "peak_rss_bytes": 791134208
+    },
+    {
+      "model": "ggml-small.bin",
+      "tag": "te_tts_short",
+      "TELUGU_SCRIPT_OUTPUT": "Devanagari",
+      "TELUGU_SCRIPT_CORRECT": false,
+      "wer": 1.0,
+      "cer": 1.0,
+      "hyp": "नमस्कारम ना पेरू गीता",
+      "rtf": 1.0082755035737492,
+      "peak_rss_bytes": 851427328
+    },
+    {
+      "model": "ggml-medium.bin",
+      "tag": "te_human_namaskaramu",
+      "TELUGU_SCRIPT_OUTPUT": "Telugu",
+      "TELUGU_SCRIPT_CORRECT": true,
+      "wer": 2.0,
+      "cer": 0.5555555555555556,
+      "hyp": "నిమాసక కారం",
+      "rtf": 6.194928379308188,
+      "peak_rss_bytes": 2084929536
+    },
+    {
+      "model": "ggml-medium.bin",
+      "tag": "te_human_amma",
+      "TELUGU_SCRIPT_OUTPUT": "Telugu",
+      "TELUGU_SCRIPT_CORRECT": true,
+      "wer": 4.0,
+      "cer": 2.25,
+      "hyp": "అమా అమా అమా అమా",
+      "rtf": 6.722110743019404,
+      "peak_rss_bytes": 2103115776
+    },
+    {
+      "model": "ggml-medium.bin",
+      "tag": "te_human_dengue_30s",
+      "TELUGU_SCRIPT_OUTPUT": "Telugu",
+      "TELUGU_SCRIPT_CORRECT": true,
+      "wer": null,
+      "cer": null,
+      "hyp": "ముండియు మండియు మండియు ముండియు మండియు మండియు మండియు మండియు మండియు మండియు మండియు మండియు మండియు మండియు మండియు మండియు మండ",
+      "rtf": 1.3253224946695095,
+      "peak_rss_bytes": 2081128448
+    },
+    {
+      "model": "ggml-medium.bin",
+      "tag": "te_tts_short",
+      "TELUGU_SCRIPT_OUTPUT": "Devanagari",
+      "TELUGU_SCRIPT_CORRECT": false,
+      "wer": 1.0,
+      "cer": 1.0555555555555556,
+      "hyp": "नमस्कारम ना पेरू गीता।",
+      "rtf": 6.171363222871994,
+      "peak_rss_bytes": 2078097408
+    },
+    {
+      "model": "ggml-medium-q5_0.bin",
+      "tag": "te_human_namaskaramu",
+      "TELUGU_SCRIPT_OUTPUT": "Devanagari",
+      "TELUGU_SCRIPT_CORRECT": false,
+      "wer": 1.0,
+      "cer": 1.0,
+      "hyp": "नमस्कारम्",
+      "rtf": 4.150822543316445,
+      "peak_rss_bytes": 1110458368
+    },
+    {
+      "model": "ggml-medium-q5_0.bin",
+      "tag": "te_human_amma",
+      "TELUGU_SCRIPT_OUTPUT": "Telugu",
+      "TELUGU_SCRIPT_CORRECT": true,
+      "wer": 2.0,
+      "cer": 1.25,
+      "hyp": "మామా అమా",
+      "rtf": 3.529190724088973,
+      "peak_rss_bytes": 1111293952
+    },
+    {
+      "model": "ggml-medium-q5_0.bin",
+      "tag": "te_human_dengue_30s",
+      "TELUGU_SCRIPT_OUTPUT": "Telugu",
+      "TELUGU_SCRIPT_CORRECT": true,
+      "wer": null,
+      "cer": null,
+      "hyp": "మిక్క్ల్లో మిక్ల్ల్లో మిక్క్లో మిక్ల్ల్లో మిక్క్ల్లో మిక్క్లో మిక్క్లో మిక్క్లో మిక్క్లో మిక్క్లో మిక్క్లో మిక్క్ల�",
+      "rtf": 1.2122131529850746,
+      "peak_rss_bytes": 1088946176
+    },
+    {
+      "model": "ggml-medium-q5_0.bin",
+      "tag": "te_tts_short",
+      "TELUGU_SCRIPT_OUTPUT": "Devanagari",
+      "TELUGU_SCRIPT_CORRECT": false,
+      "wer": 1.0,
+      "cer": 1.0555555555555556,
+      "hyp": "नमस्कारम ना पेरू गीता।",
+      "rtf": 3.6221234567901237,
+      "peak_rss_bytes": 1086504960
+    }
+  ]
+}
