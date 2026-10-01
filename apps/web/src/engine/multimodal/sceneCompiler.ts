@@ -100,7 +100,13 @@ export class SceneCompiler {
       .static-fallback { display: block; max-width: 32rem; margin: 2rem auto; }
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Offline-Capable / Air-Gap Safe Three.js Local Script Reference -->
+  <script src="./vendor/three.min.js"></script>
+  <script>
+    if (typeof THREE === "undefined") {
+      window.__SPE_OFFLINE_FALLBACK = true;
+    }
+  </script>
 </head>
 <body>
   <div id="canvas-container" role="region" aria-label="${ir.accessibilityFallback.ariaRegionLabel || "3D Interactive Scene"}"></div>

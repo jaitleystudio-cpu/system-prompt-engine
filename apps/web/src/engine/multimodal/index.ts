@@ -14,4 +14,5 @@ export * from "./videoTimeline";
 export * from "./screenshotCodeLoop";
 export * from "./sceneCompiler";
 export * from "./multimodalStatus";
+export * from "./outcomes";
 export { computeSha256 } from "../hashUtils";

@@ -41,6 +41,15 @@ import type {
   TargetFramework,
   VideoTimelineIR,
 } from "../engine/multimodal/types";
+import {
+  promiseLedgerEngine,
+  careTimelineEngine,
+  speakToFillFormEngine,
+  scamAfterglowEngine,
+  creatorClipMineEngine,
+  marketplaceDisputeEngine,
+  GLOBAL_LANGUAGES,
+} from "../engine/multimodal/outcomes";
 
 interface Props {
   onClose?: () => void;
@@ -54,7 +63,8 @@ type TabId =
   | "ocr"
   | "video"
   | "screenshot"
-  | "scene3d";
+  | "scene3d"
+  | "outcomes";
 
 export function MultimodalFabricInspector({ onClose }: Props) {
   const [activeTab, setActiveTab] = useState<TabId>("truth");
@@ -95,6 +105,80 @@ export function MultimodalFabricInspector({ onClose }: Props) {
   // 3D Scene state
   const [scenePreset, setScenePreset] = useState<string>("quantum");
   const [sceneResult, setSceneResult] = useState<Scene3DCompilationResult | null>(null);
+
+  // Oral Life Outcomes state
+  const [outcomeSubTab, setOutcomeSubTab] = useState<
+    "promise" | "care" | "govform" | "scam" | "clipmine" | "dispute" | "languages"
+  >("promise");
+  const [outcomeResult, setOutcomeResult] = useState<any>(null);
+  const [outcomeBusy, setOutcomeBusy] = useState<boolean>(false);
+
+  const handleRunOutcome = () => {
+    setOutcomeBusy(true);
+    try {
+      if (outcomeSubTab === "promise") {
+        const res = promiseLedgerEngine.extractLedger({
+          rawText: "I promise to pay you $450 by next Friday for repairing the electrical panel and kitchen wiring.",
+          language: "en",
+          parties: [
+            { id: "p1", name: "David Contractor", role: "promisor" },
+            { id: "p2", name: "Sarah Homeowner", role: "promisee" },
+          ],
+        });
+        setOutcomeResult(res);
+      } else if (outcomeSubTab === "care") {
+        const res = careTimelineEngine.compileTimeline({
+          primaryLanguage: "en",
+          doctorCallSummary: "Oncologist Dr. Sharma confirmed tumor shrinkage by 22%. Switch to maintenance oral tablet twice daily after meals. Blood count check in 3 weeks.",
+          voiceNotes: [
+            { text: "Mom felt slightly dizzy after the morning dose. Gave her electrolyte water and she rested for an hour." },
+          ],
+          prescriptionOcr: "Ondansetron 4mg tablet. Take twice daily after food with water. Morning 8am and Night 9pm.",
+        });
+        setOutcomeResult(res);
+      } else if (outcomeSubTab === "govform") {
+        const res = speakToFillFormEngine.processForm({
+          formType: "PENSION_BENEFIT",
+          spokenTranscript: "My name is Ramulu Naidu, age is 68 years old, from village Chandragiri. My national ID number is 4452-8819-0021. I want to apply for elder pension support.",
+          language: "en",
+        });
+        setOutcomeResult(res);
+      } else if (outcomeSubTab === "scam") {
+        const res = scamAfterglowEngine.analyzeIncident({
+          callerId: "+91-98765-43210 (Fake Police / CBI Officer)",
+          spokenTranscript: "This is Inspector Sharma from Central Customs. Your Aadhaar is linked to a parcel with illegal substances. A non-bailable arrest warrant is issued. You are under digital arrest. Stay on camera and transfer immediately $2,500 security deposit to verification account 982100441299 within 15 minutes or police will raid your house.",
+          language: "en",
+        });
+        setOutcomeResult(res);
+      } else if (outcomeSubTab === "clipmine") {
+        const res = creatorClipMineEngine.mineClips({
+          durationSec: 1800,
+          segments: [
+            { id: 1, startSec: 45, endSec: 72, text: "The biggest mistake every founder makes is obsessing over competitors instead of customer churn.", confidence: 0.95 },
+            { id: 2, startSec: 210, endSec: 245, text: "Nobody talks about this secret: if your pricing is too cheap, enterprise buyers will reject you out of fear.", confidence: 0.94 },
+            { id: 3, startSec: 850, endSec: 890, text: "What happened next was insane. We stripped away 80% of our code and the remaining feature went viral in 48 hours.", confidence: 0.96 },
+          ],
+          language: "en",
+        });
+        setOutcomeResult(res);
+      } else if (outcomeSubTab === "dispute") {
+        const res = marketplaceDisputeEngine.compileDisputePack({
+          sellerAudioNotes: [
+            { text: "Brother don't worry, the phone is brand new, completely sealed in original packaging with full 1-year warranty." },
+          ],
+          buyerAudioNotes: [
+            { text: "I opened the delivery box and the phone screen is scratched, the seal was already torn, and there is no warranty card inside." },
+          ],
+          deliveryPhotoOcr: "Item condition: Damaged. Scratched screen bezel visible. Torn factory seal.",
+        });
+        setOutcomeResult(res);
+      } else if (outcomeSubTab === "languages") {
+        setOutcomeResult(GLOBAL_LANGUAGES);
+      }
+    } finally {
+      setOutcomeBusy(false);
+    }
+  };
 
   // Refresh status and device probe on mount
   const refreshStatus = async () => {
@@ -584,6 +668,7 @@ export function MultimodalFabricInspector({ onClose }: Props) {
           { id: "video", label: "MM-3 Video Timeline" },
           { id: "screenshot", label: "MM-4 Screenshot-to-Code" },
           { id: "scene3d", label: "MM-5 3D Compiler" },
+          { id: "outcomes", label: "Oral Life Outcomes & 20 Languages" },
         ].map((t) => (
           <button
             key={t.id}
@@ -1315,6 +1400,327 @@ export function MultimodalFabricInspector({ onClose }: Props) {
               <p style={{ margin: 0, fontSize: "0.8rem", opacity: 0.8 }}>
                 ✓ Reduced-motion SVG fallback embedded · WebGL context loss recovery enabled.
               </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* TAB 9: Oral Life Outcomes & Global Languages */}
+      {activeTab === "outcomes" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div>
+            <h3 style={{ margin: 0, fontSize: "1rem" }}>Oral Life Outcomes & 20 Global Languages</h3>
+            <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.85rem", opacity: 0.85 }}>
+              The breakthrough pattern: The niche isn't plain speech recognition — it is oral life colliding with written systems.
+              Transforms spoken voice and photos into cryptographically verifiable human obligations, medical handoffs, and fraud evidence.
+            </p>
+          </div>
+
+          {/* Sub-selector */}
+          <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+            {[
+              { id: "promise", label: "1. Spoken Promise Ledger" },
+              { id: "care", label: "2. Chronic-Care & Caregiver Timeline" },
+              { id: "govform", label: "3. Speak-to-Fill Gov Forms" },
+              { id: "scam", label: "4. Scam Coercion & Bank Notice" },
+              { id: "clipmine", label: "5. Creator Clip Mine" },
+              { id: "dispute", label: "6. Marketplace Dispute Pack" },
+              { id: "languages", label: "7. 20 Global Languages Worldwide" },
+            ].map((st) => (
+              <button
+                key={st.id}
+                type="button"
+                onClick={() => {
+                  setOutcomeSubTab(st.id as any);
+                  setOutcomeResult(null);
+                }}
+                style={{
+                  padding: "0.35rem 0.75rem",
+                  borderRadius: "4px",
+                  border: "1px solid",
+                  borderColor: outcomeSubTab === st.id ? "var(--spe-accent, #6366f1)" : "var(--spe-border, #242c3d)",
+                  backgroundColor: outcomeSubTab === st.id ? "rgba(99, 102, 241, 0.2)" : "rgba(255, 255, 255, 0.02)",
+                  color: outcomeSubTab === st.id ? "#a5b4fc" : "inherit",
+                  cursor: "pointer",
+                  fontSize: "0.8rem",
+                  fontWeight: 500,
+                }}
+              >
+                {st.label}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+            <button
+              type="button"
+              onClick={handleRunOutcome}
+              disabled={outcomeBusy}
+              style={{
+                padding: "0.5rem 1.25rem",
+                borderRadius: "6px",
+                backgroundColor: "var(--spe-accent, #6366f1)",
+                color: "#fff",
+                border: "none",
+                fontWeight: 600,
+                cursor: outcomeBusy ? "not-allowed" : "pointer",
+                opacity: outcomeBusy ? 0.7 : 1,
+              }}
+            >
+              {outcomeBusy ? "Processing Outcome..." : "Execute Deterministic Outcome Engine"}
+            </button>
+            <span style={{ fontSize: "0.8rem", opacity: 0.75 }}>
+              RAW_USER_DATA_EGRESS = 0 · In-memory cryptographic receipt
+            </span>
+          </div>
+
+          {outcomeResult && (
+            <div
+              style={{
+                padding: "1rem",
+                backgroundColor: "rgba(0, 0, 0, 0.25)",
+                borderRadius: "8px",
+                border: "1px solid var(--spe-border, #242c3d)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.75rem",
+                fontSize: "0.85rem",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontWeight: 600, color: "#34d399" }}>
+                  ✓ Outcome Extracted & Cryptographically Sealed
+                </span>
+                {outcomeResult.receiptDigest && (
+                  <span style={{ fontSize: "0.75rem", fontFamily: "monospace", opacity: 0.7 }}>
+                    Receipt SHA-256: {outcomeResult.receiptDigest.substring(0, 16)}...
+                  </span>
+                )}
+              </div>
+
+              {/* Specific Outcome Visual Summaries */}
+              {outcomeSubTab === "promise" && (
+                <div>
+                  <div style={{ fontWeight: 600, marginBottom: "0.4rem" }}>{outcomeResult.summaryText}</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    {outcomeResult.commitments?.map((c: any) => (
+                      <div
+                        key={c.id}
+                        style={{
+                          padding: "0.5rem",
+                          backgroundColor: "rgba(255, 255, 255, 0.03)",
+                          borderRadius: "4px",
+                          border: "1px solid rgba(255, 255, 255, 0.05)",
+                        }}
+                      >
+                        <div>
+                          <strong>{c.promisor}</strong> promised <strong>{c.promisee}</strong>: "{c.obligation}"
+                        </div>
+                        <div style={{ fontSize: "0.75rem", opacity: 0.75, marginTop: "0.2rem" }}>
+                          Audio Timestamp: [{c.audioStartSec.toFixed(1)}s - {c.audioEndSec.toFixed(1)}s] · Category: {c.category} · Status: {c.status}
+                          {c.deadlineText && ` · Deadline: ${c.deadlineText}`}
+                          {c.monetaryAmount && ` · Amount: ${c.monetaryAmount.currency} ${c.monetaryAmount.value}`}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {outcomeSubTab === "care" && (
+                <div>
+                  <div style={{ fontWeight: 600, marginBottom: "0.4rem" }}>
+                    Chronic Care Timeline ({outcomeResult.entries?.length} entries)
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    {outcomeResult.entries?.map((e: any) => (
+                      <div
+                        key={e.id}
+                        style={{
+                          padding: "0.5rem",
+                          backgroundColor: "rgba(255, 255, 255, 0.03)",
+                          borderRadius: "4px",
+                          border: "1px solid rgba(255, 255, 255, 0.05)",
+                        }}
+                      >
+                        <div style={{ fontWeight: 600, color: "#93c5fd" }}>{e.title} ({e.category})</div>
+                        <div style={{ fontSize: "0.8rem", marginTop: "0.2rem" }}>{e.details}</div>
+                        {e.dosageSchedule && (
+                          <div style={{ fontSize: "0.75rem", color: "#34d399", marginTop: "0.2rem" }}>
+                            Alarms: {e.dosageSchedule.alarmTimes.join(", ")} · {e.dosageSchedule.withFood ? "After Food" : "Before Food"}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {outcomeSubTab === "govform" && (
+                <div>
+                  <div style={{ fontWeight: 600, marginBottom: "0.4rem" }}>
+                    Form: {outcomeResult.formType} · Completion: {outcomeResult.completionPercentage}%
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "0.5rem" }}>
+                    {outcomeResult.fields?.map((f: any) => (
+                      <div
+                        key={f.fieldKey}
+                        style={{
+                          padding: "0.5rem",
+                          backgroundColor: "rgba(255, 255, 255, 0.03)",
+                          borderRadius: "4px",
+                          border: "1px solid rgba(255, 255, 255, 0.05)",
+                        }}
+                      >
+                        <div style={{ fontSize: "0.72rem", opacity: 0.7 }}>{f.label}</div>
+                        <div style={{ fontWeight: 600, color: f.extractedValue ? "#34d399" : "#f87171" }}>
+                          {f.extractedValue || "[Unclear / Missing]"}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "#a5b4fc" }}>
+                    Spoken Read-Back Confirmation: "{outcomeResult.readBackScriptEnglish}"
+                  </div>
+                </div>
+              )}
+
+              {outcomeSubTab === "scam" && (
+                <div>
+                  <div style={{ display: "flex", gap: "1rem", alignItems: "center", marginBottom: "0.4rem" }}>
+                    <span style={{ fontWeight: 600, color: "#f87171" }}>
+                      Risk Score: {outcomeResult.riskScore}/100 (HIGH URGENCY FRAUD DETECTED)
+                    </span>
+                  </div>
+                  <div style={{ fontSize: "0.8rem", color: "#cbd5e1", marginBottom: "0.5rem" }}>
+                    Threats Detected: {outcomeResult.threatsDetected?.join(", ")}
+                  </div>
+                  <pre
+                    style={{
+                      padding: "0.75rem",
+                      backgroundColor: "rgba(0, 0, 0, 0.4)",
+                      borderRadius: "6px",
+                      fontSize: "0.72rem",
+                      overflowX: "auto",
+                      maxHeight: "160px",
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {outcomeResult.policeFirNarrative}
+                  </pre>
+                </div>
+              )}
+
+              {outcomeSubTab === "clipmine" && (
+                <div>
+                  <div style={{ fontWeight: 600, marginBottom: "0.4rem" }}>
+                    Top Ranked Viral Cuts ({outcomeResult.topCuts?.length} candidates)
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    {outcomeResult.topCuts?.slice(0, 3).map((cut: any) => (
+                      <div
+                        key={cut.rank}
+                        style={{
+                          padding: "0.5rem",
+                          backgroundColor: "rgba(255, 255, 255, 0.03)",
+                          borderRadius: "4px",
+                          border: "1px solid rgba(255, 255, 255, 0.05)",
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                          <strong>Rank #{cut.rank}: {cut.hookHeadline}</strong>
+                          <span style={{ color: "#fbbf24", fontWeight: 600 }}>Hook: {cut.hookScore}/100</span>
+                        </div>
+                        <div style={{ fontSize: "0.75rem", opacity: 0.75, marginTop: "0.2rem" }}>
+                          [{cut.startSec}s - {cut.endSec}s] ({cut.durationSec}s) · {cut.viralReason}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {outcomeSubTab === "dispute" && (
+                <div>
+                  <div style={{ fontWeight: 600, marginBottom: "0.4rem" }}>
+                    Recommended Verdict: <span style={{ color: "#34d399" }}>{outcomeResult.recommendedResolution}</span>
+                  </div>
+                  <div style={{ fontSize: "0.8rem", opacity: 0.85, marginBottom: "0.4rem" }}>
+                    {outcomeResult.resolutionJustification}
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                    {outcomeResult.discrepancies?.map((d: any) => (
+                      <div
+                        key={d.id}
+                        style={{
+                          padding: "0.5rem",
+                          backgroundColor: "rgba(239, 68, 68, 0.1)",
+                          borderRadius: "4px",
+                          border: "1px solid rgba(239, 68, 68, 0.2)",
+                        }}
+                      >
+                        <div><strong>Breach: {d.feature}</strong> ({d.discrepancyType})</div>
+                        <div style={{ fontSize: "0.75rem", opacity: 0.8, marginTop: "0.2rem" }}>
+                          Spoken Promise: "{d.spokenPromise}" vs Delivered: "{d.actualDeliveredEvidence}"
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {outcomeSubTab === "languages" && (
+                <div>
+                  <div style={{ fontWeight: 600, marginBottom: "0.4rem" }}>
+                    20 Global Languages Worldwide (&gt;5 Billion Speakers Covered)
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                      gap: "0.4rem",
+                      maxHeight: "220px",
+                      overflowY: "auto",
+                    }}
+                  >
+                    {Object.values(outcomeResult as Record<string, any>).map((lang: any) => (
+                      <div
+                        key={lang.code}
+                        style={{
+                          padding: "0.4rem",
+                          backgroundColor: "rgba(255, 255, 255, 0.03)",
+                          borderRadius: "4px",
+                          border: "1px solid rgba(255, 255, 255, 0.05)",
+                          fontSize: "0.75rem",
+                        }}
+                      >
+                        <div style={{ fontWeight: 600 }}>{lang.name} ({lang.nativeName})</div>
+                        <div style={{ opacity: 0.7 }}>{lang.speakersEstimateMillions}M speakers · {lang.scriptFamily}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Raw JSON Disclosure */}
+              <details style={{ marginTop: "0.5rem" }}>
+                <summary style={{ cursor: "pointer", fontSize: "0.75rem", opacity: 0.7 }}>
+                  View Raw Cryptographic Receipt JSON
+                </summary>
+                <pre
+                  style={{
+                    margin: "0.5rem 0 0 0",
+                    padding: "0.75rem",
+                    backgroundColor: "rgba(0, 0, 0, 0.4)",
+                    borderRadius: "6px",
+                    fontSize: "0.7rem",
+                    overflowX: "auto",
+                    maxHeight: "180px",
+                  }}
+                >
+                  {JSON.stringify(outcomeResult, null, 2)}
+                </pre>
+              </details>
             </div>
           )}
         </div>

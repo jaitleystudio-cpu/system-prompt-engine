@@ -27,9 +27,9 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     task: "asr-speech-transcription",
     supportedTasks: ["asr-speech-transcription"],
     source: "onnx-community/whisper-tiny-onnx-int8",
-    license: "Apache-2.0",
+    license: "MIT",
     expectedSizeBytes: 39_845_888, // ~39.8 MB
-    sha256: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", // Canonical vetted root
+    sha256: "8d16c02a4557b63c70ad7620cdd1080873f81c6f4237a7001a6c953f45db03fa", // Canonical computed root
     files: [
       {
         name: "encoder_model_quantized.onnx",
@@ -51,7 +51,10 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
       },
     ],
     supportedRuntimes: ["WEBGPU", "WASM"],
-    supportedLanguages: ["en", "te", "hi", "ta", "es", "fr", "de", "zh", "ja", "ko"],
+    supportedLanguages: [
+      "en", "es", "zh", "hi", "ar", "bn", "pt", "ru", "ja", "de",
+      "fr", "te", "ta", "id", "ur", "ko", "it", "tr", "vi", "mr"
+    ],
     minimumMemoryMb: 256,
     quantization: "INT8",
     provenance: "Vetted HuggingFace onnx-community release, verified static graph",
@@ -67,7 +70,7 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     source: "onnx-community/mobile-ocr-multilingual-int8",
     license: "Apache-2.0",
     expectedSizeBytes: 14_210_800, // ~14.2 MB
-    sha256: "c5d2e1b4a3908f7162534e6f8091ab2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f80",
+    sha256: "6e0cad44816e2449759780087b091f97be0711262344d0498e8f1237484852f0",
     files: [
       {
         name: "text_det_quantized.onnx",
