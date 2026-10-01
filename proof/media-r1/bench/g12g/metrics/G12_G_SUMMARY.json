@@ -1,0 +1,9 @@
+{
+  "baseline_human_explicit_script_pass": 0,
+  "challenger_human_explicit_script_pass": 3,
+  "human_explicit_n": 3,
+  "baseline_rss_max_mb": 750.53125,
+  "challenger_rss_max_mb": 501.640625,
+  "baseline_rtf_mean_human_explicit": 1.9064903465680458,
+  "challenger_rtf_mean_human_explicit": 0.5359375998323315
+}

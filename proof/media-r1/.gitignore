@@ -1,0 +1,6 @@
+models/*.bin
+models/*.download.log
+bench/g12g/logs/
+bench/g12g/hyps/
+__pycache__/
+.venv*/
