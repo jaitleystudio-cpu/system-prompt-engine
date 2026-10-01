@@ -49,7 +49,7 @@ export class MedicineScheduleEngine {
     const medications: MedicineEntry[] = [];
 
     // Common medicine pattern extraction (e.g. Paracetamol 500mg, Metformin 500mg, Amoxicillin 250mg, Pantoprazole 40mg)
-    const medRegex = /(?:tab(?:let)?|cap(?:sule)?|syrup)?\s*([A-Za-z]{3,20}(?:ol|in|cin|ide|ole|mab|pam|pine|zole|ine|ate|one|fen)?)\s*(\d{1,4}\s*(?:mg|ml|mcg|g))/gi;
+    const medRegex = /(?:tab(?:let)?|cap(?:sule)?|syrup|inj(?:ection)?)?\s*([A-Za-z]{3,25}(?:ol|in|cin|ide|ole|mab|pam|pine|zole|ine|ate|one|fen|prad|sartan|statin|cillin)?)\s*(\d{1,4}\s*(?:mg|ml|mcg|g|iu))/gi;
     let match: RegExpExecArray | null;
 
     let index = 1;
@@ -57,26 +57,65 @@ export class MedicineScheduleEngine {
       const medName = match[1].trim();
       const dosage = match[2].trim();
 
-      // Check doctor's voice transcript for frequency & food instructions
-      const voiceLower = params.doctorVoiceTranscript.toLowerCase();
+      // Find the specific context for this medication in voice or OCR
+      const contextWindow = this.extractContextForMedicine(medName, params.doctorVoiceTranscript, params.prescriptionOcrText);
+      const ctxLower = contextWindow.toLowerCase();
+
+      // Frequency & Timing analysis
       let frequency: MedicineEntry["frequency"] = "TWICE_DAILY";
       let timingHours = ["08:00", "20:00"];
 
-      if (voiceLower.includes("thrice") || voiceLower.includes("three times") || voiceLower.includes("tds")) {
+      if (
+        /\b(thrice|three times|tds|tid)\b/i.test(ctxLower) ||
+        ctxLower.includes("तीन बार") ||
+        ctxLower.includes("మూడుసార్లు")
+      ) {
         frequency = "THRICE_DAILY";
         timingHours = ["08:00", "14:00", "20:00"];
-      } else if (voiceLower.includes("once") || voiceLower.includes("daily once") || voiceLower.includes("od")) {
+      } else if (
+        /\b(twice|two times|bd|bid)\b/i.test(ctxLower) ||
+        ctxLower.includes("दो बार") ||
+        ctxLower.includes("రెండుసార్లు")
+      ) {
+        frequency = "TWICE_DAILY";
+        timingHours = ["08:00", "20:00"];
+      } else if (
+        /\b(once|daily once|od|qd|morning|night)\b/i.test(ctxLower) ||
+        ctxLower.includes("एक बार") ||
+        ctxLower.includes("ఒకసారి")
+      ) {
         frequency = "ONCE_DAILY";
-        timingHours = ["09:00"];
-      } else if (voiceLower.includes("as needed") || voiceLower.includes("sos")) {
+        timingHours = ["08:00"];
+      } else if (
+        /\b(as needed|sos|prn)\b/i.test(ctxLower) ||
+        ctxLower.includes("ज़रूरत")
+      ) {
         frequency = "AS_NEEDED";
         timingHours = [];
       }
 
+      // Specific explicit hours extraction if mentioned (e.g., "at 8 AM and 8 PM")
+      const timeMatches = contextWindow.match(/\b(\d{1,2})\s*(?::\s*(\d{2}))?\s*(am|pm)\b/gi);
+      if (timeMatches && timeMatches.length > 0) {
+        const parsedHours = timeMatches.map((t) => this.normalizeTimeTo24h(t));
+        if (parsedHours.length > 0) {
+          timingHours = parsedHours;
+        }
+      }
+
+      // Relation to food
       let relationToFood: MedicineEntry["relationToFood"] = "AFTER_FOOD";
-      if (voiceLower.includes("before food") || voiceLower.includes("empty stomach")) {
+      if (
+        /\b(before food|empty stomach|ac)\b/i.test(ctxLower) ||
+        ctxLower.includes("खाने से पहले") ||
+        ctxLower.includes("భోజనానికి ముందు")
+      ) {
         relationToFood = "BEFORE_FOOD";
-      } else if (voiceLower.includes("with food")) {
+      } else if (
+        /\b(with food|with meal)\b/i.test(ctxLower) ||
+        ctxLower.includes("खाने के साथ") ||
+        ctxLower.includes("భోజనంతో")
+      ) {
         relationToFood = "WITH_FOOD";
       }
 
@@ -128,6 +167,27 @@ export class MedicineScheduleEngine {
     };
   }
 
+  private extractContextForMedicine(medName: string, voice: string, ocr: string): string {
+    const combined = `${voice}. ${ocr}`;
+    const sentences = combined.split(/(?<=[.?!,;])\s+/);
+    const relevant = sentences.filter((s) => s.toLowerCase().includes(medName.toLowerCase()));
+    if (relevant.length > 0) {
+      return relevant.join(" ");
+    }
+    return voice || ocr;
+  }
+
+  private normalizeTimeTo24h(timeStr: string): string {
+    const match = timeStr.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i);
+    if (!match) return "08:00";
+    let hour = parseInt(match[1], 10);
+    const min = match[2] ? match[2].padStart(2, "0") : "00";
+    const period = match[3].toLowerCase();
+    if (period === "pm" && hour < 12) hour += 12;
+    if (period === "am" && hour === 12) hour = 0;
+    return `${hour.toString().padStart(2, "0")}:${min}`;
+  }
+
   private formatInstruction(
     name: string,
     dosage: string,
@@ -136,19 +196,31 @@ export class MedicineScheduleEngine {
     lang: string,
   ): string {
     const relationStr = relation === "BEFORE_FOOD" ? "before food" : relation === "AFTER_FOOD" ? "after food" : "with food";
-    const hoursStr = hours.join(" and ");
+    const hoursStr = hours.length > 0 ? hours.join(" and ") : "as needed";
 
     if (lang === "hi") {
-      const relHi = relation === "BEFORE_FOOD" ? "खाने से पहले" : "खाने के बाद";
+      const relHi = relation === "BEFORE_FOOD" ? "खाने से पहले" : relation === "AFTER_FOOD" ? "खाने के बाद" : "खाने के साथ";
       return `${name} (${dosage}) ${relHi} समय ${hoursStr} पर लें।`;
     }
     if (lang === "te") {
-      const relTe = relation === "BEFORE_FOOD" ? "ఆహారానికి ముందు" : "ఆహారం తర్వాత";
+      const relTe = relation === "BEFORE_FOOD" ? "ఆహారానికి ముందు" : relation === "AFTER_FOOD" ? "ఆహారం తర్వాత" : "భోజనంతో పాటు";
       return `${name} (${dosage}) ${relTe} సమయం ${hoursStr} కి తీసుకోండి.`;
     }
+    if (lang === "ta") {
+      const relTa = relation === "BEFORE_FOOD" ? "உணவுக்கு முன்" : relation === "AFTER_FOOD" ? "உணவுக்குப் பின்" : "உணவுடன்";
+      return `${name} (${dosage}) ${relTa} நேரம் ${hoursStr} அளவில் எடுத்துக்கொள்ளவும்.`;
+    }
     if (lang === "es") {
-      const relEs = relation === "BEFORE_FOOD" ? "antes de comer" : "después de comer";
+      const relEs = relation === "BEFORE_FOOD" ? "antes de comer" : relation === "AFTER_FOOD" ? "después de comer" : "con alimentos";
       return `Tomar ${name} (${dosage}) ${relEs} a las ${hoursStr}.`;
+    }
+    if (lang === "fr") {
+      const relFr = relation === "BEFORE_FOOD" ? "avant le repas" : relation === "AFTER_FOOD" ? "après le repas" : "pendant le repas";
+      return `Prendre ${name} (${dosage}) ${relFr} à ${hoursStr}.`;
+    }
+    if (lang === "ar") {
+      const relAr = relation === "BEFORE_FOOD" ? "قبل الأكل" : relation === "AFTER_FOOD" ? "بعد الأكل" : "مع الأكل";
+      return `تناول ${name} (${dosage}) ${relAr} في ${hoursStr}.`;
     }
     return `Take ${name} (${dosage}) ${relationStr} at ${hoursStr}.`;
   }

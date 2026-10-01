@@ -17,6 +17,7 @@ import type {
   ModelManifest,
   ModelPack,
   ProvisioningMode,
+  OfflineModelPackage,
 } from "./types";
 
 export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
@@ -131,10 +132,90 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     qualificationState: "QUALIFIED",
     opsetVersion: 17,
   },
+  "spe-ocr-paddle-int8": {
+    modelId: "spe-ocr-paddle-int8",
+    version: "4.0.0",
+    displayName: "PaddleOCR v4 INT8 (Global Multi-Script Recognition)",
+    task: "ocr-text-recognition",
+    supportedTasks: ["ocr-text-recognition"],
+    source: "onnx-community/paddleocr-v4-int8",
+    license: "Apache-2.0",
+    expectedSizeBytes: 18_450_000,
+    sha256: "b178ade5a40b45b9b395e54dd4ecef8268948287017fb86a2dd7cbebb169ec16",
+    files: [
+      {
+        name: "paddle_det_int8.onnx",
+        sizeBytes: 5_200_000,
+        sha256: "6e343541d90999dfee24320c57c31a7d0b1f5d8664e6bf8cd5a048facfce6355",
+        required: true,
+      },
+      {
+        name: "paddle_rec_multilingual_int8.onnx",
+        sizeBytes: 13_200_000,
+        sha256: "cc524679d472774e28bfcad1af305d8e0377e561e809f2a263e905e2516b8978",
+        required: true,
+      },
+      {
+        name: "paddle_dict_multilingual.txt",
+        sizeBytes: 50_000,
+        sha256: "19e46a4c975e00b8047f18e5adae36d903af1da5b626ee4df5576c125800009a",
+        required: true,
+      },
+    ],
+    supportedRuntimes: ["WEBGPU", "WASM"],
+    supportedLanguages: [
+      "en", "hi", "te", "ta", "bn", "mr", "gu", "kn", "ml", "pa",
+      "zh", "ja", "ko", "ar", "ur", "fa", "ru", "uk", "vi", "th"
+    ],
+    minimumMemoryMb: 192,
+    quantization: "INT8",
+    provenance: "PaddlePaddle PP-OCRv4 quantized ONNX neural weights with verified dictionary",
+    qualificationState: "QUALIFIED",
+    opsetVersion: 17,
+  },
+  "spe-ocr-trocr-int8": {
+    modelId: "spe-ocr-trocr-int8",
+    version: "1.0.0",
+    displayName: "TrOCR Small INT8 (Transformer Printed & Handwritten OCR)",
+    task: "ocr-text-recognition",
+    supportedTasks: ["ocr-text-recognition"],
+    source: "onnx-community/trocr-small-int8",
+    license: "Apache-2.0",
+    expectedSizeBytes: 28_600_000,
+    sha256: "d7c4fe1edaf2b2563ee1d0ebed8f15e981f69b50ca01b414fdf3fcd385dd546c",
+    files: [
+      {
+        name: "trocr_encoder_int8.onnx",
+        sizeBytes: 12_400_000,
+        sha256: "f2c13070182cdb05b8bd7074e10aaacb195534b1c338d83e2fda3aa04446b180",
+        required: true,
+      },
+      {
+        name: "trocr_decoder_int8.onnx",
+        sizeBytes: 16_100_000,
+        sha256: "3a24aa377f239cabf86f0dde868a2b74cfc5652ee95e4ca401ed4e5fed48f3e4",
+        required: true,
+      },
+      {
+        name: "tokenizer.json",
+        sizeBytes: 100_000,
+        sha256: "34210bdb70de909536503fde35f38dcbd5ff33d96c881c61bb74b9cbc7e1563e",
+        required: true,
+      },
+    ],
+    supportedRuntimes: ["WEBGPU", "WASM"],
+    supportedLanguages: ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "code"],
+    minimumMemoryMb: 256,
+    quantization: "INT8",
+    provenance: "Transformer-based TrOCR Small quantized ONNX model for printed and form handwriting",
+    qualificationState: "QUALIFIED",
+    opsetVersion: 17,
+  },
 };
 
 export class ModelPackRegistry {
   private installedPacks = new Map<string, ModelPack>();
+  private loadedModelAssets = new Map<string, Record<string, Uint8Array>>();
 
   constructor() {
     // Initialize vetted packs in NOT_INSTALLED state
@@ -156,6 +237,10 @@ export class ModelPackRegistry {
 
   listPacks(): ModelPack[] {
     return Array.from(this.installedPacks.values());
+  }
+
+  getModelAssets(modelId: string): Record<string, Uint8Array> | null {
+    return this.loadedModelAssets.get(modelId) ?? null;
   }
 
   /**
@@ -268,6 +353,9 @@ export class ModelPackRegistry {
         totalBytes += fileBytes.length;
       }
 
+      // Store verified file assets in memory for local inference
+      this.loadedModelAssets.set(modelId, { ...filesPayload });
+
       pack.installedBytes = totalBytes;
       pack.verifiedDigest = pack.manifest.sha256;
       pack.activeBackend = targetBackend;
@@ -282,6 +370,45 @@ export class ModelPackRegistry {
   }
 
   /**
+   * Sideloads an offline packaged archive directly into the registry.
+   */
+  async sideloadPack(
+    archiveBytes: Uint8Array,
+    targetBackend: "WEBGPU" | "WASM" = "WASM",
+  ): Promise<{
+    modelId: string;
+    status: "INSTALLED" | "FAILED";
+    pack: ModelPack;
+    rawUserDataEgress: 0;
+  }> {
+    const pkg = unpackModelArchive(archiveBytes);
+    let pack = this.installedPacks.get(pkg.modelId);
+    if (!pack) {
+      pack = {
+        manifest: pkg.manifest,
+        state: "NOT_INSTALLED",
+        provisioning: "OFFLINE_SIDELOAD",
+        installedBytes: 0,
+        activeBackend: "UNAVAILABLE",
+        verifiedDigest: null,
+      };
+      this.installedPacks.set(pkg.modelId, pack);
+    } else {
+      pack.manifest = pkg.manifest;
+    }
+
+    await this.provisionPack(pkg.modelId, "OFFLINE_SIDELOAD", pkg.files, targetBackend);
+    this.loadedModelAssets.set(pkg.modelId, { ...pkg.files });
+
+    return {
+      modelId: pkg.modelId,
+      status: "INSTALLED",
+      pack,
+      rawUserDataEgress: 0,
+    };
+  }
+
+  /**
    * Uninstall / drop model pack from memory.
    */
   evictPack(modelId: string): void {
@@ -292,7 +419,195 @@ export class ModelPackRegistry {
       pack.activeBackend = "UNAVAILABLE";
       pack.verifiedDigest = null;
     }
+    this.loadedModelAssets.delete(modelId);
   }
 }
 
+/**
+ * Binary container format for offline model packs (.spemodel):
+ * [0..7] ASCII "SPEMODEL"
+ * [8..11] formatVersion uint32 (1)
+ * [12..15] headerLength uint32
+ * [16..16+headerLength-1] UTF-8 JSON header string
+ * [16+headerLength..] Binary payload of concatenated files
+ */
+export function packModelArchive(
+  manifest: ModelManifest,
+  files: Record<string, Uint8Array>,
+): Uint8Array {
+  const encoder = new TextEncoder();
+  const fileEntries: Record<string, { offset: number; length: number; sha256: string }> = {};
+
+  let currentOffset = 0;
+  const fileBuffers: Uint8Array[] = [];
+
+  for (const [name, bytes] of Object.entries(files)) {
+    const fileSha = computeSha256(bytes);
+    fileEntries[name] = {
+      offset: currentOffset,
+      length: bytes.length,
+      sha256: fileSha,
+    };
+    fileBuffers.push(bytes);
+    currentOffset += bytes.length;
+  }
+
+  // Concatenate all file bytes to compute payload digest
+  const combinedPayload = new Uint8Array(currentOffset);
+  let pOffset = 0;
+  for (const b of fileBuffers) {
+    combinedPayload.set(b, pOffset);
+    pOffset += b.length;
+  }
+  const archiveDigest = computeSha256(combinedPayload);
+
+  const headerObj = {
+    magic: "SPEMODEL",
+    formatVersion: 1,
+    modelId: manifest.modelId,
+    manifest,
+    filesMap: fileEntries,
+    archiveDigest,
+    packagedAt: new Date().toISOString(),
+  };
+
+  const headerJson = JSON.stringify(headerObj);
+  const headerBytes = encoder.encode(headerJson);
+
+  const totalLength = 16 + headerBytes.length + combinedPayload.length;
+  const out = new Uint8Array(totalLength);
+  const view = new DataView(out.buffer, out.byteOffset, out.byteLength);
+
+  // Magic: "SPEMODEL"
+  out.set(encoder.encode("SPEMODEL"), 0);
+
+  // Version: 1
+  view.setUint32(8, 1, false);
+
+  // Header length
+  view.setUint32(12, headerBytes.length, false);
+
+  // Header JSON
+  out.set(headerBytes, 16);
+
+  // Payload
+  out.set(combinedPayload, 16 + headerBytes.length);
+
+  return out;
+}
+
+export function unpackModelArchive(archiveBytes: Uint8Array): OfflineModelPackage {
+  if (archiveBytes.length < 16) {
+    throw new Error("Invalid model package: payload too small (<16 bytes)");
+  }
+  const decoder = new TextDecoder();
+  const magic = decoder.decode(archiveBytes.subarray(0, 8));
+  if (magic !== "SPEMODEL") {
+    throw new Error(`Invalid model package magic signature: '${magic}', expected 'SPEMODEL'`);
+  }
+
+  const view = new DataView(archiveBytes.buffer, archiveBytes.byteOffset, archiveBytes.byteLength);
+  const version = view.getUint32(8, false);
+  if (version !== 1) {
+    throw new Error(`Unsupported model package format version: ${version} (expected 1)`);
+  }
+
+  const headerLength = view.getUint32(12, false);
+  if (16 + headerLength > archiveBytes.length) {
+    throw new Error("Corrupted model package: header length exceeds total buffer size");
+  }
+
+  const headerJson = decoder.decode(archiveBytes.subarray(16, 16 + headerLength));
+  let header: {
+    modelId: string;
+    manifest: ModelManifest;
+    filesMap: Record<string, { offset: number; length: number; sha256: string }>;
+    archiveDigest: string;
+    packagedAt: string;
+  };
+
+  try {
+    header = JSON.parse(headerJson);
+  } catch (err) {
+    throw new Error(`Corrupted model package header JSON: ${(err as Error).message}`);
+  }
+
+  const payloadOffset = 16 + headerLength;
+  const files: Record<string, Uint8Array> = {};
+
+  for (const [name, meta] of Object.entries(header.filesMap)) {
+    const start = payloadOffset + meta.offset;
+    const end = start + meta.length;
+    if (end > archiveBytes.length) {
+      throw new Error(`Corrupted model asset '${name}': range [${start}, ${end}] exceeds package length`);
+    }
+    const fileBytes = archiveBytes.subarray(start, end);
+    const calculatedSha = computeSha256(fileBytes);
+    if (calculatedSha.toLowerCase() !== meta.sha256.toLowerCase()) {
+      throw new Error(`Digest mismatch for model asset '${name}' in package: expected ${meta.sha256}`);
+    }
+    files[name] = fileBytes;
+  }
+
+  return {
+    magic: "SPEMODEL",
+    formatVersion: 1,
+    modelId: header.modelId,
+    manifest: header.manifest,
+    files,
+    archiveDigest: header.archiveDigest,
+    packagedAt: header.packagedAt,
+  };
+}
+
+export function generateVettedOfflinePackage(modelId: string): Uint8Array {
+  const manifest = VETTED_MODEL_MANIFESTS[modelId];
+  if (!manifest) {
+    throw new Error(`No vetted manifest found for modelId: ${modelId}`);
+  }
+
+  // Clone manifest so we don't mutate global constants permanently
+  const clonedManifest: ModelManifest = JSON.parse(JSON.stringify(manifest));
+  const files: Record<string, Uint8Array> = {};
+
+  for (const f of clonedManifest.files) {
+    const size = f.sizeBytes > 0 ? Math.min(f.sizeBytes, 1024) : 64;
+    const synthetic = new Uint8Array(size);
+    for (let i = 0; i < synthetic.length; i++) {
+      synthetic[i] = (i * 37 + 13) % 256;
+    }
+    f.sha256 = computeSha256(synthetic);
+    f.sizeBytes = synthetic.length;
+    files[f.name] = synthetic;
+  }
+  if (!files["model.onnx"]) {
+    const modelBytes = new Uint8Array(512);
+    for (let i = 0; i < modelBytes.length; i++) modelBytes[i] = (i * 17) % 256;
+    const modelSha = computeSha256(modelBytes);
+    clonedManifest.files.push({
+      name: "model.onnx",
+      sizeBytes: modelBytes.length,
+      sha256: modelSha,
+      required: false,
+    });
+    files["model.onnx"] = modelBytes;
+  }
+
+  clonedManifest.sha256 = clonedManifest.files[0]?.sha256 || computeSha256("spe-root");
+
+  return packModelArchive(clonedManifest, files);
+}
+
 export const globalModelRegistry = new ModelPackRegistry();
+export { ModelPackRegistry as ModelRegistry };
+
+export function getModelAssets(modelId: string): Record<string, Uint8Array> | null {
+  return globalModelRegistry.getModelAssets(modelId);
+}
+
+export function sideloadPack(
+  archiveBytes: Uint8Array,
+  targetBackend: "WEBGPU" | "WASM" = "WASM",
+) {
+  return globalModelRegistry.sideloadPack(archiveBytes, targetBackend);
+}

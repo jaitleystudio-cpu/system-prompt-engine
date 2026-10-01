@@ -57,12 +57,23 @@ export interface PromiseCommitment {
     value: number;
     currency: string;
   };
+  secondaryMonetaryAmount?: {
+    value: number;
+    currency: string;
+  };
+  additionalAmounts?: Array<{
+    value: number;
+    currency: string;
+  }>;
   condition?: string;
   confidence: number;
   audioStartSec: number;
   audioEndSec: number;
   quoteSnippet: string;
   status: "PENDING" | "FULFILLED" | "DISPUTED" | "BREACHED";
+  needsClarification?: boolean;
+  clarificationPrompt?: string;
+  turnIndex?: number;
 }
 
 export interface PromiseLedger {
@@ -120,6 +131,7 @@ export interface ParentMentalLoad {
   appointments: string[];
   overdueActions: string[];
   sleepNotes: string[];
+  partnerDelegation?: string[];
 }
 
 export interface ChronicCareTimeline {
@@ -188,9 +200,11 @@ export interface CoercionDemand {
   amountDemanded?: string;
   accountNumbersMentioned: string[];
   phoneNumbersMentioned: string[];
+  upiIdsMentioned?: string[];
   urgencyKeywords: string[];
   audioStartSec: number;
   audioEndSec: number;
+  turnIndex?: number;
 }
 
 export interface ScamCoercionPack {
@@ -203,6 +217,7 @@ export interface ScamCoercionPack {
   policeFirNarrative: string; // Ready for law enforcement submission
   bankDisputeNotice: string; // Ready for bank fraud division freeze
   victimReassuranceSteps: string[];
+  statutorySections?: string[];
   receiptDigest: string;
   rawUserDataEgress: 0;
 }

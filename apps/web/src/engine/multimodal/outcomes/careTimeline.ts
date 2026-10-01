@@ -135,7 +135,10 @@ export class CareTimelineEngine {
     shift: CaregiverHandoff["shift"],
     spokenNurseRant: string,
   ): CaregiverHandoff {
-    const sentences = spokenNurseRant.split(/[.!?\n]+/).map((s) => s.trim()).filter((s) => s.length > 5);
+    const sentences = spokenNurseRant
+      .split(/[.!?\n]+|\s+(?:and\s+then|and\s+also|and\s+the|and\s+we|and\s+gave|and\s+patient|and\s+morning|also|plus|then)\s+/i)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 5);
 
     const urgentAlerts: string[] = [];
     const pendingMeds: string[] = [];
@@ -206,16 +209,32 @@ export class CareTimelineEngine {
   }
 
   private inferCategory(text: string): CareTimelineEntry["category"] {
-    if (/dr|doctor|prescribed|decided|agreed|surgery|hospital|discharge/i.test(text)) {
+    if (
+      /dr|doctor|prescribed|decided|agreed|surgery|hospital|discharge|డాక్టర్|వైద్యుడు|सलाह|अस्पताल|médecin|médico|arzt|врач|طبيب|医生|의사|doktor/i.test(
+        text,
+      )
+    ) {
       return "DECISION";
     }
-    if (/tablet|pill|medicine|syrup|dosage|take twice|after food|drops/i.test(text)) {
+    if (
+      /tablet|pill|medicine|syrup|dosage|take twice|after food|drops|capsule|మందులు|మాత్రలు|दवा|गोली|خوراک|medicamento|médicament|arzneimittel|лекарство|دواء|药|약|ilaç|obat/i.test(
+        text,
+      )
+    ) {
       return "MEDICATION";
     }
-    if (/appointment|visit|scan|x-ray|blood test|lab/i.test(text)) {
+    if (
+      /appointment|visit|scan|x-ray|blood test|lab|తనిఖీ|जांच|rendez-vous|cita|termin|прием|موعد|预约|예약|randevu/i.test(
+        text,
+      )
+    ) {
       return "APPOINTMENT";
     }
-    if (/pain|cough|headache|nausea|fever|swelling|dizziness/i.test(text)) {
+    if (
+      /pain|cough|headache|nausea|fever|swelling|dizziness|నొప్పి|జ్వరం|దగ్గు|दर्द|बुखार|खांसी|douleur|fièvre|dolor|fiebre|schmerz|fieber|боль|температура|ألم|حمى|疼痛|发烧|통증|열|ağrı|ateş/i.test(
+        text,
+      )
+    ) {
       return "SYMPTOM";
     }
     return "NEXT_STEP";
@@ -230,13 +249,29 @@ export class CareTimelineEngine {
   }
 
   private extractDosageFromOcr(ocrText: string, lang: string): DosageSchedule {
-    const withFood = /after food|with meal|with food|भोजन के बाद|తిన్న తర్వాత|après repas/i.test(ocrText);
+    const withFood =
+      /after food|with meal|with food|\bpc\b|\bp\.c\.\b|भोजन के बाद|తిన్న తర్వాత|après repas|después de comer|nach dem essen|после еды|بعد الأكل|饭后|식후|yemekten sonra/i.test(
+        ocrText,
+      );
     const times: ("MORNING" | "AFTERNOON" | "EVENING" | "NIGHT")[] = [];
 
-    if (/morning|सुबह|ఉదయం|matin|mañana/i.test(ocrText)) times.push("MORNING");
-    if (/afternoon|दोपहर|మధ్యాహ్నం|midi|tarde/i.test(ocrText)) times.push("AFTERNOON");
-    if (/evening|शाम|సాయంత్రం|soir|tarde/i.test(ocrText)) times.push("EVENING");
-    if (/night|bedtime|रात|రాత్రి|nuit|noche/i.test(ocrText)) times.push("NIGHT");
+    // Latin abbreviations: BID (twice), TID (thrice), QID (four times), HS (night)
+    const isBid = /\bb\.?i\.?d\b|twice daily|2 times/i.test(ocrText);
+    const isTid = /\bt\.?i\.?d\b|thrice daily|3 times/i.test(ocrText);
+    const isQid = /\bq\.?i\.?d\b|four times|4 times/i.test(ocrText);
+
+    if (isQid) {
+      times.push("MORNING", "AFTERNOON", "EVENING", "NIGHT");
+    } else if (isTid) {
+      times.push("MORNING", "AFTERNOON", "NIGHT");
+    } else if (isBid) {
+      times.push("MORNING", "NIGHT");
+    } else {
+      if (/morning|सुबह|ఉదయం|matin|mañana|morgen|утро|صباح|早上|아침|sabah/i.test(ocrText)) times.push("MORNING");
+      if (/afternoon|दोपहर|మధ్యాహ్నం|midi|tarde|nachmittag|день|ظهر|下午|점심|öğle/i.test(ocrText)) times.push("AFTERNOON");
+      if (/evening|शाम|సాయంత్రం|soir|abend|вечер|مساء|晚上|저녁|akşam/i.test(ocrText)) times.push("EVENING");
+      if (/night|bedtime|रात|రాత్రి|nuit|noche|nacht|ночь|ليل|夜|밤|gece|\bh\.?s\b/i.test(ocrText)) times.push("NIGHT");
+    }
 
     if (times.length === 0) {
       times.push("MORNING", "NIGHT");
@@ -255,7 +290,7 @@ export class CareTimelineEngine {
       }
     });
 
-    const medMatch = ocrText.match(/([a-zA-Z]{3,20}\s*(?:\d+\s*mg)?)/i);
+    const medMatch = ocrText.match(/(?:rx:?\s*)?(?:tab(?:let)?|cap(?:sule)?|syrup)?\s*([a-zA-Z\u0900-\u097F\u0C00-\u0C7F]{4,25}(?:\s+\d+\s*mg)?)/i);
     const medicationName = medMatch ? medMatch[1].trim() : "Prescribed Medication";
 
     return {

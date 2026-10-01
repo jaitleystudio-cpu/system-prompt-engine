@@ -18,13 +18,16 @@ interface ClipMineInput {
   videoTimeline?: VideoTimelineIR;
   segments?: AsrTimestampSegment[];
   durationSec?: number;
+  spokenTranscript?: string;
   language?: string;
 }
 
 const VIRAL_HOOK_PATTERNS = [
   /never|secret|nobody tells you|the truth|huge mistake|insane|shocking|the biggest|why you must|don't do this/i,
-  /most people think|stop doing|what happened next|game changer|unbelievable|proof|secret hack/i,
-  /రహస్యం|నిజం|తప్పు|ముఖ్యమైన|सच|रहस्य|गलती|सावधान|secreto|error|increíble/i,
+  /most people think|stop doing|what happened next|game changer|unbelievable|proof|secret hack|rule number one/i,
+  /రహస్యం|నిజం|తప్పు|ముఖ్యమైన|విలువైన|सच|रहस्य|गलती|सावधान|चमत्कार|secreto|error|increíble|cuidado/i,
+  /verité|jamais|attention|incroyable|geheimnis|wahnsinn|wahrheit|segredo|perigo|verdade/i,
+  /秘密|真相|千万不要|震惊|不可思议|嘘|비밀|충격|절대|حقيقة|سر|خطير|تحذير/i,
 ];
 
 export class CreatorClipMineEngine {
@@ -33,7 +36,33 @@ export class CreatorClipMineEngine {
    */
   mineClips(input: ClipMineInput): CreatorClipMine {
     const language = input.language || input.asrResult?.language || "en";
-    const segments = input.segments || input.asrResult?.segments || [];
+    let segments = input.segments || input.asrResult?.segments || [];
+
+    // Fallback: If segments are missing but transcript is provided, slice into conversational segments
+    if (segments.length === 0) {
+      const fullText =
+        input.spokenTranscript ||
+        input.videoTimeline?.events.filter((e) => e.speech).map((e) => e.speech).join(" ") ||
+        "";
+      if (fullText.trim().length > 0) {
+        const sentences = fullText.split(/(?<=[.?!])\s+/).filter((s) => s.trim().length > 0);
+        let curTime = 0;
+        segments = sentences.map((s, idx) => {
+          const words = s.split(/\s+/).length;
+          const dur = Math.max(2, Math.round(words / 2.8));
+          const seg: AsrTimestampSegment = {
+            id: idx + 1,
+            startSec: curTime,
+            endSec: curTime + dur,
+            text: s.trim(),
+            confidence: 0.95,
+          };
+          curTime += dur;
+          return seg;
+        });
+      }
+    }
+
     const totalDuration =
       input.durationSec ||
       input.videoTimeline?.durationSec ||
@@ -42,7 +71,7 @@ export class CreatorClipMineEngine {
 
     const candidates: ViralCutCandidate[] = [];
 
-    // Analyze segments for high-hook density
+    // Analyze segments for high-hook density and conversational pacing
     for (let i = 0; i < segments.length; i++) {
       const seg = segments[i];
       const text = seg.text;
@@ -56,15 +85,18 @@ export class CreatorClipMineEngine {
         }
       }
 
-      // Check speech pacing (words per sec)
+      // Check speech pacing (words and syllables per second)
       const wordCount = text.split(/\s+/).length;
       const duration = Math.max(1, seg.endSec - seg.startSec);
       const wps = wordCount / duration;
-      if (wps >= 2.5 && wps <= 4.2) {
+      const estimatedSyllables = Math.round(wordCount * 1.45);
+      const pps = Number((estimatedSyllables / duration).toFixed(2));
+
+      if (wps >= 2.4 && wps <= 4.2) {
         hookScore += 15; // Optimal conversational punchy pacing
       }
 
-      // Find best window ending within 10 to 60 seconds
+      // Find best window ending within 8 to 60 seconds
       const windowStartSec = seg.startSec;
       let windowEndIdx = i;
       for (let j = i; j < segments.length; j++) {
@@ -84,19 +116,22 @@ export class CreatorClipMineEngine {
           .map((s) => s.text)
           .join(" ");
 
+        // Viral hook headline
+        const hookHeadline = this.deriveHookHeadline(text);
+
         candidates.push({
           rank: 0, // Assigned after sorting
           hookScore: Math.min(99, hookScore),
           startSec: Number(windowStartSec.toFixed(1)),
           endSec: Number(windowEndSec.toFixed(1)),
           durationSec: Number(clipDuration.toFixed(1)),
-          hookHeadline: this.deriveHookHeadline(text),
+          hookHeadline,
           punchlineText: segments[windowEndIdx]?.text || text,
           suggestedCaptions: {
             primary: fullWindowText,
             bilingualEnglish: language !== "en" ? `[Translated]: ${fullWindowText}` : undefined,
           },
-          pacingPps: Number(wps.toFixed(2)),
+          pacingPps: pps,
           viralReason:
             hookScore > 75
               ? "High psychological curiosity trigger + punchy pacing"
@@ -107,18 +142,21 @@ export class CreatorClipMineEngine {
 
     // Fallback if audio was short or uniform
     if (candidates.length === 0 && segments.length > 0) {
+      const segStart = segments[0].startSec;
+      const segEnd = segments[segments.length - 1].endSec;
       candidates.push({
         rank: 1,
         hookScore: 82,
-        startSec: segments[0].startSec,
-        endSec: segments[segments.length - 1].endSec,
-        durationSec: segments[segments.length - 1].endSec - segments[0].startSec,
+        startSec: segStart,
+        endSec: segEnd,
+        durationSec: Number((segEnd - segStart).toFixed(1)),
         hookHeadline: "Key Takeaway",
         punchlineText: segments[segments.length - 1].text,
         suggestedCaptions: {
           primary: segments.map((s) => s.text).join(" "),
+          bilingualEnglish: language !== "en" ? `[Translated]: ${segments.map((s) => s.text).join(" ")}` : undefined,
         },
-        pacingPps: 3.1,
+        pacingPps: 3.8,
         viralReason: "Primary discussion highlight",
       });
     }

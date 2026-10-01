@@ -84,6 +84,16 @@ export interface ModelPack {
   installedAt?: string;
 }
 
+export interface OfflineModelPackage {
+  magic: "SPEMODEL";
+  formatVersion: 1;
+  modelId: string;
+  manifest: ModelManifest;
+  files: Record<string, Uint8Array>;
+  archiveDigest: string;
+  packagedAt: string;
+}
+
 export interface DeviceCapability {
   hasWebGpu: boolean;
   webGpuAdapterInfo?: string;
@@ -275,7 +285,10 @@ export type TargetFramework =
   | "swiftui"
   | "compose"
   | "flutter"
-  | "react-native";
+  | "react-native"
+  | "html-tailwind"
+  | "vue"
+  | "svelte";
 
 export interface FidelityReceipt {
   receiptId: string;

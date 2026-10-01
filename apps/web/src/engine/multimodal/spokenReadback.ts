@@ -13,6 +13,7 @@
  */
 
 import type { PromiseLedger, PromiseCommitment } from "./outcomes/types";
+import { GLOBAL_CURRENCIES } from "./outcomes/globalLanguages";
 
 export interface ClarificationQuestion {
   id: string;
@@ -465,7 +466,12 @@ export class SpokenReadbackEngine {
 
     // Check for Ambiguity 1: Amount present but currency missing or generic
     const quote = primaryCommitment?.quoteSnippet || ledger.summaryText || "";
-    if (amountNum !== undefined && (!currency || (currency === "USD" && !quote.includes("$") && !quote.toLowerCase().includes("dollar")))) {
+    if (
+      amountNum !== undefined &&
+      (!currency ||
+        currency === "UNSPECIFIED" ||
+        (currency === "USD" && !quote.includes("$") && !quote.toLowerCase().includes("dollar")))
+    ) {
       questions.push({
         id: "clarify-currency",
         field: "currency",
@@ -476,9 +482,17 @@ export class SpokenReadbackEngine {
       });
     }
 
-    // Check for Ambiguity 2: Relative weekday deadline (e.g. "by Friday") without specific calendar date
-    if (deadline && /^(friday|monday|tuesday|wednesday|thursday|saturday|sunday)$/i.test(deadline.trim())) {
-      const dayName = deadline.trim();
+    // Check for Ambiguity 2: Relative weekday deadline (e.g. "by Friday", "this friday", "next monday") without specific calendar date
+    if (
+      deadline &&
+      (/\b(friday|monday|tuesday|wednesday|thursday|saturday|sunday|tomorrow|weekend)\b/i.test(
+        deadline.trim(),
+      ) ||
+        (primaryCommitment?.needsClarification &&
+          primaryCommitment?.clarificationPrompt?.toLowerCase().includes("deadline")))
+    ) {
+      const dayMatch = deadline.match(/\b(friday|monday|tuesday|wednesday|thursday|saturday|sunday)\b/i);
+      const dayName = dayMatch ? dayMatch[1] : deadline.trim();
       questions.push({
         id: "clarify-deadline",
         field: "deadline",
@@ -522,6 +536,140 @@ export class SpokenReadbackEngine {
       audioPromptScript: fullScript,
       timestamp: new Date().toISOString(),
     };
+  }
+
+  /**
+   * Resolves an interactive clarification question and reconciles the promise ledger.
+   */
+  resolveClarification(
+    readbackResult: SpokenReadbackResult,
+    questionId: string,
+    resolvedAnswer: string,
+    originalLedger: PromiseLedger,
+  ): {
+    updatedResult: SpokenReadbackResult;
+    updatedLedger: PromiseLedger;
+  } {
+    const updatedQuestions = readbackResult.clarificationQuestions.map((q) => {
+      if (q.id === questionId) {
+        return {
+          ...q,
+          resolved: true,
+          resolvedValue: resolvedAnswer,
+        };
+      }
+      return q;
+    });
+
+    const targetQuestion = readbackResult.clarificationQuestions?.find((q) => q.id === questionId);
+    if (!targetQuestion) {
+      return { updatedResult: readbackResult, updatedLedger: originalLedger };
+    }
+
+    let resolvedCurr = resolvedAnswer.trim();
+    const currMatch = resolvedAnswer.match(/\b([A-Z]{3})\b/);
+    if (currMatch) {
+      resolvedCurr = currMatch[1];
+    } else {
+      const lowerAns = resolvedAnswer.toLowerCase().trim();
+      for (const [code, info] of Object.entries(GLOBAL_CURRENCIES)) {
+        if (
+          info.symbol.toLowerCase() === lowerAns ||
+          code.toLowerCase() === lowerAns ||
+          info.terms.some((t) => lowerAns.includes(t.toLowerCase()))
+        ) {
+          resolvedCurr = code;
+          break;
+        }
+      }
+    }
+
+    let updatedParties = [...(originalLedger.parties || [])];
+    if (targetQuestion.field === "parties") {
+      const parts = resolvedAnswer
+        .split(/(?:,|\band\b|\bto\b|\bpaying\b)/i)
+        .map((p) => p.trim())
+        .filter((p) => p.length > 0);
+      if (parts.length >= 2) {
+        updatedParties = [
+          { id: "party-1", name: parts[0], role: "promisor" },
+          { id: "party-2", name: parts[1], role: "promisee" },
+        ];
+      } else if (parts.length === 1) {
+        if (updatedParties.length > 0) {
+          updatedParties[0] = { ...updatedParties[0], name: parts[0] };
+        } else {
+          updatedParties = [{ id: "party-1", name: parts[0], role: "promisor" }];
+        }
+      }
+    }
+
+    // Deep clone ledger commitments for mutation across all matching commitments
+    const updatedCommitments: PromiseCommitment[] = (originalLedger.commitments || []).map((c) => {
+      const updated = { ...c };
+
+      if (targetQuestion.field === "currency") {
+        if (updated.monetaryAmount) {
+          updated.monetaryAmount = {
+            ...updated.monetaryAmount,
+            currency: resolvedCurr,
+          };
+        }
+        updated.needsClarification = false;
+        updated.clarificationPrompt = undefined;
+      } else if (targetQuestion.field === "deadline") {
+        updated.deadlineText = resolvedAnswer.trim();
+        updated.needsClarification = false;
+        updated.clarificationPrompt = undefined;
+      } else if (targetQuestion.field === "condition") {
+        updated.condition = resolvedAnswer.trim();
+      } else if (targetQuestion.field === "parties") {
+        if (updatedParties.length >= 2) {
+          updated.promisor = updatedParties[0].name;
+          updated.promisee = updatedParties[1].name;
+        }
+        updated.needsClarification = false;
+        updated.clarificationPrompt = undefined;
+      }
+      return updated;
+    });
+
+    const updatedLedger: PromiseLedger = {
+      ...originalLedger,
+      parties: updatedParties,
+      commitments: updatedCommitments,
+    };
+
+    const allResolved = updatedQuestions.every((q) => q.resolved);
+    const langRaw = readbackResult.language.toLowerCase().trim();
+    const template =
+      READBACK_TEMPLATES[langRaw] ||
+      READBACK_TEMPLATES[langRaw.substring(0, 2)] ||
+      READBACK_TEMPLATES.en;
+
+    let updatedReadbackText = "";
+    const primaryCommitment = updatedCommitments[0];
+    const action = primaryCommitment?.obligation || updatedLedger.summaryText || "";
+    const deadline = primaryCommitment?.deadlineText;
+    const amountStr = primaryCommitment?.monetaryAmount ? String(primaryCommitment.monetaryAmount.value) : undefined;
+
+    if (allResolved) {
+      updatedReadbackText = `${template.confirmedAck} ${template.intro(action, deadline, amountStr)}`;
+    } else {
+      const remainingUnresolved = updatedQuestions.filter((q) => !q.resolved);
+      updatedReadbackText = `${template.intro(action, deadline, amountStr)} ${remainingUnresolved.map((q) => q.spokenPrompt).join(" ")}`;
+    }
+
+    const updatedResult: SpokenReadbackResult = {
+      ...readbackResult,
+      status: allResolved ? "CONFIRMED" : "NEEDS_CLARIFICATION",
+      clarificationQuestions: updatedQuestions,
+      readbackText: updatedReadbackText,
+      audioPromptScript: updatedReadbackText,
+      timestamp: new Date().toISOString(),
+    };
+
+    return { updatedResult, updatedLedger };
   }
 
   /**

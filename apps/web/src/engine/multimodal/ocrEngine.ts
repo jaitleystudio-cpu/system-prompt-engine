@@ -181,13 +181,24 @@ export class LocalOcrEngine {
       `img-${imageData.width}x${imageData.height}-${imageData.data.byteLength}`,
     );
 
-    // Step 2: Determine execution tier
-    const isModelReady =
-      pack && pack.state === "READY" && pack.verifiedDigest === pack.manifest.sha256;
+    // Step 2: Determine execution tier (supports Mobile-OCR, PaddleOCR, and TrOCR)
+    const paddlePack = globalModelRegistry.getPack("spe-ocr-paddle-int8");
+    const trocrPack = globalModelRegistry.getPack("spe-ocr-trocr-int8");
+
+    const activeReadyPack =
+      (pack && pack.state === "READY" && pack.verifiedDigest === pack.manifest.sha256)
+        ? pack
+        : (paddlePack && paddlePack.state === "READY" && paddlePack.verifiedDigest === paddlePack.manifest.sha256)
+        ? paddlePack
+        : (trocrPack && trocrPack.state === "READY" && trocrPack.verifiedDigest === trocrPack.manifest.sha256)
+        ? trocrPack
+        : null;
+
+    const isModelReady = activeReadyPack != null;
     const recognizedRegions: OcrRecognizedRegion[] = [];
     const detectedScripts = new Set<string>();
 
-    if (isModelReady) {
+    if (isModelReady && activeReadyPack) {
       // Tier-1 Local Neural Recognition
       if (knownTextLabels && knownTextLabels.length > 0) {
         // High-precision fixture/known text recognition path
@@ -232,11 +243,11 @@ export class LocalOcrEngine {
 
       const receipt: InferenceSessionReceipt = {
         sessionId: `ocr-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-        modelId: pack.manifest.modelId,
-        backend: pack.activeBackend,
+        modelId: activeReadyPack.manifest.modelId,
+        backend: activeReadyPack.activeBackend,
         deviceCapability: deviceCap,
         inferenceTimeMs: elapsedMs,
-        peakMemoryMb: pack.manifest.minimumMemoryMb,
+        peakMemoryMb: activeReadyPack.manifest.minimumMemoryMb,
         inputDigest,
         outputDigest: computeSha256(fullText),
         timestamp: new Date().toISOString(),
@@ -248,7 +259,7 @@ export class LocalOcrEngine {
         regions: recognizedRegions,
         fullText,
         scriptsDetected: Array.from(detectedScripts),
-        backend: pack.activeBackend,
+        backend: activeReadyPack.activeBackend,
         truthState: "LOCAL_OCR_QUALIFIED",
         receipt,
       };

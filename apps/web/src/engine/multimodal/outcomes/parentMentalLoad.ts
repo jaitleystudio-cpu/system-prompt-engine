@@ -3,11 +3,12 @@
  *
  * Converts rapid, unstructured spoken venting / streams of consciousness
  * into clean, prioritized, stress-reducing action buckets:
+ * - Urgent & Overdue Actions (Immediate)
  * - Feeds & Nursing
  * - Medications & Vitamins
  * - Pediatrician & Vaccination Appointments
- * - Urgent & Overdue Actions
  * - Supplies & Restock Needs
+ * - Partner / Co-Caregiver Delegation
  *
  * INVARIANTS:
  * - RAW_USER_DATA_EGRESS = 0
@@ -18,7 +19,7 @@ import { computeSha256 } from "../../hashUtils";
 
 export interface ParentActionItem {
   id: string;
-  category: "FEEDS" | "MEDS" | "APPOINTMENTS" | "URGENT_OVERDUE" | "SUPPLIES";
+  category: "FEEDS" | "MEDS" | "APPOINTMENTS" | "URGENT_OVERDUE" | "SUPPLIES" | "PARTNER_DELEGATION";
   description: string;
   targetTime?: string;
   priority: "HIGH" | "MEDIUM" | "NORMAL";
@@ -35,6 +36,7 @@ export interface ParentMentalLoadSummary {
   appointments: ParentActionItem[];
   urgentOverdue: ParentActionItem[];
   supplies: ParentActionItem[];
+  partnerDelegation: ParentActionItem[];
   receiptDigest: string;
   createdAt: string;
   rawUserDataEgress: 0;
@@ -44,7 +46,7 @@ export class ParentMentalLoadEngine {
   sortMentalDump(spokenRant: string, language: string = "en"): ParentMentalLoadSummary {
     const text = spokenRant.trim();
     const sentences = text
-      .split(/(?<=[.?!,\n])\s+/)
+      .split(/(?<=[.?!,\n])\s+|\s+(?:and\s+then|and\s+also|and\s+we|and\s+i|and\s+need|and\s+my|and\s+you|and\s+the|also|plus|then)\s+/i)
       .map((s) => s.trim())
       .filter((s) => s.length > 2);
 
@@ -53,6 +55,7 @@ export class ParentMentalLoadEngine {
     const appointments: ParentActionItem[] = [];
     const urgentOverdue: ParentActionItem[] = [];
     const supplies: ParentActionItem[] = [];
+    const partnerDelegation: ParentActionItem[] = [];
 
     let idCounter = 1;
 
@@ -68,7 +71,20 @@ export class ParentMentalLoadEngine {
         lower.includes("overdue") ||
         lower.includes("immediately");
 
-      if (lower.includes("fever") || lower.includes("emergency")) {
+      // Check Partner Delegation first if speaker delegates to spouse/partner
+      if (
+        /ask\s+[A-Za-z]+|tell\s+(?:my\s+)?(?:husband|wife|partner|spouse|dad|mom|grandma)|delegate|can\s+you\s+(?:pick|get|handle)|husband\s+will|partner\s+should|ఆయనకి|చెప్పు|पति\s+को|पत्नी\s+को|dile\s+a/i.test(
+          lower,
+        )
+      ) {
+        partnerDelegation.push({
+          id,
+          category: "PARTNER_DELEGATION",
+          description: s,
+          priority: isHighPriority ? "HIGH" : "NORMAL",
+          status: "PENDING",
+        });
+      } else if (lower.includes("fever") || lower.includes("emergency")) {
         urgentOverdue.push({
           id,
           category: "URGENT_OVERDUE",
@@ -161,21 +177,22 @@ export class ParentMentalLoadEngine {
       meds.length +
       appointments.length +
       urgentOverdue.length +
-      supplies.length;
+      supplies.length +
+      partnerDelegation.length;
 
     let calming = "";
     if (language.startsWith("hi")) {
-      calming = `चिंता मत कीजिए, हमने आपकी सारी बातें ${total} ज़रूरी कामों में सुलझा दी हैं। सबसे पहले ${urgentOverdue.length} ज़रूरी कामों पर ध्यान दें।`;
+      calming = `चिंता मत कीजिए, हमने आपकी सारी बातें ${total} ज़रूरी कामों में सुलझा दी हैं। सबसे पहले ${urgentOverdue.length} ज़रूरी कामों पर ध्यान दें${partnerDelegation.length > 0 ? ` और ${partnerDelegation.length} काम अपने साथी को सौंप दें` : ""}।`;
     } else if (language.startsWith("te")) {
-      calming = `ఆందోళన చెందకండి, మీ ఆలోచనలను ${total} ముఖ్యమైన పనులుగా విభజించాము. మొదట ${urgentOverdue.length} అత్యవసర పనులను పూర్తి చేయండి.`;
+      calming = `ఆందోళన చెందకండి, మీ ఆలోచనలను ${total} ముఖ్యమైన పనులుగా విభజించాము. మొదట ${urgentOverdue.length} అత్యవసర పనులను పూర్తి చేయండి${partnerDelegation.length > 0 ? ` మరియు ${partnerDelegation.length} పనులను సహాయకుడికి అప్పగించండి` : ""}.`;
     } else if (language.startsWith("es")) {
-      calming = `Tranquilo(a), hemos organizado tus pensamientos en ${total} tareas claras. Primero atiende los ${urgentOverdue.length} asuntos urgentes.`;
+      calming = `Tranquilo(a), hemos organizado tus pensamientos en ${total} tareas claras. Primero atiende los ${urgentOverdue.length} asuntos urgentes${partnerDelegation.length > 0 ? ` y delega ${partnerDelegation.length} tareas a tu pareja` : ""}.`;
     } else {
-      calming = `Take a deep breath. We sorted your thoughts into ${total} organized tasks. You have ${urgentOverdue.length} urgent items to handle first.`;
+      calming = `Take a deep breath. We sorted your thoughts into ${total} organized tasks. You have ${urgentOverdue.length} urgent items to handle first${partnerDelegation.length > 0 ? `, and ${partnerDelegation.length} items ready to delegate to your partner` : ""}.`;
     }
 
     const receiptDigest = computeSha256(
-      `PARENT-DUMP:${text}:${total}:${urgentOverdue.length}`,
+      `PARENT-DUMP:${text}:${total}:${urgentOverdue.length}:${partnerDelegation.length}`,
     );
 
     return {
@@ -188,6 +205,7 @@ export class ParentMentalLoadEngine {
       appointments,
       urgentOverdue,
       supplies,
+      partnerDelegation,
       receiptDigest,
       createdAt: new Date().toISOString(),
       rawUserDataEgress: 0,

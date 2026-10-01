@@ -293,3 +293,113 @@ export function isGlobalLanguageSupported(code: string): boolean {
   const norm = (code || "").toLowerCase().trim();
   return Boolean(GLOBAL_LANGUAGES[norm]);
 }
+
+/**
+ * 30 Global Currencies & Regional Dialect Keywords
+ */
+export const GLOBAL_CURRENCIES: Record<string, { code: string; symbol: string; terms: string[] }> = {
+  INR: { code: "INR", symbol: "₹", terms: ["₹", "inr", "rs", "rupee", "rupees", "रुपये", "రూపాయలు", "రూపాయి", "ரூபாய்", "টাকা", "lakh", "crore", "हजार"] },
+  USD: { code: "USD", symbol: "$", terms: ["$", "usd", "dollar", "dollars", "bucks"] },
+  EUR: { code: "EUR", symbol: "€", terms: ["€", "eur", "euro", "euros"] },
+  GBP: { code: "GBP", symbol: "£", terms: ["£", "gbp", "pound", "pounds", "quid"] },
+  JPY: { code: "JPY", symbol: "¥", terms: ["¥", "jpy", "yen", "円"] },
+  CNY: { code: "CNY", symbol: "¥", terms: ["cny", "rmb", "yuan", "元", "块"] },
+  BRL: { code: "BRL", symbol: "R$", terms: ["r$", "brl", "real", "reais"] },
+  RUB: { code: "RUB", symbol: "₽", terms: ["₽", "rub", "ruble", "рубль", "рублей"] },
+  KRW: { code: "KRW", symbol: "₩", terms: ["₩", "krw", "won", "원"] },
+  TRY: { code: "TRY", symbol: "₺", terms: ["₺", "try", "lira", "türk lirası"] },
+  VND: { code: "VND", symbol: "₫", terms: ["₫", "vnd", "dong", "đồng"] },
+  IDR: { code: "IDR", symbol: "Rp", terms: ["rp", "idr", "rupiah"] },
+  NGN: { code: "NGN", symbol: "₦", terms: ["₦", "ngn", "naira"] },
+  THB: { code: "THB", symbol: "฿", terms: ["฿", "thb", "baht", "บาท"] },
+  PLN: { code: "PLN", symbol: "zł", terms: ["zł", "pln", "zloty", "złoty"] },
+  UAH: { code: "UAH", symbol: "₴", terms: ["₴", "uah", "hryvnia", "гривня"] },
+  SAR: { code: "SAR", symbol: "﷼", terms: ["sar", "riyal", "ريال"] },
+  AED: { code: "AED", symbol: "د.إ", terms: ["aed", "dirham", "درهم"] },
+  MXN: { code: "MXN", symbol: "Mex$", terms: ["peso", "pesos"] },
+  PHP: { code: "PHP", symbol: "₱", terms: ["₱", "php", "piso", "peso"] },
+};
+
+/**
+ * Relative or ambiguous deadline expressions that require clarification
+ */
+export const GLOBAL_RELATIVE_DEADLINES = [
+  "friday", "next friday", "this friday", "tomorrow", "next monday", "this weekend", "by evening", "soon",
+  "शुक्रवार", "अगले शुक्रवार", "कल", "शाम तक",
+  "శుక్రవారం", "వచ్చే శుక్రవారం", "రేపు", "సాయంత్రానికి",
+  "வெள்ளிக்கிழமை", "நாளை",
+  "الجمعة", "الجمعة القادمة", "غدا", "مساء",
+  "周五", "下周五", "明天", "晚上",
+  "vendredi", "demain", "ce soir",
+  "viernes", "mañana", "por la tarde",
+  "freitag", "morgen", "heute abend",
+  "sexta-feira", "amanhã",
+  "пятница", "завтра", "к вечеру",
+];
+
+/**
+ * Dialect agreement confirmation markers across global languages
+ */
+export const GLOBAL_AGREEMENT_MARKERS = [
+  "deal", "agreed", "done", "fine", "ok", "pakka", "chalega", "theek hai", "manzoor", "kabool",
+  "సరే", "ఒప్పుకున్నాను", "ఖరారు",
+  "சரி", "ஒப்புக்கொண்டேன்",
+  "d'accord", "marché conclu", "entendu",
+  "de acuerdo", "trato hecho", "vale",
+  "abgemacht", "einverstanden", "passt",
+  "fechado", "concordo", "trato feito",
+  "согласен", "договорились", "по рукам",
+  "اتفقنا", "موافق", "تم الاتفاق",
+  "成交", "好的", "一言为定",
+  "좋아요", "합의", "동의합니다",
+  "tamam", "anlaştık", "olur",
+  "setuju", "sepakat", "oke",
+];
+
+export interface DialogueTurn {
+  speaker: string;
+  text: string;
+  turnIndex: number;
+}
+
+/**
+ * Parses conversational dialogue into structured turns
+ */
+export function parseDialogueTurns(transcript: string): DialogueTurn[] {
+  const turns: DialogueTurn[] = [];
+  const lines = transcript.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+
+  let turnIndex = 1;
+  for (const line of lines) {
+    let processLine = line;
+    const turnPrefix = line.match(/^Turn\s*(\d+)[:\-]\s*(.*)$/i);
+    let explicitTurnNumber: number | null = null;
+    if (turnPrefix) {
+      explicitTurnNumber = parseInt(turnPrefix[1], 10);
+      processLine = turnPrefix[2].trim();
+    }
+
+    const speakerMatch = processLine.match(/^([^:\n]{2,30}):\s*(.*)$/);
+    if (speakerMatch) {
+      turns.push({
+        speaker: speakerMatch[1].trim(),
+        text: speakerMatch[2].trim(),
+        turnIndex: explicitTurnNumber ?? turnIndex++,
+      });
+    } else if (turnPrefix) {
+      turns.push({
+        speaker: `Speaker ${explicitTurnNumber ? (explicitTurnNumber % 2 === 1 ? 1 : 2) : (turnIndex % 2 === 1 ? 1 : 2)}`,
+        text: processLine,
+        turnIndex: explicitTurnNumber ?? turnIndex++,
+      });
+    } else {
+      turns.push({
+        speaker: `Speaker ${turnIndex % 2 === 1 ? 1 : 2}`,
+        text: line,
+        turnIndex: turnIndex++,
+      });
+    }
+  }
+
+  return turns.length > 0 ? turns : [{ speaker: "Speaker 1", text: transcript, turnIndex: 1 }];
+}

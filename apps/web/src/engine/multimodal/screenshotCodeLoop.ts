@@ -131,7 +131,10 @@ export class ScreenshotCodeLoopEngine {
       if (bestSsim < 0.85) {
         if (cycle === 1) {
           repairedDefects.push("Adjusted container flex-wrap and padding alignment");
-          currentCode = currentCode.replace("padding: 1rem;", "padding: 1.5rem; gap: 1rem;");
+          currentCode = currentCode.replace(
+            `padding: "${designTokens["--spacing-base"] || "1rem"}"`,
+            `padding: "1.5rem", gap: "1rem"`,
+          );
           bestSsim = Math.min(0.92, bestSsim + 0.12);
         } else if (cycle === 2) {
           repairedDefects.push("Corrected font-weight and border-radius tokens");
@@ -177,18 +180,27 @@ export class ScreenshotCodeLoopEngine {
   }
 
   private extractDesignTokens(img: ImageData): Record<string, string> {
-    // Sample primary background and foreground colors
-    const bgR = img.data[0] || 15;
-    const bgG = img.data[1] || 17;
-    const bgB = img.data[2] || 23;
+    // Sample primary background color from corner pixel
+    const bgR = img.data[0] ?? 15;
+    const bgG = img.data[1] ?? 17;
+    const bgB = img.data[2] ?? 23;
     const bgHex = `#${bgR.toString(16).padStart(2, "0")}${bgG.toString(16).padStart(2, "0")}${bgB.toString(16).padStart(2, "0")}`;
+
+    // Sample foreground color (or compute accessible contrast)
+    const isDark = (bgR * 299 + bgG * 587 + bgB * 114) / 1000 < 128;
+    const fgHex = isDark ? "#f8fafc" : "#0f172a";
+    const accentHex = isDark ? "#6366f1" : "#4f46e5";
+    const accentSecondary = isDark ? "#38bdf8" : "#0284c7";
 
     return {
       "--bg-primary": bgHex,
-      "--fg-primary": "#f8fafc",
-      "--accent-primary": "#6366f1",
+      "--fg-primary": fgHex,
+      "--accent-primary": accentHex,
+      "--accent-secondary": accentSecondary,
       "--radius-base": "8px",
-      "--font-family": "system-ui, -apple-system, sans-serif",
+      "--spacing-base": "1rem",
+      "--font-family": "Inter, system-ui, -apple-system, sans-serif",
+      "--shadow-card": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
     };
   }
 
@@ -224,13 +236,13 @@ export class ScreenshotCodeLoopEngine {
 
 export function ReconstructedView() {
   return (
-    <div style={{ background: "${tokens["--bg-primary"]}", color: "${tokens["--fg-primary"]}", padding: 1rem; minHeight: "100vh" }}>
+    <div style={{ backgroundColor: "${tokens["--bg-primary"]}", color: "${tokens["--fg-primary"]}", padding: "${tokens["--spacing-base"] || "1rem"}", minHeight: "100vh", fontFamily: "${tokens["--font-family"]}" }}>
       <header style={{ borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "0.75rem" }}>
         <h1>${textNodes[0] || "Header"}</h1>
       </header>
       <main style={{ marginTop: "1.5rem" }}>
         <p>${textNodes[1] || "Primary Content Section"}</p>
-        <button style={{ background: "${tokens["--accent-primary"]}", color: "#fff", borderRadius: "${tokens["--radius-base"]}", padding: "0.5rem 1rem" }}>
+        <button style={{ backgroundColor: "${tokens["--accent-primary"]}", color: "#ffffff", borderRadius: "${tokens["--radius-base"]}", padding: "0.5rem 1rem", border: "none", cursor: "pointer" }}>
           ${textNodes[2] || "Action"}
         </button>
       </main>
@@ -253,6 +265,8 @@ struct ReconstructedView: View {
                 // Action handler
             }
             .buttonStyle(.borderedProminent)
+            .tint(Color(hex: "${tokens["--accent-primary"]}"))
+            .cornerRadius(8)
             Spacer()
         }
         .padding()
@@ -260,11 +274,14 @@ struct ReconstructedView: View {
     }
 }`;
 
-      case "compose":
+      case "compose": {
+        const bgHex = (tokens["--bg-primary"] || "#0f1117").replace("#", "").toUpperCase();
+        const accentHex = (tokens["--accent-primary"] || "#4f46e5").replace("#", "").toUpperCase();
         return `package com.spe.reconstruction
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -276,20 +293,27 @@ fun ReconstructedView() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0F1117))
+            .background(Color(0xFF${bgHex}))
             .padding(16.dp)
     ) {
         Text("${textNodes[0] || "Header"}", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(8.dp))
         Text("${textNodes[1] || "Primary Content"}")
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {}) {
+        Button(
+            onClick = {},
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF${accentHex})),
+            shape = RoundedCornerShape(8.dp)
+        ) {
             Text("${textNodes[2] || "Action"}")
         }
     }
 }`;
+      }
 
-      case "flutter":
+      case "flutter": {
+        const bgHex = (tokens["--bg-primary"] || "#0f1117").replace("#", "").toUpperCase();
+        const accentHex = (tokens["--accent-primary"] || "#4f46e5").replace("#", "").toUpperCase();
         return `import 'package:flutter/material.dart';
 
 class ReconstructedView extends StatelessWidget {
@@ -298,7 +322,7 @@ class ReconstructedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F1117),
+      backgroundColor: const Color(0xFF${bgHex}),
       appBar: AppBar(title: Text("${textNodes[0] || "Header"}")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -307,13 +331,21 @@ class ReconstructedView extends StatelessWidget {
           children: [
             Text("${textNodes[1] || "Primary Content"}", style: const TextStyle(color: Colors.white)),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: () {}, child: Text("${textNodes[2] || "Action"}")),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF${accentHex}),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () {},
+              child: Text("${textNodes[2] || "Action"}"),
+            ),
           ],
         ),
       ),
     );
   }
 }`;
+      }
 
       case "react-native":
         return `import React from 'react';
@@ -333,11 +365,97 @@ export function ReconstructedView() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '${tokens["--bg-primary"]}', padding: 16 },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 12 },
-  content: { color: '#ccc', marginBottom: 20 },
+  title: { fontSize: 24, fontWeight: 'bold', color: '${tokens["--fg-primary"]}', marginBottom: 12 },
+  content: { color: '#cbd5e1', marginBottom: 20 },
   button: { backgroundColor: '${tokens["--accent-primary"]}', padding: 12, borderRadius: 8, alignItems: 'center' },
-  buttonText: { color: '#fff', fontWeight: '600' }
+  buttonText: { color: '#ffffff', fontWeight: '600' }
 });`;
+
+      case "html-tailwind":
+        return `<div class="min-h-screen bg-slate-900 text-slate-100 p-6 font-sans">
+  <header class="border-b border-slate-800 pb-3">
+    <h1 class="text-2xl font-bold tracking-tight">${textNodes[0] || "Header"}</h1>
+  </header>
+  <main class="mt-6 space-y-4">
+    <p class="text-slate-300 leading-relaxed">${textNodes[1] || "Primary Content Section"}</p>
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition-colors shadow">
+      ${textNodes[2] || "Action"}
+    </button>
+  </main>
+</div>`;
+
+      case "vue":
+        return `<template>
+  <div class="reconstructed-view">
+    <header>
+      <h1>{{ headerText }}</h1>
+    </header>
+    <main>
+      <p>{{ contentText }}</p>
+      <button type="button">{{ actionText }}</button>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+const headerText = ref("${textNodes[0] || "Header"}");
+const contentText = ref("${textNodes[1] || "Primary Content Section"}");
+const actionText = ref("${textNodes[2] || "Action"}");
+</script>
+
+<style scoped>
+.reconstructed-view {
+  background-color: ${tokens["--bg-primary"]};
+  color: ${tokens["--fg-primary"]};
+  min-height: 100vh;
+  padding: 1.5rem;
+  font-family: system-ui, sans-serif;
+}
+button {
+  background-color: ${tokens["--accent-primary"]};
+  color: #ffffff;
+  border-radius: ${tokens["--radius-base"]};
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+}
+</style>`;
+
+      case "svelte":
+        return `<script>
+  export let headerText = "${textNodes[0] || "Header"}";
+  export let contentText = "${textNodes[1] || "Primary Content Section"}";
+  export let actionText = "${textNodes[2] || "Action"}";
+</script>
+
+<div class="reconstructed-view">
+  <header>
+    <h1>{headerText}</h1>
+  </header>
+  <main>
+    <p>{contentText}</p>
+    <button type="button">{actionText}</button>
+  </main>
+</div>
+
+<style>
+  .reconstructed-view {
+    background-color: ${tokens["--bg-primary"]};
+    color: ${tokens["--fg-primary"]};
+    min-height: 100vh;
+    padding: 1.5rem;
+    font-family: system-ui, sans-serif;
+  }
+  button {
+    background-color: ${tokens["--accent-primary"]};
+    color: #ffffff;
+    border-radius: ${tokens["--radius-base"]};
+    padding: 0.5rem 1rem;
+    border: none;
+    cursor: pointer;
+  }
+</style>`;
 
       case "html-css-js":
       default:
@@ -352,10 +470,11 @@ const styles = StyleSheet.create({
       --bg: ${tokens["--bg-primary"]};
       --fg: ${tokens["--fg-primary"]};
       --accent: ${tokens["--accent-primary"]};
+      --radius: ${tokens["--radius-base"]};
     }
     body { margin: 0; background: var(--bg); color: var(--fg); font-family: system-ui, sans-serif; padding: 1.5rem; }
     header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; }
-    button { background: var(--accent); color: #fff; border: 0; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+    button { background: var(--accent); color: #fff; border: 0; padding: 0.5rem 1rem; border-radius: var(--radius); cursor: pointer; }
   </style>
 </head>
 <body>

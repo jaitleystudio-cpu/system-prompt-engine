@@ -106,7 +106,14 @@ export interface ScholarlySourceRecord {
   keyFinding: string;
   sourceSaysText: string;
   speInferenceText: string;
-  evidenceTier: "[PROVEN_SPEC]" | "[EMPIRICAL_BENCHMARK]" | "[HEURISTIC_HYPOTHESIS]";
+  catalogSource?: "ARXIV" | "PMC" | "OPENALEX" | "DOAJ" | "W3C" | "IEEE" | "ACM";
+  evidenceTier:
+    | "[PROVEN_SPEC]"
+    | "[PEER_REVIEWED_OPEN_ACCESS]"
+    | "[EMPIRICAL_BENCHMARK]"
+    | "[PREPRINT_UNREVIEWED]"
+    | "[RETRACTED_DANGER]"
+    | "[HEURISTIC_HYPOTHESIS]";
 }
 
 export interface EvidenceEdge {
