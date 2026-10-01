@@ -10,7 +10,10 @@ function walk(dir) {
 }
 export function inventory() {
   const paths = walk(`${root}/apps/web/src`).filter(
-    (p) => /\.[jt]sx?$/.test(p) && !p.includes("/engine/"),
+    (p) =>
+      /\.[jt]sx?$/.test(p) &&
+      !p.includes("/engine/") &&
+      !p.includes("/builder/"),
   );
   paths.push(`${root}/packages/human-perspective/src/copy.ts`);
   const entries = new Map();

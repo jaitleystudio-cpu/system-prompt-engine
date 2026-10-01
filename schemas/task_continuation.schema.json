@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SPETaskContinuationSchema",
+  "description": "Strict schema for SPE task review, evidence triangulation, and continuation contracts",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "taskId",
+    "submission",
+    "reviewedReport",
+    "continuationContract"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "enum": ["1.0.0"]
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "submission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["originalTask", "targetAgent", "agentReport", "candidateSha"],
+      "properties": {
+        "originalTask": { "type": "string" },
+        "targetAgent": { "type": "string" },
+        "previousPrompt": { "type": ["string", "null"] },
+        "agentReport": { "type": "string" },
+        "candidateSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "patchDigest": { "type": ["string", "null"] },
+        "authority": { "type": "string", "enum": ["REVIEW_ONLY", "ADVISORY_ONLY"] }
+      }
+    },
+    "reviewedReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verdict", "materialReportCoverage", "claims", "unknowns"],
+      "properties": {
+        "verdict": { "type": "string", "enum": ["PASS", "HOLD", "FAIL"] },
+        "materialReportCoverage": { "type": "number", "minimum": 0, "maximum": 1 },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["claimId", "claimText", "claimType", "disposition"],
+            "properties": {
+              "claimId": { "type": "string" },
+              "claimText": { "type": "string" },
+              "claimType": {
+                "type": "string",
+                "enum": ["IMPLEMENTATION", "EXECUTION", "PERFORMANCE", "SECURITY", "SPECIFICATION"]
+              },
+              "disposition": {
+                "type": "string",
+                "enum": ["SUPPORTED", "PARTIALLY_SUPPORTED", "CONTRADICTED", "UNVERIFIED", "OUT_OF_SCOPE"]
+              }
+            }
+          }
+        },
+        "unknowns": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "continuationContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mission", "baselineSha", "targetProfile", "authority", "nextTaskPrompt"],
+      "properties": {
+        "mission": { "type": "string" },
+        "baselineSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "targetProfile": { "type": "string" },
+        "authority": { "type": "string", "enum": ["ADVISORY_ONLY"] },
+        "nextTaskPrompt": { "type": "string" }
+      }
+    }
+  }
+}
