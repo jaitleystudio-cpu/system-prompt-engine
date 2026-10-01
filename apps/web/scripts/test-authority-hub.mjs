@@ -103,4 +103,16 @@ assert.doesNotMatch(
   "GuideArticle must NOT be mounted into App.tsx (ROUTE_MOUNT_STATUS=NOT_INTEGRATED)"
 );
 
+// 5. Publication honesty while NOT_INTEGRATED: no production /authority/ @id in registry source
+assert.doesNotMatch(
+  registrySource,
+  /systempromptengine\.com\/authority\//,
+  "JSON-LD must not claim production /authority/* while ROUTE_MOUNT_STATUS=NOT_INTEGRATED"
+);
+assert.match(
+  registrySource,
+  /PUBLICATION_STATUS\s*=\s*["']NOT_INTEGRATED["']/,
+  "PUBLICATION_STATUS must be NOT_INTEGRATED"
+);
+
 console.log("PASS: Lane A9 Authority Hub & Evidence Registry contract verified.");
