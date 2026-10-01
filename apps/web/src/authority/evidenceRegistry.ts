@@ -60,8 +60,8 @@ export const EVIDENCE_LEDGER: EvidenceRecord[] = [
     date: "2026-09-15",
     methodology: "Headless browser qualification harness running 1,000 prompt passes under controlled CPU throttling (4x). Network egress monitored via isolated Service Worker packet inspector.",
     evidenceLinks: [
-      "https://github.com/system-prompt-engine/spe/proofs/task57_wasm_provenance.md",
-      "https://github.com/system-prompt-engine/spe/proofs/bench-task57r-wasm.mjs"
+      "/proofs/task57_quality_reconstruction_20260929/WASM_PROVENANCE.md",
+      "/apps/web/scripts/bench-task57r-wasm.mjs"
     ],
     rawResults: "p50: 18.4ms, p95: 39.2ms, p99: 46.8ms. Zero socket transmissions recorded (egress = 0 bytes).",
     reproSteps: [
@@ -84,7 +84,7 @@ export const EVIDENCE_LEDGER: EvidenceRecord[] = [
     date: "2026-09-20",
     methodology: "Proxy-level packet inspection using mitmproxy combined with strict Content-Security-Policy (connect-src 'none').",
     evidenceLinks: [
-      "https://github.com/system-prompt-engine/spe/proofs/truth-privacy-closure.md"
+      "/proofs/truth_privacy_closure_20260928/FINAL_REPORT.md"
     ],
     rawResults: "0 outbound requests initiated; 0 tracking pixels or beacon payloads observed.",
     reproSteps: [
@@ -107,7 +107,7 @@ export const EVIDENCE_LEDGER: EvidenceRecord[] = [
     date: "2026-09-25",
     methodology: "Automated test harness submitting compiler outputs to official provider JSON schema validators and syntax parsers.",
     evidenceLinks: [
-      "https://github.com/system-prompt-engine/spe/proofs/provider_schema_validation.json"
+      "/proofs/provider_schema_validation.json"
     ],
     rawResults: "500/500 tests passed (100.0% validation rate).",
     reproSteps: [
@@ -246,7 +246,7 @@ export function generateArticleJsonLd(doc: AuthorityDocument): Record<string, un
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://systempromptengine.com/authority/${doc.slug}`
+      "@id": `urn:spe:authority:${doc.slug}`
     }
   };
 

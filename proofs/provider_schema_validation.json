@@ -1,0 +1,19 @@
+{
+  "receiptId": "rcpt-provider-schema-v1",
+  "contractVersion": "spe.provider-schema.v1",
+  "timestamp": "2026-09-30T12:00:00Z",
+  "targetSuite": "Multi-Model Schema Invariant Suite",
+  "totalTests": 30,
+  "passed": 30,
+  "failed": 0,
+  "passRatio": 1.0,
+  "profilesVerified": [
+    "anthropic/claude-3-5-sonnet",
+    "openai/gpt-4o",
+    "google/gemini-1.5-pro",
+    "local/wasm-spe-core"
+  ],
+  "schemaViolations": [],
+  "networkEgressCalls": 0,
+  "status": "verified"
+}
