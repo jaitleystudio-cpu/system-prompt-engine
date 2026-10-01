@@ -103,6 +103,9 @@ export class ScreenshotCodeLoopEngine {
       `recon-${target}-${screenshot.width}x${screenshot.height}-${Date.now()}`,
     );
 
+    // MM-4 Law: Maximum automatic repair cycles = 3
+    const boundedCycles = Math.min(3, Math.max(1, maxCycles));
+
     // Step 1: Perceive UI text and layout structure
     const ocrResult = await globalOcrEngine.recognize(screenshot);
     const designTokens = this.extractDesignTokens(screenshot);
@@ -114,7 +117,7 @@ export class ScreenshotCodeLoopEngine {
     let bestSsim = 0.72; // Baseline structural resemblance
     let currentIteration = 0;
 
-    for (let cycle = 1; cycle <= maxCycles; cycle++) {
+    for (let cycle = 1; cycle <= boundedCycles; cycle++) {
       currentIteration = cycle;
       // Synthesize simulated render fidelity check
       const simulatedRender = this.simulateRender(screenshot.width, screenshot.height, designTokens);
@@ -142,16 +145,23 @@ export class ScreenshotCodeLoopEngine {
     }
 
     const isQualified = bestSsim >= 0.85;
+    const pixelDiff = Number(((1.0 - bestSsim) * 100 * 0.4).toFixed(1));
+    const structMatch = isQualified ? 0.92 : 0.74;
+    const txtMatch = ocrResult.regions.length > 0 ? 0.95 : 0.8;
 
     const fidelityReceipt: FidelityReceipt = {
       receiptId: `fid-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       target,
       viewport: { width: screenshot.width, height: screenshot.height },
       ssim: Number(bestSsim.toFixed(3)),
-      pixelDifferencePercent: Number(((1.0 - bestSsim) * 100 * 0.4).toFixed(1)),
-      structuralMatchScore: isQualified ? 0.92 : 0.74,
-      textMatchScore: ocrResult.regions.length > 0 ? 0.95 : 0.80,
+      pixelDifferencePercent: pixelDiff,
+      pixelDifference: pixelDiff,
+      structuralMatchScore: structMatch,
+      structuralMatch: structMatch,
+      textMatchScore: txtMatch,
+      textMatch: txtMatch,
       iterationsRun: currentIteration,
+      iterationCount: currentIteration,
       candidateDigest,
       status: isQualified ? "QUALIFIED_FIDELITY" : "FIDELITY_UNPROVEN",
       measuredTimestamp: new Date().toISOString(),

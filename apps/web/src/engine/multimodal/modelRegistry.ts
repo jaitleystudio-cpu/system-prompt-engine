@@ -25,6 +25,7 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     version: "1.0.0",
     displayName: "Whisper Tiny INT8 (Local Multilingual ASR)",
     task: "asr-speech-transcription",
+    supportedTasks: ["asr-speech-transcription"],
     source: "onnx-community/whisper-tiny-onnx-int8",
     license: "Apache-2.0",
     expectedSizeBytes: 39_845_888, // ~39.8 MB
@@ -54,12 +55,15 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     minimumMemoryMb: 256,
     quantization: "INT8",
     provenance: "Vetted HuggingFace onnx-community release, verified static graph",
+    qualificationState: "QUALIFIED",
+    opsetVersion: 17,
   },
   "spe-ocr-multilingual-int8": {
     modelId: "spe-ocr-multilingual-int8",
     version: "1.0.0",
     displayName: "Mobile-OCR INT8 (Multilingual Text Recognition)",
     task: "ocr-text-recognition",
+    supportedTasks: ["ocr-text-recognition"],
     source: "onnx-community/mobile-ocr-multilingual-int8",
     license: "Apache-2.0",
     expectedSizeBytes: 14_210_800, // ~14.2 MB
@@ -89,12 +93,15 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     minimumMemoryMb: 128,
     quantization: "INT8",
     provenance: "Compact quantized ONNX text detection and recognition weights",
+    qualificationState: "QUALIFIED",
+    opsetVersion: 17,
   },
   "spe-ui-segmenter-int8": {
     modelId: "spe-ui-segmenter-int8",
     version: "1.0.0",
     displayName: "MobileNetV2 UI Component Segmenter INT8",
     task: "ui-segmentation",
+    supportedTasks: ["ui-segmentation"],
     source: "onnx-community/mobilenetv2-ui-int8",
     license: "Apache-2.0",
     expectedSizeBytes: 3_450_000, // ~3.45 MB
@@ -118,6 +125,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     minimumMemoryMb: 64,
     quantization: "INT8",
     provenance: "Client-side structural layout classifier for screenshot regions",
+    qualificationState: "QUALIFIED",
+    opsetVersion: 17,
   },
 };
 
@@ -151,13 +160,7 @@ export class ModelPackRegistry {
    */
   verifyAssetDigest(bytes: Uint8Array, expectedSha256: string): boolean {
     if (!bytes || bytes.length === 0) return false;
-    // Use fast deterministic SHA-256
-    let binary = "";
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    const calculated = computeSha256(binary);
+    const calculated = computeSha256(bytes);
     return calculated.toLowerCase() === expectedSha256.toLowerCase();
   }
 
@@ -178,9 +181,22 @@ export class ModelPackRegistry {
     if (!manifest.files || manifest.files.length === 0) {
       errors.push("Manifest contains no model files");
     }
+    if (
+      manifest.opsetVersion !== undefined &&
+      (manifest.opsetVersion < 11 || manifest.opsetVersion > 19)
+    ) {
+      errors.push(
+        `Unsupported ONNX operator set version: ${manifest.opsetVersion} (supported: 11-19)`,
+      );
+    }
+    const ALLOWED_EXTS = ["onnx", "json", "txt", "bin", "proto", "wasm"];
     for (const f of manifest.files ?? []) {
       if (f.name.includes("..") || f.name.includes("/") || f.name.includes("\\")) {
         errors.push(`Disallowed path traversal in file: ${f.name}`);
+      }
+      const ext = f.name.toLowerCase().split(".").pop();
+      if (!ext || !ALLOWED_EXTS.includes(ext)) {
+        errors.push(`Disallowed unknown or executable asset format: ${f.name}`);
       }
       if (!f.sha256 || f.sha256.length !== 64) {
         errors.push(`Invalid sha256 for file: ${f.name}`);
@@ -195,6 +211,7 @@ export class ModelPackRegistry {
   /**
    * Explicitly provision a model pack via Download or Sideload.
    * STRICT: Requires user initiation. Throws if digest or size mismatch occurs.
+   * REJECTS: Unexpected files, unknown formats, partial downloads, digest corruptions.
    */
   async provisionPack(
     modelId: string,
@@ -212,6 +229,15 @@ export class ModelPackRegistry {
 
     try {
       pack.state = "VERIFYING";
+
+      // MM-6 Law: Reject unexpected files in payload
+      const declaredFileNames = new Set(pack.manifest.files.map((f) => f.name));
+      for (const fileName of Object.keys(filesPayload)) {
+        if (!declaredFileNames.has(fileName)) {
+          throw new Error(`Security rejection: unexpected file in payload: ${fileName}`);
+        }
+      }
+
       let totalBytes = 0;
 
       for (const reqFile of pack.manifest.files) {
@@ -221,6 +247,13 @@ export class ModelPackRegistry {
             throw new Error(`Missing required model asset: ${reqFile.name}`);
           }
           continue;
+        }
+
+        // Check for partial download (size mismatch)
+        if (reqFile.sizeBytes > 0 && fileBytes.length !== reqFile.sizeBytes) {
+          throw new Error(
+            `Asset size mismatch for ${reqFile.name}: expected ${reqFile.sizeBytes} bytes, got ${fileBytes.length} bytes (partial download detected)`,
+          );
         }
 
         const valid = this.verifyAssetDigest(fileBytes, reqFile.sha256);

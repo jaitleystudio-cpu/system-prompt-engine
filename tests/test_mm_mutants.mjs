@@ -40,15 +40,16 @@ console.log("========================================================\n");
 // MUTANT 1: Digest verification accepts corrupted bytes
 try {
   const reg = new mm.ModelPackRegistry();
-  const corruptFile = new Uint8Array([0xde, 0xad, 0xbe, 0xef]);
   const pack = reg.getPack("spe-ui-segmenter-int8");
+  const corruptFile1 = new Uint8Array(pack.manifest.files[0].sizeBytes).fill(0xde);
+  const corruptFile2 = new Uint8Array(pack.manifest.files[1].sizeBytes).fill(0xad);
   // Try provisioning with wrong digest
   await reg.provisionPack(
     "spe-ui-segmenter-int8",
     "OFFLINE_SIDELOAD",
     {
-      [pack.manifest.files[0].name]: corruptFile,
-      [pack.manifest.files[1].name]: corruptFile,
+      [pack.manifest.files[0].name]: corruptFile1,
+      [pack.manifest.files[1].name]: corruptFile2,
     },
   );
   console.error("  ✗ MUTANT 1 SURVIVED: Digest corruption did not throw!");
@@ -61,57 +62,73 @@ try {
   }
 }
 
-// MUTANT 2: OCR output untrusted provenance check
+// MUTANT 2: Unexpected payload asset injection bypass
 try {
-  const ocr = new mm.LocalOcrEngine();
-  mm.globalModelRegistry.getPack("spe-ocr-multilingual-int8").state = "READY";
-  const dummyImg = { width: 10, height: 10, data: new Uint8ClampedArray(400) };
-  const res = await ocr.recognize(dummyImg, undefined, [{ bounds: { x: 0, y: 0, w: 1, h: 1 }, text: "Test label" }]);
-  assert.equal(res.regions.length, 1);
-  assert.equal(res.regions[0].provenance, "UNTRUSTED_SOURCE");
-  // Try to assert against false provenance
-  assert.equal(res.regions[0].provenance, "VERIFIED_INTERNAL_FACT");
-  console.error("  ✗ MUTANT 2 SURVIVED: False provenance accepted!");
+  const reg = new mm.ModelPackRegistry();
+  const pack = reg.getPack("spe-ui-segmenter-int8");
+  // Try provisioning with injected rogue file
+  await reg.provisionPack(
+    "spe-ui-segmenter-int8",
+    "OFFLINE_SIDELOAD",
+    {
+      [pack.manifest.files[0].name]: new Uint8Array([1, 2, 3, 4]),
+      [pack.manifest.files[1].name]: new Uint8Array([5, 6, 7, 8]),
+      "injected_payload.exe": new Uint8Array([0x4d, 0x5a]), // UNEXPECTED FILE
+    },
+  );
+  console.error("  ✗ MUTANT 2 SURVIVED: Unexpected payload asset accepted!");
 } catch (err) {
-  if (err.name === "AssertionError") {
+  if (/unexpected file/i.test(err.message)) {
     mutantsKilled++;
-    console.log("  ✓ MUTANT 2 KILLED: Provenance strictly enforced as UNTRUSTED_SOURCE.");
+    console.log("  ✓ MUTANT 2 KILLED: Unexpected payload asset strictly rejected.");
   } else {
     throw err;
   }
 }
 
-// MUTANT 3: Screenshot loop exceeds max repair cycles
+// MUTANT 3: Screenshot loop exceeds max repair cycles (> 3 cycles requested)
 try {
   const loop = new mm.ScreenshotCodeLoopEngine();
   const dummyImg = { width: 16, height: 16, data: new Uint8ClampedArray(16 * 16 * 4) };
-  const cand = await loop.reconstruct(dummyImg, "react", 3);
-  assert.ok(cand.fidelity.iterationsRun <= 3, "Must never exceed max repair cycles");
-  // Attempt mutant assertion
-  assert.ok(cand.fidelity.iterationsRun > 10, "Mutant claiming > 10 cycles");
-  console.error("  ✗ MUTANT 3 SURVIVED: Loop allowed unbounded repair cycles!");
-} catch (err) {
-  if (err.name === "AssertionError") {
-    mutantsKilled++;
-    console.log("  ✓ MUTANT 3 KILLED: Iteration count strictly capped at 3.");
+  // Caller requests 15 repair cycles; engine invariant MUST strictly clamp to max 3
+  const cand = await loop.reconstruct(dummyImg, "react", 15);
+  if (cand.fidelity.iterationCount > 3 || cand.fidelity.iterationsRun > 3) {
+    console.error("  ✗ MUTANT 3 SURVIVED: Loop allowed > 3 repair cycles!");
   } else {
-    throw err;
+    mutantsKilled++;
+    console.log("  ✓ MUTANT 3 KILLED: Iteration count strictly capped at 3 despite requesting 15 cycles.");
   }
+} catch (err) {
+  throw err;
 }
 
 // MUTANT 4: Raw egress non-zero leak
 try {
-  const asr = new mm.LocalAsrEngine();
-  mm.globalModelRegistry.getPack("spe-whisper-tiny-int8").state = "READY";
-  const res = await asr.transcribe({ audioBytes: new Uint8Array(100) });
-  assert.equal(res.receipt.rawUserDataEgress, 0);
-  // Attempt mutant assertion
-  assert.equal(res.receipt.rawUserDataEgress, 1);
+  const leakyReceipt = {
+    sessionId: "test-egress-leak",
+    modelId: "spe-whisper-tiny-int8",
+    backend: "WEBGPU",
+    deviceCapability: {
+      hasWebGpu: true,
+      hasWasmSimd: true,
+      hasWasmThreads: true,
+      hardwareConcurrency: 8,
+      isMobile: false,
+      browserFamily: "chrome",
+      osFamily: "macos",
+    },
+    inferenceTimeMs: 25,
+    inputDigest: "abc",
+    outputDigest: "def",
+    timestamp: new Date().toISOString(),
+    rawUserDataEgress: 2048, // CRITICAL PRIVACY LEAK
+  };
+  mm.validateInferenceReceipt(leakyReceipt);
   console.error("  ✗ MUTANT 4 SURVIVED: Non-zero data egress permitted!");
 } catch (err) {
-  if (err.name === "AssertionError") {
+  if (/PRIVACY VIOLATION/.test(err.message)) {
     mutantsKilled++;
-    console.log("  ✓ MUTANT 4 KILLED: Non-zero egress strictly rejected.");
+    console.log("  ✓ MUTANT 4 KILLED: Non-zero egress strictly rejected by validator.");
   } else {
     throw err;
   }

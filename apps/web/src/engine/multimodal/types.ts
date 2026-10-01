@@ -37,11 +37,28 @@ export interface ModelManifestFile {
   required: boolean;
 }
 
+export interface ModelDigest {
+  algorithm: "sha256";
+  expectedDigest: string;
+  actualDigest: string | null;
+  verified: boolean;
+}
+
+export interface ModelCapability {
+  task: MultimodalTask;
+  supportedTasks: MultimodalTask[];
+  supportedLanguages: string[];
+  supportedRuntimes: RuntimeBackend[];
+  quantization: "INT8" | "FP16" | "FP32";
+  minimumMemoryMb: number;
+}
+
 export interface ModelManifest {
   modelId: string;
   version: string;
   displayName: string;
   task: MultimodalTask;
+  supportedTasks: MultimodalTask[];
   source: string;
   license: string;
   expectedSizeBytes: number;
@@ -52,6 +69,8 @@ export interface ModelManifest {
   minimumMemoryMb: number;
   quantization: "INT8" | "FP16" | "FP32";
   provenance: string;
+  qualificationState: "QUALIFIED" | "DEGRADED" | "FALLBACK" | "UNAVAILABLE" | "UNTESTED";
+  opsetVersion?: number;
 }
 
 export interface ModelPack {
@@ -77,6 +96,15 @@ export interface DeviceCapability {
   osFamily: "macos" | "windows" | "linux" | "android" | "ios" | "other";
 }
 
+export interface InferenceSession {
+  sessionId: string;
+  modelId: string;
+  backend: RuntimeBackend;
+  state: "INITIALIZING" | "READY" | "BUSY" | "TERMINATED" | "ERROR";
+  deviceCapability: DeviceCapability;
+  createdAt: string;
+}
+
 export interface InferenceSessionReceipt {
   sessionId: string;
   modelId: string;
@@ -89,6 +117,27 @@ export interface InferenceSessionReceipt {
   timestamp: string;
   rawUserDataEgress: 0;
 }
+
+export type InferenceReceipt = InferenceSessionReceipt;
+
+/**
+ * Validates inference receipt against non-negotiable zero user data egress law.
+ */
+export function validateInferenceReceipt(receipt: InferenceSessionReceipt): boolean {
+  if (!receipt) {
+    throw new Error("Receipt validation failed: missing receipt object");
+  }
+  if (receipt.rawUserDataEgress !== 0) {
+    throw new Error(
+      `PRIVACY VIOLATION: rawUserDataEgress must be strictly 0, got ${receipt.rawUserDataEgress}`,
+    );
+  }
+  if (!receipt.sessionId || !receipt.modelId || !receipt.timestamp) {
+    throw new Error("Invalid receipt: missing required identification fields");
+  }
+  return true;
+}
+
 
 // -------------------------------------------------------------
 // MM-1: ASR / Speech Types
@@ -172,8 +221,11 @@ export interface VideoTimelineEvent {
   type: VideoTimelineEntryType;
   content: string;
   confidence: number;
-  provenance: "LOCAL_ASR" | "LOCAL_OCR" | "VISUAL_DIFF" | "HEURISTIC";
+  provenance: "LOCAL_ASR" | "LOCAL_OCR" | "VISUAL_DIFF" | "HEURISTIC" | "UNTRUSTED_SOURCE";
   associatedBounds?: NormalizedBox;
+  speech?: string;
+  visibleText?: string;
+  visualChange?: string;
 }
 
 export interface VideoTimelineIR {
@@ -211,14 +263,61 @@ export interface FidelityReceipt {
   viewport: { width: number; height: number };
   ssim: number; // 0.0 to 1.0
   pixelDifferencePercent: number; // e.g. 2.4%
+  pixelDifference: number; // MM-4 alias
   structuralMatchScore: number; // 0.0 to 1.0
+  structuralMatch: number; // MM-4 alias
   textMatchScore: number; // 0.0 to 1.0
+  textMatch: number; // MM-4 alias
   iterationsRun: number;
+  iterationCount: number; // MM-4 alias
   candidateDigest: string;
   status: "QUALIFIED_FIDELITY" | "FIDELITY_UNPROVEN";
   measuredTimestamp: string;
   repairedDefects: string[];
 }
+
+export interface OcrBenchmarkFixture {
+  id: string;
+  name: string;
+  script: OcrRecognizedRegion["script"];
+  groundTruthText: string;
+  expectedBounds: NormalizedBox;
+  isDarkTheme?: boolean;
+  isLowContrast?: boolean;
+  isMobileScreenshot?: boolean;
+  imageData?: ImageData;
+}
+
+export interface OcrBenchmarkReport {
+  fixturesEvaluated: number;
+  cerByScript: Record<string, number>;
+  averageWer: number;
+  averageBoxIou: number;
+  averageLatencyMs: number;
+  peakMemoryMb: number;
+  modelSizeBytes: number;
+  allScriptsQualified: boolean;
+}
+
+export interface AsrBenchmarkFixture {
+  id: string;
+  name: string;
+  language: string;
+  groundTruthText: string;
+  audioBytes: Uint8Array;
+  sampleRate?: number;
+}
+
+export interface AsrBenchmarkReport {
+  fixturesEvaluated: number;
+  werByLanguage: Record<string, number>;
+  cerByLanguage: Record<string, number>;
+  averageRtf: number;
+  coldLoadSec: number;
+  warmLoadMs: number;
+  allLanguagesQualified: boolean;
+}
+
 
 export interface ReconstructionCandidate {
   target: TargetFramework;

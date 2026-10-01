@@ -224,6 +224,21 @@ export class SceneCompiler {
         renderer.render(scene, camera);
       }
       animate();
+
+      // Memory & Resource Disposal
+      window.addEventListener("beforeunload", function() {
+        meshMap.forEach(function(m) {
+          if (m.geometry) m.geometry.dispose();
+          if (m.material) {
+            if (Array.isArray(m.material)) {
+              m.material.forEach(function(mat) { mat.dispose(); });
+            } else {
+              m.material.dispose();
+            }
+          }
+        });
+        renderer.dispose();
+      });
     })();
   </script>
 </body>

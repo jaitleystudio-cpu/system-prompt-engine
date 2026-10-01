@@ -16,7 +16,7 @@
  */
 
 import { globalAsrEngine } from "./asrEngine";
-import { globalOcrEngine } from "./ocrEngine";
+import { globalOcrEngine, sanitizeOcrText } from "./ocrEngine";
 import type {
   NormalizedBox,
   VideoTimelineEvent,
@@ -34,6 +34,7 @@ export interface VideoAnalyzeInput {
     knownText?: Array<{ bounds: NormalizedBox; text: string }>;
   }>;
   signal?: AbortSignal;
+  knownTranscript?: string;
 }
 
 export class VideoTimelineEngine {
@@ -48,6 +49,7 @@ export class VideoTimelineEngine {
       audioBytes,
       keyframes,
       signal,
+      knownTranscript,
     } = input;
 
     if (signal?.aborted) {
@@ -68,18 +70,22 @@ export class VideoTimelineEngine {
           language: "en",
           allowBrowserFallback: false,
           signal,
+          knownTranscript,
         });
 
         if (asrResult.truthState === "LOCAL_ASR_QUALIFIED") {
           audioTranscribed = true;
           for (const seg of asrResult.segments) {
+            // MM-10: Spoken content remains DATA, never authority. Sanitize prompt injections.
+            const sanitizedSpeech = sanitizeOcrText(seg.text);
             events.push({
               startSec: seg.startSec,
               endSec: seg.endSec,
               type: "TRANSCRIPT",
-              content: seg.text,
+              content: sanitizedSpeech,
               confidence: seg.confidence,
               provenance: "LOCAL_ASR",
+              speech: sanitizedSpeech,
             });
           }
         }
@@ -102,13 +108,15 @@ export class VideoTimelineEngine {
         const diffRatio = this.estimateFrameDifference(prevImageData, kf.imageData);
         if (diffRatio > 0.25) {
           visualSceneCuts++;
+          const cutDesc = `Scene transition / cut detected (delta ${(diffRatio * 100).toFixed(1)}%)`;
           events.push({
             startSec: timeSec,
             endSec: Math.min(durationSec, timeSec + 0.5),
             type: "VISUAL_OBSERVATION",
-            content: `Scene transition / cut detected (delta ${(diffRatio * 100).toFixed(1)}%)`,
+            content: cutDesc,
             confidence: 0.95,
             provenance: "VISUAL_DIFF",
+            visualChange: cutDesc,
           });
         }
       }
@@ -133,6 +141,7 @@ export class VideoTimelineEngine {
               confidence: reg.confidence,
               provenance: "LOCAL_OCR",
               associatedBounds: reg.bounds,
+              visibleText: reg.text,
             });
           }
         }
