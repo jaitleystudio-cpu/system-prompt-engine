@@ -4,14 +4,18 @@
  * Synthesizes comprehensive, production-grade system prompts by combining:
  * 1. The authoritative kernel K3 effect plan (preserving all protected fields & safety invariants).
  * 2. The WASM-compiled multi-stage execution protocol (from context_protocol execution contracts).
- * 3. Domain-specific engineering & analytical methodologies.
- * 4. Operational boundaries and zero-network telemetry security invariants.
- * 5. Concrete deliverable schemas and output specifications.
- * 6. Conformance verification and acceptance checklists.
+ * 3. Domain-specific engineering & analytical methodologies across all 12 domains.
+ * 4. Multi-tier depth expansion: FAST (compact), SMART (balanced), DEEP (exhaustive enterprise specification).
+ * 5. Architectural topologies, formal state machines, failure recovery matrices, concurrency models,
+ *    concrete contract schemas, zero-loss cryptographic audit protocols, and chaos simulation suites.
+ * 6. Operational boundaries and zero-network telemetry security invariants (network_mode=NONE).
+ * 7. Conformance verification and acceptance checklists.
  * 
- * Invariant: Every section must start with `## <Heading>\n<Body>` and have no bare `\n\n` within chunks
+ * Strict WASM Invariant: Every section MUST start with `## <Heading>\n<Body>` and have no bare `\n\n` within chunks
  * so that the Rust WASM `parse_sections` parser evaluates every obligation to SATISFIED.
  */
+
+export type PromptDepthMode = "FAST" | "SMART" | "DEEP" | "AUTO";
 
 export interface PromptSynthesisInput {
   k3CompiledPrompt: string;
@@ -30,7 +34,235 @@ export interface DomainMethodology {
   invariants: string[];
   outputStandards: string[];
   checklist: string[];
+  deepModules?: {
+    heading: string;
+    lines: string[];
+  }[];
 }
+
+const CODING_DEEP_MODULES = [
+  {
+    heading: "Architectural Topology & Component Boundaries",
+    lines: [
+      "1. Coordinator Core Engine: Implement an event-driven, decoupled coordinator managing active saga orchestrations.",
+      "2. Saga Execution Coordinator (SEC): Maintain state durability with an append-only persistence log before dispatching commands.",
+      "3. Forward Execution Handlers: Each service step exposes an idempotent command handler with forward progress semantics.",
+      "4. Backward Compensation Dispatchers: Every forward action defines an inverse compensating action capable of idempotent partial rollback.",
+      "5. Outbox Message Relay: Store outbound events in the local database within the same atomic transaction as state mutations.",
+      "6. Dead-Letter Queue (DLQ) Quarantines: Divert poisoned payloads and non-recoverable schema faults to a durable quarantine queue with alerts.",
+      "7. Append-Only Tamper-Evident Ledger: Record all state transitions, compensation steps, and audit hashes in a verifiable monotonic log.",
+    ],
+  },
+  {
+    heading: "Formal State Machine & Lifecycle Transitions",
+    lines: [
+      "State 1: [INITIALIZED] - Saga instance created, unique saga_id allocated, parameters validated against schema invariants.",
+      "State 2: [STEP_PENDING] - Step execution envelope persisted to outbox; readiness criteria verified.",
+      "State 3: [STEP_EXECUTING] - Outbound command dispatched to worker; timeout timer armed with exponential jittered backoff.",
+      "State 4: [STEP_SUCCEEDED] - Worker acknowledgment received with cryptographic receipt; monotonic step pointer advanced.",
+      "State 5: [STEP_FAILED] - Worker error or timeout detected; forward progress suspended; compensation engine activated.",
+      "State 6: [COMPENSATION_INITIATED] - Rollback graph evaluated; compensating actions enqueued in strict reverse-topological order.",
+      "State 7: [COMPENSATING_BACKWARD] - Compensating transactions dispatched; retry budget monitored.",
+      "State 8: [COMPENSATION_COMPLETED] - All previously committed steps successfully compensated; saga state marked COMPENSATED.",
+      "State 9: [DLQ_QUARANTINED] - Compensation budget exhausted or manual intervention required; quarantined with diagnostic snapshot.",
+      "State 10: [SAGA_COMPLETED] - All forward steps verified; terminal completion receipt emitted.",
+    ],
+  },
+  {
+    heading: "Fault Tolerance, Compensation & DLQ Quarantine Matrix",
+    lines: [
+      "- Step Forward Action: Validate preconditions -> Acquire lock-free lease -> Mutate entity -> Emit outbox event -> Commit transaction.",
+      "- Step Backward Compensation: Invert mutations using compensating payload -> Release leases -> Record compensation event -> Commit.",
+      "- Network Timeout Policy: Retry up to 3 times with decorrelated jitter (base: 100ms, max: 2000ms). Do not interpret timeout as failure.",
+      "- Circuit Breaker Triggers: Trip to OPEN on 5 consecutive network or downstream service errors within a 30-second sliding window.",
+      "- Poison Pill Containment: When payload causes unhandled panic or syntax invalidation, isolate immediately to DLQ without retrying.",
+      "- Partial Rollback Integrity: If step N fails, steps N-1 down to 1 must execute compensation in reverse order; never skip an executed step.",
+      "- Manual Intervention Hook: Expose safe operator review interface for DLQ items with dry-run re-drive capabilities.",
+    ],
+  },
+  {
+    heading: "Concurrency, Idempotency & Write-Ahead Log Consistency",
+    lines: [
+      "- Distributed Idempotency Key Format: Standardize header `Idempotency-Key: <saga_id>:<step_id>:<operation_hash>` on all mutations.",
+      "- Lock-Free Deduplication: Utilize database unique constraints or atomic Compare-And-Swap (CAS) on version fields to reject duplicates.",
+      "- At-Least-Once to Exactly-Once: Bridge messaging systems using transactional outbox pattern combined with idempotent consumer deduplication.",
+      "- Write-Ahead Log (WAL) Layout: Flush state transitions to durable disk storage prior to initiating external RPC or messaging operations.",
+      "- Crash Recovery Invariant: Upon process reboot or kill -9, SEC replays active WAL entries to reconstruct state before resuming dispatch.",
+      "- Read-Repair Mechanism: When encountering conflicting distributed timestamps, verify state against authoritative WAL snapshot.",
+    ],
+  },
+  {
+    heading: "Contract Schemas, Data Envelopes & Error Taxonomy",
+    lines: [
+      "- Saga Envelope Schema: `{ saga_id: UUID, correlation_id: UUID, schema_version: '1.0.0', initiator: string, payload: Record, created_at: ISO8601 }`",
+      "- Step Execution Envelope: `{ step_id: string, saga_id: UUID, retry_count: number, timeout_ms: number, forward_action: string, compensation_action: string }`",
+      "- Error Taxonomy: Exhaustive domain error enums including:",
+      "  * TransientError::NetworkTimeout { retryable: true, backoff_ms: number }",
+      "  * TransientError::ServiceUnavailable { retryable: true, retry_after: number }",
+      "  * PermanentError::InvalidBusinessRule { code: string, message: string }",
+      "  * PermanentError::PoisonPillPayload { reason: string, raw_payload_hash: string }",
+      "  * CriticalError::LedgerDiscrepancy { expected_hash: string, actual_hash: string }",
+    ],
+  },
+  {
+    heading: "Zero-Loss Cryptographic Ledger & Audit Trail Protocol",
+    lines: [
+      "- Ledger Block Structure: Monotonically increasing block sequence with SHA-256 hash chaining `hash_n = sha256(hash_{n-1} + block_payload)`.",
+      "- Non-Repudiation: Every participant response includes timestamp, worker identifier, and operation digest.",
+      "- Zero Network Egress Invariant: Core execution coordinator operates with network_mode=NONE for local-first zero-egress environments.",
+      "- Tamper-Evident Auditing: Replay verification harness validates unbroken hash chain from genesis block to current head.",
+      "- Secret Isolation: Sanitize sensitive payload credentials, cryptographic keys, and user authentication tokens before ledger persistence.",
+    ],
+  },
+  {
+    heading: "Adversarial Chaos & Simulation Test Suite",
+    lines: [
+      "- Chaos Test 1 (Simulated Network Partition): Drop 50% of ACK messages between SEC and step worker. Assert zero duplicate executions.",
+      "- Chaos Test 2 (Abrupt Kill -9 During Step Execution): Terminate coordinator process during step 3 execution. Verify state recovery on reboot.",
+      "- Chaos Test 3 (Abrupt Kill -9 During Compensation): Terminate process during rollback of step 2. Verify compensation resumes without orphan states.",
+      "- Chaos Test 4 (Poison Pill Injection): Inject corrupted JSON into outbox queue. Verify immediate routing to DLQ with alert and non-blocking operation.",
+      "- Chaos Test 5 (Out-of-Order Message Storm): Deliver step 3 completion before step 2 completion. Verify coordinator rejects out-of-sequence ACK.",
+    ],
+  },
+];
+
+const RESEARCH_DEEP_MODULES = [
+  {
+    heading: "Epistemic Hierarchy & Evidence Confidence Stratification",
+    lines: [
+      "Level 1 (Highest Confidence): Replicated, peer-reviewed empirical studies with open datasets and pre-registered methodological protocols.",
+      "Level 2 (High Confidence): Large-sample controlled observational studies, multi-center meta-analyses with low heterogeneity (I^2 < 25%).",
+      "Level 3 (Moderate Confidence): Single-cohort observational studies, expert consensus statements, or preprints with open reproducible code.",
+      "Level 4 (Low / Provisional Confidence): Exploratory studies with sample sizes < 30, unpublished working papers, or non-peer-reviewed whitepapers.",
+      "Level 5 (Unverified / Contradicted): Anecdotal reports, vendor marketing claims, or studies with identified methodological confounders.",
+    ],
+  },
+  {
+    heading: "Methodological Triangulation & Contradiction Resolution",
+    lines: [
+      "1. Active Falsification: For every substantive hypothesis, search explicitly for contradictory empirical findings and negative results.",
+      "2. Confounder Auditing: Evaluate potential selection bias, attrition bias, reporting bias, and funding conflicts of interest.",
+      "3. Heterogeneity Analysis: When studies report conflicting effect sizes, decompose discrepancies by population cohort, sample size, or instrumentation.",
+      "4. Synthesis Reconciliation: Avoid simplistic averaging; construct systematic comparative matrices highlighting boundaries of applicability.",
+    ],
+  },
+  {
+    heading: "Primary Dataset & Corpus Verification Protocol",
+    lines: [
+      "- Citation Integrity Invariant: Every factual claim must reference a verified primary source with title, authors, year, and persistent identifier (DOI/arXiv).",
+      "- Anti-Hallucination Guardrail: Never invent citation titles, authors, experimental benchmarks, or quantitative findings.",
+      "- Primary Source Grounding: Distinguish secondary commentary or media reporting from raw empirical publications and peer-reviewed journals.",
+      "- Reproducibility Manifest: Document exact dataset versions, query parameters, inclusion criteria, and temporal cutoff dates.",
+    ],
+  },
+  {
+    heading: "Evidentiary Synthesis & Gap Analysis",
+    lines: [
+      "- Comparative Literature Matrix: Tabulate methodologies, sample demographics, baseline controls, effect sizes, and p-values.",
+      "- Boundary Condition Mapping: Identify explicitly what remains unknown, under-investigated, or methodologically contested.",
+      "- Epistemic Humility Standard: Use precise probabilistic phrasing rather than absolute assertions when evidence is emerging.",
+    ],
+  },
+];
+
+const WRITING_DEEP_MODULES = [
+  {
+    heading: "Stakeholder Topology & Communication Architecture",
+    lines: [
+      "1. Primary Executive Audience: Focus on strategic impact, risk exposure, cost-benefit trade-offs, and critical decision gates.",
+      "2. Technical Implementation Audience: Provide clear architectural blueprints, contract definitions, and actionable steps.",
+      "3. Operational Stakeholders: Outline process workflows, governance friction points, change management, and failure recovery.",
+      "4. Cognitive Load Management: Use progressive disclosure—lead with high-level summaries before descending into granular specifics.",
+    ],
+  },
+  {
+    heading: "Rhetorical Strategy & Stylistic Invariants",
+    lines: [
+      "- Strict Elimination of AI Tropes: Banish generic filler ('game-changing', 'revolutionize', 'in this fast-paced world', 'delve into').",
+      "- Active Voice Enforcement: Structure sentences around concrete actors taking decisive actions.",
+      "- Information Density: Maximize signal-to-noise ratio; replace empty rhetorical transitions with substantive data or concrete examples.",
+      "- Structured Typographic Hierarchy: Use clear headings, bulleted taxonomies, and comparison tables for rapid executive scanning.",
+    ],
+  },
+  {
+    heading: "Factual Precision & Governance Review",
+    lines: [
+      "- Grounded Factuality: Every asserted metric, timeline, or constraint must directly derive from provided context or verifiable facts.",
+      "- Prohibited Superlatives: Ban unearned superlatives ('industry-leading', 'best-in-class') unless accompanied by audited benchmarks.",
+      "- Plain English Gate: Comply with plain-language accessibility guidelines to ensure clarity across non-technical leadership.",
+    ],
+  },
+];
+
+const BUSINESS_DEEP_MODULES = [
+  {
+    heading: "Strategic Alignment & Enterprise Value Architecture",
+    lines: [
+      "1. Problem Space Definition: Quantify current operational inefficiencies, financial leakage, and compliance risk vectors.",
+      "2. Solution Architecture: Map business capabilities to technical components with explicit ROI and total cost of ownership (TCO) models.",
+      "3. Competitive Moat Analysis: Identify network effects, switching costs, structural advantages, and defensibility barriers.",
+      "4. Capital Allocation & Unit Economics: Establish cost per transaction, customer acquisition cost (CAC), and customer lifetime value (LTV) dynamics.",
+    ],
+  },
+  {
+    heading: "Risk Governance & Compliance Friction Matrix",
+    lines: [
+      "- Regulatory Compliance Vectors: Detail GDPR/CCPA data sovereignty, SOC 2 Type II audit controls, and industry-specific regulations.",
+      "- Operational Resilience: Establish Recovery Point Objective (RPO) and Recovery Time Objective (RTO) targets for all core business capabilities.",
+      "- Third-Party Dependency Risk: Audit vendor concentration, API rate limits, pricing volatility, and single points of failure.",
+      "- Change Management Scaffolding: Define stakeholder training plans, dual-run validation periods, and rollback criteria for business processes.",
+    ],
+  },
+  {
+    heading: "Milestone Execution Roadmap & KPI Measurement",
+    lines: [
+      "- Phase 1 (Foundation & De-risking): Core architectural MVP, baseline benchmarking, security review, and proof-of-concept sign-off.",
+      "- Phase 2 (Controlled Pilot): Closed customer cohort, latency monitoring, unit economics verification, and feedback loop iteration.",
+      "- Phase 3 (General Availability): Automated scaling, multi-region failover, SLA enforcement, and revenue expansion instrumentation.",
+    ],
+  },
+];
+
+const DATA_DEEP_MODULES = [
+  {
+    heading: "Data Pipeline Topology & Stream Processing Architecture",
+    lines: [
+      "1. Ingestion Layer: Idempotent message ingress, schema validation at boundary, dead-letter routing for malformed payloads.",
+      "2. Storage & Partitioning Strategy: Columnar storage formats (Parquet), partition pruning by timestamp, and optimal clustering keys.",
+      "3. Compute Engine: Lock-free distributed aggregation, vectorized execution, and deterministic stream-table duality.",
+      "4. Quality Gates: Zero silent data loss, schema evolution rules (backward and forward compatibility), and automated data drift detection.",
+    ],
+  },
+  {
+    heading: "Statistical Anomaly Detection & Lineage Verification",
+    lines: [
+      "- Data Lineage Ledger: Track upstream source commits, transformation job IDs, and pipeline run SHAs for every derived table.",
+      "- Anomaly Detection Rules: Flag distribution shifts exceeding 3-sigma thresholds across null-ratios, cardinality, and key distributions.",
+      "- Idempotent Backfills: Support deterministic replay of historical time windows with zero duplicate row insertion.",
+    ],
+  },
+];
+
+const UX_DEEP_MODULES = [
+  {
+    heading: "Frontend Component Hierarchy & State Machine Architecture",
+    lines: [
+      "1. Atomic Component Architecture: Structure components into design tokens, atoms, molecules, and layout templates.",
+      "2. Progressive Enhancement Tiers: Tier 1 (WebGL 3D interactive) -> Tier 2 (HTML5 Canvas 2D fallback) -> Tier 3 (Accessible semantic HTML).",
+      "3. State Machine Navigation: Formal state transitions for modal dialogs, drawer disclosures, form validation, and offline indicators.",
+      "4. Reflow Resilience: Fluid layouts tested across 360px mobile viewports up to 4K displays with zero horizontal clipping.",
+    ],
+  },
+  {
+    heading: "Accessibility (WCAG 2.1 AA) & Performance Invariants",
+    lines: [
+      "- Keyboard Navigation: Comprehensive focus traps in modals, visible focus indicators (:focus-visible), and logical tab sequences.",
+      "- Screen Reader Compatibility: Accurate ARIA landmark roles, descriptive labels on interactive elements, and live-region announcements.",
+      "- Reduced-Motion Protocol: Explicit media query `@media (prefers-reduced-motion: reduce)` disabling non-essential transitions.",
+      "- Asset Budget: Bundle size caps, zero third-party tracking scripts, and sub-50ms interaction response times.",
+    ],
+  },
+];
 
 const DOMAIN_METHODOLOGIES: Record<string, DomainMethodology> = {
   coding: {
@@ -59,6 +291,7 @@ const DOMAIN_METHODOLOGIES: Record<string, DomainMethodology> = {
       "- [ ] Crash recovery and rollback verified under simulated process termination",
       "- [ ] Quality obligations verified with cryptographic receipt",
     ],
+    deepModules: CODING_DEEP_MODULES,
   },
   research: {
     title: "Scholarly Research & Evidence Methodology",
@@ -83,6 +316,7 @@ const DOMAIN_METHODOLOGIES: Record<string, DomainMethodology> = {
       "- [ ] Competing hypotheses and counter-evidence explicitly addressed",
       "- [ ] Clear distinction between consensus findings and frontier uncertainties",
     ],
+    deepModules: RESEARCH_DEEP_MODULES,
   },
   writing_communication: {
     title: "Executive Communication & Rhetorical Strategy",
@@ -98,54 +332,56 @@ const DOMAIN_METHODOLOGIES: Record<string, DomainMethodology> = {
     ],
     outputStandards: [
       "Deliver publication-ready prose formatted with clear typographic hierarchy and intuitive structural flow.",
-      "Include executive summaries and actionable takeaways where appropriate.",
+      "Provide concrete executive summaries followed by logically sequenced evidentiary support.",
     ],
     checklist: [
-      "- [ ] Tone and terminology aligned with the target audience",
-      "- [ ] Every core requirement addressed without filler or generic advice",
-      "- [ ] Logical coherence verified across all transitional paragraphs",
+      "- [ ] Core thesis stated within the opening paragraph",
+      "- [ ] All key assertions grounded in supplied context with zero unsubstantiated claims",
+      "- [ ] Readability score optimized for effortless stakeholder digestion",
     ],
+    deepModules: WRITING_DEEP_MODULES,
   },
   business_strategy: {
-    title: "Strategic Business Architecture Methodology",
+    title: "Enterprise Strategy & Operational Architecture",
     steps: [
-      "1. Market & Ecosystem Mapping: Map value chains, unit economics, regulatory landscape, and competitive moats.",
-      "2. Constraint-Based Prioritization: Sequence strategic initiatives by return on investment, time-to-value, and capital constraints.",
-      "3. Risk & Sensitivity Modeling: Stress-test assumptions against demand shifts, execution delays, and cost volatility.",
-      "4. Operational Governance: Define measurable KPIs, ownership structures, and milestone gates.",
+      "1. Opportunity Mapping: Define total addressable market, value proposition, and customer problem statement.",
+      "2. Financial Modeling: Articulate unit economics, margin structures, payback periods, and operating leverage.",
+      "3. Operational De-risking: Pinpoint dependency bottlenecks, regulatory constraints, and execution vulnerabilities.",
+      "4. Strategic Milestones: Formulate sequenced OKRs, resource allocation matrices, and decisive kill-criteria.",
     ],
     invariants: [
-      "- Realistic assumptions: Base financial and operational projections strictly on provided constraints and market fundamentals.",
-      "- Trade-off transparency: Explicitly document what will NOT be done to maintain operational focus.",
+      "- No speculative revenue claims: Anchor financial projections to documented market assumptions.",
+      "- Actionable governance: Every strategic proposal must specify owner, delivery timeline, and verification metric.",
     ],
     outputStandards: [
-      "Deliver actionable roadmaps, phased financial projections, and decision matrix scorecards.",
+      "Deliver structured executive briefs, financial sensitivity tables, and operational delivery schedules.",
     ],
     checklist: [
-      "- [ ] Operational plan feasible within stated budget and timeline constraints",
-      "- [ ] Clear ownership, dependencies, and exit criteria established for each initiative",
-      "- [ ] Downside risk mitigations documented",
+      "- [ ] Clear ROI framework with quantitative risk-adjusted sensitivity analysis",
+      "- [ ] Operational bottlenecks and regulatory constraints explicitly mitigated",
     ],
+    deepModules: BUSINESS_DEEP_MODULES,
   },
   data_statistics: {
-    title: "Quantitative Analysis & Data Methodology",
+    title: "Quantitative Analysis & Data Systems Methodology",
     steps: [
-      "1. Data Integrity Audit: Inspect missing values, outliers, sampling bias, and distribution properties.",
-      "2. Statistical Modeling: Select appropriate parametric or non-parametric tests suited to the data scale and assumptions.",
-      "3. Sensitivity Analysis: Test stability across alternative parameterizations and bootstrap resamples.",
-      "4. Causal Distinction: Rigorously distinguish observational correlation from causal mechanisms.",
+      "1. Schema Definition: Validate data types, nullability, unique identifiers, and domain integrity rules.",
+      "2. Statistical Grounding: Check sample distributions, normality assumptions, and outlier influence before aggregating.",
+      "3. Causal Rigor: Differentiate correlation from causation; control for confounders and selection bias.",
+      "4. Reproducibility: Document exact formulas, aggregation algorithms, and data cleansing transformations.",
     ],
     invariants: [
-      "- Zero hallucinated metrics: Report only numbers derived mathematically from verified data inputs.",
-      "- Full methodology disclosure: Document formulas, degrees of freedom, p-values, and confidence intervals.",
+      "- Zero data leakage: Ensure strict isolation between training/testing partitions and validation cohorts.",
+      "- Deterministic execution: Same input dataset must yield bit-identical statistical results every time.",
     ],
     outputStandards: [
-      "Provide reproducible calculation summaries, distribution statistics, and data dictionary definitions.",
+      "Deliver verified data schemas, statistical distribution summaries, and reproducible analytical pipelines.",
     ],
     checklist: [
-      "- [ ] Calculations, units, and denominators cross-checked against source data",
-      "- [ ] Limitations, assumptions, and potential confounders explicitly labeled",
+      "- [ ] Data distributions and missing-value treatments explicitly documented",
+      "- [ ] Statistical significance levels and confidence intervals reported alongside point estimates",
     ],
+    deepModules: DATA_DEEP_MODULES,
   },
   ux_ui_web_design: {
     title: "Frontend Architecture & UX Engineering Methodology",
@@ -167,8 +403,38 @@ const DOMAIN_METHODOLOGIES: Record<string, DomainMethodology> = {
       "- [ ] Contrast ratios meet or exceed 4.5:1 for normal text and 3:1 for large text",
       "- [ ] Graceful fallback confirmed when WebGL or JavaScript is restricted",
     ],
+    deepModules: UX_DEEP_MODULES,
   },
 };
+
+/**
+ * Intelligently resolves the depth mode based on input depth and goal complexity.
+ */
+export function resolveEffectiveDepth(depth?: string | null, goal?: string): PromptDepthMode {
+  const norm = (depth || "").toUpperCase().trim();
+  if (norm === "FAST") return "FAST";
+  if (norm === "SMART") return "SMART";
+  if (norm === "DEEP") return "DEEP";
+
+  // AUTO resolution based on goal complexity
+  if (goal) {
+    const text = goal.toLowerCase();
+    const deepKeywords = [
+      "distributed", "saga", "transaction", "coordinator", "database", "kernel",
+      "security", "pipeline", "orchestrator", "protocol", "engine", "compiler",
+      "fail-safe", "high-availability", "architecture", "scale", "dead-letter",
+      "idempotent", "ledger", "compensation", "microservice", "infrastructure",
+    ];
+    if (deepKeywords.some((kw) => text.includes(kw))) {
+      return "DEEP";
+    }
+    if (goal.length > 80 || goal.includes(" and ") || goal.includes(",")) {
+      return "SMART";
+    }
+  }
+
+  return "FAST";
+}
 
 /**
  * Format string as clean Markdown heading with single-newline body.
@@ -192,13 +458,14 @@ export function synthesizeSystemPrompt(input: PromptSynthesisInput): string {
     goal,
     desiredOutput,
     protocolRendered,
+    depth,
   } = input;
 
+  const effectiveDepth = resolveEffectiveDepth(depth, goal);
   const meth = DOMAIN_METHODOLOGIES[domainId] || DOMAIN_METHODOLOGIES["coding"];
   const sections: string[] = [];
 
   // 1. Authoritative K3 Kernel Effect Plan (MUST be the primary prefix)
-  // Ensure the K3 prompt chunks are cleanly separated
   const k3Clean = k3CompiledPrompt
     .split("\n\n")
     .map((chunk) => chunk.trim())
@@ -219,17 +486,32 @@ export function synthesizeSystemPrompt(input: PromptSynthesisInput): string {
   // 3. Domain Engineering & Analytical Methodology
   const domainSteps = [
     `Domain Archetype: ${category} (${domainId.toUpperCase()})`,
+    `Execution Depth Mode: ${effectiveDepth}`,
     `Core Mission Target: ${goal}`,
     ...meth.steps,
   ];
   sections.push(createSection(meth.title, domainSteps));
 
-  // 4. Operational Boundaries & Security Invariants
+  // 4. If DEEP mode: inject full architectural, fault tolerance, concurrency, and chaos modules
+  if (effectiveDepth === "DEEP") {
+    const modules = meth.deepModules || CODING_DEEP_MODULES;
+    for (const mod of modules) {
+      sections.push(createSection(mod.heading, mod.lines));
+    }
+  } else if (effectiveDepth === "SMART") {
+    // Inject first 2 deep modules for balanced professional depth
+    const modules = (meth.deepModules || CODING_DEEP_MODULES).slice(0, 2);
+    for (const mod of modules) {
+      sections.push(createSection(mod.heading, mod.lines));
+    }
+  }
+
+  // 5. Operational Boundaries & Security Invariants
   sections.push(
     createSection("Operational Boundaries & Security Invariants", meth.invariants),
   );
 
-  // 5. Output Depth and Structural Standards
+  // 6. Output Depth and Structural Standards
   const standards = [...meth.outputStandards];
   if (desiredOutput && desiredOutput.trim()) {
     standards.unshift(
@@ -240,7 +522,7 @@ export function synthesizeSystemPrompt(input: PromptSynthesisInput): string {
     createSection("Output Depth and Structural Standards", standards),
   );
 
-  // 6. Conformance Verification & Acceptance Checklist
+  // 7. Conformance Verification & Acceptance Checklist
   sections.push(
     createSection(
       "Verification and Acceptance Checklist",
