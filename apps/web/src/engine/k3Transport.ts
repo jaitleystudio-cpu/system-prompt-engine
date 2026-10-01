@@ -196,7 +196,6 @@ function record(value: unknown): Record<string, unknown> {
 function protectedFromFixture(
   fixture: unknown,
   goal: string,
-  xcatId: string,
 ): Record<string, unknown> {
   const payload = record(record(fixture).payload);
   const constraints = Array.isArray(payload.hard_constraints)
@@ -212,7 +211,6 @@ function protectedFromFixture(
   return {
     ...payload,
     goal,
-    category: xcatId,
     budget: payload.budget ?? null,
     desired_output: desiredText,
   };
@@ -225,29 +223,13 @@ export async function requestK3Binding(
   goal: string,
 ): Promise<K3Binding> {
   try {
-    const meta = resolveCategoryMetadata(displayLabel, goal);
-    const prot = protectedFromFixture(fixture, goal, meta.xcatId);
-    const words = goal.trim().split(/\s+/).length;
-
-    const taskPayload = {
-      role_label: meta.defaultRole,
-      needs_structured_output: Boolean(prot.desired_output),
-      needs_decomposition: words > 8 || meta.domainId === "coding" || meta.domainId === "research",
-      has_context: Array.isArray(prot.facts) && prot.facts.length > 0,
-      complexity_class: words > 15 ? "COMPLEX" : "STANDARD",
-    };
-
     const outcome = await client.compile(
       JSON.stringify({
         spe_api: "k3",
         op: "select",
-        protected: prot,
-        category: {
-          display_label: meta.displayLabel,
-          xcat_id: meta.xcatId,
-          protocol_domain_id: meta.domainId,
-        },
-        task: taskPayload,
+        protected: protectedFromFixture(fixture, goal),
+        category: { display_label: displayLabel },
+        task: {},
       }),
       () => {},
     );

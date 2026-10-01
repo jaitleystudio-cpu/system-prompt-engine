@@ -553,12 +553,13 @@ export default function App() {
             protocolRendered: protoRendered,
             depth: publicDepth,
           });
+          prompt.finalPrompt = richPrompt;
 
           let qualityOut: unknown = null;
           try {
             qualityOut = await requestQualityReceipt(
               client,
-              fromK3QualityRequest(k3.rawOutput, richPrompt),
+              fromK3QualityRequest(k3.rawOutput, prompt.finalPrompt),
             );
           } catch {
             qualityOut = null;
@@ -566,7 +567,7 @@ export default function App() {
           const decision = qualityOut
             ? deliveryForReceipt(qualityOut)
             : deliveryForQualityMiss();
-          const surfaces = bindEffectiveSurfaces(richPrompt, qualityOut);
+          const surfaces = bindEffectiveSurfaces(prompt.finalPrompt, qualityOut);
           const shown = { ...prompt, finalPrompt: surfaces.display };
           setRendered(shown);
           const spe = await buildSpeArtifact({
