@@ -65,9 +65,17 @@ assert(cssText.includes("prefers-reduced-motion: reduce"), "CSS must support pre
 assert(cssText.includes("min-height: 44px"), "CSS must enforce 44px touch targets");
 assert(cssText.includes("@media (max-width: 360px)"), "CSS must reflow down to 360px");
 
+console.log("Checking 3D Wireframe Emulation and Fallback...");
+assert(viewText.includes("WireframeCanvasPreview"), "StaticWebsiteBuilder must define WireframeCanvasPreview");
+assert(viewText.includes("3D Wireframe Fallback"), "StaticWebsiteBuilder must offer 3D Wireframe Fallback toggle");
+assert(viewText.includes("2D Wireframe Preview rendered via Canvas / WebGL fallback"), "StaticWebsiteBuilder must disclose 2D wireframe canvas fallback");
+assert(cssText.includes(".bld-wireframe-container"), "static-builder.css must style .bld-wireframe-container");
+assert(cssText.includes(".bld-wireframe-canvas"), "static-builder.css must style .bld-wireframe-canvas");
+
 console.log("Checking Route Mount isolation...");
 assert(modelText.includes('ROUTE_MOUNT_STATUS = "NOT_INTEGRATED"'), "ROUTE_MOUNT_STATUS must be NOT_INTEGRATED");
 const appTsx = fs.readFileSync(path.join(webRoot, "src/App.tsx"), "utf8");
 assert(!appTsx.includes("StaticWebsiteBuilder"), "StaticWebsiteBuilder must not be eagerly mounted in App.tsx");
 
 console.log("PASS: Lane A11-S Static Website Builder contract verified.");
+

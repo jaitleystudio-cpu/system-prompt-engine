@@ -49,3 +49,14 @@ def test_visual_screenshot_route_isolation():
 
     assert "<VisualScreenshotWorkspace" not in app_tsx
     assert "visual-screenshot" not in routing_ts
+
+
+def test_visual_screenshot_fidelity_receipt_contract():
+    workspace_tsx = WEB / "src" / "media" / "VisualScreenshotWorkspace.tsx"
+    content = workspace_tsx.read_text(encoding="utf-8")
+
+    assert "validateFidelityReceipt" in content
+    assert "SAMPLE_VERIFIED_RECEIPT" in content
+    assert "spe.fidelity-receipt.v1" in content
+    assert "rcpt-" in content
+

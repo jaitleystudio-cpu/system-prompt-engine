@@ -234,3 +234,28 @@ html[data-theme="light"] {
     width: 100% !important;
   }
 }
+
+/* 3D Wireframe Emulation Container */
+.bld-wireframe-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.bld-wireframe-canvas {
+  background: var(--bld-surface);
+  border: 1px solid var(--bld-border);
+  border-radius: 8px;
+  max-width: 100%;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.bld-wireframe-status {
+  font-size: 0.8125rem;
+  color: var(--bld-muted);
+  text-align: center;
+  line-height: 1.4;
+}
+

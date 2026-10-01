@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import {
   type WebsiteSpec,
+  type WebsiteSection,
   DEFAULT_WEBSITE_SPEC,
   compileWebsiteSpecToStaticHtml,
   AI_GENERATION,
@@ -12,13 +13,119 @@ import {
 import "./static-builder.css";
 
 type ViewportMode = "desktop" | "tablet" | "mobile";
+type ViewMode = "preview" | "code" | "wireframe_3d";
+
+export const WireframeCanvasPreview: React.FC<{ sections: WebsiteSection[] }> = ({ sections }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Graceful 2D Context fallback for wireframe emulation
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const width = canvas.width;
+    const height = canvas.height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Background grid
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+    ctx.lineWidth = 1;
+    for (let x = 0; x < width; x += 30) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, height);
+      ctx.stroke();
+    }
+    for (let y = 0; y < height; y += 30) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+      ctx.stroke();
+    }
+
+    // Render isometric section wireframe stack
+    const startY = 45;
+    const blockHeight = 44;
+    const blockSpacing = 18;
+
+    sections.forEach((sec, idx) => {
+      const y = startY + idx * (blockHeight + blockSpacing);
+      if (y + blockHeight > height) return;
+
+      const isoOffset = 16;
+      const x = 50;
+      const w = width - 110;
+
+      // Front face
+      ctx.fillStyle = idx === 0 ? "rgba(99, 102, 241, 0.25)" : "rgba(30, 41, 59, 0.7)";
+      ctx.strokeStyle = idx === 0 ? "#818cf8" : "#64748b";
+      ctx.lineWidth = 1.5;
+
+      ctx.fillRect(x, y, w, blockHeight);
+      ctx.strokeRect(x, y, w, blockHeight);
+
+      // Top face (isometric projection)
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + isoOffset, y - isoOffset);
+      ctx.lineTo(x + w + isoOffset, y - isoOffset);
+      ctx.lineTo(x + w, y);
+      ctx.closePath();
+      ctx.fillStyle = idx === 0 ? "rgba(99, 102, 241, 0.4)" : "rgba(51, 65, 85, 0.7)";
+      ctx.fill();
+      ctx.stroke();
+
+      // Right side face
+      ctx.beginPath();
+      ctx.moveTo(x + w, y);
+      ctx.lineTo(x + w + isoOffset, y - isoOffset);
+      ctx.lineTo(x + w + isoOffset, y - isoOffset + blockHeight);
+      ctx.lineTo(x + w, y + blockHeight);
+      ctx.closePath();
+      ctx.fillStyle = idx === 0 ? "rgba(99, 102, 241, 0.2)" : "rgba(15, 23, 42, 0.7)";
+      ctx.fill();
+      ctx.stroke();
+
+      // Text label inside front face
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 12px sans-serif";
+      ctx.fillText(
+        `[${sec.kind.toUpperCase()}] ${sec.heading.slice(0, 32)}`,
+        x + 12,
+        y + 26
+      );
+    });
+  }, [sections]);
+
+  return (
+    <div className="bld-wireframe-container" aria-label="3D Wireframe Layout Preview">
+      <div className="bld-wireframe-status">
+        <strong style={{ color: "var(--bld-warning)", display: "block", marginBottom: "4px" }}>
+          🧊 3D Scene Execution: {SCENE_3D}
+        </strong>
+        <span>2D Wireframe Preview rendered via Canvas / WebGL fallback</span>
+      </div>
+      <canvas
+        ref={canvasRef}
+        width={540}
+        height={340}
+        className="bld-wireframe-canvas"
+        aria-label="Isometric wireframe layout preview"
+      />
+    </div>
+  );
+};
 
 export const StaticWebsiteBuilder: React.FC = () => {
   const [spec, setSpec] = useState<WebsiteSpec>(DEFAULT_WEBSITE_SPEC);
   const [activePageIndex, setActivePageIndex] = useState<number>(0);
   const [activeSectionIndex, setActiveSectionIndex] = useState<number>(0);
   const [viewport, setViewport] = useState<ViewportMode>("desktop");
-  const [viewMode, setViewMode] = useState<"preview" | "code">("preview");
+  const [viewMode, setViewMode] = useState<ViewMode>("preview");
 
   const activePage = spec.pages[activePageIndex] || spec.pages[0];
   const activeSection = activePage?.sections[activeSectionIndex] || activePage?.sections[0];
@@ -183,8 +290,8 @@ export const StaticWebsiteBuilder: React.FC = () => {
           </div>
         </div>
 
-        {/* View Mode Toggle: Preview vs Code */}
-        <div style={{ display: "flex", gap: "8px" }}>
+        {/* View Mode Toggle: Preview vs Code vs 3D Wireframe Fallback */}
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <button
             type="button"
             className={`bld-btn ${viewMode === "preview" ? "active" : ""}`}
@@ -200,6 +307,14 @@ export const StaticWebsiteBuilder: React.FC = () => {
             aria-pressed={viewMode === "code"}
           >
             Compiled Code
+          </button>
+          <button
+            type="button"
+            className={`bld-btn ${viewMode === "wireframe_3d" ? "active" : ""}`}
+            onClick={() => setViewMode("wireframe_3d")}
+            aria-pressed={viewMode === "wireframe_3d"}
+          >
+            3D Wireframe Fallback
           </button>
         </div>
       </div>
@@ -331,7 +446,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
           )}
         </section>
 
-        {/* 3. Live Preview Canvas or Code Inspector */}
+        {/* 3. Live Preview Canvas, Code Inspector, or Wireframe Preview */}
         <section className="bld-preview-canvas" aria-label="Static Preview Representation">
           {viewMode === "preview" ? (
             <div
@@ -345,7 +460,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
                 sandbox="allow-same-origin"
               />
             </div>
-          ) : (
+          ) : viewMode === "code" ? (
             <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "16px" }}>
               <div>
                 <h3 style={{ margin: "0 0 8px 0", fontSize: "0.875rem", color: "var(--bld-muted)" }}>
@@ -387,6 +502,8 @@ export const StaticWebsiteBuilder: React.FC = () => {
                 </pre>
               </div>
             </div>
+          ) : (
+            <WireframeCanvasPreview sections={activePage?.sections || []} />
           )}
         </section>
       </main>

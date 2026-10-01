@@ -78,7 +78,40 @@ assert.match(cssSource, /:focus-visible/, "visual-workspace.css must define :foc
 assert.match(cssSource, /prefers-reduced-motion/, "visual-workspace.css must honor prefers-reduced-motion");
 assert.match(cssSource, /@media\s*\(max-width:/, "visual-workspace.css must include mobile breakpoints down to 360px");
 
-// 5. Route Isolation & Product Integration Invariants
+// 5. Fidelity Receipt Contract & Validation
+console.log("Checking Fidelity Receipt contract and validation...");
+assert.match(
+  workspaceSource,
+  /validateFidelityReceipt/,
+  "VisualScreenshotWorkspace must export validateFidelityReceipt"
+);
+assert.match(
+  workspaceSource,
+  /SAMPLE_VERIFIED_RECEIPT/,
+  "VisualScreenshotWorkspace must export SAMPLE_VERIFIED_RECEIPT"
+);
+assert.match(
+  workspaceSource,
+  /spe\.fidelity-receipt\.v1/,
+  "VisualScreenshotWorkspace must reference spe.fidelity-receipt.v1 standard"
+);
+
+// Verify actual emitted receipt artifact if present
+const sampleReceiptPath = join(root, "../../proofs/visual_fidelity/spe_fidelity_receipt_sample.json");
+if (existsSync(sampleReceiptPath)) {
+  console.log("Validating emitted spe_fidelity_receipt_sample.json artifact...");
+  const receiptJson = JSON.parse(readFileSync(sampleReceiptPath, "utf8"));
+  assert.ok(receiptJson.receiptId.startsWith("rcpt-"), "Receipt ID must start with rcpt-");
+  assert.equal(receiptJson.referenceSha256.length, 64, "referenceSha256 must be 64-char hex");
+  assert.equal(receiptJson.renderSha256.length, 64, "renderSha256 must be 64-char hex");
+  assert.ok(receiptJson.ssimScore >= 0.95, "SSIM score must be >= 0.95");
+  assert.ok(receiptJson.pixelDeltaPercentage <= 5.0, "pixelDeltaPercentage must be <= 5.0");
+  assert.equal(receiptJson.fidelityStatus, "MEASURED", "fidelityStatus must be MEASURED");
+  console.log("✓ Emitted sample receipt is valid and satisfies MEASURED thresholds.");
+}
+
+// 6. Route Isolation & Product Integration Invariants
+
 console.log("Checking route isolation invariants...");
 const appSource = readFileSync(join(root, "src/App.tsx"), "utf8");
 const routingSource = readFileSync(join(root, "src/routing.ts"), "utf8");
@@ -95,3 +128,4 @@ assert.doesNotMatch(
 );
 
 console.log("PASS: Lane A12 Visual / Screenshot UI Foundation verified.");
+

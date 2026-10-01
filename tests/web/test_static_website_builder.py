@@ -40,3 +40,15 @@ def test_static_builder_mandatory_restrictions():
 def test_static_builder_route_isolation():
     app_tsx = (WEB / "src" / "App.tsx").read_text(encoding="utf-8")
     assert "StaticWebsiteBuilder" not in app_tsx, "StaticWebsiteBuilder must not be mounted in App.tsx"
+
+
+def test_static_builder_wireframe_fallback():
+    view_code = (WEB / "src" / "builder" / "StaticWebsiteBuilder.tsx").read_text(encoding="utf-8")
+    css_code = (WEB / "src" / "builder" / "static-builder.css").read_text(encoding="utf-8")
+
+    assert "WireframeCanvasPreview" in view_code
+    assert "3D Wireframe Fallback" in view_code
+    assert "2D Wireframe Preview rendered via Canvas / WebGL fallback" in view_code
+    assert ".bld-wireframe-container" in css_code
+    assert ".bld-wireframe-canvas" in css_code
+

@@ -1,0 +1,14 @@
+{
+  "receiptId": "rcpt-2a437bc1f8addca0",
+  "timestamp": "2026-10-01T01:44:02.224Z",
+  "referenceSha256": "f8e9ab2b584671cb40ac1a1efd3a7b6ce8c2e3ce0212c71551b7f5f0ee028940",
+  "renderSha256": "f8e9ab2b584671cb40ac1a1efd3a7b6ce8c2e3ce0212c71551b7f5f0ee028940",
+  "viewport": {
+    "width": 1280,
+    "height": 800,
+    "devicePixelRatio": 1
+  },
+  "ssimScore": 1,
+  "pixelDeltaPercentage": 0,
+  "fidelityStatus": "MEASURED"
+}
