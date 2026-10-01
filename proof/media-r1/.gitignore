@@ -1,0 +1,7 @@
+models/*.bin
+models/*.download.log
+models/*.headers.txt
+bench/g12e/hyps/
+bench/g12e/logs/*.log
+!bench/g12e/logs/.gitkeep
+.venv*/
