@@ -1,0 +1,177 @@
+{
+  "export_contract_version": "spe.workflow-export.v1",
+  "target": "n8n",
+  "loss_state": "DEGRADED",
+  "guarantees": {
+    "network": false,
+    "credentials_stored": false,
+    "executed": false,
+    "published": false,
+    "webhook_triggered": false,
+    "authority": "NONE",
+    "validation_is_not_execution": true,
+    "capability_is_not_authority": true
+  },
+  "canonical": {
+    "prompt_body": "Write a calm status note.",
+    "prompt_body_disposition": "VERBATIM",
+    "prompt_body_sha256": "8ad479d99a7602ac46b6519d08b7f2c024c5796282c6eb51a33e2497a8c4a068",
+    "variables": [
+      {
+        "name": "tone",
+        "value": "calm",
+        "disposition": "KEPT"
+      },
+      {
+        "name": "api_key",
+        "value": "",
+        "disposition": "STRIPPED"
+      }
+    ],
+    "required_inputs": [
+      "topic"
+    ],
+    "expected_outputs": [
+      "note"
+    ],
+    "constraints": [
+      "no network"
+    ],
+    "provider_target": "local"
+  },
+  "fidelity": [
+    {
+      "facet": "prompt_body",
+      "state": "PRESERVED",
+      "code": "NATIVE_FIELD",
+      "reason": "Sticky note content is the prompt body and the workflow is inactive."
+    },
+    {
+      "facet": "variables",
+      "state": "DEGRADED",
+      "code": "VALUE_STRIPPED",
+      "reason": "One or more variables used a credential or webhook name. Those values were removed and the names were kept with disposition STRIPPED."
+    },
+    {
+      "facet": "required_inputs",
+      "state": "DEGRADED",
+      "code": "TARGET_DOES_NOT_ENFORCE",
+      "reason": "n8n workflow JSON does not enforce required inputs; values are copied into staticData.spe.required_inputs."
+    },
+    {
+      "facet": "expected_outputs",
+      "state": "DEGRADED",
+      "code": "TARGET_DOES_NOT_ENFORCE",
+      "reason": "n8n workflow JSON has no expected-output contract; values are copied into staticData.spe.expected_outputs."
+    },
+    {
+      "facet": "constraints",
+      "state": "DEGRADED",
+      "code": "TARGET_DOES_NOT_ENFORCE",
+      "reason": "n8n workflow JSON does not enforce constraints; values are copied into staticData.spe.constraints."
+    },
+    {
+      "facet": "provider_target",
+      "state": "DEGRADED",
+      "code": "TARGET_DOES_NOT_ENFORCE",
+      "reason": "n8n workflow JSON has no provider-target field; the value is copied into staticData.spe.provider_target."
+    }
+  ],
+  "warnings": [
+    {
+      "code": "VALUE_STRIPPED",
+      "facet": "variables",
+      "message": "One or more variables used a credential or webhook name. Those values were removed and the names were kept with disposition STRIPPED."
+    },
+    {
+      "code": "TARGET_DOES_NOT_ENFORCE",
+      "facet": "required_inputs",
+      "message": "n8n workflow JSON does not enforce required inputs; values are copied into staticData.spe.required_inputs."
+    },
+    {
+      "code": "TARGET_DOES_NOT_ENFORCE",
+      "facet": "expected_outputs",
+      "message": "n8n workflow JSON has no expected-output contract; values are copied into staticData.spe.expected_outputs."
+    },
+    {
+      "code": "TARGET_DOES_NOT_ENFORCE",
+      "facet": "constraints",
+      "message": "n8n workflow JSON does not enforce constraints; values are copied into staticData.spe.constraints."
+    },
+    {
+      "code": "TARGET_DOES_NOT_ENFORCE",
+      "facet": "provider_target",
+      "message": "n8n workflow JSON has no provider-target field; the value is copied into staticData.spe.provider_target."
+    },
+    {
+      "code": "UNSUPPORTED_FEATURE",
+      "facet": null,
+      "message": "credential or execution field stripped at variables.api_key; value not stored"
+    }
+  ],
+  "stripped_paths": [
+    "variables.api_key"
+  ],
+  "target_document": {
+    "name": "SPE offline export (not executable)",
+    "active": false,
+    "nodes": [
+      {
+        "parameters": {
+          "content": "Write a calm status note.",
+          "height": 240,
+          "width": 320
+        },
+        "name": "SPE Prompt",
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ]
+      }
+    ],
+    "connections": {},
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": {
+      "spe_variables": [
+        {
+          "name": "tone",
+          "value": "calm",
+          "disposition": "KEPT"
+        },
+        {
+          "name": "api_key",
+          "value": "",
+          "disposition": "STRIPPED"
+        }
+      ],
+      "spe": {
+        "required_inputs": [
+          "topic"
+        ],
+        "expected_outputs": [
+          "note"
+        ],
+        "constraints": [
+          "no network"
+        ],
+        "provider_target": "local",
+        "export_contract_version": "spe.workflow-export.v1",
+        "executable": false
+      }
+    },
+    "meta": {
+      "speExport": "spe.workflow-export.v1",
+      "executable": false
+    },
+    "pinData": {}
+  },
+  "source": {
+    "kind": "prompt_contract",
+    "spe_format": null,
+    "contract_version": "spe.prompt-contract.v1"
+  }
+}

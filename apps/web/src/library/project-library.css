@@ -1,0 +1,399 @@
+/**
+ * SPE Project Library CSS (Lane A7)
+ * High-contrast, mobile-first down to 360px, prefers-reduced-motion,
+ * 44px touch targets, dual-theme focus rings.
+ */
+
+:root {
+  --spe-lib-bg: #090d16;
+  --spe-lib-surface: #111827;
+  --spe-lib-surface-hover: #1f2937;
+  --spe-lib-border: #374151;
+  --spe-lib-text: #f9fafb;
+  --spe-lib-muted: #9ca3af;
+  --spe-lib-accent: #6366f1;
+  --spe-lib-accent-hover: #4f46e5;
+  --spe-lib-success: #10b981;
+  --spe-lib-warning: #f59e0b;
+  --spe-lib-danger: #ef4444;
+  --spe-lib-focus: #bbceff;
+}
+
+html[data-theme="light"] {
+  --spe-lib-bg: #f9fafb;
+  --spe-lib-surface: #ffffff;
+  --spe-lib-surface-hover: #f3f4f6;
+  --spe-lib-border: #e5e7eb;
+  --spe-lib-text: #111827;
+  --spe-lib-muted: #4b5563;
+  --spe-lib-accent: #4f46e5;
+  --spe-lib-accent-hover: #4338ca;
+  --spe-lib-success: #059669;
+  --spe-lib-warning: #d97706;
+  --spe-lib-danger: #dc2626;
+  --spe-lib-focus: #1a3675;
+}
+
+/* Reduced Motion Kill Switch */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.spe-lib-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--spe-lib-bg);
+  color: var(--spe-lib-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+/* Dual Theme Focus Rings */
+.spe-lib-container button:focus-visible,
+.spe-lib-container a:focus-visible,
+.spe-lib-container [tabindex]:focus-visible,
+.spe-lib-container input:focus-visible,
+.spe-lib-container select:focus-visible {
+  outline: 2px solid var(--spe-lib-focus) !important;
+  outline-offset: 2px;
+}
+
+/* Header */
+.spe-lib-header {
+  padding: 24px 32px;
+  background-color: var(--spe-lib-surface);
+  border-bottom: 1px solid var(--spe-lib-border);
+}
+
+.spe-lib-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.spe-lib-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.spe-lib-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.spe-lib-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.spe-lib-badge-private {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--spe-lib-success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.spe-lib-badge-noindex {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--spe-lib-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.spe-lib-badge-unbound {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: var(--spe-lib-accent);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.spe-lib-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: 0.8125rem;
+  color: var(--spe-lib-muted);
+  flex-wrap: wrap;
+}
+
+.spe-lib-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Button & Interactive Targets */
+.spe-lib-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--spe-lib-border);
+  background-color: var(--spe-lib-surface);
+  color: var(--spe-lib-text);
+  touch-action: manipulation;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.spe-lib-btn:hover {
+  background-color: var(--spe-lib-surface-hover);
+  border-color: var(--spe-lib-muted);
+}
+
+.spe-lib-btn-primary {
+  background-color: var(--spe-lib-accent);
+  border-color: var(--spe-lib-accent);
+  color: #ffffff;
+}
+
+.spe-lib-btn-primary:hover {
+  background-color: var(--spe-lib-accent-hover);
+  border-color: var(--spe-lib-accent-hover);
+}
+
+/* Main Layout */
+.spe-lib-content {
+  display: grid;
+  grid-template-columns: 320px 1fr 380px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Artifacts Sidebar */
+.spe-lib-sidebar {
+  border-right: 1px solid var(--spe-lib-border);
+  padding: 20px;
+  background-color: var(--spe-lib-surface);
+  overflow-y: auto;
+}
+
+.spe-lib-section-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--spe-lib-muted);
+  letter-spacing: 0.05em;
+  margin: 0 0 16px 0;
+}
+
+.spe-lib-artifact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.spe-lib-artifact-card {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--spe-lib-border);
+  background-color: var(--spe-lib-bg);
+  cursor: pointer;
+  min-height: 44px;
+  text-align: left;
+  transition: border-color 0.15s ease;
+}
+
+.spe-lib-artifact-card:hover {
+  border-color: var(--spe-lib-muted);
+}
+
+.spe-lib-artifact-card.active {
+  border-color: var(--spe-lib-accent);
+  background-color: rgba(99, 102, 241, 0.08);
+}
+
+.spe-lib-type-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--spe-lib-text);
+  margin-bottom: 6px;
+  align-self: flex-start;
+}
+
+/* Timeline Panel */
+.spe-lib-main {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.spe-lib-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  padding-left: 24px;
+}
+
+.spe-lib-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 7px;
+  width: 2px;
+  background-color: var(--spe-lib-border);
+}
+
+.spe-lib-history-item {
+  position: relative;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--spe-lib-border);
+  background-color: var(--spe-lib-surface);
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.spe-lib-history-item::before {
+  content: "";
+  position: absolute;
+  left: -21px;
+  top: 20px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--spe-lib-accent);
+  border: 2px solid var(--spe-lib-bg);
+}
+
+.spe-lib-history-item.rollback::before {
+  background-color: var(--spe-lib-warning);
+}
+
+.spe-lib-history-item.active {
+  border-color: var(--spe-lib-accent);
+}
+
+.spe-lib-rollback-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--spe-lib-warning);
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+/* Inspector Panel */
+.spe-lib-inspector {
+  border-left: 1px solid var(--spe-lib-border);
+  padding: 20px;
+  background-color: var(--spe-lib-surface);
+  overflow-y: auto;
+}
+
+.spe-lib-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.spe-lib-chip {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--spe-lib-border);
+  font-family: monospace;
+}
+
+.spe-lib-body-viewer {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 6px;
+  background-color: var(--spe-lib-bg);
+  border: 1px solid var(--spe-lib-border);
+  font-family: monospace;
+  font-size: 0.8125rem;
+  overflow-x: auto;
+  max-height: 300px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Modal */
+.spe-lib-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.spe-lib-modal {
+  width: 100%;
+  max-width: 560px;
+  background-color: var(--spe-lib-surface);
+  border: 1px solid var(--spe-lib-border);
+  border-radius: 8px;
+  padding: 24px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Mobile Reflow down to 360px */
+@media (max-width: 1024px) {
+  .spe-lib-content {
+    grid-template-columns: 1fr;
+  }
+  .spe-lib-sidebar,
+  .spe-lib-inspector {
+    border: none;
+    border-bottom: 1px solid var(--spe-lib-border);
+  }
+}
+
+@media (max-width: 360px) {
+  .spe-lib-header {
+    padding: 16px 12px;
+  }
+  .spe-lib-main,
+  .spe-lib-sidebar,
+  .spe-lib-inspector {
+    padding: 12px;
+  }
+  .spe-lib-title {
+    font-size: 1.25rem;
+  }
+  .spe-lib-btn {
+    width: 100%;
+  }
+}

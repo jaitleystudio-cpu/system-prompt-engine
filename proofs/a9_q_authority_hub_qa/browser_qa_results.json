@@ -1,0 +1,80 @@
+{
+  "base": "http://127.0.0.1:5173",
+  "lab_meta": "PUBLISH DATE\n2026-09-17\nINTERACTION\nhover-explode\nMATERIALS\npastel resin / soft gloss\nLIGHTING\nstudio softbox\nSTATUS\npublished",
+  "findings": [
+    {
+      "path": "/",
+      "canonical": "https://systempromptengine.com",
+      "og": "https://systempromptengine.com",
+      "publication_hits": [],
+      "control_hits": []
+    },
+    {
+      "path": "/capabilities",
+      "canonical": "https://systempromptengine.com/capabilities",
+      "og": "https://systempromptengine.com/capabilities",
+      "publication_hits": [],
+      "control_hits": []
+    },
+    {
+      "path": "/daily-lab",
+      "canonical": "https://systempromptengine.com/daily-lab",
+      "og": "https://systempromptengine.com/daily-lab",
+      "publication_hits": [
+        "PUBLISH DATE",
+        "published"
+      ],
+      "control_hits": []
+    },
+    {
+      "path": "/privacy",
+      "canonical": "https://systempromptengine.com/privacy",
+      "og": "https://systempromptengine.com/privacy",
+      "publication_hits": [],
+      "control_hits": []
+    },
+    {
+      "path": "/workspace",
+      "canonical": "https://systempromptengine.com/workspace",
+      "og": "https://systempromptengine.com/workspace",
+      "publication_hits": [],
+      "control_hits": []
+    },
+    {
+      "path": "/create",
+      "canonical": "https://systempromptengine.com/create",
+      "og": "https://systempromptengine.com/create",
+      "publication_hits": [],
+      "control_hits": []
+    }
+  ],
+  "import": {
+    "pills": [
+      "online shellsensitivity: USER_PRIVATEtrust: TRUSTEDauthority: GRANTEDcompile: local · no cloud"
+    ],
+    "authority_card": "AUTHORITY\nWhat is authorized\nSTATUS\nNONE\nLEVEL\n0\nGRANTS\n0\nSIDE EFFECTS\nNONE\n\nrecommend ≠ authorize ≠ execute\n\nEXAMPLE HANDLING\n\nNo user example supplied.",
+    "check_lines": [
+      "selection ≠ authority grant · env tags are declarations only · display: ts_mirror",
+      "selected DETERMINISTIC via local-first routing (preferred over external); selection is not an authority grant (ts_mirror)",
+      "AUTHORITY",
+      "GRANTS",
+      "SIDE EFFECTS",
+      "Prepared locally with no side effects. This records contract checks, not target execution or verified success.",
+      "SIDE EFFECTS",
+      "6 PASS · 0 FAIL · 1 UNKNOWN",
+      "PASS applies only to the listed local check. UNKNOWN is not PASS.",
+      "PASS",
+      "PASS",
+      "PASS",
+      "PASS",
+      "Authority not escalated",
+      "Authority is NONE; no grants or side-effect permission were created.",
+      "PASS",
+      "PASS",
+      "Provider profile does not escalate authority",
+      "Profile bind is observational (SELECTED: DETERMINISTIC); no AuthorityGrant, network, or credentials.",
+      "online shellsensitivity: USER_PRIVATEtrust: TRUSTEDauthority: GRANTEDcompile: local · no cloud"
+    ],
+    "simple_text": "Prepared\n\nWHAT SPE PREPARED\nYour goal is kept with this prompt.\nWHAT IS PROTECTED\nLimits you wrote stay attached to the prompt.\nPERMISSIONS\nNothing is allowed to run on your behalf.\nDID ANYTHING RUN?\nNothing has been executed.\nPROFILE\nDETERMINISTIC\nCHECK STATUS\nNot checked yet. Unknown is not a pass.\n✓\nGoal preserved\n✓\nHard constraints preserved\n✓\nNo authority granted\n✓\nNo side effects authorized\n·\nProfile DETERMINISTIC · 1.0.0\n·\nRun NOT EXECUTED\n·\nConformance UNKNOWN — not a pass\n\nPREPARED GOAL\nPlan a careful product launch.\n\nSame underlying contract as Inspect. UNKNOWN is never treated as PASS. Selection is not an authority grant."
+  }
+}

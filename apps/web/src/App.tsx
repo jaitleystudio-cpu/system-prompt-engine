@@ -5,7 +5,14 @@ import {
   requestK3Binding,
   requireBoundEffectPlan,
   K3EffectUnavailableError,
+  resolveCategoryMetadata,
 } from "./engine/k3Transport";
+import { synthesizeSystemPrompt } from "./engine/promptSynthesizer";
+import {
+  DEFAULT_TARGET_MODEL_ID,
+  type TargetModelId,
+} from "./engine/targetModelConfig";
+import { ModelContinuationPicker } from "./ui/ModelContinuationPicker";
 import { requestQualityReceipt } from "./engine/qualityTransport";
 import {
   deliveryForBrief,
@@ -239,6 +246,8 @@ export default function App() {
     useState<PublicSourceControl>("AUTO");
   const [publicDepth, setPublicDepth] =
     useState<PublicDepthControl>("AUTO");
+  const [targetAIModel, setTargetAIModel] =
+    useState<TargetModelId>(DEFAULT_TARGET_MODEL_ID);
   const [contextProtocol, setContextProtocol] =
     useState<ContextProtocolCompileOutput | null>(null);
   const [executionRecord, setExecutionRecord] =
@@ -313,7 +322,12 @@ export default function App() {
     };
   }, []);
 
+  const isInitialMount = useRef(true);
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     window.scrollTo({ top: 0, behavior: "instant" });
     document.getElementById("main")?.focus({ preventScroll: true });
   }, [view]);
@@ -464,6 +478,9 @@ export default function App() {
         });
         if (requestRevision !== revision.current) return;
 
+        const catMeta = resolveCategoryMetadata(category, goal);
+        let protoOutput: ContextProtocolCompileOutput | null = null;
+
         // Context / grounding protocol — WASM only (fail closed; no TS synthesis).
         try {
           const proto = await client.compileContextProtocol(
@@ -471,6 +488,7 @@ export default function App() {
               spe_api: "context_protocol",
               op: "compile",
               request_text: goal,
+              domain_ids: [catMeta.domainId],
               source_mode: mapPublicSourceToWasm(publicSource),
               requested_depth: publicDepth,
               adapter_id: "ANY_AI",
@@ -479,9 +497,8 @@ export default function App() {
           );
           if (requestRevision !== revision.current) return;
           if (!proto.error && proto.result?.output) {
-            setContextProtocol(
-              proto.result.output as ContextProtocolCompileOutput,
-            );
+            protoOutput = proto.result.output as ContextProtocolCompileOutput;
+            setContextProtocol(protoOutput);
           } else {
             setContextProtocol(null);
           }
@@ -515,11 +532,40 @@ export default function App() {
           const prompt = renderPromptArtifact({
             userRequest: goal,
             target,
-            category,
+            category: catMeta.displayLabel,
             envelopeOutput: out.result.output,
             techniques: bound.techniques,
             effectPlan: bound.effectPlan,
           });
+
+          // Synthesize deep, production-ready system prompt
+          const desiredOutput =
+            intent.confirmed.find((a) => a.id === "desired-output")?.text ||
+            null;
+          const desiredExample =
+            intent.assumed.find((a) => a.id === "desired-example")?.text ||
+            null;
+          const protoRendered =
+            protoOutput && typeof protoOutput === "object" && "rendered" in protoOutput
+              ? (protoOutput as { rendered?: string }).rendered || null
+              : null;
+
+          const richPrompt = synthesizeSystemPrompt({
+            k3CompiledPrompt: prompt.finalPrompt,
+            category: catMeta.displayLabel,
+            domainId: catMeta.domainId,
+            goal,
+            desiredOutput,
+            desiredExample,
+            protocolRendered: protoRendered,
+            depth: publicDepth,
+            taskReportTelemetry: {
+              rawOutput: goal,
+              modelTarget: targetAIModel,
+            },
+          });
+          prompt.finalPrompt = richPrompt;
+
           let qualityOut: unknown = null;
           try {
             qualityOut = await requestQualityReceipt(
@@ -537,7 +583,7 @@ export default function App() {
           setRendered(shown);
           const spe = await buildSpeArtifact({
             user_request: goal,
-            category,
+            category: catMeta.displayLabel as CategoryId,
             target,
             envelope: fixture,
             wasm: {
@@ -993,6 +1039,47 @@ export default function App() {
                 applyUserRequestChange(prompt);
               }}
             />
+            {/* Domain Category Selector */}
+            <div className="spe-category-picker" role="radiogroup" aria-label="Target domain category">
+              <span className="spe-category-picker-label">Domain Category:</span>
+              <div className="spe-category-pills">
+                {(
+                  [
+                    "Coding",
+                    "Writing",
+                    "Research",
+                    "Business",
+                    "Education",
+                    "Analysis",
+                    "Website / 3D",
+                    "Structured Data",
+                    "Creative",
+                    "Multilingual",
+                    "Image",
+                    "Video",
+                    "AI Assistant",
+                  ] as const
+                ).map((catName) => {
+                  const isSelected = category === catName;
+                  return (
+                    <button
+                      key={catName}
+                      type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      className={`spe-category-pill ${isSelected ? "spe-category-pill--active" : ""}`}
+                      onClick={() => {
+                        invalidate();
+                        setCategory(catName);
+                      }}
+                      disabled={busy}
+                    >
+                      {catName === "AI Assistant" ? "⚡ Auto Detect" : catName}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             <div className="compile-row">
               <button
                 type="button"
@@ -1022,6 +1109,14 @@ export default function App() {
                 disabled={busy}
                 inspectOutput={contextProtocol}
                 refreshNotice={contextRefreshNotice}
+              />
+              <ModelContinuationPicker
+                selectedModel={targetAIModel}
+                onSelectModel={(m) => {
+                  invalidate();
+                  setTargetAIModel(m);
+                }}
+                disabled={busy}
               />
             </SourcesDepthDisclosure>
             </div>

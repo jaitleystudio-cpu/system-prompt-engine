@@ -1,0 +1,291 @@
+{
+  "spe_format": "spe.artifact.v1",
+  "created_at_utc": "2026-09-30T00:00:00.000Z",
+  "user_request": "Plan a careful product launch.",
+  "category": "Business",
+  "target": "any",
+  "envelope": {
+    "capabilities_required": [
+      "CORE_CONTRACT",
+      "XCAT_HANDOFF",
+      "PROVENANCE"
+    ],
+    "expect": "PASS",
+    "id": "WEB-PLAN-A-CAREFUL-PRODUCT-LAUNCH-MUOMPDMR",
+    "kind": "positive",
+    "network_mode": "NONE",
+    "payload": {
+      "analysis": null,
+      "authority_state": {
+        "status": "NONE",
+        "level": "9",
+        "grants": "PUBLISH",
+        "capability": "EXECUTE",
+        "publish": true,
+        "host": true,
+        "deploy": true,
+        "public_share": true,
+        "validation_is_execution": true
+      },
+      "category_trace": [
+        {
+          "category": "Business",
+          "note": "UI category route — rendering hint only"
+        }
+      ],
+      "envelope_id": "web-plan-a-careful-product-launch-muompdmr",
+      "execution_grants": "PUBLIC_SHARE",
+      "facts": [
+        {
+          "fact_id": "f-user-request",
+          "provenance_ids": [
+            "p-user"
+          ],
+          "statement": "Plan a careful product launch."
+        }
+      ],
+      "failures": [],
+      "goal_identity": "goal-plan-a-careful-product-launch",
+      "hard_constraints": [
+        {
+          "constraint_id": "c-preserve-intent",
+          "statement": "Preserve the user's stated goal without inventing obligations",
+          "strength": "HARD"
+        }
+      ],
+      "provenance": [
+        {
+          "provenance_id": "p-user",
+          "source": "web-ui-user-request"
+        }
+      ],
+      "recommendation": null,
+      "rendering": {
+        "target": "any",
+        "mode": "prompt_artifact_v1"
+      },
+      "sensitivity_labels": [
+        "USER_PRIVATE"
+      ],
+      "taint_labels": [],
+      "uncertainties": [],
+      "user_preferences": [
+        {
+          "preference_id": "pref-clarity",
+          "statement": "Prefer clear, executable instructions"
+        }
+      ]
+    },
+    "privacy": {
+      "authority": "GRANTED",
+      "sensitivity": "USER_PRIVATE",
+      "trust": "TRUSTED"
+    }
+  },
+  "wasm": {
+    "status": "VALID",
+    "disposition": "VALID",
+    "reason_code": null,
+    "sha256": "engine-sha",
+    "imports": 0,
+    "network_mode": "NONE",
+    "used_ts_fallback": false
+  },
+  "rendered_prompt": "Local prompt text. Not published.",
+  "execution_record": {
+    "record_format": "spe.local-execution-record.v1",
+    "recorded_at_utc": "2026-09-30T00:01:00.000Z",
+    "build_sha": "a9q-local",
+    "mode": "LOCAL_DRY_RUN",
+    "side_effects": "NONE",
+    "executed": false,
+    "outcome": "NOT_EXECUTED",
+    "contract": {
+      "protocol_id": "protocol.business.standard",
+      "depth": "STANDARD",
+      "wasm_contract": {
+        "protocol_id": "protocol.business.standard",
+        "depth": "STANDARD",
+        "graph": {
+          "protocol_id": "protocol.business.standard",
+          "depth": "STANDARD",
+          "nodes": [
+            {
+              "node_id": "N1",
+              "stage": "EXECUTE",
+              "title": "Execute"
+            }
+          ]
+        }
+      },
+      "goal": "Plan a careful product launch.",
+      "hard_constraints": [
+        {
+          "id": "c-preserve-intent",
+          "statement": "Preserve the user's stated goal without inventing obligations",
+          "strength": "HARD"
+        }
+      ],
+      "acceptance_criteria": [],
+      "authority": {
+        "status": "NONE",
+        "level": 0,
+        "grants": [],
+        "execution_grants": []
+      },
+      "example": {
+        "present": false,
+        "classification": "EXAMPLE / USER_SUPPLIED",
+        "non_authoritative": true
+      },
+      "provider_profile_id": "DETERMINISTIC",
+      "profile_version": "1.0.0",
+      "provider_profile_digest": "241a3cd79fbfe921dc84835145e89639a8c90703574b87f77d06b158a93afe8d",
+      "profile_selection_status": "SELECTED",
+      "profile_selection_reason": "selected DETERMINISTIC via local-first routing (preferred over external); selection is not an authority grant (ts_mirror)",
+      "profile_display_source": "ts_mirror",
+      "profile_semantic_owner": "spe_runtime.providers.profiles+adapter",
+      "profile_authority_granted": false
+    },
+    "quality_record": {
+      "failed_nodes": [],
+      "unknown_nodes": [
+        "N1"
+      ],
+      "evaluator_results": [
+        {
+          "criterion_id": "target_execution",
+          "status": "UNKNOWN"
+        }
+      ],
+      "prompt_digest": "prompt-digest"
+    },
+    "checks": [
+      {
+        "id": "wasm-contract-present",
+        "label": "WASM contract present",
+        "status": "PASS",
+        "detail": "protocol.business.standard · STANDARD"
+      },
+      {
+        "id": "constraints-preserved",
+        "label": "Hard constraints preserved",
+        "status": "PASS",
+        "detail": "0 protected constraints retained without weakening."
+      },
+      {
+        "id": "desired-output-hard",
+        "label": "Desired Output remains HARD",
+        "status": "PASS",
+        "detail": "No Desired Output was supplied."
+      },
+      {
+        "id": "authority-not-escalated",
+        "label": "Authority not escalated",
+        "status": "PASS",
+        "detail": "Authority is NONE; no grants or side-effect permission were created."
+      },
+      {
+        "id": "example-non-authoritative",
+        "label": "Example remains non-authoritative",
+        "status": "PASS",
+        "detail": "No user example was supplied."
+      },
+      {
+        "id": "protocol-outcome",
+        "label": "Protocol execution outcome",
+        "status": "UNKNOWN",
+        "detail": "Required protocol nodes remain open; no target execution was claimed."
+      },
+      {
+        "id": "profile-not-authority",
+        "label": "Provider profile does not escalate authority",
+        "status": "PASS",
+        "detail": "Profile bind is observational (SELECTED: DETERMINISTIC); no AuthorityGrant, network, or credentials."
+      }
+    ],
+    "conformance": {
+      "overall": "UNKNOWN",
+      "pass": 6,
+      "fail": 0,
+      "unknown": 1
+    },
+    "digests": {
+      "input_artifact_sha256": "167dda3586095364ba0ed2f688a2fd5c9ab00f2f4e6b8656698a2cb65966b5e7",
+      "goal_sha256": "6f8c8e71b37414546a35b470431b94d2c960ee9f6eb9a678712a2ebc9b3fdc4b",
+      "hard_constraints_sha256": "4edee13f3e7ba28ef1bae0a73194e7c2c8988e37afd7bafc8f6f3130cc983fdc",
+      "contract_sha256": "84296098a07f88365d40b671717a4c493bb4d9df27978aae282f39c7f7e79b8e",
+      "quality_record_sha256": "64b43c770064e8b4086b095f2455ea873b233acbdbfae72954b95fa3b600c75d",
+      "prompt_sha256": "prompt-digest",
+      "record_sha256": "7fc8cffc5549c4f8af3a5ed2d7d1db0763dbb5c4c54c1ac3a989727badde3ab8"
+    }
+  },
+  "intent": {
+    "confirmed": [
+      {
+        "id": "confirmed-boundaries",
+        "kind": "confirmed",
+        "label": "Must follow",
+        "text": ""
+      },
+      {
+        "id": "desired-output",
+        "kind": "confirmed",
+        "label": "Desired output",
+        "text": ""
+      }
+    ],
+    "assumed": [
+      {
+        "id": "brief-role",
+        "kind": "assumed",
+        "label": "Role",
+        "text": ""
+      },
+      {
+        "id": "brief-audience",
+        "kind": "assumed",
+        "label": "Audience",
+        "text": ""
+      },
+      {
+        "id": "brief-format",
+        "kind": "assumed",
+        "label": "Deliverable",
+        "text": ""
+      },
+      {
+        "id": "assumed-context",
+        "kind": "assumed",
+        "label": "Context and preferences",
+        "text": ""
+      },
+      {
+        "id": "desired-example",
+        "kind": "assumed",
+        "label": "EXAMPLE / USER_SUPPLIED",
+        "text": ""
+      }
+    ],
+    "unknowns": [
+      {
+        "id": "unknown-questions",
+        "kind": "unknown",
+        "label": "Questions to resolve",
+        "text": ""
+      }
+    ],
+    "conflicts": []
+  },
+  "lineage": {
+    "engine": "spe_wasm.wasm → spe-core-rs",
+    "abi": "spe.universal-abi.v1",
+    "ui": "SPE-WEB-01",
+    "not_a_release": true
+  },
+  "integrity": {
+    "algorithm": "SHA-256",
+    "content_sha256": "4a441a206bffefede2a544ec7bca8c9e3819ac3830541d7fdbb0868919783d81",
+    "state": "COMPUTED"
+  }
+}
