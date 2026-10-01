@@ -27,6 +27,11 @@ export interface EvidenceRecord {
 export type AuthorityDocType = "research_guide" | "technical_spec";
 export type SchemaType = "Article" | "TechArticle";
 
+/** Route is deliberately unmounted; do not imply live host publication. */
+export const ROUTE_MOUNT_STATUS = "NOT_INTEGRATED" as const;
+/** Publication/host claims must stay honest while the hub is unmounted. */
+export const PUBLICATION_STATUS = "NOT_INTEGRATED" as const;
+
 export interface AuthorityDocument {
   slug: string;
   title: string;
@@ -60,8 +65,8 @@ export const EVIDENCE_LEDGER: EvidenceRecord[] = [
     date: "2026-09-15",
     methodology: "Headless browser qualification harness running 1,000 prompt passes under controlled CPU throttling (4x). Network egress monitored via isolated Service Worker packet inspector.",
     evidenceLinks: [
-      "/proofs/task57_quality_reconstruction_20260929/WASM_PROVENANCE.md",
-      "/apps/web/scripts/bench-task57r-wasm.mjs"
+      "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/proofs/task57_quality_reconstruction_20260929/WASM_PROVENANCE.md",
+      "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/apps/web/scripts/bench-task57r-wasm.mjs"
     ],
     rawResults: "p50: 18.4ms, p95: 39.2ms, p99: 46.8ms. Zero socket transmissions recorded (egress = 0 bytes).",
     reproSteps: [
@@ -84,7 +89,7 @@ export const EVIDENCE_LEDGER: EvidenceRecord[] = [
     date: "2026-09-20",
     methodology: "Proxy-level packet inspection using mitmproxy combined with strict Content-Security-Policy (connect-src 'none').",
     evidenceLinks: [
-      "/proofs/truth_privacy_closure_20260928/FINAL_REPORT.md"
+      "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/proofs/truth_privacy_closure_20260928/FINAL_REPORT.md"
     ],
     rawResults: "0 outbound requests initiated; 0 tracking pixels or beacon payloads observed.",
     reproSteps: [
@@ -107,7 +112,7 @@ export const EVIDENCE_LEDGER: EvidenceRecord[] = [
     date: "2026-09-25",
     methodology: "Automated test harness submitting compiler outputs to official provider JSON schema validators and syntax parsers.",
     evidenceLinks: [
-      "/proofs/provider_schema_validation.json"
+      "NOT_PUBLISHED"
     ],
     rawResults: "500/500 tests passed (100.0% validation rate).",
     reproSteps: [
@@ -130,8 +135,7 @@ export const AUTHORITY_DOCUMENTS: AuthorityDocument[] = [
     category: "compiler",
     author: {
       name: "SPE Architecture Group",
-      role: "Systems Research",
-      url: "https://systempromptengine.com"
+      role: "Systems Research"
     },
     publishedDate: "2026-09-15T00:00:00Z",
     modifiedDate: "2026-09-30T12:00:00Z",
@@ -162,8 +166,7 @@ export const AUTHORITY_DOCUMENTS: AuthorityDocument[] = [
     category: "privacy",
     author: {
       name: "Security & Privacy Working Group",
-      role: "Security Audit",
-      url: "https://systempromptengine.com"
+      role: "Security Audit"
     },
     publishedDate: "2026-09-20T00:00:00Z",
     modifiedDate: "2026-09-30T12:00:00Z",
@@ -194,8 +197,7 @@ export const AUTHORITY_DOCUMENTS: AuthorityDocument[] = [
     category: "prompt_adaptation",
     author: {
       name: "Prompt Engineering Research Team",
-      role: "Format Engineering",
-      url: "https://systempromptengine.com"
+      role: "Format Engineering"
     },
     publishedDate: "2026-09-25T00:00:00Z",
     modifiedDate: "2026-09-30T12:00:00Z",
@@ -226,7 +228,9 @@ export const AUTHORITY_DOCUMENTS: AuthorityDocument[] = [
  */
 export function generateArticleJsonLd(doc: AuthorityDocument): Record<string, unknown> {
   const isTech = doc.schemaType === "TechArticle";
-  
+
+  // PUBLICATION_STATUS=NOT_INTEGRATED: omit production host @id/canonical authority URLs.
+  // Do not imply live Authority Hub publication while the route is unmounted.
   const baseSchema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": isTech ? "TechArticle" : "Article",
@@ -237,17 +241,11 @@ export function generateArticleJsonLd(doc: AuthorityDocument): Record<string, un
     "author": {
       "@type": "Organization",
       "name": doc.author.name,
-      "url": doc.author.url || "https://systempromptengine.com"
     },
     "publisher": {
       "@type": "Organization",
       "name": "System Prompt Engine",
-      "url": "https://systempromptengine.com"
     },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `urn:spe:authority:${doc.slug}`
-    }
   };
 
   if (isTech) {
