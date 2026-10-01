@@ -1,0 +1,23 @@
+{
+  "file": "ggml-te-small.bin",
+  "url": "https://huggingface.co/ukta-app/indic-whisper-ggml/resolve/a3d637b81797a1d680e6933b71058ac9e00681fd/ggml-te-small.bin",
+  "hf_repo": "ukta-app/indic-whisper-ggml",
+  "hf_commit": "a3d637b81797a1d680e6933b71058ac9e00681fd",
+  "file_introduced_commit": "4168702a4120ab864413cd6f61d0baba89352cec",
+  "bytes": 190085487,
+  "expected_sha256": "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e",
+  "license": "Apache-2.0",
+  "quant": "q5_1",
+  "fine_tune_source": "vasista22/whisper-telugu-small@717212f9c4c16a78a86ddcb98f93c7f73ef8a5cc",
+  "whisper_cpp_compatible": true,
+  "require_no_timestamps": true,
+  "cross_custody_secondary": {
+    "repo": "bhaskaro/ainotes-whisper-telugu-q5_1",
+    "commit": "11bb1860bf271666c5f3ae709b7414cf993608b4",
+    "file": "ggml-model.bin",
+    "sha256": "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e",
+    "bytes": 190085487
+  },
+  "verify": "PENDING_DOWNLOAD",
+  "custody_precheck": "PASS"
+}
