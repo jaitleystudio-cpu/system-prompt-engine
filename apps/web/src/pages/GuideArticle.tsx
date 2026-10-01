@@ -156,12 +156,26 @@ export const GuideArticle: React.FC<GuideArticleProps> = ({ document: doc, onBac
                 <div className="spe-evidence-field-val">
                   <ul style={{ margin: 0, paddingLeft: "16px" }}>
                     {ev.evidenceLinks.map((link, lIdx) => {
-                      const isExternal = link.startsWith("http://") || link.startsWith("https://");
+                      const isHttp = /^https?:\/\//i.test(link);
+                      // Gap tokens (NOT_PUBLISHED / UNAVAILABLE / MISSING_IN_REPO) are
+                      // truthful non-clickable provenance — never invent a dead href.
+                      if (!isHttp) {
+                        return (
+                          <li key={lIdx}>
+                            <span
+                              data-evidence-gap="true"
+                              style={{ color: "var(--spe-hub-muted, #94a3b8)", fontStyle: "italic" }}
+                            >
+                              {link}
+                            </span>
+                          </li>
+                        );
+                      }
                       return (
                         <li key={lIdx}>
                           <a
                             href={link}
-                            {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                            {...{ target: "_blank", rel: "noopener noreferrer" }}
                             style={{ color: "var(--spe-hub-accent)" }}
                           >
                             {link}

@@ -1,0 +1,72 @@
+{
+  "mission": "A9-LINK-V",
+  "generated_at_ist": "1/10/2026, 8:05:12 am",
+  "base_sha_a9r": "8ddfe7e630d507ad9c13345e4e2e03120903ea82",
+  "verified_tip": "c3698cd87ef100447c044e479dcc16929cd2d165",
+  "app_delta_a9r_to_tip": "NONE (PR#90 custody proofs only)",
+  "INTERNAL_LINKS": {
+    "count": 0,
+    "pass": true,
+    "detail": "NONE_PRESENT (vacuous pass; no relative evidence hrefs)"
+  },
+  "EXTERNAL_LINKS": {
+    "count": 3,
+    "noopener_noreferrer": "PASS",
+    "http_resolve": "PASS",
+    "results": [
+      {
+        "link": "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/proofs/task57_quality_reconstruction_20260929/WASM_PROVENANCE.md",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "link": "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/apps/web/scripts/bench-task57r-wasm.mjs",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "link": "https://github.com/jaitleystudio-cpu/system-prompt-engine/blob/8ddfe7e630d507ad9c13345e4e2e03120903ea82/proofs/truth_privacy_closure_20260928/FINAL_REPORT.md",
+        "ok": true,
+        "status": 200
+      }
+    ],
+    "wrong_org_repo": false
+  },
+  "DEAD_LINKS": "NONE",
+  "PUBLICATION_TRUTH": {
+    "status": "PASS",
+    "notes": [
+      "ROUTE_MOUNT_STATUS=NOT_INTEGRATED",
+      "UI_SHOWS_DOCUMENT_PUBLISHED_DATE_COPY",
+      "HUB_USES_PUBLICATIONS_COPY"
+    ],
+    "landerNote": "Live host /authority/* observed as lander redirect stub (not Authority Hub product); route mount NOT_INTEGRATED in App/routing.",
+    "mountedHub": false,
+    "mountedGuide": false,
+    "inRouting": false,
+    "jsonLdHost": false
+  },
+  "SCHEMA_TRUTH": {
+    "status": "PASS",
+    "stacked": "PASS",
+    "conditional": "PASS",
+    "perDocTypes": [
+      "TechArticle",
+      "Article",
+      "Article"
+    ],
+    "singleTypePerDoc": "PASS"
+  },
+  "MANDATORY_14_FIELDS": "PASS",
+  "LOCAL_ANALOGS": {
+    "task57_wasm_provenance.md": "proofs/task57_quality_reconstruction_20260929/WASM_PROVENANCE.md",
+    "bench-task57r-wasm.mjs": "apps/web/scripts/bench-task57r-wasm.mjs",
+    "truth-privacy-closure.md": "proofs/truth_privacy_closure_20260928/ (dir; no exact .md basename)",
+    "provider_schema_validation.json": "MISSING_IN_REPO"
+  },
+  "FINAL": "A9_LINK_RESOLUTION_VERIFIED",
+  "MERGED": "NO",
+  "DEPLOYED": "NO",
+  "HOSTED": "NO",
+  "SOURCE_MODIFIED": "NO"
+}
