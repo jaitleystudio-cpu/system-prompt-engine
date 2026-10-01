@@ -73,6 +73,20 @@ export const StaticWebsiteBuilder: React.FC = () => {
     });
   };
 
+  // Download Standalone Static HTML File
+  const handleDownloadHtml = () => {
+    const standalone = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="utf-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>${activePage.title}</title>\n  <style>${compiled.css}</style>\n</head>\n<body>\n${compiled.html}\n</body>\n</html>`;
+    const blob = new Blob([standalone], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${activePage.path === "/" ? "index" : activePage.path.replace(/\//g, "-")}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   // Download Bundle Locally
   const handleDownloadBundle = () => {
     const jsonStr = JSON.stringify(spec, null, 2);
@@ -105,6 +119,14 @@ export const StaticWebsiteBuilder: React.FC = () => {
           </div>
 
           <div style={{ display: "flex", gap: "8px" }}>
+            <button
+              type="button"
+              className="bld-btn"
+              onClick={handleDownloadHtml}
+              aria-label="Download Standalone HTML file"
+            >
+              Export HTML
+            </button>
             <button
               type="button"
               className="bld-btn"
