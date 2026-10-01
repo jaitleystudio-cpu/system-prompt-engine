@@ -69,7 +69,15 @@ export interface ModelManifest {
   minimumMemoryMb: number;
   quantization: "INT8" | "FP16" | "FP32";
   provenance: string;
-  qualificationState: "QUALIFIED" | "DEGRADED" | "FALLBACK" | "UNAVAILABLE" | "UNTESTED";
+  qualificationState:
+    | "QUALIFIED"
+    | "CANDIDATE"
+    | "MANIFEST_ONLY"
+    | "ARTIFACT_UNVERIFIED"
+    | "DEGRADED"
+    | "FALLBACK"
+    | "UNAVAILABLE"
+    | "UNTESTED";
   opsetVersion?: number;
 }
 
@@ -82,6 +90,8 @@ export interface ModelPack {
   verifiedDigest: string | null;
   errorMessage?: string;
   installedAt?: string;
+  artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+  productionQualificationAllowed?: boolean;
 }
 
 export interface OfflineModelPackage {
@@ -92,6 +102,8 @@ export interface OfflineModelPackage {
   files: Record<string, Uint8Array>;
   archiveDigest: string;
   packagedAt: string;
+  artifactClass: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+  productionQualificationAllowed: boolean;
 }
 
 export interface DeviceCapability {
@@ -126,6 +138,8 @@ export interface InferenceSessionReceipt {
   outputDigest: string;
   timestamp: string;
   rawUserDataEgress: 0;
+  artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+  productionQualificationAllowed?: boolean;
 }
 
 export type InferenceReceipt = InferenceSessionReceipt;

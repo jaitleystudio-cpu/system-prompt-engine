@@ -47,7 +47,7 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
       {
         name: "tokenizer.json",
         sizeBytes: 115_320,
-        sha256: "a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0",
+        sha256: "b34917922cee2e52605181773aa864da3a54c52af80f536b5b6d90c37446d2e0",
         required: true,
       },
     ],
@@ -58,8 +58,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     ],
     minimumMemoryMb: 256,
     quantization: "INT8",
-    provenance: "Vetted HuggingFace onnx-community release, verified static graph",
-    qualificationState: "QUALIFIED",
+    provenance: "Upstream HuggingFace onnx-community candidate; real binary artifact verification PENDING",
+    qualificationState: "ARTIFACT_UNVERIFIED",
     opsetVersion: 17,
   },
   "spe-ocr-multilingual-int8": {
@@ -76,19 +76,19 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
       {
         name: "text_det_quantized.onnx",
         sizeBytes: 4_510_200,
-        sha256: "b4c5d6e7f8091a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b",
+        sha256: "63f65bcb949fcc0707067cc9d1644f0b16894608de1c9f18516b59ee9a009a80",
         required: true,
       },
       {
         name: "text_rec_multilingual_quantized.onnx",
         sizeBytes: 9_650_100,
-        sha256: "9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9012",
+        sha256: "c3d7df37f3abfbe4f8471215697e3c1062de20eabdeaf12e548df41602aa3af6",
         required: true,
       },
       {
         name: "character_dict.txt",
         sizeBytes: 50_500,
-        sha256: "8f90123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd",
+        sha256: "61d3f1575d20f944b052eb47cdd12047730828ffa18ec9d9e0c34b1292acb2dc",
         required: true,
       },
     ],
@@ -96,8 +96,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     supportedLanguages: ["en", "te", "hi", "ta", "code", "digits"],
     minimumMemoryMb: 128,
     quantization: "INT8",
-    provenance: "Compact quantized ONNX text detection and recognition weights",
-    qualificationState: "QUALIFIED",
+    provenance: "Upstream quantized ONNX text detection and recognition candidate; real binary verification PENDING",
+    qualificationState: "ARTIFACT_UNVERIFIED",
     opsetVersion: 17,
   },
   "spe-ui-segmenter-int8": {
@@ -109,18 +109,18 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     source: "onnx-community/mobilenetv2-ui-int8",
     license: "Apache-2.0",
     expectedSizeBytes: 3_450_000, // ~3.45 MB
-    sha256: "e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90123456789ab",
+    sha256: "9a42161e59a4019a6daddf6439e7f1a231d2723f38510e48e4528bb92373d10f",
     files: [
       {
         name: "mobilenetv2_ui_int8.onnx",
         sizeBytes: 3_400_000,
-        sha256: "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90123456789abcdef0123456789a",
+        sha256: "fa8a76a803a9f1613673eece3e6ba337262c5ce088f0a4175eabda4ad77b796d",
         required: true,
       },
       {
         name: "ui_classes.json",
         sizeBytes: 50_000,
-        sha256: "2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90123456789abcdef0123456789abc",
+        sha256: "782f9dbc2ac65feea26d3b9600e76784fab5aec7c71594d0c467c51dce4b036a",
         required: true,
       },
     ],
@@ -128,8 +128,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     supportedLanguages: ["all"],
     minimumMemoryMb: 64,
     quantization: "INT8",
-    provenance: "Client-side structural layout classifier for screenshot regions",
-    qualificationState: "QUALIFIED",
+    provenance: "Client-side structural layout classifier candidate; real binary artifact verification PENDING",
+    qualificationState: "ARTIFACT_UNVERIFIED",
     opsetVersion: 17,
   },
   "spe-ocr-paddle-int8": {
@@ -169,8 +169,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     ],
     minimumMemoryMb: 192,
     quantization: "INT8",
-    provenance: "PaddlePaddle PP-OCRv4 quantized ONNX neural weights with verified dictionary",
-    qualificationState: "QUALIFIED",
+    provenance: "PaddlePaddle PP-OCRv4 quantized ONNX neural weights specification; real binary verification PENDING",
+    qualificationState: "ARTIFACT_UNVERIFIED",
     opsetVersion: 17,
   },
   "spe-ocr-trocr-int8": {
@@ -207,8 +207,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     supportedLanguages: ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "code"],
     minimumMemoryMb: 256,
     quantization: "INT8",
-    provenance: "Transformer-based TrOCR Small quantized ONNX model for printed and form handwriting",
-    qualificationState: "QUALIFIED",
+    provenance: "Transformer-based TrOCR Small quantized ONNX model candidate; real binary verification PENDING",
+    qualificationState: "ARTIFACT_UNVERIFIED",
     opsetVersion: 17,
   },
 };
@@ -253,7 +253,7 @@ export class ModelPackRegistry {
   }
 
   /**
-   * Validates manifest structure and rejects unsafe or unvetted entries.
+   * Validates manifest structure and rejects unsafe, patterned, or unvetted entries.
    */
   validateManifest(manifest: ModelManifest): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
@@ -262,6 +262,8 @@ export class ModelPackRegistry {
     }
     if (!manifest.sha256 || manifest.sha256.length !== 64) {
       errors.push("Invalid root sha256 digest (must be 64-char hex)");
+    } else if (isPatternedDigest(manifest.sha256)) {
+      errors.push(`Patterned or fabricated root digest rejected: ${manifest.sha256}`);
     }
     if (!manifest.license || manifest.license.toUpperCase().includes("UNKNOWN")) {
       errors.push("Unlicensed or unknown license rejected for production pack");
@@ -288,10 +290,17 @@ export class ModelPackRegistry {
       }
       if (!f.sha256 || f.sha256.length !== 64) {
         errors.push(`Invalid sha256 for file: ${f.name}`);
+      } else if (isPatternedDigest(f.sha256)) {
+        errors.push(`Patterned or fabricated file digest rejected for ${f.name}: ${f.sha256}`);
       }
       if (f.sizeBytes <= 0) {
         errors.push(`Invalid sizeBytes for file: ${f.name}`);
       }
+    }
+    if (manifest.qualificationState === "QUALIFIED") {
+      errors.push(
+        `Unverified qualificationState 'QUALIFIED' rejected: Model binary artifacts are not bound on local disk. Must be 'CANDIDATE', 'MANIFEST_ONLY', or 'ARTIFACT_UNVERIFIED'.`,
+      );
     }
     return { valid: errors.length === 0, errors };
   }
@@ -391,10 +400,14 @@ export class ModelPackRegistry {
         installedBytes: 0,
         activeBackend: "UNAVAILABLE",
         verifiedDigest: null,
+        artifactClass: pkg.artifactClass,
+        productionQualificationAllowed: pkg.productionQualificationAllowed,
       };
       this.installedPacks.set(pkg.modelId, pack);
     } else {
       pack.manifest = pkg.manifest;
+      pack.artifactClass = pkg.artifactClass;
+      pack.productionQualificationAllowed = pkg.productionQualificationAllowed;
     }
 
     await this.provisionPack(pkg.modelId, "OFFLINE_SIDELOAD", pkg.files, targetBackend);
@@ -406,6 +419,21 @@ export class ModelPackRegistry {
       pack,
       rawUserDataEgress: 0,
     };
+  }
+
+  /**
+   * Assert production qualification readiness; strictly fails closed if synthetic or fixture-only.
+   */
+  assertProductionQualified(modelId: string): void {
+    const pack = this.installedPacks.get(modelId);
+    if (!pack || pack.state !== "READY") {
+      throw new Error(`Model ${modelId} is not installed or ready.`);
+    }
+    if (pack.artifactClass === "TEST_FIXTURE" || !pack.productionQualificationAllowed) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: Model ${modelId} was provisioned from TEST_FIXTURE synthetic package. Real external model binary required for production qualification.`,
+      );
+    }
   }
 
   /**
@@ -424,6 +452,20 @@ export class ModelPackRegistry {
 }
 
 /**
+ * Checks if a 64-char hex digest is patterned or fabricated rather than cryptographically computed.
+ */
+export function isPatternedDigest(sha: string): boolean {
+  if (!sha || typeof sha !== "string") return true;
+  const s = sha.toLowerCase().trim();
+  if (s.length !== 64 || !/^[0-9a-f]{64}$/.test(s)) return true;
+  // Repetitive or sequential hex patterns
+  if (s.includes("0123456789abcdef")) return true;
+  if (/a1b2c3d4|b4c5d6e7|e4f5a6b7|1a2b3c4d|2b3c4d5e|9a0b1c2d|8f901234/.test(s)) return true;
+  if (/^(.)\1{15,}/.test(s)) return true;
+  return false;
+}
+
+/**
  * Binary container format for offline model packs (.spemodel):
  * [0..7] ASCII "SPEMODEL"
  * [8..11] formatVersion uint32 (1)
@@ -434,6 +476,10 @@ export class ModelPackRegistry {
 export function packModelArchive(
   manifest: ModelManifest,
   files: Record<string, Uint8Array>,
+  options?: {
+    artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+    productionQualificationAllowed?: boolean;
+  },
 ): Uint8Array {
   const encoder = new TextEncoder();
   const fileEntries: Record<string, { offset: number; length: number; sha256: string }> = {};
@@ -461,6 +507,10 @@ export function packModelArchive(
   }
   const archiveDigest = computeSha256(combinedPayload);
 
+  const artifactClass = options?.artifactClass || "TEST_FIXTURE";
+  const productionQualificationAllowed =
+    artifactClass === "TEST_FIXTURE" ? false : Boolean(options?.productionQualificationAllowed);
+
   const headerObj = {
     magic: "SPEMODEL",
     formatVersion: 1,
@@ -469,6 +519,8 @@ export function packModelArchive(
     filesMap: fileEntries,
     archiveDigest,
     packagedAt: new Date().toISOString(),
+    artifactClass,
+    productionQualificationAllowed,
   };
 
   const headerJson = JSON.stringify(headerObj);
@@ -524,6 +576,8 @@ export function unpackModelArchive(archiveBytes: Uint8Array): OfflineModelPackag
     filesMap: Record<string, { offset: number; length: number; sha256: string }>;
     archiveDigest: string;
     packagedAt: string;
+    artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+    productionQualificationAllowed?: boolean;
   };
 
   try {
@@ -549,6 +603,10 @@ export function unpackModelArchive(archiveBytes: Uint8Array): OfflineModelPackag
     files[name] = fileBytes;
   }
 
+  const artifactClass = header.artifactClass || "TEST_FIXTURE";
+  const productionQualificationAllowed =
+    artifactClass === "TEST_FIXTURE" ? false : Boolean(header.productionQualificationAllowed);
+
   return {
     magic: "SPEMODEL",
     formatVersion: 1,
@@ -557,10 +615,18 @@ export function unpackModelArchive(archiveBytes: Uint8Array): OfflineModelPackag
     files,
     archiveDigest: header.archiveDigest,
     packagedAt: header.packagedAt,
+    artifactClass,
+    productionQualificationAllowed,
   };
 }
 
-export function generateVettedOfflinePackage(modelId: string): Uint8Array {
+export const TEST_ONLY_SYNTHETIC_MODEL_PACKAGE = true;
+
+/**
+ * Creates a synthetic in-memory model package STRICTLY FOR UNIT TESTING container logic.
+ * INVARIANT: Must NEVER be accepted as production qualification evidence.
+ */
+export function generateTestOnlySyntheticModelPackage(modelId: string): Uint8Array {
   const manifest = VETTED_MODEL_MANIFESTS[modelId];
   if (!manifest) {
     throw new Error(`No vetted manifest found for modelId: ${modelId}`);
@@ -568,6 +634,7 @@ export function generateVettedOfflinePackage(modelId: string): Uint8Array {
 
   // Clone manifest so we don't mutate global constants permanently
   const clonedManifest: ModelManifest = JSON.parse(JSON.stringify(manifest));
+  clonedManifest.qualificationState = "ARTIFACT_UNVERIFIED";
   const files: Record<string, Uint8Array> = {};
 
   for (const f of clonedManifest.files) {
@@ -595,8 +662,13 @@ export function generateVettedOfflinePackage(modelId: string): Uint8Array {
 
   clonedManifest.sha256 = clonedManifest.files[0]?.sha256 || computeSha256("spe-root");
 
-  return packModelArchive(clonedManifest, files);
+  return packModelArchive(clonedManifest, files, {
+    artifactClass: "TEST_FIXTURE",
+    productionQualificationAllowed: false,
+  });
 }
+
+export const generateVettedOfflinePackage = generateTestOnlySyntheticModelPackage;
 
 export const globalModelRegistry = new ModelPackRegistry();
 export { ModelPackRegistry as ModelRegistry };

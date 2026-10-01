@@ -28,8 +28,16 @@ export interface EvidenceNeedAssessment {
     | "NONE";
 }
 
-// Canonical open-access knowledge base of verified peer-reviewed publications and formal specifications
-export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
+export const SCHOLARLY_FABRIC_TRUTH_STATUS = {
+  CURATED_OFFLINE_SEED_CORPUS: "IMPLEMENTED",
+  FULL_SCHOLARLY_INDEX: "NO",
+  LIVE_RETRACTION_VERIFICATION: "NO",
+  SEED_CORPUS_SIZE: 12,
+  RETRACTION_SOURCE: "LOCAL_TEST_SENTINELS_ONLY",
+} as const;
+
+// Curated offline seed corpus of foundational computer science & cognitive specifications (NOT full global index)
+export const CURATED_SEED_CORPUS: Record<string, ScholarlySourceRecord> = {
   // --- W3C & ISO Normative Specifications ---
   "w3c-wasm-core-2": {
     sourceId: "SRC-W3C-WASM-2",
@@ -239,17 +247,22 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
   },
 };
 
-// Known retracted items registry to prevent citing fraudulent or retracted science
-export const RETRACTED_REGISTRY = new Set<string>([
+export const VERIFIED_KNOWLEDGE_BASE = CURATED_SEED_CORPUS;
+
+// Local test sentinels to verify retraction handling logic.
+// NOT an authoritative live retraction database (LIVE_RETRACTION_VERIFICATION = NO).
+export const RETRACTED_TEST_SENTINELS = new Set<string>([
   "doi:10.1016/fake.retracted.2020",
   "doi:10.1126/science.fabricated.123",
   "doi:10.1038/s41586-020-retracted-claim",
   "arXiv:2101.99999-retracted",
 ]);
+export const RETRACTED_REGISTRY = RETRACTED_TEST_SENTINELS;
 
 /**
- * Searches the offline open-access scholarly index across arXiv, PMC, OpenAlex, DOAJ, and W3C.
- * Invariant: RAW_USER_DATA_EGRESS = 0 (100% offline index).
+ * Searches the curated offline seed corpus across foundational open-access computer science topics.
+ * TRUTH: CURATED_OFFLINE_SEED_CORPUS = IMPLEMENTED, FULL_SCHOLARLY_INDEX = NO.
+ * Invariant: RAW_USER_DATA_EGRESS = 0 (100% offline).
  */
 export function searchOfflineScholarlyIndex(
   query: string,
@@ -261,7 +274,7 @@ export function searchOfflineScholarlyIndex(
   const qLower = query.toLowerCase().trim();
   const results: ScholarlySourceRecord[] = [];
 
-  for (const record of Object.values(VERIFIED_KNOWLEDGE_BASE)) {
+  for (const record of Object.values(CURATED_SEED_CORPUS)) {
     if (options?.catalog && record.catalogSource !== options.catalog) {
       continue;
     }
@@ -283,7 +296,7 @@ export function searchOfflineScholarlyIndex(
 
 /**
  * Anti-hallucination verification engine for cited scholarly sources.
- * Validates identifier syntax, confirms catalog existence, and detects retracted publications.
+ * Validates identifier syntax, confirms catalog existence, and checks local test sentinels.
  */
 export function verifyCitation(sourceIdOrIdentifier: string): {
   verified: boolean;
@@ -299,17 +312,17 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
 } {
   const cleanId = (sourceIdOrIdentifier || "").trim();
 
-  // Check 1: Retraction Registry
-  if (RETRACTED_REGISTRY.has(cleanId)) {
+  // Check 1: Test Sentinels for Retraction Logic
+  if (RETRACTED_TEST_SENTINELS.has(cleanId)) {
     return {
       verified: false,
       tier: "[RETRACTED_DANGER]",
-      reason: `Citation ${cleanId} is officially registered as RETRACTED or fraudulent science.`,
+      reason: `Citation ${cleanId} matched in local test sentinels as RETRACTED science (LIVE_RETRACTION_VERIFICATION = NO; test fixture only).`,
     };
   }
 
-  // Check 2: Match against Verified Local Index
-  for (const [key, record] of Object.entries(VERIFIED_KNOWLEDGE_BASE)) {
+  // Check 2: Match against Curated Offline Seed Corpus
+  for (const [key, record] of Object.entries(CURATED_SEED_CORPUS)) {
     if (
       key.toLowerCase() === cleanId.toLowerCase() ||
       record.sourceId.toLowerCase() === cleanId.toLowerCase() ||
@@ -327,7 +340,7 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
         verified: true,
         record,
         tier: record.evidenceTier,
-        reason: `Verified in offline ${record.catalogSource || "catalog"} index as ${record.evidenceTier}.`,
+        reason: `Verified in curated offline seed corpus (FULL_SCHOLARLY_INDEX = NO) as ${record.evidenceTier}.`,
       };
     }
   }

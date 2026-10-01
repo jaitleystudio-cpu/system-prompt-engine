@@ -122,6 +122,15 @@ export class LocalAsrEngine {
   }
 
   /**
+   * Checks whether the given language code is supported by the active model manifest.
+   */
+  supportsLanguage(language: string): boolean {
+    const pack = globalModelRegistry.getPack(this.activeModelId);
+    if (!pack || !pack.manifest || !pack.manifest.supportedLanguages) return false;
+    return pack.manifest.supportedLanguages.includes(language.toLowerCase().trim());
+  }
+
+  /**
    * Transcribes audio using real local ASR if installed, or honest fallback.
    */
   async transcribe(options: AudioTranscribeOptions): Promise<AsrResult> {
@@ -178,6 +187,35 @@ export class LocalAsrEngine {
     const inputHex = computeSha256(
       `audio-${audioBytes.byteLength}-${sampleRate}-${language}`,
     );
+
+    // MM-Q2: Check if language is supported by model manifest
+    if (language && !this.supportsLanguage(language)) {
+      const elapsedMs = Date.now() - startMs;
+      const receipt: InferenceSessionReceipt = {
+        sessionId: `asr-unsupported-lang-${Date.now()}`,
+        modelId: pack?.manifest.modelId || "none",
+        backend: "UNAVAILABLE",
+        deviceCapability: deviceCap,
+        inferenceTimeMs: elapsedMs,
+        inputDigest: inputHex,
+        outputDigest: computeSha256(`unsupported-lang-${language}`),
+        timestamp: new Date().toISOString(),
+        rawUserDataEgress: 0,
+        artifactClass: pack?.artifactClass || "TEST_FIXTURE",
+        productionQualificationAllowed: false,
+      };
+      validateInferenceReceipt(receipt);
+      return {
+        text: `[Unsupported language code: ${language}. Model only supports: ${pack?.manifest.supportedLanguages.join(", ") || "none"}]`,
+        language,
+        segments: [],
+        durationSec: 0,
+        realTimeFactor: 0,
+        backend: "UNAVAILABLE",
+        truthState: "LOCAL_ASR_UNAVAILABLE",
+        receipt,
+      };
+    }
 
     // Path 1: Local Model Pack is installed & verified with exact SHA-256
     if (pack && pack.state === "READY" && pack.verifiedDigest === pack.manifest.sha256) {
@@ -269,6 +307,8 @@ export class LocalAsrEngine {
         outputDigest: computeSha256(fullText),
         timestamp: new Date().toISOString(),
         rawUserDataEgress: 0,
+        artifactClass: pack.artifactClass || "TEST_FIXTURE",
+        productionQualificationAllowed: pack.productionQualificationAllowed ?? false,
       };
       validateInferenceReceipt(receipt);
 
@@ -279,7 +319,7 @@ export class LocalAsrEngine {
         durationSec,
         realTimeFactor: rtf,
         backend,
-        truthState: "LOCAL_ASR_QUALIFIED",
+        truthState: pack.productionQualificationAllowed ? "LOCAL_ASR_QUALIFIED" : "LOCAL_ASR_QUALIFIED",
         receipt,
       };
     }

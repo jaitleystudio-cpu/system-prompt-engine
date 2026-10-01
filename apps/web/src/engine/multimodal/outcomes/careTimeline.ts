@@ -123,9 +123,24 @@ export class CareTimelineEngine {
       primaryLanguage: language,
       entries,
       nextDecisionsSummary,
+      draftStatus: "DRAFT_ONLY",
+      requiresHumanConfirmation: true,
+      noAutonomousSubmission: true,
+      noClinicalDecision: true,
+      safetyDisclaimer:
+        "DRAFT ONLY: For caregiver coordination and handoff notes only. Requires clinician or supervisor review. Does not constitute clinical diagnosis or autonomous care authority.",
       receiptDigest,
       rawUserDataEgress: 0,
     };
+  }
+
+  /**
+   * High-consequence safety invariant: autonomous submission is strictly blocked.
+   */
+  attemptAutonomousSubmission(_timeline: ChronicCareTimeline): never {
+    throw new Error(
+      "SAFETY VIOLATION: Autonomous submission of high-consequence care timeline is strictly blocked. Human confirmation is mandatory under SPE Law.",
+    );
   }
 
   /**

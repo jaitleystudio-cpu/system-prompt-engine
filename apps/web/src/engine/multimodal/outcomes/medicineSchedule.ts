@@ -30,6 +30,11 @@ export interface MedicineAlarmSchedule {
   medications: MedicineEntry[];
   alarmsCount: number;
   spokenReminderScript: string;
+  draftStatus: "DRAFT_ONLY";
+  requiresHumanConfirmation: true;
+  noAutonomousSubmission: true;
+  noAutonomousDosingDecision: true;
+  safetyDisclaimer: string;
   receiptDigest: string;
   createdAt: string;
   rawUserDataEgress: 0;
@@ -161,10 +166,25 @@ export class MedicineScheduleEngine {
       medications,
       alarmsCount: totalAlarms,
       spokenReminderScript,
+      draftStatus: "DRAFT_ONLY",
+      requiresHumanConfirmation: true,
+      noAutonomousSubmission: true,
+      noAutonomousDosingDecision: true,
+      safetyDisclaimer:
+        "DRAFT ONLY: Extracted from visual/audio notes. Does not constitute clinical advice or autonomous dosage decision. Always verify with a licensed healthcare professional.",
       receiptDigest,
       createdAt: new Date().toISOString(),
       rawUserDataEgress: 0,
     };
+  }
+
+  /**
+   * High-consequence safety invariant: autonomous submission is strictly blocked.
+   */
+  attemptAutonomousSubmission(_schedule: MedicineAlarmSchedule): never {
+    throw new Error(
+      "SAFETY VIOLATION: Autonomous submission of high-consequence medical schedule is strictly blocked. Human confirmation is mandatory under SPE Law.",
+    );
   }
 
   private extractContextForMedicine(medName: string, voice: string, ocr: string): string {

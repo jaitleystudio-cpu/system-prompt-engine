@@ -82,9 +82,24 @@ export class SpeakToFillFormEngine {
       readBackScriptNative,
       readBackScriptEnglish,
       clarificationsNeeded,
+      draftStatus: "DRAFT_ONLY",
+      requiresHumanConfirmation: true,
+      noAutonomousSubmission: true,
+      noEligibilityDecision: true,
+      safetyDisclaimer:
+        "DRAFT ONLY: Speech-assisted form drafting. No autonomous submission to government portal. Eligibility decisions rest solely with designated government authorities.",
       receiptDigest,
       rawUserDataEgress: 0,
     };
+  }
+
+  /**
+   * High-consequence safety invariant: autonomous submission is strictly blocked.
+   */
+  attemptAutonomousSubmission(_form: SpeakToFillForm): never {
+    throw new Error(
+      "SAFETY VIOLATION: Autonomous submission of high-consequence government form is strictly blocked. Human confirmation is mandatory under SPE Law.",
+    );
   }
 
   private extractFieldsForForm(

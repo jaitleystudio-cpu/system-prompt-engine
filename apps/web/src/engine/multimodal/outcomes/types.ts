@@ -142,6 +142,11 @@ export interface ChronicCareTimeline {
   caregiverHandoff?: CaregiverHandoff;
   parentMentalLoad?: ParentMentalLoad;
   nextDecisionsSummary: string[];
+  draftStatus: "DRAFT_ONLY";
+  requiresHumanConfirmation: true;
+  noAutonomousSubmission: true;
+  noClinicalDecision: true;
+  safetyDisclaimer: string;
   receiptDigest: string;
   rawUserDataEgress: 0;
 }
@@ -178,6 +183,11 @@ export interface SpeakToFillForm {
   readBackScriptNative: string; // Plain-spoken summary for illiterate applicant to confirm
   readBackScriptEnglish: string;
   clarificationsNeeded: string[];
+  draftStatus: "DRAFT_ONLY";
+  requiresHumanConfirmation: true;
+  noAutonomousSubmission: true;
+  noEligibilityDecision: true;
+  safetyDisclaimer: string;
   receiptDigest: string;
   rawUserDataEgress: 0;
 }
@@ -214,10 +224,16 @@ export interface ScamCoercionPack {
   riskScore: number; // 0 - 100
   threatsDetected: string[];
   demands: CoercionDemand[];
-  policeFirNarrative: string; // Ready for law enforcement submission
-  bankDisputeNotice: string; // Ready for bank fraud division freeze
+  policeFirNarrative: string; // Draft assistance for manual law enforcement submission
+  bankDisputeNotice: string; // Draft notice for manual bank branch presentation
   victimReassuranceSteps: string[];
   statutorySections?: string[];
+  draftStatus: "DRAFT_ONLY";
+  requiresHumanConfirmation: true;
+  noAutonomousSubmission: true;
+  noLegalConclusion: true;
+  noBankingAuthority: true;
+  safetyDisclaimer: string;
   receiptDigest: string;
   rawUserDataEgress: 0;
 }
@@ -274,6 +290,11 @@ export interface MarketplaceDisputePack {
   discrepancies: DiscrepancyItem[];
   recommendedResolution: "FULL_REFUND" | "PARTIAL_REFUND" | "RELEASE_TO_SELLER" | "REPLACEMENT";
   resolutionJustification: string;
+  draftStatus: "DRAFT_ONLY";
+  requiresHumanConfirmation: true;
+  noAutonomousSubmission: true;
+  noLegalConclusion: true;
+  safetyDisclaimer: string;
   receiptDigest: string;
   rawUserDataEgress: 0;
 }

@@ -167,9 +167,24 @@ export class MarketplaceDisputeEngine {
       discrepancies,
       recommendedResolution,
       resolutionJustification,
+      draftStatus: "DRAFT_ONLY",
+      requiresHumanConfirmation: true,
+      noAutonomousSubmission: true,
+      noLegalConclusion: true,
+      safetyDisclaimer:
+        "DRAFT ONLY: Discrepancy comparison between oral promise and delivery evidence. Requires human review before formal arbitration or marketplace submission. Does not constitute legal determination.",
       receiptDigest,
       rawUserDataEgress: 0,
     };
+  }
+
+  /**
+   * High-consequence safety invariant: autonomous submission is strictly blocked.
+   */
+  attemptAutonomousSubmission(_pack: MarketplaceDisputePack): never {
+    throw new Error(
+      "SAFETY VIOLATION: Autonomous submission of high-consequence marketplace dispute pack is strictly blocked. Human confirmation is mandatory under SPE Law.",
+    );
   }
 }
 

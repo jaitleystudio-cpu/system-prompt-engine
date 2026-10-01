@@ -252,6 +252,8 @@ export class LocalOcrEngine {
         outputDigest: computeSha256(fullText),
         timestamp: new Date().toISOString(),
         rawUserDataEgress: 0,
+        artifactClass: activeReadyPack.artifactClass || "TEST_FIXTURE",
+        productionQualificationAllowed: activeReadyPack.productionQualificationAllowed ?? false,
       };
       validateInferenceReceipt(receipt);
 
@@ -292,6 +294,8 @@ export class LocalOcrEngine {
       outputDigest: computeSha256(fullText),
       timestamp: new Date().toISOString(),
       rawUserDataEgress: 0,
+      artifactClass: "TEST_FIXTURE",
+      productionQualificationAllowed: false,
     };
     validateInferenceReceipt(receipt);
 

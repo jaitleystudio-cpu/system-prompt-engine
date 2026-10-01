@@ -208,9 +208,25 @@ export class ScamAfterglowEngine {
       bankDisputeNotice,
       victimReassuranceSteps,
       statutorySections,
+      draftStatus: "DRAFT_ONLY",
+      requiresHumanConfirmation: true,
+      noAutonomousSubmission: true,
+      noLegalConclusion: true,
+      noBankingAuthority: true,
+      safetyDisclaimer:
+        "DRAFT ONLY: Narrative assistance for statutory FIR reporting and bank dispute. Does not constitute formal legal counsel, filed report, or autonomous banking transaction authority. Must be reviewed and submitted manually by victim or legal advocate.",
       receiptDigest,
       rawUserDataEgress: 0,
     };
+  }
+
+  /**
+   * High-consequence safety invariant: autonomous submission is strictly blocked.
+   */
+  attemptAutonomousSubmission(_pack: ScamCoercionPack): never {
+    throw new Error(
+      "SAFETY VIOLATION: Autonomous submission of high-consequence police FIR or bank dispute notice is strictly blocked. Human confirmation is mandatory under SPE Law.",
+    );
   }
 
   private generatePoliceFir(
