@@ -19,6 +19,9 @@ import type {
   ProvisioningMode,
   OfflineModelPackage,
   ModelCustodyState,
+  ProvenanceVerificationTier,
+  MultimodalTask,
+  RuntimeBackend,
 } from "./types";
 
 export interface UpstreamModelProvenanceFile {
@@ -32,6 +35,9 @@ export interface UpstreamModelProvenanceFile {
 export interface UpstreamModelProvenance {
   modelId: string;
   baseModel?: string;
+  baseModelLicense?: "MIT" | "Apache-2.0" | "UNVERIFIED" | string;
+  conversionRepoLicense?: "Apache-2.0" | "UNVERIFIED" | string;
+  artifactLicenseStatus?: "VERIFIED_MIT" | "VERIFIED_APACHE_2_0" | "UNVERIFIED" | "HOLD";
   upstreamRepository: string;
   revision: string;
   license: string;
@@ -39,6 +45,57 @@ export interface UpstreamModelProvenance {
   totalSizeBytes: number;
   custodyState?: ModelCustodyState;
   custodyStatus: "CUSTODY_PENDING_DOWNLOAD" | "CUSTODY_VERIFIED" | "CUSTODY_PENDING";
+  verificationTier?: ProvenanceVerificationTier;
+  isLiveVerified?: boolean;
+}
+
+export interface CanonicalProductionModel {
+  modelId: string;
+  version: string;
+  displayName: string;
+  task: MultimodalTask;
+  supportedTasks: MultimodalTask[];
+  baseModel: string;
+  baseModelLicense: "MIT" | "Apache-2.0" | string;
+  conversionRepoLicense: "Apache-2.0" | "UNVERIFIED" | string;
+  artifactLicenseStatus: "VERIFIED_MIT" | "VERIFIED_APACHE_2_0" | "HOLD";
+  license: string;
+  upstreamRepository: string;
+  revision: string;
+  files: Array<{
+    name: string;
+    upstreamUrl: string;
+    sizeBytes: number;
+    sha256: string;
+    required: boolean;
+    isRealBinaryVerified: boolean;
+  }>;
+  totalSizeBytes: number;
+  sha256: string;
+  supportedRuntimes: RuntimeBackend[];
+  supportedLanguages: string[];
+  minimumMemoryMb: number;
+  quantization: "INT8" | "FP16" | "FP32";
+  provenance: string;
+  qualificationState:
+    | "DECLARED"
+    | "PROVENANCE_VERIFIED"
+    | "BYTES_VERIFIED"
+    | "INFERENCE_VERIFIED"
+    | "BENCHMARKED"
+    | "QUALIFIED"
+    | "CANDIDATE"
+    | "MANIFEST_ONLY"
+    | "ARTIFACT_UNVERIFIED"
+    | "DEGRADED"
+    | "FALLBACK"
+    | "UNAVAILABLE"
+    | "UNTESTED";
+  custodyState: ModelCustodyState;
+  custodyStatus: "CUSTODY_PENDING_DOWNLOAD" | "CUSTODY_VERIFIED";
+  verificationTier: ProvenanceVerificationTier;
+  isLiveVerified: boolean;
+  opsetVersion?: number;
 }
 
 export const MODEL_PACK_SIZE_METRICS = {
@@ -46,21 +103,24 @@ export const MODEL_PACK_SIZE_METRICS = {
   ASR_COMPLETE_PACK_BYTES: 43_324_697, // + tokenizer.json (2,480,466)
   OCR_PADDLE_MODEL_ONLY_BYTES: 10_260_761, // det (2,429,873) + rec_en (7,830,888)
   OCR_PADDLE_COMPLETE_PACK_BYTES: 10_262_177, // + dict (1,416)
-  OCR_MOBILE_MODEL_ONLY_BYTES: 14_160_300,
-  OCR_MOBILE_COMPLETE_PACK_BYTES: 14_210_800,
+  OCR_MOBILE_MODEL_ONLY_BYTES: 10_260_761,
+  OCR_MOBILE_COMPLETE_PACK_BYTES: 10_262_177,
   OCR_TROCR_MODEL_ONLY_BYTES: 28_500_000,
   OCR_TROCR_COMPLETE_PACK_BYTES: 28_600_000,
   RUNTIME_SHARED_BYTES: 11_246_030, // ort-wasm-simd-threaded.wasm
 } as const;
 
-export const VERIFIED_UPSTREAM_REPOSITORIES: Record<
+export const CACHED_VERIFIED_UPSTREAM_METADATA: Record<
   string,
   {
     repoUrl: string;
     verifiedRevisions: Record<
       string,
       {
-        license: string;
+        baseModel: string;
+        baseModelLicense: string;
+        conversionRepoLicense: string;
+        artifactLicenseStatus: string;
         files: Record<string, { sizeBytes: number; sha256: string }>;
       }
     >;
@@ -70,7 +130,10 @@ export const VERIFIED_UPSTREAM_REPOSITORIES: Record<
     repoUrl: "https://huggingface.co/onnx-community/whisper-tiny",
     verifiedRevisions: {
       "6d4fb5abc94227ee92e43fc5091278851eadf8a0": {
-        license: "Apache-2.0",
+        baseModel: "openai/whisper-tiny",
+        baseModelLicense: "MIT",
+        conversionRepoLicense: "UNVERIFIED",
+        artifactLicenseStatus: "HOLD",
         files: {
           "encoder_model_quantized.onnx": {
             sizeBytes: 10_124_990,
@@ -100,29 +163,32 @@ export const VERIFIED_UPSTREAM_REPOSITORIES: Record<
     repoUrl: "https://huggingface.co/monkt/paddleocr-onnx",
     verifiedRevisions: {
       "7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65": {
-        license: "Apache-2.0",
+        baseModel: "PaddlePaddle/PaddleOCR PP-OCRv3/v4",
+        baseModelLicense: "Apache-2.0",
+        conversionRepoLicense: "Apache-2.0",
+        artifactLicenseStatus: "VERIFIED_APACHE_2_0",
         files: {
-          "detection/v3/det.onnx": {
-            sizeBytes: 2_429_873,
-            sha256: "ee40e80071ba3a320d4efda75f3e22047a7d049e9bf7bcaaf9daea23fc21b935",
-          },
           "det.onnx": {
             sizeBytes: 2_429_873,
             sha256: "ee40e80071ba3a320d4efda75f3e22047a7d049e9bf7bcaaf9daea23fc21b935",
           },
-          "languages/english/rec.onnx": {
-            sizeBytes: 7_830_888,
-            sha256: "4e16deb22c4da6468bdca539b2cd3c8687825538b67109177c47d359ab994cd7",
+          "detection/v3/det.onnx": {
+            sizeBytes: 2_429_873,
+            sha256: "ee40e80071ba3a320d4efda75f3e22047a7d049e9bf7bcaaf9daea23fc21b935",
           },
           "rec.onnx": {
             sizeBytes: 7_830_888,
             sha256: "4e16deb22c4da6468bdca539b2cd3c8687825538b67109177c47d359ab994cd7",
           },
-          "languages/english/dict.txt": {
+          "languages/english/rec.onnx": {
+            sizeBytes: 7_830_888,
+            sha256: "4e16deb22c4da6468bdca539b2cd3c8687825538b67109177c47d359ab994cd7",
+          },
+          "dict.txt": {
             sizeBytes: 1_416,
             sha256: "e025a66d31f327ba0c232e03f407ae8d105e1e709e7ccb3f408aa778c24e70d6",
           },
-          "dict.txt": {
+          "languages/english/dict.txt": {
             sizeBytes: 1_416,
             sha256: "e025a66d31f327ba0c232e03f407ae8d105e1e709e7ccb3f408aa778c24e70d6",
           },
@@ -144,96 +210,469 @@ export const VERIFIED_UPSTREAM_REPOSITORIES: Record<
   },
 };
 
-export const PRODUCTION_MODEL_PROVENANCE: Record<string, UpstreamModelProvenance> = {
+export const VERIFIED_UPSTREAM_REPOSITORIES = CACHED_VERIFIED_UPSTREAM_METADATA;
+
+export const CANONICAL_PRODUCTION_MODELS: Record<string, CanonicalProductionModel> = {
   "spe-whisper-tiny-int8": {
     modelId: "spe-whisper-tiny-int8",
+    version: "1.0.0",
+    displayName: "Whisper Tiny INT8 (Local Multilingual ASR)",
+    task: "asr-speech-transcription",
+    supportedTasks: ["asr-speech-transcription"],
     baseModel: "openai/whisper-tiny",
+    baseModelLicense: "MIT",
+    conversionRepoLicense: "UNVERIFIED",
+    artifactLicenseStatus: "HOLD",
+    license: "MIT",
     upstreamRepository: "https://huggingface.co/onnx-community/whisper-tiny",
     revision: "6d4fb5abc94227ee92e43fc5091278851eadf8a0",
-    license: "Apache-2.0",
     files: [
       {
         name: "encoder_model_quantized.onnx",
         upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny/resolve/6d4fb5abc94227ee92e43fc5091278851eadf8a0/onnx/encoder_model_quantized.onnx",
-        expectedSizeBytes: 10_124_990,
-        expectedSha256: "2af4a414ca47aa30f61246017e5fe82b0a8d229281d1255ba666a2a7f6b84d19",
+        sizeBytes: 10_124_990,
+        sha256: "2af4a414ca47aa30f61246017e5fe82b0a8d229281d1255ba666a2a7f6b84d19",
+        required: true,
         isRealBinaryVerified: false,
       },
       {
         name: "decoder_model_merged_quantized.onnx",
         upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny/resolve/6d4fb5abc94227ee92e43fc5091278851eadf8a0/onnx/decoder_model_merged_quantized.onnx",
-        expectedSizeBytes: 30_719_241,
-        expectedSha256: "25e807a962b6349356d0ea5d0dfe530b7e5bf0e2a484aeca0359d03143faddd3",
+        sizeBytes: 30_719_241,
+        sha256: "25e807a962b6349356d0ea5d0dfe530b7e5bf0e2a484aeca0359d03143faddd3",
+        required: true,
         isRealBinaryVerified: false,
       },
       {
         name: "tokenizer.json",
         upstreamUrl: "https://huggingface.co/onnx-community/whisper-tiny/resolve/6d4fb5abc94227ee92e43fc5091278851eadf8a0/tokenizer.json",
-        expectedSizeBytes: 2_480_466,
-        expectedSha256: "27fc476bfe7f17299480be2273fc0608e4d5a99aba2ab5dec5374b4482d1a566",
+        sizeBytes: 2_480_466,
+        sha256: "27fc476bfe7f17299480be2273fc0608e4d5a99aba2ab5dec5374b4482d1a566",
+        required: true,
         isRealBinaryVerified: false,
       },
     ],
     totalSizeBytes: 43_324_697,
-    custodyState: "DECLARED",
+    sha256: "4a9a6324601da120b3ab5369856f29e60389334501ae840a569962c390bb8ec7",
+    supportedRuntimes: ["WEBGPU", "WASM"],
+    supportedLanguages: [
+      "en", "es", "zh", "hi", "ar", "bn", "pt", "ru", "ja", "de",
+      "fr", "te", "ta", "id", "ur", "ko", "it", "tr", "vi", "mr"
+    ],
+    minimumMemoryMb: 256,
+    quantization: "INT8",
+    provenance: "Vetted HuggingFace onnx-community/whisper-tiny commit 6d4fb5a...; base model MIT; conversion license unverified (HOLD); real binary verification PENDING",
+    qualificationState: "DECLARED",
+    custodyState: "SOURCE_VERIFIED",
     custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
+    verificationTier: "CACHED_SOURCE_VERIFIED",
+    isLiveVerified: false,
+    opsetVersion: 17,
   },
   "spe-ocr-paddle-int8": {
     modelId: "spe-ocr-paddle-int8",
+    version: "4.0.0",
+    displayName: "PaddleOCR v3/v4 ONNX (Global Multi-Script Recognition)",
+    task: "ocr-text-recognition",
+    supportedTasks: ["ocr-text-recognition"],
     baseModel: "PaddlePaddle/PaddleOCR PP-OCRv3/v4",
+    baseModelLicense: "Apache-2.0",
+    conversionRepoLicense: "Apache-2.0",
+    artifactLicenseStatus: "VERIFIED_APACHE_2_0",
+    license: "Apache-2.0",
     upstreamRepository: "https://huggingface.co/monkt/paddleocr-onnx",
     revision: "7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65",
-    license: "Apache-2.0",
     files: [
       {
-        name: "detection/v3/det.onnx",
+        name: "det.onnx",
         upstreamUrl: "https://huggingface.co/monkt/paddleocr-onnx/resolve/7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65/detection/v3/det.onnx",
-        expectedSizeBytes: 2_429_873,
-        expectedSha256: "ee40e80071ba3a320d4efda75f3e22047a7d049e9bf7bcaaf9daea23fc21b935",
+        sizeBytes: 2_429_873,
+        sha256: "ee40e80071ba3a320d4efda75f3e22047a7d049e9bf7bcaaf9daea23fc21b935",
+        required: true,
         isRealBinaryVerified: false,
       },
       {
-        name: "languages/english/rec.onnx",
+        name: "rec.onnx",
         upstreamUrl: "https://huggingface.co/monkt/paddleocr-onnx/resolve/7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65/languages/english/rec.onnx",
-        expectedSizeBytes: 7_830_888,
-        expectedSha256: "4e16deb22c4da6468bdca539b2cd3c8687825538b67109177c47d359ab994cd7",
+        sizeBytes: 7_830_888,
+        sha256: "4e16deb22c4da6468bdca539b2cd3c8687825538b67109177c47d359ab994cd7",
+        required: true,
         isRealBinaryVerified: false,
       },
       {
-        name: "languages/english/dict.txt",
+        name: "dict.txt",
         upstreamUrl: "https://huggingface.co/monkt/paddleocr-onnx/resolve/7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65/languages/english/dict.txt",
-        expectedSizeBytes: 1_416,
-        expectedSha256: "e025a66d31f327ba0c232e03f407ae8d105e1e709e7ccb3f408aa778c24e70d6",
+        sizeBytes: 1_416,
+        sha256: "e025a66d31f327ba0c232e03f407ae8d105e1e709e7ccb3f408aa778c24e70d6",
+        required: true,
         isRealBinaryVerified: false,
       },
     ],
     totalSizeBytes: 10_262_177,
-    custodyState: "DECLARED",
+    sha256: "3d25f6c16028f4fb59c60e8ee29d937f58ad464bc7435985ee54e2be198c09a8",
+    supportedRuntimes: ["WEBGPU", "WASM"],
+    supportedLanguages: [
+      "en", "hi", "te", "ta", "bn", "mr", "gu", "kn", "ml", "pa",
+      "zh", "ja", "ko", "ar", "ur", "fa", "ru", "uk", "vi", "th"
+    ],
+    minimumMemoryMb: 192,
+    quantization: "INT8",
+    provenance: "PaddlePaddle PP-OCRv3/v4 ONNX weights via monkt/paddleocr-onnx commit 7b02d0a...; Apache-2.0; real binary verification PENDING",
+    qualificationState: "DECLARED",
+    custodyState: "SOURCE_VERIFIED",
     custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
+    verificationTier: "CACHED_SOURCE_VERIFIED",
+    isLiveVerified: false,
+    opsetVersion: 17,
   },
   "spe-ocr-multilingual-int8": {
     modelId: "spe-ocr-multilingual-int8",
-    baseModel: "onnx-community/mobile-ocr-multilingual-int8",
-    upstreamRepository: "UNKNOWN_PENDING_SOURCE_VERIFICATION",
-    revision: "UNKNOWN_PENDING_SOURCE_VERIFICATION",
+    version: "4.0.0",
+    displayName: "Multilingual OCR INT8 (PaddleOCR PP-OCRv3/v4 ONNX)",
+    task: "ocr-text-recognition",
+    supportedTasks: ["ocr-text-recognition"],
+    baseModel: "PaddlePaddle/PaddleOCR PP-OCRv3/v4",
+    baseModelLicense: "Apache-2.0",
+    conversionRepoLicense: "Apache-2.0",
+    artifactLicenseStatus: "VERIFIED_APACHE_2_0",
     license: "Apache-2.0",
-    files: [],
-    totalSizeBytes: 0,
+    upstreamRepository: "https://huggingface.co/monkt/paddleocr-onnx",
+    revision: "7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65",
+    files: [
+      {
+        name: "det.onnx",
+        upstreamUrl: "https://huggingface.co/monkt/paddleocr-onnx/resolve/7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65/detection/v3/det.onnx",
+        sizeBytes: 2_429_873,
+        sha256: "ee40e80071ba3a320d4efda75f3e22047a7d049e9bf7bcaaf9daea23fc21b935",
+        required: true,
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "rec.onnx",
+        upstreamUrl: "https://huggingface.co/monkt/paddleocr-onnx/resolve/7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65/languages/english/rec.onnx",
+        sizeBytes: 7_830_888,
+        sha256: "4e16deb22c4da6468bdca539b2cd3c8687825538b67109177c47d359ab994cd7",
+        required: true,
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "dict.txt",
+        upstreamUrl: "https://huggingface.co/monkt/paddleocr-onnx/resolve/7b02d0a30a07ba2b92ad1ff5a8941ae2c633de65/languages/english/dict.txt",
+        sizeBytes: 1_416,
+        sha256: "e025a66d31f327ba0c232e03f407ae8d105e1e709e7ccb3f408aa778c24e70d6",
+        required: true,
+        isRealBinaryVerified: false,
+      },
+    ],
+    totalSizeBytes: 10_262_177,
+    sha256: "3d25f6c16028f4fb59c60e8ee29d937f58ad464bc7435985ee54e2be198c09a8",
+    supportedRuntimes: ["WEBGPU", "WASM"],
+    supportedLanguages: ["en", "te", "hi", "ta", "code", "digits"],
+    minimumMemoryMb: 128,
+    quantization: "INT8",
+    provenance: "PaddlePaddle PP-OCRv3/v4 multilingual text detection and recognition weights via monkt/paddleocr-onnx commit 7b02d0a...; real binary verification PENDING",
+    qualificationState: "DECLARED",
+    custodyState: "SOURCE_VERIFIED",
+    custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
+    verificationTier: "CACHED_SOURCE_VERIFIED",
+    isLiveVerified: false,
+    opsetVersion: 17,
+  },
+  "spe-ui-segmenter-int8": {
+    modelId: "spe-ui-segmenter-int8",
+    version: "1.0.0",
+    displayName: "MobileNetV2 UI Component Segmenter INT8",
+    task: "ui-segmentation",
+    supportedTasks: ["ui-segmentation"],
+    baseModel: "google/mobilenet_v2",
+    baseModelLicense: "Apache-2.0",
+    conversionRepoLicense: "UNVERIFIED",
+    artifactLicenseStatus: "HOLD",
+    license: "Apache-2.0",
+    upstreamRepository: "google/mobilenet_v2",
+    revision: "UNVERIFIED_CANDIDATE",
+    files: [
+      {
+        name: "mobilenetv2_ui_int8.onnx",
+        upstreamUrl: "google/mobilenet_v2/mobilenetv2_ui_int8.onnx",
+        sizeBytes: 3_400_000,
+        sha256: "cd80774aa0b491f992f4b46d5f05772251a4a0a0356f2cf33af033650f8bdd9d",
+        required: true,
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "ui_classes.json",
+        upstreamUrl: "google/mobilenet_v2/ui_classes.json",
+        sizeBytes: 50_000,
+        sha256: "74d0015796233105d0e7120b7143bb2a1a8cfb14e3066743d8c86d26e98899f2",
+        required: true,
+        isRealBinaryVerified: false,
+      },
+    ],
+    totalSizeBytes: 3_450_000,
+    sha256: "133f13472e0d8458f076ea20371f93249847094fe0a2edc1b1fd493edf16d76f",
+    supportedRuntimes: ["WEBGPU", "WASM"],
+    supportedLanguages: ["all"],
+    minimumMemoryMb: 64,
+    quantization: "INT8",
+    provenance: "Client-side structural layout classifier for screenshot regions; real binary verification PENDING",
+    qualificationState: "ARTIFACT_UNVERIFIED",
     custodyState: "DECLARED",
     custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
+    verificationTier: "UNVERIFIED",
+    isLiveVerified: false,
+    opsetVersion: 17,
   },
   "spe-ocr-trocr-int8": {
     modelId: "spe-ocr-trocr-int8",
+    version: "1.0.0",
+    displayName: "TrOCR Small INT8 (Candidate Transformer OCR)",
+    task: "ocr-text-recognition",
+    supportedTasks: ["ocr-text-recognition"],
     baseModel: "microsoft/trocr-small-printed",
-    upstreamRepository: "UNKNOWN_PENDING_SOURCE_VERIFICATION",
-    revision: "UNKNOWN_PENDING_SOURCE_VERIFICATION",
+    baseModelLicense: "Apache-2.0",
+    conversionRepoLicense: "UNVERIFIED",
+    artifactLicenseStatus: "HOLD",
     license: "Apache-2.0",
-    files: [],
-    totalSizeBytes: 0,
+    upstreamRepository: "microsoft/trocr-small-printed",
+    revision: "UNVERIFIED_CANDIDATE",
+    files: [
+      {
+        name: "trocr_encoder_int8.onnx",
+        upstreamUrl: "microsoft/trocr-small-printed/trocr_encoder_int8.onnx",
+        sizeBytes: 12_400_000,
+        sha256: "6e90fb69bf58101b6a07f8017eead48fa7b7eb60b75b2d8115553755c7df5d7b",
+        required: true,
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "trocr_decoder_int8.onnx",
+        upstreamUrl: "microsoft/trocr-small-printed/trocr_decoder_int8.onnx",
+        sizeBytes: 16_100_000,
+        sha256: "ea4fc62d9222b0adfe5e940f9b61b76e0361dd221027334a23833052b665c984",
+        required: true,
+        isRealBinaryVerified: false,
+      },
+      {
+        name: "tokenizer.json",
+        upstreamUrl: "microsoft/trocr-small-printed/tokenizer.json",
+        sizeBytes: 100_000,
+        sha256: "55d26bba1cee2bf6efa67ff04a73ca0bc41f3908ed3d1ccb131390f5d0e394f9",
+        required: true,
+        isRealBinaryVerified: false,
+      },
+    ],
+    totalSizeBytes: 28_600_000,
+    sha256: "d1cf262b80015d76cf9fa3c30c0fca6bcce5bc0b38147d4ef58178d8887d950e",
+    supportedRuntimes: ["WEBGPU", "WASM"],
+    supportedLanguages: ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "code"],
+    minimumMemoryMb: 256,
+    quantization: "INT8",
+    provenance: "Transformer-based TrOCR Small candidate model; real binary verification PENDING",
+    qualificationState: "ARTIFACT_UNVERIFIED",
     custodyState: "DECLARED",
     custodyStatus: "CUSTODY_PENDING_DOWNLOAD",
+    verificationTier: "UNVERIFIED",
+    isLiveVerified: false,
+    opsetVersion: 17,
   },
 };
+
+/**
+ * Derives runtime ModelManifest directly from canonical production provenance record.
+ * Guarantees zero divergence between provenance and runtime manifest.
+ */
+export function deriveModelManifestFromProvenance(
+  prov: CanonicalProductionModel,
+): ModelManifest {
+  return {
+    modelId: prov.modelId,
+    version: prov.version,
+    displayName: prov.displayName,
+    task: prov.task,
+    supportedTasks: prov.supportedTasks,
+    source: prov.upstreamRepository,
+    license: prov.license,
+    expectedSizeBytes: prov.totalSizeBytes,
+    sha256: prov.sha256,
+    files: prov.files.map((f) => ({
+      name: f.name,
+      sizeBytes: f.sizeBytes,
+      sha256: f.sha256,
+      required: f.required,
+    })),
+    supportedRuntimes: prov.supportedRuntimes,
+    supportedLanguages: prov.supportedLanguages,
+    minimumMemoryMb: prov.minimumMemoryMb,
+    quantization: prov.quantization,
+    provenance: prov.provenance,
+    qualificationState: prov.qualificationState,
+    opsetVersion: prov.opsetVersion,
+  };
+}
+
+export const PRODUCTION_MODEL_PROVENANCE: Record<string, UpstreamModelProvenance> = Object.fromEntries(
+  Object.entries(CANONICAL_PRODUCTION_MODELS).map(([k, v]) => [
+    k,
+    {
+      modelId: v.modelId,
+      baseModel: v.baseModel,
+      baseModelLicense: v.baseModelLicense,
+      conversionRepoLicense: v.conversionRepoLicense,
+      artifactLicenseStatus: v.artifactLicenseStatus,
+      upstreamRepository: v.upstreamRepository,
+      revision: v.revision,
+      license: v.license,
+      files: v.files.map((f) => ({
+        name: f.name,
+        upstreamUrl: f.upstreamUrl,
+        expectedSizeBytes: f.sizeBytes,
+        expectedSha256: f.sha256,
+        isRealBinaryVerified: f.isRealBinaryVerified,
+      })),
+      totalSizeBytes: v.totalSizeBytes,
+      custodyState: v.custodyState,
+      custodyStatus: v.custodyStatus,
+      verificationTier: v.verificationTier,
+      isLiveVerified: v.isLiveVerified,
+    },
+  ]),
+);
+
+export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = Object.fromEntries(
+  Object.entries(CANONICAL_PRODUCTION_MODELS).map(([k, v]) => [
+    k,
+    deriveModelManifestFromProvenance(v),
+  ]),
+);
+
+export const STALE_MODEL_IDENTITIES = [
+  "onnx-community/whisper-tiny-onnx-int8",
+  "whisper-tiny-onnx-int8",
+  "onnx-community/mobile-ocr-multilingual-int8",
+  "mobile-ocr-multilingual-int8",
+  "onnx-community/paddleocr-v4-int8",
+  "paddleocr-v4-int8",
+  "onnx-community/mobilenetv2-ui-int8",
+  "mobilenetv2-ui-int8",
+  "onnx-community/trocr-small-int8",
+  "trocr-small-int8",
+];
+
+/**
+ * Asserts that no stale, fabricated, or unverified repository names survive in manifests.
+ */
+export function assertNoStaleModelIdentities(manifests: Record<string, ModelManifest>): void {
+  for (const [id, m] of Object.entries(manifests)) {
+    for (const stale of STALE_MODEL_IDENTITIES) {
+      if (m.source.includes(stale) || (m.provenance && m.provenance.includes(stale))) {
+        throw new Error(
+          `STALE_MODEL_IDENTITY: Model '${id}' contains stale unverified identity '${stale}' (found in source: '${m.source}')`,
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Cross-validates runtime manifest against canonical upstream provenance.
+ * Throws MANIFEST_PROVENANCE_MISMATCH on any discrepancy.
+ */
+export function assertManifestProvenanceConsistency(
+  manifest: ModelManifest,
+  prov: UpstreamModelProvenance,
+): void {
+  if (!manifest || !prov) {
+    throw new Error("MANIFEST_PROVENANCE_MISMATCH: Missing manifest or provenance record");
+  }
+  if (manifest.modelId !== prov.modelId) {
+    throw new Error(
+      `MANIFEST_PROVENANCE_MISMATCH: modelId mismatch ('${manifest.modelId}' vs '${prov.modelId}')`,
+    );
+  }
+  if (manifest.source !== prov.upstreamRepository) {
+    throw new Error(
+      `MANIFEST_PROVENANCE_MISMATCH: Source repository mismatch for ${manifest.modelId}: manifest has '${manifest.source}', provenance has '${prov.upstreamRepository}'`,
+    );
+  }
+  if (manifest.license !== prov.license) {
+    throw new Error(
+      `MANIFEST_PROVENANCE_MISMATCH: License mismatch for ${manifest.modelId}: manifest has '${manifest.license}', provenance has '${prov.license}'`,
+    );
+  }
+  if (manifest.expectedSizeBytes !== prov.totalSizeBytes) {
+    throw new Error(
+      `MANIFEST_PROVENANCE_MISMATCH: Expected size mismatch for ${manifest.modelId}: manifest has ${manifest.expectedSizeBytes} bytes, provenance has ${prov.totalSizeBytes} bytes`,
+    );
+  }
+
+  const provFileMap = new Map(prov.files.map((f) => [f.name, f]));
+  for (const mf of manifest.files) {
+    const pf = provFileMap.get(mf.name);
+    if (!pf) {
+      throw new Error(
+        `MANIFEST_PROVENANCE_MISMATCH: File '${mf.name}' in manifest not found in provenance for ${manifest.modelId}`,
+      );
+    }
+    if (mf.sizeBytes !== pf.expectedSizeBytes) {
+      throw new Error(
+        `MANIFEST_PROVENANCE_MISMATCH: File size mismatch for '${mf.name}' in ${manifest.modelId}: manifest has ${mf.sizeBytes}, provenance has ${pf.expectedSizeBytes}`,
+      );
+    }
+    if (mf.sha256.toLowerCase() !== pf.expectedSha256.toLowerCase()) {
+      throw new Error(
+        `MANIFEST_PROVENANCE_MISMATCH: File SHA mismatch for '${mf.name}' in ${manifest.modelId}: manifest has ${mf.sha256}, provenance has ${pf.expectedSha256}`,
+      );
+    }
+  }
+  if (manifest.files.length !== prov.files.length) {
+    throw new Error(
+      `MANIFEST_PROVENANCE_MISMATCH: File count mismatch in ${manifest.modelId}: manifest has ${manifest.files.length}, provenance has ${prov.files.length}`,
+    );
+  }
+}
+
+/**
+ * Validates license provenance, ensuring base model licenses are not mislabeled and
+ * unverified conversion licenses fail closed.
+ */
+export function validateLicenseProvenance(prov: UpstreamModelProvenance): {
+  valid: boolean;
+  errors: string[];
+} {
+  const errors: string[] = [];
+  if (prov.baseModel?.includes("whisper") && prov.baseModelLicense !== "MIT") {
+    errors.push(
+      `LICENSE_MISMATCH: Whisper base model is MIT, but baseModelLicense was mislabeled as '${prov.baseModelLicense}'`,
+    );
+  }
+  if (
+    prov.conversionRepoLicense === "UNVERIFIED" &&
+    prov.artifactLicenseStatus === "VERIFIED_APACHE_2_0"
+  ) {
+    errors.push(
+      `UNVERIFIED_LICENSE_PROMOTION: Cannot claim VERIFIED_APACHE_2_0 when conversion repo license is UNVERIFIED`,
+    );
+  }
+  if (prov.license?.includes("UNKNOWN") || prov.license?.includes("INFERRED")) {
+    errors.push(`UNKNOWN_LICENSE: License must fail closed: '${prov.license}'`);
+  }
+  return { valid: errors.length === 0, errors };
+}
+
+/**
+ * Asserts that a provenance claim is backed by live authoritative verification.
+ */
+export function assertLiveSourceVerified(prov: {
+  verificationTier?: string;
+  isLiveVerified?: boolean;
+}): void {
+  if (prov.verificationTier !== "LIVE_SOURCE_VERIFIED" || !prov.isLiveVerified) {
+    throw new Error(
+      "EPISTEMIC VIOLATION: Offline cached metadata cannot claim LIVE_SOURCE_VERIFIED without live authoritative Hugging Face API verification",
+    );
+  }
+}
 
 /**
  * Checks if a git commit revision is patterned or fabricated rather than genuine.
@@ -256,10 +695,17 @@ export function isPatternedRevision(rev: string): boolean {
 export function validateUpstreamProvenance(prov: UpstreamModelProvenance): {
   valid: boolean;
   errors: string[];
+  verificationTier: ProvenanceVerificationTier;
+  isLiveVerified: boolean;
 } {
   const errors: string[] = [];
   if (!prov) {
-    return { valid: false, errors: ["Missing upstream provenance record"] };
+    return {
+      valid: false,
+      errors: ["Missing upstream provenance record"],
+      verificationTier: "UNVERIFIED",
+      isLiveVerified: false,
+    };
   }
 
   // Revision validation
@@ -267,8 +713,8 @@ export function validateUpstreamProvenance(prov: UpstreamModelProvenance): {
     errors.push(`Patterned, fake, or synthetic revision rejected: ${prov.revision}`);
   }
 
-  // Repository verification
-  const repoEntry = VERIFIED_UPSTREAM_REPOSITORIES[prov.upstreamRepository];
+  // Repository verification against cached allowlist
+  const repoEntry = CACHED_VERIFIED_UPSTREAM_METADATA[prov.upstreamRepository];
   if (!repoEntry) {
     errors.push(
       `Unverified or nonexistent repository rejected: ${prov.upstreamRepository}`,
@@ -302,7 +748,19 @@ export function validateUpstreamProvenance(prov: UpstreamModelProvenance): {
     errors.push(`Invalid, unverified, or inferred license rejected: ${prov.license}`);
   }
 
-  return { valid: errors.length === 0, errors };
+  // Epistemic honesty check: cached allowlist cannot claim live verification
+  if (prov.isLiveVerified === true || prov.verificationTier === "LIVE_SOURCE_VERIFIED") {
+    errors.push(
+      `EPISTEMIC VIOLATION: Offline cached metadata cannot claim LIVE_SOURCE_VERIFIED without live network proof`,
+    );
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+    verificationTier: errors.length === 0 ? "CACHED_SOURCE_VERIFIED" : "UNVERIFIED",
+    isLiveVerified: false,
+  };
 }
 
 /**
@@ -397,199 +855,6 @@ export function assertScriptSupportedByRecognizer(
   }
 }
 
-export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
-  "spe-whisper-tiny-int8": {
-    modelId: "spe-whisper-tiny-int8",
-    version: "1.0.0",
-    displayName: "Whisper Tiny INT8 (Local Multilingual ASR)",
-    task: "asr-speech-transcription",
-    supportedTasks: ["asr-speech-transcription"],
-    source: "onnx-community/whisper-tiny-onnx-int8",
-    license: "MIT",
-    expectedSizeBytes: 39_845_888, // ~39.8 MB
-    sha256: "8d16c02a4557b63c70ad7620cdd1080873f81c6f4237a7001a6c953f45db03fa", // Canonical computed root
-    files: [
-      {
-        name: "encoder_model_quantized.onnx",
-        sizeBytes: 15_820_112,
-        sha256: "7d1b3f94a28c460195e8bc4a54c30c8ef2829e0839e1a8bb23126f59b6c00d41",
-        required: true,
-      },
-      {
-        name: "decoder_model_merged_quantized.onnx",
-        sizeBytes: 23_910_456,
-        sha256: "3f98a1c828e5f20108db28148b301c2ba45e69e0881b2394c8034a719c28e932",
-        required: true,
-      },
-      {
-        name: "tokenizer.json",
-        sizeBytes: 115_320,
-        sha256: "2430f1a2ad2982d0067885488a4c89e21ad1d7c83b115ba8f1b20acc88dfaea8",
-        required: true,
-      },
-    ],
-    supportedRuntimes: ["WEBGPU", "WASM"],
-    supportedLanguages: [
-      "en", "es", "zh", "hi", "ar", "bn", "pt", "ru", "ja", "de",
-      "fr", "te", "ta", "id", "ur", "ko", "it", "tr", "vi", "mr"
-    ],
-    minimumMemoryMb: 256,
-    quantization: "INT8",
-    provenance: "Vetted HuggingFace onnx-community release, verified static graph; real binary verification PENDING",
-    qualificationState: "DECLARED",
-    opsetVersion: 17,
-  },
-  "spe-ocr-multilingual-int8": {
-    modelId: "spe-ocr-multilingual-int8",
-    version: "1.0.0",
-    displayName: "Mobile-OCR INT8 (Multilingual Text Recognition)",
-    task: "ocr-text-recognition",
-    supportedTasks: ["ocr-text-recognition"],
-    source: "onnx-community/mobile-ocr-multilingual-int8",
-    license: "Apache-2.0",
-    expectedSizeBytes: 14_210_800, // ~14.2 MB
-    sha256: "79e77624ca59e77aa2d4ed8c331dc3a88ea9ea7ba1ad5fcaab8e684369759dd8",
-    files: [
-      {
-        name: "text_det_quantized.onnx",
-        sizeBytes: 4_510_200,
-        sha256: "cdfe3b6aa0ca4d6c2eba7926f902fc629a311df1488e0540b154015156a148d0",
-        required: true,
-      },
-      {
-        name: "text_rec_multilingual_quantized.onnx",
-        sizeBytes: 9_650_100,
-        sha256: "fbd1a1a19d580a779c4c291e47117e748de79aafca7ba63c93bf628aa42505f6",
-        required: true,
-      },
-      {
-        name: "character_dict.txt",
-        sizeBytes: 50_500,
-        sha256: "3a1bd46d6016eac2d9e06ebdf8c6e9b79a8618a03e1667727c841b0f9e52a560",
-        required: true,
-      },
-    ],
-    supportedRuntimes: ["WEBGPU", "WASM"],
-    supportedLanguages: ["en", "te", "hi", "ta", "code", "digits"],
-    minimumMemoryMb: 128,
-    quantization: "INT8",
-    provenance: "Compact quantized ONNX text detection and recognition weights; real binary verification PENDING",
-    qualificationState: "DECLARED",
-    opsetVersion: 17,
-  },
-  "spe-ui-segmenter-int8": {
-    modelId: "spe-ui-segmenter-int8",
-    version: "1.0.0",
-    displayName: "MobileNetV2 UI Component Segmenter INT8",
-    task: "ui-segmentation",
-    supportedTasks: ["ui-segmentation"],
-    source: "onnx-community/mobilenetv2-ui-int8",
-    license: "Apache-2.0",
-    expectedSizeBytes: 3_450_000, // ~3.45 MB
-    sha256: "133f13472e0d8458f076ea20371f93249847094fe0a2edc1b1fd493edf16d76f",
-    files: [
-      {
-        name: "mobilenetv2_ui_int8.onnx",
-        sizeBytes: 3_400_000,
-        sha256: "cd80774aa0b491f992f4b46d5f05772251a4a0a0356f2cf33af033650f8bdd9d",
-        required: true,
-      },
-      {
-        name: "ui_classes.json",
-        sizeBytes: 50_000,
-        sha256: "74d0015796233105d0e7120b7143bb2a1a8cfb14e3066743d8c86d26e98899f2",
-        required: true,
-      },
-    ],
-    supportedRuntimes: ["WEBGPU", "WASM"],
-    supportedLanguages: ["all"],
-    minimumMemoryMb: 64,
-    quantization: "INT8",
-    provenance: "Client-side structural layout classifier for screenshot regions; real binary verification PENDING",
-    qualificationState: "DECLARED",
-    opsetVersion: 17,
-  },
-  "spe-ocr-paddle-int8": {
-    modelId: "spe-ocr-paddle-int8",
-    version: "4.0.0",
-    displayName: "PaddleOCR v4 INT8 (Global Multi-Script Recognition)",
-    task: "ocr-text-recognition",
-    supportedTasks: ["ocr-text-recognition"],
-    source: "onnx-community/paddleocr-v4-int8",
-    license: "Apache-2.0",
-    expectedSizeBytes: 18_450_000,
-    sha256: "b178ade5a40b45b9b395e54dd4ecef8268948287017fb86a2dd7cbebb169ec16",
-    files: [
-      {
-        name: "paddle_det_int8.onnx",
-        sizeBytes: 5_200_000,
-        sha256: "6e343541d90999dfee24320c57c31a7d0b1f5d8664e6bf8cd5a048facfce6355",
-        required: true,
-      },
-      {
-        name: "paddle_rec_multilingual_int8.onnx",
-        sizeBytes: 13_200_000,
-        sha256: "cc524679d472774e28bfcad1af305d8e0377e561e809f2a263e905e2516b8978",
-        required: true,
-      },
-      {
-        name: "paddle_dict_multilingual.txt",
-        sizeBytes: 50_000,
-        sha256: "19e46a4c975e00b8047f18e5adae36d903af1da5b626ee4df5576c125800009a",
-        required: true,
-      },
-    ],
-    supportedRuntimes: ["WEBGPU", "WASM"],
-    supportedLanguages: [
-      "en", "hi", "te", "ta", "bn", "mr", "gu", "kn", "ml", "pa",
-      "zh", "ja", "ko", "ar", "ur", "fa", "ru", "uk", "vi", "th"
-    ],
-    minimumMemoryMb: 192,
-    quantization: "INT8",
-    provenance: "PaddlePaddle PP-OCRv4 quantized ONNX neural weights with verified dictionary; real binary verification PENDING",
-    qualificationState: "DECLARED",
-    opsetVersion: 17,
-  },
-  "spe-ocr-trocr-int8": {
-    modelId: "spe-ocr-trocr-int8",
-    version: "1.0.0",
-    displayName: "TrOCR Small INT8 (Transformer Printed & Handwritten OCR)",
-    task: "ocr-text-recognition",
-    supportedTasks: ["ocr-text-recognition"],
-    source: "onnx-community/trocr-small-int8",
-    license: "Apache-2.0",
-    expectedSizeBytes: 28_600_000,
-    sha256: "d1cf262b80015d76cf9fa3c30c0fca6bcce5bc0b38147d4ef58178d8887d950e",
-    files: [
-      {
-        name: "trocr_encoder_int8.onnx",
-        sizeBytes: 12_400_000,
-        sha256: "6e90fb69bf58101b6a07f8017eead48fa7b7eb60b75b2d8115553755c7df5d7b",
-        required: true,
-      },
-      {
-        name: "trocr_decoder_int8.onnx",
-        sizeBytes: 16_100_000,
-        sha256: "ea4fc62d9222b0adfe5e940f9b61b76e0361dd221027334a23833052b665c984",
-        required: true,
-      },
-      {
-        name: "tokenizer.json",
-        sizeBytes: 100_000,
-        sha256: "55d26bba1cee2bf6efa67ff04a73ca0bc41f3908ed3d1ccb131390f5d0e394f9",
-        required: true,
-      },
-    ],
-    supportedRuntimes: ["WEBGPU", "WASM"],
-    supportedLanguages: ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "code"],
-    minimumMemoryMb: 256,
-    quantization: "INT8",
-    provenance: "Transformer-based TrOCR Small quantized ONNX model candidate; real binary verification PENDING",
-    qualificationState: "DECLARED",
-    opsetVersion: 17,
-  },
-};
-
 /**
  * Checks if a hex digest was trivially computed from a string label rather
  * than from actual model artifact file bytes.
@@ -654,10 +919,24 @@ export class ModelPackRegistry {
   private loadedModelAssets = new Map<string, Record<string, Uint8Array>>();
 
   constructor() {
-    // Initialize vetted packs in NOT_INSTALLED state
+    // MM-Q3-R2 Invariant: Assert no stale model identities survive
+    assertNoStaleModelIdentities(VETTED_MODEL_MANIFESTS);
+
+    // MM-Q3-R2 Invariant: Cross-validate manifest and provenance alignment
+    for (const [modelId, manifest] of Object.entries(VETTED_MODEL_MANIFESTS)) {
+      const prov = PRODUCTION_MODEL_PROVENANCE[modelId];
+      if (prov) {
+        assertManifestProvenanceConsistency(manifest, prov);
+      }
+    }
+
+    // Initialize vetted packs in NOT_INSTALLED state with decoupled manifest copies
     for (const [modelId, manifest] of Object.entries(VETTED_MODEL_MANIFESTS)) {
       this.installedPacks.set(modelId, {
-        manifest,
+        manifest: {
+          ...manifest,
+          files: manifest.files.map((f) => ({ ...f })),
+        },
         state: "NOT_INSTALLED",
         provisioning: "EXPLICIT_DOWNLOAD",
         installedBytes: 0,

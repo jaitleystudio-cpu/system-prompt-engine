@@ -125,6 +125,12 @@ export type CodeSwitchStatus =
   | "BENCHMARKED"
   | "QUALIFIED_WITHIN_TESTED_SCOPE";
 
+export type ProvenanceVerificationTier =
+  | "LIVE_SOURCE_VERIFIED"
+  | "CACHED_SOURCE_VERIFIED"
+  | "ARTIFACT_BYTES_VERIFIED"
+  | "UNVERIFIED";
+
 export type ModelCustodyState =
   | "DECLARED"
   | "SOURCE_VERIFIED"
