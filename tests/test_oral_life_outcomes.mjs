@@ -66,14 +66,16 @@ function test(name, fn) {
 }
 
 // ---------------------------------------------------------------------
-// TEST WAVE 1: 20 Global Languages Worldwide Registry
+// TEST WAVE 1: 30 Major Global Languages Worldwide Registry
 // ---------------------------------------------------------------------
-console.log("--- WAVE 1: 20 Global Languages Worldwide Registry ---");
+console.log("--- WAVE 1: 30 Major Global Languages Worldwide Registry ---");
 
-test("Registry contains all 20 major global languages covering >5B speakers", () => {
+test("Registry contains all 30 major global languages covering >6B speakers", () => {
   const expectedCodes = [
     "en", "es", "zh", "hi", "ar", "bn", "pt", "ru", "ja", "de",
-    "fr", "te", "ta", "id", "ur", "ko", "it", "tr", "vi", "mr"
+    "fr", "te", "ta", "id", "ur", "ko", "it", "tr", "vi", "mr",
+    "gu", "kn", "ml", "pa", "fa", "sw", "th", "pl", "uk", "nl",
+    "fil", "ha"
   ];
 
   for (const code of expectedCodes) {
@@ -81,21 +83,23 @@ test("Registry contains all 20 major global languages covering >5B speakers", ()
     const info = getLanguageInfo(code);
     assert.equal(info.code, code);
     assert.ok(info.nativeName.length > 0);
-    assert.ok(info.speakersEstimateMillions > 50);
+    assert.ok(info.speakersEstimateMillions >= 25);
   }
 
   const totalSpeakers = Object.values(GLOBAL_LANGUAGES).reduce(
     (acc, l) => acc + l.speakersEstimateMillions,
     0,
   );
-  assert.ok(totalSpeakers >= 5000, `Total speakers estimate should exceed 5,000M (got ${totalSpeakers}M)`);
+  assert.ok(totalSpeakers >= 6000, `Total speakers estimate should exceed 6,000M (got ${totalSpeakers}M)`);
 });
 
-test("RTL languages (Arabic, Urdu) have correct directionality metadata", () => {
+test("RTL languages (Arabic, Urdu, Persian) have correct directionality metadata", () => {
   assert.equal(getLanguageInfo("ar").direction, "rtl");
   assert.equal(getLanguageInfo("ur").direction, "rtl");
+  assert.equal(getLanguageInfo("fa").direction, "rtl");
   assert.equal(getLanguageInfo("en").direction, "ltr");
   assert.equal(getLanguageInfo("zh").direction, "ltr");
+  assert.equal(getLanguageInfo("sw").direction, "ltr");
 });
 
 // ---------------------------------------------------------------------

@@ -287,6 +287,150 @@ export const READBACK_TEMPLATES: Record<string, ReadbackTemplate> = {
     partyClarification: "Chi paga chi?",
     confirmedAck: "Promessa confermata e salvata nel registro.",
   },
+  gu: {
+    intro: (action, deadline, amount) => {
+      let msg = `મેં સાંભળ્યું: ${action}`;
+      if (deadline) msg += `, ${deadline} સુધીમાં`;
+      if (amount) msg += `, રકમ ${amount}`;
+      return msg + "।";
+    },
+    currencyClarification: "કયા ચલણમાં ચુકવણી કરવાની છે?",
+    deadlineClarification: (day) => `કયા ${day} સુધીમાં પૂર્ણ કરવાનું છે?`,
+    partyClarification: "કોણે કોને ચૂકવણી કરવાની છે?",
+    confirmedAck: "વચન કન્ફર્મ થયું અને તમારા લેજરમાં સુરક્ષિત રાખવામાં આવ્યું.",
+  },
+  kn: {
+    intro: (action, deadline, amount) => {
+      let msg = `ನಾನು ಕೇಳಿದ್ದು: ${action}`;
+      if (deadline) msg += `, ${deadline} ಒಳಗೆ`;
+      if (amount) msg += `, ಮೊತ್ತ ${amount}`;
+      return msg + ".";
+    },
+    currencyClarification: "ಯಾವ ಕರೆನ್ಸಿಯಲ್ಲಿ ಪಾವತಿಸಬೇಕು?",
+    deadlineClarification: (day) => `ಯಾವ ${day} ಒಳಗೆ ಮುಗಿಸಬೇಕು?`,
+    partyClarification: "ಯಾರು ಯಾರಿಗೆ ಹಣ ನೀಡಬೇಕು?",
+    confirmedAck: "ಭರವಸೆ ಖಚಿತಪಡಿಸಲಾಗಿದೆ ಮತ್ತು ಲೆಡ್ಜರ್‌ನಲ್ಲಿ ದಾಖಲಿಸಲಾಗಿದೆ.",
+  },
+  ml: {
+    intro: (action, deadline, amount) => {
+      let msg = `ഞാൻ കേട്ടത്: ${action}`;
+      if (deadline) msg += `, ${deadline} നുള്ളിൽ`;
+      if (amount) msg += `, തുക ${amount}`;
+      return msg + ".";
+    },
+    currencyClarification: "ഏത് കറൻസിയിലാണ് നൽകേണ്ടത്?",
+    deadlineClarification: (day) => `ഏത് ${day} ന് മുമ്പ് പൂർത്തിയാക്കണം?`,
+    partyClarification: "ആരാണ് ആർക്കാണ് നൽകേണ്ടത്?",
+    confirmedAck: "വാഗ്ദാനം സ്ഥിരീകരിച്ചു, നിങ്ങളുടെ രജിസ്റ്ററിൽ രേഖപ്പെടുത്തി.",
+  },
+  pa: {
+    intro: (action, deadline, amount) => {
+      let msg = `ਮੈਂ ਸੁਣਿਆ: ${action}`;
+      if (deadline) msg += `, ${deadline} ਤੱਕ`;
+      if (amount) msg += `, ਰਕਮ ${amount}`;
+      return msg + "।";
+    },
+    currencyClarification: "ਕਿਹੜੀ ਕਰੰਸੀ ਵਿੱਚ ਭੁਗਤਾਨ ਹੋਵੇਗਾ?",
+    deadlineClarification: (day) => `ਕਿਹੜੇ ${day} ਤੱਕ ਪੂਰਾ ਕਰਨਾ ਹੈ?`,
+    partyClarification: "ਕਿਸਨੇ ਕਿਸਨੂੰ ਪੈਸੇ ਦੇਣੇ ਹਨ?",
+    confirmedAck: "ਵਾਅਦਾ ਪੱਕਾ ਹੋ ਗਿਆ ਅਤੇ ਤੁਹਾਡੇ ਵਹੀ-ਖਾਤੇ ਵਿੱਚ ਦਰਜ ਹੋ ਗਿਆ।",
+  },
+  fa: {
+    intro: (action, deadline, amount) => {
+      let msg = `شنیدم: ${action}`;
+      if (deadline) msg += `، تا تاریخ ${deadline}`;
+      if (amount) msg += `، مبلغ ${amount}`;
+      return msg + ".";
+    },
+    currencyClarification: "ارز مورد توافق چیست؟",
+    deadlineClarification: (day) => `کدام ${day} مهلت نهایی است؟`,
+    partyClarification: "چه کسی به چه کسی پرداخت می‌کند؟",
+    confirmedAck: "تعهد تایید شد و در دفتر ثبت شما قرار گرفت.",
+  },
+  sw: {
+    intro: (action, deadline, amount) => {
+      let msg = `Nilisikia: ${action}`;
+      if (deadline) msg += ` kabla ya ${deadline}`;
+      if (amount) msg += `, kiasi ${amount}`;
+      return msg + ".";
+    },
+    currencyClarification: "Ni sarafu gani iliyokubaliwa?",
+    deadlineClarification: (day) => `Ni ${day} gani ya mwisho wa makataa?`,
+    partyClarification: "Nani anamlipa nani?",
+    confirmedAck: "Ahadi imethibitishwa na kurekodiwa kwenye leja yako.",
+  },
+  th: {
+    intro: (action, deadline, amount) => {
+      let msg = `ฉันได้ยินว่า: ${action}`;
+      if (deadline) msg += ` ภายใน ${deadline}`;
+      if (amount) msg += ` จำนวน ${amount}`;
+      return msg;
+    },
+    currencyClarification: "ตกลงกันด้วยสกุลเงินใด?",
+    deadlineClarification: (day) => `เส้นตายคือวัน${day}ใด?`,
+    partyClarification: "ใครจ่ายเงินให้ใคร?",
+    confirmedAck: "คำมั่นสัญญาได้รับการยืนยันและบันทึกลงในสมุดบัญชีแล้ว",
+  },
+  pl: {
+    intro: (action, deadline, amount) => {
+      let msg = `Usłyszałem: ${action}`;
+      if (deadline) msg += ` do ${deadline}`;
+      if (amount) msg += `, kwota ${amount}`;
+      return msg + ".";
+    },
+    currencyClarification: "W jakiej walucie uzgodniono płatność?",
+    deadlineClarification: (day) => `Do którego ${day} jest termin?`,
+    partyClarification: "Kto komu płaci?",
+    confirmedAck: "Obietnica potwierdzona i zapisana w Twojej księdze.",
+  },
+  uk: {
+    intro: (action, deadline, amount) => {
+      let msg = `Я почув: ${action}`;
+      if (deadline) msg += `, обіцяно до ${deadline}`;
+      if (amount) msg += `, сума ${amount}`;
+      return msg + ".";
+    },
+    currencyClarification: "У якій валюті домовленість?",
+    deadlineClarification: (day) => `До якої саме ${day}?`,
+    partyClarification: "Хто кому сплачує?",
+    confirmedAck: "Обіцянку підтверджено та внесено до реєстру.",
+  },
+  nl: {
+    intro: (action, deadline, amount) => {
+      let msg = `Ik hoorde: ${action}`;
+      if (deadline) msg += ` beloofd voor ${deadline}`;
+      if (amount) msg += `, bedrag ${amount}`;
+      return msg + ".";
+    },
+    currencyClarification: "Welke valuta is overeengekomen?",
+    deadlineClarification: (day) => `Voor welke ${day} is de deadline?`,
+    partyClarification: "Wie betaalt aan wie?",
+    confirmedAck: "Belofte bevestigd en vastgelegd in uw register.",
+  },
+  fil: {
+    intro: (action, deadline, amount) => {
+      let msg = `Narinig ko: ${action}`;
+      if (deadline) msg += `, ipinangako bago ang ${deadline}`;
+      if (amount) msg += `, halagang ${amount}`;
+      return msg + ".";
+    },
+    currencyClarification: "Anong pera ang napagkasunduan?",
+    deadlineClarification: (day) => `Aling ${day} ang takdang oras?`,
+    partyClarification: "Sino ang magbabayad kanino?",
+    confirmedAck: "Kumpirmado ang pangako at naitala sa iyong ledger.",
+  },
+  ha: {
+    intro: (action, deadline, amount) => {
+      let msg = `Na ji: ${action}`;
+      if (deadline) msg += `, an yi alkawari kafin ${deadline}`;
+      if (amount) msg += `, adadin ${amount}`;
+      return msg + ".";
+    },
+    currencyClarification: "Wace kudin aka amince da ita?",
+    deadlineClarification: (day) => `Wace ${day} ce ranar karshe?`,
+    partyClarification: "Wa zai biya wa?",
+    confirmedAck: "An tabbatar da alkawari kuma an rubuta a littafinku.",
+  },
 };
 
 /**
@@ -300,8 +444,12 @@ export class SpokenReadbackEngine {
     ledger: PromiseLedger,
     targetLanguage: string = "en",
   ): SpokenReadbackResult {
-    const langCode = targetLanguage.toLowerCase().substring(0, 2);
-    const template = READBACK_TEMPLATES[langCode] || READBACK_TEMPLATES.en;
+    const langRaw = targetLanguage.toLowerCase().trim();
+    const langCode = langRaw;
+    const template =
+      READBACK_TEMPLATES[langRaw] ||
+      READBACK_TEMPLATES[langRaw.substring(0, 2)] ||
+      READBACK_TEMPLATES.en;
     const questions: ClarificationQuestion[] = [];
 
     // Analyze first commitment for primary oral readback

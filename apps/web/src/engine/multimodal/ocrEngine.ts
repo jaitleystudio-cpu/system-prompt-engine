@@ -73,6 +73,14 @@ export function detectScriptType(
   let telugu = 0;
   let devanagari = 0;
   let tamil = 0;
+  let bengali = 0;
+  let gujarati = 0;
+  let kannada = 0;
+  let malayalam = 0;
+  let gurmukhi = 0;
+  let thai = 0;
+  let hangul = 0;
+  let japanese = 0;
   let arabic = 0;
   let han = 0;
   let cyrillic = 0;
@@ -84,6 +92,14 @@ export function detectScriptType(
     if (cp >= 0x0c00 && cp <= 0x0c7f) telugu++;
     else if (cp >= 0x0900 && cp <= 0x097f) devanagari++;
     else if (cp >= 0x0b80 && cp <= 0x0bff) tamil++;
+    else if (cp >= 0x0980 && cp <= 0x09ff) bengali++;
+    else if (cp >= 0x0a80 && cp <= 0x0aff) gujarati++;
+    else if (cp >= 0x0c80 && cp <= 0x0cff) kannada++;
+    else if (cp >= 0x0d00 && cp <= 0x0d7f) malayalam++;
+    else if (cp >= 0x0a00 && cp <= 0x0a7f) gurmukhi++;
+    else if (cp >= 0x0e00 && cp <= 0x0e7f) thai++;
+    else if ((cp >= 0xac00 && cp <= 0xd7af) || (cp >= 0x1100 && cp <= 0x11ff)) hangul++;
+    else if ((cp >= 0x3040 && cp <= 0x309f) || (cp >= 0x30a0 && cp <= 0x30ff)) japanese++;
     else if (cp >= 0x0600 && cp <= 0x06ff) arabic++;
     else if (cp >= 0x4e00 && cp <= 0x9fff) han++;
     else if (cp >= 0x0400 && cp <= 0x04ff) cyrillic++;
@@ -91,14 +107,37 @@ export function detectScriptType(
     else if ("{};()[]=>#$/<>_+=*&|!~`".includes(ch)) codeSymbols++;
   }
 
-  const maxNonLatin = Math.max(telugu, devanagari, tamil, arabic, han, cyrillic);
+  const maxNonLatin = Math.max(
+    telugu,
+    devanagari,
+    tamil,
+    bengali,
+    gujarati,
+    kannada,
+    malayalam,
+    gurmukhi,
+    thai,
+    hangul,
+    japanese,
+    arabic,
+    han,
+    cyrillic,
+  );
   if (latin > 0 && maxNonLatin > 0) return "Mixed";
   if (arabic > 0 && arabic === maxNonLatin) return "Arabic";
   if (han > 0 && han === maxNonLatin) return "Han";
+  if (hangul > 0 && hangul === maxNonLatin) return "Hangul";
+  if (japanese > 0 && japanese === maxNonLatin) return "Japanese";
   if (cyrillic > 0 && cyrillic === maxNonLatin) return "Cyrillic";
   if (telugu > 0 && telugu === maxNonLatin) return "Telugu";
   if (devanagari > 0 && devanagari === maxNonLatin) return "Devanagari";
   if (tamil > 0 && tamil === maxNonLatin) return "Tamil";
+  if (bengali > 0 && bengali === maxNonLatin) return "Bengali";
+  if (gujarati > 0 && gujarati === maxNonLatin) return "Gujarati";
+  if (kannada > 0 && kannada === maxNonLatin) return "Kannada";
+  if (malayalam > 0 && malayalam === maxNonLatin) return "Malayalam";
+  if (gurmukhi > 0 && gurmukhi === maxNonLatin) return "Gurmukhi";
+  if (thai > 0 && thai === maxNonLatin) return "Thai";
   if (
     codeSymbols >= 2 &&
     (codeSymbols >= latin * 0.2 ||

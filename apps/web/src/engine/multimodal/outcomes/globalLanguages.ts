@@ -1,7 +1,7 @@
 /**
  * Worldwide Global Languages Registry
  *
- * Defines the top 20 major global languages worldwide covering over 5 billion speakers.
+ * Defines the top 30 major global languages worldwide covering over 6 billion speakers.
  * Provides lexical markers for oral promise extraction, medical directives,
  * form field parsing, and dispute cues across all major language families.
  */
@@ -169,6 +169,102 @@ export const GLOBAL_LANGUAGES: Record<string, GlobalLanguageInfo> = {
     direction: "ltr",
     speakersEstimateMillions: 95,
   },
+  gu: {
+    code: "gu",
+    name: "Gujarati",
+    nativeName: "ગુજરાતી",
+    scriptFamily: "Gujarati",
+    direction: "ltr",
+    speakersEstimateMillions: 62,
+  },
+  kn: {
+    code: "kn",
+    name: "Kannada",
+    nativeName: "ಕನ್ನಡ",
+    scriptFamily: "Kannada",
+    direction: "ltr",
+    speakersEstimateMillions: 50,
+  },
+  ml: {
+    code: "ml",
+    name: "Malayalam",
+    nativeName: "മലയാളം",
+    scriptFamily: "Malayalam",
+    direction: "ltr",
+    speakersEstimateMillions: 38,
+  },
+  pa: {
+    code: "pa",
+    name: "Punjabi",
+    nativeName: "ਪੰਜਾਬੀ",
+    scriptFamily: "Gurmukhi",
+    direction: "ltr",
+    speakersEstimateMillions: 125,
+  },
+  fa: {
+    code: "fa",
+    name: "Persian",
+    nativeName: "فارسی",
+    scriptFamily: "Arabic",
+    direction: "rtl",
+    speakersEstimateMillions: 80,
+  },
+  sw: {
+    code: "sw",
+    name: "Swahili",
+    nativeName: "Kiswahili",
+    scriptFamily: "Latin",
+    direction: "ltr",
+    speakersEstimateMillions: 80,
+  },
+  th: {
+    code: "th",
+    name: "Thai",
+    nativeName: "ไทย",
+    scriptFamily: "Thai",
+    direction: "ltr",
+    speakersEstimateMillions: 70,
+  },
+  pl: {
+    code: "pl",
+    name: "Polish",
+    nativeName: "Polski",
+    scriptFamily: "Latin",
+    direction: "ltr",
+    speakersEstimateMillions: 45,
+  },
+  uk: {
+    code: "uk",
+    name: "Ukrainian",
+    nativeName: "Українська",
+    scriptFamily: "Cyrillic",
+    direction: "ltr",
+    speakersEstimateMillions: 40,
+  },
+  nl: {
+    code: "nl",
+    name: "Dutch",
+    nativeName: "Nederlands",
+    scriptFamily: "Latin",
+    direction: "ltr",
+    speakersEstimateMillions: 25,
+  },
+  fil: {
+    code: "fil",
+    name: "Filipino",
+    nativeName: "Wikang Filipino",
+    scriptFamily: "Latin",
+    direction: "ltr",
+    speakersEstimateMillions: 85,
+  },
+  ha: {
+    code: "ha",
+    name: "Hausa",
+    nativeName: "Harshen Hausa",
+    scriptFamily: "Latin",
+    direction: "ltr",
+    speakersEstimateMillions: 85,
+  },
 };
 
 /**
@@ -191,7 +287,7 @@ export function getLanguageInfo(codeOrName: string): GlobalLanguageInfo {
 }
 
 /**
- * Checks if a language code is among the 20 qualified global languages.
+ * Checks if a language code is among the 30 qualified global languages.
  */
 export function isGlobalLanguageSupported(code: string): boolean {
   const norm = (code || "").toLowerCase().trim();

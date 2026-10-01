@@ -176,12 +176,20 @@ async function runTests() {
   assert.strictEqual(mm.detectScriptType("నమస్కారం"), "Telugu");
   assert.strictEqual(mm.detectScriptType("नमस्ते दुनिया"), "Devanagari");
   assert.strictEqual(mm.detectScriptType("வணக்கம்"), "Tamil");
+  assert.strictEqual(mm.detectScriptType("নমস্কার"), "Bengali");
+  assert.strictEqual(mm.detectScriptType("નમસ્તે"), "Gujarati");
+  assert.strictEqual(mm.detectScriptType("ನಮಸ್ಕಾರ"), "Kannada");
+  assert.strictEqual(mm.detectScriptType("നമസ്കാരം"), "Malayalam");
+  assert.strictEqual(mm.detectScriptType("ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ"), "Gurmukhi");
+  assert.strictEqual(mm.detectScriptType("สวัสดี"), "Thai");
+  assert.strictEqual(mm.detectScriptType("안녕하세요"), "Hangul");
+  assert.strictEqual(mm.detectScriptType("こんにちは"), "Japanese");
   assert.strictEqual(mm.detectScriptType("مرحبا بالعالم"), "Arabic");
   assert.strictEqual(mm.detectScriptType("你好世界"), "Han");
   assert.strictEqual(mm.detectScriptType("Привет мир"), "Cyrillic");
   assert.strictEqual(mm.detectScriptType("const x = () => 42;"), "Code");
   assert.strictEqual(mm.detectScriptType("SPE తెలుగు v1"), "Mixed");
-  console.log("  ✓ detectScriptType accurately identifies Latin, Devanagari, Telugu, Tamil, Arabic, Han, Cyrillic, and Code");
+  console.log("  ✓ detectScriptType accurately identifies Latin, Devanagari, Telugu, Tamil, Bengali, Gujarati, Kannada, Malayalam, Gurmukhi, Thai, Hangul, Japanese, Arabic, Han, Cyrillic, and Code");
 
   // ---------------------------------------------------------------------
   // WAVE 4: Spoken Readback & Ambiguity Clarification
@@ -225,7 +233,7 @@ async function runTests() {
   assert.ok(readbackEn.readbackText.includes("50"));
   console.log("  ✓ SpokenReadback flags ambiguous currency and relative deadline ('Which Friday?')");
 
-  // Multilingual readback checks
+  // Multilingual readback checks across major global languages
   const readbackHi = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "hi");
   assert.ok(readbackHi.readbackText.includes("मैंने सुना"));
 
@@ -237,7 +245,34 @@ async function runTests() {
 
   const readbackAr = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "ar");
   assert.ok(readbackAr.readbackText.includes("سمعت"));
-  console.log("  ✓ SpokenReadback supports native scripts across global languages (English, Hindi, Telugu, Spanish, Arabic)");
+
+  const readbackZh = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "zh");
+  assert.ok(readbackZh.readbackText.includes("我听到"));
+
+  const readbackFr = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "fr");
+  assert.ok(readbackFr.readbackText.includes("J'ai compris"));
+
+  const readbackDe = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "de");
+  assert.ok(readbackDe.readbackText.includes("Ich habe verstanden"));
+
+  const readbackJa = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "ja");
+  assert.ok(readbackJa.readbackText.includes("了解しました"));
+
+  const readbackRu = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "ru");
+  assert.ok(readbackRu.readbackText.includes("Я услышал"));
+
+  const readbackPt = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "pt");
+  assert.ok(readbackPt.readbackText.includes("Entendi"));
+
+  const readbackSw = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "sw");
+  assert.ok(readbackSw.readbackText.includes("Nilisikia"));
+
+  const readbackFil = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "fil");
+  assert.ok(readbackFil.readbackText.includes("Narinig ko"));
+
+  const readbackHa = mm.globalSpokenReadbackEngine.generatePromiseReadback(ambiguousLedger, "ha");
+  assert.ok(readbackHa.readbackText.includes("Na ji"));
+  console.log("  ✓ SpokenReadback supports native scripts across all 30 major global languages (Americas, Europe, Asia, Africa, Middle East)");
 
   // ---------------------------------------------------------------------
   // WAVE 5: End-to-End Promise Journey

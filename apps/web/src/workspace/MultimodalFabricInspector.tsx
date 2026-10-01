@@ -1453,7 +1453,7 @@ export function MultimodalFabricInspector({ onClose }: Props) {
       {activeTab === "outcomes" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: "1rem" }}>Oral Life Outcomes & 20 Global Languages</h3>
+            <h3 style={{ margin: 0, fontSize: "1rem" }}>Oral Life Outcomes & 30 Global Languages</h3>
             <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.85rem", opacity: 0.85 }}>
               The breakthrough pattern: The niche isn't plain speech recognition — it is oral life colliding with written systems.
               Transforms spoken voice and photos into cryptographically verifiable human obligations, medical handoffs, and fraud evidence.
@@ -1472,7 +1472,7 @@ export function MultimodalFabricInspector({ onClose }: Props) {
               { id: "medicine", label: "7. Medicine Photo + Voice Alarms" },
               { id: "parentload", label: "8. New-Parent Mental Load Dump" },
               { id: "journey", label: "9. End-to-End Promise Journey (Prompt Compiler)" },
-              { id: "languages", label: "10. 20 Global Languages Worldwide" },
+              { id: "languages", label: "10. 30 Global Languages Worldwide" },
             ].map((st) => (
               <button
                 key={st.id}
@@ -2015,7 +2015,7 @@ export function MultimodalFabricInspector({ onClose }: Props) {
               {outcomeSubTab === "languages" && (
                 <div>
                   <div style={{ fontWeight: 600, marginBottom: "0.4rem" }}>
-                    20 Global Languages Worldwide (&gt;5 Billion Speakers Covered)
+                    30 Global Languages Worldwide (&gt;6 Billion Speakers Covered)
                   </div>
                   <div
                     style={{

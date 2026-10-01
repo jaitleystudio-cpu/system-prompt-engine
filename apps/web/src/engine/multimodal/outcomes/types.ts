@@ -8,7 +8,7 @@
  * INVARIANTS:
  * - RAW_USER_DATA_EGRESS = 0 (strictly enforced on all receipts)
  * - Cryptographic digest binding (tamper-evident SHA-256)
- * - Multilingual support for all 20 global languages
+ * - Multilingual support for all 30+ major global languages worldwide
  */
 
 export interface GlobalLanguageInfo {
@@ -25,7 +25,12 @@ export interface GlobalLanguageInfo {
     | "Japanese"
     | "Telugu"
     | "Tamil"
-    | "Hangul";
+    | "Hangul"
+    | "Gujarati"
+    | "Kannada"
+    | "Malayalam"
+    | "Gurmukhi"
+    | "Thai";
   direction: "ltr" | "rtl";
   speakersEstimateMillions: number;
 }
