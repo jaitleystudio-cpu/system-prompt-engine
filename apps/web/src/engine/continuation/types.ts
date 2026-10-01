@@ -114,7 +114,18 @@ export interface ScholarlySourceRecord {
     | "[PREPRINT_UNREVIEWED]"
     | "[RETRACTED_DANGER]"
     | "[HEURISTIC_HYPOTHESIS]";
+  retrievalDate?: string;
+  verificationMethod?: "OFFLINE_SEED_SPECIFICATION" | "METADATA_VERIFIED" | "CURATED_CATALOG";
+  applicabilityStatus?: "APPLICABLE" | "NEEDS_REVIEW" | "NOT_APPLICABLE";
 }
+
+export type CitationVerificationStatus =
+  | "IDENTIFIER_SYNTAX_VALID"
+  | "METADATA_VERIFIED"
+  | "RETRACTION_CHECKED"
+  | "CLAIM_APPLICABILITY_REVIEWED"
+  | "UNVERIFIED"
+  | "RETRACTED_DANGER";
 
 export interface EvidenceEdge {
   edgeId: string;

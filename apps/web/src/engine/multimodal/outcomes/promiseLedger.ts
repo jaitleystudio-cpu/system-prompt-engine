@@ -202,6 +202,12 @@ export class PromiseLedgerEngine {
       executableContractPrompt,
       receiptDigest,
       rawUserDataEgress: 0,
+      draftStatus: "DRAFT_ONLY",
+      requiresHumanConfirmation: true,
+      noAutonomousSubmission: true,
+      negativeAuthorities: {
+        noLegalConclusion: true,
+      },
     };
   }
 

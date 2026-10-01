@@ -76,6 +76,29 @@ export interface PromiseCommitment {
   turnIndex?: number;
 }
 
+export interface HighConsequenceSafetyEnvelope {
+  draftStatus: "DRAFT_ONLY";
+  requiresHumanConfirmation: true;
+  noAutonomousSubmission: true;
+  negativeAuthorities: {
+    noAutonomousDosingDecision?: true;
+    noClinicalDecision?: true;
+    noLegalConclusion?: true;
+    noBankingAuthority?: true;
+    noEligibilityDecision?: true;
+    noAutonomousSubmission?: true;
+  };
+}
+
+/**
+ * Anti-harm gate: Strictly forbids autonomous submission of any high-consequence drafted artifact.
+ */
+export function attemptAutonomousSubmission(_artifact: unknown): never {
+  throw new Error(
+    "SAFETY VIOLATION: Autonomous submission of high-consequence drafts (medical dosing, legal complaints, banking freezes, government benefit filings) is strictly prohibited. Human confirmation is mandatory.",
+  );
+}
+
 export interface PromiseLedger {
   ledgerId: string;
   timestamp: string;
@@ -87,6 +110,12 @@ export interface PromiseLedger {
   executableContractPrompt: string;
   receiptDigest: string;
   rawUserDataEgress: 0;
+  draftStatus?: "DRAFT_ONLY";
+  requiresHumanConfirmation?: boolean;
+  noAutonomousSubmission?: boolean;
+  negativeAuthorities?: {
+    noLegalConclusion?: true;
+  };
 }
 
 // -------------------------------------------------------------
@@ -101,6 +130,11 @@ export interface DosageSchedule {
   withFood: boolean;
   alarmTimes: string[];
   instructionsNative: string;
+  draftStatus?: "DRAFT_ONLY";
+  requiresHumanConfirmation?: boolean;
+  noAutonomousSubmission?: boolean;
+  noAutonomousDosingDecision?: true;
+  noClinicalDecision?: true;
 }
 
 export interface CareTimelineEntry {
@@ -144,6 +178,13 @@ export interface ChronicCareTimeline {
   nextDecisionsSummary: string[];
   receiptDigest: string;
   rawUserDataEgress: 0;
+  draftStatus?: "DRAFT_ONLY";
+  requiresHumanConfirmation?: boolean;
+  noAutonomousSubmission?: boolean;
+  negativeAuthorities?: {
+    noAutonomousDosingDecision?: true;
+    noClinicalDecision?: true;
+  };
 }
 
 // -------------------------------------------------------------
@@ -180,6 +221,13 @@ export interface SpeakToFillForm {
   clarificationsNeeded: string[];
   receiptDigest: string;
   rawUserDataEgress: 0;
+  draftStatus?: "DRAFT_ONLY";
+  requiresHumanConfirmation?: boolean;
+  noAutonomousSubmission?: boolean;
+  negativeAuthorities?: {
+    noEligibilityDecision?: true;
+    noAutonomousSubmission?: true;
+  };
 }
 
 // -------------------------------------------------------------
@@ -220,6 +268,13 @@ export interface ScamCoercionPack {
   statutorySections?: string[];
   receiptDigest: string;
   rawUserDataEgress: 0;
+  draftStatus?: "DRAFT_ONLY";
+  requiresHumanConfirmation?: boolean;
+  noAutonomousSubmission?: boolean;
+  negativeAuthorities?: {
+    noLegalConclusion?: true;
+    noBankingAuthority?: true;
+  };
 }
 
 // -------------------------------------------------------------
@@ -276,4 +331,10 @@ export interface MarketplaceDisputePack {
   resolutionJustification: string;
   receiptDigest: string;
   rawUserDataEgress: 0;
+  draftStatus?: "DRAFT_ONLY";
+  requiresHumanConfirmation?: boolean;
+  noAutonomousSubmission?: boolean;
+  negativeAuthorities?: {
+    noLegalConclusion?: true;
+  };
 }

@@ -13,7 +13,7 @@
  * - RAW_USER_DATA_EGRESS = 0 (100% offline index execution).
  */
 
-import type { ClaimRecord, ScholarlySourceRecord } from "./types";
+import type { ClaimRecord, ScholarlySourceRecord, CitationVerificationStatus } from "./types";
 
 export interface EvidenceNeedAssessment {
   needed: boolean;
@@ -28,8 +28,8 @@ export interface EvidenceNeedAssessment {
     | "NONE";
 }
 
-// Canonical open-access knowledge base of verified peer-reviewed publications and formal specifications
-export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
+// Canonical curated offline seed registry of foundational peer-reviewed publications and formal specifications
+export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceRecord> = {
   // --- W3C & ISO Normative Specifications ---
   "w3c-wasm-core-2": {
     sourceId: "SRC-W3C-WASM-2",
@@ -48,6 +48,9 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Enforce memory limit ceilings and zero host import execution bounds.",
     catalogSource: "W3C",
     evidenceTier: "[PROVEN_SPEC]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
 
   // --- OpenAlex & ACM Peer-Reviewed Foundations ---
@@ -68,6 +71,9 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Use Lamport timestamps to enforce monotonic sequence ordering in distributed saga events.",
     catalogSource: "OPENALEX",
     evidenceTier: "[PROVEN_SPEC]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
   "hoare-1969": {
     sourceId: "SRC-HOARE-1969",
@@ -86,6 +92,9 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Formulate invariant guards as executable preconditions before mutating critical state.",
     catalogSource: "OPENALEX",
     evidenceTier: "[PROVEN_SPEC]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
   "ongaro-2014": {
     sourceId: "SRC-ONGARO-2014",
@@ -104,6 +113,9 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Model coordinator state transitions with explicit epoch and term numbers to prevent split-brain execution.",
     catalogSource: "OPENALEX",
     evidenceTier: "[PEER_REVIEWED_OPEN_ACCESS]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
   "michael-2004": {
     sourceId: "SRC-MICHAEL-2004",
@@ -122,6 +134,9 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Apply epoch-based or hazard-pointer tracking to eliminate concurrent use-after-free bugs.",
     catalogSource: "IEEE",
     evidenceTier: "[PROVEN_SPEC]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
 
   // --- arXiv Open-Access Preprints & Empirical Benchmarks ---
@@ -142,6 +157,9 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Utilize scaled dot-product attention structures for cross-lingual token mappings.",
     catalogSource: "ARXIV",
     evidenceTier: "[EMPIRICAL_BENCHMARK]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
   "candea-2003": {
     sourceId: "SRC-CANDEA-2003",
@@ -160,6 +178,9 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Validate write-ahead log replay recovery under simulated kill -9 scenarios.",
     catalogSource: "ARXIV",
     evidenceTier: "[EMPIRICAL_BENCHMARK]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
   "radford-2022": {
     sourceId: "SRC-RADFORD-2022",
@@ -178,6 +199,9 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Use quantized Whisper INT8 model architectures for deterministic offline on-device speech transcription.",
     catalogSource: "ARXIV",
     evidenceTier: "[EMPIRICAL_BENCHMARK]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
 
   // --- PMC (PubMed Central) Open-Access Cognitive & Health Ergonomics ---
@@ -198,6 +222,9 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Cap parent mental load task buckets to at most 5-7 actionable items to prevent cognitive paralysis.",
     catalogSource: "PMC",
     evidenceTier: "[PEER_REVIEWED_OPEN_ACCESS]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
   "sweller-1988": {
     sourceId: "SRC-SWELLER-1988",
@@ -216,6 +243,9 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Provide calming, reassuring spoken readback scripts to neutralize user anxiety during post-scam afterglow.",
     catalogSource: "PMC",
     evidenceTier: "[PEER_REVIEWED_OPEN_ACCESS]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
 
   // --- DOAJ (Directory of Open Access Journals) Peer-Reviewed Software ---
@@ -236,16 +266,32 @@ export const VERIFIED_KNOWLEDGE_BASE: Record<string, ScholarlySourceRecord> = {
       "Uphold RAW_USER_DATA_EGRESS = 0 invariant across all SPE engines.",
     catalogSource: "DOAJ",
     evidenceTier: "[PEER_REVIEWED_OPEN_ACCESS]",
+    retrievalDate: "2026-09-30T00:00:00.000Z",
+    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
+    applicabilityStatus: "APPLICABLE",
   },
 };
 
-// Known retracted items registry to prevent citing fraudulent or retracted science
-export const RETRACTED_REGISTRY = new Set<string>([
+export const VERIFIED_KNOWLEDGE_BASE = CURATED_SCHOLARLY_SEED_REGISTRY;
+
+// Retraction test fixtures explicitly disclosed as test sentinels
+export const RETRACTION_TEST_SENTINELS = new Set<string>([
   "doi:10.1016/fake.retracted.2020",
   "doi:10.1126/science.fabricated.123",
   "doi:10.1038/s41586-020-retracted-claim",
   "arXiv:2101.99999-retracted",
 ]);
+
+export const PRODUCTION_RETRACTIONS = new Set<string>();
+export const RETRACTED_REGISTRY = RETRACTION_TEST_SENTINELS; // Backward compatibility alias
+
+export const SCHOLARLY_FABRIC_TRUTH_STATUS = {
+  CURATED_SCHOLARLY_SEED_REGISTRY: "IMPLEMENTED",
+  REAL_OPENALEX_INDEX: "NO",
+  REAL_PMC_INDEX: "NO",
+  REAL_DOAJ_INDEX: "NO",
+  LIVE_RETRACTION_VERIFICATION: "NOT_PROVEN",
+} as const;
 
 /**
  * Searches the offline open-access scholarly index across arXiv, PMC, OpenAlex, DOAJ, and W3C.
@@ -261,7 +307,7 @@ export function searchOfflineScholarlyIndex(
   const qLower = query.toLowerCase().trim();
   const results: ScholarlySourceRecord[] = [];
 
-  for (const record of Object.values(VERIFIED_KNOWLEDGE_BASE)) {
+  for (const record of Object.values(CURATED_SCHOLARLY_SEED_REGISTRY)) {
     if (options?.catalog && record.catalogSource !== options.catalog) {
       continue;
     }
@@ -295,21 +341,33 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
     | "[PREPRINT_UNREVIEWED]"
     | "[RETRACTED_DANGER]"
     | "[HEURISTIC_HYPOTHESIS]";
+  verificationStatus: CitationVerificationStatus;
   reason: string;
+  isTestSentinel?: boolean;
 } {
   const cleanId = (sourceIdOrIdentifier || "").trim();
 
-  // Check 1: Retraction Registry
-  if (RETRACTED_REGISTRY.has(cleanId)) {
+  // Check 1: Retraction Test Sentinels vs Production Retractions
+  if (RETRACTION_TEST_SENTINELS.has(cleanId)) {
     return {
       verified: false,
       tier: "[RETRACTED_DANGER]",
-      reason: `Citation ${cleanId} is officially registered as RETRACTED or fraudulent science.`,
+      verificationStatus: "RETRACTED_DANGER",
+      reason: `Citation ${cleanId} is officially registered as RETRACTED in test sentinel retraction fixture. Disclosed as synthetic test fixture; live corpus retraction verification is NOT_PROVEN.`,
+      isTestSentinel: true,
+    };
+  }
+  if (PRODUCTION_RETRACTIONS.has(cleanId)) {
+    return {
+      verified: false,
+      tier: "[RETRACTED_DANGER]",
+      verificationStatus: "RETRACTED_DANGER",
+      reason: `Citation ${cleanId} is verified retracted in local production index.`,
     };
   }
 
-  // Check 2: Match against Verified Local Index
-  for (const [key, record] of Object.entries(VERIFIED_KNOWLEDGE_BASE)) {
+  // Check 2: Match against Curated Offline Seed Registry
+  for (const [key, record] of Object.entries(CURATED_SCHOLARLY_SEED_REGISTRY)) {
     if (
       key.toLowerCase() === cleanId.toLowerCase() ||
       record.sourceId.toLowerCase() === cleanId.toLowerCase() ||
@@ -320,6 +378,7 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
           verified: false,
           record,
           tier: "[RETRACTED_DANGER]",
+          verificationStatus: "RETRACTED_DANGER",
           reason: `Publication ${record.identifier} (${record.title}) was retracted.`,
         };
       }
@@ -327,7 +386,8 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
         verified: true,
         record,
         tier: record.evidenceTier,
-        reason: `Verified in offline ${record.catalogSource || "catalog"} index as ${record.evidenceTier}.`,
+        verificationStatus: "CLAIM_APPLICABILITY_REVIEWED",
+        reason: `Verified in offline curated seed registry (${record.catalogSource || "catalog"}) as ${record.evidenceTier}.`,
       };
     }
   }
@@ -338,6 +398,7 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
     return {
       verified: false,
       tier: "[HEURISTIC_HYPOTHESIS]",
+      verificationStatus: "UNVERIFIED",
       reason: `Invalid citation syntax: "${cleanId}" does not conform to valid DOI, arXiv, or specification URL.`,
     };
   }
@@ -346,6 +407,7 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
     return {
       verified: false,
       tier: "[PREPRINT_UNREVIEWED]",
+      verificationStatus: "IDENTIFIER_SYNTAX_VALID",
       reason: `Identifier ${cleanId} has valid arXiv syntax but is not in the offline vetted index; flagged as unreviewed preprint.`,
     };
   }
@@ -353,7 +415,8 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
   return {
     verified: false,
     tier: "[HEURISTIC_HYPOTHESIS]",
-    reason: `Citation ${cleanId} not present in offline peer-reviewed indices. Potential LLM hallucination risk.`,
+    verificationStatus: "IDENTIFIER_SYNTAX_VALID",
+    reason: `Citation ${cleanId} has valid syntax but is not present in offline seed index. Potential LLM hallucination risk.`,
   };
 }
 
@@ -527,18 +590,18 @@ export function acquireScholarlyEvidence(
   const selectedSources: ScholarlySourceRecord[] = [];
 
   if (need.domain === "webassembly_specification") {
-    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["w3c-wasm-core-2"]);
+    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["w3c-wasm-core-2"]);
   } else if (need.domain === "distributed_consensus") {
-    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["lamport-1978"]);
-    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["ongaro-2014"]);
+    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["lamport-1978"]);
+    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["ongaro-2014"]);
   } else if (need.domain === "crash_consistency") {
-    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["candea-2003"]);
+    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["candea-2003"]);
   } else if (need.domain === "speech_recognition") {
-    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["radford-2022"]);
+    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["radford-2022"]);
   } else if (need.domain === "cognitive_ergonomics") {
-    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["miller-1956"]);
+    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["miller-1956"]);
   } else {
-    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["hoare-1969"]);
+    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["hoare-1969"]);
   }
 
   // Filter against retraction registry

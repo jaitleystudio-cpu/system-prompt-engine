@@ -84,6 +84,13 @@ export class SpeakToFillFormEngine {
       clarificationsNeeded,
       receiptDigest,
       rawUserDataEgress: 0,
+      draftStatus: "DRAFT_ONLY",
+      requiresHumanConfirmation: true,
+      noAutonomousSubmission: true,
+      negativeAuthorities: {
+        noEligibilityDecision: true,
+        noAutonomousSubmission: true,
+      },
     };
   }
 

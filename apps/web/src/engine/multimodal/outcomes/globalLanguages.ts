@@ -7,6 +7,7 @@
  */
 
 import type { GlobalLanguageInfo } from "./types";
+import type { LanguageQualificationStatus } from "../types";
 
 export const GLOBAL_LANGUAGES: Record<string, GlobalLanguageInfo> = {
   en: {
@@ -402,4 +403,38 @@ export function parseDialogueTurns(transcript: string): DialogueTurn[] {
   }
 
   return turns.length > 0 ? turns : [{ speaker: "Speaker 1", text: transcript, turnIndex: 1 }];
+}
+
+/**
+ * Returns the rigorous truth-separated qualification status for a given language code.
+ * Enforces: UI_LOCALE_AVAILABLE != ASR_BENCHMARKED != OCR_BENCHMARKED.
+ */
+export function getLanguageQualificationStatus(langCode: string): LanguageQualificationStatus {
+  const cleanCode = (langCode || "").toLowerCase().trim();
+  const uiLocaleAvailable = Boolean(GLOBAL_LANGUAGES[cleanCode]);
+  const readbackSupported = [
+    "en", "es", "zh", "hi", "ar", "bn", "pt", "ru", "ja", "de",
+    "fr", "te", "ta", "id", "ur", "ko", "it", "tr", "vi", "mr",
+  ].includes(cleanCode);
+  const asrDeclared = [
+    "en", "zh", "de", "es", "ru", "ko", "fr", "ja", "pt", "tr",
+    "pl", "ca", "nl", "ar", "sv", "it", "id", "hi", "fi", "vi",
+    "he", "uk", "el", "ms", "cs", "ro", "da", "hu", "ta", "te",
+  ].includes(cleanCode);
+  const asrBenchmarked = ["en", "te", "hi", "ta"].includes(cleanCode);
+  const ocrDeclared = [
+    "en", "zh", "de", "es", "ru", "ko", "fr", "ja", "pt", "tr",
+    "pl", "nl", "ar", "it", "hi", "vi", "el", "ta", "te", "code",
+  ].includes(cleanCode);
+  const ocrBenchmarked = ["en", "te", "hi", "ta"].includes(cleanCode);
+
+  return {
+    locale: cleanCode,
+    uiLocaleAvailable,
+    readbackTemplateAvailable: readbackSupported,
+    asrModelSupportDeclared: asrDeclared,
+    asrBenchmarked,
+    ocrModelSupportDeclared: ocrDeclared,
+    ocrBenchmarked,
+  };
 }

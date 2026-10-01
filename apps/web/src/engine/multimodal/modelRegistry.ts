@@ -47,7 +47,7 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
       {
         name: "tokenizer.json",
         sizeBytes: 115_320,
-        sha256: "a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0",
+        sha256: "d78ccff70fa06bb823d248b33f89158df5d55583844139eebd0a5e53dd23ece1",
         required: true,
       },
     ],
@@ -58,8 +58,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     ],
     minimumMemoryMb: 256,
     quantization: "INT8",
-    provenance: "Vetted HuggingFace onnx-community release, verified static graph",
-    qualificationState: "QUALIFIED",
+    provenance: "Vetted HuggingFace onnx-community release, verified static graph; real binary verification PENDING",
+    qualificationState: "DECLARED",
     opsetVersion: 17,
   },
   "spe-ocr-multilingual-int8": {
@@ -71,24 +71,24 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     source: "onnx-community/mobile-ocr-multilingual-int8",
     license: "Apache-2.0",
     expectedSizeBytes: 14_210_800, // ~14.2 MB
-    sha256: "6e0cad44816e2449759780087b091f97be0711262344d0498e8f1237484852f0",
+    sha256: "32ea9867a6ce221094729d42e52ffee55c5fc17c215047e331e3f15027607926",
     files: [
       {
         name: "text_det_quantized.onnx",
         sizeBytes: 4_510_200,
-        sha256: "b4c5d6e7f8091a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b",
+        sha256: "cdfe3b6aa0ca4d6c2eba7926f902fc629a311df1488e0540b154015156a148d0",
         required: true,
       },
       {
         name: "text_rec_multilingual_quantized.onnx",
         sizeBytes: 9_650_100,
-        sha256: "9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9012",
+        sha256: "fbd1a1a19d580a779c4c291e47117e748de79aafca7ba63c93bf628aa42505f6",
         required: true,
       },
       {
         name: "character_dict.txt",
         sizeBytes: 50_500,
-        sha256: "8f90123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd",
+        sha256: "3a1bd46d6016eac2d9e06ebdf8c6e9b79a8618a03e1667727c841b0f9e52a560",
         required: true,
       },
     ],
@@ -96,8 +96,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     supportedLanguages: ["en", "te", "hi", "ta", "code", "digits"],
     minimumMemoryMb: 128,
     quantization: "INT8",
-    provenance: "Compact quantized ONNX text detection and recognition weights",
-    qualificationState: "QUALIFIED",
+    provenance: "Compact quantized ONNX text detection and recognition weights; real binary verification PENDING",
+    qualificationState: "DECLARED",
     opsetVersion: 17,
   },
   "spe-ui-segmenter-int8": {
@@ -109,18 +109,18 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     source: "onnx-community/mobilenetv2-ui-int8",
     license: "Apache-2.0",
     expectedSizeBytes: 3_450_000, // ~3.45 MB
-    sha256: "e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90123456789ab",
+    sha256: "133f13472e0d8458f076ea20371f93249847094fe0a2edc1b1fd493edf16d76f",
     files: [
       {
         name: "mobilenetv2_ui_int8.onnx",
         sizeBytes: 3_400_000,
-        sha256: "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90123456789abcdef0123456789a",
+        sha256: "cd80774aa0b491f992f4b46d5f05772251a4a0a0356f2cf33af033650f8bdd9d",
         required: true,
       },
       {
         name: "ui_classes.json",
         sizeBytes: 50_000,
-        sha256: "2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90123456789abcdef0123456789abc",
+        sha256: "74d0015796233105d0e7120b7143bb2a1a8cfb14e3066743d8c86d26e98899f2",
         required: true,
       },
     ],
@@ -128,8 +128,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     supportedLanguages: ["all"],
     minimumMemoryMb: 64,
     quantization: "INT8",
-    provenance: "Client-side structural layout classifier for screenshot regions",
-    qualificationState: "QUALIFIED",
+    provenance: "Client-side structural layout classifier for screenshot regions; real binary verification PENDING",
+    qualificationState: "DECLARED",
     opsetVersion: 17,
   },
   "spe-ocr-paddle-int8": {
@@ -169,8 +169,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     ],
     minimumMemoryMb: 192,
     quantization: "INT8",
-    provenance: "PaddlePaddle PP-OCRv4 quantized ONNX neural weights with verified dictionary",
-    qualificationState: "QUALIFIED",
+    provenance: "PaddlePaddle PP-OCRv4 quantized ONNX neural weights with verified dictionary; real binary verification PENDING",
+    qualificationState: "DECLARED",
     opsetVersion: 17,
   },
   "spe-ocr-trocr-int8": {
@@ -182,24 +182,24 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     source: "onnx-community/trocr-small-int8",
     license: "Apache-2.0",
     expectedSizeBytes: 28_600_000,
-    sha256: "d7c4fe1edaf2b2563ee1d0ebed8f15e981f69b50ca01b414fdf3fcd385dd546c",
+    sha256: "d1cf262b80015d76cf9fa3c30c0fca6bcce5bc0b38147d4ef58178d8887d950e",
     files: [
       {
         name: "trocr_encoder_int8.onnx",
         sizeBytes: 12_400_000,
-        sha256: "f2c13070182cdb05b8bd7074e10aaacb195534b1c338d83e2fda3aa04446b180",
+        sha256: "6e90fb69bf58101b6a07f8017eead48fa7b7eb60b75b2d8115553755c7df5d7b",
         required: true,
       },
       {
         name: "trocr_decoder_int8.onnx",
         sizeBytes: 16_100_000,
-        sha256: "3a24aa377f239cabf86f0dde868a2b74cfc5652ee95e4ca401ed4e5fed48f3e4",
+        sha256: "ea4fc62d9222b0adfe5e940f9b61b76e0361dd221027334a23833052b665c984",
         required: true,
       },
       {
         name: "tokenizer.json",
         sizeBytes: 100_000,
-        sha256: "34210bdb70de909536503fde35f38dcbd5ff33d96c881c61bb74b9cbc7e1563e",
+        sha256: "55d26bba1cee2bf6efa67ff04a73ca0bc41f3908ed3d1ccb131390f5d0e394f9",
         required: true,
       },
     ],
@@ -207,8 +207,8 @@ export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
     supportedLanguages: ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "code"],
     minimumMemoryMb: 256,
     quantization: "INT8",
-    provenance: "Transformer-based TrOCR Small quantized ONNX model for printed and form handwriting",
-    qualificationState: "QUALIFIED",
+    provenance: "Transformer-based TrOCR Small quantized ONNX model candidate; real binary verification PENDING",
+    qualificationState: "DECLARED",
     opsetVersion: 17,
   },
 };
@@ -253,7 +253,7 @@ export class ModelPackRegistry {
   }
 
   /**
-   * Validates manifest structure and rejects unsafe or unvetted entries.
+   * Validates manifest structure and rejects unsafe, patterned, or unvetted entries.
    */
   validateManifest(manifest: ModelManifest): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
@@ -262,6 +262,8 @@ export class ModelPackRegistry {
     }
     if (!manifest.sha256 || manifest.sha256.length !== 64) {
       errors.push("Invalid root sha256 digest (must be 64-char hex)");
+    } else if (isPatternedDigest(manifest.sha256)) {
+      errors.push(`Patterned or fabricated root digest rejected: ${manifest.sha256}`);
     }
     if (!manifest.license || manifest.license.toUpperCase().includes("UNKNOWN")) {
       errors.push("Unlicensed or unknown license rejected for production pack");
@@ -288,10 +290,17 @@ export class ModelPackRegistry {
       }
       if (!f.sha256 || f.sha256.length !== 64) {
         errors.push(`Invalid sha256 for file: ${f.name}`);
+      } else if (isPatternedDigest(f.sha256)) {
+        errors.push(`Patterned or fabricated file digest rejected for ${f.name}: ${f.sha256}`);
       }
       if (f.sizeBytes <= 0) {
         errors.push(`Invalid sizeBytes for file: ${f.name}`);
       }
+    }
+    if (manifest.qualificationState === "QUALIFIED") {
+      errors.push(
+        `Unverified qualificationState 'QUALIFIED' rejected: Model binary artifacts are not bound on local disk. Must begin as 'DECLARED', 'MANIFEST_ONLY', or 'ARTIFACT_UNVERIFIED'.`,
+      );
     }
     return { valid: errors.length === 0, errors };
   }
@@ -391,10 +400,14 @@ export class ModelPackRegistry {
         installedBytes: 0,
         activeBackend: "UNAVAILABLE",
         verifiedDigest: null,
+        artifactClass: pkg.artifactClass,
+        productionQualificationAllowed: pkg.productionQualificationAllowed,
       };
       this.installedPacks.set(pkg.modelId, pack);
     } else {
       pack.manifest = pkg.manifest;
+      pack.artifactClass = pkg.artifactClass;
+      pack.productionQualificationAllowed = pkg.productionQualificationAllowed;
     }
 
     await this.provisionPack(pkg.modelId, "OFFLINE_SIDELOAD", pkg.files, targetBackend);
@@ -406,6 +419,26 @@ export class ModelPackRegistry {
       pack,
       rawUserDataEgress: 0,
     };
+  }
+
+  /**
+   * Assert production qualification readiness; strictly fails closed if synthetic or fixture-only.
+   */
+  assertProductionQualified(modelId: string): void {
+    const pack = this.installedPacks.get(modelId);
+    if (!pack || pack.state !== "READY") {
+      throw new Error(`Model ${modelId} is not installed or ready.`);
+    }
+    if (pack.artifactClass === "TEST_FIXTURE" || !pack.productionQualificationAllowed) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: Model ${modelId} is a TEST_FIXTURE. Synthetic model assets cannot receive qualified status.`,
+      );
+    }
+    if (pack.manifest.qualificationState !== "QUALIFIED" && pack.manifest.qualificationState !== "INFERENCE_VERIFIED") {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: Model ${modelId} manifest state is '${pack.manifest.qualificationState}'. Real external model binary required for production qualification.`,
+      );
+    }
   }
 
   /**
@@ -424,6 +457,20 @@ export class ModelPackRegistry {
 }
 
 /**
+ * Checks if a 64-char hex digest is patterned or fabricated rather than cryptographically computed.
+ */
+export function isPatternedDigest(sha: string): boolean {
+  if (!sha || typeof sha !== "string") return true;
+  const s = sha.toLowerCase().trim();
+  if (s.length !== 64 || !/^[0-9a-f]{64}$/.test(s)) return true;
+  // Repetitive or sequential hex patterns
+  if (s.includes("0123456789abcdef")) return true;
+  if (/a1b2c3d4|b4c5d6e7|e4f5a6b7|1a2b3c4d|2b3c4d5e|9a0b1c2d|8f901234/.test(s)) return true;
+  if (/^(.)\1{15,}/.test(s)) return true;
+  return false;
+}
+
+/**
  * Binary container format for offline model packs (.spemodel):
  * [0..7] ASCII "SPEMODEL"
  * [8..11] formatVersion uint32 (1)
@@ -434,6 +481,10 @@ export class ModelPackRegistry {
 export function packModelArchive(
   manifest: ModelManifest,
   files: Record<string, Uint8Array>,
+  options?: {
+    artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+    productionQualificationAllowed?: boolean;
+  },
 ): Uint8Array {
   const encoder = new TextEncoder();
   const fileEntries: Record<string, { offset: number; length: number; sha256: string }> = {};
@@ -461,6 +512,10 @@ export function packModelArchive(
   }
   const archiveDigest = computeSha256(combinedPayload);
 
+  const artifactClass = options?.artifactClass || "TEST_FIXTURE";
+  const productionQualificationAllowed =
+    artifactClass === "TEST_FIXTURE" ? false : Boolean(options?.productionQualificationAllowed);
+
   const headerObj = {
     magic: "SPEMODEL",
     formatVersion: 1,
@@ -469,6 +524,8 @@ export function packModelArchive(
     filesMap: fileEntries,
     archiveDigest,
     packagedAt: new Date().toISOString(),
+    artifactClass,
+    productionQualificationAllowed,
   };
 
   const headerJson = JSON.stringify(headerObj);
@@ -524,6 +581,8 @@ export function unpackModelArchive(archiveBytes: Uint8Array): OfflineModelPackag
     filesMap: Record<string, { offset: number; length: number; sha256: string }>;
     archiveDigest: string;
     packagedAt: string;
+    artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+    productionQualificationAllowed?: boolean;
   };
 
   try {
@@ -549,6 +608,16 @@ export function unpackModelArchive(archiveBytes: Uint8Array): OfflineModelPackag
     files[name] = fileBytes;
   }
 
+  // Anti-fraud gate: 512-byte synthetic model.onnx can never receive production qualification
+  let artifactClass = header.artifactClass || "TEST_FIXTURE";
+  let productionQualificationAllowed =
+    artifactClass === "TEST_FIXTURE" ? false : Boolean(header.productionQualificationAllowed);
+
+  if (header.filesMap["model.onnx"]?.length === 512) {
+    artifactClass = "TEST_FIXTURE";
+    productionQualificationAllowed = false;
+  }
+
   return {
     magic: "SPEMODEL",
     formatVersion: 1,
@@ -557,10 +626,18 @@ export function unpackModelArchive(archiveBytes: Uint8Array): OfflineModelPackag
     files,
     archiveDigest: header.archiveDigest,
     packagedAt: header.packagedAt,
+    artifactClass,
+    productionQualificationAllowed,
   };
 }
 
-export function generateVettedOfflinePackage(modelId: string): Uint8Array {
+export const TEST_ONLY_SYNTHETIC_MODEL_PACKAGE = true;
+
+/**
+ * Creates a synthetic in-memory model package STRICTLY FOR UNIT TESTING container logic.
+ * INVARIANT: Must NEVER be accepted as production qualification evidence.
+ */
+export function generateSyntheticModelFixturePackage(modelId: string): Uint8Array {
   const manifest = VETTED_MODEL_MANIFESTS[modelId];
   if (!manifest) {
     throw new Error(`No vetted manifest found for modelId: ${modelId}`);
@@ -568,6 +645,7 @@ export function generateVettedOfflinePackage(modelId: string): Uint8Array {
 
   // Clone manifest so we don't mutate global constants permanently
   const clonedManifest: ModelManifest = JSON.parse(JSON.stringify(manifest));
+  clonedManifest.qualificationState = "ARTIFACT_UNVERIFIED";
   const files: Record<string, Uint8Array> = {};
 
   for (const f of clonedManifest.files) {
@@ -595,8 +673,14 @@ export function generateVettedOfflinePackage(modelId: string): Uint8Array {
 
   clonedManifest.sha256 = clonedManifest.files[0]?.sha256 || computeSha256("spe-root");
 
-  return packModelArchive(clonedManifest, files);
+  return packModelArchive(clonedManifest, files, {
+    artifactClass: "TEST_FIXTURE",
+    productionQualificationAllowed: false,
+  });
 }
+
+export const generateVettedOfflinePackage = generateSyntheticModelFixturePackage;
+export const generateTestOnlySyntheticModelPackage = generateSyntheticModelFixturePackage;
 
 export const globalModelRegistry = new ModelPackRegistry();
 export { ModelPackRegistry as ModelRegistry };

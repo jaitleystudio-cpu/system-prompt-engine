@@ -69,7 +69,20 @@ export interface ModelManifest {
   minimumMemoryMb: number;
   quantization: "INT8" | "FP16" | "FP32";
   provenance: string;
-  qualificationState: "QUALIFIED" | "DEGRADED" | "FALLBACK" | "UNAVAILABLE" | "UNTESTED";
+  qualificationState:
+    | "DECLARED"
+    | "PROVENANCE_VERIFIED"
+    | "BYTES_VERIFIED"
+    | "INFERENCE_VERIFIED"
+    | "BENCHMARKED"
+    | "QUALIFIED"
+    | "CANDIDATE"
+    | "MANIFEST_ONLY"
+    | "ARTIFACT_UNVERIFIED"
+    | "DEGRADED"
+    | "FALLBACK"
+    | "UNAVAILABLE"
+    | "UNTESTED";
   opsetVersion?: number;
 }
 
@@ -82,6 +95,8 @@ export interface ModelPack {
   verifiedDigest: string | null;
   errorMessage?: string;
   installedAt?: string;
+  artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+  productionQualificationAllowed?: boolean;
 }
 
 export interface OfflineModelPackage {
@@ -92,6 +107,26 @@ export interface OfflineModelPackage {
   files: Record<string, Uint8Array>;
   archiveDigest: string;
   packagedAt: string;
+  artifactClass: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+  productionQualificationAllowed: boolean;
+}
+
+export interface NetworkObservabilityTrace {
+  modelDownloadNetworkBytes: number;
+  inferenceNetworkBytes: 0;
+  rawMediaEgressBytes: 0;
+  derivedTextEgressBytes: 0;
+  telemetryEgressBytes: 0;
+}
+
+export interface LanguageQualificationStatus {
+  locale: string;
+  uiLocaleAvailable: boolean;
+  readbackTemplateAvailable: boolean;
+  asrModelSupportDeclared: boolean;
+  asrBenchmarked: boolean;
+  ocrModelSupportDeclared: boolean;
+  ocrBenchmarked: boolean;
 }
 
 export interface DeviceCapability {
@@ -126,12 +161,15 @@ export interface InferenceSessionReceipt {
   outputDigest: string;
   timestamp: string;
   rawUserDataEgress: 0;
+  artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+  productionQualificationAllowed?: boolean;
+  networkTrace?: NetworkObservabilityTrace;
 }
 
 export type InferenceReceipt = InferenceSessionReceipt;
 
 /**
- * Validates inference receipt against non-negotiable zero user data egress law.
+ * Validates inference receipt against non-negotiable zero user data egress and qualification laws.
  */
 export function validateInferenceReceipt(receipt: InferenceSessionReceipt): boolean {
   if (!receipt) {
@@ -144,6 +182,35 @@ export function validateInferenceReceipt(receipt: InferenceSessionReceipt): bool
   }
   if (!receipt.sessionId || !receipt.modelId || !receipt.timestamp) {
     throw new Error("Invalid receipt: missing required identification fields");
+  }
+  // Anti-fraud gate: TEST_FIXTURE claiming production qualification is invalid
+  if (receipt.artifactClass === "TEST_FIXTURE" && receipt.productionQualificationAllowed === true) {
+    throw new Error(
+      "QUALIFICATION FRAUD: artifactClass TEST_FIXTURE cannot claim productionQualificationAllowed=true",
+    );
+  }
+  // Validate network observability trace if attached
+  if (receipt.networkTrace) {
+    if (receipt.networkTrace.inferenceNetworkBytes !== 0) {
+      throw new Error(
+        `PRIVACY VIOLATION: inferenceNetworkBytes must be 0 during inference, got ${receipt.networkTrace.inferenceNetworkBytes}`,
+      );
+    }
+    if (receipt.networkTrace.rawMediaEgressBytes !== 0) {
+      throw new Error(
+        `PRIVACY VIOLATION: rawMediaEgressBytes must be 0, got ${receipt.networkTrace.rawMediaEgressBytes}`,
+      );
+    }
+    if (receipt.networkTrace.derivedTextEgressBytes !== 0) {
+      throw new Error(
+        `PRIVACY VIOLATION: derivedTextEgressBytes must be 0, got ${receipt.networkTrace.derivedTextEgressBytes}`,
+      );
+    }
+    if (receipt.networkTrace.telemetryEgressBytes !== 0) {
+      throw new Error(
+        `PRIVACY VIOLATION: telemetryEgressBytes must be 0, got ${receipt.networkTrace.telemetryEgressBytes}`,
+      );
+    }
   }
   return true;
 }
@@ -187,6 +254,7 @@ export type OcrTruthState =
   | "LOCAL_OCR_QUALIFIED"
   | "LOCAL_OCR_UNAVAILABLE"
   | "HEURISTIC_ROI_ONLY"
+  | "SCRIPT_DETECTION_ONLY"
   | "NO_OCR";
 
 export interface NormalizedBox {

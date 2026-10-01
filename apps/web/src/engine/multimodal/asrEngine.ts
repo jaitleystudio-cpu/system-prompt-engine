@@ -96,6 +96,12 @@ export interface AudioTranscribeOptions {
 export class LocalAsrEngine {
   private activeModelId = "spe-whisper-tiny-int8";
 
+  supportsLanguage(language: string): boolean {
+    const pack = globalModelRegistry.getPack(this.activeModelId);
+    if (!pack || !pack.manifest || !pack.manifest.supportedLanguages) return false;
+    return pack.manifest.supportedLanguages.includes(language.toLowerCase().trim());
+  }
+
   /**
    * Resamples raw audio to standard 16kHz mono PCM Float32Array.
    */
@@ -156,6 +162,15 @@ export class LocalAsrEngine {
         outputDigest: "0000000000000000000000000000000000000000000000000000000000000000",
         timestamp: new Date().toISOString(),
         rawUserDataEgress: 0,
+        artifactClass: "TEST_FIXTURE",
+        productionQualificationAllowed: false,
+        networkTrace: {
+          modelDownloadNetworkBytes: 0,
+          inferenceNetworkBytes: 0,
+          rawMediaEgressBytes: 0,
+          derivedTextEgressBytes: 0,
+          telemetryEgressBytes: 0,
+        },
       };
       validateInferenceReceipt(receipt);
       return {
@@ -179,6 +194,41 @@ export class LocalAsrEngine {
       `audio-${audioBytes.byteLength}-${sampleRate}-${language}`,
     );
 
+    // Check unsupported language
+    if (language && !this.supportsLanguage(language)) {
+      const receipt: InferenceSessionReceipt = {
+        sessionId: `asr-unsupported-lang-${Date.now()}`,
+        modelId: pack?.manifest.modelId || "none",
+        backend: "UNAVAILABLE",
+        deviceCapability: deviceCap,
+        inferenceTimeMs: Date.now() - startMs,
+        inputDigest: inputHex,
+        outputDigest: "0000000000000000000000000000000000000000000000000000000000000000",
+        timestamp: new Date().toISOString(),
+        rawUserDataEgress: 0,
+        artifactClass: pack?.artifactClass || "TEST_FIXTURE",
+        productionQualificationAllowed: false,
+        networkTrace: {
+          modelDownloadNetworkBytes: 0,
+          inferenceNetworkBytes: 0,
+          rawMediaEgressBytes: 0,
+          derivedTextEgressBytes: 0,
+          telemetryEgressBytes: 0,
+        },
+      };
+      validateInferenceReceipt(receipt);
+      return {
+        text: `[Unsupported ASR language: '${language}'. Model ${this.activeModelId} has not qualified this language.]`,
+        language,
+        segments: [],
+        durationSec: 0,
+        realTimeFactor: 0,
+        backend: "UNAVAILABLE",
+        truthState: "LOCAL_ASR_UNAVAILABLE",
+        receipt,
+      };
+    }
+
     // Path 1: Local Model Pack is installed & verified with exact SHA-256
     if (pack && pack.state === "READY" && pack.verifiedDigest === pack.manifest.sha256) {
       onProgress?.(0.3, "Normalizing 16kHz mono audio tensor");
@@ -199,6 +249,10 @@ export class LocalAsrEngine {
       const rms = Math.sqrt(sumSq / Math.max(1, normalizedPcm.length));
       const isSilent = maxAmp < 0.005 && rms < 0.001;
 
+      const artifactClass = pack.artifactClass ?? "PRODUCTION_RELEASE";
+      const productionQualificationAllowed =
+        pack.productionQualificationAllowed ?? (artifactClass === "PRODUCTION_RELEASE");
+
       if (isSilent) {
         // Return NO_TRANSCRIPTION honestly for silent audio
         const elapsedMs = Math.max(1, Date.now() - startMs);
@@ -213,6 +267,15 @@ export class LocalAsrEngine {
           outputDigest: computeSha256("[Silence]"),
           timestamp: new Date().toISOString(),
           rawUserDataEgress: 0,
+          artifactClass,
+          productionQualificationAllowed,
+          networkTrace: {
+            modelDownloadNetworkBytes: 0,
+            inferenceNetworkBytes: 0,
+            rawMediaEgressBytes: 0,
+            derivedTextEgressBytes: 0,
+            telemetryEgressBytes: 0,
+          },
         };
         validateInferenceReceipt(receipt);
 
@@ -269,8 +332,22 @@ export class LocalAsrEngine {
         outputDigest: computeSha256(fullText),
         timestamp: new Date().toISOString(),
         rawUserDataEgress: 0,
+        artifactClass,
+        productionQualificationAllowed,
+        networkTrace: {
+          modelDownloadNetworkBytes: 0,
+          inferenceNetworkBytes: 0,
+          rawMediaEgressBytes: 0,
+          derivedTextEgressBytes: 0,
+          telemetryEgressBytes: 0,
+        },
       };
       validateInferenceReceipt(receipt);
+
+      const truthState =
+        productionQualificationAllowed && this.supportsLanguage(language)
+          ? "LOCAL_ASR_QUALIFIED"
+          : "LOCAL_ASR_UNAVAILABLE";
 
       return {
         text: fullText,
@@ -279,7 +356,7 @@ export class LocalAsrEngine {
         durationSec,
         realTimeFactor: rtf,
         backend,
-        truthState: "LOCAL_ASR_QUALIFIED",
+        truthState,
         receipt,
       };
     }
@@ -301,6 +378,15 @@ export class LocalAsrEngine {
         outputDigest: computeSha256(warningText),
         timestamp: new Date().toISOString(),
         rawUserDataEgress: 0, // In WebSpeech, browser handles networking directly, not SPE JS
+        artifactClass: "TEST_FIXTURE",
+        productionQualificationAllowed: false,
+        networkTrace: {
+          modelDownloadNetworkBytes: 0,
+          inferenceNetworkBytes: 0,
+          rawMediaEgressBytes: 0,
+          derivedTextEgressBytes: 0,
+          telemetryEgressBytes: 0,
+        },
       };
       validateInferenceReceipt(receipt);
 
@@ -328,6 +414,15 @@ export class LocalAsrEngine {
       outputDigest: "0000000000000000000000000000000000000000000000000000000000000000",
       timestamp: new Date().toISOString(),
       rawUserDataEgress: 0,
+      artifactClass: "TEST_FIXTURE",
+      productionQualificationAllowed: false,
+      networkTrace: {
+        modelDownloadNetworkBytes: 0,
+        inferenceNetworkBytes: 0,
+        rawMediaEgressBytes: 0,
+        derivedTextEgressBytes: 0,
+        telemetryEgressBytes: 0,
+      },
     };
     validateInferenceReceipt(receipt);
 

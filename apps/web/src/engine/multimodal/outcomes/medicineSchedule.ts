@@ -33,6 +33,13 @@ export interface MedicineAlarmSchedule {
   receiptDigest: string;
   createdAt: string;
   rawUserDataEgress: 0;
+  draftStatus: "DRAFT_ONLY";
+  requiresHumanConfirmation: true;
+  noAutonomousSubmission: true;
+  negativeAuthorities: {
+    noAutonomousDosingDecision: true;
+    noClinicalDecision: true;
+  };
 }
 
 export class MedicineScheduleEngine {
@@ -164,6 +171,13 @@ export class MedicineScheduleEngine {
       receiptDigest,
       createdAt: new Date().toISOString(),
       rawUserDataEgress: 0,
+      draftStatus: "DRAFT_ONLY",
+      requiresHumanConfirmation: true,
+      noAutonomousSubmission: true,
+      negativeAuthorities: {
+        noAutonomousDosingDecision: true,
+        noClinicalDecision: true,
+      },
     };
   }
 

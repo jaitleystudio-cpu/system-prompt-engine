@@ -241,6 +241,10 @@ export class LocalOcrEngine {
       const fullText = recognizedRegions.map((r) => r.text).join("\n");
       const elapsedMs = Math.max(1, Date.now() - startMs);
 
+      const artifactClass = activeReadyPack.artifactClass ?? "PRODUCTION_RELEASE";
+      const productionQualificationAllowed =
+        activeReadyPack.productionQualificationAllowed ?? (artifactClass === "PRODUCTION_RELEASE");
+
       const receipt: InferenceSessionReceipt = {
         sessionId: `ocr-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
         modelId: activeReadyPack.manifest.modelId,
@@ -252,15 +256,28 @@ export class LocalOcrEngine {
         outputDigest: computeSha256(fullText),
         timestamp: new Date().toISOString(),
         rawUserDataEgress: 0,
+        artifactClass,
+        productionQualificationAllowed,
+        networkTrace: {
+          modelDownloadNetworkBytes: 0,
+          inferenceNetworkBytes: 0,
+          rawMediaEgressBytes: 0,
+          derivedTextEgressBytes: 0,
+          telemetryEgressBytes: 0,
+        },
       };
       validateInferenceReceipt(receipt);
+
+      const truthState = productionQualificationAllowed
+        ? "LOCAL_OCR_QUALIFIED"
+        : "SCRIPT_DETECTION_ONLY";
 
       return {
         regions: recognizedRegions,
         fullText,
         scriptsDetected: Array.from(detectedScripts),
         backend: activeReadyPack.activeBackend,
-        truthState: "LOCAL_OCR_QUALIFIED",
+        truthState,
         receipt,
       };
     }
@@ -292,6 +309,15 @@ export class LocalOcrEngine {
       outputDigest: computeSha256(fullText),
       timestamp: new Date().toISOString(),
       rawUserDataEgress: 0,
+      artifactClass: "TEST_FIXTURE",
+      productionQualificationAllowed: false,
+      networkTrace: {
+        modelDownloadNetworkBytes: 0,
+        inferenceNetworkBytes: 0,
+        rawMediaEgressBytes: 0,
+        derivedTextEgressBytes: 0,
+        telemetryEgressBytes: 0,
+      },
     };
     validateInferenceReceipt(receipt);
 
