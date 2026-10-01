@@ -313,7 +313,12 @@ export default function App() {
     };
   }, []);
 
+  const isInitialMount = useRef(true);
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     window.scrollTo({ top: 0, behavior: "instant" });
     document.getElementById("main")?.focus({ preventScroll: true });
   }, [view]);

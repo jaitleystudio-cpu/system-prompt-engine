@@ -1,0 +1,21 @@
+{
+  "receiptId": "rcpt-cfd4777ea4bbe0ad",
+  "timestamp": "2026-10-01T02:29:14.089Z",
+  "referenceSha256": "f8e9ab2b584671cb40ac1a1efd3a7b6ce8c2e3ce0212c71551b7f5f0ee028940",
+  "renderSha256": "f8e9ab2b584671cb40ac1a1efd3a7b6ce8c2e3ce0212c71551b7f5f0ee028940",
+  "referenceSourceSha256": "78cf74b603913d926f6ad6446afac37b391c5a3e1c986cbe73d9dc2987cf7fe6",
+  "candidateSourceSha256": "78cf74b603913d926f6ad6446afac37b391c5a3e1c986cbe73d9dc2987cf7fe6",
+  "viewportWidth": 1280,
+  "viewportHeight": 800,
+  "DPR": 1,
+  "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+  "comparatorVersion": "1.0.0",
+  "thresholdVersion": "1.0.0",
+  "ssimScore": 1,
+  "pixelDeltaPercentage": 0,
+  "mismatchedPixelCount": 0,
+  "captureEngine": "playwright-chromium",
+  "browserVersion": "Google Chrome / Playwright Chromium Headless",
+  "status": "MEASURED",
+  "fidelityStatus": "MEASURED"
+}

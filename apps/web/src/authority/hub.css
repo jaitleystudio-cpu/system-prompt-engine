@@ -1,0 +1,391 @@
+/**
+ * Authority Hub & Evidence Ledger Styles
+ * Built for clarity, readability, editorial precision, and full WCAG accessibility.
+ */
+
+:root {
+  --spe-hub-bg: #090d16;
+  --spe-hub-surface: #131c2e;
+  --spe-hub-surface-subtle: #1e293b;
+  --spe-hub-border: rgba(255, 255, 255, 0.1);
+  --spe-hub-border-accent: rgba(99, 102, 241, 0.4);
+  --spe-hub-text: #f1f5f9;
+  --spe-hub-muted: #94a3b8;
+  --spe-hub-accent: #6366f1;
+  --spe-hub-success: #10b981;
+  --spe-hub-warning: #f59e0b;
+  --spe-hub-focus-ring: #818cf8;
+}
+
+/* ==========================================================================
+   Hub Layout & Typography
+   ========================================================================== */
+
+.spe-authority-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  box-sizing: border-box;
+  color: var(--spe-hub-text);
+  font-family: inherit;
+}
+
+.spe-authority-header {
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.spe-authority-header h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin: 0 0 12px 0;
+  color: #ffffff;
+}
+
+.spe-authority-header p {
+  font-size: 1.125rem;
+  color: var(--spe-hub-muted);
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Filter Navigation
+   ========================================================================== */
+
+.spe-hub-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.spe-hub-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--spe-hub-surface);
+  border: 1px solid var(--spe-hub-border);
+  color: var(--spe-hub-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+
+.spe-hub-filter-btn:hover {
+  color: var(--spe-hub-text);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.spe-hub-filter-btn.active,
+.spe-hub-filter-btn[aria-pressed="true"] {
+  background: rgba(99, 102, 241, 0.15);
+  color: #c7d2fe;
+  border-color: var(--spe-hub-accent);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Document Grid & Cards
+   ========================================================================== */
+
+.spe-docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-bottom: 48px;
+}
+
+.spe-doc-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+  background: var(--spe-hub-surface);
+  border: 1px solid var(--spe-hub-border);
+  border-radius: 12px;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: inherit;
+  min-height: 44px;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.spe-doc-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--spe-hub-border-accent);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
+}
+
+.spe-doc-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.spe-doc-type-badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.2);
+  color: #c7d2fe;
+}
+
+.spe-doc-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  color: #ffffff;
+}
+
+.spe-doc-card p {
+  font-size: 0.875rem;
+  color: var(--spe-hub-muted);
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  flex: 1;
+}
+
+.spe-doc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 12px;
+  font-size: 0.8125rem;
+  color: var(--spe-hub-muted);
+}
+
+/* ==========================================================================
+   Article Detail View
+   ========================================================================== */
+
+.spe-article-view {
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.spe-article-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--spe-hub-muted);
+  margin-bottom: 24px;
+}
+
+.spe-article-back-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--spe-hub-border);
+  border-radius: 6px;
+  color: var(--spe-hub-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.spe-article-back-btn:hover {
+  background: var(--spe-hub-surface);
+}
+
+.spe-article-header {
+  border-bottom: 1px solid var(--spe-hub-border);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+
+.spe-article-header h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 12px 0 16px 0;
+}
+
+.spe-article-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.875rem;
+  color: var(--spe-hub-muted);
+  flex-wrap: wrap;
+}
+
+.spe-article-body {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #cbd5e1;
+}
+
+.spe-article-body h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 32px 0 12px 0;
+}
+
+.spe-article-body p {
+  margin: 0 0 16px 0;
+}
+
+/* ==========================================================================
+   14-Field Evidence Disclosure Table / Card
+   ========================================================================== */
+
+.spe-evidence-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--spe-hub-border);
+}
+
+.spe-evidence-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.spe-evidence-card {
+  background: var(--spe-hub-surface);
+  border: 1px solid var(--spe-hub-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.spe-evidence-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.spe-evidence-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--spe-hub-accent);
+}
+
+.spe-evidence-status-badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.spe-evidence-status-badge.verified {
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.spe-evidence-status-badge.replicated {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.spe-evidence-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 12px 16px;
+  font-size: 0.875rem;
+}
+
+.spe-evidence-field-label {
+  font-weight: 600;
+  color: var(--spe-hub-muted);
+}
+
+.spe-evidence-field-val {
+  color: var(--spe-hub-text);
+}
+
+/* ==========================================================================
+   Focus Visible (High Contrast)
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--spe-hub-focus-ring) !important;
+  outline-offset: 2px !important;
+}
+
+/* ==========================================================================
+   360px Mobile Reflow
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .spe-authority-page {
+    padding: 24px 16px;
+  }
+
+  .spe-authority-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .spe-docs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .spe-evidence-grid {
+    grid-template-columns: 1fr;
+    gap: 4px 0;
+  }
+
+  .spe-evidence-field-label {
+    margin-top: 8px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .spe-hub-filter-bar {
+    width: 100%;
+  }
+
+  .spe-hub-filter-btn {
+    flex: 1;
+    min-width: 44px;
+    text-align: center;
+  }
+}
+
+/* ==========================================================================
+   Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,374 @@
+/**
+ * Visual & Screenshot Workspace Styles (Lane A12)
+ * Clean, tactile, high-craft developer interface for image observation & screenshot-to-code synthesis.
+ * Enforces strict 44px touch targets, :focus-visible, prefers-reduced-motion, and 360px reflow.
+ */
+
+:root {
+  --spe-vis-bg: #090e1a;
+  --spe-vis-surface: #131d31;
+  --spe-vis-surface-subtle: #1c2840;
+  --spe-vis-border: rgba(255, 255, 255, 0.12);
+  --spe-vis-border-accent: rgba(99, 102, 241, 0.4);
+  --spe-vis-text: #f1f5f9;
+  --spe-vis-muted: #94a3b8;
+  --spe-vis-accent: #6366f1;
+  --spe-vis-accent-hover: #4f46e5;
+  --spe-vis-success: #10b981;
+  --spe-vis-warning: #f59e0b;
+  --spe-vis-danger: #ef4444;
+  --spe-vis-focus: #818cf8;
+}
+
+/* ==========================================================================
+   Main Container
+   ========================================================================== */
+
+.spe-visual-workspace {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  box-sizing: border-box;
+  color: var(--spe-vis-text);
+  font-family: inherit;
+}
+
+.spe-visual-header {
+  margin-bottom: 28px;
+}
+
+.spe-visual-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #ffffff;
+}
+
+.spe-visual-header p {
+  font-size: 1rem;
+  color: var(--spe-vis-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Mode Switcher Toolbar
+   ========================================================================== */
+
+.spe-visual-mode-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.spe-visual-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: var(--spe-vis-surface);
+  border: 1px solid var(--spe-vis-border);
+  color: var(--spe-vis-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+
+.spe-visual-mode-btn:hover {
+  color: var(--spe-vis-text);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.spe-visual-mode-btn.active,
+.spe-visual-mode-btn[aria-pressed="true"] {
+  background: rgba(99, 102, 241, 0.15);
+  color: #c7d2fe;
+  border-color: var(--spe-vis-accent);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Two-Column Inspection Grid
+   ========================================================================== */
+
+.spe-visual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Left: Input & Preview Card */
+.spe-visual-card {
+  background: var(--spe-vis-surface);
+  border: 1px solid var(--spe-vis-border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.spe-visual-card h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: #ffffff;
+}
+
+.spe-visual-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  min-height: 160px;
+  border: 2px dashed var(--spe-vis-border);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+
+.spe-visual-dropzone:hover {
+  border-color: var(--spe-vis-accent);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.spe-visual-preview-frame {
+  width: 100%;
+  max-height: 280px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--spe-vis-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+}
+
+.spe-visual-preview-img {
+  max-width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   Truth Receipt Card
+   ========================================================================== */
+
+.spe-truth-receipt {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--spe-vis-border);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.spe-truth-receipt-header {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--spe-vis-muted);
+}
+
+.spe-truth-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.spe-truth-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: var(--spe-vis-surface-subtle);
+  border: 1px solid var(--spe-vis-border);
+}
+
+.spe-truth-pill.observed,
+.spe-truth-pill.found {
+  color: #a7f3d0;
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.spe-truth-pill.inferred {
+  color: #fde68a;
+  border-color: rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.spe-truth-pill.unproven,
+.spe-truth-pill.unknown {
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.3);
+  background: rgba(148, 163, 184, 0.08);
+}
+
+/* ==========================================================================
+   Target Selector & Code Output
+   ========================================================================== */
+
+.spe-target-selector-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.spe-target-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: var(--spe-vis-surface-subtle);
+  border: 1px solid var(--spe-vis-border);
+  color: var(--spe-vis-muted);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+
+.spe-target-chip:hover {
+  color: var(--spe-vis-text);
+}
+
+.spe-target-chip.active,
+.spe-target-chip[aria-selected="true"] {
+  background: rgba(99, 102, 241, 0.18);
+  color: #c7d2fe;
+  border-color: var(--spe-vis-accent);
+  font-weight: 600;
+}
+
+.spe-code-output-box {
+  width: 100%;
+  min-height: 220px;
+  max-height: 420px;
+  background: #050811;
+  border: 1px solid var(--spe-vis-border);
+  border-radius: 8px;
+  padding: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+  color: #e2e8f0;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+
+.spe-vis-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+
+.spe-vis-btn.primary {
+  background: var(--spe-vis-accent);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+.spe-vis-btn.primary:hover:not(:disabled) {
+  background: var(--spe-vis-accent-hover);
+  transform: translateY(-1px);
+}
+
+.spe-vis-btn.secondary {
+  background: var(--spe-vis-surface-subtle);
+  border: 1px solid var(--spe-vis-border);
+  color: var(--spe-vis-text);
+}
+
+.spe-vis-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================================
+   Focus Visible (High Contrast)
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--spe-vis-focus) !important;
+  outline-offset: 2px !important;
+}
+
+/* ==========================================================================
+   360px Mobile Reflow
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .spe-visual-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .spe-visual-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .spe-visual-mode-bar {
+    width: 100%;
+  }
+
+  .spe-visual-mode-btn {
+    flex: 1;
+    min-width: 44px;
+    text-align: center;
+  }
+
+  .spe-target-chip {
+    flex: 1;
+    min-width: 44px;
+    text-align: center;
+  }
+}
+
+/* ==========================================================================
+   Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
