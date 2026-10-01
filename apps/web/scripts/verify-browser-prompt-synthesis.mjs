@@ -52,8 +52,8 @@ async function main() {
 
   for (const d of depths) {
     console.log(`\n--- Compiling Depth: ${d.id} (${d.label}) ---`);
-    // Click depth button
-    const depthBtn = page.locator(`button:has-text('${d.label}')`);
+    // Click depth button using specific data-depth attribute
+    const depthBtn = page.locator(`button[data-depth='${d.id}']`);
     if (await depthBtn.isVisible()) {
       await depthBtn.click();
       await page.waitForTimeout(400);

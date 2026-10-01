@@ -26,6 +26,10 @@ export interface PromptSynthesisInput {
   desiredExample?: string | null;
   protocolRendered?: string | null;
   depth?: string;
+  taskReportTelemetry?: {
+    rawOutput?: string;
+    modelTarget?: "claude" | "codex" | "deepseek" | "general";
+  } | null;
 }
 
 export interface DomainMethodology {
@@ -447,6 +451,8 @@ export function resolveEffectiveDepth(depth?: string | null, goal?: string): Pro
       "security", "pipeline", "orchestrator", "protocol", "engine", "compiler",
       "fail-safe", "high-availability", "architecture", "scale", "dead-letter",
       "idempotent", "ledger", "compensation", "microservice", "infrastructure",
+      "research", "paper", "arxiv", "continuation", "defect", "remediation",
+      "telemetry", "stack trace", "benchmark", "academic", "literature",
     ];
     if (deepKeywords.some((kw) => text.includes(kw))) {
       return "DEEP";
@@ -480,8 +486,10 @@ export function synthesizeSystemPrompt(input: PromptSynthesisInput): string {
     domainId,
     goal,
     desiredOutput,
+    desiredExample,
     protocolRendered,
     depth,
+    taskReportTelemetry,
   } = input;
 
   const effectiveDepth = resolveEffectiveDepth(depth, goal);
@@ -541,6 +549,11 @@ export function synthesizeSystemPrompt(input: PromptSynthesisInput): string {
       `Mandatory Deliverable Contract: "${desiredOutput.trim()}"`,
     );
   }
+  if (desiredExample && desiredExample.trim()) {
+    standards.push(
+      `Canonical Structural Example: "${desiredExample.trim()}"`,
+    );
+  }
   sections.push(
     createSection("Output Depth and Structural Standards", standards),
   );
@@ -552,6 +565,28 @@ export function synthesizeSystemPrompt(input: PromptSynthesisInput): string {
       meth.checklist,
     ),
   );
+
+  // 8. Downstream Model Task Continuation Directive (for downstream AI coding loops)
+  if (taskReportTelemetry?.rawOutput || /error|failure|exception|traceback|panic|stack trace|regression|unresolved/i.test(goal)) {
+    const targetModel = taskReportTelemetry?.modelTarget || "claude";
+    const modelDirectives = {
+      claude: "Enforce tool-use boundaries, minimal surgical diff patches, and structured verification terminal commands.",
+      codex: "Provide concise functional pipelines, explicit boundary assertions, and clear operational constraints.",
+      deepseek: "Enforce step-by-step reasoning scaffolds, complete symbol signatures, and strict code block boundaries.",
+      general: "Provide deterministic differential remediation, formal proofs, and regression tests.",
+    }[targetModel];
+
+    sections.push(
+      createSection("Autonomous Task Continuation & Remediation Directive", [
+        `Target Model Profile: ${targetModel.toUpperCase()}`,
+        `Model Directive: ${modelDirectives}`,
+        "- Telemetry Root Cause Analysis: Isolate the failing boundary condition from execution logs or stack traces.",
+        "- Zero-Paywall Literature Triangulation: Reconcile defect solutions with open-access repositories (arXiv, PubMed Central, OpenAlex).",
+        "- Differential Remediation Invariant: Apply non-breaking differential patches with regression assertions.",
+        "- Acceptance Gate: The task is resolved only when all assertions and test suites exit with code 0.",
+      ]),
+    );
+  }
 
   // Join all sections with double newline. Every section starts with `## ` and has no bare `\n\n`
   return sections

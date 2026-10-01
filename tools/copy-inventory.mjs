@@ -72,7 +72,7 @@ export function inventory() {
         let depth = "PRODUCT",
           p = node.parent;
         if (
-          /ui\/(TrustPanel|PrivacyIndicator)\.tsx$/.test(file) ||
+          /ui\/(TrustPanel|PrivacyIndicator|ModelContinuationPicker)\.tsx$/.test(file) ||
           file.includes("authority/") ||
           file.includes("GuideArticle.tsx") ||
           file.includes("AuthorityHub.tsx") ||

@@ -8,6 +8,11 @@ import {
   resolveCategoryMetadata,
 } from "./engine/k3Transport";
 import { synthesizeSystemPrompt } from "./engine/promptSynthesizer";
+import {
+  DEFAULT_TARGET_MODEL_ID,
+  type TargetModelId,
+} from "./engine/targetModelConfig";
+import { ModelContinuationPicker } from "./ui/ModelContinuationPicker";
 import { requestQualityReceipt } from "./engine/qualityTransport";
 import {
   deliveryForBrief,
@@ -241,6 +246,8 @@ export default function App() {
     useState<PublicSourceControl>("AUTO");
   const [publicDepth, setPublicDepth] =
     useState<PublicDepthControl>("AUTO");
+  const [targetAIModel, setTargetAIModel] =
+    useState<TargetModelId>(DEFAULT_TARGET_MODEL_ID);
   const [contextProtocol, setContextProtocol] =
     useState<ContextProtocolCompileOutput | null>(null);
   const [executionRecord, setExecutionRecord] =
@@ -552,6 +559,10 @@ export default function App() {
             desiredExample,
             protocolRendered: protoRendered,
             depth: publicDepth,
+            taskReportTelemetry: {
+              rawOutput: goal,
+              modelTarget: targetAIModel,
+            },
           });
           prompt.finalPrompt = richPrompt;
 
@@ -1098,6 +1109,14 @@ export default function App() {
                 disabled={busy}
                 inspectOutput={contextProtocol}
                 refreshNotice={contextRefreshNotice}
+              />
+              <ModelContinuationPicker
+                selectedModel={targetAIModel}
+                onSelectModel={(m) => {
+                  invalidate();
+                  setTargetAIModel(m);
+                }}
+                disabled={busy}
               />
             </SourcesDepthDisclosure>
             </div>
