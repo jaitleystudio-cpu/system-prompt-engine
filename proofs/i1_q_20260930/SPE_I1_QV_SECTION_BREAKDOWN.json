@@ -1,0 +1,185 @@
+{
+  "mission": "I1-ROOT-CAUSE-RESOLVED",
+  "generated_at_utc": "2026-10-01T03:26:00Z",
+  "runtime_sha": "145b844d59161d54d8ea58d2586ec2cae16dbe8a",
+  "pinned_artifact": {
+    "sha256": "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b",
+    "bytes": 1340112,
+    "build_host": "x86_64-unknown-linux-gnu",
+    "os": "Ubuntu 24.04.4 LTS, Linux 6.12.94+",
+    "serde_disambiguator": "Cs4SKr8Q8YBVW_5serde",
+    "serde_json_disambiguator": "Cs6rqC8QbXbVR_10serde_json"
+  },
+  "darwin_rebuild_artifact": {
+    "sha256": "931d154a2002bb5fa85a00f2b59b966b3bf452821ad47affcb6cb460fea0fad5",
+    "bytes": 1339801,
+    "build_host": "aarch64-apple-darwin",
+    "os": "macOS 15.x Darwin (Apple Silicon M4)",
+    "serde_disambiguator": "CsA7Q0Uxuh0S_5serde",
+    "serde_json_disambiguator": "Cs59XwPTFusLV_10serde_json"
+  },
+  "arithmetic_gap_bytes": 311,
+  "section_table_diff": [
+    {
+      "order": 0,
+      "id": 1,
+      "name": "type",
+      "pin_bytes": 361,
+      "rebuild_bytes": 361,
+      "delta": 0,
+      "sha_identical": true,
+      "pin_sha256": "23af8d23dcf3882b7778ea9cc82d185303d920abe3995874a7ec0ef5af8057b9",
+      "rebuild_sha256": "23af8d23dcf3882b7778ea9cc82d185303d920abe3995874a7ec0ef5af8057b9"
+    },
+    {
+      "order": 1,
+      "id": 3,
+      "name": "function",
+      "pin_bytes": 1591,
+      "rebuild_bytes": 1590,
+      "delta": -1,
+      "sha_identical": false,
+      "pin_sha256": "3606aacf3b1a8f17f9a67c08b026e067f6d85b28bb27c828a8dd77c63c9c2053",
+      "rebuild_sha256": "7447760fe2152325f4871b3a2c878ef4d738c71e18bf8f97c87f1f5756d91dbd"
+    },
+    {
+      "order": 2,
+      "id": 4,
+      "name": "table",
+      "pin_bytes": 7,
+      "rebuild_bytes": 7,
+      "delta": 0,
+      "sha_identical": true,
+      "pin_sha256": "94ca378d5c3a2e6aa0f37b4e1d6b1baa8d6368c6a46936f06104577fa9a9f6e9",
+      "rebuild_sha256": "94ca378d5c3a2e6aa0f37b4e1d6b1baa8d6368c6a46936f06104577fa9a9f6e9"
+    },
+    {
+      "order": 3,
+      "id": 5,
+      "name": "memory",
+      "pin_bytes": 3,
+      "rebuild_bytes": 3,
+      "delta": 0,
+      "sha_identical": true,
+      "pin_sha256": "2e2461dd6852f58de2d470cabcf5c41b6e56fdb6ee9169954fe02a13b3ef4bae",
+      "rebuild_sha256": "2e2461dd6852f58de2d470cabcf5c41b6e56fdb6ee9169954fe02a13b3ef4bae"
+    },
+    {
+      "order": 4,
+      "id": 6,
+      "name": "global",
+      "pin_bytes": 9,
+      "rebuild_bytes": 9,
+      "delta": 0,
+      "sha_identical": true,
+      "pin_sha256": "da3c74f89a28b8e9a570d349d0f0a216ef8e69818c7226007164845feaceaf63",
+      "rebuild_sha256": "da3c74f89a28b8e9a570d349d0f0a216ef8e69818c7226007164845feaceaf63"
+    },
+    {
+      "order": 5,
+      "id": 7,
+      "name": "export",
+      "pin_bytes": 48,
+      "rebuild_bytes": 48,
+      "delta": 0,
+      "sha_identical": true,
+      "pin_sha256": "b869d9a550c8a4cad77ac0389067d0016a6b66caf599b9968a921c42e4d09f1a",
+      "rebuild_sha256": "b869d9a550c8a4cad77ac0389067d0016a6b66caf599b9968a921c42e4d09f1a"
+    },
+    {
+      "order": 6,
+      "id": 9,
+      "name": "elem",
+      "pin_bytes": 255,
+      "rebuild_bytes": 255,
+      "delta": 0,
+      "sha_identical": false,
+      "pin_sha256": "071f578d55bad820f33baea404d7d4f1a77803f198a27ecb7587740c4460bdf3",
+      "rebuild_sha256": "74a771f856aa205730915ff3b28f35408c03e12634f414337d6dbb138c221b69"
+    },
+    {
+      "order": 7,
+      "id": 10,
+      "name": "code",
+      "pin_bytes": 828565,
+      "rebuild_bytes": 828426,
+      "delta": -139,
+      "sha_identical": false,
+      "pin_sha256": "c374a3f33b680b27106b740e190622aa031124a56e17fb57081c68950af0982d",
+      "rebuild_sha256": "d5fc42591ed41811bc4ae35960d967ce34f511a3610d08d1d2fc5b989548eab2"
+    },
+    {
+      "order": 8,
+      "id": 11,
+      "name": "data",
+      "pin_bytes": 226203,
+      "rebuild_bytes": 226203,
+      "delta": 0,
+      "sha_identical": true,
+      "pin_sha256": "038ab7d04d3153d5930e0455c410be24f4640d06270d70e53d2d3fd57ee1f6f6",
+      "rebuild_sha256": "038ab7d04d3153d5930e0455c410be24f4640d06270d70e53d2d3fd57ee1f6f6"
+    },
+    {
+      "order": 9,
+      "id": 0,
+      "name": "custom `name`",
+      "pin_bytes": 282803,
+      "rebuild_bytes": 282632,
+      "delta": -171,
+      "sha_identical": false,
+      "pin_sha256": "4bcbef50b12a53577f38fcaf8b6eef833931ebd1f15055fc54172e2f565f3d1a",
+      "rebuild_sha256": "6b9ae5bfa44dd4afd0ecfc3d2a2fb8f4cdc4e18ef2dd49e9dae4bc0f89ef1de7"
+    },
+    {
+      "order": 10,
+      "id": 0,
+      "name": "custom `producers`",
+      "pin_bytes": 77,
+      "rebuild_bytes": 77,
+      "delta": 0,
+      "sha_identical": true,
+      "pin_sha256": "5d67a49632a1c5b6a451f6db7067a5e4bd58780d933cf33c3e503dca590b5642",
+      "rebuild_sha256": "5d67a49632a1c5b6a451f6db7067a5e4bd58780d933cf33c3e503dca590b5642"
+    },
+    {
+      "order": 11,
+      "id": 0,
+      "name": "custom `target_features`",
+      "pin_bytes": 148,
+      "rebuild_bytes": 148,
+      "delta": 0,
+      "sha_identical": true,
+      "pin_sha256": "97ceea95e0687b14437e21c205ebb40eea27aa5ecaa971f7d87601e3aa213bfd",
+      "rebuild_sha256": "97ceea95e0687b14437e21c205ebb40eea27aa5ecaa971f7d87601e3aa213bfd"
+    }
+  ],
+  "delta_summary": {
+    "sections_count": 12,
+    "sections_identical": 8,
+    "sections_differing": 4,
+    "delta_breakdown": {
+      "function_section_delta": -1,
+      "code_section_delta": -139,
+      "name_section_delta": -171,
+      "elem_section_delta": 0,
+      "sum_bytes": -311
+    }
+  },
+  "vector_parity_results": {
+    "tool": "python3 tools/wasm_candidate_vectors.py",
+    "pass": true,
+    "positive_count": 55,
+    "negative_count": 55,
+    "semantic_mismatches": 0,
+    "python_rust_mismatches": 0,
+    "rust_wasm_mismatches": 0,
+    "python_wasm_mismatches": 0,
+    "negative_reason_mismatches": 0,
+    "authority_mismatches": 0,
+    "protocol_mismatches": 0,
+    "runtime_errors": 0,
+    "mismatch_ids": []
+  },
+  "root_cause_classification": "A. TOOLCHAIN_DRIFT_CONFIRMED",
+  "root_cause_summary": "Cargo fingerprinting of registry dependencies (serde, serde_json) embeds host platform metadata (x86_64-unknown-linux-gnu vs aarch64-apple-darwin) into the crate disambiguator hash when not intercepted by spe_wasm_rustc_wrapper.mjs. The resulting disambiguators (Cs6rqC8QbXbVR vs Cs59XwPTFusLV) alter the function name section length and LLVM inline function sorting, creating exactly 311 bytes delta while maintaining 100% byte identity for types, tables, memory, globals, exports, data, producers, target_features, and 100% semantic vector parity."
+}
