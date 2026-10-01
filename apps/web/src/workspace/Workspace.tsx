@@ -21,6 +21,7 @@ import { PrivacyIndicator } from "../ui/PrivacyIndicator";
 import { TrustPanel } from "../ui/TrustPanel";
 import { techniqueLabel } from "../engine/k3Transport";
 import { ReconstructionSummary } from "./ReconstructionSummary";
+import { TaskContinuationInspector } from "./TaskContinuationInspector";
 
 type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
@@ -463,6 +464,12 @@ export function Workspace(props: Props) {
           </div>
         )}
       </div>
+
+      {(mode === "inspect" || mode === "pro") && (
+        <div style={{ marginTop: "1.5rem" }}>
+          <TaskContinuationInspector baselineSha={sha256} />
+        </div>
+      )}
 
       <details className="spe-ws-advanced">
         <summary>Advanced settings</summary>

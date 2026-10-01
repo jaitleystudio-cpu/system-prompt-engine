@@ -13,7 +13,8 @@ export function inventory() {
     (p) =>
       /\.[jt]sx?$/.test(p) &&
       !p.includes("/engine/") &&
-      !p.includes("/builder/"),
+      !p.includes("/builder/") &&
+      !p.includes("TaskContinuationInspector"),
   );
   paths.push(`${root}/packages/human-perspective/src/copy.ts`);
   const entries = new Map();
