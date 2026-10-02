@@ -271,6 +271,35 @@ export interface ResearchAccessDecision {
  * this engine's scholarly fabric is an offline seed corpus. Unsafe URLs are
  * rejected so a caller must not fetch them.
  */
+
+/** RT-B-14/15: oversized or wrong MIME bodies cannot become paper evidence. */
+export function assessRetrievedBody(input: {
+  byteLength: number;
+  mimeType?: string;
+  claimedType?: string;
+  maxBytes?: number;
+}): { allowed: boolean; reasons: string[]; hold?: "OVERSIZE" | "MIME_MISMATCH" } {
+  const reasons: string[] = [];
+  const maxBytes = input.maxBytes ?? 25 * 1024 * 1024;
+  if (input.byteLength > maxBytes) {
+    reasons.push("OVERSIZE");
+  }
+  const mime = (input.mimeType || "").toLowerCase();
+  const claimed = (input.claimedType || "").toLowerCase();
+  if (claimed.includes("pdf") && mime && mime !== "application/pdf" && !mime.includes("pdf")) {
+    reasons.push("MIME_MISMATCH");
+  }
+  if (mime === "application/octet-stream" && claimed.includes("pdf")) {
+    if (!reasons.includes("MIME_MISMATCH")) reasons.push("MIME_MISMATCH");
+  }
+  const hold = reasons.includes("OVERSIZE")
+    ? "OVERSIZE"
+    : reasons.includes("MIME_MISMATCH")
+      ? "MIME_MISMATCH"
+      : undefined;
+  return { allowed: reasons.length === 0, reasons, hold };
+}
+
 export function evaluateResearchAccess(input: ResearchAccessInput): ResearchAccessDecision {
   const rejected: { url: string; reason: string }[] = [];
   const violations: string[] = [];
@@ -322,6 +351,8 @@ export interface IdentifierMatchInput {
   inCorpus: boolean;
   retracted: boolean;
   retractionSources?: string[];
+  /** Correction notice present but conclusion still pre-correction. */
+  staleConclusion?: boolean;
 }
 
 export interface IdentifierMatch {
@@ -369,6 +400,9 @@ export function matchIdentifierClaim(input: IdentifierMatchInput): IdentifierMat
   if (input.claimedVersion && input.claimedVersion !== String(record.year)) {
     const id = record.identifier.toLowerCase();
     if (!id.includes(input.claimedVersion.toLowerCase())) reasons.push("VERSION_MISMATCH");
+  }
+  if (input.staleConclusion === true) {
+    reasons.push("STALE_CONCLUSION");
   }
   const tier = record.contentTier || "FULL";
   if (tier === "METADATA") reasons.push("METADATA_ONLY");
