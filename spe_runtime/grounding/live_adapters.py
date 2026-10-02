@@ -429,8 +429,10 @@ def acquire_scholarly_hits(
             "reasons": ["TIMEOUT_NE_CLEAN"],
         }
 
+    live_network = transport is None and os.environ.get("SPE_SCHOLARLY_LIVE", "0") == "1"
+    fixture_path = transport is None and not live_network
     get = transport or fixture_transport
-    if transport is None and os.environ.get("SPE_SCHOLARLY_LIVE", "0") == "1":
+    if live_network:
         import urllib.request
 
         def _live_get(url: str) -> tuple[int, str]:
@@ -487,7 +489,11 @@ def acquire_scholarly_hits(
     merged = merge_retraction_checks(tuple(h.retraction for h in all_hits))
     capsules = hits_to_capsules(clean_hits)
     return {
-        "status": "ACQUIRED_LIVE" if clean_hits else "PARTIAL",
+        "status": (
+            ("ACQUIRED_LIVE" if clean_hits else "PARTIAL")
+            if not fixture_path
+            else ("ACQUIRED_FIXTURE" if clean_hits else "PARTIAL")
+        ),
         "hits": clean_hits,
         "capsules": [c.to_dict() for c in capsules],
         "network_calls": network_calls,
@@ -496,6 +502,6 @@ def acquire_scholarly_hits(
         "live_index": LIVE_INDEX,
         "live_retraction": LIVE_RETRACTION,
         "adapters": list(ADAPTERS_IMPLEMENTED),
-        "mode": "LIVE",
+        "mode": "OFFLINE_SEED" if fixture_path else "LIVE",
         "identity_providers_agreeing": count_identity_provider_agreement(clean_hits),
     }

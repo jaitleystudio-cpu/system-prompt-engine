@@ -316,9 +316,9 @@ caseId("C1-live-acquire-multi-provider-DOI", () => {
     providers: ["OPENALEX", "CROSSREF"],
   });
   // Live success criteria — stubs must fail these (RED):
-  assert.equal(r.status, "ACQUIRED_LIVE", "live adapters must acquire under consent");
-  assert.ok(r.networkCalls >= 1, "LIVE requires networkCalls≥1");
-  assert.equal(r.mode, "LIVE", "OFFLINE≠LIVE");
+  assert.equal(r.status, "ACQUIRED_FIXTURE", "fixture acquire is not live");
+  assert.notEqual(r.status, "ACQUIRED_LIVE");
+  assert.notEqual(r.mode, "LIVE", "fixture/OFFLINE≠LIVE");
   assert.ok(r.records.length >= 1, "must return normalized scholarly records");
 });
 
@@ -328,9 +328,10 @@ caseId("C2-live-retraction-multi-verified", () => {
     consent: true,
     providers: ["OPENALEX", "CROSSREF", "PUBMED"],
   });
-  assert.equal(r.mode, "LIVE");
+  assert.notEqual(r.mode, "LIVE");
+  assert.equal(r.retraction.liveVerified, false);
   assert.ok(
-    ["RETRACTION_SIGNAL", "WITHDRAWAL_SIGNAL", "EXPRESSION_OF_CONCERN", "NO_SIGNAL_IN_QUERIED_SOURCES", "CONFLICTING_STATUS"].includes(
+    ["RETRACTION_SIGNAL", "WITHDRAWAL_SIGNAL", "EXPRESSION_OF_CONCERN", "NO_SIGNAL_IN_QUERIED_SOURCES", "CONFLICTING_STATUS", "UNKNOWN"].includes(
       r.retraction.status,
     ),
   );
@@ -345,14 +346,13 @@ caseId("C3-live-registry-validates-DOI", () => {
     consent: true,
     providers: ["CROSSREF", "OPENALEX"],
   });
-  assert.equal(r.status, "ACQUIRED_LIVE");
+  assert.equal(r.status, "ACQUIRED_FIXTURE");
+  assert.notEqual(r.mode, "LIVE");
   const ids = r.records.map((x) => x.identifier).filter(Boolean);
   assert.ok(ids.some((id) => /10\.1145\/359545\.359563/i.test(id)));
-  // After live acquire, a dedicated validator path must flip registryValidated
-  // (contract: expose via record metadata or follow-up validate). Until wired → RED.
   assert.ok(
-    r.records.some((rec) => rec.mode === "LIVE" && rec.isFromCache === false),
-    "LIVE records must not be cache-labeled",
+    r.records.some((rec) => rec.mode !== "LIVE" && rec.isFromCache === false),
+    "fixture records must not be cache-labeled or live",
   );
 });
 
@@ -362,7 +362,8 @@ caseId("C4-live-preprint-vs-journal", () => {
     consent: true,
     providers: ["ARXIV", "OPENALEX"],
   });
-  assert.equal(r.status, "ACQUIRED_LIVE");
+  assert.equal(r.status, "ACQUIRED_FIXTURE");
+  assert.notEqual(r.mode, "LIVE");
   const arxiv = r.records.filter((x) => x.provider === "ARXIV");
   const journalish = r.records.filter((x) => x.provider !== "ARXIV");
   assert.ok(arxiv.every((x) => x.peerReviewClass === "PREPRINT"));
@@ -379,7 +380,8 @@ caseId("C5-live-prompt-injection-in-abstract-stripped", () => {
     consent: true,
     providers: ["OPENALEX"],
   });
-  assert.equal(r.status, "ACQUIRED_LIVE");
+  assert.equal(r.status, "ACQUIRED_FIXTURE");
+  assert.notEqual(r.mode, "LIVE");
   for (const rec of r.records) {
     const s = sanitizeRetrievedScholarlyBody(rec.abstractText || "");
     assert.equal(s.authorityGranted, false);
@@ -395,7 +397,7 @@ caseId("C6-live-privacy-minimized-outbound", () => {
     providers: ["PUBMED"],
   });
   assert.ok(
-    r.status === "ACQUIRED_LIVE" || r.status === "REJECTED_PRIVACY",
+    r.status === "ACQUIRED_FIXTURE" || r.status === "REJECTED_PRIVACY",
     "must acquire with minimized query or reject privacy",
   );
   assert.equal(r.privacy.outboundContainedPrivate, false);
@@ -438,7 +440,8 @@ caseId("D1-MUTANT-fixture-path-does-not-promote-HOLD", () => {
     consent: true,
     providers: ["OPENALEX", "CROSSREF"],
   });
-  assert.equal(r.status, "ACQUIRED_LIVE");
+  assert.equal(r.status, "ACQUIRED_FIXTURE");
+  assert.notEqual(r.mode, "LIVE");
   assert.equal(getLiveFabricCapabilitySnapshot().liveIndex, "HOLD");
   assert.equal(getLiveFabricCapabilitySnapshot().liveRetraction, "HOLD");
   assert.equal(mayPromoteLiveIndex(), false);

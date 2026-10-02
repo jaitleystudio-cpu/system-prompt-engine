@@ -89,6 +89,8 @@ export interface LiveScholarlyRecord {
   retrievedAtIso: string | null;
   isFromCache: boolean;
   mode: VerificationMode;
+  /** Set only from a provider retraction field, never from the query string. */
+  providerRetraction?: RetractionCheckStatus;
 }
 
 export interface LiveAcquireResult {
@@ -100,6 +102,7 @@ export interface LiveAcquireResult {
     | "RATE_LIMITED"
     | "PARTIAL"
     | "ACQUIRED_LIVE"
+    | "ACQUIRED_FIXTURE"
     | "REJECTED_PRIVACY"
     | "REJECTED_INJECTION";
   records: readonly LiveScholarlyRecord[];
@@ -380,7 +383,7 @@ export function checkRetractionStatus(input: {
           ? ["SINGLE_PROVIDER_NE_MULTI_VERIFIED", "SIGNAL_PRESENT_AWAITING_CORROBORATION"]
           : ["MULTI_PROVIDER_SIGNAL"],
       ),
-      liveVerified: !singleProvider,
+      liveVerified: false,
     });
   }
   if (kinds.has("NO_SIGNAL_IN_QUERIED_SOURCES") && kinds.size === 1) {
@@ -708,6 +711,8 @@ function parseProviderHits(
     for (const item of results) {
       const doi = String(item.doi || "").replace(/^https?:\/\/doi\.org\//i, "");
       const sanitized = sanitizeRetrievedScholarlyBody(String(item.abstract || ""));
+      const providerRetraction: RetractionCheckStatus | undefined =
+        item.is_retracted === true ? "RETRACTION_SIGNAL" : undefined;
       out.push(Object.freeze({
         provider,
         identifier: doi ? `doi:${doi}` : null,
@@ -719,6 +724,7 @@ function parseProviderHits(
         retrievedAtIso: now,
         isFromCache: false,
         mode: "LIVE",
+        providerRetraction,
       }));
     }
   }
@@ -729,6 +735,15 @@ function parseProviderHits(
       const doi = String(item.DOI || "");
       const title = (item.title && item.title[0]) || "";
       const sanitized = sanitizeRetrievedScholarlyBody(String(item.abstract || ""));
+      const updates = [
+        ...(Array.isArray(item["updated-by"]) ? item["updated-by"] : []),
+        ...(Array.isArray(item["update-to"]) ? item["update-to"] : []),
+      ];
+      const providerRetraction: RetractionCheckStatus | undefined = updates.some(
+        (u) => String((u && u.type) || "").toLowerCase() === "retraction",
+      )
+        ? "RETRACTION_SIGNAL"
+        : undefined;
       out.push(Object.freeze({
         provider,
         identifier: doi ? `doi:${doi}` : null,
@@ -740,6 +755,7 @@ function parseProviderHits(
         retrievedAtIso: now,
         isFromCache: false,
         mode: "LIVE",
+        providerRetraction,
       }));
     }
   }
@@ -761,26 +777,32 @@ function parseProviderHits(
   return out;
 }
 
-function retractionSignalsFromQuery(
+function normalizeDoi(raw: string | null | undefined): string {
+  let ident = String(raw || "").trim().toLowerCase();
+  if (ident.startsWith("doi:")) ident = ident.slice(4);
+  ident = ident.replace(/^https?:\/\/doi\.org\//, "");
+  return ident;
+}
+
+function queriedDoi(query: string): string | null {
+  const match = /^(?:doi:)?(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)$/i.exec(String(query || "").trim());
+  return match ? match[1].toLowerCase() : null;
+}
+
+function retractionSignalsFromRecords(
   needQuery: string,
-  providers: readonly ProviderId[],
   records: readonly LiveScholarlyRecord[],
 ): { provider: ProviderId; status: RetractionCheckStatus }[] {
-  const q = needQuery.toLowerCase();
-  if (q.includes("fake.retracted.2020") || q.includes("nature00870") || q.includes("10.1038/nature00870") || records.some((r) => /retracted/i.test(r.title))) {
-    return providers.map((provider) => ({
-      provider,
-      status: "RETRACTION_SIGNAL" as RetractionCheckStatus,
-    }));
+  // Query text is never a retraction witness. Only a provider field on a DOI-matched hit.
+  const doi = queriedDoi(needQuery);
+  if (!doi) return [];
+  const signals: { provider: ProviderId; status: RetractionCheckStatus }[] = [];
+  for (const rec of records) {
+    if (normalizeDoi(rec.identifier) !== doi) continue;
+    if (rec.providerRetraction !== "RETRACTION_SIGNAL") continue;
+    signals.push({ provider: rec.provider, status: "RETRACTION_SIGNAL" });
   }
-  // Default: no signal in queried sources for each provider that responded
-  const responded = new Set(records.map((r) => r.provider));
-  return providers
-    .filter((p) => responded.has(p) || providers.length > 0)
-    .map((provider) => ({
-      provider,
-      status: "NO_SIGNAL_IN_QUERIED_SOURCES" as RetractionCheckStatus,
-    }));
+  return signals;
 }
 
 /**
@@ -856,10 +878,11 @@ export function acquireLiveScholarlyEvidence(input: {
     ? input.providers
     : (["OPENALEX", "CROSSREF"] as ProviderId[]));
 
+  const fixturePath = !input.transport;
   const transport: ScholarlyTransport = input.transport || {
     get: fixtureTransportGet,
   };
-  // Real network path reserved; default CI uses fixtures (allowNetwork OFF).
+  // allowNetwork is not a live transport. Fixture stays non-live until a real fetch exists.
   void input.allowNetwork;
 
   const builders: Partial<Record<ProviderId, (q: string) => string>> = {
@@ -880,20 +903,31 @@ export function acquireLiveScholarlyEvidence(input: {
     networkCalls += 1;
     records.push(...parseProviderHits(prov, resp.status, resp.body));
   }
+  const materialized = fixturePath
+    ? records.map((rec) => Object.freeze({ ...rec, mode: "OFFLINE_SEED" as VerificationMode }))
+    : records;
 
-  const doiMatch = input.needQuery.match(/(?:doi:)?(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)/i);
-  const retraction = checkRetractionStatus({
-    identifier: doiMatch ? `doi:${doiMatch[1]}` : (records[0]?.identifier || "doi:10.1234/fixture.generic"),
+  const doiMatch = /^(?:doi:)?(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)$/i.exec(input.needQuery.trim());
+  const checked = checkRetractionStatus({
+    identifier: doiMatch ? `doi:${doiMatch[1]}` : (materialized[0]?.identifier || "doi:10.1234/fixture.generic"),
     providers,
-    signals: retractionSignalsFromQuery(input.needQuery, providers, records),
+    signals: retractionSignalsFromRecords(input.needQuery, materialized),
   });
+  const retraction = fixturePath
+    ? Object.freeze({
+        ...checked,
+        mode: checked.mode === "LIVE" ? ("OFFLINE_SEED" as VerificationMode) : checked.mode,
+        liveVerified: false,
+      })
+    : Object.freeze({ ...checked, liveVerified: false });
 
-  // Provenance: every material record has LIVE mode + non-cache.
   return Object.freeze({
-    status: records.length ? "ACQUIRED_LIVE" : "PARTIAL",
-    records: Object.freeze(records),
+    status: materialized.length
+      ? (fixturePath ? "ACQUIRED_FIXTURE" : "ACQUIRED_LIVE")
+      : "PARTIAL",
+    records: Object.freeze(materialized),
     networkCalls,
-    mode: "LIVE" as VerificationMode,
+    mode: (fixturePath ? "OFFLINE_SEED" : "LIVE") as VerificationMode,
     retraction,
     privacy: Object.freeze({
       outboundContainedPrivate: false,

@@ -224,5 +224,54 @@ caseId("P3-C4-MUTANT-timeout-ne-clean", () => {
   assert.notEqual(r.status, "NOT_RETRACTED");
 });
 
+caseId("P3-D1-fixture-allowNetwork-not-live", () => {
+  const r = acquireLiveScholarlyEvidence({
+    needQuery: "10.1038/nature00870",
+    consent: true,
+    providers: ["OPENALEX", "CROSSREF", "PUBMED", "ARXIV"],
+    allowNetwork: true,
+  });
+  assert.notEqual(r.status, "ACQUIRED_LIVE");
+  assert.notEqual(r.mode, "LIVE");
+  assert.equal(r.retraction.liveVerified, false);
+  assert.equal(getLiveFabricCapabilitySnapshot().liveIndex, "HOLD");
+  assert.equal(getLiveFabricCapabilitySnapshot().liveRetraction, "HOLD");
+});
+
+caseId("P3-D2-query-substring-does-not-stamp-retraction", () => {
+  const r = acquireLiveScholarlyEvidence({
+    needQuery: "notes mentioning nature00870",
+    consent: true,
+    providers: ["OPENALEX", "CROSSREF", "PUBMED", "ARXIV"],
+    transport: {
+      get() {
+        return {
+          status: 200,
+          body: JSON.stringify({
+            results: [{
+              doi: "https://doi.org/10.9999/unrelated.paper",
+              display_name: "Unrelated paper",
+              is_retracted: false,
+              type: "article",
+            }],
+            message: {
+              items: [{
+                DOI: "10.9999/unrelated.paper",
+                title: ["Unrelated paper"],
+                type: "journal-article",
+              }],
+            },
+            esearchresult: { idlist: ["42"] },
+          }),
+        };
+      },
+    },
+  });
+  assert.notEqual(r.retraction.status, "RETRACTION_SIGNAL");
+  assert.equal(r.retraction.liveVerified, false);
+  const stamped = (r.retraction.providersResponded || []).length;
+  assert.ok(stamped < 4, "query substring must not stamp every provider");
+});
+
 console.log(`\nRT_LIVE_SCHOLARLY_P3_ORACLES pass=${pass} fail=${fail}`);
 process.exitCode = fail > 0 ? 1 : 0;

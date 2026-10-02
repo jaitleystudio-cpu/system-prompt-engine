@@ -12,9 +12,11 @@ def test_fixture_acquire_multi_provider_hold():
         providers=("OPENALEX", "CROSSREF"),
         consent=True,
     )
-    assert result["status"] == "ACQUIRED_LIVE"
+    assert result["status"] == "ACQUIRED_FIXTURE"
+    assert result["status"] != "ACQUIRED_LIVE"
     assert int(result["network_calls"]) >= 1
-    assert result["mode"] == "LIVE"
+    assert result["mode"] == "OFFLINE_SEED"
+    assert result["mode"] != "LIVE"
     assert result["live_index"] == "HOLD"
     assert result["live_retraction"] == "HOLD"
     assert LIVE_INDEX == "HOLD"
@@ -32,7 +34,7 @@ def test_privacy_rejects_or_strips_secret():
         sensitive_spans=(secret,),
         consent=True,
     )
-    assert result["status"] in {"ACQUIRED_LIVE", "REJECTED_PRIVACY", "PARTIAL"}
+    assert result["status"] in {"ACQUIRED_FIXTURE", "ACQUIRED_LIVE", "REJECTED_PRIVACY", "PARTIAL"}
     blob = str(result)
     assert secret not in blob or result["status"] == "REJECTED_PRIVACY"
     if result["status"] != "REJECTED_PRIVACY":
@@ -169,3 +171,57 @@ def test_doi_query_returns_target_work_not_search_neighbors():
     assert lamport_ids["CROSSREF"] == "doi:10.1145/359545.359563"
     assert lamport["identity_providers_agreeing"] == 2
     assert lamport["live_index"] == "HOLD"
+
+
+def test_fixture_transport_is_not_acquired_live(monkeypatch):
+    """Default fixture transport must not claim ACQUIRED_LIVE or mode LIVE."""
+    monkeypatch.delenv("SPE_SCHOLARLY_LIVE", raising=False)
+    result = acquire_scholarly_hits(
+        "10.1038/nature00870",
+        providers=("OPENALEX", "CROSSREF", "PUBMED"),
+        consent=True,
+    )
+    assert result["status"] != "ACQUIRED_LIVE"
+    assert result["mode"] != "LIVE"
+    assert result["live_index"] == "HOLD"
+    assert result["live_retraction"] == "HOLD"
+    assert result["retraction"]["live_verified"] is False
+
+
+def test_query_substring_does_not_stamp_retraction_on_every_provider():
+    """nature00870 in the query is not a retraction field and not a DOI match."""
+    import json
+
+    def transport(_url: str) -> tuple[int, str]:
+        return 200, json.dumps(
+            {
+                "results": [
+                    {
+                        "doi": "https://doi.org/10.9999/unrelated.paper",
+                        "display_name": "Unrelated paper",
+                        "is_retracted": False,
+                        "type": "article",
+                    }
+                ],
+                "message": {
+                    "items": [
+                        {
+                            "DOI": "10.9999/unrelated.paper",
+                            "title": ["Unrelated paper"],
+                            "type": "journal-article",
+                        }
+                    ]
+                },
+                "esearchresult": {"idlist": ["42"]},
+            }
+        )
+
+    result = acquire_scholarly_hits(
+        "notes mentioning nature00870",
+        providers=("OPENALEX", "CROSSREF", "PUBMED"),
+        consent=True,
+        transport=transport,
+    )
+    assert all(hit["retraction"] != "RETRACTION_SIGNAL" for hit in result["hits"])
+    assert result["retraction"]["status"] != "RETRACTION_SIGNAL"
+    assert result["retraction"]["live_verified"] is False
