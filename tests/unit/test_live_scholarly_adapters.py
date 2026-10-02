@@ -43,3 +43,129 @@ def test_timeout_probe_not_acquired():
     result = acquire_scholarly_hits("timeout-probe", consent=True)
     assert result["status"] == "TIMEOUT"
     assert result["status"] != "ACQUIRED_LIVE"
+
+
+def test_pmid_pair_does_not_count_as_two_doi_providers():
+    """PubMed and PMC sharing a pmid are not independent DOI identity."""
+    from spe_runtime.grounding.live_fabric import count_identity_provider_agreement
+
+    agree = count_identity_provider_agreement(
+        [
+            {"provider": "PUBMED", "identifier": "pmid:12077603"},
+            {"provider": "PMC", "identifier": "pmid:12077603"},
+        ]
+    )
+    assert agree == 0
+
+
+def test_doi_query_returns_target_work_not_search_neighbors():
+    """DOI queries must hit the work itself. Bibliographic neighbors do not match."""
+    import json
+
+    from spe_runtime.grounding.live_fabric import (
+        LIVE_INDEX,
+        LIVE_RETRACTION,
+        may_promote_live_index,
+        may_promote_live_retraction,
+    )
+
+    def transport(url: str) -> tuple[int, str]:
+        lowered = url.lower()
+        if "openalex.org" in lowered and "/works/https://doi.org/10.1038/nature00870" in lowered:
+            return 200, json.dumps(
+                {
+                    "doi": "https://doi.org/10.1038/nature00870",
+                    "display_name": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+                    "is_retracted": True,
+                    "type": "article",
+                }
+            )
+        if "crossref.org" in lowered and lowered.rstrip("/").endswith("/works/10.1038/nature00870"):
+            return 200, json.dumps(
+                {
+                    "message": {
+                        "DOI": "10.1038/nature00870",
+                        "title": [
+                            "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow"
+                        ],
+                        "type": "journal-article",
+                        "updated-by": [{"type": "retraction"}],
+                    }
+                }
+            )
+        if "openalex.org" in lowered and "/works/https://doi.org/10.1145/359545.359563" in lowered:
+            return 200, json.dumps(
+                {
+                    "doi": "https://doi.org/10.1145/359545.359563",
+                    "display_name": "Time, Clocks, and the Ordering of Events in a Distributed System",
+                    "is_retracted": False,
+                    "type": "article",
+                }
+            )
+        if "crossref.org" in lowered and lowered.rstrip("/").endswith("/works/10.1145/359545.359563"):
+            return 200, json.dumps(
+                {
+                    "message": {
+                        "DOI": "10.1145/359545.359563",
+                        "title": [
+                            "Time, Clocks, and the Ordering of Events in a Distributed System"
+                        ],
+                        "type": "journal-article",
+                    }
+                }
+            )
+        return 200, json.dumps(
+            {
+                "results": [
+                    {
+                        "doi": "https://doi.org/10.1038/nature05812",
+                        "display_name": "Erratum neighbor",
+                        "is_retracted": False,
+                        "type": "erratum",
+                    }
+                ],
+                "message": {
+                    "items": [
+                        {
+                            "DOI": "10.1190/tle12101038.1",
+                            "title": ["Membership Applications Received"],
+                            "type": "journal-article",
+                        }
+                    ]
+                },
+                "esearchresult": {"idlist": ["12077603"]},
+            }
+        )
+
+    retracted = acquire_scholarly_hits(
+        "10.1038/nature00870",
+        providers=("OPENALEX", "CROSSREF", "PUBMED", "PMC"),
+        consent=True,
+        transport=transport,
+    )
+    by_provider = {hit["provider"]: hit for hit in retracted["hits"]}
+    assert by_provider["OPENALEX"]["identifier"] == "doi:10.1038/nature00870"
+    assert by_provider["CROSSREF"]["identifier"] == "doi:10.1038/nature00870"
+    assert by_provider["OPENALEX"]["retraction"] == "RETRACTION_SIGNAL"
+    assert by_provider["CROSSREF"]["retraction"] == "RETRACTION_SIGNAL"
+    assert retracted["identity_providers_agreeing"] == 2
+    assert retracted["retraction"]["status"] == "RETRACTION_SIGNAL"
+    assert "UNTRUSTED_SOURCE" in retracted["capsules"][0]["taint_labels"]
+    assert retracted["live_index"] == "HOLD"
+    assert retracted["live_retraction"] == "HOLD"
+    assert LIVE_INDEX == "HOLD"
+    assert LIVE_RETRACTION == "HOLD"
+    assert may_promote_live_index() is False
+    assert may_promote_live_retraction() is False
+
+    lamport = acquire_scholarly_hits(
+        "doi:10.1145/359545.359563",
+        providers=("OPENALEX", "CROSSREF"),
+        consent=True,
+        transport=transport,
+    )
+    lamport_ids = {hit["provider"]: hit["identifier"] for hit in lamport["hits"]}
+    assert lamport_ids["OPENALEX"] == "doi:10.1145/359545.359563"
+    assert lamport_ids["CROSSREF"] == "doi:10.1145/359545.359563"
+    assert lamport["identity_providers_agreeing"] == 2
+    assert lamport["live_index"] == "HOLD"

@@ -49,13 +49,32 @@ class AdapterHit:
     retraction: RetractionCheckStatus
 
 
+_BARE_DOI_QUERY = re.compile(
+    r"^(?:doi:)?(10\.\d{4,9}/[-._;()/:A-Z0-9]+)$",
+    re.I,
+)
+
+
+def doi_lookup_key(query: str) -> str | None:
+    """Return a DOI only when the whole query is that DOI, not free text."""
+    match = _BARE_DOI_QUERY.match(str(query or "").strip())
+    return match.group(1) if match else None
+
+
 def build_openalex_url(query: str, *, per_page: int = 3) -> str:
+    doi = doi_lookup_key(query)
+    if doi:
+        # Direct work URL. Bibliographic search misses the queried DOI.
+        return f"https://api.openalex.org/works/https://doi.org/{doi}"
     return "https://api.openalex.org/works?" + urlencode(
         {"search": query, "per-page": str(per_page)}
     )
 
 
 def build_crossref_url(query: str, *, rows: int = 3) -> str:
+    doi = doi_lookup_key(query)
+    if doi:
+        return f"https://api.crossref.org/works/{doi}"
     return "https://api.crossref.org/works?" + urlencode(
         {"query.bibliographic": query, "rows": str(rows)}
     )
@@ -244,7 +263,10 @@ def _parse_hits(provider: str, status: int, body: str) -> list[AdapterHit]:
         return []
     hits: list[AdapterHit] = []
     if provider == "OPENALEX":
-        for item in data.get("results") or []:
+        results = data.get("results")
+        if not results and data.get("doi"):
+            results = [data]
+        for item in results or []:
             doi = str(item.get("doi") or "").replace("https://doi.org/", "")
             title_oa = str(item.get("display_name") or "")
             retracted = bool(item.get("is_retracted")) or title_oa.upper().startswith("RETRACTED")
@@ -267,8 +289,11 @@ def _parse_hits(provider: str, status: int, body: str) -> list[AdapterHit]:
                 )
             )
     if provider == "CROSSREF":
-        items = ((data.get("message") or {}).get("items")) or []
-        for item in items:
+        message = data.get("message") or {}
+        items = message.get("items")
+        if not items and message.get("DOI"):
+            items = [message]
+        for item in items or []:
             doi = str(item.get("DOI") or "")
             titles = item.get("title") or [""]
             updates = list(item.get("update-to") or []) + list(item.get("updated-by") or [])

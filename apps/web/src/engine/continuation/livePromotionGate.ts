@@ -112,7 +112,8 @@ export function countIdentityProviderAgreement(
     if (ident.startsWith("doi:")) ident = ident.slice(4);
     ident = ident.replace(/^https?:\/\/doi\.org\//i, "");
     const prov = String(rec.provider || "").trim().toUpperCase();
-    if (!ident || !prov) continue;
+    // pmid/arxiv agreement is not independent DOI identity.
+    if (!prov || !/^10\.\d{4,9}\/\S+$/i.test(ident)) continue;
     if (!byId.has(ident)) byId.set(ident, new Set());
     byId.get(ident)!.add(prov);
   }

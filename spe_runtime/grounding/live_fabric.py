@@ -149,15 +149,24 @@ def evaluate_live_promotion_gate(
 def count_identity_provider_agreement(
     hits: list[dict[str, object]] | tuple[dict[str, object], ...],
 ) -> int:
-    """Count distinct providers that share the same normalized DOI/identifier."""
+    """Count distinct providers that share the same DOI string.
+
+    pmid/arxiv/other identifiers do not count. Two endpoints that only share a
+    pmid are not independent DOI providers.
+    """
+    import re
+
+    doi_re = re.compile(r"^10\.\d{4,9}/\S+$", re.I)
     by_id: dict[str, set[str]] = {}
     for hit in hits:
         ident = str(hit.get("identifier") or "").strip().lower()
         if ident.startswith("doi:"):
             ident = ident[4:]
-        ident = ident.replace("https://doi.org/", "")
+        for prefix in ("https://doi.org/", "http://doi.org/"):
+            if ident.startswith(prefix):
+                ident = ident[len(prefix):]
         prov = str(hit.get("provider") or "").strip().upper()
-        if not ident or not prov:
+        if not prov or not doi_re.match(ident):
             continue
         by_id.setdefault(ident, set()).add(prov)
     if not by_id:

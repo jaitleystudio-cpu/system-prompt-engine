@@ -525,10 +525,18 @@ export interface ScholarlyTransport {
   get(url: string): { status: number; body: string };
 }
 
+function doiLookupKey(query: string): string | null {
+  const match = /^(?:doi:)?(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)$/i.exec(String(query || "").trim());
+  return match ? match[1] : null;
+}
 function buildOpenAlexUrl(query: string): string {
+  const doi = doiLookupKey(query);
+  if (doi) return `https://api.openalex.org/works/https://doi.org/${doi}`;
   return `https://api.openalex.org/works?search=${encodeURIComponent(query)}&per-page=3`;
 }
 function buildCrossrefUrl(query: string): string {
+  const doi = doiLookupKey(query);
+  if (doi) return `https://api.crossref.org/works/${doi}`;
   return `https://api.crossref.org/works?query.bibliographic=${encodeURIComponent(query)}&rows=3`;
 }
 function buildPubmedUrl(query: string): string {
@@ -696,7 +704,8 @@ function parseProviderHits(
   try { data = JSON.parse(body); } catch { return []; }
   const out: LiveScholarlyRecord[] = [];
   if (provider === "OPENALEX") {
-    for (const item of data.results || []) {
+    const results = data.results || (data.doi ? [data] : []);
+    for (const item of results) {
       const doi = String(item.doi || "").replace(/^https?:\/\/doi\.org\//i, "");
       const sanitized = sanitizeRetrievedScholarlyBody(String(item.abstract || ""));
       out.push(Object.freeze({
@@ -714,7 +723,9 @@ function parseProviderHits(
     }
   }
   if (provider === "CROSSREF") {
-    for (const item of (data.message && data.message.items) || []) {
+    const message = data.message || {};
+    const items = message.items || (message.DOI ? [message] : []);
+    for (const item of items) {
       const doi = String(item.DOI || "");
       const title = (item.title && item.title[0]) || "";
       const sanitized = sanitizeRetrievedScholarlyBody(String(item.abstract || ""));
