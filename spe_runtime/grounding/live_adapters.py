@@ -20,6 +20,7 @@ from spe_runtime.grounding.live_fabric import (
     ADAPTERS_IMPLEMENTED,
     LIVE_INDEX,
     LIVE_RETRACTION,
+    count_identity_provider_agreement,
 )
 from spe_runtime.grounding.models import (
     ContextCapsule,
@@ -96,6 +97,32 @@ def fixture_transport(url: str) -> tuple[int, str]:
     hay = q + " " + unquote(url).lower()
     if "timeout-probe" in hay:
         return 504, '{"error":"timeout"}'
+    if "nature00870" in hay or "10.1038/nature00870" in hay:
+        body = {
+            "message": {
+                "items": [
+                    {
+                        "DOI": "10.1038/nature00870",
+                        "title": [
+                            "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow"
+                        ],
+                        "abstract": "Retracted Nature article.",
+                        "type": "journal-article",
+                        "updated-by": [{"type": "retraction"}],
+                    }
+                ]
+            },
+            "results": [
+                {
+                    "doi": "https://doi.org/10.1038/nature00870",
+                    "display_name": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+                    "is_retracted": True,
+                    "type": "article",
+                }
+            ],
+            "esearchresult": {"idlist": ["12077603"]},
+        }
+        return 200, json.dumps(body)
     if "fake.retracted.2020" in hay:
         body = {
             "message": {
@@ -219,7 +246,8 @@ def _parse_hits(provider: str, status: int, body: str) -> list[AdapterHit]:
     if provider == "OPENALEX":
         for item in data.get("results") or []:
             doi = str(item.get("doi") or "").replace("https://doi.org/", "")
-            retracted = bool(item.get("is_retracted"))
+            title_oa = str(item.get("display_name") or "")
+            retracted = bool(item.get("is_retracted")) or title_oa.upper().startswith("RETRACTED")
             hits.append(
                 AdapterHit(
                     provider=provider,
@@ -243,10 +271,11 @@ def _parse_hits(provider: str, status: int, body: str) -> list[AdapterHit]:
         for item in items:
             doi = str(item.get("DOI") or "")
             titles = item.get("title") or [""]
-            updates = item.get("update-to") or []
+            updates = list(item.get("update-to") or []) + list(item.get("updated-by") or [])
+            title0 = str((item.get("title") or [""])[0] if item.get("title") else "")
             retracted = any(
                 str(u.get("type", "")).lower() == "retraction" for u in updates
-            )
+            ) or title0.upper().startswith("RETRACTED")
             hits.append(
                 AdapterHit(
                     provider="CROSSREF",
@@ -443,4 +472,5 @@ def acquire_scholarly_hits(
         "live_retraction": LIVE_RETRACTION,
         "adapters": list(ADAPTERS_IMPLEMENTED),
         "mode": "LIVE",
+        "identity_providers_agreeing": count_identity_provider_agreement(clean_hits),
     }
