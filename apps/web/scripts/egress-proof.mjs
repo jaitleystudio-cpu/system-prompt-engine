@@ -8,6 +8,7 @@ import { spawnSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { classifyEgress } from "./egress-verdict.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const webRoot = resolve(here, "..");
@@ -30,15 +31,23 @@ if (proc.status !== 0) {
 }
 const result = JSON.parse(proc.stdout);
 const egress = result.egress || {};
+const verdict = classifyEgress(result);
 const proof = {
   not_a_release: true,
   new_implementation: true,
   network_mode: "NONE",
   fixture_id: "POS-001",
-  fetch_during_evaluate: egress.fetch_during_evaluate ?? -1,
-  websocket_during_evaluate: egress.websocket_during_evaluate ?? -1,
+  fetch_during_evaluate: Number.isInteger(egress.fetch_during_evaluate)
+    ? egress.fetch_during_evaluate
+    : null,
+  websocket_during_evaluate: Number.isInteger(egress.websocket_during_evaluate)
+    ? egress.websocket_during_evaluate
+    : null,
   external_hosts: [],
-  zero_egress: (egress.fetch_during_evaluate ?? 1) === 0 && (egress.websocket_during_evaluate ?? 1) === 0,
+  zero_egress: verdict.zero_egress,
+  outbound_safe: verdict.outbound_safe,
+  missing_consent_allows_egress: verdict.missing_consent_allows_egress,
+  privacy_qualification: verdict.privacy_qualification,
   engine_error: result.error,
   used_ts_fallback: result.used_ts_fallback === true,
 };

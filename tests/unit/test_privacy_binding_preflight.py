@@ -376,7 +376,10 @@ def test_i11_map_marks_every_touch_point_not_wired() -> None:
     assert "preflight_passed: 18" in proof
     assert "qualified_passed: 60" in proof
     assert "broader_passed: 20" in proof
-    assert "FINAL: PRIVACY_BINDING_PREFLIGHT_PASS" in proof
+    assert "FINAL: HOLD" in proof
+    assert "PRIVACY_QUALIFICATION: NOT_A_PASS" in proof
+    assert "PRIVACY_BINDING_PREFLIGHT_PASS" not in proof
+    assert "PRIVACY_PASS" not in proof
     assert "I11_WIRING: WIRED" not in proof
 
 
