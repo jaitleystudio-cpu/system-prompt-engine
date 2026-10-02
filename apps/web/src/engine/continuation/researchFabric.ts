@@ -15,6 +15,10 @@
 
 import type { ClaimRecord, ScholarlySourceRecord } from "./types";
 import { evaluateResearchAccess } from "./oracleGuards";
+import {
+  acquireLiveScholarlyEvidence,
+  type ScholarlyTransport,
+} from "./liveScholarlyFabric";
 
 export {
   assessRedirect,
@@ -615,6 +619,10 @@ export function acquireScholarlyEvidence(
     sourceMode?: "OFF" | "EXPLICIT";
     revoked?: boolean;
     urls?: string[];
+    /** Opt-in live adapter path (fixtures by default). Does NOT promote LIVE_* HOLD gates. */
+    preferLiveAdapters?: boolean;
+    liveTransport?: ScholarlyTransport;
+    liveProviders?: Array<"OPENALEX" | "CROSSREF" | "PUBMED" | "PMC" | "ARXIV" | "DOAJ" | "LOCAL_SENTINEL">;
   },
 ): {
   sources: ScholarlySourceRecord[];
@@ -648,6 +656,57 @@ export function acquireScholarlyEvidence(
       violations.push("Research needed but explicit research consent was not granted (NEED != CONSENT).");
     }
     return { sources: [], status, violations, networkCalls: 0 };
+  }
+
+  // Optional live adapter bridge (fixtures/injectable). Capability HOLD unchanged.
+  if (options?.preferLiveAdapters === true) {
+    const live = acquireLiveScholarlyEvidence({
+      needQuery: need.rationale || need.domain || "scholarly",
+      consent: hasConsent === true,
+      providers: options.liveProviders || ["OPENALEX", "CROSSREF"],
+      transport: options.liveTransport,
+    });
+    if (live.status === "ACQUIRED_LIVE" || live.status === "PARTIAL") {
+      const mapped: ScholarlySourceRecord[] = live.records.map((rec, i) =>
+        Object.freeze({
+          sourceId: `LIVE-${rec.provider}-${i}`,
+          sourceType:
+            rec.peerReviewClass === "PREPRINT"
+              ? "PREPRINT"
+              : rec.peerReviewClass === "PEER_REVIEWED"
+                ? "PEER_REVIEWED_PAPER"
+                : "EMPIRICAL_STUDY",
+          identifier: rec.identifier || `live:${rec.provider}:${i}`,
+          title: rec.title,
+          authors: Object.freeze([]) as string[],
+          year: 0,
+          isRetracted: live.retraction.status === "RETRACTION_SIGNAL",
+          retractionDetails: live.retraction.status,
+          normativeApplicability: "UNKNOWN",
+          keyFinding: rec.abstractText.slice(0, 280),
+          sourceSaysText: rec.abstractText,
+          speInferenceText: "LIVE_ADAPTER_DATA_TAINTED_NE_AUTHORITY",
+          catalogSource:
+            rec.provider === "ARXIV"
+              ? "ARXIV"
+              : rec.provider === "PMC"
+                ? "PMC"
+                : "OPENALEX",
+          evidenceTier:
+            live.retraction.status === "RETRACTION_SIGNAL"
+              ? "[RETRACTED_DANGER]"
+              : rec.peerReviewClass === "PREPRINT"
+                ? "[PREPRINT_UNREVIEWED]"
+                : "[HEURISTIC_HYPOTHESIS]",
+        } as ScholarlySourceRecord),
+      );
+      return {
+        sources: mapped,
+        status: mapped.length ? "ACQUIRED" : "UNAVAILABLE",
+        violations: [...violations, ...live.reasons],
+        networkCalls: live.networkCalls,
+      };
+    }
   }
 
   const selectedSources: ScholarlySourceRecord[] = [];

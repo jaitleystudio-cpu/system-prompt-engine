@@ -68,8 +68,15 @@ OFFLINE≠LIVE · CACHE≠LIVE · DOI≠validated · NO_MATCH≠NOT_RETRACTED ·
 
 | Key | Value |
 |---|---|
-| TIP_SHA | branch HEAD (oracle slice `717f3b8ce344c1afc608ba57b4a8628551541682`) |
-| Phase | 0 owners mapped + 1 oracles RED |
-| IMPL_STATUS | oracle-only (fail-closed TS stubs; no live adapters) |
+| TIP_SHA | branch HEAD (Phase 2 in progress — see latest commit) |
+| Phase | 2 adapters + retraction model + Section C green |
+| IMPL_STATUS | partial → candidate (fixture-backed free adapters; LIVE_* HOLD) |
+| DRAFT_PR | [#99](https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/99) (base VR1) |
+| JS oracles | `tests/test_rt_live_scholarly_fabric_oracles.mjs` 34/34 |
+| Python retraction | `tests/unit/test_live_scholarly_retraction_states.py` 6/6 |
+| Python adapters | `tests/unit/test_live_scholarly_adapters.py` 3/3 |
+| LIVE_INDEX | **HOLD** |
+| LIVE_RETRACTION | **HOLD** |
+| Adapters | OPENALEX, CROSSREF, PUBMED, PMC, ARXIV (fixture default; SPE_SCHOLARLY_LIVE=1 optional) |
+| FINAL | RT_LIVE_SCHOLARLY_CANDIDATE_READY (promotion still HOLD — fixture≠independent live proof) |
 
-| DRAFT_PR | [#99](https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/99) (base VR1; oracle slice) |

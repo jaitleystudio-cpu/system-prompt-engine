@@ -5,7 +5,7 @@
  * · UNKNOWN≠PASS · PREPRINT≠PEER_REVIEWED · RETRACTED≠WITHDRAWN≠EoC
  *
  * LIVE_INDEX / LIVE_RETRACTION must remain HOLD until mutants killed with evidence.
- * Section C asserts live adapter behavior → expected RED until implementation.
+ * Section C live adapters use deterministic fixtures (injectable transport); LIVE_* stay HOLD.
  */
 import { strict as assert } from "node:assert";
 import { build } from "../apps/web/node_modules/esbuild/lib/main.js";
@@ -105,8 +105,15 @@ caseId("A4-LIVE_RETRACTION_VERIFICATION-NO", () => {
   assert.equal(getLiveFabricCapabilitySnapshot().liveRetractionVerification, "NO");
 });
 
-caseId("A5-adaptersImplemented-empty-until-proven", () => {
-  assert.deepEqual([...getLiveFabricCapabilitySnapshot().adaptersImplemented], []);
+caseId("A5-adapters-listed-but-HOLD-not-PASS", () => {
+  const c = getLiveFabricCapabilitySnapshot();
+  // Phase 2+: free adapters may be registered in code without promoting LIVE_* gates.
+  assert.ok(c.adaptersImplemented.includes("OPENALEX"));
+  assert.ok(c.adaptersImplemented.includes("CROSSREF"));
+  assert.equal(c.liveIndex, "HOLD");
+  assert.equal(c.liveRetraction, "HOLD");
+  assert.equal(mayPromoteLiveIndex(), false);
+  assert.equal(mayPromoteLiveRetraction(), false);
 });
 
 // ─── B. Retraction state matrix + mutant kills (fail-closed stubs) ───
@@ -422,12 +429,72 @@ caseId("C8-adapters-registered-after-impl", () => {
   );
 });
 
+
+// ─── D. Live-path mutants (capability HOLD must survive adapter success) ───
+
+caseId("D1-MUTANT-fixture-path-does-not-promote-HOLD", () => {
+  const r = acquireLiveScholarlyEvidence({
+    needQuery: "Lamport happened-before distributed clocks",
+    consent: true,
+    providers: ["OPENALEX", "CROSSREF"],
+  });
+  assert.equal(r.status, "ACQUIRED_LIVE");
+  assert.equal(getLiveFabricCapabilitySnapshot().liveIndex, "HOLD");
+  assert.equal(getLiveFabricCapabilitySnapshot().liveRetraction, "HOLD");
+  assert.equal(mayPromoteLiveIndex(), false);
+  assert.equal(mayPromoteLiveRetraction(), false);
+  assert.ok(r.reasons.some((x) => /CAPABILITY_HOLD_NE_PASS|LIVE_INDEX=HOLD/i.test(x)));
+});
+
+caseId("D2-MUTANT-injectable-transport-counted", () => {
+  let calls = 0;
+  const r = acquireLiveScholarlyEvidence({
+    needQuery: "doi:10.1145/359545.359563",
+    consent: true,
+    providers: ["CROSSREF"],
+    transport: {
+      get(url) {
+        calls += 1;
+        assert.ok(/api\.crossref\.org/i.test(url));
+        return {
+          status: 200,
+          body: JSON.stringify({
+            message: {
+              items: [{
+                DOI: "10.1145/359545.359563",
+                title: ["Time, Clocks"],
+                type: "journal-article",
+                abstract: "ok",
+              }],
+            },
+          }),
+        };
+      },
+    },
+  });
+  assert.equal(r.status, "ACQUIRED_LIVE");
+  assert.equal(r.networkCalls, 1);
+  assert.equal(calls, 1);
+  assert.equal(r.records[0].isFromCache, false);
+  assert.equal(r.mode, "LIVE");
+});
+
+caseId("D3-MUTANT-no-consent-never-live", () => {
+  const r = acquireLiveScholarlyEvidence({
+    needQuery: "anything",
+    consent: false,
+    providers: ["OPENALEX"],
+  });
+  assert.equal(r.status, "HELD_NO_CONSENT");
+  assert.equal(r.networkCalls, 0);
+  assert.notEqual(r.mode, "LIVE");
+});
+
 // ─── Summary ───
 console.log(`\nRT_LIVE_SCHOLARLY_ORACLES pass=${pass} fail=${fail}`);
 if (failures.length) {
   console.log("FAILURES:");
   for (const f of failures) console.log(` - ${f.id}: ${f.message}`);
 }
-// Suite is intentionally allowed to be RED in Phase 1.
-// Exit non-zero when any fail so CI/local sees RED; writer records counts.
+// Exit non-zero on any failure.
 process.exitCode = fail > 0 ? 1 : 0;
