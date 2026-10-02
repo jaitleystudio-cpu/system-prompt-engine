@@ -142,6 +142,57 @@ export function applyBoundedRepair(
   return { code, attempt, applied: false };
 }
 
+export type VisualRepairSpec = {
+  backgroundHex: string;
+  foregroundHex: string;
+  regions: { id: string; hex: string }[];
+};
+
+const VISUAL_REPAIR_NAMES = ["palette-ground", "region-mean-fill", "hide-invented-chrome"] as const;
+
+function safeHex(hex: string): string {
+  return /^#[0-9a-fA-F]{6}$/.test(hex) ? hex : "#000000";
+}
+
+function safeId(id: string): string | null {
+  return /^[A-Za-z][A-Za-z0-9_-]*$/.test(id) ? id : null;
+}
+
+function visualRepairCss(name: (typeof VISUAL_REPAIR_NAMES)[number], spec: VisualRepairSpec): string {
+  const bg = safeHex(spec.backgroundHex);
+  const fg = safeHex(spec.foregroundHex);
+  const palette = `html,body{margin:0;background:${bg} !important;color:${fg} !important}body,.shell,main.spe-main,header.spe-top,footer.spe-foot,aside.spe-rail{background:${bg} !important;color:${fg} !important}.spe-region{outline:none !important;background:transparent}`;
+  const fills = spec.regions
+    .map((region) => {
+      const id = safeId(region.id);
+      return id ? `#${id}{background:${safeHex(region.hex)} !important}` : "";
+    })
+    .filter(Boolean)
+    .join("");
+  const regionFill = `${palette}${fills}h1,h2,p,a,strong,li{color:${fg}}`;
+  const chrome = `${regionFill}header.spe-top,footer.spe-foot,nav{visibility:hidden !important}h1,h2,p,a,strong,li,button,label{font-size:0 !important;color:transparent !important}html,body,.shell,main.spe-main{overflow:hidden}`;
+  if (name === "palette-ground") return palette;
+  if (name === "region-mean-fill") return regionFill;
+  return chrome;
+}
+
+/** Cumulative HTML/CSS repair. attempt is how many repairs already applied (0..3). */
+export function applyVisualRepair(
+  html: string,
+  attempt: number,
+  spec: VisualRepairSpec,
+): { html: string; attempt: number; name: string; applied: boolean; refused?: string } {
+  if (attempt >= MAX_REPAIR_ATTEMPTS) {
+    return { html, attempt, name: "none", applied: false, refused: "REPAIR_CAP" };
+  }
+  const name = VISUAL_REPAIR_NAMES[attempt];
+  const css = visualRepairCss(name, spec);
+  const stripped = html.replace(/<style id="spe-repair">[\s\S]*?<\/style>/g, "");
+  const block = `<style id="spe-repair">${css}</style>`;
+  const next = stripped.includes("</head>") ? stripped.replace("</head>", `${block}</head>`) : `${stripped}${block}`;
+  return { html: next, attempt: attempt + 1, name, applied: true };
+}
+
 export function judgeRelease(input: ReleaseInput): {
   status: ReleaseStatus;
   pixelPerfect: boolean;

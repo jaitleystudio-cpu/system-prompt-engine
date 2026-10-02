@@ -8,8 +8,9 @@
       "f85649fe31d0ac7404ef1b30906b6b9d222f1a6e"
     ]
   },
-  "tesseractCli": "absent",
-  "ocrPolicy": "EXPLICIT_FALLBACK ocr-textlikeness; character text is not claimed",
+  "tesseractCli": "present",
+  "ocrStatus": "REAL_OCR",
+  "ocrPolicy": "Local tesseract CLI. REAL_OCR only when a process exits 0. Empty or failed runs keep the text-likeness fallback and do not claim character text. OCR text is UNTRUSTED_SOURCE.",
   "chrome": "154.0.8037.97",
   "comparator": "apps/web/src/media/realVisualComparator.mjs SPE_WINDOWED_SSIM_PIXELMATCH_V1",
   "passBar": {
@@ -17,6 +18,12 @@
     "maxPixelDeltaPercent": 5,
     "responsiveNarrowSsimRequired": true
   },
+  "repairCap": 3,
+  "repairNames": [
+    "palette-ground",
+    "region-mean-fill",
+    "hide-invented-chrome"
+  ],
   "declaredTargets": [
     "html-css-js",
     "react",
@@ -31,7 +38,7 @@
     "reason": "vue is not a declared screenshot code target"
   },
   "targets": {
-    "html-css-js": "scaffold + syntax + rendered SSIM at native viewport; responsive narrow SSIM UNKNOWN without paired reference",
+    "html-css-js": "scaffold + up to 3 visual repairs + native SSIM; responsive narrow SSIM UNKNOWN without paired reference",
     "react": "scaffold + syntax; render toolchain absent; HOLD_UNPROVEN",
     "swiftui": "scaffold + syntax; Swift toolchain render not run; HOLD_UNPROVEN",
     "compose": "scaffold + syntax; Compose render not run; HOLD_UNPROVEN",
@@ -40,6 +47,8 @@
   },
   "pixelPerfectClaim": false,
   "releasePass": false,
+  "setNativeBarMet": false,
+  "responsiveNarrowSsim": "UNKNOWN",
   "rows": [
     {
       "id": "desktop-landing",
@@ -48,10 +57,12 @@
       "width": 1280,
       "height": 800,
       "ocr": {
-        "mode": "EXPLICIT_FALLBACK",
-        "method": "ocr-textlikeness",
-        "characterTextClaimed": false,
-        "bands": 0
+        "mode": "REAL_OCR",
+        "method": "tesseract",
+        "characterTextClaimed": true,
+        "bands": 0,
+        "textSample": "Northwind Studio Product Pricing Docs Ship calmer product Today 3 drafts ready - 1 review pending prompts Turn messy briefs into clear instructions your team can reuse. © Northwind",
+        "provenance": "UNTRUSTED_SOURCE"
       },
       "layoutRegionCount": 3,
       "roles": [
@@ -93,18 +104,48 @@
           "reason": "syntax markers present"
         }
       },
-      "repairAttempts": 0,
+      "repairCount": 3,
+      "attempts": [
+        {
+          "attempt": 0,
+          "name": "baseline",
+          "repairCount": 0,
+          "ssimScore": 0.2045,
+          "pixelDeltaPercentage": 93.781
+        },
+        {
+          "attempt": 1,
+          "name": "palette-ground",
+          "repairCount": 1,
+          "ssimScore": 0.9092,
+          "pixelDeltaPercentage": 2.598
+        },
+        {
+          "attempt": 2,
+          "name": "region-mean-fill",
+          "repairCount": 2,
+          "ssimScore": 0.909,
+          "pixelDeltaPercentage": 2.593
+        },
+        {
+          "attempt": 3,
+          "name": "hide-invented-chrome",
+          "repairCount": 3,
+          "ssimScore": 0.9153,
+          "pixelDeltaPercentage": 2.311
+        }
+      ],
       "nativeComparison": {
-        "ssimScore": 0.2045,
-        "pixelDeltaPercentage": 93.781,
-        "mismatchedPixelCount": 960320,
+        "ssimScore": 0.9153,
+        "pixelDeltaPercentage": 2.311,
+        "mismatchedPixelCount": 23664,
         "fidelityStatusFromComparator": "UNPROVEN",
         "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
-        "receiptId": "rcpt-8019ebb7deb0639d"
+        "receiptId": "rcpt-01205f311108c3c7"
       },
       "responsiveNarrow": {
         "produced": true,
-        "sha256": "b4aaf5bc1199b1327b1f577ff42e7968ba1f53ca274b17199916558a4e3927c4",
+        "sha256": "fd24183e59e7e11179a8297df75eae7b702f08db77a5c1a64d1701e488baaeef",
         "ssim": null,
         "note": "No paired 360px reference screenshot in repo; SSIM not computed"
       },
@@ -112,8 +153,7 @@
       "pixelPerfect": false,
       "reasons": [
         "responsive narrow-viewport SSIM UNKNOWN",
-        "native SSIM below bar",
-        "pixel delta above bar"
+        "native SSIM below bar"
       ]
     },
     {
@@ -123,10 +163,12 @@
       "width": 390,
       "height": 844,
       "ocr": {
-        "mode": "EXPLICIT_FALLBACK",
-        "method": "ocr-textlikeness",
-        "characterTextClaimed": false,
-        "bands": 0
+        "mode": "REAL_OCR",
+        "method": "tesseract",
+        "characterTextClaimed": true,
+        "bands": 0,
+        "textSample": "Pulse Account Morning run Done 32min Focus block Next 90 min Inbox zero Open 12 left Home Plan Stats Me",
+        "provenance": "UNTRUSTED_SOURCE"
       },
       "layoutRegionCount": 3,
       "roles": [
@@ -168,18 +210,48 @@
           "reason": "syntax markers present"
         }
       },
-      "repairAttempts": 0,
+      "repairCount": 3,
+      "attempts": [
+        {
+          "attempt": 0,
+          "name": "baseline",
+          "repairCount": 0,
+          "ssimScore": 0.7157,
+          "pixelDeltaPercentage": 67.605
+        },
+        {
+          "attempt": 1,
+          "name": "palette-ground",
+          "repairCount": 1,
+          "ssimScore": 0.8223,
+          "pixelDeltaPercentage": 24.666
+        },
+        {
+          "attempt": 2,
+          "name": "region-mean-fill",
+          "repairCount": 2,
+          "ssimScore": 0.8165,
+          "pixelDeltaPercentage": 24.676
+        },
+        {
+          "attempt": 3,
+          "name": "hide-invented-chrome",
+          "repairCount": 3,
+          "ssimScore": 0.8375,
+          "pixelDeltaPercentage": 24.093
+        }
+      ],
       "nativeComparison": {
-        "ssimScore": 0.7157,
-        "pixelDeltaPercentage": 67.605,
-        "mismatchedPixelCount": 222529,
+        "ssimScore": 0.8375,
+        "pixelDeltaPercentage": 24.093,
+        "mismatchedPixelCount": 79304,
         "fidelityStatusFromComparator": "UNPROVEN",
         "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
-        "receiptId": "rcpt-c6784c10bfc7b06c"
+        "receiptId": "rcpt-979bc0a06adb8fae"
       },
       "responsiveNarrow": {
         "produced": true,
-        "sha256": "fe0c8ac98b230181c51df15078d20b567e4b1b27b11891eec5fad4c71a9780c6",
+        "sha256": "4cfd14f2d88a3820c22f5bd14199905121670af1c407f033e7a27fdf71516229",
         "ssim": null,
         "note": "No paired 360px reference screenshot in repo; SSIM not computed"
       },
@@ -198,10 +270,12 @@
       "width": 960,
       "height": 720,
       "ocr": {
-        "mode": "EXPLICIT_FALLBACK",
-        "method": "ocr-textlikeness",
-        "characterTextClaimed": false,
-        "bands": 0
+        "mode": "REAL_OCR",
+        "method": "tesseract",
+        "characterTextClaimed": true,
+        "bands": 0,
+        "textSample": "Contact support Full name | Ada Lovelace Email | ada@example.com Topic | Product help . Message Ineed help exporting my prompts. oY",
+        "provenance": "UNTRUSTED_SOURCE"
       },
       "layoutRegionCount": 3,
       "roles": [
@@ -243,18 +317,48 @@
           "reason": "syntax markers present"
         }
       },
-      "repairAttempts": 0,
+      "repairCount": 3,
+      "attempts": [
+        {
+          "attempt": 0,
+          "name": "baseline",
+          "repairCount": 0,
+          "ssimScore": 0.7621,
+          "pixelDeltaPercentage": 53.131
+        },
+        {
+          "attempt": 1,
+          "name": "palette-ground",
+          "repairCount": 1,
+          "ssimScore": 0.7933,
+          "pixelDeltaPercentage": 47.971
+        },
+        {
+          "attempt": 2,
+          "name": "region-mean-fill",
+          "repairCount": 2,
+          "ssimScore": 0.7932,
+          "pixelDeltaPercentage": 16.246
+        },
+        {
+          "attempt": 3,
+          "name": "hide-invented-chrome",
+          "repairCount": 3,
+          "ssimScore": 0.8087,
+          "pixelDeltaPercentage": 15.745
+        }
+      ],
       "nativeComparison": {
-        "ssimScore": 0.7621,
-        "pixelDeltaPercentage": 53.131,
-        "mismatchedPixelCount": 367241,
+        "ssimScore": 0.8087,
+        "pixelDeltaPercentage": 15.745,
+        "mismatchedPixelCount": 108826,
         "fidelityStatusFromComparator": "UNPROVEN",
         "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
-        "receiptId": "rcpt-21557170f544e1fc"
+        "receiptId": "rcpt-ce46b6af95491129"
       },
       "responsiveNarrow": {
         "produced": true,
-        "sha256": "93c8fe8e90d931fa897fc0c93d79917c146c58371f99aec405712cb63677e1b9",
+        "sha256": "49be447d2891817c09de400adc1da5120ad05e09ce485bfb6fd7bcfa753e055e",
         "ssim": null,
         "note": "No paired 360px reference screenshot in repo; SSIM not computed"
       },
@@ -273,10 +377,12 @@
       "width": 1280,
       "height": 800,
       "ocr": {
-        "mode": "EXPLICIT_FALLBACK",
-        "method": "ocr-textlikeness",
-        "characterTextClaimed": false,
-        "bands": 0
+        "mode": "REAL_OCR",
+        "method": "tesseract",
+        "characterTextClaimed": true,
+        "bands": 0,
+        "textSample": "Acme Ops 9 — Overview (New repo Open tickets SLA risk CSAT. 18 3 94% Queue Owner Status Billing Riya Healthy Onboarding Jon Watch",
+        "provenance": "UNTRUSTED_SOURCE"
       },
       "layoutRegionCount": 4,
       "roles": [
@@ -319,18 +425,48 @@
           "reason": "syntax markers present"
         }
       },
-      "repairAttempts": 0,
+      "repairCount": 3,
+      "attempts": [
+        {
+          "attempt": 0,
+          "name": "baseline",
+          "repairCount": 0,
+          "ssimScore": 0.2146,
+          "pixelDeltaPercentage": 95.216
+        },
+        {
+          "attempt": 1,
+          "name": "palette-ground",
+          "repairCount": 1,
+          "ssimScore": 0.7671,
+          "pixelDeltaPercentage": 99.961
+        },
+        {
+          "attempt": 2,
+          "name": "region-mean-fill",
+          "repairCount": 2,
+          "ssimScore": 0.768,
+          "pixelDeltaPercentage": 99.966
+        },
+        {
+          "attempt": 3,
+          "name": "hide-invented-chrome",
+          "repairCount": 3,
+          "ssimScore": 0.7758,
+          "pixelDeltaPercentage": 99.965
+        }
+      ],
       "nativeComparison": {
-        "ssimScore": 0.2146,
-        "pixelDeltaPercentage": 95.216,
-        "mismatchedPixelCount": 975010,
+        "ssimScore": 0.7758,
+        "pixelDeltaPercentage": 99.965,
+        "mismatchedPixelCount": 1023645,
         "fidelityStatusFromComparator": "UNPROVEN",
         "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
-        "receiptId": "rcpt-aca71ff750afc86b"
+        "receiptId": "rcpt-5c7e7c0735a4ffa9"
       },
       "responsiveNarrow": {
         "produced": true,
-        "sha256": "f42253d46209c59d1cd0c39203ed2f669e7845918a5af5d7da76f356eaeeb1e8",
+        "sha256": "dbf2f256b497c7b59c61e58c4b54016bf7aca7b5f2a20e826e7c792ca645dfd5",
         "ssim": null,
         "note": "No paired 360px reference screenshot in repo; SSIM not computed"
       },
@@ -349,10 +485,12 @@
       "width": 1100,
       "height": 760,
       "ocr": {
-        "mode": "EXPLICIT_FALLBACK",
-        "method": "ocr-textlikeness",
-        "characterTextClaimed": false,
-        "bands": 0
+        "mode": "REAL_OCR",
+        "method": "tesseract",
+        "characterTextClaimed": true,
+        "bands": 0,
+        "textSample": "Pattern library Indigo calm Teal focus Amber notice Primary surfaces Action accents Warnings Rose alert Slate quiet Green success Blocking errors Secondary text Completed states",
+        "provenance": "UNTRUSTED_SOURCE"
       },
       "layoutRegionCount": 3,
       "roles": [
@@ -394,18 +532,48 @@
           "reason": "syntax markers present"
         }
       },
-      "repairAttempts": 0,
+      "repairCount": 3,
+      "attempts": [
+        {
+          "attempt": 0,
+          "name": "baseline",
+          "repairCount": 0,
+          "ssimScore": 0.7453,
+          "pixelDeltaPercentage": 76.395
+        },
+        {
+          "attempt": 1,
+          "name": "palette-ground",
+          "repairCount": 1,
+          "ssimScore": 0.7898,
+          "pixelDeltaPercentage": 99.979
+        },
+        {
+          "attempt": 2,
+          "name": "region-mean-fill",
+          "repairCount": 2,
+          "ssimScore": 0.7839,
+          "pixelDeltaPercentage": 99.977
+        },
+        {
+          "attempt": 3,
+          "name": "hide-invented-chrome",
+          "repairCount": 3,
+          "ssimScore": 0.7952,
+          "pixelDeltaPercentage": 99.977
+        }
+      ],
       "nativeComparison": {
-        "ssimScore": 0.7453,
-        "pixelDeltaPercentage": 76.395,
-        "mismatchedPixelCount": 638659,
+        "ssimScore": 0.7952,
+        "pixelDeltaPercentage": 99.977,
+        "mismatchedPixelCount": 835805,
         "fidelityStatusFromComparator": "UNPROVEN",
         "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
-        "receiptId": "rcpt-f2561694433a8941"
+        "receiptId": "rcpt-5ffb1ee39c13ef1e"
       },
       "responsiveNarrow": {
         "produced": true,
-        "sha256": "dbbadeac1f02ea173634770a24628238695fe7cef6714571b5313eef0e84f114",
+        "sha256": "a7a771fc547a23c2c108729aae0769b0d5c6943ace032adbe81be4113eca4e65",
         "ssim": null,
         "note": "No paired 360px reference screenshot in repo; SSIM not computed"
       },
@@ -424,10 +592,12 @@
       "width": 1200,
       "height": 800,
       "ocr": {
-        "mode": "EXPLICIT_FALLBACK",
-        "method": "ocr-textlikeness",
-        "characterTextClaimed": false,
-        "bands": 0
+        "mode": "REAL_OCR",
+        "method": "tesseract",
+        "characterTextClaimed": true,
+        "bands": 0,
+        "textSample": "Oo NIGHT TELEMETRY live + 42ms Ss) Throughput Oo ingest ok queue 12 retry 1 drop 0 - ;",
+        "provenance": "UNTRUSTED_SOURCE"
       },
       "layoutRegionCount": 3,
       "roles": [
@@ -469,18 +639,48 @@
           "reason": "syntax markers present"
         }
       },
-      "repairAttempts": 0,
+      "repairCount": 3,
+      "attempts": [
+        {
+          "attempt": 0,
+          "name": "baseline",
+          "repairCount": 0,
+          "ssimScore": 0.6288,
+          "pixelDeltaPercentage": 52.48
+        },
+        {
+          "attempt": 1,
+          "name": "palette-ground",
+          "repairCount": 1,
+          "ssimScore": 0.5418,
+          "pixelDeltaPercentage": 99.64
+        },
+        {
+          "attempt": 2,
+          "name": "region-mean-fill",
+          "repairCount": 2,
+          "ssimScore": 0.4868,
+          "pixelDeltaPercentage": 99.768
+        },
+        {
+          "attempt": 3,
+          "name": "hide-invented-chrome",
+          "repairCount": 3,
+          "ssimScore": 0.4921,
+          "pixelDeltaPercentage": 99.741
+        }
+      ],
       "nativeComparison": {
-        "ssimScore": 0.6288,
-        "pixelDeltaPercentage": 52.48,
-        "mismatchedPixelCount": 503806,
+        "ssimScore": 0.4921,
+        "pixelDeltaPercentage": 99.741,
+        "mismatchedPixelCount": 957510,
         "fidelityStatusFromComparator": "UNPROVEN",
         "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
-        "receiptId": "rcpt-0930186fd6ca1efa"
+        "receiptId": "rcpt-b4106db1073c926c"
       },
       "responsiveNarrow": {
         "produced": true,
-        "sha256": "26863fe8e38d1115fec2d04d7e8bff3723f51c8f3ec12434dc6e313907863676",
+        "sha256": "2d259c97d8f7275bbe3bdf31ae1d37031b86d72398c2bda4cccd8d0d54546cff",
         "ssim": null,
         "note": "No paired 360px reference screenshot in repo; SSIM not computed"
       },
@@ -495,10 +695,49 @@
   ],
   "adversarial": {
     "kind": "synthetic high-frequency noise 320x200",
-    "ssimScore": 0.0819,
-    "pixelDeltaPercentage": 95.927,
+    "repairCount": 3,
+    "attempts": [
+      {
+        "attempt": 0,
+        "name": "baseline",
+        "repairCount": 0,
+        "ssimScore": 0.0819,
+        "pixelDeltaPercentage": 95.927
+      },
+      {
+        "attempt": 1,
+        "name": "palette-ground",
+        "repairCount": 1,
+        "ssimScore": 0.0881,
+        "pixelDeltaPercentage": 95.892
+      },
+      {
+        "attempt": 2,
+        "name": "region-mean-fill",
+        "repairCount": 2,
+        "ssimScore": 0.0857,
+        "pixelDeltaPercentage": 97.395
+      },
+      {
+        "attempt": 3,
+        "name": "hide-invented-chrome",
+        "repairCount": 3,
+        "ssimScore": 0.1012,
+        "pixelDeltaPercentage": 97.244
+      }
+    ],
+    "ssimScore": 0.1012,
+    "pixelDeltaPercentage": 97.244,
     "releaseStatus": "MEASURED_BELOW_BAR",
-    "pixelPerfect": false
+    "pixelPerfect": false,
+    "ocr": {
+      "mode": "REAL_OCR",
+      "method": "tesseract",
+      "characterTextClaimed": false,
+      "bands": 0,
+      "textSample": "",
+      "provenance": "UNTRUSTED_SOURCE"
+    }
   },
   "final": "HOLD"
 }
