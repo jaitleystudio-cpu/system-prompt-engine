@@ -107,19 +107,58 @@ export interface ModelManifest {
   opsetVersion?: number;
 }
 
+export type AuthorizationSource =
+  | "BUILTIN_CANONICAL_REGISTRY"
+  | "SIGNED_TRUSTED_CATALOG";
+
+export interface TrustedPackAuthorization {
+  modelId: string;
+  catalogVersion: string;
+  canonicalManifestDigest: ManifestDigest;
+  authorizedPayloadSha256: PayloadSha256;
+  sourceRepository: string;
+  sourceRevision: string;
+  licenseStatus: string;
+  authorizationSource: AuthorizationSource;
+  authorizedAt: string;
+}
+
+export const INFERENCE_EXECUTION_RECEIPT_BRAND = Symbol("INFERENCE_EXECUTION_RECEIPT_BRAND");
+
+export interface InferenceExecutionReceipt {
+  readonly __brand: typeof INFERENCE_EXECUTION_RECEIPT_BRAND;
+  candidateSha: string;
+  modelId: string;
+  verifiedPayloadSha256: PayloadSha256;
+  backend: RuntimeBackend;
+  sessionCreated: boolean;
+  sessionRun: boolean;
+  rawInputDigest: string;
+  canonicalInputDigest: string;
+  outputDigest: string;
+  startedAt: string;
+  completedAt: string;
+  durationMs: number;
+  runtimeVersion: string;
+}
+
+export type ModelArtifactClass = "PRODUCTION_RELEASE" | "TEST_FIXTURE" | "UNTRUSTED_SIDELOAD" | "EXPERIMENTAL_MODEL";
+
 export interface ModelPack {
   manifest: ModelManifest;
   state: ModelPackState;
   provisioning: ProvisioningMode;
   installedBytes: number;
   activeBackend: RuntimeBackend;
-  verifiedDigest: string | null; // Alias for verifiedPayloadDigest for backward compatibility
+  verifiedDigest: string | null; // Deprecated display-only alias
   verifiedPayloadDigest?: PayloadSha256 | null;
   archiveSha256?: ArchiveSha256 | null;
   artifactLicenseStatus?: "VERIFIED_MIT" | "VERIFIED_APACHE_2_0" | "UNVERIFIED" | "HOLD";
+  trustedAuthorization?: TrustedPackAuthorization | null;
+  executionReceipt?: InferenceExecutionReceipt | null;
   errorMessage?: string;
   installedAt?: string;
-  artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+  artifactClass?: ModelArtifactClass;
   productionQualificationAllowed?: boolean;
 }
 
@@ -134,7 +173,7 @@ export interface OfflineModelPackage {
   archiveSha256?: ArchiveSha256;
   manifestDigest?: ManifestDigest;
   packagedAt: string;
-  artifactClass: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+  artifactClass: "PRODUCTION_RELEASE" | "TEST_FIXTURE" | "UNTRUSTED_SIDELOAD";
   productionQualificationAllowed: boolean;
 }
 
@@ -245,7 +284,7 @@ export interface InferenceSessionReceipt {
   outputDigest: string;
   timestamp: string;
   rawUserDataEgress: 0;
-  artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
+  artifactClass?: ModelArtifactClass;
   productionQualificationAllowed?: boolean;
   networkTrace?: NetworkObservabilityTrace;
   sessionCreateProven?: boolean;

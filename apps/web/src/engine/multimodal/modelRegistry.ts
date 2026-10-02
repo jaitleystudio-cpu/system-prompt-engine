@@ -13,6 +13,7 @@
  */
 
 import { computeSha256 } from "../hashUtils";
+import { INFERENCE_EXECUTION_RECEIPT_BRAND } from "./types";
 import type {
   ModelManifest,
   ModelPack,
@@ -27,6 +28,8 @@ import type {
   ManifestDigest,
   ArchiveSha256,
   RecognizerCapability,
+  TrustedPackAuthorization,
+  InferenceExecutionReceipt,
 } from "./types";
 
 /**
@@ -793,6 +796,9 @@ export const CANONICAL_PRODUCTION_MODELS: Record<string, CanonicalProductionMode
     isLiveVerified: false,
     opsetVersion: 17,
   },
+};
+
+export const EXPERIMENTAL_MODEL_CANDIDATES: Record<string, CanonicalProductionModel> = {
   "spe-ui-segmenter-int8": {
     modelId: "spe-ui-segmenter-int8",
     version: "1.0.0",
@@ -826,6 +832,8 @@ export const CANONICAL_PRODUCTION_MODELS: Record<string, CanonicalProductionMode
     ],
     totalSizeBytes: 3_450_000,
     sha256: "133f13472e0d8458f076ea20371f93249847094fe0a2edc1b1fd493edf16d76f",
+    manifestDigest: "133f13472e0d8458f076ea20371f93249847094fe0a2edc1b1fd493edf16d76f",
+    expectedPayloadSha256: "133f13472e0d8458f076ea20371f93249847094fe0a2edc1b1fd493edf16d76f",
     supportedRuntimes: ["WEBGPU", "WASM"],
     supportedLanguages: ["all"],
     minimumMemoryMb: 64,
@@ -879,6 +887,8 @@ export const CANONICAL_PRODUCTION_MODELS: Record<string, CanonicalProductionMode
     ],
     totalSizeBytes: 28_600_000,
     sha256: "d1cf262b80015d76cf9fa3c30c0fca6bcce5bc0b38147d4ef58178d8887d950e",
+    manifestDigest: "d1cf262b80015d76cf9fa3c30c0fca6bcce5bc0b38147d4ef58178d8887d950e",
+    expectedPayloadSha256: "d1cf262b80015d76cf9fa3c30c0fca6bcce5bc0b38147d4ef58178d8887d950e",
     supportedRuntimes: ["WEBGPU", "WASM"],
     supportedLanguages: ["en", "es", "fr", "de", "pt", "it", "nl", "pl", "code"],
     minimumMemoryMb: 256,
@@ -930,8 +940,13 @@ export function deriveModelManifestFromProvenance(
   };
 }
 
+export const CANONICAL_ALL_MODELS: Record<string, CanonicalProductionModel> = {
+  ...CANONICAL_PRODUCTION_MODELS,
+  ...EXPERIMENTAL_MODEL_CANDIDATES,
+};
+
 export const PRODUCTION_MODEL_PROVENANCE: Record<string, UpstreamModelProvenance> = Object.fromEntries(
-  Object.entries(CANONICAL_PRODUCTION_MODELS).map(([k, v]) => [
+  Object.entries(CANONICAL_ALL_MODELS).map(([k, v]) => [
     k,
     {
       modelId: v.modelId,
@@ -959,12 +974,161 @@ export const PRODUCTION_MODEL_PROVENANCE: Record<string, UpstreamModelProvenance
   ]),
 );
 
-export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = Object.fromEntries(
+export const TRUSTED_MODEL_CATALOG: Record<string, ModelManifest> = Object.fromEntries(
   Object.entries(CANONICAL_PRODUCTION_MODELS).map(([k, v]) => [
     k,
     deriveModelManifestFromProvenance(v),
   ]),
 );
+
+export const EXPERIMENTAL_MODEL_CATALOG: Record<string, ModelManifest> = Object.fromEntries(
+  Object.entries(EXPERIMENTAL_MODEL_CANDIDATES).map(([k, v]) => [
+    k,
+    deriveModelManifestFromProvenance(v),
+  ]),
+);
+
+export const VETTED_MODEL_MANIFESTS: Record<string, ModelManifest> = {
+  ...TRUSTED_MODEL_CATALOG,
+  ...EXPERIMENTAL_MODEL_CATALOG,
+};
+
+/**
+ * Creates canonical authorization for a model from built-in trusted catalog.
+ * Strict: Experimental and unknown models are rejected.
+ */
+export function createTrustedPackAuthorization(
+  modelId: string,
+  authorizationSource: "BUILTIN_CANONICAL_REGISTRY" | "SIGNED_TRUSTED_CATALOG" = "BUILTIN_CANONICAL_REGISTRY",
+): TrustedPackAuthorization {
+  const canonical = TRUSTED_MODEL_CATALOG[modelId];
+  if (!canonical) {
+    throw new Error(
+      `CANONICAL_AUTHORIZATION_FAILED: Model '${modelId}' is not in TRUSTED_MODEL_CATALOG. Experimental or unknown models cannot receive trusted authorization.`,
+    );
+  }
+  const prov = CANONICAL_PRODUCTION_MODELS[modelId];
+  return {
+    modelId,
+    catalogVersion: canonical.version,
+    canonicalManifestDigest: canonical.manifestDigest || canonical.sha256,
+    authorizedPayloadSha256: canonical.expectedPayloadSha256 || canonical.sha256,
+    sourceRepository: prov?.upstreamRepository || canonical.source,
+    sourceRevision: prov?.revision || "v" + canonical.version,
+    licenseStatus: canonical.artifactLicenseStatus || "UNVERIFIED",
+    authorizationSource,
+    authorizedAt: new Date().toISOString(),
+  };
+}
+
+/**
+ * Validates untrusted archive contents against canonical trusted manifest.
+ * Fails closed on any discrepancy: file size, file SHA, missing required file, or extra file.
+ */
+export function validateUntrustedArchiveAgainstTrustedManifest(
+  pkg: OfflineModelPackage,
+  trustedManifest: ModelManifest,
+): void {
+  if (pkg.modelId !== trustedManifest.modelId) {
+    throw new Error(
+      `SIDELOAD_CANONICAL_MISMATCH: Model ID mismatch between archive ('${pkg.modelId}') and canonical manifest ('${trustedManifest.modelId}')`,
+    );
+  }
+
+  const pkgFiles = pkg.files || {};
+  const canonicalFileMap = new Map(trustedManifest.files.map((f) => [f.name, f]));
+
+  for (const canonFile of trustedManifest.files) {
+    const pkgFileBytes = pkgFiles[canonFile.name];
+    if (!pkgFileBytes) {
+      if (canonFile.required) {
+        throw new Error(
+          `SIDELOAD_CANONICAL_MISMATCH: Archive missing required canonical file: '${canonFile.name}'`,
+        );
+      }
+      continue;
+    }
+
+    if (canonFile.sizeBytes > 0 && pkgFileBytes.length !== canonFile.sizeBytes) {
+      throw new Error(
+        `SIDELOAD_CANONICAL_MISMATCH: File size mismatch for '${canonFile.name}': archive has ${pkgFileBytes.length} bytes, canonical requires ${canonFile.sizeBytes} bytes`,
+      );
+    }
+
+    const computedFileSha = computeSha256(pkgFileBytes);
+    if (canonFile.sha256 && computedFileSha.toLowerCase() !== canonFile.sha256.toLowerCase()) {
+      throw new Error(
+        `SIDELOAD_CANONICAL_MISMATCH: File digest mismatch for '${canonFile.name}': computed ${computedFileSha}, canonical requires ${canonFile.sha256}`,
+      );
+    }
+  }
+
+  for (const fileName of Object.keys(pkgFiles)) {
+    if (!canonicalFileMap.has(fileName)) {
+      throw new Error(
+        `SIDELOAD_CANONICAL_MISMATCH: Unexpected extra file '${fileName}' in archive not declared in canonical manifest`,
+      );
+    }
+  }
+}
+
+/**
+ * Runtime-branded InferenceExecutionReceipt constructor.
+ */
+export function createInferenceExecutionReceipt(params: {
+  candidateSha: string;
+  modelId: string;
+  verifiedPayloadSha256: PayloadSha256;
+  backend: RuntimeBackend;
+  sessionCreated: boolean;
+  sessionRun: boolean;
+  rawInputDigest: string;
+  canonicalInputDigest?: string;
+  outputDigest: string;
+  startedAt?: string;
+  completedAt?: string;
+  durationMs?: number;
+  runtimeVersion?: string;
+}): InferenceExecutionReceipt {
+  const startedAt = params.startedAt || new Date().toISOString();
+  const completedAt = params.completedAt || new Date().toISOString();
+  return {
+    __brand: INFERENCE_EXECUTION_RECEIPT_BRAND,
+    candidateSha: params.candidateSha,
+    modelId: params.modelId,
+    verifiedPayloadSha256: params.verifiedPayloadSha256,
+    backend: params.backend,
+    sessionCreated: params.sessionCreated,
+    sessionRun: params.sessionRun,
+    rawInputDigest: params.rawInputDigest,
+    canonicalInputDigest: params.canonicalInputDigest || params.rawInputDigest,
+    outputDigest: params.outputDigest,
+    startedAt,
+    completedAt,
+    durationMs: params.durationMs ?? 1,
+    runtimeVersion: params.runtimeVersion || "1.19.0",
+  };
+}
+
+/**
+ * Validates InferenceExecutionReceipt integrity and unforgeable brand.
+ */
+export function validateInferenceExecutionReceipt(
+  receipt: unknown,
+): receipt is InferenceExecutionReceipt {
+  if (!receipt || typeof receipt !== "object") return false;
+  const r = receipt as any;
+  if (r.__brand !== INFERENCE_EXECUTION_RECEIPT_BRAND) return false;
+  if (!r.candidateSha || typeof r.candidateSha !== "string") return false;
+  if (!r.modelId || typeof r.modelId !== "string") return false;
+  if (!r.verifiedPayloadSha256 || typeof r.verifiedPayloadSha256 !== "string") return false;
+  if (!r.backend || typeof r.backend !== "string") return false;
+  if (r.sessionCreated !== true || r.sessionRun !== true) return false;
+  if (!r.rawInputDigest || typeof r.rawInputDigest !== "string") return false;
+  if (!r.outputDigest || typeof r.outputDigest !== "string") return false;
+  if (typeof r.durationMs !== "number" || r.durationMs < 0) return false;
+  return true;
+}
 
 export const STALE_MODEL_IDENTITIES = [
   "onnx-community/whisper-tiny-onnx-int8",
@@ -1486,8 +1650,8 @@ export class ModelPackRegistry {
       assertSemanticModelValidity(manifest, prov);
     }
 
-    // Initialize vetted packs in NOT_INSTALLED state with decoupled manifest copies
-    for (const [modelId, manifest] of Object.entries(VETTED_MODEL_MANIFESTS)) {
+    // Initialize trusted packs in NOT_INSTALLED state with decoupled manifest copies
+    for (const [modelId, manifest] of Object.entries(TRUSTED_MODEL_CATALOG)) {
       this.installedPacks.set(modelId, {
         manifest: {
           ...manifest,
@@ -1501,6 +1665,31 @@ export class ModelPackRegistry {
         verifiedPayloadDigest: null,
         archiveSha256: null,
         artifactLicenseStatus: manifest.artifactLicenseStatus,
+        productionQualificationAllowed: true,
+        trustedAuthorization: null,
+        executionReceipt: null,
+      });
+    }
+
+    // Initialize experimental candidate packs quarantined from production qualification
+    for (const [modelId, manifest] of Object.entries(EXPERIMENTAL_MODEL_CATALOG)) {
+      this.installedPacks.set(modelId, {
+        manifest: {
+          ...manifest,
+          files: manifest.files.map((f) => ({ ...f })),
+        },
+        state: "NOT_INSTALLED",
+        provisioning: "EXPLICIT_DOWNLOAD",
+        installedBytes: 0,
+        activeBackend: "UNAVAILABLE",
+        verifiedDigest: null,
+        verifiedPayloadDigest: null,
+        archiveSha256: null,
+        artifactLicenseStatus: manifest.artifactLicenseStatus,
+        artifactClass: "EXPERIMENTAL_MODEL",
+        productionQualificationAllowed: false,
+        trustedAuthorization: null,
+        executionReceipt: null,
       });
     }
   }
@@ -1671,6 +1860,8 @@ export class ModelPackRegistry {
 
   /**
    * Sideloads an offline packaged archive directly into the registry.
+   * LAW: UNTRUSTED_PACKAGE != TRUSTED_AUTHORITY
+   * Archive manifests cannot overwrite canonical trusted registry metadata.
    */
   async sideloadPack(
     archiveBytes: Uint8Array,
@@ -1682,27 +1873,108 @@ export class ModelPackRegistry {
     rawUserDataEgress: 0;
   }> {
     const pkg = unpackModelArchive(archiveBytes);
+    const canonicalManifest = TRUSTED_MODEL_CATALOG[pkg.modelId];
+    const isTrusted = Boolean(canonicalManifest);
+
     let pack = this.installedPacks.get(pkg.modelId);
-    if (!pack) {
-      pack = {
-        manifest: pkg.manifest,
-        state: "NOT_INSTALLED",
-        provisioning: "OFFLINE_SIDELOAD",
-        installedBytes: 0,
-        activeBackend: "UNAVAILABLE",
-        verifiedDigest: null,
-        verifiedPayloadDigest: pkg.payloadSha256 || pkg.archiveDigest,
-        archiveSha256: pkg.archiveSha256,
-        artifactLicenseStatus: pkg.manifest.artifactLicenseStatus,
-        artifactClass: pkg.artifactClass,
-        productionQualificationAllowed: pkg.productionQualificationAllowed,
-      };
-      this.installedPacks.set(pkg.modelId, pack);
+
+    if (isTrusted && canonicalManifest) {
+      if (pkg.artifactClass === "PRODUCTION_RELEASE") {
+        // Must validate untrusted archive against canonical manifest
+        validateUntrustedArchiveAgainstTrustedManifest(pkg, canonicalManifest);
+        const trustedAuth = createTrustedPackAuthorization(pkg.modelId, "BUILTIN_CANONICAL_REGISTRY");
+        if (!pack) {
+          pack = {
+            manifest: {
+              ...canonicalManifest,
+              files: canonicalManifest.files.map((f) => ({ ...f })),
+            },
+            state: "NOT_INSTALLED",
+            provisioning: "OFFLINE_SIDELOAD",
+            installedBytes: 0,
+            activeBackend: "UNAVAILABLE",
+            verifiedDigest: null,
+            verifiedPayloadDigest: pkg.payloadSha256 || null,
+            archiveSha256: pkg.archiveSha256,
+            artifactLicenseStatus: canonicalManifest.artifactLicenseStatus,
+            artifactClass: "PRODUCTION_RELEASE",
+            productionQualificationAllowed: true,
+            trustedAuthorization: trustedAuth,
+            executionReceipt: null,
+          };
+          this.installedPacks.set(pkg.modelId, pack);
+        } else {
+          pack.manifest = {
+            ...canonicalManifest,
+            files: canonicalManifest.files.map((f) => ({ ...f })),
+          };
+          pack.artifactClass = "PRODUCTION_RELEASE";
+          pack.productionQualificationAllowed = true;
+          pack.artifactLicenseStatus = canonicalManifest.artifactLicenseStatus;
+          pack.trustedAuthorization = trustedAuth;
+        }
+      } else {
+        // TEST_FIXTURE or unverified for known model: permitted as test fixture, strictly blocked from production qualification
+        const fixtureManifest: ModelManifest = {
+          ...pkg.manifest,
+          qualificationState: "ARTIFACT_UNVERIFIED",
+          artifactLicenseStatus: canonicalManifest.artifactLicenseStatus,
+        };
+        if (!pack) {
+          pack = {
+            manifest: fixtureManifest,
+            state: "NOT_INSTALLED",
+            provisioning: "OFFLINE_SIDELOAD",
+            installedBytes: 0,
+            activeBackend: "UNAVAILABLE",
+            verifiedDigest: null,
+            verifiedPayloadDigest: pkg.payloadSha256 || null,
+            archiveSha256: pkg.archiveSha256,
+            artifactLicenseStatus: canonicalManifest.artifactLicenseStatus,
+            artifactClass: "TEST_FIXTURE",
+            productionQualificationAllowed: false,
+            trustedAuthorization: null,
+            executionReceipt: null,
+          };
+          this.installedPacks.set(pkg.modelId, pack);
+        } else {
+          pack.manifest = fixtureManifest;
+          pack.artifactClass = "TEST_FIXTURE";
+          pack.productionQualificationAllowed = false;
+          pack.trustedAuthorization = null;
+        }
+      }
     } else {
-      pack.manifest = pkg.manifest;
-      pack.artifactClass = pkg.artifactClass;
-      pack.productionQualificationAllowed = pkg.productionQualificationAllowed;
-      pack.artifactLicenseStatus = pkg.manifest.artifactLicenseStatus;
+      // Unknown or experimental candidate model
+      if (!pack) {
+        pack = {
+          manifest: {
+            ...pkg.manifest,
+            qualificationState: "ARTIFACT_UNVERIFIED",
+          },
+          state: "NOT_INSTALLED",
+          provisioning: "OFFLINE_SIDELOAD",
+          installedBytes: 0,
+          activeBackend: "UNAVAILABLE",
+          verifiedDigest: null,
+          verifiedPayloadDigest: pkg.payloadSha256 || null,
+          archiveSha256: pkg.archiveSha256,
+          artifactLicenseStatus: pkg.manifest.artifactLicenseStatus,
+          artifactClass: "UNTRUSTED_SIDELOAD",
+          productionQualificationAllowed: false,
+          trustedAuthorization: null,
+          executionReceipt: null,
+        };
+        this.installedPacks.set(pkg.modelId, pack);
+      } else {
+        pack.manifest = {
+          ...pkg.manifest,
+          qualificationState: "ARTIFACT_UNVERIFIED",
+        };
+        pack.artifactClass = "UNTRUSTED_SIDELOAD";
+        pack.productionQualificationAllowed = false;
+        pack.trustedAuthorization = null;
+      }
     }
 
     await this.provisionPack(pkg.modelId, "OFFLINE_SIDELOAD", pkg.files, targetBackend);
@@ -1720,21 +1992,66 @@ export class ModelPackRegistry {
   }
 
   /**
-   * Assert production qualification readiness; strictly fails closed if synthetic or fixture-only.
+   * Attaches an independently verified InferenceExecutionReceipt to an installed pack.
    */
-  assertProductionQualified(modelId: string): void {
+  recordExecutionReceipt(
+    modelId: string,
+    receipt: InferenceExecutionReceipt,
+  ): void {
+    if (!validateInferenceExecutionReceipt(receipt)) {
+      throw new Error("INVALID_EXECUTION_RECEIPT: Execution receipt failed validation");
+    }
+    const pack = this.installedPacks.get(modelId);
+    if (!pack) {
+      throw new Error(`Model pack not found in registry: ${modelId}`);
+    }
+    if (receipt.modelId !== modelId) {
+      throw new Error(
+        `EXECUTION_RECEIPT_MISMATCH: Receipt modelId '${receipt.modelId}' does not match pack '${modelId}'`,
+      );
+    }
+    if (pack.verifiedPayloadDigest && receipt.verifiedPayloadSha256 !== pack.verifiedPayloadDigest) {
+      throw new Error(
+        `EXECUTION_RECEIPT_MISMATCH: Receipt payload SHA '${receipt.verifiedPayloadSha256}' does not match pack verified payload SHA '${pack.verifiedPayloadDigest}'`,
+      );
+    }
+    pack.executionReceipt = receipt;
+  }
+
+  /**
+   * Assert production qualification readiness; strictly fails closed if synthetic or fixture-only.
+   * Requires:
+   * 1. Membership in TRUSTED_MODEL_CATALOG (experimental models strictly rejected).
+   * 2. TrustedPackAuthorization from built-in canonical registry.
+   * 3. Non-HOLD / non-UNVERIFIED artifact license status.
+   * 4. Cryptographic verifiedPayloadDigest from real binary bytes.
+   * 5. Valid InferenceExecutionReceipt with sessionCreated=true, sessionRun=true, matching candidateSha.
+   */
+  assertProductionQualified(modelId: string, currentCandidateSha?: string): void {
+    if (!TRUSTED_MODEL_CATALOG[modelId]) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: Model '${modelId}' is not in TRUSTED_MODEL_CATALOG. Experimental and untrusted models cannot be production qualified.`,
+      );
+    }
+
     const pack = this.installedPacks.get(modelId);
     if (!pack || pack.state !== "READY") {
       throw new Error(`Model ${modelId} is not installed or ready.`);
     }
-    if (pack.artifactClass === "TEST_FIXTURE" || !pack.productionQualificationAllowed) {
+
+    if (
+      pack.artifactClass === "TEST_FIXTURE" ||
+      pack.artifactClass === "UNTRUSTED_SIDELOAD" ||
+      pack.artifactClass === "EXPERIMENTAL_MODEL" ||
+      !pack.productionQualificationAllowed
+    ) {
       throw new Error(
-        `PRODUCTION_QUALIFICATION_REJECTED: Model ${modelId} is a TEST_FIXTURE. Synthetic model assets cannot receive qualified status.`,
+        `PRODUCTION_QUALIFICATION_REJECTED: Model ${modelId} is marked artifactClass='${pack.artifactClass}'. Synthetic, fixture, and untrusted model assets cannot receive qualified status.`,
       );
     }
 
     // License Check: Reject HOLD or UNVERIFIED license status
-    const prov = PRODUCTION_MODEL_PROVENANCE[modelId];
+    const prov = CANONICAL_PRODUCTION_MODELS[modelId];
     const licenseStatus =
       pack.artifactLicenseStatus ||
       pack.manifest.artifactLicenseStatus ||
@@ -1745,20 +2062,70 @@ export class ModelPackRegistry {
       );
     }
 
+    // Check trusted authorization
+    if (!pack.trustedAuthorization) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: Model ${modelId} lacks valid TrustedPackAuthorization from built-in canonical catalog.`,
+      );
+    }
+    if (pack.trustedAuthorization.modelId !== modelId) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: TrustedPackAuthorization modelId '${pack.trustedAuthorization.modelId}' does not match pack '${modelId}'.`,
+      );
+    }
+
     // Verified Digest Check: Must have a valid verified payload digest
-    const verifiedPayloadSha = pack.verifiedPayloadDigest || pack.verifiedDigest;
+    const verifiedPayloadSha = pack.verifiedPayloadDigest;
     if (!verifiedPayloadSha) {
       throw new Error(
         `PRODUCTION_QUALIFICATION_REJECTED: Model ${modelId} lacks a verified payload digest.`,
       );
     }
 
-    if (isStringLabelDerivedDigest(verifiedPayloadSha) || isStringLabelDerivedDigest(pack.manifest.sha256)) {
+    if (
+      isStringLabelDerivedDigest(verifiedPayloadSha) ||
+      isStringLabelDerivedDigest(pack.manifest.sha256)
+    ) {
       throw new Error(
         `PRODUCTION_QUALIFICATION_REJECTED: String-label derived digest detected in model ${modelId}. Must be cryptographically computed from actual model binary bytes.`,
       );
     }
-    if (pack.manifest.qualificationState !== "QUALIFIED" && pack.manifest.qualificationState !== "INFERENCE_VERIFIED") {
+
+    // Execution Receipt Check: Must prove session was created AND session.run executed
+    if (!pack.executionReceipt) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: Model ${modelId} lacks an InferenceExecutionReceipt. Actual runtime execution (session.run) is required for qualification.`,
+      );
+    }
+
+    if (!validateInferenceExecutionReceipt(pack.executionReceipt)) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: Invalid or forged InferenceExecutionReceipt for model ${modelId}.`,
+      );
+    }
+
+    if (!pack.executionReceipt.sessionCreated || !pack.executionReceipt.sessionRun) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: Inference execution receipt indicates sessionRun was not completed (sessionCreated=${pack.executionReceipt.sessionCreated}, sessionRun=${pack.executionReceipt.sessionRun}).`,
+      );
+    }
+
+    if (pack.executionReceipt.verifiedPayloadSha256 !== verifiedPayloadSha) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: Execution receipt payload SHA '${pack.executionReceipt.verifiedPayloadSha256}' does not match pack verified payload SHA '${verifiedPayloadSha}'.`,
+      );
+    }
+
+    if (currentCandidateSha && pack.executionReceipt.candidateSha !== currentCandidateSha) {
+      throw new Error(
+        `PRODUCTION_QUALIFICATION_REJECTED: Candidate SHA mismatch: receipt has '${pack.executionReceipt.candidateSha}', required '${currentCandidateSha}'.`,
+      );
+    }
+
+    if (
+      pack.manifest.qualificationState !== "QUALIFIED" &&
+      pack.manifest.qualificationState !== "INFERENCE_VERIFIED"
+    ) {
       throw new Error(
         `PRODUCTION_QUALIFICATION_REJECTED: Model ${modelId} manifest state is '${pack.manifest.qualificationState}'. Real external model binary required for production qualification.`,
       );
@@ -1766,7 +2133,7 @@ export class ModelPackRegistry {
   }
 
   /**
-   * Uninstall / drop model pack from memory.
+   * Uninstall / drop model pack from memory and purge all volatile custody proof.
    */
   evictPack(modelId: string): void {
     const pack = this.installedPacks.get(modelId);
@@ -1775,6 +2142,11 @@ export class ModelPackRegistry {
       pack.installedBytes = 0;
       pack.activeBackend = "UNAVAILABLE";
       pack.verifiedDigest = null;
+      pack.verifiedPayloadDigest = null;
+      pack.archiveSha256 = null;
+      pack.installedAt = undefined;
+      pack.trustedAuthorization = null;
+      pack.executionReceipt = null;
     }
     this.loadedModelAssets.delete(modelId);
   }
@@ -2047,4 +2419,11 @@ export function sideloadPack(
   targetBackend: "WEBGPU" | "WASM" = "WASM",
 ) {
   return globalModelRegistry.sideloadPack(archiveBytes, targetBackend);
+}
+
+export function recordExecutionReceipt(
+  modelId: string,
+  receipt: InferenceExecutionReceipt,
+) {
+  return globalModelRegistry.recordExecutionReceipt(modelId, receipt);
 }

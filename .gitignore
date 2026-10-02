@@ -236,3 +236,5 @@ apps/web/node_modules/
 # Local provider qualification evidence
 qualification/*_receipt.json
 .worktrees/
+.model_cache/
+*.spemodel

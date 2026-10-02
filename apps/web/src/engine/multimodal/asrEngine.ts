@@ -82,6 +82,124 @@ export function computeCer(reference: string, hypothesis: string): number {
   return d[m][n] / m;
 }
 
+/**
+ * Decodes standard RIFF/WAVE PCM audio buffers into normalized Float32Array (-1.0 to 1.0).
+ * Handles mono, stereo, 8-bit, 16-bit, and 32-bit float PCM.
+ * Rejects corrupted WAV headers, missing chunks, and unsupported compressed formats.
+ */
+export function decodeWavPcm(buffer: ArrayBuffer | Uint8Array): {
+  pcmData: Float32Array;
+  sampleRate: number;
+  channels: number;
+} {
+  const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+  if (bytes.length < 12) {
+    throw new Error("WAV_DECODE_ERROR: Buffer too short to be a valid WAV file (<12 bytes)");
+  }
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const tag = (offset: number) =>
+    String.fromCharCode(bytes[offset], bytes[offset + 1], bytes[offset + 2], bytes[offset + 3]);
+
+  if (tag(0) === "RIFF" && tag(8) === "WAVE") {
+    let offset = 12;
+    let fmtParsed = false;
+    let audioFormat = 1;
+    let numChannels = 1;
+    let sampleRate = 16000;
+    let bitsPerSample = 16;
+    let dataOffset = -1;
+    let dataLength = 0;
+
+    while (offset + 8 <= bytes.length) {
+      const chunkId = tag(offset);
+      const chunkSize = view.getUint32(offset + 4, true);
+      const chunkDataStart = offset + 8;
+
+      if (chunkId === "fmt ") {
+        audioFormat = view.getUint16(chunkDataStart, true);
+        numChannels = view.getUint16(chunkDataStart + 2, true);
+        sampleRate = view.getUint32(chunkDataStart + 4, true);
+        bitsPerSample = view.getUint16(chunkDataStart + 14, true);
+        fmtParsed = true;
+      } else if (chunkId === "data") {
+        dataOffset = chunkDataStart;
+        dataLength = Math.min(chunkSize, bytes.length - chunkDataStart);
+        break;
+      }
+      offset += 8 + chunkSize;
+    }
+
+    if (!fmtParsed || dataOffset < 0) {
+      throw new Error("WAV_DECODE_ERROR: Corrupted WAV: missing fmt or data chunk");
+    }
+    if (audioFormat !== 1 && audioFormat !== 3) {
+      throw new Error(
+        `WAV_DECODE_ERROR: Unsupported audio format: ${audioFormat} (only PCM and IEEE float supported)`,
+      );
+    }
+    if (numChannels < 1 || numChannels > 8) {
+      throw new Error(`WAV_DECODE_ERROR: Invalid channel count: ${numChannels}`);
+    }
+    if (sampleRate < 8000 || sampleRate > 192000) {
+      throw new Error(`WAV_DECODE_ERROR: Invalid sample rate: ${sampleRate}`);
+    }
+
+    let pcmData: Float32Array;
+    if (audioFormat === 1) {
+      if (bitsPerSample === 16) {
+        const sampleCount = Math.floor(dataLength / (2 * numChannels));
+        pcmData = new Float32Array(sampleCount);
+        for (let i = 0; i < sampleCount; i++) {
+          let sum = 0;
+          for (let ch = 0; ch < numChannels; ch++) {
+            const byteIdx = dataOffset + (i * numChannels + ch) * 2;
+            const sample = view.getInt16(byteIdx, true);
+            sum += sample / 32768.0;
+          }
+          pcmData[i] = sum / numChannels;
+        }
+      } else if (bitsPerSample === 8) {
+        const sampleCount = Math.floor(dataLength / numChannels);
+        pcmData = new Float32Array(sampleCount);
+        for (let i = 0; i < sampleCount; i++) {
+          let sum = 0;
+          for (let ch = 0; ch < numChannels; ch++) {
+            const byteIdx = dataOffset + (i * numChannels + ch);
+            const sample = (bytes[byteIdx] - 128) / 128.0;
+            sum += sample;
+          }
+          pcmData[i] = sum / numChannels;
+        }
+      } else {
+        throw new Error(`WAV_DECODE_ERROR: Unsupported bitsPerSample: ${bitsPerSample}`);
+      }
+    } else {
+      // IEEE float (32-bit)
+      const sampleCount = Math.floor(dataLength / (4 * numChannels));
+      pcmData = new Float32Array(sampleCount);
+      for (let i = 0; i < sampleCount; i++) {
+        let sum = 0;
+        for (let ch = 0; ch < numChannels; ch++) {
+          const byteIdx = dataOffset + (i * numChannels + ch) * 4;
+          sum += view.getFloat32(byteIdx, true);
+        }
+        pcmData[i] = sum / numChannels;
+      }
+    }
+
+    return { pcmData, sampleRate, channels: numChannels };
+  }
+
+  // Not a RIFF header -> assume raw 16-bit mono/stereo PCM
+  const numSamples = Math.floor(bytes.length / 2);
+  const pcm16 = new Int16Array(bytes.buffer, bytes.byteOffset, numSamples);
+  const pcmData = new Float32Array(numSamples);
+  for (let i = 0; i < numSamples; i++) {
+    pcmData[i] = pcm16[i] / 32768.0;
+  }
+  return { pcmData, sampleRate: 16000, channels: 1 };
+}
+
 export interface AudioTranscribeOptions {
   audioBytes: ArrayBuffer | Uint8Array;
   sampleRate?: number;
@@ -115,18 +233,38 @@ export class LocalAsrEngine {
     inputSampleRate = 44100,
   ): Promise<Float32Array> {
     const raw = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
-    // Convert 16-bit PCM or Float32 to normalized -1.0 to 1.0 Float32Array
-    const numSamples = Math.floor(raw.length / 2);
-    const pcm16 = new Int16Array(raw.buffer, raw.byteOffset, numSamples);
+    const tag = raw.length >= 12
+      ? String.fromCharCode(raw[0], raw[1], raw[2], raw[3]) + String.fromCharCode(raw[8], raw[9], raw[10], raw[11])
+      : "";
+
+    let pcmData: Float32Array;
+    let actualSampleRate = inputSampleRate;
+
+    if (tag === "RIFFWAVE") {
+      const decoded = decodeWavPcm(raw);
+      pcmData = decoded.pcmData;
+      actualSampleRate = decoded.sampleRate;
+    } else {
+      const numSamples = Math.floor(raw.length / 2);
+      const pcm16 = new Int16Array(raw.buffer, raw.byteOffset, numSamples);
+      pcmData = new Float32Array(numSamples);
+      for (let i = 0; i < numSamples; i++) {
+        pcmData[i] = pcm16[i] / 32768.0;
+      }
+    }
 
     const targetRate = 16000;
-    const resampleRatio = targetRate / inputSampleRate;
-    const targetLength = Math.max(1, Math.floor(numSamples * resampleRatio));
+    if (actualSampleRate === targetRate) {
+      return pcmData;
+    }
+
+    const resampleRatio = targetRate / actualSampleRate;
+    const targetLength = Math.max(1, Math.floor(pcmData.length * resampleRatio));
     const out = new Float32Array(targetLength);
 
     for (let i = 0; i < targetLength; i++) {
-      const srcIdx = Math.min(numSamples - 1, Math.floor(i / resampleRatio));
-      out[i] = pcm16[srcIdx] / 32768.0;
+      const srcIdx = Math.min(pcmData.length - 1, Math.floor(i / resampleRatio));
+      out[i] = pcmData[srcIdx];
     }
 
     return out;
@@ -447,6 +585,9 @@ export class LocalAsrEngine {
       rawUserDataEgress: 0,
       artifactClass: "TEST_FIXTURE",
       productionQualificationAllowed: false,
+      sessionCreateProven: false,
+      sessionRunProven: false,
+      realModelExecuted: false,
       networkTrace: {
         modelDownloadNetworkBytes: 0,
         inferenceNetworkBytes: 0,
