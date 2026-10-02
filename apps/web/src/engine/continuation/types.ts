@@ -194,6 +194,14 @@ export interface ReviewSubmission {
   /** Dirty candidate requires patchDigest. */
   worktreeDirty?: boolean;
   repo?: string;
+  /**
+   * Caller-minted capability assertions. Always UNTRUSTED_CLAIM.
+   * Cannot convert static FULL_SCHOLARLY_INDEX=NO / LIVE_RETRACTION=NO into PASS.
+   */
+  liveIndex?: boolean;
+  fullIndex?: boolean;
+  scholarlyVerified?: boolean;
+  qualified?: boolean;
 }
 
 export interface ContinuationContract {
