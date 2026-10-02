@@ -1,0 +1,90 @@
+{
+  "lane": "G3-l10n",
+  "startSha": "a6d686635c2b5ac12a8060a31657330afe90cbd3",
+  "pr80": "https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/80",
+  "published": [
+    "en"
+  ],
+  "unpublished": [
+    "es",
+    "ar",
+    "ja",
+    "zh-Hans",
+    "hi",
+    "pt-BR",
+    "de",
+    "fr"
+  ],
+  "worldwideLocalizationPass": false,
+  "records": [
+    {
+      "id": "en",
+      "state": "PUBLISHED",
+      "catalogKeyCount": 13,
+      "englishCopyKeyCount": 13,
+      "advertisedAsShipped": true
+    },
+    {
+      "id": "es",
+      "state": "CATALOG_PRESENT_UNPUBLISHED",
+      "catalogKeyCount": 13,
+      "englishCopyKeyCount": 0,
+      "advertisedAsShipped": false
+    },
+    {
+      "id": "ar",
+      "state": "CATALOG_PRESENT_UNPUBLISHED",
+      "catalogKeyCount": 13,
+      "englishCopyKeyCount": 0,
+      "advertisedAsShipped": false
+    },
+    {
+      "id": "ja",
+      "state": "CATALOG_PRESENT_UNPUBLISHED",
+      "catalogKeyCount": 13,
+      "englishCopyKeyCount": 0,
+      "advertisedAsShipped": false
+    },
+    {
+      "id": "zh-Hans",
+      "state": "CATALOG_PRESENT_UNPUBLISHED",
+      "catalogKeyCount": 13,
+      "englishCopyKeyCount": 0,
+      "advertisedAsShipped": false
+    },
+    {
+      "id": "hi",
+      "state": "CATALOG_PRESENT_UNPUBLISHED",
+      "catalogKeyCount": 13,
+      "englishCopyKeyCount": 0,
+      "advertisedAsShipped": false
+    },
+    {
+      "id": "pt-BR",
+      "state": "REGISTERED_NO_CATALOG",
+      "catalogKeyCount": 0,
+      "englishCopyKeyCount": 0,
+      "advertisedAsShipped": false
+    },
+    {
+      "id": "de",
+      "state": "REGISTERED_NO_CATALOG",
+      "catalogKeyCount": 0,
+      "englishCopyKeyCount": 0,
+      "advertisedAsShipped": false
+    },
+    {
+      "id": "fr",
+      "state": "REGISTERED_NO_CATALOG",
+      "catalogKeyCount": 0,
+      "englishCopyKeyCount": 0,
+      "advertisedAsShipped": false
+    }
+  ],
+  "hreflangAdvertised": [
+    "en",
+    "x-default"
+  ],
+  "note": "Catalogs for es, ar, ja, zh-Hans, and hi are present and are not byte-identical to English. They stay UNPUBLISHED because PUBLISHED_LOCALES is English-only and no shipped route was verified. pt-BR, de, and fr are registered with no catalog. No translations were added.",
+  "final": "HOLD"
+}

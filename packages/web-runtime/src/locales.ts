@@ -470,3 +470,69 @@ export function formatMessage(
   }
   return key;
 }
+
+export type LocaleShipState =
+  | "PUBLISHED"
+  | "CATALOG_PRESENT_UNPUBLISHED"
+  | "REGISTERED_NO_CATALOG";
+
+export interface LocalePublicationRecord {
+  readonly id: string;
+  readonly state: LocaleShipState;
+  readonly catalogKeyCount: number;
+  readonly englishCopyKeyCount: number;
+  readonly advertisedAsShipped: boolean;
+}
+
+/**
+ * Registered catalogs are not shipped locales.
+ * A locale is PUBLISHED only when it is in PUBLISHED_LOCALES, its catalog
+ * covers every English key with a non-empty value, and a non-English catalog
+ * is not a copy of the English strings. English remains the only published
+ * locale until a route is actually shipped.
+ */
+export function localePublicationCensus(): {
+  readonly published: readonly string[];
+  readonly unpublished: readonly string[];
+  readonly worldwideLocalizationPass: boolean;
+  readonly records: readonly LocalePublicationRecord[];
+} {
+  const english = MESSAGES[DEFAULT_LOCALE.id] ?? {};
+  const englishKeys = Object.keys(english);
+  const advertised = new Set(
+    buildHreflangAlternates("https://example.invalid/").map((row) => row.hreflang),
+  );
+  const records: LocalePublicationRecord[] = SUPPORTED_LOCALES.map((locale) => {
+    const table = MESSAGES[locale.id];
+    const catalogKeyCount = table ? Object.keys(table).length : 0;
+    const englishCopyKeyCount = table
+      ? englishKeys.filter((key) => table[key] === english[key] && table[key].length > 0).length
+      : 0;
+    const complete = Boolean(
+      table &&
+        englishKeys.every((key) => typeof table[key] === "string" && table[key].length > 0),
+    );
+    const flagged = PUBLISHED_LOCALES.includes(locale.id);
+    const copyBlocksPublication = locale.id !== DEFAULT_LOCALE.id && englishCopyKeyCount > 0;
+    const published = flagged && complete && !copyBlocksPublication;
+    let state: LocaleShipState;
+    if (published) state = "PUBLISHED";
+    else if (catalogKeyCount > 0) state = "CATALOG_PRESENT_UNPUBLISHED";
+    else state = "REGISTERED_NO_CATALOG";
+    return {
+      id: locale.id,
+      state,
+      catalogKeyCount,
+      englishCopyKeyCount,
+      advertisedAsShipped: advertised.has(locale.id),
+    };
+  });
+  const published = records.filter((row) => row.state === "PUBLISHED").map((row) => row.id);
+  const unpublished = records.filter((row) => row.state !== "PUBLISHED").map((row) => row.id);
+  return {
+    published,
+    unpublished,
+    worldwideLocalizationPass: published.length === SUPPORTED_LOCALES.length,
+    records,
+  };
+}
