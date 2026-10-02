@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Smoke: theme module + route map (no browser). */
+/** Smoke: theme module + public route map (no browser). Private paths stay out of sitemap. */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -11,20 +11,27 @@ const theme = readFileSync(join(root, "src/ui/theme.ts"), "utf8");
 const robots = readFileSync(join(root, "public/robots.txt"), "utf8");
 const sitemap = readFileSync(join(root, "public/sitemap.xml"), "utf8");
 
-for (const p of [
+const PUBLIC_PATHS = [
   "/",
   "/create",
   "/code",
   "/daily-lab",
-  "/my-work",
   "/privacy",
   "/capabilities",
-]) {
+];
+const PRIVATE_PATHS = ["/my-work", "/workspace"];
+
+for (const p of PUBLIC_PATHS) {
   assert.match(routing, new RegExp(p.replace("/", "\\/")));
-  if (p !== "/") assert.match(sitemap, new RegExp(p));
-  assert.match(robots, /Allow:/);
+  if (p !== "/") assert.match(sitemap, new RegExp(p.replace(/\//g, "\\/")));
+}
+for (const p of PRIVATE_PATHS) {
+  assert.match(routing, new RegExp(p.replace("/", "\\/")));
+  assert.doesNotMatch(sitemap, new RegExp(p.replace(/\//g, "\\/")));
+  assert.match(robots, new RegExp(`Disallow:\\s*${p.replace(/\//g, "\\/")}`));
 }
 assert.match(robots, /Allow:\s*\/capabilities/);
+assert.doesNotMatch(robots, /Allow:\s*\/my-work/);
 assert.match(theme, /ThemePreference/);
 assert.match(theme, /spe-theme/);
 assert.match(theme, /prefers-color-scheme/);

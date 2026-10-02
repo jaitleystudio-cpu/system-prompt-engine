@@ -8,6 +8,9 @@ import {
   type AppView,
 } from "../routing";
 
+/** Device-local / inspect surfaces — must not be advertised as indexable. */
+const NOINDEX_VIEWS: ReadonlySet<AppView> = new Set(["workspace", "my-work"]);
+
 function upsertMeta(attr: "name" | "property", key: string, content: string) {
   let el = document.head.querySelector(
     `meta[${attr}="${key}"]`,
@@ -32,6 +35,14 @@ function upsertLink(rel: string, href: string) {
   el.href = href;
 }
 
+function removeLink(rel: string) {
+  document.head.querySelector(`link[rel="${rel}"]`)?.remove();
+}
+
+function removeMeta(attr: "name" | "property", key: string) {
+  document.head.querySelector(`meta[${attr}="${key}"]`)?.remove();
+}
+
 function upsertJsonLd(id: string, data: Record<string, unknown>) {
   let el = document.getElementById(id) as HTMLScriptElement | null;
   if (!el) {
@@ -47,39 +58,65 @@ function removeJsonLd(id: string) {
   document.getElementById(id)?.remove();
 }
 
-export function SeoHead({ view }: { view: AppView }) {
+export function SeoHead({
+  view,
+  unlisted = false,
+  notFound = false,
+}: {
+  view: AppView;
+  /** Private or unknown routes must not be indexed (optional shell wiring). */
+  unlisted?: boolean;
+  notFound?: boolean;
+}) {
   useEffect(() => {
     const meta = ROUTE_META[view];
+    const privateSurface =
+      unlisted || notFound || NOINDEX_VIEWS.has(view);
+    const title = notFound ? "Page not found — SPE" : meta.title;
+    const description = notFound
+      ? "That address is not a page in this preview."
+      : meta.description;
     const url = absoluteUrl(meta.path);
-    document.title = meta.title;
-    upsertMeta("name", "description", meta.description);
-    upsertLink("canonical", url);
-    upsertMeta("property", "og:type", "website");
-    upsertMeta("property", "og:site_name", "SPE — System Prompt Engine");
-    upsertMeta("property", "og:title", meta.title);
-    upsertMeta("property", "og:description", meta.description);
-    upsertMeta("property", "og:url", url);
-    upsertMeta(
-      "property",
-      "og:image",
-      absoluteUrl("/art/intent-core.webp"),
-    );
-    upsertMeta("name", "twitter:card", "summary_large_image");
-    upsertMeta("name", "twitter:title", meta.title);
-    upsertMeta("name", "twitter:description", meta.description);
+    document.title = title;
+    upsertMeta("name", "description", description);
     upsertMeta(
       "name",
-      "twitter:image",
-      absoluteUrl("/art/intent-core.webp"),
+      "robots",
+      privateSurface ? "noindex, nofollow" : "index, follow",
     );
-    upsertJsonLd("spe-jsonld-app", jsonLdSoftwareApplication());
-    if (view === "capabilities") {
-      upsertJsonLd("spe-jsonld-capabilities-page", jsonLdCapabilitiesWebPage());
-      upsertJsonLd("spe-jsonld-capabilities-faq", jsonLdCapabilitiesFaq());
-    } else {
+    upsertMeta("property", "og:type", "website");
+    upsertMeta("property", "og:site_name", "SPE — System Prompt Engine");
+    upsertMeta("property", "og:title", title);
+    upsertMeta("property", "og:description", description);
+    upsertMeta("name", "twitter:card", "summary_large_image");
+    upsertMeta("name", "twitter:title", title);
+    upsertMeta("name", "twitter:description", description);
+    if (privateSurface) {
+      // Do not advertise private/unknown surfaces as published URLs.
+      removeLink("canonical");
+      removeMeta("property", "og:url");
+      removeMeta("property", "og:image");
+      removeMeta("name", "twitter:image");
+      removeJsonLd("spe-jsonld-app");
       removeJsonLd("spe-jsonld-capabilities-page");
       removeJsonLd("spe-jsonld-capabilities-faq");
+    } else {
+      upsertLink("canonical", url);
+      upsertMeta("property", "og:url", url);
+      upsertMeta("property", "og:image", absoluteUrl("/art/intent-core.webp"));
+      upsertMeta("name", "twitter:image", absoluteUrl("/art/intent-core.webp"));
+      upsertJsonLd("spe-jsonld-app", jsonLdSoftwareApplication());
+      if (view === "capabilities") {
+        upsertJsonLd(
+          "spe-jsonld-capabilities-page",
+          jsonLdCapabilitiesWebPage(),
+        );
+        upsertJsonLd("spe-jsonld-capabilities-faq", jsonLdCapabilitiesFaq());
+      } else {
+        removeJsonLd("spe-jsonld-capabilities-page");
+        removeJsonLd("spe-jsonld-capabilities-faq");
+      }
     }
-  }, [view]);
+  }, [view, unlisted, notFound]);
   return null;
 }
