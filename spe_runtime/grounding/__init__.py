@@ -35,6 +35,11 @@ from spe_runtime.grounding.live_fabric import (
     ADAPTERS_IMPLEMENTED,
     LIVE_INDEX,
     LIVE_RETRACTION,
+    LivePromotionGateEvidence,
+    count_identity_provider_agreement,
+    evaluate_live_promotion_gate,
+    may_promote_live_index,
+    may_promote_live_retraction,
 )
 from spe_runtime.grounding.live_adapters import (
     acquire_scholarly_hits,
@@ -62,6 +67,11 @@ __all__ = [
     "LIVE_INDEX",
     "LIVE_RETRACTION",
     "ADAPTERS_IMPLEMENTED",
+    "LivePromotionGateEvidence",
+    "count_identity_provider_agreement",
+    "evaluate_live_promotion_gate",
+    "may_promote_live_index",
+    "may_promote_live_retraction",
     "acquire_scholarly_hits",
     "hits_to_capsules",
     "compile_context",
