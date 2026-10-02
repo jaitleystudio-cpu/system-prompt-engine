@@ -1,0 +1,72 @@
+{
+  "subject_sha": "e55fd369f1e5412b5ce7f665a3f354e879ad0779",
+  "git_head_at_run": "e55fd369f1e5412b5ce7f665a3f354e879ad0779",
+  "command": "SPE_PLAYWRIGHT_MODULE=/tmp/spe-perf-pw/node_modules/playwright/index.js node tools/perf/measure_lane_cwv.mjs",
+  "browser": "Google Chrome via Playwright channel=chrome",
+  "host": "127.0.0.1",
+  "remote": false,
+  "product_shell_measured": false,
+  "pixel_pass": false,
+  "pass": false,
+  "cwv": "UNKNOWN",
+  "lcpMs": null,
+  "clsRaw": null,
+  "inpMs": null,
+  "pages": [
+    {
+      "id": "home",
+      "path": "/home.html",
+      "lcpMs": 52,
+      "cls": 0,
+      "inpMs": 16
+    },
+    {
+      "id": "create",
+      "path": "/create.html",
+      "lcpMs": 40,
+      "cls": 0,
+      "inpMs": 16
+    },
+    {
+      "id": "code",
+      "path": "/code.html",
+      "lcpMs": 32,
+      "cls": 0,
+      "inpMs": 16
+    },
+    {
+      "id": "lab",
+      "path": "/lab.html",
+      "lcpMs": 36,
+      "cls": 0,
+      "inpMs": 16
+    },
+    {
+      "id": "capabilities",
+      "path": "/capabilities.html",
+      "lcpMs": 32,
+      "cls": 0,
+      "inpMs": 16
+    },
+    {
+      "id": "privacy",
+      "path": "/privacy.html",
+      "lcpMs": 40,
+      "cls": 0,
+      "inpMs": 16
+    },
+    {
+      "id": "not-found",
+      "path": "/not-found.html",
+      "lcpMs": 36,
+      "cls": 0,
+      "inpMs": 16
+    }
+  ],
+  "blocker": null,
+  "note": "Top-level product CWV stays UNKNOWN. Page entries are lab samples of standalone crawl documents only, and only if this command observed them. Identical inpMs values are raw Chrome event durations from one click, not field INP. CLS is the layout-shift observer sum. No vitals PASS and no pixel PASS.",
+  "lcp": "UNKNOWN",
+  "cls": "UNKNOWN",
+  "inp": "UNKNOWN",
+  "status": "UNKNOWN"
+}
