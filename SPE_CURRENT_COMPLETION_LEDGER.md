@@ -68,6 +68,8 @@ OFFLINE≠LIVE · CACHE≠LIVE · DOI≠validated · NO_MATCH≠NOT_RETRACTED ·
 
 | Key | Value |
 |---|---|
-| TIP_SHA | `717f3b8ce344c1afc608ba57b4a8628551541682` |
+| TIP_SHA | branch HEAD (oracle slice `717f3b8ce344c1afc608ba57b4a8628551541682`) |
 | Phase | 0 owners mapped + 1 oracles RED |
 | IMPL_STATUS | oracle-only (fail-closed TS stubs; no live adapters) |
+
+| DRAFT_PR | [#99](https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/99) (base VR1; oracle slice) |
