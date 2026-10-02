@@ -23,6 +23,15 @@ import type {
   ClaimEvidenceGraph,
   ContinuationContract,
 } from "./types";
+import {
+  adapterToKernelTargetId,
+  cursorPromptIsHostOnly,
+  isKernelTargetId,
+  measureObligationPreservation,
+  type ObligationSet,
+} from "./oracleGuards";
+
+export { measureObligationPreservation, adapterToKernelTargetId, isKernelTargetId };
 
 export type TargetExportModel =
   | "claude"
@@ -52,6 +61,22 @@ export function compileContinuationContract(
     "Stop immediately if any existing regression test fails (exit code != 0).",
     "Stop if unexpected schema changes or boundary type modifications are required.",
     "Stop and HOLD if external network egress is requested.",
+  ];
+  const mustNot: string[] = [
+    "MUST_NOT deploy, merge, host, release, or spend without a separate human grant.",
+    "MUST_NOT paste production credentials, .env secrets, or private keys into prompts.",
+    "MUST_NOT invent Cursor model capabilities from the editor name.",
+    "MUST_NOT downgrade evidence requirements from MUST to should.",
+  ];
+  const privacy: string[] = [
+    "Privacy: omit secrets from public research queries; minimize local absolute paths.",
+    "Privacy: RAW_USER_DATA_EGRESS = 0 for scholarly fabric unless explicit consent and public hosts.",
+  ];
+  const rollback: string[] = [
+    "Rollback: revert the surgical patch and restore baseline SHA if gates fail.",
+  ];
+  const evidenceRequirements: string[] = [
+    "Evidence requirements are MUST: independent executor receipts bound to candidate SHA.",
   ];
 
   if (review.verdict === "FAIL") {
@@ -102,7 +127,6 @@ export function compileContinuationContract(
   );
   const unknowns = review.unknowns.map((u) => `[UNKNOWN] ${u}`);
 
-  // Base prompt template
   const nextTaskPrompt = formatTargetModelPrompt(
     targetProfile as TargetExportModel,
     mission,
@@ -113,7 +137,8 @@ export function compileContinuationContract(
     contradictions,
     unknowns,
     testGates,
-    stopConditions
+    stopConditions,
+    { mustNot, privacy, rollback, evidenceRequirements },
   );
 
   return {
@@ -150,29 +175,54 @@ export function formatTargetModelPrompt(
   contradictions: string[],
   unknowns: string[],
   testGates: string[],
-  stopConditions: string[]
+  stopConditions: string[],
+  extras?: {
+    mustNot?: string[];
+    privacy?: string[];
+    rollback?: string[];
+    evidenceRequirements?: string[];
+  },
 ): string {
+  const mustNot = extras?.mustNot || [
+    "MUST_NOT deploy, merge, host, release, or spend without a separate human grant.",
+    "MUST_NOT paste production credentials, .env secrets, or private keys into prompts.",
+  ];
+  const privacy = extras?.privacy || [
+    "Privacy: omit secrets from public research queries; minimize local absolute paths.",
+  ];
+  const rollback = extras?.rollback || [
+    "Rollback: revert the surgical patch and restore baseline SHA if gates fail.",
+  ];
+  const evidenceRequirements = extras?.evidenceRequirements || [
+    "Evidence requirements are MUST: independent executor receipts bound to candidate SHA.",
+  ];
+
   const profileDirectives: Record<TargetExportModel, string> = {
     claude:
-      "Role: Claude Code / Anthropic Senior Systems Engineer\nDirectives: Enforce tool-use boundaries, minimal surgical diff patches, and structured verification terminal commands.",
+      "Role: Claude Code / Anthropic Senior Systems Engineer\nDirectives: Enforce tool-use boundaries, minimal surgical diff patches, and structured verification terminal commands. Do not invent tools beyond the continuation contract.",
     codex:
-      "Role: OpenAI Codex / GPT-4o Lead Systems Architect\nDirectives: Provide concise functional pipelines, explicit boundary assertions, and clear operational constraints.",
+      "Role: OpenAI Codex Lead Systems Architect\nDirectives: Provide concise functional pipelines, explicit boundary assertions, and clear operational constraints.",
     cursor:
-      "Role: Cursor Autonomous Lead Agent\nDirectives: Prioritize precise symbol modifications, preserve existing file conventions, and emit verification commands.",
+      "Role: Cursor editor host instructions only\nDirectives: Cursor is the host only. Do not attribute model capabilities to the Cursor product name. Prefer precise symbol modifications and emit verification commands.",
     grok:
-      "Role: Grok Lead Verification Engineer\nDirectives: Apply rigorous first-principles reasoning, detect hidden edge cases, and enforce formal invariant proofs.",
+      "Role: Grok Lead Verification Engineer\nDirectives: Apply rigorous first-principles reasoning, detect hidden edge cases, and keep Open Unknowns visible.",
     local_coder:
-      "Role: Qwen 2.5 / DeepSeek High-Assurance Coding Specialist\nDirectives: Enforce step-by-step reasoning scaffolds, complete symbol signatures, and strict code block boundaries.",
+      "Role: Local open-weights coding specialist\nDirectives: Enforce step-by-step reasoning scaffolds, complete symbol signatures, preserve rollback and stop conditions.",
     generic:
-      "Role: Autonomous Verification & Coding Agent\nDirectives: Provide deterministic differential remediation, formal proofs, and regression tests.",
+      "Role: Autonomous Verification & Coding Agent\nDirectives: Provide deterministic differential remediation and keep unknowns explicit.",
   };
 
   const directive = profileDirectives[target] || profileDirectives.generic;
+  const kernelMap = adapterToKernelTargetId(target);
+  const kernelNote = kernelMap
+    ? `Kernel TargetModelId mapping: ${kernelMap}`
+    : `Adapter-only profile (not a kernel TargetModelId). Do not invent kernel ids such as cursor-ultimate.`;
 
-  return `## Autonomous Continuation Task
+  const prompt = `## Autonomous Continuation Task
 Target Profile: ${target.toUpperCase()}
 Authority Level: ADVISORY_ONLY (Zero Autonomous Deployment Authority)
 Baseline Git SHA: \`${baselineSha}\`
+${kernelNote}
 
 ${directive}
 
@@ -185,15 +235,54 @@ ${mission}
 ### Ordered Execution Plan
 ${steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}
 
+### MUST / MUST_NOT
+${mustNot.map((m) => `- [!] ${m}`).join("\n")}
+
+### Privacy Constraints
+${privacy.map((m) => `- [!] ${m}`).join("\n")}
+
+### Rollback
+${rollback.map((m) => `- [!] ${m}`).join("\n")}
+
 ### Verified Evidence & Grounding
 ${evidence.length > 0 ? evidence.join("\n") : "- (No verified evidence currently attached)"}
 
+${evidenceRequirements.map((m) => `- [MUST] ${m}`).join("\n")}
+
 ${contradictions.length > 0 ? `### Active Contradictions to Resolve:\n${contradictions.join("\n")}\n` : ""}
-${unknowns.length > 0 ? `### Open Unknowns to Verify:\n${unknowns.join("\n")}\n` : ""}
+### Open Unknowns to Verify
+${unknowns.length > 0 ? unknowns.join("\n") : "- (No open unknowns listed — still treat missing evidence as UNKNOWN != PASS)"}
 
 ### Mandatory Acceptance Test Gates
 ${testGates.map((g) => `- [ ] ${g}`).join("\n")}
 
 ### Strict Stop Conditions
 ${stopConditions.map((c) => `- [!] ${c}`).join("\n")}`;
+
+  if (target === "cursor" && !cursorPromptIsHostOnly(prompt)) {
+    throw new Error("Cursor export invented model capabilities; host-only invariant violated.");
+  }
+
+  const obligations: ObligationSet = {
+    objective: mission,
+    must: evidenceRequirements,
+    mustNot,
+    authority: "ADVISORY_ONLY",
+    baselineSha,
+    evidenceRequirements,
+    unknowns,
+    tests: testGates,
+    stops: stopConditions,
+    privacy,
+    rollback,
+  };
+  const preservation = measureObligationPreservation(prompt, obligations);
+  if (preservation.ratio < 1) {
+    throw new Error(
+      `MANDATORY_OBLIGATION_PRESERVATION=${preservation.ratio} missing=${preservation.missing.join("|")}`,
+    );
+  }
+
+  return prompt;
 }
+

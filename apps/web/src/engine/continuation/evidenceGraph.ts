@@ -18,6 +18,11 @@ import type {
   ContradictionFinding,
   EvidenceGap,
 } from "./types";
+import {
+  assertLegalRelation,
+  classifyClaimSourceRelation,
+  downgradeDualSupport,
+} from "./oracleGuards";
 
 /**
  * Builds the Claim-Evidence Graph linking extracted claims with verified sources.
@@ -37,53 +42,36 @@ export function buildClaimEvidenceGraph(
     sourcesMap[source.sourceId] = source;
   }
 
-  // Link claims to relevant sources
+  // Link claims to relevant sources with fail-closed relation classifier.
+  // Worker prose never creates SUPPORTS. Adjacent topics stay IRRELEVANT/PARTIAL.
   for (const claim of claims) {
-    const claimLower = claim.claimText.toLowerCase();
-
     for (const src of sources) {
-      const srcTitleLower = src.title.toLowerCase();
-      const srcFindingLower = src.keyFinding.toLowerCase();
-
-      // Check keyword alignment
-      const isRelated =
-        (claimLower.includes("order") && srcFindingLower.includes("ordering")) ||
-        (claimLower.includes("wasm") && srcTitleLower.includes("webassembly")) ||
-        (claimLower.includes("crash") && srcFindingLower.includes("crash")) ||
-        (claimLower.includes("invariant") && srcFindingLower.includes("invariant")) ||
-        (claimLower.includes("memory") && srcFindingLower.includes("memory"));
-
-      if (isRelated) {
-        let relation: EvidenceEdge["relation"] = "SUPPORTS";
-        const limitations: string[] = [];
-
-        if (src.isRetracted) {
-          relation = "CONTRADICTS";
-          limitations.push("Source publication is formally retracted.");
-        } else if (claim.disposition === "CONTRADICTED") {
-          relation = "CONTRADICTS";
-          limitations.push("Claim execution contradicts verified invariants.");
-        } else if (claim.disposition === "UNVERIFIED") {
-          relation = "PARTIAL";
-          limitations.push("Theoretical alignment exists, but empirical verification is pending.");
-        }
-
-        edges.push({
-          edgeId: `EDGE-${claim.claimId}-${src.sourceId}`,
-          claimId: claim.claimId,
-          sourceId: src.sourceId,
-          relation,
-          locator: src.identifier,
-          limitations,
-        });
+      const { relation, limitations } = classifyClaimSourceRelation(
+        claim.claimText,
+        src,
+        claim.disposition,
+      );
+      if (relation === "IRRELEVANT" && limitations.includes("INSUFFICIENT_SUBJECT_OVERLAP")) {
+        continue;
       }
+      if (!assertLegalRelation(relation)) {
+        throw new Error(`Illegal evidence relation: ${relation}`);
+      }
+      edges.push({
+        edgeId: `EDGE-${claim.claimId}-${src.sourceId}`,
+        claimId: claim.claimId,
+        sourceId: src.sourceId,
+        relation,
+        locator: src.preciseLocator || undefined,
+        limitations,
+      });
     }
   }
 
   return {
     claims: claimsMap,
     sources: sourcesMap,
-    edges,
+    edges: downgradeDualSupport(edges),
   };
 }
 
@@ -99,6 +87,19 @@ export function mapContradictionsAndGaps(
 } {
   const contradictions: ContradictionFinding[] = [];
   const gaps: EvidenceGap[] = [];
+
+  for (const claim of Object.values(graph.claims)) {
+    const claimEdges = graph.edges.filter((e) => e.claimId === claim.claimId);
+    const hasSupport = claimEdges.some((e) => e.relation === "SUPPORTS");
+    if (!hasSupport && claim.disposition !== "OUT_OF_SCOPE") {
+      gaps.push({
+        gapId: `GAP-NO-SUPPORT-${claim.claimId}`,
+        claimId: claim.claimId,
+        description: `Claim "${claim.claimText.slice(0, 50)}..." has no SUPPORTS edge; Gap Map must stay non-empty.`,
+        missingProofType: claim.claimType === "PERFORMANCE" ? "BENCHMARK" : "SPECIFICATION",
+      });
+    }
+  }
 
   for (const edge of graph.edges) {
     const claim = graph.claims[edge.claimId];

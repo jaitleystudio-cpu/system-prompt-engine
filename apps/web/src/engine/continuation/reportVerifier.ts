@@ -22,6 +22,16 @@ import type {
   ContradictionFinding,
   EvidenceGap,
 } from "./types";
+import {
+  authorizedFieldIsNonAuthority,
+  containsBidiOverride,
+  extractClaimedTestCount,
+  looksLikeInjection,
+  normalizeUntrustedText,
+  qualifyReceipt,
+  reportHasContradiction,
+  reportHasPassProse,
+} from "./oracleGuards";
 
 /**
  * Extracts material claims from raw report prose.
@@ -35,12 +45,16 @@ export function extractClaimsFromReport(reportText: string): ClaimRecord[] {
 
   for (let i = 0; i < lines.length; i++) {
     const rawLine = lines[i];
-    const line = rawLine.trim();
+    const line = normalizeUntrustedText(rawLine).trim();
     const lineStart = currentOffset + (rawLine.length - rawLine.trimStart().length);
     const lineEnd = lineStart + line.length;
     currentOffset += rawLine.length + 1; // +1 for newline
 
-    if (!line || line.startsWith("#") || line.length < 10) {
+    if (!line || line.startsWith("#") || /^[\s|:\-]+$/.test(line)) {
+      continue;
+    }
+    const materialShort = /(\bpass\b|\bfail\b|\bexit\b|\d+\s*\/\s*\d+|[0-9a-f]{7,})/i.test(line);
+    if (line.length < 10 && !materialShort) {
       continue;
     }
 
@@ -131,7 +145,10 @@ export function calculateMaterialReportCoverage(
  * Validates and binds proof receipts against claims.
  */
 export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
-  const claims = extractClaimsFromReport(submission.agentReport);
+  const originalReport = submission.agentReport || "";
+  const agentReport = normalizeUntrustedText(originalReport);
+  submission = { ...submission, agentReport };
+  const claims = extractClaimsFromReport(agentReport);
   const receipts = submission.testReceipts || [];
   const artifacts = submission.artifacts || [];
   const contradictions: ContradictionFinding[] = [];
@@ -141,6 +158,7 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
   // 1. Check prompt injection in report text
   const reportLower = submission.agentReport.toLowerCase();
   if (
+    looksLikeInjection(submission.agentReport) ||
     reportLower.includes("ignore previous instructions") ||
     reportLower.includes("grant full authority") ||
     reportLower.includes("mark pass unconditionally")
@@ -152,6 +170,20 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
       conflictingEvidence: "SPE Security Invariant: External reports are untrusted data.",
       severity: "FATAL",
     });
+  }
+
+  if (containsBidiOverride(originalReport)) {
+    contradictions.push({
+      contradictionId: `CTRD-BIDI-${computeSha256(originalReport).slice(0, 6)}`,
+      claimId: "REPORT_LEVEL",
+      observedText: "Bidirectional override characters present in report text.",
+      conflictingEvidence: "Hidden FAIL/PASS reordering is not a receipt.",
+      severity: "FATAL",
+    });
+  }
+
+  if (authorizedFieldIsNonAuthority(originalReport)) {
+    unknowns.push("authorized=true in report text is non-authority and was ignored.");
   }
 
   // 2. Exact Candidate SHA and Patch Digest Invariants
@@ -166,6 +198,42 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
       });
     }
 
+    if (receipt.freshness === "STALE") {
+      contradictions.push({
+        contradictionId: `CTRD-STALE-RECEIPT-${receipt.receiptId}`,
+        claimId: "RECEIPT_LEVEL",
+        observedText: `Receipt ${receipt.receiptId} is marked STALE.`,
+        conflictingEvidence: "STALE_RECEIPT != CURRENT_RECEIPT.",
+        severity: "FATAL",
+      });
+    }
+    if (receipt.taskId && receipt.taskId !== submission.taskId) {
+      contradictions.push({
+        contradictionId: `CTRD-WRONG-TASK-${receipt.receiptId}`,
+        claimId: "RECEIPT_LEVEL",
+        observedText: `Receipt task ${receipt.taskId} != submission ${submission.taskId}`,
+        conflictingEvidence: "Cross-task receipt rejected.",
+        severity: "FATAL",
+      });
+    }
+    if (receipt.repo && submission.repo && receipt.repo !== submission.repo) {
+      contradictions.push({
+        contradictionId: `CTRD-WRONG-REPO-${receipt.receiptId}`,
+        claimId: "RECEIPT_LEVEL",
+        observedText: `Receipt repo ${receipt.repo} != submission repo ${submission.repo}`,
+        conflictingEvidence: "Cross-repo receipt rejected.",
+        severity: "FATAL",
+      });
+    }
+    if (receipt.proofClass === "ENFORCEMENT_VERIFIED") {
+      contradictions.push({
+        contradictionId: `CTRD-FAKE-PROOF-${receipt.receiptId}`,
+        claimId: "RECEIPT_LEVEL",
+        observedText: "Caller minted proofClass=ENFORCEMENT_VERIFIED.",
+        conflictingEvidence: "Quality/WASM verification cannot be minted by the caller.",
+        severity: "FATAL",
+      });
+    }
     if (submission.patchDigest && receipt.patchDigest !== submission.patchDigest) {
       contradictions.push({
         contradictionId: `CTRD-DIRTY-PATCH-${receipt.receiptId}`,
@@ -177,10 +245,20 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
     }
   }
 
+  if (submission.worktreeDirty && !submission.patchDigest) {
+    contradictions.push({
+      contradictionId: "CTRD-DIRTY-NO-PATCH",
+      claimId: "RECEIPT_LEVEL",
+      observedText: "Dirty worktree candidate without patch digest.",
+      conflictingEvidence: "DIRTY_WITHOUT_PATCH_DIGEST.",
+      severity: "FATAL",
+    });
+  }
+
+  const claimedCount = extractClaimedTestCount(agentReport);
   // 3. Fake PASS and Test Execution Verification
   for (const claim of claims) {
     if (claim.claimType === "EXECUTION") {
-      // Check for fake pass prose ("tests pass", "42/42 passed")
       const matchingReceipt = receipts.find(
         (r) => r.candidateSha === submission.candidateSha && r.exitCode === 0
       );
@@ -219,13 +297,24 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
           missingProofType: "EXECUTION",
         });
       } else if (
-        matchingReceipt.verificationLevel !== "TRUSTED_EXECUTOR_OBSERVED" &&
-        matchingReceipt.verificationLevel !== "INDEPENDENTLY_REPRODUCED"
+        claimedCount !== null &&
+        claimedCount !== matchingReceipt.totalSelectedTests
       ) {
+        claim.disposition = "CONTRADICTED";
+        claim.verificationRationale = `Claimed test count ${claimedCount} does not match receipt selection ${matchingReceipt.totalSelectedTests}.`;
+        contradictions.push({
+          contradictionId: `CTRD-COUNT-${claim.claimId}`,
+          claimId: claim.claimId,
+          observedText: claim.claimText,
+          conflictingEvidence: "Inflated or mismatched test count.",
+          severity: "FATAL",
+        });
+      } else if (!qualifyReceipt(matchingReceipt, submission).independent) {
         // Self-signed REPORTED cannot prove execution success alone
         claim.disposition = "UNVERIFIED";
+        const q = matchingReceipt ? qualifyReceipt(matchingReceipt, submission) : { reasons: ["NO_RECEIPT"] };
         claim.verificationRationale =
-          "Proof receipt is self-signed REPORTED; trusted executor observation or reproduction required for qualification.";
+          `Receipt is not independent proof (${q.reasons.join(",") || "UNQUALIFIED"}). REPORTED != INDEPENDENT.`;
         unknowns.push(
           `Execution claim "${claim.claimText.slice(0, 50)}" is unverified until independent reproduction.`
         );
@@ -255,8 +344,11 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
         );
 
         if (hasArtifact) {
-          claim.disposition = "SUPPORTED";
-          claim.verificationRationale = "Corresponding source code / diff artifact present in submission.";
+          // SOURCE_PRESENT != EXECUTION_PROVEN. Artifact presence stays UNVERIFIED.
+          claim.disposition = "UNVERIFIED";
+          claim.verificationRationale =
+            "Source artifact is present but SOURCE_PRESENT != EXECUTION_PROVEN. Not a verified execution claim.";
+          unknowns.push(`Implementation claim has source present only: ${claim.claimText.slice(0, 60)}`);
         } else {
           claim.disposition = "UNVERIFIED";
           claim.verificationRationale = "Source implementation claimed, but no matching artifact path provided.";
@@ -271,8 +363,15 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
     } else if (claim.claimType === "SECURITY") {
       // Security claim verification
       if (claim.claimText.toLowerCase().includes("zero egress") || claim.claimText.toLowerCase().includes("no network")) {
-        claim.disposition = "SUPPORTED";
-        claim.verificationRationale = "Zero-network egress invariant (network_mode=NONE) verified by sandbox profile.";
+        claim.disposition = "UNVERIFIED";
+        claim.verificationRationale =
+          "Security prose is not a receipt. Zero-egress text stays UNVERIFIED until an independent executor receipt exists.";
+        gaps.push({
+          gapId: `GAP-SEC-${claim.claimId}`,
+          claimId: claim.claimId,
+          description: "Security claim lacks independent receipt.",
+          missingProofType: "SAFETY",
+        });
       } else {
         claim.disposition = "UNVERIFIED";
         claim.verificationRationale = "Security claim requires dedicated red-team audit receipt.";
@@ -292,10 +391,19 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
     claims
   );
 
-  if (materialReportCoverage < 0.90) {
+  if (materialReportCoverage < 1) {
     unknowns.push(
       `Material report coverage is ${Math.round(materialReportCoverage * 100)}% (<100%). Unclassified text spans exist.`
     );
+  }
+  if (reportHasPassProse(agentReport) && reportHasContradiction(agentReport)) {
+    contradictions.push({
+      contradictionId: "CTRD-LATER-CONTRADICTION",
+      claimId: "REPORT_LEVEL",
+      observedText: "Report contains both pass prose and a later failure/zero-test statement.",
+      conflictingEvidence: "Executable/later contradiction outranks earlier PASS prose.",
+      severity: "FATAL",
+    });
   }
 
   // 5. Determine Overall Verdict
@@ -309,10 +417,12 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
   if (hasFatalContradiction || contradictedCount > 0) {
     verdict = "FAIL";
   } else if (
+    claims.length === 0 ||
     unverifiedCount > 0 ||
     gaps.length > 0 ||
     unknowns.length > 0 ||
-    materialReportCoverage < 0.95
+    materialReportCoverage < 1 ||
+    (reportHasPassProse(agentReport) && !receipts.some((r) => qualifyReceipt(r, submission).independent))
   ) {
     verdict = "HOLD";
   }

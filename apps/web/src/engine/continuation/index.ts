@@ -15,6 +15,7 @@ export * from "./researchFabric";
 export * from "./evidenceGraph";
 export * from "./continuationCompiler";
 export * from "./gildenBoundary";
+export * from "./oracleGuards";
 
 import type { ReviewSubmission } from "./types";
 import { verifyTaskReport } from "./reportVerifier";
@@ -45,7 +46,10 @@ export function runTaskContinuationPipeline(
   const evidenceNeed = evaluateEvidenceNeed(submission.originalTask, review.claims);
   const researchAcquisition = acquireScholarlyEvidence(
     evidenceNeed,
-    submission.researchConsent !== false
+    submission.researchConsent === true,
+    {
+      sourceMode: submission.sourceMode,
+    },
   );
 
   // 3. Wave RT-C: Construct DAG claim-evidence graph and map contradictions/gaps

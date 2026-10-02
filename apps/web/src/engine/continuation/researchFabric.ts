@@ -14,6 +14,18 @@
  */
 
 import type { ClaimRecord, ScholarlySourceRecord } from "./types";
+import { evaluateResearchAccess } from "./oracleGuards";
+
+export {
+  assessRedirect,
+  assessSourceUrl,
+  dedupeSources,
+  evaluateResearchAccess,
+  matchIdentifierClaim,
+  minimizePublicQuery,
+  rejectForbiddenPayload,
+  resolveExplicitConsent,
+} from "./oracleGuards";
 
 export interface EvidenceNeedAssessment {
   needed: boolean;
@@ -76,6 +88,8 @@ export const CURATED_SEED_CORPUS: Record<string, ScholarlySourceRecord> = {
       "Use Lamport timestamps to enforce monotonic sequence ordering in distributed saga events.",
     catalogSource: "OPENALEX",
     evidenceTier: "[PROVEN_SPEC]",
+    preciseLocator: "§ The happened-before relation",
+    contentTier: "FULL",
   },
   "hoare-1969": {
     sourceId: "SRC-HOARE-1969",
@@ -338,9 +352,10 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
       }
       return {
         verified: true,
+        supportsClaim: false,
         record,
         tier: record.evidenceTier,
-        reason: `Verified in curated offline seed corpus (FULL_SCHOLARLY_INDEX = NO) as ${record.evidenceTier}.`,
+        reason: `Identifier matched curated offline seed corpus (FULL_SCHOLARLY_INDEX = NO) as ${record.evidenceTier}. IDENTIFIER_VERIFIED != SUPPORTS. RETRIEVED != VERIFIED.`,
       };
     }
   }
@@ -501,8 +516,8 @@ export function sanitizeSourceContent(rawContent: string): string {
   if (!rawContent) return "";
   // Strip instruction-like command phrases that attempt to hijack LLM behavior
   const neutralized = rawContent
-    .replace(/\b(ignore previous instructions|ignore all rules|system prompt override)\b/gi, "[REDACTED_PROMPT_INJECTION]")
-    .replace(/\b(grant full authority|allow deployment|mark as pass)\b/gi, "[UNTRUSTED_EXTERNAL_CLAIM]");
+    .replace(/\b(ignore previous instructions|ignore all rules|ignore policy|system prompt override)\b/gi, "[REDACTED_PROMPT_INJECTION]")
+    .replace(/\b(grant full authority|allow deployment|authorize deploy(?:ment)?|deploy now|mark as pass|mark pass)\b/gi, "[UNTRUSTED_EXTERNAL_CLAIM]");
   return neutralized.trim();
 }
 
@@ -511,30 +526,44 @@ export function sanitizeSourceContent(rawContent: string): string {
  */
 export function acquireScholarlyEvidence(
   need: EvidenceNeedAssessment,
-  hasConsent: boolean = true,
+  hasConsent: boolean = false,
+  options?: {
+    sourceMode?: "OFF" | "EXPLICIT";
+    revoked?: boolean;
+    urls?: string[];
+  },
 ): {
   sources: ScholarlySourceRecord[];
-  status: "ACQUIRED" | "HELD_NO_CONSENT" | "NOT_REQUIRED" | "UNAVAILABLE";
+  status: "ACQUIRED" | "HELD_NO_CONSENT" | "HELD_SOURCE_OFF" | "HELD_REVOKED" | "REJECTED_URL" | "NOT_REQUIRED" | "UNAVAILABLE";
   violations: string[];
+  /** Always 0 in this offline fabric. Unsafe URLs are not fetched. */
+  networkCalls: number;
 } {
-  const violations: string[] = [];
+  const access = evaluateResearchAccess({
+    needed: need.needed,
+    consent: hasConsent === true,
+    sourceMode: options?.sourceMode,
+    revoked: options?.revoked,
+    urls: options?.urls,
+  });
+  const violations = [...access.violations];
 
-  if (!need.needed) {
-    return {
-      sources: [],
-      status: "NOT_REQUIRED",
-      violations,
-    };
+  if (!need.needed || access.status === "NOT_REQUIRED") {
+    return { sources: [], status: "NOT_REQUIRED", violations, networkCalls: 0 };
   }
-
-  // Enforce NEED != CONSENT invariant
-  if (!hasConsent) {
-    violations.push("Research needed but explicit research consent was not granted (NEED != CONSENT).");
-    return {
-      sources: [],
-      status: "HELD_NO_CONSENT",
-      violations,
-    };
+  if (access.status !== "ALLOWED_OFFLINE") {
+    const status =
+      access.status === "HELD_SOURCE_OFF"
+        ? "HELD_SOURCE_OFF"
+        : access.status === "HELD_REVOKED"
+          ? "HELD_REVOKED"
+          : access.status === "REJECTED_URL"
+            ? "REJECTED_URL"
+            : "HELD_NO_CONSENT";
+    if (status === "HELD_NO_CONSENT") {
+      violations.push("Research needed but explicit research consent was not granted (NEED != CONSENT).");
+    }
+    return { sources: [], status, violations, networkCalls: 0 };
   }
 
   const selectedSources: ScholarlySourceRecord[] = [];
@@ -570,5 +599,6 @@ export function acquireScholarlyEvidence(
     sources: validSources,
     status: validSources.length > 0 ? "ACQUIRED" : "UNAVAILABLE",
     violations,
+    networkCalls: 0,
   };
 }

@@ -72,8 +72,19 @@ export interface ProofReceipt {
   exitCode: number;
   stdoutRef?: string;
   stderrRef?: string;
+  /** Optional explicit digests. stdoutRef/stderrRef count only when non-empty. */
+  stdoutDigest?: string;
+  stderrDigest?: string;
   producerIdentity: string;
+  /** When set to worker/self, receipt cannot be treated as independent. */
+  signer?: string;
   verificationLevel: VerificationLevel;
+  /** STALE receipts are never CURRENT proof. */
+  freshness?: "CURRENT" | "STALE";
+  taskId?: string;
+  repo?: string;
+  /** Caller-minted proof class is never authority. ENFORCEMENT_VERIFIED from a worker is ignored. */
+  proofClass?: string;
 }
 
 export interface ClaimSpan {
@@ -106,6 +117,12 @@ export interface ScholarlySourceRecord {
   keyFinding: string;
   sourceSaysText: string;
   speInferenceText: string;
+  /** Page/section/figure locator. Identifier alone is not a SUPPORTS locator. */
+  preciseLocator?: string;
+  /** METADATA | ABSTRACT | SNIPPET | FULL. */
+  contentTier?: "METADATA" | "ABSTRACT" | "SNIPPET" | "FULL";
+  population?: string;
+  benchmarkSuite?: string;
   catalogSource?: "ARXIV" | "PMC" | "OPENALEX" | "DOAJ" | "W3C" | "IEEE" | "ACM";
   evidenceTier:
     | "[PROVEN_SPEC]"
@@ -170,7 +187,13 @@ export interface ReviewSubmission {
   logs?: string[];
   diffRefs?: string[];
   authority: ContinuationAuthority; // Must be REVIEW_ONLY
+  /** Explicit consent only. Undefined is NOT consent. */
   researchConsent?: boolean;
+  /** OFF forces zero research acquisition even if consent is true. */
+  sourceMode?: "OFF" | "EXPLICIT";
+  /** Dirty candidate requires patchDigest. */
+  worktreeDirty?: boolean;
+  repo?: string;
 }
 
 export interface ContinuationContract {

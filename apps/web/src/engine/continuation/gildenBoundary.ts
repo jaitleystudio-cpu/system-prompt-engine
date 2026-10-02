@@ -58,11 +58,27 @@ export function processGildenReview(
   let selfGrantedAuthorityAttempted = false;
 
   // 1. Detect illegal authority escalation attempts
+  const reportL = (submission.agentReport || "").toLowerCase();
+  const escalatePhrases = [
+    "grant deploy authority",
+    "deploy now",
+    "spend $",
+    "production credentials",
+    "ignore policy",
+    "self approve",
+    "owner approved",
+    "authorized=true",
+  ];
   if (
     (submission.authority as string) === "FULL" ||
     (submission.authority as string) === "DEPLOY_ALLOWED" ||
-    submission.agentReport.toLowerCase().includes("grant deploy authority")
+    escalatePhrases.some((p) => reportL.includes(p))
   ) {
+    selfGrantedAuthorityAttempted = true;
+  }
+
+  // Strip illegal enforcement authority on contract text
+  if (/authority\s*[:=]\s*ENFORCEMENT_VERIFIED/i.test(submission.agentReport || "")) {
     selfGrantedAuthorityAttempted = true;
   }
 
