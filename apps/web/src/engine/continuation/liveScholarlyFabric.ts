@@ -526,9 +526,19 @@ export interface ScholarlyTransport {
 }
 
 function buildOpenAlexUrl(query: string): string {
+  const clean = query.trim();
+  const doiMatch = clean.match(/(?:doi:)?(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)/i);
+  if (doiMatch) {
+    return `https://api.openalex.org/works?filter=doi:${encodeURIComponent(doiMatch[1])}&per-page=3`;
+  }
   return `https://api.openalex.org/works?search=${encodeURIComponent(query)}&per-page=3`;
 }
 function buildCrossrefUrl(query: string): string {
+  const clean = query.trim();
+  const doiMatch = clean.match(/(?:doi:)?(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)/i);
+  if (doiMatch) {
+    return `https://api.crossref.org/works?filter=doi:${encodeURIComponent(doiMatch[1])}&rows=3`;
+  }
   return `https://api.crossref.org/works?query.bibliographic=${encodeURIComponent(query)}&rows=3`;
 }
 function buildPubmedUrl(query: string): string {
@@ -773,6 +783,58 @@ function retractionSignalsFromQuery(
 }
 
 /**
+ * Creates live network transport for Node.js test/CLI environments when SPE_SCHOLARLY_LIVE=1.
+ */
+export function createLiveNetworkTransport(): ScholarlyTransport {
+  return {
+    get(url: string): { status: number; body: string } {
+      try {
+        const p = typeof process !== "undefined" ? (process as any) : null;
+        const cp =
+          p && typeof p.getBuiltinModule === "function"
+            ? p.getBuiltinModule("node:child_process")
+            : typeof require !== "undefined"
+            ? require("node:child_process")
+            : p?.mainModule && typeof p.mainModule.require === "function"
+            ? p.mainModule.require("node:child_process")
+            : null;
+        if (!cp || !cp.spawnSync) {
+          return { status: 501, body: JSON.stringify({ error: "LIVE_TRANSPORT_UNAVAILABLE_IN_BROWSER" }) };
+        }
+        const res = cp.spawnSync(
+          "curl",
+          [
+            "-s",
+            "-S",
+            "-L",
+            "--max-time",
+            "15",
+            "-H",
+            "User-Agent: SPE-GroundingFabric/1.0",
+            "-H",
+            "Accept: application/json, application/xml, text/xml, */*",
+            "-w",
+            "\n%{http_code}",
+            url,
+          ],
+          { encoding: "utf8", timeout: 20000 },
+        );
+        if (res.error) {
+          return { status: 599, body: JSON.stringify({ error: res.error.message }) };
+        }
+        const lines = (res.stdout || "").trim().split("\n");
+        const statusCodeStr = lines.pop() || "500";
+        const status = parseInt(statusCodeStr, 10) || 500;
+        const body = lines.join("\n");
+        return { status, body };
+      } catch (err: any) {
+        return { status: 599, body: JSON.stringify({ error: err?.message || String(err) }) };
+      }
+    },
+  };
+}
+
+/**
  * Live scholarly acquire via free adapters (OpenAlex/Crossref/PubMed/PMC/arXiv).
  * Default transport = deterministic fixtures (CI). Pass `transport` to inject.
  * Set options.allowNetwork / SPE_SCHOLARLY_LIVE=1 for real HTTPS (OFF by default).
@@ -845,11 +907,13 @@ export function acquireLiveScholarlyEvidence(input: {
     ? input.providers
     : (["OPENALEX", "CROSSREF"] as ProviderId[]));
 
-  const transport: ScholarlyTransport = input.transport || {
-    get: fixtureTransportGet,
-  };
-  // Real network path reserved; default CI uses fixtures (allowNetwork OFF).
-  void input.allowNetwork;
+  const isLiveEnv =
+    input.allowNetwork === true ||
+    (typeof process !== "undefined" && process.env?.SPE_SCHOLARLY_LIVE === "1");
+
+  const transport: ScholarlyTransport =
+    input.transport ||
+    (isLiveEnv ? createLiveNetworkTransport() : { get: fixtureTransportGet });
 
   const builders: Partial<Record<ProviderId, (q: string) => string>> = {
     OPENALEX: buildOpenAlexUrl,
@@ -890,7 +954,7 @@ export function acquireLiveScholarlyEvidence(input: {
     }),
     reasons: Object.freeze([
       "LIVE_ADAPTER_PATH",
-      "FIXTURE_OR_INJECTED_TRANSPORT",
+      isLiveEnv && !input.transport ? "REAL_NETWORK_TRANSPORT" : "FIXTURE_OR_INJECTED_TRANSPORT",
       `LIVE_INDEX=${caps.liveIndex}`,
       `LIVE_RETRACTION=${caps.liveRetraction}`,
       "CAPABILITY_HOLD_NE_PASS",

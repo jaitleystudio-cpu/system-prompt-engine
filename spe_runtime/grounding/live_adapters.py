@@ -50,12 +50,22 @@ class AdapterHit:
 
 
 def build_openalex_url(query: str, *, per_page: int = 3) -> str:
+    doi_match = _DOI_RE.search(query)
+    if doi_match:
+        return "https://api.openalex.org/works?" + urlencode(
+            {"filter": f"doi:{doi_match.group(1)}", "per-page": str(per_page)}
+        )
     return "https://api.openalex.org/works?" + urlencode(
         {"search": query, "per-page": str(per_page)}
     )
 
 
 def build_crossref_url(query: str, *, rows: int = 3) -> str:
+    doi_match = _DOI_RE.search(query)
+    if doi_match:
+        return "https://api.crossref.org/works?" + urlencode(
+            {"filter": f"doi:{doi_match.group(1)}", "rows": str(rows)}
+        )
     return "https://api.crossref.org/works?" + urlencode(
         {"query.bibliographic": query, "rows": str(rows)}
     )

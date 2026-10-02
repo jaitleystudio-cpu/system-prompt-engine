@@ -1,0 +1,71 @@
+{
+  "receiptId": "rcpt-rt-live-p3-1790978133766",
+  "timestamp": "2026-10-02T21:55:33.766Z",
+  "environment": "macOS",
+  "testedNetworkEndpoints": [
+    "https://api.openalex.org/works",
+    "https://api.crossref.org/works"
+  ],
+  "liveTopicQuery": {
+    "query": "quantum error correction surface code",
+    "status": "ACQUIRED_LIVE",
+    "recordsCount": 6,
+    "transport": "REAL_NETWORK_TRANSPORT",
+    "sampleRecords": [
+      {
+        "provider": "OPENALEX",
+        "identifier": "doi:10.1038/s41586-024-08449-y",
+        "title": "Quantum error correction below the surface code threshold",
+        "mode": "LIVE"
+      },
+      {
+        "provider": "OPENALEX",
+        "identifier": "doi:10.1088/0953-8984/21/39/395502",
+        "title": "QUANTUM ESPRESSO: a modular and open-source software project for quantum simulations of materials",
+        "mode": "LIVE"
+      }
+    ]
+  },
+  "liveRetractionQuery": {
+    "doi": "10.1038/nature00870",
+    "status": "ACQUIRED_LIVE",
+    "identityProvidersAgreeing": 2,
+    "retractionStatus": "RETRACTION_SIGNAL",
+    "providersResponded": [
+      "OPENALEX",
+      "CROSSREF"
+    ],
+    "records": [
+      {
+        "provider": "OPENALEX",
+        "identifier": "doi:10.1038/nature00870",
+        "title": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow"
+      },
+      {
+        "provider": "CROSSREF",
+        "identifier": "doi:10.1038/nature00870",
+        "title": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow"
+      }
+    ]
+  },
+  "privacyAudit": {
+    "rawUserDataEgress": 0,
+    "sensitiveSpansLeaked": 0,
+    "promptInjectionsNeutralized": true
+  },
+  "falsificationMutants": {
+    "total": 8,
+    "killed": 8,
+    "survived": 0
+  },
+  "promotionGateVerdict": {
+    "mayPromoteIndex": true,
+    "mayPromoteRetraction": true,
+    "reasons": [
+      "GATE_MET_PRODUCT_CONSTANTS_STILL_HOLD",
+      "FOUNDER_FLIP_REQUIRED_FOR_LIVE_YES"
+    ],
+    "productLiveIndex": "HOLD",
+    "productLiveRetraction": "HOLD"
+  }
+}
