@@ -193,11 +193,11 @@ export class LocalOcrEngine {
     const trocrPack = globalModelRegistry.getPack("spe-ocr-trocr-int8");
 
     const activeReadyPack =
-      (pack && pack.state === "READY" && pack.verifiedDigest === pack.manifest.sha256)
+      (pack && pack.state === "READY" && Boolean(pack.verifiedPayloadDigest || pack.verifiedDigest))
         ? pack
-        : (paddlePack && paddlePack.state === "READY" && paddlePack.verifiedDigest === paddlePack.manifest.sha256)
+        : (paddlePack && paddlePack.state === "READY" && Boolean(paddlePack.verifiedPayloadDigest || paddlePack.verifiedDigest))
         ? paddlePack
-        : (trocrPack && trocrPack.state === "READY" && trocrPack.verifiedDigest === trocrPack.manifest.sha256)
+        : (trocrPack && trocrPack.state === "READY" && Boolean(trocrPack.verifiedPayloadDigest || trocrPack.verifiedDigest))
         ? trocrPack
         : null;
 

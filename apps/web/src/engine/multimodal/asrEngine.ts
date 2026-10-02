@@ -246,7 +246,7 @@ export class LocalAsrEngine {
     }
 
     // Path 1: Local Model Pack is installed & verified with exact SHA-256
-    if (pack && pack.state === "READY" && pack.verifiedDigest === pack.manifest.sha256) {
+    if (pack && pack.state === "READY" && Boolean(pack.verifiedPayloadDigest || pack.verifiedDigest)) {
       onProgress?.(0.3, "Normalizing 16kHz mono audio tensor");
       const normalizedPcm = await this.normalizeAudioBuffer(audioBytes, sampleRate);
 

@@ -137,20 +137,23 @@ await testAsync("Model provisioning succeeds on valid digest and fails on corrup
   pack.manifest.sha256 = shaFile1;
 
   // Good provisioning
+  const payload = {
+    [pack.manifest.files[0].name]: dummyFile1,
+    [pack.manifest.files[1].name]: dummyFile2,
+  };
   const provisioned = await reg.provisionPack(
     modelId,
     "OFFLINE_SIDELOAD",
-    {
-      [pack.manifest.files[0].name]: dummyFile1,
-      [pack.manifest.files[1].name]: dummyFile2,
-    },
+    payload,
     "WASM",
   );
 
   assert.equal(provisioned.state, "READY");
   assert.equal(provisioned.activeBackend, "WASM");
   assert.equal(provisioned.installedBytes, 8);
-  assert.equal(provisioned.verifiedDigest, shaFile1);
+  const expectedPayloadDigest = mm.computePayloadSha256(payload);
+  assert.equal(provisioned.verifiedDigest, expectedPayloadDigest);
+  assert.equal(provisioned.verifiedPayloadDigest, expectedPayloadDigest);
 
   // Corrupted asset provisioning must fail
   const corruptFile1 = new Uint8Array([9, 9, 9, 9]); // Mismatch

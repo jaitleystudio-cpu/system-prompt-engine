@@ -30,6 +30,23 @@ export type MultimodalTask =
   | "ui-segmentation"
   | "scene-3d-compilation";
 
+export type FileSha256 = string;
+export type PayloadSha256 = string;
+export type ManifestDigest = string;
+export type ArchiveSha256 = string;
+
+export interface RecognizerCapability {
+  recognizerId: string;
+  scriptFamily: string;
+  supportedLanguages: string[];
+  upstreamArtifact: string;
+  revision: string;
+  dictionaryArtifact: string;
+  detectorArtifact: string;
+  detectorVersion: "v3" | "v5";
+  recognizerVersion: "v3" | "v4";
+}
+
 export interface ModelManifestFile {
   name: string;
   sizeBytes: number;
@@ -62,7 +79,11 @@ export interface ModelManifest {
   source: string;
   license: string;
   expectedSizeBytes: number;
-  sha256: string;
+  sha256: string; // Deprecated alias for manifestDigest to prevent breaking callers
+  manifestDigest?: ManifestDigest;
+  expectedPayloadSha256?: PayloadSha256;
+  recognizerCapabilityId?: string;
+  artifactLicenseStatus?: "VERIFIED_MIT" | "VERIFIED_APACHE_2_0" | "UNVERIFIED" | "HOLD";
   files: ModelManifestFile[];
   supportedRuntimes: RuntimeBackend[];
   supportedLanguages: string[];
@@ -92,7 +113,10 @@ export interface ModelPack {
   provisioning: ProvisioningMode;
   installedBytes: number;
   activeBackend: RuntimeBackend;
-  verifiedDigest: string | null;
+  verifiedDigest: string | null; // Alias for verifiedPayloadDigest for backward compatibility
+  verifiedPayloadDigest?: PayloadSha256 | null;
+  archiveSha256?: ArchiveSha256 | null;
+  artifactLicenseStatus?: "VERIFIED_MIT" | "VERIFIED_APACHE_2_0" | "UNVERIFIED" | "HOLD";
   errorMessage?: string;
   installedAt?: string;
   artifactClass?: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
@@ -105,7 +129,10 @@ export interface OfflineModelPackage {
   modelId: string;
   manifest: ModelManifest;
   files: Record<string, Uint8Array>;
-  archiveDigest: string;
+  archiveDigest: string; // Deprecated alias for payloadSha256
+  payloadSha256?: PayloadSha256;
+  archiveSha256?: ArchiveSha256;
+  manifestDigest?: ManifestDigest;
   packagedAt: string;
   artifactClass: "PRODUCTION_RELEASE" | "TEST_FIXTURE";
   productionQualificationAllowed: boolean;
