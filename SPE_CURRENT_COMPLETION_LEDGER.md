@@ -63,3 +63,11 @@ OFFLINE≠LIVE · CACHE≠LIVE · DOI≠validated · NO_MATCH≠NOT_RETRACTED ·
 - In-repo path: `SPE_CURRENT_COMPLETION_LEDGER.md` (this file)
 - Disk mirror: `/Volumes/4TB-WD/spe-worktrees/SPE_CURRENT_COMPLETION_LEDGER.md`
 - Do **not** rewrite VR2R tip or mutate PR#98 for ledger updates
+
+## Mission branch progress (this lane)
+
+| Key | Value |
+|---|---|
+| TIP_SHA | `717f3b8ce344c1afc608ba57b4a8628551541682` |
+| Phase | 0 owners mapped + 1 oracles RED |
+| IMPL_STATUS | oracle-only (fail-closed TS stubs; no live adapters) |
