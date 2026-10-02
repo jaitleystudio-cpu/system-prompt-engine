@@ -225,3 +225,47 @@ def test_query_substring_does_not_stamp_retraction_on_every_provider():
     assert all(hit["retraction"] != "RETRACTION_SIGNAL" for hit in result["hits"])
     assert result["retraction"]["status"] != "RETRACTION_SIGNAL"
     assert result["retraction"]["live_verified"] is False
+
+
+def test_free_text_mention_does_not_select_nature00870_fixture(monkeypatch):
+    """Free text that only mentions nature00870 must not load the retracted fixture."""
+    monkeypatch.delenv("SPE_SCHOLARLY_LIVE", raising=False)
+    result = acquire_scholarly_hits(
+        "notes mentioning nature00870",
+        providers=("OPENALEX", "CROSSREF", "PUBMED"),
+        consent=True,
+    )
+    assert result["status"] == "ACQUIRED_FIXTURE"
+    assert result["mode"] == "OFFLINE_SEED"
+    assert result["status"] != "ACQUIRED_LIVE"
+    assert result["mode"] != "LIVE"
+    assert result["retraction"]["status"] != "RETRACTION_SIGNAL"
+    assert result["retraction"]["live_verified"] is False
+    assert result["live_index"] == "HOLD"
+    assert result["live_retraction"] == "HOLD"
+    for hit in result["hits"]:
+        ident = str(hit.get("identifier") or "").lower()
+        assert "10.1038/nature00870" not in ident
+        assert hit["retraction"] != "RETRACTION_SIGNAL"
+
+
+def test_exact_doi_fixture_keeps_retraction_offline(monkeypatch):
+    """A real DOI query may return fixture retraction fields, still not live."""
+    monkeypatch.delenv("SPE_SCHOLARLY_LIVE", raising=False)
+    result = acquire_scholarly_hits(
+        "doi:10.1038/nature00870",
+        providers=("OPENALEX", "CROSSREF", "PUBMED"),
+        consent=True,
+    )
+    assert result["status"] == "ACQUIRED_FIXTURE"
+    assert result["mode"] == "OFFLINE_SEED"
+    assert result["status"] != "ACQUIRED_LIVE"
+    assert result["retraction"]["live_verified"] is False
+    assert result["retraction"]["status"] == "RETRACTION_SIGNAL"
+    by_provider = {hit["provider"]: hit for hit in result["hits"]}
+    assert by_provider["OPENALEX"]["identifier"].lower().endswith("10.1038/nature00870")
+    assert by_provider["OPENALEX"]["retraction"] == "RETRACTION_SIGNAL"
+    assert by_provider["CROSSREF"]["retraction"] == "RETRACTION_SIGNAL"
+    assert by_provider["PUBMED"]["retraction"] == "NO_SIGNAL_IN_QUERIED_SOURCES"
+    assert result["live_index"] == "HOLD"
+    assert result["live_retraction"] == "HOLD"

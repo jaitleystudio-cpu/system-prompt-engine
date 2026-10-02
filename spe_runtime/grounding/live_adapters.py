@@ -116,7 +116,13 @@ def fixture_transport(url: str) -> tuple[int, str]:
     hay = q + " " + unquote(url).lower()
     if "timeout-probe" in hay:
         return 504, '{"error":"timeout"}'
-    if "nature00870" in hay or "10.1038/nature00870" in hay:
+    parsed_dois = {
+        match.group(1).lower()
+        for match in _DOI_RE.finditer(unquote(url))
+    }
+    # Corpus selection is by parsed DOI only. A free-text mention of
+    # nature00870 must not load the retracted fixture.
+    if "10.1038/nature00870" in parsed_dois:
         body = {
             "message": {
                 "items": [
