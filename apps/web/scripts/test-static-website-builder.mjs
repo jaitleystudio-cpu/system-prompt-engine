@@ -86,6 +86,18 @@ assert(viewText.includes('"isometric_2d"'), "ViewMode must use isometric_2d");
 assert(cssText.includes(".bld-wireframe-container"), "static-builder.css must style .bld-wireframe-container");
 assert(cssText.includes(".bld-wireframe-canvas"), "static-builder.css must style .bld-wireframe-canvas");
 
+console.log("Checking honest labels, preview sandbox, deterministic spec filename...");
+assert(!viewText.includes("Status: VERIFIED"), "must not claim an unverified VERIFIED receipt");
+assert(!viewText.includes("WCAG 2.1 AA"), "must not claim a full WCAG certificate");
+assert(viewText.includes("Desktop (fluid)"), "desktop viewport label must match fluid width");
+assert(!viewText.includes("1200px"), "must not claim a 1200px desktop frame");
+assert(viewText.includes('sandbox=""'), "preview iframe must use an empty sandbox");
+assert(!viewText.includes("allow-same-origin"), "preview must not opt into same-origin");
+assert(!viewText.includes("allow-scripts"), "preview must not allow scripts");
+assert(viewText.includes('a.download = "website-spec.json"'), "spec download name must be stable");
+assert(!viewText.includes("Date.now"), "export path must not use Date.now");
+assert(viewText.includes('aria-hidden="true"'), "decorative isometric canvas must be aria-hidden");
+
 console.log("Checking Route Mount isolation...");
 assert(modelText.includes('ROUTE_MOUNT_STATUS = "NOT_INTEGRATED"'), "ROUTE_MOUNT_STATUS must be NOT_INTEGRATED");
 const appTsx = fs.readFileSync(path.join(webRoot, "src/App.tsx"), "utf8");

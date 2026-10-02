@@ -94,4 +94,82 @@ assert.equal(SCENE_3D, "NOT_AVAILABLE");
 assert.equal(G13_PACKAGE_BOUND, false);
 assert.equal(COMPILER_BINDING, "LOCAL_TS_WEBSITE_SPEC_1");
 
+console.log("G4 reproduced defects: fail-closed page identity, kind, style breakout, CSP, a11y, determinism...");
+
+function srgb(c) {
+  const x = c / 255;
+  return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+}
+function lum(hex) {
+  const n = Number.parseInt(hex.slice(1), 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  return 0.2126 * srgb(r) + 0.7152 * srgb(g) + 0.0722 * srgb(b);
+}
+function contrast(a, b) {
+  const L1 = lum(a);
+  const L2 = lum(b);
+  const hi = Math.max(L1, L2);
+  const lo = Math.min(L1, L2);
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+const missing = structuredClone(DEFAULT_WEBSITE_SPEC);
+assert.throws(
+  () => compileWebsiteSpecToStaticHtml(missing, "missing.html"),
+  WebsiteCompileError,
+  "active page outside the spec must not silently fall back",
+);
+
+const dup = structuredClone(DEFAULT_WEBSITE_SPEC);
+dup.pages.push({ ...dup.pages[0], title: "Second copy" });
+assert.throws(
+  () => compileWebsiteSpecToStaticHtml(dup, "index.html"),
+  WebsiteCompileError,
+  "duplicate page paths must be refused",
+);
+
+const unknown = structuredClone(DEFAULT_WEBSITE_SPEC);
+unknown.pages[0].sections.push({ kind: "script", heading: "Nope", body: "x" });
+assert.throws(
+  () => compileWebsiteSpecToStaticHtml(unknown, "index.html"),
+  WebsiteCompileError,
+  "unknown section kind must be refused",
+);
+
+const emptyHeading = structuredClone(DEFAULT_WEBSITE_SPEC);
+emptyHeading.pages[0].sections[0].heading = "   ";
+assert.throws(() => compileWebsiteSpecToStaticHtml(emptyHeading, "index.html"), WebsiteCompileError);
+
+const badCss = "body{color:red}</style><script>alert(1)</script>";
+assert.throws(
+  () => toStandaloneDocument(compiled.html, badCss),
+  WebsiteCompileError,
+  "standalone export must refuse style-tag breakout",
+);
+
+for (const theme of ["dark", "light"]) {
+  const themed = structuredClone(DEFAULT_WEBSITE_SPEC);
+  themed.theme = theme;
+  const out = compileWebsiteSpecToStaticHtml(themed, "index.html");
+  const accent = out.css.match(/--site-accent:\s*(#[0-9a-fA-F]{6})/);
+  assert(accent, "exported CSS must declare --site-accent");
+  const ratio = contrast("#ffffff", accent[1]);
+  assert(ratio >= 4.5, `white on ${accent[1]} contrast ${ratio.toFixed(2)} must be >= 4.5`);
+  assert(out.css.includes(":focus-visible"), "exported CSS must style :focus-visible");
+  assert(out.css.includes("prefers-reduced-motion: reduce"), "exported CSS must include reduced-motion");
+  assert.equal((out.html.match(/<main\b/g) || []).length, 1, "exported HTML needs one main");
+  assert(out.html.includes('http-equiv="Content-Security-Policy"'), "exported HTML needs CSP");
+  assert(out.html.includes("script-src 'none'"), "CSP must refuse scripts");
+  assert(!out.html.includes("<script"), "export must not emit a script element");
+  const doc = toStandaloneDocument(out.html, out.css);
+  assert(doc.includes("script-src 'none'"));
+  assert.equal((doc.match(/<!DOCTYPE html>/gi) || []).length, 1);
+  const again = compileWebsiteSpecToStaticHtml(themed, "index.html");
+  assert.equal(out.html, again.html, "html export must be deterministic");
+  assert.equal(out.css, again.css, "css export must be deterministic");
+  assert.equal(doc, toStandaloneDocument(again.html, again.css), "standalone export must be deterministic");
+}
+
 console.log("PASS: compiler safety (compileWebsiteSpecToStaticHtml invoked).");

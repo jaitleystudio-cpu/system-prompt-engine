@@ -192,11 +192,25 @@ export function compileWebsiteSpecToStaticHtml(
 
   const knownPages = new Set<string>();
   for (const p of spec.pages) {
-    knownPages.add(assertPagePath(p.path, `page.path`));
+    const pagePath = assertPagePath(p.path, `page.path`);
+    if (knownPages.has(pagePath)) {
+      throw new WebsiteCompileError(`duplicate page path refused: ${pagePath}`);
+    }
+    knownPages.add(pagePath);
   }
   assertPagePath(activePagePath, "activePagePath");
+  if (!knownPages.has(activePagePath)) {
+    throw new WebsiteCompileError(
+      `activePagePath is not a page in this spec: ${JSON.stringify(activePagePath)}`,
+    );
+  }
 
-  const page = spec.pages.find((p) => p.path === activePagePath) || spec.pages[0];
+  const page = spec.pages.find((p) => p.path === activePagePath);
+  if (!page) {
+    throw new WebsiteCompileError(
+      `activePagePath is not a page in this spec: ${JSON.stringify(activePagePath)}`,
+    );
+  }
   const isDark = spec.theme !== "light";
 
   const css = `
@@ -206,7 +220,8 @@ export function compileWebsiteSpecToStaticHtml(
   --site-surface: ${isDark ? "#111827" : "#f9fafb"};
   --site-text: ${isDark ? "#f9fafb" : "#111827"};
   --site-muted: ${isDark ? "#9ca3af" : "#4b5563"};
-  --site-accent: #6366f1;
+  --site-accent: #4338ca;
+  --site-focus: ${isDark ? "#bbceff" : "#1e3a8a"};
   --site-border: ${isDark ? "#374151" : "#e5e7eb"};
 }
 
@@ -259,6 +274,37 @@ body {
   margin-bottom: 8px;
 }
 
+.site-cta-btn:focus-visible,
+.skip-link:focus-visible {
+  outline: 3px solid var(--site-focus);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+}
+
+.skip-link:focus {
+  left: 8px;
+  top: 8px;
+  background: var(--site-accent);
+  color: #ffffff;
+  padding: 8px 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @media (max-width: 360px) {
   .site-hero h1 { font-size: 1.75rem; }
   .site-container { padding: 16px 12px; }
@@ -267,6 +313,21 @@ body {
 
   const sectionsHtml = page.sections
     .map((sec) => {
+      if (sec.kind !== "hero" && sec.kind !== "prose" && sec.kind !== "list" && sec.kind !== "cta") {
+        throw new WebsiteCompileError(`unknown section kind ${JSON.stringify(sec.kind)}`);
+      }
+      if (typeof sec.heading !== "string" || sec.heading.trim() === "") {
+        throw new WebsiteCompileError("section heading must be a non-empty string");
+      }
+      if (sec.body != null && typeof sec.body !== "string") {
+        throw new WebsiteCompileError("section body must be a string");
+      }
+      if (
+        sec.items != null &&
+        (!Array.isArray(sec.items) || sec.items.some((it) => typeof it !== "string"))
+      ) {
+        throw new WebsiteCompileError("section items must be an array of strings");
+      }
       const heading = escapeHtml(sec.heading);
       const body = sec.body ? `<p>${escapeHtml(sec.body)}</p>` : "";
       switch (sec.kind) {
@@ -300,7 +361,7 @@ body {
       ${renderCtaAnchor(sec.cta_label, sec.cta_href, knownPages)}
     </section>`;
         default:
-          return "";
+          throw new WebsiteCompileError(`unknown section kind ${JSON.stringify(sec.kind)}`);
       }
     })
     .join("\n");
@@ -310,13 +371,15 @@ body {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" />
   <title>${escapeHtml(page.title)} - ${escapeHtml(spec.title)}</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="site-container">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <main id="content" class="site-container">
 ${sectionsHtml}
-  </div>
+  </main>
 </body>
 </html>`.trim();
 
@@ -328,6 +391,9 @@ ${sectionsHtml}
  * Fixes nested double-document Export HTML / srcDoc malformation.
  */
 export function toStandaloneDocument(html: string, css: string): string {
+  if (/<\s*\/\s*style/i.test(css) || /<\s*script/i.test(css)) {
+    throw new WebsiteCompileError("css refuses style-tag breakout or script");
+  }
   if ((html.match(/<!DOCTYPE html>/gi) || []).length !== 1) {
     throw new WebsiteCompileError("expected exactly one doctype in compiled html");
   }
