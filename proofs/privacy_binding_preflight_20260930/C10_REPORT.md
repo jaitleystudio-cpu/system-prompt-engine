@@ -77,4 +77,8 @@ NO MERGE. NO DEPLOY. NO HOST. NO MAIN. NO I2. NO I11 implementation.
 
 ## Result
 
-FINAL: PRIVACY_BINDING_PREFLIGHT_PASS
+Pytest counts above are fixture results. They are not a privacy qualification.
+A green fixture does not make raw bytes outbound-safe, and it does not supply consent.
+
+FINAL: HOLD
+PRIVACY_QUALIFICATION: NOT_A_PASS

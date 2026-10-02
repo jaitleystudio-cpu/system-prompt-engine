@@ -31,7 +31,8 @@ function fail(code, message, phases = []) {
     imports: null,
   };
   if (process.env.SPE_PROOF_EGRESS === "1") {
-    out.egress = { fetch_during_evaluate: 0, websocket_during_evaluate: 0 };
+    // The host never evaluated. Do not invent a zero-fetch measurement.
+    out.egress = { measured: false };
   }
   process.stdout.write(JSON.stringify(out) + "\n");
   process.exit(0);
