@@ -133,3 +133,7 @@ export function mayPromoteLiveRetractionFromGate(
 ): boolean {
   return evaluateLivePromotionGate(evidence ?? null).mayPromoteRetraction;
 }
+
+/** Canonical names (also re-exported for callers that import from gate). */
+export const mayPromoteLiveIndex = mayPromoteLiveIndexFromGate;
+export const mayPromoteLiveRetraction = mayPromoteLiveRetractionFromGate;
