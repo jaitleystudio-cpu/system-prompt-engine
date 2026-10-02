@@ -32,6 +32,7 @@ import {
   reportHasContradiction,
   reportHasPassProse,
 } from "./oracleGuards";
+import { getScholarlyFabricTruthStatus } from "./researchFabric";
 
 /**
  * Extracts material claims from raw report prose.
@@ -144,6 +145,23 @@ export function calculateMaterialReportCoverage(
 /**
  * Validates and binds proof receipts against claims.
  */
+
+const LIVE_TRUTH_CLAIM_RE =
+  /FULL_SCHOLARLY_INDEX\s*=\s*YES|LIVE_RETRACTION_VERIFICATION\s*=\s*YES|LIVE_INDEX\s*=\s*PASS|LIVE_RETRACTION\s*=\s*PASS|full\s+scholarly\s+index|live\s+retraction\s+verification|live\s+scholarly\s+index/i;
+
+function isCallerAssertedLiveTruth(text: string): boolean {
+  return LIVE_TRUTH_CLAIM_RE.test(text);
+}
+
+function callerMintedUntrusted(submission: ReviewSubmission): string[] {
+  const flags: string[] = [];
+  if (submission.liveIndex === true) flags.push("liveIndex");
+  if (submission.fullIndex === true) flags.push("fullIndex");
+  if (submission.scholarlyVerified === true) flags.push("scholarlyVerified");
+  if (submission.qualified === true) flags.push("qualified");
+  return flags;
+}
+
 export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
   const originalReport = submission.agentReport || "";
   const agentReport = normalizeUntrustedText(originalReport);
@@ -154,6 +172,19 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
   const contradictions: ContradictionFinding[] = [];
   const gaps: EvidenceGap[] = [];
   const unknowns: string[] = [];
+  const truth = getScholarlyFabricTruthStatus();
+  const callerFlags = callerMintedUntrusted(submission);
+  if (callerFlags.length > 0) {
+    contradictions.push({
+      contradictionId: `CTRD-CALLER-ASSERTED-${callerFlags.join("-")}`,
+      claimId: "REPORT_LEVEL",
+      observedText: `CALLER_ASSERTED fields: ${callerFlags.join(", ")}`,
+      conflictingEvidence:
+        "CALLER_ASSERTED = UNTRUSTED_CLAIM. Caller-minted liveIndex/fullIndex/verified/qualified cannot mint SUPPORTED. " +
+        `Measured static capability: FULL_SCHOLARLY_INDEX=${truth.FULL_SCHOLARLY_INDEX}, LIVE_RETRACTION_VERIFICATION=${truth.LIVE_RETRACTION_VERIFICATION}.`,
+      severity: "FATAL",
+    });
+  }
 
   // 1. Check prompt injection in report text
   const reportLower = submission.agentReport.toLowerCase();
@@ -258,6 +289,29 @@ export function verifyTaskReport(submission: ReviewSubmission): ReviewedReport {
   const claimedCount = extractClaimedTestCount(agentReport);
   // 3. Fake PASS and Test Execution Verification
   for (const claim of claims) {
+    if (isCallerAssertedLiveTruth(claim.claimText)) {
+      // Prose or flag claiming live/full index without bound live evidence.
+      // Static capability is NO — never SUPPORTED from prose.
+      if (
+        truth.FULL_SCHOLARLY_INDEX !== "YES" ||
+        truth.LIVE_RETRACTION_VERIFICATION !== "YES"
+      ) {
+        claim.disposition = "CONTRADICTED";
+        claim.verificationRationale =
+          "UNTRUSTED_CLAIM: FULL_SCHOLARLY_INDEX/LIVE_RETRACTION asserted without bound live evidence. " +
+          `Static capability remains FULL_SCHOLARLY_INDEX=${truth.FULL_SCHOLARLY_INDEX}, ` +
+          `LIVE_RETRACTION_VERIFICATION=${truth.LIVE_RETRACTION_VERIFICATION}. CALLER_ASSERTED != EVIDENCE.`;
+        contradictions.push({
+          contradictionId: `CTRD-LIVE-TRUTH-${claim.claimId}`,
+          claimId: claim.claimId,
+          observedText: claim.claimText,
+          conflictingEvidence:
+            "LIVE_INDEX/LIVE_RETRACTION/FULL_SCHOLARLY_INDEX=YES without bound evidence is CONTRADICTED. RT_B_LIVE_INDEX=HOLD, RT_B_LIVE_RETRACTION=HOLD.",
+          severity: "FATAL",
+        });
+        continue;
+      }
+    }
     if (claim.claimType === "EXECUTION") {
       const matchingReceipt = receipts.find(
         (r) => r.candidateSha === submission.candidateSha && r.exitCode === 0

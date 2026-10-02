@@ -40,16 +40,91 @@ export interface EvidenceNeedAssessment {
     | "NONE";
 }
 
-export const SCHOLARLY_FABRIC_TRUTH_STATUS = {
+/**
+ * Internal static capability disclosure. STATIC != MEASURED != EVIDENCE-DERIVED.
+ * Never Object.assign / mutate to promote NO→YES. Live OpenAlex/Crossref/PubMed
+ * /Retraction Watch are NOT implemented here.
+ */
+const INTERNAL_SCHOLARLY_CAPABILITIES = Object.freeze({
   CURATED_OFFLINE_SEED_CORPUS: "IMPLEMENTED",
   FULL_SCHOLARLY_INDEX: "NO",
   LIVE_RETRACTION_VERIFICATION: "NO",
   SEED_CORPUS_SIZE: 12,
   RETRACTION_SOURCE: "LOCAL_TEST_SENTINELS_ONLY",
-} as const;
+  classification: Object.freeze({
+    CURATED_OFFLINE_SEED_CORPUS: "STATIC_CAPABILITY",
+    FULL_SCHOLARLY_INDEX: "STATIC_CAPABILITY",
+    LIVE_RETRACTION_VERIFICATION: "STATIC_CAPABILITY",
+    SEED_CORPUS_SIZE: "MEASURED",
+    RETRACTION_SOURCE: "STATIC_CAPABILITY",
+  }),
+} as const);
+
+export type ScholarlyFabricTruthStatus = {
+  CURATED_OFFLINE_SEED_CORPUS: "IMPLEMENTED";
+  FULL_SCHOLARLY_INDEX: "NO";
+  LIVE_RETRACTION_VERIFICATION: "NO";
+  SEED_CORPUS_SIZE: number;
+  RETRACTION_SOURCE: "LOCAL_TEST_SENTINELS_ONLY";
+  classification: {
+    CURATED_OFFLINE_SEED_CORPUS: "STATIC_CAPABILITY";
+    FULL_SCHOLARLY_INDEX: "STATIC_CAPABILITY";
+    LIVE_RETRACTION_VERIFICATION: "STATIC_CAPABILITY";
+    SEED_CORPUS_SIZE: "MEASURED";
+    RETRACTION_SOURCE: "STATIC_CAPABILITY";
+  };
+};
+
+/** Frozen snapshot. Mutation of the returned object cannot convert NO→YES. */
+export function getScholarlyFabricTruthStatus(): ScholarlyFabricTruthStatus {
+  return Object.freeze({
+    CURATED_OFFLINE_SEED_CORPUS: INTERNAL_SCHOLARLY_CAPABILITIES.CURATED_OFFLINE_SEED_CORPUS,
+    FULL_SCHOLARLY_INDEX: INTERNAL_SCHOLARLY_CAPABILITIES.FULL_SCHOLARLY_INDEX,
+    LIVE_RETRACTION_VERIFICATION: INTERNAL_SCHOLARLY_CAPABILITIES.LIVE_RETRACTION_VERIFICATION,
+    SEED_CORPUS_SIZE: INTERNAL_SCHOLARLY_CAPABILITIES.SEED_CORPUS_SIZE, // measured offline seed size; not a live index
+    RETRACTION_SOURCE: INTERNAL_SCHOLARLY_CAPABILITIES.RETRACTION_SOURCE,
+    classification: Object.freeze({
+      ...INTERNAL_SCHOLARLY_CAPABILITIES.classification,
+    }),
+  });
+}
+
+/**
+ * Backward-compatible export: frozen static snapshot (not a live capability).
+ * Prefer getScholarlyFabricTruthStatus().
+ */
+export const SCHOLARLY_FABRIC_TRUTH_STATUS: ScholarlyFabricTruthStatus =
+  getScholarlyFabricTruthStatus();
+
+/** UI/Inspector: three states separately — never infer full-index from offline seed. */
+export function describeScholarlyFabricDisplayStates(): {
+  curatedOfflineSeedCorpus: "IMPLEMENTED";
+  fullScholarlyIndex: "NO";
+  liveRetractionVerification: "NO";
+  rtBLiveIndex: "HOLD";
+  rtBLiveRetraction: "HOLD";
+  inferredFullIndexFromOffline: false;
+} {
+  const t = getScholarlyFabricTruthStatus();
+  return Object.freeze({
+    curatedOfflineSeedCorpus: t.CURATED_OFFLINE_SEED_CORPUS,
+    fullScholarlyIndex: t.FULL_SCHOLARLY_INDEX,
+    liveRetractionVerification: t.LIVE_RETRACTION_VERIFICATION,
+    rtBLiveIndex: "HOLD" as const,
+    rtBLiveRetraction: "HOLD" as const,
+    inferredFullIndexFromOffline: false as const,
+  });
+}
+
+function freezeScholarlyRecord(record: ScholarlySourceRecord): ScholarlySourceRecord {
+  return Object.freeze({
+    ...record,
+    authors: Object.freeze([...(record.authors || [])]) as string[],
+  });
+}
 
 // Curated offline seed corpus of foundational computer science & cognitive specifications (NOT full global index)
-export const CURATED_SEED_CORPUS: Record<string, ScholarlySourceRecord> = {
+const _CURATED_SEED_CORPUS_MUTABLE: Record<string, ScholarlySourceRecord> = {
   // --- W3C & ISO Normative Specifications ---
   "w3c-wasm-core-2": {
     sourceId: "SRC-W3C-WASM-2",
@@ -261,16 +336,25 @@ export const CURATED_SEED_CORPUS: Record<string, ScholarlySourceRecord> = {
   },
 };
 
+const _frozenCorpusEntries: Record<string, ScholarlySourceRecord> = {};
+for (const [k, v] of Object.entries(_CURATED_SEED_CORPUS_MUTABLE)) {
+  _frozenCorpusEntries[k] = freezeScholarlyRecord(v);
+}
+export const CURATED_SEED_CORPUS: Readonly<Record<string, ScholarlySourceRecord>> =
+  Object.freeze(_frozenCorpusEntries);
+
 export const VERIFIED_KNOWLEDGE_BASE = CURATED_SEED_CORPUS;
 
 // Local test sentinels to verify retraction handling logic.
 // NOT an authoritative live retraction database (LIVE_RETRACTION_VERIFICATION = NO).
-export const RETRACTED_TEST_SENTINELS = new Set<string>([
-  "doi:10.1016/fake.retracted.2020",
-  "doi:10.1126/science.fabricated.123",
-  "doi:10.1038/s41586-020-retracted-claim",
-  "arXiv:2101.99999-retracted",
-]);
+export const RETRACTED_TEST_SENTINELS: ReadonlySet<string> = Object.freeze(
+  new Set<string>([
+    "doi:10.1016/fake.retracted.2020",
+    "doi:10.1126/science.fabricated.123",
+    "doi:10.1038/s41586-020-retracted-claim",
+    "arXiv:2101.99999-retracted",
+  ]),
+);
 export const RETRACTED_REGISTRY = RETRACTED_TEST_SENTINELS;
 
 /**

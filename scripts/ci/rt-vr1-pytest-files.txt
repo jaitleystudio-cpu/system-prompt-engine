@@ -1,0 +1,12 @@
+tests/portability/test_privacy_portability.py
+tests/portability/test_quality_parity_57.py
+tests/portability/test_quality_parity_57r.py
+tests/security/test_context_protocol_adversarial.py
+tests/security/test_grounding_firewall.py
+tests/unit/test_grounding_models.py
+tests/unit/test_grounding_privacy_freshness.py
+tests/unit/test_k3_effect.py
+tests/unit/test_k3_runtime.py
+tests/unit/test_quality_task57.py
+tests/unit/test_quality_task57r.py
+tests/unit/test_quality_task57r_f3.py
