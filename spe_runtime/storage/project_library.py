@@ -7,7 +7,8 @@ discipline, not a new database.
 No account is required. Records stay private and noindex. Revision bytes stay
 in the library file. Canonical .spe text is emitted only when a revision body
 already satisfies spe_runtime.portability.spe_artifact; otherwise export_spe
-raises NOT_YET_BOUND. A library bundle is not a .spe document.
+raises NOT_YET_BOUND. A library bundle is not a .spe document. spe_binding_report is read-only
+and never promotes spe_contract to VERIFIED.
 """
 
 from __future__ import annotations
@@ -18,12 +19,21 @@ import json
 import os
 import re
 import uuid
+from pathlib import Path
 from typing import Any, Mapping
+
+import jsonschema
 
 from spe_runtime.portability.spe_artifact import (
     dumps_spe_artifact,
     loads_spe_artifact,
     verify_integrity,
+)
+from spe_runtime.provenance.models import Provenance
+from tools.build_manifest import (
+    ManifestError,
+    build_manifest_from_blobs,
+    verify_manifest_blobs,
 )
 
 LIBRARY_SCHEMA = "spe.project-library.v1"
@@ -72,6 +82,80 @@ _REVISION_KEYS = frozenset(
 _HEAD_MOVE_KEYS = frozenset(
     {"kind", "project_id", "artifact_id", "revision_id", "created_at", "reason"}
 )
+
+
+def _binding_holds() -> dict[str, str]:
+    """HOLD where this owner has no implementation to call.
+
+    Provenance-record and capability-manifest schemas are stubs. The manifest
+    tool is a stub. G11 workflow export is a different tree and is not here.
+    """
+    root = Path(__file__).resolve().parents[2]
+    holds: dict[str, str] = {}
+    provenance = _optional_text(root / "schemas" / "provenance_record.schema.json")
+    if "STUB" in provenance or "not yet implemented" in provenance or not provenance:
+        holds["provenance_record"] = "HOLD"
+    manifest_schema = _optional_text(root / "schemas" / "capability_manifest.schema.json")
+    manifest_tool = _optional_text(root / "tools" / "build_manifest.py")
+    if (
+        "STUB" in manifest_schema
+        or "not yet implemented" in manifest_schema
+        or "stub:" in manifest_tool
+        or not manifest_schema
+    ):
+        holds["manifest_hashes"] = "HOLD"
+    exporter = root / "spe_runtime" / "workflow_export" / "export.py"
+    if not exporter.is_file():
+        holds["workflow_export"] = (
+            "HOLD: missing owner spe_runtime/workflow_export/export.py"
+            " (frozen G11). apps/web/src/export/workflowExporters.ts is not the owner"
+        )
+    return holds
+
+
+def _optional_text(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+
+
+
+PROVENANCE_RECORD_SCHEMA = "spe.provenance-record.v1"
+_PROVENANCE_SOURCES = frozenset(item.value for item in Provenance)
+_PROVENANCE_SCHEMA_PATH = Path(__file__).resolve().parents[2] / "schemas" / "provenance_record.schema.json"
+
+
+def _provenance_sources(refs: list[str]) -> list[str]:
+    return [ref for ref in refs if ref in _PROVENANCE_SOURCES]
+
+
+def _provenance_id(revision_id: str, artifact_sha256: str) -> str:
+    digest = hashlib.sha256(f"{revision_id}:{artifact_sha256}".encode("utf-8")).hexdigest()
+    return "prv_" + digest[:32]
+
+
+def _content_digest(body: Any) -> str | None:
+    try:
+        loaded = loads_spe_artifact(body)
+        checked = verify_integrity(loaded)
+    except (TypeError, ValueError, KeyError, json.JSONDecodeError):
+        return None
+    integrity = checked.get("integrity")
+    if not isinstance(integrity, Mapping) or integrity.get("state") != "VERIFIED":
+        return None
+    digest = integrity.get("content_sha256")
+    if not isinstance(digest, str):
+        return None
+    return digest
+
+
+def _require_provenance_shape(record: Mapping[str, Any]) -> None:
+    schema = json.loads(_PROVENANCE_SCHEMA_PATH.read_text(encoding="utf-8"))
+    try:
+        jsonschema.validate(record, schema)
+    except jsonschema.ValidationError as exc:
+        raise LibraryError("CORRUPT_ENTRY", "provenance record does not match its schema") from exc
 
 
 class LibraryError(Exception):
@@ -485,6 +569,149 @@ class ProjectLibrary:
         if state != "VERIFIED":
             raise LibraryError("INTEGRITY_MISMATCH", "spe integrity digest does not match")
         return dumps_spe_artifact(loaded)
+
+    def provenance_record(self, revision_id: str) -> dict[str, Any]:
+        """Derived provenance record. Not a second journal."""
+        revision = self.get_revision(revision_id)
+        sources = _provenance_sources(revision["provenance_refs"])
+        if len(sources) != 1:
+            raise LibraryError("MISSING_PROVENANCE", "revision provenance source is missing")
+        digest = _hash_body(revision["body"])
+        if digest != revision["body_sha256"]:
+            raise LibraryError("PROVENANCE_MISMATCH", "artifact digest does not match")
+        record: dict[str, Any] = {
+            "schema": PROVENANCE_RECORD_SCHEMA,
+            "provenance_id": _provenance_id(revision_id, digest),
+            "artifact_id": revision["artifact_id"],
+            "revision_id": revision_id,
+            "source": sources[0],
+            "artifact_sha256": digest,
+        }
+        content = _content_digest(revision["body"])
+        if content is not None:
+            record["content_sha256"] = content
+        _require_provenance_shape(record)
+        return record
+
+    def accept_provenance_record(self, record: Mapping[str, Any]) -> dict[str, Any]:
+        """Recompute the revision digest and reject a missing or mismatched record."""
+        if not isinstance(record, Mapping):
+            raise LibraryError("MISSING_PROVENANCE", "provenance record is missing")
+        required = (
+            "schema",
+            "provenance_id",
+            "artifact_id",
+            "revision_id",
+            "source",
+            "artifact_sha256",
+        )
+        if any(key not in record or record.get(key) in (None, "") for key in required):
+            raise LibraryError("MISSING_PROVENANCE", "provenance field is missing")
+        _require_provenance_shape(record)
+        revision = self.get_revision(str(record["revision_id"]))
+        if revision["artifact_id"] != record["artifact_id"]:
+            raise LibraryError("PROVENANCE_MISMATCH", "provenance artifact does not match")
+        digest = _hash_body(revision["body"])
+        if record["artifact_sha256"] != digest or digest != revision["body_sha256"]:
+            raise LibraryError("PROVENANCE_MISMATCH", "artifact digest does not match")
+        if record["provenance_id"] != _provenance_id(revision["revision_id"], digest):
+            raise LibraryError("PROVENANCE_MISMATCH", "provenance id does not match the digest")
+        sources = _provenance_sources(revision["provenance_refs"])
+        if len(sources) != 1:
+            raise LibraryError("MISSING_PROVENANCE", "revision provenance source is missing")
+        if record["source"] != sources[0]:
+            raise LibraryError("PROVENANCE_MISMATCH", "provenance source does not match")
+        content = _content_digest(revision["body"])
+        if content is None:
+            if "content_sha256" in record:
+                raise LibraryError("PROVENANCE_MISMATCH", "content digest is not bound")
+        elif "content_sha256" not in record:
+            raise LibraryError("MISSING_PROVENANCE", "content digest is missing")
+        elif record["content_sha256"] != content:
+            raise LibraryError("PROVENANCE_MISMATCH", "content digest does not match")
+        return dict(record)
+
+    def revision_manifest(self, project_id: str) -> dict[str, Any]:
+        """Hash each revision body again. Does not write the library journal."""
+        return build_manifest_from_blobs(self._revision_blobs(project_id))
+
+    def accept_revision_manifest(self, project_id: str, manifest: Mapping[str, Any]) -> dict[str, Any]:
+        """Recompute revision hashes and reject a corrupt manifest."""
+        try:
+            return verify_manifest_blobs(self._revision_blobs(project_id), manifest)
+        except ManifestError as exc:
+            raise LibraryError(exc.code, exc.reason) from None
+
+    def _revision_blobs(self, project_id: str) -> dict[str, bytes]:
+        bundle = self.export_project(project_id)
+        blobs: dict[str, bytes] = {}
+        for revision in bundle["revisions"]:
+            digest = _hash_body(revision["body"])
+            if digest != revision["body_sha256"]:
+                raise LibraryError("PROVENANCE_MISMATCH", "artifact digest does not match")
+            rel = f"{revision['artifact_id']}/{revision['revision_id']}.body.json"
+            blobs[rel] = _dump_body(revision["body"]).encode("utf-8")
+        if not blobs:
+            raise LibraryError("CORRUPT_ENTRY", "manifest has no revisions")
+        return blobs
+
+    def spe_binding_report(self, project_id: str) -> dict[str, Any]:
+        """Read-only census for one project.
+
+        Writes nothing. ``spe_contract`` stays ``NOT_YET_BOUND``. An artifact
+        integrity state of VERIFIED is reported on that head only and is never
+        copied onto the bundle contract. Missing owners stay HOLD.
+        """
+        bundle = self.export_project(project_id)
+        if bundle.get("spe_contract") != "NOT_YET_BOUND":
+            raise LibraryError("UNKNOWN_SCHEMA", "bundle spe contract is not recognized")
+        heads: list[dict[str, Any]] = []
+        for artifact in bundle["artifacts"]:
+            artifact_id = artifact["artifact_id"]
+            entry: dict[str, Any] = {
+                "artifact_id": artifact_id,
+                "head_revision_id": artifact["head_revision_id"],
+                "export": None,
+                "integrity_state": None,
+                "content_sha256": None,
+                "body_sha256": None,
+                "spe_format": None,
+            }
+            try:
+                text_spe = self.export_spe(artifact_id)
+            except LibraryError as exc:
+                entry["export"] = exc.code
+            else:
+                loaded = loads_spe_artifact(text_spe)
+                checked = verify_integrity(loaded)
+                integrity = checked.get("integrity")
+                state = integrity.get("state") if isinstance(integrity, Mapping) else None
+                digest = integrity.get("content_sha256") if isinstance(integrity, Mapping) else None
+                if state != "VERIFIED":
+                    entry["export"] = "INTEGRITY_MISMATCH"
+                else:
+                    entry["export"] = "CANONICAL"
+                    entry["integrity_state"] = state
+                    entry["content_sha256"] = digest
+                    entry["body_sha256"] = self.head(artifact_id)["body_sha256"]
+                    entry["spe_format"] = loaded.get("spe_format")
+            heads.append(entry)
+        return {
+            "project_id": project_id,
+            "spe_contract": "NOT_YET_BOUND",
+            "promoted": False,
+            "refused_promotion": "VERIFIED",
+            "holds": _binding_holds(),
+            "rollback_recorded": any(
+                item.get("kind") == "HEAD_MOVE" and item.get("reason") == "ROLLBACK"
+                for item in bundle["history"]
+            ),
+            "provenance_refs_present": any(
+                bool(revision.get("provenance_refs")) for revision in bundle["revisions"]
+            ),
+            "revision_count": len(bundle["revisions"]),
+            "heads": heads,
+        }
 
     def erase_project(self, project_id: str) -> None:
         self._require_project(project_id)

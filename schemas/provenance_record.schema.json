@@ -1,1 +1,37 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"provenance_record","description":"STUB — not yet implemented (NEW_IMPLEMENTATION)","type":"object","additionalProperties":true}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/provenance_record.schema.json",
+  "title": "provenance_record",
+  "description": "Provenance for one project-library revision. artifact_sha256 is the recomputed revision body digest. content_sha256 is required by the library only when the body is a canonical spe artifact whose integrity digest matches. This record is not stored in a second journal and does not set spe_contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "provenance_id",
+    "artifact_id",
+    "revision_id",
+    "source",
+    "artifact_sha256"
+  ],
+  "properties": {
+    "schema": { "const": "spe.provenance-record.v1" },
+    "provenance_id": { "type": "string", "pattern": "^prv_[0-9a-f]{32}$" },
+    "artifact_id": { "type": "string", "pattern": "^art_[0-9a-f]{32}$" },
+    "revision_id": { "type": "string", "pattern": "^rev_[0-9a-f]{32}$" },
+    "source": {
+      "type": "string",
+      "enum": [
+        "USER_EXPLICIT",
+        "USER_CONFIRMED",
+        "SYSTEM_REQUIRED",
+        "INFERRED",
+        "MODEL_PROPOSED",
+        "SPE_SUGGESTED",
+        "EXTERNAL_EVIDENCE",
+        "UNKNOWN"
+      ]
+    },
+    "artifact_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "content_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

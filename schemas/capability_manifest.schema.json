@@ -1,1 +1,31 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"capability_manifest","description":"STUB — not yet implemented (NEW_IMPLEMENTATION)","type":"object","additionalProperties":true}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/capability_manifest.schema.json",
+  "title": "capability_manifest",
+  "description": "SHA-256 capability manifest. Checking recomputes every entry from the current bytes and rejects a mismatch or a missing file. An empty entry list is invalid. This manifest does not set spe_contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "algorithm", "entries"],
+  "properties": {
+    "schema": { "const": "spe.capability-manifest.v1" },
+    "algorithm": { "const": "SHA-256" },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[A-Za-z0-9._/-]+$"
+          },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    }
+  }
+}
