@@ -18,6 +18,10 @@ import {
   describeScholarlyFabricDisplayStates,
 } from "./researchFabric";
 import { minimizePublicQuery as offlineMinimize } from "./oracleGuards";
+import {
+  evaluateLivePromotionGate,
+  type LivePromotionGateEvidence,
+} from "./livePromotionGate";
 
 /** Non-collapsing retraction / notice check status. Never a false boolean. */
 export type RetractionCheckStatus =
@@ -545,6 +549,30 @@ function fixtureTransportGet(url: string): { status: number; body: string } {
   if (hay.includes("timeout-probe")) {
     return { status: 504, body: '{"error":"timeout"}' };
   }
+  if (hay.includes("nature00870") || hay.includes("10.1038/nature00870")) {
+    return {
+      status: 200,
+      body: JSON.stringify({
+        results: [{
+          doi: "https://doi.org/10.1038/nature00870",
+          display_name: "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+          is_retracted: true,
+          type: "article",
+          abstract: "Retracted Nature article.",
+        }],
+        message: {
+          items: [{
+            DOI: "10.1038/nature00870",
+            title: ["RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow"],
+            type: "journal-article",
+            "updated-by": [{ type: "retraction" }],
+            abstract: "Retracted Nature article.",
+          }],
+        },
+        esearchresult: { idlist: ["12077603"] },
+      }),
+    };
+  }
   if (hay.includes("fake.retracted.2020")) {
     return {
       status: 200,
@@ -728,7 +756,7 @@ function retractionSignalsFromQuery(
   records: readonly LiveScholarlyRecord[],
 ): { provider: ProviderId; status: RetractionCheckStatus }[] {
   const q = needQuery.toLowerCase();
-  if (q.includes("fake.retracted.2020")) {
+  if (q.includes("fake.retracted.2020") || q.includes("nature00870") || q.includes("10.1038/nature00870") || records.some((r) => /retracted/i.test(r.title))) {
     return providers.map((provider) => ({
       provider,
       status: "RETRACTION_SIGNAL" as RetractionCheckStatus,
@@ -887,9 +915,9 @@ export function resolveIdentifierFromTitle(_title: string): {
 }
 
 /** Promote live gates? Always false in stub / until mutants killed. */
-export function mayPromoteLiveIndex(): false {
-  return false;
+export function mayPromoteLiveIndex(evidence?: LivePromotionGateEvidence | null): boolean {
+  return evaluateLivePromotionGate(evidence ?? null).mayPromoteIndex;
 }
-export function mayPromoteLiveRetraction(): false {
-  return false;
+export function mayPromoteLiveRetraction(evidence?: LivePromotionGateEvidence | null): boolean {
+  return evaluateLivePromotionGate(evidence ?? null).mayPromoteRetraction;
 }

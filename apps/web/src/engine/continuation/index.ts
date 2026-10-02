@@ -14,6 +14,13 @@ export * from "./reportVerifier";
 export * from "./researchFabric";
 export * from "./liveScholarlyFabric";
 export * from "./livePromotionGate";
+
+// Disambiguate barrel: both fabric and gate export mayPromote*.
+// Wired fabric functions are the product entry (gate remains the evaluator).
+export {
+  mayPromoteLiveIndex,
+  mayPromoteLiveRetraction,
+} from "./liveScholarlyFabric";
 export * from "./evidenceGraph";
 export * from "./continuationCompiler";
 export * from "./gildenBoundary";

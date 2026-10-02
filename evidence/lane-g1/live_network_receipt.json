@@ -1,0 +1,652 @@
+{
+  "lane": "G1",
+  "captured_at_ist": "2026-10-03T04:40:56+05:30",
+  "spe_scholarly_live": "1",
+  "consent": true,
+  "mode": "LIVE",
+  "taint": "UNTRUSTED_SOURCE",
+  "authority": "NONE",
+  "independent_verifier_receipt": false,
+  "product_LIVE_INDEX": "HOLD",
+  "product_LIVE_RETRACTION": "HOLD",
+  "calls": [
+    {
+      "query": "10.1038/nature00870",
+      "provider": "OPENALEX",
+      "host": "api.openalex.org",
+      "http_status": 200,
+      "error": "",
+      "body_sha256": "182ae7519e196cc7f1f4d560cd3ed00fb3ae60fe1c8672d80dc9ff15617fcdcb",
+      "body_bytes": 111857,
+      "mode": "LIVE",
+      "fixture": false,
+      "cache": false,
+      "timeout_counted_as_live": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_flags": {
+        "parsed_json": true,
+        "item_count": 3,
+        "flags": [
+          {
+            "doi": "https://doi.org/10.1038/nature05812",
+            "is_retracted": false,
+            "type": "erratum",
+            "title_prefix": "Erratum: Pluripotency of mesenchymal stem cells derived from adult marrow"
+          },
+          {
+            "doi": "https://doi.org/10.1084/jem.20091046",
+            "is_retracted": false,
+            "type": "article",
+            "title_prefix": "Prospective identification, isolation, and systemic transplantation of multipotent mesenchymal stem cells in murine bone"
+          },
+          {
+            "doi": "https://doi.org/10.15171/apb.2015.021",
+            "is_retracted": false,
+            "type": "article",
+            "title_prefix": "The Effect of Hypoxia on Mesenchymal Stem Cell Biology"
+          }
+        ]
+      },
+      "adapter_hits": [
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.1038/nature05812",
+          "title_prefix": "Erratum: Pluripotency of mesenchymal stem cells derived from adult marrow",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "UNKNOWN"
+        },
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.1084/jem.20091046",
+          "title_prefix": "Prospective identification, isolation, and systemic transplantation of multipotent mesenchymal stem cells in murine bone",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.15171/apb.2015.021",
+          "title_prefix": "The Effect of Hypoxia on Mesenchymal Stem Cell Biology",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        }
+      ]
+    },
+    {
+      "query": "10.1038/nature00870",
+      "provider": "CROSSREF",
+      "host": "api.crossref.org",
+      "http_status": 200,
+      "error": "",
+      "body_sha256": "37afe20a7b7d08bd23bbeb0013316e0777b76eef85d80a374298155ed3ec6321",
+      "body_bytes": 6659,
+      "mode": "LIVE",
+      "fixture": false,
+      "cache": false,
+      "timeout_counted_as_live": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_flags": {
+        "parsed_json": true,
+        "item_count": 3,
+        "flags": [
+          {
+            "doi": "10.1190/tle12101038.1",
+            "update_types": [],
+            "type": "journal-article",
+            "title_prefix": "Membership Applications Received"
+          },
+          {
+            "doi": "10.1515/zna-1955-1223",
+            "update_types": [],
+            "type": "journal-article",
+            "title_prefix": "BERICHTIGUNGEN"
+          },
+          {
+            "doi": "10.1515/zna-1955-1222",
+            "update_types": [],
+            "type": "journal-article",
+            "title_prefix": "BESPRECHUNG"
+          }
+        ]
+      },
+      "adapter_hits": [
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1190/tle12101038.1",
+          "title_prefix": "Membership Applications Received",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1515/zna-1955-1223",
+          "title_prefix": "BERICHTIGUNGEN",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1515/zna-1955-1222",
+          "title_prefix": "BESPRECHUNG",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        }
+      ]
+    },
+    {
+      "query": "10.1038/nature00870",
+      "provider": "PUBMED",
+      "host": "eutils.ncbi.nlm.nih.gov",
+      "http_status": 200,
+      "error": "",
+      "body_sha256": "6cc39093c826fb2ad8e33a014598138f47f862f86537412e4c2711d78a0adde5",
+      "body_bytes": 203,
+      "mode": "LIVE",
+      "fixture": false,
+      "cache": false,
+      "timeout_counted_as_live": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_flags": {
+        "parsed_json": true,
+        "item_count": 1,
+        "flags": [],
+        "idlist_prefix": [
+          "12077603"
+        ],
+        "retraction_metadata_in_esearch": false,
+        "note": "esearch idlist has no retraction field; adapter cannot observe retraction here"
+      },
+      "adapter_hits": [
+        {
+          "provider": "PUBMED",
+          "identifier": "pmid:12077603",
+          "title_prefix": "PUBMED hit 12077603",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "query": "10.1038/nature00870",
+      "provider": "PMC",
+      "host": "eutils.ncbi.nlm.nih.gov",
+      "http_status": 200,
+      "error": "",
+      "body_sha256": "6cc39093c826fb2ad8e33a014598138f47f862f86537412e4c2711d78a0adde5",
+      "body_bytes": 203,
+      "mode": "LIVE",
+      "fixture": false,
+      "cache": false,
+      "timeout_counted_as_live": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_flags": {
+        "parsed_json": true,
+        "item_count": 1,
+        "flags": [],
+        "idlist_prefix": [
+          "12077603"
+        ],
+        "retraction_metadata_in_esearch": false,
+        "note": "esearch idlist has no retraction field; adapter cannot observe retraction here"
+      },
+      "adapter_hits": [
+        {
+          "provider": "PMC",
+          "identifier": "pmid:12077603",
+          "title_prefix": "PMC hit 12077603",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "query": "10.1038/nature00870",
+      "provider": "ARXIV",
+      "host": "export.arxiv.org",
+      "http_status": 200,
+      "error": "",
+      "body_sha256": "98b3229cfaa188f1a484c58b6a495645273825450fd168cc4f7b235dd70d14b1",
+      "body_bytes": 717,
+      "mode": "LIVE",
+      "fixture": false,
+      "cache": false,
+      "timeout_counted_as_live": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_flags": {
+        "parsed_json": false,
+        "item_count": 0,
+        "flags": [],
+        "has_entry": false
+      },
+      "adapter_hits": []
+    },
+    {
+      "query": "10.1145/359545.359563",
+      "provider": "OPENALEX",
+      "host": "api.openalex.org",
+      "http_status": 200,
+      "error": "",
+      "body_sha256": "5c0f83723e66599cdf2490ae6eccdd4b390e280d6816866e03e17bb40e2f5666",
+      "body_bytes": 61955,
+      "mode": "LIVE",
+      "fixture": false,
+      "cache": false,
+      "timeout_counted_as_live": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_flags": {
+        "parsed_json": true,
+        "item_count": 3,
+        "flags": [
+          {
+            "doi": "https://doi.org/10.1016/j.future.2010.07.005",
+            "is_retracted": false,
+            "type": "article",
+            "title_prefix": "The Open Provenance Model core specification (v1.1)"
+          },
+          {
+            "doi": "https://doi.org/10.6028/nist.ir.8202",
+            "is_retracted": false,
+            "type": "report",
+            "title_prefix": "Blockchain technology overview"
+          },
+          {
+            "doi": "https://doi.org/10.1145/3293611.3331591",
+            "is_retracted": false,
+            "type": "conference-paper",
+            "title_prefix": "HotStuff"
+          }
+        ]
+      },
+      "adapter_hits": [
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.1016/j.future.2010.07.005",
+          "title_prefix": "The Open Provenance Model core specification (v1.1)",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.6028/nist.ir.8202",
+          "title_prefix": "Blockchain technology overview",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "UNKNOWN"
+        },
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.1145/3293611.3331591",
+          "title_prefix": "HotStuff",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "query": "10.1145/359545.359563",
+      "provider": "CROSSREF",
+      "host": "api.crossref.org",
+      "http_status": 200,
+      "error": "",
+      "body_sha256": "3e8339b8cfcecb083a5cc4d1eec84b7a61fa2676c327db8bb8f185598fcf346d",
+      "body_bytes": 8355,
+      "mode": "LIVE",
+      "fixture": false,
+      "cache": false,
+      "timeout_counted_as_live": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_flags": {
+        "parsed_json": true,
+        "item_count": 3,
+        "flags": [
+          {
+            "doi": "10.1177/106002809102501038",
+            "update_types": [],
+            "type": "journal-article",
+            "title_prefix": "Books Received"
+          },
+          {
+            "doi": "10.1038/s41477-024-01785-x",
+            "update_types": [],
+            "type": "journal-article",
+            "title_prefix": "Pretty privilege"
+          },
+          {
+            "doi": "10.1212/wnl.32.10.1145",
+            "update_types": [],
+            "type": "journal-article",
+            "title_prefix": "classics in neurology"
+          }
+        ]
+      },
+      "adapter_hits": [
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1177/106002809102501038",
+          "title_prefix": "Books Received",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1038/s41477-024-01785-x",
+          "title_prefix": "Pretty privilege",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1212/wnl.32.10.1145",
+          "title_prefix": "classics in neurology",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        }
+      ]
+    },
+    {
+      "query": "10.1145/359545.359563",
+      "provider": "PUBMED",
+      "host": "eutils.ncbi.nlm.nih.gov",
+      "http_status": 200,
+      "error": "",
+      "body_sha256": "f4667fb6f4d6ac94a2809f56c3890399075a9bca09b814adcaa60f94e5698a19",
+      "body_bytes": 310,
+      "mode": "LIVE",
+      "fixture": false,
+      "cache": false,
+      "timeout_counted_as_live": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_flags": {
+        "parsed_json": true,
+        "item_count": 0,
+        "flags": [],
+        "idlist_prefix": [],
+        "retraction_metadata_in_esearch": false,
+        "note": "esearch idlist has no retraction field; adapter cannot observe retraction here"
+      },
+      "adapter_hits": []
+    },
+    {
+      "query": "10.1145/359545.359563",
+      "provider": "PMC",
+      "host": "eutils.ncbi.nlm.nih.gov",
+      "http_status": 200,
+      "error": "",
+      "body_sha256": "f4667fb6f4d6ac94a2809f56c3890399075a9bca09b814adcaa60f94e5698a19",
+      "body_bytes": 310,
+      "mode": "LIVE",
+      "fixture": false,
+      "cache": false,
+      "timeout_counted_as_live": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_flags": {
+        "parsed_json": true,
+        "item_count": 0,
+        "flags": [],
+        "idlist_prefix": [],
+        "retraction_metadata_in_esearch": false,
+        "note": "esearch idlist has no retraction field; adapter cannot observe retraction here"
+      },
+      "adapter_hits": []
+    },
+    {
+      "query": "10.1145/359545.359563",
+      "provider": "ARXIV",
+      "host": "export.arxiv.org",
+      "http_status": 200,
+      "error": "",
+      "body_sha256": "4692d976351cc885fc548bdbed821fc6d9bc66593a31d99690d89d9cebd11421",
+      "body_bytes": 721,
+      "mode": "LIVE",
+      "fixture": false,
+      "cache": false,
+      "timeout_counted_as_live": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_flags": {
+        "parsed_json": false,
+        "item_count": 0,
+        "flags": [],
+        "has_entry": false
+      },
+      "adapter_hits": []
+    }
+  ],
+  "acquires": [
+    {
+      "query": "10.1038/nature00870",
+      "status": "ACQUIRED_LIVE",
+      "mode": "LIVE",
+      "network_calls": 5,
+      "identity_providers_agreeing": 2,
+      "retraction": {
+        "status": "NO_SIGNAL_IN_QUERIED_SOURCES",
+        "evidence": [
+          "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "NO_MATCH_NE_NOT_RETRACTED"
+        ],
+        "live_verified": false
+      },
+      "live_index": "HOLD",
+      "live_retraction": "HOLD",
+      "outbound_query": "10.1038/nature00870",
+      "capsule_count": 8,
+      "hits": [
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.1038/nature05812",
+          "title_prefix": "Erratum: Pluripotency of mesenchymal stem cells derived from adult marrow",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "UNKNOWN"
+        },
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.1084/jem.20091046",
+          "title_prefix": "Prospective identification, isolation, and systemic transplantation of multipotent mesenchymal stem cells in murine bone",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.15171/apb.2015.021",
+          "title_prefix": "The Effect of Hypoxia on Mesenchymal Stem Cell Biology",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1190/tle12101038.1",
+          "title_prefix": "Membership Applications Received",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1515/zna-1955-1223",
+          "title_prefix": "BERICHTIGUNGEN",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1515/zna-1955-1222",
+          "title_prefix": "BESPRECHUNG",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "PUBMED",
+          "identifier": "pmid:12077603",
+          "title_prefix": "PUBMED hit 12077603",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "UNKNOWN"
+        },
+        {
+          "provider": "PMC",
+          "identifier": "pmid:12077603",
+          "title_prefix": "PMC hit 12077603",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "UNKNOWN"
+        }
+      ],
+      "taint": "UNTRUSTED_SOURCE"
+    },
+    {
+      "query": "10.1145/359545.359563",
+      "status": "ACQUIRED_LIVE",
+      "mode": "LIVE",
+      "network_calls": 5,
+      "identity_providers_agreeing": 1,
+      "retraction": {
+        "status": "NO_SIGNAL_IN_QUERIED_SOURCES",
+        "evidence": [
+          "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "NO_MATCH_NE_NOT_RETRACTED"
+        ],
+        "live_verified": false
+      },
+      "live_index": "HOLD",
+      "live_retraction": "HOLD",
+      "outbound_query": "10.1145/359545.359563",
+      "capsule_count": 6,
+      "hits": [
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.1016/j.future.2010.07.005",
+          "title_prefix": "The Open Provenance Model core specification (v1.1)",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.6028/nist.ir.8202",
+          "title_prefix": "Blockchain technology overview",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "UNKNOWN"
+        },
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.1145/3293611.3331591",
+          "title_prefix": "HotStuff",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "UNKNOWN"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1177/106002809102501038",
+          "title_prefix": "Books Received",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1038/s41477-024-01785-x",
+          "title_prefix": "Pretty privilege",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1212/wnl.32.10.1145",
+          "title_prefix": "classics in neurology",
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "peer_review_class": "PEER_REVIEWED"
+        }
+      ],
+      "taint": "UNTRUSTED_SOURCE"
+    }
+  ],
+  "gate_evaluations_writer_only": [
+    {
+      "query": "10.1038/nature00870",
+      "identity_providers_agreeing": 2,
+      "retraction_status": "NO_SIGNAL_IN_QUERIED_SOURCES",
+      "independent_live_network_proof": false,
+      "may_promote_index": false,
+      "may_promote_retraction": false,
+      "reasons": [
+        "MUTANTS_NOT_GREEN",
+        "INDEPENDENT_LIVE_NETWORK_PROOF_MISSING",
+        "LIVE_INDEX=HOLD",
+        "LIVE_RETRACTION=HOLD"
+      ],
+      "product_live_index": "HOLD",
+      "product_live_retraction": "HOLD"
+    },
+    {
+      "query": "10.1145/359545.359563",
+      "identity_providers_agreeing": 1,
+      "retraction_status": "NO_SIGNAL_IN_QUERIED_SOURCES",
+      "independent_live_network_proof": false,
+      "may_promote_index": false,
+      "may_promote_retraction": false,
+      "reasons": [
+        "NEED_GE2_PROVIDERS_IDENTITY_AGREE",
+        "MUTANTS_NOT_GREEN",
+        "INDEPENDENT_LIVE_NETWORK_PROOF_MISSING",
+        "LIVE_INDEX=HOLD",
+        "LIVE_RETRACTION=HOLD"
+      ],
+      "product_live_index": "HOLD",
+      "product_live_retraction": "HOLD"
+    }
+  ],
+  "no_arg_may_promote": {
+    "may_promote_live_index": false,
+    "may_promote_live_retraction": false,
+    "LIVE_INDEX": "HOLD",
+    "LIVE_RETRACTION": "HOLD"
+  },
+  "mutants": [
+    {
+      "id": "SINGLE_PROVIDER_NE_MULTI",
+      "killed": true,
+      "how": "gate rejects identity_providers_agreeing=1 (unit + this evaluation)",
+      "may_promote": false
+    },
+    {
+      "id": "NO_SIGNAL_COLLAPSE_TO_NOT_RETRACTED",
+      "killed": true,
+      "how": "flag no_signal_collapsed_to_not_retracted blocks",
+      "may_promote": false
+    },
+    {
+      "id": "NOT_CHECKED_BLOCKS",
+      "killed": true,
+      "how": "NOT_CHECKED cannot promote",
+      "may_promote": false
+    },
+    {
+      "id": "UNKNOWN_NE_PASS",
+      "killed": true,
+      "how": "empty witness merge is UNKNOWN; product constants not PASS",
+      "live_retraction_constant": "HOLD"
+    },
+    {
+      "id": "FIXTURE_CACHE_TIMEOUT_NE_LIVE",
+      "killed": true,
+      "how": "this receipt excludes fixture/cache/timeout; those modes are not counted as live"
+    },
+    {
+      "id": "INDEPENDENT_LIVE_NETWORK_PROOF",
+      "killed": false,
+      "how": "writer network is not an independent-verifier receipt; flag left false; mayPromote stays false",
+      "may_promote_index_no_arg": false,
+      "may_promote_retraction_no_arg": false
+    }
+  ],
+  "missing_for_LIVE_RETRACTION_PASS": [
+    "independent verifier receipt not issued by this writer",
+    "merge_retraction_checks sets live_verified=false even on RETRACTION_SIGNAL",
+    "PUBMED and PMC adapters read esearch idlist only; no retraction metadata field is observed",
+    "product LIVE_RETRACTION constant remains HOLD"
+  ],
+  "missing_for_LIVE_INDEX_PASS": [
+    "independent verifier receipt not issued by this writer",
+    "product LIVE_INDEX constant remains HOLD",
+    "may_promote_* without evidence pack is false"
+  ],
+  "identity_agreement_caveat": {
+    "10.1038/nature00870": "identity_providers_agreeing=2 is PUBMED+PMC sharing pmid:12077603 from the same esearch URL builder, not two independent DOI records. Target DOI was not in OpenAlex or Crossref search hits. Not qualifying multi-provider DOI identity.",
+    "10.1145/359545.359563": "search hits did not include the target DOI. agree=1 is not multi-provider identity of the queried work."
+  },
+  "adapter_search_did_not_return_target_doi": true,
+  "retraction_on_adapter_search_path": "NO_SIGNAL_IN_QUERIED_SOURCES"
+}
