@@ -118,7 +118,7 @@ export const WireframeCanvasPreview: React.FC<{ sections: WebsiteSection[] }> = 
         width={540}
         height={340}
         className="bld-wireframe-canvas"
-        aria-label="Isometric wireframe layout preview"
+        aria-hidden="true"
       />
     </div>
   );
@@ -206,7 +206,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `website-spec-${Date.now()}.json`;
+    a.download = "website-spec.json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -272,7 +272,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
               aria-pressed={viewport === "desktop"}
               aria-label="Desktop viewport"
             >
-              Desktop (1200px)
+              Desktop (fluid)
             </button>
             <button
               type="button"
@@ -379,7 +379,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
           <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px solid var(--bld-border)" }}>
             <div style={{ fontSize: "0.75rem", color: "var(--bld-muted)" }}>Compiler Receipt</div>
             <div style={{ fontSize: "0.8125rem", fontFamily: "monospace", marginTop: "4px" }}>
-              Sections: {activePage?.sections.length} | Status: VERIFIED
+              Sections: {activePage?.sections.length} | Compile: LOCAL_TS (not a verification receipt)
             </div>
           </div>
         </aside>
@@ -462,7 +462,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
                 title="Static Website Preview"
                 className="bld-preview-iframe"
                 srcDoc={toStandaloneDocument(compiled.html, compiled.css)}
-                sandbox="allow-same-origin"
+                sandbox=""
               />
             </div>
           ) : viewMode === "code" ? (
@@ -489,7 +489,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
 
               <div>
                 <h3 style={{ margin: "0 0 8px 0", fontSize: "0.875rem", color: "var(--bld-muted)" }}>
-                  styles.css (WCAG 2.1 AA Styled CSS)
+                  styles.css (exported stylesheet)
                 </h3>
                 <pre
                   style={{
