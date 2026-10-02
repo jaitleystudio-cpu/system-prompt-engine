@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { runTaskContinuationPipeline } from "../engine/continuation";
+import { runTaskContinuationPipeline, describeScholarlyFabricDisplayStates } from "../engine/continuation";
 import { composePromptPackage, serializePromptPackage } from "../engine/packageComposer";
 import { computeIntentDiff } from "../engine/intentDiff";
 import type { TargetModelId } from "../engine/targetModelConfig";
@@ -59,6 +59,7 @@ export function TaskContinuationInspector({ baselineSha, onClose }: Props) {
 
   const { gildenReview, claimEvidenceGraph, graphSummary } = pipelineResult;
   const { review, continuationContract, cycleState } = gildenReview;
+  const scholarlyStates = describeScholarlyFabricDisplayStates();
 
   // Build the multi-stage package
   const pkg = composePromptPackage({
@@ -178,6 +179,43 @@ export function TaskContinuationInspector({ baselineSha, onClose }: Props) {
             ✕
           </button>
         )}
+      </div>
+
+
+      {/* Scholarly fabric truth — three states separately; no offline→full-index inference */}
+      <div
+        data-testid="scholarly-fabric-truth-states"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+          gap: "0.75rem",
+          padding: "0.85rem 1rem",
+          borderRadius: "8px",
+          border: "1px solid rgba(148, 163, 184, 0.35)",
+          background: "rgba(15, 23, 42, 0.65)",
+          fontSize: "0.8rem",
+        }}
+      >
+        <div>
+          <div style={{ opacity: 0.7 }}>Curated offline seed</div>
+          <div style={{ fontWeight: 700, color: "#34d399" }}>{scholarlyStates.curatedOfflineSeedCorpus}</div>
+        </div>
+        <div>
+          <div style={{ opacity: 0.7 }}>Full scholarly index</div>
+          <div style={{ fontWeight: 700, color: "#f87171" }}>{scholarlyStates.fullScholarlyIndex}</div>
+        </div>
+        <div>
+          <div style={{ opacity: 0.7 }}>Live retraction verification</div>
+          <div style={{ fontWeight: 700, color: "#f87171" }}>{scholarlyStates.liveRetractionVerification}</div>
+        </div>
+        <div>
+          <div style={{ opacity: 0.7 }}>RT_B_LIVE_INDEX</div>
+          <div style={{ fontWeight: 700, color: "#fbbf24" }}>{scholarlyStates.rtBLiveIndex}</div>
+        </div>
+        <div>
+          <div style={{ opacity: 0.7 }}>RT_B_LIVE_RETRACTION</div>
+          <div style={{ fontWeight: 700, color: "#fbbf24" }}>{scholarlyStates.rtBLiveRetraction}</div>
+        </div>
       </div>
 
       {/* Preset Pickers */}
