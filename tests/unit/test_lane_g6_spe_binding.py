@@ -5,7 +5,7 @@ only when spe_runtime.portability.spe_artifact.verify_integrity says so.
 That state must not be copied onto spe_contract.
 
 provenance_record and capability_manifest are real in this ancestry.
-workflow export stays HOLD: apps/web/src/export/workflowExporters.ts is absent.
+workflow export is the frozen G11 package spe_runtime.workflow_export, not workflowExporters.ts.
 """
 
 from __future__ import annotations
