@@ -1,0 +1,504 @@
+{
+  "lane": "G3",
+  "ancestry": {
+    "startSha": "89ef290a09ad2196e802d2d47455d922514138fd",
+    "why": "Newest commit owning IMAGE→PROMPT (observationToPromptBlock / scaffold prompt), SCREENSHOT→UI STRUCTURE (observeScreenshotIRLite), SCREENSHOT→CODE (screenshotToCode CODE_TARGETS) plus real windowed SSIM. Python codevision r1q is a sibling structure census that refuses image bytes and does not emit these code targets.",
+    "notUsed": [
+      "ecd6ae544beb6ba0b44243ea8f2acfd131bfdac3",
+      "f85649fe31d0ac7404ef1b30906b6b9d222f1a6e"
+    ]
+  },
+  "tesseractCli": "absent",
+  "ocrPolicy": "EXPLICIT_FALLBACK ocr-textlikeness; character text is not claimed",
+  "chrome": "154.0.8037.97",
+  "comparator": "apps/web/src/media/realVisualComparator.mjs SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+  "passBar": {
+    "minSsim": 0.95,
+    "maxPixelDeltaPercent": 5,
+    "responsiveNarrowSsimRequired": true
+  },
+  "declaredTargets": [
+    "html-css-js",
+    "react",
+    "swiftui",
+    "compose",
+    "flutter",
+    "react-native"
+  ],
+  "unsupportedExample": {
+    "supported": false,
+    "status": "UNSUPPORTED_TARGET",
+    "reason": "vue is not a declared screenshot code target"
+  },
+  "targets": {
+    "html-css-js": "scaffold + syntax + rendered SSIM at native viewport; responsive narrow SSIM UNKNOWN without paired reference",
+    "react": "scaffold + syntax; render toolchain absent; HOLD_UNPROVEN",
+    "swiftui": "scaffold + syntax; Swift toolchain render not run; HOLD_UNPROVEN",
+    "compose": "scaffold + syntax; Compose render not run; HOLD_UNPROVEN",
+    "flutter": "scaffold + syntax; Flutter render not run; HOLD_UNPROVEN",
+    "react-native": "scaffold + syntax; RN render not run; HOLD_UNPROVEN"
+  },
+  "pixelPerfectClaim": false,
+  "releasePass": false,
+  "rows": [
+    {
+      "id": "desktop-landing",
+      "file": "desktop-landing.png",
+      "referenceSha256": "d85baef83a156fcbcb080801c614d4102b7903496c866de734668cbd0376301c",
+      "width": 1280,
+      "height": 800,
+      "ocr": {
+        "mode": "EXPLICIT_FALLBACK",
+        "method": "ocr-textlikeness",
+        "characterTextClaimed": false,
+        "bands": 0
+      },
+      "layoutRegionCount": 3,
+      "roles": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions"
+      ],
+      "designTokens": [
+        "#f9fbfc",
+        "#0f172a",
+        "#2563eb",
+        "#eff1f4",
+        "#485568"
+      ],
+      "promptNonEmpty": true,
+      "syntaxOk": {
+        "html-css-js": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "swiftui": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "compose": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "flutter": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react-native": {
+          "ok": true,
+          "reason": "syntax markers present"
+        }
+      },
+      "repairAttempts": 0,
+      "nativeComparison": {
+        "ssimScore": 0.2045,
+        "pixelDeltaPercentage": 93.781,
+        "mismatchedPixelCount": 960320,
+        "fidelityStatusFromComparator": "UNPROVEN",
+        "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+        "receiptId": "rcpt-8019ebb7deb0639d"
+      },
+      "responsiveNarrow": {
+        "produced": true,
+        "sha256": "b4aaf5bc1199b1327b1f577ff42e7968ba1f53ca274b17199916558a4e3927c4",
+        "ssim": null,
+        "note": "No paired 360px reference screenshot in repo; SSIM not computed"
+      },
+      "releaseStatus": "MEASURED_BELOW_BAR",
+      "pixelPerfect": false,
+      "reasons": [
+        "responsive narrow-viewport SSIM UNKNOWN",
+        "native SSIM below bar",
+        "pixel delta above bar"
+      ]
+    },
+    {
+      "id": "mobile-app",
+      "file": "mobile-app.png",
+      "referenceSha256": "cc688e589987d0c9c9e7ae24bdc9029959d18305ff615e0a9c02697b56d08334",
+      "width": 390,
+      "height": 844,
+      "ocr": {
+        "mode": "EXPLICIT_FALLBACK",
+        "method": "ocr-textlikeness",
+        "characterTextClaimed": false,
+        "bands": 0
+      },
+      "layoutRegionCount": 3,
+      "roles": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions"
+      ],
+      "designTokens": [
+        "#0b1020",
+        "#1a2236",
+        "#121826",
+        "#e2e8f0",
+        "#6a7486"
+      ],
+      "promptNonEmpty": true,
+      "syntaxOk": {
+        "html-css-js": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "swiftui": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "compose": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "flutter": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react-native": {
+          "ok": true,
+          "reason": "syntax markers present"
+        }
+      },
+      "repairAttempts": 0,
+      "nativeComparison": {
+        "ssimScore": 0.7157,
+        "pixelDeltaPercentage": 67.605,
+        "mismatchedPixelCount": 222529,
+        "fidelityStatusFromComparator": "UNPROVEN",
+        "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+        "receiptId": "rcpt-c6784c10bfc7b06c"
+      },
+      "responsiveNarrow": {
+        "produced": true,
+        "sha256": "fe0c8ac98b230181c51df15078d20b567e4b1b27b11891eec5fad4c71a9780c6",
+        "ssim": null,
+        "note": "No paired 360px reference screenshot in repo; SSIM not computed"
+      },
+      "releaseStatus": "MEASURED_BELOW_BAR",
+      "pixelPerfect": false,
+      "reasons": [
+        "responsive narrow-viewport SSIM UNKNOWN",
+        "native SSIM below bar",
+        "pixel delta above bar"
+      ]
+    },
+    {
+      "id": "form",
+      "file": "form.png",
+      "referenceSha256": "97dd6b59d381b48b46bcadbb12ef5f536cc0fd142a7f345162f0e49b45c2a51d",
+      "width": 960,
+      "height": 720,
+      "ocr": {
+        "mode": "EXPLICIT_FALLBACK",
+        "method": "ocr-textlikeness",
+        "characterTextClaimed": false,
+        "bands": 0
+      },
+      "layoutRegionCount": 3,
+      "roles": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions"
+      ],
+      "designTokens": [
+        "#f8fafc",
+        "#efefef",
+        "#0f766e",
+        "#94a3b8",
+        "#0f172a"
+      ],
+      "promptNonEmpty": true,
+      "syntaxOk": {
+        "html-css-js": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "swiftui": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "compose": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "flutter": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react-native": {
+          "ok": true,
+          "reason": "syntax markers present"
+        }
+      },
+      "repairAttempts": 0,
+      "nativeComparison": {
+        "ssimScore": 0.7621,
+        "pixelDeltaPercentage": 53.131,
+        "mismatchedPixelCount": 367241,
+        "fidelityStatusFromComparator": "UNPROVEN",
+        "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+        "receiptId": "rcpt-21557170f544e1fc"
+      },
+      "responsiveNarrow": {
+        "produced": true,
+        "sha256": "93c8fe8e90d931fa897fc0c93d79917c146c58371f99aec405712cb63677e1b9",
+        "ssim": null,
+        "note": "No paired 360px reference screenshot in repo; SSIM not computed"
+      },
+      "releaseStatus": "MEASURED_BELOW_BAR",
+      "pixelPerfect": false,
+      "reasons": [
+        "responsive narrow-viewport SSIM UNKNOWN",
+        "native SSIM below bar",
+        "pixel delta above bar"
+      ]
+    },
+    {
+      "id": "dashboard-sidebar",
+      "file": "dashboard-sidebar.png",
+      "referenceSha256": "06ca11e5b05f3fd78ad8eefdaf8f74882ad13aad2a1b0ceb48e8dbdf4450b136",
+      "width": 1280,
+      "height": 800,
+      "ocr": {
+        "mode": "EXPLICIT_FALLBACK",
+        "method": "ocr-textlikeness",
+        "characterTextClaimed": false,
+        "bands": 0
+      },
+      "layoutRegionCount": 4,
+      "roles": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions",
+        "Side rail / navigation"
+      ],
+      "designTokens": [
+        "#fafbfd",
+        "#0f172a",
+        "#e3e8f0",
+        "#eaeaeb",
+        "#9ca0a9"
+      ],
+      "promptNonEmpty": true,
+      "syntaxOk": {
+        "html-css-js": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "swiftui": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "compose": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "flutter": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react-native": {
+          "ok": true,
+          "reason": "syntax markers present"
+        }
+      },
+      "repairAttempts": 0,
+      "nativeComparison": {
+        "ssimScore": 0.2146,
+        "pixelDeltaPercentage": 95.216,
+        "mismatchedPixelCount": 975010,
+        "fidelityStatusFromComparator": "UNPROVEN",
+        "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+        "receiptId": "rcpt-aca71ff750afc86b"
+      },
+      "responsiveNarrow": {
+        "produced": true,
+        "sha256": "f42253d46209c59d1cd0c39203ed2f669e7845918a5af5d7da76f356eaeeb1e8",
+        "ssim": null,
+        "note": "No paired 360px reference screenshot in repo; SSIM not computed"
+      },
+      "releaseStatus": "MEASURED_BELOW_BAR",
+      "pixelPerfect": false,
+      "reasons": [
+        "responsive narrow-viewport SSIM UNKNOWN",
+        "native SSIM below bar",
+        "pixel delta above bar"
+      ]
+    },
+    {
+      "id": "card-grid",
+      "file": "card-grid.png",
+      "referenceSha256": "e591d5acd526b6ba47cd3bcdeaa70cd2c6f3c8f448518defaf67149392ca142f",
+      "width": 1100,
+      "height": 760,
+      "ocr": {
+        "mode": "EXPLICIT_FALLBACK",
+        "method": "ocr-textlikeness",
+        "characterTextClaimed": false,
+        "bands": 0
+      },
+      "layoutRegionCount": 3,
+      "roles": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions"
+      ],
+      "designTokens": [
+        "#eef2ff",
+        "#ffffff",
+        "#64748b",
+        "#6366f1",
+        "#14b8a6"
+      ],
+      "promptNonEmpty": true,
+      "syntaxOk": {
+        "html-css-js": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "swiftui": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "compose": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "flutter": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react-native": {
+          "ok": true,
+          "reason": "syntax markers present"
+        }
+      },
+      "repairAttempts": 0,
+      "nativeComparison": {
+        "ssimScore": 0.7453,
+        "pixelDeltaPercentage": 76.395,
+        "mismatchedPixelCount": 638659,
+        "fidelityStatusFromComparator": "UNPROVEN",
+        "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+        "receiptId": "rcpt-f2561694433a8941"
+      },
+      "responsiveNarrow": {
+        "produced": true,
+        "sha256": "dbbadeac1f02ea173634770a24628238695fe7cef6714571b5313eef0e84f114",
+        "ssim": null,
+        "note": "No paired 360px reference screenshot in repo; SSIM not computed"
+      },
+      "releaseStatus": "MEASURED_BELOW_BAR",
+      "pixelPerfect": false,
+      "reasons": [
+        "responsive narrow-viewport SSIM UNKNOWN",
+        "native SSIM below bar",
+        "pixel delta above bar"
+      ]
+    },
+    {
+      "id": "dark-difficult",
+      "file": "dark-difficult.png",
+      "referenceSha256": "99724ccf0b88a5fd0d666f49d1d387bbfd0e080fbd1057a0e6073a283f3414db",
+      "width": 1200,
+      "height": 800,
+      "ocr": {
+        "mode": "EXPLICIT_FALLBACK",
+        "method": "ocr-textlikeness",
+        "characterTextClaimed": false,
+        "bands": 0
+      },
+      "layoutRegionCount": 3,
+      "roles": [
+        "Header / top bar",
+        "Main content",
+        "Footer / bottom actions"
+      ],
+      "designTokens": [
+        "#05070d",
+        "#0b111e",
+        "#1eb6cf",
+        "#0a0f1a",
+        "#1f2937"
+      ],
+      "promptNonEmpty": true,
+      "syntaxOk": {
+        "html-css-js": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "swiftui": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "compose": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "flutter": {
+          "ok": true,
+          "reason": "syntax markers present"
+        },
+        "react-native": {
+          "ok": true,
+          "reason": "syntax markers present"
+        }
+      },
+      "repairAttempts": 0,
+      "nativeComparison": {
+        "ssimScore": 0.6288,
+        "pixelDeltaPercentage": 52.48,
+        "mismatchedPixelCount": 503806,
+        "fidelityStatusFromComparator": "UNPROVEN",
+        "comparatorAlgorithm": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+        "receiptId": "rcpt-0930186fd6ca1efa"
+      },
+      "responsiveNarrow": {
+        "produced": true,
+        "sha256": "26863fe8e38d1115fec2d04d7e8bff3723f51c8f3ec12434dc6e313907863676",
+        "ssim": null,
+        "note": "No paired 360px reference screenshot in repo; SSIM not computed"
+      },
+      "releaseStatus": "MEASURED_BELOW_BAR",
+      "pixelPerfect": false,
+      "reasons": [
+        "responsive narrow-viewport SSIM UNKNOWN",
+        "native SSIM below bar",
+        "pixel delta above bar"
+      ]
+    }
+  ],
+  "adversarial": {
+    "kind": "synthetic high-frequency noise 320x200",
+    "ssimScore": 0.0819,
+    "pixelDeltaPercentage": 95.927,
+    "releaseStatus": "MEASURED_BELOW_BAR",
+    "pixelPerfect": false
+  },
+  "final": "HOLD"
+}

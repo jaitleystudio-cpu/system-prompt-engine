@@ -13,3 +13,4 @@ export * from "./semanticCompose";
 export * from "./semanticPipeline";
 export * from "./uiObservation";
 export * from "../engine/onnxSemantic";
+export * from "./visionReleaseGate";

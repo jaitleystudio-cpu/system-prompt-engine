@@ -238,6 +238,7 @@ function html(spec: UiSpec): string {
     `.spe-list li{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.08)}\n` +
     `.spe-form{display:flex;flex-direction:column;gap:.75rem;max-width:28rem;margin:1rem auto;padding:1rem;background:rgba(255,255,255,.05)}\n` +
     `.spe-region{outline:1px dashed rgba(255,255,255,.12);padding:.5rem}\n` +
+    `@media (max-width: 640px){.shell{grid-template-columns:1fr}aside.spe-rail{grid-column:1/-1}}\n` +
     `</style></head><body>\n` +
     `<!-- OBSERVATION scaffold: structure resemblance, not pixel-perfect reconstruction -->\n` +
     `<div class="shell" data-hierarchy="1">\n` +
