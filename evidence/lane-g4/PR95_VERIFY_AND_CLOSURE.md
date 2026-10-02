@@ -73,3 +73,11 @@ Port is the library only: `spe_runtime/webrecon/`, schema, foundation tests, and
 Labels added on the package (not in the frozen donor): `LIVE_RECONSTRUCTION=NOT_AVAILABLE`, `HOSTED_PUBLISH=HOLD`, `SCENE_3D=NOT_AVAILABLE`, `AI_GENERATION=NOT_AVAILABLE`. The donor already refuses non-allowlisted and non-http(s) URLs and does not fetch. No new 3D qualification was run. Hero Three.js was not touched.
 
 Tests after the port: `test_webrecon_g4_url_closure.py`, `test_webrecon_foundation.py`, `test_webrecon_r1_qualification.py` — 39 passed. Compiler and builder harnesses re-run PASS.
+
+## Website-generator port (2026-10-03)
+
+Source: PR #78 commit `85f9ebda420936142cb864f281ad3a3a02a55e2c` via `git archive` (not a live lane worktree). The change is only `packages/website-generator/`. No App.tsx, nav, shell, or route table. It is a library, not a UI route.
+
+Compiled output keeps `hosted: false`, `ai_site_engine: false`, `three_d: false`. `hosted_export` is HOLD and `sandbox_preview` is UNSUPPORTED. Neither is a pass. `javascript:` and network hrefs raise `WebsiteSpecError`. A `<script>` body is escaped and is not emitted as a script element. `LIVE_RECONSTRUCTION` remains `NOT_AVAILABLE` on `spe_runtime.webrecon` and is not claimed by the generator.
+
+Tests: `test_website_generator_g4_closure.py` failed closed on missing module, then passed with the donor compiler tests and `test_webrecon_g4_url_closure.py` (14 passed). Compiler harness and builder harness re-run PASS.
