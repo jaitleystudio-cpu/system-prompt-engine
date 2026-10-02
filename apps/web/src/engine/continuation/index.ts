@@ -12,6 +12,15 @@
 export * from "./types";
 export * from "./reportVerifier";
 export * from "./researchFabric";
+export * from "./liveScholarlyFabric";
+export * from "./livePromotionGate";
+
+// Disambiguate barrel: both fabric and gate export mayPromote*.
+// Wired fabric functions are the product entry (gate remains the evaluator).
+export {
+  mayPromoteLiveIndex,
+  mayPromoteLiveRetraction,
+} from "./liveScholarlyFabric";
 export * from "./evidenceGraph";
 export * from "./continuationCompiler";
 export * from "./gildenBoundary";
@@ -39,10 +48,8 @@ export function runTaskContinuationPipeline(
   submission: ReviewSubmission,
   cycleCount: number = 1
 ): TaskContinuationPipelineResult {
-  // 1. Wave RT-A: Verify report, extract claims, bind proof receipts
   const review = verifyTaskReport(submission);
 
-  // 2. Wave RT-B: Evaluate research need and acquire open literature / specs under consent
   const evidenceNeed = evaluateEvidenceNeed(submission.originalTask, review.claims);
   const researchAcquisition = acquireScholarlyEvidence(
     evidenceNeed,
@@ -52,28 +59,24 @@ export function runTaskContinuationPipeline(
     },
   );
 
-  // 3. Wave RT-C: Construct DAG claim-evidence graph and map contradictions/gaps
   const claimEvidenceGraph = buildClaimEvidenceGraph(
     review.claims,
     researchAcquisition.sources
   );
   const graphSummary = mapContradictionsAndGaps(claimEvidenceGraph);
 
-  // Merge any graph contradictions into review contradictions
   for (const ctrd of graphSummary.contradictions) {
     if (!review.contradictions.some((c) => c.contradictionId === ctrd.contradictionId)) {
       review.contradictions.push(ctrd);
     }
   }
 
-  // 4. Wave RT-D: Compile canonical continuation contract and format target model prompt
   const continuationContract = compileContinuationContract(
     submission,
     review,
     claimEvidenceGraph
   );
 
-  // 5. Wave RT-E: Apply Gilden authority bounds and cycle limits
   const gildenReview = processGildenReview(
     submission,
     review,

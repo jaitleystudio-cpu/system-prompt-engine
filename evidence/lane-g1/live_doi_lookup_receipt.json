@@ -1,0 +1,172 @@
+{
+  "lane": "G1",
+  "captured_at_ist": "2026-10-03T04:49:29+05:30",
+  "spe_scholarly_live": "1",
+  "consent": true,
+  "mode": "LIVE",
+  "path": "acquire_scholarly_hits",
+  "taint": "UNTRUSTED_SOURCE",
+  "authority": "NONE",
+  "counts_as_promotion": false,
+  "independent_verifier_receipt": false,
+  "fixture_cache_timeout_counted_as_live": false,
+  "direct_doi_observation_counts_as_promotion": false,
+  "identity_rule": "DOI string match only; shared pmid is not two DOI providers",
+  "product_LIVE_INDEX": "HOLD",
+  "product_LIVE_RETRACTION": "HOLD",
+  "no_arg_may_promote_index": false,
+  "no_arg_may_promote_retraction": false,
+  "queries": [
+    {
+      "query": "10.1038/nature00870",
+      "status": "ACQUIRED_LIVE",
+      "mode": "LIVE",
+      "network_calls": 5,
+      "identity_providers_agreeing_doi_only": 2,
+      "doi_match_providers": [
+        "CROSSREF",
+        "OPENALEX"
+      ],
+      "retraction": {
+        "status": "RETRACTION_SIGNAL",
+        "evidence": [
+          "SIGNAL:RETRACTION_SIGNAL"
+        ],
+        "live_verified": false
+      },
+      "live_index": "HOLD",
+      "live_retraction": "HOLD",
+      "hits": [
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.1038/nature00870",
+          "doi_match": true,
+          "retraction": "RETRACTION_SIGNAL",
+          "title_prefix": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+          "taint": "UNTRUSTED_SOURCE"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1038/nature00870",
+          "doi_match": true,
+          "retraction": "RETRACTION_SIGNAL",
+          "title_prefix": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+          "taint": "UNTRUSTED_SOURCE"
+        },
+        {
+          "provider": "PUBMED",
+          "identifier": "pmid:12077603",
+          "doi_match": false,
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "title_prefix": "PUBMED hit 12077603",
+          "taint": "UNTRUSTED_SOURCE"
+        },
+        {
+          "provider": "PMC",
+          "identifier": "pmid:12077603",
+          "doi_match": false,
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "title_prefix": "PMC hit 12077603",
+          "taint": "UNTRUSTED_SOURCE"
+        },
+        {
+          "provider": "ARXIV",
+          "identifier": null,
+          "doi_match": false,
+          "retraction": null,
+          "title_prefix": "",
+          "taint": "UNTRUSTED_SOURCE"
+        }
+      ],
+      "gate": {
+        "may_promote_index": false,
+        "may_promote_retraction": false,
+        "reasons": [
+          "MUTANTS_NOT_GREEN",
+          "INDEPENDENT_LIVE_NETWORK_PROOF_MISSING",
+          "LIVE_INDEX=HOLD",
+          "LIVE_RETRACTION=HOLD"
+        ],
+        "product_live_index": "HOLD",
+        "product_live_retraction": "HOLD",
+        "independent_live_network_proof": false
+      }
+    },
+    {
+      "query": "10.1145/359545.359563",
+      "status": "ACQUIRED_LIVE",
+      "mode": "LIVE",
+      "network_calls": 5,
+      "identity_providers_agreeing_doi_only": 2,
+      "doi_match_providers": [
+        "CROSSREF",
+        "OPENALEX"
+      ],
+      "retraction": {
+        "status": "NO_SIGNAL_IN_QUERIED_SOURCES",
+        "evidence": [
+          "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "NO_MATCH_NE_NOT_RETRACTED"
+        ],
+        "live_verified": false
+      },
+      "live_index": "HOLD",
+      "live_retraction": "HOLD",
+      "hits": [
+        {
+          "provider": "OPENALEX",
+          "identifier": "doi:10.1145/359545.359563",
+          "doi_match": true,
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "title_prefix": "Time, clocks, and the ordering of events in a distributed system",
+          "taint": "UNTRUSTED_SOURCE"
+        },
+        {
+          "provider": "CROSSREF",
+          "identifier": "doi:10.1145/359545.359563",
+          "doi_match": true,
+          "retraction": "NO_SIGNAL_IN_QUERIED_SOURCES",
+          "title_prefix": "Time, clocks, and the ordering of events in a distributed system",
+          "taint": "UNTRUSTED_SOURCE"
+        },
+        {
+          "provider": "PUBMED",
+          "identifier": null,
+          "doi_match": false,
+          "retraction": null,
+          "title_prefix": "",
+          "taint": "UNTRUSTED_SOURCE"
+        },
+        {
+          "provider": "PMC",
+          "identifier": null,
+          "doi_match": false,
+          "retraction": null,
+          "title_prefix": "",
+          "taint": "UNTRUSTED_SOURCE"
+        },
+        {
+          "provider": "ARXIV",
+          "identifier": null,
+          "doi_match": false,
+          "retraction": null,
+          "title_prefix": "",
+          "taint": "UNTRUSTED_SOURCE"
+        }
+      ],
+      "gate": {
+        "may_promote_index": false,
+        "may_promote_retraction": false,
+        "reasons": [
+          "MUTANTS_NOT_GREEN",
+          "INDEPENDENT_LIVE_NETWORK_PROOF_MISSING",
+          "LIVE_INDEX=HOLD",
+          "LIVE_RETRACTION=HOLD"
+        ],
+        "product_live_index": "HOLD",
+        "product_live_retraction": "HOLD",
+        "independent_live_network_proof": false
+      }
+    }
+  ]
+}

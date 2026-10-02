@@ -1,0 +1,74 @@
+{
+  "lane": "G1",
+  "captured_at_ist": "2026-10-03T04:41:55+05:30",
+  "consent": true,
+  "spe_scholarly_live": "1",
+  "taint": "UNTRUSTED_SOURCE",
+  "authority": "NONE",
+  "counts_as_promotion": false,
+  "independent_verifier_receipt": false,
+  "note": "Direct DOI/esummary GETs are outside acquire_scholarly_hits search builders. They document whether public APIs return retraction for 10.1038/nature00870. They do not flip LIVE_* or mayPromote.",
+  "observations": [
+    {
+      "name": "OPENALEX_DOI",
+      "http_status": 200,
+      "body_sha256": "32132d40b66dbd21a919f2cf7981be1faa52e0bf937ebe3376a9bb8858559c62",
+      "body_bytes": 43169,
+      "mode": "LIVE_DIRECT_DOI_NOT_ADAPTER_SEARCH",
+      "fixture": false,
+      "counts_as_adapter_live_index": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "doi": "https://doi.org/10.1038/nature00870",
+      "is_retracted": true,
+      "type": "article",
+      "title_prefix": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "id": "https://openalex.org/W2158048826"
+    },
+    {
+      "name": "CROSSREF_DOI",
+      "http_status": 200,
+      "body_sha256": "b410cbdaa8498194122c2f4c912e1e1a6845da0395900aad184693a72a16d47b",
+      "body_bytes": 25539,
+      "mode": "LIVE_DIRECT_DOI_NOT_ADAPTER_SEARCH",
+      "fixture": false,
+      "counts_as_adapter_live_index": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "doi": "10.1038/nature00870",
+      "type": "journal-article",
+      "title_prefix": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "update_types": [
+        "correction",
+        "retraction",
+        "erratum",
+        "retraction"
+      ]
+    },
+    {
+      "name": "PUBMED_ESUMMARY",
+      "http_status": 200,
+      "body_sha256": "a89d6abd660223b36f8302fea056b15bb537f4c4a1106a3b23dd28ec97a8d7d5",
+      "body_bytes": 2954,
+      "mode": "LIVE_DIRECT_DOI_NOT_ADAPTER_SEARCH",
+      "fixture": false,
+      "counts_as_adapter_live_index": false,
+      "taint": "UNTRUSTED_SOURCE",
+      "present_keys_of_interest": [
+        "title",
+        "sorttitle",
+        "pubtype",
+        "recordstatus",
+        "pubstatus",
+        "booktitle",
+        "vernaculartitle"
+      ],
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Research Support, U.S. Gov't, P.H.S.",
+        "Retracted Publication"
+      ],
+      "title_prefix": "Pluripotency of mesenchymal stem cells derived from adult marrow.",
+      "retraction_field_present": false
+    }
+  ]
+}
