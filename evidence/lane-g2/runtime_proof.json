@@ -1,0 +1,72 @@
+{
+  "speech": {
+    "status": "SPEECH",
+    "text": "అమ్మా",
+    "execution": "LOCAL_CPU",
+    "egress_attempts": 0,
+    "sandbox_network": "DENY",
+    "timestamp_state": "UNSUPPORTED_FOR_QUALIFIED_TE_MODEL",
+    "raw_audio_retained": false,
+    "audio_sha256": "f255d15c0214d17090da28870209f0af40788322c0b2209f46f2903cb204abba",
+    "media_kind": "audio",
+    "pcm_released": true,
+    "no_speech_basis": null,
+    "user_transcript_promoted": true,
+    "discarded_model_text": null,
+    "duration_ms": 2113
+  },
+  "silence": {
+    "status": "NO_SPEECH",
+    "text": "",
+    "execution": "LOCAL_CPU",
+    "egress_attempts": 0,
+    "sandbox_network": "DENY",
+    "timestamp_state": "UNSUPPORTED_FOR_QUALIFIED_TE_MODEL",
+    "raw_audio_retained": false,
+    "audio_sha256": "643f8a8dc8bd9c19225afffad2becfec5426180b3749cb208abdf1a6c8354efc",
+    "media_kind": "audio",
+    "pcm_released": true,
+    "no_speech_basis": "PCM_ENERGY",
+    "user_transcript_promoted": false,
+    "discarded_model_text": null,
+    "duration_ms": 1000
+  },
+  "video": {
+    "status": "SPEECH",
+    "text": "అమ్మా",
+    "execution": "LOCAL_CPU",
+    "egress_attempts": 0,
+    "sandbox_network": "DENY",
+    "timestamp_state": "UNSUPPORTED_FOR_QUALIFIED_TE_MODEL",
+    "raw_audio_retained": false,
+    "audio_sha256": "92e5c9e58e93320ceb7a54c8645374f9cd8dccdd6b127ad27e86c5fe3fe9a18d",
+    "media_kind": "video-audio",
+    "pcm_released": true,
+    "no_speech_basis": null,
+    "user_transcript_promoted": true,
+    "discarded_model_text": null,
+    "duration_ms": 2113
+  },
+  "cancelled_status": "CANCELLED",
+  "gates": {
+    "TELUGU_MODEL_QUALIFIED_FOR_MEDIA_BACKEND": "PRESERVED",
+    "LIVE_TRANSCRIPTION": "UNAVAILABLE",
+    "PRODUCT_MEDIA_V1": "NOT_PASS",
+    "UI_INTEGRATED": "NO",
+    "UI_MOUNTED": "NO",
+    "PHYSICAL_DEVICE": "WAITING_EXTERNAL",
+    "RAW_MEDIA_EGRESS": 0,
+    "TIMESTAMPS": "UNSUPPORTED_FOR_QUALIFIED_TE_MODEL",
+    "BROWSER_CLOUD_STT": "NOT_LOCAL",
+    "LOCAL_FILE_TRANSCRIPTION": "PASS"
+  },
+  "assets": {
+    "cli_path": "/Volumes/4TB-WD/spe-worktrees/spe-g12c-media-backend-qual-20261001/proof/media-r1/build/whisper-cmake/bin/whisper-cli",
+    "cli_sha256": "784e1cb576b40c08827860779c2c0cc6b17b746171d62ce4fb9ff6ea014193a7",
+    "model_path": "/Volumes/4TB-WD/spe-worktrees/spe-g12g-te-human-bench-20261001/proof/media-r1/models/ggml-te-small.bin",
+    "model_sha256": "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e",
+    "raw_download": false,
+    "source_pin": "927cfce34f31707e17f2bff35c349632fb9e2c3a"
+  },
+  "ui_mounted": false
+}
