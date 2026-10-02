@@ -43,7 +43,8 @@
     "test:home-bound": "node scripts/test-home-bound-browser.mjs",
     "test:quality-custody": "node scripts/test-quality-runtime-custody.mjs",
     "test:core-b": "node scripts/test-core-b-fallback.mjs",
-    "test:quality-wiring": "node scripts/test-quality-product-wiring.mjs"
+    "test:quality-wiring": "node scripts/test-quality-product-wiring.mjs",
+    "test:lane-g3-vision": "node scripts/test-lane-g3-vision-release.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",
