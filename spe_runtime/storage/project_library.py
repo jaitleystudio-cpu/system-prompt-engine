@@ -22,10 +22,18 @@ import uuid
 from pathlib import Path
 from typing import Any, Mapping
 
+import jsonschema
+
 from spe_runtime.portability.spe_artifact import (
     dumps_spe_artifact,
     loads_spe_artifact,
     verify_integrity,
+)
+from spe_runtime.provenance.models import Provenance
+from tools.build_manifest import (
+    ManifestError,
+    build_manifest_from_blobs,
+    verify_manifest_blobs,
 )
 
 LIBRARY_SCHEMA = "spe.project-library.v1"
@@ -98,7 +106,10 @@ def _binding_holds() -> dict[str, str]:
         holds["manifest_hashes"] = "HOLD"
     exporter = root / "apps" / "web" / "src" / "export" / "workflowExporters.ts"
     if not exporter.is_file():
-        holds["workflow_export"] = "HOLD"
+        holds["workflow_export"] = (
+            "HOLD: missing owner apps/web/src/export/workflowExporters.ts"
+            " (G11 workflow export is not in this ancestry)"
+        )
     return holds
 
 
@@ -107,6 +118,44 @@ def _optional_text(path: Path) -> str:
         return path.read_text(encoding="utf-8")
     except OSError:
         return ""
+
+
+
+PROVENANCE_RECORD_SCHEMA = "spe.provenance-record.v1"
+_PROVENANCE_SOURCES = frozenset(item.value for item in Provenance)
+_PROVENANCE_SCHEMA_PATH = Path(__file__).resolve().parents[2] / "schemas" / "provenance_record.schema.json"
+
+
+def _provenance_sources(refs: list[str]) -> list[str]:
+    return [ref for ref in refs if ref in _PROVENANCE_SOURCES]
+
+
+def _provenance_id(revision_id: str, artifact_sha256: str) -> str:
+    digest = hashlib.sha256(f"{revision_id}:{artifact_sha256}".encode("utf-8")).hexdigest()
+    return "prv_" + digest[:32]
+
+
+def _content_digest(body: Any) -> str | None:
+    try:
+        loaded = loads_spe_artifact(body)
+        checked = verify_integrity(loaded)
+    except (TypeError, ValueError, KeyError, json.JSONDecodeError):
+        return None
+    integrity = checked.get("integrity")
+    if not isinstance(integrity, Mapping) or integrity.get("state") != "VERIFIED":
+        return None
+    digest = integrity.get("content_sha256")
+    if not isinstance(digest, str):
+        return None
+    return digest
+
+
+def _require_provenance_shape(record: Mapping[str, Any]) -> None:
+    schema = json.loads(_PROVENANCE_SCHEMA_PATH.read_text(encoding="utf-8"))
+    try:
+        jsonschema.validate(record, schema)
+    except jsonschema.ValidationError as exc:
+        raise LibraryError("CORRUPT_ENTRY", "provenance record does not match its schema") from exc
 
 
 class LibraryError(Exception):
@@ -520,6 +569,91 @@ class ProjectLibrary:
         if state != "VERIFIED":
             raise LibraryError("INTEGRITY_MISMATCH", "spe integrity digest does not match")
         return dumps_spe_artifact(loaded)
+
+    def provenance_record(self, revision_id: str) -> dict[str, Any]:
+        """Derived provenance record. Not a second journal."""
+        revision = self.get_revision(revision_id)
+        sources = _provenance_sources(revision["provenance_refs"])
+        if len(sources) != 1:
+            raise LibraryError("MISSING_PROVENANCE", "revision provenance source is missing")
+        digest = _hash_body(revision["body"])
+        if digest != revision["body_sha256"]:
+            raise LibraryError("PROVENANCE_MISMATCH", "artifact digest does not match")
+        record: dict[str, Any] = {
+            "schema": PROVENANCE_RECORD_SCHEMA,
+            "provenance_id": _provenance_id(revision_id, digest),
+            "artifact_id": revision["artifact_id"],
+            "revision_id": revision_id,
+            "source": sources[0],
+            "artifact_sha256": digest,
+        }
+        content = _content_digest(revision["body"])
+        if content is not None:
+            record["content_sha256"] = content
+        _require_provenance_shape(record)
+        return record
+
+    def accept_provenance_record(self, record: Mapping[str, Any]) -> dict[str, Any]:
+        """Recompute the revision digest and reject a missing or mismatched record."""
+        if not isinstance(record, Mapping):
+            raise LibraryError("MISSING_PROVENANCE", "provenance record is missing")
+        required = (
+            "schema",
+            "provenance_id",
+            "artifact_id",
+            "revision_id",
+            "source",
+            "artifact_sha256",
+        )
+        if any(key not in record or record.get(key) in (None, "") for key in required):
+            raise LibraryError("MISSING_PROVENANCE", "provenance field is missing")
+        _require_provenance_shape(record)
+        revision = self.get_revision(str(record["revision_id"]))
+        if revision["artifact_id"] != record["artifact_id"]:
+            raise LibraryError("PROVENANCE_MISMATCH", "provenance artifact does not match")
+        digest = _hash_body(revision["body"])
+        if record["artifact_sha256"] != digest or digest != revision["body_sha256"]:
+            raise LibraryError("PROVENANCE_MISMATCH", "artifact digest does not match")
+        if record["provenance_id"] != _provenance_id(revision["revision_id"], digest):
+            raise LibraryError("PROVENANCE_MISMATCH", "provenance id does not match the digest")
+        sources = _provenance_sources(revision["provenance_refs"])
+        if len(sources) != 1:
+            raise LibraryError("MISSING_PROVENANCE", "revision provenance source is missing")
+        if record["source"] != sources[0]:
+            raise LibraryError("PROVENANCE_MISMATCH", "provenance source does not match")
+        content = _content_digest(revision["body"])
+        if content is None:
+            if "content_sha256" in record:
+                raise LibraryError("PROVENANCE_MISMATCH", "content digest is not bound")
+        elif "content_sha256" not in record:
+            raise LibraryError("MISSING_PROVENANCE", "content digest is missing")
+        elif record["content_sha256"] != content:
+            raise LibraryError("PROVENANCE_MISMATCH", "content digest does not match")
+        return dict(record)
+
+    def revision_manifest(self, project_id: str) -> dict[str, Any]:
+        """Hash each revision body again. Does not write the library journal."""
+        return build_manifest_from_blobs(self._revision_blobs(project_id))
+
+    def accept_revision_manifest(self, project_id: str, manifest: Mapping[str, Any]) -> dict[str, Any]:
+        """Recompute revision hashes and reject a corrupt manifest."""
+        try:
+            return verify_manifest_blobs(self._revision_blobs(project_id), manifest)
+        except ManifestError as exc:
+            raise LibraryError(exc.code, exc.reason) from None
+
+    def _revision_blobs(self, project_id: str) -> dict[str, bytes]:
+        bundle = self.export_project(project_id)
+        blobs: dict[str, bytes] = {}
+        for revision in bundle["revisions"]:
+            digest = _hash_body(revision["body"])
+            if digest != revision["body_sha256"]:
+                raise LibraryError("PROVENANCE_MISMATCH", "artifact digest does not match")
+            rel = f"{revision['artifact_id']}/{revision['revision_id']}.body.json"
+            blobs[rel] = _dump_body(revision["body"]).encode("utf-8")
+        if not blobs:
+            raise LibraryError("CORRUPT_ENTRY", "manifest has no revisions")
+        return blobs
 
     def spe_binding_report(self, project_id: str) -> dict[str, Any]:
         """Read-only census for one project.

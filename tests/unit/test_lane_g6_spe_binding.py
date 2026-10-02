@@ -4,10 +4,8 @@ The bundle contract stays NOT_YET_BOUND. Artifact integrity may be VERIFIED
 only when spe_runtime.portability.spe_artifact.verify_integrity says so.
 That state must not be copied onto spe_contract.
 
-Capabilities with no owner stay HOLD:
-- provenance_record schema is a stub
-- capability manifest schema and tools/build_manifest.py are stubs
-- G11 workflow exporters are not in this storage owner
+provenance_record and capability_manifest are real in this ancestry.
+workflow export stays HOLD: apps/web/src/export/workflowExporters.ts is absent.
 """
 
 from __future__ import annotations
@@ -184,9 +182,12 @@ def test_canonical_workflow_does_not_promote_spe_contract(tmp_path, monkeypatch)
     assert report["spe_contract"] == "NOT_YET_BOUND"
     assert report["promoted"] is False
     assert report["refused_promotion"] == "VERIFIED"
-    assert report["holds"]["provenance_record"] == "HOLD"
-    assert report["holds"]["manifest_hashes"] == "HOLD"
-    assert report["holds"]["workflow_export"] == "HOLD"
+    assert "provenance_record" not in report["holds"]
+    assert "manifest_hashes" not in report["holds"]
+    assert report["holds"]["workflow_export"].startswith("HOLD")
+    assert "workflowExporters.ts" in report["holds"]["workflow_export"]
+    assert report["promoted"] is False
+    assert report["spe_contract"] == "NOT_YET_BOUND"
     assert report["rollback_recorded"] is True
     assert report["provenance_refs_present"] is True
     assert report["revision_count"] == 2
@@ -288,3 +289,120 @@ def test_legacy_not_yet_bound_bundle_still_imports(tmp_path):
     imported = ProjectLibrary(tmp_path / "legacy.jsonl")
     imported.import_bundle(json.loads(json.dumps(bundle)))
     assert imported.export_project(project["project_id"])["spe_contract"] == "NOT_YET_BOUND"
+
+
+def test_provenance_record_binds_hash_and_rejects_gaps(tmp_path):
+    import jsonschema
+
+    from tools.build_manifest import ManifestError
+
+    lib = ProjectLibrary(tmp_path / "library.jsonl")
+    project = lib.create_project("Prov", created_at=T0)
+    revision = lib.create_artifact(
+        project["project_id"],
+        artifact_type="prompt",
+        body=_v1("prov"),
+        created_at=T1,
+        provenance_refs=("USER_EXPLICIT",),
+    )
+    record = lib.provenance_record(revision["revision_id"])
+    schema = json.loads((ROOT / "schemas" / "provenance_record.schema.json").read_text())
+    assert "STUB" not in schema.get("description", "")
+    assert schema.get("additionalProperties") is False
+    jsonschema.validate(record, schema)
+    assert record["artifact_sha256"] == revision["body_sha256"]
+    assert record["content_sha256"]
+    assert record["source"] == "USER_EXPLICIT"
+    checked = lib.accept_provenance_record(record)
+    assert checked["artifact_sha256"] == revision["body_sha256"]
+
+    bare = lib.create_artifact(
+        project["project_id"],
+        artifact_type="code",
+        body={"src": "print(1)"},
+        created_at=T2,
+    )
+    with pytest.raises(LibraryError) as missing:
+        lib.provenance_record(bare["revision_id"])
+    assert missing.value.code == "MISSING_PROVENANCE"
+
+    mismatched = dict(record)
+    mismatched["artifact_sha256"] = "0" * 64
+    with pytest.raises(LibraryError) as bad_hash:
+        lib.accept_provenance_record(mismatched)
+    assert bad_hash.value.code == "PROVENANCE_MISMATCH"
+
+    dropped = dict(record)
+    del dropped["source"]
+    with pytest.raises(LibraryError) as dropped_source:
+        lib.accept_provenance_record(dropped)
+    assert dropped_source.value.code == "MISSING_PROVENANCE"
+
+    wrong_content = dict(record)
+    wrong_content["content_sha256"] = "a" * 64
+    with pytest.raises(LibraryError) as bad_content:
+        lib.accept_provenance_record(wrong_content)
+    assert bad_content.value.code == "PROVENANCE_MISMATCH"
+
+    bundle = lib.export_project(project["project_id"])
+    assert bundle["spe_contract"] == "NOT_YET_BOUND"
+    report = lib.spe_binding_report(project["project_id"])
+    assert report["promoted"] is False
+    assert report["spe_contract"] != "VERIFIED"
+    assert isinstance(ManifestError, type)
+
+
+def test_manifest_recomputes_hashes_and_rejects_corruption(tmp_path):
+    import jsonschema
+
+    from tools.build_manifest import (
+        ManifestError,
+        build_manifest,
+        main,
+        verify_manifest,
+    )
+
+    schema = json.loads((ROOT / "schemas" / "capability_manifest.schema.json").read_text())
+    assert "STUB" not in schema.get("description", "")
+    assert schema["properties"]["entries"]["minItems"] >= 1
+
+    payload = tmp_path / "note.txt"
+    payload.write_text("alpha", encoding="utf-8")
+    manifest = build_manifest(tmp_path, ["note.txt"])
+    jsonschema.validate(manifest, schema)
+    assert verify_manifest(tmp_path, manifest)["entries"][0]["sha256"] == manifest["entries"][0]["sha256"]
+
+    corrupted = json.loads(json.dumps(manifest))
+    corrupted["entries"][0]["sha256"] = "b" * 64
+    with pytest.raises(ManifestError) as mismatch:
+        verify_manifest(tmp_path, corrupted)
+    assert mismatch.value.code == "HASH_MISMATCH"
+
+    payload.write_text("beta", encoding="utf-8")
+    with pytest.raises(ManifestError) as drifted:
+        verify_manifest(tmp_path, manifest)
+    assert drifted.value.code == "HASH_MISMATCH"
+
+    code = main(["check", "--root", str(tmp_path), "--manifest", str(tmp_path / "missing.json")])
+    assert code != 0
+
+    lib = ProjectLibrary(tmp_path / "library.jsonl")
+    project = lib.create_project("Man", created_at=T0)
+    revision = lib.create_artifact(
+        project["project_id"],
+        artifact_type="template",
+        body={"text": "manifest me"},
+        created_at=T1,
+        provenance_refs=("SYSTEM_REQUIRED",),
+    )
+    built = lib.revision_manifest(project["project_id"])
+    jsonschema.validate(built, schema)
+    assert built["entries"][0]["sha256"] == revision["body_sha256"]
+    assert lib.accept_revision_manifest(project["project_id"], built)["entries"][0]["sha256"] == revision["body_sha256"]
+    tampered = json.loads(json.dumps(built))
+    tampered["entries"][0]["sha256"] = "c" * 64
+    with pytest.raises(LibraryError) as refused:
+        lib.accept_revision_manifest(project["project_id"], tampered)
+    assert refused.value.code == "HASH_MISMATCH"
+    assert lib.export_project(project["project_id"])["spe_contract"] == "NOT_YET_BOUND"
+    assert lib.spe_binding_report(project["project_id"])["promoted"] is False
