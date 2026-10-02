@@ -63,3 +63,13 @@ React builder UI qualification = WAITING_EXTERNAL (component is still `NOT_INTEG
 - G13 Python website package remains unbound.
 - Hero Three.js scene contract receipt (hardcoded draw/triangle estimates) was not treated as a website-export owner and was not rewritten.
 - Full interactive browser pass of the builder UI is WAITING_EXTERNAL.
+
+## WebRecon port (2026-10-03)
+
+Source (read-only, frozen): `spe-c1-webrecon-r1` tip `1259bd4`, which is PR #64 `f2f67c0` plus the R1 quarantine repair `4f5a770` / qualification `89bc11e` / `1259bd4`. PR #78 is `packages/website-generator` only and was not copied. Live lane worktrees were not read.
+
+Port is the library only: `spe_runtime/webrecon/`, schema, foundation tests, and `qualification/webrecon_r1/oracles.py`. No `App.tsx`, `Nav.tsx`, shell, or route table edits. `ROUTE_MOUNT_STATUS` stays `NOT_INTEGRATED`.
+
+Labels added on the package (not in the frozen donor): `LIVE_RECONSTRUCTION=NOT_AVAILABLE`, `HOSTED_PUBLISH=HOLD`, `SCENE_3D=NOT_AVAILABLE`, `AI_GENERATION=NOT_AVAILABLE`. The donor already refuses non-allowlisted and non-http(s) URLs and does not fetch. No new 3D qualification was run. Hero Three.js was not touched.
+
+Tests after the port: `test_webrecon_g4_url_closure.py`, `test_webrecon_foundation.py`, `test_webrecon_r1_qualification.py` — 39 passed. Compiler and builder harnesses re-run PASS.
