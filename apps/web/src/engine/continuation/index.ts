@@ -12,6 +12,7 @@
 export * from "./types";
 export * from "./reportVerifier";
 export * from "./researchFabric";
+export * from "./liveScholarlyFabric";
 export * from "./evidenceGraph";
 export * from "./continuationCompiler";
 export * from "./gildenBoundary";

@@ -47,6 +47,25 @@ class SupportStatus(str, Enum):
         return self.value
 
 
+class RetractionCheckStatus(str, Enum):
+    """Non-collapsing retraction/notice check. Never a false boolean."""
+
+    NOT_CHECKED = "NOT_CHECKED"
+    CHECKING = "CHECKING"
+    NO_SIGNAL_IN_QUERIED_SOURCES = "NO_SIGNAL_IN_QUERIED_SOURCES"
+    RETRACTION_SIGNAL = "RETRACTION_SIGNAL"
+    WITHDRAWAL_SIGNAL = "WITHDRAWAL_SIGNAL"
+    EXPRESSION_OF_CONCERN = "EXPRESSION_OF_CONCERN"
+    CORRECTION_SIGNAL = "CORRECTION_SIGNAL"
+    CONFLICTING_STATUS = "CONFLICTING_STATUS"
+    SOURCE_UNAVAILABLE = "SOURCE_UNAVAILABLE"
+    IDENTIFIER_AMBIGUOUS = "IDENTIFIER_AMBIGUOUS"
+    UNKNOWN = "UNKNOWN"
+
+    def to_dict(self) -> str:
+        return self.value
+
+
 _RISK_LEVELS = frozenset({"LOW", "MEDIUM", "HIGH"})
 
 
