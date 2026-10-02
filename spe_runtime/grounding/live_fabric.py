@@ -41,7 +41,6 @@ _TERMINAL_OK = frozenset(
         RetractionCheckStatus.CONFLICTING_STATUS,
         RetractionCheckStatus.SOURCE_UNAVAILABLE,
         RetractionCheckStatus.IDENTIFIER_AMBIGUOUS,
-        RetractionCheckStatus.UNKNOWN,
     }
 )
 
@@ -82,9 +81,10 @@ def evaluate_live_promotion_gate(
     """Founder-grade promotion gate.
 
     Requires: >=2 providers agree on identity; retraction layer checked with a
-    non-NOT_CHECKED explicit RetractionCheckStatus that did not silently collapse
-    NO_SIGNAL->NOT_RETRACTED; provenance present; mutants green; independent
-    live multi-provider network proof.
+    non-NOT_CHECKED explicit RetractionCheckStatus other than UNKNOWN that did
+    not silently collapse NO_SIGNAL->NOT_RETRACTED; provenance present; mutants
+    green; independent live multi-provider network proof. UNKNOWN is not
+    terminal-ok and must not set may_promote_*.
 
     Product LIVE_* constants remain HOLD even when may_promote* is True --
     founder must flip constants separately.
@@ -109,6 +109,8 @@ def evaluate_live_promotion_gate(
         reasons.append("RETRACTION_NOT_CHECKED")
     if status_val == RetractionCheckStatus.CHECKING:
         reasons.append("RETRACTION_STILL_CHECKING")
+    if status_val == RetractionCheckStatus.UNKNOWN:
+        reasons.append("UNKNOWN_NE_TERMINAL_OK")
     if evidence.no_signal_collapsed_to_not_retracted:
         reasons.append("NO_SIGNAL_COLLAPSE_TO_NOT_RETRACTED_FORBIDDEN")
     if str(status_val.value) == "NOT_RETRACTED" or str(status) == "NOT_RETRACTED":

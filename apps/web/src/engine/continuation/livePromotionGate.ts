@@ -42,7 +42,6 @@ const TERMINAL_OK = new Set<GateRetractionStatus>([
   "CONFLICTING_STATUS",
   "SOURCE_UNAVAILABLE",
   "IDENTIFIER_AMBIGUOUS",
-  "UNKNOWN",
 ]);
 
 export function evaluateLivePromotionGate(
@@ -66,6 +65,9 @@ export function evaluateLivePromotionGate(
   }
   if (evidence.retractionStatus === "CHECKING") {
     reasons.push("RETRACTION_STILL_CHECKING");
+  }
+  if (evidence.retractionStatus === "UNKNOWN") {
+    reasons.push("UNKNOWN_NE_TERMINAL_OK");
   }
   if (evidence.noSignalCollapsedToNotRetracted) {
     reasons.push("NO_SIGNAL_COLLAPSE_TO_NOT_RETRACTED_FORBIDDEN");

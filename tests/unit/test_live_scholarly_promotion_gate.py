@@ -155,3 +155,44 @@ def test_network_failure_not_clean_not_retracted():
     status = (result.get("retraction") or {}).get("status", "UNKNOWN")
     assert status != "NOT_RETRACTED"
     assert status != "PASS"
+
+
+def test_unknown_full_pack_does_not_set_may_promote():
+    """UNKNOWN is not terminal-ok. A full pack must not set may_promote_*."""
+    ev = LivePromotionGateEvidence(
+        identity_providers_agreeing=2,
+        retraction_status=RetractionCheckStatus.UNKNOWN,
+        provenance_present=True,
+        mutants_green=True,
+        independent_live_network_proof=True,
+    )
+    result = evaluate_live_promotion_gate(ev)
+    assert result.may_promote_index is False
+    assert result.may_promote_retraction is False
+    assert "UNKNOWN_NE_TERMINAL_OK" in result.reasons
+    assert "GATE_MET_PRODUCT_CONSTANTS_STILL_HOLD" not in result.reasons
+    assert "FOUNDER_FLIP_REQUIRED_FOR_LIVE_YES" not in result.reasons
+    assert result.product_live_index == "HOLD"
+    assert result.product_live_retraction == "HOLD"
+    assert LIVE_INDEX == "HOLD"
+    assert LIVE_RETRACTION == "HOLD"
+
+
+def test_writer_receipt_without_independent_verifier_does_not_promote():
+    """independent_verifier_receipt=false keeps may_promote_* false."""
+    receipt = {"independent_verifier_receipt": False}
+    ev = LivePromotionGateEvidence(
+        identity_providers_agreeing=2,
+        retraction_status=RetractionCheckStatus.RETRACTION_SIGNAL,
+        provenance_present=True,
+        mutants_green=True,
+        independent_live_network_proof=bool(receipt["independent_verifier_receipt"]),
+    )
+    result = evaluate_live_promotion_gate(ev)
+    assert result.may_promote_index is False
+    assert result.may_promote_retraction is False
+    assert "INDEPENDENT_LIVE_NETWORK_PROOF_MISSING" in result.reasons
+    assert result.product_live_index == "HOLD"
+    assert result.product_live_retraction == "HOLD"
+    assert LIVE_INDEX == "HOLD"
+    assert LIVE_RETRACTION == "HOLD"

@@ -182,6 +182,38 @@ caseId("P3-C3-MUTANT-cache-ne-live", () => {
   assert.notEqual(r.mode, "LIVE");
 });
 
+caseId("P3-B6-MUTANT-UNKNOWN-full-pack-ne-mayPromote", () => {
+  const g = evaluateLivePromotionGate({
+    identityProvidersAgreeing: 2,
+    retractionStatus: "UNKNOWN",
+    provenancePresent: true,
+    mutantsGreen: true,
+    independentLiveNetworkProof: true,
+  });
+  assert.equal(g.mayPromoteIndex, false);
+  assert.equal(g.mayPromoteRetraction, false);
+  assert.equal(g.productLiveIndex, "HOLD");
+  assert.equal(g.productLiveRetraction, "HOLD");
+  assert.ok(g.reasons.includes("UNKNOWN_NE_TERMINAL_OK"));
+  assert.ok(!g.reasons.includes("GATE_MET_PRODUCT_CONSTANTS_STILL_HOLD"));
+  assert.ok(!g.reasons.includes("FOUNDER_FLIP_REQUIRED_FOR_LIVE_YES"));
+});
+
+caseId("P3-B7-writer-receipt-independent-verifier-false", () => {
+  const receipt = { independent_verifier_receipt: false };
+  const g = evaluateLivePromotionGate({
+    identityProvidersAgreeing: 2,
+    retractionStatus: "RETRACTION_SIGNAL",
+    provenancePresent: true,
+    mutantsGreen: true,
+    independentLiveNetworkProof: receipt.independent_verifier_receipt,
+  });
+  assert.equal(g.mayPromoteIndex, false);
+  assert.equal(g.mayPromoteRetraction, false);
+  assert.ok(g.reasons.includes("INDEPENDENT_LIVE_NETWORK_PROOF_MISSING"));
+  assert.equal(g.productLiveIndex, "HOLD");
+});
+
 caseId("P3-C4-MUTANT-timeout-ne-clean", () => {
   const r = checkRetractionStatus({
     identifier: "doi:10.1234/example",
