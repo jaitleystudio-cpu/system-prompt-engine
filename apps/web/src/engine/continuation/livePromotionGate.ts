@@ -3,11 +3,22 @@
  * Product LIVE_INDEX / LIVE_RETRACTION constants stay HOLD until founder flips.
  */
 
-import type { RetractionCheckStatus } from "./liveScholarlyFabric";
+export type GateRetractionStatus =
+  | "NOT_CHECKED"
+  | "CHECKING"
+  | "NO_SIGNAL_IN_QUERIED_SOURCES"
+  | "RETRACTION_SIGNAL"
+  | "WITHDRAWAL_SIGNAL"
+  | "EXPRESSION_OF_CONCERN"
+  | "CORRECTION_SIGNAL"
+  | "CONFLICTING_STATUS"
+  | "SOURCE_UNAVAILABLE"
+  | "IDENTIFIER_AMBIGUOUS"
+  | "UNKNOWN";
 
 export interface LivePromotionGateEvidence {
   identityProvidersAgreeing: number;
-  retractionStatus: RetractionCheckStatus;
+  retractionStatus: GateRetractionStatus;
   provenancePresent: boolean;
   mutantsGreen: boolean;
   independentLiveNetworkProof: boolean;
@@ -22,7 +33,7 @@ export interface LivePromotionGateResult {
   productLiveRetraction: "HOLD";
 }
 
-const TERMINAL_OK = new Set<RetractionCheckStatus>([
+const TERMINAL_OK = new Set<GateRetractionStatus>([
   "NO_SIGNAL_IN_QUERIED_SOURCES",
   "RETRACTION_SIGNAL",
   "WITHDRAWAL_SIGNAL",
@@ -108,4 +119,17 @@ export function countIdentityProviderAgreement(
   let max = 0;
   for (const set of byId.values()) max = Math.max(max, set.size);
   return max;
+}
+
+/** Default mayPromote* with no evidence pack -- always false / HOLD. */
+export function mayPromoteLiveIndexFromGate(
+  evidence?: LivePromotionGateEvidence | null,
+): boolean {
+  return evaluateLivePromotionGate(evidence ?? null).mayPromoteIndex;
+}
+
+export function mayPromoteLiveRetractionFromGate(
+  evidence?: LivePromotionGateEvidence | null,
+): boolean {
+  return evaluateLivePromotionGate(evidence ?? null).mayPromoteRetraction;
 }
