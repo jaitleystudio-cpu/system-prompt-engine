@@ -68,7 +68,7 @@ OFFLINE≠LIVE · CACHE≠LIVE · DOI≠validated · NO_MATCH≠NOT_RETRACTED ·
 
 | Key | Value |
 |---|---|
-| TIP_SHA | `ec129cb9656fe807e7172795d1b4aec41436ea5a` |
+| TIP_SHA | `3e53866fb0e4e4c648a24cb98ba54d41316018a9` |
 | Phase | 2 adapters + retraction model + Section C green |
 | IMPL_STATUS | partial → candidate (fixture-backed free adapters; LIVE_* HOLD) |
 | DRAFT_PR | [#99](https://github.com/jaitleystudio-cpu/system-prompt-engine/pull/99) (base VR1) |
