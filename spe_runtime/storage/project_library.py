@@ -104,11 +104,11 @@ def _binding_holds() -> dict[str, str]:
         or not manifest_schema
     ):
         holds["manifest_hashes"] = "HOLD"
-    exporter = root / "apps" / "web" / "src" / "export" / "workflowExporters.ts"
+    exporter = root / "spe_runtime" / "workflow_export" / "export.py"
     if not exporter.is_file():
         holds["workflow_export"] = (
-            "HOLD: missing owner apps/web/src/export/workflowExporters.ts"
-            " (G11 workflow export is not in this ancestry)"
+            "HOLD: missing owner spe_runtime/workflow_export/export.py"
+            " (frozen G11). apps/web/src/export/workflowExporters.ts is not the owner"
         )
     return holds
 

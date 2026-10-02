@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spe.local/schemas/workflow_export.schema.json",
+  "title": "SPE workflow export v1",
+  "description": "Offline portable workflow export. Validation of this document is not execution, authority, publication, or a credential store.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "export_contract_version",
+    "target",
+    "loss_state",
+    "guarantees",
+    "canonical",
+    "fidelity",
+    "warnings",
+    "stripped_paths",
+    "target_document",
+    "source"
+  ],
+  "properties": {
+    "export_contract_version": { "const": "spe.workflow-export.v1" },
+    "target": {
+      "enum": ["n8n", "make", "zapier", "generic_json", "generic_text"]
+    },
+    "loss_state": { "enum": ["NONE", "DEGRADED", "UNSUPPORTED"] },
+    "guarantees": { "$ref": "#/$defs/guarantees" },
+    "canonical": { "$ref": "#/$defs/canonical" },
+    "fidelity": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/fidelity_item" }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/warning" }
+    },
+    "stripped_paths": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "target_document": {
+      "oneOf": [{ "type": "string" }, { "type": "object" }]
+    },
+    "source": { "$ref": "#/$defs/source" }
+  },
+  "$defs": {
+    "guarantees": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "network",
+        "credentials_stored",
+        "executed",
+        "published",
+        "webhook_triggered",
+        "authority",
+        "validation_is_not_execution",
+        "capability_is_not_authority"
+      ],
+      "properties": {
+        "network": { "const": false },
+        "credentials_stored": { "const": false },
+        "executed": { "const": false },
+        "published": { "const": false },
+        "webhook_triggered": { "const": false },
+        "authority": { "const": "NONE" },
+        "validation_is_not_execution": { "const": true },
+        "capability_is_not_authority": { "const": true }
+      }
+    },
+    "canonical": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prompt_body",
+        "prompt_body_disposition",
+        "prompt_body_sha256",
+        "variables",
+        "required_inputs",
+        "expected_outputs",
+        "constraints",
+        "provider_target"
+      ],
+      "properties": {
+        "prompt_body": { "type": "string" },
+        "prompt_body_disposition": {
+          "enum": ["VERBATIM", "WITHHELD_CREDENTIAL"]
+        },
+        "prompt_body_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "variables": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/variable" }
+        },
+        "required_inputs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "expected_outputs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "provider_target": { "type": "string", "minLength": 1 }
+      }
+    },
+    "variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "value", "disposition"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "value": { "type": "string" },
+        "disposition": { "enum": ["KEPT", "STRIPPED"] }
+      }
+    },
+    "fidelity_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["facet", "state", "code", "reason"],
+      "properties": {
+        "facet": {
+          "enum": [
+            "prompt_body",
+            "variables",
+            "required_inputs",
+            "expected_outputs",
+            "constraints",
+            "provider_target"
+          ]
+        },
+        "state": { "enum": ["PRESERVED", "DEGRADED", "UNSUPPORTED"] },
+        "code": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "warning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "facet", "message"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "facet": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "enum": [
+                "prompt_body",
+                "variables",
+                "required_inputs",
+                "expected_outputs",
+                "constraints",
+                "provider_target"
+              ]
+            }
+          ]
+        },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "spe_format", "contract_version"],
+      "properties": {
+        "kind": { "enum": ["spe_artifact", "prompt_contract"] },
+        "spe_format": { "type": ["string", "null"] },
+        "contract_version": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

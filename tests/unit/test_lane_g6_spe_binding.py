@@ -10,6 +10,7 @@ workflow export stays HOLD: apps/web/src/export/workflowExporters.ts is absent.
 
 from __future__ import annotations
 
+import copy
 import json
 import socket
 from pathlib import Path
@@ -184,8 +185,8 @@ def test_canonical_workflow_does_not_promote_spe_contract(tmp_path, monkeypatch)
     assert report["refused_promotion"] == "VERIFIED"
     assert "provenance_record" not in report["holds"]
     assert "manifest_hashes" not in report["holds"]
-    assert report["holds"]["workflow_export"].startswith("HOLD")
-    assert "workflowExporters.ts" in report["holds"]["workflow_export"]
+    assert "workflow_export" not in report["holds"]
+    assert not (ROOT / "apps/web/src/export/workflowExporters.ts").is_file()
     assert report["promoted"] is False
     assert report["spe_contract"] == "NOT_YET_BOUND"
     assert report["rollback_recorded"] is True
@@ -406,3 +407,51 @@ def test_manifest_recomputes_hashes_and_rejects_corruption(tmp_path):
     assert refused.value.code == "HASH_MISMATCH"
     assert lib.export_project(project["project_id"])["spe_contract"] == "NOT_YET_BOUND"
     assert lib.spe_binding_report(project["project_id"])["promoted"] is False
+
+
+def test_frozen_g11_export_is_offline_deterministic_and_unverified(tmp_path, monkeypatch):
+    """Frozen owner is spe_runtime.workflow_export from 4c916d77, not workflowExporters.ts."""
+    def _refuse(*_args, **_kwargs):
+        raise AssertionError("network attempted")
+
+    monkeypatch.setattr(socket, "socket", _refuse)
+    monkeypatch.setattr(socket, "create_connection", _refuse)
+
+    from spe_runtime.workflow_export import ExportIntegrityError, audit_export, export_workflow
+
+    source = {
+        "contract_version": "spe.prompt-contract.v1",
+        "prompt_body": "Summarize the quarterly report for {{audience}}.",
+        "variables": {"audience": "operators", "tone": "formal"},
+        "required_inputs": ["audience"],
+        "expected_outputs": ["summary"],
+        "constraints": ["no network", "do not call webhooks"],
+        "provider_target": "local-prompt",
+    }
+    first = export_workflow(copy.deepcopy(source), target="generic_json")
+    second = export_workflow(copy.deepcopy(source), target="generic_json")
+    assert first == second
+    assert "spe_contract" not in first
+    assert first.get("spe_contract") != "VERIFIED"
+    artifact = tmp_path / "workflow-export.json"
+    artifact.write_text(json.dumps(first, sort_keys=True), encoding="utf-8")
+    assert json.loads(artifact.read_text(encoding="utf-8")) == first
+
+    corrupted = copy.deepcopy(first)
+    corrupted["fidelity"] = [item for item in corrupted["fidelity"] if item["facet"] != "constraints"]
+    with pytest.raises(ExportIntegrityError):
+        audit_export(corrupted)
+
+    lib = ProjectLibrary(tmp_path / "library.jsonl")
+    project = lib.create_project("Export", created_at=T0)
+    lib.create_artifact(
+        project["project_id"],
+        artifact_type="prompt",
+        body={"text": "not a bundle contract"},
+        created_at=T1,
+    )
+    assert lib.export_project(project["project_id"])["spe_contract"] == "NOT_YET_BOUND"
+    report = lib.spe_binding_report(project["project_id"])
+    assert report["promoted"] is False
+    assert report["spe_contract"] == "NOT_YET_BOUND"
+    assert "workflow_export" not in report["holds"]
