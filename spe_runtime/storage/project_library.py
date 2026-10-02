@@ -7,7 +7,8 @@ discipline, not a new database.
 No account is required. Records stay private and noindex. Revision bytes stay
 in the library file. Canonical .spe text is emitted only when a revision body
 already satisfies spe_runtime.portability.spe_artifact; otherwise export_spe
-raises NOT_YET_BOUND. A library bundle is not a .spe document.
+raises NOT_YET_BOUND. A library bundle is not a .spe document. spe_binding_report is read-only
+and never promotes spe_contract to VERIFIED.
 """
 
 from __future__ import annotations
@@ -18,6 +19,7 @@ import json
 import os
 import re
 import uuid
+from pathlib import Path
 from typing import Any, Mapping
 
 from spe_runtime.portability.spe_artifact import (
@@ -72,6 +74,39 @@ _REVISION_KEYS = frozenset(
 _HEAD_MOVE_KEYS = frozenset(
     {"kind", "project_id", "artifact_id", "revision_id", "created_at", "reason"}
 )
+
+
+def _binding_holds() -> dict[str, str]:
+    """HOLD where this owner has no implementation to call.
+
+    Provenance-record and capability-manifest schemas are stubs. The manifest
+    tool is a stub. G11 workflow export is a different tree and is not here.
+    """
+    root = Path(__file__).resolve().parents[2]
+    holds: dict[str, str] = {}
+    provenance = _optional_text(root / "schemas" / "provenance_record.schema.json")
+    if "STUB" in provenance or "not yet implemented" in provenance or not provenance:
+        holds["provenance_record"] = "HOLD"
+    manifest_schema = _optional_text(root / "schemas" / "capability_manifest.schema.json")
+    manifest_tool = _optional_text(root / "tools" / "build_manifest.py")
+    if (
+        "STUB" in manifest_schema
+        or "not yet implemented" in manifest_schema
+        or "stub:" in manifest_tool
+        or not manifest_schema
+    ):
+        holds["manifest_hashes"] = "HOLD"
+    exporter = root / "apps" / "web" / "src" / "export" / "workflowExporters.ts"
+    if not exporter.is_file():
+        holds["workflow_export"] = "HOLD"
+    return holds
+
+
+def _optional_text(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except OSError:
+        return ""
 
 
 class LibraryError(Exception):
@@ -485,6 +520,64 @@ class ProjectLibrary:
         if state != "VERIFIED":
             raise LibraryError("INTEGRITY_MISMATCH", "spe integrity digest does not match")
         return dumps_spe_artifact(loaded)
+
+    def spe_binding_report(self, project_id: str) -> dict[str, Any]:
+        """Read-only census for one project.
+
+        Writes nothing. ``spe_contract`` stays ``NOT_YET_BOUND``. An artifact
+        integrity state of VERIFIED is reported on that head only and is never
+        copied onto the bundle contract. Missing owners stay HOLD.
+        """
+        bundle = self.export_project(project_id)
+        if bundle.get("spe_contract") != "NOT_YET_BOUND":
+            raise LibraryError("UNKNOWN_SCHEMA", "bundle spe contract is not recognized")
+        heads: list[dict[str, Any]] = []
+        for artifact in bundle["artifacts"]:
+            artifact_id = artifact["artifact_id"]
+            entry: dict[str, Any] = {
+                "artifact_id": artifact_id,
+                "head_revision_id": artifact["head_revision_id"],
+                "export": None,
+                "integrity_state": None,
+                "content_sha256": None,
+                "body_sha256": None,
+                "spe_format": None,
+            }
+            try:
+                text_spe = self.export_spe(artifact_id)
+            except LibraryError as exc:
+                entry["export"] = exc.code
+            else:
+                loaded = loads_spe_artifact(text_spe)
+                checked = verify_integrity(loaded)
+                integrity = checked.get("integrity")
+                state = integrity.get("state") if isinstance(integrity, Mapping) else None
+                digest = integrity.get("content_sha256") if isinstance(integrity, Mapping) else None
+                if state != "VERIFIED":
+                    entry["export"] = "INTEGRITY_MISMATCH"
+                else:
+                    entry["export"] = "CANONICAL"
+                    entry["integrity_state"] = state
+                    entry["content_sha256"] = digest
+                    entry["body_sha256"] = self.head(artifact_id)["body_sha256"]
+                    entry["spe_format"] = loaded.get("spe_format")
+            heads.append(entry)
+        return {
+            "project_id": project_id,
+            "spe_contract": "NOT_YET_BOUND",
+            "promoted": False,
+            "refused_promotion": "VERIFIED",
+            "holds": _binding_holds(),
+            "rollback_recorded": any(
+                item.get("kind") == "HEAD_MOVE" and item.get("reason") == "ROLLBACK"
+                for item in bundle["history"]
+            ),
+            "provenance_refs_present": any(
+                bool(revision.get("provenance_refs")) for revision in bundle["revisions"]
+            ),
+            "revision_count": len(bundle["revisions"]),
+            "heads": heads,
+        }
 
     def erase_project(self, project_id: str) -> None:
         self._require_project(project_id)
