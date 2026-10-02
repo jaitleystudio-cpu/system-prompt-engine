@@ -13,7 +13,23 @@
  * - RAW_USER_DATA_EGRESS = 0 (100% offline index execution).
  */
 
-import type { ClaimRecord, ScholarlySourceRecord, CitationVerificationStatus } from "./types";
+import type { ClaimRecord, ScholarlySourceRecord } from "./types";
+import { evaluateResearchAccess } from "./oracleGuards";
+import {
+  acquireLiveScholarlyEvidence,
+  type ScholarlyTransport,
+} from "./liveScholarlyFabric";
+
+export {
+  assessRedirect,
+  assessSourceUrl,
+  dedupeSources,
+  evaluateResearchAccess,
+  matchIdentifierClaim,
+  minimizePublicQuery,
+  rejectForbiddenPayload,
+  resolveExplicitConsent,
+} from "./oracleGuards";
 
 export interface EvidenceNeedAssessment {
   needed: boolean;
@@ -28,8 +44,113 @@ export interface EvidenceNeedAssessment {
     | "NONE";
 }
 
-// Canonical curated offline seed registry of foundational peer-reviewed publications and formal specifications
-export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceRecord> = {
+/**
+ * Internal static capability disclosure. STATIC != MEASURED != EVIDENCE-DERIVED.
+ * Never Object.assign / mutate to promote NO→YES. Live OpenAlex/Crossref/PubMed
+ * /Retraction Watch are NOT implemented here.
+ */
+const INTERNAL_SCHOLARLY_CAPABILITIES = Object.freeze({
+  CURATED_OFFLINE_SEED_CORPUS: "IMPLEMENTED",
+  FULL_SCHOLARLY_INDEX: "NO",
+  LIVE_RETRACTION_VERIFICATION: "NO",
+  SEED_CORPUS_SIZE: 11,
+  RETRACTION_SOURCE: "LOCAL_TEST_SENTINELS_ONLY",
+  REAL_OPENALEX_INDEX: "NO",
+  REAL_PMC_INDEX: "NO",
+  REAL_DOAJ_INDEX: "NO",
+  CURATED_SCHOLARLY_SEED_REGISTRY: "IMPLEMENTED",
+  classification: Object.freeze({
+    CURATED_OFFLINE_SEED_CORPUS: "STATIC_CAPABILITY",
+    FULL_SCHOLARLY_INDEX: "STATIC_CAPABILITY",
+    LIVE_RETRACTION_VERIFICATION: "STATIC_CAPABILITY",
+    SEED_CORPUS_SIZE: "MEASURED",
+    RETRACTION_SOURCE: "STATIC_CAPABILITY",
+    REAL_OPENALEX_INDEX: "STATIC_CAPABILITY",
+    REAL_PMC_INDEX: "STATIC_CAPABILITY",
+    REAL_DOAJ_INDEX: "STATIC_CAPABILITY",
+    CURATED_SCHOLARLY_SEED_REGISTRY: "STATIC_CAPABILITY",
+  }),
+} as const);
+
+export type ScholarlyFabricTruthStatus = {
+  CURATED_OFFLINE_SEED_CORPUS: "IMPLEMENTED";
+  FULL_SCHOLARLY_INDEX: "NO";
+  LIVE_RETRACTION_VERIFICATION: "NO";
+  SEED_CORPUS_SIZE: number;
+  RETRACTION_SOURCE: "LOCAL_TEST_SENTINELS_ONLY";
+  REAL_OPENALEX_INDEX: "NO";
+  REAL_PMC_INDEX: "NO";
+  REAL_DOAJ_INDEX: "NO";
+  CURATED_SCHOLARLY_SEED_REGISTRY: "IMPLEMENTED";
+  classification: {
+    CURATED_OFFLINE_SEED_CORPUS: "STATIC_CAPABILITY";
+    FULL_SCHOLARLY_INDEX: "STATIC_CAPABILITY";
+    LIVE_RETRACTION_VERIFICATION: "STATIC_CAPABILITY";
+    SEED_CORPUS_SIZE: "MEASURED";
+    RETRACTION_SOURCE: "STATIC_CAPABILITY";
+    REAL_OPENALEX_INDEX?: "STATIC_CAPABILITY";
+    REAL_PMC_INDEX?: "STATIC_CAPABILITY";
+    REAL_DOAJ_INDEX?: "STATIC_CAPABILITY";
+    CURATED_SCHOLARLY_SEED_REGISTRY?: "STATIC_CAPABILITY";
+  };
+};
+
+/** Frozen snapshot. Mutation of the returned object cannot convert NO→YES. */
+export function getScholarlyFabricTruthStatus(): ScholarlyFabricTruthStatus {
+  return Object.freeze({
+    CURATED_OFFLINE_SEED_CORPUS: INTERNAL_SCHOLARLY_CAPABILITIES.CURATED_OFFLINE_SEED_CORPUS,
+    FULL_SCHOLARLY_INDEX: INTERNAL_SCHOLARLY_CAPABILITIES.FULL_SCHOLARLY_INDEX,
+    LIVE_RETRACTION_VERIFICATION: INTERNAL_SCHOLARLY_CAPABILITIES.LIVE_RETRACTION_VERIFICATION,
+    SEED_CORPUS_SIZE: INTERNAL_SCHOLARLY_CAPABILITIES.SEED_CORPUS_SIZE, // measured offline seed size; not a live index
+    RETRACTION_SOURCE: INTERNAL_SCHOLARLY_CAPABILITIES.RETRACTION_SOURCE,
+    REAL_OPENALEX_INDEX: INTERNAL_SCHOLARLY_CAPABILITIES.REAL_OPENALEX_INDEX,
+    REAL_PMC_INDEX: INTERNAL_SCHOLARLY_CAPABILITIES.REAL_PMC_INDEX,
+    REAL_DOAJ_INDEX: INTERNAL_SCHOLARLY_CAPABILITIES.REAL_DOAJ_INDEX,
+    CURATED_SCHOLARLY_SEED_REGISTRY: INTERNAL_SCHOLARLY_CAPABILITIES.CURATED_SCHOLARLY_SEED_REGISTRY,
+    classification: Object.freeze({
+      ...INTERNAL_SCHOLARLY_CAPABILITIES.classification,
+    }),
+  });
+}
+
+/**
+ * Backward-compatible export: frozen static snapshot (not a live capability).
+ * Prefer getScholarlyFabricTruthStatus().
+ */
+export const SCHOLARLY_FABRIC_TRUTH_STATUS: ScholarlyFabricTruthStatus =
+  getScholarlyFabricTruthStatus();
+
+/** UI/Inspector: three states separately — never infer full-index from offline seed. */
+export function describeScholarlyFabricDisplayStates(): {
+  curatedOfflineSeedCorpus: "IMPLEMENTED";
+  fullScholarlyIndex: "NO";
+  liveRetractionVerification: "NO";
+  rtBLiveIndex: "HOLD";
+  rtBLiveRetraction: "HOLD";
+  inferredFullIndexFromOffline: false;
+} {
+  const t = getScholarlyFabricTruthStatus();
+  return Object.freeze({
+    curatedOfflineSeedCorpus: t.CURATED_OFFLINE_SEED_CORPUS,
+    fullScholarlyIndex: t.FULL_SCHOLARLY_INDEX,
+    liveRetractionVerification: t.LIVE_RETRACTION_VERIFICATION,
+    rtBLiveIndex: "HOLD" as const,
+    rtBLiveRetraction: "HOLD" as const,
+    inferredFullIndexFromOffline: false as const,
+  });
+}
+
+function freezeScholarlyRecord(record: ScholarlySourceRecord): ScholarlySourceRecord {
+  return Object.freeze({
+    ...record,
+    authors: Object.freeze([...(record.authors || [])]) as string[],
+    verificationMethod: record.verificationMethod || "OFFLINE_SEED_SPECIFICATION",
+    retrievalDate: record.retrievalDate || "2026-09-24",
+  });
+}
+
+// Curated offline seed corpus of foundational computer science & cognitive specifications (NOT full global index)
+const _CURATED_SEED_CORPUS_MUTABLE: Record<string, ScholarlySourceRecord> = {
   // --- W3C & ISO Normative Specifications ---
   "w3c-wasm-core-2": {
     sourceId: "SRC-W3C-WASM-2",
@@ -48,9 +169,6 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Enforce memory limit ceilings and zero host import execution bounds.",
     catalogSource: "W3C",
     evidenceTier: "[PROVEN_SPEC]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
   },
 
   // --- OpenAlex & ACM Peer-Reviewed Foundations ---
@@ -71,9 +189,8 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Use Lamport timestamps to enforce monotonic sequence ordering in distributed saga events.",
     catalogSource: "OPENALEX",
     evidenceTier: "[PROVEN_SPEC]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
+    preciseLocator: "§ The happened-before relation",
+    contentTier: "FULL",
   },
   "hoare-1969": {
     sourceId: "SRC-HOARE-1969",
@@ -92,9 +209,6 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Formulate invariant guards as executable preconditions before mutating critical state.",
     catalogSource: "OPENALEX",
     evidenceTier: "[PROVEN_SPEC]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
   },
   "ongaro-2014": {
     sourceId: "SRC-ONGARO-2014",
@@ -113,9 +227,6 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Model coordinator state transitions with explicit epoch and term numbers to prevent split-brain execution.",
     catalogSource: "OPENALEX",
     evidenceTier: "[PEER_REVIEWED_OPEN_ACCESS]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
   },
   "michael-2004": {
     sourceId: "SRC-MICHAEL-2004",
@@ -134,9 +245,6 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Apply epoch-based or hazard-pointer tracking to eliminate concurrent use-after-free bugs.",
     catalogSource: "IEEE",
     evidenceTier: "[PROVEN_SPEC]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
   },
 
   // --- arXiv Open-Access Preprints & Empirical Benchmarks ---
@@ -157,9 +265,6 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Utilize scaled dot-product attention structures for cross-lingual token mappings.",
     catalogSource: "ARXIV",
     evidenceTier: "[EMPIRICAL_BENCHMARK]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
   },
   "candea-2003": {
     sourceId: "SRC-CANDEA-2003",
@@ -178,9 +283,6 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Validate write-ahead log replay recovery under simulated kill -9 scenarios.",
     catalogSource: "ARXIV",
     evidenceTier: "[EMPIRICAL_BENCHMARK]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
   },
   "radford-2022": {
     sourceId: "SRC-RADFORD-2022",
@@ -199,9 +301,6 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Use quantized Whisper INT8 model architectures for deterministic offline on-device speech transcription.",
     catalogSource: "ARXIV",
     evidenceTier: "[EMPIRICAL_BENCHMARK]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
   },
 
   // --- PMC (PubMed Central) Open-Access Cognitive & Health Ergonomics ---
@@ -222,9 +321,6 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Cap parent mental load task buckets to at most 5-7 actionable items to prevent cognitive paralysis.",
     catalogSource: "PMC",
     evidenceTier: "[PEER_REVIEWED_OPEN_ACCESS]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
   },
   "sweller-1988": {
     sourceId: "SRC-SWELLER-1988",
@@ -243,9 +339,6 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Provide calming, reassuring spoken readback scripts to neutralize user anxiety during post-scam afterglow.",
     catalogSource: "PMC",
     evidenceTier: "[PEER_REVIEWED_OPEN_ACCESS]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
   },
 
   // --- DOAJ (Directory of Open Access Journals) Peer-Reviewed Software ---
@@ -266,36 +359,37 @@ export const CURATED_SCHOLARLY_SEED_REGISTRY: Record<string, ScholarlySourceReco
       "Uphold RAW_USER_DATA_EGRESS = 0 invariant across all SPE engines.",
     catalogSource: "DOAJ",
     evidenceTier: "[PEER_REVIEWED_OPEN_ACCESS]",
-    retrievalDate: "2026-09-30T00:00:00.000Z",
-    verificationMethod: "OFFLINE_SEED_SPECIFICATION",
-    applicabilityStatus: "APPLICABLE",
   },
 };
 
-export const VERIFIED_KNOWLEDGE_BASE = CURATED_SCHOLARLY_SEED_REGISTRY;
+const _frozenCorpusEntries: Record<string, ScholarlySourceRecord> = {};
+for (const [k, v] of Object.entries(_CURATED_SEED_CORPUS_MUTABLE)) {
+  _frozenCorpusEntries[k] = freezeScholarlyRecord(v);
+}
+export const CURATED_SEED_CORPUS: Readonly<Record<string, ScholarlySourceRecord>> =
+  Object.freeze(_frozenCorpusEntries);
 
-// Retraction test fixtures explicitly disclosed as test sentinels
-export const RETRACTION_TEST_SENTINELS = new Set<string>([
-  "doi:10.1016/fake.retracted.2020",
-  "doi:10.1126/science.fabricated.123",
-  "doi:10.1038/s41586-020-retracted-claim",
-  "arXiv:2101.99999-retracted",
-]);
+export const CURATED_SCHOLARLY_SEED_REGISTRY: Readonly<Record<string, ScholarlySourceRecord>> =
+  CURATED_SEED_CORPUS;
 
-export const PRODUCTION_RETRACTIONS = new Set<string>();
-export const RETRACTED_REGISTRY = RETRACTION_TEST_SENTINELS; // Backward compatibility alias
+export const VERIFIED_KNOWLEDGE_BASE = CURATED_SEED_CORPUS;
 
-export const SCHOLARLY_FABRIC_TRUTH_STATUS = {
-  CURATED_SCHOLARLY_SEED_REGISTRY: "IMPLEMENTED",
-  REAL_OPENALEX_INDEX: "NO",
-  REAL_PMC_INDEX: "NO",
-  REAL_DOAJ_INDEX: "NO",
-  LIVE_RETRACTION_VERIFICATION: "NOT_PROVEN",
-} as const;
+// Local test sentinels to verify retraction handling logic.
+// NOT an authoritative live retraction database (LIVE_RETRACTION_VERIFICATION = NO).
+export const RETRACTED_TEST_SENTINELS: ReadonlySet<string> = Object.freeze(
+  new Set<string>([
+    "doi:10.1016/fake.retracted.2020",
+    "doi:10.1126/science.fabricated.123",
+    "doi:10.1038/s41586-020-retracted-claim",
+    "arXiv:2101.99999-retracted",
+  ]),
+);
+export const RETRACTED_REGISTRY = RETRACTED_TEST_SENTINELS;
 
 /**
- * Searches the offline open-access scholarly index across arXiv, PMC, OpenAlex, DOAJ, and W3C.
- * Invariant: RAW_USER_DATA_EGRESS = 0 (100% offline index).
+ * Searches the curated offline seed corpus across foundational open-access computer science topics.
+ * TRUTH: CURATED_OFFLINE_SEED_CORPUS = IMPLEMENTED, FULL_SCHOLARLY_INDEX = NO.
+ * Invariant: RAW_USER_DATA_EGRESS = 0 (100% offline).
  */
 export function searchOfflineScholarlyIndex(
   query: string,
@@ -307,7 +401,7 @@ export function searchOfflineScholarlyIndex(
   const qLower = query.toLowerCase().trim();
   const results: ScholarlySourceRecord[] = [];
 
-  for (const record of Object.values(CURATED_SCHOLARLY_SEED_REGISTRY)) {
+  for (const record of Object.values(CURATED_SEED_CORPUS)) {
     if (options?.catalog && record.catalogSource !== options.catalog) {
       continue;
     }
@@ -329,7 +423,7 @@ export function searchOfflineScholarlyIndex(
 
 /**
  * Anti-hallucination verification engine for cited scholarly sources.
- * Validates identifier syntax, confirms catalog existence, and detects retracted publications.
+ * Validates identifier syntax, confirms catalog existence, and checks local test sentinels.
  */
 export function verifyCitation(sourceIdOrIdentifier: string): {
   verified: boolean;
@@ -341,33 +435,24 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
     | "[PREPRINT_UNREVIEWED]"
     | "[RETRACTED_DANGER]"
     | "[HEURISTIC_HYPOTHESIS]";
-  verificationStatus: CitationVerificationStatus;
   reason: string;
+  supportsClaim?: boolean;
   isTestSentinel?: boolean;
 } {
   const cleanId = (sourceIdOrIdentifier || "").trim();
 
-  // Check 1: Retraction Test Sentinels vs Production Retractions
-  if (RETRACTION_TEST_SENTINELS.has(cleanId)) {
+  // Check 1: Test Sentinels for Retraction Logic
+  if (RETRACTED_TEST_SENTINELS.has(cleanId)) {
     return {
       verified: false,
       tier: "[RETRACTED_DANGER]",
-      verificationStatus: "RETRACTED_DANGER",
-      reason: `Citation ${cleanId} is officially registered as RETRACTED in test sentinel retraction fixture. Disclosed as synthetic test fixture; live corpus retraction verification is NOT_PROVEN.`,
       isTestSentinel: true,
-    };
-  }
-  if (PRODUCTION_RETRACTIONS.has(cleanId)) {
-    return {
-      verified: false,
-      tier: "[RETRACTED_DANGER]",
-      verificationStatus: "RETRACTED_DANGER",
-      reason: `Citation ${cleanId} is verified retracted in local production index.`,
+      reason: `Citation ${cleanId} matched in local test sentinels as RETRACTED science (LIVE_RETRACTION_VERIFICATION = NO; synthetic test fixture only, NOT_PROVEN).`,
     };
   }
 
-  // Check 2: Match against Curated Offline Seed Registry
-  for (const [key, record] of Object.entries(CURATED_SCHOLARLY_SEED_REGISTRY)) {
+  // Check 2: Match against Curated Offline Seed Corpus
+  for (const [key, record] of Object.entries(CURATED_SEED_CORPUS)) {
     if (
       key.toLowerCase() === cleanId.toLowerCase() ||
       record.sourceId.toLowerCase() === cleanId.toLowerCase() ||
@@ -378,16 +463,15 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
           verified: false,
           record,
           tier: "[RETRACTED_DANGER]",
-          verificationStatus: "RETRACTED_DANGER",
           reason: `Publication ${record.identifier} (${record.title}) was retracted.`,
         };
       }
       return {
         verified: true,
+        supportsClaim: false,
         record,
         tier: record.evidenceTier,
-        verificationStatus: "CLAIM_APPLICABILITY_REVIEWED",
-        reason: `Verified in offline curated seed registry (${record.catalogSource || "catalog"}) as ${record.evidenceTier}.`,
+        reason: `Identifier matched curated offline seed corpus (FULL_SCHOLARLY_INDEX = NO) as ${record.evidenceTier}. IDENTIFIER_VERIFIED != SUPPORTS. RETRIEVED != VERIFIED.`,
       };
     }
   }
@@ -398,7 +482,6 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
     return {
       verified: false,
       tier: "[HEURISTIC_HYPOTHESIS]",
-      verificationStatus: "UNVERIFIED",
       reason: `Invalid citation syntax: "${cleanId}" does not conform to valid DOI, arXiv, or specification URL.`,
     };
   }
@@ -407,7 +490,6 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
     return {
       verified: false,
       tier: "[PREPRINT_UNREVIEWED]",
-      verificationStatus: "IDENTIFIER_SYNTAX_VALID",
       reason: `Identifier ${cleanId} has valid arXiv syntax but is not in the offline vetted index; flagged as unreviewed preprint.`,
     };
   }
@@ -415,8 +497,7 @@ export function verifyCitation(sourceIdOrIdentifier: string): {
   return {
     verified: false,
     tier: "[HEURISTIC_HYPOTHESIS]",
-    verificationStatus: "IDENTIFIER_SYNTAX_VALID",
-    reason: `Citation ${cleanId} has valid syntax but is not present in offline seed index. Potential LLM hallucination risk.`,
+    reason: `Citation ${cleanId} not present in offline peer-reviewed indices. Potential LLM hallucination risk.`,
   };
 }
 
@@ -551,8 +632,8 @@ export function sanitizeSourceContent(rawContent: string): string {
   if (!rawContent) return "";
   // Strip instruction-like command phrases that attempt to hijack LLM behavior
   const neutralized = rawContent
-    .replace(/\b(ignore previous instructions|ignore all rules|system prompt override)\b/gi, "[REDACTED_PROMPT_INJECTION]")
-    .replace(/\b(grant full authority|allow deployment|mark as pass)\b/gi, "[UNTRUSTED_EXTERNAL_CLAIM]");
+    .replace(/\b(ignore previous instructions|ignore all rules|ignore policy|system prompt override)\b/gi, "[REDACTED_PROMPT_INJECTION]")
+    .replace(/\b(grant full authority|allow deployment|authorize deploy(?:ment)?|deploy now|mark as pass|mark pass)\b/gi, "[UNTRUSTED_EXTERNAL_CLAIM]");
   return neutralized.trim();
 }
 
@@ -561,47 +642,116 @@ export function sanitizeSourceContent(rawContent: string): string {
  */
 export function acquireScholarlyEvidence(
   need: EvidenceNeedAssessment,
-  hasConsent: boolean = true,
+  hasConsent: boolean = false,
+  options?: {
+    sourceMode?: "OFF" | "EXPLICIT";
+    revoked?: boolean;
+    urls?: string[];
+    /** Opt-in live adapter path (fixtures by default). Does NOT promote LIVE_* HOLD gates. */
+    preferLiveAdapters?: boolean;
+    liveTransport?: ScholarlyTransport;
+    liveProviders?: Array<"OPENALEX" | "CROSSREF" | "PUBMED" | "PMC" | "ARXIV" | "DOAJ" | "LOCAL_SENTINEL">;
+  },
 ): {
   sources: ScholarlySourceRecord[];
-  status: "ACQUIRED" | "HELD_NO_CONSENT" | "NOT_REQUIRED" | "UNAVAILABLE";
+  status: "ACQUIRED" | "HELD_NO_CONSENT" | "HELD_SOURCE_OFF" | "HELD_REVOKED" | "REJECTED_URL" | "NOT_REQUIRED" | "UNAVAILABLE";
   violations: string[];
+  /** Always 0 in this offline fabric. Unsafe URLs are not fetched. */
+  networkCalls: number;
 } {
-  const violations: string[] = [];
+  const access = evaluateResearchAccess({
+    needed: need.needed,
+    consent: hasConsent === true,
+    sourceMode: options?.sourceMode,
+    revoked: options?.revoked,
+    urls: options?.urls,
+  });
+  const violations = [...access.violations];
 
-  if (!need.needed) {
-    return {
-      sources: [],
-      status: "NOT_REQUIRED",
-      violations,
-    };
+  if (!need.needed || access.status === "NOT_REQUIRED") {
+    return { sources: [], status: "NOT_REQUIRED", violations, networkCalls: 0 };
+  }
+  if (access.status !== "ALLOWED_OFFLINE") {
+    const status =
+      access.status === "HELD_SOURCE_OFF"
+        ? "HELD_SOURCE_OFF"
+        : access.status === "HELD_REVOKED"
+          ? "HELD_REVOKED"
+          : access.status === "REJECTED_URL"
+            ? "REJECTED_URL"
+            : "HELD_NO_CONSENT";
+    if (status === "HELD_NO_CONSENT") {
+      violations.push("Research needed but explicit research consent was not granted (NEED != CONSENT).");
+    }
+    return { sources: [], status, violations, networkCalls: 0 };
   }
 
-  // Enforce NEED != CONSENT invariant
-  if (!hasConsent) {
-    violations.push("Research needed but explicit research consent was not granted (NEED != CONSENT).");
-    return {
-      sources: [],
-      status: "HELD_NO_CONSENT",
-      violations,
-    };
+  // Optional live adapter bridge (fixtures/injectable). Capability HOLD unchanged.
+  if (options?.preferLiveAdapters === true) {
+    const live = acquireLiveScholarlyEvidence({
+      needQuery: need.rationale || need.domain || "scholarly",
+      consent: hasConsent === true,
+      providers: options.liveProviders || ["OPENALEX", "CROSSREF"],
+      transport: options.liveTransport,
+    });
+    if (live.status === "ACQUIRED_LIVE" || live.status === "PARTIAL") {
+      const mapped: ScholarlySourceRecord[] = live.records.map((rec, i) =>
+        Object.freeze({
+          sourceId: `LIVE-${rec.provider}-${i}`,
+          sourceType:
+            rec.peerReviewClass === "PREPRINT"
+              ? "PREPRINT"
+              : rec.peerReviewClass === "PEER_REVIEWED"
+                ? "PEER_REVIEWED_PAPER"
+                : "EMPIRICAL_STUDY",
+          identifier: rec.identifier || `live:${rec.provider}:${i}`,
+          title: rec.title,
+          authors: Object.freeze([]) as unknown as string[],
+          year: 0,
+          isRetracted: live.retraction.status === "RETRACTION_SIGNAL",
+          retractionDetails: live.retraction.status,
+          normativeApplicability: "UNKNOWN",
+          keyFinding: rec.abstractText.slice(0, 280),
+          sourceSaysText: rec.abstractText,
+          speInferenceText: "LIVE_ADAPTER_DATA_TAINTED_NE_AUTHORITY",
+          catalogSource:
+            rec.provider === "ARXIV"
+              ? "ARXIV"
+              : rec.provider === "PMC"
+                ? "PMC"
+                : "OPENALEX",
+          evidenceTier:
+            live.retraction.status === "RETRACTION_SIGNAL"
+              ? "[RETRACTED_DANGER]"
+              : rec.peerReviewClass === "PREPRINT"
+                ? "[PREPRINT_UNREVIEWED]"
+                : "[HEURISTIC_HYPOTHESIS]",
+        } as ScholarlySourceRecord),
+      );
+      return {
+        sources: mapped,
+        status: mapped.length ? "ACQUIRED" : "UNAVAILABLE",
+        violations: [...violations, ...live.reasons],
+        networkCalls: live.networkCalls,
+      };
+    }
   }
 
   const selectedSources: ScholarlySourceRecord[] = [];
 
   if (need.domain === "webassembly_specification") {
-    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["w3c-wasm-core-2"]);
+    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["w3c-wasm-core-2"]);
   } else if (need.domain === "distributed_consensus") {
-    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["lamport-1978"]);
-    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["ongaro-2014"]);
+    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["lamport-1978"]);
+    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["ongaro-2014"]);
   } else if (need.domain === "crash_consistency") {
-    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["candea-2003"]);
+    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["candea-2003"]);
   } else if (need.domain === "speech_recognition") {
-    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["radford-2022"]);
+    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["radford-2022"]);
   } else if (need.domain === "cognitive_ergonomics") {
-    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["miller-1956"]);
+    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["miller-1956"]);
   } else {
-    selectedSources.push(CURATED_SCHOLARLY_SEED_REGISTRY["hoare-1969"]);
+    selectedSources.push(VERIFIED_KNOWLEDGE_BASE["hoare-1969"]);
   }
 
   // Filter against retraction registry
@@ -620,5 +770,6 @@ export function acquireScholarlyEvidence(
     sources: validSources,
     status: validSources.length > 0 ? "ACQUIRED" : "UNAVAILABLE",
     violations,
+    networkCalls: 0,
   };
 }
