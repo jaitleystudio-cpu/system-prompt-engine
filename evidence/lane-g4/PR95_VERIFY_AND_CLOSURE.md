@@ -57,7 +57,7 @@ React builder UI qualification = WAITING_EXTERNAL (component is still `NOT_INTEG
 
 ## Still HOLD
 
-- URL reconstruction and the webrecon engine are not on this ancestry. Not replayed from #64/#78.
+- URL reconstruction library is ported from frozen c1/PR #64 and is not route-mounted. PR #78 website-generator was not copied. Hosted/live reconstruction stays NOT_AVAILABLE.
 - Hosted publish remains HOLD. No deploy.
 - Route mount remains NOT_INTEGRATED.
 - G13 Python website package remains unbound.
