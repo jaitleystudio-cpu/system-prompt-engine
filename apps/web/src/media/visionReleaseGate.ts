@@ -5,6 +5,7 @@
  * narrow-viewport SSIM all clear the existing A12 bar.
  */
 import { CODE_TARGETS, type CodeTarget } from "./screenshotToCode";
+import { isExactRgbPartitionReplay, type RgbaImage } from "./screenshotReconstruct";
 
 export const DECLARED_CODE_TARGETS = CODE_TARGETS;
 export const MAX_REPAIR_ATTEMPTS = 3;
@@ -239,4 +240,82 @@ export function judgeRelease(input: ReleaseInput): {
     input.responsive.narrowSsim != null &&
     input.responsive.narrowSsim >= PASS_MIN_SSIM;
   return { status, pixelPerfect, reasons };
+}
+
+export { isExactRgbPartitionReplay };
+
+export function judgeNativeReconstruction(input: {
+  html: string;
+  image: RgbaImage;
+  ssimScore: number | null;
+  pixelDeltaPercentage: number | null;
+  exactViewport: boolean;
+  copiedFixture: boolean;
+}): { status: ReleaseStatus; reasons: string[]; bar: { minSsim: number; maxPixelDeltaPercent: number } } {
+  const bar = { minSsim: PASS_MIN_SSIM, maxPixelDeltaPercent: PASS_MAX_PIXEL_DELTA_PERCENT };
+  const partition = isExactRgbPartitionReplay(input.html, input.image);
+  if (partition || input.copiedFixture) {
+    const reasons: string[] = [];
+    if (partition) reasons.push("rectangle partition replay of source bitmap");
+    if (input.copiedFixture) reasons.push("fixture-output cheat");
+    return { status: "FAIL_CONTRACT", reasons, bar };
+  }
+  const reasons: string[] = [];
+  if (!input.exactViewport) reasons.push("viewport is not the frozen fixture viewport");
+  if (input.ssimScore == null || input.pixelDeltaPercentage == null) {
+    reasons.push("rendered comparison not measured");
+  }
+  if (input.ssimScore != null && input.ssimScore < PASS_MIN_SSIM) reasons.push("native SSIM below bar");
+  if (
+    input.pixelDeltaPercentage != null &&
+    input.pixelDeltaPercentage > PASS_MAX_PIXEL_DELTA_PERCENT
+  ) {
+    reasons.push("pixel delta above bar");
+  }
+  const measured =
+    input.exactViewport &&
+    input.ssimScore != null &&
+    input.pixelDeltaPercentage != null;
+  let status: ReleaseStatus;
+  if (reasons.length === 0) status = "PASS";
+  else if (measured) status = "MEASURED_BELOW_BAR";
+  else status = "HOLD_UNPROVEN";
+  return { status, reasons, bar };
+}
+
+/**
+ * PASS_WITHIN_TESTED_SCOPE is refused for an exact-RGB rectangle partition of
+ * the fixture, even if the caller passes native PASS statuses and copiedFixture false.
+ * Omitting the HTML candidates also fails closed. The 0.95 / 5% bar is unchanged.
+ */
+export function judgeLaneScope(input: {
+  nativeStatuses: ReleaseStatus[];
+  narrowReferencePaired: boolean;
+  nonHtmlVisualRendered: boolean;
+  candidates?: { html: string; image: RgbaImage }[];
+}): {
+  final: "PASS_WITHIN_TESTED_SCOPE" | "HOLD";
+  tested: "html-exact-fixture-viewport";
+  outsideScope: string[];
+  killed: string[];
+} {
+  const outsideScope: string[] = [];
+  if (!input.narrowReferencePaired) outsideScope.push("responsive narrow-viewport SSIM HOLD_UNPROVEN");
+  if (!input.nonHtmlVisualRendered) outsideScope.push("non-HTML visual render HOLD_UNPROVEN");
+  const candidates = input.candidates ?? [];
+  const killed: string[] = [];
+  if (candidates.some((candidate) => isExactRgbPartitionReplay(candidate.html, candidate.image))) {
+    killed.push("rectangle partition replay of source bitmap");
+  }
+  if (!candidates.length) killed.push("no HTML candidate supplied");
+  const nativePass =
+    killed.length === 0 &&
+    input.nativeStatuses.length > 0 &&
+    input.nativeStatuses.every((status) => status === "PASS");
+  return {
+    final: nativePass ? "PASS_WITHIN_TESTED_SCOPE" : "HOLD",
+    tested: "html-exact-fixture-viewport",
+    outsideScope,
+    killed,
+  };
 }
