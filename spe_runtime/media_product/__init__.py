@@ -10,6 +10,7 @@ from spe_runtime.media_product.local_backend import (
     discover_qualified_assets,
     local_claim,
     product_gates,
+    resolve_media_mode,
     verify_file_sha256,
 )
 
@@ -19,5 +20,6 @@ __all__ = [
     "discover_qualified_assets",
     "local_claim",
     "product_gates",
+    "resolve_media_mode",
     "verify_file_sha256",
 ]
