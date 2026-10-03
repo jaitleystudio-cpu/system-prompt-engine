@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   ShockwaveCinemaAudioEngine,
   ShockwaveConfig,
+  ShockwaveSoundMode,
 } from "@/audio/ShockwaveCinemaAudioEngine";
 import { AcousticRoomProfile } from "@/audio/ShockwaveRoomCalibrationEngine";
 import { LedgerBlock, WalEntry } from "@/audio/ShockwaveSagaCoordinator";
@@ -38,6 +39,7 @@ export default function ShockwaveDashboard() {
   });
 
   const [isPlayingDemo, setIsPlayingDemo] = useState(false);
+  const [selectedMode, setSelectedMode] = useState<ShockwaveSoundMode>("Cinema Beast 5.1");
   const [calibratingChannel, setCalibratingChannel] = useState<string | null>(null);
   const [levels, setLevels] = useState<number[]>([0, 0, 0, 0, 0, 0]);
   const [activeSoloChannel, setActiveSoloChannel] = useState<number | null>(null);
@@ -70,6 +72,13 @@ export default function ShockwaveDashboard() {
     setConfig(newCfg);
     setWalHistory(engine.getCoordinator().getWalSnapshot());
     setLedgerBlocks(engine.getCoordinator().getLedger());
+  };
+
+  const handleSelectMode = (mode: ShockwaveSoundMode) => {
+    setSelectedMode(mode);
+    if (engine) {
+      engine.setSoundMode(mode);
+    }
   };
 
   const handleToggleDemo = () => {
@@ -150,8 +159,100 @@ export default function ShockwaveDashboard() {
 
       {/* Main Content Layout */}
       <main className="max-w-7xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left 2 Columns: 5.1 Discrete Routing Matrix & Research DSPs */}
+        {/* Left 2 Columns: Sound Modes, 5.1 Discrete Routing Matrix & Research DSPs */}
         <div className="lg:col-span-2 space-y-8">
+          {/* Legendary 6 Sound Modes Selector */}
+          <section className="bg-zinc-950 border border-zinc-800/80 rounded-3xl p-6 shadow-2xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 pb-3 border-b border-zinc-800 gap-2">
+              <div>
+                <h2 className="text-xl font-bold text-zinc-100 flex items-center gap-2">
+                  Legendary Shockwave Sound Modes
+                  <span className="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800/60 font-mono px-2 py-0.5 rounded">
+                    ACTIVE: {selectedMode.toUpperCase()}
+                  </span>
+                </h2>
+                <p className="text-zinc-400 text-xs mt-0.5">
+                  Select a research-grade acoustic mode to dynamically adjust 5.1 routing, virtual bass harmonics, and Haas delays.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {[
+                {
+                  id: "Big Bang 8D" as ShockwaveSoundMode,
+                  icon: "🪐",
+                  name: "Big Bang 8D",
+                  badge: "0.15Hz Orbit",
+                  desc: "Ambisonic spatial rotation with Haas phase panning & XTC.",
+                },
+                {
+                  id: "bass bazucca" as ShockwaveSoundMode,
+                  icon: "💣",
+                  name: "Bass Bazooka",
+                  badge: "+9dB Sub Drive",
+                  desc: "Larsen-Aarts missing fundamental at 110Hz + Chebyshev harmonics.",
+                },
+                {
+                  id: "music studio" as ShockwaveSoundMode,
+                  icon: "🎚️",
+                  name: "Music Studio",
+                  badge: "0dB Reference",
+                  desc: "Bit-perfect flat reference monitor, unity gains, zero coloration.",
+                },
+                {
+                  id: "soul song" as ShockwaveSoundMode,
+                  icon: "🎷",
+                  name: "Soul Song",
+                  badge: "Triode Tube",
+                  desc: "Warm vacuum tube saturation with 1.8kHz rich vocal presence.",
+                },
+                {
+                  id: "Cinema Beast 5.1" as ShockwaveSoundMode,
+                  icon: "🎬",
+                  name: "Cinema Beast 5.1",
+                  badge: "Theater Staging",
+                  desc: "2.4kHz dialogue boost, 22ms Haas delay, +7dB LFE cinema slam.",
+                },
+                {
+                  id: "voice crystal" as ShockwaveSoundMode,
+                  icon: "💎",
+                  name: "Voice Crystal",
+                  badge: "+8dB Formant",
+                  desc: "Hyper-articulated speech isolation with -14dB sub-rumble cut.",
+                },
+              ].map((m) => {
+                const isActive = selectedMode === m.id;
+                return (
+                  <button
+                    key={m.id}
+                    onClick={() => handleSelectMode(m.id)}
+                    className={`text-left p-3.5 rounded-2xl border transition-all relative overflow-hidden ${
+                      isActive
+                        ? "bg-gradient-to-br from-amber-500/20 via-zinc-900 to-zinc-900 border-amber-400 shadow-lg shadow-amber-500/10 scale-[1.02]"
+                        : "bg-zinc-900/60 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xl">{m.icon}</span>
+                      <span
+                        className={`text-[10px] font-mono px-2 py-0.5 rounded ${
+                          isActive
+                            ? "bg-amber-400 text-black font-bold"
+                            : "bg-zinc-800 text-zinc-400"
+                        }`}
+                      >
+                        {m.badge}
+                      </span>
+                    </div>
+                    <div className="font-bold text-sm text-zinc-100">{m.name}</div>
+                    <div className="text-[11px] text-zinc-400 mt-1 leading-snug">{m.desc}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
           {/* 6-Channel Visual Matrix */}
           <section className="bg-zinc-950 border border-zinc-800/80 rounded-3xl p-6 shadow-2xl">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 border-b border-zinc-800 gap-4">
