@@ -4,6 +4,7 @@ import {
   jsonLdCapabilitiesFaq,
   jsonLdCapabilitiesWebPage,
   jsonLdSoftwareApplication,
+  NOINDEX_VIEWS,
   ROUTE_META,
   type AppView,
 } from "../routing";
@@ -67,7 +68,8 @@ export function SeoHead({
 }) {
   useEffect(() => {
     const meta = ROUTE_META[view];
-    const privateSurface = unlisted || notFound || view === "workspace";
+    const privateSurface =
+      unlisted || notFound || NOINDEX_VIEWS.has(view);
     const title = notFound ? "Page not found — SPE" : meta.title;
     const description = notFound
       ? "That address is not a page in this preview."
