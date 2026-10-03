@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-01T04:40:37.579Z",
-  "tipNote": "Truth/privacy closure 20260928: URL reference-only CSP honesty, Home/Create bound notices, screenshot-to-code claim boundary.",
+  "generated": "2026-10-03T00:19:34.626Z",
+  "tipNote": "Lane G5 Universal Shell UX and Accessibility copy review.",
   "entries": [
     {
       "id": "0014fed211f55a770c35",
@@ -1131,6 +1131,12 @@
       "text": "Page Structure"
     },
     {
+      "id": "0faaead390e2a7ac468a",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "index, follow"
+    },
+    {
       "id": "0fc538fdab387747598d",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -1249,6 +1255,12 @@
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
       "text": "Start with messy thoughts: a note, question, image, document, voice note or link."
+    },
+    {
+      "id": "1123c29c4f01ef19813d",
+      "file": "apps/web/src/shell/NotFound.tsx",
+      "depth": "PRODUCT",
+      "text": "Page not found"
     },
     {
       "id": "11277e125abafcb09817",
@@ -1933,6 +1945,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "instantiating"
+    },
+    {
+      "id": "1a75c8879494285e368b",
+      "file": "apps/web/src/shell/NotFound.tsx",
+      "depth": "PRODUCT",
+      "text": "Nothing in this preview lives at"
     },
     {
       "id": "1a796a29faa5a3a73b95",
@@ -2877,6 +2895,12 @@
       "text": "Make your thoughts"
     },
     {
+      "id": "25681571ed6724c4b3bd",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "not-found"
+    },
+    {
       "id": "25b8699a38c42ff4a5d7",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
@@ -3525,6 +3549,12 @@
       "text": "Symphonia (Unsupported)"
     },
     {
+      "id": "2df836d73dfd089f0654",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "Page not found — SPE"
+    },
+    {
       "id": "2df9fcbf0becae7325bd",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
@@ -3819,6 +3849,12 @@
       "text": "Make my prompt"
     },
     {
+      "id": "3231027aa20bbeb6dfed",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "robots"
+    },
+    {
       "id": "323735819f9e1efcf3e9",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
@@ -3859,6 +3895,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "Website / 3D"
+    },
+    {
+      "id": "32e4ebed6f9972b105cb",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "view"
     },
     {
       "id": "332d630c68656ffa9a52",
@@ -6777,6 +6819,12 @@
       "text": "Restored"
     },
     {
+      "id": "594ce8d48e532fc21e48",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Research preview"
+    },
+    {
       "id": "59858f9282e4ecc0becf",
       "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
       "depth": "PROOF",
@@ -7525,6 +7573,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "; images:"
+    },
+    {
+      "id": "62b9f300e0c63b1c8ad6",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "workspace"
     },
     {
       "id": "62bd3b2c5ff9667dd2fd",
@@ -9729,6 +9783,12 @@
       "text": "Moderate error rate observed on complex syntax."
     },
     {
+      "id": "7f47a22e7d4d1bb08e49",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "That address is not a page in this preview."
+    },
+    {
       "id": "7f8eb5bc0f77ddcfc4e6",
       "file": "apps/web/src/composer/ContextProtocolControls.tsx",
       "depth": "PRODUCT",
@@ -11277,6 +11337,12 @@
       "text": "Could not decode this image."
     },
     {
+      "id": "9318ef18f528379990c3",
+      "file": "apps/web/src/ui/HumanError.tsx",
+      "depth": "PRODUCT",
+      "text": "Add an idea first."
+    },
+    {
       "id": "932ff61735e65373c398",
       "file": "apps/web/src/input/speechHelpers.ts",
       "depth": "PRODUCT",
@@ -12519,6 +12585,12 @@
       "text": "Image resolution is too high ("
     },
     {
+      "id": "a3e2bd1bd685765d0eb7",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Queue date"
+    },
+    {
       "id": "a3ec03bea19de625ad27",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -12931,6 +13003,12 @@
       "file": "apps/web/src/export/workflowExportViewModel.ts",
       "depth": "PRODUCT",
       "text": "export guarantees claim network, credentials, execution, or authority"
+    },
+    {
+      "id": "a9ca3599927f406ce116",
+      "file": "apps/web/src/shell/NotFound.tsx",
+      "depth": "PRODUCT",
+      "text": "Not found"
     },
     {
       "id": "a9de75a7e5babf7f4e3a",
@@ -14319,6 +14397,12 @@
       "text": "You choose the destination"
     },
     {
+      "id": "ba0e47f1e209f1e473d2",
+      "file": "apps/web/src/ui/HumanError.tsx",
+      "depth": "PRODUCT",
+      "text": "EMPTY_BRIEF"
+    },
+    {
       "id": "ba2882a46f8858f317c2",
       "file": "apps/web/src/builder/websiteSpecModel.ts",
       "depth": "PRODUCT",
@@ -14941,6 +15025,12 @@
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "EXPERIENCE",
       "text": "is a place to begin."
+    },
+    {
+      "id": "c19a43453a70dca7e246",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "EMPTY_BRIEF"
     },
     {
       "id": "c1dc4c14eec0a9d9df84",
@@ -16713,6 +16803,12 @@
       "text": "Video outline"
     },
     {
+      "id": "d74de3724ae6763cad82",
+      "file": "apps/web/src/shell/shellGuards.ts",
+      "depth": "PRODUCT",
+      "text": "Enter what you want SPE to build."
+    },
+    {
       "id": "d75fe0a420947d9754a4",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -16735,6 +16831,12 @@
       "file": "apps/web/src/ui/SeoHead.tsx",
       "depth": "PRODUCT",
       "text": "spe-jsonld-capabilities-page"
+    },
+    {
+      "id": "d7ba6c3716299cc23083",
+      "file": "apps/web/src/ui/SeoHead.tsx",
+      "depth": "PRODUCT",
+      "text": "noindex, nofollow"
     },
     {
       "id": "d7bd0ad88cb2f2de4f11",
@@ -17119,6 +17221,12 @@
       "file": "apps/web/src/landing/dailyHero.ts",
       "depth": "PRODUCT",
       "text": "A clear prompt."
+    },
+    {
+      "id": "dc87b43f661b95b4c53f",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "not-found"
     },
     {
       "id": "dcaebb04679e4aa9e2a2",
@@ -17667,6 +17775,12 @@
       "text": "NO"
     },
     {
+      "id": "e34755cc1570b35d2380",
+      "file": "apps/web/src/a11y/focusOnView.ts",
+      "depth": "PRODUCT",
+      "text": "main"
+    },
+    {
       "id": "e34876e2a3529a954cc1",
       "file": "apps/web/src/media/limits.ts",
       "depth": "PRODUCT",
@@ -18087,6 +18201,12 @@
       "text": "Docking pastel modules with hover assembly and a clear Open in SPE CTA."
     },
     {
+      "id": "e8856f60c75f4cd1dc99",
+      "file": "apps/web/src/shell/NotFound.tsx",
+      "depth": "PRODUCT",
+      "text": ". Your idea on this page was not cleared."
+    },
+    {
       "id": "e8a149fae86b231f625c",
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
@@ -18157,6 +18277,12 @@
       "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
       "depth": "PROOF",
       "text": "rgba(99, 102, 241, 0.2)"
+    },
+    {
+      "id": "e96921ccc97c4886e97a",
+      "file": "apps/web/src/shell/NotFound.tsx",
+      "depth": "PRODUCT",
+      "text": "Back to Home"
     },
     {
       "id": "e9704ba2aeb629ec219b",
@@ -19177,6 +19303,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "\" data-confidence=\""
+    },
+    {
+      "id": "f8358b554f2eab60d3c4",
+      "file": "apps/web/src/a11y/focusOnView.ts",
+      "depth": "PRODUCT",
+      "text": "instant"
     },
     {
       "id": "f836a7867fdb26875d06",

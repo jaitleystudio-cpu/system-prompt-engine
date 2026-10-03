@@ -18,6 +18,8 @@ import type {
 } from "../engine/types";
 import { semanticGroups } from "../scene/semantic";
 import { DotPattern } from "../ui/DotPattern";
+import type { AppView } from "../routing";
+import { InAppLink } from "../shell/inAppLink";
 import { useDailyHero } from "./useDailyHero";
 import { HeroStory } from "./HeroStory";
 import {
@@ -54,6 +56,7 @@ type Props = {
   onTarget: (v: TargetId) => void;
   intent: Intent;
   onIntent: (bucket: keyof Intent, id: string, text: string) => void;
+  onNavigate: (view: AppView) => void;
 };
 const EXAMPLES = [
   {
@@ -221,7 +224,10 @@ export function Hero(p: Props) {
               <p id="spe-one-line-limit-help" className="spe-bound-hint">
                 Quick-start limit {formatCharCount(HOME_QUICK_START_MAX_CHARS)}.
                 For longer material, use{" "}
-                <a href="/create">Create</a>.
+                <InAppLink view="create" onNavigate={p.onNavigate}>
+                  Create
+                </InAppLink>
+                .
               </p>
             </div>
             {boundNotice && (

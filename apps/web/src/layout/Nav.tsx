@@ -3,7 +3,7 @@ import { ThemeToggle } from "../ui/ThemeToggle";
 
 type Props = {
   scrolled: boolean;
-  view: AppView;
+  view: AppView | null;
   onNavigate: (v: AppView) => void;
   menuOpen: boolean;
   setMenuOpen: (v: boolean) => void;
