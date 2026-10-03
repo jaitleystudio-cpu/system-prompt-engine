@@ -1,13 +1,15 @@
-/** Shell mount ledger. Website UI is mounted. Media UI is frozen elsewhere and not in this commit. */
-export const MOUNT_PENDING = [
-  {
-    id: "media",
-    sha: "a93e87d0efb247204883ecbd18203fe248c5c8e5",
-    route: "/media",
-    component: "MediaProductPanel",
-    productMediaV1: "NOT_PASS",
-  },
-] as const;
+/** Shell mount ledger. Website UI is mounted. Media panel is mounted with no browser neural runtime. */
+export const MOUNT_PENDING = [] as const;
+
+export const MEDIA_MOUNT = {
+  id: "media",
+  sha: "a93e87d0efb247204883ecbd18203fe248c5c8e5",
+  route: "/media",
+  component: "MediaProductPanel",
+  productMediaV1: "NOT_PASS",
+  runtime: null,
+  localNeuralInBrowser: "UNAVAILABLE",
+} as const;
 
 export const WEBSITE_MOUNT = {
   id: "website",

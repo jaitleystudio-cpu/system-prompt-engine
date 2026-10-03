@@ -57,25 +57,27 @@ check("unknown route is not-found and is not Home", () => {
   assert.doesNotMatch(app, /replaceState\(\{ view: "home" \}/);
 });
 
-check("website mounted and media pending", () => {
+check("website mounted and media panel mounted without a neural runtime", () => {
   assert.equal(routing.resolveRoute("/website").view, "website");
   assert.equal(routing.resolveRoute("/media").view, "media");
-  assert.equal(mount.MOUNT_PENDING.length, 1);
-  assert.equal(mount.MOUNT_PENDING[0].id, "media");
-  assert.equal(mount.MOUNT_PENDING[0].sha, "a93e87d0efb247204883ecbd18203fe248c5c8e5");
-  assert.equal(mount.MOUNT_PENDING[0].productMediaV1, "NOT_PASS");
+  assert.deepEqual(mount.MOUNT_PENDING, []);
+  assert.equal(mount.MEDIA_MOUNT.sha, "a93e87d0efb247204883ecbd18203fe248c5c8e5");
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
+  assert.equal(mount.MEDIA_MOUNT.runtime, null);
+  assert.equal(mount.MEDIA_MOUNT.localNeuralInBrowser, "UNAVAILABLE");
   assert.equal(mount.WEBSITE_MOUNT.sha, FROZEN);
   assert.equal(mount.WEBSITE_MOUNT.status, "MOUNTED");
   const app = src("src/App.tsx");
   assert.match(app, /WebsiteProduct/);
-  assert.match(app, /MediaRouteSlot/);
+  assert.match(app, /<MediaProductPanel \/>/);
+  assert.doesNotMatch(app, /MediaRouteSlot/);
+  assert.doesNotMatch(app, /runtime=\{/);
   assert.doesNotMatch(app, /StaticWebsiteBuilder/);
-  assert.doesNotMatch(src("src/shell/MediaRouteSlot.tsx"), /<input|<textarea|<button|type="file"/);
-  assert.match(src("src/shell/MediaRouteSlot.tsx"), /LOCAL_NEURAL is unavailable in the browser/);
-  assert.match(src("src/shell/MediaRouteSlot.tsx"), /NOT_PASS/);
-  assert.doesNotMatch(src("src/shell/MediaRouteSlot.tsx"), /PRODUCT_MEDIA_V1\s*=\s*PASS/);
-  assert.doesNotMatch(src("src/shell/mountStatus.ts"), /PRODUCT_MEDIA_V1\s*=\s*"PASS"/);
-  assert.equal(existsSync(join(webRoot, "src/media/mount-contract.ts")), false);
+  assert.doesNotMatch(app, /productMediaV1:\s*"PASS"/);
+  const contract = src("src/media/mount-contract.ts");
+  assert.match(contract, /productMediaV1: "NOT_PASS"/);
+  assert.doesNotMatch(contract, /productMediaV1: "PASS"/);
+  assert.equal(existsSync(join(webRoot, "src/media/MediaProductPanel.tsx")), true);
 });
 
 check("private and tool routes are noindex and off the sitemap", () => {
@@ -285,30 +287,33 @@ try {
   await themePage.close();
 
   const media = await openCase("media", desktop, "dark");
-  async function mediaPaint(theme) {
-    return media.evaluate((next) => {
-      document.documentElement.setAttribute("data-theme", next);
-      const el = document.querySelector(".spe-mount-pending");
-      const s = getComputedStyle(el);
-      return {
-        theme: next,
-        fg: s.color,
-        bg: s.backgroundColor,
-        state: el.getAttribute("data-mount-state"),
-        title: document.getElementById("media-unavailable-title")?.textContent,
-      };
-    }, theme);
-  }
-  const mediaSample = await mediaPaint("light");
-  assert.equal(mediaSample.state, "MOUNT_PENDING");
-  assert.match(mediaSample.title, /not available/i);
-  const mediaRatio = contrastRatio(mediaSample.fg, mediaSample.bg);
-  assert.ok(mediaRatio >= 4.5, JSON.stringify(mediaSample));
-  const mediaDark = await mediaPaint("dark");
-  const mediaDarkRatio = contrastRatio(mediaDark.fg, mediaDark.bg);
-  assert.ok(mediaDarkRatio >= 4.5, JSON.stringify(mediaDark));
-  assert.notEqual(mediaSample.bg, mediaDark.bg, "media slot colors must change with theme");
-  console.log("PASS 1.4.3 media slot", mediaRatio.toFixed(2), mediaDarkRatio.toFixed(2), JSON.stringify({ light: mediaSample, dark: mediaDark }));
+  const panel = await media.evaluate(() => {
+    const root = document.querySelector(".spe-media-product");
+    const mode = document.querySelector("[data-testid=media-mode]")?.textContent ?? "";
+    return {
+      heading: root?.querySelector("h2")?.textContent ?? "",
+      mode,
+      hasFile: !!root?.querySelector('input[type="file"]'),
+    };
+  });
+  assert.equal(panel.heading, "Local media");
+  assert.match(panel.mode, /UNAVAILABLE/);
+  assert.doesNotMatch(panel.mode, /LOCAL_NEURAL/);
+  assert.doesNotMatch(panel.mode, /Local neural session/);
+  assert.equal(panel.hasFile, true);
+  await media.getByTestId("media-file").setInputFiles({
+    name: "note.wav",
+    mimeType: "audio/wav",
+    buffer: Buffer.from("RIFF"),
+  });
+  await media.getByTestId("media-start").click();
+  const after = await media.locator("[data-testid=media-mode]").innerText();
+  const err = await media.locator("[data-testid=media-error]").innerText();
+  assert.match(after, /UNAVAILABLE/);
+  assert.doesNotMatch(after, /LOCAL_NEURAL/);
+  assert.doesNotMatch(after, /Local neural session/);
+  assert.match(err, /not mounted in this browser/i);
+  console.log("PASS /media panel is UNAVAILABLE and does not label LOCAL_NEURAL as available");
   checks += 1;
   await media.close();
 

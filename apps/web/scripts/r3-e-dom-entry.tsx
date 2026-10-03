@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Nav } from "../src/layout/Nav";
 import type { AppView } from "../src/routing";
 import { resolveRoute } from "../src/routing";
-import { MediaRouteSlot } from "../src/shell/MediaRouteSlot";
+import { MediaProductPanel } from "../src/media/MediaProductPanel";
 import { NotFound } from "../src/shell/NotFound";
 import { SkipLink } from "../src/shell/SkipLink";
 import { EMPTY_IDEA_MESSAGE, workspaceBuildDisabled } from "../src/shell/shellGuards";
@@ -42,7 +42,7 @@ function ShellCase({ want }: { want: string }) {
       />
       <main id="main" tabIndex={-1}>
         <h1>Home</h1>
-        {want === "media" ? <MediaRouteSlot /> : null}
+        {want === "media" ? <MediaProductPanel /> : null}
         {want === "website" ? (
           <div data-shell-mount="website">
             <WebsiteProduct />

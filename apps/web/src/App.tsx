@@ -56,7 +56,7 @@ import {
   type AppView,
 } from "./routing";
 import { InAppLink } from "./shell/inAppLink";
-import { MediaRouteSlot } from "./shell/MediaRouteSlot";
+import { MediaProductPanel } from "./media/MediaProductPanel";
 import { WEBSITE_MOUNT } from "./shell/mountStatus";
 import { NotFound } from "./shell/NotFound";
 import { SkipLink } from "./shell/SkipLink";
@@ -1155,7 +1155,15 @@ export default function App() {
           </div>
         )}
 
-        {!notFound && view === "media" && <MediaRouteSlot />}
+        {!notFound && view === "media" && (
+          <div
+            data-shell-mount="media"
+            data-shell-mount-sha="a93e87d0efb247204883ecbd18203fe248c5c8e5"
+            data-product-media-v1="NOT_PASS"
+          >
+            <MediaProductPanel />
+          </div>
+        )}
 
         {!notFound && view === "my-work" && (
           <MyWork
