@@ -1,0 +1,90 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>r3g local harness</title>
+<script type="module">
+import { EngineClient } from "/src/engine/client.ts";
+import {
+  clearHistory,
+  loadHistory,
+  saveHistoryItem,
+  setHistoryOptIn,
+} from "@spe/web-runtime";
+
+const params = new URLSearchParams(location.search);
+const canary = params.get("canary") || "";
+const repeats = Math.max(1, Number(params.get("repeats") || "1"));
+
+function finish(payload) {
+  window.__r3g = payload;
+}
+
+async function compileSamples(jsonText) {
+  const client = new EngineClient();
+  const samples = [];
+  let outcome = null;
+  try {
+    for (let i = 0; i < repeats; i += 1) {
+      const t0 = performance.now();
+      outcome = await client.compile(jsonText, () => {});
+      samples.push({
+        i,
+        ms: performance.now() - t0,
+        error: outcome && outcome.error ? outcome.error : null,
+        sha256: outcome ? outcome.sha256 : null,
+        phases: outcome ? outcome.phases : null,
+      });
+    }
+  } finally {
+    client.terminate();
+  }
+  return { samples, outcome };
+}
+
+async function storeLocally() {
+  setHistoryOptIn(true);
+  saveHistoryItem({
+    id: `r3g-${canary}`,
+    saved_at_utc: new Date().toISOString(),
+    user_request: canary,
+    category: "r3g",
+    target: "local",
+    prompt_preview: canary,
+  });
+  const stored = loadHistory().some((item) => item && item.user_request === canary);
+  clearHistory();
+  setHistoryOptIn(false);
+  return { stored, cleared: loadHistory().length === 0 };
+}
+
+async function main() {
+  const fixtureResp = await fetch("/src/samples/pos001.json", { cache: "no-store" });
+  if (!fixtureResp.ok) throw new Error(`fixture fetch ${fixtureResp.status}`);
+  const fixture = await fixtureResp.json();
+  fixture.payload.facts[0].statement = canary;
+  fixture.payload.user_preferences[0].statement = canary;
+  const jsonText = JSON.stringify(fixture);
+  if (!jsonText.includes(canary)) throw new Error("canary missing from compile payload");
+  let compile = { samples: [], outcome: null, error: null };
+  try {
+    compile = await compileSamples(jsonText);
+  } catch (err) {
+    compile.error = String(err && err.message ? err.message : err);
+  }
+  let storage = { stored: false, cleared: false, error: null };
+  try {
+    storage = await storeLocally();
+  } catch (err) {
+    storage.error = String(err && err.message ? err.message : err);
+  }
+  finish({
+    done: true,
+    canaryPresentInPayload: true,
+    compile,
+    storage,
+  });
+}
+
+main().catch((err) => {
+  finish({ done: true, fatal: String(err && err.stack ? err.stack : err) });
+});
+</script>
