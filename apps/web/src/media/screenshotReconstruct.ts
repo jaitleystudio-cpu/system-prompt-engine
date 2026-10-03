@@ -97,31 +97,6 @@ function bytesToBase64(bytes: Uint8Array): string {
   return btoa(binary);
 }
 
-function parseEncodedRects(html: string): MeasuredRect[] {
-  const rects: MeasuredRect[] = [];
-  const tuples = /\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*["'](#[0-9a-fA-F]{6})["']\s*\]/g;
-  for (const match of html.matchAll(tuples)) {
-    rects.push({
-      x: Number(match[1]),
-      y: Number(match[2]),
-      w: Number(match[3]),
-      h: Number(match[4]),
-      hex: match[5].toLowerCase(),
-    });
-  }
-  const paints = /fillStyle\s*=\s*["'](#[0-9a-fA-F]{6})["'][\s\S]{0,80}?fillRect\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\)/g;
-  for (const match of html.matchAll(paints)) {
-    rects.push({
-      x: Number(match[2]),
-      y: Number(match[3]),
-      w: Number(match[4]),
-      h: Number(match[5]),
-      hex: match[1].toLowerCase(),
-    });
-  }
-  return rects;
-}
-
 function pixelHex(data: ArrayLike<number>, width: number, x: number, y: number): string {
   const i = (y * width + x) << 2;
   const r = data[i].toString(16).padStart(2, "0");
@@ -130,13 +105,102 @@ function pixelHex(data: ArrayLike<number>, width: number, x: number, y: number):
   return `#${r}${g}${b}`;
 }
 
-/**
- * True when the HTML is an exact-RGB rectangle or run-length partition of the
- * source bitmap (full coverage, source colors, no gaps). That is a pixel
- * replay, not a reconstruction that may be scored.
- */
-export function isExactRgbPartitionReplay(html: string, image: RgbaImage): boolean {
-  const rects = parseEncodedRects(html);
+function parseTupleRects(html: string): MeasuredRect[] {
+  const rects: MeasuredRect[] = [];
+  const tuples = /\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*["']#?([0-9a-fA-F]{6})["']\s*\]/g;
+  for (const match of html.matchAll(tuples)) {
+    rects.push({
+      x: Number(match[1]),
+      y: Number(match[2]),
+      w: Number(match[3]),
+      h: Number(match[4]),
+      hex: `#${match[5].toLowerCase()}`,
+    });
+  }
+  return rects;
+}
+
+function parseLiteralFillRects(html: string): MeasuredRect[] {
+  const rects: MeasuredRect[] = [];
+  const paints = /fillStyle\s*=\s*["']#?([0-9a-fA-F]{6})["'][\s\S]{0,80}?fillRect\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\)/g;
+  for (const match of html.matchAll(paints)) {
+    rects.push({
+      x: Number(match[2]),
+      y: Number(match[3]),
+      w: Number(match[4]),
+      h: Number(match[5]),
+      hex: `#${match[1].toLowerCase()}`,
+    });
+  }
+  return rects;
+}
+
+function hexFromToken(raw: string): string | null {
+  const text = raw.trim().replace(/^['"]|['"]$/g, "");
+  const plain = text.match(/^#?([0-9a-fA-F]{6})$/);
+  if (plain) return `#${plain[1].toLowerCase()}`;
+  const prefixed = text.match(/^0x([0-9a-fA-F]{6})$/i);
+  if (prefixed) return `#${prefixed[1].toLowerCase()}`;
+  return null;
+}
+
+function splitObjectFields(body: string): string[] {
+  const fields: string[] = [];
+  let current = "";
+  let quote: string | null = null;
+  for (const ch of body) {
+    if (quote) {
+      current += ch;
+      if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === "'" || ch === "\"") {
+      quote = ch;
+      current += ch;
+      continue;
+    }
+    if (ch === ",") {
+      if (current.trim()) fields.push(current.trim());
+      current = "";
+      continue;
+    }
+    current += ch;
+  }
+  if (current.trim()) fields.push(current.trim());
+  return fields;
+}
+
+/** Object records. Key order does not matter. The paint binding is not consulted. */
+function parseObjectRects(html: string): MeasuredRect[] {
+  const rects: MeasuredRect[] = [];
+  for (const match of html.matchAll(/\{[^{}]*\}/g)) {
+    const fields = splitObjectFields(match[0].slice(1, -1));
+    const numbers = new Map<string, number>();
+    const hexes: { key: string; hex: string }[] = [];
+    for (const field of fields) {
+      const colon = field.indexOf(":");
+      if (colon < 0) continue;
+      const key = field.slice(0, colon).trim().replace(/^['"]|['"]$/g, "").toLowerCase();
+      const raw = field.slice(colon + 1).trim();
+      if (/^-?\d+(?:\.\d+)?$/.test(raw)) {
+        numbers.set(key, Number(raw));
+        continue;
+      }
+      const hex = hexFromToken(raw);
+      if (hex) hexes.push({ key, hex });
+    }
+    const x = numbers.get("x") ?? numbers.get("left");
+    const y = numbers.get("y") ?? numbers.get("top");
+    const w = numbers.get("w") ?? numbers.get("width");
+    const h = numbers.get("h") ?? numbers.get("height");
+    if (x == null || y == null || w == null || h == null || !hexes.length) continue;
+    const preferred = hexes.find((item) => /hex|color|fill|background|^bg$/.test(item.key));
+    rects.push({ x, y, w, h, hex: (preferred ?? hexes[0]).hex });
+  }
+  return rects;
+}
+
+function exactRgbCover(rects: MeasuredRect[], image: RgbaImage): boolean {
   if (!rects.length || image.width < 1 || image.height < 1) return false;
   const area = rects.reduce((sum, rect) => sum + rect.w * rect.h, 0);
   if (area !== image.width * image.height) return false;
@@ -160,6 +224,20 @@ export function isExactRgbPartitionReplay(html: string, image: RgbaImage): boole
   }
   for (let i = 0; i < seen.length; i++) if (!seen[i]) return false;
   return true;
+}
+
+/**
+ * True when any one encoding in the HTML is an exact-RGB partition of the
+ * source bitmap. Tuple lists, object records, and literal fillStyle/fillRect
+ * are checked separately so a second syntax cannot hide a covering partition.
+ * Paint-site names (r.hex, block.hex, or another local binding) are ignored.
+ */
+export function isExactRgbPartitionReplay(html: string, image: RgbaImage): boolean {
+  return (
+    exactRgbCover(parseTupleRects(html), image) ||
+    exactRgbCover(parseObjectRects(html), image) ||
+    exactRgbCover(parseLiteralFillRects(html), image)
+  );
 }
 
 /**

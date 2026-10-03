@@ -261,6 +261,66 @@ const ui = await bundle("uiObservation.ts");
 const shot = await bundle("screenshotToCode.ts");
 const recon = await bundle("screenshotReconstruct.ts");
 
+function objectFormPartitionHtml(rects, binding) {
+  const name = binding || "r";
+  const body = rects
+    .map((rect) => `  { x: ${rect.x}, y: ${rect.y}, w: ${rect.w}, h: ${rect.h}, hex: "${rect.hex}" }`)
+    .join(",\n");
+  return `<!doctype html><canvas id="c"></canvas><script>
+const rects = [
+${body}
+];
+const ctx = document.getElementById("c").getContext("2d");
+for (const ${name} of rects) { ctx.fillStyle = ${name}.hex; ctx.fillRect(${name}.x, ${name}.y, ${name}.w, ${name}.h); }
+</script>`;
+}
+
+function assertObjectFormPartitionFailsClosed() {
+  const data = new Uint8ClampedArray([
+    255, 0, 0, 255, 0, 255, 0, 255,
+    0, 0, 255, 255, 255, 255, 255, 255,
+  ]);
+  const image = { width: 2, height: 2, data };
+  const rects = recon.measureRectangles(image);
+  const html = objectFormPartitionHtml(rects, "r");
+  assert.equal(html.includes("[0,0,"), false);
+  assert.match(html, /\{ x: 0, y: 0, w: /);
+  assert.match(html, /fillStyle = r\.hex/);
+  assert.equal(gate.isExactRgbPartitionReplay(html, image), true);
+  const judged = gate.judgeNativeReconstruction({
+    html,
+    image,
+    ssimScore: 1,
+    pixelDeltaPercentage: 0,
+    exactViewport: true,
+    copiedFixture: false,
+  });
+  assert.notEqual(judged.status, "PASS");
+  assert.equal(judged.status, "FAIL_CONTRACT");
+  const scope = gate.judgeLaneScope({
+    nativeStatuses: ["PASS"],
+    narrowReferencePaired: true,
+    nonHtmlVisualRendered: true,
+    candidates: [{ html, image }],
+  });
+  assert.equal(scope.final, "HOLD");
+  assert.notEqual(scope.final, "PASS_WITHIN_TESTED_SCOPE");
+  const rebound = objectFormPartitionHtml(rects, "block");
+  assert.match(rebound, /fillStyle = block\.hex/);
+  assert.equal(gate.isExactRgbPartitionReplay(rebound, image), true);
+  const reboundScope = gate.judgeLaneScope({
+    nativeStatuses: ["PASS"],
+    narrowReferencePaired: true,
+    nonHtmlVisualRendered: true,
+    candidates: [{ html: rebound, image }],
+  });
+  assert.equal(reboundScope.final, "HOLD");
+  assert.notEqual(reboundScope.final, "PASS_WITHIN_TESTED_SCOPE");
+}
+
+assertObjectFormPartitionFailsClosed();
+
+
 assert.equal(gate.PASS_MIN_SSIM, 0.95);
 assert.equal(gate.PASS_MAX_PIXEL_DELTA_PERCENT, 5);
 assert.equal(gate.MAX_REPAIR_ATTEMPTS, 3);
@@ -613,6 +673,9 @@ const evidence = {
 assert.equal(evidence.final, "HOLD");
 assert.equal(evidence.pixelPerfectClaim, false);
 writeFileSync(join(evidenceDir, "R3C_VISION_EVIDENCE.json"), JSON.stringify(evidence, null, 2));
+test("object-form exact-RGB partition fillStyle=r.hex fails closed", () => {
+  assertObjectFormPartitionFailsClosed();
+});
 test("exact-RGB rectangle partition replay fails closed", () => {
   assert.equal(evidence.final, "HOLD");
   assert.equal(desktop.measured.ssimScore, 0.9153);
