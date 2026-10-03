@@ -87,8 +87,9 @@ _HEAD_MOVE_KEYS = frozenset(
 def _binding_holds() -> dict[str, str]:
     """HOLD where this owner has no implementation to call.
 
-    Provenance-record and capability-manifest schemas are stubs. The manifest
-    tool is a stub. G11 workflow export is a different tree and is not here.
+    Provenance records, capability manifests, and the frozen G11 workflow
+    export are real when their files are present. Nothing in this tree compiles
+    a saved .spe artifact into a target-model prompt, so that step stays HOLD.
     """
     root = Path(__file__).resolve().parents[2]
     holds: dict[str, str] = {}
@@ -110,6 +111,9 @@ def _binding_holds() -> dict[str, str]:
             "HOLD: missing owner spe_runtime/workflow_export/export.py"
             " (frozen G11). apps/web/src/export/workflowExporters.ts is not the owner"
         )
+    holds["target_model_compile"] = (
+        "HOLD: no owner compiles a saved .spe artifact for a named target model"
+    )
     return holds
 
 
@@ -636,11 +640,28 @@ class ProjectLibrary:
         return build_manifest_from_blobs(self._revision_blobs(project_id))
 
     def accept_revision_manifest(self, project_id: str, manifest: Mapping[str, Any]) -> dict[str, Any]:
-        """Recompute revision hashes and reject a corrupt manifest."""
+        """Recompute revision hashes and reject a corrupt or stale manifest.
+
+        A manifest that still matches old payloads but does not list every
+        current revision is stale. Hash mismatches stay HASH_MISMATCH.
+        """
+        blobs = self._revision_blobs(project_id)
         try:
-            return verify_manifest_blobs(self._revision_blobs(project_id), manifest)
+            verified = verify_manifest_blobs(blobs, manifest)
         except ManifestError as exc:
             raise LibraryError(exc.code, exc.reason) from None
+        if not isinstance(manifest, Mapping):
+            raise LibraryError("CORRUPT_ENTRY", "manifest is not an object")
+        entries = manifest.get("entries")
+        if not isinstance(entries, list):
+            raise LibraryError("CORRUPT_ENTRY", "manifest entries are missing")
+        claimed = {entry.get("path") for entry in entries if isinstance(entry, Mapping)}
+        if claimed != set(blobs):
+            raise LibraryError(
+                "STALE_MANIFEST",
+                "manifest does not list the current revision payloads",
+            )
+        return verified
 
     def _revision_blobs(self, project_id: str) -> dict[str, bytes]:
         bundle = self.export_project(project_id)
