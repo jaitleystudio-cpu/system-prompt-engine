@@ -1,9 +1,10 @@
 /**
- * Lane R3-C — architecture measurement for screenshot reconstruction.
+ * Lane R3-C — the rectangle replay is not a pass.
  * Bar stays SSIM >= 0.95 and pixel delta <= 5%.
- * Does not embed fixture bytes. Does not qualify non-HTML from emitted strings.
+ * Honest measured state is the pre-replay scaffold. No new repair cycle.
  */
 import assert from "node:assert/strict";
+import { test } from "node:test";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -322,6 +323,7 @@ async function legacyBest(html, png, ir) {
 }
 
 const rows = [];
+const replayCandidates = [];
 const nonHtml = {
   react: { toolchain: "typescript", visual: "HOLD_UNPROVEN", qualified: false },
   swiftui: { toolchain: "swiftc", visual: "HOLD_UNPROVEN", qualified: false },
@@ -357,32 +359,29 @@ for (const fix of manifest.fixtures) {
   const decomposition = classifyDiscrepancy(decoded, legacyPng, ocr.words);
   const recall = ocrTokenRecall(ocr.text, legacyHtml);
 
-  const built = recon.reconstructionHtml({ width: decoded.width, height: decoded.height, data: decoded.data });
+  const image = { width: decoded.width, height: decoded.height, data: decoded.data };
+  const built = recon.reconstructionHtml(image);
   assert.equal(built.coverage, decoded.width * decoded.height, `${fix.id} partition`);
-  assert.equal(recon.isCopiedFixture(built.html, raw, fix.file), false, `${fix.id} must not be a fixture copy`);
-  assert.equal(built.viewport.width, decoded.width);
-  assert.equal(built.viewport.height, decoded.height);
-  const replayShot = await renderHtml(built.html, decoded.width, decoded.height);
-  const replayPng = PNG.sync.read(replayShot);
-  assert.equal(replayPng.width, decoded.width);
-  assert.equal(replayPng.height, decoded.height);
-  const replayCmp = compareVisualBuffers(raw, replayShot, {
-    viewport: { width: decoded.width, height: decoded.height, devicePixelRatio: 1 },
-    browserVersion,
-  });
+  assert.equal(gate.isExactRgbPartitionReplay(built.html, image), true, fix.id);
+  assert.equal(recon.isCopiedFixture(built.html, raw, fix.file, image), true, `${fix.id} rectangle replay is a copy`);
+  assert.equal(recon.isCopiedFixture(legacyHtml, raw, fix.file, image), false, `${fix.id} scaffold is not a bitmap partition`);
+  replayCandidates.push({ html: built.html, image });
   const judged = gate.judgeNativeReconstruction({
-    ssimScore: replayCmp.ssimScore,
-    pixelDeltaPercentage: replayCmp.pixelDeltaPercentage,
+    html: built.html,
+    image,
+    ssimScore: 1,
+    pixelDeltaPercentage: 0,
     exactViewport: true,
     copiedFixture: false,
   });
   assert.equal(judged.bar.minSsim, 0.95);
-  assert.equal(judged.status, "PASS", `${fix.id} ${replayCmp.ssimScore} ${replayCmp.pixelDeltaPercentage}`);
-  assert.ok(replayCmp.ssimScore > legacyCmp.ssimScore, `${fix.id} architecture did not beat legacy SSIM`);
+  assert.equal(judged.status, "FAIL_CONTRACT", fix.id);
+  assert.notEqual(judged.status, "PASS", fix.id);
+  assert.ok(judged.reasons.includes("rectangle partition replay of source bitmap"), fix.id);
 
   const narrowW = 360;
   const narrowH = Math.min(decoded.height, 800);
-  const narrowShot = await renderHtml(built.html, narrowW, narrowH);
+  const narrowShot = await renderHtml(legacyHtml, narrowW, narrowH);
   const narrowPng = PNG.sync.read(narrowShot);
   let narrowRefused = false;
   try {
@@ -450,15 +449,18 @@ for (const fix of manifest.fixtures) {
       ocrWordCount: ocr.words.length,
       priorRecordedBestSsim: priorById[fix.id].nativeComparison.ssimScore,
     },
-    after: {
+    measured: {
+      method: "legacy-scaffold-plus-3-css-repairs",
+      ssimScore: legacyCmp.ssimScore,
+      pixelDeltaPercentage: legacyCmp.pixelDeltaPercentage,
+      status: "MEASURED_BELOW_BAR",
+    },
+    rejectedReplay: {
       method: built.method,
       rectCount: built.rectCount,
-      coverage: built.coverage,
-      copiedFixture: false,
-      ssimScore: replayCmp.ssimScore,
-      pixelDeltaPercentage: replayCmp.pixelDeltaPercentage,
-      mismatchedPixelCount: replayCmp.mismatchedPixelCount,
+      scored: false,
       status: judged.status,
+      reasons: judged.reasons,
     },
     secondViewport: {
       width: narrowPng.width,
@@ -476,21 +478,21 @@ mkdirSync(evidenceDir, { recursive: true });
 const advPath = join(evidenceDir, "adversarial-noise.png");
 writeFileSync(advPath, advRaw);
 const advDecoded = PNG.sync.read(advRaw);
-const advBuilt = recon.reconstructionHtml({ width: advDecoded.width, height: advDecoded.height, data: advDecoded.data });
-assert.equal(recon.isCopiedFixture(advBuilt.html, advRaw, "adversarial-noise.png"), false);
-assert.equal(advBuilt.coverage, advDecoded.width * advDecoded.height);
-const advShot = await renderHtml(advBuilt.html, advDecoded.width, advDecoded.height);
-const advCmp = compareVisualBuffers(advRaw, advShot, {
-  viewport: { width: advDecoded.width, height: advDecoded.height, devicePixelRatio: 1 },
-  browserVersion,
-});
+const advImage = { width: advDecoded.width, height: advDecoded.height, data: advDecoded.data };
+const advBuilt = recon.reconstructionHtml(advImage);
+assert.equal(gate.isExactRgbPartitionReplay(advBuilt.html, advImage), true);
+assert.equal(recon.isCopiedFixture(advBuilt.html, advRaw, "adversarial-noise.png", advImage), true);
 const advJudge = gate.judgeNativeReconstruction({
-  ssimScore: advCmp.ssimScore,
-  pixelDeltaPercentage: advCmp.pixelDeltaPercentage,
+  html: advBuilt.html,
+  image: advImage,
+  ssimScore: 1,
+  pixelDeltaPercentage: 0,
   exactViewport: true,
   copiedFixture: false,
 });
-assert.equal(advJudge.status, "PASS");
+assert.equal(advJudge.status, "FAIL_CONTRACT");
+assert.notEqual(advJudge.status, "PASS");
+replayCandidates.push({ html: advBuilt.html, image: advImage });
 
 const mutant = recon.fixtureCopyMutant(readFileSync(join(fixturesDir, "mobile-app.png")));
 const mutantBytes = readFileSync(join(fixturesDir, "mobile-app.png"));
@@ -501,6 +503,8 @@ const mutantCmp = compareVisualBuffers(mutantBytes, mutantShot, {
   browserVersion,
 });
 const mutantJudge = gate.judgeNativeReconstruction({
+  html: mutant,
+  image: { width: 390, height: 844, data: PNG.sync.read(mutantBytes).data },
   ssimScore: mutantCmp.ssimScore,
   pixelDeltaPercentage: mutantCmp.pixelDeltaPercentage,
   exactViewport: true,
@@ -519,18 +523,38 @@ for (const target of ["react", "swiftui", "compose", "flutter", "react-native"])
 const viewports = new Set(rows.map((r) => `${r.viewport.width}x${r.viewport.height}`));
 assert.ok(viewports.size >= 2, "at least two frozen viewports");
 
+const spoofedReplayScope = gate.judgeLaneScope({
+  nativeStatuses: replayCandidates.map(() => "PASS"),
+  narrowReferencePaired: true,
+  nonHtmlVisualRendered: true,
+  candidates: replayCandidates,
+});
+assert.equal(spoofedReplayScope.final, "HOLD");
+assert.notEqual(spoofedReplayScope.final, "PASS_WITHIN_TESTED_SCOPE");
+assert.ok(spoofedReplayScope.killed.includes("rectangle partition replay of source bitmap"));
+const omittedScope = gate.judgeLaneScope({
+  nativeStatuses: ["PASS"],
+  narrowReferencePaired: true,
+  nonHtmlVisualRendered: true,
+});
+assert.equal(omittedScope.final, "HOLD");
 const scope = gate.judgeLaneScope({
-  nativeStatuses: [...rows.map((r) => r.after.status), advJudge.status],
+  nativeStatuses: rows.map((r) => r.measured.status),
   narrowReferencePaired: false,
   nonHtmlVisualRendered: false,
+  candidates: rows.map((r, i) => ({ html: "legacy scaffold", image: replayCandidates[i].image })),
 });
-assert.equal(scope.final, "PASS_WITHIN_TESTED_SCOPE");
-assert.ok(scope.outsideScope.length >= 2);
+assert.equal(scope.final, "HOLD");
+assert.notEqual(scope.final, "PASS_WITHIN_TESTED_SCOPE");
 
 const desktop = rows.find((r) => r.id === "desktop-landing");
+assert.equal(desktop.measured.ssimScore, 0.9153);
+assert.ok(desktop.measured.ssimScore < gate.PASS_MIN_SSIM);
+assert.equal(gate.PASS_MIN_SSIM, 0.95);
 const evidence = {
   lane: "R3-C",
   startSha: "f331dc9c89c3d911ab8abc7d3e0d87b10396f37c",
+  killedTip: "4cb762ee921ed47c5436bc6752eb0b1cae610449",
   bar: { minSsim: 0.95, maxPixelDeltaPercent: 5, lowered: false },
   wasmSha256: wasm.sha256,
   tesseract: "5.5.3",
@@ -545,28 +569,30 @@ const evidence = {
     ocrTokenRecallInLegacyHtml: r.before.ocrTokenRecallInLegacyHtml,
     ocrWordCount: r.before.ocrWordCount,
   })),
-  cycles: [
-    {
-      n: 1,
-      cause: "Legacy HTML is a 3-band semantic scaffold plus three CSS mean-fills. Mismatch mass sits in flat color, edges, and text because those paints cannot represent measured geometry. desktop-landing was already close in flat area (historical SSIM 0.9153) but windowed SSIM still failed on residual structure.",
-      change: "Replace the scored HTML candidate with a measured exact-RGB rectangle partition replayed by fillRect at the fixture viewport. Do not embed the fixture. Leave the spent CSS repair cap unused for this candidate.",
-      expected: "Native SSIM moves from the legacy plateau toward the 0.95 bar on every frozen viewport, including the high-frequency adversarial PNG, without a fixture data-URL.",
-      measured: {
-        desktopLanding: { before: desktop.before.ssimScore, after: desktop.after.ssimScore, viewport: "1280x800" },
-        rows: rows.map((r) => ({ id: r.id, before: r.before.ssimScore, after: r.after.ssimScore, deltaAfter: r.after.pixelDeltaPercentage, viewport: `${r.viewport.width}x${r.viewport.height}` })),
-        adversarial: { ssim: advCmp.ssimScore, delta: advCmp.pixelDeltaPercentage, viewport: "320x200" },
-      },
+  repairCycleStarted: false,
+  rejectedReplay: {
+    test: "exact-RGB rectangle partition replay fails closed",
+    disposition: "KILLED",
+    cause: "fillRect of an exact-RGB run-length partition is a pixel replay of the fixture PNG",
+    change: "The gate fails closed when the HTML is that partition, even if copiedFixture is false. judgeLaneScope cannot emit PASS_WITHIN_TESTED_SCOPE for it.",
+    expected: "HOLD. Measured SSIM stays the pre-replay scaffold (desktop-landing 0.9153).",
+    measured: {
+      desktopLanding: { ssim: desktop.measured.ssimScore, delta: desktop.measured.pixelDeltaPercentage, viewport: "1280x800" },
+      rows: rows.map((r) => ({
+        id: r.id,
+        ssim: r.measured.ssimScore,
+        delta: r.measured.pixelDeltaPercentage,
+        viewport: `${r.viewport.width}x${r.viewport.height}`,
+        replay: r.rejectedReplay.status,
+      })),
     },
-  ],
-  stoppedAfterCycle: 1,
-  stopReason: "Cycle 1 moved the dominant native mismatch to zero on every frozen fixture and the adversarial PNG. Another cycle would not be aimed at a remaining dominant native error. Narrow paired SSIM and non-HTML renders stay HOLD_UNPROVEN.",
+  },
   rows,
   adversarial: {
     viewport: { width: 320, height: 200 },
-    ssimScore: advCmp.ssimScore,
-    pixelDeltaPercentage: advCmp.pixelDeltaPercentage,
+    scored: false,
     status: advJudge.status,
-    copiedFixture: false,
+    reasons: advJudge.reasons,
   },
   mutant: {
     kind: "data-url copy of mobile-app.png",
@@ -579,15 +605,31 @@ const evidence = {
   nonHtml,
   pixelPerfectClaim: false,
   releasePass: false,
-  final: scope.final,
+  final: "HOLD",
   outsideScope: scope.outsideScope,
+  laneScope: scope.final,
+  spoofedReplayScope: spoofedReplayScope.final,
 };
+assert.equal(evidence.final, "HOLD");
+assert.equal(evidence.pixelPerfectClaim, false);
 writeFileSync(join(evidenceDir, "R3C_VISION_EVIDENCE.json"), JSON.stringify(evidence, null, 2));
+test("exact-RGB rectangle partition replay fails closed", () => {
+  assert.equal(evidence.final, "HOLD");
+  assert.equal(desktop.measured.ssimScore, 0.9153);
+  assert.equal(spoofedReplayScope.final, "HOLD");
+  assert.notEqual(spoofedReplayScope.final, "PASS_WITHIN_TESTED_SCOPE");
+  assert.equal(evidence.pixelPerfectClaim, false);
+  for (const target of ["react", "swiftui", "compose", "flutter", "react-native"]) {
+    assert.equal(nonHtml[target].visual, "HOLD_UNPROVEN");
+    assert.equal(nonHtml[target].qualified, false);
+  }
+});
 console.log(JSON.stringify({
   ok: true,
+  test: "exact-RGB rectangle partition replay fails closed",
   final: evidence.final,
-  desktop: evidence.cycles[0].measured.desktopLanding,
-  rows: evidence.cycles[0].measured.rows,
+  desktopSsim: desktop.measured.ssimScore,
+  rows: evidence.rejectedReplay.measured.rows,
   adversarial: evidence.adversarial,
   nonHtml,
   mutant: evidence.mutant.status,

@@ -1,9 +1,9 @@
 /**
  * Screenshot reconstruction as a measured rectangle partition.
  * Every source pixel belongs to one axis-aligned run of its exact RGB.
- * The HTML replays those runs with canvas fillRect. It does not embed the
- * fixture bytes, a data-URL, or an <img> of the screenshot file.
- * This is a raster reconstruction, not a claim that non-HTML targets render.
+ * The HTML replays those runs with canvas fillRect. That exact-RGB partition
+ * is a bitmap replay. isExactRgbPartitionReplay must fail it closed. It is not
+ * a passable reconstruction.
  */
 export const RECONSTRUCTION_METHOD = "measured-rectangle-partition-v1";
 
@@ -97,11 +97,82 @@ function bytesToBase64(bytes: Uint8Array): string {
   return btoa(binary);
 }
 
+function parseEncodedRects(html: string): MeasuredRect[] {
+  const rects: MeasuredRect[] = [];
+  const tuples = /\[\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*["'](#[0-9a-fA-F]{6})["']\s*\]/g;
+  for (const match of html.matchAll(tuples)) {
+    rects.push({
+      x: Number(match[1]),
+      y: Number(match[2]),
+      w: Number(match[3]),
+      h: Number(match[4]),
+      hex: match[5].toLowerCase(),
+    });
+  }
+  const paints = /fillStyle\s*=\s*["'](#[0-9a-fA-F]{6})["'][\s\S]{0,80}?fillRect\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\)/g;
+  for (const match of html.matchAll(paints)) {
+    rects.push({
+      x: Number(match[2]),
+      y: Number(match[3]),
+      w: Number(match[4]),
+      h: Number(match[5]),
+      hex: match[1].toLowerCase(),
+    });
+  }
+  return rects;
+}
+
+function pixelHex(data: ArrayLike<number>, width: number, x: number, y: number): string {
+  const i = (y * width + x) << 2;
+  const r = data[i].toString(16).padStart(2, "0");
+  const g = data[i + 1].toString(16).padStart(2, "0");
+  const b = data[i + 2].toString(16).padStart(2, "0");
+  return `#${r}${g}${b}`;
+}
+
 /**
- * True when the document is the fixture file (data URL, matching filename, or
- * the fixture's own base64 signature). A rectangle replay is not a copy.
+ * True when the HTML is an exact-RGB rectangle or run-length partition of the
+ * source bitmap (full coverage, source colors, no gaps). That is a pixel
+ * replay, not a reconstruction that may be scored.
  */
-export function isCopiedFixture(html: string, fixture: Uint8Array, fileName?: string): boolean {
+export function isExactRgbPartitionReplay(html: string, image: RgbaImage): boolean {
+  const rects = parseEncodedRects(html);
+  if (!rects.length || image.width < 1 || image.height < 1) return false;
+  const area = rects.reduce((sum, rect) => sum + rect.w * rect.h, 0);
+  if (area !== image.width * image.height) return false;
+  const seen = new Uint8Array(image.width * image.height);
+  for (const rect of rects) {
+    if (!Number.isInteger(rect.x) || !Number.isInteger(rect.y) || !Number.isInteger(rect.w) || !Number.isInteger(rect.h)) {
+      return false;
+    }
+    if (rect.w < 1 || rect.h < 1) return false;
+    const x1 = rect.x + rect.w;
+    const y1 = rect.y + rect.h;
+    if (rect.x < 0 || rect.y < 0 || x1 > image.width || y1 > image.height) return false;
+    for (let y = rect.y; y < y1; y++) {
+      for (let x = rect.x; x < x1; x++) {
+        const p = y * image.width + x;
+        if (seen[p]) return false;
+        seen[p] = 1;
+        if (pixelHex(image.data, image.width, x, y) !== rect.hex) return false;
+      }
+    }
+  }
+  for (let i = 0; i < seen.length; i++) if (!seen[i]) return false;
+  return true;
+}
+
+/**
+ * True for a fixture file embed, or for an exact-RGB rectangle partition of
+ * the source bitmap when the pixels are supplied.
+ */
+export function isCopiedFixture(
+  html: string,
+  fixture: Uint8Array,
+  fileName?: string,
+  image?: RgbaImage,
+): boolean {
+  if (image && isExactRgbPartitionReplay(html, image)) return true;
   if (/data:image\//i.test(html)) return true;
   if (/<img\b/i.test(html)) return true;
   if (fileName) {
