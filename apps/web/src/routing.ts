@@ -29,9 +29,18 @@ export function pathForView(view: AppView): string {
   return VIEW_PATH[view] ?? "/";
 }
 
-export function viewFromPath(pathname: string): AppView {
-  const clean = (pathname.replace(/\/+$/, "") || "/") as string;
-  return PATH_VIEW[clean] ?? PATH_VIEW[pathname] ?? "home";
+export function resolveRoute(pathname: string):
+  | { kind: "view"; view: AppView; canonicalPath: string }
+  | { kind: "not-found"; pathname: string } {
+  const clean = pathname.replace(/\/+$/, "") || "/";
+  const view = PATH_VIEW[clean];
+  if (!view) return { kind: "not-found", pathname: clean };
+  return { kind: "view", view, canonicalPath: VIEW_PATH[view] };
+}
+
+export function viewFromPath(pathname: string): AppView | null {
+  const resolved = resolveRoute(pathname);
+  return resolved.kind === "view" ? resolved.view : null;
 }
 
 export function navigateTo(

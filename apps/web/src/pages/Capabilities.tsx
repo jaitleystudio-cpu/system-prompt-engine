@@ -1,7 +1,12 @@
-import { pathForView } from "../routing";
+import type { AppView } from "../routing";
+import { InAppLink } from "../shell/inAppLink";
 
 /** Honest capability landing for search + answer engines — ranking claims stay unproven. */
-export function Capabilities() {
+export function Capabilities({
+  onNavigate,
+}: {
+  onNavigate: (view: AppView) => void;
+}) {
   return (
     <section
       className="spe-capabilities-page spe-privacy-page"
@@ -187,16 +192,24 @@ export function Capabilities() {
 
       <ul className="spe-seo-links spe-capabilities-links">
         <li>
-          <a href={pathForView("create")}>Open the free prompt builder</a>
+          <InAppLink view="create" onNavigate={onNavigate}>
+            Open the free prompt builder
+          </InAppLink>
         </li>
         <li>
-          <a href={pathForView("privacy")}>Privacy proof — what stays local</a>
+          <InAppLink view="privacy" onNavigate={onNavigate}>
+            Privacy proof — what stays local
+          </InAppLink>
         </li>
         <li>
-          <a href={pathForView("code")}>Screenshot-to-code prompts</a>
+          <InAppLink view="code" onNavigate={onNavigate}>
+            Screenshot-to-code prompts
+          </InAppLink>
         </li>
         <li>
-          <a href={pathForView("lab")}>Daily Lab specimens</a>
+          <InAppLink view="lab" onNavigate={onNavigate}>
+            Daily Lab specimens
+          </InAppLink>
         </li>
       </ul>
     </section>

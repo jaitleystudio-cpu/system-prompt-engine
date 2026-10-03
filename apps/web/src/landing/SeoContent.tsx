@@ -1,7 +1,12 @@
-import { pathForView } from "../routing";
+import type { AppView } from "../routing";
+import { InAppLink } from "../shell/inAppLink";
 
 /** Search-targeted semantic content BELOW the premium hero — not stuffed into the theater. */
-export function SeoContent() {
+export function SeoContent({
+  onNavigate,
+}: {
+  onNavigate: (view: AppView) => void;
+}) {
   return (
     <section
       className="spe-seo-content"
@@ -20,30 +25,34 @@ export function SeoContent() {
         </p>
         <ul className="spe-seo-links">
           <li>
-            <a href={pathForView("create")}>
+            <InAppLink view="create" onNavigate={onNavigate}>
               Open the free prompt builder (Create)
-            </a>
+            </InAppLink>
           </li>
           <li>
-            <a href={pathForView("code")}>
+            <InAppLink view="code" onNavigate={onNavigate}>
               Screenshot-to-code prompt engineering tool
-            </a>
+            </InAppLink>
           </li>
           <li>
-            <a href={pathForView("lab")}>Browse Daily Lab prompt ideas</a>
+            <InAppLink view="lab" onNavigate={onNavigate}>
+              Browse Daily Lab prompt ideas
+            </InAppLink>
           </li>
           <li>
-            <a href={pathForView("capabilities")}>
+            <InAppLink view="capabilities" onNavigate={onNavigate}>
               SPE capabilities — local contracts and portability
-            </a>
+            </InAppLink>
           </li>
           <li>
-            <a href={pathForView("privacy")}>
+            <InAppLink view="privacy" onNavigate={onNavigate}>
               Privacy proof — what stays on this device
-            </a>
+            </InAppLink>
           </li>
           <li>
-            <a href={pathForView("my-work")}>My Work — prompts saved on device</a>
+            <InAppLink view="my-work" onNavigate={onNavigate}>
+              My Work — prompts saved on device
+            </InAppLink>
           </li>
         </ul>
         <p className="spe-seo-phrases">
