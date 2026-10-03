@@ -17,18 +17,21 @@ export default mergeConfig(base, {
     host: "127.0.0.1",
     port: 5199,
     strictPort: true,
+    fs: { allow: [join(here, "../..")] },
   },
   plugins: [
     {
       name: "r3g-harness-page",
       configureServer(server) {
+        const harnessSrc = "/@fs" + join(here, "harness.js");
+        const page = html.replace("__HARNESS_SRC__", harnessSrc);
         server.middlewares.use((req, res, next) => {
           const path = (req.url || "/").split("?")[0];
           if (path !== "/__r3g/harness.html") return next();
           res.statusCode = 200;
           res.setHeader("Content-Type", "text/html; charset=utf-8");
           res.setHeader("Cache-Control", "no-store");
-          res.end(html);
+          res.end(page);
         });
       },
     },

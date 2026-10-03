@@ -82,6 +82,11 @@ async function runPage(browser, origin, { phase, repeats, canary, cacheDisabled 
     await client.send("Network.enable");
   }
   const requests = [];
+  const pageErrors = [];
+  page.on("pageerror", (err) => pageErrors.push(String(err && err.message ? err.message : err)));
+  page.on("console", (msg) => {
+    if (msg.type() === "error") pageErrors.push(msg.text());
+  });
   page.on("request", (request) => {
     const url = request.url();
     const postData = request.postData() || "";
@@ -102,9 +107,19 @@ async function runPage(browser, origin, { phase, repeats, canary, cacheDisabled 
     });
   });
   const url = `${origin}/__r3g/harness.html?canary=${encodeURIComponent(canary)}&repeats=${repeats}&phase=${phase}`;
-  await page.goto(url, { waitUntil: "networkidle", timeout: 30000 });
-  await page.waitForFunction(() => window.__r3g && window.__r3g.done, null, { timeout: 30000 });
+  await page.goto(url, { waitUntil: "load", timeout: 30000 });
+  try {
+    await page.waitForFunction(() => window.__r3g && window.__r3g.done, null, { timeout: 60000 });
+  } catch (err) {
+    const result = {
+      done: true,
+      fatal: `harness_timeout: ${pageErrors.join(" | ") || err.message}`,
+    };
+    await context.close();
+    return { result, requests };
+  }
   const result = await page.evaluate(() => window.__r3g);
+  if (pageErrors.length && result && !result.fatal) result.pageErrors = pageErrors;
   await context.close();
   return { result, requests };
 }
