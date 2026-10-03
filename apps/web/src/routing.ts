@@ -8,7 +8,9 @@ export type AppView =
   | "my-work"
   | "privacy"
   | "capabilities"
-  | "workspace";
+  | "workspace"
+  | "website"
+  | "media";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -19,7 +21,17 @@ export const VIEW_PATH: Record<AppView, string> = {
   privacy: "/privacy",
   capabilities: "/capabilities",
   workspace: "/workspace",
+  website: "/website",
+  media: "/media",
 };
+
+/** Device-local and tool surfaces. Not advertised to crawlers. */
+export const NOINDEX_VIEWS: ReadonlySet<AppView> = new Set([
+  "workspace",
+  "my-work",
+  "website",
+  "media",
+]);
 
 const PATH_VIEW: Record<string, AppView> = Object.fromEntries(
   Object.entries(VIEW_PATH).map(([view, path]) => [path, view as AppView]),
@@ -116,6 +128,18 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Workspace — Inspect & Refine Prompts | SPE",
     description:
       "Inspect intent, structure, and your finished prompt. Refine and export a portable .spe file.",
+  },
+  website: {
+    path: "/website",
+    title: "Website — Local spec preview | SPE",
+    description:
+      "Turn a local website spec into a preview and a saved file. This does not open a web address or publish a site.",
+  },
+  media: {
+    path: "/media",
+    title: "Media — Not available | SPE",
+    description:
+      "Media is not mounted in this build. Nothing on this route can capture or generate media.",
   },
 };
 

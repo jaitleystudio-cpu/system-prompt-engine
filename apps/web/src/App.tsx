@@ -56,8 +56,12 @@ import {
   type AppView,
 } from "./routing";
 import { InAppLink } from "./shell/inAppLink";
+import { MediaRoute } from "./media/MediaRoute";
+import { WEBSITE_MOUNT } from "./shell/mountStatus";
 import { NotFound } from "./shell/NotFound";
+import { SkipLink } from "./shell/SkipLink";
 import { EMPTY_IDEA_MESSAGE } from "./shell/shellGuards";
+import { WebsiteProduct } from "./website/WebsiteProduct";
 import { SeoHead } from "./ui/SeoHead";
 import { DotPattern } from "./ui/DotPattern";
 import { SeoContent } from "./landing/SeoContent";
@@ -847,21 +851,16 @@ export default function App() {
 
   return (
     <>
-      <a
-        className="skip-link"
-        href="#main"
-        onClick={(e) => {
-          e.preventDefault();
-          const main = document.getElementById("main");
-          main?.focus({ preventScroll: false });
-          main?.scrollIntoView();
-        }}
-      >
-        Skip to main content
-      </a>
+      <SkipLink />
       <SeoHead
         view={view}
-        unlisted={notFound || view === "workspace"}
+        unlisted={
+          notFound ||
+          view === "workspace" ||
+          view === "my-work" ||
+          view === "website" ||
+          view === "media"
+        }
         notFound={notFound}
       />
       <Nav
@@ -1147,6 +1146,17 @@ export default function App() {
           />
         )}
 
+        {!notFound && view === "website" && (
+          <div
+            data-shell-mount="website"
+            data-shell-mount-sha={WEBSITE_MOUNT.sha}
+          >
+            <WebsiteProduct />
+          </div>
+        )}
+
+        {!notFound && view === "media" && <MediaRoute />}
+
         {!notFound && view === "my-work" && (
           <MyWork
             historyOptIn={historyOptIn}
@@ -1327,6 +1337,7 @@ export default function App() {
           <InAppLink view="home" onNavigate={setView}>Home</InAppLink>
           <InAppLink view="create" onNavigate={setView}>Create</InAppLink>
           <InAppLink view="code" onNavigate={setView}>Code</InAppLink>
+          <InAppLink view="website" onNavigate={setView}>Website</InAppLink>
           <InAppLink view="lab" onNavigate={setView}>Daily Lab</InAppLink>
           <InAppLink view="my-work" onNavigate={setView}>My Work</InAppLink>
           <InAppLink view="capabilities" onNavigate={setView}>

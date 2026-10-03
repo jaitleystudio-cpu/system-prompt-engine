@@ -1,0 +1,46 @@
+.website-product {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  color: #111827;
+  background: #f8fafc;
+}
+
+.website-product h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.website-product-modes,
+.website-product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.website-product textarea {
+  width: 100%;
+  min-height: 180px;
+  box-sizing: border-box;
+  font: 0.875rem/1.5 ui-monospace, monospace;
+}
+
+.website-product-preview {
+  width: 100%;
+  min-height: 320px;
+  border: 1px solid #cbd5e1;
+  background: white;
+}
+
+.website-product-note {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .website-product,
+  .website-product * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -7421,3 +7421,28 @@ html[data-theme="light"] .prompt-studio .review-questions {
   background: transparent;
   border-color: #c4bbaa;
 }
+
+/* R3-E: reserved media route. Honest unavailable state, both themes. */
+.spe-mount-pending {
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #141820;
+  color: #f4f1ea;
+}
+.spe-mount-pending h1 {
+  margin: 0 0 0.75rem;
+  font-size: 1.75rem;
+}
+html[data-theme="light"] .spe-mount-pending {
+  background: #f4f1ea;
+  color: #141820;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spe-mount-pending,
+  .spe-mount-pending * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
