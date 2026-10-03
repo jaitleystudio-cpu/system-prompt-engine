@@ -83,7 +83,7 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
             <p className="spe-lab-story">{active.editorialStory}</p>
             <dl className="spe-lab-meta">
               <div>
-                <dt>Publish date</dt>
+                <dt>Queue date</dt>
                 <dd>{active.publishDate}</dd>
               </div>
               <div>
@@ -102,7 +102,7 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
               </div>
               <div>
                 <dt>Status</dt>
-                <dd>{active.status}</dd>
+                <dd>Research preview</dd>
               </div>
             </dl>
             <pre className="spe-lab-seed">{active.buildPrompt}</pre>

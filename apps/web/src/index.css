@@ -2659,6 +2659,13 @@ html[data-theme="light"] .spe-bound-notice {
 .spe-nav-links a.spe-nav-cta {
   opacity: 1;
 }
+/* Dark default: later `.spe-nav-links a { background: transparent }` would otherwise win. */
+html[data-theme="dark"] .spe-nav-links a.spe-nav-cta,
+html:not([data-theme]) .spe-nav-links a.spe-nav-cta {
+  background: #eff2ff;
+  color: #0a1020;
+  opacity: 1;
+}
 .spe-seo-content {
   padding: 0 1.5rem 4.75rem;
   background: transparent;

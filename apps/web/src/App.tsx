@@ -48,13 +48,16 @@ import {
   type SpeArtifactV1,
   type TargetId,
 } from "@spe/web-runtime";
+import { focusMainAfterNavigation } from "./a11y/focusOnView";
 import { Nav } from "./layout/Nav";
 import {
   navigateTo,
-  pathForView,
-  viewFromPath,
+  resolveRoute,
   type AppView,
 } from "./routing";
+import { InAppLink } from "./shell/inAppLink";
+import { NotFound } from "./shell/NotFound";
+import { EMPTY_IDEA_MESSAGE } from "./shell/shellGuards";
 import { SeoHead } from "./ui/SeoHead";
 import { DotPattern } from "./ui/DotPattern";
 import { SeoContent } from "./landing/SeoContent";
@@ -90,6 +93,13 @@ type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
 /** Intent lens provenance — SIMPLE/CREATE rederive; INSPECT/PRO preserve edits. */
 type IntentProvenance = "AUTO_DERIVED_INTENT" | "USER_EDITED_INTENT";
 type IntentLensState = ReturnType<typeof defaultIntentLens>;
+
+function readInitialRoute(): { view: View; notFound: boolean } {
+  if (typeof window === "undefined") return { view: "home", notFound: false };
+  const resolved = resolveRoute(window.location.pathname);
+  if (resolved.kind === "not-found") return { view: "home", notFound: true };
+  return { view: resolved.view, notFound: false };
+}
 
 const CREATE_INTENT_FIELD_IDS = new Set(["desired-output", "desired-example"]);
 
@@ -195,10 +205,11 @@ function phaseToScene(
 export default function App() {
   const clientRef = useRef<EngineClient | null>(null);
   const revision = useRef(0);
-  const [view, setViewState] = useState<View>(() =>
-    typeof window === "undefined" ? "home" : viewFromPath(window.location.pathname),
-  );
+  const initialRoute = readInitialRoute();
+  const [view, setViewState] = useState<View>(initialRoute.view);
+  const [notFound, setNotFound] = useState(initialRoute.notFound);
   const setView = useCallback((next: View, opts: { replace?: boolean } = {}) => {
+    setNotFound(false);
     setViewState(next);
     navigateTo(next, opts);
   }, []);
@@ -257,17 +268,27 @@ export default function App() {
 
   useEffect(() => {
     // Sync history state without wiping ?specimen= (Batch G deep-link).
-    const pathView = viewFromPath(window.location.pathname);
-    if (window.location.pathname !== pathForView(pathView)) {
-      navigateTo(pathView, { replace: true });
-    } else {
-      window.history.replaceState(
-        { view: pathView },
-        "",
-        window.location.pathname + window.location.search,
-      );
-    }
-    const onPop = () => setViewState(viewFromPath(window.location.pathname));
+    // Unknown paths stay put. They must not be rewritten to Home.
+    const applyPath = (pathname: string) => {
+      const resolved = resolveRoute(pathname);
+      if (resolved.kind === "not-found") {
+        setNotFound(true);
+        return;
+      }
+      setNotFound(false);
+      setViewState(resolved.view);
+      if (window.location.pathname !== resolved.canonicalPath) {
+        navigateTo(resolved.view, { replace: true });
+      } else {
+        window.history.replaceState(
+          { view: resolved.view },
+          "",
+          window.location.pathname + window.location.search,
+        );
+      }
+    };
+    applyPath(window.location.pathname);
+    const onPop = () => applyPath(window.location.pathname);
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
@@ -315,12 +336,7 @@ export default function App() {
 
   const isInitialMount = useRef(true);
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    window.scrollTo({ top: 0, behavior: "instant" });
-    document.getElementById("main")?.focus({ preventScroll: true });
+    focusMainAfterNavigation(isInitialMount);
   }, [view]);
 
   const privacy = useMemo(() => privacyFromEnvelope(envelope), [envelope]);
@@ -410,8 +426,8 @@ export default function App() {
       const goal = (requestText ?? userRequest).trim();
       if (!goal) {
         setError({
-          code: "INVALID_JSON",
-          message: "Enter what you want SPE to build.",
+          code: "EMPTY_BRIEF",
+          message: EMPTY_IDEA_MESSAGE,
         });
         return;
       }
@@ -843,17 +859,28 @@ export default function App() {
       >
         Skip to main content
       </a>
-      <SeoHead view={view} />
+      <SeoHead
+        view={view}
+        unlisted={notFound || view === "workspace"}
+        notFound={notFound}
+      />
       <Nav
         scrolled={scrolled || view !== "home"}
-        view={view}
+        view={notFound ? null : view}
         onNavigate={setView}
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
       />
 
       <main id="main" tabIndex={-1}>
-        {view === "home" && (
+        {notFound ? (
+          <NotFound
+            path={
+              typeof window === "undefined" ? "" : window.location.pathname
+            }
+            onNavigate={setView}
+          />
+        ) : view === "home" && (
           <>
             <Hero
               onReset={() => {
@@ -893,6 +920,7 @@ export default function App() {
               }}
               onCopy={() => void onCopy()}
               onExport={onExportSpe}
+              onNavigate={setView}
             />
             <HomeQuiet
               onCreate={() => {
@@ -904,11 +932,11 @@ export default function App() {
                 window.scrollTo(0, 0);
               }}
             />
-            <SeoContent />
+            <SeoContent onNavigate={setView} />
           </>
         )}
 
-        {(view === "create" || view === "code") && (
+        {!notFound && (view === "create" || view === "code") && (
           <section className="spe-create" aria-labelledby="create-title">
             <DotPattern surface="create" />
             <header className="spe-create-head">
@@ -1099,7 +1127,7 @@ export default function App() {
           </section>
         )}
 
-        {view === "lab" && (
+        {!notFound && view === "lab" && (
           <DailyLab
             onOpenInSpe={(s) => {
               applyLabAcquisition(s);
@@ -1119,7 +1147,7 @@ export default function App() {
           />
         )}
 
-        {view === "my-work" && (
+        {!notFound && view === "my-work" && (
           <MyWork
             historyOptIn={historyOptIn}
             setHistoryOptIn={(v) => {
@@ -1141,10 +1169,10 @@ export default function App() {
           />
         )}
 
-        {view === "capabilities" && <Capabilities />}
-        {view === "privacy" && <PrivacyProof />}
+        {!notFound && view === "capabilities" && <Capabilities onNavigate={setView} />}
+        {!notFound && view === "privacy" && <PrivacyProof />}
 
-        {view === "workspace" && (
+        {!notFound && view === "workspace" && (
           <>
             <ContextProtocolControls
               source={publicSource}
@@ -1296,13 +1324,15 @@ export default function App() {
           forward.
         </div>
         <nav className="spe-footer-links" aria-label="Footer">
-          <a href={pathForView("home")}>Home</a>
-          <a href={pathForView("create")}>Create</a>
-          <a href={pathForView("code")}>Code</a>
-          <a href={pathForView("lab")}>Daily Lab</a>
-          <a href={pathForView("my-work")}>My Work</a>
-          <a href={pathForView("capabilities")}>Capabilities</a>
-          <a href={pathForView("privacy")}>Privacy</a>
+          <InAppLink view="home" onNavigate={setView}>Home</InAppLink>
+          <InAppLink view="create" onNavigate={setView}>Create</InAppLink>
+          <InAppLink view="code" onNavigate={setView}>Code</InAppLink>
+          <InAppLink view="lab" onNavigate={setView}>Daily Lab</InAppLink>
+          <InAppLink view="my-work" onNavigate={setView}>My Work</InAppLink>
+          <InAppLink view="capabilities" onNavigate={setView}>
+            Capabilities
+          </InAppLink>
+          <InAppLink view="privacy" onNavigate={setView}>Privacy</InAppLink>
         </nav>
         <div className="claim-strip">
           {ui.claim}

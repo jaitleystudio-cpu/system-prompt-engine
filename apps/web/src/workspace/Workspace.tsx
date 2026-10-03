@@ -1,4 +1,5 @@
 import { SpeechInput } from "../input/SpeechInput";
+import { workspaceBuildDisabled } from "../shell/shellGuards";
 import { ui } from "@spe/human-perspective";
 import { HumanError } from "../ui/HumanError";
 import type {
@@ -246,7 +247,7 @@ export function Workspace(props: Props) {
           <button
             type="button"
             className="spe-build"
-            disabled={busy}
+            disabled={workspaceBuildDisabled(busy, userRequest)}
             onClick={onCompile}
           >
             {busy ? ui.working : ui.build}
