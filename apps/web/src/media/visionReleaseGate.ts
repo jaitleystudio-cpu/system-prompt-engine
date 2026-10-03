@@ -240,3 +240,64 @@ export function judgeRelease(input: ReleaseInput): {
     input.responsive.narrowSsim >= PASS_MIN_SSIM;
   return { status, pixelPerfect, reasons };
 }
+
+export function judgeNativeReconstruction(input: {
+  ssimScore: number | null;
+  pixelDeltaPercentage: number | null;
+  exactViewport: boolean;
+  copiedFixture: boolean;
+}): { status: ReleaseStatus; reasons: string[]; bar: { minSsim: number; maxPixelDeltaPercent: number } } {
+  const reasons: string[] = [];
+  if (input.copiedFixture) reasons.push("fixture-output cheat");
+  if (!input.exactViewport) reasons.push("viewport is not the frozen fixture viewport");
+  if (input.ssimScore == null || input.pixelDeltaPercentage == null) {
+    reasons.push("rendered comparison not measured");
+  }
+  if (input.ssimScore != null && input.ssimScore < PASS_MIN_SSIM) reasons.push("native SSIM below bar");
+  if (
+    input.pixelDeltaPercentage != null &&
+    input.pixelDeltaPercentage > PASS_MAX_PIXEL_DELTA_PERCENT
+  ) {
+    reasons.push("pixel delta above bar");
+  }
+  const measured =
+    input.exactViewport &&
+    !input.copiedFixture &&
+    input.ssimScore != null &&
+    input.pixelDeltaPercentage != null;
+  let status: ReleaseStatus;
+  if (reasons.length === 0) status = "PASS";
+  else if (measured) status = "MEASURED_BELOW_BAR";
+  else status = "HOLD_UNPROVEN";
+  return {
+    status,
+    reasons,
+    bar: { minSsim: PASS_MIN_SSIM, maxPixelDeltaPercent: PASS_MAX_PIXEL_DELTA_PERCENT },
+  };
+}
+
+/**
+ * Native HTML at the frozen fixture viewport can clear the bar without
+ * promoting unrendered targets or an unpaired narrow viewport to PASS.
+ * The 0.95 / 5% bar is unchanged.
+ */
+export function judgeLaneScope(input: {
+  nativeStatuses: ReleaseStatus[];
+  narrowReferencePaired: boolean;
+  nonHtmlVisualRendered: boolean;
+}): {
+  final: "PASS_WITHIN_TESTED_SCOPE" | "HOLD";
+  tested: "html-exact-fixture-viewport";
+  outsideScope: string[];
+} {
+  const outsideScope: string[] = [];
+  if (!input.narrowReferencePaired) outsideScope.push("responsive narrow-viewport SSIM HOLD_UNPROVEN");
+  if (!input.nonHtmlVisualRendered) outsideScope.push("non-HTML visual render HOLD_UNPROVEN");
+  const nativePass =
+    input.nativeStatuses.length > 0 && input.nativeStatuses.every((status) => status === "PASS");
+  return {
+    final: nativePass ? "PASS_WITHIN_TESTED_SCOPE" : "HOLD",
+    tested: "html-exact-fixture-viewport",
+    outsideScope,
+  };
+}

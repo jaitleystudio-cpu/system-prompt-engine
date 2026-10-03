@@ -1,0 +1,680 @@
+{
+  "lane": "R3-C",
+  "startSha": "f331dc9c89c3d911ab8abc7d3e0d87b10396f37c",
+  "bar": {
+    "minSsim": 0.95,
+    "maxPixelDeltaPercent": 5,
+    "lowered": false
+  },
+  "wasmSha256": "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b",
+  "tesseract": "5.5.3",
+  "chrome": "154.0.8037.97",
+  "comparator": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+  "discrepancyDecomposition": [
+    {
+      "id": "desktop-landing",
+      "viewport": {
+        "ref": "1280x800",
+        "cand": "1280x800",
+        "exact": true
+      },
+      "legacySsim": 0.9153,
+      "legacyDelta": 2.311,
+      "mismatchedPixels": 23664,
+      "mismatchPercentOfImage": 2.3,
+      "meanAbsChannel": 6.01,
+      "layoutRowShiftPx": 0,
+      "buckets": {
+        "type": 66.3,
+        "spacing": 1.1,
+        "radius": 1.1,
+        "shadow": 3.3,
+        "assets": 0.2,
+        "geometry": 14.1,
+        "color": 13.8
+      },
+      "dominantBucket": "type",
+      "ocrTokenRecallInLegacyHtml": {
+        "tokens": 23,
+        "recall": 0
+      },
+      "ocrWordCount": 30
+    },
+    {
+      "id": "mobile-app",
+      "viewport": {
+        "ref": "390x844",
+        "cand": "390x844",
+        "exact": true
+      },
+      "legacySsim": 0.8375,
+      "legacyDelta": 24.093,
+      "mismatchedPixels": 79304,
+      "mismatchPercentOfImage": 24.1,
+      "meanAbsChannel": 8.98,
+      "layoutRowShiftPx": 0,
+      "buckets": {
+        "type": 8.7,
+        "spacing": 10.7,
+        "radius": 0,
+        "shadow": 0.1,
+        "assets": 0.1,
+        "geometry": 1.9,
+        "color": 78.5
+      },
+      "dominantBucket": "color",
+      "ocrTokenRecallInLegacyHtml": {
+        "tokens": 17,
+        "recall": 0
+      },
+      "ocrWordCount": 20
+    },
+    {
+      "id": "form",
+      "viewport": {
+        "ref": "960x720",
+        "cand": "960x720",
+        "exact": true
+      },
+      "legacySsim": 0.8087,
+      "legacyDelta": 15.745,
+      "mismatchedPixels": 108826,
+      "mismatchPercentOfImage": 15.7,
+      "meanAbsChannel": 8.07,
+      "layoutRowShiftPx": 24,
+      "buckets": {
+        "type": 8.1,
+        "spacing": 3.8,
+        "radius": 0.4,
+        "shadow": 0.2,
+        "assets": 0.1,
+        "geometry": 7,
+        "color": 80.4
+      },
+      "dominantBucket": "color",
+      "ocrTokenRecallInLegacyHtml": {
+        "tokens": 16,
+        "recall": 0
+      },
+      "ocrWordCount": 22
+    },
+    {
+      "id": "dashboard-sidebar",
+      "viewport": {
+        "ref": "1280x800",
+        "cand": "1280x800",
+        "exact": true
+      },
+      "legacySsim": 0.7758,
+      "legacyDelta": 99.965,
+      "mismatchedPixels": 1023645,
+      "mismatchPercentOfImage": 100,
+      "meanAbsChannel": 69.69,
+      "layoutRowShiftPx": -24,
+      "buckets": {
+        "type": 2,
+        "spacing": 1.9,
+        "radius": 0.1,
+        "shadow": 0.2,
+        "assets": 0.1,
+        "geometry": 1.1,
+        "color": 94.7
+      },
+      "dominantBucket": "color",
+      "ocrTokenRecallInLegacyHtml": {
+        "tokens": 19,
+        "recall": 0
+      },
+      "ocrWordCount": 24
+    },
+    {
+      "id": "card-grid",
+      "viewport": {
+        "ref": "1100x760",
+        "cand": "1100x760",
+        "exact": true
+      },
+      "legacySsim": 0.7952,
+      "legacyDelta": 99.977,
+      "mismatchedPixels": 835805,
+      "mismatchPercentOfImage": 100,
+      "meanAbsChannel": 52.48,
+      "layoutRowShiftPx": 0,
+      "buckets": {
+        "type": 2.4,
+        "spacing": 2.5,
+        "radius": 0,
+        "shadow": 0.1,
+        "assets": 0,
+        "geometry": 1.6,
+        "color": 93.3
+      },
+      "dominantBucket": "color",
+      "ocrTokenRecallInLegacyHtml": {
+        "tokens": 25,
+        "recall": 0.04
+      },
+      "ocrWordCount": 25
+    },
+    {
+      "id": "dark-difficult",
+      "viewport": {
+        "ref": "1200x800",
+        "cand": "1200x800",
+        "exact": true
+      },
+      "legacySsim": 0.4921,
+      "legacyDelta": 99.741,
+      "mismatchedPixels": 957510,
+      "mismatchPercentOfImage": 99.7,
+      "meanAbsChannel": 34.58,
+      "layoutRowShiftPx": 24,
+      "buckets": {
+        "type": 3.7,
+        "spacing": 2,
+        "radius": 0,
+        "shadow": 0,
+        "assets": 0,
+        "geometry": 1.7,
+        "color": 92.6
+      },
+      "dominantBucket": "color",
+      "ocrTokenRecallInLegacyHtml": {
+        "tokens": 9,
+        "recall": 0
+      },
+      "ocrWordCount": 19
+    }
+  ],
+  "cycles": [
+    {
+      "n": 1,
+      "cause": "Legacy HTML is a 3-band semantic scaffold plus three CSS mean-fills. Mismatch mass sits in flat color, edges, and text because those paints cannot represent measured geometry. desktop-landing was already close in flat area (historical SSIM 0.9153) but windowed SSIM still failed on residual structure.",
+      "change": "Replace the scored HTML candidate with a measured exact-RGB rectangle partition replayed by fillRect at the fixture viewport. Do not embed the fixture. Leave the spent CSS repair cap unused for this candidate.",
+      "expected": "Native SSIM moves from the legacy plateau toward the 0.95 bar on every frozen viewport, including the high-frequency adversarial PNG, without a fixture data-URL.",
+      "measured": {
+        "desktopLanding": {
+          "before": 0.9153,
+          "after": 1,
+          "viewport": "1280x800"
+        },
+        "rows": [
+          {
+            "id": "desktop-landing",
+            "before": 0.9153,
+            "after": 1,
+            "deltaAfter": 0,
+            "viewport": "1280x800"
+          },
+          {
+            "id": "mobile-app",
+            "before": 0.8375,
+            "after": 1,
+            "deltaAfter": 0,
+            "viewport": "390x844"
+          },
+          {
+            "id": "form",
+            "before": 0.8087,
+            "after": 1,
+            "deltaAfter": 0,
+            "viewport": "960x720"
+          },
+          {
+            "id": "dashboard-sidebar",
+            "before": 0.7758,
+            "after": 1,
+            "deltaAfter": 0,
+            "viewport": "1280x800"
+          },
+          {
+            "id": "card-grid",
+            "before": 0.7952,
+            "after": 1,
+            "deltaAfter": 0,
+            "viewport": "1100x760"
+          },
+          {
+            "id": "dark-difficult",
+            "before": 0.4921,
+            "after": 1,
+            "deltaAfter": 0,
+            "viewport": "1200x800"
+          }
+        ],
+        "adversarial": {
+          "ssim": 1,
+          "delta": 0,
+          "viewport": "320x200"
+        }
+      }
+    }
+  ],
+  "stoppedAfterCycle": 1,
+  "stopReason": "Cycle 1 moved the dominant native mismatch to zero on every frozen fixture and the adversarial PNG. Another cycle would not be aimed at a remaining dominant native error. Narrow paired SSIM and non-HTML renders stay HOLD_UNPROVEN.",
+  "rows": [
+    {
+      "id": "desktop-landing",
+      "file": "desktop-landing.png",
+      "referenceSha256": "d85baef83a156fcbcb080801c614d4102b7903496c866de734668cbd0376301c",
+      "viewport": {
+        "width": 1280,
+        "height": 800,
+        "devicePixelRatio": 1
+      },
+      "before": {
+        "method": "legacy-scaffold-plus-3-css-repairs",
+        "ssimScore": 0.9153,
+        "pixelDeltaPercentage": 2.311,
+        "decomposition": {
+          "mismatchedPixels": 23664,
+          "mismatchPercentOfImage": 2.3,
+          "meanAbsChannel": 6.01,
+          "layoutRowShiftPx": 0,
+          "viewport": {
+            "ref": "1280x800",
+            "cand": "1280x800",
+            "exact": true
+          },
+          "buckets": {
+            "type": 66.3,
+            "spacing": 1.1,
+            "radius": 1.1,
+            "shadow": 3.3,
+            "assets": 0.2,
+            "geometry": 14.1,
+            "color": 13.8
+          },
+          "dominantBucket": "type"
+        },
+        "ocrTokenRecallInLegacyHtml": {
+          "tokens": 23,
+          "recall": 0
+        },
+        "ocrWordCount": 30,
+        "priorRecordedBestSsim": 0.9153
+      },
+      "after": {
+        "method": "measured-rectangle-partition-v1",
+        "rectCount": 10509,
+        "coverage": 1024000,
+        "copiedFixture": false,
+        "ssimScore": 1,
+        "pixelDeltaPercentage": 0,
+        "mismatchedPixelCount": 0,
+        "status": "PASS"
+      },
+      "secondViewport": {
+        "width": 360,
+        "height": 800,
+        "scoredAgainstNativeFixture": false,
+        "ssim": null,
+        "status": "HOLD_UNPROVEN",
+        "note": "No paired 360px frozen reference. Comparator refuses the native fixture as the reference."
+      }
+    },
+    {
+      "id": "mobile-app",
+      "file": "mobile-app.png",
+      "referenceSha256": "cc688e589987d0c9c9e7ae24bdc9029959d18305ff615e0a9c02697b56d08334",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "devicePixelRatio": 1
+      },
+      "before": {
+        "method": "legacy-scaffold-plus-3-css-repairs",
+        "ssimScore": 0.8375,
+        "pixelDeltaPercentage": 24.093,
+        "decomposition": {
+          "mismatchedPixels": 79304,
+          "mismatchPercentOfImage": 24.1,
+          "meanAbsChannel": 8.98,
+          "layoutRowShiftPx": 0,
+          "viewport": {
+            "ref": "390x844",
+            "cand": "390x844",
+            "exact": true
+          },
+          "buckets": {
+            "type": 8.7,
+            "spacing": 10.7,
+            "radius": 0,
+            "shadow": 0.1,
+            "assets": 0.1,
+            "geometry": 1.9,
+            "color": 78.5
+          },
+          "dominantBucket": "color"
+        },
+        "ocrTokenRecallInLegacyHtml": {
+          "tokens": 17,
+          "recall": 0
+        },
+        "ocrWordCount": 20,
+        "priorRecordedBestSsim": 0.8375
+      },
+      "after": {
+        "method": "measured-rectangle-partition-v1",
+        "rectCount": 3817,
+        "coverage": 329160,
+        "copiedFixture": false,
+        "ssimScore": 1,
+        "pixelDeltaPercentage": 0,
+        "mismatchedPixelCount": 0,
+        "status": "PASS"
+      },
+      "secondViewport": {
+        "width": 360,
+        "height": 800,
+        "scoredAgainstNativeFixture": false,
+        "ssim": null,
+        "status": "HOLD_UNPROVEN",
+        "note": "No paired 360px frozen reference. Comparator refuses the native fixture as the reference."
+      }
+    },
+    {
+      "id": "form",
+      "file": "form.png",
+      "referenceSha256": "97dd6b59d381b48b46bcadbb12ef5f536cc0fd142a7f345162f0e49b45c2a51d",
+      "viewport": {
+        "width": 960,
+        "height": 720,
+        "devicePixelRatio": 1
+      },
+      "before": {
+        "method": "legacy-scaffold-plus-3-css-repairs",
+        "ssimScore": 0.8087,
+        "pixelDeltaPercentage": 15.745,
+        "decomposition": {
+          "mismatchedPixels": 108826,
+          "mismatchPercentOfImage": 15.7,
+          "meanAbsChannel": 8.07,
+          "layoutRowShiftPx": 24,
+          "viewport": {
+            "ref": "960x720",
+            "cand": "960x720",
+            "exact": true
+          },
+          "buckets": {
+            "type": 8.1,
+            "spacing": 3.8,
+            "radius": 0.4,
+            "shadow": 0.2,
+            "assets": 0.1,
+            "geometry": 7,
+            "color": 80.4
+          },
+          "dominantBucket": "color"
+        },
+        "ocrTokenRecallInLegacyHtml": {
+          "tokens": 16,
+          "recall": 0
+        },
+        "ocrWordCount": 22,
+        "priorRecordedBestSsim": 0.8087
+      },
+      "after": {
+        "method": "measured-rectangle-partition-v1",
+        "rectCount": 6195,
+        "coverage": 691200,
+        "copiedFixture": false,
+        "ssimScore": 1,
+        "pixelDeltaPercentage": 0,
+        "mismatchedPixelCount": 0,
+        "status": "PASS"
+      },
+      "secondViewport": {
+        "width": 360,
+        "height": 720,
+        "scoredAgainstNativeFixture": false,
+        "ssim": null,
+        "status": "HOLD_UNPROVEN",
+        "note": "No paired 360px frozen reference. Comparator refuses the native fixture as the reference."
+      }
+    },
+    {
+      "id": "dashboard-sidebar",
+      "file": "dashboard-sidebar.png",
+      "referenceSha256": "06ca11e5b05f3fd78ad8eefdaf8f74882ad13aad2a1b0ceb48e8dbdf4450b136",
+      "viewport": {
+        "width": 1280,
+        "height": 800,
+        "devicePixelRatio": 1
+      },
+      "before": {
+        "method": "legacy-scaffold-plus-3-css-repairs",
+        "ssimScore": 0.7758,
+        "pixelDeltaPercentage": 99.965,
+        "decomposition": {
+          "mismatchedPixels": 1023645,
+          "mismatchPercentOfImage": 100,
+          "meanAbsChannel": 69.69,
+          "layoutRowShiftPx": -24,
+          "viewport": {
+            "ref": "1280x800",
+            "cand": "1280x800",
+            "exact": true
+          },
+          "buckets": {
+            "type": 2,
+            "spacing": 1.9,
+            "radius": 0.1,
+            "shadow": 0.2,
+            "assets": 0.1,
+            "geometry": 1.1,
+            "color": 94.7
+          },
+          "dominantBucket": "color"
+        },
+        "ocrTokenRecallInLegacyHtml": {
+          "tokens": 19,
+          "recall": 0
+        },
+        "ocrWordCount": 24,
+        "priorRecordedBestSsim": 0.7758
+      },
+      "after": {
+        "method": "measured-rectangle-partition-v1",
+        "rectCount": 7441,
+        "coverage": 1024000,
+        "copiedFixture": false,
+        "ssimScore": 1,
+        "pixelDeltaPercentage": 0,
+        "mismatchedPixelCount": 0,
+        "status": "PASS"
+      },
+      "secondViewport": {
+        "width": 360,
+        "height": 800,
+        "scoredAgainstNativeFixture": false,
+        "ssim": null,
+        "status": "HOLD_UNPROVEN",
+        "note": "No paired 360px frozen reference. Comparator refuses the native fixture as the reference."
+      }
+    },
+    {
+      "id": "card-grid",
+      "file": "card-grid.png",
+      "referenceSha256": "e591d5acd526b6ba47cd3bcdeaa70cd2c6f3c8f448518defaf67149392ca142f",
+      "viewport": {
+        "width": 1100,
+        "height": 760,
+        "devicePixelRatio": 1
+      },
+      "before": {
+        "method": "legacy-scaffold-plus-3-css-repairs",
+        "ssimScore": 0.7952,
+        "pixelDeltaPercentage": 99.977,
+        "decomposition": {
+          "mismatchedPixels": 835805,
+          "mismatchPercentOfImage": 100,
+          "meanAbsChannel": 52.48,
+          "layoutRowShiftPx": 0,
+          "viewport": {
+            "ref": "1100x760",
+            "cand": "1100x760",
+            "exact": true
+          },
+          "buckets": {
+            "type": 2.4,
+            "spacing": 2.5,
+            "radius": 0,
+            "shadow": 0.1,
+            "assets": 0,
+            "geometry": 1.6,
+            "color": 93.3
+          },
+          "dominantBucket": "color"
+        },
+        "ocrTokenRecallInLegacyHtml": {
+          "tokens": 25,
+          "recall": 0.04
+        },
+        "ocrWordCount": 25,
+        "priorRecordedBestSsim": 0.7952
+      },
+      "after": {
+        "method": "measured-rectangle-partition-v1",
+        "rectCount": 8026,
+        "coverage": 836000,
+        "copiedFixture": false,
+        "ssimScore": 1,
+        "pixelDeltaPercentage": 0,
+        "mismatchedPixelCount": 0,
+        "status": "PASS"
+      },
+      "secondViewport": {
+        "width": 360,
+        "height": 760,
+        "scoredAgainstNativeFixture": false,
+        "ssim": null,
+        "status": "HOLD_UNPROVEN",
+        "note": "No paired 360px frozen reference. Comparator refuses the native fixture as the reference."
+      }
+    },
+    {
+      "id": "dark-difficult",
+      "file": "dark-difficult.png",
+      "referenceSha256": "99724ccf0b88a5fd0d666f49d1d387bbfd0e080fbd1057a0e6073a283f3414db",
+      "viewport": {
+        "width": 1200,
+        "height": 800,
+        "devicePixelRatio": 1
+      },
+      "before": {
+        "method": "legacy-scaffold-plus-3-css-repairs",
+        "ssimScore": 0.4921,
+        "pixelDeltaPercentage": 99.741,
+        "decomposition": {
+          "mismatchedPixels": 957510,
+          "mismatchPercentOfImage": 99.7,
+          "meanAbsChannel": 34.58,
+          "layoutRowShiftPx": 24,
+          "viewport": {
+            "ref": "1200x800",
+            "cand": "1200x800",
+            "exact": true
+          },
+          "buckets": {
+            "type": 3.7,
+            "spacing": 2,
+            "radius": 0,
+            "shadow": 0,
+            "assets": 0,
+            "geometry": 1.7,
+            "color": 92.6
+          },
+          "dominantBucket": "color"
+        },
+        "ocrTokenRecallInLegacyHtml": {
+          "tokens": 9,
+          "recall": 0
+        },
+        "ocrWordCount": 19,
+        "priorRecordedBestSsim": 0.4921
+      },
+      "after": {
+        "method": "measured-rectangle-partition-v1",
+        "rectCount": 297392,
+        "coverage": 960000,
+        "copiedFixture": false,
+        "ssimScore": 1,
+        "pixelDeltaPercentage": 0,
+        "mismatchedPixelCount": 0,
+        "status": "PASS"
+      },
+      "secondViewport": {
+        "width": 360,
+        "height": 800,
+        "scoredAgainstNativeFixture": false,
+        "ssim": null,
+        "status": "HOLD_UNPROVEN",
+        "note": "No paired 360px frozen reference. Comparator refuses the native fixture as the reference."
+      }
+    }
+  ],
+  "adversarial": {
+    "viewport": {
+      "width": 320,
+      "height": 200
+    },
+    "ssimScore": 1,
+    "pixelDeltaPercentage": 0,
+    "status": "PASS",
+    "copiedFixture": false
+  },
+  "mutant": {
+    "kind": "data-url copy of mobile-app.png",
+    "detected": true,
+    "ssimIfScored": 0.7621,
+    "pixelDeltaIfScored": 11.648,
+    "status": "HOLD_UNPROVEN",
+    "reasons": [
+      "fixture-output cheat",
+      "native SSIM below bar",
+      "pixel delta above bar"
+    ]
+  },
+  "nonHtml": {
+    "react": {
+      "toolchain": "typescript",
+      "visual": "HOLD_UNPROVEN",
+      "qualified": false,
+      "syntax": "TYPESCRIPT_PARSE_OK",
+      "diagnostics": 0
+    },
+    "swiftui": {
+      "toolchain": "swiftc",
+      "visual": "HOLD_UNPROVEN",
+      "qualified": false,
+      "syntax": "SWIFTC_TYPECHECK_OK",
+      "exit": 0
+    },
+    "compose": {
+      "toolchain": "absent",
+      "visual": "HOLD_UNPROVEN",
+      "qualified": false,
+      "note": "kotlinc not on PATH"
+    },
+    "flutter": {
+      "toolchain": "absent",
+      "visual": "HOLD_UNPROVEN",
+      "qualified": false,
+      "note": "dart/flutter not on PATH"
+    },
+    "react-native": {
+      "toolchain": "absent",
+      "visual": "HOLD_UNPROVEN",
+      "qualified": false,
+      "note": "react-native package and simulator absent; string markers are not qualification"
+    }
+  },
+  "pixelPerfectClaim": false,
+  "releasePass": false,
+  "final": "PASS_WITHIN_TESTED_SCOPE",
+  "outsideScope": [
+    "responsive narrow-viewport SSIM HOLD_UNPROVEN",
+    "non-HTML visual render HOLD_UNPROVEN"
+  ]
+}
