@@ -269,36 +269,164 @@ function scriptSources(html: string): string[] {
  * Run the page scripts against a canvas mock and rasterize fillRect.
  * This does not inspect how the color was spelled in the source.
  */
-function executeCanvasRaster(html: string, width: number, height: number): { data: Uint8ClampedArray; painted: Uint8Array } | null {
+function blitPixels(
+  data: Uint8ClampedArray,
+  painted: Uint8Array,
+  width: number,
+  height: number,
+  dx: number,
+  dy: number,
+  src: ArrayLike<number>,
+  sw: number,
+  sh: number,
+) {
+  const ox = dx | 0;
+  const oy = dy | 0;
+  for (let y = 0; y < sh; y++) {
+    const yy = oy + y;
+    if (yy < 0 || yy >= height) continue;
+    for (let x = 0; x < sw; x++) {
+      const xx = ox + x;
+      if (xx < 0 || xx >= width) continue;
+      const s = (y * sw + x) << 2;
+      const p = yy * width + xx;
+      const i = p << 2;
+      data[i] = src[s];
+      data[i + 1] = src[s + 1];
+      data[i + 2] = src[s + 2];
+      data[i + 3] = src[s + 3] ?? 255;
+      painted[p] = 1;
+    }
+  }
+}
+
+type RasterState = { data: Uint8ClampedArray; painted: Uint8Array; unaccounted: boolean };
+
+/**
+ * Run page scripts on a canvas mock. fillRect, putImageData, and drawImage
+ * stamp pixels. Any other draw, or a throw, is unaccounted and must not be
+ * dropped into a pass.
+ */
+function executeCanvasRaster(html: string, width: number, height: number): RasterState | null {
   if (width < 1 || height < 1) return null;
   const data = new Uint8ClampedArray(width * height * 4);
   const painted = new Uint8Array(width * height);
-  const ctx = {
-    fillStyle: "#000000" as string,
-    imageSmoothingEnabled: false,
-    fillRect(x: number, y: number, w: number, h: number) {
-      const rgb = cssColor(this.fillStyle);
-      if (!rgb || !(w > 0) || !(h > 0)) return;
-      const x0 = Math.max(0, x | 0);
-      const y0 = Math.max(0, y | 0);
-      const x1 = Math.min(width, (x + w) | 0);
-      const y1 = Math.min(height, (y + h) | 0);
-      for (let yy = y0; yy < y1; yy++) {
-        for (let xx = x0; xx < x1; xx++) {
-          const p = yy * width + xx;
-          const i = p << 2;
-          data[i] = rgb[0];
-          data[i + 1] = rgb[1];
-          data[i + 2] = rgb[2];
-          data[i + 3] = 255;
-          painted[p] = 1;
-        }
-      }
-    },
+  const state: RasterState = { data, painted, unaccounted: false };
+  const markUnaccounted = () => {
+    state.unaccounted = true;
   };
+  const target: Record<string, unknown> = {
+    fillStyle: "#000000",
+    imageSmoothingEnabled: false,
+    globalAlpha: 1,
+  };
+  target.fillRect = function fillRect(x: number, y: number, w: number, h: number) {
+    const rgb = cssColor(target.fillStyle);
+    if (!rgb || !(w > 0) || !(h > 0)) {
+      markUnaccounted();
+      return;
+    }
+    const x0 = Math.max(0, x | 0);
+    const y0 = Math.max(0, y | 0);
+    const x1 = Math.min(width, (x + w) | 0);
+    const y1 = Math.min(height, (y + h) | 0);
+    for (let yy = y0; yy < y1; yy++) {
+      for (let xx = x0; xx < x1; xx++) {
+        const p = yy * width + xx;
+        const i = p << 2;
+        data[i] = rgb[0];
+        data[i + 1] = rgb[1];
+        data[i + 2] = rgb[2];
+        data[i + 3] = 255;
+        painted[p] = 1;
+      }
+    }
+  };
+  target.putImageData = function putImageData(
+    imageData: { data?: ArrayLike<number>; width?: number; height?: number } | null,
+    dx: number,
+    dy: number,
+  ) {
+    if (!imageData || !imageData.data || !imageData.width || !imageData.height) {
+      markUnaccounted();
+      return;
+    }
+    blitPixels(data, painted, width, height, dx, dy, imageData.data, imageData.width | 0, imageData.height | 0);
+  };
+  target.drawImage = function drawImage(source: { data?: ArrayLike<number>; width?: number; height?: number; _pixels?: ArrayLike<number> } | null, ...args: number[]) {
+    const src = source?._pixels ?? source?.data;
+    const sw = source?.width ?? 0;
+    const sh = source?.height ?? 0;
+    if (!src || sw < 1 || sh < 1) {
+      markUnaccounted();
+      return;
+    }
+    let dx = 0;
+    let dy = 0;
+    let dw = sw;
+    let dh = sh;
+    if (args.length === 2) {
+      dx = args[0];
+      dy = args[1];
+    } else if (args.length === 4) {
+      dx = args[0];
+      dy = args[1];
+      dw = args[2];
+      dh = args[3];
+    } else if (args.length === 8) {
+      dx = args[4];
+      dy = args[5];
+      dw = args[6];
+      dh = args[7];
+      if ((args[2] | 0) !== sw || (args[3] | 0) !== sh) {
+        markUnaccounted();
+        return;
+      }
+    } else {
+      markUnaccounted();
+      return;
+    }
+    if ((dw | 0) !== sw || (dh | 0) !== sh) {
+      markUnaccounted();
+      return;
+    }
+    blitPixels(data, painted, width, height, dx, dy, src, sw, sh);
+  };
+  target.getImageData = function getImageData(sx: number, sy: number, sw: number, sh: number) {
+    const out = new Uint8ClampedArray(sw * sh * 4);
+    for (let y = 0; y < sh; y++) {
+      for (let x = 0; x < sw; x++) {
+        const xx = (sx | 0) + x;
+        const yy = (sy | 0) + y;
+        const d = (y * sw + x) << 2;
+        if (xx < 0 || yy < 0 || xx >= width || yy >= height) continue;
+        const s = (yy * width + xx) << 2;
+        out[d] = data[s];
+        out[d + 1] = data[s + 1];
+        out[d + 2] = data[s + 2];
+        out[d + 3] = data[s + 3];
+      }
+    }
+    return { data: out, width: sw, height: sh };
+  };
+  const ctx = new Proxy(target, {
+    get(obj, prop, receiver) {
+      if (typeof prop !== "string") return Reflect.get(obj, prop, receiver);
+      if (prop === "canvas") return canvas;
+      if (prop in obj) return Reflect.get(obj, prop, receiver);
+      return () => {
+        markUnaccounted();
+      };
+    },
+    set(obj, prop, value) {
+      (obj as Record<string | symbol, unknown>)[prop] = value;
+      return true;
+    },
+  });
   const canvas = {
     width,
     height,
+    _pixels: data,
     getContext() {
       return ctx;
     },
@@ -315,14 +443,15 @@ function executeCanvasRaster(html: string, width: number, height: number): { dat
       run(documentStub, { document: documentStub });
     }
   } catch {
-    return null;
+    markUnaccounted();
   }
-  return { data, painted };
+  return state;
 }
 
-function rasterMatchesFixture(html: string, image: RgbaImage): boolean {
+function executedDrawFailsClosed(html: string, image: RgbaImage): boolean {
   const raster = executeCanvasRaster(html, image.width, image.height);
   if (!raster) return false;
+  if (raster.unaccounted) return true;
   const pixels = image.width * image.height;
   for (let p = 0; p < pixels; p++) {
     if (!raster.painted[p]) return false;
@@ -339,7 +468,7 @@ function rasterMatchesFixture(html: string, image: RgbaImage): boolean {
 }
 
 export function isExactRgbPartitionReplay(html: string, image: RgbaImage): boolean {
-  if (rasterMatchesFixture(html, image)) return true;
+  if (executedDrawFailsClosed(html, image)) return true;
   return (
     exactRgbCover(parseTupleRects(html), image) ||
     exactRgbCover(parseObjectRects(html), image) ||

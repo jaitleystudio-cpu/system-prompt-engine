@@ -382,6 +382,71 @@ function assertParallelChannelPartitionFailsClosed() {
 
 assertParallelChannelPartitionFailsClosed();
 
+function assertPutImageDataPartitionFailsClosed() {
+  const data = new Uint8ClampedArray([
+    255, 0, 0, 255, 0, 255, 0, 255,
+    0, 0, 255, 255, 255, 255, 255, 255,
+  ]);
+  const image = { width: 2, height: 2, data };
+  const html = `<!doctype html><canvas id="c"></canvas><script>
+const px = new Uint8ClampedArray(${JSON.stringify(Array.from(data))});
+const ctx = document.getElementById("c").getContext("2d");
+ctx.putImageData({ data: px, width: 2, height: 2 }, 0, 0);
+</script>`;
+  assert.match(html, /putImageData\(\{ data: px, width: 2, height: 2 \}, 0, 0\)/);
+  assert.equal(html.includes("fillRect"), false);
+  const mismatched = `<!doctype html><canvas id="c"></canvas><script>
+const px = new Uint8ClampedArray(${JSON.stringify(Array.from(data).map((v) => (v === 255 ? 1 : 0)))});
+const ctx = document.getElementById("c").getContext("2d");
+ctx.putImageData({ data: px, width: 2, height: 2 }, 0, 0);
+</script>`;
+  assert.equal(gate.isExactRgbPartitionReplay(mismatched, image), false);
+  const judged = gate.judgeNativeReconstruction({
+    html,
+    image,
+    ssimScore: 1,
+    pixelDeltaPercentage: 0,
+    exactViewport: true,
+    copiedFixture: false,
+  });
+  assert.notEqual(judged.status, "PASS");
+  assert.equal(judged.status, "FAIL_CONTRACT");
+  const scope = gate.judgeLaneScope({
+    nativeStatuses: ["PASS"],
+    narrowReferencePaired: true,
+    nonHtmlVisualRendered: true,
+    candidates: [{ html, image }],
+  });
+  assert.equal(scope.final, "HOLD");
+  assert.notEqual(scope.final, "PASS_WITHIN_TESTED_SCOPE");
+
+  const skipped = `<!doctype html><canvas id="c"></canvas><script>
+const ctx = document.getElementById("c").getContext("2d");
+ctx.drawImage({}, 0, 0);
+</script>`;
+  const skippedScope = gate.judgeLaneScope({
+    nativeStatuses: ["PASS"],
+    narrowReferencePaired: true,
+    nonHtmlVisualRendered: true,
+    candidates: [{ html: skipped, image }],
+  });
+  assert.equal(skippedScope.final, "HOLD");
+  assert.notEqual(skippedScope.final, "PASS_WITHIN_TESTED_SCOPE");
+  const thrown = gate.judgeNativeReconstruction({
+    html: `<script>throw new Error("draw skipped");</script>`,
+    image,
+    ssimScore: 1,
+    pixelDeltaPercentage: 0,
+    exactViewport: true,
+    copiedFixture: false,
+  });
+  assert.notEqual(thrown.status, "PASS");
+  assert.equal(thrown.status, "FAIL_CONTRACT");
+}
+
+assertPutImageDataPartitionFailsClosed();
+
+
 
 
 assert.equal(gate.PASS_MIN_SSIM, 0.95);
@@ -736,6 +801,9 @@ const evidence = {
 assert.equal(evidence.final, "HOLD");
 assert.equal(evidence.pixelPerfectClaim, false);
 writeFileSync(join(evidenceDir, "R3C_VISION_EVIDENCE.json"), JSON.stringify(evidence, null, 2));
+test("putImageData fixture pixels fail closed", () => {
+  assertPutImageDataPartitionFailsClosed();
+});
 test("parallel-channel exact-RGB partition fails closed", () => {
   assertParallelChannelPartitionFailsClosed();
 });
