@@ -141,6 +141,12 @@
       "text": "URL content added (followed to"
     },
     {
+      "id": "01fff77f32ec0eac0cb4",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Save HTML"
+    },
+    {
       "id": "021c9f237c8e0ae8a2a8",
       "file": "apps/web/src/builder/websiteSpecModel.ts",
       "depth": "PRODUCT",
@@ -465,6 +471,12 @@
       "text": "Zero client-side JavaScript execution required"
     },
     {
+      "id": "07251de020e7386ad078",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/builder/websiteSpecModel.ts"
+    },
+    {
       "id": "072cd3d05470051bca9f",
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "PRODUCT",
@@ -541,6 +553,12 @@
       "file": "apps/web/src/media/semanticCompose.ts",
       "depth": "PRODUCT",
       "text": "Style:"
+    },
+    {
+      "id": "07ea1c4ed46ddeee537b",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "live_url"
     },
     {
       "id": "07ee42b7e2923111e546",
@@ -709,6 +727,12 @@
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
       "text": "Analyzed at"
+    },
+    {
+      "id": "0ad5684ff89ddb2942cb",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Fetched: no. Live site: no. 3D scene: no."
     },
     {
       "id": "0aecc5ddbb5632bde96a",
@@ -1209,6 +1233,12 @@
       "text": "A FREE PROMPT ENGINEERING TOOL"
     },
     {
+      "id": "10760bdd2763ee508323",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "UNSUPPORTED"
+    },
+    {
       "id": "108c9fb3bb87c85d5d46",
       "file": "apps/web/src/composer/ContextProtocolControls.tsx",
       "depth": "PRODUCT",
@@ -1495,6 +1525,18 @@
       "file": "apps/web/src/export/workflowExportViewModel.ts",
       "depth": "PRODUCT",
       "text": "expected_outputs"
+    },
+    {
+      "id": "144eac6a8b6451952ba0",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "1458e1cf47e956a93ab1",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_HAS_NO_PAGE"
     },
     {
       "id": "1473bb71d26d03c3e0f0",
@@ -1857,6 +1899,12 @@
       "text": "unknown"
     },
     {
+      "id": "197b0053da9efa0458b7",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Local website preview"
+    },
+    {
       "id": "198be810a2b13f666220",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -1867,6 +1915,12 @@
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
       "text": "Blocked. This is not a pass."
+    },
+    {
+      "id": "19c052aa551b956578ee",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "prefers-reduced-motion"
     },
     {
       "id": "19e2c9e86784cc7134d2",
@@ -2353,6 +2407,12 @@
       "file": "apps/web/src/composer/ContextProtocolControls.tsx",
       "depth": "INSPECT",
       "text": "Contradictions / unverified"
+    },
+    {
+      "id": "1f8a1ba642c27ce7bb95",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "UNSUPPORTED"
     },
     {
       "id": "1f9d7c7ad67cbdfba804",
@@ -3393,6 +3453,12 @@
       "text": "audio/wav"
     },
     {
+      "id": "2c17fd9b14e2c4969775",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "index.html"
+    },
+    {
       "id": "2c1d668003e4b72de887",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -3559,6 +3625,12 @@
       "file": "apps/web/src/authority/evidenceRegistry.ts",
       "depth": "PROOF",
       "text": "NOT_PUBLISHED"
+    },
+    {
+      "id": "2e6314a1b32d82c0ab4e",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Build preview"
     },
     {
       "id": "2e79f8d7803c095b27be",
@@ -3795,6 +3867,12 @@
       "text": "spe:daily3d:pillar-grid"
     },
     {
+      "id": "31f0e8a17873a86d68d2",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "STATIC_FILES_ONLY"
+    },
+    {
       "id": "31f1410106df8ca0a415",
       "file": "apps/web/src/builder/StaticWebsiteBuilder.tsx",
       "depth": "PROOF",
@@ -3859,6 +3937,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "Website / 3D"
+    },
+    {
+      "id": "32da8c327cfc54ba0550",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "page.html"
     },
     {
       "id": "332d630c68656ffa9a52",
@@ -3931,6 +4015,12 @@
       "file": "apps/web/src/lab/LabStage.tsx",
       "depth": "PRODUCT",
       "text": "orb-field"
+    },
+    {
+      "id": "33a4de2c3119c6e85972",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_APPLICABLE_SCENE_IR_NOT_WIRED"
     },
     {
       "id": "33f07eb7aa18936d6463",
@@ -4257,6 +4347,12 @@
       "text": "layout:"
     },
     {
+      "id": "37cf3512d58c0728c5ed",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
       "id": "37e71157b356d890a6e7",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
@@ -4383,6 +4479,12 @@
       "text": "Scene boundaries use brightness/edge/grid signatures, not a dedicated shot-boundary network."
     },
     {
+      "id": "39a82088fcd1c07d743b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "HOLD"
+    },
+    {
       "id": "39adca50d195bcd34392",
       "file": "apps/web/src/media/videoSample.ts",
       "depth": "PRODUCT",
@@ -4485,6 +4587,12 @@
       "text": "Subject/object labels are MODEL_JUDGMENT — not VERIFIED_FACT."
     },
     {
+      "id": "3b5732b580fea6673214",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_JSON_INVALID"
+    },
+    {
       "id": "3b60ec0e03df280530a6",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
@@ -4569,6 +4677,12 @@
       "text": "photograph"
     },
     {
+      "id": "3c33bd60918e1b568f6c",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website result"
+    },
+    {
       "id": "3c4bc04744c124dd6ee3",
       "file": "apps/web/src/builder/websiteSpecModel.ts",
       "depth": "PRODUCT",
@@ -4597,6 +4711,12 @@
       "file": "apps/web/src/media/mediaCapabilityModel.ts",
       "depth": "PRODUCT",
       "text": "audio/opus"
+    },
+    {
+      "id": "3c757b4182021fda4e01",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Web address"
     },
     {
       "id": "3c7a9b39b9f4566c8eb4",
@@ -4633,6 +4753,12 @@
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
       "text": "Does SPE claim a worldwide ranking as the top prompt tool?"
+    },
+    {
+      "id": "3cd3b301ce51168d4822",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Saved file"
     },
     {
       "id": "3d1fe332d8cb173c8e56",
@@ -4753,6 +4879,12 @@
       "file": "apps/web/src/landing/UniversalInputShell.tsx",
       "depth": "PRODUCT",
       "text": "Code"
+    },
+    {
+      "id": "3ec3b48819f8a3b33958",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "website_spec"
     },
     {
       "id": "3ed023f68952c8057690",
@@ -4995,6 +5127,18 @@
       "text": "gal-07"
     },
     {
+      "id": "42918d04f2bef2ac82d8",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "CSP_MISSING"
+    },
+    {
+      "id": "429ddbc58b89473cd9d6",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "local_saved_html"
+    },
+    {
       "id": "42d1cf5f9e4067be6509",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -5041,6 +5185,12 @@
       "file": "apps/web/src/composer/ContextProtocolControls.tsx",
       "depth": "PRODUCT",
       "text": "SMART"
+    },
+    {
+      "id": "43af47d67b0e5fa47285",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "live_url"
     },
     {
       "id": "43b5b78909487e312382",
@@ -5571,6 +5721,12 @@
       "text": "warnings must be a list"
     },
     {
+      "id": "4a656eb62da050eaaea9",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "a"
+    },
+    {
       "id": "4a7af6d55a92c5357909",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -5629,6 +5785,12 @@
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
       "text": "image"
+    },
+    {
+      "id": "4b5ec626a708ee6f38b6",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "website_spec"
     },
     {
       "id": "4b9178f6ff75501f469b",
@@ -5871,10 +6033,22 @@
       "text": "OFF"
     },
     {
+      "id": "4e1acdada7a8ab82b1df",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_REUSED_SCENE_IR_ABSENT"
+    },
+    {
       "id": "4e1ec0c9c3340bfadc77",
       "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
       "depth": "PROOF",
       "text": "UNKNOWN"
+    },
+    {
+      "id": "4e5025eb143f41fd0ca6",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "packages/website-generator"
     },
     {
       "id": "4e50e7fc5d9d9d53dddf",
@@ -6669,6 +6843,12 @@
       "text": "md"
     },
     {
+      "id": "57d0e68929b6e9b819a9",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "EXPORT_NOT_DETERMINISTIC"
+    },
+    {
       "id": "5800ac4352fdda1ce06e",
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
@@ -6805,6 +6985,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Choose"
+    },
+    {
+      "id": "599ea2ce5f6a09bc5272",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_SAVED_HTML_IS_NOT_A_SPEC"
     },
     {
       "id": "59a8b97cce3c747b63a5",
@@ -7105,6 +7291,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "form["
+    },
+    {
+      "id": "5cd4d3014209adbe1a8c",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_AVAILABLE"
     },
     {
       "id": "5cd8dcdb955dc8d01c05",
@@ -7417,6 +7609,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "A single ring pulses only when you ask it to analyze media — a reminder that vision packs stay at zero bytes until invited."
+    },
+    {
+      "id": "613f343888d5bc338c69",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_INTEGRATED"
     },
     {
       "id": "6149bb871c8c4602f5a8",
@@ -7993,6 +8191,12 @@
       "file": "apps/web/src/landing/dailyHero.ts",
       "depth": "PRODUCT",
       "text": "to make today?"
+    },
+    {
+      "id": "683bc08716e91084ddfb",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_SHAPE_REFUSED"
     },
     {
       "id": "683c8be24a9fe0a38e47",
@@ -8787,6 +8991,12 @@
       "text": "LITE frame semantics"
     },
     {
+      "id": "71c81d3b3a703b607f9a",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "WebsiteProduct"
+    },
+    {
       "id": "71e0a35771d14c1e2b5e",
       "file": "apps/web/src/landing/UniversalInputShell.tsx",
       "depth": "PRODUCT",
@@ -9165,6 +9375,12 @@
       "text": "TimeoutError"
     },
     {
+      "id": "775ef219989171b2aed9",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "text/html;charset=utf-8"
+    },
+    {
       "id": "77a26ade21fdafc418b0",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
@@ -9199,6 +9415,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "Try again"
+    },
+    {
+      "id": "780911ef74f48ae5e98e",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/website/WebsiteProduct.tsx"
     },
     {
       "id": "781d36a1c08abb38ce11",
@@ -9483,6 +9705,12 @@
       "text": "Bring your goal, resources and limits. Shape a prompt with a practical path to the result you need."
     },
     {
+      "id": "7b68e472876a7e3d60ae",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_EMPTY"
+    },
+    {
       "id": "7b713100dc2dc763e8a3",
       "file": "apps/web/src/pages/MyWork.tsx",
       "depth": "PRODUCT",
@@ -9637,6 +9865,12 @@
       "file": "apps/web/src/library/ProjectLibraryView.tsx",
       "depth": "PROOF",
       "text": "Revision Details"
+    },
+    {
+      "id": "7e21e348c3c68fdadc0b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_AVAILABLE"
     },
     {
       "id": "7e3399d4a5a525ef65bd",
@@ -9841,6 +10075,12 @@
       "file": "apps/web/src/landing/ModalModeSelector.tsx",
       "depth": "PRODUCT",
       "text": "button:not([disabled]), [tabindex]:not([tabindex=\"-1\"])"
+    },
+    {
+      "id": "8121de3e33ad789a97dd",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "HOLD"
     },
     {
       "id": "813db8b7a82cdc6db7b1",
@@ -10333,6 +10573,12 @@
       "file": "apps/web/src/ui/SeoHead.tsx",
       "depth": "PRODUCT",
       "text": "website"
+    },
+    {
+      "id": "8758e622baf3ee2ee791",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "File name"
     },
     {
       "id": "875fb569521d143a7b65",
@@ -10855,6 +11101,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "ArrowLeft"
+    },
+    {
+      "id": "8df63179c9a4238ca442",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "local_saved_html"
     },
     {
       "id": "8df90b4ea25eca62bf8c",
@@ -11451,6 +11703,12 @@
       "text": "Review code"
     },
     {
+      "id": "95cd3d90eb400347fbfa",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "REJECTED"
+    },
+    {
       "id": "95ceae3fc5db55438114",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
@@ -11845,6 +12103,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Reading screenshot (UI IR)…"
+    },
+    {
+      "id": "9a95793107ce1f8a73d4",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Spec"
     },
     {
       "id": "9ab1ba85cb5a73619d3a",
@@ -12261,6 +12525,12 @@
       "text": "</style>\n</head>\n<body>\n  <div class=\"site-container\">"
     },
     {
+      "id": "a000c6b21e431b1e0171",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_APPLICABLE_SCENE_IR_NOT_WIRED"
+    },
+    {
       "id": "a011dd2a7a3ddcc0b342",
       "file": "apps/web/src/workspace/Workspace.tsx",
       "depth": "PRODUCT",
@@ -12325,6 +12595,12 @@
       "file": "apps/web/src/scene/SpeIntelligence.tsx",
       "depth": "PRODUCT",
       "text": "visibilitychange"
+    },
+    {
+      "id": "a0e3789a20e0971d0c7d",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "RAW_DOCUMENT_NOT_REPLAYED"
     },
     {
       "id": "a0eeb24ea87eff68cecc",
@@ -12465,6 +12741,12 @@
       "text": "export contract version is not spe.workflow-export.v1"
     },
     {
+      "id": "a2c5646ba127ae63944c",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "http-equiv=\"Content-Security-Policy\""
+    },
+    {
       "id": "a2ec126620aa5dee2f0e",
       "file": "apps/web/src/landing/ScrollStory.tsx",
       "depth": "INSPECT",
@@ -12559,6 +12841,12 @@
       "file": "apps/web/src/builder/websiteSpecModel.ts",
       "depth": "PRODUCT",
       "text": ";\n  --site-text:"
+    },
+    {
+      "id": "a457248cc58a5216000a",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Input"
     },
     {
       "id": "a45cc4c261bc1015f512",
@@ -12747,6 +13035,12 @@
       "text": "Compiled Code"
     },
     {
+      "id": "a75ba57c8316d9b8f439",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "live_url"
+    },
+    {
       "id": "a75eb947a9f6fc0bffd3",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
@@ -12859,6 +13153,12 @@
       "file": "apps/web/src/scene/quality.ts",
       "depth": "PRODUCT",
       "text": "experimental-webgl"
+    },
+    {
+      "id": "a8a3fdedd8add359681c",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "spe_runtime/webrecon"
     },
     {
       "id": "a8a51dfce3b3a30fd15b",
@@ -13641,6 +13941,12 @@
       "text": "JSON saves the same work as plain data."
     },
     {
+      "id": "b1094df2933bff8f4d9e",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_COMPILE_REFUSED"
+    },
+    {
       "id": "b147c7619f5dfa442d12",
       "file": "apps/web/src/landing/HeroStory.tsx",
       "depth": "PRODUCT",
@@ -13669,6 +13975,12 @@
       "file": "apps/web/src/builder/websiteSpecModel.ts",
       "depth": "PRODUCT",
       "text": "\" class=\"site-cta-btn\">"
+    },
+    {
+      "id": "b1aa82b45c1b27d32a4c",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "READY_FOR_SHELL_MOUNT"
     },
     {
       "id": "b1bdbf9ca192275e68d6",
@@ -13881,6 +14193,12 @@
       "text": "Rebuild the UI shown in this screenshot for"
     },
     {
+      "id": "b378f7c44566dd09f292",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "A local spec can become a preview and a saved file. A saved file is not a web address. A web address is not opened."
+    },
+    {
       "id": "b3c3790c0fb6e1369198",
       "file": "apps/web/src/media/mediaCapabilityModel.ts",
       "depth": "PRODUCT",
@@ -13993,6 +14311,12 @@
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
       "text": "MP)"
+    },
+    {
+      "id": "b5a14ae85bff1e04ebe0",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Input kind"
     },
     {
       "id": "b5adb81e62460149e310",
@@ -14767,6 +15091,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "This file could not be restored. Nothing was changed."
+    },
+    {
+      "id": "bf4acab212fef0f4f626",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "spe.web.website-product"
     },
     {
       "id": "bf683158b1aa9b06a9d7",
@@ -15573,6 +15903,12 @@
       "text": "• Warm Median Execution: ~"
     },
     {
+      "id": "c943e461919b05ace5df",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LIVE_URL_NOT_FETCHED"
+    },
+    {
       "id": "c963846786dd5d970a8a",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
@@ -15673,6 +16009,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "A scene start, not a novel."
+    },
+    {
+      "id": "ca77356bc1a2595ab029",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "REDUCED_MOTION_MISSING"
     },
     {
       "id": "ca85f26fe1449b94291d",
@@ -15937,6 +16279,18 @@
       "file": "apps/web/src/library/ProjectLibraryView.tsx",
       "depth": "PROOF",
       "text": "all"
+    },
+    {
+      "id": "cd267c5148a05a33920e",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NO_ACQUISITION_GRANT"
+    },
+    {
+      "id": "cd353d5ecc0cad12e71b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_EXPORT_READY"
     },
     {
       "id": "cd3fb4276b3636c725ad",
@@ -16407,6 +16761,12 @@
       "text": "AbortError"
     },
     {
+      "id": "d2ffec664204d2580e65",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_TS_WEBSITE_SPEC_1"
+    },
+    {
       "id": "d3049c99d87c0a48da59",
       "file": "apps/web/src/workspace/ExecutionContractPanel.tsx",
       "depth": "PRODUCT",
@@ -16425,10 +16785,22 @@
       "text": "Only the first"
     },
     {
+      "id": "d34c477a0ad7569346b5",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website product"
+    },
+    {
       "id": "d34f41e2311933e6e8b3",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": ".html,text/html"
+    },
+    {
+      "id": "d372d0194db0366e40c6",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "local_saved_html"
     },
     {
       "id": "d385635b9ed79b20fdbc",
@@ -16923,6 +17295,12 @@
       "text": "Google Chrome / Playwright Chromium Headless"
     },
     {
+      "id": "d9d8409ab0df604225ec",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "REFUSED"
+    },
+    {
       "id": "d9da99ce70149e5ca2bc",
       "file": "packages/human-perspective/src/copy.ts",
       "depth": "EXPERIENCE",
@@ -17319,6 +17697,12 @@
       "text": "Privacy"
     },
     {
+      "id": "df58da94382015553d02",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "local_saved_html"
+    },
+    {
       "id": "df62980077c61db21d8f",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -17655,6 +18039,12 @@
       "text": "object"
     },
     {
+      "id": "e2ddf41712b87c13e608",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_DOCUMENT_EMPTY"
+    },
+    {
       "id": "e2ed9b82fea8d6940dbf",
       "file": "apps/web/src/scene/semantic.ts",
       "depth": "PRODUCT",
@@ -17955,6 +18345,12 @@
       "text": "Process narrative on a copper helix with scroll scrubbing and honest status labels."
     },
     {
+      "id": "e61e513e6331d741476d",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website input"
+    },
+    {
       "id": "e6312ad8921ac759d57d",
       "file": "apps/web/src/media/mediaCapabilityModel.ts",
       "depth": "PRODUCT",
@@ -18013,6 +18409,12 @@
       "file": "apps/web/src/pages/MyWork.tsx",
       "depth": "PRODUCT",
       "text": "My Work"
+    },
+    {
+      "id": "e711f65441ab872146b5",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "website-spec/1"
     },
     {
       "id": "e76d99ed4e0c402a6655",
@@ -18753,6 +19155,12 @@
       "text": "fidelity must list the six canonical facets"
     },
     {
+      "id": "f1b1b98a1b14d77323ef",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "{\n  \"spec_version\": \"website-spec/1\",\n  \"title\": \"Local notes\",\n  \"language\": \"en\",\n  \"summary\": \"A private static page.\",\n  \"theme\": \"light\",\n  \"pages\": [\n    {\n      \"path\": \"index.html\",\n      \"title\": \"Home\",\n      \"sections\": [\n        {\n          \"kind\": \"prose\",\n          \"heading\": \"Notes\",\n          \"body\": \"This page is a local file.\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
       "id": "f1b694a3422a8e31a0a5",
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
@@ -18963,6 +19371,12 @@
       "text": "Desired output"
     },
     {
+      "id": "f495585aac44466f659d",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website"
+    },
+    {
       "id": "f4a67c582a9360190f38",
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
@@ -18999,10 +19413,22 @@
       "text": "First-run copy that respects people."
     },
     {
+      "id": "f542a5749f09963a6382",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "MALICIOUS_OR_REMOTE_MARKUP_REFUSED"
+    },
+    {
       "id": "f550e8ac815f89ceafec",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Education"
+    },
+    {
+      "id": "f5537b031c1160259128",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "HTML_IS_NOT_A_WEBSITE_SPEC"
     },
     {
       "id": "f55395bfd27b2b6dcc0e",
@@ -19143,6 +19569,12 @@
       "text": "Import Bundle"
     },
     {
+      "id": "f7130e190d5ff2f2d6c3",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/website/productFlow.ts"
+    },
+    {
       "id": "f71f97da946252b7ad54",
       "file": "apps/web/src/input/boundedText.ts",
       "depth": "PRODUCT",
@@ -19213,6 +19645,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "PROMPT ENGINE"
+    },
+    {
+      "id": "f8adef7ceac51b394274",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCRIPT_ELEMENT_REFUSED"
     },
     {
       "id": "f8b93c9a512ebe241c2e",
@@ -19363,6 +19801,12 @@
       "file": "apps/web/src/media/MediaWorkspaceView.tsx",
       "depth": "PRODUCT",
       "text": "* Memory advisory: Requires at least 1.0 GiB free host memory prior to execution."
+    },
+    {
+      "id": "fa82fbc1fa0a758ed043",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_INTEGRATED"
     },
     {
       "id": "fa8dd71b775055377779",
@@ -19615,6 +20059,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "#fbcfe8"
+    },
+    {
+      "id": "fd8a87ba2db3d439ed5e",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "website_spec"
     },
     {
       "id": "fdd09be14f8ef0ac2ca9",
