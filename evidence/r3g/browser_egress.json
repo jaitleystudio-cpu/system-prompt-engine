@@ -1,0 +1,1354 @@
+{
+  "start_sha_base": "8afc3564ae608f818e172d15f9e7c38a79a7a9ab",
+  "git_head_at_run": "10bc4a77491fa1b3af0da90df67c1f6c23b38b71",
+  "command": "node tools/r3g/browser_egress_harness.mjs",
+  "host": "127.0.0.1",
+  "remote": false,
+  "cost_inr": 0,
+  "device": "Apple M2, 8 GiB, macOS 27.2",
+  "browser": "Google Chrome 154.0.8037.97; playwright channel=chrome 154.0.8037.97",
+  "wasm": {
+    "spe_wasm_sha256": "a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf",
+    "matches_tree_constant": true,
+    "release_pin_string": "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b",
+    "release_pin_present_in_tree": false,
+    "wasm_files_edited": false
+  },
+  "flows_executed": [
+    "prompt",
+    "local_storage"
+  ],
+  "flows_not_executed": [
+    "transcript",
+    "image",
+    "audio",
+    "video",
+    "ocr",
+    "website",
+    "code",
+    "document"
+  ],
+  "local_storage_roundtrip": true,
+  "compile_notes": [
+    {
+      "phase": "cold",
+      "i": 0,
+      "engineOk": true,
+      "fatal": null,
+      "error": null,
+      "sha256": "a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf",
+      "storage": {
+        "stored": true,
+        "cleared": true
+      }
+    },
+    {
+      "phase": "cold",
+      "i": 1,
+      "engineOk": true,
+      "fatal": null,
+      "error": null,
+      "sha256": "a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf",
+      "storage": {
+        "stored": true,
+        "cleared": true
+      }
+    },
+    {
+      "phase": "cold",
+      "i": 2,
+      "engineOk": true,
+      "fatal": null,
+      "error": null,
+      "sha256": "a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf",
+      "storage": {
+        "stored": true,
+        "cleared": true
+      }
+    },
+    {
+      "phase": "cold",
+      "i": 3,
+      "engineOk": true,
+      "fatal": null,
+      "error": null,
+      "sha256": "a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf",
+      "storage": {
+        "stored": true,
+        "cleared": true
+      }
+    },
+    {
+      "phase": "cold",
+      "i": 4,
+      "engineOk": true,
+      "fatal": null,
+      "error": null,
+      "sha256": "a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf",
+      "storage": {
+        "stored": true,
+        "cleared": true
+      }
+    },
+    {
+      "phase": "warm",
+      "engineOk": true,
+      "fatal": null,
+      "discarded_warmup": 23.599999994039536,
+      "errors": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "storage": {
+        "stored": true,
+        "cleared": true
+      }
+    }
+  ],
+  "request_counts": {
+    "raw_user_data_egress": false,
+    "asset_ingress": 0,
+    "loopback_asset": 112,
+    "loopback_with_canary": 6,
+    "external_other": 0,
+    "observed": 118
+  },
+  "external_hosts": [],
+  "requests": [
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/__r3g/harness.html",
+      "resourceType": "document",
+      "postBytes": 0,
+      "canary": true,
+      "class": "loopback_with_canary"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/tools/r3g/harness.js",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/client.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/index.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/targets.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/envelope.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/render.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/speArtifact.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/history.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/executionRecord.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/providerProfiles.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/samples/pos001.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/engine.worker.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/apps/web/node_modules/vite/dist/client/env.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/wasm-host.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/__r3g/harness.html",
+      "resourceType": "document",
+      "postBytes": 0,
+      "canary": true,
+      "class": "loopback_with_canary"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/tools/r3g/harness.js",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/client.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/index.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/targets.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/envelope.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/render.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/speArtifact.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/history.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/executionRecord.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/providerProfiles.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/samples/pos001.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/engine.worker.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/apps/web/node_modules/vite/dist/client/env.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/wasm-host.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/__r3g/harness.html",
+      "resourceType": "document",
+      "postBytes": 0,
+      "canary": true,
+      "class": "loopback_with_canary"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/tools/r3g/harness.js",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/client.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/index.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/targets.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/envelope.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/render.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/speArtifact.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/history.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/executionRecord.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/providerProfiles.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/samples/pos001.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/engine.worker.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/apps/web/node_modules/vite/dist/client/env.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/wasm-host.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/__r3g/harness.html",
+      "resourceType": "document",
+      "postBytes": 0,
+      "canary": true,
+      "class": "loopback_with_canary"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/tools/r3g/harness.js",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/client.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/index.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/targets.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/envelope.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/render.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/speArtifact.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/history.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/executionRecord.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/providerProfiles.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/samples/pos001.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/engine.worker.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/apps/web/node_modules/vite/dist/client/env.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/wasm-host.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/__r3g/harness.html",
+      "resourceType": "document",
+      "postBytes": 0,
+      "canary": true,
+      "class": "loopback_with_canary"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/tools/r3g/harness.js",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/client.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/index.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/targets.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/envelope.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/render.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/speArtifact.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/history.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/executionRecord.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/providerProfiles.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/samples/pos001.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/engine.worker.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/apps/web/node_modules/vite/dist/client/env.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/wasm-host.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "cold",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/__r3g/harness.html",
+      "resourceType": "document",
+      "postBytes": 0,
+      "canary": true,
+      "class": "loopback_with_canary"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/tools/r3g/harness.js",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/client.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/index.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/targets.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/envelope.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/render.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/speArtifact.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/history.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/executionRecord.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-g-privacy/packages/web-runtime/src/providerProfiles.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/samples/pos001.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/engine.worker.ts",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/@fs/Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/apps/web/node_modules/vite/dist/client/env.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/src/engine/wasm-host.mjs",
+      "resourceType": "script",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.wasm",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    },
+    {
+      "phase": "warm",
+      "method": "GET",
+      "host": "127.0.0.1",
+      "path": "/spe_wasm.sha256.json",
+      "resourceType": "fetch",
+      "postBytes": 0,
+      "canary": false,
+      "class": "loopback_asset"
+    }
+  ],
+  "judgment": {
+    "privacy_qualification": "HOLD",
+    "pass": false,
+    "zero_egress": false,
+    "raw_user_data_egress": false,
+    "asset_ingress": 0,
+    "loopback_asset": 112,
+    "loopback_with_canary": 6,
+    "external_other": 0,
+    "missing_modalities": [
+      "transcript",
+      "image",
+      "audio",
+      "video",
+      "code",
+      "document"
+    ],
+    "reasons": [
+      "modalities_not_executed:transcript,image,audio,video,code,document"
+    ],
+    "field_cwv": "UNKNOWN"
+  },
+  "lab": {
+    "field_cwv": "UNKNOWN",
+    "pass": false,
+    "pixel_pass": false,
+    "cold": {
+      "n": 5,
+      "median": 25.19999998807907,
+      "p95": 173
+    },
+    "warm": {
+      "n": 8,
+      "median": 4.799999982118607,
+      "p95": 6.5
+    }
+  },
+  "field_cwv": "UNKNOWN",
+  "cwv_assess": {
+    "lcp": "UNKNOWN",
+    "cls": "UNKNOWN",
+    "inp": "UNKNOWN",
+    "status": "UNKNOWN",
+    "field_cwv": "UNKNOWN",
+    "pass": false
+  },
+  "privacy_qualification": "HOLD",
+  "note": "Executed flows are prompt compile and local history only. QUALIFICATION stays HOLD because transcript, image, audio, video, OCR, website, code, and document were not executed. A missing WASM result is not a pass. Lab medians are not field CWV."
+}
