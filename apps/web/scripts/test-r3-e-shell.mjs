@@ -4,8 +4,10 @@
  * Not a full WCAG audit. Criteria named at the bottom are the ones this file ran.
  */
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import esbuild from "esbuild";
@@ -316,6 +318,105 @@ try {
   console.log("PASS /media panel is UNAVAILABLE and does not label LOCAL_NEURAL as available");
   checks += 1;
   await media.close();
+
+  let whisperChild = null;
+  async function runPinnedWhisper(payload) {
+    const dir = await mkdtemp(join(tmpdir(), "r3e-whisper-"));
+    const safeName = payload.name && String(payload.name).endsWith(".wav") ? String(payload.name) : "clip.wav";
+    const wavPath = join(dir, safeName.replaceAll("/", "_"));
+    await writeFile(wavPath, Buffer.from(payload.b64, "base64"));
+    const child = spawn("python3", [join(here, "r3-e-whisper-bridge.py"), wavPath], {
+      detached: true,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    whisperChild = child;
+    let out = "";
+    let err = "";
+    child.stdout.on("data", (chunk) => { out += chunk; });
+    child.stderr.on("data", (chunk) => { err += chunk; });
+    const code = await new Promise((resolve) => child.on("close", resolve));
+    if (whisperChild === child) whisperChild = null;
+    await rm(dir, { recursive: true, force: true });
+    if (code !== 0) throw new Error(`pinned whisper-cli bridge exit ${code}: ${err.slice(-500)}`);
+    return JSON.parse(out);
+  }
+  async function cancelPinnedWhisper() {
+    const child = whisperChild;
+    if (!child?.pid) return;
+    try { process.kill(-child.pid, "SIGKILL"); } catch { try { child.kill("SIGKILL"); } catch { /* already gone */ } }
+  }
+  async function openWhisperCase() {
+    const page = await browser.newPage({ viewport: desktop });
+    await page.exposeFunction("__speWhisper", runPinnedWhisper);
+    await page.exposeFunction("__speWhisperCancel", cancelPinnedWhisper);
+    const htmlPath = "/tmp/r3-e-media-whisper.html";
+    writeFileSync(
+      htmlPath,
+      `<!doctype html><html data-theme="dark"><head><meta charset="utf-8"><style>${cssText}</style></head><body><div id="root"></div><script>window.__r3Want="media";</script><script src="${pathToFileURL(outfile).href}"></script></body></html>`,
+    );
+    await page.goto(pathToFileURL(htmlPath).href, { waitUntil: "domcontentloaded" });
+    await page.waitForFunction(() => window.__r3Case === "media");
+    return page;
+  }
+
+  const speech = await openWhisperCase();
+  await speech.getByTestId("media-file").setInputFiles(
+    "/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-b-media/proof/media-r1/fixtures/human/te_amma_16k.wav",
+  );
+  await speech.getByTestId("media-start").click();
+  await speech.waitForFunction(() => {
+    const mode = document.querySelector("[data-testid=media-mode]")?.textContent ?? "";
+    const text = document.querySelector("[data-testid=media-transcript]")?.textContent ?? "";
+    return mode.includes("LOCAL_NEURAL") && text.includes("అమ్మా");
+  }, null, { timeout: 60000 });
+  const speechSeen = await speech.evaluate(() => ({
+    mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
+    text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
+    error: document.querySelector("[data-testid=media-error]")?.textContent ?? "",
+  }));
+  assert.match(speechSeen.mode, /LOCAL_NEURAL/);
+  assert.equal(speechSeen.text.trim(), "అమ్మా");
+  assert.equal(speechSeen.error, "");
+  console.log("PASS browser whisper speech", JSON.stringify(speechSeen));
+  checks += 1;
+  await speech.close();
+
+  execFileSync("python3", ["-c", "import wave; p='/tmp/r3e-silence-16k.wav'; w=wave.open(p,'w'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(16000); w.writeframes(b'\\x00\\x00'*16000); w.close()"]);
+  const silence = await openWhisperCase();
+  await silence.getByTestId("media-file").setInputFiles("/tmp/r3e-silence-16k.wav");
+  await silence.getByTestId("media-start").click();
+  await silence.waitForFunction(() => {
+    const mode = document.querySelector("[data-testid=media-mode]")?.textContent ?? "";
+    return mode.includes("LOCAL_FALLBACK");
+  }, null, { timeout: 30000 });
+  const silenceSeen = await silence.evaluate(() => ({
+    mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
+    text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
+  }));
+  assert.match(silenceSeen.mode, /LOCAL_FALLBACK/);
+  assert.doesNotMatch(silenceSeen.mode, /LOCAL_NEURAL/);
+  assert.equal(silenceSeen.text, "");
+  console.log("PASS browser whisper silence is not LOCAL_NEURAL", JSON.stringify(silenceSeen));
+  checks += 1;
+  await silence.close();
+
+  const cancelPage = await openWhisperCase();
+  await cancelPage.getByTestId("media-file").setInputFiles(
+    "/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-b-media/proof/media-r1/fixtures/human/te_dengue_intro_30s.wav",
+  );
+  await cancelPage.getByTestId("media-start").click();
+  await cancelPage.waitForSelector("[data-testid=media-progress]", { timeout: 15000 });
+  await cancelPage.getByTestId("media-cancel").click();
+  await cancelPage.waitForFunction(() => !document.querySelector("[data-testid=media-progress]"), null, { timeout: 15000 });
+  const cancelSeen = await cancelPage.evaluate(() => ({
+    mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
+    text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
+  }));
+  assert.doesNotMatch(cancelSeen.mode, /LOCAL_NEURAL/);
+  assert.equal(cancelSeen.text, "");
+  console.log("PASS browser whisper cancel is not LOCAL_NEURAL", JSON.stringify(cancelSeen));
+  checks += 1;
+  await cancelPage.close();
 
   async function robotsOf(caseName) {
     const page = await openCase(caseName, desktop);

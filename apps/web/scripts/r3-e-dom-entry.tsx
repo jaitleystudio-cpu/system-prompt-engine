@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Nav } from "../src/layout/Nav";
 import type { AppView } from "../src/routing";
 import { resolveRoute } from "../src/routing";
-import { MediaProductPanel } from "../src/media/MediaProductPanel";
+import { MediaProductPanel, type MediaRuntime } from "../src/media/MediaProductPanel";
 import { NotFound } from "../src/shell/NotFound";
 import { SkipLink } from "../src/shell/SkipLink";
 import { EMPTY_IDEA_MESSAGE, workspaceBuildDisabled } from "../src/shell/shellGuards";
@@ -16,7 +16,65 @@ declare global {
     __r3Want?: string;
     __r3Case?: string;
     __r3Route?: { kind: string; rewritten: boolean };
+    __speWhisper?: (payload: { name: string; b64: string }) => Promise<{
+      status: "SPEECH" | "NO_SPEECH" | "CANCELLED" | "ERROR";
+      text: string;
+      mode: "LOCAL_NEURAL" | "LOCAL_FALLBACK" | "BROWSER_SERVICE" | "UNAVAILABLE";
+      errorCode: string | null;
+      neuralSessionRan: boolean;
+      timestampsProven: boolean;
+      segments: Array<{ startMs: number; endMs: number; text: string }>;
+      progressPercent: number | null;
+      egressAttempts: number;
+    }>;
+    __speWhisperCancel?: () => Promise<void>;
   }
+}
+
+function bytesToB64(bytes: Uint8Array): string {
+  let raw = "";
+  const chunk = 0x4000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    raw += String.fromCharCode(...bytes.subarray(i, i + chunk));
+  }
+  return btoa(raw);
+}
+
+/** Present only when the Playwright page exposed the pinned whisper-cli bridge. */
+function whisperRuntime(): MediaRuntime | null {
+  if (typeof window.__speWhisper !== "function") return null;
+  return {
+    transcribe: async (file, hooks) => {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      hooks.onProgress({ percent: null, note: "Local neural session running." });
+      const finished = window.__speWhisper!({ name: file.name, b64: bytesToB64(bytes) });
+      const aborted = new Promise<{ cancelled: true }>((resolve) => {
+        if (hooks.signal.aborted) resolve({ cancelled: true });
+        hooks.signal.addEventListener("abort", () => {
+          void window.__speWhisperCancel?.();
+          resolve({ cancelled: true });
+        }, { once: true });
+      });
+      const raced = await Promise.race([
+        finished.then((result) => ({ cancelled: false as const, result })),
+        aborted,
+      ]);
+      if (raced.cancelled || hooks.signal.aborted) {
+        return {
+          status: "CANCELLED",
+          text: "",
+          mode: "UNAVAILABLE",
+          errorCode: "CANCELLED",
+          neuralSessionRan: false,
+          timestampsProven: false,
+          segments: [],
+          progressPercent: null,
+          egressAttempts: 0,
+        };
+      }
+      return raced.result;
+    },
+  };
 }
 
 function mark(name: string) {
@@ -42,7 +100,7 @@ function ShellCase({ want }: { want: string }) {
       />
       <main id="main" tabIndex={-1}>
         <h1>Home</h1>
-        {want === "media" ? <MediaProductPanel /> : null}
+        {want === "media" ? <MediaProductPanel runtime={whisperRuntime()} /> : null}
         {want === "website" ? (
           <div data-shell-mount="website">
             <WebsiteProduct />
