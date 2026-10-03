@@ -232,7 +232,114 @@ function exactRgbCover(rects: MeasuredRect[], image: RgbaImage): boolean {
  * are checked separately so a second syntax cannot hide a covering partition.
  * Paint-site names (r.hex, block.hex, or another local binding) are ignored.
  */
+function cssColor(style: unknown): [number, number, number] | null {
+  if (typeof style !== "string") return null;
+  const text = style.trim();
+  const hex = /^#([0-9a-f]{6})$/i.exec(text);
+  if (hex) {
+    return [
+      parseInt(hex[1].slice(0, 2), 16),
+      parseInt(hex[1].slice(2, 4), 16),
+      parseInt(hex[1].slice(4, 6), 16),
+    ];
+  }
+  const rgb = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i.exec(text);
+  if (!rgb) return null;
+  return [Number(rgb[1]), Number(rgb[2]), Number(rgb[3])];
+}
+
+function scriptSources(html: string): string[] {
+  const sources: string[] = [];
+  const lower = html.toLowerCase();
+  let from = 0;
+  while (from < html.length) {
+    const open = lower.indexOf("<script", from);
+    if (open < 0) break;
+    const start = html.indexOf(">", open);
+    if (start < 0) break;
+    const close = lower.indexOf("</script>", start);
+    if (close < 0) break;
+    sources.push(html.slice(start + 1, close));
+    from = close + 9;
+  }
+  return sources;
+}
+
+/**
+ * Run the page scripts against a canvas mock and rasterize fillRect.
+ * This does not inspect how the color was spelled in the source.
+ */
+function executeCanvasRaster(html: string, width: number, height: number): { data: Uint8ClampedArray; painted: Uint8Array } | null {
+  if (width < 1 || height < 1) return null;
+  const data = new Uint8ClampedArray(width * height * 4);
+  const painted = new Uint8Array(width * height);
+  const ctx = {
+    fillStyle: "#000000" as string,
+    imageSmoothingEnabled: false,
+    fillRect(x: number, y: number, w: number, h: number) {
+      const rgb = cssColor(this.fillStyle);
+      if (!rgb || !(w > 0) || !(h > 0)) return;
+      const x0 = Math.max(0, x | 0);
+      const y0 = Math.max(0, y | 0);
+      const x1 = Math.min(width, (x + w) | 0);
+      const y1 = Math.min(height, (y + h) | 0);
+      for (let yy = y0; yy < y1; yy++) {
+        for (let xx = x0; xx < x1; xx++) {
+          const p = yy * width + xx;
+          const i = p << 2;
+          data[i] = rgb[0];
+          data[i + 1] = rgb[1];
+          data[i + 2] = rgb[2];
+          data[i + 3] = 255;
+          painted[p] = 1;
+        }
+      }
+    },
+  };
+  const canvas = {
+    width,
+    height,
+    getContext() {
+      return ctx;
+    },
+  };
+  const documentStub = {
+    getElementById() {
+      return canvas;
+    },
+  };
+  try {
+    for (const source of scriptSources(html)) {
+      if (!source.trim()) continue;
+      const run = new Function("document", "window", `"use strict";\n${source}`);
+      run(documentStub, { document: documentStub });
+    }
+  } catch {
+    return null;
+  }
+  return { data, painted };
+}
+
+function rasterMatchesFixture(html: string, image: RgbaImage): boolean {
+  const raster = executeCanvasRaster(html, image.width, image.height);
+  if (!raster) return false;
+  const pixels = image.width * image.height;
+  for (let p = 0; p < pixels; p++) {
+    if (!raster.painted[p]) return false;
+    const i = p << 2;
+    if (
+      raster.data[i] !== image.data[i] ||
+      raster.data[i + 1] !== image.data[i + 1] ||
+      raster.data[i + 2] !== image.data[i + 2]
+    ) {
+      return false;
+    }
+  }
+  return pixels > 0;
+}
+
 export function isExactRgbPartitionReplay(html: string, image: RgbaImage): boolean {
+  if (rasterMatchesFixture(html, image)) return true;
   return (
     exactRgbCover(parseTupleRects(html), image) ||
     exactRgbCover(parseObjectRects(html), image) ||

@@ -320,6 +320,69 @@ function assertObjectFormPartitionFailsClosed() {
 
 assertObjectFormPartitionFailsClosed();
 
+function parallelChannelPartitionHtml(rects) {
+  const xs = rects.map((rect) => rect.x);
+  const ys = rects.map((rect) => rect.y);
+  const ws = rects.map((rect) => rect.w);
+  const hs = rects.map((rect) => rect.h);
+  const rs = rects.map((rect) => parseInt(rect.hex.slice(1, 3), 16));
+  const gs = rects.map((rect) => parseInt(rect.hex.slice(3, 5), 16));
+  const bs = rects.map((rect) => parseInt(rect.hex.slice(5, 7), 16));
+  return `<!doctype html><canvas id="c"></canvas><script>
+const xs = ${JSON.stringify(xs)};
+const ys = ${JSON.stringify(ys)};
+const ws = ${JSON.stringify(ws)};
+const hs = ${JSON.stringify(hs)};
+const rs = ${JSON.stringify(rs)};
+const gs = ${JSON.stringify(gs)};
+const bs = ${JSON.stringify(bs)};
+const ctx = document.getElementById("c").getContext("2d");
+for (let i = 0; i < xs.length; i++) {
+  const red = rs[i].toString(16).padStart(2, "0");
+  const green = gs[i].toString(16).padStart(2, "0");
+  const blue = bs[i].toString(16).padStart(2, "0");
+  ctx.fillStyle = "#" + red + green + blue;
+  ctx.fillRect(xs[i], ys[i], ws[i], hs[i]);
+}
+</script>`;
+}
+
+function assertParallelChannelPartitionFailsClosed() {
+  const data = new Uint8ClampedArray([
+    255, 0, 0, 255, 0, 255, 0, 255,
+    0, 0, 255, 255, 255, 255, 255, 255,
+  ]);
+  const image = { width: 2, height: 2, data };
+  const rects = recon.measureRectangles(image);
+  const html = parallelChannelPartitionHtml(rects);
+  assert.match(html, /const xs = /);
+  assert.match(html, /const rs = /);
+  assert.match(html, /toString\(16\)\.padStart\(2, "0"\)/);
+  assert.match(html, /fillStyle = "#" \+ red \+ green \+ blue/);
+  assert.equal(html.includes('"#ff0000"'), false);
+  const judged = gate.judgeNativeReconstruction({
+    html,
+    image,
+    ssimScore: 1,
+    pixelDeltaPercentage: 0,
+    exactViewport: true,
+    copiedFixture: false,
+  });
+  assert.notEqual(judged.status, "PASS");
+  assert.equal(judged.status, "FAIL_CONTRACT");
+  const scope = gate.judgeLaneScope({
+    nativeStatuses: ["PASS"],
+    narrowReferencePaired: true,
+    nonHtmlVisualRendered: true,
+    candidates: [{ html, image }],
+  });
+  assert.equal(scope.final, "HOLD");
+  assert.notEqual(scope.final, "PASS_WITHIN_TESTED_SCOPE");
+}
+
+assertParallelChannelPartitionFailsClosed();
+
+
 
 assert.equal(gate.PASS_MIN_SSIM, 0.95);
 assert.equal(gate.PASS_MAX_PIXEL_DELTA_PERCENT, 5);
@@ -673,6 +736,9 @@ const evidence = {
 assert.equal(evidence.final, "HOLD");
 assert.equal(evidence.pixelPerfectClaim, false);
 writeFileSync(join(evidenceDir, "R3C_VISION_EVIDENCE.json"), JSON.stringify(evidence, null, 2));
+test("parallel-channel exact-RGB partition fails closed", () => {
+  assertParallelChannelPartitionFailsClosed();
+});
 test("object-form exact-RGB partition fillStyle=r.hex fails closed", () => {
   assertObjectFormPartitionFailsClosed();
 });
