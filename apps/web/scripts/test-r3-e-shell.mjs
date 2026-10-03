@@ -60,7 +60,10 @@ check("unknown route is not-found and is not Home", () => {
 check("website mounted and media pending", () => {
   assert.equal(routing.resolveRoute("/website").view, "website");
   assert.equal(routing.resolveRoute("/media").view, "media");
-  assert.deepEqual(mount.MOUNT_PENDING, ["media"]);
+  assert.equal(mount.MOUNT_PENDING.length, 1);
+  assert.equal(mount.MOUNT_PENDING[0].id, "media");
+  assert.equal(mount.MOUNT_PENDING[0].sha, "a93e87d0efb247204883ecbd18203fe248c5c8e5");
+  assert.equal(mount.MOUNT_PENDING[0].productMediaV1, "NOT_PASS");
   assert.equal(mount.WEBSITE_MOUNT.sha, FROZEN);
   assert.equal(mount.WEBSITE_MOUNT.status, "MOUNTED");
   const app = src("src/App.tsx");
@@ -68,7 +71,10 @@ check("website mounted and media pending", () => {
   assert.match(app, /MediaRouteSlot/);
   assert.doesNotMatch(app, /StaticWebsiteBuilder/);
   assert.doesNotMatch(src("src/shell/MediaRouteSlot.tsx"), /<input|<textarea|<button|type="file"/);
-  assert.match(src("src/shell/MediaRouteSlot.tsx"), /No media product is mounted/);
+  assert.match(src("src/shell/MediaRouteSlot.tsx"), /LOCAL_NEURAL is unavailable in the browser/);
+  assert.match(src("src/shell/MediaRouteSlot.tsx"), /NOT_PASS/);
+  assert.doesNotMatch(src("src/shell/MediaRouteSlot.tsx"), /PRODUCT_MEDIA_V1\s*=\s*PASS/);
+  assert.doesNotMatch(src("src/shell/mountStatus.ts"), /PRODUCT_MEDIA_V1\s*=\s*"PASS"/);
   assert.equal(existsSync(join(webRoot, "src/media/mount-contract.ts")), false);
 });
 
