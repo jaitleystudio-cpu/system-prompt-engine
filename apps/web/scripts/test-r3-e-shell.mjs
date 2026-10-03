@@ -59,26 +59,28 @@ check("unknown route is not-found and is not Home", () => {
   assert.doesNotMatch(app, /replaceState\(\{ view: "home" \}/);
 });
 
-check("website mounted and media panel mounted without a neural runtime", () => {
+check("website mounted and /media route owns the whisper runtime", () => {
   assert.equal(routing.resolveRoute("/website").view, "website");
   assert.equal(routing.resolveRoute("/media").view, "media");
   assert.deepEqual(mount.MOUNT_PENDING, []);
   assert.equal(mount.MEDIA_MOUNT.sha, "a93e87d0efb247204883ecbd18203fe248c5c8e5");
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
-  assert.equal(mount.MEDIA_MOUNT.runtime, null);
-  assert.equal(mount.MEDIA_MOUNT.localNeuralInBrowser, "UNAVAILABLE");
   assert.equal(mount.WEBSITE_MOUNT.sha, FROZEN);
   assert.equal(mount.WEBSITE_MOUNT.status, "MOUNTED");
   const app = src("src/App.tsx");
+  const route = src("src/media/MediaRoute.tsx");
+  const harness = src("scripts/r3-e-dom-entry.tsx");
   assert.match(app, /WebsiteProduct/);
-  assert.match(app, /<MediaProductPanel \/>/);
-  assert.doesNotMatch(app, /MediaRouteSlot/);
+  assert.match(app, /<MediaRoute \/>/);
+  assert.doesNotMatch(app, /<MediaProductPanel/);
   assert.doesNotMatch(app, /runtime=\{/);
+  assert.match(route, /runtime=\{pinnedWhisperRuntime\}/);
+  assert.doesNotMatch(harness, /runtime=\{/);
+  assert.doesNotMatch(harness, /whisperRuntime/);
   assert.doesNotMatch(app, /StaticWebsiteBuilder/);
-  assert.doesNotMatch(app, /productMediaV1:\s*"PASS"/);
   const contract = src("src/media/mount-contract.ts");
-  assert.match(contract, /productMediaV1: "NOT_PASS"/);
-  assert.doesNotMatch(contract, /productMediaV1: "PASS"/);
+  assert.match(contract, /productMediaV1: "PASS"/);
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
+  assert.equal(mount.MEDIA_MOUNT.runtime, "pinnedWhisperRuntime");
   assert.equal(existsSync(join(webRoot, "src/media/MediaProductPanel.tsx")), true);
 });
 
@@ -314,8 +316,10 @@ try {
   assert.match(after, /UNAVAILABLE/);
   assert.doesNotMatch(after, /LOCAL_NEURAL/);
   assert.doesNotMatch(after, /Local neural session/);
-  assert.match(err, /not mounted in this browser/i);
-  console.log("PASS /media panel is UNAVAILABLE and does not label LOCAL_NEURAL as available");
+  assert.match(err, /NOT_MOUNTED/);
+  const owner = await media.evaluate(() => document.querySelector("[data-runtime-owner]")?.getAttribute("data-runtime-owner"));
+  assert.equal(owner, "route");
+  console.log("PASS /media route runtime stays UNAVAILABLE without the CLI bridge");
   checks += 1;
   await media.close();
 
@@ -377,6 +381,7 @@ try {
   assert.match(speechSeen.mode, /LOCAL_NEURAL/);
   assert.equal(speechSeen.text.trim(), "అమ్మా");
   assert.equal(speechSeen.error, "");
+  assert.equal(await speech.evaluate(() => document.querySelector("[data-runtime-owner]")?.getAttribute("data-runtime-owner")), "route");
   console.log("PASS browser whisper speech", JSON.stringify(speechSeen));
   checks += 1;
   await speech.close();
