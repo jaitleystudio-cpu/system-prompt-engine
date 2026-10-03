@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawn } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -78,10 +78,58 @@ check("website mounted and /media route owns the whisper runtime", () => {
   assert.doesNotMatch(harness, /whisperRuntime/);
   assert.doesNotMatch(app, /StaticWebsiteBuilder/);
   const contract = src("src/media/mount-contract.ts");
-  assert.match(contract, /productMediaV1: "PASS"/);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
+  assert.match(contract, /productMediaV1: "NOT_PASS"/);
+  assert.doesNotMatch(contract, /productMediaV1:\s*"PASS"/);
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
   assert.equal(mount.MEDIA_MOUNT.runtime, "pinnedWhisperRuntime");
   assert.equal(existsSync(join(webRoot, "src/media/MediaProductPanel.tsx")), true);
+});
+
+const PRODUCT_MEDIA_HOLD =
+  "A normal /media visit stays NOT_MOUNTED unless a test plants window.__speWhisper, and the pinned session lives in the r3-b worktree, not in this branch.";
+
+function sourceFiles(dir) {
+  const out = [];
+  for (const ent of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, ent.name);
+    if (ent.isDirectory()) {
+      if (ent.name === "node_modules" || ent.name === "dist") continue;
+      out.push(...sourceFiles(path));
+      continue;
+    }
+    if (/\.(tsx?|jsx?|mjs|cjs|html)$/.test(ent.name)) out.push(path);
+  }
+  return out;
+}
+
+check("productMediaV1 cannot PASS on a test-injected __speWhisper", () => {
+  const contract = src("src/media/mount-contract.ts");
+  const statusSrc = src("src/shell/mountStatus.ts");
+  const assign = /(?:window|globalThis)\.__speWhisper\s*=|exposeFunction\(\s*["']__speWhisper["']/;
+  const harnessPath = fileURLToPath(import.meta.url);
+  const productHits = [];
+  for (const path of [...sourceFiles(join(webRoot, "src")), ...sourceFiles(join(webRoot, "scripts"))]) {
+    if (path === harnessPath) continue;
+    if (assign.test(readFileSync(path, "utf8"))) productHits.push(path);
+  }
+  const testInjects = assign.test(readFileSync(harnessPath, "utf8"));
+  const claimsPass =
+    /productMediaV1:\s*"PASS"/.test(contract) ||
+    /productMediaV1:\s*"PASS"/.test(statusSrc) ||
+    mount.MEDIA_MOUNT.productMediaV1 === "PASS";
+  if (claimsPass && testInjects && productHits.length === 0) {
+    throw new Error(
+      "productMediaV1 is PASS while the only runtime assignment is a test-injected page global",
+    );
+  }
+  assert.equal(claimsPass, false);
+  assert.equal(testInjects, true);
+  assert.deepEqual(productHits, []);
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, PRODUCT_MEDIA_HOLD);
+  assert.match(contract, /productMediaV1: "NOT_PASS"/);
+  assert.ok(contract.includes(PRODUCT_MEDIA_HOLD));
+  assert.doesNotMatch(contract, /remainingGap:\s*"NONE"/);
 });
 
 check("private and tool routes are noindex and off the sitemap", () => {
@@ -382,7 +430,7 @@ try {
   assert.equal(speechSeen.text.trim(), "అమ్మా");
   assert.equal(speechSeen.error, "");
   assert.equal(await speech.evaluate(() => document.querySelector("[data-runtime-owner]")?.getAttribute("data-runtime-owner")), "route");
-  console.log("PASS browser whisper speech", JSON.stringify(speechSeen));
+  console.log("TEST-BRIDGE EVIDENCE speech, not a product pass", JSON.stringify(speechSeen));
   checks += 1;
   await speech.close();
 
@@ -401,7 +449,7 @@ try {
   assert.match(silenceSeen.mode, /LOCAL_FALLBACK/);
   assert.doesNotMatch(silenceSeen.mode, /LOCAL_NEURAL/);
   assert.equal(silenceSeen.text, "");
-  console.log("PASS browser whisper silence is not LOCAL_NEURAL", JSON.stringify(silenceSeen));
+  console.log("TEST-BRIDGE EVIDENCE silence is not LOCAL_NEURAL, not a product pass", JSON.stringify(silenceSeen));
   checks += 1;
   await silence.close();
 
@@ -419,7 +467,7 @@ try {
   }));
   assert.doesNotMatch(cancelSeen.mode, /LOCAL_NEURAL/);
   assert.equal(cancelSeen.text, "");
-  console.log("PASS browser whisper cancel is not LOCAL_NEURAL", JSON.stringify(cancelSeen));
+  console.log("TEST-BRIDGE EVIDENCE cancel is not LOCAL_NEURAL, not a product pass", JSON.stringify(cancelSeen));
   checks += 1;
   await cancelPage.close();
 
