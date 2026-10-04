@@ -1,13 +1,13 @@
 /**
- * Mount contract for the shell lane.
- * This lane does not edit App, routing, Nav, shell, a11y, SeoHead, or sitemap.
- * routeMountStatus stays NOT_INTEGRATED / SHELL_MOUNT=NOT_DONE until that lane mounts WebsiteProduct.
+ * Mount contract reconciled with the current shell.
+ * WebsiteProduct is mounted at /website by App.tsx; live URL reconstruction
+ * and independent WebGL execution remain separate qualification states.
  */
 export const websiteMountContract = {
   id: "spe.web.website-product",
-  status: "READY_FOR_SHELL_MOUNT",
-  routeMountStatus: "NOT_INTEGRATED",
-  shellMount: "NOT_DONE",
+  status: "MOUNTED",
+  routeMountStatus: "MOUNTED",
+  shellMount: "MOUNTED",
   importPath: "apps/web/src/website/WebsiteProduct.tsx",
   exportName: "WebsiteProduct",
   flowPath: "apps/web/src/website/productFlow.ts",
