@@ -101,7 +101,7 @@ export const pinnedWhisperRuntime: MediaRuntime = {
     const onAbort = () => cancelHost();
     hooks.signal.addEventListener("abort", onAbort, { once: true });
     if (hooks.signal.aborted) return cancelled();
-    hooks.onProgress({ percent: null, note: "Starting the local media session on this machine." });
+    hooks.onProgress({ percent: null, note: "Requesting transcription from the configured app host." });
     try {
       const bytes = await file.arrayBuffer();
       if (hooks.signal.aborted) return cancelled();

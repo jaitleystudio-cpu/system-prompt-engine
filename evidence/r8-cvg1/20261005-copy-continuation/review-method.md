@@ -1,0 +1,17 @@
+# R8-CVG-1 deliberate copy review
+
+Mission: contextual review of donor copy, preserving source and evidence custody. No architecture, release, or qualification promotion.
+
+Authority: docs/human-perspective/SPEC.md, CONSTITUTION.md, REPORT.md; static inventory is conservative and includes internal literals. Research literature does not adjudicate these repository-local contracts. Foundational and latest authority are the current branch contracts and exact-head CI, not external studies.
+
+Evidence graph: each batch's reviewed.json binds explicit IDs to file, depth, and text. Source inspection distinguishes action labels, accessibility labels, runtime disclosures, refusal/error diagnostics, protocol enums, CSS/HTML fragments, and sample content. Internal tokens are retained without claiming they are visible product capability. Approval additions use explicitly enumerated reviewed IDs; the approved inventory is never regenerated. Prior approvals are retained as historical custody.
+
+Hypotheses and adversarial elimination: (1) stale checkout, (2) missing prior commits, (3) stale CI, (4) copy scanner defect, (5) broad approvals required, (6) mode selection executes reasoning, (7) shell submits file bytes, (8) 50 MB shell cap enforced, (9) desktop width fixed at 1200px, (10) sample CTA downloads a bundle, (11) image notes prove OCR, (12) scaffold emission proves compilation, (13) file stays in browser during media/OCR requests, (14) host counter proves zero total network. Fetch/ancestry and baseline CI eliminate 1–3; gate reproduces 657 unknown IDs and 0 policy violations, not a scanner exception. Explicit source review eliminates 4–5 as fixes. Callback metadata, absent byte submission/size checks, width 100%, anchor-only sample, pixel sampling, scaffold emission, and relative API POSTs contradict 6–14.
+
+Batch 1: fully inspected builder UI/spec emitter and input shell/modal. Reviewed 249 IDs: actual labels and sample content, error/refusal branches, state tokens, MIME/DOM names, CSS and HTML fragments. Copy repairs preceded by 12 failing regression cases. Concurrent shell/mode commits preserved via merges; footer matches preserved Selected mode contract, adding one newly reviewed ID. No execution behavior added.
+
+Batch 2: fully inspected mediaProductModel, MediaProductPanel, MediaRoute, mount-contract, pinnedWhisperRuntime, ocrLite, OcrRoute, VisualScreenshotWorkspace; traced imageObserve, limits, screenshotToCode and its coarse-summary bridge. OCR remains UNKNOWN because this workspace never calls canonical OCR. Asset/response inferences and fidelity UNPROVEN are retained. Counter disclosure explicitly says unverified host counter and excludes browser-to-host upload: it is not a zero-network receipt. Host-reported LOCAL_NEURAL remains distinct from independently measured inference.
+
+Contradictions: planned isolated donor UX versus actual handler/route behavior; generic notes versus OCR evidence; scaffold emission versus target build; relative host endpoint versus on-device claim. Smallest surviving repair: truthful bounded disclosures, without new processing or weakened tests.
+
+Unknowns: human interpretation, independent browser acceptance, Vision replay/SSIM, global network qualification, vendor/payment/pen-test receipts. Human ratings NO_RATINGS_YET. UNKNOWN != PASS. Vision threshold remains 0.95. Product verdict R8_NOT_READY. No studies or independent human checks invented.

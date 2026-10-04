@@ -46,7 +46,7 @@ export function MediaProductPanel({ runtime = null }: { runtime?: MediaRuntime |
           mode: "UNAVAILABLE",
           errorCode: "NOT_MOUNTED",
           message:
-            "Local neural transcription is not mounted in this browser. The shell still has to mount this panel. The file stayed on this device.",
+            "No transcription runtime is connected to this panel. No file was submitted by this attempt.",
         }),
       );
       return;
@@ -83,7 +83,7 @@ export function MediaProductPanel({ runtime = null }: { runtime?: MediaRuntime |
   return (
     <section className="spe-media-product" aria-labelledby="spe-media-product-title" data-egress="0" data-status={state.status || "idle"} data-phase={state.phase} data-error-code={state.errorCode ?? ""} data-testid="media-panel">
       <h2 id="spe-media-product-title">Local media</h2>
-      <p>Choose an audio or video file on this device. It is not uploaded.</p>
+      <p>Choose an audio or video file. Transcribe sends its bytes to the configured app host; on-device execution requires a local host.</p>
       <p data-testid="media-mode">
         Mode: <strong>{MODE_COPY[state.mode]}</strong> <span>({state.mode})</span>
       </p>
@@ -143,7 +143,7 @@ export function MediaProductPanel({ runtime = null }: { runtime?: MediaRuntime |
       <p data-testid="media-timestamps">
         {state.timestampsProven ? "Segment timestamps came from the model." : "Segment timestamps are not proven."}
       </p>
-      <p data-testid="media-egress">Network sends for this file: {state.egressAttempts}</p>
+      <p data-testid="media-egress">Network sends for this file: {state.egressAttempts} (unverified host counter; excludes browser-to-host upload)</p>
     </section>
   );
 }

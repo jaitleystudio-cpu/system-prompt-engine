@@ -17539,6 +17539,1158 @@
       "file": "apps/web/src/landing/UniversalInputShell.tsx",
       "depth": "PRODUCT",
       "text": "Selected mode ("
+    },
+    {
+      "id": "044184aa8e6426570709",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "http://"
+    },
+    {
+      "id": "0b6ff689a4b312584bf8",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "local-cpu"
+    },
+    {
+      "id": "0ec3ff7407957218ab4c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "webm"
+    },
+    {
+      "id": "1051c6583741bb1c3809",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "Refusing LOCAL_NEURAL without a real neural session."
+    },
+    {
+      "id": "1a2ba95649d944a0ead9",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "retry"
+    },
+    {
+      "id": "1d094190769054c1a3a2",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "cloud"
+    },
+    {
+      "id": "1fb6960e79df0ec0dd8d",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "azure"
+    },
+    {
+      "id": "3555e3844df098ac88bf",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "NO_FILE"
+    },
+    {
+      "id": "3e602941289ad47bd68c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "audio"
+    },
+    {
+      "id": "4ac2e42f8de6df52943e",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "UNAVAILABLE"
+    },
+    {
+      "id": "4e6a14e311d891ae0040",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "result"
+    },
+    {
+      "id": "4f5198ba8d4b3a89a1af",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "FALSE_NEURAL"
+    },
+    {
+      "id": "5e8ed32ccdc15277c068",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "wav"
+    },
+    {
+      "id": "608d3503a7e934b6b284",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "browser"
+    },
+    {
+      "id": "793d5bc70d4ff7ae98f9",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "Choose an audio or video file on this device."
+    },
+    {
+      "id": "7ae86b266d8f8d335142",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "working"
+    },
+    {
+      "id": "7ff18f122ef4bdb7484a",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "Reading the file on this device."
+    },
+    {
+      "id": "82774382400eac13ad89",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "CANCELLED"
+    },
+    {
+      "id": "83503bf3104f6fc88386",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "unknown"
+    },
+    {
+      "id": "83cdfa1264d09839ec6c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "cancel"
+    },
+    {
+      "id": "8471435d38546efa7f41",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_NEURAL"
+    },
+    {
+      "id": "878dec8e0e11d3b279e4",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "cancelled"
+    },
+    {
+      "id": "8c37fb3619ea436e58df",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "aac"
+    },
+    {
+      "id": "8df4023620144d9f72b3",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "mov"
+    },
+    {
+      "id": "8f22cd017f9e08fcca73",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "web-speech"
+    },
+    {
+      "id": "9910fe47ab7c80bb539e",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "remote"
+    },
+    {
+      "id": "a4924ad47735e69daf6d",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "idle"
+    },
+    {
+      "id": "a7142d810e21aef725ec",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "pinned-whisper-cpp"
+    },
+    {
+      "id": "af17171ed614397ea34c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "mp4"
+    },
+    {
+      "id": "b0d9905e3c77ced544a5",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "whisper-cli"
+    },
+    {
+      "id": "b0dcc1d38e8c6a4decf3",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "ERROR"
+    },
+    {
+      "id": "b3c28bf9a206e4cc0ea7",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "flac"
+    },
+    {
+      "id": "b658b0e7e7687edb89b6",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "Select a local audio or video file first."
+    },
+    {
+      "id": "b75bfb1ecf2bc924f752",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "mkv"
+    },
+    {
+      "id": "b8fe1584e35d5f054116",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "fail"
+    },
+    {
+      "id": "bcba174f9974d7f1fc2c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "error"
+    },
+    {
+      "id": "be3314be1bb337257729",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "oga"
+    },
+    {
+      "id": "cd558d14ac3cc3f6eccf",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "UNSUPPORTED_TYPE"
+    },
+    {
+      "id": "cea6163880e55da0ddf2",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "start"
+    },
+    {
+      "id": "d04136cc9703c4c75e4d",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "video"
+    },
+    {
+      "id": "d1fe7fe1f67475011131",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "aws"
+    },
+    {
+      "id": "d2bb689408ea21abe7d0",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "selected"
+    },
+    {
+      "id": "d69582634d5a8eb80eb4",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "BROWSER_SERVICE"
+    },
+    {
+      "id": "da48edff90cf5292a0d6",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "mp3"
+    },
+    {
+      "id": "dcafaba6e3fddec71cb7",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "ogg"
+    },
+    {
+      "id": "de891b49859379b2219f",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "m4a"
+    },
+    {
+      "id": "e08482bc800efdda7516",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "Cancelled."
+    },
+    {
+      "id": "e164ed1d74e812f5626b",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "google"
+    },
+    {
+      "id": "e81552b20643f72a421c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "progress"
+    },
+    {
+      "id": "ecd566b8d48cfe08c7a7",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "m4v"
+    },
+    {
+      "id": "f03d5eda23af4ab66309",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_FALLBACK"
+    },
+    {
+      "id": "f79c1627c97b9337beac",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "select"
+    },
+    {
+      "id": "f8329a084de3010e724e",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "openai"
+    },
+    {
+      "id": "f8c2f151b98da47e3460",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "webspeech"
+    },
+    {
+      "id": "fa00aac9e308bce1e41f",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "WORKING"
+    },
+    {
+      "id": "fb2aa270530910594778",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "review"
+    },
+    {
+      "id": "fd6dae8acc0efe4f0bdc",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "https://"
+    },
+    {
+      "id": "2b99c447f522ba005e1d",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "No transcription runtime is connected to this panel. No file was submitted by this attempt."
+    },
+    {
+      "id": "1d4c4394e31ef08504ae",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "cancel"
+    },
+    {
+      "id": "395e6f471278c11943ac",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Working"
+    },
+    {
+      "id": "48382e0dd674c166ecef",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "UNAVAILABLE"
+    },
+    {
+      "id": "4940649d17922b5ce94f",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "result"
+    },
+    {
+      "id": "582b5aa5922e0a56ee3a",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "LOCAL_FALLBACK"
+    },
+    {
+      "id": "5b457c300970d4c1af02",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "start"
+    },
+    {
+      "id": "79ce62c2afd3814a37e5",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "RUNTIME_ERROR"
+    },
+    {
+      "id": "8103533b5e973e5c2635",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Mode:"
+    },
+    {
+      "id": "856032488c4b64cb4447",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Transcription failed."
+    },
+    {
+      "id": "8b15c0d986edc2167cf6",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Network sends for this file:"
+    },
+    {
+      "id": "8b6badb7d76e9a18b2c0",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Browser speech service"
+    },
+    {
+      "id": "92f37a77659749cfd60b",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "fail"
+    },
+    {
+      "id": "a4882bb96c597320bbdb",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local neural session"
+    },
+    {
+      "id": "ac15dac2dd2473c4b607",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "progress"
+    },
+    {
+      "id": "2e17f6f9f4eccd828c93",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Choose an audio or video file. Transcribe sends its bytes to the configured app host; on-device execution requires a local host."
+    },
+    {
+      "id": "b31aff0e75b8c1d5e804",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "NOT_MOUNTED"
+    },
+    {
+      "id": "bbff7a80133c2c84ed80",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Unavailable"
+    },
+    {
+      "id": "bd134e66e193801ab3bf",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "error"
+    },
+    {
+      "id": "bdf680e146eb64232fbb",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "working"
+    },
+    {
+      "id": "c046248dfd8a512d4bba",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local media"
+    },
+    {
+      "id": "c594224cade328d44b2c",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Segment timestamps came from the model."
+    },
+    {
+      "id": "c9f946d83d00e4990e94",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Cancel"
+    },
+    {
+      "id": "cd890498eac0919ce0e9",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Segment timestamps are not proven."
+    },
+    {
+      "id": "d97f30e66b9f1a41a71c",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local fallback (no neural session)"
+    },
+    {
+      "id": "f2d023b794e8760c31a7",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Retry"
+    },
+    {
+      "id": "ffde158a116ac06fc99c",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Transcribe"
+    },
+    {
+      "id": "825788009903b45a2617",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "(unverified host counter; excludes browser-to-host upload)"
+    },
+    {
+      "id": "0acfa4aebc0f7d494f95",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "/api/media/health"
+    },
+    {
+      "id": "426ad990213b598b4307",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "PASS"
+    },
+    {
+      "id": "502764b56776869cab7d",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "route"
+    },
+    {
+      "id": "89d177a26f355a7f4d2c",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "92d6cb6094de8ab56e89",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "mount"
+    },
+    {
+      "id": "abcb79198e56103844b0",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "NOT_PASS"
+    },
+    {
+      "id": "2485405257e9c84b4adf",
+      "file": "apps/web/src/media/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "/media"
+    },
+    {
+      "id": "25c0103edc4f82975dfc",
+      "file": "apps/web/src/media/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "JOURNEY_NOT_RECORDED"
+    },
+    {
+      "id": "2d36a722742be1204963",
+      "file": "apps/web/src/media/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_PASS"
+    },
+    {
+      "id": "3e95328e2fed182ffa4a",
+      "file": "apps/web/src/media/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "MediaProductPanel"
+    },
+    {
+      "id": "b283879b5be3e543ecfd",
+      "file": "apps/web/src/media/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/media/MediaProductPanel.tsx"
+    },
+    {
+      "id": "00e057557d87a42f1591",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "FALSE_MODE"
+    },
+    {
+      "id": "156f894e8ba66a16e06e",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "POST"
+    },
+    {
+      "id": "333c5bff2eafba0fa532",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "application/octet-stream"
+    },
+    {
+      "id": "4569a91a37a9a7c2c94a",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "HOST_ERROR"
+    },
+    {
+      "id": "4b2ead22398aab3cd7b2",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "image/png"
+    },
+    {
+      "id": "59496dc90bdb0137687e",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "CANCELLED"
+    },
+    {
+      "id": "5e856f397c0fe381e706",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_NEURAL"
+    },
+    {
+      "id": "64b4d45e86aaf8c64644",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "number"
+    },
+    {
+      "id": "943751892a1410601271",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "UNAVAILABLE"
+    },
+    {
+      "id": "9a000b467878e0c29bb9",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "HEURISTIC"
+    },
+    {
+      "id": "a14ade25e8d876e7bc49",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "function"
+    },
+    {
+      "id": "a24046edb63cb65b267a",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "b13549cdc7af4d0a380c",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "high"
+    },
+    {
+      "id": "b986a56376792a4b822f",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "ce550446dae0bdf2529c",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "/api/ocr/recognize"
+    },
+    {
+      "id": "ceae99a7f0c9e28cd076",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "DECODE"
+    },
+    {
+      "id": "d36c4c5b7e3760037bca",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_OCR"
+    },
+    {
+      "id": "e2568ce17ec7c27b62c8",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "ocr-tesseract"
+    },
+    {
+      "id": "e40bb7af81f20a06c6a1",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "ENGINE_FAILED"
+    },
+    {
+      "id": "eaf5f671cbded179317b",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_MOUNTED"
+    },
+    {
+      "id": "0a68f51d788f26cfdb25",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Network sends for this image:"
+    },
+    {
+      "id": "1a570c951807a4083d61",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "OCR product:"
+    },
+    {
+      "id": "7b7898699a462bbf316d",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Choose or drop an image. Read image sends its bytes to the configured app host; on-device OCR requires a local host."
+    },
+    {
+      "id": "3d50abd9447de6f52596",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "UNAVAILABLE"
+    },
+    {
+      "id": "3e8b141edb377d8b7359",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy text"
+    },
+    {
+      "id": "42369c5bca5aac1e9796",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Local OCR"
+    },
+    {
+      "id": "69246fba307401c79ff5",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Mode:"
+    },
+    {
+      "id": "9b8a78c2905030ba2cd6",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Export text"
+    },
+    {
+      "id": "b8ccd7707294bc7c4dd5",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "a"
+    },
+    {
+      "id": "dfadc6e811257dfff28f",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Export JSON"
+    },
+    {
+      "id": "e43d86acdbaf7f631abe",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "HOLD"
+    },
+    {
+      "id": "ed5a00e646b00fd212a8",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Read image"
+    },
+    {
+      "id": "f2cc03a127cd47a1933c",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "/api/ocr/health"
+    },
+    {
+      "id": "14ad2674b05c6c3f4968",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "(unverified host counter; excludes browser-to-host upload)"
+    },
+    {
+      "id": "09ad3bf26b9cfe2f8c5b",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "FALSE_NEURAL"
+    },
+    {
+      "id": "09d78da500a9fa5466df",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "NO_SPEECH"
+    },
+    {
+      "id": "0b16ccf1eca79e915bad",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "CANCELLED"
+    },
+    {
+      "id": "0c6df96ebead170a58b4",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_MOUNTED"
+    },
+    {
+      "id": "107cc8b59105aa22d646",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "10ffcf0b1faa4cbfd0d4",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "/api/media/transcribe"
+    },
+    {
+      "id": "1944ea59afccc54c5c25",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "SPEECH"
+    },
+    {
+      "id": "27a6c4fe1b4b3eacfa86",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "ERROR"
+    },
+    {
+      "id": "3270a7881e02f214631c",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "POST"
+    },
+    {
+      "id": "37e25916d68526951e59",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "number"
+    },
+    {
+      "id": "45747166054b4948b480",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "UNAVAILABLE"
+    },
+    {
+      "id": "6e22dbd594e130e55142",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_NEURAL"
+    },
+    {
+      "id": "72a0638dbe85052c84bb",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "application/octet-stream"
+    },
+    {
+      "id": "737e308dcb1fe2e11d87",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "7d66d71105b32d54984c",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "/api/media/cancel"
+    },
+    {
+      "id": "b61b31fa8346b57335d2",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "Requesting transcription from the configured app host."
+    },
+    {
+      "id": "c39b876f07ba31222d6e",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "BROWSER_SERVICE"
+    },
+    {
+      "id": "c579c587975240e73c2a",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "abort"
+    },
+    {
+      "id": "d61c7a8e2ee5b5393aa1",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "HOST_ERROR"
+    },
+    {
+      "id": "df17597e2f7b1d5fc753",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_FALLBACK"
+    },
+    {
+      "id": "e7b9c5f3686a4d9e7779",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "application/json"
+    },
+    {
+      "id": "013022e50415cd44ddf1",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Upload screenshot or UI image"
+    },
+    {
+      "id": "031cd71f4b751e2712fa",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Visual Evidence Inspector"
+    },
+    {
+      "id": "03e12d2ba6cf3c4b8f1d",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy generated code to clipboard"
+    },
+    {
+      "id": "0862abdf2d2f39f182f0",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy Code"
+    },
+    {
+      "id": "e9b0fb772491d3e6faad",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Observation disclosures"
+    },
+    {
+      "id": "15266cf489662d6e7a5e",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "responsive:"
+    },
+    {
+      "id": "16da33a66011ddecde4a",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Replace Image"
+    },
+    {
+      "id": "19b5a8d31d11fa534c13",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "✓ Copied to Clipboard"
+    },
+    {
+      "id": "1ccc94d85a0eeb505899",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "(OBSERVED / UNKNOWN)"
+    },
+    {
+      "id": "262d0b11a3088c96f6a4",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "react"
+    },
+    {
+      "id": "2c8887df81a1056600aa",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Evidence Disclosure Ledger"
+    },
+    {
+      "id": "30282bea43c88de3dbd1",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Image Reference Input"
+    },
+    {
+      "id": "40ad7a6cc8ff88cd16d9",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "// Upload an image or screenshot to synthesize"
+    },
+    {
+      "id": "41c158d602d56db70acf",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Visual & Screenshot Intelligence"
+    },
+    {
+      "id": "459d466b6bfc0522db6c",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Reference Image"
+    },
+    {
+      "id": "496bfb1681b0b9301c30",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Compiler Targets"
+    },
+    {
+      "id": "4bc32abf6e4eee7179ee",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "assets:"
+    },
+    {
+      "id": "4d70c71f5363e0f49c8b",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Screenshot to Code"
+    },
+    {
+      "id": "ea7be9caf8667b03da45",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Click to choose a UI screenshot"
+    },
+    {
+      "id": "51bd0ae9252e1835bd9c",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Synthesized component code"
+    },
+    {
+      "id": "52de2e6f025c3db09bd5",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "fidelity:"
+    },
+    {
+      "id": "5b24a7873a978f10f164",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Generated Code & Spec"
+    },
+    {
+      "id": "7128ff5f6879a9a5420d",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "UNPROVEN"
+    },
+    {
+      "id": "7e2bb831d2a53f507120",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "OCR:"
+    },
+    {
+      "id": "73b321d8e171469a545f",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "starter scaffolds.\n// Regions are inferred from coarse pixel summaries; text, fonts, interactions, and fidelity are unproven."
+    },
+    {
+      "id": "8a609bbf277dae352522",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "03a59ac75be5ed27bde9",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "PNG, JPEG, WebP up to 25 MiB and 40 megapixels. Browser pixel sampling only."
+    },
+    {
+      "id": "a6247e0f0076cf2770b2",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "* Honest boundary: Visual fidelity remains UNPROVEN until measured against rendered browser DOM. No artificial guarantees or synthetic pixel metrics."
+    },
+    {
+      "id": "ae923480cbc91dab3475",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Compiler Target Output"
+    },
+    {
+      "id": "baabeeddba0d065ec91d",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "image/"
+    },
+    {
+      "id": "a3847963a16a5b18d61d",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Browser pixel sampling and inferred starter scaffolds. OCR, target compilation, and visual fidelity are not verified here."
+    },
+    {
+      "id": "cee2f16c6de59858ef60",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "(FOUND / INFERRED / UNKNOWN)"
+    },
+    {
+      "id": "d7267d04d16bfb483390",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Uploaded reference UI"
+    },
+    {
+      "id": "e18c6bb875735d857ce4",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "File upload"
+    },
+    {
+      "id": "e6f7b5c12d3e1658d51d",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "screenshot_to_code"
+    },
+    {
+      "id": "eac5b66882e515ac96c7",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Select Framework Target"
+    },
+    {
+      "id": "ecc492feafcfacc6745c",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "INFERRED"
+    },
+    {
+      "id": "ee2398c2b945287fa493",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "(OBSERVED / INFERRED / UNKNOWN)"
+    },
+    {
+      "id": "f0bd04941d34dc414e7c",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "(MEASURED / UNPROVEN)"
+    },
+    {
+      "id": "f1819e26090c6951d266",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "// Analyzing image layout and extracting UI regions..."
+    },
+    {
+      "id": "f2ba3202bbc2b625699c",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Visual Intelligence Modes"
     }
   ]
 }

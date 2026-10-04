@@ -1,0 +1,2871 @@
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 3325,
+  "unreviewed": 409,
+  "violations": [
+    {
+      "id": "12739389fa7f5373501c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "history must be an array",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "17e618ac115de92a3bd7",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid visibility: expected \"private\", got \"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1beadf5b8e208b6d1825",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "rev_00000000000000000000000000000001",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2190abeee9cd79bd336c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2342e291b5941204c939",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "REVISION",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2403ba9fa551d1ca9ee5",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "prompt",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "25f1ee2ae68201c27b13",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Review the system specification according to ISO 25010 with p99 < 50ms constraint.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2c2f79cebae5e36e1d49",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "ev:typecheck_pass",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2fc8abe7ba39270b68ab",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T10:25:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "337edd7300e4cba559e9",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "openai:gpt-4o",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "33f2fdf4470bdd3a6509",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "v1.0.0",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "36e0bb575df75bd75222",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T10:05:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3f50a0eae954dd84a6d8",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid noindex: expected true, got",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3fc8b9e1bfa22a0f23bb",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "rev_00000000000000000000000000000002",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "419609e8ba62049767e9",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid schema: expected \"spe.project-library.v1\", got \"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "497593170eaec7ee95ce",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "ROLLBACK",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4cd1c6a49278e8ea5677",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "prov:prompt_v1_seed",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "54761012883200836feb",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid indexing: expected \"noindex\", got \"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "5598b6a4306c85d3a0fa",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "ev:syntax_validation_pass",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "58573105a757ec6c0fee",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "5888ba891938d7d8c92d",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Project ID must match ^prj_[0-9a-f]{32}$",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "6484f7b137c0f2d6d2cf",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "ev:cwv_lcp_verified",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "65f3f6404138679b8d8b",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "private",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "68634867c27fccd9070d",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "You are an enterprise system architect specializing in low-latency systems.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "802d5a69b538e5577c2c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "prov:code_spec_init",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "82b692c68bbdbcba0900",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "artifacts must be an array",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "87c565c3a057c76b467b",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "src/index.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8ada66bd44994ca9aa72",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "You are an enterprise system architect.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "90d9bc0a05630cbf9bc7",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "export const initEngine = () => ({ status: 'ready' });",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "99065c1a0a2ca457e16a",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "HEAD_MOVE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a401aa3bcad31c06264d",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "prov:eval_delta_pass",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a7fb237902f0ea1c1d17",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T10:20:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ab6927d89472dc08a591",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Review the system specification according to ISO 25010.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ac560955603656ef1ef3",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "spe.project-library.v1",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ac88a5c34d271ec6fb6e",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Bundle must be a non-null object",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ad9f3136bcb2aa71300d",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "revisions must be an array",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c0c6b085e5f23e563cd7",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Enterprise Architecture Review Pack",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c0cb92369cdd15a91720",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "art_b2000000000000000000000000000002",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c33eb3a3fd0fb86a5a57",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_INTEGRATED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c3bed69723fbf36bc9b5",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T10:00:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c3e88f8f61d5a17a5e69",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "v1.1.0",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c42f28cc9d0639f2ccce",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "typescript",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c4f276a9521fb57ba2e6",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid spe_contract: expected \"NOT_YET_BOUND\", got \"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ca646654288bccd4f9f3",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "anthropic:claude-3-5-sonnet",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ce785ff8e4873ca1e12e",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Missing project metadata",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d0509009b7b2ee2c772c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "prj_0123456789abcdef0123456789abcdef",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d7389edaa4f430e3ac1c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_YET_BOUND",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "da865ceb4dfa76017edd",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T10:30:00Z",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e54c283372a0c1cf6961",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "object",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ed066d7368d57910b1e0",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ef7068fb028cc49f7436",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "art_a1000000000000000000000000000001",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f7d6b0d6991b5f751dbe",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "noindex",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "fbbf5ebcd04e1fade5ff",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "rev_10000000000000000000000000000001",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "fe97f44676c8b9a3968c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "fcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "044184aa8e6426570709",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "http://",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0b6ff689a4b312584bf8",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "local-cpu",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0ec3ff7407957218ab4c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "webm",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1051c6583741bb1c3809",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "Refusing LOCAL_NEURAL without a real neural session.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1a2ba95649d944a0ead9",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "retry",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1d094190769054c1a3a2",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "cloud",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1fb6960e79df0ec0dd8d",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "azure",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3555e3844df098ac88bf",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "NO_FILE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3e602941289ad47bd68c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "audio",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4ac2e42f8de6df52943e",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4e6a14e311d891ae0040",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "result",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4f5198ba8d4b3a89a1af",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "FALSE_NEURAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "5e8ed32ccdc15277c068",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "wav",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "608d3503a7e934b6b284",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "browser",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "793d5bc70d4ff7ae98f9",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "Choose an audio or video file on this device.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7ae86b266d8f8d335142",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "working",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7ff18f122ef4bdb7484a",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "Reading the file on this device.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "82774382400eac13ad89",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "CANCELLED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "83503bf3104f6fc88386",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "unknown",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "83cdfa1264d09839ec6c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "cancel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8471435d38546efa7f41",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_NEURAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "878dec8e0e11d3b279e4",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "cancelled",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8c37fb3619ea436e58df",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "aac",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8df4023620144d9f72b3",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "mov",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8f22cd017f9e08fcca73",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "web-speech",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "9910fe47ab7c80bb539e",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "remote",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a4924ad47735e69daf6d",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "idle",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a7142d810e21aef725ec",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "pinned-whisper-cpp",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "af17171ed614397ea34c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "mp4",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b0d9905e3c77ced544a5",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "whisper-cli",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b0dcc1d38e8c6a4decf3",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "ERROR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b3c28bf9a206e4cc0ea7",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "flac",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b658b0e7e7687edb89b6",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "Select a local audio or video file first.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b75bfb1ecf2bc924f752",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "mkv",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b8fe1584e35d5f054116",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "fail",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "bcba174f9974d7f1fc2c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "error",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "be3314be1bb337257729",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "oga",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "cd558d14ac3cc3f6eccf",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "UNSUPPORTED_TYPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "cea6163880e55da0ddf2",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "start",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d04136cc9703c4c75e4d",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "video",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d1fe7fe1f67475011131",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "aws",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d2bb689408ea21abe7d0",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "selected",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d69582634d5a8eb80eb4",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "BROWSER_SERVICE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "da48edff90cf5292a0d6",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "mp3",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "dcafaba6e3fddec71cb7",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "ogg",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "de891b49859379b2219f",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "m4a",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e08482bc800efdda7516",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "Cancelled.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e164ed1d74e812f5626b",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "google",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e81552b20643f72a421c",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "progress",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ecd566b8d48cfe08c7a7",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "m4v",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f03d5eda23af4ab66309",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_FALLBACK",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f79c1627c97b9337beac",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "select",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f8329a084de3010e724e",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "openai",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f8c2f151b98da47e3460",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "webspeech",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "fa00aac9e308bce1e41f",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "WORKING",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "fb2aa270530910594778",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "review",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "fd6dae8acc0efe4f0bdc",
+      "file": "apps/web/src/media/mediaProductModel.ts",
+      "depth": "PRODUCT",
+      "text": "https://",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1d4c4394e31ef08504ae",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "cancel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2b99c447f522ba005e1d",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "No transcription runtime is connected to this panel. No file was submitted by this attempt.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2e17f6f9f4eccd828c93",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Choose an audio or video file. Transcribe sends its bytes to the configured app host; on-device execution requires a local host.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "395e6f471278c11943ac",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Working",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "48382e0dd674c166ecef",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4940649d17922b5ce94f",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "result",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "582b5aa5922e0a56ee3a",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "LOCAL_FALLBACK",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "5b457c300970d4c1af02",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "start",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "79ce62c2afd3814a37e5",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "RUNTIME_ERROR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8103533b5e973e5c2635",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Mode:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "825788009903b45a2617",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "(unverified host counter; excludes browser-to-host upload)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "856032488c4b64cb4447",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Transcription failed.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8b15c0d986edc2167cf6",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Network sends for this file:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8b6badb7d76e9a18b2c0",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Browser speech service",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "92f37a77659749cfd60b",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "fail",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a4882bb96c597320bbdb",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local neural session",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ac15dac2dd2473c4b607",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "progress",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b31aff0e75b8c1d5e804",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "NOT_MOUNTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "bbff7a80133c2c84ed80",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Unavailable",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "bd134e66e193801ab3bf",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "error",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "bdf680e146eb64232fbb",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "working",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c046248dfd8a512d4bba",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c594224cade328d44b2c",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Segment timestamps came from the model.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c9f946d83d00e4990e94",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Cancel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "cd890498eac0919ce0e9",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Segment timestamps are not proven.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d97f30e66b9f1a41a71c",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Local fallback (no neural session)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f2d023b794e8760c31a7",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Retry",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ffde158a116ac06fc99c",
+      "file": "apps/web/src/media/MediaProductPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Transcribe",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0acfa4aebc0f7d494f95",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "/api/media/health",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "426ad990213b598b4307",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "PASS",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "502764b56776869cab7d",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "route",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "89d177a26f355a7f4d2c",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "92d6cb6094de8ab56e89",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "mount",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "abcb79198e56103844b0",
+      "file": "apps/web/src/media/MediaRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "NOT_PASS",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2485405257e9c84b4adf",
+      "file": "apps/web/src/media/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "/media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "25c0103edc4f82975dfc",
+      "file": "apps/web/src/media/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "JOURNEY_NOT_RECORDED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2d36a722742be1204963",
+      "file": "apps/web/src/media/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_PASS",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3e95328e2fed182ffa4a",
+      "file": "apps/web/src/media/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "MediaProductPanel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b283879b5be3e543ecfd",
+      "file": "apps/web/src/media/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/media/MediaProductPanel.tsx",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "00e057557d87a42f1591",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "FALSE_MODE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "156f894e8ba66a16e06e",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "POST",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "333c5bff2eafba0fa532",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "application/octet-stream",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4569a91a37a9a7c2c94a",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "HOST_ERROR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4b2ead22398aab3cd7b2",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "image/png",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "59496dc90bdb0137687e",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "CANCELLED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "5e856f397c0fe381e706",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_NEURAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "64b4d45e86aaf8c64644",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "number",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "943751892a1410601271",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "9a000b467878e0c29bb9",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "HEURISTIC",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a14ade25e8d876e7bc49",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "function",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a24046edb63cb65b267a",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "object",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b13549cdc7af4d0a380c",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "high",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b986a56376792a4b822f",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ce550446dae0bdf2529c",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "/api/ocr/recognize",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ceae99a7f0c9e28cd076",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "DECODE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d36c4c5b7e3760037bca",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_OCR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e2568ce17ec7c27b62c8",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "ocr-tesseract",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e40bb7af81f20a06c6a1",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "ENGINE_FAILED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "eaf5f671cbded179317b",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_MOUNTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0a68f51d788f26cfdb25",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Network sends for this image:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "14ad2674b05c6c3f4968",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "(unverified host counter; excludes browser-to-host upload)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1a570c951807a4083d61",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "OCR product:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3d50abd9447de6f52596",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3e8b141edb377d8b7359",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy text",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "42369c5bca5aac1e9796",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Local OCR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "69246fba307401c79ff5",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Mode:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7b7898699a462bbf316d",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Choose or drop an image. Read image sends its bytes to the configured app host; on-device OCR requires a local host.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "9b8a78c2905030ba2cd6",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Export text",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b8ccd7707294bc7c4dd5",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "a",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "dfadc6e811257dfff28f",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Export JSON",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e43d86acdbaf7f631abe",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "HOLD",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ed5a00e646b00fd212a8",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Read image",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f2cc03a127cd47a1933c",
+      "file": "apps/web/src/media/OcrRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "/api/ocr/health",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "09ad3bf26b9cfe2f8c5b",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "FALSE_NEURAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "09d78da500a9fa5466df",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "NO_SPEECH",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0b16ccf1eca79e915bad",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "CANCELLED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0c6df96ebead170a58b4",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_MOUNTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "107cc8b59105aa22d646",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "10ffcf0b1faa4cbfd0d4",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "/api/media/transcribe",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1944ea59afccc54c5c25",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "SPEECH",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "27a6c4fe1b4b3eacfa86",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "ERROR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3270a7881e02f214631c",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "POST",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "37e25916d68526951e59",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "number",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "45747166054b4948b480",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "UNAVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "6e22dbd594e130e55142",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_NEURAL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "72a0638dbe85052c84bb",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "application/octet-stream",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "737e308dcb1fe2e11d87",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "object",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7d66d71105b32d54984c",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "/api/media/cancel",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b61b31fa8346b57335d2",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "Requesting transcription from the configured app host.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c39b876f07ba31222d6e",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "BROWSER_SERVICE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c579c587975240e73c2a",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "abort",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d61c7a8e2ee5b5393aa1",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "HOST_ERROR",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "df17597e2f7b1d5fc753",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_FALLBACK",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e7b9c5f3686a4d9e7779",
+      "file": "apps/web/src/media/pinnedWhisperRuntime.ts",
+      "depth": "PRODUCT",
+      "text": "application/json",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "013022e50415cd44ddf1",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Upload screenshot or UI image",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "031cd71f4b751e2712fa",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Visual Evidence Inspector",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "03a59ac75be5ed27bde9",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "PNG, JPEG, WebP up to 25 MiB and 40 megapixels. Browser pixel sampling only.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "03e12d2ba6cf3c4b8f1d",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy generated code to clipboard",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0862abdf2d2f39f182f0",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy Code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "15266cf489662d6e7a5e",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "responsive:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "16da33a66011ddecde4a",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Replace Image",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "19b5a8d31d11fa534c13",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "✓ Copied to Clipboard",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1ccc94d85a0eeb505899",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "(OBSERVED / UNKNOWN)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "262d0b11a3088c96f6a4",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "react",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2c8887df81a1056600aa",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Evidence Disclosure Ledger",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "30282bea43c88de3dbd1",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Image Reference Input",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "40ad7a6cc8ff88cd16d9",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "// Upload an image or screenshot to synthesize",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "41c158d602d56db70acf",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Visual & Screenshot Intelligence",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "459d466b6bfc0522db6c",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Reference Image",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "496bfb1681b0b9301c30",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Compiler Targets",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4bc32abf6e4eee7179ee",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "assets:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4d70c71f5363e0f49c8b",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Screenshot to Code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "51bd0ae9252e1835bd9c",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Synthesized component code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "52de2e6f025c3db09bd5",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "fidelity:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "5b24a7873a978f10f164",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Generated Code & Spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7128ff5f6879a9a5420d",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "UNPROVEN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "73b321d8e171469a545f",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "starter scaffolds.\n// Regions are inferred from coarse pixel summaries; text, fonts, interactions, and fidelity are unproven.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7e2bb831d2a53f507120",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "OCR:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8a609bbf277dae352522",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a3847963a16a5b18d61d",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Browser pixel sampling and inferred starter scaffolds. OCR, target compilation, and visual fidelity are not verified here.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a6247e0f0076cf2770b2",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "* Honest boundary: Visual fidelity remains UNPROVEN until measured against rendered browser DOM. No artificial guarantees or synthetic pixel metrics.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ae923480cbc91dab3475",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Compiler Target Output",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "baabeeddba0d065ec91d",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "image/",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "cee2f16c6de59858ef60",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "(FOUND / INFERRED / UNKNOWN)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d7267d04d16bfb483390",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Uploaded reference UI",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e18c6bb875735d857ce4",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "File upload",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e6f7b5c12d3e1658d51d",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "screenshot_to_code",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e9b0fb772491d3e6faad",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Observation disclosures",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ea7be9caf8667b03da45",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Click to choose a UI screenshot",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "eac5b66882e515ac96c7",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Select Framework Target",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ecc492feafcfacc6745c",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "INFERRED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ee2398c2b945287fa493",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "(OBSERVED / INFERRED / UNKNOWN)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f0bd04941d34dc414e7c",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "(MEASURED / UNPROVEN)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f1819e26090c6951d266",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "// Analyzing image layout and extracting UI regions...",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f2ba3202bbc2b625699c",
+      "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
+      "depth": "PRODUCT",
+      "text": "Visual Intelligence Modes",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1a45bb7d9258724d5969",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Verification status",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1eb23aa856893d5d24e6",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2fb941c87d9285d67f09",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "IDLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4c82befb5cf35eeaede5",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "OPENALEX",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "55065409500555a42f6f",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "STORED_RECEIPT",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "57651283ab0fce063846",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Ask a public question. Search stays off unless you consent. This page does not send the question, a private document, code, audio, or an image. PubMed and PMC are one NCBI family. Live index and live retraction stay HOLD.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "69d0e7d1287989e5e68a",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "URL / API",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "6e7a43162fe955f9a704",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "is not a new request. Receipt status",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "770425ebdcc7126f91a2",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Response digest",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "847a73044f601e1fc6ca",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Nothing has been sent.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "851c49413e997fbbbeed",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "PubMed (NCBI, includes PMC)",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "85a20d1d1b0b8f4bc793",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Query",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "88d22780cfb1651c63aa",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Stored receipt only. No new provider request. LIVE_INDEX HOLD. LIVE_RETRACTION HOLD.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "96bcdeaad860e1138a88",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "PUBMED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a078cb894145bdfdb7a9",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "HELD_NO_CONSENT",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a6a0bfabed174a99e14f",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": ". DOI",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a85605863fdc46ba7e6a",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": ". May promote: no.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "bbc3aa62422692893dd3",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Provider",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "bf0d473857b2125fd81a",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "I consent to a public research lookup. Off means no search.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c039ba2f996d36a23feb",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "CROSSREF",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "da2c9aaf32485c7edc86",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Question",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "df3eff82886a5fe02580",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Selected provider",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e742308d5987729900b2",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Identifier",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e84a68451dbc916770ed",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Consent is off. The question was not sent.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ed8e43487f18ee3fef1c",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Stored receipt for",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f1db87203999730171f2",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Timestamp",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f3b96d626c28a90e9960",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Continue",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0b18cde43a373bead6c8",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0d10a8c6b683acd050df",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Ask a public research question. Search stays off until you consent. This route does not send the question and does not promote live index or retraction.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0dc1f9085af2b01d1dfa",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Turn a local website spec into a preview and a saved file. This does not open a web address or publish a site.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "0f28442a6f5be2b47bf1",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Media is not mounted in this build. Nothing on this route can capture or generate media.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "105069afb93c64542776",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1d5c896e04c7f69dffe4",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Website — Local spec preview | SPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "25681571ed6724c4b3bd",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "not-found",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2dd1d74563c96a17ee06",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "media",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2eb6c16159a91f0badc6",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Media — Not available | SPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "32e4ebed6f9972b105cb",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "view",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "44514acee3add9d07e58",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "60347efa07a1e1e97a8b",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/ocr",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "63e225b7ed6170dc1f32",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Read text from an image on this machine with the pinned local engine. If that engine is not verified, this route stays unavailable.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7ba218c97c945e9b311e",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "my-work",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "84fd5156958d2eef9017",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "OCR — Local text from an image | SPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "9d536c8d63bfc6606c46",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "ocr",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c5a4803e68dde384a7eb",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "workspace",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d77e6ecfec55e77411cc",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e15dc0f3fbc7394289c2",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Research — Stored receipt only | SPE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "fe16e2ca7052f7e0cd5c",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/research",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "07251de020e7386ad078",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/builder/websiteSpecModel.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1f8a1ba642c27ce7bb95",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "UNSUPPORTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2b664784a93918947f21",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "43af47d67b0e5fa47285",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "live_url",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4b5ec626a708ee6f38b6",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "website_spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4e5025eb143f41fd0ca6",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "packages/website-generator",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4fd31f37272b7652d0ac",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_IMPLEMENTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "5a7a959a355d46af35ff",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/engine/multimodal/sceneCompiler.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "5cd4d3014209adbe1a8c",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_AVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "613f343888d5bc338c69",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_INTEGRATED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "64cbf5166917b4d0294d",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_RUN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "71c81d3b3a703b607f9a",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "WebsiteProduct",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "72c78264241fdd6ac07a",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "OWNER_WIRED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "780911ef74f48ae5e98e",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/website/WebsiteProduct.tsx",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8121de3e33ad789a97dd",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "HOLD",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a8a3fdedd8add359681c",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "spe_runtime/webrecon",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b1aa82b45c1b27d32a4c",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "READY_FOR_SHELL_MOUNT",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ba9c0e2280e9afab639d",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_DONE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "bf4acab212fef0f4f626",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "spe.web.website-product",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "df58da94382015553d02",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "local_saved_html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f7130e190d5ff2f2d6c3",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/website/productFlow.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "10760bdd2763ee508323",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "UNSUPPORTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "13624aa28ac7d351e299",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_RUN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "144eac6a8b6451952ba0",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "object",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1458e1cf47e956a93ab1",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_HAS_NO_PAGE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "19c052aa551b956578ee",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "prefers-reduced-motion",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "1d1e03cf5758278b7682",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": ".dispose()",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2358adb0ff064453c501",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENEIR_OPTIONAL_ATTACHED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "26a65f812149481abcd9",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "MALICIOUS_SCENEIR_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "28e8378429937aeb8028",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "plane",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "31f0e8a17873a86d68d2",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "STATIC_FILES_ONLY",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "32fae5f92c945aa2ff15",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "torus",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3700988f4bf257508f1d",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "scrollRatio",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "37cf3512d58c0728c5ed",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "string",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "39a82088fcd1c07d743b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "HOLD",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3b5732b580fea6673214",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_JSON_INVALID",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3dc182987eb9b60fa150",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_DONE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3ec3b48819f8a3b33958",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "website_spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "42918d04f2bef2ac82d8",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "CSP_MISSING",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "429ddbc58b89473cd9d6",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "local_saved_html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "43bb84499ac03b75df12",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENEIR_VALIDATION_FAILED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "48f0510e88eba22dc8cb",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_INVALID_GEOMETRY",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "510180471c43d11768d4",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_SHAPE_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "57d0e68929b6e9b819a9",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "EXPORT_NOT_DETERMINISTIC",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "599ea2ce5f6a09bc5272",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_SAVED_HTML_IS_NOT_A_SPEC",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "683bc08716e91084ddfb",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_SHAPE_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "73880d42681b1f3bd99d",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "OWNER_WIRED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "745a137ea1cae1ed424d",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_COMPILE_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "75b4beb96aad9321da50",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_REDUCED_MOTION_MISSING",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7b68e472876a7e3d60ae",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_EMPTY",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7e21e348c3c68fdadc0b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_AVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7f75bc2327eef3f7f7ba",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "cylinder",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "821c816af131044462da",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "wave-mesh",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "87955f9bfc412f34e34b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_DEFINITION_MISSING",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "95cd3d90eb400347fbfa",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "REJECTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a0e3789a20e0971d0c7d",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "RAW_DOCUMENT_NOT_REPLAYED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a2c438f57ab503f9a069",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_ZERO_OBJECTS",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a2c5646ba127ae63944c",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "http-equiv=\"Content-Security-Policy\"",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a75ba57c8316d9b8f439",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "live_url",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b1094df2933bff8f4d9e",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_COMPILE_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b90806408427b8115011",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "sphere",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c42e592281a59e2702ce",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "beforeunload",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c70fed50345f15847aaa",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/engine/multimodal/sceneCompiler.ts",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "c943e461919b05ace5df",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LIVE_URL_NOT_FETCHED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "ca77356bc1a2595ab029",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "REDUCED_MOTION_MISSING",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "cd267c5148a05a33920e",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NO_ACQUISITION_GRANT",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "cd353d5ecc0cad12e71b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_EXPORT_READY",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "cfe4955c32e50246dd39",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "AVAILABLE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d2ffec664204d2580e65",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_TS_WEBSITE_SPEC_1",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d3f81e5f898af763bed5",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_IMPLEMENTED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d9d8409ab0df604225ec",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "dba61996153e1726c60e",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_JSON_INVALID",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e2af00f78455e67d0e84",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_TOO_LARGE",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e2ddf41712b87c13e608",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_DOCUMENT_EMPTY",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e711f65441ab872146b5",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "website-spec/1",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f51d204ca99f3316b5e6",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f542a5749f09963a6382",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "MALICIOUS_OR_REMOTE_MARKUP_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f5537b031c1160259128",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "HTML_IS_NOT_A_WEBSITE_SPEC",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f64307a522bd52b540f6",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "box",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f8adef7ceac51b394274",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCRIPT_ELEMENT_REFUSED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "fa82fbc1fa0a758ed043",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_INTEGRATED",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "01fff77f32ec0eac0cb4",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Save HTML",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "07ea1c4ed46ddeee537b",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "live_url",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "197b0053da9efa0458b7",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Local website preview",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2c17fd9b14e2c4969775",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "index.html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "2e6314a1b32d82c0ab4e",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Build preview",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "32da8c327cfc54ba0550",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "page.html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3c33bd60918e1b568f6c",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website result",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3c757b4182021fda4e01",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Web address",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3cd3b301ce51168d4822",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Saved file",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "4a656eb62da050eaaea9",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "a",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "775ef219989171b2aed9",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "text/html;charset=utf-8",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7bab5d0a8eea73270951",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Fetched: no. Live site: no. SceneIR owner: wired. Live URL: unavailable. Shell mount: not done.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8758e622baf3ee2ee791",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "File name",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "8df63179c9a4238ca442",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "local_saved_html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "9a95793107ce1f8a73d4",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "a457248cc58a5216000a",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Input",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b378f7c44566dd09f292",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "A local spec can become a preview and a saved file. A saved file is not a web address. A web address is not opened.",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "b5a14ae85bff1e04ebe0",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Input kind",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d34c477a0ad7569346b5",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website product",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d372d0194db0366e40c6",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "local_saved_html",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "e61e513e6331d741476d",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website input",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f1b1b98a1b14d77323ef",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "{\n  \"spec_version\": \"website-spec/1\",\n  \"title\": \"Local notes\",\n  \"language\": \"en\",\n  \"summary\": \"A private static page.\",\n  \"theme\": \"light\",\n  \"pages\": [\n    {\n      \"path\": \"index.html\",\n      \"title\": \"Home\",\n      \"sections\": [\n        {\n          \"kind\": \"prose\",\n          \"heading\": \"Notes\",\n          \"body\": \"This page is a local file.\"\n        }\n      ]\n    }\n  ]\n}",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "f495585aac44466f659d",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "fd8a87ba2db3d439ed5e",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "website_spec",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "17d5e84a4ade39c661e0",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": ". Non-clear pixels",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "208683f16dd133d244a5",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "ok",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3aa8b7f53ef8f8c1c95b",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "threw:",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3d63d71d187c6dc49bbe",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": ". Three",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "3fa0fb93db25fefa5419",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "WebGL",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "70bbdefb52a50aaf5c84",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "not executed",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7600a21cfeff78b4ae0f",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "NOT_RUN",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "7d8c86b8d03bbc901f61",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "pending",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "d406de6edadda7fca879",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "bundled as",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "eb7dadb250a7eb68de69",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "Scene",
+      "reason": "UNREVIEWED_COPY"
+    },
+    {
+      "id": "fa0e5334a0b6baf1e7a7",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "Unmount scene",
+      "reason": "UNREVIEWED_COPY"
+    }
+  ],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}

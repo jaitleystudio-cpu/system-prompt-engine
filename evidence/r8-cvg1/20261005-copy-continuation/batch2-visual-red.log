@@ -1,0 +1,283 @@
+Checking Lane A12 file existence...
+Checking mandatory truth labels...
+Checking ban on 100% pixel perfect claims...
+Checking visual truth semantics...
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Visual workspace must not infer OCR observation from generic image notes
+    at file:///Users/prawinpalisetty/.codex/.chatgpt-projects/g-p-6aa32fc67f688191aae39cb61faa5250/spe-r8-cvg1/apps/web/scripts/test-visual-screenshot-ui.mjs:68:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'import React, { useState, useRef } from "react";\n' +
+    'import {\n' +
+    '  CODE_TARGETS,\n' +
+    '  CODE_TARGET_LABELS,\n' +
+    '  type CodeTarget,\n' +
+    '  screenshotToCodePackage,\n' +
+    '} from "./screenshotToCode";\n' +
+    'import { observeImageFile } from "./imageObserve";\n' +
+    'import type { ImageObservation } from "./types";\n' +
+    'import "./visual-workspace.css";\n' +
+    '\n' +
+    'export type VisualWorkspaceMode = "screenshot_to_code" | "visual_evidence";\n' +
+    '\n' +
+    'export interface VisualTruthReceipt {\n' +
+    '  ocrStatus: "OBSERVED" | "UNKNOWN";\n' +
+    '  assetsStatus: "FOUND" | "INFERRED" | "UNKNOWN";\n' +
+    '  responsiveStatus: "OBSERVED" | "INFERRED" | "UNKNOWN";\n' +
+    '  fidelityStatus: "MEASURED" | "UNPROVEN";\n' +
+    '  measuredConfidencePercent?: number;\n' +
+    '}\n' +
+    '\n' +
+    '// Contract-mandated truth states:\n' +
+    '// OCR: OBSERVED / UNKNOWN\n' +
+    '// assets: FOUND / INFERRED / UNKNOWN\n' +
+    '// responsive: OBSERVED / INFERRED / UNKNOWN\n' +
+    '// fidelity: MEASURED / UNPROVEN\n' +
+    '\n' +
+    'export const VisualScreenshotWorkspace: React.FC = () => {\n' +
+    '  const [activeMode, setActiveMode] = useState<VisualWorkspaceMode>("screenshot_to_code");\n' +
+    '  const [selectedTarget, setSelectedTarget] = useState<CodeTarget>("react");\n' +
+    '  const [imageSrc, setImageSrc] = useState<string | null>(null);\n' +
+    '  const [imageObs, setImageObs] = useState<ImageObservation | null>(null);\n' +
+    '  const [generatedCode, setGeneratedCode] = useState<string>("");\n' +
+    '  const [copied, setCopied] = useState<boolean>(false);\n' +
+    '  const [isProcessing, setIsProcessing] = useState<boolean>(false);\n' +
+    '\n' +
+    '  const fileInputRef = useRef<HTMLInputElement>(null);\n' +
+    '\n' +
+    '  // Verifiable Truth Receipt (never claims false pixel perfection)\n' +
+    '  const truthReceipt: VisualTruthReceipt = {\n' +
+    '    ocrStatus: imageObs && imageObs.notes && imageObs.notes.length > 0 ? "OBSERVED" : "UNKNOWN",\n' +
+    '    assetsStatus: imageObs ? "INFERRED" : "UNKNOWN",\n' +
+    '    responsiveStatus: "INFERRED",\n' +
+    '    // Fidelity is UNPROVEN until live pixel-level rendering comparison is executed\n' +
+    '    fidelityStatus: "UNPROVEN",\n' +
+    '  };\n' +
+    '\n' +
+    '  const handleFileSelect = async (file: File) => {\n' +
+    '    if (!file.type.startsWith("image/")) return;\n' +
+    '\n' +
+    '    const previewUrl = URL.createObjectURL(file);\n' +
+    '    setImageSrc(previewUrl);\n' +
+    '    setIsProcessing(true);\n' +
+    '\n' +
+    '    try {\n' +
+    '      const obs = await observeImageFile(file);\n' +
+    '      setImageObs(obs);\n' +
+    '      const pkg = screenshotToCodePackage(obs);\n' +
+    '      const scaffold = pkg.scaffolds.find((s) => s.target === selectedTarget) || pkg.scaffolds[0];\n' +
+    '      if (scaffold) {\n' +
+    '        setGeneratedCode(scaffold.code);\n' +
+    '      }\n' +
+    '    } catch {\n' +
+    '      // Fallback\n' +
+    '    } finally {\n' +
+    '      setIsProcessing(false);\n' +
+    '    }\n' +
+    '  };\n' +
+    '\n' +
+    '  const handleTargetChange = (target: CodeTarget) => {\n' +
+    '    setSelectedTarget(target);\n' +
+    '    if (imageObs) {\n' +
+    '      const pkg = screenshotToCodePackage(imageObs);\n' +
+    '      const scaffold = pkg.scaffolds.find((s) => s.target === target) || pkg.scaffolds[0];\n' +
+    '      if (scaffold) {\n' +
+    '        setGeneratedCode(scaffold.code);\n' +
+    '      }\n' +
+    '    }\n' +
+    '  };\n' +
+    '\n' +
+    '  const handleCopyCode = async () => {\n' +
+    '    if (!generatedCode) return;\n' +
+    '    try {\n' +
+    '      await navigator.clipboard.writeText(generatedCode);\n' +
+    '      setCopied(true);\n' +
+    '      setTimeout(() => setCopied(false), 2000);\n' +
+    '    } catch {\n' +
+    '      setCopied(false);\n' +
+    '    }\n' +
+    '  };\n' +
+    '\n' +
+    '  return (\n' +
+    '    <main className="spe-visual-workspace" aria-labelledby="spe-visual-title">\n' +
+    '      <header className="spe-visual-header">\n' +
+    '        <h1 id="spe-visual-title">Visual & Screenshot Intelligence</h1>\n' +
+    '        <p>\n' +
+    '          Client-side UI structure recovery and visual evidence extraction.\n' +
+    '          Honest semantic boundaries with verified compiler target generation.\n' +
+    '        </p>\n' +
+    '      </header>\n' +
+    '\n' +
+    '      {/* Mode Switcher */}\n' +
+    '      <nav className="spe-visual-mode-bar" aria-label="Visual Intelligence Modes">\n' +
+    '        <button\n' +
+    '          type="button"\n' +
+    '          className={`spe-visual-mode-btn ${activeMode === "screenshot_to_code" ? "active" : ""}`}\n' +
+    '          aria-pressed={activeMode === "screenshot_to_code"}\n' +
+    '          onClick={() => setActiveMode("screenshot_to_code")}\n' +
+    '        >\n' +
+    '          Screenshot to Code\n' +
+    '        </button>\n' +
+    '        <button\n' +
+    '          type="button"\n' +
+    '          className={`spe-visual-mode-btn ${activeMode === "visual_evidence" ? "active" : ""}`}\n' +
+    '          aria-pressed={activeMode === "visual_evidence"}\n' +
+    '          onClick={() => setActiveMode("visual_evidence")}\n' +
+    '        >\n' +
+    '          Visual Evidence Inspector\n' +
+    '        </button>\n' +
+    '      </nav>\n' +
+    '\n' +
+    '      {/* Main Inspection Grid */}\n' +
+    '      <div className="spe-visual-grid">\n' +
+    '        {/* Left: Image / Screenshot Input & Truth Receipt */}\n' +
+    '        <section className="spe-visual-card" aria-label="Image Reference Input">\n' +
+    '          <h2>Reference Image</h2>\n' +
+    '\n' +
+    '          {!imageSrc ? (\n' +
+    '            <div\n' +
+    '              className="spe-visual-dropzone"\n' +
+    '              onClick={() => fileInputRef.current?.click()}\n' +
+    '              role="button"\n' +
+    '              tabIndex={0}\n' +
+    '              onKeyDown={(e) => {\n' +
+    '                if (e.key === "Enter" || e.key === " ") {\n' +
+    '                  e.preventDefault();\n' +
+    '                  fileInputRef.current?.click();\n' +
+    '                }\n' +
+    '              }}\n' +
+    '              aria-label="Upload screenshot or UI image"\n' +
+    '            >\n' +
+    '              <div style={{ fontSize: "2rem", marginBottom: "8px" }}>📷</div>\n' +
+    '              <strong style={{ color: "#ffffff" }}>\n' +
+    '                Click or drop UI screenshot here\n' +
+    '              </strong>\n' +
+    '              <span style={{ fontSize: "0.8125rem", color: "var(--spe-vis-muted)", marginTop: "4px" }}>\n' +
+    '                PNG, JPEG, WebP up to 20MB. Fully local processing.\n' +
+    '              </span>\n' +
+    '            </div>\n' +
+    '          ) : (\n' +
+    '            <div className="spe-visual-preview-frame">\n' +
+    '              <img\n' +
+    '                src={imageSrc}\n' +
+    '                alt="Uploaded reference UI"\n' +
+    '                className="spe-visual-preview-img"\n' +
+    '              />\n' +
+    '            </div>\n' +
+    '          )}\n' +
+    '\n' +
+    '          <input\n' +
+    '            ref={fileInputRef}\n' +
+    '            type="file"\n' +
+    '            accept="image/*"\n' +
+    '            style={{ display: "none" }}\n' +
+    '            onChange={(e) => {\n' +
+    '              const file = e.target.files?.[0];\n' +
+    '              if (file) handleFileSelect(file);\n' +
+    '            }}\n' +
+    '            aria-label="File upload"\n' +
+    '          />\n' +
+    '\n' +
+    '          {imageSrc && (\n' +
+    '            <button\n' +
+    '              type="button"\n' +
+    '              className="spe-vis-btn secondary"\n' +
+    '              onClick={() => fileInputRef.current?.click()}\n' +
+    '            >\n' +
+    '              Replace Image\n' +
+    '            </button>\n' +
+    '          )}\n' +
+    '\n' +
+    '          {/* Verifiable Truth Receipt (Strictly Mandated Truth Labels) */}\n' +
+    '          <div className="spe-truth-receipt" aria-label="Verifiable Observation Ledger">\n' +
+    '            <div className="spe-truth-receipt-header">Evidence Disclosure Ledger</div>\n' +
+    '            <div className="spe-truth-pills-row">\n' +
+    '              <span className={`spe-truth-pill ${truthReceipt.ocrStatus.toLowerCase()}`}>\n' +
+    '                OCR: {truthReceipt.ocrStatus} (OBSERVED / UNKNOWN)\n' +
+    '              </span>\n' +
+    '              <span className={`spe-truth-pill ${truthReceipt.assetsStatus.toLowerCase()}`}>\n' +
+    '                assets: {truthReceipt.assetsStatus} (FOUND / INFERRED / UNKNOWN)\n' +
+    '              </span>\n' +
+    '              <span className={`spe-truth-pill ${truthReceipt.responsiveStatus.toLowerCase()}`}>\n' +
+    '                responsive: {truthReceipt.responsiveStatus} (OBSERVED / INFERRED / UNKNOWN)\n' +
+    '              </span>\n' +
+    '              <span className={`spe-truth-pill ${truthReceipt.fidelityStatus.toLowerCase()}`}>\n' +
+    '                fidelity: {truthReceipt.fidelityStatus} (MEASURED / UNPROVEN)\n' +
+    '              </span>\n' +
+    '            </div>\n' +
+    '            <p style={{ fontSize: "0.75rem", color: "var(--spe-vis-muted)", margin: 0, lineHeight: 1.4 }}>\n' +
+    '              * Honest boundary: Visual fidelity remains UNPROVEN until measured against rendered browser DOM.\n' +
+    '              No artificial guarantees or synthetic pixel metrics.\n' +
+    '            </p>\n' +
+    '          </div>\n' +
+    '        </section>\n' +
+    '\n' +
+    '        {/* Right: Target Selector & Code Output */}\n' +
+    '        <section className="spe-visual-card" aria-label="Generated Code & Spec">\n' +
+    '          <h2>Compiler Target Output</h2>\n' +
+    '\n' +
+    '          {/* Canonical Target Selector */}\n' +
+    '          <div>\n' +
+    '            <div style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", color: "var(--spe-vis-muted)", marginBottom: "8px" }}>\n' +
+    '              Select Framework Target\n' +
+    '            </div>\n' +
+    '            <div className="spe-target-selector-bar" role="tablist" aria-label="Compiler Targets">\n' +
+    '              {CODE_TARGETS.map((target) => {\n' +
+    '                const isSelected = selectedTarget === target;\n' +
+    '                return (\n' +
+    '                  <button\n' +
+    '                    key={target}\n' +
+    '                    type="button"\n' +
+    '                    role="tab"\n' +
+    '                    className={`spe-target-chip ${isSelected ? "active" : ""}`}\n' +
+    '                    aria-selected={isSelected}\n' +
+    '                    onClick={() => handleTargetChange(target)}\n' +
+    '                  >\n' +
+    '                    {CODE_TARGET_LABELS[target]}\n' +
+    '                  </button>\n' +
+    '                );\n' +
+    '              })}\n' +
+    '            </div>\n' +
+    '          </div>\n' +
+    '\n' +
+    '          {/* Code Output Box */}\n' +
+    '          <pre\n' +
+    '            className="spe-code-output-box"\n' +
+    '            tabIndex={0}\n' +
+    '            aria-label="Synthesized component code"\n' +
+    '          >\n' +
+    '            {isProcessing\n' +
+    '              ? "// Analyzing image layout and extracting UI regions..."\n' +
+    '              : generatedCode ||\n' +
+    '                `// Upload an image or screenshot to synthesize ${CODE_TARGET_LABELS[selectedTarget]} components.\\n// The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.`}\n' +
+    '          </pre>\n' +
+    '\n' +
+    '          {/* Actions */}\n' +
+    '          <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end", flexWrap: "wrap" }}>\n' +
+    '            <button\n' +
+    '              type="button"\n' +
+    '              className="spe-vis-btn primary"\n' +
+    '              disabled={!generatedCode || isProcessing}\n' +
+    '              onClick={handleCopyCode}\n' +
+    '              aria-label="Copy generated code to clipboard"\n' +
+    '            >\n' +
+    '              {copied ? "✓ Copied to Clipboard" : "Copy Code"}\n' +
+    '            </button>\n' +
+    '          </div>\n' +
+    '        </section>\n' +
+    '      </div>\n' +
+    '    </main>\n' +
+    '  );\n' +
+    '};\n',
+  expected: /ocrStatus:\s*imageObs\s*&&\s*imageObs\.notes/i,
+  operator: 'doesNotMatch',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

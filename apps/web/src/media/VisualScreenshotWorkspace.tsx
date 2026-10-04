@@ -38,7 +38,7 @@ export const VisualScreenshotWorkspace: React.FC = () => {
 
   // Verifiable Truth Receipt (never claims false pixel perfection)
   const truthReceipt: VisualTruthReceipt = {
-    ocrStatus: imageObs && imageObs.notes && imageObs.notes.length > 0 ? "OBSERVED" : "UNKNOWN",
+    ocrStatus: "UNKNOWN",
     assetsStatus: imageObs ? "INFERRED" : "UNKNOWN",
     responsiveStatus: "INFERRED",
     // Fidelity is UNPROVEN until live pixel-level rendering comparison is executed
@@ -94,8 +94,8 @@ export const VisualScreenshotWorkspace: React.FC = () => {
       <header className="spe-visual-header">
         <h1 id="spe-visual-title">Visual & Screenshot Intelligence</h1>
         <p>
-          Client-side UI structure recovery and visual evidence extraction.
-          Honest semantic boundaries with verified compiler target generation.
+          Browser pixel sampling and inferred starter scaffolds.
+          OCR, target compilation, and visual fidelity are not verified here.
         </p>
       </header>
 
@@ -141,10 +141,10 @@ export const VisualScreenshotWorkspace: React.FC = () => {
             >
               <div style={{ fontSize: "2rem", marginBottom: "8px" }}>📷</div>
               <strong style={{ color: "#ffffff" }}>
-                Click or drop UI screenshot here
+                Click to choose a UI screenshot
               </strong>
               <span style={{ fontSize: "0.8125rem", color: "var(--spe-vis-muted)", marginTop: "4px" }}>
-                PNG, JPEG, WebP up to 20MB. Fully local processing.
+                PNG, JPEG, WebP up to 25 MiB and 40 megapixels. Browser pixel sampling only.
               </span>
             </div>
           ) : (
@@ -180,7 +180,7 @@ export const VisualScreenshotWorkspace: React.FC = () => {
           )}
 
           {/* Verifiable Truth Receipt (Strictly Mandated Truth Labels) */}
-          <div className="spe-truth-receipt" aria-label="Verifiable Observation Ledger">
+          <div className="spe-truth-receipt" aria-label="Observation disclosures">
             <div className="spe-truth-receipt-header">Evidence Disclosure Ledger</div>
             <div className="spe-truth-pills-row">
               <span className={`spe-truth-pill ${truthReceipt.ocrStatus.toLowerCase()}`}>
@@ -240,7 +240,7 @@ export const VisualScreenshotWorkspace: React.FC = () => {
             {isProcessing
               ? "// Analyzing image layout and extracting UI regions..."
               : generatedCode ||
-                `// Upload an image or screenshot to synthesize ${CODE_TARGET_LABELS[selectedTarget]} components.\n// The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.`}
+                `// Upload an image or screenshot to synthesize ${CODE_TARGET_LABELS[selectedTarget]} starter scaffolds.\n// Regions are inferred from coarse pixel summaries; text, fonts, interactions, and fidelity are unproven.`}
           </pre>
 
           {/* Actions */}

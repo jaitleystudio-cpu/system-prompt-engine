@@ -87,7 +87,7 @@ export function OcrRoute() {
       data-egress={execution.egressAttempts}
     >
       <h2>Local OCR</h2>
-      <p>Choose or drop an image. The pinned engine reads it on this machine.</p>
+      <p>Choose or drop an image. Read image sends its bytes to the configured app host; on-device OCR requires a local host.</p>
       <p data-testid="ocr-mode">
         Mode: <strong>{mode}</strong>
       </p>
@@ -152,7 +152,7 @@ export function OcrRoute() {
           ))}
         </ul>
       ) : null}
-      <p data-testid="ocr-egress">Network sends for this image: {execution.egressAttempts}</p>
+      <p data-testid="ocr-egress">Network sends for this image: {execution.egressAttempts} (unverified host counter; excludes browser-to-host upload)</p>
     </section>
   );
 }

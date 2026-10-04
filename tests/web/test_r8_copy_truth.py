@@ -18,3 +18,14 @@ from tests.web.paths import WEB
 ])
 def test_unimplemented_surface_claims_are_absent(file, unsupported):
     assert unsupported not in (WEB / 'src' / file).read_text()
+
+@pytest.mark.parametrize('file,unsupported', [
+    ('media/MediaProductPanel.tsx', 'It is not uploaded.'),
+    ('media/MediaProductPanel.tsx', 'The shell still has to mount this panel.'),
+    ('media/pinnedWhisperRuntime.ts', 'Starting the local media session on this machine.'),
+    ('media/OcrRoute.tsx', 'The pinned engine reads it on this machine.'),
+    ('media/VisualScreenshotWorkspace.tsx', 'Click or drop UI screenshot here'),
+    ('media/VisualScreenshotWorkspace.tsx', 'The synthesizer extracts layout hierarchy, colors, typography, and interactive controls.'),
+])
+def test_media_copy_does_not_imply_unproven_processing(file, unsupported):
+    assert unsupported not in (WEB / 'src' / file).read_text()
