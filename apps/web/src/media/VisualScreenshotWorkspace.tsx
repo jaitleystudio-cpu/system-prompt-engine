@@ -38,7 +38,7 @@ export const VisualScreenshotWorkspace: React.FC = () => {
 
   // Verifiable Truth Receipt (never claims false pixel perfection)
   const truthReceipt: VisualTruthReceipt = {
-    ocrStatus: imageObs && imageObs.notes && imageObs.notes.length > 0 ? "OBSERVED" : "UNKNOWN",
+    ocrStatus: "UNKNOWN",
     assetsStatus: imageObs ? "INFERRED" : "UNKNOWN",
     responsiveStatus: "INFERRED",
     // Fidelity is UNPROVEN until live pixel-level rendering comparison is executed
@@ -95,7 +95,7 @@ export const VisualScreenshotWorkspace: React.FC = () => {
         <h1 id="spe-visual-title">Visual & Screenshot Intelligence</h1>
         <p>
           Client-side UI structure recovery and visual evidence extraction.
-          Honest semantic boundaries with verified compiler target generation.
+          Honest semantic boundaries with compiler target scaffolds.
         </p>
       </header>
 
@@ -144,7 +144,7 @@ export const VisualScreenshotWorkspace: React.FC = () => {
                 Click or drop UI screenshot here
               </strong>
               <span style={{ fontSize: "0.8125rem", color: "var(--spe-vis-muted)", marginTop: "4px" }}>
-                PNG, JPEG, WebP up to 20MB. Fully local processing.
+                Images up to 25MB before decode. Browser-local analysis in this workspace.
               </span>
             </div>
           ) : (
