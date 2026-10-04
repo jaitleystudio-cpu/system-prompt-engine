@@ -98,7 +98,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
       <header className="bld-header">
         <div className="bld-header-top">
           <div>
-            <h1 className="bld-title">Static Website Builder (G13 Spec Compiler)</h1>
+            <h1 className="bld-title">Static Website Builder (website-spec/1)</h1>
             <div style={{ fontSize: "0.75rem", color: "var(--bld-muted)", marginTop: "4px" }}>
               Specification: <code>{spec.spec_version}</code> | Emitter: <code>{spec.emitter}</code> | Offline Static HTML/CSS
             </div>
@@ -169,7 +169,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
             onClick={() => setViewMode("preview")}
             aria-pressed={viewMode === "preview"}
           >
-            Live Preview
+            Local Preview
           </button>
           <button
             type="button"
@@ -237,7 +237,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
           <div style={{ marginTop: "24px", paddingTop: "16px", borderTop: "1px solid var(--bld-border)" }}>
             <div style={{ fontSize: "0.75rem", color: "var(--bld-muted)" }}>Compiler Receipt</div>
             <div style={{ fontSize: "0.8125rem", fontFamily: "monospace", marginTop: "4px" }}>
-              Sections: {activePage?.sections.length} | Status: VERIFIED
+              Sections: {activePage?.sections.length} | Local compile: OK
             </div>
           </div>
         </aside>
@@ -347,7 +347,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
 
               <div>
                 <h3 style={{ margin: "0 0 8px 0", fontSize: "0.875rem", color: "var(--bld-muted)" }}>
-                  styles.css (WCAG 2.1 AA Styled CSS)
+                  styles.css (focus-visible + reduced-motion styles)
                 </h3>
                 <pre
                   style={{
