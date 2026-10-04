@@ -14,25 +14,25 @@ export const EXECUTION_MODES: ModeOption[] = [
     id: "standard",
     name: "Standard Synthesis",
     badge: "Balanced",
-    description: "Optimal balance of precision, reasoning depth, and synthesis speed.",
+    description: "Default synthesis mode label for general workflows.",
   },
   {
     id: "deep",
     name: "Deep Synthesis",
     badge: "Thorough",
-    description: "Multi-layered reasoning and systematic requirement expansion for complex workflows.",
+    description: "Requests additional synthesis depth from the host workflow.",
   },
   {
     id: "fast",
     name: "Fast Iteration",
     badge: "Swift",
-    description: "Rapid turnaround for live experimentation and rapid specification prototyping.",
+    description: "Requests a faster iteration mode from the host workflow.",
   },
   {
     id: "strict",
     name: "Deterministic Strict",
     badge: "Verifiable",
-    description: "Enforces strict output contracts, schema guarantees, and verifiable boundaries.",
+    description: "Requests stricter output-shape handling from the host workflow.",
   },
 ];
 
