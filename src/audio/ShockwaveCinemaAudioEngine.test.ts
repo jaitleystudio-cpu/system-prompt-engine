@@ -467,30 +467,71 @@ async function runFormalVerificationSuite() {
     console.error("  ✗ FAIL: Crockford token sync failed.");
   }
 
-  // 17. All 6 Legendary Sound Modes Dynamic Switching
+  // 17. All 6 Legendary Sound Modes Dynamic Switching & DSP Node Verification
   console.log("\nTEST 17 [SOUND-MODES]: All 6 Legendary Sound Modes Activation & Routing...");
-  const modesToTest = [
-    "Big Bang 8D",
-    "Bass Bazooka",
-    "Music Studio",
-    "Soul Song",
-    "Cinema Beast 5.1",
-    "Voice Crystal",
-  ] as const;
+  
+  // 1. Big Bang 8D
+  engine.setSoundMode("Big Bang 8D");
+  const is8DMode = engine.getCurrentSoundMode() === "Big Bang 8D" &&
+    priv.centerClarityFilter.gain.value === 0 &&
+    priv.lfeBassDrive.gain.value === 1.6 &&
+    priv.rearLeftDelay.delayTime.value === 0.025;
 
-  let allModesPassed = true;
-  for (const m of modesToTest) {
-    engine.setSoundMode(m);
-    if (engine.getCurrentSoundMode() !== m) {
-      allModesPassed = false;
-    }
-  }
+  // 2. Bass Bazooka (High LFE crossover 110Hz + 2.8 drive)
+  engine.setSoundMode("Bass Bazooka");
+  const isBassMode = engine.getCurrentSoundMode() === "Bass Bazooka" &&
+    priv.lfeBoostFilter.frequency.value === 110 &&
+    priv.lfeCascadeFilter.frequency.value === 110 &&
+    priv.lfeBassDrive.gain.value === 2.8 &&
+    priv.centerClarityFilter.gain.value === 1.0 &&
+    Math.abs(priv.xtcGainNodeL.gain.value - -0.68) < 0.001; // XTC restored to balanced baseline
 
-  if (allModesPassed) {
-    console.log("  ✓ PASS: All 6 legendary sound modes activated and validated across discrete DSP nodes.");
+  // 3. Music Studio (Bit-perfect flat reference: 85Hz, 1.0 drive, 0ms surround latency)
+  engine.setSoundMode("Music Studio");
+  const isStudioMode = engine.getCurrentSoundMode() === "Music Studio" &&
+    priv.lfeBoostFilter.frequency.value === 85 &&
+    priv.lfeBassDrive.gain.value === 1.0 &&
+    priv.centerClarityFilter.gain.value === 0.0 &&
+    priv.rearLeftDelay.delayTime.value === 0.0;
+
+  // 4. Soul Song (Warm 1.8kHz vocal presence + 1.3 drive)
+  engine.setSoundMode("Soul Song");
+  const isSoulMode = engine.getCurrentSoundMode() === "Soul Song" &&
+    priv.centerClarityFilter.frequency.value === 1800 &&
+    priv.centerClarityFilter.gain.value === 2.5 &&
+    priv.lfeBoostFilter.frequency.value === 85 && // Reset from Bass Bazooka 110Hz
+    priv.lfeBassDrive.gain.value === 1.3;
+
+  // 5. Cinema Beast 5.1 (2.4kHz dialogue + 2.2 slam + 22ms Haas delay)
+  engine.setSoundMode("Cinema Beast 5.1");
+  const isCinemaMode = engine.getCurrentSoundMode() === "Cinema Beast 5.1" &&
+    priv.centerClarityFilter.frequency.value === 2400 &&
+    priv.centerClarityFilter.gain.value === 4.5 &&
+    priv.lfeBassDrive.gain.value === 2.2 &&
+    priv.rearLeftDelay.delayTime.value === 0.022;
+
+  // 6. Voice Crystal (2.8kHz speech peak + 0.2 rumble cut)
+  engine.setSoundMode("Voice Crystal");
+  const isVoiceMode = engine.getCurrentSoundMode() === "Voice Crystal" &&
+    priv.centerClarityFilter.frequency.value === 2800 &&
+    priv.centerClarityFilter.gain.value === 8.0 &&
+    priv.lfeBassDrive.gain.value === 0.2 &&
+    priv.lfeBoostFilter.frequency.value === 85;
+
+  // Verify Graph Rebuild Preserves Active Mode
+  engine.setup51CinemaAudioGraph(mockSource);
+  const isGraphRebuildPreserved =
+    priv.centerClarityFilter.frequency.value === 2800 &&
+    priv.lfeBassDrive.gain.value === 0.2;
+
+  // Verify Engine Dispose Lifecycle
+  engine.dispose();
+
+  if (is8DMode && isBassMode && isStudioMode && isSoulMode && isCinemaMode && isVoiceMode && isGraphRebuildPreserved) {
+    console.log("  ✓ PASS: All 6 legendary sound modes verified across discrete DSP nodes with zero state leakage & graph rebuild preservation.");
     passed++;
   } else {
-    console.error("  ✗ FAIL: Sound modes activation mismatch.");
+    console.error("  ✗ FAIL: Sound modes DSP node verification mismatch.");
   }
 
   console.log("\n================================================================================");

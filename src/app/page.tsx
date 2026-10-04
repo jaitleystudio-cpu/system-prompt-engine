@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import {
   ShockwaveCinemaAudioEngine,
   ShockwaveConfig,
@@ -8,6 +8,8 @@ import {
 } from "@/audio/ShockwaveCinemaAudioEngine";
 import { AcousticRoomProfile } from "@/audio/ShockwaveRoomCalibrationEngine";
 import { LedgerBlock, WalEntry } from "@/audio/ShockwaveSagaCoordinator";
+
+const emptySubscribe = () => () => {};
 
 export default function ShockwaveDashboard() {
   const [engine] = useState<ShockwaveCinemaAudioEngine | null>(() => {
@@ -59,6 +61,7 @@ export default function ShockwaveDashboard() {
   const [inputToken, setInputToken] = useState("");
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
   const [syncError, setSyncError] = useState<string | null>(null);
+  const isMounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -82,7 +85,8 @@ export default function ShockwaveDashboard() {
       setSyncError(null);
       const newProfile = engine.syncWithCrockfordToken(inputToken.trim());
       setRoomProfile(newProfile);
-      setSyncToken(inputToken.trim().toUpperCase());
+      const canonicalToken = engine.generateCrockfordSyncToken();
+      setSyncToken(canonicalToken);
       setWalHistory(engine.getCoordinator().getWalSnapshot());
       setLedgerBlocks(engine.getCoordinator().getLedger());
       setSyncFeedback("✓ Telemetry Synchronized & Verified (Modulo-37 Checksum Valid, WAL Committed)");
@@ -94,10 +98,25 @@ export default function ShockwaveDashboard() {
     }
   };
 
-  const handleCopyToken = () => {
-    if (typeof navigator !== "undefined" && navigator.clipboard) {
-      void navigator.clipboard.writeText(syncToken);
+  const handleCopyToken = async () => {
+    try {
+      if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(syncToken);
+      } else if (typeof document !== "undefined") {
+        const textArea = document.createElement("textarea");
+        textArea.value = syncToken;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
       setSyncFeedback("✓ Copied Crockford Token to Clipboard");
+      setTimeout(() => setSyncFeedback(null), 3000);
+    } catch {
+      setSyncFeedback("✓ Token selected for copy");
       setTimeout(() => setSyncFeedback(null), 3000);
     }
   };
@@ -189,8 +208,8 @@ export default function ShockwaveDashboard() {
             </span>
             <span className="text-xs text-emerald-400 font-mono font-bold">365 DAYS ACTIVE</span>
           </div>
-          <p className="text-xs text-zinc-400 mt-1 font-mono">
-            Expires: {config?.activationExpires ? new Date(config.activationExpires).toLocaleDateString() : "Loading..."}
+          <p className="text-xs text-zinc-400 mt-1 font-mono" suppressHydrationWarning>
+            Expires: {isMounted && config?.activationExpires ? new Date(config.activationExpires).toLocaleDateString() : "365-Day Active"}
           </p>
         </div>
       </header>

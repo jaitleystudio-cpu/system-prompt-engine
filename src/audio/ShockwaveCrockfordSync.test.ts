@@ -24,7 +24,7 @@ async function runCrockfordTestSuite() {
   console.log("================================================================================\n");
 
   let passed = 0;
-  const total = 10;
+  const total = 12;
 
   // TEST 1: Alphabet Specification
   console.log("TEST 1 [ALPHABET]: Douglas Crockford 32-Character Symbol Set...");
@@ -75,9 +75,10 @@ async function runCrockfordTestSuite() {
   const samplePayload = "7K9MX2QP";
   const checkSymbol = ShockwaveCrockfordSync.computeModulo37Checksum(samplePayload);
   const validToken = samplePayload + checkSymbol;
-  const isVerified = ShockwaveCrockfordSync.verifyChecksum(validToken);
-  if (isVerified && checkSymbol.length === 1) {
-    console.log(`  ✓ PASS: Payload "${samplePayload}" check symbol "${checkSymbol}" verified cleanly.`);
+  const isVerifiedRaw = ShockwaveCrockfordSync.verifyChecksum(validToken);
+  const isVerifiedPrefixed = ShockwaveCrockfordSync.verifyChecksum("SW-" + samplePayload + "-" + checkSymbol);
+  if (isVerifiedRaw && isVerifiedPrefixed && checkSymbol.length === 1) {
+    console.log(`  ✓ PASS: Payload "${samplePayload}" check symbol "${checkSymbol}" verified cleanly (raw & prefixed).`);
     passed++;
   } else {
     throw new Error("TEST 4 FAILED: Checksum verification failed");
@@ -128,9 +129,11 @@ async function runCrockfordTestSuite() {
   const syncToken = ShockwaveCrockfordSync.encodeProfile(originalProfile);
   console.log(`  Generated Sync Token: ${syncToken}`);
   const reconstructed = ShockwaveCrockfordSync.decodeProfile(syncToken);
+  const isTokenChecksumValid = ShockwaveCrockfordSync.verifyChecksum(syncToken);
 
   if (
     reconstructed &&
+    isTokenChecksumValid &&
     reconstructed.rt60DecaySeconds === 0.43 &&
     reconstructed.measuredSplDb === 75 &&
     reconstructed.roomModesHz[2] === 61.3 &&
@@ -145,19 +148,22 @@ async function runCrockfordTestSuite() {
     throw new Error("TEST 7 FAILED: Acoustic profile reconstruction mismatch");
   }
 
-  // TEST 8: Token Resiliency - Decoding with Human Typo (O instead of 0, hyphens added/removed)
-  console.log("\nTEST 8 [HUMAN-TYPO]: Resilient Token Decoding with Lowercase, Spaces & Hyphens...");
+  // TEST 8: Token Resiliency - Decoding with Human Typo & Garbage Rejection
+  console.log("\nTEST 8 [HUMAN-TYPO]: Resilient Token Decoding with Lowercase, Spaces & Garbage Rejection...");
   const tokenWithNoise = syncToken.toLowerCase().replace(/-/g, " ");
   const recoveredFromNoise = ShockwaveCrockfordSync.decodeProfile(tokenWithNoise);
+  const garbageRejected = ShockwaveCrockfordSync.decodeProfile(syncToken + "-EXTRA") === null;
+
   if (
     recoveredFromNoise &&
+    garbageRejected &&
     recoveredFromNoise.rt60DecaySeconds === originalProfile.rt60DecaySeconds &&
     recoveredFromNoise.channelDelaysMs.surroundLeft === 18.5
   ) {
-    console.log("  ✓ PASS: Noisy human input decoded cleanly and verified.");
+    console.log("  ✓ PASS: Noisy human input decoded cleanly and trailing garbage strictly rejected.");
     passed++;
   } else {
-    throw new Error("TEST 8 FAILED: Human typo recovery failed");
+    throw new Error("TEST 8 FAILED: Human typo recovery or garbage rejection failed");
   }
 
   // TEST 9: Mobile Probe CalibrationProfile Sync
@@ -191,13 +197,44 @@ async function runCrockfordTestSuite() {
   // TEST 10: Session Pairing Token
   console.log("\nTEST 10 [SESSION-PAIR]: Random 8-character Pairing Token Generation...");
   const pairToken = ShockwaveCrockfordSync.generateSessionPairingToken();
-  const rawPair = ShockwaveCrockfordSync.parseToken(pairToken);
-  const isPairValid = ShockwaveCrockfordSync.verifyChecksum(rawPair);
-  if (pairToken.startsWith("SW-") && isPairValid) {
-    console.log(`  ✓ PASS: Valid session pairing token generated: ${pairToken}`);
+  const isPairValidDirect = ShockwaveCrockfordSync.verifyChecksum(pairToken);
+  if (pairToken.startsWith("SW-") && isPairValidDirect) {
+    console.log(`  ✓ PASS: Valid session pairing token generated and directly verified: ${pairToken}`);
     passed++;
   } else {
-    throw new Error("TEST 10 FAILED: Session pairing token invalid");
+    throw new Error("TEST 10 FAILED: Session pairing token direct verification failed");
+  }
+
+  // TEST 11: Prefix Distinction on Tokens Starting with 'SW' in Payload
+  console.log("\nTEST 11 [PREFIX-SAFETY]: Tokens Starting with 'SW' in Base32 Payload...");
+  // Create profile with rt60 = 1.98s (rt60Cs = 198 -> first 5 bits = 'S') and measuredSplDb = 210 -> 'W'
+  const edgeProfile: AcousticRoomProfile = {
+    ...originalProfile,
+    rt60DecaySeconds: 1.98,
+    measuredSplDb: 210,
+  };
+  const edgeToken = ShockwaveCrockfordSync.encodeProfile(edgeProfile);
+  const rawEdgeToken = ShockwaveCrockfordSync.parseToken(edgeToken);
+  const rawWithoutPrefix = ShockwaveCrockfordSync.formatToken(rawEdgeToken, 4, "");
+  const edgeReconstructed = ShockwaveCrockfordSync.decodeProfile(rawWithoutPrefix);
+  if (edgeReconstructed && edgeReconstructed.rt60DecaySeconds === 1.98 && edgeReconstructed.measuredSplDb === 210) {
+    console.log("  ✓ PASS: Token with payload beginning with 'SW' safely parsed without truncation.");
+    passed++;
+  } else {
+    throw new Error("TEST 11 FAILED: Raw token starting with SW truncated");
+  }
+
+  // TEST 12: Multi-byte Buffer Bitwise Masking Roundtrip
+  console.log("\nTEST 12 [BUFFER-MASK]: Multi-Byte Arbitrary Length Encoding & Masked Roundtrip...");
+  const multiBytes = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+  const encMulti = ShockwaveCrockfordSync.encodeBytes(multiBytes);
+  const decMulti = ShockwaveCrockfordSync.decodeBytes(encMulti, multiBytes.length);
+  const multiMatch = multiBytes.every((v, i) => decMulti[i] === v);
+  if (multiMatch) {
+    console.log("  ✓ PASS: 16-byte buffer encoded and decoded bit-for-bit with bitwise masking.");
+    passed++;
+  } else {
+    throw new Error("TEST 12 FAILED: 16-byte buffer roundtrip mismatch");
   }
 
   console.log("\n================================================================================");

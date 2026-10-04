@@ -91,6 +91,9 @@ export class ShockwaveCrockfordSync {
   /**
    * Decode Crockford Base32 string into byte buffer
    */
+  /**
+   * Decode Crockford Base32 string into byte buffer
+   */
   public static decodeBytes(token: string, expectedByteLength?: number): Uint8Array {
     const normalized = this.normalize(token);
     let bits = 0;
@@ -108,6 +111,7 @@ export class ShockwaveCrockfordSync {
       if (bits >= 8) {
         bytes.push((value >>> (bits - 8)) & 0xff);
         bits -= 8;
+        value &= (1 << bits) - 1;
       }
     }
 
@@ -135,10 +139,11 @@ export class ShockwaveCrockfordSync {
   }
 
   /**
-   * Verify that a token ending with a Crockford Modulo-37 check symbol is authentic
+   * Verify that a token ending with a Crockford Modulo-37 check symbol is authentic.
+   * Tolerant of prefixes ("SW-"), delimiters, case, and check symbol aliases.
    */
   public static verifyChecksum(tokenWithCheck: string): boolean {
-    const raw = tokenWithCheck.replace(/[\s\-_]/g, "").toUpperCase();
+    const raw = this.parseToken(tokenWithCheck);
     if (raw.length < 2) return false;
 
     // Last character is the check symbol
@@ -148,7 +153,10 @@ export class ShockwaveCrockfordSync {
     const normalizedPayload = this.normalize(payloadPart);
     const expectedCheck = this.computeModulo37Checksum(normalizedPayload);
 
-    return checkChar === expectedCheck;
+    const expectedVal = this.CHECK_DECODE_MAP[expectedCheck];
+    const actualVal = this.CHECK_DECODE_MAP[checkChar];
+
+    return expectedVal !== undefined && actualVal !== undefined && expectedVal === actualVal;
   }
 
   /**
@@ -166,11 +174,17 @@ export class ShockwaveCrockfordSync {
   }
 
   /**
-   * Strip formatting prefix and hyphens to retrieve raw payload + checksum
+   * Strip formatting prefix (e.g. "SW-", "SW:") and hyphens/spaces to retrieve raw payload + checksum.
+   * Distinguishes explicit prefix from legitimate Base32 data starting with 'S' and 'W'.
    */
   public static parseToken(token: string): string {
-    let clean = token.replace(/[\s\-_]/g, "").toUpperCase();
-    if (clean.startsWith("SW")) {
+    const trimmed = token.trim();
+    let stripped = trimmed;
+    if (/^SW[\s\-_:]+/i.test(stripped)) {
+      stripped = stripped.replace(/^SW[\s\-_:]+/i, "");
+    }
+    let clean = stripped.replace(/[\s\-_:]/g, "").toUpperCase();
+    if ((clean.length === 19 || clean.length === 11) && clean.startsWith("SW")) {
       clean = clean.slice(2);
     }
     return clean;
@@ -225,21 +239,18 @@ export class ShockwaveCrockfordSync {
   public static decodeProfile(token: string): AcousticRoomProfile | null {
     try {
       const raw = this.parseToken(token);
-      if (raw.length < 17) {
-        return null; // Must be at least 16 Base32 chars + 1 check symbol
-      }
-
-      const payloadChars = raw.slice(0, 16);
-      const checkChar = raw.slice(16, 17);
-
-      const normalizedPayload = this.normalize(payloadChars);
-      const expectedCheck = this.computeModulo37Checksum(normalizedPayload);
-
-      if (checkChar !== expectedCheck) {
-        console.warn(`[CROCKFORD] Checksum failure: received "${checkChar}", expected "${expectedCheck}"`);
+      // Strictly 16 Base32 payload characters + 1 check symbol = 17 characters
+      if (raw.length !== 17) {
         return null;
       }
 
+      if (!this.verifyChecksum(raw)) {
+        console.warn(`[CROCKFORD] Checksum verification failed for token: ${token}`);
+        return null;
+      }
+
+      const payloadChars = raw.slice(0, 16);
+      const normalizedPayload = this.normalize(payloadChars);
       const buffer = this.decodeBytes(normalizedPayload, 10);
       if (buffer.length < 10) return null;
 
@@ -332,8 +343,9 @@ export class ShockwaveCrockfordSync {
    */
   public static generateSessionPairingToken(): string {
     const randomBytes = new Uint8Array(5);
-    if (typeof crypto !== "undefined" && crypto.getRandomValues) {
-      crypto.getRandomValues(randomBytes);
+    const gCrypto = typeof globalThis !== "undefined" ? globalThis.crypto : undefined;
+    if (gCrypto && typeof gCrypto.getRandomValues === "function") {
+      gCrypto.getRandomValues(randomBytes);
     } else {
       for (let i = 0; i < 5; i++) {
         randomBytes[i] = Math.floor(Math.random() * 256);

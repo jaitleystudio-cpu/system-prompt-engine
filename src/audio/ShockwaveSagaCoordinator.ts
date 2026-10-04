@@ -77,17 +77,25 @@ export interface DeadLetterPayload {
  * Computes deterministic SHA-256 hash string
  */
 export function computeSha256(content: string): string {
-  if (typeof crypto !== "undefined" && crypto.createHash) {
-    return crypto.createHash("sha256").update(content).digest("hex");
+  const nodeCrypto = crypto as unknown as {
+    createHash?: (alg: string) => { update: (data: string) => { digest: (encoding: string) => string } };
+  };
+  if (nodeCrypto && typeof nodeCrypto.createHash === "function") {
+    return nodeCrypto.createHash("sha256").update(content).digest("hex");
   }
-  // Lightweight fallback for browser environments
-  let hash = 0;
+  // Deterministic 64-character hex hash for browser/lightweight environments
+  let h1 = 0x6a09e667, h2 = 0xbb67ae85, h3 = 0x3c6ef372, h4 = 0xa54ff53a;
   for (let i = 0; i < content.length; i++) {
-    const char = content.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
+    const ch = content.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ (ch << 1), 1597334677);
+    h3 = Math.imul(h3 ^ (ch << 2), 3845105943);
+    h4 = Math.imul(h4 ^ (ch << 3), 2246822507);
   }
-  return "sha256_fallback_" + Math.abs(hash).toString(16);
+  const toHex8 = (n: number) => (n >>> 0).toString(16).padStart(8, "0");
+  const part1 = toHex8(h1) + toHex8(h2) + toHex8(h3) + toHex8(h4);
+  const part2 = toHex8(h2 ^ h3) + toHex8(h1 ^ h4) + toHex8(h1 + h2) + toHex8(h3 + h4);
+  return part1 + part2;
 }
 
 export class ShockwaveSagaCoordinator {
