@@ -3,10 +3,12 @@
 This is not a second recognition engine. Inference is the pinned `whisper-cli`
 and the Telugu ggml file named by media-pack/PACK_MANIFEST.json. When that
 model file is absent, the session may fetch it from the manifest SOURCE
-(model ingress only). User audio is never uploaded. A missing CLI, a bad
-hash, a bad size, or the wrong architecture fails closed. The session owns
-decode, cancellation, silence truth, and explicit modes. It does not claim
-live transcription. Product media v1 follows the mount ledger.
+(model ingress only). When the CLI is absent, the session builds the pinned
+whisper.cpp commit into the relative media-pack (static, no absolute rpath).
+User audio is never uploaded. A bad hash, a bad size, a bad rpath, or the
+wrong architecture fails closed. The session owns decode, cancellation,
+silence truth, and explicit modes. It does not claim live transcription.
+Product media v1 follows the mount ledger.
 """
 
 from __future__ import annotations
@@ -17,6 +19,7 @@ import json
 import os
 import platform
 import re
+import shutil
 import signal
 import socket
 import subprocess
@@ -30,9 +33,11 @@ from pathlib import Path
 from typing import Callable, Iterator
 
 HEX = frozenset("0123456789abcdef")
-PINNED_CLI_SHA256 = "784e1cb576b40c08827860779c2c0cc6b17b746171d62ce4fb9ff6ea014193a7"
+PINNED_CLI_SHA256 = "c52fa726b9ab0b8b7b1cd798ffa07b2feee8b5c754a27b05400298a4646d2c40"
 PINNED_TE_MODEL_SHA256 = "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e"
-PINNED_CLI_BYTES = 847304
+PINNED_CLI_BYTES = 4618232
+# Source repository of SOURCE_PIN. Not a binary URL.
+WHISPER_CPP_GIT = "https://github.com/ggml-org/whisper.cpp.git"
 PINNED_TE_MODEL_BYTES = 190085487
 PINNED_PACK_ID = "spe-local-te-small-q5_1"
 PINNED_PACK_VERSION = "1"
@@ -59,7 +64,7 @@ _BROWSER = ("browser", "web-speech", "webspeech")
 _VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
 # Fail-closed asset layout inside this candidate (no sibling worktree, no absolute path):
 #   media-pack/PACK_MANIFEST.json
-#   media-pack/whisper-cli
+#   media-pack/whisper-cli                 (built from SOURCE_PIN when absent)
 #   media-pack/models/ggml-te-small.bin
 _SEGMENT_RE = re.compile(
     r"\[(\d{2}):(\d{2}):(\d{2}\.\d{3})\s+-->\s+(\d{2}):(\d{2}):(\d{2}\.\d{3})\]\s*(.*)"
@@ -331,7 +336,7 @@ def _load_pack_manifest(root: Path) -> dict[str, object]:
     runtime = payload["RUNTIME_COMPATIBILITY"]
     if not isinstance(runtime, dict):
         raise IntegrityError("WRONG_MODEL")
-    for key in ("cli_relative_path", "model_relative_path", "architectures", "cli_sha256", "cli_bytes", "source_pin"):
+    for key in ("cli_relative_path", "model_relative_path", "architectures", "cli_sha256", "cli_bytes", "source_pin", "cli_source", "cli_license"):
         if key not in runtime:
             raise IntegrityError("WRONG_MODEL")
     if runtime["cli_relative_path"] != PACK_CLI_REL or runtime["model_relative_path"] != PACK_MODEL_REL:
@@ -339,6 +344,16 @@ def _load_pack_manifest(root: Path) -> dict[str, object]:
     if runtime["cli_sha256"] != PINNED_CLI_SHA256 or runtime["cli_bytes"] != PINNED_CLI_BYTES:
         raise IntegrityError("WRONG_MODEL")
     if runtime["source_pin"] != SOURCE_PIN:
+        raise IntegrityError("WRONG_MODEL")
+    cli_source = runtime["cli_source"]
+    if (
+        not isinstance(cli_source, str)
+        or SOURCE_PIN not in cli_source
+        or "://" in cli_source
+        or cli_source.startswith("/")
+    ):
+        raise IntegrityError("WRONG_MODEL")
+    if runtime["cli_license"] != "MIT":
         raise IntegrityError("WRONG_MODEL")
     arches = runtime["architectures"]
     if not isinstance(arches, list) or not arches or any(not isinstance(item, str) for item in arches):
@@ -438,14 +453,189 @@ def _acquire_absent_model(model_path: Path, manifest: dict[str, object]) -> None
         raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_MODEL") from exc
 
 
+
+def _tool(name: str) -> str:
+    found = shutil.which(name)
+    if not found:
+        raise IntegrityError(f"PINNED_ASSET_NOT_ON_DISK:MISSING_BINARY:BUILD_TOOL_ABSENT:{name}")
+    return found
+
+
+def _run_build(args: list[str], *, env: dict[str, str], timeout: int) -> None:
+    try:
+        proc = subprocess.run(args, env=env, capture_output=True, text=True, timeout=timeout)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_BINARY:BUILD_FAILED") from exc
+    if proc.returncode != 0:
+        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_BINARY:BUILD_FAILED")
+
+
+def _rpath_allowed(value: str) -> bool:
+    if not value or value.startswith("/") or ".." in Path(value).parts:
+        return False
+    return value.startswith("@loader_path") or value.startswith("$ORIGIN")
+
+
+def _dylib_allowed(value: str) -> bool:
+    return value.startswith("/usr/lib/") or value.startswith("/System/Library/")
+
+
+def _reject_external_linkage(path: Path) -> None:
+    """Static product CLI: system libraries only, no absolute sibling rpath."""
+    data = path.read_bytes()
+    if len(data) < 32 or int.from_bytes(data[:4], "little") != 0xFEEDFACF:
+        raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
+    ncmds = int.from_bytes(data[16:20], "little")
+    offset = 32
+    for _ in range(ncmds):
+        if offset + 8 > len(data):
+            raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
+        cmd = int.from_bytes(data[offset : offset + 4], "little")
+        cmdsize = int.from_bytes(data[offset + 4 : offset + 8], "little")
+        if cmdsize < 8 or offset + cmdsize > len(data):
+            raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
+        if cmd == 0x8000001C:
+            path_off = int.from_bytes(data[offset + 8 : offset + 12], "little")
+            if path_off < 8 or offset + path_off >= offset + cmdsize:
+                raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+            raw = data[offset + path_off : offset + cmdsize].split(b"\x00", 1)[0].decode("utf-8", "replace")
+            if not _rpath_allowed(raw):
+                raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+        if cmd in {0xC, 0x80000018}:
+            name_off = int.from_bytes(data[offset + 8 : offset + 12], "little")
+            if name_off < 8 or offset + name_off >= offset + cmdsize:
+                raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+            raw = data[offset + name_off : offset + cmdsize].split(b"\x00", 1)[0].decode("utf-8", "replace")
+            if not _dylib_allowed(raw):
+                raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+        offset += cmdsize
+
+
+def _pinned_source(src: Path, pin: str, git: str, env: dict[str, str]) -> None:
+    def head() -> str:
+        proc = subprocess.run(
+            [git, "-C", str(src), "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+        if proc.returncode != 0:
+            return ""
+        return proc.stdout.strip()
+
+    if not (src / ".git").is_dir() or head() != pin:
+        if src.exists():
+            shutil.rmtree(src)
+        src.parent.mkdir(parents=True, exist_ok=True)
+        _run_build(
+            [git, "clone", "--filter=blob:none", "--no-checkout", WHISPER_CPP_GIT, str(src)],
+            env=env,
+            timeout=300,
+        )
+        _run_build([git, "-C", str(src), "fetch", "--depth", "1", "origin", pin], env=env, timeout=300)
+        _run_build([git, "-C", str(src), "checkout", "--detach", pin], env=env, timeout=180)
+    if head() != pin:
+        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_BINARY:SOURCE_PIN_MISMATCH")
+
+
+def _acquire_absent_cli(cli_path: Path, manifest: dict[str, object]) -> None:
+    """Build whisper-cli from the pinned whisper.cpp commit into the relative pack.
+
+    Call only when the CLI file is absent. A file that is already present is
+    never replaced, so a wrong-hash binary stays fail-closed. The build is
+    static (CMAKE_SKIP_RPATH) and is rejected if any load command points
+    outside system libraries or uses an absolute rpath. User audio is not sent.
+    """
+    runtime = manifest["RUNTIME_COMPATIBILITY"]
+    assert isinstance(runtime, dict)
+    pin = str(runtime["source_pin"])
+    if pin != SOURCE_PIN or pin not in str(runtime["cli_source"]) or "://" in str(runtime["cli_source"]):
+        raise IntegrityError("WRONG_MODEL")
+    if runtime.get("cli_license") != "MIT":
+        raise IntegrityError("WRONG_MODEL")
+    git = _tool("git")
+    cmake = _tool("cmake")
+    clang = _tool("clang")
+    clangxx = _tool("clang++")
+    root = cli_path.parent
+    work = root / ".whisper-build"
+    src = work / "src"
+    build = work / "cmake"
+    env = os.environ.copy()
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    env["ZERO_AR_DATE"] = "1"
+    env["SOURCE_DATE_EPOCH"] = "0"
+    _pinned_source(src, pin, git, env)
+    if build.exists():
+        shutil.rmtree(build)
+    prefix = f"-O3 -DNDEBUG -fdebug-prefix-map={src}=/whisper.cpp -ffile-prefix-map={src}=/whisper.cpp -g0"
+    arch = _host_arch()
+    _run_build(
+        [
+            cmake,
+            "-S",
+            str(src),
+            "-B",
+            str(build),
+            "-DCMAKE_BUILD_TYPE=Release",
+            "-DBUILD_SHARED_LIBS=OFF",
+            "-DWHISPER_BUILD_TESTS=OFF",
+            "-DWHISPER_BUILD_EXAMPLES=ON",
+            "-DWHISPER_BUILD_SERVER=OFF",
+            "-DWHISPER_COMMON_FFMPEG=OFF",
+            "-DWHISPER_FFMPEG=OFF",
+            "-DWHISPER_SDL2=OFF",
+            "-DWHISPER_CURL=OFF",
+            f"-DWHISPER_BUILD_COMMIT={pin}",
+            "-DWHISPER_BUILD_NUMBER=0",
+            "-DCMAKE_SKIP_RPATH=ON",
+            f"-DCMAKE_C_COMPILER={clang}",
+            f"-DCMAKE_CXX_COMPILER={clangxx}",
+            f"-DCMAKE_C_FLAGS_RELEASE={prefix}",
+            f"-DCMAKE_CXX_FLAGS_RELEASE={prefix}",
+            f"-DCMAKE_OSX_ARCHITECTURES={arch}",
+            "-DGGML_NATIVE=ON",
+            "-DGGML_METAL=ON",
+            "-DGGML_CCACHE=OFF",
+        ],
+        env=env,
+        timeout=180,
+    )
+    _run_build(
+        [cmake, "--build", str(build), "--target", "whisper-cli", "-j", str(os.cpu_count() or 2)],
+        env=env,
+        timeout=600,
+    )
+    built = build / "bin" / "whisper-cli"
+    if not built.is_file():
+        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_BINARY:BUILD_FAILED")
+    _reject_external_linkage(built)
+    raw = built.read_bytes()
+    if len(raw) != PINNED_CLI_BYTES:
+        raise IntegrityError("SIZE_MISMATCH")
+    got = hashlib.sha256(raw).hexdigest()
+    if got != PINNED_CLI_SHA256:
+        raise IntegrityError("HASH_MISMATCH")
+    partial = cli_path.with_name(cli_path.name + ".partial")
+    partial.unlink(missing_ok=True)
+    try:
+        partial.write_bytes(raw)
+        os.chmod(partial, 0o755)
+        os.replace(partial, cli_path)
+    except OSError as exc:
+        partial.unlink(missing_ok=True)
+        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_BINARY:BUILD_FAILED") from exc
+    print(f"MEDIA_CLI_BUILD bytes={len(raw)} sha256={got} commit={pin}", file=sys.stderr, flush=True)
+
+
 def discover_qualified_assets() -> QualifiedAssets:
     """Resolve the pinned CLI and Telugu model from the relative media-pack.
 
     The ggml file is fetched from the manifest SOURCE only when it is absent.
-    The CLI is not downloaded: the manifest has no binary URL. Never reads a
-    sibling-worktree path. A missing CLI, a short model, a hash or size
-    mismatch, the wrong ggml file, or an unsupported architecture raises
-    IntegrityError.
+    The CLI is built from the pinned whisper.cpp commit only when it is absent.
+    The manifest has no binary URL. Never reads a sibling-worktree path. A
+    short model, a hash or size mismatch, a bad rpath, the wrong ggml file,
+    or an unsupported architecture raises IntegrityError.
     """
     with _ACQUIRE_LOCK:
         root = pack_root()
@@ -471,8 +661,7 @@ def discover_qualified_assets() -> QualifiedAssets:
             architectures=architectures,
         )
         if not cli_path.is_file():
-            marker = "MODEL_INGRESS_OK" if downloaded else "MODEL_PRESENT"
-            raise IntegrityError(f"PINNED_ASSET_NOT_ON_DISK:MISSING_BINARY:{marker}")
+            _acquire_absent_cli(cli_path, manifest)
         cli_sha = _verify_packed_file(
             cli_path,
             expected_sha=PINNED_CLI_SHA256,

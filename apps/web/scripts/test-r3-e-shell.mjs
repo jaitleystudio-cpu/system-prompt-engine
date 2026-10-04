@@ -78,14 +78,14 @@ check("website mounted and /media route owns the whisper runtime", () => {
   assert.doesNotMatch(harness, /whisperRuntime/);
   assert.doesNotMatch(app, /StaticWebsiteBuilder/);
   const contract = src("src/media/mount-contract.ts");
-  assert.match(contract, /productMediaV1: "NOT_PASS"/);
+  assert.match(contract, /productMediaV1: "PASS"/);
   assert.match(contract, /media-pack/);
   assert.doesNotMatch(contract, /SPE_MEDIA_ROOT/);
   assert.doesNotMatch(contract, /\/Volumes\//);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'Clean checkout cannot transcribe: whisper-cli is gitignored and PACK_MANIFEST has no binary URL. Model ingress uses SOURCE, sha256, expected bytes, and license only.');
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'NONE');
   assert.match(contract, /remainingGap:/);
-  assert.doesNotMatch(contract, /remainingGap: "NONE"/);
+  assert.match(contract, /remainingGap: "NONE"/);
   assert.equal(mount.MEDIA_MOUNT.runtime, "pinnedWhisperRuntime");
   assert.match(src("src/media/pinnedWhisperRuntime.ts"), /\/api\/media\/transcribe/);
   assert.doesNotMatch(src("src/media/pinnedWhisperRuntime.ts"), /__speWhisper/);
@@ -122,19 +122,19 @@ check("productMediaV1 is not a test-injected page global", () => {
   }
   const testInjects = assign.test(readFileSync(harnessPath, "utf8"));
   const claimsPass =
-    /productMediaV1:\s*"NOT_PASS"/.test(contract) &&
-    /productMediaV1:\s*"NOT_PASS"/.test(statusSrc) &&
-    mount.MEDIA_MOUNT.productMediaV1 === "NOT_PASS";
+    /productMediaV1:\s*"PASS"/.test(contract) &&
+    /productMediaV1:\s*"PASS"/.test(statusSrc) &&
+    mount.MEDIA_MOUNT.productMediaV1 === "PASS";
   if (testInjects || productHits.length > 0) {
     throw new Error("a page global is still the runtime");
   }
   assert.equal(claimsPass, true);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
-  assert.notEqual(mount.MEDIA_MOUNT.remainingGap, "NONE");
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, "NONE");
   assert.equal(testInjects, false);
   assert.deepEqual(productHits, []);
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'Clean checkout cannot transcribe: whisper-cli is gitignored and PACK_MANIFEST has no binary URL. Model ingress uses SOURCE, sha256, expected bytes, and license only.');
-  assert.doesNotMatch(contract, /remainingGap:\s*"NONE"/);
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'NONE');
+  assert.match(contract, /remainingGap:\s*"NONE"/);
   const host = readFileSync(join(repoRoot, "spe_runtime/media_product/route_host.py"), "utf8");
   const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
   assert.match(host, /LocalMediaSession\.open/);
@@ -157,9 +157,9 @@ check("production static server and relative media-pack share one host owner", (
   const vite = src("vite.config.ts");
   const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
   const claimsPass =
-    /productMediaV1:\s*"NOT_PASS"/.test(contract) &&
-    /productMediaV1:\s*"NOT_PASS"/.test(statusSrc) &&
-    mount.MEDIA_MOUNT.productMediaV1 === "NOT_PASS";
+    /productMediaV1:\s*"PASS"/.test(contract) &&
+    /productMediaV1:\s*"PASS"/.test(statusSrc) &&
+    mount.MEDIA_MOUNT.productMediaV1 === "PASS";
   assert.match(hostOwner, /spe_runtime\.media_product\.route_host/);
   assert.match(hostOwner, /export function createLocalMediaHost/);
   assert.match(plugin, /createLocalMediaHost/);
@@ -180,11 +180,14 @@ check("production static server and relative media-pack share one host owner", (
   assert.match(owner, /REAL_SHA256/);
   assert.match(owner, /EXPECTED_BYTES/);
   assert.match(owner, /_acquire_absent_model/);
+  assert.match(owner, /_acquire_absent_cli/);
+  assert.match(owner, /CMAKE_SKIP_RPATH/);
   assert.match(owner, /MEDIA_MODEL_INGRESS/);
+  assert.match(owner, /MEDIA_CLI_BUILD/);
   assert.match(owner, /"PRODUCT_MEDIA_V1": "PASS" if mounted else "NOT_PASS"/);
   assert.equal(claimsPass, true);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'Clean checkout cannot transcribe: whisper-cli is gitignored and PACK_MANIFEST has no binary URL. Model ingress uses SOURCE, sha256, expected bytes, and license only.');
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'NONE');
   const manifest = JSON.parse(readFileSync(join(repoRoot, "media-pack/PACK_MANIFEST.json"), "utf8"));
   for (const key of [
     "MODEL_PACK_ID",
@@ -454,7 +457,10 @@ try {
   const cancelFixture = join(here, "fixtures/media/te_dengue_intro_30s.wav");
   assert.equal(existsSync(speechFixture), true);
   assert.equal(existsSync(cancelFixture), true);
-  assert.equal(existsSync(packCli), true, "place whisper-cli in media-pack/");
+  const siblingAside = "/tmp/r3e-whisper-cli.sibling-not-restored";
+  if (existsSync(siblingAside)) unlinkSync(siblingAside);
+  if (existsSync(packCli)) relocate(packCli, siblingAside);
+  assert.equal(existsSync(packCli), false, "pre-seeded whisper-cli stays aside; the product must build it");
   assert.equal(existsSync(packModel), true, "place models/ggml-te-small.bin in media-pack/");
   execFileSync("python3", [
     "-c",
@@ -573,7 +579,7 @@ try {
       injected: typeof window.__speWhisper,
     }));
     assert.equal(mounted.owner, "route");
-    assert.equal(mounted.claim, "NOT_PASS");
+    assert.equal(mounted.claim, "PASS");
     assert.equal(mounted.injected, "undefined");
     const health = await page.evaluate(async () => {
       const res = await fetch("/api/media/health");
@@ -624,7 +630,7 @@ try {
   const speech = await openAppMedia();
   await speech.page.getByTestId("media-file").setInputFiles(speechFixture);
   await speech.page.getByTestId("media-start").click();
-  await speech.page.getByTestId("media-transcript").waitFor({ timeout: 180000 });
+  await speech.page.getByTestId("media-transcript").waitFor({ timeout: 540000 });
   await speech.page.getByTestId("media-mode").filter({ hasText: "LOCAL_NEURAL" }).waitFor({ timeout: 5000 });
   const speechSeen = await readPanel(speech.page);
   assert.match(speechSeen.mode, /LOCAL_NEURAL/);
@@ -682,7 +688,7 @@ try {
     claim: document.querySelector("[data-product-media-v1]")?.getAttribute("data-product-media-v1") ?? "",
   }));
   assert.equal(reloaded.injected, "undefined");
-  assert.equal(reloaded.claim, "NOT_PASS");
+  assert.equal(reloaded.claim, "PASS");
   await speech.page.getByTestId("media-file").setInputFiles("/tmp/r3e-silence-16k.wav");
   await speech.page.getByTestId("media-start").click();
   await speech.page.getByTestId("media-mode").filter({ hasText: "LOCAL_FALLBACK" }).waitFor({ timeout: 180000 });
@@ -817,52 +823,65 @@ try {
     writeFileSync(packManifestPath, packManifestText);
   }
 
-  const cliKeep = "/tmp/r3e-whisper-cli.keep";
-  relocate(packCli, cliKeep);
-  try {
-    await expectPackError("MISSING_BINARY");
-  } finally {
-    if (!existsSync(packCli) && existsSync(cliKeep)) relocate(cliKeep, packCli, 0o755);
-  }
-
   const cliAside = "/tmp/r3e-whisper-cli.clean-aside";
-  const modelAside = "/tmp/r3e-ggml-te-small.clean-aside";
+  if (existsSync(cliAside)) unlinkSync(cliAside);
+  assert.equal(existsSync(packCli), true, "the product speech path must have built whisper-cli");
   relocate(packCli, cliAside);
-  relocate(packModel, modelAside);
+  assert.equal(existsSync(packCli), false);
   try {
     const clean = await openAppMedia();
     try {
       await clean.page.getByTestId("media-file").setInputFiles(speechFixture);
       await clean.page.getByTestId("media-start").click();
-      await clean.page.waitForSelector("[data-testid=media-error], [data-testid=media-transcript]", { timeout: 600000 });
+      await clean.page.getByTestId("media-transcript").waitFor({ timeout: 540000 });
+      await clean.page.getByTestId("media-mode").filter({ hasText: "LOCAL_NEURAL" }).waitFor({ timeout: 5000 });
       const cleanSeen = await readPanel(clean.page);
-      assert.doesNotMatch(cleanSeen.mode, /LOCAL_NEURAL/);
-      assert.notEqual(cleanSeen.status, "SPEECH");
+      assert.match(cleanSeen.mode, /LOCAL_NEURAL/);
+      assert.equal(cleanSeen.status, "SPEECH");
+      assert.equal(cleanSeen.text.trim(), "\u0c05\u0c2e\u0c4d\u0c2e\u0c3e");
+      assert.equal(cleanSeen.lang, "te");
+      assert.equal(cleanSeen.error, "");
       assert.match(cleanSeen.egress, /Network sends for this file: 0/);
       assert.deepEqual(clean.external, []);
-      const ingress = execFileSync("python3", ["-c", [
-        "import hashlib",
+      const built = execFileSync("python3", ["-c", [
+        "import hashlib, json, subprocess",
         "from pathlib import Path",
-        "path = Path(" + JSON.stringify(packModel) + ")",
-        "print('ABSENT' if not path.is_file() else hashlib.sha256(path.read_bytes()).hexdigest())",
-      ].join("\n")], { encoding: "utf8" }).trim();
-      console.log("CLEAN_ABSENCE", JSON.stringify({ seen: cleanSeen, modelSha: ingress, serverLog: appLog.includes("MEDIA_MODEL_INGRESS") }));
-      if (ingress === "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e") {
-        assert.match(cleanSeen.error, /MISSING_BINARY/);
-        assert.match(cleanSeen.error, /MODEL_INGRESS_OK/);
-        assert.match(appLog, /MEDIA_MODEL_INGRESS/);
-      } else {
-        console.log("BLOCKER clean-checkout model ingress did not verify", ingress, cleanSeen.error);
-        assert.match(cleanSeen.mode, /UNAVAILABLE/);
-      }
+        "path = Path(" + JSON.stringify(packCli) + ")",
+        "model = Path(" + JSON.stringify(packModel) + ")",
+        "manifest = json.loads(Path(" + JSON.stringify(packManifestPath) + ").read_text())",
+        "data = path.read_bytes()",
+        "print(hashlib.sha256(data).hexdigest())",
+        "print(len(data))",
+        "print(manifest['RUNTIME_COMPATIBILITY']['cli_sha256'])",
+        "print(hashlib.sha256(model.read_bytes()).hexdigest())",
+        "text = subprocess.check_output(['otool', '-l', str(path)], text=True)",
+        "rpaths = []",
+        "lines = text.splitlines()",
+        "for i, line in enumerate(lines):",
+        "    if 'LC_RPATH' in line:",
+        "        for nxt in lines[i:i+6]:",
+        "            if 'path ' in nxt:",
+        "                rpaths.append(nxt.split('path ', 1)[1].split(' (', 1)[0].strip())",
+        "print('RPATH', '|'.join(rpaths))",
+        "print(subprocess.check_output(['otool', '-L', str(path)], text=True))",
+      ].join("\n")], { encoding: "utf8" });
+      console.log("CLEAN_BUILD_CLI", built);
+      const expectSha = JSON.parse(packManifestText).RUNTIME_COMPATIBILITY.cli_sha256;
+      assert.match(built, new RegExp(expectSha));
+      assert.notEqual(expectSha, "784e1cb576b40c08827860779c2c0cc6b17b746171d62ce4fb9ff6ea014193a7");
+      assert.match(built, /47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e/);
+      assert.doesNotMatch(built, /RPATH \//);
+      assert.doesNotMatch(built, /@rpath\//);
+      assert.doesNotMatch(built, /spe-g12/);
+      assert.match(appLog, /MEDIA_CLI_BUILD/);
+      assert.match(cleanSeen.egress, /Network sends for this file: 0/);
       checks += 1;
     } finally {
       await clean.context.close();
     }
   } finally {
-    if (!existsSync(packCli) && existsSync(cliAside)) relocate(cliAside, packCli, 0o755);
-    if (!existsSync(packModel) && existsSync(modelAside)) relocate(modelAside, packModel);
-    else if (existsSync(modelAside)) unlinkSync(modelAside);
+    if (existsSync(siblingAside)) unlinkSync(siblingAside);
+    if (existsSync(cliAside)) unlinkSync(cliAside);
   }
 
   async function robotsOf(caseName) {

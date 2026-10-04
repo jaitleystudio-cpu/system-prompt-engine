@@ -5,7 +5,7 @@ reaches it only through the app's same-origin /api/media route.
 
 Ownership, from spe_runtime/media_product/local_backend.py:
 - Runtime creation: LocalMediaSession.open(discover_qualified_assets()).
-- Model location: discover_qualified_assets() verifies media-pack/PACK_MANIFEST.json and, only when the ggml file is absent, fetches SOURCE (model ingress, then sha256).
+- Model location: discover_qualified_assets() verifies media-pack/PACK_MANIFEST.json and, only when the ggml file is absent, fetches SOURCE (model ingress, then sha256). When whisper-cli is absent it builds the pinned whisper.cpp commit into that pack.
 - Lifecycle: LocalMediaSession.transcribe_path (decode, energy gate, whisper-cli).
 - Cancellation: LocalMediaSession.cancel() sets the event and SIGTERMs the CLI group.
 - Cleanup: LocalMediaSession.close() drops PCM buffers and unlinks session temps.

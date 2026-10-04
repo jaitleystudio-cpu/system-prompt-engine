@@ -12,8 +12,8 @@
       "arm64"
     ],
     "source_pin": "927cfce34f31707e17f2bff35c349632fb9e2c3a",
-    "cli_sha256": "784e1cb576b40c08827860779c2c0cc6b17b746171d62ce4fb9ff6ea014193a7",
-    "cli_bytes": 847304,
+    "cli_sha256": "c52fa726b9ab0b8b7b1cd798ffa07b2feee8b5c754a27b05400298a4646d2c40",
+    "cli_bytes": 4618232,
     "cli_license": "MIT",
     "cli_source": "whisper.cpp@927cfce34f31707e17f2bff35c349632fb9e2c3a"
   },
