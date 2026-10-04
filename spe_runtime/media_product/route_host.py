@@ -109,7 +109,9 @@ def _from_transcript(result: object) -> dict[str, object]:
         if not neural or mode != "LOCAL_NEURAL":
             return _public("ERROR", "UNAVAILABLE", "FALSE_NEURAL", egress=egress)
         return _public("SPEECH", "LOCAL_NEURAL", None, text=text, neural=True, egress=egress, progress=shown_progress)
-    if error in {"CORRUPT", "NO_AUDIO_TRACK", "FILE_MISSING"}:
+    if error == "CORRUPT":
+        return _public("ERROR", "UNAVAILABLE", "CORRUPT", egress=egress)
+    if error in {"NO_AUDIO_TRACK", "FILE_MISSING"}:
         neural = False
         if mode == "LOCAL_NEURAL":
             mode = "LOCAL_FALLBACK"

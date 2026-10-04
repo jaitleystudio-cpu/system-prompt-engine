@@ -692,7 +692,8 @@ try {
       status: document.querySelector("[data-testid=media-panel]")?.getAttribute("data-status") ?? "",
     }));
     assert.match(corruptSeen.error, /CORRUPT/);
-    assert.match(corruptSeen.mode, /LOCAL_FALLBACK/);
+    assert.match(corruptSeen.mode, /UNAVAILABLE/);
+    assert.doesNotMatch(corruptSeen.mode, /LOCAL_FALLBACK/);
     assert.doesNotMatch(corruptSeen.mode, /LOCAL_NEURAL/);
     assert.equal(corruptSeen.status, "ERROR");
     assert.equal(corruptSeen.text, "");
@@ -700,7 +701,7 @@ try {
     await waitClean(corrupt.page);
     assert.deepEqual(corrupt.external, []);
     console.log(
-      "PRODUCT-STATIC EVIDENCE /media corrupt LOCAL_FALLBACK not a product pass",
+      "PRODUCT-STATIC EVIDENCE /media corrupt UNAVAILABLE fail-closed not a product pass",
       JSON.stringify(corruptSeen),
     );
     checks += 1;

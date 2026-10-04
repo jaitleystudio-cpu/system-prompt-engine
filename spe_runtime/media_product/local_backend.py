@@ -107,7 +107,8 @@ def resolve_media_mode(*, provider: str, assets_ready: bool, neural_session_ran:
     """LOCAL_NEURAL only after the pinned CLI actually ran.
 
     Browser speech is BROWSER_SERVICE. Cloud and missing assets are UNAVAILABLE.
-    Energy checks and decode failures that never spawn whisper-cli are LOCAL_FALLBACK.
+    Energy checks that never spawn whisper-cli are LOCAL_FALLBACK.
+    Corrupt input is not resolved here; callers fail it closed as UNAVAILABLE.
     """
     name = str(provider).strip().lower().replace("_", "-")
     if any(marker in name for marker in _BROWSER):
@@ -742,11 +743,15 @@ class LocalMediaSession:
         progress_state: str = "NOT_REPORTED",
     ) -> LocalTranscript:
         self.phase = "error"
-        mode = resolve_media_mode(
-            provider="whisper-cli",
-            assets_ready=True,
-            neural_session_ran=neural,
-        )
+        # Corrupt bytes never become a completed fallback transcription.
+        if code == "CORRUPT":
+            mode = "UNAVAILABLE"
+        else:
+            mode = resolve_media_mode(
+                provider="whisper-cli",
+                assets_ready=True,
+                neural_session_ran=neural,
+            )
         return LocalTranscript(
             status="ERROR",
             text="",
