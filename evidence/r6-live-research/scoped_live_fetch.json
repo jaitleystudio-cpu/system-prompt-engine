@@ -1,0 +1,32 @@
+{
+  "scoped_live_fetch": "LIVE_FETCH_SCOPED",
+  "consent_blocked_first_attempt": true,
+  "provider": "OPENALEX",
+  "provider_family": "OPENALEX",
+  "identifier": "10.1038/nature00870",
+  "verification_status": "DOI_MATCH",
+  "response_digest": "86c03a6148fa3fe4034be1c55bc1657b7ba636332b3f3f286d261b8d9905640c",
+  "response_digest_algorithm": "sha256",
+  "timestamp_ist": "2026-10-04T18:10:49+05:30",
+  "url": "https://api.openalex.org/works/https://doi.org/10.1038/nature00870",
+  "http_status": 200,
+  "retraction_status": "RETRACTION_SIGNAL",
+  "retraction_provider": "CROSSREF",
+  "retraction_provider_family": "CROSSREF",
+  "retraction_notice_types": [
+    "correction",
+    "erratum",
+    "retraction"
+  ],
+  "retraction_response_digest": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+  "retraction_url": "https://api.crossref.org/works/10.1038/nature00870",
+  "retraction_timestamp_ist": "2026-10-04T18:10:50+05:30",
+  "product_LIVE_INDEX": "HOLD",
+  "product_LIVE_RETRACTION": "HOLD",
+  "may_promote": false,
+  "journey_receipt": "NOT_PASS",
+  "stored_receipt_reported_as_live": false,
+  "ncbi_counts_as_two_providers": false,
+  "parent": "29a4d7139e5194a9b365a0b25b5d25df1e06c22e",
+  "note": "One consented DOI. LIVE_FETCH_SCOPED is not a product LIVE pass."
+}

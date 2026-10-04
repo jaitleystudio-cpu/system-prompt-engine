@@ -47,6 +47,7 @@ class AdapterHit:
     abstract: str
     peer_review_class: str
     retraction: RetractionCheckStatus
+    notice_types: tuple[str, ...] = ()
 
 
 _BARE_DOI_QUERY = re.compile(
@@ -276,6 +277,10 @@ def _parse_hits(provider: str, status: int, body: str) -> list[AdapterHit]:
             doi = str(item.get("doi") or "").replace("https://doi.org/", "")
             title_oa = str(item.get("display_name") or "")
             retracted = bool(item.get("is_retracted")) or title_oa.upper().startswith("RETRACTED")
+            if "is_retracted" in item:
+                oa_notice = ("is_retracted",) if item.get("is_retracted") is True else ("is_retracted_false",)
+            else:
+                oa_notice = ()
             hits.append(
                 AdapterHit(
                     provider=provider,
@@ -292,6 +297,7 @@ def _parse_hits(provider: str, status: int, body: str) -> list[AdapterHit]:
                         if retracted
                         else RetractionCheckStatus.NO_SIGNAL_IN_QUERIED_SOURCES
                     ),
+                    notice_types=oa_notice,
                 )
             )
     if provider == "CROSSREF":
@@ -304,9 +310,26 @@ def _parse_hits(provider: str, status: int, body: str) -> list[AdapterHit]:
             titles = item.get("title") or [""]
             updates = list(item.get("update-to") or []) + list(item.get("updated-by") or [])
             title0 = str((item.get("title") or [""])[0] if item.get("title") else "")
-            retracted = any(
-                str(u.get("type", "")).lower() == "retraction" for u in updates
-            ) or title0.upper().startswith("RETRACTED")
+            cr_notice = tuple(
+                sorted(
+                    {
+                        str(u.get("type", "")).lower()
+                        for u in updates
+                        if isinstance(u, dict) and u.get("type")
+                    }
+                )
+            )
+            retracted = "retraction" in cr_notice or title0.upper().startswith("RETRACTED")
+            if retracted:
+                cr_status = RetractionCheckStatus.RETRACTION_SIGNAL
+            elif "withdrawal" in cr_notice:
+                cr_status = RetractionCheckStatus.WITHDRAWAL_SIGNAL
+            elif "expression_of_concern" in cr_notice or "expression of concern" in cr_notice:
+                cr_status = RetractionCheckStatus.EXPRESSION_OF_CONCERN
+            elif "correction" in cr_notice or "erratum" in cr_notice:
+                cr_status = RetractionCheckStatus.CORRECTION_SIGNAL
+            else:
+                cr_status = RetractionCheckStatus.NO_SIGNAL_IN_QUERIED_SOURCES
             hits.append(
                 AdapterHit(
                     provider="CROSSREF",
@@ -318,11 +341,8 @@ def _parse_hits(provider: str, status: int, body: str) -> list[AdapterHit]:
                         if item.get("type") == "journal-article"
                         else None
                     ),
-                    retraction=(
-                        RetractionCheckStatus.RETRACTION_SIGNAL
-                        if retracted
-                        else RetractionCheckStatus.NO_SIGNAL_IN_QUERIED_SOURCES
-                    ),
+                    retraction=cr_status,
+                    notice_types=cr_notice,
                 )
             )
     if provider in {"PUBMED", "PMC"}:
@@ -399,6 +419,7 @@ def acquire_scholarly_hits(
     sensitive_spans: tuple[str, ...] = (),
     transport: TransportGet | None = None,
     consent: bool = False,
+    force_live: bool = False,
 ) -> dict[str, object]:
     """Privacy-minimized multi-provider acquire → sanitized hits + capsules."""
     if not consent:
@@ -435,7 +456,9 @@ def acquire_scholarly_hits(
             "reasons": ["TIMEOUT_NE_CLEAN"],
         }
 
-    live_network = transport is None and os.environ.get("SPE_SCHOLARLY_LIVE", "0") == "1"
+    live_network = transport is None and (
+        force_live is True or os.environ.get("SPE_SCHOLARLY_LIVE", "0") == "1"
+    )
     fixture_path = transport is None and not live_network
     get = transport or fixture_transport
     if live_network:
@@ -444,18 +467,19 @@ def acquire_scholarly_hits(
         def _live_get(url: str) -> tuple[int, str]:
             req = urllib.request.Request(
                 url,
-                headers={"User-Agent": "SPE-GroundingFabric/1.0", "Accept": "*/*"},
+                headers={"User-Agent": "SPE-GroundingFabric/1.0", "Accept": "application/json"},
             )
             try:
-                with urllib.request.urlopen(req, timeout=15) as resp:  # noqa: S310
+                with urllib.request.urlopen(req, timeout=25) as resp:  # noqa: S310
                     return int(resp.status), resp.read().decode("utf-8", "replace")
             except Exception as exc:  # noqa: BLE001
-                return 599, json.dumps({"error": str(exc)})
+                return 599, json.dumps({"error": type(exc).__name__})
 
         get = _live_get
 
     all_hits: list[AdapterHit] = []
     network_calls = 0
+    fetches: list[dict[str, object]] = []
     builders = {
         "OPENALEX": build_openalex_url,
         "CROSSREF": build_crossref_url,
@@ -469,6 +493,21 @@ def acquire_scholarly_hits(
         url = builders[prov](mini.public_query)
         status, body = get(url)
         network_calls += 1
+        from datetime import datetime
+        from zoneinfo import ZoneInfo
+
+        fetches.append(
+            {
+                "provider": prov,
+                "provider_family": "NCBI" if prov in {"PUBMED", "PMC"} else prov,
+                "url": url,
+                "http_status": status,
+                "response_sha256": hashlib.sha256(body.encode("utf-8")).hexdigest(),
+                "response_bytes": len(body.encode("utf-8")),
+                "timestamp_ist": datetime.now(ZoneInfo("Asia/Kolkata")).isoformat(timespec="seconds"),
+                "live": live_network,
+            }
+        )
         all_hits.extend(_parse_hits(prov, status, body))
 
     clean_hits: list[dict[str, object]] = []
@@ -489,6 +528,7 @@ def acquire_scholarly_hits(
                 "abstract": payload["abstract"],
                 "peer_review_class": hit.peer_review_class,
                 "retraction": hit.retraction.value,
+                "notice_types": list(hit.notice_types),
             }
         )
 
@@ -510,4 +550,5 @@ def acquire_scholarly_hits(
         "adapters": list(ADAPTERS_IMPLEMENTED),
         "mode": "OFFLINE_SEED" if fixture_path else "LIVE",
         "identity_providers_agreeing": count_identity_provider_agreement(clean_hits),
+        "fetches": fetches,
     }

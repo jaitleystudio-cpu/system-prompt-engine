@@ -7,6 +7,7 @@ question -> ContextNeed (NEED is not consent) -> explicit research consent
 
 Does not promote product LIVE_INDEX or LIVE_RETRACTION. Does not mount the shell.
 Does not invent a second OpenAlex client, evidence graph, or retraction engine.
+A stored receipt is not live execution. allow_live records LIVE_FETCH_SCOPED only.
 """
 
 from __future__ import annotations
@@ -499,9 +500,18 @@ def run_research_journey(
         "product_LIVE_RETRACTION": LIVE_RETRACTION,
         "may_promote": False,
         "live_request_happened": False,
-        "allow_live": False,
+        "allow_live": allow_live is True,
         "executed_at_ist": _now_ist(),
     }
+
+    if allow_live is True and transport is None:
+        return _scoped_live_journey(
+            base=base,
+            public_query=mini.public_query,
+            spans=spans,
+            collapsed=collapsed,
+            doi=doi if isinstance(doi, str) else None,
+        )
 
     if reuse and doi is not None:
         identity_rows = _select_rows(_rows(identity_pack, "bindings"), doi, collapsed)
@@ -677,10 +687,293 @@ def run_research_journey(
     }
 
 
+
+def _scoped_live_journey(
+    *,
+    base: dict[str, object],
+    public_query: str,
+    spans: tuple[str, ...],
+    collapsed: list[str],
+    doi: str | None,
+) -> dict[str, object]:
+    """One privacy-minimized live fetch. Product LIVE gates stay HOLD.
+
+    Identity is the first selected provider. Retraction or correction status
+    comes only from a different provider family. PubMed and PMC are one NCBI
+    family. A failed source is UNKNOWN or DEGRADED, never a fabricated record.
+    """
+    from spe_runtime.grounding.models import RetractionCheckStatus
+    from spe_runtime.grounding.retraction import merge_retraction_checks
+
+    acquired = acquire_scholarly_hits(
+        public_query,
+        providers=tuple(collapsed),
+        sensitive_spans=spans,
+        transport=None,
+        consent=True,
+        force_live=True,
+    )
+    if acquired.get("status") in {"HELD_NO_CONSENT", "REJECTED_PRIVACY", "TIMEOUT"}:
+        blocked = _closed(
+            str(acquired.get("status")),
+            question=public_query,
+            research_consent=acquired.get("status") != "HELD_NO_CONSENT",
+            egress="NO_EGRESS_LIVE_NOT_SENT",
+            reasons=["SCOPED_LIVE_DID_NOT_SEND", str(acquired.get("status"))],
+        )
+        blocked["allow_live"] = True
+        blocked["stored_receipt_reported_as_live"] = False
+        blocked["scoped_live_fetch"] = "NOT_SENT"
+        return blocked
+
+    fetches = acquired.get("fetches") if isinstance(acquired.get("fetches"), list) else []
+    fetch_rows = [row for row in fetches if isinstance(row, Mapping)]
+    hits = acquired.get("hits") if isinstance(acquired.get("hits"), list) else []
+    hit_rows = [hit for hit in hits if isinstance(hit, Mapping)]
+    sent_urls = [str(row.get("url") or "") for row in fetch_rows]
+    if any(span and any(span in url for url in sent_urls) for span in spans):
+        blocked = _closed(
+            "REJECTED_PRIVACY",
+            question=public_query,
+            research_consent=True,
+            egress="LIVE_URL_CONTAINED_PRIVATE_TEXT",
+            reasons=["PRIVATE_TEXT_IN_LIVE_URL"],
+        )
+        blocked["allow_live"] = True
+        blocked["network_calls"] = int(acquired.get("network_calls") or 0)
+        blocked["stored_receipt_reported_as_live"] = False
+        return blocked
+
+    identity_provider = collapsed[0]
+    retraction_provider = next(
+        (name for name in collapsed if _family(name) != _family(identity_provider)),
+        None,
+    )
+
+    def _fetch_for(provider: str) -> Mapping[str, object] | None:
+        for row in fetch_rows:
+            if str(row.get("provider") or "").upper() == provider:
+                return row
+        return None
+
+    def _hit_for(provider: str) -> Mapping[str, object] | None:
+        for hit in hit_rows:
+            if str(hit.get("provider") or "").upper() == provider:
+                return hit
+        return None
+
+    identity_fetch = _fetch_for(identity_provider)
+    identity_hit = _hit_for(identity_provider)
+    http_status = int(identity_fetch.get("http_status") or 0) if identity_fetch else 0
+    digest = str(identity_fetch.get("response_sha256") or "") if identity_fetch else ""
+    ident = _normalize_identifier(identity_hit.get("identifier") if identity_hit else "")
+    returned_doi = ident["doi"] if isinstance(ident.get("doi"), str) else None
+    returned_identifier = returned_doi or (
+        str(ident.get("normalized")) if ident.get("normalized") else None
+    )
+    if (
+        http_status == 200
+        and len(digest) == 64
+        and returned_doi
+        and doi
+        and returned_doi.lower() == doi.lower()
+    ):
+        verification = "DOI_MATCH"
+        status = "LIVE_FETCH_SCOPED"
+    elif http_status == 200 and len(digest) == 64 and returned_identifier:
+        verification = "IDENTIFIER_RETURNED"
+        status = "LIVE_FETCH_SCOPED"
+    elif http_status >= 500 or http_status in {0, 599}:
+        verification = "SOURCE_UNAVAILABLE"
+        status = "DEGRADED"
+        returned_identifier = None
+    else:
+        verification = "UNKNOWN"
+        status = "UNKNOWN"
+        if http_status != 200:
+            returned_identifier = None
+
+    retraction_fetch = _fetch_for(retraction_provider) if retraction_provider else None
+    if retraction_provider is None:
+        retraction_status = RetractionCheckStatus.UNKNOWN.value
+        retraction_reason = "INDEPENDENT_FAMILY_NOT_QUERIED"
+    else:
+        r_http = int(retraction_fetch.get("http_status") or 0) if retraction_fetch else 0
+        independent_hits = [
+            hit
+            for hit in hit_rows
+            if str(hit.get("provider") or "").upper() == retraction_provider
+        ]
+        if retraction_fetch is None or r_http in {0, 599} or r_http >= 500:
+            retraction_status = (
+                RetractionCheckStatus.SOURCE_UNAVAILABLE.value
+                if r_http >= 500 or r_http == 599
+                else RetractionCheckStatus.UNKNOWN.value
+            )
+            retraction_reason = "INDEPENDENT_SOURCE_FAILED"
+        elif not independent_hits:
+            retraction_status = RetractionCheckStatus.UNKNOWN.value
+            retraction_reason = "INDEPENDENT_SOURCE_NO_RECORD"
+        else:
+            witnesses = []
+            for hit in independent_hits:
+                raw_status = str(hit.get("retraction") or "UNKNOWN")
+                try:
+                    witnesses.append(RetractionCheckStatus(raw_status))
+                except ValueError:
+                    witnesses.append(RetractionCheckStatus.UNKNOWN)
+            retraction_status = merge_retraction_checks(tuple(witnesses)).status.value
+            retraction_reason = "INDEPENDENT_FAMILY_WITNESS"
+
+    provenance: list[dict[str, object]] = []
+    for row in fetch_rows:
+        provider = str(row.get("provider") or "").upper()
+        hit = _hit_for(provider)
+        hid = _normalize_identifier(hit.get("identifier") if hit else "")
+        if provider == identity_provider:
+            row_verification = verification
+            row_identifier = returned_identifier
+        elif provider == retraction_provider:
+            row_verification = retraction_status
+            row_identifier = hid.get("doi") or hid.get("normalized") or None
+        else:
+            row_verification = "NOT_USED_FOR_SCOPED_CLAIM"
+            row_identifier = hid.get("doi") or hid.get("normalized") or None
+        provenance.append(
+            {
+                "record_kind": (
+                    "identity"
+                    if provider == identity_provider
+                    else "retraction"
+                    if provider == retraction_provider
+                    else "supplemental"
+                ),
+                "provider": provider,
+                "provider_family": _family(provider),
+                "query": row.get("url"),
+                "identifier": row_identifier,
+                "identifier_kind": "DOI" if isinstance(row_identifier, str) and str(row_identifier).startswith("10.") else hid.get("kind"),
+                "timestamp": row.get("timestamp_ist"),
+                "url": row.get("url"),
+                "response_digest": row.get("response_sha256"),
+                "verification_status": row_verification,
+                "http_status": row.get("http_status"),
+                "live_verified": int(row.get("http_status") or 0) == 200 and bool(row.get("response_sha256")),
+                "egress": "LIVE_HTTPS_PRIVACY_MINIMIZED",
+                "stored_receipt": False,
+                "notice_types": list(hit.get("notice_types") or []) if hit else [],
+            }
+        )
+
+    retracted = retraction_status == RetractionCheckStatus.RETRACTION_SIGNAL.value
+    sources: list[dict[str, object]] = []
+    if identity_hit is not None and status == "LIVE_FETCH_SCOPED":
+        title = str(identity_hit.get("title") or returned_identifier or identity_provider)
+        sources.append(
+            {
+                "sourceId": f"SRC-{identity_provider}-0",
+                "sourceType": "PEER_REVIEWED_PAPER",
+                "identifier": f"doi:{returned_doi}" if returned_doi else str(returned_identifier),
+                "title": title,
+                "authors": [],
+                "year": 0,
+                "isRetracted": retracted,
+                "retractionDetails": retraction_status,
+                "normativeApplicability": "UNKNOWN",
+                "keyFinding": title,
+                "sourceSaysText": title,
+                "speInferenceText": "SCOPED_LIVE_FETCH_IS_NOT_PRODUCT_LIVE_PASS",
+                "contentTier": "METADATA",
+                "evidenceTier": "[RETRACTED_DANGER]" if retracted else "[HEURISTIC_HYPOTHESIS]",
+            }
+        )
+    graph = _bind_graph(
+        public_query=public_query,
+        sources=sources,
+        forbidden=spans,
+        unknowns=[
+            "PRODUCT_LIVE_INDEX_HOLD",
+            "PRODUCT_LIVE_RETRACTION_HOLD",
+            "LIVE_FETCH_SCOPED_IS_NOT_FOUNDER_LAW",
+            "STORED_RECEIPT_IS_NOT_THIS_EXECUTION",
+            "PUBMED_PLUS_PMC_ARE_ONE_NCBI_FAMILY",
+        ],
+    )
+    prompt = str(graph.get("prompt") or "") if graph.get("ok") is True else ""
+    if any(span and span in prompt for span in spans):
+        prompt = ""
+        graph = {"ok": False, "error": "REJECTED_PRIVACY_PROMPT"}
+
+    result = {
+        **base,
+        "status": status,
+        "scoped_live_fetch": "LIVE_FETCH_SCOPED" if status == "LIVE_FETCH_SCOPED" else status,
+        "egress_classification": "LIVE_HTTPS_PRIVACY_MINIMIZED",
+        "network_calls": int(acquired.get("network_calls") or 0),
+        "outbound_urls_sent": sent_urls,
+        "providers_sent": collapsed,
+        "classified_query_urls_not_sent": {},
+        "live_request_happened": int(acquired.get("network_calls") or 0) > 0,
+        "allow_live": True,
+        "stored_receipt_reported_as_live": False,
+        "canonical_doi": doi,
+        "provider": identity_provider,
+        "provider_family": _family(identity_provider),
+        "identifier": returned_identifier,
+        "response_digest": digest if status == "LIVE_FETCH_SCOPED" else digest or None,
+        "verification_status": verification,
+        "retraction_status": retraction_status,
+        "retraction_provider": retraction_provider,
+        "retraction_provider_family": _family(retraction_provider) if retraction_provider else None,
+        "retraction_independent_of_identity": retraction_provider is not None,
+        "retraction_reason": retraction_reason,
+        "ncbi_counts_as_two_providers": False,
+        "ncbi_family_count": 1 if any(name in _NCBI for name in collapsed) else 0,
+        "product_LIVE_INDEX": LIVE_INDEX,
+        "product_LIVE_RETRACTION": LIVE_RETRACTION,
+        "may_promote": False,
+        "journey_receipt": "NOT_PASS",
+        "client_mode": acquired.get("mode"),
+        "client_live_index": acquired.get("live_index"),
+        "client_live_retraction": acquired.get("live_retraction"),
+        "source_records": sources,
+        "graph": {
+            "ok": graph.get("ok") is True,
+            "edge_relations": graph.get("edgeRelations") or [],
+            "contradictions": graph.get("contradictions") or [],
+            "gaps": graph.get("gaps") or [],
+            "error": graph.get("error"),
+        },
+        "research_grounded_prompt": prompt,
+        "provenance": provenance,
+        "reasons": [
+            "SCOPED_LIVE_FETCH_IS_NOT_PRODUCT_PASS",
+            "ONE_DOI_DOES_NOT_MEET_FOUNDER_LAW",
+            "STORED_RECEIPT_NOT_REPORTED_AS_LIVE",
+            "PUBMED_PLUS_PMC_NOT_TWO_CONFIRMATIONS",
+            "PRODUCT_LIVE_GATES_NOT_MOVED",
+            retraction_reason,
+        ],
+        "tested_scope": (
+            "One consented privacy-minimized live fetch through the existing "
+            "scholarly adapters. Product LIVE_INDEX and LIVE_RETRACTION remain HOLD."
+        ),
+    }
+    if status != "LIVE_FETCH_SCOPED":
+        result["response_digest"] = None
+        result["reasons"] = list(result["reasons"]) + ["EXTERNAL_SOURCE_NOT_FABRICATED"]
+    return result
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run one SPE research journey. Consent defaults off.")
     parser.add_argument("--question", required=True)
     parser.add_argument("--consent", action="store_true", help="Explicit research consent. Omit to refuse search.")
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="Scoped live fetch. Does not promote product LIVE_INDEX or LIVE_RETRACTION.",
+    )
     parser.add_argument("--provider", action="append", dest="providers")
     parser.add_argument("--private-document", default=None, help="Local text that must not be placed in the outbound query.")
     args = parser.parse_args(argv)
@@ -690,7 +983,7 @@ def main(argv: list[str] | None = None) -> int:
         research_consent=True if args.consent else False,
         providers=providers,
         private_document=args.private_document,
-        allow_live=False,
+        allow_live=bool(args.live),
     )
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0
