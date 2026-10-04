@@ -21,11 +21,14 @@ from spe_runtime.ocr_product.local_backend import (  # noqa: E402
     PINNED_CLI_BLOB_SHA256,
     PINNED_CLI_BYTES,
     PINNED_CLI_SHA256,
+    PINNED_LANGUAGE_PACKS,
     PINNED_MODEL_BYTES,
     PINNED_MODEL_SHA256,
     cli_ingress_hosts,
     discover_qualified_assets,
+    ensure_language_pack,
     model_ingress_hosts,
+    pack_root,
     product_verdict,
     reset_journey_for_tests,
 )
@@ -110,26 +113,31 @@ def test_rejects() -> None:
 
 
 
-def render_proof(path: Path, phrase: str) -> None:
+def render_proof(path: Path, phrase: str, font_name: str = "Arial") -> None:
+    if font_name == "Arial":
+        width, height, size, baseline = 1200, 180, 64, 50
+    else:
+        width, height, size, baseline = 1600, 320, 120, 90
     program = """
 import AppKit
 let text = %s
 let out = %s
-let width = 1200
-let height = 180
+let fontName = %s
+let width = %d
+let height = %d
 let img = NSImage(size: NSSize(width: width, height: height))
 img.lockFocus()
 NSColor.white.setFill()
 NSBezierPath(rect: NSRect(x: 0, y: 0, width: width, height: height)).fill()
-let font = NSFont(name: "Arial", size: 64) ?? NSFont.systemFont(ofSize: 64)
+let font = NSFont(name: fontName, size: %d) ?? NSFont.systemFont(ofSize: %d)
 let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.black]
-(text as NSString).draw(at: NSPoint(x: 40, y: 50), withAttributes: attrs)
+(text as NSString).draw(at: NSPoint(x: 40, y: %d), withAttributes: attrs)
 img.unlockFocus()
 guard let tiff = img.tiffRepresentation, let rep = NSBitmapImageRep(data: tiff), let png = rep.representation(using: .png, properties: [:]) else {
   exit(1)
 }
 try png.write(to: URL(fileURLWithPath: out))
-""" % (json.dumps(phrase), json.dumps(str(path)))
+""" % (json.dumps(phrase, ensure_ascii=False), json.dumps(str(path)), json.dumps(font_name), width, height, size, size, baseline)
     completed = subprocess.run(["swift", "-"], input=program, text=True, capture_output=True, check=False)
     if completed.returncode != 0 or not path.is_file():
         fail("could not render proof image: " + completed.stderr[-500:])
@@ -162,12 +170,12 @@ def _assert_closed_loads(path: Path) -> None:
         fail(command)
 
 
-def _recognize(phrase: str) -> bytes:
+def _recognize(phrase: str, font_name: str = "Arial") -> bytes:
     assets_root = ROOT / "ocr-pack"
     session = assets_root / ".session"
     session.mkdir(parents=True, exist_ok=True)
     image = session / "generated-proof.png"
-    render_proof(image, phrase)
+    render_proof(image, phrase, font_name)
     blob = image.read_bytes()
     image.unlink()
     return blob
@@ -261,6 +269,58 @@ def test_loopback_route(blob: bytes, phrase_span: str) -> None:
         proc.wait(timeout=10)
 
 
+
+def test_indic_packs(assets: object, park: Path) -> None:
+    """One rendered word per pinned pack. A miss is UNAVAILABLE, not a product pass."""
+    cases = {
+        "tel": ("అమ్మ", "Kohinoor Telugu"),
+        "hin": ("भारत", "Devanagari Sangam MN"),
+        "tam": ("தமிழ்", "Tamil Sangam MN"),
+    }
+    for item in PINNED_LANGUAGE_PACKS:
+        language = str(item["language"])
+        if language == "eng":
+            continue
+        phrase, font_name = cases[language]
+        with tempfile.TemporaryDirectory() as raw:
+            directory = Path(raw)
+            bad = directory / str(item["relative_path"])
+            bad.parent.mkdir(parents=True)
+            bad.write_bytes(b"x" * int(item["bytes"]))
+            try:
+                ensure_language_pack(directory, language, fetch=False)
+            except IntegrityError as exc:
+                assert_true(exc.code == "HASH_MISMATCH", exc.code)
+            else:
+                fail("wrong " + language + " digest was accepted")
+        path = pack_root() / str(item["relative_path"])
+        _park(path, park / f"{language}.traineddata")
+        assert_true(not path.exists(), language + " was not absent")
+        span = "UNAVAILABLE"
+        transcript = ""
+        try:
+            acquired_path, acquired = ensure_language_pack(pack_root(), language, fetch=True)
+            assert_true(acquired is True, language + " was not acquired")
+            assert_true(acquired_path.stat().st_size == int(item["bytes"]), language + " size")
+            assert_true(hashlib.sha256(acquired_path.read_bytes()).hexdigest() == item["sha256"], language + " digest")
+            blob = _recognize(phrase, font_name)
+            execution = LocalOcrSession.open(assets).recognize(blob, language=language)
+            transcript = execution.text
+            if execution.mode == "LOCAL_OCR" and phrase in execution.text:
+                span = phrase
+        except IntegrityError:
+            span = "UNAVAILABLE"
+        assert_true(span == "UNAVAILABLE" or span in transcript, language + " claimed without the rendered word")
+        print("LANGUAGE", json.dumps({
+            "language": language,
+            "sha256": item["sha256"],
+            "bytes": item["bytes"],
+            "license": item["license"],
+            "span": span,
+            "transcript": transcript,
+        }, ensure_ascii=False))
+
+
 def main() -> None:
     test_sources_do_not_embed_the_proof()
     test_rejects()
@@ -340,11 +400,14 @@ def main() -> None:
         }))
         test_missing_binary_without_fetch()
         test_loopback_route(second_blob, "DOCK")
+        test_indic_packs(assets, park)
     finally:
         _restore(park / "eng.traineddata", model)
         _restore(park / "eng-second.traineddata", model)
         _restore(park / "tesseract", cli)
         _restore(park / "lib", lib_dir)
+        for language in ("tel", "hin", "tam"):
+            _restore(park / f"{language}.traineddata", ROOT / "ocr-pack/tessdata" / f"{language}.traineddata")
         shutil.rmtree(park, ignore_errors=True)
     print("OK r6 ocr")
 

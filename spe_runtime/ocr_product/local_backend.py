@@ -60,6 +60,42 @@ PINNED_CLI_LIB_MEMBER = "tesseract/5.5.3/lib/libtesseract.5.dylib"
 PINNED_ENGINE = "tesseract"
 PINNED_ENGINE_VERSION = "5.5.3"
 PINNED_LANGUAGE = "eng"
+# tessdata_fast 4.1.0 packs. eng remains the product model. tel, hin, and tam are
+# pinned the same way and are not a product pass.
+PINNED_LANGUAGE_PACKS = (
+    {
+        "language": "eng",
+        "relative_path": "tessdata/eng.traineddata",
+        "sha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2",
+        "bytes": 4113088,
+        "license": "Apache-2.0",
+        "source": "https://github.com/tesseract-ocr/tessdata_fast/raw/4.1.0/eng.traineddata",
+    },
+    {
+        "language": "tel",
+        "relative_path": "tessdata/tel.traineddata",
+        "sha256": "d10691fddd5b67802e1c12800ebb321d3b8bcd8d24a2ac3ff206f93188c04ab5",
+        "bytes": 2769654,
+        "license": "Apache-2.0",
+        "source": "https://github.com/tesseract-ocr/tessdata_fast/raw/4.1.0/tel.traineddata",
+    },
+    {
+        "language": "hin",
+        "relative_path": "tessdata/hin.traineddata",
+        "sha256": "4c73ffc59d497c186b19d1e90f5d721d678ea6b2e277b719bee4e2af12271825",
+        "bytes": 1122751,
+        "license": "Apache-2.0",
+        "source": "https://github.com/tesseract-ocr/tessdata_fast/raw/4.1.0/hin.traineddata",
+    },
+    {
+        "language": "tam",
+        "relative_path": "tessdata/tam.traineddata",
+        "sha256": "d02fbec24be4b07e32e80d0ccfc3b6b67a3c5d61c9d0a7c8532677990912c6ec",
+        "bytes": 3237963,
+        "license": "Apache-2.0",
+        "source": "https://github.com/tesseract-ocr/tessdata_fast/raw/4.1.0/tam.traineddata",
+    },
+)
 SYSTEM_LOAD_PREFIXES = ("/usr/lib/", "/System/Library/")
 # Bottle members only. Executed digests are after @loader_path rewrite and ad-hoc sign.
 # Relink order is this order. Bottles are downloaded, checked, and not committed.
@@ -401,6 +437,7 @@ def _load_pack_manifest(root: Path) -> dict[str, object]:
         "engine_version": PINNED_ENGINE_VERSION,
         "model_relative_path": PINNED_MODEL_REL,
         "language": PINNED_LANGUAGE,
+        "language_packs": [dict(item) for item in PINNED_LANGUAGE_PACKS],
         "vendored_libraries": [dict(item) for item in PINNED_VENDORED_LIBRARIES],
     }
     for key, value in expected_runtime.items():
@@ -429,7 +466,26 @@ def _record_ingress(url: str, kind: str) -> None:
         bucket.append(host)
 
 
-def _acquire_absent_model(model_path: Path) -> None:
+def _language_pack(language: str) -> dict[str, object]:
+    for item in PINNED_LANGUAGE_PACKS:
+        if item["language"] == language:
+            return item
+    raise IntegrityError("WRONG_MODEL")
+
+
+def _missing_model(item: dict[str, object]) -> IntegrityError:
+    return IntegrityError(
+        "MISSING_MODEL "
+        f"{item['relative_path']} sha256={item['sha256']} bytes={item['bytes']} "
+        f"source={item['source']}"
+    )
+
+
+def _acquire_absent_model(model_path: Path, item: dict[str, object] | None = None) -> None:
+    pack = item if item is not None else _language_pack(PINNED_LANGUAGE)
+    expected_bytes = int(pack["bytes"])
+    expected_sha = str(pack["sha256"])
+    source = str(pack["source"])
     model_path.parent.mkdir(parents=True, exist_ok=True)
     partial = model_path.with_name(model_path.name + ".partial")
     partial.unlink(missing_ok=True)
@@ -437,33 +493,28 @@ def _acquire_absent_model(model_path: Path) -> None:
     size = 0
     try:
         request = urllib.request.Request(
-            PINNED_MODEL_SOURCE,
+            source,
             headers={"User-Agent": "spe-ocr/1", "Accept": "application/octet-stream"},
             method="GET",
         )
         with urllib.request.urlopen(request, timeout=120) as response, partial.open("wb") as handle:
             final = str(response.geturl())
             if not final.startswith("https://"):
-                raise IntegrityError(
-                    "MISSING_MODEL "
-                    f"{PINNED_MODEL_REL} sha256={PINNED_MODEL_SHA256} bytes={PINNED_MODEL_BYTES} "
-                    f"source={PINNED_MODEL_SOURCE}"
-                )
-            _record_ingress(PINNED_MODEL_SOURCE, "model")
+                raise _missing_model(pack)
+            _record_ingress(source, "model")
             _record_ingress(final, "model")
             while True:
                 chunk = response.read(1 << 20)
                 if not chunk:
                     break
                 size += len(chunk)
-                if size > PINNED_MODEL_BYTES:
+                if size > expected_bytes:
                     raise IntegrityError("SIZE_MISMATCH")
                 digest.update(chunk)
                 handle.write(chunk)
-        if size != PINNED_MODEL_BYTES:
+        if size != expected_bytes:
             raise IntegrityError("SIZE_MISMATCH")
-        got = digest.hexdigest()
-        if got != PINNED_MODEL_SHA256:
+        if digest.hexdigest() != expected_sha:
             raise IntegrityError("HASH_MISMATCH")
         os.replace(partial, model_path)
     except IntegrityError:
@@ -471,26 +522,31 @@ def _acquire_absent_model(model_path: Path) -> None:
         raise
     except Exception as exc:
         partial.unlink(missing_ok=True)
-        raise IntegrityError(
-            "MISSING_MODEL "
-            f"{PINNED_MODEL_REL} sha256={PINNED_MODEL_SHA256} bytes={PINNED_MODEL_BYTES} "
-            f"source={PINNED_MODEL_SOURCE}"
-        ) from exc
+        raise _missing_model(pack) from exc
 
 
-def _verify_model(path: Path) -> None:
+def _verify_model(path: Path, item: dict[str, object] | None = None) -> None:
+    pack = item if item is not None else _language_pack(PINNED_LANGUAGE)
     if not path.is_file():
-        raise IntegrityError(
-            "MISSING_MODEL "
-            f"{PINNED_MODEL_REL} sha256={PINNED_MODEL_SHA256} bytes={PINNED_MODEL_BYTES} "
-            f"source={PINNED_MODEL_SOURCE}"
-        )
-    size = path.stat().st_size
-    if size != PINNED_MODEL_BYTES:
+        raise _missing_model(pack)
+    if path.stat().st_size != int(pack["bytes"]):
         raise IntegrityError("SIZE_MISMATCH")
-    got = _sha256_file(path)
-    if got != PINNED_MODEL_SHA256:
+    if _sha256_file(path) != str(pack["sha256"]):
         raise IntegrityError("HASH_MISMATCH")
+
+
+def ensure_language_pack(root: Path, language: str, *, fetch: bool = True) -> tuple[Path, bool]:
+    """Absence downloads the pinned tessdata_fast pack. A present wrong file is not replaced."""
+    pack = _language_pack(language)
+    path = _member(root, str(pack["relative_path"]))
+    acquired = False
+    if not path.is_file():
+        if not fetch:
+            raise _missing_model(pack)
+        _acquire_absent_model(path, pack)
+        acquired = True
+    _verify_model(path, pack)
+    return path, acquired
 
 
 def _missing_binary() -> IntegrityError:
@@ -788,6 +844,16 @@ def discover_qualified_assets(
         _acquire_absent_model(model_path)
         model_acquired = True
     _verify_model(model_path)
+    for extra in PINNED_LANGUAGE_PACKS:
+        if extra["language"] == PINNED_LANGUAGE:
+            continue
+        extra_path = _member(pack, str(extra["relative_path"]))
+        if not extra_path.is_file():
+            if fetch:
+                _acquire_absent_model(extra_path, extra)
+                _verify_model(extra_path, extra)
+        else:
+            _verify_model(extra_path, extra)
     cli_files = [cli_path, *lib_paths]
     present = [path.is_file() for path in cli_files]
     if not any(present):
@@ -960,12 +1026,15 @@ class LocalOcrSession:
         _verify_cli(assets.cli_path)
         return cls(assets)
 
-    def recognize(self, blob: bytes) -> OcrExecution:
+    def recognize(self, blob: bytes, language: str = PINNED_LANGUAGE) -> OcrExecution:
         global _EGRESS_STICKY, _JOURNEY
         if not blob or len(blob) > 20 * 1024 * 1024:
             return _fail("DECODE")
         try:
             suffix = _image_suffix(blob)
+            pack = _language_pack(language)
+            model_path = _member(self.assets.root, str(pack["relative_path"]))
+            _verify_model(model_path, pack)
         except IntegrityError as exc:
             return _fail(exc.code)
         session_dir = self.assets.root / ".session"
@@ -982,9 +1051,9 @@ class LocalOcrSession:
                 str(image_path),
                 "stdout",
                 "-l",
-                PINNED_LANGUAGE,
+                language,
                 "--tessdata-dir",
-                str(self.assets.model_path.parent),
+                str(model_path.parent),
                 "--psm",
                 "3",
                 "tsv",
@@ -1009,7 +1078,7 @@ class LocalOcrSession:
                 return _fail(exc.code, hosts, egress)
             execution = OcrExecution("LOCAL_OCR", text, regions, None, egress, hosts, True)
             with _LOCK:
-                if _EGRESS_STICKY == 0 and text and execution.mode == "LOCAL_OCR":
+                if language == PINNED_LANGUAGE and _EGRESS_STICKY == 0 and text and execution.mode == "LOCAL_OCR":
                     _JOURNEY = {
                         "local_ocr": True,
                         "image_egress": 0,
