@@ -247,4 +247,7 @@ qualification/*_receipt.json
 /ocr-pack/tessdata/*.traineddata
 /ocr-pack/tessdata/*.partial
 /ocr-pack/.session/
+/ocr-pack/tesseract
+/ocr-pack/lib/
+/ocr-pack/.bottle/
 /.ocr-scratch/

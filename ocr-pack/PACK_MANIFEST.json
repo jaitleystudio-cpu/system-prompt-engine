@@ -6,15 +6,30 @@
   "LICENSE": "Apache-2.0",
   "SOURCE": "https://github.com/tesseract-ocr/tessdata_fast/raw/4.1.0/eng.traineddata",
   "RUNTIME_COMPATIBILITY": {
-    "cli_discovery": "PATH",
-    "cli_sha256": "9fd3da5637e8d490182708c3689f15921cddb9beb469c1f128bc210033714ef9",
-    "cli_bytes": 70544,
+    "cli_relative_path": "tesseract",
+    "cli_library_relative_path": "lib/libtesseract.5.dylib",
+    "cli_sha256": "b953aa22b850527259bb595ee69d374013b7101781a7e03fef7d88926e3d616f",
+    "cli_bytes": 70128,
+    "cli_blob_sha256": "1b426db05d316b17d655a76103f2086a83c9af38d2b33b75242be705db0a92e1",
+    "cli_blob_bytes": 70544,
+    "cli_library_sha256": "31fabd39faa9391033d534c794f62537d453714b71e2e481702aed8c87c5635e",
+    "cli_library_bytes": 2840736,
+    "cli_library_blob_sha256": "07918650b59231f1e62baa7bfe483e95a7fe029575d2858d789162cbf8ef40ce",
+    "cli_library_blob_bytes": 2857328,
+    "cli_bottle_sha256": "0059a0945a6d5ac2ef57b084eb2bf87666df0040d22a2ba8cf0448a3fd6b06a9",
+    "cli_bottle_bytes": 10233009,
+    "cli_source": "https://ghcr.io/v2/homebrew/core/tesseract/blobs/sha256:0059a0945a6d5ac2ef57b084eb2bf87666df0040d22a2ba8cf0448a3fd6b06a9",
     "cli_license": "Apache-2.0",
+    "host_library_prefix": "/opt/homebrew",
     "engine": "tesseract",
     "engine_version": "5.5.3",
     "model_relative_path": "tessdata/eng.traineddata",
-    "architectures": ["arm64"],
+    "architectures": [
+      "arm64"
+    ],
     "language": "eng"
   },
-  "LANGUAGE_SCOPE": ["eng"]
+  "LANGUAGE_SCOPE": [
+    "eng"
+  ]
 }

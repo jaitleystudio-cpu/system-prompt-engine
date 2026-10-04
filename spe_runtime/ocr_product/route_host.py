@@ -1,8 +1,8 @@
 """Same-origin route in front of the pinned LocalOcrSession.
 
 Not a second engine. The browser reaches it only through /api/ocr on
-loopback. OCR_PRODUCT stays HOLD until this process has verified the pack
-and recognized non-empty text with raw image egress 0.
+loopback. OCR_PRODUCT stays HOLD. Recognition may record LOCAL_OCR.
+A product PASS stamp is not issued from this route.
 """
 
 from __future__ import annotations
@@ -49,17 +49,23 @@ def _health() -> dict[str, object]:
         error = exc.code
         verdict = {
             "OCR_PRODUCT": "HOLD",
+            "execution": "NOT_RUN",
             "missing": exc.code,
+            "modelIngressHosts": ingress_hosts(),
+            "cliIngressHosts": [],
             "ingressHosts": ingress_hosts(),
             "imageEgressAttempts": verdict.get("imageEgressAttempts", 0),
         }
     body: dict[str, object] = {
         "owner": "LocalOcrSession",
         "engine": "tesseract",
-        "OCR_PRODUCT": verdict["OCR_PRODUCT"],
-        "missing": verdict["missing"],
-        "ingressHosts": verdict["ingressHosts"],
-        "imageEgressAttempts": verdict["imageEgressAttempts"],
+        "OCR_PRODUCT": "HOLD",
+        "execution": verdict.get("execution", "NOT_RUN"),
+        "missing": verdict.get("missing"),
+        "modelIngressHosts": verdict.get("modelIngressHosts", []),
+        "cliIngressHosts": verdict.get("cliIngressHosts", []),
+        "ingressHosts": verdict.get("ingressHosts", []),
+        "imageEgressAttempts": verdict.get("imageEgressAttempts", 0),
         "error": error,
     }
     return body

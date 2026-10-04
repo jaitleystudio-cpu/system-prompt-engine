@@ -39,7 +39,7 @@ export function OcrRoute() {
         if (!res.ok) return;
         const body = (await res.json()) as { OCR_PRODUCT?: unknown };
         if (dead) return;
-        if (body.OCR_PRODUCT === "PASS" || body.OCR_PRODUCT === "HOLD") setProduct(body.OCR_PRODUCT);
+        if (body.OCR_PRODUCT === "HOLD") setProduct("HOLD");
       } catch {
         /* no host in a file-only harness */
       }

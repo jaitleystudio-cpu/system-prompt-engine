@@ -1,8 +1,10 @@
 """Local OCR session over the pinned Tesseract CLI.
 
-This is not a second recognition engine. Inference is the PATH `tesseract`
-binary whose digest matches ocr-pack/PACK_MANIFEST.json, plus
-tessdata_fast eng.traineddata at 4.1.0. Text-band detection is not used.
+This is not a second recognition engine. Inference is the bottle-pinned
+`ocr-pack/tesseract` blob, checked before and after a fixed relink, plus
+tessdata_fast eng.traineddata at 4.1.0. PATH and the Homebrew cellar binary
+are not the product runtime. The product stamp stays HOLD. Text-band
+detection is not used.
 The image is written only under this pack's session directory and the CLI
 runs with network denied. A missing file, a bad hash, a bad size, or the
 wrong model fails closed. Loopback is not image egress.
@@ -11,12 +13,14 @@ wrong model fails closed. Loopback is not image egress.
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import os
 import platform
 import shutil
 import socket
 import subprocess
+import tarfile
 import threading
 import urllib.request
 from contextlib import contextmanager
@@ -34,15 +38,31 @@ PINNED_MODEL_BYTES = 4113088
 PINNED_MODEL_REL = "tessdata/eng.traineddata"
 PINNED_MODEL_SOURCE = "https://github.com/tesseract-ocr/tessdata_fast/raw/4.1.0/eng.traineddata"
 PINNED_LICENSE = "Apache-2.0"
-PINNED_CLI_SHA256 = "9fd3da5637e8d490182708c3689f15921cddb9beb469c1f128bc210033714ef9"
-PINNED_CLI_BYTES = 70544
+PINNED_CLI_REL = "tesseract"
+PINNED_CLI_LIB_REL = "lib/libtesseract.5.dylib"
+PINNED_CLI_BLOB_SHA256 = "1b426db05d316b17d655a76103f2086a83c9af38d2b33b75242be705db0a92e1"
+PINNED_CLI_BLOB_BYTES = 70544
+PINNED_CLI_SHA256 = "b953aa22b850527259bb595ee69d374013b7101781a7e03fef7d88926e3d616f"
+PINNED_CLI_BYTES = 70128
+PINNED_CLI_LIB_BLOB_SHA256 = "07918650b59231f1e62baa7bfe483e95a7fe029575d2858d789162cbf8ef40ce"
+PINNED_CLI_LIB_BLOB_BYTES = 2857328
+PINNED_CLI_LIB_SHA256 = "31fabd39faa9391033d534c794f62537d453714b71e2e481702aed8c87c5635e"
+PINNED_CLI_LIB_BYTES = 2840736
+PINNED_CLI_BOTTLE_SHA256 = "0059a0945a6d5ac2ef57b084eb2bf87666df0040d22a2ba8cf0448a3fd6b06a9"
+PINNED_CLI_BOTTLE_BYTES = 10233009
+PINNED_CLI_SOURCE = "https://ghcr.io/v2/homebrew/core/tesseract/blobs/sha256:0059a0945a6d5ac2ef57b084eb2bf87666df0040d22a2ba8cf0448a3fd6b06a9"
+PINNED_CLI_TOKEN_URL = "https://ghcr.io/token?service=ghcr.io&scope=repository:homebrew/core/tesseract:pull"
+PINNED_HOST_LIBRARY_PREFIX = "/opt/homebrew"
+PINNED_CLI_MEMBER = "tesseract/5.5.3/bin/tesseract"
+PINNED_CLI_LIB_MEMBER = "tesseract/5.5.3/lib/libtesseract.5.dylib"
 PINNED_ENGINE = "tesseract"
 PINNED_ENGINE_VERSION = "5.5.3"
 PINNED_LANGUAGE = "eng"
 SANDBOX_PROFILE = "(version 1)(allow default)(deny network*)"
 LOOPBACK_HOSTS = {"127.0.0.1", "::1", "localhost", "0.0.0.0"}
 _LOCK = threading.Lock()
-_INGRESS_HOSTS: list[str] = []
+_MODEL_INGRESS_HOSTS: list[str] = []
+_CLI_INGRESS_HOSTS: list[str] = []
 _JOURNEY: dict[str, object] | None = None
 _EGRESS_STICKY = 0
 
@@ -143,10 +163,21 @@ def _load_pack_manifest(root: Path) -> dict[str, object]:
     if not isinstance(runtime, dict):
         raise IntegrityError("WRONG_MODEL")
     expected_runtime = {
-        "cli_discovery": "PATH",
+        "cli_relative_path": PINNED_CLI_REL,
+        "cli_library_relative_path": PINNED_CLI_LIB_REL,
         "cli_sha256": PINNED_CLI_SHA256,
         "cli_bytes": PINNED_CLI_BYTES,
+        "cli_blob_sha256": PINNED_CLI_BLOB_SHA256,
+        "cli_blob_bytes": PINNED_CLI_BLOB_BYTES,
+        "cli_library_sha256": PINNED_CLI_LIB_SHA256,
+        "cli_library_bytes": PINNED_CLI_LIB_BYTES,
+        "cli_library_blob_sha256": PINNED_CLI_LIB_BLOB_SHA256,
+        "cli_library_blob_bytes": PINNED_CLI_LIB_BLOB_BYTES,
+        "cli_bottle_sha256": PINNED_CLI_BOTTLE_SHA256,
+        "cli_bottle_bytes": PINNED_CLI_BOTTLE_BYTES,
+        "cli_source": PINNED_CLI_SOURCE,
         "cli_license": PINNED_LICENSE,
+        "host_library_prefix": PINNED_HOST_LIBRARY_PREFIX,
         "engine": PINNED_ENGINE,
         "engine_version": PINNED_ENGINE_VERSION,
         "model_relative_path": PINNED_MODEL_REL,
@@ -171,10 +202,11 @@ def _host_of(url: str) -> str:
     return rest.split("/", 1)[0].split("@")[-1].split(":")[0].lower()
 
 
-def _record_ingress(url: str) -> None:
+def _record_ingress(url: str, kind: str) -> None:
     host = _host_of(url)
-    if host and host not in _INGRESS_HOSTS:
-        _INGRESS_HOSTS.append(host)
+    bucket = _MODEL_INGRESS_HOSTS if kind == "model" else _CLI_INGRESS_HOSTS
+    if host and host not in bucket:
+        bucket.append(host)
 
 
 def _acquire_absent_model(model_path: Path) -> None:
@@ -197,8 +229,8 @@ def _acquire_absent_model(model_path: Path) -> None:
                     f"{PINNED_MODEL_REL} sha256={PINNED_MODEL_SHA256} bytes={PINNED_MODEL_BYTES} "
                     f"source={PINNED_MODEL_SOURCE}"
                 )
-            _record_ingress(PINNED_MODEL_SOURCE)
-            _record_ingress(final)
+            _record_ingress(PINNED_MODEL_SOURCE, "model")
+            _record_ingress(final, "model")
             while True:
                 chunk = response.read(1 << 20)
                 if not chunk:
@@ -241,35 +273,165 @@ def _verify_model(path: Path) -> None:
         raise IntegrityError("HASH_MISMATCH")
 
 
-def _discover_cli(environ: dict[str, str]) -> Path:
-    path_value = environ.get("PATH", "")
-    for directory in path_value.split(":"):
-        if not directory or directory.startswith(".."):
-            continue
-        candidate = Path(directory) / "tesseract"
-        if candidate.is_file() and os.access(candidate, os.X_OK):
-            return candidate.resolve()
-    raise IntegrityError(
+def _missing_binary() -> IntegrityError:
+    return IntegrityError(
         "MISSING_BINARY "
-        f"tesseract sha256={PINNED_CLI_SHA256} bytes={PINNED_CLI_BYTES}"
+        f"tesseract blob_sha256={PINNED_CLI_BLOB_SHA256} blob_bytes={PINNED_CLI_BLOB_BYTES} "
+        f"executed_sha256={PINNED_CLI_SHA256} executed_bytes={PINNED_CLI_BYTES} "
+        f"bottle_sha256={PINNED_CLI_BOTTLE_SHA256} bottle_bytes={PINNED_CLI_BOTTLE_BYTES} "
+        f"source={PINNED_CLI_SOURCE}"
     )
+
+
+def _http_bytes(url: str, headers: dict[str, str], kind: str, expected_bytes: int, *, exact: bool = True) -> bytes:
+    _record_ingress(url, kind)
+    request = urllib.request.Request(url, headers={"User-Agent": "spe-ocr/1", **headers}, method="GET")
+    try:
+        with urllib.request.urlopen(request, timeout=180) as response:
+            final = str(response.geturl())
+            if not final.startswith("https://"):
+                raise _missing_binary()
+            _record_ingress(final, kind)
+            payload = bytearray()
+            while True:
+                chunk = response.read(1 << 20)
+                if not chunk:
+                    break
+                if len(payload) + len(chunk) > expected_bytes:
+                    raise IntegrityError("SIZE_MISMATCH")
+                payload.extend(chunk)
+    except IntegrityError:
+        raise
+    except Exception as exc:
+        raise _missing_binary() from exc
+    if exact and len(payload) != expected_bytes:
+        raise IntegrityError("SIZE_MISMATCH")
+    if not payload:
+        raise _missing_binary()
+    return bytes(payload)
+
+
+def _sha256_bytes(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()
+
+
+def _require_blob(payload: bytes, expected_sha: str, expected_bytes: int) -> None:
+    if len(payload) != expected_bytes:
+        raise IntegrityError("SIZE_MISMATCH")
+    if _sha256_bytes(payload) != expected_sha:
+        raise IntegrityError("HASH_MISMATCH")
+
+
+def _relink_pinned_cli(cli_path: Path, lib_path: Path) -> None:
+    """Deterministic relink of the verified bottle blobs. The executed digest is pinned."""
+    prefix = PINNED_HOST_LIBRARY_PREFIX
+    bin_changes = [
+        (
+            "@@HOMEBREW_CELLAR@@/tesseract/5.5.3/lib/libtesseract.5.dylib",
+            "@loader_path/lib/libtesseract.5.dylib",
+        ),
+        (
+            "@@HOMEBREW_PREFIX@@/opt/leptonica/lib/libleptonica.6.dylib",
+            f"{prefix}/opt/leptonica/lib/libleptonica.6.dylib",
+        ),
+        (
+            "@@HOMEBREW_PREFIX@@/opt/libarchive/lib/libarchive.13.dylib",
+            f"{prefix}/opt/libarchive/lib/libarchive.13.dylib",
+        ),
+    ]
+    lib_changes = [
+        (
+            "@@HOMEBREW_PREFIX@@/opt/leptonica/lib/libleptonica.6.dylib",
+            f"{prefix}/opt/leptonica/lib/libleptonica.6.dylib",
+        ),
+        (
+            "@@HOMEBREW_PREFIX@@/opt/libarchive/lib/libarchive.13.dylib",
+            f"{prefix}/opt/libarchive/lib/libarchive.13.dylib",
+        ),
+    ]
+    for old, new in bin_changes:
+        subprocess.run(["install_name_tool", "-change", old, new, str(cli_path)], check=True, capture_output=True)
+    subprocess.run(
+        ["install_name_tool", "-id", "@loader_path/libtesseract.5.dylib", str(lib_path)],
+        check=True,
+        capture_output=True,
+    )
+    for old, new in lib_changes:
+        subprocess.run(["install_name_tool", "-change", old, new, str(lib_path)], check=True, capture_output=True)
+    subprocess.run(["codesign", "--force", "--sign", "-", str(cli_path)], check=True, capture_output=True)
+    subprocess.run(["codesign", "--force", "--sign", "-", str(lib_path)], check=True, capture_output=True)
+
+
+def _acquire_absent_cli(root: Path) -> None:
+    token_payload = _http_bytes(
+        PINNED_CLI_TOKEN_URL,
+        {"Accept": "application/json"},
+        "cli",
+        65536,
+        exact=False,
+    )
+    try:
+        token = json.loads(token_payload.decode("utf-8"))["token"]
+    except (UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError) as exc:
+        raise _missing_binary() from exc
+    if not isinstance(token, str) or not token:
+        raise _missing_binary()
+    bottle = _http_bytes(
+        PINNED_CLI_SOURCE,
+        {
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/vnd.oci.image.layer.v1.tar+gzip",
+        },
+        "cli",
+        PINNED_CLI_BOTTLE_BYTES,
+    )
+    _require_blob(bottle, PINNED_CLI_BOTTLE_SHA256, PINNED_CLI_BOTTLE_BYTES)
+    extracted: dict[str, bytes] = {}
+    with tarfile.open(fileobj=io.BytesIO(bottle), mode="r:gz") as archive:
+        for name in (PINNED_CLI_MEMBER, PINNED_CLI_LIB_MEMBER):
+            member = archive.extractfile(name)
+            if member is None:
+                raise IntegrityError("WRONG_MODEL")
+            extracted[name] = member.read()
+    _require_blob(extracted[PINNED_CLI_MEMBER], PINNED_CLI_BLOB_SHA256, PINNED_CLI_BLOB_BYTES)
+    _require_blob(extracted[PINNED_CLI_LIB_MEMBER], PINNED_CLI_LIB_BLOB_SHA256, PINNED_CLI_LIB_BLOB_BYTES)
+    stage = root / ".bottle"
+    if stage.exists():
+        shutil.rmtree(stage)
+    stage_bin = stage / "tesseract"
+    stage_lib = stage / "lib" / "libtesseract.5.dylib"
+    stage_lib.parent.mkdir(parents=True)
+    stage_bin.write_bytes(extracted[PINNED_CLI_MEMBER])
+    stage_lib.write_bytes(extracted[PINNED_CLI_LIB_MEMBER])
+    os.chmod(stage_bin, 0o755)
+    os.chmod(stage_lib, 0o755)
+    try:
+        _relink_pinned_cli(stage_bin, stage_lib)
+    except subprocess.CalledProcessError as exc:
+        raise _missing_binary() from exc
+    _require_blob(stage_bin.read_bytes(), PINNED_CLI_SHA256, PINNED_CLI_BYTES)
+    _require_blob(stage_lib.read_bytes(), PINNED_CLI_LIB_SHA256, PINNED_CLI_LIB_BYTES)
+    cli_path = _member(root, PINNED_CLI_REL)
+    lib_path = _member(root, PINNED_CLI_LIB_REL)
+    lib_path.parent.mkdir(parents=True, exist_ok=True)
+    os.replace(stage_bin, cli_path)
+    os.replace(stage_lib, lib_path)
+    os.chmod(cli_path, 0o755)
+    os.chmod(lib_path, 0o755)
 
 
 def _verify_cli(path: Path) -> None:
     if not path.is_file():
-        raise IntegrityError(
-            "MISSING_BINARY "
-            f"tesseract sha256={PINNED_CLI_SHA256} bytes={PINNED_CLI_BYTES}"
-        )
-    size = path.stat().st_size
-    if size != PINNED_CLI_BYTES:
+        raise _missing_binary()
+    if "Cellar" in path.parts:
+        raise IntegrityError("WRONG_MODEL")
+    if path.stat().st_size != PINNED_CLI_BYTES:
         raise IntegrityError("SIZE_MISMATCH")
     if _binary_arch(path) != "arm64" or _host_arch() != "arm64":
         raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
-    got = _sha256_file(path)
-    if got != PINNED_CLI_SHA256:
+    if _sha256_file(path) != PINNED_CLI_SHA256:
         raise IntegrityError("HASH_MISMATCH")
-    if not shutil.which("sandbox-exec") and not Path("/usr/bin/sandbox-exec").is_file():
+    if not Path("/usr/bin/sandbox-exec").is_file():
         raise IntegrityError("SANDBOX_UNAVAILABLE")
     completed = subprocess.run(
         ["/usr/bin/sandbox-exec", "-p", SANDBOX_PROFILE, str(path), "--version"],
@@ -283,37 +445,76 @@ def _verify_cli(path: Path) -> None:
         raise IntegrityError("WRONG_MODEL")
 
 
+def _verify_cli_library(path: Path) -> None:
+    if not path.is_file():
+        raise _missing_binary()
+    if path.stat().st_size != PINNED_CLI_LIB_BYTES:
+        raise IntegrityError("SIZE_MISMATCH")
+    if _sha256_file(path) != PINNED_CLI_LIB_SHA256:
+        raise IntegrityError("HASH_MISMATCH")
+
+
 @dataclass
 class QualifiedAssets:
     root: Path
     model_path: Path
     cli_path: Path
+    model_acquired: bool = False
+    cli_acquired: bool = False
     model_sha256: str = PINNED_MODEL_SHA256
     cli_sha256: str = PINNED_CLI_SHA256
 
 
-def ingress_hosts() -> list[str]:
+def model_ingress_hosts() -> list[str]:
     with _LOCK:
-        return list(_INGRESS_HOSTS)
+        return list(_MODEL_INGRESS_HOSTS)
+
+
+def cli_ingress_hosts() -> list[str]:
+    with _LOCK:
+        return list(_CLI_INGRESS_HOSTS)
+
+
+def ingress_hosts() -> list[str]:
+    return model_ingress_hosts()
 
 
 def discover_qualified_assets(
     root: Path | None = None,
     *,
     fetch: bool = True,
-    environ: dict[str, str] | None = None,
 ) -> QualifiedAssets:
     pack = Path(root) if root is not None else pack_root()
     manifest = _load_pack_manifest(pack)
-    model_path = _member(pack, str(manifest["RUNTIME_COMPATIBILITY"]["model_relative_path"]))  # type: ignore[index]
+    runtime = manifest["RUNTIME_COMPATIBILITY"]
+    assert isinstance(runtime, dict)
+    model_path = _member(pack, str(runtime["model_relative_path"]))
+    cli_path = _member(pack, str(runtime["cli_relative_path"]))
+    lib_path = _member(pack, str(runtime["cli_library_relative_path"]))
+    model_acquired = False
+    cli_acquired = False
     if not model_path.is_file():
         if not fetch:
             _verify_model(model_path)
         _acquire_absent_model(model_path)
+        model_acquired = True
     _verify_model(model_path)
-    cli_path = _discover_cli(environ if environ is not None else dict(os.environ))
+    if not cli_path.is_file() and not lib_path.is_file():
+        if not fetch:
+            raise _missing_binary()
+        _acquire_absent_cli(pack)
+        cli_acquired = True
+    elif not cli_path.is_file() or not lib_path.is_file():
+        raise _missing_binary()
     _verify_cli(cli_path)
-    return QualifiedAssets(root=pack, model_path=model_path, cli_path=cli_path)
+    _verify_cli_library(lib_path)
+    return QualifiedAssets(
+        root=pack,
+        model_path=model_path,
+        cli_path=cli_path,
+        model_acquired=model_acquired,
+        cli_acquired=cli_acquired,
+    )
 
 
 def _image_suffix(blob: bytes) -> str:
@@ -542,43 +743,33 @@ def recorded_journey() -> dict[str, object] | None:
 
 
 def product_verdict() -> dict[str, object]:
-    """HOLD unless this process recognized non-empty text with image egress 0."""
+    """Product stamp stays HOLD. LOCAL_OCR is execution evidence, not a release pass."""
     with _LOCK:
         journey = None if _JOURNEY is None else dict(_JOURNEY)
         egress = _EGRESS_STICKY
-        hosts = list(_INGRESS_HOSTS)
-    if egress != 0:
-        return {
-            "OCR_PRODUCT": "HOLD",
-            "missing": "RAW_IMAGE_EGRESS",
-            "ingressHosts": hosts,
-            "imageEgressAttempts": egress,
-        }
-    if not journey or journey.get("local_ocr") is not True or journey.get("text_nonempty") is not True:
-        return {
-            "OCR_PRODUCT": "HOLD",
-            "missing": "RECOGNITION_NOT_RUN",
-            "ingressHosts": hosts,
-            "imageEgressAttempts": 0,
-        }
+        model_hosts = list(_MODEL_INGRESS_HOSTS)
+        cli_hosts = list(_CLI_INGRESS_HOSTS)
+    execution = "NOT_RUN"
     if (
-        journey.get("model_sha256") != PINNED_MODEL_SHA256
-        or journey.get("model_bytes") != PINNED_MODEL_BYTES
-        or journey.get("cli_sha256") != PINNED_CLI_SHA256
-        or journey.get("cli_bytes") != PINNED_CLI_BYTES
-        or journey.get("image_egress") != 0
+        egress == 0
+        and isinstance(journey, dict)
+        and journey.get("local_ocr") is True
+        and journey.get("text_nonempty") is True
+        and journey.get("model_sha256") == PINNED_MODEL_SHA256
+        and journey.get("model_bytes") == PINNED_MODEL_BYTES
+        and journey.get("cli_sha256") == PINNED_CLI_SHA256
+        and journey.get("cli_bytes") == PINNED_CLI_BYTES
+        and journey.get("image_egress") == 0
     ):
-        return {
-            "OCR_PRODUCT": "HOLD",
-            "missing": "WRONG_MODEL",
-            "ingressHosts": hosts,
-            "imageEgressAttempts": 0,
-        }
+        execution = "LOCAL_OCR"
     return {
-        "OCR_PRODUCT": "PASS",
-        "missing": None,
-        "ingressHosts": hosts,
-        "imageEgressAttempts": 0,
+        "OCR_PRODUCT": "HOLD",
+        "execution": execution,
+        "missing": "RELEASE_NOT_QUALIFIED",
+        "modelIngressHosts": model_hosts,
+        "cliIngressHosts": cli_hosts,
+        "ingressHosts": model_hosts,
+        "imageEgressAttempts": egress,
     }
 
 

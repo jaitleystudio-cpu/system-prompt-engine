@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -16,17 +18,20 @@ sys.path.insert(0, str(ROOT))
 from spe_runtime.ocr_product.local_backend import (  # noqa: E402
     IntegrityError,
     LocalOcrSession,
+    PINNED_CLI_BLOB_SHA256,
     PINNED_CLI_BYTES,
     PINNED_CLI_SHA256,
     PINNED_MODEL_BYTES,
     PINNED_MODEL_SHA256,
+    cli_ingress_hosts,
     discover_qualified_assets,
-    ingress_hosts,
+    model_ingress_hosts,
     product_verdict,
     reset_journey_for_tests,
 )
 
 PROOF = "SPE OCR LANE R6 HOLDFAST"
+SECOND = "NORTH DOCK 17"
 RUNTIME_FILES = [
     ROOT / "spe_runtime/ocr_product/local_backend.py",
     ROOT / "spe_runtime/ocr_product/route_host.py",
@@ -103,23 +108,14 @@ def test_rejects() -> None:
             fail("missing model was accepted")
 
 
-def test_missing_binary() -> None:
-    try:
-        discover_qualified_assets(fetch=True, environ={"PATH": ""})
-    except IntegrityError as exc:
-        assert_true(exc.code.startswith("MISSING_BINARY "), exc.code)
-        assert_true(PINNED_CLI_SHA256 in exc.code, exc.code)
-        assert_true(str(PINNED_CLI_BYTES) in exc.code, exc.code)
-    else:
-        fail("missing binary was accepted")
 
 
-def render_proof(path: Path) -> None:
+def render_proof(path: Path, phrase: str) -> None:
     program = """
 import AppKit
 let text = %s
 let out = %s
-let width = 1100
+let width = 1200
 let height = 180
 let img = NSImage(size: NSSize(width: width, height: height))
 img.lockFocus()
@@ -133,48 +129,87 @@ guard let tiff = img.tiffRepresentation, let rep = NSBitmapImageRep(data: tiff),
   exit(1)
 }
 try png.write(to: URL(fileURLWithPath: out))
-""" % (json.dumps(PROOF), json.dumps(str(path)))
+""" % (json.dumps(phrase), json.dumps(str(path)))
     completed = subprocess.run(["swift", "-"], input=program, text=True, capture_output=True, check=False)
     if completed.returncode != 0 or not path.is_file():
         fail("could not render proof image: " + completed.stderr[-500:])
 
 
-def test_execution() -> None:
-    reset_journey_for_tests()
-    before = product_verdict()
-    assert_true(before["OCR_PRODUCT"] == "HOLD", str(before))
-    assert_true(before["missing"] == "RECOGNITION_NOT_RUN", str(before))
-    assets = discover_qualified_assets(fetch=True)
-    assert_true(assets.model_path.stat().st_size == PINNED_MODEL_BYTES, "model size")
-    session_dir = assets.root / ".session"
-    session_dir.mkdir(parents=True, exist_ok=True)
-    image = session_dir / "generated-proof.png"
-    render_proof(image)
+def _park(src: Path, dest: Path) -> None:
+    if not src.exists():
+        return
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(src, dest)
+
+
+def _restore(parked: Path, dest: Path) -> None:
+    if dest.exists() or not parked.exists():
+        return
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(parked, dest)
+
+
+def _recognize(phrase: str) -> bytes:
+    assets_root = ROOT / "ocr-pack"
+    session = assets_root / ".session"
+    session.mkdir(parents=True, exist_ok=True)
+    image = session / "generated-proof.png"
+    render_proof(image, phrase)
     blob = image.read_bytes()
     image.unlink()
-    execution = LocalOcrSession.open(assets).recognize(blob)
-    assert_true(execution.mode == "LOCAL_OCR", execution.mode + str(execution.error_code))
-    assert_true(execution.egress_attempts == 0, str(execution.network_hosts))
-    assert_true("HOLDFAST" in execution.text, execution.text)
-    assert_true(any(region["text"] == "HOLDFAST" for region in execution.regions), str(execution.regions))
+    return blob
+
+
+def test_sources_do_not_embed_the_proof() -> None:
+    for path in RUNTIME_FILES:
+        text = path.read_text(encoding="utf-8")
+        assert_true("HOLDFAST" not in text, str(path))
+        assert_true("NORTH DOCK" not in text, str(path))
+        assert_true("/Volumes/" not in text, str(path))
+        assert_true("spe-worktrees" not in text, str(path))
+        assert_true("OCR_PRODUCT=PASS" not in text, str(path))
+        assert_true('"OCR_PRODUCT": "PASS"' not in text, str(path))
+    route = (ROOT / "apps/web/src/media/OcrRoute.tsx").read_text(encoding="utf-8")
+    owner = (ROOT / "apps/web/src/media/ocrLite.ts").read_text(encoding="utf-8")
+    backend = (ROOT / "spe_runtime/ocr_product/local_backend.py").read_text(encoding="utf-8")
+    assert_true("detectTextLikeRegions" not in route, "route calls text-band detection")
+    assert_true("/api/ocr/recognize" in owner, "owner is not bound")
+    assert_true("cli_discovery" not in backend, "PATH discovery remains the product runtime")
+    assert_true("shutil.which" not in backend, "PATH lookup remains")
+    wasm = json.loads((ROOT / "apps/web/public/spe_wasm.sha256.json").read_text(encoding="utf-8"))
+    assert_true(
+        wasm["sha256"] == "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b",
+        wasm["sha256"],
+    )
+
+
+def test_missing_binary_without_fetch() -> None:
+    with tempfile.TemporaryDirectory() as raw:
+        directory = Path(raw)
+        copy_manifest(directory)
+        model = directory / "tessdata" / "eng.traineddata"
+        model.parent.mkdir(parents=True)
+        shutil.copyfile(ROOT / "ocr-pack/tessdata/eng.traineddata", model)
+        try:
+            discover_qualified_assets(directory, fetch=False)
+        except IntegrityError as exc:
+            assert_true(exc.code.startswith("MISSING_BINARY "), exc.code)
+            assert_true(PINNED_CLI_BLOB_SHA256 in exc.code, exc.code)
+            assert_true(str(PINNED_CLI_BYTES) in exc.code, exc.code)
+        else:
+            fail("missing pinned CLI was accepted")
+
+
+def _assert_stamp(execution_mode: str) -> dict:
     verdict = product_verdict()
-    assert_true(verdict["OCR_PRODUCT"] == "PASS", str(verdict))
-    assert_true(verdict["missing"] is None, str(verdict))
-    print("OCR_EXECUTION", json.dumps({
-        "mode": execution.mode,
-        "text": execution.text,
-        "span": "HOLDFAST",
-        "source": "swift-rendered png, phrase only in this test",
-        "egress": execution.egress_attempts,
-        "imageHosts": execution.network_hosts,
-        "ingressHosts": ingress_hosts(),
-        "modelSha256": PINNED_MODEL_SHA256,
-        "modelBytes": PINNED_MODEL_BYTES,
-        "verdict": verdict["OCR_PRODUCT"],
-    }))
+    assert_true(verdict["OCR_PRODUCT"] == "HOLD", str(verdict))
+    assert_true(verdict["OCR_PRODUCT"] != "PASS", str(verdict))
+    assert_true(verdict["execution"] == execution_mode, str(verdict))
+    assert_true(verdict["missing"] == "RELEASE_NOT_QUALIFIED", str(verdict))
+    return verdict
 
 
-def test_loopback_route(blob: bytes) -> None:
+def test_loopback_route(blob: bytes, phrase_span: str) -> None:
     env = os.environ.copy()
     env["PYTHONPATH"] = str(ROOT)
     env["PYTHONUNBUFFERED"] = "1"
@@ -197,53 +232,102 @@ def test_loopback_route(blob: bytes) -> None:
             method="POST",
             headers={"content-type": "application/octet-stream"},
         )
-        with urllib.request.urlopen(request, timeout=60) as response:
+        with urllib.request.urlopen(request, timeout=90) as response:
             body = json.loads(response.read().decode("utf-8"))
         assert_true(body["mode"] == "LOCAL_OCR", str(body))
         assert_true(body["egressAttempts"] == 0, str(body))
-        assert_true("HOLDFAST" in body["text"], body["text"])
+        assert_true(phrase_span in body["text"], body["text"])
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/health", timeout=30) as response:
             health = json.loads(response.read().decode("utf-8"))
-        assert_true(health["OCR_PRODUCT"] == "PASS", str(health))
+        assert_true(health["OCR_PRODUCT"] == "HOLD", str(health))
+        assert_true(health["OCR_PRODUCT"] != "PASS", str(health))
         assert_true(health["imageEgressAttempts"] == 0, str(health))
-        print("OCR_ROUTE", json.dumps({"portHost": "127.0.0.1", "health": health["OCR_PRODUCT"], "ingress": health["ingressHosts"]}))
+        print("OCR_ROUTE", json.dumps({"portHost": "127.0.0.1", "PRODUCT_STAMP": health["OCR_PRODUCT"], "execution": health.get("execution")}))
     finally:
         proc.terminate()
         proc.wait(timeout=10)
 
 
-def test_sources_do_not_embed_the_proof() -> None:
-    for path in RUNTIME_FILES:
-        text = path.read_text(encoding="utf-8")
-        assert_true("HOLDFAST" not in text, str(path))
-        assert_true("/Volumes/" not in text, str(path))
-        assert_true("spe-worktrees" not in text, str(path))
-        assert_true("OCR_PRODUCT=PASS" not in text, str(path))
-    route = (ROOT / "apps/web/src/media/OcrRoute.tsx").read_text(encoding="utf-8")
-    owner = (ROOT / "apps/web/src/media/ocrLite.ts").read_text(encoding="utf-8")
-    assert_true("detectTextLikeRegions" not in route, "route calls text-band detection")
-    assert_true("/api/ocr/recognize" in owner, "owner is not bound")
-    wasm = json.loads((ROOT / "apps/web/public/spe_wasm.sha256.json").read_text(encoding="utf-8"))
-    assert_true(
-        wasm["sha256"] == "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b",
-        wasm["sha256"],
-    )
-
-
 def main() -> None:
     test_sources_do_not_embed_the_proof()
     test_rejects()
-    test_missing_binary()
-    test_execution()
-    # Re-render is inside test_execution and the file is deleted. Render once more for HTTP.
-    session = ROOT / "ocr-pack/.session"
-    session.mkdir(parents=True, exist_ok=True)
-    image = session / "generated-proof.png"
-    render_proof(image)
-    blob = image.read_bytes()
-    image.unlink()
-    test_loopback_route(blob)
-    print("PASS r6 ocr")
+    model = ROOT / "ocr-pack/tessdata/eng.traineddata"
+    cli = ROOT / "ocr-pack/tesseract"
+    library = ROOT / "ocr-pack/lib/libtesseract.5.dylib"
+    park = Path(f"/tmp/r6-ocr-absence-{os.getpid()}")
+    if park.exists():
+        shutil.rmtree(park)
+    park.mkdir()
+    try:
+        _park(model, park / "eng.traineddata")
+        _park(cli, park / "tesseract")
+        _park(library, park / "libtesseract.5.dylib")
+        assert_true(not model.exists(), "model was not absent")
+        assert_true(not cli.exists(), "cli was not absent")
+        assert_true(not library.exists(), "cli library was not absent")
+        reset_journey_for_tests()
+        resting = product_verdict()
+        assert_true(resting["OCR_PRODUCT"] == "HOLD", str(resting))
+        assert_true(resting["execution"] == "NOT_RUN", str(resting))
+        assets = discover_qualified_assets(fetch=True)
+        assert_true(assets.model_acquired is True, "model fetch did not acquire")
+        assert_true(assets.cli_acquired is True, "cli fetch did not acquire")
+        assert_true(assets.model_path.stat().st_size == PINNED_MODEL_BYTES, "model size")
+        assert_true(assets.cli_path == assets.root / "tesseract", str(assets.cli_path))
+        assert_true("Cellar" not in str(assets.cli_path), str(assets.cli_path))
+        assert_true(assets.cli_path.stat().st_size == PINNED_CLI_BYTES, "cli size")
+        assert_true(hashlib.sha256(assets.cli_path.read_bytes()).hexdigest() == PINNED_CLI_SHA256, "cli digest")
+        hosts = model_ingress_hosts()
+        assert_true(any(host in hosts for host in ("github.com", "raw.githubusercontent.com")), str(hosts))
+        assert_true(cli_ingress_hosts(), str(cli_ingress_hosts()))
+        blob = _recognize(PROOF)
+        execution = LocalOcrSession.open(assets).recognize(blob)
+        assert_true(execution.mode == "LOCAL_OCR", execution.mode + str(execution.error_code))
+        assert_true(execution.egress_attempts == 0, str(execution.network_hosts))
+        assert_true("HOLDFAST" in execution.text, execution.text)
+        verdict = _assert_stamp("LOCAL_OCR")
+        print("ABSENCE_THEN_ACQUIRE", json.dumps({
+            "modelAbsentAtStart": True,
+            "modelAcquired": assets.model_acquired,
+            "modelIngressHosts": hosts,
+            "cliAcquired": assets.cli_acquired,
+            "cliIngressHosts": cli_ingress_hosts(),
+            "cliPath": "ocr-pack/tesseract",
+            "cliSha256": PINNED_CLI_SHA256,
+            "cliBytes": PINNED_CLI_BYTES,
+            "cliBlobSha256": PINNED_CLI_BLOB_SHA256,
+        }))
+        print("PRODUCT_STAMP", verdict["OCR_PRODUCT"])
+        print("TRANSCRIPT", json.dumps({"span": "HOLDFAST", "text": execution.text}))
+
+        _park(model, park / "eng-second.traineddata")
+        assert_true(not model.exists(), "second image did not start with the model absent")
+        second_assets = discover_qualified_assets(fetch=True)
+        assert_true(second_assets.model_acquired is True, "second acquire did not download")
+        assert_true(second_assets.cli_acquired is False, "second run rebuilt the CLI")
+        second_blob = _recognize(SECOND)
+        second = LocalOcrSession.open(second_assets).recognize(second_blob)
+        assert_true(second.mode == "LOCAL_OCR", second.mode + str(second.error_code))
+        assert_true("DOCK" in second.text, second.text)
+        assert_true("HOLDFAST" not in second.text, second.text)
+        assert_true(second.egress_attempts == 0, str(second.network_hosts))
+        _assert_stamp("LOCAL_OCR")
+        print("SECOND_IMAGE", json.dumps({
+            "modelAbsentAtStart": True,
+            "modelAcquired": True,
+            "span": "DOCK",
+            "text": second.text,
+            "PRODUCT_STAMP": "HOLD",
+        }))
+        test_missing_binary_without_fetch()
+        test_loopback_route(second_blob, "DOCK")
+    finally:
+        _restore(park / "eng.traineddata", model)
+        _restore(park / "eng-second.traineddata", model)
+        _restore(park / "tesseract", cli)
+        _restore(park / "libtesseract.5.dylib", library)
+        shutil.rmtree(park, ignore_errors=True)
+    print("OK r6 ocr")
 
 
 if __name__ == "__main__":
