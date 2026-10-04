@@ -368,7 +368,7 @@ export const ProjectLibraryView: React.FC = () => {
                 </div>
 
                 <div>
-                  <div style={{ fontSize: "0.75rem", color: "var(--spe-lib-muted)" }}>SHA-256 Digest</div>
+                  <div style={{ fontSize: "0.75rem", color: "var(--spe-lib-muted)" }}>File fingerprint</div>
                   <code style={{ fontSize: "0.75rem", wordBreak: "break-all" }}>{activeRevision.body_sha256}</code>
                 </div>
 
