@@ -63,6 +63,29 @@ for (const pattern of HYPE_PATTERNS) {
   );
 }
 
+// 2b. Evidence semantics: pixel notes are not OCR evidence; labels must match implemented limits.
+console.log("Checking visual truth semantics...");
+assert.doesNotMatch(
+  workspaceSource,
+  /ocrStatus:\s*imageObs\s*&&\s*imageObs\.notes/i,
+  "Visual workspace must not infer OCR observation from generic image notes"
+);
+assert.match(
+  workspaceSource,
+  /ocrStatus:\s*"UNKNOWN"/,
+  "OCR must stay UNKNOWN until canonical OCR evidence is actually wired"
+);
+assert.doesNotMatch(
+  workspaceSource,
+  /verified compiler target generation/i,
+  "Workspace must not label target generation verified without candidate-bound evidence"
+);
+assert.doesNotMatch(
+  workspaceSource,
+  /up to 20MB/i,
+  "Workspace copy must not contradict the 25 MB image-bound implementation"
+);
+
 // 3. Supported Compiler Targets Only
 console.log("Checking compiler targets alignment...");
 assert.match(
