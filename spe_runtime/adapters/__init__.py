@@ -20,6 +20,18 @@ from spe_runtime.adapters.protocol_render import (
     render_with_environment_capability_clause,
 )
 
+from spe_runtime.adapters.spe_target_compile import (
+    CANONICAL_COMPILER_PATH,
+    CANONICAL_COMPILER_SHA,
+    CANONICAL_COMPILER_SYMBOL,
+    TARGET_EXPORT_MODELS,
+    TargetCompileError,
+    UnknownTargetError,
+    compile_spe_for_target,
+    resolve_target_model,
+    semantic_compare,
+)
+
 __all__ = [
     "APPROVED_ADAPTER_IDS",
     "ENVIRONMENT_CAPABILITY_TAGS",
@@ -37,4 +49,14 @@ __all__ = [
     "render_with_environment_capability_clause",
     "select_for_environment_need",
     "write_local_temp_file",
+    "CANONICAL_COMPILER_PATH",
+    "CANONICAL_COMPILER_SHA",
+    "CANONICAL_COMPILER_SYMBOL",
+    "TARGET_EXPORT_MODELS",
+    "TargetCompileError",
+    "UnknownTargetError",
+    "compile_spe_for_target",
+    "resolve_target_model",
+    "semantic_compare",
 ]
+

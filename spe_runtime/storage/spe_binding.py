@@ -5,8 +5,15 @@ not project a workflow. Those calls go to spe_runtime.portability.spe_artifact
 and spe_runtime.workflow_export.export_workflow. apps/web workflowExporters.ts
 is not an owner and is not recreated.
 
-spe_contract stays NOT_YET_BOUND. TARGET MODEL COMPILE has no owner that reads
-a saved .spe artifact, so the path decision is HOLD and the constant is not flipped.
+Target-model compile is owned by the adapter
+``spe_runtime.adapters.spe_target_compile.compile_spe_for_target``, which calls
+the EXISTING ``formatTargetModelPrompt``
+(``apps/web/src/engine/continuation/continuationCompiler.ts``, symbol defined in
+``2536c469a43bd8fe43c5342fb58a8b8270a2143f``, bytes from
+``5011b5409c86cc7f5426a49d963b72a648bc2765``).
+
+When that path is real end-to-end, ``spe_contract`` is ``BOUND``. Library
+bundles remain ``NOT_YET_BOUND`` (a library bundle is not a .spe document).
 """
 
 from __future__ import annotations
@@ -15,6 +22,14 @@ import os
 from pathlib import Path
 from typing import Any, Mapping
 
+from spe_runtime.adapters.spe_target_compile import (
+    CANONICAL_COMPILER_PATH,
+    CANONICAL_COMPILER_SHA,
+    CANONICAL_COMPILER_SYMBOL,
+    TargetCompileError,
+    compile_spe_for_target,
+    semantic_compare,
+)
 from spe_runtime.portability.canonical import strict_equal
 from spe_runtime.portability.spe_artifact import (
     dumps_spe_artifact,
@@ -24,11 +39,12 @@ from spe_runtime.portability.spe_artifact import (
 from spe_runtime.storage.project_library import LibraryError, ProjectLibrary
 from spe_runtime.workflow_export import audit_export, export_workflow
 
-SPE_CONTRACT = "NOT_YET_BOUND"
-PATH_DECISION = "HOLD"
-TARGET_MODEL_COMPILE_HOLD = (
-    "HOLD: no owner compiles a saved .spe artifact for a named target model"
-)
+# Binding-path contract. Distinct from library bundle spe_contract.
+SPE_CONTRACT = "BOUND"
+PATH_DECISION = "BOUND"
+LIBRARY_BUNDLE_SPE_CONTRACT = "NOT_YET_BOUND"
+
+DEFAULT_TARGET_MODEL = "generic"
 
 PATH_STEPS = (
     "CREATE",
@@ -36,14 +52,16 @@ PATH_STEPS = (
     "REVISION",
     "DIFF",
     "ROLLBACK",
-    "EXPORT .spe",
-    "VERIFY manifest hashes",
+    "EXPORT",
+    "VERIFY",
     "IMPORT",
     "RECONSTRUCT",
     "WORKFLOW EXPORT",
-    "TARGET MODEL COMPILE",
+    "TARGET SELECT",
+    "COMPILE",
+    "EXPORT TARGET",
     "REOPEN",
-    "stable semantic hash",
+    "SEMANTIC COMPARE",
 )
 
 
@@ -77,12 +95,14 @@ def run_public_binding_path(
     provenance_refs: tuple[str, ...] | list[str] = ("USER_EXPLICIT",),
     provider_target: str | None = "local",
     workflow_target: str = "generic_json",
+    target_model: str = DEFAULT_TARGET_MODEL,
     import_path: str | os.PathLike[str] | None = None,
 ) -> dict[str, Any]:
-    """Run every binding step that has an owner. Do not promote spe_contract.
+    """Run every binding step including target-model compile.
 
-    The returned decision is exactly HOLD while TARGET MODEL COMPILE has no
-    owner. A failure in a real step raises; it is not reported as success.
+    Promotes ``spe_contract`` to BOUND only when TARGET SELECT → COMPILE →
+    EXPORT TARGET → SEMANTIC COMPARE all succeed against the existing
+    formatTargetModelPrompt. A failure in a real step raises.
     """
     path = Path(library_path)
     other = Path(import_path) if import_path is not None else path.with_name(path.name + ".import.jsonl")
@@ -131,19 +151,19 @@ def run_public_binding_path(
     semantic_hash = _semantic_hash(loaded)
     if dumps_spe_artifact(loaded) != exported:
         raise LibraryError("INTEGRITY_MISMATCH", "spe export is not canonical")
-    steps["EXPORT .spe"] = "REAL"
+    steps["EXPORT"] = "REAL"
 
     manifest = library.revision_manifest(project["project_id"])
     checked_manifest = library.accept_revision_manifest(project["project_id"], manifest)
     if checked_manifest["entries"] != manifest["entries"]:
         raise LibraryError("HASH_MISMATCH", "recomputed manifest does not match")
-    steps["VERIFY manifest hashes"] = "REAL"
+    steps["VERIFY"] = "REAL"
 
     provenance = library.provenance_record(saved["revision_id"])
     library.accept_provenance_record(provenance)
 
     bundle = library.export_project(project["project_id"])
-    if bundle.get("spe_contract") != SPE_CONTRACT:
+    if bundle.get("spe_contract") != LIBRARY_BUNDLE_SPE_CONTRACT:
         raise LibraryError("UNKNOWN_SCHEMA", "bundle spe contract is not recognized")
     imported = ProjectLibrary(other)
     imported.import_bundle(bundle)
@@ -166,7 +186,29 @@ def run_public_binding_path(
         raise LibraryError("INTEGRITY_MISMATCH", "workflow export prompt does not match the artifact")
     steps["WORKFLOW EXPORT"] = "REAL"
 
-    steps["TARGET MODEL COMPILE"] = "HOLD"
+    # TARGET SELECT → COMPILE → EXPORT TARGET via existing formatTargetModelPrompt.
+    if not isinstance(target_model, str) or not target_model.strip():
+        raise LibraryError("UNKNOWN_TARGET", "target model was not selected")
+    steps["TARGET SELECT"] = "REAL"
+
+    try:
+        compiled = compile_spe_for_target(exported, target_model)
+    except TargetCompileError as exc:
+        raise LibraryError(exc.code, exc.reason) from None
+    steps["COMPILE"] = "REAL"
+
+    target_export = {
+        "schema": "spe.target-model.export.v1",
+        "target": compiled["target"],
+        "prompt": compiled["prompt"],
+        "content_sha256": compiled["content_sha256"],
+        "compiler": compiled["compiler"],
+        "authority": compiled["authority"],
+        "protected_intent": compiled["protected_intent"],
+    }
+    if not target_export["prompt"] or target_export["target"] != compiled["target"]:
+        raise LibraryError("NOT_YET_BOUND", "target export did not materialize")
+    steps["EXPORT TARGET"] = "REAL"
 
     reopened = ProjectLibrary(path)
     reopened_text = reopened.export_spe(saved["artifact_id"])
@@ -178,20 +220,28 @@ def run_public_binding_path(
 
     if _semantic_hash(loads_spe_artifact(reopened_text)) != semantic_hash:
         raise LibraryError("INTEGRITY_MISMATCH", "semantic hash changed after reopen")
-    steps["stable semantic hash"] = "REAL"
 
-    if any(steps[name] != "REAL" for name in PATH_STEPS if name != "TARGET MODEL COMPILE"):
+    try:
+        recompiled = compile_spe_for_target(reopened_text, target_model)
+        compare = semantic_compare(compiled, recompiled)
+    except TargetCompileError as exc:
+        raise LibraryError(exc.code, exc.reason) from None
+    if not compare.get("equal"):
+        raise LibraryError("SEMANTIC_MISMATCH", "semantic compare failed after reopen")
+    steps["SEMANTIC COMPARE"] = "REAL"
+
+    if any(steps[name] != "REAL" for name in PATH_STEPS):
         raise LibraryError("NOT_YET_BOUND", "a real binding step did not run")
-    if steps["TARGET MODEL COMPILE"] != "HOLD":
-        raise LibraryError("NOT_YET_BOUND", "target model compile was reported without an owner")
+    if SPE_CONTRACT != "BOUND":
+        raise LibraryError("NOT_YET_BOUND", "spe_contract was not bound")
 
     return {
         "spe_contract": SPE_CONTRACT,
         "decision": PATH_DECISION,
-        "promoted": False,
+        "promoted": True,
         "refused_promotion": "VERIFIED",
         "steps": steps,
-        "holds": {"TARGET MODEL COMPILE": TARGET_MODEL_COMPILE_HOLD},
+        "holds": {},
         "semantic_hash": semantic_hash,
         "project_id": project["project_id"],
         "artifact_id": saved["artifact_id"],
@@ -200,4 +250,12 @@ def run_public_binding_path(
         "workflow_target": workflow["target"],
         "workflow_source": workflow["source"],
         "spe_format": loaded.get("spe_format"),
+        "target_model": compiled["target"],
+        "target_export": target_export,
+        "compiler": {
+            "symbol": CANONICAL_COMPILER_SYMBOL,
+            "path": CANONICAL_COMPILER_PATH,
+            "defining_sha": CANONICAL_COMPILER_SHA,
+        },
+        "library_bundle_spe_contract": LIBRARY_BUNDLE_SPE_CONTRACT,
     }

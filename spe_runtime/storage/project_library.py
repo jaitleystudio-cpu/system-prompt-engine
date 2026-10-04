@@ -88,8 +88,9 @@ def _binding_holds() -> dict[str, str]:
     """HOLD where this owner has no implementation to call.
 
     Provenance records, capability manifests, and the frozen G11 workflow
-    export are real when their files are present. Nothing in this tree compiles
-    a saved .spe artifact into a target-model prompt, so that step stays HOLD.
+    export are real when their files are present. Target-model compile is real
+    when spe_runtime/adapters/spe_target_compile.py owns the saved-.spe path
+    into formatTargetModelPrompt.
     """
     root = Path(__file__).resolve().parents[2]
     holds: dict[str, str] = {}
@@ -111,9 +112,16 @@ def _binding_holds() -> dict[str, str]:
             "HOLD: missing owner spe_runtime/workflow_export/export.py"
             " (frozen G11). apps/web/src/export/workflowExporters.ts is not the owner"
         )
-    holds["target_model_compile"] = (
-        "HOLD: no owner compiles a saved .spe artifact for a named target model"
+    adapter = root / "spe_runtime" / "adapters" / "spe_target_compile.py"
+    bridge = root / "spe_runtime" / "adapters" / "invoke_format_target_model_prompt.mjs"
+    ts_compiler = (
+        root / "apps" / "web" / "src" / "engine" / "continuation" / "continuationCompiler.ts"
     )
+    guards = root / "apps" / "web" / "src" / "engine" / "continuation" / "oracleGuards.ts"
+    if not adapter.is_file() or not bridge.is_file() or not ts_compiler.is_file() or not guards.is_file():
+        holds["target_model_compile"] = (
+            "HOLD: no owner compiles a saved .spe artifact for a named target model"
+        )
     return holds
 
 

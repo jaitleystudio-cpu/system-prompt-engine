@@ -1,6 +1,7 @@
-"""Lane R3-F — connect the public .spe path without flipping spe_contract.
+"""Lane R3-F — bind saved .spe to EXISTING formatTargetModelPrompt.
 
-TARGET MODEL COMPILE has no owner. The decision stays the exact string HOLD.
+spe_contract is BOUND only when the end-to-end journey and fail-closed attacks
+pass through spe_runtime.adapters.spe_target_compile → formatTargetModelPrompt.
 """
 
 from __future__ import annotations
@@ -11,19 +12,26 @@ from pathlib import Path
 
 import pytest
 
+from spe_runtime.adapters.spe_target_compile import (
+    CANONICAL_COMPILER_PATH,
+    CANONICAL_COMPILER_SHA,
+    CANONICAL_COMPILER_SYMBOL,
+    TARGET_EXPORT_MODELS,
+)
 from spe_runtime.portability.spe_artifact import (
     SPE_FORMAT_V1,
     SPE_FORMAT_V2,
     build_context_protocol_lineage,
     build_spe_artifact,
+    dumps_spe_artifact,
     loads_spe_artifact,
 )
 from spe_runtime.protocols.quality_record import QualityRecord
 from spe_runtime.storage.project_library import LibraryError, ProjectLibrary
 from spe_runtime.storage.spe_binding import (
+    LIBRARY_BUNDLE_SPE_CONTRACT,
     PATH_DECISION,
     SPE_CONTRACT,
-    TARGET_MODEL_COMPILE_HOLD,
     run_public_binding_path,
 )
 from spe_runtime.workflow_export import ExportIntegrityError, audit_export, export_workflow
@@ -40,10 +48,32 @@ T3 = "2026-10-03T00:00:03Z"
 
 def _partial(rendered: str) -> dict:
     return {
-        "user_request": "Summarize the quarterly report.",
+        "user_request": "Summarize the quarterly report within the $2000 budget.",
         "category": "CAT:C02",
         "target": "local",
-        "envelope": {},
+        "envelope": {
+            "network_mode": "NONE",
+            "payload": {
+                "authority_state": {"grants": [], "level": 0, "status": "NONE"},
+                "hard_constraints": [
+                    {
+                        "constraint_id": "budget-cap",
+                        "statement": "Budget must remain $2000.",
+                        "strength": "HARD",
+                    }
+                ],
+                "facts": [
+                    {
+                        "fact_id": "f-user-request",
+                        "statement": "Summarize the quarterly report within the $2000 budget.",
+                        "provenance_ids": ["p-user"],
+                    }
+                ],
+                "provenance": [{"provenance_id": "p-user", "source": "test"}],
+                "uncertainties": [],
+                "execution_grants": [],
+            },
+        },
         "wasm": {
             "status": None,
             "disposition": None,
@@ -56,10 +86,25 @@ def _partial(rendered: str) -> dict:
         "rendered_prompt": rendered,
         "intent": {
             "confirmed": [
-                {"id": "i1", "label": "Goal", "text": "Summarize quarterly report"}
+                {
+                    "id": "i1",
+                    "label": "Goal",
+                    "text": "Summarize quarterly report",
+                },
+                {
+                    "id": "i-budget",
+                    "label": "Must follow",
+                    "text": "Budget must remain $2000.",
+                },
             ],
             "assumed": [],
-            "unknowns": [],
+            "unknowns": [
+                {
+                    "id": "u-scope",
+                    "label": "Questions to resolve",
+                    "text": "Which quarter is in scope?",
+                }
+            ],
             "conflicts": [],
         },
         "lineage": {
@@ -111,7 +156,7 @@ def _v2(rendered: str) -> dict:
     )
 
 
-def _run(tmp_path: Path, first: dict, revised: dict, name: str) -> dict:
+def _run(tmp_path: Path, first: dict, revised: dict, name: str, target_model: str = "generic") -> dict:
     return run_public_binding_path(
         tmp_path / "library.jsonl",
         project_name=name,
@@ -121,36 +166,60 @@ def _run(tmp_path: Path, first: dict, revised: dict, name: str) -> dict:
         rollback_at=T3,
         first_body=first,
         revised_body=revised,
+        target_model=target_model,
     )
 
 
-def test_public_path_v1_and_v2_stay_hold(tmp_path):
-    first = _run(tmp_path / "v1", _v1("alpha payload"), _v1("beta payload"), "R3F-v1")
-    second = _run(tmp_path / "v2", _v2("alpha payload"), _v2("beta payload"), "R3F-v2")
-    assert SPE_CONTRACT == "NOT_YET_BOUND"
-    assert PATH_DECISION == "HOLD"
-    for report, fmt in ((first, SPE_FORMAT_V1), (second, SPE_FORMAT_V2)):
-        assert report["spe_contract"] == "NOT_YET_BOUND"
-        assert report["decision"] == "HOLD"
-        assert report["promoted"] is False
-        assert report["refused_promotion"] == "VERIFIED"
-        assert report["spe_format"] == fmt
-        assert report["steps"]["TARGET MODEL COMPILE"] == "HOLD"
-        assert report["holds"]["TARGET MODEL COMPILE"] == TARGET_MODEL_COMPILE_HOLD
-        assert report["workflow_source"]["kind"] == "spe_artifact"
-        assert report["workflow_source"]["spe_format"] == fmt
-        for name, status in report["steps"].items():
-            if name == "TARGET MODEL COMPILE":
-                assert status == "HOLD"
-            else:
-                assert status == "REAL"
-        assert len(report["semantic_hash"]) == 64
-    assert first["semantic_hash"] != second["semantic_hash"]
+def test_public_path_v1_and_v2_bind_all_targets(tmp_path):
+    assert SPE_CONTRACT == "BOUND"
+    assert PATH_DECISION == "BOUND"
+    assert LIBRARY_BUNDLE_SPE_CONTRACT == "NOT_YET_BOUND"
+    for target in TARGET_EXPORT_MODELS:
+        first = _run(
+            tmp_path / f"v1-{target}",
+            _v1("alpha payload"),
+            _v1("beta payload"),
+            f"R3F-v1-{target}",
+            target_model=target,
+        )
+        second = _run(
+            tmp_path / f"v2-{target}",
+            _v2("alpha payload"),
+            _v2("beta payload"),
+            f"R3F-v2-{target}",
+            target_model=target,
+        )
+        for report, fmt in ((first, SPE_FORMAT_V1), (second, SPE_FORMAT_V2)):
+            assert report["spe_contract"] == "BOUND"
+            assert report["decision"] == "BOUND"
+            assert report["promoted"] is True
+            assert report["refused_promotion"] == "VERIFIED"
+            assert report["spe_format"] == fmt
+            assert report["target_model"] == target
+            assert report["library_bundle_spe_contract"] == "NOT_YET_BOUND"
+            assert report["compiler"]["symbol"] == CANONICAL_COMPILER_SYMBOL
+            assert report["compiler"]["path"] == CANONICAL_COMPILER_PATH
+            assert report["compiler"]["defining_sha"] == CANONICAL_COMPILER_SHA
+            for name, status in report["steps"].items():
+                assert status == "REAL", name
+            prompt = report["target_export"]["prompt"]
+            assert "ProtectedIntent (Immutable)" in prompt
+            assert "Budget must remain $2000." in prompt
+            assert "budget-cap" in prompt
+            assert "f-user-request" in prompt
+            assert "Which quarter is in scope?" in prompt
+            assert report["target_export"]["authority"]["status"] == "NONE"
+            assert report["target_export"]["authority"]["level"] == 0
+            assert len(report["semantic_hash"]) == 64
+        assert first["semantic_hash"] != second["semantic_hash"]
+
     binding = (ROOT / "spe_runtime" / "storage" / "spe_binding.py").read_text(encoding="utf-8")
     assert "compile_execution_contract" not in binding
     assert "Date.now" not in binding
-    assert 'spe_contract"] = "BOUND"' not in binding
+    assert "TargetCompiler2" not in binding
+    assert "formatTargetModelPrompt2" not in binding
     assert not (ROOT / "apps/web/src/export/workflowExporters.ts").is_file()
+    assert (ROOT / CANONICAL_COMPILER_PATH).is_file()
     wasm = json.loads((ROOT / "apps/web/public/spe_wasm.sha256.json").read_text(encoding="utf-8"))
     assert wasm["sha256"] == WASM_PIN
 
@@ -294,5 +363,7 @@ def test_rollback_after_import_and_export_mismatch(tmp_path):
     with pytest.raises(LibraryError) as mismatch:
         library.export_spe(bad["artifact_id"])
     assert mismatch.value.code == "INTEGRITY_MISMATCH"
-    assert library.spe_binding_report(report["project_id"])["holds"]["target_model_compile"].startswith("HOLD")
+    holds = library.spe_binding_report(report["project_id"])["holds"]
+    assert "target_model_compile" not in holds
     assert library.export_project(report["project_id"])["spe_contract"] == "NOT_YET_BOUND"
+    assert report["spe_contract"] == "BOUND"
