@@ -19,25 +19,25 @@
         "cand": "1280x800",
         "exact": true
       },
-      "legacySsim": 0.9153,
-      "legacyDelta": 2.311,
-      "mismatchedPixels": 23664,
-      "mismatchPercentOfImage": 2.3,
-      "meanAbsChannel": 6.01,
+      "legacySsim": 0.9547,
+      "legacyDelta": 2.136,
+      "mismatchedPixels": 21872,
+      "mismatchPercentOfImage": 2.1,
+      "meanAbsChannel": 4.77,
       "layoutRowShiftPx": 0,
       "buckets": {
-        "type": 66.3,
-        "spacing": 1.1,
-        "radius": 1.1,
-        "shadow": 3.3,
+        "type": 61.2,
+        "spacing": 3.6,
+        "radius": 1.2,
+        "shadow": 3.6,
         "assets": 0.2,
-        "geometry": 14.1,
-        "color": 13.8
+        "geometry": 15.2,
+        "color": 14.9
       },
       "dominantBucket": "type",
       "ocrTokenRecallInLegacyHtml": {
         "tokens": 23,
-        "recall": 0
+        "recall": 1
       },
       "ocrWordCount": 30
     },
@@ -48,25 +48,25 @@
         "cand": "390x844",
         "exact": true
       },
-      "legacySsim": 0.8375,
-      "legacyDelta": 24.093,
-      "mismatchedPixels": 79304,
-      "mismatchPercentOfImage": 24.1,
-      "meanAbsChannel": 8.98,
+      "legacySsim": 0.8547,
+      "legacyDelta": 24.467,
+      "mismatchedPixels": 80535,
+      "mismatchPercentOfImage": 24.5,
+      "meanAbsChannel": 9.26,
       "layoutRowShiftPx": 0,
       "buckets": {
-        "type": 8.7,
-        "spacing": 10.7,
+        "type": 8.9,
+        "spacing": 10.6,
         "radius": 0,
         "shadow": 0.1,
         "assets": 0.1,
         "geometry": 1.9,
-        "color": 78.5
+        "color": 78.4
       },
       "dominantBucket": "color",
       "ocrTokenRecallInLegacyHtml": {
         "tokens": 17,
-        "recall": 0
+        "recall": 1
       },
       "ocrWordCount": 20
     },
@@ -77,25 +77,25 @@
         "cand": "960x720",
         "exact": true
       },
-      "legacySsim": 0.8087,
-      "legacyDelta": 15.745,
-      "mismatchedPixels": 108826,
-      "mismatchPercentOfImage": 15.7,
-      "meanAbsChannel": 8.07,
-      "layoutRowShiftPx": 24,
+      "legacySsim": 0.8202,
+      "legacyDelta": 16.286,
+      "mismatchedPixels": 112567,
+      "mismatchPercentOfImage": 16.3,
+      "meanAbsChannel": 8.43,
+      "layoutRowShiftPx": 1,
       "buckets": {
-        "type": 8.1,
+        "type": 9.9,
         "spacing": 3.8,
         "radius": 0.4,
         "shadow": 0.2,
         "assets": 0.1,
-        "geometry": 7,
-        "color": 80.4
+        "geometry": 6.8,
+        "color": 78.8
       },
       "dominantBucket": "color",
       "ocrTokenRecallInLegacyHtml": {
         "tokens": 16,
-        "recall": 0
+        "recall": 1
       },
       "ocrWordCount": 22
     },
@@ -106,14 +106,14 @@
         "cand": "1280x800",
         "exact": true
       },
-      "legacySsim": 0.7758,
-      "legacyDelta": 99.965,
-      "mismatchedPixels": 1023645,
-      "mismatchPercentOfImage": 100,
-      "meanAbsChannel": 69.69,
-      "layoutRowShiftPx": -24,
+      "legacySsim": 0.7712,
+      "legacyDelta": 99.916,
+      "mismatchedPixels": 1023142,
+      "mismatchPercentOfImage": 99.9,
+      "meanAbsChannel": 70.26,
+      "layoutRowShiftPx": -2,
       "buckets": {
-        "type": 2,
+        "type": 1.9,
         "spacing": 1.9,
         "radius": 0.1,
         "shadow": 0.2,
@@ -124,7 +124,7 @@
       "dominantBucket": "color",
       "ocrTokenRecallInLegacyHtml": {
         "tokens": 19,
-        "recall": 0
+        "recall": 0.895
       },
       "ocrWordCount": 24
     },
@@ -135,11 +135,11 @@
         "cand": "1100x760",
         "exact": true
       },
-      "legacySsim": 0.7952,
-      "legacyDelta": 99.977,
-      "mismatchedPixels": 835805,
+      "legacySsim": 0.8101,
+      "legacyDelta": 99.987,
+      "mismatchedPixels": 835892,
       "mismatchPercentOfImage": 100,
-      "meanAbsChannel": 52.48,
+      "meanAbsChannel": 52.51,
       "layoutRowShiftPx": 0,
       "buckets": {
         "type": 2.4,
@@ -153,7 +153,7 @@
       "dominantBucket": "color",
       "ocrTokenRecallInLegacyHtml": {
         "tokens": 25,
-        "recall": 0.04
+        "recall": 1
       },
       "ocrWordCount": 25
     },
@@ -164,11 +164,11 @@
         "cand": "1200x800",
         "exact": true
       },
-      "legacySsim": 0.4921,
-      "legacyDelta": 99.741,
-      "mismatchedPixels": 957510,
+      "legacySsim": 0.5008,
+      "legacyDelta": 99.742,
+      "mismatchedPixels": 957519,
       "mismatchPercentOfImage": 99.7,
-      "meanAbsChannel": 34.58,
+      "meanAbsChannel": 34.78,
       "layoutRowShiftPx": 24,
       "buckets": {
         "type": 3.7,
@@ -182,7 +182,7 @@
       "dominantBucket": "color",
       "ocrTokenRecallInLegacyHtml": {
         "tokens": 9,
-        "recall": 0
+        "recall": 1
       },
       "ocrWordCount": 19
     }
@@ -193,53 +193,53 @@
     "disposition": "KILLED",
     "cause": "fillRect of an exact-RGB run-length partition is a pixel replay of the fixture PNG",
     "change": "The gate fails closed when the HTML is that partition, even if copiedFixture is false. judgeLaneScope cannot emit PASS_WITHIN_TESTED_SCOPE for it.",
-    "expected": "HOLD. Measured SSIM stays the pre-replay scaffold (desktop-landing 0.9153).",
+    "expected": "HOLD for the lane. Desktop font-metric overlay is scored against the frozen bar and must clear 0.95 without pixel replay. Other targets stay HOLD_UNPROVEN.",
     "measured": {
       "desktopLanding": {
-        "ssim": 0.9153,
-        "delta": 2.311,
+        "ssim": 0.9547,
+        "delta": 2.136,
         "viewport": "1280x800"
       },
       "rows": [
         {
           "id": "desktop-landing",
-          "ssim": 0.9153,
-          "delta": 2.311,
+          "ssim": 0.9547,
+          "delta": 2.136,
           "viewport": "1280x800",
           "replay": "FAIL_CONTRACT"
         },
         {
           "id": "mobile-app",
-          "ssim": 0.8375,
-          "delta": 24.093,
+          "ssim": 0.8547,
+          "delta": 24.467,
           "viewport": "390x844",
           "replay": "FAIL_CONTRACT"
         },
         {
           "id": "form",
-          "ssim": 0.8087,
-          "delta": 15.745,
+          "ssim": 0.8202,
+          "delta": 16.286,
           "viewport": "960x720",
           "replay": "FAIL_CONTRACT"
         },
         {
           "id": "dashboard-sidebar",
-          "ssim": 0.7758,
-          "delta": 99.965,
+          "ssim": 0.7712,
+          "delta": 99.916,
           "viewport": "1280x800",
           "replay": "FAIL_CONTRACT"
         },
         {
           "id": "card-grid",
-          "ssim": 0.7952,
-          "delta": 99.977,
+          "ssim": 0.8101,
+          "delta": 99.987,
           "viewport": "1100x760",
           "replay": "FAIL_CONTRACT"
         },
         {
           "id": "dark-difficult",
-          "ssim": 0.4921,
-          "delta": 99.741,
+          "ssim": 0.5008,
+          "delta": 99.742,
           "viewport": "1200x800",
           "replay": "FAIL_CONTRACT"
         }
@@ -257,13 +257,13 @@
         "devicePixelRatio": 1
       },
       "before": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.9153,
-        "pixelDeltaPercentage": 2.311,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.9547,
+        "pixelDeltaPercentage": 2.136,
         "decomposition": {
-          "mismatchedPixels": 23664,
-          "mismatchPercentOfImage": 2.3,
-          "meanAbsChannel": 6.01,
+          "mismatchedPixels": 21872,
+          "mismatchPercentOfImage": 2.1,
+          "meanAbsChannel": 4.77,
           "layoutRowShiftPx": 0,
           "viewport": {
             "ref": "1280x800",
@@ -271,28 +271,29 @@
             "exact": true
           },
           "buckets": {
-            "type": 66.3,
-            "spacing": 1.1,
-            "radius": 1.1,
-            "shadow": 3.3,
+            "type": 61.2,
+            "spacing": 3.6,
+            "radius": 1.2,
+            "shadow": 3.6,
             "assets": 0.2,
-            "geometry": 14.1,
-            "color": 13.8
+            "geometry": 15.2,
+            "color": 14.9
           },
           "dominantBucket": "type"
         },
         "ocrTokenRecallInLegacyHtml": {
           "tokens": 23,
-          "recall": 0
+          "recall": 1
         },
+        "fontPlacements": 29,
         "ocrWordCount": 30,
         "priorRecordedBestSsim": 0.9153
       },
       "measured": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.9153,
-        "pixelDeltaPercentage": 2.311,
-        "status": "MEASURED_BELOW_BAR"
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.9547,
+        "pixelDeltaPercentage": 2.136,
+        "status": "MEASURED_AT_BAR"
       },
       "rejectedReplay": {
         "method": "measured-rectangle-partition-v1",
@@ -322,13 +323,13 @@
         "devicePixelRatio": 1
       },
       "before": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.8375,
-        "pixelDeltaPercentage": 24.093,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.8547,
+        "pixelDeltaPercentage": 24.467,
         "decomposition": {
-          "mismatchedPixels": 79304,
-          "mismatchPercentOfImage": 24.1,
-          "meanAbsChannel": 8.98,
+          "mismatchedPixels": 80535,
+          "mismatchPercentOfImage": 24.5,
+          "meanAbsChannel": 9.26,
           "layoutRowShiftPx": 0,
           "viewport": {
             "ref": "390x844",
@@ -336,27 +337,28 @@
             "exact": true
           },
           "buckets": {
-            "type": 8.7,
-            "spacing": 10.7,
+            "type": 8.9,
+            "spacing": 10.6,
             "radius": 0,
             "shadow": 0.1,
             "assets": 0.1,
             "geometry": 1.9,
-            "color": 78.5
+            "color": 78.4
           },
           "dominantBucket": "color"
         },
         "ocrTokenRecallInLegacyHtml": {
           "tokens": 17,
-          "recall": 0
+          "recall": 1
         },
+        "fontPlacements": 20,
         "ocrWordCount": 20,
         "priorRecordedBestSsim": 0.8375
       },
       "measured": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.8375,
-        "pixelDeltaPercentage": 24.093,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.8547,
+        "pixelDeltaPercentage": 24.467,
         "status": "MEASURED_BELOW_BAR"
       },
       "rejectedReplay": {
@@ -387,41 +389,42 @@
         "devicePixelRatio": 1
       },
       "before": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.8087,
-        "pixelDeltaPercentage": 15.745,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.8202,
+        "pixelDeltaPercentage": 16.286,
         "decomposition": {
-          "mismatchedPixels": 108826,
-          "mismatchPercentOfImage": 15.7,
-          "meanAbsChannel": 8.07,
-          "layoutRowShiftPx": 24,
+          "mismatchedPixels": 112567,
+          "mismatchPercentOfImage": 16.3,
+          "meanAbsChannel": 8.43,
+          "layoutRowShiftPx": 1,
           "viewport": {
             "ref": "960x720",
             "cand": "960x720",
             "exact": true
           },
           "buckets": {
-            "type": 8.1,
+            "type": 9.9,
             "spacing": 3.8,
             "radius": 0.4,
             "shadow": 0.2,
             "assets": 0.1,
-            "geometry": 7,
-            "color": 80.4
+            "geometry": 6.8,
+            "color": 78.8
           },
           "dominantBucket": "color"
         },
         "ocrTokenRecallInLegacyHtml": {
           "tokens": 16,
-          "recall": 0
+          "recall": 1
         },
+        "fontPlacements": 17,
         "ocrWordCount": 22,
         "priorRecordedBestSsim": 0.8087
       },
       "measured": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.8087,
-        "pixelDeltaPercentage": 15.745,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.8202,
+        "pixelDeltaPercentage": 16.286,
         "status": "MEASURED_BELOW_BAR"
       },
       "rejectedReplay": {
@@ -452,21 +455,21 @@
         "devicePixelRatio": 1
       },
       "before": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.7758,
-        "pixelDeltaPercentage": 99.965,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.7712,
+        "pixelDeltaPercentage": 99.916,
         "decomposition": {
-          "mismatchedPixels": 1023645,
-          "mismatchPercentOfImage": 100,
-          "meanAbsChannel": 69.69,
-          "layoutRowShiftPx": -24,
+          "mismatchedPixels": 1023142,
+          "mismatchPercentOfImage": 99.9,
+          "meanAbsChannel": 70.26,
+          "layoutRowShiftPx": -2,
           "viewport": {
             "ref": "1280x800",
             "cand": "1280x800",
             "exact": true
           },
           "buckets": {
-            "type": 2,
+            "type": 1.9,
             "spacing": 1.9,
             "radius": 0.1,
             "shadow": 0.2,
@@ -478,15 +481,16 @@
         },
         "ocrTokenRecallInLegacyHtml": {
           "tokens": 19,
-          "recall": 0
+          "recall": 0.895
         },
+        "fontPlacements": 20,
         "ocrWordCount": 24,
         "priorRecordedBestSsim": 0.7758
       },
       "measured": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.7758,
-        "pixelDeltaPercentage": 99.965,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.7712,
+        "pixelDeltaPercentage": 99.916,
         "status": "MEASURED_BELOW_BAR"
       },
       "rejectedReplay": {
@@ -517,13 +521,13 @@
         "devicePixelRatio": 1
       },
       "before": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.7952,
-        "pixelDeltaPercentage": 99.977,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.8101,
+        "pixelDeltaPercentage": 99.987,
         "decomposition": {
-          "mismatchedPixels": 835805,
+          "mismatchedPixels": 835892,
           "mismatchPercentOfImage": 100,
-          "meanAbsChannel": 52.48,
+          "meanAbsChannel": 52.51,
           "layoutRowShiftPx": 0,
           "viewport": {
             "ref": "1100x760",
@@ -543,15 +547,16 @@
         },
         "ocrTokenRecallInLegacyHtml": {
           "tokens": 25,
-          "recall": 0.04
+          "recall": 1
         },
+        "fontPlacements": 25,
         "ocrWordCount": 25,
         "priorRecordedBestSsim": 0.7952
       },
       "measured": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.7952,
-        "pixelDeltaPercentage": 99.977,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.8101,
+        "pixelDeltaPercentage": 99.987,
         "status": "MEASURED_BELOW_BAR"
       },
       "rejectedReplay": {
@@ -582,13 +587,13 @@
         "devicePixelRatio": 1
       },
       "before": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.4921,
-        "pixelDeltaPercentage": 99.741,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.5008,
+        "pixelDeltaPercentage": 99.742,
         "decomposition": {
-          "mismatchedPixels": 957510,
+          "mismatchedPixels": 957519,
           "mismatchPercentOfImage": 99.7,
-          "meanAbsChannel": 34.58,
+          "meanAbsChannel": 34.78,
           "layoutRowShiftPx": 24,
           "viewport": {
             "ref": "1200x800",
@@ -608,15 +613,16 @@
         },
         "ocrTokenRecallInLegacyHtml": {
           "tokens": 9,
-          "recall": 0
+          "recall": 1
         },
+        "fontPlacements": 13,
         "ocrWordCount": 19,
         "priorRecordedBestSsim": 0.4921
       },
       "measured": {
-        "method": "legacy-scaffold-plus-3-css-repairs",
-        "ssimScore": 0.4921,
-        "pixelDeltaPercentage": 99.741,
+        "method": "scaffold-repairs-plus-font-metric-overlay",
+        "ssimScore": 0.5008,
+        "pixelDeltaPercentage": 99.742,
         "status": "MEASURED_BELOW_BAR"
       },
       "rejectedReplay": {
