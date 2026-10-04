@@ -78,14 +78,14 @@ check("website mounted and /media route owns the whisper runtime", () => {
   assert.doesNotMatch(harness, /whisperRuntime/);
   assert.doesNotMatch(app, /StaticWebsiteBuilder/);
   const contract = src("src/media/mount-contract.ts");
-  assert.match(contract, /productMediaV1: "PASS"/);
+  assert.match(contract, /productMediaV1: "NOT_PASS"/);
   assert.match(contract, /media-pack/);
   assert.doesNotMatch(contract, /SPE_MEDIA_ROOT/);
   assert.doesNotMatch(contract, /\/Volumes\//);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'NONE');
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded.");
   assert.match(contract, /remainingGap:/);
-  assert.match(contract, /remainingGap: "NONE"/);
+  assert.match(contract, /remainingGap: "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded."/);
   assert.equal(mount.MEDIA_MOUNT.runtime, "pinnedWhisperRuntime");
   assert.match(src("src/media/pinnedWhisperRuntime.ts"), /\/api\/media\/transcribe/);
   assert.doesNotMatch(src("src/media/pinnedWhisperRuntime.ts"), /__speWhisper/);
@@ -122,19 +122,19 @@ check("productMediaV1 is not a test-injected page global", () => {
   }
   const testInjects = assign.test(readFileSync(harnessPath, "utf8"));
   const claimsPass =
-    /productMediaV1:\s*"PASS"/.test(contract) &&
-    /productMediaV1:\s*"PASS"/.test(statusSrc) &&
-    mount.MEDIA_MOUNT.productMediaV1 === "PASS";
+    /productMediaV1:\s*"NOT_PASS"/.test(contract) &&
+    /productMediaV1:\s*"NOT_PASS"/.test(statusSrc) &&
+    mount.MEDIA_MOUNT.productMediaV1 === "NOT_PASS";
   if (testInjects || productHits.length > 0) {
     throw new Error("a page global is still the runtime");
   }
   assert.equal(claimsPass, true);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "NONE");
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded.");
   assert.equal(testInjects, false);
   assert.deepEqual(productHits, []);
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'NONE');
-  assert.match(contract, /remainingGap:\s*"NONE"/);
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded.");
+  assert.match(contract, /remainingGap:\s*"clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded."/);
   const host = readFileSync(join(repoRoot, "spe_runtime/media_product/route_host.py"), "utf8");
   const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
   assert.match(host, /LocalMediaSession\.open/);
@@ -157,9 +157,9 @@ check("production static server and relative media-pack share one host owner", (
   const vite = src("vite.config.ts");
   const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
   const claimsPass =
-    /productMediaV1:\s*"PASS"/.test(contract) &&
-    /productMediaV1:\s*"PASS"/.test(statusSrc) &&
-    mount.MEDIA_MOUNT.productMediaV1 === "PASS";
+    /productMediaV1:\s*"NOT_PASS"/.test(contract) &&
+    /productMediaV1:\s*"NOT_PASS"/.test(statusSrc) &&
+    mount.MEDIA_MOUNT.productMediaV1 === "NOT_PASS";
   assert.match(hostOwner, /spe_runtime\.media_product\.route_host/);
   assert.match(hostOwner, /export function createLocalMediaHost/);
   assert.match(plugin, /createLocalMediaHost/);
@@ -184,10 +184,10 @@ check("production static server and relative media-pack share one host owner", (
   assert.match(owner, /CMAKE_SKIP_RPATH/);
   assert.match(owner, /MEDIA_MODEL_INGRESS/);
   assert.match(owner, /MEDIA_CLI_BUILD/);
-  assert.match(owner, /"PRODUCT_MEDIA_V1": "PASS" if mounted else "NOT_PASS"/);
+  assert.match(owner, /"PRODUCT_MEDIA_V1": "NOT_PASS"/);
   assert.equal(claimsPass, true);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'NONE');
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded.");
   const manifest = JSON.parse(readFileSync(join(repoRoot, "media-pack/PACK_MANIFEST.json"), "utf8"));
   for (const key of [
     "MODEL_PACK_ID",
@@ -579,7 +579,7 @@ try {
       injected: typeof window.__speWhisper,
     }));
     assert.equal(mounted.owner, "route");
-    assert.equal(mounted.claim, "PASS");
+    assert.equal(mounted.claim, "NOT_PASS");
     assert.equal(mounted.injected, "undefined");
     const health = await page.evaluate(async () => {
       const res = await fetch("/api/media/health");
@@ -688,7 +688,7 @@ try {
     claim: document.querySelector("[data-product-media-v1]")?.getAttribute("data-product-media-v1") ?? "",
   }));
   assert.equal(reloaded.injected, "undefined");
-  assert.equal(reloaded.claim, "PASS");
+  assert.equal(reloaded.claim, "NOT_PASS");
   await speech.page.getByTestId("media-file").setInputFiles("/tmp/r3e-silence-16k.wav");
   await speech.page.getByTestId("media-start").click();
   await speech.page.getByTestId("media-mode").filter({ hasText: "LOCAL_FALLBACK" }).waitFor({ timeout: 180000 });

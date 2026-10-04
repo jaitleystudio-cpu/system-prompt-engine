@@ -153,7 +153,7 @@ def product_gates(
     return {
         "TELUGU_MODEL_QUALIFIED_FOR_MEDIA_BACKEND": "PRESERVED",
         "LIVE_TRANSCRIPTION": "UNAVAILABLE",
-        "PRODUCT_MEDIA_V1": "PASS" if mounted else "NOT_PASS",
+        "PRODUCT_MEDIA_V1": "NOT_PASS",
         "UI_INTEGRATED": "YES" if mounted else "NO",
         "UI_MOUNTED": "YES" if mounted else "NO",
         "SHELL_MOUNT": "DONE" if mounted else "REQUIRED",

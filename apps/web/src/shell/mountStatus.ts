@@ -6,8 +6,8 @@ export const MEDIA_MOUNT = {
   sha: "a93e87d0efb247204883ecbd18203fe248c5c8e5",
   route: "/media",
   component: "MediaProductPanel",
-  productMediaV1: "PASS",
-  remainingGap: "NONE",
+  productMediaV1: "NOT_PASS",
+  remainingGap: "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded.",
   runtime: "pinnedWhisperRuntime",
   localNeuralInBrowser: "ONLY_WHEN_NEURAL_SESSION_RAN",
 } as const;
