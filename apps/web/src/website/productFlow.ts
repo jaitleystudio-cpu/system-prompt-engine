@@ -196,7 +196,7 @@ function gateSceneDefinition(
   return { ok: true, ir };
 }
 
-function attachScene(result: WebsiteFlowResult, compiled: Scene3DCompilationResult): void {
+function attachScene(result: WebsiteFlowResult, compiled: Scene3DCompilationResult): boolean {
   result.scene3d = compiled.status === "AVAILABLE" ? "AVAILABLE" : "NOT_AVAILABLE";
   result.sceneHtml = compiled.standaloneHtml;
   result.sceneId = compiled.sceneId;
@@ -213,7 +213,9 @@ function attachScene(result: WebsiteFlowResult, compiled: Scene3DCompilationResu
     result.reasons = ["SCENE_REDUCED_MOTION_MISSING"];
     result.sceneHtml = null;
     result.scene3d = "REJECTED";
+    return true;
   }
+  return false;
 }
 
 /**
@@ -353,8 +355,7 @@ export function runWebsiteProduct(input: WebsiteInput): WebsiteFlowResult {
     result.contentSecurityPolicy = true;
     result.scene3d = "NOT_AVAILABLE";
     if (sceneCompiled) {
-      attachScene(result, sceneCompiled);
-      if (result.status === "REJECTED") return result;
+      if (attachScene(result, sceneCompiled)) return result;
       // Website one-file export stays the CSP static document.
       // Optional SceneIR one-file export is sceneHtml from the owner.
     }
