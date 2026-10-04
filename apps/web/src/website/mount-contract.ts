@@ -23,7 +23,8 @@ export const websiteMountContract = {
   sceneIrWired: true,
   sceneIrOwnerPath: "apps/web/src/engine/multimodal/sceneCompiler.ts",
   sceneIrSourceSha: "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949",
-  webglContextLossDisposal: "OWNER_SUPPORTED",
+  webglContextLossDisposal: "NOT_IMPLEMENTED",
+  webglExecution: "NOT_RUN",
   reused: {
     browserCompiler: "apps/web/src/builder/websiteSpecModel.ts",
     canonicalGenerator: "packages/website-generator",

@@ -38,7 +38,8 @@ export const SCENE_IR_OWNER_PATH =
   "apps/web/src/engine/multimodal/sceneCompiler.ts" as const;
 export const SCENE_IR_SOURCE_SHA =
   "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949" as const;
-export const WEBGL_CONTEXT_LOSS_DISPOSAL = "OWNER_SUPPORTED" as const;
+export const WEBGL_CONTEXT_LOSS_DISPOSAL = "NOT_IMPLEMENTED" as const;
+export const WEBGL_EXECUTION = "NOT_RUN" as const;
 export const ROUTE_MOUNT_STATUS = "NOT_INTEGRATED" as const;
 export const COMPILER_REUSED = "LOCAL_TS_WEBSITE_SPEC_1" as const;
 export const SHELL_MOUNT = "NOT_DONE" as const;
@@ -77,6 +78,7 @@ export type WebsiteFlowResult = {
   contextLossRecoverySupported: boolean;
   contextRestoredSupported: boolean;
   disposeSupported: boolean;
+  webglExecution: typeof WEBGL_EXECUTION;
 };
 
 const ACTIVE_DOCUMENT =
@@ -122,6 +124,7 @@ function base(kind: WebsiteInput["kind"]): WebsiteFlowResult {
     contextLossRecoverySupported: false,
     contextRestoredSupported: false,
     disposeSupported: false,
+    webglExecution: WEBGL_EXECUTION,
   };
 }
 
@@ -200,7 +203,8 @@ function attachScene(result: WebsiteFlowResult, compiled: Scene3DCompilationResu
   result.sceneTriangles = compiled.totalTriangles;
   result.scrollTracksSupported = compiled.standaloneHtml.includes("scrollRatio");
   result.contextLossRecoverySupported = compiled.contextLossRecoverySupported;
-  result.contextRestoredSupported = compiled.standaloneHtml.includes("webglcontextrestored");
+  result.contextRestoredSupported = compiled.contextLossRecoverySupported;
+  result.webglExecution = compiled.webglExecution;
   result.disposeSupported =
     compiled.standaloneHtml.includes("beforeunload") &&
     compiled.standaloneHtml.includes(".dispose()");

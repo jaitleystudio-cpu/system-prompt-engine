@@ -1,19 +1,24 @@
 /**
  * MM-5: Deterministic SceneIR to Real 3D Website Compiler
  *
- * Compiles a structured SceneIR specification into a production-ready,
- * standalone Three.js / WebGL web experience with:
+ * Compiles a structured SceneIR specification into a standalone HTML document
+ * that can host Three.js when ./vendor/three.min.js is actually present.
+ * This compiler does not bundle that file and does not execute WebGL.
+ *
  * - Deterministic procedural geometry & materials
  * - Timeline & scroll-driven motion tracks
  * - Responsive pointer/touch parallax interaction
  * - Page visibility throttling (pauses render loop when hidden)
- * - Reduced-motion accessibility fallback
- * - WebGL context loss recovery
- * - DPR budget clamping & resource disposal
+ * - Reduced-motion accessibility fallback (CSS, no WebGL required)
+ * - WebGL context-loss pause only. Recovery is not implemented:
+ *   a lost context is not rebuilt from SceneIR and the old scene is not disposed.
+ * - DPR budget clamping & unload-time resource disposal when THREE loaded
  *
  * PROOF LAW:
- * SCENE_3D switches to "AVAILABLE" only upon valid SceneIR compilation.
- * Decorative status orbs do NOT count as 3D website generation.
+ * Text interpolated into the document is escaped. Unknown geometry is refused.
+ * contextLossRecoverySupported is true only when the emitted document rebuilds
+ * from SceneIR and disposes the previous scene. webglExecution stays NOT_RUN
+ * until a canonical vendor/three.min.js is part of this repo.
  */
 
 import { computeSha256 } from "../hashUtils.ts";
@@ -21,6 +26,95 @@ import type {
   Scene3DCompilationResult,
   SceneIR,
 } from "./types.ts";
+
+const GEOMETRY_EMIT: Record<string, { triangles: number; ctor: string }> = {
+  box: { triangles: 12, ctor: "new THREE.BoxGeometry(1, 1, 1)" },
+  sphere: { triangles: 960, ctor: "new THREE.SphereGeometry(1, 32, 32)" },
+  cylinder: { triangles: 640, ctor: "new THREE.CylinderGeometry(1, 1, 2, 32)" },
+  plane: { triangles: 2, ctor: "new THREE.PlaneGeometry(10, 10)" },
+  torus: { triangles: 1200, ctor: "new THREE.TorusGeometry(1, 0.4, 16, 100)" },
+};
+
+const SCROLL_PROPS = new Set([
+  "position.x",
+  "position.y",
+  "position.z",
+  "rotation.x",
+  "rotation.y",
+  "scale",
+]);
+
+const SAFE_ID = /^[A-Za-z0-9_-]{1,64}$/;
+const SAFE_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function fail(message: string): never {
+  throw new Error(`SceneIR validation failed: ${message}`);
+}
+
+function assertFinite(value: unknown, label: string): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    fail(`${label} must be a finite number`);
+  }
+  return value;
+}
+
+function assertVec3(value: unknown, label: string): [number, number, number] {
+  if (!Array.isArray(value) || value.length !== 3) {
+    fail(`${label} must be a 3-vector`);
+  }
+  return [
+    assertFinite(value[0], `${label}[0]`),
+    assertFinite(value[1], `${label}[1]`),
+    assertFinite(value[2], `${label}[2]`),
+  ];
+}
+
+function assertColor(value: unknown, label: string): string {
+  if (typeof value !== "string" || !SAFE_COLOR.test(value)) {
+    fail(`${label} must be a hex color`);
+  }
+  return value;
+}
+
+function assertId(value: unknown, label: string): string {
+  if (typeof value !== "string" || !SAFE_ID.test(value)) {
+    fail(`${label} must be a safe id`);
+  }
+  return value;
+}
+
+function assertClosedTextSlots(html: string): void {
+  const patterns = [
+    /<title>([\s\S]*?)<\/title>/g,
+    /<h1>([\s\S]*?)<\/h1>/g,
+    /<p>([\s\S]*?)<\/p>/g,
+    /aria-label="([^"]*)"/g,
+  ];
+  for (const pattern of patterns) {
+    for (const match of html.matchAll(pattern)) {
+      const text = match[1] ?? "";
+      if (/<\s*script/i.test(text) || /javascript\s*:/i.test(text)) {
+        fail("markup breakout refused");
+      }
+    }
+  }
+}
+
+function recoveryRebuildsFromSceneIR(html: string): boolean {
+  return (
+    html.includes("function rebuildSceneFromIR(") &&
+    html.includes("disposeRecoveredScene(")
+  );
+}
 
 export class SceneCompiler {
   /**
@@ -46,7 +140,10 @@ export class SceneCompiler {
   }
 
   /**
-   * Compiles SceneIR into a self-contained, standalone Three.js HTML/JS document.
+   * Compiles SceneIR into a self-contained HTML document.
+   * Callers that skip productFlow still cannot emit a script breakout:
+   * text is escaped, and unknown geometry throws before a document is returned.
+   * WebGL is not executed here.
    */
   compile(ir: SceneIR): Scene3DCompilationResult {
     const validation = this.validateSceneIR(ir);
@@ -56,38 +153,127 @@ export class SceneCompiler {
 
     const sceneId = `scene-${computeSha256(ir.title + ir.objects.length).substring(0, 12)}`;
     let totalTriangles = 0;
+    const meshBlocks: string[] = [];
 
     for (const obj of ir.objects) {
-      switch (obj.geometry.type) {
-        case "box":
-          totalTriangles += 12;
-          break;
-        case "sphere":
-          totalTriangles += 960;
-          break;
-        case "cylinder":
-          totalTriangles += 640;
-          break;
-        case "plane":
-          totalTriangles += 2;
-          break;
-        case "torus":
-          totalTriangles += 1200;
-          break;
-        default:
-          totalTriangles += 100;
+      const geomType = String(obj.geometry?.type ?? "");
+      const spec = GEOMETRY_EMIT[geomType];
+      if (!spec) {
+        fail(`unsupported geometry '${geomType}' refused`);
       }
+      const id = assertId(obj.id, "object id");
+      const color = assertColor(obj.material?.color, `material color for ${id}`);
+      const roughness = assertFinite(obj.material?.roughness, `roughness for ${id}`);
+      const metalness = assertFinite(obj.material?.metalness, `metalness for ${id}`);
+      const position = assertVec3(obj.position, `position for ${id}`);
+      const rotation = assertVec3(obj.rotation, `rotation for ${id}`);
+      const scale = assertVec3(obj.scale, `scale for ${id}`);
+      const wireframe = obj.material?.wireframe === true;
+      totalTriangles += spec.triangles;
+      meshBlocks.push(`
+      {
+        const geom = ${spec.ctor};
+        const mat = new THREE.MeshStandardMaterial({
+          color: "${color}",
+          roughness: ${roughness},
+          metalness: ${metalness},
+          wireframe: ${wireframe}
+        });
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.position.set(${position.join(", ")});
+        mesh.rotation.set(${rotation.join(", ")});
+        mesh.scale.set(${scale.join(", ")});
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        scene.add(mesh);
+        meshMap.set(${JSON.stringify(id)}, mesh);
+      }`);
     }
 
-    const maxDpr = Math.min(2.0, ir.performanceBudget.maxDpr || 1.5);
-    const bgColor = ir.environment.backgroundColor || "#08090d";
+    if (!ir.performanceBudget) {
+      fail("performance budget is required");
+    }
+    const maxDpr = Math.min(2.0, assertFinite(ir.performanceBudget.maxDpr || 1.5, "maxDpr"));
+    const bgColor = assertColor(ir.environment?.backgroundColor || "#08090d", "backgroundColor");
+    const fogColor = ir.environment?.fogColor
+      ? assertColor(ir.environment.fogColor, "fogColor")
+      : "";
+    const fogDensity = ir.environment?.fogColor
+      ? assertFinite(ir.environment.fogDensity ?? 0.05, "fogDensity")
+      : 0;
+    if (!ir.camera.target || ir.camera.target.length !== 3) {
+      fail("camera target is required");
+    }
+    const fov = assertFinite(ir.camera.fov, "camera fov");
+    const near = assertFinite(ir.camera.near, "camera near");
+    const far = assertFinite(ir.camera.far, "camera far");
+    const camPos = assertVec3(ir.camera.position, "camera position");
+    const camTarget = assertVec3(ir.camera.target, "camera target");
+
+    const lightBlocks: string[] = [];
+    for (const light of ir.lighting ?? []) {
+      const color = assertColor(light.color, "light color");
+      const intensity = assertFinite(light.intensity, "light intensity");
+      if (light.type === "ambient") {
+        lightBlocks.push(
+          `{ const light = new THREE.AmbientLight("${color}", ${intensity}); scene.add(light); }`,
+        );
+        continue;
+      }
+      if (light.type === "directional") {
+        const position = assertVec3(light.position || [5, 10, 5], "directional light position");
+        lightBlocks.push(
+          `{ const light = new THREE.DirectionalLight("${color}", ${intensity}); light.position.set(${position.join(", ")}); light.castShadow = ${light.castShadow === true}; scene.add(light); }`,
+        );
+        continue;
+      }
+      if (light.type === "point") {
+        const position = assertVec3(light.position || [0, 5, 0], "point light position");
+        lightBlocks.push(
+          `{ const light = new THREE.PointLight("${color}", ${intensity}); light.position.set(${position.join(", ")}); scene.add(light); }`,
+        );
+        continue;
+      }
+      fail(`unsupported light '${String(light.type)}' refused`);
+    }
+
+    const scrollBlocks: string[] = [];
+    for (const track of ir.scrollTracks ?? []) {
+      const objectId = assertId(track.objectId, "scroll objectId");
+      if (!SCROLL_PROPS.has(track.property)) {
+        fail(`unsupported scroll property '${String(track.property)}' refused`);
+      }
+      const start = assertFinite(track.startScrollRatio, "scroll start");
+      const end = assertFinite(track.endScrollRatio, "scroll end");
+      const fromValue = assertFinite(track.fromValue, "scroll from");
+      const toValue = assertFinite(track.toValue, "scroll to");
+      scrollBlocks.push(`
+        {
+          const m = meshMap.get(${JSON.stringify(objectId)});
+          if (m) {
+            const t = Math.max(0, Math.min(1, (scrollRatio - ${start}) / (${end - start} || 1)));
+            const val = ${fromValue} + (${toValue} - ${fromValue}) * t;
+            m.${track.property} = val;
+          }
+        }`);
+    }
+
+    const titleText = escapeHtml(String(ir.title ?? ""));
+    const ariaLabel = escapeHtml(
+      ir.accessibilityFallback?.ariaRegionLabel || "3D Interactive Scene",
+    );
+    const description = escapeHtml(
+      ir.accessibilityFallback?.textDescription ||
+        "Interactive 3D procedural experience generated by SPE.",
+    );
+    const svgFallback = escapeHtml(ir.accessibilityFallback?.hero2dSvg || "");
 
     const standaloneHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>${ir.title} - SPE 3D Scene</title>
+  <title>${titleText} - SPE 3D Scene</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: ${bgColor}; color: #f8fafc; font-family: system-ui, sans-serif; overflow-x: hidden; }
@@ -102,23 +288,24 @@ export class SceneCompiler {
       .static-fallback { display: block; max-width: 32rem; margin: 2rem auto; }
     }
   </style>
-  <!-- Offline-Capable / Air-Gap Safe Three.js Local Script Reference -->
+  <!-- Vendor reference only. This compiler does not bundle three.min.js. -->
   <script src="./vendor/three.min.js"></script>
   <script>
     if (typeof THREE === "undefined") {
       window.__SPE_OFFLINE_FALLBACK = true;
+      window.__SPE_WEBGL_EXECUTION = "NOT_RUN";
     }
   </script>
 </head>
 <body>
-  <div id="canvas-container" role="region" aria-label="${ir.accessibilityFallback?.ariaRegionLabel || "3D Interactive Scene"}"></div>
+  <div id="canvas-container" role="region" aria-label="${ariaLabel}"></div>
   
   <main id="content-layer">
     <section class="scroll-section">
-      <h1>${ir.title}</h1>
-      <p>${ir.accessibilityFallback?.textDescription || "Interactive 3D procedural experience generated by SPE."}</p>
+      <h1>${titleText}</h1>
+      <p>${description}</p>
       <div class="static-fallback">
-        ${ir.accessibilityFallback?.hero2dSvg || ""}
+        ${svgFallback}
       </div>
     </section>
     <section class="scroll-section">
@@ -129,15 +316,24 @@ export class SceneCompiler {
 
   <script>
     (function() {
-      // SceneIR Runtime Execution Engine
+      if (typeof THREE === "undefined") {
+        window.__SPE_OFFLINE_FALLBACK = true;
+        window.__SPE_WEBGL_EXECUTION = "NOT_RUN";
+        var fallback = document.querySelector(".static-fallback");
+        if (fallback) fallback.style.display = "block";
+        var host = document.getElementById("canvas-container");
+        if (host) host.setAttribute("data-webgl", "NOT_RUN");
+        return;
+      }
+
       const container = document.getElementById("canvas-container");
       const scene = new THREE.Scene();
       scene.background = new THREE.Color("${bgColor}");
-      ${ir.environment.fogColor ? `scene.fog = new THREE.FogExp2("${ir.environment.fogColor}", ${ir.environment.fogDensity || 0.05});` : ""}
+      ${fogColor ? `scene.fog = new THREE.FogExp2("${fogColor}", ${fogDensity});` : ""}
 
-      const camera = new THREE.PerspectiveCamera(${ir.camera.fov}, window.innerWidth / window.innerHeight, ${ir.camera.near}, ${ir.camera.far});
-      const initialCamPos = [${ir.camera.position.join(", ")}];
-      const initialTarget = [${ir.camera.target.join(", ")}];
+      const camera = new THREE.PerspectiveCamera(${fov}, window.innerWidth / window.innerHeight, ${near}, ${far});
+      const initialCamPos = [${camPos.join(", ")}];
+      const initialTarget = [${camTarget.join(", ")}];
       camera.position.set(initialCamPos[0], initialCamPos[1], initialCamPos[2]);
       camera.lookAt(initialTarget[0], initialTarget[1], initialTarget[2]);
 
@@ -147,91 +343,42 @@ export class SceneCompiler {
       renderer.shadowMap.enabled = true;
       container.appendChild(renderer.domElement);
 
-      // Context Loss Recovery & Page Visibility Throttling
       let isContextLost = false;
       let isTabVisible = !document.hidden;
 
       renderer.domElement.addEventListener("webglcontextlost", function(e) {
         e.preventDefault();
         isContextLost = true;
-        console.warn("SPE WebGL Context Lost. Pausing render loop.");
-      }, false);
-
-      renderer.domElement.addEventListener("webglcontextrestored", function() {
-        isContextLost = false;
-        console.info("SPE WebGL Context Restored. Rebuilding scene.");
+        console.warn("SPE WebGL Context Lost. Pausing render loop. Scene is not rebuilt.");
       }, false);
 
       document.addEventListener("visibilitychange", function() {
         isTabVisible = !document.hidden;
       });
 
-      // Lighting Rig (Key, Fill, and Ambient)
-      ${ir.lighting
-        .map((l) => {
-          if (l.type === "ambient") {
-            return `{ const light = new THREE.AmbientLight("${l.color}", ${l.intensity}); scene.add(light); }`;
-          }
-          if (l.type === "directional") {
-            return `{ const light = new THREE.DirectionalLight("${l.color}", ${l.intensity}); light.position.set(${(l.position || [5, 10, 5]).join(", ")}); light.castShadow = ${!!l.castShadow}; scene.add(light); }`;
-          }
-          return `{ const light = new THREE.PointLight("${l.color}", ${l.intensity}); light.position.set(${(l.position || [0, 5, 0]).join(", ")}); scene.add(light); }`;
-        })
-        .join("\n      ")}
+      ${lightBlocks.join("\n      ")}
 
-      // Meshes
       const meshMap = new Map();
-      ${ir.objects
-        .map((obj) => {
-          let geomCode = `new THREE.BoxGeometry(1, 1, 1)`;
-          if (obj.geometry.type === "sphere") geomCode = `new THREE.SphereGeometry(1, 32, 32)`;
-          else if (obj.geometry.type === "cylinder") geomCode = `new THREE.CylinderGeometry(1, 1, 2, 32)`;
-          else if (obj.geometry.type === "plane") geomCode = `new THREE.PlaneGeometry(10, 10)`;
-          else if (obj.geometry.type === "torus") geomCode = `new THREE.TorusGeometry(1, 0.4, 16, 100)`;
+      ${meshBlocks.join("\n")}
 
-          return `
-      {
-        const geom = ${geomCode};
-        const mat = new THREE.MeshStandardMaterial({
-          color: "${obj.material.color}",
-          roughness: ${obj.material.roughness},
-          metalness: ${obj.material.metalness},
-          wireframe: ${!!obj.material.wireframe}
-        });
-        const mesh = new THREE.Mesh(geom, mat);
-        mesh.position.set(${obj.position.join(", ")});
-        mesh.rotation.set(${obj.rotation.join(", ")});
-        mesh.scale.set(${obj.scale.join(", ")});
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        scene.add(mesh);
-        meshMap.set(${JSON.stringify(obj.id)}, mesh);
-      }`;
-        })
-        .join("\n")}
-
-      // Scroll Timeline Tracking
       let scrollRatio = 0;
       window.addEventListener("scroll", function() {
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         scrollRatio = maxScroll > 0 ? window.scrollY / maxScroll : 0;
       });
 
-      // Pointer Parallax Interaction
       let mouseX = 0, mouseY = 0;
       window.addEventListener("pointermove", function(e) {
         mouseX = (e.clientX / window.innerWidth) * 2 - 1;
         mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
       });
 
-      // Responsive Resize
       window.addEventListener("resize", function() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
 
-      // Render Loop
       let clock = new THREE.Clock();
       function animate() {
         requestAnimationFrame(animate);
@@ -239,31 +386,16 @@ export class SceneCompiler {
 
         const elapsed = clock.getElapsedTime();
 
-        // Parallax camera easing
         camera.position.x += (initialCamPos[0] + mouseX * 0.4 - camera.position.x) * 0.05;
         camera.position.y += (initialCamPos[1] + mouseY * 0.3 - camera.position.y) * 0.05;
         camera.lookAt(initialTarget[0], initialTarget[1], initialTarget[2]);
 
-        // Apply scroll tracks
-        ${(ir.scrollTracks || [])
-          .map((st) => {
-            return `
-        {
-          const m = meshMap.get(${JSON.stringify(st.objectId)});
-          if (m) {
-            const t = Math.max(0, Math.min(1, (scrollRatio - ${st.startScrollRatio}) / (${st.endScrollRatio - st.startScrollRatio} || 1)));
-            const val = ${st.fromValue} + (${st.toValue} - ${st.fromValue}) * t;
-            m.${st.property} = val;
-          }
-        }`;
-          })
-          .join("\n")}
+        ${scrollBlocks.join("\n")}
 
         renderer.render(scene, camera);
       }
       animate();
 
-      // Memory & Resource Disposal
       window.addEventListener("beforeunload", function() {
         meshMap.forEach(function(m) {
           if (m.geometry) m.geometry.dispose();
@@ -282,15 +414,23 @@ export class SceneCompiler {
 </body>
 </html>`;
 
+    assertClosedTextSlots(standaloneHtml);
+
+    const reducedMotionSupported =
+      standaloneHtml.includes("@media (prefers-reduced-motion: reduce)") &&
+      standaloneHtml.includes("static-fallback");
+    const contextLossRecoverySupported = recoveryRebuildsFromSceneIR(standaloneHtml);
+
     return {
       sceneId,
       standaloneHtml,
       totalTriangles,
       status: "AVAILABLE",
       memoryFootprintKb: Math.round(totalTriangles * 0.05 + 120),
-      threeVersion: "r128",
-      reducedMotionSupported: true,
-      contextLossRecoverySupported: true,
+      threeVersion: "NOT_BUNDLED",
+      reducedMotionSupported,
+      contextLossRecoverySupported,
+      webglExecution: "NOT_RUN",
     };
   }
 }

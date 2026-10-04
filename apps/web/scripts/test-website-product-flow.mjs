@@ -30,6 +30,7 @@ const {
   SHELL_MOUNT,
   SCENE_IR_SOURCE_SHA,
   SCENE_IR_OWNER_PATH,
+  WEBGL_EXECUTION,
 } = await import(flowUrl);
 const { websiteMountContract } = await import(contractUrl);
 const { SceneCompiler } = await import(ownerUrl);
@@ -252,19 +253,28 @@ const withScene = runWebsiteProduct({
 });
 assert.equal(withScene.status, "LOCAL_EXPORT_READY");
 assert.equal(withScene.scene3d, "AVAILABLE");
+assert.notEqual(withScene.scene3d, "PASS");
 assert.ok(withScene.sceneHtml);
-assert.match(withScene.sceneHtml, /THREE\.PerspectiveCamera/);
+assert.equal(withScene.sceneTriangles, 960);
+assert.match(withScene.sceneHtml, /hero-orb/);
+assert.match(withScene.sceneHtml, /SphereGeometry/);
+assert.doesNotMatch(withScene.sceneHtml, /BoxGeometry/);
+assert.match(withScene.sceneHtml, /#6366f1/);
+assert.match(withScene.sceneHtml, /6\.28/);
 assert.match(withScene.sceneHtml, /prefers-reduced-motion/);
-assert.match(withScene.sceneHtml, /webglcontextlost/);
-assert.match(withScene.sceneHtml, /webglcontextrestored/);
-assert.match(withScene.sceneHtml, /beforeunload/);
-assert.match(withScene.sceneHtml, /\.dispose\(\)/);
-assert.match(withScene.sceneHtml, /scrollRatio/);
+assert.match(withScene.sceneHtml, /static-fallback/);
 assert.match(withScene.sceneHtml, /__SPE_OFFLINE_FALLBACK/);
+assert.match(withScene.sceneHtml, /__SPE_WEBGL_EXECUTION = "NOT_RUN"/);
+assert.doesNotMatch(withScene.sceneHtml, /Rebuilding scene/);
 assert.equal(withScene.scrollTracksSupported, true);
-assert.equal(withScene.contextLossRecoverySupported, true);
-assert.equal(withScene.contextRestoredSupported, true);
-assert.equal(withScene.disposeSupported, true);
+assert.equal(withScene.contextLossRecoverySupported, false);
+assert.equal(withScene.contextRestoredSupported, false);
+assert.equal(withScene.webglExecution, "NOT_RUN");
+assert.equal(
+  withScene.contextLossRecoverySupported,
+  withScene.sceneHtml.includes("function rebuildSceneFromIR(") &&
+    withScene.sceneHtml.includes("disposeRecoveredScene("),
+);
 assert.equal(withScene.liveUrlReconstruction, "NOT_AVAILABLE");
 // website preview stays separate from scene one-file export artifact
 assert.match(withScene.previewHtml, /Content-Security-Policy/);
@@ -359,18 +369,100 @@ assert.ok(tooLargeResult.reasons.includes("SCENE_TOO_LARGE"));
 const owner = new SceneCompiler();
 const compiled = owner.compile(validScene);
 assert.equal(compiled.status, "AVAILABLE");
-assert.match(compiled.standaloneHtml, /__SPE_OFFLINE_FALLBACK/);
-assert.match(compiled.standaloneHtml, /vendor\/three\.min\.js/);
-assert.match(compiled.standaloneHtml, /webglcontextlost/);
-assert.match(compiled.standaloneHtml, /webglcontextrestored/);
-assert.match(compiled.standaloneHtml, /geometry\.dispose|m\.geometry\) m\.geometry\.dispose/);
-assert.match(compiled.standaloneHtml, /renderer\.dispose\(\)/);
-assert.equal(compiled.reducedMotionSupported, true);
-assert.equal(compiled.contextLossRecoverySupported, true);
+assert.equal(compiled.totalTriangles, 960);
+assert.equal(compiled.webglExecution, "NOT_RUN");
+assert.equal(compiled.threeVersion, "NOT_BUNDLED");
+assert.equal(withScene.sceneHtml, compiled.standaloneHtml);
+assert.equal(
+  compiled.reducedMotionSupported,
+  compiled.standaloneHtml.includes("prefers-reduced-motion") &&
+    compiled.standaloneHtml.includes("static-fallback"),
+);
+assert.equal(compiled.contextLossRecoverySupported, false);
+assert.equal(
+  compiled.contextLossRecoverySupported,
+  compiled.standaloneHtml.includes("function rebuildSceneFromIR(") &&
+    compiled.standaloneHtml.includes("disposeRecoveredScene("),
+);
+assert.doesNotMatch(compiled.standaloneHtml, /webglcontextrestored/);
+assert.doesNotMatch(compiled.standaloneHtml, /<h1>\s*<script>/i);
+assert.doesNotMatch(compiled.standaloneHtml, /Rebuilding scene/);
+
+const alpha = structuredClone(validScene);
+alpha.title = "Alpha";
+alpha.objects = [{
+  ...structuredClone(validScene.objects[0]),
+  id: "alpha-sphere",
+  name: "Alpha",
+  geometry: { type: "sphere", parameters: {} },
+  material: { ...validScene.objects[0].material, color: "#112233" },
+}];
+alpha.accessibilityFallback = {
+  ...alpha.accessibilityFallback,
+  textDescription: "alpha-fallback-copy",
+};
+const beta = structuredClone(validScene);
+beta.title = "Beta";
+beta.objects = [{
+  ...structuredClone(validScene.objects[0]),
+  id: "beta-box",
+  name: "Beta",
+  geometry: { type: "box", parameters: {} },
+  material: { ...validScene.objects[0].material, color: "#445566" },
+}];
+beta.accessibilityFallback = {
+  ...beta.accessibilityFallback,
+  textDescription: "beta-fallback-copy",
+};
+beta.scrollTracks = [];
+const alphaCompiled = owner.compile(alpha);
+const betaCompiled = owner.compile(beta);
+assert.equal(alphaCompiled.totalTriangles, 960);
+assert.equal(betaCompiled.totalTriangles, 12);
+assert.notEqual(alphaCompiled.standaloneHtml, betaCompiled.standaloneHtml);
+assert.match(alphaCompiled.standaloneHtml, /SphereGeometry/);
+assert.match(alphaCompiled.standaloneHtml, /#112233/);
+assert.match(alphaCompiled.standaloneHtml, /alpha-sphere/);
+assert.match(alphaCompiled.standaloneHtml, /alpha-fallback-copy/);
+assert.match(alphaCompiled.standaloneHtml, /6\.28/);
+assert.doesNotMatch(alphaCompiled.standaloneHtml, /BoxGeometry/);
+assert.doesNotMatch(alphaCompiled.standaloneHtml, /#445566/);
+assert.doesNotMatch(alphaCompiled.standaloneHtml, /beta-box/);
+assert.doesNotMatch(alphaCompiled.standaloneHtml, /beta-fallback-copy/);
+assert.match(betaCompiled.standaloneHtml, /BoxGeometry/);
+assert.match(betaCompiled.standaloneHtml, /#445566/);
+assert.match(betaCompiled.standaloneHtml, /beta-box/);
+assert.match(betaCompiled.standaloneHtml, /beta-fallback-copy/);
+assert.doesNotMatch(betaCompiled.standaloneHtml, /SphereGeometry/);
+assert.doesNotMatch(betaCompiled.standaloneHtml, /#112233/);
+assert.doesNotMatch(betaCompiled.standaloneHtml, /alpha-sphere/);
+assert.doesNotMatch(betaCompiled.standaloneHtml, /alpha-fallback-copy/);
+assert.doesNotMatch(betaCompiled.standaloneHtml, /6\.28/);
+
+const tampered = structuredClone(validScene);
+tampered.objects[0].geometry = { type: "malware-mesh", parameters: {} };
+assert.throws(() => owner.compile(tampered), /unsupported geometry/);
+
+const evilTitle = structuredClone(validScene);
+evilTitle.title = "<script>alert(1)</script>";
+const evilCompiled = owner.compile(evilTitle);
+assert.doesNotMatch(evilCompiled.standaloneHtml, /<h1>\s*<script>alert\(1\)<\/script>/i);
+assert.doesNotMatch(evilCompiled.standaloneHtml, /<title>\s*<script>alert\(1\)<\/script>/i);
+assert.match(
+  evilCompiled.standaloneHtml,
+  /<title>&lt;script&gt;alert\(1\)&lt;\/script&gt; - SPE 3D Scene<\/title>/,
+);
+assert.match(
+  evilCompiled.standaloneHtml,
+  /<h1>&lt;script&gt;alert\(1\)&lt;\/script&gt;<\/h1>/,
+);
+assert.equal(evilCompiled.totalTriangles, 960);
 
 // --- module / mount contract truth ---
 assert.equal(SCENE_IR_WIRED, true);
 assert.equal(SCENE_3D, "OWNER_WIRED");
+assert.notEqual(SCENE_3D, "PASS");
+assert.equal(WEBGL_EXECUTION, "NOT_RUN");
 assert.equal(AI_GENERATION, "NOT_AVAILABLE");
 assert.equal(LIVE_URL_RECONSTRUCTION, "NOT_AVAILABLE");
 assert.equal(SHELL_MOUNT, "NOT_DONE");

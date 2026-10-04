@@ -474,4 +474,6 @@ export interface Scene3DCompilationResult {
   threeVersion: string;
   reducedMotionSupported: boolean;
   contextLossRecoverySupported: boolean;
+  /** Compile does not execute WebGL. Canonical vendor/three.min.js is not in this repo. */
+  webglExecution: "NOT_RUN";
 }
