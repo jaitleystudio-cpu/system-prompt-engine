@@ -171,7 +171,9 @@ function visualRepairCss(name: (typeof VISUAL_REPAIR_NAMES)[number], spec: Visua
     .filter(Boolean)
     .join("");
   const regionFill = `${palette}${fills}h1,h2,p,a,strong,li{color:${fg}}`;
-  const chrome = `${regionFill}header.spe-top,footer.spe-foot,nav{visibility:hidden !important}h1,h2,p,a,strong,li,button,label{font-size:0 !important;color:transparent !important}html,body,.shell,main.spe-main{overflow:hidden}`;
+  const inventedChrome =
+    "h1:not([data-provenance=\"observed-ocr\"]),h2:not([data-provenance=\"observed-ocr\"]),p:not([data-provenance=\"observed-ocr\"]),a:not([data-provenance=\"observed-ocr\"]),strong:not([data-provenance=\"observed-ocr\"]),li:not([data-provenance=\"observed-ocr\"]),button:not([data-provenance=\"observed-ocr\"]),label:not([data-provenance=\"observed-ocr\"])";
+  const chrome = `${regionFill}header.spe-top,footer.spe-foot,nav{visibility:hidden !important}${inventedChrome}{font-size:0 !important;color:transparent !important}html,body,.shell,main.spe-main{overflow:hidden}`;
   if (name === "palette-ground") return palette;
   if (name === "region-mean-fill") return regionFill;
   return chrome;

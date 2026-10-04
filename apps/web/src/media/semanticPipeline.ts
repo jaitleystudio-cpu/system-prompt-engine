@@ -6,7 +6,7 @@ import {
   observeImageData,
   observeImageFile,
 } from "./imageObserve";
-import { detectTextLikeRegions } from "./ocrLite";
+import { observeText } from "./ocrLite";
 import {
   classifySubjectsMobileNet,
   currentVisionBytes,
@@ -34,7 +34,8 @@ export async function observeImageSemanticFromData(
   const want: VisionTier = opts.tier ?? "STANDARD";
   opts.onProgress?.(0.05, "LITE pixel pass");
   const lite = observeImageData(data, meta);
-  const ocrBlocks = detectTextLikeRegions(data);
+  const ocrPass = await observeText(data, opts.signal);
+  const ocrBlocks = ocrPass.regions;
   opts.onProgress?.(0.35, "Structure semantics");
 
   let subjects: SemanticObservation["subjects"] = [];

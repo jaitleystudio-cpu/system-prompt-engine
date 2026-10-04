@@ -44,7 +44,8 @@
     "test:quality-custody": "node scripts/test-quality-runtime-custody.mjs",
     "test:core-b": "node scripts/test-core-b-fallback.mjs",
     "test:quality-wiring": "node scripts/test-quality-product-wiring.mjs",
-    "test:lane-g3-vision": "node scripts/test-lane-g3-vision-release.mjs"
+    "test:lane-g3-vision": "node scripts/test-lane-g3-vision-release.mjs",
+    "test:r6-vision-text": "node scripts/test-r6-vision-adaptive-text.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",

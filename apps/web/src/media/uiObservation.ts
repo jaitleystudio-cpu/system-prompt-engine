@@ -287,14 +287,21 @@ export function buildUIObservationIR(
 
   containers.push(...regions);
 
-  const textBlocks: UiTextBlock[] = detectTextLikeRegions(data).map((b, i) => ({
-    id: `text-${i}`,
-    textGuess: b.text,
-    bounds: b.bounds,
-    confidence: b.confidence,
-    evidence: `Text-likeness HF projection (${b.method})`,
-    method: b.method,
-  }));
+  const textBlocks: UiTextBlock[] = semantic.ocrBlocks.map((b, i) => {
+    const observed =
+      b.provenance === "observed-ocr" && b.text.trim().length > 0;
+    return {
+      id: `text-${i}`,
+      textGuess: observed ? b.text : null,
+      bounds: b.bounds,
+      confidence: b.confidence,
+      evidence: observed
+        ? `observed OCR (${b.method})`
+        : `text proposal (${b.method})`,
+      method: b.method,
+      provenance: observed ? "observed-ocr" : "proposal",
+    };
+  });
 
   const controls: UiControl[] = [];
   if (formControl) controls.push(formControl);

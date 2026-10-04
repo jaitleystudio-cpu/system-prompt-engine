@@ -80,6 +80,7 @@ export function semanticToPromptBlock(sem: SemanticObservation): string {
     .map((s) => `${s.label} (${(s.score * 100).toFixed(1)}%, ${s.method})`)
     .join("; ");
   const ocr = sem.ocrBlocks
+    .filter((b) => b.text.trim())
     .slice(0, 8)
     .map(
       (b) =>
