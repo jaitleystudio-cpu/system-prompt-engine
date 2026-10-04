@@ -81,7 +81,7 @@ export function MediaProductPanel({ runtime = null }: { runtime?: MediaRuntime |
   }
 
   return (
-    <section className="spe-media-product" aria-labelledby="spe-media-product-title" data-egress="0">
+    <section className="spe-media-product" aria-labelledby="spe-media-product-title" data-egress="0" data-status={state.status || "idle"} data-phase={state.phase} data-testid="media-panel">
       <h2 id="spe-media-product-title">Local media</h2>
       <p>Choose an audio or video file on this device. It is not uploaded.</p>
       <p data-testid="media-mode">

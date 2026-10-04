@@ -42,14 +42,10 @@ _NON_LOCAL = (
 )
 _BROWSER = ("browser", "web-speech", "webspeech")
 _VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
-_CLI_CANDIDATES = (
-    Path("/Volumes/4TB-WD/spe-worktrees/spe-g12h-te-indep-qual-20261001/proof/media-r1/whisper-cli"),
-    Path("/Volumes/4TB-WD/spe-worktrees/spe-g12c-media-backend-qual-20261001/proof/media-r1/build/whisper-cmake/bin/whisper-cli"),
-)
-_MODEL_CANDIDATES = (
-    Path("/Volumes/4TB-WD/spe-worktrees/spe-g12h-te-indep-qual-20261001/proof/media-r1/models/ggml-te-small.bin"),
-    Path("/Volumes/4TB-WD/spe-worktrees/spe-g12g-te-human-bench-20261001/proof/media-r1/models/ggml-te-small.bin"),
-)
+# Fail-closed asset layout under SPE_MEDIA_ROOT (never hardcoded sibling trees):
+#   $SPE_MEDIA_ROOT/whisper-cli
+#   $SPE_MEDIA_ROOT/models/ggml-te-small.bin
+# Optional absolute overrides: SPE_WHISPER_CLI, SPE_WHISPER_MODEL.
 _SEGMENT_RE = re.compile(
     r"\[(\d{2}):(\d{2}):(\d{2}\.\d{3})\s+-->\s+(\d{2}):(\d{2}):(\d{2}\.\d{3})\]\s*(.*)"
 )
@@ -214,7 +210,7 @@ class QualifiedAssets:
         }
 
 
-def _first_verified(candidates: tuple[Path, ...], expected: str) -> tuple[Path, str]:
+def _first_verified(candidates: list[Path], expected: str) -> tuple[Path, str]:
     errors: list[str] = []
     for candidate in candidates:
         if not candidate.exists():
@@ -229,10 +225,59 @@ def _first_verified(candidates: tuple[Path, ...], expected: str) -> tuple[Path, 
     raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:" + ";".join(errors))
 
 
+def _env_path(name: str) -> Path | None:
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return None
+    return Path(raw).expanduser()
+
+
+def _asset_candidates() -> tuple[list[Path], list[Path]]:
+    """Build CLI/model candidates from env only. Empty means fail closed."""
+    cli: list[Path] = []
+    model: list[Path] = []
+    cli_override = _env_path("SPE_WHISPER_CLI")
+    model_override = _env_path("SPE_WHISPER_MODEL")
+    if cli_override is not None:
+        cli.append(cli_override)
+    if model_override is not None:
+        model.append(model_override)
+    root = _env_path("SPE_MEDIA_ROOT")
+    if root is not None:
+        cli.append(root / "whisper-cli")
+        model.append(root / "models" / "ggml-te-small.bin")
+    # Deduplicate while preserving order.
+    def uniq(items: list[Path]) -> list[Path]:
+        seen: set[str] = set()
+        out: list[Path] = []
+        for item in items:
+            key = str(item)
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(item)
+        return out
+
+    return uniq(cli), uniq(model)
+
+
 def discover_qualified_assets() -> QualifiedAssets:
-    """Resolve the qualified CLI and Telugu model from local caches. Never downloads."""
-    cli_path, cli_sha = _first_verified(_CLI_CANDIDATES, PINNED_CLI_SHA256)
-    model_path, model_sha = _first_verified(_MODEL_CANDIDATES, PINNED_TE_MODEL_SHA256)
+    """Resolve the pinned CLI and Telugu model from SPE_MEDIA_ROOT (or overrides).
+
+    Never downloads. Never falls back to hardcoded sibling-worktree paths.
+    Missing env or missing/mismatched files raise IntegrityError so /media
+    reports UNAVAILABLE / NOT_MOUNTED instead of pretending to transcribe.
+    """
+    cli_candidates, model_candidates = _asset_candidates()
+    if not cli_candidates or not model_candidates:
+        raise IntegrityError(
+            "PINNED_ASSET_NOT_ON_DISK:SPE_MEDIA_ROOT unset "
+            "(expected $SPE_MEDIA_ROOT/whisper-cli and "
+            "$SPE_MEDIA_ROOT/models/ggml-te-small.bin; "
+            "optional SPE_WHISPER_CLI / SPE_WHISPER_MODEL)"
+        )
+    cli_path, cli_sha = _first_verified(cli_candidates, PINNED_CLI_SHA256)
+    model_path, model_sha = _first_verified(model_candidates, PINNED_TE_MODEL_SHA256)
     return QualifiedAssets(
         cli_path=cli_path,
         cli_sha256=cli_sha,

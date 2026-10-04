@@ -1,4 +1,4 @@
-/** Shell mount ledger. Website UI is mounted. /media can call LocalMediaSession only while the Vite dev/preview plugin is running. That is not a product pass. */
+/** Shell mount ledger. Website UI is mounted. /media uses createLocalMediaHost in production static serve and Vite. PRODUCT_MEDIA_V1 is NOT_PASS. */
 export const MOUNT_PENDING = [] as const;
 
 export const MEDIA_MOUNT = {
@@ -7,7 +7,8 @@ export const MEDIA_MOUNT = {
   route: "/media",
   component: "MediaProductPanel",
   productMediaV1: "NOT_PASS",
-  remainingGap: "The runtime starts only from the Vite dev/preview plugin, and the pinned CLI and model are sibling-worktree paths, not shipped with this branch.",
+  remainingGap:
+    "PRODUCT_MEDIA_V1 stays NOT_PASS until an independent verifier confirms the production static /media journey with SPE_MEDIA_ROOT assets.",
   runtime: "pinnedWhisperRuntime",
   localNeuralInBrowser: "ONLY_WHEN_NEURAL_SESSION_RAN",
 } as const;

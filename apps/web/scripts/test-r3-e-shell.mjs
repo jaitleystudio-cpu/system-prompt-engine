@@ -2,7 +2,8 @@
 /**
  * R3-E product shell. Real Chrome on this Mac. ₹0.
  * Not a full WCAG audit. Criteria named at the bottom are the ones this file ran.
- * The Vite dev-server /media journey is dev-server evidence, not PRODUCT_MEDIA_V1.
+ * Production static /media evidence uses serve-local-product.mjs + SPE_MEDIA_ROOT.
+ * PRODUCT_MEDIA_V1 stays NOT_PASS until an independent verifier confirms it.
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawn } from "node:child_process";
@@ -77,17 +78,19 @@ check("website mounted and /media route owns the whisper runtime", () => {
   assert.doesNotMatch(harness, /whisperRuntime/);
   assert.doesNotMatch(app, /StaticWebsiteBuilder/);
   const contract = src("src/media/mount-contract.ts");
-  const gap = "The runtime starts only from the Vite dev/preview plugin, and the pinned CLI and model are sibling-worktree paths, not shipped with this branch.";
+  const gap = "PRODUCT_MEDIA_V1 stays NOT_PASS until an independent verifier confirms the production static /media journey with SPE_MEDIA_ROOT assets.";
   assert.match(contract, /productMediaV1: "NOT_PASS"/);
-  assert.match(contract, /Vite dev\/preview plugin/);
-  assert.match(contract, /sibling-worktree paths/);
+  assert.match(contract, /SPE_MEDIA_ROOT/);
+  assert.match(contract, /independent verifier/);
   assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
   assert.equal(mount.MEDIA_MOUNT.remainingGap, gap);
   assert.equal(contract.includes(gap), true);
   assert.equal(mount.MEDIA_MOUNT.runtime, "pinnedWhisperRuntime");
   assert.match(src("src/media/pinnedWhisperRuntime.ts"), /\/api\/media\/transcribe/);
   assert.doesNotMatch(src("src/media/pinnedWhisperRuntime.ts"), /__speWhisper/);
-  assert.match(src("scripts/local-media-host-plugin.mjs"), /spe_runtime\.media_product\.route_host/);
+  assert.match(src("scripts/local-media-host.mjs"), /spe_runtime\.media_product\.route_host/);
+  assert.match(src("scripts/local-media-host-plugin.mjs"), /createLocalMediaHost/);
+  assert.match(src("scripts/serve-local-product.mjs"), /createLocalMediaHost/);
   assert.equal(existsSync(join(here, "r3-e-whisper-bridge.py")), false);
   assert.equal(existsSync(join(webRoot, "src/media/MediaProductPanel.tsx")), true);
 });
@@ -135,48 +138,44 @@ check("productMediaV1 is not a test-injected page global", () => {
   assert.match(host, /LocalMediaSession\.open/);
   assert.doesNotMatch(host, /spe-lane-r3-b-media/);
   assert.doesNotMatch(src("scripts/local-media-host-plugin.mjs"), /spe-lane-r3-b-media/);
+  assert.doesNotMatch(src("scripts/local-media-host.mjs"), /spe-lane-r3-b-media/);
+  assert.doesNotMatch(src("scripts/serve-local-product.mjs"), /spe-lane-r3-b-media/);
+  assert.doesNotMatch(src("src/media/pinnedWhisperRuntime.ts"), /__speWhisper/);
+  assert.doesNotMatch(src("src/media/MediaRoute.tsx"), /__speWhisper/);
+  assert.doesNotMatch(src("src/media/MediaProductPanel.tsx"), /__speWhisper/);
   assert.match(owner, /class LocalMediaSession/);
 });
 
-check("productMediaV1 cannot pass on a dev-only host or sibling assets", () => {
+check("production static server and SPE_MEDIA_ROOT share one host owner; PRODUCT_MEDIA_V1 stays NOT_PASS", () => {
   const contract = src("src/media/mount-contract.ts");
   const statusSrc = src("src/shell/mountStatus.ts");
   const plugin = src("scripts/local-media-host-plugin.mjs");
+  const hostOwner = src("scripts/local-media-host.mjs");
+  const productServe = src("scripts/serve-local-product.mjs");
   const vite = src("vite.config.ts");
   const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
   const claimsPass =
     /productMediaV1:\s*"PASS"/.test(contract) ||
     /productMediaV1:\s*"PASS"/.test(statusSrc) ||
     mount.MEDIA_MOUNT.productMediaV1 === "PASS";
-  const returned = plugin.slice(plugin.lastIndexOf("return {"));
-  const hooks = [...returned.matchAll(/^    ([A-Za-z]\w*)\s*(?:\(|:)/gm)].map((match) => match[1]);
-  const staticBuildStartsHost = hooks.some(
-    (name) => !["name", "configureServer", "configurePreviewServer"].includes(name),
-  ) || /route_host/.test(vite);
-  const staticBuildDoesNotStartHost = !staticBuildStartsHost;
-  if (!plugin.includes("configureServer") || !plugin.includes("configurePreviewServer")) {
-    throw new Error("dev/preview host plugin is missing");
-  }
-  if (!/spe_runtime\.media_product\.route_host/.test(plugin)) {
-    throw new Error("dev/preview plugin no longer starts route_host");
-  }
-  function listed(name) {
-    const match = owner.match(new RegExp(`${name} = \\(([\\s\\S]*?)\\n\\)`));
-    if (!match) throw new Error(`missing ${name}`);
-    return [...match[1].matchAll(/["']([^"']+)["']/g)].map((item) => item[1]);
-  }
-  const candidates = [...listed("_CLI_CANDIDATES"), ...listed("_MODEL_CANDIDATES")];
-  if (candidates.length < 2) throw new Error("CLI and model candidates were removed");
-  const candidatesOutside = candidates.some((path) => !path.startsWith(repoRoot + "/"));
-  if (claimsPass && (staticBuildDoesNotStartHost || candidatesOutside)) {
-    throw new Error(
-      "productMediaV1 is PASS while the static build does not start the host or the CLI/model candidates are outside this repo",
-    );
-  }
-  assert.equal(staticBuildDoesNotStartHost, true);
-  assert.equal(candidatesOutside, true);
-  assert.equal(claimsPass, false);
+  assert.match(hostOwner, /spe_runtime\.media_product\.route_host/);
+  assert.match(hostOwner, /export function createLocalMediaHost/);
+  assert.match(plugin, /createLocalMediaHost/);
+  assert.match(plugin, /configureServer/);
+  assert.match(plugin, /configurePreviewServer/);
+  assert.match(productServe, /createLocalMediaHost/);
+  assert.match(productServe, /PRODUCT_STATIC/);
+  assert.match(productServe, /dist/);
+  assert.doesNotMatch(vite, /route_host/);
+  assert.doesNotMatch(owner, /spe-g12[a-z]-/);
+  assert.doesNotMatch(owner, /_CLI_CANDIDATES/);
+  assert.doesNotMatch(owner, /_MODEL_CANDIDATES/);
+  assert.match(owner, /SPE_MEDIA_ROOT/);
+  assert.match(owner, /PINNED_ASSET_NOT_ON_DISK:SPE_MEDIA_ROOT unset/);
   assert.match(owner, /"PRODUCT_MEDIA_V1": "PASS" if mounted else "NOT_PASS"/);
+  assert.equal(claimsPass, false);
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
+  assert.doesNotMatch(mount.MEDIA_MOUNT.remainingGap, /^NONE$/);
 });
 
 check("private and tool routes are noindex and off the sitemap", () => {
@@ -419,43 +418,114 @@ try {
   checks += 1;
   await media.close();
 
-  const viteBin = join(webRoot, "node_modules/vite/bin/vite.js");
+  const mediaRootCandidates = [
+    "/Volumes/4TB-WD/spe-worktrees/spe-g12h-te-indep-qual-20261001/proof/media-r1",
+  ];
+  const mediaRoot = mediaRootCandidates.find(
+    (root) =>
+      existsSync(join(root, "whisper-cli")) &&
+      existsSync(join(root, "models/ggml-te-small.bin")),
+  );
+  const speechFixture =
+    "/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-b-media/proof/media-r1/fixtures/human/te_amma_16k.wav";
+  const cancelFixture =
+    "/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-b-media/proof/media-r1/fixtures/human/te_dengue_intro_30s.wav";
+  execFileSync("python3", [
+    "-c",
+    "import wave; p='/tmp/r3e-silence-16k.wav'; w=wave.open(p,'w'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(16000); w.writeframes(b'\\x00\\x00'*16000); w.close()",
+  ]);
+
+  {
+    const py = [
+      "import os, sys",
+      "for key in ('SPE_MEDIA_ROOT', 'SPE_WHISPER_CLI', 'SPE_WHISPER_MODEL'):",
+      "    os.environ.pop(key, None)",
+      "sys.path.insert(0, " + JSON.stringify(repoRoot) + ")",
+      "from spe_runtime.media_product.local_backend import IntegrityError, discover_qualified_assets",
+      "try:",
+      "    discover_qualified_assets()",
+      "    raise SystemExit('expected fail-closed')",
+      "except IntegrityError as exc:",
+      "    assert 'SPE_MEDIA_ROOT' in str(exc), exc",
+      "    print('FAIL_CLOSED', exc)",
+    ].join("\n");
+    const failClosed = execFileSync("python3", ["-c", py], {
+      cwd: repoRoot,
+      encoding: "utf8",
+      env: { ...process.env, SPE_MEDIA_ROOT: "", SPE_WHISPER_CLI: "", SPE_WHISPER_MODEL: "" },
+    });
+    assert.match(failClosed, /FAIL_CLOSED/);
+    console.log("PASS asset discovery fail-closed without SPE_MEDIA_ROOT");
+    checks += 1;
+  }
+
+  const distIndex = join(webRoot, "dist/index.html");
+  if (!existsSync(distIndex)) {
+    console.log("building apps/web dist for production static /media evidence");
+    execFileSync(process.execPath, [join(webRoot, "node_modules/vite/bin/vite.js"), "build"], {
+      cwd: webRoot,
+      env: process.env,
+      stdio: "inherit",
+    });
+  }
+  assert.equal(existsSync(distIndex), true);
+
   const appPort = 4187;
   const appUrl = `http://127.0.0.1:${appPort}`;
-  appServer = spawn(process.execPath, [viteBin, "--host", "127.0.0.1", "--port", String(appPort), "--strictPort"], {
+  const serveEnv = { ...process.env, SPE_PRODUCT_PORT: String(appPort) };
+  if (mediaRoot) {
+    serveEnv.SPE_MEDIA_ROOT = mediaRoot;
+  } else {
+    delete serveEnv.SPE_MEDIA_ROOT;
+    delete serveEnv.SPE_WHISPER_CLI;
+    delete serveEnv.SPE_WHISPER_MODEL;
+  }
+  appServer = spawn(process.execPath, [join(here, "serve-local-product.mjs"), String(appPort)], {
     cwd: webRoot,
-    env: process.env,
+    env: serveEnv,
     stdio: ["ignore", "pipe", "pipe"],
   });
   let appLog = "";
-  appServer.stdout.on("data", (chunk) => { appLog += chunk.toString(); });
-  appServer.stderr.on("data", (chunk) => { appLog += chunk.toString(); });
+  appServer.stdout.on("data", (chunk) => {
+    appLog += chunk.toString();
+  });
+  appServer.stderr.on("data", (chunk) => {
+    appLog += chunk.toString();
+  });
   const appExit = new Promise((resolve) => appServer.on("exit", resolve));
   const ready = await Promise.race([
     new Promise((resolve) => {
       const timer = setInterval(() => {
-        if (appLog.includes("Local:")) {
+        if (appLog.includes("PRODUCT_STATIC")) {
           clearInterval(timer);
           resolve(true);
         }
       }, 200);
     }),
-    appExit.then((code) => { throw new Error(`app server exited ${code}: ${appLog.slice(-1500)}`); }),
-    new Promise((_, reject) => setTimeout(() => reject(new Error(`app server did not listen: ${appLog.slice(-1500)}`)), 90000)),
+    appExit.then((code) => {
+      throw new Error(`product static server exited ${code}: ${appLog.slice(-1500)}`);
+    }),
+    new Promise((_, reject) =>
+      setTimeout(
+        () => reject(new Error(`product static server did not listen: ${appLog.slice(-1500)}`)),
+        90000,
+      ),
+    ),
   ]);
   assert.equal(ready, true);
-
-  const speechFixture = "/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-b-media/proof/media-r1/fixtures/human/te_amma_16k.wav";
-  const cancelFixture = "/Volumes/4TB-WD/spe-worktrees/spe-lane-r3-b-media/proof/media-r1/fixtures/human/te_dengue_intro_30s.wav";
-  execFileSync("python3", ["-c", "import wave; p='/tmp/r3e-silence-16k.wav'; w=wave.open(p,'w'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(16000); w.writeframes(b'\\x00\\x00'*16000); w.close()"]);
+  console.log(
+    mediaRoot
+      ? `ASSET_DISCOVERY present SPE_MEDIA_ROOT=${mediaRoot}`
+      : "ASSET_DISCOVERY absent; expecting fail-closed UNAVAILABLE",
+  );
 
   async function openAppMedia() {
     const context = await browser.newContext({ viewport: desktop, serviceWorkers: "block" });
     const page = await context.newPage();
     const external = [];
     page.on("request", (req) => {
-      const host = new URL(req.url()).hostname;
-      if (host !== "127.0.0.1" && host !== "localhost") external.push(req.url());
+      const hostName = new URL(req.url()).hostname;
+      if (hostName !== "127.0.0.1" && hostName !== "localhost") external.push(req.url());
     });
     await page.goto(appUrl + "/", { waitUntil: "domcontentloaded", timeout: 120000 });
     await page.goto(appUrl + "/media", { waitUntil: "domcontentloaded", timeout: 120000 });
@@ -471,10 +541,11 @@ try {
     assert.equal(mounted.injected, "undefined");
     const health = await page.evaluate(async () => {
       const res = await fetch("/api/media/health");
-      return res.json();
+      return { ok: res.ok, body: await res.json() };
     });
-    assert.equal(health.owner, "LocalMediaSession");
-    assert.equal(health.egressAttempts, 0);
+    assert.equal(health.ok, true);
+    assert.equal(health.body.owner, "LocalMediaSession");
+    assert.equal(health.body.egressAttempts, 0);
     return { context, page, external };
   }
 
@@ -486,97 +557,155 @@ try {
         const res = await fetch("/api/media/health");
         return res.json();
       });
-      if (last && last.owner === "LocalMediaSession" && last.activeJobs === 0 && last.lastTempFilesRemaining === 0 && last.lastUploadRemoved === true && last.egressAttempts === 0) return;
+      if (
+        last &&
+        last.owner === "LocalMediaSession" &&
+        last.activeJobs === 0 &&
+        last.lastTempFilesRemaining === 0 &&
+        last.lastUploadRemoved === true &&
+        last.egressAttempts === 0
+      ) {
+        return;
+      }
       await page.waitForTimeout(300);
     }
     throw new Error(`media host did not clean up: ${JSON.stringify(last)}`);
   }
 
-  const speech = await openAppMedia();
-  await speech.page.getByTestId("media-file").setInputFiles(speechFixture);
-  await speech.page.getByTestId("media-start").click();
-  await speech.page.getByTestId("media-transcript").waitFor({ timeout: 180000 });
-  await speech.page.getByTestId("media-mode").filter({ hasText: "LOCAL_NEURAL" }).waitFor({ timeout: 5000 });
-  const speechSeen = await speech.page.evaluate(() => ({
-    mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
-    text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
-    error: document.querySelector("[data-testid=media-error]")?.textContent ?? "",
-    egress: document.querySelector("[data-testid=media-egress]")?.textContent ?? "",
-  }));
-  assert.match(speechSeen.mode, /LOCAL_NEURAL/);
-  assert.equal(speechSeen.text.trim(), "\u0c05\u0c2e\u0c4d\u0c2e\u0c3e");
-  assert.equal(speechSeen.error, "");
-  assert.match(speechSeen.egress, /Network sends for this file: 0/);
-  await waitClean(speech.page);
-  assert.deepEqual(speech.external, []);
-  console.log("DEV-SERVER EVIDENCE /media speech LOCAL_NEURAL not a product pass", JSON.stringify(speechSeen));
-  checks += 1;
-  await speech.context.close();
+  if (!mediaRoot || !existsSync(speechFixture) || !existsSync(cancelFixture)) {
+    const probe = await openAppMedia();
+    await probe.page.getByTestId("media-file").setInputFiles({
+      name: "note.wav",
+      mimeType: "audio/wav",
+      buffer: Buffer.from("RIFF"),
+    });
+    await probe.page.getByTestId("media-start").click();
+    await probe.page.waitForSelector("[data-testid=media-error]", { timeout: 60000 });
+    const unavailable = await probe.page.evaluate(() => ({
+      mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
+      error: document.querySelector("[data-testid=media-error]")?.textContent ?? "",
+      status: document.querySelector("[data-testid=media-panel]")?.getAttribute("data-status") ?? "",
+      text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
+    }));
+    assert.match(unavailable.mode, /UNAVAILABLE/);
+    assert.doesNotMatch(unavailable.mode, /LOCAL_NEURAL/);
+    assert.match(unavailable.error, /PINNED_ASSET_MISSING|NOT_MOUNTED|CORRUPT|HOST_ERROR/);
+    assert.equal(unavailable.text, "");
+    console.log(
+      "PRODUCT-STATIC EVIDENCE /media fail-closed UNAVAILABLE assets absent not a product pass",
+      JSON.stringify(unavailable),
+    );
+    checks += 1;
+    await probe.context.close();
+  } else {
+    const speech = await openAppMedia();
+    await speech.page.getByTestId("media-file").setInputFiles(speechFixture);
+    await speech.page.getByTestId("media-start").click();
+    await speech.page.getByTestId("media-transcript").waitFor({ timeout: 180000 });
+    await speech.page.getByTestId("media-mode").filter({ hasText: "LOCAL_NEURAL" }).waitFor({ timeout: 5000 });
+    const speechSeen = await speech.page.evaluate(() => ({
+      mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
+      text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
+      error: document.querySelector("[data-testid=media-error]")?.textContent ?? "",
+      egress: document.querySelector("[data-testid=media-egress]")?.textContent ?? "",
+      status: document.querySelector("[data-testid=media-panel]")?.getAttribute("data-status") ?? "",
+    }));
+    assert.match(speechSeen.mode, /LOCAL_NEURAL/);
+    assert.equal(speechSeen.status, "SPEECH");
+    assert.equal(speechSeen.text.trim(), "\u0c05\u0c2e\u0c4d\u0c2e\u0c3e");
+    assert.equal(speechSeen.error, "");
+    assert.match(speechSeen.egress, /Network sends for this file: 0/);
+    await waitClean(speech.page);
+    assert.deepEqual(speech.external, []);
+    console.log(
+      "PRODUCT-STATIC EVIDENCE /media speech LOCAL_NEURAL not a product pass",
+      JSON.stringify(speechSeen),
+    );
+    checks += 1;
+    await speech.context.close();
 
-  const silence = await openAppMedia();
-  await silence.page.getByTestId("media-file").setInputFiles("/tmp/r3e-silence-16k.wav");
-  await silence.page.getByTestId("media-start").click();
-  await silence.page.getByTestId("media-mode").filter({ hasText: "LOCAL_FALLBACK" }).waitFor({ timeout: 180000 });
-  const silenceSeen = await silence.page.evaluate(() => ({
-    mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
-    text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
-    egress: document.querySelector("[data-testid=media-egress]")?.textContent ?? "",
-  }));
-  assert.match(silenceSeen.mode, /LOCAL_FALLBACK/);
-  assert.doesNotMatch(silenceSeen.mode, /LOCAL_NEURAL/);
-  assert.equal(silenceSeen.text, "");
-  assert.match(silenceSeen.egress, /Network sends for this file: 0/);
-  await waitClean(silence.page);
-  assert.deepEqual(silence.external, []);
-  console.log("DEV-SERVER EVIDENCE /media silence LOCAL_FALLBACK not a product pass", JSON.stringify(silenceSeen));
-  checks += 1;
-  await silence.context.close();
+    const silence = await openAppMedia();
+    await silence.page.getByTestId("media-file").setInputFiles("/tmp/r3e-silence-16k.wav");
+    await silence.page.getByTestId("media-start").click();
+    await silence.page.getByTestId("media-mode").filter({ hasText: "LOCAL_FALLBACK" }).waitFor({ timeout: 180000 });
+    const silenceSeen = await silence.page.evaluate(() => ({
+      mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
+      text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
+      egress: document.querySelector("[data-testid=media-egress]")?.textContent ?? "",
+      status: document.querySelector("[data-testid=media-panel]")?.getAttribute("data-status") ?? "",
+    }));
+    assert.match(silenceSeen.mode, /LOCAL_FALLBACK/);
+    assert.doesNotMatch(silenceSeen.mode, /LOCAL_NEURAL/);
+    assert.equal(silenceSeen.status, "NO_SPEECH");
+    assert.equal(silenceSeen.text, "");
+    assert.match(silenceSeen.egress, /Network sends for this file: 0/);
+    await waitClean(silence.page);
+    assert.deepEqual(silence.external, []);
+    console.log(
+      "PRODUCT-STATIC EVIDENCE /media silence LOCAL_FALLBACK not a product pass",
+      JSON.stringify(silenceSeen),
+    );
+    checks += 1;
+    await silence.context.close();
 
-  const cancelPage = await openAppMedia();
-  await cancelPage.page.getByTestId("media-file").setInputFiles(cancelFixture);
-  await cancelPage.page.getByTestId("media-start").click();
-  await cancelPage.page.waitForSelector("[data-testid=media-progress]", { timeout: 15000 });
-  await cancelPage.page.getByTestId("media-cancel").click();
-  await cancelPage.page.getByTestId("media-progress").waitFor({ state: "detached", timeout: 15000 });
-  await waitClean(cancelPage.page, 20000);
-  const cancelSeen = await cancelPage.page.evaluate(() => ({
-    mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
-    text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
-    egress: document.querySelector("[data-testid=media-egress]")?.textContent ?? "",
-  }));
-  assert.match(cancelSeen.mode, /UNAVAILABLE/);
-  assert.doesNotMatch(cancelSeen.mode, /LOCAL_NEURAL/);
-  assert.equal(cancelSeen.text, "");
-  assert.match(cancelSeen.egress, /Network sends for this file: 0/);
-  assert.deepEqual(cancelPage.external, []);
-  console.log("DEV-SERVER EVIDENCE /media cancel UNAVAILABLE not a product pass", JSON.stringify(cancelSeen));
-  checks += 1;
-  await cancelPage.context.close();
+    const cancelPage = await openAppMedia();
+    await cancelPage.page.getByTestId("media-file").setInputFiles(cancelFixture);
+    await cancelPage.page.getByTestId("media-start").click();
+    await cancelPage.page.waitForSelector("[data-testid=media-progress]", { timeout: 15000 });
+    await cancelPage.page.getByTestId("media-cancel").click();
+    await cancelPage.page.getByTestId("media-progress").waitFor({ state: "detached", timeout: 15000 });
+    await waitClean(cancelPage.page, 20000);
+    const cancelSeen = await cancelPage.page.evaluate(() => ({
+      mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
+      text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
+      egress: document.querySelector("[data-testid=media-egress]")?.textContent ?? "",
+      status: document.querySelector("[data-testid=media-panel]")?.getAttribute("data-status") ?? "",
+      phase: document.querySelector("[data-testid=media-panel]")?.getAttribute("data-phase") ?? "",
+    }));
+    assert.equal(cancelSeen.status, "CANCELLED");
+    assert.equal(cancelSeen.phase, "cancelled");
+    assert.match(cancelSeen.mode, /UNAVAILABLE/);
+    assert.doesNotMatch(cancelSeen.mode, /LOCAL_NEURAL/);
+    assert.equal(cancelSeen.text, "");
+    assert.match(cancelSeen.egress, /Network sends for this file: 0/);
+    assert.deepEqual(cancelPage.external, []);
+    console.log(
+      "PRODUCT-STATIC EVIDENCE /media cancel CANCELLED not a product pass",
+      JSON.stringify(cancelSeen),
+    );
+    checks += 1;
+    await cancelPage.context.close();
 
-  const corrupt = await openAppMedia();
-  await corrupt.page.getByTestId("media-file").setInputFiles({
-    name: "corrupt.wav",
-    mimeType: "audio/wav",
-    buffer: Buffer.from("RIFF not a media file"),
-  });
-  await corrupt.page.getByTestId("media-start").click();
-  await corrupt.page.waitForSelector("[data-testid=media-error]", { timeout: 180000 });
-  const corruptSeen = await corrupt.page.evaluate(() => ({
-    mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
-    text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
-    error: document.querySelector("[data-testid=media-error]")?.textContent ?? "",
-    egress: document.querySelector("[data-testid=media-egress]")?.textContent ?? "",
-  }));
-  assert.match(corruptSeen.error, /CORRUPT/);
-  assert.match(corruptSeen.mode, /LOCAL_FALLBACK/);
-  assert.doesNotMatch(corruptSeen.mode, /LOCAL_NEURAL/);
-  assert.equal(corruptSeen.text, "");
-  assert.match(corruptSeen.egress, /Network sends for this file: 0/);
-  await waitClean(corrupt.page);
-  assert.deepEqual(corrupt.external, []);
-  console.log("DEV-SERVER EVIDENCE /media corrupt LOCAL_FALLBACK not a product pass", JSON.stringify(corruptSeen));
-  checks += 1;
-  await corrupt.context.close();
+    const corrupt = await openAppMedia();
+    await corrupt.page.getByTestId("media-file").setInputFiles({
+      name: "corrupt.wav",
+      mimeType: "audio/wav",
+      buffer: Buffer.from("RIFF not a media file"),
+    });
+    await corrupt.page.getByTestId("media-start").click();
+    await corrupt.page.waitForSelector("[data-testid=media-error]", { timeout: 180000 });
+    const corruptSeen = await corrupt.page.evaluate(() => ({
+      mode: document.querySelector("[data-testid=media-mode]")?.textContent ?? "",
+      text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
+      error: document.querySelector("[data-testid=media-error]")?.textContent ?? "",
+      egress: document.querySelector("[data-testid=media-egress]")?.textContent ?? "",
+      status: document.querySelector("[data-testid=media-panel]")?.getAttribute("data-status") ?? "",
+    }));
+    assert.match(corruptSeen.error, /CORRUPT/);
+    assert.match(corruptSeen.mode, /LOCAL_FALLBACK/);
+    assert.doesNotMatch(corruptSeen.mode, /LOCAL_NEURAL/);
+    assert.equal(corruptSeen.status, "ERROR");
+    assert.equal(corruptSeen.text, "");
+    assert.match(corruptSeen.egress, /Network sends for this file: 0/);
+    await waitClean(corrupt.page);
+    assert.deepEqual(corrupt.external, []);
+    console.log(
+      "PRODUCT-STATIC EVIDENCE /media corrupt LOCAL_FALLBACK not a product pass",
+      JSON.stringify(corruptSeen),
+    );
+    checks += 1;
+    await corrupt.context.close();
+  }
 
   async function robotsOf(caseName) {
     const page = await openCase(caseName, desktop);
