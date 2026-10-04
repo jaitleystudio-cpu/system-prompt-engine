@@ -371,7 +371,13 @@ const compiled = owner.compile(validScene);
 assert.equal(compiled.status, "AVAILABLE");
 assert.equal(compiled.totalTriangles, 960);
 assert.equal(compiled.webglExecution, "NOT_RUN");
-assert.equal(compiled.threeVersion, "NOT_BUNDLED");
+assert.equal(compiled.threeVersion, "0.170.0");
+assert.match(compiled.standaloneHtml, /\.\/vendor\/three\.min\.js/);
+assert.match(compiled.standaloneHtml, /08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7/);
+assert.match(compiled.standaloneHtml, /readPixels/);
+assert.match(compiled.standaloneHtml, /prefers-reduced-motion: reduce/);
+assert.doesNotMatch(compiled.standaloneHtml, /putImageData/);
+assert.equal(compiled.webglExecution, "NOT_RUN");
 assert.equal(withScene.sceneHtml, compiled.standaloneHtml);
 assert.equal(
   compiled.reducedMotionSupported,

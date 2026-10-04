@@ -1,0 +1,12 @@
+{
+  "name": "three",
+  "version": "0.170.0",
+  "resolved": "https://registry.npmjs.org/three/-/three-0.170.0.tgz",
+  "integrity": "sha512-FQK+LEpYc0fBD+J8g6oSEyyNzjp+Q7Ks1C568WWaoMRLW+TkNNWmenWeGgJjV105Gd+p/2ql1ZcjYvNiPZBhuQ==",
+  "artifact": "three.min.js",
+  "artifactSource": "node_modules/three/build/three.module.min.js",
+  "sha256": "08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7",
+  "bytes": 691648,
+  "acquire": "copied from the existing package-manager install of the lockfile pin; no second network fetch",
+  "note": "three@0.170.0 publishes no UMD build/three.min.js. This file is build/three.module.min.js and the export loads it with import()."
+}

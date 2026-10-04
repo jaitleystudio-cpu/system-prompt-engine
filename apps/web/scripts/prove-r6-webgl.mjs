@@ -32,8 +32,11 @@ const constants = {
   ledgerWebglNotRun: /WEBGL_EXECUTION:\s*"NOT_RUN"/.test(ledger),
   ledgerSceneNotPass: !/SCENE3D:\s*"PASS"/.test(ledger) && !/WEBGL_EXECUTION:\s*"PASS"/.test(ledger),
   flowNotRun: /export const WEBGL_EXECUTION = "NOT_RUN"/.test(flow),
-  compilerNotBundled: /threeVersion:\s*"NOT_BUNDLED"/.test(compiler),
+  compilerExportPinned: /EXPORT_THREE_VERSION = "0\.170\.0"/.test(compiler) &&
+    /08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7/.test(compiler) &&
+    /webglExecution:\s*"NOT_RUN"/.test(compiler),
   compilerNotRun: /webglExecution:\s*"NOT_RUN"/.test(compiler),
+  compilerNoPass: !/webglExecution:\s*"PASS"/.test(compiler) && !/threeVersion:\s*"PASS"/.test(compiler),
 };
 if (Object.values(constants).some((ok) => !ok)) {
   console.error("SOURCE_CONSTANTS_MOVED", constants);
