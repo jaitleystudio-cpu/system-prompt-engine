@@ -16,18 +16,6 @@ declare global {
     __r3Want?: string;
     __r3Case?: string;
     __r3Route?: { kind: string; rewritten: boolean };
-    __speWhisper?: (payload: { name: string; b64: string }) => Promise<{
-      status: "SPEECH" | "NO_SPEECH" | "CANCELLED" | "ERROR";
-      text: string;
-      mode: "LOCAL_NEURAL" | "LOCAL_FALLBACK" | "BROWSER_SERVICE" | "UNAVAILABLE";
-      errorCode: string | null;
-      neuralSessionRan: boolean;
-      timestampsProven: boolean;
-      segments: Array<{ startMs: number; endMs: number; text: string }>;
-      progressPercent: number | null;
-      egressAttempts: number;
-    }>;
-    __speWhisperCancel?: () => Promise<void>;
   }
 }
 
