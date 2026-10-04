@@ -33,7 +33,7 @@ export function ResearchRoute() {
       <p className="spe-kicker">Research</p>
       <h1 id="research-title">Research</h1>
       <p className="spe-privacy-lede">
-        Ask a public question. Search stays off unless you consent. This page does not send the
+        Enter a question to view a stored receipt. This page never performs a new search, even with consent. This page does not send the
         question, a private document, code, audio, or an image. PubMed and PMC are one NCBI family.
         Live index and live retraction stay HOLD.
       </p>
@@ -79,7 +79,7 @@ export function ResearchRoute() {
                 setPhase("IDLE");
               }}
             />
-            I consent to a public research lookup. Off means no search.
+            I choose to view the stored research receipt. This does not authorize or perform a new search.
           </label>
         </div>
         <button type="submit">Continue</button>

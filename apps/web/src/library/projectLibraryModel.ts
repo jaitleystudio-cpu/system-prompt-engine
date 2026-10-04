@@ -129,7 +129,7 @@ export function validateProjectLibraryBundle(
 }
 
 /**
- * Fixture: A complete, fully verified spe.project-library.v1 sample bundle.
+ * Synthetic schema fixture. References and fingerprints are examples, not measured evidence.
  */
 export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
   schema: "spe.project-library.v1",
@@ -139,7 +139,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
   spe_contract: "NOT_YET_BOUND",
   project: {
     project_id: "prj_0123456789abcdef0123456789abcdef",
-    name: "Enterprise Architecture Review Pack",
+    name: "Synthetic Library Example",
     created_at: "2026-09-30T10:00:00Z",
     visibility: "private",
     noindex: true,
@@ -169,7 +169,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       artifact_type: "prompt",
       provider_target: "anthropic:claude-3-5-sonnet",
       provenance_refs: ["prov:prompt_v1_seed"],
-      quality_evidence_refs: ["ev:syntax_validation_pass"],
+      quality_evidence_refs: ["example:syntax_not_verified"],
       body: {
         system: "You are an enterprise system architect.",
         template: "Review the system specification according to ISO 25010.",
@@ -187,8 +187,8 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       created_at: "2026-09-30T10:20:00Z",
       artifact_type: "prompt",
       provider_target: "anthropic:claude-3-5-sonnet",
-      provenance_refs: ["prov:prompt_v1_seed", "prov:eval_delta_pass"],
-      quality_evidence_refs: ["ev:syntax_validation_pass", "ev:cwv_lcp_verified"],
+      provenance_refs: ["prov:prompt_v1_seed", "example:eval_not_run"],
+      quality_evidence_refs: ["example:syntax_not_verified", "example:cwv_not_measured"],
       body: {
         system: "You are an enterprise system architect specializing in low-latency systems.",
         template: "Review the system specification according to ISO 25010 with p99 < 50ms constraint.",
@@ -207,7 +207,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       artifact_type: "code",
       provider_target: "openai:gpt-4o",
       provenance_refs: ["prov:code_spec_init"],
-      quality_evidence_refs: ["ev:typecheck_pass"],
+      quality_evidence_refs: ["example:typecheck_not_run"],
       body: {
         entrypoint: "src/index.ts",
         language: "typescript",
@@ -229,7 +229,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       artifact_type: "prompt",
       provider_target: "anthropic:claude-3-5-sonnet",
       provenance_refs: ["prov:prompt_v1_seed"],
-      quality_evidence_refs: ["ev:syntax_validation_pass"],
+      quality_evidence_refs: ["example:syntax_not_verified"],
       body: {
         system: "You are an enterprise system architect.",
         template: "Review the system specification according to ISO 25010.",
@@ -247,8 +247,8 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       created_at: "2026-09-30T10:20:00Z",
       artifact_type: "prompt",
       provider_target: "anthropic:claude-3-5-sonnet",
-      provenance_refs: ["prov:prompt_v1_seed", "prov:eval_delta_pass"],
-      quality_evidence_refs: ["ev:syntax_validation_pass", "ev:cwv_lcp_verified"],
+      provenance_refs: ["prov:prompt_v1_seed", "example:eval_not_run"],
+      quality_evidence_refs: ["example:syntax_not_verified", "example:cwv_not_measured"],
       body: {
         system: "You are an enterprise system architect specializing in low-latency systems.",
         template: "Review the system specification according to ISO 25010 with p99 < 50ms constraint.",
@@ -275,7 +275,7 @@ export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
       artifact_type: "code",
       provider_target: "openai:gpt-4o",
       provenance_refs: ["prov:code_spec_init"],
-      quality_evidence_refs: ["ev:typecheck_pass"],
+      quality_evidence_refs: ["example:typecheck_not_run"],
       body: {
         entrypoint: "src/index.ts",
         language: "typescript",

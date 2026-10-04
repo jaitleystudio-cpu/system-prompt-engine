@@ -109,7 +109,7 @@ export function WebsiteProduct() {
         <div role="status" aria-label="Website result">
           <p>{result.status}</p>
           <p>{result.reasons.join(", ")}</p>
-          <p>Fetched: no. Live site: no. SceneIR owner: wired. Live URL: unavailable. Shell mount: not done.</p>
+          <p>Fetched: no. Live site: no. SceneIR owner: wired. Live URL: unavailable. Website UI is mounted in the app shell.</p>
         </div>
       ) : null}
       {result?.previewHtml ? (

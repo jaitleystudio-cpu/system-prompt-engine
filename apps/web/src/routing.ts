@@ -143,21 +143,21 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
   },
   media: {
     path: "/media",
-    title: "Media — Not available | SPE",
+    title: "Media — Host transcription request | SPE",
     description:
-      "Media is not mounted in this build. Nothing on this route can capture or generate media.",
+      "Select audio or video and request transcription from the configured app host. Availability depends on its runtime; on-device execution requires a local host.",
   },
   ocr: {
     path: "/ocr",
     title: "OCR — Local text from an image | SPE",
     description:
-      "Read text from an image on this machine with the pinned local engine. If that engine is not verified, this route stays unavailable.",
+      "Request image text from the configured app host. Image bytes are sent to that host; on-device OCR requires a local host. Missing runtime stays unavailable.",
   },
   research: {
     path: "/research",
     title: "Research — Stored receipt only | SPE",
     description:
-      "Ask a public research question. Search stays off until you consent. This route does not send the question and does not promote live index or retraction.",
+      "View a stored research receipt after opting in. This route does not search or send the question; live index and retraction remain HOLD.",
   },
 };
 
