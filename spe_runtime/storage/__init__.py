@@ -5,5 +5,20 @@ ProjectLibrary: private project/artifact revisions on the same JSONL discipline.
 """
 from .journal import DurableJournal, JournalError
 from .project_library import LibraryError, ProjectLibrary
+from .spe_binding import (
+    LIBRARY_BUNDLE_SPE_CONTRACT,
+    PATH_DECISION,
+    SPE_CONTRACT,
+    run_public_binding_path,
+)
 
-__all__ = ["DurableJournal", "JournalError", "LibraryError", "ProjectLibrary"]
+__all__ = [
+    "DurableJournal",
+    "JournalError",
+    "LIBRARY_BUNDLE_SPE_CONTRACT",
+    "LibraryError",
+    "PATH_DECISION",
+    "ProjectLibrary",
+    "SPE_CONTRACT",
+    "run_public_binding_path",
+]
