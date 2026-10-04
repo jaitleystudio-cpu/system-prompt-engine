@@ -927,6 +927,426 @@
       "text": "my-work"
     },
     {
+      "id": "04139fa93538b1d81b03",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Provider format compatibility requires versioned validation receipts."
+    },
+    {
+      "id": "0b849b2d62c9abe20fe4",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Record the environment and raw results."
+    },
+    {
+      "id": "1a6f3a6b1005df3ad8d7",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Local-First Compiler Latency and Determinism in Modern Web Runtimes"
+    },
+    {
+      "id": "1e5592450d5edc905a4a",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Architecture Overview"
+    },
+    {
+      "id": "23da5a31a96dd8db6297",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-25T00:00:00Z"
+    },
+    {
+      "id": "25eb53e5d8dc1ad82f36",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "2c89dc03938770280604",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "EV-2026-ADAPT-03"
+    },
+    {
+      "id": "2d9cd5ca1d80aa26ce3e",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "local-first-compiler-latency-and-determinism"
+    },
+    {
+      "id": "2e14a470da527873f9c1",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Qualification plan for workspace privacy and network behavior. Full workflow evidence remains pending."
+    },
+    {
+      "id": "3a9297211c586910c2af",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "External requests and transmitted bytes for the tested workflow"
+    },
+    {
+      "id": "3bfddd7e594cc46a5a1f",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "The proposed audit combines content policy checks, browser traffic observation and independent network measurement."
+    },
+    {
+      "id": "3e226ac4ae760a1ae6e4",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "The Threat Model"
+    },
+    {
+      "id": "401369b227c0ae865e30",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "EV-2026-PRIVACY-02"
+    },
+    {
+      "id": "43114f4cf536746a609e",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Freeze the candidate and workload."
+    },
+    {
+      "id": "47a49cc3fe9f47548ff5",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Evaluation Pending"
+    },
+    {
+      "id": "47a4b673ae73f5dcc5e1",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-20T00:00:00Z"
+    },
+    {
+      "id": "4b56b9c1e3e44888f358",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Format Engineering"
+    },
+    {
+      "id": "4c494dba3d1dcf678c89",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Memory results remain unknown until the workload, environment and raw logs are bound to the candidate."
+    },
+    {
+      "id": "501cc013ae7d29542668",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "The Multi-Model Challenge"
+    },
+    {
+      "id": "55b9e361d055f4638263",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Workspace privacy and network behavior require candidate-bound traces."
+    },
+    {
+      "id": "5d754465ad1e633c00cf",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Verification Pending"
+    },
+    {
+      "id": "62ad9246abd9b87669a6",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Workspace Privacy: Verification Plan and Pending Evidence"
+    },
+    {
+      "id": "681cf369d8e019043f58",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T12:00:00Z"
+    },
+    {
+      "id": "6a3ee054d65b31db99b7",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "prompt_adaptation"
+    },
+    {
+      "id": "7169f2cdbdc6843b5e84",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "https://schema.org"
+    },
+    {
+      "id": "75450444270d1b27622d",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "proficiencyLevel"
+    },
+    {
+      "id": "79dc884439fc75132a3c",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "compiler"
+    },
+    {
+      "id": "7b8bcde2deb37f19623a",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "research_guide"
+    },
+    {
+      "id": "7c282a0ade6e7d6b0c92",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Local compiler latency and network behavior require candidate-bound measurements."
+    },
+    {
+      "id": "7cb06f7a51ce6ca01fbf",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Advanced"
+    },
+    {
+      "id": "7e4b0384251e29a5120b",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Prompt Engineering Research Team"
+    },
+    {
+      "id": "8615040fd5df6319293a",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Provider validation results remain unknown until attributable test receipts are supplied."
+    },
+    {
+      "id": "8735a9ce931c2510a93f",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Qualification plan for local compiler execution, memory bounds and latency. Results remain unknown."
+    },
+    {
+      "id": "884014e4c4309ccbba06",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Systems Research"
+    },
+    {
+      "id": "8abf96c92db96aa946e5",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "https://systempromptengine.com/authority/"
+    },
+    {
+      "id": "8c3be661487f5d367781",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-15T00:00:00Z"
+    },
+    {
+      "id": "92e8701803b350e4d908",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Cross-Provider Prompt Adaptation: Syntactic Fidelity and Schema Compliance"
+    },
+    {
+      "id": "9456178a04b644dcba1b",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "cross-provider-prompt-adaptation-fidelity"
+    },
+    {
+      "id": "970c14da17f491bebcc1",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Full lifecycle network results remain unknown for this record."
+    },
+    {
+      "id": "9a6319b8db66bb3f4786",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Security & Privacy Working Group"
+    },
+    {
+      "id": "9b65b8efa4aff6a6af6f",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Independently reproduce the same workload before promotion."
+    },
+    {
+      "id": "9c80ccb8041904d0c26d",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Schema validation results for the tested provider versions"
+    },
+    {
+      "id": "9e8f4376c692027835f9",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "https://systempromptengine.com"
+    },
+    {
+      "id": "9ef7b82fe91e145004f2",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "SPE Architecture Group"
+    },
+    {
+      "id": "a1a1544723744308b2b1",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Local prompt preparation is intended to run on the device. Offline use depends on intact cached assets."
+    },
+    {
+      "id": "a2e031d70cfbb68fd487",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "dependencies"
+    },
+    {
+      "id": "a44b6709d18c4cc8f6b1",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "EV-2026-COMPILER-01"
+    },
+    {
+      "id": "aaa57c90079eeb3a2d98",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Syntax validation alone does not establish model quality or instruction adherence."
+    },
+    {
+      "id": "ab09ae74d8e9bacffb1e",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "provisional"
+    },
+    {
+      "id": "acc2fe341b5b21c4a434",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Security Audit"
+    },
+    {
+      "id": "b410fa13be5f1ae6dd91",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Article"
+    },
+    {
+      "id": "b738beeefb8ab2be9146",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "zero-egress-privacy-guarantee-and-verification"
+    },
+    {
+      "id": "b76a45c328fffc061723",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Qualification plan for versioned provider formats. Compatibility results remain unknown."
+    },
+    {
+      "id": "c4e15648e0b82d782c47",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "WebAssembly, ECMAScript 2022+"
+    },
+    {
+      "id": "c88fcde855f42fb3d3c9",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Audit Protocol"
+    },
+    {
+      "id": "d283cfa726885b2c9c2d",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "The donor record lacked attributable receipts. Historical measurements are archived for custody, not accepted as verified results."
+    },
+    {
+      "id": "d80ca85100646c4b221b",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "The ledger below records the pending evidence requirements and provisional status."
+    },
+    {
+      "id": "d95af79ed0aba040166e",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Prompt contents frequently contain proprietary code, confidential business requirements, and private communications."
+    },
+    {
+      "id": "d9c635a2bba1dd4909e1",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Organization"
+    },
+    {
+      "id": "dbeb711ac57370a0682f",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Compilation latency and outgoing request count"
+    },
+    {
+      "id": "dd34e789a71bd57dcf72",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "System Prompt Engine"
+    },
+    {
+      "id": "dd3dfda7c2416182a761",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Required: bind the exact candidate, workload, environment, raw logs and independent check before promotion."
+    },
+    {
+      "id": "e14d84cd230d69ac747c",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "privacy"
+    },
+    {
+      "id": "e214f38b4e1d501d78b7",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Our WebAssembly pipeline compiles the core parser into a deterministic binary that runs entirely inside the browser's sandbox."
+    },
+    {
+      "id": "f11d35854693d7192393",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "WebPage"
+    },
+    {
+      "id": "f4df2a8f2f75a2c2db78",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Network and privacy conclusions must identify the tested workflow and its data boundaries."
+    },
+    {
+      "id": "f6324d779c9a45eeb8f7",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "TechArticle"
+    },
+    {
+      "id": "f673ce76860a8d1ffb6c",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Candidate-bound latency measurements have not been supplied for this record."
+    },
+    {
+      "id": "fb6193b8e31c9f9720b7",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "technical_spec"
+    },
+    {
+      "id": "ff063f8ab577a0fc95d1",
+      "file": "apps/web/src/authority/evidenceRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Provider formats can differ. Format compatibility must be checked against identified provider versions."
+    },
+    {
       "id": "57ca44474f9663f6e921",
       "file": "apps/web/src/brand/Logo.tsx",
       "depth": "PRODUCT",
@@ -7227,6 +7647,462 @@
       "text": "PROMPT ENGINE"
     },
     {
+      "id": "03b5c1480b63ca425da4",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Research Pack"
+    },
+    {
+      "id": "0d90c134601bf96b1c89",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Revision"
+    },
+    {
+      "id": "0dc1c2c6953c8272b702",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Artifacts List"
+    },
+    {
+      "id": "1259e64c5f6f4356cd8d",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Code"
+    },
+    {
+      "id": "17c2ac9dc4e61f96e288",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Rollback event to revision"
+    },
+    {
+      "id": "18c102610dd5ea4d9d1f",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "HEAD:"
+    },
+    {
+      "id": "23929f4c1c4ed67fe655",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Validate & Load"
+    },
+    {
+      "id": "243d97dd935a26d96501",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Revision Timeline"
+    },
+    {
+      "id": "2b76d3272d2f26e741e6",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Parent:"
+    },
+    {
+      "id": "2f25cb7016348c26654a",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Cancel"
+    },
+    {
+      "id": "3281560c4333b255b5f7",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Revisions)"
+    },
+    {
+      "id": "330ddd5b64834c12b11f",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "refs"
+    },
+    {
+      "id": "3364812fa0fc654a2816",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "HEAD_MOVE"
+    },
+    {
+      "id": "3aaac827abdade851f2c",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Target:"
+    },
+    {
+      "id": "3d12c3c0f52c3f56acc1",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Artifacts"
+    },
+    {
+      "id": "3e1081843bb481a211ea",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "project-library-"
+    },
+    {
+      "id": "41a19604e7997c230365",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Visibility: Private"
+    },
+    {
+      "id": "442e07fef0affac9c450",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Artifact"
+    },
+    {
+      "id": "45beef27d1ea966c3b62",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "45e6ad5e95e9ccb68515",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Revision Details"
+    },
+    {
+      "id": "467796998fbc543036dc",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Revision Body"
+    },
+    {
+      "id": "4810dc57c9c3fafcda7b",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "HEAD"
+    },
+    {
+      "id": "4898d66d8c5f8a666534",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Tab"
+    },
+    {
+      "id": "4c3556d4b7b91735fac2",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Revision ID"
+    },
+    {
+      "id": "4e351d6bedf5e2d89048",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Evidence:"
+    },
+    {
+      "id": "4e956f8a64e0a3e694d3",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Close Import Dialog"
+    },
+    {
+      "id": "50429bc5c011d1b2ab0d",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt"
+    },
+    {
+      "id": "52152282e06a96e62537",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Template"
+    },
+    {
+      "id": "56850294153ea97822da",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Revisions:"
+    },
+    {
+      "id": "58fd7853b33c5518f0a1",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Provenance References"
+    },
+    {
+      "id": "5af926f1f9f9e1ef7dc0",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "File fingerprint"
+    },
+    {
+      "id": "5b75e63c28c1d481ea99",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Export Bundle JSON"
+    },
+    {
+      "id": "5bbe28227e5714244689",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "button:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex=\"-1\"])"
+    },
+    {
+      "id": "5eabec15fcd2e98630c0",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Escape"
+    },
+    {
+      "id": "661c33f38e3f4c6dbee7",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "unlabeled"
+    },
+    {
+      "id": "6921fdcca35a7aed93ad",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Export Project Library Bundle JSON"
+    },
+    {
+      "id": "69c5dc0145fb939fd5e1",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "a"
+    },
+    {
+      "id": "6b9aee9480fb92859faa",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "All Types ("
+    },
+    {
+      "id": "6eff3ba102dc73fee5d1",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Website"
+    },
+    {
+      "id": "6fac017bdd9a50125c7c",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": ".json"
+    },
+    {
+      "id": "749926044ec1bff3ed09",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Validation failed:"
+    },
+    {
+      "id": "7ba53f805e296aa17e8d",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "ID:"
+    },
+    {
+      "id": "83af12e1bb60c89a5bc7",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Quality Evidence References"
+    },
+    {
+      "id": "84a27409d01563c91fe6",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE Contract Status: NOT_YET_BOUND"
+    },
+    {
+      "id": "883d3fee3f269d486899",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "keydown"
+    },
+    {
+      "id": "8d790deb38fb322ee12a",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "all"
+    },
+    {
+      "id": "8dc828e5ce8fa32c0630",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Project ID:"
+    },
+    {
+      "id": "91d490d36a1d9c38542d",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Provenance:"
+    },
+    {
+      "id": "9512557b19d6948478ff",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Timestamp:"
+    },
+    {
+      "id": "959d0d15a6394cf27a4a",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Project Library Bundle JSON"
+    },
+    {
+      "id": "9a59626dd71542194e97",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "label"
+    },
+    {
+      "id": "9ce5dd09b3fc678cf0e2",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Import Bundle"
+    },
+    {
+      "id": "9d4b9eb579dce736a9c2",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Select a revision from the timeline to inspect its details."
+    },
+    {
+      "id": "ad07f76bd9659b264dec",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "⚠️ HEAD MOVE:"
+    },
+    {
+      "id": "b0bbe9dbe53b377c32b1",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "application/json"
+    },
+    {
+      "id": "b0d98db18621f50c91c0",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Transcript"
+    },
+    {
+      "id": "b459305cbe9cd2e6798a",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Artifact ID & Type"
+    },
+    {
+      "id": "b65399676d6e286b0df1",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Rolled back HEAD pointer to revision:"
+    },
+    {
+      "id": "b65eeca90c72828300fe",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Artifacts:"
+    },
+    {
+      "id": "b701f9a9c3c41470baa1",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Filter artifacts by type"
+    },
+    {
+      "id": "b7a5799955e32e032d77",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Paste {\"schema\": \"spe.project-library.v1\", ...} here"
+    },
+    {
+      "id": "bf858deca2fb75ab10cb",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Invalid JSON:"
+    },
+    {
+      "id": "c14ff46291e2fe6373fd",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Provider Target"
+    },
+    {
+      "id": "c9d1fe846710d1804aaa",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Paste a valid"
+    },
+    {
+      "id": "cf1620241a9b36d4e032",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Revision Inspector"
+    },
+    {
+      "id": "d556e055eb79e514da91",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "of type"
+    },
+    {
+      "id": "d5e86e72a270472afe17",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Revisions & History:"
+    },
+    {
+      "id": "d62d8a11f9314ccf304b",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Branched"
+    },
+    {
+      "id": "d81151e1386af8fdb33f",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "spe.project-library.v1"
+    },
+    {
+      "id": "e35f776d6707d3fca323",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Search indexing: noindex"
+    },
+    {
+      "id": "e4dc5ecbef3b1ea89e24",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE Project Library"
+    },
+    {
+      "id": "ea65ff7866681936ac95",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "None"
+    },
+    {
+      "id": "efe7c3d5194b28869ffb",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Import Project Library Bundle"
+    },
+    {
+      "id": "f3dcbabf3a686eecd3bb",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Filter by Type:"
+    },
+    {
+      "id": "f6e1c9cd71b56ff0b4ee",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "JSON bundle. Local private parsing only (no network transfer)."
+    },
+    {
+      "id": "ff679318238526b794dd",
+      "file": "apps/web/src/library/ProjectLibraryView.tsx",
+      "depth": "PRODUCT",
+      "text": "Created:"
+    },
+    {
       "id": "95a47d5284b232421522",
       "file": "apps/web/src/main.tsx",
       "depth": "PRODUCT",
@@ -11409,6 +12285,126 @@
       "text": "2d"
     },
     {
+      "id": "1b3cff6faf5e216ad272",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "replicated"
+    },
+    {
+      "id": "210a46435f38a093f8ac",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Available publications"
+    },
+    {
+      "id": "297cc87ae29a8e6fb59f",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Technical Specifications"
+    },
+    {
+      "id": "48278b0dd277dcc5e3f0",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "All Publications"
+    },
+    {
+      "id": "488e8fc9cd32c9071d43",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Tech Spec"
+    },
+    {
+      "id": "52a5ad0f3786d1f93fea",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Evidence & Authority Hub"
+    },
+    {
+      "id": "6ac2f3c6d27a03b88d5c",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Filter authority publications"
+    },
+    {
+      "id": "6bef0aa6104c6dc1977b",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Qualification plans and evidence requirements for the System Prompt Engine. Provisional records do not establish measured results or independent verification."
+    },
+    {
+      "id": "6c54d924536f13f6e5e0",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "all"
+    },
+    {
+      "id": "97157ad2a31072dfb5f6",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Research Guides"
+    },
+    {
+      "id": "9b6ac609de2b332cdd90",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "verified"
+    },
+    {
+      "id": "b5e07009a62cdd625bd1",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "records verified"
+    },
+    {
+      "id": "b9f0cea635696b9460a5",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Read →"
+    },
+    {
+      "id": "bd2d75bb54ef767df8e6",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Privacy & Security"
+    },
+    {
+      "id": "d56f2366c87e397a9210",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Read"
+    },
+    {
+      "id": "d79207c6750deba1cfbb",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "technical_spec"
+    },
+    {
+      "id": "dcfb7d1bee0218736ed1",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "research_guide"
+    },
+    {
+      "id": "e00353240155140d6cf5",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Guide"
+    },
+    {
+      "id": "ef3b1014e0c626ee4215",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Verified Claims"
+    },
+    {
+      "id": "f4d30ff3e6aae8dccbb1",
+      "file": "apps/web/src/pages/AuthorityHub.tsx",
+      "depth": "PRODUCT",
+      "text": "Technical Specs"
+    },
+    {
       "id": "02920995647895555892",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
@@ -11683,6 +12679,228 @@
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
       "text": "Failures stay visible; SPE does not pretend a blocked fetch succeeded."
+    },
+    {
+      "id": "00e7956f0b19351516c3",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "technical_spec"
+    },
+    {
+      "id": "0caa8e3387e3d4535518",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "spe-jsonld-"
+    },
+    {
+      "id": "0f2cf0a81b25d163f0e2",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Metric:"
+    },
+    {
+      "id": "180a491b2c1ff4e3f4ed",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Verifiable Evidence Ledger"
+    },
+    {
+      "id": "29b5519613e981c1e323",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Baseline:"
+    },
+    {
+      "id": "2d8d262e4db56295ce86",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Breadcrumbs"
+    },
+    {
+      "id": "33c573ebe1f8bd7e3b16",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Schema:"
+    },
+    {
+      "id": "3452c59d2dc5bb9ef1cb",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Measurement Date:"
+    },
+    {
+      "id": "3553c0888c0aeee4bebb",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "noopener noreferrer"
+    },
+    {
+      "id": "4820e7234e6da14830f3",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "https://"
+    },
+    {
+      "id": "5009dbe15ddf6e0b3240",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Back to Authority Hub"
+    },
+    {
+      "id": "536ea6798005c82dbb83",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Last Verified:"
+    },
+    {
+      "id": "646fdcb213f5c226b411",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Authority"
+    },
+    {
+      "id": "72744aaabb8e48c86423",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Evidence Links:"
+    },
+    {
+      "id": "74565025a022195966f1",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "By"
+    },
+    {
+      "id": "7e1d7c68d41e6b8092be",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "TechArticle"
+    },
+    {
+      "id": "809116d152d09c105fa1",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Provider Version:"
+    },
+    {
+      "id": "85d97d084cc2818ae571",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Raw Results:"
+    },
+    {
+      "id": "9051196b6617144ac192",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Dataset:"
+    },
+    {
+      "id": "941eb516cf9ea014f456",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Article"
+    },
+    {
+      "id": "99f0666abe8c3d3e48c5",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "application/ld+json"
+    },
+    {
+      "id": "9c4579939bcc6779e81d",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Audit Status:"
+    },
+    {
+      "id": "a976015e43c27e65e23b",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "script"
+    },
+    {
+      "id": "b64b4c01e1e268a9ce7c",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Limitations:"
+    },
+    {
+      "id": "bfcac79794d248b7daca",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Each record shows its evidence status. Provisional records await attributable receipts and independent verification."
+    },
+    {
+      "id": "c71fcef6a621e990985a",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "← Back to Hub"
+    },
+    {
+      "id": "cbdb581ac8c7a7008e93",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "http://"
+    },
+    {
+      "id": "cc36a56315dd3d34f6e1",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Published"
+    },
+    {
+      "id": "d4e15039e2acf6206502",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "_blank"
+    },
+    {
+      "id": "da934a0505149c990e89",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Claim:"
+    },
+    {
+      "id": "ec212eefe7cdb23ff86e",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Technical Specification"
+    },
+    {
+      "id": "ed0f51a1be22e78cea49",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Sample Size:"
+    },
+    {
+      "id": "f15107a31e8e21652959",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Updated"
+    },
+    {
+      "id": "f1dea7ff30e22ac3059b",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Repro Steps:"
+    },
+    {
+      "id": "f59d291ef4305e115899",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Research Guide"
+    },
+    {
+      "id": "f5cf995a2bc69d6d7880",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "f84c7b949f290443f21c",
+      "file": "apps/web/src/pages/GuideArticle.tsx",
+      "depth": "PRODUCT",
+      "text": "Methodology:"
     },
     {
       "id": "100520aff20f92d043a5",
