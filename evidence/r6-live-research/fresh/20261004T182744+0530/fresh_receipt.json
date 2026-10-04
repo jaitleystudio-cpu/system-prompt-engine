@@ -66,35 +66,29 @@
       ]
     }
   ],
-  "chain": {
-    "ContextNeed": "EXECUTED",
-    "privacy_minimized_query": "EXECUTED",
-    "live_source": "EXECUTED",
-    "metadata": "EXECUTED",
-    "DOI_dedup": "ABSENT",
-    "evidence_extraction": "EXECUTED",
-    "provenance": "EXECUTED",
-    "freshness": "ABSENT",
-    "retraction_status": "EXECUTED",
-    "contradiction_replication_class": {
-      "contradiction": "EXECUTED",
-      "replication_class": "ABSENT"
-    },
-    "ContextCapsule": "EXECUTED",
-    "C02_K3_binding": "ABSENT"
-  },
   "graph_ok": true,
   "graph_edge_relations": [
     "CONTRADICTS"
   ],
   "graph_contradiction_count": 1,
   "need_id": "need-general-c0184ca01696c0ed",
-  "freshness_module_called": false,
-  "context_capsule_on_journey_result": false,
-  "c02_binding_on_journey_result": false,
   "parent": "03f7f96053631a73a13b682fdb2a62e4e2c50ae7",
-  "note": "Fresh bytes from one consented OpenAlex+Crossref call. Not a product LIVE pass. Pinned bodies were not copied.",
-  "context_capsule_note": "hits_to_capsules ran inside acquire_scholarly_hits. The journey did not pass those capsules to compile_context.",
-  "evidence_extraction_note": "Existing buildClaimEvidenceGraph bound the adapter metadata source. No full-text extractor ran.",
-  "freshness_note": "ContextNeed.freshness_required was set. freshness_state and plan_refresh were not called."
+  "note": "author_map classifies the already-saved fetch. It is not a runtime proof. ContextCapsule was not bound by _scoped_live_journey on that run. Product LIVE gates stay HOLD.",
+  "author_map": {
+    "label": "author_map",
+    "not_runtime_proof": true,
+    "ContextNeed": "EXECUTED",
+    "privacy_minimized_query": "EXECUTED",
+    "live_source": "EXECUTED",
+    "metadata": "EXECUTED",
+    "evidence_extraction_from_metadata": "EXECUTED",
+    "provenance": "EXECUTED",
+    "retraction_status": "EXECUTED",
+    "contradiction": "EXECUTED",
+    "ContextCapsule": "ABSENT",
+    "DOI_dedup": "ABSENT",
+    "freshness": "ABSENT",
+    "replication_class": "ABSENT",
+    "C02_K3": "ABSENT"
+  }
 }

@@ -21,7 +21,8 @@ from pathlib import Path
 from typing import Mapping
 from zoneinfo import ZoneInfo
 
-from spe_runtime.grounding.compiler import compile_context
+from spe_runtime.grounding.compiler import compile_context, research_capsules_to_c02_inputs
+from spe_runtime.grounding.freshness import freshness_state, plan_refresh
 from spe_runtime.grounding.live_adapters import (
     acquire_scholarly_hits,
     build_arxiv_url,
@@ -690,6 +691,55 @@ def run_research_journey(
 
 
 
+
+def _existing_owner_returns(
+    public_query: str,
+    hit_rows: list[Mapping[str, object]],
+    now_iso: str,
+) -> dict[str, object]:
+    """Call grounding functions that already exist. Missing steps stay ABSENT.
+
+    This is not a product pass and not an author map of an earlier receipt.
+    """
+    capsules = hits_to_capsules([dict(row) for row in hit_rows])
+    bundle = compile_context(public_query, tuple(capsules))
+    freshness_rows: list[dict[str, object]] = []
+    refresh_rows: list[dict[str, object] | None] = []
+    for capsule in capsules:
+        state = freshness_state(capsule, now_iso)
+        plan = plan_refresh(capsule, now_iso=now_iso)
+        freshness_rows.append(
+            {"capsule_id": capsule.capsule_id, "freshness_state": state}
+        )
+        refresh_rows.append(
+            None
+            if plan is None
+            else {
+                "action": plan.action,
+                "original_capsule_id": plan.original_capsule_id,
+                "new_capsule_id": plan.new_capsule_id,
+                "new_lineage_id": plan.new_lineage_id,
+                "reason": plan.reason,
+                "freshness_state": plan.freshness_state,
+            }
+        )
+    facts, provenance_rows, uncertainties = research_capsules_to_c02_inputs(bundle)
+    return {
+        "hits_to_capsules": [capsule.to_dict() for capsule in capsules],
+        "compile_context": bundle.to_dict(),
+        "freshness_state": freshness_rows,
+        "plan_refresh": refresh_rows,
+        "research_capsules_to_c02_inputs": {
+            "facts": [dict(row) for row in facts],
+            "provenance": [dict(row) for row in provenance_rows],
+            "uncertainties": [dict(row) for row in uncertainties],
+        },
+        "doi_dedup": "ABSENT",
+        "replication_class": "ABSENT",
+        "k3_binding": "ABSENT",
+    }
+
+
 def _scoped_live_journey(
     *,
     base: dict[str, object],
@@ -909,6 +959,11 @@ def _scoped_live_journey(
         prompt = ""
         graph = {"ok": False, "error": "REJECTED_PRIVACY_PROMPT"}
 
+    owner_returns = _existing_owner_returns(
+        public_query,
+        hit_rows,
+        str(base.get("executed_at_ist") or _now_ist()),
+    )
     result = {
         **base,
         "status": status,
@@ -956,6 +1011,7 @@ def _scoped_live_journey(
         },
         "research_grounded_prompt": prompt,
         "provenance": provenance,
+        "owner_returns": owner_returns,
         "reasons": [
             "SCOPED_LIVE_FETCH_IS_NOT_PRODUCT_PASS",
             "ONE_DOI_DOES_NOT_MEET_FOUNDER_LAW",

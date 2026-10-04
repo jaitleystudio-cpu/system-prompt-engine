@@ -208,6 +208,18 @@ def test_one_real_scoped_live_fetch(monkeypatch, tmp_path):
     assert result["product_LIVE_RETRACTION"] == "HOLD"
     assert result["may_promote"] is False
     _assert_gates(result)
+    owner = result["owner_returns"]
+    assert owner["hits_to_capsules"]
+    assert "CAPSULES_VALIDATED" in owner["compile_context"]["reason_codes"]
+    assert owner["freshness_state"]
+    assert owner["freshness_state"][0]["freshness_state"] == "UNKNOWN"
+    assert owner["plan_refresh"][0]["reason"] == "FRESHNESS_UNKNOWN"
+    assert owner["research_capsules_to_c02_inputs"]["facts"]
+    assert owner["doi_dedup"] == "ABSENT"
+    assert owner["replication_class"] == "ABSENT"
+    assert owner["k3_binding"] == "ABSENT"
+    assert result["product_LIVE_INDEX"] == "HOLD"
+    assert result["product_LIVE_RETRACTION"] == "HOLD"
     saved_openalex = Path(result["response_body_path"]).read_bytes()
     saved_crossref = Path(result["retraction_body_path"]).read_bytes()
     assert hashlib.sha256(saved_openalex).hexdigest() == result["response_digest"]
@@ -247,20 +259,23 @@ def test_fresh_timestamped_journey_does_not_touch_pinned_bodies():
     assert fresh["ncbi_counts_as_two_providers"] is False
     assert fresh["consent_blocked_first_attempt"] is True
     assert LIVE_INDEX == "HOLD" and LIVE_RETRACTION == "HOLD"
-    chain = fresh["chain"]
-    assert chain["ContextNeed"] == "EXECUTED"
-    assert chain["privacy_minimized_query"] == "EXECUTED"
-    assert chain["live_source"] == "EXECUTED"
-    assert chain["metadata"] == "EXECUTED"
-    assert chain["DOI_dedup"] == "ABSENT"
-    assert chain["evidence_extraction"] == "EXECUTED"
-    assert chain["provenance"] == "EXECUTED"
-    assert chain["freshness"] == "ABSENT"
-    assert chain["retraction_status"] == "EXECUTED"
-    assert chain["contradiction_replication_class"]["contradiction"] == "EXECUTED"
-    assert chain["contradiction_replication_class"]["replication_class"] == "ABSENT"
-    assert chain["ContextCapsule"] == "EXECUTED"
-    assert chain["C02_K3_binding"] == "ABSENT"
+    assert "chain" not in fresh
+    author_map = fresh["author_map"]
+    assert author_map["label"] == "author_map"
+    assert author_map["not_runtime_proof"] is True
+    assert author_map["ContextNeed"] == "EXECUTED"
+    assert author_map["privacy_minimized_query"] == "EXECUTED"
+    assert author_map["live_source"] == "EXECUTED"
+    assert author_map["metadata"] == "EXECUTED"
+    assert author_map["evidence_extraction_from_metadata"] == "EXECUTED"
+    assert author_map["provenance"] == "EXECUTED"
+    assert author_map["retraction_status"] == "EXECUTED"
+    assert author_map["contradiction"] == "EXECUTED"
+    assert author_map["ContextCapsule"] == "ABSENT"
+    assert author_map["DOI_dedup"] == "ABSENT"
+    assert author_map["freshness"] == "ABSENT"
+    assert author_map["replication_class"] == "ABSENT"
+    assert author_map["C02_K3"] == "ABSENT"
 
     by_provider = {row["provider"]: row for row in fresh["hosts"]}
     assert set(by_provider) == {"OPENALEX", "CROSSREF"}
