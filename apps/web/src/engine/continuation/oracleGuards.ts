@@ -11,7 +11,6 @@
  */
 
 import type {
-  ClaimRecord,
   EvidenceEdge,
   EvidenceEdgeRelation,
   ProofReceipt,
