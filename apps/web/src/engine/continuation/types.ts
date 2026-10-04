@@ -9,7 +9,7 @@
  * - GILDEN_CAN_SELF_GRANT_AUTHORITY = NO
  */
 
-import type { TargetModelId } from "../targetModelConfig";
+export type TargetModelId = "claude" | "codex" | "deepseek" | "general";
 
 export type ContinuationAuthority = "REVIEW_ONLY" | "ADVISORY_ONLY";
 
