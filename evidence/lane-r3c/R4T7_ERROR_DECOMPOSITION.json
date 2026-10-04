@@ -1,0 +1,939 @@
+{
+  "lane": "R4-T7",
+  "parent": "ea2a8a7c64d5c7eaa5fa3dd18bbbf0679e140338",
+  "architecture": "legacy-scaffold-plus-3-css-repairs",
+  "repairsApplied": [],
+  "bar": {
+    "minSsim": 0.95,
+    "lowered": false
+  },
+  "comparator": "SPE_WINDOWED_SSIM_PIXELMATCH_V1",
+  "browserArgs": [
+    "--disable-gpu",
+    "--hide-scrollbars",
+    "--font-render-hinting=none"
+  ],
+  "pixelPerfectClaim": false,
+  "productPass": false,
+  "verdict": "HOLD",
+  "whyDesktopIsBelowBar": "Desktop measured SSIM 0.9153, gap 0.0347. Font-metric pixels are 0.8296 of squared RGB error. Substituting only those pixels inside the measurement oracle (not a renderer) raises SSIM to 0.9733. Substituting color, the second contributor, reaches only 0.9272 and does not clear 0.95. The IR for this fixture has zero text blocks, so the scaffold has no reconstructed glyphs; repair 3 hides invented labels and leaves the reference ink unmatched.",
+  "oracleNote": "ssimIfClassMatched replaces that class of candidate pixels with the fixture inside the measurement only. It is an attribution oracle, not a reconstruction and not a gate score.",
+  "semanticScreen": {
+    "disposition": "DISCARDED",
+    "reason": "Untracked semanticScreen.ts sampled fixture pixels for panel means, residual seams, and per-word ink color, then placed OCR words at those boxes. That is screenshot-derived painting, not the scaffold that scored 0.9153. It was not committed and the gate was not wired to it."
+  },
+  "probesNotKept": [
+    {
+      "name": "region-flow OCR text in IR regions",
+      "desktopSsim": 0.8929,
+      "pixelDelta": 3.229,
+      "kept": false,
+      "why": "Uses recognized strings inside IR region boxes with a fixed type scale, not ink-box fitting. Measured SSIM fell from 0.9153 to 0.8929."
+    },
+    {
+      "name": "collapse hidden chrome",
+      "desktopSsim": 0.9153,
+      "pixelDelta": 2.31,
+      "kept": false,
+      "why": "display:none on header/footer did not move desktop SSIM. layoutRowShiftPx was already 0."
+    },
+    {
+      "name": "dominant palette background",
+      "desktopSsim": 0.9138,
+      "pixelDelta": 2.313,
+      "kept": false,
+      "why": "Replacing the region mean with palette[0] lowered SSIM."
+    }
+  ],
+  "rows": [
+    {
+      "id": "desktop-landing",
+      "viewport": "1280x800",
+      "priorRecordedSsim": 0.9153,
+      "measuredSsim": 0.9153,
+      "measuredPixelDelta": 2.311,
+      "gapToBar": 0.0347,
+      "layoutRowShiftPx": 0,
+      "mismatchPercent": 2.3,
+      "meanChannelRmse": 23.4,
+      "ocrWords": 30,
+      "responsive": {
+        "nativeWidth": 1280,
+        "mediaQuery": "@media (max-width: 640px)",
+        "mediaQueryActiveAtNative": false,
+        "pixelMseShare": 0,
+        "note": "Native width is above 640px, so the only responsive rule does not change pixels. Responsive structure contributes 0 MSE at this viewport."
+      },
+      "rankedByMseShare": [
+        {
+          "factor": "fontMetrics",
+          "mseShare": 0.8296,
+          "sse": 1395619737,
+          "pixels": 35055
+        },
+        {
+          "factor": "color",
+          "mseShare": 0.1404,
+          "sse": 236178144,
+          "pixels": 829185
+        },
+        {
+          "factor": "images",
+          "mseShare": 0.0059,
+          "sse": 9916240,
+          "pixels": 741
+        },
+        {
+          "factor": "gradient",
+          "mseShare": 0.0052,
+          "sse": 8678982,
+          "pixels": 191
+        },
+        {
+          "factor": "lineHeight",
+          "mseShare": 0.0051,
+          "sse": 8539500,
+          "pixels": 111442
+        },
+        {
+          "factor": "layoutGeometry",
+          "mseShare": 0.0045,
+          "sse": 7578090,
+          "pixels": 131
+        },
+        {
+          "factor": "letterSpacing",
+          "mseShare": 0.0038,
+          "sse": 6432167,
+          "pixels": 44360
+        },
+        {
+          "factor": "shadow",
+          "mseShare": 0.0034,
+          "sse": 5636824,
+          "pixels": 172
+        },
+        {
+          "factor": "borderRadius",
+          "mseShare": 0.0021,
+          "sse": 3593004,
+          "pixels": 176
+        },
+        {
+          "factor": "antiAliasing",
+          "mseShare": 0.0001,
+          "sse": 113333,
+          "pixels": 520
+        }
+      ],
+      "rankedBySsimLift": [
+        {
+          "factor": "fontMetrics",
+          "ssimIfClassMatched": 0.9733,
+          "ssimLift": 0.058,
+          "pixelDeltaIfClassMatched": 0.778
+        },
+        {
+          "factor": "color",
+          "ssimIfClassMatched": 0.9272,
+          "ssimLift": 0.0119,
+          "pixelDeltaIfClassMatched": 1.807
+        },
+        {
+          "factor": "lineHeight",
+          "ssimIfClassMatched": 0.9201,
+          "ssimLift": 0.0048,
+          "pixelDeltaIfClassMatched": 2.145
+        },
+        {
+          "factor": "gradient",
+          "ssimIfClassMatched": 0.9158,
+          "ssimLift": 0.0005,
+          "pixelDeltaIfClassMatched": 2.294
+        },
+        {
+          "factor": "shadow",
+          "ssimIfClassMatched": 0.9155,
+          "ssimLift": 0.0002,
+          "pixelDeltaIfClassMatched": 2.3
+        },
+        {
+          "factor": "images",
+          "ssimIfClassMatched": 0.9155,
+          "ssimLift": 0.0002,
+          "pixelDeltaIfClassMatched": 2.296
+        },
+        {
+          "factor": "layoutGeometry",
+          "ssimIfClassMatched": 0.9154,
+          "ssimLift": 0.0001,
+          "pixelDeltaIfClassMatched": 2.298
+        },
+        {
+          "factor": "borderRadius",
+          "ssimIfClassMatched": 0.9153,
+          "ssimLift": 0,
+          "pixelDeltaIfClassMatched": 2.296
+        },
+        {
+          "factor": "antiAliasing",
+          "ssimIfClassMatched": 0.9153,
+          "ssimLift": 0,
+          "pixelDeltaIfClassMatched": 2.305
+        },
+        {
+          "factor": "letterSpacing",
+          "ssimIfClassMatched": 0.9123,
+          "ssimLift": -0.003,
+          "pixelDeltaIfClassMatched": 2.281
+        }
+      ],
+      "regionRoles": [
+        "Header / top bar 0.00,0.00 1.00x0.10",
+        "Main content 0.00,0.10 1.00x0.70",
+        "Footer / bottom actions 0.00,0.80 1.00x0.20"
+      ]
+    },
+    {
+      "id": "mobile-app",
+      "viewport": "390x844",
+      "priorRecordedSsim": 0.8375,
+      "measuredSsim": 0.8375,
+      "measuredPixelDelta": 24.093,
+      "gapToBar": 0.1125,
+      "layoutRowShiftPx": 0,
+      "mismatchPercent": 24.1,
+      "meanChannelRmse": 18.31,
+      "ocrWords": 20,
+      "responsive": {
+        "nativeWidth": 390,
+        "mediaQuery": "@media (max-width: 640px)",
+        "mediaQueryActiveAtNative": true,
+        "pixelMseShare": 0,
+        "note": "Narrow fixture: the scaffold media query is active, so column collapse is part of the measured pixels and is not separable from layout geometry."
+      },
+      "rankedByMseShare": [
+        {
+          "factor": "fontMetrics",
+          "mseShare": 0.8129,
+          "sse": 269067859,
+          "pixels": 8702
+        },
+        {
+          "factor": "color",
+          "mseShare": 0.119,
+          "sse": 39373777,
+          "pixels": 242155
+        },
+        {
+          "factor": "lineHeight",
+          "mseShare": 0.0556,
+          "sse": 18412457,
+          "pixels": 58405
+        },
+        {
+          "factor": "letterSpacing",
+          "mseShare": 0.0116,
+          "sse": 3835480,
+          "pixels": 19191
+        },
+        {
+          "factor": "gradient",
+          "mseShare": 0.0003,
+          "sse": 88631,
+          "pixels": 251
+        },
+        {
+          "factor": "images",
+          "mseShare": 0.0002,
+          "sse": 81256,
+          "pixels": 280
+        },
+        {
+          "factor": "borderRadius",
+          "mseShare": 0.0001,
+          "sse": 31274,
+          "pixels": 1
+        },
+        {
+          "factor": "antiAliasing",
+          "mseShare": 0.0001,
+          "sse": 47769,
+          "pixels": 150
+        },
+        {
+          "factor": "shadow",
+          "mseShare": 0.0001,
+          "sse": 21261,
+          "pixels": 22
+        },
+        {
+          "factor": "layoutGeometry",
+          "mseShare": 0.0001,
+          "sse": 19446,
+          "pixels": 3
+        }
+      ],
+      "rankedBySsimLift": [
+        {
+          "factor": "fontMetrics",
+          "ssimIfClassMatched": 0.8975,
+          "ssimLift": 0.06,
+          "pixelDeltaIfClassMatched": 22.008
+        },
+        {
+          "factor": "color",
+          "ssimIfClassMatched": 0.8863,
+          "ssimLift": 0.0488,
+          "pixelDeltaIfClassMatched": 17.392
+        },
+        {
+          "factor": "lineHeight",
+          "ssimIfClassMatched": 0.8538,
+          "ssimLift": 0.0163,
+          "pixelDeltaIfClassMatched": 11.674
+        },
+        {
+          "factor": "gradient",
+          "ssimIfClassMatched": 0.8383,
+          "ssimLift": 0.0008,
+          "pixelDeltaIfClassMatched": 24.039
+        },
+        {
+          "factor": "borderRadius",
+          "ssimIfClassMatched": 0.8375,
+          "ssimLift": 0,
+          "pixelDeltaIfClassMatched": 24.093
+        },
+        {
+          "factor": "layoutGeometry",
+          "ssimIfClassMatched": 0.8375,
+          "ssimLift": 0,
+          "pixelDeltaIfClassMatched": 24.092
+        },
+        {
+          "factor": "antiAliasing",
+          "ssimIfClassMatched": 0.8374,
+          "ssimLift": -0.0001,
+          "pixelDeltaIfClassMatched": 24.059
+        },
+        {
+          "factor": "shadow",
+          "ssimIfClassMatched": 0.8374,
+          "ssimLift": -0.0001,
+          "pixelDeltaIfClassMatched": 24.088
+        },
+        {
+          "factor": "images",
+          "ssimIfClassMatched": 0.8374,
+          "ssimLift": -0.0001,
+          "pixelDeltaIfClassMatched": 24.031
+        },
+        {
+          "factor": "letterSpacing",
+          "ssimIfClassMatched": 0.8274,
+          "ssimLift": -0.0101,
+          "pixelDeltaIfClassMatched": 21.36
+        }
+      ],
+      "regionRoles": [
+        "Header / top bar 0.00,0.00 1.00x0.10",
+        "Main content 0.00,0.10 1.00x0.70",
+        "Footer / bottom actions 0.00,0.80 1.00x0.20"
+      ]
+    },
+    {
+      "id": "form",
+      "viewport": "960x720",
+      "priorRecordedSsim": 0.8087,
+      "measuredSsim": 0.8087,
+      "measuredPixelDelta": 15.745,
+      "gapToBar": 0.1413,
+      "layoutRowShiftPx": 48,
+      "mismatchPercent": 15.7,
+      "meanChannelRmse": 23.6,
+      "ocrWords": 22,
+      "responsive": {
+        "nativeWidth": 960,
+        "mediaQuery": "@media (max-width: 640px)",
+        "mediaQueryActiveAtNative": false,
+        "pixelMseShare": 0,
+        "note": "Native width is above 640px, so the only responsive rule does not change pixels. Responsive structure contributes 0 MSE at this viewport."
+      },
+      "rankedByMseShare": [
+        {
+          "factor": "fontMetrics",
+          "mseShare": 0.4877,
+          "sse": 563463307,
+          "pixels": 21827
+        },
+        {
+          "factor": "color",
+          "mseShare": 0.3391,
+          "sse": 391803935,
+          "pixels": 535536
+        },
+        {
+          "factor": "layoutGeometry",
+          "mseShare": 0.0532,
+          "sse": 61423241,
+          "pixels": 2317
+        },
+        {
+          "factor": "lineHeight",
+          "mseShare": 0.0503,
+          "sse": 58159839,
+          "pixels": 95784
+        },
+        {
+          "factor": "images",
+          "mseShare": 0.0336,
+          "sse": 38799452,
+          "pixels": 10746
+        },
+        {
+          "factor": "gradient",
+          "mseShare": 0.0194,
+          "sse": 22468608,
+          "pixels": 1119
+        },
+        {
+          "factor": "shadow",
+          "mseShare": 0.0082,
+          "sse": 9452116,
+          "pixels": 1436
+        },
+        {
+          "factor": "borderRadius",
+          "mseShare": 0.0044,
+          "sse": 5065687,
+          "pixels": 222
+        },
+        {
+          "factor": "letterSpacing",
+          "mseShare": 0.0032,
+          "sse": 3726628,
+          "pixels": 17115
+        },
+        {
+          "factor": "antiAliasing",
+          "mseShare": 0.0008,
+          "sse": 961403,
+          "pixels": 5098
+        }
+      ],
+      "rankedBySsimLift": [
+        {
+          "factor": "fontMetrics",
+          "ssimIfClassMatched": 0.869,
+          "ssimLift": 0.0603,
+          "pixelDeltaIfClassMatched": 14.471
+        },
+        {
+          "factor": "layoutGeometry",
+          "ssimIfClassMatched": 0.853,
+          "ssimLift": 0.0443,
+          "pixelDeltaIfClassMatched": 15.409
+        },
+        {
+          "factor": "lineHeight",
+          "ssimIfClassMatched": 0.8431,
+          "ssimLift": 0.0344,
+          "pixelDeltaIfClassMatched": 14.745
+        },
+        {
+          "factor": "shadow",
+          "ssimIfClassMatched": 0.8236,
+          "ssimLift": 0.0149,
+          "pixelDeltaIfClassMatched": 15.547
+        },
+        {
+          "factor": "gradient",
+          "ssimIfClassMatched": 0.8222,
+          "ssimLift": 0.0135,
+          "pixelDeltaIfClassMatched": 15.584
+        },
+        {
+          "factor": "images",
+          "ssimIfClassMatched": 0.8214,
+          "ssimLift": 0.0127,
+          "pixelDeltaIfClassMatched": 15.142
+        },
+        {
+          "factor": "color",
+          "ssimIfClassMatched": 0.8171,
+          "ssimLift": 0.0084,
+          "pixelDeltaIfClassMatched": 3.783
+        },
+        {
+          "factor": "antiAliasing",
+          "ssimIfClassMatched": 0.8101,
+          "ssimLift": 0.0014,
+          "pixelDeltaIfClassMatched": 15.599
+        },
+        {
+          "factor": "borderRadius",
+          "ssimIfClassMatched": 0.8091,
+          "ssimLift": 0.0004,
+          "pixelDeltaIfClassMatched": 15.717
+        },
+        {
+          "factor": "letterSpacing",
+          "ssimIfClassMatched": 0.8069,
+          "ssimLift": -0.0018,
+          "pixelDeltaIfClassMatched": 15.705
+        }
+      ],
+      "regionRoles": [
+        "Header / top bar 0.00,0.00 1.00x0.13",
+        "Main content 0.00,0.13 1.00x0.67",
+        "Footer / bottom actions 0.00,0.80 1.00x0.20"
+      ]
+    },
+    {
+      "id": "dashboard-sidebar",
+      "viewport": "1280x800",
+      "priorRecordedSsim": 0.7758,
+      "measuredSsim": 0.7758,
+      "measuredPixelDelta": 99.965,
+      "gapToBar": 0.1742,
+      "layoutRowShiftPx": -48,
+      "mismatchPercent": 100,
+      "meanChannelRmse": 87.5,
+      "ocrWords": 24,
+      "responsive": {
+        "nativeWidth": 1280,
+        "mediaQuery": "@media (max-width: 640px)",
+        "mediaQueryActiveAtNative": false,
+        "pixelMseShare": 0,
+        "note": "Native width is above 640px, so the only responsive rule does not change pixels. Responsive structure contributes 0 MSE at this viewport."
+      },
+      "rankedByMseShare": [
+        {
+          "factor": "color",
+          "mseShare": 0.8533,
+          "sse": 20069366146,
+          "pixels": 764898
+        },
+        {
+          "factor": "lineHeight",
+          "mseShare": 0.0704,
+          "sse": 1654862495,
+          "pixels": 135826
+        },
+        {
+          "factor": "letterSpacing",
+          "mseShare": 0.0516,
+          "sse": 1213876544,
+          "pixels": 101437
+        },
+        {
+          "factor": "fontMetrics",
+          "mseShare": 0.0215,
+          "sse": 506649377,
+          "pixels": 20463
+        },
+        {
+          "factor": "layoutGeometry",
+          "mseShare": 0.003,
+          "sse": 69985317,
+          "pixels": 768
+        },
+        {
+          "factor": "images",
+          "mseShare": 0.0001,
+          "sse": 2860692,
+          "pixels": 277
+        },
+        {
+          "factor": "gradient",
+          "mseShare": 0.0001,
+          "sse": 1684068,
+          "pixels": 248
+        },
+        {
+          "factor": "borderRadius",
+          "mseShare": 0,
+          "sse": 499051,
+          "pixels": 20
+        },
+        {
+          "factor": "antiAliasing",
+          "mseShare": 0,
+          "sse": 92546,
+          "pixels": 43
+        },
+        {
+          "factor": "shadow",
+          "mseShare": 0,
+          "sse": 379490,
+          "pixels": 20
+        }
+      ],
+      "rankedBySsimLift": [
+        {
+          "factor": "color",
+          "ssimIfClassMatched": 0.8865,
+          "ssimLift": 0.1107,
+          "pixelDeltaIfClassMatched": 25.268
+        },
+        {
+          "factor": "fontMetrics",
+          "ssimIfClassMatched": 0.7966,
+          "ssimLift": 0.0208,
+          "pixelDeltaIfClassMatched": 97.999
+        },
+        {
+          "factor": "borderRadius",
+          "ssimIfClassMatched": 0.7759,
+          "ssimLift": 0.0001,
+          "pixelDeltaIfClassMatched": 99.964
+        },
+        {
+          "factor": "images",
+          "ssimIfClassMatched": 0.7759,
+          "ssimLift": 0.0001,
+          "pixelDeltaIfClassMatched": 99.938
+        },
+        {
+          "factor": "antiAliasing",
+          "ssimIfClassMatched": 0.7758,
+          "ssimLift": 0,
+          "pixelDeltaIfClassMatched": 99.962
+        },
+        {
+          "factor": "shadow",
+          "ssimIfClassMatched": 0.7758,
+          "ssimLift": 0,
+          "pixelDeltaIfClassMatched": 99.963
+        },
+        {
+          "factor": "gradient",
+          "ssimIfClassMatched": 0.7746,
+          "ssimLift": -0.0012,
+          "pixelDeltaIfClassMatched": 99.941
+        },
+        {
+          "factor": "layoutGeometry",
+          "ssimIfClassMatched": 0.7734,
+          "ssimLift": -0.0024,
+          "pixelDeltaIfClassMatched": 99.89
+        },
+        {
+          "factor": "lineHeight",
+          "ssimIfClassMatched": 0.7111,
+          "ssimLift": -0.0647,
+          "pixelDeltaIfClassMatched": 86.701
+        },
+        {
+          "factor": "letterSpacing",
+          "ssimIfClassMatched": 0.6922,
+          "ssimLift": -0.0836,
+          "pixelDeltaIfClassMatched": 90.06
+        }
+      ],
+      "regionRoles": [
+        "Header / top bar 0.00,0.00 1.00x0.12",
+        "Main content 0.00,0.12 1.00x0.69",
+        "Footer / bottom actions 0.00,0.80 1.00x0.20",
+        "Side rail / navigation 0.00,0.12 0.33x0.69"
+      ]
+    },
+    {
+      "id": "card-grid",
+      "viewport": "1100x760",
+      "priorRecordedSsim": 0.7952,
+      "measuredSsim": 0.7952,
+      "measuredPixelDelta": 99.977,
+      "gapToBar": 0.1548,
+      "layoutRowShiftPx": 0,
+      "mismatchPercent": 100,
+      "meanChannelRmse": 66.25,
+      "ocrWords": 25,
+      "responsive": {
+        "nativeWidth": 1100,
+        "mediaQuery": "@media (max-width: 640px)",
+        "mediaQueryActiveAtNative": false,
+        "pixelMseShare": 0,
+        "note": "Native width is above 640px, so the only responsive rule does not change pixels. Responsive structure contributes 0 MSE at this viewport."
+      },
+      "rankedByMseShare": [
+        {
+          "factor": "color",
+          "mseShare": 0.6141,
+          "sse": 6760364411,
+          "pixels": 622680
+        },
+        {
+          "factor": "lineHeight",
+          "mseShare": 0.2924,
+          "sse": 3218888682,
+          "pixels": 134467
+        },
+        {
+          "factor": "fontMetrics",
+          "mseShare": 0.0416,
+          "sse": 457792827,
+          "pixels": 20204
+        },
+        {
+          "factor": "letterSpacing",
+          "mseShare": 0.0246,
+          "sse": 271082593,
+          "pixels": 39881
+        },
+        {
+          "factor": "images",
+          "mseShare": 0.0195,
+          "sse": 214276497,
+          "pixels": 9776
+        },
+        {
+          "factor": "layoutGeometry",
+          "mseShare": 0.0043,
+          "sse": 47618331,
+          "pixels": 2248
+        },
+        {
+          "factor": "gradient",
+          "mseShare": 0.0018,
+          "sse": 19969369,
+          "pixels": 1341
+        },
+        {
+          "factor": "shadow",
+          "mseShare": 0.0015,
+          "sse": 16872368,
+          "pixels": 4590
+        },
+        {
+          "factor": "antiAliasing",
+          "mseShare": 0.0001,
+          "sse": 1512728,
+          "pixels": 762
+        },
+        {
+          "factor": "borderRadius",
+          "mseShare": 0,
+          "sse": 326303,
+          "pixels": 51
+        }
+      ],
+      "rankedBySsimLift": [
+        {
+          "factor": "color",
+          "ssimIfClassMatched": 0.8336,
+          "ssimLift": 0.0384,
+          "pixelDeltaIfClassMatched": 25.493
+        },
+        {
+          "factor": "fontMetrics",
+          "ssimIfClassMatched": 0.8313,
+          "ssimLift": 0.0361,
+          "pixelDeltaIfClassMatched": 97.582
+        },
+        {
+          "factor": "lineHeight",
+          "ssimIfClassMatched": 0.8119,
+          "ssimLift": 0.0167,
+          "pixelDeltaIfClassMatched": 83.892
+        },
+        {
+          "factor": "images",
+          "ssimIfClassMatched": 0.8029,
+          "ssimLift": 0.0077,
+          "pixelDeltaIfClassMatched": 98.807
+        },
+        {
+          "factor": "layoutGeometry",
+          "ssimIfClassMatched": 0.7988,
+          "ssimLift": 0.0036,
+          "pixelDeltaIfClassMatched": 99.708
+        },
+        {
+          "factor": "gradient",
+          "ssimIfClassMatched": 0.7966,
+          "ssimLift": 0.0014,
+          "pixelDeltaIfClassMatched": 99.816
+        },
+        {
+          "factor": "antiAliasing",
+          "ssimIfClassMatched": 0.7961,
+          "ssimLift": 0.0009,
+          "pixelDeltaIfClassMatched": 99.886
+        },
+        {
+          "factor": "borderRadius",
+          "ssimIfClassMatched": 0.7953,
+          "ssimLift": 0.0001,
+          "pixelDeltaIfClassMatched": 99.971
+        },
+        {
+          "factor": "shadow",
+          "ssimIfClassMatched": 0.7771,
+          "ssimLift": -0.0181,
+          "pixelDeltaIfClassMatched": 99.428
+        },
+        {
+          "factor": "letterSpacing",
+          "ssimIfClassMatched": 0.7634,
+          "ssimLift": -0.0318,
+          "pixelDeltaIfClassMatched": 95.207
+        }
+      ],
+      "regionRoles": [
+        "Header / top bar 0.00,0.00 1.00x0.18",
+        "Main content 0.00,0.18 1.00x0.62",
+        "Footer / bottom actions 0.00,0.80 1.00x0.20"
+      ]
+    },
+    {
+      "id": "dark-difficult",
+      "viewport": "1200x800",
+      "priorRecordedSsim": 0.4921,
+      "measuredSsim": 0.4921,
+      "measuredPixelDelta": 99.741,
+      "gapToBar": 0.4579,
+      "layoutRowShiftPx": 48,
+      "mismatchPercent": 99.7,
+      "meanChannelRmse": 50.87,
+      "ocrWords": 19,
+      "responsive": {
+        "nativeWidth": 1200,
+        "mediaQuery": "@media (max-width: 640px)",
+        "mediaQueryActiveAtNative": false,
+        "pixelMseShare": 0,
+        "note": "Native width is above 640px, so the only responsive rule does not change pixels. Responsive structure contributes 0 MSE at this viewport."
+      },
+      "rankedByMseShare": [
+        {
+          "factor": "color",
+          "mseShare": 0.8178,
+          "sse": 6095280780,
+          "pixels": 813090
+        },
+        {
+          "factor": "fontMetrics",
+          "mseShare": 0.1377,
+          "sse": 1026453396,
+          "pixels": 37646
+        },
+        {
+          "factor": "letterSpacing",
+          "mseShare": 0.0213,
+          "sse": 158615050,
+          "pixels": 81023
+        },
+        {
+          "factor": "gradient",
+          "mseShare": 0.0131,
+          "sse": 97446097,
+          "pixels": 11583
+        },
+        {
+          "factor": "layoutGeometry",
+          "mseShare": 0.0035,
+          "sse": 26343325,
+          "pixels": 695
+        },
+        {
+          "factor": "lineHeight",
+          "mseShare": 0.0028,
+          "sse": 20521969,
+          "pixels": 10308
+        },
+        {
+          "factor": "images",
+          "mseShare": 0.0028,
+          "sse": 20844131,
+          "pixels": 3095
+        },
+        {
+          "factor": "antiAliasing",
+          "mseShare": 0.0008,
+          "sse": 5775060,
+          "pixels": 2408
+        },
+        {
+          "factor": "shadow",
+          "mseShare": 0.0002,
+          "sse": 1724919,
+          "pixels": 133
+        },
+        {
+          "factor": "borderRadius",
+          "mseShare": 0,
+          "sse": 273471,
+          "pixels": 19
+        }
+      ],
+      "rankedBySsimLift": [
+        {
+          "factor": "color",
+          "ssimIfClassMatched": 0.8726,
+          "ssimLift": 0.3805,
+          "pixelDeltaIfClassMatched": 15.045
+        },
+        {
+          "factor": "fontMetrics",
+          "ssimIfClassMatched": 0.5306,
+          "ssimLift": 0.0385,
+          "pixelDeltaIfClassMatched": 96.076
+        },
+        {
+          "factor": "letterSpacing",
+          "ssimIfClassMatched": 0.5049,
+          "ssimLift": 0.0128,
+          "pixelDeltaIfClassMatched": 91.302
+        },
+        {
+          "factor": "images",
+          "ssimIfClassMatched": 0.4966,
+          "ssimLift": 0.0045,
+          "pixelDeltaIfClassMatched": 99.418
+        },
+        {
+          "factor": "gradient",
+          "ssimIfClassMatched": 0.4964,
+          "ssimLift": 0.0043,
+          "pixelDeltaIfClassMatched": 98.534
+        },
+        {
+          "factor": "antiAliasing",
+          "ssimIfClassMatched": 0.4934,
+          "ssimLift": 0.0013,
+          "pixelDeltaIfClassMatched": 99.49
+        },
+        {
+          "factor": "layoutGeometry",
+          "ssimIfClassMatched": 0.4931,
+          "ssimLift": 0.001,
+          "pixelDeltaIfClassMatched": 99.668
+        },
+        {
+          "factor": "shadow",
+          "ssimIfClassMatched": 0.4922,
+          "ssimLift": 0.0001,
+          "pixelDeltaIfClassMatched": 99.727
+        },
+        {
+          "factor": "borderRadius",
+          "ssimIfClassMatched": 0.4921,
+          "ssimLift": 0,
+          "pixelDeltaIfClassMatched": 99.739
+        },
+        {
+          "factor": "lineHeight",
+          "ssimIfClassMatched": 0.4861,
+          "ssimLift": -0.006,
+          "pixelDeltaIfClassMatched": 98.667
+        }
+      ],
+      "regionRoles": [
+        "Header / top bar 0.00,0.00 1.00x0.09",
+        "Main content 0.00,0.09 1.00x0.71",
+        "Footer / bottom actions 0.00,0.80 1.00x0.20"
+      ]
+    }
+  ]
+}
