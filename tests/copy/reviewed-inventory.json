@@ -17533,6 +17533,12 @@
       "file": "apps/web/src/landing/UniversalInputShell.tsx",
       "depth": "PRODUCT",
       "text": "Prompt"
+    },
+    {
+      "id": "360815ca2aefb91e3dd7",
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "depth": "PRODUCT",
+      "text": "Selected mode ("
     }
   ]
 }

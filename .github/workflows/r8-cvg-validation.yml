@@ -70,6 +70,8 @@ jobs:
         run: npm run test:engine
       - name: unreceipted authority claims remain provisional
         run: node apps/web/scripts/test-authority-evidence-truth.mjs
+      - name: universal shell truth contract
+        run: node apps/web/scripts/test-universal-shell.mjs
       - name: build
         working-directory: apps/web
         run: npm run build

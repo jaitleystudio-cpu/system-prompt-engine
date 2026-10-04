@@ -1,0 +1,14 @@
+{
+  "review": "Assistant editorial source review; not participant study",
+  "ids": [
+    "360815ca2aefb91e3dd7"
+  ],
+  "entries": [
+    {
+      "id": "360815ca2aefb91e3dd7",
+      "file": "apps/web/src/landing/UniversalInputShell.tsx",
+      "depth": "PRODUCT",
+      "text": "Selected mode ("
+    }
+  ]
+}

@@ -103,6 +103,29 @@ assert.match(shellSource, /TRANSCRIPTION_STATUS=UNAVAILABLE/, "Shell must visibl
 assert.match(modalSource, /previousActiveElement/, "Modal must retain previousActiveElement for focus restoration");
 assert.match(modalSource, /e\.key\s*===\s*["']Tab["']/, "Modal must trap Tab key navigation");
 
+// 5c. Visitor-facing truth: isolated shell/modes describe requests, not unproven outcomes.
+console.log("Checking visitor-facing shell truth...");
+for (const claim of [
+  "Synthesize production-ready source code",
+  "Transcribe audio & video into structured transcript",
+  "Generate project architecture & implementation",
+  "Conduct empirical investigation & citation search",
+  "Produce visual assets & creative media",
+  "Ready (",
+]) {
+  assert.ok(!shellSource.includes(claim), `Isolated shell must not claim outcome: ${claim}`);
+}
+for (const claim of [
+  "Optimal balance of precision, reasoning depth, and synthesis speed.",
+  "Multi-layered reasoning and systematic requirement expansion for complex workflows.",
+  "Rapid turnaround for live experimentation and rapid specification prototyping.",
+  "Enforces strict output contracts, schema guarantees, and verifiable boundaries.",
+]) {
+  assert.ok(!modalSource.includes(claim), `Mode selector must not claim unverified behavior: ${claim}`);
+}
+assert.match(shellSource, /mode:\s*activeMode/, "Shell must pass the selected mode to its host callback");
+assert.match(shellSource, /Selected mode \(/, "Footer must report selection rather than execution readiness");
+
 // 6. Route Isolation & Integrity (Must NOT be integrated into App.tsx or routing.ts yet)
 console.log("Checking route isolation invariants...");
 const appSource = readFileSync(join(root, "src/App.tsx"), "utf8");

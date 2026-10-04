@@ -399,7 +399,7 @@ export const UniversalInputShell: React.FC<UniversalInputShellProps> = ({
         <footer className="spe-shell-footer">
           <div className="spe-shell-status-indicator">
             <span className="spe-shell-status-dot" aria-hidden="true" />
-            <span>Selection ready ({currentModeOption.name})</span>
+            <span>Selected mode ({currentModeOption.name})</span>
           </div>
 
           <button
