@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath, URL } from "node:url";
+import { localMediaHostPlugin } from "./scripts/local-media-host-plugin.mjs";
 
 const repoRoot = fileURLToPath(new URL("../..", import.meta.url));
 const buildSha =
@@ -12,7 +13,7 @@ const buildSha =
   }).trim();
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), localMediaHostPlugin(repoRoot)],
   define: {
     __SPE_BUILD_SHA__: JSON.stringify(buildSha),
   },

@@ -236,3 +236,9 @@ apps/web/node_modules/
 # Local provider qualification evidence
 qualification/*_receipt.json
 .worktrees/
+# Local media pack bytes. PACK_MANIFEST.json stays committed.
+/media-pack/whisper-cli
+/media-pack/whisper-cli.partial
+/media-pack/.whisper-build/
+/media-pack/models/*.bin
+/media-pack/models/*.partial

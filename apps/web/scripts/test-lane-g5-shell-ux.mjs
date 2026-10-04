@@ -72,8 +72,11 @@ test("in-app links do not hard-navigate", () => {
 
 test("private workspace is noindex and not a public WebApplication", () => {
   const seo = src("src/ui/SeoHead.tsx");
+  const routing = src("src/routing.ts");
   assert.match(seo, /noindex, nofollow/);
-  assert.match(seo, /workspace/);
+  assert.match(seo, /NOINDEX_VIEWS/);
+  assert.match(routing, /"workspace"/);
+  assert.match(routing, /"my-work"/);
   assert.match(seo, /removeJsonLd\("spe-jsonld-app"\)/);
 });
 
