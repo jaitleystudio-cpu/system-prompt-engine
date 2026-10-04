@@ -2,8 +2,8 @@
  * MM-5: Deterministic SceneIR to Real 3D Website Compiler
  *
  * Compiles a structured SceneIR specification into a standalone HTML document
- * that can host Three.js when ./vendor/three.min.js is actually present.
- * This compiler does not bundle that file and does not execute WebGL.
+ * that can host Three.js from the packaged ./vendor/three.min.js artifact.
+ * Compile does not execute WebGL. The export proof does.
  *
  * - Deterministic procedural geometry & materials
  * - Timeline & scroll-driven motion tracks
@@ -18,7 +18,8 @@
  * Text interpolated into the document is escaped. Unknown geometry is refused.
  * contextLossRecoverySupported is true only when the emitted document rebuilds
  * from SceneIR and disposes the previous scene. webglExecution stays NOT_RUN
- * until a canonical vendor/three.min.js is part of this repo.
+ * because compile does not create a context. threeVersion is the lockfile pin
+ * of the packaged vendor artifact, not a product PASS.
  */
 
 import { computeSha256 } from "../hashUtils.ts";
@@ -26,6 +27,15 @@ import type {
   Scene3DCompilationResult,
   SceneIR,
 } from "./types.ts";
+
+/** Lockfile pin. Bytes are the installed three@0.170.0 ESM build, not a CDN copy. */
+export const EXPORT_THREE_VERSION = "0.170.0";
+export const EXPORT_THREE_ARTIFACT = "./vendor/three.min.js";
+export const EXPORT_THREE_SHA256 =
+  "08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7";
+export const EXPORT_THREE_INTEGRITY =
+  "sha512-FQK+LEpYc0fBD+J8g6oSEyyNzjp+Q7Ks1C568WWaoMRLW+TkNNWmenWeGgJjV105Gd+p/2ql1ZcjYvNiPZBhuQ==";
+
 
 const GEOMETRY_EMIT: Record<string, { triangles: number; ctor: string }> = {
   box: { triangles: 12, ctor: "new THREE.BoxGeometry(1, 1, 1)" },
@@ -143,7 +153,7 @@ export class SceneCompiler {
    * Compiles SceneIR into a self-contained HTML document.
    * Callers that skip productFlow still cannot emit a script breakout:
    * text is escaped, and unknown geometry throws before a document is returned.
-   * WebGL is not executed here.
+   * WebGL is not executed here. threeVersion names the packaged pin only.
    */
   compile(ir: SceneIR): Scene3DCompilationResult {
     const validation = this.validateSceneIR(ir);
@@ -288,14 +298,7 @@ export class SceneCompiler {
       .static-fallback { display: block; max-width: 32rem; margin: 2rem auto; }
     }
   </style>
-  <!-- Vendor reference only. This compiler does not bundle three.min.js. -->
-  <script src="./vendor/three.min.js"></script>
-  <script>
-    if (typeof THREE === "undefined") {
-      window.__SPE_OFFLINE_FALLBACK = true;
-      window.__SPE_WEBGL_EXECUTION = "NOT_RUN";
-    }
-  </script>
+  <!-- Packaged ${EXPORT_THREE_ARTIFACT} three ${EXPORT_THREE_VERSION} sha256 ${EXPORT_THREE_SHA256} integrity ${EXPORT_THREE_INTEGRITY} -->
 </head>
 <body>
   <div id="canvas-container" role="region" aria-label="${ariaLabel}"></div>
@@ -314,18 +317,45 @@ export class SceneCompiler {
     </section>
   </main>
 
-  <script>
-    (function() {
-      if (typeof THREE === "undefined") {
-        window.__SPE_OFFLINE_FALLBACK = true;
-        window.__SPE_WEBGL_EXECUTION = "NOT_RUN";
-        var fallback = document.querySelector(".static-fallback");
-        if (fallback) fallback.style.display = "block";
-        var host = document.getElementById("canvas-container");
-        if (host) host.setAttribute("data-webgl", "NOT_RUN");
-        return;
+  <script type="module">
+    const REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches === true;
+    const root = document.documentElement;
+    function showStaticFallback() {
+      window.__SPE_OFFLINE_FALLBACK = true;
+      var fallback = document.querySelector(".static-fallback");
+      if (fallback) fallback.style.display = "block";
+      var host = document.getElementById("canvas-container");
+      if (host) host.setAttribute("data-webgl", "NOT_RUN");
+      root.setAttribute("data-fallback-shown", "1");
+    }
+    function settle(execution, extra) {
+      window.__SPE_EXPORT_EXECUTION = execution;
+      window.__SPE_WEBGL_EXECUTION = execution;
+      root.setAttribute("data-webgl-execution", execution);
+      root.setAttribute("data-reduced-motion", REDUCE ? "1" : "0");
+      root.setAttribute("data-three-version", "${EXPORT_THREE_VERSION}");
+      root.setAttribute("data-three-sha256", "${EXPORT_THREE_SHA256}");
+      if (extra) {
+        var keys = Object.keys(extra);
+        for (var i = 0; i < keys.length; i++) root.setAttribute(keys[i], String(extra[keys[i]]));
       }
-
+      root.setAttribute("data-scene-settled", "1");
+    }
+    if (REDUCE) {
+      showStaticFallback();
+      window.__SPE_WEBGL_EXECUTION = "NOT_RUN";
+      settle("NOT_RUN", { "data-context-created": "0", "data-scene-created": "0", "data-non-clear-pixels": "0" });
+    } else {
+      let THREE = null;
+      try {
+        THREE = await import("${EXPORT_THREE_ARTIFACT}");
+      } catch (error) {
+        showStaticFallback();
+        window.__SPE_WEBGL_EXECUTION = "NOT_RUN";
+        window.__SPE_THREE_IMPORT_ERROR = String(error);
+        settle("NOT_RUN", { "data-context-created": "0", "data-scene-created": "0", "data-three-missing": "1", "data-non-clear-pixels": "0" });
+      }
+      if (THREE) {
       const container = document.getElementById("canvas-container");
       const scene = new THREE.Scene();
       scene.background = new THREE.Color("${bgColor}");
@@ -337,7 +367,23 @@ export class SceneCompiler {
       camera.position.set(initialCamPos[0], initialCamPos[1], initialCamPos[2]);
       camera.lookAt(initialTarget[0], initialTarget[1], initialTarget[2]);
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+      let renderer = null;
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance", preserveDrawingBuffer: true, failIfMajorPerformanceCaveat: false });
+      } catch (error) {
+        showStaticFallback();
+        window.__SPE_WEBGL_EXECUTION = "UNAVAILABLE";
+        window.__SPE_WEBGL_ERROR = String(error);
+        settle("UNAVAILABLE", { "data-context-created": "0", "data-scene-created": "0", "data-unavailable-honest": "1", "data-non-clear-pixels": "0" });
+      }
+      if (renderer && !renderer.getContext()) {
+        showStaticFallback();
+        window.__SPE_WEBGL_EXECUTION = "UNAVAILABLE";
+        settle("UNAVAILABLE", { "data-context-created": "0", "data-scene-created": "0", "data-unavailable-honest": "1", "data-non-clear-pixels": "0" });
+        try { renderer.dispose(); } catch (error) { /* already unavailable */ }
+        renderer = null;
+      }
+      if (renderer) {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, ${maxDpr}));
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.shadowMap.enabled = true;
@@ -393,6 +439,34 @@ export class SceneCompiler {
         ${scrollBlocks.join("\n")}
 
         renderer.render(scene, camera);
+        if (!window.__SPE_FRAME_SETTLED) {
+          window.__SPE_FRAME_SETTLED = true;
+          var gl = renderer.getContext();
+          gl.finish();
+          var width = gl.drawingBufferWidth;
+          var height = gl.drawingBufferHeight;
+          var pixels = new Uint8Array(width * height * 4);
+          gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+          var clearHex = "${bgColor}".replace("#", "");
+          var clearR = parseInt(clearHex.slice(0, 2), 16);
+          var clearG = parseInt(clearHex.slice(2, 4), 16);
+          var clearB = parseInt(clearHex.slice(4, 6), 16);
+          var nonClear = 0;
+          for (var pi = 0; pi < pixels.length; pi += 4) {
+            var delta = Math.abs(pixels[pi] - clearR) + Math.abs(pixels[pi + 1] - clearG) + Math.abs(pixels[pi + 2] - clearB);
+            if (delta > 18) nonClear += 1;
+          }
+          var execution = (width > 1 && height > 1 && nonClear >= 50) ? "EXECUTED_WITHIN_TESTED_SCOPE" : "NOT_RUN";
+          if (execution === "NOT_RUN") window.__SPE_WEBGL_EXECUTION = "NOT_RUN";
+          root.setAttribute("data-non-clear-pixels", String(nonClear));
+          root.setAttribute("data-sampled-pixels", String(width * height));
+          root.setAttribute("data-context-created", "1");
+          root.setAttribute("data-scene-created", meshMap.size > 0 ? "1" : "0");
+          root.setAttribute("data-three-revision", String(THREE.REVISION));
+          root.setAttribute("data-fallback-shown", "0");
+          root.setAttribute("data-unavailable-honest", "0");
+          settle(execution, {});
+        }
       }
       animate();
 
@@ -409,7 +483,9 @@ export class SceneCompiler {
         });
         renderer.dispose();
       });
-    })();
+      }
+      }
+    }
   </script>
 </body>
 </html>`;
@@ -427,7 +503,7 @@ export class SceneCompiler {
       totalTriangles,
       status: "AVAILABLE",
       memoryFootprintKb: Math.round(totalTriangles * 0.05 + 120),
-      threeVersion: "NOT_BUNDLED",
+      threeVersion: EXPORT_THREE_VERSION,
       reducedMotionSupported,
       contextLossRecoverySupported,
       webglExecution: "NOT_RUN",

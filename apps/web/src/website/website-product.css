@@ -44,3 +44,26 @@
     scroll-behavior: auto !important;
   }
 }
+
+.website-scene-canvas {
+  width: 480px;
+  height: 360px;
+  background: #05070a;
+}
+
+.website-scene-canvas canvas {
+  display: block;
+  width: 480px;
+  height: 360px;
+}
+
+.website-scene-fallback {
+  max-width: 36rem;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  background: #e2e8f0;
+}
+
+.website-scene-status {
+  margin: 0;
+}
