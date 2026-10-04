@@ -204,7 +204,7 @@ def test_sources_do_not_embed_the_proof() -> None:
     )
 
 
-def test_missing_binary_without_fetch() -> None:
+def check_missing_binary_without_fetch() -> None:
     with tempfile.TemporaryDirectory() as raw:
         directory = Path(raw)
         copy_manifest(directory)
@@ -230,7 +230,7 @@ def _assert_stamp(execution_mode: str) -> dict:
     return verdict
 
 
-def test_loopback_route(blob: bytes, phrase_span: str) -> None:
+def check_loopback_route(blob: bytes, phrase_span: str) -> None:
     env = os.environ.copy()
     env["PYTHONPATH"] = str(ROOT)
     env["PYTHONUNBUFFERED"] = "1"
@@ -270,7 +270,7 @@ def test_loopback_route(blob: bytes, phrase_span: str) -> None:
 
 
 
-def test_indic_packs(assets: object, park: Path) -> None:
+def check_indic_packs(assets: object, park: Path) -> None:
     """One rendered word per pinned pack. A miss is UNAVAILABLE, not a product pass."""
     cases = {
         "tel": ("అమ్మ", "Kohinoor Telugu"),
@@ -398,9 +398,9 @@ def main() -> None:
             "text": second.text,
             "PRODUCT_STAMP": "HOLD",
         }))
-        test_missing_binary_without_fetch()
-        test_loopback_route(second_blob, "DOCK")
-        test_indic_packs(assets, park)
+        check_missing_binary_without_fetch()
+        check_loopback_route(second_blob, "DOCK")
+        check_indic_packs(assets, park)
     finally:
         _restore(park / "eng.traineddata", model)
         _restore(park / "eng-second.traineddata", model)
