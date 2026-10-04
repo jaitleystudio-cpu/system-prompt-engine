@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { websiteMountContract } from "./mount-contract";
 import { runWebsiteProduct, type WebsiteInput } from "./productFlow";
+import { WebsiteSceneHost } from "./WebsiteSceneHost";
 import "./website-product.css";
 
 type Mode = WebsiteInput["kind"];
@@ -63,6 +64,7 @@ export function WebsiteProduct() {
       aria-label="Website product"
     >
       <h1>Website</h1>
+      <WebsiteSceneHost />
       <p className="website-product-note">
         A local spec can become a preview and a saved file. A saved file is not a web address. A web address is not opened.
       </p>
