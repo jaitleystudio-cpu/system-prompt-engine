@@ -390,6 +390,7 @@ def run_research_journey(
     private_document: str | None = None,
     transport=None,
     allow_live: bool = False,
+    evidence_dir: str | None = None,
 ) -> dict[str, object]:
     """Run one research journey. Missing consent does not search."""
     if not isinstance(question, str):
@@ -511,6 +512,7 @@ def run_research_journey(
             spans=spans,
             collapsed=collapsed,
             doi=doi if isinstance(doi, str) else None,
+            evidence_dir=evidence_dir,
         )
 
     if reuse and doi is not None:
@@ -695,6 +697,7 @@ def _scoped_live_journey(
     spans: tuple[str, ...],
     collapsed: list[str],
     doi: str | None,
+    evidence_dir: str | None = None,
 ) -> dict[str, object]:
     """One privacy-minimized live fetch. Product LIVE gates stay HOLD.
 
@@ -712,6 +715,7 @@ def _scoped_live_journey(
         transport=None,
         consent=True,
         force_live=True,
+        evidence_dir=evidence_dir,
     )
     if acquired.get("status") in {"HELD_NO_CONSENT", "REJECTED_PRIVACY", "TIMEOUT"}:
         blocked = _closed(
@@ -862,6 +866,7 @@ def _scoped_live_journey(
                 "egress": "LIVE_HTTPS_PRIVACY_MINIMIZED",
                 "stored_receipt": False,
                 "notice_types": list(hit.get("notice_types") or []) if hit else [],
+                "body_path": row.get("body_path"),
             }
         )
 
@@ -920,13 +925,18 @@ def _scoped_live_journey(
         "provider": identity_provider,
         "provider_family": _family(identity_provider),
         "identifier": returned_identifier,
-        "response_digest": digest if status == "LIVE_FETCH_SCOPED" else digest or None,
+        "response_digest": digest if status == "LIVE_FETCH_SCOPED" else None,
+        "response_body_path": identity_fetch.get("body_path") if identity_fetch and status == "LIVE_FETCH_SCOPED" else None,
+        "retraction_body_path": retraction_fetch.get("body_path") if retraction_fetch else None,
         "verification_status": verification,
         "retraction_status": retraction_status,
         "retraction_provider": retraction_provider,
         "retraction_provider_family": _family(retraction_provider) if retraction_provider else None,
         "retraction_independent_of_identity": retraction_provider is not None,
         "retraction_reason": retraction_reason,
+        "retraction_response_digest": (
+            retraction_fetch.get("response_sha256") if retraction_fetch else None
+        ),
         "ncbi_counts_as_two_providers": False,
         "ncbi_family_count": 1 if any(name in _NCBI for name in collapsed) else 0,
         "product_LIVE_INDEX": LIVE_INDEX,

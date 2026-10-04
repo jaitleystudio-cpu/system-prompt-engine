@@ -420,6 +420,7 @@ def acquire_scholarly_hits(
     transport: TransportGet | None = None,
     consent: bool = False,
     force_live: bool = False,
+    evidence_dir: str | None = None,
 ) -> dict[str, object]:
     """Privacy-minimized multi-provider acquire → sanitized hits + capsules."""
     if not consent:
@@ -464,6 +465,8 @@ def acquire_scholarly_hits(
     if live_network:
         import urllib.request
 
+        raw_responses: list[bytes] = []
+
         def _live_get(url: str) -> tuple[int, str]:
             req = urllib.request.Request(
                 url,
@@ -471,9 +474,13 @@ def acquire_scholarly_hits(
             )
             try:
                 with urllib.request.urlopen(req, timeout=25) as resp:  # noqa: S310
-                    return int(resp.status), resp.read().decode("utf-8", "replace")
+                    raw = resp.read()
+                    raw_responses.append(raw)
+                    return int(resp.status), raw.decode("utf-8", "replace")
             except Exception as exc:  # noqa: BLE001
-                return 599, json.dumps({"error": type(exc).__name__})
+                raw = json.dumps({"error": type(exc).__name__}).encode("utf-8")
+                raw_responses.append(raw)
+                return 599, raw.decode("utf-8")
 
         get = _live_get
 
@@ -494,18 +501,29 @@ def acquire_scholarly_hits(
         status, body = get(url)
         network_calls += 1
         from datetime import datetime
+        from pathlib import Path
         from zoneinfo import ZoneInfo
 
+        raw = raw_responses.pop(0) if live_network else body.encode("utf-8")
+        body_path = None
+        if evidence_dir and live_network:
+            folder = Path(evidence_dir)
+            folder.mkdir(parents=True, exist_ok=True)
+            saved = folder / f"{prov.lower()}.body.json"
+            saved.write_bytes(raw)
+            raw = saved.read_bytes()
+            body_path = str(saved)
         fetches.append(
             {
                 "provider": prov,
                 "provider_family": "NCBI" if prov in {"PUBMED", "PMC"} else prov,
                 "url": url,
                 "http_status": status,
-                "response_sha256": hashlib.sha256(body.encode("utf-8")).hexdigest(),
-                "response_bytes": len(body.encode("utf-8")),
+                "response_sha256": hashlib.sha256(raw).hexdigest(),
+                "response_bytes": len(raw),
                 "timestamp_ist": datetime.now(ZoneInfo("Asia/Kolkata")).isoformat(timespec="seconds"),
                 "live": live_network,
+                "body_path": body_path,
             }
         )
         all_hits.extend(_parse_hits(prov, status, body))
