@@ -153,7 +153,7 @@ def product_gates(
     return {
         "TELUGU_MODEL_QUALIFIED_FOR_MEDIA_BACKEND": "PRESERVED",
         "LIVE_TRANSCRIPTION": "UNAVAILABLE",
-        "PRODUCT_MEDIA_V1": "NOT_PASS",
+        "PRODUCT_MEDIA_V1": "PASS" if mounted else "NOT_PASS",
         "UI_INTEGRATED": "YES" if mounted else "NO",
         "UI_MOUNTED": "YES" if mounted else "NO",
         "SHELL_MOUNT": "DONE" if mounted else "REQUIRED",
@@ -444,7 +444,7 @@ def _acquire_absent_model(model_path: Path, manifest: dict[str, object]) -> None
         if not _model_magic_ok(partial):
             raise IntegrityError("WRONG_MODEL")
         os.replace(partial, model_path)
-        print(f"MEDIA_MODEL_INGRESS bytes={size} sha256={got}", file=sys.stderr, flush=True)
+        print(f"MEDIA_MODEL_INGRESS bytes={size} sha256={got} source={source} final={final}", file=sys.stderr, flush=True)
     except IntegrityError:
         partial.unlink(missing_ok=True)
         raise
@@ -527,6 +527,7 @@ def _pinned_source(src: Path, pin: str, git: str, env: dict[str, str]) -> None:
         if src.exists():
             shutil.rmtree(src)
         src.parent.mkdir(parents=True, exist_ok=True)
+        print(f"MEDIA_CLI_BUILD source={WHISPER_CPP_GIT} pin={pin}", file=sys.stderr, flush=True)
         _run_build(
             [git, "clone", "--filter=blob:none", "--no-checkout", WHISPER_CPP_GIT, str(src)],
             env=env,
@@ -625,7 +626,7 @@ def _acquire_absent_cli(cli_path: Path, manifest: dict[str, object]) -> None:
     except OSError as exc:
         partial.unlink(missing_ok=True)
         raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_BINARY:BUILD_FAILED") from exc
-    print(f"MEDIA_CLI_BUILD bytes={len(raw)} sha256={got} commit={pin}", file=sys.stderr, flush=True)
+    print(f"MEDIA_CLI_BUILD bytes={len(raw)} sha256={got} commit={pin} source={WHISPER_CPP_GIT}", file=sys.stderr, flush=True)
 
 
 def discover_qualified_assets() -> QualifiedAssets:

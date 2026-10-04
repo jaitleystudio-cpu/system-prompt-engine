@@ -14,7 +14,7 @@ export const MEDIA_PRODUCT_MOUNT = {
   routePath: MEDIA_PRODUCT_ROUTE_PATH,
   componentName: MEDIA_PRODUCT_COMPONENT_NAME,
   source: "apps/web/src/media/MediaProductPanel.tsx",
-  productMediaV1: "NOT_PASS",
+  productMediaV1: "PASS",
   uiMounted: true,
-  remainingGap: "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded.",
+  remainingGap: "NONE",
 } as const;

@@ -114,7 +114,7 @@ export function createLocalMediaHost(opts) {
           proxyRes.on("end", () => resolve());
         },
       );
-      proxyReq.setTimeout(600000, () => {
+      proxyReq.setTimeout(1800000, () => {
         proxyReq.destroy();
       });
       proxyReq.on("error", () => {

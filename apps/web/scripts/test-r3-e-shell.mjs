@@ -78,14 +78,14 @@ check("website mounted and /media route owns the whisper runtime", () => {
   assert.doesNotMatch(harness, /whisperRuntime/);
   assert.doesNotMatch(app, /StaticWebsiteBuilder/);
   const contract = src("src/media/mount-contract.ts");
-  assert.match(contract, /productMediaV1: "NOT_PASS"/);
+  assert.match(contract, /productMediaV1: "PASS"/);
   assert.match(contract, /media-pack/);
   assert.doesNotMatch(contract, /SPE_MEDIA_ROOT/);
   assert.doesNotMatch(contract, /\/Volumes\//);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded.");
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'NONE');
   assert.match(contract, /remainingGap:/);
-  assert.match(contract, /remainingGap: "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded."/);
+  assert.match(contract, /remainingGap: "NONE"/);
   assert.equal(mount.MEDIA_MOUNT.runtime, "pinnedWhisperRuntime");
   assert.match(src("src/media/pinnedWhisperRuntime.ts"), /\/api\/media\/transcribe/);
   assert.doesNotMatch(src("src/media/pinnedWhisperRuntime.ts"), /__speWhisper/);
@@ -122,19 +122,19 @@ check("productMediaV1 is not a test-injected page global", () => {
   }
   const testInjects = assign.test(readFileSync(harnessPath, "utf8"));
   const claimsPass =
-    /productMediaV1:\s*"NOT_PASS"/.test(contract) &&
-    /productMediaV1:\s*"NOT_PASS"/.test(statusSrc) &&
-    mount.MEDIA_MOUNT.productMediaV1 === "NOT_PASS";
+    /productMediaV1:\s*"PASS"/.test(contract) &&
+    /productMediaV1:\s*"PASS"/.test(statusSrc) &&
+    mount.MEDIA_MOUNT.productMediaV1 === "PASS";
   if (testInjects || productHits.length > 0) {
     throw new Error("a page global is still the runtime");
   }
   assert.equal(claimsPass, true);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded.");
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'NONE');
   assert.equal(testInjects, false);
   assert.deepEqual(productHits, []);
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded.");
-  assert.match(contract, /remainingGap:\s*"clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded."/);
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'NONE');
+  assert.match(contract, /remainingGap:\s*"NONE"/);
   const host = readFileSync(join(repoRoot, "spe_runtime/media_product/route_host.py"), "utf8");
   const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
   assert.match(host, /LocalMediaSession\.open/);
@@ -157,9 +157,9 @@ check("production static server and relative media-pack share one host owner", (
   const vite = src("vite.config.ts");
   const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
   const claimsPass =
-    /productMediaV1:\s*"NOT_PASS"/.test(contract) &&
-    /productMediaV1:\s*"NOT_PASS"/.test(statusSrc) &&
-    mount.MEDIA_MOUNT.productMediaV1 === "NOT_PASS";
+    /productMediaV1:\s*"PASS"/.test(contract) &&
+    /productMediaV1:\s*"PASS"/.test(statusSrc) &&
+    mount.MEDIA_MOUNT.productMediaV1 === "PASS";
   assert.match(hostOwner, /spe_runtime\.media_product\.route_host/);
   assert.match(hostOwner, /export function createLocalMediaHost/);
   assert.match(plugin, /createLocalMediaHost/);
@@ -184,10 +184,10 @@ check("production static server and relative media-pack share one host owner", (
   assert.match(owner, /CMAKE_SKIP_RPATH/);
   assert.match(owner, /MEDIA_MODEL_INGRESS/);
   assert.match(owner, /MEDIA_CLI_BUILD/);
-  assert.match(owner, /"PRODUCT_MEDIA_V1": "NOT_PASS"/);
+  assert.match(owner, /"PRODUCT_MEDIA_V1": "PASS" if mounted else "NOT_PASS"/);
   assert.equal(claimsPass, true);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "clean checkout does not obtain the model and the CLI in one journey; both were pre-seeded.");
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'NONE');
   const manifest = JSON.parse(readFileSync(join(repoRoot, "media-pack/PACK_MANIFEST.json"), "utf8"));
   for (const key of [
     "MODEL_PACK_ID",
@@ -458,7 +458,7 @@ try {
   assert.equal(existsSync(speechFixture), true);
   assert.equal(existsSync(cancelFixture), true);
   const siblingAside = "/tmp/r3e-whisper-cli.sibling-not-restored";
-  if (existsSync(siblingAside)) unlinkSync(siblingAside);
+  if (existsSync(packCli) && existsSync(siblingAside)) unlinkSync(siblingAside);
   if (existsSync(packCli)) relocate(packCli, siblingAside);
   assert.equal(existsSync(packCli), false, "pre-seeded whisper-cli stays aside; the product must build it");
   assert.equal(existsSync(packModel), true, "place models/ggml-te-small.bin in media-pack/");
@@ -579,7 +579,7 @@ try {
       injected: typeof window.__speWhisper,
     }));
     assert.equal(mounted.owner, "route");
-    assert.equal(mounted.claim, "NOT_PASS");
+    assert.equal(mounted.claim, "PASS");
     assert.equal(mounted.injected, "undefined");
     const health = await page.evaluate(async () => {
       const res = await fetch("/api/media/health");
@@ -629,8 +629,29 @@ try {
 
   const speech = await openAppMedia();
   await speech.page.getByTestId("media-file").setInputFiles(speechFixture);
+  const absencePark = "/tmp/r3e-absence-park";
+  mkdirSync(absencePark, { recursive: true });
+  const parkAside = (from, to) => {
+    if (!existsSync(from)) return;
+    if (existsSync(to)) throw new Error(`refusing to overwrite parked copy ${to}`);
+    execFileSync("mv", [from, to]);
+  };
+  parkAside(packModel, join(absencePark, "ggml-te-small.bin"));
+  parkAside(join(repoRoot, "media-pack/.whisper-build"), join(absencePark, "whisper-build"));
+  parkAside(packCli, join(absencePark, "whisper-cli"));
+  assert.equal(existsSync(packModel), false, "model file gone before fetch");
+  assert.equal(existsSync(join(repoRoot, "media-pack/.whisper-build")), false, "whisper src gone before fetch");
+  assert.equal(existsSync(join(repoRoot, "media-pack/.whisper-build/src")), false, "whisper src gone before fetch");
+  assert.equal(existsSync(packCli), false, "whisper-cli gone before fetch");
+  const absenceLog = appLog.length;
+  const absenceSource = JSON.parse(readFileSync(packManifestPath, "utf8")).SOURCE;
+  assert.equal(
+    absenceSource,
+    "https://huggingface.co/ukta-app/indic-whisper-ggml/resolve/a3d637b81797a1d680e6933b71058ac9e00681fd/ggml-te-small.bin",
+  );
+  console.log("ABSENCE_BEFORE_FETCH", JSON.stringify({ model: false, whisperSrc: false, cli: false, source: absenceSource }));
   await speech.page.getByTestId("media-start").click();
-  await speech.page.getByTestId("media-transcript").waitFor({ timeout: 540000 });
+  await speech.page.getByTestId("media-transcript").waitFor({ timeout: 1800000 });
   await speech.page.getByTestId("media-mode").filter({ hasText: "LOCAL_NEURAL" }).waitFor({ timeout: 5000 });
   const speechSeen = await readPanel(speech.page);
   assert.match(speechSeen.mode, /LOCAL_NEURAL/);
@@ -641,7 +662,16 @@ try {
   assert.match(speechSeen.egress, /Network sends for this file: 0/);
   await waitClean(speech.page);
   assert.deepEqual(speech.external, []);
+  const acquired = appLog.slice(absenceLog);
+  assert.match(acquired, /MEDIA_MODEL_INGRESS/);
+  assert.match(acquired, /MEDIA_CLI_BUILD/);
+  assert.ok(acquired.includes(absenceSource), acquired.slice(-1500));
+  assert.match(acquired, /https:\/\/github\.com\/ggml-org\/whisper\.cpp\.git/);
+  assert.match(acquired, /sha256=47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e/);
+  assert.match(acquired, /bytes=190085487/);
+  assert.doesNotMatch(acquired, /127\.0\.0\.1/);
   console.log("PRODUCT-STATIC EVIDENCE /media speech LOCAL_NEURAL", JSON.stringify(speechSeen));
+  console.log("ABSENCE_JOURNEY", acquired.split("\n").filter((line) => line.includes("MEDIA_MODEL_INGRESS") || line.includes("MEDIA_CLI_BUILD")).join(" | "));
   checks += 1;
 
   await speech.page.route("**/*", (route) => {
@@ -688,7 +718,7 @@ try {
     claim: document.querySelector("[data-product-media-v1]")?.getAttribute("data-product-media-v1") ?? "",
   }));
   assert.equal(reloaded.injected, "undefined");
-  assert.equal(reloaded.claim, "NOT_PASS");
+  assert.equal(reloaded.claim, "PASS");
   await speech.page.getByTestId("media-file").setInputFiles("/tmp/r3e-silence-16k.wav");
   await speech.page.getByTestId("media-start").click();
   await speech.page.getByTestId("media-mode").filter({ hasText: "LOCAL_FALLBACK" }).waitFor({ timeout: 180000 });
@@ -880,8 +910,16 @@ try {
       await clean.context.close();
     }
   } finally {
-    if (existsSync(siblingAside)) unlinkSync(siblingAside);
-    if (existsSync(cliAside)) unlinkSync(cliAside);
+    const restoreIfMissing = (parked, dest, mode = null) => {
+      if (existsSync(dest) || !existsSync(parked)) return;
+      execFileSync("mv", [parked, dest]);
+      if (mode != null) chmodSync(dest, mode);
+    };
+    restoreIfMissing(siblingAside, packCli, 0o755);
+    restoreIfMissing(cliAside, packCli, 0o755);
+    restoreIfMissing(join("/tmp/r3e-absence-park", "whisper-cli"), packCli, 0o755);
+    restoreIfMissing(join("/tmp/r3e-absence-park", "ggml-te-small.bin"), packModel);
+    restoreIfMissing(join("/tmp/r3e-absence-park", "whisper-build"), join(repoRoot, "media-pack/.whisper-build"));
   }
 
   async function robotsOf(caseName) {
@@ -971,6 +1009,18 @@ try {
 } finally {
   if (appServer && !appServer.killed) appServer.kill("SIGTERM");
   await browser.close();
+  const restoreIfMissing = (parked, dest) => {
+    if (existsSync(dest) || !existsSync(parked)) return;
+    try {
+      execFileSync("mv", [parked, dest]);
+    } catch (err) {
+      console.error("RESTORE_FAILED", parked, err);
+    }
+  };
+  restoreIfMissing("/tmp/r3e-absence-park/ggml-te-small.bin", join(repoRoot, "media-pack/models/ggml-te-small.bin"));
+  restoreIfMissing("/tmp/r3e-absence-park/whisper-build", join(repoRoot, "media-pack/.whisper-build"));
+  restoreIfMissing("/tmp/r3e-absence-park/whisper-cli", join(repoRoot, "media-pack/whisper-cli"));
+  restoreIfMissing("/tmp/r3e-whisper-cli.sibling-not-restored", join(repoRoot, "media-pack/whisper-cli"));
 }
 
 await esbuild.stop();
