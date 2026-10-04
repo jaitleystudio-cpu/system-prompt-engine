@@ -1,0 +1,573 @@
+{
+  "lane": "R4-TASK6-LIVE-RETRACTION",
+  "base_sha": "a20099a92e08b7d558cfadb442565df1cb85fa6d",
+  "captured_at_ist": "2026-10-04T10:47:27+05:30",
+  "taint": "UNTRUSTED_SOURCE",
+  "authority": "NONE",
+  "self_signed": false,
+  "writer_receipt_is_promotion_proof": false,
+  "independent_verifier_receipt": false,
+  "may_promote": false,
+  "product_LIVE_INDEX": "HOLD",
+  "product_LIVE_RETRACTION": "HOLD",
+  "bodies_stored": false,
+  "pmc_queried": false,
+  "note": "Point-in-time retraction fields only. Response bodies are not stored. response_sha256 is the raw HTTP body. This file is a writer receipt, not an independent verifier receipt, and not promotion proof. PubMed esearch is PMID resolution and is not a retraction field. PMC was not queried.",
+  "receipts": [
+    {
+      "canonical_doi": "10.1038/nature00870",
+      "provider": "OPENALEX",
+      "provider_family": "OPENALEX",
+      "query_class": "OPENALEX_IS_RETRACTED",
+      "query": "https://api.openalex.org/works/https://doi.org/10.1038%2Fnature00870?select=id,doi,ids,is_retracted,display_name,type",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:06+05:30",
+      "returned_id": "https://openalex.org/W2158048826",
+      "returned_doi": "10.1038/nature00870",
+      "response_bytes": 391,
+      "response_sha256": "81f2808bda3a0d7bad2a72c76537fe55b823803b153946ed3feb465b48782e59",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_status": {
+        "is_retracted": true,
+        "is_retracted_present": true,
+        "type": "article",
+        "display_name": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow"
+      }
+    },
+    {
+      "canonical_doi": "10.1038/nature00870",
+      "provider": "CROSSREF",
+      "provider_family": "CROSSREF",
+      "query_class": "CROSSREF_UPDATE_RELATION",
+      "query": "https://api.crossref.org/works/10.1038/nature00870",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:24+05:30",
+      "returned_id": "10.1038/nature00870",
+      "returned_doi": "10.1038/nature00870",
+      "response_bytes": 25539,
+      "response_sha256": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_status": {
+        "update-to_present": false,
+        "updated-by_present": true,
+        "update-to": null,
+        "updated-by": [
+          {
+            "DOI": "10.1038/nature05812",
+            "type": "correction",
+            "label": "Correction",
+            "source": "retraction-watch"
+          },
+          {
+            "DOI": "10.1038/s41586-024-07653-0",
+            "type": "retraction",
+            "label": "Retraction",
+            "source": "retraction-watch"
+          },
+          {
+            "DOI": "10.1038/nature05812",
+            "type": "erratum",
+            "label": "Erratum",
+            "source": "publisher"
+          },
+          {
+            "DOI": "10.1038/s41586-024-07653-0",
+            "type": "retraction",
+            "label": "Retraction",
+            "source": "publisher"
+          }
+        ],
+        "relation_present": true,
+        "relation": {
+          "has-review": [
+            {
+              "id-type": "doi",
+              "id": "10.3410/f.1007596.128607",
+              "asserted-by": "object"
+            },
+            {
+              "id-type": "doi",
+              "id": "10.3410/f.1007596.95860",
+              "asserted-by": "object"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "canonical_doi": "10.1038/nature00870",
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query_class": "PMID_RESOLUTION",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=5&term=%2210.1038/nature00870%22&tool=spe_grounding",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:08+05:30",
+      "returned_id": "12077603",
+      "hit_count": 1,
+      "response_bytes": 203,
+      "response_sha256": "6cc39093c826fb2ad8e33a014598138f47f862f86537412e4c2711d78a0adde5",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "counts_as_retraction_field": false,
+      "raw_status": {
+        "count": "1",
+        "idlist": [
+          "12077603"
+        ],
+        "pubtype": null,
+        "retraction_field_present": false,
+        "note": "esearch idlist has no retraction field"
+      }
+    },
+    {
+      "canonical_doi": "10.1038/nature00870",
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query_class": "PUBMED_ESUMMARY_PUBTYPE",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=12077603&retmode=json&tool=spe_grounding",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:27+05:30",
+      "returned_id": "12077603",
+      "returned_doi": "10.1038/nature00870",
+      "response_bytes": 2954,
+      "response_sha256": "a89d6abd660223b36f8302fea056b15bb537f4c4a1106a3b23dd28ec97a8d7d5",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_status": {
+        "pubtype": [
+          "Journal Article",
+          "Research Support, Non-U.S. Gov't",
+          "Research Support, U.S. Gov't, P.H.S.",
+          "Retracted Publication"
+        ],
+        "pubtype_present": true,
+        "article_doi": [
+          "10.1038/nature00870"
+        ]
+      }
+    },
+    {
+      "canonical_doi": "10.1145/359545.359563",
+      "provider": "OPENALEX",
+      "provider_family": "OPENALEX",
+      "query_class": "OPENALEX_IS_RETRACTED",
+      "query": "https://api.openalex.org/works/https://doi.org/10.1145%2F359545.359563?select=id,doi,ids,is_retracted,display_name,type",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:08+05:30",
+      "returned_id": "https://openalex.org/W3137220996",
+      "returned_doi": "10.1145/359545.359563",
+      "response_bytes": 327,
+      "response_sha256": "eea848b0c6abab1e35b70a883502123c0047f81be703fddafe26695737632a18",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_status": {
+        "is_retracted": false,
+        "is_retracted_present": true,
+        "type": "article",
+        "display_name": "Time, clocks, and the ordering of events in a distributed system"
+      }
+    },
+    {
+      "canonical_doi": "10.1145/359545.359563",
+      "provider": "CROSSREF",
+      "provider_family": "CROSSREF",
+      "query_class": "CROSSREF_UPDATE_RELATION",
+      "query": "https://api.crossref.org/works/10.1145/359545.359563",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:25+05:30",
+      "returned_id": "10.1145/359545.359563",
+      "returned_doi": "10.1145/359545.359563",
+      "response_bytes": 3586,
+      "response_sha256": "ec6950de8905c7302b50ce32783f775aa3483fc02f53a3a48b9e00a1130fa968",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_status": {
+        "update-to_present": false,
+        "updated-by_present": false,
+        "update-to": null,
+        "updated-by": null,
+        "relation_present": true,
+        "relation": {}
+      }
+    },
+    {
+      "canonical_doi": "10.1145/359545.359563",
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query_class": "PMID_RESOLUTION",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=5&term=%2210.1145/359545.359563%22&tool=spe_grounding",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:10+05:30",
+      "returned_id": null,
+      "hit_count": 0,
+      "response_bytes": 310,
+      "response_sha256": "f4667fb6f4d6ac94a2809f56c3890399075a9bca09b814adcaa60f94e5698a19",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "counts_as_retraction_field": false,
+      "raw_status": {
+        "count": "0",
+        "idlist": [],
+        "pubtype": null,
+        "retraction_field_present": false,
+        "note": "esearch idlist has no retraction field"
+      }
+    },
+    {
+      "canonical_doi": "10.1016/j.ijantimicag.2020.105949",
+      "provider": "OPENALEX",
+      "provider_family": "OPENALEX",
+      "query_class": "OPENALEX_IS_RETRACTED",
+      "query": "https://api.openalex.org/works/https://doi.org/10.1016%2Fj.ijantimicag.2020.105949?select=id,doi,ids,is_retracted,display_name,type",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:10+05:30",
+      "returned_id": "https://openalex.org/W3010930696",
+      "returned_doi": "10.1016/j.ijantimicag.2020.105949",
+      "response_bytes": 465,
+      "response_sha256": "9a1937b834055cd57689450b8139c614aa120e1e56dbedb30667a499cffb6307",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_status": {
+        "is_retracted": true,
+        "is_retracted_present": true,
+        "type": "article",
+        "display_name": "RETRACTED: Hydroxychloroquine and azithromycin as a treatment of COVID-19: results of an open-label non-randomized clinical trial"
+      }
+    },
+    {
+      "canonical_doi": "10.1016/j.ijantimicag.2020.105949",
+      "provider": "CROSSREF",
+      "provider_family": "CROSSREF",
+      "query_class": "CROSSREF_UPDATE_RELATION",
+      "query": "https://api.crossref.org/works/10.1016/j.ijantimicag.2020.105949",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:26+05:30",
+      "returned_id": "10.1016/j.ijantimicag.2020.105949",
+      "returned_doi": "10.1016/j.ijantimicag.2020.105949",
+      "response_bytes": 15197,
+      "response_sha256": "44cfb1200ec0861053f023fcd77fb90d4b385340808663504906258eaf2c8361",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_status": {
+        "update-to_present": true,
+        "updated-by_present": true,
+        "update-to": [
+          {
+            "DOI": "10.1016/j.ijantimicag.2020.105949",
+            "type": "retraction",
+            "label": "Retraction",
+            "source": "publisher"
+          }
+        ],
+        "updated-by": [
+          {
+            "DOI": "10.1016/j.ijantimicag.2024.107416",
+            "type": "retraction",
+            "label": "Retraction",
+            "source": "retraction-watch"
+          },
+          {
+            "DOI": "10.1016/j.ijantimicag.2024.107416",
+            "type": "erratum",
+            "label": "Erratum",
+            "source": "publisher"
+          },
+          {
+            "DOI": "10.1016/j.ijantimicag.2020.105949",
+            "type": "retraction",
+            "label": "Retraction",
+            "source": "publisher"
+          }
+        ],
+        "relation_present": true,
+        "relation": {
+          "has-review": [
+            {
+              "id-type": "doi",
+              "id": "10.3410/f.737589198.793573012",
+              "asserted-by": "object"
+            },
+            {
+              "id-type": "doi",
+              "id": "10.3410/f.737589198.793575483",
+              "asserted-by": "object"
+            },
+            {
+              "id-type": "doi",
+              "id": "10.3410/f.737589198.793575078",
+              "asserted-by": "object"
+            },
+            {
+              "id-type": "doi",
+              "id": "10.3410/f.737589198.793575992",
+              "asserted-by": "object"
+            }
+          ],
+          "has-preprint": [
+            {
+              "id-type": "doi",
+              "id": "10.1101/2020.03.16.20037135",
+              "asserted-by": "object"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "canonical_doi": "10.1016/j.ijantimicag.2020.105949",
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query_class": "PMID_RESOLUTION",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=5&term=%2210.1016/j.ijantimicag.2020.105949%22&tool=spe_grounding",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:11+05:30",
+      "returned_id": "32205204",
+      "hit_count": 1,
+      "response_bytes": 217,
+      "response_sha256": "cafd339d573d11f58339de024267ca5a5b1f585475ccab87ada337d6625bc5c1",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "counts_as_retraction_field": false,
+      "raw_status": {
+        "count": "1",
+        "idlist": [
+          "32205204"
+        ],
+        "pubtype": null,
+        "retraction_field_present": false,
+        "note": "esearch idlist has no retraction field"
+      }
+    },
+    {
+      "canonical_doi": "10.1016/j.ijantimicag.2020.105949",
+      "provider": "PUBMED",
+      "provider_family": "NCBI",
+      "query_class": "PUBMED_ESUMMARY_PUBTYPE",
+      "query": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=32205204&retmode=json&tool=spe_grounding",
+      "http_status": 200,
+      "timestamp_ist": "2026-10-04T10:47:27+05:30",
+      "returned_id": "32205204",
+      "returned_doi": "10.1016/j.ijantimicag.2020.105949",
+      "response_bytes": 5540,
+      "response_sha256": "a54728b90b698085ce4d0854f9770f64831a38eb84ab79a40d3134c8cc3ca409",
+      "body_stored": false,
+      "self_signed": false,
+      "authority": "NONE",
+      "taint": "UNTRUSTED_SOURCE",
+      "raw_status": {
+        "pubtype": [
+          "Clinical Trial",
+          "Journal Article",
+          "Retracted Publication"
+        ],
+        "pubtype_present": true,
+        "article_doi": [
+          "10.1016/j.ijantimicag.2020.105949"
+        ]
+      }
+    }
+  ],
+  "verdict": {
+    "LIVE_RETRACTION": "HOLD",
+    "scoped_LIVE_RETRACTION": "HOLD",
+    "product_LIVE_INDEX": "HOLD",
+    "product_LIVE_RETRACTION": "HOLD",
+    "may_promote": false,
+    "pass": false,
+    "writer_receipt_is_promotion_proof": false,
+    "independent_verifier_receipt": false,
+    "index_unchanged": true,
+    "dois": {
+      "10.1038/nature00870": {
+        "provider_status": {
+          "OPENALEX": "ASSERTED",
+          "CROSSREF": "ASSERTED",
+          "PUBMED": "ASSERTED"
+        },
+        "queries": [
+          {
+            "provider": "OPENALEX",
+            "query_class": "OPENALEX_IS_RETRACTED",
+            "assertion": "ASSERTED",
+            "stored": true,
+            "self_signed": false,
+            "counted": true,
+            "returned_id": "https://openalex.org/W2158048826"
+          },
+          {
+            "provider": "CROSSREF",
+            "query_class": "CROSSREF_UPDATE_RELATION",
+            "assertion": "ASSERTED",
+            "stored": true,
+            "self_signed": false,
+            "counted": true,
+            "returned_id": "10.1038/nature00870"
+          },
+          {
+            "provider": "PUBMED",
+            "query_class": "PMID_RESOLUTION",
+            "assertion": "FIELD_ABSENT",
+            "stored": true,
+            "self_signed": false,
+            "counted": false,
+            "returned_id": "12077603"
+          },
+          {
+            "provider": "PUBMED",
+            "query_class": "PUBMED_ESUMMARY_PUBTYPE",
+            "assertion": "ASSERTED",
+            "stored": true,
+            "self_signed": false,
+            "counted": true,
+            "returned_id": "12077603"
+          }
+        ],
+        "asserting_families": [
+          "CROSSREF",
+          "NCBI",
+          "OPENALEX"
+        ],
+        "independent_family_count": 3,
+        "ncbi_family_count": 1,
+        "ncbi_counts_as_two_providers": false,
+        "retraction_gate": "RETRACTION_BOUND",
+        "evidence": "retraction asserted by CROSSREF,NCBI,OPENALEX",
+        "not_retracted": false,
+        "pass": false,
+        "live_verified": false
+      },
+      "10.1145/359545.359563": {
+        "provider_status": {
+          "OPENALEX": "NOT_ASSERTED",
+          "CROSSREF": "NOT_ASSERTED",
+          "PUBMED": "FIELD_ABSENT"
+        },
+        "queries": [
+          {
+            "provider": "OPENALEX",
+            "query_class": "OPENALEX_IS_RETRACTED",
+            "assertion": "NOT_ASSERTED",
+            "stored": true,
+            "self_signed": false,
+            "counted": false,
+            "returned_id": "https://openalex.org/W3137220996"
+          },
+          {
+            "provider": "CROSSREF",
+            "query_class": "CROSSREF_UPDATE_RELATION",
+            "assertion": "NOT_ASSERTED",
+            "stored": true,
+            "self_signed": false,
+            "counted": false,
+            "returned_id": "10.1145/359545.359563"
+          },
+          {
+            "provider": "PUBMED",
+            "query_class": "PMID_RESOLUTION",
+            "assertion": "FIELD_ABSENT",
+            "stored": true,
+            "self_signed": false,
+            "counted": false,
+            "returned_id": null
+          }
+        ],
+        "asserting_families": [],
+        "independent_family_count": 0,
+        "ncbi_family_count": 0,
+        "ncbi_counts_as_two_providers": false,
+        "retraction_gate": "HOLD",
+        "evidence": "no retraction asserted by these providers on this date",
+        "not_retracted": false,
+        "pass": false,
+        "live_verified": false
+      },
+      "10.1016/j.ijantimicag.2020.105949": {
+        "provider_status": {
+          "OPENALEX": "ASSERTED",
+          "CROSSREF": "ASSERTED",
+          "PUBMED": "ASSERTED"
+        },
+        "queries": [
+          {
+            "provider": "OPENALEX",
+            "query_class": "OPENALEX_IS_RETRACTED",
+            "assertion": "ASSERTED",
+            "stored": true,
+            "self_signed": false,
+            "counted": true,
+            "returned_id": "https://openalex.org/W3010930696"
+          },
+          {
+            "provider": "CROSSREF",
+            "query_class": "CROSSREF_UPDATE_RELATION",
+            "assertion": "ASSERTED",
+            "stored": true,
+            "self_signed": false,
+            "counted": true,
+            "returned_id": "10.1016/j.ijantimicag.2020.105949"
+          },
+          {
+            "provider": "PUBMED",
+            "query_class": "PMID_RESOLUTION",
+            "assertion": "FIELD_ABSENT",
+            "stored": true,
+            "self_signed": false,
+            "counted": false,
+            "returned_id": "32205204"
+          },
+          {
+            "provider": "PUBMED",
+            "query_class": "PUBMED_ESUMMARY_PUBTYPE",
+            "assertion": "ASSERTED",
+            "stored": true,
+            "self_signed": false,
+            "counted": true,
+            "returned_id": "32205204"
+          }
+        ],
+        "asserting_families": [
+          "CROSSREF",
+          "NCBI",
+          "OPENALEX"
+        ],
+        "independent_family_count": 3,
+        "ncbi_family_count": 1,
+        "ncbi_counts_as_two_providers": false,
+        "retraction_gate": "RETRACTION_BOUND",
+        "evidence": "retraction asserted by CROSSREF,NCBI,OPENALEX",
+        "not_retracted": false,
+        "pass": false,
+        "live_verified": false
+      }
+    },
+    "reasons": [
+      "PRODUCT_LIVE_RETRACTION_HOLD",
+      "WRITER_RECEIPT_DOES_NOT_FLIP_PRODUCT_CONSTANT",
+      "FIELD_ABSENT_IS_NOT_PASS",
+      "PUBMED_PLUS_PMC_NOT_TWO_CONFIRMATIONS",
+      "NOT_PASS"
+    ]
+  }
+}

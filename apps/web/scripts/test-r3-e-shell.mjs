@@ -226,7 +226,7 @@ check("production static server and relative media-pack share one host owner", (
 check("private and tool routes are noindex and off the sitemap", () => {
   const robots = src("public/robots.txt");
   const sitemap = src("public/sitemap.xml");
-  for (const path of ["/my-work", "/workspace", "/website", "/media"]) {
+  for (const path of ["/my-work", "/workspace", "/website", "/media", "/research"]) {
     assert.match(robots, new RegExp(`Disallow:\\s*${path}`));
     assert.doesNotMatch(sitemap, new RegExp(`<loc>[^<]*${path}</loc>`));
     const view = path === "/my-work" ? "my-work" : path.slice(1);

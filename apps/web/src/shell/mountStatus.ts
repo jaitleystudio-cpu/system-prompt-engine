@@ -20,3 +20,15 @@ export const WEBSITE_MOUNT = {
   contract: "apps/web/src/website/mount-contract.ts",
   status: "MOUNTED",
 } as const;
+
+/** Stored research journey mounted on /research. Not a live pass. */
+export const RESEARCH_MOUNT = {
+  id: "research",
+  route: "/research",
+  component: "ResearchRoute",
+  engine: "spe_runtime/grounding/research_journey.py",
+  RESEARCH_PRODUCT: "MOUNTED_STORED",
+  product_LIVE_INDEX: "HOLD",
+  product_LIVE_RETRACTION: "HOLD",
+  may_promote: false,
+} as const;

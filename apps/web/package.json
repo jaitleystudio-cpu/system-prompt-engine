@@ -46,6 +46,7 @@
     "test:quality-wiring": "node scripts/test-quality-product-wiring.mjs",
     "test:lane-g5": "node --experimental-strip-types scripts/test-lane-g5-shell-ux.mjs",
     "test:r3-e-shell": "node --experimental-strip-types scripts/test-r3-e-shell.mjs",
+    "test:r5-research-route": "node --experimental-strip-types scripts/test-r5-research-route.mjs",
     "test:website-product": "node --experimental-strip-types scripts/test-website-product-flow.mjs",
     "test:website-compiler": "node --experimental-strip-types scripts/test-static-website-compiler.mjs"
   },

@@ -57,6 +57,7 @@ import {
 } from "./routing";
 import { InAppLink } from "./shell/inAppLink";
 import { MediaRoute } from "./media/MediaRoute";
+import { ResearchRoute } from "./research/ResearchRoute";
 import { WEBSITE_MOUNT } from "./shell/mountStatus";
 import { NotFound } from "./shell/NotFound";
 import { SkipLink } from "./shell/SkipLink";
@@ -859,7 +860,8 @@ export default function App() {
           view === "workspace" ||
           view === "my-work" ||
           view === "website" ||
-          view === "media"
+          view === "media" ||
+          view === "research"
         }
         notFound={notFound}
       />
@@ -1156,6 +1158,7 @@ export default function App() {
         )}
 
         {!notFound && view === "media" && <MediaRoute />}
+        {!notFound && view === "research" && <ResearchRoute />}
 
         {!notFound && view === "my-work" && (
           <MyWork

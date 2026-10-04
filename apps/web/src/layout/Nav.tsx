@@ -16,6 +16,7 @@ const LINKS: { id: AppView; label: string }[] = [
   { id: "website", label: "Website" },
   { id: "lab", label: "Daily Lab" },
   { id: "my-work", label: "My Work" },
+  { id: "research", label: "Research" },
   { id: "capabilities", label: "Capabilities" },
   { id: "privacy", label: "Privacy" },
 ];

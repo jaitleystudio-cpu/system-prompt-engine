@@ -12,6 +12,7 @@ Disallow: /my-work
 Disallow: /workspace
 Disallow: /website
 Disallow: /media
+Disallow: /research
 Disallow: /models/
 Disallow: /ort/
 

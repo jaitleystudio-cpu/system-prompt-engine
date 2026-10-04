@@ -10,7 +10,8 @@ export type AppView =
   | "capabilities"
   | "workspace"
   | "website"
-  | "media";
+  | "media"
+  | "research";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -23,6 +24,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   workspace: "/workspace",
   website: "/website",
   media: "/media",
+  research: "/research",
 };
 
 /** Device-local and tool surfaces. Not advertised to crawlers. */
@@ -31,6 +33,7 @@ export const NOINDEX_VIEWS: ReadonlySet<AppView> = new Set([
   "my-work",
   "website",
   "media",
+  "research",
 ]);
 
 const PATH_VIEW: Record<string, AppView> = Object.fromEntries(
@@ -140,6 +143,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Media — Not available | SPE",
     description:
       "Media is not mounted in this build. Nothing on this route can capture or generate media.",
+  },
+  research: {
+    path: "/research",
+    title: "Research — Stored receipt only | SPE",
+    description:
+      "Ask a public research question. Search stays off until you consent. This route does not send the question and does not promote live index or retraction.",
   },
 };
 
