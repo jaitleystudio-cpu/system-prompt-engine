@@ -134,6 +134,7 @@ def _render_page(spec: WebsiteSpec, page: Page) -> StaticFile:
         "<head>\n"
         '  <meta charset="utf-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'\">\n"
         f"  <title>{title}</title>\n"
         f"{summary}"
         f"{robots}"

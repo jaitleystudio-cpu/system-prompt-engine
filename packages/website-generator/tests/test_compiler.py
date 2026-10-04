@@ -77,6 +77,8 @@ def test_compile_is_deterministic_and_offline_html_css():
     page = first.as_map()["index.html"]
     css = first.as_map()["assets/site.css"]
     assert "<!DOCTYPE html>" in page
+    assert 'http-equiv="Content-Security-Policy"' in page
+    assert "script-src 'none'" in page
     assert 'href="assets/site.css"' in page
     assert "<script" not in page.lower()
     assert "http://" not in page and "https://" not in css
