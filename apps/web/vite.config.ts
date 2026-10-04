@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath, URL } from "node:url";
 import { localMediaHostPlugin } from "./scripts/local-media-host-plugin.mjs";
+import { localOcrHostPlugin } from "./scripts/local-ocr-host-plugin.mjs";
 
 const repoRoot = fileURLToPath(new URL("../..", import.meta.url));
 const buildSha =
@@ -13,7 +14,7 @@ const buildSha =
   }).trim();
 
 export default defineConfig({
-  plugins: [react(), localMediaHostPlugin(repoRoot)],
+  plugins: [react(), localMediaHostPlugin(repoRoot), localOcrHostPlugin(repoRoot)],
   define: {
     __SPE_BUILD_SHA__: JSON.stringify(buildSha),
   },
