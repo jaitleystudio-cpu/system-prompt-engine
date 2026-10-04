@@ -40,9 +40,9 @@ export const SCENE_IR_SOURCE_SHA =
   "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949" as const;
 export const WEBGL_CONTEXT_LOSS_DISPOSAL = "NOT_IMPLEMENTED" as const;
 export const WEBGL_EXECUTION = "NOT_RUN" as const;
-export const ROUTE_MOUNT_STATUS = "NOT_INTEGRATED" as const;
+export const ROUTE_MOUNT_STATUS = "MOUNTED" as const;
 export const COMPILER_REUSED = "LOCAL_TS_WEBSITE_SPEC_1" as const;
-export const SHELL_MOUNT = "NOT_DONE" as const;
+export const SHELL_MOUNT = "MOUNTED" as const;
 
 export type WebsiteInput =
   | { kind: "website_spec"; spec: unknown; sceneDefinition?: unknown }
