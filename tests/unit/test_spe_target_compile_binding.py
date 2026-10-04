@@ -330,3 +330,66 @@ def test_recover_intermediate_keeps_protected_intent_bytes():
     assert ir["protected_intent_text"] == art["user_request"]
     assert {c["constraint_id"] for c in ir["requirements"]} == {"budget-cap", "one-page"}
     assert {e["fact_id"] for e in ir["evidence"]} == {"f-user-request", "f-budget"}
+
+
+def test_saved_package_extras_reach_prompt_and_drop_fails_closed():
+    """mustNot, privacy, and rollback from the saved package are not compiler defaults.
+
+    Deleting one extra in the adapter must fail closed and name that field.
+    A package with no extras still compiles (covered by the target sweep).
+    """
+    art = _artifact()
+    patched = copy.deepcopy(art)
+    patched["envelope"]["payload"]["extras"] = {
+        "mustNot": ["MUST_NOT spend beyond the saved cap."],
+        "privacy": ["Privacy: do not export the saved customer list."],
+        "rollback": ["Rollback: restore the saved baseline if the gate fails."],
+    }
+    patched["envelope"]["payload"]["hard_constraints"].extend(
+        [
+            {
+                "constraint_id": "no-spend",
+                "statement": "MUST_NOT spend beyond the saved cap.",
+                "strength": "HARD",
+                "kind": "MUST_NOT",
+            },
+            {
+                "constraint_id": "no-export",
+                "statement": "Privacy: do not export the saved customer list.",
+                "strength": "HARD",
+                "kind": "PRIVACY",
+            },
+            {
+                "constraint_id": "revert-sha",
+                "statement": "Rollback: restore the saved baseline if the gate fails.",
+                "strength": "HARD",
+                "kind": "ROLLBACK",
+            },
+        ]
+    )
+    patched.pop("integrity", None)
+    from spe_runtime.portability.spe_artifact import compute_integrity
+
+    patched["integrity"] = compute_integrity(patched)
+    result = compile_spe_for_target(patched, "grok")
+    prompt = result["prompt"]
+    assert "MUST_NOT spend beyond the saved cap." in prompt
+    assert "Privacy: do not export the saved customer list." in prompt
+    assert "Rollback: restore the saved baseline if the gate fails." in prompt
+    assert "no-spend" in prompt
+    assert "no-export" in prompt
+    assert "revert-sha" in prompt
+    # Saved mustNot replaces the compiler default instead of dropping the package text.
+    assert "MUST_NOT deploy, merge, host, release" not in prompt
+    assert result["intermediate"]["extras"]["mustNot"]
+    assert result["intermediate"]["extras"]["privacy"]
+    assert result["intermediate"]["extras"]["rollback"]
+
+    def drop_privacy(ir):
+        ir["extras"]["privacy"] = []
+        return ir
+
+    with pytest.raises(TargetCompileError) as exc:
+        compile_spe_for_target(patched, "grok", mutate_intermediate=drop_privacy)
+    assert exc.value.code == "EXTRAS_DROPPED"
+    assert "privacy" in exc.value.reason

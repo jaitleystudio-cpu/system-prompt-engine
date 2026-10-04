@@ -8,7 +8,7 @@ import { formatTargetModelPrompt } from "../../apps/web/src/engine/continuation/
 
 const input = JSON.parse(readFileSync(0, "utf8"));
 try {
-  const prompt = formatTargetModelPrompt(
+  const args = [
     input.target,
     input.mission,
     input.baselineSha,
@@ -19,7 +19,12 @@ try {
     input.unknowns,
     input.testGates,
     input.stopConditions,
-  );
+  ];
+  // Existing extras argument only. Absent means the package had none.
+  if (input.extras !== undefined && input.extras !== null) {
+    args.push(input.extras);
+  }
+  const prompt = formatTargetModelPrompt(...args);
   process.stdout.write(
     JSON.stringify({
       symbol: "formatTargetModelPrompt",

@@ -171,8 +171,15 @@ def invoke_format_target_model_prompt(
     unknowns: Sequence[str],
     test_gates: Sequence[str],
     stop_conditions: Sequence[str],
+    extras: Mapping[str, Sequence[str]] | None = None,
 ) -> str:
-    """Call the existing TypeScript formatTargetModelPrompt. Do not reimplement it."""
+    """Call the existing TypeScript formatTargetModelPrompt. Do not reimplement it.
+
+    ``extras`` is the compiler's existing structured argument
+    (mustNot / privacy / rollback). Omit it only when the saved package has
+    none. An empty list is passed through so compiler defaults cannot refill
+    a field the adapter deleted.
+    """
     if target not in TARGET_EXPORT_MODELS:
         raise UnknownTargetError(target)
     assert_canonical_compiler_bytes()
@@ -198,6 +205,8 @@ def invoke_format_target_model_prompt(
         "testGates": list(test_gates),
         "stopConditions": list(stop_conditions),
     }
+    if extras is not None:
+        payload["extras"] = {key: list(value) for key, value in extras.items()}
     try:
         proc = subprocess.run(
             [
@@ -398,6 +407,139 @@ def _refuse_duplicate_ids(artifact: Mapping[str, Any]) -> None:
             seen_field.add(item_id)
 
 
+
+_EXTRA_FIELDS = ("mustNot", "privacy", "rollback")
+_EXTRA_SLOT_TOKENS = {
+    "must_not": "mustNot",
+    "mustnot": "mustNot",
+    "privacy": "privacy",
+    "rollback": "rollback",
+}
+_PAYLOAD_EXTRA_KEYS = (
+    ("mustNot", "mustNot"),
+    ("must_not", "mustNot"),
+    ("privacy", "privacy"),
+    ("privacy_constraints", "privacy"),
+    ("rollback", "rollback"),
+    ("rollback_constraints", "rollback"),
+)
+
+
+def _extra_slot_token(value: str) -> str | None:
+    token = value.strip().lower().replace("-", "_").replace(" ", "_")
+    return _EXTRA_SLOT_TOKENS.get(token)
+
+
+def _constraint_extra_slot(item: Mapping[str, Any]) -> str | None:
+    for key in ("kind", "slot", "obligation", "semantic_key"):
+        raw = item.get(key)
+        if isinstance(raw, str):
+            slot = _extra_slot_token(raw)
+            if slot is not None:
+                return slot
+    return None
+
+
+def _append_extra_line(bucket: dict[str, list[str]], field: str, line: str) -> None:
+    if line not in bucket[field]:
+        bucket[field].append(line)
+
+
+def _lines_from_extra_value(value: Any, *, field: str) -> list[str]:
+    """Normalize a saved extra into compiler string lines. Fail closed on junk."""
+    if isinstance(value, str):
+        if not value.strip():
+            raise TargetCompileError("MALICIOUS_FIELD", f"{field} extra is empty")
+        return [value]
+    if not isinstance(value, list):
+        raise TargetCompileError(
+            "MALICIOUS_FIELD", f"{field} extras must be a list of strings"
+        )
+    lines: list[str] = []
+    for item in value:
+        if isinstance(item, str):
+            if not item.strip():
+                raise TargetCompileError("MALICIOUS_FIELD", f"{field} extra is empty")
+            lines.append(item)
+            continue
+        if isinstance(item, Mapping):
+            statement = item.get("statement")
+            if not isinstance(statement, str) or not statement.strip():
+                statement = item.get("text")
+            if not isinstance(statement, str) or not statement.strip():
+                raise TargetCompileError(
+                    "MALICIOUS_FIELD", f"{field} extra is not a constraint string"
+                )
+            cid = item.get("constraint_id")
+            if not isinstance(cid, str) or not cid.strip():
+                cid = item.get("id") if isinstance(item.get("id"), str) else ""
+            if cid.strip():
+                lines.append(f"[{field}:{cid}] {statement}")
+            else:
+                lines.append(statement)
+            continue
+        raise TargetCompileError(
+            "MALICIOUS_FIELD", f"{field} extra is not a constraint string"
+        )
+    return lines
+
+
+def _empty_extras() -> dict[str, list[str]]:
+    return {field: [] for field in _EXTRA_FIELDS}
+
+
+def _absorb_payload_extras(payload: Mapping[str, Any], bucket: dict[str, list[str]]) -> None:
+    """Read compiler-shaped extras saved on the package. Do not invent defaults."""
+    raw_extras = payload.get("extras")
+    if raw_extras is not None:
+        if not isinstance(raw_extras, Mapping):
+            raise TargetCompileError("MALICIOUS_FIELD", "extras must be an object")
+        for key, field in (
+            ("mustNot", "mustNot"),
+            ("must_not", "mustNot"),
+            ("privacy", "privacy"),
+            ("rollback", "rollback"),
+        ):
+            if key not in raw_extras:
+                continue
+            for line in _lines_from_extra_value(raw_extras[key], field=field):
+                _append_extra_line(bucket, field, line)
+    for key, field in _PAYLOAD_EXTRA_KEYS:
+        if key not in payload:
+            continue
+        for line in _lines_from_extra_value(payload[key], field=field):
+            _append_extra_line(bucket, field, line)
+
+
+def _compiler_extras(
+    original: Mapping[str, Any], working: Mapping[str, Any]
+) -> dict[str, list[str]] | None:
+    """Pass saved extras through. A deleted field becomes [] so defaults cannot refill it."""
+    saved = original.get("extras")
+    if not isinstance(saved, Mapping):
+        return None
+    current = working.get("extras")
+    if current is None:
+        current = {}
+    if not isinstance(current, Mapping):
+        raise TargetCompileError("MALICIOUS_FIELD", "extras must be an object")
+    out: dict[str, list[str]] = {}
+    for field in _EXTRA_FIELDS:
+        saved_items = saved.get(field) or []
+        if not isinstance(saved_items, list) or not saved_items:
+            continue
+        if field not in current:
+            out[field] = []
+            continue
+        value = current.get(field)
+        if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+            raise TargetCompileError(
+                "MALICIOUS_FIELD", f"{field} extras must be a list of strings"
+            )
+        out[field] = list(value)
+    return out or None
+
+
 def recover_intermediate(artifact: Mapping[str, Any]) -> dict[str, Any]:
     """Recover ProtectedIntent, requirements, evidence, authority into IR."""
     intent = copy.deepcopy(dict(artifact["intent"]))
@@ -417,6 +559,8 @@ def recover_intermediate(artifact: Mapping[str, Any]) -> dict[str, Any]:
     authority_snapshot = canonicalize(dict(authority))
 
     hard_constraints = []
+    extra_lines = _empty_extras()
+    ordinary_constraints = []
     for index, item in enumerate(_as_list(payload.get("hard_constraints"))):
         if not isinstance(item, Mapping):
             raise TargetCompileError("MALICIOUS_FIELD", "constraint must be an object")
@@ -424,13 +568,19 @@ def recover_intermediate(artifact: Mapping[str, Any]) -> dict[str, Any]:
         constraint_id = item.get("constraint_id")
         if not isinstance(statement, str) or not isinstance(constraint_id, str):
             raise TargetCompileError("MALICIOUS_FIELD", "constraint fields invalid")
-        hard_constraints.append(
-            {
-                "constraint_id": constraint_id,
-                "statement": statement,
-                "strength": item.get("strength", "HARD"),
-            }
-        )
+        record = {
+            "constraint_id": constraint_id,
+            "statement": statement,
+            "strength": item.get("strength", "HARD"),
+        }
+        slot = _constraint_extra_slot(item)
+        if slot is not None:
+            record["extra_slot"] = slot
+            _append_extra_line(extra_lines, slot, f"[{slot}:{constraint_id}] {statement}")
+        else:
+            ordinary_constraints.append(record)
+        hard_constraints.append(record)
+    _absorb_payload_extras(payload, extra_lines)
 
     evidence = []
     for index, item in enumerate(_as_list(payload.get("facts"))):
@@ -482,7 +632,9 @@ def recover_intermediate(artifact: Mapping[str, Any]) -> dict[str, Any]:
         if text:
             confirmed_obligations.append(f"[MUST:{item_id}] {text}")
 
-    test_gates = [f"[CONSTRAINT:{c['constraint_id']}] {c['statement']}" for c in hard_constraints]
+    test_gates = [
+        f"[CONSTRAINT:{c['constraint_id']}] {c['statement']}" for c in ordinary_constraints
+    ]
     for obligation in confirmed_obligations:
         if obligation not in test_gates:
             test_gates.append(obligation)
@@ -543,6 +695,7 @@ def recover_intermediate(artifact: Mapping[str, Any]) -> dict[str, Any]:
         "baseline_sha": baseline_sha,
         "spe_format": artifact["spe_format"],
         "content_sha256": baseline_sha,
+        "extras": extra_lines,
     }
     return intermediate
 
@@ -556,6 +709,14 @@ def verify_preservation(
     """Fail closed if the adapter dropped/changed protected surfaces."""
     if intermediate.get("schema") != INTERMEDIATE_SCHEMA:
         raise TargetCompileError("MALICIOUS_FIELD", "intermediate schema mismatch")
+
+    extras = intermediate.get("extras")
+    if not isinstance(extras, Mapping):
+        extras = {}
+    for field in _EXTRA_FIELDS:
+        for line in extras.get(field) or []:
+            if not isinstance(line, str) or line not in prompt:
+                raise TargetCompileError("EXTRAS_DROPPED", f"dropped field: {field}")
 
     intent = intermediate.get("protected_intent")
     if not isinstance(intent, Mapping):
@@ -649,6 +810,7 @@ def compile_spe_for_target(
         working["unknowns"],
         working["test_gates"],
         working["stop_conditions"],
+        extras=_compiler_extras(intermediate, working),
     )
 
     # Preservation is always checked against the *original* recovered IR, so an
@@ -725,6 +887,12 @@ def semantic_compare(
     right_unknowns = set(right_ir["unknowns"])
     left_stops = set(left_ir["stop_conditions"])
     right_stops = set(right_ir["stop_conditions"])
+
+    def _extra_map(ir: Mapping[str, Any]) -> dict[str, list[str]]:
+        raw = ir.get("extras") if isinstance(ir.get("extras"), Mapping) else {}
+        return {field: list(raw.get(field) or []) for field in _EXTRA_FIELDS}
+
+    extras_equal = _extra_map(left_ir) == _extra_map(right_ir)
     ok = (
         intent_equal
         and authority_equal
@@ -732,6 +900,7 @@ def semantic_compare(
         and left_evidence == right_evidence
         and left_unknowns == right_unknowns
         and left_stops == right_stops
+        and extras_equal
     )
     if not ok:
         raise TargetCompileError("SEMANTIC_MISMATCH", "semantic compare failed")
@@ -743,6 +912,7 @@ def semantic_compare(
         "evidence_ids": left_evidence == right_evidence,
         "unknowns": left_unknowns == right_unknowns,
         "stop_conditions": left_stops == right_stops,
+        "extras": extras_equal,
     }
 
 
