@@ -105,8 +105,8 @@ export const GuideArticle: React.FC<GuideArticleProps> = ({ document: doc, onBac
             Verifiable Evidence Ledger
           </h2>
           <p style={{ fontSize: "0.9375rem", color: "var(--spe-hub-muted)", marginBottom: "20px" }}>
-            The following empirical claims have been independently evaluated according to our 14-field
-            verifiable benchmark standard.
+            Each record shows its evidence status. Provisional records await attributable receipts
+            and independent verification.
           </p>
 
           {doc.evidenceRecords.map((ev: EvidenceRecord) => (
@@ -199,9 +199,11 @@ export const GuideArticle: React.FC<GuideArticleProps> = ({ document: doc, onBac
                 {/* 14. Last Verified */}
                 <div className="spe-evidence-field-label">Last Verified:</div>
                 <div className="spe-evidence-field-val">
-                  <time dateTime={ev.lastVerified}>
-                    {new Date(ev.lastVerified).toLocaleString()}
-                  </time>
+                  {ev.lastVerified === "UNKNOWN" ? "UNKNOWN" : (
+                    <time dateTime={ev.lastVerified}>
+                      {new Date(ev.lastVerified).toLocaleString()}
+                    </time>
+                  )}
                 </div>
               </div>
             </div>

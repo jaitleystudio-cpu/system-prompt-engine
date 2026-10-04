@@ -68,6 +68,8 @@ jobs:
       - name: engine tests
         working-directory: apps/web
         run: npm run test:engine
+      - name: unreceipted authority claims remain provisional
+        run: node apps/web/scripts/test-authority-evidence-truth.mjs
       - name: build
         working-directory: apps/web
         run: npm run build

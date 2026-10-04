@@ -1,0 +1,25 @@
+{
+  "actual_network_calls": 0,
+  "captured_request_boundaries": [
+    {
+      "url": "https://api.openalex.org/works/https://doi.org/10.1038/nature00870",
+      "method": "GET",
+      "data": null,
+      "headers": {
+        "User-agent": "SPE-GroundingFabric/1.0",
+        "Accept": "application/json"
+      }
+    },
+    {
+      "url": "https://api.crossref.org/works/10.1038/nature00870",
+      "method": "GET",
+      "data": null,
+      "headers": {
+        "User-agent": "SPE-GroundingFabric/1.0",
+        "Accept": "application/json"
+      }
+    }
+  ],
+  "private_sentinel_in_requests": false,
+  "scope": "Fixed public DOI metadata GET requests; example.com uses fixed public URL. No user data or request body."
+}

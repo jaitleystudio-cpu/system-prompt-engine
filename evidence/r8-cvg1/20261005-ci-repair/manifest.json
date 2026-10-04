@@ -1,0 +1,109 @@
+{
+  "baseline_sha": "7e09f68daf5a09905bf50abfc5f145bece9e5a55",
+  "qualification": "R8_NOT_READY",
+  "repair": "Unreceipted authority claims remain provisional",
+  "first_mandatory_defect": "LANGUAGE_PERSPECTIVE_GATE: 912 unreviewed entries and one jargon risk",
+  "candidate_frozen": false,
+  "human_ratings": "NO_RATINGS_YET",
+  "external_vendor": "UNKNOWN",
+  "external_pen_test": "UNKNOWN",
+  "external_payment": "UNKNOWN",
+  "files": {
+    ".github/workflows/r8-cvg-validation.yml": {
+      "sha256": "4425acc72a522cdb7b50a1a680e255dd7ef8763806c88202d55ce23aa3bf31e8",
+      "bytes": 2160
+    },
+    "apps/web/scripts/test-authority-evidence-truth.mjs": {
+      "sha256": "56897491ed5ea06890147ebbb5ec6d01c4490ad805f718a673384924a114a56c",
+      "bytes": 2654
+    },
+    "apps/web/src/authority/evidenceRegistry.ts": {
+      "sha256": "aae4b32fd8036131130613b6d621fd8ac1ca696b486b175247c49db436e05cc2",
+      "bytes": 8929
+    },
+    "apps/web/src/pages/AuthorityHub.tsx": {
+      "sha256": "27b5db40b0b1ce4b05ca61e64df7d3db63b457da791cc796bc92609bde7792a3",
+      "bytes": 5624
+    },
+    "apps/web/src/pages/GuideArticle.tsx": {
+      "sha256": "4d3968b2e3626a141eb5a2d5499f9fb31976318aec778429db00c4d0f3f2b46f",
+      "bytes": 8469
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/LEDGER.md": {
+      "sha256": "0bff08c0499e33acd1317755783af6c2569bc4d1e8b6734477f92bcbc92cc5e8",
+      "bytes": 7747
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/authority-green.log": {
+      "sha256": "509e4016cd9e117c87cbddd64f065fb6e5981789ca6979acaccfb0557ac9f85e",
+      "bytes": 104
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/authority-red.log": {
+      "sha256": "e54e53bb9068840a6e8091eff54eccb02d79a92085c5cdcb9ba2eb04b20e52a8",
+      "bytes": 639
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/authority-registry-before.ts": {
+      "sha256": "de5953832548483d5ac48c40c07ae66abdb4765002ebea1e69e7a078c9d59714",
+      "bytes": 10551
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/baseline-ci-failed.log": {
+      "sha256": "4fc2a0a9a12889860cfc45a30d359df382e75cefc85c97691b6f3a961f109d62",
+      "bytes": 326059
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/baseline-ci-full.log": {
+      "sha256": "d0c2ad8b50dd95dc9ec112359f04af679e69197bdcd9937cc33c6a0144abd8ff",
+      "bytes": 502071
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/baseline-ci.json": {
+      "sha256": "b0e8a95fc2aa2307f614d2b4e75fee4c326f2c870ff5bc9f86d1c400122f438f",
+      "bytes": 5668
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/copy-adversarial.log": {
+      "sha256": "251bbc7e00ff509983a055f2bca2577cb0a429ecd64299f959047a40f6bda546",
+      "bytes": 214
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/copy-after-truth-repair.json": {
+      "sha256": "acb134ce325ca2717feb2ddb7db86d618435b2b61be41c149cddec87d76feae6",
+      "bytes": 133749
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/copy-red.json": {
+      "sha256": "79d2f85919d0e92f8804e80965f9463b1089197ed46b2051205cb7ae965bf584",
+      "bytes": 140416
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/custody.json": {
+      "sha256": "c844e56c4f54aadb7c0ed78bd7a6f2a2c70457da35266e215a09ded7d29f31c2",
+      "bytes": 1358
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/engine.log": {
+      "sha256": "0f6f015341dc704fd00606b77a4bc496900f447b9d1edb4903dea106a81b69ee",
+      "bytes": 1016
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/network-preflight.json": {
+      "sha256": "4024158ae3efd52673ed6f7800e1473d126666c3ca10923a183e5ed67d3c889d",
+      "bytes": 719
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/python-regression.log": {
+      "sha256": "3ed794f42d62273ef33ac1100dc5e9197cf6b54d66180e579645b89b5ddd8419",
+      "bytes": 6076
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/rust-core.log": {
+      "sha256": "5234c966b9bba3feb0e49458bad592f4b1c3322d8d7ced94372e2fa14a0e3b44",
+      "bytes": 4196
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/rust-wasm.log": {
+      "sha256": "69326c937f60d838a04dab92f2fbfdaa7b7251cfbb083c749e50403d900490cd",
+      "bytes": 1577
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/scoped-live-recheck.log": {
+      "sha256": "63ff8e87b81f77183150f0cc103cb26233bf4d032c96af822c1c6bb9ea915c06",
+      "bytes": 98
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/typecheck.log": {
+      "sha256": "26bccbc7b69199a40e66ebd489b4197ece6b48318e6e37ec3f6556b940cb7f0f",
+      "bytes": 409
+    },
+    "evidence/r8-cvg1/20261005-ci-repair/web-build.log": {
+      "sha256": "3dd4957a3c7501dfedad786bdb9598a9850ff5c845a8413d75e63382e3c46bab",
+      "bytes": 133980
+    }
+  }
+}

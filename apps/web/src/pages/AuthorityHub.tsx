@@ -27,8 +27,8 @@ export const AuthorityHub: React.FC = () => {
       <header className="spe-authority-header">
         <h1 id="spe-authority-main-title">Evidence & Authority Hub</h1>
         <p>
-          Peer-replicable research, technical specifications, and empirical benchmarks
-          grounding the System Prompt Engine architecture.
+          Qualification plans and evidence requirements for the System Prompt Engine.
+          Provisional records do not establish measured results or independent verification.
         </p>
 
         {/* Global Evidence Ledger Metrics */}
@@ -46,7 +46,7 @@ export const AuthorityHub: React.FC = () => {
         >
           <div>
             <div style={{ fontSize: "0.75rem", color: "var(--spe-hub-muted)", textTransform: "uppercase" }}>
-              Verified & Replicated Claims
+              Verified Claims
             </div>
             <div style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--spe-hub-success)" }}>
               {EVIDENCE_LEDGER.filter((e) => e.status === "verified").length} / {EVIDENCE_LEDGER.length}
@@ -138,7 +138,7 @@ export const AuthorityHub: React.FC = () => {
             </div>
 
             <div className="spe-doc-footer">
-              <span>{doc.evidenceRecords.length} Verified Evidence Records</span>
+              <span>{doc.evidenceRecords.filter((e) => e.status === "verified" || e.status === "replicated").length} / {doc.evidenceRecords.length} records verified</span>
               <span style={{ color: "var(--spe-hub-accent)", fontWeight: 600 }}>Read →</span>
             </div>
           </article>
