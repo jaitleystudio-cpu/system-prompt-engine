@@ -59,7 +59,7 @@ export function WebsiteProduct() {
       className="website-product"
       data-copy-depth="PROOF"
       data-route-mount={websiteMountContract.routeMountStatus}
-      data-scene-ir-wired="false"
+      data-scene-ir-wired="true"
       aria-label="Website product"
     >
       <h1>Website</h1>
@@ -107,7 +107,7 @@ export function WebsiteProduct() {
         <div role="status" aria-label="Website result">
           <p>{result.status}</p>
           <p>{result.reasons.join(", ")}</p>
-          <p>Fetched: no. Live site: no. 3D scene: no.</p>
+          <p>Fetched: no. Live site: no. SceneIR owner: wired. Live URL: unavailable. Shell mount: not done.</p>
         </div>
       ) : null}
       {result?.previewHtml ? (
