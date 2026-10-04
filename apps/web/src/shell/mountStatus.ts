@@ -16,9 +16,14 @@ export const MEDIA_MOUNT = {
 
 export const WEBSITE_MOUNT = {
   id: "website",
-  sha: "53028b17d28a233bef3076f33f38e9817d6fdb37",
+  sha: "aa823977fc14db66d06f52fc38a85045d122ae05",
+  route: "/website",
   contract: "apps/web/src/website/mount-contract.ts",
   status: "MOUNTED",
+  WEBSITE_PRODUCT: "MOUNTED_LOCAL",
+  SCENE3D: "OWNER_WIRED",
+  LIVE_URL: "NOT_AVAILABLE",
+  WEBGL_EXECUTION: "NOT_RUN",
 } as const;
 
 /** Stored research journey mounted on /research. Not a live pass. */
