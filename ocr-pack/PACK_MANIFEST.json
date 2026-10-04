@@ -276,6 +276,9 @@
     ]
   },
   "LANGUAGE_SCOPE": [
-    "eng"
+    "eng",
+    "tel",
+    "hin",
+    "tam"
   ]
 }

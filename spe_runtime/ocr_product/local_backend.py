@@ -412,7 +412,8 @@ def _load_pack_manifest(root: Path) -> dict[str, object]:
         raise IntegrityError("WRONG_MODEL")
     if payload["LICENSE"] != PINNED_LICENSE or payload["SOURCE"] != PINNED_MODEL_SOURCE:
         raise IntegrityError("WRONG_MODEL")
-    if payload["LANGUAGE_SCOPE"] != [PINNED_LANGUAGE]:
+    pinned_scope = [str(item["language"]) for item in PINNED_LANGUAGE_PACKS]
+    if payload["LANGUAGE_SCOPE"] != pinned_scope:
         raise IntegrityError("WRONG_MODEL")
     runtime = payload["RUNTIME_COMPATIBILITY"]
     if not isinstance(runtime, dict):
