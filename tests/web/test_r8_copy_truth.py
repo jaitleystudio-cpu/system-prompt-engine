@@ -37,6 +37,7 @@ def test_project_library_sample_does_not_claim_measured_verification():
     assert "ev:cwv_lcp_verified" not in text
     assert "ev:syntax_validation_pass" not in text
     assert "prov:eval_delta_pass" not in text
+    assert "ev:typecheck_pass" not in text
     assert "Synthetic schema fixture" in text
 
 @pytest.mark.parametrize('file,unsupported', [
