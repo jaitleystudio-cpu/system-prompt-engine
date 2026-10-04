@@ -45,6 +45,7 @@ from spe_runtime.grounding.live_adapters import (
     acquire_scholarly_hits,
     hits_to_capsules,
 )
+from spe_runtime.grounding.research_journey import run_research_journey
 
 __all__ = [
     "ContextCapsule",
@@ -74,6 +75,7 @@ __all__ = [
     "may_promote_live_retraction",
     "acquire_scholarly_hits",
     "hits_to_capsules",
+    "run_research_journey",
     "compile_context",
     "compile_context_need",
     "freshness_state",
