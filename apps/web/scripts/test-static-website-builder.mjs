@@ -65,6 +65,15 @@ assert(cssText.includes("prefers-reduced-motion: reduce"), "CSS must support pre
 assert(cssText.includes("min-height: 44px"), "CSS must enforce 44px touch targets");
 assert(cssText.includes("@media (max-width: 360px)"), "CSS must reflow down to 360px");
 
+console.log("Checking visitor-facing truth labels...");
+assert(!viewText.includes("G13 Spec Compiler"), "UI must not imply a G13 package binding");
+assert(!viewText.includes("Status: VERIFIED"), "Local compile output must not be labeled independently verified");
+assert(!viewText.includes("WCAG 2.1 AA Styled CSS"), "Static CSS must not claim WCAG conformance from styling alone");
+assert(!modelText.includes("ensures zero unverified cloud exposure"), "Sample copy must not assert unreceipted zero-egress truth");
+assert(!modelText.includes("Dual-theme WCAG 2.1 AA focus rings"), "Sample copy must not claim WCAG conformance from focus styles");
+assert(viewText.includes("Local compile: OK"), "UI should report the bounded local compile result");
+assert(viewText.includes("focus-visible + reduced-motion styles"), "Code inspector should describe implemented accessibility styles without certification");
+
 console.log("Checking Route Mount isolation...");
 assert(modelText.includes('ROUTE_MOUNT_STATUS = "NOT_INTEGRATED"'), "ROUTE_MOUNT_STATUS must be NOT_INTEGRATED");
 const appTsx = fs.readFileSync(path.join(webRoot, "src/App.tsx"), "utf8");
