@@ -29,13 +29,13 @@ const ledger = read("src/shell/mountStatus.ts");
 const flow = read("src/website/productFlow.ts");
 const compiler = read("src/engine/multimodal/sceneCompiler.ts");
 const constants = {
-  ledgerWebglNotRun: /WEBGL_EXECUTION:\s*"NOT_RUN"/.test(ledger),
+  ledgerWebglEvidence: /WEBGL_EXECUTION:\s*"EVIDENCE:\/tmp\/spe-webgl-r6c\//.test(ledger),
   ledgerSceneNotPass: !/SCENE3D:\s*"PASS"/.test(ledger) && !/WEBGL_EXECUTION:\s*"PASS"/.test(ledger),
-  flowNotRun: /export const WEBGL_EXECUTION = "NOT_RUN"/.test(flow),
+  flowEvidence: /export const WEBGL_EXECUTION = "EVIDENCE:\/tmp\/spe-webgl-r6c\//.test(flow),
   compilerExportPinned: /EXPORT_THREE_VERSION = "0\.170\.0"/.test(compiler) &&
     /08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7/.test(compiler) &&
-    /webglExecution:\s*"NOT_RUN"/.test(compiler),
-  compilerNotRun: /webglExecution:\s*"NOT_RUN"/.test(compiler),
+    /webglExecution:\s*"EVIDENCE:\/tmp\/spe-webgl-r6c\//.test(compiler),
+  compilerEvidence: /webglExecution:\s*"EVIDENCE:\/tmp\/spe-webgl-r6c\//.test(compiler),
   compilerNoPass: !/webglExecution:\s*"PASS"/.test(compiler) && !/threeVersion:\s*"PASS"/.test(compiler),
 };
 if (Object.values(constants).some((ok) => !ok)) {

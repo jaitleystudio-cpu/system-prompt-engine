@@ -269,7 +269,7 @@ assert.doesNotMatch(withScene.sceneHtml, /Rebuilding scene/);
 assert.equal(withScene.scrollTracksSupported, true);
 assert.equal(withScene.contextLossRecoverySupported, false);
 assert.equal(withScene.contextRestoredSupported, false);
-assert.equal(withScene.webglExecution, "NOT_RUN");
+assert.equal(withScene.webglExecution, "EVIDENCE:/tmp/spe-webgl-r6c/frame.png@b73818629311a472936e64662ff5188e7e1db305d710c28c6d9ba8f979acf2cc;/tmp/spe-webgl-r6c/reduced-motion.json@82078622caf6f87f3285c0bdebd561bb787c4e44f9ada1ab8c2484656fc400a5;/tmp/spe-webgl-r6c/unavailable.json@13fe0860b8720301f8c820d52ddb825308f86afe12b974ffba73415f2609a0a7");
 assert.equal(
   withScene.contextLossRecoverySupported,
   withScene.sceneHtml.includes("function rebuildSceneFromIR(") &&
@@ -370,14 +370,14 @@ const owner = new SceneCompiler();
 const compiled = owner.compile(validScene);
 assert.equal(compiled.status, "AVAILABLE");
 assert.equal(compiled.totalTriangles, 960);
-assert.equal(compiled.webglExecution, "NOT_RUN");
+assert.equal(compiled.webglExecution, "EVIDENCE:/tmp/spe-webgl-r6c/frame.png@b73818629311a472936e64662ff5188e7e1db305d710c28c6d9ba8f979acf2cc;/tmp/spe-webgl-r6c/reduced-motion.json@82078622caf6f87f3285c0bdebd561bb787c4e44f9ada1ab8c2484656fc400a5;/tmp/spe-webgl-r6c/unavailable.json@13fe0860b8720301f8c820d52ddb825308f86afe12b974ffba73415f2609a0a7");
 assert.equal(compiled.threeVersion, "0.170.0");
 assert.match(compiled.standaloneHtml, /\.\/vendor\/three\.min\.js/);
 assert.match(compiled.standaloneHtml, /08fd7545d13d2c7fb65ab691530a802dafefd638596501854f267d0fb13c39e7/);
 assert.match(compiled.standaloneHtml, /readPixels/);
 assert.match(compiled.standaloneHtml, /prefers-reduced-motion: reduce/);
 assert.doesNotMatch(compiled.standaloneHtml, /putImageData/);
-assert.equal(compiled.webglExecution, "NOT_RUN");
+assert.equal(compiled.webglExecution, "EVIDENCE:/tmp/spe-webgl-r6c/frame.png@b73818629311a472936e64662ff5188e7e1db305d710c28c6d9ba8f979acf2cc;/tmp/spe-webgl-r6c/reduced-motion.json@82078622caf6f87f3285c0bdebd561bb787c4e44f9ada1ab8c2484656fc400a5;/tmp/spe-webgl-r6c/unavailable.json@13fe0860b8720301f8c820d52ddb825308f86afe12b974ffba73415f2609a0a7");
 assert.equal(withScene.sceneHtml, compiled.standaloneHtml);
 assert.equal(
   compiled.reducedMotionSupported,
@@ -468,7 +468,7 @@ assert.equal(evilCompiled.totalTriangles, 960);
 assert.equal(SCENE_IR_WIRED, true);
 assert.equal(SCENE_3D, "OWNER_WIRED");
 assert.notEqual(SCENE_3D, "PASS");
-assert.equal(WEBGL_EXECUTION, "NOT_RUN");
+assert.equal(WEBGL_EXECUTION, "EVIDENCE:/tmp/spe-webgl-r6c/frame.png@b73818629311a472936e64662ff5188e7e1db305d710c28c6d9ba8f979acf2cc;/tmp/spe-webgl-r6c/reduced-motion.json@82078622caf6f87f3285c0bdebd561bb787c4e44f9ada1ab8c2484656fc400a5;/tmp/spe-webgl-r6c/unavailable.json@13fe0860b8720301f8c820d52ddb825308f86afe12b974ffba73415f2609a0a7");
 assert.equal(AI_GENERATION, "NOT_AVAILABLE");
 assert.equal(LIVE_URL_RECONSTRUCTION, "NOT_AVAILABLE");
 assert.equal(SHELL_MOUNT, "NOT_DONE");
