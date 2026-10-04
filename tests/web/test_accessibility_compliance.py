@@ -26,12 +26,17 @@ def test_accessibility_harness_script_passes():
 
 def test_skip_link_and_main_landmark():
     app_tsx = WEB / "src" / "App.tsx"
+    skip_link_tsx = WEB / "src" / "shell" / "SkipLink.tsx"
     assert app_tsx.is_file()
-    text = app_tsx.read_text(encoding="utf-8")
+    assert skip_link_tsx.is_file()
 
-    assert 'className="skip-link"' in text
-    assert 'href="#main"' in text
-    assert '<main id="main"' in text
+    app_text = app_tsx.read_text(encoding="utf-8")
+    skip_text = skip_link_tsx.read_text(encoding="utf-8")
+
+    assert "<SkipLink />" in app_text
+    assert 'className="skip-link"' in skip_text
+    assert 'href="#main"' in skip_text
+    assert '<main id="main"' in app_text
 
 
 def test_focus_visible_dual_theme_contrast():
