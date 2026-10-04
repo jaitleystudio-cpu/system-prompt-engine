@@ -1,0 +1,61 @@
+{
+  "git_head_at_run": "44ea4026e05f8c289d530da1b843a8c25e492fff",
+  "privacy_qualification": "HOLD",
+  "field_cwv": "UNKNOWN",
+  "workflows_run": [
+    "prompt_compile",
+    "spe_export",
+    "spe_import",
+    "history",
+    "media",
+    "screenshot",
+    "video",
+    "website",
+    "three_d",
+    "model_pack"
+  ],
+  "workflows_not_run": [
+    {
+      "id": "ocr",
+      "reason": "Product tryTesseractOcr returns null and does not ship a WASM OCR pack (HOLD). System tesseract was not invoked. A null hook is not an OCR pass."
+    },
+    {
+      "id": "asr",
+      "reason": "Speech qualification dictationSmoke is NOT_RUN. Chrome Web Speech was not started because it would send audio to Google. whisper-cli is absent. A cloud dictation skip is not an ASR privacy pass."
+    },
+    {
+      "id": "research",
+      "reason": "This worktree has no live scholarly network adapter. Local query minimization was not treated as a lookup. No external research request was made."
+    }
+  ],
+  "workflows_local_pending": [
+    {
+      "id": "media_product_route",
+      "reason": "App route /media exists only on spe-lane-r3-e-shell. No shell dist to instrument. Shell source was not copied."
+    },
+    {
+      "id": "website_product_route",
+      "reason": "App route /website exists only on spe-lane-r3-e-shell. No built shell app was found. Shell source was not copied."
+    }
+  ],
+  "external_hosts": [],
+  "raw_egress_observations": [],
+  "request_counts": {
+    "raw_user_data_egress": false,
+    "asset_ingress": 0,
+    "user_authorized_model_download": 0,
+    "loopback_asset": 176,
+    "loopback_with_canary": 7,
+    "external_other": 0,
+    "network_error": 0,
+    "observed": 185
+  },
+  "mutants": [
+    "missing WASM is not privacy PASS",
+    "fixture fetch is not privacy PASS",
+    "localhost is not an external host",
+    "model download is not raw media upload",
+    "a network error is not privacy proof"
+  ],
+  "wasm_sha256": "a2a2041b0c2b485b5e61347d6e2f13ce613f3a25c1e2dcccc0e178a7aad347bf"
+}

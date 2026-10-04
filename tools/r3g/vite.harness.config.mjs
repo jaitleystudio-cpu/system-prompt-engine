@@ -2,7 +2,7 @@
  * Dev server for the R3-G harness page only.
  * Does not replace apps/web/vite.config.ts.
  */
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mergeConfig } from "../../apps/web/node_modules/vite/dist/node/index.js";
@@ -19,6 +19,15 @@ export default mergeConfig(base, {
     strictPort: true,
     fs: { allow: [join(here, "../..")] },
   },
+  optimizeDeps: {
+    include: [
+      "react",
+      "react-dom/client",
+      "three",
+      "three/examples/jsm/environments/RoomEnvironment.js",
+      "@react-three/fiber",
+    ],
+  },
   plugins: [
     {
       name: "r3g-harness-page",
@@ -27,6 +36,20 @@ export default mergeConfig(base, {
         const page = html.replace("__HARNESS_SRC__", harnessSrc);
         server.middlewares.use((req, res, next) => {
           const path = (req.url || "/").split("?")[0];
+          if (path === "/__r3g/fixtures/local.mp4") {
+            const file = process.env.SPE_R4_FIXTURE || "";
+            if (!file || !existsSync(file)) {
+              res.statusCode = 404;
+              res.end("local mp4 fixture absent");
+              return;
+            }
+            const buf = readFileSync(file);
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "video/mp4");
+            res.setHeader("Cache-Control", "no-store");
+            res.end(buf);
+            return;
+          }
           if (path !== "/__r3g/harness.html") return next();
           res.statusCode = 200;
           res.setHeader("Content-Type", "text/html; charset=utf-8");

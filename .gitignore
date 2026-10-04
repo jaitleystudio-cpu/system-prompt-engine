@@ -234,3 +234,4 @@ apps/web/node_modules/
 # Local provider qualification evidence
 qualification/*_receipt.json
 .worktrees/
+tools/r3g/.fixtures/
