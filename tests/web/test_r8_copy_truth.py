@@ -48,3 +48,22 @@ def test_project_library_sample_does_not_claim_measured_verification():
 ])
 def test_mounted_routes_describe_actual_request_behavior(file, unsupported):
     assert unsupported not in (WEB / 'src' / file).read_text()
+
+
+def test_website_mount_truth_matches_live_shell():
+    app = (WEB / "src" / "App.tsx").read_text()
+    ledger = (WEB / "src" / "shell" / "mountStatus.ts").read_text()
+    flow = (WEB / "src" / "website" / "productFlow.ts").read_text()
+    contract = (WEB / "src" / "website" / "mount-contract.ts").read_text()
+
+    assert "<WebsiteProduct />" in app
+    assert 'WEBSITE_PRODUCT: "MOUNTED_LOCAL"' in ledger
+    assert 'SHELL_MOUNT = "NOT_DONE"' not in flow
+    assert 'ROUTE_MOUNT_STATUS = "NOT_INTEGRATED"' not in flow
+    assert 'routeMountStatus: "NOT_INTEGRATED"' not in contract
+    assert 'shellMount: "NOT_DONE"' not in contract
+    assert 'status: "READY_FOR_SHELL_MOUNT"' not in contract
+    assert 'SHELL_MOUNT = "MOUNTED"' in flow
+    assert 'ROUTE_MOUNT_STATUS = "MOUNTED"' in flow
+    assert 'routeMountStatus: "MOUNTED"' in contract
+    assert 'shellMount: "MOUNTED"' in contract
