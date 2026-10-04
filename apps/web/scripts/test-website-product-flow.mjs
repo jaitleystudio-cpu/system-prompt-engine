@@ -163,7 +163,7 @@ assert.equal(first.aiGeneration, "NOT_AVAILABLE");
 assert.equal(first.scene3d, "NOT_AVAILABLE");
 assert.equal(first.liveUrlReconstruction, "NOT_AVAILABLE");
 assert.equal(first.sceneIrWired, true);
-assert.equal(first.shellMount, "NOT_DONE");
+assert.equal(first.shellMount, "MOUNTED");
 assert.equal(first.sceneHtml, null);
 
 // --- responsive (viewport + fluid reflow contract in compiler CSS) ---
@@ -471,14 +471,14 @@ assert.notEqual(SCENE_3D, "PASS");
 assert.equal(WEBGL_EXECUTION, "NOT_RUN");
 assert.equal(AI_GENERATION, "NOT_AVAILABLE");
 assert.equal(LIVE_URL_RECONSTRUCTION, "NOT_AVAILABLE");
-assert.equal(SHELL_MOUNT, "NOT_DONE");
+assert.equal(SHELL_MOUNT, "MOUNTED");
 assert.equal(SCENE_IR_SOURCE_SHA, "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949");
 assert.equal(
   SCENE_IR_OWNER_PATH,
   "apps/web/src/engine/multimodal/sceneCompiler.ts",
 );
-assert.equal(websiteMountContract.routeMountStatus, "NOT_INTEGRATED");
-assert.equal(websiteMountContract.shellMount, "NOT_DONE");
+assert.equal(websiteMountContract.routeMountStatus, "MOUNTED");
+assert.equal(websiteMountContract.shellMount, "MOUNTED");
 assert.equal(websiteMountContract.shellEditsInThisLane, false);
 assert.equal(websiteMountContract.silentFetch, false);
 assert.equal(websiteMountContract.sceneIrWired, true);
@@ -519,5 +519,5 @@ assert.match(sceneCompilerSrc, /from "\.\.\/hashUtils\.ts"/);
 assert.doesNotMatch(sceneCompilerSrc, /second SceneCompiler|invent/i);
 
 console.log(
-  "R3-D website product flow: local spec export, SceneIR owner wired, live URL unavailable, shell mount not done",
+  "R3-D website product flow: local spec export, SceneIR owner wired, live URL unavailable, shell mounted",
 );
