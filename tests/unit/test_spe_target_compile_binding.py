@@ -333,7 +333,7 @@ def test_recover_intermediate_keeps_protected_intent_bytes():
 
 
 def test_saved_package_extras_reach_prompt_and_drop_fails_closed():
-    """mustNot, privacy, and rollback from the saved package are not compiler defaults.
+    """mustNot, privacy, rollback, and evidenceRequirements from the saved package are not compiler defaults.
 
     Deleting one extra in the adapter must fail closed and name that field.
     A package with no extras still compiles (covered by the target sweep).
@@ -344,6 +344,9 @@ def test_saved_package_extras_reach_prompt_and_drop_fails_closed():
         "mustNot": ["MUST_NOT spend beyond the saved cap."],
         "privacy": ["Privacy: do not export the saved customer list."],
         "rollback": ["Rollback: restore the saved baseline if the gate fails."],
+        "evidenceRequirements": [
+            "VERIFIER_EVIDENCE_only_the_amber_receipt_counts_14e0e004"
+        ],
     }
     patched["envelope"]["payload"]["hard_constraints"].extend(
         [
@@ -384,6 +387,17 @@ def test_saved_package_extras_reach_prompt_and_drop_fails_closed():
     assert result["intermediate"]["extras"]["mustNot"]
     assert result["intermediate"]["extras"]["privacy"]
     assert result["intermediate"]["extras"]["rollback"]
+    assert result["intermediate"]["extras"]["evidenceRequirements"] == [
+        "VERIFIER_EVIDENCE_only_the_amber_receipt_counts_14e0e004"
+    ]
+    assert (
+        "- [MUST] VERIFIER_EVIDENCE_only_the_amber_receipt_counts_14e0e004"
+        in prompt
+    )
+    assert (
+        "- [MUST] Evidence requirements are MUST: independent executor receipts bound to candidate SHA."
+        not in prompt
+    )
 
     def drop_privacy(ir):
         ir["extras"]["privacy"] = []
@@ -393,3 +407,14 @@ def test_saved_package_extras_reach_prompt_and_drop_fails_closed():
         compile_spe_for_target(patched, "grok", mutate_intermediate=drop_privacy)
     assert exc.value.code == "EXTRAS_DROPPED"
     assert "privacy" in exc.value.reason
+
+    def drop_evidence_requirements(ir):
+        ir["extras"]["evidenceRequirements"] = []
+        return ir
+
+    with pytest.raises(TargetCompileError) as exc_evidence:
+        compile_spe_for_target(
+            patched, "grok", mutate_intermediate=drop_evidence_requirements
+        )
+    assert exc_evidence.value.code == "EXTRAS_DROPPED"
+    assert exc_evidence.value.reason == "dropped field: evidenceRequirements"

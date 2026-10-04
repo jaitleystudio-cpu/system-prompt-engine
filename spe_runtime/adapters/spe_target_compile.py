@@ -176,9 +176,9 @@ def invoke_format_target_model_prompt(
     """Call the existing TypeScript formatTargetModelPrompt. Do not reimplement it.
 
     ``extras`` is the compiler's existing structured argument
-    (mustNot / privacy / rollback). Omit it only when the saved package has
-    none. An empty list is passed through so compiler defaults cannot refill
-    a field the adapter deleted.
+    (mustNot / privacy / rollback / evidenceRequirements). Omit it only when
+    the saved package has none. An empty list is passed through so compiler
+    defaults cannot refill a field the adapter deleted.
     """
     if target not in TARGET_EXPORT_MODELS:
         raise UnknownTargetError(target)
@@ -408,12 +408,14 @@ def _refuse_duplicate_ids(artifact: Mapping[str, Any]) -> None:
 
 
 
-_EXTRA_FIELDS = ("mustNot", "privacy", "rollback")
+_EXTRA_FIELDS = ("mustNot", "privacy", "rollback", "evidenceRequirements")
 _EXTRA_SLOT_TOKENS = {
     "must_not": "mustNot",
     "mustnot": "mustNot",
     "privacy": "privacy",
     "rollback": "rollback",
+    "evidence_requirements": "evidenceRequirements",
+    "evidencerequirements": "evidenceRequirements",
 }
 _PAYLOAD_EXTRA_KEYS = (
     ("mustNot", "mustNot"),
@@ -422,6 +424,8 @@ _PAYLOAD_EXTRA_KEYS = (
     ("privacy_constraints", "privacy"),
     ("rollback", "rollback"),
     ("rollback_constraints", "rollback"),
+    ("evidenceRequirements", "evidenceRequirements"),
+    ("evidence_requirements", "evidenceRequirements"),
 )
 
 
@@ -499,6 +503,8 @@ def _absorb_payload_extras(payload: Mapping[str, Any], bucket: dict[str, list[st
             ("must_not", "mustNot"),
             ("privacy", "privacy"),
             ("rollback", "rollback"),
+            ("evidenceRequirements", "evidenceRequirements"),
+            ("evidence_requirements", "evidenceRequirements"),
         ):
             if key not in raw_extras:
                 continue
