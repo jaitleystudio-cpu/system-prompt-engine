@@ -1,0 +1,126 @@
+........................................................................ [  6%]
+........................................................................ [ 12%]
+........................................................................ [ 18%]
+........................................................................ [ 24%]
+........................................................................ [ 30%]
+................F....................................................... [ 36%]
+........................................................................ [ 43%]
+........................................................................ [ 49%]
+........................................................................ [ 55%]
+........................................................................ [ 61%]
+........................................................................ [ 67%]
+..........F............................................................. [ 73%]
+........................................................................ [ 80%]
+..........F............................................................. [ 86%]
+........................................................................ [ 92%]
+........................................................................ [ 98%]
+..................                                                       [100%]
+=================================== FAILURES ===================================
+_______________ test_dirty_candidate_is_rebuilt_and_not_trusted ________________
+
+tmp_path = PosixPath('/private/var/folders/zs/7mx0z9hd78nfycph9jdpf03h0000gn/T/pytest-of-prawinpalisetty/pytest-18/test_dirty_candidate_is_rebuil0')
+
+    def test_dirty_candidate_is_rebuilt_and_not_trusted(tmp_path: Path):
+        """A pre-existing wasm in the target dir must not be returned as the candidate."""
+        before = _public_sha()
+        target = tmp_path / "candidate-target"
+        artifact = target / "wasm32-unknown-unknown" / "release" / "spe_wasm.wasm"
+        artifact.parent.mkdir(parents=True)
+        artifact.write_bytes(b"\x00asm-not-a-real-module")
+        planted = hashlib.sha256(artifact.read_bytes()).hexdigest()
+        proc = _run_build({"SPE_WASM_CANDIDATE_TARGET_DIR": str(target)})
+>       assert proc.returncode == 0, proc.stderr
+E       AssertionError: canonical-wasm: canonical candidate size 1339801 != expected 1340112
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['node', '/Users/prawinpalisetty/.codex/.chatgpt-projects/g-p-6aa32fc67f688191aae39cb61faa5250/s..._build.mjs'], returncode=1, stdout='', stderr='canonical-wasm: canonical candidate size 1339801 != expected 1340112\n').returncode
+
+tests/release/test_wasm_canonical_supply_chain.py:137: AssertionError
+_______________________ test_one_real_scoped_live_fetch ________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a1b1f40>
+tmp_path = PosixPath('/private/var/folders/zs/7mx0z9hd78nfycph9jdpf03h0000gn/T/pytest-of-prawinpalisetty/pytest-18/test_one_real_scoped_live_fetc0')
+
+    def test_one_real_scoped_live_fetch(monkeypatch, tmp_path):
+        calls = {"n": 0}
+        real_open = urllib.request.urlopen
+        receipt_before = _RECEIPT.read_bytes()
+    
+        def blocked(*_args, **_kwargs):
+            calls["n"] += 1
+            raise AssertionError("consent false must not open a socket")
+    
+        monkeypatch.setattr(urllib.request, "urlopen", blocked)
+        refused = run_research_journey(
+            f"{_SECRET} {_DOI}",
+            research_consent=False,
+            private_document=_SECRET,
+            providers=("OPENALEX", "CROSSREF"),
+            allow_live=True,
+            evidence_dir=str(tmp_path),
+        )
+        assert calls["n"] == 0
+        assert refused["status"] == "HELD_NO_CONSENT"
+        assert refused["network_calls"] == 0
+        assert list(tmp_path.iterdir()) == []
+    
+        captured: list[tuple[str, bytes]] = []
+    
+        def wrap(req, timeout=25):
+            response = real_open(req, timeout=timeout)
+    
+            class _Cap:
+                def __enter__(self):
+                    return self
+    
+                def __exit__(self, exc_type, exc, tb):
+                    return response.__exit__(exc_type, exc, tb)
+    
+                def read(self):
+                    data = response.read()
+                    captured.append((req.full_url, data))
+                    return data
+    
+                @property
+                def status(self):
+                    return response.status
+    
+            return _Cap()
+    
+        monkeypatch.setattr(urllib.request, "urlopen", wrap)
+        result = run_research_journey(
+            f"{_SECRET} {_DOI}",
+            research_consent=True,
+            private_document=_SECRET,
+            providers=("OPENALEX", "CROSSREF"),
+            allow_live=True,
+            evidence_dir=str(tmp_path),
+        )
+>       assert result["status"] == "LIVE_FETCH_SCOPED"
+E       AssertionError: assert 'DEGRADED' == 'LIVE_FETCH_SCOPED'
+E         
+E         - LIVE_FETCH_SCOPED
+E         + DEGRADED
+
+tests/unit/test_r6_scoped_live_fetch.py:265: AssertionError
+____________ test_grant_fetches_example_com_and_records_real_digest ____________
+
+    def test_grant_fetches_example_com_and_records_real_digest() -> None:
+        receipt = acquire_scoped_example(
+            ExampleComGrant(grant_id="r6-example-com"),
+            timeout_seconds=5.0,
+            max_bytes=65_536,
+        )
+>       assert receipt.status == "SCOPED", receipt.reason
+E       AssertionError: FETCH_FAILED
+E       assert 'UNKNOWN' == 'SCOPED'
+E         
+E         - SCOPED
+E         + UNKNOWN
+
+tests/unit/test_webrecon_scoped_example.py:77: AssertionError
+=========================== short test summary info ============================
+FAILED tests/release/test_wasm_canonical_supply_chain.py::test_dirty_candidate_is_rebuilt_and_not_trusted
+FAILED tests/unit/test_r6_scoped_live_fetch.py::test_one_real_scoped_live_fetch
+FAILED tests/unit/test_webrecon_scoped_example.py::test_grant_fetches_example_com_and_records_real_digest
+3 failed, 1167 passed in 77.38s (0:01:17)

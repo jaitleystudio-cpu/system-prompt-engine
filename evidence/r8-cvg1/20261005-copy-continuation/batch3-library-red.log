@@ -1,0 +1,22 @@
+..................F                                                      [100%]
+=================================== FAILURES ===================================
+_______ test_project_library_sample_does_not_claim_measured_verification _______
+
+    def test_project_library_sample_does_not_claim_measured_verification():
+        text = (WEB / "src" / "library" / "projectLibraryModel.ts").read_text()
+>       assert "complete, fully verified spe.project-library.v1 sample bundle" not in text
+E       assert 'complete, f...ample bundle' not in '/**\n * SPE...\n  ],\n};\n'
+E         
+E         'complete, fully ve...ry.v1 sample bundle' is contained here:
+E           ixture: A complete, fully verified spe.project-library.v1 sample bundle.
+E            */
+E           export const SAMPLE_PROJECT_LIBRARY_BUNDLE: ProjectLibraryBundle = {
+E             schema: "spe.project-library.v1",
+E             visibility: "private",...
+E         
+E         ...Full output truncated (153 lines hidden), use '-vv' to show
+
+tests/web/test_r8_copy_truth.py:36: AssertionError
+=========================== short test summary info ============================
+FAILED tests/web/test_r8_copy_truth.py::test_project_library_sample_does_not_claim_measured_verification
+1 failed, 18 passed in 0.03s

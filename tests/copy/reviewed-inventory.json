@@ -18691,6 +18691,1308 @@
       "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
       "depth": "PRODUCT",
       "text": "Visual Intelligence Modes"
+    },
+    {
+      "id": "12739389fa7f5373501c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "history must be an array"
+    },
+    {
+      "id": "17e618ac115de92a3bd7",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid visibility: expected \"private\", got \""
+    },
+    {
+      "id": "1beadf5b8e208b6d1825",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "rev_00000000000000000000000000000001"
+    },
+    {
+      "id": "2190abeee9cd79bd336c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    {
+      "id": "2342e291b5941204c939",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "REVISION"
+    },
+    {
+      "id": "2403ba9fa551d1ca9ee5",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "prompt"
+    },
+    {
+      "id": "25f1ee2ae68201c27b13",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Review the system specification according to ISO 25010 with p99 < 50ms constraint."
+    },
+    {
+      "id": "b356d679fd2dfd4b1401",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "example:typecheck_not_run"
+    },
+    {
+      "id": "2fc8abe7ba39270b68ab",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T10:25:00Z"
+    },
+    {
+      "id": "337edd7300e4cba559e9",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "openai:gpt-4o"
+    },
+    {
+      "id": "33f2fdf4470bdd3a6509",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "v1.0.0"
+    },
+    {
+      "id": "36e0bb575df75bd75222",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T10:05:00Z"
+    },
+    {
+      "id": "3f50a0eae954dd84a6d8",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid noindex: expected true, got"
+    },
+    {
+      "id": "3fc8b9e1bfa22a0f23bb",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "rev_00000000000000000000000000000002"
+    },
+    {
+      "id": "419609e8ba62049767e9",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid schema: expected \"spe.project-library.v1\", got \""
+    },
+    {
+      "id": "497593170eaec7ee95ce",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "ROLLBACK"
+    },
+    {
+      "id": "4cd1c6a49278e8ea5677",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "prov:prompt_v1_seed"
+    },
+    {
+      "id": "54761012883200836feb",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid indexing: expected \"noindex\", got \""
+    },
+    {
+      "id": "7886470e7e68246aea53",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "example:syntax_not_verified"
+    },
+    {
+      "id": "58573105a757ec6c0fee",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "code"
+    },
+    {
+      "id": "5888ba891938d7d8c92d",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Project ID must match ^prj_[0-9a-f]{32}$"
+    },
+    {
+      "id": "8288b792e4d622a2ae54",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "example:cwv_not_measured"
+    },
+    {
+      "id": "65f3f6404138679b8d8b",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "private"
+    },
+    {
+      "id": "68634867c27fccd9070d",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "You are an enterprise system architect specializing in low-latency systems."
+    },
+    {
+      "id": "802d5a69b538e5577c2c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "prov:code_spec_init"
+    },
+    {
+      "id": "82b692c68bbdbcba0900",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "artifacts must be an array"
+    },
+    {
+      "id": "87c565c3a057c76b467b",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "src/index.ts"
+    },
+    {
+      "id": "8ada66bd44994ca9aa72",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "You are an enterprise system architect."
+    },
+    {
+      "id": "90d9bc0a05630cbf9bc7",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "export const initEngine = () => ({ status: 'ready' });"
+    },
+    {
+      "id": "99065c1a0a2ca457e16a",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "HEAD_MOVE"
+    },
+    {
+      "id": "a65103b1842878c3e4fe",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "example:eval_not_run"
+    },
+    {
+      "id": "a7fb237902f0ea1c1d17",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T10:20:00Z"
+    },
+    {
+      "id": "ab6927d89472dc08a591",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Review the system specification according to ISO 25010."
+    },
+    {
+      "id": "ac560955603656ef1ef3",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "spe.project-library.v1"
+    },
+    {
+      "id": "ac88a5c34d271ec6fb6e",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Bundle must be a non-null object"
+    },
+    {
+      "id": "ad9f3136bcb2aa71300d",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "revisions must be an array"
+    },
+    {
+      "id": "dea4483619271281f730",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Synthetic Library Example"
+    },
+    {
+      "id": "c0cb92369cdd15a91720",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "art_b2000000000000000000000000000002"
+    },
+    {
+      "id": "c33eb3a3fd0fb86a5a57",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_INTEGRATED"
+    },
+    {
+      "id": "c3bed69723fbf36bc9b5",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T10:00:00Z"
+    },
+    {
+      "id": "c3e88f8f61d5a17a5e69",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "v1.1.0"
+    },
+    {
+      "id": "c42f28cc9d0639f2ccce",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "typescript"
+    },
+    {
+      "id": "c4f276a9521fb57ba2e6",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid spe_contract: expected \"NOT_YET_BOUND\", got \""
+    },
+    {
+      "id": "ca646654288bccd4f9f3",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "anthropic:claude-3-5-sonnet"
+    },
+    {
+      "id": "ce785ff8e4873ca1e12e",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "Missing project metadata"
+    },
+    {
+      "id": "d0509009b7b2ee2c772c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "prj_0123456789abcdef0123456789abcdef"
+    },
+    {
+      "id": "d7389edaa4f430e3ac1c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_YET_BOUND"
+    },
+    {
+      "id": "da865ceb4dfa76017edd",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2026-09-30T10:30:00Z"
+    },
+    {
+      "id": "e54c283372a0c1cf6961",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "ed066d7368d57910b1e0",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae"
+    },
+    {
+      "id": "ef7068fb028cc49f7436",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "art_a1000000000000000000000000000001"
+    },
+    {
+      "id": "f7d6b0d6991b5f751dbe",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "noindex"
+    },
+    {
+      "id": "fbbf5ebcd04e1fade5ff",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "rev_10000000000000000000000000000001"
+    },
+    {
+      "id": "fe97f44676c8b9a3968c",
+      "file": "apps/web/src/library/projectLibraryModel.ts",
+      "depth": "PRODUCT",
+      "text": "fcde2b2edba56bf408601fb721fe9b5c338d10ee429ea04fae5511b68fbf8fb9"
+    },
+    {
+      "id": "1a45bb7d9258724d5969",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Verification status"
+    },
+    {
+      "id": "1eb23aa856893d5d24e6",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Research"
+    },
+    {
+      "id": "2fb941c87d9285d67f09",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "IDLE"
+    },
+    {
+      "id": "4c82befb5cf35eeaede5",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "OPENALEX"
+    },
+    {
+      "id": "55065409500555a42f6f",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "STORED_RECEIPT"
+    },
+    {
+      "id": "69d242782d575f77d5b3",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Enter a question to view a stored receipt. This page never performs a new search, even with consent. This page does not send the question, a private document, code, audio, or an image. PubMed and PMC are one NCBI family. Live index and live retraction stay HOLD."
+    },
+    {
+      "id": "69d0e7d1287989e5e68a",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "URL / API"
+    },
+    {
+      "id": "6e7a43162fe955f9a704",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "is not a new request. Receipt status"
+    },
+    {
+      "id": "770425ebdcc7126f91a2",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Response digest"
+    },
+    {
+      "id": "847a73044f601e1fc6ca",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Nothing has been sent."
+    },
+    {
+      "id": "851c49413e997fbbbeed",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "PubMed (NCBI, includes PMC)"
+    },
+    {
+      "id": "85a20d1d1b0b8f4bc793",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Query"
+    },
+    {
+      "id": "88d22780cfb1651c63aa",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Stored receipt only. No new provider request. LIVE_INDEX HOLD. LIVE_RETRACTION HOLD."
+    },
+    {
+      "id": "96bcdeaad860e1138a88",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "PUBMED"
+    },
+    {
+      "id": "a078cb894145bdfdb7a9",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "HELD_NO_CONSENT"
+    },
+    {
+      "id": "a6a0bfabed174a99e14f",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": ". DOI"
+    },
+    {
+      "id": "a85605863fdc46ba7e6a",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": ". May promote: no."
+    },
+    {
+      "id": "bbc3aa62422692893dd3",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Provider"
+    },
+    {
+      "id": "dd419af19806eeff352a",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "I choose to view the stored research receipt. This does not authorize or perform a new search."
+    },
+    {
+      "id": "c039ba2f996d36a23feb",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "CROSSREF"
+    },
+    {
+      "id": "da2c9aaf32485c7edc86",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Question"
+    },
+    {
+      "id": "df3eff82886a5fe02580",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Selected provider"
+    },
+    {
+      "id": "e742308d5987729900b2",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Identifier"
+    },
+    {
+      "id": "e84a68451dbc916770ed",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Consent is off. The question was not sent."
+    },
+    {
+      "id": "ed8e43487f18ee3fef1c",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Stored receipt for"
+    },
+    {
+      "id": "f1db87203999730171f2",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Timestamp"
+    },
+    {
+      "id": "f3b96d626c28a90e9960",
+      "file": "apps/web/src/research/ResearchRoute.tsx",
+      "depth": "PRODUCT",
+      "text": "Continue"
+    },
+    {
+      "id": "0b18cde43a373bead6c8",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/website"
+    },
+    {
+      "id": "d87bdeacccb7b37fe463",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "View a stored research receipt after opting in. This route does not search or send the question; live index and retraction remain HOLD."
+    },
+    {
+      "id": "0dc1f9085af2b01d1dfa",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Turn a local website spec into a preview and a saved file. This does not open a web address or publish a site."
+    },
+    {
+      "id": "c15b58c9f480f081f17c",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Select audio or video and request transcription from the configured app host. Availability depends on its runtime; on-device execution requires a local host."
+    },
+    {
+      "id": "105069afb93c64542776",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/media"
+    },
+    {
+      "id": "1d5c896e04c7f69dffe4",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Website — Local spec preview | SPE"
+    },
+    {
+      "id": "25681571ed6724c4b3bd",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "not-found"
+    },
+    {
+      "id": "2dd1d74563c96a17ee06",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "media"
+    },
+    {
+      "id": "2fac0062b221a8460126",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Media — Host transcription request | SPE"
+    },
+    {
+      "id": "32e4ebed6f9972b105cb",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "view"
+    },
+    {
+      "id": "44514acee3add9d07e58",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "website"
+    },
+    {
+      "id": "60347efa07a1e1e97a8b",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/ocr"
+    },
+    {
+      "id": "cc3580a82ea1f13e5f46",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Request image text from the configured app host. Image bytes are sent to that host; on-device OCR requires a local host. Missing runtime stays unavailable."
+    },
+    {
+      "id": "7ba218c97c945e9b311e",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "my-work"
+    },
+    {
+      "id": "84fd5156958d2eef9017",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "OCR — Local text from an image | SPE"
+    },
+    {
+      "id": "9d536c8d63bfc6606c46",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "ocr"
+    },
+    {
+      "id": "c5a4803e68dde384a7eb",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "workspace"
+    },
+    {
+      "id": "d77e6ecfec55e77411cc",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "research"
+    },
+    {
+      "id": "e15dc0f3fbc7394289c2",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Research — Stored receipt only | SPE"
+    },
+    {
+      "id": "fe16e2ca7052f7e0cd5c",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/research"
+    },
+    {
+      "id": "07251de020e7386ad078",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/builder/websiteSpecModel.ts"
+    },
+    {
+      "id": "1f8a1ba642c27ce7bb95",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "UNSUPPORTED"
+    },
+    {
+      "id": "2b664784a93918947f21",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949"
+    },
+    {
+      "id": "43af47d67b0e5fa47285",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "live_url"
+    },
+    {
+      "id": "4b5ec626a708ee6f38b6",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "website_spec"
+    },
+    {
+      "id": "4e5025eb143f41fd0ca6",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "packages/website-generator"
+    },
+    {
+      "id": "4fd31f37272b7652d0ac",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "5a7a959a355d46af35ff",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/engine/multimodal/sceneCompiler.ts"
+    },
+    {
+      "id": "5cd4d3014209adbe1a8c",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_AVAILABLE"
+    },
+    {
+      "id": "613f343888d5bc338c69",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_INTEGRATED"
+    },
+    {
+      "id": "64cbf5166917b4d0294d",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_RUN"
+    },
+    {
+      "id": "71c81d3b3a703b607f9a",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "WebsiteProduct"
+    },
+    {
+      "id": "72c78264241fdd6ac07a",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "OWNER_WIRED"
+    },
+    {
+      "id": "780911ef74f48ae5e98e",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/website/WebsiteProduct.tsx"
+    },
+    {
+      "id": "8121de3e33ad789a97dd",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "HOLD"
+    },
+    {
+      "id": "a8a3fdedd8add359681c",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "spe_runtime/webrecon"
+    },
+    {
+      "id": "b1aa82b45c1b27d32a4c",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "READY_FOR_SHELL_MOUNT"
+    },
+    {
+      "id": "ba9c0e2280e9afab639d",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_DONE"
+    },
+    {
+      "id": "bf4acab212fef0f4f626",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "spe.web.website-product"
+    },
+    {
+      "id": "df58da94382015553d02",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "local_saved_html"
+    },
+    {
+      "id": "f7130e190d5ff2f2d6c3",
+      "file": "apps/web/src/website/mount-contract.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/website/productFlow.ts"
+    },
+    {
+      "id": "10760bdd2763ee508323",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "UNSUPPORTED"
+    },
+    {
+      "id": "13624aa28ac7d351e299",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_RUN"
+    },
+    {
+      "id": "144eac6a8b6451952ba0",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "1458e1cf47e956a93ab1",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_HAS_NO_PAGE"
+    },
+    {
+      "id": "19c052aa551b956578ee",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "prefers-reduced-motion"
+    },
+    {
+      "id": "1d1e03cf5758278b7682",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": ".dispose()"
+    },
+    {
+      "id": "2358adb0ff064453c501",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENEIR_OPTIONAL_ATTACHED"
+    },
+    {
+      "id": "26a65f812149481abcd9",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "MALICIOUS_SCENEIR_REFUSED"
+    },
+    {
+      "id": "28e8378429937aeb8028",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "plane"
+    },
+    {
+      "id": "31f0e8a17873a86d68d2",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "STATIC_FILES_ONLY"
+    },
+    {
+      "id": "32fae5f92c945aa2ff15",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "torus"
+    },
+    {
+      "id": "3700988f4bf257508f1d",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "scrollRatio"
+    },
+    {
+      "id": "37cf3512d58c0728c5ed",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "39a82088fcd1c07d743b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "HOLD"
+    },
+    {
+      "id": "3b5732b580fea6673214",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_JSON_INVALID"
+    },
+    {
+      "id": "3dc182987eb9b60fa150",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_DONE"
+    },
+    {
+      "id": "3ec3b48819f8a3b33958",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "website_spec"
+    },
+    {
+      "id": "42918d04f2bef2ac82d8",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "CSP_MISSING"
+    },
+    {
+      "id": "429ddbc58b89473cd9d6",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "local_saved_html"
+    },
+    {
+      "id": "43bb84499ac03b75df12",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENEIR_VALIDATION_FAILED"
+    },
+    {
+      "id": "48f0510e88eba22dc8cb",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_INVALID_GEOMETRY"
+    },
+    {
+      "id": "510180471c43d11768d4",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_SHAPE_REFUSED"
+    },
+    {
+      "id": "57d0e68929b6e9b819a9",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "EXPORT_NOT_DETERMINISTIC"
+    },
+    {
+      "id": "599ea2ce5f6a09bc5272",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_SAVED_HTML_IS_NOT_A_SPEC"
+    },
+    {
+      "id": "683bc08716e91084ddfb",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_SHAPE_REFUSED"
+    },
+    {
+      "id": "73880d42681b1f3bd99d",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "OWNER_WIRED"
+    },
+    {
+      "id": "745a137ea1cae1ed424d",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_COMPILE_REFUSED"
+    },
+    {
+      "id": "75b4beb96aad9321da50",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_REDUCED_MOTION_MISSING"
+    },
+    {
+      "id": "7b68e472876a7e3d60ae",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_EMPTY"
+    },
+    {
+      "id": "7e21e348c3c68fdadc0b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_AVAILABLE"
+    },
+    {
+      "id": "7f75bc2327eef3f7f7ba",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "cylinder"
+    },
+    {
+      "id": "821c816af131044462da",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "wave-mesh"
+    },
+    {
+      "id": "87955f9bfc412f34e34b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_DEFINITION_MISSING"
+    },
+    {
+      "id": "95cd3d90eb400347fbfa",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "REJECTED"
+    },
+    {
+      "id": "a0e3789a20e0971d0c7d",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "RAW_DOCUMENT_NOT_REPLAYED"
+    },
+    {
+      "id": "a2c438f57ab503f9a069",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_ZERO_OBJECTS"
+    },
+    {
+      "id": "a2c5646ba127ae63944c",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "http-equiv=\"Content-Security-Policy\""
+    },
+    {
+      "id": "a75ba57c8316d9b8f439",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "live_url"
+    },
+    {
+      "id": "b1094df2933bff8f4d9e",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SPEC_COMPILE_REFUSED"
+    },
+    {
+      "id": "b90806408427b8115011",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "sphere"
+    },
+    {
+      "id": "c42e592281a59e2702ce",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "beforeunload"
+    },
+    {
+      "id": "c70fed50345f15847aaa",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "apps/web/src/engine/multimodal/sceneCompiler.ts"
+    },
+    {
+      "id": "c943e461919b05ace5df",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LIVE_URL_NOT_FETCHED"
+    },
+    {
+      "id": "ca77356bc1a2595ab029",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "REDUCED_MOTION_MISSING"
+    },
+    {
+      "id": "cd267c5148a05a33920e",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NO_ACQUISITION_GRANT"
+    },
+    {
+      "id": "cd353d5ecc0cad12e71b",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_EXPORT_READY"
+    },
+    {
+      "id": "cfe4955c32e50246dd39",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "AVAILABLE"
+    },
+    {
+      "id": "d2ffec664204d2580e65",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_TS_WEBSITE_SPEC_1"
+    },
+    {
+      "id": "d3f81e5f898af763bed5",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_IMPLEMENTED"
+    },
+    {
+      "id": "d9d8409ab0df604225ec",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "REFUSED"
+    },
+    {
+      "id": "dba61996153e1726c60e",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_JSON_INVALID"
+    },
+    {
+      "id": "e2af00f78455e67d0e84",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCENE_TOO_LARGE"
+    },
+    {
+      "id": "e2ddf41712b87c13e608",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_DOCUMENT_EMPTY"
+    },
+    {
+      "id": "e711f65441ab872146b5",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "website-spec/1"
+    },
+    {
+      "id": "f51d204ca99f3316b5e6",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949"
+    },
+    {
+      "id": "f542a5749f09963a6382",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "MALICIOUS_OR_REMOTE_MARKUP_REFUSED"
+    },
+    {
+      "id": "f5537b031c1160259128",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "HTML_IS_NOT_A_WEBSITE_SPEC"
+    },
+    {
+      "id": "f64307a522bd52b540f6",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "box"
+    },
+    {
+      "id": "f8adef7ceac51b394274",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "SCRIPT_ELEMENT_REFUSED"
+    },
+    {
+      "id": "fa82fbc1fa0a758ed043",
+      "file": "apps/web/src/website/productFlow.ts",
+      "depth": "PRODUCT",
+      "text": "NOT_INTEGRATED"
+    },
+    {
+      "id": "01fff77f32ec0eac0cb4",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Save HTML"
+    },
+    {
+      "id": "07ea1c4ed46ddeee537b",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "live_url"
+    },
+    {
+      "id": "197b0053da9efa0458b7",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Local website preview"
+    },
+    {
+      "id": "2c17fd9b14e2c4969775",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "index.html"
+    },
+    {
+      "id": "2e6314a1b32d82c0ab4e",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Build preview"
+    },
+    {
+      "id": "32da8c327cfc54ba0550",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "page.html"
+    },
+    {
+      "id": "3c33bd60918e1b568f6c",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website result"
+    },
+    {
+      "id": "3c757b4182021fda4e01",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Web address"
+    },
+    {
+      "id": "3cd3b301ce51168d4822",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Saved file"
+    },
+    {
+      "id": "4a656eb62da050eaaea9",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "a"
+    },
+    {
+      "id": "775ef219989171b2aed9",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "text/html;charset=utf-8"
+    },
+    {
+      "id": "12dd3fb2e73484df7c56",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Fetched: no. Live site: no. SceneIR owner: wired. Live URL: unavailable. Website UI is mounted in the app shell."
+    },
+    {
+      "id": "8758e622baf3ee2ee791",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "File name"
+    },
+    {
+      "id": "8df63179c9a4238ca442",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "local_saved_html"
+    },
+    {
+      "id": "9a95793107ce1f8a73d4",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Spec"
+    },
+    {
+      "id": "a457248cc58a5216000a",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Input"
+    },
+    {
+      "id": "b378f7c44566dd09f292",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "A local spec can become a preview and a saved file. A saved file is not a web address. A web address is not opened."
+    },
+    {
+      "id": "b5a14ae85bff1e04ebe0",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Input kind"
+    },
+    {
+      "id": "d34c477a0ad7569346b5",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website product"
+    },
+    {
+      "id": "d372d0194db0366e40c6",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "local_saved_html"
+    },
+    {
+      "id": "e61e513e6331d741476d",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website input"
+    },
+    {
+      "id": "f1b1b98a1b14d77323ef",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "{\n  \"spec_version\": \"website-spec/1\",\n  \"title\": \"Local notes\",\n  \"language\": \"en\",\n  \"summary\": \"A private static page.\",\n  \"theme\": \"light\",\n  \"pages\": [\n    {\n      \"path\": \"index.html\",\n      \"title\": \"Home\",\n      \"sections\": [\n        {\n          \"kind\": \"prose\",\n          \"heading\": \"Notes\",\n          \"body\": \"This page is a local file.\"\n        }\n      ]\n    }\n  ]\n}"
+    },
+    {
+      "id": "f495585aac44466f659d",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PROOF",
+      "text": "Website"
+    },
+    {
+      "id": "fd8a87ba2db3d439ed5e",
+      "file": "apps/web/src/website/WebsiteProduct.tsx",
+      "depth": "PRODUCT",
+      "text": "website_spec"
+    },
+    {
+      "id": "17d5e84a4ade39c661e0",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": ". Non-clear pixels"
+    },
+    {
+      "id": "208683f16dd133d244a5",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "ok"
+    },
+    {
+      "id": "3aa8b7f53ef8f8c1c95b",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "threw:"
+    },
+    {
+      "id": "3d63d71d187c6dc49bbe",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": ". Three"
+    },
+    {
+      "id": "3fa0fb93db25fefa5419",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "WebGL"
+    },
+    {
+      "id": "70bbdefb52a50aaf5c84",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "not executed"
+    },
+    {
+      "id": "7600a21cfeff78b4ae0f",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "NOT_RUN"
+    },
+    {
+      "id": "7d8c86b8d03bbc901f61",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "pending"
+    },
+    {
+      "id": "d406de6edadda7fca879",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "bundled as"
+    },
+    {
+      "id": "eb7dadb250a7eb68de69",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "Scene"
+    },
+    {
+      "id": "fa0e5334a0b6baf1e7a7",
+      "file": "apps/web/src/website/WebsiteSceneHost.tsx",
+      "depth": "PRODUCT",
+      "text": "Unmount scene"
     }
   ]
 }

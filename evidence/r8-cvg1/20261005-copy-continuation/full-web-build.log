@@ -1,0 +1,20 @@
+
+> spe-web@0.3.0 build
+> npm run spe:copy-check && npm run wasm:build-canonical && npm run copy-wasm && tsc --noEmit && vite build && node scripts/cache-shell.mjs
+
+
+> spe-web@0.3.0 spe:copy-check
+> node ../../tools/copy-check.mjs
+
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 3325,
+  "unreviewed": 0,
+  "violations": [],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}
+
+> spe-web@0.3.0 wasm:build-canonical
+> node ../../tools/wasm_canonical_build.mjs
+
+canonical-wasm: canonical candidate size 1339801 != expected 1340112
