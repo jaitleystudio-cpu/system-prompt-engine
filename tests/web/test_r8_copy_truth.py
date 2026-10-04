@@ -18,3 +18,12 @@ from tests.web.paths import WEB
 ])
 def test_unimplemented_surface_claims_are_absent(file, unsupported):
     assert unsupported not in (WEB / 'src' / file).read_text()
+
+
+def test_project_library_sample_does_not_claim_measured_verification():
+    text = (WEB / "src" / "library" / "projectLibraryModel.ts").read_text()
+    assert "complete, fully verified spe.project-library.v1 sample bundle" not in text
+    assert "ev:cwv_lcp_verified" not in text
+    assert "ev:syntax_validation_pass" not in text
+    assert "prov:eval_delta_pass" not in text
+    assert "Synthetic schema fixture" in text
