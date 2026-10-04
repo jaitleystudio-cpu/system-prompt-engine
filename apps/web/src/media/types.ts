@@ -54,12 +54,23 @@ export type UiRegion = {
   notes: string;
 };
 
+/** Tight glyph ink measured inside an OCR box. Pixels, not a preset size. */
+export type ObservedFontInk = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  stroke: number;
+  color: string;
+};
+
 export type UiObservedText = {
   id: string;
   text: string;
   bounds: { x: number; y: number; w: number; h: number };
   confidence: "high" | "medium" | "low";
   provenance: "observed-ocr";
+  fontInk?: ObservedFontInk;
 };
 
 export type UiSpec = {

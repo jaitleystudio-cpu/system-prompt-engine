@@ -1,6 +1,6 @@
 /** Semantic media IR — OBSERVATION / MODEL_JUDGMENT only. Never second K3. */
 
-import type { ColorSwatch, ImageObservation } from "./types";
+import type { ColorSwatch, ImageObservation, ObservedFontInk } from "./types";
 
 export type VisionTier = "LITE" | "STANDARD";
 
@@ -85,6 +85,8 @@ export type UiTextBlock = {
   method: JudgmentMethod;
   /** observed-ocr only when a production OCR call returned the text. */
   provenance?: "observed-ocr" | "proposal";
+  /** Present only when ink was measured inside this block's bounds. */
+  fontInk?: ObservedFontInk;
 };
 
 export type UiControl = {

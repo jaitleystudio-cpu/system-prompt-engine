@@ -1,13 +1,17 @@
+import { fontFitRuntimeSource } from "./fontMetricFit";
 import { observationToPromptBlock } from "./imageObserve";
 import { semanticToPromptBlock } from "./semanticCompose";
 import type { UIObservationIR } from "./semanticTypes";
 import type {
   CodeScaffold,
   ImageObservation,
+  ObservedFontInk,
   UiRegion,
   UiSpec,
 } from "./types";
 import { observeScreenshotIRLite } from "./uiObservation";
+
+export { measureObservedInk } from "./fontMetricFit";
 
 export const CODE_TARGETS = [
   "html-css-js",
@@ -113,6 +117,7 @@ export function buildUiSpecFromIR(ir: UIObservationIR): UiSpec {
         bounds: block.bounds,
         confidence: block.confidence,
         provenance: "observed-ocr" as const,
+        fontInk: block.fontInk,
       })),
   };
 }
@@ -137,14 +142,49 @@ function escapeHtml(text: string): string {
     .replace(/"/g, "&quot;");
 }
 
+function numAttr(n: number): string {
+  if (!Number.isFinite(n)) return "0";
+  return String(Math.round(n * 100) / 100);
+}
+
+function safeInk(ink: ObservedFontInk | undefined): ObservedFontInk | null {
+  if (!ink) return null;
+  if (![ink.x, ink.y, ink.w, ink.h, ink.stroke].every((n) => Number.isFinite(n) && n >= 0)) return null;
+  if (!(ink.w > 0) || !(ink.h > 0)) return null;
+  if (!/^#[0-9a-fA-F]{6}$/.test(ink.color)) return null;
+  return ink;
+}
+
+function observedBlocks(spec: UiSpec) {
+  return (spec.textBlocks ?? []).filter((block) => block.provenance === "observed-ocr" && block.text.trim());
+}
+
 function observedOcrHtml(spec: UiSpec): string {
-  return (spec.textBlocks ?? [])
-    .filter((block) => block.provenance === "observed-ocr" && block.text.trim())
+  return observedBlocks(spec)
+    .filter((block) => !safeInk(block.fontInk))
     .map(
       (block) =>
         `    <p class="spe-ocr-text" data-provenance="observed-ocr" data-confidence="${block.confidence}" style="position:absolute;margin:0;${regionStyle(block)}">${escapeHtml(block.text)}</p>`,
     )
     .join("\n");
+}
+
+function observedInkLayer(spec: UiSpec): string {
+  const blocks = observedBlocks(spec).flatMap((block) => {
+    const ink = safeInk(block.fontInk);
+    return ink ? [{ block, ink }] : [];
+  });
+  if (!blocks.length) return "";
+  const paras = blocks
+    .map(({ block, ink }) =>
+      `  <p class="spe-ocr-text" data-provenance="observed-ocr" data-confidence="${block.confidence}" data-ink-x="${numAttr(ink.x)}" data-ink-y="${numAttr(ink.y)}" data-ink-w="${numAttr(ink.w)}" data-ink-h="${numAttr(ink.h)}" data-stroke="${numAttr(ink.stroke)}" data-ink-color="${ink.color}" style="position:absolute;margin:0;padding:0;white-space:pre">${escapeHtml(block.text)}</p>`,
+    )
+    .join("\n");
+  return (
+    `<style id="spe-font-metric">#spe-ocr-layer{position:fixed;inset:0;z-index:40;pointer-events:none;overflow:visible}</style>\n` +
+    `<div id="spe-ocr-layer">\n${paras}\n</div>\n` +
+    `<script>${fontFitRuntimeSource()}<\/script>\n`
+  );
 }
 
 function regionStyle(r: { bounds: UiRegion["bounds"] }): string {
@@ -292,6 +332,7 @@ function html(spec: UiSpec): string {
     `  </main>\n` +
     `  <footer class="spe-foot" role="contentinfo" data-zone="bottom-center" data-hierarchy="2">${footerText}</footer>\n` +
     `</div>\n` +
+    `${observedInkLayer(spec)}` +
     `</body></html>\n`
   );
 }
