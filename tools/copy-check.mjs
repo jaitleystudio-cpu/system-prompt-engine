@@ -26,7 +26,9 @@ for (const entry of current) {
     previous.depth !== entry.depth
   )
     violations.push({
+      id: entry.id,
       file: entry.file,
+      depth: entry.depth,
       text: entry.text,
       reason: "UNREVIEWED_COPY",
     });
@@ -56,7 +58,9 @@ for (const entry of current) {
   );
   if (review.risks.length)
     violations.push({
+      id: entry.id,
       file: entry.file,
+      depth: entry.depth,
       text: entry.text,
       reason: review.risks.join(","),
     });
