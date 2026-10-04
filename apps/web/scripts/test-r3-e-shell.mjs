@@ -2,6 +2,7 @@
 /**
  * R3-E product shell. Real Chrome on this Mac. ₹0.
  * Not a full WCAG audit. Criteria named at the bottom are the ones this file ran.
+ * The Vite dev-server /media journey is dev-server evidence, not PRODUCT_MEDIA_V1.
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawn } from "node:child_process";
@@ -76,10 +77,13 @@ check("website mounted and /media route owns the whisper runtime", () => {
   assert.doesNotMatch(harness, /whisperRuntime/);
   assert.doesNotMatch(app, /StaticWebsiteBuilder/);
   const contract = src("src/media/mount-contract.ts");
-  assert.match(contract, /productMediaV1: "PASS"/);
-  assert.match(contract, /remainingGap: "NONE"/);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "NONE");
+  const gap = "The runtime starts only from the Vite dev/preview plugin, and the pinned CLI and model are sibling-worktree paths, not shipped with this branch.";
+  assert.match(contract, /productMediaV1: "NOT_PASS"/);
+  assert.match(contract, /Vite dev\/preview plugin/);
+  assert.match(contract, /sibling-worktree paths/);
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, gap);
+  assert.equal(contract.includes(gap), true);
   assert.equal(mount.MEDIA_MOUNT.runtime, "pinnedWhisperRuntime");
   assert.match(src("src/media/pinnedWhisperRuntime.ts"), /\/api\/media\/transcribe/);
   assert.doesNotMatch(src("src/media/pinnedWhisperRuntime.ts"), /__speWhisper/);
@@ -114,23 +118,65 @@ check("productMediaV1 is not a test-injected page global", () => {
   }
   const testInjects = assign.test(readFileSync(harnessPath, "utf8"));
   const claimsPass =
-    /productMediaV1:\s*"PASS"/.test(contract) &&
-    /productMediaV1:\s*"PASS"/.test(statusSrc) &&
+    /productMediaV1:\s*"PASS"/.test(contract) ||
+    /productMediaV1:\s*"PASS"/.test(statusSrc) ||
     mount.MEDIA_MOUNT.productMediaV1 === "PASS";
   if (claimsPass && (testInjects || productHits.length > 0)) {
     throw new Error("productMediaV1 is PASS while a page global is still the runtime");
   }
-  assert.equal(claimsPass, true);
+  assert.equal(claimsPass, false);
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
   assert.equal(testInjects, false);
   assert.deepEqual(productHits, []);
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "NONE");
-  assert.match(contract, /remainingGap: "NONE"/);
+  assert.doesNotMatch(mount.MEDIA_MOUNT.remainingGap, /^NONE$/);
+  assert.doesNotMatch(contract, /remainingGap:\s*"NONE"/);
   const host = readFileSync(join(repoRoot, "spe_runtime/media_product/route_host.py"), "utf8");
   const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
   assert.match(host, /LocalMediaSession\.open/);
   assert.doesNotMatch(host, /spe-lane-r3-b-media/);
   assert.doesNotMatch(src("scripts/local-media-host-plugin.mjs"), /spe-lane-r3-b-media/);
   assert.match(owner, /class LocalMediaSession/);
+});
+
+check("productMediaV1 cannot pass on a dev-only host or sibling assets", () => {
+  const contract = src("src/media/mount-contract.ts");
+  const statusSrc = src("src/shell/mountStatus.ts");
+  const plugin = src("scripts/local-media-host-plugin.mjs");
+  const vite = src("vite.config.ts");
+  const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
+  const claimsPass =
+    /productMediaV1:\s*"PASS"/.test(contract) ||
+    /productMediaV1:\s*"PASS"/.test(statusSrc) ||
+    mount.MEDIA_MOUNT.productMediaV1 === "PASS";
+  const returned = plugin.slice(plugin.lastIndexOf("return {"));
+  const hooks = [...returned.matchAll(/^    ([A-Za-z]\w*)\s*(?:\(|:)/gm)].map((match) => match[1]);
+  const staticBuildStartsHost = hooks.some(
+    (name) => !["name", "configureServer", "configurePreviewServer"].includes(name),
+  ) || /route_host/.test(vite);
+  const staticBuildDoesNotStartHost = !staticBuildStartsHost;
+  if (!plugin.includes("configureServer") || !plugin.includes("configurePreviewServer")) {
+    throw new Error("dev/preview host plugin is missing");
+  }
+  if (!/spe_runtime\.media_product\.route_host/.test(plugin)) {
+    throw new Error("dev/preview plugin no longer starts route_host");
+  }
+  function listed(name) {
+    const match = owner.match(new RegExp(`${name} = \\(([\\s\\S]*?)\\n\\)`));
+    if (!match) throw new Error(`missing ${name}`);
+    return [...match[1].matchAll(/["']([^"']+)["']/g)].map((item) => item[1]);
+  }
+  const candidates = [...listed("_CLI_CANDIDATES"), ...listed("_MODEL_CANDIDATES")];
+  if (candidates.length < 2) throw new Error("CLI and model candidates were removed");
+  const candidatesOutside = candidates.some((path) => !path.startsWith(repoRoot + "/"));
+  if (claimsPass && (staticBuildDoesNotStartHost || candidatesOutside)) {
+    throw new Error(
+      "productMediaV1 is PASS while the static build does not start the host or the CLI/model candidates are outside this repo",
+    );
+  }
+  assert.equal(staticBuildDoesNotStartHost, true);
+  assert.equal(candidatesOutside, true);
+  assert.equal(claimsPass, false);
+  assert.match(owner, /"PRODUCT_MEDIA_V1": "PASS" if mounted else "NOT_PASS"/);
 });
 
 check("private and tool routes are noindex and off the sitemap", () => {
@@ -421,7 +467,7 @@ try {
       injected: typeof window.__speWhisper,
     }));
     assert.equal(mounted.owner, "route");
-    assert.equal(mounted.claim, "PASS");
+    assert.equal(mounted.claim, "NOT_PASS");
     assert.equal(mounted.injected, "undefined");
     const health = await page.evaluate(async () => {
       const res = await fetch("/api/media/health");
@@ -463,7 +509,7 @@ try {
   assert.match(speechSeen.egress, /Network sends for this file: 0/);
   await waitClean(speech.page);
   assert.deepEqual(speech.external, []);
-  console.log("PASS normal /media speech", JSON.stringify(speechSeen));
+  console.log("DEV-SERVER EVIDENCE /media speech LOCAL_NEURAL not a product pass", JSON.stringify(speechSeen));
   checks += 1;
   await speech.context.close();
 
@@ -482,7 +528,7 @@ try {
   assert.match(silenceSeen.egress, /Network sends for this file: 0/);
   await waitClean(silence.page);
   assert.deepEqual(silence.external, []);
-  console.log("PASS normal /media silence is not LOCAL_NEURAL", JSON.stringify(silenceSeen));
+  console.log("DEV-SERVER EVIDENCE /media silence LOCAL_FALLBACK not a product pass", JSON.stringify(silenceSeen));
   checks += 1;
   await silence.context.close();
 
@@ -498,11 +544,12 @@ try {
     text: document.querySelector("[data-testid=media-transcript]")?.textContent ?? "",
     egress: document.querySelector("[data-testid=media-egress]")?.textContent ?? "",
   }));
+  assert.match(cancelSeen.mode, /UNAVAILABLE/);
   assert.doesNotMatch(cancelSeen.mode, /LOCAL_NEURAL/);
   assert.equal(cancelSeen.text, "");
   assert.match(cancelSeen.egress, /Network sends for this file: 0/);
   assert.deepEqual(cancelPage.external, []);
-  console.log("PASS normal /media cancel is not LOCAL_NEURAL", JSON.stringify(cancelSeen));
+  console.log("DEV-SERVER EVIDENCE /media cancel UNAVAILABLE not a product pass", JSON.stringify(cancelSeen));
   checks += 1;
   await cancelPage.context.close();
 
@@ -521,13 +568,13 @@ try {
     egress: document.querySelector("[data-testid=media-egress]")?.textContent ?? "",
   }));
   assert.match(corruptSeen.error, /CORRUPT/);
-  assert.match(corruptSeen.mode, /LOCAL_FALLBACK|UNAVAILABLE/);
+  assert.match(corruptSeen.mode, /LOCAL_FALLBACK/);
   assert.doesNotMatch(corruptSeen.mode, /LOCAL_NEURAL/);
   assert.equal(corruptSeen.text, "");
   assert.match(corruptSeen.egress, /Network sends for this file: 0/);
   await waitClean(corrupt.page);
   assert.deepEqual(corrupt.external, []);
-  console.log("PASS normal /media corrupt input is not LOCAL_NEURAL", JSON.stringify(corruptSeen));
+  console.log("DEV-SERVER EVIDENCE /media corrupt LOCAL_FALLBACK not a product pass", JSON.stringify(corruptSeen));
   checks += 1;
   await corrupt.context.close();
 
@@ -620,4 +667,5 @@ try {
   await browser.close();
 }
 
+await esbuild.stop();
 console.log(`R3-E shell checks: ${checks}`);
