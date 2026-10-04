@@ -239,3 +239,4 @@ qualification/*_receipt.json
 # Local media pack bytes. PACK_MANIFEST.json stays committed.
 /media-pack/whisper-cli
 /media-pack/models/*.bin
+/media-pack/models/*.partial

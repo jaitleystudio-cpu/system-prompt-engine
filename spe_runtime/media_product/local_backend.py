@@ -1,9 +1,12 @@
 """Local media product session over the pinned whisper.cpp CLI.
 
-This is not a second recognition engine. Inference is the already-qualified
-`whisper-cli` binary and the Telugu ggml candidate already on disk. The session
-owns load checks, decode, cancellation, silence truth, and explicit modes.
-It does not claim live transcription. Product media v1 follows the mount ledger.
+This is not a second recognition engine. Inference is the pinned `whisper-cli`
+and the Telugu ggml file named by media-pack/PACK_MANIFEST.json. When that
+model file is absent, the session may fetch it from the manifest SOURCE
+(model ingress only). User audio is never uploaded. A missing CLI, a bad
+hash, a bad size, or the wrong architecture fails closed. The session owns
+decode, cancellation, silence truth, and explicit modes. It does not claim
+live transcription. Product media v1 follows the mount ledger.
 """
 
 from __future__ import annotations
@@ -17,7 +20,9 @@ import re
 import signal
 import socket
 import subprocess
+import sys
 import threading
+import urllib.request
 import wave
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -366,43 +371,122 @@ def _verify_packed_file(path: Path, *, expected_sha: str, expected_bytes: int, k
         raise
 
 
+_ACQUIRE_LOCK = threading.Lock()
+
+
+def _manifest_model_source(manifest: dict[str, object]) -> str:
+    """HTTPS model URL already stored on the pack manifest. Not a CLI URL."""
+    license_name = manifest.get("LICENSE")
+    source = manifest.get("SOURCE")
+    if not isinstance(license_name, str) or not license_name.strip():
+        raise IntegrityError("WRONG_MODEL")
+    if not isinstance(source, str) or not source.startswith("https://") or any(ch.isspace() for ch in source):
+        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_MODEL")
+    return source
+
+
+def _acquire_absent_model(model_path: Path, manifest: dict[str, object]) -> None:
+    """Stream the pinned ggml file into the relative pack.
+
+    Call only when the model file is absent. A file that is already present
+    is never replaced, so a short or wrong-hash model stays fail-closed.
+    The request body is the model download. User audio is not sent.
+    """
+    source = _manifest_model_source(manifest)
+    expected_bytes = int(manifest["EXPECTED_BYTES"])
+    expected_sha = str(manifest["REAL_SHA256"]).lower()
+    if expected_bytes != PINNED_TE_MODEL_BYTES or expected_sha != PINNED_TE_MODEL_SHA256:
+        raise IntegrityError("WRONG_MODEL")
+    model_path.parent.mkdir(parents=True, exist_ok=True)
+    partial = model_path.with_name(model_path.name + ".partial")
+    partial.unlink(missing_ok=True)
+    digest = hashlib.sha256()
+    size = 0
+    try:
+        request = urllib.request.Request(
+            source,
+            headers={"User-Agent": "spe-product-media/1", "Accept": "application/octet-stream"},
+            method="GET",
+        )
+        with urllib.request.urlopen(request, timeout=120) as response, partial.open("wb") as handle:
+            final = str(response.geturl())
+            if not final.startswith("https://"):
+                raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_MODEL")
+            while True:
+                chunk = response.read(1 << 20)
+                if not chunk:
+                    break
+                size += len(chunk)
+                if size > expected_bytes:
+                    raise IntegrityError("SIZE_MISMATCH")
+                digest.update(chunk)
+                handle.write(chunk)
+        if size != expected_bytes:
+            raise IntegrityError("MODEL_LOAD_INTERRUPTED")
+        got = digest.hexdigest()
+        if got != expected_sha:
+            raise IntegrityError("HASH_MISMATCH")
+        if not _model_magic_ok(partial):
+            raise IntegrityError("WRONG_MODEL")
+        os.replace(partial, model_path)
+        print(f"MEDIA_MODEL_INGRESS bytes={size} sha256={got}", file=sys.stderr, flush=True)
+    except IntegrityError:
+        partial.unlink(missing_ok=True)
+        raise
+    except Exception as exc:
+        partial.unlink(missing_ok=True)
+        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_MODEL") from exc
+
+
 def discover_qualified_assets() -> QualifiedAssets:
     """Resolve the pinned CLI and Telugu model from the relative media-pack.
 
-    Never downloads. Never reads a sibling-worktree path. Missing files, a
-    short model, a hash or size mismatch, the wrong ggml file, or an
-    unsupported Mach-O architecture raise IntegrityError.
+    The ggml file is fetched from the manifest SOURCE only when it is absent.
+    The CLI is not downloaded: the manifest has no binary URL. Never reads a
+    sibling-worktree path. A missing CLI, a short model, a hash or size
+    mismatch, the wrong ggml file, or an unsupported architecture raises
+    IntegrityError.
     """
-    root = pack_root()
-    if not root.is_dir():
-        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_PACK")
-    manifest = _load_pack_manifest(root)
-    runtime = manifest["RUNTIME_COMPATIBILITY"]
-    assert isinstance(runtime, dict)
-    architectures = [str(item) for item in runtime["architectures"]]
-    cli_path = _member(root, PACK_CLI_REL)
-    model_path = _member(root, PACK_MODEL_REL)
-    cli_sha = _verify_packed_file(
-        cli_path,
-        expected_sha=PINNED_CLI_SHA256,
-        expected_bytes=PINNED_CLI_BYTES,
-        kind="cli",
-        architectures=architectures,
-    )
-    model_sha = _verify_packed_file(
-        model_path,
-        expected_sha=PINNED_TE_MODEL_SHA256,
-        expected_bytes=PINNED_TE_MODEL_BYTES,
-        kind="model",
-        architectures=architectures,
-    )
-    return QualifiedAssets(
-        cli_path=cli_path,
-        cli_sha256=cli_sha,
-        model_path=model_path,
-        model_sha256=model_sha,
-        raw_download=False,
-    )
+    with _ACQUIRE_LOCK:
+        root = pack_root()
+        if not root.is_dir():
+            raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_PACK")
+        manifest = _load_pack_manifest(root)
+        runtime = manifest["RUNTIME_COMPATIBILITY"]
+        assert isinstance(runtime, dict)
+        architectures = [str(item) for item in runtime["architectures"]]
+        if _host_arch() not in architectures:
+            raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
+        cli_path = _member(root, PACK_CLI_REL)
+        model_path = _member(root, PACK_MODEL_REL)
+        downloaded = False
+        if not model_path.is_file():
+            _acquire_absent_model(model_path, manifest)
+            downloaded = True
+        model_sha = _verify_packed_file(
+            model_path,
+            expected_sha=PINNED_TE_MODEL_SHA256,
+            expected_bytes=PINNED_TE_MODEL_BYTES,
+            kind="model",
+            architectures=architectures,
+        )
+        if not cli_path.is_file():
+            marker = "MODEL_INGRESS_OK" if downloaded else "MODEL_PRESENT"
+            raise IntegrityError(f"PINNED_ASSET_NOT_ON_DISK:MISSING_BINARY:{marker}")
+        cli_sha = _verify_packed_file(
+            cli_path,
+            expected_sha=PINNED_CLI_SHA256,
+            expected_bytes=PINNED_CLI_BYTES,
+            kind="cli",
+            architectures=architectures,
+        )
+        return QualifiedAssets(
+            cli_path=cli_path,
+            cli_sha256=cli_sha,
+            model_path=model_path,
+            model_sha256=model_sha,
+            raw_download=downloaded,
+        )
 
 
 @dataclass(frozen=True)

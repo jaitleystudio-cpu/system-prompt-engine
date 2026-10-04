@@ -7,7 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawn } from "node:child_process";
-import { closeSync, existsSync, ftruncateSync, mkdirSync, openSync, readdirSync, readFileSync, renameSync, unlinkSync, writeFileSync, writeSync } from "node:fs";
+import { chmodSync, closeSync, copyFileSync, existsSync, ftruncateSync, mkdirSync, openSync, readdirSync, readFileSync, renameSync, unlinkSync, writeFileSync, writeSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import esbuild from "esbuild";
@@ -78,13 +78,14 @@ check("website mounted and /media route owns the whisper runtime", () => {
   assert.doesNotMatch(harness, /whisperRuntime/);
   assert.doesNotMatch(app, /StaticWebsiteBuilder/);
   const contract = src("src/media/mount-contract.ts");
-  assert.match(contract, /productMediaV1: "PASS"/);
+  assert.match(contract, /productMediaV1: "NOT_PASS"/);
   assert.match(contract, /media-pack/);
   assert.doesNotMatch(contract, /SPE_MEDIA_ROOT/);
   assert.doesNotMatch(contract, /\/Volumes\//);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "NONE");
-  assert.match(contract, /remainingGap: "NONE"/);
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'Clean checkout cannot transcribe: whisper-cli is gitignored and PACK_MANIFEST has no binary URL. Model ingress uses SOURCE, sha256, expected bytes, and license only.');
+  assert.match(contract, /remainingGap:/);
+  assert.doesNotMatch(contract, /remainingGap: "NONE"/);
   assert.equal(mount.MEDIA_MOUNT.runtime, "pinnedWhisperRuntime");
   assert.match(src("src/media/pinnedWhisperRuntime.ts"), /\/api\/media\/transcribe/);
   assert.doesNotMatch(src("src/media/pinnedWhisperRuntime.ts"), /__speWhisper/);
@@ -121,19 +122,19 @@ check("productMediaV1 is not a test-injected page global", () => {
   }
   const testInjects = assign.test(readFileSync(harnessPath, "utf8"));
   const claimsPass =
-    /productMediaV1:\s*"PASS"/.test(contract) ||
-    /productMediaV1:\s*"PASS"/.test(statusSrc) ||
-    mount.MEDIA_MOUNT.productMediaV1 === "PASS";
+    /productMediaV1:\s*"NOT_PASS"/.test(contract) &&
+    /productMediaV1:\s*"NOT_PASS"/.test(statusSrc) &&
+    mount.MEDIA_MOUNT.productMediaV1 === "NOT_PASS";
   if (testInjects || productHits.length > 0) {
     throw new Error("a page global is still the runtime");
   }
   assert.equal(claimsPass, true);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "NONE");
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
+  assert.notEqual(mount.MEDIA_MOUNT.remainingGap, "NONE");
   assert.equal(testInjects, false);
   assert.deepEqual(productHits, []);
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "NONE");
-  assert.match(contract, /remainingGap:\s*"NONE"/);
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'Clean checkout cannot transcribe: whisper-cli is gitignored and PACK_MANIFEST has no binary URL. Model ingress uses SOURCE, sha256, expected bytes, and license only.');
+  assert.doesNotMatch(contract, /remainingGap:\s*"NONE"/);
   const host = readFileSync(join(repoRoot, "spe_runtime/media_product/route_host.py"), "utf8");
   const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
   assert.match(host, /LocalMediaSession\.open/);
@@ -156,9 +157,9 @@ check("production static server and relative media-pack share one host owner", (
   const vite = src("vite.config.ts");
   const owner = readFileSync(join(repoRoot, "spe_runtime/media_product/local_backend.py"), "utf8");
   const claimsPass =
-    /productMediaV1:\s*"PASS"/.test(contract) ||
-    /productMediaV1:\s*"PASS"/.test(statusSrc) ||
-    mount.MEDIA_MOUNT.productMediaV1 === "PASS";
+    /productMediaV1:\s*"NOT_PASS"/.test(contract) &&
+    /productMediaV1:\s*"NOT_PASS"/.test(statusSrc) &&
+    mount.MEDIA_MOUNT.productMediaV1 === "NOT_PASS";
   assert.match(hostOwner, /spe_runtime\.media_product\.route_host/);
   assert.match(hostOwner, /export function createLocalMediaHost/);
   assert.match(plugin, /createLocalMediaHost/);
@@ -178,10 +179,12 @@ check("production static server and relative media-pack share one host owner", (
   assert.match(owner, /MODEL_PACK_ID/);
   assert.match(owner, /REAL_SHA256/);
   assert.match(owner, /EXPECTED_BYTES/);
+  assert.match(owner, /_acquire_absent_model/);
+  assert.match(owner, /MEDIA_MODEL_INGRESS/);
   assert.match(owner, /"PRODUCT_MEDIA_V1": "PASS" if mounted else "NOT_PASS"/);
   assert.equal(claimsPass, true);
-  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "PASS");
-  assert.equal(mount.MEDIA_MOUNT.remainingGap, "NONE");
+  assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
+  assert.equal(mount.MEDIA_MOUNT.remainingGap, 'Clean checkout cannot transcribe: whisper-cli is gitignored and PACK_MANIFEST has no binary URL. Model ingress uses SOURCE, sha256, expected bytes, and license only.');
   const manifest = JSON.parse(readFileSync(join(repoRoot, "media-pack/PACK_MANIFEST.json"), "utf8"));
   for (const key of [
     "MODEL_PACK_ID",
@@ -467,18 +470,29 @@ try {
       "for key in ('SPE_MEDIA_ROOT', 'SPE_WHISPER_CLI', 'SPE_WHISPER_MODEL'):",
       "    os.environ.pop(key, None)",
       "from spe_runtime.media_product.local_backend import IntegrityError, discover_qualified_assets",
+      "import json",
       "model = root / 'media-pack' / 'models' / 'ggml-te-small.bin'",
-      "kept = model.with_name('ggml-te-small.bin.keep')",
-      "model.rename(kept)",
+      "manifest_path = root / 'media-pack' / 'PACK_MANIFEST.json'",
+      "original = manifest_path.read_text()",
+      "import shutil",
+      "kept = Path('/tmp/r3e-ggml-te-small.bin.keep')",
+      "if kept.exists():",
+      "    kept.unlink()",
+      "shutil.move(str(model), str(kept))",
+      "payload = json.loads(original)",
+      "payload['SOURCE'] = 'https://127.0.0.1:9/ggml-te-small.bin'",
+      "manifest_path.write_text(json.dumps(payload))",
       "try:",
       "    discover_qualified_assets()",
       "    raise SystemExit('expected fail-closed')",
       "except IntegrityError as exc:",
       "    assert 'MISSING_MODEL' in str(exc), exc",
+      "    assert not model.exists(), 'dead source must not create a model'",
       "    print('FAIL_CLOSED', exc)",
       "finally:",
-      "    if not model.exists():",
-      "        kept.rename(model)",
+      "    manifest_path.write_text(original)",
+      "    if not model.exists() and kept.exists():",
+      "        shutil.move(str(kept), str(model))",
     ].join("\n");
     const failClosed = execFileSync("python3", ["-c", py], {
       cwd: repoRoot,
@@ -559,7 +573,7 @@ try {
       injected: typeof window.__speWhisper,
     }));
     assert.equal(mounted.owner, "route");
-    assert.equal(mounted.claim, "PASS");
+    assert.equal(mounted.claim, "NOT_PASS");
     assert.equal(mounted.injected, "undefined");
     const health = await page.evaluate(async () => {
       const res = await fetch("/api/media/health");
@@ -668,7 +682,7 @@ try {
     claim: document.querySelector("[data-product-media-v1]")?.getAttribute("data-product-media-v1") ?? "",
   }));
   assert.equal(reloaded.injected, "undefined");
-  assert.equal(reloaded.claim, "PASS");
+  assert.equal(reloaded.claim, "NOT_PASS");
   await speech.page.getByTestId("media-file").setInputFiles("/tmp/r3e-silence-16k.wav");
   await speech.page.getByTestId("media-start").click();
   await speech.page.getByTestId("media-mode").filter({ hasText: "LOCAL_FALLBACK" }).waitFor({ timeout: 180000 });
@@ -758,10 +772,21 @@ try {
     }
   }
 
-  const modelKeep = packModel + ".keep";
-  renameSync(packModel, modelKeep);
+
+  function relocate(from, to, mode = null) {
+    copyFileSync(from, to);
+    if (mode != null) chmodSync(to, mode);
+    unlinkSync(from);
+  }
+
+  const modelKeep = "/tmp/r3e-ggml-te-small.browser-keep";
+  relocate(packModel, modelKeep);
+  const deadManifest = JSON.parse(packManifestText);
+  deadManifest.SOURCE = "https://127.0.0.1:9/ggml-te-small.bin";
+  writeFileSync(packManifestPath, JSON.stringify(deadManifest, null, 2) + "\n");
   try {
     await expectPackError("MISSING_MODEL");
+    writeFileSync(packManifestPath, packManifestText);
     const fd = openSync(packModel, "w");
     try {
       writeSync(fd, Buffer.from("short"));
@@ -778,8 +803,9 @@ try {
     }
     await expectPackError("HASH_MISMATCH");
   } finally {
+    writeFileSync(packManifestPath, packManifestText);
     if (existsSync(packModel)) unlinkSync(packModel);
-    if (existsSync(modelKeep) && !existsSync(packModel)) renameSync(modelKeep, packModel);
+    if (existsSync(modelKeep) && !existsSync(packModel)) relocate(modelKeep, packModel);
   }
 
   const manifest = JSON.parse(packManifestText);
@@ -791,12 +817,52 @@ try {
     writeFileSync(packManifestPath, packManifestText);
   }
 
-  const cliKeep = packCli + ".keep";
-  renameSync(packCli, cliKeep);
+  const cliKeep = "/tmp/r3e-whisper-cli.keep";
+  relocate(packCli, cliKeep);
   try {
     await expectPackError("MISSING_BINARY");
   } finally {
-    if (!existsSync(packCli) && existsSync(cliKeep)) renameSync(cliKeep, packCli);
+    if (!existsSync(packCli) && existsSync(cliKeep)) relocate(cliKeep, packCli, 0o755);
+  }
+
+  const cliAside = "/tmp/r3e-whisper-cli.clean-aside";
+  const modelAside = "/tmp/r3e-ggml-te-small.clean-aside";
+  relocate(packCli, cliAside);
+  relocate(packModel, modelAside);
+  try {
+    const clean = await openAppMedia();
+    try {
+      await clean.page.getByTestId("media-file").setInputFiles(speechFixture);
+      await clean.page.getByTestId("media-start").click();
+      await clean.page.waitForSelector("[data-testid=media-error], [data-testid=media-transcript]", { timeout: 600000 });
+      const cleanSeen = await readPanel(clean.page);
+      assert.doesNotMatch(cleanSeen.mode, /LOCAL_NEURAL/);
+      assert.notEqual(cleanSeen.status, "SPEECH");
+      assert.match(cleanSeen.egress, /Network sends for this file: 0/);
+      assert.deepEqual(clean.external, []);
+      const ingress = execFileSync("python3", ["-c", [
+        "import hashlib",
+        "from pathlib import Path",
+        "path = Path(" + JSON.stringify(packModel) + ")",
+        "print('ABSENT' if not path.is_file() else hashlib.sha256(path.read_bytes()).hexdigest())",
+      ].join("\n")], { encoding: "utf8" }).trim();
+      console.log("CLEAN_ABSENCE", JSON.stringify({ seen: cleanSeen, modelSha: ingress, serverLog: appLog.includes("MEDIA_MODEL_INGRESS") }));
+      if (ingress === "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e") {
+        assert.match(cleanSeen.error, /MISSING_BINARY/);
+        assert.match(cleanSeen.error, /MODEL_INGRESS_OK/);
+        assert.match(appLog, /MEDIA_MODEL_INGRESS/);
+      } else {
+        console.log("BLOCKER clean-checkout model ingress did not verify", ingress, cleanSeen.error);
+        assert.match(cleanSeen.mode, /UNAVAILABLE/);
+      }
+      checks += 1;
+    } finally {
+      await clean.context.close();
+    }
+  } finally {
+    if (!existsSync(packCli) && existsSync(cliAside)) relocate(cliAside, packCli, 0o755);
+    if (!existsSync(packModel) && existsSync(modelAside)) relocate(modelAside, packModel);
+    else if (existsSync(modelAside)) unlinkSync(modelAside);
   }
 
   async function robotsOf(caseName) {

@@ -53,6 +53,7 @@ export function createLocalMediaHost(opts) {
       }, 20000);
       child.stdout.on("data", (buf) => {
         out += buf.toString();
+        process.stdout.write(buf);
         const match = out.match(/MEDIA_HOST (\d+)/);
         if (match) {
           clearTimeout(timer);
@@ -61,6 +62,7 @@ export function createLocalMediaHost(opts) {
       });
       child.stderr.on("data", (buf) => {
         err += buf.toString();
+        process.stderr.write(buf);
       });
       child.on("exit", (code) => {
         ready = null;
@@ -112,7 +114,7 @@ export function createLocalMediaHost(opts) {
           proxyRes.on("end", () => resolve());
         },
       );
-      proxyReq.setTimeout(180000, () => {
+      proxyReq.setTimeout(600000, () => {
         proxyReq.destroy();
       });
       proxyReq.on("error", () => {
