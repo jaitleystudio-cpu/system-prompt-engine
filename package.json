@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "jiti src/audio/ShockwaveCinemaAudioEngine.test.ts && jiti src/audio/ShockwaveMasterAudioEngine.test.ts && jiti src/audio/ShockwaveCrockfordSync.test.ts"
+    "test": "jiti src/audio/ShockwaveCinemaAudioEngine.test.ts && jiti src/audio/ShockwaveMasterAudioEngine.test.ts && jiti src/audio/ShockwaveCrockfordSync.test.ts && jiti src/audio/ShockwaveImaxCinemaUpmixer.test.ts"
   },
   "dependencies": {
     "next": "16.2.6",

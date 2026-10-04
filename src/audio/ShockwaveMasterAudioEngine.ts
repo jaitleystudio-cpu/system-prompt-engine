@@ -4,6 +4,8 @@
  * Zero Dependencies · 100% Type-Safe · Real-time 5.1 Spatial DSP
  */
 
+import { ShockwaveImaxCinemaUpmixer } from "./ShockwaveImaxCinemaUpmixer";
+
 export type SoundMode =
   | "BIG_BANG_8D"
   | "BASS_BAZUCCA"
@@ -45,6 +47,7 @@ export class ShockwaveMasterAudioEngine {
   public ctx: AudioContext;
   private isFounderActive = false;
   private currentMode: SoundMode = "CINEMA_BEAST_5_1";
+  private imaxUpmixer: ShockwaveImaxCinemaUpmixer | null = null;
 
   // Audio Graph Nodes
   private inputNode!: GainNode;
@@ -185,6 +188,35 @@ export class ShockwaveMasterAudioEngine {
 
     // Build Interconnections
     this.inputNode.connect(this.splitter);
+
+    // Normal Sound (Stereo 2.0 / Mono) -> Discrete 5.1 IMAX Multichannel Matrix
+    const msFactor = 1 / Math.SQRT2;
+    const msCenterSumL = this.ctx.createGain();
+    const msCenterSumR = this.ctx.createGain();
+    msCenterSumL.gain.value = msFactor;
+    msCenterSumR.gain.value = msFactor;
+    this.splitter.connect(msCenterSumL, 0);
+    this.splitter.connect(msCenterSumR, 1);
+    msCenterSumL.connect(this.centerDialogueFilter);
+    msCenterSumR.connect(this.centerDialogueFilter);
+
+    const msLfeSumL = this.ctx.createGain();
+    const msLfeSumR = this.ctx.createGain();
+    msLfeSumL.gain.value = 0.5;
+    msLfeSumR.gain.value = 0.5;
+    this.splitter.connect(msLfeSumL, 0);
+    this.splitter.connect(msLfeSumR, 1);
+    msLfeSumL.connect(this.lfeCrossover);
+    msLfeSumR.connect(this.lfeCrossover);
+
+    const msSurroundDiffL = this.ctx.createGain();
+    const msSurroundDiffR = this.ctx.createGain();
+    msSurroundDiffL.gain.value = msFactor;
+    msSurroundDiffR.gain.value = -msFactor;
+    this.splitter.connect(msSurroundDiffL, 0);
+    this.splitter.connect(msSurroundDiffR, 1);
+    msSurroundDiffL.connect(this.slDelay);
+    msSurroundDiffR.connect(this.srDelay);
 
     // Channel 0 -> FL
     this.splitter.connect(this.flGain, 0);
@@ -359,8 +391,26 @@ export class ShockwaveMasterAudioEngine {
     return this.inputNode;
   }
 
+  public getImaxUpmixer(): ShockwaveImaxCinemaUpmixer {
+    if (!this.imaxUpmixer) {
+      this.imaxUpmixer = new ShockwaveImaxCinemaUpmixer(this.ctx);
+    }
+    return this.imaxUpmixer;
+  }
+
+  public convertNormalSoundToTrue51Imax(sourceNode: AudioNode): AudioNode {
+    const upmixer = this.getImaxUpmixer();
+    sourceNode.connect(upmixer.getInputNode());
+    upmixer.getOutputNode().connect(this.masterLimiter);
+    return upmixer.getOutputNode();
+  }
+
   public dispose(): void {
     this.stop8DOrbit();
+    if (this.imaxUpmixer) {
+      try { this.imaxUpmixer.dispose(); } catch {}
+      this.imaxUpmixer = null;
+    }
     if (this.ctx && typeof this.ctx.close === "function" && this.ctx.state !== "closed") {
       this.ctx.close().catch(() => {});
     }

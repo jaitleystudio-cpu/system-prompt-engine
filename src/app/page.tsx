@@ -61,8 +61,10 @@ export default function ShockwaveDashboard() {
   const [inputToken, setInputToken] = useState("");
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
   const [syncError, setSyncError] = useState<string | null>(null);
+  const [isImaxUpmixing, setIsImaxUpmixing] = useState(false);
   const isMounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const animationFrameRef = useRef<number | null>(null);
+  const imaxSourceRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (!engine) return;
@@ -75,6 +77,10 @@ export default function ShockwaveDashboard() {
 
     return () => {
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      if (imaxSourceRef.current) {
+        imaxSourceRef.current();
+        imaxSourceRef.current = null;
+      }
       engine.stopDemo();
     };
   }, [engine]);
@@ -142,9 +148,79 @@ export default function ShockwaveDashboard() {
       engine.stopDemo();
       setIsPlayingDemo(false);
     } else {
+      if (isImaxUpmixing && imaxSourceRef.current) {
+        imaxSourceRef.current();
+        imaxSourceRef.current = null;
+        setIsImaxUpmixing(false);
+      }
       engine.playCinemaDemo();
       setIsPlayingDemo(true);
     }
+  };
+
+  const handleToggleImaxUpmixDemo = () => {
+    if (!engine) return;
+    const ctx = engine.getContext();
+    if (!ctx) return;
+
+    if (isImaxUpmixing) {
+      if (imaxSourceRef.current) {
+        imaxSourceRef.current();
+        imaxSourceRef.current = null;
+      }
+      setIsImaxUpmixing(false);
+      return;
+    }
+
+    if (isPlayingDemo) {
+      engine.stopDemo();
+      setIsPlayingDemo(false);
+    }
+
+    if (ctx.state === "suspended") {
+      void ctx.resume();
+    }
+
+    // Synthesize standard 2-channel stereo audio (normal music/sound: Left=220Hz, Right=330Hz)
+    const stereoMerger = ctx.createChannelMerger(2);
+    const oscL = ctx.createOscillator();
+    const oscR = ctx.createOscillator();
+    oscL.type = "sawtooth";
+    oscR.type = "sawtooth";
+    oscL.frequency.value = 220;
+    oscR.frequency.value = 330;
+
+    const gainL = ctx.createGain();
+    const gainR = ctx.createGain();
+    gainL.gain.value = 0.12;
+    gainR.gain.value = 0.12;
+
+    oscL.connect(gainL);
+    oscR.connect(gainR);
+    gainL.connect(stereoMerger, 0, 0);
+    gainR.connect(stereoMerger, 0, 1);
+
+    // Convert Normal Stereo Sound to True 5.1 IMAX Multichannel Audio
+    engine.setSoundMode("Cinema Beast 5.1");
+    setSelectedMode("Cinema Beast 5.1");
+    engine.convertNormalSoundToTrue51Imax(stereoMerger);
+
+    oscL.start();
+    oscR.start();
+
+    imaxSourceRef.current = () => {
+      try {
+        oscL.stop();
+        oscR.stop();
+        oscL.disconnect();
+        oscR.disconnect();
+        gainL.disconnect();
+        gainR.disconnect();
+        stereoMerger.disconnect();
+      } catch {}
+    };
+
+    setIsImaxUpmixing(true);
   };
 
   const handleRunCalibration = async () => {
@@ -268,8 +344,8 @@ export default function ShockwaveDashboard() {
                   id: "Cinema Beast 5.1" as ShockwaveSoundMode,
                   icon: "🎬",
                   name: "Cinema Beast 5.1",
-                  badge: "Theater Staging",
-                  desc: "2.4kHz dialogue boost, 22ms Haas delay, +7dB LFE cinema slam.",
+                  badge: "IMAX True 5.1",
+                  desc: "Converts normal audio to true 5.1 IMAX: 2.4kHz dialogue, LR4 85Hz sub slam (+7dB), 22ms Haas delay.",
                 },
                 {
                   id: "Voice Crystal" as ShockwaveSoundMode,
@@ -324,16 +400,29 @@ export default function ShockwaveDashboard() {
                   Atal-Schroeder Transaural 3D Holographic Field, Dialogue Formant Peaking, LR4 85Hz Sub-Bass, and Haas Surround
                 </p>
               </div>
-              <button
-                onClick={handleToggleDemo}
-                className={`px-5 py-2.5 rounded-xl font-bold text-sm tracking-wide transition-all shadow-lg ${
-                  isPlayingDemo
-                    ? "bg-rose-600 hover:bg-rose-500 text-white shadow-rose-900/30"
-                    : "bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-black shadow-amber-900/20"
-                }`}
-              >
-                {isPlayingDemo ? "Stop Cinema Demo" : "Play 5.1 Cinema Demo"}
-              </button>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={handleToggleImaxUpmixDemo}
+                  className={`px-4 py-2.5 rounded-xl font-bold text-xs tracking-wide transition-all border shadow-lg ${
+                    isImaxUpmixing
+                      ? "bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-400 shadow-emerald-900/30"
+                      : "bg-zinc-900 hover:bg-zinc-800 text-amber-400 border-amber-500/50 hover:border-amber-400"
+                  }`}
+                  title="Converts regular 2-channel stereo audio into discrete 6-channel IMAX 5.1 cinema soundfield"
+                >
+                  {isImaxUpmixing ? "✓ IMAX 5.1 Active (Stereo Converted)" : "🎬 Convert Normal Sound -> True 5.1 IMAX"}
+                </button>
+                <button
+                  onClick={handleToggleDemo}
+                  className={`px-5 py-2.5 rounded-xl font-bold text-sm tracking-wide transition-all shadow-lg ${
+                    isPlayingDemo
+                      ? "bg-rose-600 hover:bg-rose-500 text-white shadow-rose-900/30"
+                      : "bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-black shadow-amber-900/20"
+                  }`}
+                >
+                  {isPlayingDemo ? "Stop Cinema Demo" : "Play 5.1 Cinema Demo"}
+                </button>
+              </div>
             </div>
 
             {/* 6 Channel Cards */}
@@ -444,6 +533,15 @@ export default function ShockwaveDashboard() {
                 </div>
                 <p className="text-zinc-300 leading-relaxed">
                   4th-order (24dB/octave) cascaded Butterworth network with automated parametric anti-resonance notch filtering (61.3Hz) to eliminate room boominess.
+                </p>
+              </div>
+
+              <div className="bg-zinc-900/80 p-4 rounded-2xl border border-zinc-800 md:col-span-2">
+                <div className="text-amber-400 font-mono font-bold mb-1">
+                  5. Gerzon (1992) & Jot (1991) IMAX Cinema 5.1 Upmixer Matrix
+                </div>
+                <p className="text-zinc-300 leading-relaxed">
+                  Converts standard 2.0 stereo sound into discrete 6-channel cinema audio: Mid/Side orthogonal dialogue isolation at 2400Hz (+4.5dB), subtractive front steering (-0.35), Linkwitz-Riley LR4 85Hz subwoofer slam (+7dB), and asymmetric prime Schroeder allpass diffuse surround envelopment (22ms / 24.5ms).
                 </p>
               </div>
             </div>

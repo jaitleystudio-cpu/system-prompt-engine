@@ -22,6 +22,7 @@ import {
   AcousticRoomProfile,
 } from "./ShockwaveRoomCalibrationEngine";
 import { ShockwaveCrockfordSync } from "./ShockwaveCrockfordSync";
+import { ShockwaveImaxCinemaUpmixer } from "./ShockwaveImaxCinemaUpmixer";
 
 export interface ShockwaveConfig {
   founderEdition: boolean;
@@ -97,6 +98,7 @@ export class ShockwaveCinemaAudioEngine {
   private isCustomSoundModeSet = false;
   private orbitalTimer: ReturnType<typeof setInterval> | null = null;
   private orbitalAngle: number = 0;
+  private imaxUpmixer: ShockwaveImaxCinemaUpmixer | null = null;
 
   constructor() {
     this.coordinator = new ShockwaveSagaCoordinator();
@@ -304,6 +306,32 @@ export class ShockwaveCinemaAudioEngine {
     this.channelAnalysers[1].connect(this.merger, 0, 1);
 
     // =========================================================================
+    // Normal Sound (Stereo 2.0 / Mono) -> Discrete 5.1 IMAX Multichannel Matrix
+    // Derives Gerzon M/S dialogue center, Linkwitz-Riley LFE bass sum, and out-of-phase surrounds
+    // =========================================================================
+    const msFactor = 1 / Math.SQRT2;
+    const msCenterSumL = this.ctx.createGain();
+    const msCenterSumR = this.ctx.createGain();
+    msCenterSumL.gain.value = msFactor;
+    msCenterSumR.gain.value = msFactor;
+    this.splitter.connect(msCenterSumL, 0);
+    this.splitter.connect(msCenterSumR, 1);
+
+    const msLfeSumL = this.ctx.createGain();
+    const msLfeSumR = this.ctx.createGain();
+    msLfeSumL.gain.value = 0.5;
+    msLfeSumR.gain.value = 0.5;
+    this.splitter.connect(msLfeSumL, 0);
+    this.splitter.connect(msLfeSumR, 1);
+
+    const msSurroundDiffL = this.ctx.createGain();
+    const msSurroundDiffR = this.ctx.createGain();
+    msSurroundDiffL.gain.value = msFactor;
+    msSurroundDiffR.gain.value = -msFactor;
+    this.splitter.connect(msSurroundDiffL, 0);
+    this.splitter.connect(msSurroundDiffR, 1);
+
+    // =========================================================================
     // 2. CENTER CHANNEL (CH 2) - Dialogue Presence & Formant Boost (2.2kHz)
     // =========================================================================
     this.centerClarityFilter = this.ctx.createBiquadFilter();
@@ -313,6 +341,8 @@ export class ShockwaveCinemaAudioEngine {
     this.centerClarityFilter.gain.value = 3.0; // +3.0dB speech intelligibility
 
     this.splitter.connect(this.centerClarityFilter, 2);
+    msCenterSumL.connect(this.centerClarityFilter);
+    msCenterSumR.connect(this.centerClarityFilter);
     this.centerClarityFilter.connect(this.channelAnalysers[2]);
     this.channelAnalysers[2].connect(this.merger, 0, 2);
 
@@ -344,6 +374,8 @@ export class ShockwaveCinemaAudioEngine {
     this.lfeBassDrive.gain.value = 2.0;
 
     this.splitter.connect(this.lfeBoostFilter, 3);
+    msLfeSumL.connect(this.lfeBoostFilter);
+    msLfeSumR.connect(this.lfeBoostFilter);
     this.lfeBoostFilter.connect(this.lfeCascadeFilter);
     this.lfeCascadeFilter.connect(this.lfeRoomModeNotch);
     this.lfeRoomModeNotch.connect(chebyshevShaper);
@@ -370,6 +402,8 @@ export class ShockwaveCinemaAudioEngine {
 
     this.splitter.connect(this.rearLeftDelay, 4);
     this.splitter.connect(this.rearRightDelay, 5);
+    msSurroundDiffL.connect(this.rearLeftDelay);
+    msSurroundDiffR.connect(this.rearRightDelay);
 
     this.rearLeftDelay.connect(this.rearDiffuser);
     this.rearRightDelay.connect(this.rearDiffuser);
@@ -417,9 +451,85 @@ export class ShockwaveCinemaAudioEngine {
     if (this.lfeRoomModeNotch) {
       this.lfeRoomModeNotch.frequency.value = primaryRoomModeHz;
     }
+    if (this.imaxUpmixer) {
+      this.imaxUpmixer.updateRoomModalNotch(primaryRoomModeHz);
+      this.imaxUpmixer.updateSurroundDelays(delays.rearLeftMs, delays.rearRightMs);
+    }
     console.log(
       `[SHOCKWAVE] Room Calibration Applied: SL=${delays.rearLeftMs}ms, SR=${delays.rearRightMs}ms, Anti-Resonance=${primaryRoomModeHz}Hz`
     );
+  }
+
+  /**
+   * Peak IMAX Cinema 5.1 Upmixer Engine:
+   * Converts normal mono (1.0) or stereo (2.0) audio into true discrete 6-channel 5.1 IMAX audio.
+   * Grounded in Gerzon (1992) Ambisonic M/S matrixing, Linkwitz-Riley LR4 85Hz crossover,
+   * Larsen & Aarts Chebyshev NLD sub-bass slam, and asymmetric Schroeder-Haas diffuse envelopment.
+   */
+  public convertNormalSoundToTrue51Imax(sourceNode: AudioNode): AudioNode {
+    if (!this.ctx) {
+      throw new Error("WebAudio AudioContext is not initialized in this environment.");
+    }
+
+    if (!this.isActivated) {
+      this.activateFounderSpecialEdition();
+    }
+
+    if (this.ctx.state === "suspended") {
+      void this.ctx.resume();
+    }
+
+    if (this.ctx.destination.maxChannelCount >= 6) {
+      this.ctx.destination.channelCount = 6;
+      this.ctx.destination.channelCountMode = "explicit";
+      this.ctx.destination.channelInterpretation = "discrete";
+    }
+
+    const upmixer = this.getImaxUpmixer();
+    sourceNode.connect(upmixer.getInputNode());
+
+    // Apply active room calibration profile if available
+    if (this.activeRoomProfile) {
+      upmixer.updateRoomModalNotch(this.activeRoomProfile.roomModesHz[2] || 61.3);
+      upmixer.updateSurroundDelays(
+        this.activeRoomProfile.channelDelaysMs.surroundLeft,
+        this.activeRoomProfile.channelDelaysMs.surroundRight
+      );
+    }
+
+    // Connect upmixer 6-channel output through analysers to destination
+    if (this.channelAnalysers.length < 6) {
+      this.channelAnalysers = Array.from({ length: 6 }, () => {
+        const analyser = this.ctx!.createAnalyser();
+        analyser.fftSize = 64;
+        return analyser;
+      });
+    }
+
+    const upmixSplitter = this.ctx.createChannelSplitter(6);
+    const upmixMerger = this.ctx.createChannelMerger(6);
+    upmixer.getOutputNode().connect(upmixSplitter);
+
+    for (let ch = 0; ch < 6; ch++) {
+      upmixSplitter.connect(this.channelAnalysers[ch], ch);
+      this.channelAnalysers[ch].connect(upmixMerger, 0, ch);
+    }
+
+    upmixMerger.connect(this.ctx.destination);
+    console.log(
+      "[SHOCKWAVE] Normal Sound Converted to True 5.1 IMAX Discrete Multichannel Processing (FL, FR, FC, LFE, SL, SR)."
+    );
+    return upmixMerger;
+  }
+
+  public getImaxUpmixer(): ShockwaveImaxCinemaUpmixer {
+    if (!this.ctx) {
+      throw new Error("WebAudio AudioContext is not initialized in this environment.");
+    }
+    if (!this.imaxUpmixer) {
+      this.imaxUpmixer = new ShockwaveImaxCinemaUpmixer(this.ctx, undefined, this.coordinator);
+    }
+    return this.imaxUpmixer;
   }
 
   /**
@@ -866,6 +976,10 @@ export class ShockwaveCinemaAudioEngine {
 
   public dispose(): void {
     this.stopDemo();
+    if (this.imaxUpmixer) {
+      try { this.imaxUpmixer.dispose(); } catch {}
+      this.imaxUpmixer = null;
+    }
     if (this.merger) {
       try { this.merger.disconnect(); } catch {}
       this.merger = null;

@@ -202,8 +202,8 @@ async function runShockwaveMasterVerificationSuite(): Promise<void> {
   const harmonicCurve = engine.generateBassHarmonicCurve(256);
   if (
     engine.getCurrentMode() === "BASS_BAZUCCA" &&
-    engine.lfeCrossover.frequency.value === 110 &&
-    engine.lfeGain.gain.value === 2.8 && // +9dB
+    (engine.lfeCrossover.frequency.value as number) === 110 &&
+    (engine.lfeGain.gain.value as number) === 2.8 && // +9dB
     harmonicCurve.length === 256
   ) {
     console.log("  ✓ PASS: Bass Bazucca active at 110Hz crossover, +9dB LFE drive, and 256-point MaxxBass polynomial saturation.");
@@ -216,12 +216,12 @@ async function runShockwaveMasterVerificationSuite(): Promise<void> {
   console.log("\nTEST 5 [MODE 3]: Music Studio Bit-Perfect Flat Reference Monitor...");
   engine.setSoundMode("MUSIC_STUDIO");
   if (
-    engine.flGain.gain.value === 1.0 &&
-    engine.frGain.gain.value === 1.0 &&
-    engine.centerGain.gain.value === 1.0 &&
-    engine.centerDialogueFilter.gain.value === 0.0 &&
-    engine.slDelay.delayTime.value === 0.0 &&
-    engine.srDelay.delayTime.value === 0.0
+    (engine.flGain.gain.value as number) === 1.0 &&
+    (engine.frGain.gain.value as number) === 1.0 &&
+    (engine.centerGain.gain.value as number) === 1.0 &&
+    (engine.centerDialogueFilter.gain.value as number) === 0.0 &&
+    (engine.slDelay.delayTime.value as number) === 0.0 &&
+    (engine.srDelay.delayTime.value as number) === 0.0
   ) {
     console.log("  ✓ PASS: Music Studio active with 0.0dB coloration, unity gains, and zero surround latency.");
     passedTests++;
@@ -233,9 +233,9 @@ async function runShockwaveMasterVerificationSuite(): Promise<void> {
   console.log("\nTEST 6 [MODE 4]: Soul Song Triode Vacuum Tube Warmth Saturation...");
   engine.setSoundMode("SOUL_SONG");
   if (
-    engine.centerDialogueFilter.frequency.value === 1800 &&
-    engine.centerDialogueFilter.gain.value === 2.0 &&
-    engine.lfeGain.gain.value === 1.2
+    (engine.centerDialogueFilter.frequency.value as number) === 1800 &&
+    (engine.centerDialogueFilter.gain.value as number) === 2.0 &&
+    (engine.lfeGain.gain.value as number) === 1.2
   ) {
     console.log("  ✓ PASS: Soul Song active with 1.8 kHz vocal warmth boost and 1.2x tube low-end harmonic weight.");
     passedTests++;
@@ -247,11 +247,11 @@ async function runShockwaveMasterVerificationSuite(): Promise<void> {
   console.log("\nTEST 7 [MODE 5]: Cinema Beast 5.1 Theater Staging, Speech Boost & Haas Latency...");
   engine.setSoundMode("CINEMA_BEAST_5_1");
   if (
-    engine.centerDialogueFilter.frequency.value === 2400 &&
-    engine.centerDialogueFilter.gain.value === 4.5 && // +4.5dB dialogue clarity
-    engine.lfeGain.gain.value === 2.2 && // +7dB cinema slam
-    engine.slDelay.delayTime.value === 0.022 && // 22ms Haas delay
-    engine.srDelay.delayTime.value === 0.022
+    (engine.centerDialogueFilter.frequency.value as number) === 2400 &&
+    (engine.centerDialogueFilter.gain.value as number) === 4.5 && // +4.5dB dialogue clarity
+    (engine.lfeGain.gain.value as number) === 2.2 && // +7dB cinema slam
+    (engine.slDelay.delayTime.value as number) === 0.022 && // 22ms Haas delay
+    (engine.srDelay.delayTime.value as number) === 0.022
   ) {
     console.log("  ✓ PASS: Cinema Beast 5.1 active with 2.4 kHz dialogue presence, +7dB sub slam, and 22ms Haas delay.");
     passedTests++;
@@ -263,9 +263,9 @@ async function runShockwaveMasterVerificationSuite(): Promise<void> {
   console.log("\nTEST 8 [MODE 6]: Voice Crystal Speech Isolation & Sub-Rumble Cutoff...");
   engine.setSoundMode("VOICE_CRYSTAL");
   if (
-    engine.centerDialogueFilter.frequency.value === 2500 &&
-    engine.centerDialogueFilter.gain.value === 8.0 && // +8dB speech boost
-    engine.lfeGain.gain.value === 0.2 // Rumble cut
+    (engine.centerDialogueFilter.frequency.value as number) === 2500 &&
+    (engine.centerDialogueFilter.gain.value as number) === 8.0 && // +8dB speech boost
+    (engine.lfeGain.gain.value as number) === 0.2 // Rumble cut
   ) {
     console.log("  ✓ PASS: Voice Crystal active with +8dB formant enhancement and -14dB sub-bass rumble cutoff.");
     passedTests++;
