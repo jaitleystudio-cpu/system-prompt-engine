@@ -36,6 +36,62 @@ def _assert_gates(result: dict) -> None:
     assert _SECRET not in json.dumps(result)
 
 
+
+def _assert_doi_relationship(message: dict, relationship: dict) -> None:
+    """Roles come from Crossref update type, label, and assertion URL.
+
+    nature05812 is the erratum, not the retraction note. Retraction Watch's
+    updated-by type stays correction. The publisher assertion change_type on
+    the retraction note stays Correction. Those source fields are not relabeled.
+    """
+    updated = [item for item in message.get("updated-by") or [] if isinstance(item, dict)]
+    witnessed = {
+        (item.get("source"), item.get("type"), item.get("label"), item.get("DOI"))
+        for item in updated
+    }
+    assert ("publisher", "retraction", "Retraction", "10.1038/s41586-024-07653-0") in witnessed
+    assert ("retraction-watch", "retraction", "Retraction", "10.1038/s41586-024-07653-0") in witnessed
+    assert ("publisher", "erratum", "Erratum", "10.1038/nature05812") in witnessed
+    assert ("retraction-watch", "correction", "Correction", "10.1038/nature05812") in witnessed
+    assert not any(
+        item.get("DOI") == "10.1038/nature05812" and item.get("type") == "retraction"
+        for item in updated
+    )
+    paired: list[tuple[str, str]] = []
+    change_type = None
+    for item in message.get("assertion") or []:
+        if not isinstance(item, dict):
+            continue
+        if item.get("name") == "change_type":
+            change_type = str(item.get("value") or "")
+        elif item.get("name") == "change_details" and str(item.get("value") or "").startswith("https://doi.org/"):
+            paired.append((change_type or "", str(item.get("value"))))
+            change_type = None
+    assert ("Erratum", "https://doi.org/10.1038/nature05812") in paired
+    assert ("Correction", "https://doi.org/10.1038/s41586-024-07653-0") in paired
+    original = relationship["10.1038/nature00870"]
+    note = relationship["10.1038/s41586-024-07653-0"]
+    erratum = relationship["10.1038/nature05812"]
+    assert original["role"] == "ORIGINAL_ARTICLE"
+    assert original["retracted"] is True
+    assert original["openalex_is_retracted"] is True
+    assert original["openalex_vs_crossref"] == "AGREE"
+    assert note["role"] == "RETRACTION_NOTE"
+    assert note["crossref_updated_by_type"] == "retraction"
+    assert note["publisher_assertion_change_type"] == "Correction"
+    assert note["publisher_assertion_change_type_relabel"] == "REFUSED"
+    assert erratum["role"] == "ERRATUM"
+    assert erratum["not_retraction_note"] is True
+    assert erratum["publisher_updated_by_type"] == "erratum"
+    assert erratum["retraction_watch_updated_by_type"] == "correction"
+    assert erratum["retraction_watch_type_relabel"] == "REFUSED"
+    assert relationship["openalex_vs_crossref"] == "AGREE"
+    assert relationship["status_not_openalex_boolean_only"] is True
+    refused = {(row["doi"], row["field"], row["source_value"]) for row in relationship["refused_relabel"]}
+    assert ("10.1038/nature05812", "updated-by.type", "correction") in refused
+    assert ("10.1038/s41586-024-07653-0", "assertion.change_type", "Correction") in refused
+
+
 def test_missing_consent_blocks_even_if_live_was_requested(monkeypatch):
     def boom(*_args, **_kwargs):
         raise AssertionError("network was contacted without consent")
@@ -136,6 +192,16 @@ def test_saved_bodies_are_the_receipt():
     assert ("retraction", "10.1038/s41586-024-07653-0") in notices
     assert ("correction", "10.1038/nature05812") in notices
     assert ("erratum", "10.1038/nature05812") in notices
+    assert ("retraction", "10.1038/nature05812") not in notices
+    _assert_doi_relationship(message, receipt["doi_relationship"])
+    stored_roles = {(item.get("role"), item.get("DOI")) for item in receipt["retraction_notices"]}
+    assert ("RETRACTION_NOTE", "10.1038/s41586-024-07653-0") in stored_roles
+    assert ("ERRATUM", "10.1038/nature05812") in stored_roles
+    assert ("RETRACTION_NOTE", "10.1038/nature05812") not in stored_roles
+    openalex_record = json.loads(openalex)
+    assert openalex_record["is_retracted"] is True
+    assert str(openalex_record["doi"]).lower().endswith("10.1038/nature00870")
+    assert receipt["doi_relationship"]["10.1038/nature00870"]["openalex_vs_crossref"] == "AGREE"
     assert _SECRET.encode() not in openalex
     assert _SECRET.encode() not in crossref
     assert _RECEIPT.read_bytes() == before
@@ -312,3 +378,9 @@ def test_fresh_timestamped_journey_does_not_touch_pinned_bodies():
     assert ("retraction", "10.1038/s41586-024-07653-0") in notices
     assert ("correction", "10.1038/nature05812") in notices
     assert ("erratum", "10.1038/nature05812") in notices
+    assert ("retraction", "10.1038/nature05812") not in notices
+    _assert_doi_relationship(message, fresh["doi_relationship"])
+    stored_roles = {(item.get("role"), item.get("DOI")) for item in crossref["notices"]}
+    assert ("RETRACTION_NOTE", "10.1038/s41586-024-07653-0") in stored_roles
+    assert ("ERRATUM", "10.1038/nature05812") in stored_roles
+    assert ("RETRACTION_NOTE", "10.1038/nature05812") not in stored_roles

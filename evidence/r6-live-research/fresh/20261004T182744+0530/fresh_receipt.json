@@ -49,19 +49,31 @@
       "notices": [
         {
           "type": "correction",
-          "DOI": "10.1038/nature05812"
+          "label": "Correction",
+          "source": "retraction-watch",
+          "DOI": "10.1038/nature05812",
+          "role": "ERRATUM"
         },
         {
           "type": "retraction",
-          "DOI": "10.1038/s41586-024-07653-0"
+          "label": "Retraction",
+          "source": "retraction-watch",
+          "DOI": "10.1038/s41586-024-07653-0",
+          "role": "RETRACTION_NOTE"
         },
         {
           "type": "erratum",
-          "DOI": "10.1038/nature05812"
+          "label": "Erratum",
+          "source": "publisher",
+          "DOI": "10.1038/nature05812",
+          "role": "ERRATUM"
         },
         {
           "type": "retraction",
-          "DOI": "10.1038/s41586-024-07653-0"
+          "label": "Retraction",
+          "source": "publisher",
+          "DOI": "10.1038/s41586-024-07653-0",
+          "role": "RETRACTION_NOTE"
         }
       ]
     }
@@ -102,5 +114,59 @@
         "missing_input": "selection"
       }
     }
+  },
+  "doi_relationship": {
+    "10.1038/nature00870": {
+      "role": "ORIGINAL_ARTICLE",
+      "retracted": true,
+      "crossref_doi": "10.1038/nature00870",
+      "crossref_title": "RETRACTED ARTICLE: Pluripotency of mesenchymal stem cells derived from adult marrow",
+      "crossref_updated_by_retraction_doi": "10.1038/s41586-024-07653-0",
+      "openalex_doi": "https://doi.org/10.1038/nature00870",
+      "openalex_is_retracted": true,
+      "openalex_vs_crossref": "AGREE"
+    },
+    "10.1038/s41586-024-07653-0": {
+      "role": "RETRACTION_NOTE",
+      "crossref_updated_by_type": "retraction",
+      "crossref_updated_by_label": "Retraction",
+      "crossref_updated_by_sources": [
+        "retraction-watch",
+        "publisher"
+      ],
+      "publisher_assertion_change_type": "Correction",
+      "publisher_assertion_change_type_relabel": "REFUSED",
+      "publisher_assertion_details": "This article has been retracted. Please see the Retraction Notice for more detail:",
+      "publisher_assertion_url": "https://doi.org/10.1038/s41586-024-07653-0"
+    },
+    "10.1038/nature05812": {
+      "role": "ERRATUM",
+      "not_retraction_note": true,
+      "publisher_updated_by_type": "erratum",
+      "publisher_updated_by_label": "Erratum",
+      "publisher_assertion_change_type": "Erratum",
+      "publisher_assertion_url": "https://doi.org/10.1038/nature05812",
+      "retraction_watch_updated_by_type": "correction",
+      "retraction_watch_updated_by_label": "Correction",
+      "retraction_watch_type_relabel": "REFUSED"
+    },
+    "openalex_vs_crossref": "AGREE",
+    "status_not_openalex_boolean_only": true,
+    "refused_relabel": [
+      {
+        "doi": "10.1038/nature05812",
+        "field": "updated-by.type",
+        "source": "retraction-watch",
+        "source_value": "correction",
+        "reason": "SOURCE_FIELD_SAYS_CORRECTION_PUBLISHER_TYPE_SAYS_ERRATUM"
+      },
+      {
+        "doi": "10.1038/s41586-024-07653-0",
+        "field": "assertion.change_type",
+        "source": "publisher",
+        "source_value": "Correction",
+        "reason": "SOURCE_FIELD_SAYS_CORRECTION_UPDATED_BY_TYPE_AND_DETAILS_SAY_RETRACTION_NOTICE"
+      }
+    ]
   }
 }
