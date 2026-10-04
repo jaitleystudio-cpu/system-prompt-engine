@@ -11,6 +11,7 @@ export type AppView =
   | "workspace"
   | "website"
   | "media"
+  | "ocr"
   | "research";
 
 export const VIEW_PATH: Record<AppView, string> = {
@@ -24,6 +25,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   workspace: "/workspace",
   website: "/website",
   media: "/media",
+  ocr: "/ocr",
   research: "/research",
 };
 
@@ -33,6 +35,7 @@ export const NOINDEX_VIEWS: ReadonlySet<AppView> = new Set([
   "my-work",
   "website",
   "media",
+  "ocr",
   "research",
 ]);
 
@@ -143,6 +146,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Media — Not available | SPE",
     description:
       "Media is not mounted in this build. Nothing on this route can capture or generate media.",
+  },
+  ocr: {
+    path: "/ocr",
+    title: "OCR — Local text from an image | SPE",
+    description:
+      "Read text from an image on this machine with the pinned local engine. If that engine is not verified, this route stays unavailable.",
   },
   research: {
     path: "/research",

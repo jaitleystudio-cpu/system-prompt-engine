@@ -10,6 +10,7 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createLocalMediaHost } from "./local-media-host.mjs";
+import { createLocalOcrHost } from "./local-ocr-host.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const webRoot = join(here, "..");
@@ -40,6 +41,7 @@ if (!existsSync(join(dist, "index.html"))) {
 }
 
 const mediaHost = createLocalMediaHost({ repoRoot });
+const ocrHost = createLocalOcrHost({ repoRoot });
 
 function sendFile(res, file) {
   const body = readFileSync(file);
@@ -56,6 +58,10 @@ const server = createServer((req, res) => {
     void mediaHost.handleApi(req, res);
     return;
   }
+  if (ocrHost.isApi(rawUrl)) {
+    void ocrHost.handleApi(req, res);
+    return;
+  }
   let reqPath = decodeURIComponent(rawUrl.split("?")[0] || "/");
   if (reqPath === "/") reqPath = "/index.html";
   const file = join(dist, reqPath.replace(/^\//, ""));
@@ -69,6 +75,7 @@ const server = createServer((req, res) => {
 
 function shutdown() {
   mediaHost.stop();
+  ocrHost.stop();
   server.close(() => process.exit(0));
 }
 

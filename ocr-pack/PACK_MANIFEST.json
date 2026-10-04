@@ -1,0 +1,20 @@
+{
+  "MODEL_PACK_ID": "spe-ocr-tesseract-eng-fast",
+  "VERSION": "1",
+  "REAL_SHA256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2",
+  "EXPECTED_BYTES": 4113088,
+  "LICENSE": "Apache-2.0",
+  "SOURCE": "https://github.com/tesseract-ocr/tessdata_fast/raw/4.1.0/eng.traineddata",
+  "RUNTIME_COMPATIBILITY": {
+    "cli_discovery": "PATH",
+    "cli_sha256": "9fd3da5637e8d490182708c3689f15921cddb9beb469c1f128bc210033714ef9",
+    "cli_bytes": 70544,
+    "cli_license": "Apache-2.0",
+    "engine": "tesseract",
+    "engine_version": "5.5.3",
+    "model_relative_path": "tessdata/eng.traineddata",
+    "architectures": ["arm64"],
+    "language": "eng"
+  },
+  "LANGUAGE_SCOPE": ["eng"]
+}

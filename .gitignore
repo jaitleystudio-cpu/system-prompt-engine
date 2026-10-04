@@ -242,3 +242,9 @@ qualification/*_receipt.json
 /media-pack/.whisper-build/
 /media-pack/models/*.bin
 /media-pack/models/*.partial
+
+# Local OCR pack bytes. PACK_MANIFEST.json stays committed.
+/ocr-pack/tessdata/*.traineddata
+/ocr-pack/tessdata/*.partial
+/ocr-pack/.session/
+/.ocr-scratch/
