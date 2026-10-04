@@ -3,6 +3,11 @@
 Not a second engine. This process is started by the app server. The browser
 reaches it only through the app's same-origin /api/media route.
 
+File proof does not flip v1. This route calls product_gates. PRODUCT_MEDIA_V1
+becomes PASS only after one journey on this route recorded absence, verified
+model ingress, a verified CLI build, LOCAL_NEURAL, and user-audio egress 0.
+A mount string is not that journey.
+
 Ownership, from spe_runtime/media_product/local_backend.py:
 - Runtime creation: LocalMediaSession.open(discover_qualified_assets()).
 - Model location: discover_qualified_assets() verifies media-pack/PACK_MANIFEST.json and, only when the ggml file is absent, fetches SOURCE (model ingress, then sha256). When whisper-cli is absent it builds the pinned whisper.cpp commit into that pack.
@@ -25,7 +30,10 @@ from urllib.parse import unquote
 from spe_runtime.media_product.local_backend import (
     IntegrityError,
     LocalMediaSession,
+    commit_product_journey,
     discover_qualified_assets,
+    product_gates,
+    recorded_journey,
 )
 
 _MAX_BYTES = 32 * 1024 * 1024
@@ -152,7 +160,21 @@ def _run_job(job: Job, media_path: Path) -> dict[str, object]:
         if job.cancel.is_set():
             payload = _public("CANCELLED", "UNAVAILABLE", "CANCELLED")
         else:
-            payload = _from_transcript(session.transcribe_path(media_path))
+            result = session.transcribe_path(media_path)
+            if result.mode == "LOCAL_NEURAL" and result.neural_session_ran:
+                print(
+                    f"LOCAL_NEURAL user_audio_egress={int(result.egress_attempts)}",
+                    file=sys.stderr,
+                    flush=True,
+                )
+            verdict, gap, became = commit_product_journey(assets, result)
+            if became:
+                print(
+                    f"PRODUCT_MEDIA_V1 {verdict} remainingGap={gap}",
+                    file=sys.stderr,
+                    flush=True,
+                )
+            payload = _from_transcript(result)
         _STATE["last_error"] = ""
         _STATE["egress_attempts"] = int(payload["egressAttempts"])
         return payload
@@ -183,6 +205,11 @@ class Handler(BaseHTTPRequestHandler):
             return
         with _LOCK:
             active = len(_JOBS)
+        gates = product_gates(
+            local_file_transcription="UNAVAILABLE",
+            raw_media_egress=int(_STATE["egress_attempts"]),
+            journey=recorded_journey(),
+        )
         self._send(
             200,
             {
@@ -192,6 +219,8 @@ class Handler(BaseHTTPRequestHandler):
                 "lastTempFilesRemaining": int(_STATE["last_temp_files_remaining"]),
                 "lastUploadRemoved": bool(_STATE["last_upload_removed"]),
                 "lastError": _STATE["last_error"],
+                "productMediaV1": gates["PRODUCT_MEDIA_V1"],
+                "remainingGap": gates["REMAINING_GAP"],
             },
         )
 

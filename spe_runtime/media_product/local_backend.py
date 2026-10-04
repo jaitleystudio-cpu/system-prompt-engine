@@ -8,7 +8,7 @@ whisper.cpp commit into the relative media-pack (static, no absolute rpath).
 User audio is never uploaded. A bad hash, a bad size, a bad rpath, or the
 wrong architecture fails closed. The session owns decode, cancellation,
 silence truth, and explicit modes. It does not claim live transcription.
-Product media v1 follows the mount ledger.
+Product media v1 is NOT_PASS until one journey records absence, verified model ingress, a verified CLI build, LOCAL_NEURAL, and user-audio egress 0.
 """
 
 from __future__ import annotations
@@ -142,26 +142,82 @@ def resolve_media_mode(*, provider: str, assets_ready: bool, neural_session_ran:
     return "LOCAL_FALLBACK"
 
 
+_JOURNEY_LOCK = threading.Lock()
+_RECORDED_JOURNEY: dict[str, object] | None = None
+
+
+def recorded_journey() -> dict[str, object] | None:
+    """The one journey this process has recorded, if it closed every gate."""
+    with _JOURNEY_LOCK:
+        if _RECORDED_JOURNEY is None:
+            return None
+        return dict(_RECORDED_JOURNEY)
+
+
+def journey_gap(proof: dict[str, object] | None) -> str:
+    """Why PRODUCT_MEDIA_V1 is not a pass. NONE only when this proof is complete."""
+    if not isinstance(proof, dict):
+        return "JOURNEY_NOT_RECORDED"
+    gaps: list[str] = []
+    if proof.get("absence_before_fetch") is not True:
+        gaps.append("ABSENCE_BEFORE_FETCH")
+    ingress = proof.get("model_ingress")
+    if (
+        not isinstance(ingress, dict)
+        or ingress.get("sha256") != PINNED_TE_MODEL_SHA256
+        or ingress.get("bytes") != PINNED_TE_MODEL_BYTES
+    ):
+        gaps.append("MODEL_INGRESS")
+    cli = proof.get("cli_build")
+    if (
+        not isinstance(cli, dict)
+        or cli.get("sha256") != PINNED_CLI_SHA256
+        or cli.get("bytes") != PINNED_CLI_BYTES
+        or cli.get("rpath_clean") is not True
+        or cli.get("spe_g12") is not False
+    ):
+        gaps.append("CLI_BUILD")
+    if proof.get("local_neural") is not True:
+        gaps.append("LOCAL_NEURAL")
+    if proof.get("user_audio_egress") != 0:
+        gaps.append("USER_AUDIO_EGRESS")
+    if gaps:
+        return ",".join(gaps)
+    return "NONE"
+
+
 def product_gates(
     *,
     local_file_transcription: str,
     raw_media_egress: int,
+    journey: dict[str, object] | None = None,
     browser_journey: str = "NOT_RUN",
 ) -> dict[str, object]:
-    """Honest gates. File proof does not flip v1, live, UI mount, or device."""
-    mounted = browser_journey == "PASS"
+    """File proof does not flip v1. A mount string does not flip v1.
+
+    PRODUCT_MEDIA_V1 becomes PASS only when `journey` recorded absence before
+    fetch, verified model ingress (sha and size), a verified CLI build (sha,
+    no rpath, no spe-g12), LOCAL_NEURAL, and user-audio egress 0.
+    `browser_journey` is reported and does not change the verdict. Live
+    transcription, UI mount, and a physical device stay unflipped.
+    """
+    gap = journey_gap(journey)
+    verdict = "NOT_PASS"
+    if gap == "NONE":
+        verdict = "PASS"
     return {
         "TELUGU_MODEL_QUALIFIED_FOR_MEDIA_BACKEND": "PRESERVED",
         "LIVE_TRANSCRIPTION": "UNAVAILABLE",
-        "PRODUCT_MEDIA_V1": "PASS" if mounted else "NOT_PASS",
-        "UI_INTEGRATED": "YES" if mounted else "NO",
-        "UI_MOUNTED": "YES" if mounted else "NO",
-        "SHELL_MOUNT": "DONE" if mounted else "REQUIRED",
+        "PRODUCT_MEDIA_V1": verdict,
+        "UI_INTEGRATED": "NO",
+        "UI_MOUNTED": "NO",
+        "SHELL_MOUNT": "REQUIRED",
         "PHYSICAL_DEVICE": "WAITING_EXTERNAL",
         "RAW_MEDIA_EGRESS": raw_media_egress,
         "TIMESTAMPS": TIMESTAMP_STATE,
         "BROWSER_CLOUD_STT": "NOT_LOCAL",
         "LOCAL_FILE_TRANSCRIPTION": local_file_transcription,
+        "REMAINING_GAP": gap,
         "BROWSER_JOURNEY": browser_journey,
     }
 
@@ -219,6 +275,12 @@ class QualifiedAssets:
     model_path: Path
     model_sha256: str
     raw_download: bool = False
+    cli_built: bool = False
+    absence_before_fetch: bool = False
+    model_bytes: int = 0
+    cli_bytes: int = 0
+    cli_rpath_clean: bool = False
+    cli_spe_g12: bool = True
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -495,12 +557,8 @@ def _reject_external_linkage(path: Path) -> None:
         if cmdsize < 8 or offset + cmdsize > len(data):
             raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
         if cmd == 0x8000001C:
-            path_off = int.from_bytes(data[offset + 8 : offset + 12], "little")
-            if path_off < 8 or offset + path_off >= offset + cmdsize:
-                raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
-            raw = data[offset + path_off : offset + cmdsize].split(b"\x00", 1)[0].decode("utf-8", "replace")
-            if not _rpath_allowed(raw):
-                raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+            # Product CLI is static. Any LC_RPATH, including @loader_path, is a fail.
+            raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
         if cmd in {0xC, 0x80000018}:
             name_off = int.from_bytes(data[offset + 8 : offset + 12], "little")
             if name_off < 8 or offset + name_off >= offset + cmdsize:
@@ -612,6 +670,8 @@ def _acquire_absent_cli(cli_path: Path, manifest: dict[str, object]) -> None:
         raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_BINARY:BUILD_FAILED")
     _reject_external_linkage(built)
     raw = built.read_bytes()
+    if b"spe-g12" in raw:
+        raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
     if len(raw) != PINNED_CLI_BYTES:
         raise IntegrityError("SIZE_MISMATCH")
     got = hashlib.sha256(raw).hexdigest()
@@ -650,7 +710,12 @@ def discover_qualified_assets() -> QualifiedAssets:
             raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
         cli_path = _member(root, PACK_CLI_REL)
         model_path = _member(root, PACK_MODEL_REL)
+        whisper_src = root / ".whisper-build" / "src"
+        absence_before_fetch = (
+            not model_path.is_file() and not cli_path.is_file() and not whisper_src.exists()
+        )
         downloaded = False
+        cli_built = False
         if not model_path.is_file():
             _acquire_absent_model(model_path, manifest)
             downloaded = True
@@ -663,6 +728,7 @@ def discover_qualified_assets() -> QualifiedAssets:
         )
         if not cli_path.is_file():
             _acquire_absent_cli(cli_path, manifest)
+            cli_built = True
         cli_sha = _verify_packed_file(
             cli_path,
             expected_sha=PINNED_CLI_SHA256,
@@ -670,12 +736,32 @@ def discover_qualified_assets() -> QualifiedAssets:
             kind="cli",
             architectures=architectures,
         )
+        model_bytes = model_path.stat().st_size if downloaded else 0
+        cli_bytes = 0
+        cli_rpath_clean = False
+        cli_spe_g12 = True
+        if cli_built:
+            _reject_external_linkage(cli_path)
+            cli_raw = cli_path.read_bytes()
+            cli_bytes = len(cli_raw)
+            cli_spe_g12 = b"spe-g12" in cli_raw
+            if cli_spe_g12:
+                raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+            if cli_bytes != PINNED_CLI_BYTES:
+                raise IntegrityError("SIZE_MISMATCH")
+            cli_rpath_clean = True
         return QualifiedAssets(
             cli_path=cli_path,
             cli_sha256=cli_sha,
             model_path=model_path,
             model_sha256=model_sha,
             raw_download=downloaded,
+            cli_built=cli_built,
+            absence_before_fetch=absence_before_fetch,
+            model_bytes=model_bytes,
+            cli_bytes=cli_bytes,
+            cli_rpath_clean=cli_rpath_clean,
+            cli_spe_g12=cli_spe_g12,
         )
 
 
@@ -731,6 +817,50 @@ class LocalTranscript:
             "attempts": self.attempts,
             "phase": self.phase,
         }
+
+
+def commit_product_journey(assets: QualifiedAssets, result: LocalTranscript) -> tuple[str, str, bool]:
+    """Record this discover+transcribe only when that same call closed every gate.
+
+    Returns verdict, remaining gap, and whether this call is what made the
+    verdict PASS. A later call does not become a pass by pointing at an
+    earlier one, and a mount string never does.
+    """
+    proof: dict[str, object] = {
+        "absence_before_fetch": bool(
+            assets.absence_before_fetch and assets.raw_download and assets.cli_built
+        ),
+        "model_ingress": {
+            "sha256": assets.model_sha256,
+            "bytes": assets.model_bytes,
+        }
+        if assets.raw_download
+        else None,
+        "cli_build": {
+            "sha256": assets.cli_sha256,
+            "bytes": assets.cli_bytes,
+            "rpath_clean": assets.cli_rpath_clean,
+            "spe_g12": assets.cli_spe_g12,
+        }
+        if assets.cli_built
+        else None,
+        "local_neural": bool(
+            result.mode == "LOCAL_NEURAL" and result.neural_session_ran and result.status == "SPEECH"
+        ),
+        "user_audio_egress": int(result.egress_attempts),
+    }
+    gap = journey_gap(proof)
+    if gap != "NONE":
+        gates = product_gates(
+            local_file_transcription=result.mode,
+            raw_media_egress=int(result.egress_attempts),
+            journey=recorded_journey(),
+        )
+        return str(gates["PRODUCT_MEDIA_V1"]), str(gates["REMAINING_GAP"]), False
+    with _JOURNEY_LOCK:
+        global _RECORDED_JOURNEY
+        _RECORDED_JOURNEY = proof
+    return "PASS", "NONE", True
 
 
 def _wav_usable(path: Path) -> bool:
