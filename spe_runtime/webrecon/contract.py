@@ -7,6 +7,8 @@ assign a semantic category, score quality, or call K3.
 
 from __future__ import annotations
 
+import html
+import re
 from dataclasses import dataclass
 from typing import Any, Mapping
 
@@ -601,3 +603,149 @@ def build_reconstruction_contract(
         network_performed=False,
         k3_integrated=False,
     )
+
+
+_VOID_TAGS = frozenset(
+    {
+        "area",
+        "base",
+        "br",
+        "col",
+        "embed",
+        "hr",
+        "img",
+        "input",
+        "link",
+        "meta",
+        "param",
+        "source",
+        "track",
+        "wbr",
+    }
+)
+_TAG_NAME = re.compile(r"^[a-z][a-z0-9]*$")
+_ATTR_NAME = re.compile(r"^[a-zA-Z_:][-a-zA-Z0-9_:.]*$")
+_TOKEN_PROPS = (
+    ("font-family", "font_family"),
+    ("font-size", "font_size"),
+    ("font-weight", "font_weight"),
+    ("line-height", "line_height"),
+    ("letter-spacing", "letter_spacing"),
+    ("font", "font_shorthand"),
+)
+
+
+def _node_has_text(node: LayoutNode) -> bool:
+    if node.text_excerpt:
+        return True
+    return any(_node_has_text(child) for child in node.children)
+
+
+def _attr_value(node: LayoutNode, name: str) -> str | None:
+    for attr in node.attributes:
+        if attr.name == name:
+            return attr.value
+    return None
+
+
+def _css_string(value: str) -> str | None:
+    if any(char in value for char in "<>{};"):
+        return None
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+    return '"' + escaped + '"'
+
+
+def _token_style(xray: WebsiteXRay) -> str:
+    declarations: list[str] = []
+    for index, token in enumerate(xray.typography):
+        for css_name, field_name in _TOKEN_PROPS:
+            raw = getattr(token, field_name)
+            if not raw:
+                continue
+            quoted = _css_string(raw)
+            if quoted is None:
+                continue
+            declarations.append(f"--webrecon-{index}-{css_name}:{quoted};")
+    if not declarations:
+        return ""
+    return ":root{" + "".join(declarations) + "}"
+
+
+def _render_node(
+    node: LayoutNode,
+    metadata: DocumentMetadata,
+    token_style: str,
+    state: dict[str, bool],
+) -> str:
+    if node.tag == "#document":
+        return "".join(
+            _render_node(child, metadata, token_style, state) for child in node.children
+        )
+    if node.tag == "script" or not _TAG_NAME.match(node.tag):
+        return ""
+    if node.tag == "style":
+        return ""
+    attrs: list[str] = []
+    names: set[str] = set()
+    for attr in node.attributes:
+        if not _ATTR_NAME.match(attr.name) or attr.name.lower().startswith("on"):
+            continue
+        names.add(attr.name.lower())
+        attrs.append(f' {attr.name}="{html.escape(attr.value, quote=True)}"')
+    if (
+        node.tag == "meta"
+        and _attr_value(node, "name") == "viewport"
+        and "content" not in names
+        and metadata.viewport
+    ):
+        attrs.append(f' content="{html.escape(metadata.viewport, quote=True)}"')
+        state["viewport"] = True
+    inner: list[str] = []
+    if node.tag not in _VOID_TAGS:
+        if node.text_excerpt:
+            inner.append(html.escape(node.text_excerpt))
+        for child in node.children:
+            inner.append(_render_node(child, metadata, token_style, state))
+        if node.tag == "head":
+            if metadata.charset and not state["charset"]:
+                inner.insert(0, f'<meta charset="{html.escape(metadata.charset, quote=True)}">')
+                state["charset"] = True
+            if metadata.viewport and not state["viewport"]:
+                inner.append(
+                    f'<meta name="viewport" content="{html.escape(metadata.viewport, quote=True)}">'
+                )
+                state["viewport"] = True
+            if token_style and not state["tokens"]:
+                inner.append(f"<style>{token_style}</style>")
+                state["tokens"] = True
+        return f"<{node.tag}{''.join(attrs)}>{''.join(inner)}</{node.tag}>"
+    return f"<{node.tag}{''.join(attrs)}>"
+
+
+def emit_observed_page(contract: WebReconstructionContract) -> str:
+    """Emit a local HTML page from fields already on a reconstruction contract.
+
+    Observed layout text and typography token fields are restated. Sanitized CSS
+    text is not on the contract, so it is not invented. Script bodies are not
+    on the contract and are not emitted.
+    """
+
+    xray = contract.xray
+    title = xray.metadata.title if xray is not None else None
+    if xray is None or not (_node_has_text(xray.layout) or (title and title.strip())):
+        raise ValueError("contract does not contain observed text to emit")
+    parts: list[str] = []
+    doctype = xray.metadata.doctype or ""
+    if doctype.lower().startswith("doctype ") and "<" not in doctype and ">" not in doctype:
+        parts.append(f"<!{doctype}>")
+    page_body = _render_node(
+        xray.layout,
+        xray.metadata,
+        _token_style(xray),
+        {"charset": False, "viewport": False, "tokens": False},
+    )
+    parts.append(page_body)
+    page = "\n".join(part for part in parts if part)
+    if re.search(r"<script\b", page, re.IGNORECASE):
+        raise RuntimeError("emitted page included a script element")
+    return page

@@ -19,6 +19,7 @@ from spe_runtime.webrecon.contract import (
     PROHIBITIONS,
     WebReconstructionContract,
     build_reconstruction_contract,
+    emit_observed_page,
 )
 from spe_runtime.webrecon.limits import ObservationLimits
 from spe_runtime.webrecon.scoped_grant import (
@@ -44,6 +45,7 @@ __all__ = [
     "WebReconstructionContract",
     "WebsiteXRay",
     "build_reconstruction_contract",
+    "emit_observed_page",
     "decide_acquisition",
     "ExampleComGrant",
     "ScopedAcquisitionReceipt",
