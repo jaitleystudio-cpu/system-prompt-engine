@@ -138,23 +138,23 @@ export const DEFAULT_WEBSITE_SPEC: WebsiteSpec = {
         {
           kind: "hero",
           heading: "System Prompt Engine Architecture",
-          body: "Deterministic, offline-first prompt compilers and multi-provider adaptation engines.",
+          body: "Local prompt compiler and provider-format adaptation concepts.",
           cta_label: "View Specification",
           cta_href: "#specs",
         },
         {
           kind: "prose",
           heading: "System Invariants",
-          body: "SPE enforces immutable custody over semantic compiler cores and ensures zero unverified cloud exposure.",
+          body: "This example documents local compiler boundaries; network and privacy claims require separate evidence.",
         },
         {
           kind: "list",
           heading: "Supported Static Targets",
           items: [
             "Deterministic static HTML5 & CSS3 layout",
-            "Dual-theme WCAG 2.1 AA focus rings",
+            "Visible focus styles for both themes",
             "Zero client-side JavaScript execution required",
-            "Fluid reflow down to 360px viewport",
+            "Responsive styles include a 360px breakpoint",
           ],
         },
         {
