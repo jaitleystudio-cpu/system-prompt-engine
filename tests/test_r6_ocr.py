@@ -149,6 +149,19 @@ def _restore(parked: Path, dest: Path) -> None:
     shutil.move(parked, dest)
 
 
+def _assert_closed_loads(path: Path) -> None:
+    out = subprocess.check_output(["otool", "-L", str(path)], text=True)
+    assert_true("/opt/homebrew" not in out, out)
+    assert_true("@@HOMEBREW" not in out, out)
+    for line in out.splitlines()[1:]:
+        command = line.strip().split(" (compatibility", 1)[0].strip()
+        if command.startswith("@loader_path/"):
+            continue
+        if command.startswith("/usr/lib/") or command.startswith("/System/Library/"):
+            continue
+        fail(command)
+
+
 def _recognize(phrase: str) -> bytes:
     assets_root = ROOT / "ocr-pack"
     session = assets_root / ".session"
@@ -253,7 +266,7 @@ def main() -> None:
     test_rejects()
     model = ROOT / "ocr-pack/tessdata/eng.traineddata"
     cli = ROOT / "ocr-pack/tesseract"
-    library = ROOT / "ocr-pack/lib/libtesseract.5.dylib"
+    lib_dir = ROOT / "ocr-pack/lib"
     park = Path(f"/tmp/r6-ocr-absence-{os.getpid()}")
     if park.exists():
         shutil.rmtree(park)
@@ -261,10 +274,10 @@ def main() -> None:
     try:
         _park(model, park / "eng.traineddata")
         _park(cli, park / "tesseract")
-        _park(library, park / "libtesseract.5.dylib")
+        _park(lib_dir, park / "lib")
         assert_true(not model.exists(), "model was not absent")
         assert_true(not cli.exists(), "cli was not absent")
-        assert_true(not library.exists(), "cli library was not absent")
+        assert_true(not lib_dir.exists(), "cli library directory was not absent")
         reset_journey_for_tests()
         resting = product_verdict()
         assert_true(resting["OCR_PRODUCT"] == "HOLD", str(resting))
@@ -277,6 +290,12 @@ def main() -> None:
         assert_true("Cellar" not in str(assets.cli_path), str(assets.cli_path))
         assert_true(assets.cli_path.stat().st_size == PINNED_CLI_BYTES, "cli size")
         assert_true(hashlib.sha256(assets.cli_path.read_bytes()).hexdigest() == PINNED_CLI_SHA256, "cli digest")
+        for relative in ("tesseract", "lib/libtesseract.5.dylib", "lib/libleptonica.6.dylib", "lib/libarchive.13.dylib"):
+            _assert_closed_loads(assets.root / relative)
+        manifest = json.loads((ROOT / "ocr-pack/PACK_MANIFEST.json").read_text(encoding="utf-8"))
+        licensed = {item["formula"]: item["license"] for item in manifest["RUNTIME_COMPATIBILITY"]["vendored_libraries"]}
+        assert_true(licensed["leptonica"] == "BSD-2-Clause", licensed["leptonica"])
+        assert_true(licensed["libarchive"] == "BSD-2-Clause", licensed["libarchive"])
         hosts = model_ingress_hosts()
         assert_true(any(host in hosts for host in ("github.com", "raw.githubusercontent.com")), str(hosts))
         assert_true(cli_ingress_hosts(), str(cli_ingress_hosts()))
@@ -325,7 +344,7 @@ def main() -> None:
         _restore(park / "eng.traineddata", model)
         _restore(park / "eng-second.traineddata", model)
         _restore(park / "tesseract", cli)
-        _restore(park / "libtesseract.5.dylib", library)
+        _restore(park / "lib", lib_dir)
         shutil.rmtree(park, ignore_errors=True)
     print("OK r6 ocr")
 
