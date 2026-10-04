@@ -159,9 +159,9 @@ export const DEFAULT_WEBSITE_SPEC: WebsiteSpec = {
         },
         {
           kind: "cta",
-          heading: "Export Static Artifacts",
-          body: "Download self-contained offline HTML and CSS bundles directly to your machine.",
-          cta_label: "Download Bundle",
+          heading: "Example Call to Action",
+          body: "Sample link only. Use Export Spec JSON in the builder to download the editable specification.",
+          cta_label: "Example Link",
           cta_href: "#download",
         },
       ],

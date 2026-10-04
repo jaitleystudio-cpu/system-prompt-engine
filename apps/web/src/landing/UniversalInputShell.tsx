@@ -45,12 +45,12 @@ export interface UniversalInputShellProps {
 }
 
 const ACTION_DEFINITIONS: Array<{ id: ShellAction; label: string; description: string }> = [
-  { id: "prompt", label: "Prompt", description: "Compile structured system prompt" },
-  { id: "transcribe", label: "Transcribe", description: "Transcribe audio & video into structured transcript" },
-  { id: "build", label: "Build", description: "Generate project architecture & implementation" },
-  { id: "code", label: "Code", description: "Synthesize production-ready source code" },
-  { id: "research", label: "Research", description: "Conduct empirical investigation & citation search" },
-  { id: "create", label: "Create", description: "Produce visual assets & creative media" },
+  { id: "prompt", label: "Prompt", description: "Select a prompt-preparation request" },
+  { id: "transcribe", label: "Transcribe", description: "Select a transcription request; transcription is unavailable in this shell" },
+  { id: "build", label: "Build", description: "Select a website-building request; execution requires a connected handler" },
+  { id: "code", label: "Code", description: "Select a coding request; source-code generation is unavailable in this shell" },
+  { id: "research", label: "Research", description: "Select a research request; execution requires a connected handler" },
+  { id: "create", label: "Create", description: "Select a creative request; media generation is unavailable in this shell" },
 ];
 
 const INPUT_TYPE_DEFINITIONS: Array<{ id: ShellInputType; label: string; icon: string }> = [
@@ -297,7 +297,7 @@ export const UniversalInputShell: React.FC<UniversalInputShellProps> = ({
                 Click or drag & drop {activeInputType} files here
               </div>
               <div className="spe-shell-dropzone-subtext">
-                Supported formats depend on media type. Maximum file size 50MB. Audio/video upload supported for local processing where available.
+                Files are listed as local references. This shell does not enforce a size limit or process audio/video.
               </div>
             </div>
 
@@ -320,7 +320,7 @@ export const UniversalInputShell: React.FC<UniversalInputShellProps> = ({
               >
                 <span>⚠️</span>
                 <span>
-                  <strong>TRANSCRIPTION_STATUS=UNAVAILABLE</strong>: Transcription backend not yet integrated. Audio/video upload accepted for local file packaging only.
+                  <strong>TRANSCRIPTION_STATUS=UNAVAILABLE</strong>: Transcription backend not yet integrated. Audio/video references are listed for local file packaging only; file bytes are not submitted.
                 </span>
               </div>
             )}
@@ -399,7 +399,7 @@ export const UniversalInputShell: React.FC<UniversalInputShellProps> = ({
         <footer className="spe-shell-footer">
           <div className="spe-shell-status-indicator">
             <span className="spe-shell-status-dot" aria-hidden="true" />
-            <span>Ready ({currentModeOption.name})</span>
+            <span>Selection ready ({currentModeOption.name})</span>
           </div>
 
           <button

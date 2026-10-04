@@ -14,25 +14,25 @@ export const EXECUTION_MODES: ModeOption[] = [
     id: "standard",
     name: "Standard Synthesis",
     badge: "Balanced",
-    description: "Optimal balance of precision, reasoning depth, and synthesis speed.",
+    description: "Standard request preference. This selector does not change engine behavior.",
   },
   {
     id: "deep",
     name: "Deep Synthesis",
     badge: "Thorough",
-    description: "Multi-layered reasoning and systematic requirement expansion for complex workflows.",
+    description: "Detailed request preference. Additional reasoning is not implemented by this selector.",
   },
   {
     id: "fast",
     name: "Fast Iteration",
     badge: "Swift",
-    description: "Rapid turnaround for live experimentation and rapid specification prototyping.",
+    description: "Iteration request preference. No speed improvement has been measured.",
   },
   {
     id: "strict",
     name: "Deterministic Strict",
-    badge: "Verifiable",
-    description: "Enforces strict output contracts, schema guarantees, and verifiable boundaries.",
+    badge: "Preference",
+    description: "Strict request preference. This selector does not enforce output contracts.",
   },
 ];
 

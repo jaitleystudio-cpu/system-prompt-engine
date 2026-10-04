@@ -138,7 +138,7 @@ export const StaticWebsiteBuilder: React.FC = () => {
               aria-pressed={viewport === "desktop"}
               aria-label="Desktop viewport"
             >
-              Desktop (1200px)
+              Desktop (available width)
             </button>
             <button
               type="button"
