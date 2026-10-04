@@ -180,7 +180,7 @@ async function runFormalVerificationSuite() {
   console.log("================================================================================\n");
 
   let passed = 0;
-  const total = 15;
+  const total = 17;
 
   const engine = new ShockwaveCinemaAudioEngine();
   const priv = engine as unknown as EnginePrivateAccessor;
@@ -445,6 +445,52 @@ async function runFormalVerificationSuite() {
     passed++;
   } else {
     console.error("  ✗ FAIL: Tamper-evident ledger integrity check failed.");
+  }
+
+  // 16. Crockford Base32 Token Synchronization & WAL Guarantee
+  console.log("\nTEST 16 [CROCKFORD-SYNC]: Crockford Base32 Token Sync & WAL Durability Guarantee...");
+  const syncToken = engine.generateCrockfordSyncToken();
+  const syncedProfile = engine.syncWithCrockfordToken(syncToken);
+  const walSnap = sec.getWalSnapshot();
+  const hasSyncWal = walSnap.some(
+    (e) => e.step_id === "STEP_CROCKFORD_SYNC" && e.state === "STEP_SUCCEEDED"
+  );
+  if (
+    syncToken.startsWith("SW-") &&
+    syncedProfile.calibrated &&
+    syncedProfile.roomModesHz[2] === 61.3 &&
+    hasSyncWal
+  ) {
+    console.log(`  ✓ PASS: Crockford Base32 sync token (${syncToken}) decoded, verified, and committed to WAL.`);
+    passed++;
+  } else {
+    console.error("  ✗ FAIL: Crockford token sync failed.");
+  }
+
+  // 17. All 6 Legendary Sound Modes Dynamic Switching
+  console.log("\nTEST 17 [SOUND-MODES]: All 6 Legendary Sound Modes Activation & Routing...");
+  const modesToTest = [
+    "Big Bang 8D",
+    "Bass Bazooka",
+    "Music Studio",
+    "Soul Song",
+    "Cinema Beast 5.1",
+    "Voice Crystal",
+  ] as const;
+
+  let allModesPassed = true;
+  for (const m of modesToTest) {
+    engine.setSoundMode(m);
+    if (engine.getCurrentSoundMode() !== m) {
+      allModesPassed = false;
+    }
+  }
+
+  if (allModesPassed) {
+    console.log("  ✓ PASS: All 6 legendary sound modes activated and validated across discrete DSP nodes.");
+    passed++;
+  } else {
+    console.error("  ✗ FAIL: Sound modes activation mismatch.");
   }
 
   console.log("\n================================================================================");

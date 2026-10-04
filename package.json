@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "jiti src/audio/ShockwaveCinemaAudioEngine.test.ts && jiti src/audio/ShockwaveMasterAudioEngine.test.ts && jiti src/audio/ShockwaveCrockfordSync.test.ts"
   },
   "dependencies": {
     "next": "16.2.6",

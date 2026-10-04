@@ -5,6 +5,7 @@
  */
 
 import { CalibrationProfile } from "./ShockwaveMasterAudioEngine";
+import { ShockwaveCrockfordSync } from "./ShockwaveCrockfordSync";
 
 export class ShockwaveMobileRoomProbe {
   private micStream: MediaStream | null = null;
@@ -98,5 +99,19 @@ export class ShockwaveMobileRoomProbe {
         resolve();
       }, 100); // 100ms async simulation for automated testing and execution
     });
+  }
+
+  /**
+   * Encode measurement profile to Crockford Base32 token for TV synchronization
+   */
+  public generateSyncToken(profile: CalibrationProfile): string {
+    return ShockwaveCrockfordSync.encodeCalibrationProfileReceipt(profile);
+  }
+
+  /**
+   * Decode Crockford Base32 token to CalibrationProfile
+   */
+  public parseSyncToken(token: string): Partial<CalibrationProfile> | null {
+    return ShockwaveCrockfordSync.decodeCalibrationProfileReceipt(token);
   }
 }

@@ -21,6 +21,7 @@ import {
   ShockwaveRoomCalibrationEngine,
   AcousticRoomProfile,
 } from "./ShockwaveRoomCalibrationEngine";
+import { ShockwaveCrockfordSync } from "./ShockwaveCrockfordSync";
 
 export interface ShockwaveConfig {
   founderEdition: boolean;
@@ -50,10 +51,14 @@ export interface ChannelDelays {
 
 export type ShockwaveSoundMode =
   | "Big Bang 8D"
+  | "Bass Bazooka"
   | "bass bazucca"
+  | "Music Studio"
   | "music studio"
+  | "Soul Song"
   | "soul song"
   | "Cinema Beast 5.1"
+  | "Voice Crystal"
   | "voice crystal";
 
 export class ShockwaveCinemaAudioEngine {
@@ -432,16 +437,20 @@ export class ShockwaveCinemaAudioEngine {
 
     this.applyRoomCalibration(channelDelays, profile.roomModesHz[2] || 61.3);
 
+    const syncToken = ShockwaveCrockfordSync.encodeProfile(profile);
+
     // Commit calibration success to Write-Ahead Log & Ledger
     this.coordinator.flushWal(sagaId, "STEP_ROOM_CALIBRATION", "STEP_SUCCEEDED", `calib_done:${sagaId}`, {
       rt60: profile.rt60DecaySeconds,
       spl: profile.measuredSplDb,
       roomModes: profile.roomModesHz,
       xtcDelayUs: profile.interAuralDelayUs,
+      crockfordSyncToken: syncToken,
     });
 
     if (typeof window !== "undefined" && window.localStorage) {
       window.localStorage.setItem("shockwave_calibration_result", JSON.stringify(profile));
+      window.localStorage.setItem("shockwave_crockford_token", syncToken);
     }
 
     return profile;
@@ -629,112 +638,151 @@ export class ShockwaveCinemaAudioEngine {
     if (!this.ctx) return;
     const now = this.ctx.currentTime;
 
-    switch (mode) {
-      case "Big Bang 8D":
-        if (this.centerClarityFilter) {
-          this.centerClarityFilter.gain.setValueAtTime(0, now);
-        }
-        if (this.lfeBassDrive) {
-          this.lfeBassDrive.gain.setValueAtTime(1.6, now);
-        }
-        if (this.rearLeftDelay && this.rearRightDelay) {
-          this.rearLeftDelay.delayTime.setValueAtTime(0.025, now);
-          this.rearRightDelay.delayTime.setValueAtTime(0.028, now);
-        }
-        this.orbitalTimer = setInterval(() => {
-          this.orbitalAngle += (2 * Math.PI * 0.15) / 20;
-          if (this.orbitalAngle > 2 * Math.PI) this.orbitalAngle -= 2 * Math.PI;
-          if (this.xtcGainNodeL && this.xtcGainNodeR && this.ctx) {
-            const panL = (Math.cos(this.orbitalAngle) + 1) / 2;
-            const panR = (Math.sin(this.orbitalAngle) + 1) / 2;
-            this.xtcGainNodeL.gain.setValueAtTime(-0.4 - 0.3 * panL, this.ctx.currentTime);
-            this.xtcGainNodeR.gain.setValueAtTime(-0.4 - 0.3 * panR, this.ctx.currentTime);
-          }
-        }, 50);
-        break;
+    const modeLower = mode.toLowerCase();
 
-      case "bass bazucca":
-        if (this.lfeBoostFilter && this.lfeCascadeFilter) {
-          this.lfeBoostFilter.frequency.setValueAtTime(110, now);
-          this.lfeCascadeFilter.frequency.setValueAtTime(110, now);
+    if (modeLower.includes("big bang") || modeLower.includes("8d")) {
+      if (this.centerClarityFilter) {
+        this.centerClarityFilter.gain.setValueAtTime(0, now);
+      }
+      if (this.lfeBassDrive) {
+        this.lfeBassDrive.gain.setValueAtTime(1.6, now);
+      }
+      if (this.rearLeftDelay && this.rearRightDelay) {
+        this.rearLeftDelay.delayTime.setValueAtTime(0.025, now);
+        this.rearRightDelay.delayTime.setValueAtTime(0.028, now);
+      }
+      this.orbitalTimer = setInterval(() => {
+        this.orbitalAngle += (2 * Math.PI * 0.15) / 20;
+        if (this.orbitalAngle > 2 * Math.PI) this.orbitalAngle -= 2 * Math.PI;
+        if (this.xtcGainNodeL && this.xtcGainNodeR && this.ctx) {
+          const panL = (Math.cos(this.orbitalAngle) + 1) / 2;
+          const panR = (Math.sin(this.orbitalAngle) + 1) / 2;
+          this.xtcGainNodeL.gain.setValueAtTime(-0.4 - 0.3 * panL, this.ctx.currentTime);
+          this.xtcGainNodeR.gain.setValueAtTime(-0.4 - 0.3 * panR, this.ctx.currentTime);
         }
-        if (this.lfeBassDrive) {
-          this.lfeBassDrive.gain.setValueAtTime(2.8, now); // +9dB
-        }
-        if (this.centerClarityFilter) {
-          this.centerClarityFilter.gain.setValueAtTime(1.0, now);
-        }
-        if (this.rearLeftDelay && this.rearRightDelay) {
-          this.rearLeftDelay.delayTime.setValueAtTime(0.015, now);
-          this.rearRightDelay.delayTime.setValueAtTime(0.015, now);
-        }
-        break;
-
-      case "music studio":
-        if (this.centerClarityFilter) {
-          this.centerClarityFilter.gain.setValueAtTime(0.0, now);
-        }
-        if (this.lfeBassDrive) {
-          this.lfeBassDrive.gain.setValueAtTime(1.0, now);
-        }
-        if (this.lfeBoostFilter && this.lfeCascadeFilter) {
-          this.lfeBoostFilter.frequency.setValueAtTime(85, now);
-          this.lfeCascadeFilter.frequency.setValueAtTime(85, now);
-        }
-        if (this.rearLeftDelay && this.rearRightDelay) {
-          this.rearLeftDelay.delayTime.setValueAtTime(0.0, now);
-          this.rearRightDelay.delayTime.setValueAtTime(0.0, now);
-        }
-        break;
-
-      case "soul song":
-        if (this.centerClarityFilter) {
-          this.centerClarityFilter.frequency.setValueAtTime(1800, now);
-          this.centerClarityFilter.gain.setValueAtTime(2.5, now);
-        }
-        if (this.lfeBassDrive) {
-          this.lfeBassDrive.gain.setValueAtTime(1.3, now);
-        }
-        if (this.rearLeftDelay && this.rearRightDelay) {
-          this.rearLeftDelay.delayTime.setValueAtTime(0.016, now);
-          this.rearRightDelay.delayTime.setValueAtTime(0.016, now);
-        }
-        break;
-
-      case "Cinema Beast 5.1":
-        if (this.centerClarityFilter) {
-          this.centerClarityFilter.frequency.setValueAtTime(2400, now);
-          this.centerClarityFilter.gain.setValueAtTime(4.5, now); // +4.5dB dialogue presence
-        }
-        if (this.lfeBoostFilter && this.lfeCascadeFilter) {
-          this.lfeBoostFilter.frequency.setValueAtTime(85, now);
-          this.lfeCascadeFilter.frequency.setValueAtTime(85, now);
-        }
-        if (this.lfeBassDrive) {
-          this.lfeBassDrive.gain.setValueAtTime(2.2, now); // +7dB cinema slam
-        }
-        if (this.rearLeftDelay && this.rearRightDelay) {
-          this.rearLeftDelay.delayTime.setValueAtTime(0.022, now);
-          this.rearRightDelay.delayTime.setValueAtTime(0.0245, now);
-        }
-        break;
-
-      case "voice crystal":
-        if (this.centerClarityFilter) {
-          this.centerClarityFilter.frequency.setValueAtTime(2800, now);
-          this.centerClarityFilter.gain.setValueAtTime(8.0, now); // +8dB formant peak
-        }
-        if (this.lfeBassDrive) {
-          this.lfeBassDrive.gain.setValueAtTime(0.2, now); // -14dB sub-bass rumble cutoff
-        }
-        if (this.rearLeftDelay && this.rearRightDelay) {
-          this.rearLeftDelay.delayTime.setValueAtTime(0.010, now);
-          this.rearRightDelay.delayTime.setValueAtTime(0.010, now);
-        }
-        break;
+      }, 50);
+    } else if (modeLower.includes("bass") || modeLower.includes("bazucca") || modeLower.includes("bazooka")) {
+      if (this.lfeBoostFilter && this.lfeCascadeFilter) {
+        this.lfeBoostFilter.frequency.setValueAtTime(110, now);
+        this.lfeCascadeFilter.frequency.setValueAtTime(110, now);
+      }
+      if (this.lfeBassDrive) {
+        this.lfeBassDrive.gain.setValueAtTime(2.8, now); // +9dB
+      }
+      if (this.centerClarityFilter) {
+        this.centerClarityFilter.gain.setValueAtTime(1.0, now);
+      }
+      if (this.rearLeftDelay && this.rearRightDelay) {
+        this.rearLeftDelay.delayTime.setValueAtTime(0.015, now);
+        this.rearRightDelay.delayTime.setValueAtTime(0.015, now);
+      }
+    } else if (modeLower.includes("music") || modeLower.includes("studio")) {
+      if (this.centerClarityFilter) {
+        this.centerClarityFilter.gain.setValueAtTime(0.0, now);
+      }
+      if (this.lfeBassDrive) {
+        this.lfeBassDrive.gain.setValueAtTime(1.0, now);
+      }
+      if (this.lfeBoostFilter && this.lfeCascadeFilter) {
+        this.lfeBoostFilter.frequency.setValueAtTime(85, now);
+        this.lfeCascadeFilter.frequency.setValueAtTime(85, now);
+      }
+      if (this.rearLeftDelay && this.rearRightDelay) {
+        this.rearLeftDelay.delayTime.setValueAtTime(0.0, now);
+        this.rearRightDelay.delayTime.setValueAtTime(0.0, now);
+      }
+    } else if (modeLower.includes("soul") || modeLower.includes("song")) {
+      if (this.centerClarityFilter) {
+        this.centerClarityFilter.frequency.setValueAtTime(1800, now);
+        this.centerClarityFilter.gain.setValueAtTime(2.5, now);
+      }
+      if (this.lfeBassDrive) {
+        this.lfeBassDrive.gain.setValueAtTime(1.3, now);
+      }
+      if (this.rearLeftDelay && this.rearRightDelay) {
+        this.rearLeftDelay.delayTime.setValueAtTime(0.016, now);
+        this.rearRightDelay.delayTime.setValueAtTime(0.016, now);
+      }
+    } else if (modeLower.includes("cinema") || modeLower.includes("beast")) {
+      if (this.centerClarityFilter) {
+        this.centerClarityFilter.frequency.setValueAtTime(2400, now);
+        this.centerClarityFilter.gain.setValueAtTime(4.5, now); // +4.5dB dialogue presence
+      }
+      if (this.lfeBoostFilter && this.lfeCascadeFilter) {
+        this.lfeBoostFilter.frequency.setValueAtTime(85, now);
+        this.lfeCascadeFilter.frequency.setValueAtTime(85, now);
+      }
+      if (this.lfeBassDrive) {
+        this.lfeBassDrive.gain.setValueAtTime(2.2, now); // +7dB cinema slam
+      }
+      if (this.rearLeftDelay && this.rearRightDelay) {
+        this.rearLeftDelay.delayTime.setValueAtTime(0.022, now);
+        this.rearRightDelay.delayTime.setValueAtTime(0.0245, now);
+      }
+    } else if (modeLower.includes("voice") || modeLower.includes("crystal")) {
+      if (this.centerClarityFilter) {
+        this.centerClarityFilter.frequency.setValueAtTime(2800, now);
+        this.centerClarityFilter.gain.setValueAtTime(8.0, now); // +8dB formant peak
+      }
+      if (this.lfeBassDrive) {
+        this.lfeBassDrive.gain.setValueAtTime(0.2, now); // -14dB sub-bass rumble cutoff
+      }
+      if (this.rearLeftDelay && this.rearRightDelay) {
+        this.rearLeftDelay.delayTime.setValueAtTime(0.010, now);
+        this.rearRightDelay.delayTime.setValueAtTime(0.010, now);
+      }
     }
 
     console.log(`[SHOCKWAVE] Sound Mode Activated: ${mode}`);
+  }
+
+  /**
+   * Generate Crockford Base32 room calibration synchronization token
+   */
+  public generateCrockfordSyncToken(): string {
+    const profile = this.activeRoomProfile || this.roomCalibrator.analyzeRoomAcoustics();
+    return ShockwaveCrockfordSync.encodeProfile(profile);
+  }
+
+  /**
+   * Synchronize room calibration profile using a Crockford Base32 token
+   * with Write-Ahead Log durability and immediate DSP realignment.
+   */
+  public syncWithCrockfordToken(token: string): AcousticRoomProfile {
+    const profile = ShockwaveCrockfordSync.decodeProfile(token);
+    if (!profile) {
+      throw new Error(`Invalid or corrupted Crockford Base32 sync token: ${token}`);
+    }
+
+    const sagaId = "saga_crockford_sync_" + Date.now();
+    const idempotencyKey = this.coordinator.generateIdempotencyKey(sagaId, "STEP_CROCKFORD_SYNC", { token });
+
+    this.coordinator.flushWal(sagaId, "STEP_CROCKFORD_SYNC", "STEP_EXECUTING", idempotencyKey, { token });
+
+    this.activeRoomProfile = profile;
+    const channelDelays: ChannelDelays = {
+      frontLeftMs: profile.channelDelaysMs.frontLeft,
+      frontRightMs: profile.channelDelaysMs.frontRight,
+      centerMs: profile.channelDelaysMs.center,
+      lfeMs: profile.channelDelaysMs.lfe,
+      rearLeftMs: profile.channelDelaysMs.surroundLeft,
+      rearRightMs: profile.channelDelaysMs.surroundRight,
+    };
+
+    this.applyRoomCalibration(channelDelays, profile.roomModesHz[2] || 61.3);
+
+    this.coordinator.flushWal(sagaId, "STEP_CROCKFORD_SYNC", "STEP_SUCCEEDED", idempotencyKey, {
+      token,
+      profile,
+    });
+
+    if (typeof window !== "undefined" && window.localStorage) {
+      window.localStorage.setItem("shockwave_calibration_result", JSON.stringify(profile));
+      window.localStorage.setItem("shockwave_crockford_token", token);
+    }
+
+    console.log(`[SHOCKWAVE] Acoustic profile synchronized via Crockford Base32 token: ${token}`);
+    return profile;
   }
 
   public getChannelLevels(): number[] {

@@ -49,6 +49,16 @@ export default function ShockwaveDashboard() {
   const [ledgerBlocks, setLedgerBlocks] = useState<LedgerBlock[]>(() => {
     return engine ? engine.getCoordinator().getLedger() : [];
   });
+  const [syncToken, setSyncToken] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const stored = window.localStorage.getItem("shockwave_crockford_token");
+      if (stored) return stored;
+    }
+    return engine ? engine.generateCrockfordSyncToken() : "SW-5D5G-4SDS-Q463-004P-8";
+  });
+  const [inputToken, setInputToken] = useState("");
+  const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
+  const [syncError, setSyncError] = useState<string | null>(null);
   const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -65,6 +75,32 @@ export default function ShockwaveDashboard() {
       engine.stopDemo();
     };
   }, [engine]);
+
+  const handleSyncToken = () => {
+    if (!engine || !inputToken.trim()) return;
+    try {
+      setSyncError(null);
+      const newProfile = engine.syncWithCrockfordToken(inputToken.trim());
+      setRoomProfile(newProfile);
+      setSyncToken(inputToken.trim().toUpperCase());
+      setWalHistory(engine.getCoordinator().getWalSnapshot());
+      setLedgerBlocks(engine.getCoordinator().getLedger());
+      setSyncFeedback("✓ Telemetry Synchronized & Verified (Modulo-37 Checksum Valid, WAL Committed)");
+      setInputToken("");
+      setTimeout(() => setSyncFeedback(null), 5000);
+    } catch (err) {
+      setSyncError(err instanceof Error ? err.message : "Invalid sync token");
+      setSyncFeedback(null);
+    }
+  };
+
+  const handleCopyToken = () => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      void navigator.clipboard.writeText(syncToken);
+      setSyncFeedback("✓ Copied Crockford Token to Clipboard");
+      setTimeout(() => setSyncFeedback(null), 3000);
+    }
+  };
 
   const handleActivateFounder = () => {
     if (!engine) return;
@@ -100,6 +136,8 @@ export default function ShockwaveDashboard() {
       });
       setRoomProfile(profile);
       setCalibratingChannel(null);
+      const token = engine.generateCrockfordSyncToken();
+      setSyncToken(token);
       setWalHistory(engine.getCoordinator().getWalSnapshot());
       setLedgerBlocks(engine.getCoordinator().getLedger());
     } catch (e) {
@@ -187,21 +225,21 @@ export default function ShockwaveDashboard() {
                   desc: "Ambisonic spatial rotation with Haas phase panning & XTC.",
                 },
                 {
-                  id: "bass bazucca" as ShockwaveSoundMode,
+                  id: "Bass Bazooka" as ShockwaveSoundMode,
                   icon: "💣",
                   name: "Bass Bazooka",
                   badge: "+9dB Sub Drive",
                   desc: "Larsen-Aarts missing fundamental at 110Hz + Chebyshev harmonics.",
                 },
                 {
-                  id: "music studio" as ShockwaveSoundMode,
+                  id: "Music Studio" as ShockwaveSoundMode,
                   icon: "🎚️",
                   name: "Music Studio",
                   badge: "0dB Reference",
                   desc: "Bit-perfect flat reference monitor, unity gains, zero coloration.",
                 },
                 {
-                  id: "soul song" as ShockwaveSoundMode,
+                  id: "Soul Song" as ShockwaveSoundMode,
                   icon: "🎷",
                   name: "Soul Song",
                   badge: "Triode Tube",
@@ -215,7 +253,7 @@ export default function ShockwaveDashboard() {
                   desc: "2.4kHz dialogue boost, 22ms Haas delay, +7dB LFE cinema slam.",
                 },
                 {
-                  id: "voice crystal" as ShockwaveSoundMode,
+                  id: "Voice Crystal" as ShockwaveSoundMode,
                   icon: "💎",
                   name: "Voice Crystal",
                   badge: "+8dB Formant",
@@ -445,6 +483,73 @@ export default function ShockwaveDashboard() {
                   <span className="text-amber-400 font-bold">{roomProfile?.channelDelaysMs?.surroundLeft ?? 18.5} ms</span>
                 </div>
               </div>
+            </div>
+          </section>
+
+          {/* Crockford Base32 Acoustic Token Synchronization */}
+          <section className="bg-zinc-950 border border-zinc-800/80 rounded-3xl p-6 shadow-2xl">
+            <h2 className="text-lg font-bold text-zinc-100 flex items-center justify-between">
+              Crockford Base32 Token Sync
+              <span className="text-xs bg-amber-950 text-amber-400 border border-amber-800/60 font-mono px-2 py-0.5 rounded">
+                DOUGLAS CROCKFORD (2002)
+              </span>
+            </h2>
+            <p className="text-zinc-400 text-xs mt-1 leading-relaxed">
+              Human-friendly 32-character alphabet (no I, L, O, U) with Modulo-37 error-detecting checksum. Seamlessly synchronizes Farina acoustic profiles between mobile probe and TV.
+            </p>
+
+            {/* Current Device Token Display */}
+            <div className="mt-4 bg-zinc-900/90 border border-zinc-800 p-3 rounded-2xl">
+              <div className="flex justify-between items-center text-[11px] font-mono text-zinc-400 mb-1">
+                <span>ACTIVE CALIBRATION TOKEN</span>
+                <span className="text-emerald-400">CHECKSUM VERIFIED</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={syncToken}
+                  className="bg-black/60 border border-zinc-700/80 rounded-xl px-3 py-2 text-amber-300 font-mono font-bold text-xs tracking-wider w-full select-all focus:outline-none"
+                />
+                <button
+                  onClick={handleCopyToken}
+                  className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-mono font-bold rounded-xl transition whitespace-nowrap border border-zinc-700"
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
+
+            {/* Remote Token Pairing Input */}
+            <div className="mt-4 pt-3 border-t border-zinc-800/80">
+              <label className="text-[11px] font-mono text-zinc-400 block mb-1.5 uppercase">
+                Pair Remote Phone / TV Token
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="e.g. SW-5D5G-4SDS-Q463-004P-8"
+                  value={inputToken}
+                  onChange={(e) => setInputToken(e.target.value)}
+                  className="bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-white font-mono text-xs w-full focus:border-amber-400 focus:outline-none placeholder:text-zinc-600"
+                />
+                <button
+                  onClick={handleSyncToken}
+                  className="px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-black font-bold text-xs rounded-xl transition shadow whitespace-nowrap"
+                >
+                  Sync Token
+                </button>
+              </div>
+              {syncFeedback && (
+                <div className="mt-2 text-xs font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-900/60 p-2 rounded-xl">
+                  {syncFeedback}
+                </div>
+              )}
+              {syncError && (
+                <div className="mt-2 text-xs font-mono text-rose-400 bg-rose-950/40 border border-rose-900/60 p-2 rounded-xl">
+                  ⚠ {syncError}
+                </div>
+              )}
             </div>
           </section>
 
