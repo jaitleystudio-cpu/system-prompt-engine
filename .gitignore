@@ -236,3 +236,12 @@ apps/web/node_modules/
 # Local provider qualification evidence
 qualification/*_receipt.json
 .worktrees/
+
+# Local OCR pack bytes. PACK_MANIFEST.json stays committed.
+/ocr-pack/tessdata/*.traineddata
+/ocr-pack/tessdata/*.partial
+/ocr-pack/.session/
+/ocr-pack/tesseract
+/ocr-pack/lib/
+/ocr-pack/.bottle/
+/.ocr-scratch/

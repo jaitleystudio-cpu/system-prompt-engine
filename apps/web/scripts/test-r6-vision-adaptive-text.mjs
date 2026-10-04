@@ -5,9 +5,13 @@
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createLocalOcrHost } from "./local-ocr-host.mjs";
 import { build } from "../node_modules/esbuild/lib/main.js";
 import { PNG } from "pngjs";
 
@@ -55,6 +59,30 @@ function paintBars(originX, darkOnLight, y0 = 28) {
     }
   }
   return new ImageData(data, w, h);
+}
+
+
+function renderPhrase(text) {
+  const dir = mkdtempSync(join(tmpdir(), "spe-ocr-phrase-"));
+  const file = join(dir, "phrase.png");
+  const rendered = spawnSync(
+    "magick",
+    [
+      "-background", "white",
+      "-fill", "black",
+      "-font", "/System/Library/Fonts/Supplemental/Arial.ttf",
+      "-pointsize", "64",
+      `label:${text}`,
+      "-bordercolor", "white",
+      "-border", "40",
+      `PNG32:${file}`,
+    ],
+    { encoding: "utf8" },
+  );
+  assert.equal(rendered.status, 0, rendered.stderr || rendered.stdout);
+  const decoded = PNG.sync.read(readFileSync(file));
+  assert.equal(decoded.data.length, decoded.width * decoded.height * 4);
+  return new ImageData(Uint8ClampedArray.from(decoded.data), decoded.width, decoded.height);
 }
 
 function unionBox(blocks, w, h) {
@@ -113,28 +141,49 @@ assert.ok(at20.every((block) => block.text === ""));
 assert.ok(at20.every((block) => block.provenance !== "observed-ocr"));
 assert.equal(at20.some((block) => block.text === "Main content"), false);
 
+const ocrHost = createLocalOcrHost({ repoRoot: root });
+const ocrServer = createServer((req, res) => {
+  if (ocrHost.isApi(req.url || "")) {
+    void ocrHost.handleApi(req, res);
+    return;
+  }
+  res.statusCode = 404;
+  res.end();
+});
+await new Promise((resolve) => ocrServer.listen(0, "127.0.0.1", resolve));
+const ocrPort = ocrServer.address().port;
+const nativeFetch = globalThis.fetch;
+globalThis.fetch = (input, init) => {
+  const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+  if (url.startsWith("/api/ocr/")) return nativeFetch(`http://127.0.0.1:${ocrPort}${url}`, init);
+  return nativeFetch(input, init);
+};
+process.on("exit", () => {
+  ocrHost.stop();
+  ocrServer.close();
+});
+
 const sourceA = "SYSTEM PROMPT ENGINE";
 const sourceB = "HELLO MAJOR";
-const seenA = await ocr.observeText(paintBars(20, true));
-const seenB = await ocr.observeText(paintBars(60, true));
-assert.equal(seenA.proposals, at20.length);
+const imageA = renderPhrase(sourceA);
+const imageB = renderPhrase(sourceB);
+const seenA = await ocr.observeText(imageA);
+const seenB = await ocr.observeText(imageB);
 assert.equal(seenA.execution.egressAttempts, 0);
-if (seenA.execution.mode === "LOCAL_OCR") {
-  assert.equal(seenA.execution.text.replace(/\s+/g, " ").trim(), sourceA);
-  assert.equal(seenB.execution.text.replace(/\s+/g, " ").trim(), sourceB);
-  assert.notEqual(seenA.execution.text, seenB.execution.text);
-  assert.ok(seenA.regions.every((region) => region.provenance === "observed-ocr"));
-} else {
-  assert.equal(seenA.execution.mode, "UNAVAILABLE");
-  assert.equal(seenA.execution.text, "");
-  assert.equal(seenB.execution.text, "");
-  assert.equal(seenA.execution.errorCode, "NOT_MOUNTED");
-  assert.ok(seenA.regions.every((region) => region.text === ""));
-  assert.equal(seenA.regions.some((region) => region.provenance === "observed-ocr"), false);
-}
+assert.equal(seenB.execution.egressAttempts, 0);
+assert.equal(seenA.execution.mode, "LOCAL_OCR");
+assert.equal(seenB.execution.mode, "LOCAL_OCR");
+assert.equal(seenA.execution.text.replace(/\s+/g, " ").trim(), sourceA);
+assert.equal(seenB.execution.text.replace(/\s+/g, " ").trim(), sourceB);
+assert.notEqual(seenA.execution.text, seenB.execution.text);
+assert.ok(seenA.regions.every((region) => region.provenance === "observed-ocr"));
+assert.ok(seenB.regions.every((region) => region.provenance === "observed-ocr"));
+
+const blankSeen = await ocr.observeText(flat);
+assert.equal(blankSeen.execution.text.replace(/\s+/g, " ").trim(), "");
+assert.equal(blankSeen.regions.some((region) => String(region.text || "").trim().length > 0), false);
 
 const heldOut = await ocr.observeText(paintBars(15, true, 40));
-assert.equal(heldOut.execution.mode, seenA.execution.mode);
 assert.ok(heldOut.proposals > 0);
 assert.equal(typeof ocr.observeText, "function");
 assert.equal(typeof ocr.recognizeImageFile, "function");
@@ -206,6 +255,8 @@ const receipt = {
     mode: seenA.execution.mode,
     errorCode: seenA.execution.errorCode,
     text: seenA.execution.text,
+    textB: seenB.execution.text,
+    blank: blankSeen.execution.text,
     provenance: seenA.regions.map((region) => region.provenance),
     confidence: seenA.regions.map((region) => region.confidence),
     blocker:
@@ -217,7 +268,7 @@ const receipt = {
   genuineTextBlocksRendered: seenA.execution.mode === "LOCAL_OCR",
   domGeometry: null,
   ssim: null,
-  note: "Desktop frame not rendered because genuine OCR text blocks were absent. 0.9153 was not recomputed. PASS bar remains 0.95.",
+  note: "Frozen desktop fixture was not rendered and was not scored. 0.9153 was not recomputed. PASS bar remains 0.95.",
   antiCheat: "no fixture filename, fixture SHA, expected-text table, or font metric",
 };
 const dir = "/tmp/spe-vision-r6d";
@@ -226,4 +277,6 @@ const body = JSON.stringify(receipt, null, 2);
 const digest = createHash("sha256").update(body).digest("hex");
 writeFileSync(join(dir, "receipt.json"), body);
 writeFileSync(join(dir, "receipt.sha256"), `${digest}  receipt.json\n`);
-console.log(JSON.stringify({ ok: true, sha256: digest, proposals: receipt.proposals, ocr: receipt.ocr.mode, errorCode: receipt.ocr.errorCode, movePx: receipt.movePx }, null, 2));
+ocrHost.stop();
+await new Promise((resolve) => ocrServer.close(resolve));
+console.log(JSON.stringify({ ok: true, sha256: digest, proposals: receipt.proposals, ocr: receipt.ocr.mode, errorCode: receipt.ocr.errorCode, movePx: receipt.movePx, textA: receipt.ocr.text, textB: receipt.ocr.textB, blank: receipt.ocr.blank }, null, 2));
