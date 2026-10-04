@@ -222,3 +222,71 @@ def test_one_real_scoped_live_fetch(monkeypatch, tmp_path):
     committed = json.loads(receipt_before)
     assert hashlib.sha256((_ROOT / committed["response_body_path"]).read_bytes()).hexdigest() == committed["response_digest"]
     assert _RECEIPT.read_bytes() == receipt_before
+
+
+def test_fresh_timestamped_journey_does_not_touch_pinned_bodies():
+    """One consented fresh run is hashed from its own directory. Pinned files stay put."""
+    pinned_receipt = json.loads(_RECEIPT.read_text(encoding="utf-8"))
+    pinned_openalex = (_ROOT / pinned_receipt["response_body_path"]).read_bytes()
+    pinned_crossref = (_ROOT / pinned_receipt["retraction_body_path"]).read_bytes()
+    assert hashlib.sha256(pinned_openalex).hexdigest() == pinned_receipt["response_digest"]
+    assert hashlib.sha256(pinned_crossref).hexdigest() == pinned_receipt["retraction_response_digest"]
+    assert pinned_receipt["response_digest"] == "c59f16e73081e6fedf4884c164a3fffa8ceab5d9798deb8930c8f00b95f83c4e"
+    assert pinned_receipt["retraction_response_digest"] == "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac"
+    assert pinned_receipt["product_LIVE_INDEX"] == "HOLD"
+    assert pinned_receipt["product_LIVE_RETRACTION"] == "HOLD"
+
+    fresh_receipts = sorted((_ROOT / "evidence/r6-live-research/fresh").glob("*/fresh_receipt.json"))
+    assert len(fresh_receipts) == 1
+    fresh = json.loads(fresh_receipts[0].read_text(encoding="utf-8"))
+    assert fresh["product_pass"] is False
+    assert fresh["journey_receipt"] == "NOT_PASS"
+    assert fresh["product_LIVE_INDEX"] == "HOLD"
+    assert fresh["product_LIVE_RETRACTION"] == "HOLD"
+    assert fresh["may_promote"] is False
+    assert fresh["ncbi_counts_as_two_providers"] is False
+    assert fresh["consent_blocked_first_attempt"] is True
+    assert LIVE_INDEX == "HOLD" and LIVE_RETRACTION == "HOLD"
+    chain = fresh["chain"]
+    assert chain["ContextNeed"] == "EXECUTED"
+    assert chain["privacy_minimized_query"] == "EXECUTED"
+    assert chain["live_source"] == "EXECUTED"
+    assert chain["metadata"] == "EXECUTED"
+    assert chain["DOI_dedup"] == "ABSENT"
+    assert chain["evidence_extraction"] == "EXECUTED"
+    assert chain["provenance"] == "EXECUTED"
+    assert chain["freshness"] == "ABSENT"
+    assert chain["retraction_status"] == "EXECUTED"
+    assert chain["contradiction_replication_class"]["contradiction"] == "EXECUTED"
+    assert chain["contradiction_replication_class"]["replication_class"] == "ABSENT"
+    assert chain["ContextCapsule"] == "EXECUTED"
+    assert chain["C02_K3_binding"] == "ABSENT"
+
+    by_provider = {row["provider"]: row for row in fresh["hosts"]}
+    assert set(by_provider) == {"OPENALEX", "CROSSREF"}
+    for row in by_provider.values():
+        body = (_ROOT / row["body_path"]).read_bytes()
+        assert row["body_path"].startswith("evidence/r6-live-research/fresh/")
+        assert not row["body_path"].startswith("evidence/r6-live-research/bodies/")
+        assert hashlib.sha256(body).hexdigest() == row["sha256"]
+        assert row["byte_count"] == len(body)
+        assert row["http_status"] == 200
+        assert row["copied_from_pinned"] is False
+        assert row["host"]
+    openalex = by_provider["OPENALEX"]
+    crossref = by_provider["CROSSREF"]
+    assert openalex["host"] == "api.openalex.org"
+    assert openalex["body_moved"] is True
+    assert openalex["host_status"] == "UNKNOWN"
+    assert openalex["sha256"] != pinned_receipt["response_digest"]
+    assert crossref["host"] == "api.crossref.org"
+    assert crossref["host_status"] == "FRESH_HTTP_200"
+    assert crossref["sha256"] == pinned_receipt["retraction_response_digest"]
+    assert crossref["retraction_doi_10.1038/s41586-024-07653-0"] is True
+    assert crossref["correction_10.1038/nature05812"] is True
+    assert crossref["erratum_10.1038/nature05812"] is True
+    message = json.loads((_ROOT / crossref["body_path"]).read_bytes())["message"]
+    notices = {(item.get("type"), item.get("DOI")) for item in message.get("updated-by") or []}
+    assert ("retraction", "10.1038/s41586-024-07653-0") in notices
+    assert ("correction", "10.1038/nature05812") in notices
+    assert ("erratum", "10.1038/nature05812") in notices

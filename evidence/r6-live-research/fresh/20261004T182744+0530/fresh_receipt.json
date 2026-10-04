@@ -1,0 +1,100 @@
+{
+  "kind": "FRESH_LIVE_JOURNEY",
+  "product_pass": false,
+  "journey_receipt": "NOT_PASS",
+  "scoped_live_fetch": "LIVE_FETCH_SCOPED",
+  "pinned_files": "NOT_OVERWRITTEN",
+  "pinned_receipt": "NOT_REWRITTEN",
+  "stored_body_digest_match_is_not_this_run": true,
+  "product_LIVE_INDEX": "HOLD",
+  "product_LIVE_RETRACTION": "HOLD",
+  "may_promote": false,
+  "consent_blocked_first_attempt": true,
+  "network_calls": 2,
+  "public_query": "10.1038/nature00870",
+  "identifier": "10.1038/nature00870",
+  "verification_status": "DOI_MATCH",
+  "retraction_status": "RETRACTION_SIGNAL",
+  "retraction_provider_family": "CROSSREF",
+  "ncbi_counts_as_two_providers": false,
+  "hosts": [
+    {
+      "provider": "OPENALEX",
+      "provider_family": "OPENALEX",
+      "host": "api.openalex.org",
+      "http_status": 200,
+      "byte_count": 43308,
+      "sha256": "a8c657bd1ca2af878085d0acacb0de813d5fa068e7d913d38d4899d8232e4ca5",
+      "body_path": "evidence/r6-live-research/fresh/20261004T182744+0530/openalex.body.json",
+      "pinned_sha256": "c59f16e73081e6fedf4884c164a3fffa8ceab5d9798deb8930c8f00b95f83c4e",
+      "body_moved": true,
+      "host_status": "UNKNOWN",
+      "copied_from_pinned": false
+    },
+    {
+      "provider": "CROSSREF",
+      "provider_family": "CROSSREF",
+      "host": "api.crossref.org",
+      "http_status": 200,
+      "byte_count": 25539,
+      "sha256": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+      "body_path": "evidence/r6-live-research/fresh/20261004T182744+0530/crossref.body.json",
+      "pinned_sha256": "35f97d2fdaab919bd619a1a6166b225f9240d264f74bbade7e39bb5142c9feac",
+      "body_moved": false,
+      "host_status": "FRESH_HTTP_200",
+      "copied_from_pinned": false,
+      "retraction_doi_10.1038/s41586-024-07653-0": true,
+      "correction_10.1038/nature05812": true,
+      "erratum_10.1038/nature05812": true,
+      "notices": [
+        {
+          "type": "correction",
+          "DOI": "10.1038/nature05812"
+        },
+        {
+          "type": "retraction",
+          "DOI": "10.1038/s41586-024-07653-0"
+        },
+        {
+          "type": "erratum",
+          "DOI": "10.1038/nature05812"
+        },
+        {
+          "type": "retraction",
+          "DOI": "10.1038/s41586-024-07653-0"
+        }
+      ]
+    }
+  ],
+  "chain": {
+    "ContextNeed": "EXECUTED",
+    "privacy_minimized_query": "EXECUTED",
+    "live_source": "EXECUTED",
+    "metadata": "EXECUTED",
+    "DOI_dedup": "ABSENT",
+    "evidence_extraction": "EXECUTED",
+    "provenance": "EXECUTED",
+    "freshness": "ABSENT",
+    "retraction_status": "EXECUTED",
+    "contradiction_replication_class": {
+      "contradiction": "EXECUTED",
+      "replication_class": "ABSENT"
+    },
+    "ContextCapsule": "EXECUTED",
+    "C02_K3_binding": "ABSENT"
+  },
+  "graph_ok": true,
+  "graph_edge_relations": [
+    "CONTRADICTS"
+  ],
+  "graph_contradiction_count": 1,
+  "need_id": "need-general-c0184ca01696c0ed",
+  "freshness_module_called": false,
+  "context_capsule_on_journey_result": false,
+  "c02_binding_on_journey_result": false,
+  "parent": "03f7f96053631a73a13b682fdb2a62e4e2c50ae7",
+  "note": "Fresh bytes from one consented OpenAlex+Crossref call. Not a product LIVE pass. Pinned bodies were not copied.",
+  "context_capsule_note": "hits_to_capsules ran inside acquire_scholarly_hits. The journey did not pass those capsules to compile_context.",
+  "evidence_extraction_note": "Existing buildClaimEvidenceGraph bound the adapter metadata source. No full-text extractor ran.",
+  "freshness_note": "ContextNeed.freshness_required was set. freshness_state and plan_refresh were not called."
+}
