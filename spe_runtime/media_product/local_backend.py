@@ -3,14 +3,16 @@
 This is not a second recognition engine. Inference is the already-qualified
 `whisper-cli` binary and the Telugu ggml candidate already on disk. The session
 owns load checks, decode, cancellation, silence truth, and explicit modes.
-It does not claim live transcription, a mounted UI, or product media v1.
+It does not claim live transcription. Product media v1 follows the mount ledger.
 """
 
 from __future__ import annotations
 
 import array
 import hashlib
+import json
 import os
+import platform
 import re
 import signal
 import socket
@@ -25,7 +27,15 @@ from typing import Callable, Iterator
 HEX = frozenset("0123456789abcdef")
 PINNED_CLI_SHA256 = "784e1cb576b40c08827860779c2c0cc6b17b746171d62ce4fb9ff6ea014193a7"
 PINNED_TE_MODEL_SHA256 = "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e"
+PINNED_CLI_BYTES = 847304
+PINNED_TE_MODEL_BYTES = 190085487
+PINNED_PACK_ID = "spe-local-te-small-q5_1"
+PINNED_PACK_VERSION = "1"
 SOURCE_PIN = "927cfce34f31707e17f2bff35c349632fb9e2c3a"
+PACK_DIR_NAME = "media-pack"
+PACK_MANIFEST_NAME = "PACK_MANIFEST.json"
+PACK_CLI_REL = "whisper-cli"
+PACK_MODEL_REL = "models/ggml-te-small.bin"
 SANDBOX_PROFILE = "(version 1)(allow default)(deny network*)"
 _NON_LOCAL = (
     "browser",
@@ -42,10 +52,10 @@ _NON_LOCAL = (
 )
 _BROWSER = ("browser", "web-speech", "webspeech")
 _VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
-# Fail-closed asset layout under SPE_MEDIA_ROOT (never hardcoded sibling trees):
-#   $SPE_MEDIA_ROOT/whisper-cli
-#   $SPE_MEDIA_ROOT/models/ggml-te-small.bin
-# Optional absolute overrides: SPE_WHISPER_CLI, SPE_WHISPER_MODEL.
+# Fail-closed asset layout inside this candidate (no sibling worktree, no absolute path):
+#   media-pack/PACK_MANIFEST.json
+#   media-pack/whisper-cli
+#   media-pack/models/ggml-te-small.bin
 _SEGMENT_RE = re.compile(
     r"\[(\d{2}):(\d{2}):(\d{2}\.\d{3})\s+-->\s+(\d{2}):(\d{2}):(\d{2}\.\d{3})\]\s*(.*)"
 )
@@ -226,59 +236,166 @@ def _first_verified(candidates: list[Path], expected: str) -> tuple[Path, str]:
     raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:" + ";".join(errors))
 
 
-def _env_path(name: str) -> Path | None:
-    raw = os.environ.get(name, "").strip()
-    if not raw:
-        return None
-    return Path(raw).expanduser()
+def pack_root() -> Path:
+    """Candidate-relative media pack. Resolved from this file, never from a sibling tree."""
+    return Path(__file__).resolve().parents[2] / PACK_DIR_NAME
 
 
-def _asset_candidates() -> tuple[list[Path], list[Path]]:
-    """Build CLI/model candidates from env only. Empty means fail closed."""
-    cli: list[Path] = []
-    model: list[Path] = []
-    cli_override = _env_path("SPE_WHISPER_CLI")
-    model_override = _env_path("SPE_WHISPER_MODEL")
-    if cli_override is not None:
-        cli.append(cli_override)
-    if model_override is not None:
-        model.append(model_override)
-    root = _env_path("SPE_MEDIA_ROOT")
-    if root is not None:
-        cli.append(root / "whisper-cli")
-        model.append(root / "models" / "ggml-te-small.bin")
-    # Deduplicate while preserving order.
-    def uniq(items: list[Path]) -> list[Path]:
-        seen: set[str] = set()
-        out: list[Path] = []
-        for item in items:
-            key = str(item)
-            if key in seen:
-                continue
-            seen.add(key)
-            out.append(item)
-        return out
+def _reject_unrelative(relative: str) -> None:
+    if not isinstance(relative, str) or not relative:
+        raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+    if relative.startswith(("/", "\\")) or ":" in relative:
+        raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+    parts = Path(relative).parts
+    if not parts or ".." in parts:
+        raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
 
-    return uniq(cli), uniq(model)
+
+def _member(root: Path, relative: str) -> Path:
+    _reject_unrelative(relative)
+    candidate = (root / relative).resolve()
+    root_resolved = root.resolve()
+    if candidate != root_resolved and root_resolved not in candidate.parents:
+        raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+    return candidate
+
+
+def _host_arch() -> str:
+    machine = platform.machine().lower()
+    if machine in {"arm64", "aarch64"}:
+        return "arm64"
+    if machine in {"x86_64", "amd64"}:
+        return "x86_64"
+    raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
+
+
+def _binary_arch(path: Path) -> str:
+    """Mach-O 64-bit CPU id. Other formats are unsupported for this pack."""
+    with path.open("rb") as handle:
+        header = handle.read(8)
+    if len(header) < 8:
+        raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
+    magic = int.from_bytes(header[:4], "little")
+    cpu = int.from_bytes(header[4:8], "little")
+    if magic != 0xFEEDFACF:
+        raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
+    if cpu == 0x0100000C:
+        return "arm64"
+    if cpu == 0x01000007:
+        return "x86_64"
+    raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
+
+
+def _model_magic_ok(path: Path) -> bool:
+    with path.open("rb") as handle:
+        return handle.read(4) == b"lmgg"
+
+
+def _load_pack_manifest(root: Path) -> dict[str, object]:
+    manifest_path = root / PACK_MANIFEST_NAME
+    if not manifest_path.is_file():
+        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_MANIFEST")
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_MANIFEST") from exc
+    if not isinstance(payload, dict):
+        raise IntegrityError("WRONG_MODEL")
+    required = (
+        "MODEL_PACK_ID",
+        "VERSION",
+        "REAL_SHA256",
+        "EXPECTED_BYTES",
+        "LICENSE",
+        "SOURCE",
+        "RUNTIME_COMPATIBILITY",
+        "LANGUAGE_SCOPE",
+    )
+    if any(key not in payload for key in required):
+        raise IntegrityError("WRONG_MODEL")
+    if payload["MODEL_PACK_ID"] != PINNED_PACK_ID or str(payload["VERSION"]) != PINNED_PACK_VERSION:
+        raise IntegrityError("WRONG_MODEL")
+    if payload["REAL_SHA256"] != PINNED_TE_MODEL_SHA256 or payload["EXPECTED_BYTES"] != PINNED_TE_MODEL_BYTES:
+        raise IntegrityError("WRONG_MODEL")
+    if payload["LANGUAGE_SCOPE"] != ["te"]:
+        raise IntegrityError("WRONG_MODEL")
+    if not isinstance(payload["LICENSE"], str) or not payload["LICENSE"].strip():
+        raise IntegrityError("WRONG_MODEL")
+    if not isinstance(payload["SOURCE"], str) or not payload["SOURCE"].strip():
+        raise IntegrityError("WRONG_MODEL")
+    runtime = payload["RUNTIME_COMPATIBILITY"]
+    if not isinstance(runtime, dict):
+        raise IntegrityError("WRONG_MODEL")
+    for key in ("cli_relative_path", "model_relative_path", "architectures", "cli_sha256", "cli_bytes", "source_pin"):
+        if key not in runtime:
+            raise IntegrityError("WRONG_MODEL")
+    if runtime["cli_relative_path"] != PACK_CLI_REL or runtime["model_relative_path"] != PACK_MODEL_REL:
+        raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+    if runtime["cli_sha256"] != PINNED_CLI_SHA256 or runtime["cli_bytes"] != PINNED_CLI_BYTES:
+        raise IntegrityError("WRONG_MODEL")
+    if runtime["source_pin"] != SOURCE_PIN:
+        raise IntegrityError("WRONG_MODEL")
+    arches = runtime["architectures"]
+    if not isinstance(arches, list) or not arches or any(not isinstance(item, str) for item in arches):
+        raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
+    _reject_unrelative(str(runtime["cli_relative_path"]))
+    _reject_unrelative(str(runtime["model_relative_path"]))
+    return payload
+
+
+def _verify_packed_file(path: Path, *, expected_sha: str, expected_bytes: int, kind: str, architectures: list[str]) -> str:
+    label = "MISSING_BINARY" if kind == "cli" else "MISSING_MODEL"
+    if not path.is_file():
+        raise IntegrityError(f"PINNED_ASSET_NOT_ON_DISK:{label}")
+    size = path.stat().st_size
+    if kind == "model" and size < expected_bytes:
+        raise IntegrityError("MODEL_LOAD_INTERRUPTED")
+    if size != expected_bytes:
+        raise IntegrityError("SIZE_MISMATCH")
+    if kind == "model" and not _model_magic_ok(path):
+        raise IntegrityError("WRONG_MODEL")
+    if kind == "cli":
+        arch = _binary_arch(path)
+        if arch != _host_arch() or arch not in architectures:
+            raise IntegrityError("UNSUPPORTED_ARCHITECTURE")
+    try:
+        return verify_file_sha256(path, expected_sha)
+    except IntegrityError as exc:
+        if str(exc).startswith("HASH_MISMATCH"):
+            raise IntegrityError("HASH_MISMATCH") from exc
+        raise
 
 
 def discover_qualified_assets() -> QualifiedAssets:
-    """Resolve the pinned CLI and Telugu model from SPE_MEDIA_ROOT (or overrides).
+    """Resolve the pinned CLI and Telugu model from the relative media-pack.
 
-    Never downloads. Never falls back to hardcoded sibling-worktree paths.
-    Missing env or missing/mismatched files raise IntegrityError so /media
-    reports UNAVAILABLE / NOT_MOUNTED instead of pretending to transcribe.
+    Never downloads. Never reads a sibling-worktree path. Missing files, a
+    short model, a hash or size mismatch, the wrong ggml file, or an
+    unsupported Mach-O architecture raise IntegrityError.
     """
-    cli_candidates, model_candidates = _asset_candidates()
-    if not cli_candidates or not model_candidates:
-        raise IntegrityError(
-            "PINNED_ASSET_NOT_ON_DISK:SPE_MEDIA_ROOT unset "
-            "(expected $SPE_MEDIA_ROOT/whisper-cli and "
-            "$SPE_MEDIA_ROOT/models/ggml-te-small.bin; "
-            "optional SPE_WHISPER_CLI / SPE_WHISPER_MODEL)"
-        )
-    cli_path, cli_sha = _first_verified(cli_candidates, PINNED_CLI_SHA256)
-    model_path, model_sha = _first_verified(model_candidates, PINNED_TE_MODEL_SHA256)
+    root = pack_root()
+    if not root.is_dir():
+        raise IntegrityError("PINNED_ASSET_NOT_ON_DISK:MISSING_PACK")
+    manifest = _load_pack_manifest(root)
+    runtime = manifest["RUNTIME_COMPATIBILITY"]
+    assert isinstance(runtime, dict)
+    architectures = [str(item) for item in runtime["architectures"]]
+    cli_path = _member(root, PACK_CLI_REL)
+    model_path = _member(root, PACK_MODEL_REL)
+    cli_sha = _verify_packed_file(
+        cli_path,
+        expected_sha=PINNED_CLI_SHA256,
+        expected_bytes=PINNED_CLI_BYTES,
+        kind="cli",
+        architectures=architectures,
+    )
+    model_sha = _verify_packed_file(
+        model_path,
+        expected_sha=PINNED_TE_MODEL_SHA256,
+        expected_bytes=PINNED_TE_MODEL_BYTES,
+        kind="model",
+        architectures=architectures,
+    )
     return QualifiedAssets(
         cli_path=cli_path,
         cli_sha256=cli_sha,

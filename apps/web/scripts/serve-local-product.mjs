@@ -3,7 +3,7 @@
  * Production static server for the built web app.
  * Serves apps/web/dist and starts the same canonical local media host
  * (createLocalMediaHost → spe_runtime.media_product.route_host).
- * Vite is not involved. Fail-closed when SPE_MEDIA_ROOT assets are absent.
+ * Vite is not involved. Fail-closed when the relative media-pack does not verify.
  */
 import { createServer } from "node:http";
 import { existsSync, readFileSync, statSync } from "node:fs";
