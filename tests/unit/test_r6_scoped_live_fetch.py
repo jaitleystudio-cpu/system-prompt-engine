@@ -218,6 +218,8 @@ def test_one_real_scoped_live_fetch(monkeypatch, tmp_path):
     assert owner["doi_dedup"] == "ABSENT"
     assert owner["replication_class"] == "ABSENT"
     assert owner["k3_binding"] == "ABSENT"
+    assert owner["k3_gap"]["compile_with_k3"] == {"called": False, "missing_input": "depth"}
+    assert owner["k3_gap"]["bind_prompt_effects"] == {"called": False, "missing_input": "selection"}
     assert result["product_LIVE_INDEX"] == "HOLD"
     assert result["product_LIVE_RETRACTION"] == "HOLD"
     saved_openalex = Path(result["response_body_path"]).read_bytes()
@@ -276,6 +278,11 @@ def test_fresh_timestamped_journey_does_not_touch_pinned_bodies():
     assert author_map["freshness"] == "ABSENT"
     assert author_map["replication_class"] == "ABSENT"
     assert author_map["C02_K3"] == "ABSENT"
+    assert author_map["k3"]["compile_with_k3"]["called"] is False
+    assert author_map["k3"]["compile_with_k3"]["missing_input"] == "depth"
+    assert author_map["k3"]["bind_prompt_effects"]["called"] is False
+    assert author_map["k3"]["bind_prompt_effects"]["missing_input"] == "selection"
+    assert "no K3 function" not in fresh_receipts[0].read_text(encoding="utf-8")
 
     by_provider = {row["provider"]: row for row in fresh["hosts"]}
     assert set(by_provider) == {"OPENALEX", "CROSSREF"}

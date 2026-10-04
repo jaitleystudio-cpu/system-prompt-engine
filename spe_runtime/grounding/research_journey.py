@@ -737,6 +737,16 @@ def _existing_owner_returns(
         "doi_dedup": "ABSENT",
         "replication_class": "ABSENT",
         "k3_binding": "ABSENT",
+        "k3_gap": {
+            "compile_with_k3": {
+                "called": False,
+                "missing_input": "depth",
+            },
+            "bind_prompt_effects": {
+                "called": False,
+                "missing_input": "selection",
+            },
+        },
     }
 
 

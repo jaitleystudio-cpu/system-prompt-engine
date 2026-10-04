@@ -73,7 +73,7 @@
   "graph_contradiction_count": 1,
   "need_id": "need-general-c0184ca01696c0ed",
   "parent": "03f7f96053631a73a13b682fdb2a62e4e2c50ae7",
-  "note": "author_map classifies the already-saved fetch. It is not a runtime proof. ContextCapsule was not bound by _scoped_live_journey on that run. Product LIVE gates stay HOLD.",
+  "note": "author_map classifies the already-saved fetch. It is not a runtime proof and not a pass. compile_with_k3 and bind_prompt_effects exist and were not called: this path has no protocol depth and no technique selection. Product LIVE gates stay HOLD.",
   "author_map": {
     "label": "author_map",
     "not_runtime_proof": true,
@@ -89,6 +89,18 @@
     "DOI_dedup": "ABSENT",
     "freshness": "ABSENT",
     "replication_class": "ABSENT",
-    "C02_K3": "ABSENT"
+    "C02_K3": "ABSENT",
+    "k3": {
+      "compile_with_k3": {
+        "called": false,
+        "function": "spe_runtime.k3.compile.compile_with_k3",
+        "missing_input": "depth"
+      },
+      "bind_prompt_effects": {
+        "called": false,
+        "function": "spe_runtime.k3.effect.bind_prompt_effects",
+        "missing_input": "selection"
+      }
+    }
   }
 }
