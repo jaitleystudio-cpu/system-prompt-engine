@@ -3,7 +3,7 @@
  * Reuses SceneCompiler validation and the same procedural geometry
  * constructors as sceneCompiler.ts. This is not a second website compiler.
  *
- * The compile result names the r6 browser evidence files. threeVersion is the export pin.
+ * The compile result stays webglExecution NOT_RUN. threeVersion is the export pin.
  * EXECUTED is assigned only after this module creates a context, builds a scene,
  * and reads back a frame that is not a clear-only buffer.
  */

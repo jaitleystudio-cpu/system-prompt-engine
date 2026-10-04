@@ -39,7 +39,7 @@ export const SCENE_IR_OWNER_PATH =
 export const SCENE_IR_SOURCE_SHA =
   "c08c6929ad57885a3d16eb10f1cd07b2a5ed4949" as const;
 export const WEBGL_CONTEXT_LOSS_DISPOSAL = "NOT_IMPLEMENTED" as const;
-export const WEBGL_EXECUTION = "EVIDENCE:/tmp/spe-webgl-r6c/frame.png@b73818629311a472936e64662ff5188e7e1db305d710c28c6d9ba8f979acf2cc;/tmp/spe-webgl-r6c/reduced-motion.json@82078622caf6f87f3285c0bdebd561bb787c4e44f9ada1ab8c2484656fc400a5;/tmp/spe-webgl-r6c/unavailable.json@13fe0860b8720301f8c820d52ddb825308f86afe12b974ffba73415f2609a0a7" as const;
+export const WEBGL_EXECUTION = "NOT_RUN" as const;
 export const ROUTE_MOUNT_STATUS = "NOT_INTEGRATED" as const;
 export const COMPILER_REUSED = "LOCAL_TS_WEBSITE_SPEC_1" as const;
 export const SHELL_MOUNT = "NOT_DONE" as const;

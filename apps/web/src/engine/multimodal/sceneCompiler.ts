@@ -17,8 +17,8 @@
  * PROOF LAW:
  * Text interpolated into the document is escaped. Unknown geometry is refused.
  * contextLossRecoverySupported is true only when the emitted document rebuilds
- * from SceneIR and disposes the previous scene. webglExecution names the r6
- * browser evidence files and is not a product pass. Compile does not create a context. threeVersion is the lockfile pin
+ * from SceneIR and disposes the previous scene. webglExecution stays NOT_RUN
+ * because compile does not create a context. threeVersion is the lockfile pin
  * of the packaged vendor artifact, not a product PASS.
  */
 
@@ -506,7 +506,7 @@ export class SceneCompiler {
       threeVersion: EXPORT_THREE_VERSION,
       reducedMotionSupported,
       contextLossRecoverySupported,
-      webglExecution: "EVIDENCE:/tmp/spe-webgl-r6c/frame.png@b73818629311a472936e64662ff5188e7e1db305d710c28c6d9ba8f979acf2cc;/tmp/spe-webgl-r6c/reduced-motion.json@82078622caf6f87f3285c0bdebd561bb787c4e44f9ada1ab8c2484656fc400a5;/tmp/spe-webgl-r6c/unavailable.json@13fe0860b8720301f8c820d52ddb825308f86afe12b974ffba73415f2609a0a7",
+      webglExecution: "NOT_RUN",
     };
   }
 }

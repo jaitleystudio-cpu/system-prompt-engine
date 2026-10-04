@@ -275,11 +275,11 @@ const flow = readFileSync(join(webRoot, "src/website/productFlow.ts"), "utf8");
 const compiler = readFileSync(join(webRoot, "src/engine/multimodal/sceneCompiler.ts"), "utf8");
 const ledger = readFileSync(join(webRoot, "src/shell/mountStatus.ts"), "utf8");
 const gates = {
-  productWebglExecution: /export const WEBGL_EXECUTION = "EVIDENCE:\/tmp\/spe-webgl-r6c\//.test(flow) ? "EVIDENCE" : "MOVED",
+  productWebglExecution: /export const WEBGL_EXECUTION = "NOT_RUN"/.test(flow) ? "NOT_RUN" : "MOVED",
   productNotPass: !/WEBGL_EXECUTION = "PASS"/.test(flow) && !/SCENE_3D = "PASS"/.test(flow),
-  compilerWebglExecution: /webglExecution:\s*"EVIDENCE:\/tmp\/spe-webgl-r6c\//.test(compiler) ? "EVIDENCE" : "MOVED",
+  compilerWebglExecution: /webglExecution:\s*"NOT_RUN"/.test(compiler) ? "NOT_RUN" : "MOVED",
   compilerThreeVersion: /EXPORT_THREE_VERSION = "0\.170\.0"/.test(compiler) ? "0.170.0" : "MOVED",
-  ledgerWebglExecution: /WEBGL_EXECUTION:\s*"EVIDENCE:\/tmp\/spe-webgl-r6c\//.test(ledger) ? "EVIDENCE" : "MOVED",
+  ledgerWebglExecution: /WEBGL_EXECUTION:\s*"NOT_RUN"/.test(ledger) ? "NOT_RUN" : "MOVED",
   ledgerNotPass: !/WEBGL_EXECUTION:\s*"PASS"/.test(ledger) && !/SCENE3D:\s*"PASS"/.test(ledger),
 };
 
@@ -398,7 +398,7 @@ try {
     evidence.unavailable.scene.contextCreated === "0" &&
     evidence.unavailable.scene.unavailableHonest === "1" &&
     evidence.unavailable.scene.sceneCreated === "0";
-  const gatesOk = Object.values(gates).every((value) => value === true || value === "NOT_RUN" || value === "EVIDENCE" || value === "0.170.0");
+  const gatesOk = Object.values(gates).every((value) => value === true || value === "NOT_RUN" || value === "0.170.0");
   evidence.checks = { frameOk, fallbackOk, unavailableOk, gatesOk };
   evidence.exportExecution = frameOk ? "EXECUTED_WITHIN_TESTED_SCOPE" : "NOT_RUN";
   writeFileSync(join(proofDir, "export-execution.json"), JSON.stringify(evidence, null, 2));

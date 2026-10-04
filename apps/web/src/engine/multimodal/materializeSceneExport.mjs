@@ -53,12 +53,7 @@ export function assertPackagedThree() {
 export function materializeSceneExport(dir, ir) {
   const pin = assertPackagedThree();
   const compiled = new SceneCompiler().compile(ir);
-  if (
-    compiled.webglExecution === "PASS" ||
-    compiled.webglExecution === "EXECUTED" ||
-    String(compiled.webglExecution).startsWith("EXECUTED") ||
-    !String(compiled.webglExecution).startsWith("EVIDENCE:/tmp/spe-webgl-r6c/")
-  ) {
+  if (compiled.webglExecution !== "NOT_RUN") {
     throw new Error("compile must not claim WebGL execution");
   }
   if (compiled.threeVersion !== EXPORT_THREE_VERSION) {
