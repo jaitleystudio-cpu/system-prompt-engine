@@ -82,6 +82,7 @@ export function buildUiSpec(obs: ImageObservation): UiSpec {
       "Region roles include evidence strings — verify against screenshot.",
       "Scaffolds reflect IR structure when strong; otherwise honest starter + build prompt.",
     ],
+    textBlocks: [],
   };
 }
 
@@ -99,6 +100,20 @@ export function buildUiSpecFromIR(ir: UIObservationIR): UiSpec {
     palette: ir.palette,
     observations: ir.semantic.lite,
     uncertainty: ir.uncertainty,
+    textBlocks: ir.textBlocks
+      .filter(
+        (block) =>
+          block.provenance === "observed-ocr" &&
+          typeof block.textGuess === "string" &&
+          block.textGuess.trim().length > 0,
+      )
+      .map((block) => ({
+        id: block.id,
+        text: block.textGuess as string,
+        bounds: block.bounds,
+        confidence: block.confidence,
+        provenance: "observed-ocr" as const,
+      })),
   };
 }
 
@@ -114,7 +129,25 @@ function pct(n: number): string {
   return `${(n * 100).toFixed(1)}%`;
 }
 
-function regionStyle(r: UiRegion): string {
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function observedOcrHtml(spec: UiSpec): string {
+  return (spec.textBlocks ?? [])
+    .filter((block) => block.provenance === "observed-ocr" && block.text.trim())
+    .map(
+      (block) =>
+        `    <p class="spe-ocr-text" data-provenance="observed-ocr" data-confidence="${block.confidence}" style="position:absolute;margin:0;${regionStyle(block)}">${escapeHtml(block.text)}</p>`,
+    )
+    .join("\n");
+}
+
+function regionStyle(r: { bounds: UiRegion["bounds"] }): string {
   const { x, y, w, h } = r.bounds;
   return `left:${pct(x)};top:${pct(y)};width:${pct(w)};height:${pct(h)}`;
 }
@@ -238,6 +271,7 @@ function html(spec: UiSpec): string {
     `.spe-list li{padding:.75rem;border-bottom:1px solid rgba(255,255,255,.08)}\n` +
     `.spe-form{display:flex;flex-direction:column;gap:.75rem;max-width:28rem;margin:1rem auto;padding:1rem;background:rgba(255,255,255,.05)}\n` +
     `.spe-region{outline:1px dashed rgba(255,255,255,.12);padding:.5rem}\n` +
+    `@media (max-width: 640px){.shell{grid-template-columns:1fr}aside.spe-rail{grid-column:1/-1}}\n` +
     `</style></head><body>\n` +
     `<!-- OBSERVATION scaffold: structure resemblance, not pixel-perfect reconstruction -->\n` +
     `<div class="shell" data-hierarchy="1">\n` +
@@ -248,6 +282,7 @@ function html(spec: UiSpec): string {
     `  </header>\n` +
     `${railHtml}\n` +
     `  <main class="spe-main" role="main" data-zone="mid-center" data-hierarchy="2">\n` +
+    `${observedOcrHtml(spec)}\n` +
     `${heroHtml}\n` +
     `${sections}\n` +
     `${formHtml}\n` +
