@@ -250,3 +250,38 @@ def test_package_build_wires_canonical_before_copy():
     assert "wasm:build-canonical" in build
     assert "copy-wasm" in build
     assert build.index("wasm:build-canonical") < build.index("copy-wasm")
+
+
+def test_canonical_wrapper_normalizes_host_query_for_cross_host_determinism():
+    """Wrapper must normalize rustc verbose version host to canonical Linux identity."""
+    for flag in ("-vV", "-Vv"):
+        proc = subprocess.run(
+            ["node", str(WRAPPER), "rustc", flag],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert proc.returncode == 0, proc.stderr
+        assert "host: x86_64-unknown-linux-gnu\n" in proc.stdout
+        assert "release: 1.98.1\n" in proc.stdout
+        assert "commit-hash: 48a229ceaefd4985c50990b14116b6d856af0985\n" in proc.stdout
+
+    # Non-query compiler commands pass through to real rustc.
+    passthrough = subprocess.run(
+        ["node", str(WRAPPER), "rustc", "--version"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert passthrough.returncode == 0, passthrough.stderr
+    assert "rustc 1.98.1" in passthrough.stdout
+
+    # Failure exit codes from real rustc are preserved.
+    failing = subprocess.run(
+        ["node", str(WRAPPER), "rustc", "--this-flag-does-not-exist"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert failing.returncode != 0
+
