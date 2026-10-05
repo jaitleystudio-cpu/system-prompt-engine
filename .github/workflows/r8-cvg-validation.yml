@@ -80,6 +80,21 @@ jobs:
         run: node apps/web/scripts/test-r8-vision-font-fit.mjs
       - name: measured OCR IR wiring regression
         run: node apps/web/scripts/test-r8-vision-font-wiring.mjs
+      - name: unicode and raw identity regression
+        working-directory: apps/web
+        run: node scripts/test-unicode-regression.mjs
+      - name: website product flow and free-text 3d compiler regression
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-website-product-flow.mjs
+      - name: static website compiler regression
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-static-website-compiler.mjs
+      - name: truth privacy and ssrf regression
+        working-directory: apps/web
+        run: node scripts/test-truth-privacy-closure.mjs
+      - name: screenshot fidelity frozen gate regression
+        working-directory: apps/web
+        run: node scripts/test-screenshot-fidelity.mjs
       - name: build
         working-directory: apps/web
         run: npm run build
