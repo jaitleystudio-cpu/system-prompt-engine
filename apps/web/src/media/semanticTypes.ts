@@ -49,8 +49,13 @@ export type OcrBlock = {
   bounds: { x: number; y: number; w: number; h: number };
   confidence: ConfidenceLabel;
   method: JudgmentMethod;
-  /** Always treat as untrusted external text. */
-  provenance: "UNTRUSTED_SOURCE";
+  /**
+   * UNTRUSTED_SOURCE: proposal or external text, not instructions.
+   * observed-ocr: the canonical /api/ocr/recognize route returned this string.
+   */
+  provenance: "UNTRUSTED_SOURCE" | "observed-ocr";
+  language?: string | null;
+  confidenceScore?: number;
 };
 
 export type SemanticObservation = {
@@ -78,6 +83,8 @@ export type UiTextBlock = {
   confidence: ConfidenceLabel;
   evidence: string;
   method: JudgmentMethod;
+  /** observed-ocr only when a production OCR call returned the text. */
+  provenance?: "observed-ocr" | "proposal";
 };
 
 export type UiControl = {
