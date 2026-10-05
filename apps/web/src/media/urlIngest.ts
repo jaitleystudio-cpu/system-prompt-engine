@@ -53,6 +53,8 @@ export function connectSrcAllowsRemoteHost(
   }
   return false;
 }
+import { isSsrfSafeUrl } from "../engine/multimodal/urlSecurity";
+export { isSsrfSafeUrl };
 
 export function readDocumentNetworkPolicy(): BrowserNetworkPolicy {
   if (typeof document === "undefined" || typeof location === "undefined") {
@@ -473,7 +475,11 @@ export async function ingestUrl(
   } = {},
 ): Promise<UrlIngestResult> {
   const parsed = normalizeUrl(rawUrl);
-  if (!parsed || (parsed.protocol !== "http:" && parsed.protocol !== "https:")) {
+  if (
+    !parsed ||
+    (parsed.protocol !== "http:" && parsed.protocol !== "https:") ||
+    !isSsrfSafeUrl(parsed).safe
+  ) {
     return {
       status: "invalid_url",
       url: rawUrl,

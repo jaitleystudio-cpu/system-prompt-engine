@@ -167,6 +167,26 @@ await checkAsync("url_ingest_reference_only_and_bounds", async () => {
   assert.match(block, /UNTRUSTED_SOURCE|URL reference|not read/i);
   assert.doesNotMatch(block, /Title:|Excerpt:/);
 
+  // SSRF Protection Invariants
+  assert.equal(typeof url.isSsrfSafeUrl, "function", "isSsrfSafeUrl export required");
+  assert.equal(url.isSsrfSafeUrl(new URL("http://169.254.169.254/latest/meta-data")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("http://127.0.0.1:8080/admin")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("http://localhost:3000")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("http://10.0.0.1/internal")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("http://192.168.1.1/router")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("http://172.16.0.1/corp")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("http://user:pass@example.com/")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("http://[::ffff:127.0.0.1]/")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("http://[::ffff:169.254.169.254]/")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("http://[::]/")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("http://example.com:8080/")).safe, false);
+  assert.equal(url.isSsrfSafeUrl(new URL("https://example.com/docs")).safe, true);
+
+  const ssrfIngest = await url.ingestUrl("http://169.254.169.254/metadata");
+  assert.equal(ssrfIngest.status, "invalid_url");
+  const ssrfIpv6Mapped = await url.ingestUrl("http://[::ffff:127.0.0.1]/");
+  assert.equal(ssrfIpv6Mapped.status, "invalid_url");
+
   // Truncation provenance on HTML path
   const big = "a".repeat(250_000);
   const file = {
