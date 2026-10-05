@@ -121,13 +121,13 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     path: "/privacy",
     title: "Privacy & Proof — Local System Prompt Engine | SPE",
     description:
-      "How SPE prepares prompts on this device, with honest privacy claims for this research preview.",
+      "How SPE prepares prompts on this device, with honest privacy claims for this release.",
   },
   capabilities: {
     path: "/capabilities",
     title: "SPE Capabilities — Local Prompt Engine Features",
     description:
-      "Honest SPE capabilities: local-first preparation, ProtectedIntent, Execution Contract, provider profiles, and portable .spe files. Research preview — any worldwide top ranking remains unproven.",
+      "Honest SPE capabilities: local-first preparation, ProtectedIntent, Execution Contract, provider profiles, and portable .spe files. Independent comparative ranking has not been established; human preference ratings have not yet been collected.",
   },
   workspace: {
     path: "/workspace",
@@ -224,7 +224,7 @@ export function jsonLdCapabilitiesFaq(): Record<string, unknown> {
         name: "Does SPE claim a worldwide ranking as the top prompt tool?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "No. That ranking claim is not proven. SPE is a research preview with honest local preparation, contracts, and portability — not an independently replicated top ranking.",
+          text: "No. That ranking claim is not proven. Independent comparative ranking has not been established. Human preference ratings have not yet been collected. SPE provides honest local preparation, contracts, and portability — not an independently replicated top ranking.",
         },
       },
     ],

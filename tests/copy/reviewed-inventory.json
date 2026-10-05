@@ -15687,10 +15687,10 @@
       "text": "Portable"
     },
     {
-      "id": "50ed77fb4c3ebeaadef8",
+      "id": "b6554f6d5bdc3f3b2cb1",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
-      "text": "No. That ranking claim is not proven. SPE is a research preview with honest local preparation, contracts, and portability — not an independently replicated top ranking."
+      "text": "No. That ranking claim is not proven. Independent comparative ranking has not been established. Human preference ratings have not yet been collected. SPE provides honest local preparation, contracts, and portability — not an independently replicated top ranking."
     },
     {
       "id": "55be489bb913e83981db",
@@ -16827,10 +16827,10 @@
       "text": "SPE — System Prompt Engine | Free System Prompt Generator"
     },
     {
-      "id": "9242e4f215bb3aa1e7be",
+      "id": "f1e714733659f22362bd",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
-      "text": "No. That ranking claim is not proven. SPE is a research preview with honest local preparation, contracts, and portability — not an independently replicated top ranking."
+      "text": "No. That ranking claim is not proven. Independent comparative ranking has not been established. Human preference ratings have not yet been collected. SPE provides honest local preparation, contracts, and portability — not an independently replicated top ranking."
     },
     {
       "id": "9cd13dc304d56902c06e",
@@ -16851,16 +16851,16 @@
       "text": "ocr"
     },
     {
-      "id": "aa1c506f7a3720a6ebf9",
+      "id": "7b3fcbe2dca98407cf8a",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
-      "text": "How SPE prepares prompts on this device, with honest privacy claims for this research preview."
+      "text": "How SPE prepares prompts on this device, with honest privacy claims for this release."
     },
     {
-      "id": "b61600be3316539e069c",
+      "id": "cfe6abe6c9ed405869bb",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
-      "text": "Honest SPE capabilities: local-first preparation, ProtectedIntent, Execution Contract, provider profiles, and portable .spe files. Research preview — any worldwide top ranking remains unproven."
+      "text": "Honest SPE capabilities: local-first preparation, ProtectedIntent, Execution Contract, provider profiles, and portable .spe files. Independent comparative ranking has not been established; human preference ratings have not yet been collected."
     },
     {
       "id": "ba48c44899936fd87334",

@@ -164,9 +164,11 @@ export function Capabilities({
           <div>
             <dt>Does SPE claim a worldwide ranking as the top prompt tool?</dt>
             <dd>
-              No. That ranking claim is not proven. SPE is a research preview
-              with honest local preparation, contracts, and portability — not
-              an independently replicated top ranking.
+              No. That ranking claim is not proven. Independent comparative
+              ranking has not been established. Human preference ratings have
+              not yet been collected. SPE provides honest local preparation,
+              contracts, and portability — not an independently replicated top
+              ranking.
             </dd>
           </div>
         </dl>
