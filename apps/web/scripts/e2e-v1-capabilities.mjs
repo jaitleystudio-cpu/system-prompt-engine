@@ -50,7 +50,11 @@ async function nav(page, label) {
     const expanded = await burger.getAttribute("aria-expanded");
     if (expanded !== "true") await burger.click();
   }
-  await page.locator("#spe-primary-nav").getByRole("button", { name: label, exact: true }).click();
+  const item = page
+    .locator("#spe-primary-nav")
+    .getByRole("link", { name: label, exact: true })
+    .or(page.locator("#spe-primary-nav").getByRole("button", { name: label, exact: true }));
+  await item.click();
   await page.waitForTimeout(400);
 }
 
@@ -60,8 +64,13 @@ async function modeTab(page, label) {
 }
 
 const server = await startServer();
+const chromePath =
+  process.env.CHROME_PATH ||
+  (existsSync("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+    ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    : "/usr/bin/google-chrome");
 const browser = await chromium.launch({
-  executablePath: "/usr/bin/google-chrome",
+  executablePath: chromePath,
   headless: true,
   args: ["--no-sandbox", "--disable-gpu"],
 });

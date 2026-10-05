@@ -76,7 +76,11 @@ const evidence = {
 
 const server = await startServer();
 const browser = await chromium.launch({
-  executablePath: process.env.CHROME_PATH || "/usr/bin/google-chrome",
+  executablePath:
+    process.env.CHROME_PATH ||
+    (existsSync("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+      ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+      : "/usr/bin/google-chrome"),
   headless: true,
   args: ["--no-sandbox", "--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream"],
 });
