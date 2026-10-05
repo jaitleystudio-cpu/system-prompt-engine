@@ -101,6 +101,9 @@ jobs:
       - name: website studio v1.1 intent compilers
         working-directory: apps/web
         run: node --experimental-strip-types scripts/test-website-studio-intent.mjs
+      - name: website studio v1.1 core contracts
+        working-directory: apps/web
+        run: node --experimental-strip-types scripts/test-website-studio-core-v11.mjs
       - name: truth privacy and ssrf regression
         working-directory: apps/web
         run: node scripts/test-truth-privacy-closure.mjs
