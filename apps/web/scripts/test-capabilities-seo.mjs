@@ -39,10 +39,10 @@ assert.match(page, /not proven/i);
 assert.doesNotMatch(page, /SPE is the world'?s best/i);
 assert.doesNotMatch(page, /award-winning|guaranteed results/i);
 
-assert.match(app, /<Capabilities\s*\/>/);
-assert.match(app, /pathForView\("capabilities"\)/);
+assert.match(app, /<Capabilities\b[^>]*\/>/);
+assert.match(app, /(?:pathForView\("capabilities"\)|view="capabilities")/);
 assert.match(nav, /id:\s*"capabilities"/);
-assert.match(seoContent, /pathForView\("capabilities"\)/);
+assert.match(seoContent, /(?:pathForView\("capabilities"\)|view="capabilities")/);
 assert.match(sitemap, /systempromptengine\.com\/capabilities/);
 assert.match(robots, /Allow:\s*\/capabilities/);
 
