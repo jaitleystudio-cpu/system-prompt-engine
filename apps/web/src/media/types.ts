@@ -54,6 +54,14 @@ export type UiRegion = {
   notes: string;
 };
 
+export type UiObservedText = {
+  id: string;
+  text: string;
+  bounds: { x: number; y: number; w: number; h: number };
+  confidence: "high" | "medium" | "low";
+  provenance: "observed-ocr";
+};
+
 export type UiSpec = {
   frameworkTargets: readonly string[];
   layout: string;
@@ -61,6 +69,8 @@ export type UiSpec = {
   palette: ColorSwatch[];
   observations: ImageObservation;
   uncertainty: string[];
+  /** Genuine OCR only. Missing recognition stays absent, not a guessed label. */
+  textBlocks?: UiObservedText[];
 };
 
 export type CodeScaffold = {
