@@ -74,6 +74,8 @@ jobs:
         run: node apps/web/scripts/test-universal-shell.mjs
       - name: visual screenshot truth contract
         run: node apps/web/scripts/test-visual-screenshot-ui.mjs
+      - name: vision replay metamorphic regression
+        run: node apps/web/scripts/test-r8-vision-replay.mjs
       - name: build
         working-directory: apps/web
         run: npm run build
