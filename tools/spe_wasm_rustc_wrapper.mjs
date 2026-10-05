@@ -21,12 +21,43 @@ import { appendFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 
 const PINNED = new Set(["spe_core_rs", "spe_wasm"]);
+const CANONICAL_HOST = "x86_64-unknown-linux-gnu";
 
 const rustc = process.argv[2];
 const args = process.argv.slice(3);
 if (!rustc) {
   process.stderr.write("spe-wasm rustc wrapper: missing rustc\n");
   process.exit(2);
+}
+
+const isVerboseVersion =
+  !args.includes("--crate-name") &&
+  (args.includes("-vV") ||
+    args.includes("-Vv") ||
+    ((args.includes("-v") || args.includes("--verbose")) &&
+      (args.includes("-V") || args.includes("--version"))));
+
+if (isVerboseVersion) {
+  const result = spawnSync(rustc, args, { encoding: "utf8" });
+  if (result.error) {
+    process.stderr.write(`spe-wasm rustc wrapper: ${result.error.message}\n`);
+    process.exit(1);
+  }
+  if (result.status !== 0) {
+    if (result.stdout) process.stdout.write(result.stdout);
+    if (result.stderr) process.stderr.write(result.stderr);
+    process.exit(result.status === null ? 1 : result.status);
+  }
+  const lines = (result.stdout || "").split("\n");
+  const normalized = lines.map((line) => {
+    if (line.startsWith("host:")) {
+      return `host: ${CANONICAL_HOST}`;
+    }
+    return line;
+  });
+  process.stdout.write(normalized.join("\n"));
+  if (result.stderr) process.stderr.write(result.stderr);
+  process.exit(0);
 }
 
 let crate = null;
