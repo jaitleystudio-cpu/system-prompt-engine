@@ -25,8 +25,8 @@ WASM_HOST = REPO / "tools" / "spe_wasm_node_host.js"
 RUST_BIN = REPO / "portable" / "spe-core-rs" / "target" / "debug" / "spe-core-eval"
 K3_VECTORS = REPO / "proofs" / "k3_runtime_closure_20260929" / "K3_VECTORS.json"
 FROZEN_K3_SHA256 = "563bf5cc5b454c9cf453dfdf59b98b533932633195e23eb4a98eadbee9b286c2"
-PIN_SHA = "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b"
-PIN_BYTES = 1340112
+PIN_SHA = "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d"
+PIN_BYTES = 1339691
 
 def _killed(name: str, held: list[str]) -> None:
     held.append(name)

@@ -115,7 +115,7 @@ fn wrap_raw_output(output: Value) -> String {
         "reason_code": null,
         "output": output,
     });
-    value::canonical_dumps(&body).unwrap_or_else(|_| "{}".to_string())
+    value::raw_dumps(&body).unwrap_or_else(|_| "{}".to_string())
 }
 
 fn wrap_result(result: &ConformanceResult) -> String {
@@ -125,7 +125,7 @@ fn wrap_result(result: &ConformanceResult) -> String {
         "reason_code": result.reason_code,
         "output": result.output,
     });
-    value::canonical_dumps(&body).unwrap_or_else(|_| "{}".to_string())
+    value::raw_dumps(&body).unwrap_or_else(|_| "{}".to_string())
 }
 
 fn wrap_error(code: &str, message: &str) -> String {
@@ -135,5 +135,6 @@ fn wrap_error(code: &str, message: &str) -> String {
         "reason_code": code,
         "output": serde_json::json!({"message": message}),
     });
-    value::canonical_dumps(&body).unwrap_or_else(|_| "{}".to_string())
+    value::raw_dumps(&body).unwrap_or_else(|_| "{}".to_string())
 }
+

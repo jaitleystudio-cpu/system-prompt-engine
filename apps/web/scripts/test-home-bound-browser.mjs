@@ -69,7 +69,11 @@ function record(cases, name, data) {
 
 await ensureBuild();
 const { server, base } = await startStatic();
-const browser = await chromium.launch({ headless: true });
+const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const browser = await chromium.launch({
+  headless: true,
+  ...(existsSync(chromePath) ? { executablePath: chromePath } : {}),
+});
 const cases = [];
 
 try {

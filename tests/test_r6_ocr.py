@@ -199,7 +199,7 @@ def test_sources_do_not_embed_the_proof() -> None:
     assert_true("shutil.which" not in backend, "PATH lookup remains")
     wasm = json.loads((ROOT / "apps/web/public/spe_wasm.sha256.json").read_text(encoding="utf-8"))
     assert_true(
-        wasm["sha256"] == "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b",
+        wasm["sha256"] == "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
         wasm["sha256"],
     )
 

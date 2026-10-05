@@ -23,8 +23,8 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const EXPECTED_SHA256 =
-  "b707f5eb480adc166f8b5b0df733e742a08a476c89c3f99b90ad63a61c11199b";
-const EXPECTED_BYTES = 1340112;
+  "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d";
+const EXPECTED_BYTES = 1339691;
 const TASK57R_F1_SHA256 =
   "dfdad1270bb11e9325c3676c1ae9f00ae1df7f47071feb0b1ccda8ff96b78541";
 const TASK57R_F1_BYTES = 1275233;

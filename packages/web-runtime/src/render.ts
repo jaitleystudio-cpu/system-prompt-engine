@@ -84,6 +84,21 @@ function sameIds(left: string[], right: string[]): boolean {
   return left.length === right.length && left.every((item, index) => item === right[index]);
 }
 
+/**
+ * Strict canonical equivalence under Unicode UAX #15 (NFC).
+ * Equates canonically equivalent precomposed and decomposed forms (e.g. é vs e\u0301).
+ * Does NOT fold case, punctuation, scripts, compatibility forms (NFKC), or whitespace.
+ */
+export function isCanonicalEquivalent(a: string, b: string): boolean {
+  if (a === b) return true;
+  return a.normalize("NFC") === b.normalize("NFC");
+}
+
+export function includesCanonical(haystack: string, needle: string): boolean {
+  if (haystack.includes(needle)) return true;
+  return haystack.normalize("NFC").includes(needle.normalize("NFC"));
+}
+
 function readBrief(input: RenderInput) {
   const output = record(input.envelopeOutput);
   if (!Array.isArray(output.facts))
@@ -94,15 +109,15 @@ function readBrief(input: RenderInput) {
   const requestedGoal = input.userRequest.trim();
   const goalAtom =
     facts.find((a) => a.id === "f-user-request") ??
-    facts.find((a) => a.text === requestedGoal);
-  if (!goalAtom || goalAtom.text !== requestedGoal)
+    facts.find((a) => isCanonicalEquivalent(a.text, requestedGoal));
+  if (!goalAtom || !isCanonicalEquivalent(goalAtom.text, requestedGoal))
     throw new Error(
       "The returned engine request does not match the current brief. Please compile again.",
     );
   const goal = goalAtom.text;
-  const contextFacts = facts.filter((a) => a !== goalAtom && a.text !== goal);
+  const contextFacts = facts.filter((a) => a !== goalAtom && !isCanonicalEquivalent(a.text, goal));
   const constraints = atoms(output.hard_constraints, "statement").filter(
-    (a) => a.text !== goal,
+    (a) => !isCanonicalEquivalent(a.text, goal),
   );
   const conflicts = constraints.filter((a) => a.text.startsWith("[CONFLICT]"));
   if (conflicts.length) {
@@ -158,23 +173,24 @@ export function renderPromptArtifact(input: RenderInput) {
     effectPlan.renderable !== true ||
     effectPlan.disposition !== "BOUND" ||
     typeof effectPlan.compiled_prompt !== "string" ||
-    !effectPlan.compiled_prompt.includes(brief.goal)
+    !includesCanonical(effectPlan.compiled_prompt, brief.goal)
   ) {
     refuseUnauthorized(notes);
   }
   const planGoal = effectPlan.protected_fields?.goal;
-  if (typeof planGoal === "string" && planGoal !== brief.goal) {
+  if (typeof planGoal === "string" && !isCanonicalEquivalent(planGoal, brief.goal)) {
     throw new PromptBriefError(
       "The engine prompt does not preserve the current goal.",
     );
   }
   for (const constraint of brief.constraints) {
-    if (!effectPlan.compiled_prompt.includes(constraint.text)) {
+    if (!includesCanonical(effectPlan.compiled_prompt, constraint.text)) {
       throw new PromptBriefError(
         "The engine prompt dropped a hard constraint.",
       );
     }
   }
+
   const techniques = stringList(effectPlan.techniques);
   const passed = input.techniques ?? [];
   if (passed.length && !sameIds(passed, techniques)) {

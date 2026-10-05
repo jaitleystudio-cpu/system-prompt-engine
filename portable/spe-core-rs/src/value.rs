@@ -3,10 +3,15 @@
 use crate::reasons::{SpeError, PORTABILITY_NONPORTABLE_NUMBER};
 use serde_json::{Map, Number, Value};
 
+pub fn raw_dumps(value: &Value) -> Result<String, SpeError> {
+    dump(value)
+}
+
 pub fn canonical_dumps(value: &Value) -> Result<String, SpeError> {
     let canon = canonicalize(value)?;
     dump(&canon)
 }
+
 
 pub fn canonicalize(value: &Value) -> Result<Value, SpeError> {
     canonicalize_inner(value)
