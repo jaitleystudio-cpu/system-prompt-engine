@@ -76,6 +76,8 @@ jobs:
         run: node apps/web/scripts/test-visual-screenshot-ui.mjs
       - name: vision replay metamorphic regression
         run: node apps/web/scripts/test-r8-vision-replay.mjs
+      - name: measured OCR font-fit regression
+        run: node apps/web/scripts/test-r8-vision-font-fit.mjs
       - name: build
         working-directory: apps/web
         run: npm run build
