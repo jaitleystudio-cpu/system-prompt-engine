@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
@@ -115,6 +116,31 @@ def test_headers_file_documents_csp():
     assert "frame-ancestors" in text
     assert "X-Content-Type-Options" in text
     assert "Referrer-Policy" in text
+    assert "Cross-Origin-Embedder-Policy: require-corp" in text
+
+
+def test_vercel_json_security_and_routing():
+    vercel_file = REPO / "apps" / "web" / "vercel.json"
+    assert vercel_file.is_file(), "apps/web/vercel.json must exist"
+    data = json.loads(vercel_file.read_text(encoding="utf-8"))
+    assert "headers" in data
+    assert "rewrites" in data
+
+    root_header = next((h for h in data["headers"] if h.get("source") == "/(.*)"), None)
+    assert root_header is not None
+    header_dict = {h["key"]: h["value"] for h in root_header["headers"]}
+    assert "Content-Security-Policy" in header_dict
+    assert header_dict.get("Cross-Origin-Opener-Policy") == "same-origin"
+    assert header_dict.get("Cross-Origin-Embedder-Policy") == "require-corp"
+    assert header_dict.get("Cross-Origin-Resource-Policy") == "same-origin"
+    assert header_dict.get("X-Content-Type-Options") == "nosniff"
+
+    spa_rewrite = next(
+        (r for r in data["rewrites"] if r.get("destination") == "/index.html"),
+        None,
+    )
+    assert spa_rewrite is not None
+
 
 
 def test_intent_provenance_auto_vs_user_edited():
