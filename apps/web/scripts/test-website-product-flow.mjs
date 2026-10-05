@@ -333,6 +333,38 @@ const remoteSceneResult = runWebsiteProduct({
 assert.equal(remoteSceneResult.status, "REJECTED");
 assert.ok(remoteSceneResult.reasons.includes("MALICIOUS_SCENEIR_REFUSED"));
 
+// --- SVG namespace tolerance & malicious rejection ---
+const svgNamespaceScene = structuredClone(validScene);
+svgNamespaceScene.accessibilityFallback.hero2dSvg =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/></svg>';
+const svgNamespaceResult = runWebsiteProduct({
+  kind: "website_spec",
+  spec,
+  sceneDefinition: svgNamespaceScene,
+});
+assert.equal(svgNamespaceResult.status, "LOCAL_EXPORT_READY");
+assert.equal(svgNamespaceResult.scene3d, "AVAILABLE");
+
+const svgMaliciousRemote = structuredClone(validScene);
+svgMaliciousRemote.accessibilityFallback.hero2dSvg =
+  '<svg xmlns="http://www.w3.org/2000/svg"><image href="https://evil.example/img.png"/></svg>';
+const svgMaliciousResult = runWebsiteProduct({
+  kind: "website_spec",
+  spec,
+  sceneDefinition: svgMaliciousRemote,
+});
+assert.equal(svgMaliciousResult.status, "REJECTED");
+assert.ok(svgMaliciousResult.reasons.includes("MALICIOUS_SCENEIR_REFUSED"));
+
+// --- Natural language free-text compilation ---
+const freeTextResult = runWebsiteProduct({
+  kind: "website_spec",
+  spec: "Create a modern 3D portfolio website for a solar coffee roastery",
+});
+assert.equal(freeTextResult.status, "LOCAL_EXPORT_READY");
+assert.equal(freeTextResult.scene3d, "AVAILABLE");
+assert.match(freeTextResult.exportHtml, /solar coffee roastery/i);
+
 // --- large scene ---
 const large = structuredClone(validScene);
 large.objects = Array.from({ length: 40 }, (_, i) => ({
@@ -463,6 +495,41 @@ assert.match(
   /<h1>&lt;script&gt;alert\(1\)&lt;\/script&gt;<\/h1>/,
 );
 assert.equal(evilCompiled.totalTriangles, 960);
+
+// --- Free-text Natural Language -> WebsiteSpec + SceneIR ---
+const freeTextSpace = runWebsiteProduct({
+  kind: "website_spec",
+  spec: "Build a cinematic 3D website about space with a scrolling camera",
+});
+assert.equal(freeTextSpace.status, "LOCAL_EXPORT_READY");
+assert.equal(freeTextSpace.scene3d, "AVAILABLE");
+assert.ok(freeTextSpace.previewHtml);
+assert.match(freeTextSpace.previewHtml, /cinematic 3D website about space/i);
+
+const freeTextTelugu = runWebsiteProduct({
+  kind: "website_spec",
+  spec: "అంతరిక్షం గురించి 3D వెబ్‌సైట్",
+});
+assert.equal(freeTextTelugu.status, "LOCAL_EXPORT_READY");
+assert.equal(freeTextTelugu.scene3d, "AVAILABLE");
+assert.ok(freeTextTelugu.previewHtml);
+assert.match(freeTextTelugu.previewHtml, /అంతరిక్షం గురించి 3D వెబ్‌సైట్/);
+
+const freeTextArabic = runWebsiteProduct({
+  kind: "website_spec",
+  spec: "موقع ثلاثي الأبعاد عن الفضاء",
+});
+assert.equal(freeTextArabic.status, "LOCAL_EXPORT_READY");
+assert.equal(freeTextArabic.scene3d, "AVAILABLE");
+assert.ok(freeTextArabic.previewHtml);
+assert.match(freeTextArabic.previewHtml, /موقع ثلاثي الأبعاد عن الفضاء/);
+
+const freeTextEmpty = runWebsiteProduct({
+  kind: "website_spec",
+  spec: "   ",
+});
+assert.equal(freeTextEmpty.status, "REJECTED");
+assert.deepEqual(freeTextEmpty.reasons, ["SPEC_EMPTY"]);
 
 // --- module / mount contract truth ---
 assert.equal(SCENE_IR_WIRED, true);

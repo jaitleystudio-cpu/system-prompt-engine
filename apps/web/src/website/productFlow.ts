@@ -26,6 +26,9 @@ import {
   type Scene3DCompilationResult,
   type SceneIR,
 } from "../engine/multimodal/sceneOwner.ts";
+import { compileFreeTextToWebsite } from "../engine/multimodal/freeTextCompiler.ts";
+
+export { compileFreeTextToWebsite };
 
 export const AI_GENERATION = "NOT_AVAILABLE" as const;
 /** Module-level label: SceneIR owner is wired; per-run status is on the result. */
@@ -84,6 +87,7 @@ export type WebsiteFlowResult = {
 const ACTIVE_DOCUMENT =
   /<\s*script\b|javascript\s*:|vbscript\s*:|<\s*iframe\b|<\s*object\b|<\s*embed\b|\son[a-z]+\s*=/i;
 const REMOTE_URL = /https?:\/\//i;
+const INERT_SVG_NAMESPACE = /\bxmlns(?::[a-zA-Z0-9_-]+)?=['"]http:\/\/www\.w3\.org\/2000\/svg['"]/gi;
 const ALLOWED_GEOMETRY = new Set([
   "box",
   "sphere",
@@ -169,7 +173,8 @@ function gateSceneDefinition(
   const strings: string[] = [];
   collectStrings(raw, strings);
   for (const s of strings) {
-    if (ACTIVE_DOCUMENT.test(s) || REMOTE_URL.test(s)) {
+    const stripped = s.replace(INERT_SVG_NAMESPACE, "");
+    if (ACTIVE_DOCUMENT.test(s) || REMOTE_URL.test(stripped)) {
       return { ok: false, reasons: ["MALICIOUS_SCENEIR_REFUSED"] };
     }
   }
@@ -240,7 +245,8 @@ export function runWebsiteProduct(input: WebsiteInput): WebsiteFlowResult {
       result.reasons = ["LOCAL_DOCUMENT_EMPTY"];
       return result;
     }
-    if (ACTIVE_DOCUMENT.test(html) || REMOTE_URL.test(html)) {
+    const strippedHtml = html.replace(INERT_SVG_NAMESPACE, "");
+    if (ACTIVE_DOCUMENT.test(html) || REMOTE_URL.test(strippedHtml)) {
       result.status = "REJECTED";
       result.reasons = ["MALICIOUS_OR_REMOTE_MARKUP_REFUSED"];
       return result;
@@ -269,10 +275,18 @@ export function runWebsiteProduct(input: WebsiteInput): WebsiteFlowResult {
     try {
       parsed = JSON.parse(trimmed);
     } catch {
-      result.status = "REJECTED";
-      result.scene3d = "NOT_AVAILABLE";
-      result.reasons = ["SPEC_JSON_INVALID"];
-      return result;
+      if (!trimmed.startsWith("{")) {
+        const compiled = compileFreeTextToWebsite(trimmed);
+        parsed = compiled.spec;
+        if (input.sceneDefinition === undefined) {
+          input.sceneDefinition = compiled.sceneDefinition;
+        }
+      } else {
+        result.status = "REJECTED";
+        result.scene3d = "NOT_AVAILABLE";
+        result.reasons = ["SPEC_JSON_INVALID"];
+        return result;
+      }
     }
   }
   if (!isWebsiteSpec(parsed)) {
