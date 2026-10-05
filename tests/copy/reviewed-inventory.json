@@ -9933,6 +9933,12 @@
       "text": "root"
     },
     {
+      "id": "1bba250e0b2485756a76",
+      "file": "apps/web/src/media/fontMetricFit.ts",
+      "depth": "PRODUCT",
+      "text": "(() => {\n  const nodes = [...document.querySelectorAll(\".spe-ocr-text[data-ink-h]\")];\n  if (!nodes.length) return;\n  const canvas = document.createElement(\"canvas\");\n  const families = [\"system-ui\", \"Helvetica Neue\", \"Helvetica\", \"Arial\", \"SF Pro Text\", \"SF Pro Display\"];\n  const weights = [400, 500, 600, 700];\n  const installed = families.filter((name) => name === \"system-ui\" || document.fonts.check('16px \"' + name + '\"'));\n  const faces = (installed.length ? installed : [\"system-ui\"]).flatMap((family) => weights.map((weight) => ({ family, weight })));\n  function raster(text, family, weight, size, spacing) {\n    const ctx = canvas.getContext(\"2d\");\n    if (!ctx) return null;\n    ctx.font = weight + \" \" + size + \"px \" + (family.includes(\" \") ? '\"' + family + '\"' : family);\n    ctx.letterSpacing = spacing + \"px\";\n    const metrics = ctx.measureText(text);\n    const ascent = metrics.actualBoundingBoxAscent || 0;\n    const descent = metrics.actualBoundingBoxDescent || 0;\n    const fontAscent = metrics.fontBoundingBoxAscent || ascent;\n    const fontDescent = metrics.fontBoundingBoxDescent || descent;\n    const left = metrics.actualBoundingBoxLeft || 0;\n    const inkH = ascent + descent;\n    const width = metrics.width;\n    if (!(inkH > 0) || !(width > 0)) return null;\n    const pad = 2;\n    const cw = Math.max(2, Math.ceil(width) + pad * 2);\n    const ch = Math.max(2, Math.ceil(inkH) + pad * 2);\n    canvas.width = cw;\n    canvas.height = ch;\n    const paint = canvas.getContext(\"2d\");\n    if (!paint) return null;\n    paint.font = weight + \" \" + size + \"px \" + (family.includes(\" \") ? '\"' + family + '\"' : family);\n    paint.letterSpacing = spacing + \"px\";\n    paint.fillStyle = \"#000\";\n    paint.textBaseline = \"alphabetic\";\n    paint.fillText(text, pad, pad + ascent);\n    const img = paint.getImageData(0, 0, cw, ch).data;\n    const runs = [];\n    for (let y = 0; y < ch; y++) {\n      let run = 0;\n      for (let x = 0; x < cw; x++) {\n        const a = img[(y * cw + x) * 4 + 3];\n        if (a > 160) run += 1;\n        else if (run) { runs.push(run); run = 0; }\n      }\n      if (run) runs.push(run);\n    }\n    runs.sort((a, b) => a - b);\n    const stroke = runs.length ? runs[Math.min(runs.length - 1, Math.floor(runs.length * 0.25))] : 0;\n    return { inkH, width, stroke, ascent, fontAscent, fontDescent, left };\n  }\n  function fitSize(text, family, weight, targetH) {\n    let lo = Math.max(1, targetH * 0.45);\n    let hi = Math.max(lo + 1, targetH * 4);\n    let best = lo;\n    for (let i = 0; i < 14; i++) {\n      const mid = (lo + hi) / 2;\n      const got = raster(text, family, weight, mid, 0);\n      if (!got) { hi = mid; continue; }\n      best = mid;\n      if (got.inkH < targetH) lo = mid;\n      else hi = mid;\n    }\n    return best;\n  }\n  for (const el of nodes) {\n    const text = el.textContent || \"\";\n    const inkH = Number(el.getAttribute(\"data-ink-h\"));\n    const inkW = Number(el.getAttribute(\"data-ink-w\"));\n    const inkX = Number(el.getAttribute(\"data-ink-x\"));\n    const inkY = Number(el.getAttribute(\"data-ink-y\"));\n    const stroke = Number(el.getAttribute(\"data-stroke\"));\n    const color = el.getAttribute(\"data-ink-color\") || \"\";\n    if (!text.trim() || !(inkH > 0) || !(inkW > 0)) continue;\n    let best = null;\n    for (const face of faces) {\n      const size = fitSize(text, face.family, face.weight, inkH);\n      const painted = raster(text, face.family, face.weight, size, 0);\n      if (!painted) continue;\n      const strokeErr = stroke > 0 ? Math.abs(painted.stroke - stroke) / stroke : 0;\n      const widthErr = Math.abs(painted.width - inkW) / inkW;\n      const heightErr = Math.abs(painted.inkH - inkH) / inkH;\n      const score = strokeErr + widthErr * 0.35 + heightErr * 0.5;\n      if (!best || score < best.score) best = { ...face, size, score };\n    }\n    if (!best) continue;\n    const family = best.family.includes(\" \") ? '\"' + best.family + '\"' : best.family;\n    el.style.fontFamily = family;\n    el.style.fontWeight = String(best.weight);\n    el.style.fontSize = best.size + \"px\";\n    el.style.lineHeight = inkH + \"px\";\n    el.style.fontSynthesis = \"none\";\n    el.style.fontKerning = \"normal\";\n    el.style.whiteSpace = \"pre\";\n    el.style.margin = \"0\";\n    el.style.padding = \"0\";\n    if (/^#[0-9a-fA-F]{6}$/.test(color)) el.style.color = color;\n    let lo = -0.08 * best.size;\n    let hi = 0.25 * best.size;\n    let spacing = 0;\n    if (text.length > 1) {\n      for (let i = 0; i < 10; i++) {\n        spacing = (lo + hi) / 2;\n        const painted = raster(text, best.family, best.weight, best.size, spacing);\n        if (!painted) break;\n        if (painted.width < inkW) lo = spacing;\n        else hi = spacing;\n      }\n      spacing = (lo + hi) / 2;\n    }\n    el.style.letterSpacing = spacing + \"px\";\n    const placed = raster(text, best.family, best.weight, best.size, spacing);\n    if (!placed) continue;\n    const content = placed.fontAscent + placed.fontDescent;\n    const halfLeading = (inkH - content) / 2;\n    const inkOffset = halfLeading + (placed.fontAscent - placed.ascent);\n    el.style.left = (inkX + placed.left) + \"px\";\n    el.style.top = (inkY - inkOffset) + \"px\";\n  }\n})();"
+    },
+    {
       "id": "02cde16a3d60f7def9de",
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
@@ -11565,6 +11571,12 @@
       "text": ", alignment: .topLeading)\n        .offset(x: geo.size.width *"
     },
     {
+      "id": "41af20c6b0a2faf1523c",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" data-ink-h=\""
+    },
+    {
       "id": "42345fa3020d2d4b1c71",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -11883,6 +11895,12 @@
       "text": "{hasRail ? <aside role=\"navigation\" aria-label=\"Side rail\" data-structure=\"left-rail\" data-hierarchy=\"2\" style={{ padding: 12 }}>{regions.filter((r) => /rail|sidebar|side/i.test(r.role)).map((r) => <a key={r.id} href={\"#\" + r.id}>{r.role}</a>)}</aside> : null}"
     },
     {
+      "id": "755960573c1d30727bf8",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<style id=\"spe-font-metric\">#spe-ocr-layer{position:fixed;inset:0;z-index:40;pointer-events:none;overflow:visible}</style>"
+    },
+    {
       "id": "78b51a3a5234c22322dc",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -11929,6 +11947,18 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "&lt;"
+    },
+    {
+      "id": "81b9ddfa86a5adb7007c",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<div id=\"spe-ocr-layer\">"
+    },
+    {
+      "id": "82801157dba67ae0da55",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" data-ink-x=\""
     },
     {
       "id": "8296775bcf5d41b5b99a",
@@ -12105,6 +12135,12 @@
       "text": ".spe-form{display:flex;flex-direction:column;gap:.75rem;max-width:28rem;margin:1rem auto;padding:1rem;background:rgba(255,255,255,.05)}"
     },
     {
+      "id": "aa7b90d7dfacc5bbe150",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" data-ink-color=\""
+    },
+    {
       "id": "ac2c66fd56b4566fd85c",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -12183,6 +12219,12 @@
       "text": "{structure.toolbarList ? <><div role=\"toolbar\" data-structure=\"toolbar-list\" data-hierarchy=\"2\">Toolbar</div><ul data-structure=\"toolbar-list\">{regions.filter((r) => /List row/i.test(r.role)).map((r) => <li key={r.id}>{r.role}</li>)}</ul></> : null}"
     },
     {
+      "id": "bbd39976d012729cc872",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" style=\"position:absolute;margin:0;padding:0;white-space:pre\">"
+    },
+    {
       "id": "bd0490b56e52c492879d",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -12193,6 +12235,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "// data-structure="
+    },
+    {
+      "id": "bd831a4bd9a35fae7fe1",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</script>"
     },
     {
       "id": "bda520762ed49a85ff5d",
@@ -12387,6 +12435,12 @@
       "text": "const regions ="
     },
     {
+      "id": "db8855b11265cde38782",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" data-stroke=\""
+    },
+    {
       "id": "dcde0f1c40f709a67762",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -12531,6 +12585,12 @@
       "text": "(analysis"
     },
     {
+      "id": "f4a5fdc40af12f0d9bf2",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" data-ink-w=\""
+    },
+    {
       "id": "f599a0297856deafbe26",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -12547,6 +12607,18 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "\" data-confidence=\""
+    },
+    {
+      "id": "f814907ef37692ccaf4c",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<script>"
+    },
+    {
+      "id": "f83e6179f3d3c5487efe",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" data-ink-y=\""
     },
     {
       "id": "fa993b4e11424c18062e",
