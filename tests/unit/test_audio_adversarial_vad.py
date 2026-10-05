@@ -42,10 +42,55 @@ def _write_wav(path: Path, samples: list[int], sample_rate: int = 16000) -> None
 
 @pytest.fixture(scope="module")
 def session():
-    assets = discover_qualified_assets()
+    try:
+        assets = discover_qualified_assets()
+    except IntegrityError as exc:
+        if "UNSUPPORTED_ARCHITECTURE" in str(exc) or "PINNED_ASSET_NOT_ON_DISK" in str(exc):
+            pytest.skip(f"Local media backend requires macOS arm64: {exc}")
+        raise
     sess = LocalMediaSession.open(assets, language="te")
     yield sess
     sess.close()
+
+
+def test_acoustic_gating_silence_cross_platform(tmp_path: Path):
+    silence_wav = tmp_path / "silence_direct.wav"
+    samples = [0] * (16000 * 2)
+    _write_wav(silence_wav, samples)
+    class DummySession:
+        def __init__(self):
+            self._buffers = []
+    dummy = DummySession()
+    is_speech, basis = LocalMediaSession._detect_speech_acoustics(dummy, silence_wav)
+    assert not is_speech
+    assert basis == "PCM_ENERGY"
+
+
+def test_acoustic_gating_pure_tone_cross_platform(tmp_path: Path):
+    tone_wav = tmp_path / "tone_direct.wav"
+    samples = [int(16000 * math.sin(2 * math.pi * 440.0 * i / 16000)) for i in range(16000 * 2)]
+    _write_wav(tone_wav, samples)
+    class DummySession:
+        def __init__(self):
+            self._buffers = []
+    dummy = DummySession()
+    is_speech, basis = LocalMediaSession._detect_speech_acoustics(dummy, tone_wav)
+    assert not is_speech
+    assert basis == "PURE_TONE"
+
+
+def test_acoustic_gating_white_noise_cross_platform(tmp_path: Path):
+    noise_wav = tmp_path / "noise_direct.wav"
+    rng = random.Random(42)
+    samples = [int(rng.uniform(-10000, 10000)) for _ in range(16000 * 2)]
+    _write_wav(noise_wav, samples)
+    class DummySession:
+        def __init__(self):
+            self._buffers = []
+    dummy = DummySession()
+    is_speech, basis = LocalMediaSession._detect_speech_acoustics(dummy, noise_wav)
+    assert not is_speech
+    assert basis == "STATIONARY_NOISE"
 
 
 def test_silence_produces_no_speech(session: LocalMediaSession, tmp_path: Path):
