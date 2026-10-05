@@ -106,15 +106,23 @@ function readBrief(input: RenderInput) {
       "A returned engine envelope is required to render a prompt.",
     );
   const facts = atoms(output.facts, "statement");
-  const requestedGoal = input.userRequest.trim();
+  const rawRequested = input.userRequest;
+  const validationView = rawRequested.trim();
   const goalAtom =
     facts.find((a) => a.id === "f-user-request") ??
-    facts.find((a) => isCanonicalEquivalent(a.text, requestedGoal));
-  if (!goalAtom || !isCanonicalEquivalent(goalAtom.text, requestedGoal))
+    facts.find((a) => a.text === rawRequested) ??
+    facts.find((a) => isCanonicalEquivalent(a.text, rawRequested)) ??
+    facts.find((a) => isCanonicalEquivalent(a.text, validationView));
+  if (!goalAtom || (!isCanonicalEquivalent(goalAtom.text, rawRequested) && !isCanonicalEquivalent(goalAtom.text, validationView)))
     throw new Error(
       "The returned engine request does not match the current brief. Please compile again.",
     );
-  const goal = goalAtom.text;
+  const goal =
+    goalAtom.text === rawRequested ||
+    isCanonicalEquivalent(goalAtom.text, rawRequested) ||
+    isCanonicalEquivalent(goalAtom.text, validationView)
+      ? rawRequested
+      : goalAtom.text;
   const contextFacts = facts.filter((a) => a !== goalAtom && !isCanonicalEquivalent(a.text, goal));
   const constraints = atoms(output.hard_constraints, "statement").filter(
     (a) => !isCanonicalEquivalent(a.text, goal),
@@ -169,16 +177,24 @@ export function renderPromptArtifact(input: RenderInput) {
   }
   const brief = readBrief(input);
   const notes = stringList(effectPlan.notes);
+  const compiledPrompt = typeof effectPlan.compiled_prompt === "string" ? effectPlan.compiled_prompt : "";
+  const goalMatches =
+    includesCanonical(compiledPrompt, brief.goal) ||
+    includesCanonical(compiledPrompt, brief.goal.trim());
   if (
     effectPlan.renderable !== true ||
     effectPlan.disposition !== "BOUND" ||
     typeof effectPlan.compiled_prompt !== "string" ||
-    !includesCanonical(effectPlan.compiled_prompt, brief.goal)
+    !goalMatches
   ) {
     refuseUnauthorized(notes);
   }
   const planGoal = effectPlan.protected_fields?.goal;
-  if (typeof planGoal === "string" && !isCanonicalEquivalent(planGoal, brief.goal)) {
+  if (
+    typeof planGoal === "string" &&
+    !isCanonicalEquivalent(planGoal, brief.goal) &&
+    !isCanonicalEquivalent(planGoal, brief.goal.trim())
+  ) {
     throw new PromptBriefError(
       "The engine prompt does not preserve the current goal.",
     );

@@ -53,11 +53,12 @@ function slug(s: string): string {
 export function buildAbiFixture(
   input: BuildEnvelopeInput,
 ): Record<string, unknown> {
-  const goal = input.userRequest.trim();
-  if (!goal) {
+  const rawUserRequest = input.userRequest;
+  const validationView = rawUserRequest.trim();
+  if (!validationView) {
     throw new Error("user request required");
   }
-  const id = `web-${slug(goal)}-${Date.now().toString(36)}`;
+  const id = `web-${slug(validationView)}-${Date.now().toString(36)}`;
   const hard = (input.confirmed ?? [])
     .filter((a) => a.text.trim())
     .map((a, i) => ({
@@ -110,11 +111,11 @@ export function buildAbiFixture(
         {
           fact_id: "f-user-request",
           provenance_ids: ["p-user"],
-          statement: goal,
+          statement: rawUserRequest,
         },
       ],
       failures: [],
-      goal_identity: `goal-${slug(goal)}`,
+      goal_identity: `goal-${slug(validationView)}`,
       hard_constraints: hard.length
         ? hard
         : [

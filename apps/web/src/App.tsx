@@ -18,6 +18,7 @@ import {
 import { fromK3QualityRequest } from "./engine/quality-request.mjs";
 import { createRawRequestCustody, renderSafeFallbackPrompt } from "./engine/core-b.mjs";
 import { QualityReceiptPanel } from "./workspace/QualityReceiptPanel";
+import { getServiceWorkerSafe } from "./engine/pwaSafe";
 import type {
   CompilePhase,
   ContextProtocolCompileOutput,
@@ -208,6 +209,7 @@ function phaseToScene(
   return "IDLE";
 }
 
+
 export default function App() {
   const clientRef = useRef<EngineClient | null>(null);
   const revision = useRef(0);
@@ -301,12 +303,13 @@ export default function App() {
 
   useEffect(() => {
     registerServiceWorker();
-    let hadController = Boolean(navigator.serviceWorker?.controller);
+    const sw = getServiceWorkerSafe();
+    let hadController = Boolean(sw?.controller);
     const onControllerChange = () => {
       if (hadController) setUpdateAvailable(true);
       hadController = true;
     };
-    navigator.serviceWorker?.addEventListener(
+    sw?.addEventListener(
       "controllerchange",
       onControllerChange,
     );
@@ -326,7 +329,7 @@ export default function App() {
     window.addEventListener("offline", off);
     onScroll();
     return () => {
-      navigator.serviceWorker?.removeEventListener(
+      sw?.removeEventListener(
         "controllerchange",
         onControllerChange,
       );
@@ -429,17 +432,19 @@ export default function App() {
 
   const compile = useCallback(
     async (requestText?: string) => {
-      const goal = (requestText ?? userRequest).trim();
-      if (!goal) {
+      const rawUser = requestText ?? userRequest;
+      const validationView = rawUser.trim();
+      if (!validationView) {
         setError({
           code: "EMPTY_BRIEF",
           message: EMPTY_IDEA_MESSAGE,
         });
         return;
       }
-      const lensState = requestText ? defaultIntentLens(goal) : intent;
+      const goal = rawUser;
+      const lensState = requestText ? defaultIntentLens(rawUser) : intent;
       if (requestText) {
-        setUserRequest(goal);
+        setUserRequest(rawUser);
         setIntent(lensState);
       }
 
@@ -458,7 +463,7 @@ export default function App() {
       let fixture: Record<string, unknown>;
       try {
         fixture = buildAbiFixture({
-          userRequest: goal,
+          userRequest: rawUser,
           category,
           target,
           confirmed: lensState.confirmed,
@@ -537,10 +542,10 @@ export default function App() {
         setPhase(out.error ? "unavailable" : "done");
 
         if (!out.error && out.result) {
-          const k3 = await requestK3Binding(client, fixture, category, goal);
+          const k3 = await requestK3Binding(client, fixture, category, rawUser);
           const bound = requireBoundEffectPlan(k3);
           const prompt = renderPromptArtifact({
-            userRequest: goal,
+            userRequest: rawUser,
             target,
             category,
             envelopeOutput: out.result.output,

@@ -177,6 +177,33 @@ for (const [name, raw] of compatibilityCases) {
 }
 console.log("PASS: NFKC compatibility characters preservation (8/8)");
 
+// Suite 5: Raw Request Whitespace & Formatting Preservation
+const whitespaceCases = [
+  ["leading_trailing_spaces", "   Build a prompt with leading and trailing spaces   "],
+  ["internal_multiple_spaces", "Build   a   prompt   with   multiple   spaces"],
+  ["tabs_and_crlf", "\tBuild a prompt\r\n\twith tabs and CRLF\r\n"],
+  ["newlines_only_internal", "First line\nSecond line\nThird line"],
+];
+
+for (const [name, raw] of whitespaceCases) {
+  await runTestCase("WHITESPACE_PRESERVATION", name, raw);
+}
+console.log("PASS: Raw whitespace preservation (4/4)");
+
+// Suite 6: Timestamp-Shaped Text (Ordinary user prompts shaped like ISO-8601 timestamps)
+const timestampCases = [
+  ["iso8601_with_offset", "2026-10-06T12:00:00+05:30"],
+  ["iso8601_utc_z", "2026-10-06T06:30:00Z"],
+  ["iso8601_with_millis_offset", "2026-10-06T12:00:00.000+05:30"],
+  ["iso8601_embedded_in_prompt", "Meeting scheduled at 2026-10-06T12:00:00+05:30 for launch plan"],
+];
+
+for (const [name, raw] of timestampCases) {
+  await runTestCase("TIMESTAMP_SHAPED_TEXT", name, raw);
+}
+console.log("PASS: Timestamp-shaped text preservation (4/4)");
+
 console.log("============================================================");
-console.log("ALL 31 ADVERSARIAL UNICODE TEST CASES PASSED GREEN!");
+console.log("ALL 39 ADVERSARIAL UNICODE & RAW IDENTITY TEST CASES PASSED GREEN!");
 console.log("============================================================");
+
