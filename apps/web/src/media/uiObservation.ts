@@ -8,6 +8,7 @@ import { buildSemanticFromLite } from "./semanticCompose";
 import { observeImageSemanticFromData } from "./semanticPipeline";
 import { projectionLayout } from "./structureSemantics";
 import { detectTextLikeRegions } from "./ocrLite";
+import { measureObservedInk } from "./fontMetricFit";
 import type {
   UIObservationIR,
   UiContainer,
@@ -287,6 +288,7 @@ export function buildUIObservationIR(
 
   containers.push(...regions);
 
+  const measuredInk = measureObservedInk(data, semantic.ocrBlocks);
   const textBlocks: UiTextBlock[] = semantic.ocrBlocks.map((b, i) => {
     const observed =
       b.provenance === "observed-ocr" && b.text.trim().length > 0;
@@ -300,6 +302,7 @@ export function buildUIObservationIR(
         : `text proposal (${b.method})`,
       method: b.method,
       provenance: observed ? "observed-ocr" : "proposal",
+      fontInk: observed ? measuredInk[i] ?? undefined : undefined,
     };
   });
 
@@ -341,6 +344,8 @@ export function buildUIObservationIR(
   const density: "sparse" | "comfortable" | "dense" =
     textBlocks.length > 6 ? "dense" : textBlocks.length > 2 ? "comfortable" : "sparse";
 
+  const measuredInkCount = textBlocks.filter((block) => block.fontInk != null).length;
+
   const confidence: UIObservationIR["confidence"] =
     regions.filter((r) => r.confidence === "high").length >= 1 ? "medium" : "low";
 
@@ -370,13 +375,15 @@ export function buildUIObservationIR(
         ? ["body", textBlocks.some((t) => t.bounds.h > 0.06) ? "display" : "caption"]
         : ["unknown"],
       density,
-      evidence: `${textBlocks.length} text-like bands; spacing unit ~${Math.round(obs.width / 40)}px`,
+      evidence: `${textBlocks.length} text blocks; ${measuredInkCount} measured OCR ink blocks; spacing unit ~${Math.round(obs.width / 40)}px`,
     },
     confidence,
     uncertainty: [
       ...semantic.uncertainty,
       "UI roles are structure heuristics + optional MobileNet context — verify against the screenshot.",
-      "Typography sizes are guessed from band height, not measured fonts.",
+      measuredInkCount > 0
+        ? `${measuredInkCount} OCR blocks carry measured pixel ink; runtime font family remains an installed-face fit.`
+        : "Typography remains approximate until genuine OCR ink is measured.",
       "Screenshot→Code scaffolds resemble observed structure; they are not pixel-perfect reconstructions.",
       ...(structureHints.length
         ? [`Structure hints: ${structureHints.join(", ")}`]
