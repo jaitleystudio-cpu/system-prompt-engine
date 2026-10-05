@@ -79,27 +79,17 @@ check("csp_headers", () => {
   assert.match(headers, /frame-ancestors 'none'/);
   assert.match(headers, /Cross-Origin-Embedder-Policy: require-corp/);
 });
-check("vercel_headers_and_rewrites", () => {
-  const vercelJsonPath = join(root, "vercel.json");
-  assert.ok(existsSync(vercelJsonPath), "apps/web/vercel.json must exist");
-  const config = JSON.parse(readFileSync(vercelJsonPath, "utf8"));
-  assert.ok(Array.isArray(config.headers), "headers array must exist");
-  assert.ok(Array.isArray(config.rewrites), "rewrites array must exist");
+check("cloudflare_pages_headers_and_redirects", () => {
+  const headers = readFileSync(join(root, "public/_headers"), "utf8");
+  assert.match(headers, /Content-Security-Policy/);
+  assert.match(headers, /Cross-Origin-Opener-Policy: same-origin/);
+  assert.match(headers, /Cross-Origin-Embedder-Policy: require-corp/);
+  assert.match(headers, /Cross-Origin-Resource-Policy: same-origin/);
+  assert.match(headers, /X-Content-Type-Options: nosniff/);
+  assert.match(headers, /X-Frame-Options: DENY/);
 
-  const rootHeader = config.headers.find((h) => h.source === "/(.*)");
-  assert.ok(rootHeader, "root header entry /(.*) must exist");
-  const headerKeys = rootHeader.headers.map((h) => h.key);
-  assert.ok(headerKeys.includes("Content-Security-Policy"));
-  assert.ok(headerKeys.includes("Cross-Origin-Opener-Policy"));
-  assert.ok(headerKeys.includes("Cross-Origin-Embedder-Policy"));
-  assert.ok(headerKeys.includes("Cross-Origin-Resource-Policy"));
-  assert.ok(headerKeys.includes("X-Content-Type-Options"));
-
-  const coep = rootHeader.headers.find((h) => h.key === "Cross-Origin-Embedder-Policy");
-  assert.equal(coep.value, "require-corp");
-
-  const spaRewrite = config.rewrites.find((r) => r.destination === "/index.html");
-  assert.ok(spaRewrite, "SPA rewrite to /index.html must exist");
+  const redirects = readFileSync(join(root, "public/_redirects"), "utf8");
+  assert.match(redirects, /\/\*\s+\/index\.html\s+200/);
 });
 check("untrusted_boundary", () => {
   const u = read("media/untrusted.ts");
