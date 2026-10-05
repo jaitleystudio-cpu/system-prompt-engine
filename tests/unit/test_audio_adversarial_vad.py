@@ -22,6 +22,7 @@ from pathlib import Path
 import pytest
 
 from spe_runtime.media_product.local_backend import (
+    IntegrityError,
     LocalMediaSession,
     discover_qualified_assets,
 )
