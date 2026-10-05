@@ -46,6 +46,9 @@ PACK_DIR_NAME = "media-pack"
 PACK_MANIFEST_NAME = "PACK_MANIFEST.json"
 PACK_CLI_REL = "whisper-cli"
 PACK_MODEL_REL = "models/ggml-te-small.bin"
+PINNED_SILERO_VAD_SHA256 = "2aa269b785eeb53a82983a20501ddf7c1d9c48e33ab63a41391ac6c9f7fb6987"
+PINNED_SILERO_VAD_BYTES = 885098
+PACK_VAD_MODEL_REL = "models/ggml-silero-v6.2.0.bin"
 SANDBOX_PROFILE = "(version 1)(allow default)(deny network*)"
 _NON_LOCAL = (
     "browser",
@@ -274,6 +277,8 @@ class QualifiedAssets:
     cli_sha256: str
     model_path: Path
     model_sha256: str
+    vad_model_path: Path | None = None
+    vad_model_sha256: str | None = None
     raw_download: bool = False
     cli_built: bool = False
     absence_before_fetch: bool = False
@@ -288,6 +293,8 @@ class QualifiedAssets:
             "cli_sha256": self.cli_sha256,
             "model_path": str(self.model_path),
             "model_sha256": self.model_sha256,
+            "vad_model_path": str(self.vad_model_path) if self.vad_model_path else None,
+            "vad_model_sha256": self.vad_model_sha256,
             "raw_download": self.raw_download,
             "source_pin": SOURCE_PIN,
         }
@@ -750,11 +757,19 @@ def discover_qualified_assets() -> QualifiedAssets:
             if cli_bytes != PINNED_CLI_BYTES:
                 raise IntegrityError("SIZE_MISMATCH")
             cli_rpath_clean = True
+        vad_model_cand = root / PACK_VAD_MODEL_REL
+        vad_model_path: Path | None = None
+        vad_model_sha: str | None = None
+        if vad_model_cand.is_file():
+            vad_model_path = _member(root, PACK_VAD_MODEL_REL)
+            vad_model_sha = verify_file_sha256(vad_model_path, PINNED_SILERO_VAD_SHA256)
         return QualifiedAssets(
             cli_path=cli_path,
             cli_sha256=cli_sha,
             model_path=model_path,
             model_sha256=model_sha,
+            vad_model_path=vad_model_path,
+            vad_model_sha256=vad_model_sha,
             raw_download=downloaded,
             cli_built=cli_built,
             absence_before_fetch=absence_before_fetch,
@@ -972,6 +987,8 @@ class LocalMediaSession:
             raise UnsupportedPath("AUTO_OR_OTHER_NOT_PRODUCT_PATH")
         verify_file_sha256(self.assets.cli_path, self.assets.cli_sha256)
         verify_file_sha256(self.assets.model_path, self.assets.model_sha256)
+        if self.assets.vad_model_path is not None:
+            verify_file_sha256(self.assets.vad_model_path, self.assets.vad_model_sha256 or PINNED_SILERO_VAD_SHA256)
 
     @classmethod
     def open(
@@ -1046,6 +1063,7 @@ class LocalMediaSession:
 
     def retry(self, path: Path, *, language: str | None = None) -> LocalTranscript:
         """Run the same local file again. Does not upload it."""
+        self._cancel_event.clear()
         return self.transcribe_path(path, language=language)
 
     def transcribe_path(self, path: Path, *, language: str | None = None) -> LocalTranscript:
@@ -1055,6 +1073,10 @@ class LocalMediaSession:
         if lang != "te":
             raise UnsupportedPath("AUTO_OR_OTHER_NOT_PRODUCT_PATH")
         self._attempts += 1
+        self._proc = None
+        self._buffers.clear()
+        self._temps.clear()
+        self._pcm_released = False
         source = Path(path)
         media_kind = "video-audio" if source.suffix.lower() in _VIDEO_SUFFIXES else "audio"
         if not source.is_file():
@@ -1066,8 +1088,8 @@ class LocalMediaSession:
             kind = "video" if media_kind == "video-audio" else media_kind
             return self._error(exc.code, str(exc)[-240:], kind, self._sha(source), 0, neural=False)
         audio_sha = self._sha(source)
-        peak = self._peak_abs(wav_path)
-        if peak <= 8:
+        speech_candidate, basis = self._detect_speech_acoustics(wav_path)
+        if not speech_candidate:
             self._release_pcm()
             self.phase = "done"
             return LocalTranscript(
@@ -1081,7 +1103,7 @@ class LocalMediaSession:
                 audio_sha256=audio_sha,
                 media_kind=media_kind,
                 pcm_released=True,
-                no_speech_basis="PCM_ENERGY",
+                no_speech_basis=basis,
                 user_transcript_promoted=False,
                 discarded_model_text=None,
                 duration_ms=duration_ms,
@@ -1214,7 +1236,10 @@ class LocalMediaSession:
             "0",
             "-fa",
             "-ng",
+            "-sns",
         ]
+        if self.assets.vad_model_path is not None and self.assets.vad_model_path.is_file():
+            cmd.extend(["--vad", "-vm", str(self.assets.vad_model_path)])
         if no_timestamps:
             cmd.insert(cmd.index("-l") + 2, "-nt")
         if any(token.startswith("http://") or token.startswith("https://") for token in cmd):
@@ -1243,7 +1268,15 @@ class LocalMediaSession:
             if stripped.startswith("[") and "-->" in stripped:
                 continue
             lines.append(stripped)
-        return " ".join(lines).strip()
+        text = " ".join(lines).strip()
+        if not text:
+            return ""
+        if (text.startswith("[") and text.endswith("]")) or (text.startswith("(") and text.endswith(")")):
+            return ""
+        hallucinations = {"ఉమ్", "ఉమ్ ఉమ్", "ఉమ్ ఉమ్ ఉమ్", "మ్యూజిక్", "సంగీతం", "Music"}
+        if text in hallucinations:
+            return ""
+        return text
 
     def _sha(self, source: Path) -> str:
         try:
@@ -1365,6 +1398,40 @@ class LocalMediaSession:
             dest.unlink(missing_ok=True)
             raise DecodeError("CORRUPT", "EMPTY_WAV")
         return dest, _wav_duration_ms(dest)
+
+    def _detect_speech_acoustics(self, wav_path: Path) -> tuple[bool, str]:
+        with wave.open(str(wav_path), "rb") as handle:
+            frames = handle.readframes(handle.getnframes())
+        buf = bytearray(frames)
+        self._buffers.append(buf)
+        if len(buf) < 2:
+            return False, "PCM_ENERGY"
+        samples = array.array("h")
+        usable = len(buf) - (len(buf) % 2)
+        samples.frombytes(bytes(buf[:usable]))
+        if not samples:
+            return False, "PCM_ENERGY"
+        peak = max(abs(sample) for sample in samples)
+        if peak <= 8:
+            return False, "PCM_ENERGY"
+        crossings: list[float] = []
+        for i in range(1, len(samples)):
+            s_prev = samples[i - 1]
+            s_curr = samples[i]
+            if (s_prev < 0 and s_curr >= 0) or (s_prev >= 0 and s_curr < 0):
+                denom = s_curr - s_prev
+                frac = -s_prev / denom if denom != 0 else 0.0
+                crossings.append((i - 1) + frac)
+        if len(crossings) >= 20:
+            diffs = [crossings[j] - crossings[j - 1] for j in range(1, len(crossings))]
+            mean_diff = sum(diffs) / len(diffs)
+            var_diff = sum((d - mean_diff) ** 2 for d in diffs) / len(diffs)
+            std_diff = var_diff ** 0.5
+            if std_diff < 0.08:
+                return False, "PURE_TONE"
+            if mean_diff < 2.5 and len(crossings) > len(samples) * 0.35:
+                return False, "STATIONARY_NOISE"
+        return True, "SPEECH_CANDIDATE"
 
     def _peak_abs(self, wav_path: Path) -> int:
         with wave.open(str(wav_path), "rb") as handle:
