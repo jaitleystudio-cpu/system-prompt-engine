@@ -13173,6 +13173,12 @@
       "text": "Typography sizes are guessed from band height, not measured fonts."
     },
     {
+      "id": "0688c177a3a950ce160c",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "measured OCR ink blocks; spacing unit ~"
+    },
+    {
       "id": "08b946a1d0507f1d178a",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -13267,6 +13273,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "Text-likeness HF projection ("
+    },
+    {
+      "id": "3211f0bed22335468c99",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "OCR blocks carry measured pixel ink; runtime font family remains an installed-face fit."
     },
     {
       "id": "3344222a3c346ac74e7d",
@@ -13599,10 +13611,22 @@
       "text": "form-panel-candidate"
     },
     {
+      "id": "b4756ec83afd6ce7881c",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "Typography remains approximate until genuine OCR ink is measured."
+    },
+    {
       "id": "b580bc9374b941122fdd",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "observed-ocr"
+    },
+    {
+      "id": "b5937c338002d933abcb",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "text blocks;"
     },
     {
       "id": "b5fc66dbb72cdeae90e0",
