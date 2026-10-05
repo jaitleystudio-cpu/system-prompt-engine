@@ -116,12 +116,14 @@ export function validateWebsiteSpecV2(spec: WebsiteSpecV2): WebsiteSpecV2 {
   if (!Array.isArray(spec.motionBlocks)) throw new WebsiteSpecV2ValidationError("motionBlocks must be an array");
   for (const block of spec.motionBlocks) wrapValidation("motionBlock", () => validateMotionBlock(block));
 
-  const cameraPlan = spec.cameraPlan;\n  if (cameraPlan) wrapValidation("cameraPlan", () => validateCameraPlan(cameraPlan));
+  const cameraPlan = spec.cameraPlan;
+  if (cameraPlan) wrapValidation("cameraPlan", () => validateCameraPlan(cameraPlan));
 
   if (!Array.isArray(spec.dataBindings)) throw new WebsiteSpecV2ValidationError("dataBindings must be an array");
   for (const binding of spec.dataBindings) wrapValidation("dataBinding", () => validateDataBinding(binding));
 
-  const enhancement = spec.enhancement;\n  if (enhancement) wrapValidation("enhancement", () => validateEnhancementMetadata(enhancement));
+  const enhancement = spec.enhancement;
+  if (enhancement) wrapValidation("enhancement", () => validateEnhancementMetadata(enhancement));
 
   wrapValidation("agentPolicy", () => validateAgentPolicy(spec.agentPolicy));
 
