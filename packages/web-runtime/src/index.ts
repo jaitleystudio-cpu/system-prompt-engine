@@ -5,3 +5,6 @@ export * from "./speArtifact";
 export * from "./history";
 export * from "./executionRecord";
 export * from "./providerProfiles";
+export * from "./wordCount";
+export * from "./budgets";
+export * from "./providerFeasibility";

@@ -79,9 +79,20 @@ function protectedFromFixture(
     desired && typeof desired.statement === "string" && desired.statement.trim()
       ? desired.statement
       : null;
+  const rawFacts = Array.isArray(payload.facts) ? payload.facts : [];
+  const filteredFacts = rawFacts.filter((item) => {
+    const f = record(item);
+    if (f.fact_id === "f-user-request") return false;
+    const stmt = typeof f.statement === "string" ? f.statement : "";
+    if (stmt === goal || (goal.length > 0 && stmt.normalize("NFC") === goal.normalize("NFC"))) {
+      return false;
+    }
+    return true;
+  });
   return {
     ...payload,
     goal,
+    facts: filteredFacts,
     budget: payload.budget ?? null,
     desired_output: desiredText,
   };

@@ -1,5 +1,5 @@
-/** Serializes a canonical effect plan. Technique choice stays in the engine. */
 import type { CategoryId, TargetId } from "./targets";
+import { detectBudgetConflicts } from "./budgets";
 
 export type RenderInput = {
   userRequest: string;
@@ -49,7 +49,7 @@ function atoms(v: unknown, field: string): { id: string; text: string }[] {
     ? v.flatMap((item) => {
         const a = record(item),
           text = a[field];
-        return typeof text === "string" && text.trim()
+        return typeof text === "string" && text.length > 0
           ? [
               {
                 id: String(
@@ -59,7 +59,7 @@ function atoms(v: unknown, field: string): { id: string; text: string }[] {
                     a.uncertainty_id ??
                     "",
                 ),
-                text: text.trim(),
+                text: text,
               },
             ]
           : [];
@@ -113,16 +113,25 @@ function readBrief(input: RenderInput) {
     facts.find((a) => a.text === rawRequested) ??
     facts.find((a) => isCanonicalEquivalent(a.text, rawRequested)) ??
     facts.find((a) => isCanonicalEquivalent(a.text, validationView));
-  if (!goalAtom || (!isCanonicalEquivalent(goalAtom.text, rawRequested) && !isCanonicalEquivalent(goalAtom.text, validationView)))
+  const isSourceRef = goalAtom && typeof goalAtom.text === "string" && goalAtom.text.startsWith("[SOURCE_REF:");
+  const isGoalEqual =
+    goalAtom &&
+    (goalAtom.text === rawRequested ||
+      isCanonicalEquivalent(goalAtom.text, rawRequested) ||
+      isCanonicalEquivalent(goalAtom.text, validationView) ||
+      isSourceRef);
+  if (!goalAtom || !isGoalEqual)
     throw new Error(
       "The returned engine request does not match the current brief. Please compile again.",
     );
   const goal =
-    goalAtom.text === rawRequested ||
-    isCanonicalEquivalent(goalAtom.text, rawRequested) ||
-    isCanonicalEquivalent(goalAtom.text, validationView)
-      ? rawRequested
-      : goalAtom.text;
+    isSourceRef
+      ? goalAtom.text
+      : goalAtom.text === rawRequested ||
+        isCanonicalEquivalent(goalAtom.text, rawRequested) ||
+        isCanonicalEquivalent(goalAtom.text, validationView)
+        ? rawRequested
+        : goalAtom.text;
   const contextFacts = facts.filter((a) => a !== goalAtom && !isCanonicalEquivalent(a.text, goal));
   const constraints = atoms(output.hard_constraints, "statement").filter(
     (a) => !isCanonicalEquivalent(a.text, goal),
@@ -134,6 +143,13 @@ function readBrief(input: RenderInput) {
         conflicts
           .map((a) => a.text.slice("[CONFLICT]".length).trim())
           .join("; "),
+    );
+  }
+  const budgetConflict = detectBudgetConflicts(constraints.map((a) => a.text));
+  if (budgetConflict.hasConflict && budgetConflict.message) {
+    throw new PromptBriefError(
+      "Resolve the marked conflict before building a prompt: " +
+        budgetConflict.message.replace(/^\[CONFLICT\]\s*/, ""),
     );
   }
   const prefs = atoms(output.user_preferences, "statement");
@@ -178,9 +194,18 @@ export function renderPromptArtifact(input: RenderInput) {
   const brief = readBrief(input);
   const notes = stringList(effectPlan.notes);
   const compiledPrompt = typeof effectPlan.compiled_prompt === "string" ? effectPlan.compiled_prompt : "";
+  const isLargeOrRef =
+    brief.goal.length > 20000 ||
+    brief.goal.startsWith("[SOURCE_REF:") ||
+    (typeof effectPlan.compiled_prompt === "string" &&
+      effectPlan.compiled_prompt.includes("[SOURCE_REF:"));
   const goalMatches =
     includesCanonical(compiledPrompt, brief.goal) ||
-    includesCanonical(compiledPrompt, brief.goal.trim());
+    includesCanonical(compiledPrompt, brief.goal.trim()) ||
+    (isLargeOrRef &&
+      (compiledPrompt.includes(brief.goal.slice(0, 80)) ||
+        compiledPrompt.includes("SOURCE_REF") ||
+        compiledPrompt.includes("source_document")));
   if (
     effectPlan.renderable !== true ||
     effectPlan.disposition !== "BOUND" ||
@@ -193,7 +218,8 @@ export function renderPromptArtifact(input: RenderInput) {
   if (
     typeof planGoal === "string" &&
     !isCanonicalEquivalent(planGoal, brief.goal) &&
-    !isCanonicalEquivalent(planGoal, brief.goal.trim())
+    !isCanonicalEquivalent(planGoal, brief.goal.trim()) &&
+    !(isLargeOrRef && (planGoal.includes("SOURCE_REF") || planGoal.includes(brief.goal.slice(0, 80))))
   ) {
     throw new PromptBriefError(
       "The engine prompt does not preserve the current goal.",
@@ -216,7 +242,7 @@ export function renderPromptArtifact(input: RenderInput) {
   }
   const operations = stringList(effectPlan.operations);
   return {
-    userRequest: brief.goal,
+    userRequest: input.userRequest,
     speAdded: [
       `Category presentation: ${brief.category}`,
       ...operations.map((code) => `Authorized effect: ${code}`),
@@ -225,7 +251,7 @@ export function renderPromptArtifact(input: RenderInput) {
     ],
     finalPrompt: effectPlan.compiled_prompt,
     review: {
-      goal: brief.goal,
+      goal: input.userRequest,
       decisions: operations.map((code) => ({
         title: code,
         source: code === "DIRECT" ? ("Working default" as const) : ("Your brief" as const),
@@ -280,7 +306,7 @@ export function renderNonProductionEnvelopePreview(input: RenderInput) {
       : []),
   ];
   return {
-    userRequest: brief.goal,
+    userRequest: input.userRequest,
     speAdded: [
       `Category presentation: ${brief.category}`,
       ...brief.contextFacts.map((a) => `Supplied fact: ${a.text}`),
@@ -291,7 +317,7 @@ export function renderNonProductionEnvelopePreview(input: RenderInput) {
     ],
     finalPrompt: sections.join("\n\n"),
     review: {
-      goal: brief.goal,
+      goal: input.userRequest,
       decisions: [
         ...(brief.suppliedRole
           ? [

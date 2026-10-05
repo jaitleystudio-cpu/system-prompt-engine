@@ -7,6 +7,7 @@
  */
 
 import type { CategoryId, TargetId } from "./targets";
+import { detectBudgetConflicts, type SourceDocument } from "./budgets";
 
 export type IntentAtom = {
   id: string;
@@ -23,6 +24,7 @@ export type BuildEnvelopeInput = {
   assumed?: IntentAtom[];
   unknowns?: IntentAtom[];
   conflicts?: IntentAtom[];
+  sourceDocument?: SourceDocument;
 };
 
 export const USER_SUPPLIED_EXAMPLE_OPEN =
@@ -90,6 +92,18 @@ export function buildAbiFixture(
     });
   }
 
+  // Cross-check confirmed constraints for conflicting length/budget expressions
+  const budgetConflict = detectBudgetConflicts(hard.map((h) => h.statement));
+  if (budgetConflict.hasConflict && budgetConflict.message) {
+    hard.push({
+      constraint_id: `conflict-budget-${hard.length + 1}`,
+      statement: budgetConflict.message.startsWith("[CONFLICT]")
+        ? budgetConflict.message
+        : `[CONFLICT] ${budgetConflict.message}`,
+      strength: "HARD",
+    });
+  }
+
   return {
     capabilities_required: ["CORE_CONTRACT", "XCAT_HANDOFF", "PROVENANCE"],
     expect: "PASS",
@@ -111,7 +125,16 @@ export function buildAbiFixture(
         {
           fact_id: "f-user-request",
           provenance_ids: ["p-user"],
-          statement: rawUserRequest,
+          statement:
+            input.sourceDocument && rawUserRequest.length > 20000
+              ? `[SOURCE_REF:${input.sourceDocument.id}:${input.sourceDocument.sha256}]`
+              : rawUserRequest,
+          ...(input.sourceDocument
+            ? {
+                source_document_id: input.sourceDocument.id,
+                source_document_sha256: input.sourceDocument.sha256,
+              }
+            : {}),
         },
       ],
       failures: [],

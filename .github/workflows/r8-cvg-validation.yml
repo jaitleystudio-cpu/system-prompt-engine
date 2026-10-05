@@ -83,6 +83,9 @@ jobs:
       - name: unicode and raw identity regression
         working-directory: apps/web
         run: node scripts/test-unicode-regression.mjs
+      - name: text volume and output-budget regression
+        working-directory: apps/web
+        run: node scripts/test-volume-budget-regression.mjs
       - name: website product flow and free-text 3d compiler regression
         working-directory: apps/web
         run: node --experimental-strip-types scripts/test-website-product-flow.mjs

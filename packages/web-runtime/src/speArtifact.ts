@@ -2,6 +2,7 @@
  * .spe portable artifact — open / inspect / export / import / lineage / integrity.
  */
 import type { LocalExecutionRecord } from "./executionRecord";
+import type { RequestedAnswerBudget, SourceDocument } from "./budgets";
 
 export type SpeArtifactV1 = {
   spe_format: "spe.artifact.v1";
@@ -10,6 +11,8 @@ export type SpeArtifactV1 = {
   category: string;
   target: string;
   envelope: unknown;
+  source_document?: SourceDocument;
+  requested_answer_budget?: RequestedAnswerBudget | null;
   wasm: {
     status: string | null;
     disposition: string | null;
@@ -87,6 +90,10 @@ export async function buildSpeArtifact(
     category: partial.category,
     target: partial.target,
     envelope: partial.envelope,
+    ...(partial.source_document ? { source_document: partial.source_document } : {}),
+    ...(partial.requested_answer_budget !== undefined
+      ? { requested_answer_budget: partial.requested_answer_budget }
+      : {}),
     wasm: partial.wasm,
     rendered_prompt: partial.rendered_prompt,
     ...(partial.execution_record
