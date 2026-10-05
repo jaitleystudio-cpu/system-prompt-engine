@@ -10995,6 +10995,12 @@
       "text": "ocr-textlikeness"
     },
     {
+      "id": "407474beae12ea62d66d",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "observed-ocr"
+    },
+    {
       "id": "4569a91a37a9a7c2c94a",
       "file": "apps/web/src/media/ocrLite.ts",
       "depth": "PRODUCT",
@@ -11023,6 +11029,18 @@
       "file": "apps/web/src/media/ocrLite.ts",
       "depth": "PRODUCT",
       "text": "number"
+    },
+    {
+      "id": "67565f094a7903b1b3af",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "IEND"
+    },
+    {
+      "id": "6a94895ff8aca4ab44bb",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "IHDR"
     },
     {
       "id": "74a961d6c28a6d9583fc",
@@ -11095,6 +11113,12 @@
       "file": "apps/web/src/media/ocrLite.ts",
       "depth": "PRODUCT",
       "text": "DECODE"
+    },
+    {
+      "id": "cfe9129a46197ece6a7f",
+      "file": "apps/web/src/media/ocrLite.ts",
+      "depth": "PRODUCT",
+      "text": "IDAT"
     },
     {
       "id": "d36c4c5b7e3760037bca",
@@ -11433,6 +11457,12 @@
       "text": "rows; density"
     },
     {
+      "id": "1ce8e46992eae8262833",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "&gt;"
+    },
+    {
       "id": "1d4fb5c515c758f3762f",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -11467,6 +11497,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "Scaffolds reflect IR structure when strong; otherwise honest starter + build prompt."
+    },
+    {
+      "id": "294575f0b58ba19f94c7",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "</p>"
     },
     {
       "id": "2e0616564df5237db683",
@@ -11509,6 +11545,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "<h2>"
+    },
+    {
+      "id": "3b4614b86b671cfb90ab",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "string"
     },
     {
       "id": "407decd308ea2484dc81",
@@ -11883,6 +11925,12 @@
       "text": "<div class=\"spe-modal\" role=\"dialog\" aria-modal=\"true\" data-structure=\"modal\" data-hierarchy=\"3\">"
     },
     {
+      "id": "80c2bfb009a05d2da45a",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "&lt;"
+    },
+    {
       "id": "8296775bcf5d41b5b99a",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -11935,6 +11983,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "<header role=\"banner\" data-zone=\"top-center\" data-hierarchy=\"2\" style={{ gridColumn: \"1 / -1\", padding: 12, display: \"flex\", gap: 12 }}>"
+    },
+    {
+      "id": "913573291e633caba159",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "\" style=\"position:absolute;margin:0;"
     },
     {
       "id": "91b9edd80a778d4ab7bb",
@@ -12147,6 +12201,12 @@
       "text": "columns ×"
     },
     {
+      "id": "be62c7411dcc19b2c9c1",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "&quot;"
+    },
+    {
       "id": "c1170efe09c13ed17d65",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -12217,6 +12277,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "\"><h3>Card"
+    },
+    {
+      "id": "cabcba69fc492f6bd369",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "observed-ocr"
     },
     {
       "id": "cac236d93d2619eebae7",
@@ -12363,6 +12429,12 @@
       "text": "</main>"
     },
     {
+      "id": "e4559ec90fdea32224c7",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "<p class=\"spe-ocr-text\" data-provenance=\"observed-ocr\" data-confidence=\""
+    },
+    {
       "id": "e56398d521000721b182",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -12441,6 +12513,12 @@
       "text": "<div class=\"spe-card-grid\" role=\"list\" data-structure=\"card-grid\" data-hierarchy=\"2\">"
     },
     {
+      "id": "f0a2f860d475f8db4324",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "&amp;"
+    },
+    {
       "id": "f2ef04471a07aa94024f",
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
@@ -12487,6 +12565,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": ";height:"
+    },
+    {
+      "id": "fea6b6417d231d8d2b8f",
+      "file": "apps/web/src/media/screenshotToCode.ts",
+      "depth": "PRODUCT",
+      "text": "@media (max-width: 640px){.shell{grid-template-columns:1fr}aside.spe-rail{grid-column:1/-1}}"
     },
     {
       "id": "07bd3063e92c14ec670a",
@@ -13041,6 +13125,12 @@
       "text": "mid"
     },
     {
+      "id": "16f8c30c95ce8684fe41",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "proposal"
+    },
+    {
       "id": "1844181688e07a716299",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -13287,6 +13377,18 @@
       "text": "Full-width bright mid"
     },
     {
+      "id": "773554159fd9480077ba",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "observed OCR ("
+    },
+    {
+      "id": "77c4219fecf97575dea3",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "text proposal ("
+    },
+    {
       "id": "781d36a1c08abb38ce11",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -13423,6 +13525,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "form-panel-candidate"
+    },
+    {
+      "id": "b580bc9374b941122fdd",
+      "file": "apps/web/src/media/uiObservation.ts",
+      "depth": "PRODUCT",
+      "text": "observed-ocr"
     },
     {
       "id": "b5fc66dbb72cdeae90e0",
