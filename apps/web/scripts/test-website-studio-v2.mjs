@@ -27,6 +27,18 @@ assert(Array.isArray(spec.dataBindings));
 assert(spec.agentPolicy && typeof spec.agentPolicy === "object");
 assert.equal(validateWebsiteSpecV2(spec), spec);
 
+const sceneUrl = pathToFileURL(
+  path.join(__dirname, "../src/website-studio/model/sceneIR.ts"),
+).href;
+const { createEmptySceneIR } = await import(sceneUrl);
+const canonicalScene = createEmptySceneIR();
+assert.equal(canonicalScene.sceneVersion, "scene-ir/1");
+assert.ok(Array.isArray(canonicalScene.lighting));
+assert.ok(Array.isArray(canonicalScene.scrollTracks));
+assert.ok(canonicalScene.accessibilityFallback?.ariaRegionLabel);
+spec.scene = canonicalScene;
+assert.equal(validateWebsiteSpecV2(spec), spec);
+
 const wildcard = structuredClone(spec);
 wildcard.agentPolicy.execute = ["*"];
 assert.throws(
