@@ -40,6 +40,8 @@ export function hashCanonicalState(value: unknown): string {
   return HASH_PREFIX + computeSha256(input);
 }
 
+const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
 function applyOperations<T>(state: T, operations: PatchOperation[]): T {
   const next = structuredClone(state);
   for (const operation of operations) {
@@ -48,13 +50,20 @@ function applyOperations<T>(state: T, operations: PatchOperation[]): T {
     }
     let cursor: any = next;
     for (let i = 0; i < operation.path.length - 1; i += 1) {
-      const key = operation.path[i];
+      const key = String(operation.path[i]);
+      if (FORBIDDEN_KEYS.has(key)) {
+        throw new Error("PATCH_PATH_REFUSED");
+      }
       if (cursor[key] == null || typeof cursor[key] !== "object") {
         throw new Error("PATCH_PATH_REFUSED");
       }
       cursor = cursor[key];
     }
-    cursor[operation.path[operation.path.length - 1]] = structuredClone(operation.value);
+    const lastKey = String(operation.path[operation.path.length - 1]);
+    if (FORBIDDEN_KEYS.has(lastKey)) {
+      throw new Error("PATCH_PATH_REFUSED");
+    }
+    cursor[lastKey] = structuredClone(operation.value);
   }
   return next;
 }

@@ -2,13 +2,16 @@ import React from "react";
 import type { CameraPlan } from "../model/cameraPlan.ts";
 import {
   createCameraPlanFromPreset,
+  validateCameraSafety,
   type CameraPreset,
+  type CameraSafetyFinding,
 } from "./cameraDirector.ts";
 
 export interface CameraDirectorPanelProps {
   currentPlan?: CameraPlan;
   onPlanChange?: (plan: CameraPlan) => void;
   onSelectPreset?: (preset: CameraPreset) => void;
+  scene?: any;
 }
 
 const PRESETS: CameraPreset[] = [
@@ -26,6 +29,7 @@ export const CameraDirectorPanel: React.FC<CameraDirectorPanelProps> = ({
   currentPlan,
   onPlanChange,
   onSelectPreset,
+  scene,
 }) => {
   const handlePresetClick = (preset: CameraPreset) => {
     onSelectPreset?.(preset);
@@ -34,6 +38,15 @@ export const CameraDirectorPanel: React.FC<CameraDirectorPanelProps> = ({
       onPlanChange(newPlan);
     }
   };
+
+  const report = React.useMemo(() => {
+    if (!currentPlan) return null;
+    try {
+      return validateCameraSafety(currentPlan, scene);
+    } catch {
+      return null;
+    }
+  }, [currentPlan, scene]);
 
   return (
     <div
@@ -99,24 +112,83 @@ export const CameraDirectorPanel: React.FC<CameraDirectorPanelProps> = ({
             ACTIVE SHOTS ({currentPlan.shots.length})
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            {currentPlan.shots.map((shot) => (
-              <div
-                key={shot.id}
-                style={{
-                  fontSize: "11px",
-                  color: "#cbd5e1",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <span>
-                  <strong>{shot.id}</strong> ({shot.intent})
-                </span>
-                <span style={{ color: "#8e95a5" }}>
-                  {(shot.start * 100).toFixed(0)}%–{(shot.end * 100).toFixed(0)}% • FOV {shot.fov}°
-                </span>
-              </div>
-            ))}
+            {currentPlan.shots.map((shot) => {
+              const shotFindings =
+                report?.findings.filter((f: CameraSafetyFinding) => f.shotId === shot.id) || [];
+              const hasCollision = shotFindings.some(
+                (f: CameraSafetyFinding) => f.code === "CAMERA_INSIDE_MESH",
+              );
+              const hasClipping = shotFindings.some(
+                (f: CameraSafetyFinding) =>
+                  f.code === "CAMERA_CLIPPING_NEAR" || f.code === "CAMERA_CLIPPING_FAR",
+              );
+              return (
+                <div
+                  key={shot.id}
+                  style={{
+                    fontSize: "11px",
+                    color: "#cbd5e1",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span>
+                      <strong>{shot.id}</strong> ({shot.intent})
+                    </span>
+                    {hasCollision && (
+                      <span
+                        data-testid="collision-indicator"
+                        style={{
+                          fontSize: "9px",
+                          color: "#fca5a5",
+                          backgroundColor: "#7f1d1d",
+                          padding: "1px 4px",
+                          borderRadius: "3px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Collision
+                      </span>
+                    )}
+                    {hasClipping && (
+                      <span
+                        data-testid="clipping-indicator"
+                        style={{
+                          fontSize: "9px",
+                          color: "#fcd34d",
+                          backgroundColor: "#78350f",
+                          padding: "1px 4px",
+                          borderRadius: "3px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Clipping
+                      </span>
+                    )}
+                    {!hasCollision && !hasClipping && (
+                      <span
+                        data-testid="clear-indicator"
+                        style={{
+                          fontSize: "9px",
+                          color: "#6ee7b7",
+                          backgroundColor: "#064e3b",
+                          padding: "1px 4px",
+                          borderRadius: "3px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Clear
+                      </span>
+                    )}
+                  </div>
+                  <span style={{ color: "#8e95a5" }}>
+                    {(shot.start * 100).toFixed(0)}%–{(shot.end * 100).toFixed(0)}% • FOV {shot.fov}°
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

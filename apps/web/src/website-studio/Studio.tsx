@@ -648,6 +648,7 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
           {/* Camera Director in Intelligence Sidebar */}
           <CameraDirectorPanel
             currentPlan={spec.cameraPlan}
+            scene={spec.scene}
             onPlanChange={(plan) => {
               const patch = createSitePatch(
                 spec,

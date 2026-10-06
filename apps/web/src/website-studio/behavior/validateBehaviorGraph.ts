@@ -26,15 +26,20 @@ export function buildBehaviorDependencyGraph(graph: BehaviorGraph): Map<string, 
     const dataKeysAffected = new Set<string>();
     let triggersTimelinePlay = false;
 
+    const triggerTarget = ruleA.trigger.targetId || (ruleA.trigger as any).variable;
+
     for (const action of ruleA.actions) {
       if (action.targetId) {
         targetsAffected.add(action.targetId);
       }
+      if ((action as any).variable) {
+        dataKeysAffected.add((action as any).variable);
+      }
+      if (action.type === "data-set" && (action.targetId || (action as any).variable)) {
+        dataKeysAffected.add(action.targetId || (action as any).variable);
+      }
       if (typeof action.value === "string") {
         ruleIdsAffected.add(action.value);
-      }
-      if (action.type === "data-set" && action.targetId) {
-        dataKeysAffected.add(action.targetId);
       }
       if (action.type === "timeline-play") {
         triggersTimelinePlay = true;
@@ -43,9 +48,9 @@ export function buildBehaviorDependencyGraph(graph: BehaviorGraph): Map<string, 
 
     // Direct self-cycle check
     if (
-      ruleA.trigger.targetId &&
-      targetsAffected.has(ruleA.trigger.targetId) &&
-      (triggersTimelinePlay || ruleIdsAffected.has(ruleA.id))
+      triggerTarget &&
+      ((targetsAffected.has(triggerTarget) && (triggersTimelinePlay || ruleIdsAffected.has(ruleA.id))) ||
+        (ruleA.trigger.type === "data" && dataKeysAffected.has(triggerTarget)))
     ) {
       adj.get(ruleA.id)!.add(ruleA.id);
     }
@@ -61,7 +66,8 @@ export function buildBehaviorDependencyGraph(graph: BehaviorGraph): Map<string, 
       }
 
       // 2. Data binding cycle: ruleA sets data key that ruleB triggers on
-      if (ruleB.trigger.type === "data" && ruleB.trigger.targetId && dataKeysAffected.has(ruleB.trigger.targetId)) {
+      const targetB = ruleB.trigger.targetId || (ruleB.trigger as any).variable;
+      if (ruleB.trigger.type === "data" && targetB && dataKeysAffected.has(targetB)) {
         dependent = true;
       }
 
@@ -242,3 +248,6 @@ export function executeBehaviorGraphWithBudget(
 
   return { dispatchedCount, replayDepthReached: currentDepth };
 }
+
+export const validateBehaviorGraphSafety = validateBehaviorGraphAdvanced;
+

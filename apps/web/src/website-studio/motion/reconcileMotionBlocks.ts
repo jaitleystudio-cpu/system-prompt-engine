@@ -12,7 +12,10 @@ export function reconcileMotionBlocks(
 
   if (modifiedTracks?.camera?.keyframes) {
     for (const kf of modifiedTracks.camera.keyframes) {
-      if (typeof kf.time === "number" && kf.time > maxTime) maxTime = kf.time;
+      if (typeof kf.time === "number" && Number.isFinite(kf.time)) {
+        const t = Math.max(0, kf.time);
+        if (t > maxTime) maxTime = t;
+      }
     }
   }
 
@@ -20,10 +23,25 @@ export function reconcileMotionBlocks(
     for (const track of modifiedTracks.objects) {
       if (Array.isArray(track?.keyframes)) {
         for (const kf of track.keyframes) {
-          if (typeof kf.time === "number" && kf.time > maxTime) maxTime = kf.time;
+          if (typeof kf.time === "number" && Number.isFinite(kf.time)) {
+            const t = Math.max(0, kf.time);
+            if (t > maxTime) maxTime = t;
+          }
         }
       }
     }
+  }
+
+  if (blocks.length === 0 && maxTime > 0) {
+    return [
+      {
+        id: "block-custom-timeline",
+        semanticType: "product-reveal",
+        start: 0,
+        end: maxTime,
+        tracks: modifiedTracks,
+      },
+    ];
   }
 
   return blocks.map((block, index) => {

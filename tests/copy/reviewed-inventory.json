@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-06T05:40:38.576Z",
+  "generated": "2026-10-06T05:49:32.759Z",
   "tipNote": "Founder-approved SPE Free 3D Websites v1.1 Studio UI foundation copy reviewed; zero superlatives, zero unreviewed copy.",
   "entries": [
     {
@@ -19329,6 +19329,24 @@
       "text": "Director-tested camera choreography with bounded velocity and reduced-motion variants."
     },
     {
+      "id": "37a055ac449a61841c4b",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Clear"
+    },
+    {
+      "id": "433df678c6bb2b73743f",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Clipping"
+    },
+    {
+      "id": "498b20bd84b39c592263",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Collision"
+    },
+    {
       "id": "50785bc982b9985ab38f",
       "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
       "depth": "PRODUCT",
@@ -19339,6 +19357,12 @@
       "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
       "depth": "PRODUCT",
       "text": "% • FOV"
+    },
+    {
+      "id": "5c7de7167068e5b9afe1",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "CAMERA_CLIPPING_NEAR"
     },
     {
       "id": "6df58425b52e0461db16",
@@ -19363,6 +19387,18 @@
       "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
       "depth": "PRODUCT",
       "text": "Macro Detail"
+    },
+    {
+      "id": "c1a3560bba7ba7397216",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "CAMERA_INSIDE_MESH"
+    },
+    {
+      "id": "c26ecddd070c45d3ec15",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "CAMERA_CLIPPING_FAR"
     },
     {
       "id": "caec44d4408420bf3336",
@@ -20427,6 +20463,12 @@
       "text": "object"
     },
     {
+      "id": "6f06b5dcbeb3c90c38e9",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "__proto__"
+    },
+    {
       "id": "7c75094bff663d5f11b7",
       "file": "apps/web/src/website-studio/history/sitePatch.ts",
       "depth": "PRODUCT",
@@ -20463,6 +20505,12 @@
       "text": "PATCH_INVALID_HASH: cryptographic beforeHash required"
     },
     {
+      "id": "e54d56efab8d87da07fe",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "prototype"
+    },
+    {
       "id": "ebf16be316f60e1767bd",
       "file": "apps/web/src/website-studio/history/sitePatch.ts",
       "depth": "PRODUCT",
@@ -20473,6 +20521,12 @@
       "file": "apps/web/src/website-studio/history/sitePatch.ts",
       "depth": "PRODUCT",
       "text": "PATCH_CONFLICT: state hash mismatch"
+    },
+    {
+      "id": "f444aeb398dc9300526a",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "constructor"
     },
     {
       "id": "05dd5321464cf6ddcf22",
@@ -20859,12 +20913,6 @@
       "text": "WebsiteIntentCompileError"
     },
     {
-      "id": "cde56736d3b8cc1ea19c",
-      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
-      "depth": "PRODUCT",
-      "text": "signup"
-    },
-    {
       "id": "d4672df205870b9dd66a",
       "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
       "depth": "PRODUCT",
@@ -20887,6 +20935,12 @@
       "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
       "depth": "PRODUCT",
       "text": "storytelling"
+    },
+    {
+      "id": "f71824a2a4ec51cc03b7",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "subscribe"
     },
     {
       "id": "f82d9a1ecd732d0b7851",
@@ -21003,6 +21057,12 @@
       "text": "number-scale"
     },
     {
+      "id": "4ab7fecaffc471e1b6bb",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
       "id": "50d586ae6b18dfda0a4d",
       "file": "apps/web/src/website-studio/model/dataBinding.ts",
       "depth": "PRODUCT",
@@ -21021,10 +21081,22 @@
       "text": "LOCAL"
     },
     {
+      "id": "67c6705e30ecc944e832",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "EXTERNAL_PROVIDER_BOUNDARY_REQUIRED: external provider source must disclose EXTERNAL_PROVIDER privacy boundary"
+    },
+    {
       "id": "88186b6ad7d3ad6dc6b4",
       "file": "apps/web/src/website-studio/model/dataBinding.ts",
       "depth": "PRODUCT",
       "text": "map-enum"
+    },
+    {
+      "id": "9855e4d669a4c5bc4d30",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "EXTERNAL_PROVIDER_REQUIRED: external provider requires provider identification"
     },
     {
       "id": "9d9b3cc30e0dd24179e8",
@@ -21033,10 +21105,34 @@
       "text": "unsafe or unknown data transform refused"
     },
     {
+      "id": "d2880cda0ff199a5c5e3",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "PUBLIC_FETCH"
+    },
+    {
+      "id": "d2b3b9ae6310466ec15b",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "PUBLIC_FETCH_URL_REQUIRED: public fetch requires explicit URL"
+    },
+    {
       "id": "f2016e1997c3c30f4a3d",
       "file": "apps/web/src/website-studio/model/dataBinding.ts",
       "depth": "PRODUCT",
       "text": "string-template"
+    },
+    {
+      "id": "f35738b95e9e67618d99",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "EXTERNAL_PROVIDER"
+    },
+    {
+      "id": "ff95249c481f9552101b",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "PUBLIC_FETCH_BOUNDARY_REQUIRED: public fetch source must disclose PUBLIC_FETCH privacy boundary"
     },
     {
       "id": "12bd2da302f7e7654691",
@@ -21445,6 +21541,18 @@
       "file": "apps/web/src/website-studio/motion/reconcileMotionBlocks.ts",
       "depth": "PRODUCT",
       "text": "number"
+    },
+    {
+      "id": "9d7946e9e2ed4b14b147",
+      "file": "apps/web/src/website-studio/motion/reconcileMotionBlocks.ts",
+      "depth": "PRODUCT",
+      "text": "block-custom-timeline"
+    },
+    {
+      "id": "f71c97020e324377def1",
+      "file": "apps/web/src/website-studio/motion/reconcileMotionBlocks.ts",
+      "depth": "PRODUCT",
+      "text": "product-reveal"
     },
     {
       "id": "05f433769802afbbbb29",
