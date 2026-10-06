@@ -28,6 +28,8 @@ export interface NarrativeMotionBlock {
   reducedMotionTransform?: { mode: "preserve" | "simplify" | "static" };
 }
 
+export type MotionBlock = NarrativeMotionBlock;
+
 export function validateMotionBlock(block: NarrativeMotionBlock): void {
   if (!block.id) throw new Error("motion block id required");
   if (!Number.isFinite(block.start) || !Number.isFinite(block.end)) throw new Error("motion range must be finite");

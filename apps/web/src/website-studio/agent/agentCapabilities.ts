@@ -1,6 +1,8 @@
 import type { AgentCommandName } from "./commandTypes.ts";
 import type { AgentPolicy } from "../model/agentPolicy.ts";
 
+export type AgentCapabilities = AgentPolicy;
+
 const READ = new Set<AgentCommandName>([
   "getWebsiteSpec",
   "getPageTree",

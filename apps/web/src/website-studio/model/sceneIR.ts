@@ -1,6 +1,6 @@
 import type { SceneIR } from "../../engine/multimodal/types.ts";
 
-export type { SceneIR } from "../../engine/multimodal/types.ts";
+export type { SceneIR, Scene3DObject, Scene3DObject as SceneObjectIR } from "../../engine/multimodal/types.ts";
 
 /**
  * Studio uses the existing MM-5 SceneIR authority. This factory only

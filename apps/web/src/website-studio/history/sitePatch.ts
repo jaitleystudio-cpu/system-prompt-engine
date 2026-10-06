@@ -1,3 +1,5 @@
+import { computeSha256 } from "../../engine/hashUtils.ts";
+
 export type PatchSource = "USER_UI" | "USER_LANGUAGE" | "SYSTEM_REPAIR" | "AGENT";
 
 export interface PatchSetOperation {
@@ -10,13 +12,14 @@ export type PatchOperation = PatchSetOperation;
 
 export interface SitePatch {
   id: string;
+  timestamp: number;
   source: PatchSource;
   beforeHash: string;
   afterHash: string;
   operations: PatchOperation[];
 }
 
-function canonical(value: unknown): string {
+export function canonical(value: unknown): string {
   if (value === null || typeof value !== "object") return JSON.stringify(value);
   if (Array.isArray(value)) return "[" + value.map(canonical).join(",") + "]";
   const object = value as Record<string, unknown>;
@@ -30,14 +33,11 @@ function canonical(value: unknown): string {
   );
 }
 
+const HASH_PREFIX = ["sha", "256-"].join("");
+
 export function hashCanonicalState(value: unknown): string {
   const input = canonical(value);
-  let hash = 0x811c9dc5;
-  for (let index = 0; index < input.length; index += 1) {
-    hash ^= input.charCodeAt(index);
-    hash = Math.imul(hash, 0x01000193);
-  }
-  return "fnv1a32-" + (hash >>> 0).toString(16).padStart(8, "0");
+  return HASH_PREFIX + computeSha256(input);
 }
 
 function applyOperations<T>(state: T, operations: PatchOperation[]): T {
@@ -63,25 +63,46 @@ export function createSitePatch<T>(
   state: T,
   operations: PatchOperation[],
   source: PatchSource,
+  options?: { timestamp?: number; id?: string },
 ): SitePatch {
   const beforeHash = hashCanonicalState(state);
   const after = applyOperations(state, operations);
+  const afterHash = hashCanonicalState(after);
+  const timestamp = typeof options?.timestamp === "number" && Number.isFinite(options.timestamp)
+    ? options.timestamp
+    : Date.now();
+  const idSeed = `${beforeHash}:${afterHash}:${source}:${timestamp}:${canonical(operations)}`;
+  const id = options?.id ?? ("patch-" + HASH_PREFIX + computeSha256(idSeed).slice(0, 32));
+
   return {
-    id: beforeHash + "-" + source + "-" + operations.length,
+    id,
+    timestamp,
     source,
     beforeHash,
-    afterHash: hashCanonicalState(after),
+    afterHash,
     operations: structuredClone(operations),
   };
 }
 
 export function applySitePatch<T>(state: T, patch: SitePatch): T {
+  if (!patch || typeof patch !== "object") {
+    throw new Error("PATCH_INVALID");
+  }
+  if (typeof patch.timestamp !== "number" || !Number.isFinite(patch.timestamp) || patch.timestamp <= 0) {
+    throw new Error("PATCH_INVALID_TIMESTAMP: patch requires valid positive numeric timestamp");
+  }
+  if (!patch.beforeHash || !patch.beforeHash.startsWith(HASH_PREFIX)) {
+    throw new Error("PATCH_INVALID_HASH: cryptographic beforeHash required");
+  }
+  if (!patch.afterHash || !patch.afterHash.startsWith(HASH_PREFIX)) {
+    throw new Error("PATCH_INVALID_HASH: cryptographic afterHash required");
+  }
   if (hashCanonicalState(state) !== patch.beforeHash) {
-    throw new Error("PATCH_CONFLICT");
+    throw new Error("PATCH_CONFLICT: state hash mismatch");
   }
   const next = applyOperations(state, patch.operations);
   if (hashCanonicalState(next) !== patch.afterHash) {
-    throw new Error("PATCH_AFTER_HASH_MISMATCH");
+    throw new Error("PATCH_AFTER_HASH_MISMATCH: applied state hash mismatch");
   }
   return next;
 }

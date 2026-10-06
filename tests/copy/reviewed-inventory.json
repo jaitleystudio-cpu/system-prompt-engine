@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-06T00:00:00.000Z",
-  "tipNote": "Founder-approved SPE Free 3D Websites v1.1 core strings reviewed, including inert SVG accessibility fallback.",
+  "generated": "2026-10-06T05:22:43.081Z",
+  "tipNote": "Founder-approved SPE Free 3D Websites v1.1 Studio UI foundation copy reviewed; zero superlatives, zero unreviewed copy.",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -249,12 +249,6 @@
       "text": "Print / Save PDF is for printing. It does not restore the prompt."
     },
     {
-      "id": "44de4510e3fe368e0715",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "Skip to main content"
-    },
-    {
       "id": "458995f05c7d07437a83",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -411,12 +405,6 @@
       "text": "Copy"
     },
     {
-      "id": "746878a55fb633ff8f05",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "instant"
-    },
-    {
       "id": "752eb67cf68a25b73ab8",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -427,12 +415,6 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "change"
-    },
-    {
-      "id": "75ed13f574d6e235dc8d",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "main"
     },
     {
       "id": "77af3a8ba6ce5dd5c29c",
@@ -775,12 +757,6 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "LITE"
-    },
-    {
-      "id": "cfb32307522ec7cd4dae",
-      "file": "apps/web/src/App.tsx",
-      "depth": "PRODUCT",
-      "text": "Enter what you want SPE to build."
     },
     {
       "id": "cfe83315e00808ba25e9",
@@ -3901,12 +3877,6 @@
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
       "text": "Copy build prompt"
-    },
-    {
-      "id": "3b60ec0e03df280530a6",
-      "file": "apps/web/src/lab/DailyLab.tsx",
-      "depth": "PRODUCT",
-      "text": "Publish date"
     },
     {
       "id": "594ce8d48e532fc21e48",
@@ -8871,12 +8841,6 @@
       "text": "Select a coding request; source-code generation is unavailable in this shell"
     },
     {
-      "id": "aeba5249d8bf43baf676",
-      "file": "apps/web/src/landing/UniversalInputShell.tsx",
-      "depth": "PRODUCT",
-      "text": "Selection ready ("
-    },
-    {
       "id": "b04d559300665633a07d",
       "file": "apps/web/src/landing/UniversalInputShell.tsx",
       "depth": "PRODUCT",
@@ -10983,12 +10947,6 @@
       "text": "POST"
     },
     {
-      "id": "314a5841590b4105eb06",
-      "file": "apps/web/src/media/ocrLite.ts",
-      "depth": "PRODUCT",
-      "text": "[text-like band ~"
-    },
-    {
       "id": "333c5bff2eafba0fa532",
       "file": "apps/web/src/media/ocrLite.ts",
       "depth": "PRODUCT",
@@ -11083,12 +11041,6 @@
       "file": "apps/web/src/media/ocrLite.ts",
       "depth": "PRODUCT",
       "text": "object"
-    },
-    {
-      "id": "accff5eb2a405d10262a",
-      "file": "apps/web/src/media/ocrLite.ts",
-      "depth": "PRODUCT",
-      "text": "textlike-"
     },
     {
       "id": "b13549cdc7af4d0a380c",
@@ -13167,12 +13119,6 @@
       "text": "Bottom brightness"
     },
     {
-      "id": "05fda2f8e49579987356",
-      "file": "apps/web/src/media/uiObservation.ts",
-      "depth": "PRODUCT",
-      "text": "Typography sizes are guessed from band height, not measured fonts."
-    },
-    {
       "id": "0688c177a3a950ce160c",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -13269,12 +13215,6 @@
       "text": "under dark header"
     },
     {
-      "id": "31361c9e13ec02002339",
-      "file": "apps/web/src/media/uiObservation.ts",
-      "depth": "PRODUCT",
-      "text": "Text-likeness HF projection ("
-    },
-    {
       "id": "3211f0bed22335468c99",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -13351,12 +13291,6 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "ui-ir-lite"
-    },
-    {
-      "id": "4f5f6fbe03a363f2ae8c",
-      "file": "apps/web/src/media/uiObservation.ts",
-      "depth": "PRODUCT",
-      "text": "text-like bands; spacing unit ~"
     },
     {
       "id": "4fbf7748977fad92beae",
@@ -17001,12 +16935,6 @@
       "text": "WebApplication"
     },
     {
-      "id": "fc03ed137655494c215e",
-      "file": "apps/web/src/routing.ts",
-      "depth": "PRODUCT",
-      "text": "home"
-    },
-    {
       "id": "fe16e2ca7052f7e0cd5c",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -18003,10 +17931,76 @@
       "text": "updateCameraPlan"
     },
     {
+      "id": "06947394f09f6007ddd8",
+      "file": "apps/web/src/website-studio/agent/agentReceipt.ts",
+      "depth": "PRODUCT",
+      "text": "input-hash"
+    },
+    {
+      "id": "192a9fcc8a6644c25187",
+      "file": "apps/web/src/website-studio/agent/agentReceipt.ts",
+      "depth": "PRODUCT",
+      "text": "PASS"
+    },
+    {
+      "id": "357f5ea6d0c14fed4e5f",
+      "file": "apps/web/src/website-studio/agent/agentReceipt.ts",
+      "depth": "PRODUCT",
+      "text": "USER_UI"
+    },
+    {
+      "id": "3975651933ef128717f5",
+      "file": "apps/web/src/website-studio/agent/agentReceipt.ts",
+      "depth": "PRODUCT",
+      "text": "sess-"
+    },
+    {
+      "id": "7b20206dbc43c7b54e20",
+      "file": "apps/web/src/website-studio/agent/agentReceipt.ts",
+      "depth": "PRODUCT",
+      "text": "SUCCESS"
+    },
+    {
+      "id": "90ea67d9ad1ecb2462c8",
+      "file": "apps/web/src/website-studio/agent/agentReceipt.ts",
+      "depth": "PRODUCT",
+      "text": "FAIL"
+    },
+    {
+      "id": "bf429c13328d7651212f",
+      "file": "apps/web/src/website-studio/agent/agentReceipt.ts",
+      "depth": "PRODUCT",
+      "text": "before-hash"
+    },
+    {
+      "id": "e2ae59283afce40fbee1",
+      "file": "apps/web/src/website-studio/agent/agentReceipt.ts",
+      "depth": "PRODUCT",
+      "text": "after-hash"
+    },
+    {
       "id": "03cfa8eec4ee7f467aee",
       "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
       "depth": "PRODUCT",
       "text": "getAccessibilityReceipt"
+    },
+    {
+      "id": "04bb99cdd8705480fefa",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "runQualityAudit"
+    },
+    {
+      "id": "089cf802f5763c34acef",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "runResponsiveAudit"
+    },
+    {
+      "id": "0a4132d758a2563b3a00",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "INVALID_UPDATE_ARGS"
     },
     {
       "id": "0e3663f3f2dfb0907883",
@@ -18033,6 +18027,12 @@
       "text": "PATCH_CONFLICT"
     },
     {
+      "id": "1cf9ae9b27ce8dd65a27",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "INVALID_SCENE_OBJECT_ARGS"
+    },
+    {
       "id": "1e23631c6891ab7fdfa9",
       "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
       "depth": "PRODUCT",
@@ -18045,10 +18045,76 @@
       "text": "exportProject"
     },
     {
+      "id": "224e935bb354ff15c0c8",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "renderPreview"
+    },
+    {
+      "id": "260cb8123ee4785516cb",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "<svg></svg>"
+    },
+    {
+      "id": "26f6d9f6a571c5444f77",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "cameraPlan"
+    },
+    {
+      "id": "2c994b5f03abc53de3db",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "STALE_STATE_DETECTED"
+    },
+    {
+      "id": "35da776529ed0be3c84f",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "viewport-min"
+    },
+    {
+      "id": "37444a997982ef1d140d",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "OPERATIONS_ARRAY_REQUIRED"
+    },
+    {
+      "id": "3a78846b3518d0e82229",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "Scene"
+    },
+    {
+      "id": "3ee89a396ad9738f0159",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "perspective"
+    },
+    {
       "id": "4249d0e33f03582b95bd",
       "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
       "depth": "PRODUCT",
       "text": "OK"
+    },
+    {
+      "id": "4475059af8c9fd040ea0",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "updateSceneObject"
+    },
+    {
+      "id": "452797560843cfb28b58",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "runPerformanceAudit"
+    },
+    {
+      "id": "45300cc90448f6a78c46",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "FAIL"
     },
     {
       "id": "4c0148cf28bf9d88f686",
@@ -18057,10 +18123,82 @@
       "text": "exportSite"
     },
     {
+      "id": "4ced1b9b74f76a76d41d",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "POLICY"
+    },
+    {
+      "id": "4fe9281e9db77eba24f0",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "PASS"
+    },
+    {
+      "id": "50caa4172a5cb724ab30",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "dark"
+    },
+    {
+      "id": "555471c54ce19a59cd8e",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "scene-ir/1"
+    },
+    {
+      "id": "57b262b6797531d81346",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "set"
+    },
+    {
+      "id": "589554a181cea2579e41",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "ARIA_REGION_LABEL_MISSING"
+    },
+    {
+      "id": "5ac70412dd7e4e26c32a",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "INVALID_MOTION_BLOCK_ARGS"
+    },
+    {
+      "id": "639b3e7ffbae31569f5c",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "OBJECT_ALREADY_EXISTS"
+    },
+    {
       "id": "64bc7f70de571c937c23",
       "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
       "depth": "PRODUCT",
       "text": "getWebsiteSpec"
+    },
+    {
+      "id": "6a75836a927c4bf8a06c",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_APPLY_FAILED"
+    },
+    {
+      "id": "70202d4e66892d1b753d",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "INCOMPLETE_REDUCED_MOTION_COVERAGE"
+    },
+    {
+      "id": "717a6a1b01725ff2043e",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "HERO_2D_SVG_MISSING"
+    },
+    {
+      "id": "7c3bd81d59115217a868",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "optimizeScene"
     },
     {
       "id": "7f11e78a3be12b6b6046",
@@ -18069,16 +18207,136 @@
       "text": "getCameraPlan"
     },
     {
+      "id": "8434fe1798a79d0f56e4",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "unknown"
+    },
+    {
+      "id": "8885ca8fc503db98139b",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "createBehaviorRule"
+    },
+    {
       "id": "8cd881b0f9cbd69178cf",
       "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
       "depth": "PRODUCT",
       "text": "proposePatch"
     },
     {
+      "id": "8e38b907787f5e656ee2",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "INVALID_BEHAVIOR_RULE_ARGS"
+    },
+    {
+      "id": "8f68f37185a2dc7fa63d",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "spe-structured-agent"
+    },
+    {
+      "id": "902f6bb2b2b25faaa3bc",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "MOTION_BLOCK_NOT_FOUND"
+    },
+    {
+      "id": "93613b74e3ba34e30716",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "number"
+    },
+    {
+      "id": "964954091537cf9a9e66",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "BEFORE_HASH_MISMATCH"
+    },
+    {
+      "id": "96d594fc4e7a75df7bff",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "updateMotionBlock"
+    },
+    {
+      "id": "9895c3a101bac0fe33ad",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "createSceneObject"
+    },
+    {
+      "id": "991f436d3ae1f246552d",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "INVALID_CAMERA_PLAN_ARGS"
+    },
+    {
+      "id": "9be21816a1a747e478b2",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "webgl"
+    },
+    {
+      "id": "9ca7e23af3f599a19d34",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "viewport-max"
+    },
+    {
+      "id": "9cdf4b5a4d2e65a573d8",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "RULE_ALREADY_EXISTS"
+    },
+    {
       "id": "9f5dcb76802974e7dcc3",
       "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
       "depth": "PRODUCT",
       "text": "COMMAND_REFUSED"
+    },
+    {
+      "id": "a06ed4e0787e7622d6a8",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "runAccessibilityAudit"
+    },
+    {
+      "id": "a364c854fdbb5e5cd459",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "a57812ead444f0b320d7",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "updateCameraPlan"
+    },
+    {
+      "id": "a5c4c9f89502f326c364",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "session-canonical"
+    },
+    {
+      "id": "a5f45e178a100dccac29",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "scene"
+    },
+    {
+      "id": "a72190beb49e1fd35878",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "a76d96631a44d8dd40da",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "VALID_SITEPATCH_REQUIRED"
     },
     {
       "id": "a80321620b13ce0e1bda",
@@ -18093,6 +18351,30 @@
       "text": "AGENT"
     },
     {
+      "id": "bcdb4eb241ebd4eb2664",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_GENERATION_FAILED"
+    },
+    {
+      "id": "c6fbd808395f6dce4831",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "OBJECT_NOT_FOUND"
+    },
+    {
+      "id": "cf32a4383e9bd09fcd66",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "motionBlocks"
+    },
+    {
+      "id": "d4338d6447d303ffdbaf",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "MALFORMED_COMMAND_ENVELOPE"
+    },
+    {
       "id": "dcbdffb3496f025d3abb",
       "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
       "depth": "PRODUCT",
@@ -18105,10 +18387,22 @@
       "text": "CAPABILITY_DENIED"
     },
     {
+      "id": "e317a2780741645d382b",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "behaviorGraph"
+    },
+    {
       "id": "e59f0a07838ae4d79283",
       "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
       "depth": "PRODUCT",
       "text": "getBehaviorGraph"
+    },
+    {
+      "id": "f02d6eb8465e53c175d6",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "NO_SCENE_IN_SPEC"
     },
     {
       "id": "f25770422013fad233d0",
@@ -18117,16 +18411,418 @@
       "text": "getTimeline"
     },
     {
+      "id": "fb76952f2881b6c87e58",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "UNRECOGNIZED_COMMAND"
+    },
+    {
+      "id": "00945f49eefcae041e04",
+      "file": "apps/web/src/website-studio/agent/executeAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "SUCCESS"
+    },
+    {
+      "id": "11776b3d315c4c0ddcf9",
+      "file": "apps/web/src/website-studio/agent/executeAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_CONFLICT: Canonical state hash mismatch. Expected \""
+    },
+    {
+      "id": "1343e386e40722c181cb",
+      "file": "apps/web/src/website-studio/agent/executeAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "\". Agent must re-read state."
+    },
+    {
+      "id": "50c509d72f4a90c44404",
+      "file": "apps/web/src/website-studio/agent/executeAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "exportSite"
+    },
+    {
+      "id": "5267b8561172093a18c9",
+      "file": "apps/web/src/website-studio/agent/executeAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "\", got \""
+    },
+    {
+      "id": "5b330c614b8d8ec5d240",
+      "file": "apps/web/src/website-studio/agent/executeAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "hash-"
+    },
+    {
+      "id": "94b45a473112483295d5",
+      "file": "apps/web/src/website-studio/agent/executeAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "getWebsiteSpec"
+    },
+    {
+      "id": "98ddd4b017838c58d62c",
+      "file": "apps/web/src/website-studio/agent/executeAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "applyApprovedPatch"
+    },
+    {
+      "id": "a4e357fa7a382505f834",
+      "file": "apps/web/src/website-studio/agent/executeAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "exportProject"
+    },
+    {
+      "id": "072f846e4d0c17fbde67",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "UNAUTHORIZED_AGENT_ACTION: Agent lacks export capability for \""
+    },
+    {
+      "id": "34192bc0ee09739ae40f",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "create"
+    },
+    {
+      "id": "347abcfe3a23bb852bbd",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "UNAUTHORIZED_AGENT_ACTION: Agent lacks read capability for \""
+    },
+    {
+      "id": "3582a05b7a87999bdd7d",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN_COMMAND: Unrecognized command \""
+    },
+    {
+      "id": "4fdfe7537ab65026f89e",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "UNAUTHORIZED_AGENT_ACTION: Agent lacks proposal capability for \""
+    },
+    {
+      "id": "50c82f41c26a58e988bf",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "get"
+    },
+    {
+      "id": "586e8ce07747eb937e00",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "all"
+    },
+    {
+      "id": "82e4dc763a6561596842",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "optimizeScene"
+    },
+    {
+      "id": "9afbde971fe2114881f3",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "applyApprovedPatch"
+    },
+    {
+      "id": "9f7d3dc4ddba3a54766a",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "update"
+    },
+    {
+      "id": "a334c37cdee4b331f22a",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "proposePatch"
+    },
+    {
+      "id": "be3a0d31a85f54ac589a",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "UNAUTHORIZED_AGENT_ACTION: Agent lacks execute capability for \""
+    },
+    {
+      "id": "cf8ccaf4b12f4589736e",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "export"
+    },
+    {
+      "id": "d33d014a0d239a38c3d9",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "run"
+    },
+    {
+      "id": "ef2383c7b5cd24464977",
+      "file": "apps/web/src/website-studio/agent/validateAgentCommand.ts",
+      "depth": "PRODUCT",
+      "text": "render"
+    },
+    {
+      "id": "0958da91b9086b92818f",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Actions:"
+    },
+    {
+      "id": "1a0812f5c47522ccd155",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "No behavior rules configured. Add a rule to connect user interactions to 3D reactions."
+    },
+    {
+      "id": "2047c6077d328c2ba096",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Trigger:"
+    },
+    {
+      "id": "2e9ecccc40952adfd99f",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Behavior Graph Editor"
+    },
+    {
+      "id": "2f6fe327ad37561ae6d1",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "mesh-main"
+    },
+    {
+      "id": "3ec05a97cfba0d70c413",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "+ Add Interaction Rule"
+    },
+    {
+      "id": "48ad15126d01cf104915",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "viewport-min"
+    },
+    {
+      "id": "4a6d92ecb2d9b2aac44a",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "visual"
+    },
+    {
+      "id": "4d0e4412f50d85f89039",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "scroll"
+    },
+    {
+      "id": "5fe19bbfb83372d3a49f",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "scene-rotate"
+    },
+    {
+      "id": "6e7d0c83bf608028f561",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "on #"
+    },
+    {
+      "id": "74869e39e52494c66742",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "rule"
+    },
+    {
+      "id": "7f36170a8a553645b3d6",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "hero-static"
+    },
+    {
+      "id": "9ffebe4228cf320d826c",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Fallback:"
+    },
+    {
+      "id": "a1166355407dea6209b1",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "section-hero"
+    },
+    {
+      "id": "a28338c4bf02162f69e6",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Graph JSON"
+    },
+    {
+      "id": "ae1db650b180661c38c4",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "defined"
+    },
+    {
+      "id": "b61e340b8b01d36e730c",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Remove"
+    },
+    {
+      "id": "bd58c9761bb9ba730938",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Visual Rules"
+    },
+    {
+      "id": "d1900af3105c64d8e028",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "rule-"
+    },
+    {
+      "id": "d9c29d3a8bcf4088d721",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "s"
+    },
+    {
+      "id": "de22c06dd1ead6bf76bf",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "dom-show"
+    },
+    {
+      "id": "e96feb45aae988585fa7",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Delete rule"
+    },
+    {
+      "id": "260dedd875470f2e5e94",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "number"
+    },
+    {
+      "id": "300ba3b0a2e7f7ddd400",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "set-object-visibility"
+    },
+    {
+      "id": "348017f0f6a0e5c93b7e",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "scene-rotate"
+    },
+    {
+      "id": "564ebf00b7705d03a92d",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "translate-object"
+    },
+    {
+      "id": "6018ce16ef5c7f756f1a",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "\" is not a recognized typed SceneAction"
+    },
+    {
+      "id": "8fbe5128b283057f9010",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "y"
+    },
+    {
+      "id": "a6dc08e72c04fa40f8d7",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "rotate-object"
+    },
+    {
+      "id": "c543f48991040be470f1",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "x"
+    },
+    {
+      "id": "e5d4274146eb08986bee",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "scale-object"
+    },
+    {
+      "id": "e8a4572c3ef03d5abe0c",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "scene-translate"
+    },
+    {
+      "id": "eadebdc88fae4f42832d",
+      "file": "apps/web/src/website-studio/behavior/executeSceneAction.ts",
+      "depth": "PRODUCT",
+      "text": "UNSUPPORTED_ACTION: Action type \""
+    },
+    {
+      "id": "36602a23ec349ab08550",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "prefers-reduced-motion"
+    },
+    {
+      "id": "49280934fced16cb1b0a",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "camera-orbit"
+    },
+    {
+      "id": "54eb1fcbbd371596c39a",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "hover"
+    },
+    {
+      "id": "56504668dc30f291f22e",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "BEHAVIOR_REPLAY_DEPTH_EXCEEDED: cascade exceeded maximum replay depth of"
+    },
+    {
+      "id": "62a483be540c9f69c566",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "' performs 3D motion without reduced-motion condition or accessible fallback"
+    },
+    {
+      "id": "6c78c035bf2169d23387",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "scroll"
+    },
+    {
+      "id": "6f5105078898d5fd3a83",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "material-set"
+    },
+    {
       "id": "83de60081c4f17e947dd",
       "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
       "depth": "PRODUCT",
       "text": "string"
     },
     {
-      "id": "adecc909683cb2b0fc06",
+      "id": "8b6a4bcb0efb75d7eeb1",
       "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
       "depth": "PRODUCT",
-      "text": "BEHAVIOR_CYCLE_REFUSED: direct self cycle"
+      "text": "click"
+    },
+    {
+      "id": "b0ee6181d968404fed62",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "scene-translate"
     },
     {
       "id": "b641c513400dedfb52d1",
@@ -18135,10 +18831,58 @@
       "text": "timeline-play"
     },
     {
-      "id": "05e5e13fb909a96c4674",
+      "id": "bfed97db113dd3bdbb95",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "data-set"
+    },
+    {
+      "id": "c276d3904590fd94b2da",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "camera-dolly"
+    },
+    {
+      "id": "c5147ca37ec1cc385af3",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "BEHAVIOR_CYCLE_REFUSED: dependency cycle detected:"
+    },
+    {
+      "id": "c862f0570ccd7b0be82e",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "data"
+    },
+    {
+      "id": "c8a5d3712b1268808ced",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "scene-rotate"
+    },
+    {
+      "id": "d6cb96a9be8579bcce5f",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "BEHAVIOR_FALLBACK_REQUIRED: rule '"
+    },
+    {
+      "id": "db9c5833e5005bb0a7fd",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "scene"
+    },
+    {
+      "id": "087f3cda224437caf73e",
       "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
       "depth": "PRODUCT",
-      "text": "Establish premium subject"
+      "text": "REDUCED_MOTION_EQUIVALENCE_MISSING"
+    },
+    {
+      "id": "08e7eb98e110626ed23a",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Top-angle detail settle"
     },
     {
       "id": "0cf43555df49a7a0135b",
@@ -18147,10 +18891,76 @@
       "text": "orbit"
     },
     {
-      "id": "1bead51d203ecae0de51",
+      "id": "0d9b999739f6f0aee293",
       "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
       "depth": "PRODUCT",
-      "text": "Wide establish"
+      "text": "Leveling into interior eye-line"
+    },
+    {
+      "id": "0f94baa51780cf0b7bc5",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "level-in"
+    },
+    {
+      "id": "10a7aa117b4b91945614",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "hero-establish"
+    },
+    {
+      "id": "162a3d6057188d2a5ed0",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Camera collides with mesh '"
+    },
+    {
+      "id": "1e04278503597a0894a6",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Slow arc along side profile"
+    },
+    {
+      "id": "1f9c0e08fdbd08975ae7",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "CAMERA_CLIPPING_NEAR"
+    },
+    {
+      "id": "2985bc812094cc8839f3",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "macro-lead"
+    },
+    {
+      "id": "2c506998e6da6d7bbb6c",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "overview"
+    },
+    {
+      "id": "2c85ce4798fad1517535",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "FOV"
+    },
+    {
+      "id": "2cc246c1ea46c1d10802",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Linear camera speed"
+    },
+    {
+      "id": "2d401eae06d6dc619de7",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Lock to primary core component"
+    },
+    {
+      "id": "2e104c5d93160b753d21",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "' lacks reducedMotionVariant for accessibility"
     },
     {
       "id": "3092f3dc892fe1525c5f",
@@ -18159,10 +18969,52 @@
       "text": "Dramatic Push-In"
     },
     {
+      "id": "3b36f832fe545f4293ae",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "CAMERA_CLIPPING_FAR"
+    },
+    {
+      "id": "3c0032fcd390e37dfcf1",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "SUBJECT_OCCLUDED_OR_OUT_OF_VIEW"
+    },
+    {
+      "id": "3c50b320f036411e67a4",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Macro Detail"
+    },
+    {
+      "id": "3cf0d5493783e211308b",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "hero-focus"
+    },
+    {
+      "id": "43bbaf9c05704859f5d3",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "rotate-flank"
+    },
+    {
       "id": "44681fe3d63a8fc5901b",
       "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
       "depth": "PRODUCT",
       "text": "establish"
+    },
+    {
+      "id": "4ab2101f179db3b2925f",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "°/s exceeds disorientation limit of 180°/s"
+    },
+    {
+      "id": "4be05403db4fa9886fbc",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "component-lock"
     },
     {
       "id": "4d039407efa2e5eba237",
@@ -18171,16 +19023,58 @@
       "text": "push"
     },
     {
-      "id": "632ffffd2653e1d83813",
+      "id": "4fae1828a1376e68df61",
       "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
       "depth": "PRODUCT",
-      "text": "resolve"
+      "text": "Architectural Flythrough"
     },
     {
-      "id": "6810777f0aa974f19658",
+      "id": "54d516e195566ae0f387",
       "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
       "depth": "PRODUCT",
-      "text": "Controlled luxury orbit"
+      "text": "chapter-2"
+    },
+    {
+      "id": "581208d4e8fd2e61f900",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "exceeds safety threshold 25.0"
+    },
+    {
+      "id": "58762aee68557471231f",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Shot '"
+    },
+    {
+      "id": "58b26751179d133a10ee",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "chapter-3"
+    },
+    {
+      "id": "5e2bddd678e5fd4ee6b1",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Exploded Assembly"
+    },
+    {
+      "id": "658ace20ac00fc34642b",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "vista"
+    },
+    {
+      "id": "66975b8b99f013be35f3",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Story Journey"
+    },
+    {
+      "id": "66f6907b1ee63465f0cc",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "MOBILE_FRAMING_DEFICIENT"
     },
     {
       "id": "69017334f1b4670a70a7",
@@ -18189,16 +19083,130 @@
       "text": "cinematic"
     },
     {
-      "id": "6cb69c533aac1f4d2cce",
+      "id": "6bae37c26cf611771939",
       "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
       "depth": "PRODUCT",
-      "text": "Dramatic push-in"
+      "text": "Establish premium subject silhouette"
     },
     {
-      "id": "a7b84336adc5fb1d1314",
+      "id": "6c51435d7b514bfd0f27",
       "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
       "depth": "PRODUCT",
-      "text": "Hero settle"
+      "text": "Wide distance establish"
+    },
+    {
+      "id": "6d3fbd9ccc058e9509de",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "sphere"
+    },
+    {
+      "id": "6f32a28e24bb89e35a12",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Hero steady settle for reading copy"
+    },
+    {
+      "id": "7537c777be725136dc53",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Smooth controlled push-in toward focal center"
+    },
+    {
+      "id": "7727d1c76aa8419dfb3c",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Wide atmospheric establish"
+    },
+    {
+      "id": "77da2e40bfc3d8bc5bfe",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Controlled luxury orbit highlighting curvature"
+    },
+    {
+      "id": "7c71005060f83b2297d4",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "CAMERA_INSIDE_MESH"
+    },
+    {
+      "id": "7f14a1949aee6ce2789c",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "macro-hover"
+    },
+    {
+      "id": "808f82b7af19e60379d0",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "causes extreme distortion or subject loss"
+    },
+    {
+      "id": "81f09c490c9c08138fce",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Open vista framing"
+    },
+    {
+      "id": "86a0b01f9e235517effd",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Gentle cinematic settle on hero subject"
+    },
+    {
+      "id": "87ce7fec71017dde91cd",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Introduction vantage"
+    },
+    {
+      "id": "8b8ba8428788ee894a31",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "assembled"
+    },
+    {
+      "id": "8cca095638af5b1d5c30",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "' (distance"
+    },
+    {
+      "id": "9beb1eb3f5bdd469f4c1",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Resolution landing"
+    },
+    {
+      "id": "9c45c93835f8f507fe8f",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "High elevation contextual approach"
+    },
+    {
+      "id": "9c4a51f3d622bbbe7e31",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Product Inspection"
+    },
+    {
+      "id": "a3d5fdd36abd77002ad9",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Front three-quarter inspection view"
+    },
+    {
+      "id": "acdb46272681a3f841ff",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "approach"
+    },
+    {
+      "id": "b01d4b936791789a49b0",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "box"
     },
     {
       "id": "b1ec712670933f575627",
@@ -18207,10 +19215,346 @@
       "text": "settle"
     },
     {
+      "id": "b220f0134dfbd3681c70",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Camera position is too close to near plane ("
+    },
+    {
       "id": "b4e6b470cdfacdc0ea7b",
       "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
       "depth": "PRODUCT",
       "text": "Luxury Orbit"
+    },
+    {
+      "id": "b530dcd0a60135b908b8",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "<= radius"
+    },
+    {
+      "id": "bca46275e83c4b24e293",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Transformation transition"
+    },
+    {
+      "id": "c17658a6152b57dfda5e",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "chapter-1"
+    },
+    {
+      "id": "c2629aa7aa642ba70270",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Hero Reveal"
+    },
+    {
+      "id": "c9308ec448d7b589c3c4",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Camera position approaches or exceeds far plane ("
+    },
+    {
+      "id": "ca6f8910cc4bc67e5aa9",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "EXCESSIVE_LINEAR_ACCELERATION"
+    },
+    {
+      "id": "d63230349dfbec5e3c62",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "detail-rest"
+    },
+    {
+      "id": "d6f6cab88a13908e7951",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "' lacks responsiveVariant for mobile viewports"
+    },
+    {
+      "id": "dcdc304a7e5db837943a",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "explode-track"
+    },
+    {
+      "id": "e15545f40bccd7979b96",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Solid assembled product state"
+    },
+    {
+      "id": "f3ee2d74b867911e5f80",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Ultra-stable micro-texture observation"
+    },
+    {
+      "id": "f6aab20d949913a49308",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Glide into micro-surface focal zone"
+    },
+    {
+      "id": "f6d6c65ccc2201fd60c1",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Back away as components separate"
+    },
+    {
+      "id": "f6e9bb76a098dbe20119",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "EXCESSIVE_ANGULAR_VELOCITY"
+    },
+    {
+      "id": "f8de9c7525537d3b20d0",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Angular camera velocity"
+    },
+    {
+      "id": "1bf198d45004e8a0e175",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Camera Director"
+    },
+    {
+      "id": "2968abd16e10c6cf0f9e",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Director-tested camera choreography with bounded velocity and reduced-motion variants."
+    },
+    {
+      "id": "50785bc982b9985ab38f",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Exploded Assembly"
+    },
+    {
+      "id": "50ecde408c896ea0af52",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "% • FOV"
+    },
+    {
+      "id": "6df58425b52e0461db16",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Product Inspection"
+    },
+    {
+      "id": "8e427ad44db0fef2b32a",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "ACTIVE SHOTS ("
+    },
+    {
+      "id": "9a814a8ee0450e032c51",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Hero Reveal"
+    },
+    {
+      "id": "b4e0a506a650ebd5159a",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Macro Detail"
+    },
+    {
+      "id": "caec44d4408420bf3336",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "CINEMATIC PRESETS"
+    },
+    {
+      "id": "dd36ad88a1dc634df6c4",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Story Journey"
+    },
+    {
+      "id": "ea036eaab1f3f9ca6f9d",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Dramatic Push-In"
+    },
+    {
+      "id": "f0c8de7e023512245838",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Luxury Orbit"
+    },
+    {
+      "id": "f6533147ca170292be9f",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Architectural Flythrough"
+    },
+    {
+      "id": "066d3809d710d4aa889d",
+      "file": "apps/web/src/website-studio/camera/validateCameraPlan.ts",
+      "depth": "PRODUCT",
+      "text": "units/sec) exceeds safety threshold"
+    },
+    {
+      "id": "815b2a74d4fcb3610207",
+      "file": "apps/web/src/website-studio/camera/validateCameraPlan.ts",
+      "depth": "PRODUCT",
+      "text": "CAMERA_INSIDE_MESH: Shot \""
+    },
+    {
+      "id": "d4cbf057a40172301d30",
+      "file": "apps/web/src/website-studio/camera/validateCameraPlan.ts",
+      "depth": "PRODUCT",
+      "text": "EXCESSIVE_VELOCITY: Camera movement speed ("
+    },
+    {
+      "id": "f54d8400b4ec084f6486",
+      "file": "apps/web/src/website-studio/camera/validateCameraPlan.ts",
+      "depth": "PRODUCT",
+      "text": "\" camera is positioned inside object mesh bounds"
+    },
+    {
+      "id": "2af329c9efe89f242038",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#064e3b"
+    },
+    {
+      "id": "350d4aefbbb0eef9dd22",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "+ Bind Variable"
+    },
+    {
+      "id": "37b9daf3a27da0fb2762",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "PUBLIC WEB FETCH"
+    },
+    {
+      "id": "557ea9da430f4d831935",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "EXTERNAL PROVIDER"
+    },
+    {
+      "id": "5691fce44b9a1cb40284",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "EXTERNAL_PROVIDER"
+    },
+    {
+      "id": "5f85ba1c8f79703fda95",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "s"
+    },
+    {
+      "id": "6210c125cceb2abf6d87",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Data Binding & Privacy Inspector"
+    },
+    {
+      "id": "68feb47d2e13c833a82e",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#fca5a5"
+    },
+    {
+      "id": "6bc700c002eac3ae2a71",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "External API provider with mandatory privacy disclosure."
+    },
+    {
+      "id": "6bdc9c476b4dbdba861e",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "LOCAL"
+    },
+    {
+      "id": "70b387728bed82736ef1",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#34d399"
+    },
+    {
+      "id": "719efe7e518d009520d1",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#fcd34d"
+    },
+    {
+      "id": "728326f50025be197397",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#78350f"
+    },
+    {
+      "id": "8359cf830239bb4eb1f9",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Source:"
+    },
+    {
+      "id": "97eb3d892806f82330bd",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "No data bindings connected. Dynamic variables bind safely without code execution."
+    },
+    {
+      "id": "9a290a93d634c0c26cd5",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "bound"
+    },
+    {
+      "id": "a78a7c18527b2b62be98",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "variable"
+    },
+    {
+      "id": "ae8aed8454e42d5746e5",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "PUBLIC_FETCH"
+    },
+    {
+      "id": "b87236c21fa5c925c221",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Disconnect"
+    },
+    {
+      "id": "b9123268b8b4b7509b59",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Public read-only GET fetch. Disclosed public URL."
+    },
+    {
+      "id": "d6429d9a21eafd6d8932",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Never leaves the browser sandbox. 100% on-device."
+    },
+    {
+      "id": "efa3f4ef5be4a192a143",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Transform:"
+    },
+    {
+      "id": "fd06c8ce0b0ca4de443d",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#7f1d1d"
     },
     {
       "id": "06e9ac23fd93f456c209",
@@ -18297,10 +19641,100 @@
       "text": "DATA_BINDING_TYPE_MISMATCH"
     },
     {
+      "id": "02e344c87259ab31c6a2",
+      "file": "apps/web/src/website-studio/data/safeTransform.ts",
+      "depth": "PRODUCT",
+      "text": "\" is not an approved safe transformation"
+    },
+    {
+      "id": "11f156a92962d9f59d20",
+      "file": "apps/web/src/website-studio/data/safeTransform.ts",
+      "depth": "PRODUCT",
+      "text": "number"
+    },
+    {
+      "id": "2770f770f8a0f36d819f",
+      "file": "apps/web/src/website-studio/data/safeTransform.ts",
+      "depth": "PRODUCT",
+      "text": "UNSAFE_TRANSFORM: Transform type \""
+    },
+    {
+      "id": "325ee1908520fc6ff804",
+      "file": "apps/web/src/website-studio/data/safeTransform.ts",
+      "depth": "PRODUCT",
+      "text": "map-enum"
+    },
+    {
+      "id": "45df17eabcd44aaa336d",
+      "file": "apps/web/src/website-studio/data/safeTransform.ts",
+      "depth": "PRODUCT",
+      "text": "boolean-invert"
+    },
+    {
+      "id": "57271c8f7694d9fe4599",
+      "file": "apps/web/src/website-studio/data/safeTransform.ts",
+      "depth": "PRODUCT",
+      "text": "{{value}}"
+    },
+    {
+      "id": "5a95025c0815fc6a8966",
+      "file": "apps/web/src/website-studio/data/safeTransform.ts",
+      "depth": "PRODUCT",
+      "text": "string-template"
+    },
+    {
+      "id": "d7708b3b7a71bb8ba8c2",
+      "file": "apps/web/src/website-studio/data/safeTransform.ts",
+      "depth": "PRODUCT",
+      "text": "number-scale"
+    },
+    {
+      "id": "e060336359c4aaea9942",
+      "file": "apps/web/src/website-studio/data/safeTransform.ts",
+      "depth": "PRODUCT",
+      "text": "{value}"
+    },
+    {
       "id": "027bbad2c9d591072c64",
       "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
       "depth": "PRODUCT",
       "text": "depth-composite"
+    },
+    {
+      "id": "0434ab2d3c8596afc02d",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "product-stage"
+    },
+    {
+      "id": "087c559837c19e106eba",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "button"
+    },
+    {
+      "id": "195f26ef9cdf3d506c8f",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "\" cannot be claimed as TRUE_3D"
+    },
+    {
+      "id": "1d42308de206cd459674",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "motion-system"
+    },
+    {
+      "id": "23f5a04e0d10bc31afdb",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "KeyLight"
+    },
+    {
+      "id": "2ac20a807cbe92ede0ea",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "layered-depth-parallax-cards"
     },
     {
       "id": "2d77542c8356e654a739",
@@ -18315,16 +19749,100 @@
       "text": "selective-webgl-product-stage"
     },
     {
+      "id": "495aed7ca895de846d07",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "h1"
+    },
+    {
+      "id": "5e69e3ab569b00d4cf58",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "flat-cards"
+    },
+    {
+      "id": "646ae0547e0db1c8e726",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "three.js"
+    },
+    {
+      "id": "668f224658db4d529192",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "threejs"
+    },
+    {
+      "id": "6897160ab69262209c2b",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "enhancement-"
+    },
+    {
       "id": "691d9634ab78679ef204",
       "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
       "depth": "PRODUCT",
       "text": "2_5D"
     },
     {
+      "id": "722537cea8ee375c0b2e",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "TRUTH_LABEL_VIOLATION: Technique \""
+    },
+    {
+      "id": "8c717bdf72dad8ff67a4",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "p"
+    },
+    {
+      "id": "8c8927f791f65cb3eee9",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "isometric-tilt-inspection"
+    },
+    {
+      "id": "8f633ddc326574a97dac",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "webgl"
+    },
+    {
+      "id": "917164392b79089a024d",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "img"
+    },
+    {
       "id": "935a0e833777306e661f",
       "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
       "depth": "PRODUCT",
       "text": "TRUE_3D"
+    },
+    {
+      "id": "990739d8aaa89abb2d4c",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "section"
+    },
+    {
+      "id": "9ac59eeeec069050a449",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "PASS"
+    },
+    {
+      "id": "9ad39268586895285ffc",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "background"
+    },
+    {
+      "id": "a2a2d62a74ce93061202",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "FillLight"
     },
     {
       "id": "aa11ab5db3367fd77e48",
@@ -18345,16 +19863,58 @@
       "text": "LOW"
     },
     {
+      "id": "b46388b78897174fc273",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "features"
+    },
+    {
+      "id": "b783a3e7b17e4852ac21",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "static-grid"
+    },
+    {
+      "id": "b870b5a645c6ca7e7440",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "ambient-css-mesh-drift"
+    },
+    {
       "id": "bd6272d9ef3fc17a27c2",
       "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
       "depth": "PRODUCT",
       "text": "REVIEW_REQUIRED"
     },
     {
+      "id": "c12b47175a529a7b74a0",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "HeroProductMesh"
+    },
+    {
+      "id": "cac7e9f24bb3cab96f9f",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "main"
+    },
+    {
       "id": "cbd903404ed2210b1a26",
       "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
       "depth": "PRODUCT",
       "text": "hero-3d"
+    },
+    {
+      "id": "cf1c94fe599dce021dd1",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "gallery"
+    },
+    {
+      "id": "d7be44229f8ddb025c31",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "static-color"
     },
     {
       "id": "da6933e254d4fb1b1b6d",
@@ -18381,6 +19941,366 @@
       "text": "DEPTH_COMPOSITE"
     },
     {
+      "id": "1e92798bb41df1341fc4",
+      "file": "apps/web/src/website-studio/explore/InspirationCard.tsx",
+      "depth": "PRODUCT",
+      "text": "Use Recipe"
+    },
+    {
+      "id": "3893dde197d2d111ccb8",
+      "file": "apps/web/src/website-studio/explore/InspirationCard.tsx",
+      "depth": "PRODUCT",
+      "text": "Select"
+    },
+    {
+      "id": "e08b747fc2d5e9f4f4cd",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "ORIGINALITY_FIREWALL_VIOLATION: Remixed site retains source brand name: \""
+    },
+    {
+      "id": "03462dd2722678fc24af",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "BehaviorGraph"
+    },
+    {
+      "id": "0f1b7f153e6b94a64a68",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Interior flythrough with bounded mesh collision guards and waypoint annotations."
+    },
+    {
+      "id": "11960d87e1cffd98de0c",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Filter recipes"
+    },
+    {
+      "id": "1aa75a355afd1ddeb999",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "DoctorDiagnostics"
+    },
+    {
+      "id": "1cae89f77cf0ea626970",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "reduced-motion"
+    },
+    {
+      "id": "252f4aafa6e15badee34",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "pbr-materials"
+    },
+    {
+      "id": "258fdf34b178d3d2f42b",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Inspiration Recipes"
+    },
+    {
+      "id": "25ff6bacc2e29d8748b8",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "E-Commerce"
+    },
+    {
+      "id": "269921328131254601b2",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "DataBinding"
+    },
+    {
+      "id": "2a71787cfc5561ce9452",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Live data-bound parameters controlling 3D geometry with strict origin disclosure."
+    },
+    {
+      "id": "2f292f0e7627b25ad1ae",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Creative & Agency"
+    },
+    {
+      "id": "320c19588d897b746008",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "luxury-product-orbit"
+    },
+    {
+      "id": "335948f9f2619e6262fd",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Technology"
+    },
+    {
+      "id": "341d89b6db682c25e770",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "kinetic-typography-stage"
+    },
+    {
+      "id": "34b0677610bae87a77bf",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "SceneDoctor"
+    },
+    {
+      "id": "36202376923e48ebe2c8",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "privacy-boundary"
+    },
+    {
+      "id": "3e6d4ff8aad55a56df74",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "architectural-spatial"
+    },
+    {
+      "id": "4f66e34bc215957027e5",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "All"
+    },
+    {
+      "id": "55739046feef3d3412da",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "CameraDirector"
+    },
+    {
+      "id": "598e1e5dd6298db9a8dd",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "data-telemetry-dashboard"
+    },
+    {
+      "id": "59a326fa41a4b8bca105",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "flythrough"
+    },
+    {
+      "id": "5de5ba2ace08bf25e4ff",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "typography"
+    },
+    {
+      "id": "7245167812ab0f5d6bce",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "DataBindingInspector"
+    },
+    {
+      "id": "744afded3cbf6d979d70",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Multi-shot orbital camera with cinematic lighting and responsive zoom on interaction."
+    },
+    {
+      "id": "77707c95ed5a624aa733",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "ReducedMotionEquivalence"
+    },
+    {
+      "id": "83d65d83afe5eec09341",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Filter recipes..."
+    },
+    {
+      "id": "86ccc7e976845ef05541",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "data-binding"
+    },
+    {
+      "id": "9196238c032a64e08f5b",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Luxury Product Showcase"
+    },
+    {
+      "id": "949693c6c9db0fb167f9",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Telemetry Data Stage"
+    },
+    {
+      "id": "a242b8372c3beacb64c9",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "LocalSandbox"
+    },
+    {
+      "id": "a32223755d8af3021845",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Responsive 3D background linked to scroll progress with accessible static fallback."
+    },
+    {
+      "id": "a50357c5d71ef3d83d6f",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "NarrativeBlocks"
+    },
+    {
+      "id": "ad12a881ae8918e4927c",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "scroll-driven"
+    },
+    {
+      "id": "b9ad1efbe4f233f9f24a",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "CollisionGuards"
+    },
+    {
+      "id": "ba7329e9a774217d78f7",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Architectural Space Tour"
+    },
+    {
+      "id": "c5e3be25a38e4ced0693",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "DOMSync"
+    },
+    {
+      "id": "d49f38f755926d5eef00",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Real Estate & Architecture"
+    },
+    {
+      "id": "d6b39453aa942aedc8c9",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Kinetic Interactive Stage"
+    },
+    {
+      "id": "d9f1dbc426ab50f736f5",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "lighting-ambient"
+    },
+    {
+      "id": "e4e6d45b60897e7bf00e",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "camera-director"
+    },
+    {
+      "id": "ec6c7ad930b07624bf93",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Curated 3D website recipes with tested camera plans, motion blocks, and behavior graphs."
+    },
+    {
+      "id": "ed088cbd40cdca391df9",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "real-time"
+    },
+    {
+      "id": "f0df2529a7f5a3495f54",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "orbit"
+    },
+    {
+      "id": "ffcfbb95b61270b0409a",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "waypoints"
+    },
+    {
+      "id": "07a16117cdfae527efa6",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "scene-ir.json"
+    },
+    {
+      "id": "0fd1a82c54269cfb9dbe",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "performance.json"
+    },
+    {
+      "id": "2f86cf656a0f47cdc20b",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "provenance.json"
+    },
+    {
+      "id": "3af07e7eb20a19905211",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "design-dna.json"
+    },
+    {
+      "id": "3ef54e707a75b18c24de",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "motion-blocks.json"
+    },
+    {
+      "id": "4db81a990946c78afbd8",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "data-bindings.json"
+    },
+    {
+      "id": "531177a5940a4c66491e",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "user"
+    },
+    {
+      "id": "81be1c7ad5465b638efe",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "camera-plan.json"
+    },
+    {
+      "id": "a1e5787567ee587f5470",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "project.json"
+    },
+    {
+      "id": "be09fa0bd749156f6a28",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "agent-policy.json"
+    },
+    {
+      "id": "cd92f1516e0489b512ce",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "Invalid .spe-site bundle: missing website-spec.json"
+    },
+    {
+      "id": "e323f564663ea867ea52",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "behavior-graph.json"
+    },
+    {
+      "id": "f52eec6c86ee45507106",
+      "file": "apps/web/src/website-studio/export/exportSpeSite.ts",
+      "depth": "PRODUCT",
+      "text": "website-spec.json"
+    },
+    {
       "id": "16b6b0a7bbe4ffc6d1f7",
       "file": "apps/web/src/website-studio/export/projectPackage.ts",
       "depth": "PRODUCT",
@@ -18399,16 +20319,28 @@
       "text": "spe-site/1"
     },
     {
-      "id": "26a44a4f27b9478bce82",
+      "id": "08a3c3c47a9eacc73967",
       "file": "apps/web/src/website-studio/history/sitePatch.ts",
       "depth": "PRODUCT",
-      "text": "fnv1a32-"
+      "text": "number"
     },
     {
-      "id": "5ed61ec35694af3e568c",
+      "id": "10ba4537c1d711d0ce60",
       "file": "apps/web/src/website-studio/history/sitePatch.ts",
       "depth": "PRODUCT",
-      "text": "PATCH_CONFLICT"
+      "text": "PATCH_AFTER_HASH_MISMATCH: applied state hash mismatch"
+    },
+    {
+      "id": "46ba2b76f8d2bffbdcdd",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "sha"
+    },
+    {
+      "id": "67bf7b15de1df5160c39",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "patch-"
     },
     {
       "id": "6a1225a3436ee2897aba",
@@ -18423,6 +20355,18 @@
       "text": "PATCH_OPERATION_REFUSED"
     },
     {
+      "id": "816a99109b9ba46c11d3",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_INVALID"
+    },
+    {
+      "id": "92bf4f426057342c291b",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_INVALID_TIMESTAMP: patch requires valid positive numeric timestamp"
+    },
+    {
       "id": "a3f678df29957fb0a4eb",
       "file": "apps/web/src/website-studio/history/sitePatch.ts",
       "depth": "PRODUCT",
@@ -18435,10 +20379,22 @@
       "text": "set"
     },
     {
-      "id": "e3e768fc40ea890415a3",
+      "id": "db1b890b1347f450f2b3",
       "file": "apps/web/src/website-studio/history/sitePatch.ts",
       "depth": "PRODUCT",
-      "text": "PATCH_AFTER_HASH_MISMATCH"
+      "text": "PATCH_INVALID_HASH: cryptographic beforeHash required"
+    },
+    {
+      "id": "ebf16be316f60e1767bd",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_INVALID_HASH: cryptographic afterHash required"
+    },
+    {
+      "id": "f1732763bfd75cfdd75c",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_CONFLICT: state hash mismatch"
     },
     {
       "id": "05dd5321464cf6ddcf22",
@@ -19200,7 +21156,7 @@
       "id": "c6ee83e3ca62720a61c1",
       "file": "apps/web/src/website-studio/model/sceneIR.ts",
       "depth": "PRODUCT",
-      "text": "<svg xmlns=\\"
+      "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><rect width=\"64\" height=\"64\" rx=\"12\" fill=\"#0b0d12\"/></svg>"
     },
     {
       "id": "04e88cb3bfb815cb0e1a",
@@ -19317,10 +21273,124 @@
       "text": "-track-"
     },
     {
+      "id": "0e25ea54c622ede4d87e",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Narrative Blocks"
+    },
+    {
+      "id": "4080e197a8ab7e46960d",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "No narrative motion blocks created yet."
+    },
+    {
+      "id": "7f3ca39dcaa3f952bc23",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "block"
+    },
+    {
+      "id": "8fcf43ba7a6e6fc81183",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "active track"
+    },
+    {
+      "id": "a35ae4afa6ce5010aa7f",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "s"
+    },
+    {
+      "id": "ab8b91668e230690053e",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "narrative"
+    },
+    {
+      "id": "ae240e77f61aed8e1ce7",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Detailed Tracks"
+    },
+    {
+      "id": "bc4f8f431d1ee1b7f491",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Timeline & Narrative Motion Blocks"
+    },
+    {
+      "id": "e741fc072da7d79ce8f6",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "No expanded keyframe tracks found."
+    },
+    {
+      "id": "f97886df077c72adeaf2",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "keyframes ("
+    },
+    {
+      "id": "09f631158069508ae5fe",
+      "file": "apps/web/src/website-studio/motion/reconcileMotionBlocks.ts",
+      "depth": "PRODUCT",
+      "text": "number"
+    },
+    {
+      "id": "05f433769802afbbbb29",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "CLAMP_MAX_DPR_1_25"
+    },
+    {
+      "id": "076da2b16f6f2754d477",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "12de2803deec4e3ac1bb",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "INSTANCED_MESH_BATCHING"
+    },
+    {
+      "id": "239fa4f0dab49412b449",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "PERFORMANCE_MEASUREMENT_REJECTED: caller-supplied values alone cannot declare MEASURED; verified browser telemetry harness required"
+    },
+    {
       "id": "28e4687b133e946893b6",
       "file": "apps/web/src/website-studio/performance/measureScene.ts",
       "depth": "PRODUCT",
       "text": "UNKNOWN"
+    },
+    {
+      "id": "412f4ef2b452b15e305d",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: telemetry must originate from BROWSER_HARNESS"
+    },
+    {
+      "id": "4f286bbb7291425523cc",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "ESTIMATED"
+    },
+    {
+      "id": "52ce481c779734e55603",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "ESTIMATED_TIER_"
+    },
+    {
+      "id": "6129bd766c7607b9cb65",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: valid viewport required"
     },
     {
       "id": "61a8133b2a6d49edbed8",
@@ -19335,16 +21405,184 @@
       "text": "DRAW_CALL_BUDGET_EXCEEDED"
     },
     {
+      "id": "7200e3780736573f9dc5",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "BROWSER_HARNESS"
+    },
+    {
+      "id": "7a3aef98187b36ae8878",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "sig-"
+    },
+    {
+      "id": "81f2441014122cd420e0",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "DESKTOP_HIGH"
+    },
+    {
       "id": "8ea6d68debf9b30deba3",
       "file": "apps/web/src/website-studio/performance/measureScene.ts",
       "depth": "PRODUCT",
       "text": "MEASURED"
     },
     {
-      "id": "c3ea52c0708667088753",
+      "id": "a6b912927dde79905540",
       "file": "apps/web/src/website-studio/performance/measureScene.ts",
       "depth": "PRODUCT",
-      "text": "PERFORMANCE_MEASUREMENT_INVALID"
+      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: statistical telemetry percentile mismatch"
+    },
+    {
+      "id": "a873f80f55bb7415ab53",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "ENABLE_LOD_DECIMATION"
+    },
+    {
+      "id": "b5337b959c03babcefb4",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: minimum 10 warmup frames must be discarded"
+    },
+    {
+      "id": "d00f38bc0f15c73880a5",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: valid DPR required"
+    },
+    {
+      "id": "d0d138fcdd46aa9f802c",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: browser metadata required"
+    },
+    {
+      "id": "ff0c4855f125285d40c9",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: minimum 60 sampled frames required"
+    },
+    {
+      "id": "0ae0474e2959c4b986a5",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Draw Calls"
+    },
+    {
+      "id": "11399be6c5d19e0e7f35",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Active Lights"
+    },
+    {
+      "id": "26cf1dfa86a2c7cc17e7",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "TIER C"
+    },
+    {
+      "id": "2e81d92a4e7c5e617f2a",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "#f59e0b"
+    },
+    {
+      "id": "3c208c425e9e57b31278",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Scene Performance Doctor"
+    },
+    {
+      "id": "4eb64e7aac777483dee3",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Apply Non-Destructive Optimizations"
+    },
+    {
+      "id": "50ca23a7f2a7635c51a6",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "#ef4444"
+    },
+    {
+      "id": "55f246282d28c05c0e89",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Geometry Memory"
+    },
+    {
+      "id": "5f216379943538858f1e",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "TIER B"
+    },
+    {
+      "id": "84e0f422838de0f9a375",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "#10b981"
+    },
+    {
+      "id": "8bb04a4776019d904bf7",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "KB"
+    },
+    {
+      "id": "8c413c860989bd34d2f2",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "91ad7122d6ec635291de",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Triangles"
+    },
+    {
+      "id": "a7f383472b7922944b2e",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "TIER A"
+    },
+    {
+      "id": "d83992fcef12d13092df",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "State:"
+    },
+    {
+      "id": "fcc3fe899a8472c0eefc",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "DETECTED ISSUES ("
+    },
+    {
+      "id": "18ffb680e19897f4fab6",
+      "file": "apps/web/src/website-studio/performance/proposeOptimization.ts",
+      "depth": "PRODUCT",
+      "text": "\" to improve framerate"
+    },
+    {
+      "id": "9ebf7b06ce58c3980609",
+      "file": "apps/web/src/website-studio/performance/proposeOptimization.ts",
+      "depth": "PRODUCT",
+      "text": "remove-node"
+    },
+    {
+      "id": "deacb533e13970325cf8",
+      "file": "apps/web/src/website-studio/performance/proposeOptimization.ts",
+      "depth": "PRODUCT",
+      "text": "delete-section"
+    },
+    {
+      "id": "e37def0318da8adcdbf3",
+      "file": "apps/web/src/website-studio/performance/proposeOptimization.ts",
+      "depth": "PRODUCT",
+      "text": "ESSENTIAL_CONTENT_DELETED: Optimization cannot delete essential content section \""
     },
     {
       "id": "5f4862766a72184f2072",
@@ -19407,6 +21645,408 @@
       "text": "OBSERVED"
     },
     {
+      "id": "06c841280cf4b3b0be4f",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "Interactive 3D experience with accessible semantic DOM hierarchy and tested camera motion."
+    },
+    {
+      "id": "153fde751a1349e80277",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "Explore Experience"
+    },
+    {
+      "id": "17c73ac8dabcfbeba982",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "desktop"
+    },
+    {
+      "id": "38eb8bbe909e3a575ffc",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "375px"
+    },
+    {
+      "id": "3bb11351ded3ab35e436",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "index.html"
+    },
+    {
+      "id": "48bbf2f1713a35c62622",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "home"
+    },
+    {
+      "id": "5414660443ca886a281c",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "Overview"
+    },
+    {
+      "id": "5b35138b7e56744ca7d7",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "Contact"
+    },
+    {
+      "id": "7160e2bf700b5acba665",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "[ Interactive 3D WebGL Canvas Layer ]"
+    },
+    {
+      "id": "b311028bed65588989bf",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "tablet"
+    },
+    {
+      "id": "b75b52f2388e39ac4f90",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "Features"
+    },
+    {
+      "id": "b9ea1736fe4a7093610e",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "mobile"
+    },
+    {
+      "id": "bdacbf53761d0e577906",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "768px"
+    },
+    {
+      "id": "27034e0cb0c535d7bfc5",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "\" lacks mobile fallback action"
+    },
+    {
+      "id": "38c0693f06b5c0b68872",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "MISSING_REDUCED_MOTION_VARIANT"
+    },
+    {
+      "id": "3e3f541194c809efdf02",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "Rule \""
+    },
+    {
+      "id": "4947d1fa94fcf6a2c564",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "MISSING_MOBILE_FALLBACK"
+    },
+    {
+      "id": "4ef390bfba24db378f80",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "hero"
+    },
+    {
+      "id": "5e878638d0774669bb0a",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "add-camera-reduced-motion"
+    },
+    {
+      "id": "644e3af190d5fed8947d",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "add-rule-fallback"
+    },
+    {
+      "id": "665ada55413df7f88add",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "repair-"
+    },
+    {
+      "id": "8408084ccc070450d804",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "HIGH"
+    },
+    {
+      "id": "b428c704c71eef74a1b4",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "\" lacks reducedMotionVariant"
+    },
+    {
+      "id": "d106f357c309cc1d222a",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "dom-show"
+    },
+    {
+      "id": "d73263db4df9beefae41",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "MEDIUM"
+    },
+    {
+      "id": "d8cfc689853330ad2de9",
+      "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
+      "depth": "PRODUCT",
+      "text": "Camera shot \""
+    },
+    {
+      "id": "0297949250ada5d75fc7",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Tablet"
+    },
+    {
+      "id": "0ed46b5ac15770ffd2bb",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Mobile"
+    },
+    {
+      "id": "1178ab1e8be761b3ed5b",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "INTELLIGENCE Panel"
+    },
+    {
+      "id": "14b00be5bcab1c78f95d",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "STRUCTURE Panel"
+    },
+    {
+      "id": "1533cdeda95b47907e5c",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Apply Edit"
+    },
+    {
+      "id": "1fe14c89beecfcf4beff",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "USER_LANGUAGE"
+    },
+    {
+      "id": "20db5f284b34ddc322dd",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Recipes"
+    },
+    {
+      "id": "21545ca25793a2c7dc42",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "s"
+    },
+    {
+      "id": "25a0ce518695bfe9badc",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Tablet Preview Mode"
+    },
+    {
+      "id": "379a1d44261bcf03e291",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "(Updated)"
+    },
+    {
+      "id": "39a1c4bb0c1f0f52f3fc",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt Copilot to direct motion, lighting, or camera..."
+    },
+    {
+      "id": "4b1d33624792c9f4bbae",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "LIVE WEBSITE Stage"
+    },
+    {
+      "id": "5afd1562c16dc15781da",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Export .spe-site"
+    },
+    {
+      "id": "665a394887cc8274b97a",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "v1.1 Free 3D Architecture"
+    },
+    {
+      "id": "69c31dd6d03e4f0b9579",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE Website Studio"
+    },
+    {
+      "id": "6cd863ad7fcda6bd5cb8",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Data"
+    },
+    {
+      "id": "6d0f12dad35976150854",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Desktop Preview Mode"
+    },
+    {
+      "id": "6e99eba73fc6289a3bb4",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "bytes)"
+    },
+    {
+      "id": "7a64fe459a7e5b109837",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "COPILOT"
+    },
+    {
+      "id": "879fedb8c87faa72d892",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Desktop"
+    },
+    {
+      "id": "8986d5207fbb07b13f0e",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Mobile Preview Mode"
+    },
+    {
+      "id": "97fa3be8ee37a3ccb51c",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "INTELLIGENCE"
+    },
+    {
+      "id": "a2c1f09fa4da1d4fe096",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "explore"
+    },
+    {
+      "id": "a91fe3d9bd579d3c7d1a",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "hero"
+    },
+    {
+      "id": "ab543f4b143fc99266e3",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Export SPE Site Package"
+    },
+    {
+      "id": "af42615aea861b03ed70",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "metadata"
+    },
+    {
+      "id": "b135d37e3b64ff755ff0",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "LIVE WEBSITE"
+    },
+    {
+      "id": "b3410f49bd2703a6cbde",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "structure"
+    },
+    {
+      "id": "b84bb64da29054926a5f",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Tree"
+    },
+    {
+      "id": "b9f85f732d4daf4be171",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Pages & Hierarchy"
+    },
+    {
+      "id": "ba2be4d4c754acc5749f",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Graph"
+    },
+    {
+      "id": "c825757b56037f4ca9fd",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "data"
+    },
+    {
+      "id": "d79d5dc51e220e79fe47",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Exported .spe-site package ("
+    },
+    {
+      "id": "d9414142a259a7b508f0",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Direct Copilot with natural language"
+    },
+    {
+      "id": "e31e443b9653c997e9ad",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "set"
+    },
+    {
+      "id": "ef92b18b6eee3f00b42f",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "edit"
+    },
+    {
+      "id": "f0f09aab55861ce88c4b",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "STRUCTURE"
+    },
+    {
+      "id": "f25d4deaeef1f2bb1cd5",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "desktop"
+    },
+    {
+      "id": "f46f03066fb246201662",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "behaviors"
+    },
+    {
+      "id": "f650c526378ef69333a1",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "title"
+    },
+    {
+      "id": "f65aa29db91a3e956a5b",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "COPILOT & Motion Timeline"
+    },
+    {
       "id": "07251de020e7386ad078",
       "file": "apps/web/src/website/mount-contract.ts",
       "depth": "PRODUCT",
@@ -19461,12 +22101,6 @@
       "text": "NOT_AVAILABLE"
     },
     {
-      "id": "613f343888d5bc338c69",
-      "file": "apps/web/src/website/mount-contract.ts",
-      "depth": "PRODUCT",
-      "text": "NOT_INTEGRATED"
-    },
-    {
       "id": "64cbf5166917b4d0294d",
       "file": "apps/web/src/website/mount-contract.ts",
       "depth": "PRODUCT",
@@ -19501,18 +22135,6 @@
       "file": "apps/web/src/website/mount-contract.ts",
       "depth": "PRODUCT",
       "text": "spe_runtime/webrecon"
-    },
-    {
-      "id": "b1aa82b45c1b27d32a4c",
-      "file": "apps/web/src/website/mount-contract.ts",
-      "depth": "PRODUCT",
-      "text": "READY_FOR_SHELL_MOUNT"
-    },
-    {
-      "id": "ba9c0e2280e9afab639d",
-      "file": "apps/web/src/website/mount-contract.ts",
-      "depth": "PRODUCT",
-      "text": "NOT_DONE"
     },
     {
       "id": "bf4acab212fef0f4f626",
@@ -19627,12 +22249,6 @@
       "file": "apps/web/src/website/productFlow.ts",
       "depth": "PRODUCT",
       "text": "SPEC_JSON_INVALID"
-    },
-    {
-      "id": "3dc182987eb9b60fa150",
-      "file": "apps/web/src/website/productFlow.ts",
-      "depth": "PRODUCT",
-      "text": "NOT_DONE"
     },
     {
       "id": "3ec3b48819f8a3b33958",
@@ -19897,12 +22513,6 @@
       "file": "apps/web/src/website/productFlow.ts",
       "depth": "PRODUCT",
       "text": "SCRIPT_ELEMENT_REFUSED"
-    },
-    {
-      "id": "fa82fbc1fa0a758ed043",
-      "file": "apps/web/src/website/productFlow.ts",
-      "depth": "PRODUCT",
-      "text": "NOT_INTEGRATED"
     },
     {
       "id": "01fff77f32ec0eac0cb4",
