@@ -22,8 +22,13 @@ export function WebsiteSceneHost() {
     if (!mounted) return;
     const node = hostRef.current;
     if (!node) return;
-    const handle = mountBundledScene(node, WEBSITE_SCENE_IR);
+    const activeIr = (window as any).__SPE_TEST_SCENE_IR || WEBSITE_SCENE_IR;
+    const handle = mountBundledScene(node, activeIr);
     window.__SPE_SCENE_HANDLE = handle;
+    (window as any).__SPE_REMOUNT_SCENE = () => {
+      setMounted(false);
+      setTimeout(() => setMounted(true), 50);
+    };
     setReport({ ...handle.report });
     return () => {
       try {

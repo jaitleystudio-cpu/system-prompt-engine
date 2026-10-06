@@ -5,8 +5,9 @@
     "ledgerWebglNotRun": true,
     "ledgerSceneNotPass": true,
     "flowNotRun": true,
-    "compilerNotBundled": true,
-    "compilerNotRun": true
+    "compilerExportPinned": true,
+    "compilerNotRun": true,
+    "compilerNoPass": true
   },
   "executed": {
     "webglExecution": "EXECUTED",

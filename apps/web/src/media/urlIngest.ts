@@ -520,6 +520,16 @@ export async function ingestUrl(
       signal: controller.signal,
     });
     const finalUrl = res.url || parsed.toString();
+    const finalParsed = normalizeUrl(finalUrl);
+    if (!finalParsed || !isSsrfSafeUrl(finalParsed).safe) {
+      return {
+        status: "invalid_url",
+        url: parsed.toString(),
+        finalUrl,
+        message: "Enter a full http(s) URL.",
+        fallbacks: FALLBACKS,
+      };
+    }
     if (!res.ok) {
       return {
         status: "network_error",
