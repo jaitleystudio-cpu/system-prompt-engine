@@ -1,7 +1,7 @@
 {
   "ok": true,
   "suite": "SPE_R8_IMAGE_REAL_RENDERED_FIDELITY",
-  "timestamp": "2026-10-06T00:33:47.219Z",
+  "timestamp": "2026-10-06T00:52:41.260Z",
   "fixturesEvaluated": 6,
   "meanSsimScore": 0.552,
   "frozenGateRequired": 0.95,
@@ -21,8 +21,8 @@
     {
       "fixtureId": "mobile-app",
       "dimensions": "390x844",
-      "ssimScore": 0.7142,
-      "pixelDeltaPercentage": 67.499,
+      "ssimScore": 0.7157,
+      "pixelDeltaPercentage": 67.601,
       "status": "UNPROVEN",
       "notes": "Scaffold structural layout compared against pixel reference"
     },

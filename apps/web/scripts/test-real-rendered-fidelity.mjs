@@ -37,9 +37,9 @@ console.log("SPE R8 IMAGE — REAL RENDERED FIDELITY, HOLDOUTS & MUTATION SUITE"
 console.log("============================================================");
 
 // 1. Launch Playwright Chromium Headless
-const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const chromePath = process.env.CHROME_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const browser = await chromium.launch({
-  executablePath: chromePath,
+  ...(existsSync(chromePath) ? { executablePath: chromePath } : {}),
   headless: true,
 });
 

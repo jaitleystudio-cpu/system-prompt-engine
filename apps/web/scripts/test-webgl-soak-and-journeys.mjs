@@ -19,14 +19,14 @@
  */
 
 import { spawn } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
-const chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const chrome = process.env.CHROME_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const port = 5195;
 const url = `http://127.0.0.1:${port}/website`;
 
@@ -86,7 +86,7 @@ try {
   console.log("Vite server ready at", url);
 
   const browser = await chromium.launch({
-    executablePath: chrome,
+    ...(existsSync(chrome) ? { executablePath: chrome } : {}),
     headless: true,
     args: ["--use-angle=metal", "--js-flags=--expose-gc"],
   });

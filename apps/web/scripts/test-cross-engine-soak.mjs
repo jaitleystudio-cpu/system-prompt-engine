@@ -16,7 +16,7 @@
 
 import assert from "node:assert/strict";
 import http from "node:http";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build } from "../node_modules/esbuild/lib/main.js";
@@ -25,7 +25,7 @@ import { spawn } from "node:child_process";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const src = join(root, "src");
-const chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const chrome = process.env.CHROME_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const port = 5196;
 const url = `http://127.0.0.1:${port}/website`;
 
@@ -108,7 +108,7 @@ try {
   console.log("Vite ready at", url);
 
   const browser = await chromium.launch({
-    executablePath: chrome,
+    ...(existsSync(chrome) ? { executablePath: chrome } : {}),
     headless: true,
     args: ["--use-angle=metal"],
   });
