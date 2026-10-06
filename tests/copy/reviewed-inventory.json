@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-06T05:22:43.081Z",
+  "generated": "2026-10-06T05:40:38.576Z",
   "tipNote": "Founder-approved SPE Free 3D Websites v1.1 Studio UI foundation copy reviewed; zero superlatives, zero unreviewed copy.",
   "entries": [
     {
@@ -19947,10 +19947,28 @@
       "text": "Use Recipe"
     },
     {
-      "id": "3893dde197d2d111ccb8",
+      "id": "32aeb23dc540f038ac94",
       "file": "apps/web/src/website-studio/explore/InspirationCard.tsx",
       "depth": "PRODUCT",
-      "text": "Select"
+      "text": "Blend"
+    },
+    {
+      "id": "46406da460d1772ce7e1",
+      "file": "apps/web/src/website-studio/explore/InspirationCard.tsx",
+      "depth": "PRODUCT",
+      "text": "Analyze"
+    },
+    {
+      "id": "9faa2376a0f59740df24",
+      "file": "apps/web/src/website-studio/explore/InspirationCard.tsx",
+      "depth": "PRODUCT",
+      "text": "Blend DNA"
+    },
+    {
+      "id": "e26f5f8b1fd38b2eb1f8",
+      "file": "apps/web/src/website-studio/explore/InspirationCard.tsx",
+      "depth": "PRODUCT",
+      "text": "Use"
     },
     {
       "id": "e08b747fc2d5e9f4f4cd",
@@ -19965,6 +19983,12 @@
       "text": "BehaviorGraph"
     },
     {
+      "id": "0a010ddca23de42beb8e",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Primary #3b82f6, Accents #60a5fa/#818cf8"
+    },
+    {
       "id": "0f1b7f153e6b94a64a68",
       "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
       "depth": "PRODUCT",
@@ -19975,6 +19999,12 @@
       "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
       "depth": "PRODUCT",
       "text": "Filter recipes"
+    },
+    {
+      "id": "1543bbb6c3127244701c",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Blend DNA Into Active Site"
     },
     {
       "id": "1aa75a355afd1ddeb999",
@@ -20091,6 +20121,24 @@
       "text": "typography"
     },
     {
+      "id": "6afc7bc75c0ee1c7fbb3",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Display Inter, Body DM Sans"
+    },
+    {
+      "id": "6bdfe69eb029f602fe5e",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Scroll motion with fallback"
+    },
+    {
+      "id": "71dc4830691c13aa5ac2",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Palette:"
+    },
+    {
       "id": "7245167812ab0f5d6bce",
       "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
       "depth": "PRODUCT",
@@ -20127,10 +20175,22 @@
       "text": "Luxury Product Showcase"
     },
     {
+      "id": "933eb8bb30f457e0e55b",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "DesignDNA Analysis:"
+    },
+    {
       "id": "949693c6c9db0fb167f9",
       "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
       "depth": "PRODUCT",
       "text": "Telemetry Data Stage"
+    },
+    {
+      "id": "a066c428aa686018283a",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Motion Rhythm:"
     },
     {
       "id": "a242b8372c3beacb64c9",
@@ -20149,6 +20209,12 @@
       "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
       "depth": "PRODUCT",
       "text": "NarrativeBlocks"
+    },
+    {
+      "id": "ab072a4157f4b4bd64a1",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Typography:"
     },
     {
       "id": "ad12a881ae8918e4927c",
@@ -20173,6 +20239,18 @@
       "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
       "depth": "PRODUCT",
       "text": "DOMSync"
+    },
+    {
+      "id": "c80efd6634554c572c93",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Cinematic Rim + Ambient Key"
+    },
+    {
+      "id": "ceaeec3cd6b62d0754b1",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Lighting:"
     },
     {
       "id": "d49f38f755926d5eef00",
@@ -21273,6 +21351,12 @@
       "text": "-track-"
     },
     {
+      "id": "0c2e20650cdd7cd03019",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "reveal-block-"
+    },
+    {
       "id": "0e25ea54c622ede4d87e",
       "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
       "depth": "PRODUCT",
@@ -21283,6 +21367,12 @@
       "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
       "depth": "PRODUCT",
       "text": "No narrative motion blocks created yet."
+    },
+    {
+      "id": "408633665f27535be1aa",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "camera"
     },
     {
       "id": "7f3ca39dcaa3f952bc23",
@@ -21303,6 +21393,12 @@
       "text": "s"
     },
     {
+      "id": "a9ae78d2857841f07235",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "position.z"
+    },
+    {
       "id": "ab8b91668e230690053e",
       "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
       "depth": "PRODUCT",
@@ -21321,10 +21417,22 @@
       "text": "Timeline & Narrative Motion Blocks"
     },
     {
+      "id": "e459b344f83620d3eb44",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "product-reveal"
+    },
+    {
       "id": "e741fc072da7d79ce8f6",
       "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
       "depth": "PRODUCT",
       "text": "No expanded keyframe tracks found."
+    },
+    {
+      "id": "f05f62577fefa3a7d79e",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "+ Add Motion Block"
     },
     {
       "id": "f97886df077c72adeaf2",
@@ -21411,10 +21519,10 @@
       "text": "BROWSER_HARNESS"
     },
     {
-      "id": "7a3aef98187b36ae8878",
+      "id": "75726608654921baa63f",
       "file": "apps/web/src/website-studio/performance/measureScene.ts",
       "depth": "PRODUCT",
-      "text": "sig-"
+      "text": "sha"
     },
     {
       "id": "81f2441014122cd420e0",
@@ -21801,10 +21909,34 @@
       "text": "Camera shot \""
     },
     {
+      "id": "021f9a71fb8ec5a4d662",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "accents"
+    },
+    {
       "id": "0297949250ada5d75fc7",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "Tablet"
+    },
+    {
+      "id": "04a8e7168c4f321070d2",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Direct Copilot with natural language..."
+    },
+    {
+      "id": "0850d237b3a5a9dfa911",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Undo"
+    },
+    {
+      "id": "09e598761c11ebd92d2b",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "dynamic-reveal"
     },
     {
       "id": "0ed46b5ac15770ffd2bb",
@@ -21813,10 +21945,28 @@
       "text": "Mobile"
     },
     {
+      "id": "109cd24ff7bc0fb88c0f",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "AGENT"
+    },
+    {
       "id": "1178ab1e8be761b3ed5b",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "INTELLIGENCE Panel"
+    },
+    {
+      "id": "124a38ed40f0628b5b41",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "#3b82f6"
+    },
+    {
+      "id": "13c0e5e49f3ba14b275f",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "TRUE_3D"
     },
     {
       "id": "14b00be5bcab1c78f95d",
@@ -21829,6 +21979,18 @@
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "Apply Edit"
+    },
+    {
+      "id": "1b4b16428d389b677e2e",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Blend"
+    },
+    {
+      "id": "1c19eefb15f3a4e82222",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "CSS_MOTION"
     },
     {
       "id": "1fe14c89beecfcf4beff",
@@ -21849,10 +22011,34 @@
       "text": "s"
     },
     {
+      "id": "24f25d081ab04030ca3a",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "[Agent Enhanced]"
+    },
+    {
       "id": "25a0ce518695bfe9badc",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "Tablet Preview Mode"
+    },
+    {
+      "id": "26701fe8e2687c9539f4",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Redo"
+    },
+    {
+      "id": "2a7f8a5dec91494404e6",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "environment"
+    },
+    {
+      "id": "2dd11619f982b211aeb1",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "description"
     },
     {
       "id": "379a1d44261bcf03e291",
@@ -21861,10 +22047,16 @@
       "text": "(Updated)"
     },
     {
-      "id": "39a1c4bb0c1f0f52f3fc",
+      "id": "3966cf170fead546b638",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
-      "text": "Prompt Copilot to direct motion, lighting, or camera..."
+      "text": "intent"
+    },
+    {
+      "id": "42f51925834aea73bbd5",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Enhance"
     },
     {
       "id": "4b1d33624792c9f4bbae",
@@ -21873,16 +22065,64 @@
       "text": "LIVE WEBSITE Stage"
     },
     {
+      "id": "555f09b4ca39525b16a0",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Multi-tier analysis strictly mapping 3D fidelity without deceptive labeling."
+    },
+    {
       "id": "5afd1562c16dc15781da",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "Export .spe-site"
     },
     {
+      "id": "5b63da88354340bbbd15",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Reopen .spe-site"
+    },
+    {
+      "id": "5d28f763e570c09d8662",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Redo Edit"
+    },
+    {
+      "id": "606d71cf4c3fcababcd2",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Reopened .spe-site project package"
+    },
+    {
+      "id": "63c43cfc439c0880cbad",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "WebGL Context Lost — Recovering..."
+    },
+    {
       "id": "665a394887cc8274b97a",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "v1.1 Free 3D Architecture"
+    },
+    {
+      "id": "67f45ef65101438fc6d5",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "shots"
+    },
+    {
+      "id": "68c9462175b9cb06d387",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "#60a5fa"
+    },
+    {
+      "id": "68d25926090eeba543e5",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "2_5D"
     },
     {
       "id": "69c31dd6d03e4f0b9579",
@@ -21909,10 +22149,28 @@
       "text": "bytes)"
     },
     {
+      "id": "75a08a9836721f92fe43",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "colors"
+    },
+    {
       "id": "7a64fe459a7e5b109837",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "COPILOT"
+    },
+    {
+      "id": "80194f8e17d2f15d138c",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Create from Intent"
+    },
+    {
+      "id": "80f9232f1402526038d8",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "WebGL Context Restored — All Scene State Preserved"
     },
     {
       "id": "879fedb8c87faa72d892",
@@ -21927,10 +22185,70 @@
       "text": "Mobile Preview Mode"
     },
     {
+      "id": "8c0a46b37cb9e4995f49",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Undo Edit"
+    },
+    {
+      "id": "8ee8563d27cc8b5ab13a",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "background"
+    },
+    {
+      "id": "923f5b9f3c7da9dd20bc",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Approve & Apply Patch"
+    },
+    {
+      "id": "94ee8c1d32cceac3ac4f",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "cameraPlan"
+    },
+    {
+      "id": "95f67579a7bf76843e18",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Motion: Reduced"
+    },
+    {
       "id": "97fa3be8ee37a3ccb51c",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "INTELLIGENCE"
+    },
+    {
+      "id": "989b071385270d971aa8",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "designDNA"
+    },
+    {
+      "id": "99237149c6e7c67ebeef",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Reopen SPE Site Package"
+    },
+    {
+      "id": "9d5373adf4b33a1e5bfb",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "#090a0f"
+    },
+    {
+      "id": "9fb00949436c8e771a80",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Propose Patch"
+    },
+    {
+      "id": "a2941898618ba7f72f80",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Motion: Normal"
     },
     {
       "id": "a2c1f09fa4da1d4fe096",
@@ -21939,10 +22257,22 @@
       "text": "explore"
     },
     {
+      "id": "a7fd346ca77cd2a2e59e",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Simulate Context Loss"
+    },
+    {
       "id": "a91fe3d9bd579d3c7d1a",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "hero"
+    },
+    {
+      "id": "a9fa4819b0ddd00b5cc2",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "preset"
     },
     {
       "id": "ab543f4b143fc99266e3",
@@ -21951,10 +22281,22 @@
       "text": "Export SPE Site Package"
     },
     {
+      "id": "ac451f01a489b6c958bf",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Reject"
+    },
+    {
       "id": "af42615aea861b03ed70",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "metadata"
+    },
+    {
+      "id": "af7052c6e124cf4a37b7",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "High-fidelity 3D experience generated from intent: \""
     },
     {
       "id": "b135d37e3b64ff755ff0",
@@ -21987,10 +22329,46 @@
       "text": "Graph"
     },
     {
+      "id": "bbebb06befd38bef6da7",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "beforeHash:"
+    },
+    {
+      "id": "c2a9aa5c5550c3c60623",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Propose 3D Enhancement"
+    },
+    {
+      "id": "c690aefb5144c7119d77",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Futuristic Cybernetic Showcase"
+    },
+    {
+      "id": "c6e433a1cf90da6899b8",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Toggle Reduced Motion"
+    },
+    {
       "id": "c825757b56037f4ca9fd",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "data"
+    },
+    {
+      "id": "caac705da82e91fadfcd",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "(3D Enhanced:"
+    },
+    {
+      "id": "d4e2d09a1603b083735f",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "DEPTH_COMPOSITE"
     },
     {
       "id": "d79d5dc51e220e79fe47",
@@ -22011,6 +22389,18 @@
       "text": "set"
     },
     {
+      "id": "e34cb352cd8c3d1a135d",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "3D Enhancement Opportunities"
+    },
+    {
+      "id": "e55c198087298c22ba76",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Simulate WebGL Context Loss"
+    },
+    {
       "id": "ef92b18b6eee3f00b42f",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
@@ -22029,6 +22419,12 @@
       "text": "desktop"
     },
     {
+      "id": "f4339c8286d990bb5bf6",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "studio-cinematic"
+    },
+    {
       "id": "f46f03066fb246201662",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
@@ -22045,6 +22441,30 @@
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "COPILOT & Motion Timeline"
+    },
+    {
+      "id": "fc808ed2d31236cd5425",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "enhance"
+    },
+    {
+      "id": "fc9b8889fb118e318859",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "USER_UI"
+    },
+    {
+      "id": "ff3f0ca840ff6b5faa08",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "scene"
+    },
+    {
+      "id": "ffd9458c40e182469fc3",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "... → afterHash:"
     },
     {
       "id": "07251de020e7386ad078",

@@ -5,12 +5,14 @@ export interface WebsiteRendererProps {
   spec: WebsiteSpecV2;
   viewMode?: "desktop" | "tablet" | "mobile";
   reducedMotion?: boolean;
+  contextLostStatus?: string | null;
 }
 
 export const WebsiteRenderer: React.FC<WebsiteRendererProps> = ({
   spec,
   viewMode = "desktop",
   reducedMotion = false,
+  contextLostStatus = null,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [webglActive] = useState(true);
@@ -49,6 +51,26 @@ export const WebsiteRenderer: React.FC<WebsiteRendererProps> = ({
       }}
       data-testid="website-renderer"
     >
+      {contextLostStatus && (
+        <div
+          data-testid="webgl-context-status"
+          style={{
+            position: "absolute",
+            top: "12px",
+            zIndex: 100,
+            backgroundColor: "rgba(16, 185, 129, 0.9)",
+            color: "#ffffff",
+            padding: "6px 14px",
+            borderRadius: "6px",
+            fontSize: "12px",
+            fontWeight: 600,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+          }}
+        >
+          {contextLostStatus}
+        </div>
+      )}
+
       <div
         className="website-preview-viewport"
         style={{
@@ -81,6 +103,7 @@ export const WebsiteRenderer: React.FC<WebsiteRendererProps> = ({
         >
           {reducedMotion || !webglActive ? (
             <div
+              data-testid="accessible-2d-fallback"
               style={{
                 width: "100%",
                 height: "100%",
@@ -91,11 +114,12 @@ export const WebsiteRenderer: React.FC<WebsiteRendererProps> = ({
               dangerouslySetInnerHTML={{
                 __html:
                   spec.scene?.accessibilityFallback?.hero2dSvg ||
-                  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0b0d12"/></svg>',
+                  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0b0d12"/><text x="10" y="36" fill="#fff" font-size="10">2D Fallback</text></svg>',
               }}
             />
           ) : (
             <div
+              data-testid="canvas-3d-active"
               style={{
                 width: "100%",
                 height: "100%",

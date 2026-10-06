@@ -38,17 +38,27 @@ export const CURATED_INSPIRATION_RECIPES: InspirationItem[] = [
 
 export interface StudioExploreProps {
   onSelectRecipe?: (item: InspirationItem) => void;
+  onAnalyzeRecipe?: (item: InspirationItem) => void;
+  onBlendRecipe?: (item: InspirationItem) => void;
   selectedId?: string;
 }
 
 export const StudioExplore: React.FC<StudioExploreProps> = ({
   onSelectRecipe,
+  onAnalyzeRecipe,
+  onBlendRecipe,
   selectedId,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [query, setQuery] = useState("");
+  const [analyzedItem, setAnalyzedItem] = useState<InspirationItem | null>(null);
 
   const categories = ["All", "E-Commerce", "Real Estate & Architecture", "Creative & Agency", "Technology"];
+
+  const handleAnalyze = (item: InspirationItem) => {
+    setAnalyzedItem(item);
+    onAnalyzeRecipe?.(item);
+  };
 
   const filtered = CURATED_INSPIRATION_RECIPES.filter((item) => {
     const matchesCat = selectedCategory === "All" || item.category === selectedCategory;
@@ -107,6 +117,41 @@ export const StudioExplore: React.FC<StudioExploreProps> = ({
         </div>
       </div>
 
+      {analyzedItem && (
+        <div
+          style={{
+            backgroundColor: "#161922",
+            border: "1px solid #3b82f6",
+            borderRadius: "8px",
+            padding: "14px",
+            fontSize: "12px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+          }}
+          data-testid="reference-analysis-panel"
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <strong style={{ color: "#60a5fa" }}>DesignDNA Analysis: {analyzedItem.title}</strong>
+            <button
+              type="button"
+              className="studio-btn"
+              onClick={() => onBlendRecipe?.(analyzedItem)}
+              style={{ fontSize: "11px", padding: "4px 8px", minHeight: "30px" }}
+              data-testid="blend-analyzed-btn"
+            >
+              Blend DNA Into Active Site
+            </button>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "8px", color: "#cbd5e1" }}>
+            <div><span style={{ color: "#94a3b8" }}>Palette:</span> Primary #3b82f6, Accents #60a5fa/#818cf8</div>
+            <div><span style={{ color: "#94a3b8" }}>Typography:</span> Display Inter, Body DM Sans</div>
+            <div><span style={{ color: "#94a3b8" }}>Lighting:</span> Cinematic Rim + Ambient Key</div>
+            <div><span style={{ color: "#94a3b8" }}>Motion Rhythm:</span> Scroll motion with fallback</div>
+          </div>
+        </div>
+      )}
+
       <div
         style={{
           display: "grid",
@@ -120,6 +165,8 @@ export const StudioExplore: React.FC<StudioExploreProps> = ({
             item={item}
             selected={item.id === selectedId}
             onSelect={onSelectRecipe}
+            onAnalyze={handleAnalyze}
+            onBlend={onBlendRecipe}
           />
         ))}
       </div>

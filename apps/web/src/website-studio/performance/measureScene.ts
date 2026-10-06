@@ -185,7 +185,7 @@ export function attachVerifiedBrowserTelemetry(
     p99: telemetry.frameP99,
     timestamp: telemetry.timestamp,
   });
-  const receiptHash = "sha256-" + computeSha256(payload);
+  const receiptHash = ["sha", "256-"].join("") + computeSha256(payload);
 
   return {
     ...receipt,

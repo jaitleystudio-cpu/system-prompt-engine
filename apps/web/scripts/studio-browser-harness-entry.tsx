@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
+import { Studio } from "../src/website-studio/Studio.tsx";
 import { BehaviorGraphEditor } from "../src/website-studio/behavior/BehaviorGraphEditor.tsx";
 import { MotionBlockEditor } from "../src/website-studio/motion/MotionBlockEditor.tsx";
 import { CameraDirectorPanel } from "../src/website-studio/camera/CameraDirectorPanel.tsx";
@@ -48,6 +49,10 @@ function Harness() {
   const [activePlan, setActivePlan] = useState(() => createCameraPlanFromPreset("Hero Reveal"));
 
   window.__studioState = { spec, activePlan };
+
+  if (surface === "studio") {
+    return <Studio initialSpec={spec} />;
+  }
 
   return (
     <div style={{ padding: 20, background: "#090a0f", minHeight: "100vh" }}>

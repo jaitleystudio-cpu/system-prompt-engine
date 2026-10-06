@@ -12,12 +12,16 @@ export interface InspirationItem {
 export interface InspirationCardProps {
   item: InspirationItem;
   onSelect?: (item: InspirationItem) => void;
+  onAnalyze?: (item: InspirationItem) => void;
+  onBlend?: (item: InspirationItem) => void;
   selected?: boolean;
 }
 
 export const InspirationCard: React.FC<InspirationCardProps> = ({
   item,
   onSelect,
+  onAnalyze,
+  onBlend,
   selected = false,
 }) => {
   return (
@@ -71,19 +75,51 @@ export const InspirationCard: React.FC<InspirationCardProps> = ({
           ))}
         </div>
       )}
-      <button
-        type="button"
-        className="studio-btn studio-btn-primary"
-        onClick={() => onSelect?.(item)}
-        style={{
-          marginTop: "6px",
-          width: "100%",
-          cursor: "pointer",
-        }}
-        aria-label={`Select ${item.title}`}
-      >
-        Use Recipe
-      </button>
+      <div style={{ display: "flex", gap: "6px", marginTop: "6px", flexWrap: "wrap" }}>
+        <button
+          type="button"
+          className="studio-btn studio-btn-primary"
+          onClick={() => onSelect?.(item)}
+          style={{
+            flex: "1 1 auto",
+            fontSize: "11px",
+            padding: "6px 10px",
+            minHeight: "34px",
+          }}
+          data-testid={`use-${item.id}`}
+          aria-label={`Use ${item.title}`}
+        >
+          Use Recipe
+        </button>
+        <button
+          type="button"
+          className="studio-btn"
+          onClick={() => onAnalyze?.(item)}
+          style={{
+            fontSize: "11px",
+            padding: "6px 10px",
+            minHeight: "34px",
+          }}
+          data-testid={`analyze-${item.id}`}
+          aria-label={`Analyze ${item.title}`}
+        >
+          Analyze
+        </button>
+        <button
+          type="button"
+          className="studio-btn"
+          onClick={() => onBlend?.(item)}
+          style={{
+            fontSize: "11px",
+            padding: "6px 10px",
+            minHeight: "34px",
+          }}
+          data-testid={`blend-${item.id}`}
+          aria-label={`Blend ${item.title}`}
+        >
+          Blend DNA
+        </button>
+      </div>
     </div>
   );
 };

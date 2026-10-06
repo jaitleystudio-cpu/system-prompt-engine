@@ -9,6 +9,7 @@ export interface MotionBlockEditorProps {
 
 export const MotionBlockEditor: React.FC<MotionBlockEditorProps> = ({
   blocks,
+  onBlocksChange,
 }) => {
   const [viewMode, setViewMode] = useState<"narrative" | "tracks">("narrative");
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(
@@ -16,6 +17,17 @@ export const MotionBlockEditor: React.FC<MotionBlockEditorProps> = ({
   );
 
   const expandedTracks = blocks.flatMap((block) => expandMotionBlock(block));
+
+  const handleAddBlock = () => {
+    const newBlock: NarrativeMotionBlock = {
+      id: `reveal-block-${blocks.length + 1}`,
+      semanticType: "product-reveal",
+      start: 0,
+      end: 1,
+      tracks: { camera: [{ targetId: "camera", property: "position.z" }] },
+    };
+    onBlocksChange?.([...blocks, newBlock]);
+  };
 
   return (
     <div
@@ -45,6 +57,15 @@ export const MotionBlockEditor: React.FC<MotionBlockEditorProps> = ({
           </span>
         </div>
         <div style={{ display: "flex", gap: "6px" }}>
+          <button
+            type="button"
+            className="studio-btn"
+            onClick={handleAddBlock}
+            style={{ padding: "4px 10px", fontSize: "12px", minHeight: "36px" }}
+            data-testid="add-motion-block-btn"
+          >
+            + Add Motion Block
+          </button>
           <button
             type="button"
             className={`studio-btn ${viewMode === "narrative" ? "studio-btn-primary" : ""}`}
