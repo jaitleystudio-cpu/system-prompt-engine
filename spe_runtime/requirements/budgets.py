@@ -81,8 +81,15 @@ def normalize_unicode_digits(text: str) -> str:
 
 def parse_flexible_number(raw: str) -> float | None:
     cleaned = normalize_unicode_digits(raw.strip().replace(",", "").replace("_", ""))
+    multiplier = 1.0
+    if re.search(r"[0-9][kK]$", cleaned):
+        multiplier = 1000.0
+        cleaned = cleaned[:-1]
+    elif re.search(r"[0-9][mM]$", cleaned):
+        multiplier = 1000000.0
+        cleaned = cleaned[:-1]
     try:
-        val = float(cleaned)
+        val = float(cleaned) * multiplier
         return val
     except ValueError:
         return None
@@ -104,10 +111,27 @@ def parse_requested_answer_budget(expr: str) -> dict[str, Any]:
         unit = "sentences"
     elif re.search(r"\b(words?)\b", normalized):
         unit = "words"
+    else:
+        # Check if length keyword exists or pure number
+        if not re.search(r"\b\d+\b", normalized):
+            return {"status": "NO_BUDGET", "raw_expression": expr}
+        words = [w for w in re.sub(r"[^a-z0-9_\s]", " ", normalized).split() if w and not w.isdigit()]
+        allowed_modifiers = {
+            "exact", "exactly", "precisely", "strictly", "no", "more", "than",
+            "at", "most", "under", "max", "maximum", "up", "to", "least", "minimum",
+            "min", "less", "about", "approx", "approximately", "around", "between",
+            "and", "return", "length", "count", "target", "output", "response",
+            "deliverable", "final", "total", "answer", "draft", "write", "generate",
+            "produce", "of", "in", "the", "is", "be", "should", "must", "have", "contain"
+        }
+        unknown = next((w for w in words if w not in allowed_modifiers), None)
+        if unknown:
+            return {"status": "INVALID", "error": f"Unknown or malformed length unit: \"{unknown}\" in \"{expr}\""}
+        unit = "words"
 
     # Range
     range_match = re.search(
-        r"(?:between\s+)?([0-9][0-9,_eE.]*)\s*(?:-|–|—|to|\band\b)\s*([0-9][0-9,_eE.]*)",
+        r"(?:between\s+)?([0-9][0-9,_eE.]*[kkm]?)\s*(?:-|–|—|to|\band\b)\s*([0-9][0-9,_eE.]*[kkm]*)",
         normalized,
     )
     if range_match and any(sep in normalized for sep in ["between", "-", "–", "—", "to", "and"]):
@@ -124,14 +148,14 @@ def parse_requested_answer_budget(expr: str) -> dict[str, Any]:
             "budget": RequestedAnswerBudget(
                 unit=unit,
                 mode="range",
-                target=int(max_val),
-                min=int(min_val),
-                max=int(max_val),
+                target=int(max_val + 0.5),
+                min=int(min_val + 0.5),
+                max=int(max_val + 0.5),
                 raw_expression=expr,
             ),
         }
 
-    nums = re.findall(r"[-+]?[0-9][0-9,_eE.]*", normalized)
+    nums = re.findall(r"[-+]?[0-9][0-9,_eE.]*[kkm]?", normalized)
     if not nums:
         return {"status": "NO_BUDGET", "raw_expression": expr}
 
@@ -141,7 +165,7 @@ def parse_requested_answer_budget(expr: str) -> dict[str, Any]:
     if val < 0:
         return {"status": "INVALID", "error": f"Negative length is invalid: {val}"}
 
-    int_val = int(val)
+    int_val = int(val + 0.5)
 
     if re.search(r"\b(exactly|exact|precisely|strictly)\b", normalized) or normalized.startswith("="):
         mode: BudgetMode = "exact"
@@ -184,6 +208,22 @@ def parse_requested_answer_budget(expr: str) -> dict[str, Any]:
     }
 
 
+def _get_lower_bound(b: RequestedAnswerBudget) -> Optional[int]:
+    if b.mode == "exact":
+        return b.target
+    if b.mode in ("minimum", "range"):
+        return b.min if b.min is not None else b.target
+    return None
+
+
+def _get_upper_bound(b: RequestedAnswerBudget) -> Optional[int]:
+    if b.mode == "exact":
+        return b.target
+    if b.mode in ("maximum", "range"):
+        return b.max if b.max is not None else b.target
+    return None
+
+
 def detect_budget_conflicts(statements: list[str]) -> dict[str, Any]:
     budgets: list[RequestedAnswerBudget] = []
     for stmt in statements:
@@ -207,36 +247,83 @@ def detect_budget_conflicts(statements: list[str]) -> dict[str, Any]:
                     "message": f"[CONFLICT] Conflicting exact length constraints: {b1.target} vs {b2.target} {b1.unit}",
                     "budgets": budgets,
                 }
-            if b1.mode == "exact" and b2.mode == "maximum" and b1.target > (b2.max or b2.target):
+
+            low1 = _get_lower_bound(b1)
+            high1 = _get_upper_bound(b1)
+            low2 = _get_lower_bound(b2)
+            high2 = _get_upper_bound(b2)
+
+            if low1 is not None and high2 is not None and low1 > high2:
+                if b1.mode == "exact" and b2.mode == "maximum":
+                    return {
+                        "has_conflict": True,
+                        "message": f"[CONFLICT] Exact requirement of {b1.target} {b1.unit} exceeds maximum of {high2} {b2.unit}",
+                        "budgets": budgets,
+                    }
+                if b2.mode == "exact" and b1.mode == "minimum":
+                    return {
+                        "has_conflict": True,
+                        "message": f"[CONFLICT] Exact requirement of {b2.target} {b2.unit} is below minimum of {low1} {b1.unit}",
+                        "budgets": budgets,
+                    }
+                if b1.mode == "exact" and b2.mode == "range":
+                    return {
+                        "has_conflict": True,
+                        "message": f"[CONFLICT] Exact requirement of {b1.target} {b1.unit} falls outside range [{b2.min or b2.target}, {b2.max or b2.target}] {b2.unit}",
+                        "budgets": budgets,
+                    }
+                if b1.mode == "range" and b2.mode == "exact":
+                    return {
+                        "has_conflict": True,
+                        "message": f"[CONFLICT] Exact requirement of {b2.target} {b2.unit} falls outside range [{b1.min or b1.target}, {b1.max or b1.target}] {b1.unit}",
+                        "budgets": budgets,
+                    }
+                if b1.mode == "range" and b2.mode == "range":
+                    return {
+                        "has_conflict": True,
+                        "message": f"[CONFLICT] Disjoint length ranges [{b1.min or b1.target}, {b1.max or b1.target}] and [{b2.min or b2.target}, {b2.max or b2.target}] {b1.unit}",
+                        "budgets": budgets,
+                    }
                 return {
                     "has_conflict": True,
-                    "message": f"[CONFLICT] Exact requirement of {b1.target} {b1.unit} exceeds maximum of {b2.max or b2.target} {b2.unit}",
+                    "message": f"[CONFLICT] Minimum constraint ({low1}) exceeds maximum constraint ({high2}) {b1.unit}",
                     "budgets": budgets,
                 }
-            if b2.mode == "exact" and b1.mode == "maximum" and b2.target > (b1.max or b1.target):
+
+            if low2 is not None and high1 is not None and low2 > high1:
+                if b2.mode == "exact" and b1.mode == "maximum":
+                    return {
+                        "has_conflict": True,
+                        "message": f"[CONFLICT] Exact requirement of {b2.target} {b2.unit} exceeds maximum of {high1} {b1.unit}",
+                        "budgets": budgets,
+                    }
+                if b1.mode == "exact" and b2.mode == "minimum":
+                    return {
+                        "has_conflict": True,
+                        "message": f"[CONFLICT] Exact requirement of {b1.target} {b1.unit} is below minimum of {low2} {b2.unit}",
+                        "budgets": budgets,
+                    }
+                if b2.mode == "exact" and b1.mode == "range":
+                    return {
+                        "has_conflict": True,
+                        "message": f"[CONFLICT] Exact requirement of {b2.target} {b2.unit} falls outside range [{b1.min or b1.target}, {b1.max or b1.target}] {b1.unit}",
+                        "budgets": budgets,
+                    }
+                if b2.mode == "range" and b1.mode == "exact":
+                    return {
+                        "has_conflict": True,
+                        "message": f"[CONFLICT] Exact requirement of {b1.target} {b1.unit} falls outside range [{b2.min or b2.target}, {b2.max or b2.target}] {b2.unit}",
+                        "budgets": budgets,
+                    }
+                if b1.mode == "range" and b2.mode == "range":
+                    return {
+                        "has_conflict": True,
+                        "message": f"[CONFLICT] Disjoint length ranges [{b1.min or b1.target}, {b1.max or b1.target}] and [{b2.min or b2.target}, {b2.max or b2.target}] {b1.unit}",
+                        "budgets": budgets,
+                    }
                 return {
                     "has_conflict": True,
-                    "message": f"[CONFLICT] Exact requirement of {b2.target} {b2.unit} exceeds maximum of {b1.max or b1.target} {b1.unit}",
-                    "budgets": budgets,
-                }
-            if b1.mode == "exact" and b2.mode == "minimum" and b1.target < (b2.min or b2.target):
-                return {
-                    "has_conflict": True,
-                    "message": f"[CONFLICT] Exact requirement of {b1.target} {b1.unit} is below minimum of {b2.min or b2.target} {b2.unit}",
-                    "budgets": budgets,
-                }
-            if b2.mode == "exact" and b1.mode == "minimum" and b2.target < (b1.min or b1.target):
-                return {
-                    "has_conflict": True,
-                    "message": f"[CONFLICT] Exact requirement of {b2.target} {b2.unit} is below minimum of {b1.min or b1.target} {b1.unit}",
-                    "budgets": budgets,
-                }
-            min_val = b1.min or (b1.target if b1.mode == "minimum" else None)
-            max_val = b2.max or (b2.target if b2.mode == "maximum" else None)
-            if min_val is not None and max_val is not None and min_val > max_val:
-                return {
-                    "has_conflict": True,
-                    "message": f"[CONFLICT] Minimum constraint ({min_val}) exceeds maximum constraint ({max_val}) {b1.unit}",
+                    "message": f"[CONFLICT] Minimum constraint ({low2}) exceeds maximum constraint ({high1}) {b1.unit}",
                     "budgets": budgets,
                 }
 

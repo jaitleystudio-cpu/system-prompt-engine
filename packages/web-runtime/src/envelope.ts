@@ -126,7 +126,7 @@ export function buildAbiFixture(
           fact_id: "f-user-request",
           provenance_ids: ["p-user"],
           statement:
-            input.sourceDocument && rawUserRequest.length > 20000
+            input.sourceDocument
               ? `[SOURCE_REF:${input.sourceDocument.id}:${input.sourceDocument.sha256}]`
               : rawUserRequest,
           ...(input.sourceDocument

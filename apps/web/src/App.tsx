@@ -29,12 +29,14 @@ import {
   buildAbiFixture,
   buildLocalExecutionRecord,
   buildSpeArtifact,
+  createSourceDocument,
   clearHistory,
   defaultIntentLens,
   downloadJson,
   isHistoryOptIn,
   loadHistory,
   openArtifactPrintView,
+  parseRequestedAnswerBudget,
   parseSpeArtifactText,
   renderPromptArtifact,
   PromptBriefError,
@@ -567,11 +569,25 @@ export default function App() {
           const surfaces = bindEffectiveSurfaces(prompt.finalPrompt, qualityOut);
           const shown = { ...prompt, finalPrompt: surfaces.display };
           setRendered(shown);
+          const desiredAtom = lensState.confirmed.find(
+            (a) => a.id === "desired-output" && a.text.trim(),
+          );
+          const parsedBudget = desiredAtom
+            ? parseRequestedAnswerBudget(desiredAtom.text)
+            : null;
+          const answerBudget =
+            parsedBudget && parsedBudget.status === "SUCCESS"
+              ? parsedBudget.budget
+              : null;
+          const sourceDoc =
+            goal.length > 20000 ? await createSourceDocument(goal) : undefined;
           const spe = await buildSpeArtifact({
             user_request: goal,
             category,
             target,
             envelope: fixture,
+            ...(sourceDoc ? { source_document: sourceDoc } : {}),
+            ...(answerBudget ? { requested_answer_budget: answerBudget } : {}),
             wasm: {
               status: out.result.status,
               disposition: out.result.disposition,
@@ -820,6 +836,10 @@ export default function App() {
         category: artifact.category,
         target: artifact.target,
         envelope: artifact.envelope,
+        ...(artifact.source_document ? { source_document: artifact.source_document } : {}),
+        ...(artifact.requested_answer_budget !== undefined
+          ? { requested_answer_budget: artifact.requested_answer_budget }
+          : {}),
         wasm: artifact.wasm,
         rendered_prompt: artifact.rendered_prompt,
         intent: artifact.intent,

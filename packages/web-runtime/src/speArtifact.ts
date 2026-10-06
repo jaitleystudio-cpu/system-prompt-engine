@@ -220,6 +220,12 @@ function reconstructionReport(artifact: SpeArtifactV1): ReconstructionReport {
       "Rendered prompt",
       "Input envelope and provenance",
       "Artifact lineage and matching integrity",
+      ...(artifact.source_document
+        ? ["Authoritative source document (verified SHA-256)"]
+        : []),
+      ...(artifact.requested_answer_budget
+        ? ["Requested deliverable length budget"]
+        : []),
       ...(artifact.execution_record
         ? ["Local run record and conformance checks"]
         : []),
@@ -312,6 +318,26 @@ export async function parseSpeArtifactText(text: string): Promise<{
       "INTEGRITY_MISMATCH",
       "This SPE file changed after export. Its integrity check failed, so nothing was restored.",
     );
+  }
+  if (verified.source_document) {
+    const doc = verified.source_document;
+    if (
+      typeof doc.id !== "string" ||
+      typeof doc.raw_text !== "string" ||
+      typeof doc.sha256 !== "string"
+    ) {
+      throw new SpeArtifactImportError(
+        "INVALID_SOURCE_DOCUMENT",
+        "Source document in artifact is malformed.",
+      );
+    }
+    const computedDigest = await sha256Hex(doc.raw_text);
+    if (computedDigest !== doc.sha256) {
+      throw new SpeArtifactImportError(
+        "SOURCE_HASH_MISMATCH",
+        "Source document SHA-256 does not match its raw text content.",
+      );
+    }
   }
   const unsafeExample = [
     ...verified.intent.confirmed,

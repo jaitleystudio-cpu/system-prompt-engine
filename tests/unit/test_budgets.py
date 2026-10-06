@@ -47,12 +47,37 @@ def test_unicode_digits_and_delimiters():
 
 
 def test_conflict_detection():
-    stmts = ["exactly 20,000 words", "under 10,000 words"]
-    conflict = detect_budget_conflicts(stmts)
-    assert conflict["has_conflict"] is True
-    assert "CONFLICT" in conflict["message"]
+    # Forward and reverse orders
+    assert detect_budget_conflicts(["exactly 20,000 words", "under 10,000 words"])["has_conflict"] is True
+    assert detect_budget_conflicts(["under 10,000 words", "exactly 20,000 words"])["has_conflict"] is True
+    assert detect_budget_conflicts(["at least 20,000 words", "no more than 10,000 words"])["has_conflict"] is True
+    assert detect_budget_conflicts(["no more than 10,000 words", "at least 20,000 words"])["has_conflict"] is True
+
+    # Disjoint ranges
+    assert detect_budget_conflicts(["between 1,000 and 2,000 words", "between 3,000 and 4,000 words"])["has_conflict"] is True
+    assert detect_budget_conflicts(["between 3,000 and 4,000 words", "between 1,000 and 2,000 words"])["has_conflict"] is True
+
+    # Range vs min/max
+    assert detect_budget_conflicts(["under 2,000 words", "between 5,000 and 10,000 words"])["has_conflict"] is True
+    assert detect_budget_conflicts(["between 5,000 and 10,000 words", "under 2,000 words"])["has_conflict"] is True
 
 
 def test_infeasible_or_negative():
-    res = parse_requested_answer_budget("-500 words")
-    assert res["status"] == "INVALID"
+    assert parse_requested_answer_budget("-500 words")["status"] == "INVALID"
+    assert parse_requested_answer_budget("between 30,000 and 20,000 words")["status"] == "CONFLICT"
+    assert parse_requested_answer_budget("20,000 florbos")["status"] == "INVALID"
+    assert parse_requested_answer_budget("1500 unknown_unit")["status"] == "INVALID"
+
+
+def test_decimal_and_zero_words():
+    k_res = parse_requested_answer_budget("1.5k words")
+    assert k_res["status"] == "SUCCESS"
+    assert k_res["budget"].target == 1500
+
+    dec_res = parse_requested_answer_budget("1500.5 words")
+    assert dec_res["status"] == "SUCCESS"
+    assert dec_res["budget"].target == 1501
+
+    zero_res = parse_requested_answer_budget("0 words")
+    assert zero_res["status"] == "SUCCESS"
+    assert zero_res["budget"].target == 0

@@ -211,8 +211,15 @@ console.log("\n[TDD REGRESSION E] Conflicting Length Constraints Detection");
 {
   const conflictSets = [
     ["exactly 20,000 words", "under 10,000 words"],
+    ["under 10,000 words", "exactly 20,000 words"],
     ["exactly 20,000 words", "exactly 15,000 words"],
     ["at least 30,000 words", "at most 20,000 words"],
+    ["at most 20,000 words", "at least 30,000 words"],
+    ["under 2,000 words", "between 5,000 and 10,000 words"],
+    ["between 5,000 and 10,000 words", "under 2,000 words"],
+    ["between 5,000 and 10,000 words", "at least 15,000 words"],
+    ["at least 15,000 words", "between 5,000 and 10,000 words"],
+    ["between 1,000 and 2,000 words", "between 3,000 and 4,000 words"],
     ["between 25,000 and 20,000 words"], // inverted range
   ];
 
@@ -331,6 +338,16 @@ console.log("\n[TDD REGRESSION H] Export / Import Roundtrip Custody");
     assert.equal(parsed.artifact.source_document.sha256, sourceDoc.sha256);
     assert.equal(parsed.artifact.requested_answer_budget.target, count);
     assert.equal(parsed.artifact.rendered_prompt, `## Objective\n${sourceText}`);
+
+    // Verify that tampering with source_document raw_text triggers rejection
+    const tampered = JSON.parse(jsonExport);
+    tampered.source_document.raw_text = "MUTATED " + tampered.source_document.raw_text;
+    await assert.rejects(
+      async () => {
+        await runtime.parseSpeArtifactText(JSON.stringify(tampered));
+      },
+      (err) => err instanceof runtime.SpeArtifactImportError
+    );
   }
   console.log("  PASS: Export/import roundtrip verifies raw source hash and budgets (TDD H passed)");
 }
@@ -449,6 +466,9 @@ const adversarialInputs = [
   ["<= 2,000 words", { mode: "maximum", target: 2000, unit: "words" }],
   ["20_000 words", { mode: "exact", target: 20000, unit: "words" }],
   ["2e4 words", { mode: "exact", target: 20000, unit: "words" }],
+  ["1.5k words", { mode: "exact", target: 1500, unit: "words" }],
+  ["1500.5 words", { mode: "exact", target: 1501, unit: "words" }],
+  ["0 words", { mode: "exact", target: 0, unit: "words" }],
   ["२०००० words", { mode: "exact", target: 20000, unit: "words" }], // Devanagari digits
   ["٢٠٠٠٠ words", { mode: "exact", target: 20000, unit: "words" }], // Arabic-Indic digits
 ];
@@ -468,6 +488,8 @@ console.log(`  PASS: All ${adversarialInputs.length} adversarial input formats p
 const invalidInputs = [
   "-500 words",
   "between 30000 and 20000 words", // inverted
+  "20,000 florbos", // malformed unit
+  "1500 unknown_unit", // malformed unit
 ];
 for (const expr of invalidInputs) {
   const parsed = runtime.parseRequestedAnswerBudget(expr);

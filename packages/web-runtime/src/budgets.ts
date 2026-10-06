@@ -175,6 +175,68 @@ export function parseRequestedAnswerBudget(expr: string): ParseBudgetResult {
     if (!/\b(\d+)\b/.test(normalizedText)) {
       return { status: "NO_BUDGET", raw_expression: expr };
     }
+    // Check if there are other word tokens attached that are unrecognized units (e.g. "20000 florbos")
+    const words = normalizedText
+      .replace(/[^a-z0-9_\s]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w && !/^\d+$/.test(w));
+    const ALLOWED_MODIFIERS = new Set([
+      "exact",
+      "exactly",
+      "precisely",
+      "strictly",
+      "no",
+      "more",
+      "than",
+      "at",
+      "most",
+      "under",
+      "max",
+      "maximum",
+      "up",
+      "to",
+      "least",
+      "minimum",
+      "min",
+      "less",
+      "about",
+      "approx",
+      "approximately",
+      "around",
+      "between",
+      "and",
+      "return",
+      "length",
+      "count",
+      "target",
+      "output",
+      "response",
+      "deliverable",
+      "final",
+      "total",
+      "answer",
+      "draft",
+      "write",
+      "generate",
+      "produce",
+      "of",
+      "in",
+      "the",
+      "is",
+      "be",
+      "should",
+      "must",
+      "have",
+      "contain",
+    ]);
+    const unknownWord = words.find((w) => !ALLOWED_MODIFIERS.has(w));
+    if (unknownWord) {
+      return {
+        status: "INVALID",
+        error: `Unknown or malformed length unit: "${unknownWord}" in "${expr}"`,
+        raw_expression: expr,
+      };
+    }
     // Default to words
     unit = "words";
   }
@@ -214,14 +276,16 @@ export function parseRequestedAnswerBudget(expr: string): ParseBudgetResult {
         raw_expression: expr,
       };
     }
+    const roundedMin = Math.round(minVal);
+    const roundedMax = Math.round(maxVal);
     return {
       status: "SUCCESS",
       budget: {
         unit,
         mode: "range",
-        target: maxVal,
-        min: minVal,
-        max: maxVal,
+        target: roundedMax,
+        min: roundedMin,
+        max: roundedMax,
         raw_expression: expr,
         counting_contract: WORD_COUNT_VERSION,
       },
@@ -259,6 +323,8 @@ export function parseRequestedAnswerBudget(expr: string): ParseBudgetResult {
     };
   }
 
+  const roundedTarget = Math.round(primaryNum);
+
   // Mode detection
   if (
     /\b(exactly|exact|precisely|strictly)\b/i.test(normalizedText) ||
@@ -269,9 +335,9 @@ export function parseRequestedAnswerBudget(expr: string): ParseBudgetResult {
       budget: {
         unit,
         mode: "exact",
-        target: primaryNum,
-        min: primaryNum,
-        max: primaryNum,
+        target: roundedTarget,
+        min: roundedTarget,
+        max: roundedTarget,
         raw_expression: expr,
         counting_contract: WORD_COUNT_VERSION,
       },
@@ -288,8 +354,8 @@ export function parseRequestedAnswerBudget(expr: string): ParseBudgetResult {
       budget: {
         unit,
         mode: "maximum",
-        target: primaryNum,
-        max: primaryNum,
+        target: roundedTarget,
+        max: roundedTarget,
         raw_expression: expr,
         counting_contract: WORD_COUNT_VERSION,
       },
@@ -304,8 +370,8 @@ export function parseRequestedAnswerBudget(expr: string): ParseBudgetResult {
       budget: {
         unit,
         mode: "minimum",
-        target: primaryNum,
-        min: primaryNum,
+        target: roundedTarget,
+        min: roundedTarget,
         raw_expression: expr,
         counting_contract: WORD_COUNT_VERSION,
       },
@@ -320,7 +386,7 @@ export function parseRequestedAnswerBudget(expr: string): ParseBudgetResult {
       budget: {
         unit,
         mode: "approximate",
-        target: primaryNum,
+        target: roundedTarget,
         raw_expression: expr,
         counting_contract: WORD_COUNT_VERSION,
       },
@@ -333,13 +399,27 @@ export function parseRequestedAnswerBudget(expr: string): ParseBudgetResult {
     budget: {
       unit,
       mode: "exact",
-      target: primaryNum,
-      min: primaryNum,
-      max: primaryNum,
+      target: roundedTarget,
+      min: roundedTarget,
+      max: roundedTarget,
       raw_expression: expr,
       counting_contract: WORD_COUNT_VERSION,
     },
   };
+}
+
+function getBudgetLowerBound(b: RequestedAnswerBudget): number | undefined {
+  if (b.mode === "exact") return b.target;
+  if (b.mode === "minimum") return b.min ?? b.target;
+  if (b.mode === "range") return b.min ?? b.target;
+  return undefined;
+}
+
+function getBudgetUpperBound(b: RequestedAnswerBudget): number | undefined {
+  if (b.mode === "exact") return b.target;
+  if (b.mode === "maximum") return b.max ?? b.target;
+  if (b.mode === "range") return b.max ?? b.target;
+  return undefined;
 }
 
 /**
@@ -382,45 +462,95 @@ export function detectBudgetConflicts(
         };
       }
 
-      // Exact vs Maximum
-      if (b1.mode === "exact" && b2.mode === "maximum" && b1.target > (b2.max ?? b2.target)) {
+      const low1 = getBudgetLowerBound(b1);
+      const high1 = getBudgetUpperBound(b1);
+      const low2 = getBudgetLowerBound(b2);
+      const high2 = getBudgetUpperBound(b2);
+
+      // Check if b1's lower bound exceeds b2's upper bound
+      if (low1 !== undefined && high2 !== undefined && low1 > high2) {
+        if (b1.mode === "exact" && b2.mode === "maximum") {
+          return {
+            hasConflict: true,
+            message: `[CONFLICT] Exact requirement of ${b1.target} ${b1.unit} exceeds maximum of ${high2} ${b2.unit}`,
+            budgets,
+          };
+        }
+        if (b2.mode === "exact" && b1.mode === "minimum") {
+          return {
+            hasConflict: true,
+            message: `[CONFLICT] Exact requirement of ${b2.target} ${b2.unit} is below minimum of ${low1} ${b1.unit}`,
+            budgets,
+          };
+        }
+        if (b1.mode === "exact" && b2.mode === "range") {
+          return {
+            hasConflict: true,
+            message: `[CONFLICT] Exact requirement of ${b1.target} ${b1.unit} falls outside range [${b2.min ?? b2.target}, ${b2.max ?? b2.target}] ${b2.unit}`,
+            budgets,
+          };
+        }
+        if (b1.mode === "range" && b2.mode === "exact") {
+          return {
+            hasConflict: true,
+            message: `[CONFLICT] Exact requirement of ${b2.target} ${b2.unit} falls outside range [${b1.min ?? b1.target}, ${b1.max ?? b1.target}] ${b1.unit}`,
+            budgets,
+          };
+        }
+        if (b1.mode === "range" && b2.mode === "range") {
+          return {
+            hasConflict: true,
+            message: `[CONFLICT] Disjoint length ranges [${b1.min ?? b1.target}, ${b1.max ?? b1.target}] and [${b2.min ?? b2.target}, ${b2.max ?? b2.target}] ${b1.unit}`,
+            budgets,
+          };
+        }
         return {
           hasConflict: true,
-          message: `[CONFLICT] Exact requirement of ${b1.target} ${b1.unit} exceeds maximum of ${b2.max ?? b2.target} ${b2.unit}`,
-          budgets,
-        };
-      }
-      if (b2.mode === "exact" && b1.mode === "maximum" && b2.target > (b1.max ?? b1.target)) {
-        return {
-          hasConflict: true,
-          message: `[CONFLICT] Exact requirement of ${b2.target} ${b2.unit} exceeds maximum of ${b1.max ?? b1.target} ${b1.unit}`,
+          message: `[CONFLICT] Minimum constraint (${low1}) exceeds maximum constraint (${high2}) ${b1.unit}`,
           budgets,
         };
       }
 
-      // Exact vs Minimum
-      if (b1.mode === "exact" && b2.mode === "minimum" && b1.target < (b2.min ?? b2.target)) {
+      // Check if b2's lower bound exceeds b1's upper bound
+      if (low2 !== undefined && high1 !== undefined && low2 > high1) {
+        if (b2.mode === "exact" && b1.mode === "maximum") {
+          return {
+            hasConflict: true,
+            message: `[CONFLICT] Exact requirement of ${b2.target} ${b2.unit} exceeds maximum of ${high1} ${b1.unit}`,
+            budgets,
+          };
+        }
+        if (b1.mode === "exact" && b2.mode === "minimum") {
+          return {
+            hasConflict: true,
+            message: `[CONFLICT] Exact requirement of ${b1.target} ${b1.unit} is below minimum of ${low2} ${b2.unit}`,
+            budgets,
+          };
+        }
+        if (b2.mode === "exact" && b1.mode === "range") {
+          return {
+            hasConflict: true,
+            message: `[CONFLICT] Exact requirement of ${b2.target} ${b2.unit} falls outside range [${b1.min ?? b1.target}, ${b1.max ?? b1.target}] ${b1.unit}`,
+            budgets,
+          };
+        }
+        if (b2.mode === "range" && b1.mode === "exact") {
+          return {
+            hasConflict: true,
+            message: `[CONFLICT] Exact requirement of ${b1.target} ${b1.unit} falls outside range [${b2.min ?? b2.target}, ${b2.max ?? b2.target}] ${b2.unit}`,
+            budgets,
+          };
+        }
+        if (b1.mode === "range" && b2.mode === "range") {
+          return {
+            hasConflict: true,
+            message: `[CONFLICT] Disjoint length ranges [${b1.min ?? b1.target}, ${b1.max ?? b1.target}] and [${b2.min ?? b2.target}, ${b2.max ?? b2.target}] ${b1.unit}`,
+            budgets,
+          };
+        }
         return {
           hasConflict: true,
-          message: `[CONFLICT] Exact requirement of ${b1.target} ${b1.unit} is below minimum of ${b2.min ?? b2.target} ${b2.unit}`,
-          budgets,
-        };
-      }
-      if (b2.mode === "exact" && b1.mode === "minimum" && b2.target < (b1.min ?? b1.target)) {
-        return {
-          hasConflict: true,
-          message: `[CONFLICT] Exact requirement of ${b2.target} ${b2.unit} is below minimum of ${b1.min ?? b1.target} ${b1.unit}`,
-          budgets,
-        };
-      }
-
-      // Minimum vs Maximum
-      const minVal = b1.min ?? (b1.mode === "minimum" ? b1.target : undefined);
-      const maxVal = b2.max ?? (b2.mode === "maximum" ? b2.target : undefined);
-      if (minVal !== undefined && maxVal !== undefined && minVal > maxVal) {
-        return {
-          hasConflict: true,
-          message: `[CONFLICT] Minimum constraint (${minVal}) exceeds maximum constraint (${maxVal}) ${b1.unit}`,
+          message: `[CONFLICT] Minimum constraint (${low2}) exceeds maximum constraint (${high1}) ${b1.unit}`,
           budgets,
         };
       }
