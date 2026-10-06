@@ -60,7 +60,9 @@ export type SpeArtifactImportCode =
   | "UNSUPPORTED_VERSION"
   | "MISSING_FIELDS"
   | "INTEGRITY_MISMATCH"
-  | "EXAMPLE_AUTHORITY";
+  | "EXAMPLE_AUTHORITY"
+  | "INVALID_SOURCE_DOCUMENT"
+  | "SOURCE_HASH_MISMATCH";
 
 export class SpeArtifactImportError extends Error {
   code: SpeArtifactImportCode;

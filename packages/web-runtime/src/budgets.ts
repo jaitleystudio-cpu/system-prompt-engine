@@ -140,6 +140,12 @@ export type ParseBudgetResult =
       raw_expression: string;
     };
 
+export function extractAnswerBudget(
+  result: ParseBudgetResult | null | undefined,
+): RequestedAnswerBudget | null {
+  return result && result.status === "SUCCESS" ? result.budget : null;
+}
+
 /**
  * Parses downstream deliverable length constraints from expressions like:
  * - "exactly 20,000 words"

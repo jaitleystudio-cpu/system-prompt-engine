@@ -33,6 +33,7 @@ import {
   clearHistory,
   defaultIntentLens,
   downloadJson,
+  extractAnswerBudget,
   isHistoryOptIn,
   loadHistory,
   openArtifactPrintView,
@@ -575,10 +576,7 @@ export default function App() {
           const parsedBudget = desiredAtom
             ? parseRequestedAnswerBudget(desiredAtom.text)
             : null;
-          const answerBudget =
-            parsedBudget && parsedBudget.status === "SUCCESS"
-              ? parsedBudget.budget
-              : null;
+          const answerBudget = extractAnswerBudget(parsedBudget);
           const sourceDoc =
             goal.length > 20000 ? await createSourceDocument(goal) : undefined;
           const spe = await buildSpeArtifact({

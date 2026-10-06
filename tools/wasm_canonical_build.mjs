@@ -254,6 +254,7 @@ function main() {
     RUSTC_WRAPPER: wrapperPath,
     RUSTFLAGS: rustflags,
   };
+  delete buildEnv.CARGO_MAKEFLAGS;
   if (process.env.SPE_WASM_RUSTC_LOG) {
     buildEnv.SPE_WASM_RUSTC_LOG = process.env.SPE_WASM_RUSTC_LOG;
   }
