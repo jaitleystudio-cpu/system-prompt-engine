@@ -10,6 +10,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import esbuild from "esbuild";
 import { chromium } from "playwright";
+import { getBrowserLaunchOptions } from "./resolve-chrome.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const webRoot = join(here, "..");
@@ -133,11 +134,7 @@ await esbuild.build({
   loader: { ".css": "empty" },
 });
 
-const browser = await chromium.launch({
-  executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-  headless: true,
-  args: ["--no-sandbox"],
-});
+const browser = await chromium.launch(getBrowserLaunchOptions());
 
 async function openCase(caseName, viewport) {
   const page = await browser.newPage({ viewport });

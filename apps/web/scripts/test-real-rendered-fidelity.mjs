@@ -6,6 +6,8 @@ import { chromium } from "playwright";
 import { build } from "../node_modules/esbuild/lib/main.js";
 import { compareVisualBuffers } from "../src/media/realVisualComparator.mjs";
 
+import { getBrowserLaunchOptions } from "./resolve-chrome.mjs";
+
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const repo = join(root, "../..");
 const mediaDir = join(root, "src/media");
@@ -37,11 +39,7 @@ console.log("SPE R8 IMAGE — REAL RENDERED FIDELITY, HOLDOUTS & MUTATION SUITE"
 console.log("============================================================");
 
 // 1. Launch Playwright Chromium Headless
-const chromePath = process.env.CHROME_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const browser = await chromium.launch({
-  ...(existsSync(chromePath) ? { executablePath: chromePath } : {}),
-  headless: true,
-});
+const browser = await chromium.launch(getBrowserLaunchOptions());
 
 const viewport = { width: 1280, height: 800 };
 const context = await browser.newContext({
@@ -86,7 +84,7 @@ for (const fix of manifest.fixtures) {
     viewport: { width: parsedPng.width, height: parsedPng.height, devicePixelRatio: 1.0 },
     referenceSource: `file://${refPath}`,
     candidateSource: htmlScaffold.code,
-    browserVersion: "Playwright Headless Chrome (macOS arm64)",
+    browserVersion: `Playwright Headless Chrome (${process.platform} ${process.arch})`,
   });
 
   results.push({

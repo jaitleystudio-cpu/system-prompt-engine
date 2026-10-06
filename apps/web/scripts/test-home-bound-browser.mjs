@@ -8,6 +8,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { dirname, join, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
+import { getBrowserLaunchOptions } from "./resolve-chrome.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
@@ -69,11 +70,7 @@ function record(cases, name, data) {
 
 await ensureBuild();
 const { server, base } = await startStatic();
-const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const browser = await chromium.launch({
-  headless: true,
-  ...(existsSync(chromePath) ? { executablePath: chromePath } : {}),
-});
+const browser = await chromium.launch(getBrowserLaunchOptions());
 const cases = [];
 
 try {

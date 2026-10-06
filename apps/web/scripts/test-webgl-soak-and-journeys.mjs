@@ -24,9 +24,9 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
+import { getBrowserLaunchOptions } from "./resolve-chrome.mjs";
 
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
-const chrome = process.env.CHROME_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const port = 5195;
 const url = `http://127.0.0.1:${port}/website`;
 
@@ -85,11 +85,11 @@ try {
   await waitForServer();
   console.log("Vite server ready at", url);
 
-  const browser = await chromium.launch({
-    ...(existsSync(chrome) ? { executablePath: chrome } : {}),
-    headless: true,
-    args: ["--use-angle=metal", "--js-flags=--expose-gc"],
-  });
+  const browser = await chromium.launch(
+    getBrowserLaunchOptions({
+      args: ["--js-flags=--expose-gc"],
+    }),
+  );
 
   // ========================================================
   // PHASE 1: Real Free-Text Journeys Execution

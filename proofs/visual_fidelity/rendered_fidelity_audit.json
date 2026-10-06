@@ -1,7 +1,7 @@
 {
   "ok": true,
   "suite": "SPE_R8_IMAGE_REAL_RENDERED_FIDELITY",
-  "timestamp": "2026-10-06T00:52:41.260Z",
+  "timestamp": "2026-10-06T01:19:41.974Z",
   "fixturesEvaluated": 6,
   "meanSsimScore": 0.552,
   "frozenGateRequired": 0.95,
@@ -13,7 +13,7 @@
     {
       "fixtureId": "desktop-landing",
       "dimensions": "1280x800",
-      "ssimScore": 0.2044,
+      "ssimScore": 0.2045,
       "pixelDeltaPercentage": 93.763,
       "status": "UNPROVEN",
       "notes": "Scaffold structural layout compared against pixel reference"
@@ -30,7 +30,7 @@
       "fixtureId": "form",
       "dimensions": "960x720",
       "ssimScore": 0.7764,
-      "pixelDeltaPercentage": 53.131,
+      "pixelDeltaPercentage": 53.126,
       "status": "UNPROVEN",
       "notes": "Scaffold structural layout compared against pixel reference"
     },
@@ -54,7 +54,7 @@
       "fixtureId": "dark-difficult",
       "dimensions": "1200x800",
       "ssimScore": 0.6284,
-      "pixelDeltaPercentage": 52.482,
+      "pixelDeltaPercentage": 52.481,
       "status": "UNPROVEN",
       "notes": "Scaffold structural layout compared against pixel reference"
     }

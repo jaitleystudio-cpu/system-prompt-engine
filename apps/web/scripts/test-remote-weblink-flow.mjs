@@ -123,6 +123,7 @@ const {
   ingestUrl,
   ingestHtmlFile,
   urlResultToPromptBlock,
+  readResponseBounded,
 } = urlModule;
 const { MAX_URL_BYTES } = limitsModule;
 
@@ -256,6 +257,27 @@ try {
   assert.match(refBlock, /UNTRUSTED_SOURCE/);
   assert.match(refBlock, /URL reference only — remote page content was not read/);
   console.log("Confirmed: CSP 'self' safely falls back to url_reference_only with UNTRUSTED_SOURCE block.");
+
+  // Test 5: Post-redirect destination SSRF rejection
+  const redirectTarget = new URL("http://127.0.0.1/admin");
+  const postRedirectCheck = isSsrfSafeUrl(redirectTarget);
+  assert.equal(postRedirectCheck.safe, false);
+  assert.equal(postRedirectCheck.reason, "LOOPBACK_IP");
+  console.log("Confirmed: redirect to private address destination rejected by SSRF policy.");
+
+  // Test 6: Bounded stream read on /large (enforcing MAX_URL_BYTES boundary)
+  const largeRes = await fetch(`http://127.0.0.1:${port}/large`);
+  const boundedLarge = await readResponseBounded(largeRes, MAX_URL_BYTES);
+  assert.equal(boundedLarge.hitLimit, true);
+  assert.equal(boundedLarge.usedBytes, MAX_URL_BYTES);
+  console.log("Confirmed: large response body strictly bounded to MAX_URL_BYTES.");
+
+  // Test 7: Non-HTML response content parsing
+  const nonHtmlRes = await fetch(`http://127.0.0.1:${port}/non-html`);
+  const boundedNonHtml = await readResponseBounded(nonHtmlRes, MAX_URL_BYTES);
+  assert.equal(boundedNonHtml.hitLimit, false);
+  assert.equal(boundedNonHtml.text, "Raw plain text content from server.");
+  console.log("Confirmed: non-HTML plain text response read cleanly.");
 
 } finally {
   server.close();

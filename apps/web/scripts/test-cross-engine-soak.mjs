@@ -22,10 +22,10 @@ import { fileURLToPath } from "node:url";
 import { build } from "../node_modules/esbuild/lib/main.js";
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
+import { getBrowserLaunchOptions } from "./resolve-chrome.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const src = join(root, "src");
-const chrome = process.env.CHROME_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const port = 5196;
 const url = `http://127.0.0.1:${port}/website`;
 
@@ -107,11 +107,7 @@ try {
   await waitForServer();
   console.log("Vite ready at", url);
 
-  const browser = await chromium.launch({
-    ...(existsSync(chrome) ? { executablePath: chrome } : {}),
-    headless: true,
-    args: ["--use-angle=metal"],
-  });
+  const browser = await chromium.launch(getBrowserLaunchOptions());
 
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(url, { waitUntil: "networkidle" });
