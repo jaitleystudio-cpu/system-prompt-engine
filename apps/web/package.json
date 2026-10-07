@@ -66,7 +66,10 @@
     "test:invariant-coverage": "node --experimental-strip-types scripts/test-invariant-coverage.mjs",
     "test:model-transcompiler": "node --experimental-strip-types scripts/test-model-transcompiler.mjs",
     "test:logic-constraint": "node --experimental-strip-types scripts/test-logic-constraint.mjs",
-    "test:swarm-topology": "node --experimental-strip-types scripts/test-swarm-topology.mjs"
+    "test:swarm-topology": "node --experimental-strip-types scripts/test-swarm-topology.mjs",
+    "test:kv-cache-aligner": "node --experimental-strip-types scripts/test-kv-cache-aligner.mjs",
+    "test:dual-symmetric-cogym": "node --experimental-strip-types scripts/test-dual-symmetric-cogym.mjs",
+    "test:data-quality": "node --experimental-strip-types scripts/test-data-quality-framework.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",

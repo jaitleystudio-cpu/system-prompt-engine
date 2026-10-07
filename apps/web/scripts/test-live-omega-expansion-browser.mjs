@@ -78,6 +78,42 @@ async function main() {
         });
         console.log("✓ Saved spe_monopoly_swarm_topology.png");
       }
+
+      // 6. Capture Speculative KV-Cache Alignment Tab
+      const kvTab = page.locator("button:has-text('KV-Cache Align')").first();
+      if (await kvTab.isVisible()) {
+        await kvTab.click();
+        await page.waitForTimeout(800);
+        await page.screenshot({
+          path: resolve(BRAIN_DIR, "spe_monopoly_kv_cache_align.png"),
+          fullPage: false,
+        });
+        console.log("✓ Saved spe_monopoly_kv_cache_align.png");
+      }
+
+      // 7. Capture Minimax Co-Gym Tab
+      const cogymTab = page.locator("button:has-text('Minimax Co-Gym')").first();
+      if (await cogymTab.isVisible()) {
+        await cogymTab.click();
+        await page.waitForTimeout(800);
+        await page.screenshot({
+          path: resolve(BRAIN_DIR, "spe_monopoly_minimax_cogym.png"),
+          fullPage: false,
+        });
+        console.log("✓ Saved spe_monopoly_minimax_cogym.png");
+      }
+
+      // 8. Capture Data Quality Framework Tab
+      const dqTab = page.locator("button:has-text('Data Quality')").first();
+      if (await dqTab.isVisible()) {
+        await dqTab.click();
+        await page.waitForTimeout(800);
+        await page.screenshot({
+          path: resolve(BRAIN_DIR, "spe_monopoly_data_quality.png"),
+          fullPage: false,
+        });
+        console.log("✓ Saved spe_monopoly_data_quality.png");
+      }
     }
   } catch (err) {
     console.error("Browser screenshot error:", err.message);
