@@ -1,0 +1,151 @@
+/* SPE Free 3D Websites v1.1 — Studio Foundation Stylesheet */
+
+:root {
+  --studio-bg: #090a0f;
+  --studio-surface: #12151e;
+  --studio-surface-elevated: #1a1e2b;
+  --studio-border: #242938;
+  --studio-border-active: #3b82f6;
+  --studio-text: #f4f5f8;
+  --studio-text-muted: #8e95a5;
+  --studio-primary: #3b82f6;
+  --studio-primary-hover: #2563eb;
+  --studio-success: #10b981;
+  --studio-warning: #f59e0b;
+  --studio-danger: #ef4444;
+  --studio-touch-target: 44px;
+}
+
+.studio-root {
+  display: grid;
+  grid-template-columns: minmax(280px, 320px) 1fr minmax(300px, 360px);
+  grid-template-rows: auto 1fr minmax(200px, 240px);
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--studio-bg);
+  color: var(--studio-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+}
+
+.studio-header {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: var(--studio-surface);
+  border-bottom: 1px solid var(--studio-border);
+  min-height: var(--studio-touch-target);
+}
+
+.studio-panel {
+  background-color: var(--studio-surface);
+  border-right: 1px solid var(--studio-border);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.studio-panel-right {
+  border-right: none;
+  border-left: 1px solid var(--studio-border);
+}
+
+.studio-timeline-panel {
+  grid-column: 1 / -1;
+  background-color: var(--studio-surface);
+  border-top: 1px solid var(--studio-border);
+  padding: 12px 20px;
+  overflow-x: auto;
+}
+
+.studio-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--studio-touch-target);
+  min-width: var(--studio-touch-target);
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--studio-border);
+  background-color: var(--studio-surface-elevated);
+  color: var(--studio-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.studio-btn:hover {
+  background-color: #262c3e;
+  border-color: #3b455e;
+}
+
+.studio-btn-primary {
+  background-color: var(--studio-primary);
+  border-color: var(--studio-primary);
+  color: #ffffff;
+}
+
+.studio-btn-primary:hover {
+  background-color: var(--studio-primary-hover);
+  border-color: var(--studio-primary-hover);
+}
+
+.studio-btn:focus-visible,
+.studio-input:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--studio-border-active);
+  outline-offset: 2px;
+}
+
+.studio-input {
+  min-height: var(--studio-touch-target);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--studio-border);
+  background-color: var(--studio-bg);
+  color: var(--studio-text);
+  font-size: 13px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.studio-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 900px) {
+  .studio-root {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr auto auto;
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .studio-panel,
+  .studio-panel-right {
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid var(--studio-border);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
