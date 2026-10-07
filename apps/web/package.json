@@ -73,6 +73,12 @@
     "test:owasp-compliance": "node --experimental-strip-types scripts/test-owasp-compliance.mjs",
     "test:sdk-codegen": "node --experimental-strip-types scripts/test-sdk-codegen.mjs",
     "test:semantic-diff": "node --experimental-strip-types scripts/test-semantic-diff.mjs",
+    "test:context-salience": "node --experimental-strip-types scripts/test-context-salience.mjs",
+    "test:multi-turn": "node --experimental-strip-types scripts/test-multi-turn-simulator.mjs",
+    "test:fewshot": "node --experimental-strip-types scripts/test-few-shot-curriculum.mjs",
+    "test:watermark": "node --experimental-strip-types scripts/test-prompt-watermark.mjs",
+    "test:cost-carbon": "node --experimental-strip-types scripts/test-cost-carbon-optimizer.mjs",
+    "test:otel-telemetry": "node --experimental-strip-types scripts/test-otel-telemetry-exporter.mjs",
     "test:spe-cli": "node --experimental-strip-types bin/spe.mjs --version"
   },
   "bin": {

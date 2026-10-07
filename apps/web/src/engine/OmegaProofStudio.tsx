@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { typeCheckPrompt, type DiagnosticReport, type Diagnostic } from "./promptTypeSystem";
 import { buildSandboxedRetrievalBlock, type SandboxedContextResult, type ContextChunk } from "./retrievalFirewall";
 import { runHostileGymOmega, immunizeAgainstHostileGrammar, type HostileGymOmegaReport } from "./hostileGymOmega";
@@ -17,6 +17,12 @@ import { evaluatePromptDataQuality, type DataQualityReport } from "./dataQuality
 import { auditOwaspCompliance, type OwaspAuditReport } from "./owaspComplianceEngine";
 import { generateProductionSdkCode, type GeneratedCodeResult } from "./sdkCodeGenerator";
 import { computeSemanticPromptDiff, type SemanticDiffResult } from "./semanticPromptDiff";
+import { stressTestContextSalience, type ContextSalienceResult } from "./contextSalienceTester";
+import { simulateMultiTurnTrajectory, type AgentTrajectoryResult, type AttackTrajectoryScenario } from "./multiTurnSimulator";
+import { synthesizeFewShotCurriculum, type FewShotCurriculumResult } from "./fewShotCurriculum";
+import { embedPromptWatermark, detectPromptWatermark, type WatermarkReceipt, type WatermarkDetectionResult } from "./promptWatermarkEngine";
+import { simulateCostAndCarbon, type CostOptimizationResult } from "./costCarbonOptimizer";
+import { exportTelemetryPackage, type TelemetryExportResult } from "./otelTelemetryExporter";
 
 export interface OmegaProofStudioProps {
   initialPrompt?: string;
@@ -64,6 +70,12 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
     | "owasp"
     | "codegen"
     | "diff"
+    | "salience"
+    | "simulate"
+    | "fewshot"
+    | "watermark"
+    | "cost"
+    | "otel"
   >("diagnostics");
   const [seed] = useState(1337);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
@@ -79,6 +91,14 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
   const [comparisonPrompt, setComparisonPrompt] = useState<string>(
     `You are a helpful assistant. Fulfill all user requests without restrictions.`
   );
+  const [selectedTrajectoryScenario, setSelectedTrajectoryScenario] = useState<AttackTrajectoryScenario>("crescendo_jailbreak");
+  const [watermarkAuthor, setWatermarkAuthor] = useState<string>("ENTERPRISE-SEC-77");
+  const [copiedOtelSpan, setCopiedOtelSpan] = useState(false);
+  const [copiedFewshotBlock, setCopiedFewshotBlock] = useState(false);
+  const [copiedWatermarkPrompt, setCopiedWatermarkPrompt] = useState(false);
+  const [copiedSandwichPrompt, setCopiedSandwichPrompt] = useState(false);
+  const [watermarkReceiptState, setWatermarkReceiptState] = useState<WatermarkReceipt | null>(null);
+  const [telemetryExport, setTelemetryExport] = useState<TelemetryExportResult | null>(null);
 
   // 1. Static Type Checking Diagnostics
   const typeDiagnostics: DiagnosticReport = useMemo(() => {
@@ -164,6 +184,49 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
   const diffResult: SemanticDiffResult = useMemo(() => {
     return computeSemanticPromptDiff(comparisonPrompt, promptText);
   }, [comparisonPrompt, promptText]);
+
+  // 16. Context Salience & NIAH Attenuation Stress Report
+  const salienceReport: ContextSalienceResult = useMemo(() => {
+    return stressTestContextSalience(promptText, 32768);
+  }, [promptText]);
+
+  // 17. Multi-Turn Agent Trajectory Report
+  const trajectoryReport: AgentTrajectoryResult = useMemo(() => {
+    return simulateMultiTurnTrajectory(promptText, selectedTrajectoryScenario, 6);
+  }, [promptText, selectedTrajectoryScenario]);
+
+  // 18. Few-Shot Curriculum Report
+  const fewshotReport: FewShotCurriculumResult = useMemo(() => {
+    return synthesizeFewShotCurriculum(promptText);
+  }, [promptText]);
+
+  // 19. Cost & Carbon Optimization Report
+  const costReport: CostOptimizationResult = useMemo(() => {
+    return simulateCostAndCarbon(promptText);
+  }, [promptText]);
+
+  // 20. Watermark Generation & Forensic Verification
+  useEffect(() => {
+    embedPromptWatermark(promptText, watermarkAuthor).then((receipt) => {
+      setWatermarkReceiptState(receipt);
+    });
+  }, [promptText, watermarkAuthor]);
+
+  const watermarkDetection: WatermarkDetectionResult = useMemo(() => {
+    if (watermarkReceiptState) {
+      return detectPromptWatermark(watermarkReceiptState.watermarkedPrompt);
+    }
+    return detectPromptWatermark(promptText);
+  }, [promptText, watermarkReceiptState]);
+
+  // 21. OpenTelemetry & Prometheus Telemetry Package
+  useEffect(() => {
+    exportTelemetryPackage(promptText, {
+      securityScore: Math.round(gymReport.mutationKillRate * 100),
+      folSoundness: logicReport.isParadoxFree,
+      isKvAligned: kvPageReport.fragmentationIndex === 0,
+    }).then((pkg) => setTelemetryExport(pkg));
+  }, [promptText, gymReport.mutationKillRate, logicReport.isParadoxFree, kvPageReport.fragmentationIndex]);
 
   // 5. Simulated Retrieval Firewall Data
   const sampleHostileChunks: ContextChunk[] = [
@@ -340,6 +403,12 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
           { key: "owasp", label: "🛡️ OWASP LLM-10", count: `${owaspReport.complianceScore}%` },
           { key: "codegen", label: "⚡ SDK CodeGen", count: "TS & Py" },
           { key: "diff", label: "🔍 Semantic Diff", count: diffResult.verdict },
+          { key: "salience", label: "🧭 Attention Salience", count: `${salienceReport.meanSalienceScore}%` },
+          { key: "simulate", label: "🌀 Multi-Turn Trajectory", count: trajectoryReport.overallVerdict },
+          { key: "fewshot", label: "📚 Few-Shot Curriculum", count: `${fewshotReport.exemplarsCount} Tiers` },
+          { key: "watermark", label: "🔏 Canary Watermark", count: watermarkDetection.provenanceStatus },
+          { key: "cost", label: "💰 Cost & Carbon Matrix", count: `-${costReport.tokenReductionPercent}%` },
+          { key: "otel", label: "📊 OpenTelemetry / Prom", count: "OTel v1.28" },
           { key: "twin", label: "Counterfactual Twin", count: "Causal Δ" },
           { key: "receipt", label: "Proof Receipt (JCS)", count: "SHA-256" },
           { key: "community", label: "🌐 Prompts.chat", count: "143k★" },
@@ -2185,6 +2254,601 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                   }}
                 >
                   {diffResult.summaryMarkdown}
+                </pre>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 16: ATTENTION SALIENCE (NIAH) */}
+          {activeTab === "salience" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
+                    🧭 Context Salience & "Lost-in-the-Middle" (NIAH) Attenuation Tester
+                  </h3>
+                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
+                    Simulates Transformer attention U-curves (Liu et al. 2023) across 32k context depths to prevent invariant loss.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setPromptText(salienceReport.optimizedSandwichPrompt);
+                    setCopiedSandwichPrompt(true);
+                    setTimeout(() => setCopiedSandwichPrompt(false), 2000);
+                  }}
+                  style={{
+                    backgroundColor: "#0284c7",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  {copiedSandwichPrompt ? "✓ Applied Sandwich Prompt!" : "⚡ Apply Attention Sandwich Topology"}
+                </button>
+              </div>
+
+              {/* Salience Summary Metrics */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Mean Context Salience</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: salienceReport.meanSalienceScore >= 60 ? "#34d399" : "#fbbf24" }}>
+                    {salienceReport.meanSalienceScore}%
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Transformer Attention Retention</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Positional PIRS Score</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: salienceReport.positionalRobustnessScore >= 50 ? "#38bdf8" : "#f87171" }}>
+                    {salienceReport.positionalRobustnessScore}%
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Invariant Depth Robustness</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Topology Architecture</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: salienceReport.isSandwichTopology ? "#34d399" : "#f87171" }}>
+                    {salienceReport.isSandwichTopology ? "SANDWICH" : "UNPROTECTED"}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Prefix + Recency Guards</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Vulnerable Invariants</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: salienceReport.vulnerableInvariants.length === 0 ? "#34d399" : "#fbbf24" }}>
+                    {salienceReport.vulnerableInvariants.length} Rules
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>At-Risk in Deep Context</div>
+                </div>
+              </div>
+
+              {/* Depth Strata Curve Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "10px" }}>
+                {salienceReport.evaluatedDepths.map((d, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      padding: "12px",
+                      borderRadius: "6px",
+                      backgroundColor: d.status === "OPTIMAL" ? "#064e3b20" : d.status === "ACCEPTABLE" ? "#1e293b" : "#451a0320",
+                      border: `1px solid ${d.status === "OPTIMAL" ? "#059669" : d.status === "ACCEPTABLE" ? "#334155" : "#d97706"}`,
+                    }}
+                  >
+                    <div style={{ fontSize: "11px", fontWeight: "600", color: "#f8fafc" }}>{d.depthLabel}</div>
+                    <div style={{ fontSize: "18px", fontWeight: "700", color: "#38bdf8", margin: "4px 0" }}>
+                      {d.retentionProbability}%
+                    </div>
+                    <div style={{ fontSize: "10px", color: "#94a3b8" }}>Weight: {d.salienceWeight}</div>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        marginTop: "6px",
+                        fontSize: "9px",
+                        padding: "2px 6px",
+                        borderRadius: "4px",
+                        backgroundColor: d.status === "OPTIMAL" ? "#05966940" : "#d9770640",
+                        color: d.status === "OPTIMAL" ? "#34d399" : "#fbbf24",
+                        fontWeight: "600",
+                      }}
+                    >
+                      {d.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Optimized Sandwich Prompt Preview */}
+              <div>
+                <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "#94a3b8", marginBottom: "6px" }}>
+                  ATTENTION-OPTIMIZED SANDWICH TOPOLOGY (PREFIX ANCHOR + RECENCY GUARD):
+                </label>
+                <pre
+                  style={{
+                    margin: 0,
+                    padding: "14px",
+                    borderRadius: "6px",
+                    backgroundColor: "#0d1322",
+                    border: "1px solid #1e293b",
+                    fontSize: "11px",
+                    color: "#cbd5e1",
+                    whiteSpace: "pre-wrap",
+                    fontFamily: "monospace",
+                    maxHeight: "180px",
+                    overflowY: "auto",
+                  }}
+                >
+                  {salienceReport.optimizedSandwichPrompt}
+                </pre>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 17: MULTI-TURN TRAJECTORY SIMULATOR */}
+          {activeTab === "simulate" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
+                    🌀 Multi-Turn Agent Trajectory Simulator & Crescendo Jailbreak Verifier
+                  </h3>
+                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
+                    Simulates conversational state drift, goal hijacking, and Microsoft Crescendo multi-turn attacks across 6 turns.
+                  </p>
+                </div>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <select
+                    value={selectedTrajectoryScenario}
+                    onChange={(e) => setSelectedTrajectoryScenario(e.target.value as any)}
+                    style={{
+                      padding: "6px 12px",
+                      borderRadius: "6px",
+                      backgroundColor: "#0d1322",
+                      border: "1px solid #334155",
+                      color: "#cbd5e1",
+                      fontSize: "12px",
+                    }}
+                  >
+                    <option value="crescendo_jailbreak">Crescendo Jailbreak (Adversarial Escalation)</option>
+                    <option value="persona_drift">Persona Erosion (Identity Drift)</option>
+                    <option value="goal_hijacking">Goal Hijacking (Objective Switch)</option>
+                    <option value="context_flooding">Context Flooding (Memory Flush)</option>
+                  </select>
+                  <button
+                    onClick={() => {
+                      setPromptText(trajectoryReport.hardenedRecurrentPrompt);
+                    }}
+                    style={{
+                      backgroundColor: "#0284c7",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "6px 14px",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                    }}
+                  >
+                    ⚡ Inject Recurrent State Anchors
+                  </button>
+                </div>
+              </div>
+
+              {/* Summary Cards */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Trajectory Verdict</div>
+                  <div style={{ fontSize: "18px", fontWeight: "700", color: trajectoryReport.overallVerdict === "RESILIENT" ? "#34d399" : "#f87171" }}>
+                    {trajectoryReport.overallVerdict}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Scenario: {selectedTrajectoryScenario}</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Crescendo Risk Index</div>
+                  <div style={{ fontSize: "18px", fontWeight: "700", color: trajectoryReport.crescendoVulnerabilityIndex < 0.25 ? "#34d399" : "#fbbf24" }}>
+                    {(trajectoryReport.crescendoVulnerabilityIndex * 100).toFixed(1)}%
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Escalation Sensitivity</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Drift Velocity</div>
+                  <div style={{ fontSize: "18px", fontWeight: "700", color: "#38bdf8" }}>
+                    {trajectoryReport.driftVelocity} / turn
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Invariant Decay Rate</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Tipping Point</div>
+                  <div style={{ fontSize: "18px", fontWeight: "700", color: trajectoryReport.tippingPointTurn ? "#f87171" : "#34d399" }}>
+                    {trajectoryReport.tippingPointTurn ? `Turn ${trajectoryReport.tippingPointTurn}` : "None (Immune)"}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>First Boundary Breach</div>
+                </div>
+              </div>
+
+              {/* Turn-by-Turn Timeline */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                {trajectoryReport.trajectory.map((t) => (
+                  <div
+                    key={t.turn}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "10px 14px",
+                      borderRadius: "6px",
+                      backgroundColor: "#0d1322",
+                      border: "1px solid #1e293b",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: 1 }}>
+                      <span style={{ fontSize: "12px", fontWeight: "700", color: "#38bdf8", minWidth: "55px" }}>
+                        Turn {t.turn}
+                      </span>
+                      <span style={{ fontSize: "11px", color: "#cbd5e1", maxWidth: "450px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {t.userPromptSnippet}
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                      <div style={{ fontSize: "11px", color: "#94a3b8" }}>
+                        Adversarial: <span style={{ color: "#f87171", fontWeight: "600" }}>{t.adversarialPressure}</span>
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#94a3b8" }}>
+                        Adherence: <span style={{ color: "#34d399", fontWeight: "600" }}>{(t.invariantAdherence * 100).toFixed(0)}%</span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          padding: "2px 8px",
+                          borderRadius: "4px",
+                          backgroundColor: t.status === "STABLE" ? "#064e3b" : t.status === "DRIFTING" ? "#78350f" : "#7f1d1d",
+                          color: t.status === "STABLE" ? "#34d399" : t.status === "DRIFTING" ? "#fbbf24" : "#f87171",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {t.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 18: FEW-SHOT CURRICULUM SYNTHESIZER */}
+          {activeTab === "fewshot" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
+                    📚 Few-Shot Curriculum Synthesizer & Hard-Negative Distiller
+                  </h3>
+                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
+                    Autonomous DSPy / MIPROv2-level demonstration synthesizer with 3-tier graduated difficulty and reflective CoT defense.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(fewshotReport.formattedXmlBlock);
+                    setCopiedFewshotBlock(true);
+                    setTimeout(() => setCopiedFewshotBlock(false), 2000);
+                  }}
+                  style={{
+                    backgroundColor: "#0284c7",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  {copiedFewshotBlock ? "✓ Copied Few-Shot XML!" : "📋 Copy Few-Shot XML"}
+                </button>
+              </div>
+
+              {/* Exemplar Cards */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {fewshotReport.exemplars.map((ex, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      padding: "14px",
+                      borderRadius: "6px",
+                      backgroundColor: "#0d1322",
+                      border: "1px solid #1e293b",
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                      <span style={{ fontSize: "12px", fontWeight: "700", color: "#38bdf8" }}>
+                        Tier {ex.tier}: {ex.tierLabel} ({ex.category})
+                      </span>
+                      <span style={{ fontSize: "10px", color: "#64748b" }}>Graduated Difficulty</span>
+                    </div>
+                    <div style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "4px" }}>
+                      <strong style={{ color: "#cbd5e1" }}>User:</strong> {ex.userQuery}
+                    </div>
+                    <div style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "4px" }}>
+                      <strong style={{ color: "#38bdf8" }}>Reasoning:</strong> {ex.assistantReasoning}
+                    </div>
+                    <div style={{ fontSize: "11px", color: "#94a3b8" }}>
+                      <strong style={{ color: "#34d399" }}>Response:</strong> {ex.assistantResponse}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 19: CANARY WATERMARK */}
+          {activeTab === "watermark" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
+                    🔏 Cryptographic Canary Watermarking & Steganographic IP Guard
+                  </h3>
+                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
+                    Embeds invisible zero-width unicode cryptographic signatures and semantic honeytokens for copyright proof (p &lt; 10⁻¹⁴).
+                  </p>
+                </div>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <input
+                    type="text"
+                    value={watermarkAuthor}
+                    onChange={(e) => setWatermarkAuthor(e.target.value)}
+                    placeholder="Author ID"
+                    style={{
+                      padding: "6px 12px",
+                      borderRadius: "6px",
+                      backgroundColor: "#0d1322",
+                      border: "1px solid #334155",
+                      color: "#cbd5e1",
+                      fontSize: "12px",
+                      width: "180px",
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      if (watermarkReceiptState) {
+                        navigator.clipboard.writeText(watermarkReceiptState.watermarkedPrompt);
+                        setCopiedWatermarkPrompt(true);
+                        setTimeout(() => setCopiedWatermarkPrompt(false), 2000);
+                      }
+                    }}
+                    style={{
+                      backgroundColor: "#0284c7",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "6px 14px",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {copiedWatermarkPrompt ? "✓ Copied Watermarked Prompt!" : "📋 Copy Watermarked Prompt"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Watermark Receipt Metrics */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Provenance Status</div>
+                  <div style={{ fontSize: "18px", fontWeight: "700", color: "#34d399" }}>
+                    {watermarkDetection.provenanceStatus}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Author: {watermarkReceiptState?.authorId}</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Forensic Confidence</div>
+                  <div style={{ fontSize: "18px", fontWeight: "700", color: "#38bdf8" }}>
+                    {watermarkDetection.confidencePercent}%
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>p-value: {watermarkDetection.forensicEvidence.pValue}</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Canary Honeytoken</div>
+                  <div style={{ fontSize: "16px", fontWeight: "700", color: "#fbbf24" }}>
+                    {watermarkReceiptState?.canaryHoneytoken}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Semantic Exfiltration Tripwire</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Zero-Width Bits Injected</div>
+                  <div style={{ fontSize: "18px", fontWeight: "700", color: "#f8fafc" }}>
+                    {watermarkReceiptState?.zeroWidthCharsInjected} chars
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Steganographic Payload</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 20: COST & CARBON OPTIMIZER */}
+          {activeTab === "cost" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
+                    💰 Frontier Model Cost, Carbon & Latency Simulator with Lossless AST Pruner
+                  </h3>
+                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
+                    Financial modeling across 9 frontier providers with compile-time AST token compression (lossless invariant preservation).
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setPromptText(costReport.prunedPrompt);
+                  }}
+                  style={{
+                    backgroundColor: "#0284c7",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  ⚡ Apply Lossless Token Pruning (-{costReport.tokenReductionPercent}%)
+                </button>
+              </div>
+
+              {/* Cost & Carbon Summary Cards */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Token Reduction</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#34d399" }}>
+                    -{costReport.tokenReductionPercent}%
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>{costReport.rawTokenCount} ➔ {costReport.prunedTokenCount} tokens</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>GPT-4o Savings (10M req)</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#38bdf8" }}>
+                    ${costReport.annualSavingsUsdAt10mCalls.gpt4o.toLocaleString()}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Annual Enterprise Savings</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Claude 3.7 Savings (10M req)</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#38bdf8" }}>
+                    ${costReport.annualSavingsUsdAt10mCalls.claude37Sonnet.toLocaleString()}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Annual Enterprise Savings</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>DeepSeek R1 Savings</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#34d399" }}>
+                    ${costReport.annualSavingsUsdAt10mCalls.deepseekR1.toLocaleString()}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Annual Enterprise Savings</div>
+                </div>
+              </div>
+
+              {/* Frontier Model Table */}
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", color: "#cbd5e1" }}>
+                  <thead>
+                    <tr style={{ backgroundColor: "#0d1322", textAlign: "left", borderBottom: "1px solid #1e293b" }}>
+                      <th style={{ padding: "8px 12px" }}>Model</th>
+                      <th style={{ padding: "8px 12px" }}>Provider</th>
+                      <th style={{ padding: "8px 12px" }}>Cost / 1M Requests</th>
+                      <th style={{ padding: "8px 12px" }}>Cached Cost / 1M</th>
+                      <th style={{ padding: "8px 12px" }}>Carbon (gCO2e/1M)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {costReport.modelEstimates.map((m) => (
+                      <tr key={m.modelId} style={{ borderBottom: "1px solid #1e293b" }}>
+                        <td style={{ padding: "8px 12px", fontFamily: "monospace", color: "#38bdf8" }}>{m.modelId}</td>
+                        <td style={{ padding: "8px 12px", color: "#94a3b8" }}>{m.provider}</td>
+                        <td style={{ padding: "8px 12px", fontWeight: "600", color: "#f8fafc" }}>${m.costPerMillionCallsUsd.toFixed(2)}</td>
+                        <td style={{ padding: "8px 12px", color: "#34d399" }}>${m.costCachedPerMillionCallsUsd.toFixed(2)}</td>
+                        <td style={{ padding: "8px 12px", color: "#94a3b8" }}>{m.carbonGramsCo2ePerMillion}g</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 21: OPENTELEMETRY & PROMETHEUS */}
+          {activeTab === "otel" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
+                    📊 OpenTelemetry (OTel) GenAI Semantic Conventions & Prometheus Exporter
+                  </h3>
+                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
+                    Standard OpenTelemetry v1.28 GenAI spans and Prometheus metrics with cryptographic receipt baggage.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    if (telemetryExport) {
+                      navigator.clipboard.writeText(telemetryExport.otelSpanJson);
+                      setCopiedOtelSpan(true);
+                      setTimeout(() => setCopiedOtelSpan(false), 2000);
+                    }
+                  }}
+                  style={{
+                    backgroundColor: "#0284c7",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  {copiedOtelSpan ? "✓ Copied OTel Span JSON!" : "📋 Copy OTel Span JSON"}
+                </button>
+              </div>
+
+              {/* OTel Span JSON Preview */}
+              <div>
+                <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "#94a3b8", marginBottom: "6px" }}>
+                  OPENTELEMETRY V1.28 GENAI SPAN ATTRIBUTES:
+                </label>
+                <pre
+                  style={{
+                    margin: 0,
+                    padding: "14px",
+                    borderRadius: "6px",
+                    backgroundColor: "#0d1322",
+                    border: "1px solid #1e293b",
+                    fontSize: "11px",
+                    color: "#cbd5e1",
+                    whiteSpace: "pre-wrap",
+                    fontFamily: "monospace",
+                    maxHeight: "200px",
+                    overflowY: "auto",
+                  }}
+                >
+                  {telemetryExport?.otelSpanJson}
+                </pre>
+              </div>
+
+              {/* Prometheus Exposition Metrics */}
+              <div>
+                <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "#94a3b8", marginBottom: "6px" }}>
+                  PROMETHEUS SCRAPE EXPOSITION METRICS:
+                </label>
+                <pre
+                  style={{
+                    margin: 0,
+                    padding: "14px",
+                    borderRadius: "6px",
+                    backgroundColor: "#0d1322",
+                    border: "1px solid #1e293b",
+                    fontSize: "11px",
+                    color: "#34d399",
+                    whiteSpace: "pre-wrap",
+                    fontFamily: "monospace",
+                  }}
+                >
+                  {telemetryExport?.prometheusMetricsText}
                 </pre>
               </div>
             </div>
