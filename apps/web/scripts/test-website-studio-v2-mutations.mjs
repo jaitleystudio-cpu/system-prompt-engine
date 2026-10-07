@@ -3,10 +3,13 @@
  * SPE Free 3D Websites v1.1 — Workstream A mutation/falsification gate.
  *
  * Mutates temporary copies only. Production source is never modified.
+ * Copies model + security (+ SSRF helper) so WebsiteSpecV2 security
+ * imports resolve in the temp tree without weakening kill assertions.
  */
 import assert from "node:assert/strict";
 import {
   cpSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
@@ -18,13 +21,24 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const sourceDir = path.join(__dirname, "../src/website-studio/model");
+const studioRoot = path.join(__dirname, "../src/website-studio");
+const modelSource = path.join(studioRoot, "model");
+const securitySource = path.join(studioRoot, "security");
+const urlSecuritySource = path.join(
+  __dirname,
+  "../src/engine/multimodal/urlSecurity.ts",
+);
 
 function runMutation(name, mutate, runnerBody) {
   const tmpRoot = mkdtempSync(path.join(os.tmpdir(), "spe-studio-mutation-"));
-  const modelDir = path.join(tmpRoot, "model");
+  const studioDir = path.join(tmpRoot, "website-studio");
+  const modelDir = path.join(studioDir, "model");
   try {
-    cpSync(sourceDir, modelDir, { recursive: true });
+    mkdirSync(studioDir, { recursive: true });
+    cpSync(modelSource, modelDir, { recursive: true });
+    cpSync(securitySource, path.join(studioDir, "security"), { recursive: true });
+    mkdirSync(path.join(tmpRoot, "engine/multimodal"), { recursive: true });
+    cpSync(urlSecuritySource, path.join(tmpRoot, "engine/multimodal/urlSecurity.ts"));
     mutate(modelDir);
     const runner = path.join(tmpRoot, "runner.mjs");
     writeFileSync(
