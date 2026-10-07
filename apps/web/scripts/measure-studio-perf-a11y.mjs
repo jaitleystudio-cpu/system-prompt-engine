@@ -190,7 +190,12 @@ window.__speSampleFrames = (warmup, samples) =>
           frameP95: pct(95),
           frameP99: pct(99),
           memoryBytes: performance.memory ? performance.memory.usedJSHeapSize : undefined,
-          viewport: { width: window.innerWidth, height: window.innerHeight },
+          viewport: { width: window.screen.width, height: window.screen.height },
+          layoutViewport: { width: window.innerWidth, height: window.innerHeight },
+          visualViewport: window.visualViewport
+            ? { width: window.visualViewport.width, height: window.visualViewport.height, scale: window.visualViewport.scale }
+            : null,
+          documentScrollWidth: document.documentElement.scrollWidth,
           dpr: window.devicePixelRatio,
           userAgent: navigator.userAgent,
           maxTouchPoints: navigator.maxTouchPoints,
@@ -297,7 +302,9 @@ async function sampleEnvironment(browser, browserLabel, env, htmlPath, urlFixtur
       ([warmup, samples]) => window.__speSampleFrames(warmup, samples),
       [WARMUP_FRAMES, SAMPLE_FRAMES],
     );
-    assert.deepEqual(sample.viewport, env.viewport, `${env.environmentClass} observed viewport differs from requested`);
+    // Device viewport (screen) must be what was requested. The layout viewport
+    // may grow on a mobile page whose content overflows; that is recorded, not hidden.
+    assert.deepEqual(sample.viewport, env.viewport, `${env.environmentClass} observed device viewport differs from requested`);
     assert.equal(sample.dpr, env.deviceScaleFactor, `${env.environmentClass} observed DPR differs from requested`);
     return {
       scene,
@@ -325,6 +332,9 @@ async function sampleEnvironment(browser, browserLabel, env, htmlPath, urlFixtur
       },
       framesRendered: sample.framesRendered,
       maxTouchPoints: sample.maxTouchPoints,
+      layoutViewport: sample.layoutViewport,
+      visualViewport: sample.visualViewport,
+      documentScrollWidth: sample.documentScrollWidth,
     };
   } finally {
     await context.close();
@@ -403,6 +413,11 @@ try {
           hasTouch: env.hasTouch,
         },
         observed_max_touch_points: sampled.maxTouchPoints,
+        observed_layout_viewport: sampled.layoutViewport,
+        observed_visual_viewport: sampled.visualViewport,
+        layout_viewport_expanded:
+          sampled.layoutViewport.width !== env.viewport.width ||
+          sampled.layoutViewport.height !== env.viewport.height,
         frames_rendered_during_sampling: sampled.framesRendered,
         scene_execution: sampled.scene?.report ?? null,
         attached: false,
@@ -454,12 +469,35 @@ try {
   {
     const { context, page } = await openPage(browser, ENVIRONMENTS[1], htmlPath, "");
     const mobileA11y = await collectA11y(page);
+    const overflow = await page.evaluate((deviceWidth) => {
+      const offenders = [...document.querySelectorAll("body *")]
+        .map((el) => ({ el, r: el.getBoundingClientRect() }))
+        .filter(({ r }) => r.width > 0 && r.right > deviceWidth + 0.5)
+        .slice(0, 8)
+        .map(({ el, r }) => ({
+          tag: el.tagName.toLowerCase(),
+          testid: el.getAttribute("data-testid"),
+          className: typeof el.className === "string" ? el.className.slice(0, 60) : "",
+          right: Math.round(r.right),
+          width: Math.round(r.width),
+        }));
+      return {
+        layout_width: window.innerWidth,
+        document_scroll_width: document.documentElement.scrollWidth,
+        offenders,
+      };
+    }, ENVIRONMENTS[1].viewport.width);
     assert.equal(mobileA11y.mainCount, 1);
     assert.equal(mobileA11y.smallTargets.length, 0, `mobile touch <44px: ${JSON.stringify(mobileA11y.smallTargets)}`);
     await context.close();
     results.a11y.mobile_390x844 = {
       touch_targets_below_44px: mobileA11y.smallTargets.length,
       main_landmark_count: mobileA11y.mainCount,
+      horizontal_overflow: overflow,
+      reflow_finding:
+        overflow.document_scroll_width > ENVIRONMENTS[1].viewport.width || overflow.layout_width > ENVIRONMENTS[1].viewport.width
+          ? "CONTENT_WIDER_THAN_390_CSS_PX"
+          : "NONE_OBSERVED",
     };
   }
   assert.equal(results.blocked_network_requests, 0, "harness page attempted network egress");
@@ -498,6 +536,7 @@ const summary = {
   exit_code: exitCode,
   candidate_custody_after_run: custodyAfter,
   field_cwv: results.field_cwv,
+  mobile_reflow: results.a11y?.mobile_390x844?.reflow_finding ?? "NOT_RUN",
   fixtures: results.fixtures.map((fixture) => ({
     fixture_id: fixture.fixture_id,
     frame_state: fixture.frame_state,
@@ -518,6 +557,7 @@ function pickEnv(env, record) {
     p95: env.frameP95,
     p99: env.frameP99,
     hold_reason: record?.hold_reason ?? null,
+    layout_viewport: record?.observed_layout_viewport ?? null,
   };
 }
 console.log(JSON.stringify(summary, null, 2));
