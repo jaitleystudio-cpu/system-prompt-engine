@@ -53,7 +53,13 @@ export function connectSrcAllowsRemoteHost(
   }
   return false;
 }
-import { isSsrfSafeUrl } from "../engine/multimodal/urlSecurity";
+import {
+  DestinationPolicies,
+  guardedPublicFetch,
+  isSsrfSafeUrl,
+  isUnverifiableDestinationRefusal,
+  type TrustedHostResolver,
+} from "../engine/multimodal/urlSecurity";
 export { isSsrfSafeUrl };
 
 export function readDocumentNetworkPolicy(): BrowserNetworkPolicy {
@@ -472,6 +478,13 @@ export async function ingestUrl(
     signal?: AbortSignal;
     timeoutMs?: number;
     networkPolicy?: BrowserNetworkPolicy;
+    /**
+     * Trusted resolver (non-browser runtimes only). When supplied, every hop's
+     * hostname must resolve exclusively to public addresses before it is
+     * requested. Browsers expose no resolver, so destination identity there
+     * stays unverified and redirects that hide their Location fail closed.
+     */
+    resolveHost?: TrustedHostResolver;
   } = {},
 ): Promise<UrlIngestResult> {
   const parsed = normalizeUrl(rawUrl);
@@ -512,14 +525,42 @@ export async function ingestUrl(
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const res = await fetch(parsed.toString(), {
-      method: "GET",
-      mode: "cors",
-      credentials: "omit",
-      headers: { Accept: "text/html,text/plain;q=0.9,*/*;q=0.1" },
-      signal: controller.signal,
+    // Execution boundary: every redirect hop is validated BEFORE it is
+    // requested (the transport never auto-follows redirects).
+    const guarded = await guardedPublicFetch(parsed.toString(), {
+      resolveHost: opts.resolveHost,
+      policy: opts.resolveHost
+        ? DestinationPolicies.REQUIRE_RESOLUTION
+        : DestinationPolicies.BROWSER_UNVERIFIABLE,
+      init: {
+        method: "GET",
+        mode: "cors",
+        credentials: "omit",
+        headers: { Accept: "text/html,text/plain;q=0.9,*/*;q=0.1" },
+        signal: controller.signal,
+      },
     });
-    const finalUrl = res.url || parsed.toString();
+    if (!guarded.ok) {
+      if (isUnverifiableDestinationRefusal(guarded.reason)) {
+        return {
+          status: "url_reference_only",
+          url: parsed.toString(),
+          reason: "remote_fetch_unavailable",
+          message:
+            "SPE could not read that page in this browser. The URL is kept as a reference only — remote page content was not loaded. Upload page HTML or a screenshot for grounding.",
+          fallbacks: FALLBACKS,
+        };
+      }
+      return {
+        status: "invalid_url",
+        url: parsed.toString(),
+        finalUrl: guarded.refusedUrl,
+        message: "Enter a full http(s) URL.",
+        fallbacks: FALLBACKS,
+      };
+    }
+    const res = guarded.response;
+    const finalUrl = guarded.finalUrl;
     const finalParsed = normalizeUrl(finalUrl);
     if (!finalParsed || !isSsrfSafeUrl(finalParsed).safe) {
       return {
