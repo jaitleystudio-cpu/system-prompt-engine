@@ -4,6 +4,7 @@ import { GeneticEvolverStudio } from "./GeneticEvolverStudio";
 import { VisionCompilerStudio } from "./VisionCompilerStudio";
 import { CognitiveEnergyShader } from "./CognitiveEnergyShader";
 import { BlindedJudgeArenaStudio } from "./BlindedJudgeArenaStudio";
+import { OmegaProofStudio } from "./OmegaProofStudio";
 import { defaultRagEngine, type SearchResult } from "./hybridRagEngine";
 
 export interface FeaturesHubProps {
@@ -23,6 +24,14 @@ export interface FeatureItem {
 }
 
 export const FEATURES: FeatureItem[] = [
+  {
+    id: "omega-proof",
+    view: "capabilities",
+    title: "🛡️ SPE Ω Proof Lab",
+    subtitle: "Type Diagnostics, Hostile Gym Ω & Proof Receipts",
+    href: "/capabilities",
+    badge: "Ω Core",
+  },
   {
     id: "genetic-evolver",
     view: "create",
@@ -123,7 +132,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
   };
 
   const isOmniBrainFeature = (id: string) =>
-    ["genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
+    ["omega-proof", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
 
   const visibleFeatures = filter.trim()
     ? FEATURES.filter(
@@ -385,6 +394,10 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 ✕ Close
               </button>
             </div>
+
+            {activeModal === "omega-proof" && (
+              <OmegaProofStudio onClose={() => setActiveModal(null)} />
+            )}
 
             {activeModal === "genetic-evolver" && (
               <GeneticEvolverStudio

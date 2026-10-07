@@ -58,7 +58,8 @@
     "test:hybrid-rag-engine": "node scripts/test-hybrid-rag-engine.mjs",
     "test:cognitive-shader": "node scripts/test-cognitive-shader.mjs",
     "test:blinded-judge-arena": "node scripts/test-blinded-judge-arena.mjs",
-    "test:v1-4-omnibrain": "node scripts/test-v1-4-omnibrain-suite.mjs"
+    "test:v1-4-omnibrain": "node scripts/test-v1-4-omnibrain-suite.mjs",
+    "test:spe-omega-proof": "node --experimental-strip-types scripts/test-spe-omega-proof-engine.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",
