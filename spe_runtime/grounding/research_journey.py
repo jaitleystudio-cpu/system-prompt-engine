@@ -1052,15 +1052,30 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--provider", action="append", dest="providers")
     parser.add_argument("--private-document", default=None, help="Local text that must not be placed in the outbound query.")
+    parser.add_argument(
+        "--evidence-dir",
+        default=None,
+        help="Directory for live response bodies. Required for durable receipts; auto-created under evidence/r9-f-scholarly-retraction/fresh/ when --live omits this.",
+    )
     args = parser.parse_args(argv)
     providers = tuple(args.providers) if args.providers else ("OPENALEX", "CROSSREF", "PUBMED")
+    evidence_dir = args.evidence_dir
+    if bool(args.live) and not evidence_dir:
+        stamp = datetime.now(_IST).strftime("%Y%m%dT%H%M%S%z")
+        # Normalize +0530 (strftime %z is +0530 already on IST)
+        evidence_dir = str(_repo_root() / "evidence" / "r9-f-scholarly-retraction" / "fresh" / stamp)
+        Path(evidence_dir).mkdir(parents=True, exist_ok=True)
     result = run_research_journey(
         args.question,
         research_consent=True if args.consent else False,
         providers=providers,
         private_document=args.private_document,
         allow_live=bool(args.live),
+        evidence_dir=evidence_dir,
     )
+    if evidence_dir:
+        result = dict(result)
+        result["evidence_dir"] = evidence_dir
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
