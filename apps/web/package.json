@@ -52,7 +52,13 @@
     "test:website-product": "node --experimental-strip-types scripts/test-website-product-flow.mjs",
     "test:website-compiler": "node --experimental-strip-types scripts/test-static-website-compiler.mjs",
     "test:volume-budget": "node scripts/test-volume-budget-regression.mjs",
-    "test:stress-1m": "node --expose-gc scripts/stress-1m-volume-qualification.mjs"
+    "test:stress-1m": "node --expose-gc scripts/stress-1m-volume-qualification.mjs",
+    "test:genetic-evolver": "node scripts/test-genetic-evolver.mjs",
+    "test:vision-inverse-compiler": "node scripts/test-vision-inverse-compiler.mjs",
+    "test:hybrid-rag-engine": "node scripts/test-hybrid-rag-engine.mjs",
+    "test:cognitive-shader": "node scripts/test-cognitive-shader.mjs",
+    "test:blinded-judge-arena": "node scripts/test-blinded-judge-arena.mjs",
+    "test:v1-4-omnibrain": "node scripts/test-v1-4-omnibrain-suite.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",

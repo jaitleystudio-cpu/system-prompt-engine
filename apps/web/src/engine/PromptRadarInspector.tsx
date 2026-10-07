@@ -2,6 +2,11 @@ import React, { useState, useMemo } from "react";
 import { synthesizeSystemPrompt } from "./promptSynthesizer.mjs";
 import { constructMarkdownSystemPrompt, downloadMarkdownFile } from "./markdownExport";
 import type { TargetId } from "@spe/web-runtime";
+import { GeneticEvolverStudio } from "./GeneticEvolverStudio";
+import { VisionCompilerStudio } from "./VisionCompilerStudio";
+import { CognitiveEnergyShader } from "./CognitiveEnergyShader";
+import { BlindedJudgeArenaStudio } from "./BlindedJudgeArenaStudio";
+import { defaultRagEngine } from "./hybridRagEngine";
 
 export interface PromptRadarInspectorProps {
   promptText: string;
@@ -73,7 +78,10 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
   onNavigate,
   onAutoOptimize,
 }) => {
-  const [activeTab, setActiveTab] = useState<"radar" | "harness" | "matrix" | "markdown" | "code" | "rules">("radar");
+  const [activeTab, setActiveTab] = useState<
+    "radar" | "evolver" | "vision" | "rag" | "quantum" | "arena" | "harness" | "matrix" | "markdown" | "code" | "rules"
+  >("radar");
+  const [ragQuery, setRagQuery] = useState<string>("");
   const [activeCodeLang, setActiveCodeLang] = useState<"python" | "typescript" | "curl" | "rules">("python");
   const [includeFrontmatter, setIncludeFrontmatter] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -404,6 +412,11 @@ ${promptText}
           {(
             [
               { id: "radar", label: "📊 Quality Radar" },
+              { id: "evolver", label: "🧬 Genetic Evolver" },
+              { id: "vision", label: "👁️ Vision Compiler" },
+              { id: "rag", label: "⚡ Hybrid RAG" },
+              { id: "quantum", label: "🌌 3D Quantum Field" },
+              { id: "arena", label: "⚖️ Blinded Arena" },
               { id: "harness", label: "🧠 AGI Brain Harness" },
               { id: "matrix", label: "⚡ Model Matrix" },
               { id: "markdown", label: "📝 Markdown (.md)" },
@@ -1527,6 +1540,161 @@ ${promptText}
           >
             {ideRulesSnippet}
           </pre>
+        </div>
+      )}
+
+      {/* Tab 5: Genetic Prompt Evolver */}
+      {activeTab === "evolver" && (
+        <div style={{ padding: "0.5rem" }}>
+          <GeneticEvolverStudio
+            initialPrompt={currentPrompt}
+            onApplyOptimizedPrompt={(evolved) => {
+              onAutoOptimize?.(evolved);
+              setIsOptimized(false);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Tab 6: Multimodal Vision Compiler */}
+      {activeTab === "vision" && (
+        <div style={{ padding: "0.5rem" }}>
+          <VisionCompilerStudio
+            onApplyCompiledPrompt={(compiled) => {
+              onAutoOptimize?.(compiled);
+              setIsOptimized(false);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Tab 7: In-WASM Hybrid RAG Retrieval Fabric */}
+      {activeTab === "rag" && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+            padding: "1rem",
+            background: "rgba(15, 23, 42, 0.7)",
+            borderRadius: "8px",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
+            <div>
+              <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#f8fafc" }}>
+                ⚡ In-WASM Supersonic Hybrid RAG Retrieval Fabric (BM25 + 384-d Dense RRF)
+              </div>
+              <div style={{ fontSize: "0.7rem", color: "#94a3b8" }}>
+                Sub-millisecond retrieval across verified architectural standards with 0 network egress.
+              </div>
+            </div>
+            <div style={{ fontSize: "0.7rem", color: "#38bdf8" }}>
+              {defaultRagEngine.getStats().totalDocuments} Standards Indexed • 384-d Unit Vectors
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <input
+              type="text"
+              placeholder="Query architectural standards (e.g. 'zero trust input delimiters' or 'CoALA memory')..."
+              value={ragQuery}
+              onChange={(e) => setRagQuery(e.target.value)}
+              style={{
+                flex: 1,
+                fontSize: "0.75rem",
+                padding: "0.45rem 0.75rem",
+                borderRadius: "6px",
+                background: "rgba(0, 0, 0, 0.4)",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                color: "#fff",
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const section = defaultRagEngine.generateKnowledgeAnchorSection(ragQuery || currentPrompt, 3);
+                if (onAutoOptimize) {
+                  onAutoOptimize(currentPrompt + "\n\n" + section);
+                }
+              }}
+              style={{
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                padding: "0.45rem 0.9rem",
+                borderRadius: "6px",
+                background: "linear-gradient(135deg, #0ea5e9, #6366f1)",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              ⚡ Inject Top Standards into Prompt
+            </button>
+          </div>
+
+          {/* RRF Results */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            {defaultRagEngine.searchHybrid(ragQuery || currentPrompt || "security architecture", 4).map((r, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: "0.6rem 0.8rem",
+                  borderRadius: "6px",
+                  background: "rgba(0, 0, 0, 0.3)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  gap: "0.75rem",
+                }}
+              >
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                    <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#38bdf8" }}>
+                      {r.doc.title}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "0.6rem",
+                        padding: "0.1rem 0.35rem",
+                        borderRadius: "4px",
+                        background: "rgba(56, 189, 248, 0.2)",
+                        color: "#38bdf8",
+                      }}
+                    >
+                      {r.doc.category.toUpperCase()}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: "0.7rem", color: "#cbd5e1", marginTop: "0.25rem" }}>
+                    {r.doc.content}
+                  </div>
+                </div>
+                <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+                  <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#10b981" }}>
+                    RRF: {r.rrfScore}
+                  </div>
+                  <div style={{ fontSize: "0.6rem", color: "#64748b" }}>
+                    BM25: {r.bm25Score} • Dense: {r.denseScore}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 8: 3D GLSL Quantum Energy Field */}
+      {activeTab === "quantum" && (
+        <div style={{ padding: "0.5rem" }}>
+          <CognitiveEnergyShader promptText={currentPrompt} height={420} />
+        </div>
+      )}
+
+      {/* Tab 9: Game-Theoretic Blinded Multi-Judge Arena */}
+      {activeTab === "arena" && (
+        <div style={{ padding: "0.5rem" }}>
+          <BlindedJudgeArenaStudio promptText={currentPrompt} />
         </div>
       )}
     </div>
