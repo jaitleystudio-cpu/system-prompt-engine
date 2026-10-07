@@ -51,6 +51,8 @@ const HARNESS_FILES = [
   "apps/web/scripts/fixtures/studio-perf-fixtures.mjs",
   "apps/web/src/website-studio/performance/measureScene.ts",
   "apps/web/src/engine/multimodal/sceneRuntime.ts",
+  "apps/web/src/index.css",
+  "apps/web/src/website-studio/studio.css",
   "tools/candidate-custody.mjs",
 ];
 const WARMUP_FRAMES = 20;
@@ -228,6 +230,10 @@ window.__studioReady = true;
     loader: { ".css": "empty", ".ts": "ts", ".tsx": "tsx" },
     logLevel: "silent",
   });
+  // Same stylesheets the product loads for /studio: global index.css (body
+  // margin reset, box-sizing) + studio.css. Omitting index.css adds the UA
+  // 8px body margin and fakes a mobile horizontal overflow.
+  const appCss = readFileSync(join(webRoot, "src/index.css"), "utf8");
   const studioCss = readFileSync(join(webRoot, "src/website-studio/studio.css"), "utf8");
   const htmlPath = join(workDir, "studio-harness.html");
   writeFileSync(
@@ -238,7 +244,8 @@ window.__studioReady = true;
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>SPE Studio R9-H measure</title>
-<style>${studioCss}
+<style>${appCss}
+${studioCss}
 #perf-scene{position:fixed;right:0;bottom:0;width:min(480px,100vw);pointer-events:none;z-index:0}
 #perf-scene canvas{display:block;width:100%;height:auto}</style>
 </head>
