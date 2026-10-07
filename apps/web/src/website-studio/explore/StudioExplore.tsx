@@ -68,9 +68,9 @@ export const StudioExplore: React.FC<StudioExploreProps> = ({
             <button
               key={cat}
               type="button"
-              className={`studio-btn ${selectedCategory === cat ? "studio-btn-primary" : ""}`}
+              className={`studio-btn studio-btn-compact ${selectedCategory === cat ? "studio-btn-primary" : ""}`}
               onClick={() => setSelectedCategory(cat)}
-              style={{ fontSize: "12px", padding: "6px 12px" }}
+              aria-pressed={selectedCategory === cat}
             >
               {cat}
             </button>

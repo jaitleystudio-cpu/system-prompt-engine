@@ -79,17 +79,17 @@ export const BehaviorGraphEditor: React.FC<BehaviorGraphEditorProps> = ({
         <div style={{ display: "flex", gap: "6px" }}>
           <button
             type="button"
-            className={`studio-btn ${activeTab === "visual" ? "studio-btn-primary" : ""}`}
+            className={`studio-btn studio-btn-compact ${activeTab === "visual" ? "studio-btn-primary" : ""}`}
             onClick={() => setActiveTab("visual")}
-            style={{ padding: "4px 10px", fontSize: "12px", minHeight: "36px" }}
+            style={{ fontSize: "12px" }}
           >
             Visual Rules
           </button>
           <button
             type="button"
-            className={`studio-btn ${activeTab === "json" ? "studio-btn-primary" : ""}`}
+            className={`studio-btn studio-btn-compact ${activeTab === "json" ? "studio-btn-primary" : ""}`}
             onClick={() => setActiveTab("json")}
-            style={{ padding: "4px 10px", fontSize: "12px", minHeight: "36px" }}
+            style={{ fontSize: "12px" }}
           >
             Graph JSON
           </button>
