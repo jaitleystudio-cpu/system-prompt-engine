@@ -56,6 +56,9 @@ const { synthesizeFewShotCurriculum } = await import(`${engineDir}/fewShotCurric
 const { embedPromptWatermark, detectPromptWatermark } = await import(`${engineDir}/promptWatermarkEngine.ts`);
 const { simulateCostAndCarbon, losslessAstPrune } = await import(`${engineDir}/costCarbonOptimizer.ts`);
 const { exportTelemetryPackage } = await import(`${engineDir}/otelTelemetryExporter.ts`);
+const { evaluateCrossModelDifferential } = await import(`${engineDir}/crossModelDifferentialLab.ts`);
+const { auditPromptAgainstVulnerabilityInventory } = await import(`${engineDir}/evolvingVulnerabilityInventory.ts`);
+const { analyzePromptRefinements } = await import(`${engineDir}/aiPromptRefiner.ts`);
 
 // ANSI Color Helpers
 const bold = (s) => `\x1b[1m${s}\x1b[0m`;
@@ -89,8 +92,11 @@ ${bold('COMMANDS:')}
   ${green('simulate')}  <file>       Simulate multi-turn agent trajectory & Crescendo jailbreaks
   ${green('fewshot')}   <file>       Synthesize 3-tier few-shot curriculum with hard-negatives
   ${green('watermark')} <file>       Embed invisible cryptographic watermark & canary IP guard
-  ${green('cost')}      <file>       Simulate 10-model cost/carbon matrix & lossless AST pruning
-  ${green('otel')}      <file>       Export OpenTelemetry GenAI spans & Prometheus metrics
+  ${green('cost')}        <file>       Simulate 10-model cost/carbon matrix & lossless AST pruning
+  ${green('otel')}        <file>       Export OpenTelemetry GenAI spans & Prometheus metrics
+  ${green('diff-models')} <file>       Differential testing across 5 frontier models (Behavior Atlas)
+  ${green('vuln-sync')}   <file>       Scan prompt against living CVE-style Vulnerability Inventory
+  ${green('refine')}      <file>       AI-Assisted prompt refinement with Suggestion Receipts
 
 ${bold('OPTIONS:')}
   --target <dialect>     Model dialect: claude-xml, openai-markdown, gemini-agent, cursor-rules, open-weights
@@ -100,11 +106,15 @@ ${bold('OPTIONS:')}
   --author <id>          Author ID for watermark signing (default: SPE-AUTHOR)
   --scenario <type>      Trajectory scenario: crescendo_jailbreak, persona_drift, goal_hijacking
   --prune                Apply lossless AST token pruning during cost calculation
+  --apply                Apply proposed refinements directly to prompt file
   --help, -h             Show this help menu
   --version, -v          Show SPE version
 
 ${bold('EXAMPLES:')}
   ${gray('$')} spe compile system.md --target claude-xml --align-kv 32 --out prompt.xml
+  ${gray('$')} spe diff-models system.md --out atlas.md
+  ${gray('$')} spe vuln-sync system.md --out patch_digest.md
+  ${gray('$')} spe refine system.md --apply --out refined.md
   ${gray('$')} spe salience system.md --out sandwich_prompt.xml
   ${gray('$')} spe simulate system.md --scenario crescendo_jailbreak
   ${gray('$')} spe fewshot system.md --out system_with_examples.md
@@ -502,6 +512,81 @@ try {
       console.log(`  Saved Span:  ${outPath}`);
       console.log(green('\n✓ Prometheus exposition snippet:'));
       console.log(gray(telemetry.prometheusMetricsText));
+      break;
+    }
+
+    case 'diff-models': {
+      if (!fileTarget) {
+        console.error(red('Error: Missing prompt file. Usage: spe diff-models <file>'));
+        process.exit(1);
+      }
+      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      console.log(cyan(`🔬 Running Cross-Model Differential Testing Lab for '${fileTarget}'...`));
+
+      const atlas = await evaluateCrossModelDifferential(rawPrompt);
+      console.log(`\n${bold('MODEL BEHAVIOR ATLAS SUMMARY:')}`);
+      console.log(`  Cross-Model Consensus: ${green(`${atlas.crossModelConsensusScore}%`)}`);
+      console.log(`  Recommended Engine:    ${cyan(atlas.recommendedModelForPrompt)}`);
+      console.log(`  Models Evaluated:      ${atlas.evaluatedModels.length}`);
+
+      console.log(`\n${bold('MODEL-BY-MODEL SCORE MATRIX:')}`);
+      for (const m of atlas.evaluatedModels) {
+        console.log(`  • ${m.modelId.padEnd(22)}: Intent=${m.intentPreservationScore}% | Format=${m.formatComplianceScore}% | Safety=${m.safetyResistanceScore}% | TTFT=${m.estimatedTtftMs}ms`);
+      }
+
+      const outPath = flags.out || 'Model_Behavior_Atlas.md';
+      writeFileSync(outPath, atlas.markdownAtlas, 'utf8');
+      console.log(green(`\n✓ Full Model Behavior Atlas written to ${outPath}`));
+      break;
+    }
+
+    case 'vuln-sync': {
+      if (!fileTarget) {
+        console.error(red('Error: Missing prompt file. Usage: spe vuln-sync <file>'));
+        process.exit(1);
+      }
+      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      console.log(cyan(`🗄️ Auditing prompt against living Vulnerability Inventory ("Failure Genome")...`));
+
+      const vulnResult = auditPromptAgainstVulnerabilityInventory(rawPrompt);
+      console.log(`\n${bold('VULNERABILITY INVENTORY AUDIT:')}`);
+      console.log(`  Catalog Version:       ${vulnResult.inventoryVersion}`);
+      console.log(`  Total Vectors:         ${vulnResult.totalCatalogedVulnerabilities}`);
+      console.log(`  Mitigated Vectors:     ${green(vulnResult.blockedCount)}`);
+      console.log(`  Unmitigated Vectors:   ${vulnResult.vulnerableCount > 0 ? red(vulnResult.vulnerableCount) : green(0)}`);
+      console.log(`  Immunity Score:        ${vulnResult.immunityScore >= 80 ? green(`${vulnResult.immunityScore}%`) : yellow(`${vulnResult.immunityScore}%`)}`);
+
+      const outPath = flags.out || 'VULN_PATCH_DIGEST.md';
+      writeFileSync(outPath, vulnResult.patchDigestMarkdown, 'utf8');
+      console.log(green(`\n✓ Vulnerability Patch Digest written to ${outPath}`));
+      break;
+    }
+
+    case 'refine': {
+      if (!fileTarget) {
+        console.error(red('Error: Missing prompt file. Usage: spe refine <file>'));
+        process.exit(1);
+      }
+      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      console.log(cyan(`💡 Running AI-Assisted Prompt Refiner & Reflection CoT Harness for '${fileTarget}'...`));
+
+      const refinerResult = await analyzePromptRefinements(rawPrompt);
+      console.log(`\n${bold('PROMPT REFINEMENT ANALYSIS:')}`);
+      console.log(`  Overall Health Score:  ${refinerResult.overallHealthScore}%`);
+      console.log(`  Proposals Generated:   ${refinerResult.proposals.length}`);
+      console.log(`  Suggestion Digest:     ${refinerResult.suggestionDigest.slice(0, 16)}...`);
+
+      console.log(`\n${bold('PROPOSAL ACTIONS:')}`);
+      for (const p of refinerResult.proposals) {
+        console.log(`  [${cyan(p.id)}] ${bold(p.title)} (${p.category})`);
+        console.log(`    ↳ Rationale: ${gray(p.rationale)}`);
+      }
+
+      if (flags.apply || flags.out) {
+        const outPath = flags.out || fileTarget;
+        writeFileSync(outPath, refinerResult.refinedPrompt, 'utf8');
+        console.log(green(`\n✓ Refined prompt written to ${outPath}`));
+      }
       break;
     }
 

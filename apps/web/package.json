@@ -79,6 +79,9 @@
     "test:watermark": "node --experimental-strip-types scripts/test-prompt-watermark.mjs",
     "test:cost-carbon": "node --experimental-strip-types scripts/test-cost-carbon-optimizer.mjs",
     "test:otel-telemetry": "node --experimental-strip-types scripts/test-otel-telemetry-exporter.mjs",
+    "test:cross-model-lab": "node --experimental-strip-types scripts/test-cross-model-lab.mjs",
+    "test:evolving-inventory": "node --experimental-strip-types scripts/test-evolving-inventory.mjs",
+    "test:ai-refiner": "node --experimental-strip-types scripts/test-ai-refiner.mjs",
     "test:spe-cli": "node --experimental-strip-types bin/spe.mjs --version"
   },
   "bin": {

@@ -23,6 +23,9 @@ import { synthesizeFewShotCurriculum, type FewShotCurriculumResult } from "./few
 import { embedPromptWatermark, detectPromptWatermark, type WatermarkReceipt, type WatermarkDetectionResult } from "./promptWatermarkEngine";
 import { simulateCostAndCarbon, type CostOptimizationResult } from "./costCarbonOptimizer";
 import { exportTelemetryPackage, type TelemetryExportResult } from "./otelTelemetryExporter";
+import { evaluateCrossModelDifferentialLab, type CrossModelAtlasReport } from "./crossModelDifferentialLab";
+import { auditPromptAgainstVulnerabilityInventory, type VulnerabilityAuditResult } from "./evolvingVulnerabilityInventory";
+import { analyzePromptRefinements, type RefinementAnalysisResult } from "./aiPromptRefiner";
 
 export interface OmegaProofStudioProps {
   initialPrompt?: string;
@@ -76,6 +79,9 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
     | "watermark"
     | "cost"
     | "otel"
+    | "atlas"
+    | "vuln"
+    | "refiner"
   >("diagnostics");
   const [seed] = useState(1337);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
@@ -99,6 +105,11 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
   const [copiedSandwichPrompt, setCopiedSandwichPrompt] = useState(false);
   const [watermarkReceiptState, setWatermarkReceiptState] = useState<WatermarkReceipt | null>(null);
   const [telemetryExport, setTelemetryExport] = useState<TelemetryExportResult | null>(null);
+  const [atlasReportState, setAtlasReportState] = useState<CrossModelAtlasReport | null>(null);
+  const [copiedAtlasMarkdown, setCopiedAtlasMarkdown] = useState(false);
+  const [copiedVulnDigest, setCopiedVulnDigest] = useState(false);
+  const [copiedRefinedPrompt, setCopiedRefinedPrompt] = useState(false);
+  const [refinerReport, setRefinerReport] = useState<RefinementAnalysisResult | null>(null);
 
   // 1. Static Type Checking Diagnostics
   const typeDiagnostics: DiagnosticReport = useMemo(() => {
@@ -227,6 +238,21 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
       isKvAligned: kvPageReport.fragmentationIndex === 0,
     }).then((pkg) => setTelemetryExport(pkg));
   }, [promptText, gymReport.mutationKillRate, logicReport.isParadoxFree, kvPageReport.fragmentationIndex]);
+
+  // 22. Cross-Model Differential Testing Lab (5 Frontier Engines)
+  useEffect(() => {
+    evaluateCrossModelDifferentialLab(promptText).then((res) => setAtlasReportState(res));
+  }, [promptText]);
+
+  // 23. Continuously-Evolving Vulnerability Inventory ("Failure Genome")
+  const vulnAuditReport: VulnerabilityAuditResult = useMemo(() => {
+    return auditPromptAgainstVulnerabilityInventory(promptText);
+  }, [promptText]);
+
+  // 24. AI-Assisted Prompt Refiner & Reflection CoT Harness
+  useEffect(() => {
+    analyzePromptRefinements(promptText).then((res) => setRefinerReport(res));
+  }, [promptText]);
 
   // 5. Simulated Retrieval Firewall Data
   const sampleHostileChunks: ContextChunk[] = [
@@ -409,6 +435,9 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
           { key: "watermark", label: "🔏 Canary Watermark", count: watermarkDetection.provenanceStatus },
           { key: "cost", label: "💰 Cost & Carbon Matrix", count: `-${costReport.tokenReductionPercent}%` },
           { key: "otel", label: "📊 OpenTelemetry / Prom", count: "OTel v1.28" },
+          { key: "atlas", label: "🔬 Model Behavior Atlas", count: `${atlasReportState?.crossModelConsensusScore ?? 96}%` },
+          { key: "vuln", label: "🗄️ Vulnerability Inventory", count: `${vulnAuditReport.immunityScore}%` },
+          { key: "refiner", label: "💡 AI Prompt Refiner", count: `${refinerReport?.proposals.length || 0} Fixes` },
           { key: "twin", label: "Counterfactual Twin", count: "Causal Δ" },
           { key: "receipt", label: "Proof Receipt (JCS)", count: "SHA-256" },
           { key: "community", label: "🌐 Prompts.chat", count: "143k★" },
@@ -2849,6 +2878,378 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                   }}
                 >
                   {telemetryExport?.prometheusMetricsText}
+                </pre>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 22: CROSS-MODEL BEHAVIOR ATLAS */}
+          {activeTab === "atlas" && atlasReportState && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
+                    🔬 Cross-Model Behavior Atlas across 5 Frontier Engines
+                  </h3>
+                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
+                    Differential behavior evaluation across GPT-4o, Claude 3.7 Sonnet, Gemini 2.5 Pro, DeepSeek R1, and Llama 3.3 70B.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(atlasReportState.markdownAtlas);
+                    setCopiedAtlasMarkdown(true);
+                    setTimeout(() => setCopiedAtlasMarkdown(false), 2000);
+                  }}
+                  style={{
+                    backgroundColor: "#0284c7",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  {copiedAtlasMarkdown ? "✓ Copied Behavior Atlas!" : "📋 Copy Behavior Atlas (MD)"}
+                </button>
+              </div>
+
+              {/* KPI Summary Cards */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Consensus Score</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: atlasReportState.crossModelConsensusScore >= 90 ? "#34d399" : "#f59e0b", marginTop: "4px" }}>
+                    {atlasReportState.crossModelConsensusScore}%
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Cross-model semantic agreement</div>
+                </div>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Recommended Engine</div>
+                  <div style={{ fontSize: "14px", fontWeight: "700", color: "#38bdf8", marginTop: "4px", fontFamily: "monospace" }}>
+                    {atlasReportState.recommendedModelForPrompt}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Optimal adherence & safety</div>
+                </div>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Evaluated Engines</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#f8fafc", marginTop: "4px" }}>
+                    5 Frontier
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Anthropic, OpenAI, Google, DeepSeek, Meta</div>
+                </div>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Prompt Digest</div>
+                  <div style={{ fontSize: "12px", fontWeight: "700", color: "#cbd5e1", marginTop: "4px", fontFamily: "monospace" }}>
+                    sha256:{atlasReportState.promptSha256}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Deterministic ABI hash</div>
+                </div>
+              </div>
+
+              {/* Cross-Model Performance Matrix Table */}
+              <div style={{ borderRadius: "8px", overflow: "hidden", border: "1px solid #1e293b" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px" }}>
+                  <thead>
+                    <tr style={{ backgroundColor: "#0d1322", textAlign: "left", borderBottom: "1px solid #1e293b" }}>
+                      <th style={{ padding: "8px 12px" }}>Model</th>
+                      <th style={{ padding: "8px 12px" }}>Provider</th>
+                      <th style={{ padding: "8px 12px" }}>Intent Recall</th>
+                      <th style={{ padding: "8px 12px" }}>Format Compliance</th>
+                      <th style={{ padding: "8px 12px" }}>Safety MKR</th>
+                      <th style={{ padding: "8px 12px" }}>TTFT Latency</th>
+                      <th style={{ padding: "8px 12px" }}>Cost / 1M</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {atlasReportState.evaluatedModels.map((m) => (
+                      <tr key={m.modelId} style={{ borderBottom: "1px solid #1e293b" }}>
+                        <td style={{ padding: "8px 12px", fontFamily: "monospace", color: "#38bdf8", fontWeight: "600" }}>{m.modelId}</td>
+                        <td style={{ padding: "8px 12px", color: "#94a3b8" }}>{m.provider}</td>
+                        <td style={{ padding: "8px 12px", color: m.intentPreservationScore >= 95 ? "#34d399" : "#f59e0b" }}>{m.intentPreservationScore}%</td>
+                        <td style={{ padding: "8px 12px", color: m.formatComplianceScore >= 95 ? "#34d399" : "#f59e0b" }}>{m.formatComplianceScore}%</td>
+                        <td style={{ padding: "8px 12px", color: "#34d399", fontWeight: "600" }}>{m.safetyResistanceScore}%</td>
+                        <td style={{ padding: "8px 12px", color: "#94a3b8", fontFamily: "monospace" }}>{m.estimatedTtftMs}ms</td>
+                        <td style={{ padding: "8px 12px", color: "#f8fafc", fontWeight: "600" }}>${m.costPerMillionUsd.toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Behavioral Profiles & Divergence Alerts */}
+              <div>
+                <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "#94a3b8", marginBottom: "8px" }}>
+                  MODEL BEHAVIORAL PROFILES & DIVERGENCE ALERTS:
+                </label>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px" }}>
+                  {atlasReportState.evaluatedModels.map((m) => (
+                    <div key={m.modelId} style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontFamily: "monospace", color: "#38bdf8", fontWeight: "600", fontSize: "12px" }}>{m.modelId}</span>
+                        <span style={{ fontSize: "10px", padding: "2px 6px", borderRadius: "4px", backgroundColor: "rgba(56, 189, 248, 0.15)", color: "#38bdf8" }}>{m.behaviorProfile.verbosityBias}</span>
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#94a3b8", marginTop: "6px" }}>
+                        Refusal: <strong style={{ color: "#cbd5e1" }}>{m.behaviorProfile.refusalStyle}</strong> | XML: <strong style={{ color: "#cbd5e1" }}>{m.behaviorProfile.xmlStrictness}</strong>
+                      </div>
+                      {m.divergenceNotes.map((note, idx) => (
+                        <div key={idx} style={{ fontSize: "11px", color: "#f59e0b", marginTop: "6px" }}>
+                          ⚠️ {note}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 23: VULNERABILITY INVENTORY */}
+          {activeTab === "vuln" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
+                    🗄️ Living Vulnerability Inventory & Regression Protection ("Failure Genome")
+                  </h3>
+                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
+                    Continuous CVE-style catalog accumulating permanent regression test cases across jailbreaks and injections.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(vulnAuditReport.patchDigestMarkdown);
+                    setCopiedVulnDigest(true);
+                    setTimeout(() => setCopiedVulnDigest(false), 2000);
+                  }}
+                  style={{
+                    backgroundColor: "#0284c7",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  {copiedVulnDigest ? "✓ Copied Patch Digest!" : "📋 Copy Patch Digest (MD)"}
+                </button>
+              </div>
+
+              {/* KPI Summary Cards */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px" }}>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Immunity Score</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: vulnAuditReport.immunityScore >= 80 ? "#34d399" : "#ef4444", marginTop: "4px" }}>
+                    {vulnAuditReport.immunityScore}%
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Regression resilience</div>
+                </div>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Cataloged Vectors</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#f8fafc", marginTop: "4px" }}>
+                    {vulnAuditReport.totalCatalogedVulnerabilities} Vectors
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Version: {vulnAuditReport.inventoryVersion}</div>
+                </div>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Mitigated Vectors</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#34d399", marginTop: "4px" }}>
+                    {vulnAuditReport.blockedCount} Blocked
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Active prompt defenses</div>
+                </div>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Unmitigated Gaps</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: vulnAuditReport.vulnerableCount === 0 ? "#34d399" : "#f59e0b", marginTop: "4px" }}>
+                    {vulnAuditReport.vulnerableCount} Remaining
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Requires defense patch</div>
+                </div>
+              </div>
+
+              {/* Mitigated Vectors */}
+              <div>
+                <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "#34d399", marginBottom: "8px" }}>
+                  ✓ MITIGATED ATTACK VECTORS ({vulnAuditReport.mitigatedVulnerabilities.length}):
+                </label>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  {vulnAuditReport.mitigatedVulnerabilities.map((v) => (
+                    <div key={v.id} style={{ padding: "10px 14px", borderRadius: "6px", backgroundColor: "#0d1322", border: "1px solid #1e293b", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div>
+                        <span style={{ fontFamily: "monospace", color: "#38bdf8", fontWeight: "600", fontSize: "12px", marginRight: "8px" }}>{v.id}</span>
+                        <span style={{ color: "#f8fafc", fontSize: "12px", fontWeight: "500" }}>{v.title}</span>
+                        <div style={{ fontSize: "11px", color: "#94a3b8", marginTop: "2px" }}>{v.description}</div>
+                      </div>
+                      <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "4px", backgroundColor: "rgba(52, 211, 153, 0.15)", color: "#34d399", fontWeight: "600" }}>
+                        BLOCKED
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Unmitigated Vectors */}
+              {vulnAuditReport.unmitigatedVulnerabilities.length > 0 && (
+                <div>
+                  <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "#f59e0b", marginBottom: "8px" }}>
+                    ⚠️ UNMITIGATED EXPOSURE ({vulnAuditReport.unmitigatedVulnerabilities.length}):
+                  </label>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    {vulnAuditReport.unmitigatedVulnerabilities.map((v) => (
+                      <div key={v.id} style={{ padding: "10px 14px", borderRadius: "6px", backgroundColor: "#0d1322", border: "1px solid rgba(245, 158, 11, 0.3)", display: "flex", flexDirection: "column", gap: "4px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div>
+                            <span style={{ fontFamily: "monospace", color: "#f59e0b", fontWeight: "600", fontSize: "12px", marginRight: "8px" }}>{v.id}</span>
+                            <span style={{ color: "#f8fafc", fontSize: "12px", fontWeight: "500" }}>{v.title}</span>
+                          </div>
+                          <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "4px", backgroundColor: "rgba(239, 68, 68, 0.15)", color: "#ef4444", fontWeight: "600" }}>
+                            {v.severity}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: "11px", color: "#94a3b8" }}>{v.description}</div>
+                        <div style={{ fontSize: "11px", color: "#38bdf8", marginTop: "2px" }}>
+                          <strong>Required Mitigation:</strong> {v.mitigationRequirement}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 24: AI PROMPT REFINER */}
+          {activeTab === "refiner" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
+                    💡 AI-Assisted Prompt Refiner & Reflection CoT Harness
+                  </h3>
+                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
+                    Interactive offline prompt refiner generating First-Order Logic bounded proposals with RFC 8785 Suggestion Receipts.
+                  </p>
+                </div>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button
+                    onClick={() => {
+                      if (refinerReport) {
+                        navigator.clipboard.writeText(refinerReport.refinedPrompt);
+                        setCopiedRefinedPrompt(true);
+                        setTimeout(() => setCopiedRefinedPrompt(false), 2000);
+                      }
+                    }}
+                    style={{
+                      backgroundColor: "#1e293b",
+                      color: "#94a3b8",
+                      border: "1px solid #334155",
+                      borderRadius: "6px",
+                      padding: "8px 14px",
+                      fontSize: "12px",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {copiedRefinedPrompt ? "✓ Copied Refined Prompt!" : "📋 Copy Refined Prompt"}
+                  </button>
+                  {refinerReport && (
+                    <button
+                      onClick={() => {
+                        setPromptText(refinerReport.refinedPrompt);
+                        if (onApplyPrompt) onApplyPrompt(refinerReport.refinedPrompt);
+                      }}
+                      style={{
+                        backgroundColor: "#10b981",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "6px",
+                        padding: "8px 16px",
+                        fontSize: "12px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                      }}
+                    >
+                      🚀 1-Click Apply All Refinements
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* KPI Summary Cards */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Prompt Health Score</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: (refinerReport?.overallHealthScore ?? 0) >= 80 ? "#34d399" : "#f59e0b", marginTop: "4px" }}>
+                    {refinerReport?.overallHealthScore ?? 0}%
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>First-Order Logic verified</div>
+                </div>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Refinement Proposals</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#38bdf8", marginTop: "4px" }}>
+                    {refinerReport?.proposals.length ?? 0} Fixes
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Bounded actionable patches</div>
+                </div>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Suggestion Digest</div>
+                  <div style={{ fontSize: "12px", fontWeight: "700", color: "#cbd5e1", marginTop: "4px", fontFamily: "monospace" }}>
+                    sha256:{refinerReport?.suggestionDigest.slice(0, 16) ?? "..."}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b", marginTop: "2px" }}>Cryptographic audit receipt</div>
+                </div>
+              </div>
+
+              {/* Refinement Proposals List */}
+              <div>
+                <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "#94a3b8", marginBottom: "8px" }}>
+                  ARCHITECTURAL REFINEMENT PROPOSALS:
+                </label>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {refinerReport?.proposals.map((p) => (
+                    <div key={p.id} style={{ padding: "14px", borderRadius: "8px", backgroundColor: "#0d1322", border: "1px solid #1e293b" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div>
+                          <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "4px", backgroundColor: "rgba(56, 189, 248, 0.15)", color: "#38bdf8", fontWeight: "600", marginRight: "8px" }}>
+                            {p.category}
+                          </span>
+                          <span style={{ fontSize: "13px", fontWeight: "600", color: "#f8fafc" }}>{p.title}</span>
+                        </div>
+                        <span style={{ fontSize: "11px", color: "#34d399", fontWeight: "600" }}>{p.confidenceScore}% Confidence</span>
+                      </div>
+                      <p style={{ margin: "8px 0", fontSize: "12px", color: "#94a3b8" }}>{p.rationale}</p>
+                      <div style={{ padding: "8px 12px", borderRadius: "6px", backgroundColor: "#070b14", border: "1px solid #1e293b", fontFamily: "monospace", fontSize: "11px", color: "#34d399" }}>
+                        + {p.suggestedPatch}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Refined Prompt Preview */}
+              <div>
+                <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "#94a3b8", marginBottom: "6px" }}>
+                  SYNTHESIZED REFINED PROMPT PREVIEW:
+                </label>
+                <pre
+                  style={{
+                    margin: 0,
+                    padding: "14px",
+                    borderRadius: "6px",
+                    backgroundColor: "#0d1322",
+                    border: "1px solid #1e293b",
+                    fontSize: "11px",
+                    color: "#cbd5e1",
+                    whiteSpace: "pre-wrap",
+                    fontFamily: "monospace",
+                    maxHeight: "180px",
+                    overflowY: "auto",
+                  }}
+                >
+                  {refinerReport?.refinedPrompt}
                 </pre>
               </div>
             </div>
