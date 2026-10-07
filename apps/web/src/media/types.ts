@@ -125,6 +125,8 @@ export type UrlIngestResult =
       status: "cors_blocked" | "network_error" | "invalid_url" | "timeout" | "aborted";
       url: string;
       finalUrl?: string;
+      /** Execution-boundary refusal code for hard security refusals (machine code, not UX copy). */
+      refusal?: string;
       message: string;
       fallbacks: string[];
     };

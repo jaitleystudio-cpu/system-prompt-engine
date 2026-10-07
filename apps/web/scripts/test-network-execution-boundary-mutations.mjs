@@ -32,9 +32,13 @@ const MUTANTS = [
   ["ipv4-mapped-private-treated-public", "      ? { family: 6, forbidden: true, reason: `IPV4_MAPPED_${check.reason}` }", "      ? { family: 6, forbidden: false }"],
   ["drop-redirect-limit", "if (redirects + 1 > maxRedirects) {", "if (false) {"],
   // R9-G destination binding (fail closed).
-  ["skip-connected-address-binding", "if (transport.pinsResolvedAddress && pinned !== null) {", "if (false) {"],
+  ["skip-connected-address-binding", "    if (\n      policy === DestinationPolicies.REQUIRE_PINNED_RESOLUTION ||\n      (transport.pinsResolvedAddress && pinned !== null)\n    ) {", "    if (false) {"],
   ["browser-same-origin-only-ignored", "      opts.sameOriginOnly &&\n      policy === DestinationPolicies.BROWSER_UNVERIFIABLE &&", "      false &&\n      policy === DestinationPolicies.BROWSER_UNVERIFIABLE &&"],
   ["ingest-require-resolution-not-pinned", "? DestinationPolicies.REQUIRE_PINNED_RESOLUTION", "? DestinationPolicies.REQUIRE_RESOLUTION", "ingest"],
+  // R9-G literal-binding closure.
+  ["remove-ip-literal-pinning-enforcement", "      if (\n        policy === DestinationPolicies.REQUIRE_PINNED_RESOLUTION &&\n        !transport.pinsResolvedAddress\n      ) {", "      if (false) {"],
+  ["mismatch-classified-unverifiable", '  return reason === "DESTINATION_BINDING_UNVERIFIABLE";', '  return reason === "DESTINATION_BINDING_UNVERIFIABLE" || reason === "DESTINATION_BINDING_MISMATCH";'],
+  ["ingest-maps-mismatch-to-reference-only", '  if (isDestinationBindingMismatch(boundaryReason)) {\n    return {\n      status: "invalid_url",', '  if (isDestinationBindingMismatch(boundaryReason)) {\n    return {\n      reason: "destination_binding_unverifiable",\n      status: "url_reference_only",', "ingest"],
   ["ingest-drop-browser-same-origin-only", "      sameOriginOnly: opts.resolveHost ? undefined : { origin: originOf(policy.pageOrigin) },\n", "", "ingest"],
 ];
 

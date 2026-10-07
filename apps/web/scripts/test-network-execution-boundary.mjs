@@ -222,14 +222,19 @@ console.log("B7b: binding — validated address must equal the connected destina
   const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver });
   eq(r.ok, false, "pinning transport that connected elsewhere fails closed");
   eq(r.reason, "DESTINATION_BINDING_MISMATCH", "mismatch reason");
-  eq(sec.isDestinationBindingRefusal(r.reason), true, "mismatch is a binding refusal");
-  eq(sec.isUnverifiableDestinationRefusal(r.reason), true, "mismatch maps to reference-only");
+  // Updated in the literal-binding closure: a proven different peer is a HARD
+  // refusal, no longer grouped with "unverifiable" (which maps to reference-only).
+  eq(sec.isDestinationBindingMismatch(r.reason), true, "mismatch classified as hard binding mismatch");
+  eq(sec.isUnverifiableDestinationRefusal(r.reason), false, "mismatch is NOT an unverifiable/reference-only refusal");
+  eq(sec.isDestinationBindingUnverifiable(r.reason), false, "mismatch is NOT binding-unverifiable");
   ok(!("response" in r), "mismatched body never delivered");
 }
 {
   const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "secret" } }, { pins: true, connectedOverride: null });
   const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver });
   eq(r.reason, "DESTINATION_BINDING_UNVERIFIABLE", "pinning transport that cannot report its peer fails closed");
+  eq(sec.isUnverifiableDestinationRefusal(r.reason), true, "missing peer proof is unverifiable (reference-only acceptable)");
+  eq(sec.isDestinationBindingMismatch(r.reason), false, "missing peer proof is not a mismatch");
 }
 {
   const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "secret" } });
@@ -262,6 +267,90 @@ console.log("B7c: browser policy — cross-origin hops refused before any reques
   const r5 = await sec.guardedPublicFetch("https://spe.app/page", { transport: t5, policy: sec.DestinationPolicies.BROWSER_UNVERIFIABLE, sameOriginOnly: { origin: "https://spe.app" } });
   eq(r5.ok, true, "same-origin browser read permitted");
   eq(r5.destinationIdentity, "UNVERIFIED_BROWSER", "same-origin browser read stays UNVERIFIED_BROWSER (never labelled verified)");
+  const t6 = scriptedTransport({ "https://93.184.215.14/page": { status: 200, body: "x" } });
+  const r6 = await sec.guardedPublicFetch("https://93.184.215.14/page", { transport: t6, policy: sec.DestinationPolicies.BROWSER_UNVERIFIABLE, sameOriginOnly: { origin: "https://93.184.215.14" } });
+  eq(r6.ok, true, "same-origin IP-literal browser read permitted");
+  eq(r6.destinationIdentity, "UNVERIFIED_BROWSER", "same-origin IP literal in browser stays UNVERIFIED_BROWSER, not IP_LITERAL");
+}
+
+console.log("B7d: IP-literal destinations need connected-address proof under the pinned policy...");
+// Stream body that records whether anyone read it (highWaterMark 0: no pre-pull).
+function trackedBody(text) {
+  const state = { pulls: 0, cancelled: false };
+  const stream = new ReadableStream({
+    pull(controller) { state.pulls += 1; controller.enqueue(new TextEncoder().encode(text)); controller.close(); },
+    cancel() { state.cancelled = true; },
+  }, { highWaterMark: 0 });
+  return { stream, state };
+}
+function peerTransport(peer, { pins = true } = {}) {
+  const calls = [];
+  const bodies = [];
+  return {
+    calls, bodies, pinsResolvedAddress: pins,
+    async request(url, init, pinned) {
+      calls.push({ url, pinned, redirect: init.redirect });
+      const b = trackedBody("secret");
+      bodies.push(b.state);
+      return new Response(b.stream, { status: 200, headers: { "content-type": "text/html" } });
+    },
+    connectedAddress: () => (typeof peer === "function" ? peer() : peer),
+  };
+}
+for (const [label, url] of [["A: public IPv4 literal", "https://93.184.215.14/"], ["B: public IPv6 literal", "https://[2606:4700:4700::1111]/"]]) {
+  for (const extra of [{}, { resolveHost: resolver }]) {
+    const t = peerTransport("93.184.215.14", { pins: false });
+    const r = await sec.guardedPublicFetch(url, { transport: t, ...extra });
+    eq(r.ok, false, `${label}: non-pinning transport refused`);
+    eq(r.reason, "DESTINATION_BINDING_UNVERIFIABLE", `${label}: DESTINATION_BINDING_UNVERIFIABLE`);
+    eq(t.calls.length, 0, `${label}: ZERO requests (literal is not connected-destination proof)`);
+  }
+  const t2 = peerTransport("93.184.215.14", { pins: false });
+  const r2 = await sec.guardedPublicFetch(url, { transport: t2, policy: sec.DestinationPolicies.REQUIRE_PINNED_RESOLUTION });
+  eq(t2.calls.length, 0, `${label}: explicit REQUIRE_PINNED_RESOLUTION also zero requests`);
+  eq(r2.reason, "DESTINATION_BINDING_UNVERIFIABLE", `${label}: explicit policy reason`);
+}
+{
+  const t = peerTransport("93.184.215.14");
+  const r = await sec.guardedPublicFetch("https://93.184.215.14/", { transport: t });
+  eq(r.ok, true, "C: public IPv4 literal + pinning transport + connected == literal permitted");
+  eq(r.destinationIdentity, "IP_LITERAL", "C: identity IP_LITERAL (bound)");
+  eq(t.calls[0].pinned, "93.184.215.14", "C: transport pinned to the literal");
+  const t6 = peerTransport("2606:4700:4700::1111");
+  const r6 = await sec.guardedPublicFetch("https://[2606:4700:4700::1111]/", { transport: t6 });
+  eq(r6.ok, true, "C: public IPv6 literal + pinning + matching peer permitted");
+}
+{
+  const t = peerTransport("10.0.0.9");
+  const r = await sec.guardedPublicFetch("https://93.184.215.14/", { transport: t });
+  eq(r.ok, false, "D: literal + pinning + different peer refused");
+  eq(r.reason, "DESTINATION_BINDING_MISMATCH", "D: DESTINATION_BINDING_MISMATCH");
+  eq(sec.isUnverifiableDestinationRefusal(r.reason), false, "D: mismatch never unverifiable/reference-only");
+  ok(!("response" in r), "D: no response handed to caller");
+  eq(t.bodies[0].pulls, 0, "D: body never consumed");
+  eq(t.bodies[0].cancelled, true, "D: body discarded");
+}
+{
+  const t = peerTransport(null);
+  const r = await sec.guardedPublicFetch("https://93.184.215.14/", { transport: t });
+  eq(r.reason, "DESTINATION_BINDING_UNVERIFIABLE", "literal + pinning + missing peer -> unverifiable");
+  eq(t.bodies[0].pulls, 0, "missing peer: body never consumed");
+  eq(t.bodies[0].cancelled, true, "missing peer: body discarded");
+}
+{
+  const t = peerTransport("10.1.1.1");
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver });
+  eq(r.reason, "DESTINATION_BINDING_MISMATCH", "E: hostname resolved public + connected mismatch");
+  eq(sec.isDestinationBindingMismatch(r.reason), true, "E: hard mismatch classification");
+  eq(sec.isUnverifiableDestinationRefusal(r.reason), false, "E: not unverifiable");
+  eq(t.bodies[0].pulls, 0, "E: body never consumed");
+}
+{
+  const t = peerTransport(undefined);
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver });
+  eq(r.reason, "DESTINATION_BINDING_UNVERIFIABLE", "F: hostname resolved public + missing connected identity -> unverifiable");
+  eq(sec.isDestinationBindingMismatch(r.reason), false, "F: not a mismatch");
+  eq(t.bodies[0].pulls, 0, "F: body never consumed");
 }
 
 console.log("B8: safe public chain remains permitted...");
@@ -403,6 +492,31 @@ async function bundleIngest() {
     eq(r10.status, "url_reference_only", "ingestUrl: same-origin -> cross-origin redirect -> reference only");
     eq(r10.reason, "destination_binding_unverifiable", "ingestUrl: cross-origin redirect reason");
     eq(calls.length, 1, "ingestUrl: cross-origin redirect hop never requested");
+
+    calls.length = 0;
+    globalThis.fetch = async (url) => { calls.push({ url }); return html(); };
+    for (const lit of ["https://93.184.215.14/", "https://[2606:4700:4700::1111]/"]) {
+      const rl = await ingest.ingestUrl(lit, { networkPolicy: open, resolveHost: async () => ["93.184.215.14"] });
+      eq(rl.status, "url_reference_only", `ingestUrl: public literal ${lit} + non-pinning sink -> reference only`);
+      eq(rl.reason, "destination_binding_unverifiable", "ingestUrl: literal binding-unverifiable reason");
+      const rb = await ingest.ingestUrl(lit, { networkPolicy: open });
+      eq(rb.status, "url_reference_only", `ingestUrl: browser cross-origin literal ${lit} -> reference only (G)`);
+    }
+    eq(calls.length, 0, "ingestUrl: ZERO requests for public IP literals");
+
+    // Mismatch is a hard refusal at the sink; unverifiable stays reference-only.
+    const mm = ingest.guardRefusalToResult("DESTINATION_BINDING_MISMATCH", "https://public-site.example.org/", "https://public-site.example.org/");
+    ok(mm.status !== "url_reference_only", "mismatch never maps to url_reference_only");
+    eq(mm.status, "invalid_url", "mismatch -> existing hard-refusal path (nothing appended to the prompt)");
+    eq(mm.refusal, "DESTINATION_BINDING_MISMATCH", "mismatch carries its distinct boundary classification");
+    eq(ingest.urlResultToPromptBlock(mm), null, "mismatch produces no prompt block");
+    const uv = ingest.guardRefusalToResult("DESTINATION_BINDING_UNVERIFIABLE", "https://public-site.example.org/", "https://public-site.example.org/");
+    eq(uv.status, "url_reference_only", "unverifiable -> reference only");
+    eq(uv.reason, "destination_binding_unverifiable", "unverifiable reason code");
+    const block = ingest.urlResultToPromptBlock(uv);
+    ok(block && !block.includes("destination_binding_unverifiable"), "machine reason code never surfaced in the composer block");
+    const priv = ingest.guardRefusalToResult("RESOLVED_PRIVATE_IP", "https://x.example/", "https://x.example/");
+    eq(priv.status, "invalid_url", "forbidden-address refusal stays hard");
 
     calls.length = 0;
     const ac = new AbortController();
