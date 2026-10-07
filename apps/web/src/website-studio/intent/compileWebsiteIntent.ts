@@ -39,7 +39,7 @@ function primaryActionFor(lower: string): string {
   if (/book|booking|reserve|reservation/.test(lower)) return "booking";
   if (/buy|purchase|checkout/.test(lower)) return "purchase";
   if (/contact|inquir/.test(lower)) return "contact";
-  if (/sign\s?up|register/.test(lower)) return "signup";
+  if (/sign\s?up|register/.test(lower)) return "join";
   if (/download/.test(lower)) return "download";
   return "explore";
 }

@@ -22,6 +22,13 @@ const brief = compileWebsiteIntent(
 assert.equal(brief.siteType, "product");
 assert.match(brief.purpose, /electric motorcycle/i);
 assert.equal(brief.primaryAction, "booking");
+
+const joinBrief = compileWebsiteIntent(
+  "Landing page where visitors can register for early access to a newsletter.",
+);
+assert.equal(joinBrief.primaryAction, "join");
+assert.ok(joinBrief.sections.some((s) => /join|cta/i.test(s.intent)));
+
 assert.ok(brief.sections.some((s) => /product/i.test(s.intent)));
 assert.ok(brief.sections.some((s) => /booking|cta/i.test(s.intent)));
 
