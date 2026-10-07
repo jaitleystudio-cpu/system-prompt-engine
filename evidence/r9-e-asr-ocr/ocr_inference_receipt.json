@@ -1,0 +1,96 @@
+{
+  "lane": "SPE-R9-E",
+  "kind": "ocr_local_inference",
+  "timestamp_ist": "2026-10-07T11:31:54.277438+05:30",
+  "git_base": "895a3230d445089b3fdb48fbbb101e7b539f58c8",
+  "proof_phrase": "SPE OCR LANE R6 HOLDFAST",
+  "image_sha256": "4a142c6466518d47f8c854d9fba87ba31af617764a55ac877e53aa72ecbb2b2d",
+  "image_bytes": 32806,
+  "elapsed_s": 0.165,
+  "execution": {
+    "mode": "LOCAL_OCR",
+    "text": "SPE OCR LANE R6 HOLDFAST",
+    "regions": [
+      {
+        "text": "SPE",
+        "bounds": {
+          "x": 0.16333333333333333,
+          "y": 0.35,
+          "w": 0.08888888888888889,
+          "h": 0.1431818181818182
+        },
+        "confidence": 0.95553146
+      },
+      {
+        "text": "OCR",
+        "bounds": {
+          "x": 0.27,
+          "y": 0.35,
+          "w": 0.10111111111111111,
+          "h": 0.1431818181818182
+        },
+        "confidence": 0.95553146
+      },
+      {
+        "text": "LANE",
+        "bounds": {
+          "x": 0.3877777777777778,
+          "y": 0.3522727272727273,
+          "w": 0.11611111111111111,
+          "h": 0.13863636363636364
+        },
+        "confidence": 0.90973145
+      },
+      {
+        "text": "R6",
+        "bounds": {
+          "x": 0.5227777777777778,
+          "y": 0.3522727272727273,
+          "w": 0.05388888888888889,
+          "h": 0.1409090909090909
+        },
+        "confidence": 0.90973145
+      },
+      {
+        "text": "HOLDFAST",
+        "bounds": {
+          "x": 0.595,
+          "y": 0.35,
+          "w": 0.24222222222222223,
+          "h": 0.1431818181818182
+        },
+        "confidence": 0.91198273
+      }
+    ],
+    "error_code": null,
+    "egress_attempts": 0,
+    "engine_ran": true
+  },
+  "assets": {
+    "cli_sha256": "42ac364d327a170b3f36ae0c34c32744e06783257eb5bf6c1f48f88fe54104e8",
+    "model_sha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2",
+    "cli_path": "/Volumes/4TB-WD/projects/spe-r9a-free3d-reconcile/ocr-pack/tesseract",
+    "model_path": "/Volumes/4TB-WD/projects/spe-r9a-free3d-reconcile/ocr-pack/tessdata/eng.traineddata"
+  },
+  "product_verdict": {
+    "OCR_PRODUCT": "HOLD",
+    "execution": "LOCAL_OCR",
+    "missing": "RELEASE_NOT_QUALIFIED",
+    "modelIngressHosts": [],
+    "cliIngressHosts": [],
+    "ingressHosts": [],
+    "imageEgressAttempts": 0
+  },
+  "claims": {
+    "LOCAL_OCR_execution": true,
+    "OCR_PRODUCT_stays_HOLD": true,
+    "proof_text_recovered": true,
+    "image_egress_0": true
+  },
+  "non_claims": [
+    "OCR_PRODUCT is NOT PASS / NOT promoted",
+    "Not a release qualification stamp",
+    "No ResearchEngine2 invented",
+    "Browser UI journey not claimed"
+  ]
+}
