@@ -205,6 +205,15 @@ window.__speSampleFrames = (warmup, samples) =>
     }
     requestAnimationFrame(tick);
   });
+window.__speGlRenderer = (() => {
+  const c = document.createElement("canvas");
+  const gl = c.getContext("webgl2") || c.getContext("webgl");
+  if (!gl) return "NO_WEBGL";
+  const ext = gl.getExtension("WEBGL_debug_renderer_info");
+  const name = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+  gl.getExtension("WEBGL_lose_context")?.loseContext();
+  return String(name);
+})();
 window.__studioReady = true;
 `,
       resolveDir: webRoot,
@@ -298,6 +307,7 @@ async function sampleEnvironment(browser, browserLabel, env, htmlPath, urlFixtur
   const { context, page } = await openPage(browser, env, htmlPath, urlFixture);
   try {
     const scene = await page.evaluate(() => window.__speScene);
+    const glRenderer = await page.evaluate(() => window.__speGlRenderer);
     const sample = await page.evaluate(
       ([warmup, samples]) => window.__speSampleFrames(warmup, samples),
       [WARMUP_FRAMES, SAMPLE_FRAMES],
@@ -331,6 +341,7 @@ async function sampleEnvironment(browser, browserLabel, env, htmlPath, urlFixtur
         sceneFixtureId: fixtureId,
       },
       framesRendered: sample.framesRendered,
+      glRenderer,
       maxTouchPoints: sample.maxTouchPoints,
       layoutViewport: sample.layoutViewport,
       visualViewport: sample.visualViewport,
@@ -349,7 +360,15 @@ const chromeCandidates = [
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
 ].filter(Boolean);
 const executablePath = chromeCandidates.find((candidate) => existsSync(candidate));
-const launchOpts = { headless: true, args: ["--no-sandbox"] };
+// Explicit, recorded GL backend. Headless Chrome may otherwise expose no WebGL.
+const GL_BACKENDS = {
+  metal: ["--use-angle=metal", "--ignore-gpu-blocklist", "--enable-gpu"],
+  swiftshader: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"],
+  default: [],
+};
+const glBackend = process.env.SPE_CHROME_GL || (process.platform === "darwin" ? "metal" : "swiftshader");
+if (!GL_BACKENDS[glBackend]) throw new Error(`unknown SPE_CHROME_GL=${glBackend}`);
+const launchOpts = { headless: true, args: ["--no-sandbox", ...GL_BACKENDS[glBackend]] };
 if (executablePath) launchOpts.executablePath = executablePath;
 
 let browser;
@@ -363,6 +382,9 @@ const environmentRecord = {
   total_memory_bytes: os.totalmem(),
   browser_executable: executablePath ?? "playwright-bundled-chromium",
   browser_version: "UNKNOWN",
+  browser_launch_args: launchOpts.args,
+  gl_backend: glBackend,
+  webgl_renderer: "UNKNOWN",
   headless: true,
   cpu_throttling_rate: 1,
   physical_mobile_device: false,
@@ -412,6 +434,7 @@ try {
           isMobile: env.isMobile,
           hasTouch: env.hasTouch,
         },
+        webgl_renderer: sampled.glRenderer,
         observed_max_touch_points: sampled.maxTouchPoints,
         observed_layout_viewport: sampled.layoutViewport,
         observed_visual_viewport: sampled.visualViewport,
@@ -432,6 +455,7 @@ try {
         envRecord.attached = true;
       }
       fixtureRecord.environments[env.environmentClass] = envRecord;
+      if (environmentRecord.webgl_renderer === "UNKNOWN") environmentRecord.webgl_renderer = sampled.glRenderer;
     }
     fixtureRecord.frame_receipt = receipt;
     fixtureRecord.frame_state = receipt.frameMeasurementState;
@@ -535,6 +559,9 @@ const summary = {
   receipt_outside_candidate: relative(repoRoot, receiptFile).startsWith(".."),
   exit_code: exitCode,
   candidate_custody_after_run: custodyAfter,
+  browser: environmentRecord.browser_version,
+  gl_backend: environmentRecord.gl_backend,
+  webgl_renderer: environmentRecord.webgl_renderer,
   field_cwv: results.field_cwv,
   mobile_reflow: results.a11y?.mobile_390x844?.reflow_finding ?? "NOT_RUN",
   fixtures: results.fixtures.map((fixture) => ({
