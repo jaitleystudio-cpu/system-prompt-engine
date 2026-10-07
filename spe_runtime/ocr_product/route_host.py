@@ -11,7 +11,9 @@ import json
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+from spe_runtime.journey_observation import text_digest
 from spe_runtime.ocr_product.local_backend import (
+    JOURNEY_OBSERVER,
     IntegrityError,
     LocalOcrSession,
     discover_qualified_assets,
@@ -88,6 +90,11 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         path = self.path.split("?", 1)[0]
+        if path == "/journey":
+            # Verifier hook: runtime observation only. OCR_PRODUCT stays HOLD.
+            stamp = str(product_verdict().get("OCR_PRODUCT", "HOLD"))
+            self._json(200, JOURNEY_OBSERVER.export(product_stamp=stamp))
+            return
         if path != "/health":
             self._json(404, {"status": "ERROR", "mode": "UNAVAILABLE", "errorCode": "NOT_FOUND", "text": "", "regions": [], "egressAttempts": 0})
             return
@@ -120,6 +127,21 @@ class Handler(BaseHTTPRequestHandler):
             return
         with _LOCK:
             result = session.recognize(blob)
+        JOURNEY_OBSERVER.record(
+            "INFERENCE",
+            engine="tesseract",
+            mode=str(result.mode),
+            engine_ran=bool(result.engine_ran),
+            text_chars=len(result.text or ""),
+            text_sha256=text_digest(result.text or ""),
+            error_code=result.error_code,
+        )
+        JOURNEY_OBSERVER.record(
+            "EGRESS", user_media_egress=int(result.egress_attempts), hosts=list(result.network_hosts or [])
+        )
+        session_dir = session.assets.root / ".session"
+        remaining = len(list(session_dir.glob("input*"))) if session_dir.is_dir() else 0
+        JOURNEY_OBSERVER.record("TEMP_CLEANUP", scope="session", temp_files_remaining=remaining)
         self._json(
             200,
             {
@@ -138,6 +160,7 @@ class Handler(BaseHTTPRequestHandler):
 def main() -> None:
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     port = int(server.server_address[1])
+    JOURNEY_OBSERVER.record("PROCESS_START", boot_id=JOURNEY_OBSERVER.boot_id)
     print(f"OCR_HOST {port}", flush=True)
     server.serve_forever()
 
