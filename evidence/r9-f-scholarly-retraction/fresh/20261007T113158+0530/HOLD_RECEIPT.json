@@ -1,0 +1,46 @@
+{
+  "FINAL": "SPE_R9F_HOLD_EXPLICIT",
+  "base_sha": "895a3230d445089b3fdb48fbbb101e7b539f58c8",
+  "branch": "grok/r9-f-scholarly-retraction",
+  "canonical_owner": "spe_runtime.grounding.research_journey (existing scholarly adapters; NO ResearchEngine2)",
+  "captured_at_ist": "2026-10-07T11:31:58+05:30",
+  "doi": "10.1038/nature00870",
+  "gate": {
+    "may_promote_index": false,
+    "may_promote_retraction": false,
+    "product_live_index": "HOLD",
+    "product_live_retraction": "HOLD",
+    "reasons": [
+      "MUTANTS_NOT_GREEN",
+      "INDEPENDENT_LIVE_NETWORK_PROOF_MISSING",
+      "LIVE_INDEX=HOLD",
+      "LIVE_RETRACTION=HOLD"
+    ]
+  },
+  "journey_status": "LIVE_FETCH_SCOPED",
+  "lane": "SPE-R9-F",
+  "may_promote": false,
+  "product_LIVE_INDEX": "HOLD",
+  "product_LIVE_RETRACTION": "HOLD",
+  "provider_families": [
+    "OPENALEX",
+    "CROSSREF",
+    "NCBI"
+  ],
+  "reasons_hold": [
+    "PRODUCT_LIVE_INDEX_HOLD",
+    "PRODUCT_LIVE_RETRACTION_HOLD",
+    "SCOPED_LIVE_FETCH_IS_NOT_PRODUCT_PASS",
+    "ONE_DOI_DOES_NOT_MEET_FOUNDER_LAW",
+    "MUTANTS_NOT_GREEN",
+    "INDEPENDENT_VERIFIER_RECEIPT_MISSING",
+    "WRITER_RECEIPT_IS_NOT_PROMOTION_PROOF",
+    "NO_ResearchEngine2"
+  ],
+  "response_body_path": "evidence/r9-f-scholarly-retraction/fresh/20261007T113158+0530/openalex.body.json",
+  "response_digest": "ea818b14eb7f5761cf5cec52a968a815e020e7ccbb042ce40e6243d8c58ee814",
+  "retraction_body_path": "evidence/r9-f-scholarly-retraction/fresh/20261007T113158+0530/crossref.body.json",
+  "retraction_response_digest": "fdaef51c835946599f9a20d8b267fd32385a243949ceb655056c6e26c27ff32a",
+  "retraction_status": "RETRACTION_SIGNAL",
+  "verification_status": "DOI_MATCH"
+}
