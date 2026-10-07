@@ -56,6 +56,7 @@ export function connectSrcAllowsRemoteHost(
 import {
   DestinationPolicies,
   guardedPublicFetch,
+  isDestinationBindingRefusal,
   isSsrfSafeUrl,
   isUnverifiableDestinationRefusal,
   type TrustedHostResolver,
@@ -468,9 +469,25 @@ export function buildWebsiteBriefFromHtml(
   return { title, description, textExcerpt, buildBrief };
 }
 
+function originOf(raw: string | null): string | null {
+  if (!raw) return null;
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return null;
+  }
+}
+
 /** CORS-honest ingest. Never uses a paid proxy. Supports abort + timeout.
  * Under CSP connect-src 'self', cross-origin remote HTML is not read —
  * returns url_reference_only so the URL can still ground a prompt as a reference.
+ *
+ * Destination binding (fail closed): remote content is read only when the
+ * connected destination can be bound to the validated one. This sink has no
+ * pinning transport, so a trusted resolver's "public" answer alone never
+ * authorises a read (REQUIRE_PINNED_RESOLUTION → reference only, zero
+ * requests). In a browser the connected IP is invisible, so only same-origin
+ * reads proceed; any other remote URL is kept as a reference only.
  */
 export async function ingestUrl(
   rawUrl: string,
@@ -480,9 +497,10 @@ export async function ingestUrl(
     networkPolicy?: BrowserNetworkPolicy;
     /**
      * Trusted resolver (non-browser runtimes only). When supplied, every hop's
-     * hostname must resolve exclusively to public addresses before it is
-     * requested. Browsers expose no resolver, so destination identity there
-     * stays unverified and redirects that hide their Location fail closed.
+     * hostname must resolve exclusively to public addresses AND be connected
+     * through a pinning transport; this sink has none, so resolved hostnames
+     * are kept as references only. Private answers are refused outright.
+     * Without a resolver, only same-origin reads are attempted.
      */
     resolveHost?: TrustedHostResolver;
   } = {},
@@ -525,13 +543,16 @@ export async function ingestUrl(
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
+    if (controller.signal.aborted) throw new DOMException("Aborted", "AbortError");
     // Execution boundary: every redirect hop is validated BEFORE it is
-    // requested (the transport never auto-follows redirects).
+    // requested (the transport never auto-follows redirects), and the
+    // destination must be bindable (pinned, or same-origin in a browser).
     const guarded = await guardedPublicFetch(parsed.toString(), {
       resolveHost: opts.resolveHost,
       policy: opts.resolveHost
-        ? DestinationPolicies.REQUIRE_RESOLUTION
+        ? DestinationPolicies.REQUIRE_PINNED_RESOLUTION
         : DestinationPolicies.BROWSER_UNVERIFIABLE,
+      sameOriginOnly: opts.resolveHost ? undefined : { origin: originOf(policy.pageOrigin) },
       init: {
         method: "GET",
         mode: "cors",
@@ -545,7 +566,9 @@ export async function ingestUrl(
         return {
           status: "url_reference_only",
           url: parsed.toString(),
-          reason: "remote_fetch_unavailable",
+          reason: isDestinationBindingRefusal(guarded.reason)
+            ? "destination_binding_unverifiable"
+            : "remote_fetch_unavailable",
           message:
             "SPE could not read that page in this browser. The URL is kept as a reference only — remote page content was not loaded. Upload page HTML or a screenshot for grounding.",
           fallbacks: FALLBACKS,

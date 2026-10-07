@@ -118,7 +118,7 @@ export type UrlIngestResult =
       status: "url_reference_only";
       url: string;
       message: string;
-      reason: "csp_connect_src_self" | "remote_fetch_unavailable";
+      reason: "csp_connect_src_self" | "remote_fetch_unavailable" | "destination_binding_unverifiable";
       fallbacks: string[];
     }
   | {
