@@ -27,7 +27,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote
 
+from spe_runtime.journey_observation import text_digest
 from spe_runtime.media_product.local_backend import (
+    JOURNEY_OBSERVER,
     IntegrityError,
     LocalMediaSession,
     commit_product_journey,
@@ -161,6 +163,17 @@ def _run_job(job: Job, media_path: Path) -> dict[str, object]:
             payload = _public("CANCELLED", "UNAVAILABLE", "CANCELLED")
         else:
             result = session.transcribe_path(media_path)
+            JOURNEY_OBSERVER.record(
+                "INFERENCE",
+                engine="whisper-cli",
+                mode=str(result.mode),
+                status=str(result.status),
+                neural_session_ran=bool(result.neural_session_ran),
+                transcript_chars=len(result.text or ""),
+                transcript_sha256=text_digest(result.text or ""),
+                error_code=result.error_code,
+            )
+            JOURNEY_OBSERVER.record("EGRESS", user_media_egress=int(result.egress_attempts))
             if result.mode == "LOCAL_NEURAL" and result.neural_session_ran:
                 print(
                     f"LOCAL_NEURAL user_audio_egress={int(result.egress_attempts)}",
@@ -181,6 +194,9 @@ def _run_job(job: Job, media_path: Path) -> dict[str, object]:
     finally:
         session.close()
         _STATE["last_temp_files_remaining"] = session.temp_files_remaining
+        JOURNEY_OBSERVER.record(
+            "TEMP_CLEANUP", scope="session", temp_files_remaining=int(session.temp_files_remaining)
+        )
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -200,6 +216,15 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         path = self.path.split("?", 1)[0]
+        if path == "/journey":
+            # Verifier hook: runtime observation only. Never a promotion.
+            stamp = product_gates(
+                local_file_transcription="UNAVAILABLE",
+                raw_media_egress=int(_STATE["egress_attempts"]),
+                journey=recorded_journey(),
+            )["PRODUCT_MEDIA_V1"]
+            self._send(200, JOURNEY_OBSERVER.export(product_stamp=str(stamp)))
+            return
         if path != "/health":
             self._send(404, {"error": "NOT_FOUND"})
             return
@@ -266,6 +291,9 @@ class Handler(BaseHTTPRequestHandler):
         finally:
             shutil.rmtree(directory, ignore_errors=True)
             _STATE["last_upload_removed"] = not media_path.exists() and not directory.exists()
+            JOURNEY_OBSERVER.record(
+                "TEMP_CLEANUP", scope="upload", upload_removed=bool(_STATE["last_upload_removed"])
+            )
             with _LOCK:
                 _JOBS.pop(job_id, None)
         print(
@@ -279,6 +307,7 @@ class Handler(BaseHTTPRequestHandler):
 def main() -> None:
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     port = int(server.server_address[1])
+    JOURNEY_OBSERVER.record("PROCESS_START", boot_id=JOURNEY_OBSERVER.boot_id)
     print(f"MEDIA_HOST {port}", flush=True)
     try:
         server.serve_forever()
