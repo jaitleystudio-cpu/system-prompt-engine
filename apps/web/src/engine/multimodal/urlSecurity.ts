@@ -173,7 +173,14 @@ export function isSsrfSafeUrl(url: URL): { safe: boolean; reason?: string } {
 //   * Standard fetch cannot pin a connection to a pre-validated address, so
 //     resolution-time validation alone leaves a DNS-rebinding TOCTOU window.
 //     Only a transport that declares pinsResolvedAddress=true satisfies
-//     REQUIRE_PINNED_RESOLUTION (the default, fail-closed policy).
+//     REQUIRE_PINNED_RESOLUTION (the default, fail-closed policy), and the
+//     declaration alone is not trusted: a pinning transport must report the
+//     address it actually connected to, which must equal the validated
+//     address, or the hop fails closed (DESTINATION_BINDING_MISMATCH /
+//     DESTINATION_BINDING_UNVERIFIABLE) and its body is discarded.
+//   * No pinning transport ships in this web app. Callers that cannot pin
+//     (media/urlIngest.ts) must not read remote content on a resolver's word;
+//     they keep the URL as a reference only.
 // ===========================================================================
 
 export type AddressClassification = {
@@ -373,6 +380,11 @@ export type BoundaryTransport = {
     init: RequestInit,
     pinnedAddress: string | null,
   ) => Promise<Response>;
+  /**
+   * Required for pinning transports: the peer address the response actually
+   * came from. Missing or different from the validated address fails closed.
+   */
+  connectedAddress?: (response: Response) => string | null | undefined;
 };
 
 export type BoundaryHop = {
@@ -401,8 +413,20 @@ export function isUnverifiableDestinationRefusal(reason: string): boolean {
   return (
     reason === "REDIRECT_DESTINATION_UNVERIFIABLE" ||
     reason === "TRUSTED_RESOLVER_UNAVAILABLE" ||
-    reason === "DESTINATION_BINDING_UNVERIFIABLE"
+    isDestinationBindingRefusal(reason)
   );
+}
+
+/** Refusals because the connected destination could not be bound to the validated one. */
+export function isDestinationBindingRefusal(reason: string): boolean {
+  return (
+    reason === "DESTINATION_BINDING_UNVERIFIABLE" ||
+    reason === "DESTINATION_BINDING_MISMATCH"
+  );
+}
+
+function sameAddress(a: string, b: string): boolean {
+  return bareHost(a).toLowerCase() === bareHost(b).toLowerCase();
 }
 
 function defaultTransport(): BoundaryTransport {
@@ -434,6 +458,12 @@ export async function guardedPublicFetch(
     policy?: DestinationPolicy;
     maxRedirects?: number;
     init?: RequestInit;
+    /**
+     * Browser policy only: every hop must be same-origin with `origin`
+     * (null = no origin is trusted). A browser cannot prove which address it
+     * connected to, so cross-origin hops are refused before any request.
+     */
+    sameOriginOnly?: { origin: string | null };
   } = {},
 ): Promise<GuardedFetchResult> {
   const transport = opts.transport ?? defaultTransport();
@@ -453,6 +483,18 @@ export async function guardedPublicFetch(
       return {
         ok: false,
         reason: `LEXICAL_${lexical.reason || "UNSAFE"}`,
+        refusedUrl: parsed.toString(),
+        hops,
+      };
+    }
+    if (
+      opts.sameOriginOnly &&
+      policy === DestinationPolicies.BROWSER_UNVERIFIABLE &&
+      (!opts.sameOriginOnly.origin || parsed.origin !== opts.sameOriginOnly.origin)
+    ) {
+      return {
+        ok: false,
+        reason: "DESTINATION_BINDING_UNVERIFIABLE",
         refusedUrl: parsed.toString(),
         hops,
       };
@@ -512,6 +554,20 @@ export async function guardedPublicFetch(
       pinned,
     );
     hop.status = response.status;
+
+    if (transport.pinsResolvedAddress && pinned !== null) {
+      // Bind: the validated address must equal the connected destination.
+      const connected = transport.connectedAddress?.(response) ?? null;
+      if (!connected || !sameAddress(connected, pinned)) {
+        await discardBody(response);
+        return {
+          ok: false,
+          reason: connected ? "DESTINATION_BINDING_MISMATCH" : "DESTINATION_BINDING_UNVERIFIABLE",
+          refusedUrl: parsed.toString(),
+          hops,
+        };
+      }
+    }
 
     if (response.type === "opaqueredirect") {
       await discardBody(response);

@@ -226,16 +226,47 @@ try {
   assert.equal(loopbackResult.status, "invalid_url");
   console.log("Confirmed: direct loopback ingestion rejected with invalid_url.");
 
-  // Test 2: Timeout handling via mock/custom network policy
-  const timeoutResult = await ingestUrl("https://example.com/slow", {
-    timeoutMs: 50,
-    networkPolicy: { pageOrigin: null, connectSrc: "*" },
-  });
-  assert.ok(
-    timeoutResult.status === "timeout" || timeoutResult.status === "network_error" || timeoutResult.status === "cors_blocked",
-    `Unexpected status for timed-out request: ${timeoutResult.status}`,
-  );
-  console.log(`Confirmed: timeout handling handled gracefully (status: ${timeoutResult.status}).`);
+  // Test 2a (R9-G destination binding): a cross-origin remote URL is no longer
+  // requested at all — this browser cannot bind the connected destination — so
+  // the old "timeout | network_error | cors_blocked" expectation is obsolete.
+  // It must be an honest reference-only result with zero network requests.
+  const realFetch = globalThis.fetch;
+  let remoteRequests = 0;
+  globalThis.fetch = async (...args) => {
+    remoteRequests += 1;
+    return realFetch(...args);
+  };
+  let timeoutResult;
+  try {
+    timeoutResult = await ingestUrl("https://example.com/slow", {
+      timeoutMs: 50,
+      networkPolicy: { pageOrigin: null, connectSrc: "*" },
+    });
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+  assert.equal(timeoutResult.status, "url_reference_only");
+  assert.equal(timeoutResult.reason, "destination_binding_unverifiable");
+  assert.equal(remoteRequests, 0);
+  console.log("Confirmed: unbindable cross-origin URL kept as reference only with zero requests.");
+
+  // Test 2b: timeout handling is still exercised on the one read path that
+  // remains (same-origin), using a stalled same-origin transport.
+  globalThis.fetch = (url, init) =>
+    new Promise((_resolve, reject) => {
+      init?.signal?.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")), { once: true });
+    });
+  let sameOriginTimeout;
+  try {
+    sameOriginTimeout = await ingestUrl("https://example.com/slow", {
+      timeoutMs: 50,
+      networkPolicy: { pageOrigin: "https://example.com", connectSrc: "*" },
+    });
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+  assert.equal(sameOriginTimeout.status, "timeout");
+  console.log("Confirmed: same-origin timeout handled gracefully (status: timeout).");
 
   // Test 3: Cancellation via AbortSignal
   const abortController = new AbortController();
