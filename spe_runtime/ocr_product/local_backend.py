@@ -30,6 +30,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterator
 
+from spe_runtime.journey_observation import JourneyObserver, host_of, provision_authorization
+
 HEX = frozenset("0123456789abcdef")
 PACK_DIR_NAME = "ocr-pack"
 PACK_MANIFEST_NAME = "PACK_MANIFEST.json"
@@ -320,6 +322,14 @@ _MODEL_INGRESS_HOSTS: list[str] = []
 _CLI_INGRESS_HOSTS: list[str] = []
 _JOURNEY: dict[str, object] | None = None
 _EGRESS_STICKY = 0
+# SPE-R9-E: runtime journey observation for an INDEPENDENT verifier. Never promotes.
+JOURNEY_OBSERVER = JourneyObserver("OCR")
+JOURNEY_PINS: dict[str, object] = {
+    "model_sha256": PINNED_MODEL_SHA256,
+    "model_bytes": PINNED_MODEL_BYTES,
+    "cli_sha256": PINNED_CLI_SHA256,
+    "cli_bytes": PINNED_CLI_BYTES,
+}
 
 
 class IntegrityError(ValueError):
@@ -839,11 +849,40 @@ def discover_qualified_assets(
     lib_paths = [_member(pack, str(item["relative_path"])) for item in PINNED_VENDORED_LIBRARIES]
     model_acquired = False
     cli_acquired = False
+    cli_files_present = [path.is_file() for path in (cli_path, *lib_paths)]
+    JOURNEY_OBSERVER.record(
+        "PACK_STATE",
+        model_present=model_path.is_file(),
+        cli_present=all(cli_files_present),
+        cli_partial=any(cli_files_present) and not all(cli_files_present),
+    )
+    if fetch and (not model_path.is_file() or not any(cli_files_present)):
+        JOURNEY_OBSERVER.record("PROVISION_AUTHORIZATION", **provision_authorization())
+    model_source_host = host_of(str(_language_pack(PINNED_LANGUAGE).get("source") or ""))
     if not model_path.is_file():
         if not fetch:
             _verify_model(model_path)
-        _acquire_absent_model(model_path)
+        try:
+            _acquire_absent_model(model_path)
+            _verify_model(model_path)
+        except IntegrityError as exc:
+            JOURNEY_OBSERVER.record(
+                "INGRESS", kind="traineddata", ok=False, error=exc.code, source_host=model_source_host
+            )
+            raise
         model_acquired = True
+        model_sha = _sha256_file(model_path)
+        JOURNEY_OBSERVER.record(
+            "INGRESS",
+            kind="traineddata",
+            ok=True,
+            source_host=model_source_host,
+            final_hosts=model_ingress_hosts(),
+            bytes=model_path.stat().st_size,
+            sha256=model_sha,
+            expected_sha256=PINNED_MODEL_SHA256,
+            digest_ok=model_sha == PINNED_MODEL_SHA256,
+        )
     _verify_model(model_path)
     for extra in PINNED_LANGUAGE_PACKS:
         if extra["language"] == PINNED_LANGUAGE:
@@ -860,12 +899,30 @@ def discover_qualified_assets(
     if not any(present):
         if not fetch:
             raise _missing_binary()
-        _acquire_absent_cli(pack)
+        try:
+            _acquire_absent_cli(pack)
+            _verify_cli(cli_path)
+            _verify_vendored_libraries(pack, cli_path)
+        except IntegrityError as exc:
+            JOURNEY_OBSERVER.record("CLI_BUILD", result="FAILED", error=exc.code, acquired=True)
+            raise
         cli_acquired = True
+        JOURNEY_OBSERVER.record(
+            "CLI_BUILD",
+            result="OK",
+            acquired=True,
+            install="PINNED_BOTTLE_RELINK",
+            source_hosts=cli_ingress_hosts(),
+            sha256=_sha256_file(cli_path),
+            bytes=cli_path.stat().st_size,
+        )
     elif not all(present):
         raise _missing_binary()
     _verify_cli(cli_path)
     _verify_vendored_libraries(pack, cli_path)
+    JOURNEY_OBSERVER.record(
+        "RUNTIME_READY", cli_sha256=_sha256_file(cli_path), model_sha256=_sha256_file(model_path)
+    )
     return QualifiedAssets(
         root=pack,
         model_path=model_path,

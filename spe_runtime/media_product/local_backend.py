@@ -32,6 +32,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterator
 
+from spe_runtime.journey_observation import JourneyObserver, host_of, provision_authorization
+
 HEX = frozenset("0123456789abcdef")
 PINNED_CLI_SHA256 = "c52fa726b9ab0b8b7b1cd798ffa07b2feee8b5c754a27b05400298a4646d2c40"
 PINNED_TE_MODEL_SHA256 = "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e"
@@ -75,6 +77,14 @@ _SEGMENT_RE = re.compile(
 _PROGRESS_RE = re.compile(r"progress\s*=\s*(-?\d+)")
 TIMESTAMP_STATE = "UNSUPPORTED_FOR_QUALIFIED_TE_MODEL"
 ProgressHook = Callable[[dict[str, object]], None]
+# SPE-R9-E: runtime journey observation for an INDEPENDENT verifier. Never promotes.
+JOURNEY_OBSERVER = JourneyObserver("ASR")
+JOURNEY_PINS: dict[str, object] = {
+    "model_sha256": PINNED_TE_MODEL_SHA256,
+    "model_bytes": PINNED_TE_MODEL_BYTES,
+    "cli_sha256": PINNED_CLI_SHA256,
+    "cli_bytes": PINNED_CLI_BYTES,
+}
 
 
 class IntegrityError(ValueError):
@@ -469,8 +479,8 @@ def _manifest_model_source(manifest: dict[str, object]) -> str:
     return source
 
 
-def _acquire_absent_model(model_path: Path, manifest: dict[str, object]) -> None:
-    """Stream the pinned ggml file into the relative pack.
+def _acquire_absent_model(model_path: Path, manifest: dict[str, object]) -> str:
+    """Stream the pinned ggml file into the relative pack. Returns the final URL.
 
     Call only when the model file is absent. A file that is already present
     is never replaced, so a short or wrong-hash model stays fail-closed.
@@ -514,6 +524,7 @@ def _acquire_absent_model(model_path: Path, manifest: dict[str, object]) -> None
             raise IntegrityError("WRONG_MODEL")
         os.replace(partial, model_path)
         print(f"MEDIA_MODEL_INGRESS bytes={size} sha256={got} source={source} final={final}", file=sys.stderr, flush=True)
+        return final
     except IntegrityError:
         partial.unlink(missing_ok=True)
         raise
@@ -721,42 +732,97 @@ def discover_qualified_assets() -> QualifiedAssets:
         absence_before_fetch = (
             not model_path.is_file() and not cli_path.is_file() and not whisper_src.exists()
         )
+        JOURNEY_OBSERVER.record(
+            "PACK_STATE",
+            model_present=model_path.is_file(),
+            cli_present=cli_path.is_file(),
+            build_src_present=whisper_src.exists(),
+        )
+        if not model_path.is_file() or not cli_path.is_file():
+            JOURNEY_OBSERVER.record("PROVISION_AUTHORIZATION", **provision_authorization())
         downloaded = False
         cli_built = False
+        model_source_host = host_of(str(manifest.get("SOURCE") or ""))
         if not model_path.is_file():
-            _acquire_absent_model(model_path, manifest)
+            try:
+                final_url = _acquire_absent_model(model_path, manifest)
+            except IntegrityError as exc:
+                JOURNEY_OBSERVER.record(
+                    "INGRESS", kind="model", ok=False, error=str(exc), source_host=model_source_host
+                )
+                raise
             downloaded = True
-        model_sha = _verify_packed_file(
-            model_path,
-            expected_sha=PINNED_TE_MODEL_SHA256,
-            expected_bytes=PINNED_TE_MODEL_BYTES,
-            kind="model",
-            architectures=architectures,
-        )
+        try:
+            model_sha = _verify_packed_file(
+                model_path,
+                expected_sha=PINNED_TE_MODEL_SHA256,
+                expected_bytes=PINNED_TE_MODEL_BYTES,
+                kind="model",
+                architectures=architectures,
+            )
+        except IntegrityError as exc:
+            if downloaded:
+                JOURNEY_OBSERVER.record(
+                    "INGRESS", kind="model", ok=False, error=str(exc), source_host=model_source_host
+                )
+            raise
+        if downloaded:
+            JOURNEY_OBSERVER.record(
+                "INGRESS",
+                kind="model",
+                ok=True,
+                source_host=model_source_host,
+                final_host=host_of(final_url),
+                bytes=model_path.stat().st_size,
+                sha256=model_sha,
+                expected_sha256=PINNED_TE_MODEL_SHA256,
+                digest_ok=model_sha == PINNED_TE_MODEL_SHA256,
+            )
         if not cli_path.is_file():
-            _acquire_absent_cli(cli_path, manifest)
+            try:
+                _acquire_absent_cli(cli_path, manifest)
+            except IntegrityError as exc:
+                JOURNEY_OBSERVER.record("CLI_BUILD", result="FAILED", error=str(exc), acquired=False)
+                raise
             cli_built = True
-        cli_sha = _verify_packed_file(
-            cli_path,
-            expected_sha=PINNED_CLI_SHA256,
-            expected_bytes=PINNED_CLI_BYTES,
-            kind="cli",
-            architectures=architectures,
-        )
-        model_bytes = model_path.stat().st_size if downloaded else 0
-        cli_bytes = 0
-        cli_rpath_clean = False
-        cli_spe_g12 = True
+        try:
+            cli_sha = _verify_packed_file(
+                cli_path,
+                expected_sha=PINNED_CLI_SHA256,
+                expected_bytes=PINNED_CLI_BYTES,
+                kind="cli",
+                architectures=architectures,
+            )
+            model_bytes = model_path.stat().st_size if downloaded else 0
+            cli_bytes = 0
+            cli_rpath_clean = False
+            cli_spe_g12 = True
+            if cli_built:
+                _reject_external_linkage(cli_path)
+                cli_raw = cli_path.read_bytes()
+                cli_bytes = len(cli_raw)
+                cli_spe_g12 = b"spe-g12" in cli_raw
+                if cli_spe_g12:
+                    raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
+                if cli_bytes != PINNED_CLI_BYTES:
+                    raise IntegrityError("SIZE_MISMATCH")
+                cli_rpath_clean = True
+        except IntegrityError as exc:
+            if cli_built:
+                JOURNEY_OBSERVER.record("CLI_BUILD", result="FAILED", error=str(exc), acquired=True)
+            raise
         if cli_built:
-            _reject_external_linkage(cli_path)
-            cli_raw = cli_path.read_bytes()
-            cli_bytes = len(cli_raw)
-            cli_spe_g12 = b"spe-g12" in cli_raw
-            if cli_spe_g12:
-                raise IntegrityError("ABSOLUTE_OR_SIBLING_PATH")
-            if cli_bytes != PINNED_CLI_BYTES:
-                raise IntegrityError("SIZE_MISMATCH")
-            cli_rpath_clean = True
+            JOURNEY_OBSERVER.record(
+                "CLI_BUILD",
+                result="OK",
+                acquired=True,
+                source_pin=SOURCE_PIN,
+                source_host=host_of(WHISPER_CPP_GIT),
+                sha256=cli_sha,
+                bytes=cli_bytes,
+                rpath_clean=cli_rpath_clean,
+            )
+        JOURNEY_OBSERVER.record("RUNTIME_READY", cli_sha256=cli_sha, model_sha256=model_sha)
         vad_model_cand = root / PACK_VAD_MODEL_REL
         vad_model_path: Path | None = None
         vad_model_sha: str | None = None
