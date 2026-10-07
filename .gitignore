@@ -251,3 +251,5 @@ qualification/*_receipt.json
 /ocr-pack/lib/
 /ocr-pack/.bottle/
 /.ocr-scratch/
+evidence/r9-h-studio-perf-a11y/studio-harness.js
+evidence/r9-h-studio-perf-a11y/studio-harness.html

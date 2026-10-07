@@ -54,6 +54,11 @@
     "test:website-studio-intent": "node --experimental-strip-types scripts/test-website-studio-intent.mjs",
     "test:website-studio-core": "node --experimental-strip-types scripts/test-website-studio-core-v11.mjs",
     "test:website-studio-journey": "node --experimental-strip-types scripts/test-website-studio-runtime-journey.mjs",
+    "test:website-studio-perf-a11y": "node --experimental-strip-types scripts/test-website-studio-perf-a11y.mjs",
+    "test:v1-1-performance-telemetry": "node --experimental-strip-types scripts/test-v1-1-performance-telemetry.mjs",
+    "measure:studio-perf-a11y": "node --experimental-strip-types scripts/measure-studio-perf-a11y.mjs",
+    "test:website-studio-security": "node --experimental-strip-types scripts/test-website-studio-security.mjs",
+    "test:website-studio-security-mutations": "node --experimental-strip-types scripts/test-website-studio-security-mutations.mjs",
     "test:website-compiler": "node --experimental-strip-types scripts/test-static-website-compiler.mjs",
     "test:volume-budget": "node scripts/test-volume-budget-regression.mjs",
     "test:stress-1m": "node --expose-gc scripts/stress-1m-volume-qualification.mjs"

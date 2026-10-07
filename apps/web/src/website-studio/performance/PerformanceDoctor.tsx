@@ -66,6 +66,9 @@ export const PerformanceDoctor: React.FC<PerformanceDoctorProps> = ({
           <h4 style={{ margin: 0, fontSize: "14px" }}>Scene Performance Doctor</h4>
           <span style={{ fontSize: "11px", color: "#8e95a5" }}>
             State: {receipt.frameMeasurementState}
+            {receipt.frameMeasurementState !== "MEASURED"
+              ? " (lab or estimate only — field vitals unknown)"
+              : " (browser harness verified)"}
           </span>
         </div>
         <span
@@ -110,6 +113,22 @@ export const PerformanceDoctor: React.FC<PerformanceDoctorProps> = ({
         <div style={{ backgroundColor: "#1a1e2b", padding: "10px", borderRadius: "6px" }}>
           <div style={{ fontSize: "11px", color: "#8e95a5" }}>Active Lights</div>
           <div style={{ fontSize: "15px", fontWeight: 700 }}>{receipt.lights}</div>
+        </div>
+        <div style={{ backgroundColor: "#1a1e2b", padding: "10px", borderRadius: "6px" }}>
+          <div style={{ fontSize: "11px", color: "#8e95a5" }}>Desktop frame p95</div>
+          <div style={{ fontSize: "15px", fontWeight: 700 }}>
+            {receipt.desktopFrameP95 != null
+              ? `${receipt.desktopFrameP95.toFixed(1)} ms`
+              : "UNKNOWN"}
+          </div>
+        </div>
+        <div style={{ backgroundColor: "#1a1e2b", padding: "10px", borderRadius: "6px" }}>
+          <div style={{ fontSize: "11px", color: "#8e95a5" }}>Mobile frame p95</div>
+          <div style={{ fontSize: "15px", fontWeight: 700 }}>
+            {receipt.mobileFrameP95 != null
+              ? `${receipt.mobileFrameP95.toFixed(1)} ms`
+              : "UNKNOWN"}
+          </div>
         </div>
       </div>
 
