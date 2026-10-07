@@ -1,5 +1,5 @@
 {
-  "sha": "895a3230d445089b3fdb48fbbb101e7b539f58c8",
+  "sha": "30c6657a41fb24d3aec55ba017f1e9927e432fb5",
   "command": "node --experimental-strip-types apps/web/scripts/measure-studio-perf-a11y.mjs",
   "not_a_release": true,
   "network_mode": "NONE",
@@ -37,7 +37,7 @@
     "desktopFrameP95": 16.7,
     "mobileFrameP95": 21.71,
     "sampleCount": 90,
-    "receiptHash": "sha256-9e2028d0b23d8cf001e2efa53af0ad67bbd86a7737c1e741cfcd5b04b975eaa5",
+    "receiptHash": "sha256-2cb6bb2572813a2b6070b53cf682c3c1091eef80df8ef5f3b195a2b55f7450f3",
     "lab_only": true
   }
 }
