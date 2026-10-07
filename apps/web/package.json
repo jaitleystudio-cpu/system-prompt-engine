@@ -57,6 +57,8 @@
     "test:website-studio-perf-a11y": "node --experimental-strip-types scripts/test-website-studio-perf-a11y.mjs",
     "test:v1-1-performance-telemetry": "node --experimental-strip-types scripts/test-v1-1-performance-telemetry.mjs",
     "measure:studio-perf-a11y": "node --experimental-strip-types scripts/measure-studio-perf-a11y.mjs",
+    "test:perf-proof-mutations": "node --experimental-strip-types scripts/test-perf-proof-mutations.mjs",
+    "test:candidate-custody": "node ../../tools/candidate-custody-regression.mjs",
     "test:website-studio-security": "node --experimental-strip-types scripts/test-website-studio-security.mjs",
     "test:website-studio-security-mutations": "node --experimental-strip-types scripts/test-website-studio-security-mutations.mjs",
     "test:website-compiler": "node --experimental-strip-types scripts/test-static-website-compiler.mjs",

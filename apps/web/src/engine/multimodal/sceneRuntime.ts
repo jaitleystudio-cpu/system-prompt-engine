@@ -129,6 +129,12 @@ export type SceneMountHandle = {
   report: SceneExecutionReport;
   dispose: () => void;
   loseAndRestore: () => Promise<SceneExecutionReport>;
+  /**
+   * Render one more frame of the already-built scene. Present only on an
+   * executed mount. Used by lab frame-timing harnesses; it does not change
+   * the execution report. Returns false when there is nothing to draw.
+   */
+  renderFrame?: () => boolean;
 };
 
 function prefersReducedMotion(): boolean {
@@ -476,6 +482,11 @@ export function mountBundledScene(container: HTMLElement, ir: SceneIR): SceneMou
   return {
     report,
     dispose,
+    renderFrame() {
+      if (!renderer || !built || disposed) return false;
+      renderer.render(built.scene, built.camera);
+      return true;
+    },
     async loseAndRestore() {
       if (!renderer || disposed) {
         report.contextLossRecovery = "FAILED";
