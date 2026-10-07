@@ -8,6 +8,11 @@ import { validateMotionBlock, type NarrativeMotionBlock } from "./motionBlock.ts
 import type { MotionSpec } from "./timeline.ts";
 import type { ProvenanceGraph } from "./provenance.ts";
 import type { SceneIR } from "./sceneIR.ts";
+import {
+  assertStudioDataBindingBounds,
+  assertStudioSceneObjectBounds,
+  sanitizeStudioSvg,
+} from "../security/studioSecurity.ts";
 
 export interface SiteMetadata {
   title: string;
@@ -120,12 +125,24 @@ export function validateWebsiteSpecV2(spec: WebsiteSpecV2): WebsiteSpecV2 {
   if (cameraPlan) wrapValidation("cameraPlan", () => validateCameraPlan(cameraPlan));
 
   if (!Array.isArray(spec.dataBindings)) throw new WebsiteSpecV2ValidationError("dataBindings must be an array");
+  wrapValidation("dataBindings.bounds", () => assertStudioDataBindingBounds(spec.dataBindings.length));
   for (const binding of spec.dataBindings) wrapValidation("dataBinding", () => validateDataBinding(binding));
 
   const enhancement = spec.enhancement;
   if (enhancement) wrapValidation("enhancement", () => validateEnhancementMetadata(enhancement));
 
   wrapValidation("agentPolicy", () => validateAgentPolicy(spec.agentPolicy));
+
+  if (spec.scene) {
+    const objects = Array.isArray(spec.scene.objects) ? spec.scene.objects.length : 0;
+    wrapValidation("scene.bounds", () => assertStudioSceneObjectBounds(objects));
+    const heroSvg = spec.scene.accessibilityFallback?.hero2dSvg;
+    if (heroSvg) {
+      wrapValidation("scene.hero2dSvg", () => {
+        sanitizeStudioSvg(heroSvg);
+      });
+    }
+  }
 
   return spec;
 }

@@ -1,3 +1,5 @@
+import { assertNoPrototypePollutionKey } from "../security/studioSecurity.ts";
+
 export type PatchSource = "USER_UI" | "USER_LANGUAGE" | "SYSTEM_REPAIR" | "AGENT";
 
 export interface PatchSetOperation {
@@ -49,12 +51,15 @@ function applyOperations<T>(state: T, operations: PatchOperation[]): T {
     let cursor: any = next;
     for (let i = 0; i < operation.path.length - 1; i += 1) {
       const key = operation.path[i];
+      assertNoPrototypePollutionKey(key);
       if (cursor[key] == null || typeof cursor[key] !== "object") {
         throw new Error("PATCH_PATH_REFUSED");
       }
       cursor = cursor[key];
     }
-    cursor[operation.path[operation.path.length - 1]] = structuredClone(operation.value);
+    const lastKey = operation.path[operation.path.length - 1];
+    assertNoPrototypePollutionKey(lastKey);
+    cursor[lastKey] = structuredClone(operation.value);
   }
   return next;
 }
