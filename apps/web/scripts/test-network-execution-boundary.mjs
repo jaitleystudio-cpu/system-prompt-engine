@@ -19,6 +19,8 @@ import { build } from "../node_modules/esbuild/lib/main.js";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const src = join(root, "src");
 const target = process.env.SPE_URL_SECURITY_PATH || join(src, "engine/multimodal/urlSecurity.ts");
+// Mutation hook for the only fetch sink: a temp copy of media/urlIngest.ts.
+const ingestSource = process.env.SPE_URL_INGEST_PATH || join(src, "media/urlIngest.ts");
 const sec = await import(pathToFileURL(target).href);
 
 let checks = 0;
@@ -26,21 +28,27 @@ const ok = (cond, msg) => { assert.ok(cond, msg); checks += 1; };
 const eq = (a, b, msg) => { assert.equal(a, b, msg); checks += 1; };
 
 // Fake transport: scripted responses keyed by URL; records every request.
-function scriptedTransport(script, { pins = false } = {}) {
+// A pinning fake reports the peer it "connected" to: the pinned address by
+// default, or `connectedOverride` (string / null) to simulate a binding defect.
+function scriptedTransport(script, { pins = false, connectedOverride } = {}) {
   const calls = [];
-  return {
+  const peers = new WeakMap();
+  const t = {
     calls,
     pinsResolvedAddress: pins,
     async request(url, init, pinned) {
       calls.push({ url, redirect: init.redirect, pinned });
       const step = script[url];
       if (!step) assert.fail("UNEXPECTED_REQUEST (forbidden hop reached transport) " + url);
-      if (step.opaque) {
-        return { type: "opaqueredirect", status: 0, headers: new Headers(), body: null };
-      }
-      return new Response(step.body ?? "", { status: step.status ?? 200, headers: step.headers ?? {} });
+      const res = step.opaque
+        ? { type: "opaqueredirect", status: 0, headers: new Headers(), body: null }
+        : new Response(step.body ?? "", { status: step.status ?? 200, headers: step.headers ?? {} });
+      peers.set(res, connectedOverride === undefined ? pinned : connectedOverride);
+      return res;
     },
   };
+  if (pins) t.connectedAddress = (res) => peers.get(res);
+  return t;
 }
 const publicResolver = (map) => async (host) => {
   if (!(host in map)) throw new Error("NXDOMAIN " + host);
@@ -200,10 +208,60 @@ console.log("B7: destination binding (DNS rebinding) — default policy requires
   eq(n, 1, "resolver consulted exactly once for the hop");
 }
 {
+  // Explicit opt-in policy on the canonical primitive only (disclosed TOCTOU).
+  // No product sink may select it — see the static check in B10.
   const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "ok" } });
   const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver, policy: sec.DestinationPolicies.REQUIRE_RESOLUTION });
   eq(r.ok, true, "resolution-only policy permits safe public host");
   eq(r.destinationIdentity, "RESOLVED_NOT_PINNED", "TOCTOU disclosed as RESOLVED_NOT_PINNED");
+}
+
+console.log("B7b: binding — validated address must equal the connected destination...");
+{
+  const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "secret" } }, { pins: true, connectedOverride: "10.0.0.9" });
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver });
+  eq(r.ok, false, "pinning transport that connected elsewhere fails closed");
+  eq(r.reason, "DESTINATION_BINDING_MISMATCH", "mismatch reason");
+  eq(sec.isDestinationBindingRefusal(r.reason), true, "mismatch is a binding refusal");
+  eq(sec.isUnverifiableDestinationRefusal(r.reason), true, "mismatch maps to reference-only");
+  ok(!("response" in r), "mismatched body never delivered");
+}
+{
+  const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "secret" } }, { pins: true, connectedOverride: null });
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver });
+  eq(r.reason, "DESTINATION_BINDING_UNVERIFIABLE", "pinning transport that cannot report its peer fails closed");
+}
+{
+  const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "secret" } });
+  t.pinsResolvedAddress = true; // declares pinning but exposes no connectedAddress
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver });
+  eq(r.reason, "DESTINATION_BINDING_UNVERIFIABLE", "pinning declaration alone is not trusted");
+}
+
+console.log("B7c: browser policy — cross-origin hops refused before any request...");
+{
+  const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "x" } });
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, policy: sec.DestinationPolicies.BROWSER_UNVERIFIABLE, sameOriginOnly: { origin: "https://spe.app" } });
+  eq(r.reason, "DESTINATION_BINDING_UNVERIFIABLE", "cross-origin browser read refused");
+  eq(t.calls.length, 0, "cross-origin browser read: zero requests");
+  const t2 = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "x" } });
+  const r2 = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t2, policy: sec.DestinationPolicies.BROWSER_UNVERIFIABLE, sameOriginOnly: { origin: null } });
+  eq(r2.reason, "DESTINATION_BINDING_UNVERIFIABLE", "unknown page origin trusts nothing");
+  eq(t2.calls.length, 0, "unknown page origin: zero requests");
+  const t3 = scriptedTransport({ "https://93.184.215.14/": { status: 200, body: "x" } });
+  const r3 = await sec.guardedPublicFetch("https://93.184.215.14/", { transport: t3, policy: sec.DestinationPolicies.BROWSER_UNVERIFIABLE, sameOriginOnly: { origin: "https://spe.app" } });
+  eq(r3.reason, "DESTINATION_BINDING_UNVERIFIABLE", "cross-origin public IP literal refused in browser policy");
+  eq(t3.calls.length, 0, "cross-origin IP literal: zero requests");
+  const t4 = scriptedTransport({
+    "https://spe.app/page": { status: 302, headers: { location: "https://public-site.example.org/" } },
+  });
+  const r4 = await sec.guardedPublicFetch("https://spe.app/page", { transport: t4, policy: sec.DestinationPolicies.BROWSER_UNVERIFIABLE, sameOriginOnly: { origin: "https://spe.app" } });
+  eq(r4.reason, "DESTINATION_BINDING_UNVERIFIABLE", "same-origin -> cross-origin redirect refused");
+  eq(t4.calls.length, 1, "cross-origin redirect hop never requested");
+  const t5 = scriptedTransport({ "https://spe.app/page": { status: 200, body: "x" } });
+  const r5 = await sec.guardedPublicFetch("https://spe.app/page", { transport: t5, policy: sec.DestinationPolicies.BROWSER_UNVERIFIABLE, sameOriginOnly: { origin: "https://spe.app" } });
+  eq(r5.ok, true, "same-origin browser read permitted");
+  eq(r5.destinationIdentity, "UNVERIFIED_BROWSER", "same-origin browser read stays UNVERIFIED_BROWSER (never labelled verified)");
 }
 
 console.log("B8: safe public chain remains permitted...");
@@ -230,14 +288,19 @@ console.log("B9: real socket — redirect to metadata is refused after exactly o
   await new Promise((r) => server.listen(0, "127.0.0.1", r));
   const port = server.address().port;
   // Test transport: routes the validated public hostname to the local server, pinning by construction.
+  // Test double: it reports the pinned address as its peer (routing by construction).
+  const peers = new WeakMap();
   const transport = {
     pinsResolvedAddress: true,
     calls: 0,
-    async request(url, init) {
+    async request(url, init, pinned) {
       transport.calls += 1;
       const u = new URL(url);
-      return fetch(`http://127.0.0.1:${port}${u.pathname}`, { ...init, headers: { host: u.host } });
+      const res = await fetch(`http://127.0.0.1:${port}${u.pathname}`, { ...init, headers: { host: u.host } });
+      peers.set(res, pinned);
+      return res;
     },
+    connectedAddress: (res) => peers.get(res),
   };
   try {
     const r = await sec.guardedPublicFetch("https://public-site.example.org/start", { transport, resolveHost: resolver });
@@ -250,19 +313,33 @@ console.log("B9: real socket — redirect to metadata is refused after exactly o
   }
 }
 
-console.log("B10: urlIngest wiring — the existing fetch sink uses the boundary...");
-async function bundleIsolated(relPath) {
-  const full = join(src, relPath);
+console.log("B10: urlIngest wiring — the existing fetch sink uses the boundary and fails closed on binding...");
+async function bundleIngest() {
+  const resolveDir = join(src, "media");
+  const redirectSecurity = {
+    name: "spe-url-security-under-test",
+    setup(b) {
+      b.onResolve({ filter: /engine\/multimodal\/urlSecurity$/ }, () => ({ path: target }));
+    },
+  };
   const bundled = await build({
-    stdin: { contents: readFileSync(full, "utf8"), resolveDir: dirname(full), sourcefile: relPath, loader: "ts" },
-    bundle: true, write: false, format: "esm", platform: "node",
+    stdin: { contents: readFileSync(ingestSource, "utf8"), resolveDir, sourcefile: "media/urlIngest.ts", loader: "ts" },
+    bundle: true, write: false, format: "esm", platform: "node", plugins: [redirectSecurity],
   });
   return import("data:text/javascript;base64," + Buffer.from(bundled.outputFiles[0].text).toString("base64"));
 }
-if (!process.env.SPE_URL_SECURITY_PATH) {
-  const ingest = await bundleIsolated("media/urlIngest.ts");
+{
+  // Static: no product source selects the non-pinning resolution policy.
+  const ingestText = readFileSync(join(src, "media/urlIngest.ts"), "utf8");
+  ok(!/DestinationPolicies\.REQUIRE_RESOLUTION\b/.test(ingestText), "urlIngest.ts must not select REQUIRE_RESOLUTION");
+}
+{
+  const ingest = await bundleIngest();
   const realFetch = globalThis.fetch;
   const open = { pageOrigin: null, connectSrc: "*" };
+  // Same-origin page: the only browser read SPE still attempts.
+  const sameOrigin = { pageOrigin: "https://public-site.example.org", connectSrc: "*" };
+  const html = () => new Response("<html><title>x</title></html>", { status: 200, headers: { "content-type": "text/html" } });
   try {
     const calls = [];
     globalThis.fetch = async (url, init) => {
@@ -270,32 +347,69 @@ if (!process.env.SPE_URL_SECURITY_PATH) {
       if (url === "https://public-site.example.org/") return new Response("", { status: 302, headers: { location: "http://127.0.0.1/admin" } });
       assert.fail("UNEXPECTED_REQUEST " + url);
     };
-    const r1 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open });
-    eq(r1.status, "invalid_url", "ingestUrl: redirect to loopback refused");
+    const r1 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: sameOrigin });
+    eq(r1.status, "invalid_url", "ingestUrl: public -> loopback redirect refused");
     eq(calls.length, 1, "ingestUrl: loopback hop never requested");
     eq(calls[0].redirect, "manual", "ingestUrl: transport never auto-follows");
 
     calls.length = 0;
-    globalThis.fetch = async (url, init) => { calls.push({ url }); return { type: "opaqueredirect", status: 0, headers: new Headers(), body: null }; };
-    const r2 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open });
+    globalThis.fetch = async (url) => { calls.push({ url }); return { type: "opaqueredirect", status: 0, headers: new Headers(), body: null }; };
+    const r2 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: sameOrigin });
     eq(r2.status, "url_reference_only", "ingestUrl: opaque browser redirect -> reference only");
-    eq(r2.reason, "remote_fetch_unavailable", "ingestUrl: reference reason");
+    eq(r2.reason, "remote_fetch_unavailable", "ingestUrl: opaque reference reason");
 
     calls.length = 0;
-    globalThis.fetch = async (url) => { calls.push({ url }); return new Response("<html><title>x</title></html>", { status: 200, headers: { "content-type": "text/html" } }); };
+    globalThis.fetch = async (url) => { calls.push({ url }); return html(); };
     const r3 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open, resolveHost: async () => ["10.9.9.9"] });
     eq(r3.status, "invalid_url", "ingestUrl: resolver says private -> refused");
-    eq(calls.length, 0, "ingestUrl: no request when DNS private");
+    eq(calls.length, 0, "ingestUrl: zero requests when DNS private");
 
     const r4 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open, resolveHost: async () => { throw new Error("SERVFAIL"); } });
     eq(r4.status, "invalid_url", "ingestUrl: DNS failure fails closed");
+    eq(calls.length, 0, "ingestUrl: zero requests on DNS failure");
 
+    // OBSOLETE before this repair: r5 expected status "ok" (RESOLVED_NOT_PINNED + plain fetch = TOCTOU).
+    // A resolver's "public" answer alone no longer authorises a read: no pinning transport exists here.
     const r5 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open, resolveHost: async () => ["93.184.215.14"] });
-    eq(r5.status, "ok", "ingestUrl: safe public host still permitted");
-    eq(r5.title, "x", "ingestUrl: content parsed");
+    eq(r5.status, "url_reference_only", "ingestUrl: resolver public + non-pinning transport -> reference only");
+    eq(r5.reason, "destination_binding_unverifiable", "ingestUrl: binding-unverifiable reason");
+    eq(calls.length, 0, "ingestUrl: ZERO requests when binding cannot be pinned");
 
     const r6 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: { pageOrigin: "https://spe.app", connectSrc: "'self'" } });
     eq(r6.status, "url_reference_only", "ingestUrl: product CSP connect-src 'self' still reference-only");
+    eq(r6.reason, "csp_connect_src_self", "ingestUrl: CSP reason preserved");
+
+    const r7 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open });
+    eq(r7.status, "url_reference_only", "ingestUrl: browser cross-origin remote -> reference only");
+    eq(r7.reason, "destination_binding_unverifiable", "ingestUrl: browser cross-origin reason");
+    eq(calls.length, 0, "ingestUrl: ZERO requests for unverifiable browser destination");
+
+    const r8 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: { pageOrigin: "https://spe.app", connectSrc: "*" } });
+    eq(r8.status, "url_reference_only", "ingestUrl: open CSP does not make a cross-origin destination verifiable");
+    eq(calls.length, 0, "ingestUrl: zero requests (open CSP, cross-origin)");
+
+    const r9 = await ingest.ingestUrl("https://public-site.example.org/page", { networkPolicy: sameOrigin });
+    eq(r9.status, "ok", "ingestUrl: same-origin read still permitted");
+    eq(calls.length, 1, "ingestUrl: same-origin read made one request");
+    ok(!r9.notes.some((n) => /verified|pinned/i.test(n)), "ingestUrl: unverified browser read never labelled verified/pinned");
+
+    calls.length = 0;
+    globalThis.fetch = async (url, init) => {
+      calls.push({ url, redirect: init?.redirect });
+      if (url === "https://public-site.example.org/") return new Response("", { status: 302, headers: { location: "https://elsewhere.example.net/" } });
+      assert.fail("UNEXPECTED_REQUEST " + url);
+    };
+    const r10 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: sameOrigin });
+    eq(r10.status, "url_reference_only", "ingestUrl: same-origin -> cross-origin redirect -> reference only");
+    eq(r10.reason, "destination_binding_unverifiable", "ingestUrl: cross-origin redirect reason");
+    eq(calls.length, 1, "ingestUrl: cross-origin redirect hop never requested");
+
+    calls.length = 0;
+    const ac = new AbortController();
+    ac.abort();
+    const r11 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: sameOrigin, signal: ac.signal });
+    eq(r11.status, "aborted", "ingestUrl: pre-aborted signal -> aborted");
+    eq(calls.length, 0, "ingestUrl: zero requests when pre-aborted");
   } finally {
     globalThis.fetch = realFetch;
   }

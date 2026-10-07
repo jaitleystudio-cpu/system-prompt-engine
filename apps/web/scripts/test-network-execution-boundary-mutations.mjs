@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
  * SPE-R9-G repair — mutation gate for the network execution boundary.
- * Mutates a temporary copy of engine/multimodal/urlSecurity.ts only; the
- * production source is never modified. Each mutant must be killed by
- * scripts/test-network-execution-boundary.mjs with an AssertionError.
+ * Mutates a temporary copy of engine/multimodal/urlSecurity.ts or of the only
+ * fetch sink media/urlIngest.ts; the production source is never modified.
+ * Each mutant must be killed by scripts/test-network-execution-boundary.mjs
+ * with an AssertionError.
  */
 import assert from "node:assert/strict";
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -13,7 +14,10 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const source = path.join(__dirname, "../src/engine/multimodal/urlSecurity.ts");
+const SOURCES = {
+  security: { file: path.join(__dirname, "../src/engine/multimodal/urlSecurity.ts"), env: "SPE_URL_SECURITY_PATH", name: "urlSecurity.ts" },
+  ingest: { file: path.join(__dirname, "../src/media/urlIngest.ts"), env: "SPE_URL_INGEST_PATH", name: "urlIngest.ts" },
+};
 const gate = path.join(__dirname, "test-network-execution-boundary.mjs");
 
 const MUTANTS = [
@@ -27,22 +31,28 @@ const MUTANTS = [
   ["drop-embedded-ipv6-lexical-classification", "if (literalCheck.family !== 6 || literalCheck.forbidden) {", "if (false) {"],
   ["ipv4-mapped-private-treated-public", "      ? { family: 6, forbidden: true, reason: `IPV4_MAPPED_${check.reason}` }", "      ? { family: 6, forbidden: false }"],
   ["drop-redirect-limit", "if (redirects + 1 > maxRedirects) {", "if (false) {"],
+  // R9-G destination binding (fail closed).
+  ["skip-connected-address-binding", "if (transport.pinsResolvedAddress && pinned !== null) {", "if (false) {"],
+  ["browser-same-origin-only-ignored", "      opts.sameOriginOnly &&\n      policy === DestinationPolicies.BROWSER_UNVERIFIABLE &&", "      false &&\n      policy === DestinationPolicies.BROWSER_UNVERIFIABLE &&"],
+  ["ingest-require-resolution-not-pinned", "? DestinationPolicies.REQUIRE_PINNED_RESOLUTION", "? DestinationPolicies.REQUIRE_RESOLUTION", "ingest"],
+  ["ingest-drop-browser-same-origin-only", "      sameOriginOnly: opts.resolveHost ? undefined : { origin: originOf(policy.pageOrigin) },\n", "", "ingest"],
 ];
 
-const original = readFileSync(source, "utf8");
 let killed = 0;
-for (const [name, needle, replacement] of MUTANTS) {
-  assert.ok(original.includes(needle), `mutation anchor missing: ${name}`);
+for (const [name, needle, replacement, which = "security"] of MUTANTS) {
+  const { file: source, env, name: base } = SOURCES[which];
+  const original = readFileSync(source, "utf8");
+  assert.equal(original.split(needle).length - 1, 1, `mutation anchor missing/ambiguous: ${name}`);
   const tmp = mkdtempSync(path.join(os.tmpdir(), "spe-r9g-net-mut-"));
   try {
-    const mutatedPath = path.join(tmp, "urlSecurity.ts");
+    const mutatedPath = path.join(tmp, base);
     cpSync(source, mutatedPath);
     const mutated = original.replace(needle, replacement);
     assert.notEqual(mutated, original, `mutation did not apply: ${name}`);
     writeFileSync(mutatedPath, mutated);
     const result = spawnSync(process.execPath, ["--experimental-strip-types", gate], {
       encoding: "utf8",
-      env: { ...process.env, SPE_URL_SECURITY_PATH: mutatedPath },
+      env: { ...process.env, [env]: mutatedPath },
     });
     assert.notEqual(result.status, 0, `${name} mutation SURVIVED\n${result.stdout}\n${result.stderr}`);
     assert.match(result.stderr + result.stdout, /AssertionError/, `${name} must die by assertion\n${result.stderr}`);
