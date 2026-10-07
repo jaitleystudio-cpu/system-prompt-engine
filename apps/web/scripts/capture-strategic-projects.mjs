@@ -60,6 +60,18 @@ async function main() {
       } else {
         console.error("Could not find AI Prompt Refiner tab button");
       }
+
+      // 4. Golden Path Stepper Hero View
+      const diagTab = page.locator("button:has-text('Static Diagnostics')").first();
+      if (await diagTab.isVisible()) {
+        await diagTab.click();
+        await page.waitForTimeout(600);
+        await page.screenshot({
+          path: resolve(BRAIN_DIR, "spe_monopoly_golden_path_stepper.png"),
+          fullPage: false,
+        });
+        console.log("✓ Saved spe_monopoly_golden_path_stepper.png");
+      }
     } else {
       console.error("Could not find SPE Ω Proof Lab link");
     }

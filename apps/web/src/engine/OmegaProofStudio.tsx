@@ -403,6 +403,53 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
         </div>
       </div>
 
+      {/* Golden Path 6-Step Assurance Stepper */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "10px 24px",
+          backgroundColor: "#070b14",
+          borderBottom: "1px solid #1e293b",
+          fontSize: "12px",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ fontWeight: "700", color: "#f59e0b", letterSpacing: "0.5px" }}>👑 GOLDEN PATH:</span>
+          <span style={{ color: "#94a3b8", fontSize: "11px" }}>One Prompt → Immutable Invariants → Compiled Artifact → Adversarial Battery → Measurable Improvement → Proof Receipt</span>
+        </div>
+        <div style={{ display: "flex", gap: "6px" }}>
+          {[
+            { step: "1. Prompt", tab: "diagnostics" },
+            { step: "2. Invariants", tab: "logic" },
+            { step: "3. Align", tab: "kvcache" },
+            { step: "4. Attacks", tab: "gym" },
+            { step: "5. Delta", tab: "twin" },
+            { step: "6. Receipt", tab: "receipt" },
+          ].map((s) => (
+            <button
+              key={s.step}
+              onClick={() => setActiveTab(s.tab as any)}
+              style={{
+                padding: "4px 10px",
+                borderRadius: "4px",
+                fontSize: "11px",
+                fontWeight: activeTab === s.tab ? "700" : "500",
+                backgroundColor: activeTab === s.tab ? "rgba(56, 189, 248, 0.2)" : "#0f172a",
+                color: activeTab === s.tab ? "#38bdf8" : "#94a3b8",
+                border: activeTab === s.tab ? "1px solid #0284c7" : "1px solid #1e293b",
+                cursor: "pointer",
+              }}
+            >
+              {s.step}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Navigation Tabs */}
       <div
         style={{
@@ -2888,9 +2935,24 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
-                    🔬 Cross-Model Behavior Atlas across 5 Frontier Engines
-                  </h3>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
+                      🔬 Cross-Model Behavior Atlas across 5 Frontier Engines
+                    </h3>
+                    <span
+                      style={{
+                        fontSize: "10px",
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                        backgroundColor: "rgba(16, 185, 129, 0.15)",
+                        color: "#34d399",
+                        border: "1px solid rgba(16, 185, 129, 0.3)",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Mode: Calibrated Empirical Archetype (Air-Gapped / Zero-Egress)
+                    </span>
+                  </div>
                   <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
                     Differential behavior evaluation across GPT-4o, Claude 3.7 Sonnet, Gemini 2.5 Pro, DeepSeek R1, and Llama 3.3 70B.
                   </p>

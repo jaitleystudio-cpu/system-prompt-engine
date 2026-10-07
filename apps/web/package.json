@@ -82,7 +82,8 @@
     "test:cross-model-lab": "node --experimental-strip-types scripts/test-cross-model-lab.mjs",
     "test:evolving-inventory": "node --experimental-strip-types scripts/test-evolving-inventory.mjs",
     "test:ai-refiner": "node --experimental-strip-types scripts/test-ai-refiner.mjs",
-    "test:spe-cli": "node --experimental-strip-types bin/spe.mjs --version"
+    "test:spe-cli": "node --experimental-strip-types bin/spe.mjs --version",
+    "benchmark:golden-path": "node --experimental-strip-types scripts/benchmark-golden-path-evidence.mjs"
   },
   "bin": {
     "spe": "./bin/spe.mjs"

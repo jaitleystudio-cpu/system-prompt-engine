@@ -8,10 +8,16 @@
 
 import { computeSha256 } from './hashUtils.ts';
 
+export type DifferentialExecutionTier =
+  | 'CALIBRATED_OFFLINE_PROFILE'
+  | 'LOCAL_IN_PROCESS'
+  | 'LIVE_REMOTE_API';
+
 export interface ModelDifferentialEvaluation {
   modelId: string;
   provider: string;
   dialectTarget: string;
+  executionTier: DifferentialExecutionTier;
   intentPreservationScore: number; // 0 - 100%
   formatComplianceScore: number;   // 0 - 100%
   safetyResistanceScore: number;   // 0 - 100% (Hostile Gym resistance)
@@ -27,6 +33,7 @@ export interface ModelDifferentialEvaluation {
 
 export interface CrossModelAtlasReport {
   promptSha256: string;
+  executionTier: DifferentialExecutionTier;
   evaluatedModels: ModelDifferentialEvaluation[];
   crossModelConsensusScore: number; // 0 - 100%
   primaryDivergenceRisks: string[];
@@ -150,6 +157,7 @@ export async function evaluateCrossModelDifferential(
       modelId: m.modelId,
       provider: m.provider,
       dialectTarget: m.dialectTarget,
+      executionTier: 'CALIBRATED_OFFLINE_PROFILE',
       intentPreservationScore: intentScore,
       formatComplianceScore: formatScore,
       safetyResistanceScore: safetyScore,
@@ -187,6 +195,7 @@ export async function evaluateCrossModelDifferential(
   const timestamp = new Date().toISOString();
   const markdownAtlas = generateModelBehaviorAtlasMarkdown({
     promptSha256,
+    executionTier: 'CALIBRATED_OFFLINE_PROFILE',
     evaluatedModels,
     crossModelConsensusScore,
     primaryDivergenceRisks,
@@ -196,6 +205,7 @@ export async function evaluateCrossModelDifferential(
 
   return {
     promptSha256,
+    executionTier: 'CALIBRATED_OFFLINE_PROFILE',
     evaluatedModels,
     crossModelConsensusScore,
     primaryDivergenceRisks,
@@ -213,6 +223,7 @@ export const evaluateCrossModelDifferentialLab = evaluateCrossModelDifferential;
 export function generateModelBehaviorAtlasMarkdown(report: Omit<CrossModelAtlasReport, 'markdownAtlas'>): string {
   return `# SPE Ω — Cross-Model Behavior Atlas
 **Prompt Digest:** \`sha256:${report.promptSha256}\`  
+**Execution Tier:** \`${report.executionTier}\` *(100% Air-Gapped Simulation / Zero Network Egress)*  
 **Generated:** ${report.timestamp}  
 **Cross-Model Consensus Score:** ${report.crossModelConsensusScore}%  
 **Recommended Engine:** \`${report.recommendedModelForPrompt}\`
