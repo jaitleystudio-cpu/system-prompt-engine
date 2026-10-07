@@ -16,6 +16,7 @@ import type { SemanticObservation, VisionTier } from "./semanticTypes";
 import { getVisionModelBytes } from "../engine/visionBudget";
 import { buildSemanticFromLite } from "./semanticCompose";
 export { buildSemanticFromLite, semanticToPromptBlock } from "./semanticCompose";
+export { observeImageFile } from "./imageObserve";
 
 export type SemanticObserveOptions = {
   tier?: VisionTier;

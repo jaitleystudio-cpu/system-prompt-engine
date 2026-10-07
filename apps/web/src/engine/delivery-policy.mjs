@@ -39,6 +39,8 @@ function reconstructionAccepted(reconstruction, receipt) {
   return typeof prompt === "string" && prompt.length > 0;
 }
 
+import { synthesizeSystemPrompt } from "./promptSynthesizer.mjs";
+
 export function selectEffectivePrompt(canonicalPrompt, qualityOut) {
   if (!qualityOut || !reconstructionAccepted(qualityOut.reconstruction, qualityOut.receipt)) {
     return canonicalPrompt;
@@ -47,14 +49,16 @@ export function selectEffectivePrompt(canonicalPrompt, qualityOut) {
 }
 
 /** One kernel-selected prompt for display, artifact, history, copy, and export. */
-export function bindEffectiveSurfaces(canonicalPrompt, qualityOut) {
+export function bindEffectiveSurfaces(canonicalPrompt, qualityOut, opts) {
   const prompt = selectEffectivePrompt(canonicalPrompt, qualityOut);
+  const formatted = synthesizeSystemPrompt(prompt, opts);
   return {
-    display: prompt,
-    artifactPrompt: prompt,
-    historyPreview: typeof prompt === "string" ? prompt.slice(0, 240) : "",
-    exportPrompt: prompt,
-    copyPrompt: prompt,
+    display: formatted,
+    rawPrompt: prompt,
+    artifactPrompt: formatted,
+    historyPreview: typeof formatted === "string" ? formatted.slice(0, 240) : "",
+    exportPrompt: formatted,
+    copyPrompt: formatted,
   };
 }
 

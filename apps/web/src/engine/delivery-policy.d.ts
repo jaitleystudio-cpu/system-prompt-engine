@@ -28,6 +28,7 @@ export function selectEffectivePrompt(canonicalPrompt: string, qualityOut: unkno
 export function bindEffectiveSurfaces(
   canonicalPrompt: string,
   qualityOut: unknown,
+  opts?: { target?: string; category?: string; depth?: string; depthTier?: string },
 ): {
   display: string;
   artifactPrompt: string;

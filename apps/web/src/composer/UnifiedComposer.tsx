@@ -9,7 +9,14 @@ import { SpeechInput } from "../input/SpeechInput";
 import {
   observeImageFileSemantic,
   semanticToPromptBlock,
+  observeImageFile,
+  buildSemanticFromLite,
 } from "../media/semanticPipeline";
+import {
+  createProgressiveScreenshotPrompt,
+  createProgressiveImagePrompt,
+  PROGRESSIVE_NOTE,
+} from "../engine/mediaProgressive";
 import {
   observeVideoFileSemantic,
   videoObservationToPromptBlock,
@@ -124,6 +131,11 @@ export function UnifiedComposer({
   useEffect(() => {
     return () => {
       abortRef.current?.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
@@ -255,6 +267,13 @@ export function UnifiedComposer({
           const ctx = canvas.getContext("2d", { willReadFrequently: true });
           if (!ctx) throw new Error("Canvas is unavailable in this browser.");
           ctx.drawImage(img, 0, 0, w, h);
+          const progressiveStarter = createProgressiveScreenshotPrompt(
+            CODE_TARGET_LABELS[codeTarget],
+            img.naturalWidth,
+            img.naturalHeight,
+          );
+          onChange(progressiveStarter);
+          valueRef.current = progressiveStarter;
           const data = ctx.getImageData(0, 0, w, h);
           const ir = await observeScreenshotIR(
             data,
@@ -313,27 +332,46 @@ export function UnifiedComposer({
           URL.revokeObjectURL(url);
         }
       } else {
-        const sem = await observeImageFileSemantic(file, {
-          tier: "STANDARD",
-          signal: ac.signal,
-          onProgress: (p, label) => {
-            if (isCurrent()) setStatus(`${label} (${Math.round(p * 100)}%)`);
-          },
-        });
+        // Step 1: Instant progressive yield (<30ms) so YOUR IDEA is never empty and build button is active immediately
+        const lite = await observeImageFile(file, ac.signal);
         if (!isCurrent()) return;
-        const block = semanticToPromptBlock(sem);
-        setMediaNotes(sem.humanSummary || "Picture notes are ready below.");
+        const initialSem = buildSemanticFromLite(lite, {
+          tier: "LITE",
+          elapsedMs: 15,
+          methodNotes: [PROGRESSIVE_NOTE],
+        });
+        const initialBlock = semanticToPromptBlock(initialSem);
+        setMediaNotes(initialSem.humanSummary || "Picture notes are ready below.");
         setStructureLines([]);
         setVideoScenes(null);
-        appendBlock(
-          [
-            "Image → prompt request:",
-            "Using only the grounded observations / model judgments below (not verified facts), help me write a strong prompt about this image.",
-            "",
-            block,
-          ].join("\n"),
-        );
+        const initialRequest = createProgressiveImagePrompt(initialBlock);
+        appendBlock(initialRequest);
         setStatus("Picture notes ready — review them beside your idea.");
+
+        // Step 2: Background semantic enrichment (STANDARD) with non-blocking timeout
+        try {
+          const sem = await observeImageFileSemantic(file, {
+            tier: "STANDARD",
+            signal: ac.signal,
+            onProgress: (p, label) => {
+              if (isCurrent()) setStatus(`${label} (${Math.round(p * 100)}%)`);
+            },
+          });
+          if (!isCurrent()) return;
+          if (sem && sem.tier === "STANDARD") {
+            const enrichedBlock = semanticToPromptBlock(sem);
+            setMediaNotes(sem.humanSummary || "Picture notes are ready below.");
+            if (valueRef.current.includes(initialBlock)) {
+              const updated = valueRef.current.replace(initialBlock, enrichedBlock);
+              valueRef.current = updated;
+              onChange(updated);
+            }
+          }
+          setStatus("Picture notes ready — review them beside your idea.");
+        } catch {
+          // Keep grounded LITE block silently
+          if (isCurrent()) setStatus("Picture notes ready — review them beside your idea.");
+        }
       }
     } catch (e) {
       if (!isCurrent()) return;

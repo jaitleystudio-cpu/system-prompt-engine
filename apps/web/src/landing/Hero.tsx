@@ -22,6 +22,7 @@ import type { AppView } from "../routing";
 import { InAppLink } from "../shell/inAppLink";
 import { useDailyHero } from "./useDailyHero";
 import { HeroStory } from "./HeroStory";
+import { MarkdownExportButton } from "../engine/markdownExport";
 import {
   HOME_QUICK_START_MAX_CHARS,
   applyTextBound,
@@ -475,6 +476,11 @@ export function Hero(p: Props) {
                   <button className="spe-ghost" onClick={p.onExport}>
                     Download .spe
                   </button>
+                  <MarkdownExportButton
+                    promptText={p.prompt || ""}
+                    category={p.category}
+                    disabled={!p.prompt}
+                  />
                   <button className="spe-ghost" onClick={p.onOpen}>
                     {ui.inspect}
                   </button>

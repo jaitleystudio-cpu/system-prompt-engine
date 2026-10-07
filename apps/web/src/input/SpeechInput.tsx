@@ -5,6 +5,7 @@ import {
   SPEECH_VISITOR_HELP,
   speechUnsupportedMessage,
 } from "./speechHelpers";
+import { AudioStudio } from "../engine/AudioStudio";
 
 type Recognition = {
   lang: string;
@@ -133,6 +134,12 @@ export function SpeechInput({ onInsert, disabled }: { onInsert: (text: string) =
       <p className="spe-muted" data-speech-visitor-help="true">
         {SPEECH_VISITOR_HELP}
       </p>
+      <AudioStudio
+        onInsert={onInsert}
+        disabled={disabled}
+        currentTranscript={transcript}
+        onTranscriptChange={setTranscript}
+      />
       <details
         className="spe-speech"
         data-testid="speech-panel"

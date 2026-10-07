@@ -174,21 +174,32 @@ export async function classifySubjectsMobileNet(
   if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
   try {
     lastError = null;
-    const [session, labels, ort] = await Promise.all([
-      loadSession(signal),
-      loadLabels(signal),
-      loadOrt(),
-    ]);
-    if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
-    const { tensor } = preprocessImageNet(data);
-    const inputName = session.inputNames[0];
-    const feeds: Record<string, import("onnxruntime-web").Tensor> = {
-      [inputName]: new ort.Tensor("float32", tensor, [1, 3, 224, 224]),
+    const runInference = async (): Promise<SemanticSubject[] | null> => {
+      const [session, labels, ort] = await Promise.all([
+        loadSession(signal),
+        loadLabels(signal),
+        loadOrt(),
+      ]);
+      if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
+      const { tensor } = preprocessImageNet(data);
+      const inputName = session.inputNames[0];
+      const feeds: Record<string, import("onnxruntime-web").Tensor> = {
+        [inputName]: new ort.Tensor("float32", tensor, [1, 3, 224, 224]),
+      };
+      const out = await session.run(feeds);
+      const outName = session.outputNames[0];
+      const logits = out[outName].data as Float32Array;
+      return softmaxTopK(logits, labels, 5);
     };
-    const out = await session.run(feeds);
-    const outName = session.outputNames[0];
-    const logits = out[outName].data as Float32Array;
-    return softmaxTopK(logits, labels, 5);
+
+    const runTimeout = new Promise<null>((resolve) =>
+      setTimeout(() => {
+        lastError = "MobileNet inference timeout (2.5s) — fell back gracefully to LITE";
+        resolve(null);
+      }, 2500),
+    );
+
+    return await Promise.race([runInference(), runTimeout]);
   } catch (err) {
     lastError = err instanceof Error ? err.message : String(err);
     return null;

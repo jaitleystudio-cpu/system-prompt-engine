@@ -22,11 +22,16 @@ import { PrivacyIndicator } from "../ui/PrivacyIndicator";
 import { TrustPanel } from "../ui/TrustPanel";
 import { techniqueLabel } from "../engine/k3Transport";
 import { ReconstructionSummary } from "./ReconstructionSummary";
+import { FeaturesHub } from "../engine/FeaturesHub";
+import { PromptRadarInspector } from "../engine/PromptRadarInspector";
+import { MarkdownExportButton } from "../engine/markdownExport";
+import type { DepthTier } from "../engine/promptSynthesizer";
 
 type Mode = "simple" | "inspect" | "pro";
 type Lens = "prompt" | "intent" | "changes" | "techniques" | "artifact";
 
 type Props = {
+  onNavigate?: (v: any) => void;
   userRequest: string;
   setUserRequest: (v: string) => void;
   category: CategoryId;
@@ -50,6 +55,7 @@ type Props = {
     finalPrompt: string;
     techniques: string[];
   } | null;
+  rawIrPrompt?: string | null;
   artifact: SpeArtifactV1 | null;
   error: EngineError | null;
   result: EngineSuccessBody | null;
@@ -76,6 +82,8 @@ type Props = {
   setMode: (m: Mode) => void;
   lens: Lens;
   setLens: (l: Lens) => void;
+  activeDepthTier?: DepthTier;
+  onSelectDepthTier?: (tier: DepthTier) => void;
 };
 
 export function Workspace(props: Props) {
@@ -111,10 +119,13 @@ export function Workspace(props: Props) {
     setMode,
     lens,
     setLens,
+    rawIrPrompt,
+    activeDepthTier,
   } = props;
 
   return (
     <section className="spe-workspace" aria-labelledby="ws-title">
+      <FeaturesHub currentView="workspace" onNavigate={props.onNavigate} />
       <header className="spe-ws-head">
         <div>
           <p className="spe-kicker">Workspace</p>
@@ -326,6 +337,19 @@ export function Workspace(props: Props) {
               >
                 {rendered?.finalPrompt || "Shape your prompt to see it here."}
               </pre>
+              {rendered?.finalPrompt && (
+                <div style={{ margin: "1rem 0" }}>
+                  <PromptRadarInspector
+                    promptText={rendered.finalPrompt}
+                    rawIrPrompt={props.rawIrPrompt ?? undefined}
+                    activeTarget={target}
+                    activeDepthTier={props.activeDepthTier}
+                    onSelectTarget={(t) => setTarget(t)}
+                    onSelectDepthTier={props.onSelectDepthTier}
+                    onNavigate={props.onNavigate}
+                  />
+                </div>
+              )}
               <div className="spe-actions">
                 <button
                   type="button"
@@ -359,6 +383,14 @@ export function Workspace(props: Props) {
                 >
                   PDF
                 </button>
+                <MarkdownExportButton
+                  promptText={rendered?.finalPrompt || ""}
+                  rawIrPrompt={rawIrPrompt}
+                  category={category}
+                  depthTier={activeDepthTier}
+                  sha256={sha256}
+                  disabled={!rendered?.finalPrompt}
+                />
                 <label className="spe-ghost file">
                   Import .spe / JSON
                   <input

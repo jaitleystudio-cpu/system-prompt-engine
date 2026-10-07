@@ -15,6 +15,12 @@ import {
   bindEffectiveSurfaces,
   deliveryForReceipt,
 } from "./engine/delivery-policy.mjs";
+import {
+  synthesizeSystemPrompt,
+  DEFAULT_DEPTH_TIER,
+  type DepthTier,
+} from "./engine/promptSynthesizer";
+import { MarkdownExportButton } from "./engine/markdownExport";
 import { fromK3QualityRequest } from "./engine/quality-request.mjs";
 import { createRawRequestCustody, renderSafeFallbackPrompt } from "./engine/core-b.mjs";
 import { QualityReceiptPanel } from "./workspace/QualityReceiptPanel";
@@ -65,6 +71,8 @@ import { NotFound } from "./shell/NotFound";
 import { SkipLink } from "./shell/SkipLink";
 import { EMPTY_IDEA_MESSAGE } from "./shell/shellGuards";
 import { WebsiteProduct } from "./website/WebsiteProduct";
+import { FeaturesHub } from "./engine/FeaturesHub";
+import { PromptRadarInspector } from "./engine/PromptRadarInspector";
 import { SeoHead } from "./ui/SeoHead";
 import { DotPattern } from "./ui/DotPattern";
 import { SeoContent } from "./landing/SeoContent";
@@ -229,6 +237,7 @@ export default function App() {
   const [userRequest, setUserRequest] = useState("");
   const [category, setCategory] = useState<CategoryId>("AI Assistant");
   const [target, setTarget] = useState<TargetId>("any");
+  const [depthTier, setDepthTier] = useState<DepthTier>(DEFAULT_DEPTH_TIER);
   const [intent, setIntent] = useState(() => defaultIntentLens(""));
   const [intentProvenance, setIntentProvenance] =
     useState<IntentProvenance>("AUTO_DERIVED_INTENT");
@@ -243,6 +252,7 @@ export default function App() {
   const [rendered, setRendered] = useState<ReturnType<
     typeof renderPromptArtifact
   > | null>(null);
+  const [rawIrPrompt, setRawIrPrompt] = useState<string | null>(null);
   const [artifact, setArtifact] = useState<SpeArtifactV1 | null>(null);
   const [safeFallback, setSafeFallback] = useState<{ prompt: string } | null>(null);
   const [qualityView, setQualityView] = useState<{
@@ -360,6 +370,7 @@ export default function App() {
     revision.current += 1;
     setResult(null);
     setRendered(null);
+    setRawIrPrompt(null);
     setArtifact(null);
     setError(null);
     setEnvelope(null);
@@ -430,6 +441,36 @@ export default function App() {
     }
   };
 
+  const handleSelectDepthTier = useCallback(
+    (newTier: DepthTier) => {
+      setDepthTier(newTier);
+      if (rawIrPrompt) {
+        const updated = synthesizeSystemPrompt(rawIrPrompt, {
+          target,
+          category,
+          depthTier: newTier,
+        });
+        setRendered((prev) => (prev ? { ...prev, finalPrompt: updated } : prev));
+      }
+    },
+    [rawIrPrompt, target, category],
+  );
+
+  const handleSelectTarget = useCallback(
+    (newTarget: TargetId) => {
+      setTarget(newTarget);
+      if (rawIrPrompt) {
+        const updated = synthesizeSystemPrompt(rawIrPrompt, {
+          target: newTarget,
+          category,
+          depthTier,
+        });
+        setRendered((prev) => (prev ? { ...prev, finalPrompt: updated } : prev));
+      }
+    },
+    [rawIrPrompt, category, depthTier],
+  );
+
   const compile = useCallback(
     async (requestText?: string) => {
       const rawUser = requestText ?? userRequest;
@@ -453,6 +494,7 @@ export default function App() {
       setError(null);
       setResult(null);
       setRendered(null);
+      setRawIrPrompt(null);
       setArtifact(null);
       setSafeFallback(null);
       setQualityView(null);
@@ -564,9 +606,14 @@ export default function App() {
           const decision = qualityOut
             ? deliveryForReceipt(qualityOut)
             : deliveryForQualityMiss();
-          const surfaces = bindEffectiveSurfaces(prompt.finalPrompt, qualityOut);
+          const surfaces = (bindEffectiveSurfaces(prompt.finalPrompt, qualityOut), bindEffectiveSurfaces(prompt.finalPrompt, qualityOut, {
+            target,
+            category,
+            depthTier,
+          }));
           const shown = { ...prompt, finalPrompt: surfaces.display };
           setRendered(shown);
+          setRawIrPrompt(prompt.finalPrompt);
           const spe = await buildSpeArtifact({
             user_request: goal,
             category,
@@ -647,7 +694,7 @@ export default function App() {
         if (requestRevision === revision.current) setBusy(false);
       }
     },
-    [userRequest, intent, category, target, publicSource, publicDepth],
+    [userRequest, intent, category, target, depthTier, publicSource, publicDepth],
   );
 
   const onCopy = async () => {
@@ -890,6 +937,9 @@ export default function App() {
           />
         ) : view === "home" && (
           <>
+            <div style={{ maxWidth: "1200px", margin: "1rem auto 0", padding: "0 1.5rem" }}>
+              <FeaturesHub currentView="home" onNavigate={setView} />
+            </div>
             <Hero
               onReset={() => {
                 invalidate();
@@ -930,6 +980,19 @@ export default function App() {
               onExport={onExportSpe}
               onNavigate={setView}
             />
+            {rendered?.finalPrompt && (
+              <div style={{ maxWidth: "1200px", margin: "1.5rem auto", padding: "0 1.5rem" }}>
+                <PromptRadarInspector
+                  promptText={rendered.finalPrompt}
+                  rawIrPrompt={rawIrPrompt ?? undefined}
+                  activeTarget={target}
+                  activeDepthTier={depthTier}
+                  onSelectTarget={handleSelectTarget}
+                  onSelectDepthTier={handleSelectDepthTier}
+                  onNavigate={setView}
+                />
+              </div>
+            )}
             <HomeQuiet
               onCreate={() => {
                 setView("create");
@@ -947,6 +1010,7 @@ export default function App() {
         {!notFound && (view === "create" || view === "code") && (
           <section className="spe-create" aria-labelledby="create-title">
             <DotPattern surface="create" />
+            <FeaturesHub currentView={view} onNavigate={setView} />
             <header className="spe-create-head">
               <p className="spe-kicker">{view === "code" ? "Code" : "Create"}</p>
               <h1 id="create-title">
@@ -1084,6 +1148,17 @@ export default function App() {
               <section className="spe-create-result" aria-label="Your prompt">
                 <h2>Your prompt</h2>
                 <pre tabIndex={0}>{rendered.finalPrompt}</pre>
+                <div style={{ margin: "1rem 0" }}>
+                  <PromptRadarInspector
+                    promptText={rendered.finalPrompt}
+                    rawIrPrompt={rawIrPrompt ?? undefined}
+                    activeTarget={target}
+                    activeDepthTier={depthTier}
+                    onSelectTarget={handleSelectTarget}
+                    onSelectDepthTier={handleSelectDepthTier}
+                    onNavigate={setView}
+                  />
+                </div>
                 <QualityReceiptPanel receipt={qualityView} fallback={false} />
                 <div className="spe-actions">
                   <button type="button" className="spe-build" onClick={() => void onCopy()}>
@@ -1103,6 +1178,14 @@ export default function App() {
                   <button type="button" className="spe-ghost" onClick={onExportPdf}>
                     PDF
                   </button>
+                  <MarkdownExportButton
+                    promptText={rendered?.finalPrompt || ""}
+                    rawIrPrompt={rawIrPrompt}
+                    category={category}
+                    depthTier={depthTier}
+                    sha256={sha256}
+                    disabled={!rendered?.finalPrompt}
+                  />
                   <button
                     type="button"
                     className="spe-ghost"
@@ -1241,6 +1324,7 @@ export default function App() {
               intent={intent}
               updateIntentField={updateIntentField}
               rendered={rendered}
+              rawIrPrompt={rawIrPrompt}
               artifact={artifact}
               error={error}
               result={result}
@@ -1263,6 +1347,9 @@ export default function App() {
               setMode={setMode}
               lens={lens}
               setLens={setLens}
+              activeDepthTier={depthTier}
+              onSelectDepthTier={handleSelectDepthTier}
+              onNavigate={setView}
             />
 
             <section className="spe-workspace" aria-labelledby="hist-mini">
