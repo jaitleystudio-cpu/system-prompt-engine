@@ -1,6 +1,6 @@
 # SPE-R9-H Studio perf + a11y evidence
 
-- subject SHA: `30c6657a41fb24d3aec55ba017f1e9927e432fb5`
+- subject SHA: `f406fb709bafafdb2714d1e858768c81bcc1bc80`
 - command: `npm run measure:studio-perf-a11y` (in `apps/web`)
 - field CWV: **UNKNOWN** (not measured in field; not faked; `pass: false`)
 - lab frames: `measure.json` → `frames` (`BROWSER_HARNESS` MEASURED rAF intervals only)
