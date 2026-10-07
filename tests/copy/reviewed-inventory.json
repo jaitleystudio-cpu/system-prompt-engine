@@ -20853,58 +20853,10 @@
       "text": "MEASURED"
     },
     {
-      "id": "c3ea52c0708667088753",
-      "file": "apps/web/src/website-studio/performance/measureScene.ts",
-      "depth": "PRODUCT",
-      "text": "PERFORMANCE_MEASUREMENT_INVALID"
-    },
-    {
       "id": "239fa4f0dab49412b449",
       "file": "apps/web/src/website-studio/performance/measureScene.ts",
       "depth": "PRODUCT",
       "text": "PERFORMANCE_MEASUREMENT_REJECTED: caller-supplied values alone cannot declare MEASURED; verified browser telemetry harness required"
-    },
-    {
-      "id": "d0d138fcdd46aa9f802c",
-      "file": "apps/web/src/website-studio/performance/measureScene.ts",
-      "depth": "PRODUCT",
-      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: browser metadata required"
-    },
-    {
-      "id": "b5337b959c03babcefb4",
-      "file": "apps/web/src/website-studio/performance/measureScene.ts",
-      "depth": "PRODUCT",
-      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: minimum 10 warmup frames must be discarded"
-    },
-    {
-      "id": "ff0c4855f125285d40c9",
-      "file": "apps/web/src/website-studio/performance/measureScene.ts",
-      "depth": "PRODUCT",
-      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: minimum 60 sampled frames required"
-    },
-    {
-      "id": "a6b912927dde79905540",
-      "file": "apps/web/src/website-studio/performance/measureScene.ts",
-      "depth": "PRODUCT",
-      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: statistical telemetry percentile mismatch"
-    },
-    {
-      "id": "412f4ef2b452b15e305d",
-      "file": "apps/web/src/website-studio/performance/measureScene.ts",
-      "depth": "PRODUCT",
-      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: telemetry must originate from BROWSER_HARNESS"
-    },
-    {
-      "id": "d00f38bc0f15c73880a5",
-      "file": "apps/web/src/website-studio/performance/measureScene.ts",
-      "depth": "PRODUCT",
-      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: valid DPR required"
-    },
-    {
-      "id": "6129bd766c7607b9cb65",
-      "file": "apps/web/src/website-studio/performance/measureScene.ts",
-      "depth": "PRODUCT",
-      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED: valid viewport required"
     },
     {
       "id": "61a8133b2a6d49edbed8",
@@ -20929,6 +20881,348 @@
       "file": "apps/web/src/website-studio/performance/measureScene.ts",
       "depth": "PRODUCT",
       "text": "string"
+    },
+    {
+      "id": "05d8192d6b86433d63d4",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "viewport and DPR copied from another environment"
+    },
+    {
+      "id": "0969d2d252e85d044aa1",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "AGGREGATE_MEASURED_WITHOUT_EVERY_ENVIRONMENT_MEASURED"
+    },
+    {
+      "id": "0e517cbfc5a987b3f54c",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_SAMPLES_DIGEST_MISMATCH"
+    },
+    {
+      "id": "0f407e52ef59f0aaf13b",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "PERFORMANCE_MEASUREMENT_UNVERIFIED:"
+    },
+    {
+      "id": "11b143e488bd3d0bace3",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "MOBILE_MIRROR_DISAGREES_WITH_ENVIRONMENT"
+    },
+    {
+      "id": "1868bddf82b81faa279c",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "frame samples required"
+    },
+    {
+      "id": "1dc55ceb68c771916a6a",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "frame samples derived from another environment"
+    },
+    {
+      "id": "20451b74a533d4f24a35",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_ENVIRONMENT_CLASS_MISMATCH"
+    },
+    {
+      "id": "238c2b2fc9b323ffa3cc",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "telemetry must originate from BROWSER_HARNESS"
+    },
+    {
+      "id": "251c67bc9be130d9b011",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "FRAME_VALUES_WITHOUT_ENVIRONMENT_RECEIPTS"
+    },
+    {
+      "id": "27f1fc7d538c57074ea0",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "statistical telemetry percentile mismatch"
+    },
+    {
+      "id": "2f2e96dc7a58a5544298",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "P50"
+    },
+    {
+      "id": "32a2c9d49146c4282cdc",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "CRUX"
+    },
+    {
+      "id": "35b9d27c74d6d66218c3",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_MEASURED_WITHOUT_BROWSER_TELEMETRY"
+    },
+    {
+      "id": "4504ea0095283bd05766",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "timestamp copied from another environment"
+    },
+    {
+      "id": "46f2740db66842187733",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_INSUFFICIENT_WARMUP"
+    },
+    {
+      "id": "4c57f1a9ff4df78cc2ac",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "FIELD_PASS_WITH_UNKNOWN_METRIC"
+    },
+    {
+      "id": "4d0ed7773a665c6b0e00",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "MOBILE_VIEWPORT_NOT_MOBILE"
+    },
+    {
+      "id": "4d27813500bb25c75afa",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_MISSING_FRAME_SAMPLES"
+    },
+    {
+      "id": "4dc860e95afcbae2363f",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "environment class must be DESKTOP or MOBILE"
+    },
+    {
+      "id": "5cf1f680f7bdc292e20a",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "DESKTOP_MIRROR_DISAGREES_WITH_ENVIRONMENT"
+    },
+    {
+      "id": "5fa107498f916f240dfc",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_SAMPLE_COUNT_MISMATCH"
+    },
+    {
+      "id": "61ff10c9f8954d81001c",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "browser metadata required"
+    },
+    {
+      "id": "624bc6e1e8e6570f20a0",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "MOBILE_SAMPLES_COPIED_FROM_DESKTOP"
+    },
+    {
+      "id": "68c508b2bf7cfab72c91",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "valid DPR required"
+    },
+    {
+      "id": "71af7ee1edb563b2e1a5",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "P99"
+    },
+    {
+      "id": "7afb7888d620281ca2a5",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "desktop"
+    },
+    {
+      "id": "7c08ef55559fdd50408a",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_DPR_MISSING"
+    },
+    {
+      "id": "87210c6b98795eb6156f",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "mobile"
+    },
+    {
+      "id": "894a7c95e2967a45edde",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "FIELD_METRIC_WITHOUT_FIELD_EVIDENCE"
+    },
+    {
+      "id": "8cf524a48eb279d4f3d8",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "user agent required"
+    },
+    {
+      "id": "8f562aa028b3c5fbee7e",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "DESKTOP_VIEWPORT_NOT_DESKTOP"
+    },
+    {
+      "id": "948f04c6c6bb1e4e80c6",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "MEASURED_WITHOUT_ENVIRONMENT_RECEIPTS"
+    },
+    {
+      "id": "9692896076269fcf58a8",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "MOBILE_SAMPLES_DERIVED_FROM_DESKTOP"
+    },
+    {
+      "id": "9739f8cc7878760e41fe",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "DESKTOP"
+    },
+    {
+      "id": "9961c8bf02abd00afb26",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "measurement timestamp required"
+    },
+    {
+      "id": "9de001200b4f2e147d6b",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "MOBILE"
+    },
+    {
+      "id": "9e702055aa85defef4d0",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_RECEIPT_HASH_MISMATCH"
+    },
+    {
+      "id": "a33165d899e3a9ffde37",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "mobile receipt viewport is not a mobile viewport"
+    },
+    {
+      "id": "b067848fbcffb9f90535",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "frame samples copied from another environment"
+    },
+    {
+      "id": "b3830ed4802427263dea",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "FIELD_PASS_WITHOUT_FIELD_EVIDENCE"
+    },
+    {
+      "id": "b5db6a9e8d62355b3da0",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "ANALYTICAL_ESTIMATE"
+    },
+    {
+      "id": "bdd7d36cbd04242b0746",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_INCONSISTENT_WITH_SAMPLES"
+    },
+    {
+      "id": "bff022911431c7020f01",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_USER_AGENT_MISSING"
+    },
+    {
+      "id": "c608336361678fd20754",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "frame samples must be finite positive intervals"
+    },
+    {
+      "id": "c61593ae4c2a67c06f21",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "P95"
+    },
+    {
+      "id": "cee16e903038e2f89c1d",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_VIEWPORT_MISSING"
+    },
+    {
+      "id": "cfcd1dc6eeaa98d84689",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "valid viewport required"
+    },
+    {
+      "id": "d2ced1979bdeaeccf081",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "minimum 60 sampled frames required"
+    },
+    {
+      "id": "d4df70e1692b99855f86",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "number"
+    },
+    {
+      "id": "e406131d884c2c0fa5b1",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "desktop receipt viewport is not a desktop viewport"
+    },
+    {
+      "id": "e485468e510b2cdd0001",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "FIELD_RUM"
+    },
+    {
+      "id": "e83d14dca3b76e311f18",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "_INSUFFICIENT_SAMPLES"
+    },
+    {
+      "id": "eac40ba0aa0cfdc2f8c6",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "minimum 10 warmup frames must be discarded"
+    },
+    {
+      "id": "eb7f381bd04c37d93c63",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "NONE"
+    },
+    {
+      "id": "eecddea0b0ddb24efe1d",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "sample count does not match frame samples"
+    },
+    {
+      "id": "f9bd4976a35ce004de7a",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "FIELD_STATUS_WITHOUT_FIELD_EVIDENCE"
     },
     {
       "id": "9ee3fcf74cf24ec1311e",
