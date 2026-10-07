@@ -54,6 +54,30 @@ async function main() {
         });
         console.log("✓ Saved spe_monopoly_cross_model_transcompiler.png");
       }
+
+      // 4. Capture Symbolic Logic (FOL-CV) Tab
+      const logicTab = page.locator("button:has-text('Symbolic Logic (FOL)')").first();
+      if (await logicTab.isVisible()) {
+        await logicTab.click();
+        await page.waitForTimeout(800);
+        await page.screenshot({
+          path: resolve(BRAIN_DIR, "spe_monopoly_logic_constraint_fol.png"),
+          fullPage: false,
+        });
+        console.log("✓ Saved spe_monopoly_logic_constraint_fol.png");
+      }
+
+      // 5. Capture Swarm Topology Compiler Tab
+      const swarmTab = page.locator("button:has-text('Swarm Topology')").first();
+      if (await swarmTab.isVisible()) {
+        await swarmTab.click();
+        await page.waitForTimeout(800);
+        await page.screenshot({
+          path: resolve(BRAIN_DIR, "spe_monopoly_swarm_topology.png"),
+          fullPage: false,
+        });
+        console.log("✓ Saved spe_monopoly_swarm_topology.png");
+      }
     }
   } catch (err) {
     console.error("Browser screenshot error:", err.message);

@@ -64,7 +64,9 @@
     "test:promptfoo-exporter": "node --experimental-strip-types scripts/test-promptfoo-exporter.mjs",
     "test:prompt-mutation": "node --experimental-strip-types scripts/test-prompt-mutation.mjs",
     "test:invariant-coverage": "node --experimental-strip-types scripts/test-invariant-coverage.mjs",
-    "test:model-transcompiler": "node --experimental-strip-types scripts/test-model-transcompiler.mjs"
+    "test:model-transcompiler": "node --experimental-strip-types scripts/test-model-transcompiler.mjs",
+    "test:logic-constraint": "node --experimental-strip-types scripts/test-logic-constraint.mjs",
+    "test:swarm-topology": "node --experimental-strip-types scripts/test-swarm-topology.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",

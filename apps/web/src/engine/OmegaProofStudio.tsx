@@ -9,6 +9,8 @@ import { generatePromptfooConfig } from "./promptfooExporter";
 import { evaluatePromptMutationSuite, type PromptMutationReport } from "./promptMutationTesting";
 import { buildInvariantCoverageGraph, type InvariantCoverageGraphReport } from "./invariantCoverageGraph";
 import { transcompileAllDialects, type ModelDialect } from "./modelTranscompiler";
+import { verifySymbolicConstraints, type LogicConstraintReport } from "./logicConstraintVerifier";
+import { compileSwarmTopology, type SwarmTopologyBundle } from "./swarmTopologyCompiler";
 
 export interface OmegaProofStudioProps {
   initialPrompt?: string;
@@ -38,7 +40,18 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
 }) => {
   const [promptText, setPromptText] = useState(initialPrompt);
   const [activeTab, setActiveTab] = useState<
-    "diagnostics" | "gym" | "firewall" | "twin" | "receipt" | "community" | "promptfoo" | "mutation" | "coverage" | "transcompiler"
+    | "diagnostics"
+    | "gym"
+    | "firewall"
+    | "twin"
+    | "receipt"
+    | "community"
+    | "promptfoo"
+    | "mutation"
+    | "coverage"
+    | "transcompiler"
+    | "logic"
+    | "swarm"
   >("diagnostics");
   const [seed] = useState(1337);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
@@ -81,6 +94,16 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
   // 7. Cross-Model Transcompilations
   const transcompiledDialects = useMemo(() => {
     return transcompileAllDialects(promptText);
+  }, [promptText]);
+
+  // 8. Symbolic Logic Constraint Verification
+  const logicReport: LogicConstraintReport = useMemo(() => {
+    return verifySymbolicConstraints(promptText);
+  }, [promptText]);
+
+  // 9. Multi-Agent Swarm Topology
+  const swarmBundle: SwarmTopologyBundle = useMemo(() => {
+    return compileSwarmTopology(promptText);
   }, [promptText]);
 
   // 5. Simulated Retrieval Firewall Data
@@ -249,6 +272,8 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
           { key: "coverage", label: "Invariant Graph", count: `${coverageReport.overallCoverageScore.toFixed(0)}%` },
           { key: "transcompiler", label: "Transcompiler", count: "5 Run" },
           { key: "firewall", label: "Retrieval Firewall", count: firewallResult.untrustedChunksFiltered },
+          { key: "logic", label: "Symbolic Logic (FOL)", count: logicReport.isParadoxFree ? "SAT" : "PARADOX" },
+          { key: "swarm", label: "Swarm Topology", count: "3 Agents" },
           { key: "twin", label: "Counterfactual Twin", count: "Causal Δ" },
           { key: "receipt", label: "Proof Receipt (JCS)", count: "SHA-256" },
           { key: "community", label: "🌐 Prompts.chat", count: "143k★" },
@@ -1377,6 +1402,228 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                   </div>
                 );
               })()}
+            </div>
+          )}
+
+          {/* 11. Tab: Symbolic Logic Constraint Verifier (FOL-CV) */}
+          {activeTab === "logic" && (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", color: "#f8fafc" }}>
+                    Symbolic Logic Constraint Verifier (FOL-CV)
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+                    First-Order Logic satisfiability verification detecting semantic paradoxes, authority inversions, and deadlocks.
+                  </p>
+                </div>
+                <div>
+                  <span
+                    style={{
+                      padding: "6px 14px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      backgroundColor: logicReport.isParadoxFree ? "rgba(16, 185, 129, 0.15)" : "rgba(239, 68, 68, 0.15)",
+                      color: logicReport.isParadoxFree ? "#34d399" : "#f87171",
+                      border: `1px solid ${logicReport.isParadoxFree ? "#10b981" : "#ef4444"}`,
+                    }}
+                  >
+                    {logicReport.status} ({(logicReport.satisfiabilityRatio * 100).toFixed(0)}% SAT)
+                  </span>
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginBottom: "20px" }}>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Propositions Extracted</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#f8fafc", marginTop: "4px" }}>
+                    {logicReport.propositions.length}
+                  </div>
+                </div>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Contradictions</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: logicReport.contradictions.length === 0 ? "#34d399" : "#f87171", marginTop: "4px" }}>
+                    {logicReport.contradictions.length}
+                  </div>
+                </div>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Satisfiability Ratio</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#38bdf8", marginTop: "4px" }}>
+                    {(logicReport.satisfiabilityRatio * 100).toFixed(0)}%
+                  </div>
+                </div>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Paradox Free</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: logicReport.isParadoxFree ? "#34d399" : "#f87171", marginTop: "4px" }}>
+                    {logicReport.isParadoxFree ? "YES" : "NO"}
+                  </div>
+                </div>
+              </div>
+
+              {/* Contradictions Alert */}
+              {logicReport.contradictions.length > 0 && (
+                <div style={{ marginBottom: "16px", display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {logicReport.contradictions.map((c, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        padding: "14px 16px",
+                        backgroundColor: "rgba(239, 68, 68, 0.1)",
+                        borderRadius: "8px",
+                        border: "1px solid rgba(239, 68, 68, 0.3)",
+                      }}
+                    >
+                      <div style={{ fontSize: "13px", fontWeight: "700", color: "#f87171", marginBottom: "6px" }}>
+                        ⚠️ {c.conflictReason}
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#cbd5e1", marginBottom: "8px" }}>
+                        <strong>Clause A [{c.propositionA}]:</strong> "{c.clauseA}"<br />
+                        <strong>Clause B [{c.propositionB}]:</strong> "{c.clauseB}"
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#34d399", backgroundColor: "rgba(16, 185, 129, 0.08)", padding: "6px 10px", borderRadius: "4px" }}>
+                        💡 <strong>Suggested Fix:</strong> {c.suggestedResolution}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Extracted FOL Propositions */}
+              <div style={{ backgroundColor: "#111827", padding: "14px 16px", borderRadius: "8px", border: "1px solid #1e293b", marginBottom: "16px" }}>
+                <div style={{ fontSize: "12px", fontWeight: "700", color: "#f8fafc", marginBottom: "10px" }}>
+                  Extracted First-Order Logic Propositions
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  {logicReport.propositions.map((p) => (
+                    <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "#0b1120", padding: "8px 12px", borderRadius: "6px" }}>
+                      <div>
+                        <span style={{ fontSize: "11px", fontWeight: "700", color: "#38bdf8", marginRight: "8px" }}>[{p.id}]</span>
+                        <span style={{ fontSize: "12px", color: "#e2e8f0" }}>{p.predicate} ({p.variableScope})</span>
+                      </div>
+                      <code style={{ fontSize: "11px", color: "#c084fc", fontFamily: "monospace" }}>{p.formalFormula}</code>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Proof Tree */}
+              <div style={{ backgroundColor: "#111827", padding: "14px 16px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                <div style={{ fontSize: "12px", fontWeight: "700", color: "#f8fafc", marginBottom: "8px" }}>
+                  Formal Proof Deductive Trace
+                </div>
+                <pre style={{ margin: 0, padding: "10px", backgroundColor: "#050811", borderRadius: "6px", color: "#34d399", fontSize: "11px", fontFamily: "monospace", maxHeight: "150px", overflowY: "auto" }}>
+                  {logicReport.formalProofProofTree.join("\n")}
+                </pre>
+              </div>
+            </div>
+          )}
+
+          {/* 12. Tab: Autonomous Swarm Topology Decompiler */}
+          {activeTab === "swarm" && (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", color: "#f8fafc" }}>
+                    Autonomous Swarm Topology Decompiler & Compiler
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+                    Decomposes monolithic system prompt into an enterprise 3-tier multi-agent system with AGENTS.md and CrewAI/LangGraph scaffolding.
+                  </p>
+                </div>
+                <div>
+                  <span
+                    style={{
+                      padding: "6px 14px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      backgroundColor: "rgba(168, 85, 247, 0.15)",
+                      color: "#c084fc",
+                      border: "1px solid #9333ea",
+                    }}
+                  >
+                    Topology: {swarmBundle.topologyName} (3 Active Agents)
+                  </span>
+                </div>
+              </div>
+
+              {/* 3 Agent Cards */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", marginBottom: "20px" }}>
+                {swarmBundle.agents.map((a) => (
+                  <div
+                    key={a.name}
+                    style={{
+                      backgroundColor: "#111827",
+                      borderRadius: "8px",
+                      border: "1px solid #1e293b",
+                      padding: "14px 16px",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                        <span style={{ fontSize: "13px", fontWeight: "700", color: "#f8fafc" }}>{a.name}</span>
+                        <span style={{ fontSize: "10px", padding: "2px 6px", borderRadius: "4px", backgroundColor: "#1e293b", color: "#38bdf8" }}>
+                          {a.authorityLevel}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "8px" }}>
+                        {a.role}
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#cbd5e1", marginBottom: "10px" }}>
+                        {a.goal}
+                      </div>
+                    </div>
+                    <div style={{ fontSize: "10px", color: "#64748b" }}>
+                      Tools: {a.toolsPermitted.join(", ")}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Generated AGENTS.md */}
+              <div style={{ backgroundColor: "#111827", padding: "14px 16px", borderRadius: "8px", border: "1px solid #1e293b", marginBottom: "16px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                  <div style={{ fontSize: "12px", fontWeight: "700", color: "#f8fafc" }}>
+                    Compiled AGENTS.md (Enterprise Governance Standard)
+                  </div>
+                  <button
+                    onClick={() => {
+                      if (navigator.clipboard) {
+                        void navigator.clipboard.writeText(swarmBundle.agentsMarkdown);
+                      }
+                    }}
+                    style={{
+                      backgroundColor: "#1e293b",
+                      color: "#38bdf8",
+                      border: "1px solid #334155",
+                      borderRadius: "4px",
+                      padding: "4px 10px",
+                      fontSize: "11px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    📋 Copy AGENTS.md
+                  </button>
+                </div>
+                <pre style={{ margin: 0, padding: "12px", backgroundColor: "#050811", borderRadius: "6px", color: "#cbd5e1", fontSize: "10px", fontFamily: "monospace", maxHeight: "160px", overflowY: "auto", whiteSpace: "pre-wrap" }}>
+                  {swarmBundle.agentsMarkdown}
+                </pre>
+              </div>
+
+              {/* CrewAI YAML */}
+              <div style={{ backgroundColor: "#111827", padding: "14px 16px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                <div style={{ fontSize: "12px", fontWeight: "700", color: "#f8fafc", marginBottom: "8px" }}>
+                  CrewAI Configuration (agents.yaml)
+                </div>
+                <pre style={{ margin: 0, padding: "12px", backgroundColor: "#050811", borderRadius: "6px", color: "#f472b6", fontSize: "10px", fontFamily: "monospace", maxHeight: "140px", overflowY: "auto", whiteSpace: "pre-wrap" }}>
+                  {swarmBundle.crewAiYaml}
+                </pre>
+              </div>
             </div>
           )}
         </div>
