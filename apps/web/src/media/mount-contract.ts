@@ -7,9 +7,11 @@
  * builds the pinned whisper.cpp commit into this pack (static, no absolute
  * rpath). No sibling-worktree path.
  *
- * productMediaV1 stays NOT_PASS in source. The route may report a pass only
- * after one runtime journey (absence, model ingress, CLI build, LOCAL_NEURAL,
- * user-audio egress 0). A missing journey leaves remainingGap set.
+ * productMediaV1 stays NOT_PASS in source and at runtime. The route is an
+ * evidence writer: after one runtime journey (absence, model ingress, CLI
+ * build, LOCAL_NEURAL, user-audio egress 0) it reports runtimeJourney
+ * COMPLETE with remainingGap INDEPENDENT_VERIFICATION_REQUIRED, never a pass.
+ * A missing journey leaves the concrete remainingGap set.
  */
 export const MEDIA_PRODUCT_ROUTE_PATH = "/media" as const;
 export const MEDIA_PRODUCT_COMPONENT_NAME = "MediaProductPanel" as const;

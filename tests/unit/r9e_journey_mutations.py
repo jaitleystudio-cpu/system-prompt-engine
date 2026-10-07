@@ -3,7 +3,9 @@
 
 Copies spe_runtime + the hook tests into a temp dir, applies one deliberate
 defect at a time to spe_runtime/journey_observation.py (or a wiring file), and
-requires tests/unit/test_r9e_journey_observation.py to FAIL. Production source
+requires tests/unit/test_r9e_journey_observation.py plus
+tests/unit/test_r9e_authority_separation.py to FAIL. The authority mutants
+restore runtime self-promotion of PRODUCT_MEDIA_V1. Production source
 is never modified. Builder regression only — not qualification.
 
 Usage: python tests/unit/r9e_journey_mutations.py
@@ -48,7 +50,21 @@ MUTANTS: list[tuple[str, str, str, str]] = [
      '"verdict": spec["hold_value"],', '"verdict": "PASS" if not blocking else spec["hold_value"],'),
     ("media-owner-skips-pack-state", "spe_runtime/media_product/local_backend.py",
      'JOURNEY_OBSERVER.record(\n            "PACK_STATE",', 'JOURNEY_OBSERVER.record(\n            "PROCESS_START",'),
+    # Authority separation: the writer must never promote PRODUCT_MEDIA_V1.
+    ("restore-gates-gap-none-pass", "spe_runtime/media_product/local_backend.py",
+     '    verdict = "NOT_PASS"\n    runtime_journey =',
+     '    verdict = "NOT_PASS"\n    if gap == "NONE":\n        verdict = "PASS"\n    runtime_journey ='),
+    ("restore-commit-return-pass", "spe_runtime/media_product/local_backend.py",
+     'return "NOT_PASS", INDEPENDENT_VERIFICATION_REQUIRED, False',
+     'return "PASS", "NONE", True'),
+    ("route-host-health-reports-pass", "spe_runtime/media_product/route_host.py",
+     '"productMediaV1": gates["PRODUCT_MEDIA_V1"],',
+     '"productMediaV1": "PASS" if gates["RUNTIME_JOURNEY"] == "COMPLETE" else gates["PRODUCT_MEDIA_V1"],'),
+    ("route-host-logs-pass", "spe_runtime/media_product/route_host.py",
+     'f"RUNTIME_JOURNEY COMPLETE PRODUCT_MEDIA_V1 {verdict} remainingGap={gap} writerPromoted=false",',
+     'f"RUNTIME_JOURNEY COMPLETE PRODUCT_MEDIA_V1 PASS remainingGap={gap} writerPromoted=false",'),
 ]
+TESTS = ["tests/unit/test_r9e_journey_observation.py", "tests/unit/test_r9e_authority_separation.py"]
 
 
 def main() -> int:
@@ -58,7 +74,11 @@ def main() -> int:
         try:
             shutil.copytree(REPO / "spe_runtime", tmp / "spe_runtime", ignore=shutil.ignore_patterns("__pycache__"))
             (tmp / "tests" / "unit").mkdir(parents=True)
-            shutil.copy2(REPO / "tests/unit/test_r9e_journey_observation.py", tmp / "tests/unit/")
+            for test in TESTS:
+                shutil.copy2(REPO / test, tmp / "tests/unit/")
+            (tmp / "apps/web/src/media").mkdir(parents=True)
+            for ui in ("MediaRoute.tsx", "mount-contract.ts"):
+                shutil.copy2(REPO / "apps/web/src/media" / ui, tmp / "apps/web/src/media/")
             (tmp / "media-pack").mkdir()
             shutil.copy2(REPO / "media-pack/PACK_MANIFEST.json", tmp / "media-pack/")
             target = tmp / rel
@@ -68,7 +88,7 @@ def main() -> int:
                 return 2
             target.write_text(source.replace(needle, replacement), encoding="utf-8")
             proc = subprocess.run(
-                [sys.executable, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider", "tests/unit/test_r9e_journey_observation.py"],
+                [sys.executable, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider", *TESTS],
                 cwd=tmp, capture_output=True, text=True, env={"PYTHONPATH": str(tmp), "PATH": "/usr/bin:/bin"},
             )
             if proc.returncode == 0:
