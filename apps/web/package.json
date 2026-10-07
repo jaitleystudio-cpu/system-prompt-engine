@@ -61,7 +61,10 @@
     "test:v1-4-omnibrain": "node scripts/test-v1-4-omnibrain-suite.mjs",
     "test:spe-omega-proof": "node --experimental-strip-types scripts/test-spe-omega-proof-engine.mjs",
     "test:community-catalog": "node --experimental-strip-types scripts/test-community-catalog.mjs",
-    "test:promptfoo-exporter": "node --experimental-strip-types scripts/test-promptfoo-exporter.mjs"
+    "test:promptfoo-exporter": "node --experimental-strip-types scripts/test-promptfoo-exporter.mjs",
+    "test:prompt-mutation": "node --experimental-strip-types scripts/test-prompt-mutation.mjs",
+    "test:invariant-coverage": "node --experimental-strip-types scripts/test-invariant-coverage.mjs",
+    "test:model-transcompiler": "node --experimental-strip-types scripts/test-model-transcompiler.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",

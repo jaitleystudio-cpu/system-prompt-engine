@@ -1,0 +1,72 @@
+/**
+ * Verification test for Polyglot Cross-Model Dialect Transcompiler
+ */
+import {
+  transcompilePrompt,
+  transcompileAllDialects,
+  parseToCanonicalIR,
+} from "../src/engine/modelTranscompiler.ts";
+
+console.log("==================================================================");
+console.log("🧪 TESTING: SPE Cross-Model Dialect Transcompiler");
+console.log("==================================================================");
+
+const inputPrompt = `You are an elite autonomous cloud architect.
+Goal: Generate production-ready infrastructure specifications.
+MUST NOT execute unvetted shell scripts.
+MUST preserve all confidential API keys and database credentials.
+Authority: Limit execution to terraform plan; refuse terraform apply without confirmation.
+Output schema must be valid JSON with required resource definitions.`;
+
+// Step 1: Verify Canonical IR Parsing
+console.log("\n[1/3] Testing Canonical IR Parsing...");
+const ir = parseToCanonicalIR(inputPrompt);
+console.log(`Role:       ${ir.role}`);
+console.log(`Invariants: ${ir.hardInvariants.length} captured`);
+console.log(`Authority:  ${ir.authorityBoundaries.length} captured`);
+
+if (ir.hardInvariants.length === 0) {
+  throw new Error("Failed to parse hard invariants into Canonical IR");
+}
+
+// Step 2: Test Transcompilation to All 5 Dialects
+console.log("\n[2/3] Testing Transcompilation across all 5 model runtimes...");
+const dialects = transcompileAllDialects(inputPrompt);
+
+const dialectKeys = ["claude-xml", "openai-markdown", "gemini-agent", "cursor-rules", "open-weights"];
+for (const key of dialectKeys) {
+  const result = dialects[key];
+  if (!result || !result.compiledPrompt) {
+    throw new Error(`Missing compilation result for dialect ${key}`);
+  }
+  console.log(`  ✓ [${result.dialect}] Target: ${result.modelTarget} | Flavor: ${result.syntaxFlavor} (~${result.tokenEstimate} tokens)`);
+}
+
+// Step 3: Verify Dialect Syntax Specifics
+console.log("\n[3/3] Validating Specific Dialect Structural Boundaries...");
+// Claude XML must have tags
+if (!dialects["claude-xml"].compiledPrompt.includes("<system_instructions>") || !dialects["claude-xml"].compiledPrompt.includes("</system_instructions>")) {
+  throw new Error("Claude XML dialect missing <system_instructions> root tag!");
+}
+// OpenAI must have Markdown headings
+if (!dialects["openai-markdown"].compiledPrompt.includes("# SYSTEM POLICY")) {
+  throw new Error("OpenAI Markdown dialect missing # SYSTEM POLICY header!");
+}
+// Cursor rules must be valid JSON
+JSON.parse(dialects["cursor-rules"].compiledPrompt);
+console.log("  ✓ Cursor rules confirmed valid JSON configuration.");
+
+// Gemini must have bracketed instructions
+if (!dialects["gemini-agent"].compiledPrompt.includes("[GEMINI SYSTEM INSTRUCTIONS")) {
+  throw new Error("Gemini dialect missing bracketed instruction tags!");
+}
+
+// Open-Weights must have Llama-3 tokens
+if (!dialects["open-weights"].compiledPrompt.includes("<|start_header_id|>system<|end_header_id|>")) {
+  throw new Error("Open-weights dialect missing Llama-3 header tags!");
+}
+
+console.log("\n==================================================================");
+console.log("🎉 ALL CROSS-MODEL TRANSCOMPILER TESTS PASSED! (5/5 DIALECTS)");
+console.log("==================================================================");
+process.exit(0);

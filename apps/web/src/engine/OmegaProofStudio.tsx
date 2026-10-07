@@ -6,6 +6,9 @@ import { evaluateCounterfactualTwin, type CounterfactualTwinReport } from "./cou
 import { generateProofReceipt, type ProofReceiptPayload, canonicalizeJson } from "./proofReceipt";
 import { CURATED_COMMUNITY_PROMPTS, fortifyCommunityPrompt } from "./communityCatalog";
 import { generatePromptfooConfig } from "./promptfooExporter";
+import { evaluatePromptMutationSuite, type PromptMutationReport } from "./promptMutationTesting";
+import { buildInvariantCoverageGraph, type InvariantCoverageGraphReport } from "./invariantCoverageGraph";
+import { transcompileAllDialects, type ModelDialect } from "./modelTranscompiler";
 
 export interface OmegaProofStudioProps {
   initialPrompt?: string;
@@ -34,11 +37,15 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
   onClose,
 }) => {
   const [promptText, setPromptText] = useState(initialPrompt);
-  const [activeTab, setActiveTab] = useState<"diagnostics" | "gym" | "firewall" | "twin" | "receipt" | "community" | "promptfoo">("diagnostics");
+  const [activeTab, setActiveTab] = useState<
+    "diagnostics" | "gym" | "firewall" | "twin" | "receipt" | "community" | "promptfoo" | "mutation" | "coverage" | "transcompiler"
+  >("diagnostics");
   const [seed] = useState(1337);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
   const [copiedPromptfoo, setCopiedPromptfoo] = useState(false);
   const [selectedCommunityId, setSelectedCommunityId] = useState<string>("linux-terminal");
+  const [selectedDialect, setSelectedDialect] = useState<ModelDialect>("claude-xml");
+  const [copiedDialect, setCopiedDialect] = useState(false);
 
   // 1. Static Type Checking Diagnostics
   const typeDiagnostics: DiagnosticReport = useMemo(() => {
@@ -60,6 +67,21 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
   const receipt: ProofReceiptPayload = useMemo(() => {
     return generateProofReceipt(naiveBaseline, promptText, twinReport, gymReport);
   }, [promptText, twinReport, gymReport]);
+
+  // 5. Prompt Mutation Testing Report (PMS)
+  const mutationReport: PromptMutationReport = useMemo(() => {
+    return evaluatePromptMutationSuite(promptText);
+  }, [promptText]);
+
+  // 6. Invariant Coverage Graph Report (ICG)
+  const coverageReport: InvariantCoverageGraphReport = useMemo(() => {
+    return buildInvariantCoverageGraph(promptText, typeDiagnostics);
+  }, [promptText, typeDiagnostics]);
+
+  // 7. Cross-Model Transcompilations
+  const transcompiledDialects = useMemo(() => {
+    return transcompileAllDialects(promptText);
+  }, [promptText]);
 
   // 5. Simulated Retrieval Firewall Data
   const sampleHostileChunks: ContextChunk[] = [
@@ -223,6 +245,9 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
         {[
           { key: "diagnostics", label: "Static Diagnostics", count: typeDiagnostics.diagnostics.length },
           { key: "gym", label: "Hostile Gym Ω (1,024)", count: `${(gymReport.mutationKillRate * 100).toFixed(0)}%` },
+          { key: "mutation", label: "Mutation (PMS)", count: `${mutationReport.promptMutationScore.toFixed(0)}%` },
+          { key: "coverage", label: "Invariant Graph", count: `${coverageReport.overallCoverageScore.toFixed(0)}%` },
+          { key: "transcompiler", label: "Transcompiler", count: "5 Run" },
           { key: "firewall", label: "Retrieval Firewall", count: firewallResult.untrustedChunksFiltered },
           { key: "twin", label: "Counterfactual Twin", count: "Causal Δ" },
           { key: "receipt", label: "Proof Receipt (JCS)", count: "SHA-256" },
@@ -1010,6 +1035,345 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                         {bundle.githubActionsWorkflow}
                       </pre>
                     </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* 8. Tab: Prompt Mutation Testing (PMS) */}
+          {activeTab === "mutation" && (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", color: "#f8fafc" }}>
+                    Prompt Mutation Testing Engine (PMS)
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+                    Deliberately injects AST & semantic defects into the candidate prompt to test whether the qualification suite kills broken mutants.
+                  </p>
+                </div>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <span
+                    style={{
+                      padding: "6px 14px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      backgroundColor: mutationReport.promptMutationScore >= 80 ? "rgba(16, 185, 129, 0.15)" : "rgba(239, 68, 68, 0.15)",
+                      color: mutationReport.promptMutationScore >= 80 ? "#34d399" : "#f87171",
+                      border: `1px solid ${mutationReport.promptMutationScore >= 80 ? "#10b981" : "#ef4444"}`,
+                    }}
+                  >
+                    PMS: {mutationReport.promptMutationScore.toFixed(1)}% ({mutationReport.evaluationVerdict})
+                  </span>
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginBottom: "20px" }}>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Generated Mutants</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#f8fafc", marginTop: "4px" }}>
+                    {mutationReport.totalMutantsGenerated}
+                  </div>
+                </div>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Killed Mutants</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#34d399", marginTop: "4px" }}>
+                    {mutationReport.killedMutants}
+                  </div>
+                </div>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Surviving Mutants</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: mutationReport.survivingMutants === 0 ? "#38bdf8" : "#f87171", marginTop: "4px" }}>
+                    {mutationReport.survivingMutants}
+                  </div>
+                </div>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Mutation Operators</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#c084fc", marginTop: "4px" }}>
+                    10 Active
+                  </div>
+                </div>
+              </div>
+
+              {/* Mutants List */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {mutationReport.mutants.map((m) => (
+                  <div
+                    key={m.id}
+                    style={{
+                      padding: "12px 16px",
+                      borderRadius: "8px",
+                      backgroundColor: "#111827",
+                      border: `1px solid ${m.status === "killed" ? "rgba(16, 185, 129, 0.3)" : "rgba(239, 68, 68, 0.3)"}`,
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span style={{ fontSize: "12px", fontWeight: "700", color: "#38bdf8" }}>[{m.id}]</span>
+                        <span style={{ fontSize: "13px", fontWeight: "600", color: "#f8fafc" }}>{m.operatorName}</span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: "11px",
+                          fontWeight: "700",
+                          padding: "2px 8px",
+                          borderRadius: "4px",
+                          backgroundColor: m.status === "killed" ? "rgba(16, 185, 129, 0.2)" : "rgba(239, 68, 68, 0.2)",
+                          color: m.status === "killed" ? "#34d399" : "#f87171",
+                        }}
+                      >
+                        {m.status.toUpperCase()}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "6px" }}>
+                      {m.diffSummary}
+                    </div>
+                    {m.killReason && (
+                      <div style={{ fontSize: "11px", color: "#34d399", backgroundColor: "rgba(16, 185, 129, 0.08)", padding: "6px 10px", borderRadius: "4px" }}>
+                        🛡️ <strong>Killed by:</strong> {m.killReason}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 9. Tab: Invariant Coverage Graph (ICG) */}
+          {activeTab === "coverage" && (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", color: "#f8fafc" }}>
+                    Living Invariant Coverage Graph (ICG)
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+                    Mathematical traceability linking Human Intent to Type Diagnostics, Hostile Gym Families, and Mutation Operators.
+                  </p>
+                </div>
+                <div>
+                  <span
+                    style={{
+                      padding: "6px 14px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      backgroundColor: coverageReport.overallCoverageScore >= 90 ? "rgba(16, 185, 129, 0.15)" : "rgba(245, 158, 11, 0.15)",
+                      color: coverageReport.overallCoverageScore >= 90 ? "#34d399" : "#fbbf24",
+                      border: `1px solid ${coverageReport.overallCoverageScore >= 90 ? "#10b981" : "#f59e0b"}`,
+                    }}
+                  >
+                    Coverage: {coverageReport.overallCoverageScore.toFixed(1)}% ({coverageReport.verificationVerdict})
+                  </span>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginBottom: "20px" }}>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Total Invariants</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#f8fafc", marginTop: "4px" }}>
+                    {coverageReport.totalInvariants}
+                  </div>
+                </div>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Verified Nodes</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#34d399", marginTop: "4px" }}>
+                    {coverageReport.coveredInvariants}
+                  </div>
+                </div>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Traced Graph Edges</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#38bdf8", marginTop: "4px" }}>
+                    {coverageReport.edges.length}
+                  </div>
+                </div>
+                <div style={{ backgroundColor: "#111827", padding: "12px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Blind Spots</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: coverageReport.blindSpots.length === 0 ? "#34d399" : "#f87171", marginTop: "4px" }}>
+                    {coverageReport.blindSpots.length}
+                  </div>
+                </div>
+              </div>
+
+              {/* Invariants Grid */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {coverageReport.invariants.map((inv) => (
+                  <div
+                    key={inv.id}
+                    style={{
+                      padding: "14px 16px",
+                      borderRadius: "8px",
+                      backgroundColor: "#111827",
+                      border: `1px solid ${inv.status === "verified" ? "rgba(16, 185, 129, 0.3)" : "rgba(245, 158, 11, 0.3)"}`,
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span style={{ fontSize: "12px", fontWeight: "700", color: "#c084fc" }}>[{inv.id}]</span>
+                        <span style={{ fontSize: "13px", fontWeight: "600", color: "#f8fafc" }}>{inv.label}</span>
+                        <span style={{ fontSize: "10px", padding: "2px 6px", borderRadius: "4px", backgroundColor: "#1e293b", color: "#94a3b8" }}>
+                          {inv.category.toUpperCase()}
+                        </span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: "11px",
+                          fontWeight: "700",
+                          padding: "2px 8px",
+                          borderRadius: "4px",
+                          backgroundColor: inv.status === "verified" ? "rgba(16, 185, 129, 0.2)" : "rgba(245, 158, 11, 0.2)",
+                          color: inv.status === "verified" ? "#34d399" : "#fbbf24",
+                        }}
+                      >
+                        {inv.status.toUpperCase()} ({(inv.coverageRatio * 100).toFixed(0)}%)
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "12px", color: "#cbd5e1", marginBottom: "8px" }}>
+                      {inv.contractClause}
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", fontSize: "10px" }}>
+                      {inv.mappedDiagnostics.map((d) => (
+                        <span key={d} style={{ backgroundColor: "#1e293b", padding: "2px 6px", borderRadius: "4px", color: "#38bdf8" }}>
+                          Type: {d}
+                        </span>
+                      ))}
+                      {inv.mappedAttackFamilies.map((a) => (
+                        <span key={a} style={{ backgroundColor: "#1e293b", padding: "2px 6px", borderRadius: "4px", color: "#f472b6" }}>
+                          Probe: {a}
+                        </span>
+                      ))}
+                      {inv.mappedMutants.map((m) => (
+                        <span key={m} style={{ backgroundColor: "#1e293b", padding: "2px 6px", borderRadius: "4px", color: "#fbbf24" }}>
+                          Mutant: {m}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 10. Tab: Polyglot Model Transcompiler */}
+          {activeTab === "transcompiler" && (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", color: "#f8fafc" }}>
+                    Polyglot Cross-Model Dialect Transcompiler
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+                    Lowers canonical SPE IR into model-native, mathematically verified syntax dialects with target-specific hardening.
+                  </p>
+                </div>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <button
+                    onClick={() => {
+                      const text = transcompiledDialects[selectedDialect].compiledPrompt;
+                      if (navigator.clipboard) {
+                        void navigator.clipboard.writeText(text);
+                        setCopiedDialect(true);
+                        setTimeout(() => setCopiedDialect(false), 2000);
+                      }
+                    }}
+                    style={{
+                      backgroundColor: copiedDialect ? "#059669" : "#0284c7",
+                      color: "#ffffff",
+                      border: "none",
+                      padding: "8px 16px",
+                      borderRadius: "6px",
+                      fontWeight: "600",
+                      fontSize: "12px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {copiedDialect ? "✓ Copied Dialect!" : "📋 Copy Dialect"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Dialect Selector Tabs */}
+              <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
+                {(
+                  [
+                    { key: "claude-xml", label: "Claude XML", tag: "Sonnet/Opus" },
+                    { key: "openai-markdown", label: "OpenAI Markdown", tag: "GPT-4o/o3" },
+                    { key: "gemini-agent", label: "Gemini Agent", tag: "Gemini 2.0" },
+                    { key: "cursor-rules", label: "Cursor Rules", tag: ".cursorrules" },
+                    { key: "open-weights", label: "Open-Weights", tag: "Llama-3/DeepSeek" },
+                  ] as const
+                ).map((d) => (
+                  <button
+                    key={d.key}
+                    onClick={() => setSelectedDialect(d.key)}
+                    style={{
+                      padding: "8px 14px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: selectedDialect === d.key ? "700" : "500",
+                      backgroundColor: selectedDialect === d.key ? "#1e293b" : "#111827",
+                      color: selectedDialect === d.key ? "#38bdf8" : "#94a3b8",
+                      border: `1px solid ${selectedDialect === d.key ? "#0284c7" : "#1e293b"}`,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <span>{d.label}</span>
+                    <span style={{ fontSize: "10px", color: "#64748b" }}>({d.tag})</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Dialect Meta Bar */}
+              {(() => {
+                const current = transcompiledDialects[selectedDialect];
+                return (
+                  <div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        padding: "10px 14px",
+                        backgroundColor: "#0d1322",
+                        borderRadius: "8px 8px 0 0",
+                        border: "1px solid #1e293b",
+                        borderBottom: "none",
+                        fontSize: "11px",
+                      }}
+                    >
+                      <span style={{ color: "#38bdf8", fontWeight: "600" }}>
+                        🎯 Target: {current.modelTarget}
+                      </span>
+                      <span style={{ color: "#94a3b8" }}>
+                        Flavor: {current.syntaxFlavor} • ~{current.tokenEstimate} tokens
+                      </span>
+                      <span style={{ color: "#34d399" }}>
+                        🛡️ {current.safetyHardening}
+                      </span>
+                    </div>
+                    <pre
+                      style={{
+                        margin: 0,
+                        padding: "16px",
+                        borderRadius: "0 0 8px 8px",
+                        backgroundColor: "#050811",
+                        border: "1px solid #1e293b",
+                        color: "#e2e8f0",
+                        fontSize: "11px",
+                        fontFamily: "monospace",
+                        maxHeight: "360px",
+                        overflowY: "auto",
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      {current.compiledPrompt}
+                    </pre>
                   </div>
                 );
               })()}
