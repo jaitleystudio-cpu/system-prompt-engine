@@ -18819,16 +18819,16 @@
       "text": "real 3D requested"
     },
     {
+      "id": "b8f4191db588d91698c2",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "join"
+    },
+    {
       "id": "c25a74034a67699b901a",
       "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
       "depth": "PRODUCT",
       "text": "WebsiteIntentCompileError"
-    },
-    {
-      "id": "cde56736d3b8cc1ea19c",
-      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
-      "depth": "PRODUCT",
-      "text": "signup"
     },
     {
       "id": "d4672df205870b9dd66a",
