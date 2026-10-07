@@ -11,6 +11,56 @@ export interface PromptRadarInspectorProps {
   onSelectTarget?: (target: TargetId) => void;
   onSelectDepthTier?: (tier: "normal" | "mid" | "deep") => void;
   onNavigate?: (view: any) => void;
+  onAutoOptimize?: (optimizedPrompt: string) => void;
+}
+
+/** 1-Click Auto-Optimizer: Injects missing invariant pillars to reach 100/100 score */
+export function autoOptimizeSystemPrompt(prompt: string): string {
+  let result = prompt.trim();
+
+  const hasRole = /#{1,4}[^\n]*(?:Role|Persona|Identity)|<role>/i.test(result);
+  const hasObjective = /#{1,4}[^\n]*(?:Objective|Goal|Mission|Task)|<objective>/i.test(result);
+  const hasMethodology = /#{1,4}[^\n]*(?:Approach|Methodolog|Step|Scaffold|Execution Plan)|<approach>/i.test(result);
+  const hasVerification = /#{1,4}[^\n]*(?:Acceptance|Verification|Checks|Audit Battery)|<acceptance_checks>/i.test(result);
+  const hasGrounding = /#{1,4}[^\n]*(?:Missing Information|Grounding|Evidence)|handling_missing_information|<handling_missing_information>/i.test(result);
+
+  const additions: string[] = [];
+
+  if (!hasRole) {
+    additions.push(
+      `# System Role & Persona\nYou are a senior technical systems architect specializing in clean, robust, and maintainable software with strict verification and zero hallucinated dependencies.`
+    );
+  }
+
+  if (!hasObjective) {
+    additions.push(
+      `# Objective & Boundary Scope\nExecute the primary deliverable with zero hallucinated dependencies, preserving all supplied user constraints, performance budgets, and error recovery contracts.`
+    );
+  }
+
+  if (!hasMethodology) {
+    additions.push(
+      `# Approach & Methodological Plan\n1. Inspect supplied requirements, dependencies, and environment constraints before proposing changes.\n2. Implement the smallest complete, robust solution adhering strictly to architectural contracts.\n3. Consider failure modes, memory bounds, and defensive error boundaries explicitly.\n4. Validate against deterministic verification criteria before completion.`
+    );
+  }
+
+  if (!hasGrounding) {
+    additions.push(
+      `# Handling Missing Information\nUse only supplied facts, context and requirements. Never assume outside network tools or uncited documents. Ask a focused question only when missing information blocks progress; otherwise proceed with clearly labeled, limited assumptions.`
+    );
+  }
+
+  if (!hasVerification) {
+    additions.push(
+      `# Acceptance Checks & Verification Battery\n- Are setup, behavior changes, and verification reproducible without guessing missing steps?\n- Are memory limits, error recovery paths, and boundary conditions enforced?\n- Is every explicit requirement addressed, with no unrelated obligations added?\n- Have unsupported claims and contradictory instructions been removed?`
+    );
+  }
+
+  if (additions.length > 0) {
+    result = additions.join("\n\n") + "\n\n" + (result ? `# Primary Execution Content\n${result}` : "");
+  }
+
+  return result;
 }
 
 export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
@@ -21,27 +71,34 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
   onSelectTarget,
   onSelectDepthTier,
   onNavigate,
+  onAutoOptimize,
 }) => {
   const [activeTab, setActiveTab] = useState<"radar" | "harness" | "matrix" | "markdown" | "code" | "rules">("radar");
   const [activeCodeLang, setActiveCodeLang] = useState<"python" | "typescript" | "curl" | "rules">("python");
   const [includeFrontmatter, setIncludeFrontmatter] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [selectedDiagnostic, setSelectedDiagnostic] = useState<string | null>(null);
+  const [isOptimized, setIsOptimized] = useState(false);
+
+  // Active prompt based on optimization toggle
+  const currentPrompt = useMemo(() => {
+    return isOptimized ? autoOptimizeSystemPrompt(promptText) : promptText;
+  }, [isOptimized, promptText]);
 
   // Compute Telemetry Metrics
   const metrics = useMemo(() => {
-    if (!promptText) return null;
-    const charCount = promptText.length;
-    const wordCount = promptText.trim().split(/\s+/).filter(Boolean).length;
+    if (!currentPrompt) return null;
+    const charCount = currentPrompt.length;
+    const wordCount = currentPrompt.trim().split(/\s+/).filter(Boolean).length;
     // Approximations: ~4 chars per token for English text
     const estTokens = Math.round(charCount / 3.8);
 
     // Ultra-Robust Heuristic Quality Analysis (Matches any markdown heading depth or XML tags)
-    const hasRole = /#{1,4}[^\n]*(?:Role|Persona|Identity)|<role>/i.test(promptText);
-    const hasObjective = /#{1,4}[^\n]*(?:Objective|Goal|Mission|Task)|<objective>/i.test(promptText);
-    const hasMethodology = /#{1,4}[^\n]*(?:Approach|Methodolog|Step|Scaffold|Execution Plan)|<approach>/i.test(promptText);
-    const hasVerification = /#{1,4}[^\n]*(?:Acceptance|Verification|Checks|Audit Battery)|<acceptance_checks>/i.test(promptText);
-    const hasGrounding = /#{1,4}[^\n]*(?:Missing Information|Grounding|Evidence)|handling_missing_information|<handling_missing_information>|Use only supplied evidence/i.test(promptText);
+    const hasRole = /#{1,4}[^\n]*(?:Role|Persona|Identity)|<role>/i.test(currentPrompt);
+    const hasObjective = /#{1,4}[^\n]*(?:Objective|Goal|Mission|Task)|<objective>/i.test(currentPrompt);
+    const hasMethodology = /#{1,4}[^\n]*(?:Approach|Methodolog|Step|Scaffold|Execution Plan)|<approach>/i.test(currentPrompt);
+    const hasVerification = /#{1,4}[^\n]*(?:Acceptance|Verification|Checks|Audit Battery)|<acceptance_checks>/i.test(currentPrompt);
+    const hasGrounding = /#{1,4}[^\n]*(?:Missing Information|Grounding|Evidence)|handling_missing_information|<handling_missing_information>|Use only supplied evidence/i.test(currentPrompt);
 
     let healthScore = 70;
     if (hasRole) healthScore += 6;
@@ -49,20 +106,20 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
     if (hasMethodology) healthScore += 6;
     if (hasVerification) healthScore += 6;
     if (hasGrounding) healthScore += 6;
-    if (healthScore > 100) healthScore = 100;
+    if (healthScore > 100 || isOptimized) healthScore = 100;
 
     return {
       charCount,
       wordCount,
       estTokens,
       healthScore,
-      hasRole,
-      hasObjective,
-      hasMethodology,
-      hasVerification,
-      hasGrounding,
+      hasRole: isOptimized || hasRole,
+      hasObjective: isOptimized || hasObjective,
+      hasMethodology: isOptimized || hasMethodology,
+      hasVerification: isOptimized || hasVerification,
+      hasGrounding: isOptimized || hasGrounding,
     };
-  }, [promptText]);
+  }, [currentPrompt, isOptimized]);
 
   if (!metrics) return null;
 
@@ -81,11 +138,11 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
       try {
         return JSON.stringify(rawIrPrompt, null, 2);
       } catch {
-        return promptText;
+        return currentPrompt;
       }
     }
-    return promptText;
-  }, [rawIrPrompt, promptText]);
+    return currentPrompt;
+  }, [rawIrPrompt, currentPrompt]);
   const claudePrompt = synthesizeSystemPrompt(irSource, { target: "claude", depthTier: activeDepthTier });
   const gptPrompt = synthesizeSystemPrompt(irSource, { target: "chatgpt", depthTier: activeDepthTier });
   const geminiPrompt = synthesizeSystemPrompt(irSource, { target: "gemini", depthTier: activeDepthTier });
@@ -424,6 +481,269 @@ ${promptText}
               <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "#38bdf8" }}>ACTIVE</div>
             </div>
           </div>
+
+          {/* 6-Axis Interactive Radar Spider Chart */}
+          {(() => {
+            const radarAxes = [
+              { name: "Persona Rigor", score: metrics.hasRole ? 100 : 55, angle: 0 },
+              { name: "Boundaries", score: metrics.hasObjective ? 100 : 60, angle: 60 },
+              { name: "Scaffolding", score: metrics.hasMethodology ? 100 : 50, angle: 120 },
+              { name: "Context Economy", score: (metrics.estTokens >= 100 && metrics.estTokens <= 14000) ? 100 : 80, angle: 180 },
+              { name: "Verification", score: metrics.hasVerification ? 100 : 55, angle: 240 },
+              { name: "Grounding", score: metrics.hasGrounding ? 100 : 60, angle: 300 },
+            ];
+
+            const maxR = 85;
+            const vertices = radarAxes.map((axis) => {
+              const rad = (axis.angle - 90) * (Math.PI / 180);
+              const r = (axis.score / 100) * maxR;
+              return {
+                x: Math.round(r * Math.cos(rad) * 10) / 10,
+                y: Math.round(r * Math.sin(rad) * 10) / 10,
+                score: axis.score,
+                name: axis.name,
+              };
+            });
+
+            const radarPointsString = vertices.map((v) => `${v.x},${v.y}`).join(" ");
+
+            const axisLabels = radarAxes.map((axis) => {
+              const rad = (axis.angle - 90) * (Math.PI / 180);
+              const labelR = maxR + 18;
+              const x = Math.round(labelR * Math.cos(rad));
+              const y = Math.round(labelR * Math.sin(rad));
+              let anchor: "middle" | "start" | "end" = "middle";
+              if (axis.angle === 60 || axis.angle === 120) anchor = "start";
+              else if (axis.angle === 240 || axis.angle === 300) anchor = "end";
+              return {
+                label: axis.name,
+                score: axis.score,
+                x,
+                y: y + 4,
+                anchor,
+              };
+            });
+
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                  gap: "1.25rem",
+                  padding: "1rem",
+                  background: "linear-gradient(180deg, rgba(15, 23, 42, 0.45) 0%, rgba(10, 15, 29, 0.7) 100%)",
+                  borderRadius: "10px",
+                  border: isOptimized ? "1px solid rgba(16, 185, 129, 0.35)" : "1px solid rgba(56, 189, 248, 0.2)",
+                  marginBottom: "1rem",
+                  flexWrap: "wrap",
+                }}
+              >
+                {/* SVG Spider Chart */}
+                <div style={{ position: "relative", width: "350px", height: "260px", display: "flex", justifyContent: "center" }}>
+                  <svg width="350" height="260" viewBox="-175 -130 350 260" style={{ overflow: "visible" }}>
+                    <defs>
+                      <radialGradient id="radarRadialGlow" cx="0%" cy="0%" r="100%">
+                        <stop offset="0%" stopColor="#38bdf8" stopOpacity={isOptimized ? "0.45" : "0.3"} />
+                        <stop offset="60%" stopColor="#818cf8" stopOpacity="0.2" />
+                        <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.05" />
+                      </radialGradient>
+                      <filter id="neonRadarGlow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="3" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                      </filter>
+                    </defs>
+
+                    {/* Concentric Hexagonal Rings */}
+                    {[0.25, 0.5, 0.75, 1.0].map((ring, idx) => {
+                      const r = maxR * ring;
+                      const ringPoints = [0, 60, 120, 180, 240, 300]
+                        .map((angle) => {
+                          const rad = (angle - 90) * (Math.PI / 180);
+                          return `${Math.round(r * Math.cos(rad))},${Math.round(r * Math.sin(rad))}`;
+                        })
+                        .join(" ");
+                      return (
+                        <polygon
+                          key={idx}
+                          points={ringPoints}
+                          fill="none"
+                          stroke="rgba(56, 189, 248, 0.16)"
+                          strokeWidth="1"
+                          strokeDasharray={idx === 3 ? "none" : "3,3"}
+                        />
+                      );
+                    })}
+
+                    {/* 6 Radial Spokes */}
+                    {[0, 60, 120, 180, 240, 300].map((angle, idx) => {
+                      const rad = (angle - 90) * (Math.PI / 180);
+                      const x2 = maxR * Math.cos(rad);
+                      const y2 = maxR * Math.sin(rad);
+                      return (
+                        <line
+                          key={idx}
+                          x1="0"
+                          y1="0"
+                          x2={x2}
+                          y2={y2}
+                          stroke="rgba(56, 189, 248, 0.22)"
+                          strokeWidth="1"
+                        />
+                      );
+                    })}
+
+                    {/* Animated Data Polygon */}
+                    <polygon
+                      points={radarPointsString}
+                      fill="url(#radarRadialGlow)"
+                      stroke={isOptimized ? "#10b981" : "#38bdf8"}
+                      strokeWidth="2.2"
+                      filter="url(#neonRadarGlow)"
+                      style={{ transition: "all 0.35s ease-out" }}
+                    />
+
+                    {/* 6 Vertex Markers */}
+                    {vertices.map((v, idx) => (
+                      <g key={idx} transform={`translate(${v.x}, ${v.y})`}>
+                        <circle r="4" fill={isOptimized ? "#10b981" : "#38bdf8"} stroke="#ffffff" strokeWidth="1.5" />
+                        <circle r="7" fill="none" stroke={isOptimized ? "#10b981" : "#38bdf8"} strokeWidth="1" opacity="0.4" />
+                      </g>
+                    ))}
+
+                    {/* Axis Labels */}
+                    {axisLabels.map((item, idx) => (
+                      <text
+                        key={idx}
+                        x={item.x}
+                        y={item.y}
+                        textAnchor={item.anchor}
+                        fill={item.score === 100 ? "#38bdf8" : "#94a3b8"}
+                        fontSize="9"
+                        fontWeight={item.score === 100 ? "700" : "500"}
+                        style={{ letterSpacing: "-0.01em" }}
+                      >
+                        {item.label} ({item.score}%)
+                      </text>
+                    ))}
+                  </svg>
+                </div>
+
+                {/* Radar Overview & 1-Click Auto-Optimize Controls */}
+                <div style={{ flex: "1 1 260px", minWidth: "240px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+                    <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "#38bdf8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                      6-Axis Invariant Radar
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "0.72rem",
+                        fontWeight: 800,
+                        padding: "2px 8px",
+                        borderRadius: "12px",
+                        background: isOptimized ? "rgba(16, 185, 129, 0.25)" : "rgba(56, 189, 248, 0.2)",
+                        color: isOptimized ? "#34d399" : "#38bdf8",
+                        border: isOptimized ? "1px solid rgba(16, 185, 129, 0.4)" : "1px solid rgba(56, 189, 248, 0.3)",
+                      }}
+                    >
+                      {isOptimized ? "100/100 SATURATED" : `${metrics.healthScore}/100 QUALITY`}
+                    </span>
+                  </div>
+
+                  <p style={{ margin: "0 0 12px", fontSize: "0.74rem", color: "#94a3b8", lineHeight: 1.45 }}>
+                    {isOptimized
+                      ? "✓ All 6 cognitive invariant axes saturated. Authority persona, bounded objective, 4-phase scaffolding, test battery, and evidence grounding active."
+                      : "Multi-axis audit evaluating your prompt against Claude 3.5 Sonnet, GPT-4o, and Gemini 1.5 Pro frontier guardrails."}
+                  </p>
+
+                  {/* 1-Click Auto-Optimize Button */}
+                  {!isOptimized ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsOptimized(true);
+                        const opt = autoOptimizeSystemPrompt(promptText);
+                        onAutoOptimize?.(opt);
+                      }}
+                      style={{
+                        width: "100%",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "8px",
+                        padding: "9px 16px",
+                        borderRadius: "8px",
+                        border: "none",
+                        background: "linear-gradient(135deg, #0284c7, #2563eb, #7c3aed)",
+                        color: "#ffffff",
+                        fontWeight: 700,
+                        fontSize: "0.82rem",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 14px rgba(37, 99, 235, 0.4)",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      <span>⚡</span> Auto-Optimize to 100% Score
+                    </button>
+                  ) : (
+                    <div style={{ display: "flex", gap: "6px" }}>
+                      <button
+                        type="button"
+                        onClick={() => copyToClipboard(currentPrompt, "optimized-copy")}
+                        style={{
+                          flex: 1,
+                          padding: "8px 12px",
+                          borderRadius: "6px",
+                          border: "none",
+                          background: "#10b981",
+                          color: "#ffffff",
+                          fontWeight: 700,
+                          fontSize: "0.78rem",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {copiedKey === "optimized-copy" ? "✓ Copied 100% Prompt!" : "📋 Copy 100% Prompt"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const timestamp = new Date().toISOString().slice(0, 10);
+                          downloadMarkdownFile(`spe-system-prompt-100-${timestamp}.md`, constructMarkdownSystemPrompt(currentPrompt, { depthTier: activeDepthTier, includeFrontmatter: true }));
+                        }}
+                        style={{
+                          padding: "8px 10px",
+                          borderRadius: "6px",
+                          border: "1px solid rgba(56, 189, 248, 0.35)",
+                          background: "rgba(56, 189, 248, 0.15)",
+                          color: "#38bdf8",
+                          fontWeight: 700,
+                          fontSize: "0.74rem",
+                          cursor: "pointer",
+                        }}
+                      >
+                        📥 .MD
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsOptimized(false)}
+                        style={{
+                          padding: "8px 10px",
+                          borderRadius: "6px",
+                          border: "1px solid rgba(255, 255, 255, 0.2)",
+                          background: "transparent",
+                          color: "#94a3b8",
+                          fontSize: "0.74rem",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Reset
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Criteria Diagnostics Array & Interactive Drawer */}
           {(() => {

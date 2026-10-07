@@ -597,6 +597,13 @@ export function UnifiedComposer({
               disabled={disabled}
               placeholder="Describe the task. Include what matters, what to avoid, and what good looks like…"
               onChange={(e) => onChange(e.target.value)}
+              onKeyDown={(e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                  e.preventDefault();
+                  const form = e.currentTarget.closest("form");
+                  if (form) form.requestSubmit();
+                }
+              }}
             />
           </label>
         </div>
