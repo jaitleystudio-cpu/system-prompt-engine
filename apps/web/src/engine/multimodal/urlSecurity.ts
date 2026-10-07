@@ -176,8 +176,12 @@ export function isSsrfSafeUrl(url: URL): { safe: boolean; reason?: string } {
 //     REQUIRE_PINNED_RESOLUTION (the default, fail-closed policy), and the
 //     declaration alone is not trusted: a pinning transport must report the
 //     address it actually connected to, which must equal the validated
-//     address, or the hop fails closed (DESTINATION_BINDING_MISMATCH /
-//     DESTINATION_BINDING_UNVERIFIABLE) and its body is discarded.
+//     address, or the hop fails closed and its body is discarded. This holds
+//     for IP-literal URLs too: a literal in the URL is not proof of the
+//     connected destination. Missing proof → DESTINATION_BINDING_UNVERIFIABLE
+//     (reference-only is acceptable); a proven different peer →
+//     DESTINATION_BINDING_MISMATCH, a hard security refusal that is never
+//     treated as merely unverifiable.
 //   * No pinning transport ships in this web app. Callers that cannot pin
 //     (media/urlIngest.ts) must not read remote content on a resolver's word;
 //     they keep the URL as a reference only.
@@ -413,16 +417,21 @@ export function isUnverifiableDestinationRefusal(reason: string): boolean {
   return (
     reason === "REDIRECT_DESTINATION_UNVERIFIABLE" ||
     reason === "TRUSTED_RESOLVER_UNAVAILABLE" ||
-    isDestinationBindingRefusal(reason)
+    isDestinationBindingUnverifiable(reason)
   );
 }
 
-/** Refusals because the connected destination could not be bound to the validated one. */
-export function isDestinationBindingRefusal(reason: string): boolean {
-  return (
-    reason === "DESTINATION_BINDING_UNVERIFIABLE" ||
-    reason === "DESTINATION_BINDING_MISMATCH"
-  );
+/** The connected destination could not be proven equal to the validated one. */
+export function isDestinationBindingUnverifiable(reason: string): boolean {
+  return reason === "DESTINATION_BINDING_UNVERIFIABLE";
+}
+
+/**
+ * Hard security refusal: the transport proved it connected somewhere other
+ * than the validated destination. Never an "unverifiable" / reference-only case.
+ */
+export function isDestinationBindingMismatch(reason: string): boolean {
+  return reason === "DESTINATION_BINDING_MISMATCH";
 }
 
 function sameAddress(a: string, b: string): boolean {
@@ -513,7 +522,23 @@ export async function guardedPublicFetch(
           hops,
         };
       }
-      identity = "IP_LITERAL";
+      // A literal in the URL is not proof of the connected destination: under
+      // the pinned policy the transport must pin and report its peer too.
+      if (
+        policy === DestinationPolicies.REQUIRE_PINNED_RESOLUTION &&
+        !transport.pinsResolvedAddress
+      ) {
+        return {
+          ok: false,
+          reason: "DESTINATION_BINDING_UNVERIFIABLE",
+          refusedUrl: parsed.toString(),
+          hops,
+        };
+      }
+      identity =
+        policy === DestinationPolicies.BROWSER_UNVERIFIABLE && !transport.pinsResolvedAddress
+          ? "UNVERIFIED_BROWSER"
+          : "IP_LITERAL";
       addresses = [host];
       pinned = host;
     } else if (opts.resolveHost) {
@@ -555,10 +580,17 @@ export async function guardedPublicFetch(
     );
     hop.status = response.status;
 
-    if (transport.pinsResolvedAddress && pinned !== null) {
-      // Bind: the validated address must equal the connected destination.
-      const connected = transport.connectedAddress?.(response) ?? null;
-      if (!connected || !sameAddress(connected, pinned)) {
+    if (
+      policy === DestinationPolicies.REQUIRE_PINNED_RESOLUTION ||
+      (transport.pinsResolvedAddress && pinned !== null)
+    ) {
+      // Bind: the validated address must equal the connected destination,
+      // whether it came from DNS or from an IP literal. No proof → refuse.
+      const connected =
+        transport.pinsResolvedAddress && pinned !== null
+          ? transport.connectedAddress?.(response) ?? null
+          : null;
+      if (!connected || pinned === null || !sameAddress(connected, pinned)) {
         await discardBody(response);
         return {
           ok: false,

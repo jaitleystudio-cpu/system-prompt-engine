@@ -56,7 +56,8 @@ export function connectSrcAllowsRemoteHost(
 import {
   DestinationPolicies,
   guardedPublicFetch,
-  isDestinationBindingRefusal,
+  isDestinationBindingMismatch,
+  isDestinationBindingUnverifiable,
   isSsrfSafeUrl,
   isUnverifiableDestinationRefusal,
   type TrustedHostResolver,
@@ -469,6 +470,52 @@ export function buildWebsiteBriefFromHtml(
   return { title, description, textExcerpt, buildBrief };
 }
 
+/**
+ * Map an execution-boundary refusal to an ingest result.
+ *   * DESTINATION_BINDING_MISMATCH (a proven different peer) is a HARD security
+ *     refusal: never reference-only, nothing is appended to the prompt; the
+ *     boundary code is carried in `refusal`. It is checked first.
+ *   * Unverifiable destinations (binding not provable, opaque redirect, no
+ *     trusted resolver) keep the URL as a reference only.
+ *   * Every other refusal (forbidden address, redirect limit, …) is hard.
+ */
+export function guardRefusalToResult(
+  boundaryReason: string,
+  url: string,
+  refusedUrl: string,
+): UrlIngestResult {
+  if (isDestinationBindingMismatch(boundaryReason)) {
+    return {
+      status: "invalid_url",
+      url,
+      finalUrl: refusedUrl,
+      refusal: boundaryReason,
+      message: "Enter a full http(s) URL.",
+      fallbacks: FALLBACKS,
+    };
+  }
+  if (isUnverifiableDestinationRefusal(boundaryReason)) {
+    return {
+      status: "url_reference_only",
+      url,
+      reason: isDestinationBindingUnverifiable(boundaryReason)
+        ? "destination_binding_unverifiable"
+        : "remote_fetch_unavailable",
+      message:
+        "SPE could not read that page in this browser. The URL is kept as a reference only — remote page content was not loaded. Upload page HTML or a screenshot for grounding.",
+      fallbacks: FALLBACKS,
+    };
+  }
+  return {
+    status: "invalid_url",
+    url,
+    finalUrl: refusedUrl,
+    refusal: boundaryReason,
+    message: "Enter a full http(s) URL.",
+    fallbacks: FALLBACKS,
+  };
+}
+
 function originOf(raw: string | null): string | null {
   if (!raw) return null;
   try {
@@ -562,25 +609,7 @@ export async function ingestUrl(
       },
     });
     if (!guarded.ok) {
-      if (isUnverifiableDestinationRefusal(guarded.reason)) {
-        return {
-          status: "url_reference_only",
-          url: parsed.toString(),
-          reason: isDestinationBindingRefusal(guarded.reason)
-            ? "destination_binding_unverifiable"
-            : "remote_fetch_unavailable",
-          message:
-            "SPE could not read that page in this browser. The URL is kept as a reference only — remote page content was not loaded. Upload page HTML or a screenshot for grounding.",
-          fallbacks: FALLBACKS,
-        };
-      }
-      return {
-        status: "invalid_url",
-        url: parsed.toString(),
-        finalUrl: guarded.refusedUrl,
-        message: "Enter a full http(s) URL.",
-        fallbacks: FALLBACKS,
-      };
+      return guardRefusalToResult(guarded.reason, parsed.toString(), guarded.refusedUrl);
     }
     const res = guarded.response;
     const finalUrl = guarded.finalUrl;
@@ -708,11 +737,15 @@ export function urlResultToPromptBlock(result: UrlIngestResult): string | null {
   if (result.status === "url_reference_only") {
     const body = [
       `URL reference only — remote page content was not read: ${result.url}`,
-      `Reason: ${result.reason}`,
+      // destination_binding_unverifiable is a machine reason code, not UX copy:
+      // this block lands in the user's composer, so it is not surfaced here.
+      result.reason === "destination_binding_unverifiable" ? null : `Reason: ${result.reason}`,
       "Do not invent page contents from this URL.",
       "If grounding is required, ask for uploaded HTML, a screenshot, or pasted text.",
       "SPE may still construct a prompt that cites this URL as a reference.",
-    ].join("\n");
+    ]
+      .filter(Boolean)
+      .join("\n");
     return wrapUntrustedData("url-reference", body);
   }
   if (result.status !== "ok") return null;
