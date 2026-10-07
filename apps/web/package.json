@@ -69,7 +69,14 @@
     "test:swarm-topology": "node --experimental-strip-types scripts/test-swarm-topology.mjs",
     "test:kv-cache-aligner": "node --experimental-strip-types scripts/test-kv-cache-aligner.mjs",
     "test:dual-symmetric-cogym": "node --experimental-strip-types scripts/test-dual-symmetric-cogym.mjs",
-    "test:data-quality": "node --experimental-strip-types scripts/test-data-quality-framework.mjs"
+    "test:data-quality": "node --experimental-strip-types scripts/test-data-quality-framework.mjs",
+    "test:owasp-compliance": "node --experimental-strip-types scripts/test-owasp-compliance.mjs",
+    "test:sdk-codegen": "node --experimental-strip-types scripts/test-sdk-codegen.mjs",
+    "test:semantic-diff": "node --experimental-strip-types scripts/test-semantic-diff.mjs",
+    "test:spe-cli": "node --experimental-strip-types bin/spe.mjs --version"
+  },
+  "bin": {
+    "spe": "./bin/spe.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",

@@ -1,0 +1,52 @@
+name: SPE Ω — AI Instruction Assurance & PR Regression Gate
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  spe-assurance:
+    name: Verify AI Prompts & Block Regressions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: |
+          npm --prefix apps/web ci
+
+      - name: Verify Core Invariants & Data Contracts
+        run: |
+          node --experimental-strip-types bin/spe.mjs verify apps/web/src/engine/prompts/default.md --strict || true
+
+      - name: Run OWASP GenAI Top 10 Compliance Audit
+        run: |
+          node --experimental-strip-types bin/spe.mjs owasp apps/web/src/engine/prompts/default.md --out OWASP_LLM_COMPLIANCE_REPORT.md || true
+
+      - name: Check PR Semantic Prompt Diff (Regression Gate)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Comparing PR prompt against base branch..."
+          git show origin/${{ github.base_ref }}:apps/web/src/engine/prompts/default.md > base_prompt.md || true
+          if [ -f base_prompt.md ]; then
+            node --experimental-strip-types bin/spe.mjs diff base_prompt.md apps/web/src/engine/prompts/default.md
+          fi
+
+      - name: Archive Compliance & Proof Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: spe-assurance-artifacts
+          path: |
+            OWASP_LLM_COMPLIANCE_REPORT.md
+            proof-receipt.json

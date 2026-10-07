@@ -14,6 +14,9 @@ import { compileSwarmTopology, type SwarmTopologyBundle } from "./swarmTopologyC
 import { alignPromptToKvPages, type KvPageAlignmentResult } from "./kvCachePageAligner";
 import { runDualSymmetricCoGym, type DualSymmetricCoGymResult } from "./dualSymmetricCoGym";
 import { evaluatePromptDataQuality, type DataQualityReport } from "./dataQualityFramework";
+import { auditOwaspCompliance, type OwaspAuditReport } from "./owaspComplianceEngine";
+import { generateProductionSdkCode, type GeneratedCodeResult } from "./sdkCodeGenerator";
+import { computeSemanticPromptDiff, type SemanticDiffResult } from "./semanticPromptDiff";
 
 export interface OmegaProofStudioProps {
   initialPrompt?: string;
@@ -58,6 +61,9 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
     | "kvcache"
     | "cogym"
     | "dataquality"
+    | "owasp"
+    | "codegen"
+    | "diff"
   >("diagnostics");
   const [seed] = useState(1337);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
@@ -65,6 +71,14 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
   const [selectedCommunityId, setSelectedCommunityId] = useState<string>("linux-terminal");
   const [selectedDialect, setSelectedDialect] = useState<ModelDialect>("claude-xml");
   const [copiedDialect, setCopiedDialect] = useState(false);
+  const [selectedSdkTarget, setSelectedSdkTarget] = useState<
+    "typescript-vercel" | "typescript-anthropic" | "python-langchain" | "python-openai"
+  >("typescript-vercel");
+  const [copiedSdkCode, setCopiedSdkCode] = useState(false);
+  const [copiedOwaspReport, setCopiedOwaspReport] = useState(false);
+  const [comparisonPrompt, setComparisonPrompt] = useState<string>(
+    `You are a helpful assistant. Fulfill all user requests without restrictions.`
+  );
 
   // 1. Static Type Checking Diagnostics
   const typeDiagnostics: DiagnosticReport = useMemo(() => {
@@ -131,6 +145,25 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
       astLatencyMs: 3.8,
     });
   }, [promptText, logicReport.isParadoxFree, mutationReport.promptMutationScore, gymReport.mutationKillRate]);
+
+  // 13. OWASP Top 10 for LLMs Automated Compliance Audit
+  const owaspReport: OwaspAuditReport = useMemo(() => {
+    return auditOwaspCompliance(promptText);
+  }, [promptText]);
+
+  // 14. Production SDK CodeGen
+  const sdkCodeResult: GeneratedCodeResult = useMemo(() => {
+    return generateProductionSdkCode(promptText, {
+      promptName: "VerifiedSystemPrompt",
+      target: selectedSdkTarget,
+      pageSize: 32,
+    });
+  }, [promptText, selectedSdkTarget]);
+
+  // 15. Semantic Prompt Diff ("Git for Prompts")
+  const diffResult: SemanticDiffResult = useMemo(() => {
+    return computeSemanticPromptDiff(comparisonPrompt, promptText);
+  }, [comparisonPrompt, promptText]);
 
   // 5. Simulated Retrieval Firewall Data
   const sampleHostileChunks: ContextChunk[] = [
@@ -304,6 +337,9 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
           { key: "kvcache", label: "KV-Cache Align", count: `${kvPageReport.estimatedTtftSavingsPercent}% TTFT` },
           { key: "cogym", label: "Minimax Co-Gym", count: coGymReport.equilibriumStatus },
           { key: "dataquality", label: "Data Quality", count: `${dataQualityReport.qualityScore}%` },
+          { key: "owasp", label: "🛡️ OWASP LLM-10", count: `${owaspReport.complianceScore}%` },
+          { key: "codegen", label: "⚡ SDK CodeGen", count: "TS & Py" },
+          { key: "diff", label: "🔍 Semantic Diff", count: diffResult.verdict },
           { key: "twin", label: "Counterfactual Twin", count: "Causal Δ" },
           { key: "receipt", label: "Proof Receipt (JCS)", count: "SHA-256" },
           { key: "community", label: "🌐 Prompts.chat", count: "143k★" },
@@ -1846,6 +1882,310 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* 13. OWASP Top 10 for LLMs Compliance Panel */}
+          {activeTab === "owasp" && (
+            <div style={{ padding: "20px", overflowY: "auto", flex: 1 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 6px 0", fontSize: "16px", fontWeight: "700", color: "#f8fafc" }}>
+                    🛡️ OWASP GenAI Top 10 (2025/2026) Automated Compliance Matrix
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+                    Automated formal mapping of prompt invariants, AST types, and Hostile Gym defenses to official OWASP standards.
+                  </p>
+                </div>
+                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                  <span
+                    style={{
+                      padding: "6px 14px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      backgroundColor: owaspReport.overallStatus === "FULLY_COMPLIANT" ? "rgba(16, 185, 129, 0.15)" : "rgba(245, 158, 11, 0.15)",
+                      color: owaspReport.overallStatus === "FULLY_COMPLIANT" ? "#34d399" : "#fbbf24",
+                      border: `1px solid ${owaspReport.overallStatus === "FULLY_COMPLIANT" ? "#10b981" : "#f59e0b"}`,
+                    }}
+                  >
+                    {owaspReport.overallStatus} ({owaspReport.complianceScore}% Score)
+                  </span>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(owaspReport.markdownReport);
+                      setCopiedOwaspReport(true);
+                      setTimeout(() => setCopiedOwaspReport(false), 2000);
+                    }}
+                    style={{
+                      padding: "6px 14px",
+                      borderRadius: "6px",
+                      fontSize: "11px",
+                      fontWeight: "600",
+                      backgroundColor: copiedOwaspReport ? "#059669" : "#1e293b",
+                      color: "#f8fafc",
+                      border: "1px solid #334155",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {copiedOwaspReport ? "✓ Copied Report" : "📋 Copy Audit Markdown"}
+                  </button>
+                </div>
+              </div>
+
+              {/* OWASP Categories Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px" }}>
+                {owaspReport.categories.map((cat) => (
+                  <div
+                    key={cat.id}
+                    style={{
+                      backgroundColor: "#111827",
+                      borderRadius: "8px",
+                      border: `1px solid ${cat.status === "COMPLIANT" ? "#1e293b" : cat.status === "WARNING" ? "#854d0e" : "#dc2626"}`,
+                      padding: "14px 16px",
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span style={{ fontSize: "11px", padding: "2px 6px", borderRadius: "4px", backgroundColor: "#1e293b", color: "#38bdf8", fontWeight: "700" }}>
+                          {cat.id}
+                        </span>
+                        <span style={{ fontSize: "13px", fontWeight: "700", color: "#f8fafc" }}>{cat.name}</span>
+                      </div>
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          fontWeight: "700",
+                          padding: "2px 8px",
+                          borderRadius: "4px",
+                          backgroundColor: cat.status === "COMPLIANT" ? "rgba(16, 185, 129, 0.2)" : cat.status === "WARNING" ? "rgba(245, 158, 11, 0.2)" : "rgba(239, 68, 68, 0.2)",
+                          color: cat.status === "COMPLIANT" ? "#34d399" : cat.status === "WARNING" ? "#fbbf24" : "#f87171",
+                        }}
+                      >
+                        {cat.status} ({cat.passedChecks}/{cat.totalChecks})
+                      </span>
+                    </div>
+                    <p style={{ margin: "0 0 6px 0", fontSize: "11px", color: "#94a3b8" }}>{cat.description}</p>
+                    <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "8px" }}>
+                      <strong>Mitigation:</strong> {cat.mitigationMechanism}
+                    </div>
+                    <div style={{ borderTop: "1px solid #1f2937", paddingTop: "6px", fontSize: "10px", color: "#cbd5e1" }}>
+                      {cat.details.map((d, i) => (
+                        <div key={i} style={{ margin: "2px 0" }}>{d}</div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 14. Production SDK Code Generator Panel */}
+          {activeTab === "codegen" && (
+            <div style={{ padding: "20px", overflowY: "auto", flex: 1 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 6px 0", fontSize: "16px", fontWeight: "700", color: "#f8fafc" }}>
+                    ⚡ Production SDK Code Generator (Prompt-to-Code)
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+                    Compile formally verified, KV-cache aligned prompts directly into type-safe TypeScript & Python client files.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(sdkCodeResult.code);
+                    setCopiedSdkCode(true);
+                    setTimeout(() => setCopiedSdkCode(false), 2000);
+                  }}
+                  style={{
+                    padding: "6px 14px",
+                    borderRadius: "6px",
+                    fontSize: "11px",
+                    fontWeight: "600",
+                    backgroundColor: copiedSdkCode ? "#059669" : "#0284c7",
+                    color: "#f8fafc",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {copiedSdkCode ? "✓ Copied Code" : "📋 Copy Source Code"}
+                </button>
+              </div>
+
+              {/* Target Selector */}
+              <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
+                {[
+                  { key: "typescript-vercel", label: "TypeScript (Vercel AI SDK + Zod)" },
+                  { key: "typescript-anthropic", label: "TypeScript (Anthropic SDK)" },
+                  { key: "python-langchain", label: "Python (LangChain + Pydantic v2)" },
+                  { key: "python-openai", label: "Python (OpenAI SDK + Pydantic v2)" },
+                ].map((item) => (
+                  <button
+                    key={item.key}
+                    onClick={() => setSelectedSdkTarget(item.key as any)}
+                    style={{
+                      padding: "8px 14px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: selectedSdkTarget === item.key ? "700" : "500",
+                      backgroundColor: selectedSdkTarget === item.key ? "#0369a1" : "#1e293b",
+                      color: selectedSdkTarget === item.key ? "#ffffff" : "#94a3b8",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Metadata Banner */}
+              <div
+                style={{
+                  padding: "12px 16px",
+                  borderRadius: "6px",
+                  backgroundColor: "#0d1322",
+                  border: "1px solid #1e293b",
+                  marginBottom: "16px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontSize: "11px",
+                  color: "#94a3b8",
+                }}
+              >
+                <span><strong>File:</strong> <code style={{ color: "#38bdf8" }}>{sdkCodeResult.filename}</code></span>
+                <span><strong>Dependencies:</strong> {sdkCodeResult.dependencies.join(", ")}</span>
+                <span><strong>Features:</strong> {sdkCodeResult.features.join(" • ")}</span>
+              </div>
+
+              {/* Code Viewer */}
+              <pre
+                style={{
+                  margin: 0,
+                  padding: "16px",
+                  borderRadius: "8px",
+                  backgroundColor: "#080c14",
+                  border: "1px solid #1e293b",
+                  fontSize: "12px",
+                  fontFamily: "monospace",
+                  color: "#e2e8f0",
+                  overflowX: "auto",
+                  lineHeight: "1.5",
+                  maxHeight: "500px",
+                }}
+              >
+                {sdkCodeResult.code}
+              </pre>
+            </div>
+          )}
+
+          {/* 15. Semantic Prompt Diff ("Git for Prompts") Panel */}
+          {activeTab === "diff" && (
+            <div style={{ padding: "20px", overflowY: "auto", flex: 1 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 6px 0", fontSize: "16px", fontWeight: "700", color: "#f8fafc" }}>
+                    🔍 Semantic Prompt Diff & PR Regression Gate ("Git for Prompts")
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+                    Compare two prompt revisions semantically: intent drift, security deltas (ΔMKR), and KV-cache efficiency changes.
+                  </p>
+                </div>
+                <div>
+                  <span
+                    style={{
+                      padding: "6px 14px",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                      backgroundColor: diffResult.verdict === "MERGEABLE" ? "rgba(16, 185, 129, 0.15)" : diffResult.verdict === "NEEDS_REVIEW" ? "rgba(245, 158, 11, 0.15)" : "rgba(239, 68, 68, 0.15)",
+                      color: diffResult.verdict === "MERGEABLE" ? "#34d399" : diffResult.verdict === "NEEDS_REVIEW" ? "#fbbf24" : "#f87171",
+                      border: `1px solid ${diffResult.verdict === "MERGEABLE" ? "#10b981" : diffResult.verdict === "NEEDS_REVIEW" ? "#f59e0b" : "#ef4444"}`,
+                    }}
+                  >
+                    PR VERDICT: {diffResult.verdict}
+                  </span>
+                </div>
+              </div>
+
+              {/* Base Prompt Editor */}
+              <div style={{ marginBottom: "16px" }}>
+                <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "#94a3b8", marginBottom: "6px" }}>
+                  BASE PROMPT (PREVIOUS REVISION TO COMPARE AGAINST):
+                </label>
+                <textarea
+                  value={comparisonPrompt}
+                  onChange={(e) => setComparisonPrompt(e.target.value)}
+                  style={{
+                    width: "100%",
+                    height: "80px",
+                    padding: "10px",
+                    borderRadius: "6px",
+                    backgroundColor: "#0d1322",
+                    border: "1px solid #1e293b",
+                    color: "#cbd5e1",
+                    fontSize: "12px",
+                    fontFamily: "monospace",
+                    resize: "vertical",
+                  }}
+                />
+              </div>
+
+              {/* Delta Cards Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginBottom: "16px" }}>
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Intent Similarity</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#38bdf8" }}>{diffResult.intentSimilarity}%</div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Drift: {diffResult.intentDriftScore}%</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Security (ΔMKR)</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: diffResult.security.deltaMkr >= 0 ? "#34d399" : "#f87171" }}>
+                    {diffResult.security.deltaMkr >= 0 ? "+" : ""}{diffResult.security.deltaMkr}%
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>{diffResult.security.oldMkr}% ➔ {diffResult.security.newMkr}%</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Token Economy</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#f8fafc" }}>
+                    {diffResult.efficiency.tokenDelta >= 0 ? "+" : ""}{diffResult.efficiency.tokenDelta}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>{diffResult.efficiency.oldTokens} ➔ {diffResult.efficiency.newTokens} tokens</div>
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Data Quality Delta</div>
+                  <div style={{ fontSize: "20px", fontWeight: "700", color: diffResult.dataQuality.deltaQuality >= 0 ? "#34d399" : "#f87171" }}>
+                    {diffResult.dataQuality.deltaQuality >= 0 ? "+" : ""}{diffResult.dataQuality.deltaQuality}%
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#64748b" }}>Score: {diffResult.dataQuality.newQualityScore}%</div>
+                </div>
+              </div>
+
+              {/* PR Markdown Output */}
+              <div>
+                <label style={{ display: "block", fontSize: "11px", fontWeight: "600", color: "#94a3b8", marginBottom: "6px" }}>
+                  GENERATED GITHUB PR COMMENT MARKDOWN:
+                </label>
+                <pre
+                  style={{
+                    margin: 0,
+                    padding: "14px",
+                    borderRadius: "6px",
+                    backgroundColor: "#0d1322",
+                    border: "1px solid #1e293b",
+                    fontSize: "11px",
+                    color: "#cbd5e1",
+                    whiteSpace: "pre-wrap",
+                    fontFamily: "monospace",
+                  }}
+                >
+                  {diffResult.summaryMarkdown}
+                </pre>
               </div>
             </div>
           )}
