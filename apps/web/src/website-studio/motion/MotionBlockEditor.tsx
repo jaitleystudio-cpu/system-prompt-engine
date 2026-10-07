@@ -83,26 +83,26 @@ export const MotionBlockEditor: React.FC<MotionBlockEditorProps> = ({
         <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
           <button
             type="button"
-            className={`studio-btn ${viewMode === "narrative" ? "studio-btn-primary" : ""}`}
+            className={`studio-btn studio-btn-compact ${viewMode === "narrative" ? "studio-btn-primary" : ""}`}
             onClick={() => setViewMode("narrative")}
-            style={{ padding: "4px 10px", fontSize: "12px", minHeight: "36px" }}
+            style={{ fontSize: "12px" }}
           >
             Narrative Blocks
           </button>
           <button
             type="button"
-            className={`studio-btn ${viewMode === "tracks" ? "studio-btn-primary" : ""}`}
+            className={`studio-btn studio-btn-compact ${viewMode === "tracks" ? "studio-btn-primary" : ""}`}
             onClick={() => setViewMode("tracks")}
-            style={{ padding: "4px 10px", fontSize: "12px", minHeight: "36px" }}
+            style={{ fontSize: "12px" }}
           >
             Detailed Tracks
           </button>
           {onBlocksChange && (
             <button
               type="button"
-              className="studio-btn studio-btn-primary"
+              className="studio-btn studio-btn-compact studio-btn-primary"
               onClick={handleAddBlock}
-              style={{ padding: "4px 10px", fontSize: "12px", minHeight: "36px" }}
+              style={{ fontSize: "12px" }}
               aria-label="Add narrative motion block"
             >
               + Add Block

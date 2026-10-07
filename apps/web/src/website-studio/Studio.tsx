@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./studio.css";
 import {
   createDefaultWebsiteSpecV2,
@@ -40,6 +40,16 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
   const [journeyPhase, setJourneyPhase] = useState<
     "explore" | "created" | "edited" | "exported"
   >(initialSpec ? "created" : "explore");
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReducedMotion(mq.matches);
+    sync();
+    mq.addEventListener?.("change", sync);
+    return () => mq.removeEventListener?.("change", sync);
+  }, []);
 
   const handleApplyPatch = (newSpec: WebsiteSpecV2, patch: SitePatch) => {
     setSpec(newSpec);
@@ -143,6 +153,7 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
             onClick={() => setViewMode("desktop")}
             aria-label="Desktop Preview Mode"
             aria-pressed={viewMode === "desktop"}
+            data-testid="viewport-desktop"
           >
             Desktop
           </button>
@@ -152,6 +163,7 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
             onClick={() => setViewMode("tablet")}
             aria-label="Tablet Preview Mode"
             aria-pressed={viewMode === "tablet"}
+            data-testid="viewport-tablet"
           >
             Tablet
           </button>
@@ -161,15 +173,27 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
             onClick={() => setViewMode("mobile")}
             aria-label="Mobile Preview Mode"
             aria-pressed={viewMode === "mobile"}
+            data-testid="viewport-mobile"
           >
             Mobile
           </button>
         </div>
 
+        <button
+          type="button"
+          className={`studio-btn ${reducedMotion ? "studio-btn-primary" : ""}`}
+          onClick={() => setReducedMotion((v) => !v)}
+          aria-pressed={reducedMotion}
+          aria-label="Toggle Reduced Motion"
+          data-testid="studio-reduced-motion"
+        >
+          {reducedMotion ? "Motion: Reduced" : "Motion: Normal"}
+        </button>
+
         {/* Actions */}
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
           {exportNotice && (
-            <span style={{ fontSize: "12px", color: "#34d399" }} role="status">
+            <span style={{ fontSize: "12px", color: "#34d399" }} role="status" aria-live="polite">
               {exportNotice}
             </span>
           )}
@@ -212,33 +236,37 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
           <div style={{ display: "flex", gap: "4px" }}>
             <button
               type="button"
-              className={`studio-btn ${activeLeftTab === "structure" ? "studio-btn-primary" : ""}`}
+              className={`studio-btn studio-btn-compact ${activeLeftTab === "structure" ? "studio-btn-primary" : ""}`}
               onClick={() => setActiveLeftTab("structure")}
-              style={{ fontSize: "11px", padding: "4px 8px", minHeight: "32px", minWidth: "32px" }}
+              aria-pressed={activeLeftTab === "structure"}
+              aria-label="Tree panel"
             >
               Tree
             </button>
             <button
               type="button"
-              className={`studio-btn ${activeLeftTab === "behaviors" ? "studio-btn-primary" : ""}`}
+              className={`studio-btn studio-btn-compact ${activeLeftTab === "behaviors" ? "studio-btn-primary" : ""}`}
               onClick={() => setActiveLeftTab("behaviors")}
-              style={{ fontSize: "11px", padding: "4px 8px", minHeight: "32px", minWidth: "32px" }}
+              aria-pressed={activeLeftTab === "behaviors"}
+              aria-label="Graph panel"
             >
               Graph
             </button>
             <button
               type="button"
-              className={`studio-btn ${activeLeftTab === "data" ? "studio-btn-primary" : ""}`}
+              className={`studio-btn studio-btn-compact ${activeLeftTab === "data" ? "studio-btn-primary" : ""}`}
               onClick={() => setActiveLeftTab("data")}
-              style={{ fontSize: "11px", padding: "4px 8px", minHeight: "32px", minWidth: "32px" }}
+              aria-pressed={activeLeftTab === "data"}
+              aria-label="Data panel"
             >
               Data
             </button>
             <button
               type="button"
-              className={`studio-btn ${activeLeftTab === "explore" ? "studio-btn-primary" : ""}`}
+              className={`studio-btn studio-btn-compact ${activeLeftTab === "explore" ? "studio-btn-primary" : ""}`}
               onClick={() => setActiveLeftTab("explore")}
-              style={{ fontSize: "11px", padding: "4px 8px", minHeight: "32px", minWidth: "32px" }}
+              aria-pressed={activeLeftTab === "explore"}
+              aria-label="Recipes panel"
             >
               Recipes
             </button>
@@ -267,8 +295,10 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
                 }}
                 role="button"
                 tabIndex={0}
+                aria-pressed={selectionScope.includes(p.id)}
                 style={{
                   backgroundColor: selectionScope.includes(p.id) ? "#1e293b" : "#161922",
+                  minHeight: "44px",
                   border: selectionScope.includes(p.id) ? "1px solid #3b82f6" : "1px solid #232736",
                   padding: "10px",
                   borderRadius: "6px",
@@ -311,7 +341,7 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
       </aside>
 
       {/* Surface 2: LIVE WEBSITE */}
-      <main className="studio-stage" aria-label="LIVE WEBSITE Stage" style={{ position: "relative", height: "100%" }}>
+      <section className="studio-stage" role="region" aria-label="LIVE WEBSITE Stage" style={{ position: "relative", height: "100%" }}>
         <div
           style={{
             position: "absolute",
@@ -330,8 +360,8 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
         >
           LIVE WEBSITE
         </div>
-        <WebsiteRenderer spec={spec} viewMode={viewMode} />
-      </main>
+        <WebsiteRenderer spec={spec} viewMode={viewMode} reducedMotion={reducedMotion} />
+      </section>
 
       {/* Surface 3: INTELLIGENCE */}
       <aside className="studio-panel studio-panel-right" aria-label="INTELLIGENCE Panel">
@@ -389,14 +419,14 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
               value={copilotPrompt}
               onChange={(e) => setCopilotPrompt(e.target.value)}
               placeholder="Prompt Copilot to direct motion, lighting, or camera..."
-              style={{ minHeight: "36px", fontSize: "12px" }}
+              style={{ fontSize: "12px" }}
               aria-label="Direct Copilot with natural language"
             />
             <button
               type="button"
-              className="studio-btn studio-btn-primary"
+              className="studio-btn studio-btn-compact studio-btn-primary"
               onClick={handleQueueCopilotEdit}
-              style={{ minHeight: "36px", fontSize: "12px", whiteSpace: "nowrap" }}
+              style={{ fontSize: "12px", whiteSpace: "nowrap" }}
             >
               Apply Edit
             </button>
