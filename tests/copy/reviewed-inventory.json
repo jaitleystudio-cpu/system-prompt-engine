@@ -1,6 +1,6 @@
 {
-  "generated": "2026-09-28T18:05:37.421Z",
-  "tipNote": "Truth/privacy closure 20260928: URL reference-only CSP honesty, Home/Create bound notices, screenshot-to-code claim boundary.",
+  "generated": "2026-10-06T00:00:00.000Z",
+  "tipNote": "Founder-approved SPE Free 3D Websites v1.1 core strings reviewed, including inert SVG accessibility fallback.",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -15687,12 +15687,6 @@
       "text": "Portable"
     },
     {
-      "id": "b6554f6d5bdc3f3b2cb1",
-      "file": "apps/web/src/pages/Capabilities.tsx",
-      "depth": "PRODUCT",
-      "text": "No. That ranking claim is not proven. Independent comparative ranking has not been established. Human preference ratings have not yet been collected. SPE provides honest local preparation, contracts, and portability — not an independently replicated top ranking."
-    },
-    {
       "id": "55be489bb913e83981db",
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PROOF",
@@ -15811,6 +15805,12 @@
       "file": "apps/web/src/pages/Capabilities.tsx",
       "depth": "PRODUCT",
       "text": "Explicit constraints and desired output stay bound to the brief."
+    },
+    {
+      "id": "b6554f6d5bdc3f3b2cb1",
+      "file": "apps/web/src/pages/Capabilities.tsx",
+      "depth": "PRODUCT",
+      "text": "No. That ranking claim is not proven. Independent comparative ranking has not been established. Human preference ratings have not yet been collected. SPE provides honest local preparation, contracts, and portability — not an independently replicated top ranking."
     },
     {
       "id": "b978a5031a55837e0fa5",
@@ -16797,6 +16797,12 @@
       "text": "pushState"
     },
     {
+      "id": "7b3fcbe2dca98407cf8a",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "How SPE prepares prompts on this device, with honest privacy claims for this release."
+    },
+    {
       "id": "7ba218c97c945e9b311e",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -16827,12 +16833,6 @@
       "text": "SPE — System Prompt Engine | Free System Prompt Generator"
     },
     {
-      "id": "f1e714733659f22362bd",
-      "file": "apps/web/src/routing.ts",
-      "depth": "PRODUCT",
-      "text": "No. That ranking claim is not proven. Independent comparative ranking has not been established. Human preference ratings have not yet been collected. SPE provides honest local preparation, contracts, and portability — not an independently replicated top ranking."
-    },
-    {
       "id": "9cd13dc304d56902c06e",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -16849,18 +16849,6 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "ocr"
-    },
-    {
-      "id": "7b3fcbe2dca98407cf8a",
-      "file": "apps/web/src/routing.ts",
-      "depth": "PRODUCT",
-      "text": "How SPE prepares prompts on this device, with honest privacy claims for this release."
-    },
-    {
-      "id": "cfe6abe6c9ed405869bb",
-      "file": "apps/web/src/routing.ts",
-      "depth": "PRODUCT",
-      "text": "Honest SPE capabilities: local-first preparation, ProtectedIntent, Execution Contract, provider profiles, and portable .spe files. Independent comparative ranking has not been established; human preference ratings have not yet been collected."
     },
     {
       "id": "ba48c44899936fd87334",
@@ -16917,6 +16905,12 @@
       "text": "Request image text from the configured app host. Image bytes are sent to that host; on-device OCR requires a local host. Missing runtime stays unavailable."
     },
     {
+      "id": "cfe6abe6c9ed405869bb",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Honest SPE capabilities: local-first preparation, ProtectedIntent, Execution Contract, provider profiles, and portable .spe files. Independent comparative ranking has not been established; human preference ratings have not yet been collected."
+    },
+    {
       "id": "d77e6ecfec55e77411cc",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -16969,6 +16963,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "/create"
+    },
+    {
+      "id": "f1e714733659f22362bd",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "No. That ranking claim is not proven. Independent comparative ranking has not been established. Human preference ratings have not yet been collected. SPE provides honest local preparation, contracts, and portability — not an independently replicated top ranking."
     },
     {
       "id": "f2cdd956da68d266f602",
@@ -17857,6 +17857,1554 @@
       "file": "apps/web/src/ui/TrustPanel.tsx",
       "depth": "PROOF",
       "text": "wasm imports:"
+    },
+    {
+      "id": "055240dc2616ab630ef2",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "exportSite"
+    },
+    {
+      "id": "0899ddfe8756fd47cfd5",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "getTimeline"
+    },
+    {
+      "id": "234c2442eca3d7d2df6d",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "optimizeScene"
+    },
+    {
+      "id": "2bc7dceb71aabce3d7ea",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "runAccessibilityAudit"
+    },
+    {
+      "id": "2bf16b73a6042ab481b9",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "updateSceneObject"
+    },
+    {
+      "id": "30f107087d78daa71896",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "runPerformanceAudit"
+    },
+    {
+      "id": "34fc42dc1303b62ddd1f",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "getCameraPlan"
+    },
+    {
+      "id": "43a7941db294b12bd902",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "getWebsiteSpec"
+    },
+    {
+      "id": "470d008c74000da2cb0e",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "getAccessibilityReceipt"
+    },
+    {
+      "id": "53f4adaa00f5070a9fe5",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "getBehaviorGraph"
+    },
+    {
+      "id": "58a10cc85b5dd585c4de",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "getPageTree"
+    },
+    {
+      "id": "6258a55a83ba2751efd4",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "updateMotionBlock"
+    },
+    {
+      "id": "64b92b9dd0c84a425803",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "createSceneObject"
+    },
+    {
+      "id": "69a777f99f9a09cfec3f",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "getScene"
+    },
+    {
+      "id": "88ab8cfc98e8aa7eb348",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "runQualityAudit"
+    },
+    {
+      "id": "ac66d662b44e46749182",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "proposePatch"
+    },
+    {
+      "id": "bcc12ceb658fb580e211",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "renderPreview"
+    },
+    {
+      "id": "bdd62fdd6367daedf5c8",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "runResponsiveAudit"
+    },
+    {
+      "id": "c048e21a22f995848845",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "exportProject"
+    },
+    {
+      "id": "c9da731a684291bcf494",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "getPerformanceReceipt"
+    },
+    {
+      "id": "cfc263f5a407812c39c9",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "getSelectedObjects"
+    },
+    {
+      "id": "de3c005659d5efc1cedb",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "applyApprovedPatch"
+    },
+    {
+      "id": "ef08f3548e63b1b50c7f",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "createBehaviorRule"
+    },
+    {
+      "id": "f2e647554422b1087ff0",
+      "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
+      "depth": "PRODUCT",
+      "text": "updateCameraPlan"
+    },
+    {
+      "id": "03cfa8eec4ee7f467aee",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "getAccessibilityReceipt"
+    },
+    {
+      "id": "0e3663f3f2dfb0907883",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "getPageTree"
+    },
+    {
+      "id": "0f9d4c3102064d2ea14a",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "getPerformanceReceipt"
+    },
+    {
+      "id": "17b8e398e146d10a3ac7",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "getScene"
+    },
+    {
+      "id": "1a91369480ddf47e9eaf",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_CONFLICT"
+    },
+    {
+      "id": "1e23631c6891ab7fdfa9",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "1e7a68fc87e795e14d15",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "exportProject"
+    },
+    {
+      "id": "4249d0e33f03582b95bd",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "OK"
+    },
+    {
+      "id": "4c0148cf28bf9d88f686",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "exportSite"
+    },
+    {
+      "id": "64bc7f70de571c937c23",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "getWebsiteSpec"
+    },
+    {
+      "id": "7f11e78a3be12b6b6046",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "getCameraPlan"
+    },
+    {
+      "id": "8cd881b0f9cbd69178cf",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "proposePatch"
+    },
+    {
+      "id": "9f5dcb76802974e7dcc3",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "COMMAND_REFUSED"
+    },
+    {
+      "id": "a80321620b13ce0e1bda",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "applyApprovedPatch"
+    },
+    {
+      "id": "aeb3d7840d963830c684",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "AGENT"
+    },
+    {
+      "id": "dcbdffb3496f025d3abb",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "getSelectedObjects"
+    },
+    {
+      "id": "dde1ebac10caa14bd611",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "CAPABILITY_DENIED"
+    },
+    {
+      "id": "e59f0a07838ae4d79283",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "getBehaviorGraph"
+    },
+    {
+      "id": "f25770422013fad233d0",
+      "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
+      "depth": "PRODUCT",
+      "text": "getTimeline"
+    },
+    {
+      "id": "83de60081c4f17e947dd",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "string"
+    },
+    {
+      "id": "adecc909683cb2b0fc06",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "BEHAVIOR_CYCLE_REFUSED: direct self cycle"
+    },
+    {
+      "id": "b641c513400dedfb52d1",
+      "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "timeline-play"
+    },
+    {
+      "id": "05e5e13fb909a96c4674",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Establish premium subject"
+    },
+    {
+      "id": "0cf43555df49a7a0135b",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "orbit"
+    },
+    {
+      "id": "1bead51d203ecae0de51",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Wide establish"
+    },
+    {
+      "id": "3092f3dc892fe1525c5f",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Dramatic Push-In"
+    },
+    {
+      "id": "44681fe3d63a8fc5901b",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "establish"
+    },
+    {
+      "id": "4d039407efa2e5eba237",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "push"
+    },
+    {
+      "id": "632ffffd2653e1d83813",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "resolve"
+    },
+    {
+      "id": "6810777f0aa974f19658",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Controlled luxury orbit"
+    },
+    {
+      "id": "69017334f1b4670a70a7",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "cinematic"
+    },
+    {
+      "id": "6cb69c533aac1f4d2cce",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Dramatic push-in"
+    },
+    {
+      "id": "a7b84336adc5fb1d1314",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Hero settle"
+    },
+    {
+      "id": "b1ec712670933f575627",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "settle"
+    },
+    {
+      "id": "b4e6b470cdfacdc0ea7b",
+      "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
+      "depth": "PRODUCT",
+      "text": "Luxury Orbit"
+    },
+    {
+      "id": "06e9ac23fd93f456c209",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "map-enum"
+    },
+    {
+      "id": "0ef9893bfe5be5a82ec9",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_CONSTANT"
+    },
+    {
+      "id": "4804a4926a656410d306",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "number-scale"
+    },
+    {
+      "id": "49be415c2f28595b87ac",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "DATA_BINDING_NETWORK_EXECUTION_REQUIRES_DISCLOSED_ADAPTER"
+    },
+    {
+      "id": "5a55c4651605c114def9",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_PROJECT_DATA"
+    },
+    {
+      "id": "6f45abc33195f3dc05ab",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "DATA_BINDING_ENUM_MISSING"
+    },
+    {
+      "id": "88fd15b258298f3672bf",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "{value}"
+    },
+    {
+      "id": "97ce8ffa40d82bdb6faa",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "number"
+    },
+    {
+      "id": "aef10a332124f2e359c9",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "string-template"
+    },
+    {
+      "id": "bef271002a31994769aa",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL"
+    },
+    {
+      "id": "c48ce1c7f147b04ecea2",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "boolean-invert"
+    },
+    {
+      "id": "c6fd649554b260ac4bac",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "DATA_BINDING_TRANSFORM_REFUSED"
+    },
+    {
+      "id": "e88ac678bbbb3c9eac2e",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "boolean"
+    },
+    {
+      "id": "ec9153179a88ecdfb949",
+      "file": "apps/web/src/website-studio/data/evaluateBinding.ts",
+      "depth": "PRODUCT",
+      "text": "DATA_BINDING_TYPE_MISMATCH"
+    },
+    {
+      "id": "027bbad2c9d591072c64",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "depth-composite"
+    },
+    {
+      "id": "2d77542c8356e654a739",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "2.5d"
+    },
+    {
+      "id": "319809fa02fed5d18e60",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "selective-webgl-product-stage"
+    },
+    {
+      "id": "691d9634ab78679ef204",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "2_5D"
+    },
+    {
+      "id": "935a0e833777306e661f",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "TRUE_3D"
+    },
+    {
+      "id": "aa11ab5db3367fd77e48",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "MEDIUM"
+    },
+    {
+      "id": "ad51d792d4f700b9a556",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "static-image"
+    },
+    {
+      "id": "b09be9499c47d744596b",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "LOW"
+    },
+    {
+      "id": "bd6272d9ef3fc17a27c2",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "REVIEW_REQUIRED"
+    },
+    {
+      "id": "cbd903404ed2210b1a26",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "hero-3d"
+    },
+    {
+      "id": "da6933e254d4fb1b1b6d",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "webgl-scene"
+    },
+    {
+      "id": "deadd2a2ed182ade5cfb",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "hero"
+    },
+    {
+      "id": "f6fad4856984abe0e4a1",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "CSS_MOTION"
+    },
+    {
+      "id": "ffe8362ad594c49382ae",
+      "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
+      "depth": "PRODUCT",
+      "text": "DEPTH_COMPOSITE"
+    },
+    {
+      "id": "16b6b0a7bbe4ffc6d1f7",
+      "file": "apps/web/src/website-studio/export/projectPackage.ts",
+      "depth": "PRODUCT",
+      "text": "SPE_SITE_FORMAT_REFUSED"
+    },
+    {
+      "id": "1be478e8e802d73c7700",
+      "file": "apps/web/src/website-studio/export/projectPackage.ts",
+      "depth": "PRODUCT",
+      "text": "SPE_SITE_INTEGRITY_MISMATCH"
+    },
+    {
+      "id": "5d4250dc1e3ed672aaae",
+      "file": "apps/web/src/website-studio/export/projectPackage.ts",
+      "depth": "PRODUCT",
+      "text": "spe-site/1"
+    },
+    {
+      "id": "26a44a4f27b9478bce82",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "fnv1a32-"
+    },
+    {
+      "id": "5ed61ec35694af3e568c",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_CONFLICT"
+    },
+    {
+      "id": "6a1225a3436ee2897aba",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "object"
+    },
+    {
+      "id": "7c75094bff663d5f11b7",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_OPERATION_REFUSED"
+    },
+    {
+      "id": "a3f678df29957fb0a4eb",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_PATH_REFUSED"
+    },
+    {
+      "id": "be2330597ee8a1eee5f5",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "set"
+    },
+    {
+      "id": "e3e768fc40ea890415a3",
+      "file": "apps/web/src/website-studio/history/sitePatch.ts",
+      "depth": "PRODUCT",
+      "text": "PATCH_AFTER_HASH_MISMATCH"
+    },
+    {
+      "id": "05dd5321464cf6ddcf22",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "product"
+    },
+    {
+      "id": "1418de6bb8fb30bd7d20",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "visibility"
+    },
+    {
+      "id": "1790fd680aecd7fe7d48",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "click"
+    },
+    {
+      "id": "1ca8fb5c5830b2f6ccb0",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "dom-show"
+    },
+    {
+      "id": "1d4fbd9f7dbccd249cbc",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "prefers-reduced-motion"
+    },
+    {
+      "id": "25071d120b3c9e1fcec5",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "scene-rotate"
+    },
+    {
+      "id": "41562ed57203811e8479",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "scroll"
+    },
+    {
+      "id": "594783e0afa6436da7f5",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "fade"
+    },
+    {
+      "id": "5db8c0a0a7dc606bf914",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "closer"
+    },
+    {
+      "id": "6228ee6d0bbdb8d17bad",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "page"
+    },
+    {
+      "id": "671bcf8496146cc95ac5",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "camera-dolly"
+    },
+    {
+      "id": "6d352f8be71ed330bdca",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "data"
+    },
+    {
+      "id": "6e5e18c3efe4809eae7c",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "mobile-lightweight-reveal"
+    },
+    {
+      "id": "93ba2d53289b212d69f7",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "hover"
+    },
+    {
+      "id": "a80bef195c32d87e1b33",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "sold-out"
+    },
+    {
+      "id": "b4091a206f3c0a1f6a22",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "camera"
+    },
+    {
+      "id": "baa7f08a9117dac08159",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "timer"
+    },
+    {
+      "id": "bc7a125fdbe139c2e56f",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "selection"
+    },
+    {
+      "id": "c35bc7da6612d3d64f7a",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "behavior-graph/1"
+    },
+    {
+      "id": "c6e20e9f84ba840dd5ea",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "cta"
+    },
+    {
+      "id": "c9b531953128e13da2aa",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "gentle"
+    },
+    {
+      "id": "d70bde344c9daeeba918",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "section"
+    },
+    {
+      "id": "f192349e5a228c8892d2",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "scene"
+    },
+    {
+      "id": "f2db64aeed62f9ad2ee0",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "intent-rule-1"
+    },
+    {
+      "id": "f333fe5bcc335adad874",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "specifications"
+    },
+    {
+      "id": "f531d3b943b5f853df60",
+      "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
+      "depth": "PRODUCT",
+      "text": "viewport-min"
+    },
+    {
+      "id": "18d006698bfc7dd06340",
+      "file": "apps/web/src/website-studio/intent/compileCameraIntent.ts",
+      "depth": "PRODUCT",
+      "text": "Reveal volume with a controlled orbit"
+    },
+    {
+      "id": "44b84a3de1fc4e2b4205",
+      "file": "apps/web/src/website-studio/intent/compileCameraIntent.ts",
+      "depth": "PRODUCT",
+      "text": "Push toward hero detail and settle"
+    },
+    {
+      "id": "48052dcf5283e434f67d",
+      "file": "apps/web/src/website-studio/intent/compileCameraIntent.ts",
+      "depth": "PRODUCT",
+      "text": "orbit"
+    },
+    {
+      "id": "5be073a03307199d3e7a",
+      "file": "apps/web/src/website-studio/intent/compileCameraIntent.ts",
+      "depth": "PRODUCT",
+      "text": "cinematic"
+    },
+    {
+      "id": "920c3772db6f0d0f5a0d",
+      "file": "apps/web/src/website-studio/intent/compileCameraIntent.ts",
+      "depth": "PRODUCT",
+      "text": "establish"
+    },
+    {
+      "id": "cef22c6f6a41f9b0d93d",
+      "file": "apps/web/src/website-studio/intent/compileCameraIntent.ts",
+      "depth": "PRODUCT",
+      "text": "settle"
+    },
+    {
+      "id": "f9ef28beb58d76ac1b96",
+      "file": "apps/web/src/website-studio/intent/compileCameraIntent.ts",
+      "depth": "PRODUCT",
+      "text": "Establish subject"
+    },
+    {
+      "id": "077f6884f165966ef4b9",
+      "file": "apps/web/src/website-studio/intent/compileDataIntent.ts",
+      "depth": "PRODUCT",
+      "text": "product.stock"
+    },
+    {
+      "id": "4c34191fac6a113a23c2",
+      "file": "apps/web/src/website-studio/intent/compileDataIntent.ts",
+      "depth": "PRODUCT",
+      "text": "visibility"
+    },
+    {
+      "id": "63df0a920005c2988319",
+      "file": "apps/web/src/website-studio/intent/compileDataIntent.ts",
+      "depth": "PRODUCT",
+      "text": "rotation-enabled"
+    },
+    {
+      "id": "6afb409e05e6d170e27e",
+      "file": "apps/web/src/website-studio/intent/compileDataIntent.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_PROJECT_DATA"
+    },
+    {
+      "id": "af81fa43e7692f667f64",
+      "file": "apps/web/src/website-studio/intent/compileDataIntent.ts",
+      "depth": "PRODUCT",
+      "text": "product-stock"
+    },
+    {
+      "id": "b64fc388e38029ff85d0",
+      "file": "apps/web/src/website-studio/intent/compileDataIntent.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL"
+    },
+    {
+      "id": "d054bc95a080cf24c4e4",
+      "file": "apps/web/src/website-studio/intent/compileDataIntent.ts",
+      "depth": "PRODUCT",
+      "text": "manual"
+    },
+    {
+      "id": "da4f1f9c99749b16a631",
+      "file": "apps/web/src/website-studio/intent/compileDataIntent.ts",
+      "depth": "PRODUCT",
+      "text": "product"
+    },
+    {
+      "id": "f49900b04a521540b2ff",
+      "file": "apps/web/src/website-studio/intent/compileDataIntent.ts",
+      "depth": "PRODUCT",
+      "text": "sold-out"
+    },
+    {
+      "id": "077985514abd8d7ac155",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "explore"
+    },
+    {
+      "id": "0df97173b9047dd835a8",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "landing"
+    },
+    {
+      "id": "0e3d84759c3b958b7054",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "business"
+    },
+    {
+      "id": "156f36c16fd999c974df",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "download"
+    },
+    {
+      "id": "3200377e1b2c7b9dcb76",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "story"
+    },
+    {
+      "id": "35c4a486bbf44e433188",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "booking"
+    },
+    {
+      "id": "5740ec7cdb645bd0b074",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "cinematic"
+    },
+    {
+      "id": "58d8821262a221b2ad6b",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "purchase"
+    },
+    {
+      "id": "5d737a86a3a15063a7e9",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "portfolio"
+    },
+    {
+      "id": "724467581c34593b5296",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "site visitors"
+    },
+    {
+      "id": "72ee196c31100de58716",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "Website intent is empty."
+    },
+    {
+      "id": "73f35e43ba6f0ba7e658",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "editorial"
+    },
+    {
+      "id": "75cbfa54461652a261f9",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "cinematic motion requested"
+    },
+    {
+      "id": "8906c6a7207f017ab15e",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "Conflicting motion requirements require user resolution."
+    },
+    {
+      "id": "94ef386bed3bcbf19d21",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "prospective customers"
+    },
+    {
+      "id": "a11eb612b56314e82a50",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "3d"
+    },
+    {
+      "id": "a279fb27e3d95e403ef9",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "hero"
+    },
+    {
+      "id": "a6b96003d274123ac3a9",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "cta"
+    },
+    {
+      "id": "a98192c7d1972b385c0b",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "CTA"
+    },
+    {
+      "id": "ace0d08f51a282465c64",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "contact"
+    },
+    {
+      "id": "b78a0d0c84ab65e92dc8",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "real 3D requested"
+    },
+    {
+      "id": "c25a74034a67699b901a",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "WebsiteIntentCompileError"
+    },
+    {
+      "id": "cde56736d3b8cc1ea19c",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "signup"
+    },
+    {
+      "id": "d4672df205870b9dd66a",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "INTENT_CONFLICT"
+    },
+    {
+      "id": "dae8409d6328e4ea8dda",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "product reveal"
+    },
+    {
+      "id": "e002817df38033ebe0b0",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "storytelling sequence"
+    },
+    {
+      "id": "e4760f4de289d6286309",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "storytelling"
+    },
+    {
+      "id": "f82d9a1ecd732d0b7851",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "product"
+    },
+    {
+      "id": "f8d991cb8ee8e0f22b15",
+      "file": "apps/web/src/website-studio/intent/compileWebsiteIntent.ts",
+      "depth": "PRODUCT",
+      "text": "hero introduction"
+    },
+    {
+      "id": "3d59f0748dd0aa165e89",
+      "file": "apps/web/src/website-studio/model/agentPolicy.ts",
+      "depth": "PRODUCT",
+      "text": "invalid agent policy"
+    },
+    {
+      "id": "6f264aedf335c2dc17d1",
+      "file": "apps/web/src/website-studio/model/agentPolicy.ts",
+      "depth": "PRODUCT",
+      "text": "wildcard agent authority is forbidden"
+    },
+    {
+      "id": "388f365d7f804ede4ba5",
+      "file": "apps/web/src/website-studio/model/behaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "behavior-graph/1"
+    },
+    {
+      "id": "3feff5c64b0e2a16817e",
+      "file": "apps/web/src/website-studio/model/behaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "invalid BehaviorGraph"
+    },
+    {
+      "id": "746cfbd8853d13e0ddb8",
+      "file": "apps/web/src/website-studio/model/behaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "behavior trigger required"
+    },
+    {
+      "id": "76c8dede82694e1b73c1",
+      "file": "apps/web/src/website-studio/model/behaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "behavior rule ids must be unique"
+    },
+    {
+      "id": "aafd100550c0bc2e18aa",
+      "file": "apps/web/src/website-studio/model/behaviorGraph.ts",
+      "depth": "PRODUCT",
+      "text": "behavior conditions/actions must be arrays"
+    },
+    {
+      "id": "0e9f0c085fc8b0b9d6c0",
+      "file": "apps/web/src/website-studio/model/cameraPlan.ts",
+      "depth": "PRODUCT",
+      "text": "camera fov must be between 10 and 140"
+    },
+    {
+      "id": "25a718211aac5410c3e0",
+      "file": "apps/web/src/website-studio/model/cameraPlan.ts",
+      "depth": "PRODUCT",
+      "text": "camera shots must be an array"
+    },
+    {
+      "id": "79cad754b3175a81cc18",
+      "file": "apps/web/src/website-studio/model/cameraPlan.ts",
+      "depth": "PRODUCT",
+      "text": "camera vectors must be finite vec3 values"
+    },
+    {
+      "id": "a05bc323f5e470513dbc",
+      "file": "apps/web/src/website-studio/model/cameraPlan.ts",
+      "depth": "PRODUCT",
+      "text": "camera shots must stay within normalized timeline"
+    },
+    {
+      "id": "eb9e3a5a7aa23f6d4cd3",
+      "file": "apps/web/src/website-studio/model/cameraPlan.ts",
+      "depth": "PRODUCT",
+      "text": "camera shot ids must be unique"
+    },
+    {
+      "id": "0c4a341aee26a5a149eb",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_PROJECT_DATA"
+    },
+    {
+      "id": "0c74fc8db99c4d36ab9f",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "boolean-invert"
+    },
+    {
+      "id": "18395aa80cbf085438b2",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "data binding id and variable required"
+    },
+    {
+      "id": "197bf438c39d2c403a05",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "local source must use LOCAL privacy boundary"
+    },
+    {
+      "id": "1eade7a8f707493b407b",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "number-scale"
+    },
+    {
+      "id": "50d586ae6b18dfda0a4d",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL_CONSTANT"
+    },
+    {
+      "id": "53ed5c33cf2852bc4d7b",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "data binding consumers must be an array"
+    },
+    {
+      "id": "653ad04ef072c4ddf2cc",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "LOCAL"
+    },
+    {
+      "id": "88186b6ad7d3ad6dc6b4",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "map-enum"
+    },
+    {
+      "id": "9d9b3cc30e0dd24179e8",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "unsafe or unknown data transform refused"
+    },
+    {
+      "id": "f2016e1997c3c30f4a3d",
+      "file": "apps/web/src/website-studio/model/dataBinding.ts",
+      "depth": "PRODUCT",
+      "text": "string-template"
+    },
+    {
+      "id": "12bd2da302f7e7654691",
+      "file": "apps/web/src/website-studio/model/designDNA.ts",
+      "depth": "PRODUCT",
+      "text": "#f7f8fb"
+    },
+    {
+      "id": "145ad980cb5137bff476",
+      "file": "apps/web/src/website-studio/model/designDNA.ts",
+      "depth": "PRODUCT",
+      "text": "#7c8cff"
+    },
+    {
+      "id": "dce58cde2558c46ed92f",
+      "file": "apps/web/src/website-studio/model/designDNA.ts",
+      "depth": "PRODUCT",
+      "text": "system-ui"
+    },
+    {
+      "id": "dea56baa32adb06d99b4",
+      "file": "apps/web/src/website-studio/model/designDNA.ts",
+      "depth": "PRODUCT",
+      "text": "#0b0d12"
+    },
+    {
+      "id": "ea2b3ba8478c571c38f9",
+      "file": "apps/web/src/website-studio/model/designDNA.ts",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "048b0d8550e79cad3f27",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "unknown enhancement kind"
+    },
+    {
+      "id": "1632719f624cfc9d20ea",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "DEPTH_COMPOSITE"
+    },
+    {
+      "id": "2a97aca2957cd1004e00",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "CSS_MOTION"
+    },
+    {
+      "id": "8a8b63974fbcf3d0fa51",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "2_5D"
+    },
+    {
+      "id": "8e73af55b93ca8defeb5",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "TRUE_3D"
+    },
+    {
+      "id": "a88a8f2fe7a834cc1678",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "depth-composite"
+    },
+    {
+      "id": "aceca5c1895f16137e4f",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "transition-system"
+    },
+    {
+      "id": "d4b0efe610af20cca809",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "motion-system"
+    },
+    {
+      "id": "ee013ecf4a71f8669d7d",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "hero-3d"
+    },
+    {
+      "id": "f2ac7b375d9709aa2079",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "product-stage"
+    },
+    {
+      "id": "fbc256ac557e0535dfc5",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "scroll-camera"
+    },
+    {
+      "id": "fdb6f1430e2fb3fd8a60",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "unknown enhancement truth label"
+    },
+    {
+      "id": "fedf2a5f0eb8a40ad975",
+      "file": "apps/web/src/website-studio/model/enhancementMetadata.ts",
+      "depth": "PRODUCT",
+      "text": "interactive-hotspots"
+    },
+    {
+      "id": "179bbf5fb72b963f8407",
+      "file": "apps/web/src/website-studio/model/motionBlock.ts",
+      "depth": "PRODUCT",
+      "text": "motion block range must satisfy 0 <= start <= end <= 1"
+    },
+    {
+      "id": "74c281ae0d56b9ec40f0",
+      "file": "apps/web/src/website-studio/model/motionBlock.ts",
+      "depth": "PRODUCT",
+      "text": "motion block id required"
+    },
+    {
+      "id": "a49b938be5a2a9626ad0",
+      "file": "apps/web/src/website-studio/model/motionBlock.ts",
+      "depth": "PRODUCT",
+      "text": "motion range must be finite"
+    },
+    {
+      "id": "51c86cc9f4f171c39180",
+      "file": "apps/web/src/website-studio/model/referenceBlend.ts",
+      "depth": "PRODUCT",
+      "text": "reference blend weights must sum to 1"
+    },
+    {
+      "id": "5261a53521e84aafca9c",
+      "file": "apps/web/src/website-studio/model/referenceBlend.ts",
+      "depth": "PRODUCT",
+      "text": "reference weights must be normalized"
+    },
+    {
+      "id": "b88b7ac7418ec09817df",
+      "file": "apps/web/src/website-studio/model/referenceBlend.ts",
+      "depth": "PRODUCT",
+      "text": "reference blend needs sources"
+    },
+    {
+      "id": "053f973d7d065a110fb6",
+      "file": "apps/web/src/website-studio/model/runtimeExtension.ts",
+      "depth": "PRODUCT",
+      "text": "runtime extensions must be sandboxed and non-authoritative"
+    },
+    {
+      "id": "3454090e0d040387d6e4",
+      "file": "apps/web/src/website-studio/model/sceneIR.ts",
+      "depth": "PRODUCT",
+      "text": "Untitled 3D Scene"
+    },
+    {
+      "id": "37a65c206ad7b4a6ae1c",
+      "file": "apps/web/src/website-studio/model/sceneIR.ts",
+      "depth": "PRODUCT",
+      "text": "#0b0d12"
+    },
+    {
+      "id": "5f4a1b81b5de9a2a5662",
+      "file": "apps/web/src/website-studio/model/sceneIR.ts",
+      "depth": "PRODUCT",
+      "text": "dark"
+    },
+    {
+      "id": "642f5554686a22d02249",
+      "file": "apps/web/src/website-studio/model/sceneIR.ts",
+      "depth": "PRODUCT",
+      "text": "perspective"
+    },
+    {
+      "id": "6681abd417b29d4388ff",
+      "file": "apps/web/src/website-studio/model/sceneIR.ts",
+      "depth": "PRODUCT",
+      "text": "Interactive 3D scene"
+    },
+    {
+      "id": "7e32281e0295097dd575",
+      "file": "apps/web/src/website-studio/model/sceneIR.ts",
+      "depth": "PRODUCT",
+      "text": "scene-ir/1"
+    },
+    {
+      "id": "a5de4d3b0b7f9bc652e1",
+      "file": "apps/web/src/website-studio/model/sceneIR.ts",
+      "depth": "PRODUCT",
+      "text": "3D scene preview"
+    },
+    {
+      "id": "c6ee83e3ca62720a61c1",
+      "file": "apps/web/src/website-studio/model/sceneIR.ts",
+      "depth": "PRODUCT",
+      "text": "<svg xmlns=\\"
+    },
+    {
+      "id": "04e88cb3bfb815cb0e1a",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "home"
+    },
+    {
+      "id": "0d83e9fc5bb10c814f8a",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "metadata title and at least one page are required"
+    },
+    {
+      "id": "18f01f5ca62727ffd487",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "enhancement"
+    },
+    {
+      "id": "2aa6f9362ae781f76895",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "WebsiteSpecV2ValidationError"
+    },
+    {
+      "id": "2dc383576c972aa5fae6",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "dataBinding"
+    },
+    {
+      "id": "373d0d2a887518c63c11",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "behaviorGraph"
+    },
+    {
+      "id": "3f36467acb23adc04408",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "index.html"
+    },
+    {
+      "id": "44a611eb54d92c20c3d3",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "motionBlocks must be an array"
+    },
+    {
+      "id": "4c909877b727b1aaf221",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "cameraPlan"
+    },
+    {
+      "id": "5c839ea918d68f2eab09",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "B"
+    },
+    {
+      "id": "5ddd2f7f7ee05db83f46",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "motionBlock"
+    },
+    {
+      "id": "9344a88e305f70aec969",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "Home"
+    },
+    {
+      "id": "b0fb6371b47c462c3ea7",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "Untitled SPE Website"
+    },
+    {
+      "id": "bfc4f39224b9fd87c073",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "website-spec/2"
+    },
+    {
+      "id": "d28aa7e9fa1f707cafa7",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "en"
+    },
+    {
+      "id": "d5ae29788732ef89196b",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "dataBindings must be an array"
+    },
+    {
+      "id": "ddbb3d2bfaa73c8c2f9f",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "agentPolicy"
+    },
+    {
+      "id": "f3f9c3e46bf10262bc05",
+      "file": "apps/web/src/website-studio/model/websiteSpecV2.ts",
+      "depth": "PRODUCT",
+      "text": "spec_version must be website-spec/2"
+    },
+    {
+      "id": "4c17463fadbe12414e49",
+      "file": "apps/web/src/website-studio/motion/expandMotionBlock.ts",
+      "depth": "PRODUCT",
+      "text": "-track-"
+    },
+    {
+      "id": "28e4687b133e946893b6",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "61a8133b2a6d49edbed8",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "TRIANGLE_BUDGET_EXCEEDED"
+    },
+    {
+      "id": "6d8fd315359559d5de42",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "DRAW_CALL_BUDGET_EXCEEDED"
+    },
+    {
+      "id": "8ea6d68debf9b30deba3",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "MEASURED"
+    },
+    {
+      "id": "c3ea52c0708667088753",
+      "file": "apps/web/src/website-studio/performance/measureScene.ts",
+      "depth": "PRODUCT",
+      "text": "PERFORMANCE_MEASUREMENT_INVALID"
+    },
+    {
+      "id": "5f4862766a72184f2072",
+      "file": "apps/web/src/website-studio/quality/inspectSite.ts",
+      "depth": "PRODUCT",
+      "text": "ERROR"
+    },
+    {
+      "id": "8aaddeb9b317109ceb7e",
+      "file": "apps/web/src/website-studio/quality/inspectSite.ts",
+      "depth": "PRODUCT",
+      "text": "WEBGL_CONTEXT_LEAK_RISK"
+    },
+    {
+      "id": "9ee3fcf74cf24ec1311e",
+      "file": "apps/web/src/website-studio/quality/inspectSite.ts",
+      "depth": "PRODUCT",
+      "text": "ANIMATION_LOOP_LEAK_RISK"
+    },
+    {
+      "id": "af79c809efa30055549f",
+      "file": "apps/web/src/website-studio/quality/inspectSite.ts",
+      "depth": "PRODUCT",
+      "text": "REDUCED_MOTION_MISSING"
+    },
+    {
+      "id": "d530779d4c1bf6769cc2",
+      "file": "apps/web/src/website-studio/quality/inspectSite.ts",
+      "depth": "PRODUCT",
+      "text": "SEMANTIC_DOM_MISSING"
+    },
+    {
+      "id": "f6fc868b08a153d4784e",
+      "file": "apps/web/src/website-studio/quality/inspectSite.ts",
+      "depth": "PRODUCT",
+      "text": "WARNING"
+    },
+    {
+      "id": "59211b1be32416704aae",
+      "file": "apps/web/src/website-studio/reference/blendReferences.ts",
+      "depth": "PRODUCT",
+      "text": "REFERENCE_BLEND_DIMENSION_CONFLICT"
+    },
+    {
+      "id": "47d9bc3098da9d5b8df2",
+      "file": "apps/web/src/website-studio/reference/extractDesignDNAFromHtml.ts",
+      "depth": "PRODUCT",
+      "text": "#ffffff"
+    },
+    {
+      "id": "68586b8847c14e57747f",
+      "file": "apps/web/src/website-studio/reference/extractDesignDNAFromHtml.ts",
+      "depth": "PRODUCT",
+      "text": "system-ui"
+    },
+    {
+      "id": "cbb0e63ca0aee1912acc",
+      "file": "apps/web/src/website-studio/reference/extractDesignDNAFromHtml.ts",
+      "depth": "PRODUCT",
+      "text": "OBSERVED"
     },
     {
       "id": "07251de020e7386ad078",
