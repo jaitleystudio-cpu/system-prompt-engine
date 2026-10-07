@@ -3,10 +3,11 @@
 Not a second engine. This process is started by the app server. The browser
 reaches it only through the app's same-origin /api/media route.
 
-File proof does not flip v1. This route calls product_gates. PRODUCT_MEDIA_V1
-becomes PASS only after one journey on this route recorded absence, verified
-model ingress, a verified CLI build, LOCAL_NEURAL, and user-audio egress 0.
-A mount string is not that journey.
+File proof does not flip v1. This route calls product_gates. This route is an
+evidence writer and never reports PRODUCT_MEDIA_V1=PASS. After one journey on
+this route recorded absence, verified model ingress, a verified CLI build,
+LOCAL_NEURAL, and user-audio egress 0 it reports runtimeJourney=COMPLETE with
+remainingGap=INDEPENDENT_VERIFICATION_REQUIRED. A mount string is not that journey.
 
 Ownership, from spe_runtime/media_product/local_backend.py:
 - Runtime creation: LocalMediaSession.open(discover_qualified_assets()).
@@ -29,6 +30,7 @@ from urllib.parse import unquote
 
 from spe_runtime.journey_observation import text_digest
 from spe_runtime.media_product.local_backend import (
+    INDEPENDENT_VERIFICATION_REQUIRED,
     JOURNEY_OBSERVER,
     IntegrityError,
     LocalMediaSession,
@@ -180,10 +182,12 @@ def _run_job(job: Job, media_path: Path) -> dict[str, object]:
                     file=sys.stderr,
                     flush=True,
                 )
-            verdict, gap, became = commit_product_journey(assets, result)
-            if became:
+            verdict, gap, writer_promoted = commit_product_journey(assets, result)
+            if writer_promoted:  # pragma: no cover - the writer never promotes
+                raise RuntimeError("WRITER_PROMOTION_REFUSED")
+            if gap == INDEPENDENT_VERIFICATION_REQUIRED:
                 print(
-                    f"PRODUCT_MEDIA_V1 {verdict} remainingGap={gap}",
+                    f"RUNTIME_JOURNEY COMPLETE PRODUCT_MEDIA_V1 {verdict} remainingGap={gap} writerPromoted=false",
                     file=sys.stderr,
                     flush=True,
                 )
@@ -246,6 +250,7 @@ class Handler(BaseHTTPRequestHandler):
                 "lastError": _STATE["last_error"],
                 "productMediaV1": gates["PRODUCT_MEDIA_V1"],
                 "remainingGap": gates["REMAINING_GAP"],
+                "runtimeJourney": gates["RUNTIME_JOURNEY"],
             },
         )
 

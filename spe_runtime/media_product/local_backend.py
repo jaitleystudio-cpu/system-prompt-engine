@@ -8,7 +8,11 @@ whisper.cpp commit into the relative media-pack (static, no absolute rpath).
 User audio is never uploaded. A bad hash, a bad size, a bad rpath, or the
 wrong architecture fails closed. The session owns decode, cancellation,
 silence truth, and explicit modes. It does not claim live transcription.
-Product media v1 is NOT_PASS until one journey records absence, verified model ingress, a verified CLI build, LOCAL_NEURAL, and user-audio egress 0.
+This runtime is an evidence WRITER. It never sets PRODUCT_MEDIA_V1=PASS. A
+journey that records absence, verified model ingress, a verified CLI build,
+LOCAL_NEURAL, and user-audio egress 0 only reports RUNTIME_JOURNEY=COMPLETE
+with REMAINING_GAP=INDEPENDENT_VERIFICATION_REQUIRED. Promotion belongs to an
+independent verifier and later adjudication, never to this process.
 """
 
 from __future__ import annotations
@@ -157,6 +161,16 @@ def resolve_media_mode(*, provider: str, assets_ready: bool, neural_session_ran:
 
 _JOURNEY_LOCK = threading.Lock()
 _RECORDED_JOURNEY: dict[str, object] | None = None
+# Writer-side ceiling: a complete runtime journey is evidence, not a pass.
+INDEPENDENT_VERIFICATION_REQUIRED = "INDEPENDENT_VERIFICATION_REQUIRED"
+RUNTIME_JOURNEY_COMPLETE = "COMPLETE"
+RUNTIME_JOURNEY_INCOMPLETE = "INCOMPLETE"
+
+
+def reset_recorded_journey_for_tests() -> None:
+    global _RECORDED_JOURNEY
+    with _JOURNEY_LOCK:
+        _RECORDED_JOURNEY = None
 
 
 def recorded_journey() -> dict[str, object] | None:
@@ -208,16 +222,19 @@ def product_gates(
 ) -> dict[str, object]:
     """File proof does not flip v1. A mount string does not flip v1.
 
-    PRODUCT_MEDIA_V1 becomes PASS only when `journey` recorded absence before
-    fetch, verified model ingress (sha and size), a verified CLI build (sha,
-    no rpath, no spe-g12), LOCAL_NEURAL, and user-audio egress 0.
-    `browser_journey` is reported and does not change the verdict. Live
+    The runtime is an evidence writer: PRODUCT_MEDIA_V1 is NOT_PASS on every
+    path. journey_gap(journey) == "NONE" means only that the RUNTIME
+    OBSERVABLE journey is complete (absence before fetch, verified model
+    ingress, verified CLI build, LOCAL_NEURAL, user-audio egress 0); it then
+    reports RUNTIME_JOURNEY=COMPLETE and
+    REMAINING_GAP=INDEPENDENT_VERIFICATION_REQUIRED. Otherwise the concrete
+    gap is reported. `browser_journey` is reported and does not change the verdict. Live
     transcription, UI mount, and a physical device stay unflipped.
     """
     gap = journey_gap(journey)
     verdict = "NOT_PASS"
-    if gap == "NONE":
-        verdict = "PASS"
+    runtime_journey = RUNTIME_JOURNEY_COMPLETE if gap == "NONE" else RUNTIME_JOURNEY_INCOMPLETE
+    remaining = INDEPENDENT_VERIFICATION_REQUIRED if gap == "NONE" else gap
     return {
         "TELUGU_MODEL_QUALIFIED_FOR_MEDIA_BACKEND": "PRESERVED",
         "LIVE_TRANSCRIPTION": "UNAVAILABLE",
@@ -230,7 +247,8 @@ def product_gates(
         "TIMESTAMPS": TIMESTAMP_STATE,
         "BROWSER_CLOUD_STT": "NOT_LOCAL",
         "LOCAL_FILE_TRANSCRIPTION": local_file_transcription,
-        "REMAINING_GAP": gap,
+        "REMAINING_GAP": remaining,
+        "RUNTIME_JOURNEY": runtime_journey,
         "BROWSER_JOURNEY": browser_journey,
     }
 
@@ -901,11 +919,14 @@ class LocalTranscript:
 
 
 def commit_product_journey(assets: QualifiedAssets, result: LocalTranscript) -> tuple[str, str, bool]:
-    """Record this discover+transcribe only when that same call closed every gate.
+    """Record this discover+transcribe as writer evidence when that same call
+    closed every runtime-observable gate.
 
-    Returns verdict, remaining gap, and whether this call is what made the
-    verdict PASS. A later call does not become a pass by pointing at an
-    earlier one, and a mount string never does.
+    Returns (verdict, remaining gap, writer_promoted). The verdict is always
+    NOT_PASS and writer_promoted is always False: the runtime never promotes.
+    A complete runtime journey returns INDEPENDENT_VERIFICATION_REQUIRED as the
+    remaining gap. A later call cannot promote by pointing at an earlier one,
+    and a mount string never does.
     """
     proof: dict[str, object] = {
         "absence_before_fetch": bool(
@@ -941,7 +962,7 @@ def commit_product_journey(assets: QualifiedAssets, result: LocalTranscript) -> 
     with _JOURNEY_LOCK:
         global _RECORDED_JOURNEY
         _RECORDED_JOURNEY = proof
-    return "PASS", "NONE", True
+    return "NOT_PASS", INDEPENDENT_VERIFICATION_REQUIRED, False
 
 
 def _wav_usable(path: Path) -> bool:

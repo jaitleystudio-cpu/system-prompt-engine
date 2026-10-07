@@ -192,6 +192,13 @@ check("production static server and relative media-pack share one host owner", (
   assert.match(owner, /MEDIA_MODEL_INGRESS/);
   assert.match(owner, /MEDIA_CLI_BUILD/);
   assert.doesNotMatch(owner, /"PRODUCT_MEDIA_V1": "PASS" if mounted else "NOT_PASS"/);
+  // R9-E authority separation: the runtime is an evidence writer and never promotes.
+  assert.doesNotMatch(owner, /verdict = "PASS"/);
+  assert.doesNotMatch(owner, /return "PASS"/);
+  assert.match(owner, /INDEPENDENT_VERIFICATION_REQUIRED = "INDEPENDENT_VERIFICATION_REQUIRED"/);
+  assert.match(owner, /"RUNTIME_JOURNEY": runtime_journey/);
+  assert.doesNotMatch(src("src/media/MediaRoute.tsx"), /"PASS"/);
+  assert.match(src("src/media/MediaRoute.tsx"), /export function readRouteClaim/);
   assert.match(owner, /def journey_gap/);
   assert.match(owner, /def commit_product_journey/);
   assert.match(owner, /browser_journey` is reported and does not change the verdict/);
@@ -199,6 +206,9 @@ check("production static server and relative media-pack share one host owner", (
   assert.match(host, /product_gates/);
   assert.match(host, /commit_product_journey/);
   assert.match(host, /File proof does not flip v1/);
+  assert.match(host, /never reports PRODUCT_MEDIA_V1=PASS/);
+  assert.doesNotMatch(host, /PRODUCT_MEDIA_V1 PASS/);
+  assert.match(host, /RUNTIME_JOURNEY COMPLETE PRODUCT_MEDIA_V1 \{verdict\} remainingGap=\{gap\} writerPromoted=false/);
   assert.equal(sourcePass, false);
   assert.equal(mount.MEDIA_MOUNT.productMediaV1, "NOT_PASS");
   assert.equal(mount.MEDIA_MOUNT.remainingGap, "JOURNEY_NOT_RECORDED");
@@ -576,7 +586,7 @@ try {
   assert.equal(ready, true);
   console.log("ASSET_DISCOVERY relative media-pack (no SPE_MEDIA_ROOT)");
 
-  async function openAppMedia(expectClaim = "PASS") {
+  async function openAppMedia(expectClaim = "NOT_PASS") {
     const context = await browser.newContext({ viewport: desktop, serviceWorkers: "block" });
     const page = await context.newPage();
     const external = [];
@@ -686,13 +696,27 @@ try {
   assert.match(acquired, /sha256=47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e/);
   assert.match(acquired, /bytes=190085487/);
   assert.doesNotMatch(acquired, /127\.0\.0\.1/);
+  // Evidence order: model ingress -> LOCAL_NEURAL -> runtime-journey-complete.
+  // The writer never logs a product pass; it reports the independent gap.
   const ingressAt = acquired.indexOf("MEDIA_MODEL_INGRESS");
+  const buildAt = acquired.indexOf("MEDIA_CLI_BUILD");
   const neuralAt = acquired.indexOf("LOCAL_NEURAL");
-  const passAt = acquired.indexOf("PRODUCT_MEDIA_V1 PASS");
+  const completeAt = acquired.indexOf("RUNTIME_JOURNEY COMPLETE");
   assert.ok(ingressAt >= 0, acquired.slice(-1500));
+  assert.ok(buildAt >= 0, acquired.slice(-1500));
   assert.ok(neuralAt > ingressAt, acquired.slice(-1500));
-  assert.ok(passAt > neuralAt, acquired.slice(-1500));
-  assert.equal(acquired.slice(0, passAt).includes("PRODUCT_MEDIA_V1 PASS"), false);
+  assert.ok(neuralAt > buildAt, acquired.slice(-1500));
+  assert.ok(completeAt > neuralAt, acquired.slice(-1500));
+  assert.match(acquired, /RUNTIME_JOURNEY COMPLETE PRODUCT_MEDIA_V1 NOT_PASS remainingGap=INDEPENDENT_VERIFICATION_REQUIRED writerPromoted=false/);
+  assert.equal(appLog.includes("PRODUCT_MEDIA_V1 PASS"), false, "writer log must never report PRODUCT_MEDIA_V1 PASS");
+  const journeyHealth = await speech.page.evaluate(async () => (await fetch("/api/media/health")).json());
+  assert.equal(journeyHealth.productMediaV1, "NOT_PASS");
+  assert.equal(journeyHealth.remainingGap, "INDEPENDENT_VERIFICATION_REQUIRED");
+  assert.equal(journeyHealth.runtimeJourney, "COMPLETE");
+  assert.equal(journeyHealth.egressAttempts, 0);
+  await speech.page
+    .locator('[data-product-media-v1="NOT_PASS"][data-claim-source="route"][data-remaining-gap="INDEPENDENT_VERIFICATION_REQUIRED"][data-runtime-journey="COMPLETE"]')
+    .waitFor({ timeout: 20000 });
   assert.doesNotMatch(src("src/media/mount-contract.ts"), /productMediaV1:\s*"PASS"/);
   assert.doesNotMatch(src("src/shell/mountStatus.ts"), /productMediaV1:\s*"PASS"/);
   console.log("PRODUCT-STATIC EVIDENCE /media speech LOCAL_NEURAL", JSON.stringify(speechSeen));
@@ -738,13 +762,17 @@ try {
   await speech.page.reload({ waitUntil: "domcontentloaded" });
   await speech.page.waitForSelector("[data-testid=media-file]", { timeout: 120000 });
   assert.equal(new URL(speech.page.url()).pathname, "/media");
-  await speech.page.locator('[data-product-media-v1="PASS"][data-claim-source="route"]').waitFor({ timeout: 20000 });
+  await speech.page
+    .locator('[data-product-media-v1="NOT_PASS"][data-claim-source="route"][data-remaining-gap="INDEPENDENT_VERIFICATION_REQUIRED"]')
+    .waitFor({ timeout: 20000 });
   const reloaded = await speech.page.evaluate(() => ({
     injected: typeof window.__speWhisper,
     claim: document.querySelector("[data-product-media-v1]")?.getAttribute("data-product-media-v1") ?? "",
+    gap: document.querySelector("[data-remaining-gap]")?.getAttribute("data-remaining-gap") ?? "",
   }));
   assert.equal(reloaded.injected, "undefined");
-  assert.equal(reloaded.claim, "PASS");
+  assert.equal(reloaded.claim, "NOT_PASS");
+  assert.equal(reloaded.gap, "INDEPENDENT_VERIFICATION_REQUIRED");
   await speech.page.getByTestId("media-file").setInputFiles("/tmp/r3e-silence-16k.wav");
   await speech.page.getByTestId("media-start").click();
   await speech.page.getByTestId("media-mode").filter({ hasText: "LOCAL_FALLBACK" }).waitFor({ timeout: 180000 });
