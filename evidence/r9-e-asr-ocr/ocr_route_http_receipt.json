@@ -1,0 +1,58 @@
+{
+  "lane": "SPE-R9-E",
+  "kind": "ocr_route_host_http",
+  "timestamp_ist": "2026-10-07T11:34:19.685645+05:30",
+  "port": 57101,
+  "health_before": {
+    "owner": "LocalOcrSession",
+    "engine": "tesseract",
+    "OCR_PRODUCT": "HOLD",
+    "execution": "NOT_RUN",
+    "missing": "RELEASE_NOT_QUALIFIED",
+    "modelIngressHosts": [],
+    "cliIngressHosts": [],
+    "ingressHosts": [],
+    "imageEgressAttempts": 0,
+    "error": ""
+  },
+  "recognize": {
+    "status": "OK",
+    "mode": "LOCAL_OCR",
+    "text": "SPE OCR LANE R6 HOLDFAST",
+    "errorCode": null,
+    "egressAttempts": 0,
+    "regions_count": 5
+  },
+  "recognize_full_keys": [
+    "status",
+    "mode",
+    "errorCode",
+    "text",
+    "regions",
+    "egressAttempts",
+    "networkHosts",
+    "engineRan"
+  ],
+  "health_after": {
+    "owner": "LocalOcrSession",
+    "engine": "tesseract",
+    "OCR_PRODUCT": "HOLD",
+    "execution": "LOCAL_OCR",
+    "missing": "RELEASE_NOT_QUALIFIED",
+    "modelIngressHosts": [],
+    "cliIngressHosts": [],
+    "ingressHosts": [],
+    "imageEgressAttempts": 0,
+    "error": ""
+  },
+  "claims": {
+    "OCR_PRODUCT_HOLD": true,
+    "recognize_LOCAL_OCR": true,
+    "text_recovered": true,
+    "execution_LOCAL_OCR_after": true
+  },
+  "non_claims": [
+    "OCR_PRODUCT not PASS",
+    "No browser UI journey"
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "lane": "SPE-R9-E",
+  "kind": "asr_local_neural_inference",
+  "timestamp_ist": "2026-10-07T11:32:22.480465+05:30",
+  "git_base": "895a3230d445089b3fdb48fbbb101e7b539f58c8",
+  "fixture": "apps/web/scripts/fixtures/media/te_amma_16k.wav",
+  "fixture_sha256": "f255d15c0214d17090da28870209f0af40788322c0b2209f46f2903cb204abba",
+  "fixture_bytes": 67694,
+  "elapsed_s": 26.656,
+  "transcript": {
+    "status": "SPEECH",
+    "text": "అమ్మా",
+    "execution": "LOCAL_CPU",
+    "egress_attempts": 0,
+    "sandbox_network": "DENY",
+    "timestamp_state": "UNSUPPORTED_FOR_QUALIFIED_TE_MODEL",
+    "raw_audio_retained": false,
+    "audio_sha256": "f255d15c0214d17090da28870209f0af40788322c0b2209f46f2903cb204abba",
+    "media_kind": "audio",
+    "pcm_released": true,
+    "no_speech_basis": null,
+    "user_transcript_promoted": true,
+    "discarded_model_text": null,
+    "duration_ms": 2113,
+    "mode": "LOCAL_NEURAL",
+    "error_code": null,
+    "neural_session_ran": true,
+    "timestamps_proven": false,
+    "segments": [],
+    "progress_percent": null,
+    "progress_state": "UNUSABLE_CALLBACK",
+    "attempts": 1,
+    "phase": "done"
+  },
+  "assets": {
+    "cli_sha256": "c52fa726b9ab0b8b7b1cd798ffa07b2feee8b5c754a27b05400298a4646d2c40",
+    "model_sha256": "47369abd7ee13b624606b762a860a42d7cbea8f320e3c4553954d1fea748d49e",
+    "cli_path": "/Volumes/4TB-WD/projects/spe-r9a-free3d-reconcile/media-pack/whisper-cli",
+    "model_path": "/Volumes/4TB-WD/projects/spe-r9a-free3d-reconcile/media-pack/models/ggml-te-small.bin",
+    "raw_download": false,
+    "cli_built": false,
+    "absence_before_fetch": false
+  },
+  "commit_product_journey": {
+    "verdict": "NOT_PASS",
+    "gap": "JOURNEY_NOT_RECORDED",
+    "became_pass": false
+  },
+  "product_gates": {
+    "TELUGU_MODEL_QUALIFIED_FOR_MEDIA_BACKEND": "PRESERVED",
+    "LIVE_TRANSCRIPTION": "UNAVAILABLE",
+    "PRODUCT_MEDIA_V1": "NOT_PASS",
+    "UI_INTEGRATED": "NO",
+    "UI_MOUNTED": "NO",
+    "SHELL_MOUNT": "REQUIRED",
+    "PHYSICAL_DEVICE": "WAITING_EXTERNAL",
+    "RAW_MEDIA_EGRESS": 0,
+    "TIMESTAMPS": "UNSUPPORTED_FOR_QUALIFIED_TE_MODEL",
+    "BROWSER_CLOUD_STT": "NOT_LOCAL",
+    "LOCAL_FILE_TRANSCRIPTION": "LOCAL_NEURAL",
+    "REMAINING_GAP": "JOURNEY_NOT_RECORDED",
+    "BROWSER_JOURNEY": "NOT_RUN"
+  },
+  "claims": {
+    "LOCAL_NEURAL_or_speech": true,
+    "neural_session_ran": true,
+    "user_audio_egress_0": true,
+    "PRODUCT_MEDIA_V1_stays_NOT_PASS": true,
+    "UI_INTEGRATED_stays_NO": true
+  },
+  "non_claims": [
+    "PRODUCT_MEDIA_V1 is NOT PASS (journey requires absence+ingress+cli build)",
+    "UI_INTEGRATED / UI_MOUNTED remain NO (no browser journey proof)",
+    "LIVE_TRANSCRIPTION UNAVAILABLE",
+    "Audio→Text product qualification remains HOLD",
+    "No ResearchEngine2 invented",
+    "Browser Web Speech is not this path"
+  ]
+}

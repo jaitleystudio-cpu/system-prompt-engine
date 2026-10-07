@@ -1,5 +1,6 @@
 /** Shell mount ledger. Website UI is mounted. /media uses createLocalMediaHost and the relative media-pack.
  * productMediaV1 is not a source pass. The media route reads the runtime journey.
+ * /ocr uses createLocalOcrHost and the relative ocr-pack. OCR_PRODUCT stays HOLD.
  */
 export const MOUNT_PENDING = [] as const;
 
@@ -12,6 +13,20 @@ export const MEDIA_MOUNT = {
   remainingGap: "JOURNEY_NOT_RECORDED",
   runtime: "pinnedWhisperRuntime",
   localNeuralInBrowser: "ONLY_WHEN_NEURAL_SESSION_RAN",
+  contract: "apps/web/src/media/mount-contract.ts",
+} as const;
+
+/** Local OCR mounted on /ocr. Execution may be LOCAL_OCR; product stamp stays HOLD. */
+export const OCR_MOUNT = {
+  id: "ocr",
+  route: "/ocr",
+  component: "OcrRoute",
+  OCR_PRODUCT: "HOLD",
+  execution: "NOT_RUN",
+  missing: "RELEASE_NOT_QUALIFIED",
+  runtime: "ocrLite → createLocalOcrHost → spe_runtime.ocr_product.route_host",
+  contract: "apps/web/src/media/ocr-mount-contract.ts",
+  localOcrInBrowser: "ONLY_WHEN_ENGINE_RAN",
 } as const;
 
 export const WEBSITE_MOUNT = {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./MediaProductPanel.css";
+import { OCR_PRODUCT_MOUNT } from "./ocr-mount-contract";
 import { recognizeImageFile, type OcrExecution, type OcrExecutionMode } from "./ocrLite";
 
 const IDLE: OcrExecution = {
@@ -28,7 +29,10 @@ export function OcrRoute() {
   const [preview, setPreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [execution, setExecution] = useState<OcrExecution>(IDLE);
-  const [product, setProduct] = useState("HOLD");
+  const [product, setProduct] = useState<"HOLD">(OCR_PRODUCT_MOUNT.OCR_PRODUCT);
+  const [hostExecution, setHostExecution] = useState<string>(OCR_PRODUCT_MOUNT.execution);
+  const [missing, setMissing] = useState<string>(OCR_PRODUCT_MOUNT.missing);
+  const [claimSource, setClaimSource] = useState<"mount" | "route">("mount");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -37,11 +41,19 @@ export function OcrRoute() {
       try {
         const res = await fetch("/api/ocr/health");
         if (!res.ok) return;
-        const body = (await res.json()) as { OCR_PRODUCT?: unknown };
+        const body = (await res.json()) as {
+          OCR_PRODUCT?: unknown;
+          execution?: unknown;
+          missing?: unknown;
+        };
         if (dead) return;
+        // Product stamp never promotes from this route. Only surface execution evidence.
         if (body.OCR_PRODUCT === "HOLD") setProduct("HOLD");
+        if (typeof body.execution === "string" && body.execution) setHostExecution(body.execution);
+        if (typeof body.missing === "string" && body.missing) setMissing(body.missing);
+        setClaimSource("route");
       } catch {
-        /* no host in a file-only harness */
+        /* no host in a file-only harness; the ledger value stands */
       }
     }
     void pull();
@@ -82,8 +94,12 @@ export function OcrRoute() {
     <section
       className="spe-media-product"
       data-testid="ocr-panel"
+      data-shell-mount="ocr"
       data-ocr-mode={mode}
       data-ocr-product={product}
+      data-ocr-execution={hostExecution}
+      data-ocr-missing={missing}
+      data-claim-source={claimSource}
       data-egress={execution.egressAttempts}
     >
       <h2>Local OCR</h2>
@@ -92,6 +108,9 @@ export function OcrRoute() {
         Mode: <strong>{mode}</strong>
       </p>
       <p data-testid="ocr-product">OCR product: {product}</p>
+      <p data-testid="ocr-host-execution">
+        Host execution: <strong>{hostExecution}</strong> ({missing})
+      </p>
       <div
         onDragOver={(event) => event.preventDefault()}
         onDrop={(event) => {

@@ -85,4 +85,5 @@ process.on("SIGINT", shutdown);
 server.listen(port, hostBind, () => {
   console.log(`PRODUCT_STATIC http://${hostBind}:${port}`);
   console.log(`MEDIA_OWNER createLocalMediaHost -> spe_runtime.media_product.route_host`);
+  console.log(`OCR_OWNER createLocalOcrHost -> spe_runtime.ocr_product.route_host`);
 });
