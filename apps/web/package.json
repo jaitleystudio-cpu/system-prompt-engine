@@ -56,6 +56,8 @@
     "test:website-studio-journey": "node --experimental-strip-types scripts/test-website-studio-runtime-journey.mjs",
     "test:website-studio-security": "node --experimental-strip-types scripts/test-website-studio-security.mjs",
     "test:website-studio-security-mutations": "node --experimental-strip-types scripts/test-website-studio-security-mutations.mjs",
+    "test:network-boundary": "node --experimental-strip-types scripts/test-network-execution-boundary.mjs",
+    "test:network-boundary-mutations": "node --experimental-strip-types scripts/test-network-execution-boundary-mutations.mjs",
     "test:website-compiler": "node --experimental-strip-types scripts/test-static-website-compiler.mjs",
     "test:volume-budget": "node scripts/test-volume-budget-regression.mjs",
     "test:stress-1m": "node --expose-gc scripts/stress-1m-volume-qualification.mjs"

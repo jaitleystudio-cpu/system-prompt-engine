@@ -1,0 +1,304 @@
+#!/usr/bin/env node
+/**
+ * SPE-R9-G repair — network execution-boundary adversarial gate.
+ *
+ * Exercises the canonical SSRF owner (engine/multimodal/urlSecurity.ts) at the
+ * point of execution: resolved-address classification, trusted-resolver
+ * fail-closed behaviour, per-hop redirect validation, destination binding, and
+ * the wiring of media/urlIngest.ts (the only existing web fetch sink).
+ *
+ * Builder regression only. This is NOT independent security qualification.
+ */
+import assert from "node:assert/strict";
+import http from "node:http";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { build } from "../node_modules/esbuild/lib/main.js";
+
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const src = join(root, "src");
+const target = process.env.SPE_URL_SECURITY_PATH || join(src, "engine/multimodal/urlSecurity.ts");
+const sec = await import(pathToFileURL(target).href);
+
+let checks = 0;
+const ok = (cond, msg) => { assert.ok(cond, msg); checks += 1; };
+const eq = (a, b, msg) => { assert.equal(a, b, msg); checks += 1; };
+
+// Fake transport: scripted responses keyed by URL; records every request.
+function scriptedTransport(script, { pins = false } = {}) {
+  const calls = [];
+  return {
+    calls,
+    pinsResolvedAddress: pins,
+    async request(url, init, pinned) {
+      calls.push({ url, redirect: init.redirect, pinned });
+      const step = script[url];
+      if (!step) assert.fail("UNEXPECTED_REQUEST (forbidden hop reached transport) " + url);
+      if (step.opaque) {
+        return { type: "opaqueredirect", status: 0, headers: new Headers(), body: null };
+      }
+      return new Response(step.body ?? "", { status: step.status ?? 200, headers: step.headers ?? {} });
+    },
+  };
+}
+const publicResolver = (map) => async (host) => {
+  if (!(host in map)) throw new Error("NXDOMAIN " + host);
+  return map[host];
+};
+
+console.log("B1: forbidden address classes (resolved addresses)...");
+const forbidden = [
+  "0.0.0.0", "0.1.2.3", "10.0.0.1", "100.64.0.1", "100.127.255.254", "127.0.0.1", "127.255.255.255",
+  "169.254.169.254", "172.16.0.1", "172.31.255.255", "192.168.1.1", "224.0.0.1", "239.255.255.250",
+  "240.0.0.1", "255.255.255.255", "192.0.2.10", "198.51.100.7", "203.0.113.9", "198.18.0.1", "192.0.0.8",
+  "::", "::1", "0:0:0:0:0:0:0:1", "fc00::1", "fd12:3456::1", "fe80::1", "fe80::1%en0", "febf::1", "ff02::1",
+  "::ffff:127.0.0.1", "::ffff:7f00:1", "::ffff:10.0.0.1", "::ffff:169.254.169.254", "::ffff:a9fe:a9fe",
+  "::127.0.0.1", "::7f00:1", "::ffff:0:127.0.0.1", "64:ff9b::169.254.169.254", "64:ff9b::a00:1",
+  "64:ff9b:1::1", "2002:7f00:1::", "2002:a9fe:a9fe::1", "2001:0:4136:e378:8000:63bf:3fff:fdd2",
+  "2001:db8::1", "3fff::1", "3fff:0fff::1", "fec0::1", "100::1", "3fff::1".replace("3fff", "4000"), "not-an-ip", "", "1.2.3", "01.2.3.4",
+];
+for (const a of forbidden) {
+  const c = sec.classifyIpAddress(a);
+  ok(c.forbidden === true, `address must be forbidden: ${JSON.stringify(a)} -> ${JSON.stringify(c)}`);
+}
+const allowed = ["93.184.215.14", "8.8.8.8", "1.1.1.1", "2606:4700:4700::1111", "2001:4860:4860::8888", "::ffff:8.8.8.8", "64:ff9b::808:808", "2002:808:808::1"];
+for (const a of allowed) {
+  const c = sec.classifyIpAddress(a);
+  ok(c.forbidden === false, `public address must be allowed: ${a} -> ${JSON.stringify(c)}`);
+}
+
+console.log("B2: lexical gate preserved + strengthened for alternate localhost / embedded IPv6 forms...");
+for (const u of [
+  "http://127.0.0.1/", "http://127.1/", "http://0x7f.0.0.1/", "http://2130706433/", "http://017700000001/",
+  "http://localhost/", "http://localhost./", "http://LOCALHOST/", "http://a.localhost/", "http://[::1]/",
+  "http://[::ffff:127.0.0.1]/", "http://[0:0:0:0:0:ffff:7f00:1]/", "http://[::127.0.0.1]/",
+  "http://[64:ff9b::169.254.169.254]/", "http://[2002:7f00:1::]/", "http://[::ffff:0:127.0.0.1]/",
+  "http://[2001:0:4136:e378:8000:63bf:3fff:fdd2]/", "http://169.254.169.254/latest/meta-data",
+  "http://metadata.google.internal/", "http://0.0.0.0/",
+]) {
+  eq(sec.isSsrfSafeUrl(new URL(u)).safe, false, `lexical gate must refuse ${u}`);
+}
+for (const u of ["https://example.com/", "https://docs.github.com/en", "http://[2606:4700:4700::1111]/"]) {
+  eq(sec.isSsrfSafeUrl(new URL(u)).safe, true, `lexical gate must allow ${u}`);
+}
+
+console.log("B3: public hostname -> private DNS answer refused before connect...");
+for (const [answers, label] of [
+  [["10.0.0.5"], "rfc1918"], [["127.0.0.1"], "loopback"], [["169.254.169.254"], "metadata"],
+  [["::1"], "v6 loopback"], [["::ffff:127.0.0.1"], "v4-mapped loopback"], [["fd00::1"], "ula"],
+  [["93.184.215.14", "10.0.0.5"], "mixed public+private"],
+]) {
+  const t = scriptedTransport({});
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", {
+    transport: t, resolveHost: async () => answers, policy: sec.DestinationPolicies.REQUIRE_RESOLUTION,
+  });
+  eq(r.ok, false, `private DNS (${label}) must be refused`);
+  ok(String(r.reason).startsWith("RESOLVED_"), `reason RESOLVED_* for ${label}: ${r.reason}`);
+  eq(t.calls.length, 0, `no connection attempted for ${label}`);
+}
+
+console.log("B4: DNS failure / empty answer / garbage answer fail closed...");
+for (const [resolver, reason] of [
+  [async () => { throw new Error("SERVFAIL"); }, "DNS_RESOLUTION_FAILED"],
+  [async () => [], "DNS_NO_ADDRESSES"],
+  [async () => ["not-an-address"], "RESOLVED_ADDRESS_UNPARSEABLE"],
+]) {
+  const t = scriptedTransport({});
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", {
+    transport: t, resolveHost: resolver, policy: sec.DestinationPolicies.REQUIRE_RESOLUTION,
+  });
+  eq(r.ok, false, `${reason} must fail closed`);
+  eq(r.reason, reason, `reason ${reason}`);
+  eq(t.calls.length, 0, `no connection for ${reason}`);
+}
+
+console.log("B5: redirect hops validated before request (public -> loopback / metadata / public->public->private)...");
+const resolver = publicResolver({
+  "public-site.example.org": ["93.184.215.14"],
+  "hop2.example.net": ["93.184.215.15"],
+  "rebind.example.net": ["10.1.2.3"],
+});
+const chains = [
+  ["public -> 127.0.0.1", { "https://public-site.example.org/": { status: 302, headers: { location: "http://127.0.0.1/admin" } } }, 1],
+  ["public -> metadata", { "https://public-site.example.org/": { status: 301, headers: { location: "http://169.254.169.254/latest/meta-data/" } } }, 1],
+  ["public -> localhost", { "https://public-site.example.org/": { status: 307, headers: { location: "http://localhost/" } } }, 1],
+  ["public -> RFC1918", { "https://public-site.example.org/": { status: 308, headers: { location: "http://192.168.0.1/" } } }, 1],
+  ["public -> private IPv6", { "https://public-site.example.org/": { status: 302, headers: { location: "http://[fd00::1]/" } } }, 1],
+  ["public -> v4-mapped IPv6", { "https://public-site.example.org/": { status: 302, headers: { location: "http://[::ffff:169.254.169.254]/" } } }, 1],
+  ["public -> NAT64 metadata", { "https://public-site.example.org/": { status: 302, headers: { location: "http://[64:ff9b::a9fe:a9fe]/" } } }, 1],
+  ["public -> public -> private literal", {
+    "https://public-site.example.org/": { status: 302, headers: { location: "https://hop2.example.net/next" } },
+    "https://hop2.example.net/next": { status: 303, headers: { location: "http://10.0.0.7/" } },
+  }, 2],
+  ["public -> public -> host resolving private", {
+    "https://public-site.example.org/": { status: 302, headers: { location: "https://hop2.example.net/next" } },
+    "https://hop2.example.net/next": { status: 302, headers: { location: "https://rebind.example.net/" } },
+  }, 2],
+];
+for (const [label, script, expectedCalls] of chains) {
+  const t = scriptedTransport(script);
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", {
+    transport: t, resolveHost: resolver, policy: sec.DestinationPolicies.REQUIRE_RESOLUTION,
+  });
+  eq(r.ok, false, `${label} must be refused`);
+  eq(t.calls.length, expectedCalls, `${label}: forbidden hop must never be requested (calls=${t.calls.length})`);
+  ok(t.calls.every((c) => c.redirect === "manual"), `${label}: transport must never auto-follow`);
+}
+{
+  // Same chain without a resolver in browser policy: lexical per-hop still refuses literal private hops.
+  const t = scriptedTransport({ "https://public-site.example.org/": { status: 302, headers: { location: "http://127.0.0.1/" } } });
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, policy: sec.DestinationPolicies.BROWSER_UNVERIFIABLE });
+  eq(r.ok, false, "browser policy still refuses literal loopback hop");
+  eq(t.calls.length, 1, "browser policy: loopback hop never requested");
+}
+
+console.log("B6: opaque browser redirect, missing Location, redirect limit fail closed...");
+{
+  const t = scriptedTransport({ "https://public-site.example.org/": { opaque: true } });
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, policy: sec.DestinationPolicies.BROWSER_UNVERIFIABLE });
+  eq(r.reason, "REDIRECT_DESTINATION_UNVERIFIABLE", "opaqueredirect fails closed");
+  eq(sec.isUnverifiableDestinationRefusal(r.reason), true, "opaque classified as unverifiable");
+}
+{
+  const t = scriptedTransport({ "https://public-site.example.org/": { status: 302 } });
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver, policy: sec.DestinationPolicies.REQUIRE_RESOLUTION });
+  eq(r.reason, "REDIRECT_LOCATION_MISSING", "3xx without Location fails closed");
+}
+{
+  const script = {};
+  for (let i = 0; i < 10; i += 1) script[`https://public-site.example.org/${i}`] = { status: 302, headers: { location: `/${i + 1}` } };
+  const t = scriptedTransport(script);
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/0", { transport: t, resolveHost: resolver, policy: sec.DestinationPolicies.REQUIRE_RESOLUTION, maxRedirects: 3 });
+  eq(r.reason, "REDIRECT_LIMIT_EXCEEDED", "redirect loop bounded");
+  eq(t.calls.length, 4, "exactly maxRedirects+1 requests");
+}
+
+console.log("B7: destination binding (DNS rebinding) — default policy requires a pinning transport...");
+{
+  const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "ok" } });
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver });
+  eq(r.ok, false, "non-pinning transport under default policy must fail closed");
+  eq(r.reason, "DESTINATION_BINDING_UNVERIFIABLE", "binding unverifiable reason");
+  eq(t.calls.length, 0, "no request when binding unverifiable");
+}
+{
+  const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "ok" } });
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t });
+  eq(r.reason, "TRUSTED_RESOLVER_UNAVAILABLE", "default policy without resolver fails closed");
+}
+{
+  // Rebinding resolver: first answer public, every later answer private. A pinning transport
+  // must receive exactly the validated address; the resolver must be consulted once per hop.
+  let n = 0;
+  const rebinding = async () => (n++ === 0 ? ["93.184.215.14"] : ["127.0.0.1"]);
+  const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "ok" } }, { pins: true });
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: rebinding });
+  eq(r.ok, true, "pinned public destination permitted");
+  eq(r.destinationIdentity, "RESOLVED_AND_PINNED", "identity RESOLVED_AND_PINNED");
+  eq(t.calls[0].pinned, "93.184.215.14", "connection pinned to the validated address");
+  eq(n, 1, "resolver consulted exactly once for the hop");
+}
+{
+  const t = scriptedTransport({ "https://public-site.example.org/": { status: 200, body: "ok" } });
+  const r = await sec.guardedPublicFetch("https://public-site.example.org/", { transport: t, resolveHost: resolver, policy: sec.DestinationPolicies.REQUIRE_RESOLUTION });
+  eq(r.ok, true, "resolution-only policy permits safe public host");
+  eq(r.destinationIdentity, "RESOLVED_NOT_PINNED", "TOCTOU disclosed as RESOLVED_NOT_PINNED");
+}
+
+console.log("B8: safe public chain remains permitted...");
+{
+  const t = scriptedTransport({
+    "http://public-site.example.org/": { status: 301, headers: { location: "https://public-site.example.org/" } },
+    "https://public-site.example.org/": { status: 200, body: "<html>hi</html>" },
+  }, { pins: true });
+  const r = await sec.guardedPublicFetch("http://public-site.example.org/", { transport: t, resolveHost: resolver });
+  eq(r.ok, true, "public -> public permitted");
+  eq(r.finalUrl, "https://public-site.example.org/", "finalUrl tracks validated hop");
+  eq(r.hops.length, 2, "two validated hops recorded");
+  eq(await r.response.text(), "<html>hi</html>", "body delivered");
+}
+
+console.log("B9: real socket — redirect to metadata is refused after exactly one server hit...");
+{
+  let hits = 0;
+  const server = http.createServer((req, res) => {
+    hits += 1;
+    res.writeHead(302, { Location: "http://169.254.169.254/latest/meta-data/iam" });
+    res.end();
+  });
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  const port = server.address().port;
+  // Test transport: routes the validated public hostname to the local server, pinning by construction.
+  const transport = {
+    pinsResolvedAddress: true,
+    calls: 0,
+    async request(url, init) {
+      transport.calls += 1;
+      const u = new URL(url);
+      return fetch(`http://127.0.0.1:${port}${u.pathname}`, { ...init, headers: { host: u.host } });
+    },
+  };
+  try {
+    const r = await sec.guardedPublicFetch("https://public-site.example.org/start", { transport, resolveHost: resolver });
+    eq(r.ok, false, "real 302 -> metadata refused");
+    eq(r.reason, "LEXICAL_METADATA_LINK_LOCAL_IP", "metadata reason");
+    eq(hits, 1, "server hit exactly once");
+    eq(transport.calls, 1, "metadata hop never requested");
+  } finally {
+    server.close();
+  }
+}
+
+console.log("B10: urlIngest wiring — the existing fetch sink uses the boundary...");
+async function bundleIsolated(relPath) {
+  const full = join(src, relPath);
+  const bundled = await build({
+    stdin: { contents: readFileSync(full, "utf8"), resolveDir: dirname(full), sourcefile: relPath, loader: "ts" },
+    bundle: true, write: false, format: "esm", platform: "node",
+  });
+  return import("data:text/javascript;base64," + Buffer.from(bundled.outputFiles[0].text).toString("base64"));
+}
+if (!process.env.SPE_URL_SECURITY_PATH) {
+  const ingest = await bundleIsolated("media/urlIngest.ts");
+  const realFetch = globalThis.fetch;
+  const open = { pageOrigin: null, connectSrc: "*" };
+  try {
+    const calls = [];
+    globalThis.fetch = async (url, init) => {
+      calls.push({ url, redirect: init?.redirect });
+      if (url === "https://public-site.example.org/") return new Response("", { status: 302, headers: { location: "http://127.0.0.1/admin" } });
+      assert.fail("UNEXPECTED_REQUEST " + url);
+    };
+    const r1 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open });
+    eq(r1.status, "invalid_url", "ingestUrl: redirect to loopback refused");
+    eq(calls.length, 1, "ingestUrl: loopback hop never requested");
+    eq(calls[0].redirect, "manual", "ingestUrl: transport never auto-follows");
+
+    calls.length = 0;
+    globalThis.fetch = async (url, init) => { calls.push({ url }); return { type: "opaqueredirect", status: 0, headers: new Headers(), body: null }; };
+    const r2 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open });
+    eq(r2.status, "url_reference_only", "ingestUrl: opaque browser redirect -> reference only");
+    eq(r2.reason, "remote_fetch_unavailable", "ingestUrl: reference reason");
+
+    calls.length = 0;
+    globalThis.fetch = async (url) => { calls.push({ url }); return new Response("<html><title>x</title></html>", { status: 200, headers: { "content-type": "text/html" } }); };
+    const r3 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open, resolveHost: async () => ["10.9.9.9"] });
+    eq(r3.status, "invalid_url", "ingestUrl: resolver says private -> refused");
+    eq(calls.length, 0, "ingestUrl: no request when DNS private");
+
+    const r4 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open, resolveHost: async () => { throw new Error("SERVFAIL"); } });
+    eq(r4.status, "invalid_url", "ingestUrl: DNS failure fails closed");
+
+    const r5 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: open, resolveHost: async () => ["93.184.215.14"] });
+    eq(r5.status, "ok", "ingestUrl: safe public host still permitted");
+    eq(r5.title, "x", "ingestUrl: content parsed");
+
+    const r6 = await ingest.ingestUrl("https://public-site.example.org/", { networkPolicy: { pageOrigin: "https://spe.app", connectSrc: "'self'" } });
+    eq(r6.status, "url_reference_only", "ingestUrl: product CSP connect-src 'self' still reference-only");
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+}
+
+console.log(`PASS: SPE-R9-G network execution-boundary gate (${checks} checks). Builder regression only — not independent qualification.`);
