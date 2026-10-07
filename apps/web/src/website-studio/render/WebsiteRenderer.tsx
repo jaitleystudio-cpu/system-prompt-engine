@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import type { WebsiteSpecV2 } from "../model/websiteSpecV2.ts";
+import { resolveStudioHeroSvg } from "../security/studioSecurity.ts";
 
 export interface WebsiteRendererProps {
   spec: WebsiteSpecV2;
@@ -47,9 +48,9 @@ export const WebsiteRenderer: React.FC<WebsiteRendererProps> = ({
 
   const ariaRegionLabel =
     spec.scene?.accessibilityFallback?.ariaRegionLabel || "Website preview";
-  const fallbackSvg =
-    spec.scene?.accessibilityFallback?.hero2dSvg ||
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Static scene fallback"><rect width="64" height="64" rx="12" fill="#0b0d12"/></svg>';
+  const fallbackSvg = resolveStudioHeroSvg(
+    spec.scene?.accessibilityFallback?.hero2dSvg,
+  );
   const fallbackText =
     spec.scene?.accessibilityFallback?.textDescription || "3D scene preview";
 
