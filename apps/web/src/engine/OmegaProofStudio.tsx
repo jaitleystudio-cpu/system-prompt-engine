@@ -4,6 +4,8 @@ import { buildSandboxedRetrievalBlock, type SandboxedContextResult, type Context
 import { runHostileGymOmega, immunizeAgainstHostileGrammar, type HostileGymOmegaReport } from "./hostileGymOmega";
 import { evaluateCounterfactualTwin, type CounterfactualTwinReport } from "./counterfactualTwin";
 import { generateProofReceipt, type ProofReceiptPayload, canonicalizeJson } from "./proofReceipt";
+import { CURATED_COMMUNITY_PROMPTS, fortifyCommunityPrompt } from "./communityCatalog";
+import { generatePromptfooConfig } from "./promptfooExporter";
 
 export interface OmegaProofStudioProps {
   initialPrompt?: string;
@@ -32,9 +34,11 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
   onClose,
 }) => {
   const [promptText, setPromptText] = useState(initialPrompt);
-  const [activeTab, setActiveTab] = useState<"diagnostics" | "gym" | "firewall" | "twin" | "receipt">("diagnostics");
+  const [activeTab, setActiveTab] = useState<"diagnostics" | "gym" | "firewall" | "twin" | "receipt" | "community" | "promptfoo">("diagnostics");
   const [seed] = useState(1337);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
+  const [copiedPromptfoo, setCopiedPromptfoo] = useState(false);
+  const [selectedCommunityId, setSelectedCommunityId] = useState<string>("linux-terminal");
 
   // 1. Static Type Checking Diagnostics
   const typeDiagnostics: DiagnosticReport = useMemo(() => {
@@ -222,6 +226,8 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
           { key: "firewall", label: "Retrieval Firewall", count: firewallResult.untrustedChunksFiltered },
           { key: "twin", label: "Counterfactual Twin", count: "Causal Δ" },
           { key: "receipt", label: "Proof Receipt (JCS)", count: "SHA-256" },
+          { key: "community", label: "🌐 Prompts.chat", count: "143k★" },
+          { key: "promptfoo", label: "⚡ Promptfoo Bridge", count: "CI/CD" },
         ].map((t) => (
           <button
             key={t.key}
@@ -795,6 +801,218 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
               >
                 {JSON.stringify(receipt, null, 2)}
               </pre>
+            </div>
+          )}
+
+          {/* TAB 6: Community Prompt Fortifier (prompts.chat / DAIR.AI) */}
+          {activeTab === "community" && (
+            <div>
+              <div style={{ marginBottom: "16px" }}>
+                <h3 style={{ margin: "0 0 6px", fontSize: "16px", color: "#f8fafc" }}>
+                  🌐 143k★ Prompts.chat Community Fortifier
+                </h3>
+                <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+                  Select iconic prompts from the world's largest prompt library. Compile & fortify with SPE invariants.
+                </p>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", gap: "12px", marginBottom: "16px" }}>
+                {/* List of prompts */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                  {CURATED_COMMUNITY_PROMPTS.map((cp) => {
+                    const isCurSelected = cp.id === selectedCommunityId;
+                    return (
+                      <button
+                        key={cp.id}
+                        onClick={() => setSelectedCommunityId(cp.id)}
+                        style={{
+                          textAlign: "left",
+                          padding: "8px 12px",
+                          borderRadius: "6px",
+                          backgroundColor: isCurSelected ? "#1e293b" : "#0d1322",
+                          border: isCurSelected ? "1px solid #38bdf8" : "1px solid #1e293b",
+                          color: isCurSelected ? "#ffffff" : "#94a3b8",
+                          cursor: "pointer",
+                          fontSize: "12px",
+                        }}
+                      >
+                        <div style={{ fontWeight: "600" }}>{cp.title}</div>
+                        <div style={{ fontSize: "10px", color: "#64748b" }}>{cp.category} • {cp.author}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Selected Fortified Details */}
+                {(() => {
+                  const targetPrompt = CURATED_COMMUNITY_PROMPTS.find(p => p.id === selectedCommunityId) || CURATED_COMMUNITY_PROMPTS[0];
+                  const fortified = fortifyCommunityPrompt(targetPrompt);
+                  return (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "10px", backgroundColor: "#0f172a", padding: "14px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: "13px", fontWeight: "700", color: "#f8fafc" }}>
+                          {targetPrompt.title} ({targetPrompt.category})
+                        </span>
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          <span style={{ fontSize: "11px", padding: "2px 8px", borderRadius: "4px", backgroundColor: "rgba(16, 185, 129, 0.2)", color: "#34d399" }}>
+                            Kill Rate: {fortified.originalKillRate}% → {fortified.fortifiedKillRate}%
+                          </span>
+                        </div>
+                      </div>
+
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                        <div>
+                          <div style={{ fontSize: "11px", color: "#f87171", fontWeight: "600", marginBottom: "4px" }}>⚠️ Raw Prompts.chat Prose</div>
+                          <pre style={{ margin: 0, padding: "8px", borderRadius: "6px", backgroundColor: "#050811", color: "#cbd5e1", fontSize: "10px", maxHeight: "150px", overflowY: "auto", whiteSpace: "pre-wrap" }}>
+                            {targetPrompt.rawProse}
+                          </pre>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: "11px", color: "#34d399", fontWeight: "600", marginBottom: "4px" }}>🛡️ SPE Fortified & Typed</div>
+                          <pre style={{ margin: 0, padding: "8px", borderRadius: "6px", backgroundColor: "#050811", color: "#38bdf8", fontSize: "10px", maxHeight: "150px", overflowY: "auto", whiteSpace: "pre-wrap" }}>
+                            {fortified.fortifiedPrompt}
+                          </pre>
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px", marginTop: "8px" }}>
+                        <button
+                          onClick={() => setPromptText(fortified.fortifiedPrompt)}
+                          style={{
+                            padding: "6px 14px",
+                            borderRadius: "6px",
+                            backgroundColor: "#059669",
+                            color: "#ffffff",
+                            fontSize: "11px",
+                            fontWeight: "600",
+                            border: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          ⚡ Load Fortified Prompt into Editor
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 7: Promptfoo Bridge & CI/CD Generator */}
+          {activeTab === "promptfoo" && (
+            <div>
+              <div style={{ marginBottom: "16px" }}>
+                <h3 style={{ margin: "0 0 6px", fontSize: "16px", color: "#f8fafc" }}>
+                  ⚡ Upstream Promptfoo Bridge & CI/CD Exporter
+                </h3>
+                <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
+                  Export verified system prompts into Promptfoo evaluation configs and GitHub Actions CI/CD workflows.
+                </p>
+              </div>
+
+              {(() => {
+                const bundle = generatePromptfooConfig(promptText, { projectName: "spe-hardened-suite" });
+                return (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                    {/* Action Bar */}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "#111827", padding: "12px 16px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                      <div>
+                        <div style={{ fontSize: "12px", fontWeight: "600", color: "#f8fafc" }}>promptfooconfig.yaml</div>
+                        <div style={{ fontSize: "11px", color: "#94a3b8" }}>Includes automated assertions, latency limits & red-team plugins</div>
+                      </div>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard?.writeText(bundle.yamlConfig);
+                            setCopiedPromptfoo(true);
+                            setTimeout(() => setCopiedPromptfoo(false), 2000);
+                          }}
+                          style={{
+                            padding: "6px 12px",
+                            borderRadius: "6px",
+                            fontSize: "11px",
+                            fontWeight: "600",
+                            backgroundColor: copiedPromptfoo ? "#059669" : "#1e293b",
+                            color: "#ffffff",
+                            border: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {copiedPromptfoo ? "✓ Copied YAML" : "Copy YAML Config"}
+                        </button>
+                        <button
+                          onClick={() => {
+                            const blob = new Blob([bundle.yamlConfig], { type: "text/yaml" });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = "promptfooconfig.yaml";
+                            a.click();
+                            URL.revokeObjectURL(url);
+                          }}
+                          style={{
+                            padding: "6px 12px",
+                            borderRadius: "6px",
+                            fontSize: "11px",
+                            fontWeight: "600",
+                            backgroundColor: "#0284c7",
+                            color: "#ffffff",
+                            border: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Download YAML
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* YAML Viewer */}
+                    <pre
+                      style={{
+                        padding: "14px",
+                        borderRadius: "8px",
+                        backgroundColor: "#050811",
+                        border: "1px solid #1e293b",
+                        color: "#a5b4fc",
+                        fontSize: "11px",
+                        fontFamily: "monospace",
+                        maxHeight: "220px",
+                        overflowY: "auto",
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      {bundle.yamlConfig}
+                    </pre>
+
+                    {/* CI/CD Workflow */}
+                    <div style={{ backgroundColor: "#111827", padding: "12px 16px", borderRadius: "8px", border: "1px solid #1e293b" }}>
+                      <div style={{ fontSize: "12px", fontWeight: "600", color: "#f8fafc", marginBottom: "4px" }}>
+                        GitHub Actions Workflow (.github/workflows/prompt-evals.yml)
+                      </div>
+                      <p style={{ margin: "0 0 10px 0", fontSize: "11px", color: "#94a3b8" }}>
+                        Runs zero-token offline SPE checks on PRs, then initiates Promptfoo evaluations on merge.
+                      </p>
+                      <pre
+                        style={{
+                          margin: 0,
+                          padding: "10px",
+                          borderRadius: "6px",
+                          backgroundColor: "#050811",
+                          color: "#34d399",
+                          fontSize: "10px",
+                          fontFamily: "monospace",
+                          maxHeight: "150px",
+                          overflowY: "auto",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        {bundle.githubActionsWorkflow}
+                      </pre>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
         </div>

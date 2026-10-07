@@ -8,6 +8,7 @@ import { CognitiveEnergyShader } from "./CognitiveEnergyShader";
 import { BlindedJudgeArenaStudio } from "./BlindedJudgeArenaStudio";
 import { defaultRagEngine } from "./hybridRagEngine";
 import { OmegaProofStudio } from "./OmegaProofStudio";
+import { CommunityCatalogStudio } from "./CommunityCatalogStudio";
 
 export interface PromptRadarInspectorProps {
   promptText: string;
@@ -80,7 +81,7 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
   onAutoOptimize,
 }) => {
   const [activeTab, setActiveTab] = useState<
-    "radar" | "proof" | "evolver" | "vision" | "rag" | "quantum" | "arena" | "harness" | "matrix" | "markdown" | "code" | "rules"
+    "radar" | "proof" | "community" | "evolver" | "vision" | "rag" | "quantum" | "arena" | "harness" | "matrix" | "markdown" | "code" | "rules"
   >("radar");
   const [ragQuery, setRagQuery] = useState<string>("");
   const [activeCodeLang, setActiveCodeLang] = useState<"python" | "typescript" | "curl" | "rules">("python");
@@ -414,6 +415,7 @@ ${promptText}
             [
               { id: "radar", label: "📊 Quality Radar" },
               { id: "proof", label: "🛡️ Ω Proof Lab" },
+              { id: "community", label: "🌐 Prompts.chat" },
               { id: "evolver", label: "🧬 Genetic Evolver" },
               { id: "vision", label: "👁️ Vision Compiler" },
               { id: "rag", label: "⚡ Hybrid RAG" },
@@ -1553,6 +1555,19 @@ ${promptText}
             onApplyPrompt={(fortified) => {
               onAutoOptimize?.(fortified);
               setIsOptimized(false);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Tab: Community Prompts Fortifier (prompts.chat / DAIR.AI) */}
+      {activeTab === "community" && (
+        <div style={{ padding: "0.5rem", minHeight: "500px" }}>
+          <CommunityCatalogStudio
+            onSelectPrompt={(fortified) => {
+              onAutoOptimize?.(fortified);
+              setIsOptimized(false);
+              setActiveTab("proof");
             }}
           />
         </div>

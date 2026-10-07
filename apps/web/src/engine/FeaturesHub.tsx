@@ -5,6 +5,7 @@ import { VisionCompilerStudio } from "./VisionCompilerStudio";
 import { CognitiveEnergyShader } from "./CognitiveEnergyShader";
 import { BlindedJudgeArenaStudio } from "./BlindedJudgeArenaStudio";
 import { OmegaProofStudio } from "./OmegaProofStudio";
+import { CommunityCatalogStudio } from "./CommunityCatalogStudio";
 import { defaultRagEngine, type SearchResult } from "./hybridRagEngine";
 
 export interface FeaturesHubProps {
@@ -31,6 +32,22 @@ export const FEATURES: FeatureItem[] = [
     subtitle: "Type Diagnostics, Hostile Gym Ω & Proof Receipts",
     href: "/capabilities",
     badge: "Ω Core",
+  },
+  {
+    id: "community-fortifier",
+    view: "capabilities",
+    title: "🌐 Prompts.chat Fortifier",
+    subtitle: "143k★ Curated Catalog & Invariant Hardener",
+    href: "/capabilities",
+    badge: "143k★",
+  },
+  {
+    id: "promptfoo-bridge",
+    view: "capabilities",
+    title: "⚡ Promptfoo CI/CD Bridge",
+    subtitle: "Zero-Token Compiler & promptfooconfig Export",
+    href: "/capabilities",
+    badge: "CI/CD",
   },
   {
     id: "genetic-evolver",
@@ -132,7 +149,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
   };
 
   const isOmniBrainFeature = (id: string) =>
-    ["omega-proof", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
+    ["omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
 
   const visibleFeatures = filter.trim()
     ? FEATURES.filter(
@@ -358,6 +375,9 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff" }}>
+                  {activeModal === "omega-proof" && "🛡️ SPE Ω Proof Lab & Type System"}
+                  {activeModal === "community-fortifier" && "🌐 143k★ Prompts.chat Community Fortifier"}
+                  {activeModal === "promptfoo-bridge" && "⚡ Promptfoo CI/CD Bridge & Exporter"}
                   {activeModal === "genetic-evolver" && "🧬 Genetic Prompt Evolver & Hostile Gym"}
                   {activeModal === "vision-compiler" && "👁️ Multimodal Neural Vision Inverse-Compiler"}
                   {activeModal === "hybrid-rag" && "⚡ In-WASM Supersonic Hybrid RAG Fabric"}
@@ -397,6 +417,26 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
 
             {activeModal === "omega-proof" && (
               <OmegaProofStudio onClose={() => setActiveModal(null)} />
+            )}
+
+            {activeModal === "community-fortifier" && (
+              <CommunityCatalogStudio
+                onSelectPrompt={() => {
+                  setActiveModal("omega-proof");
+                }}
+                onClose={() => setActiveModal(null)}
+              />
+            )}
+
+            {activeModal === "promptfoo-bridge" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem", color: "#f8fafc" }}>
+                <CommunityCatalogStudio
+                  onSelectPrompt={() => {
+                    setActiveModal("omega-proof");
+                  }}
+                  onClose={() => setActiveModal(null)}
+                />
+              </div>
             )}
 
             {activeModal === "genetic-evolver" && (
