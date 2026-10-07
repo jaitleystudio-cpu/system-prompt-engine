@@ -1,13 +1,6 @@
 import React from "react";
-
-export interface InspirationItem {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  tags?: string[];
-  features?: string[];
-}
+export type { InspirationItem } from "./inspirationRecipes.ts";
+import type { InspirationItem } from "./inspirationRecipes.ts";
 
 export interface InspirationCardProps {
   item: InspirationItem;

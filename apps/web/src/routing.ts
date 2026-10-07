@@ -12,7 +12,8 @@ export type AppView =
   | "website"
   | "media"
   | "ocr"
-  | "research";
+  | "research"
+  | "studio";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -27,6 +28,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   media: "/media",
   ocr: "/ocr",
   research: "/research",
+  studio: "/studio",
 };
 
 /** Device-local and tool surfaces. Not advertised to crawlers. */
@@ -37,6 +39,7 @@ export const NOINDEX_VIEWS: ReadonlySet<AppView> = new Set([
   "media",
   "ocr",
   "research",
+  "studio",
 ]);
 
 const PATH_VIEW: Record<string, AppView> = Object.fromEntries(
@@ -158,6 +161,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Research — Stored receipt only | SPE",
     description:
       "View a stored research receipt after opting in. This route does not search or send the question; live index and retraction remain HOLD.",
+  },
+  studio: {
+    path: "/studio",
+    title: "Website Studio — Free 3D local preview | SPE",
+    description:
+      "Explore recipes, create a local WebsiteSpec, edit, preview responsively, and export a .spe-site package. Runs on this device; does not publish a site.",
   },
 };
 

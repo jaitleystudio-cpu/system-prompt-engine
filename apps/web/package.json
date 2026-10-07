@@ -50,6 +50,10 @@
     "test:r5-website-route": "node --experimental-strip-types scripts/test-r5-website-route.mjs",
     "test:r6-ocr": "node --experimental-strip-types scripts/test-r6-ocr-route.mjs",
     "test:website-product": "node --experimental-strip-types scripts/test-website-product-flow.mjs",
+    "test:website-studio-ui": "node --experimental-strip-types scripts/test-website-studio-ui-foundation.mjs",
+    "test:website-studio-intent": "node --experimental-strip-types scripts/test-website-studio-intent.mjs",
+    "test:website-studio-core": "node --experimental-strip-types scripts/test-website-studio-core-v11.mjs",
+    "test:website-studio-journey": "node --experimental-strip-types scripts/test-website-studio-runtime-journey.mjs",
     "test:website-compiler": "node --experimental-strip-types scripts/test-static-website-compiler.mjs",
     "test:volume-budget": "node scripts/test-volume-budget-regression.mjs",
     "test:stress-1m": "node --expose-gc scripts/stress-1m-volume-qualification.mjs"

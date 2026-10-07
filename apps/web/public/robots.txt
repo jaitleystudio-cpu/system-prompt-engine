@@ -14,6 +14,7 @@ Disallow: /website
 Disallow: /media
 Disallow: /research
 Disallow: /ocr
+Disallow: /studio
 Disallow: /models/
 Disallow: /ort/
 

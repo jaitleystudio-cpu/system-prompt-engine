@@ -12,7 +12,7 @@ const robots = readFileSync(join(root, "public/robots.txt"), "utf8");
 const sitemap = readFileSync(join(root, "public/sitemap.xml"), "utf8");
 
 const publicPaths = ["/", "/create", "/code", "/daily-lab", "/privacy", "/capabilities"];
-const privatePaths = ["/my-work", "/workspace", "/website", "/media", "/research"];
+const privatePaths = ["/my-work", "/workspace", "/website", "/media", "/research", "/studio"];
 for (const routePath of [...publicPaths, ...privatePaths]) {
   assert.match(routing, new RegExp(routePath.replaceAll("/", "\\/")));
 }

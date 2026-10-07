@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * SPE Free 3D Websites v1.1 — UI foundation gate.
- * Route remains isolated until Workstream N qualification.
+ * Workstream N: Studio is routed at /studio (private/noindex).
  */
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
@@ -47,9 +47,11 @@ assert.match(css, /44px/);
 assert.match(css, /@media\s*\(max-width:/);
 assert.match(css, /minmax\(/);
 
-assert.doesNotMatch(app, /website-studio\/Studio/);
+assert.match(app, /website-studio\/Studio/);
+assert.match(app, /view === "studio"/);
+assert.match(routing, /studio:\s*"\/studio"/);
 assert.doesNotMatch(routing, /studio-test|free-3d-studio/i);
 assert.doesNotMatch(studio, /world(?:wide)?\s*(?:number\s*1|#1)/i);
 assert.doesNotMatch(studio, /Spline|Norrly/i);
 
-console.log("PASS: Website Studio v1.1 UI foundation remains isolated and accessible.");
+console.log("PASS: Website Studio v1.1 UI foundation routed at /studio and accessible.");

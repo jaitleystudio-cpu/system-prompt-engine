@@ -63,11 +63,12 @@ import { InAppLink } from "./shell/inAppLink";
 import { MediaRoute } from "./media/MediaRoute";
 import { OcrRoute } from "./media/OcrRoute";
 import { ResearchRoute } from "./research/ResearchRoute";
-import { WEBSITE_MOUNT } from "./shell/mountStatus";
+import { STUDIO_MOUNT, WEBSITE_MOUNT } from "./shell/mountStatus";
 import { NotFound } from "./shell/NotFound";
 import { SkipLink } from "./shell/SkipLink";
 import { EMPTY_IDEA_MESSAGE } from "./shell/shellGuards";
 import { WebsiteProduct } from "./website/WebsiteProduct";
+import { Studio } from "./website-studio/Studio";
 import { SeoHead } from "./ui/SeoHead";
 import { DotPattern } from "./ui/DotPattern";
 import { SeoContent } from "./landing/SeoContent";
@@ -1173,6 +1174,16 @@ export default function App() {
           />
         )}
 
+        {!notFound && view === "studio" && (
+          <div
+            data-shell-mount="studio"
+            data-shell-mount-route={STUDIO_MOUNT.route}
+            data-studio-product={STUDIO_MOUNT.STUDIO_PRODUCT}
+          >
+            <Studio />
+          </div>
+        )}
+
         {!notFound && view === "website" && (
           <div
             data-shell-mount="website"
@@ -1367,6 +1378,7 @@ export default function App() {
           <InAppLink view="create" onNavigate={setView}>Create</InAppLink>
           <InAppLink view="code" onNavigate={setView}>Code</InAppLink>
           <InAppLink view="website" onNavigate={setView}>Website</InAppLink>
+          <InAppLink view="studio" onNavigate={setView}>Studio</InAppLink>
           <InAppLink view="lab" onNavigate={setView}>Daily Lab</InAppLink>
           <InAppLink view="my-work" onNavigate={setView}>My Work</InAppLink>
           <InAppLink view="capabilities" onNavigate={setView}>

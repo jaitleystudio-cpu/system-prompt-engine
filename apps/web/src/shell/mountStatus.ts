@@ -37,3 +37,15 @@ export const RESEARCH_MOUNT = {
   product_LIVE_RETRACTION: "HOLD",
   may_promote: false,
 } as const;
+
+/** Free 3D Website Studio mounted on /studio. Local preview only; not a publish pass. */
+export const STUDIO_MOUNT = {
+  id: "studio",
+  route: "/studio",
+  component: "Studio",
+  STUDIO_PRODUCT: "MOUNTED_LOCAL",
+  WEBSITE_SPEC_OWNER: "website-studio/model/websiteSpecV2",
+  SCENE_IR_OWNER: "website-studio/model/sceneIR → engine/multimodal/types",
+  LIVE_URL: "NOT_AVAILABLE",
+  WEBGL_EXECUTION: "NOT_RUN",
+} as const;

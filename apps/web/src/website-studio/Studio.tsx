@@ -11,9 +11,14 @@ import { PerformanceDoctor } from "./performance/PerformanceDoctor.tsx";
 import { DataBindingInspector } from "./data/DataBindingInspector.tsx";
 import { WebsiteRenderer } from "./render/WebsiteRenderer.tsx";
 import { StudioExplore } from "./explore/StudioExplore.tsx";
+import type { InspirationItem } from "./explore/InspirationCard.tsx";
 import { createEmptySceneIR } from "./model/sceneIR.ts";
 import { createSitePatch, applySitePatch, type SitePatch } from "./history/sitePatch.ts";
 import { serializeProjectPackage } from "./export/projectPackage.ts";
+import {
+  createBlankStudioProject,
+  createFromRecipe,
+} from "./create/createFromRecipe.ts";
 
 export interface StudioProps {
   initialSpec?: WebsiteSpecV2;
@@ -24,15 +29,42 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
     () => initialSpec || createDefaultWebsiteSpecV2(),
   );
   const [viewMode, setViewMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
-  const [activeLeftTab, setActiveLeftTab] = useState<"structure" | "behaviors" | "data" | "explore">("structure");
+  const [activeLeftTab, setActiveLeftTab] = useState<"structure" | "behaviors" | "data" | "explore">(
+    initialSpec ? "structure" : "explore",
+  );
   const [selectionScope, setSelectionScope] = useState<string[]>(["hero"]);
   const [copilotPrompt, setCopilotPrompt] = useState("");
   const [patchHistory, setPatchHistory] = useState<SitePatch[]>([]);
   const [exportNotice, setExportNotice] = useState<string | null>(null);
+  const [selectedRecipeId, setSelectedRecipeId] = useState<string | undefined>();
+  const [journeyPhase, setJourneyPhase] = useState<
+    "explore" | "created" | "edited" | "exported"
+  >(initialSpec ? "created" : "explore");
 
   const handleApplyPatch = (newSpec: WebsiteSpecV2, patch: SitePatch) => {
     setSpec(newSpec);
     setPatchHistory((prev) => [...prev, patch]);
+    setJourneyPhase("edited");
+  };
+
+  const handleCreateBlank = () => {
+    const next = createBlankStudioProject();
+    setSpec(next);
+    setSelectedRecipeId(undefined);
+    setPatchHistory([]);
+    setActiveLeftTab("structure");
+    setSelectionScope([next.pages[0]?.id ?? "home"]);
+    setJourneyPhase("created");
+  };
+
+  const handleCreateFromRecipe = (recipe: InspirationItem) => {
+    const next = createFromRecipe(recipe);
+    setSpec(next);
+    setSelectedRecipeId(recipe.id);
+    setPatchHistory([]);
+    setActiveLeftTab("structure");
+    setSelectionScope([next.pages[0]?.id ?? "home"]);
+    setJourneyPhase("created");
   };
 
   const handleQueueCopilotEdit = () => {
@@ -56,7 +88,21 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
   const handleExport = async () => {
     try {
       const pkg = await serializeProjectPackage(spec);
+      const blob = new Blob([pkg], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const safeName = spec.metadata.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "") || "spe-site";
+      link.href = url;
+      link.download = `${safeName}.spe-site.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
       setExportNotice(`Exported .spe-site package (${pkg.length} bytes)`);
+      setJourneyPhase("exported");
       setTimeout(() => setExportNotice(null), 4000);
     } catch (err) {
       setExportNotice(err instanceof Error ? err.message : String(err));
@@ -64,7 +110,11 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
   };
 
   return (
-    <div className="studio-root" data-testid="website-studio">
+    <div
+      className="studio-root"
+      data-testid="website-studio"
+      data-journey-phase={journeyPhase}
+    >
       {/* Top Header */}
       <header className="studio-header">
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -85,13 +135,14 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
           </span>
         </div>
 
-        {/* Viewport Controls */}
-        <div style={{ display: "flex", gap: "6px" }}>
+        {/* Viewport Controls — responsive preview */}
+        <div style={{ display: "flex", gap: "6px" }} role="group" aria-label="Responsive preview">
           <button
             type="button"
             className={`studio-btn ${viewMode === "desktop" ? "studio-btn-primary" : ""}`}
             onClick={() => setViewMode("desktop")}
             aria-label="Desktop Preview Mode"
+            aria-pressed={viewMode === "desktop"}
           >
             Desktop
           </button>
@@ -100,6 +151,7 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
             className={`studio-btn ${viewMode === "tablet" ? "studio-btn-primary" : ""}`}
             onClick={() => setViewMode("tablet")}
             aria-label="Tablet Preview Mode"
+            aria-pressed={viewMode === "tablet"}
           >
             Tablet
           </button>
@@ -108,6 +160,7 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
             className={`studio-btn ${viewMode === "mobile" ? "studio-btn-primary" : ""}`}
             onClick={() => setViewMode("mobile")}
             aria-label="Mobile Preview Mode"
+            aria-pressed={viewMode === "mobile"}
           >
             Mobile
           </button>
@@ -116,13 +169,34 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
         {/* Actions */}
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
           {exportNotice && (
-            <span style={{ fontSize: "12px", color: "#34d399" }}>{exportNotice}</span>
+            <span style={{ fontSize: "12px", color: "#34d399" }} role="status">
+              {exportNotice}
+            </span>
           )}
+          <button
+            type="button"
+            className="studio-btn"
+            onClick={handleCreateBlank}
+            aria-label="Create blank SPE website"
+            data-testid="studio-create-blank"
+          >
+            Create blank
+          </button>
+          <button
+            type="button"
+            className="studio-btn"
+            onClick={() => setActiveLeftTab("explore")}
+            aria-label="Explore inspiration recipes"
+            data-testid="studio-open-explore"
+          >
+            Explore
+          </button>
           <button
             type="button"
             className="studio-btn studio-btn-primary"
             onClick={handleExport}
             aria-label="Export SPE Site Package"
+            data-testid="studio-export"
           >
             Export .spe-site
           </button>
@@ -175,12 +249,24 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#a1a1aa" }}>
               <span>Pages & Hierarchy</span>
-              {patchHistory.length > 0 && <span>{patchHistory.length} edit{patchHistory.length === 1 ? "" : "s"}</span>}
+              {patchHistory.length > 0 && (
+                <span>
+                  {patchHistory.length} edit{patchHistory.length === 1 ? "" : "s"}
+                </span>
+              )}
             </div>
             {spec.pages.map((p) => (
               <div
                 key={p.id}
                 onClick={() => setSelectionScope([p.id])}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setSelectionScope([p.id]);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
                 style={{
                   backgroundColor: selectionScope.includes(p.id) ? "#1e293b" : "#161922",
                   border: selectionScope.includes(p.id) ? "1px solid #3b82f6" : "1px solid #232736",
@@ -218,13 +304,8 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
 
         {activeLeftTab === "explore" && (
           <StudioExplore
-            onSelectRecipe={(recipe) => {
-              setSpec((prev) => ({
-                ...prev,
-                metadata: { ...prev.metadata, title: recipe.title },
-              }));
-              setActiveLeftTab("structure");
-            }}
+            selectedId={selectedRecipeId}
+            onSelectRecipe={handleCreateFromRecipe}
           />
         )}
       </aside>
@@ -261,7 +342,6 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <PerformanceDoctor scene={spec.scene ?? createEmptySceneIR()} />
 
-          {/* Camera Director in Intelligence Sidebar */}
           <CameraDirectorPanel
             currentPlan={spec.cameraPlan}
             onPlanChange={(plan) => setSpec({ ...spec, cameraPlan: plan })}
@@ -302,7 +382,6 @@ export const Studio: React.FC<StudioProps> = ({ initialSpec }) => {
             </div>
           </div>
 
-          {/* Quick Natural Language Copilot Input */}
           <div style={{ display: "flex", gap: "8px", width: "420px" }}>
             <input
               type="text"

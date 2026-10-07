@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-06T00:00:00.000Z",
-  "tipNote": "Founder-approved SPE Free 3D Websites v1.1 core strings reviewed, including inert SVG accessibility fallback.",
+  "generated": "2026-10-07T05:52:47.269Z",
+  "tipNote": "Founder-approved SPE Free 3D Studio runtime journey strings (Explore→Create→edit→render→responsive→export) plus prior v1.1 core and privacy join CTA.",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -169,6 +169,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Daily Lab"
+    },
+    {
+      "id": "2abceb7c3ab3dd95398a",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "Studio"
     },
     {
       "id": "2c9f934faf82d9a37e95",
@@ -919,6 +925,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": ".json"
+    },
+    {
+      "id": "fdd060407f7e619108ac",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "studio"
     },
     {
       "id": "ff9246c59928e9d2d455",
@@ -9015,6 +9027,12 @@
       "text": "website"
     },
     {
+      "id": "28177cbae80dddcb9fe3",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Studio"
+    },
+    {
       "id": "35c061562a2ccf6fcd63",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -9097,6 +9115,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Privacy"
+    },
+    {
+      "id": "9f87b6c809ac19b2bc70",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "studio"
     },
     {
       "id": "b1655880cfe478e90451",
@@ -16647,6 +16671,12 @@
       "text": "Do provider profiles grant SPE permission to call external AI?"
     },
     {
+      "id": "2424b050cc4beba876ab",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "studio"
+    },
+    {
       "id": "24429aa3e0fae95b50e8",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -16773,6 +16803,12 @@
       "text": "DeveloperApplication"
     },
     {
+      "id": "677ec8902637120abe9c",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/studio"
+    },
+    {
       "id": "69a2b710569776a27810",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -16819,6 +16855,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "OCR — Local text from an image | SPE"
+    },
+    {
+      "id": "887498f7eb2f2a3f278d",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Website Studio — Free 3D local preview | SPE"
     },
     {
       "id": "88db71227eaaf2e38281",
@@ -16927,6 +16969,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Offer"
+    },
+    {
+      "id": "dd0119d257ca134a70f7",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Explore recipes, create a local WebsiteSpec, edit, preview responsively, and export a .spe-site package. Runs on this device; does not publish a site."
     },
     {
       "id": "df332df94ae7272f4c4e",
@@ -17259,6 +17307,12 @@
       "text": "spe_runtime/grounding/research_journey.py"
     },
     {
+      "id": "450b0433364735a162c2",
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "depth": "PRODUCT",
+      "text": "website-studio/model/websiteSpecV2"
+    },
+    {
       "id": "4ebac042f24a8845f4f9",
       "file": "apps/web/src/shell/mountStatus.ts",
       "depth": "PRODUCT",
@@ -17313,6 +17367,18 @@
       "text": "apps/web/src/website/mount-contract.ts"
     },
     {
+      "id": "82ea42b2a30f41cc3617",
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "depth": "PRODUCT",
+      "text": "/studio"
+    },
+    {
+      "id": "82f37d757c4c6deac97f",
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "depth": "PRODUCT",
+      "text": "website-studio/model/sceneIR → engine/multimodal/types"
+    },
+    {
       "id": "89eb5ad5743cc6e6079e",
       "file": "apps/web/src/shell/mountStatus.ts",
       "depth": "PRODUCT",
@@ -17323,6 +17389,18 @@
       "file": "apps/web/src/shell/mountStatus.ts",
       "depth": "PRODUCT",
       "text": "MOUNTED"
+    },
+    {
+      "id": "97d379d07e86b0d0e5c2",
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "depth": "PRODUCT",
+      "text": "studio"
+    },
+    {
+      "id": "b99775541db874204fce",
+      "file": "apps/web/src/shell/mountStatus.ts",
+      "depth": "PRODUCT",
+      "text": "Studio"
     },
     {
       "id": "be98c6295b2aaf14fa4d",
@@ -18117,6 +18195,144 @@
       "text": "getTimeline"
     },
     {
+      "id": "0958da91b9086b92818f",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Actions:"
+    },
+    {
+      "id": "1a0812f5c47522ccd155",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "No behavior rules configured. Add a rule to connect user interactions to 3D reactions."
+    },
+    {
+      "id": "2047c6077d328c2ba096",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Trigger:"
+    },
+    {
+      "id": "2e9ecccc40952adfd99f",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Behavior Graph Editor"
+    },
+    {
+      "id": "2f6fe327ad37561ae6d1",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "mesh-main"
+    },
+    {
+      "id": "3ec05a97cfba0d70c413",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "+ Add Interaction Rule"
+    },
+    {
+      "id": "48ad15126d01cf104915",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "viewport-min"
+    },
+    {
+      "id": "4a6d92ecb2d9b2aac44a",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "visual"
+    },
+    {
+      "id": "4d0e4412f50d85f89039",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "scroll"
+    },
+    {
+      "id": "5fe19bbfb83372d3a49f",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "scene-rotate"
+    },
+    {
+      "id": "6e7d0c83bf608028f561",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "on #"
+    },
+    {
+      "id": "74869e39e52494c66742",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "rule"
+    },
+    {
+      "id": "7f36170a8a553645b3d6",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "hero-static"
+    },
+    {
+      "id": "9ffebe4228cf320d826c",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Fallback:"
+    },
+    {
+      "id": "a1166355407dea6209b1",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "section-hero"
+    },
+    {
+      "id": "a28338c4bf02162f69e6",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Graph JSON"
+    },
+    {
+      "id": "ae1db650b180661c38c4",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "defined"
+    },
+    {
+      "id": "b61e340b8b01d36e730c",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Remove"
+    },
+    {
+      "id": "bd58c9761bb9ba730938",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Visual Rules"
+    },
+    {
+      "id": "d1900af3105c64d8e028",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "rule-"
+    },
+    {
+      "id": "d9c29d3a8bcf4088d721",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "s"
+    },
+    {
+      "id": "de22c06dd1ead6bf76bf",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "dom-show"
+    },
+    {
+      "id": "e96feb45aae988585fa7",
+      "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Delete rule"
+    },
+    {
       "id": "83de60081c4f17e947dd",
       "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
       "depth": "PRODUCT",
@@ -18211,6 +18427,330 @@
       "file": "apps/web/src/website-studio/camera/cameraDirector.ts",
       "depth": "PRODUCT",
       "text": "Luxury Orbit"
+    },
+    {
+      "id": "1bf198d45004e8a0e175",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Camera Director"
+    },
+    {
+      "id": "2968abd16e10c6cf0f9e",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Director-tested camera choreography with bounded velocity and reduced-motion variants."
+    },
+    {
+      "id": "50785bc982b9985ab38f",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Exploded Assembly"
+    },
+    {
+      "id": "50ecde408c896ea0af52",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "% • FOV"
+    },
+    {
+      "id": "6df58425b52e0461db16",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Product Inspection"
+    },
+    {
+      "id": "8e427ad44db0fef2b32a",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "ACTIVE SHOTS ("
+    },
+    {
+      "id": "9a814a8ee0450e032c51",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Hero Reveal"
+    },
+    {
+      "id": "b4e0a506a650ebd5159a",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Macro Detail"
+    },
+    {
+      "id": "caec44d4408420bf3336",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "CINEMATIC PRESETS"
+    },
+    {
+      "id": "dd36ad88a1dc634df6c4",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Story Journey"
+    },
+    {
+      "id": "ea036eaab1f3f9ca6f9d",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Dramatic Push-In"
+    },
+    {
+      "id": "f0c8de7e023512245838",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Luxury Orbit"
+    },
+    {
+      "id": "f6533147ca170292be9f",
+      "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Architectural Flythrough"
+    },
+    {
+      "id": "09feb3f851755c9ec01a",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "static"
+    },
+    {
+      "id": "0a5d700fbddf65218631",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "Story Journey"
+    },
+    {
+      "id": "10615776a3f4084f94d1",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "home"
+    },
+    {
+      "id": "2bd4e192f702f9ae6f3e",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "Hero Reveal"
+    },
+    {
+      "id": "3c06652b8c53f50c6723",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "Architectural Flythrough"
+    },
+    {
+      "id": "47ba3a69df1d99f0b4de",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "simplify"
+    },
+    {
+      "id": "4f93ddf2574f33c519f3",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "Untitled SPE Website"
+    },
+    {
+      "id": "57c4102ec6bbcfb3e941",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "Luxury Orbit"
+    },
+    {
+      "id": "71c6f98fe253e6ae7315",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "index.html"
+    },
+    {
+      "id": "7d8b17c735428a40c12f",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "interactive scene"
+    },
+    {
+      "id": "7e38dcdc5edbac6d5466",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "product-reveal"
+    },
+    {
+      "id": "86ed9c02e5d42a0f24c4",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "-arrival"
+    },
+    {
+      "id": "8e66bf61c2a2d5a3525c",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "Macro Detail"
+    },
+    {
+      "id": "97df0978cd05659a9379",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "orbit"
+    },
+    {
+      "id": "b2dc9dd9ebf83cbac915",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "hero-arrival"
+    },
+    {
+      "id": "dd9fddc7c1728feea667",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "Dramatic Push-In"
+    },
+    {
+      "id": "de06abaf083c71f38b97",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "camera"
+    },
+    {
+      "id": "f644638f3846a1b128c3",
+      "file": "apps/web/src/website-studio/create/createFromRecipe.ts",
+      "depth": "PRODUCT",
+      "text": "position.z"
+    },
+    {
+      "id": "2af329c9efe89f242038",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#064e3b"
+    },
+    {
+      "id": "350d4aefbbb0eef9dd22",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "+ Bind Variable"
+    },
+    {
+      "id": "37b9daf3a27da0fb2762",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "PUBLIC WEB FETCH"
+    },
+    {
+      "id": "557ea9da430f4d831935",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "EXTERNAL PROVIDER"
+    },
+    {
+      "id": "5691fce44b9a1cb40284",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "EXTERNAL_PROVIDER"
+    },
+    {
+      "id": "5f85ba1c8f79703fda95",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "s"
+    },
+    {
+      "id": "6210c125cceb2abf6d87",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Data Binding & Privacy Inspector"
+    },
+    {
+      "id": "68feb47d2e13c833a82e",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#fca5a5"
+    },
+    {
+      "id": "6bc700c002eac3ae2a71",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "External API provider with mandatory privacy disclosure."
+    },
+    {
+      "id": "6bdc9c476b4dbdba861e",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "LOCAL"
+    },
+    {
+      "id": "70b387728bed82736ef1",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#34d399"
+    },
+    {
+      "id": "719efe7e518d009520d1",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#fcd34d"
+    },
+    {
+      "id": "728326f50025be197397",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#78350f"
+    },
+    {
+      "id": "8359cf830239bb4eb1f9",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Source:"
+    },
+    {
+      "id": "97eb3d892806f82330bd",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "No data bindings connected. Dynamic variables bind safely without code execution."
+    },
+    {
+      "id": "9a290a93d634c0c26cd5",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "bound"
+    },
+    {
+      "id": "a78a7c18527b2b62be98",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "variable"
+    },
+    {
+      "id": "ae8aed8454e42d5746e5",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "PUBLIC_FETCH"
+    },
+    {
+      "id": "b87236c21fa5c925c221",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Disconnect"
+    },
+    {
+      "id": "b9123268b8b4b7509b59",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Public read-only GET fetch. Disclosed public URL."
+    },
+    {
+      "id": "d6429d9a21eafd6d8932",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Never leaves the browser sandbox. 100% on-device."
+    },
+    {
+      "id": "efa3f4ef5be4a192a143",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "Transform:"
+    },
+    {
+      "id": "fd06c8ce0b0ca4de443d",
+      "file": "apps/web/src/website-studio/data/DataBindingInspector.tsx",
+      "depth": "PRODUCT",
+      "text": "#7f1d1d"
     },
     {
       "id": "06e9ac23fd93f456c209",
@@ -18379,6 +18919,306 @@
       "file": "apps/web/src/website-studio/enhance/analyzeEnhancementOpportunities.ts",
       "depth": "PRODUCT",
       "text": "DEPTH_COMPOSITE"
+    },
+    {
+      "id": "1e92798bb41df1341fc4",
+      "file": "apps/web/src/website-studio/explore/InspirationCard.tsx",
+      "depth": "PRODUCT",
+      "text": "Use Recipe"
+    },
+    {
+      "id": "3893dde197d2d111ccb8",
+      "file": "apps/web/src/website-studio/explore/InspirationCard.tsx",
+      "depth": "PRODUCT",
+      "text": "Select"
+    },
+    {
+      "id": "0b3cc68263353e184905",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "reduced-motion"
+    },
+    {
+      "id": "0d920f3793df8cdf6a28",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "kinetic-typography-stage"
+    },
+    {
+      "id": "14ab7b3c3767d8f4335b",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Architectural Space Tour"
+    },
+    {
+      "id": "19a13ca698e2237a7ce6",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Telemetry Data Stage"
+    },
+    {
+      "id": "2e0b4239fb2743d18498",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Responsive 3D background linked to scroll progress with accessible static fallback."
+    },
+    {
+      "id": "4da182d056c0930ef2c3",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Creative & Agency"
+    },
+    {
+      "id": "50aeae9114c30eb59386",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Multi-shot orbital camera with cinematic lighting and responsive zoom on interaction."
+    },
+    {
+      "id": "58a029639aff775775aa",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "luxury-product-orbit"
+    },
+    {
+      "id": "62046252148de78c3123",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "privacy-boundary"
+    },
+    {
+      "id": "6286026e616f3dd8fbf8",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "DataBinding"
+    },
+    {
+      "id": "629805fbdf64663dbb86",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Interior flythrough with bounded mesh collision guards and waypoint annotations."
+    },
+    {
+      "id": "79bf38db01676fbb9e43",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "BehaviorGraph"
+    },
+    {
+      "id": "7dc7db0abe778283666b",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "orbit"
+    },
+    {
+      "id": "7ee95cbf13db3f24820f",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "DoctorDiagnostics"
+    },
+    {
+      "id": "81a7a3890b706741c440",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "CameraDirector"
+    },
+    {
+      "id": "836c8cad914cf7217c52",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "LocalSandbox"
+    },
+    {
+      "id": "90c5f26ee5455fa39b50",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Live data-bound parameters controlling 3D geometry with strict origin disclosure."
+    },
+    {
+      "id": "91df16a14103e25e8fb5",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "typography"
+    },
+    {
+      "id": "98189da8721d423c852d",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "architectural-spatial"
+    },
+    {
+      "id": "a9cdf2182558c3969689",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Luxury Product Showcase"
+    },
+    {
+      "id": "b0a164eef3858f3e0b89",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "real-time"
+    },
+    {
+      "id": "b34a688eca6cf3a62ec6",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Real Estate & Architecture"
+    },
+    {
+      "id": "b570d0131bc84f48c65e",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "data-binding"
+    },
+    {
+      "id": "c029c15c83442b1ac8d2",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "data-telemetry-dashboard"
+    },
+    {
+      "id": "c32bb3f749fa71f2a387",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "pbr-materials"
+    },
+    {
+      "id": "c70f8d7992308408d22f",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "NarrativeBlocks"
+    },
+    {
+      "id": "c8f557661ecfabb2dd37",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "flythrough"
+    },
+    {
+      "id": "c9562a0bd3ff3c5d4e11",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "CollisionGuards"
+    },
+    {
+      "id": "c9d6074f46e111a8613c",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "DOMSync"
+    },
+    {
+      "id": "ce2bf2f938eb7a7f4502",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "lighting-ambient"
+    },
+    {
+      "id": "d7a51b04507e4952e093",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Kinetic Interactive Stage"
+    },
+    {
+      "id": "dd1e811b4044107b2dcf",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "SceneDoctor"
+    },
+    {
+      "id": "ddbf57a15506d66b1fde",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "waypoints"
+    },
+    {
+      "id": "e67a49d33ef45a7862df",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "ReducedMotionEquivalence"
+    },
+    {
+      "id": "eee14105c5185366ef4a",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "E-Commerce"
+    },
+    {
+      "id": "ef4d1b8577824771d84a",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "Technology"
+    },
+    {
+      "id": "f2960f3b393ecd0d5acc",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "DataBindingInspector"
+    },
+    {
+      "id": "f555ed380c9f5abfedfa",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "scroll-driven"
+    },
+    {
+      "id": "f9237af9b93b153f8874",
+      "file": "apps/web/src/website-studio/explore/inspirationRecipes.ts",
+      "depth": "PRODUCT",
+      "text": "camera-director"
+    },
+    {
+      "id": "11960d87e1cffd98de0c",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Filter recipes"
+    },
+    {
+      "id": "258fdf34b178d3d2f42b",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Inspiration Recipes"
+    },
+    {
+      "id": "25ff6bacc2e29d8748b8",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "E-Commerce"
+    },
+    {
+      "id": "2f292f0e7627b25ad1ae",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Creative & Agency"
+    },
+    {
+      "id": "335948f9f2619e6262fd",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Technology"
+    },
+    {
+      "id": "4f66e34bc215957027e5",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "All"
+    },
+    {
+      "id": "83d65d83afe5eec09341",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Filter recipes..."
+    },
+    {
+      "id": "d49f38f755926d5eef00",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Real Estate & Architecture"
+    },
+    {
+      "id": "ec6c7ad930b07624bf93",
+      "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
+      "depth": "PRODUCT",
+      "text": "Curated 3D website recipes with tested camera plans, motion blocks, and behavior graphs."
     },
     {
       "id": "16b6b0a7bbe4ffc6d1f7",
@@ -19200,7 +20040,7 @@
       "id": "c6ee83e3ca62720a61c1",
       "file": "apps/web/src/website-studio/model/sceneIR.ts",
       "depth": "PRODUCT",
-      "text": "<svg xmlns=\\"
+      "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><rect width=\"64\" height=\"64\" rx=\"12\" fill=\"#0b0d12\"/></svg>"
     },
     {
       "id": "04e88cb3bfb815cb0e1a",
@@ -19317,6 +20157,126 @@
       "text": "-track-"
     },
     {
+      "id": "0e25ea54c622ede4d87e",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Narrative Blocks"
+    },
+    {
+      "id": "2d865bba21a5807a39d6",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Remove"
+    },
+    {
+      "id": "4080e197a8ab7e46960d",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "No narrative motion blocks created yet."
+    },
+    {
+      "id": "408633665f27535be1aa",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "camera"
+    },
+    {
+      "id": "487df1a1bc970e42f558",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Remove motion block"
+    },
+    {
+      "id": "708ebd9f9a8fc3a56707",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "simplify"
+    },
+    {
+      "id": "7f3ca39dcaa3f952bc23",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "block"
+    },
+    {
+      "id": "8fcf43ba7a6e6fc81183",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "active track"
+    },
+    {
+      "id": "a35ae4afa6ce5010aa7f",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "s"
+    },
+    {
+      "id": "a9ae78d2857841f07235",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "position.z"
+    },
+    {
+      "id": "ab8b91668e230690053e",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "narrative"
+    },
+    {
+      "id": "ae240e77f61aed8e1ce7",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Detailed Tracks"
+    },
+    {
+      "id": "bbd677cd3a7f8f2b6aa0",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "block-"
+    },
+    {
+      "id": "bc4f8f431d1ee1b7f491",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Timeline & Narrative Motion Blocks"
+    },
+    {
+      "id": "deb1c2fd27c40a10d015",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "static"
+    },
+    {
+      "id": "e459b344f83620d3eb44",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "product-reveal"
+    },
+    {
+      "id": "e741fc072da7d79ce8f6",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "No expanded keyframe tracks found."
+    },
+    {
+      "id": "f4b1c5f49d5adbd04f3f",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "Add narrative motion block"
+    },
+    {
+      "id": "f97886df077c72adeaf2",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "keyframes ("
+    },
+    {
+      "id": "ff742207ad5616a14e29",
+      "file": "apps/web/src/website-studio/motion/MotionBlockEditor.tsx",
+      "depth": "PRODUCT",
+      "text": "+ Add Block"
+    },
+    {
       "id": "28e4687b133e946893b6",
       "file": "apps/web/src/website-studio/performance/measureScene.ts",
       "depth": "PRODUCT",
@@ -19345,6 +20305,102 @@
       "file": "apps/web/src/website-studio/performance/measureScene.ts",
       "depth": "PRODUCT",
       "text": "PERFORMANCE_MEASUREMENT_INVALID"
+    },
+    {
+      "id": "0ae0474e2959c4b986a5",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Draw Calls"
+    },
+    {
+      "id": "11399be6c5d19e0e7f35",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Active Lights"
+    },
+    {
+      "id": "26cf1dfa86a2c7cc17e7",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "TIER C"
+    },
+    {
+      "id": "2e81d92a4e7c5e617f2a",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "#f59e0b"
+    },
+    {
+      "id": "3c208c425e9e57b31278",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Scene Performance Doctor"
+    },
+    {
+      "id": "4eb64e7aac777483dee3",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Apply Non-Destructive Optimizations"
+    },
+    {
+      "id": "50ca23a7f2a7635c51a6",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "#ef4444"
+    },
+    {
+      "id": "55f246282d28c05c0e89",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Geometry Memory"
+    },
+    {
+      "id": "5f216379943538858f1e",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "TIER B"
+    },
+    {
+      "id": "84e0f422838de0f9a375",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "#10b981"
+    },
+    {
+      "id": "8bb04a4776019d904bf7",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "KB"
+    },
+    {
+      "id": "8c413c860989bd34d2f2",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "UNKNOWN"
+    },
+    {
+      "id": "91ad7122d6ec635291de",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "Triangles"
+    },
+    {
+      "id": "a7f383472b7922944b2e",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "TIER A"
+    },
+    {
+      "id": "d83992fcef12d13092df",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "State:"
+    },
+    {
+      "id": "fcc3fe899a8472c0eefc",
+      "file": "apps/web/src/website-studio/performance/PerformanceDoctor.tsx",
+      "depth": "PRODUCT",
+      "text": "DETECTED ISSUES ("
     },
     {
       "id": "5f4862766a72184f2072",
@@ -19405,6 +20461,408 @@
       "file": "apps/web/src/website-studio/reference/extractDesignDNAFromHtml.ts",
       "depth": "PRODUCT",
       "text": "OBSERVED"
+    },
+    {
+      "id": "06c841280cf4b3b0be4f",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "Interactive 3D experience with accessible semantic DOM hierarchy and tested camera motion."
+    },
+    {
+      "id": "153fde751a1349e80277",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "Explore Experience"
+    },
+    {
+      "id": "17c73ac8dabcfbeba982",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "desktop"
+    },
+    {
+      "id": "38eb8bbe909e3a575ffc",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "375px"
+    },
+    {
+      "id": "3bb11351ded3ab35e436",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "index.html"
+    },
+    {
+      "id": "48bbf2f1713a35c62622",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "home"
+    },
+    {
+      "id": "5414660443ca886a281c",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "Overview"
+    },
+    {
+      "id": "5b35138b7e56744ca7d7",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "Contact"
+    },
+    {
+      "id": "7160e2bf700b5acba665",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "[ Interactive 3D WebGL Canvas Layer ]"
+    },
+    {
+      "id": "b311028bed65588989bf",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "tablet"
+    },
+    {
+      "id": "b75b52f2388e39ac4f90",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "Features"
+    },
+    {
+      "id": "b9ea1736fe4a7093610e",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "mobile"
+    },
+    {
+      "id": "bdacbf53761d0e577906",
+      "file": "apps/web/src/website-studio/render/WebsiteRenderer.tsx",
+      "depth": "PRODUCT",
+      "text": "768px"
+    },
+    {
+      "id": "0026d17896efcecd5158",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Responsive preview"
+    },
+    {
+      "id": "0297949250ada5d75fc7",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Tablet"
+    },
+    {
+      "id": "08ae99405a50c66729dd",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "application/json;charset=utf-8"
+    },
+    {
+      "id": "0ed46b5ac15770ffd2bb",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Mobile"
+    },
+    {
+      "id": "1178ab1e8be761b3ed5b",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "INTELLIGENCE Panel"
+    },
+    {
+      "id": "14b00be5bcab1c78f95d",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "STRUCTURE Panel"
+    },
+    {
+      "id": "1533cdeda95b47907e5c",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Apply Edit"
+    },
+    {
+      "id": "183c1f448c23849f5ac7",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Explore"
+    },
+    {
+      "id": "1fe14c89beecfcf4beff",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "USER_LANGUAGE"
+    },
+    {
+      "id": "20db5f284b34ddc322dd",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Recipes"
+    },
+    {
+      "id": "21545ca25793a2c7dc42",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "s"
+    },
+    {
+      "id": "25a0ce518695bfe9badc",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Tablet Preview Mode"
+    },
+    {
+      "id": "34e59019d356605814e8",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "exported"
+    },
+    {
+      "id": "379a1d44261bcf03e291",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "(Updated)"
+    },
+    {
+      "id": "39a1c4bb0c1f0f52f3fc",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Prompt Copilot to direct motion, lighting, or camera..."
+    },
+    {
+      "id": "46f20c38aaf8deb3f65c",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "edited"
+    },
+    {
+      "id": "4b1d33624792c9f4bbae",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "LIVE WEBSITE Stage"
+    },
+    {
+      "id": "4b4ab0de8f71425d624e",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "spe-site"
+    },
+    {
+      "id": "5afd1562c16dc15781da",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Export .spe-site"
+    },
+    {
+      "id": "5c5304b1695157f759e1",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "a"
+    },
+    {
+      "id": "665a394887cc8274b97a",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "v1.1 Free 3D Architecture"
+    },
+    {
+      "id": "69c31dd6d03e4f0b9579",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE Website Studio"
+    },
+    {
+      "id": "6cd863ad7fcda6bd5cb8",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Data"
+    },
+    {
+      "id": "6d0f12dad35976150854",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Desktop Preview Mode"
+    },
+    {
+      "id": "6e99eba73fc6289a3bb4",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "bytes)"
+    },
+    {
+      "id": "7a64fe459a7e5b109837",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "COPILOT"
+    },
+    {
+      "id": "7cbcb45dccaffe2e8341",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "home"
+    },
+    {
+      "id": "843540dc6e55bc8ac0df",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Create blank"
+    },
+    {
+      "id": "879fedb8c87faa72d892",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Desktop"
+    },
+    {
+      "id": "8986d5207fbb07b13f0e",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Mobile Preview Mode"
+    },
+    {
+      "id": "97fa3be8ee37a3ccb51c",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "INTELLIGENCE"
+    },
+    {
+      "id": "a2c1f09fa4da1d4fe096",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "explore"
+    },
+    {
+      "id": "a7a5bc729b81203b16c4",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Create blank SPE website"
+    },
+    {
+      "id": "a91fe3d9bd579d3c7d1a",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "hero"
+    },
+    {
+      "id": "ab543f4b143fc99266e3",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Export SPE Site Package"
+    },
+    {
+      "id": "af42615aea861b03ed70",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "metadata"
+    },
+    {
+      "id": "b135d37e3b64ff755ff0",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "LIVE WEBSITE"
+    },
+    {
+      "id": "b3410f49bd2703a6cbde",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "structure"
+    },
+    {
+      "id": "b84bb64da29054926a5f",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Tree"
+    },
+    {
+      "id": "b9f85f732d4daf4be171",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Pages & Hierarchy"
+    },
+    {
+      "id": "ba2be4d4c754acc5749f",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Graph"
+    },
+    {
+      "id": "c19cd4a23b66eca52b46",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "created"
+    },
+    {
+      "id": "c825757b56037f4ca9fd",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "data"
+    },
+    {
+      "id": "d79d5dc51e220e79fe47",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Exported .spe-site package ("
+    },
+    {
+      "id": "d9414142a259a7b508f0",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Direct Copilot with natural language"
+    },
+    {
+      "id": "e31e443b9653c997e9ad",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "set"
+    },
+    {
+      "id": "ef92b18b6eee3f00b42f",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "edit"
+    },
+    {
+      "id": "f0f09aab55861ce88c4b",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "STRUCTURE"
+    },
+    {
+      "id": "f25d4deaeef1f2bb1cd5",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "desktop"
+    },
+    {
+      "id": "f46f03066fb246201662",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "behaviors"
+    },
+    {
+      "id": "f650c526378ef69333a1",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "title"
+    },
+    {
+      "id": "f65aa29db91a3e956a5b",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "COPILOT & Motion Timeline"
+    },
+    {
+      "id": "f682688407703e322ffb",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": ".spe-site.json"
+    },
+    {
+      "id": "f845fb5e4a558766557d",
+      "file": "apps/web/src/website-studio/Studio.tsx",
+      "depth": "PRODUCT",
+      "text": "Explore inspiration recipes"
     },
     {
       "id": "07251de020e7386ad078",
