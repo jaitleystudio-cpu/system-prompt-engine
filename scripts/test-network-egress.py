@@ -130,14 +130,16 @@ def run_egress_qualification() -> int:
     })
 
     # 5. Test 4: Capability Firewall & Runtime Gateway
-    from spe_runtime.runtime_gateway.firewall import CapabilityFirewall
+    from spe_runtime.ci_gate.receipt import generate_keypair
+    from spe_runtime.runtime_gateway.firewall import CapabilityFirewall, sign_grant
     from spe_runtime.runtime_gateway.models import (
         CapabilityGrant,
         CapabilityRequest,
         CapabilityType,
         Decision,
     )
-    fw = CapabilityFirewall()
+    sk_fw, pk_fw = generate_keypair()
+    fw = CapabilityFirewall(trusted_roots={"sec-ops": pk_fw.hex()})
     grant = CapabilityGrant(
         grant_id="grant-test",
         capability=CapabilityType.READ_FILE,
@@ -147,8 +149,9 @@ def run_egress_qualification() -> int:
         approval_identity="appr-test",
         expiration_iso="2030-01-01T00:00:00Z",
         nonce="nonce-001",
-        signature="sig-test",
+        signature="",
     )
+    sign_grant(grant, sk_fw, pk_fw)
     fw.install_grant(grant)
     res = fw.evaluate_request(CapabilityRequest(
         capability=CapabilityType.READ_FILE,
@@ -222,7 +225,10 @@ def run_egress_qualification() -> int:
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "audit_policy": "STRICT_AIR_GAP_ZERO_UNEXPECTED_EGRESS",
         "unexpected_external_destinations": 0,
-        "status": "EGRESS_PROOF_QUALIFIED_PASS",
+        "status": "PYTHON_PRIVATE_CORE_EGRESS_PASS_WITH_WEB_CSP_BOUNDARY_PRESENT",
+        "python_core_egress": "PYTHON_PRIVATE_CORE_EGRESS_PASS",
+        "web_csp_boundary": "WEB_CSP_BOUNDARY_PRESENT",
+        "system_wide_packet_capture": "UNKNOWN",
         "total_audit_events": len(egress_log),
         "events": egress_log
     }
@@ -232,7 +238,7 @@ def run_egress_qualification() -> int:
     print(f"✅ Generated Network Egress Proof: {EVIDENCE_PATH}")
     print(f"   Unexpected external destinations: 0")
     print(f"   Total audited events: {len(egress_log)}")
-    print(f"   Status: EGRESS_PROOF_QUALIFIED_PASS")
+    print(f"   Status: PYTHON_PRIVATE_CORE_EGRESS_PASS_WITH_WEB_CSP_BOUNDARY_PRESENT")
     return 0
 
 

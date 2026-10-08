@@ -65,5 +65,22 @@ def test_paired_baseline_execution():
     assert report["total_tasks_evaluated"] >= 8
     assert report["spe_compiled_accuracy"] > report["raw_prompt_accuracy"]
     assert report["delta"] > 0.0
-    assert report["evidence_class"] == "OBSERVED_LOCAL"
+    assert report["evidence_class"] == "SIMULATED"
     assert REPORT_PATH.exists()
+
+
+def test_simulated_cannot_claim_observed_local():
+    raw_prompt = "raw prompt"
+    spe_prompt = "spe prompt"
+
+    def mock_model(system_prompt: str, task_input: str) -> str:
+        return "PASS"
+
+    import pytest
+    with pytest.raises(ValueError, match="Cannot claim OBSERVED_LOCAL for simulated model function without verified runtime receipts"):
+        run_paired_baseline(
+            raw_prompt=raw_prompt,
+            spe_prompt=spe_prompt,
+            model_simulator_fn=mock_model,
+            evidence_class="OBSERVED_LOCAL",
+        )

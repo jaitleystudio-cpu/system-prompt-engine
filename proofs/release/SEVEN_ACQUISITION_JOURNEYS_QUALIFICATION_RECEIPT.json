@@ -1,6 +1,6 @@
 {
   "specificationVersion": "SPE-OMEGA-QUAL-v1.0",
-  "qualifiedAt": "2026-10-08T06:45:07.146Z",
+  "qualifiedAt": "2026-10-08T11:44:34.869Z",
   "targetRelease": "2026-10-26 22:10 IST",
   "totalJourneys": 7,
   "passedJourneys": 7,
@@ -51,10 +51,10 @@
       "route": "/tools/system-prompt-generator",
       "status": "PASS",
       "evidenceClass": "DETERMINISTIC",
-      "digest": "849dbab405301ba1e033c130ca14849af2ec4de5d5a5a723065fb9931e050801",
+      "digest": "ccc4a5cd227c6c044ed6b2ed8c07d0f17882967b25ea456a140d3a467a911d83",
       "metrics": {
         "dialects": 5,
-        "receiptDigest": "5ac53689dd9dc0b4c0985bba744dc95f620c2bae85c8602a60cd4eb242d06386"
+        "receiptDigest": "d3675f1ca7c45401bc594cfe8b7a35ab1766c616f89d2d35211b64b27e8d3ba4"
       }
     },
     {

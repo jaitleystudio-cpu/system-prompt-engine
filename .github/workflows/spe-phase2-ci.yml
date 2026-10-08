@@ -60,3 +60,12 @@ jobs:
         run: |
           node bin/spe.mjs --help
           node bin/spe.mjs version
+      - name: Run Copy Governance Check
+        run: |
+          npm --prefix apps/web run spe:copy-check
+      - name: Run Complete 30-Command CLI Battery
+        run: |
+          npm --prefix apps/web run test:cli-battery
+      - name: Verify Machine Test Manifest Generation
+        run: |
+          node scripts/generate-test-manifest.mjs

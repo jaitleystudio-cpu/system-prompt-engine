@@ -1,12 +1,12 @@
 {
   "bundle_name": "SPE Ω Independent Adversarial Review Package",
   "prepared_for": "Grok Independent Hostile Auditor",
-  "generated_at": "2026-10-08T10:55:00Z",
+  "generated_at": "2026-10-08T11:45:00Z",
   "candidate_branch": "candidate/2026-10-26",
   "integration_branch": "integration/spe-2026-10-26",
   "remote_repository": "https://github.com/jaitleystudio-cpu/system-prompt-engine.git",
   "audit_scope": {
-    "python_tests": 736,
+    "python_tests": 744,
     "cli_battery": 30,
     "seo_pages": 25,
     "wasm_canonical_sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
@@ -14,15 +14,20 @@
     "unreviewed_copy_violations": 0
   },
   "evidence_tiers": {
-    "LOCAL_VERIFIED": "736 Python unit tests, 30 CLI commands, zero socket egress script, WASM hash",
-    "REMOTE_CI_VERIFIED": "GitHub Actions spe-phase2-ci.yml on branch candidate/2026-10-26",
-    "UNKNOWN_REGISTER": "12 unobserved dimensions recorded in evidence/unknown-register.json (model drift in wild, live stripe webhooks, field CrUX CWV, search engine indexation)"
+    "LOCAL_VERIFIED": "744 Python unit tests, 30 CLI commands, python private core socket interception, WASM hash",
+    "REMOTE_CORE_CI_PASS": "GitHub Actions spe-phase2-ci.yml passing on integration/spe-2026-10-26 and candidate/2026-10-26",
+    "EGRESS_AUDIT_STATUS": "PYTHON_PRIVATE_CORE_EGRESS_PASS_WITH_WEB_CSP_BOUNDARY_PRESENT (system-wide packet capture remains UNKNOWN)",
+    "BENCHMARK_STATUS": "SIMULATED (strictly reclassified; negative guard forbids mock simulator runs from claiming OBSERVED_LOCAL)",
+    "MODEL_ATLAS_STATUS": "MODEL_ATLAS_PROVENANCE_SCHEMA_PASS (physical weight inference marked NOT_RUN until real weights are executed)",
+    "UNKNOWN_REGISTER": "13 unobserved empirical dimensions recorded in evidence/unknown-register.json (remote model drift, live payment webhooks, field CrUX CWV, physical weight inference)"
   },
   "claims_audit_corrections": {
     "fol_sat": "Bounded Horn / propositional rule consistency only; general FOL SAT undecidability acknowledged",
     "receipts": "Two-tier: JCS + SHA-256 integrity digest + Ed25519 digital signature; does not prove model objective correctness",
     "regulatory": "Evidence mapping only (EU AI Act, ISO 42001, OWASP GenAI); no self-issued official legal certification",
     "kv_cache": "Measured in InferenceEconomicsLab; no generic 30-50% GPU memory savings claimed",
-    "failure_genome": "Persistent SPE-FG-YYYY-NNNNNN IDs with sanitization & delta minimization; no fake CVE claims"
+    "failure_genome": "Persistent SPE-FG-YYYY-NNNNNN IDs with sanitization & delta minimization; no fake CVE claims",
+    "capability_firewall": "P0 security hardened: Ed25519 grant signatures against authorized trust roots, 2-phase budget transaction model, durable nonces and revocations across restarts",
+    "gilden_kernel": "RFC 8785 JCS + Ed25519 authenticated EffectReceipt signatures, sequence numbering, previous-record hash chaining, record checksums, and os.fsync()"
   }
 }

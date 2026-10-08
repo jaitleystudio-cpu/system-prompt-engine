@@ -15,9 +15,10 @@ const repoRoot = resolve(__dirname, '..');
 const manifestPath = resolve(repoRoot, 'evidence/test-manifest.json');
 const xmlPath = resolve(repoRoot, 'tmp/pytest-results.xml');
 
-// 1. Get Git commit SHA
+// 1. Get Git commit SHA and decoupled tested subject SHA
 const commitSha = execSync('git rev-parse HEAD', { cwd: repoRoot, encoding: 'utf8' }).trim();
 const gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: repoRoot, encoding: 'utf8' }).trim();
+const testedSubjectSha = process.env.TESTED_SUBJECT_SHA || commitSha;
 
 // 2. Parse pytest results
 let pythonTests = {
@@ -69,12 +70,20 @@ if (existsSync(wasmShaPath)) {
 const manifest = {
   manifest_version: "1.0",
   generated_at: new Date().toISOString(),
+  provenance: {
+    tested_subject_sha: testedSubjectSha,
+    attestation_mode: "DECOUPLED_INDEPENDENT_EVALUATION",
+    manifest_generator: "scripts/generate-test-manifest.mjs",
+    attestation_commit_sha: commitSha,
+    git_branch: gitBranch
+  },
   environment: {
     platform: process.platform,
     arch: process.arch,
     node_version: process.version,
     git_branch: gitBranch,
-    commit_sha: commitSha
+    commit_sha: commitSha,
+    tested_subject_sha: testedSubjectSha
   },
   wasm_engine: {
     canonical_sha256: wasmDetails.sha256,

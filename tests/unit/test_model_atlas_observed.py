@@ -5,7 +5,10 @@ from spe_runtime.model_atlas.atlas import ModelAtlasRegistry, RemoteExecutionNot
 from spe_runtime.model_atlas.models import ExecutionClass, ExecutionProvenance
 
 
-def test_observed_local_execution_provenance():
+def test_model_atlas_provenance_schema_pass():
+    """Validates the provenance schema structure for local execution records (MODEL_ATLAS_PROVENANCE_SCHEMA_PASS).
+    Real weight inference remains NOT_RUN / UNKNOWN until executed against physical weights.
+    """
     registry = ModelAtlasRegistry()
     prov = ExecutionProvenance(
         execution_id="exec-local-001",
@@ -36,6 +39,9 @@ def test_observed_local_execution_provenance():
     assert passport.execution_class == ExecutionClass.OBSERVED_LOCAL
     assert passport.sample_count == 1
     assert passport.latency_p50_ms == 18.4
+
+
+test_observed_local_execution_provenance = test_model_atlas_provenance_schema_pass
 
 
 def test_remote_execution_requires_explicit_opt_in():

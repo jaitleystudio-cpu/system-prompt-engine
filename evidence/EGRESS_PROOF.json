@@ -1,9 +1,12 @@
 {
   "proof_version": "1.0",
-  "timestamp": "2026-10-08T10:21:28.670383+00:00",
+  "timestamp": "2026-10-08T11:40:39.432367+00:00",
   "audit_policy": "STRICT_AIR_GAP_ZERO_UNEXPECTED_EGRESS",
   "unexpected_external_destinations": 0,
-  "status": "EGRESS_PROOF_QUALIFIED_PASS",
+  "status": "PYTHON_PRIVATE_CORE_EGRESS_PASS_WITH_WEB_CSP_BOUNDARY_PRESENT",
+  "python_core_egress": "PYTHON_PRIVATE_CORE_EGRESS_PASS",
+  "web_csp_boundary": "WEB_CSP_BOUNDARY_PRESENT",
+  "system_wide_packet_capture": "UNKNOWN",
   "total_audit_events": 7,
   "events": [
     {

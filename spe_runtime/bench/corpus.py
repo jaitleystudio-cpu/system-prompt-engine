@@ -77,8 +77,16 @@ def run_paired_baseline(
     model_simulator_fn: Callable[[str, str], str],
     split: DatasetSplit = DatasetSplit.HELD_OUT,
     output_report_path: Path | None = None,
+    evidence_class: str = "SIMULATED",
+    verified_weights_receipt: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Runs rigorous paired evaluation on the exact same model & task inputs."""
+    # Negative guard: prevent simulated runs from claiming OBSERVED_LOCAL without real weights
+    if evidence_class == "OBSERVED_LOCAL" and not verified_weights_receipt:
+        raise ValueError(
+            "Cannot claim OBSERVED_LOCAL for simulated model function without verified runtime receipts and real weights."
+        )
+
     suite = load_corpus_suite()
 
     # 1. Run raw uncompiled prompt
@@ -99,7 +107,7 @@ def run_paired_baseline(
         "delta": comparison["delta"],
         "noninferior": comparison["noninferior"],
         "domain_deltas": comparison["domain_deltas"],
-        "evidence_class": "OBSERVED_LOCAL",
+        "evidence_class": evidence_class,
         "raw_domain_breakdown": raw_res.domain_breakdown,
         "spe_domain_breakdown": spe_res.domain_breakdown,
     }

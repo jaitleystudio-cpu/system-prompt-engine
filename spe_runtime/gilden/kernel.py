@@ -11,10 +11,18 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+from spe_runtime.ci_gate.receipt import (
+    ed25519_sign,
+    ed25519_verify,
+    generate_keypair,
+    rfc8785_canonicalize,
+)
 
 
 class BudgetExhaustionError(Exception):
@@ -36,6 +44,32 @@ class EffectReceipt:
     cost_usd: float
     timestamp: str
     payload_digest: str
+    signer_key_id: str = "spe-gilden-authority:ed25519:default"
+    signature_hex: str = ""
+
+
+def verify_effect_receipt(receipt: EffectReceipt, public_key_bytes: bytes) -> bool:
+    """Cryptographically verifies RFC 8785 canonical digest and Ed25519 signature of an EffectReceipt."""
+    payload_dict = {
+        "action": receipt.action,
+        "cost": receipt.cost_usd,
+        "expected": receipt.expected_effect,
+        "job_id": receipt.job_id,
+        "observed": receipt.observed_effect,
+        "status": receipt.verification_status,
+        "timestamp": receipt.timestamp,
+    }
+    canonical_bytes = rfc8785_canonicalize(payload_dict)
+    digest = hashlib.sha256(canonical_bytes).hexdigest()
+    if digest != receipt.payload_digest:
+        return False
+    if not receipt.signature_hex:
+        return False
+    try:
+        sig_bytes = bytes.fromhex(receipt.signature_hex)
+        return ed25519_verify(public_key_bytes, digest.encode("utf-8"), sig_bytes)
+    except Exception:
+        return False
 
 
 @dataclass
@@ -55,7 +89,9 @@ class GildenJob:
 
 
 class GildenStore:
-    """Crash-safe append-only ledger for Gilden operations."""
+    """Crash-safe append-only ledger for Gilden operations with hash chaining and checksums."""
+
+    GENESIS_HASH = "0000000000000000000000000000000000000000000000000000000000000000"
 
     def __init__(self, storage_dir: Path | str = ".spe/gilden") -> None:
         self.storage_dir = Path(storage_dir)
@@ -63,6 +99,8 @@ class GildenStore:
         self.ledger_file = self.storage_dir / "gilden_ledger.jsonl"
         self._jobs: dict[str, GildenJob] = {}
         self._idempotency_map: dict[str, str] = {}
+        self._sequence_number: int = 0
+        self._last_record_hash: str = self.GENESIS_HASH
         self._load()
 
     def record_job(self, job: GildenJob) -> None:
@@ -78,9 +116,24 @@ class GildenStore:
         return self._jobs.get(job_id) if job_id else None
 
     def _append(self, job: GildenJob) -> None:
+        self._sequence_number += 1
         row = asdict(job)
+        row_json = json.dumps(row, sort_keys=True)
+        checksum = hashlib.sha256(row_json.encode("utf-8")).hexdigest()
+
+        envelope = {
+            "sequence_number": self._sequence_number,
+            "previous_record_hash": self._last_record_hash,
+            "record_checksum": checksum,
+            "data": row,
+        }
+        envelope_json = json.dumps(envelope, sort_keys=True)
+        self._last_record_hash = hashlib.sha256(envelope_json.encode("utf-8")).hexdigest()
+
         with self.ledger_file.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(row) + "\n")
+            f.write(envelope_json + "\n")
+            f.flush()
+            os.fsync(f.fileno())
 
     def _load(self) -> None:
         if not self.ledger_file.exists():
@@ -89,10 +142,26 @@ class GildenStore:
             for line in f:
                 if not line.strip():
                     continue
-                d = json.loads(line)
-                receipt_d = d.pop("effect_receipt", None)
+                envelope = json.loads(line)
+                if "sequence_number" in envelope and "data" in envelope:
+                    # Enveloped record
+                    row = envelope["data"]
+                    # Verify checksum
+                    row_json = json.dumps(row, sort_keys=True)
+                    computed_checksum = hashlib.sha256(row_json.encode("utf-8")).hexdigest()
+                    if computed_checksum != envelope.get("record_checksum"):
+                        raise ValueError(
+                            f"Corrupt ledger record detected at sequence {envelope.get('sequence_number')}: checksum mismatch"
+                        )
+                    self._sequence_number = envelope["sequence_number"]
+                    self._last_record_hash = hashlib.sha256(json.dumps(envelope, sort_keys=True).encode("utf-8")).hexdigest()
+                else:
+                    # Legacy un-enveloped format
+                    row = envelope
+
+                receipt_d = row.pop("effect_receipt", None)
                 receipt = EffectReceipt(**receipt_d) if receipt_d else None
-                job = GildenJob(**d, effect_receipt=receipt)
+                job = GildenJob(**row, effect_receipt=receipt)
                 self._jobs[job.job_id] = job
                 self._idempotency_map[job.idempotency_key] = job.job_id
 
@@ -125,10 +194,19 @@ class GildenKernel:
         storage_dir: Path | str = ".spe/gilden",
         max_budget_usd: float = 100.0,
         authority_grant_id: str | None = None,
+        signing_key: bytes | None = None,
+        public_key: bytes | None = None,
+        key_id: str = "spe-gilden-authority:ed25519:default",
     ) -> None:
         self.store = GildenStore(storage_dir)
         self.budget_guard = BudgetGuard(max_budget_usd)
         self.authority_grant_id = authority_grant_id
+        if signing_key and public_key:
+            self.signing_key = signing_key
+            self.public_key = public_key
+        else:
+            self.signing_key, self.public_key = generate_keypair()
+        self.key_id = key_id
 
     def execute_job(
         self,
@@ -184,16 +262,19 @@ class GildenKernel:
         job.status = "VERIFIED" if is_verified else "FAILED"
         job.completed_at = datetime.now(timezone.utc).isoformat()
 
-        # 6. Generate cryptographic effect receipt
-        payload_bytes = json.dumps({
-            "job_id": job.job_id,
+        # 6. Generate authenticated cryptographic effect receipt
+        payload_dict = {
             "action": job.action,
+            "cost": cost_usd,
             "expected": expected_effect,
+            "job_id": job.job_id,
             "observed": job.observed_effect,
             "status": job.status,
-            "cost": cost_usd,
-        }, sort_keys=True).encode("utf-8")
-        digest = hashlib.sha256(payload_bytes).hexdigest()
+            "timestamp": job.completed_at,
+        }
+        canonical_bytes = rfc8785_canonicalize(payload_dict)
+        digest = hashlib.sha256(canonical_bytes).hexdigest()
+        sig_bytes = ed25519_sign(self.signing_key, self.public_key, digest.encode("utf-8"))
 
         receipt = EffectReceipt(
             receipt_id=f"RECEIPT-{hashlib.sha256(job_id.encode()).hexdigest()[:12]}",
@@ -205,9 +286,12 @@ class GildenKernel:
             cost_usd=cost_usd,
             timestamp=job.completed_at,
             payload_digest=digest,
+            signer_key_id=self.key_id,
+            signature_hex=sig_bytes.hex(),
         )
         job.effect_receipt = receipt
 
         # 7. Persist to append-only store
         self.store.record_job(job)
         return job
+

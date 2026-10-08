@@ -112,6 +112,15 @@
       "owner": "RuntimeGatewayTeam",
       "blocking_or_nonblocking": "NON_BLOCKING",
       "planned_test": "k6 run benchmarks/load/concurrent_gateway_load.js"
+    },
+    {
+      "id": "UNK-013",
+      "claim": "Observed Local Model Inference with Physical Weights",
+      "status": "NOT_RUN",
+      "evidence_needed": "Physical GGUF/Safetensors model weight loading and local hardware inference execution receipts (e.g. via llama.cpp or vLLM). Currently verified at MODEL_ATLAS_PROVENANCE_SCHEMA_PASS level only.",
+      "owner": "ModelAtlasTeam",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "spe atlas --local-weights (executed with local physical weights)"
     }
   ]
 }

@@ -165,6 +165,63 @@ def test_gilden_kernel_effect_receipt_generation(tmp_path):
     assert job.effect_receipt.verification_status == "VERIFIED"
     assert job.effect_receipt.cost_usd == 1.25
     assert len(job.effect_receipt.payload_digest) == 64
+    assert len(job.effect_receipt.signature_hex) == 128  # 64-byte Ed25519 signature in hex
+    assert job.effect_receipt.signer_key_id.startswith("spe-gilden-authority:ed25519:")
+
+    from spe_runtime.gilden.kernel import verify_effect_receipt
+    assert verify_effect_receipt(job.effect_receipt, kernel.public_key) is True
+
+    # Bad key fails verification
+    bad_pk = b"\x00" * 32
+    assert verify_effect_receipt(job.effect_receipt, bad_pk) is False
+
+
+def test_gilden_ledger_hash_chain_and_corruption_detection(tmp_path):
+    """Verify hash chaining across ledger entries and crash detection on tampered records."""
+    store_dir = tmp_path / "gilden_chain_store"
+    kernel = GildenKernel(
+        storage_dir=store_dir,
+        max_budget_usd=50.0,
+        authority_grant_id="FOUNDER-EXEC-GRANT-01",
+    )
+
+    kernel.execute_job(
+        job_id="job-c1",
+        idempotency_key="idem-c1",
+        action="RECORD_STEP_1",
+        cost_usd=1.0,
+        expected_effect={"step": 1},
+        actor_fn=lambda: {"step": 1},
+    )
+    kernel.execute_job(
+        job_id="job-c2",
+        idempotency_key="idem-c2",
+        action="RECORD_STEP_2",
+        cost_usd=2.0,
+        expected_effect={"step": 2},
+        actor_fn=lambda: {"step": 2},
+    )
+
+    ledger_path = store_dir / "gilden_ledger.jsonl"
+    lines = ledger_path.read_text(encoding="utf-8").strip().split("\n")
+    assert len(lines) == 2
+
+    import json
+    row1 = json.loads(lines[0])
+    row2 = json.loads(lines[1])
+
+    assert row1["sequence_number"] == 1
+    assert row2["sequence_number"] == 2
+    assert row1["previous_record_hash"] == GildenStore.GENESIS_HASH
+    assert row2["previous_record_hash"] != GildenStore.GENESIS_HASH
+
+    # Tamper with record 2 data to simulate corruption
+    corrupt_lines = [lines[0], lines[1].replace('"step": 2', '"step": 999')]
+    ledger_path.write_text("\n".join(corrupt_lines) + "\n", encoding="utf-8")
+
+    # Reloading corrupt store must fail closed
+    with pytest.raises(ValueError, match="Corrupt ledger record detected"):
+        GildenStore(store_dir)
 
 
 def test_gilden_kernel_duplicate_job_idempotency(tmp_path):

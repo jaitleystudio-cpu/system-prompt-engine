@@ -1,12 +1,20 @@
 {
   "manifest_version": "1.0",
-  "generated_at": "2026-10-08T10:56:51.956Z",
+  "generated_at": "2026-10-08T11:45:11.849Z",
+  "provenance": {
+    "tested_subject_sha": "fc76a011e3db70389aaa2e9b51e2e3b778c8484d",
+    "attestation_mode": "DECOUPLED_INDEPENDENT_EVALUATION",
+    "manifest_generator": "scripts/generate-test-manifest.mjs",
+    "attestation_commit_sha": "fc76a011e3db70389aaa2e9b51e2e3b778c8484d",
+    "git_branch": "integration/spe-2026-10-26"
+  },
   "environment": {
     "platform": "darwin",
     "arch": "arm64",
     "node_version": "v22.23.2",
     "git_branch": "integration/spe-2026-10-26",
-    "commit_sha": "5a397b68a4e17331381af4547b93c9e67934d6ae"
+    "commit_sha": "fc76a011e3db70389aaa2e9b51e2e3b778c8484d",
+    "tested_subject_sha": "fc76a011e3db70389aaa2e9b51e2e3b778c8484d"
   },
   "wasm_engine": {
     "canonical_sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
@@ -16,13 +24,13 @@
   "suites": {
     "python_unit": {
       "suite": "pytest tests/unit",
-      "total": 736,
-      "passed": 736,
+      "total": 744,
+      "passed": 744,
       "failed": 0,
       "errors": 0,
       "skipped": 0,
-      "duration_seconds": 78.512,
-      "timestamp": "2026-10-08T16:23:26.650253+05:30"
+      "duration_seconds": 34.864,
+      "timestamp": "2026-10-08T17:11:10.560174+05:30"
     },
     "cli_battery": {
       "suite": "npm run test:cli-battery",
@@ -50,8 +58,8 @@
     }
   },
   "totals": {
-    "python_tests_passed": 736,
-    "python_tests_total": 736,
+    "python_tests_passed": 744,
+    "python_tests_total": 744,
     "cli_commands_passed": 30,
     "cli_commands_total": 30,
     "all_gates_clean": true
