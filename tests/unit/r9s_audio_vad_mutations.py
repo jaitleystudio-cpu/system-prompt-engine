@@ -87,10 +87,17 @@ MUTANTS: list[tuple[str, str, str]] = [
      "            if duration_ms > MAX_DECODED_DURATION_MS or size > MAX_DECODED_PCM_BYTES + _WAV_HEADER_SLACK_BYTES:\n",
      "            if False:\n"),
     ("limit-raised-silently", "MAX_DECODED_DURATION_MS = 600_000\n", "MAX_DECODED_DURATION_MS = 6_000_000\n"),
+    ("no-seam-reconciliation", "        merged = words if not merged else _merge_seam(merged, words)\n",
+     "        merged = merged + words\n"),
+    ("no-window-overlap", "    pad = sample_rate * DECODE_WINDOW_OVERLAP_MS // 1000\n", "    pad = 0\n"),
+    ("keep-truncated-left-copy",
+     "    shared = [\n        right[j + t] if right[j + t] != left[i + t] and right[j + t].startswith(left[i + t]) else left[i + t]\n        for t in range(run)\n    ]\n",
+     "    shared = left[i:i + run]\n"),
 ]
 TESTS = [
     "tests/unit/test_audio_vad_modulation_generalization.py",
     "tests/unit/test_media_decode_resource_limits.py",
+    "tests/unit/test_audio_window_seams.py",
     "tests/unit/test_audio_adversarial_vad.py",
     "tests/unit/test_audio_multilingual_corpus_and_vad_guard.py",
 ]

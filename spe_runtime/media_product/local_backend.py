@@ -18,6 +18,7 @@ independent verifier and later adjudication, never to this process.
 from __future__ import annotations
 
 import array
+import difflib
 import hashlib
 import json
 import math
@@ -32,6 +33,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import unicodedata
 import urllib.request
 import wave
 from contextlib import contextmanager
@@ -142,9 +144,18 @@ _WAV_HEADER_SLACK_BYTES = 1 << 16
 # and the rest of the window was silently dropped. Long audio is therefore
 # decoded as consecutive windows of at most DECODE_WINDOW_MAX_MS, cut at the
 # quietest 20 ms frame, so each window fits the budget and no audio is lost.
-DECODE_WINDOW_MAX_MS = 7000
+# A cut can still fall inside a word in dense speech, so each decoded span
+# extends DECODE_WINDOW_OVERLAP_MS past its cut on both sides (decoded span
+# <= 7.5 s) and adjacent window transcripts are reconciled word-by-word at the
+# seam (merge_window_transcripts): words seen by both windows are kept once,
+# cut-off fragments at window edges are dropped in favour of the full word.
+DECODE_WINDOW_MAX_MS = 6000
 DECODE_WINDOW_MIN_MS = 3000
+DECODE_WINDOW_OVERLAP_MS = 750
 DECODE_WINDOW_SILENT_DB = 40.0
+SEAM_MATCH_SIMILARITY = 0.75
+SEAM_MAX_OVERLAP_WORDS = 12
+SEAM_MAX_EDGE_FRAGMENTS = 2
 
 
 def _as_pcm16(samples: "array.array[int] | list[float]") -> "array.array[int]":
@@ -249,6 +260,76 @@ def speech_modulation_features(
         return modulation_db, 0.0
     mean_tilt = sum(tilts) / len(tilts)
     return modulation_db, math.sqrt(sum((v - mean_tilt) ** 2 for v in tilts) / len(tilts))
+
+
+def decode_spans(windows: list[tuple[int, int]], total: int, sample_rate: int = 16000) -> list[tuple[int, int]]:
+    """Decoded sample spans: each planned window widened by the seam overlap."""
+    if len(windows) <= 1:
+        return list(windows)
+    pad = sample_rate * DECODE_WINDOW_OVERLAP_MS // 1000
+    return [(max(0, start - pad), min(total, end + pad)) for start, end in windows]
+
+
+def _word_similarity(left: str, right: str) -> float:
+    if left == right:
+        return 1.0
+    return difflib.SequenceMatcher(None, left, right, autojunk=False).ratio()
+
+
+def _merge_seam(left: list[str], right: list[str]) -> list[str]:
+    """Join two overlapping window transcripts at their shared words.
+
+    The matched run must reach the end of the left window (up to
+    SEAM_MAX_EDGE_FRAGMENTS cut-off fragments after it) and start within the
+    first SEAM_MAX_OVERLAP_WORDS words of the right window. Shared words are kept
+    once (the left copy, or the right copy when the left one is a truncated
+    prefix of it); right-window words before the run (fragments of overlap
+    audio) and left-window fragments after it are dropped.
+    """
+    n = len(left)
+    best: tuple[tuple[int, int], int, int, int] | None = None
+    for i in range(max(0, n - SEAM_MAX_OVERLAP_WORDS), n):
+        for j in range(min(SEAM_MAX_OVERLAP_WORDS, len(right))):
+            run = 0
+            while (
+                i + run < n
+                and j + run < len(right)
+                and _word_similarity(left[i + run], right[j + run]) >= SEAM_MATCH_SIMILARITY
+            ):
+                run += 1
+            if run == 0:
+                continue
+            tail = n - (i + run)
+            if tail > SEAM_MAX_EDGE_FRAGMENTS:
+                continue
+            key = (run, -(tail + j))
+            if best is None or key > best[0]:
+                best = (key, i, j, run)
+    if best is None:
+        # No shared word inside the overlap (e.g. it was a pause): plain join,
+        # except an immediate near-duplicate cut-off fragment.
+        if left and right and _word_similarity(left[-1], right[0]) >= 0.6:
+            return left + right[1:]
+        return left + right
+    _, i, j, run = best
+    # Within the shared run keep the left copy, unless it is a strict prefix of
+    # the right copy (a word truncated at the left window's edge).
+    shared = [
+        right[j + t] if right[j + t] != left[i + t] and right[j + t].startswith(left[i + t]) else left[i + t]
+        for t in range(run)
+    ]
+    return left[:i] + shared + right[j + run:]
+
+
+def merge_window_transcripts(texts: list[str]) -> str:
+    """Reconcile per-window transcripts of overlapping decode spans, in order."""
+    merged: list[str] = []
+    for text in texts:
+        words = unicodedata.normalize("NFC", text).split()
+        if not words:
+            continue
+        merged = words if not merged else _merge_seam(merged, words)
+    return " ".join(merged)
 
 
 def plan_decode_windows(
@@ -1428,8 +1509,11 @@ class LocalMediaSession:
             return self._cancelled(audio_sha, media_kind, duration_ms, neural=False)
         self._emit("transcribing", None, "Local neural session running.")
         inputs = self._decode_inputs(wav_path)
+        window_texts: list[str] | None = None
         try:
             stdout, stderr, returncode, spawned = self._infer(inputs[0], extra_inputs=inputs[1:])
+            if len(inputs) > 1 and returncode == 0:
+                window_texts = self._window_texts(inputs)
         finally:
             self._discard_windows(inputs, wav_path)
         progress, progress_state = accepted_progress(stderr)
@@ -1448,7 +1532,10 @@ class LocalMediaSession:
                 progress=progress,
                 progress_state=progress_state,
             )
-        text = self._transcript_text(stdout)
+        if window_texts is not None:
+            text = self._transcript_text(merge_window_transcripts(window_texts))
+        else:
+            text = self._transcript_text(stdout)
         if not text:
             return LocalTranscript(
                 status="NO_SPEECH",
@@ -1557,6 +1644,8 @@ class LocalMediaSession:
             cmd.extend(["--vad", "-vm", str(self.assets.vad_model_path)])
         for extra in extra_inputs:
             cmd.extend(["-f", str(extra)])
+        if extra_inputs:
+            cmd.append("-otxt")  # one transcript file per window, for seam reconciliation
         if no_timestamps:
             cmd.insert(cmd.index("-l") + 2, "-nt")
         if any(token.startswith("http://") or token.startswith("https://") for token in cmd):
@@ -1824,9 +1913,10 @@ class LocalMediaSession:
             return [wav_path]
         folder = Path(tempfile.mkdtemp(prefix="spe-media-win-"))
         paths: list[Path] = []
-        for index, (start, end) in enumerate(windows):
+        for index, (start, end) in enumerate(decode_spans(windows, len(samples))):
             dest = folder / f"w{index:03d}.wav"
             self._temps.append(dest)
+            self._temps.append(Path(f"{dest}.txt"))  # per-window transcript written by -otxt
             with wave.open(str(dest), "wb") as out:
                 out.setnchannels(1)
                 out.setsampwidth(2)
@@ -1835,12 +1925,22 @@ class LocalMediaSession:
             paths.append(dest)
         return paths
 
+    def _window_texts(self, inputs: list[Path]) -> list[str] | None:
+        texts = []
+        for path in inputs:
+            out = Path(f"{path}.txt")
+            if not out.is_file():
+                return None
+            texts.append(self._transcript_text(out.read_bytes().decode("utf-8", errors="replace")))
+        return texts
+
     def _discard_windows(self, inputs: list[Path], wav_path: Path) -> None:
         folders = set()
         for path in inputs:
             if path == wav_path:
                 continue
             path.unlink(missing_ok=True)
+            Path(f"{path}.txt").unlink(missing_ok=True)
             folders.add(path.parent)
         for folder in folders:
             try:
