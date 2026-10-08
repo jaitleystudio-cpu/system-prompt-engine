@@ -529,4 +529,26 @@ async function bundleIngest() {
   }
 }
 
+console.log("B11: REAL_PRODUCT_PINNING_TRANSPORT=NOT_PRESENT drift guard (see evidence/r9-g-network-boundary/CROSS_ORIGIN_FETCH_ASSESSMENT.md)...");
+{
+  const { readdirSync, statSync } = await import("node:fs");
+  const walk = (d) => readdirSync(d).flatMap((n) => {
+    const p = join(d, n);
+    return statSync(p).isDirectory() ? walk(p) : [p];
+  });
+  const srcFiles = walk(src).filter((p) => /\.(ts|tsx|js|mjs)$/.test(p));
+  const pinning = srcFiles.filter((p) => /pinsResolvedAddress\s*:\s*true/.test(readFileSync(p, "utf8")));
+  eq(pinning.length, 0, `no product pinning transport exists (assessment NOT_PRESENT); found: ${pinning.join(",")}`);
+  const ingestText = readFileSync(join(src, "media/urlIngest.ts"), "utf8");
+  const call = ingestText.slice(ingestText.indexOf("guardedPublicFetch(parsed"), ingestText.indexOf("init: {", ingestText.indexOf("guardedPublicFetch(parsed")));
+  ok(call.length > 0 && !/transport\s*:/.test(call), "ingestUrl passes no custom transport (default non-pinning fetch)");
+  const secText = readFileSync(join(src, "engine/multimodal/urlSecurity.ts"), "utf8");
+  ok(/function defaultTransport\(\): BoundaryTransport \{\s*return \{\s*pinsResolvedAddress: false,/.test(secText), "canonical default transport declares pinsResolvedAddress: false");
+  ok(/export const LIVE_URL_RECONSTRUCTION = "NOT_AVAILABLE"/.test(readFileSync(join(src, "website/productFlow.ts"), "utf8")), "product contract: live URL reconstruction NOT_AVAILABLE");
+  ok(/liveUrlReconstruction: "NOT_AVAILABLE"/.test(readFileSync(join(src, "website/mount-contract.ts"), "utf8")), "mount contract: liveUrlReconstruction NOT_AVAILABLE");
+  for (const f of ["index.html", "public/_headers"]) {
+    ok(/connect-src 'self'[;\s]/.test(readFileSync(join(root, f), "utf8")), `${f}: product CSP connect-src 'self'`);
+  }
+}
+
 console.log(`PASS: SPE-R9-G network execution-boundary gate (${checks} checks). Builder regression only — not independent qualification.`);
