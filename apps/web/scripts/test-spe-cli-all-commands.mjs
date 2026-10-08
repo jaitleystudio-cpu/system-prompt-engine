@@ -212,7 +212,7 @@ assert(closedLoopContent.includes("Closed-Loop Local Model"), "Closed loop repor
 console.log("  ✓ closed-loop verified");
 
 // 20. Regulatory Privacy Scanner & PII Defense
-console.log("\n[20/20] Testing privacy");
+console.log("\n[20/28] Testing privacy");
 const privacyOut = join(tempDir, "privacy.md");
 runCli(`privacy "${promptPath1}" --out "${privacyOut}"`);
 assert(existsSync(privacyOut), "privacy.md not created");
@@ -220,9 +220,60 @@ const privacyContent = readFileSync(privacyOut, "utf-8");
 assert(privacyContent.includes("Data Privacy & Regulatory Compliance"), "Privacy report header missing");
 console.log("  ✓ privacy verified");
 
+// 21. Repo Adoption Scanner (spe adopt)
+console.log("\n[21/28] Testing adopt");
+const adoptOut = runCli(`adopt "${tempDir}" --scan`);
+assert(adoptOut.includes("SPE ADOPT [SCAN]"), "Adopt output missing header");
+console.log("  ✓ adopt verified");
+
+// 22. CI/CD Evidence Gate (spe check --strict)
+console.log("\n[22/28] Testing check --strict");
+const checkOut = runCli(`check "${promptPath1}" --strict`);
+assert(checkOut.includes("SPE CI/CD EVIDENCE GATE") && checkOut.includes("Ed25519"), "Check output missing gate receipt");
+console.log("  ✓ check --strict verified");
+
+// 23. SPE-Bench Ω (spe bench)
+console.log("\n[23/28] Testing bench");
+const benchOut = runCli(`bench`);
+assert(benchOut.includes("SPE-BENCH Ω EXECUTION") && benchOut.includes("DETERMINISTIC"), "Bench output missing execution receipt");
+console.log("  ✓ bench verified");
+
+// 24. Model Passport & Atlas (spe passport)
+console.log("\n[24/28] Testing passport");
+const passportOut = runCli(`passport gpt-4o`);
+assert(passportOut.includes("MODEL PASSPORT & ATLAS: gpt-4o"), "Passport output missing header");
+console.log("  ✓ passport verified");
+
+// 25. Failure Genome Ω (spe failures)
+console.log("\n[25/28] Testing failures");
+const failuresOut = runCli(`failures`);
+assert(failuresOut.includes("FAILURE GENOME Ω REPOSITORY"), "Failures output missing repository header");
+console.log("  ✓ failures verified");
+
+// 26. Prompt / Agent Bisect (spe bisect)
+console.log("\n[26/28] Testing bisect");
+const bisectOut = runCli(`bisect`);
+assert(bisectOut.includes("PROMPT / AGENT REGRESSION BISECT") && bisectOut.includes("Causal Class:"), "Bisect output missing causal class");
+console.log("  ✓ bisect verified");
+
+// 27. Open Package Spec (spe pack)
+console.log("\n[27/28] Testing pack and verify");
+const packDir = join(tempDir, "sample_spe_pkg");
+const packOut = runCli(`pack "${packDir}"`);
+assert(packOut.includes("SPE OPEN PACKAGE SPEC v0.1"), "Pack output missing header");
+const packVerifyOut = runCli(`pack "${packDir}" --verify`);
+assert(packVerifyOut.includes("PASS"), "Pack verification failed");
+console.log("  ✓ pack and verify verified");
+
+// 28. Causal Proof Graph (spe explain)
+console.log("\n[28/28] Testing explain");
+const explainOut = runCli(`explain "Ensure no financial records are leaked"`);
+assert(explainOut.includes("CAUSAL PROOF GRAPH EXPLANATION"), "Explain output missing explanation header");
+console.log("  ✓ explain verified");
+
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 20 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 28 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");

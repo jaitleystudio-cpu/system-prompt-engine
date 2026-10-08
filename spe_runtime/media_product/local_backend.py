@@ -1431,6 +1431,19 @@ class LocalMediaSession:
                 return False, "PURE_TONE"
             if mean_diff < 2.5 and len(crossings) > len(samples) * 0.35:
                 return False, "STATIONARY_NOISE"
+        if len(samples) >= 3200:
+            frame_size = 1600
+            rms_list = []
+            for k in range(0, len(samples) - frame_size, frame_size):
+                frame = samples[k : k + frame_size]
+                rms = (sum(s * s for s in frame) / len(frame)) ** 0.5
+                rms_list.append(rms)
+            if rms_list:
+                mean_rms = sum(rms_list) / len(rms_list)
+                if mean_rms > 0:
+                    std_rms = (sum((r - mean_rms) ** 2 for r in rms_list) / len(rms_list)) ** 0.5
+                    if (std_rms / mean_rms) < 0.03:
+                        return False, "STATIONARY_TONE"
         return True, "SPEECH_CANDIDATE"
 
     def _peak_abs(self, wav_path: Path) -> int:

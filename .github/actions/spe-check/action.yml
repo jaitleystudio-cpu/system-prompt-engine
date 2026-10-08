@@ -1,0 +1,26 @@
+name: 'SPE AI Instruction Assurance CI Gate'
+description: 'Enforces policy-driven AI instruction qualification with cryptographic evidence receipts and PR reports'
+inputs:
+  prompt-path:
+    description: 'Path to prompt file, directory, or .spe package'
+    required: true
+    default: '.'
+  strict:
+    description: 'Enforce strict fail-closed blocking'
+    required: false
+    default: 'true'
+  policy:
+    description: 'Path to custom policy.yaml'
+    required: false
+outputs:
+  verdict:
+    description: 'Gate verdict: SHIP, REVIEW, or BLOCK'
+  receipt-digest:
+    description: 'SHA-256 digest of RFC 8785 canonical evidence receipt'
+runs:
+  using: 'composite'
+  steps:
+    - name: Run spe check
+      shell: bash
+      run: |
+        npx spe check "${{ inputs.prompt-path }}" ${{ inputs.strict == 'true' && '--strict' || '' }}
