@@ -84,6 +84,10 @@
     "test:ai-refiner": "node --experimental-strip-types scripts/test-ai-refiner.mjs",
     "test:spe-cli": "node --experimental-strip-types bin/spe.mjs --version",
     "test:cli-battery": "node --experimental-strip-types scripts/test-spe-cli-all-commands.mjs",
+    "test:causal-proof-graph": "node --experimental-strip-types scripts/test-causal-proof-graph.mjs",
+    "test:seven-journeys": "node --experimental-strip-types scripts/test-seven-acquisition-journeys-qualification.mjs",
+    "test:spe-runtime": "node --experimental-strip-types ../../packages/spe-runtime/test/runtime.test.mjs",
+    "test:spe-vscode": "node --experimental-strip-types ../../packages/spe-vscode/test/extension.test.mjs",
     "benchmark:golden-path": "node --experimental-strip-types scripts/benchmark-golden-path-evidence.mjs"
   },
   "bin": {

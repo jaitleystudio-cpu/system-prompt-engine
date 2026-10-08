@@ -1,0 +1,97 @@
+{
+  "specificationVersion": "SPE-OMEGA-QUAL-v1.0",
+  "qualifiedAt": "2026-10-08T05:54:46.156Z",
+  "targetRelease": "2026-10-26 22:10 IST",
+  "totalJourneys": 7,
+  "passedJourneys": 7,
+  "failedJourneys": 0,
+  "overallVerdict": "ALL_7_JOURNEYS_QUALIFIED_PASS",
+  "airGapCompliance": "100% OFFLINE (ZERO NETWORK EGRESS)",
+  "canonicalWasmSha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+  "journeys": [
+    {
+      "journeyId": "J1_AUDIO_TO_TEXT",
+      "label": "Audio → Text",
+      "route": "/tools/audio-to-text",
+      "status": "PASS",
+      "evidenceClass": "DETERMINISTIC",
+      "digest": "0feeb686010b3c978ea08e2b065b73fe78552adbd27433237c890582d5676388",
+      "metrics": {
+        "wordsProcessed": 13,
+        "durationSec": 14.5
+      }
+    },
+    {
+      "journeyId": "J2_VIDEO_TO_TEXT",
+      "label": "Video → Text",
+      "route": "/tools/video-to-text",
+      "status": "PASS",
+      "evidenceClass": "DETERMINISTIC",
+      "digest": "6129e719143a333fd59bf82ece01f21385fc537163f53cbf019f382465cb82e8",
+      "metrics": {
+        "scenesAnalyzed": 3,
+        "durationSec": 45
+      }
+    },
+    {
+      "journeyId": "J3_FREE_3D_WEBSITES",
+      "label": "AI + 3D Website Creation",
+      "route": "/tools/free-3d-website-builder",
+      "status": "PASS",
+      "evidenceClass": "DETERMINISTIC",
+      "digest": "cd3bc75ef96b4d9b50f098c4b22bc3926556e678cc3844f88267b12b2d7a591d",
+      "metrics": {
+        "htmlBytes": 1735,
+        "cssBytes": 1720
+      }
+    },
+    {
+      "journeyId": "J4_SYSTEM_PROMPT_ENGINE",
+      "label": "System Prompt Engine",
+      "route": "/tools/system-prompt-generator",
+      "status": "PASS",
+      "evidenceClass": "DETERMINISTIC",
+      "digest": "efdec0c624460a8bfc1d749652834e2c782b8642bba8e150f2a2d5f4a83c4676",
+      "metrics": {
+        "dialects": 5,
+        "receiptDigest": "bac1d5b54cff800e7ad4288b6e09b507b1f2cfa79b0a828fd7122cb299331d81"
+      }
+    },
+    {
+      "journeyId": "J5_SCREENSHOT_TO_CODE",
+      "label": "Screenshot → Code / URL → Site",
+      "route": "/tools/screenshot-to-code",
+      "status": "PASS",
+      "evidenceClass": "DETERMINISTIC",
+      "digest": "474cf0ed796754c9b7a88e8c51bd11f16e8b3bfcd5fd5303e82a9beeed73af93",
+      "metrics": {
+        "elementsDetected": 4,
+        "codeLen": 3312
+      }
+    },
+    {
+      "journeyId": "J6_IMAGE_TO_PROMPT",
+      "label": "Image → Prompt",
+      "route": "/tools/image-to-prompt",
+      "status": "PASS",
+      "evidenceClass": "DETERMINISTIC",
+      "digest": "804d35cf9d99685c51c8fa1fe47a2ca28750d69347eed21b07445cd2f48b1f95",
+      "metrics": {
+        "compiledPromptLen": 2473,
+        "visualComponentsCount": 4
+      }
+    },
+    {
+      "journeyId": "J7_RESEARCH_TO_PROMPT",
+      "label": "Research → Prompt",
+      "route": "/tools/research-to-prompt",
+      "status": "PASS",
+      "evidenceClass": "DETERMINISTIC",
+      "digest": "2ff7122a8aee61ec413ec0f192d853c4fc2dadd32657d699e60762a353fd1736",
+      "metrics": {
+        "findingsCount": 3,
+        "promptLen": 407
+      }
+    }
+  ]
+}

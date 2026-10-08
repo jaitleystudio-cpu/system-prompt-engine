@@ -1,0 +1,98 @@
+{
+  "name": "spe-vscode",
+  "displayName": "SPE Ω — AI Instruction Assurance & Control Plane",
+  "description": "Language Server, Causal Proof Tracing, and Invariant Diagnostics for AI Prompts and Agents",
+  "version": "0.1.0",
+  "type": "module",
+  "publisher": "spe-omega",
+  "license": "MIT OR Apache-2.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Linters",
+    "Programming Languages",
+    "Machine Learning",
+    "Testing"
+  ],
+  "keywords": [
+    "spe",
+    "prompt-engineering",
+    "system-prompt",
+    "ai-security",
+    "lsp",
+    "mcp",
+    "assurance"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:spe",
+    "onLanguage:markdown",
+    "workspaceContains:**/.spe/manifest.json",
+    "workspaceContains:**/.cursorrules",
+    "onCommand:spe.adopt",
+    "onCommand:spe.check",
+    "onCommand:spe.explainClause",
+    "onCommand:spe.diffPreview"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "spe",
+        "aliases": [
+          "SPE Package",
+          "spe"
+        ],
+        "extensions": [
+          ".spe",
+          ".spe.json"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "spe.adopt",
+        "title": "Adopt Codebase into SPE Package (.spe)",
+        "category": "SPE Ω"
+      },
+      {
+        "command": "spe.check",
+        "title": "Run Invariant & Invariant Coverage Gate",
+        "category": "SPE Ω"
+      },
+      {
+        "command": "spe.explainClause",
+        "title": "Trace Clause Provenance (Causal Proof Graph)",
+        "category": "SPE Ω"
+      },
+      {
+        "command": "spe.diffPreview",
+        "title": "Show Semantic Prompt Diff",
+        "category": "SPE Ω"
+      }
+    ],
+    "configuration": {
+      "title": "SPE Ω Settings",
+      "properties": {
+        "spe.lsp.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable real-time SPE prompt diagnostics and invariant contradiction checking."
+        },
+        "spe.lsp.pythonPath": {
+          "type": "string",
+          "default": "python3",
+          "description": "Path to Python executable configured with spe_runtime."
+        },
+        "spe.lsp.strictMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enforce strict zero-secret and bounded rule consistency."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --experimental-strip-types test/extension.test.mjs"
+  }
+}

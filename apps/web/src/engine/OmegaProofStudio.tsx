@@ -28,6 +28,7 @@ import { auditPromptAgainstVulnerabilityInventory, type VulnerabilityAuditResult
 import { analyzePromptRefinements, type RefinementAnalysisResult } from "./aiPromptRefiner";
 import { runClosedLoopLocalOptimization, type ClosedLoopRunReport } from "./closedLoopLocalRunner";
 import { auditPrivacyAndRegulations, type PrivacyAuditReport } from "./privacyComplianceScanner";
+import { CausalProofGraphStudio } from "./CausalProofGraphStudio";
 
 export interface OmegaProofStudioProps {
   initialPrompt?: string;
@@ -87,6 +88,7 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
     | "closedloop"
     | "privacy"
     | "certify"
+    | "causalgraph"
   >("diagnostics");
   const [seed] = useState(1337);
   const [copiedReceipt, setCopiedReceipt] = useState(false);
@@ -560,6 +562,7 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
           { key: "closedloop", label: "🔄 Closed-Loop Runner", count: `${closedLoopReportState?.finalPassRatePercent ?? 80}% Pass` },
           { key: "privacy", label: "⚖️ Regulatory Privacy", count: `${privacyAuditReport.complianceScore}%` },
           { key: "certify", label: "🎖️ Enterprise Seal & Cert", count: certificationTier.split(" ")[0] },
+          { key: "causalgraph", label: "🔗 Causal Proof Graph", count: "RFC 8785" },
           { key: "twin", label: "Counterfactual Twin", count: "Causal Δ" },
           { key: "receipt", label: "Proof Receipt (JCS)", count: "SHA-256" },
           { key: "community", label: "🌐 Prompts.chat", count: "143k★" },
@@ -4028,6 +4031,11 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                 </div>
               </div>
             </div>
+          )}
+
+          {/* Causal Proof Graph (Ring 3 M3) */}
+          {activeTab === "causalgraph" && (
+            <CausalProofGraphStudio promptText={promptText} />
           )}
         </div>
       </div>
