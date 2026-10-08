@@ -510,13 +510,33 @@ async function bundleIngest() {
     eq(mm.status, "invalid_url", "mismatch -> existing hard-refusal path (nothing appended to the prompt)");
     eq(mm.refusal, "DESTINATION_BINDING_MISMATCH", "mismatch carries its distinct boundary classification");
     eq(ingest.urlResultToPromptBlock(mm), null, "mismatch produces no prompt block");
+    // Owner-approved mismatch UX copy (R9 successor wave). Machine code stays in `refusal` only.
+    const MISMATCH_COPY = "SPE blocked this page because its network destination did not match the address SPE validated. No page content was loaded. Upload the page HTML or a screenshot instead.";
+    const OLD_HARD_COPY = "Enter a full http(s) URL.";
+    const UNVERIFIABLE_COPY = "SPE could not read that page in this browser. The URL is kept as a reference only — remote page content was not loaded. Upload page HTML or a screenshot for grounding.";
+    eq(mm.message, MISMATCH_COPY, "mismatch shows the owner-approved destination-mismatch copy");
+    ok(mm.message !== OLD_HARD_COPY, "mismatch no longer shows the generic URL-format copy");
+    const mmUserText = [mm.message, ...mm.fallbacks].join("\n");
+    ok(!/DESTINATION_BINDING|_MISMATCH|destination_binding|refusal/.test(mmUserText), "no machine code in mismatch user-facing text");
     const uv = ingest.guardRefusalToResult("DESTINATION_BINDING_UNVERIFIABLE", "https://public-site.example.org/", "https://public-site.example.org/");
     eq(uv.status, "url_reference_only", "unverifiable -> reference only");
     eq(uv.reason, "destination_binding_unverifiable", "unverifiable reason code");
+    eq(uv.message, UNVERIFIABLE_COPY, "unverifiable keeps its existing copy");
+    ok(!uv.message.includes("destination_binding_unverifiable"), "unverifiable machine code not in user text");
     const block = ingest.urlResultToPromptBlock(uv);
     ok(block && !block.includes("destination_binding_unverifiable"), "machine reason code never surfaced in the composer block");
     const priv = ingest.guardRefusalToResult("RESOLVED_PRIVATE_IP", "https://x.example/", "https://x.example/");
     eq(priv.status, "invalid_url", "forbidden-address refusal stays hard");
+    eq(priv.message, OLD_HARD_COPY, "non-mismatch hard refusal keeps existing copy");
+    for (const other of ["REDIRECT_LIMIT_EXCEEDED", "LEXICAL_LOOPBACK_IP", "DNS_RESOLUTION_FAILED", "REDIRECT_LOCATION_MISSING"]) {
+      const r = ingest.guardRefusalToResult(other, "https://x.example/", "https://x.example/");
+      eq(r.message, OLD_HARD_COPY, `${other}: existing copy unchanged`);
+      ok(r.message !== MISMATCH_COPY, `${other}: never shows mismatch copy`);
+    }
+    for (const opaque of ["REDIRECT_DESTINATION_UNVERIFIABLE", "TRUSTED_RESOLVER_UNAVAILABLE"]) {
+      const r = ingest.guardRefusalToResult(opaque, "https://x.example/", "https://x.example/");
+      eq(r.message, UNVERIFIABLE_COPY, `${opaque}: existing reference-only copy unchanged`);
+    }
 
     calls.length = 0;
     const ac = new AbortController();
