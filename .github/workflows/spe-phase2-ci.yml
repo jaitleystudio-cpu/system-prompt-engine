@@ -44,7 +44,7 @@ jobs:
       - run: npm --prefix apps/web ci
       - name: Verify Canonical WASM Hash
         run: |
-          node -e '
+          node --input-type=module -e '
             import { readFileSync } from "fs";
             import { createHash } from "crypto";
             const buf = readFileSync("apps/web/src/wasm/spe_wasm_engine_bg.wasm");
