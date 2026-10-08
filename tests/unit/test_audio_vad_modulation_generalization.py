@@ -27,7 +27,7 @@ import pytest
 from spe_runtime.media_product.local_backend import (
     DECODE_WINDOW_MAX_MS,
     DECODE_WINDOW_MIN_MS,
-    VAD_MIN_ZCR_VARIATION,
+    VAD_MIN_TILT_VARIATION_DECADES,
     VAD_MIN_SYLLABIC_MODULATION_DB,
     IntegrityError,
     LocalMediaSession,
@@ -113,7 +113,7 @@ GENERALIZATION_NON_SPEECH = {
     "am_chord_5hz_3s": lambda: _tones([350, 525, 700], 3.0, 9000, am_hz=5.0, am_depth=0.9),
     "gated_dtmf_beeps_4hz_3s": lambda: _tones([852, 1477], 3.0, 10000, gate_hz=4.0),
     "sweep_200_2400_3s": lambda: _sweep(200, 2400, 3.0, 9000),
-    # Changing zero-crossing rate + level change slower than syllables: only the
+    # Changing spectral tilt + level change slower than syllables: only the
     # 2-8 Hz envelope feature can reject it.
     "slow_tremolo_sweep_300_2500_6s": lambda: _sweep(300, 2500, 6.0, 9000, tremolo_hz=0.5),
 }
@@ -163,13 +163,11 @@ def _speech_variants():
 def _degrade(samples: list[int], variant: str) -> list[float]:
     """Degradations at stated speech-to-background ratios (relative to speech RMS).
 
-    Measured breakdown of the modulation gate (documented, not hidden): broadband
-    noise and 50 Hz hum keep both features above threshold down to 0 dB SNR on
-    every fixture (the pre-existing STATIONARY_NOISE zero-crossing rule, unchanged
-    here, already rejects ~0 dB broadband noise, so the session-level case uses
-    10 dB); a continuous
-    1 kHz tone bed is tolerated to 10 dB SNR on every fixture (5 dB on most),
-    because a dominant steady tone pins the zero-crossing rate.
+    Broadband noise and 50 Hz hum keep both modulation features above threshold
+    down to 0 dB SNR on every fixture (feature-level test below). The
+    pre-existing STATIONARY_NOISE zero-crossing rule, unchanged here, already
+    rejects ~0 dB broadband noise, so the session-level case uses 10 dB. Tonal
+    interference is covered by the operating-envelope tests below.
     """
     rng = random.Random(1729)
     rms = math.sqrt(sum(s * s for s in samples) / len(samples))
@@ -217,10 +215,10 @@ def test_modulation_features_separate_speech_from_tones_with_margin():
     speech = [speech_modulation_features(_read(FIXTURES_DIR / n)) for n in SPEECH_FIXTURES]
     assert all(f is not None for f in speech)
     assert min(f[0] for f in speech) >= 2.0 * VAD_MIN_SYLLABIC_MODULATION_DB
-    assert min(f[1] for f in speech) >= 1.5 * VAD_MIN_ZCR_VARIATION
+    assert min(f[1] for f in speech) >= 1.5 * VAD_MIN_TILT_VARIATION_DECADES
     for name, make in {**GENERALIZATION_NON_SPEECH, **ORIGINAL_SHAPES}.items():
         depth, variation = speech_modulation_features(make())
-        assert depth < VAD_MIN_SYLLABIC_MODULATION_DB or variation < VAD_MIN_ZCR_VARIATION, name
+        assert depth < VAD_MIN_SYLLABIC_MODULATION_DB or variation < VAD_MIN_TILT_VARIATION_DECADES, name
 
 
 @pytest.mark.parametrize("name", SPEECH_FIXTURES)
@@ -232,14 +230,75 @@ def test_modulation_features_survive_0db_broadband_noise_and_hum(name: str):
     hum = [s + rms * math.sqrt(2) * math.sin(2 * math.pi * 50 * i / SR) for i, s in enumerate(samples)]
     for degraded in (noisy, hum):
         depth, variation = speech_modulation_features(degraded)
-        assert depth >= VAD_MIN_SYLLABIC_MODULATION_DB and variation >= VAD_MIN_ZCR_VARIATION
+        assert depth >= VAD_MIN_SYLLABIC_MODULATION_DB and variation >= VAD_MIN_TILT_VARIATION_DECADES
+
+
+def _bed(kind: str, n: int, freqs: list[float]) -> list[float]:
+    """Unit-RMS interference bed. 'music' = harmonic chord progression (1.5 s chords)."""
+    if kind == "music":
+        out = []
+        for i in range(n):
+            chord = freqs if int(i / SR / 1.5) % 2 == 0 else [f * 1.335 for f in freqs]
+            tt = i / SR
+            out.append(sum(sum(math.sin(2 * math.pi * f * h * tt) / h for h in (1, 2, 3)) for f in chord))
+    else:
+        phases = [0.7 * k for k in range(len(freqs))]
+        out = [sum(math.sin(2 * math.pi * f * i / SR + p) for f, p in zip(freqs, phases)) for i in range(n)]
+    rms = math.sqrt(sum(x * x for x in out) / n)
+    return [x / rms for x in out]
+
+
+# Supported operating envelope claimed in local_backend.py: speech under steady
+# tonal interference is detected down to 0 dB speech:interference SNR. Checked
+# at the owner-requested 1 kHz tone and at interference frequencies that were
+# never used while designing the gate (so the claim is not frequency-tuned).
+ENVELOPE_BEDS = {
+    "tone_1000": ("tone", [1000.0]),
+    "tone_1370": ("tone", [1370.0]),
+    "tone_410": ("tone", [410.0]),
+    "dual_480_1910": ("tone", [480.0, 1910.0]),
+    "chord_233_311_415": ("tone", [233.08, 311.13, 415.3]),
+    "music_bed_174_220_262": ("music", [174.61, 220.0, 261.63]),
+}
+ENVELOPE_SPEECH = ["te_pcm16.wav", "te_long_pcm16.wav", "te_amma_16k.wav", "te_namaskaramu_16k.wav",
+                   "en_pcm16.wav", "en_jfk_human.wav", "hi_pcm16.wav"]
+
+
+@pytest.mark.parametrize("bed", sorted(ENVELOPE_BEDS))
+@pytest.mark.parametrize("snr_db", [5, 0])
+def test_speech_detected_under_tonal_interference_within_envelope(bed: str, snr_db: int, tmp_path: Path):
+    kind, freqs = ENVELOPE_BEDS[bed]
+    for name in ENVELOPE_SPEECH:
+        speech = _read(FIXTURES_DIR / name)
+        rms = math.sqrt(sum(x * x for x in speech) / len(speech))
+        level = rms * 10 ** (-snr_db / 20)
+        mixed = [s + level * b for s, b in zip(speech, _bed(kind, len(speech), freqs))]
+        peak = max(abs(x) for x in mixed)
+        gain = min(1.0, 30000 / peak)
+        wav = _write(tmp_path / f"{bed}_{snr_db}_{name}", [x * gain for x in mixed])
+        is_speech, basis = LocalMediaSession._detect_speech_acoustics(_Gate(), wav)
+        assert (is_speech, basis) == (True, "SPEECH_CANDIDATE"), f"{name} under {bed} at {snr_db} dB: {basis}"
+
+
+@pytest.mark.parametrize("bed", sorted(ENVELOPE_BEDS))
+def test_interference_bed_alone_is_rejected(bed: str, tmp_path: Path):
+    kind, freqs = ENVELOPE_BEDS[bed]
+    if kind == "music":
+        pytest.skip("a changing chord progression is music, outside the stationary-tone rejection claim")
+    wav = _write(tmp_path / f"{bed}.wav", [8000 * x for x in _bed(kind, 4 * SR, freqs)])
+    assert LocalMediaSession._detect_speech_acoustics(_Gate(), wav)[0] is False
 
 
 def test_modulation_features_are_level_invariant():
     base = _read(FIXTURES_DIR / "te_amma_16k.wav")
     loud = speech_modulation_features(base)
     quiet = speech_modulation_features([s * 0.05 for s in base])
-    assert abs(loud[0] - quiet[0]) < 0.25 and abs(loud[1] - quiet[1]) < 0.05
+    # Tilt variation is in decades (previously a ZCR CV); the residual change at
+    # -26 dB comes from int16 requantization noise, bounded at 15 % relative.
+    assert abs(loud[0] - quiet[0]) < 0.25 and abs(loud[1] - quiet[1]) < 0.15 * loud[1]
+    # A gain that needs no requantization (x2, exact in int16) changes nothing.
+    doubled = speech_modulation_features([s * 2 for s in base])
+    assert abs(loud[0] - doubled[0]) < 1e-6 and abs(loud[1] - doubled[1]) < 1e-9
 
 
 def test_modulation_gate_defers_on_very_short_clips():
@@ -326,3 +385,42 @@ def test_long_telugu_decode_covers_whole_clip_and_cleans_windows(session):
     assert session.temp_files_remaining == 0
     after = {p.name for p in Path(tempfile.gettempdir()).glob("spe-media-win-*")}
     assert after <= before, "per-window temp audio must be removed after inference"
+
+
+# ------------------------------------------------------------ bounded analysis cost
+
+def _repeat_to(seconds: int) -> "array.array[int]":
+    base = array.array("h", _read(FIXTURES_DIR / "te_dengue_intro_30s.wav"))
+    out = array.array("h")
+    while len(out) < seconds * SR:
+        out.extend(base)
+    del out[seconds * SR:]
+    return out
+
+
+def _cpu_seconds(samples) -> float:
+    import time
+
+    best = float("inf")
+    for _ in range(2):
+        started = time.process_time()
+        speech_modulation_features(samples)
+        best = min(best, time.process_time() - started)
+    return best
+
+
+def test_modulation_analysis_cost_scales_linearly():
+    # 8x the audio must cost ~8x, not ~64x (a whole-clip per-bin DFT is quadratic).
+    short, long = _cpu_seconds(_repeat_to(30)), _cpu_seconds(_repeat_to(240))
+    assert long / max(short, 1e-3) < 20, (short, long)
+
+
+def test_modulation_analysis_within_budget_at_max_decoded_duration():
+    from spe_runtime.media_product.local_backend import MAX_DECODED_DURATION_MS
+    import time
+
+    samples = _repeat_to(MAX_DECODED_DURATION_MS // 1000)
+    started = time.process_time()
+    features = speech_modulation_features(samples)
+    assert time.process_time() - started < 30.0
+    assert features is not None and features[0] >= VAD_MIN_SYLLABIC_MODULATION_DB

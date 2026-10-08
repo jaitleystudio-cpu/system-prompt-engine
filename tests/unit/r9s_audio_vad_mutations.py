@@ -30,7 +30,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 OWNER = "spe_runtime/media_product/local_backend.py"
 GATE = (
-    "            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB or zcr_variation < VAD_MIN_ZCR_VARIATION:\n"
+    "            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB or tilt_variation < VAD_MIN_TILT_VARIATION_DECADES:\n"
 )
 HARDCODE = '''            def _goertzel(freq):
                 import math as _m
@@ -42,13 +42,28 @@ HARDCODE = '''            def _goertzel(freq):
             _total = sum(x * x for x in samples[:16000]) * 16000 / 2 + 1e-9
             if sum(_goertzel(f) for f in (440.0, 880.0, 554.37, 659.25)) / _total > 0.5:
 '''
+# Whole-clip per-bin DFT computed directly (the pre-hardening quadratic shape).
+WHOLE_CLIP_DFT = """    centered_env = [v - sum(env) / n for v in env]
+    whole = 0.0
+    for k in range(1, n // 2 + 1):
+        if not (VAD_SYLLABIC_BAND_HZ[0] <= k * frame_rate / n <= VAD_SYLLABIC_BAND_HZ[1]):
+            continue
+        re = im = 0.0
+        for t_idx, v in enumerate(centered_env):
+            re += v * math.cos(2.0 * math.pi * k * t_idx / n)
+            im += v * math.sin(2.0 * math.pi * k * t_idx / n)
+        amp = 2.0 * math.hypot(re, im) / n
+        whole += amp * amp / 2.0
+    length = min(VAD_MODULATION_WINDOW_FRAMES, n)
+    _whole_depth = math.sqrt(whole)
+"""
 MUTANTS: list[tuple[str, str, str]] = [
     ("remove-modulation-gate", GATE, "            if False:\n"),
     ("hardcode-original-frequencies", GATE, HARDCODE),
-    ("depth-only-no-zcr-variation", GATE,
+    ("depth-only-no-tilt-variation", GATE,
      "            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB:\n"),
-    ("zcr-variation-only-no-depth", GATE,
-     "            if zcr_variation < VAD_MIN_ZCR_VARIATION:\n"),
+    ("tilt-variation-only-no-depth", GATE,
+     "            if tilt_variation < VAD_MIN_TILT_VARIATION_DECADES:\n"),
     ("over-strict-gate-rejects-speech", "VAD_MIN_SYLLABIC_MODULATION_DB = 1.0\n",
      "VAD_MIN_SYLLABIC_MODULATION_DB = 6.0\n"),
     ("single-window-decode", "    if total <= max_len:\n        return [(0, total)]\n",
@@ -58,9 +73,24 @@ MUTANTS: list[tuple[str, str, str]] = [
     ("oversized-windows", "DECODE_WINDOW_MAX_MS = 7000\n", "DECODE_WINDOW_MAX_MS = 30000\n"),
     ("send-silent-windows", "    kept = [w for w in windows if loud_enough(w)]\n", "    kept = windows\n"),
     ("leak-non-speech-window-tags", "            if non_speech(stripped):\n                continue\n", ""),
+    # --- hardening pass ---
+    ("reintroduce-whole-clip-dft", "    length = min(VAD_MODULATION_WINDOW_FRAMES, n)\n", WHOLE_CLIP_DFT),
+    ("no-stationary-floor-subtraction",
+     "    floor = _percentile(power, VAD_STATIONARY_FLOOR_PERCENTILE)\n    diff_floor = _percentile(diff_power, VAD_STATIONARY_FLOOR_PERCENTILE)\n",
+     "    floor = 0.0\n    diff_floor = 0.0\n"),
+    ("silent-truncation-no-produced-duration-check",
+     "        if produced_ms > MAX_DECODED_DURATION_MS:\n            dest.unlink(missing_ok=True)\n            raise DecodeError(RESOURCE_LIMIT_CODE, \"DECODED_DURATION_LIMIT\")\n", ""),
+    ("unbounded-decoder-no-t-no-fs",
+     '                    "-t",\n                    str(MAX_DECODED_DURATION_MS // 1000 + 1),\n                    "-fs",\n                    str(MAX_DECODED_PCM_BYTES + 2 * PCM_BYTES_PER_SECOND + _WAV_HEADER_SLACK_BYTES),\n', ""),
+    ("no-decode-wall-clock-limit", "                timeout=DECODE_TIMEOUT_S,\n", ""),
+    ("wav-passthrough-unbounded",
+     "            if duration_ms > MAX_DECODED_DURATION_MS or size > MAX_DECODED_PCM_BYTES + _WAV_HEADER_SLACK_BYTES:\n",
+     "            if False:\n"),
+    ("limit-raised-silently", "MAX_DECODED_DURATION_MS = 600_000\n", "MAX_DECODED_DURATION_MS = 6_000_000\n"),
 ]
 TESTS = [
     "tests/unit/test_audio_vad_modulation_generalization.py",
+    "tests/unit/test_media_decode_resource_limits.py",
     "tests/unit/test_audio_adversarial_vad.py",
     "tests/unit/test_audio_multilingual_corpus_and_vad_guard.py",
 ]
@@ -89,8 +119,9 @@ def _stage(tmp: Path, with_model: bool) -> None:
 
 def _pytest(tmp: Path, args: list[str]) -> subprocess.CompletedProcess:
     return subprocess.run(
-        [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", *args],
-        cwd=tmp, capture_output=True, text=True, env={"PYTHONPATH": str(tmp), "PATH": "/usr/bin:/bin"},
+        [sys.executable, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider", *args],
+        cwd=tmp, capture_output=True, text=True,
+        env={"PYTHONPATH": str(tmp), "PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"},
     )
 
 

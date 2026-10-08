@@ -77,26 +77,32 @@ _VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
 
 # --- Acoustic speech gate: modulation features (general, not fixture-specific) ---
 # Speech is non-stationary on two axes at once: its energy envelope is modulated
-# at syllabic rates (~2-8 Hz) and its short-time zero-crossing rate keeps
-# changing (voiced / unvoiced / nasal / pause). Both features are computed on the
-# part of the signal that rises above the clip's *stationary floor* (a low
-# percentile of frame power): a steady tone, chord, hum or noise bed sets that
-# floor and is subtracted, so it neither masks speech underneath it nor counts as
-# speech on its own. Stationary tonal signals (single/dual tones, chords, buzzes,
-# sweeps) leave no frames above their own floor; amplitude-modulated or gated
-# tones rise above the floor but keep a fixed zero-crossing rate and fail the
-# zero-crossing-variation test. Both features are level-invariant (dB / ratios).
+# at syllabic rates (~2-8 Hz) and its spectral tilt keeps changing (voiced
+# vowels are low-frequency heavy, fricatives/bursts high-frequency heavy). Both
+# features are computed on what rises above the clip's *stationary floor* (a low
+# percentile of per-frame power, and of per-frame first-difference power): a
+# steady tone, chord, hum or noise bed sets that floor and is subtracted, so it
+# neither masks speech underneath it nor counts as speech on its own.
+# Stationary tonal signals (single/dual tones, chords, buzzes, sweeps) leave no
+# frames above their own floor; amplitude-modulated or gated tones rise above
+# the floor but keep one spectral tilt and fail the tilt-variation test; slow
+# level changes fail the 2-8 Hz envelope test. Both are level-invariant.
+#
+# Spectral tilt per frame = first-difference energy / energy (= power-weighted
+# mean of 4*sin^2(pi*f/fs), a high-frequency energy fraction / spectral-centroid
+# proxy); the feature is the standard deviation (decades) of log10 of that
+# ratio computed on floor-subtracted energies over frames above the floor.
 #
 # Cost is bounded and linear in duration: one pass over the PCM for per-frame
-# power/zero crossings, one sort for the floor percentile, and a fixed-length
-# (2.56 s, hop 1.28 s) Hann-windowed DFT restricted to the fixed 2-8 Hz bins of
-# each analysis window, aggregated by median over active windows.
+# energies, one sort per floor percentile, and a fixed-length (2.56 s, hop
+# 1.28 s) Hann-windowed DFT restricted to the fixed 2-8 Hz bins of each analysis
+# window, aggregated by median over active windows.
 #
-# Supported operating envelope (measured, see tests): speech under a steady
-# single or dual tone is detected down to about +5 dB speech:interference SNR,
-# under chord/music-like tonal beds down to about 0 dB; below that the gate may
-# return NO_SPEECH_MODULATION. Melodic music with rhythm is NOT rejected by this
-# gate (it is non-stationary); it is handed to the model like speech.
+# Supported operating envelope (measured, see tests/evidence): speech under a
+# steady single/dual tone or chord/music-like tonal bed is detected down to
+# about 0 dB speech:interference SNR (chord beds to about -5 dB); below that the
+# gate may return NO_SPEECH_MODULATION. Melodic music with rhythm is NOT
+# rejected by this gate (it is non-stationary); it is handed to the model.
 VAD_FRAME_SAMPLES = 320  # 20 ms at 16 kHz
 VAD_MIN_FRAMES_FOR_MODULATION = 30  # < 0.6 s: too short to measure; defer to the model
 VAD_SYLLABIC_BAND_HZ = (2.0, 8.0)
@@ -106,12 +112,10 @@ VAD_STATIONARY_FLOOR_PERCENTILE = 0.10
 VAD_ENVELOPE_FLOOR_DB = 50.0
 VAD_FLOOR_CLAMP_DB = 6.0  # envelope may dip at most 6 dB (power x1/4) below the stationary floor
 VAD_ACTIVE_FRAME_DB = 35.0
-VAD_STEADY_FRAME_JUMP_DB = 6.0
+VAD_MIN_TILT_FRAMES = 5
 VAD_MIN_SYLLABIC_MODULATION_DB = 1.0
-VAD_MIN_ZCR_VARIATION = 0.2
+VAD_MIN_TILT_VARIATION_DECADES = 0.1
 
-_SIGN_TABLE = bytes(1 if value >= 128 else 0 for value in range(256))
-_ADJACENT_MASK = int.from_bytes(b"\x01" * (VAD_FRAME_SAMPLES - 1), "big")
 _MODULATION_TABLES: dict[int, list[tuple[list[float], list[float]]]] = {}
 _HANN_TABLES: dict[int, list[float]] = {}
 
@@ -150,29 +154,19 @@ def _as_pcm16(samples: "array.array[int] | list[float]") -> "array.array[int]":
 
 
 def _frame_profile(samples: "array.array[int] | list[float]") -> tuple[list[float], list[float]]:
-    """Per-frame mean power and zero-crossing rate (20 ms frames), linear cost.
-
-    Zero crossings are counted from the int16 sign bits with big-integer bit
-    operations instead of a per-sample Python loop.
-    """
+    """Per-frame mean power and mean first-difference power (20 ms frames), linear cost."""
     pcm = _as_pcm16(samples)
     frame = VAD_FRAME_SAMPLES
-    high_byte = 1 if sys.byteorder == "little" else 0
     mul = operator.mul
+    sub = operator.sub
     power: list[float] = []
-    zcr: list[float] = []
-    n_frames = len(pcm) // frame
-    block = 512  # frames per block: bounded temporary byte buffers
-    for first in range(0, n_frames, block):
-        last = min(n_frames, first + block)
-        signs = pcm[first * frame:last * frame].tobytes()[high_byte::2].translate(_SIGN_TABLE)
-        for f in range(first, last):
-            seg = pcm[f * frame:(f + 1) * frame]
-            power.append(sum(map(mul, seg, seg)) / frame)
-            offset = (f - first) * frame
-            bits = int.from_bytes(signs[offset:offset + frame], "big")
-            zcr.append(((bits ^ (bits >> 8)) & _ADJACENT_MASK).bit_count() / frame)
-    return power, zcr
+    diff_power: list[float] = []
+    for f in range(len(pcm) // frame):
+        seg = pcm[f * frame:(f + 1) * frame]
+        power.append(sum(map(mul, seg, seg)) / frame)
+        diff = list(map(sub, seg[1:], seg[:-1]))
+        diff_power.append(sum(map(mul, diff, diff)) / frame)
+    return power, diff_power
 
 
 def _modulation_tables(length: int, frame_rate: float) -> list[tuple[list[float], list[float]]]:
@@ -189,25 +183,28 @@ def _modulation_tables(length: int, frame_rate: float) -> list[tuple[list[float]
     return tables
 
 
+def _percentile(values: list[float], fraction: float) -> float:
+    return sorted(values)[int(fraction * (len(values) - 1))]
+
+
 def speech_modulation_features(
     samples: "array.array[int] | list[float]", sample_rate: int = 16000
 ) -> tuple[float, float] | None:
-    """(syllabic_modulation_db, zcr_variation) or None when too short.
+    """(syllabic_modulation_db, tilt_variation_decades) or None when too short.
 
     syllabic_modulation_db: median over active 2.56 s analysis windows of the RMS
     (dB) of the floor-subtracted log-energy envelope restricted to the 2-8 Hz
     modulation band (Hann-windowed DFT at the fixed in-band bins only).
-    zcr_variation: coefficient of variation of the short-time zero-crossing rate
-    over active, steady frames of the full signal (frames at
-    abrupt on/off edges are excluded so a gated tone cannot borrow variation
-    from its own switching transients). This is a zero-crossing statistic, not a
-    spectral feature.
+    tilt_variation_decades: standard deviation of log10(first-difference energy /
+    energy), both floor-subtracted, over frames that rise above the stationary
+    floor (a genuine spectral-shape statistic: high-frequency energy fraction).
     """
-    power, zcr = _frame_profile(samples)
+    power, diff_power = _frame_profile(samples)
     n = len(power)
     if n < VAD_MIN_FRAMES_FOR_MODULATION:
         return None
-    floor = sorted(power)[int(VAD_STATIONARY_FLOOR_PERCENTILE * (n - 1))]
+    floor = _percentile(power, VAD_STATIONARY_FLOOR_PERCENTILE)
+    diff_floor = _percentile(diff_power, VAD_STATIONARY_FLOOR_PERCENTILE)
     residual = [max(p - floor, 0.0) for p in power]
     top = max(residual)
     if top <= 0.0:
@@ -243,25 +240,15 @@ def speech_modulation_features(
         depths.append(math.sqrt(band_power))
     depths.sort()
     modulation_db = depths[len(depths) // 2] if depths else 0.0
-    # Zero-crossing variation is measured over all active frames of the full
-    # signal (bed included): frames dominated by a steady bed and frames
-    # dominated by speech differ in crossing rate, which is evidence of speech;
-    # a tone/chord alone (gated, AM or steady) keeps one crossing rate throughout.
-    level_db = [10.0 * math.log10(p + 1e-9) for p in power]
-    loud = max(level_db)
-    active = [i for i in range(n) if level_db[i] > loud - VAD_ACTIVE_FRAME_DB]
-    steady = [
-        i for i in active
-        if 0 < i < n - 1
-        and abs(level_db[i] - level_db[i - 1]) < VAD_STEADY_FRAME_JUMP_DB
-        and abs(level_db[i + 1] - level_db[i]) < VAD_STEADY_FRAME_JUMP_DB
-    ] or active
-    rates = [zcr[i] for i in steady]
-    mean_rate = sum(rates) / len(rates)
-    if mean_rate <= 0.0:
+    tilts = []
+    for i in above:
+        diff_residual = diff_power[i] - diff_floor
+        if diff_residual > 0.0:
+            tilts.append(math.log10(diff_residual / residual[i]))
+    if len(tilts) < VAD_MIN_TILT_FRAMES:
         return modulation_db, 0.0
-    spread = math.sqrt(sum((r - mean_rate) ** 2 for r in rates) / len(rates))
-    return modulation_db, spread / mean_rate
+    mean_tilt = sum(tilts) / len(tilts)
+    return modulation_db, math.sqrt(sum((v - mean_tilt) ** 2 for v in tilts) / len(tilts))
 
 
 def plan_decode_windows(
@@ -1804,8 +1791,8 @@ class LocalMediaSession:
                 return False, "STATIONARY_NOISE"
         modulation = speech_modulation_features(samples)
         if modulation is not None:
-            syllabic_db, zcr_variation = modulation
-            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB or zcr_variation < VAD_MIN_ZCR_VARIATION:
+            syllabic_db, tilt_variation = modulation
+            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB or tilt_variation < VAD_MIN_TILT_VARIATION_DECADES:
                 return False, "NO_SPEECH_MODULATION"
         return True, "SPEECH_CANDIDATE"
 
