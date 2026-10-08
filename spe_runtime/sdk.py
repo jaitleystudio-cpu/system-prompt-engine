@@ -5,6 +5,11 @@ Allows developers to guard any LLM call, agent tool, or workflow with:
     async def run_finance_agent(query: str):
         ...
 
+Or granular agent step compute salvaging:
+    @spe.step("retrieve_customer")
+    async def retrieve_customer(customer_id: str):
+        ...
+
 Or:
     guarded_fn = spe.wrap(my_fn, intent="...")
     result = spe.execute_guarded(my_fn, prompt, intent="...")
@@ -13,21 +18,30 @@ Or:
 from __future__ import annotations
 
 import asyncio
+from collections import deque
+from enum import Enum
 import functools
 import hashlib
 import inspect
+import threading
 import time
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Union
 
 from spe_runtime.ci_gate.receipt import generate_keypair
 from spe_runtime.cost_engine.cost_optimizer import QuantumCostOptimizer
 from spe_runtime.cost_engine.deterministic_offloader import DeterministicOffloader
 from spe_runtime.cost_engine.kv_aligner import PagedAttentionKVAligner
 from spe_runtime.cost_engine.models import TotalSavingsReport
-from spe_runtime.csi.models import LatticeState
+from spe_runtime.cost_engine.telemetry import (
+    CostSource,
+    PINNED_LOCAL_PRICE_TABLE,
+    TelemetryEvidence,
+    compute_pinned_cost,
+)
+from spe_runtime.csi.models import LatticeState, SemanticRegister
 from spe_runtime.csi.mvcc_engine import EpistemicMVCCEngine
 from spe_runtime.csi.s_mmu import SemanticMMU
 from spe_runtime.runtime_gateway.firewall import CapabilityFirewall, sign_grant
@@ -38,6 +52,12 @@ from spe_runtime.runtime_gateway.models import (
     Decision,
     PolicyEvaluationResult,
 )
+
+
+class AuthorityMode(str, Enum):
+    """Authority trust mode separating ephemeral local development from external enterprise roots."""
+    DEV_EPHEMERAL = "DEV_EPHEMERAL"
+    PRODUCTION_EXTERNAL = "PRODUCTION_EXTERNAL"
 
 
 @dataclass
@@ -55,6 +75,10 @@ class SPEReceipt:
     savings_ratio_percent: float
     salvaged_registers_count: int = 0
     tx_id: Optional[str] = None
+    authority_mode: str = "DEV_EPHEMERAL"
+    enterprise_qualified: bool = False
+    evidence_class: str = TelemetryEvidence.CALIBRATED_ESTIMATE.value
+    cost_source: str = CostSource.LOCAL_PINNED_PRICE_TABLE.value
 
 
 @dataclass
@@ -67,23 +91,73 @@ class SPEResult:
         return self.data[item]
 
 
-# Global shared instances for SDK drop-in convenience
+# Global shared authority and memory state
 _GLOBAL_FIREWALL: Optional[CapabilityFirewall] = None
 _GLOBAL_KEYPAIR: Optional[Tuple[bytes, bytes]] = None
 _GLOBAL_ISSUER: str = "spe-sdk-authority"
 _GLOBAL_MMU: Optional[SemanticMMU] = None
 _GLOBAL_MVCC: Optional[EpistemicMVCCEngine] = None
+_GLOBAL_AUTHORITY_MODE: AuthorityMode = AuthorityMode.DEV_EPHEMERAL
+_PRODUCTION_TRUST_ROOTS: Dict[str, str] = {}  # issuer -> public_key_hex
+
+# Step Registry state for @spe.step
+_STEP_LOCK = threading.RLock()
+_STEP_REGISTRY: Dict[str, SemanticRegister] = {}
+_LAST_STEP_NAME: Optional[str] = None
+_STEP_COUNTER: int = 0
+
+
+def set_authority_mode(mode: Union[AuthorityMode, str]) -> None:
+    """Configures global authority mode: DEV_EPHEMERAL or PRODUCTION_EXTERNAL."""
+    global _GLOBAL_AUTHORITY_MODE, _GLOBAL_FIREWALL, _GLOBAL_KEYPAIR
+    new_mode = AuthorityMode(mode) if isinstance(mode, str) else mode
+    if new_mode != _GLOBAL_AUTHORITY_MODE:
+        _GLOBAL_AUTHORITY_MODE = new_mode
+        # Reset firewall cache so proper trust root policy applies
+        _GLOBAL_FIREWALL = None
+        if new_mode == AuthorityMode.PRODUCTION_EXTERNAL:
+            _GLOBAL_KEYPAIR = None
+
+
+def get_authority_mode() -> AuthorityMode:
+    """Returns the current authority mode."""
+    return _GLOBAL_AUTHORITY_MODE
+
+
+def set_production_trust_root(issuer: str, public_key_hex: str) -> None:
+    """Injects an external public trust root for production authority."""
+    global _PRODUCTION_TRUST_ROOTS
+    _PRODUCTION_TRUST_ROOTS[issuer] = public_key_hex
+    if _GLOBAL_FIREWALL is not None:
+        _GLOBAL_FIREWALL.register_trust_root(issuer, public_key_hex)
+
+
+def clear_production_trust_roots() -> None:
+    """Clears all external production trust roots."""
+    global _PRODUCTION_TRUST_ROOTS, _GLOBAL_FIREWALL
+    _PRODUCTION_TRUST_ROOTS.clear()
+    _GLOBAL_FIREWALL = None
 
 
 def _get_or_create_firewall() -> CapabilityFirewall:
     global _GLOBAL_FIREWALL, _GLOBAL_KEYPAIR
-    if _GLOBAL_FIREWALL is None:
-        sk, pk = generate_keypair()
-        _GLOBAL_KEYPAIR = (sk, pk)
-        fw = CapabilityFirewall(storage_dir=Path(".spe/sdk_firewall"), verify_signatures=True)
-        fw.register_trust_root(_GLOBAL_ISSUER, pk.hex())
-        _GLOBAL_FIREWALL = fw
-    return _GLOBAL_FIREWALL
+    if _GLOBAL_AUTHORITY_MODE == AuthorityMode.PRODUCTION_EXTERNAL:
+        if not _PRODUCTION_TRUST_ROOTS:
+            raise PermissionError("Production trust root missing: FAIL CLOSED in PRODUCTION_EXTERNAL mode.")
+        if _GLOBAL_FIREWALL is None:
+            fw = CapabilityFirewall(storage_dir=Path(".spe/prod_firewall"), verify_signatures=True)
+            for issuer, pk_hex in _PRODUCTION_TRUST_ROOTS.items():
+                fw.register_trust_root(issuer, pk_hex)
+            _GLOBAL_FIREWALL = fw
+        return _GLOBAL_FIREWALL
+    else:
+        if _GLOBAL_FIREWALL is None:
+            sk, pk = generate_keypair()
+            _GLOBAL_KEYPAIR = (sk, pk)
+            fw = CapabilityFirewall(storage_dir=Path(".spe/sdk_firewall"), verify_signatures=True)
+            fw.register_trust_root(_GLOBAL_ISSUER, pk.hex())
+            _GLOBAL_FIREWALL = fw
+        return _GLOBAL_FIREWALL
 
 
 def _get_or_create_mmu() -> SemanticMMU:
@@ -101,8 +175,9 @@ def _get_or_create_mvcc() -> EpistemicMVCCEngine:
     return _GLOBAL_MVCC
 
 
-
 def _get_keypair() -> Tuple[bytes, bytes]:
+    if _GLOBAL_AUTHORITY_MODE == AuthorityMode.PRODUCTION_EXTERNAL:
+        raise PermissionError("Private keys are strictly absent from SPE in PRODUCTION_EXTERNAL mode.")
     _get_or_create_firewall()
     assert _GLOBAL_KEYPAIR is not None
     return _GLOBAL_KEYPAIR
@@ -114,7 +189,17 @@ def grant_capability(
     action_scope: str = "*",
     budget_usd: float = 100.0,
 ) -> CapabilityGrant:
-    """Helper to install an authorized capability grant into the global firewall."""
+    """Helper to install an authorized capability grant into the global firewall.
+    
+    In DEV_EPHEMERAL mode: signs with local ephemeral dev authority.
+    In PRODUCTION_EXTERNAL mode: fails closed; self-grants are prohibited.
+    """
+    if _GLOBAL_AUTHORITY_MODE == AuthorityMode.PRODUCTION_EXTERNAL:
+        raise PermissionError(
+            "Self-granting or ephemeral grant signing is strictly prohibited in PRODUCTION_EXTERNAL mode. "
+            "Grants must be externally provisioned and signed."
+        )
+
     fw = _get_or_create_firewall()
     sk, pk = _get_keypair()
 
@@ -137,6 +222,15 @@ def grant_capability(
     return signed
 
 
+def install_production_grant(grant: CapabilityGrant) -> None:
+    """Installs an externally signed capability grant into the global firewall.
+    
+    Required in PRODUCTION_EXTERNAL mode where self-granting is prohibited.
+    """
+    fw = _get_or_create_firewall()
+    fw.install_grant(grant)
+
+
 def protect(
     intent: str = "auto",
     max_budget_usd: float = 1.0,
@@ -149,7 +243,12 @@ def protect(
     invariant_check: Optional[Callable[[Any], bool]] = None,
     return_result_wrapper: bool = False,
 ) -> Callable:
-    """1-Line Drop-in Decorator to secure and optimize any sync or async function/agent."""
+    """1-Line Drop-in Decorator to secure and optimize any sync or async function/agent.
+    
+    Strict Ordering Law:
+        Execute -> Stage -> Verify Invariants & Authority -> MVCC Commit -> Effect
+    Never commits before verification.
+    """
     def decorator(fn: Callable) -> Callable:
         actual_intent = intent if intent != "auto" else (fn.__doc__ or fn.__name__)
 
@@ -182,6 +281,7 @@ def protect(
                 if offloader.can_offload_math(first_arg_str):
                     math_res = offloader.evaluate_math(first_arg_str)
                     latency_ms = (time.perf_counter() - t0) * 1000.0
+                    is_prod = (_GLOBAL_AUTHORITY_MODE == AuthorityMode.PRODUCTION_EXTERNAL)
                     receipt = SPEReceipt(
                         call_id=call_id,
                         intent=actual_intent,
@@ -193,51 +293,56 @@ def protect(
                         timestamp_iso=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                         latency_ms=round(latency_ms, 2),
                         savings_ratio_percent=100.0,
+                        authority_mode=_GLOBAL_AUTHORITY_MODE.value,
+                        enterprise_qualified=is_prod,
+                        evidence_class=TelemetryEvidence.THEORETICAL_BOUND.value,
+                        cost_source=CostSource.LOCAL_PINNED_PRICE_TABLE.value,
                     )
                     return t0, receipt, math_res
 
             return t0, None, None
 
-        def _post_check(
+        def _verify_authority() -> None:
+            """Verifies external production authority or fails closed."""
+            if _GLOBAL_AUTHORITY_MODE == AuthorityMode.PRODUCTION_EXTERNAL:
+                if not _PRODUCTION_TRUST_ROOTS:
+                    raise PermissionError("Production trust root missing: FAIL CLOSED in PRODUCTION_EXTERNAL mode.")
+
+        def _build_receipt(
             output: Any,
             t0: float,
             call_id: str,
             tx_id: str,
             salvaged_count: int,
-        ) -> Tuple[SPEReceipt, Any]:
-            invariants_ok = True
-            if invariant_check:
-                invariants_ok = invariant_check(output)
-                if not invariants_ok:
-                    raise ValueError(
-                        f"SPE Behavioral Invariant Guard Violated: Output failed invariant check for intent '{actual_intent}'"
-                    )
-
+            invariants_ok: bool,
+        ) -> SPEReceipt:
             latency_ms = (time.perf_counter() - t0) * 1000.0
-            receipt = SPEReceipt(
+            is_prod = (_GLOBAL_AUTHORITY_MODE == AuthorityMode.PRODUCTION_EXTERNAL)
+            
+            # Honest cost calculation from pinned price table
+            est_tokens = max(10, len(str(output)) // 4)
+            cost_usd, cost_src, _ = compute_pinned_cost(est_tokens, est_tokens)
+            # Honest telemetry: 0.0% savings unless offloaded or KV-aligned cache hit observed
+            savings_pct = 0.0
+
+            return SPEReceipt(
                 call_id=call_id,
                 intent=actual_intent,
                 decision="ALLOWED",
-                cost_usd=max_budget_usd * 0.15 if enable_cost_optimization else max_budget_usd,
+                cost_usd=cost_usd,
                 deterministic_offloaded=False,
                 kv_aligned=enable_cost_optimization,
                 invariants_satisfied=invariants_ok,
                 timestamp_iso=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                 latency_ms=round(latency_ms, 2),
-                savings_ratio_percent=85.0 if enable_cost_optimization else 0.0,
+                savings_ratio_percent=savings_pct,
                 salvaged_registers_count=salvaged_count,
                 tx_id=tx_id,
+                authority_mode=_GLOBAL_AUTHORITY_MODE.value,
+                enterprise_qualified=is_prod and invariants_ok,
+                evidence_class=TelemetryEvidence.CALIBRATED_ESTIMATE.value,
+                cost_source=cost_src.value,
             )
-
-            if isinstance(output, dict):
-                output["_spe_receipt"] = receipt
-            elif hasattr(output, "__dict__"):
-                try:
-                    setattr(output, "_spe_receipt", receipt)
-                except Exception:
-                    pass
-
-            return receipt, output
 
         if inspect.iscoroutinefunction(fn):
             @functools.wraps(fn)
@@ -261,18 +366,47 @@ def protect(
                 mvcc.read(tx, input_reg.reg_id)
 
                 try:
+                    # 1. EXECUTE
                     output = await fn(*args, **kwargs)
+
+                    # 2. STAGE
                     mvcc.write(tx, f"out_{call_id}", term=str(output), dependencies=[input_reg.reg_id])
+
+                    # 3. VERIFY INVARIANTS & AUTHORITY (BEFORE COMMIT!)
+                    _verify_authority()
+                    invariants_ok = True
+                    if invariant_check:
+                        invariants_ok = invariant_check(output)
+                        if not invariants_ok:
+                            mvcc.abort(tx, reason=f"Behavioral Invariant Guard Violated for intent '{actual_intent}'")
+                            raise ValueError(
+                                f"SPE Behavioral Invariant Guard Violated: Output failed invariant check for intent '{actual_intent}'"
+                            )
+
+                    # 4. MVCC COMMIT (ONLY AFTER VERIFY!)
                     mvcc.commit(tx)
-                    receipt, final_out = _post_check(output, t0, call_id, tx_id, salvaged_count=1)
+
+                    # 5. EFFECT BARRIER
+                    receipt = _build_receipt(output, t0, call_id, tx_id, salvaged_count=1, invariants_ok=invariants_ok)
+                    if isinstance(output, dict):
+                        output["_spe_receipt"] = receipt
+                    elif hasattr(output, "__dict__"):
+                        try:
+                            setattr(output, "_spe_receipt", receipt)
+                        except Exception:
+                            pass
+
                     if return_result_wrapper:
-                        return SPEResult(data=final_out, receipt=receipt)
-                    return final_out
+                        return SPEResult(data=output, receipt=receipt)
+                    return output
                 except Exception as e:
                     if rollback_on_fail:
-                        mvcc.abort(tx, reason=str(e))
+                        if tx.tx_id in mvcc.active_transactions:
+                            mvcc.abort(tx, reason=str(e))
                     if salvage:
-                        surviving = mmu.page_working_set([input_reg.reg_id]).registers
+                        surviving = salvage_valid_registers()
+                        if not surviving:
+                            surviving = mmu.page_working_set([input_reg.reg_id]).registers
                         try:
                             setattr(e, "_spe_salvaged_registers", surviving)
                         except Exception:
@@ -303,18 +437,47 @@ def protect(
                 mvcc.read(tx, input_reg.reg_id)
 
                 try:
+                    # 1. EXECUTE
                     output = fn(*args, **kwargs)
+
+                    # 2. STAGE
                     mvcc.write(tx, f"out_{call_id}", term=str(output), dependencies=[input_reg.reg_id])
+
+                    # 3. VERIFY INVARIANTS & AUTHORITY (BEFORE COMMIT!)
+                    _verify_authority()
+                    invariants_ok = True
+                    if invariant_check:
+                        invariants_ok = invariant_check(output)
+                        if not invariants_ok:
+                            mvcc.abort(tx, reason=f"Behavioral Invariant Guard Violated for intent '{actual_intent}'")
+                            raise ValueError(
+                                f"SPE Behavioral Invariant Guard Violated: Output failed invariant check for intent '{actual_intent}'"
+                            )
+
+                    # 4. MVCC COMMIT (ONLY AFTER VERIFY!)
                     mvcc.commit(tx)
-                    receipt, final_out = _post_check(output, t0, call_id, tx_id, salvaged_count=1)
+
+                    # 5. EFFECT BARRIER
+                    receipt = _build_receipt(output, t0, call_id, tx_id, salvaged_count=1, invariants_ok=invariants_ok)
+                    if isinstance(output, dict):
+                        output["_spe_receipt"] = receipt
+                    elif hasattr(output, "__dict__"):
+                        try:
+                            setattr(output, "_spe_receipt", receipt)
+                        except Exception:
+                            pass
+
                     if return_result_wrapper:
-                        return SPEResult(data=final_out, receipt=receipt)
-                    return final_out
+                        return SPEResult(data=output, receipt=receipt)
+                    return output
                 except Exception as e:
                     if rollback_on_fail:
-                        mvcc.abort(tx, reason=str(e))
+                        if tx.tx_id in mvcc.active_transactions:
+                            mvcc.abort(tx, reason=str(e))
                     if salvage:
-                        surviving = mmu.page_working_set([input_reg.reg_id]).registers
+                        surviving = salvage_valid_registers()
+                        if not surviving:
+                            surviving = mmu.page_working_set([input_reg.reg_id]).registers
                         try:
                             setattr(e, "_spe_salvaged_registers", surviving)
                         except Exception:
@@ -325,6 +488,254 @@ def protect(
 
     return decorator
 
+
+# ---------------------------------------------------------------------------
+# Real Compute Salvaging via @spe.step
+# ---------------------------------------------------------------------------
+
+def _invalidate_register_tree(reg_id: str, mmu: SemanticMMU) -> Set[str]:
+    """Transitively invalidates a register and all its downstream consumers in EAS."""
+    invalidated: Set[str] = set()
+    queue = deque([reg_id])
+    while queue:
+        curr_id = queue.popleft()
+        if curr_id in invalidated:
+            continue
+        invalidated.add(curr_id)
+        if curr_id in mmu.eas:
+            mmu.eas[curr_id].lattice_state = LatticeState.INVALID
+        for s_name, s_reg in _STEP_REGISTRY.items():
+            if s_reg.reg_id == curr_id:
+                s_reg.lattice_state = LatticeState.INVALID
+        for child_id in mmu.consumers.get(curr_id, set()):
+            if child_id not in invalidated:
+                queue.append(child_id)
+    return invalidated
+
+
+def _create_step_decorator(
+    name: str,
+    depends_on: Optional[List[str]] = None,
+    isolated: bool = False,
+    salvage: bool = True,
+    invariant_check: Optional[Callable[[Any], bool]] = None,
+) -> Callable:
+    def decorator(fn: Callable) -> Callable:
+        global _STEP_COUNTER, _LAST_STEP_NAME
+
+        def _prepare_call(args: Tuple[Any, ...], kwargs: Dict[str, Any]) -> Tuple[SemanticMMU, Optional[SemanticRegister], str, List[str], bool]:
+            mmu = _get_or_create_mmu()
+            existing_reg = _STEP_REGISTRY.get(name)
+            input_signature = hashlib.sha256(f"{args}:{kwargs}".encode()).hexdigest()[:12]
+
+            # 1. Dependency validation
+            dep_reg_ids: List[str] = []
+            if isolated:
+                dep_reg_ids = []
+            elif depends_on is not None:
+                for dep_name in depends_on:
+                    dep_reg = _STEP_REGISTRY.get(dep_name)
+                    if dep_reg is None:
+                        raise ValueError(
+                            f"Step '{name}' depends on step '{dep_name}', which has not been executed or registered."
+                        )
+                    if dep_reg.lattice_state != LatticeState.VALID:
+                        raise ValueError(
+                            f"Step '{name}' depends on invalid register '{dep_reg.reg_id}' from step '{dep_name}'"
+                        )
+                    dep_reg_ids.append(dep_reg.reg_id)
+            elif _LAST_STEP_NAME and _LAST_STEP_NAME != name:
+                prev_reg = _STEP_REGISTRY.get(_LAST_STEP_NAME)
+                if prev_reg and prev_reg.lattice_state == LatticeState.VALID:
+                    dep_reg_ids.append(prev_reg.reg_id)
+
+            # 2. Check if this step already has a valid salvaged register matching current inputs
+            can_salvage = False
+            if (
+                salvage
+                and existing_reg
+                and existing_reg.lattice_state == LatticeState.VALID
+                and existing_reg.provenance.get("input_signature") == input_signature
+            ):
+                deps_valid = True
+                for dep_id in existing_reg.dependencies:
+                    dep_in_eas = mmu.eas.get(dep_id)
+                    if not dep_in_eas or dep_in_eas.lattice_state != LatticeState.VALID:
+                        deps_valid = False
+                        break
+                if deps_valid and depends_on is not None:
+                    for dep_name in depends_on:
+                        curr_dep_reg = _STEP_REGISTRY.get(dep_name)
+                        if not curr_dep_reg or curr_dep_reg.reg_id not in existing_reg.dependencies:
+                            deps_valid = False
+                            break
+                if deps_valid:
+                    can_salvage = True
+
+            if can_salvage:
+                return mmu, existing_reg, input_signature, dep_reg_ids, True
+
+            # If re-executing (not salvaged), invalidate previous register and downstream consumers
+            if existing_reg:
+                _invalidate_register_tree(existing_reg.reg_id, mmu)
+
+            return mmu, existing_reg, input_signature, dep_reg_ids, False
+
+        def _record_success(mmu: SemanticMMU, out: Any, input_signature: str, dep_reg_ids: List[str]) -> Any:
+            global _STEP_COUNTER, _LAST_STEP_NAME
+            if invariant_check and not invariant_check(out):
+                if name in _STEP_REGISTRY:
+                    _invalidate_register_tree(_STEP_REGISTRY[name].reg_id, mmu)
+                valid_regs = salvage_valid_registers()
+                err = ValueError(f"Step '{name}' violated step invariant check")
+                setattr(err, "_spe_salvaged_registers", valid_regs)
+                raise err
+
+            reg_id = f"v_{_STEP_COUNTER}"
+            _STEP_COUNTER += 1
+            reg = mmu.allocate_register(
+                reg_id=reg_id,
+                term=out,
+                dependencies=dep_reg_ids,
+                provenance={
+                    "step_name": name,
+                    "version": _STEP_COUNTER,
+                    "input_signature": input_signature,
+                    "version_tag": f"{name}@{_STEP_COUNTER}",
+                },
+            )
+            _STEP_REGISTRY[name] = reg
+            _LAST_STEP_NAME = name
+            return out
+
+        if inspect.iscoroutinefunction(fn):
+            @functools.wraps(fn)
+            async def async_step_wrapper(*args: Any, **kwargs: Any) -> Any:
+                with _STEP_LOCK:
+                    mmu, existing_reg, input_sig, dep_reg_ids, can_salvage = _prepare_call(args, kwargs)
+                    if can_salvage and existing_reg:
+                        return existing_reg.term
+
+                try:
+                    out = await fn(*args, **kwargs)
+                except Exception as exc:
+                    with _STEP_LOCK:
+                        if name in _STEP_REGISTRY:
+                            _invalidate_register_tree(_STEP_REGISTRY[name].reg_id, mmu)
+                        valid_regs = salvage_valid_registers()
+                    setattr(exc, "_spe_salvaged_registers", valid_regs)
+                    raise
+
+                with _STEP_LOCK:
+                    return _record_success(mmu, out, input_sig, dep_reg_ids)
+
+            return async_step_wrapper
+        else:
+            @functools.wraps(fn)
+            def sync_step_wrapper(*args: Any, **kwargs: Any) -> Any:
+                with _STEP_LOCK:
+                    mmu, existing_reg, input_sig, dep_reg_ids, can_salvage = _prepare_call(args, kwargs)
+                    if can_salvage and existing_reg:
+                        return existing_reg.term
+
+                try:
+                    out = fn(*args, **kwargs)
+                except Exception as exc:
+                    with _STEP_LOCK:
+                        if name in _STEP_REGISTRY:
+                            _invalidate_register_tree(_STEP_REGISTRY[name].reg_id, mmu)
+                        valid_regs = salvage_valid_registers()
+                    setattr(exc, "_spe_salvaged_registers", valid_regs)
+                    raise
+
+                with _STEP_LOCK:
+                    return _record_success(mmu, out, input_sig, dep_reg_ids)
+
+            return sync_step_wrapper
+
+    return decorator
+
+
+def step(
+    name: Union[str, Callable] = "auto",
+    depends_on: Optional[List[str]] = None,
+    isolated: bool = False,
+    salvage: bool = True,
+    invariant_check: Optional[Callable[[Any], bool]] = None,
+) -> Callable:
+    """Decorator for individual agent sub-steps.
+    
+    Registers an immutable ESSA register (v_0, v_1, ...) in the Epistemic Address Space (EAS).
+    Tracks def-use causal dependencies across steps.
+    On invalidation/retry, selectively invalidates downstream consumers while
+    preserving unrelated verified registers.
+    Supports both @spe.step and @spe.step("step_name").
+    """
+    if callable(name):
+        actual_fn = name
+        actual_name = getattr(actual_fn, "__name__", "step")
+        return _create_step_decorator(
+            name=actual_name,
+            depends_on=depends_on,
+            isolated=isolated,
+            salvage=salvage,
+            invariant_check=invariant_check,
+        )(actual_fn)
+
+    return _create_step_decorator(
+        name=name,
+        depends_on=depends_on,
+        isolated=isolated,
+        salvage=salvage,
+        invariant_check=invariant_check,
+    )
+
+
+def invalidate_step(name: str, reason: str = "Invalidated") -> Set[str]:
+    """Invalidates step 'name' and transitively invalidates all dependent registers in EAS.
+    
+    Preserves all unrelated verified registers.
+    Returns the set of invalidated register IDs (including transitive consumers).
+    """
+    with _STEP_LOCK:
+        mmu = _get_or_create_mmu()
+        reg = _STEP_REGISTRY.get(name)
+        if not reg:
+            return set()
+        return _invalidate_register_tree(reg.reg_id, mmu)
+
+
+def salvage_valid_registers() -> Dict[str, SemanticRegister]:
+    """Returns all verified registers in EAS that remain in LatticeState.VALID."""
+    with _STEP_LOCK:
+        mmu = _get_or_create_mmu()
+        return {
+            reg_id: reg
+            for reg_id, reg in mmu.eas.items()
+            if reg.lattice_state == LatticeState.VALID
+        }
+
+
+def get_step_register(name: str) -> Optional[SemanticRegister]:
+    """Retrieves current semantic register for a step name."""
+    with _STEP_LOCK:
+        return _STEP_REGISTRY.get(name)
+
+
+def reset_step_context() -> None:
+    """Resets step registry, counter, and global MMU/MVCC state for clean test runs."""
+    global _STEP_COUNTER, _LAST_STEP_NAME, _STEP_REGISTRY, _GLOBAL_MMU, _GLOBAL_MVCC
+    with _STEP_LOCK:
+        _STEP_COUNTER = 0
+        _LAST_STEP_NAME = None
+        _STEP_REGISTRY.clear()
+        _GLOBAL_MMU = None
+        _GLOBAL_MVCC = None
+
+
+# ---------------------------------------------------------------------------
+# High-Level Conveniences
+# ---------------------------------------------------------------------------
 
 def wrap(
     target: Any,

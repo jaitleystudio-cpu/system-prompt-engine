@@ -1,3 +1,9 @@
+from spe_runtime.cost_engine.telemetry import (
+    CostSource,
+    PINNED_LOCAL_PRICE_TABLE,
+    TelemetryEvidence,
+    compute_pinned_cost,
+)
 from spe_runtime.csi import (
     CausalCommitEngine,
     EffectBarrierViolation,
@@ -16,12 +22,26 @@ from spe_runtime.csi import (
 from spe_runtime.developer.repo_audit import AuditFinding, RepoAuditor, RepoAuditReport
 from spe_runtime.runtime_gateway.wire_proxy import ProxyMetrics, WireProxyServer
 from spe_runtime.sdk import (
+    AuthorityMode,
     SPEReceipt,
     SPEResult,
+    _get_or_create_firewall,
+    _get_or_create_mmu,
+    _get_or_create_mvcc,
     audit_savings,
+    clear_production_trust_roots,
     execute_guarded,
+    get_authority_mode,
+    get_step_register,
     grant_capability,
+    install_production_grant,
+    invalidate_step,
     protect,
+    reset_step_context,
+    salvage_valid_registers,
+    set_authority_mode,
+    set_production_trust_root,
+    step,
     wrap,
 )
 
@@ -29,12 +49,26 @@ __version__ = "0.1.0"
 
 __all__ = [
     "protect",
+    "step",
     "wrap",
     "execute_guarded",
     "grant_capability",
+    "install_production_grant",
     "audit_savings",
+    "invalidate_step",
+    "salvage_valid_registers",
+    "get_step_register",
+    "reset_step_context",
+    "AuthorityMode",
+    "set_authority_mode",
+    "get_authority_mode",
+    "set_production_trust_root",
     "SPEResult",
     "SPEReceipt",
+    "TelemetryEvidence",
+    "CostSource",
+    "PINNED_LOCAL_PRICE_TABLE",
+    "compute_pinned_cost",
     "SemanticMMU",
     "EpistemicMVCCEngine",
     "CausalCommitEngine",

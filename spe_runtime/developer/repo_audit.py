@@ -1,8 +1,8 @@
-"""SPE Ω Repo Auditor & CI Gatekeeper: 60-Second Instant Audit & Monopoly Trojan Horse.
+"""SPE Ω Repo Auditor & CI Gatekeeper: 60-Second Instant Audit & SPE Adoption Gateway.
 
 Scans any codebase for raw OpenAI/Anthropic/LangChain/CrewAI calls, calculates
-estimated monthly KV-cache waste and security vulnerability debt, and generates
-the exact 1-line drop-in diff to activate SPE.
+potential optimization exposure and security governance risks, and generates
+the exact 1-line drop-in diff to activate SPE Zero-Friction Runtime.
 """
 
 from __future__ import annotations
@@ -22,8 +22,13 @@ class AuditFinding:
     finding_type: str  # e.g. "RAW_OPENAI_CALL", "RAW_ANTHROPIC_CALL", "UNGUARDED_TOOL"
     code_snippet: str
     severity: str      # "CRITICAL", "HIGH", "MEDIUM"
-    estimated_monthly_waste_usd: float
+    potential_optimization_exposure_usd: float
     recommended_fix: str
+
+    @property
+    def estimated_monthly_waste_usd(self) -> float:
+        """Backwards compatibility alias for potential_optimization_exposure_usd."""
+        return self.potential_optimization_exposure_usd
 
 
 @dataclass
@@ -33,9 +38,14 @@ class RepoAuditReport:
     files_scanned: int
     findings: List[AuditFinding]
     total_raw_calls: int
-    total_estimated_monthly_waste_usd: float
+    total_potential_optimization_exposure_usd: float
     governance_score_percent: float
     suggested_patch_diff: str
+
+    @property
+    def total_estimated_monthly_waste_usd(self) -> float:
+        """Backwards compatibility alias for total_potential_optimization_exposure_usd."""
+        return self.total_potential_optimization_exposure_usd
 
     def to_markdown(self) -> str:
         lines = [
@@ -44,25 +54,25 @@ class RepoAuditReport:
             f"**Target Path**: `{self.target_path}` | **Files Scanned**: {self.files_scanned}",
             f"**Governance Health Score**: **{self.governance_score_percent:.1f}%**",
             f"**Total Raw LLM Endpoints**: {self.total_raw_calls} detected",
-            f"**Estimated Monthly KV-Cache & Compute Waste**: **${self.total_estimated_monthly_waste_usd:.2f} / month**",
+            f"**Potential Optimization Exposure**: **${self.total_potential_optimization_exposure_usd:.2f} / month**",
             "",
             "---",
             "",
-            "## Detected Vulnerabilities & Waste Hotspots",
+            "## Detected Vulnerabilities & Optimization Hotspots",
             "",
-            "| Severity | Type | File & Line | Snippet | Est. Waste/Mo | Recommended Action |",
+            "| Severity | Type | File & Line | Snippet | Potential Exposure/Mo | Recommended Action |",
             "|---|---|---|---|---|---|",
         ]
         for f in self.findings:
             snippet = f.code_snippet.replace("|", "\\|").strip()
             lines.append(
-                f"| `{f.severity}` | `{f.finding_type}` | `{f.file_path}:{f.line_number}` | `{snippet[:40]}` | ${f.estimated_monthly_waste_usd:.2f} | {f.recommended_fix} |"
+                f"| `{f.severity}` | `{f.finding_type}` | `{f.file_path}:{f.line_number}` | `{snippet[:40]}` | ${f.potential_optimization_exposure_usd:.2f} | {f.recommended_fix} |"
             )
         lines.extend([
             "",
             "---",
             "",
-            "## 1-Line Drop-In Remediation (Activate SPE Monopoly)",
+            "## 1-Line Drop-In Remediation (Activate SPE Zero-Friction Runtime)",
             "",
             "### Option A: Zero-Code Wire Proxy (Instant 70%+ Savings)",
             "Run in terminal:",
@@ -93,7 +103,7 @@ class RepoAuditReport:
 
 
 class RepoAuditor:
-    """Scans repositories to find raw LLM calls and generate Trojan Horse adoption patches."""
+    """Scans repositories to find raw LLM calls and generate adoption patches."""
 
     # Patterns matching raw LLM SDK invocations
     PATTERNS = [
@@ -136,6 +146,27 @@ class RepoAuditor:
 
     IGNORE_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__", "dist", "build", ".spe"}
 
+    def _compute_governance_score(self, files_scanned: int, findings: List[AuditFinding]) -> float:
+        """Calculates multi-factor governance score based on severity, call density, and diversity."""
+        if files_scanned == 0 or not findings:
+            return 100.0
+
+        severity_weights = {
+            "CRITICAL": 25.0,
+            "HIGH": 15.0,
+            "MEDIUM": 8.0,
+            "LOW": 3.0,
+        }
+        severity_risk = sum(severity_weights.get(f.severity, 10.0) for f in findings)
+        density = len(findings) / max(1, files_scanned)
+        density_factor = 1.0 + min(2.0, density)
+        distinct_types = len({f.finding_type for f in findings})
+        diversity_factor = 1.0 + (distinct_types * 0.15)
+
+        total_risk = severity_risk * density_factor * diversity_factor
+        score = 100.0 / (1.0 + (total_risk / 50.0))
+        return max(0.0, min(100.0, round(score, 1)))
+
     def scan_path(self, target_dir: str | Path) -> RepoAuditReport:
         root = Path(target_dir).resolve()
         findings: List[AuditFinding] = []
@@ -165,7 +196,7 @@ class RepoAuditor:
                                     finding_type=finding_type,
                                     code_snippet=line.strip(),
                                     severity=severity,
-                                    estimated_monthly_waste_usd=waste,
+                                    potential_optimization_exposure_usd=waste,
                                     recommended_fix=fix,
                                 )
                             )
@@ -176,16 +207,16 @@ class RepoAuditor:
                             else:
                                 patch_lines.append(f"+ # [SPE_GUARDED] {line.strip()}")
 
-        total_waste = sum(f.estimated_monthly_waste_usd for f in findings)
+        total_waste = sum(f.potential_optimization_exposure_usd for f in findings)
         total_calls = len(findings)
-        score = max(0.0, 100.0 - (total_calls * 12.5))
+        score = self._compute_governance_score(files_scanned, findings)
 
         return RepoAuditReport(
             target_path=str(root),
             files_scanned=files_scanned,
             findings=findings,
             total_raw_calls=total_calls,
-            total_estimated_monthly_waste_usd=total_waste,
-            governance_score_percent=round(score, 1),
+            total_potential_optimization_exposure_usd=total_waste,
+            governance_score_percent=score,
             suggested_patch_diff="\n".join(patch_lines[:15]),
         )
