@@ -72,7 +72,8 @@ sponsor terms.
 
 ## PRIVACY BOUNDARY
 
-Sponsors receive aggregate delivery reports only, k-suppressed (spec 03). There are no user-level
+Sponsors receive aggregate delivery reports only, with cells below MINIMUM_CELL_COUNT suppressed
+(spec 03). Reports state event counts, never users, sessions or people (spec 03 counting claim law). There are no user-level
 data, no retargeting and no sponsor tags.
 
 ## SECURITY BOUNDARY
@@ -84,8 +85,11 @@ data, no retargeting and no sponsor tags.
 
 ## ZERO-COST IMPACT
 
-No infrastructure cost beyond the house-card renderer. It conflicts with E6 copy (ads/sponsor
-presence), so an E12 copy change is needed (C11).
+- Contracting and invoicing **may** be manual, with no checkout or billing infrastructure.
+- **Delivering sponsor inventory is not infrastructure-free.** A placement still needs an
+  approved, live public surface: hosting and deploy (F14, C14), the house-card renderer (spec 08),
+  ad posture (F08) and copy approval (E12).
+- It conflicts with E6 copy (ads/sponsor presence), so an E12 copy change is needed (C11).
 
 ## FOUNDER DECISIONS REQUIRED
 

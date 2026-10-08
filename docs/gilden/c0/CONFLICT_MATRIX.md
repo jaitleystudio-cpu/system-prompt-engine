@@ -29,3 +29,4 @@ This matrix lists every place a C0 proposal touches current zero-cost, privacy o
 | C18 | Claim law (v3 §44); claim regexes (E11) | Media-kit and sponsor marketing claims | UNKNOWN rendering; claim lint (07) | None (kept) |
 | C19 | Release target 2026-10-26 22:10 IST with open HOLDs (custody report §7.8) | v3 §29 Oct 18–25 commercial qualification | Commercial channels stay OFF until qualified; no date-driven promotion | F14 plus owner release ruling |
 | C20 | Copy inventory gate (E12) | Every new commercial string (labels, disclosures, pricing copy) | Submit strings for owner approval | Owner copy approval |
+| C21 | No fingerprint, no persistent identifier, "no silent tracking" (E6; spec 03 forbidden fields) | Device-bound offline licence (spec 02, F22) | TRANSFERABLE binding (no device identifier) | F22 plus privacy review, privacy-copy change (E12) and a recovery process |

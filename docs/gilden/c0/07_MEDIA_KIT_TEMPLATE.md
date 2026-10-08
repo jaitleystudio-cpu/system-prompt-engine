@@ -23,13 +23,14 @@ state.
 | --- | --- | --- | --- |
 | About SPE | One-paragraph description | Drawn from approved copy (E12) | No superlatives (v3 §44) |
 | Product surfaces | Public tools and pages | List from `routing.ts` public views (E10) | Only live surfaces (F14) |
-| Audience: traffic | Monthly visits, organic share, return rate | **UNKNOWN** | Spec 03 aggregates; period and method stated |
-| Audience: geography and device | Top countries, device split | **UNKNOWN** | Spec 03, k-suppressed |
+| Audience: traffic | Monthly `page_view` event count; organic share of `page_view` events | **UNKNOWN** | Spec 03 aggregates; labelled as event counts; period and method stated |
+| Audience: unique users, sessions, return rate | Not offered | **NOT_MEASURABLE** | No persistent identifier exists (spec 03), so these cannot be measured and must not be shown |
+| Audience: geography and device | Top countries, device split (shares of events) | **UNKNOWN** | Spec 03; cells below MINIMUM_CELL_COUNT suppressed |
 | Audience: profile | Developer, designer or creator share | **UNKNOWN** | Measurable only via voluntary survey (F11); never inferred from prompts |
 | Inventory | Slots per surface | From spec 08 slot registry | — |
 | Packages | Pilot, monthly, benchmark-suite | Rates: `<FOUNDER_DECISION>` | F09 |
 | Policies | Separation of influence; disclosure; privacy | From specs 05, 06 and 08 | Verbatim |
-| Reporting | What sponsors receive | Aggregate impressions and clicks, k-suppressed | Spec 03 |
+| Reporting | What sponsors receive | Aggregate impression and click event counts; cells below MINIMUM_CELL_COUNT suppressed | Spec 03 |
 | Contact | Sponsorship contact | `<FOUNDER_DECISION>` | F17 |
 
 **Rules.**
@@ -38,6 +39,10 @@ state.
 2. Missing data renders as `UNKNOWN`. It never renders as an estimate, range or projection.
 3. Targets (v3 §5) never appear in a media kit.
 4. Logos of past sponsors only with a signed agreement and permission.
+5. **Counting claim law** (spec 03). There is no persistent identifier, so event counts ≠ unique
+   users, event counts ≠ unique sessions, and page views ≠ people. Counts are labelled as event
+   counts (e.g. "page_view events"). Words such as "users", "visitors", "readers",
+   "sessions", "people", "reach" or "audience size" are never attached to them.
 
 ## DATA MODEL
 
@@ -76,7 +81,8 @@ Spec 03 (metrics), spec 05 (packages), spec 08 (inventory), and a live surface (
 ## QUALIFICATION PLAN
 
 1. Generator test: any metric without a `source_ref` renders as `UNKNOWN`.
-2. Claim-law lint (E11 patterns plus v3 §44 list) passes.
+2. Claim-law lint (E11 patterns plus v3 §44 list) passes, including a lint that rejects
+   user/visitor/session/people/reach labels on event counts.
 3. The founder approval record is present.
 
 ## ROLLBACK / DISABLE PATH
@@ -85,10 +91,13 @@ Withdraw the kit version. Sponsors are told which version is superseded.
 
 ## UNKNOWN / HOLD
 
-All audience metrics are UNKNOWN. Rates are `<FOUNDER_DECISION>`.
+- All audience metrics are UNKNOWN.
+- Unique users, sessions and return rate are NOT_MEASURABLE by design.
+- Rates are `<FOUNDER_DECISION>`.
 
 ## ACCEPTANCE CRITERIA
 
 - [ ] The template is accepted.
 - [ ] The UNKNOWN-rendering rule is accepted.
 - [ ] No number appears without a source.
+- [ ] Counting claim law accepted (no unique-user, session or people claims from event counts).

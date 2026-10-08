@@ -98,3 +98,15 @@ These come from directive v3 §1, §7–§9, §33, §44 and v2 §1, §22.
 - No self-granted authority.
 - No third-party script that silently weakens CSP (E1, E2).
 - Hosted processing is explicit opt-in only (E8, v3 §13).
+- **Counting claim law:** no persistent identifier exists, so event counts ≠ unique users, event
+  counts ≠ unique sessions and page views ≠ people (spec 03). Counts are labelled as event counts.
+- **Suppression wording:** the reporting threshold is called MINIMUM_CELL_COUNT /
+  REPORTING_SUPPRESSION_THRESHOLD. It is not called k-anonymity unless distinct-subject
+  cardinality is proven.
+- **IP wording:** "IP not stored" is allowed; "IP never processed" is not. Any request exposes the
+  IP to hosting infrastructure transiently, and SPE components must discard it immediately (spec
+  03).
+- **Attribution integrity:** client attribution metadata is CLIENT_ASSERTED. Entitlement, billing
+  and cash truth never trust it (spec 04, F21).
+- **Licence honesty:** an offline licence is copyable unless bound and is never described as
+  strong seat enforcement (spec 02, F22).

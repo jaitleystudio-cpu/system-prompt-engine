@@ -57,7 +57,7 @@ monthly P&L computable.
 ```text
 LedgerEntry { entry_id, stream: ADS|SPONSOR|AFFILIATE|PRO|TEAM|ENTERPRISE|HOSTED|API_OEM|MARKETPLACE|SERVICES|OTHER,
               state, amount_minor, currency, counterparty_ref, plan_id?|campaign_id?|program_id?|opportunity_id?,
-              attribution_key|UNATTRIBUTED, evidence_refs[], previous_entry_id?, created_at, created_by }
+              attribution_key|UNATTRIBUTED (label only, never evidence; trust_class per spec 04), evidence_refs[], previous_entry_id?, created_at, created_by }
 Transition  { from_state, to_state, entry_id, evidence_refs[] (non-empty, type-checked per table), at, actor }
 Evidence    { evidence_id, type: QUOTE_DOC|SEND_RECORD|INVOICE|PROVIDER_EVENT|PARTNER_REPORT|BANK_LINE|PAYOUT_LINE|ASSUMPTIONS|CONTRACT,
               ref (id/number), sha256 of stored artifact, stored_at (off-repo location), captured_at }

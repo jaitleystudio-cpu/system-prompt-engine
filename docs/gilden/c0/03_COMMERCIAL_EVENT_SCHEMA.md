@@ -40,11 +40,32 @@ There are two event families with separate pipelines.
 
 - `surface`; `pillar` (the 7 pillars, v2 §9);
 - `device_class` (mobile/desktop);
-- `country` (only if derivable server-side without storing IP; otherwise omitted);
+- `country` (optional, F07). If used, it is derived from the request IP address at request time
+  by the hosting/edge infrastructure. **The IP address is therefore transiently processed** (as it
+  is for any HTTP request) and must be discarded immediately after the country lookup. It is never
+  written to the aggregate, the collector store or SPE-controlled logs. Infrastructure access-log
+  retention of IPs is UNKNOWN until hosting is chosen (F14) and must be configured and verified.
+  If that cannot be verified, `country` is omitted;
 - `entry_channel` (organic, direct, referral, AI-referral, campaign; from spec 04);
 - `day` (UTC date).
 
-**k-anonymity floor:** aggregates below `<FOUNDER_DECISION: k>` are suppressed in reports.
+**REPORTING_SUPPRESSION_THRESHOLD:** any report cell whose count is below
+`<FOUNDER_DECISION: MINIMUM_CELL_COUNT>` is suppressed.
+
+- This is a **report-count threshold**, not k-anonymity. There is no persistent identifier, so a
+  cell count is a count of events, not of distinct people. A cell of N events may come from one
+  person. The design must not be described as k-anonymous unless distinct-subject cardinality per
+  cell is proven, and this design cannot prove it.
+
+**Counting claim law.** No persistent identifier exists, so:
+
+- event counts ≠ unique users;
+- event counts ≠ unique sessions;
+- page views ≠ people (visitors, readers, audience size).
+
+Every report, dashboard, media kit (spec 07) and sponsor report (spec 05) must label counts as
+event counts (e.g. "page_view events"). They must never be relabelled as users, visitors,
+sessions, people, reach or audience.
 
 ## DATA MODEL
 
@@ -68,7 +89,9 @@ Classification   { monetizable_event_type → route_state: ACTIVE|QUALIFIED_CAND
 **Forbidden fields:**
 
 - prompt text, file names, transcripts, image or audio data, URLs entered by users;
-- emails; IP addresses (not stored); user agents (not stored, except the derived `device_class`);
+- emails; IP addresses (never stored or logged by SPE components; transiently processed by request
+  infrastructure only, as stated above; no document may claim SPE never processes IP addresses);
+- user agents (not stored, except the derived `device_class`);
 - precise timestamps per user;
 - cross-site IDs.
 
@@ -91,7 +114,8 @@ C14). Commercial events need the ledger store (spec 10).
 
 ## FOUNDER DECISIONS REQUIRED
 
-F07 (activate first-party aggregate analytics; opt-out and GPC posture; k; privacy copy), F14,
+F07 (activate first-party aggregate analytics; opt-out and GPC posture; MINIMUM_CELL_COUNT; country
+dimension; privacy copy), F14,
 F18.
 
 ## IMPLEMENTATION DEPENDENCIES
@@ -106,9 +130,12 @@ F18.
 1. Schema allow-list test.
 2. Prove no forbidden field via a fuzz test.
 3. Network test: only same-origin requests (extend E14).
-4. Suppression below k.
-5. Opt-out stops all product events.
-6. Webhook replay is idempotent.
+4. Suppression below MINIMUM_CELL_COUNT.
+5. No IP address in collector storage or SPE logs (inspection test); hosting log retention verified
+   before `country` is enabled.
+6. Report-label lint: no "users", "visitors", "sessions" or "people" label on event counts.
+7. Opt-out stops all product events.
+8. Webhook replay is idempotent.
 
 ## ROLLBACK / DISABLE PATH
 
@@ -118,12 +145,17 @@ F18.
 
 ## UNKNOWN / HOLD
 
-All event volumes are UNKNOWN. The value of k is `<FOUNDER_DECISION>`.
+- All event volumes are UNKNOWN.
+- MINIMUM_CELL_COUNT is `<FOUNDER_DECISION>`.
+- Unique users, unique sessions and people: NOT_MEASURABLE by design (no persistent identifier).
+- Hosting-infrastructure IP log retention: UNKNOWN (F14).
 
 ## ACCEPTANCE CRITERIA
 
 - [ ] The vocabulary is reviewed.
 - [ ] The forbidden-field list is accepted.
+- [ ] The counting claim law (events ≠ users ≠ sessions ≠ people) is accepted.
+- [ ] The IP-processing statement (transient processing, immediate discard, no storage) is accepted.
 - [ ] F07 is decided.
 - [ ] Single-owner reconciliation with #69 is agreed.
 - [ ] No CSP change is required (verified against E1).

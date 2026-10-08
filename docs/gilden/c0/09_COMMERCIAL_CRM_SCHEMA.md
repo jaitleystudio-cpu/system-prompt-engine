@@ -38,7 +38,7 @@ collaborators. It must record evidence, authority and outcome per opportunity.
 Organization { org_id, name, domain, type: SPONSOR|AFFILIATE_PARTNER|ENTERPRISE|OEM|INTEGRATION|PRESS|RESEARCH,
                category, verification_evidence_ref, brand_safety }
 Contact      { contact_id, org_id, name, role, channel (work email/profile), source_url, collected_at,
-               lawful_basis: <FOUNDER_DECISION/legal>, do_not_contact: bool }
+               lawful_basis: <DETERMINED_UNDER_APPLICABLE_LAW / LEGAL_REVIEW>, do_not_contact: bool }
 Opportunity  { opportunity_id, channel, market, customer_type, expected_value: <estimate|UNKNOWN> (FORECAST only),
                expected_cost, probability_class: LOW|MED|HIGH|UNKNOWN, evidence_refs[], required_work,
                required_authority: [F##], owner, state: DISCOVERED|QUALIFIED|TESTING|ACTIVE|WON|LOST|HOLD|REJECTED|EXPIRED,
@@ -60,7 +60,11 @@ The founder decides (F12, F17, F15):
 - sends;
 - any `WON` that implies a contract;
 - the storage location;
-- the lawful-basis and retention policy.
+- the CRM operating policy and retention scope.
+
+**Lawful basis** for contact processing is **determined under applicable law through legal review**
+(F15). It is not a founder preference or a GILDEN choice. The founder approves the operating policy
+and retention scope (F12) within whatever basis legal review establishes.
 
 `cash_collected_ref` links to the ledger. It can never be entered directly (spec 10).
 
@@ -84,8 +88,9 @@ A local or private-repo store costs nothing. A SaaS CRM would conflict with E7 (
 
 ## FOUNDER DECISIONS REQUIRED
 
-F12 (storage, retention, lawful basis), F17 (send authority), F15 (legal review of outreach and
-contact data handling).
+F12 (storage, operating policy, retention scope), F17 (send authority), F15 (legal review of
+outreach and contact data handling, including determination of the lawful basis under applicable
+law).
 
 ## IMPLEMENTATION DEPENDENCIES
 
@@ -107,11 +112,13 @@ Freeze writes. Export to the founder. Delete on instruction.
 ## UNKNOWN / HOLD
 
 - Pipeline contents: UNKNOWN (none recorded).
-- Lawful basis for contact processing: UNKNOWN (legal).
+- Lawful basis for contact processing: UNKNOWN until determined by legal review under applicable
+  law (F15).
 
 ## ACCEPTANCE CRITERIA
 
 - [ ] Schema accepted.
 - [ ] Off-repo storage rule accepted.
 - [ ] Send-requires-authority rule accepted.
-- [ ] F12 decided.
+- [ ] F12 decided (operating policy, retention scope, storage).
+- [ ] Lawful basis determined by legal review (F15).

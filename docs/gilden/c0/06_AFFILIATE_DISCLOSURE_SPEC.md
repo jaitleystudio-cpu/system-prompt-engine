@@ -79,7 +79,10 @@ AffiliateReport  { program_id, month, clicks (from 03), conversions (program-rep
 
 ## ZERO-COST IMPACT
 
-No infrastructure cost. Programs may require account creation, which is founder-only.
+- No billing or checkout infrastructure is needed.
+- Affiliate links still need an approved, live public surface to appear (F14), plus copy approval
+  (E12).
+- Programs may require account creation, which is founder-only.
 
 ## FOUNDER DECISIONS REQUIRED
 

@@ -94,7 +94,11 @@ implementation (dependency on 02 and 10). The client must never be trusted for t
 ## ZERO-COST IMPACT
 
 - Options A–D introduce provider fees and possibly hosting costs, which conflicts with E7 (C12).
-- Option E has no infrastructure cost.
+- Option E (services) may operate manually without product infrastructure: no checkout,
+  entitlement or collector. It still needs legal templates (F15) and off-repo CRM/ledger stores
+  (F12, F13).
+- Sponsor inventory is a separate line (spec 05). Even with manual contracting and invoicing, it
+  needs an approved, live public surface to deliver placements (F14, F08).
 - Any cost needs F18 (zero-cost law amendment) and F16 (budget ceilings).
 
 ## FOUNDER DECISIONS REQUIRED
