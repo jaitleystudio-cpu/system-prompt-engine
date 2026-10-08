@@ -1,12 +1,12 @@
 {
   "manifest_version": "1.0",
-  "generated_at": "2026-10-08T10:38:40.532Z",
+  "generated_at": "2026-10-08T10:39:26.254Z",
   "environment": {
     "platform": "darwin",
     "arch": "arm64",
     "node_version": "v22.23.2",
     "git_branch": "integration/spe-2026-10-26",
-    "commit_sha": "ebf1bad4d12f9da84325cdf841ef0804c9b9df35"
+    "commit_sha": "f1df89f61305e02d1f654aed8afa0d9d9d6ca53f"
   },
   "wasm_engine": {
     "canonical_sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
