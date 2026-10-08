@@ -1,20 +1,16 @@
-# SPE — System Prompt Engine
-# HOSTING remains founder-gated; this file ships with the static build.
-# Private / device-local / tool surfaces must not be advertised as crawlable.
+# robots.txt for SPE Ω Public Evidence Engine
 User-agent: *
 Allow: /
-Allow: /create
-Allow: /code
-Allow: /daily-lab
-Allow: /privacy
-Allow: /capabilities
-Disallow: /my-work
+Allow: /evidence-pages/
+Allow: /models/
+Allow: /failure-genome/
+Allow: /tools/
+Allow: /integrations/
+Allow: /compare/
+Allow: /migrate/
 Disallow: /workspace
-Disallow: /website
-Disallow: /media
-Disallow: /research
-Disallow: /ocr
-Disallow: /models/
-Disallow: /ort/
+Disallow: /studio
+Disallow: /private/
+Disallow: /api/
 
 Sitemap: https://systempromptengine.com/sitemap.xml

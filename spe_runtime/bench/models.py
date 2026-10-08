@@ -183,6 +183,45 @@ class LlmJudgeOracle(TaskOracle):
         )
 
 
+class HybridCompositeOracle(TaskOracle):
+    def __init__(self, oracle_id: str, components: list[tuple[TaskOracle, float]], pass_threshold: float = 0.75) -> None:
+        self.oracle_id = oracle_id
+        self.method = "HYBRID_WEIGHTED_COMPOSITE"
+        self.known_limitations = "Aggregates sub-oracles; weakest evidence tier governs output"
+        self.components = components
+        self.pass_threshold = pass_threshold
+        evidence_tiers = [c[0].evidence_strength for c in components]
+        if "SIMULATED" in evidence_tiers:
+            self.evidence_strength = "SIMULATED"
+        elif "CALIBRATED_ESTIMATE" in evidence_tiers:
+            self.evidence_strength = "CALIBRATED_ESTIMATE"
+        else:
+            self.evidence_strength = "DETERMINISTIC"
+
+    def evaluate(self, candidate_output: str, task_context: dict[str, Any]) -> OracleVerdict:
+        total_weight = sum(w for _, w in self.components) or 1.0
+        weighted_score = 0.0
+        rationales: list[str] = []
+        all_passed = True
+
+        for oracle, weight in self.components:
+            v = oracle.evaluate(candidate_output, task_context)
+            weighted_score += (v.score * weight)
+            rationales.append(f"[{oracle.oracle_id}: {v.score:.2f} ({v.rationale})]")
+            if not v.passed:
+                all_passed = False
+
+        normalized_score = weighted_score / total_weight
+        passed = normalized_score >= self.pass_threshold and all_passed
+        return OracleVerdict(
+            passed=passed,
+            score=normalized_score,
+            rationale=f"Hybrid score: {normalized_score:.2f} | " + "; ".join(rationales),
+            evidence_class=self.evidence_strength,
+            oracle_id=self.oracle_id,
+        )
+
+
 @dataclass
 class BenchmarkTask:
     task_id: str

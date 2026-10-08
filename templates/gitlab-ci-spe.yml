@@ -1,0 +1,48 @@
+# ==============================================================================
+# SPE Ω — AI Instruction Assurance GitLab CI Pipeline Template
+# Enforces policy-driven CI qualification, cryptographic evidence receipts, and
+# deterministic regression blocking before merge.
+# ==============================================================================
+
+spec:
+  inputs:
+    prompt_path:
+      default: "."
+      description: "Path to prompt file, directory, or .spe package"
+    strict_mode:
+      default: "true"
+      description: "Fail pipeline if gate verdict is not SHIP or REVIEW"
+    node_version:
+      default: "22"
+      description: "Node.js runtime version for SPE CLI execution"
+
+---
+
+.spe-base:
+  image: node:$[[ inputs.node_version ]]-alpine
+  variables:
+    NODE_ENV: "production"
+
+spe:evidence-gate:
+  extends: .spe-base
+  stage: test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  before_script:
+    - apk add --no-cache python3 py3-pip git
+  script:
+    - echo "🛡️ Evaluating SPE AI Instruction Assurance CI Gate..."
+    - |
+      if [ "$[[ inputs.strict_mode ]]" = "true" ]; then
+        npx spe check "$[[ inputs.prompt_path ]]" --strict
+      else
+        npx spe check "$[[ inputs.prompt_path ]]"
+      fi
+  artifacts:
+    name: "spe-evidence-$CI_COMMIT_SHORT_SHA"
+    when: always
+    paths:
+      - .spe/
+      - tmp/cli-verification-battery/receipt.json
+    expire_in: 30 days

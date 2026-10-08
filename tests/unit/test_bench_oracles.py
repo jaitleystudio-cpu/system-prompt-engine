@@ -6,6 +6,7 @@ from spe_runtime.bench.models import (
     BenchmarkTask,
     DatasetSplit,
     DeterministicOracle,
+    HybridCompositeOracle,
     LlmJudgeOracle,
     ProgrammaticConstraintOracle,
     ReferenceAnswerOracle,
@@ -81,3 +82,24 @@ def test_benchmark_suite_split_and_comparison():
     comp = compare_benchmarks(res_a, res_b)
     assert comp["delta"] == -1.0
     assert comp["noninferior"] is False
+
+
+def test_hybrid_composite_oracle():
+    o1 = DeterministicOracle("d1", "exact match")
+    o2 = ProgrammaticConstraintOracle("p1", lambda s: len(s) > 5, "Length > 5")
+    o3 = ReferenceAnswerOracle("r1", ["match"])
+
+    hybrid = HybridCompositeOracle("hyb-01", [(o1, 0.4), (o2, 0.3), (o3, 0.3)])
+    assert hybrid.evidence_strength == "CALIBRATED_ESTIMATE"
+
+    # Evaluates matching output
+    v_pass = hybrid.evaluate("exact match", {})
+    assert v_pass.passed is True
+    assert v_pass.score == 1.0
+    assert v_pass.evidence_class == "CALIBRATED_ESTIMATE"
+
+    # Evaluates failing output
+    v_fail = hybrid.evaluate("wrong", {})
+    assert v_fail.passed is False
+    assert v_fail.score < 0.75
+

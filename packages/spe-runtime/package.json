@@ -1,0 +1,27 @@
+{
+  "name": "@spe/runtime",
+  "version": "0.1.0",
+  "description": "Zero-Dependency AI Capability Firewall & Runtime Gateway for SPE",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "test": "node test/runtime.test.mjs"
+  },
+  "keywords": [
+    "spe",
+    "prompt-engine",
+    "capability-firewall",
+    "ai-security",
+    "mcp",
+    "a2a"
+  ],
+  "license": "MIT OR Apache-2.0"
+}
