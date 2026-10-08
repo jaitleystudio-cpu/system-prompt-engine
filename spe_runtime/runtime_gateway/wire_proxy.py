@@ -32,6 +32,13 @@ from spe_runtime.cost_engine.telemetry import (
     TelemetryEvidence,
     compute_pinned_cost,
 )
+from spe_runtime.hybrid.cloud_gate import CloudGate
+from spe_runtime.hybrid.models import (
+    HybridPolicy,
+    PlacementTarget,
+    TaskRequirement,
+)
+from spe_runtime.hybrid.switchboard import HybridSwitchboard
 from spe_runtime.runtime_gateway.firewall import CapabilityFirewall
 from spe_runtime.runtime_gateway.models import (
     CapabilityGrant,
@@ -39,6 +46,7 @@ from spe_runtime.runtime_gateway.models import (
     CapabilityType,
     Decision,
 )
+
 
 
 @dataclass
@@ -157,6 +165,7 @@ class WireProxyHandler(http.server.BaseHTTPRequestHandler):
     server_api_key: Optional[str]
     require_auth: bool
     server_port: int
+    switchboard: Optional[HybridSwitchboard]
 
     def log_message(self, format: str, *args: Any) -> None:
         """Suppress default stdout logging for quiet operation."""
@@ -350,7 +359,49 @@ class WireProxyHandler(http.server.BaseHTTPRequestHandler):
             })
             return
 
-        # 2. Deterministic AST Offload Check (DACO)
+        # 2. Hybrid Switchboard Compute Placement Planning
+        plan = None
+        if getattr(self, "switchboard", None):
+            task_tokens_est = max(10, len(user_content) // 3)
+            is_complex = len(user_content) > 300 or any(k in user_content.lower() for k in ["complex", "reasoning", "multihop", "synthesize"])
+            task = TaskRequirement(
+                task_id=f"req-{uuid.uuid4().hex[:8]}",
+                prompt=user_content,
+                estimated_tokens=task_tokens_est,
+                complexity_score=0.85 if is_complex else 0.35,
+                contains_sensitive_data=any(k in user_content.lower() for k in ["ssn", "secret", "private key", "password", "confidential"]),
+            )
+            approval_token = req_json.get("approval_token") or self.headers.get("x-spe-approval-token")
+            plan = self.switchboard.plan(task, approval_token=approval_token, force_cloud_model=model)
+
+            if plan.target == PlacementTarget.BLOCKED:
+                self.metrics.record_blocked()
+                err_resp = {
+                    "id": f"chatcmpl-spe-hybrid-block-{uuid.uuid4().hex[:8]}",
+                    "object": "chat.completion",
+                    "created": int(time.time()),
+                    "model": model,
+                    "choices": [{
+                        "index": 0,
+                        "message": {
+                            "role": "assistant",
+                            "content": f"SPE Hybrid Gate Refusal: {plan.justification}",
+                        },
+                        "finish_reason": "stop",
+                    }],
+                    "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
+                    "spe_decision": "BLOCKED_BY_HYBRID_GATE",
+                    "spe_reason": plan.justification,
+                }
+                self._send_json_response(200, err_resp, {
+                    "x-spe-blocked": "true",
+                    "x-spe-placement-target": plan.target.value,
+                    "x-spe-hybrid-policy": plan.policy.value,
+                    "x-spe-evidence": TelemetryEvidence.THEORETICAL_BOUND.value,
+                })
+                return
+
+        # 3. Deterministic AST Offload Check (DACO)
         math_expr = ""
         can_math = False
         math_match = re_math_search(user_content.strip())
@@ -359,6 +410,7 @@ class WireProxyHandler(http.server.BaseHTTPRequestHandler):
             if self.offloader.can_offload_math(candidate_expr) and any(op in candidate_expr for op in "+-*/%"):
                 can_math = True
                 math_expr = candidate_expr
+
 
         if can_math:
             try:
@@ -401,19 +453,20 @@ class WireProxyHandler(http.server.BaseHTTPRequestHandler):
                         "cost_source": cost_src.value,
                     },
                 }
-                self._send_json_response(
-                    200,
-                    resp_data,
-                    {
-                        "x-spe-offloaded": "true",
-                        "x-spe-technique": "DACO_AST_OFFLOAD",
-                        "x-spe-savings-usd": str(dollars_saved),
-                        "x-spe-evidence": TelemetryEvidence.THEORETICAL_BOUND.value,
-                        "x-spe-cost-source": cost_src.value,
-                        "x-spe-backend": "LOCAL_OFFLINE_MOCK",
-                    },
-                )
+                daco_headers = {
+                    "x-spe-offloaded": "true",
+                    "x-spe-technique": "DACO_AST_OFFLOAD",
+                    "x-spe-savings-usd": str(dollars_saved),
+                    "x-spe-evidence": TelemetryEvidence.THEORETICAL_BOUND.value,
+                    "x-spe-cost-source": cost_src.value,
+                    "x-spe-backend": "LOCAL_OFFLINE_MOCK",
+                }
+                if plan:
+                    daco_headers["x-spe-placement-target"] = plan.target.value
+                    daco_headers["x-spe-hybrid-policy"] = plan.policy.value
+                self._send_json_response(200, resp_data, daco_headers)
                 return
+
             except Exception:
                 pass
 
@@ -466,13 +519,22 @@ class WireProxyHandler(http.server.BaseHTTPRequestHandler):
                         "dollars_saved_usd": saved_usd,
                     }
 
-                    self._send_json_response(200, u_data, {
+                    upstream_headers = {
                         "x-spe-evidence": TelemetryEvidence.OBSERVED_USAGE.value,
                         "x-spe-backend": self.upstream_url,
                         "x-spe-cost-source": CostSource.BACKEND_REPORTED.value if "cost" in usage else CostSource.LOCAL_PINNED_PRICE_TABLE.value,
                         "x-spe-savings-usd": str(saved_usd),
-                    })
+                    }
+                    if plan:
+                        actual_spend = cost_usd if plan.target in (PlacementTarget.CLOUD_AUTHORIZED, PlacementTarget.HYBRID_SPLIT) else 0.0
+                        cert = self.switchboard.certify(plan, actual_spent_usd=actual_spend)
+                        upstream_headers["x-spe-placement-target"] = plan.target.value
+                        upstream_headers["x-spe-hybrid-policy"] = plan.policy.value
+                        upstream_headers["x-spe-placement-cert"] = cert.certificate_id
+                        upstream_headers["x-spe-budget-remaining-usd"] = str(cert.budget_remaining_usd)
+                    self._send_json_response(200, u_data, upstream_headers)
                     return
+
             except urllib.error.HTTPError as e:
                 err_content = e.read().decode("utf-8", errors="replace")
                 try:
@@ -545,18 +607,19 @@ class WireProxyHandler(http.server.BaseHTTPRequestHandler):
                 "cache_hit_rate": round(self.metrics.cache_hit_rate, 2),
             },
         }
-        self._send_json_response(
-            200,
-            resp_data,
-            {
-                "x-spe-aligned": "true",
-                "x-spe-cache-hit": "true",
-                "x-spe-backend": "LOCAL_OFFLINE_MOCK",
-                "x-spe-evidence": "SIMULATED_BACKEND",
-                "x-spe-cost-source": CostSource.LOCAL_PINNED_PRICE_TABLE.value,
-                "x-spe-savings-usd": str(dollars_saved),
-            },
-        )
+        fallback_headers = {
+            "x-spe-aligned": "true",
+            "x-spe-cache-hit": "true",
+            "x-spe-backend": "LOCAL_OFFLINE_MOCK",
+            "x-spe-evidence": "SIMULATED_BACKEND",
+            "x-spe-cost-source": CostSource.LOCAL_PINNED_PRICE_TABLE.value,
+            "x-spe-savings-usd": str(dollars_saved),
+        }
+        if plan:
+            fallback_headers["x-spe-placement-target"] = plan.target.value
+            fallback_headers["x-spe-hybrid-policy"] = plan.policy.value
+        self._send_json_response(200, resp_data, fallback_headers)
+
 
 
 def re_math_search(content: str) -> Optional[str]:
@@ -587,6 +650,9 @@ class WireProxyServer:
         api_key: Optional[str] = None,
         require_auth: bool = True,
         firewall: Optional[CapabilityFirewall] = None,
+        switchboard: Optional[HybridSwitchboard] = None,
+        hybrid_policy: HybridPolicy = HybridPolicy.STRICT_OFFLINE,
+        max_cloud_budget_usd: float = 0.0,
     ):
         _validate_local_host(host)
         _validate_local_endpoint(upstream_url)
@@ -600,6 +666,11 @@ class WireProxyServer:
         self.offloader = DeterministicOffloader()
         self.kv_aligner = PagedAttentionKVAligner(block_size=32)
         self.firewall = firewall or CapabilityFirewall(verify_signatures=False)
+        self.switchboard = switchboard or HybridSwitchboard(
+            cloud_gate=CloudGate(policy=hybrid_policy, max_budget_usd=max_cloud_budget_usd),
+            offloader=self.offloader,
+            local_upstream_url=self.upstream_url,
+        )
         self._server: Optional[ThreadedHTTPServer] = None
         self._thread: Optional[threading.Thread] = None
 
@@ -614,6 +685,7 @@ class WireProxyServer:
         handler_cls.server_api_key = self.api_key
         handler_cls.require_auth = self.require_auth
         handler_cls.server_port = self.port
+        handler_cls.switchboard = self.switchboard
 
         self._server = ThreadedHTTPServer((self.host, self.port), handler_cls)
         self._thread = threading.Thread(target=self._server.serve_forever, daemon=True)

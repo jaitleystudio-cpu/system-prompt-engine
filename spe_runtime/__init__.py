@@ -20,7 +20,28 @@ from spe_runtime.csi import (
     SemanticWorkingSet,
 )
 from spe_runtime.developer.repo_audit import AuditFinding, RepoAuditor, RepoAuditReport
+from spe_runtime.hybrid import (
+    ApprovalRequiredError,
+    BudgetEscrow,
+    BudgetEscrowReservation,
+    BudgetExceededError,
+    CloudGate,
+    DataDisclosureScope,
+    DeviceCapabilityProfile,
+    DeviceProfiler,
+    EgressProhibitedError,
+    ExecutionPlacementCertificate,
+    ExecutionPlacementPlan,
+    HybridPolicy,
+    HybridSwitchboard,
+    PlacementTarget,
+    ProviderNotAllowlistedError,
+    QualificationVerdict,
+    SensitiveDataLeakageError,
+    TaskRequirement,
+)
 from spe_runtime.runtime_gateway.wire_proxy import ProxyMetrics, WireProxyServer
+
 from spe_runtime.sdk import (
     AuthorityMode,
     SPEReceipt,
@@ -87,4 +108,23 @@ __all__ = [
     "RepoAuditor",
     "RepoAuditReport",
     "AuditFinding",
+    "PlacementTarget",
+    "HybridPolicy",
+    "DataDisclosureScope",
+    "QualificationVerdict",
+    "DeviceCapabilityProfile",
+    "TaskRequirement",
+    "BudgetEscrowReservation",
+    "ExecutionPlacementPlan",
+    "ExecutionPlacementCertificate",
+    "DeviceProfiler",
+    "BudgetEscrow",
+    "CloudGate",
+    "HybridSwitchboard",
+    "EgressProhibitedError",
+    "ApprovalRequiredError",
+    "BudgetExceededError",
+    "ProviderNotAllowlistedError",
+    "SensitiveDataLeakageError",
 ]
+

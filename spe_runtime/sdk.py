@@ -44,6 +44,13 @@ from spe_runtime.cost_engine.telemetry import (
 from spe_runtime.csi.models import LatticeState, SemanticRegister
 from spe_runtime.csi.mvcc_engine import EpistemicMVCCEngine
 from spe_runtime.csi.s_mmu import SemanticMMU
+from spe_runtime.hybrid.cloud_gate import CloudGate
+from spe_runtime.hybrid.models import (
+    HybridPolicy,
+    PlacementTarget,
+    TaskRequirement,
+)
+from spe_runtime.hybrid.switchboard import HybridSwitchboard
 from spe_runtime.runtime_gateway.firewall import CapabilityFirewall, sign_grant
 from spe_runtime.runtime_gateway.models import (
     CapabilityGrant,
@@ -79,6 +86,9 @@ class SPEReceipt:
     enterprise_qualified: bool = False
     evidence_class: str = TelemetryEvidence.CALIBRATED_ESTIMATE.value
     cost_source: str = CostSource.LOCAL_PINNED_PRICE_TABLE.value
+    placement_target: Optional[str] = None
+    placement_cert_id: Optional[str] = None
+    hybrid_policy: Optional[str] = None
 
 
 @dataclass
@@ -242,6 +252,10 @@ def protect(
     rollback_on_fail: bool = True,
     invariant_check: Optional[Callable[[Any], bool]] = None,
     return_result_wrapper: bool = False,
+    hybrid: bool = False,
+    hybrid_policy: Optional[Union[HybridPolicy, str]] = None,
+    max_cloud_budget_usd: float = 0.0,
+    switchboard: Optional[HybridSwitchboard] = None,
 ) -> Callable:
     """1-Line Drop-in Decorator to secure and optimize any sync or async function/agent.
     
@@ -251,6 +265,11 @@ def protect(
     """
     def decorator(fn: Callable) -> Callable:
         actual_intent = intent if intent != "auto" else (fn.__doc__ or fn.__name__)
+        sb = switchboard
+        if hybrid and sb is None:
+            pol = HybridPolicy(hybrid_policy) if isinstance(hybrid_policy, str) else (hybrid_policy or HybridPolicy.STRICT_OFFLINE)
+            sb = HybridSwitchboard(cloud_gate=CloudGate(policy=pol, max_budget_usd=max_cloud_budget_usd))
+
 
         def _pre_check(call_id: str, args: Tuple[Any, ...]) -> Tuple[float, Optional[SPEReceipt], Optional[Any]]:
             t0 = time.perf_counter()
@@ -274,14 +293,31 @@ def protect(
                             f"SPE Capability Guard Blocked Execution: {eval_res.reason} (Capability: {cap_enum.value})"
                         )
 
-            # 2. Deterministic AST Offload Check
             first_arg_str = str(args[0]) if args and isinstance(args[0], str) else ""
+
+            # 2. Hybrid Switchboard Planning Check
+            active_plan = None
+            if hybrid and sb:
+                task_tokens = max(10, len(first_arg_str) // 3)
+                task = TaskRequirement(
+                    task_id=f"req-{call_id}",
+                    prompt=first_arg_str or str(args),
+                    estimated_tokens=task_tokens,
+                    complexity_score=0.4 if len(first_arg_str) < 200 else 0.8,
+                )
+                active_plan = sb.plan(task)
+                if active_plan.target == PlacementTarget.BLOCKED:
+                    raise PermissionError(f"SPE Hybrid Gate Blocked Execution: {active_plan.justification}")
+
+            # 3. Deterministic AST Offload Check
             if enable_cost_optimization and first_arg_str:
                 offloader = DeterministicOffloader()
                 if offloader.can_offload_math(first_arg_str):
+
                     math_res = offloader.evaluate_math(first_arg_str)
                     latency_ms = (time.perf_counter() - t0) * 1000.0
                     is_prod = (_GLOBAL_AUTHORITY_MODE == AuthorityMode.PRODUCTION_EXTERNAL)
+                    cert_id = sb.certify(active_plan).certificate_id if (active_plan and sb) else None
                     receipt = SPEReceipt(
                         call_id=call_id,
                         intent=actual_intent,
@@ -297,10 +333,13 @@ def protect(
                         enterprise_qualified=is_prod,
                         evidence_class=TelemetryEvidence.THEORETICAL_BOUND.value,
                         cost_source=CostSource.LOCAL_PINNED_PRICE_TABLE.value,
+                        placement_target=active_plan.target.value if active_plan else None,
+                        placement_cert_id=cert_id,
+                        hybrid_policy=active_plan.policy.value if active_plan else None,
                     )
                     return t0, receipt, math_res
 
-            return t0, None, None
+            return t0, None, active_plan
 
         def _verify_authority() -> None:
             """Verifies external production authority or fails closed."""
@@ -315,6 +354,7 @@ def protect(
             tx_id: str,
             salvaged_count: int,
             invariants_ok: bool,
+            plan: Optional[Any] = None,
         ) -> SPEReceipt:
             latency_ms = (time.perf_counter() - t0) * 1000.0
             is_prod = (_GLOBAL_AUTHORITY_MODE == AuthorityMode.PRODUCTION_EXTERNAL)
@@ -322,8 +362,9 @@ def protect(
             # Honest cost calculation from pinned price table
             est_tokens = max(10, len(str(output)) // 4)
             cost_usd, cost_src, _ = compute_pinned_cost(est_tokens, est_tokens)
-            # Honest telemetry: 0.0% savings unless offloaded or KV-aligned cache hit observed
             savings_pct = 0.0
+
+            cert_id = sb.certify(plan).certificate_id if (plan and sb) else None
 
             return SPEReceipt(
                 call_id=call_id,
@@ -342,18 +383,23 @@ def protect(
                 enterprise_qualified=is_prod and invariants_ok,
                 evidence_class=TelemetryEvidence.CALIBRATED_ESTIMATE.value,
                 cost_source=cost_src.value,
+                placement_target=plan.target.value if plan else None,
+                placement_cert_id=cert_id,
+                hybrid_policy=plan.policy.value if plan else None,
             )
+
 
         if inspect.iscoroutinefunction(fn):
             @functools.wraps(fn)
             async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
                 call_id = f"call-{uuid.uuid4().hex[:8]}"
                 tx_id = f"tx-{call_id}"
-                t0, offload_receipt, offload_res = _pre_check(call_id, args)
+                t0, offload_receipt, plan_or_res = _pre_check(call_id, args)
                 if offload_receipt is not None:
                     if return_result_wrapper:
-                        return SPEResult(data=offload_res, receipt=offload_receipt)
-                    return offload_res
+                        return SPEResult(data=plan_or_res, receipt=offload_receipt)
+                    return plan_or_res
+                active_plan = plan_or_res
 
                 mmu = _get_or_create_mmu()
                 mvcc = _get_or_create_mvcc()
@@ -387,7 +433,8 @@ def protect(
                     mvcc.commit(tx)
 
                     # 5. EFFECT BARRIER
-                    receipt = _build_receipt(output, t0, call_id, tx_id, salvaged_count=1, invariants_ok=invariants_ok)
+                    receipt = _build_receipt(output, t0, call_id, tx_id, salvaged_count=1, invariants_ok=invariants_ok, plan=active_plan)
+
                     if isinstance(output, dict):
                         output["_spe_receipt"] = receipt
                     elif hasattr(output, "__dict__"):
@@ -420,11 +467,12 @@ def protect(
             def sync_wrapper(*args: Any, **kwargs: Any) -> Any:
                 call_id = f"call-{uuid.uuid4().hex[:8]}"
                 tx_id = f"tx-{call_id}"
-                t0, offload_receipt, offload_res = _pre_check(call_id, args)
+                t0, offload_receipt, plan_or_res = _pre_check(call_id, args)
                 if offload_receipt is not None:
                     if return_result_wrapper:
-                        return SPEResult(data=offload_res, receipt=offload_receipt)
-                    return offload_res
+                        return SPEResult(data=plan_or_res, receipt=offload_receipt)
+                    return plan_or_res
+                active_plan = plan_or_res
 
                 mmu = _get_or_create_mmu()
                 mvcc = _get_or_create_mvcc()
@@ -458,7 +506,8 @@ def protect(
                     mvcc.commit(tx)
 
                     # 5. EFFECT BARRIER
-                    receipt = _build_receipt(output, t0, call_id, tx_id, salvaged_count=1, invariants_ok=invariants_ok)
+                    receipt = _build_receipt(output, t0, call_id, tx_id, salvaged_count=1, invariants_ok=invariants_ok, plan=active_plan)
+
                     if isinstance(output, dict):
                         output["_spe_receipt"] = receipt
                     elif hasattr(output, "__dict__"):
