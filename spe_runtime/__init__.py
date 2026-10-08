@@ -13,6 +13,8 @@ from spe_runtime.csi import (
     SemanticTransaction,
     SemanticWorkingSet,
 )
+from spe_runtime.developer.repo_audit import AuditFinding, RepoAuditor, RepoAuditReport
+from spe_runtime.runtime_gateway.wire_proxy import ProxyMetrics, WireProxyServer
 from spe_runtime.sdk import (
     SPEReceipt,
     SPEResult,
@@ -46,4 +48,9 @@ __all__ = [
     "SemanticWorkingSet",
     "LatticeState",
     "PageFaultInterrupt",
+    "WireProxyServer",
+    "ProxyMetrics",
+    "RepoAuditor",
+    "RepoAuditReport",
+    "AuditFinding",
 ]

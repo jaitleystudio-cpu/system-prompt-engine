@@ -1,8 +1,8 @@
 """SPE Ω 1-Line Drop-In SDK: Instant developer adoption with zero friction.
 
 Allows developers to guard any LLM call, agent tool, or workflow with:
-    @spe.protect(intent="...", max_budget_usd=0.05, capabilities=["DATABASE_READ"])
-    def my_agent_action(prompt: str):
+    @spe.protect(salvage=True, rollback_on_fail=True)
+    async def run_finance_agent(query: str):
         ...
 
 Or:
@@ -12,6 +12,7 @@ Or:
 
 from __future__ import annotations
 
+import asyncio
 import functools
 import hashlib
 import inspect
@@ -26,6 +27,9 @@ from spe_runtime.cost_engine.cost_optimizer import QuantumCostOptimizer
 from spe_runtime.cost_engine.deterministic_offloader import DeterministicOffloader
 from spe_runtime.cost_engine.kv_aligner import PagedAttentionKVAligner
 from spe_runtime.cost_engine.models import TotalSavingsReport
+from spe_runtime.csi.models import LatticeState
+from spe_runtime.csi.mvcc_engine import EpistemicMVCCEngine
+from spe_runtime.csi.s_mmu import SemanticMMU
 from spe_runtime.runtime_gateway.firewall import CapabilityFirewall, sign_grant
 from spe_runtime.runtime_gateway.models import (
     CapabilityGrant,
@@ -49,6 +53,8 @@ class SPEReceipt:
     timestamp_iso: str
     latency_ms: float
     savings_ratio_percent: float
+    salvaged_registers_count: int = 0
+    tx_id: Optional[str] = None
 
 
 @dataclass
@@ -61,10 +67,12 @@ class SPEResult:
         return self.data[item]
 
 
-# Global shared firewall instance for SDK drop-in convenience
+# Global shared instances for SDK drop-in convenience
 _GLOBAL_FIREWALL: Optional[CapabilityFirewall] = None
 _GLOBAL_KEYPAIR: Optional[Tuple[bytes, bytes]] = None
 _GLOBAL_ISSUER: str = "spe-sdk-authority"
+_GLOBAL_MMU: Optional[SemanticMMU] = None
+_GLOBAL_MVCC: Optional[EpistemicMVCCEngine] = None
 
 
 def _get_or_create_firewall() -> CapabilityFirewall:
@@ -76,6 +84,22 @@ def _get_or_create_firewall() -> CapabilityFirewall:
         fw.register_trust_root(_GLOBAL_ISSUER, pk.hex())
         _GLOBAL_FIREWALL = fw
     return _GLOBAL_FIREWALL
+
+
+def _get_or_create_mmu() -> SemanticMMU:
+    global _GLOBAL_MMU
+    if _GLOBAL_MMU is None:
+        _GLOBAL_MMU = SemanticMMU()
+    return _GLOBAL_MMU
+
+
+def _get_or_create_mvcc() -> EpistemicMVCCEngine:
+    global _GLOBAL_MVCC
+    if _GLOBAL_MVCC is None:
+        mmu = _get_or_create_mmu()
+        _GLOBAL_MVCC = EpistemicMVCCEngine(mmu=mmu)
+    return _GLOBAL_MVCC
+
 
 
 def _get_keypair() -> Tuple[bytes, bytes]:
@@ -114,22 +138,24 @@ def grant_capability(
 
 
 def protect(
-    intent: str,
+    intent: str = "auto",
     max_budget_usd: float = 1.0,
     capabilities: Optional[List[Union[CapabilityType, str]]] = None,
     resource: str = "*",
     action: str = "execute",
     enable_cost_optimization: bool = True,
+    salvage: bool = True,
+    rollback_on_fail: bool = True,
     invariant_check: Optional[Callable[[Any], bool]] = None,
     return_result_wrapper: bool = False,
 ) -> Callable:
-    """1-Line Drop-in Decorator to secure and optimize any function or agent tool."""
+    """1-Line Drop-in Decorator to secure and optimize any sync or async function/agent."""
     def decorator(fn: Callable) -> Callable:
-        @functools.wraps(fn)
-        def wrapper(*args: Any, **kwargs: Any) -> Any:
+        actual_intent = intent if intent != "auto" else (fn.__doc__ or fn.__name__)
+
+        def _pre_check(call_id: str, args: Tuple[Any, ...]) -> Tuple[float, Optional[SPEReceipt], Optional[Any]]:
             t0 = time.perf_counter()
             fw = _get_or_create_firewall()
-            call_id = f"call-{uuid.uuid4().hex[:8]}"
 
             # 1. Capability Firewall Verification
             if capabilities:
@@ -150,7 +176,6 @@ def protect(
                         )
 
             # 2. Deterministic AST Offload Check
-            offloaded = False
             first_arg_str = str(args[0]) if args and isinstance(args[0], str) else ""
             if enable_cost_optimization and first_arg_str:
                 offloader = DeterministicOffloader()
@@ -159,7 +184,7 @@ def protect(
                     latency_ms = (time.perf_counter() - t0) * 1000.0
                     receipt = SPEReceipt(
                         call_id=call_id,
-                        intent=intent,
+                        intent=actual_intent,
                         decision="OFFLOADED_ZERO_COST",
                         cost_usd=0.0,
                         deterministic_offloaded=True,
@@ -169,26 +194,29 @@ def protect(
                         latency_ms=round(latency_ms, 2),
                         savings_ratio_percent=100.0,
                     )
-                    if return_result_wrapper:
-                        return SPEResult(data=math_res, receipt=receipt)
-                    return math_res
+                    return t0, receipt, math_res
 
-            # 3. Call Wrapped Function
-            output = fn(*args, **kwargs)
+            return t0, None, None
 
-            # 4. Invariant Verification
+        def _post_check(
+            output: Any,
+            t0: float,
+            call_id: str,
+            tx_id: str,
+            salvaged_count: int,
+        ) -> Tuple[SPEReceipt, Any]:
             invariants_ok = True
             if invariant_check:
                 invariants_ok = invariant_check(output)
                 if not invariants_ok:
                     raise ValueError(
-                        f"SPE Behavioral Invariant Guard Violated: Output failed invariant check for intent '{intent}'"
+                        f"SPE Behavioral Invariant Guard Violated: Output failed invariant check for intent '{actual_intent}'"
                     )
 
             latency_ms = (time.perf_counter() - t0) * 1000.0
             receipt = SPEReceipt(
                 call_id=call_id,
-                intent=intent,
+                intent=actual_intent,
                 decision="ALLOWED",
                 cost_usd=max_budget_usd * 0.15 if enable_cost_optimization else max_budget_usd,
                 deterministic_offloaded=False,
@@ -197,9 +225,10 @@ def protect(
                 timestamp_iso=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                 latency_ms=round(latency_ms, 2),
                 savings_ratio_percent=85.0 if enable_cost_optimization else 0.0,
+                salvaged_registers_count=salvaged_count,
+                tx_id=tx_id,
             )
 
-            # Attach receipt to output if dict or object allows
             if isinstance(output, dict):
                 output["_spe_receipt"] = receipt
             elif hasattr(output, "__dict__"):
@@ -208,20 +237,103 @@ def protect(
                 except Exception:
                     pass
 
-            if return_result_wrapper:
-                return SPEResult(data=output, receipt=receipt)
-            return output
+            return receipt, output
 
-        return wrapper
+        if inspect.iscoroutinefunction(fn):
+            @functools.wraps(fn)
+            async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
+                call_id = f"call-{uuid.uuid4().hex[:8]}"
+                tx_id = f"tx-{call_id}"
+                t0, offload_receipt, offload_res = _pre_check(call_id, args)
+                if offload_receipt is not None:
+                    if return_result_wrapper:
+                        return SPEResult(data=offload_res, receipt=offload_receipt)
+                    return offload_res
+
+                mmu = _get_or_create_mmu()
+                mvcc = _get_or_create_mvcc()
+                tx = mvcc.begin_transaction(tx_id=tx_id)
+                input_reg = mmu.allocate_register(
+                    reg_id=f"in_{call_id}",
+                    term=str(args) + str(kwargs),
+                    provenance={"producer": actual_intent},
+                )
+                mvcc.read(tx, input_reg.reg_id)
+
+                try:
+                    output = await fn(*args, **kwargs)
+                    mvcc.write(tx, f"out_{call_id}", term=str(output), dependencies=[input_reg.reg_id])
+                    mvcc.commit(tx)
+                    receipt, final_out = _post_check(output, t0, call_id, tx_id, salvaged_count=1)
+                    if return_result_wrapper:
+                        return SPEResult(data=final_out, receipt=receipt)
+                    return final_out
+                except Exception as e:
+                    if rollback_on_fail:
+                        mvcc.abort(tx, reason=str(e))
+                    if salvage:
+                        surviving = mmu.page_working_set([input_reg.reg_id]).registers
+                        try:
+                            setattr(e, "_spe_salvaged_registers", surviving)
+                        except Exception:
+                            pass
+                    raise
+
+            return async_wrapper
+
+        else:
+            @functools.wraps(fn)
+            def sync_wrapper(*args: Any, **kwargs: Any) -> Any:
+                call_id = f"call-{uuid.uuid4().hex[:8]}"
+                tx_id = f"tx-{call_id}"
+                t0, offload_receipt, offload_res = _pre_check(call_id, args)
+                if offload_receipt is not None:
+                    if return_result_wrapper:
+                        return SPEResult(data=offload_res, receipt=offload_receipt)
+                    return offload_res
+
+                mmu = _get_or_create_mmu()
+                mvcc = _get_or_create_mvcc()
+                tx = mvcc.begin_transaction(tx_id=tx_id)
+                input_reg = mmu.allocate_register(
+                    reg_id=f"in_{call_id}",
+                    term=str(args) + str(kwargs),
+                    provenance={"producer": actual_intent},
+                )
+                mvcc.read(tx, input_reg.reg_id)
+
+                try:
+                    output = fn(*args, **kwargs)
+                    mvcc.write(tx, f"out_{call_id}", term=str(output), dependencies=[input_reg.reg_id])
+                    mvcc.commit(tx)
+                    receipt, final_out = _post_check(output, t0, call_id, tx_id, salvaged_count=1)
+                    if return_result_wrapper:
+                        return SPEResult(data=final_out, receipt=receipt)
+                    return final_out
+                except Exception as e:
+                    if rollback_on_fail:
+                        mvcc.abort(tx, reason=str(e))
+                    if salvage:
+                        surviving = mmu.page_working_set([input_reg.reg_id]).registers
+                        try:
+                            setattr(e, "_spe_salvaged_registers", surviving)
+                        except Exception:
+                            pass
+                    raise
+
+            return sync_wrapper
+
     return decorator
 
 
 def wrap(
     target: Any,
-    intent: str,
+    intent: str = "auto",
     max_budget_usd: float = 1.0,
     capabilities: Optional[List[Union[CapabilityType, str]]] = None,
     invariant_check: Optional[Callable[[Any], bool]] = None,
+    salvage: bool = True,
+    rollback_on_fail: bool = True,
 ) -> Any:
     """Wraps a callable or client object with SPE assurance."""
     if callable(target):
@@ -230,6 +342,8 @@ def wrap(
             max_budget_usd=max_budget_usd,
             capabilities=capabilities,
             invariant_check=invariant_check,
+            salvage=salvage,
+            rollback_on_fail=rollback_on_fail,
             return_result_wrapper=True,
         )(target)
     return target
@@ -238,10 +352,12 @@ def wrap(
 def execute_guarded(
     fn: Callable,
     *args: Any,
-    intent: str,
+    intent: str = "auto",
     max_budget_usd: float = 1.0,
     capabilities: Optional[List[Union[CapabilityType, str]]] = None,
     invariant_check: Optional[Callable[[Any], bool]] = None,
+    salvage: bool = True,
+    rollback_on_fail: bool = True,
     **kwargs: Any,
 ) -> SPEResult:
     """One-shot direct guarded execution with returned SPEResult."""
@@ -250,6 +366,8 @@ def execute_guarded(
         max_budget_usd=max_budget_usd,
         capabilities=capabilities,
         invariant_check=invariant_check,
+        salvage=salvage,
+        rollback_on_fail=rollback_on_fail,
         return_result_wrapper=True,
     )(fn)
     return guarded_fn(*args, **kwargs)
