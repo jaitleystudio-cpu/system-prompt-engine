@@ -83,6 +83,7 @@
     "test:evolving-inventory": "node --experimental-strip-types scripts/test-evolving-inventory.mjs",
     "test:ai-refiner": "node --experimental-strip-types scripts/test-ai-refiner.mjs",
     "test:spe-cli": "node --experimental-strip-types bin/spe.mjs --version",
+    "test:cli-battery": "node --experimental-strip-types scripts/test-spe-cli-all-commands.mjs",
     "benchmark:golden-path": "node --experimental-strip-types scripts/benchmark-golden-path-evidence.mjs"
   },
   "bin": {
