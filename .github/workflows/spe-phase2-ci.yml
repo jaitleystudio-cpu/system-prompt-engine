@@ -47,7 +47,7 @@ jobs:
           node --input-type=module -e '
             import { readFileSync } from "fs";
             import { createHash } from "crypto";
-            const buf = readFileSync("apps/web/src/wasm/spe_wasm_engine_bg.wasm");
+            const buf = readFileSync("apps/web/public/spe_wasm.wasm");
             const hash = createHash("sha256").update(buf).digest("hex");
             const expected = "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d";
             if (hash !== expected) {
