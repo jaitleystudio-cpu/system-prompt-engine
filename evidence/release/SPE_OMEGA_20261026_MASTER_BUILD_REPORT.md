@@ -1,7 +1,7 @@
 # SPE Ω & GILDEN — Category-Monarch Master Build Report
 **Target Release:** 2026-10-26 22:10 IST | **RC Freeze:** 2026-10-24  
-**Authoritative Lineage:** `integration/spe-2026-10-26` | **Commit SHA:** `5a2cdce`  
-**WASM Hash:** `ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d`  
+**Authoritative Lineage:** `integration/spe-2026-10-26` | **Commit SHA:** `5ee1a9b`  
+**Release Candidate Branch:** `release/2026-10-26-rc1` | **WASM Hash:** `ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d`  
 
 ---
 
@@ -59,7 +59,8 @@ The source custody audit was performed on October 8, 2026, and frozen into [`evi
 
 * **Origin Main SHA:** `3abe3df` (clean base)
 * **Predecessor Milestones:** `427f32f` (paired benchmarks), `4bdd71a` (enterprise audit), `df22033` (all 10 uncovered trends), `1d1df19` (12 moat engines implementation)
-* **Authoritative Integration Lineage:** `integration/spe-2026-10-26` at HEAD `5a2cdce`
+* **Authoritative Integration Lineage:** `integration/spe-2026-10-26` at HEAD `5ee1a9b`
+* **Release Candidate Branch:** `release/2026-10-26-rc1` (pinned at `5ee1a9b`)
 * **Donor Policy Enforced:** Oversized PR #125 (372 commits, 1,389 files) was strictly classified as donor-only. 21 accidentally staged unreviewed files were purged, restoring strict copy governance (`4,147 candidate strings, 0 unreviewed copy, 0 violations`).
 * **Canonical WebAssembly Engine:** Pinned `1,339,691` byte binary with zero external imports and verified SHA-256 hash:
   `ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d`
@@ -251,8 +252,8 @@ Every release-relevant integration test has been executed cleanly on the single 
 
 ## 10. Release Candidate Freeze & Go/Hold Criteria
 
-* **Release Candidate Branch:** `integration/spe-2026-10-26`
-* **Candidate Commit:** HEAD of `integration/spe-2026-10-26`
+* **Release Candidate Branch:** `release/2026-10-26-rc1` (derived from `integration/spe-2026-10-26`)
+* **Candidate Commit:** `5ee1a9b` (SHA-256 integrity digest verified)
 * **Freeze Date:** October 24, 2026
 * **Public Target Launch:** October 26, 2026, 22:10 IST
 * **Egress Policy:** Strict air-gapped zero-network enforcement (`connect-src 'self'`). Zero prompt or PII data transmitted off device.
