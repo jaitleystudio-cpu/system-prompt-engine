@@ -13873,6 +13873,12 @@
       "text": "Requested URL:"
     },
     {
+      "id": "0da13d8430776659f8a7",
+      "file": "apps/web/src/media/urlIngest.ts",
+      "depth": "PRODUCT",
+      "text": "SPE blocked this page because its network destination did not match the address SPE validated. No page content was loaded. Upload the page HTML or a screenshot instead."
+    },
+    {
       "id": "0dcf2085313cbeff0bd6",
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",

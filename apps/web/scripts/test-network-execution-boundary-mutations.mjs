@@ -39,6 +39,10 @@ const MUTANTS = [
   ["remove-ip-literal-pinning-enforcement", "      if (\n        policy === DestinationPolicies.REQUIRE_PINNED_RESOLUTION &&\n        !transport.pinsResolvedAddress\n      ) {", "      if (false) {"],
   ["mismatch-classified-unverifiable", '  return reason === "DESTINATION_BINDING_UNVERIFIABLE";', '  return reason === "DESTINATION_BINDING_UNVERIFIABLE" || reason === "DESTINATION_BINDING_MISMATCH";'],
   ["ingest-maps-mismatch-to-reference-only", '  if (isDestinationBindingMismatch(boundaryReason)) {\n    return {\n      status: "invalid_url",', '  if (isDestinationBindingMismatch(boundaryReason)) {\n    return {\n      reason: "destination_binding_unverifiable",\n      status: "url_reference_only",', "ingest"],
+  // R9 successor: owner-approved destination-mismatch UX copy.
+  ["ingest-mismatch-copy-reverted", '        "SPE blocked this page because its network destination did not match the address SPE validated. No page content was loaded. Upload the page HTML or a screenshot instead.",', '        "Enter a full http(s) URL.",', "ingest"],
+  ["ingest-mismatch-copy-exposes-machine-code", '        "SPE blocked this page because its network destination did not match the address SPE validated. No page content was loaded. Upload the page HTML or a screenshot instead.",', '        `SPE blocked this page (${boundaryReason}). No page content was loaded.`,', "ingest"],
+  ["ingest-mismatch-copy-applied-to-all-hard-refusals", '    refusal: boundaryReason,\n    message: "Enter a full http(s) URL.",', '    refusal: boundaryReason,\n    message: "SPE blocked this page because its network destination did not match the address SPE validated. No page content was loaded. Upload the page HTML or a screenshot instead.",', "ingest"],
   ["ingest-drop-browser-same-origin-only", "      sameOriginOnly: opts.resolveHost ? undefined : { origin: originOf(policy.pageOrigin) },\n", "", "ingest"],
 ];
 

@@ -490,7 +490,8 @@ export function guardRefusalToResult(
       url,
       finalUrl: refusedUrl,
       refusal: boundaryReason,
-      message: "Enter a full http(s) URL.",
+      message:
+        "SPE blocked this page because its network destination did not match the address SPE validated. No page content was loaded. Upload the page HTML or a screenshot instead.",
       fallbacks: FALLBACKS,
     };
   }
