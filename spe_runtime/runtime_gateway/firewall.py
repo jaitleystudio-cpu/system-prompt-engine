@@ -6,6 +6,7 @@ import fnmatch
 import hashlib
 import json
 import os
+import threading
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -46,6 +47,7 @@ class CapabilityFirewall:
         trusted_roots: dict[str, str] | None = None,
         verify_signatures: bool = True,
     ) -> None:
+        self._lock = threading.RLock()
         self.storage_dir = Path(storage_dir) if storage_dir else None
         self.verify_signatures = verify_signatures
         self.trusted_roots: dict[str, str] = dict(trusted_roots or {})
@@ -61,7 +63,8 @@ class CapabilityFirewall:
 
     def register_trust_root(self, issuer: str, public_key_hex: str) -> None:
         """Registers an authorized Ed25519 trust root for a grant issuer."""
-        self.trusted_roots[issuer] = public_key_hex
+        with self._lock:
+            self.trusted_roots[issuer] = public_key_hex
 
     def _load_durable_state(self) -> None:
         if not self.storage_dir:
@@ -138,165 +141,171 @@ class CapabilityFirewall:
             os.fsync(f.fileno())
 
     def install_grant(self, grant: CapabilityGrant, installer_id: str | None = None) -> None:
-        # Check revocation
-        if grant.grant_id in self.revoked_grant_ids:
-            raise ValueError(f"Grant '{grant.grant_id}' has been revoked and cannot be reinstalled.")
+        with self._lock:
+            # Check revocation
+            if grant.grant_id in self.revoked_grant_ids:
+                raise ValueError(f"Grant '{grant.grant_id}' has been revoked and cannot be reinstalled.")
 
-        # Prevent replay attacks on grant installation
-        if grant.nonce in self.used_grant_nonces:
-            raise ValueError(f"Replay attack detected: grant nonce '{grant.nonce}' already consumed.")
+            # Prevent replay attacks on grant installation
+            if grant.nonce in self.used_grant_nonces:
+                raise ValueError(f"Replay attack detected: grant nonce '{grant.nonce}' already consumed.")
 
-        # Prevent self-grant attacks by agents
-        if installer_id and (installer_id == grant.issuer or installer_id == grant.approval_identity):
-            raise PermissionError("Self-granting capability authority is strictly prohibited.")
+            # Prevent self-grant attacks by agents
+            if installer_id and (installer_id == grant.issuer or installer_id == grant.approval_identity):
+                raise PermissionError("Self-granting capability authority is strictly prohibited.")
 
-        # Cryptographic Ed25519 signature verification against authorized trust root
-        if self.verify_signatures:
-            if not self.trusted_roots:
-                raise PermissionError("No authorized trust roots registered in CapabilityFirewall.")
-            if grant.issuer not in self.trusted_roots:
-                raise PermissionError(f"Untrusted grant issuer '{grant.issuer}': not in authorized trust roots.")
+            # Cryptographic Ed25519 signature verification against authorized trust root
+            if self.verify_signatures:
+                if not self.trusted_roots:
+                    raise PermissionError("No authorized trust roots registered in CapabilityFirewall.")
+                if grant.issuer not in self.trusted_roots:
+                    raise PermissionError(f"Untrusted grant issuer '{grant.issuer}': not in authorized trust roots.")
 
-            pk_hex = self.trusted_roots[grant.issuer]
-            try:
-                pk_bytes = bytes.fromhex(pk_hex)
-                sig_bytes = bytes.fromhex(grant.signature)
-                payload = compute_grant_payload(grant)
-                digest = hashlib.sha256(payload).hexdigest()
-                if not ed25519_verify(pk_bytes, digest.encode("utf-8"), sig_bytes):
-                    raise ValueError("Cryptographic signature verification failed: invalid grant signature.")
-            except Exception as e:
-                if isinstance(e, ValueError):
-                    raise
-                raise ValueError(f"Cryptographic signature verification failed: {str(e)}") from e
+                pk_hex = self.trusted_roots[grant.issuer]
+                try:
+                    pk_bytes = bytes.fromhex(pk_hex)
+                    sig_bytes = bytes.fromhex(grant.signature)
+                    payload = compute_grant_payload(grant)
+                    digest = hashlib.sha256(payload).hexdigest()
+                    if not ed25519_verify(pk_bytes, digest.encode("utf-8"), sig_bytes):
+                        raise ValueError("Cryptographic signature verification failed: invalid grant signature.")
+                except Exception as e:
+                    if isinstance(e, ValueError):
+                        raise
+                    raise ValueError(f"Cryptographic signature verification failed: {str(e)}") from e
 
-        self.used_grant_nonces.add(grant.nonce)
-        self._persist_nonce("grant", grant.nonce)
-        self.grants[grant.grant_id] = grant
+            self.used_grant_nonces.add(grant.nonce)
+            self._persist_nonce("grant", grant.nonce)
+            self.grants[grant.grant_id] = grant
 
     def revoke_grant(self, grant_id: str) -> bool:
-        removed = self.grants.pop(grant_id, None) is not None
-        self.revoked_grant_ids.add(grant_id)
-        self._persist_revocation(grant_id)
-        return removed
+        with self._lock:
+            removed = self.grants.pop(grant_id, None) is not None
+            self.revoked_grant_ids.add(grant_id)
+            self._persist_revocation(grant_id)
+            return removed
 
     def evaluate_request(self, req: CapabilityRequest) -> PolicyEvaluationResult:
         """Evaluates capability requests strictly independent of LLM content.
         Model output alone can NEVER grant itself authority.
         """
-        # Request nonce replay defense
-        if req.nonce:
-            if req.nonce in self.used_request_nonces:
+        with self._lock:
+            # Request nonce replay defense
+            if req.nonce:
+                if req.nonce in self.used_request_nonces:
+                    return PolicyEvaluationResult(
+                        decision=Decision.DENY,
+                        reason=f"Replay attack detected: request nonce '{req.nonce}' already consumed.",
+                    )
+                self.used_request_nonces.add(req.nonce)
+                self._persist_nonce("request", req.nonce)
+
+            now = datetime.now(timezone.utc)
+
+            # Find matching grants
+            matching_grants: list[CapabilityGrant] = []
+            for g in self.grants.values():
+                if g.capability != req.capability:
+                    continue
+                # Check expiration with timezone-aware datetime parsing
+                if g.expiration_iso:
+                    exp_str = g.expiration_iso.strip()
+                    if exp_str.endswith("Z"):
+                        exp_str = exp_str[:-1] + "+00:00"
+                    try:
+                        exp_dt = datetime.fromisoformat(exp_str)
+                        if exp_dt.tzinfo is None:
+                            exp_dt = exp_dt.replace(tzinfo=timezone.utc)
+                        if exp_dt < now:
+                            continue
+                    except Exception:
+                        # Malformed expiration fails closed
+                        continue
+
+                # Self-grant defense: agent cannot evaluate against a grant where agent is issuer or approver
+                if req.agent_id and (req.agent_id == g.issuer or req.agent_id == g.approval_identity):
+                    continue
+                # Check resource scope pattern
+                if not fnmatch.fnmatch(req.target_resource, g.resource_scope):
+                    continue
+                # Check action scope
+                if g.action_scope != "*" and req.action not in g.action_scope.split(","):
+                    continue
+                matching_grants.append(g)
+
+            if not matching_grants:
                 return PolicyEvaluationResult(
                     decision=Decision.DENY,
-                    reason=f"Replay attack detected: request nonce '{req.nonce}' already consumed.",
+                    reason=f"No active CapabilityGrant found for {req.capability.value} on resource '{req.target_resource}'.",
                 )
-            self.used_request_nonces.add(req.nonce)
-            self._persist_nonce("request", req.nonce)
 
-        now = datetime.now(timezone.utc)
+            # Evaluate matching grants
+            for g in matching_grants:
+                # 1. Check budget sufficiency
+                if g.amount_budget is not None and g.remaining_budget is not None:
+                    if g.remaining_budget < req.amount:
+                        return PolicyEvaluationResult(
+                            decision=Decision.REQUIRES_APPROVAL,
+                            reason=f"Operation amount {req.amount} exceeds remaining grant budget {g.remaining_budget}.",
+                            matched_grant_id=g.grant_id,
+                            remaining_budget=g.remaining_budget,
+                        )
 
-        # Find matching grants
-        matching_grants: list[CapabilityGrant] = []
-        for g in self.grants.values():
-            if g.capability != req.capability:
-                continue
-            # Check expiration with timezone-aware datetime parsing
-            if g.expiration_iso:
-                exp_str = g.expiration_iso.strip()
-                if exp_str.endswith("Z"):
-                    exp_str = exp_str[:-1] + "+00:00"
-                try:
-                    exp_dt = datetime.fromisoformat(exp_str)
-                    if exp_dt.tzinfo is None:
-                        exp_dt = exp_dt.replace(tzinfo=timezone.utc)
-                    if exp_dt < now:
-                        continue
-                except Exception:
-                    # Malformed expiration fails closed
-                    continue
+                # 2. High risk capabilities require explicit human approval unless specifically permitted
+                # IMPORTANT: High risk check occurs BEFORE debiting budget!
+                if req.capability in (CapabilityType.PRODUCTION_CHANGE, CapabilityType.DEPLOY, CapabilityType.PAYMENT):
+                    if "auto_approved" not in g.action_scope:
+                        return PolicyEvaluationResult(
+                            decision=Decision.REQUIRES_APPROVAL,
+                            reason=f"High-impact capability {req.capability.value} requires human approval.",
+                            matched_grant_id=g.grant_id,
+                            remaining_budget=g.remaining_budget,
+                        )
 
-            # Self-grant defense: agent cannot evaluate against a grant where agent is issuer or approver
-            if req.agent_id and (req.agent_id == g.issuer or req.agent_id == g.approval_identity):
-                continue
-            # Check resource scope pattern
-            if not fnmatch.fnmatch(req.target_resource, g.resource_scope):
-                continue
-            # Check action scope
-            if g.action_scope != "*" and req.action not in g.action_scope.split(","):
-                continue
-            matching_grants.append(g)
+                # 3. Only decrement budget on ALLOW
+                if g.amount_budget is not None and g.remaining_budget is not None:
+                    g.remaining_budget -= req.amount
 
-        if not matching_grants:
-            return PolicyEvaluationResult(
-                decision=Decision.DENY,
-                reason=f"No active CapabilityGrant found for {req.capability.value} on resource '{req.target_resource}'.",
-            )
+                return PolicyEvaluationResult(
+                    decision=Decision.ALLOW,
+                    reason=f"Authorized under grant {g.grant_id} by issuer {g.issuer}.",
+                    matched_grant_id=g.grant_id,
+                    remaining_budget=g.remaining_budget,
+                )
 
-        # Evaluate matching grants
-        for g in matching_grants:
-            # 1. Check budget sufficiency
-            if g.amount_budget is not None and g.remaining_budget is not None:
-                if g.remaining_budget < req.amount:
-                    return PolicyEvaluationResult(
-                        decision=Decision.REQUIRES_APPROVAL,
-                        reason=f"Operation amount {req.amount} exceeds remaining grant budget {g.remaining_budget}.",
-                        matched_grant_id=g.grant_id,
-                        remaining_budget=g.remaining_budget,
-                    )
-
-            # 2. High risk capabilities require explicit human approval unless specifically permitted
-            # IMPORTANT: High risk check occurs BEFORE debiting budget!
-            if req.capability in (CapabilityType.PRODUCTION_CHANGE, CapabilityType.DEPLOY, CapabilityType.PAYMENT):
-                if "auto_approved" not in g.action_scope:
-                    return PolicyEvaluationResult(
-                        decision=Decision.REQUIRES_APPROVAL,
-                        reason=f"High-impact capability {req.capability.value} requires human approval.",
-                        matched_grant_id=g.grant_id,
-                        remaining_budget=g.remaining_budget,
-                    )
-
-            # 3. Only decrement budget on ALLOW
-            if g.amount_budget is not None and g.remaining_budget is not None:
-                g.remaining_budget -= req.amount
-
-            return PolicyEvaluationResult(
-                decision=Decision.ALLOW,
-                reason=f"Authorized under grant {g.grant_id} by issuer {g.issuer}.",
-                matched_grant_id=g.grant_id,
-                remaining_budget=g.remaining_budget,
-            )
-
-        return PolicyEvaluationResult(decision=Decision.DENY, reason="Capability grant rejected.")
+            return PolicyEvaluationResult(decision=Decision.DENY, reason="Capability grant rejected.")
 
     def reserve_budget(self, grant_id: str, amount: float, reservation_id: str) -> bool:
         """Reserves budget in a 2-phase commit model without final debit."""
-        g = self.grants.get(grant_id)
-        if not g or g.remaining_budget is None:
-            return False
-        if g.remaining_budget < amount:
-            return False
-        g.remaining_budget -= amount
-        self.active_reservations[reservation_id] = (grant_id, amount)
-        self._persist_reservation(reservation_id, grant_id, amount, "RESERVED")
-        return True
+        with self._lock:
+            g = self.grants.get(grant_id)
+            if not g or g.remaining_budget is None:
+                return False
+            if g.remaining_budget < amount:
+                return False
+            g.remaining_budget -= amount
+            self.active_reservations[reservation_id] = (grant_id, amount)
+            self._persist_reservation(reservation_id, grant_id, amount, "RESERVED")
+            return True
 
     def commit_budget(self, reservation_id: str) -> bool:
         """Commits previously reserved budget upon confirmed execution."""
-        if reservation_id not in self.active_reservations:
-            return False
-        grant_id, amount = self.active_reservations.pop(reservation_id)
-        self._persist_reservation(reservation_id, grant_id, amount, "COMMITTED")
-        return True
+        with self._lock:
+            if reservation_id not in self.active_reservations:
+                return False
+            grant_id, amount = self.active_reservations.pop(reservation_id)
+            self._persist_reservation(reservation_id, grant_id, amount, "COMMITTED")
+            return True
 
     def rollback_budget(self, reservation_id: str) -> bool:
         """Rolls back reserved budget if execution fails or approval is rejected."""
-        if reservation_id not in self.active_reservations:
-            return False
-        grant_id, amount = self.active_reservations.pop(reservation_id)
-        g = self.grants.get(grant_id)
-        if g and g.remaining_budget is not None:
-            g.remaining_budget += amount
-        self._persist_reservation(reservation_id, grant_id, amount, "ROLLED_BACK")
-        return True
+        with self._lock:
+            if reservation_id not in self.active_reservations:
+                return False
+            grant_id, amount = self.active_reservations.pop(reservation_id)
+            g = self.grants.get(grant_id)
+            if g and g.remaining_budget is not None:
+                g.remaining_budget += amount
+            self._persist_reservation(reservation_id, grant_id, amount, "ROLLED_BACK")
+            return True
 

@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import threading
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -94,6 +95,7 @@ class GildenStore:
     GENESIS_HASH = "0000000000000000000000000000000000000000000000000000000000000000"
 
     def __init__(self, storage_dir: Path | str = ".spe/gilden") -> None:
+        self._lock = threading.RLock()
         self.storage_dir = Path(storage_dir)
         self.storage_dir.mkdir(parents=True, exist_ok=True)
         self.ledger_file = self.storage_dir / "gilden_ledger.jsonl"
@@ -104,16 +106,19 @@ class GildenStore:
         self._load()
 
     def record_job(self, job: GildenJob) -> None:
-        self._jobs[job.job_id] = job
-        self._idempotency_map[job.idempotency_key] = job.job_id
-        self._append(job)
+        with self._lock:
+            self._jobs[job.job_id] = job
+            self._idempotency_map[job.idempotency_key] = job.job_id
+            self._append(job)
 
     def get_job(self, job_id: str) -> GildenJob | None:
-        return self._jobs.get(job_id)
+        with self._lock:
+            return self._jobs.get(job_id)
 
     def find_by_idempotency_key(self, idempotency_key: str) -> GildenJob | None:
-        job_id = self._idempotency_map.get(idempotency_key)
-        return self._jobs.get(job_id) if job_id else None
+        with self._lock:
+            job_id = self._idempotency_map.get(idempotency_key)
+            return self._jobs.get(job_id) if job_id else None
 
     def _append(self, job: GildenJob) -> None:
         self._sequence_number += 1
@@ -170,20 +175,23 @@ class BudgetGuard:
     """Guards against budget exhaustion."""
 
     def __init__(self, max_budget_usd: float) -> None:
+        self._lock = threading.RLock()
         self.max_budget_usd = max_budget_usd
         self.consumed_budget_usd: float = 0.0
 
     @property
     def remaining_budget_usd(self) -> float:
-        return max(0.0, self.max_budget_usd - self.consumed_budget_usd)
+        with self._lock:
+            return max(0.0, self.max_budget_usd - self.consumed_budget_usd)
 
     def allocate(self, amount: float) -> None:
-        if self.consumed_budget_usd + amount > self.max_budget_usd:
-            raise BudgetExhaustionError(
-                f"Requested allocation ${amount:.2f} exceeds remaining budget ${self.remaining_budget_usd:.2f} "
-                f"(max: ${self.max_budget_usd:.2f}, consumed: ${self.consumed_budget_usd:.2f})."
-            )
-        self.consumed_budget_usd += amount
+        with self._lock:
+            if self.consumed_budget_usd + amount > self.max_budget_usd:
+                raise BudgetExhaustionError(
+                    f"Requested allocation ${amount:.2f} exceeds remaining budget ${self.remaining_budget_usd:.2f} "
+                    f"(max: ${self.max_budget_usd:.2f}, consumed: ${self.consumed_budget_usd:.2f})."
+                )
+            self.consumed_budget_usd += amount
 
 
 class GildenKernel:
@@ -198,6 +206,7 @@ class GildenKernel:
         public_key: bytes | None = None,
         key_id: str = "spe-gilden-authority:ed25519:default",
     ) -> None:
+        self._lock = threading.RLock()
         self.store = GildenStore(storage_dir)
         self.budget_guard = BudgetGuard(max_budget_usd)
         self.authority_grant_id = authority_grant_id
@@ -217,81 +226,82 @@ class GildenKernel:
         expected_effect: dict[str, Any],
         actor_fn: Any,
     ) -> GildenJob:
-        # 1. Authority validation
-        if not self.authority_grant_id or "self" in self.authority_grant_id.lower():
-            raise UnauthorizedActionError("Gilden cannot execute actions without external authority grant.")
+        with self._lock:
+            # 1. Authority validation
+            if not self.authority_grant_id or "self" in self.authority_grant_id.lower():
+                raise UnauthorizedActionError("Gilden cannot execute actions without external authority grant.")
 
-        # 2. Duplicate job idempotency check
-        existing = self.store.find_by_idempotency_key(idempotency_key)
-        if existing:
-            return existing
+            # 2. Duplicate job idempotency check
+            existing = self.store.find_by_idempotency_key(idempotency_key)
+            if existing:
+                return existing
 
-        # 3. Budget guard check
-        self.budget_guard.allocate(cost_usd)
+            # 3. Budget guard check
+            self.budget_guard.allocate(cost_usd)
 
-        now = datetime.now(timezone.utc).isoformat()
-        job = GildenJob(
-            job_id=job_id,
-            idempotency_key=idempotency_key,
-            action=action,
-            authority_grant_id=self.authority_grant_id,
-            budget_allocated=cost_usd,
-            budget_consumed=cost_usd,
-            expected_effect=expected_effect,
-            observed_effect={},
-            status="CLAIMED",
-            created_at=now,
-        )
+            now = datetime.now(timezone.utc).isoformat()
+            job = GildenJob(
+                job_id=job_id,
+                idempotency_key=idempotency_key,
+                action=action,
+                authority_grant_id=self.authority_grant_id,
+                budget_allocated=cost_usd,
+                budget_consumed=cost_usd,
+                expected_effect=expected_effect,
+                observed_effect={},
+                status="CLAIMED",
+                created_at=now,
+            )
 
-        # 4. Act
-        try:
-            observed = actor_fn()
-            job.observed_effect = observed
-            job.status = "OBSERVED"
-        except Exception as e:
-            job.status = "FAILED"
-            job.observed_effect = {"error": str(e)}
+            # 4. Act
+            try:
+                observed = actor_fn()
+                job.observed_effect = observed
+                job.status = "OBSERVED"
+            except Exception as e:
+                job.status = "FAILED"
+                job.observed_effect = {"error": str(e)}
+                self.store.record_job(job)
+                raise
+
+            # 5. Verify effect
+            is_verified = all(
+                job.observed_effect.get(k) == v
+                for k, v in expected_effect.items()
+            )
+            job.status = "VERIFIED" if is_verified else "FAILED"
+            job.completed_at = datetime.now(timezone.utc).isoformat()
+
+            # 6. Generate authenticated cryptographic effect receipt
+            payload_dict = {
+                "action": job.action,
+                "cost": cost_usd,
+                "expected": expected_effect,
+                "job_id": job.job_id,
+                "observed": job.observed_effect,
+                "status": job.status,
+                "timestamp": job.completed_at,
+            }
+            canonical_bytes = rfc8785_canonicalize(payload_dict)
+            digest = hashlib.sha256(canonical_bytes).hexdigest()
+            sig_bytes = ed25519_sign(self.signing_key, self.public_key, digest.encode("utf-8"))
+
+            receipt = EffectReceipt(
+                receipt_id=f"RECEIPT-{hashlib.sha256(job_id.encode()).hexdigest()[:12]}",
+                job_id=job.job_id,
+                action=job.action,
+                expected_effect=expected_effect,
+                observed_effect=job.observed_effect,
+                verification_status=job.status,
+                cost_usd=cost_usd,
+                timestamp=job.completed_at,
+                payload_digest=digest,
+                signer_key_id=self.key_id,
+                signature_hex=sig_bytes.hex(),
+            )
+            job.effect_receipt = receipt
+
+            # 7. Persist to append-only store
             self.store.record_job(job)
-            raise
-
-        # 5. Verify effect
-        is_verified = all(
-            job.observed_effect.get(k) == v
-            for k, v in expected_effect.items()
-        )
-        job.status = "VERIFIED" if is_verified else "FAILED"
-        job.completed_at = datetime.now(timezone.utc).isoformat()
-
-        # 6. Generate authenticated cryptographic effect receipt
-        payload_dict = {
-            "action": job.action,
-            "cost": cost_usd,
-            "expected": expected_effect,
-            "job_id": job.job_id,
-            "observed": job.observed_effect,
-            "status": job.status,
-            "timestamp": job.completed_at,
-        }
-        canonical_bytes = rfc8785_canonicalize(payload_dict)
-        digest = hashlib.sha256(canonical_bytes).hexdigest()
-        sig_bytes = ed25519_sign(self.signing_key, self.public_key, digest.encode("utf-8"))
-
-        receipt = EffectReceipt(
-            receipt_id=f"RECEIPT-{hashlib.sha256(job_id.encode()).hexdigest()[:12]}",
-            job_id=job.job_id,
-            action=job.action,
-            expected_effect=expected_effect,
-            observed_effect=job.observed_effect,
-            verification_status=job.status,
-            cost_usd=cost_usd,
-            timestamp=job.completed_at,
-            payload_digest=digest,
-            signer_key_id=self.key_id,
-            signature_hex=sig_bytes.hex(),
-        )
-        job.effect_receipt = receipt
-
-        # 7. Persist to append-only store
-        self.store.record_job(job)
-        return job
+            return job
 

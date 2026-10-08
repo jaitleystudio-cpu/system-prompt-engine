@@ -1,4 +1,4 @@
-"""System Prompt Engine runtime — NEW_IMPLEMENTATION."""
+"""SPE Ω Top-Level Drop-In Module for 'import spe'."""
 
 from spe_runtime.sdk import (
     SPEReceipt,
@@ -9,8 +9,6 @@ from spe_runtime.sdk import (
     protect,
     wrap,
 )
-
-__version__ = "0.1.0"
 
 __all__ = [
     "protect",
