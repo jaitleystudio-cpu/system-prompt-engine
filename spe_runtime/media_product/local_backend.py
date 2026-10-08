@@ -18,8 +18,11 @@ independent verifier and later adjudication, never to this process.
 from __future__ import annotations
 
 import array
+import difflib
 import hashlib
 import json
+import math
+import operator
 import os
 import platform
 import re
@@ -28,7 +31,9 @@ import signal
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
+import unicodedata
 import urllib.request
 import wave
 from contextlib import contextmanager
@@ -71,6 +76,319 @@ _NON_LOCAL = (
 )
 _BROWSER = ("browser", "web-speech", "webspeech")
 _VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
+
+# --- Acoustic speech gate: modulation features (general, not fixture-specific) ---
+# Speech is non-stationary on two axes at once: its energy envelope is modulated
+# at syllabic rates (~2-8 Hz) and its spectral tilt keeps changing (voiced
+# vowels are low-frequency heavy, fricatives/bursts high-frequency heavy). Both
+# features are computed on what rises above the clip's *stationary floor* (a low
+# percentile of per-frame power, and of per-frame first-difference power): a
+# steady tone, chord, hum or noise bed sets that floor and is subtracted, so it
+# neither masks speech underneath it nor counts as speech on its own.
+# Stationary tonal signals (single/dual tones, chords, buzzes, sweeps) leave no
+# frames above their own floor; amplitude-modulated or gated tones rise above
+# the floor but keep one spectral tilt and fail the tilt-variation test; slow
+# level changes fail the 2-8 Hz envelope test. Both are level-invariant.
+#
+# Spectral tilt per frame = first-difference energy / energy (= power-weighted
+# mean of 4*sin^2(pi*f/fs), a high-frequency energy fraction / spectral-centroid
+# proxy); the feature is the standard deviation (decades) of log10 of that
+# ratio computed on floor-subtracted energies over frames above the floor.
+#
+# Cost is bounded and linear in duration: one pass over the PCM for per-frame
+# energies, one sort per floor percentile, and a fixed-length (2.56 s, hop
+# 1.28 s) Hann-windowed DFT restricted to the fixed 2-8 Hz bins of each analysis
+# window, aggregated by median over active windows.
+#
+# Supported operating envelope (measured, see tests/evidence): speech under a
+# steady single/dual tone or chord/music-like tonal bed is detected down to
+# about 0 dB speech:interference SNR (chord beds to about -5 dB); below that the
+# gate may return NO_SPEECH_MODULATION. Melodic music with rhythm is NOT
+# rejected by this gate (it is non-stationary); it is handed to the model.
+VAD_FRAME_SAMPLES = 320  # 20 ms at 16 kHz
+VAD_MIN_FRAMES_FOR_MODULATION = 30  # < 0.6 s: too short to measure; defer to the model
+VAD_SYLLABIC_BAND_HZ = (2.0, 8.0)
+VAD_MODULATION_WINDOW_FRAMES = 128  # 2.56 s analysis window
+VAD_MODULATION_HOP_FRAMES = 64
+VAD_STATIONARY_FLOOR_PERCENTILE = 0.10
+VAD_ENVELOPE_FLOOR_DB = 50.0
+VAD_FLOOR_CLAMP_DB = 6.0  # envelope may dip at most 6 dB (power x1/4) below the stationary floor
+VAD_ACTIVE_FRAME_DB = 35.0
+VAD_MIN_TILT_FRAMES = 5
+VAD_MIN_SYLLABIC_MODULATION_DB = 1.0
+VAD_MIN_TILT_VARIATION_DECADES = 0.1
+
+_MODULATION_TABLES: dict[int, list[tuple[list[float], list[float]]]] = {}
+_HANN_TABLES: dict[int, list[float]] = {}
+
+# --- Decoded-media resource limits ---
+# Compressed audio/video can expand far beyond its upload size (a 32 MiB
+# low-bitrate file can hold many hours). Decoding is therefore bounded *during*
+# ffmpeg (-t one second past the limit, -fs hard byte cap, wall-clock timeout)
+# and the produced PCM is measured; anything over the limit is refused with the
+# existing public code FILE_TOO_LARGE (same code as an oversized upload) and a
+# machine detail, never silently truncated. 10 minutes of 16 kHz mono PCM is
+# 19.2 MB; at the measured local real-time factor (~2-4x on the pinned small
+# model, 2 threads) it is already a 20-40 minute local job.
+MAX_DECODED_DURATION_MS = 600_000
+PCM_BYTES_PER_SECOND = 16000 * 2
+MAX_DECODED_PCM_BYTES = MAX_DECODED_DURATION_MS * PCM_BYTES_PER_SECOND // 1000
+DECODE_TIMEOUT_S = 120
+RESOURCE_LIMIT_CODE = "FILE_TOO_LARGE"
+_WAV_HEADER_SLACK_BYTES = 1 << 16
+
+# --- Decode windows ---
+# With -nt the pinned whisper.cpp decodes one segment per 30 s encoder window and
+# stops at its per-window text-token budget. Telugu script costs several
+# byte-level tokens per syllable, so ~10 s of dense speech exhausts the budget
+# and the rest of the window was silently dropped. Long audio is therefore
+# decoded as consecutive windows of at most DECODE_WINDOW_MAX_MS, cut at the
+# quietest 20 ms frame, so each window fits the budget and no audio is lost.
+# A cut can still fall inside a word in dense speech, so each decoded span
+# extends DECODE_WINDOW_OVERLAP_MS past its cut on both sides (decoded span
+# <= 7.5 s) and adjacent window transcripts are reconciled word-by-word at the
+# seam (merge_window_transcripts): words seen by both windows are kept once,
+# cut-off fragments at window edges are dropped in favour of the full word.
+# The shared run must touch both window edges (at most SEAM_MAX_EDGE_FRAGMENTS
+# words outside it on either side): the overlap audio sits at the end of the
+# left span and the start of the right span, so a match deeper inside either
+# transcript is a coincidental repeat and must not delete words.
+# An overlapped span can make the model stop after a word or two. A window whose
+# transcript has fewer than SEAM_COLLAPSE_WORDS_PER_S words per second of its
+# core window is re-decoded once over the core (non-overlapped) span and the
+# transcript with more words is kept, so overlap never loses content relative
+# to the plain decode. 0.5 words/s is well below natural speech rates (~1.5-3
+# words/s; agglutinative Telugu sits at the low end), so only near-empty
+# outputs trigger it; a spurious trigger costs one extra decode, never words.
+DECODE_WINDOW_MAX_MS = 6000
+DECODE_WINDOW_MIN_MS = 3000
+DECODE_WINDOW_OVERLAP_MS = 750
+DECODE_WINDOW_SILENT_DB = 40.0
+SEAM_MATCH_SIMILARITY = 0.75
+# Shared audio between neighbours is 2 * DECODE_WINDOW_OVERLAP_MS = 1.5 s; at a
+# fast 4 words/s that holds at most 6 words. A longer textual match across the
+# seam is repeated speech (e.g. the same phrase said twice), not overlap.
+SEAM_MAX_OVERLAP_WORDS = math.ceil(4 * 2 * DECODE_WINDOW_OVERLAP_MS / 1000)
+SEAM_MAX_EDGE_FRAGMENTS = 2
+SEAM_COLLAPSE_WORDS_PER_S = 0.5
+
+
+def _as_pcm16(samples: "array.array[int] | list[float]") -> "array.array[int]":
+    if isinstance(samples, array.array) and samples.typecode == "h":
+        return samples
+    return array.array("h", (max(-32768, min(32767, int(round(x)))) for x in samples))
+
+
+def _frame_profile(samples: "array.array[int] | list[float]") -> tuple[list[float], list[float]]:
+    """Per-frame mean power and mean first-difference power (20 ms frames), linear cost."""
+    pcm = _as_pcm16(samples)
+    frame = VAD_FRAME_SAMPLES
+    mul = operator.mul
+    sub = operator.sub
+    power: list[float] = []
+    diff_power: list[float] = []
+    for f in range(len(pcm) // frame):
+        seg = pcm[f * frame:(f + 1) * frame]
+        power.append(sum(map(mul, seg, seg)) / frame)
+        diff = list(map(sub, seg[1:], seg[:-1]))
+        diff_power.append(sum(map(mul, diff, diff)) / frame)
+    return power, diff_power
+
+
+def _modulation_tables(length: int, frame_rate: float) -> list[tuple[list[float], list[float]]]:
+    tables = _MODULATION_TABLES.get(length)
+    if tables is None:
+        lo, hi = VAD_SYLLABIC_BAND_HZ
+        tables = []
+        for k in range(1, length // 2 + 1):
+            if lo <= k * frame_rate / length <= hi:
+                step = 2.0 * math.pi * k / length
+                tables.append(([math.cos(step * t) for t in range(length)], [math.sin(step * t) for t in range(length)]))
+        _MODULATION_TABLES[length] = tables
+        _HANN_TABLES[length] = [0.5 - 0.5 * math.cos(2.0 * math.pi * t / (length - 1)) for t in range(length)]
+    return tables
+
+
+def _percentile(values: list[float], fraction: float) -> float:
+    return sorted(values)[int(fraction * (len(values) - 1))]
+
+
+def speech_modulation_features(
+    samples: "array.array[int] | list[float]", sample_rate: int = 16000
+) -> tuple[float, float] | None:
+    """(syllabic_modulation_db, tilt_variation_decades) or None when too short.
+
+    syllabic_modulation_db: median over active 2.56 s analysis windows of the RMS
+    (dB) of the floor-subtracted log-energy envelope restricted to the 2-8 Hz
+    modulation band (Hann-windowed DFT at the fixed in-band bins only).
+    tilt_variation_decades: standard deviation of log10(first-difference energy /
+    energy), both floor-subtracted, over frames that rise above the stationary
+    floor (a genuine spectral-shape statistic: high-frequency energy fraction).
+    """
+    power, diff_power = _frame_profile(samples)
+    n = len(power)
+    if n < VAD_MIN_FRAMES_FOR_MODULATION:
+        return None
+    floor = _percentile(power, VAD_STATIONARY_FLOOR_PERCENTILE)
+    diff_floor = _percentile(diff_power, VAD_STATIONARY_FLOOR_PERCENTILE)
+    residual = [max(p - floor, 0.0) for p in power]
+    top = max(residual)
+    if top <= 0.0:
+        return 0.0, 0.0
+    active_floor = top * 10.0 ** (-VAD_ACTIVE_FRAME_DB / 10.0)
+    above = [i for i in range(n) if residual[i] >= max(floor, 1e-9) and residual[i] > active_floor]
+    if not above:
+        return 0.0, 0.0
+    # Residual far below the stationary floor's own level is clamped (6 dB under
+    # it), so the envelope never dives into log(~0) at the troughs of a slow
+    # level change while speech above a bed keeps its syllabic contrast.
+    env_floor = max(floor * 10.0 ** (-VAD_FLOOR_CLAMP_DB / 10.0), top * 10.0 ** (-VAD_ENVELOPE_FLOOR_DB / 10.0))
+    env = [10.0 * math.log10(max(r, env_floor)) for r in residual]
+    frame_rate = sample_rate / VAD_FRAME_SAMPLES
+    length = min(VAD_MODULATION_WINDOW_FRAMES, n)
+    tables = _modulation_tables(length, frame_rate)
+    hann = _HANN_TABLES[length]
+    starts = list(range(0, n - length + 1, VAD_MODULATION_HOP_FRAMES))
+    if starts[-1] != n - length:
+        starts.append(n - length)
+    mul = operator.mul
+    depths: list[float] = []
+    for start in starts:
+        if max(residual[start:start + length]) <= active_floor:
+            continue
+        segment = env[start:start + length]
+        mean = sum(segment) / length
+        tapered = [(v - mean) * w for v, w in zip(segment, hann)]
+        band_power = 0.0
+        for cos_row, sin_row in tables:
+            amp = 4.0 * math.hypot(sum(map(mul, tapered, cos_row)), sum(map(mul, tapered, sin_row))) / length
+            band_power += amp * amp / 2.0
+        depths.append(math.sqrt(band_power))
+    depths.sort()
+    modulation_db = depths[len(depths) // 2] if depths else 0.0
+    tilts = []
+    for i in above:
+        diff_residual = diff_power[i] - diff_floor
+        if diff_residual > 0.0:
+            tilts.append(math.log10(diff_residual / residual[i]))
+    if len(tilts) < VAD_MIN_TILT_FRAMES:
+        return modulation_db, 0.0
+    mean_tilt = sum(tilts) / len(tilts)
+    return modulation_db, math.sqrt(sum((v - mean_tilt) ** 2 for v in tilts) / len(tilts))
+
+
+def decode_spans(windows: list[tuple[int, int]], total: int, sample_rate: int = 16000) -> list[tuple[int, int]]:
+    """Decoded sample spans: each planned window widened by the seam overlap."""
+    if len(windows) <= 1:
+        return list(windows)
+    pad = sample_rate * DECODE_WINDOW_OVERLAP_MS // 1000
+    return [(max(0, start - pad), min(total, end + pad)) for start, end in windows]
+
+
+def _word_similarity(left: str, right: str) -> float:
+    if left == right:
+        return 1.0
+    return difflib.SequenceMatcher(None, left, right, autojunk=False).ratio()
+
+
+def _merge_seam(left: list[str], right: list[str]) -> list[str]:
+    """Join two overlapping window transcripts at their shared words.
+
+    The matched run must reach the end of the left window and start at the
+    beginning of the right window, each up to SEAM_MAX_EDGE_FRAGMENTS cut-off
+    fragments outside it, and is at most SEAM_MAX_OVERLAP_WORDS long (a longer
+    match is repeated speech, not overlap). Among candidates the one closest to
+    both edges wins; run length only breaks ties, so a repeated phrase near the
+    seam cannot displace the true, edge-adjacent overlap. Shared words are kept
+    once (the left copy, or the right copy when the left one is a truncated
+    prefix of it); right-window words before the run (fragments of overlap
+    audio) and left-window fragments after it are dropped.
+    """
+    n = len(left)
+    best: tuple[tuple[int, int], int, int, int] | None = None
+    for i in range(max(0, n - SEAM_MAX_OVERLAP_WORDS), n):
+        for j in range(min(SEAM_MAX_EDGE_FRAGMENTS + 1, len(right))):
+            run = 0
+            while (
+                i + run < n
+                and j + run < len(right)
+                and _word_similarity(left[i + run], right[j + run]) >= SEAM_MATCH_SIMILARITY
+            ):
+                run += 1
+            if run == 0 or run > SEAM_MAX_OVERLAP_WORDS:
+                continue
+            tail = n - (i + run)
+            if tail > SEAM_MAX_EDGE_FRAGMENTS:
+                continue
+            key = (-(tail + j), run)
+            if best is None or key > best[0]:
+                best = (key, i, j, run)
+    if best is None:
+        # No shared word inside the overlap (e.g. it was a pause): plain join,
+        # except an immediate near-duplicate cut-off fragment.
+        if left and right and _word_similarity(left[-1], right[0]) >= 0.6:
+            return left + right[1:]
+        return left + right
+    _, i, j, run = best
+    # Within the shared run keep the left copy, unless it is a strict prefix of
+    # the right copy (a word truncated at the left window's edge).
+    shared = [
+        right[j + t] if right[j + t] != left[i + t] and right[j + t].startswith(left[i + t]) else left[i + t]
+        for t in range(run)
+    ]
+    return left[:i] + shared + right[j + run:]
+
+
+def merge_window_transcripts(texts: list[str]) -> str:
+    """Reconcile per-window transcripts of overlapping decode spans, in order."""
+    merged: list[str] = []
+    for text in texts:
+        words = unicodedata.normalize("NFC", text).split()
+        if not words:
+            continue
+        merged = words if not merged else _merge_seam(merged, words)
+    return " ".join(merged)
+
+
+def plan_decode_windows(
+    samples: "array.array[int] | list[int]", sample_rate: int = 16000
+) -> list[tuple[int, int]]:
+    """Sample ranges [start, end) to decode. One window when the audio is short.
+
+    Long audio is cut at the quietest 20 ms frame between MIN and MAX window
+    length. Windows whose loudest frame is DECODE_WINDOW_SILENT_DB below the
+    file's loudest frame carry no speech and are skipped (no hallucination bait).
+    """
+    total = len(samples)
+    max_len = sample_rate * DECODE_WINDOW_MAX_MS // 1000
+    if total <= max_len:
+        return [(0, total)]
+    frame = VAD_FRAME_SAMPLES
+    min_len = sample_rate * DECODE_WINDOW_MIN_MS // 1000
+    power, _ = _frame_profile(samples)
+    energy_db = [10.0 * math.log10(p + 1e-9) for p in power]
+    windows: list[tuple[int, int]] = []
+    start = 0
+    while total - start > max_len:
+        lo = (start + min_len) // frame
+        hi = min((start + max_len) // frame, len(energy_db))
+        if hi <= lo:
+            cut = start + max_len
+        else:
+            quiet = min(range(lo, hi), key=lambda f: energy_db[f])
+            cut = quiet * frame + frame // 2
+        windows.append((start, cut))
+        start = cut
+    windows.append((start, total))
+    top = max(energy_db) if energy_db else 0.0
+
+    def loud_enough(win: tuple[int, int]) -> bool:
+        first, last = win[0] // frame, max(win[0] // frame + 1, win[1] // frame)
+        span = energy_db[first:last]
+        return bool(span) and max(span) > top - DECODE_WINDOW_SILENT_DB
+
+    kept = [w for w in windows if loud_enough(w)]
+    return kept or windows
 # Fail-closed asset layout inside this candidate (no sibling worktree, no absolute path):
 #   media-pack/PACK_MANIFEST.json
 #   media-pack/whisper-cli                 (built from SOURCE_PIN when absent)
@@ -988,8 +1306,11 @@ def _ffmpeg() -> str:
     return "ffmpeg"
 
 
-def _run_ffmpeg(args: list[str]) -> None:
-    completed = subprocess.run(args, capture_output=True, text=True, check=False)
+def _run_ffmpeg(args: list[str], *, timeout: float | None = None) -> None:
+    try:
+        completed = subprocess.run(args, capture_output=True, text=True, check=False, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise DecodeError(RESOURCE_LIMIT_CODE, "DECODE_TIME_LIMIT") from exc
     if completed.returncode != 0:
         raise UnsupportedPath(
             "VIDEO_AUDIO_EXTRACT_FAILED:" + (completed.stderr or "")[-800:]
@@ -1061,6 +1382,10 @@ class LocalMediaSession:
     _proc: subprocess.Popen[str] | None = field(default=None, init=False, repr=False)
     _temps: list[Path] = field(default_factory=list, init=False, repr=False)
     _buffers: list[bytearray] = field(default_factory=list, init=False, repr=False)
+    _planned_windows: list[tuple[int, int]] = field(default_factory=list, init=False, repr=False)
+    _planned_buf: bytearray | None = field(default=None, init=False, repr=False)
+    _core_inputs: list[Path] = field(default_factory=list, init=False, repr=False)
+    _window_folder: Path | None = field(default=None, init=False, repr=False)
     closed: bool = field(default=False, init=False)
     _pcm_released: bool = field(default=False, init=False)
     _attempts: int = field(default=0, init=False)
@@ -1205,7 +1530,17 @@ class LocalMediaSession:
             self._release_pcm()
             return self._cancelled(audio_sha, media_kind, duration_ms, neural=False)
         self._emit("transcribing", None, "Local neural session running.")
-        stdout, stderr, returncode, spawned = self._infer(wav_path)
+        inputs = self._decode_inputs(wav_path)
+        window_texts: list[str] | None = None
+        try:
+            stdout, stderr, returncode, spawned = self._infer(inputs[0], extra_inputs=inputs[1:])
+            if len(inputs) > 1 and returncode == 0:
+                window_texts = self._window_texts(inputs)
+                if window_texts is not None:
+                    window_texts = self._recover_collapsed_windows(window_texts)
+        finally:
+            self._discard_windows(inputs + self._core_inputs, wav_path)
+            self._planned_buf = None
         progress, progress_state = accepted_progress(stderr)
         self._release_pcm()
         if self._cancel_event.is_set() or returncode < 0:
@@ -1222,7 +1557,10 @@ class LocalMediaSession:
                 progress=progress,
                 progress_state=progress_state,
             )
-        text = self._transcript_text(stdout)
+        if window_texts is not None:
+            text = self._transcript_text(merge_window_transcripts(window_texts))
+        else:
+            text = self._transcript_text(stdout)
         if not text:
             return LocalTranscript(
                 status="NO_SPEECH",
@@ -1297,7 +1635,9 @@ class LocalMediaSession:
             "product_flag": "-nt",
         }
 
-    def infer_command(self, wav_path: Path, *, no_timestamps: bool = True) -> list[str]:
+    def infer_command(
+        self, wav_path: Path, *, no_timestamps: bool = True, extra_inputs: "list[Path] | tuple[Path, ...]" = ()
+    ) -> list[str]:
         cmd = [
             "/usr/bin/sandbox-exec",
             "-p",
@@ -1327,6 +1667,10 @@ class LocalMediaSession:
         ]
         if self.assets.vad_model_path is not None and self.assets.vad_model_path.is_file():
             cmd.extend(["--vad", "-vm", str(self.assets.vad_model_path)])
+        for extra in extra_inputs:
+            cmd.extend(["-f", str(extra)])
+        if extra_inputs:
+            cmd.append("-otxt")  # one transcript file per window, for seam reconciliation
         if no_timestamps:
             cmd.insert(cmd.index("-l") + 2, "-nt")
         if any(token.startswith("http://") or token.startswith("https://") for token in cmd):
@@ -1347,6 +1691,15 @@ class LocalMediaSession:
 
     def _transcript_text(self, stdout: str) -> str:
         """Product path is -nt, so timestamp brackets are not part of the transcript."""
+        hallucinations = {"ఉమ్", "ఉమ్ ఉమ్", "ఉమ్ ఉమ్ ఉమ్", "మ్యూజిక్", "సంగీతం", "Music"}
+
+        def non_speech(chunk: str) -> bool:
+            return (
+                (chunk.startswith("[") and chunk.endswith("]"))
+                or (chunk.startswith("(") and chunk.endswith(")"))
+                or chunk in hallucinations
+            )
+
         lines = []
         for line in (stdout or "").splitlines():
             stripped = line.strip()
@@ -1354,14 +1707,12 @@ class LocalMediaSession:
                 continue
             if stripped.startswith("[") and "-->" in stripped:
                 continue
+            # One line per decode window: a non-speech window must not leak a tag.
+            if non_speech(stripped):
+                continue
             lines.append(stripped)
         text = " ".join(lines).strip()
-        if not text:
-            return ""
-        if (text.startswith("[") and text.endswith("]")) or (text.startswith("(") and text.endswith(")")):
-            return ""
-        hallucinations = {"ఉమ్", "ఉమ్ ఉమ్", "ఉమ్ ఉమ్ ఉమ్", "మ్యూజిక్", "సంగీతం", "Music"}
-        if text in hallucinations:
+        if not text or non_speech(text):
             return ""
         return text
 
@@ -1384,8 +1735,8 @@ class LocalMediaSession:
         progress_state: str = "NOT_REPORTED",
     ) -> LocalTranscript:
         self.phase = "error"
-        # Corrupt bytes never become a completed fallback transcription.
-        if code == "CORRUPT":
+        # Corrupt or over-limit media never becomes a completed fallback transcription.
+        if code in {"CORRUPT", RESOURCE_LIMIT_CODE}:
             mode = "UNAVAILABLE"
         else:
             mode = resolve_media_mode(
@@ -1454,7 +1805,12 @@ class LocalMediaSession:
 
     def _to_wav(self, source: Path, media_kind: str) -> tuple[Path, int]:
         if media_kind == "audio" and source.suffix.lower() == ".wav" and _wav_usable(source):
-            return source, _wav_duration_ms(source)
+            # Checked from the header and the byte size before any PCM is read.
+            size = source.stat().st_size
+            duration_ms = min(_wav_duration_ms(source), max(0, size - 44) * 1000 // PCM_BYTES_PER_SECOND)
+            if duration_ms > MAX_DECODED_DURATION_MS or size > MAX_DECODED_PCM_BYTES + _WAV_HEADER_SLACK_BYTES:
+                raise DecodeError(RESOURCE_LIMIT_CODE, "DECODED_DURATION_LIMIT")
+            return source, duration_ms
         dest = source.with_suffix(".lane-r3b.wav")
         if dest.exists():
             dest = source.parent / f"{source.stem}.lane-r3b-{os.getpid()}.wav"
@@ -1473,9 +1829,19 @@ class LocalMediaSession:
                     "16000",
                     "-c:a",
                     "pcm_s16le",
+                    # Stop decoding one second past the limit (so overflow is
+                    # detectable) and hard-cap output bytes even if timestamps lie.
+                    "-t",
+                    str(MAX_DECODED_DURATION_MS // 1000 + 1),
+                    "-fs",
+                    str(MAX_DECODED_PCM_BYTES + 2 * PCM_BYTES_PER_SECOND + _WAV_HEADER_SLACK_BYTES),
                     str(dest),
-                ]
+                ],
+                timeout=DECODE_TIMEOUT_S,
             )
+        except DecodeError:
+            dest.unlink(missing_ok=True)
+            raise
         except UnsupportedPath as exc:
             dest.unlink(missing_ok=True)
             detail = str(exc)
@@ -1484,6 +1850,14 @@ class LocalMediaSession:
         if not dest.exists() or dest.stat().st_size == 0:
             dest.unlink(missing_ok=True)
             raise DecodeError("CORRUPT", "EMPTY_WAV")
+        # Measure what was actually produced (header and byte size), not metadata.
+        produced_ms = max(
+            _wav_duration_ms(dest) if _wav_usable(dest) else 0,
+            (dest.stat().st_size - 44) * 1000 // PCM_BYTES_PER_SECOND,
+        )
+        if produced_ms > MAX_DECODED_DURATION_MS:
+            dest.unlink(missing_ok=True)
+            raise DecodeError(RESOURCE_LIMIT_CODE, "DECODED_DURATION_LIMIT")
         return dest, _wav_duration_ms(dest)
 
     def _detect_speech_acoustics(self, wav_path: Path) -> tuple[bool, str]:
@@ -1495,29 +1869,45 @@ class LocalMediaSession:
             return False, "PCM_ENERGY"
         samples = array.array("h")
         usable = len(buf) - (len(buf) % 2)
-        samples.frombytes(bytes(buf[:usable]))
+        with memoryview(buf) as view:
+            samples.frombytes(view[:usable])
         if not samples:
             return False, "PCM_ENERGY"
-        peak = max(abs(sample) for sample in samples)
+        peak = max(max(samples), -min(samples))
         if peak <= 8:
             return False, "PCM_ENERGY"
-        crossings: list[float] = []
+        # Interpolated zero-crossing intervals, accumulated in a single streaming
+        # pass (Welford mean/variance): O(1) memory instead of crossing/diff lists.
+        n_crossings = 0
+        n_diffs = 0
+        mean_diff = 0.0
+        m2_diff = 0.0
+        last_crossing = 0.0
+        s_prev = samples[0]
         for i in range(1, len(samples)):
-            s_prev = samples[i - 1]
             s_curr = samples[i]
-            if (s_prev < 0 and s_curr >= 0) or (s_prev >= 0 and s_curr < 0):
+            if (s_prev < 0) != (s_curr < 0):
                 denom = s_curr - s_prev
-                frac = -s_prev / denom if denom != 0 else 0.0
-                crossings.append((i - 1) + frac)
-        if len(crossings) >= 20:
-            diffs = [crossings[j] - crossings[j - 1] for j in range(1, len(crossings))]
-            mean_diff = sum(diffs) / len(diffs)
-            var_diff = sum((d - mean_diff) ** 2 for d in diffs) / len(diffs)
-            std_diff = var_diff ** 0.5
+                crossing = (i - 1) + (-s_prev / denom if denom != 0 else 0.0)
+                if n_crossings:
+                    n_diffs += 1
+                    delta = (crossing - last_crossing) - mean_diff
+                    mean_diff += delta / n_diffs
+                    m2_diff += delta * ((crossing - last_crossing) - mean_diff)
+                last_crossing = crossing
+                n_crossings += 1
+            s_prev = s_curr
+        if n_crossings >= 20:
+            std_diff = (m2_diff / n_diffs) ** 0.5
             if std_diff < 0.08:
                 return False, "PURE_TONE"
-            if mean_diff < 2.5 and len(crossings) > len(samples) * 0.35:
+            if mean_diff < 2.5 and n_crossings > len(samples) * 0.35:
                 return False, "STATIONARY_NOISE"
+        modulation = speech_modulation_features(samples)
+        if modulation is not None:
+            syllabic_db, tilt_variation = modulation
+            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB or tilt_variation < VAD_MIN_TILT_VARIATION_DECADES:
+                return False, "NO_SPEECH_MODULATION"
         return True, "SPEECH_CANDIDATE"
 
     def _peak_abs(self, wav_path: Path) -> int:
@@ -1534,10 +1924,101 @@ class LocalMediaSession:
             return 0
         return max(abs(sample) for sample in samples)
 
-    def _infer(self, wav_path: Path, *, no_timestamps: bool = True) -> tuple[str, str, int, bool]:
+    def _decode_inputs(self, wav_path: Path) -> list[Path]:
+        """The wav itself, or per-window wavs (private temp dir) for long audio."""
+        with wave.open(str(wav_path), "rb") as handle:
+            frames = handle.readframes(handle.getnframes())
+        buf = bytearray(frames)
+        self._buffers.append(buf)
+        samples = array.array("h")
+        usable = len(buf) - (len(buf) % 2)
+        samples.frombytes(bytes(buf[:usable]))
+        windows = plan_decode_windows(samples)
+        self._planned_windows = windows
+        self._planned_buf = buf
+        self._core_inputs = []
+        if len(windows) <= 1 and windows and windows[0] == (0, len(samples)):
+            return [wav_path]
+        folder = Path(tempfile.mkdtemp(prefix="spe-media-win-"))
+        self._window_folder = folder
+        paths: list[Path] = []
+        for index, (start, end) in enumerate(decode_spans(windows, len(samples))):
+            dest = folder / f"w{index:03d}.wav"
+            self._temps.append(dest)
+            self._temps.append(Path(f"{dest}.txt"))  # per-window transcript written by -otxt
+            with wave.open(str(dest), "wb") as out:
+                out.setnchannels(1)
+                out.setsampwidth(2)
+                out.setframerate(16000)
+                out.writeframes(bytes(buf[start * 2:end * 2]))
+            paths.append(dest)
+        return paths
+
+    def _recover_collapsed_windows(self, texts: list[str]) -> list[str]:
+        """Re-decode the core span of windows whose overlapped decode collapsed."""
+        windows = self._planned_windows
+        flagged = [
+            index
+            for index, (start, end) in enumerate(windows)
+            if len(texts[index].split()) < SEAM_COLLAPSE_WORDS_PER_S * (end - start) / 16000
+        ]
+        if not flagged or self._cancel_event.is_set():
+            return texts
+        buf = self._planned_buf
+        for index in flagged:
+            start, end = windows[index]
+            dest = self._window_folder / f"c{index:03d}.wav"
+            self._temps.append(dest)
+            self._temps.append(Path(f"{dest}.txt"))
+            with wave.open(str(dest), "wb") as out:
+                out.setnchannels(1)
+                out.setsampwidth(2)
+                out.setframerate(16000)
+                out.writeframes(bytes(buf[start * 2:end * 2]))
+            self._core_inputs.append(dest)
+        paths = self._core_inputs
+        stdout, _, returncode, _ = self._infer(paths[0], extra_inputs=paths[1:])
+        if returncode != 0:
+            return texts
+        # A single input writes no per-window file (-otxt is multi-input only).
+        core_texts = self._window_texts(paths) if len(paths) > 1 else [self._transcript_text(stdout)]
+        if core_texts is None:
+            return texts
+        recovered = list(texts)
+        for index, core in zip(flagged, core_texts):
+            if len(core.split()) > len(recovered[index].split()):
+                recovered[index] = core
+        return recovered
+
+    def _window_texts(self, inputs: list[Path]) -> list[str] | None:
+        texts = []
+        for path in inputs:
+            out = Path(f"{path}.txt")
+            if not out.is_file():
+                return None
+            texts.append(self._transcript_text(out.read_bytes().decode("utf-8", errors="replace")))
+        return texts
+
+    def _discard_windows(self, inputs: list[Path], wav_path: Path) -> None:
+        folders = set()
+        for path in inputs:
+            if path == wav_path:
+                continue
+            path.unlink(missing_ok=True)
+            Path(f"{path}.txt").unlink(missing_ok=True)
+            folders.add(path.parent)
+        for folder in folders:
+            try:
+                folder.rmdir()
+            except OSError:
+                pass
+
+    def _infer(
+        self, wav_path: Path, *, no_timestamps: bool = True, extra_inputs: "list[Path] | tuple[Path, ...]" = ()
+    ) -> tuple[str, str, int, bool]:
         if self._cancel_event.is_set():
             return "", "", -1, False
-        cmd = self.infer_command(wav_path, no_timestamps=no_timestamps)
+        cmd = self.infer_command(wav_path, no_timestamps=no_timestamps, extra_inputs=extra_inputs)
         proc = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
