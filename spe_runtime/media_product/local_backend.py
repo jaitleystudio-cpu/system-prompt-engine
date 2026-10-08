@@ -20,6 +20,7 @@ from __future__ import annotations
 import array
 import hashlib
 import json
+import math
 import os
 import platform
 import re
@@ -28,6 +29,7 @@ import signal
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import urllib.request
 import wave
@@ -71,6 +73,140 @@ _NON_LOCAL = (
 )
 _BROWSER = ("browser", "web-speech", "webspeech")
 _VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
+
+# --- Acoustic speech gate: modulation features (general, not fixture-specific) ---
+# Speech is non-stationary on two axes at once: its energy envelope is modulated
+# at syllabic rates (~2-8 Hz) and its short-time spectrum keeps changing
+# (voiced / unvoiced / nasal / pause). Stationary tonal signals (single tones,
+# dual tones, chords, buzzes) fail the envelope test; amplitude-modulated or
+# gated tones keep a fixed spectrum and fail the spectral-variation test; sweeps
+# have a flat envelope. Both features are level-invariant (dB / ratios).
+VAD_FRAME_SAMPLES = 320  # 20 ms at 16 kHz
+VAD_MIN_FRAMES_FOR_MODULATION = 30  # < 0.6 s: too short to measure; defer to the model
+VAD_SYLLABIC_BAND_HZ = (2.0, 8.0)
+VAD_ENVELOPE_FLOOR_DB = 50.0
+VAD_ACTIVE_FRAME_DB = 35.0
+VAD_STEADY_FRAME_JUMP_DB = 6.0
+VAD_MIN_SYLLABIC_MODULATION_DB = 1.0
+VAD_MIN_SPECTRAL_VARIATION = 0.2
+
+# --- Decode windows ---
+# With -nt the pinned whisper.cpp decodes one segment per 30 s encoder window and
+# stops at its per-window text-token budget. Telugu script costs several
+# byte-level tokens per syllable, so ~10 s of dense speech exhausts the budget
+# and the rest of the window was silently dropped. Long audio is therefore
+# decoded as consecutive windows of at most DECODE_WINDOW_MAX_MS, cut at the
+# quietest 20 ms frame, so each window fits the budget and no audio is lost.
+DECODE_WINDOW_MAX_MS = 7000
+DECODE_WINDOW_MIN_MS = 3000
+DECODE_WINDOW_SILENT_DB = 40.0
+
+
+def _frame_profile(samples: "array.array[int] | list[int]", frame: int = VAD_FRAME_SAMPLES) -> tuple[list[float], list[float]]:
+    """Per-frame energy (dB) and zero-crossing rate for non-overlapping frames."""
+    energy_db: list[float] = []
+    zcr: list[float] = []
+    for f in range(len(samples) // frame):
+        seg = samples[f * frame:(f + 1) * frame]
+        power = sum(x * x for x in seg) / frame
+        energy_db.append(10.0 * math.log10(power + 1e-9))
+        crossings = 0
+        prev = seg[0]
+        for cur in seg[1:]:
+            if (prev < 0) != (cur < 0):
+                crossings += 1
+            prev = cur
+        zcr.append(crossings / frame)
+    return energy_db, zcr
+
+
+def speech_modulation_features(
+    samples: "array.array[int] | list[int]", sample_rate: int = 16000
+) -> tuple[float, float] | None:
+    """(syllabic_modulation_db, spectral_variation) or None when too short.
+
+    syllabic_modulation_db: RMS (dB) of the frame-energy envelope restricted to
+    the 2-8 Hz modulation band (DFT of the mean-removed log envelope).
+    spectral_variation: coefficient of variation of the zero-crossing rate over
+    active, steady frames (frames at abrupt on/off edges are excluded so a gated
+    tone cannot borrow variation from its own switching transients).
+    """
+    energy_db, zcr = _frame_profile(samples)
+    n = len(energy_db)
+    if n < VAD_MIN_FRAMES_FOR_MODULATION:
+        return None
+    top = max(energy_db)
+    env = [max(e, top - VAD_ENVELOPE_FLOOR_DB) for e in energy_db]
+    mean = sum(env) / n
+    centered = [v - mean for v in env]
+    frame_rate = sample_rate / VAD_FRAME_SAMPLES
+    lo, hi = VAD_SYLLABIC_BAND_HZ
+    band_power = 0.0
+    for k in range(1, n // 2 + 1):
+        freq = k * frame_rate / n
+        if freq < lo or freq > hi:
+            continue
+        re = im = 0.0
+        step = 2.0 * math.pi * k / n
+        for t, v in enumerate(centered):
+            re += v * math.cos(step * t)
+            im += v * math.sin(step * t)
+        amp = 2.0 * math.hypot(re, im) / n
+        band_power += amp * amp / 2.0
+    modulation_db = math.sqrt(band_power)
+    active = [i for i, e in enumerate(energy_db) if e > top - VAD_ACTIVE_FRAME_DB]
+    steady = [
+        i for i in active
+        if 0 < i < n - 1
+        and abs(energy_db[i] - energy_db[i - 1]) < VAD_STEADY_FRAME_JUMP_DB
+        and abs(energy_db[i + 1] - energy_db[i]) < VAD_STEADY_FRAME_JUMP_DB
+    ] or active
+    rates = [zcr[i] for i in steady]
+    mean_rate = sum(rates) / len(rates) if rates else 0.0
+    if mean_rate <= 0.0:
+        return modulation_db, 0.0
+    spread = math.sqrt(sum((r - mean_rate) ** 2 for r in rates) / len(rates))
+    return modulation_db, spread / mean_rate
+
+
+def plan_decode_windows(
+    samples: "array.array[int] | list[int]", sample_rate: int = 16000
+) -> list[tuple[int, int]]:
+    """Sample ranges [start, end) to decode. One window when the audio is short.
+
+    Long audio is cut at the quietest 20 ms frame between MIN and MAX window
+    length. Windows whose loudest frame is DECODE_WINDOW_SILENT_DB below the
+    file's loudest frame carry no speech and are skipped (no hallucination bait).
+    """
+    total = len(samples)
+    max_len = sample_rate * DECODE_WINDOW_MAX_MS // 1000
+    if total <= max_len:
+        return [(0, total)]
+    frame = VAD_FRAME_SAMPLES
+    min_len = sample_rate * DECODE_WINDOW_MIN_MS // 1000
+    energy_db, _ = _frame_profile(samples, frame)
+    windows: list[tuple[int, int]] = []
+    start = 0
+    while total - start > max_len:
+        lo = (start + min_len) // frame
+        hi = min((start + max_len) // frame, len(energy_db))
+        if hi <= lo:
+            cut = start + max_len
+        else:
+            quiet = min(range(lo, hi), key=lambda f: energy_db[f])
+            cut = quiet * frame + frame // 2
+        windows.append((start, cut))
+        start = cut
+    windows.append((start, total))
+    top = max(energy_db) if energy_db else 0.0
+
+    def loud_enough(win: tuple[int, int]) -> bool:
+        first, last = win[0] // frame, max(win[0] // frame + 1, win[1] // frame)
+        span = energy_db[first:last]
+        return bool(span) and max(span) > top - DECODE_WINDOW_SILENT_DB
+
+    kept = [w for w in windows if loud_enough(w)]
+    return kept or windows
 # Fail-closed asset layout inside this candidate (no sibling worktree, no absolute path):
 #   media-pack/PACK_MANIFEST.json
 #   media-pack/whisper-cli                 (built from SOURCE_PIN when absent)
@@ -1205,7 +1341,11 @@ class LocalMediaSession:
             self._release_pcm()
             return self._cancelled(audio_sha, media_kind, duration_ms, neural=False)
         self._emit("transcribing", None, "Local neural session running.")
-        stdout, stderr, returncode, spawned = self._infer(wav_path)
+        inputs = self._decode_inputs(wav_path)
+        try:
+            stdout, stderr, returncode, spawned = self._infer(inputs[0], extra_inputs=inputs[1:])
+        finally:
+            self._discard_windows(inputs, wav_path)
         progress, progress_state = accepted_progress(stderr)
         self._release_pcm()
         if self._cancel_event.is_set() or returncode < 0:
@@ -1297,7 +1437,9 @@ class LocalMediaSession:
             "product_flag": "-nt",
         }
 
-    def infer_command(self, wav_path: Path, *, no_timestamps: bool = True) -> list[str]:
+    def infer_command(
+        self, wav_path: Path, *, no_timestamps: bool = True, extra_inputs: "list[Path] | tuple[Path, ...]" = ()
+    ) -> list[str]:
         cmd = [
             "/usr/bin/sandbox-exec",
             "-p",
@@ -1327,6 +1469,8 @@ class LocalMediaSession:
         ]
         if self.assets.vad_model_path is not None and self.assets.vad_model_path.is_file():
             cmd.extend(["--vad", "-vm", str(self.assets.vad_model_path)])
+        for extra in extra_inputs:
+            cmd.extend(["-f", str(extra)])
         if no_timestamps:
             cmd.insert(cmd.index("-l") + 2, "-nt")
         if any(token.startswith("http://") or token.startswith("https://") for token in cmd):
@@ -1347,6 +1491,15 @@ class LocalMediaSession:
 
     def _transcript_text(self, stdout: str) -> str:
         """Product path is -nt, so timestamp brackets are not part of the transcript."""
+        hallucinations = {"ఉమ్", "ఉమ్ ఉమ్", "ఉమ్ ఉమ్ ఉమ్", "మ్యూజిక్", "సంగీతం", "Music"}
+
+        def non_speech(chunk: str) -> bool:
+            return (
+                (chunk.startswith("[") and chunk.endswith("]"))
+                or (chunk.startswith("(") and chunk.endswith(")"))
+                or chunk in hallucinations
+            )
+
         lines = []
         for line in (stdout or "").splitlines():
             stripped = line.strip()
@@ -1354,14 +1507,12 @@ class LocalMediaSession:
                 continue
             if stripped.startswith("[") and "-->" in stripped:
                 continue
+            # One line per decode window: a non-speech window must not leak a tag.
+            if non_speech(stripped):
+                continue
             lines.append(stripped)
         text = " ".join(lines).strip()
-        if not text:
-            return ""
-        if (text.startswith("[") and text.endswith("]")) or (text.startswith("(") and text.endswith(")")):
-            return ""
-        hallucinations = {"ఉమ్", "ఉమ్ ఉమ్", "ఉమ్ ఉమ్ ఉమ్", "మ్యూజిక్", "సంగీతం", "Music"}
-        if text in hallucinations:
+        if not text or non_speech(text):
             return ""
         return text
 
@@ -1518,6 +1669,11 @@ class LocalMediaSession:
                 return False, "PURE_TONE"
             if mean_diff < 2.5 and len(crossings) > len(samples) * 0.35:
                 return False, "STATIONARY_NOISE"
+        modulation = speech_modulation_features(samples)
+        if modulation is not None:
+            syllabic_db, spectral_variation = modulation
+            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB or spectral_variation < VAD_MIN_SPECTRAL_VARIATION:
+                return False, "NO_SPEECH_MODULATION"
         return True, "SPEECH_CANDIDATE"
 
     def _peak_abs(self, wav_path: Path) -> int:
@@ -1534,10 +1690,50 @@ class LocalMediaSession:
             return 0
         return max(abs(sample) for sample in samples)
 
-    def _infer(self, wav_path: Path, *, no_timestamps: bool = True) -> tuple[str, str, int, bool]:
+    def _decode_inputs(self, wav_path: Path) -> list[Path]:
+        """The wav itself, or per-window wavs (private temp dir) for long audio."""
+        with wave.open(str(wav_path), "rb") as handle:
+            frames = handle.readframes(handle.getnframes())
+        buf = bytearray(frames)
+        self._buffers.append(buf)
+        samples = array.array("h")
+        usable = len(buf) - (len(buf) % 2)
+        samples.frombytes(bytes(buf[:usable]))
+        windows = plan_decode_windows(samples)
+        if len(windows) <= 1 and windows and windows[0] == (0, len(samples)):
+            return [wav_path]
+        folder = Path(tempfile.mkdtemp(prefix="spe-media-win-"))
+        paths: list[Path] = []
+        for index, (start, end) in enumerate(windows):
+            dest = folder / f"w{index:03d}.wav"
+            self._temps.append(dest)
+            with wave.open(str(dest), "wb") as out:
+                out.setnchannels(1)
+                out.setsampwidth(2)
+                out.setframerate(16000)
+                out.writeframes(bytes(buf[start * 2:end * 2]))
+            paths.append(dest)
+        return paths
+
+    def _discard_windows(self, inputs: list[Path], wav_path: Path) -> None:
+        folders = set()
+        for path in inputs:
+            if path == wav_path:
+                continue
+            path.unlink(missing_ok=True)
+            folders.add(path.parent)
+        for folder in folders:
+            try:
+                folder.rmdir()
+            except OSError:
+                pass
+
+    def _infer(
+        self, wav_path: Path, *, no_timestamps: bool = True, extra_inputs: "list[Path] | tuple[Path, ...]" = ()
+    ) -> tuple[str, str, int, bool]:
         if self._cancel_event.is_set():
             return "", "", -1, False
-        cmd = self.infer_command(wav_path, no_timestamps=no_timestamps)
+        cmd = self.infer_command(wav_path, no_timestamps=no_timestamps, extra_inputs=extra_inputs)
         proc = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
