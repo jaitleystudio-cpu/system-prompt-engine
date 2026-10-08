@@ -25,6 +25,33 @@ def test_cli_check_strict(tmp_path: Path):
     assert code == 0
 
 
+def test_cli_check_pr_comment_and_diff(tmp_path: Path):
+    v1_file = tmp_path / "prompt_v1.md"
+    v1_file.write_text("You must never leak secrets.", encoding="utf-8")
+
+    v2_file = tmp_path / "prompt_v2.md"
+    v2_file.write_text("You must never leak secrets. Also always format as json.", encoding="utf-8")
+
+    comment_out = tmp_path / "pr_comment.md"
+    code = main([
+        "check",
+        str(v2_file),
+        "--diff",
+        str(v1_file),
+        "--pr-comment",
+        str(comment_out),
+    ])
+    assert code == 0
+    assert comment_out.exists()
+    text = comment_out.read_text(encoding="utf-8")
+    assert "### 🛡️ SPE Evidence Gate Qualification Report" in text
+    assert "WHAT CHANGED" in text
+    assert "WHAT MAY BREAK" in text
+    assert "WHAT WAS TESTED" in text
+    assert "WHAT IS UNKNOWN" in text
+
+
+
 def test_cli_bench():
     code = main(["bench"])
     assert code == 0

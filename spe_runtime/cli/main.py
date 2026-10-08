@@ -77,8 +77,20 @@ def cmd_check(args: argparse.Namespace) -> int:
         return 1
 
     content = target_path.read_text(encoding="utf-8")
+    diff_content = None
+    if getattr(args, "diff", None):
+        diff_path = Path(args.diff)
+        if diff_path.exists():
+            diff_content = diff_path.read_text(encoding="utf-8")
+
     policy = GatePolicy()
-    result = evaluate_ci_gate(content, policy=policy)
+    result = evaluate_ci_gate(content, policy=policy, diff_previous_text=diff_content)
+
+    if getattr(args, "pr_comment", None):
+        out_p = Path(args.pr_comment)
+        out_p.parent.mkdir(parents=True, exist_ok=True)
+        out_p.write_text(result.pr_comment_markdown, encoding="utf-8")
+        print(f"✓ PR comment markdown written to: {args.pr_comment}")
 
     print("🛡️  SPE CI/CD EVIDENCE GATE")
     print(f"  Target File:          {args.file}")
@@ -357,6 +369,8 @@ def main(argv: list[str] | None = None) -> int:
     p_check = subparsers.add_parser("check", help="Evaluate CI/CD evidence gate on prompt")
     p_check.add_argument("file", help="Prompt file to evaluate")
     p_check.add_argument("--strict", action="store_true", help="Fail with exit code 1 if verdict is not SHIP")
+    p_check.add_argument("--diff", help="Previous prompt file to diff for intent preservation")
+    p_check.add_argument("--pr-comment", help="Output PR comment markdown to specified path")
 
     # bench
     p_bench = subparsers.add_parser("bench", help="Run SPE-Bench Ω benchmark test cases")
