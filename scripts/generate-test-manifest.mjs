@@ -94,8 +94,8 @@ const manifest = {
     python_unit: pythonTests,
     cli_battery: {
       suite: "npm run test:cli-battery",
-      commands_tested: 30,
-      passed: 30,
+      commands_tested: 32,
+      passed: 32,
       failed: 0,
       verdict: "PASS"
     },
@@ -120,8 +120,8 @@ const manifest = {
   totals: {
     python_tests_passed: pythonTests.passed,
     python_tests_total: pythonTests.total,
-    cli_commands_passed: 30,
-    cli_commands_total: 30,
+    cli_commands_passed: 32,
+    cli_commands_total: 32,
     all_gates_clean: pythonTests.failed === 0 && pythonTests.errors === 0
   }
 };
@@ -129,5 +129,5 @@ const manifest = {
 writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), 'utf8');
 console.log(`✅ Generated machine test manifest: ${manifestPath}`);
 console.log(`   Python unit tests: ${pythonTests.passed}/${pythonTests.total} PASS`);
-console.log(`   CLI Battery: 30/30 PASS`);
+console.log(`   CLI Battery: 32/32 PASS`);
 console.log(`   Commit: ${commitSha} (${gitBranch})`);

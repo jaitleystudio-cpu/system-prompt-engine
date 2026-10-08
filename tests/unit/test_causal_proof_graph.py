@@ -74,3 +74,39 @@ def test_causal_proof_graph_end_to_end_trace():
     g2 = CausalProofGraph.from_dict(serialized)
     assert len(g2.nodes) == len(g.nodes)
     assert len(g2.edges) == len(g.edges)
+
+
+def test_causal_proof_graph_reference_trace():
+    """Verify that create_reference_trace constructs the complete, valid end-to-end trace."""
+    from spe_runtime.proof_graph.graph import create_reference_trace
+
+    g = create_reference_trace()
+    assert len(g.nodes) == 12
+    assert len(g.edges) == 12
+
+    # Backward trace from prompt clause
+    why = g.why_does_this_clause_exist("CLS-FIN-01")
+    assert any(h["id"] == "SRC-FIN-01" for h in why["human_spans"])
+    assert any(i["id"] == "INT-FIN-01" for i in why["protected_intents"])
+    assert any(r["id"] == "REQ-FIN-01" for r in why["requirements"])
+    assert any(t["id"] == "K3-FIN-01" for t in why["transforms"])
+
+    # Forward trace from requirement
+    where = g.where_is_this_requirement_enforced("REQ-FIN-01")
+    assert any(c["id"] == "CON-FIN-01" for c in where["constraints"])
+    assert any(cl["id"] == "CLS-FIN-01" for cl in where["prompt_clauses"])
+    assert any(t["id"] == "TST-FIN-01" for t in where["tests"])
+    assert any(p["id"] == "POL-FIN-01" for p in where["runtime_policies"])
+
+    # Regression and Repair linkage
+    fail_node = g.nodes["FAIL-FG-01"]
+    assert fail_node.node_type == NodeType.FAILURE_RECORD
+    repair_node = g.nodes["REP-FIN-01"]
+    assert repair_node.node_type == NodeType.CANDIDATE_REPAIR
+
+    # Evidence attached
+    assert "TST-FIN-01" in g.evidence
+    ev = g.evidence["TST-FIN-01"][0]
+    assert ev.evidence_class == "OBSERVED_LOCAL"
+    assert ev.metric == "masking_rejection_rate"
+    assert ev.value == 1.0

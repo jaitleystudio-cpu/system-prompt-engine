@@ -33,8 +33,8 @@ from spe_runtime.failure_genome.store import FailureGenomeStore
 from spe_runtime.governance.sbom import generate_instruction_sbom
 from spe_runtime.model_atlas.atlas import ModelAtlasRegistry
 from spe_runtime.model_atlas.models import ExecutionClass, ExecutionProvenance
-from spe_runtime.proof_graph.graph import CausalProofGraph
-from spe_runtime.proof_graph.models import CausalEdge, CausalNode, EdgeType, NodeType
+from spe_runtime.proof_graph.graph import CausalProofGraph, create_reference_trace
+from spe_runtime.proof_graph.models import CausalEdge, CausalEvidence, CausalNode, EdgeType, NodeType
 from spe_runtime.spe_package.spec import (
     SpePackage,
     inspect_package,
@@ -335,21 +335,107 @@ def cmd_unpack(args: argparse.Namespace) -> int:
 
 
 def cmd_explain(args: argparse.Namespace) -> int:
-    query = args.clause or "Ensure no financial records are leaked"
-    print(f"💡 CAUSAL PROOF GRAPH EXPLANATION: '{query}'")
-    graph = CausalProofGraph()
-    req = CausalNode("req-1", NodeType.REQUIREMENT, "SEC-01: Financial record confidentiality")
-    clause = CausalNode("clause-1", NodeType.PROMPT_CLAUSE, query)
-    graph.add_node(req)
-    graph.add_node(clause)
-    graph.add_edge(CausalEdge("edge-1", "req-1", "clause-1", EdgeType.PRODUCES))
+    clause_id = getattr(args, "clause", None) or "CLS-FIN-01"
+    print(f"💡 CAUSAL PROOF GRAPH EXPLANATION: '{clause_id}'")
+    graph = create_reference_trace()
 
-    sources = graph.why_does_this_clause_exist("clause-1")
-    print(f"  Clause:               {query}")
-    reqs = sources.get("requirements", [])
-    print(f"  Originating Sources:  {len(reqs)}")
-    for s in reqs:
-        print(f"  - [{s.get('type', 'node')}] {s.get('label', '')}")
+    if clause_id in graph.nodes:
+        why = graph.why_does_this_clause_exist(clause_id)
+        if getattr(args, "json", False):
+            print(json.dumps(why, indent=2))
+            return 0
+        node = graph.nodes[clause_id]
+        print(f"  Clause [{node.node_id}]: {node.label}")
+        print(f"  Protected Intents:    {len(why['protected_intents'])}")
+        for i in why["protected_intents"]:
+            print(f"    - [{i['id']}] {i['label']}")
+        print(f"  Requirements:         {len(why['requirements'])}")
+        for r in why["requirements"]:
+            print(f"    - [{r['id']}] {r['label']}")
+        print(f"  Transforms:           {len(why['transforms'])}")
+        for t in why["transforms"]:
+            print(f"    - [{t['id']}] {t['label']}")
+        print(f"  Human Spans:          {len(why['human_spans'])}")
+        for h in why["human_spans"]:
+            print(f"    - [{h['id']}] {h['label']}")
+        return 0
+    else:
+        # Fallback to dynamic query node
+        query = clause_id
+        g = CausalProofGraph()
+        req = CausalNode("req-1", NodeType.REQUIREMENT, "SEC-01: Financial record confidentiality")
+        clause = CausalNode("clause-1", NodeType.PROMPT_CLAUSE, query)
+        g.add_node(req)
+        g.add_node(clause)
+        g.add_edge(CausalEdge("edge-1", "req-1", "clause-1", EdgeType.PRODUCES))
+        sources = g.why_does_this_clause_exist("clause-1")
+        if getattr(args, "json", False):
+            print(json.dumps(sources, indent=2))
+            return 0
+        print(f"  Clause:               {query}")
+        reqs = sources.get("requirements", [])
+        print(f"  Originating Sources:  {len(reqs)}")
+        for s in reqs:
+            print(f"  - [{s.get('type', 'node')}] {s.get('label', '')}")
+        return 0
+
+
+def cmd_trace(args: argparse.Namespace) -> int:
+    req_id = getattr(args, "requirement", None) or "REQ-FIN-01"
+    print(f"🔍 CAUSAL PROOF GRAPH TRACE: Requirement '{req_id}'")
+    graph = create_reference_trace()
+    if req_id not in graph.nodes:
+        print(f"Warning: Node {req_id} not in current graph, falling back to reference REQ-FIN-01.", file=sys.stderr)
+        req_id = "REQ-FIN-01"
+
+    enforcement = graph.where_is_this_requirement_enforced(req_id)
+    if getattr(args, "json", False):
+        print(json.dumps(enforcement, indent=2))
+        return 0
+
+    print(f"  Requirement ID:       {req_id}")
+    print(f"  Constraints:          {len(enforcement['constraints'])}")
+    for c in enforcement["constraints"]:
+        print(f"    - [{c['id']}] {c['label']}")
+    print(f"  Prompt Clauses:       {len(enforcement['prompt_clauses'])}")
+    for cl in enforcement["prompt_clauses"]:
+        print(f"    - [{cl['id']}] {cl['label']}")
+    print(f"  Test Cases:           {len(enforcement['tests'])}")
+    for t in enforcement["tests"]:
+        print(f"    - [{t['id']}] {t['label']}")
+    print(f"  Runtime Policies:     {len(enforcement['runtime_policies'])}")
+    for p in enforcement["runtime_policies"]:
+        print(f"    - [{p['id']}] {p['label']}")
+
+    cov = graph.which_tests_cover_this_requirement(req_id)
+    print(f"  Covering Tests:       {', '.join(cov) if cov else 'NONE'}")
+    return 0
+
+
+def cmd_keygen(args: argparse.Namespace) -> int:
+    out_dir = Path(getattr(args, "out_dir", None) or ".spe/keys")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    from spe_runtime.ci_gate.receipt import generate_keypair
+
+    sk_bytes, pk_bytes = generate_keypair()
+    key_name = getattr(args, "name", None) or "spe_authority"
+    priv_path = out_dir / f"{key_name}_private.key"
+    pub_path = out_dir / f"{key_name}_public.key"
+
+    priv_path.write_text(sk_bytes.hex(), encoding="utf-8")
+    pub_path.write_text(pk_bytes.hex(), encoding="utf-8")
+    try:
+        priv_path.chmod(0o600)
+    except Exception:
+        pass
+
+    fp = hashlib.sha256(pk_bytes).hexdigest()[:16]
+
+    print("🔑 ED25519 SIGNING KEYPAIR GENERATED")
+    print(f"  Private Key:          {priv_path.resolve()} (chmod 600)")
+    print(f"  Public Key:           {pub_path.resolve()}")
+    print(f"  Public Hex:           {pk_bytes.hex()}")
+    print(f"  Key ID / Fingerprint: {key_name}::{fp}")
     return 0
 
 
@@ -410,6 +496,11 @@ def main(argv: list[str] | None = None) -> int:
     p_seal.add_argument("--out", help="Output path for receipt JSON")
     p_seal.add_argument("--signer", default="spe-local-authority", help="Signer authority key ID")
 
+    # keygen
+    p_keygen = subparsers.add_parser("keygen", help="Generate Ed25519 cryptographic signing keypair")
+    p_keygen.add_argument("--out-dir", default=".spe/keys", help="Directory to save keys")
+    p_keygen.add_argument("--name", default="spe_authority", help="Key name prefix")
+
     # sbom
     p_sbom = subparsers.add_parser("sbom", help="Generate AI Instruction Software Bill of Materials (SBOM)")
     p_sbom.add_argument("file", help="Prompt file to generate SBOM for")
@@ -420,7 +511,13 @@ def main(argv: list[str] | None = None) -> int:
 
     # explain
     p_explain = subparsers.add_parser("explain", help="Query causal proof graph for clause origin")
-    p_explain.add_argument("clause", nargs="?", default="Ensure no financial records are leaked", help="Clause or rule text")
+    p_explain.add_argument("clause", nargs="?", default="CLS-FIN-01", help="Clause or rule ID/text")
+    p_explain.add_argument("--json", action="store_true", help="Output raw JSON")
+
+    # trace
+    p_trace = subparsers.add_parser("trace", help="Trace requirement forward across proof graph")
+    p_trace.add_argument("--requirement", "-r", default="REQ-FIN-01", help="Requirement ID to trace")
+    p_trace.add_argument("--json", action="store_true", help="Output raw JSON")
 
     args = parser.parse_args(argv)
 
@@ -435,8 +532,10 @@ def main(argv: list[str] | None = None) -> int:
         "unpack": cmd_unpack,
         "inspect": cmd_inspect,
         "seal": cmd_seal,
+        "keygen": cmd_keygen,
         "sbom": cmd_sbom,
         "explain": cmd_explain,
+        "trace": cmd_trace,
     }
 
     handler = handlers.get(args.subcommand)

@@ -111,6 +111,8 @@ ${bold('COMMANDS:')}
   ${green('bisect')}                   Bisect prompt and agent regressions across version DAG
   ${green('pack')}        [dir]        Manage open .spe package format and verify SHA-256 integrity
   ${green('explain')}     [clause]     Query Causal Proof Graph for clause origin and requirement trace
+  ${green('trace')}       [-r req-id]  Trace requirement forward across Causal Proof Graph enforcements
+  ${green('keygen')}                   Generate Ed25519 cryptographic signing keypair
 
 ${bold('OPTIONS:')}
   --target <dialect>     Model dialect: claude-xml, openai-markdown, gemini-agent, cursor-rules, open-weights
@@ -208,7 +210,9 @@ try {
     case 'unpack':
     case 'inspect':
     case 'sbom':
-    case 'explain': {
+    case 'explain':
+    case 'trace':
+    case 'keygen': {
       runPythonCli(command, args.slice(1));
       break;
     }

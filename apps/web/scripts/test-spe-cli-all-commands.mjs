@@ -281,15 +281,30 @@ assert(sbomData.sbom_id && sbomData.content_hash, "SBOM missing ID or content ha
 console.log("  ✓ sbom verified");
 
 // 30. Package Inspection (spe inspect)
-console.log("\n[30/30] Testing inspect");
+console.log("\n[30/32] Testing inspect");
 const inspectOut = runCli(`inspect "${packDir}"`);
 assert(inspectOut.includes("SPE PACKAGE INSPECTION"), "Inspect output missing header");
 console.log("  ✓ inspect verified");
+
+// 31. Causal Proof Graph Trace (spe trace)
+console.log("\n[31/32] Testing trace");
+const traceOut = runCli(`trace -r REQ-FIN-01`);
+assert(traceOut.includes("CAUSAL PROOF GRAPH TRACE") && traceOut.includes("Requirement ID:"), "Trace output missing header");
+console.log("  ✓ trace verified");
+
+// 32. Keypair Generation (spe keygen)
+console.log("\n[32/32] Testing keygen");
+const keysDir = join(tempDir, "keys");
+const keygenOut = runCli(`keygen --out-dir "${keysDir}" --name authority_battery`);
+assert(keygenOut.includes("ED25519 SIGNING KEYPAIR GENERATED"), "Keygen output missing header");
+assert(existsSync(join(keysDir, "authority_battery_private.key")), "Private key not generated");
+assert(existsSync(join(keysDir, "authority_battery_public.key")), "Public key not generated");
+console.log("  ✓ keygen verified");
 
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 30 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 32 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");
 

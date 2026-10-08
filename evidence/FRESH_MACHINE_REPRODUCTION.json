@@ -33,7 +33,7 @@
       "step": 4,
       "description": "Execute complete Python test battery with JUnit reporting",
       "command": "pytest tests/unit -q --junitxml tmp/pytest-results.xml",
-      "expected_outcome": "736 passed, 0 failed, exit code 0"
+      "expected_outcome": "751 passed, 0 failed, exit code 0"
     },
     {
       "step": 5,
@@ -45,7 +45,7 @@
       "step": 6,
       "description": "Verify canonical WASM binary hash",
       "command": "npm --prefix apps/web run manifest:test",
-      "expected_outcome": "ac3f0c3e... hash verified, 30/30 CLI commands verified"
+      "expected_outcome": "ac3f0c3e... hash verified, 32/32 CLI commands verified"
     },
     {
       "step": 7,
@@ -55,8 +55,8 @@
     }
   ],
   "verified_test_totals": {
-    "python_unit_tests": 736,
-    "cli_battery_commands": 30,
+    "python_unit_tests": 751,
+    "cli_battery_commands": 32,
     "seo_prerendered_pages": 25,
     "reviewed_copy_strings": 4147,
     "unreviewed_copy_violations": 0

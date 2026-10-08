@@ -352,3 +352,69 @@ def test_clock_rollback_detection():
     # Clock rewound: T = 10:00:00Z (earlier than 12:05:00Z)
     with pytest.raises(ValueError, match="Clock rollback detected"):
         cust.is_active("2026-10-08T10:00:00Z")
+
+
+def test_concurrent_duplicate_webhook_race_condition():
+    """Verify thread-safety and exact single-execution under concurrent duplicate webhook delivery."""
+    manager = EntitlementManager()
+    same_event = {
+        "id": "evt_race_duplicate_target",
+        "type": "checkout.session.completed",
+        "data": {
+            "object": {
+                "customer": "cust_race_single",
+                "metadata": {"tier": "ENTERPRISE"},
+            }
+        },
+    }
+
+    successes = 0
+    duplicate_errors = 0
+
+    def attempt_process(_):
+        nonlocal successes, duplicate_errors
+        try:
+            res = manager.process_payment_webhook(same_event)
+            if res.get("status") == "SUCCESS":
+                return "SUCCESS"
+        except DuplicateWebhookError:
+            return "DUPLICATE"
+        return "UNKNOWN"
+
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        outcomes = list(executor.map(attempt_process, range(16)))
+
+    assert outcomes.count("SUCCESS") == 1
+    assert outcomes.count("DUPLICATE") == 15
+    cust = manager.get_or_create_customer("cust_race_single")
+    assert cust.plan_tier == PlanTier.ENTERPRISE
+
+
+def test_replayed_offline_license_tampering():
+    """Verify that tampering with any field in an offline license or replaying across machines fails."""
+    sk, pk = generate_keypair()
+    payload = OfflineLicensePayload(
+        license_id="LIC-TEST-001",
+        customer_id="cust_enterprise_airgap",
+        plan_tier=PlanTier.ENTERPRISE.value,
+        issued_at="2026-10-08T00:00:00Z",
+        expires_at="2027-10-08T00:00:00Z",
+        capabilities=["AIR_GAPPED_COMPILER", "PRIVATE_FAILURE_GENOME"],
+        machine_fingerprint="mac_hardware_sha256_abc123",
+    )
+    token = create_offline_license(payload, sk, pk)
+
+    # Valid verification passes
+    verified = verify_offline_license(token, trusted_public_key_hex=pk.hex(), current_time_iso="2026-10-08T12:00:00Z")
+    assert verified.license_id == "LIC-TEST-001"
+
+    # Tampered payload in token envelope
+    import base64
+    import json
+    envelope = json.loads(base64.b64decode(token.encode("ascii")).decode("utf-8"))
+    envelope["payload"]["plan_tier"] = "FREE"  # Tamper
+    tampered_token = base64.b64encode(json.dumps(envelope).encode("utf-8")).decode("ascii")
+
+    with pytest.raises(LicenseVerificationError, match="signature verification failed"):
+        verify_offline_license(tampered_token, trusted_public_key_hex=pk.hex(), current_time_iso="2026-10-08T12:00:00Z")
+

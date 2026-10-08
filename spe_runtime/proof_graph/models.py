@@ -21,6 +21,8 @@ class NodeType(str, Enum):
     EXECUTION = "EXECUTION"
     RESULT = "RESULT"
     EVIDENCE = "EVIDENCE"
+    FAILURE_RECORD = "FAILURE_RECORD"
+    CANDIDATE_REPAIR = "CANDIDATE_REPAIR"
 
 
 class EdgeType(str, Enum):
@@ -32,6 +34,7 @@ class EdgeType(str, Enum):
     MONITORS = "MONITORS"
     EVIDENCED_BY = "EVIDENCED_BY"
     REGRESSED_BY = "REGRESSED_BY"
+    REPAIRS = "REPAIRS"
 
 
 @dataclass(frozen=True)

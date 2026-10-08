@@ -6,7 +6,7 @@ Your objective is to find flaws, false PASSes, security bypasses, overclaims, an
 ---
 
 ## Challenge Area 1: False PASS Hunting & Test Integrity
-- Inspect test suites in `tests/unit/` (744 tests).
+- Inspect test suites in `tests/unit/` (751 tests).
 - Search for tests that pass trivially without actually exercising logic (e.g. tests with empty assertions, mock returns that bypass validation).
 - Verify that mutation/negative tests exist for every core module.
 - Confirm that `run_paired_baseline` cannot claim `OBSERVED_LOCAL` for simulated models without verified runtime receipts (`test_simulated_cannot_claim_observed_local`).

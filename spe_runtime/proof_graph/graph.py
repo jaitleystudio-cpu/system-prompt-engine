@@ -179,3 +179,56 @@ class CausalProofGraph:
             for ev in ev_list:
                 g.attach_evidence(nid, CausalEvidence(**ev))
         return g
+
+
+def create_reference_trace() -> CausalProofGraph:
+    """Builds an authoritative end-to-end reference trace demonstrating:
+    Human Source Span -> ProtectedIntent -> RequirementGraph -> Constraint -> XCAT/K3 Transform
+    -> EffectPlan -> Prompt Clause -> Test Case -> Runtime Policy -> Failure Record -> Candidate Repair.
+    """
+    g = CausalProofGraph()
+
+    # 1. Human Source Span
+    g.add_node(CausalNode("SRC-FIN-01", NodeType.HUMAN_SPAN, "PRD Sec 9.2: Mask cardholder primary account numbers and cap unapproved transfers"))
+    # 2. ProtectedIntent
+    g.add_node(CausalNode("INT-FIN-01", NodeType.PROTECTED_INTENT, "PCI-DSS Cardholder Data & Transfer Protection Intent"))
+    # 3. Requirement
+    g.add_node(CausalNode("REQ-FIN-01", NodeType.REQUIREMENT, "Redact PAN numbers in payment assistant and reject unapproved transfers over $10,000"))
+    # 4. Constraint
+    g.add_node(CausalNode("CON-FIN-01", NodeType.CONSTRAINT, "payload.pan.masked == true && transfer.limit <= $10,000"))
+    # 5. XCAT Category
+    g.add_node(CausalNode("XCAT-FIN-01", NodeType.XCAT_NODE, "CATEGORY_C08_BUSINESS_FINANCE_GUARD"))
+    # 6. K3 Transform
+    g.add_node(CausalNode("K3-FIN-01", NodeType.K3_TRANSFORM, "K3_PAN_MASK_AND_APPROVAL_RULE"))
+    # 7. Effect Plan Op
+    g.add_node(CausalNode("PLAN-OP-01", NodeType.EFFECT_PLAN_OP, "INJECT_PAN_MASKING_DIRECTIVE"))
+    # 8. Prompt Clause
+    g.add_node(CausalNode("CLS-FIN-01", NodeType.PROMPT_CLAUSE, "You MUST mask all cardholder account numbers (PAN) with asterisks except the last 4 digits, and DENY any wire transfer exceeding $10,000 without dual-approval."))
+    # 9. Test Case
+    g.add_node(CausalNode("TST-FIN-01", NodeType.TEST_CASE, "test_pan_leakage_and_transfer_cap"))
+    # 10. Runtime Policy
+    g.add_node(CausalNode("POL-FIN-01", NodeType.RUNTIME_POLICY, "PAYMENT grant requires dual-sign approval token and cardholder masking"))
+    # 11. Failure Record (from Failure Genome Ω)
+    g.add_node(CausalNode("FAIL-FG-01", NodeType.FAILURE_RECORD, "SPE-FG-2026-000412: Model unmasked card numbers when prompted with markdown table formatting"))
+    # 12. Candidate Repair
+    g.add_node(CausalNode("REP-FIN-01", NodeType.CANDIDATE_REPAIR, "DELIMITER_ENFORCEMENT: Enforce regex mask filter before output generation and deny raw payment emission"))
+
+    # Edges
+    g.add_edge(CausalEdge("E-01", "SRC-FIN-01", "INT-FIN-01", EdgeType.DERIVES_FROM))
+    g.add_edge(CausalEdge("E-02", "INT-FIN-01", "REQ-FIN-01", EdgeType.DERIVES_FROM))
+    g.add_edge(CausalEdge("E-03", "REQ-FIN-01", "CON-FIN-01", EdgeType.ENFORCES))
+    g.add_edge(CausalEdge("E-04", "CON-FIN-01", "XCAT-FIN-01", EdgeType.TRANSFORMS))
+    g.add_edge(CausalEdge("E-05", "XCAT-FIN-01", "K3-FIN-01", EdgeType.TRANSFORMS))
+    g.add_edge(CausalEdge("E-06", "K3-FIN-01", "PLAN-OP-01", EdgeType.TRANSFORMS))
+    g.add_edge(CausalEdge("E-07", "PLAN-OP-01", "CLS-FIN-01", EdgeType.PRODUCES))
+    g.add_edge(CausalEdge("E-08", "REQ-FIN-01", "TST-FIN-01", EdgeType.VALIDATES_WITH))
+    g.add_edge(CausalEdge("E-09", "REQ-FIN-01", "POL-FIN-01", EdgeType.MONITORS))
+    g.add_edge(CausalEdge("E-10", "FAIL-FG-01", "TST-FIN-01", EdgeType.REGRESSED_BY))
+    g.add_edge(CausalEdge("E-11", "REP-FIN-01", "FAIL-FG-01", EdgeType.REPAIRS))
+    g.add_edge(CausalEdge("E-12", "REP-FIN-01", "CLS-FIN-01", EdgeType.PRODUCES))
+
+    # Evidence attachment
+    g.attach_evidence("TST-FIN-01", CausalEvidence("EV-PAN-01", "OBSERVED_LOCAL", "masking_rejection_rate", 1.0, "2026-10-08T12:00:00Z"))
+
+    return g
+

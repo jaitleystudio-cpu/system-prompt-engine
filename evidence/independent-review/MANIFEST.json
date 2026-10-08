@@ -6,15 +6,15 @@
   "integration_branch": "integration/spe-2026-10-26",
   "remote_repository": "https://github.com/jaitleystudio-cpu/system-prompt-engine.git",
   "audit_scope": {
-    "python_tests": 744,
-    "cli_battery": 30,
+    "python_tests": 751,
+    "cli_battery": 32,
     "seo_pages": 25,
     "wasm_canonical_sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
     "reviewed_copy_inventory": 4147,
     "unreviewed_copy_violations": 0
   },
   "evidence_tiers": {
-    "LOCAL_VERIFIED": "744 Python unit tests, 30 CLI commands, python private core socket interception, WASM hash",
+    "LOCAL_VERIFIED": "751 Python unit tests, 32 CLI commands, python private core socket interception, WASM hash",
     "REMOTE_CORE_CI_PASS": "GitHub Actions spe-phase2-ci.yml passing on integration/spe-2026-10-26 and candidate/2026-10-26",
     "EGRESS_AUDIT_STATUS": "PYTHON_PRIVATE_CORE_EGRESS_PASS_WITH_WEB_CSP_BOUNDARY_PRESENT (system-wide packet capture remains UNKNOWN)",
     "BENCHMARK_STATUS": "SIMULATED (strictly reclassified; negative guard forbids mock simulator runs from claiming OBSERVED_LOCAL)",

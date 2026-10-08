@@ -1,6 +1,6 @@
 {
   "manifest_version": "1.0",
-  "generated_at": "2026-10-08T10:50:03.973Z",
+  "generated_at": "2026-10-08T12:28:48.417Z",
   "canonical_domain": "https://systempromptengine.com",
   "total_prerendered_pages": 25,
   "zero_placeholder_pages_verified": true,
@@ -9,7 +9,8 @@
     "noindex_count": 0,
     "REAL_PRODUCT": 8,
     "CATEGORY_OWNERSHIP": 8,
-    "REAL_DATA": 3,
+    "HOSTED_MODEL_PASSPORT": 2,
+    "REAL_DATA": 1,
     "INTEGRATION_GUIDE": 4,
     "MIGRATION_PATH": 2
   },
@@ -21,7 +22,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "WASM_SANDBOX_VERIFIED",
       "has_unique_content": true,
-      "word_count": 498,
+      "word_count": 502,
       "canonical_url": "https://systempromptengine.com/",
       "schema_type": "SoftwareApplication"
     },
@@ -32,7 +33,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 527,
+      "word_count": 531,
       "canonical_url": "https://systempromptengine.com/capabilities",
       "schema_type": "FAQPage"
     },
@@ -43,7 +44,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "WASM_SANDBOX_VERIFIED",
       "has_unique_content": true,
-      "word_count": 440,
+      "word_count": 444,
       "canonical_url": "https://systempromptengine.com/privacy",
       "schema_type": "SoftwareApplication"
     },
@@ -54,7 +55,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 432,
+      "word_count": 436,
       "canonical_url": "https://systempromptengine.com/ai-instruction-assurance",
       "schema_type": "SoftwareApplication"
     },
@@ -65,7 +66,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "EMPIRICAL_BENCHMARK",
       "has_unique_content": true,
-      "word_count": 408,
+      "word_count": 412,
       "canonical_url": "https://systempromptengine.com/ai-instruction-compiler",
       "schema_type": "SoftwareApplication"
     },
@@ -76,7 +77,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 399,
+      "word_count": 403,
       "canonical_url": "https://systempromptengine.com/prompt-compiler",
       "schema_type": "SoftwareApplication"
     },
@@ -87,7 +88,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "OBSERVED_LOCAL",
       "has_unique_content": true,
-      "word_count": 395,
+      "word_count": 399,
       "canonical_url": "https://systempromptengine.com/prompt-security",
       "schema_type": "SoftwareApplication"
     },
@@ -98,7 +99,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "OBSERVED_LOCAL",
       "has_unique_content": true,
-      "word_count": 400,
+      "word_count": 404,
       "canonical_url": "https://systempromptengine.com/ai-agent-security",
       "schema_type": "SoftwareApplication"
     },
@@ -109,7 +110,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 408,
+      "word_count": 412,
       "canonical_url": "https://systempromptengine.com/mcp-security",
       "schema_type": "SoftwareApplication"
     },
@@ -120,7 +121,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "EMPIRICAL_BENCHMARK",
       "has_unique_content": true,
-      "word_count": 405,
+      "word_count": 409,
       "canonical_url": "https://systempromptengine.com/model-drift-monitoring",
       "schema_type": "SoftwareApplication"
     },
@@ -131,7 +132,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 417,
+      "word_count": 421,
       "canonical_url": "https://systempromptengine.com/ai-governance-evidence",
       "schema_type": "SoftwareApplication"
     },
@@ -142,7 +143,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "WASM_SANDBOX_VERIFIED",
       "has_unique_content": true,
-      "word_count": 393,
+      "word_count": 397,
       "canonical_url": "https://systempromptengine.com/tools/system-prompt-generator",
       "schema_type": "SoftwareApplication"
     },
@@ -153,7 +154,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "WASM_SANDBOX_VERIFIED",
       "has_unique_content": true,
-      "word_count": 387,
+      "word_count": 391,
       "canonical_url": "https://systempromptengine.com/tools/free-3d-website-builder",
       "schema_type": "SoftwareApplication"
     },
@@ -164,7 +165,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "WASM_SANDBOX_VERIFIED",
       "has_unique_content": true,
-      "word_count": 399,
+      "word_count": 403,
       "canonical_url": "https://systempromptengine.com/tools/audio-to-text",
       "schema_type": "SoftwareApplication"
     },
@@ -175,7 +176,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "WASM_SANDBOX_VERIFIED",
       "has_unique_content": true,
-      "word_count": 391,
+      "word_count": 395,
       "canonical_url": "https://systempromptengine.com/tools/video-to-text",
       "schema_type": "SoftwareApplication"
     },
@@ -186,29 +187,29 @@
       "indexing_status": "INDEXABLE",
       "provenance": "WASM_SANDBOX_VERIFIED",
       "has_unique_content": true,
-      "word_count": 396,
+      "word_count": 400,
       "canonical_url": "https://systempromptengine.com/tools/screenshot-to-code",
       "schema_type": "SoftwareApplication"
     },
     {
       "path": "/models/openai/gpt-4o",
       "title": "OpenAI GPT-4o Empirical Model Passport | SPE Atlas",
-      "classification": "REAL_DATA",
+      "classification": "HOSTED_MODEL_PASSPORT",
       "indexing_status": "INDEXABLE",
-      "provenance": "EMPIRICAL_BENCHMARK",
+      "provenance": "SIMULATED_SPEC_BENCHMARK",
       "has_unique_content": true,
-      "word_count": 421,
+      "word_count": 440,
       "canonical_url": "https://systempromptengine.com/models/openai/gpt-4o",
       "schema_type": "SoftwareApplication"
     },
     {
       "path": "/models/anthropic/claude-3-7-sonnet",
       "title": "Anthropic Claude 3.7 Sonnet Model Passport | SPE Atlas",
-      "classification": "REAL_DATA",
+      "classification": "HOSTED_MODEL_PASSPORT",
       "indexing_status": "INDEXABLE",
-      "provenance": "EMPIRICAL_BENCHMARK",
+      "provenance": "SIMULATED_SPEC_BENCHMARK",
       "has_unique_content": true,
-      "word_count": 426,
+      "word_count": 448,
       "canonical_url": "https://systempromptengine.com/models/anthropic/claude-3-7-sonnet",
       "schema_type": "SoftwareApplication"
     },
@@ -219,7 +220,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "OBSERVED_LOCAL",
       "has_unique_content": true,
-      "word_count": 428,
+      "word_count": 432,
       "canonical_url": "https://systempromptengine.com/failure-genome/SPE-FG-2026-000001",
       "schema_type": "SoftwareApplication"
     },
@@ -230,7 +231,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 411,
+      "word_count": 415,
       "canonical_url": "https://systempromptengine.com/integrations/openai",
       "schema_type": "SoftwareApplication"
     },
@@ -241,7 +242,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 402,
+      "word_count": 406,
       "canonical_url": "https://systempromptengine.com/integrations/anthropic",
       "schema_type": "SoftwareApplication"
     },
@@ -252,7 +253,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 392,
+      "word_count": 396,
       "canonical_url": "https://systempromptengine.com/integrations/mcp",
       "schema_type": "SoftwareApplication"
     },
@@ -263,7 +264,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 396,
+      "word_count": 400,
       "canonical_url": "https://systempromptengine.com/integrations/github-actions",
       "schema_type": "SoftwareApplication"
     },
@@ -274,7 +275,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 451,
+      "word_count": 455,
       "canonical_url": "https://systempromptengine.com/compare/spe-vs-promptfoo",
       "schema_type": "SoftwareApplication"
     },
@@ -285,7 +286,7 @@
       "indexing_status": "INDEXABLE",
       "provenance": "SPECIFICATION_VERIFIED",
       "has_unique_content": true,
-      "word_count": 431,
+      "word_count": 435,
       "canonical_url": "https://systempromptengine.com/migrate/from-raw-prompts",
       "schema_type": "SoftwareApplication"
     }
