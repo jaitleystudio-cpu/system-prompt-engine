@@ -93,6 +93,18 @@ MUTANTS: list[tuple[str, str, str]] = [
     ("keep-truncated-left-copy",
      "    shared = [\n        right[j + t] if right[j + t] != left[i + t] and right[j + t].startswith(left[i + t]) else left[i + t]\n        for t in range(run)\n    ]\n",
      "    shared = left[i:i + run]\n"),
+    ("seam-match-deep-in-right-window",
+     "        for j in range(min(SEAM_MAX_EDGE_FRAGMENTS + 1, len(right))):\n",
+     "        for j in range(min(SEAM_MAX_OVERLAP_WORDS, len(right))):\n"),
+    ("no-collapsed-window-recovery",
+     "        if not flagged or self._cancel_event.is_set():\n            return texts\n",
+     "        return texts\n"),
+    ("core-redecode-overrides-richer-text",
+     "            if len(core.split()) > len(recovered[index].split()):\n",
+     "            if True:\n"),
+    ("single-core-redecode-reads-missing-file",
+     "        core_texts = self._window_texts(paths) if len(paths) > 1 else [self._transcript_text(stdout)]\n",
+     "        core_texts = self._window_texts(paths)\n"),
 ]
 VAD_TESTS = [
     "tests/unit/test_audio_vad_modulation_generalization.py",
@@ -105,7 +117,10 @@ LIMIT_MUTANTS = {
     "silent-truncation-no-produced-duration-check", "unbounded-decoder-no-t-no-fs",
     "no-decode-wall-clock-limit", "wav-passthrough-unbounded", "limit-raised-silently",
 }
-SEAM_MUTANTS = {"no-seam-reconciliation", "no-window-overlap", "keep-truncated-left-copy"}
+SEAM_MUTANTS = {
+    "no-seam-reconciliation", "no-window-overlap", "keep-truncated-left-copy", "seam-match-deep-in-right-window",
+    "no-collapsed-window-recovery", "core-redecode-overrides-richer-text", "single-core-redecode-reads-missing-file",
+}
 
 
 def _targets(name: str) -> list[str]:

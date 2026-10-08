@@ -149,6 +149,17 @@ _WAV_HEADER_SLACK_BYTES = 1 << 16
 # <= 7.5 s) and adjacent window transcripts are reconciled word-by-word at the
 # seam (merge_window_transcripts): words seen by both windows are kept once,
 # cut-off fragments at window edges are dropped in favour of the full word.
+# The shared run must touch both window edges (at most SEAM_MAX_EDGE_FRAGMENTS
+# words outside it on either side): the overlap audio sits at the end of the
+# left span and the start of the right span, so a match deeper inside either
+# transcript is a coincidental repeat and must not delete words.
+# An overlapped span can make the model stop after a word or two. A window whose
+# transcript has fewer than SEAM_COLLAPSE_WORDS_PER_S words per second of its
+# core window is re-decoded once over the core (non-overlapped) span and the
+# transcript with more words is kept, so overlap never loses content relative
+# to the plain decode. 0.5 words/s is well below natural speech rates (~1.5-3
+# words/s; agglutinative Telugu sits at the low end), so only near-empty
+# outputs trigger it; a spurious trigger costs one extra decode, never words.
 DECODE_WINDOW_MAX_MS = 6000
 DECODE_WINDOW_MIN_MS = 3000
 DECODE_WINDOW_OVERLAP_MS = 750
@@ -156,6 +167,7 @@ DECODE_WINDOW_SILENT_DB = 40.0
 SEAM_MATCH_SIMILARITY = 0.75
 SEAM_MAX_OVERLAP_WORDS = 12
 SEAM_MAX_EDGE_FRAGMENTS = 2
+SEAM_COLLAPSE_WORDS_PER_S = 0.5
 
 
 def _as_pcm16(samples: "array.array[int] | list[float]") -> "array.array[int]":
@@ -279,9 +291,9 @@ def _word_similarity(left: str, right: str) -> float:
 def _merge_seam(left: list[str], right: list[str]) -> list[str]:
     """Join two overlapping window transcripts at their shared words.
 
-    The matched run must reach the end of the left window (up to
-    SEAM_MAX_EDGE_FRAGMENTS cut-off fragments after it) and start within the
-    first SEAM_MAX_OVERLAP_WORDS words of the right window. Shared words are kept
+    The matched run must reach the end of the left window and start at the
+    beginning of the right window, each up to SEAM_MAX_EDGE_FRAGMENTS cut-off
+    fragments outside it, and is at most SEAM_MAX_OVERLAP_WORDS long. Shared words are kept
     once (the left copy, or the right copy when the left one is a truncated
     prefix of it); right-window words before the run (fragments of overlap
     audio) and left-window fragments after it are dropped.
@@ -289,10 +301,11 @@ def _merge_seam(left: list[str], right: list[str]) -> list[str]:
     n = len(left)
     best: tuple[tuple[int, int], int, int, int] | None = None
     for i in range(max(0, n - SEAM_MAX_OVERLAP_WORDS), n):
-        for j in range(min(SEAM_MAX_OVERLAP_WORDS, len(right))):
+        for j in range(min(SEAM_MAX_EDGE_FRAGMENTS + 1, len(right))):
             run = 0
             while (
-                i + run < n
+                run < SEAM_MAX_OVERLAP_WORDS
+                and i + run < n
                 and j + run < len(right)
                 and _word_similarity(left[i + run], right[j + run]) >= SEAM_MATCH_SIMILARITY
             ):
@@ -1364,6 +1377,10 @@ class LocalMediaSession:
     _proc: subprocess.Popen[str] | None = field(default=None, init=False, repr=False)
     _temps: list[Path] = field(default_factory=list, init=False, repr=False)
     _buffers: list[bytearray] = field(default_factory=list, init=False, repr=False)
+    _planned_windows: list[tuple[int, int]] = field(default_factory=list, init=False, repr=False)
+    _planned_buf: bytearray | None = field(default=None, init=False, repr=False)
+    _core_inputs: list[Path] = field(default_factory=list, init=False, repr=False)
+    _window_folder: Path | None = field(default=None, init=False, repr=False)
     closed: bool = field(default=False, init=False)
     _pcm_released: bool = field(default=False, init=False)
     _attempts: int = field(default=0, init=False)
@@ -1514,8 +1531,11 @@ class LocalMediaSession:
             stdout, stderr, returncode, spawned = self._infer(inputs[0], extra_inputs=inputs[1:])
             if len(inputs) > 1 and returncode == 0:
                 window_texts = self._window_texts(inputs)
+                if window_texts is not None:
+                    window_texts = self._recover_collapsed_windows(window_texts)
         finally:
-            self._discard_windows(inputs, wav_path)
+            self._discard_windows(inputs + self._core_inputs, wav_path)
+            self._planned_buf = None
         progress, progress_state = accepted_progress(stderr)
         self._release_pcm()
         if self._cancel_event.is_set() or returncode < 0:
@@ -1909,9 +1929,13 @@ class LocalMediaSession:
         usable = len(buf) - (len(buf) % 2)
         samples.frombytes(bytes(buf[:usable]))
         windows = plan_decode_windows(samples)
+        self._planned_windows = windows
+        self._planned_buf = buf
+        self._core_inputs = []
         if len(windows) <= 1 and windows and windows[0] == (0, len(samples)):
             return [wav_path]
         folder = Path(tempfile.mkdtemp(prefix="spe-media-win-"))
+        self._window_folder = folder
         paths: list[Path] = []
         for index, (start, end) in enumerate(decode_spans(windows, len(samples))):
             dest = folder / f"w{index:03d}.wav"
@@ -1924,6 +1948,42 @@ class LocalMediaSession:
                 out.writeframes(bytes(buf[start * 2:end * 2]))
             paths.append(dest)
         return paths
+
+    def _recover_collapsed_windows(self, texts: list[str]) -> list[str]:
+        """Re-decode the core span of windows whose overlapped decode collapsed."""
+        windows = self._planned_windows
+        flagged = [
+            index
+            for index, (start, end) in enumerate(windows)
+            if len(texts[index].split()) < SEAM_COLLAPSE_WORDS_PER_S * (end - start) / 16000
+        ]
+        if not flagged or self._cancel_event.is_set():
+            return texts
+        buf = self._planned_buf
+        for index in flagged:
+            start, end = windows[index]
+            dest = self._window_folder / f"c{index:03d}.wav"
+            self._temps.append(dest)
+            self._temps.append(Path(f"{dest}.txt"))
+            with wave.open(str(dest), "wb") as out:
+                out.setnchannels(1)
+                out.setsampwidth(2)
+                out.setframerate(16000)
+                out.writeframes(bytes(buf[start * 2:end * 2]))
+            self._core_inputs.append(dest)
+        paths = self._core_inputs
+        stdout, _, returncode, _ = self._infer(paths[0], extra_inputs=paths[1:])
+        if returncode != 0:
+            return texts
+        # A single input writes no per-window file (-otxt is multi-input only).
+        core_texts = self._window_texts(paths) if len(paths) > 1 else [self._transcript_text(stdout)]
+        if core_texts is None:
+            return texts
+        recovered = list(texts)
+        for index, core in zip(flagged, core_texts):
+            if len(core.split()) > len(recovered[index].split()):
+                recovered[index] = core
+        return recovered
 
     def _window_texts(self, inputs: list[Path]) -> list[str] | None:
         texts = []

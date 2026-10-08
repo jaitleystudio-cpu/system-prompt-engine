@@ -15,6 +15,7 @@ Audio provenance: repository fixtures under apps/web/scripts/fixtures/media
 from __future__ import annotations
 
 import array
+import threading
 import unicodedata
 import wave
 from pathlib import Path
@@ -72,6 +73,77 @@ def test_no_shared_words_means_plain_ordered_join():
     assert merge_window_transcripts(["one two", "three four", "", "five"]) == "one two three four five"
 
 
+def test_coincidental_repeat_deep_in_next_window_does_not_delete_words():
+    # Observed on continuous speech: a common word ("జ్వరం") near the end of the
+    # left window recurs nine words into the right window. The overlap audio sits
+    # at the window edges, so that is not a seam and no right-window word may go.
+    left = "డెంగ్యూ వైరస్ ఒక సాంక్రమిక ఉష్ణమండల వ్యాధి జ్వరం తలను వాయిస్"
+    right = "కేసులు కొద్ది శాతం వ్యాధి రక్త శ్రావం ఫలితంగా ప్రాణహాని టెంగ్యూ జ్వరం రక్త శ్రావం"
+    assert merge_window_transcripts([left, right]) == f"{left} {right}"
+    assert merge_window_transcripts(["a b c x y", "p q r s x y t"]) == "a b c x y p q r s x y t"
+
+
+def test_seam_run_must_start_at_right_window_edge():
+    # Up to SEAM_MAX_EDGE_FRAGMENTS cut-off fragments before the run are allowed.
+    assert merge_window_transcripts(["a b c d e", "q d e f"]) == "a b c d e f"
+    assert merge_window_transcripts(["a b c d e", "p q d e f"]) == "a b c d e f"
+    assert merge_window_transcripts(["a b c d e", "o p q d e f"]) == "a b c d e o p q d e f"
+
+
+def _offline_session(tmp_path: Path, windows, texts_by_input):
+    sess = object.__new__(LocalMediaSession)
+    sess._cancel_event = threading.Event()
+    sess._temps = []
+    sess._planned_windows = windows
+    sess._planned_buf = bytearray(2 * windows[-1][1])
+    sess._core_inputs = []
+    sess._window_folder = tmp_path
+    calls = []
+
+    def fake_infer(first, *, no_timestamps=True, extra_inputs=()):
+        paths = [first, *extra_inputs]
+        calls.append([p.name for p in paths])
+        if not extra_inputs:  # like whisper-cli: -otxt only with several inputs
+            return texts_by_input[first.name], "", 0, True
+        for path in paths:
+            Path(f"{path}.txt").write_text(texts_by_input[path.name], encoding="utf-8")
+        return "", "", 0, True
+
+    sess._infer = fake_infer
+    return sess, calls
+
+
+def test_collapsed_overlapped_window_is_recovered_from_core_span(tmp_path: Path):
+    windows = [(0, 6 * SR), (6 * SR, 12 * SR), (12 * SR, 18 * SR)]
+    core = {"c001.wav": "జ్వరం తలనొప్పి కండరాలు మరియు కీళ్లనొప్పులు ఉంటాయి"}
+    sess, calls = _offline_session(tmp_path, windows, core)
+    texts = ["ఒకటి రెండు మూడు నాలుగు", "వాయిస్", "ఐదు ఆరు ఏడు ఎనిమిది"]
+    recovered = sess._recover_collapsed_windows(texts)
+    assert calls == [["c001.wav"]]  # only the collapsed window is re-decoded
+    assert recovered == [texts[0], core["c001.wav"], texts[2]]
+    assert all(path.parent == tmp_path for path in sess._core_inputs)
+
+
+def test_several_collapsed_windows_are_recovered_in_one_decode(tmp_path: Path):
+    windows = [(0, 6 * SR), (6 * SR, 12 * SR), (12 * SR, 18 * SR)]
+    core = {"c000.wav": "ఒకటి రెండు మూడు నాలుగు", "c002.wav": "ఐదు ఆరు ఏడు ఎనిమిది"}
+    sess, calls = _offline_session(tmp_path, windows, core)
+    recovered = sess._recover_collapsed_windows(["", "తొమ్మిది పది పదకొండు పన్నెండు", "ఐదు"])
+    assert calls == [["c000.wav", "c002.wav"]]
+    assert recovered == [core["c000.wav"], "తొమ్మిది పది పదకొండు పన్నెండు", core["c002.wav"]]
+
+
+def test_core_redecode_never_replaces_a_richer_overlapped_transcript(tmp_path: Path):
+    windows = [(0, 6 * SR), (6 * SR, 12 * SR)]
+    sess, calls = _offline_session(tmp_path, windows, {"c000.wav": ""})
+    texts = ["అవును", "ఐదు ఆరు ఏడు ఎనిమిది"]
+    assert sess._recover_collapsed_windows(texts) == texts
+    assert calls == [["c000.wav"]]
+    sess2, calls2 = _offline_session(tmp_path, windows, {})
+    healthy = ["ఒకటి రెండు మూడు నాలుగు", "ఐదు ఆరు ఏడు ఎనిమిది"]
+    assert sess2._recover_collapsed_windows(healthy) == healthy and calls2 == []
+
+
 def test_reconciliation_output_is_nfc_and_free_of_replacement_chars():
     decomposed = unicodedata.normalize("NFD", "గీత ఈరోజు")
     merged = merge_window_transcripts([decomposed, "ఈరోజు వాతావరణం"])
@@ -127,3 +199,42 @@ def test_forced_mid_word_cut_reproduces_uncut_transcript(session, monkeypatch, c
     assert forced.status == "SPEECH"
     assert forced.text.replace(" ", "") == uncut.replace(" ", ""), (uncut, forced.text)
     assert session.temp_files_remaining == 0
+
+
+def _remove_long_pauses(samples: "array.array[int]") -> list[int]:
+    """Continuous speech from a fixture: keep at most 60 ms of each quiet run."""
+    frame = 320
+    powers = [sum(x * x for x in samples[f * frame:(f + 1) * frame]) / frame for f in range(len(samples) // frame)]
+    top = max(powers)
+    kept: list[int] = []
+    run = 0
+    for f, power in enumerate(powers):
+        run = run + 1 if power < top * 1e-3 else 0
+        if run <= 3:
+            kept.extend(samples[f * frame:(f + 1) * frame])
+    return kept
+
+
+def test_continuous_speech_overlap_loses_nothing_against_plain_windows(session, monkeypatch, tmp_path: Path):
+    # Dense continuous speech (pauses removed) across several seams: the overlapped,
+    # reconciled transcript must keep the content of the plain, un-overlapped decode.
+    import difflib
+
+    samples = _remove_long_pauses(_read(FIXTURES_DIR / "te_dengue_intro_30s.wav"))
+    path = tmp_path / "continuous.wav"
+    with wave.open(str(path), "wb") as out:
+        out.setnchannels(1)
+        out.setsampwidth(2)
+        out.setframerate(SR)
+        out.writeframes(array.array("h", samples).tobytes())
+    assert len(plan_decode_windows(array.array("h", samples))) >= 3
+    product = session.transcribe_path(path)
+    assert product.status == "SPEECH" and session.temp_files_remaining == 0
+    with monkeypatch.context() as patch:
+        patch.setattr(lb, "DECODE_WINDOW_OVERLAP_MS", 0)
+        patch.setattr(lb, "merge_window_transcripts", lambda texts: " ".join(t for t in texts if t))
+        plain = session.transcribe_path(path).text
+    a, b = plain.replace(" ", ""), product.text.replace(" ", "")
+    matched = sum(m.size for m in difflib.SequenceMatcher(None, a, b, autojunk=False).get_matching_blocks())
+    assert matched / len(a) >= 0.9, (plain, product.text)
+    assert "\ufffd" not in product.text and unicodedata.is_normalized("NFC", product.text)
