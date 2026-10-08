@@ -205,6 +205,9 @@ try {
     case 'failures':
     case 'bisect':
     case 'pack':
+    case 'unpack':
+    case 'inspect':
+    case 'sbom':
     case 'explain': {
       runPythonCli(command, args.slice(1));
       break;

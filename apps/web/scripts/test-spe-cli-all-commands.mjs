@@ -266,14 +266,30 @@ assert(packVerifyOut.includes("PASS"), "Pack verification failed");
 console.log("  ✓ pack and verify verified");
 
 // 28. Causal Proof Graph (spe explain)
-console.log("\n[28/28] Testing explain");
+console.log("\n[28/30] Testing explain");
 const explainOut = runCli(`explain "Ensure no financial records are leaked"`);
 assert(explainOut.includes("CAUSAL PROOF GRAPH EXPLANATION"), "Explain output missing explanation header");
 console.log("  ✓ explain verified");
+
+// 29. AI Instruction SBOM (spe sbom)
+console.log("\n[29/30] Testing sbom");
+const sbomOutPath = join(tempDir, "sample_sbom.json");
+const sbomOut = runCli(`sbom "${promptPath1}" --out "${sbomOutPath}"`);
+assert(existsSync(sbomOutPath), "sample_sbom.json not created");
+const sbomData = JSON.parse(readFileSync(sbomOutPath, "utf-8"));
+assert(sbomData.sbom_id && sbomData.content_hash, "SBOM missing ID or content hash");
+console.log("  ✓ sbom verified");
+
+// 30. Package Inspection (spe inspect)
+console.log("\n[30/30] Testing inspect");
+const inspectOut = runCli(`inspect "${packDir}"`);
+assert(inspectOut.includes("SPE PACKAGE INSPECTION"), "Inspect output missing header");
+console.log("  ✓ inspect verified");
 
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 28 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 30 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");
+

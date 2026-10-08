@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -24,14 +26,22 @@ from spe_runtime.instruction_record.models import (
     RequirementIdentity,
 )
 from spe_runtime.ci_gate.gate import GatePolicy, evaluate_ci_gate
+from spe_runtime.ci_gate.receipt import generate_authenticated_receipt
 from spe_runtime.developer.adopt import adopt_repository
 from spe_runtime.failure_genome.models import FailureClass, FailureGenomeEntry, Severity
 from spe_runtime.failure_genome.store import FailureGenomeStore
+from spe_runtime.governance.sbom import generate_instruction_sbom
 from spe_runtime.model_atlas.atlas import ModelAtlasRegistry
 from spe_runtime.model_atlas.models import ExecutionClass, ExecutionProvenance
 from spe_runtime.proof_graph.graph import CausalProofGraph
 from spe_runtime.proof_graph.models import CausalEdge, CausalNode, EdgeType, NodeType
-from spe_runtime.spe_package.spec import SpePackage, verify_package_integrity
+from spe_runtime.spe_package.spec import (
+    SpePackage,
+    inspect_package,
+    pack_directory,
+    unpack_package,
+    verify_package_integrity,
+)
 
 
 def cmd_adopt(args: argparse.Namespace) -> int:
@@ -215,6 +225,103 @@ def cmd_pack(args: argparse.Namespace) -> int:
         return 0
 
 
+def cmd_seal(args: argparse.Namespace) -> int:
+    target_path = Path(args.file)
+    if not target_path.exists():
+        print(f"Error: File not found: {args.file}", file=sys.stderr)
+        return 1
+
+    content = target_path.read_text(encoding="utf-8")
+    payload = {
+        "source_file": str(target_path.name),
+        "content_length": len(content),
+        "content_sha256": hashlib.sha256(content.encode("utf-8")).hexdigest(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "signer": args.signer or "spe-local-authority",
+    }
+    receipt = generate_authenticated_receipt(payload, key_id=args.signer or "spe-local-authority")
+    out_json = receipt.to_json()
+    if args.out:
+        out_p = Path(args.out)
+        out_p.parent.mkdir(parents=True, exist_ok=True)
+        out_p.write_text(out_json, encoding="utf-8")
+        print(f"✓ Authenticated evidence receipt written to: {args.out}")
+        print(f"  Digest (SHA-256):     {receipt.digest_sha256}")
+        print(f"  Signature (Ed25519):   {receipt.signature_ed25519[:32]}...")
+        print(f"  Signer Key ID:        {receipt.signer_key_id}")
+    else:
+        print(out_json)
+    return 0
+
+
+def cmd_sbom(args: argparse.Namespace) -> int:
+    target_path = Path(args.file)
+    if not target_path.exists():
+        print(f"Error: File not found: {args.file}", file=sys.stderr)
+        return 1
+
+    content = target_path.read_text(encoding="utf-8")
+    sbom = generate_instruction_sbom(
+        instruction_id=args.id or f"inst-{target_path.stem}",
+        version_id=args.version or "v1.0.0",
+        prompt_text=content,
+        author=args.author or "spe-engineer",
+    )
+    sbom_json = sbom.to_json()
+    if args.out:
+        out_p = Path(args.out)
+        out_p.parent.mkdir(parents=True, exist_ok=True)
+        out_p.write_text(sbom_json, encoding="utf-8")
+        print(f"✓ AI Instruction SBOM written to: {args.out}")
+        print(f"  SBOM ID:              {sbom.sbom_id}")
+        print(f"  Content Hash:         {sbom.content_hash}")
+        print(f"  Trust Tier:           {sbom.trust_tier}")
+    else:
+        print(sbom_json)
+    return 0
+
+
+def cmd_inspect(args: argparse.Namespace) -> int:
+    target_dir = Path(args.dir or ".spe")
+    if not target_dir.exists():
+        print(f"Error: Directory not found: {target_dir}", file=sys.stderr)
+        return 1
+    try:
+        info = inspect_package(target_dir)
+        if args.json:
+            print(json.dumps(info, indent=2))
+        else:
+            mf = info.get("manifest", {})
+            print(f"📋 SPE PACKAGE INSPECTION: {mf.get('package_id', target_dir.name)}")
+            print(f"  Version:              {mf.get('package_version')}")
+            print(f"  Spec Version:         {mf.get('spec_version')}")
+            print(f"  Files Count:          {info.get('files_count')}")
+            print(f"  ProtectedIntent:      {'PRESENT' if info.get('has_intent') else 'MISSING'}")
+            print(f"  Requirements:         {'PRESENT' if info.get('has_requirements') else 'MISSING'}")
+            print(f"  Prompt IR:            {'PRESENT' if info.get('has_prompt_ir') else 'MISSING'}")
+            print(f"  Effect Plan:          {'PRESENT' if info.get('has_effect_plan') else 'MISSING'}")
+            print(f"  Provider Targets:     {', '.join(mf.get('provider_targets', []))}")
+        return 0
+    except Exception as e:
+        print(f"Error inspecting package: {e}", file=sys.stderr)
+        return 1
+
+
+def cmd_unpack(args: argparse.Namespace) -> int:
+    archive_path = Path(args.archive)
+    target_dir = Path(args.dir or "unpacked_package")
+    if not archive_path.exists():
+        print(f"Error: Archive not found: {args.archive}", file=sys.stderr)
+        return 1
+    try:
+        pkg = unpack_package(archive_path, target_dir)
+        print(f"✓ Package unpacked and verified: {target_dir}")
+        return 0
+    except Exception as e:
+        print(f"Error unpacking package: {e}", file=sys.stderr)
+        return 1
+
+
 def cmd_explain(args: argparse.Namespace) -> int:
     query = args.clause or "Ensure no financial records are leaked"
     print(f"💡 CAUSAL PROOF GRAPH EXPLANATION: '{query}'")
@@ -273,6 +380,30 @@ def main(argv: list[str] | None = None) -> int:
     p_pack.add_argument("dir", nargs="?", default=".spe", help="Target package directory")
     p_pack.add_argument("--verify", action="store_true", help="Verify package SHA-256 integrity")
 
+    # unpack
+    p_unpack = subparsers.add_parser("unpack", help="Unpack .spe archive and verify digests")
+    p_unpack.add_argument("archive", help="Path to .spe tarball archive")
+    p_unpack.add_argument("dir", nargs="?", default="unpacked_package", help="Target unpack directory")
+
+    # inspect
+    p_inspect = subparsers.add_parser("inspect", help="Inspect .spe package manifest and components")
+    p_inspect.add_argument("dir", nargs="?", default=".spe", help="Target package directory")
+    p_inspect.add_argument("--json", action="store_true", help="Output raw JSON")
+
+    # seal
+    p_seal = subparsers.add_parser("seal", help="Generate RFC 8785 canonical Ed25519-signed evidence receipt")
+    p_seal.add_argument("file", help="Prompt file or payload to seal")
+    p_seal.add_argument("--out", help="Output path for receipt JSON")
+    p_seal.add_argument("--signer", default="spe-local-authority", help="Signer authority key ID")
+
+    # sbom
+    p_sbom = subparsers.add_parser("sbom", help="Generate AI Instruction Software Bill of Materials (SBOM)")
+    p_sbom.add_argument("file", help="Prompt file to generate SBOM for")
+    p_sbom.add_argument("--out", help="Output path for SBOM JSON")
+    p_sbom.add_argument("--id", help="Instruction ID")
+    p_sbom.add_argument("--version", default="v1.0.0", help="Version ID")
+    p_sbom.add_argument("--author", default="spe-engineer", help="Author")
+
     # explain
     p_explain = subparsers.add_parser("explain", help="Query causal proof graph for clause origin")
     p_explain.add_argument("clause", nargs="?", default="Ensure no financial records are leaked", help="Clause or rule text")
@@ -287,6 +418,10 @@ def main(argv: list[str] | None = None) -> int:
         "failures": cmd_failures,
         "bisect": cmd_bisect,
         "pack": cmd_pack,
+        "unpack": cmd_unpack,
+        "inspect": cmd_inspect,
+        "seal": cmd_seal,
+        "sbom": cmd_sbom,
         "explain": cmd_explain,
     }
 
