@@ -206,12 +206,54 @@ class CursorRulesDialectAdapter(PromptDialectAdapter):
         }
 
 
+class WindsurfRulesDialectAdapter(PromptDialectAdapter):
+    def lower(self, abi: PromptABI) -> dict[str, Any]:
+        body = [
+            f"# {abi.system_identity}",
+            "",
+            "## Objectives & Guidelines",
+            *[f"- {o}" for o in abi.objectives],
+            "",
+            "## Invariant Enforcement",
+            *[f"- STRICT: {i}" for i in abi.invariants],
+            *[f"- DISALLOWED: {n}" for n in abi.negative_constraints],
+        ]
+        if abi.tools:
+            body.extend(["", "## Available Capabilities & Tools", *[f"- `{t.name}`: {t.description}" for t in abi.tools]])
+        return {
+            "windsurfrules_content": "\n".join(body),
+            "target": "windsurf-rules",
+        }
+
+
+class GenericAgentDialectAdapter(PromptDialectAdapter):
+    def lower(self, abi: PromptABI) -> dict[str, Any]:
+        parts = [
+            f"You are {abi.system_identity}",
+            "",
+            "Primary Objectives:",
+            *[f"1. {o}" for o in abi.objectives],
+            "",
+            "Behavioral Constraints:",
+            *[f"- MUST: {i}" for i in abi.invariants],
+            *[f"- MUST NOT: {n}" for n in abi.negative_constraints],
+        ]
+        if abi.context_anchors:
+            parts.extend(["", "Context Anchors:", *[f"- {c}" for c in abi.context_anchors]])
+        return {
+            "system_prompt": "\n".join(parts),
+            "target": "generic-agent",
+        }
+
+
 ADAPTERS: dict[str, PromptDialectAdapter] = {
     "openai": OpenAIDialectAdapter(),
     "anthropic": AnthropicDialectAdapter(),
     "gemini": GeminiDialectAdapter(),
     "local": LocalOpenWeightDialectAdapter(),
     "cursor": CursorRulesDialectAdapter(),
+    "windsurf": WindsurfRulesDialectAdapter(),
+    "agent": GenericAgentDialectAdapter(),
 }
 
 
@@ -221,3 +263,4 @@ def lower_abi_to_provider(abi: PromptABI, provider: str) -> dict[str, Any]:
     if not adapter:
         raise ValueError(f"Unknown target provider '{provider}'. Supported: {list(ADAPTERS.keys())}")
     return adapter.lower(abi)
+

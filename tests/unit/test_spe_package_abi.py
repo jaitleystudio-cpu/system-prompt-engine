@@ -66,6 +66,17 @@ def test_prompt_abi_lowering_to_all_providers():
     cursor_res = lower_abi_to_provider(abi, "cursor")
     assert "# You are an enterprise code reviewer." in cursor_res["cursorrules_content"]
 
+    # 6. Windsurf
+    windsurf_res = lower_abi_to_provider(abi, "windsurf")
+    assert windsurf_res["target"] == "windsurf-rules"
+    assert "## Invariant Enforcement" in windsurf_res["windsurfrules_content"]
+
+    # 7. Generic Agent
+    agent_res = lower_abi_to_provider(abi, "agent")
+    assert agent_res["target"] == "generic-agent"
+    assert "Behavioral Constraints:" in agent_res["system_prompt"]
+
+
 
 def test_package_pack_unpack_verify(tmp_path: Path):
     pkg_src = tmp_path / "my_pkg"
