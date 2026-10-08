@@ -1,6 +1,6 @@
 # SPE Ω & GILDEN — Category-Monarch Master Build Report
 **Target Release:** 2026-10-26 22:10 IST | **RC Freeze:** 2026-10-24  
-**Authoritative Lineage:** `integration/spe-2026-10-26` | **Commit SHA:** `6798cca`  
+**Authoritative Lineage:** `integration/spe-2026-10-26` | **Commit SHA:** `15ea84e`  
 **Release Candidate Branch:** `release/2026-10-26-rc1` | **WASM Hash:** `ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d`  
 
 ---
@@ -58,9 +58,9 @@ LLM Providers           MCP Servers             A2A Delegation
 The source custody audit was performed on October 8, 2026, and frozen into [`evidence/release/SOURCE_CUSTODY_20261008.json`](file:///Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/evidence/release/SOURCE_CUSTODY_20261008.json).
 
 * **Origin Main SHA:** `3abe3df` (clean base)
-* **Predecessor Milestones:** `427f32f` (paired benchmarks), `4bdd71a` (enterprise audit), `df22033` (all 10 uncovered trends), `1d1df19` (12 moat engines), `5ee1a9b` (CPG & 7 journeys), `b35dd56` (specs & policies), `bd3be99` (entitlement & licenses)
-* **Authoritative Integration Lineage:** `integration/spe-2026-10-26` at HEAD `6798cca`
-* **Release Candidate Branch:** `release/2026-10-26-rc1` (pinned at `6798cca`)
+* **Predecessor Milestones:** `427f32f` (paired benchmarks), `4bdd71a` (enterprise audit), `df22033` (all 10 uncovered trends), `1d1df19` (12 moat engines), `5ee1a9b` (CPG & 7 journeys), `b35dd56` (specs & policies), `bd3be99` (entitlement & licenses), `6798cca` (CI gate --diff & --pr-comment), `5374c89` (Windsurf & agent ABI adapters)
+* **Authoritative Integration Lineage:** `integration/spe-2026-10-26` at HEAD `15ea84e`
+* **Release Candidate Branch:** `release/2026-10-26-rc1` (pinned at `15ea84e`)
 * **Donor Policy Enforced:** Oversized PR #125 (372 commits, 1,389 files) was strictly classified as donor-only. 21 accidentally staged unreviewed files were purged, restoring strict copy governance (`4,147 candidate strings, 0 unreviewed copy, 0 violations`).
 * **Canonical WebAssembly Engine:** Pinned `1,339,691` byte binary with zero external imports and verified SHA-256 hash:
   `ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d`
@@ -201,16 +201,22 @@ SPE Ω now ships first-class developer integrations across editor, CI/CD, and ru
 
 ---
 
-## 7. Programmatic Evidence SEO Architecture
+## 7. Programmatic Evidence SEO Architecture & Launch Minimum (Section 51)
 
 To achieve natural, authority-driven discoverability without engaging in scaled content abuse, SPE Ω establishes an original evidence SEO architecture across 6 strategic tiers:
 
-* **Tier A: Category Ownership Pages** (`/ai-instruction-assurance`, `/prompt-compiler`, `/ai-agent-security`, `/mcp-security`, `/model-drift-monitoring`)
+* **Tier A: Category Ownership Pages** (`/ai-instruction-assurance`, `/prompt-compiler`, `/ai-agent-security`, `/mcp-security`, `/model-drift-monitoring`, `/ai-governance-evidence`)
 * **Tier B: Free Acquisition Tools** (`/tools/system-prompt-generator`, `/tools/audio-to-text`, `/tools/video-to-text`, `/tools/free-3d-website-builder`, `/tools/screenshot-to-code`, `/tools/image-to-prompt`, `/tools/research-to-prompt`)
 * **Tier C: Empirical Evidence Pages** (`/models/<provider>/<model>` Passports, `/failure-genome/<id>` Public Cases, `/benchmarks/<domain>`)
 * **Tier D: Integration Documentation** (`/integrations/openai`, `/integrations/anthropic`, `/integrations/gemini`, `/integrations/ollama`, `/integrations/vllm`, `/integrations/mcp`, `/integrations/github-actions`, `/templates/gitlab-ci-spe.yml`)
 * **Tier E: Migration & Comparison Hubs** (`/compare/spe-vs-promptfoo`, `/compare/spe-vs-langfuse`, `/migrate/from-raw-prompts`, `/migrate/from-promptfoo`)
 * **Tier F: Package Registry Pages** (`/packages/<namespace>/<package>` showcasing test coverage, model passports, and provenance digests)
+* **Section 51 SEO Launch Minimum Qualification:**
+  * **25 Pre-Rendered Crawlable HTML Pages:** Generated in `apps/web/public/evidence-pages/` with canonical links, OpenGraph tags, and semantic structure.
+  * **Structured Data (Schema.org):** Verified JSON-LD (`SoftwareApplication` for tools/compilers and `FAQPage` for capabilities).
+  * **Index Boundaries:** `sitemap.xml` with 25 indexable URLs; `robots.txt` allowing public evidence paths while explicitly disallowing private workspaces (`/workspace`, `/studio`, `/private/`, `/api/`).
+  * **Clean Rewrites:** `apps/web/public/_redirects` configured with explicit 200 rewrites for evidence routes before client SPA fallback.
+  * **SEO Test Verification:** `npm run test:capabilities-seo` ➔ **PASS**; `pytest tests/unit/test_seo_architecture.py` ➔ **4/4 PASS**.
 
 ---
 
@@ -238,11 +244,13 @@ Every release-relevant integration test has been executed cleanly on the single 
 
 | Test Battery | Command | Result | Duration | Scope |
 | :--- | :--- | :--- | :--- | :--- |
-| **Python Full Suite** | `./.venv/bin/pytest tests/unit/` | **715 / 715 PASS** | 26.37s | 12 moat engines, replay capsules, task oracles, GILDEN kernel, bisection, entitlement & licenses. |
+| **Python Full Suite** | `./.venv/bin/pytest tests/unit/` | **715 / 715 PASS** | 23.17s | 12 moat engines, replay capsules, task oracles, GILDEN kernel, bisection, entitlement & licenses, ABI dialect adapters. |
+| **Python SEO Suite** | `./.venv/bin/pytest tests/unit/test_seo_architecture.py` | **4 / 4 PASS** | 0.11s | Route catalog validation, canonical URL integrity, sitemap and tier invariants. |
 | **CLI 30-Command Battery** | `npm run test:cli-battery` | **30 / 30 PASS** | 3.45s | All 30 CLI subcommands across compilation, verification, analysis, and packaging. |
-| **Web Production Build** | `npm run build` | **CLEAN BUILD** | 3.91s | PWA shell, WASM promotion, TypeScript typecheck, Vite asset bundle. |
+| **Web Production Build** | `npm run build` | **CLEAN BUILD** | 4.81s | PWA shell, WASM promotion, TypeScript typecheck, Vite asset bundle. |
 | **Copy Governance Gate** | `npm run spe:copy-check` | **0 VIOLATIONS** | 2.10s | 4,147 candidate strings reviewed against editorial perspective guidelines. |
 | **Canonical WASM Verify** | `node tools/wasm_canonical_build.mjs` | **HASH VERIFIED** | 1.80s | `ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d`. |
+| **Capabilities SEO Smoke** | `npm run test:capabilities-seo` | **PASS (100%)** | 0.30s | Sitemap, robots.txt, FAQPage JSON-LD, and claim guard verification. |
 | **Causal Proof Graph** | `npm run test:causal-proof-graph` | **PASS (100%)** | 0.45s | Backward provenance trace, forward enforcement trace, orphan audit. |
 | **Seven Acquisition Journeys** | `npm run test:seven-journeys` | **7 / 7 PASS** | 0.95s | End-to-end qualification across Audio, Video, 3D, SPE, Screenshot, Image, Research. |
 | **@spe/runtime Package** | `npm run test:spe-runtime` | **PASS (100%)** | 0.35s | CapabilityFirewall, McpSecurityGateway, A2ADelegationPolicyEngine. |
@@ -253,7 +261,7 @@ Every release-relevant integration test has been executed cleanly on the single 
 ## 10. Release Candidate Freeze & Go/Hold Criteria
 
 * **Release Candidate Branch:** `release/2026-10-26-rc1` (derived from `integration/spe-2026-10-26`)
-* **Candidate Commit:** `6798cca` (SHA-256 integrity digest verified)
+* **Candidate Commit:** `15ea84e` (SHA-256 integrity digest verified)
 * **Freeze Date:** October 24, 2026
 * **Public Target Launch:** October 26, 2026, 22:10 IST
 * **Egress Policy:** Strict air-gapped zero-network enforcement (`connect-src 'self'`). Zero prompt or PII data transmitted off device.
