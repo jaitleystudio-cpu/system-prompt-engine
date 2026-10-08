@@ -1,6 +1,12 @@
 """Tests for Gilden Moat Operator and authority/economic invariants."""
 
 import pytest
+from spe_runtime.gilden.kernel import (
+    BudgetExhaustionError,
+    GildenKernel,
+    GildenStore,
+    UnauthorizedActionError,
+)
 from spe_runtime.gilden.models import (
     CompetitorWatchEntry,
     FailureWatchCluster,
@@ -131,3 +137,143 @@ def test_gilden_founder_daily_report_generation():
     assert "Rule H14 Enforced" in report.markdown_brief
     assert "GILDEN-FDR-" in report.markdown_brief
     assert "SPE-FG-2026-000042" in report.markdown_brief
+
+
+def test_gilden_kernel_effect_receipt_generation(tmp_path):
+    """Verify that external actions produce verifiable EFFECT_RECEIPT records."""
+    kernel = GildenKernel(
+        storage_dir=tmp_path / "gilden_run",
+        max_budget_usd=50.0,
+        authority_grant_id="FOUNDER-EXEC-GRANT-01",
+    )
+
+    expected = {"status_code": 200, "indexed_pages": 5}
+    def mock_actor():
+        return {"status_code": 200, "indexed_pages": 5}
+
+    job = kernel.execute_job(
+        job_id="job-seo-verify-01",
+        idempotency_key="idem-seo-verify-01",
+        action="VERIFY_INDEXED_SITEMAP",
+        cost_usd=1.25,
+        expected_effect=expected,
+        actor_fn=mock_actor,
+    )
+
+    assert job.status == "VERIFIED"
+    assert job.effect_receipt is not None
+    assert job.effect_receipt.verification_status == "VERIFIED"
+    assert job.effect_receipt.cost_usd == 1.25
+    assert len(job.effect_receipt.payload_digest) == 64
+
+
+def test_gilden_kernel_duplicate_job_idempotency(tmp_path):
+    """Verify that submitting duplicate jobs returns cached result without re-executing."""
+    kernel = GildenKernel(
+        storage_dir=tmp_path / "gilden_idem",
+        max_budget_usd=50.0,
+        authority_grant_id="FOUNDER-EXEC-GRANT-01",
+    )
+
+    call_count = [0]
+    def counting_actor():
+        call_count[0] += 1
+        return {"result": "success"}
+
+    # First execution
+    job1 = kernel.execute_job(
+        job_id="job-fetch-01",
+        idempotency_key="key-idempotent-42",
+        action="FETCH_DRIFT_SIGNAL",
+        cost_usd=2.0,
+        expected_effect={"result": "success"},
+        actor_fn=counting_actor,
+    )
+    assert call_count[0] == 1
+    assert kernel.budget_guard.consumed_budget_usd == 2.0
+
+    # Second execution with same idempotency key
+    job2 = kernel.execute_job(
+        job_id="job-fetch-01-retry",
+        idempotency_key="key-idempotent-42",
+        action="FETCH_DRIFT_SIGNAL",
+        cost_usd=2.0,
+        expected_effect={"result": "success"},
+        actor_fn=counting_actor,
+    )
+    # Actor function was NOT called again; budget was NOT billed again
+    assert call_count[0] == 1
+    assert kernel.budget_guard.consumed_budget_usd == 2.0
+    assert job2.job_id == job1.job_id
+
+
+def test_gilden_kernel_budget_exhaustion_stop(tmp_path):
+    """Verify that actions exceeding the hard budget ceiling are strictly blocked."""
+    kernel = GildenKernel(
+        storage_dir=tmp_path / "gilden_budget",
+        max_budget_usd=10.0,
+        authority_grant_id="FOUNDER-EXEC-GRANT-01",
+    )
+
+    def dummy_actor():
+        return {"status": "ok"}
+
+    # First job uses $8 of $10
+    kernel.execute_job(
+        job_id="job-b1",
+        idempotency_key="idem-b1",
+        action="DATA_FETCH",
+        cost_usd=8.0,
+        expected_effect={"status": "ok"},
+        actor_fn=dummy_actor,
+    )
+    assert kernel.budget_guard.remaining_budget_usd == 2.0
+
+    # Second job requests $5 -> exceeds $2 remaining
+    with pytest.raises(BudgetExhaustionError, match="exceeds remaining budget"):
+        kernel.execute_job(
+            job_id="job-b2",
+            idempotency_key="idem-b2",
+            action="DATA_FETCH",
+            cost_usd=5.0,
+            expected_effect={"status": "ok"},
+            actor_fn=dummy_actor,
+        )
+
+
+def test_gilden_kernel_store_restart_recovery(tmp_path):
+    """Verify that append-only log safely survives crash-restarts and reloads jobs."""
+    store_dir = tmp_path / "gilden_crash_store"
+    kernel1 = GildenKernel(
+        storage_dir=store_dir,
+        max_budget_usd=100.0,
+        authority_grant_id="FOUNDER-EXEC-GRANT-01",
+    )
+
+    kernel1.execute_job(
+        job_id="job-crash-1",
+        idempotency_key="idem-crash-1",
+        action="RECORD_SIGNAL",
+        cost_usd=3.5,
+        expected_effect={"signal": "saved"},
+        actor_fn=lambda: {"signal": "saved"},
+    )
+
+    # Simulate crash and restart: create kernel2 pointing to same store_dir
+    kernel2 = GildenKernel(
+        storage_dir=store_dir,
+        max_budget_usd=100.0,
+        authority_grant_id="FOUNDER-EXEC-GRANT-01",
+    )
+
+    recovered_job = kernel2.store.get_job("job-crash-1")
+    assert recovered_job is not None
+    assert recovered_job.action == "RECORD_SIGNAL"
+    assert recovered_job.status == "VERIFIED"
+    assert recovered_job.effect_receipt is not None
+    assert recovered_job.effect_receipt.cost_usd == 3.5
+
+    # Idempotency map is restored from disk
+    same_job = kernel2.store.find_by_idempotency_key("idem-crash-1")
+    assert same_job is not None
+    assert same_job.job_id == "job-crash-1"

@@ -61,6 +61,7 @@ class CapabilityRequest:
     action: str
     agent_id: str
     amount: float = 0.0
+    nonce: str | None = None
     context: dict[str, Any] = field(default_factory=dict)
 
 

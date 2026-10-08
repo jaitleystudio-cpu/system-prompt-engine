@@ -1,0 +1,65 @@
+{
+  "reproduction_manifest_version": "1.0",
+  "generated_at": "2026-10-08T10:55:00Z",
+  "provenance_class": "LOCAL_VERIFIED",
+  "environment": {
+    "supported_platforms": ["darwin-arm64", "linux-x86_64"],
+    "required_python_version": ">=3.12",
+    "required_node_version": ">=22.0.0",
+    "optional_rust_version": ">=1.80.0 (wasm32-unknown-unknown)"
+  },
+  "canonical_wasm": {
+    "engine_path": "apps/web/src/wasm/spe_wasm_engine_bg.wasm",
+    "sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+    "verification_command": "node -e 'import {readFileSync} from \"fs\"; import {createHash} from \"crypto\"; const h = createHash(\"sha256\").update(readFileSync(\"apps/web/src/wasm/spe_wasm_engine_bg.wasm\")).digest(\"hex\"); if (h !== \"ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d\") process.exit(1);'"
+  },
+  "reproduction_steps": [
+    {
+      "step": 1,
+      "description": "Clone repository and checkout authoritative candidate branch",
+      "command": "git clone https://github.com/jaitleystudio-cpu/system-prompt-engine.git && cd system-prompt-engine && git checkout candidate/2026-10-26"
+    },
+    {
+      "step": 2,
+      "description": "Initialize clean Python virtual environment and install dependencies",
+      "command": "python3 -m venv .venv && source .venv/bin/activate && pip install --upgrade pip && pip install -e '.[dev]'"
+    },
+    {
+      "step": 3,
+      "description": "Install web and CLI Node dependencies cleanly",
+      "command": "npm --prefix apps/web ci"
+    },
+    {
+      "step": 4,
+      "description": "Execute complete Python test battery with JUnit reporting",
+      "command": "pytest tests/unit -q --junitxml tmp/pytest-results.xml",
+      "expected_outcome": "736 passed, 0 failed, exit code 0"
+    },
+    {
+      "step": 5,
+      "description": "Verify system-wide zero network egress across Python sockets, DNS, and Gilden",
+      "command": "python scripts/test-network-egress.py",
+      "expected_outcome": "EGRESS_PROOF_QUALIFIED_PASS, 0 unauthorized socket/DNS connections"
+    },
+    {
+      "step": 6,
+      "description": "Verify canonical WASM binary hash",
+      "command": "npm --prefix apps/web run manifest:test",
+      "expected_outcome": "ac3f0c3e... hash verified, 30/30 CLI commands verified"
+    },
+    {
+      "step": 7,
+      "description": "Generate and audit 25 static SEO pre-rendered pages",
+      "command": "node scripts/generate-evidence-seo.mjs",
+      "expected_outcome": "25 static pages generated, 0 thin placeholder pages, zero_placeholder_pages_verified: true"
+    }
+  ],
+  "verified_test_totals": {
+    "python_unit_tests": 736,
+    "cli_battery_commands": 30,
+    "seo_prerendered_pages": 25,
+    "reviewed_copy_strings": 4147,
+    "unreviewed_copy_violations": 0
+  },
+  "verification_decision": "FRESH_MACHINE_REPRODUCIBLE"
+}

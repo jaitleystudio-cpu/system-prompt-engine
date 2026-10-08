@@ -39,6 +39,9 @@
     a:hover { text-decoration: underline; }
     nav.breadcrumbs { font-size: 12px; color: #64748b; margin-bottom: 16px; }
     footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #1e293b; font-size: 12px; color: #64748b; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th, td { padding: 8px 12px; border-bottom: 1px solid #1e293b; }
+    th { color: #94a3b8; }
   </style>
 </head>
 <body>
@@ -47,26 +50,28 @@
       <a href="/">Home</a> &gt; <span>privacy</span>
     </nav>
     <header>
-      <span class="badge">EVIDENCE-BACKED CONTROL PLANE</span>
+      <span class="badge">REAL_PRODUCT &bull; WASM_SANDBOX_VERIFIED</span>
       <h1>Zero-Egress Privacy & Cryptographic Integrity</h1>
       <p class="lead">100% air-gapped execution verification with local WASM compilation and zero network telemetry.</p>
     </header>
 
     <main>
       <div class="box">
-        <h2>Architecture & Evidence</h2>
-        <p>SPE Ω compiles, tests, and verifies AI instructions under 100% air-gapped execution (<code>connect-src 'self'</code>) with zero external network egress.</p>
-        <ul>
-          <li><strong>Cryptographic Receipt:</strong> RFC 8785 JSON Canonicalization + SHA-256 + Ed25519 signature.</li>
-          <li><strong>Formal Verification:</strong> Bounded rule consistency analysis detecting paradoxical directives.</li>
-          <li><strong>Inference Economics:</strong> Speculative KV-cache page boundary alignment for vLLM, SGLang, and Anthropic prompt caching.</li>
-        </ul>
+        
+      <h2>Air-Gapped Privacy Architecture</h2>
+      <p>Your enterprise prompts, confidential instructions, and proprietary schema definitions never leave your machine.</p>
+      <ul>
+        <li><strong>Network Isolation:</strong> Zero external requests. Tested via socket hooks and packet verification.</li>
+        <li><strong>In-Memory WASM Engine:</strong> Hash <code>ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d</code> executes locally.</li>
+        <li><strong>No Telemetry by Default:</strong> Prompt telemetry is strictly disabled unless explicitly opted-in by an authenticated administrator.</li>
+      </ul>
+    
       </div>
 
       <div class="box">
-        <h2>Developer CLI Adoption</h2>
-        <pre>$ npx spe adopt .
-$ npx spe check system_prompt.md --strict</pre>
+        <h2>Verification & Evidence Invariant</h2>
+        <p>Executed locally via WebAssembly under zero-egress sandbox (<code>connect-src 'self'</code>). Output correctness is not proven; bounded rule consistency is deterministically verified.</p>
+        <pre>$ spe verify _privacy.spe --strict</pre>
       </div>
     </main>
 

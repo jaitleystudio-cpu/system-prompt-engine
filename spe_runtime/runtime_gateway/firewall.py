@@ -12,8 +12,17 @@ from .models import CapabilityGrant, CapabilityRequest, CapabilityType, Decision
 class CapabilityFirewall:
     def __init__(self) -> None:
         self.grants: dict[str, CapabilityGrant] = {}
+        self.used_grant_nonces: set[str] = set()
+        self.used_request_nonces: set[str] = set()
 
-    def install_grant(self, grant: CapabilityGrant) -> None:
+    def install_grant(self, grant: CapabilityGrant, installer_id: str | None = None) -> None:
+        # Prevent replay attacks on grant installation
+        if grant.nonce in self.used_grant_nonces:
+            raise ValueError(f"Replay attack detected: grant nonce '{grant.nonce}' already consumed.")
+        # Prevent self-grant attacks by agents
+        if installer_id and (installer_id == grant.issuer or installer_id == grant.approval_identity):
+            raise PermissionError("Self-granting capability authority is strictly prohibited.")
+        self.used_grant_nonces.add(grant.nonce)
         self.grants[grant.grant_id] = grant
 
     def revoke_grant(self, grant_id: str) -> bool:
@@ -23,6 +32,15 @@ class CapabilityFirewall:
         """Evaluates capability requests strictly independent of LLM content.
         Model output alone can NEVER grant itself authority.
         """
+        # Request nonce replay defense
+        if req.nonce:
+            if req.nonce in self.used_request_nonces:
+                return PolicyEvaluationResult(
+                    decision=Decision.DENY,
+                    reason=f"Replay attack detected: request nonce '{req.nonce}' already consumed.",
+                )
+            self.used_request_nonces.add(req.nonce)
+
         now_iso = datetime.now(timezone.utc).isoformat()
 
         # Find matching grants
@@ -32,6 +50,9 @@ class CapabilityFirewall:
                 continue
             # Check expiration
             if g.expiration_iso and g.expiration_iso < now_iso:
+                continue
+            # Self-grant defense: agent cannot evaluate against a grant where agent is issuer or approver
+            if req.agent_id and (req.agent_id == g.issuer or req.agent_id == g.approval_identity):
                 continue
             # Check resource scope pattern
             if not fnmatch.fnmatch(req.target_resource, g.resource_scope):

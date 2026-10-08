@@ -10,6 +10,10 @@ from pathlib import Path
 from typing import Any, Callable
 
 from .models import FailureClass, FailureGenomeEntry, Severity
+from spe_runtime.counterexample_minimizer.minimizer import (
+    DeltaDebuggingResult,
+    minimize_counterexample,
+)
 
 
 class PoisoningDetectionError(Exception):
@@ -119,6 +123,78 @@ class FailureGenomeStore:
             key = f"{entry.failure_class.value}::{entry.affected_capability}"
             clusters.setdefault(key, []).append(fid)
         return clusters
+
+    def deduplicate(self) -> list[str]:
+        """Find and consolidate duplicate failure records by model, failure class, and reproducer hash/text.
+        Returns list of pruned duplicate IDs.
+        """
+        seen: dict[tuple[str, str, str], str] = {}
+        pruned_ids: list[str] = []
+
+        for fid, entry in list(self._entries.items()):
+            # Canonical signature: model, failure_class, and normalized reproducer
+            norm_reproducer = re.sub(r"\s+", " ", entry.minimal_reproducer.strip())
+            key = (entry.model, entry.failure_class.value, norm_reproducer)
+            if key in seen:
+                canonical_id = seen[key]
+                canonical_entry = self._entries[canonical_id]
+                canonical_entry.reproduction_count += entry.reproduction_count
+                if entry.last_seen > canonical_entry.last_seen:
+                    canonical_entry.last_seen = entry.last_seen
+                if entry.is_verified_by_reproduction:
+                    canonical_entry.is_verified_by_reproduction = True
+                del self._entries[fid]
+                pruned_ids.append(fid)
+            else:
+                seen[key] = fid
+
+        if pruned_ids:
+            self._rewrite_file()
+        return pruned_ids
+
+    def minimize_entry(
+        self,
+        failure_id: str,
+        predicate_fn: Callable[[dict[str, Any]], bool],
+    ) -> DeltaDebuggingResult:
+        """Apply hierarchical delta-debugging to reduce the reproducer payload."""
+        entry = self._entries.get(failure_id)
+        if not entry:
+            raise KeyError(f"Failure {failure_id} not found")
+
+        # Represent reproducer as structured clauses if simple string
+        lines = [line.strip() for line in entry.minimal_reproducer.splitlines() if line.strip()]
+        test_case = {
+            "clauses": lines if lines else [entry.minimal_reproducer],
+            "tools": entry.metadata.get("tools", []),
+            "few_shot_examples": entry.metadata.get("examples", []),
+            "context": entry.observations,
+        }
+
+        result = minimize_counterexample(test_case, predicate_fn)
+        min_clauses = result.minimal_reproducer.get("clauses", [])
+        entry.minimal_reproducer = "\n".join(min_clauses) if min_clauses else entry.minimal_reproducer
+        self._rewrite_file()
+        return result
+
+    def check_holdout_contamination(
+        self,
+        holdout_tasks: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        """Verify that no genome failure reproducers contaminate held-out benchmark tasks."""
+        contaminations: list[dict[str, Any]] = []
+        for fid, entry in self._entries.items():
+            rep_clean = entry.minimal_reproducer.lower().strip()
+            for task in holdout_tasks:
+                task_prompt = task.get("prompt", "").lower().strip()
+                task_id = task.get("id", "unknown_task")
+                if task_prompt and (task_prompt in rep_clean or rep_clean in task_prompt):
+                    contaminations.append({
+                        "failure_id": fid,
+                        "task_id": task_id,
+                        "reason": "Exact or substring match between reproducer and held-out task",
+                    })
+        return contaminations
 
     def _append_to_file(self, entry: FailureGenomeEntry) -> None:
         row = asdict(entry)

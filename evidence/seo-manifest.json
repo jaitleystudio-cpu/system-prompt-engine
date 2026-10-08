@@ -1,0 +1,293 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-10-08T10:50:03.973Z",
+  "canonical_domain": "https://systempromptengine.com",
+  "total_prerendered_pages": 25,
+  "zero_placeholder_pages_verified": true,
+  "indexing_summary": {
+    "total_indexable": 25,
+    "noindex_count": 0,
+    "REAL_PRODUCT": 8,
+    "CATEGORY_OWNERSHIP": 8,
+    "REAL_DATA": 3,
+    "INTEGRATION_GUIDE": 4,
+    "MIGRATION_PATH": 2
+  },
+  "pages": [
+    {
+      "path": "/",
+      "title": "System Prompt Engine (SPE Ω) — AI Instruction Assurance Control Plane",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 498,
+      "canonical_url": "https://systempromptengine.com/",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/capabilities",
+      "title": "Full System Capabilities & Evaluation Atlas | SPE Ω",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 527,
+      "canonical_url": "https://systempromptengine.com/capabilities",
+      "schema_type": "FAQPage"
+    },
+    {
+      "path": "/privacy",
+      "title": "Zero-Egress Privacy & Cryptographic Integrity | SPE Ω",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 440,
+      "canonical_url": "https://systempromptengine.com/privacy",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/ai-instruction-assurance",
+      "title": "AI Instruction Assurance Control Plane | SPE Ω",
+      "classification": "CATEGORY_OWNERSHIP",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 432,
+      "canonical_url": "https://systempromptengine.com/ai-instruction-assurance",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/ai-instruction-compiler",
+      "title": "AI Instruction Compiler & Prompt IR | SPE Ω",
+      "classification": "CATEGORY_OWNERSHIP",
+      "indexing_status": "INDEXABLE",
+      "provenance": "EMPIRICAL_BENCHMARK",
+      "has_unique_content": true,
+      "word_count": 408,
+      "canonical_url": "https://systempromptengine.com/ai-instruction-compiler",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/prompt-compiler",
+      "title": "Formal AI Prompt Compiler & ABI | SPE Ω",
+      "classification": "CATEGORY_OWNERSHIP",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 399,
+      "canonical_url": "https://systempromptengine.com/prompt-compiler",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/prompt-security",
+      "title": "AI Prompt Security & Adversarial Red-Teaming | SPE Ω",
+      "classification": "CATEGORY_OWNERSHIP",
+      "indexing_status": "INDEXABLE",
+      "provenance": "OBSERVED_LOCAL",
+      "has_unique_content": true,
+      "word_count": 395,
+      "canonical_url": "https://systempromptengine.com/prompt-security",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/ai-agent-security",
+      "title": "AI Agent Security & Capability Firewall | SPE Ω",
+      "classification": "CATEGORY_OWNERSHIP",
+      "indexing_status": "INDEXABLE",
+      "provenance": "OBSERVED_LOCAL",
+      "has_unique_content": true,
+      "word_count": 400,
+      "canonical_url": "https://systempromptengine.com/ai-agent-security",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/mcp-security",
+      "title": "Model Context Protocol (MCP) Security Gateway | SPE Ω",
+      "classification": "CATEGORY_OWNERSHIP",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 408,
+      "canonical_url": "https://systempromptengine.com/mcp-security",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/model-drift-monitoring",
+      "title": "Empirical Model Drift Sentinel & Passports | SPE Ω",
+      "classification": "CATEGORY_OWNERSHIP",
+      "indexing_status": "INDEXABLE",
+      "provenance": "EMPIRICAL_BENCHMARK",
+      "has_unique_content": true,
+      "word_count": 405,
+      "canonical_url": "https://systempromptengine.com/model-drift-monitoring",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/ai-governance-evidence",
+      "title": "AI Governance Evidence Pack (EU AI Act & ISO 42001) | SPE Ω",
+      "classification": "CATEGORY_OWNERSHIP",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 417,
+      "canonical_url": "https://systempromptengine.com/ai-governance-evidence",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/tools/system-prompt-generator",
+      "title": "Free Air-Gapped System Prompt Generator | SPE",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 393,
+      "canonical_url": "https://systempromptengine.com/tools/system-prompt-generator",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/tools/free-3d-website-builder",
+      "title": "Free AI 3D Website Studio | SPE",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 387,
+      "canonical_url": "https://systempromptengine.com/tools/free-3d-website-builder",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/tools/audio-to-text",
+      "title": "Private Local Audio to Text Transcriber | SPE",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 399,
+      "canonical_url": "https://systempromptengine.com/tools/audio-to-text",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/tools/video-to-text",
+      "title": "Local Video Keyframe & Audio Transcriber | SPE",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 391,
+      "canonical_url": "https://systempromptengine.com/tools/video-to-text",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/tools/screenshot-to-code",
+      "title": "Neural Screenshot to Code Compiler | SPE",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 396,
+      "canonical_url": "https://systempromptengine.com/tools/screenshot-to-code",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/models/openai/gpt-4o",
+      "title": "OpenAI GPT-4o Empirical Model Passport | SPE Atlas",
+      "classification": "REAL_DATA",
+      "indexing_status": "INDEXABLE",
+      "provenance": "EMPIRICAL_BENCHMARK",
+      "has_unique_content": true,
+      "word_count": 421,
+      "canonical_url": "https://systempromptengine.com/models/openai/gpt-4o",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/models/anthropic/claude-3-7-sonnet",
+      "title": "Anthropic Claude 3.7 Sonnet Model Passport | SPE Atlas",
+      "classification": "REAL_DATA",
+      "indexing_status": "INDEXABLE",
+      "provenance": "EMPIRICAL_BENCHMARK",
+      "has_unique_content": true,
+      "word_count": 426,
+      "canonical_url": "https://systempromptengine.com/models/anthropic/claude-3-7-sonnet",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/failure-genome/SPE-FG-2026-000001",
+      "title": "SPE-FG-2026-000001: Indirect Prompt Injection Case Study | SPE Genome",
+      "classification": "REAL_DATA",
+      "indexing_status": "INDEXABLE",
+      "provenance": "OBSERVED_LOCAL",
+      "has_unique_content": true,
+      "word_count": 428,
+      "canonical_url": "https://systempromptengine.com/failure-genome/SPE-FG-2026-000001",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/integrations/openai",
+      "title": "OpenAI SDK Prompt Assurance Integration | SPE",
+      "classification": "INTEGRATION_GUIDE",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 411,
+      "canonical_url": "https://systempromptengine.com/integrations/openai",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/integrations/anthropic",
+      "title": "Anthropic Claude Prompt Caching Integration | SPE",
+      "classification": "INTEGRATION_GUIDE",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 402,
+      "canonical_url": "https://systempromptengine.com/integrations/anthropic",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/integrations/mcp",
+      "title": "Model Context Protocol (MCP) Tool Integration | SPE",
+      "classification": "INTEGRATION_GUIDE",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 392,
+      "canonical_url": "https://systempromptengine.com/integrations/mcp",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/integrations/github-actions",
+      "title": "SPE GitHub Action CI Evidence Gate | SPE",
+      "classification": "INTEGRATION_GUIDE",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 396,
+      "canonical_url": "https://systempromptengine.com/integrations/github-actions",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/compare/spe-vs-promptfoo",
+      "title": "SPE vs Promptfoo: Architecture Comparison | SPE",
+      "classification": "MIGRATION_PATH",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 451,
+      "canonical_url": "https://systempromptengine.com/compare/spe-vs-promptfoo",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/migrate/from-raw-prompts",
+      "title": "Migrate from Raw Prompts to .spe Packages | SPE",
+      "classification": "MIGRATION_PATH",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 431,
+      "canonical_url": "https://systempromptengine.com/migrate/from-raw-prompts",
+      "schema_type": "SoftwareApplication"
+    }
+  ]
+}

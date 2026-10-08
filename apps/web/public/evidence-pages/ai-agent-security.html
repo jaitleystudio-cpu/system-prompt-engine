@@ -39,6 +39,9 @@
     a:hover { text-decoration: underline; }
     nav.breadcrumbs { font-size: 12px; color: #64748b; margin-bottom: 16px; }
     footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #1e293b; font-size: 12px; color: #64748b; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th, td { padding: 8px 12px; border-bottom: 1px solid #1e293b; }
+    th { color: #94a3b8; }
   </style>
 </head>
 <body>
@@ -47,26 +50,23 @@
       <a href="/">Home</a> &gt; <span>ai-agent-security</span>
     </nav>
     <header>
-      <span class="badge">EVIDENCE-BACKED CONTROL PLANE</span>
+      <span class="badge">CATEGORY_OWNERSHIP &bull; OBSERVED_LOCAL</span>
       <h1>AI Agent Security & Capability Firewall</h1>
       <p class="lead">Out-of-band authority control preventing unauthorized real-world AI actions.</p>
     </header>
 
     <main>
       <div class="box">
-        <h2>Architecture & Evidence</h2>
-        <p>SPE Ω compiles, tests, and verifies AI instructions under 100% air-gapped execution (<code>connect-src 'self'</code>) with zero external network egress.</p>
-        <ul>
-          <li><strong>Cryptographic Receipt:</strong> RFC 8785 JSON Canonicalization + SHA-256 + Ed25519 signature.</li>
-          <li><strong>Formal Verification:</strong> Bounded rule consistency analysis detecting paradoxical directives.</li>
-          <li><strong>Inference Economics:</strong> Speculative KV-cache page boundary alignment for vLLM, SGLang, and Anthropic prompt caching.</li>
-        </ul>
+        
+      <h2>Runtime Capability Firewall</h2>
+      <p>An LLM cannot grant itself authority. The SPE Capability Firewall enforces signed grants for dangerous operations like file mutation, payments, and external messaging.</p>
+    
       </div>
 
       <div class="box">
-        <h2>Developer CLI Adoption</h2>
-        <pre>$ npx spe adopt .
-$ npx spe check system_prompt.md --strict</pre>
+        <h2>Verification & Evidence Invariant</h2>
+        <p>Executed locally via WebAssembly under zero-egress sandbox (<code>connect-src 'self'</code>). Output correctness is not proven; bounded rule consistency is deterministically verified.</p>
+        <pre>$ spe verify _ai-agent-security.spe --strict</pre>
       </div>
     </main>
 

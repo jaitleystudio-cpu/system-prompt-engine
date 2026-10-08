@@ -1,0 +1,62 @@
+name: SPE Ω — Phase 2 Evidence CI & Regression Gate
+
+on:
+  push:
+    branches:
+      - 'integration/**'
+      - 'candidate/**'
+  pull_request:
+    branches:
+      - 'integration/**'
+      - 'candidate/**'
+
+permissions:
+  contents: read
+
+jobs:
+  python-evidence:
+    name: Python Engine Tests & Egress Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e '.[dev]'
+      - name: Run Unit Tests & Generate JUnit XML
+        run: |
+          mkdir -p tmp
+          python -m pytest tests/unit -q --junitxml tmp/pytest-results.xml
+      - name: Run Network Egress Verification
+        run: |
+          python scripts/test-network-egress.py
+
+  cli-and-wasm:
+    name: CLI Battery & WASM Canonical Hash
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm --prefix apps/web ci
+      - name: Verify Canonical WASM Hash
+        run: |
+          node -e '
+            import { readFileSync } from "fs";
+            import { createHash } from "crypto";
+            const buf = readFileSync("apps/web/src/wasm/spe_wasm_engine_bg.wasm");
+            const hash = createHash("sha256").update(buf).digest("hex");
+            const expected = "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d";
+            if (hash !== expected) {
+              console.error(`WASM hash mismatch: got ${hash}, expected ${expected}`);
+              process.exit(1);
+            }
+            console.log("✅ Canonical WASM hash verified:", hash);
+          '
+      - name: Verify CLI Entrypoint & Commands
+        run: |
+          node bin/spe.mjs --help
+          node bin/spe.mjs version

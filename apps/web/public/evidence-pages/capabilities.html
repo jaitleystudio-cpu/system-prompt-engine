@@ -47,6 +47,9 @@
     a:hover { text-decoration: underline; }
     nav.breadcrumbs { font-size: 12px; color: #64748b; margin-bottom: 16px; }
     footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #1e293b; font-size: 12px; color: #64748b; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th, td { padding: 8px 12px; border-bottom: 1px solid #1e293b; }
+    th { color: #94a3b8; }
   </style>
 </head>
 <body>
@@ -55,26 +58,30 @@
       <a href="/">Home</a> &gt; <span>capabilities</span>
     </nav>
     <header>
-      <span class="badge">EVIDENCE-BACKED CONTROL PLANE</span>
+      <span class="badge">REAL_PRODUCT &bull; SPECIFICATION_VERIFIED</span>
       <h1>Full System Capabilities & Evaluation Atlas</h1>
       <p class="lead">Comprehensive catalog of formal prompt compiler capabilities, execution contracts, and provider profiles. Output correctness is not proven; bounded rule consistency is verified.</p>
     </header>
 
     <main>
       <div class="box">
-        <h2>Architecture & Evidence</h2>
-        <p>SPE Ω compiles, tests, and verifies AI instructions under 100% air-gapped execution (<code>connect-src 'self'</code>) with zero external network egress.</p>
-        <ul>
-          <li><strong>Cryptographic Receipt:</strong> RFC 8785 JSON Canonicalization + SHA-256 + Ed25519 signature.</li>
-          <li><strong>Formal Verification:</strong> Bounded rule consistency analysis detecting paradoxical directives.</li>
-          <li><strong>Inference Economics:</strong> Speculative KV-cache page boundary alignment for vLLM, SGLang, and Anthropic prompt caching.</li>
-        </ul>
+        
+      <h2>Verified Compiler & Runtime Capabilities</h2>
+      <p>SPE verifies bounded rule consistency, Horn clause contradictions, and authority boundary enforcement deterministically.</p>
+      <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
+        <tr style="border-bottom: 1px solid #334155; text-align: left;"><th>Capability</th><th>Status</th><th>Verification Method</th></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Bounded Horn Contradiction Scan</td><td>VERIFIED</td><td>Deterministic propositional SAT solver</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>RFC 8785 JCS Signatures</td><td>VERIFIED</td><td>Ed25519 cryptographic keypairs</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Zero-Egress CSP Enclosure</td><td>VERIFIED</td><td>Host-level socket denial & CSP 'self'</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>General FOL SAT O(N)</td><td>DISCLAIMED</td><td>Mathematically impossible (undecidable)</td></tr>
+      </table>
+    
       </div>
 
       <div class="box">
-        <h2>Developer CLI Adoption</h2>
-        <pre>$ npx spe adopt .
-$ npx spe check system_prompt.md --strict</pre>
+        <h2>Verification & Evidence Invariant</h2>
+        <p>Executed locally via WebAssembly under zero-egress sandbox (<code>connect-src 'self'</code>). Output correctness is not proven; bounded rule consistency is deterministically verified.</p>
+        <pre>$ spe verify _capabilities.spe --strict</pre>
       </div>
     </main>
 

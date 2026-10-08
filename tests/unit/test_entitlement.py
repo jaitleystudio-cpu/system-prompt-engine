@@ -1,5 +1,6 @@
 """Unit tests for Section 40: Checkout, Entitlement, Offline Licenses & Idempotent Webhooks."""
 
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 import pytest
 
@@ -241,3 +242,113 @@ def test_clock_skew_tolerance_and_rejection():
     token_bad = create_offline_license(payload_bad, sk, pk)
     with pytest.raises(LicenseVerificationError, match="clock skew"):
         verify_offline_license(token_bad, trusted_public_key_hex=pk.hex(), clock_skew_seconds=60)
+
+
+def test_concurrent_payment_webhooks():
+    """Verify thread-safety and state consistency under high-concurrency webhooks."""
+    manager = EntitlementManager()
+    events = [
+        {
+            "id": f"evt_thread_{i}",
+            "type": "checkout.session.completed",
+            "created": 1000 + i,
+            "data": {
+                "object": {
+                    "customer": f"cust_conc_{i}",
+                    "metadata": {"tier": "PRO"},
+                }
+            },
+        }
+        for i in range(25)
+    ]
+
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        results = list(executor.map(manager.process_payment_webhook, events))
+
+    assert len(results) == 25
+    assert all(r["status"] == "SUCCESS" for r in results)
+    for i in range(25):
+        cust = manager.get_or_create_customer(f"cust_conc_{i}")
+        assert cust.plan_tier == PlanTier.PRO
+        assert cust.subscription_status == SubscriptionStatus.ACTIVE
+
+
+def test_out_of_order_webhook_delivery():
+    """Verify that late-arriving older webhook events are safely ignored."""
+    manager = EntitlementManager()
+    customer_id = "cust_ooo_01"
+
+    # Event 1: Cancellation at timestamp 2000
+    cancel_evt = {
+        "id": "evt_cancel_2000",
+        "type": "customer.subscription.deleted",
+        "created": 2000,
+        "data": {"object": {"customer": customer_id}},
+    }
+    res_cancel = manager.process_payment_webhook(cancel_evt)
+    assert res_cancel["status"] == "CANCELED"
+    assert manager.get_or_create_customer(customer_id).subscription_status == SubscriptionStatus.CANCELED
+
+    # Event 2: Stale update created at timestamp 1000 arrives LATER
+    stale_update_evt = {
+        "id": "evt_update_1000",
+        "type": "customer.subscription.updated",
+        "created": 1000,
+        "data": {
+            "object": {
+                "customer": customer_id,
+                "metadata": {"tier": "PRO"},
+            }
+        },
+    }
+    res_stale = manager.process_payment_webhook(stale_update_evt)
+    assert res_stale["status"] == "IGNORED_OUT_OF_ORDER"
+    assert "older than last processed" in res_stale["reason"]
+
+    # Customer remains canceled, not resurrected!
+    assert manager.get_or_create_customer(customer_id).subscription_status == SubscriptionStatus.CANCELED
+
+
+def test_subscription_resurrection_defense():
+    """Verify that a canceled subscription cannot be revived by subscription.updated."""
+    manager = EntitlementManager()
+    customer_id = "cust_resurrect_guard"
+
+    # Step 1: Subscribe Pro
+    manager.upgrade_plan(customer_id, PlanTier.PRO)
+
+    # Step 2: Cancel
+    manager.cancel_subscription(customer_id)
+    assert manager.get_or_create_customer(customer_id).subscription_status == SubscriptionStatus.CANCELED
+
+    # Step 3: Ambiguous update webhook arrives with newer timestamp
+    update_evt = {
+        "id": "evt_update_newer",
+        "type": "customer.subscription.updated",
+        "created": 5000,
+        "data": {
+            "object": {
+                "customer": customer_id,
+                "metadata": {"tier": "PRO"},
+            }
+        },
+    }
+    res = manager.process_payment_webhook(update_evt)
+    assert res["status"] == "BLOCKED_RESURRECTION"
+    assert "Canceled subscription cannot be resurrected" in res["reason"]
+
+    # Status remains CANCELED
+    assert manager.get_or_create_customer(customer_id).subscription_status == SubscriptionStatus.CANCELED
+
+
+def test_clock_rollback_detection():
+    """Verify that system clock manipulation backward is detected and rejected."""
+    manager = EntitlementManager()
+    cust = manager.upgrade_plan("cust_clock", PlanTier.PRO, duration_days=30, current_time_iso="2026-10-08T12:00:00Z")
+
+    # Normal sequential check: T = 12:05:00Z
+    assert cust.is_active("2026-10-08T12:05:00Z") is True
+
+    # Clock rewound: T = 10:00:00Z (earlier than 12:05:00Z)
+    with pytest.raises(ValueError, match="Clock rollback detected"):
+        cust.is_active("2026-10-08T10:00:00Z")

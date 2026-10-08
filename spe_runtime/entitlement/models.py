@@ -114,9 +114,13 @@ class EntitlementState:
     quota: UsageQuota = field(default_factory=UsageQuota)
     created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     offline_license_key: str | None = None
+    last_verified_at: str | None = None
 
     def is_active(self, current_time_iso: str | None = None) -> bool:
         if self.subscription_status not in (SubscriptionStatus.ACTIVE, SubscriptionStatus.TRIALING):
             return False
         now_ts = current_time_iso or datetime.now(timezone.utc).isoformat()
+        if self.last_verified_at and now_ts < self.last_verified_at:
+            raise ValueError("Clock rollback detected: current time is earlier than previous verification timestamp.")
+        self.last_verified_at = now_ts
         return now_ts <= self.valid_until
