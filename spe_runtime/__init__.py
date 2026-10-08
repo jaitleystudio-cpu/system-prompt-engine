@@ -1,5 +1,18 @@
-"""System Prompt Engine runtime — NEW_IMPLEMENTATION."""
-
+from spe_runtime.csi import (
+    CausalCommitEngine,
+    EffectBarrierViolation,
+    EpistemicMVCCEngine,
+    IrreversibleEffectBarrier,
+    LatticeState,
+    ModelTarget,
+    PageFaultInterrupt,
+    SemanticInstruction,
+    SemanticMicrocodeCompiler,
+    SemanticMMU,
+    SemanticRegister,
+    SemanticTransaction,
+    SemanticWorkingSet,
+)
 from spe_runtime.sdk import (
     SPEReceipt,
     SPEResult,
@@ -20,4 +33,17 @@ __all__ = [
     "audit_savings",
     "SPEResult",
     "SPEReceipt",
+    "SemanticMMU",
+    "EpistemicMVCCEngine",
+    "CausalCommitEngine",
+    "IrreversibleEffectBarrier",
+    "EffectBarrierViolation",
+    "SemanticMicrocodeCompiler",
+    "ModelTarget",
+    "SemanticInstruction",
+    "SemanticRegister",
+    "SemanticTransaction",
+    "SemanticWorkingSet",
+    "LatticeState",
+    "PageFaultInterrupt",
 ]
