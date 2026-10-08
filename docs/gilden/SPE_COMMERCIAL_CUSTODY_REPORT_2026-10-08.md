@@ -9,21 +9,69 @@
 | States used | PRESENT_VERIFIED, PARTIAL, NOT_PRESENT, UNKNOWN, HOLD. **Nothing in this report is a PASS.** |
 | Money fields | Traffic, users, cash, MRR and cost are **UNKNOWN** unless a real source proves them. None are estimated. |
 
+## Status (owner ruling, 2026-10-08)
+
+```text
+PR #139
+STATE:
+DRAFT_CUSTODY_ACCEPTED_FOR_OWNER_REVIEW
+
+TEXT_CUSTODY:
+COMPLETE_WITHIN_REPO
+
+COMMERCIAL_AUDIT:
+ACCEPTED_WITH_ONE_EXTERNAL_EVIDENCE_DOWNGRADE
+
+VERCEL DEPLOYMENT:
+BUILDER_OBSERVED
+INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE
+
+MERGE:
+BLOCKED_PENDING_OWNER_ACCEPTANCE
+
+COMMERCIAL SPEC DRAFTING:
+NEXT WAVE, SEPARATE BRANCH/PR
+
+NO:
+- production deploy
+- DNS changes
+- payment-provider setup
+- partner applications
+- outreach sends
+- spend
+- analytics activation
+- ads activation
+```
+
+**Evidence-class note (owner correction, 2026-10-08).** Everything this report says about Vercel
+was observed by the builder only: the deployment, the project, the account's other projects, the
+Web Analytics and billing responses, and the vercel.app response headers. It came from the
+builder's own Vercel connector session and public `curl` fetches on 2026-10-08. The owner's
+reviewer could not reproduce it: their visible team does not expose a `system-prompt-engine`
+project, and a direct fetch returned not found / outside authorized scope.
+
+All such claims are classed:
+
+`VERCEL DEPLOYMENT: BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE`
+
+The observed details are kept as observations and are not independently verified. They were
+deliberately not re-queried to "upgrade" them. Claims that depend on them carry the tag `[BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE]`.
+
 ## 0. Refs audited
 
 | Ref | SHA | Notes |
 | --- | --- | --- |
 | `origin/main` | `3abe3df936082296b6a1ddc94923d757129cfdff` | 2026-09-24 13:26 IST. Expected value confirmed; unchanged by this work. |
 | `origin/cursor/r9-integration-q0-q9-895a323` | `8a3ae11bd82c8b56237e2216035711b5291a3ca5` | Tree `e21a2552869858efa8434e3c5df01ac579203fc1`, committed 2026-10-08 11:36 IST. Frozen R9 candidate, read only. |
-| Open PRs | #30–#138 | Listed 2026-10-08 via `gh pr list`. All open PRs are drafts or unmerged. |
+| Open PRs | #30–#138 | Listed 2026-10-08 via `gh pr list`. All open PRs are drafts or unmerged. #138 head is `21311576fce07a1b852e4d8ebcc30d11e24fd34a` (still HOLD). |
 
 Citations below use `path@sha`, where `@8a3ae11` is the R9 candidate and `@3abe3df` is main.
 
 **External read-only checks:**
 
-- Public HTTP `curl` of the domain and the Vercel URL.
+- Public HTTP `curl` of the domain. Also `curl` of the Vercel URL [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE].
 - DNS-over-HTTPS lookup.
-- Vercel connector calls: `list_projects`, `list_deployments`, `list_project_domains`, `list_domains`, `list_teams`, `count_pageviews`, `list_billing_charges`.
+- Vercel connector calls (builder's own connector session, 2026-10-08): `list_projects`, `list_deployments`, `list_project_domains`, `list_domains`, `list_teams`, `count_pageviews`, `list_billing_charges`. All results are VERCEL DEPLOYMENT: BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE.
 
 Nothing was changed. Gmail was not used. Nothing was sent, applied for, accepted or spent.
 
@@ -60,12 +108,18 @@ FREE_TOOLS_LIVE= PARTIAL / HOLD.
   - Owned domain systempromptengine.com: NOT live. Apex and www return a GoDaddy parking page
     (window.location.href="/lander"). NS ns57/ns58.domaincontrol.com; A 3.33.130.190,
     15.197.148.33.
-  - Live public deployment: Vercel project "system-prompt-engine" (prj_qEbBf3K4My2dQuGQr37L6J5Lt8h5).
-    Production deployment dpl_5buNqLTEg8bGs9iEqaQ1bBtsVW8n READY, created 2026-10-05 18:01 IST,
-    served at https://system-prompt-engine-six.vercel.app. Its robots.txt lacks /studio, so it is an
-    older build. Its source SHA is UNKNOWN (no git metadata on the deployment).
-  - Whether that deployment was founder-authorized is UNKNOWN. It conflicts with the R8 note
-    "TARGET HOST = CLOUDFLARE PAGES … Vercel is NOT USED" (PR #121 body).
+  - VERCEL DEPLOYMENT: BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE.
+    Builder-observed via the builder's Vercel connector session and public curl on 2026-10-08;
+    not independently verified:
+    - Vercel project "system-prompt-engine" (prj_qEbBf3K4My2dQuGQr37L6J5Lt8h5).
+    - Production deployment dpl_5buNqLTEg8bGs9iEqaQ1bBtsVW8n, state READY, created 2026-10-05
+      18:01 IST.
+    - Served at https://system-prompt-engine-six.vercel.app. Its robots.txt lacked /studio, which
+      suggests an older build.
+    - Source SHA UNKNOWN (no git metadata on the deployment).
+  - Whether that deployment was founder-authorized is UNKNOWN. If confirmed, it would conflict
+    with the R8 note "TARGET HOST = CLOUDFLARE PAGES … Vercel is NOT USED" (PR #121 body).
+    [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE]
   - /media and /ocr need /api/* local hosts (apps/web/src/media/pinnedWhisperRuntime.ts@8a3ae11,
     apps/web/scripts/local-media-host.mjs). They are unavailable on static hosting.
 PRO_IMPLEMENTED= NOT_PRESENT. No pricing page, plan, tier or paywall in either ref. Only
@@ -88,7 +142,8 @@ ANALYTICS_STATUS= NOT_PRESENT in the product, by policy.
     (apps/web/src/pages/PrivacyProof.tsx@8a3ae11).
   - Aggregate-only privacy analytics design exists only in draft PR #69 (f7c2e66, unmerged,
     not in R9).
-  - Vercel Web Analytics: not enabled (API 400 web_analytics_not_enabled).
+  - Vercel Web Analytics: builder-observed as not enabled (API 400 web_analytics_not_enabled)
+    [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE].
 REVENUE_ATTRIBUTION_STATUS= NOT_PRESENT.
 ADS_READY= NOT_PRESENT / HOLD.
   - No ad slots or house cards.
@@ -109,7 +164,8 @@ API_OEM_READY= NOT_PRESENT. Partial primitives: portable WASM/ABI (portable/spe-
 MARKETPLACE_READY= NOT_PRESENT. No .spe registry. "Prompt marketplace in core | NO"
   (docs/ZERO_COST_PRODUCT_LAW.md). v3 §15 forbids monetizing before package integrity,
   provenance, licensing and publisher identity are hardened.
-TRAFFIC_NOW= UNKNOWN. No analytics source anywhere; Vercel Web Analytics not enabled.
+TRAFFIC_NOW= UNKNOWN. No analytics source in the repo. Vercel Web Analytics was builder-observed
+  as not enabled [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE].
   ACTUAL_MONTHLY_VISITS=UNKNOWN. TARGET_MONTHLY_VISITS = ~20M mature / 100M+ moonshot (v3 §5:
   owner targets, not forecasts).
 USERS_NOW= UNKNOWN
@@ -118,12 +174,12 @@ CURRENT_MRR= UNKNOWN. No billing system exists, so SPE-product MRR via any repo 
   not 0.
 CURRENT_REVENUE= UNKNOWN. verified_cash_collected_to_date = UNKNOWN (not guessed).
 CURRENT_COST= UNKNOWN.
-  - Vercel billing: 403 forbidden for the team scope.
+  - Vercel billing: 403 forbidden for the team scope in the builder's session [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE].
   - GoDaddy domain and other spend: no source.
   - Repo law target is ₹0 owner spend (docs/ZERO_COST_PRODUCT_LAW.md).
 EXISTING_PARTNERS= NOT_PRESENT in repo. Off-repo partners are UNKNOWN.
-CURRENT_PIPELINE= UNKNOWN. No CRM or pipeline record. Observation only, not revenue: the same
-  Vercel account holds client-style projects visakha-motors, vajra-jewels, visakha-furnitures and
+CURRENT_PIPELINE= UNKNOWN. No CRM or pipeline record. Observation only, not revenue
+  [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE]: the builder's Vercel connector session listed client-style projects visakha-motors, vajra-jewels, visakha-furnitures and
   3d-website-portfolio (created around 2026-05). Any revenue from them is UNKNOWN.
 BLOCKERS= see §5–§8. In short:
   (1) no live owned domain and an unresolved hosting custody conflict;
@@ -134,7 +190,7 @@ BLOCKERS= see §5–§8. In short:
   (6) the v3 §29 Oct 8–12 commercial specs do not exist yet;
   (7) founder decisions pending.
 NEXT_HIGHEST_VALUE_ACTION= founder decision on public hosting custody: domain plus host, and the
-  status of the existing Vercel production deployment. Every ads, SEO, affiliate, sponsor and
+  status of the builder-observed Vercel production deployment [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE]. Every ads, SEO, affiliate, sponsor and
   self-serve route depends on a live, qualified, owned surface. In parallel and within authority:
   draft the v3 §29 Oct 8–12 commercial specs as docs.
 FOUNDER_AUTHORITY_REQUIRED= YES
@@ -152,14 +208,16 @@ release_candidate_status= HOLD. R9 integration candidate 8a3ae11 (tree e21a2552�
   - Q4/Q5 HOLD_EXPLICIT;
   - Q8 57/57 killed.
   Successor PRs: #135 f96f9cd, #136 614fb2e, #137 f55e78b accepted for successor integration;
-  #138 2131157 HOLD (audio hardening). R8 release PR #121 d1c927f is open and unmerged.
+  #138 head 21311576fce07a1b852e4d8ebcc30d11e24fd34a, still HOLD (audio hardening). R8 release PR #121 d1c927f is open and unmerged.
   main = 3abe3df (2026-09-24). No qualified RC.
 public_release_status= NOT_PRESENT on the owned domain. systempromptengine.com is a GoDaddy
   parking page (/lander; NS domaincontrol.com). The repo hosting gate is FORBIDDEN_PENDING_FOUNDER
   (SPE-CHANGELOG:10@8a3ae11).
-  Unreconciled: Vercel production deployment dpl_5buNqLTEg8bGs9iEqaQ1bBtsVW8n READY since
-  2026-10-05 18:01 IST at system-prompt-engine-six.vercel.app. Older build (robots lacks
-  /studio); source SHA UNKNOWN; authorization UNKNOWN. HOLD.
+  Unreconciled (VERCEL DEPLOYMENT: BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE):
+  the builder's connector session on 2026-10-08 showed production deployment
+  dpl_5buNqLTEg8bGs9iEqaQ1bBtsVW8n READY since 2026-10-05 18:01 IST at
+  system-prompt-engine-six.vercel.app. Older build (robots lacked /studio); source SHA UNKNOWN;
+  authorization UNKNOWN. Not independently verified. HOLD.
 
 seven_pillars_status=
   1 Audio→Text — PARTIAL / HOLD. /media via local whisper.cpp host
@@ -195,7 +253,8 @@ entitlement_status= NOT_PRESENT. No entitlement, licence key or offline-licence 
 
 analytics_status= NOT_PRESENT, by policy: audit-deps.mjs:27-38 bans analytics SDKs; PrivacyProof
   says "does not include analytics" @8a3ae11. Aggregate-only design exists only in draft PR #69
-  f7c2e66 (not in R9). Vercel Web Analytics: not enabled.
+  f7c2e66 (not in R9). Vercel Web Analytics: builder-observed as not enabled
+  [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE].
 revenue_attribution_status= NOT_PRESENT
 reconciliation_status= NOT_PRESENT. No revenue ledger. "ledger" hits are evidence ledgers only
   (apps/web/src/authority/evidenceRegistry.ts@8a3ae11).
@@ -221,7 +280,8 @@ SEO_status= PARTIAL.
 Search_Console_status= NOT_PRESENT. No verification token or file; the domain is parked; DNS
   change is founder-gated.
 
-monthly_operating_cost= UNKNOWN. Vercel billing API 403 for the team scope. GoDaddy and other
+monthly_operating_cost= UNKNOWN. Vercel billing API 403 for the team scope in the builder's session
+  [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE]. GoDaddy and other
   spend: no source. Repo target ₹0 (docs/ZERO_COST_PRODUCT_LAW.md).
 
 active_revenue_channels= NONE evidenced. Router coverage: ACTIVE 0, QUALIFIED_CANDIDATE 0 (§4).
@@ -241,7 +301,8 @@ commercial_HOLDs=
   (8) package ecosystem not hardened (v3 §15);
   (9) API/OEM not production-qualified (v3 §14).
 authority_HOLDs= every item below needs founder authority (v3 §33, v2 §22):
-  - hosting and deploy decision; fate of the Vercel deployment;
+  - hosting and deploy decision; fate of the builder-observed Vercel deployment
+    [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE];
   - DNS change and Search Console;
   - payment entity and provider account opening;
   - acceptance of network, affiliate or partner terms;
@@ -256,7 +317,8 @@ next_10_actions_in_dependency_order= see §6 (tagged within-authority-now /
 highest_probability_near-term_revenue_action= founder-led direct sales that need no checkout
   code, e.g. paid 3D-website builds using SPE Studio and enterprise prompt-governance / on-prem
   pilots, invoiced manually and recorded in a reconciliation ledger. Hypothesis only. Weak
-  evidence: client-style sites exist in the Vercel account. Revenue from them is UNKNOWN.
+  evidence: client-style sites were listed in the builder's Vercel connector session
+  [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE]. Revenue from them is UNKNOWN.
   Requires founder pricing and contract authority.
 
 highest_expected-long-term-revenue-action= Team/Enterprise assurance MRR: private Failure Genome,
@@ -264,7 +326,8 @@ highest_expected-long-term-revenue-action= Team/Enterprise assurance MRR: privat
   NOT_PRESENT today; existing authority, receipt and portable-ABI primitives are the base.
 
 highest-risk-commercial-dependency= a qualified public surface on the owned domain. Today: domain
-  parked, RC HOLD, hosting founder-gated, and an unaccounted Vercel production deploy. Every route
+  parked, RC HOLD, hosting founder-gated, and an unaccounted Vercel production deploy
+  (builder-observed; independent connector verification unavailable in current scope). Every route
   except direct services sits behind it, as does the 26 Oct target.
 
 owner_decisions_required= see §8.
@@ -366,14 +429,14 @@ Router states: ACTIVE = earning now. QUALIFIED_CANDIDATE = could be switched on 
 | Ad slots / house cards / affiliate / sponsor | NOT_PRESENT | grep returned 0 product hits. |
 | robots / sitemap / meta / JSON-LD | PARTIAL | See SEO_status above. |
 | Privacy policy | PARTIAL | `/privacy` is a product privacy-proof page, not a legal policy. It has no terms of service, refund policy or contact/grievance details, all of which payment providers and ad networks require. |
-| CSP / security headers | PRESENT_VERIFIED (static) | `apps/web/public/_headers`@8a3ae11 and meta CSP in `index.html`. Vercel does **not** apply `_headers`: the live vercel.app response has no CSP, COEP or frame-ancestors header, only the meta CSP. |
+| CSP / security headers | PRESENT_VERIFIED (static) | `apps/web/public/_headers`@8a3ae11 and meta CSP in `index.html`. The repo files are PRESENT_VERIFIED. The vercel.app header observation is [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE]: a builder `curl` on 2026-10-08 saw no CSP, COEP or frame-ancestors response header, only the meta CSP, consistent with Vercel not applying `_headers`. |
 
 ## 6. Next 10 actions in dependency order
 
 | # | Action | Tag |
 | --- | --- | --- |
 | 1 | Draft the v3 §29 Oct 8–12 commercial specs as docs for owner review: pricing architecture (Free/Pro/Team/Enterprise with the free-core guarantee); entitlement model (offline-licence option vs accounts); commercial event schema; revenue attribution (aggregate, privacy-safe); Sponsor Center spec; affiliate disclosure; media-kit template (no unmeasured numbers); public advertising boundaries plus a CSP-compatible house-card spec; CRM schema; revenue ledger (FORECAST / INVOICE / COLLECTED / RECONCILED). | within-authority-now (docs drafts) |
-| 2 | Decide public hosting custody: Cloudflare Pages (R8 plan) or Vercel (existing prod deploy 2026-10-05 18:01 IST, source SHA UNKNOWN); keep or take down the vercel.app deployment; set the go-live gate against the 26 Oct target. | founder-authority-required |
+| 2 | Decide public hosting custody: Cloudflare Pages (R8 plan) or Vercel (prod deploy 2026-10-05 18:01 IST, source SHA UNKNOWN; VERCEL DEPLOYMENT: BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE); first confirm, then keep or take down, the vercel.app deployment; set the go-live gate against the 26 Oct target. | founder-authority-required |
 | 3 | Commercial-policy amendment, as an owner-approved doc. Reconcile `docs/ZERO_COST_PRODUCT_LAW.md`, `audit-deps.mjs` bans, `test_web_privacy_pwa.py` (no login/signup/oauth) and the privacy copy with the directive. Explicitly allow: (a) cookieless first-party aggregate analytics; (b) disclosed affiliate links; (c) first-party sponsor/house cards with no third-party scripts; (d) offline licence or optional account for Pro/Team, with the free core unchanged. | founder-authority-required (then builder) |
 | 4 | Measurement foundation: same-origin, cookieless aggregate analytics compatible with `connect-src 'self'`, reconciled with draft PR #69, plus the seven-pillar board events. Copy and privacy page updated through the owner-approved copy-check inventory. | builder-work-needs-owner-tasking |
 | 5 | SEO crawlability: prerender or static crawl documents for the six public routes (reconcile draft PR #60); route AuthorityHub/guides only if they carry real tool evidence (v3 §19, v2 §30); keep private routes noindex. | builder-work-needs-owner-tasking |
@@ -392,7 +455,7 @@ Router states: ACTIVE = earning now. QUALIFIED_CANDIDATE = could be switched on 
 4. **Accounts vs Pro/Team.** `test_web_privacy_pwa.py:47-73`@8a3ae11 asserts no `login`, `signup`, `oauth` or `indexedDB` in web source. v3 §3 ("ACCOUNT / PROJECT VALUE WHERE USEFUL") and the Team engine (v3 §11) need identity. Pro could use an offline licence instead (v3 §29 "offline entitlement"), but that needs a policy decision.
 5. **Privacy copy.** `PrivacyProof.tsx` says "does not include analytics, ad tracking…". Any measurement, ad or sponsor change needs an owner-approved copy change, and changing privacy claims needs founder authority (v2 §22).
 6. **ZERO_COST_PRODUCT_LAW.** It says ₹0 owner spend, no paid analytics, no ad SDKs in core, and no prompt marketplace in core. This conflicts with v3 §15 / v2 Layer H packs and marketplace unless they are scoped outside core. Hosting cost also conflicts with ₹0 unless a free tier is used.
-7. **Hosting gate vs live deploy.** `HOSTING = FORBIDDEN_PENDING_FOUNDER_10_10_ACCEPTANCE` (SPE-CHANGELOG) and the R8 note "Vercel is NOT USED" conflict with an existing Vercel production deployment (2026-10-05). On vercel.app, `_headers` security headers are not applied, and its canonical/sitemap point to the parked domain.
+7. **Hosting gate vs live deploy** [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE]. `HOSTING = FORBIDDEN_PENDING_FOUNDER_10_10_ACCEPTANCE` (SPE-CHANGELOG) and the R8 note "Vercel is NOT USED" would conflict with the Vercel production deployment (2026-10-05) observed by the builder. On vercel.app, the builder observed that `_headers` security headers were not applied and that canonical/sitemap point to the parked domain. The owner must confirm the deployment exists before this conflict is treated as established.
 8. **Release date vs open HOLDs.** The 26 Oct 22:10 IST target faces open HOLDs: R9 Q1, Q4/Q5, #138 audio, research live index, URL fetch NOT_PRESENT, and #121 unmerged. The v3 §29 Oct 18–25 qualification and verification windows require commercial code that does not exist. The date cannot promote any HOLD.
 9. **Local-only / zero-audio-egress vs hosted revenue.** Hosted transcription, "paid higher-compute tier" (v2 §3) or hosted evaluation (v3 §13) conflicts with the zero-audio-egress and local-first posture. Hosted offers must be explicit opt-in and separate.
 10. **SEO scale vs Google policy.** Programmatic "evidence pages" must be real tool or evidence pages (v3 §19, v2 §30). Today's SPA injects per-route meta and JSON-LD client-side with no prerender.
@@ -400,7 +463,7 @@ Router states: ACTIVE = earning now. QUALIFIED_CANDIDATE = could be switched on 
 
 ## 8. Owner decisions required
 
-1. Hosting custody: host choice; fate of the vercel.app production deployment; go-live gate.
+1. Hosting custody: host choice; confirm, then decide the fate of, the builder-observed vercel.app production deployment [BUILDER_OBSERVED; INDEPENDENT_CONNECTOR_VERIFICATION = UNAVAILABLE_CURRENT_SCOPE]; go-live gate.
 2. Approve the commercial-policy amendment (analytics, affiliate, sponsor, account/licence posture) against the current zero-cost/no-ads/no-accounts laws and tests.
 3. Payment entity and provider (Indian entity, GST, merchant-of-record or not); account opening.
 4. Pricing and plan matrix (Free / Pro / Team / Enterprise) and the free-core guarantee wording.
@@ -416,4 +479,4 @@ Router states: ACTIVE = earning now. QUALIFIED_CANDIDATE = could be switched on 
 - `8a3ae11` is untouched.
 - `grok/r9s-audio-vad-telugu` (#138) and its working tree are untouched; this work used a fresh, separate clone.
 - No other PR, branch or lane was touched.
-- Nothing was sent, posted, spent, applied for or accepted. No DNS or Vercel change was made.
+- Nothing was sent, posted, spent, applied for or accepted. No DNS or Vercel change was made. Vercel was not re-queried for the evidence downgrade.
