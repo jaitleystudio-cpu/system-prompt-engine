@@ -110,7 +110,10 @@ def _normalize_feedback(raw: Mapping[str, Any] | float) -> tuple[float, dict[str
         return score, {}
     if not isinstance(raw, Mapping):
         raise TypeError("evaluator must return a float or mapping")
-    score = float(raw.get("score", 0.0))
+    raw_score = raw.get("score", 0.0)
+    if isinstance(raw_score, bool):
+        raise TypeError("evaluator score must be numeric, not bool")
+    score = float(raw_score)
     if not math.isfinite(score):
         raise ValueError("evaluator score must be finite")
     proposed = raw.get("proposed_changes") or raw.get("proposal") or {}
