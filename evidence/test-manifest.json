@@ -1,11 +1,11 @@
 {
   "manifest_version": "1.0",
-  "generated_at": "2026-10-08T12:38:21.923Z",
+  "generated_at": "2026-10-08T12:38:47.933Z",
   "provenance": {
-    "tested_subject_sha": "dffcffb49f1576b5dfb9f113289d0c8121fd2652",
+    "tested_subject_sha": "f9e01fdaa8817493415e52f07306ede27998eb60",
     "attestation_mode": "DECOUPLED_INDEPENDENT_EVALUATION",
     "manifest_generator": "scripts/generate-test-manifest.mjs",
-    "attestation_commit_sha": "dffcffb49f1576b5dfb9f113289d0c8121fd2652",
+    "attestation_commit_sha": "f9e01fdaa8817493415e52f07306ede27998eb60",
     "git_branch": "integration/spe-2026-10-26"
   },
   "environment": {
@@ -13,8 +13,8 @@
     "arch": "arm64",
     "node_version": "v22.23.2",
     "git_branch": "integration/spe-2026-10-26",
-    "commit_sha": "dffcffb49f1576b5dfb9f113289d0c8121fd2652",
-    "tested_subject_sha": "dffcffb49f1576b5dfb9f113289d0c8121fd2652"
+    "commit_sha": "f9e01fdaa8817493415e52f07306ede27998eb60",
+    "tested_subject_sha": "f9e01fdaa8817493415e52f07306ede27998eb60"
   },
   "wasm_engine": {
     "canonical_sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
