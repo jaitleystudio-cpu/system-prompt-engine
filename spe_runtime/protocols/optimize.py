@@ -10,6 +10,7 @@ evidence confidence, authority, safety policy.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+import math
 from typing import Any, Callable, Mapping
 
 # Fields the optimizer may rewrite.
@@ -103,10 +104,18 @@ EvaluatorFn = Callable[[PromptCandidate], Mapping[str, Any] | float]
 
 def _normalize_feedback(raw: Mapping[str, Any] | float) -> tuple[float, dict[str, Any]]:
     if isinstance(raw, (int, float)) and not isinstance(raw, bool):
-        return float(raw), {}
+        score = float(raw)
+        if not math.isfinite(score):
+            raise ValueError("evaluator score must be finite")
+        return score, {}
     if not isinstance(raw, Mapping):
         raise TypeError("evaluator must return a float or mapping")
-    score = float(raw.get("score", 0.0))
+    raw_score = raw.get("score", 0.0)
+    if isinstance(raw_score, bool):
+        raise TypeError("evaluator score must be numeric, not bool")
+    score = float(raw_score)
+    if not math.isfinite(score):
+        raise ValueError("evaluator score must be finite")
     proposed = raw.get("proposed_changes") or raw.get("proposal") or {}
     if not isinstance(proposed, Mapping):
         raise TypeError("proposed_changes must be a mapping")
@@ -134,10 +143,14 @@ def _apply_allowed_mutations(
     if "formatting" in proposed:
         changes["formatting"] = str(proposed["formatting"])
     if "explanatory_order" in proposed:
+        if isinstance(proposed["explanatory_order"], (str, bytes, Mapping)):
+            raise TypeError("explanatory_order must be a sequence of items")
         changes["explanatory_order"] = tuple(
             str(x) for x in proposed["explanatory_order"]
         )
     if "optional_examples" in proposed:
+        if isinstance(proposed["optional_examples"], (str, bytes, Mapping)):
+            raise TypeError("optional_examples must be a sequence of items")
         changes["optional_examples"] = tuple(
             str(x) for x in proposed["optional_examples"]
         )
@@ -160,6 +173,8 @@ def optimize_prompt(
         raise TypeError("candidate must be a PromptCandidate")
     if max_iterations < 1:
         raise ValueError("max_iterations must be >= 1")
+    if isinstance(success_threshold, bool) or not math.isfinite(float(success_threshold)):
+        raise ValueError("success_threshold must be finite")
 
     current = candidate
     scores: list[float] = []
