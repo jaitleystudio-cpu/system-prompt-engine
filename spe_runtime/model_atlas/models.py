@@ -35,6 +35,12 @@ class ExecutionProvenance:
     seed: int | None = None
     failure_id: str | None = None
     raw_artifact_location: str | None = None
+    model_digest: str | None = None
+    runtime: str | None = None
+    quantization: str | None = None
+    hardware: str | None = None
+    parameters: dict[str, Any] = field(default_factory=dict)
+    repeat_count: int = 1
 
 
 @dataclass

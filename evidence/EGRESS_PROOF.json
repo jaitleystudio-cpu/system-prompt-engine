@@ -1,0 +1,73 @@
+{
+  "proof_version": "1.0",
+  "timestamp": "2026-10-08T10:21:28.670383+00:00",
+  "audit_policy": "STRICT_AIR_GAP_ZERO_UNEXPECTED_EGRESS",
+  "unexpected_external_destinations": 0,
+  "status": "EGRESS_PROOF_QUALIFIED_PASS",
+  "total_audit_events": 7,
+  "events": [
+    {
+      "process": "python",
+      "subsystem": "instruction_record",
+      "attempted_destination": "NONE",
+      "protocol": "NONE",
+      "bytes": 0,
+      "allowed": true,
+      "reason": "VERIFIED_100%_IN_MEMORY_LOCAL_FIRST"
+    },
+    {
+      "process": "python",
+      "subsystem": "spe_package_abi",
+      "attempted_destination": "NONE",
+      "protocol": "NONE",
+      "bytes": 0,
+      "allowed": true,
+      "reason": "VERIFIED_OFFLINE_POLYGLOT_LOWERING"
+    },
+    {
+      "process": "python",
+      "subsystem": "ci_gate_receipt",
+      "attempted_destination": "NONE",
+      "protocol": "NONE",
+      "bytes": 0,
+      "allowed": true,
+      "reason": "VERIFIED_OFFLINE_ED25519_CRYPTOGRAPHY"
+    },
+    {
+      "process": "python",
+      "subsystem": "runtime_gateway_firewall",
+      "attempted_destination": "https://api.openai.com",
+      "protocol": "HTTPS",
+      "bytes": 0,
+      "allowed": false,
+      "reason": "BLOCKED_BY_CAPABILITY_FIREWALL_NO_GRANT"
+    },
+    {
+      "process": "python",
+      "subsystem": "gilden_operator",
+      "attempted_destination": "external_effect_broker",
+      "protocol": "INTERNAL_IPC",
+      "bytes": 0,
+      "allowed": false,
+      "reason": "BLOCKED_GILDEN_CANNOT_SELF_GRANT_AUTHORITY"
+    },
+    {
+      "process": "python",
+      "subsystem": "unknown",
+      "attempted_destination": "8.8.8.8:53",
+      "protocol": "TCP/IP",
+      "bytes": 0,
+      "allowed": false,
+      "reason": "BLOCKED_EXTERNAL_EGRESS_FORBIDDEN"
+    },
+    {
+      "process": "browser/node",
+      "subsystem": "web_shell_csp",
+      "attempted_destination": "external_origins",
+      "protocol": "WSS/HTTPS",
+      "bytes": 0,
+      "allowed": false,
+      "reason": "BLOCKED_BY_STRICT_CSP_CONNECT_SRC_SELF"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-10-08T10:38:40.532Z",
+  "environment": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "node_version": "v22.23.2",
+    "git_branch": "integration/spe-2026-10-26",
+    "commit_sha": "ebf1bad4d12f9da84325cdf841ef0804c9b9df35"
+  },
+  "wasm_engine": {
+    "canonical_sha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+    "bytes": 1339691,
+    "imports_count": 0
+  },
+  "suites": {
+    "python_unit": {
+      "suite": "pytest tests/unit",
+      "total": 720,
+      "passed": 720,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "duration_seconds": 65.729,
+      "timestamp": "2026-10-08T16:07:26.137421+05:30"
+    },
+    "cli_battery": {
+      "suite": "npm run test:cli-battery",
+      "commands_tested": 30,
+      "passed": 30,
+      "failed": 0,
+      "verdict": "PASS"
+    },
+    "copy_governance": {
+      "suite": "npm run spe:copy-check",
+      "candidate_strings_audited": 4147,
+      "unreviewed": 0,
+      "violations": 0,
+      "verdict": "PASS"
+    },
+    "capabilities_seo": {
+      "suite": "npm run test:capabilities-seo",
+      "verdict": "PASS"
+    },
+    "seven_journeys": {
+      "suite": "npm run test:seven-journeys",
+      "journeys_qualified": 7,
+      "total_journeys": 7,
+      "verdict": "PASS"
+    }
+  },
+  "totals": {
+    "python_tests_passed": 720,
+    "python_tests_total": 720,
+    "cli_commands_passed": 30,
+    "cli_commands_total": 30,
+    "all_gates_clean": true
+  }
+}

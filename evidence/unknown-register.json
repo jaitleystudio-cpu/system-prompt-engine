@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SPE Ω & GILDEN Unknown Register",
+  "description": "Truth register for all unobserved or pending empirical claims. UNKNOWN remains UNKNOWN until verified by real-world witness evidence.",
+  "generated_at": "2026-10-08T10:17:00Z",
+  "register_policy": "NO_PRESUMPTIVE_PASS",
+  "items": [
+    {
+      "id": "UNK-001",
+      "claim": "Remote Hosted-Model Behavior & Conformance",
+      "status": "UNKNOWN",
+      "evidence_needed": "Live API executions against remote hosted frontier models (GPT-4o, Claude 3.7, Gemini 1.5) with recorded prompt digests and raw response receipts.",
+      "owner": "ModelAtlasTeam",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "spe passport --remote (opt-in paid execution harness post-founder authorization)"
+    },
+    {
+      "id": "UNK-002",
+      "claim": "Actual Hosted Provider Cost & Invoice Billing",
+      "status": "UNKNOWN",
+      "evidence_needed": "Reconciled billing API receipts matching token usage against actual credit card / account invoices.",
+      "owner": "EconomicsLab",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "test_provider_billing_reconciliation.py"
+    },
+    {
+      "id": "UNK-003",
+      "claim": "Real Provider Network Latency & TTFT p95 Distribution",
+      "status": "UNKNOWN",
+      "evidence_needed": "Sustained p50/p95/p99 TTFT latency measurements collected across geographic zones under production network conditions.",
+      "owner": "ReliabilityTeam",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "benchmark_network_ttft_soak.mjs"
+    },
+    {
+      "id": "UNK-004",
+      "claim": "External Silent Model Drift Over Time",
+      "status": "UNKNOWN",
+      "evidence_needed": "Continuous periodic test probe evaluation detecting unannounced backend weights or tokenizer changes from providers.",
+      "owner": "DriftSentinel",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "spe_runtime.reliability.drift_sentinel periodic probe suite"
+    },
+    {
+      "id": "UNK-005",
+      "claim": "Production DNS Routing & Global Anycast Resolution",
+      "status": "UNKNOWN",
+      "evidence_needed": "Authoritative nameserver propagation and DNSSEC resolution logs for systempromptengine.com / promptengine.run.",
+      "owner": "ReleaseEngineering",
+      "blocking_or_nonblocking": "BLOCKING_FOR_PRODUCTION_ONLY",
+      "planned_test": "dig +trace +dnssec systempromptengine.com post-DNS activation"
+    },
+    {
+      "id": "UNK-006",
+      "claim": "Real Payment Provider Live Webhook Execution",
+      "status": "UNKNOWN",
+      "evidence_needed": "Production webhook delivery from live Stripe/payment gateway with actual settlement confirmation.",
+      "owner": "EntitlementTeam",
+      "blocking_or_nonblocking": "BLOCKING_FOR_COMMERCIAL_ACTIVATION",
+      "planned_test": "Live webhook end-to-end sandbox verification run"
+    },
+    {
+      "id": "UNK-007",
+      "claim": "Google Search Console Indexation & Crawl Acceptance",
+      "status": "UNKNOWN",
+      "evidence_needed": "Google Search Console URL Inspection API confirmations proving 25 evidence pages are indexed without soft 404 or canonical issues.",
+      "owner": "SeoInfrastructure",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "Search Console Index Coverage Audit post-domain release"
+    },
+    {
+      "id": "UNK-008",
+      "claim": "Field Core Web Vitals (Real User Metrics - RUM)",
+      "status": "UNKNOWN",
+      "evidence_needed": "75th percentile Chrome UX Report (CrUX) field data proving LCP <= 2.5s, INP <= 200ms, and CLS <= 0.1 on real devices.",
+      "owner": "FrontendEngineering",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "Web-vitals field beacon collector with user opt-in"
+    },
+    {
+      "id": "UNK-009",
+      "claim": "Sponsor & Affiliate Conversion Funnel Attribution",
+      "status": "UNKNOWN",
+      "evidence_needed": "Third-party referral conversion logs validating revenue attribution without PII transmission.",
+      "owner": "GildenBusiness",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "Attribution sandbox tracking test"
+    },
+    {
+      "id": "UNK-010",
+      "claim": "Gilden External-Effect Production Execution",
+      "status": "UNKNOWN",
+      "evidence_needed": "Verified external state changes (PR creation, issue filing, email dispatch) backed by authenticated destination receipts.",
+      "owner": "GildenKernel",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "Mock and authenticated GitHub API effect verification tests"
+    },
+    {
+      "id": "UNK-011",
+      "claim": "Long-Running Daemon Crash & Power-Loss Recovery",
+      "status": "UNKNOWN",
+      "evidence_needed": "SIGKILL and sudden process interruption simulation proving zero database corruption and complete state rollback.",
+      "owner": "InstructionRecordTeam",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "test_power_loss_recovery.py"
+    },
+    {
+      "id": "UNK-012",
+      "claim": "Production High-Concurrency Multi-User Load",
+      "status": "UNKNOWN",
+      "evidence_needed": "Locust/k6 load test executing 10,000 concurrent compiling requests against runtime gateway with zero race conditions.",
+      "owner": "RuntimeGatewayTeam",
+      "blocking_or_nonblocking": "NON_BLOCKING",
+      "planned_test": "k6 run benchmarks/load/concurrent_gateway_load.js"
+    }
+  ]
+}

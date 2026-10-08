@@ -1,0 +1,40 @@
+{
+  "suite_id": "spe.bench.corpus-v1",
+  "split": "HELD_OUT",
+  "total_tasks_evaluated": 9,
+  "raw_prompt_accuracy": 0.333,
+  "spe_compiled_accuracy": 1.0,
+  "delta": 0.667,
+  "noninferior": true,
+  "domain_deltas": {
+    "CITATION_REQUIREMENTS": 0.0,
+    "STRUCTURED_EXTRACTION": 1.0,
+    "SCHEMA_CONFORMANCE": 1.0,
+    "RESEARCH": 0.0,
+    "LONG_CONTEXT": 0.0,
+    "FINANCIAL_CONSTRAINTS": 1.0,
+    "MULTI_TURN_DRIFT": 1.0,
+    "AGENT_AUTHORIZATION": 1.0
+  },
+  "evidence_class": "OBSERVED_LOCAL",
+  "raw_domain_breakdown": {
+    "AGENT_AUTHORIZATION": 0.0,
+    "STRUCTURED_EXTRACTION": 0.0,
+    "CITATION_REQUIREMENTS": 1.0,
+    "LONG_CONTEXT": 1.0,
+    "MULTI_TURN_DRIFT": 0.0,
+    "FINANCIAL_CONSTRAINTS": 0.0,
+    "SCHEMA_CONFORMANCE": 0.0,
+    "RESEARCH": 1.0
+  },
+  "spe_domain_breakdown": {
+    "AGENT_AUTHORIZATION": 1.0,
+    "STRUCTURED_EXTRACTION": 1.0,
+    "CITATION_REQUIREMENTS": 1.0,
+    "LONG_CONTEXT": 1.0,
+    "MULTI_TURN_DRIFT": 1.0,
+    "FINANCIAL_CONSTRAINTS": 1.0,
+    "SCHEMA_CONFORMANCE": 1.0,
+    "RESEARCH": 1.0
+  }
+}
