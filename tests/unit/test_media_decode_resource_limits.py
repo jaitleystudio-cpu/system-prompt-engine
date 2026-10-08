@@ -36,6 +36,13 @@ pytestmark = pytest.mark.skipif(shutil.which(FFMPEG) is None and not Path(FFMPEG
 LIMIT_S = MAX_DECODED_DURATION_MS // 1000
 
 
+def test_limit_is_the_reviewed_policy_value():
+    # Policy constant: 10 min of 16 kHz mono PCM (19.2 MB). Changing it must be a
+    # deliberate, owner-reviewed edit to this test, not a silent drift.
+    assert MAX_DECODED_DURATION_MS == 600_000
+    assert MAX_DECODED_PCM_BYTES == 600 * 16000 * 2 == 19_200_000
+
+
 class _Owner:
     """Minimal stand-in: _to_wav only needs the temp registry."""
 

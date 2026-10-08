@@ -70,7 +70,7 @@ MUTANTS: list[tuple[str, str, str]] = [
      "    if True:\n        return [(0, total)]\n"),
     ("fixed-cut-not-quiet-point", "            cut = quiet * frame + frame // 2\n",
      "            cut = start + max_len\n"),
-    ("oversized-windows", "DECODE_WINDOW_MAX_MS = 7000\n", "DECODE_WINDOW_MAX_MS = 30000\n"),
+    ("oversized-windows", "DECODE_WINDOW_MAX_MS = 6000\n", "DECODE_WINDOW_MAX_MS = 30000\n"),
     ("send-silent-windows", "    kept = [w for w in windows if loud_enough(w)]\n", "    kept = windows\n"),
     ("leak-non-speech-window-tags", "            if non_speech(stripped):\n                continue\n", ""),
     # --- hardening pass ---
