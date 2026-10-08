@@ -68,6 +68,15 @@ check("website mounted and /media route owns the whisper runtime", () => {
   assert.equal(mount.MEDIA_MOUNT.sha, "a93e87d0efb247204883ecbd18203fe248c5c8e5");
   assert.equal(mount.WEBSITE_MOUNT.sha, "aa823977fc14db66d06f52fc38a85045d122ae05");
   assert.equal(mount.WEBSITE_MOUNT.status, "MOUNTED");
+  // Post-integration invariant: the website product is mounted; NOT_INTEGRATED is not permitted.
+  assert.equal(mount.WEBSITE_MOUNT.WEBSITE_PRODUCT, "MOUNTED_LOCAL");
+  assert.equal(mount.WEBSITE_MOUNT.route, "/website");
+  const websiteContract = src("src/website/mount-contract.ts");
+  assert.match(websiteContract, /^\s*status: "MOUNTED",$/m);
+  assert.match(websiteContract, /^\s*routeMountStatus: "MOUNTED",$/m);
+  assert.match(websiteContract, /^\s*shellMount: "MOUNTED",$/m);
+  assert.doesNotMatch(websiteContract, /NOT_INTEGRATED/);
+  assert.match(src("src/website/WebsiteProduct.tsx"), /data-route-mount=\{websiteMountContract\.routeMountStatus\}/);
   const app = src("src/App.tsx");
   const route = src("src/media/MediaRoute.tsx");
   const harness = src("scripts/r3-e-dom-entry.tsx");
@@ -1051,7 +1060,7 @@ try {
     };
   });
   assert.equal(product.mount, "website");
-  assert.ok(product.contract === "MOUNTED" || product.contract === "NOT_INTEGRATED");
+  assert.equal(product.contract, "MOUNTED");
   assert.equal(product.heading, "Website");
   const productRatio = contrastRatio(product.fg, product.bg);
   assert.ok(productRatio >= 4.5, JSON.stringify(product));
