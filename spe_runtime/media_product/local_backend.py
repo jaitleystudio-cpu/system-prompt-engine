@@ -165,7 +165,10 @@ DECODE_WINDOW_MIN_MS = 3000
 DECODE_WINDOW_OVERLAP_MS = 750
 DECODE_WINDOW_SILENT_DB = 40.0
 SEAM_MATCH_SIMILARITY = 0.75
-SEAM_MAX_OVERLAP_WORDS = 12
+# Shared audio between neighbours is 2 * DECODE_WINDOW_OVERLAP_MS = 1.5 s; at a
+# fast 4 words/s that holds at most 6 words. A longer textual match across the
+# seam is repeated speech (e.g. the same phrase said twice), not overlap.
+SEAM_MAX_OVERLAP_WORDS = math.ceil(4 * 2 * DECODE_WINDOW_OVERLAP_MS / 1000)
 SEAM_MAX_EDGE_FRAGMENTS = 2
 SEAM_COLLAPSE_WORDS_PER_S = 0.5
 
@@ -293,7 +296,10 @@ def _merge_seam(left: list[str], right: list[str]) -> list[str]:
 
     The matched run must reach the end of the left window and start at the
     beginning of the right window, each up to SEAM_MAX_EDGE_FRAGMENTS cut-off
-    fragments outside it, and is at most SEAM_MAX_OVERLAP_WORDS long. Shared words are kept
+    fragments outside it, and is at most SEAM_MAX_OVERLAP_WORDS long (a longer
+    match is repeated speech, not overlap). Among candidates the one closest to
+    both edges wins; run length only breaks ties, so a repeated phrase near the
+    seam cannot displace the true, edge-adjacent overlap. Shared words are kept
     once (the left copy, or the right copy when the left one is a truncated
     prefix of it); right-window words before the run (fragments of overlap
     audio) and left-window fragments after it are dropped.
@@ -304,18 +310,17 @@ def _merge_seam(left: list[str], right: list[str]) -> list[str]:
         for j in range(min(SEAM_MAX_EDGE_FRAGMENTS + 1, len(right))):
             run = 0
             while (
-                run < SEAM_MAX_OVERLAP_WORDS
-                and i + run < n
+                i + run < n
                 and j + run < len(right)
                 and _word_similarity(left[i + run], right[j + run]) >= SEAM_MATCH_SIMILARITY
             ):
                 run += 1
-            if run == 0:
+            if run == 0 or run > SEAM_MAX_OVERLAP_WORDS:
                 continue
             tail = n - (i + run)
             if tail > SEAM_MAX_EDGE_FRAGMENTS:
                 continue
-            key = (run, -(tail + j))
+            key = (-(tail + j), run)
             if best is None or key > best[0]:
                 best = (key, i, j, run)
     if best is None:

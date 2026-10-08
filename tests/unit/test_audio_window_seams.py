@@ -90,6 +90,24 @@ def test_seam_run_must_start_at_right_window_edge():
     assert merge_window_transcripts(["a b c d e", "o p q d e f"]) == "a b c d e o p q d e f"
 
 
+def test_repeated_phrase_across_seam_does_not_swallow_an_occurrence():
+    # Observed: neighbouring windows each held the same phrase; the right window
+    # also re-heard the left window's last word. Only that edge word is overlap.
+    phrase = "అమ్మా నమస్కారం నా పేరు గీత ఈ రోజు వాతావరణం చాలా బాగుంది"
+    assert merge_window_transcripts([phrase, f"బాగుంది {phrase}"]) == f"{phrase} {phrase}"
+    assert merge_window_transcripts(["x a b c", "c a b c y"]) == "x a b c a b c y"
+
+
+def test_shared_run_longer_than_overlap_can_hold_is_repetition():
+    assert lb.SEAM_MAX_OVERLAP_WORDS == 6
+    # Every edge-adjacent candidate here is a 7- or 8-word run: too long for
+    # 1.5 s of shared audio, so the windows are joined, not collapsed.
+    eight = "p q r s t u v w"
+    assert merge_window_transcripts([eight, f"y {eight} z"]) == f"{eight} y {eight} z"
+    six = "p q r s t u"
+    assert merge_window_transcripts([f"o {six}", f"{six} z"]) == f"o {six} z"
+
+
 def _offline_session(tmp_path: Path, windows, texts_by_input):
     sess = object.__new__(LocalMediaSession)
     sess._cancel_event = threading.Event()

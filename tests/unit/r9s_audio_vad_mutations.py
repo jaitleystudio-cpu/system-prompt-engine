@@ -96,6 +96,8 @@ MUTANTS: list[tuple[str, str, str]] = [
     ("seam-match-deep-in-right-window",
      "        for j in range(min(SEAM_MAX_EDGE_FRAGMENTS + 1, len(right))):\n",
      "        for j in range(min(SEAM_MAX_OVERLAP_WORDS, len(right))):\n"),
+    ("seam-prefers-longest-run", "            key = (-(tail + j), run)\n", "            key = (run, -(tail + j))\n"),
+    ("seam-run-not-bounded-by-overlap", "            if run == 0 or run > SEAM_MAX_OVERLAP_WORDS:\n", "            if run == 0:\n"),
     ("no-collapsed-window-recovery",
      "        if not flagged or self._cancel_event.is_set():\n            return texts\n",
      "        return texts\n"),
@@ -119,6 +121,7 @@ LIMIT_MUTANTS = {
 }
 SEAM_MUTANTS = {
     "no-seam-reconciliation", "no-window-overlap", "keep-truncated-left-copy", "seam-match-deep-in-right-window",
+    "seam-prefers-longest-run", "seam-run-not-bounded-by-overlap",
     "no-collapsed-window-recovery", "core-redecode-overrides-richer-text", "single-core-redecode-reads-missing-file",
 }
 
