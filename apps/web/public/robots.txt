@@ -1,6 +1,8 @@
 # robots.txt for SPE Ω Public Evidence Engine
 User-agent: *
 Allow: /
+Allow: /capabilities
+Allow: /privacy
 Allow: /evidence-pages/
 Allow: /models/
 Allow: /failure-genome/

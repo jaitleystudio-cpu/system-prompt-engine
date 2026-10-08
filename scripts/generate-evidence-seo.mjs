@@ -17,6 +17,11 @@ const publicDir = resolve(__dirname, '../apps/web/public');
 const CANONICAL_DOMAIN = 'https://systempromptengine.com';
 
 const ROUTES = [
+  // Root and Primary Surfaces
+  { path: '/', title: 'System Prompt Engine (SPE Ω) — AI Instruction Assurance Control Plane', desc: 'The open, portable, evidence-backed control plane for AI instructions. Formally specify, compile, test, version, and govern AI prompts.' },
+  { path: '/capabilities', title: 'Full System Capabilities & Evaluation Atlas | SPE Ω', desc: 'Comprehensive catalog of formal prompt compiler capabilities, execution contracts, and provider profiles. Output correctness is not proven; bounded rule consistency is verified.' },
+  { path: '/privacy', title: 'Zero-Egress Privacy & Cryptographic Integrity | SPE Ω', desc: '100% air-gapped execution verification with local WASM compilation and zero network telemetry.' },
+
   // Tier A: Category Ownership
   { path: '/ai-instruction-assurance', title: 'AI Instruction Assurance Control Plane | SPE Ω', desc: 'Formally verify, compile, and govern AI system prompts and agent instructions before deployment.' },
   { path: '/ai-instruction-compiler', title: 'AI Instruction Compiler & Prompt IR | SPE Ω', desc: 'Zero-latency PagedAttention KV-cache alignment and multi-model transcompilation.' },
@@ -51,6 +56,42 @@ const ROUTES = [
 ];
 
 function generateHtmlPage(route) {
+  const jsonLd = route.path === '/capabilities' ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does SPE send prompts or data to external servers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. SPE executes 100% locally with WebAssembly and zero network egress."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is AI correctness mathematically proven?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Output correctness is not proven; bounded rule consistency and constraint satisfaction are verified deterministically."
+        }
+      }
+    ]
+  } : {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "System Prompt Engine (SPE Ω)",
+    "operatingSystem": "All",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0.00",
+      "priceCurrency": "USD"
+    },
+    "description": route.desc,
+    "url": `${CANONICAL_DOMAIN}${route.path}`
+  };
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,6 +104,9 @@ function generateHtmlPage(route) {
   <meta property="og:description" content="${route.desc}">
   <meta property="og:url" content="${CANONICAL_DOMAIN}${route.path}">
   <meta property="og:type" content="website">
+  <script type="application/ld+json">
+${JSON.stringify(jsonLd, null, 2)}
+  </script>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #07090e; color: #e2e8f0; margin: 0; padding: 40px 20px; line-height: 1.6; }
     .container { max-width: 840px; margin: 0 auto; }
@@ -81,7 +125,7 @@ function generateHtmlPage(route) {
 <body>
   <div class="container">
     <nav class="breadcrumbs">
-      <a href="/">Home</a> &gt; <span>${route.path.slice(1)}</span>
+      <a href="/">Home</a> &gt; <span>${route.path === '/' ? 'Home' : route.path.slice(1)}</span>
     </nav>
     <header>
       <span class="badge">EVIDENCE-BACKED CONTROL PLANE</span>
@@ -122,7 +166,7 @@ const pagesDir = resolve(publicDir, 'evidence-pages');
 mkdirSync(pagesDir, { recursive: true });
 
 for (const r of ROUTES) {
-  const safeName = r.path.slice(1).replace(/\//g, '_') + '.html';
+  const safeName = (r.path === '/' ? 'index' : r.path.slice(1).replace(/\//g, '_')) + '.html';
   const outPath = resolve(pagesDir, safeName);
   writeFileSync(outPath, generateHtmlPage(r), 'utf8');
 }
@@ -134,7 +178,7 @@ ${ROUTES.map(r => `  <url>
     <loc>${CANONICAL_DOMAIN}${r.path}</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>${r.path === '/' ? '1.0' : '0.8'}</priority>
   </url>`).join('\n')}
 </urlset>
 `;
@@ -144,6 +188,8 @@ writeFileSync(resolve(publicDir, 'sitemap.xml'), sitemapXml, 'utf8');
 const robotsTxt = `# robots.txt for SPE Ω Public Evidence Engine
 User-agent: *
 Allow: /
+Allow: /capabilities
+Allow: /privacy
 Allow: /evidence-pages/
 Allow: /models/
 Allow: /failure-genome/
@@ -160,4 +206,21 @@ Sitemap: ${CANONICAL_DOMAIN}/sitemap.xml
 `;
 writeFileSync(resolve(publicDir, 'robots.txt'), robotsTxt, 'utf8');
 
-console.log(`✅ Generated ${ROUTES.length} static SEO evidence pages, sitemap.xml, and robots.txt in ${publicDir}`);
+// 4. Update _redirects with explicit evidence page mappings
+const redirectRules = [
+  '# Evidence SEO Static Pre-Rendered Pages (200 rewrite for crawlers)',
+  ...ROUTES.filter(r => r.path !== '/').map(r => {
+    const safeName = r.path.slice(1).replace(/\//g, '_') + '.html';
+    return `${r.path}  /evidence-pages/${safeName}  200`;
+  }),
+  '',
+  '# Static binary model and asset preserves',
+  '/models/*  /models/:splat  200',
+  '/ort/*     /ort/:splat     200',
+  '/assets/*  /assets/:splat  200',
+  '/*         /index.html     200',
+  ''
+].join('\n');
+writeFileSync(resolve(publicDir, '_redirects'), redirectRules, 'utf8');
+
+console.log(`✅ Generated ${ROUTES.length} static SEO evidence pages, sitemap.xml, robots.txt, and _redirects in ${publicDir}`);

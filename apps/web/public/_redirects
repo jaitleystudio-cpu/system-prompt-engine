@@ -1,5 +1,31 @@
-# SPA History API fallback — do not apply to WASM/models/ort.
- /models/*  /models/:splat  200
- /ort/*     /ort/:splat     200
- /assets/*  /assets/:splat  200
- /*         /index.html     200
+# Evidence SEO Static Pre-Rendered Pages (200 rewrite for crawlers)
+/capabilities  /evidence-pages/capabilities.html  200
+/privacy  /evidence-pages/privacy.html  200
+/ai-instruction-assurance  /evidence-pages/ai-instruction-assurance.html  200
+/ai-instruction-compiler  /evidence-pages/ai-instruction-compiler.html  200
+/prompt-compiler  /evidence-pages/prompt-compiler.html  200
+/prompt-security  /evidence-pages/prompt-security.html  200
+/ai-agent-security  /evidence-pages/ai-agent-security.html  200
+/mcp-security  /evidence-pages/mcp-security.html  200
+/model-drift-monitoring  /evidence-pages/model-drift-monitoring.html  200
+/ai-governance-evidence  /evidence-pages/ai-governance-evidence.html  200
+/tools/system-prompt-generator  /evidence-pages/tools_system-prompt-generator.html  200
+/tools/free-3d-website-builder  /evidence-pages/tools_free-3d-website-builder.html  200
+/tools/audio-to-text  /evidence-pages/tools_audio-to-text.html  200
+/tools/video-to-text  /evidence-pages/tools_video-to-text.html  200
+/tools/screenshot-to-code  /evidence-pages/tools_screenshot-to-code.html  200
+/models/openai/gpt-4o  /evidence-pages/models_openai_gpt-4o.html  200
+/models/anthropic/claude-3-7-sonnet  /evidence-pages/models_anthropic_claude-3-7-sonnet.html  200
+/failure-genome/SPE-FG-2026-000001  /evidence-pages/failure-genome_SPE-FG-2026-000001.html  200
+/integrations/openai  /evidence-pages/integrations_openai.html  200
+/integrations/anthropic  /evidence-pages/integrations_anthropic.html  200
+/integrations/mcp  /evidence-pages/integrations_mcp.html  200
+/integrations/github-actions  /evidence-pages/integrations_github-actions.html  200
+/compare/spe-vs-promptfoo  /evidence-pages/compare_spe-vs-promptfoo.html  200
+/migrate/from-raw-prompts  /evidence-pages/migrate_from-raw-prompts.html  200
+
+# Static binary model and asset preserves
+/models/*  /models/:splat  200
+/ort/*     /ort/:splat     200
+/assets/*  /assets/:splat  200
+/*         /index.html     200
