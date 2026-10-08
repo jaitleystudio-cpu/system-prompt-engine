@@ -129,10 +129,15 @@ function estimateTokenCount(text: string): number {
 }
 
 /**
- * Performs Lossless Semantic AST Token Pruning:
- * Strips rhetorical padding, tautologies, and conversational noise while retaining 100% of rules.
+ * Performs Evidence-Preserving Compression Candidate generation (lossless candidate AST pruning):
+ * Strips rhetorical padding, tautologies, and conversational noise while retaining directives.
+ * Classification: CANDIDATE_ONLY until validated by held-out tasks and noninferiority checks.
  */
 export function losslessAstPrune(prompt: string): string {
+  return evidencePreservingCompressCandidate(prompt);
+}
+
+export function evidencePreservingCompressCandidate(prompt: string): string {
   let pruned = prompt;
 
   const rhetoricalReplacements: [RegExp, string][] = [

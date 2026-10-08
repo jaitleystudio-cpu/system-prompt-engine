@@ -540,9 +540,9 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
           { key: "coverage", label: "Invariant Graph", count: `${coverageReport.overallCoverageScore.toFixed(0)}%` },
           { key: "transcompiler", label: "Transcompiler", count: "5 Run" },
           { key: "firewall", label: "Retrieval Firewall", count: firewallResult.untrustedChunksFiltered },
-          { key: "logic", label: "Symbolic Logic (FOL)", count: logicReport.isParadoxFree ? "SAT" : "PARADOX" },
+          { key: "logic", label: "Bounded Rule Consistency", count: logicReport.isParadoxFree ? "SAT" : "PARADOX" },
           { key: "swarm", label: "Swarm Topology", count: "3 Agents" },
-          { key: "kvcache", label: "KV-Cache Align", count: `${kvPageReport.estimatedTtftSavingsPercent}% TTFT` },
+          { key: "kvcache", label: "Inference Economics", count: `${kvPageReport.estimatedTtftSavingsPercent}% TTFT Est.` },
           { key: "cogym", label: "Minimax Co-Gym", count: coGymReport.equilibriumStatus },
           { key: "dataquality", label: "Data Quality", count: `${dataQualityReport.qualityScore}%` },
           { key: "owasp", label: "🛡️ OWASP LLM-10", count: `${owaspReport.complianceScore}%` },
@@ -1697,10 +1697,10 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
                 <div>
                   <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", color: "#f8fafc" }}>
-                    Symbolic Logic Constraint Verifier (FOL-CV)
+                    Bounded Rule Consistency & Contradiction Verifier (Horn-Clause SAT)
                   </h3>
                   <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
-                    First-Order Logic satisfiability verification detecting semantic paradoxes, authority inversions, and deadlocks.
+                    Bounded rule consistency analysis detecting semantic paradoxes, authority inversions, and deadlocks.
                   </p>
                 </div>
                 <div>
@@ -1919,10 +1919,10 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
                 <div>
                   <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", color: "#f8fafc" }}>
-                    Speculative KV-Cache Page Alignment Engine (PagedAttention)
+                    Inference Economics Lab: Speculative KV-Cache Page Alignment
                   </h3>
                   <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
-                    Aligns prompt prefixes to 16/32-token transformer KV-cache page boundaries, halving TTFT latency and eliminating fragmentation.
+                    Aligns prompt prefixes to 16/32-token page boundaries (vLLM / SGLang / PagedAttention). Stack-specific empirical benchmarks required for live verification.
                   </p>
                 </div>
                 <div>
@@ -2834,10 +2834,10 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div>
                   <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc" }}>
-                    💰 Frontier Model Cost, Carbon & Latency Simulator with Lossless AST Pruner
+                    💰 Frontier Model Cost, Carbon & Latency Simulator with Evidence-Preserving Compression
                   </h3>
                   <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
-                    Financial modeling across 9 frontier providers with compile-time AST token compression (lossless invariant preservation).
+                    Financial modeling across 9 frontier providers with compile-time candidate token compression (evidence-preserving candidate).
                   </p>
                 </div>
                 <button
@@ -2855,7 +2855,7 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                     cursor: "pointer",
                   }}
                 >
-                  ⚡ Apply Lossless Token Pruning (-{costReport.tokenReductionPercent}%)
+                  ⚡ Apply Compression Candidate (-{costReport.tokenReductionPercent}%)
                 </button>
               </div>
 
@@ -3996,12 +3996,12 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                 </h4>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "10px" }}>
                   {[
-                    { label: "First-Order Logic (FOL)", val: logicReport.isParadoxFree ? "100%" : "0%", status: logicReport.isParadoxFree ? "SOUND" : "PARADOX" },
+                    { label: "Bounded Rule Consistency", val: logicReport.isParadoxFree ? "100%" : "0%", status: logicReport.isParadoxFree ? "SOUND" : "PARADOX" },
                     { label: "Data Quality Contracts", val: `${dataQualityReport.qualityScore}%`, status: dataQualityReport.overallStatus },
                     { label: "Hostile Gym MKR (1,024)", val: `${(gymReport.mutationKillRate * 100).toFixed(0)}%`, status: "HARDENED" },
                     { label: "Mutation Rigor (PMS)", val: `${mutationReport.promptMutationScore.toFixed(0)}%`, status: "RIGOROUS" },
                     { label: "OWASP GenAI Top 10", val: `${owaspReport.complianceScore}%`, status: owaspReport.overallStatus },
-                    { label: "KV-Cache PagedAttention", val: kvPageReport.fragmentationIndex === 0 ? "100%" : "70%", status: kvPageReport.fragmentationIndex === 0 ? "OPTIMAL" : "FRAGMENTED" },
+                    { label: "Inference Economics (KV Paging)", val: kvPageReport.fragmentationIndex === 0 ? "100%" : "70%", status: kvPageReport.fragmentationIndex === 0 ? "OPTIMAL" : "FRAGMENTED" },
                     { label: "Multi-Turn Trajectory", val: trajectoryReport.overallVerdict === "RESILIENT" ? "100%" : "50%", status: trajectoryReport.overallVerdict },
                     { label: "Vulnerability Genome", val: `${vulnAuditReport.immunityScore}%`, status: "IMMUNE" },
                     { label: "Regulatory Privacy & EU AI", val: `${privacyAuditReport.complianceScore}%`, status: privacyAuditReport.overallStatus },

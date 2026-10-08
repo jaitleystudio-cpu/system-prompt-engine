@@ -103,6 +103,14 @@ ${bold('COMMANDS:')}
   ${green('closed-loop')} <file>       Closed-loop local model probe execution & empirical auto-tuning
   ${green('privacy')}     <file>       Audit data privacy, PII leakage, HIPAA, GDPR & EU AI Act (2024/1689)
   ${green('certify')}     <file>       Generate official SPE Enterprise Certification Seal & Audit Scorecard
+  ${green('adopt')}       [path]       Scan repo and adopt instructions into open .spe package
+  ${green('check')}       <file>       Evaluate CI/CD evidence gate with Ed25519 signatures (--strict)
+  ${green('bench')}                    Run SPE-Bench Ω reproducibility suite with verified oracles
+  ${green('passport')}    [model]      Inspect Model Passport & empirical execution provenance
+  ${green('failures')}    [query]      Query Failure Genome Ω corpus with poisoning resistance
+  ${green('bisect')}                   Bisect prompt and agent regressions across version DAG
+  ${green('pack')}        [dir]        Manage open .spe package format and verify SHA-256 integrity
+  ${green('explain')}     [clause]     Query Causal Proof Graph for clause origin and requirement trace
 
 ${bold('OPTIONS:')}
   --target <dialect>     Model dialect: claude-xml, openai-markdown, gemini-agent, cursor-rules, open-weights
@@ -170,8 +178,38 @@ if (command === '--version' || command === '-v' || command === 'version') {
 const fileTarget = args[1];
 const flags = parseFlags(args.slice(1));
 
+function getPythonBin() {
+  const root = resolve(scriptDir, '..');
+  const venvPython = resolve(root, '.venv/bin/python');
+  if (existsSync(venvPython)) return venvPython;
+  return 'python3';
+}
+
+function runPythonCli(subcommand, passArgs) {
+  const pyBin = getPythonBin();
+  const repoRoot = resolve(scriptDir, '..');
+  const proc = spawnSync(pyBin, ['-m', 'spe_runtime.cli.main', subcommand, ...passArgs], {
+    cwd: repoRoot,
+    stdio: 'inherit',
+    env: { ...process.env, PYTHONPATH: repoRoot },
+  });
+  process.exit(proc.status ?? 0);
+}
+
 try {
   switch (command) {
+    case 'adopt':
+    case 'check':
+    case 'bench':
+    case 'passport':
+    case 'failures':
+    case 'bisect':
+    case 'pack':
+    case 'explain': {
+      runPythonCli(command, args.slice(1));
+      break;
+    }
+
     case 'compile': {
       if (!fileTarget) {
         console.error(red('Error: Missing target prompt file. Usage: spe compile <file>'));

@@ -1,11 +1,12 @@
 /**
- * SPE Speculative KV-Cache Page Alignment Engine
+ * SPE Speculative KV-Cache Page Alignment Engine (Inference Economics Lab)
  *
  * Implements token-level KV-cache page boundary alignment for Transformer
  * architectures (PagedAttention, vLLM, SGLang, and Anthropic Prompt Caching).
  * By reserving deterministic buffer slots and aligning prompt prefixes to fixed
- * 16-token or 32-token page blocks, this engine eliminates dynamic KV cache
- * fragmentation and dramatically accelerates Time-To-First-Token (TTFT).
+ * 16-token or 32-token page blocks, this engine optimizes KV cache block utilization.
+ * Note: TTFT figures are modeled estimates (EVIDENCE_CLASS: ESTIMATED); actual savings
+ * must be verified per stack via SPE Inference Economics Lab.
  */
 
 export interface KvPageAlignmentResult {
