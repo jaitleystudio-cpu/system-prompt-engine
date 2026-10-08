@@ -19,6 +19,10 @@ class OptimizerInputIntegrityTests(unittest.TestCase):
             with self.subTest(score=score), self.assertRaises(ValueError):
                 optimize_prompt(self.candidate, lambda _: {"score": score})
 
+    def test_boolean_mapping_score_never_passes_as_one(self):
+        with self.assertRaises(TypeError):
+            optimize_prompt(self.candidate, lambda _: {"score": True})
+
     def test_nonfinite_candidate_score_never_commits(self):
         calls = iter((
             {"score": 0.1, "proposal": {"execution_wording": "changed"}},
