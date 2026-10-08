@@ -22,7 +22,7 @@ const cliPath = join(repoRoot, "bin/spe.mjs");
 const tempDir = join(repoRoot, "tmp/cli-verification-battery");
 
 console.log("================================================================================");
-console.log("⚡ SPE Ω — 18-Command CLI Full Battery Integration Test");
+console.log("⚡ SPE Ω — 20-Command CLI Full Battery Integration Test");
 console.log("================================================================================");
 
 // Prepare scratch directory
@@ -67,13 +67,13 @@ function runCli(commandArgs) {
 }
 
 // 1. Version
-console.log("\n[1/18] Testing --version");
+console.log("\n[1/20] Testing --version");
 const verOut = runCli("--version");
 assert(verOut.includes("spe v1.4.1"), "Version mismatch");
 console.log("  ✓ --version output verified");
 
 // 2. Compile & KV-cache align
-console.log("\n[2/18] Testing compile");
+console.log("\n[2/20] Testing compile");
 const compiledOut = join(tempDir, "compiled.xml");
 runCli(`compile "${promptPath1}" --target claude-xml --align-kv 32 --out "${compiledOut}"`);
 assert(existsSync(compiledOut), "compiled.xml not created");
@@ -82,31 +82,31 @@ assert(compiledContent.includes("<system_instructions>"), "Dialect tags missing"
 console.log("  ✓ compile verified");
 
 // 3. Verify (FOL & Data Contracts)
-console.log("\n[3/18] Testing verify");
+console.log("\n[3/20] Testing verify");
 const verifyOut = runCli(`verify "${promptPath1}"`);
 assert(verifyOut.includes("SATISFIABLE") || verifyOut.includes("VERIFIED"), "Verification failed");
 console.log("  ✓ verify verified");
 
 // 4. Redteam (Hostile Gym 1,024 attacks)
-console.log("\n[4/18] Testing redteam");
+console.log("\n[4/20] Testing redteam");
 const redteamOut = runCli(`redteam "${promptPath1}"`);
 assert(redteamOut.includes("Mutation Kill Rate"), "Redteam output missing MKR");
 console.log("  ✓ redteam verified");
 
 // 5. Test (Prompt Mutation Testing)
-console.log("\n[5/18] Testing test (PMS)");
+console.log("\n[5/20] Testing test (PMS)");
 const testOut = runCli(`test "${promptPath1}"`);
 assert(testOut.includes("Prompt Mutation Score"), "Test output missing PMS");
 console.log("  ✓ test (PMS) verified");
 
 // 6. Diff (Semantic Diff)
-console.log("\n[6/18] Testing diff");
+console.log("\n[6/20] Testing diff");
 const diffOut = runCli(`diff "${promptPath1}" "${promptPath2}"`);
 assert(diffOut.includes("Intent Similarity") || diffOut.includes("Semantic Prompt Diff"), "Diff missing semantic evaluation");
 console.log("  ✓ diff verified");
 
 // 7. Seal (RFC 8785 Proof Receipt)
-console.log("\n[7/18] Testing seal");
+console.log("\n[7/20] Testing seal");
 const receiptOut = join(tempDir, "receipt.json");
 runCli(`seal "${promptPath1}" --out "${receiptOut}"`);
 assert(existsSync(receiptOut), "receipt.json not created");
@@ -115,7 +115,7 @@ assert(receiptJson.receiptDigest || receiptJson.specSchema, "Receipt missing dig
 console.log("  ✓ seal verified");
 
 // 8. OWASP Compliance
-console.log("\n[8/18] Testing owasp");
+console.log("\n[8/20] Testing owasp");
 const owaspOut = join(tempDir, "owasp.md");
 runCli(`owasp "${promptPath1}" --out "${owaspOut}"`);
 assert(existsSync(owaspOut), "owasp.md not created");
@@ -124,7 +124,7 @@ assert(owaspContent.includes("OWASP GenAI Top 10"), "OWASP report header missing
 console.log("  ✓ owasp verified");
 
 // 9. Codegen (TypeScript SDK)
-console.log("\n[9/18] Testing codegen");
+console.log("\n[9/20] Testing codegen");
 const sdkOut = join(tempDir, "generated_sdk.ts");
 runCli(`codegen "${promptPath1}" --target typescript-vercel --out "${sdkOut}"`);
 assert(existsSync(sdkOut), "generated_sdk.ts not created");
@@ -133,40 +133,40 @@ assert(sdkContent.includes("COMPILED_SYSTEM_PROMPT"), "SDK code structure missin
 console.log("  ✓ codegen verified");
 
 // 10. Salience (Context Attenuation / NIAH)
-console.log("\n[10/18] Testing salience");
+console.log("\n[10/20] Testing salience");
 const salienceOut = join(tempDir, "salience.md");
 runCli(`salience "${promptPath1}" --out "${salienceOut}"`);
 assert(existsSync(salienceOut), "salience.md not created");
 console.log("  ✓ salience verified");
 
 // 11. Simulate (Multi-Turn Crescendo Trajectory)
-console.log("\n[11/18] Testing simulate");
+console.log("\n[11/20] Testing simulate");
 const simOut = runCli(`simulate "${promptPath1}" --scenario crescendo_jailbreak`);
 assert(simOut.includes("MULTI-TURN TRAJECTORY RESULT"), "Simulation output missing");
 console.log("  ✓ simulate verified");
 
 // 12. Few-Shot Curriculum
-console.log("\n[12/18] Testing fewshot");
+console.log("\n[12/20] Testing fewshot");
 const fewshotOut = join(tempDir, "curriculum.md");
 runCli(`fewshot "${promptPath1}" --out "${fewshotOut}"`);
 assert(existsSync(fewshotOut), "curriculum.md not created");
 console.log("  ✓ fewshot verified");
 
 // 13. Watermark (Cryptographic Canary)
-console.log("\n[13/18] Testing watermark");
+console.log("\n[13/20] Testing watermark");
 const watermarkedOut = join(tempDir, "watermarked.md");
 runCli(`watermark "${promptPath1}" --author ACME-CORP --out "${watermarkedOut}"`);
 assert(existsSync(watermarkedOut), "watermarked.md not created");
 console.log("  ✓ watermark verified");
 
 // 14. Cost & Carbon Pruning
-console.log("\n[14/18] Testing cost");
+console.log("\n[14/20] Testing cost");
 const costOut = runCli(`cost "${promptPath1}" --prune`);
 assert(costOut.includes("MODEL COST & CARBON SUMMARY"), "Cost output missing matrix");
 console.log("  ✓ cost verified");
 
 // 15. OpenTelemetry & Prometheus Exporter
-console.log("\n[15/18] Testing otel");
+console.log("\n[15/20] Testing otel");
 const otelOut = join(tempDir, "telemetry.json");
 runCli(`otel "${promptPath1}" --out "${otelOut}"`);
 assert(existsSync(otelOut), "telemetry.json not created");
@@ -175,7 +175,7 @@ assert(otelJson.traceId || otelJson.name, "OTel output invalid");
 console.log("  ✓ otel verified");
 
 // 16. Cross-Model Differential Lab (Behavior Atlas)
-console.log("\n[16/18] Testing diff-models");
+console.log("\n[16/20] Testing diff-models");
 const atlasOut = join(tempDir, "atlas.md");
 runCli(`diff-models "${promptPath1}" --out "${atlasOut}"`);
 assert(existsSync(atlasOut), "atlas.md not created");
@@ -184,7 +184,7 @@ assert(atlasContent.includes("Cross-Model Behavior Atlas"), "Atlas header missin
 console.log("  ✓ diff-models verified");
 
 // 17. Vulnerability Inventory Sync & Refine
-console.log("\n[17/18] Testing vuln-sync & refine");
+console.log("\n[17/20] Testing vuln-sync & refine");
 const vulnOut = join(tempDir, "vuln_digest.md");
 runCli(`vuln-sync "${promptPath1}" --out "${vulnOut}"`);
 assert(existsSync(vulnOut), "vuln_digest.md not created");
@@ -194,8 +194,7 @@ runCli(`refine "${promptPath1}" --out "${refinedOut}"`);
 assert(existsSync(refinedOut), "refined.md not created");
 console.log("  ✓ vuln-sync and refine verified");
 
-// 18. Official Enterprise Certification Seal
-console.log("\n[18/18] Testing certify");
+console.log("\n[18/20] Testing certify");
 const certOut = join(tempDir, "cert.md");
 runCli(`certify "${promptPath1}" --org "Global Security Board" --out "${certOut}"`);
 assert(existsSync(certOut), "cert.md not created");
@@ -203,9 +202,27 @@ const certContent = readFileSync(certOut, "utf-8");
 assert(certContent.includes("SPE Ω Enterprise Certification Seal"), "Certification seal header missing");
 console.log("  ✓ certify verified");
 
+// 19. Closed-Loop Local Model Optimization & Empirical Auto-Tuning
+console.log("\n[19/20] Testing closed-loop");
+const closedLoopOut = join(tempDir, "closed_loop.md");
+runCli(`closed-loop "${promptPath1}" --iterations 2 --out "${closedLoopOut}"`);
+assert(existsSync(closedLoopOut), "closed_loop.md not created");
+const closedLoopContent = readFileSync(closedLoopOut, "utf-8");
+assert(closedLoopContent.includes("Closed-Loop Local Model"), "Closed loop report header missing");
+console.log("  ✓ closed-loop verified");
+
+// 20. Regulatory Privacy Scanner & PII Defense
+console.log("\n[20/20] Testing privacy");
+const privacyOut = join(tempDir, "privacy.md");
+runCli(`privacy "${promptPath1}" --out "${privacyOut}"`);
+assert(existsSync(privacyOut), "privacy.md not created");
+const privacyContent = readFileSync(privacyOut, "utf-8");
+assert(privacyContent.includes("Data Privacy & Regulatory Compliance"), "Privacy report header missing");
+console.log("  ✓ privacy verified");
+
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 18 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 20 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");

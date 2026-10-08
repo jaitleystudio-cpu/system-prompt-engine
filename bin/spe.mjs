@@ -59,6 +59,8 @@ const { exportTelemetryPackage } = await import(`${engineDir}/otelTelemetryExpor
 const { evaluateCrossModelDifferential } = await import(`${engineDir}/crossModelDifferentialLab.ts`);
 const { auditPromptAgainstVulnerabilityInventory } = await import(`${engineDir}/evolvingVulnerabilityInventory.ts`);
 const { analyzePromptRefinements } = await import(`${engineDir}/aiPromptRefiner.ts`);
+const { runClosedLoopLocalOptimization } = await import(`${engineDir}/closedLoopLocalRunner.ts`);
+const { auditPrivacyAndRegulations } = await import(`${engineDir}/privacyComplianceScanner.ts`);
 const { computeSha256 } = await import(`${engineDir}/hashUtils.ts`);
 
 // ANSI Color Helpers
@@ -98,6 +100,8 @@ ${bold('COMMANDS:')}
   ${green('diff-models')} <file>       Differential testing across 5 frontier models (Behavior Atlas)
   ${green('vuln-sync')}   <file>       Scan prompt against living CVE-style Vulnerability Inventory
   ${green('refine')}      <file>       AI-Assisted prompt refinement with Suggestion Receipts
+  ${green('closed-loop')} <file>       Closed-loop local model probe execution & empirical auto-tuning
+  ${green('privacy')}     <file>       Audit data privacy, PII leakage, HIPAA, GDPR & EU AI Act (2024/1689)
   ${green('certify')}     <file>       Generate official SPE Enterprise Certification Seal & Audit Scorecard
 
 ${bold('OPTIONS:')}
@@ -110,12 +114,17 @@ ${bold('OPTIONS:')}
   --scenario <type>      Trajectory scenario: crescendo_jailbreak, persona_drift, goal_hijacking
   --prune                Apply lossless AST token pruning during cost calculation
   --apply                Apply proposed refinements directly to prompt file
+  --iterations <num>     Max closed-loop auto-tuning iterations (default: 3)
+  --model <id>           Target local model id (default: llama3.2)
+  --redact               Apply PII redactions directly to prompt file
   --help, -h             Show this help menu
   --version, -v          Show SPE version
 
 ${bold('EXAMPLES:')}
   ${gray('$')} spe compile system.md --target claude-xml --align-kv 32 --out prompt.xml
   ${gray('$')} spe certify system.md --org "Acme AI Labs" --out SPE_CERTIFICATE.md
+  ${gray('$')} spe closed-loop system.md --iterations 3 --out closed_loop.md
+  ${gray('$')} spe privacy system.md --out privacy_audit.md --strict
   ${gray('$')} spe diff-models system.md --out atlas.md
   ${gray('$')} spe vuln-sync system.md --out patch_digest.md
   ${gray('$')} spe refine system.md --apply --out refined.md
@@ -711,6 +720,96 @@ This certificate was computed inside a 100% air-gapped, zero-network execution e
       console.log(`  Certificate Hash: ${certDigest}`);
       console.log(`  Report Saved:     ${outPath}`);
       console.log(green('\n✓ Official enterprise certificate emitted successfully!'));
+      break;
+    }
+
+    case 'closed-loop': {
+      if (!fileTarget) {
+        console.error(red('Error: Missing target prompt file. Usage: spe closed-loop <file>'));
+        process.exit(1);
+      }
+      const rawPrompt = readFileSync(fileTarget, 'utf8');
+      const maxIterations = flags.iterations ? parseInt(flags.iterations, 10) : 3;
+      const modelId = flags.model || 'llama3.2';
+
+      console.log(cyan(`🔄 Running Closed-Loop Local Model Optimization [Model: ${modelId}, Max Iterations: ${maxIterations}]...`));
+
+      const report = await runClosedLoopLocalOptimization(rawPrompt, {
+        maxIterations,
+        modelId,
+      });
+
+      console.log(`\n${bold('CLOSED-LOOP EXECUTION REPORT:')}`);
+      console.log(`  Initial Pass Rate: ${report.initialPassRatePercent}%`);
+      console.log(`  Final Pass Rate:   ${report.finalPassRatePercent}%`);
+      console.log(`  Total Iterations:  ${report.totalIterations}`);
+      console.log(`  Converged:         ${report.converged ? green('YES (100% Passed)') : yellow('NO')}`);
+      console.log(`  Execution Tier:    ${cyan(report.executionTier)}`);
+
+      if (flags.out) {
+        writeFileSync(flags.out, report.markdownReport, 'utf8');
+        console.log(`  Report Saved:      ${flags.out}`);
+      }
+
+      if (flags.apply) {
+        writeFileSync(fileTarget, report.optimizedPrompt, 'utf8');
+        console.log(green(`✓ Applied optimized prompt to '${fileTarget}'`));
+      }
+
+      if (flags.strict && !report.converged) {
+        console.error(red('\nStrict Mode Violation: Closed-loop probes failed to reach 100% convergence.'));
+        process.exit(1);
+      }
+
+      console.log(green('\n✓ Closed-loop execution completed successfully!'));
+      break;
+    }
+
+    case 'privacy': {
+      if (!fileTarget) {
+        console.error(red('Error: Missing target prompt file. Usage: spe privacy <file>'));
+        process.exit(1);
+      }
+      const rawPrompt = readFileSync(fileTarget, 'utf8');
+
+      console.log(cyan(`⚖️ Auditing Data Privacy & Regulatory Compliance for '${fileTarget}'...`));
+
+      const report = auditPrivacyAndRegulations(rawPrompt);
+
+      console.log(`\n${bold('REGULATORY PRIVACY AUDIT RESULT:')}`);
+      console.log(`  Compliance Status: ${report.overallStatus === 'REGULATORY_COMPLIANT' ? green(report.overallStatus) : red(report.overallStatus)}`);
+      console.log(`  Compliance Score:  ${report.complianceScore}%`);
+      console.log(`  PII Findings:      ${report.piiFindings.length === 0 ? green('0 (Clean)') : red(`${report.piiFindings.length} detected`)}`);
+
+      if (report.piiFindings.length > 0) {
+        console.log(`\n${bold('Detected Sensitive Entities:')}`);
+        for (const finding of report.piiFindings) {
+          console.log(`  - [${finding.severity}] ${finding.entityType}: ${finding.maskedSnippet}`);
+        }
+      }
+
+      console.log(`\n${bold('Framework Adherence:')}`);
+      for (const check of report.regulatoryChecks) {
+        const statusColor = check.status === 'COMPLIANT' ? green : check.status === 'WARNING' ? yellow : red;
+        console.log(`  - ${check.framework} (${check.articleRef}): ${statusColor(check.status)}`);
+      }
+
+      if (flags.out) {
+        writeFileSync(flags.out, report.markdownReport, 'utf8');
+        console.log(`\n  Report Saved:      ${flags.out}`);
+      }
+
+      if (flags.redact) {
+        writeFileSync(fileTarget, report.sanitizedPrompt, 'utf8');
+        console.log(green(`✓ Redacted sensitive entities in '${fileTarget}'`));
+      }
+
+      if (flags.strict && report.overallStatus !== 'REGULATORY_COMPLIANT') {
+        console.error(red('\nStrict Mode Violation: Prompt contains PII or violates regulatory compliance.'));
+        process.exit(1);
+      }
+
+      console.log(green('\n✓ Regulatory privacy audit completed successfully!'));
       break;
     }
 
