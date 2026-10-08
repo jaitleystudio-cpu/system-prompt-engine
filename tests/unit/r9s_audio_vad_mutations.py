@@ -30,7 +30,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 OWNER = "spe_runtime/media_product/local_backend.py"
 GATE = (
-    "            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB or spectral_variation < VAD_MIN_SPECTRAL_VARIATION:\n"
+    "            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB or zcr_variation < VAD_MIN_ZCR_VARIATION:\n"
 )
 HARDCODE = '''            def _goertzel(freq):
                 import math as _m
@@ -45,10 +45,10 @@ HARDCODE = '''            def _goertzel(freq):
 MUTANTS: list[tuple[str, str, str]] = [
     ("remove-modulation-gate", GATE, "            if False:\n"),
     ("hardcode-original-frequencies", GATE, HARDCODE),
-    ("depth-only-no-spectral-variation", GATE,
+    ("depth-only-no-zcr-variation", GATE,
      "            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB:\n"),
-    ("spectral-variation-only-no-depth", GATE,
-     "            if spectral_variation < VAD_MIN_SPECTRAL_VARIATION:\n"),
+    ("zcr-variation-only-no-depth", GATE,
+     "            if zcr_variation < VAD_MIN_ZCR_VARIATION:\n"),
     ("over-strict-gate-rejects-speech", "VAD_MIN_SYLLABIC_MODULATION_DB = 1.0\n",
      "VAD_MIN_SYLLABIC_MODULATION_DB = 6.0\n"),
     ("single-window-decode", "    if total <= max_len:\n        return [(0, total)]\n",

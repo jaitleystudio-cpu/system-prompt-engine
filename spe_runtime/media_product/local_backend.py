@@ -21,6 +21,7 @@ import array
 import hashlib
 import json
 import math
+import operator
 import os
 import platform
 import re
@@ -76,19 +77,59 @@ _VIDEO_SUFFIXES = {".mp4", ".mov", ".mkv", ".webm", ".m4v"}
 
 # --- Acoustic speech gate: modulation features (general, not fixture-specific) ---
 # Speech is non-stationary on two axes at once: its energy envelope is modulated
-# at syllabic rates (~2-8 Hz) and its short-time spectrum keeps changing
-# (voiced / unvoiced / nasal / pause). Stationary tonal signals (single tones,
-# dual tones, chords, buzzes) fail the envelope test; amplitude-modulated or
-# gated tones keep a fixed spectrum and fail the spectral-variation test; sweeps
-# have a flat envelope. Both features are level-invariant (dB / ratios).
+# at syllabic rates (~2-8 Hz) and its short-time zero-crossing rate keeps
+# changing (voiced / unvoiced / nasal / pause). Both features are computed on the
+# part of the signal that rises above the clip's *stationary floor* (a low
+# percentile of frame power): a steady tone, chord, hum or noise bed sets that
+# floor and is subtracted, so it neither masks speech underneath it nor counts as
+# speech on its own. Stationary tonal signals (single/dual tones, chords, buzzes,
+# sweeps) leave no frames above their own floor; amplitude-modulated or gated
+# tones rise above the floor but keep a fixed zero-crossing rate and fail the
+# zero-crossing-variation test. Both features are level-invariant (dB / ratios).
+#
+# Cost is bounded and linear in duration: one pass over the PCM for per-frame
+# power/zero crossings, one sort for the floor percentile, and a fixed-length
+# (2.56 s, hop 1.28 s) Hann-windowed DFT restricted to the fixed 2-8 Hz bins of
+# each analysis window, aggregated by median over active windows.
+#
+# Supported operating envelope (measured, see tests): speech under a steady
+# single or dual tone is detected down to about +5 dB speech:interference SNR,
+# under chord/music-like tonal beds down to about 0 dB; below that the gate may
+# return NO_SPEECH_MODULATION. Melodic music with rhythm is NOT rejected by this
+# gate (it is non-stationary); it is handed to the model like speech.
 VAD_FRAME_SAMPLES = 320  # 20 ms at 16 kHz
 VAD_MIN_FRAMES_FOR_MODULATION = 30  # < 0.6 s: too short to measure; defer to the model
 VAD_SYLLABIC_BAND_HZ = (2.0, 8.0)
+VAD_MODULATION_WINDOW_FRAMES = 128  # 2.56 s analysis window
+VAD_MODULATION_HOP_FRAMES = 64
+VAD_STATIONARY_FLOOR_PERCENTILE = 0.10
 VAD_ENVELOPE_FLOOR_DB = 50.0
+VAD_FLOOR_CLAMP_DB = 6.0  # envelope may dip at most 6 dB (power x1/4) below the stationary floor
 VAD_ACTIVE_FRAME_DB = 35.0
 VAD_STEADY_FRAME_JUMP_DB = 6.0
 VAD_MIN_SYLLABIC_MODULATION_DB = 1.0
-VAD_MIN_SPECTRAL_VARIATION = 0.2
+VAD_MIN_ZCR_VARIATION = 0.2
+
+_SIGN_TABLE = bytes(1 if value >= 128 else 0 for value in range(256))
+_ADJACENT_MASK = int.from_bytes(b"\x01" * (VAD_FRAME_SAMPLES - 1), "big")
+_MODULATION_TABLES: dict[int, list[tuple[list[float], list[float]]]] = {}
+_HANN_TABLES: dict[int, list[float]] = {}
+
+# --- Decoded-media resource limits ---
+# Compressed audio/video can expand far beyond its upload size (a 32 MiB
+# low-bitrate file can hold many hours). Decoding is therefore bounded *during*
+# ffmpeg (-t one second past the limit, -fs hard byte cap, wall-clock timeout)
+# and the produced PCM is measured; anything over the limit is refused with the
+# existing public code FILE_TOO_LARGE (same code as an oversized upload) and a
+# machine detail, never silently truncated. 10 minutes of 16 kHz mono PCM is
+# 19.2 MB; at the measured local real-time factor (~2-4x on the pinned small
+# model, 2 threads) it is already a 20-40 minute local job.
+MAX_DECODED_DURATION_MS = 600_000
+PCM_BYTES_PER_SECOND = 16000 * 2
+MAX_DECODED_PCM_BYTES = MAX_DECODED_DURATION_MS * PCM_BYTES_PER_SECOND // 1000
+DECODE_TIMEOUT_S = 120
+RESOURCE_LIMIT_CODE = "FILE_TOO_LARGE"
+_WAV_HEADER_SLACK_BYTES = 1 << 16
 
 # --- Decode windows ---
 # With -nt the pinned whisper.cpp decodes one segment per 30 s encoder window and
@@ -102,67 +143,121 @@ DECODE_WINDOW_MIN_MS = 3000
 DECODE_WINDOW_SILENT_DB = 40.0
 
 
-def _frame_profile(samples: "array.array[int] | list[int]", frame: int = VAD_FRAME_SAMPLES) -> tuple[list[float], list[float]]:
-    """Per-frame energy (dB) and zero-crossing rate for non-overlapping frames."""
-    energy_db: list[float] = []
+def _as_pcm16(samples: "array.array[int] | list[float]") -> "array.array[int]":
+    if isinstance(samples, array.array) and samples.typecode == "h":
+        return samples
+    return array.array("h", (max(-32768, min(32767, int(round(x)))) for x in samples))
+
+
+def _frame_profile(samples: "array.array[int] | list[float]") -> tuple[list[float], list[float]]:
+    """Per-frame mean power and zero-crossing rate (20 ms frames), linear cost.
+
+    Zero crossings are counted from the int16 sign bits with big-integer bit
+    operations instead of a per-sample Python loop.
+    """
+    pcm = _as_pcm16(samples)
+    frame = VAD_FRAME_SAMPLES
+    high_byte = 1 if sys.byteorder == "little" else 0
+    mul = operator.mul
+    power: list[float] = []
     zcr: list[float] = []
-    for f in range(len(samples) // frame):
-        seg = samples[f * frame:(f + 1) * frame]
-        power = sum(x * x for x in seg) / frame
-        energy_db.append(10.0 * math.log10(power + 1e-9))
-        crossings = 0
-        prev = seg[0]
-        for cur in seg[1:]:
-            if (prev < 0) != (cur < 0):
-                crossings += 1
-            prev = cur
-        zcr.append(crossings / frame)
-    return energy_db, zcr
+    n_frames = len(pcm) // frame
+    block = 512  # frames per block: bounded temporary byte buffers
+    for first in range(0, n_frames, block):
+        last = min(n_frames, first + block)
+        signs = pcm[first * frame:last * frame].tobytes()[high_byte::2].translate(_SIGN_TABLE)
+        for f in range(first, last):
+            seg = pcm[f * frame:(f + 1) * frame]
+            power.append(sum(map(mul, seg, seg)) / frame)
+            offset = (f - first) * frame
+            bits = int.from_bytes(signs[offset:offset + frame], "big")
+            zcr.append(((bits ^ (bits >> 8)) & _ADJACENT_MASK).bit_count() / frame)
+    return power, zcr
+
+
+def _modulation_tables(length: int, frame_rate: float) -> list[tuple[list[float], list[float]]]:
+    tables = _MODULATION_TABLES.get(length)
+    if tables is None:
+        lo, hi = VAD_SYLLABIC_BAND_HZ
+        tables = []
+        for k in range(1, length // 2 + 1):
+            if lo <= k * frame_rate / length <= hi:
+                step = 2.0 * math.pi * k / length
+                tables.append(([math.cos(step * t) for t in range(length)], [math.sin(step * t) for t in range(length)]))
+        _MODULATION_TABLES[length] = tables
+        _HANN_TABLES[length] = [0.5 - 0.5 * math.cos(2.0 * math.pi * t / (length - 1)) for t in range(length)]
+    return tables
 
 
 def speech_modulation_features(
-    samples: "array.array[int] | list[int]", sample_rate: int = 16000
+    samples: "array.array[int] | list[float]", sample_rate: int = 16000
 ) -> tuple[float, float] | None:
-    """(syllabic_modulation_db, spectral_variation) or None when too short.
+    """(syllabic_modulation_db, zcr_variation) or None when too short.
 
-    syllabic_modulation_db: RMS (dB) of the frame-energy envelope restricted to
-    the 2-8 Hz modulation band (DFT of the mean-removed log envelope).
-    spectral_variation: coefficient of variation of the zero-crossing rate over
-    active, steady frames (frames at abrupt on/off edges are excluded so a gated
-    tone cannot borrow variation from its own switching transients).
+    syllabic_modulation_db: median over active 2.56 s analysis windows of the RMS
+    (dB) of the floor-subtracted log-energy envelope restricted to the 2-8 Hz
+    modulation band (Hann-windowed DFT at the fixed in-band bins only).
+    zcr_variation: coefficient of variation of the short-time zero-crossing rate
+    over active, steady frames of the full signal (frames at
+    abrupt on/off edges are excluded so a gated tone cannot borrow variation
+    from its own switching transients). This is a zero-crossing statistic, not a
+    spectral feature.
     """
-    energy_db, zcr = _frame_profile(samples)
-    n = len(energy_db)
+    power, zcr = _frame_profile(samples)
+    n = len(power)
     if n < VAD_MIN_FRAMES_FOR_MODULATION:
         return None
-    top = max(energy_db)
-    env = [max(e, top - VAD_ENVELOPE_FLOOR_DB) for e in energy_db]
-    mean = sum(env) / n
-    centered = [v - mean for v in env]
+    floor = sorted(power)[int(VAD_STATIONARY_FLOOR_PERCENTILE * (n - 1))]
+    residual = [max(p - floor, 0.0) for p in power]
+    top = max(residual)
+    if top <= 0.0:
+        return 0.0, 0.0
+    active_floor = top * 10.0 ** (-VAD_ACTIVE_FRAME_DB / 10.0)
+    above = [i for i in range(n) if residual[i] >= max(floor, 1e-9) and residual[i] > active_floor]
+    if not above:
+        return 0.0, 0.0
+    # Residual far below the stationary floor's own level is clamped (6 dB under
+    # it), so the envelope never dives into log(~0) at the troughs of a slow
+    # level change while speech above a bed keeps its syllabic contrast.
+    env_floor = max(floor * 10.0 ** (-VAD_FLOOR_CLAMP_DB / 10.0), top * 10.0 ** (-VAD_ENVELOPE_FLOOR_DB / 10.0))
+    env = [10.0 * math.log10(max(r, env_floor)) for r in residual]
     frame_rate = sample_rate / VAD_FRAME_SAMPLES
-    lo, hi = VAD_SYLLABIC_BAND_HZ
-    band_power = 0.0
-    for k in range(1, n // 2 + 1):
-        freq = k * frame_rate / n
-        if freq < lo or freq > hi:
+    length = min(VAD_MODULATION_WINDOW_FRAMES, n)
+    tables = _modulation_tables(length, frame_rate)
+    hann = _HANN_TABLES[length]
+    starts = list(range(0, n - length + 1, VAD_MODULATION_HOP_FRAMES))
+    if starts[-1] != n - length:
+        starts.append(n - length)
+    mul = operator.mul
+    depths: list[float] = []
+    for start in starts:
+        if max(residual[start:start + length]) <= active_floor:
             continue
-        re = im = 0.0
-        step = 2.0 * math.pi * k / n
-        for t, v in enumerate(centered):
-            re += v * math.cos(step * t)
-            im += v * math.sin(step * t)
-        amp = 2.0 * math.hypot(re, im) / n
-        band_power += amp * amp / 2.0
-    modulation_db = math.sqrt(band_power)
-    active = [i for i, e in enumerate(energy_db) if e > top - VAD_ACTIVE_FRAME_DB]
+        segment = env[start:start + length]
+        mean = sum(segment) / length
+        tapered = [(v - mean) * w for v, w in zip(segment, hann)]
+        band_power = 0.0
+        for cos_row, sin_row in tables:
+            amp = 4.0 * math.hypot(sum(map(mul, tapered, cos_row)), sum(map(mul, tapered, sin_row))) / length
+            band_power += amp * amp / 2.0
+        depths.append(math.sqrt(band_power))
+    depths.sort()
+    modulation_db = depths[len(depths) // 2] if depths else 0.0
+    # Zero-crossing variation is measured over all active frames of the full
+    # signal (bed included): frames dominated by a steady bed and frames
+    # dominated by speech differ in crossing rate, which is evidence of speech;
+    # a tone/chord alone (gated, AM or steady) keeps one crossing rate throughout.
+    level_db = [10.0 * math.log10(p + 1e-9) for p in power]
+    loud = max(level_db)
+    active = [i for i in range(n) if level_db[i] > loud - VAD_ACTIVE_FRAME_DB]
     steady = [
         i for i in active
         if 0 < i < n - 1
-        and abs(energy_db[i] - energy_db[i - 1]) < VAD_STEADY_FRAME_JUMP_DB
-        and abs(energy_db[i + 1] - energy_db[i]) < VAD_STEADY_FRAME_JUMP_DB
+        and abs(level_db[i] - level_db[i - 1]) < VAD_STEADY_FRAME_JUMP_DB
+        and abs(level_db[i + 1] - level_db[i]) < VAD_STEADY_FRAME_JUMP_DB
     ] or active
     rates = [zcr[i] for i in steady]
-    mean_rate = sum(rates) / len(rates) if rates else 0.0
+    mean_rate = sum(rates) / len(rates)
     if mean_rate <= 0.0:
         return modulation_db, 0.0
     spread = math.sqrt(sum((r - mean_rate) ** 2 for r in rates) / len(rates))
@@ -184,7 +279,8 @@ def plan_decode_windows(
         return [(0, total)]
     frame = VAD_FRAME_SAMPLES
     min_len = sample_rate * DECODE_WINDOW_MIN_MS // 1000
-    energy_db, _ = _frame_profile(samples, frame)
+    power, _ = _frame_profile(samples)
+    energy_db = [10.0 * math.log10(p + 1e-9) for p in power]
     windows: list[tuple[int, int]] = []
     start = 0
     while total - start > max_len:
@@ -1124,8 +1220,11 @@ def _ffmpeg() -> str:
     return "ffmpeg"
 
 
-def _run_ffmpeg(args: list[str]) -> None:
-    completed = subprocess.run(args, capture_output=True, text=True, check=False)
+def _run_ffmpeg(args: list[str], *, timeout: float | None = None) -> None:
+    try:
+        completed = subprocess.run(args, capture_output=True, text=True, check=False, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise DecodeError(RESOURCE_LIMIT_CODE, "DECODE_TIME_LIMIT") from exc
     if completed.returncode != 0:
         raise UnsupportedPath(
             "VIDEO_AUDIO_EXTRACT_FAILED:" + (completed.stderr or "")[-800:]
@@ -1535,8 +1634,8 @@ class LocalMediaSession:
         progress_state: str = "NOT_REPORTED",
     ) -> LocalTranscript:
         self.phase = "error"
-        # Corrupt bytes never become a completed fallback transcription.
-        if code == "CORRUPT":
+        # Corrupt or over-limit media never becomes a completed fallback transcription.
+        if code in {"CORRUPT", RESOURCE_LIMIT_CODE}:
             mode = "UNAVAILABLE"
         else:
             mode = resolve_media_mode(
@@ -1605,7 +1704,12 @@ class LocalMediaSession:
 
     def _to_wav(self, source: Path, media_kind: str) -> tuple[Path, int]:
         if media_kind == "audio" and source.suffix.lower() == ".wav" and _wav_usable(source):
-            return source, _wav_duration_ms(source)
+            # Checked from the header and the byte size before any PCM is read.
+            size = source.stat().st_size
+            duration_ms = min(_wav_duration_ms(source), max(0, size - 44) * 1000 // PCM_BYTES_PER_SECOND)
+            if duration_ms > MAX_DECODED_DURATION_MS or size > MAX_DECODED_PCM_BYTES + _WAV_HEADER_SLACK_BYTES:
+                raise DecodeError(RESOURCE_LIMIT_CODE, "DECODED_DURATION_LIMIT")
+            return source, duration_ms
         dest = source.with_suffix(".lane-r3b.wav")
         if dest.exists():
             dest = source.parent / f"{source.stem}.lane-r3b-{os.getpid()}.wav"
@@ -1624,9 +1728,19 @@ class LocalMediaSession:
                     "16000",
                     "-c:a",
                     "pcm_s16le",
+                    # Stop decoding one second past the limit (so overflow is
+                    # detectable) and hard-cap output bytes even if timestamps lie.
+                    "-t",
+                    str(MAX_DECODED_DURATION_MS // 1000 + 1),
+                    "-fs",
+                    str(MAX_DECODED_PCM_BYTES + 2 * PCM_BYTES_PER_SECOND + _WAV_HEADER_SLACK_BYTES),
                     str(dest),
-                ]
+                ],
+                timeout=DECODE_TIMEOUT_S,
             )
+        except DecodeError:
+            dest.unlink(missing_ok=True)
+            raise
         except UnsupportedPath as exc:
             dest.unlink(missing_ok=True)
             detail = str(exc)
@@ -1635,6 +1749,14 @@ class LocalMediaSession:
         if not dest.exists() or dest.stat().st_size == 0:
             dest.unlink(missing_ok=True)
             raise DecodeError("CORRUPT", "EMPTY_WAV")
+        # Measure what was actually produced (header and byte size), not metadata.
+        produced_ms = max(
+            _wav_duration_ms(dest) if _wav_usable(dest) else 0,
+            (dest.stat().st_size - 44) * 1000 // PCM_BYTES_PER_SECOND,
+        )
+        if produced_ms > MAX_DECODED_DURATION_MS:
+            dest.unlink(missing_ok=True)
+            raise DecodeError(RESOURCE_LIMIT_CODE, "DECODED_DURATION_LIMIT")
         return dest, _wav_duration_ms(dest)
 
     def _detect_speech_acoustics(self, wav_path: Path) -> tuple[bool, str]:
@@ -1646,33 +1768,44 @@ class LocalMediaSession:
             return False, "PCM_ENERGY"
         samples = array.array("h")
         usable = len(buf) - (len(buf) % 2)
-        samples.frombytes(bytes(buf[:usable]))
+        with memoryview(buf) as view:
+            samples.frombytes(view[:usable])
         if not samples:
             return False, "PCM_ENERGY"
-        peak = max(abs(sample) for sample in samples)
+        peak = max(max(samples), -min(samples))
         if peak <= 8:
             return False, "PCM_ENERGY"
-        crossings: list[float] = []
+        # Interpolated zero-crossing intervals, accumulated in a single streaming
+        # pass (Welford mean/variance): O(1) memory instead of crossing/diff lists.
+        n_crossings = 0
+        n_diffs = 0
+        mean_diff = 0.0
+        m2_diff = 0.0
+        last_crossing = 0.0
+        s_prev = samples[0]
         for i in range(1, len(samples)):
-            s_prev = samples[i - 1]
             s_curr = samples[i]
-            if (s_prev < 0 and s_curr >= 0) or (s_prev >= 0 and s_curr < 0):
+            if (s_prev < 0) != (s_curr < 0):
                 denom = s_curr - s_prev
-                frac = -s_prev / denom if denom != 0 else 0.0
-                crossings.append((i - 1) + frac)
-        if len(crossings) >= 20:
-            diffs = [crossings[j] - crossings[j - 1] for j in range(1, len(crossings))]
-            mean_diff = sum(diffs) / len(diffs)
-            var_diff = sum((d - mean_diff) ** 2 for d in diffs) / len(diffs)
-            std_diff = var_diff ** 0.5
+                crossing = (i - 1) + (-s_prev / denom if denom != 0 else 0.0)
+                if n_crossings:
+                    n_diffs += 1
+                    delta = (crossing - last_crossing) - mean_diff
+                    mean_diff += delta / n_diffs
+                    m2_diff += delta * ((crossing - last_crossing) - mean_diff)
+                last_crossing = crossing
+                n_crossings += 1
+            s_prev = s_curr
+        if n_crossings >= 20:
+            std_diff = (m2_diff / n_diffs) ** 0.5
             if std_diff < 0.08:
                 return False, "PURE_TONE"
-            if mean_diff < 2.5 and len(crossings) > len(samples) * 0.35:
+            if mean_diff < 2.5 and n_crossings > len(samples) * 0.35:
                 return False, "STATIONARY_NOISE"
         modulation = speech_modulation_features(samples)
         if modulation is not None:
-            syllabic_db, spectral_variation = modulation
-            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB or spectral_variation < VAD_MIN_SPECTRAL_VARIATION:
+            syllabic_db, zcr_variation = modulation
+            if syllabic_db < VAD_MIN_SYLLABIC_MODULATION_DB or zcr_variation < VAD_MIN_ZCR_VARIATION:
                 return False, "NO_SPEECH_MODULATION"
         return True, "SPEECH_CANDIDATE"
 

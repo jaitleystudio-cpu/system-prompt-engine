@@ -27,7 +27,7 @@ import pytest
 from spe_runtime.media_product.local_backend import (
     DECODE_WINDOW_MAX_MS,
     DECODE_WINDOW_MIN_MS,
-    VAD_MIN_SPECTRAL_VARIATION,
+    VAD_MIN_ZCR_VARIATION,
     VAD_MIN_SYLLABIC_MODULATION_DB,
     IntegrityError,
     LocalMediaSession,
@@ -86,13 +86,14 @@ def _sawtooth(f0, seconds, amp):
     return [amp * (2.0 * ((i * f0 / SR) % 1.0) - 1.0) for i in range(int(SR * seconds))]
 
 
-def _sweep(f_lo, f_hi, seconds, amp):
+def _sweep(f_lo, f_hi, seconds, amp, tremolo_hz=None):
     n = int(SR * seconds)
     out, phase = [], 0.0
     for i in range(n):
         f = f_lo + (f_hi - f_lo) * i / n
         phase += 2 * math.pi * f / SR
-        out.append(amp * math.sin(phase))
+        level = 1.0 if tremolo_hz is None else 0.55 - 0.45 * math.cos(2 * math.pi * tremolo_hz * i / SR)
+        out.append(amp * level * math.sin(phase))
     return out
 
 
@@ -112,6 +113,9 @@ GENERALIZATION_NON_SPEECH = {
     "am_chord_5hz_3s": lambda: _tones([350, 525, 700], 3.0, 9000, am_hz=5.0, am_depth=0.9),
     "gated_dtmf_beeps_4hz_3s": lambda: _tones([852, 1477], 3.0, 10000, gate_hz=4.0),
     "sweep_200_2400_3s": lambda: _sweep(200, 2400, 3.0, 9000),
+    # Changing zero-crossing rate + level change slower than syllables: only the
+    # 2-8 Hz envelope feature can reject it.
+    "slow_tremolo_sweep_300_2500_6s": lambda: _sweep(300, 2500, 6.0, 9000, tremolo_hz=0.5),
 }
 
 ORIGINAL_SHAPES = {
@@ -213,10 +217,10 @@ def test_modulation_features_separate_speech_from_tones_with_margin():
     speech = [speech_modulation_features(_read(FIXTURES_DIR / n)) for n in SPEECH_FIXTURES]
     assert all(f is not None for f in speech)
     assert min(f[0] for f in speech) >= 2.0 * VAD_MIN_SYLLABIC_MODULATION_DB
-    assert min(f[1] for f in speech) >= 1.5 * VAD_MIN_SPECTRAL_VARIATION
+    assert min(f[1] for f in speech) >= 1.5 * VAD_MIN_ZCR_VARIATION
     for name, make in {**GENERALIZATION_NON_SPEECH, **ORIGINAL_SHAPES}.items():
         depth, variation = speech_modulation_features(make())
-        assert depth < VAD_MIN_SYLLABIC_MODULATION_DB or variation < VAD_MIN_SPECTRAL_VARIATION, name
+        assert depth < VAD_MIN_SYLLABIC_MODULATION_DB or variation < VAD_MIN_ZCR_VARIATION, name
 
 
 @pytest.mark.parametrize("name", SPEECH_FIXTURES)
@@ -228,7 +232,7 @@ def test_modulation_features_survive_0db_broadband_noise_and_hum(name: str):
     hum = [s + rms * math.sqrt(2) * math.sin(2 * math.pi * 50 * i / SR) for i, s in enumerate(samples)]
     for degraded in (noisy, hum):
         depth, variation = speech_modulation_features(degraded)
-        assert depth >= VAD_MIN_SYLLABIC_MODULATION_DB and variation >= VAD_MIN_SPECTRAL_VARIATION
+        assert depth >= VAD_MIN_SYLLABIC_MODULATION_DB and variation >= VAD_MIN_ZCR_VARIATION
 
 
 def test_modulation_features_are_level_invariant():
