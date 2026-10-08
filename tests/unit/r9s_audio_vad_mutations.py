@@ -94,6 +94,28 @@ MUTANTS: list[tuple[str, str, str]] = [
      "    shared = [\n        right[j + t] if right[j + t] != left[i + t] and right[j + t].startswith(left[i + t]) else left[i + t]\n        for t in range(run)\n    ]\n",
      "    shared = left[i:i + run]\n"),
 ]
+VAD_TESTS = [
+    "tests/unit/test_audio_vad_modulation_generalization.py",
+    "tests/unit/test_audio_adversarial_vad.py",
+    "tests/unit/test_audio_multilingual_corpus_and_vad_guard.py",
+]
+LIMIT_TESTS = ["tests/unit/test_media_decode_resource_limits.py"]
+SEAM_TESTS = ["tests/unit/test_audio_window_seams.py", "tests/unit/test_audio_vad_modulation_generalization.py"]
+LIMIT_MUTANTS = {
+    "silent-truncation-no-produced-duration-check", "unbounded-decoder-no-t-no-fs",
+    "no-decode-wall-clock-limit", "wav-passthrough-unbounded", "limit-raised-silently",
+}
+SEAM_MUTANTS = {"no-seam-reconciliation", "no-window-overlap", "keep-truncated-left-copy"}
+
+
+def _targets(name: str) -> list[str]:
+    if name in LIMIT_MUTANTS:
+        return LIMIT_TESTS
+    if name in SEAM_MUTANTS:
+        return SEAM_TESTS
+    return VAD_TESTS
+
+
 TESTS = [
     "tests/unit/test_audio_vad_modulation_generalization.py",
     "tests/unit/test_media_decode_resource_limits.py",
@@ -150,12 +172,12 @@ def main() -> int:
                 cheat = _pytest(tmp, ["tests/unit/test_audio_vad_modulation_generalization.py",
                                       "-k", "original_dual_tone_and_chord_rejected_without_model"])
                 print(f"  hardcode mutant on ORIGINAL shapes: {'PASSES (cheat is real)' if cheat.returncode == 0 else 'fails'}")
-            proc = _pytest(tmp, TESTS)
+            proc = _pytest(tmp, _targets(name))
             tail = proc.stdout.strip().splitlines()[-1] if proc.stdout.strip() else ""
             if proc.returncode == 0:
                 survived.append(name)
                 print(f"SURVIVED: {name} ({tail})")
-            elif "AssertionError" not in proc.stdout and "assert" not in proc.stdout:
+            elif not any(marker in proc.stdout for marker in ("AssertionError", "assert", "DID NOT RAISE")):
                 survived.append(name)
                 print(f"DIED_FOR_WRONG_REASON: {name}\n{proc.stdout[-1500:]}")
             else:
