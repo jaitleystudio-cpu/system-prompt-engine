@@ -12,7 +12,10 @@ export type AppView =
   | "website"
   | "media"
   | "ocr"
-  | "research";
+  | "research"
+  | "workflows"
+  | "skill-builder"
+  | "compare";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -27,6 +30,9 @@ export const VIEW_PATH: Record<AppView, string> = {
   media: "/media",
   ocr: "/ocr",
   research: "/research",
+  workflows: "/workflows",
+  "skill-builder": "/build-skill",
+  compare: "/compare",
 };
 
 /** Device-local and tool surfaces. Not advertised to crawlers. */
@@ -158,6 +164,24 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Research — Stored receipt only | SPE",
     description:
       "View a stored research receipt after opting in. This route does not search or send the question; live index and retraction remain HOLD.",
+  },
+  workflows: {
+    path: "/workflows",
+    title: "Verified AI Workflows Exchange | SPE Ω",
+    description:
+      "Tested, reproducible business operations and document automation AI workflows for Claude Code, Cursor, and Codex.",
+  },
+  "skill-builder": {
+    path: "/build-skill",
+    title: "Free In-Browser AI Skill Builder & Auditor | SPE Ω",
+    description:
+      "Build, security-audit, and export portable AI skills (SKILL.md) locally on your device with $0 server inference.",
+  },
+  compare: {
+    path: "/compare",
+    title: "Skill Effectiveness Challenge — Head-to-Head Benchmarks | SPE Ω",
+    description:
+      "Empirical head-to-head AI agent task performance benchmarks with Wilson 95% confidence intervals and token deltas.",
   },
 };
 

@@ -98,6 +98,9 @@ import {
 import { MyWork } from "./pages/MyWork";
 import { PrivacyProof } from "./pages/PrivacyProof";
 import { Capabilities } from "./pages/Capabilities";
+import { WorkflowsCatalog } from "./pages/WorkflowsCatalog";
+import { SkillBuilderStudio } from "./pages/SkillBuilderStudio";
+import { HeadToHeadCompare } from "./pages/HeadToHeadCompare";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
 import { registerServiceWorker } from "./pwa";
@@ -1275,6 +1278,9 @@ export default function App() {
 
         {!notFound && view === "capabilities" && <Capabilities onNavigate={setView} />}
         {!notFound && view === "privacy" && <PrivacyProof />}
+        {!notFound && view === "workflows" && <WorkflowsCatalog onNavigate={setView} />}
+        {!notFound && view === "skill-builder" && <SkillBuilderStudio />}
+        {!notFound && view === "compare" && <HeadToHeadCompare />}
 
         {!notFound && view === "workspace" && (
           <>

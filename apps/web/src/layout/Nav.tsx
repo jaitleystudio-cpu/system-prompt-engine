@@ -11,12 +11,14 @@ type Props = {
 
 const LINKS: { id: AppView; label: string }[] = [
   { id: "home", label: "Home" },
+  { id: "workflows", label: "Workflows" },
+  { id: "skill-builder", label: "Skill Builder" },
+  { id: "compare", label: "Compare" },
   { id: "create", label: "Create" },
   { id: "code", label: "Code" },
   { id: "website", label: "Website" },
   { id: "lab", label: "Daily Lab" },
   { id: "my-work", label: "My Work" },
-  { id: "research", label: "Research" },
   { id: "capabilities", label: "Capabilities" },
   { id: "privacy", label: "Privacy" },
 ];

@@ -1,16 +1,25 @@
 # robots.txt for SPE Ω Public Evidence Engine
 User-agent: *
 Allow: /
+Allow: /create
+Allow: /code
+Allow: /daily-lab
 Allow: /capabilities
 Allow: /privacy
 Allow: /evidence-pages/
 Allow: /models/
 Allow: /failure-genome/
 Allow: /tools/
+Allow: /workflows/
+Allow: /build-skill
 Allow: /integrations/
 Allow: /compare/
 Allow: /migrate/
 Disallow: /workspace
+Disallow: /my-work
+Disallow: /website
+Disallow: /media
+Disallow: /research
 Disallow: /studio
 Disallow: /private/
 Disallow: /api/

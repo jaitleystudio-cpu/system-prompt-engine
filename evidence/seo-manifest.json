@@ -1,13 +1,13 @@
 {
   "manifest_version": "1.0",
-  "generated_at": "2026-10-09T16:24:31.626Z",
+  "generated_at": "2026-10-09T22:15:04.174Z",
   "canonical_domain": "https://systempromptengine.com",
-  "total_prerendered_pages": 25,
+  "total_prerendered_pages": 31,
   "zero_placeholder_pages_verified": true,
   "indexing_summary": {
-    "total_indexable": 25,
+    "total_indexable": 31,
     "noindex_count": 0,
-    "REAL_PRODUCT": 8,
+    "REAL_PRODUCT": 14,
     "CATEGORY_OWNERSHIP": 8,
     "HOSTED_MODEL_PASSPORT": 2,
     "REAL_DATA": 1,
@@ -46,6 +46,39 @@
       "has_unique_content": true,
       "word_count": 444,
       "canonical_url": "https://systempromptengine.com/privacy",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/create",
+      "title": "Create a Prompt — SPE Free Prompt Builder",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 442,
+      "canonical_url": "https://systempromptengine.com/create",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/code",
+      "title": "Screenshot to Code Prompt — SPE Prompt Engineering Tool",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 443,
+      "canonical_url": "https://systempromptengine.com/code",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/daily-lab",
+      "title": "Daily Lab — SPE AI Prompt Generator Ideas",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 413,
+      "canonical_url": "https://systempromptengine.com/daily-lab",
       "schema_type": "SoftwareApplication"
     },
     {
@@ -189,6 +222,39 @@
       "has_unique_content": true,
       "word_count": 400,
       "canonical_url": "https://systempromptengine.com/tools/screenshot-to-code",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/workflows",
+      "title": "Verified AI Workflows Exchange | SPE Ω",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SPECIFICATION_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 471,
+      "canonical_url": "https://systempromptengine.com/workflows",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/build-skill",
+      "title": "Free In-Browser AI Skill Builder & Security Auditor | SPE Ω",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "WASM_SANDBOX_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 452,
+      "canonical_url": "https://systempromptengine.com/build-skill",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/compare",
+      "title": "Skill Effectiveness Challenge — Empirical Benchmarks | SPE Ω",
+      "classification": "REAL_PRODUCT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "EMPIRICAL_BENCHMARK_VERIFIED",
+      "has_unique_content": true,
+      "word_count": 485,
+      "canonical_url": "https://systempromptengine.com/compare",
       "schema_type": "SoftwareApplication"
     },
     {

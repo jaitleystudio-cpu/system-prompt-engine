@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BusinessWorkflow",
+  "description": "SPE Ω Verified Business Workflow Specification",
+  "type": "object",
+  "required": [
+    "workflow_id",
+    "slug",
+    "title",
+    "job_category",
+    "summary",
+    "required_capabilities",
+    "input_artifacts",
+    "output_artifacts",
+    "max_permissions",
+    "steps",
+    "verification_fixture_id"
+  ],
+  "properties": {
+    "workflow_id": {
+      "type": "string",
+      "pattern": "^WF-[a-f0-9]{8,16}$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5
+    },
+    "job_category": {
+      "type": "string",
+      "enum": [
+        "business-operations",
+        "document-automation",
+        "engineering-ops",
+        "customer-success",
+        "marketing-briefs"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 10
+    },
+    "required_capabilities": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "input_artifacts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "output_artifacts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "max_permissions": {
+      "type": "object",
+      "required": ["allow_network", "allow_credentials", "allowed_filesystem_paths", "max_cost_nanousd"],
+      "properties": {
+        "allow_network": { "type": "boolean" },
+        "allow_credentials": { "type": "boolean" },
+        "allowed_filesystem_paths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "max_cost_nanousd": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["step_id", "title", "instruction"],
+        "properties": {
+          "step_id": { "type": "string" },
+          "title": { "type": "string" },
+          "instruction": { "type": "string" },
+          "recommended_skill": { "type": ["string", "null"] },
+          "verification_probe": { "type": ["string", "null"] },
+          "required_inputs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "produced_outputs": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "verification_fixture_id": {
+      "type": "string"
+    },
+    "top_skills": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "average_token_savings_pct": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 100.0
+    },
+    "reproducibility_rate": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    }
+  },
+  "additionalProperties": false
+}

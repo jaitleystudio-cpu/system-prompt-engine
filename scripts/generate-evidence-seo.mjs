@@ -76,6 +76,42 @@ $ spe check --strict prompt.spe</pre>
       </ul>
     `
   },
+  {
+    path: '/create',
+    title: 'Create a Prompt — SPE Free Prompt Builder',
+    desc: 'Shape text, speech, image, video, or a website into a clear system prompt. Your brief stays on this device.',
+    classification: 'REAL_PRODUCT',
+    provenance: 'WASM_SANDBOX_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Free On-Device System Prompt Builder</h2>
+      <p>Transform raw ideas, documents, and workflows into structured AI system prompts privately in your browser.</p>
+    `
+  },
+  {
+    path: '/code',
+    title: 'Screenshot to Code Prompt — SPE Prompt Engineering Tool',
+    desc: 'Upload a UI screenshot and get an implementation prompt plus starter scaffolds for HTML, React, SwiftUI, Flutter, and more.',
+    classification: 'REAL_PRODUCT',
+    provenance: 'WASM_SANDBOX_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Screenshot to Code Prompt Engineering</h2>
+      <p>Turn screenshots and UI designs into verifiable implementation prompts for AI coding agents.</p>
+    `
+  },
+  {
+    path: '/daily-lab',
+    title: 'Daily Lab — SPE AI Prompt Generator Ideas',
+    desc: 'Browse daily prompt engineering specimens and open them in SPE free prompt builder.',
+    classification: 'REAL_PRODUCT',
+    provenance: 'SPECIFICATION_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Daily Prompt Engineering Specimens</h2>
+      <p>Tested specimens, counterexamples, and formal prompt patterns from the SPE lab.</p>
+    `
+  },
 
   // Tier A: Category Ownership
   {
@@ -236,6 +272,55 @@ $ spe check --strict prompt.spe</pre>
     custom_section: `
       <h2>UI Screenshot to Clean Code</h2>
       <p>Transform wireframes and screenshots into semantic React and Tailwind CSS components with accessible ARIA tags and responsive layouts.</p>
+    `
+  },
+  {
+    path: '/workflows',
+    title: 'Verified AI Workflows Exchange | SPE Ω',
+    desc: 'Tested, reproducible business operations and document automation AI workflows for Claude Code, Cursor, and Codex.',
+    classification: 'REAL_PRODUCT',
+    provenance: 'SPECIFICATION_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Verified Business Operations & Document Workflows</h2>
+      <p>Browse tested, reproducible AI workflows for recurring business tasks with empirical Wilson confidence bounds and zero-trial error.</p>
+      <ul>
+        <li><strong>Weekly Project Status:</strong> Consolidate git commits and issue logs into verified executive reports.</li>
+        <li><strong>Meeting Follow-up Synthesis:</strong> Extract action matrices and Jira tickets with conversational attribution.</li>
+        <li><strong>Invoice OCR & Math Audit:</strong> Deterministic recalculation and line-item extraction with $0 server inference.</li>
+      </ul>
+      <pre>$ spe continue --workflow weekly-project-status --skills "git-pr-review,data-storytelling"</pre>
+    `
+  },
+  {
+    path: '/build-skill',
+    title: 'Free In-Browser AI Skill Builder & Security Auditor | SPE Ω',
+    desc: 'Build, audit, and export portable AI skills (SKILL.md) locally on your device with $0 server inference.',
+    classification: 'REAL_PRODUCT',
+    provenance: 'WASM_SANDBOX_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Client-Side AI Skill Builder & Static Security Scanner</h2>
+      <p>Transform standard operating procedures into portable AI agent skills (SKILL.md). Audited locally for malicious scripts, pipes, and network exfiltration.</p>
+      <pre>$ mkdir -p ~/.claude/skills/my-skill && spe build-skill --input procedure.txt</pre>
+    `
+  },
+  {
+    path: '/compare',
+    title: 'Skill Effectiveness Challenge — Empirical Benchmarks | SPE Ω',
+    desc: 'Empirical head-to-head AI agent task performance benchmarks with Wilson 95% confidence intervals and token deltas.',
+    classification: 'REAL_PRODUCT',
+    provenance: 'EMPIRICAL_BENCHMARK_VERIFIED',
+    indexing_status: 'INDEXABLE',
+    custom_section: `
+      <h2>Empirical Head-to-Head Skill Benchmarks</h2>
+      <p>Does a skill actually improve AI task results? Compare task success rates, token overhead, and retry reductions scored with Wilson 95% confidence intervals.</p>
+      <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
+        <tr style="border-bottom: 1px solid #334155; text-align: left;"><th>Task</th><th>Baseline</th><th>With Skill</th><th>Token Delta</th></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Weekly Git Status</td><td>62.0% (53.2% W95)</td><td>94.0% (87.8% W95)</td><td>-38.6% tokens</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Invoice Math Audit</td><td>54.0% (44.9% W95)</td><td>98.0% (92.4% W95)</td><td>-49.5% tokens</td></tr>
+        <tr style="border-bottom: 1px solid #1e293b;"><td>Meeting Action Items</td><td>70.0% (61.2% W95)</td><td>92.0% (85.1% W95)</td><td>-40.0% tokens</td></tr>
+      </table>
     `
   },
 
@@ -547,16 +632,25 @@ writeFileSync(resolve(publicDir, 'sitemap.xml'), sitemapXml, 'utf8');
 const robotsTxt = `# robots.txt for SPE Ω Public Evidence Engine
 User-agent: *
 Allow: /
+Allow: /create
+Allow: /code
+Allow: /daily-lab
 Allow: /capabilities
 Allow: /privacy
 Allow: /evidence-pages/
 Allow: /models/
 Allow: /failure-genome/
 Allow: /tools/
+Allow: /workflows/
+Allow: /build-skill
 Allow: /integrations/
 Allow: /compare/
 Allow: /migrate/
 Disallow: /workspace
+Disallow: /my-work
+Disallow: /website
+Disallow: /media
+Disallow: /research
 Disallow: /studio
 Disallow: /private/
 Disallow: /api/
