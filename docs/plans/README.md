@@ -7,6 +7,8 @@ Index of master engineering plans, upgrade proposals, and mathematical specifica
 ## Active & Upcoming Plans
 
 | Plan File | Scope / Focus | Status | Target Date |
+| :--- | :--- | :--- | :--- |
+| [**`2026-10-09-spe-true-10-out-of-10-master-plan.md`**](./2026-10-09-spe-true-10-out-of-10-master-plan.md) | **Bridging the Final 3 Gaps to True 10/10**: Eliminating cognitive load via Two-Speed UX, OpenAI-compatible drop-in proxy, and Programmatic Evidence SEO moat. | **Approved Action Plan** | October 2026 |
 | [**`2026-10-09-cec-constraint-and-evidence-conservation-plan.md`**](./2026-10-09-cec-constraint-and-evidence-conservation-plan.md) | **Constraint-and-Evidence Conservation (CEC)**: The 100-year infrastructure protocol. 6 Conservation Laws, monotone join lattices, anti-drift transition validation across heterogeneous models. | **Approved Research Candidate (Quarantine)** | October 2026 |
 | [**`2026-10-09-wpem-witness-preserving-execution-morphing-plan.md`**](./2026-10-09-wpem-witness-preserving-execution-morphing-plan.md) | **Witness-Preserving Execution Morphing (WPEM)**: Computational elasticity under hard semantic invariants. Dynamic graph rewriting across models, deterministic programs, and hardware backends under thermal/memory pressure. | **Approved Research Candidate (Quarantine)** | October 2026 |
 | [**`../spec/SOVEREIGN_EPISTEMIC_KERNEL_MASTER_PROMPT.md`**](../spec/SOVEREIGN_EPISTEMIC_KERNEL_MASTER_PROMPT.md) | **Sovereign Epistemic Kernel (SEK)**: The Cognitive POSIX Kernel of AGI. Planetary Master System Prompt, Epistemic Manifold $\mathcal{H}_\infty = (P, M, T, R, V, C, A, S, \Omega)$, and 100x Invention Paradigm. | **Frozen Standard Specification** | October 2026 |
