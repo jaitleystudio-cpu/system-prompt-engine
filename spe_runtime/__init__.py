@@ -40,7 +40,12 @@ from spe_runtime.hybrid import (
     SensitiveDataLeakageError,
     TaskRequirement,
 )
-from spe_runtime.runtime_gateway.wire_proxy import ProxyMetrics, WireProxyServer
+from spe_runtime.runtime_gateway.wire_proxy import (
+    ProxyMetrics,
+    WireProxyServer,
+    probe_local_daemons,
+    align_context_with_truncation_guard,
+)
 from spe_runtime.production_bridge import (
     EvidenceClosureAdapter,
     ConservationBus,
@@ -129,6 +134,8 @@ __all__ = [
     "PageFaultInterrupt",
     "WireProxyServer",
     "ProxyMetrics",
+    "probe_local_daemons",
+    "align_context_with_truncation_guard",
     "RepoAuditor",
     "RepoAuditReport",
     "AuditFinding",

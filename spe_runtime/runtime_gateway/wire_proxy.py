@@ -731,20 +731,96 @@ class WireProxyHandler(http.server.BaseHTTPRequestHandler):
                 })
                 return
             except urllib.error.URLError as e:
+                daco_fallback_enabled = getattr(self, "daco_fallback_on_error", False) or (
+                    self.headers.get("x-spe-daco-fallback", "").lower() in ("true", "1")
+                )
+                if not daco_fallback_enabled:
+                    if escrow_id and getattr(self, "escrow", None):
+                        try:
+                            self.escrow.abort(escrow_id)
+                        except Exception:
+                            pass
+                    self._send_json_response(502, {
+                        "error": {
+                            "message": f"Local upstream backend connection error: {str(e)}",
+                            "type": "upstream_error",
+                        }
+                    }, {
+                        "x-spe-backend": self.upstream_url,
+                        "x-spe-airgap-status": "ENFORCED",
+                    })
+                    return
+
+                # Zero-Panic Air-Gapped Fallback:
+                # If local daemon drops, unbinds, or crashes, do NOT 502 crash or cloud egress.
+                # Fall back immediately to local in-memory DACO AST solver.
                 if escrow_id and getattr(self, "escrow", None):
                     try:
-                        self.escrow.abort(escrow_id)
+                        self.escrow.commit(escrow_id, actual_consumed_nanos=0)
                     except Exception:
                         pass
-                self._send_json_response(502, {
-                    "error": {
-                        "message": f"Local upstream backend connection error: {str(e)}",
-                        "type": "upstream_error",
-                    }
-                }, {
-                    "x-spe-backend": self.upstream_url,
+
+                fallback_content = ""
+                if can_math and math_expr:
+                    try:
+                        calc_val = self.offloader.evaluate_math(math_expr)
+                        fallback_content = str(calc_val)
+                    except Exception:
+                        pass
+                if not fallback_content:
+                    fallback_content = f"[SPE Ω Air-Gapped DACO Fallback] Local daemon connection unavailable ({str(e)}). Query processed locally: '{user_content[:60]}...'"
+
+                daco_fallback_payload = {
+                    "airgap_status": "ENFORCED",
+                    "backend": "LOCAL_OFFLINE_DACO_FALLBACK",
+                    "consumed_nanos": 0,
+                    "model": model,
+                    "task_id": task_id,
+                    "upstream_error": str(e),
+                }
+                receipt_hash = f"sha256:{hashlib.sha256(rfc8785_canonicalize(daco_fallback_payload)).hexdigest()}"
+
+                resp_data = {
+                    "id": f"chatcmpl-spe-daco-fallback-{uuid.uuid4().hex[:8]}",
+                    "object": "chat.completion",
+                    "created": int(time.time()),
+                    "model": "spe-daco-ast-fallback",
+                    "choices": [{
+                        "index": 0,
+                        "message": {
+                            "role": "assistant",
+                            "content": fallback_content,
+                        },
+                        "finish_reason": "stop",
+                    }],
+                    "usage": {
+                        "prompt_tokens": len(user_content) // 4,
+                        "completion_tokens": len(fallback_content) // 4,
+                        "total_tokens": (len(user_content) + len(fallback_content)) // 4,
+                    },
+                    "spe_metadata": {
+                        "fallback": True,
+                        "technique": "LOCAL_OFFLINE_DACO_FALLBACK",
+                        "tokens_saved": len(user_content) // 4,
+                        "dollars_saved_usd": 0.0,
+                        "evidence": TelemetryEvidence.THEORETICAL_BOUND.value,
+                        "cost_source": CostSource.LOCAL_PINNED_PRICE_TABLE.value,
+                        "receipt": receipt_hash,
+                        "airgap_status": "ENFORCED",
+                    },
+                }
+                fb_headers = {
+                    "x-spe-backend": "LOCAL_OFFLINE_DACO_FALLBACK",
                     "x-spe-airgap-status": "ENFORCED",
-                })
+                    "x-spe-evidence": TelemetryEvidence.THEORETICAL_BOUND.value,
+                    "x-spe-receipt": receipt_hash,
+                    "x-spe-invariants-verified": str(invariants_count),
+                }
+                if escrow_id:
+                    fb_headers["x-spe-escrow-id"] = escrow_id
+                    fb_headers["x-spe-escrow-consumed-nanos"] = "0"
+                    fb_headers["x-spe-escrow-refunded-nanos"] = str(ceiling_nanos)
+                self._send_json_response(200, resp_data, fb_headers)
                 return
 
         # 4. Fallback when no local upstream is configured: LOCAL_OFFLINE_MOCK
@@ -868,13 +944,22 @@ class WireProxyServer:
         max_cloud_budget_usd: float = 0.0,
         escrow: Optional[TwoPhaseCommitEscrow] = None,
         initial_ledger_balance_nanos: int = 1_000_000_000,
+        daco_fallback_on_error: bool = False,
+        auto_probe: bool = False,
     ):
+        if auto_probe and upstream_url is None:
+            probed = probe_local_daemons(timeout_ms=50)
+            if probed:
+                upstream_url = probed[1]
+
         _validate_local_host(host)
         _validate_local_endpoint(upstream_url)
 
         self.host = host
         self.port = port
         self.upstream_url = upstream_url
+        self.daco_fallback_on_error = daco_fallback_on_error
+        self.auto_probe = auto_probe
         self.api_key = api_key or f"spe-local-{uuid.uuid4().hex[:16]}"
         self.require_auth = require_auth
         self.metrics = ProxyMetrics()
@@ -903,6 +988,7 @@ class WireProxyServer:
         handler_cls.server_port = self.port
         handler_cls.switchboard = self.switchboard
         handler_cls.escrow = self.escrow
+        handler_cls.daco_fallback_on_error = self.daco_fallback_on_error
 
         self._server = ThreadedHTTPServer((self.host, self.port), handler_cls)
         self._thread = threading.Thread(target=self._server.serve_forever, daemon=True)
