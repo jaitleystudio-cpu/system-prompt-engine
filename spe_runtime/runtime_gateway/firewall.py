@@ -66,6 +66,9 @@ class CapabilityFirewall:
         self.used_request_nonces: set[str] = set()
         self.active_reservations: dict[str, tuple[str, float]] = {}  # reservation_id -> (grant_id, amount)
         self.security_alerts: list[SecurityAlert] = []
+        if self.storage_dir:
+            self.storage_dir.mkdir(parents=True, exist_ok=True)
+            self._load_durable_state()
 
     def record_security_alert(self, threat_level: str, attack_vector: str, details: str) -> SecurityAlert:
         """Records an immutable security alert into memory and durable store."""
@@ -111,10 +114,6 @@ class CapabilityFirewall:
             raise SecurityPolicyViolationError(
                 f"Air-gap boundary violation: CONFIDENTIAL / AIR_GAPPED context cannot egress to '{target_destination}'."
             )
-
-        if self.storage_dir:
-            self.storage_dir.mkdir(parents=True, exist_ok=True)
-            self._load_durable_state()
 
     def register_trust_root(self, issuer: str, public_key_hex: str) -> None:
         """Registers an authorized Ed25519 trust root for a grant issuer."""
