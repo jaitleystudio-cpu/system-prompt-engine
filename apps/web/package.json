@@ -19,6 +19,7 @@
     "test:hero-story": "node scripts/test-hero-story.mjs",
     "test:final-craft": "node scripts/test-final-craft.mjs",
     "test:theme-routes": "node scripts/test-theme-routes.mjs",
+    "test:workflows-audit": "node --experimental-strip-types scripts/test-client-workflows-audit.mjs",
     "test:capabilities-seo": "node scripts/test-capabilities-seo.mjs",
     "audit:deps": "node scripts/audit-deps.mjs",
     "test:a11y": "node scripts/test-accessibility-harness.mjs",

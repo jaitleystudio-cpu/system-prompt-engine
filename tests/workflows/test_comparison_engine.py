@@ -89,3 +89,48 @@ def test_workflow_comparison_baseline_retains_lead():
     # 190/200 has a much higher Wilson lower bound than 5/5
     assert result.winner_identifier == "@skill/proven-parser"
     assert "retains superiority" in result.verdict_summary
+
+
+def test_wilson_score_boundary_conditions():
+    # Negative totals
+    assert compute_wilson_lower_bound(-5, -10) == 0.0
+    assert compute_wilson_lower_bound(5, 0) == 0.0
+
+    # Negative successes clamped to 0
+    assert compute_wilson_lower_bound(-1, 100) == compute_wilson_lower_bound(0, 100)
+
+    # Successes exceeding total clamped to total
+    assert compute_wilson_lower_bound(150, 100) == compute_wilson_lower_bound(100, 100)
+
+
+def test_workflow_comparison_zero_baselines_and_tie():
+    # Zero baseline consumption and retries
+    b_zero = CandidateTrialSummary(
+        candidate_identifier="b_zero",
+        trials_total=50,
+        trials_successful=40,
+        average_token_consumption=0,
+        average_retries=0.0,
+        average_latency_ms=100,
+    )
+    c_zero = CandidateTrialSummary(
+        candidate_identifier="c_zero",
+        trials_total=50,
+        trials_successful=40,
+        average_token_consumption=100,
+        average_retries=1.0,
+        average_latency_ms=200,
+    )
+
+    res = WorkflowComparisonEngine.compare(
+        task_slug="edge-task",
+        baseline=b_zero,
+        challenger=c_zero,
+    )
+
+    # Identical trials -> statistical tie
+    assert res.winner_identifier == "STATISTICAL_TIE"
+    assert "Statistical tie" in res.verdict_summary
+    assert res.token_savings_pct == 0.0
+    assert res.retry_reduction_pct == 0.0
+

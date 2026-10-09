@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-06T05:49:32.759Z",
-  "tipNote": "Founder-approved SPE Free 3D Websites v1.1 Studio UI foundation copy reviewed; zero superlatives, zero unreviewed copy.",
+  "generated": "2026-10-09T22:30:37.892Z",
+  "tipNote": "Founder-approved SPE Verified Workflows Exchange copy reviewed; zero superlatives, zero unreviewed copy.",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -157,6 +157,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "Older history item reopened with limited details."
+    },
+    {
+      "id": "23f06a91810d2a19a77f",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "compare"
     },
     {
       "id": "2465005d52115ee9e64d",
@@ -493,6 +499,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "conflict"
+    },
+    {
+      "id": "89fc3669bf49dc57466d",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "skill-builder"
     },
     {
       "id": "89fd992b199fb1e27dd9",
@@ -847,6 +859,12 @@
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
       "text": "loading_wasm"
+    },
+    {
+      "id": "ed5c7bc2b90b17d3db35",
+      "file": "apps/web/src/App.tsx",
+      "depth": "PRODUCT",
+      "text": "workflows"
     },
     {
       "id": "eed9b3db55d07c282ff5",
@@ -2331,6 +2349,90 @@
       "text": "Visible focus styles for both themes"
     },
     {
+      "id": "09bc15fb29db789de8cc",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "300px"
+    },
+    {
+      "id": "0b21955505acf3823f6c",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE funds free deterministic tools via contextual developer ads"
+    },
+    {
+      "id": "11e748795b89c7ef9190",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "250px"
+    },
+    {
+      "id": "1a269c44c7cf506ea3e9",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "Contextual Ad Inventory:"
+    },
+    {
+      "id": "589ba4076dddb865d232",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "728px"
+    },
+    {
+      "id": "61a75ffc58e33aad8a90",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "Sponsored Dev Partner"
+    },
+    {
+      "id": "6695bc8d8ed4dbf88f11",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "60px"
+    },
+    {
+      "id": "8250740076c4ebdad843",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "180px"
+    },
+    {
+      "id": "90873076a16d189a8231",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "Free Utility via Ads"
+    },
+    {
+      "id": "a3ef77ddf26257ed9d15",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "Certified AI model infrastructure, developer tools, and hosting providers. (Zero tracking cookies · Zero user data egress)"
+    },
+    {
+      "id": "c21499f93e824c3ae2b0",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "rectangle"
+    },
+    {
+      "id": "d8af4d24568e788f9874",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "Contextual developer advertisement"
+    },
+    {
+      "id": "e4c2cc8e4d35bc6d86b2",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "leaderboard"
+    },
+    {
+      "id": "e4cb4cb6ed5a658330e0",
+      "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
+      "depth": "PRODUCT",
+      "text": "90px"
+    },
+    {
       "id": "0d03b4a73d8570ac6d68",
       "file": "apps/web/src/composer/ContextProtocolControls.tsx",
       "depth": "PRODUCT",
@@ -2769,12 +2871,6 @@
       "text": "abort"
     },
     {
-      "id": "225228b229b53ed6a24d",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "Using only the grounded observations / model judgments below (not verified facts), help me write a strong prompt about this image."
-    },
-    {
       "id": "2270d01c6b0162173dac",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -3199,12 +3295,6 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "url"
-    },
-    {
-      "id": "9d50351a26d45deaf2de",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "Image → prompt request:"
     },
     {
       "id": "a221afa4111f444c5183",
@@ -8961,10 +9051,10 @@
       "text": "pageshow"
     },
     {
-      "id": "049458cf72dba1d6fc25",
+      "id": "026846b9bf04f026f06d",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
-      "text": "Research"
+      "text": "Workflows"
     },
     {
       "id": "04b6e3d606482fde201f",
@@ -8977,6 +9067,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "website"
+    },
+    {
+      "id": "2b1e70f2ddfd2ca07a4c",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Skill Builder"
     },
     {
       "id": "35c061562a2ccf6fcd63",
@@ -9015,12 +9111,6 @@
       "text": "Create"
     },
     {
-      "id": "5a75b82cb9e8f3cc2f24",
-      "file": "apps/web/src/layout/Nav.tsx",
-      "depth": "PRODUCT",
-      "text": "research"
-    },
-    {
       "id": "5dd13c3ddc34f4bcb19c",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -9037,6 +9127,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Home"
+    },
+    {
+      "id": "749ae760f3e702db398f",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "skill-builder"
     },
     {
       "id": "89f66e6d41ee400a3693",
@@ -9057,10 +9153,22 @@
       "text": "Menu"
     },
     {
+      "id": "9e9dd4b30f970366794a",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "compare"
+    },
+    {
       "id": "9eeeeabaa502e22034ec",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Privacy"
+    },
+    {
+      "id": "b055021f07ac5c8c797d",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Compare"
     },
     {
       "id": "b1655880cfe478e90451",
@@ -9079,6 +9187,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Code"
+    },
+    {
+      "id": "d4fad0c53b74cf571947",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "workflows"
     },
     {
       "id": "e03d4bad802a20c99d67",
@@ -16017,6 +16131,180 @@
       "text": "Methodology:"
     },
     {
+      "id": "223d930116344c8a8f2e",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Configuration"
+    },
+    {
+      "id": "2e52dd126a847446476b",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Agent + @skill/clarity-gate"
+    },
+    {
+      "id": "2f2b9856a028615aec90",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "% Agent Retries"
+    },
+    {
+      "id": "4eb75b90844a15cea8cd",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "spe bench compare --task meeting-followup-synthesis --trials 50"
+    },
+    {
+      "id": "59bc010d1e6bbc73d42e",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Multi-Currency Invoice Math Audit"
+    },
+    {
+      "id": "626f975a31df2bb160f2",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Weekly Git Log Status Consolidation"
+    },
+    {
+      "id": "69282876b42090d052b5",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "CMP-03"
+    },
+    {
+      "id": "70a18098f9cda261d10e",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy Benchmark Command"
+    },
+    {
+      "id": "786ff31b849edc1df89c",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Agent + @skill/git-pr-review"
+    },
+    {
+      "id": "7e46c1d32e3ed451b45d",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Default Coding Agent (Zero Skills)"
+    },
+    {
+      "id": "8065231670a2a66854b7",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Does a skill actually improve AI task results? Empirical head-to-head benchmarks scored with Wilson 95% confidence intervals."
+    },
+    {
+      "id": "904297e4494baea2bdb6",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Business Operations"
+    },
+    {
+      "id": "9673c91981cad2cfee33",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "CMP-02"
+    },
+    {
+      "id": "9ec93f62f0dc357591eb",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "QUALIFIED WINNER"
+    },
+    {
+      "id": "a401da53ec46ddeb3dc7",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Copied!"
+    },
+    {
+      "id": "a9386bf3a59a599cb11e",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "% Fewer Tokens"
+    },
+    {
+      "id": "aab359aac35339d403e5",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Document Automation"
+    },
+    {
+      "id": "b084f5df39d58fabbd4c",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Skill Effectiveness Challenge"
+    },
+    {
+      "id": "cb51cc9d6de41b0a9161",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "spe bench compare --task weekly-project-status --trials 50"
+    },
+    {
+      "id": "cd35ed44411cdeb5a755",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Verdict"
+    },
+    {
+      "id": "d26b137f9b82d1c4cfc1",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "spe bench compare --task invoice-data-extraction --trials 50"
+    },
+    {
+      "id": "e36c1d737da3ad7d0ece",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Observed Success"
+    },
+    {
+      "id": "e54dcda670251cf5e4a6",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "CMP-01"
+    },
+    {
+      "id": "e8b8fab046f4120fe92b",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Agent + @skill/mathguard"
+    },
+    {
+      "id": "ef9b9e65947064d5da4b",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Avg Token Consumption"
+    },
+    {
+      "id": "f61713a02318783b4f8b",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Meeting Action Item Extraction & Jira Spec"
+    },
+    {
+      "id": "f89af05b3550f5c8eebd",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Baseline"
+    },
+    {
+      "id": "f91f83cc511b2935831a",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "Wilson 95% Lower Bound"
+    },
+    {
+      "id": "fea4a2926c5de2739174",
+      "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
+      "depth": "PRODUCT",
+      "text": "tokens"
+    },
+    {
       "id": "100520aff20f92d043a5",
       "file": "apps/web/src/pages/MyWork.tsx",
       "depth": "PRODUCT",
@@ -16329,6 +16617,558 @@
       "text": "Image, screenshot, and video notes are computed here with simple pixel checks. Optional same-origin model packs may load from this site when you use image helpers — no paid vision service is required for this preview."
     },
     {
+      "id": "0a4be7243d753e8350e2",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "mkdir -p ~/.claude/skills/"
+    },
+    {
+      "id": "0e847323c7265d99fe16",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Reviews completed weekly engineering tasks, audits git commits against requirements, and prepares the next-task instructions."
+    },
+    {
+      "id": "1532c4dc0d3569db090b",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Zero regressions detected in test suite"
+    },
+    {
+      "id": "1d200b4abd31f79ddf3b",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Description & Purpose"
+    },
+    {
+      "id": "323ff2eb536d9d766f6b",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "&& cat << 'EOF' > ~/.claude/skills/"
+    },
+    {
+      "id": "329ddfafc5996d14c97e",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Business Operations"
+    },
+    {
+      "id": "35a95a9550e4b48b397e",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "In-Browser AI Skill Builder & Auditor"
+    },
+    {
+      "id": "3adcd5b861f5c6f9ba2b",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "EOF"
+    },
+    {
+      "id": "47076b1ccf5edaedb41a",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Document Automation"
+    },
+    {
+      "id": "48d73782951eaf4f0422",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Customer Support"
+    },
+    {
+      "id": "520504c8a6648251b494",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Generated SKILL.md Spec"
+    },
+    {
+      "id": "57cadf1ff2f87371fde2",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Engineering Operations"
+    },
+    {
+      "id": "597d672a913fd8a53e70",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "/SKILL.md"
+    },
+    {
+      "id": "63e3fd03c083d564e620",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Export to Claude Code (~/.claude/skills)"
+    },
+    {
+      "id": "6966dab0d2b37cc4182c",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "NETWORK_EGRESS"
+    },
+    {
+      "id": "6c8c18fc8b6015bc5d2e",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Allow External Network Egress (Defaults to $0 / Local-Only)"
+    },
+    {
+      "id": "7077f22a06e84f4aa6cd",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Define Procedure"
+    },
+    {
+      "id": "75003705ad4d144d76d1",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Security & Compliance"
+    },
+    {
+      "id": "7e7b56fa90c5cbc962b4",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Violations Detected:"
+    },
+    {
+      "id": "9441191a9f0421f76cc0",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "✓ Copied Claude Code Install Command!"
+    },
+    {
+      "id": "94a38940d29cf3b26fa7",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Step-by-Step Directives (one per line)"
+    },
+    {
+      "id": "b089b808820f72cb00a0",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Parse recent git commits and issue tracking IDs\nCross-reference modified files against declared scope invariants\nEmit a structured WEEKLY_STATUS.md report and flag regressions"
+    },
+    {
+      "id": "ccebb7b8bd1712421490",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "LOCAL_FILESYSTEM_READ"
+    },
+    {
+      "id": "cd702ea396beb2ad11fb",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Skill Name"
+    },
+    {
+      "id": "cf70ce2da6ea567d7783",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "All output reports conform to markdown standards"
+    },
+    {
+      "id": "d5b8119cf832ec2eada6",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Weekly Report Auditor"
+    },
+    {
+      "id": "d601453ee6eabb78b4f8",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Domain Category"
+    },
+    {
+      "id": "d8b3af6a1a0c5b87668f",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Security Audit & Export"
+    },
+    {
+      "id": "de8126e4b13fb12b5de6",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "(Score:"
+    },
+    {
+      "id": "ee65dc7513394e50cd55",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Build portable AI agent skills (SKILL.md) in seconds. Audited for security in your browser with $0 server inference."
+    },
+    {
+      "id": "fc7685b391e9fd137b32",
+      "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "(Matched:"
+    },
+    {
+      "id": "05d5e4ce2ddd1751a3ca",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "ACTION_ITEMS_SUMMARY.md"
+    },
+    {
+      "id": "07b78d6d984b508c8e0d",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "@skill/"
+    },
+    {
+      "id": "08181d6c0bcf9d5b3aff",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "completed_tickets.json"
+    },
+    {
+      "id": "083648899b4c6a1c6858",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Token Savings:"
+    },
+    {
+      "id": "09ba65c7e54581b7db80",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "tasks_import.json"
+    },
+    {
+      "id": "0fb6842e0c053bb620c6",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "invoice_raw_text.txt"
+    },
+    {
+      "id": "1f17e07494f616b8ded3",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "spreadsheet-to-exec-brief"
+    },
+    {
+      "id": "2093f006b1c71a378d0d",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Meeting Transcript Action Item Synthesis"
+    },
+    {
+      "id": "21f535a7054166b55551",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Categorizes incoming customer tickets by sentiment, urgency, and technical component, producing verified draft resolutions and triage tags."
+    },
+    {
+      "id": "27460f07a51bdfad3ec1",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "startup-financial-modeling"
+    },
+    {
+      "id": "2f205b6d1ceb24c22f76",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "WEEKLY_STATUS_REPORT.md"
+    },
+    {
+      "id": "2ff4e6657f659daa9ebe",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Local AST Math Verification · No Egress"
+    },
+    {
+      "id": "33a9fb1372240750dd80",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "data-storytelling"
+    },
+    {
+      "id": "33ef6b2122434f172b67",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "git_log_since_last_week.txt"
+    },
+    {
+      "id": "3ae28ab5ed3c1a058ea8",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "spe continue --workflow weekly-project-status --skills 'git-pr-review,data-storytelling'"
+    },
+    {
+      "id": "3ea0be3b639c53895be9",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Search business jobs (e.g., weekly report, invoice, triage)..."
+    },
+    {
+      "id": "4115cc2fadd2b504c8e8",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "mathguard"
+    },
+    {
+      "id": "4cfabd8e8c0060809871",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "customer-success"
+    },
+    {
+      "id": "4e1fda0bb41e33cc984b",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "customer-support"
+    },
+    {
+      "id": "56ad63c28716c4384374",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "% Wilson Bound"
+    },
+    {
+      "id": "5d561cc9245404aaea82",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Tested, reproducible business operations and document workflows. Find the top 3 verified skills for your job with zero trial-and-error."
+    },
+    {
+      "id": "5f1bfa8facd5a08bd880",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "weekly-project-status"
+    },
+    {
+      "id": "653e6737a29290c9cd60",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "quarterly_kpis.csv"
+    },
+    {
+      "id": "67defe03a5ea127db4cc",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Financial Spreadsheet to Executive Brief"
+    },
+    {
+      "id": "6b8536f68df9cdea1e42",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "meeting-followup-synthesis"
+    },
+    {
+      "id": "6d5653ed9bf3087d8a23",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "git-pr-review"
+    },
+    {
+      "id": "6d65861f900301c83953",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "✓ Copied CLI Command!"
+    },
+    {
+      "id": "7672ac3efeabd0d9d748",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "All Jobs"
+    },
+    {
+      "id": "795cfcac04075fb6a403",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Safety Boundary:"
+    },
+    {
+      "id": "799241fd12d0baaa26d4",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Local Filesystem Read · No Network"
+    },
+    {
+      "id": "79938ffc307d553e12be",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "all"
+    },
+    {
+      "id": "7af844b2abb7bf99b3c0",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Customer Support Ticket Triage & Draft"
+    },
+    {
+      "id": "808a0ec589186264f7b1",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Transforms raw meeting transcripts or bullet notes into clear action matrices, assigned owners, and ready-to-import task specifications."
+    },
+    {
+      "id": "857b68fd2539ce5da0fe",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "spe continue --workflow spreadsheet-to-exec-brief --skills 'startup-financial-modeling,data-storytelling'"
+    },
+    {
+      "id": "86369367b6eee6b7600d",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "clarity-gate"
+    },
+    {
+      "id": "8b72e2cdf6d2cbe9188b",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "spe continue --workflow invoice-data-extraction --skills 'xlsx-official,mathguard'"
+    },
+    {
+      "id": "93177036a089391daf30",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Consolidates recent git commit logs, closed issue tickets, and blocker reports into an executive status brief with verifiable milestone tracking."
+    },
+    {
+      "id": "9534aa755e348ebff297",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "INVOICE_AUDIT_REPORT.md"
+    },
+    {
+      "id": "96e15eb25b4512541d54",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "xlsx-official"
+    },
+    {
+      "id": "9a0aa7da2759c012454b",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "% vs unguided agent"
+    },
+    {
+      "id": "9e74aaf95c68f694ebf6",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "inbox_tickets.json"
+    },
+    {
+      "id": "9f06b9d6a3f005505e96",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Extracts line items, vendor details, tax computations, and verifies mathematical integrity before generating accounting ledger records."
+    },
+    {
+      "id": "a090bdf102fbbd0801da",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "product-manager-toolkit"
+    },
+    {
+      "id": "a78ac135cf111d74be56",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "ledger_entry.json"
+    },
+    {
+      "id": "b220527f3686bf6ef675",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "copywriting-psychologist"
+    },
+    {
+      "id": "b53798324d2ff2ae9fa7",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "business-operations"
+    },
+    {
+      "id": "cc7d11992454089d69d0",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Weekly Engineering & Project Status Report"
+    },
+    {
+      "id": "cfd0e4a5a129e330de24",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy Ready-to-Run Workflow"
+    },
+    {
+      "id": "d02f868a65d90260fd7c",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "customer-ticket-triage"
+    },
+    {
+      "id": "d079f7a7cc3f08577d0c",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "EXECUTIVE_BRIEF.md"
+    },
+    {
+      "id": "d3fd6fcff94cc977447e",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Verified Skills:"
+    },
+    {
+      "id": "d6d5ba61d185823ddc14",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "document-automation"
+    },
+    {
+      "id": "d77258ec6eb9822df136",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Ingests CSV or Excel quarterly KPI data, calculates growth rates and variances, and renders a concise executive brief with markdown charts."
+    },
+    {
+      "id": "dc48db45e7c1611cfeb4",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "triaged_tickets.json"
+    },
+    {
+      "id": "e7377dc9e194bc5f2c20",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "invoice-data-extraction"
+    },
+    {
+      "id": "e785552ff6d86b168304",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Invoice OCR & Accounting Verification"
+    },
+    {
+      "id": "ea13614b7a8f64a94a90",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "meeting_transcript.txt"
+    },
+    {
+      "id": "f0306b2eb7eb900f4a72",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "spe continue --workflow customer-ticket-triage --skills 'customer-support,copywriting-psychologist'"
+    },
+    {
+      "id": "f0767b10dcd6b74dd665",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "Verified AI Workflows Exchange"
+    },
+    {
+      "id": "f579fee8e2b7a8a60a5b",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "spe continue --workflow meeting-followup-synthesis --skills 'clarity-gate,product-manager-toolkit'"
+    },
+    {
+      "id": "ff0f3e2ff1d46b086278",
+      "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
+      "depth": "PRODUCT",
+      "text": "DRAFT_RESPONSES.md"
+    },
+    {
       "id": "280b8b152bb0e32fda99",
       "file": "apps/web/src/pwa.ts",
       "depth": "PRODUCT",
@@ -16569,6 +17409,12 @@
       "text": "Website — Local spec preview | SPE"
     },
     {
+      "id": "1f62f48b7aaabd778966",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Free In-Browser AI Skill Builder & Auditor | SPE Ω"
+    },
+    {
       "id": "210de0e336b4a24de8aa",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -16591,6 +17437,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "not-found"
+    },
+    {
+      "id": "2569d78bb48dd24fef19",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Empirical head-to-head AI agent task performance benchmarks with Wilson 95% confidence intervals and token deltas."
     },
     {
       "id": "262c22eb2a7090b167ec",
@@ -16647,6 +17499,12 @@
       "text": "https://systempromptengine.com"
     },
     {
+      "id": "38c717a336e155245867",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/workflows"
+    },
+    {
       "id": "38e40d086c9483321a9b",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
@@ -16677,10 +17535,22 @@
       "text": "My Work — Saved Prompts on This Device | SPE"
     },
     {
+      "id": "5dd9531909ed655b27fc",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Verified AI Workflows Exchange | SPE Ω"
+    },
+    {
       "id": "5e18a32b7f567bebd1ac",
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "SPE (System Prompt Engine) is a free, browser-based system prompt generator. You start with a rough idea; SPE helps you shape meaning, structure, and a prompt you can take to any model you choose."
+    },
+    {
+      "id": "5eb94e473d711f28b745",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Build, security-audit, and export portable AI skills (SKILL.md) locally on your device with $0 server inference."
     },
     {
       "id": "5f8ca7abebd8e2e228ff",
@@ -16711,6 +17581,18 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "/workspace"
+    },
+    {
+      "id": "6dc6f06b18e7597c3147",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/build-skill"
+    },
+    {
+      "id": "6e20c85cf54cc9ec01cd",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Skill Effectiveness Challenge — Head-to-Head Benchmarks | SPE Ω"
     },
     {
       "id": "727448779c2c6cce03e0",
@@ -16783,6 +17665,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "ocr"
+    },
+    {
+      "id": "a94f315fc57bb8bd53bf",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "Tested, reproducible business operations and document automation AI workflows for Claude Code, Cursor, and Codex."
     },
     {
       "id": "ba48c44899936fd87334",
@@ -16867,6 +17755,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "Web Browser"
+    },
+    {
+      "id": "e127b9158d76c79ea36d",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "/compare"
     },
     {
       "id": "e15dc0f3fbc7394289c2",

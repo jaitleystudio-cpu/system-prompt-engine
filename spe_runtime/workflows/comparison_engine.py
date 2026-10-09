@@ -21,16 +21,19 @@ def compute_wilson_lower_bound(successes: int, total: int, confidence: float = 0
     if total <= 0:
         return 0.0
 
+    s = max(0, min(total, successes))
+
     z = 1.95996  # 95% confidence z-score
     if confidence == 0.99:
         z = 2.57583
     elif confidence == 0.90:
         z = 1.64485
 
-    p_hat = successes / total
+    p_hat = s / total
     denominator = 1.0 + (z * z) / total
     centre = p_hat + (z * z) / (2.0 * total)
-    spread = z * math.sqrt((p_hat * (1.0 - p_hat) + (z * z) / (4.0 * total)) / total)
+    variance_term = max(0.0, (p_hat * (1.0 - p_hat) + (z * z) / (4.0 * total)) / total)
+    spread = z * math.sqrt(variance_term)
 
     lower = (centre - spread) / denominator
     return max(0.0, min(1.0, lower))

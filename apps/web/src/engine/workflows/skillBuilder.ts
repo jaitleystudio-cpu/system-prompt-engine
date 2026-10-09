@@ -4,7 +4,7 @@
  * Zero server-side inference ($0 compute cost).
  */
 
-import { auditSkillContent, ClientAuditReport } from "./clientAuditScanner";
+import { auditSkillContent, type ClientAuditReport } from "./clientAuditScanner.ts";
 
 export interface SkillTemplateInput {
   name: string;

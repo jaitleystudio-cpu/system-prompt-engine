@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useMemo } from "react";
-import { auditSkillContent, ClientAuditReport } from "../engine/workflows/clientAuditScanner";
+import { auditSkillContent, type ClientAuditReport } from "../engine/workflows/clientAuditScanner";
 import { buildSkillMarkdown } from "../engine/workflows/skillBuilder";
 import { ContextualAdSlot } from "../components/ads/ContextualAdSlot";
 
