@@ -27,3 +27,4 @@ Index of master engineering plans, upgrade proposals, and mathematical specifica
 2. **Deterministic-First Principle**: Deterministic probes and local computation ($0 tokens) must always take precedence over stochastic cloud model inference.
 3. **Exact Integer Accounting**: All financial transactions, token ledgers, and escrow pools must be denominated in integer `NanoUSD` ($10^9\text{ nanos} = \$1.00\text{ USD}$).
 4. **Kleene 3-Valued Qualification**: No safety-critical obligation can be marked fulfilled while in the `UNKNOWN` state.
+- [2026-10-09-rgic-e1-evidence-closure-planner-plan.md](2026-10-09-rgic-e1-evidence-closure-planner-plan.md)
