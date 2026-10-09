@@ -9,6 +9,19 @@ from spe_runtime.hybrid.cloud_gate import (
     ProviderNotAllowlistedError,
     SensitiveDataLeakageError,
 )
+from spe_runtime.hybrid.cloud_gateway import (
+    AnthropicStreamingAdapter,
+    CloudProviderError,
+    EscrowInvariantViolationError,
+    GatewayExecutionResult,
+    GeminiStreamingAdapter,
+    LiveDropoutFailoverGateway,
+    NetworkConnectionDroppedError,
+    OpenAIStreamingAdapter,
+    RateLimitExceededError,
+    TwoPhaseCommitEscrow,
+    UserLedger,
+)
 from spe_runtime.hybrid.device_profiler import DeviceProfiler
 from spe_runtime.hybrid.models import (
     BudgetEscrowReservation,
@@ -16,10 +29,14 @@ from spe_runtime.hybrid.models import (
     DeviceCapabilityProfile,
     ExecutionPlacementCertificate,
     ExecutionPlacementPlan,
+    HardwareEngineType,
     HybridPolicy,
+    NanoUSD,
+    NANOS_PER_USD,
     PlacementTarget,
     QualificationVerdict,
     TaskRequirement,
+    ThermalState,
 )
 from spe_runtime.hybrid.switchboard import HybridSwitchboard
 
@@ -29,6 +46,10 @@ __all__ = [
     "DataDisclosureScope",
     "QualificationVerdict",
     "DeviceCapabilityProfile",
+    "HardwareEngineType",
+    "ThermalState",
+    "NanoUSD",
+    "NANOS_PER_USD",
     "TaskRequirement",
     "BudgetEscrowReservation",
     "ExecutionPlacementPlan",
@@ -37,6 +58,17 @@ __all__ = [
     "BudgetEscrow",
     "CloudGate",
     "HybridSwitchboard",
+    "TwoPhaseCommitEscrow",
+    "UserLedger",
+    "LiveDropoutFailoverGateway",
+    "AnthropicStreamingAdapter",
+    "OpenAIStreamingAdapter",
+    "GeminiStreamingAdapter",
+    "GatewayExecutionResult",
+    "CloudProviderError",
+    "RateLimitExceededError",
+    "NetworkConnectionDroppedError",
+    "EscrowInvariantViolationError",
     "EgressProhibitedError",
     "ApprovalRequiredError",
     "BudgetExceededError",

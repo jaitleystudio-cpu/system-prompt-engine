@@ -7,12 +7,21 @@ import hashlib
 import json
 import os
 import threading
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from spe_runtime.ci_gate.receipt import ed25519_sign, ed25519_verify, rfc8785_canonicalize
-from .models import CapabilityGrant, CapabilityRequest, CapabilityType, Decision, PolicyEvaluationResult
+from .models import (
+    CapabilityGrant,
+    CapabilityRequest,
+    CapabilityType,
+    Decision,
+    PolicyEvaluationResult,
+    SecurityAlert,
+    SecurityPolicyViolationError,
+)
 
 
 def compute_grant_payload(grant: CapabilityGrant) -> bytes:
@@ -56,6 +65,52 @@ class CapabilityFirewall:
         self.used_grant_nonces: set[str] = set()
         self.used_request_nonces: set[str] = set()
         self.active_reservations: dict[str, tuple[str, float]] = {}  # reservation_id -> (grant_id, amount)
+        self.security_alerts: list[SecurityAlert] = []
+
+    def record_security_alert(self, threat_level: str, attack_vector: str, details: str) -> SecurityAlert:
+        """Records an immutable security alert into memory and durable store."""
+        alert = SecurityAlert(
+            alert_id=f"alert-{uuid.uuid4().hex[:12]}",
+            threat_level=threat_level,
+            attack_vector=attack_vector,
+            details=details,
+            timestamp_iso=datetime.now(timezone.utc).isoformat(),
+        )
+        with self._lock:
+            self.security_alerts.append(alert)
+            if self.storage_dir:
+                alert_file = self.storage_dir / "security_alerts.jsonl"
+                with alert_file.open("a", encoding="utf-8") as f:
+                    f.write(json.dumps(alert.__dict__) + "\n")
+                    f.flush()
+                    os.fsync(f.fileno())
+        return alert
+
+    def enforce_airgap_boundary(self, data_context: Any, target_destination: str) -> None:
+        """
+        Enforces information flow lattice preventing CONFIDENTIAL or AIR_GAPPED data
+        from external or cloud egress.
+        """
+        context_str = json.dumps(data_context) if isinstance(data_context, (dict, list)) else str(data_context)
+        is_sensitive = any(
+            marker in context_str
+            for marker in ("CONFIDENTIAL", "AIR_GAPPED", "RESTRICTED", "TOP_SECRET", "SSN", "API_KEY")
+        )
+        target_lower = target_destination.lower()
+        is_external = any(
+            ext in target_lower
+            for ext in ("cloud", "http://", "https://", "external", "remote", "egress")
+        )
+
+        if is_sensitive and is_external:
+            self.record_security_alert(
+                threat_level="CRITICAL",
+                attack_vector="AIR_GAP_DATA_EXFILTRATION",
+                details=f"Attempted exfiltration of sensitive/air-gapped data to '{target_destination}'.",
+            )
+            raise SecurityPolicyViolationError(
+                f"Air-gap boundary violation: CONFIDENTIAL / AIR_GAPPED context cannot egress to '{target_destination}'."
+            )
 
         if self.storage_dir:
             self.storage_dir.mkdir(parents=True, exist_ok=True)
@@ -152,14 +207,29 @@ class CapabilityFirewall:
 
             # Prevent self-grant attacks by agents
             if installer_id and (installer_id == grant.issuer or installer_id == grant.approval_identity):
-                raise PermissionError("Self-granting capability authority is strictly prohibited.")
+                self.record_security_alert(
+                    threat_level="CRITICAL",
+                    attack_vector="AUTHORITY_ESCALATION_SELF_GRANT",
+                    details=f"Agent '{installer_id}' attempted self-grant authority elevation for '{grant.capability}'.",
+                )
+                raise SecurityPolicyViolationError("Self-granting capability authority is strictly prohibited.")
 
             # Cryptographic Ed25519 signature verification against authorized trust root
             if self.verify_signatures:
                 if not self.trusted_roots:
-                    raise PermissionError("No authorized trust roots registered in CapabilityFirewall.")
+                    self.record_security_alert(
+                        threat_level="HIGH",
+                        attack_vector="AUTHORITY_ESCALATION_MISSING_TRUST_ROOT",
+                        details="Attempted grant installation without registered trust roots.",
+                    )
+                    raise SecurityPolicyViolationError("No authorized trust roots registered in CapabilityFirewall.")
                 if grant.issuer not in self.trusted_roots:
-                    raise PermissionError(f"Untrusted grant issuer '{grant.issuer}': not in authorized trust roots.")
+                    self.record_security_alert(
+                        threat_level="CRITICAL",
+                        attack_vector="AUTHORITY_ESCALATION_UNTRUSTED_ISSUER",
+                        details=f"Untrusted grant issuer '{grant.issuer}'.",
+                    )
+                    raise SecurityPolicyViolationError(f"Untrusted grant issuer '{grant.issuer}': not in authorized trust roots.")
 
                 pk_hex = self.trusted_roots[grant.issuer]
                 try:
@@ -168,11 +238,21 @@ class CapabilityFirewall:
                     payload = compute_grant_payload(grant)
                     digest = hashlib.sha256(payload).hexdigest()
                     if not ed25519_verify(pk_bytes, digest.encode("utf-8"), sig_bytes):
-                        raise ValueError("Cryptographic signature verification failed: invalid grant signature.")
+                        self.record_security_alert(
+                            threat_level="CRITICAL",
+                            attack_vector="AUTHORITY_ESCALATION_FORGERY",
+                            details=f"Invalid signature on grant '{grant.grant_id}'.",
+                        )
+                        raise SecurityPolicyViolationError("Cryptographic signature verification failed: invalid grant signature.")
                 except Exception as e:
-                    if isinstance(e, ValueError):
+                    if isinstance(e, SecurityPolicyViolationError):
                         raise
-                    raise ValueError(f"Cryptographic signature verification failed: {str(e)}") from e
+                    self.record_security_alert(
+                        threat_level="CRITICAL",
+                        attack_vector="AUTHORITY_ESCALATION_SIGNATURE_EXCEPTION",
+                        details=str(e),
+                    )
+                    raise SecurityPolicyViolationError(f"Cryptographic signature verification failed: {str(e)}") from e
 
             self.used_grant_nonces.add(grant.nonce)
             self._persist_nonce("grant", grant.nonce)

@@ -25,9 +25,12 @@ from .models import (
     SecurityLabel,
     ConfidentialityLevel,
 )
+from .models import CounterfactualWorld
 
 from .world_discriminator import WorldDiscriminator
+from .world_generator import WorldGenerator
 from .probe_optimizer import ProbeOptimizer
+from .probe_synthesizer import ProbeSynthesizer
 from .counterexample_library import CounterexampleLibrary
 from .feedback_governor import FeedbackGovernor
 from .assumption_verifier import (
@@ -46,6 +49,7 @@ __all__ = [
     "ProbeVerdict",
     "QualificationMethod",
     "WorldModel",
+    "CounterfactualWorld",
     "WorldPair",
     "DistinguishingProbe",
     "CounterfactualChallengeRecord",
@@ -62,7 +66,9 @@ __all__ = [
     "ConfidentialityLevel",
     # Core Engines & Governors
     "WorldDiscriminator",
+    "WorldGenerator",
     "ProbeOptimizer",
+    "ProbeSynthesizer",
     "CounterexampleLibrary",
     "FeedbackGovernor",
     "AssumptionVerifier",

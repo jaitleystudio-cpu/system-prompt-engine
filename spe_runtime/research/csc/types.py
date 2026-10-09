@@ -26,6 +26,8 @@ from .models import (
     ConfidentialityLevel,
 )
 
+CounterfactualWorld = WorldModel
+
 __all__ = [
     "WorldType",
     "HypothesisStatus",
@@ -33,6 +35,7 @@ __all__ = [
     "ProbeVerdict",
     "QualificationMethod",
     "WorldModel",
+    "CounterfactualWorld",
     "WorldPair",
     "DistinguishingProbe",
     "CounterfactualChallengeRecord",

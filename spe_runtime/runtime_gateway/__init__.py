@@ -10,6 +10,8 @@ from .models import (
     CapabilityType,
     Decision,
     PolicyEvaluationResult,
+    SecurityAlert,
+    SecurityPolicyViolationError,
 )
 
 __all__ = [
@@ -19,6 +21,8 @@ __all__ = [
     "CapabilityRequest",
     "A2ADelegationContract",
     "PolicyEvaluationResult",
+    "SecurityAlert",
+    "SecurityPolicyViolationError",
     "CapabilityFirewall",
     "McpCapabilityAdapter",
     "A2APolicyEngine",

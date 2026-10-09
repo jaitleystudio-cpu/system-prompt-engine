@@ -30,6 +30,7 @@ class WorldType(str, Enum):
     FORMAL_COUNTERMODEL = "FORMAL_COUNTERMODEL"
     EMPIRICAL_FAILURE_WORLD = "EMPIRICAL_FAILURE_WORLD"
     HYPOTHESIS_WORLD = "HYPOTHESIS_WORLD"
+    SPEC_GAMING_WORLD = "SPEC_GAMING_WORLD"
 
 
 class HypothesisStatus(str, Enum):
@@ -82,6 +83,9 @@ class WorldModel:
     def observation_for(self, key: str) -> Any:
         return self.observations.get(key)
 
+    def project_observations(self, keys: List[str]) -> Dict[str, Any]:
+        return {k: self.observations[k] for k in keys if k in self.observations}
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "world_id": self.world_id,
@@ -95,6 +99,9 @@ class WorldModel:
     def canonical_hash(self) -> str:
         canonical_bytes = rfc8785_canonicalize(self.to_dict())
         return hashlib.sha256(canonical_bytes).hexdigest()
+
+
+CounterfactualWorld = WorldModel
 
 
 @dataclass(frozen=True)
@@ -121,12 +128,12 @@ class DistinguishingProbe:
     Designed to distinguish w_good from w_bad: Obs_q(w_good) != Obs_q(w_bad).
     """
     probe_id: str
-    name: str
     target_obligation_ref: str
-    operation: str
-    delta_v: float                  # Decision-relevant uncertainty eliminated (Delta V >= 0)
-    v_reuse: float                  # Amortized value for future qualification runs (V_reuse >= 0)
-    cost_nanos: NanoUSD             # Total execution and risk cost in NanoUSD (>= 0)
+    name: str = ""
+    operation: str = ""
+    delta_v: float = 0.0            # Decision-relevant uncertainty eliminated (Delta V >= 0)
+    v_reuse: float = 0.0            # Amortized value for future qualification runs (V_reuse >= 0)
+    cost_nanos: NanoUSD = 0         # Total execution and risk cost in NanoUSD (>= 0)
     required_authority: List[str] = field(default_factory=lambda: ["LOCAL_TEST_EXECUTION"])
     network_policy: NetworkPolicy = NetworkPolicy.AIR_GAPPED
     expected_observation_classes: List[str] = field(default_factory=list)
@@ -168,32 +175,50 @@ class CounterfactualChallengeRecord:
     Counterfactual Challenge Record (CCR) formal schema per Section 5 of plan.
     Binds visible success claims against alternative failure hypotheses and distinguishing probes.
     """
-    challenge_id: str
-    protected_intent_ref: str
-    obligation_ref: str
-    evidence_snapshot_hash: str
+    challenge_id: str = ""
+    record_id: str = ""
+    protected_intent_ref: str = ""
+    obligation_ref: str = ""
+    target_obligation_ref: str = ""
+    evidence_snapshot_hash: str = ""
 
     # Current visible success claim
-    observed_success_evidence_refs: List[str]
-    declared_scope: Dict[str, Any]
+    observed_success_evidence_refs: List[str] = field(default_factory=list)
+    declared_scope: Dict[str, Any] = field(default_factory=dict)
 
     # Counterfactual failure hypothesis
-    alternative_world_hypothesis: str
-    assumptions: List[str]
-    plausibility_basis: List[str]
-    hypothesis_status: str  # "UNVERIFIED_HYPOTHESIS", "FORMAL_COUNTERMODEL", etc.
+    alternative_world_hypothesis: str = ""
+    countermodel_ref: str = ""
+    assumptions: List[str] = field(default_factory=list)
+    plausibility_basis: List[str] = field(default_factory=list)
+    hypothesis_status: Any = HypothesisStatus.UNVERIFIED_HYPOTHESIS
 
     # Distinguishing observation probe
-    distinguishing_probe_operation: str
-    required_authority: List[str]
-    required_budget_nanos: int
-    expected_observation_classes: List[str]
-    oracle_status: str      # "QUALIFIED", "NOT_QUALIFIED"
+    probe_id: str = ""
+    distinguishing_probe_operation: str = ""
+    required_authority: List[str] = field(default_factory=list)
+    required_budget_nanos: int = 0
+    expected_observation_classes: List[str] = field(default_factory=list)
+    oracle_status: Any = OracleStatus.QUALIFIED
 
     # Execution verdict
-    observed_result: PredicateValue  # TRUE, FALSE, UNKNOWN
-    new_obligation_proposal: Optional[str]
-    invalidated_evidence_refs: List[str]
+    observed_result: Any = None
+    new_obligation_proposal: Optional[str] = None
+    invalidated_evidence_refs: List[str] = field(default_factory=list)
+
+    def __post_init__(self):
+        if not self.challenge_id and self.record_id:
+            object.__setattr__(self, "challenge_id", self.record_id)
+        elif not self.record_id and self.challenge_id:
+            object.__setattr__(self, "record_id", self.challenge_id)
+        if not self.obligation_ref and self.target_obligation_ref:
+            object.__setattr__(self, "obligation_ref", self.target_obligation_ref)
+        elif not self.target_obligation_ref and self.obligation_ref:
+            object.__setattr__(self, "target_obligation_ref", self.obligation_ref)
+        if not self.distinguishing_probe_operation and self.probe_id:
+            object.__setattr__(self, "distinguishing_probe_operation", self.probe_id)
+        if not self.probe_id and self.distinguishing_probe_operation:
+            object.__setattr__(self, "probe_id", self.distinguishing_probe_operation)
 
     def to_dict(self) -> Dict[str, Any]:
         hyp_status = (
@@ -216,17 +241,21 @@ class CounterfactualChallengeRecord:
             )
         )
         return {
-            "challenge_id": self.challenge_id,
+            "challenge_id": self.challenge_id or self.record_id,
+            "record_id": self.record_id or self.challenge_id,
             "protected_intent_ref": self.protected_intent_ref,
-            "obligation_ref": self.obligation_ref,
+            "obligation_ref": self.obligation_ref or self.target_obligation_ref,
+            "target_obligation_ref": self.target_obligation_ref or self.obligation_ref,
             "evidence_snapshot_hash": self.evidence_snapshot_hash,
             "observed_success_evidence_refs": list(self.observed_success_evidence_refs),
             "declared_scope": self.declared_scope,
             "alternative_world_hypothesis": self.alternative_world_hypothesis,
+            "countermodel_ref": self.countermodel_ref,
             "assumptions": list(self.assumptions),
             "plausibility_basis": list(self.plausibility_basis),
             "hypothesis_status": hyp_status,
-            "distinguishing_probe_operation": self.distinguishing_probe_operation,
+            "probe_id": self.probe_id or self.distinguishing_probe_operation,
+            "distinguishing_probe_operation": self.distinguishing_probe_operation or self.probe_id,
             "required_authority": list(self.required_authority),
             "required_budget_nanos": self.required_budget_nanos,
             "expected_observation_classes": list(self.expected_observation_classes),
@@ -239,6 +268,9 @@ class CounterfactualChallengeRecord:
     def canonical_hash(self) -> str:
         canonical_bytes = rfc8785_canonicalize(self.to_dict())
         return hashlib.sha256(canonical_bytes).hexdigest()
+
+    def compute_canonical_hash(self) -> str:
+        return self.canonical_hash()
 
     def with_execution_verdict(
         self,

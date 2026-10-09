@@ -82,3 +82,17 @@ class A2ADelegationContract:
     forbidden_capabilities: list[CapabilityType]
     expiration_iso: str
     max_subdelegation_depth: int = 0
+
+
+class SecurityPolicyViolationError(PermissionError):
+    """Raised when an operation violates security policy, lattice confidentiality, or air-gap egress boundary."""
+
+
+@dataclass(frozen=True)
+class SecurityAlert:
+    alert_id: str
+    threat_level: str  # CRITICAL, HIGH, MEDIUM, LOW
+    attack_vector: str
+    details: str
+    timestamp_iso: str
+

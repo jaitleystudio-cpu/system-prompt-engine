@@ -145,12 +145,19 @@ class WorldDiscriminator:
         unobserved_failure_obs: Optional[Dict[str, Any]] = None,
         world_type: WorldType = WorldType.HYPOTHESIS_WORLD,
         world_id: Optional[str] = None,
+        countermodel_description: Optional[str] = None,
+        countermodel_world_type: Optional[WorldType] = None,
+        divergent_hypotheses: Optional[Dict[str, Any]] = None,
+        divergent_latent_variables: Optional[Dict[str, Any]] = None,
     ) -> WorldModel:
         """
         Synthesizes a counterfactual world w_bad that replicates all observations
         of w_good across existing evidence, but violates the objective (K(w_bad) = False)
         in unobserved scenarios or edge-cases.
         """
+        effective_desc = countermodel_description or failure_description
+        effective_world_type = countermodel_world_type or world_type
+
         obs = dict(w_good.observations)
         if unobserved_failure_obs:
             obs.update(unobserved_failure_obs)
@@ -158,11 +165,15 @@ class WorldDiscriminator:
         env_params = dict(w_good.environment_parameters)
         if mutation_fn:
             env_params = mutation_fn(env_params)
+        if divergent_hypotheses:
+            env_params["divergent_hypotheses"] = divergent_hypotheses
+        if divergent_latent_variables:
+            env_params["divergent_latent_variables"] = divergent_latent_variables
 
         if world_id is not None:
             bad_id = world_id
         else:
-            seed = {"desc": failure_description, "obs": obs, "env": env_params}
+            seed = {"desc": effective_desc, "obs": obs, "env": env_params}
             bad_id = f"w_bad_{w_good.world_id}_{hashlib.sha256(rfc8785_canonicalize(seed)).hexdigest()[:8]}"
 
         return WorldModel(
@@ -170,8 +181,8 @@ class WorldDiscriminator:
             satisfies_objective=False,
             observations=obs,
             environment_parameters=env_params,
-            description=failure_description,
-            world_type=world_type,
+            description=effective_desc,
+            world_type=effective_world_type,
         )
 
     def filter_eliminated_worlds(

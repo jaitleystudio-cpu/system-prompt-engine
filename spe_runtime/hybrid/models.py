@@ -15,10 +15,32 @@ from spe_runtime.cost_engine.telemetry import (
 )
 
 
+NanoUSD = int  # Exact integer units: 1_000_000_000 Nanos = $1.00 USD
+NANOS_PER_USD = 1_000_000_000
+
+
+class ThermalState(str, Enum):
+    """System thermal condition."""
+    NOMINAL = "NOMINAL"
+    FAIR = "FAIR"
+    SERIOUS = "SERIOUS"
+    CRITICAL = "CRITICAL"
+
+
+class HardwareEngineType(str, Enum):
+    """Detected physical hardware acceleration engine."""
+    APPLE_METAL = "APPLE_METAL"          # Apple Silicon Metal / Unified Memory
+    NVIDIA_CUDA = "NVIDIA_CUDA"          # NVIDIA CUDA / NVML
+    QUALCOMM_NPU = "QUALCOMM_NPU"        # Qualcomm Hexagon / NNAPI
+    AMD_ROCM = "AMD_ROCM"                # AMD ROCm / HIP
+    CPU_AVX512 = "CPU_AVX512"            # x86/ARM CPU fallback with AVX-512 / NEON
+
+
 class PlacementTarget(str, Enum):
     """Where a task or subtask is placed for physical execution."""
     LOCAL_DETERMINISTIC = "LOCAL_DETERMINISTIC"  # $0 cloud, deterministic AST / compiler / validator / math
     LOCAL_NEURAL = "LOCAL_NEURAL"                # $0 cloud tokens, runs on user's local device/engine
+    LOCAL_ENGINE = "LOCAL_ENGINE"                # $0 cloud tokens, physical native device engine
     HYBRID_SPLIT = "HYBRID_SPLIT"                # Local preprocessing/validation + cloud-authorized reasoning
     CLOUD_AUTHORIZED = "CLOUD_AUTHORIZED"        # Authorized remote cloud provider with escrow
     LOCAL_RECOVERY = "LOCAL_RECOVERY"            # Fallback deterministic response when cloud fails or blocked
@@ -65,11 +87,76 @@ class DeviceCapabilityProfile:
     battery_percentage: Optional[float] = None  # None if desktop/AC-only
     is_charging: bool = True
     is_thermal_throttled: bool = False
+    thermal_state: ThermalState = ThermalState.NOMINAL
+    hardware_type: HardwareEngineType = HardwareEngineType.CPU_AVX512
+    supports_metal: bool = False
+    supports_cuda: bool = False
+    supports_npu: bool = False
+    model_parameter_ceiling_b: float = 70.0
+    free_unified_memory_mb: int = 0
     installed_local_models: List[str] = field(default_factory=list)
     measured_local_tok_per_sec: float = 0.0
     max_context_tokens_local: int = 4096
     last_calibrated_iso: str = ""
     evidence_class: TelemetryEvidence = TelemetryEvidence.CALIBRATED_ESTIMATE
+
+    def get_effective_parameter_ceiling(self) -> float:
+        """Dynamically downscale parameter ceiling under thermal stress."""
+        base = self.model_parameter_ceiling_b
+        if self.thermal_state == ThermalState.CRITICAL:
+            return 0.0
+        elif self.thermal_state == ThermalState.SERIOUS:
+            return min(7.0, base * 0.50)
+        elif self.thermal_state == ThermalState.FAIR:
+            return base * 0.85
+        return base
+
+    def check_memory_headroom(self, model_footprint_mb: int) -> Tuple[bool, str]:
+        """Refuse local weight loading if free unified memory is < 1.5x model footprint."""
+        free_mem = self.free_unified_memory_mb if self.free_unified_memory_mb > 0 else self.available_memory_mb
+        required_headroom_mb = int(model_footprint_mb * 1.5)
+        if free_mem < required_headroom_mb:
+            return (
+                False,
+                f"Memory headroom refusal: available memory ({free_mem} MB) is less than required 1.5x buffer "
+                f"for {model_footprint_mb} MB model footprint ({required_headroom_mb} MB required). "
+                f"Refusing weight load to prevent OS swap thrashing. Recommendation: fallback to CLOUD_AUTHORIZED or downscale model.",
+            )
+        return True, f"Memory headroom verified: {free_mem} MB available >= 1.5x buffer ({required_headroom_mb} MB)."
+
+    def determine_execution_placement(
+        self,
+        vram_required_mb: int,
+        task_complexity_score: float = 0.5,
+        estimated_cloud_nanos: NanoUSD = 10_000_000,
+    ) -> Tuple[PlacementTarget, NanoUSD, str]:
+        """
+        Calculates execution placement and cost.
+        If free memory is sufficient (>= 1.5x) and thermals are not critical, outputs LOCAL_ENGINE ($0 cost).
+        """
+        # Thermal check
+        if self.thermal_state == ThermalState.CRITICAL or self.is_thermal_throttled:
+            return (
+                PlacementTarget.CLOUD_AUTHORIZED,
+                estimated_cloud_nanos,
+                "Thermal state is CRITICAL; offloading to CLOUD_AUTHORIZED to prevent hardware degradation.",
+            )
+
+        # Headroom check
+        headroom_ok, reason = self.check_memory_headroom(vram_required_mb)
+        if not headroom_ok:
+            return (
+                PlacementTarget.CLOUD_AUTHORIZED,
+                estimated_cloud_nanos,
+                reason,
+            )
+
+        # Fully qualified for local execution!
+        return (
+            PlacementTarget.LOCAL_ENGINE,
+            0,  # $0 cost
+            f"Execution qualified for $0 local engine ({self.hardware_type.value}) with verified 1.5x headroom.",
+        )
 
     def qualify_for_task(
         self,
