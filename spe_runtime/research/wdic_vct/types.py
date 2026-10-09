@@ -44,6 +44,7 @@ class TaskReport:
     tests_passed: int = 0
     tests_failed: int = 0
     tests_skipped: int = 0
+    exit_code: int = 0
     claims: List[TaskClaim] = field(default_factory=list)
     commit_sha: str = ""
     raw_text: str = ""

@@ -152,16 +152,16 @@ class EvidenceCapsuleRetriever:
 
         if matches(["offline", "storage", "crdt", "database", "sqlite"]):
             return self._curated_capsules["offline_storage"]
+        elif matches(["auth", "security", "permission", "egress", "secret", "credential"]):
+            return self._curated_capsules["security"]
         elif matches(["concurrency", "concurrent", "race", "parallel", "lock", "async", "thread"]):
             return self._curated_capsules["concurrency"]
-        elif matches(["token", "cost", "history", "continue", "resume", "long"]):
+        elif matches(["token", "tokens", "cost", "history", "continue", "resume", "long"]):
             return self._curated_capsules["continuation"]
         elif matches(["test", "verify", "benchmark", "flaky", "pass", "fail"]):
             return self._curated_capsules["verification"]
         elif matches(["agent", "handoff", "summary", "report", "loss", "review"]):
             return self._curated_capsules["summarization"]
-        elif matches(["auth", "security", "token", "permission", "egress", "secret"]):
-            return self._curated_capsules["security"]
         elif matches(["ui", "react", "component", "render", "css", "layout"]):
             return self._curated_capsules["frontend_ui"]
         elif matches(["sync"]):

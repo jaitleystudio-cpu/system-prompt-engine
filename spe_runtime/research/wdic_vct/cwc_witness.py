@@ -39,6 +39,7 @@ from spe_runtime.research.wdic_vct.types import (
 class ProbeType(str, Enum):
     AST_INSPECTION = "AST_INSPECTION"
     NEGATIVE_TEST = "NEGATIVE_TEST"
+    NEGATIVE_ASSERTION = "NEGATIVE_TEST"
     EGRESS_CHECK = "EGRESS_CHECK"
     MUTATION_CHECK = "MUTATION_CHECK"
     DETERMINISTIC_ORACLE = "DETERMINISTIC_ORACLE"
@@ -231,8 +232,10 @@ class CWCWitnessEngine:
             else:
                 unverified += 1
 
-        # Check for unverified obligations
-        unmet_reqs = [r for r in all_required_requirements if r not in reusable]
+        # Check for unverified obligations (satisfied by reusable proofs OR newly verified claims)
+        newly_verified = {claim.requirement_id for claim in report.claims if claim.status == ClaimStatus.VERIFIED}
+        satisfied_reqs = set(reusable) | newly_verified
+        unmet_reqs = [r for r in all_required_requirements if r not in satisfied_reqs]
         if report.tests_failed > 0:
             contradicted += report.tests_failed
 

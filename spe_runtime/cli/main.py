@@ -571,6 +571,13 @@ def cmd_diagnose(args: argparse.Namespace) -> int:
 
 def cmd_continue(args: argparse.Namespace) -> int:
     report_arg = getattr(args, "report", None)
+    if report_arg == "-" or (report_arg is None and not sys.stdin.isatty()):
+        try:
+            stdin_data = sys.stdin.read()
+            if stdin_data.strip():
+                report_arg = stdin_data
+        except Exception:
+            pass
     reqs_arg = getattr(args, "requirements", None)
     task_id = getattr(args, "task_id", None) or "task-continuation-001"
     mission = getattr(args, "mission", None) or "MISSION-SPE-OMEGA"

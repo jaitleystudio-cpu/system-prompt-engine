@@ -47,6 +47,21 @@ def test_distinguishing_witness_generation_race():
     assert "Causal" in probe.name or "Race" in probe.name
 
 
+def test_distinguishing_witness_generation_auth():
+    cwc = CWCWitnessEngine()
+    probe = cwc.generate_distinguishing_witness(
+        requirement_id="REQ-AUTH",
+        claim_description="Implemented single-use affine auth token revocation",
+        files_modified=["src/auth/token.ts"]
+    )
+
+    assert probe.probe_type in [ProbeType.NEGATIVE_TEST, ProbeType.NEGATIVE_ASSERTION]
+    assert probe.cost_nano_usd == 0
+    assert "Token" in probe.name or "Auth" in probe.name
+    assert "401" in probe.expected_compliant
+
+
+
 def test_dependency_invalidation_matrix():
     cwc = CWCWitnessEngine()
 

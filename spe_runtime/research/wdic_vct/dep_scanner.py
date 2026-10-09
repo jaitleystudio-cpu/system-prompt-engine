@@ -178,7 +178,11 @@ class ASTDependencyScanner:
 
         while queue:
             current = queue.pop(0)
-            dependents = self.reverse_graph.get(current, set())
+            dependents = set(self.reverse_graph.get(current, set()))
+            if not dependents:
+                for graph_file, deps in self.reverse_graph.items():
+                    if graph_file == current or graph_file.endswith("/" + current) or os.path.basename(graph_file) == current:
+                        dependents.update(deps)
             for dep in dependents:
                 if dep not in invalidation_cone:
                     invalidation_cone.add(dep)

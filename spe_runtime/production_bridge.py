@@ -614,13 +614,24 @@ class ContinuationAuditorAdapter:
         from spe_runtime.research.wdic_vct.cwc_witness import CWCWitnessEngine
         from spe_runtime.research.wdic_vct.types import ClaimStatus, NextTaskContract
 
-        # Step 1: Resolve report text
+        # Step 1: Resolve report text safely (avoiding OSError: File name too long on raw text)
         raw_text = report_text
-        if report_file and Path(report_file).exists():
-            raw_text = Path(report_file).read_text(encoding="utf-8")
-        elif raw_text and Path(raw_text).exists():
-            raw_text = Path(raw_text).read_text(encoding="utf-8")
-        elif not raw_text:
+        if report_file:
+            try:
+                p = Path(report_file)
+                if p.is_file():
+                    raw_text = p.read_text(encoding="utf-8")
+            except (OSError, ValueError):
+                pass
+        elif raw_text:
+            if "\n" not in raw_text and len(raw_text) < 4096:
+                try:
+                    p = Path(raw_text)
+                    if p.is_file():
+                        raw_text = p.read_text(encoding="utf-8")
+                except (OSError, ValueError):
+                    pass
+        if not raw_text:
             raw_text = DEFAULT_SAMPLE_CONTINUATION_REPORT
 
         # Requirements default to standard two-phase scenario if none given

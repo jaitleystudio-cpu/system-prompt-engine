@@ -726,4 +726,101 @@ def test_kernel1_continuation_cli_command_battery(tmp_path):
     assert ret_alias == 0
 
 
+def test_kernel1_continuation_large_raw_report_no_os_error():
+    """Verifies that large multi-line raw reports (>1000 chars) do not trigger OSError: File name too long."""
+    large_report = (
+        "TASK: Large comprehensive refactor\n"
+        "RESULT: Succeeded with all assertions intact\n"
+        "TESTS: 250 passed. 0 failed. 0 skipped.\n"
+        "FILES: service.py model.py router.py test_router.py\n"
+        "COMMIT: aabbccddeeff00112233445566778899aabbccdd\n"
+        "R-01: passed and verified\n"
+        + ("LOG: " + ("x" * 200) + "\n") * 5
+    )
+    assert len(large_report) > 1000
+
+    bundle = ContinuationAuditorAdapter.audit_and_continue(
+        report_text=large_report,
+        requirements=["R-01"],
+    )
+    assert bundle["verdict"] == "QUALIFIED"
+    assert bundle["verified_count"] == 1
+
+
+def test_kernel1_continuation_exit_code_failure_regression():
+    """Verifies that non-zero exit code triggers TEST_REGRESSION and blocks qualification."""
+    raw_report = (
+        "TASK: Execute test battery\n"
+        "COMMAND: pytest tests/\n"
+        "EXIT_CODE: 1\n"
+        "TESTS: 50 passed\n"
+        "FILES: core.py\n"
+        "R-01: passed\n"
+    )
+
+    bundle = ContinuationAuditorAdapter.audit_and_continue(
+        report_text=raw_report,
+        requirements=["R-01"],
+    )
+    assert bundle["verdict"] == "BLOCKED_CONTRADICTION"
+    assert "TEST_REGRESSION" in bundle["deficit"]["contradicted_requirements"]
+
+
+def test_kernel1_continuation_multiline_bulleted_files_prohibited_catch():
+    """Verifies that bulleted multi-line FILES entries catch prohibited file modifications."""
+    raw_report = (
+        "TASK: Update configuration and secrets\n"
+        "RESULT: Changes committed\n"
+        "FILES:\n"
+        "  - service.py\n"
+        "  - .env\n"
+        "TESTS: 10 passed\n"
+        "R-01: passed\n"
+    )
+
+    bundle = ContinuationAuditorAdapter.audit_and_continue(
+        report_text=raw_report,
+        requirements=["R-01"],
+        prohibited_files=[".env"],
+    )
+    assert bundle["verdict"] == "BLOCKED_CONTRADICTION"
+    assert any(c["requirement_id"] == "SCOPE_SECURITY" for c in bundle["claims"])
+
+
+def test_kernel1_continuation_auth_probe_no_attribute_error():
+    """Verifies that auth reports generate distinguishing probes without AttributeError."""
+    raw_report = (
+        "TASK: Implement auth token verification\n"
+        "RESULT: Auth token verification completed\n"
+        "TESTS: 20 passed. 0 failed.\n"
+        "FILES: auth.py token.py\n"
+        "R-01 Auth Verification: passed\n"
+    )
+
+    bundle = ContinuationAuditorAdapter.audit_and_continue(
+        report_text=raw_report,
+        requirements=["R-01", "R-AUTH-EXPIRY"],
+    )
+    assert bundle["verdict"] == "DEFICIT_DETECTED"
+    assert bundle["distinguishing_probe"] is not None
+    assert bundle["distinguishing_probe"]["probe_type"] in ["NEGATIVE_TEST", "NEGATIVE_ASSERTION"]
+
+
+def test_kernel1_continuation_cli_stdin_support(monkeypatch):
+    """Verifies that spe continue reads agent reports from stdin when piped or passed -."""
+    import io
+    stdin_content = (
+        "TASK: Pipe review\n"
+        "RESULT: Piped through stdin successfully\n"
+        "TESTS: 30 passed. 0 failed.\n"
+        "FILES: pipeline.py\n"
+        "R-01: passed\n"
+    )
+    monkeypatch.setattr("sys.stdin", io.StringIO(stdin_content))
+
+    ret = cli_main(["continue", "-", "--json"])
+    assert ret == 0
+
+
+
 

@@ -39,24 +39,49 @@ class WDICContinuationEngine:
         failed = 0
         skipped = 0
 
-        p_match = re.search(r"(\d+)\s+passed", raw_text, re.IGNORECASE)
+        p_match = re.search(r"(\d+)\s+(?:passed|passing)", raw_text, re.IGNORECASE) or re.search(r"(?:passed|passing)\s*[:=]\s*(\d+)", raw_text, re.IGNORECASE)
         if p_match:
             passed = int(p_match.group(1))
 
-        f_match = re.search(r"(\d+)\s+failed", raw_text, re.IGNORECASE)
+        f_match = (
+            re.search(r"(\d+)\s+(?:failed|failing)", raw_text, re.IGNORECASE)
+            or re.search(r"(?:failed|failing)\s*[:=]\s*(\d+)", raw_text, re.IGNORECASE)
+            or re.search(r"(?:failures|errors)\s*=\s*(\d+)", raw_text, re.IGNORECASE)
+        )
         if f_match:
             failed = int(f_match.group(1))
 
-        s_match = re.search(r"(\d+)\s+skipped", raw_text, re.IGNORECASE)
+        s_match = re.search(r"(\d+)\s+(?:skipped|ignored)", raw_text, re.IGNORECASE) or re.search(r"(?:skipped|ignored)\s*[:=]\s*(\d+)", raw_text, re.IGNORECASE)
         if s_match:
             skipped = int(s_match.group(1))
 
-        # Parse files modified: e.g. "FILES: session.py recovery.py test_recovery.py"
+        # Parse exit code if present
+        exit_code = 0
+        exit_match = re.search(r"exit[ _-]?code\s*[:=]\s*(\d+)", raw_text, re.IGNORECASE)
+        if exit_match:
+            exit_code = int(exit_match.group(1))
+
+        # Parse files modified: e.g. inline "FILES: session.py recovery.py" or multi-line / bulleted
         files: List[str] = []
-        files_match = re.search(r"FILES:\s*([^\n]+)", raw_text, re.IGNORECASE)
-        if files_match:
-            raw_files = files_match.group(1).strip()
-            files = [f.strip(", ") for f in raw_files.split() if f.strip(", ")]
+        files_section_match = re.search(
+            r"(?:FILES|FILES MODIFIED|CHANGED FILES|MODIFIED FILES):\s*([^\n]*(?:\n[ \t]*[-*•]?[ \t]*[^\n]+)*)",
+            raw_text,
+            re.IGNORECASE,
+        )
+        if files_section_match:
+            raw_section = files_section_match.group(1)
+            for line in raw_section.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                # Stop if encountering another standard section header
+                if re.match(r"^(?:TESTS|RESULT|COMMIT|SHA|R-\d+|COMMAND|EXIT|OBJECTIVE|SCOPE|ACCEPTANCE):", line, re.IGNORECASE):
+                    break
+                line = re.sub(r"^[-*•]\s*", "", line)
+                tokens = [t.strip(",; ") for t in line.split() if t.strip(",; ")]
+                for tok in tokens:
+                    if tok not in ["-", "*", "•"] and not tok.startswith("-"):
+                        files.append(tok)
 
         # Parse commit SHA if present
         commit_sha = ""
@@ -77,6 +102,7 @@ class WDICContinuationEngine:
             tests_passed=passed,
             tests_failed=failed,
             tests_skipped=skipped,
+            exit_code=exit_code,
             commit_sha=commit_sha,
             raw_text=raw_text
         )
@@ -106,12 +132,12 @@ class WDICContinuationEngine:
                     evidence_details="Scope boundary violation"
                 ))
 
-        # If tests failed, record contradiction
-        if report.tests_failed > 0:
+        # If tests failed or exit code is non-zero, record contradiction
+        if report.tests_failed > 0 or getattr(report, "exit_code", 0) != 0:
             claims.append(TaskClaim(
                 id="claim-tests-failed",
                 requirement_id="TEST_REGRESSION",
-                description=f"{report.tests_failed} tests failed in execution",
+                description=f"{report.tests_failed} tests failed (exit code {getattr(report, 'exit_code', 0)}) in execution",
                 status=ClaimStatus.CONTRADICTED,
                 evidence_details="Failing test execution receipt"
             ))
@@ -128,7 +154,7 @@ class WDICContinuationEngine:
                 re.search(rf"{pattern}.*?(?:passed|verified|covered|asserted)", report.raw_text, re.IGNORECASE)
             )
 
-            if is_mentioned and has_explicit_test and report.tests_failed == 0:
+            if is_mentioned and has_explicit_test and report.tests_failed == 0 and getattr(report, "exit_code", 0) == 0:
                 claims.append(TaskClaim(
                     id=f"claim-{req}",
                     requirement_id=req,
