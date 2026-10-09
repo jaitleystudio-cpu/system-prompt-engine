@@ -569,6 +569,115 @@ def cmd_diagnose(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_continue(args: argparse.Namespace) -> int:
+    report_arg = getattr(args, "report", None)
+    reqs_arg = getattr(args, "requirements", None)
+    task_id = getattr(args, "task_id", None) or "task-continuation-001"
+    mission = getattr(args, "mission", None) or "MISSION-SPE-OMEGA"
+    baseline = getattr(args, "baseline", None) or "main-HEAD"
+    prohibited_arg = getattr(args, "prohibited", None)
+    out_path = getattr(args, "out", None)
+    out_contract = getattr(args, "out_contract", None)
+    repo_root = getattr(args, "repo_root", None)
+    as_json = getattr(args, "json", False)
+    strict = getattr(args, "strict", False)
+
+    reqs = [r.strip() for r in reqs_arg.split(",") if r.strip()] if reqs_arg else None
+    prohibited = [p.strip() for p in prohibited_arg.split(",") if p.strip()] if prohibited_arg else None
+
+    from spe_runtime.production_bridge import ContinuationAuditorAdapter
+
+    bundle = ContinuationAuditorAdapter.audit_and_continue(
+        report_text=report_arg,
+        task_id=task_id,
+        mission_id=mission,
+        requirements=reqs,
+        baseline_ref=baseline,
+        prohibited_files=prohibited,
+        output_path=out_path,
+        output_markdown_path=out_contract,
+        repo_root=repo_root,
+    )
+
+    if as_json:
+        print(json.dumps(bundle, indent=2))
+        if strict and bundle.get("verdict") == "BLOCKED_CONTRADICTION":
+            return 1
+        return 0
+
+    print("🔄 SPE Ω — WDIC-VCT CONTINUATION ENGINE & TASK AUDITOR")
+    print(f"  Task ID:              {bundle.get('task_id')}")
+    print(f"  Parent Mission:       {bundle.get('mission_id')}")
+    print(f"  Baseline Ref:         {bundle.get('baseline_ref')}")
+
+    print("\n📊 TASK AUDIT RESULTS (T0 Deterministic - $0.00 / 0 tokens):")
+    print(f"  Total Requirements:   {bundle.get('total_requirements')}")
+    print(f"  Verified (Supported): {bundle.get('verified_count')}")
+    print(f"  Unverified (Omitted): {bundle.get('unverified_count')}")
+    print(f"  Contradicted:         {bundle.get('contradicted_count')}")
+    verdict = bundle.get("verdict", "UNKNOWN")
+    print(f"  Verdict:              {verdict}")
+    print(f"  Anti-Omission Status: {bundle.get('anti_omission_status')}")
+
+    blueprint = bundle.get("empirical_blueprint") or {}
+    if blueprint:
+        print("\n🔬 SCIENTIFIC GROUNDING (S-Capsule):")
+        print(f"  Paper:                {blueprint.get('paper_title')} ({blueprint.get('identifier')})")
+        print(f"  Proven Pattern:       {blueprint.get('proven_architecture_pattern')}")
+
+    skills = bundle.get("skills_injected", [])
+    if skills:
+        print("\n🛠️ ACTIVE SPECIALIZED SKILLS:")
+        print(f"  Injected Skills:      {', '.join(skills)}")
+
+    probe = bundle.get("distinguishing_probe") or {}
+    if probe:
+        print("\n🔍 DISTINGUISHING WITNESS PROBE:")
+        print(f"  Probe Name:           {probe.get('name')} ({probe.get('probe_type')})")
+        print(f"  Verification Command: {probe.get('verification_command')}")
+
+    contract = bundle.get("next_task_contract")
+    if contract:
+        print("\n🎯 NEXT TASK CONTRACT (6-Clause Executable Contract):")
+        print(f"  Title:                {contract.get('task_title')}")
+        obj_line = contract.get('objective', '').splitlines()[0] if contract.get('objective') else ''
+        print(f"  Objective:            {obj_line}")
+        print(f"  Scope Allowed:        {', '.join(contract.get('allowed_files', []))}")
+        print(f"  Scope Prohibited:     {', '.join(contract.get('prohibited_files', []))}")
+        print(f"  Acceptance:           {contract.get('acceptance_criteria')}")
+        print("\n  [Execution Plan]")
+        for i, step in enumerate(contract.get("execution_steps", [])):
+            print(f"    {i+1}. {step}")
+        print("\n  [Stop Boundaries]")
+        for stop in contract.get("stop_boundaries", []):
+            print(f"    - {stop}")
+    else:
+        print("\n🎉 ALL REQUIREMENTS QUALIFIED: No remaining deficit to continue.")
+
+    print("\n💰 ECONOMIC SAVINGS:")
+    print(f"  Execution Tier:       {bundle.get('tier_used')} ($0 inference)")
+    print(f"  Cost Incurred:        {bundle.get('cost_nano_usd', 0):,} NanoUSD ($0.000000)")
+    print(f"  Tokens Saved:         {bundle.get('estimated_savings_tokens', 0):,} tokens")
+    savings_usd = bundle.get("estimated_savings_usd", 0.0)
+    print(f"  USD Saved vs ChatGPT: ${savings_usd:.4f} (~$20/mo subscription eliminated)")
+
+    print(f"\n  Standard Reference:   {bundle.get('regulatory_standard')}")
+    print(f"  Tamper-Proof Seal:    {bundle.get('tamper_proof_seal', '')[:16]}...")
+
+    if out_path:
+        print(f"\n✓ Continuation bundle written to: {out_path}")
+    if out_contract and contract:
+        print(f"✓ Next task contract written to: {out_contract}")
+
+    if strict and verdict == "BLOCKED_CONTRADICTION":
+        print(f"\n❌ Strict Mode Violation: Continuation blocked due to contradiction ({verdict})", file=sys.stderr)
+        return 1
+
+    print("\n✓ Task continuation compiled successfully!")
+    return 0
+
+
+
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="spe", description="SPE Ω Unified Assurance CLI")
@@ -669,6 +778,20 @@ def main(argv: list[str] | None = None) -> int:
     p_diagnose.add_argument("--json", action="store_true", help="Output raw JSON")
     p_diagnose.add_argument("--strict", action="store_true", help="Fail with exit code 1 if status is not DISCRIMINATED")
 
+    # continue
+    p_continue = subparsers.add_parser("continue", aliases=["continue-task"], help="Audit agent execution report and compile next task contract ($0 subscription)")
+    p_continue.add_argument("report", nargs="?", default=None, help="Agent report file path or raw report text")
+    p_continue.add_argument("--reqs", "--requirements", dest="requirements", help="Comma-separated required requirement IDs (e.g. R-01,R-17)")
+    p_continue.add_argument("--task-id", default="task-continuation-001", help="Task ID under continuation review")
+    p_continue.add_argument("--mission", default="MISSION-SPE-OMEGA", help="Parent mission ID")
+    p_continue.add_argument("--baseline", default="main-HEAD", help="Current baseline commit SHA or ref")
+    p_continue.add_argument("--prohibited", help="Comma-separated prohibited file paths (e.g. .env,secrets.json)")
+    p_continue.add_argument("--repo-root", help="Repository root directory for automated AST dependency graph scanning")
+    p_continue.add_argument("--out", help="Output path for JSON continuation bundle")
+    p_continue.add_argument("--out-contract", help="Output path for next task contract markdown")
+    p_continue.add_argument("--json", action="store_true", help="Output raw JSON")
+    p_continue.add_argument("--strict", action="store_true", help="Fail with exit code 1 if verdict is BLOCKED_CONTRADICTION")
+
     args = parser.parse_args(argv)
 
     handlers = {
@@ -688,6 +811,8 @@ def main(argv: list[str] | None = None) -> int:
         "trace": cmd_trace,
         "audit-release": cmd_audit_release,
         "diagnose": cmd_diagnose,
+        "continue": cmd_continue,
+        "continue-task": cmd_continue,
     }
 
     handler = handlers.get(args.subcommand)

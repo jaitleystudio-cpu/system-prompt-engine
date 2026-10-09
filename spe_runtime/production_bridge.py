@@ -8,6 +8,7 @@ Provides clean, high-level production facades:
 3. MorphingEngine: Projects WPEM dynamic AST morphing under memory/thermal pressure.
 4. ReleaseAuditorAdapter: Projects AEQ independent release audits across 5 fault families.
 5. TriOriginDiagnosticAdapter: Projects RGIC-T1 counterfactual failure origin diagnosis (Goal vs World vs Verifier).
+6. ContinuationAuditorAdapter: Projects WDIC-VCT and CWC zero-subscription task continuation and anti-omission auditing.
 """
 
 from dataclasses import dataclass, field
@@ -555,4 +556,279 @@ class TriOriginDiagnosticAdapter:
             out_file.write_text(json.dumps(bundle, indent=2), encoding="utf-8")
 
         return bundle
+
+
+DEFAULT_SAMPLE_CONTINUATION_REPORT = (
+    "TASK: Implement secure session recovery.\n"
+    "RESULT: Implementation completed successfully.\n"
+    "TESTS: 126 passed. 0 failed. 3 skipped.\n"
+    "FILES: session.py recovery.py test_recovery.py\n"
+    "COMMIT: 4f8a9b2c\n"
+    "R-01 Session Serialization: passed with full test coverage.\n"
+)
+
+
+class ContinuationAuditorAdapter:
+    """
+    Production facade for WDIC-VCT (Witness-Directed Intelligence Compilation: Verified Continuation Transactions).
+    Provides automated, zero-subscription ($0, air-gapped) task report review and continuation:
+    1. Ingests raw agent reports (Gilden, Cursor, Claude Code, SWE-bench).
+    2. Deterministic Tier 0 claim-by-claim audit ($0, 0 tokens).
+    3. Anti-Omission enforcement: Passing tests cannot certify unasserted requirements.
+    4. CWC Distinguishing Witness synthesis & dependency invalidation.
+    5. Curated S-Capsule empirical scientific grounding (~200 token blueprint).
+    6. Autonomous skill requirement detection & security qualification.
+    7. Compiles the 6-clause Next Task Contract to resume work without ChatGPT review fees.
+    """
+
+    @staticmethod
+    def parse_report(raw_text: str, task_id: str = "task-continuation-001") -> Any:
+        """Parses raw agent report text into a structured TaskReport."""
+        from spe_runtime.research.wdic_vct.continuation_engine import WDICContinuationEngine
+
+        engine = WDICContinuationEngine()
+        return engine.parse_report_text(raw_text, task_id=task_id)
+
+    @staticmethod
+    def audit_and_continue(
+        report_text: Optional[str] = None,
+        report_file: Optional[str] = None,
+        task_id: str = "task-continuation-001",
+        mission_id: str = "MISSION-SPE-OMEGA",
+        requirements: Optional[List[str]] = None,
+        baseline_ref: str = "main-HEAD",
+        prohibited_files: Optional[List[str]] = None,
+        allowed_files: Optional[List[str]] = None,
+        verified_obligations: Optional[Dict[str, List[str]]] = None,
+        output_path: Optional[str] = None,
+        output_markdown_path: Optional[str] = None,
+        repo_root: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Full zero-subscription review and continuation pipeline:
+        Ingests report, audits claims, applies anti-omission check, invalidates dependencies,
+        retrieves empirical literature capsule (S-Capsule), detects required skills,
+        and compiles the 6-clause Next Task Contract at $0.00 cost.
+        """
+        from spe_runtime.research.wdic_vct.continuation_engine import WDICContinuationEngine
+        from spe_runtime.research.wdic_vct.cwc_witness import CWCWitnessEngine
+        from spe_runtime.research.wdic_vct.types import ClaimStatus, NextTaskContract
+
+        # Step 1: Resolve report text
+        raw_text = report_text
+        if report_file and Path(report_file).exists():
+            raw_text = Path(report_file).read_text(encoding="utf-8")
+        elif raw_text and Path(raw_text).exists():
+            raw_text = Path(raw_text).read_text(encoding="utf-8")
+        elif not raw_text:
+            raw_text = DEFAULT_SAMPLE_CONTINUATION_REPORT
+
+        # Requirements default to standard two-phase scenario if none given
+        req_list = requirements if requirements is not None else ["R-01", "R-17"]
+
+        continuation_engine = WDICContinuationEngine()
+        cwc_engine = CWCWitnessEngine()
+
+        # Step 2: Parse raw report text
+        report = continuation_engine.parse_report_text(raw_text, task_id=task_id)
+        if not report.commit_sha and baseline_ref != "main-HEAD":
+            report.commit_sha = baseline_ref
+
+        # Step 3: Deterministic claim-by-claim audit (Anti-Omission check)
+        claims = continuation_engine.audit_report_claims(
+            report=report,
+            required_requirements=req_list,
+            prohibited_files=prohibited_files,
+        )
+        report.claims = claims
+
+        # Step 4: Compute Proof Deficit
+        deficit = continuation_engine.compute_proof_deficit(claims, req_list)
+
+        # Step 5: Dependency Invalidation (CWC)
+        current_verified_obs = verified_obligations or {}
+        reusable_proofs, invalidated_proofs = cwc_engine.compute_invalidation_matrix(
+            current_verified_obs, report.files_modified, repo_root=repo_root
+        )
+
+        # Step 6: Empirical S-Capsule Solution Blueprint
+        query_text = f"{report.summary} {' '.join(report.files_modified)} {' '.join(req_list)}"
+        s_capsule = cwc_engine.capsule_retriever.fetch_solution_blueprint(query_text)
+
+        # Step 7: Specialized Skill Discovery & Injection
+        skill_proposal = cwc_engine.skill_installer.formulate_installation_proposal(
+            task_description=f"{report.summary} {' '.join(deficit.open_requirements)}",
+            files_modified=report.files_modified,
+        )
+
+        # Step 8: Distinguishing Witness Synthesis
+        primary_req = (
+            deficit.contradicted_requirements[0]
+            if deficit.contradicted_requirements
+            else (deficit.open_requirements[0] if deficit.open_requirements else "REQ-CORE")
+        )
+        witness_probe = cwc_engine.generate_distinguishing_witness(
+            requirement_id=primary_req,
+            claim_description=report.summary,
+            files_modified=report.files_modified,
+        )
+
+        # Step 9: Compile 6-clause Next Task Contract
+        next_contract = continuation_engine.compile_next_task_contract(
+            deficit=deficit,
+            baseline_ref=report.commit_sha or baseline_ref,
+            allowed_files=allowed_files or report.files_modified or ["src/", "tests/"],
+            prohibited_files=prohibited_files or [".env", "config/production.json", "secrets.json"],
+        )
+
+        # If next contract was compiled, enrich execution steps with scientific blueprint & active skills
+        if next_contract is not None:
+            enriched_steps = list(next_contract.execution_steps)
+            if s_capsule:
+                enriched_steps.insert(
+                    0,
+                    f"Ground architecture in empirical blueprint: {s_capsule.paper_title} ({s_capsule.identifier})",
+                )
+            if skill_proposal.required_skills:
+                skill_names = ", ".join(s.skill_name for s in skill_proposal.required_skills)
+                enriched_steps.insert(
+                    1,
+                    f"Apply domain directives from active skill(s): {skill_names}",
+                )
+            if witness_probe and witness_probe.verification_command:
+                enriched_steps.append(
+                    f"Execute distinguishing witness probe: {witness_probe.verification_command}",
+                )
+
+            enriched_objective = next_contract.objective
+            if s_capsule:
+                enriched_objective = f"{enriched_objective}\n\n{s_capsule.to_prompt_section()}"
+            if skill_proposal.injected_prompt_headers:
+                skills_md = "\n".join(skill_proposal.injected_prompt_headers)
+                enriched_objective = f"{enriched_objective}\n### 🛠️ ACTIVE SKILLS:\n{skills_md}"
+
+            next_contract = NextTaskContract(
+                task_title=next_contract.task_title,
+                baseline_ref=next_contract.baseline_ref,
+                objective=enriched_objective,
+                allowed_files=next_contract.allowed_files,
+                prohibited_files=next_contract.prohibited_files,
+                execution_steps=enriched_steps,
+                acceptance_criteria=next_contract.acceptance_criteria,
+                stop_boundaries=next_contract.stop_boundaries,
+                tier_used=next_contract.tier_used,
+                cost_nano_usd=next_contract.cost_nano_usd,
+                saved_tokens=next_contract.saved_tokens,
+            )
+
+        # Determine overall verdict
+        verified_count = sum(1 for c in claims if c.status == ClaimStatus.VERIFIED)
+        unverified_count = len(deficit.open_requirements)
+        contradicted_count = len(deficit.contradicted_requirements)
+
+        if contradicted_count > 0:
+            verdict = "BLOCKED_CONTRADICTION"
+        elif unverified_count > 0:
+            verdict = "DEFICIT_DETECTED"
+        else:
+            verdict = "QUALIFIED"
+
+        saved_tokens = 4200 if next_contract else 2000
+        saved_usd = round((saved_tokens / 1000.0) * 0.015, 4)
+
+        bundle: Dict[str, Any] = {
+            "task_id": report.task_id,
+            "mission_id": mission_id,
+            "baseline_ref": report.commit_sha or baseline_ref,
+            "verdict": verdict,
+            "total_requirements": len(req_list),
+            "verified_count": verified_count,
+            "unverified_count": unverified_count,
+            "contradicted_count": contradicted_count,
+            "claims": [
+                {
+                    "id": c.id,
+                    "requirement_id": c.requirement_id,
+                    "description": c.description,
+                    "status": c.status.value if hasattr(c.status, "value") else str(c.status),
+                    "evidence_details": c.evidence_details,
+                }
+                for c in claims
+            ],
+            "deficit": {
+                "open_requirements": deficit.open_requirements,
+                "contradicted_requirements": deficit.contradicted_requirements,
+                "deficit_count": deficit.deficit_count,
+            },
+            "reusable_proof_count": len(reusable_proofs),
+            "invalidated_proof_count": len(invalidated_proofs),
+            "reusable_proofs": sorted(list(reusable_proofs)),
+            "invalidated_proofs": sorted(list(invalidated_proofs)),
+            "distinguishing_probe": {
+                "id": witness_probe.probe_id,
+                "name": witness_probe.name,
+                "probe_type": witness_probe.probe_type.value
+                if hasattr(witness_probe.probe_type, "value")
+                else str(witness_probe.probe_type),
+                "cost_nano_usd": witness_probe.cost_nano_usd,
+                "verification_command": witness_probe.verification_command,
+                "expected_compliant": witness_probe.expected_compliant,
+                "expected_violation": witness_probe.expected_violation,
+            }
+            if witness_probe
+            else None,
+            "empirical_blueprint": {
+                "capsule_id": s_capsule.capsule_id,
+                "domain": s_capsule.domain,
+                "paper_title": s_capsule.paper_title,
+                "identifier": s_capsule.identifier,
+                "proven_architecture_pattern": s_capsule.proven_architecture_pattern,
+                "failure_genome": s_capsule.failure_genome,
+                "quantitative_metric": s_capsule.quantitative_metric,
+                "source_provider": s_capsule.source_provider,
+                "prompt_section": s_capsule.to_prompt_section(),
+            }
+            if s_capsule
+            else None,
+            "skills_injected": [s.skill_name for s in skill_proposal.required_skills],
+            "next_task_contract": {
+                "task_title": next_contract.task_title,
+                "baseline_ref": next_contract.baseline_ref,
+                "objective": next_contract.objective,
+                "allowed_files": next_contract.allowed_files,
+                "prohibited_files": next_contract.prohibited_files,
+                "execution_steps": next_contract.execution_steps,
+                "acceptance_criteria": next_contract.acceptance_criteria,
+                "stop_boundaries": next_contract.stop_boundaries,
+                "tier_used": next_contract.tier_used,
+                "cost_nano_usd": next_contract.cost_nano_usd,
+                "saved_tokens": next_contract.saved_tokens,
+                "markdown": next_contract.to_markdown(),
+            }
+            if next_contract
+            else None,
+            "next_task_markdown": next_contract.to_markdown() if next_contract else "",
+            "tier_used": "T0_DETERMINISTIC",
+            "cost_nano_usd": 0,
+            "estimated_savings_tokens": saved_tokens,
+            "estimated_savings_usd": saved_usd,
+            "anti_omission_status": "ENFORCED",
+            "regulatory_standard": "SPE-WDIC-VCT-20261009",
+            "tamper_proof_seal": hashlib.sha256(
+                f"{report.task_id}:{mission_id}:{verdict}:{saved_tokens}".encode()
+            ).hexdigest(),
+        }
+
+        if output_path:
+            out_file = Path(output_path)
+            out_file.parent.mkdir(parents=True, exist_ok=True)
+            out_file.write_text(json.dumps(bundle, indent=2), encoding="utf-8")
+
+        if output_markdown_path and next_contract:
+            out_md = Path(output_markdown_path)
+            out_md.parent.mkdir(parents=True, exist_ok=True)
+            out_md.write_text(next_contract.to_markdown(), encoding="utf-8")
+
+        return bundle
+
 

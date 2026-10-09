@@ -231,3 +231,41 @@ class SkillAutoInstaller:
             self.installed_skills.add(skill_name)
             return True
         return False
+
+    def install_skill_to_disk(self, skill_name: str, target_dir: Optional[str] = None) -> Tuple[bool, str]:
+        """
+        Physically scaffolds and writes the verified SKILL.md to disk.
+        Default target: .spe/skills/<skill_name>/SKILL.md
+        """
+        from pathlib import Path
+
+        if skill_name not in self.KNOWN_SKILL_REGISTRY:
+            return False, f"Unknown skill: {skill_name}"
+
+        meta = self.KNOWN_SKILL_REGISTRY[skill_name]
+        out_base = Path(target_dir) if target_dir else Path(".spe/skills")
+        skill_dir = out_base / skill_name
+        skill_dir.mkdir(parents=True, exist_ok=True)
+        skill_file = skill_dir / "SKILL.md"
+
+        content = (
+            f"---\n"
+            f"name: {skill_name}\n"
+            f"description: \"{meta['domain']}\"\n"
+            f"version: 1.0.0\n"
+            f"verified_by: SPE_OMEGA_AUTONOMOUS_SKILL_AUTHORITY\n"
+            f"---\n\n"
+            f"# {meta['domain']}: {skill_name}\n\n"
+            f"## Operational Directives\n"
+            f"- Apply verified domain invariants for {meta['domain'].lower()}.\n"
+            f"- Strictly enforce safety and avoid ad-hoc heuristic workarounds.\n"
+            f"- Maintain complete documentation and test integrity.\n"
+        )
+
+        safe, msg = self.audit_skill_safety(content)
+        if not safe:
+            return False, msg
+
+        skill_file.write_text(content, encoding="utf-8")
+        self.installed_skills.add(skill_name)
+        return True, str(skill_file)

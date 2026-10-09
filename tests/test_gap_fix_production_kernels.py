@@ -24,6 +24,7 @@ from spe_runtime.production_bridge import (
     PermissionEscalationError,
     ReleaseAuditorAdapter,
     TriOriginDiagnosticAdapter,
+    ContinuationAuditorAdapter,
 )
 from spe_runtime.cli.main import main as cli_main
 from spe_runtime.runtime_gateway.wire_proxy import (
@@ -521,5 +522,208 @@ def test_kernel1_tri_origin_diagnostic_adapter_diamond_topological_sort():
         invalidated_node_id="ROOT",
     )
     assert demoted == ["MID_A", "LEAF_C"]
+
+
+# ==============================================================================
+# KERNEL 1: CONTINUATION AUDITOR ADAPTER TESTS (WDIC-VCT & CWC)
+# ==============================================================================
+
+def test_kernel1_continuation_auditor_adapter_anti_omission():
+    """
+    Verifies that unasserted requirements remain UNVERIFIED despite 126 passing tests (Anti-Omission Law).
+    Ensures that the 6-clause Next Task Contract is synthesized with S-Capsule literature and skills.
+    """
+    raw_report = (
+        "TASK: Implement secure session recovery.\n"
+        "RESULT: Implementation completed successfully.\n"
+        "TESTS: 126 passed. 0 failed. 3 skipped.\n"
+        "FILES: session.py recovery.py test_recovery.py\n"
+        "COMMIT: 4f8a9b2c\n"
+        "R-01 Session Serialization: passed with full test coverage.\n"
+    )
+
+    bundle = ContinuationAuditorAdapter.audit_and_continue(
+        report_text=raw_report,
+        task_id="task-recovery-001",
+        mission_id="MISSION-AUTH-01",
+        requirements=["R-01", "R-17"],
+        baseline_ref="4f8a9b2c",
+    )
+
+    # 1. Audit counts and verdict
+    assert bundle["verdict"] == "DEFICIT_DETECTED"
+    assert bundle["total_requirements"] == 2
+    assert bundle["verified_count"] == 1
+    assert bundle["unverified_count"] == 1
+    assert bundle["contradicted_count"] == 0
+    assert bundle["anti_omission_status"] == "ENFORCED"
+
+    # 2. Deficit targets omitted R-17
+    assert bundle["deficit"]["open_requirements"] == ["R-17"]
+    assert bundle["deficit"]["deficit_count"] == 1
+
+    # 3. Next Task Contract validation
+    contract = bundle["next_task_contract"]
+    assert contract is not None
+    assert "R-17" in contract["task_title"]
+    assert contract["baseline_ref"] == "4f8a9b2c"
+    assert contract["allowed_files"] == ["session.py", "recovery.py", "test_recovery.py"]
+    assert len(contract["execution_steps"]) >= 4
+    assert len(contract["stop_boundaries"]) >= 3
+    assert "```spe-task" in contract["markdown"]
+
+    # 4. S-Capsule and active skills attached
+    assert bundle["empirical_blueprint"] is not None
+    assert "arXiv" in bundle["empirical_blueprint"]["identifier"] or "doi" in bundle["empirical_blueprint"]["identifier"]
+    assert len(bundle["skills_injected"]) > 0
+
+    # 5. Distinguishing witness probe
+    assert bundle["distinguishing_probe"] is not None
+    assert bundle["distinguishing_probe"]["cost_nano_usd"] == 0
+
+    # 6. Strict zero-cost economics
+    assert bundle["cost_nano_usd"] == 0
+    assert bundle["estimated_savings_tokens"] >= 4000
+    assert bundle["estimated_savings_usd"] > 0.0
+    assert len(bundle["tamper_proof_seal"]) == 64
+
+
+def test_kernel1_continuation_auditor_adapter_scope_boundary_violation():
+    """Verifies that unauthorized modification of prohibited files triggers BLOCKED_CONTRADICTION."""
+    raw_report = (
+        "TASK: Update config\n"
+        "RESULT: Done\n"
+        "TESTS: 20 passed. 0 failed.\n"
+        "FILES: session.py .env\n"
+        "R-01 passed.\n"
+    )
+
+    bundle = ContinuationAuditorAdapter.audit_and_continue(
+        report_text=raw_report,
+        requirements=["R-01"],
+        prohibited_files=[".env", "secrets.json"],
+    )
+
+    assert bundle["verdict"] == "BLOCKED_CONTRADICTION"
+    assert bundle["contradicted_count"] >= 1
+    assert any(c["status"] == "CONTRADICTED" for c in bundle["claims"])
+    assert bundle["next_task_contract"] is not None
+    assert "Repair Contradiction" in bundle["next_task_contract"]["task_title"]
+
+
+def test_kernel1_continuation_auditor_adapter_regression_triggers_repair():
+    """Verifies that failing test runs trigger regression repair priority."""
+    raw_report = (
+        "TASK: Optimize memory\n"
+        "RESULT: Failed assertion\n"
+        "TESTS: 50 passed. 3 failed.\n"
+        "FILES: cache.py\n"
+        "R-01 passed.\n"
+    )
+
+    bundle = ContinuationAuditorAdapter.audit_and_continue(
+        report_text=raw_report,
+        requirements=["R-01"],
+    )
+
+    assert bundle["verdict"] == "BLOCKED_CONTRADICTION"
+    assert "TEST_REGRESSION" in bundle["deficit"]["contradicted_requirements"]
+    assert bundle["next_task_contract"] is not None
+    assert "TEST_REGRESSION" in bundle["next_task_contract"]["task_title"]
+
+
+def test_kernel1_continuation_auditor_adapter_qualified_all_passed():
+    """Verifies that fully verified tasks emit QUALIFIED with zero remaining deficit."""
+    raw_report = (
+        "TASK: Build microcode\n"
+        "RESULT: All specifications asserted\n"
+        "TESTS: 100 passed. 0 failed.\n"
+        "FILES: kernel.py\n"
+        "R-01 passed and asserted.\n"
+        "R-02 passed and asserted.\n"
+    )
+
+    bundle = ContinuationAuditorAdapter.audit_and_continue(
+        report_text=raw_report,
+        requirements=["R-01", "R-02"],
+    )
+
+    assert bundle["verdict"] == "QUALIFIED"
+    assert bundle["verified_count"] == 2
+    assert bundle["unverified_count"] == 0
+    assert bundle["contradicted_count"] == 0
+    assert bundle["deficit"]["deficit_count"] == 0
+    assert bundle["next_task_contract"] is None
+    assert bundle["next_task_markdown"] == ""
+
+
+def test_kernel1_continuation_auditor_adapter_dependency_invalidation():
+    """Verifies that CWC selectively invalidates proofs when their dependent files change."""
+    verified_obs = {
+        "PROOF-AUTH": ["session.py", "token.py"],
+        "PROOF-STORAGE": ["storage.py"],
+    }
+
+    raw_report = (
+        "TASK: Storage enhancement\n"
+        "RESULT: Storage updated\n"
+        "TESTS: 10 passed. 0 failed.\n"
+        "FILES: storage.py\n"
+    )
+
+    bundle = ContinuationAuditorAdapter.audit_and_continue(
+        report_text=raw_report,
+        verified_obligations=verified_obs,
+    )
+
+    # PROOF-AUTH depends on session.py and token.py (untouched) -> reusable
+    assert "PROOF-AUTH" in bundle["reusable_proofs"]
+    # PROOF-STORAGE depends on storage.py (modified) -> invalidated
+    assert "PROOF-STORAGE" in bundle["invalidated_proofs"]
+
+
+def test_kernel1_continuation_cli_command_battery(tmp_path):
+    """Verifies that `spe continue` and `spe continue-task` execute with zero exit code and correct artifacts."""
+    out_json = tmp_path / "cli_continuation.json"
+    out_contract = tmp_path / "cli_contract.md"
+
+    # 1. Standard execution with file outputs
+    ret = cli_main([
+        "continue",
+        "--out", str(out_json),
+        "--out-contract", str(out_contract),
+    ])
+    assert ret == 0
+    assert out_json.exists()
+    assert out_contract.exists()
+
+    data = json.loads(out_json.read_text(encoding="utf-8"))
+    assert data["verdict"] == "DEFICIT_DETECTED"
+    assert data["cost_nano_usd"] == 0
+    assert data["estimated_savings_tokens"] >= 4000
+    assert data["next_task_contract"] is not None
+
+    contract_md = out_contract.read_text(encoding="utf-8")
+    assert "```spe-task" in contract_md
+    assert "EXECUTION PLAN:" in contract_md
+
+    # 2. Strict mode on clean run passes
+    ret_strict = cli_main(["continue", "--strict"])
+    assert ret_strict == 0
+
+    # 3. Strict mode on contradiction fails with exit code 1
+    contra_file = tmp_path / "failing_report.txt"
+    contra_file.write_text("RESULT: Failed\nTESTS: 10 passed. 2 failed.\nFILES: file.py\n", encoding="utf-8")
+    ret_strict_fail = cli_main(["continue", str(contra_file), "--strict"])
+    assert ret_strict_fail == 1
+
+    # 4. JSON flag execution
+    ret_json = cli_main(["continue", "--json"])
+    assert ret_json == 0
+
+    # 5. continue-task alias execution
+    ret_alias = cli_main(["continue-task", "--json"])
+    assert ret_alias == 0
+
 
 

@@ -314,7 +314,7 @@ assert(auditData.overall_defect_detection_rate === 1.0, "Detection rate mismatch
 console.log("  ✓ audit-release verified");
 
 // 34. Tri-Origin Counterfactual Diagnosis (spe diagnose)
-console.log("\n[34/34] Testing diagnose");
+console.log("\n[34/35] Testing diagnose");
 const diagnoseOutPath = join(tempDir, "sample_diagnosis.json");
 const diagnoseOut = runCli(`diagnose "DISC-TEST-01" --origin WORLD --out "${diagnoseOutPath}"`);
 assert(diagnoseOut.includes("TRI-ORIGIN COUNTERFACTUAL DIAGNOSIS") && diagnoseOut.includes("DISCRIMINATED"), "Diagnose output missing expected header or status");
@@ -327,11 +327,30 @@ assert(diagData.precommitment_hash, "Precommitment hash missing");
 assert(diagData.selected_probe && diagData.selected_probe.is_authorized, "Selected probe missing or unauthorized");
 console.log("  ✓ diagnose verified");
 
+// 35. Task Continuation & Audit (spe continue)
+console.log("\n[35/35] Testing continue");
+const continueOutPath = join(tempDir, "sample_continuation.json");
+const continueContractPath = join(tempDir, "sample_next_contract.md");
+const continueOut = runCli(`continue --out "${continueOutPath}" --out-contract "${continueContractPath}"`);
+assert(continueOut.includes("WDIC-VCT CONTINUATION ENGINE") && continueOut.includes("DEFICIT_DETECTED"), "Continue output missing expected header or verdict");
+assert(existsSync(continueOutPath), "sample_continuation.json not created");
+assert(existsSync(continueContractPath), "sample_next_contract.md not created");
+const contData = JSON.parse(readFileSync(continueOutPath, "utf-8"));
+assert(contData.verdict === "DEFICIT_DETECTED", "Continuation verdict mismatch");
+assert(contData.cost_nano_usd === 0, "Cost must be strictly 0 NanoUSD");
+assert(contData.estimated_savings_tokens >= 4000, "Must save at least 4000 tokens");
+assert(contData.next_task_contract, "Next task contract missing");
+assert(contData.empirical_blueprint, "S-Capsule empirical blueprint missing");
+assert(contData.skills_injected && contData.skills_injected.length > 0, "Active skills missing");
+const contractMd = readFileSync(continueContractPath, "utf-8");
+assert(contractMd.includes("```spe-task") && contractMd.includes("EXECUTION PLAN:"), "Contract markdown structure invalid");
+console.log("  ✓ continue verified");
+
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 34 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 35 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");
 
 

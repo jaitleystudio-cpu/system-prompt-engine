@@ -13,6 +13,7 @@ Features:
 """
 
 import hashlib
+import os
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional, Set, Tuple
@@ -21,6 +22,7 @@ from spe_runtime.research.wdic_vct.evidence_capsules import (
     EvidenceCapsule,
     EvidenceCapsuleRetriever,
 )
+from spe_runtime.research.wdic_vct.dep_scanner import ASTDependencyScanner
 from spe_runtime.research.wdic_vct.skill_autoinstaller import (
     SkillAutoInstaller,
     SkillInstallationProposal,
@@ -170,12 +172,22 @@ class CWCWitnessEngine:
         self,
         verified_obligations: Dict[str, List[str]],  # req_id -> [dependent_file_paths]
         files_modified: List[str],
+        repo_root: Optional[str] = None,
     ) -> Tuple[Set[str], Set[str]]:
         """
         Calculates incremental proof reuse across hundreds of tasks.
+        If repo_root is provided, uses ASTDependencyScanner to compute
+        the full transitive invalidation cone.
         Returns: (reusable_obligations, invalidated_obligations).
         """
-        modified_set = set(files_modified)
+        if repo_root and os.path.exists(repo_root):
+            scanner = ASTDependencyScanner(repo_root)
+            scanner.scan_repository()
+            invalidation_cone = scanner.compute_invalidation_cone(files_modified)
+            modified_set = set(files_modified) | invalidation_cone
+        else:
+            modified_set = set(files_modified)
+
         reusable: Set[str] = set()
         invalidated: Set[str] = set()
 
@@ -195,6 +207,7 @@ class CWCWitnessEngine:
         report: TaskReport,
         verified_obligations: Dict[str, List[str]],
         all_required_requirements: List[str],
+        repo_root: Optional[str] = None,
     ) -> Tuple[CWCReviewedReceipt, NextTaskContract]:
         """
         Comprehensive CWC execution loop.
@@ -202,7 +215,7 @@ class CWCWitnessEngine:
         """
         # 1. Dependency Invalidation
         reusable, invalidated = self.compute_invalidation_matrix(
-            verified_obligations, report.files_modified
+            verified_obligations, report.files_modified, repo_root=repo_root
         )
 
         # 2. Kleene-4 claim assessment

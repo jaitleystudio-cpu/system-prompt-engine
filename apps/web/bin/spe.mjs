@@ -115,6 +115,7 @@ ${bold('COMMANDS:')}
   ${green('keygen')}                   Generate Ed25519 cryptographic signing keypair
   ${green('audit-release')}            Run AEQ Independent Release Audit ($1,500 Standard)
   ${green('diagnose')}         [disc]   Run Tri-Origin Counterfactual Diagnosis (G vs W vs V)
+  ${green('continue')}         [report] Audit agent report, run T0 verification, and compile next task contract
 
 ${bold('OPTIONS:')}
   --target <dialect>     Model dialect: claude-xml, openai-markdown, gemini-agent, cursor-rules, open-weights
@@ -229,7 +230,9 @@ try {
     case 'trace':
     case 'keygen':
     case 'audit-release':
-    case 'diagnose': {
+    case 'diagnose':
+    case 'continue':
+    case 'continue-task': {
       runPythonCli(command, args.slice(1));
       break;
     }

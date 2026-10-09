@@ -24,6 +24,9 @@ from spe_runtime.research.wdic_vct.skill_autoinstaller import (
     SkillInstallationProposal,
     SkillAutoInstaller,
 )
+from spe_runtime.research.wdic_vct.dep_scanner import (
+    ASTDependencyScanner,
+)
 from spe_runtime.research.wdic_vct.cwc_witness import (
     ProbeType,
     CounterfactualProbe,
@@ -44,6 +47,7 @@ __all__ = [
     "SkillRequirement",
     "SkillInstallationProposal",
     "SkillAutoInstaller",
+    "ASTDependencyScanner",
     "ProbeType",
     "CounterfactualProbe",
     "CWCReviewedReceipt",
