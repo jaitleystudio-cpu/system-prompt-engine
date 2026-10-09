@@ -84,7 +84,7 @@ class A2ADelegationContract:
     max_subdelegation_depth: int = 0
 
 
-class SecurityPolicyViolationError(PermissionError):
+class SecurityPolicyViolationError(PermissionError, ValueError):
     """Raised when an operation violates security policy, lattice confidentiality, or air-gap egress boundary."""
 
 
