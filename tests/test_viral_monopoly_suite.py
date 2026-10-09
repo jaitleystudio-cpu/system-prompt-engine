@@ -446,3 +446,148 @@ def test_repo_auditor_scan_and_diff(tmp_path: Path):
     assert "Trojan Horse" not in md
     assert "Monopoly" not in md
     assert "base_url=\"http://localhost:8080/v1\"" in md
+
+
+def test_wire_proxy_2pc_nanousd_escrow_and_proof_headers():
+    """
+    Verifies Gap 2 Drop-in Proxy 2PC Financial Escrow and Cryptographic Proof Headers:
+    - 2PC Escrow locks ceiling budget in integer NanoUSD (1 USD = 10^9 Nanos)
+    - DACO offload commits 0 nanos and refunds 100% of escrow
+    - Exact financial conservation: Ledger.balance + spent == initial_balance
+    - Injects x-spe-receipt, x-spe-airgap-status, x-spe-invariants-verified
+    """
+    proxy_port = find_free_port()
+    initial_nanos = 1_000_000_000  # $1.00 USD
+    server = WireProxyServer(
+        host="127.0.0.1",
+        port=proxy_port,
+        upstream_url=None,
+        initial_ledger_balance_nanos=initial_nanos,
+    )
+    server.start()
+
+    try:
+        base_url = server.base_url
+        auth_hdr = f"Bearer {server.api_key}"
+
+        # 1. Test DACO request with 2PC Escrow ceiling
+        req_daco = urllib.request.Request(
+            f"{base_url}/chat/completions",
+            data=json.dumps({
+                "model": "gpt-4o",
+                "messages": [{"role": "user", "content": "compute (45 * 20) + 100"}],
+            }).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": auth_hdr,
+                "x-spe-max-budget-nanos": "25000000",  # 25M nanos ($0.025)
+            },
+        )
+        with urllib.request.urlopen(req_daco) as resp:
+            assert resp.status == 200
+            assert resp.headers.get("x-spe-offloaded") == "true"
+            assert resp.headers.get("x-spe-technique") == "DACO_AST_OFFLOAD"
+            assert resp.headers.get("x-spe-airgap-status") == "ENFORCED"
+            assert resp.headers.get("x-spe-receipt").startswith("sha256:")
+            assert resp.headers.get("x-spe-invariants-verified") is not None
+            assert int(resp.headers.get("x-spe-invariants-verified")) >= 3
+
+            # 2PC Escrow Headers
+            escrow_id = resp.headers.get("x-spe-escrow-id")
+            assert escrow_id is not None
+            assert resp.headers.get("x-spe-escrow-consumed-nanos") == "0"
+            assert resp.headers.get("x-spe-escrow-refunded-nanos") == "25000000"
+
+            data = json.loads(resp.read().decode())
+            assert data["choices"][0]["message"]["content"] == "1000.0"
+
+        # Financial conservation check on ledger
+        assert server.escrow.ledger.balance == initial_nanos
+        assert server.escrow.total_spent_nanos == 0
+
+        # 2. Test Offline Mock request with 2PC Escrow
+        req_mock = urllib.request.Request(
+            f"{base_url}/chat/completions",
+            data=json.dumps({
+                "model": "gpt-4o",
+                "messages": [{"role": "user", "content": "summarize this text safely"}],
+            }).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": auth_hdr,
+                "x-spe-max-budget-nanos": "15000000",
+            },
+        )
+        with urllib.request.urlopen(req_mock) as resp:
+            assert resp.status == 200
+            assert resp.headers.get("x-spe-backend") == "LOCAL_OFFLINE_MOCK"
+            assert resp.headers.get("x-spe-airgap-status") == "ENFORCED"
+            assert resp.headers.get("x-spe-receipt").startswith("sha256:")
+            assert resp.headers.get("x-spe-escrow-consumed-nanos") == "0"
+            assert resp.headers.get("x-spe-escrow-refunded-nanos") == "15000000"
+
+        # Ledger remains exactly balanced
+        assert server.escrow.ledger.balance == initial_nanos
+
+    finally:
+        server.stop()
+
+
+def test_wire_proxy_tool_capability_firewall_out_of_band():
+    """
+    Verifies that Wire Proxy inspects declared tools and blocks destructive tool calls
+    out-of-band when no CapabilityGrant exists, aborting 2PC escrow cleanly.
+    """
+    proxy_port = find_free_port()
+    initial_nanos = 500_000_000
+    server = WireProxyServer(
+        host="127.0.0.1",
+        port=proxy_port,
+        upstream_url=None,
+        initial_ledger_balance_nanos=initial_nanos,
+    )
+    server.start()
+
+    try:
+        base_url = server.base_url
+        auth_hdr = f"Bearer {server.api_key}"
+
+        # Request with ungranted destructive tool definition
+        payload = {
+            "model": "gpt-4o",
+            "messages": [{"role": "user", "content": "clean up old log files"}],
+            "tools": [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "delete_file",
+                        "description": "Delete a file from disk",
+                    },
+                }
+            ],
+        }
+        req = urllib.request.Request(
+            f"{base_url}/chat/completions",
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": auth_hdr,
+                "x-spe-max-budget-nanos": "30000000",
+            },
+        )
+        with urllib.request.urlopen(req) as resp:
+            assert resp.status == 200
+            assert resp.headers.get("x-spe-blocked") == "true"
+            assert resp.headers.get("x-spe-firewall-decision") == "DENY"
+            assert resp.headers.get("x-spe-escrow-aborted") == "true"
+
+            data = json.loads(resp.read().decode())
+            assert data["spe_decision"] == "BLOCKED_BY_FIREWALL"
+            assert "CapabilityFirewall" in data["choices"][0]["message"]["content"]
+
+        # 100% refund confirmed: ledger balance untouched despite abort
+        assert server.escrow.ledger.balance == initial_nanos
+
+    finally:
+        server.stop()
+

@@ -320,3 +320,59 @@ def test_failure_genome_full_lifecycle(tmp_path: Path):
     assert len(summary["candidate_repairs"]) >= 2
     assert any("BOUNDARY_GUARD" in r for r in summary["candidate_repairs"])
 
+
+def test_evidence_generator_defaults_and_rendering(tmp_path: Path):
+    """Verify EvidenceGenerator synthesis, HTML rendering, and directory export."""
+    from spe_runtime.failure_genome.evidence_generator import (
+        EvidenceGenerator,
+        FailureGenomeReport,
+        ModelPassport,
+        BenchmarkShowdown,
+    )
+
+    # 1. Failure Genome Reports
+    records = EvidenceGenerator.default_failure_genome_records()
+    assert len(records) >= 2
+    for r in records:
+        assert isinstance(r, FailureGenomeReport)
+        assert r.failure_id.startswith("SPE-FG-")
+        assert len(r.spe_vaccine_contract) > 10
+        html = EvidenceGenerator.render_failure_genome_html(r)
+        assert "<!DOCTYPE html>" in html
+        assert r.failure_id in html
+        assert "SPE Vaccine" in html
+
+    # 2. Model Passports
+    passports = EvidenceGenerator.default_model_passports()
+    assert len(passports) >= 5
+    for p in passports:
+        assert isinstance(p, ModelPassport)
+        assert 0.0 <= p.negative_rule_preservation_score <= 1.0
+        assert 0.0 <= p.unauthorized_delegation_rate <= 1.0
+        assert isinstance(p.cost_per_verified_task_nanos, int)
+        assert p.cost_per_verified_task_nanos >= 0
+        html = EvidenceGenerator.render_model_passport_html(p)
+        assert "<!DOCTYPE html>" in html
+        assert p.model_id in html
+        assert "Model Passport" in html
+
+    # 3. Benchmark Showdowns
+    showdowns = EvidenceGenerator.default_benchmark_showdowns()
+    assert len(showdowns) >= 3
+    for s in showdowns:
+        assert isinstance(s, BenchmarkShowdown)
+        assert len(s.comparison_dimensions) >= 3
+        html = EvidenceGenerator.render_benchmark_showdown_html(s)
+        assert "<!DOCTYPE html>" in html
+        assert s.title in html
+        assert "Side-by-Side Architectural Comparison" in html
+
+    # 4. Directory export
+    export_dir = tmp_path / "evidence_export"
+    written = EvidenceGenerator.export_all_to_directory(export_dir)
+    assert len(written) == len(records) + len(passports) + len(showdowns)
+    for f in written:
+        assert f.exists()
+        assert f.stat().st_size > 200
+
+

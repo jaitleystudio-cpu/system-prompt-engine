@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPE Ω vs Promptfoo: Compile-Time $0 WASM vs $50 Cloud Token Burn | SPE Ω Benchmark Showdown</title>
-  <meta name="description" content="Why static compile-time AST verification beats brute-force LLM evaluation loops.">
+  <title>SPE Ω vs Langfuse / LangSmith: Active Invariant Enforcement vs Passive Post-Mortem Logging | SPE Ω Benchmark Showdown</title>
+  <meta name="description" content="Preventing semantic drift before execution beats observing catastrophic failures in telemetry dashboards.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://systempromptengine.com/compare/spe-vs-promptfoo">
+  <link rel="canonical" href="https://systempromptengine.com/compare/spe-vs-langfuse">
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #07090e; color: #e2e8f0; margin: 0; padding: 40px 20px; line-height: 1.6; }
     .container { max-width: 880px; margin: 0 auto; }
@@ -27,30 +27,28 @@
   <div class="container">
     <header>
       <span class="badge">HEAD_TO_HEAD_SHOWDOWN &bull; EMPIRICAL</span>
-      <h1>SPE Ω vs Promptfoo: Compile-Time $0 WASM vs $50 Cloud Token Burn</h1>
-      <p class="lead">Why static compile-time AST verification beats brute-force LLM evaluation loops.</p>
+      <h1>SPE Ω vs Langfuse / LangSmith: Active Invariant Enforcement vs Passive Post-Mortem Logging</h1>
+      <p class="lead">Preventing semantic drift before execution beats observing catastrophic failures in telemetry dashboards.</p>
     </header>
 
     <main>
       <div class="box">
         <h2>Side-by-Side Architectural Comparison</h2>
         <table>
-          <tr><th>Evaluation Dimension</th><th>SPE Ω (Compile-Time Kernel)</th><th>Promptfoo</th></tr>
-          <tr><td><strong>Evaluation Architecture</strong></td><td>Compile-time deterministic Horn-SAT + Kleene-3 logic in 1.33MB WASM (0ms, $0)</td><td>Brute-force cloud API prompting with LLM-as-a-judge ($50 token burn per run)</td></tr><tr><td><strong>Air-Gap & Data Privacy</strong></td><td>100% offline air-gapped execution; zero egress, zero external network sockets</td><td>Transmits prompts and test vectors to external third-party model APIs</td></tr><tr><td><strong>Proof of Invariance</strong></td><td>RFC 8785 Ed25519 cryptographic receipts with counterfactual test witness</td><td>Heuristic markdown scoring with floating-point assertion pass/fail</td></tr>
+          <tr><th>Evaluation Dimension</th><th>SPE Ω (Compile-Time Kernel)</th><th>Langfuse</th></tr>
+          <tr><td><strong>Intervention Phase</strong></td><td>Pre-execution compile-time gate + in-flight capability firewall (Zero Drift Sentry)</td><td>Post-execution telemetry tracing; records failure after user impact has occurred</td></tr><tr><td><strong>Financial Escrow</strong></td><td>2PC Financial Escrow with exact integer NanoUSD accounting and instant refund</td><td>Estimated floating-point cost reporting without active budgetary halt gates</td></tr><tr><td><strong>Local Performance</strong></td><td>Sub-millisecond AST evaluation on local metal; zero database overhead</td><td>Remote ingestion pipeline requiring PostgreSQL/ClickHouse cluster sync</td></tr>
         </table>
       </div>
 
       <div class="box">
         <h2>Offline Reproducible Test Vector</h2>
         <pre>{
-  "test_vector_id": "VEC-SPE-VS-PROMPTFOO-01",
-  "prompt_size_chars": 2500,
-  "spe_latency_ms": 1.2,
-  "spe_cost_usd": 0.0,
-  "promptfoo_latency_ms": 4200.0,
-  "promptfoo_cost_usd": 0.048
+  "test_vector_id": "VEC-SPE-VS-LANGFUSE-01",
+  "intervention": "Pre-flight invariant breach interception",
+  "spe_damage_usd": 0.0,
+  "competitor_damage_usd": "Full execution cost + potential unauthorized effect"
 }</pre>
-        <p><strong>Empirical Verdict:</strong> SPE Ω compiles invariants deterministically at pre-commit in 1.2ms for $0.00, while Promptfoo requires network roundtrips and recurring token spend.</p>
+        <p><strong>Empirical Verdict:</strong> SPE Ω stops failures at the gate via fail-closed invariants; passive observability platforms merely log the incident post-mortem.</p>
       </div>
     </main>
 

@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anthropic claude-3-7-sonnet: Empirical Model Passport | SPE Ω</title>
-  <meta name="description" content="Verified empirical benchmark data for claude-3-7-sonnet: negative rule preservation, drift rates, and cost per verified task.">
+  <title>DeepSeek deepseek-r1: Empirical Model Passport | SPE Ω</title>
+  <meta name="description" content="Verified empirical benchmark data for deepseek-r1: negative rule preservation, drift rates, and cost per verified task.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://systempromptengine.com/models/anthropic/claude-3-7-sonnet">
+  <link rel="canonical" href="https://systempromptengine.com/models/deepseek/deepseek-r1">
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #07090e; color: #e2e8f0; margin: 0; padding: 40px 20px; line-height: 1.6; }
     .container { max-width: 840px; margin: 0 auto; }
@@ -27,7 +27,7 @@
   <div class="container">
     <header>
       <span class="badge">EMPIRICAL_PASSPORT &bull; VERIFIED</span>
-      <h1>Anthropic claude-3-7-sonnet Model Passport</h1>
+      <h1>DeepSeek deepseek-r1 Model Passport</h1>
       <p class="lead">Standardized empirical drift and rule-retention evaluation under SPE Ω control plane.</p>
     </header>
 
@@ -36,10 +36,10 @@
         <h2>Verified Empirical Scores</h2>
         <table>
           <tr><th>Evaluation Metric</th><th>Score</th><th>Benchmark Protocol</th></tr>
-          <tr><td>Negative Rule Preservation</td><td>98.0%</td><td>Handoff under 25-word summary load</td></tr>
-          <tr><td>Unauthorized Delegation Rate</td><td>0.80%</td><td>MasDrift multi-agent privilege test</td></tr>
-          <tr><td>SpecBench Generalization Ratio</td><td>5.2x</td><td>Held-out vs memorized tasks</td></tr>
-          <tr><td>Cost-per-Verified-Task</td><td>2100 NanoUSD</td><td>Exact integer 2PC escrow accounting</td></tr>
+          <tr><td>Negative Rule Preservation</td><td>95.0%</td><td>Handoff under 25-word summary load</td></tr>
+          <tr><td>Unauthorized Delegation Rate</td><td>1.50%</td><td>MasDrift multi-agent privilege test</td></tr>
+          <tr><td>SpecBench Generalization Ratio</td><td>4.8x</td><td>Held-out vs memorized tasks</td></tr>
+          <tr><td>Cost-per-Verified-Task</td><td>800 NanoUSD</td><td>Exact integer 2PC escrow accounting</td></tr>
         </table>
       </div>
 
@@ -47,7 +47,7 @@
         <h2>Integration Directive</h2>
         <pre>client = OpenAI(base_url="http://localhost:8080/v1", api_key="spe-local")
 response = client.chat.completions.create(
-    model="claude-3-7-sonnet",
+    model="deepseek-r1",
     messages=[{"role": "user", "content": "Execute verified workflow"}]
 )</pre>
       </div>

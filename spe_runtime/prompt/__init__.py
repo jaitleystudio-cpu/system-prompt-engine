@@ -13,6 +13,7 @@ from spe_runtime.prompt.meta_compiler import (
     DriftVerdict,
     ExecutionPlacementCertificate,
     GeneratedMasterSystemPrompt,
+    InvariantGuarantees,
     MasterExecutionPlan,
     MetaPromptCompiler,
     Obligation,
@@ -20,6 +21,8 @@ from spe_runtime.prompt.meta_compiler import (
     ProtectedIntent,
     SemanticDriftViolationError,
     SelfVerifyingCompletionHarness,
+    SynthesisMode,
+    TwoSpeedSynthesisResult,
     ZeroDriftSentry,
 )
 
@@ -31,6 +34,7 @@ __all__ = [
     "DriftVerdict",
     "ExecutionPlacementCertificate",
     "GeneratedMasterSystemPrompt",
+    "InvariantGuarantees",
     "MasterExecutionPlan",
     "MetaPromptCompiler",
     "Obligation",
@@ -38,5 +42,7 @@ __all__ = [
     "ProtectedIntent",
     "SemanticDriftViolationError",
     "SelfVerifyingCompletionHarness",
+    "SynthesisMode",
+    "TwoSpeedSynthesisResult",
     "ZeroDriftSentry",
 ]
