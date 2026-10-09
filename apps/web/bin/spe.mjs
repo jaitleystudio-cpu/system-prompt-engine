@@ -113,6 +113,7 @@ ${bold('COMMANDS:')}
   ${green('explain')}     [clause]     Query Causal Proof Graph for clause origin and requirement trace
   ${green('trace')}       [-r req-id]  Trace requirement forward across Causal Proof Graph enforcements
   ${green('keygen')}                   Generate Ed25519 cryptographic signing keypair
+  ${green('audit-release')}            Run AEQ Independent Release Audit ($1,500 Standard)
 
 ${bold('OPTIONS:')}
   --target <dialect>     Model dialect: claude-xml, openai-markdown, gemini-agent, cursor-rules, open-weights
@@ -212,7 +213,8 @@ try {
     case 'sbom':
     case 'explain':
     case 'trace':
-    case 'keygen': {
+    case 'keygen':
+    case 'audit-release': {
       runPythonCli(command, args.slice(1));
       break;
     }

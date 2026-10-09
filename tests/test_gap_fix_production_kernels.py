@@ -22,6 +22,7 @@ from spe_runtime.production_bridge import (
     MorphingEngine,
     ObligationDroppedError,
     PermissionEscalationError,
+    ReleaseAuditorAdapter,
 )
 from spe_runtime.runtime_gateway.wire_proxy import (
     PagedAttentionKVAligner,
@@ -302,3 +303,37 @@ def test_kernel3_progressive_disclosure_level3_trace():
     assert "CPG Lineage DAG:" in rendered
     assert "2PC Escrow State: PREPARED ➔ COMMITTED" in rendered
     assert result.trace_graph is not None
+
+
+def test_kernel1_release_auditor_adapter_full_audit():
+    """Verifies that ReleaseAuditorAdapter executes full 500-case AEQ benchmark and returns tamper-evident bundle."""
+    bundle = ReleaseAuditorAdapter.audit_release(target_agent="AutonomousFinancialTrader")
+
+    assert bundle["verdict"] == "RELEASE_QUALIFIED"
+    assert bundle["target_agent"] == "AutonomousFinancialTrader"
+    assert bundle["total_cases_evaluated"] == 500
+    assert bundle["overall_defect_detection_rate"] == 1.0
+    assert bundle["anti_lucky_pass_status"] == "ENFORCED"
+    assert bundle["regulatory_standard"] == "SPE-AEQ-20261009"
+    assert len(bundle["tamper_proof_seal"]) == 64
+    assert len(bundle["fault_families_audited"]) == 5
+    assert bundle["hypotheses_verification"]["H1_defect_detection_ge_95"] is True
+    assert bundle["hypotheses_verification"]["H2_zero_false_rejections"] is True
+    assert bundle["hypotheses_verification"]["H3_statistically_superior_to_c"] is True
+
+
+def test_kernel1_release_auditor_adapter_with_output_path(tmp_path):
+    """Verifies that audit package is correctly saved to an air-gapped output file."""
+    out_file = tmp_path / "release_audit.json"
+    bundle = ReleaseAuditorAdapter.audit_release(
+        target_agent="PaymentEscrowAgent",
+        output_path=str(out_file),
+        split_filter="DEV",
+    )
+
+    assert out_file.exists()
+    saved = json.loads(out_file.read_text(encoding="utf-8"))
+    assert saved["audit_id"] == bundle["audit_id"]
+    assert saved["total_cases_evaluated"] == 200
+    assert saved["verdict"] == "RELEASE_QUALIFIED"
+

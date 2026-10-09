@@ -50,6 +50,7 @@ from spe_runtime.production_bridge import (
     EvidenceClosureAdapter,
     ConservationBus,
     MorphingEngine,
+    ReleaseAuditorAdapter,
     HonestTaskProjection,
     AntiSelfCertificationError,
     ObligationDroppedError,
@@ -172,9 +173,11 @@ __all__ = [
     "EvidenceClosureAdapter",
     "ConservationBus",
     "MorphingEngine",
+    "ReleaseAuditorAdapter",
     "HonestTaskProjection",
     "AntiSelfCertificationError",
     "ObligationDroppedError",
     "PermissionEscalationError",
 ]
+
 

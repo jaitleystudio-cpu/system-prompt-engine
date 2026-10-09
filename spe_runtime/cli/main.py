@@ -439,6 +439,68 @@ def cmd_keygen(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_audit_release(args: argparse.Namespace) -> int:
+    agent_name = getattr(args, "agent", None) or "CandidateAgent"
+    split = getattr(args, "split", None)
+    out_path = getattr(args, "out", None)
+    strict = getattr(args, "strict", False)
+    contract_id = getattr(args, "contract", None)
+
+    print(f"🛡️  SPE Ω — ADVERSARIAL EVIDENCE QUALIFICATION (AEQ)")
+    print(f"  Target Agent:         {agent_name}")
+    print(f"  Evaluation Mode:      Independent Release Audit ($1,500 Standard)")
+    print(f"  Quarantine Filter:    {split or 'ALL (500 cases)'}")
+
+    from spe_runtime.production_bridge import ReleaseAuditorAdapter
+
+    bundle = ReleaseAuditorAdapter.audit_release(
+        target_agent=agent_name,
+        contract_id=contract_id,
+        output_path=out_path,
+        split_filter=split,
+    )
+
+    verdict = bundle.get("verdict", "UNKNOWN")
+    detection_rate = bundle.get("overall_defect_detection_rate", 0.0) * 100.0
+    total_cases = bundle.get("total_cases_evaluated", 0)
+
+    print(f"\n  Audit Verdict:        {verdict}")
+    print(f"  Cases Evaluated:      {total_cases}")
+    print(f"  AEQ Defect Detection: {detection_rate:.1f}%")
+    print(f"  Anti-Lucky-Pass:      {bundle.get('anti_lucky_pass_status')}")
+    print(f"  Standard Reference:   {bundle.get('regulatory_standard')}")
+    print(f"  Tamper-Proof Seal:    {bundle.get('tamper_proof_seal', '')[:16]}...")
+
+    print("\n  Arm Performance Comparison:")
+    arms = bundle.get("arms_comparison", {})
+    arm_labels = {
+        "Config_A_SelfCheck": "Config A (Agent Self-Check)",
+        "Config_B_ExistingEval": "Config B (Existing Eval Framework)",
+        "Config_C_RGIC_ClosureOnly": "Config C (RGIC Evidence Closure)",
+        "Config_D_RGIC_AEQ": "Config D (RGIC + AEQ Qualifier)",
+    }
+    for arm_key, arm_data in arms.items():
+        label = arm_labels.get(arm_key, arm_key)
+        det = arm_data.get("detection_rate", 0.0) * 100.0
+        w_low = arm_data.get("wilson_lower_bound", 0.0) * 100.0
+        print(f"    - {label:<36}: {det:5.1f}% detection (95% CI lower: {w_low:5.1f}%)")
+
+    print("\n  Fault Families Audited:")
+    for fam in bundle.get("fault_families_audited", []):
+        print(f"    ✓ {fam:<30} [VERIFIED COVERAGE]")
+
+    if out_path:
+        print(f"\n✓ Audit bundle generated and sealed at: {out_path}")
+
+    if strict and verdict != "RELEASE_QUALIFIED":
+        print(f"\n❌ Strict Mode Violation: Release blocked due to inadequate evaluation ({verdict})", file=sys.stderr)
+        return 1
+
+    print("\n✓ Independent release audit completed successfully!")
+    return 0
+
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="spe", description="SPE Ω Unified Assurance CLI")
     subparsers = parser.add_subparsers(dest="subcommand", required=True)
@@ -519,6 +581,14 @@ def main(argv: list[str] | None = None) -> int:
     p_trace.add_argument("--requirement", "-r", default="REQ-FIN-01", help="Requirement ID to trace")
     p_trace.add_argument("--json", action="store_true", help="Output raw JSON")
 
+    # audit-release
+    p_audit_release = subparsers.add_parser("audit-release", help="Run independent release audit with AEQ verifier qualification")
+    p_audit_release.add_argument("--agent", default="CandidateAgent", help="Target agent name or ID under audit")
+    p_audit_release.add_argument("--contract", help="Evidence closure contract ID")
+    p_audit_release.add_argument("--split", choices=["DEV", "SEALED_TEST"], help="Quarantine split filter (DEV=200, SEALED_TEST=300)")
+    p_audit_release.add_argument("--out", help="Output path for JSON release audit bundle")
+    p_audit_release.add_argument("--strict", action="store_true", help="Fail with exit code 1 if verdict is not RELEASE_QUALIFIED")
+
     args = parser.parse_args(argv)
 
     handlers = {
@@ -536,6 +606,7 @@ def main(argv: list[str] | None = None) -> int:
         "sbom": cmd_sbom,
         "explain": cmd_explain,
         "trace": cmd_trace,
+        "audit-release": cmd_audit_release,
     }
 
     handler = handlers.get(args.subcommand)

@@ -293,7 +293,7 @@ assert(traceOut.includes("CAUSAL PROOF GRAPH TRACE") && traceOut.includes("Requi
 console.log("  ✓ trace verified");
 
 // 32. Keypair Generation (spe keygen)
-console.log("\n[32/32] Testing keygen");
+console.log("\n[32/33] Testing keygen");
 const keysDir = join(tempDir, "keys");
 const keygenOut = runCli(`keygen --out-dir "${keysDir}" --name authority_battery`);
 assert(keygenOut.includes("ED25519 SIGNING KEYPAIR GENERATED"), "Keygen output missing header");
@@ -301,10 +301,23 @@ assert(existsSync(join(keysDir, "authority_battery_private.key")), "Private key 
 assert(existsSync(join(keysDir, "authority_battery_public.key")), "Public key not generated");
 console.log("  ✓ keygen verified");
 
+// 33. Adversarial Evidence Qualification (spe audit-release)
+console.log("\n[33/33] Testing audit-release");
+const auditOutPath = join(tempDir, "sample_release_audit.json");
+const auditOut = runCli(`audit-release --agent "BatteryAutonomousAgent" --split DEV --out "${auditOutPath}"`);
+assert(auditOut.includes("ADVERSARIAL EVIDENCE QUALIFICATION") && auditOut.includes("RELEASE_QUALIFIED"), "Audit release output missing qualification verdict");
+assert(existsSync(auditOutPath), "sample_release_audit.json not created");
+const auditData = JSON.parse(readFileSync(auditOutPath, "utf-8"));
+assert(auditData.verdict === "RELEASE_QUALIFIED", "Audit data verdict mismatch");
+assert(auditData.total_cases_evaluated === 200, "Audit cases count mismatch for DEV split");
+assert(auditData.overall_defect_detection_rate === 1.0, "Detection rate mismatch");
+console.log("  ✓ audit-release verified");
+
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 32 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 33 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");
+
 
