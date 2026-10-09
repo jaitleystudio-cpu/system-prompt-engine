@@ -5,6 +5,7 @@
 
 import React, { useState } from "react";
 import { ContextualAdSlot } from "../components/ads/ContextualAdSlot";
+import { copyTextSafe } from "../engine/workflows/clipboard";
 
 interface ComparisonBenchmark {
   id: string;
@@ -77,8 +78,8 @@ const BENCHMARKS: ComparisonBenchmark[] = [
 export const HeadToHeadCompare: React.FC = () => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const copyCommand = (cmd: string, id: string) => {
-    navigator.clipboard.writeText(cmd);
+  const copyCommand = async (cmd: string, id: string) => {
+    await copyTextSafe(cmd);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2500);
   };

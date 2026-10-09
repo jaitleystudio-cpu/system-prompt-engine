@@ -25,7 +25,7 @@ export interface CompiledSkillBundle {
 }
 
 export function buildSkillMarkdown(input: SkillTemplateInput): string {
-  const slug = input.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const slug = input.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "custom-skill";
   const permissionsList = input.allowedPermissions.length > 0 ? input.allowedPermissions.join(", ") : "LOCAL_FILESYSTEM_READ";
 
   const lines = [
@@ -75,7 +75,7 @@ export function buildSkillMarkdown(input: SkillTemplateInput): string {
 export function auditAndBuildSkill(input: SkillTemplateInput): CompiledSkillBundle {
   const markdown = buildSkillMarkdown(input);
   const auditReport = auditSkillContent(markdown);
-  const slug = input.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const slug = input.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "custom-skill";
 
   const claudeCodeCommand = `mkdir -p ~/.claude/skills/${slug} && cat << 'EOF' > ~/.claude/skills/${slug}/SKILL.md\n${markdown}\nEOF`;
 

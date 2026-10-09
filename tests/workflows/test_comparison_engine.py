@@ -134,3 +134,40 @@ def test_workflow_comparison_zero_baselines_and_tie():
     assert res.token_savings_pct == 0.0
     assert res.retry_reduction_pct == 0.0
 
+
+def test_wilson_confidence_levels_and_zero_trials():
+    # Different confidence bounds: higher confidence -> wider interval -> lower lower-bound
+    w90 = compute_wilson_lower_bound(80, 100, confidence=0.90)
+    w95 = compute_wilson_lower_bound(80, 100, confidence=0.95)
+    w99 = compute_wilson_lower_bound(80, 100, confidence=0.99)
+    assert w90 > w95 > w99
+
+    # Candidates with zero total trials
+    b_empty = CandidateTrialSummary(
+        candidate_identifier="b_empty",
+        trials_total=0,
+        trials_successful=0,
+        average_token_consumption=0,
+        average_retries=0.0,
+        average_latency_ms=0,
+    )
+    c_empty = CandidateTrialSummary(
+        candidate_identifier="c_empty",
+        trials_total=0,
+        trials_successful=0,
+        average_token_consumption=0,
+        average_retries=0.0,
+        average_latency_ms=0,
+    )
+    custom_cmd = "spe bench custom --trials 0"
+    res = WorkflowComparisonEngine.compare(
+        task_slug="empty-task",
+        baseline=b_empty,
+        challenger=c_empty,
+        reproducible_command=custom_cmd,
+    )
+    assert res.winner_identifier == "STATISTICAL_TIE"
+    assert res.reproducible_command == custom_cmd
+    assert res.baseline.success_rate == 0.0
+    assert res.challenger.success_rate == 0.0
+

@@ -7,6 +7,7 @@
 import React, { useState, useMemo } from "react";
 import { auditSkillContent, type ClientAuditReport } from "../engine/workflows/clientAuditScanner";
 import { buildSkillMarkdown } from "../engine/workflows/skillBuilder";
+import { copyTextSafe } from "../engine/workflows/clipboard";
 import { ContextualAdSlot } from "../components/ads/ContextualAdSlot";
 
 export const SkillBuilderStudio: React.FC = () => {
@@ -44,8 +45,8 @@ export const SkillBuilderStudio: React.FC = () => {
   const slug = skillName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   const installCmd = `mkdir -p ~/.claude/skills/${slug} && cat << 'EOF' > ~/.claude/skills/${slug}/SKILL.md\n${compiledMarkdown}\nEOF`;
 
-  const copyInstall = () => {
-    navigator.clipboard.writeText(installCmd);
+  const copyInstall = async () => {
+    await copyTextSafe(installCmd);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };

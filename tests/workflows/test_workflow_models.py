@@ -27,8 +27,25 @@ def test_permission_ceiling_violations():
     assert violated is True
     assert any("Network" in m for m in msgs)
 
+    # Test synonym and casing: NETWORK_EGRESS, network lowercase
+    violated_egress, msgs_egress = ceiling.violates_policy({"NETWORK_EGRESS"})
+    assert violated_egress is True
+    assert any("Network" in m for m in msgs_egress)
+
+    violated_low, _ = ceiling.violates_policy({"network"})
+    assert violated_low is True
+
     violated_cred, msgs_cred = ceiling.violates_policy({"CREDENTIALS"})
     assert violated_cred is True
+
+    # Test credential synonyms
+    violated_cred_syn, _ = ceiling.violates_policy({"CREDENTIALS_ACCESS"})
+    assert violated_cred_syn is True
+
+    # Negative assertions should NOT trigger violations
+    safe_neg_net, msgs_neg = ceiling.violates_policy({"NO_NETWORK", "NO_CREDENTIALS"})
+    assert safe_neg_net is False
+    assert len(msgs_neg) == 0
 
     safe_violated, safe_msgs = ceiling.violates_policy({"FILESYSTEM_SCOPED_READ"})
     assert safe_violated is False
@@ -130,3 +147,12 @@ def test_catalog_seed_workflows_loading():
     invoice_results = catalog.search_by_intent("invoice math calculation")
     assert len(invoice_results) > 0
     assert invoice_results[0].slug == "invoice-data-extraction"
+
+    # Case-insensitive slug retrieval
+    assert catalog.get_by_slug("WEEKLY-PROJECT-STATUS") is not None
+    assert catalog.get_by_slug("  weekly-project-status  ") is not None
+
+    # Empty and non-matching query handling
+    assert len(catalog.search_by_intent("")) == len(all_workflows)
+    assert len(catalog.search_by_intent("   ")) == len(all_workflows)
+    assert len(catalog.search_by_intent("nonexistent_unknown_intent_xyz")) == 0

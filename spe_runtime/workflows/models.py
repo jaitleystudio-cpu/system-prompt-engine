@@ -36,10 +36,31 @@ class PermissionCeiling:
 
     def violates_policy(self, requested_permissions: Set[str]) -> Tuple[bool, List[str]]:
         violations = []
-        if "NETWORK" in requested_permissions and not self.allow_network:
-            violations.append("Network egress prohibited by workflow permission ceiling")
-        if "CREDENTIALS" in requested_permissions and not self.allow_credentials:
-            violations.append("Ambient credentials access prohibited by workflow ceiling")
+        negative_prefixes = ("NO_", "NON_", "DISALLOW_", "DENIED_", "WITHOUT_", "NOT_")
+
+        for perm in requested_permissions:
+            p_norm = perm.upper().strip()
+            # Safe negative assertions (e.g. NO_NETWORK, NO_CREDENTIALS) are non-violating declarations
+            if p_norm.startswith(negative_prefixes):
+                continue
+
+            if not self.allow_network:
+                if (
+                    p_norm == "NETWORK"
+                    or "NETWORK" in p_norm
+                    or "EGRESS" in p_norm
+                    or "INTERNET" in p_norm
+                ):
+                    violations.append("Network egress prohibited by workflow permission ceiling")
+
+            if not self.allow_credentials:
+                if (
+                    p_norm == "CREDENTIALS"
+                    or "CREDENTIAL" in p_norm
+                    or "SECRET" in p_norm
+                ):
+                    violations.append("Ambient credentials access prohibited by workflow ceiling")
+
         return len(violations) > 0, violations
 
 
@@ -160,10 +181,10 @@ class BusinessWorkflowCatalog:
                 self.register(w)
 
     def register(self, workflow: BusinessWorkflow) -> None:
-        self._workflows[workflow.slug] = workflow
+        self._workflows[workflow.slug.strip().lower()] = workflow
 
     def get_by_slug(self, slug: str) -> Optional[BusinessWorkflow]:
-        return self._workflows.get(slug)
+        return self._workflows.get(slug.strip().lower())
 
     def list_all(self) -> List[BusinessWorkflow]:
         return list(self._workflows.values())
@@ -174,7 +195,13 @@ class BusinessWorkflowCatalog:
     def search_by_intent(self, query: str) -> List[BusinessWorkflow]:
         import re
         q = query.lower().strip()
+        if not q:
+            return self.list_all()
+
         terms = [t for t in re.findall(r"\w+", q) if len(t) > 2]
+        if not terms:
+            return [w for w in self._workflows.values() if q in w.title.lower()]
+
         scored: List[Tuple[int, BusinessWorkflow]] = []
         for w in self._workflows.values():
             score = 0

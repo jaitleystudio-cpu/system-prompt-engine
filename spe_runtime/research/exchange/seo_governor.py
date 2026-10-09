@@ -145,6 +145,8 @@ class SeoGovernor:
         "/plugins",
         "/compare",
         "/audits",
+        "/workflows",
+        "/build-skill",
     )
 
     PRIVATE_WORKSPACE_PREFIXES = (

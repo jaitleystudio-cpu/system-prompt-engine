@@ -30,37 +30,49 @@ const DANGEROUS_PATTERNS: Array<{
     ruleId: "PIPE_TO_SHELL",
     severity: "CRITICAL",
     description: "Arbitrary remote code execution via pipe to shell",
-    pattern: /(curl|wget)\s+[^|\n]+\|\s*(bash|sh|zsh)/i,
+    pattern: /(curl|wget|fetch)\s+[^|\n]+\|\s*(sudo\s+|(\/usr)?\/bin\/)?(bash|sh|zsh|python[23]?|perl)\b/i,
+  },
+  {
+    ruleId: "EVAL_REMOTE_EXEC",
+    severity: "CRITICAL",
+    description: "Arbitrary remote code execution via eval of downloaded content",
+    pattern: /eval\s+["'`]?(\$\((curl|wget)\b|`(curl|wget)\b)/i,
+  },
+  {
+    ruleId: "BASE64_EXEC_PIPE",
+    severity: "CRITICAL",
+    description: "Obfuscated payload execution via base64 decode piped into shell",
+    pattern: /(base64\s+(-d|--decode)|openssl\s+enc\s+-[dD])\s*\|\s*(sudo\s+|(\/usr)?\/bin\/)?(bash|sh|zsh)\b/i,
   },
   {
     ruleId: "RECURSIVE_ROOT_DELETE",
     severity: "CRITICAL",
     description: "Destructive root filesystem deletion",
-    pattern: /rm\s+-(rf|fr|r)\s+(\/|~|\$HOME|\.\/|\*)/i,
+    pattern: /rm\s+(-[a-zA-Z]*[rf][a-zA-Z]*\s+-[a-zA-Z]*[rf][a-zA-Z]*|-[a-zA-Z]*r[a-zA-Z]*|--recursive(\s+--force)?)\s+(\/|~|\$HOME|\.\/|\*|\/etc|\/usr|\/var)/i,
   },
   {
     ruleId: "CREDENTIAL_EXFILTRATION",
     severity: "CRITICAL",
     description: "Access or exfiltration of sensitive credentials or environment keys",
-    pattern: /(id_rsa|\.aws\/credentials|\.env|API_KEY|SECRET_KEY|TOKEN)/i,
+    pattern: /(id_(rsa|ed25519|ecdsa|dsa)|\.ssh\/|\.aws\/credentials|\.env|\/etc\/shadow|API_KEY|SECRET_KEY|PRIVATE_KEY|TOKEN)/i,
   },
   {
     ruleId: "OUTBOUND_EXFILTRATION_SOCKET",
     severity: "HIGH",
     description: "Outbound socket or reverse shell connection",
-    pattern: /(nc|netcat)\s+-[lvpne]+\s+\d+|socat\s+|bash\s+-i\s+>&/i,
+    pattern: /(nc|netcat|ncat)\s+(-[a-zA-Z]*e\b|-[lvpne]+\s*|\d+\.\d+|\b\d{2,5}\b)|socat\s+|bash\s+-i\s+>&|\/dev\/tcp\//i,
   },
   {
     ruleId: "UNCONSTRAINED_CHMOD",
     severity: "HIGH",
     description: "Dangerous global file permission modification",
-    pattern: /chmod\s+(-R\s+)?(777|a\+rwx|u\+s)/i,
+    pattern: /chmod\s+(-[a-zA-Z]*R[a-zA-Z]*\s+|--recursive\s+)?(0?777|a\+rwx|u\+s)/i,
   },
   {
     ruleId: "RAW_DISK_WRITE",
     severity: "CRITICAL",
     description: "Direct raw block device or disk write",
-    pattern: /dd\s+if=[^\n]+of=\/dev\/(sd[a-z]|nvme|disk)/i,
+    pattern: /dd\s+[^|\n]*(of=\/dev\/(sd[a-z]|nvme|disk|rdisk|vda)|if=\/dev\/(sd[a-z]|nvme|disk|rdisk|vda))/i,
   },
 ];
 
@@ -79,6 +91,26 @@ export function auditSkillContent(content: string): ClientAuditReport {
           description: rule.description,
           matchedText: match[0],
           line: i + 1,
+        });
+      }
+    }
+  }
+
+  // Handle multiline escaped commands (e.g. bash backslash escapes `\`)
+  const normalized = content.replace(/\\\r?\n\s*/g, " ");
+  if (normalized !== content) {
+    for (const rule of DANGEROUS_PATTERNS) {
+      const match = rule.pattern.exec(normalized);
+      if (match && !violations.some((v) => v.ruleId === rule.ruleId)) {
+        const index = match.index;
+        const prefix = normalized.slice(0, index);
+        const approxLine = prefix.split("\n").length;
+        violations.push({
+          ruleId: rule.ruleId,
+          severity: rule.severity,
+          description: `${rule.description} (multiline/escaped)`,
+          matchedText: match[0],
+          line: approxLine,
         });
       }
     }

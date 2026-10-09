@@ -5,6 +5,7 @@
 
 import React, { useState, useMemo } from "react";
 import { ContextualAdSlot } from "../components/ads/ContextualAdSlot";
+import { copyTextSafe } from "../engine/workflows/clipboard";
 
 interface WorkflowItem {
   slug: string;
@@ -105,8 +106,8 @@ export const WorkflowsCatalog: React.FC<{ onNavigate?: (view: any) => void }> = 
     });
   }, [search, selectedCategory]);
 
-  const copyToClipboard = (text: string, slug: string) => {
-    navigator.clipboard.writeText(text);
+  const copyToClipboard = async (text: string, slug: string) => {
+    await copyTextSafe(text);
     setCopiedSlug(slug);
     setTimeout(() => setCopiedSlug(null), 2500);
   };
