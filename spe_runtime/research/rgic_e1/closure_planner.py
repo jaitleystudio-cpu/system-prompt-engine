@@ -16,14 +16,14 @@ class ClosurePlanner:
 
     def select_minimal_probe(self, candidate_actions: List[VerificationAction], obligation: Obligation) -> Optional[VerificationAction]:
         best_action = None
-        best_utility = float('-inf')
+        best_utility = None
 
         for action in candidate_actions:
             if not action.is_authorized:
                 continue
             
             utility = self.evaluate_action_utility(action, obligation)
-            if utility > best_utility:
+            if best_utility is None or utility > best_utility:
                 best_utility = utility
                 best_action = action
 
