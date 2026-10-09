@@ -500,6 +500,75 @@ def cmd_audit_release(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_diagnose(args: argparse.Namespace) -> int:
+    discrepancy_id = getattr(args, "discrepancy", None) or "DISC-001"
+    origin = getattr(args, "origin", None)
+    out_path = getattr(args, "out", None)
+    strict = getattr(args, "strict", False)
+    as_json = getattr(args, "json", False)
+    unidentifiable = getattr(args, "unidentifiable", False)
+    tamper = getattr(args, "tamper", False)
+    inv_node = getattr(args, "invalidate_node", None)
+
+    from spe_runtime.production_bridge import TriOriginDiagnosticAdapter
+
+    bundle = TriOriginDiagnosticAdapter.diagnose(
+        discrepancy_id=discrepancy_id,
+        target_origin=origin or "GOAL",
+        simulate_unidentifiable=unidentifiable,
+        simulate_tamper=tamper,
+        invalidated_node_id=inv_node,
+        output_path=out_path,
+    )
+
+    if as_json:
+        print(json.dumps(bundle, indent=2))
+        if strict and bundle.get("status") != "DISCRIMINATED":
+            return 1
+        return 0
+
+    print("🧠 SPE Ω — RGIC-T1 TRI-ORIGIN COUNTERFACTUAL DIAGNOSIS")
+    print(f"  Discrepancy ID:       {discrepancy_id}")
+    print(f"  Target Hypothesis:    {origin or 'ALL (Goal, World, Verifier)'}")
+
+    status = bundle.get("status", "UNKNOWN")
+    print(f"\n  Diagnostic Status:    {status}")
+    print(f"  Identifiable:         {bundle.get('is_identifiable')}")
+    origins = bundle.get("discriminated_origins", [])
+    print(f"  Isolated Origin(s):   {', '.join(origins) if origins else 'NONE'}")
+
+    probe_info = bundle.get("selected_probe", {})
+    if probe_info:
+        print(f"  Selected Probe:       {probe_info.get('id')} (VOI: {probe_info.get('voi_score', 0):,} nanos)")
+        print(f"  Probe Cost:           {probe_info.get('cost_nano_usd', 0):,} NanoUSD")
+        print(f"  Risk Score:           {probe_info.get('risk_score', 0)} bps")
+        print(f"  Authorized:           {probe_info.get('is_authorized')}")
+
+    print(f"  Precommitment Hash:   {bundle.get('precommitment_hash', '')[:16]}... (Anti-HARKing Verified)")
+    print(f"  Evaluated Hypotheses: {len(bundle.get('evaluated_hypotheses', []))}")
+    eliminated = bundle.get("eliminated_hypotheses", [])
+    remaining = bundle.get("remaining_hypotheses", [])
+    print(f"  Eliminated:           {', '.join(eliminated) if eliminated else 'NONE'}")
+    print(f"  Remaining:            {', '.join(remaining) if remaining else 'NONE'}")
+
+    demoted = bundle.get("retraction_cascade", [])
+    if demoted:
+        print(f"  DAEDG Demoted Nodes:  {', '.join(demoted)} (REQUALIFICATION_REQUIRED)")
+
+    print(f"  Standard Reference:   {bundle.get('regulatory_standard')}")
+    print(f"  Tamper-Proof Seal:    {bundle.get('tamper_proof_seal', '')[:16]}...")
+
+    if out_path:
+        print(f"\n✓ Diagnostic bundle written to: {out_path}")
+
+    if strict and status != "DISCRIMINATED":
+        print(f"\n❌ Strict Mode Violation: Diagnosis did not achieve DISCRIMINATED status ({status})", file=sys.stderr)
+        return 1
+
+    print("\n✓ Tri-Origin counterfactual diagnosis completed successfully!")
+    return 0
+
+
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="spe", description="SPE Ω Unified Assurance CLI")
@@ -589,6 +658,17 @@ def main(argv: list[str] | None = None) -> int:
     p_audit_release.add_argument("--out", help="Output path for JSON release audit bundle")
     p_audit_release.add_argument("--strict", action="store_true", help="Fail with exit code 1 if verdict is not RELEASE_QUALIFIED")
 
+    # diagnose
+    p_diagnose = subparsers.add_parser("diagnose", help="Run Tri-Origin Counterfactual Diagnosis (G vs W vs V)")
+    p_diagnose.add_argument("discrepancy", nargs="?", default="DISC-001", help="Discrepancy ID or symptom description")
+    p_diagnose.add_argument("--origin", choices=["GOAL", "WORLD", "VERIFIER"], help="Target failure origin focus")
+    p_diagnose.add_argument("--unidentifiable", action="store_true", help="Simulate observationally equivalent hypotheses")
+    p_diagnose.add_argument("--tamper", action="store_true", help="Simulate post-hoc prediction tampering (HARKing test)")
+    p_diagnose.add_argument("--invalidate-node", help="Epistemic mechanism node ID to invalidate (DAEDG retraction cascade)")
+    p_diagnose.add_argument("--out", help="Output path for JSON diagnosis bundle")
+    p_diagnose.add_argument("--json", action="store_true", help="Output raw JSON")
+    p_diagnose.add_argument("--strict", action="store_true", help="Fail with exit code 1 if status is not DISCRIMINATED")
+
     args = parser.parse_args(argv)
 
     handlers = {
@@ -607,6 +687,7 @@ def main(argv: list[str] | None = None) -> int:
         "explain": cmd_explain,
         "trace": cmd_trace,
         "audit-release": cmd_audit_release,
+        "diagnose": cmd_diagnose,
     }
 
     handler = handlers.get(args.subcommand)

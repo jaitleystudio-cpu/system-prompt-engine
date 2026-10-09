@@ -302,7 +302,7 @@ assert(existsSync(join(keysDir, "authority_battery_public.key")), "Public key no
 console.log("  ✓ keygen verified");
 
 // 33. Adversarial Evidence Qualification (spe audit-release)
-console.log("\n[33/33] Testing audit-release");
+console.log("\n[33/34] Testing audit-release");
 const auditOutPath = join(tempDir, "sample_release_audit.json");
 const auditOut = runCli(`audit-release --agent "BatteryAutonomousAgent" --split DEV --out "${auditOutPath}"`);
 assert(auditOut.includes("ADVERSARIAL EVIDENCE QUALIFICATION") && auditOut.includes("RELEASE_QUALIFIED"), "Audit release output missing qualification verdict");
@@ -313,11 +313,25 @@ assert(auditData.total_cases_evaluated === 200, "Audit cases count mismatch for 
 assert(auditData.overall_defect_detection_rate === 1.0, "Detection rate mismatch");
 console.log("  ✓ audit-release verified");
 
+// 34. Tri-Origin Counterfactual Diagnosis (spe diagnose)
+console.log("\n[34/34] Testing diagnose");
+const diagnoseOutPath = join(tempDir, "sample_diagnosis.json");
+const diagnoseOut = runCli(`diagnose "DISC-TEST-01" --origin WORLD --out "${diagnoseOutPath}"`);
+assert(diagnoseOut.includes("TRI-ORIGIN COUNTERFACTUAL DIAGNOSIS") && diagnoseOut.includes("DISCRIMINATED"), "Diagnose output missing expected header or status");
+assert(existsSync(diagnoseOutPath), "sample_diagnosis.json not created");
+const diagData = JSON.parse(readFileSync(diagnoseOutPath, "utf-8"));
+assert(diagData.status === "DISCRIMINATED", "Diagnosis status mismatch");
+assert(diagData.discriminated_origins.includes("WORLD"), "Discriminated origin mismatch");
+assert(diagData.is_identifiable === true, "Identifiability mismatch");
+assert(diagData.precommitment_hash, "Precommitment hash missing");
+assert(diagData.selected_probe && diagData.selected_probe.is_authorized, "Selected probe missing or unauthorized");
+console.log("  ✓ diagnose verified");
+
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 33 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 34 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");
 
 

@@ -23,7 +23,9 @@ from spe_runtime.production_bridge import (
     ObligationDroppedError,
     PermissionEscalationError,
     ReleaseAuditorAdapter,
+    TriOriginDiagnosticAdapter,
 )
+from spe_runtime.cli.main import main as cli_main
 from spe_runtime.runtime_gateway.wire_proxy import (
     PagedAttentionKVAligner,
     WireProxyServer,
@@ -336,4 +338,138 @@ def test_kernel1_release_auditor_adapter_with_output_path(tmp_path):
     assert saved["audit_id"] == bundle["audit_id"]
     assert saved["total_cases_evaluated"] == 200
     assert saved["verdict"] == "RELEASE_QUALIFIED"
+
+
+def test_kernel1_tri_origin_diagnostic_adapter_default_discrimination():
+    """Verifies that TriOriginDiagnosticAdapter isolates Goal divergence under default canonical probe."""
+    bundle = TriOriginDiagnosticAdapter.diagnose(
+        discrepancy_id="DISC-E2E-01",
+        target_origin="GOAL",
+    )
+    assert bundle["status"] == "DISCRIMINATED"
+    assert bundle["is_identifiable"] is True
+    assert bundle["discriminated_origins"] == ["GOAL"]
+    assert "h-goal-DISC-E2E-01" in bundle["remaining_hypotheses"]
+    assert "h-world-DISC-E2E-01" in bundle["eliminated_hypotheses"]
+    assert "h-verifier-DISC-E2E-01" in bundle["eliminated_hypotheses"]
+    assert len(bundle["precommitment_hash"]) == 64
+    assert len(bundle["tamper_proof_seal"]) == 64
+    assert bundle["regulatory_standard"] == "SPE-RGIC-T1-20261009"
+
+    probe = bundle["selected_probe"]
+    assert probe["id"] == "probe-spec-reconcile"
+    assert probe["cost_nano_usd"] == 5_000_000
+    assert probe["is_authorized"] is True
+    assert probe["voi_score"] > 0
+
+
+def test_kernel1_tri_origin_diagnostic_adapter_world_and_verifier_origins():
+    """Verifies that TriOriginDiagnosticAdapter isolates World and Verifier origins respectively."""
+    # World Model Dynamics isolation
+    world_bundle = TriOriginDiagnosticAdapter.diagnose(
+        discrepancy_id="DISC-WORLD-01",
+        target_origin="WORLD",
+    )
+    assert world_bundle["status"] == "DISCRIMINATED"
+    assert world_bundle["discriminated_origins"] == ["WORLD"]
+    assert "h-world-DISC-WORLD-01" in world_bundle["remaining_hypotheses"]
+    assert "h-goal-DISC-WORLD-01" in world_bundle["eliminated_hypotheses"]
+
+    # Verifier Inadequacy isolation
+    verifier_bundle = TriOriginDiagnosticAdapter.diagnose(
+        discrepancy_id="DISC-VERIFIER-01",
+        target_origin="VERIFIER",
+    )
+    assert verifier_bundle["status"] == "DISCRIMINATED"
+    assert verifier_bundle["discriminated_origins"] == ["VERIFIER"]
+    assert "h-verifier-DISC-VERIFIER-01" in verifier_bundle["remaining_hypotheses"]
+    assert "h-goal-DISC-VERIFIER-01" in verifier_bundle["eliminated_hypotheses"]
+
+
+def test_kernel1_tri_origin_diagnostic_adapter_unidentifiable_abstention():
+    """Verifies that when hypotheses belong to an observational equivalence class, it honestly emits UNIDENTIFIABLE."""
+    bundle = TriOriginDiagnosticAdapter.diagnose(
+        discrepancy_id="DISC-AMBIG-01",
+        simulate_unidentifiable=True,
+    )
+    assert bundle["status"] == "UNIDENTIFIABLE"
+    assert bundle["is_identifiable"] is False
+    assert len(bundle["remaining_hypotheses"]) == 2
+    assert len(bundle["eliminated_hypotheses"]) == 0
+
+
+def test_kernel1_tri_origin_diagnostic_adapter_anti_harking_tamper_rejection():
+    """Verifies that post-hoc prediction alteration violates cryptographic precommitment and yields INVALID_RUN."""
+    bundle = TriOriginDiagnosticAdapter.diagnose(
+        discrepancy_id="DISC-TAMPER-01",
+        simulate_tamper=True,
+    )
+    assert bundle["status"] == "INVALID_RUN"
+    assert bundle["is_identifiable"] is False
+
+
+def test_kernel1_tri_origin_diagnostic_adapter_retraction_cascade():
+    """Verifies that assumption invalidation cascades along DAEDG to demote downstream capabilities."""
+    bundle = TriOriginDiagnosticAdapter.diagnose(
+        discrepancy_id="DISC-RETRACT-01",
+        invalidated_node_id="M1",
+    )
+    assert bundle["retraction_cascade"] == ["C1", "QB"]
+
+    # Direct custom DAG test
+    custom_deps = {
+        "OBS_1": [],
+        "MECH_DB_POOL": ["OBS_1"],
+        "CAP_TRANSACTIONS": ["MECH_DB_POOL"],
+        "QUAL_PCI_DSS": ["CAP_TRANSACTIONS"],
+    }
+    demoted = TriOriginDiagnosticAdapter.retract_assumptions(
+        dependencies=custom_deps,
+        invalidated_node_id="MECH_DB_POOL",
+    )
+    assert demoted == ["CAP_TRANSACTIONS", "QUAL_PCI_DSS"]
+
+
+def test_kernel1_tri_origin_diagnostic_adapter_file_persistence(tmp_path):
+    """Verifies that diagnostic artifacts are correctly serialized to disk."""
+    out_file = tmp_path / "diagnosis.json"
+    bundle = TriOriginDiagnosticAdapter.diagnose(
+        discrepancy_id="DISC-PERSIST-01",
+        output_path=str(out_file),
+    )
+    assert out_file.exists()
+    saved = json.loads(out_file.read_text(encoding="utf-8"))
+    assert saved["record_id"] == bundle["record_id"]
+    assert saved["discrepancy_id"] == "DISC-PERSIST-01"
+    assert saved["status"] == "DISCRIMINATED"
+    assert saved["tamper_proof_seal"] == bundle["tamper_proof_seal"]
+
+
+def test_cli_diagnose_command_e2e(tmp_path):
+    """Verifies CLI execution of spe diagnose including flags, strict mode, and JSON formatting."""
+    # 1. Normal run with output file
+    out_file = tmp_path / "cli_diag.json"
+    ret = cli_main(["diagnose", "DISC-CLI-01", "--origin", "WORLD", "--out", str(out_file)])
+    assert ret == 0
+    assert out_file.exists()
+    data = json.loads(out_file.read_text(encoding="utf-8"))
+    assert data["status"] == "DISCRIMINATED"
+    assert data["discriminated_origins"] == ["WORLD"]
+
+    # 2. Strict mode on clean run passes
+    ret_strict = cli_main(["diagnose", "DISC-CLI-STRICT", "--origin", "GOAL", "--strict"])
+    assert ret_strict == 0
+
+    # 3. Strict mode on unidentifiable fails with exit code 1
+    ret_strict_fail = cli_main(["diagnose", "DISC-CLI-FAIL", "--unidentifiable", "--strict"])
+    assert ret_strict_fail == 1
+
+    # 4. Strict mode on tamper fails with exit code 1
+    ret_tamper_fail = cli_main(["diagnose", "DISC-CLI-TAMPER", "--tamper", "--strict"])
+    assert ret_tamper_fail == 1
+
+    # 5. JSON flag
+    ret_json = cli_main(["diagnose", "DISC-CLI-JSON", "--json"])
+    assert ret_json == 0
+
 

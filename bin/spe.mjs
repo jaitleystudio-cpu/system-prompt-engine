@@ -114,6 +114,7 @@ ${bold('COMMANDS:')}
   ${green('trace')}       [-r req-id]  Trace requirement forward across Causal Proof Graph enforcements
   ${green('keygen')}                   Generate Ed25519 cryptographic signing keypair
   ${green('audit-release')}            Run AEQ Independent Release Audit ($1,500 Standard)
+  ${green('diagnose')}         [disc]   Run Tri-Origin Counterfactual Diagnosis (G vs W vs V)
 
 ${bold('OPTIONS:')}
   --target <dialect>     Model dialect: claude-xml, openai-markdown, gemini-agent, cursor-rules, open-weights
@@ -181,8 +182,21 @@ if (command === '--version' || command === '-v' || command === 'version') {
 const fileTarget = args[1];
 const flags = parseFlags(args.slice(1));
 
+function getRepoRoot() {
+  if (existsSync(resolve(scriptDir, '../spe_runtime'))) {
+    return resolve(scriptDir, '..');
+  }
+  if (existsSync(resolve(scriptDir, '../../spe_runtime'))) {
+    return resolve(scriptDir, '../..');
+  }
+  if (existsSync(resolve(scriptDir, '../../../spe_runtime'))) {
+    return resolve(scriptDir, '../../..');
+  }
+  return resolve(scriptDir, '..');
+}
+
 function getPythonBin() {
-  const root = resolve(scriptDir, '..');
+  const root = getRepoRoot();
   const venvPython = resolve(root, '.venv/bin/python');
   if (existsSync(venvPython)) return venvPython;
   return 'python3';
@@ -190,7 +204,7 @@ function getPythonBin() {
 
 function runPythonCli(subcommand, passArgs) {
   const pyBin = getPythonBin();
-  const repoRoot = resolve(scriptDir, '..');
+  const repoRoot = getRepoRoot();
   const proc = spawnSync(pyBin, ['-m', 'spe_runtime.cli.main', subcommand, ...passArgs], {
     cwd: repoRoot,
     stdio: 'inherit',
@@ -214,7 +228,8 @@ try {
     case 'explain':
     case 'trace':
     case 'keygen':
-    case 'audit-release': {
+    case 'audit-release':
+    case 'diagnose': {
       runPythonCli(command, args.slice(1));
       break;
     }
