@@ -98,16 +98,32 @@ class TechArticleSchema:
 @dataclass
 class ItemListSchema:
     name: str
-    items: List[Dict[str, Any]]
+    items: List[Any]
 
     def to_json_ld(self) -> Dict[str, Any]:
         elements = []
         for i, item in enumerate(self.items):
+            if isinstance(item, dict):
+                item_name = item.get("name") or item.get("target_identifier") or item.get("skill_identifier") or f"Rank #{i+1}"
+                item_url = item.get("url") or f"https://spe.run/exchange/{item_name}"
+            elif hasattr(item, "target_identifier"):
+                item_name = item.target_identifier
+                item_url = f"https://spe.run/exchange/{item_name}"
+            elif hasattr(item, "skill_identifier"):
+                item_name = item.skill_identifier
+                item_url = f"https://spe.run/exchange/{item_name}"
+            elif hasattr(item, "name"):
+                item_name = item.name
+                item_url = f"https://spe.run/exchange/{item_name}"
+            else:
+                item_name = str(item)
+                item_url = f"https://spe.run/exchange/{item_name}"
+
             elements.append({
                 "@type": "ListItem",
                 "position": i + 1,
-                "name": item.get("name", f"Rank #{i+1}"),
-                "url": item.get("url", f"https://spe.run/exchange/{item.get('name', '')}"),
+                "name": item_name,
+                "url": item_url,
             })
         return {
             "@context": "https://schema.org",
@@ -168,12 +184,13 @@ class SeoGovernor:
         is_user_search_query: bool = False,
         is_raw_unverified_import: bool = False,
         has_reproducible_benchmark: bool = True,
+        passport_status: str = "CURRENT",
     ) -> IndexabilityResult:
         """
         Constitutional Publication Gate 1: THE SCALED CONTENT DEFENSE.
         Protects against Google penalties for thin/spun content:
-        - Only pages with >= 10 trials, valid Evidence Passports, and reproducible benchmarks are INDEXABLE.
-        - Unverified submissions, search query facets, and thin stubs are strictly NOINDEX.
+        - Only pages with >= 10 trials, valid CURRENT Evidence Passports, and reproducible benchmarks are INDEXABLE.
+        - Unverified submissions, search query facets, thin stubs, and non-CURRENT passports are strictly NOINDEX.
         """
         # Private workspaces are never indexed
         if cls.is_private_workspace(route):
@@ -216,6 +233,17 @@ class SeoGovernor:
                 reason="Page lacks an authenticated Evidence Passport.",
                 trials_n=trials_n,
                 has_evidence_passport=False,
+                is_thin_stub=True,
+                is_internal_filter=False,
+            )
+
+        if passport_status.upper() != "CURRENT":
+            return IndexabilityResult(
+                status="NON_INDEXABLE",
+                robots_directive="noindex, follow",
+                reason=f"Evidence Passport status is '{passport_status}' (requires CURRENT).",
+                trials_n=trials_n,
+                has_evidence_passport=has_evidence_passport,
                 is_thin_stub=True,
                 is_internal_filter=False,
             )
@@ -278,6 +306,15 @@ class SeoGovernor:
                 "Ad Sanctuary Violation: Private prompt text or user code detected in ad targeting payload."
             )
 
+        if ad_payload:
+            payload_str = json.dumps(ad_payload).lower()
+            leak_keywords = ["private_prompt", "user_prompt", "prompt_text", "user_code", "secret", "private_code"]
+            for kw in leak_keywords:
+                if kw in payload_str:
+                    raise AdSanctuaryViolationError(
+                        f"Ad Sanctuary Violation: Sensitive keyword '{kw}' detected in ad targeting payload."
+                    )
+
         return True
 
     @classmethod
@@ -296,6 +333,7 @@ class SeoGovernor:
         version_digest: str = "v1",
         passport_id: str = "EVP-123456",
         has_ads: bool = True,
+        passport_status: str = "CURRENT",
     ) -> str:
         """
         Generates clean semantic HTML following the 4-zone architecture:
@@ -306,8 +344,8 @@ class SeoGovernor:
         """
         is_private = cls.is_private_workspace(route)
 
-        # Enforce ad sanctuary
-        cls.validate_ad_sanctuary(route, has_ads=has_ads and not is_private)
+        # Enforce ad sanctuary strictly: if caller asks for ads on private route, raise violation!
+        cls.validate_ad_sanctuary(route, has_ads=has_ads)
 
         # Classify indexability
         idx_res = cls.classify_indexability(
@@ -315,6 +353,7 @@ class SeoGovernor:
             trials_n=trials_n,
             has_evidence_passport=bool(passport_id),
             has_reproducible_benchmark=bool(reproducible_command),
+            passport_status=passport_status,
         )
 
         # Generate JSON-LD

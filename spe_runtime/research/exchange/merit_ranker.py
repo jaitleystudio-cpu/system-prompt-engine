@@ -262,6 +262,7 @@ class MeritRanker:
         installation_count: int = 0,
         qualified_at: Optional[str] = None,
         expires_at: Optional[str] = None,
+        status: Optional[str] = None,
     ) -> EvidencePassport:
         """
         Creates an immutable, verifiable Evidence Passport.
@@ -291,8 +292,14 @@ class MeritRanker:
         composite_score = 0.0 if is_disq else dims.compute_composite_score()
 
         # Hard Gate status determination
-        status = "DISQUALIFIED" if is_disq else "CURRENT"
-        top_three_eligibility = not is_disq and not is_sponsored
+        if is_disq:
+            final_status = "DISQUALIFIED"
+        elif status:
+            final_status = status.upper()
+        else:
+            final_status = "CURRENT"
+
+        top_three_eligibility = not is_disq and not is_sponsored and (final_status == "CURRENT") and (trials_n >= 10)
 
         now_iso = qualified_at or "2026-10-10T00:00:00Z"
         exp_iso = expires_at or "2026-11-10T00:00:00Z"
@@ -320,7 +327,7 @@ class MeritRanker:
             validity_window=ValidityWindow(
                 qualified_at=now_iso,
                 expires_at=exp_iso,
-                status=status,
+                status=final_status,
             ),
             top_three_eligibility=top_three_eligibility,
             dimensions=dims,
@@ -350,14 +357,27 @@ class MeritRanker:
             elif isinstance(c, dict):
                 # Build passport from dictionary representation
                 sec_dict = c.get("security_audit", {})
+                static_analysis = sec_dict.get("static_analysis") or c.get("static_analysis", "PASSED_SAFE")
+                perm_footprint = (
+                    sec_dict.get("permission_footprint")
+                    or c.get("permission_footprint")
+                    or c.get("permissions")
+                    or ["FILESYSTEM_SCOPED_READ"]
+                )
+                exfiltration_risk = sec_dict.get("exfiltration_risk") or c.get("exfiltration_risk", "ZERO_DETECTED")
+                unauth_egress = sec_dict.get("unauthorized_network_egress", False) or c.get("unauthorized_network_egress", False)
+                cred_exfil = sec_dict.get("credential_exfiltration", False) or c.get("credential_exfiltration", False)
+                ambient_esc = sec_dict.get("ambient_authority_escalation", False) or c.get("ambient_authority_escalation", False)
+                prompt_inj = sec_dict.get("prompt_injection_detected", False) or c.get("prompt_injection_detected", False)
+
                 sec = SecurityAudit(
-                    static_analysis=sec_dict.get("static_analysis", "PASSED_SAFE"),
-                    permission_footprint=sec_dict.get("permission_footprint", ["FILESYSTEM_SCOPED_READ"]),
-                    exfiltration_risk=sec_dict.get("exfiltration_risk", "ZERO_DETECTED"),
-                    unauthorized_network_egress=sec_dict.get("unauthorized_network_egress", False),
-                    credential_exfiltration=sec_dict.get("credential_exfiltration", False),
-                    ambient_authority_escalation=sec_dict.get("ambient_authority_escalation", False),
-                    prompt_injection_detected=sec_dict.get("prompt_injection_detected", False),
+                    static_analysis=static_analysis,
+                    permission_footprint=perm_footprint,
+                    exfiltration_risk=exfiltration_risk,
+                    unauthorized_network_egress=unauth_egress,
+                    credential_exfiltration=cred_exfil,
+                    ambient_authority_escalation=ambient_esc,
+                    prompt_injection_detected=prompt_inj,
                 )
                 env_dict = c.get("tested_environment", {})
                 perf_dict = c.get("performance_metrics", {})
@@ -374,6 +394,9 @@ class MeritRanker:
                     documentation_ergonomics=dim_dict.get("documentation_ergonomics", 0.90),
                 )
 
+                val_dict = c.get("validity_window", {})
+                cand_status = val_dict.get("status") or c.get("status")
+
                 passport = cls.generate_evidence_passport(
                     target_identifier=c.get("target_identifier", c.get("name", "unknown-skill")),
                     version_digest=c.get("version_digest", hashlib.sha256(b"v1").hexdigest()),
@@ -388,6 +411,7 @@ class MeritRanker:
                     is_sponsored=c.get("is_sponsored", False),
                     sponsor_bid_usd=c.get("sponsor_bid_usd", 0.0),
                     installation_count=c.get("installation_count", 0),
+                    status=cand_status,
                 )
                 passports.append(passport)
 
@@ -397,7 +421,9 @@ class MeritRanker:
 
         for p in passports:
             is_disq, reasons = p.security_audit.is_disqualified()
-            if is_disq or p.validity_window.status in ("DISQUALIFIED", "HOLD"):
+            if is_disq or p.validity_window.status != "CURRENT":
+                if not reasons and p.validity_window.status != "CURRENT":
+                    reasons = [f"Validity status is {p.validity_window.status} (requires CURRENT)"]
                 disqualified.append({
                     "target_identifier": p.target_identifier,
                     "passport_id": p.passport_id,

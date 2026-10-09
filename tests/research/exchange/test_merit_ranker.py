@@ -212,3 +212,72 @@ def test_zero_capital_influence_law():
     sponsored_names = [s["target_identifier"] for s in result.sponsored_inventory]
     assert "@skill/billion-dollar-corp" in sponsored_names
     assert result.sponsored_inventory[0]["label"] == "SPONSORED_INVENTORY"
+
+
+def test_status_preservation_and_disqualification_in_dict_candidates():
+    """
+    Verifies that dictionary candidates with non-CURRENT validity status
+    (HOLD, EXPIRED, DISQUALIFIED) are not erroneously promoted to CURRENT and
+    are strictly excluded from organic rankings.
+    """
+    candidates = [
+        {
+            "name": "@skill/held-skill",
+            "validity_window": {"status": "HOLD"},
+            "trials_n": 100,
+            "successes": 98,
+        },
+        {
+            "name": "@skill/expired-skill",
+            "status": "EXPIRED",
+            "trials_n": 100,
+            "successes": 99,
+        },
+        {
+            "name": "@skill/valid-organic",
+            "status": "CURRENT",
+            "trials_n": 100,
+            "successes": 95,
+        },
+    ]
+    res = MeritRanker.rank_candidates(candidates)
+    assert len(res.ranked_candidates) == 1
+    assert res.ranked_candidates[0].target_identifier == "@skill/valid-organic"
+    assert len(res.disqualified_candidates) == 2
+    disq_names = [d["target_identifier"] for d in res.disqualified_candidates]
+    assert "@skill/held-skill" in disq_names
+    assert "@skill/expired-skill" in disq_names
+
+
+def test_top_level_security_flag_disqualification():
+    """
+    Verifies that critical vulnerabilities declared in flat dictionary candidates
+    (e.g., unauthorized network egress, prompt injection) trigger immediate hard-gate disqualification.
+    """
+    candidates = [
+        {
+            "name": "@skill/egress-leaker",
+            "unauthorized_network_egress": True,
+            "trials_n": 150,
+            "successes": 150,
+        },
+        {
+            "name": "@skill/prompt-injector",
+            "prompt_injection_detected": True,
+            "trials_n": 150,
+            "successes": 150,
+        },
+        {
+            "name": "@skill/clean-candidate",
+            "trials_n": 150,
+            "successes": 145,
+        },
+    ]
+    res = MeritRanker.rank_candidates(candidates)
+    assert len(res.ranked_candidates) == 1
+    assert res.ranked_candidates[0].target_identifier == "@skill/clean-candidate"
+    assert len(res.disqualified_candidates) == 2
+    disq_names = [d["target_identifier"] for d in res.disqualified_candidates]
+    assert "@skill/egress-leaker" in disq_names
+    assert "@skill/prompt-injector" in disq_names
+

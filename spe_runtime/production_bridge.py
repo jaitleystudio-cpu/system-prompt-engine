@@ -872,6 +872,7 @@ class ExchangeMeritRankerAdapter:
         is_sponsored: bool = False,
         sponsor_bid_usd: float = 0.0,
         installation_count: int = 0,
+        status: Optional[str] = None,
     ) -> Dict[str, Any]:
         from spe_runtime.research.exchange.merit_ranker import MeritRanker, SecurityAudit
         sec = None
@@ -899,6 +900,7 @@ class ExchangeMeritRankerAdapter:
             is_sponsored=is_sponsored,
             sponsor_bid_usd=sponsor_bid_usd,
             installation_count=installation_count,
+            status=status,
         )
         return passport.to_dict()
 
@@ -970,6 +972,7 @@ class ExchangeSeoGovernorAdapter:
         has_reproducible_benchmark: bool = True,
         is_user_search_query: bool = False,
         is_raw_unverified_import: bool = False,
+        passport_status: str = "CURRENT",
     ) -> Dict[str, Any]:
         from spe_runtime.research.exchange.seo_governor import SeoGovernor
         res = SeoGovernor.classify_indexability(
@@ -979,6 +982,7 @@ class ExchangeSeoGovernorAdapter:
             has_reproducible_benchmark=has_reproducible_benchmark,
             is_user_search_query=is_user_search_query,
             is_raw_unverified_import=is_raw_unverified_import,
+            passport_status=passport_status,
         )
         return res.to_dict()
 
@@ -1054,6 +1058,7 @@ class ExchangeSeoGovernorAdapter:
         version_digest: str = "v1",
         passport_id: str = "EVP-123456",
         has_ads: bool = True,
+        passport_status: str = "CURRENT",
         output_path: Optional[str] = None,
     ) -> str:
         from spe_runtime.research.exchange.seo_governor import SeoGovernor
@@ -1071,6 +1076,7 @@ class ExchangeSeoGovernorAdapter:
             version_digest=version_digest,
             passport_id=passport_id,
             has_ads=has_ads,
+            passport_status=passport_status,
         )
         if output_path:
             p = Path(output_path)

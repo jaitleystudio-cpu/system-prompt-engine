@@ -232,3 +232,74 @@ def test_four_zone_private_workspace_page_is_completely_ad_free():
     assert "spe-private-sanctuary-badge" in markup
     assert "100% Ad-Free Private Workspace Sanctuary" in markup
     assert '<meta name="robots" content="noindex, nofollow">' in markup
+
+
+def test_item_list_schema_with_domain_objects():
+    """Verifies that ItemListSchema accepts EvidencePassport and SkillRecommendation domain objects without crashing."""
+    from spe_runtime.research.exchange.merit_ranker import MeritRanker
+    from spe_runtime.research.exchange.mission_matcher import SkillRecommendation
+
+    p1 = MeritRanker.generate_evidence_passport("@skill/alpha", "v1", 100, 95)
+    rec = SkillRecommendation(
+        rank=1,
+        skill_identifier="@skill/beta",
+        task_fit_pct=90,
+        wilson_score_pct=90.0,
+        trials_n=100,
+        required_permissions=[],
+        limitation_or_tradeoff="",
+    )
+
+    schema = ItemListSchema(name="Top-2 Verified Skills", items=[p1, rec])
+    json_ld = schema.to_json_ld()
+
+    assert json_ld["@type"] == "ItemList"
+    assert len(json_ld["itemListElement"]) == 2
+    assert json_ld["itemListElement"][0]["name"] == "@skill/alpha"
+    assert json_ld["itemListElement"][1]["name"] == "@skill/beta"
+
+
+def test_generate_page_markup_strictly_blocks_ads_on_private_workspace():
+    """
+    Verifies that calling generate_page_markup on a private workspace route with has_ads=True
+    raises an AdSanctuaryViolationError instead of silently bypassing the check.
+    """
+    with pytest.raises(AdSanctuaryViolationError):
+        SeoGovernor.generate_page_markup(
+            route="/workspace/confidential",
+            title="Confidential Workspace",
+            canonical_url="https://spe.run/workspace/confidential",
+            breadcrumbs=[],
+            comparative_data=[],
+            methodology_text="",
+            reproducible_command="",
+            wilson_score_lower_bound=0.9,
+            trials_n=100,
+            has_ads=True,  # Forbidden in private sanctuary!
+        )
+
+
+def test_disqualified_or_expired_passport_is_strictly_noindexed():
+    """Verifies that pages with DISQUALIFIED, HOLD, or EXPIRED passports are not marked INDEXABLE."""
+    for st in ("DISQUALIFIED", "HOLD", "EXPIRED"):
+        res = SeoGovernor.classify_indexability(
+            route="/exchange/skills/flagged",
+            trials_n=200,
+            has_evidence_passport=True,
+            has_reproducible_benchmark=True,
+            passport_status=st,
+        )
+        assert res.status == "NON_INDEXABLE"
+        assert res.robots_directive == "noindex, follow"
+        assert st in res.reason
+
+
+def test_ad_payload_sensitive_keyword_inspection():
+    """Verifies that sensitive context keys inside ad targeting payloads trigger AdSanctuaryViolationError."""
+    with pytest.raises(AdSanctuaryViolationError):
+        SeoGovernor.validate_ad_sanctuary(
+            route="/exchange/skills/sample",
+            has_ads=True,
+            ad_payload={"keyword": "database", "user_prompt": "secret internal architecture"},
+        )
+

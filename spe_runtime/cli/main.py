@@ -873,7 +873,7 @@ def cmd_exchange(args: argparse.Namespace) -> int:
         route = getattr(args, "route", "/exchange")
         trials_n = getattr(args, "trials", 150)
         passport = getattr(args, "passport", None)
-        has_ads = getattr(args, "has_ads", False)
+        has_ads = getattr(args, "has_ads", False) or getattr(args, "ads", False)
         is_search = getattr(args, "search_query", False)
         out_path = getattr(args, "out", None)
 
@@ -1121,7 +1121,7 @@ def main(argv: list[str] | None = None) -> int:
     p_ex_seo.add_argument("route", nargs="?", default="/exchange", help="Target route path")
     p_ex_seo.add_argument("--trials", type=int, default=150, help="Number of empirical trials")
     p_ex_seo.add_argument("--passport", help="Evidence Passport ID or digest")
-    p_ex_seo.add_argument("--has-ads", action="store_true", help="Flag if ads are enabled on route")
+    p_ex_seo.add_argument("--has-ads", "--ads", action="store_true", dest="has_ads", help="Flag if ads are enabled on route")
     p_ex_seo.add_argument("--search-query", action="store_true", help="Flag if route is internal faceted search filter")
     p_ex_seo.add_argument("--out", help="Output path for SEO audit JSON")
     p_ex_seo.add_argument("--json", action="store_true", help="Output raw JSON")

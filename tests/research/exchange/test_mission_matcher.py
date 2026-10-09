@@ -218,3 +218,108 @@ def test_full_mission_match_workflow_emission():
     assert "| **#1** | `@skill/drizzle-orm`" in md
     assert "### 🛡️ COMBINED SAFETY AUDIT:" in md
     assert "Multi-skill conflict check: PASSED" in md
+
+
+def test_canonical_evidence_passport_permission_footprint_matching():
+    """
+    Verifies that Master Prompt 1 canonical permission assertions
+    (['FILESYSTEM_SCOPED_READ', 'NO_NETWORK', 'NO_CREDENTIALS']) correctly pass
+    the permission gateway for offline/air-gapped missions.
+    """
+    from spe_runtime.research.exchange.merit_ranker import MeritRanker
+
+    passport = MeritRanker.generate_evidence_passport(
+        target_identifier="@skill/safe-offline-engine",
+        version_digest="sha256:safe99",
+        trials_n=200,
+        successes=195,
+        permission_footprint=["FILESYSTEM_SCOPED_READ", "NO_NETWORK", "NO_CREDENTIALS"],
+    )
+
+    ast = TaskRequirementsAST.compile_from_text("Perform offline security audit, air-gap")
+    valid, violations = MissionMatcher.check_permission_boundary(passport.security_audit.permission_footprint, ast)
+    assert valid is True
+    assert len(violations) == 0
+
+    # Ensure match_mission succeeds with EvidencePassport objects
+    res = MissionMatcher.match_mission(
+        mission_input=ast,
+        catalog=[passport],
+    )
+    assert res.status == "QUALIFIED_MATCH"
+    assert len(res.recommendations) == 1
+    assert res.recommendations[0].skill_identifier == "@skill/safe-offline-engine"
+
+
+def test_commercial_isolation_in_mission_matching():
+    """
+    Constitutional Selection Law: ZERO RANKING INFLUENCE FROM CAPITAL.
+    Sponsored skills (even with highest bid and high task fit) must NEVER infiltrate
+    organic Top-3 mission recommendations.
+    """
+    catalog = [
+        {
+            "name": "@skill/sponsored-heavy",
+            "capabilities": ["Drizzle ORM", "Database Migrations"],
+            "permissions": ["LOCAL_AST_ONLY"],
+            "is_sponsored": True,
+            "sponsor_bid_usd": 5000.0,
+            "validity_window": {"status": "CURRENT"},
+            "tested_environment": {"trials_n": 100},
+            "performance_metrics": {"wilson_lower_bound_95": 0.98},
+        },
+        {
+            "name": "@skill/organic-drizzle",
+            "capabilities": ["Drizzle ORM", "Database Migrations"],
+            "permissions": ["LOCAL_AST_ONLY"],
+            "is_sponsored": False,
+            "sponsor_bid_usd": 0.0,
+            "validity_window": {"status": "CURRENT"},
+            "tested_environment": {"trials_n": 100},
+            "performance_metrics": {"wilson_lower_bound_95": 0.92},
+        },
+    ]
+
+    res = MissionMatcher.match_mission("Build Drizzle database migrations", catalog)
+    assert res.status == "QUALIFIED_MATCH"
+    assert len(res.recommendations) == 1
+    assert res.recommendations[0].skill_identifier == "@skill/organic-drizzle"
+    # Sponsored skill must NOT be in organic recommendations
+    rec_names = [r.skill_identifier for r in res.recommendations]
+    assert "@skill/sponsored-heavy" not in rec_names
+
+
+def test_glob_and_directory_write_lock_conflicts():
+    """
+    Verifies that fnmatch globs and parent-directory containment write locks
+    are recognized as operational conflicts.
+    """
+    rec_wildcard = SkillRecommendation(
+        rank=1,
+        skill_identifier="@skill/wildcard-writer",
+        task_fit_pct=90,
+        wilson_score_pct=90.0,
+        trials_n=100,
+        required_permissions=["FILESYSTEM_SCOPED_WRITE"],
+        limitation_or_tradeoff="None",
+        authority_domain="frontend",
+        scoped_write_paths=["app/*"],
+    )
+
+    rec_concrete = SkillRecommendation(
+        rank=2,
+        skill_identifier="@skill/concrete-writer",
+        task_fit_pct=85,
+        wilson_score_pct=88.0,
+        trials_n=100,
+        required_permissions=["FILESYSTEM_SCOPED_WRITE"],
+        limitation_or_tradeoff="None",
+        authority_domain="backend",  # Different domain, but conflicting file!
+        scoped_write_paths=["app/page.tsx"],
+    )
+
+    passed, conflicts = MissionMatcher.detect_inter_skill_conflicts([rec_wildcard, rec_concrete])
+    assert passed is False
+    assert len(conflicts) > 0
+    assert any("Overlapping write lock" in c for c in conflicts)
+

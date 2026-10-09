@@ -175,20 +175,24 @@ class MissionMatcher:
         """
         violations: List[str] = []
         skill_perms = {p.upper() for p in skill_permissions}
+        negative_prefixes = ("NO_", "NON_", "DISALLOW_", "DENIED_", "WITHOUT_", "NOT_")
 
         # Check forbidden permissions
         for f in ast.forbidden_permissions:
             f_norm = f.upper()
             for sp in skill_perms:
-                if f_norm in sp or sp in f_norm:
+                # Negative permission assertions (e.g. NO_NETWORK, NO_CREDENTIALS) are safe declarations
+                if sp.startswith(negative_prefixes):
+                    continue
+                if f_norm == sp or f_norm in sp or sp in f_norm:
                     violations.append(f"Skill requests forbidden permission: {sp} (matched {f})")
 
         # If strict allowed_permissions set is provided, ensure all skill perms are within allowed
         if ast.allowed_permissions:
             allowed_norm = {a.upper() for a in ast.allowed_permissions}
             for sp in skill_perms:
-                # Permitted if exact match or if NO_ prefix (safe flag)
-                if sp not in allowed_norm and not sp.startswith("NO_"):
+                # Permitted if exact match or if negative prefix (safe assertion)
+                if sp not in allowed_norm and not sp.startswith(negative_prefixes):
                     violations.append(f"Skill requests permission {sp} outside allowed ceiling {sorted(list(allowed_norm))}")
 
         return (len(violations) == 0, violations)
@@ -201,11 +205,14 @@ class MissionMatcher:
         Enforces Constitutional Selection Law 2: CONFLICT CLOSURE.
         Detects:
         - Conflicting authority domains (e.g., competing database migration handlers).
-        - Overlapping file write locks (e.g. multiple skills claiming exclusive write locks on same files).
+        - Overlapping file write locks (e.g. multiple skills claiming exclusive write locks on same files, glob overlap, or directory containment).
         """
+        import fnmatch
+        import os
+
         conflicts: List[str] = []
         domains_seen: Dict[str, str] = {}
-        paths_seen: Dict[str, str] = {}
+        paths_seen: List[Tuple[str, str]] = []
 
         for skill in selected:
             # Check domain collision
@@ -219,12 +226,24 @@ class MissionMatcher:
 
             # Check write path collision
             for p in skill.scoped_write_paths:
-                if p in paths_seen:
-                    conflicts.append(
-                        f"Overlapping write lock on path '{p}': skills '{paths_seen[p]}' and '{skill.skill_identifier}'"
-                    )
-                else:
-                    paths_seen[p] = skill.skill_identifier
+                norm_p = os.path.normpath(p.strip())
+                for existing_p, existing_skill in paths_seen:
+                    is_collision = False
+                    if norm_p == existing_p:
+                        is_collision = True
+                    elif fnmatch.fnmatch(norm_p, existing_p) or fnmatch.fnmatch(existing_p, norm_p):
+                        is_collision = True
+                    else:
+                        p_parts = norm_p.split(os.sep)
+                        e_parts = existing_p.split(os.sep)
+                        if p_parts == e_parts[:len(p_parts)] or e_parts == p_parts[:len(e_parts)]:
+                            is_collision = True
+
+                    if is_collision:
+                        conflicts.append(
+                            f"Overlapping write lock on path '{p}' (vs '{existing_p}'): skills '{existing_skill}' and '{skill.skill_identifier}'"
+                        )
+                paths_seen.append((norm_p, skill.skill_identifier))
 
         return (len(conflicts) == 0, conflicts)
 
@@ -242,10 +261,11 @@ class MissionMatcher:
         Executes selection workflow:
         1. Parse AST.
         2. Filter valid Evidence Passports (status == CURRENT).
-        3. Filter candidates exceeding permission boundary.
-        4. Score task fit and Wilson lower bound.
-        5. Check inter-skill conflicts.
-        6. Return Top 3 or honest abstention.
+        3. Commercial Separation: isolate sponsored skills from organic recommendations.
+        4. Filter candidates exceeding permission boundary.
+        5. Score task fit and Wilson lower bound.
+        6. Check inter-skill conflicts.
+        7. Return Top 3 or honest abstention.
         """
         if isinstance(mission_input, TaskRequirementsAST):
             ast = mission_input
@@ -266,9 +286,17 @@ class MissionMatcher:
             if isinstance(item, EvidencePassport):
                 passport_dict = item.to_dict()
                 raw_item = {}
+                is_sponsored = item.is_sponsored
+                sponsor_bid = item.sponsor_bid_usd
             else:
                 passport_dict = item.get("evidence_passport") or item
                 raw_item = item
+                is_sponsored = item.get("is_sponsored", False)
+                sponsor_bid = float(item.get("sponsor_bid_usd", 0.0))
+
+            # Constitutional Law 2: Zero capital influence on organic recommendations
+            if is_sponsored or sponsor_bid > 0.0:
+                continue
 
             # Check validity window
             val_window = passport_dict.get("validity_window", {})
@@ -292,10 +320,14 @@ class MissionMatcher:
             trials_n = env.get("trials_n", 100)
 
             # Compute Task Fit %
-            capabilities_supported = raw_item.get("capabilities", [])
-            domain = raw_item.get("authority_domain", "general")
-            limitation = raw_item.get("limitation", "Requires explicit schema input")
-            write_paths = raw_item.get("scoped_write_paths", [])
+            capabilities_supported = (
+                getattr(item, "capabilities", None)
+                or raw_item.get("capabilities", [])
+                or [target_id]
+            )
+            domain = getattr(item, "authority_domain", None) or raw_item.get("authority_domain", "general")
+            limitation = getattr(item, "limitation", None) or raw_item.get("limitation", "Requires explicit schema input")
+            write_paths = getattr(item, "scoped_write_paths", None) or raw_item.get("scoped_write_paths", [])
 
             # Keyword matching against AST
             matching_caps = 0
