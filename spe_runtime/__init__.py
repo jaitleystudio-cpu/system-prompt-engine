@@ -42,6 +42,21 @@ from spe_runtime.hybrid import (
 )
 from spe_runtime.runtime_gateway.wire_proxy import ProxyMetrics, WireProxyServer
 
+from spe_runtime.prompt import (
+    CompletionCertificate,
+    CompletionRejectedError,
+    DriftType,
+    DriftVerdict,
+    GeneratedMasterSystemPrompt,
+    MasterExecutionPlan,
+    MetaPromptCompiler,
+    Obligation,
+    ObligationSet,
+    ProtectedIntent as MetaProtectedIntent,
+    SelfVerifyingCompletionHarness,
+    SemanticDriftViolationError,
+    ZeroDriftSentry,
+)
 from spe_runtime.sdk import (
     AuthorityMode,
     SPEReceipt,
@@ -126,5 +141,17 @@ __all__ = [
     "BudgetExceededError",
     "ProviderNotAllowlistedError",
     "SensitiveDataLeakageError",
+    "MetaPromptCompiler",
+    "ZeroDriftSentry",
+    "SelfVerifyingCompletionHarness",
+    "MasterExecutionPlan",
+    "GeneratedMasterSystemPrompt",
+    "ObligationSet",
+    "Obligation",
+    "CompletionCertificate",
+    "CompletionRejectedError",
+    "SemanticDriftViolationError",
+    "DriftVerdict",
+    "DriftType",
 ]
 
