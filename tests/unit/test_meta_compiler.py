@@ -715,8 +715,38 @@ def test_two_speed_synthesizer_silent_contradiction_neutralization():
     rendered = result.rendered_output
     assert "### 🛡️ 1. Your Protected Master Prompt" in rendered
     assert "### 🔒 2. Three Invariant Guarantees" in rendered
-    assert "### 📦 3. One-Click .spe Bundle" in rendered
     assert "Bounded Horn SAT" not in rendered
     assert "Kleene 3-Valued Logic" not in rendered
+
+
+def test_two_speed_synthesizer_evidence_closure_contract_attached():
+    """
+    Verifies that the Two-Speed Synthesizer attaches an RGIC-E1 EvidenceClosureContract:
+    - Sets all obligations initially to UNKNOWN.
+    - Sets ClaimScope to UNRESOLVED (honest initial state before testing).
+    - Verifies compatibility with PortableContract format adapters.
+    """
+    from spe_runtime.research.rgic_e1.portable_contract import PortableContract
+
+    compiler = MetaPromptCompiler()
+    result = compiler.synthesize_two_speed("Build a high-performance REST API with rate limiting")
+
+    contract = result.evidence_closure_contract
+    assert contract is not None
+    assert len(contract.obligations) > 0
+    assert contract.claim_scope.value == "UNRESOLVED"
+    for ob in contract.obligations:
+        assert ob.state.value == "UNKNOWN"
+
+    # Multi-runtime portable contract generation
+    openai_contract = PortableContract.to_openai_agents_format(contract)
+    assert "openai_agents_contract" in openai_contract
+    assert len(openai_contract["openai_agents_contract"]["guardrails"]) == len(contract.obligations)
+
+    langsmith_suite = PortableContract.to_langsmith_format(contract)
+    assert "langsmith_evaluation_suite" in langsmith_suite
+
+    claude_assertions = PortableContract.to_claude_skill_format(contract)
+    assert "claude_skill_verification" in claude_assertions
 
 

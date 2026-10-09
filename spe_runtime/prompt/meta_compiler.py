@@ -66,6 +66,7 @@ class TwoSpeedSynthesisResult:
     witness_signature: Optional[str] = None
     cec_conservation_formula: Optional[str] = None
     execution_plan: Optional[Any] = None
+    evidence_closure_contract: Optional[Any] = None
 
 
 @dataclass(frozen=True)
@@ -525,6 +526,39 @@ class MetaPromptCompiler:
             f"  enforcement: \"pre-commit\"\n"
         )
 
+        # Build optional RGIC-E1 EvidenceClosureContract
+        evidence_contract = None
+        try:
+            from spe_runtime.research.rgic_e1.types import (
+                EvidenceClosureContract, Obligation as RGICObligation,
+                ObligationState, ClaimScope, EvidencePolicy
+            )
+            rgic_obs = []
+            for ob in plan.obligations:
+                rgic_obs.append(
+                    RGICObligation(
+                        id=ob.obligation_id,
+                        requirement=ob.description,
+                        acceptance_rule_ref=ob.predicate_target,
+                        criticality=10 if ob.is_safety_critical else 6,
+                        state=ObligationState.UNKNOWN,
+                        evidence_policy=EvidencePolicy(
+                            policy_id=f"pol_{ob.obligation_id}",
+                            required_evidence_type=ob.witness_type.upper(),
+                            min_receipts=1
+                        )
+                    )
+                )
+            evidence_contract = EvidenceClosureContract(
+                schema_version="0.2.0",
+                contract_id=f"contract_{plan.protected_intent.intent_digest[:16]}",
+                protected_intent_ref=plan.protected_intent.intent_digest,
+                obligations=rgic_obs,
+                claim_scope=ClaimScope.UNRESOLVED
+            )
+        except Exception:
+            evidence_contract = None
+
         if resolved_mode == SynthesisMode.SIMPLE:
             # Mode A: Simple Developer Mode (ZERO JARGON)
             # Never mention Bounded Horn SAT, Kleene 3-Valued Logic, Epistemic Manifolds, Lagrangian Multipliers
@@ -555,6 +589,7 @@ class MetaPromptCompiler:
                 rendered_output=rendered,
                 domain=domain,
                 execution_plan=plan,
+                evidence_closure_contract=evidence_contract,
             )
 
         else:
@@ -630,6 +665,7 @@ class MetaPromptCompiler:
                 witness_signature=witness_sig,
                 cec_conservation_formula=cec_conservation_formula,
                 execution_plan=plan,
+                evidence_closure_contract=evidence_contract,
             )
 
     def _extract_negative_bound(self, prompt: str, domain: str) -> str:

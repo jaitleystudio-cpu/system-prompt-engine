@@ -18,6 +18,7 @@ Index of master engineering plans, upgrade proposals, and mathematical specifica
 | [**`2026-10-09-spe-planetary-monopoly-harness-plan.md`**](./2026-10-09-spe-planetary-monopoly-harness-plan.md) | **Whole-Harness Supercompiler (WHS) & Planetary Monopoly**: Hybrid local-device-first switchboard ($0 local engine vs 2PC cloud escrow) & 10/10 Worldwide Standard Gap Roadmap. | **Approved for Build** | October 2026 |
 | [**`2026-10-09-spe-v1.4-blockbuster-upgrade.md`**](./2026-10-07-spe-v1.4-blockbuster-upgrade.md) | **SPE v1.4 Blockbuster Upgrade Plan**: Core production runtime stabilization, entitlement, and mutation defenses. | **Completed & Passing (751/751 Unit Tests)** | October 2026 |
 | [**`2026-10-09-rgic-reality-grounded-intelligence-compilation-plan.md`**](./2026-10-09-rgic-reality-grounded-intelligence-compilation-plan.md) | **Reality-Grounded Intelligence Compilation (RGIC)**: Concept Discovery & Repair, operational measurements, and cross-model causal theory transport. | **Approved Research Candidate (Quarantine)** | October 2026 |
+| [**`2026-10-09-rgic-e1-evidence-closure-planner-plan.md`**](./2026-10-09-rgic-e1-evidence-closure-planner-plan.md) | **Evidence Closure Planner (RGIC-E1)**: Bidirectional acceptance compilation, minimal probe selection ($\operatorname{Utility}(a)$ optimization), and uncertainty conservation ($\operatorname{Accept}(o_i) \implies \operatorname{ValidEvidence}(o_i, E)$). | **Approved Research Candidate (Quarantine)** | October 2026 |
 
 ---
 
@@ -27,4 +28,3 @@ Index of master engineering plans, upgrade proposals, and mathematical specifica
 2. **Deterministic-First Principle**: Deterministic probes and local computation ($0 tokens) must always take precedence over stochastic cloud model inference.
 3. **Exact Integer Accounting**: All financial transactions, token ledgers, and escrow pools must be denominated in integer `NanoUSD` ($10^9\text{ nanos} = \$1.00\text{ USD}$).
 4. **Kleene 3-Valued Qualification**: No safety-critical obligation can be marked fulfilled while in the `UNKNOWN` state.
-- [2026-10-09-rgic-e1-evidence-closure-planner-plan.md](2026-10-09-rgic-e1-evidence-closure-planner-plan.md)
