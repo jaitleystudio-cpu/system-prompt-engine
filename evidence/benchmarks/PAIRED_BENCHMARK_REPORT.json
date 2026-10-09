@@ -7,11 +7,11 @@
   "delta": 0.667,
   "noninferior": true,
   "domain_deltas": {
-    "SCHEMA_CONFORMANCE": 1.0,
     "FINANCIAL_CONSTRAINTS": 1.0,
+    "SCHEMA_CONFORMANCE": 1.0,
+    "AGENT_AUTHORIZATION": 1.0,
     "STRUCTURED_EXTRACTION": 1.0,
     "LONG_CONTEXT": 0.0,
-    "AGENT_AUTHORIZATION": 1.0,
     "RESEARCH": 0.0,
     "MULTI_TURN_DRIFT": 1.0,
     "CITATION_REQUIREMENTS": 0.0

@@ -156,6 +156,63 @@ def _validate_local_host(host: str) -> None:
         )
 
 
+LOCAL_DAEMON_TARGETS = [
+    ("ollama", "http://127.0.0.1:11434/api/version", "http://127.0.0.1:11434/v1"),
+    ("vllm", "http://127.0.0.1:8000/v1/models", "http://127.0.0.1:8000/v1"),
+    ("llamacpp", "http://127.0.0.1:8080/health", "http://127.0.0.1:8080/v1"),
+    ("localai", "http://127.0.0.1:8080/v1/models", "http://127.0.0.1:8080/v1"),
+]
+
+
+def probe_local_daemons(timeout_ms: int = 50) -> Optional[Tuple[str, str]]:
+    """
+    Probes known local inference daemon ports with a 50ms connect timeout.
+    Returns (daemon_name, base_url) for the first healthy daemon, or None.
+    """
+    timeout_s = timeout_ms / 1000.0
+    for name, health_url, base_url in LOCAL_DAEMON_TARGETS:
+        try:
+            req = urllib.request.Request(health_url, method="GET")
+            with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+                if resp.status in (200, 204):
+                    return (name, base_url)
+        except Exception:
+            continue
+    return None
+
+
+def align_context_with_truncation_guard(
+    kv_aligner: PagedAttentionKVAligner,
+    invariant_clauses: List[str],
+    user_input: str,
+    max_context_tokens: int = 2048,
+) -> Tuple[Any, bool]:
+    """
+    PagedAttention KV-Aligner with Context Truncation Guard:
+    Detects if estimated tokens exceed physical context limit.
+    If exceeded, slices prefix context while strictly preserving the ProtectedIntent
+    invariant block at token index 0.
+    """
+    est_invariant = sum(len(c) // 4 for c in invariant_clauses)
+    est_user = len(user_input) // 4
+    total_est = est_invariant + est_user
+
+    was_truncated = False
+    safe_user_input = user_input
+    if total_est > max_context_tokens:
+        was_truncated = True
+        available_user_tokens = max(128, max_context_tokens - est_invariant)
+        safe_user_chars = available_user_tokens * 4
+        safe_user_input = user_input[-safe_user_chars:]
+
+    layout = kv_aligner.compile_layout(
+        invariant_clauses=invariant_clauses,
+        tool_schemas=[],
+        dynamic_user_input=safe_user_input,
+    )
+    return layout, was_truncated
+
+
 class WireProxyHandler(http.server.BaseHTTPRequestHandler):
     """HTTP Request Handler implementing OpenAI v1 wire protocol with honest telemetry."""
 

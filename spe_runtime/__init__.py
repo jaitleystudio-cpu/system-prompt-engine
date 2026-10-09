@@ -41,6 +41,15 @@ from spe_runtime.hybrid import (
     TaskRequirement,
 )
 from spe_runtime.runtime_gateway.wire_proxy import ProxyMetrics, WireProxyServer
+from spe_runtime.production_bridge import (
+    EvidenceClosureAdapter,
+    ConservationBus,
+    MorphingEngine,
+    HonestTaskProjection,
+    AntiSelfCertificationError,
+    ObligationDroppedError,
+    PermissionEscalationError,
+)
 
 from spe_runtime.prompt import (
     CompletionCertificate,
@@ -153,5 +162,12 @@ __all__ = [
     "SemanticDriftViolationError",
     "DriftVerdict",
     "DriftType",
+    "EvidenceClosureAdapter",
+    "ConservationBus",
+    "MorphingEngine",
+    "HonestTaskProjection",
+    "AntiSelfCertificationError",
+    "ObligationDroppedError",
+    "PermissionEscalationError",
 ]
 
