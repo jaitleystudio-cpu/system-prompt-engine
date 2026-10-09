@@ -346,11 +346,48 @@ const contractMd = readFileSync(continueContractPath, "utf-8");
 assert(contractMd.includes("```spe-task") && contractMd.includes("EXECUTION PLAN:"), "Contract markdown structure invalid");
 console.log("  ✓ continue verified");
 
+// 36. Exchange Merit Ranking (spe exchange rank)
+console.log("\n[36/38] Testing exchange rank");
+const rankOutPath = join(tempDir, "sample_exchange_ranked.json");
+const rankOut = runCli(`exchange rank --out "${rankOutPath}"`);
+assert(rankOut.includes("SKILLS & PLUGINS EXCHANGE — MERIT RANKING") && rankOut.includes("UNPURCHASABLE TOP 3"), "Rank output missing expected header");
+assert(existsSync(rankOutPath), "sample_exchange_ranked.json not created");
+const rankData = JSON.parse(readFileSync(rankOutPath, "utf-8"));
+assert(rankData.top_3.length > 0, "Top 3 merit ranking empty");
+assert(rankData.sponsored_inventory.length > 0, "Sponsored inventory missing");
+assert(rankData.disqualified_candidates.length > 0, "Disqualified gate missing");
+console.log("  ✓ exchange rank verified");
+
+// 37. Exchange Mission-Fit Matcher (spe exchange match)
+console.log("\n[37/38] Testing exchange match");
+const matchOutPath = join(tempDir, "sample_mission_match.json");
+const matchMdPath = join(tempDir, "sample_mission_match.md");
+const matchOut = runCli(`exchange match "Build high-performance database migrations with Next.js App Router and Drizzle ORM, local AST only" --out "${matchOutPath}" --out-markdown "${matchMdPath}"`);
+assert(matchOut.includes("SPE MISSION-FIT RECOMMENDATION"), "Match output missing recommendation header");
+assert(existsSync(matchOutPath), "sample_mission_match.json not created");
+assert(existsSync(matchMdPath), "sample_mission_match.md not created");
+const matchData = JSON.parse(readFileSync(matchOutPath, "utf-8"));
+assert(matchData.status === "QUALIFIED_MATCH", "Match status mismatch");
+assert(matchData.recommendations.length > 0, "No skills recommended");
+assert(matchData.conflict_check_passed === true, "Conflict check must pass");
+console.log("  ✓ exchange match verified");
+
+// 38. Programmatic SEO & Ad Sanctuary Governor (spe exchange seo-check)
+console.log("\n[38/38] Testing exchange seo-check");
+const seoOutPath = join(tempDir, "sample_seo_audit.json");
+const seoOut = runCli(`exchange seo-check /exchange/skills/drizzle-orm --passport EVP-3010cdfe9f530793 --trials 200 --out "${seoOutPath}"`);
+assert(seoOut.includes("PROGRAMMATIC SEO & AD-MONETIZATION GOVERNOR") && seoOut.includes("INDEXABLE"), "SEO check output missing expected status");
+assert(existsSync(seoOutPath), "sample_seo_audit.json not created");
+const seoData = JSON.parse(readFileSync(seoOutPath, "utf-8"));
+assert(seoData.status === "INDEXABLE", "SEO indexability status mismatch");
+assert(seoData.robots_directive === "index, follow", "Robots directive mismatch");
+console.log("  ✓ exchange seo-check verified");
+
 // Clean up scratch files
 rmSync(tempDir, { recursive: true, force: true });
 
 console.log("\n================================================================================");
-console.log("🎉 ALL 35 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
+console.log("🎉 ALL 38 SPE CLI COMMANDS PASSED VERIFICATION WITH 100% SUCCESS!");
 console.log("================================================================================");
 
 

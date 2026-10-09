@@ -9,6 +9,9 @@ Provides clean, high-level production facades:
 4. ReleaseAuditorAdapter: Projects AEQ independent release audits across 5 fault families.
 5. TriOriginDiagnosticAdapter: Projects RGIC-T1 counterfactual failure origin diagnosis (Goal vs World vs Verifier).
 6. ContinuationAuditorAdapter: Projects WDIC-VCT and CWC zero-subscription task continuation and anti-omission auditing.
+7. ExchangeMeritRankerAdapter: Projects Master Prompt 1 Evidence Passport & Top-3 Merit Ranking.
+8. ExchangeMissionMatcherAdapter: Projects Master Prompt 2 Mission-Fit Skill Selection & Permission Gateway.
+9. ExchangeSeoGovernorAdapter: Projects Master Prompt 3 Programmatic SEO & Ad-Monetization Governor.
 """
 
 from dataclasses import dataclass, field
@@ -841,5 +844,239 @@ class ContinuationAuditorAdapter:
             out_md.write_text(next_contract.to_markdown(), encoding="utf-8")
 
         return bundle
+
+
+class ExchangeMeritRankerAdapter:
+    """
+    Production facade for Master Prompt 1: Evidence Passport & Top-3 Merit Ranking.
+    Computes Wilson lower bound confidence intervals, enforces security hard-gates,
+    and isolates capital/advertising from organic rankings.
+    """
+    @staticmethod
+    def compute_wilson_lower_bound(successes: int, trials: int, z: float = 1.96) -> float:
+        from spe_runtime.research.exchange.merit_ranker import compute_wilson_lower_bound
+        return compute_wilson_lower_bound(successes, trials, z)
+
+    @staticmethod
+    def create_evidence_passport(
+        target_identifier: str,
+        version_digest: str,
+        trials_n: int,
+        successes: int,
+        host_runtime: str = "Claude Code / Cursor / Gilden",
+        model_tested: str = "claude-3-7-sonnet",
+        os_name: str = "macOS / Linux",
+        average_token_overhead: int = 150,
+        permission_footprint: Optional[List[str]] = None,
+        security_audit: Optional[Dict[str, Any]] = None,
+        is_sponsored: bool = False,
+        sponsor_bid_usd: float = 0.0,
+        installation_count: int = 0,
+    ) -> Dict[str, Any]:
+        from spe_runtime.research.exchange.merit_ranker import MeritRanker, SecurityAudit
+        sec = None
+        if security_audit:
+            sec = SecurityAudit(
+                static_analysis=security_audit.get("static_analysis", "PASSED_SAFE"),
+                permission_footprint=security_audit.get("permission_footprint", permission_footprint or ["FILESYSTEM_SCOPED_READ"]),
+                exfiltration_risk=security_audit.get("exfiltration_risk", "ZERO_DETECTED"),
+                unauthorized_network_egress=security_audit.get("unauthorized_network_egress", False),
+                credential_exfiltration=security_audit.get("credential_exfiltration", False),
+                ambient_authority_escalation=security_audit.get("ambient_authority_escalation", False),
+                prompt_injection_detected=security_audit.get("prompt_injection_detected", False),
+            )
+        passport = MeritRanker.generate_evidence_passport(
+            target_identifier=target_identifier,
+            version_digest=version_digest,
+            trials_n=trials_n,
+            successes=successes,
+            host_runtime=host_runtime,
+            model_tested=model_tested,
+            os_name=os_name,
+            average_token_overhead=average_token_overhead,
+            permission_footprint=permission_footprint,
+            security_audit=sec,
+            is_sponsored=is_sponsored,
+            sponsor_bid_usd=sponsor_bid_usd,
+            installation_count=installation_count,
+        )
+        return passport.to_dict()
+
+    @staticmethod
+    def rank_catalog(
+        candidates: List[Dict[str, Any]],
+        z_score: float = 1.96,
+        output_path: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        from spe_runtime.research.exchange.merit_ranker import MeritRanker
+        res = MeritRanker.rank_candidates(candidates, z_score=z_score)
+        res_dict = res.to_dict()
+        if output_path:
+            p = Path(output_path)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(json.dumps(res_dict, indent=2), encoding="utf-8")
+        return res_dict
+
+
+class ExchangeMissionMatcherAdapter:
+    """
+    Production facade for Master Prompt 2: Mission-Fit Skill Selection & Permission Boundary.
+    Compiles natural language mission AST, verifies permission boundaries,
+    detects inter-skill conflicts, and produces unassailable recommendations.
+    """
+    @staticmethod
+    def match_mission(
+        mission_intent: str,
+        catalog: List[Dict[str, Any]],
+        runtime: str = "Claude Code",
+        os_name: str = "macOS",
+        allowed_permissions: Optional[List[str]] = None,
+        forbidden_permissions: Optional[List[str]] = None,
+        output_path: Optional[str] = None,
+        output_markdown_path: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        from spe_runtime.research.exchange.mission_matcher import MissionMatcher
+        res = MissionMatcher.match_mission(
+            mission_input=mission_intent,
+            catalog=catalog,
+            runtime=runtime,
+            os_name=os_name,
+            allowed_permissions=allowed_permissions,
+            forbidden_permissions=forbidden_permissions,
+        )
+        res_dict = res.to_dict()
+        if output_path:
+            p = Path(output_path)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(json.dumps(res_dict, indent=2), encoding="utf-8")
+        if output_markdown_path:
+            p = Path(output_markdown_path)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(res.raw_markdown, encoding="utf-8")
+        return res_dict
+
+
+class ExchangeSeoGovernorAdapter:
+    """
+    Production facade for Master Prompt 3: Programmatic SEO & Ad-Monetization Governor.
+    Classifies page indexability against scaled content abuse, guarantees ad-free workspace sanctuary,
+    and emits JSON-LD and 4-zone semantic markup.
+    """
+    @staticmethod
+    def classify_indexability(
+        route: str,
+        trials_n: int = 0,
+        has_evidence_passport: bool = False,
+        has_reproducible_benchmark: bool = True,
+        is_user_search_query: bool = False,
+        is_raw_unverified_import: bool = False,
+    ) -> Dict[str, Any]:
+        from spe_runtime.research.exchange.seo_governor import SeoGovernor
+        res = SeoGovernor.classify_indexability(
+            route=route,
+            trials_n=trials_n,
+            has_evidence_passport=has_evidence_passport,
+            has_reproducible_benchmark=has_reproducible_benchmark,
+            is_user_search_query=is_user_search_query,
+            is_raw_unverified_import=is_raw_unverified_import,
+        )
+        return res.to_dict()
+
+    @staticmethod
+    def enforce_ad_sanctuary(
+        route: str,
+        has_ads: bool = False,
+        ad_payload: Optional[Dict[str, Any]] = None,
+        context_contains_private_prompt: bool = False,
+        context_contains_user_code: bool = False,
+    ) -> bool:
+        from spe_runtime.research.exchange.seo_governor import SeoGovernor
+        return SeoGovernor.validate_ad_sanctuary(
+            route=route,
+            has_ads=has_ads,
+            ad_payload=ad_payload,
+            context_contains_private_prompt=context_contains_private_prompt,
+            context_contains_user_code=context_contains_user_code,
+        )
+
+    @staticmethod
+    def generate_structured_data(
+        schema_type: str,
+        data: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        from spe_runtime.research.exchange.seo_governor import (
+            SoftwareApplicationSchema,
+            TechArticleSchema,
+            ItemListSchema,
+        )
+        s_type = schema_type.lower()
+        if s_type in ("softwareapplication", "software_application", "app"):
+            schema = SoftwareApplicationSchema(
+                name=data.get("name", "skill"),
+                application_category=data.get("application_category", "DeveloperApplication"),
+                operating_system=data.get("operating_system", "macOS, Linux"),
+                software_version=data.get("software_version", "1.0.0"),
+                rating_value=data.get("rating_value", 4.8),
+                rating_count=data.get("rating_count", 150),
+                evidence_passport_id=data.get("evidence_passport_id", ""),
+            )
+            return schema.to_json_ld()
+        elif s_type in ("techarticle", "tech_article", "article"):
+            schema = TechArticleSchema(
+                headline=data.get("headline", "Technical Verification Report"),
+                dependencies=data.get("dependencies", []),
+                version=data.get("version", "1.0.0"),
+                test_methodology=data.get("test_methodology", "Reproducible testing"),
+                author=data.get("author", "SPE Ω Empirical Research Engine"),
+            )
+            return schema.to_json_ld()
+        elif s_type in ("itemlist", "item_list", "list"):
+            schema = ItemListSchema(
+                name=data.get("name", "Top-3 Verified Skills"),
+                items=data.get("items", []),
+            )
+            return schema.to_json_ld()
+        else:
+            raise ValueError(f"Unknown schema type: {schema_type}")
+
+    @staticmethod
+    def generate_page_markup(
+        route: str,
+        title: str,
+        canonical_url: str,
+        breadcrumbs: List[Tuple[str, str]],
+        comparative_data: List[Dict[str, Any]],
+        methodology_text: str,
+        reproducible_command: str,
+        wilson_score_lower_bound: float,
+        trials_n: int,
+        target_identifier: str = "skill-target",
+        version_digest: str = "v1",
+        passport_id: str = "EVP-123456",
+        has_ads: bool = True,
+        output_path: Optional[str] = None,
+    ) -> str:
+        from spe_runtime.research.exchange.seo_governor import SeoGovernor
+        markup = SeoGovernor.generate_page_markup(
+            route=route,
+            title=title,
+            canonical_url=canonical_url,
+            breadcrumbs=breadcrumbs,
+            comparative_data=comparative_data,
+            methodology_text=methodology_text,
+            reproducible_command=reproducible_command,
+            wilson_score_lower_bound=wilson_score_lower_bound,
+            trials_n=trials_n,
+            target_identifier=target_identifier,
+            version_digest=version_digest,
+            passport_id=passport_id,
+            has_ads=has_ads,
+        )
+        if output_path:
+            p = Path(output_path)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(markup, encoding="utf-8")
+        return markup
+
 
 

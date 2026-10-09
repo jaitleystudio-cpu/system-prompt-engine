@@ -232,7 +232,8 @@ try {
     case 'audit-release':
     case 'diagnose':
     case 'continue':
-    case 'continue-task': {
+    case 'continue-task':
+    case 'exchange': {
       runPythonCli(command, args.slice(1));
       break;
     }

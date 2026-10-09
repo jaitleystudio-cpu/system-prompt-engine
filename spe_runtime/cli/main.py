@@ -684,6 +684,303 @@ def cmd_continue(args: argparse.Namespace) -> int:
     return 0
 
 
+def get_default_exchange_catalog() -> list[dict[str, Any]]:
+    return [
+        {
+            "name": "@skill/drizzle-orm",
+            "target_identifier": "@skill/drizzle-orm",
+            "version_digest": "sha256:d84f9b201a",
+            "trials_n": 200,
+            "successes": 192,
+            "capabilities": ["Drizzle ORM", "Database Migrations", "Local AST Analysis"],
+            "permissions": ["LOCAL_AST_ONLY", "FILESYSTEM_SCOPED_READ"],
+            "authority_domain": "database_migration",
+            "limitation": "Requires explicit schema input",
+            "tested_environment": {"host_runtime": "Claude Code", "model_tested": "claude-3-7-sonnet", "trials_n": 200},
+            "security_audit": {"static_analysis": "PASSED_SAFE", "exfiltration_risk": "ZERO_DETECTED", "permission_footprint": ["LOCAL_AST_ONLY"]},
+            "performance_metrics": {"success_rate": 0.96, "wilson_lower_bound_95": 0.924, "average_token_overhead": 140},
+            "validity_window": {"status": "CURRENT"},
+        },
+        {
+            "name": "@skill/nextjs-router",
+            "target_identifier": "@skill/nextjs-router",
+            "version_digest": "sha256:7bc302ae55",
+            "trials_n": 120,
+            "successes": 112,
+            "capabilities": ["Next.js App Router", "React Components"],
+            "permissions": ["FILESYSTEM_SCOPED_WRITE", "FILESYSTEM_SCOPED_READ"],
+            "authority_domain": "frontend_routing",
+            "scoped_write_paths": ["app/page.tsx", "app/layout.tsx"],
+            "limitation": "Manual config file review needed",
+            "tested_environment": {"host_runtime": "Claude Code", "model_tested": "claude-3-7-sonnet", "trials_n": 120},
+            "security_audit": {"static_analysis": "PASSED_SAFE", "exfiltration_risk": "ZERO_DETECTED", "permission_footprint": ["FILESYSTEM_SCOPED_WRITE"]},
+            "performance_metrics": {"success_rate": 0.933, "wilson_lower_bound_95": 0.875, "average_token_overhead": 165},
+            "validity_window": {"status": "CURRENT"},
+        },
+        {
+            "name": "@skill/security-auditor",
+            "target_identifier": "@skill/security-auditor",
+            "version_digest": "sha256:1a84f3c09e",
+            "trials_n": 85,
+            "successes": 80,
+            "capabilities": ["Security Audit", "Local AST Analysis"],
+            "permissions": ["FILESYSTEM_SCOPED_READ"],
+            "authority_domain": "security_audit",
+            "limitation": "Read-only analysis; cannot auto-fix",
+            "tested_environment": {"host_runtime": "Claude Code", "model_tested": "claude-3-7-sonnet", "trials_n": 85},
+            "security_audit": {"static_analysis": "PASSED_SAFE", "exfiltration_risk": "ZERO_DETECTED", "permission_footprint": ["FILESYSTEM_SCOPED_READ"]},
+            "performance_metrics": {"success_rate": 0.941, "wilson_lower_bound_95": 0.868, "average_token_overhead": 110},
+            "validity_window": {"status": "CURRENT"},
+        },
+        {
+            "name": "@skill/sponsored-tool-promoted",
+            "target_identifier": "@skill/sponsored-tool-promoted",
+            "version_digest": "sha256:sponsored99",
+            "trials_n": 50,
+            "successes": 48,
+            "capabilities": ["General Code Assistance"],
+            "permissions": ["FILESYSTEM_SCOPED_READ"],
+            "is_sponsored": True,
+            "sponsor_bid_usd": 250.0,
+            "installation_count": 50000,
+            "tested_environment": {"host_runtime": "Claude Code", "model_tested": "claude-3-7-sonnet", "trials_n": 50},
+            "security_audit": {"static_analysis": "PASSED_SAFE", "exfiltration_risk": "ZERO_DETECTED", "permission_footprint": ["FILESYSTEM_SCOPED_READ"]},
+            "performance_metrics": {"success_rate": 0.96, "wilson_lower_bound_95": 0.865, "average_token_overhead": 200},
+            "validity_window": {"status": "CURRENT"},
+        },
+        {
+            "name": "@skill/insecure-network-egress",
+            "target_identifier": "@skill/insecure-network-egress",
+            "version_digest": "sha256:insecure123",
+            "trials_n": 50,
+            "successes": 50,
+            "capabilities": ["Cloud Sync"],
+            "permissions": ["NETWORK", "EXTERNAL_EGRESS"],
+            "security_audit": {
+                "static_analysis": "FAILED_RISK",
+                "exfiltration_risk": "DETECTED",
+                "unauthorized_network_egress": True,
+                "permission_footprint": ["NETWORK", "EXTERNAL_EGRESS"],
+            },
+            "validity_window": {"status": "DISQUALIFIED"},
+        },
+    ]
+
+
+def cmd_exchange(args: argparse.Namespace) -> int:
+    action = getattr(args, "exchange_action", None) or "rank"
+    as_json = getattr(args, "json", False)
+
+    from spe_runtime.production_bridge import (
+        ExchangeMeritRankerAdapter,
+        ExchangeMissionMatcherAdapter,
+        ExchangeSeoGovernorAdapter,
+    )
+
+    if action == "rank":
+        catalog_path = getattr(args, "catalog", None)
+        out_path = getattr(args, "out", None)
+        if catalog_path and Path(catalog_path).exists():
+            catalog_data = json.loads(Path(catalog_path).read_text(encoding="utf-8"))
+            if isinstance(catalog_data, dict) and "candidates" in catalog_data:
+                candidates = catalog_data["candidates"]
+            elif isinstance(catalog_data, list):
+                candidates = catalog_data
+            else:
+                candidates = [catalog_data]
+        else:
+            candidates = get_default_exchange_catalog()
+
+        res = ExchangeMeritRankerAdapter.rank_catalog(candidates, output_path=out_path)
+
+        if as_json:
+            print(json.dumps(res, indent=2))
+            return 0
+
+        print("🏆 SPE Ω SKILLS & PLUGINS EXCHANGE — MERIT RANKING (UNPURCHASABLE TOP 3)")
+        print(f"  Total Evaluated:      {res.get('total_evaluated', len(candidates))}")
+        print(f"  Eligible Ranked:      {res.get('ranked_count', len(res.get('top_3', [])))}")
+        print(f"  Disqualified Gate:    {res.get('disqualified_count', 0)}")
+        print(f"  Sponsored Inventory:  {res.get('sponsored_count', 0)} (Isolated from Top 3)")
+
+        print("\n🥇 UNPURCHASABLE TOP 3 MERIT RANKINGS (Wilson 95% Confidence Bound):")
+        for i, p in enumerate(res.get("top_3", [])):
+            ident = p.get("target_identifier")
+            metrics = p.get("performance_metrics", {})
+            w_score = metrics.get("wilson_lower_bound_95", 0.0)
+            succ = metrics.get("success_rate", 0.0)
+            env = p.get("tested_environment", {})
+            trials = env.get("trials_n", 0)
+            print(f"  #{i+1}: {ident}")
+            print(f"      Wilson Score (95% LB): {w_score * 100:.2f}% (trials n={trials}, pass rate={succ * 100:.1f}%)")
+            sec = p.get("security_audit", {})
+            print(f"      Security Gate:         {sec.get('static_analysis')} | Exfil: {sec.get('exfiltration_risk')}")
+            print(f"      Passport ID:           {p.get('passport_id')}")
+
+        disq = res.get("disqualified_candidates", [])
+        if disq:
+            print("\n🚫 DISQUALIFIED HARD GATE (CRITICAL VIOLATIONS):")
+            for d in disq:
+                print(f"  - {d.get('target_identifier')}: {', '.join(d.get('reasons', []))}")
+
+        spon = res.get("sponsored_inventory", [])
+        if spon:
+            print("\n🏷️ LABELED EXTERNAL SPONSORED INVENTORY (Zero Weight on Organic Rank):")
+            for s in spon:
+                print(f"  - [SPONSORED] {s.get('target_identifier')} (Bid: ${s.get('sponsor_bid_usd', 0):.2f})")
+
+        if out_path:
+            print(f"\n✓ Ranked results written to: {out_path}")
+        return 0
+
+    elif action == "match":
+        intent = getattr(args, "intent", "") or "General developer assistance"
+        catalog_path = getattr(args, "catalog", None)
+        runtime = getattr(args, "runtime", "Claude Code")
+        allowed_perms_arg = getattr(args, "allowed_perms", None)
+        out_path = getattr(args, "out", None)
+        out_md_path = getattr(args, "out_markdown", None)
+
+        allowed_perms = [p.strip() for p in allowed_perms_arg.split(",") if p.strip()] if allowed_perms_arg else None
+
+        if catalog_path and Path(catalog_path).exists():
+            catalog_data = json.loads(Path(catalog_path).read_text(encoding="utf-8"))
+            candidates = catalog_data if isinstance(catalog_data, list) else catalog_data.get("candidates", [])
+        else:
+            candidates = get_default_exchange_catalog()
+
+        res = ExchangeMissionMatcherAdapter.match_mission(
+            mission_intent=intent,
+            catalog=candidates,
+            runtime=runtime,
+            allowed_permissions=allowed_perms,
+            output_path=out_path,
+            output_markdown_path=out_md_path,
+        )
+
+        if as_json:
+            print(json.dumps(res, indent=2))
+            return 0
+
+        print(res.get("raw_markdown", ""))
+        if out_path:
+            print(f"\n✓ Mission match JSON written to: {out_path}")
+        if out_md_path:
+            print(f"✓ Recommendation markdown written to: {out_md_path}")
+        return 0
+
+    elif action == "seo-check":
+        route = getattr(args, "route", "/exchange")
+        trials_n = getattr(args, "trials", 150)
+        passport = getattr(args, "passport", None)
+        has_ads = getattr(args, "has_ads", False)
+        is_search = getattr(args, "search_query", False)
+        out_path = getattr(args, "out", None)
+
+        from spe_runtime.research.exchange.seo_governor import AdSanctuaryViolationError
+
+        try:
+            ExchangeSeoGovernorAdapter.enforce_ad_sanctuary(route, has_ads=has_ads)
+            ad_status = "PASSED"
+        except AdSanctuaryViolationError as e:
+            print(f"❌ Ad Sanctuary Violation: {e}", file=sys.stderr)
+            return 1
+
+        seo_res = ExchangeSeoGovernorAdapter.classify_indexability(
+            route=route,
+            trials_n=trials_n,
+            has_evidence_passport=bool(passport),
+            has_reproducible_benchmark=True,
+            is_user_search_query=is_search,
+        )
+
+        if out_path:
+            p = Path(out_path)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(json.dumps(seo_res, indent=2), encoding="utf-8")
+
+        if as_json:
+            print(json.dumps(seo_res, indent=2))
+            return 0
+
+        print("📈 SPE Ω — PROGRAMMATIC SEO & AD-MONETIZATION GOVERNOR")
+        print(f"  Target Route:         {route}")
+        print(f"  Indexability Status:  {seo_res.get('status')}")
+        print(f"  Robots Directive:     {seo_res.get('robots_directive')}")
+        print(f"  Google Scaled Defense:{'PASSED' if seo_res.get('status') == 'INDEXABLE' else 'NON_INDEXABLE (Protected from thin penalty)'}")
+        print(f"  Reason:               {seo_res.get('reason')}")
+        print(f"  Ad Sanctuary Guard:   {ad_status}")
+        if out_path:
+            print(f"\n✓ SEO audit written to: {out_path}")
+        return 0
+
+    elif action == "passport":
+        target = getattr(args, "target", "@skill/sample")
+        trials = getattr(args, "trials", 150)
+        successes = getattr(args, "successes", 144)
+        ver = getattr(args, "version", "v1.0.0")
+        out_path = getattr(args, "out", None)
+
+        passport = ExchangeMeritRankerAdapter.create_evidence_passport(
+            target_identifier=target,
+            version_digest=hashlib.sha256(ver.encode()).hexdigest(),
+            trials_n=trials,
+            successes=successes,
+        )
+
+        if out_path:
+            p = Path(out_path)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(json.dumps(passport, indent=2), encoding="utf-8")
+
+        if as_json:
+            print(json.dumps(passport, indent=2))
+            return 0
+
+        print("🎫 SPE Ω — EVIDENCE PASSPORT")
+        print(f"  Passport ID:          {passport.get('passport_id')}")
+        print(f"  Target:               {passport.get('target_identifier')}")
+        perf = passport.get("performance_metrics", {})
+        print(f"  Wilson Score (95%):   {perf.get('wilson_lower_bound_95') * 100:.2f}%")
+        print(f"  Pass Rate:            {perf.get('success_rate') * 100:.2f}% (trials n={trials})")
+        print(f"  Validity Status:      {passport.get('validity_window', {}).get('status')}")
+        print(f"  Top 3 Eligibility:    {passport.get('top_three_eligibility')}")
+        if out_path:
+            print(f"\n✓ Evidence passport written to: {out_path}")
+        return 0
+
+    elif action == "page":
+        route = getattr(args, "route", "/exchange/skills/sample")
+        title = getattr(args, "title", "SPE Ω Verified Skill")
+        trials = getattr(args, "trials", 150)
+        out_path = getattr(args, "out", None)
+
+        markup = ExchangeSeoGovernorAdapter.generate_page_markup(
+            route=route,
+            title=title,
+            canonical_url=f"https://spe.run{route}",
+            breadcrumbs=[("Exchange", "/exchange"), ("Skills", "/skills"), ("Sample", route)],
+            comparative_data=[
+                {"metric": "Success Rate", "candidate": "96.0%", "baseline": "78.2%", "delta": "+17.8%"},
+                {"metric": "Token Overhead", "candidate": "140 toks", "baseline": "420 toks", "delta": "-66.7%"},
+            ],
+            methodology_text="Standardized test battery executed across 150 reproducible trials.",
+            reproducible_command="spe bench --suite exchange-verification",
+            wilson_score_lower_bound=0.924,
+            trials_n=trials,
+            target_identifier="sample-skill",
+            output_path=out_path,
+        )
+
+        if out_path:
+            print(f"✓ 4-zone compliant semantic markup written to: {out_path}")
+        else:
+            print(markup[:500] + "\n... (truncated)")
+        return 0
+
+    else:
+        print(f"Unknown exchange action: {action}", file=sys.stderr)
+        return 1
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -799,6 +1096,52 @@ def main(argv: list[str] | None = None) -> int:
     p_continue.add_argument("--json", action="store_true", help="Output raw JSON")
     p_continue.add_argument("--strict", action="store_true", help="Fail with exit code 1 if verdict is BLOCKED_CONTRADICTION")
 
+    # exchange
+    p_exchange = subparsers.add_parser("exchange", help="Skills & Plugins Exchange: unpurchasable merit ranking, mission matching & SEO governor")
+    p_exchange_sub = p_exchange.add_subparsers(dest="exchange_action")
+
+    # spe exchange rank
+    p_ex_rank = p_exchange_sub.add_parser("rank", help="Rank skills catalog using Wilson score lower bound and 6-dimension evaluation")
+    p_ex_rank.add_argument("--catalog", "--input", dest="catalog", help="Path to catalog JSON file")
+    p_ex_rank.add_argument("--out", help="Output path for ranked JSON")
+    p_ex_rank.add_argument("--json", action="store_true", help="Output raw JSON")
+
+    # spe exchange match
+    p_ex_match = p_exchange_sub.add_parser("match", help="Match user mission against verified catalog with permission gateway")
+    p_ex_match.add_argument("intent", nargs="?", default="", help="Natural language mission intent")
+    p_ex_match.add_argument("--catalog", help="Path to catalog JSON file")
+    p_ex_match.add_argument("--runtime", default="Claude Code", help="Target runtime environment")
+    p_ex_match.add_argument("--allowed-perms", help="Comma-separated allowed permissions")
+    p_ex_match.add_argument("--out", help="Output path for matched JSON")
+    p_ex_match.add_argument("--out-markdown", help="Output path for recommendation Markdown")
+    p_ex_match.add_argument("--json", action="store_true", help="Output raw JSON")
+
+    # spe exchange seo-check
+    p_ex_seo = p_exchange_sub.add_parser("seo-check", help="Evaluate Google scaled content abuse indexability and ad sanctuary")
+    p_ex_seo.add_argument("route", nargs="?", default="/exchange", help="Target route path")
+    p_ex_seo.add_argument("--trials", type=int, default=150, help="Number of empirical trials")
+    p_ex_seo.add_argument("--passport", help="Evidence Passport ID or digest")
+    p_ex_seo.add_argument("--has-ads", action="store_true", help="Flag if ads are enabled on route")
+    p_ex_seo.add_argument("--search-query", action="store_true", help="Flag if route is internal faceted search filter")
+    p_ex_seo.add_argument("--out", help="Output path for SEO audit JSON")
+    p_ex_seo.add_argument("--json", action="store_true", help="Output raw JSON")
+
+    # spe exchange passport
+    p_ex_pass = p_exchange_sub.add_parser("passport", help="Generate or inspect Evidence Passport for a skill")
+    p_ex_pass.add_argument("target", nargs="?", default="@skill/sample", help="Skill target identifier")
+    p_ex_pass.add_argument("--trials", type=int, default=150, help="Number of empirical trials")
+    p_ex_pass.add_argument("--successes", type=int, default=144, help="Number of successful trials")
+    p_ex_pass.add_argument("--version", default="v1.0.0", help="Version digest or identifier")
+    p_ex_pass.add_argument("--out", help="Output path for Evidence Passport JSON")
+    p_ex_pass.add_argument("--json", action="store_true", help="Output raw JSON")
+
+    # spe exchange page
+    p_ex_page = p_exchange_sub.add_parser("page", help="Generate 4-zone compliant semantic HTML markup")
+    p_ex_page.add_argument("route", nargs="?", default="/exchange/skills/sample", help="Target route")
+    p_ex_page.add_argument("--title", default="SPE Ω Verified Skill", help="Page title")
+    p_ex_page.add_argument("--trials", type=int, default=150, help="Number of trials")
+    p_ex_page.add_argument("--out", help="Output path for HTML page")
+
     args = parser.parse_args(argv)
 
     handlers = {
@@ -820,6 +1163,7 @@ def main(argv: list[str] | None = None) -> int:
         "diagnose": cmd_diagnose,
         "continue": cmd_continue,
         "continue-task": cmd_continue,
+        "exchange": cmd_exchange,
     }
 
     handler = handlers.get(args.subcommand)

@@ -25,6 +25,9 @@ from spe_runtime.production_bridge import (
     ReleaseAuditorAdapter,
     TriOriginDiagnosticAdapter,
     ContinuationAuditorAdapter,
+    ExchangeMeritRankerAdapter,
+    ExchangeMissionMatcherAdapter,
+    ExchangeSeoGovernorAdapter,
 )
 from spe_runtime.cli.main import main as cli_main
 from spe_runtime.runtime_gateway.wire_proxy import (
@@ -820,6 +823,147 @@ def test_kernel1_continuation_cli_stdin_support(monkeypatch):
 
     ret = cli_main(["continue", "-", "--json"])
     assert ret == 0
+
+
+# ==============================================================================
+# EXCHANGE: EVIDENCE PASSPORT, MERIT RANKING, MISSION FIT & SEO GOVERNOR TESTS
+# ==============================================================================
+
+def test_kernel1_exchange_merit_ranker_unpurchasable_top3():
+    """Verifies unpurchasable Top-3 merit ranking, Wilson intervals, and sponsored isolation."""
+    candidates = [
+        {
+            "name": "@skill/alpha-merit",
+            "trials_n": 300,
+            "successes": 290,
+            "tested_environment": {"host_runtime": "Claude Code", "trials_n": 300},
+            "security_audit": {"static_analysis": "PASSED_SAFE", "exfiltration_risk": "ZERO_DETECTED"},
+        },
+        {
+            "name": "@skill/beta-merit",
+            "trials_n": 100,
+            "successes": 95,
+            "tested_environment": {"host_runtime": "Cursor", "trials_n": 100},
+            "security_audit": {"static_analysis": "PASSED_SAFE", "exfiltration_risk": "ZERO_DETECTED"},
+        },
+        {
+            "name": "@skill/gamma-sponsored",
+            "trials_n": 100,
+            "successes": 100,
+            "is_sponsored": True,
+            "sponsor_bid_usd": 1000.0,
+            "security_audit": {"static_analysis": "PASSED_SAFE", "exfiltration_risk": "ZERO_DETECTED"},
+        },
+        {
+            "name": "@skill/delta-malicious",
+            "trials_n": 50,
+            "successes": 50,
+            "security_audit": {"static_analysis": "FAILED_RISK", "unauthorized_network_egress": True},
+        },
+    ]
+
+    res = ExchangeMeritRankerAdapter.rank_catalog(candidates)
+    assert res["ranked_count"] == 2
+    assert res["sponsored_count"] == 1
+    assert res["disqualified_count"] == 1
+
+    top_names = [p["target_identifier"] for p in res["top_3"]]
+    assert "@skill/alpha-merit" in top_names
+    assert "@skill/beta-merit" in top_names
+    assert "@skill/gamma-sponsored" not in top_names
+    assert "@skill/delta-malicious" not in top_names
+
+
+def test_kernel1_exchange_mission_matcher_permission_and_conflict_closure():
+    """Verifies permission boundary enforcement, conflict closure, and honest abstention."""
+    catalog = [
+        {
+            "name": "@skill/drizzle-orm",
+            "capabilities": ["Drizzle ORM", "Database Migrations"],
+            "permissions": ["LOCAL_AST_ONLY"],
+            "authority_domain": "database_migration",
+            "limitation": "Requires schema input",
+            "tested_environment": {"trials_n": 200},
+            "performance_metrics": {"wilson_lower_bound_95": 0.942},
+            "validity_window": {"status": "CURRENT"},
+        },
+        {
+            "name": "@skill/prisma-competing",
+            "capabilities": ["Database Migrations"],
+            "permissions": ["LOCAL_AST_ONLY"],
+            "authority_domain": "database_migration",  # Collision!
+            "limitation": "Schema lock",
+            "tested_environment": {"trials_n": 150},
+            "performance_metrics": {"wilson_lower_bound_95": 0.890},
+            "validity_window": {"status": "CURRENT"},
+        },
+    ]
+
+    res = ExchangeMissionMatcherAdapter.match_mission(
+        mission_intent="Build database migrations using Drizzle ORM, local AST only",
+        catalog=catalog,
+        runtime="Claude Code",
+    )
+
+    assert res["status"] == "QUALIFIED_MATCH"
+    assert res["conflict_check_passed"] is True
+    # Competing migration handler excluded to prevent domain collision
+    recommended = [r["skill_identifier"] for r in res["recommendations"]]
+    assert "@skill/drizzle-orm" in recommended
+    assert "@skill/prisma-competing" not in recommended
+
+
+def test_kernel1_exchange_seo_governor_sanctuary_and_indexability():
+    """Verifies Google scaled content defense classification and 100% ad-free private sanctuary."""
+    from spe_runtime.research.exchange.seo_governor import AdSanctuaryViolationError
+
+    # 1. Scaled content indexability check
+    res_pub = ExchangeSeoGovernorAdapter.classify_indexability(
+        route="/exchange/skills/sample",
+        trials_n=150,
+        has_evidence_passport=True,
+        has_reproducible_benchmark=True,
+    )
+    assert res_pub["status"] == "INDEXABLE"
+    assert res_pub["robots_directive"] == "index, follow"
+
+    # Thin stub (< 10 trials) must be noindex
+    res_thin = ExchangeSeoGovernorAdapter.classify_indexability(
+        route="/exchange/skills/thin-stub",
+        trials_n=4,
+        has_evidence_passport=True,
+    )
+    assert res_thin["status"] == "NON_INDEXABLE"
+    assert res_thin["robots_directive"] == "noindex, follow"
+
+    # 2. Ad sanctuary enforcement
+    assert ExchangeSeoGovernorAdapter.enforce_ad_sanctuary(
+        route="/exchange/skills/sample",
+        has_ads=True,
+    ) is True
+
+    # Ads in private workspace strictly raise AdSanctuaryViolationError
+    with pytest.raises(AdSanctuaryViolationError):
+        ExchangeSeoGovernorAdapter.enforce_ad_sanctuary(
+            route="/workspace/mission-001",
+            has_ads=True,
+        )
+
+
+def test_kernel1_exchange_cli_dispatch():
+    """Verifies that `spe exchange` subcommands execute with zero exit code."""
+    # Rank
+    assert cli_main(["exchange", "rank", "--json"]) == 0
+
+    # Match
+    assert cli_main(["exchange", "match", "Build database migrations with Next.js", "--json"]) == 0
+
+    # Passport
+    assert cli_main(["exchange", "passport", "@skill/test-pass", "--json"]) == 0
+
+    # SEO check
+    assert cli_main(["exchange", "seo-check", "/exchange", "--json"]) == 0
+
 
 
 
