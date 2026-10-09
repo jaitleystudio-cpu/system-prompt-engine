@@ -133,6 +133,74 @@ def test_three_fault_world_discrimination(diagnoser, sample_hypotheses, sample_p
     assert "h-verifier-desktop-only" in record.eliminated_hypotheses
 
 
+def test_joint_fault_resolution_goal_and_verifier(diagnoser):
+    """
+    Test 2: Joint fault resolution (G + V).
+    Verifies that when both Goal misunderstanding and Verifier inadequacy coexist,
+    the joint hypothesis survives and single-cause hypotheses are eliminated.
+    """
+    h_goal_only = Hypothesis(
+        id="h-goal-only",
+        origin_class=OriginClass.GOAL,
+        description="Goal divergence only",
+        predicted_outcomes={
+            "probe-compound": {"intent_divergence": True, "verifier_fault": False}
+        }
+    )
+    h_verifier_only = Hypothesis(
+        id="h-verifier-only",
+        origin_class=OriginClass.VERIFIER,
+        description="Verifier inadequacy only",
+        predicted_outcomes={
+            "probe-compound": {"intent_divergence": False, "verifier_fault": True}
+        }
+    )
+    h_joint_gv = Hypothesis(
+        id="h-joint-gv",
+        origin_class=OriginClass.GOAL,
+        description="Compound Goal divergence AND Verifier inadequacy",
+        predicted_outcomes={
+            "probe-compound": {"intent_divergence": True, "verifier_fault": True}
+        }
+    )
+    all_hyps = [h_goal_only, h_verifier_only, h_joint_gv]
+
+    probe = DiagnosticProbe(
+        id="probe-compound",
+        description="Compound probe testing both ProtectedIntent alignment and verifier adequacy",
+        cost_nano_usd=8_000_000,
+        risk_score=15,
+        expected_entropy_reduction=900,
+        is_authorized=True
+    )
+
+    lock = diagnoser.compute_precommitment_lock(
+        probe=probe,
+        hypotheses=all_hyps,
+        timestamp_ns=1791550000000000,
+        salt="test-compound-salt"
+    )
+
+    # Reality observation: BOTH intent divergence AND verifier fault are present
+    observation = {"intent_divergence": True, "verifier_fault": True}
+
+    record = diagnoser.adjudicate(
+        record_id="rec-joint-001",
+        discrepancy_id="disc-joint-gv",
+        probe=probe,
+        lock=lock,
+        hypotheses=all_hyps,
+        observation=observation,
+        candidate_probes=[probe]
+    )
+
+    assert record.status == "DISCRIMINATED"
+    assert record.is_identifiable is True
+    assert record.remaining_hypotheses == ["h-joint-gv"]
+    assert "h-goal-only" in record.eliminated_hypotheses
+    assert "h-verifier-only" in record.eliminated_hypotheses
+
+
 def test_cryptographic_precommitment_lock_anti_harking(diagnoser, sample_hypotheses, sample_probes):
     """
     Verifies that altering predictions after the lock is created
@@ -296,3 +364,92 @@ def test_epistemic_dependency_retraction_cascade():
     # Return list contains downstream dependents
     assert "C1" in demoted
     assert "QB" in demoted
+
+
+def test_epistemic_dependency_cycle_detection_and_safeguards():
+    """
+    Verifies that circular dependencies:
+    1. Are identified by detect_cycles() and has_cycles().
+    2. Do NOT corrupt the invalidated node's state (it stays INVALIDATED).
+    3. Do NOT include the invalidated node in the demoted list.
+    """
+    graph = EpistemicDependencyGraph()
+    # Circular derivation: A -> B -> A
+    node_a = EpistemicNode(id="MECH_A", node_type="MECHANISM", dependencies=["CAP_B"])
+    node_b = EpistemicNode(id="CAP_B", node_type="CAPABILITY", dependencies=["MECH_A"])
+    graph.add_node(node_a)
+    graph.add_node(node_b)
+
+    assert graph.has_cycles() is True
+    cycles = graph.detect_cycles()
+    assert len(cycles) > 0
+
+    demoted = graph.invalidate_node("MECH_A")
+
+    # Invalidation invariant: target node must strictly remain INVALIDATED
+    assert graph.nodes["MECH_A"].state == EpistemicNodeState.INVALIDATED
+    # Target node must NEVER appear in demoted_nodes
+    assert "MECH_A" not in demoted
+    # Dependent node is demoted
+    assert "CAP_B" in demoted
+    assert graph.nodes["CAP_B"].state == EpistemicNodeState.REQUALIFICATION_REQUIRED
+
+
+def test_epistemic_dependency_diamond_topological_sort():
+    """
+    Verifies that diamond dependencies:
+    A -> B -> C and A -> C
+    When A is invalidated, Kahn's algorithm strictly demotes B BEFORE C in topological order.
+    """
+    graph = EpistemicDependencyGraph()
+    graph.add_node(EpistemicNode(id="A", node_type="MECHANISM"))
+    # Add C before B in graph definitions to test ordering independence
+    graph.add_node(EpistemicNode(id="C", node_type="QUALIFICATION", dependencies=["A", "B"]))
+    graph.add_node(EpistemicNode(id="B", node_type="CAPABILITY", dependencies=["A"]))
+
+    assert graph.has_cycles() is False
+
+    demoted = graph.invalidate_node("A")
+    assert demoted == ["B", "C"]
+    assert graph.nodes["A"].state == EpistemicNodeState.INVALIDATED
+    assert graph.nodes["B"].state == EpistemicNodeState.REQUALIFICATION_REQUIRED
+    assert graph.nodes["C"].state == EpistemicNodeState.REQUALIFICATION_REQUIRED
+
+
+def test_total_variation_probabilistic_separability(diagnoser):
+    """
+    Verifies Total Variation separability criterion:
+    TV(P(Y|H1), P(Y|H2)) >= epsilon
+    """
+    h_dist1 = Hypothesis(
+        id="h-prob-1",
+        origin_class=OriginClass.WORLD,
+        description="P(success) = 0.90",
+        predicted_outcomes={"probe-p": {"success": 0.90, "failure": 0.10}}
+    )
+    h_dist2 = Hypothesis(
+        id="h-prob-2",
+        origin_class=OriginClass.WORLD,
+        description="P(success) = 0.20",
+        predicted_outcomes={"probe-p": {"success": 0.20, "failure": 0.80}}
+    )
+    h_dist_close = Hypothesis(
+        id="h-prob-close",
+        origin_class=OriginClass.WORLD,
+        description="P(success) = 0.895 (TV < 0.01)",
+        predicted_outcomes={"probe-p": {"success": 0.895, "failure": 0.105}}
+    )
+
+    probe = DiagnosticProbe(
+        id="probe-p",
+        description="Probabilistic probe",
+        cost_nano_usd=1_000_000,
+        risk_score=5,
+        expected_entropy_reduction=500
+    )
+
+    # h_dist1 and h_dist2: TV = 0.5 * (|0.9 - 0.2| + |0.1 - 0.8|) = 0.70 >= 0.01
+    assert diagnoser.check_separability(h_dist1, h_dist2, probe, epsilon=0.01) is True
+
+    # h_dist1 and h_dist_close: TV = 0.5 * (|0.9 - 0.895| + |0.1 - 0.105|) = 0.005 < 0.01
+    assert diagnoser.check_separability(h_dist1, h_dist_close, probe, epsilon=0.01) is False

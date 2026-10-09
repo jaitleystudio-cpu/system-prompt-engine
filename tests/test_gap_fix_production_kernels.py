@@ -473,3 +473,53 @@ def test_cli_diagnose_command_e2e(tmp_path):
     assert ret_json == 0
 
 
+def test_kernel1_tri_origin_diagnostic_adapter_empty_probes_rejection():
+    """Verifies that TriOriginDiagnosticAdapter rejects empty candidate probe lists with ValueError."""
+    with pytest.raises(ValueError, match="Candidate probes list cannot be empty"):
+        TriOriginDiagnosticAdapter.diagnose(
+            discrepancy_id="DISC-EMPTY-PROBES",
+            candidate_probes=[],
+        )
+
+
+def test_kernel1_tri_origin_diagnostic_adapter_joint_gv_origin():
+    """Verifies that TriOriginDiagnosticAdapter handles compound Goal + Verifier failure origins."""
+    bundle = TriOriginDiagnosticAdapter.diagnose(
+        discrepancy_id="DISC-JOINT-01",
+        target_origin="G+V",
+    )
+    assert bundle["status"] == "UNIDENTIFIABLE" or bundle["status"] == "DISCRIMINATED"
+    # Canonical canonical probes do not model compound H_GV by default so it recognizes unmodeled or unidentifiable
+    assert len(bundle["precommitment_hash"]) == 64
+    assert len(bundle["tamper_proof_seal"]) == 64
+
+
+def test_kernel1_tri_origin_diagnostic_adapter_circular_daedg_safeguard():
+    """Verifies that circular dependencies do not overwrite target node state or corrupt demotion."""
+    circular_deps = {
+        "ALPHA": ["BETA"],
+        "BETA": ["ALPHA"],
+    }
+    demoted = TriOriginDiagnosticAdapter.retract_assumptions(
+        dependencies=circular_deps,
+        invalidated_node_id="ALPHA",
+    )
+    # ALPHA must not be in demoted list
+    assert "ALPHA" not in demoted
+    assert "BETA" in demoted
+
+
+def test_kernel1_tri_origin_diagnostic_adapter_diamond_topological_sort():
+    """Verifies that diamond epistemic derivations are demoted in strict topological order."""
+    diamond_deps = {
+        "ROOT": [],
+        "MID_A": ["ROOT"],
+        "LEAF_C": ["ROOT", "MID_A"],
+    }
+    demoted = TriOriginDiagnosticAdapter.retract_assumptions(
+        dependencies=diamond_deps,
+        invalidated_node_id="ROOT",
+    )
+    assert demoted == ["MID_A", "LEAF_C"]
+
+

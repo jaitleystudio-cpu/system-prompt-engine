@@ -10,7 +10,7 @@ Enforces:
 5. Retractable knowledge DAG representations.
 """
 
-from enum import Enum
+from enum import Enum, IntFlag
 from typing import List, Dict, Any, Optional, Callable
 from dataclasses import dataclass, field
 import hashlib
@@ -22,6 +22,18 @@ class OriginClass(str, Enum):
     WORLD = "WORLD"                # Discrepancy in world dynamics / environment (W)
     VERIFIER = "VERIFIER"          # Discrepancy in evaluation harness / test adequacy (V)
     OTHER_OR_UNMODELED = "OTHER_OR_UNMODELED"  # Open-world unmodeled uncertainty
+
+
+class FailureOrigin(IntFlag):
+    NONE = 0
+    GOAL = 1                       # Goal interpretation divergence (G)
+    WORLD = 2                      # World dynamics drift (W)
+    VERIFIER = 4                   # Verifier inadequacy (V)
+    UNMODELED = 8                  # Open-world unmodeled uncertainty
+    GOAL_AND_WORLD = GOAL | WORLD  # Compound G + W
+    GOAL_AND_VERIFIER = GOAL | VERIFIER  # Compound G + V
+    WORLD_AND_VERIFIER = WORLD | VERIFIER  # Compound W + V
+    TRI_ORIGIN = GOAL | WORLD | VERIFIER  # Joint G + W + V
 
 
 @dataclass(frozen=True)

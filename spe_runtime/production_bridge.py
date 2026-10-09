@@ -419,6 +419,7 @@ class TriOriginDiagnosticAdapter:
         dependencies: Optional[Dict[str, List[str]]] = None,
         output_path: Optional[str] = None,
         salt: str = "spe-rgic-t1-salt",
+        timestamp_ns: Optional[int] = None,
     ) -> Dict[str, Any]:
         """
         Executes end-to-end Tri-Origin Counterfactual Diagnosis.
@@ -435,7 +436,9 @@ class TriOriginDiagnosticAdapter:
             discrepancy_id=discrepancy_id,
             simulate_unidentifiable=simulate_unidentifiable,
         )
-        probes = candidate_probes or TriOriginDiagnosticAdapter.create_canonical_probes()
+        probes = candidate_probes if candidate_probes is not None else TriOriginDiagnosticAdapter.create_canonical_probes()
+        if not probes:
+            raise ValueError("Candidate probes list cannot be empty.")
 
         # Step 2: Select optimal authorized probe by VOI
         probe = None
@@ -449,7 +452,7 @@ class TriOriginDiagnosticAdapter:
         voi_score = diagnoser.compute_probe_utility(probe, criticality=criticality)
 
         # Step 3: Compute cryptographic precommitment lock (Anti-HARKing)
-        lock_timestamp_ns = 1791550000000000
+        lock_timestamp_ns = timestamp_ns if timestamp_ns is not None else 1791550000000000
         lock = diagnoser.compute_precommitment_lock(
             probe=probe,
             hypotheses=hyps,
@@ -465,14 +468,21 @@ class TriOriginDiagnosticAdapter:
         else:
             # Observation matching target_origin
             target_norm = target_origin.upper().strip()
-            target_h = next(
-                (h for h in hyps if h.origin_class.value == target_norm or h.id.endswith(target_norm.lower())),
-                None,
-            )
-            if target_h and probe.id in target_h.predicted_outcomes:
-                actual_obs = dict(target_h.predicted_outcomes[probe.id])
+            if target_norm in ("G+V", "GOAL+VERIFIER", "GOAL_AND_VERIFIER", "JOINT_GV", "JOINT"):
+                actual_obs = {
+                    "intent_divergence": True,
+                    "environment_fault": False,
+                    "verifier_fault": True,
+                }
             else:
-                actual_obs = hyps[0].predicted_outcomes.get(probe.id, {})
+                target_h = next(
+                    (h for h in hyps if h.origin_class.value == target_norm or h.id.endswith(target_norm.lower())),
+                    None,
+                )
+                if target_h and probe.id in target_h.predicted_outcomes:
+                    actual_obs = dict(target_h.predicted_outcomes[probe.id])
+                else:
+                    actual_obs = hyps[0].predicted_outcomes.get(probe.id, {})
 
         # Step 5: Adjudication (with optional HARKing / tamper simulation)
         adjudication_hyps = hyps
