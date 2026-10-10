@@ -2,6 +2,18 @@
 
 from spe_runtime.supercompiler.cegis_loop import CEGISEngine
 from spe_runtime.supercompiler.dual_compiler import DualCompiler
+from spe_runtime.supercompiler.evolution_ledger import EvolutionLedger, PromotionRecord
+from spe_runtime.supercompiler.formal_equivalence import (
+    FROZEN_GROUND_TRUTH_CORPUS,
+    CorpusTask,
+    EquivalenceProofCertificate,
+    FormalEquivalenceVerifier,
+)
+from spe_runtime.supercompiler.meta_evolver import (
+    CandidatePipeline,
+    CompilerPass,
+    MetaCompilerEvolver,
+)
 from spe_runtime.supercompiler.models import (
     AdversarialFalsifier,
     CostFrontier,
@@ -28,4 +40,13 @@ __all__ = [
     "ProofCarryingHarness",
     "CostFrontier",
     "FalsifierStrategy",
+    "CorpusTask",
+    "FROZEN_GROUND_TRUTH_CORPUS",
+    "EquivalenceProofCertificate",
+    "FormalEquivalenceVerifier",
+    "CompilerPass",
+    "CandidatePipeline",
+    "MetaCompilerEvolver",
+    "PromotionRecord",
+    "EvolutionLedger",
 ]

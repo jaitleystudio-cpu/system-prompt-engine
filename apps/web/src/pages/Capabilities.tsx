@@ -1,5 +1,6 @@
 import type { AppView } from "../routing";
 import { InAppLink } from "../shell/inAppLink";
+import { CapabilityFoundryStudio } from "../capabilities/CapabilityFoundryStudio";
 
 /** Honest capability landing for search + answer engines — ranking claims stay unproven. */
 export function Capabilities({
@@ -168,6 +169,8 @@ export function Capabilities({
           </div>
         </dl>
       </section>
+
+      <CapabilityFoundryStudio />
 
       <details className="spe-privacy-proof" data-copy-depth="PROOF">
         <summary>Technical verification details (Kleene-3 logic & Horn clause reduction)</summary>

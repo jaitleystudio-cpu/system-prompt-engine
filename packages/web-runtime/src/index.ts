@@ -8,3 +8,4 @@ export * from "./providerProfiles";
 export * from "./wordCount";
 export * from "./budgets";
 export * from "./providerFeasibility";
+export * from "./capabilityHost";
