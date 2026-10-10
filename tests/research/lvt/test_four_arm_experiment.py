@@ -134,3 +134,43 @@ def test_four_arm_default_shuffled_prompt_synthesis():
 
     # Shuffled control directive should appear in captured prompts
     assert any("[SHUFFLED_CONTROL_DIRECTIVE]" in p for p in captured_prompts)
+
+
+def test_heldout_retention_uses_paired_heldout_baseline_not_training_baseline():
+    runner = ControlledExperimentRunner(cost_per_eval_nanos=1)
+    protocol = ExperimentProtocol(protocol_id="LVT2-PAIRED", sample_size=1)
+
+    def evaluator(prompt, item):
+        if item["split"] == "train":
+            return {"base": 0.30, "refined": 0.90, "shuffled": 0.20}[prompt]
+        return {"base": 0.95, "refined": 0.75, "shuffled": 0.20}[prompt]
+
+    r = runner.run_experiment(
+        protocol, evaluator,
+        [{"id": "train-1", "split": "train"}],
+        [{"id": "heldout-1", "split": "heldout"}],
+        "base", "refined", "shuffled"
+    )
+    assert r.held_out_retention == pytest.approx(-0.20)
+    assert r.held_out_baseline_score == pytest.approx(0.95)
+    assert r.total_cost_nanos == 5
+    # A one-item score difference cannot be a significance result.
+    assert r.is_statistically_significant is False
+
+
+@pytest.mark.parametrize("value", [0, -1, True, 1.0])
+def test_experiment_protocol_rejects_non_positive_or_non_integer_samples(value):
+    with pytest.raises((TypeError, ValueError), match="sample_size"):
+        ExperimentProtocol(protocol_id="LVT2-SAMPLE", sample_size=value)
+
+
+@pytest.mark.parametrize("bad", [float("nan"), float("inf"), float("-inf"), True])
+def test_runner_rejects_nonfinite_or_boolean_evaluator_scores(bad):
+    runner = ControlledExperimentRunner()
+    protocol = ExperimentProtocol(protocol_id="LVT2-FINITE")
+    with pytest.raises((TypeError, ValueError), match="score"):
+        runner.run_experiment(
+            protocol, lambda prompt, item: bad,
+            [{"id": "train"}], [{"id": "heldout"}],
+            "base", "candidate", "shuffled"
+        )
