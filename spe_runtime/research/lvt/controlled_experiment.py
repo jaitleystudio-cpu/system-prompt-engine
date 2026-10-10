@@ -6,6 +6,7 @@ Shuffled Feedback Control (Arm C), and Held-Out Generalization (Arm D).
 
 from __future__ import annotations
 
+import math
 import random
 from typing import Any, Callable, Dict, List, Optional, Sequence
 
@@ -69,25 +70,29 @@ class ControlledExperimentRunner:
         scores_c = [self._eval_item(evaluator_fn, shuffled_feedback_prompt, item) for item in sample_train]
         score_c = sum(scores_c) / len(scores_c)
 
-        # Arm D: Held-out generalization on test
+        # Arm D: Held-out generalization on test, measured against the
+        # BASELINE ON THE SAME HELD-OUT ITEMS. Training score A is not a
+        # statistically valid held-out comparator.
         scores_d = [self._eval_item(evaluator_fn, refined_prompt, item) for item in sample_held_out]
+        scores_heldout_baseline = [
+            self._eval_item(evaluator_fn, base_prompt, item) for item in sample_held_out
+        ]
         score_d = sum(scores_d) / len(scores_d)
+        score_heldout_baseline = sum(scores_heldout_baseline) / len(scores_heldout_baseline)
 
         delta_improvement = score_b - score_a
         control_delta = score_b - score_c
-        held_out_retention = score_d - score_a
+        held_out_retention = score_d - score_heldout_baseline
 
-        # Significance criteria:
-        # 1. Delta improvement >= epsilon
-        # 2. Authentic feedback beats shuffled control by >= epsilon
-        # 3. Held-out test retention does not drop below baseline by > delta
-        is_sig = (
-            delta_improvement >= protocol.significance_threshold_epsilon
-            and control_delta >= protocol.significance_threshold_epsilon
-            and held_out_retention >= -protocol.generalization_tolerance_delta
+        # LVT-0 computes aggregate effect sizes only, not an inferential
+        # significance test with independent family-level units. Never label
+        # its threshold checks as statistical significance.
+        is_sig = False
+
+        total_evals = (
+            len(scores_a) + len(scores_b) + len(scores_c)
+            + len(scores_d) + len(scores_heldout_baseline)
         )
-
-        total_evals = len(scores_a) + len(scores_b) + len(scores_c) + len(scores_d)
         total_cost_nanos = total_evals * self.cost_per_eval_nanos
 
         return FourArmResults(
@@ -100,6 +105,7 @@ class ControlledExperimentRunner:
             held_out_retention=round(held_out_retention, 4),
             is_statistically_significant=is_sig,
             total_cost_nanos=total_cost_nanos,
+            held_out_baseline_score=round(score_heldout_baseline, 4),
         )
 
     def _eval_item(
@@ -109,6 +115,6 @@ class ControlledExperimentRunner:
         item: Dict[str, Any],
     ) -> float:
         score = evaluator_fn(prompt, item)
-        if not (0.0 <= score <= 1.0):
+        if type(score) not in (int, float) or not math.isfinite(score) or not (0.0 <= score <= 1.0):
             raise ValueError(f"Evaluator returned out-of-bounds score: {score} (must be in [0.0, 1.0])")
         return score
