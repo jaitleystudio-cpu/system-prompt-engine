@@ -6,6 +6,14 @@ from spe_runtime.crl.decoupled_adjudicator import (
     EpistemicAuditReport,
     EpistemicEvent,
 )
+from spe_runtime.crl.incremental_verifier import (
+    IncrementalCanonicalVerifier,
+    IncrementalVerificationReceipt,
+    IncrementalVerificationStatus,
+    InvariantDelta,
+    ReasoningGraph,
+    ReasoningNode,
+)
 from spe_runtime.crl.representation_lifter import (
     ConstraintGraphRepresentation,
     FiniteStateMachineRepresentation,
@@ -28,4 +36,10 @@ __all__ = [
     "EpistemicEvent",
     "EpistemicAuditReport",
     "DecoupledEpistemicAdjudicator",
+    "IncrementalCanonicalVerifier",
+    "IncrementalVerificationReceipt",
+    "IncrementalVerificationStatus",
+    "InvariantDelta",
+    "ReasoningGraph",
+    "ReasoningNode",
 ]
