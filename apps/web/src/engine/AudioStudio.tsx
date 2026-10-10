@@ -653,7 +653,7 @@ export function AudioStudio({
               SPE Audio & Speech Studio <span style={{ fontSize: "0.75rem", padding: "2px 8px", background: "rgba(56, 189, 248, 0.2)", color: "#38bdf8", borderRadius: "12px", border: "1px solid rgba(56, 189, 248, 0.3)" }}>v1.2 NORTH STAR 10/10</span>
             </h3>
             <p style={{ margin: 0, fontSize: "0.78rem", color: "#94a3b8" }}>
-              Live Neural Speech-to-Prompt Quantum Transformer & Real-Time Audio Visualizer (Shortcut: <kbd style={{ padding: "1px 5px", background: "rgba(255,255,255,0.1)", borderRadius: "4px", fontSize: "0.72rem" }}>⌘⇧M</kbd>)
+              Real-Time Speech-to-Prompt Audio Studio & Real-Time Audio Visualizer (Shortcut: <kbd style={{ padding: "1px 5px", background: "rgba(255,255,255,0.1)", borderRadius: "4px", fontSize: "0.72rem" }}>⌘⇧M</kbd>)
             </p>
           </div>
         </div>

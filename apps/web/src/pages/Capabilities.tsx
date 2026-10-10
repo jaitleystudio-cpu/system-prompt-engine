@@ -39,7 +39,7 @@ export function Capabilities({
             02
           </span>
           <div className="spe-atlas-body">
-            <h2>ProtectedIntent Guardrails</h2>
+            <h2>ProtectedIntent Scope Guardrails</h2>
             <p className="spe-atlas-outcome">
               Zero Contradictions: We catch conflicting instructions before they confuse the model.
             </p>
@@ -54,7 +54,7 @@ export function Capabilities({
             03
           </span>
           <div className="spe-atlas-body">
-            <h2>Execution Contract</h2>
+            <h2>Execution Contract & Audit Receipts</h2>
             <p className="spe-atlas-outcome">
               Zero Guesswork: Concrete proof requirements before tasks can pass.
             </p>
@@ -70,7 +70,7 @@ export function Capabilities({
             04
           </span>
           <div className="spe-atlas-body">
-            <h2>Provider profiles</h2>
+            <h2>Provider Profiles & Multi-Agent Exporters</h2>
             <p className="spe-atlas-outcome">
               Multi-Model Targeting: Dedicated formatting for Claude, Cursor, and ChatGPT.
             </p>
@@ -87,7 +87,7 @@ export function Capabilities({
           </span>
           <div className="spe-atlas-body">
             <h2>
-              Portable <code>.spe</code> files
+              Portable Artifacts (<code>.spe</code>)
             </h2>
             <p className="spe-atlas-outcome">
               Export a portable artifact with integrity metadata so you can

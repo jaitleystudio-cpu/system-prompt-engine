@@ -396,7 +396,7 @@ export const CognitiveEnergyShader: React.FC<CognitiveEnergyShaderProps> = ({
               backdropFilter: "blur(6px)",
             }}
           >
-            🌌 3D GLSL Quantum Energy Field
+            🌌 3D Canvas Visualizer
           </span>
           <span
             style={{
@@ -408,7 +408,7 @@ export const CognitiveEnergyShader: React.FC<CognitiveEnergyShaderProps> = ({
               fontWeight: 600,
             }}
           >
-            {metrics.rigor > 0.7 ? "Crystalline Lattice State" : "Turbulent Plasma State"}
+            {metrics.rigor > 0.7 ? "Structured State" : "Draft State"}
           </span>
         </div>
 

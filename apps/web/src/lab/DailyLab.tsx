@@ -43,10 +43,10 @@ export function DailyLab({ onOpenInSpe, onCopyIdea }: Props) {
   return (
     <section className="spe-lab spe-lab-3d" aria-labelledby="lab-title">
       <header className="spe-lab-head">
-        <p className="spe-kicker">Daily Lab</p>
-        <h1 id="lab-title">Today&apos;s prompt, {todaysLabDateLabel()}</h1>
+        <p className="spe-kicker">Daily Recipes</p>
+        <h1 id="lab-title">Daily Recipes: Today&apos;s Tested Prompts, {todaysLabDateLabel()}</h1>
         <p>
-          A small preview and a prompt seed you can open in Create. The same
+          A small preview and a prompt seed you can open in Prompt Studio. The same
           short list repeats on a schedule. It is not a new random scene each
           visit.
         </p>

@@ -28,71 +28,71 @@ export const FEATURES: FeatureItem[] = [
   {
     id: "omega-proof",
     view: "capabilities",
-    title: "🛡️ SPE Ω Proof Lab",
-    subtitle: "Type Diagnostics, Hostile Gym Ω & Proof Receipts",
+    title: "🛡️ Audit Receipts",
+    subtitle: "Signed Verification Receipts for Pull Requests",
     href: "/capabilities",
-    badge: "Ω Core",
+    badge: "Audit",
   },
   {
     id: "community-fortifier",
     view: "capabilities",
-    title: "🌐 Prompts.chat Fortifier",
-    subtitle: "143k★ Curated Catalog & Invariant Hardener",
+    title: "🌐 Verified Workflows",
+    subtitle: "Curated Agent Templates & Scope Guardrails",
     href: "/capabilities",
     badge: "143k★",
   },
   {
     id: "promptfoo-bridge",
     view: "capabilities",
-    title: "⚡ Promptfoo CI/CD Bridge",
-    subtitle: "Zero-Token Compiler & promptfooconfig Export",
+    title: "⚡ Agent Exporter",
+    subtitle: "1-Click Export to Cursor, Claude & Windsurf",
     href: "/capabilities",
-    badge: "CI/CD",
+    badge: "Export",
   },
   {
     id: "genetic-evolver",
     view: "create",
-    title: "🧬 Genetic Evolver",
-    subtitle: "32-Attack Hostile Gym & Self-Play",
+    title: "🧬 Attack Gym",
+    subtitle: "Live Stress-Testing Against 32 Jailbreak Attacks",
     href: "/create",
-    badge: "v1.4",
+    badge: "Defense",
   },
   {
     id: "vision-compiler",
     view: "ocr",
-    title: "👁️ Vision Compiler",
-    subtitle: "Multimodal Layout Inverse-Compiler",
+    title: "👁️ S-Code",
+    subtitle: "Convert Screenshot Layouts into Clean React/HTML",
     href: "/ocr",
-    badge: "v1.4",
+    badge: "S-Code",
   },
   {
     id: "hybrid-rag",
     view: "research",
-    title: "⚡ Hybrid RAG",
-    subtitle: "BM25 + 384-d Dense Vector RRF",
+    title: "⚡ Private Search",
+    subtitle: "Local Search & Docs Grounding with Zero Leaks",
     href: "/research",
-    badge: "v1.4",
+    badge: "Local",
   },
   {
     id: "quantum-shader",
     view: "website",
-    title: "🌌 3D Quantum Field",
-    subtitle: "GLSL Semantic Entropy Visualizer",
+    title: "🌌 3D Canvas",
+    subtitle: "Interactive 3D Workspace & Visualizer",
     href: "/website",
-    badge: "v1.4",
+    badge: "3D",
   },
   {
     id: "blinded-arena",
     view: "capabilities",
-    title: "⚖️ Blinded Arena",
-    subtitle: "5-Judge Nash Consensus & Proof",
+    title: "⚖️ Benchmark Arena",
+    subtitle: "Head-to-Head Multi-Model Accuracy Testing",
     href: "/capabilities",
-    badge: "v1.4",
+    badge: "Arena",
   },
   {
     id: "3d-studio",
     view: "website",
-    title: "🎮 3D Studio v1.2",
+    title: "🎮 3D Studio",
     subtitle: "Three.js WebGL & Motion Editor",
     href: "/website",
     externalHref: "http://localhost:4180",
@@ -100,21 +100,21 @@ export const FEATURES: FeatureItem[] = [
   {
     id: "lab",
     view: "lab",
-    title: "🔬 Daily Lab",
-    subtitle: "AI Prompts & Interactive Challenges",
+    title: "🔬 Daily Recipes",
+    subtitle: "Tested Prompt Ideas & Daily Inspiration",
     href: "/daily-lab",
   },
   {
     id: "media",
     view: "media",
-    title: "🎙️ Media Studio",
+    title: "🎙️ Voice Studio",
     subtitle: "Speech & Audio to Prompt",
     href: "/media",
   },
   {
     id: "capabilities",
     view: "capabilities",
-    title: "⚡ Capabilities",
+    title: "⚡ Scope Guardrails",
     subtitle: "Integrity, Zero-Egress Proofs",
     href: "/capabilities",
   },
@@ -196,7 +196,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 color: "var(--spe-text-muted, #888)",
               }}
             >
-              SPE v1.4 OMNIBRAIN AGI SUITE
+              SPE DEVELOPER TOOLKIT
             </span>
             <span
               style={{
@@ -235,7 +235,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 color: "var(--spe-text-muted, #777)",
               }}
             >
-              All 7 Acquisition Pillars & Tools Available on Localhost
+              All Features Available 100% Free On-Device
             </span>
           </div>
         </div>
@@ -375,14 +375,14 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff" }}>
-                  {activeModal === "omega-proof" && "🛡️ SPE Ω Proof Lab & Type System"}
-                  {activeModal === "community-fortifier" && "🌐 143k★ Prompts.chat Community Fortifier"}
-                  {activeModal === "promptfoo-bridge" && "⚡ Promptfoo CI/CD Bridge & Exporter"}
-                  {activeModal === "genetic-evolver" && "🧬 Genetic Prompt Evolver & Hostile Gym"}
-                  {activeModal === "vision-compiler" && "👁️ Multimodal Neural Vision Inverse-Compiler"}
-                  {activeModal === "hybrid-rag" && "⚡ In-WASM Supersonic Hybrid RAG Fabric"}
-                  {activeModal === "quantum-shader" && "🌌 3D GLSL Quantum Cognitive Energy Field"}
-                  {activeModal === "blinded-arena" && "⚖️ Game-Theoretic Blinded Multi-Judge Arena"}
+                  {activeModal === "omega-proof" && "🛡️ Audit Receipts · Verification & Proof"}
+                  {activeModal === "community-fortifier" && "🌐 Verified Workflows · Community Library"}
+                  {activeModal === "promptfoo-bridge" && "⚡ Agent Exporter · Multi-Format Bridge"}
+                  {activeModal === "genetic-evolver" && "🧬 Attack Gym · Jailbreak & Injection Defense"}
+                  {activeModal === "vision-compiler" && "👁️ S-Code · Screenshot to Clean Code"}
+                  {activeModal === "hybrid-rag" && "⚡ Private Search · Local Knowledge Grounding"}
+                  {activeModal === "quantum-shader" && "🌌 3D Canvas · Interactive Spatial Visualizer"}
+                  {activeModal === "blinded-arena" && "⚖️ Benchmark Arena · Multi-Model Accuracy Testing"}
                 </span>
                 <span
                   style={{

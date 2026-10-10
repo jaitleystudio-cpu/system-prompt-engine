@@ -669,7 +669,7 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
             <div>
               <div style={{ marginBottom: "16px" }}>
                 <h3 style={{ margin: "0 0 6px", fontSize: "16px", color: "#f8fafc" }}>
-                  Ring 0: Static Type System Diagnostics
+                  Scope &amp; Constraint Diagnostics
                 </h3>
                 <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>
                   Static verification of authority bounds, acceptance suites, output typing, and retrieval safety.

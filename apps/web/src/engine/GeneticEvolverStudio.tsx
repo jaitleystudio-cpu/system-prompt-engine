@@ -124,7 +124,7 @@ export const GeneticEvolverStudio: React.FC<GeneticEvolverStudioProps> = ({
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700 }}>
-                Neuro-Genetic Prompt Evolver & Hostile Gym
+                Attack Gym · Adversarial Jailbreak Defense
               </h3>
               <span
                 style={{
@@ -137,11 +137,11 @@ export const GeneticEvolverStudio: React.FC<GeneticEvolverStudioProps> = ({
                   border: "1px solid rgba(236, 72, 153, 0.4)",
                 }}
               >
-                Pillar 1 • AGI Self-Play
+                Security Defense • Red-Team
               </span>
             </div>
             <p style={{ margin: 0, fontSize: "0.75rem", color: "#94a3b8" }}>
-              Runs 32-attack hostile red-team gym and genetic chromosome self-play 100% locally on-device.
+              Runs 32-attack hostile red-team tests to stress-test your prompts 100% locally on-device.
             </p>
           </div>
         </div>

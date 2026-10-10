@@ -80,10 +80,10 @@ export const CommunityCatalogStudio: React.FC<CommunityCatalogStudioProps> = ({
       >
         <div>
           <h2 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 700, color: "#fff" }}>
-            🌐 Community Prompt Fortifier & Catalog
+            🌐 Community Prompts &amp; Workflows Catalog
           </h2>
           <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.85rem", color: "#94a3b8" }}>
-            Curated from 143k★ prompts.chat & DAIR.AI — Fortified with SPE's Type System & Hostile Gym Ω.
+            Curated from 143k★ prompts.chat &amp; DAIR.AI — Fortified with SPE&apos;s Scope Guardrails &amp; Attack Gym.
           </p>
         </div>
         <div style={{ display: "flex", gap: "0.5rem" }}>

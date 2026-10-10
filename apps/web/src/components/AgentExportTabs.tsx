@@ -33,11 +33,11 @@ export function formatForAgent(
 ): { content: string; filename: string } {
   switch (format) {
     case "claude": {
-      const content = `# CLAUDE.md — Agent System Directives\n> Compiled by System Prompt Engine (SPE Ω) · Deterministic Invariant Standard\n\n## Role & Core Guidelines\n${rawPrompt}\n\n## Non-Negotiable Operational Guardrails\n- Scope Invariant: Do not modify files outside explicitly declared boundaries.\n- Verification Receipt: Run project test suite and verify zero regressions before reporting task completion.\n- Zero Hallucination: Do not invent nonexistent packages, CLI flags, or mock endpoints.\n`;
+      const content = `# CLAUDE.md — Agent System Directives\n> Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\n## Role & Core Guidelines\n${rawPrompt}\n\n## Non-Negotiable Operational Guardrails\n- Scope Invariant: Do not modify files outside explicitly declared boundaries.\n- Verification Receipt: Run project test suite and verify zero regressions before reporting task completion.\n- Zero Hallucination: Do not invent nonexistent packages, CLI flags, or mock endpoints.\n`;
       return { content, filename: "CLAUDE.md" };
     }
     case "cursor": {
-      const content = `# .cursorrules — Project AI Directives & Guardrails\n# Compiled by System Prompt Engine (SPE Ω)\n\nYou are an expert developer operating under strict zero-drift invariants.\n\n${rawPrompt}\n\n## Project Invariants:\n1. Never introduce unverified dependencies.\n2. Ensure all types pass TypeScript/strict typechecking.\n3. Always verify changes with unit tests before declaring completion.\n`;
+      const content = `# .cursorrules — Project AI Directives & Guardrails\n# Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\nYou are an expert developer operating under strict zero-drift guidelines.\n\n${rawPrompt}\n\n## Project Invariants:\n1. Never introduce unverified dependencies.\n2. Ensure all types pass TypeScript/strict typechecking.\n3. Always verify changes with unit tests before declaring completion.\n`;
       return { content, filename: ".cursorrules" };
     }
     case "windsurf": {
@@ -124,7 +124,7 @@ export const AgentExportTabs: React.FC<AgentExportTabsProps> = ({
             marginRight: "0.25rem",
           }}
         >
-          Format For:
+          Export Target:
         </span>
         {AGENT_FORMATS.map((fmt) => {
           const isActive = activeFormat === fmt.id;

@@ -94,6 +94,15 @@ import {
 import { MyWork } from "./pages/MyWork";
 import { PrivacyProof } from "./pages/PrivacyProof";
 import { Capabilities } from "./pages/Capabilities";
+import {
+  AgentExportTabs,
+  formatForAgent,
+  type AgentFormatId,
+} from "./components/AgentExportTabs";
+import { AgentSimulatorPanel } from "./components/AgentSimulatorPanel";
+import { BeforeAfterDiffSlider } from "./landing/BeforeAfterDiffSlider";
+import { DeveloperRoiCalculator } from "./components/DeveloperRoiCalculator";
+import { SubmitWorkflowModal } from "./components/SubmitWorkflowModal";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
 import { registerServiceWorker } from "./pwa";
@@ -307,6 +316,13 @@ export default function App() {
   const [online, setOnline] = useState(
     typeof navigator === "undefined" ? true : navigator.onLine,
   );
+  const [agentFormat, setAgentFormat] = useState<AgentFormatId>("standard");
+  const [submitWorkflowOpen, setSubmitWorkflowOpen] = useState(false);
+
+  const activePromptView = useMemo(() => {
+    if (!rendered?.finalPrompt) return "";
+    return formatForAgent(rendered.finalPrompt, agentFormat, category).content;
+  }, [rendered?.finalPrompt, agentFormat, category]);
 
   useEffect(() => {
     // Sync history state without wiping ?specimen= (Batch G deep-link).
@@ -722,9 +738,10 @@ export default function App() {
   );
 
   const onCopy = async () => {
-    if (!rendered?.finalPrompt) return;
+    const textToCopy = activePromptView || rendered?.finalPrompt;
+    if (!textToCopy) return;
     try {
-      await navigator.clipboard.writeText(rendered.finalPrompt);
+      await navigator.clipboard.writeText(textToCopy);
       setNotice("Prompt copied.");
     } catch {
       setNotice("Copy unavailable. Select the prompt text to copy it.");
@@ -983,6 +1000,7 @@ export default function App() {
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
         savedCount={history.length}
+        onSubmitWorkflow={() => setSubmitWorkflowOpen(true)}
       />
 
       <main id="main" tabIndex={-1}>
@@ -995,9 +1013,6 @@ export default function App() {
           />
         ) : view === "home" && (
           <>
-            <div style={{ maxWidth: "1200px", margin: "1rem auto 0", padding: "0 1.5rem" }}>
-              <FeaturesHub currentView="home" onNavigate={setView} />
-            </div>
             <Hero
               onReset={() => {
                 invalidate();
@@ -1051,6 +1066,11 @@ export default function App() {
                 />
               </div>
             )}
+            <BeforeAfterDiffSlider onNavigate={setView} />
+            <DeveloperRoiCalculator onNavigate={setView} />
+            <div style={{ maxWidth: "1200px", margin: "2rem auto", padding: "0 1.5rem" }}>
+              <FeaturesHub currentView="home" onNavigate={setView} />
+            </div>
             <ValueComparisonMatrix onNavigate={setView} />
             <HomeQuiet
               onCreate={() => {
@@ -1074,8 +1094,8 @@ export default function App() {
               <p className="spe-kicker">{view === "code" ? "Code" : "Create"}</p>
               <h1 id="create-title">
                 {view === "code"
-                  ? "Start from a screenshot"
-                  : "Start with your idea"}
+                  ? "Screenshot to code"
+                  : "Build a clearer prompt"}
               </h1>
               {view === "create" ? (
                 <p className="spe-create-thought">
@@ -1206,7 +1226,15 @@ export default function App() {
             {rendered?.finalPrompt && (
               <section className="spe-create-result" aria-label="Your prompt">
                 <h2>Your prompt</h2>
-                <pre tabIndex={0}>{rendered.finalPrompt}</pre>
+                <AgentExportTabs
+                  promptText={rendered.finalPrompt}
+                  category={category}
+                  activeFormat={agentFormat}
+                  onFormatChange={setAgentFormat}
+                  onCopyNotice={(msg) => setNotice(msg)}
+                />
+                <pre tabIndex={0}>{activePromptView}</pre>
+                <AgentSimulatorPanel promptText={rendered.finalPrompt} category={category} />
                 <div style={{ margin: "1rem 0" }}>
                   <PromptRadarInspector
                     promptText={rendered.finalPrompt}
@@ -1352,7 +1380,11 @@ export default function App() {
         {!notFound && view === "privacy" && <PrivacyProof />}
         {!notFound && view === "workflows" && (
           <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
-            <WorkflowsCatalog onNavigate={setView} onRunWorkflow={runWorkflowInStudio} />
+            <WorkflowsCatalog
+              onNavigate={setView}
+              onRunWorkflow={runWorkflowInStudio}
+              onSubmitWorkflow={() => setSubmitWorkflowOpen(true)}
+            />
           </Suspense>
         )}
         {!notFound && view === "skill-builder" && (
@@ -1559,6 +1591,12 @@ export default function App() {
           {ui.claim}
         </div>
       </footer>
+
+      <SubmitWorkflowModal
+        isOpen={submitWorkflowOpen}
+        onClose={() => setSubmitWorkflowOpen(false)}
+        onNavigate={setView}
+      />
     </>
   );
 }

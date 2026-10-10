@@ -10,6 +10,45 @@ import { buildSkillMarkdown } from "../engine/workflows/skillBuilder";
 import { copyTextSafe } from "../engine/workflows/clipboard";
 import { ContextualAdSlot } from "../components/ads/ContextualAdSlot";
 
+interface SkillPreset {
+  name: string;
+  desc: string;
+  cat: string;
+  steps: string;
+  allowNet: boolean;
+}
+
+const FRAMEWORK_PRESETS: Record<string, SkillPreset> = {
+  "Next.js": {
+    name: "Next.js Security Auditor",
+    desc: "Audits Next.js App Router server actions, route handlers, and environment variables for client-side data leaks.",
+    cat: "Engineering Operations",
+    steps: "Scan app/ directory for exposed process.env secrets in client components\nVerify server actions validate inputs with Zod schemas\nFlag insecure cookies or headers and emit a NEXTJS_SECURITY_AUDIT.md report",
+    allowNet: false,
+  },
+  "FastAPI": {
+    name: "FastAPI REST Architect",
+    desc: "Scaffolds typed FastAPI routers with Pydantic V2 models, HTTPException handling, and pytest fixtures.",
+    cat: "Engineering Operations",
+    steps: "Parse OpenAPI schema or model specifications\nGenerate router endpoints with explicit status codes and Pydantic schemas\nAdd dependency-injected database sessions and generate unit tests",
+    allowNet: false,
+  },
+  "Docker": {
+    name: "Docker CI/CD Optimizer",
+    desc: "Audits Dockerfiles for multi-stage build layers, non-root user execution, and minimal image size.",
+    cat: "Security & Compliance",
+    steps: "Analyze Dockerfile and docker-compose.yml for security flaws\nEnforce non-root USER directives and pin base image SHA digests\nOptimize layer caching and output DOCKER_OPTIMIZATION.md with savings",
+    allowNet: false,
+  },
+  "Postgres": {
+    name: "Postgres Migration Verifier",
+    desc: "Verifies SQL migration scripts for zero-downtime safety, lock avoidance, and rollback idempotency.",
+    cat: "Engineering Operations",
+    steps: "Parse SQL DDL migration files for table alters\nFlag table-locking operations like unindexed foreign keys or blocking index creation\nVerify CONCURRENTLY index creation and generate safe rollback scripts",
+    allowNet: false,
+  },
+};
+
 export const SkillBuilderStudio: React.FC = () => {
   const [skillName, setSkillName] = useState("Weekly Report Auditor");
   const [description, setDescription] = useState(
@@ -22,6 +61,14 @@ export const SkillBuilderStudio: React.FC = () => {
   const [allowNetwork, setAllowNetwork] = useState(false);
   const [copied, setCopied] = useState(false);
   const [platform, setPlatform] = useState<"bash" | "powershell">("bash");
+
+  const applyPreset = (preset: SkillPreset) => {
+    setSkillName(preset.name);
+    setDescription(preset.desc);
+    setCategory(preset.cat);
+    setStepsText(preset.steps);
+    setAllowNetwork(preset.allowNet);
+  };
 
   const steps = useMemo(() => stepsText.split("\n").filter((s) => s.trim().length > 0), [stepsText]);
 
@@ -70,7 +117,7 @@ export const SkillBuilderStudio: React.FC = () => {
     <div className="spe-skill-builder-container" style={{ maxWidth: "1100px", margin: "0 auto", padding: "2rem 1rem" }}>
       <header style={{ marginBottom: "2rem", textAlign: "center" }}>
         <h1 style={{ fontSize: "2.25rem", fontWeight: 800, color: "#f8fafc", marginBottom: "0.5rem" }}>
-          In-Browser AI Skill Builder & Auditor
+          Skill Builder · In-Browser Agent Plugin Studio
         </h1>
         <p style={{ fontSize: "1.125rem", color: "#94a3b8", maxWidth: "700px", margin: "0 auto" }}>
           Build portable AI agent skills (SKILL.md) in seconds. Audited for security in your browser with $0 server inference.
@@ -82,7 +129,29 @@ export const SkillBuilderStudio: React.FC = () => {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", gap: "2rem", marginTop: "2rem" }}>
         {/* Input Form Column */}
         <div style={{ backgroundColor: "#0b1329", border: "1px solid #1e293b", borderRadius: "8px", padding: "1.5rem" }}>
-          <h2 style={{ fontSize: "1.25rem", color: "#f8fafc", marginBottom: "1rem" }}>Define Procedure</h2>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem", flexWrap: "wrap", gap: "0.5rem" }}>
+            <h2 style={{ fontSize: "1.25rem", color: "#f8fafc", margin: 0 }}>Define Procedure</h2>
+            <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap" }}>
+              {Object.keys(FRAMEWORK_PRESETS).map((k) => (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => applyPreset(FRAMEWORK_PRESETS[k])}
+                  style={{
+                    padding: "0.25rem 0.55rem",
+                    fontSize: "0.72rem",
+                    borderRadius: "4px",
+                    backgroundColor: "rgba(99, 102, 241, 0.15)",
+                    border: "1px solid rgba(99, 102, 241, 0.3)",
+                    color: "#a5b4fc",
+                    cursor: "pointer",
+                  }}
+                >
+                  ⚡ {k}
+                </button>
+              ))}
+            </div>
+          </div>
 
           <div style={{ marginBottom: "1rem" }}>
             <label style={{ display: "block", color: "#94a3b8", fontSize: "0.875rem", marginBottom: "0.35rem" }}>

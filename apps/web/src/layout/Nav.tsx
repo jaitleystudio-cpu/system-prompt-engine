@@ -9,6 +9,7 @@ type Props = {
   menuOpen: boolean;
   setMenuOpen: (v: boolean) => void;
   savedCount?: number;
+  onSubmitWorkflow?: () => void;
 };
 
 interface NavItem {
@@ -31,49 +32,49 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       {
         id: "create",
-        label: "System Prompt Studio",
-        desc: "Core deterministic prompt compiler",
+        label: "Prompt Studio",
+        desc: "Build & compile bulletproof prompts for any AI",
+      },
+      {
+        id: "code",
+        label: "S-Code",
+        desc: "Convert UI screenshots into clean React/HTML",
       },
       {
         id: "workflows",
-        label: "1-Click Workflows",
-        desc: "Pre-audited business & engineering templates",
+        label: "Verified Workflows",
+        desc: "Pre-tested multi-step agent recipes for GitHub & code",
       },
       {
         id: "skill-builder",
-        label: "AI Agent Skill Creator",
-        desc: "Build & audit portable SKILL.md files",
-      },
-      {
-        id: "compare",
-        label: "Benchmark Arena",
-        desc: "Empirical head-to-head accuracy tests",
+        label: "Skill Builder",
+        desc: "Create & security-scan custom agent skills",
       },
     ],
   },
   {
     id: "tools",
-    label: "Tools & Labs",
+    label: "Testing & Tools",
     items: [
       {
-        id: "code",
-        label: "Design to Code",
-        desc: "Convert UI screenshots into clean React/HTML",
+        id: "compare",
+        label: "Benchmark Arena",
+        desc: "Head-to-head prompt tests with real accuracy proof",
       },
       {
         id: "lab",
-        label: "Prompt Recipes & Inspiration",
-        desc: "Daily battle-tested prompt ideas",
+        label: "Daily Recipes",
+        desc: "Daily tested prompts & inspiration",
       },
       {
         id: "website",
-        label: "3D Website Studio",
-        desc: "Experimental canvas builder",
+        label: "3D Canvas",
+        desc: "Interactive 3D workspace & canvas builder",
       },
       {
         id: "research",
-        label: "Research Lab",
-        desc: "Local grounding & evidence receipts",
+        label: "Private Search",
+        desc: "Private local grounding with zero cloud leaks",
       },
     ],
   },
@@ -83,18 +84,18 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       {
         id: "capabilities",
-        label: "How It Works",
-        desc: "Deterministic compiler & guardrails",
+        label: "Scope Guardrails",
+        desc: "Strict project boundaries that keep agents in line",
       },
       {
         id: "privacy",
         label: "100% On-Device Privacy",
-        desc: "Air-gapped WebAssembly engine",
+        desc: "Zero prompt bytes ever leave your machine",
       },
       {
         id: "compare",
-        label: "Accuracy & Benchmarks",
-        desc: "Real token & retry reduction data",
+        label: "Token & Cost Proof",
+        desc: "See how SPE saves 8 hours and $35/week",
       },
     ],
   },
@@ -272,6 +273,23 @@ export function Nav(p: Props) {
           )}
         </a>
 
+        {/* Direct Link: Submit Workflow (GitHub PR) */}
+        <button
+          type="button"
+          className="spe-nav-direct-link spe-nav-submit-pr"
+          onClick={() => {
+            if (p.onSubmitWorkflow) {
+              p.onSubmitWorkflow();
+            } else {
+              handleLinkClick("workflows");
+            }
+            p.setMenuOpen(false);
+          }}
+          aria-label="Submit a Workflow via GitHub PR"
+        >
+          <span>Submit Workflow ↗</span>
+        </button>
+
         {/* Primary Action Pill */}
         <a
           className="spe-nav-cta"
@@ -281,7 +299,7 @@ export function Nav(p: Props) {
             handleLinkClick("create");
           }}
         >
-          Create Prompt Free <span>↗</span>
+          Open Prompt Studio Free <span>↗</span>
         </a>
       </nav>
     </header>

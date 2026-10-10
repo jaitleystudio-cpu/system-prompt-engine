@@ -88,10 +88,10 @@ export const HeadToHeadCompare: React.FC = () => {
     <div className="spe-compare-container" style={{ maxWidth: "1100px", margin: "0 auto", padding: "2rem 1rem" }}>
       <header style={{ marginBottom: "2rem", textAlign: "center" }}>
         <h1 style={{ fontSize: "2.25rem", fontWeight: 800, color: "#f8fafc", marginBottom: "0.5rem" }}>
-          Skill Effectiveness Challenge
+          Benchmark Arena · Accuracy & Token Tests
         </h1>
         <p style={{ fontSize: "1.125rem", color: "#94a3b8", maxWidth: "700px", margin: "0 auto" }}>
-          Does a skill actually improve AI task results? Empirical head-to-head benchmarks scored with Wilson 95% confidence intervals.
+          Empirical head-to-head benchmarks proving accuracy gains, token savings, and retry reductions with zero small-sample hype.
         </p>
       </header>
 

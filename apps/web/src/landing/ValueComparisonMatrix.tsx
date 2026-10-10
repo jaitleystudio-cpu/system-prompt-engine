@@ -27,9 +27,9 @@ const MATRIX_ROWS: MatrixRow[] = [
     category: "cost",
     categoryLabel: "Cost & Bills",
     painTitle: "Paying $20/mo to ChatGPT/Claude just to paste terminal logs",
-    painDetail: "Stop paying subscriptions for basic prompt cleanups. Wasting subscription fees and pasting terminal logs into hosted web chats with rate limits and data retention.",
+    painDetail: "Wasting subscription fees and pasting terminal logs into hosted web chats with rate limits, lag, and data retention.",
     solutionTitle: "Run `spe continue -` locally for $0.00 with instant terminal pipes",
-    solutionDetail: "SPE runs locally on your machine for $0. Pipes stdin directly to the local compiler at $0.00 with zero network hops and zero inference bills.",
+    solutionDetail: "SPE runs locally on your machine for $0. Pipes terminal outputs directly to your local compiler with zero network hops and zero inference bills.",
     solutionPill: "Local Pipe",
     cliCommand: "spe continue -",
   },
@@ -40,7 +40,7 @@ const MATRIX_ROWS: MatrixRow[] = [
     painTitle: "Agent claims \"Task Completed!\" but 4 unit tests are broken",
     painDetail: "Hallucinated completion reports that merge broken code into production, forcing costly emergency fixes.",
     solutionTitle: "Kleene-3 verification: tasks require tangible witness receipts",
-    solutionDetail: "Verified Task Receipts: We require concrete proof before an agent can claim a task is complete. Three-valued logic (True / False / Unknown) halts PRs unless proof witnesses and test receipts pass.",
+    solutionDetail: "Verified Task Proof: We require concrete test proof before an agent can claim a task is complete. Halts PRs unless tests actually pass.",
     solutionPill: "Verified Receipts",
     cliCommand: "spe check prompt.md --strict",
   },
@@ -51,7 +51,7 @@ const MATRIX_ROWS: MatrixRow[] = [
     painTitle: "Prompts silently drift, leaking internal keys or system bounds",
     painDetail: "Silent prompt drift over model versions, exposing internal boundaries and sensitive system context.",
     solutionTitle: "ProtectedIntent compiler halts pull requests on invariant violations",
-    solutionDetail: "Rock-Solid Guardrails: Keep your secrets and files safe. The AI is strictly blocked from touching files outside its scope. Deterministic boundary compilation with zero drift and cryptographically bound invariants.",
+    solutionDetail: "Rock-Solid Guardrails: Keep your secrets and files safe. The AI is strictly blocked from touching files outside its scope.",
     solutionPill: "Strict Guardrails",
     cliCommand: "npx @systempromptengine/cli adopt .",
   },
@@ -62,7 +62,7 @@ const MATRIX_ROWS: MatrixRow[] = [
     painTitle: "Cloud tools store your company prompts on their servers",
     painDetail: "Internal code architecture, confidential schemas, and IP stored on 3rd-party servers without guarantees.",
     solutionTitle: "100% WebAssembly in-browser sandbox — zero prompt bytes leave device",
-    solutionDetail: "Air-Gapped Privacy: 100% WebAssembly client execution. Zero prompt bytes ever leave your device. Canonical SHA-256 hash and zero telemetry egress.",
+    solutionDetail: "Air-Gapped Privacy: 100% WebAssembly client execution. Zero prompt bytes ever leave your device. Verified with zero telemetry egress.",
     solutionPill: "Air-Gapped WASM",
     cliCommand: "npm install -g @systempromptengine/cli",
   },
@@ -97,51 +97,51 @@ export function ValueComparisonMatrix({ onNavigate }: ValueComparisonMatrixProps
       <div className="spe-matrix-box">
         {/* Header */}
         <div className="spe-matrix-header">
-          <p className="spe-matrix-eyebrow">VALUE COMPARISON MATRIX</p>
+          <p className="spe-matrix-eyebrow">WHY DEVELOPERS SWITCH TO SPE</p>
           <h2 id="comparison-matrix-heading" className="spe-matrix-title">
-            Pain with Existing Chat Tools vs. SPE Ω Solution
+            Everyday AI Agent Frustrations vs. The S-Series Fix
           </h2>
           <p className="spe-matrix-subtitle">
-            Produce on demand: See why developers replace expensive cloud prompt wrappers with deterministic offline invariants.
+            See why engineers replace broken prompts and expensive cloud wrappers with instant, local, bulletproof guardrails.
           </p>
         </div>
 
-        {/* Filter Pills / Produce on Demand */}
+        {/* Filter Pills */}
         <div className="spe-matrix-filter-bar" role="group" aria-label="Matrix Filters">
           <button
             type="button"
             className={`spe-matrix-filter-btn ${filter === "all" ? "is-active" : ""}`}
             onClick={() => setFilter("all")}
           >
-            All Invariants
+            All Features
           </button>
           <button
             type="button"
             className={`spe-matrix-filter-btn ${filter === "cost" ? "is-active" : ""}`}
             onClick={() => setFilter("cost")}
           >
-            Cost &amp; Bills
+            Save Money
           </button>
           <button
             type="button"
             className={`spe-matrix-filter-btn ${filter === "receipts" ? "is-active" : ""}`}
             onClick={() => setFilter("receipts")}
           >
-            Test Receipts
+            Verified Code
           </button>
           <button
             type="button"
             className={`spe-matrix-filter-btn ${filter === "security" ? "is-active" : ""}`}
             onClick={() => setFilter("security")}
           >
-            Security Invariants
+            Security Guard
           </button>
           <button
             type="button"
             className={`spe-matrix-filter-btn ${filter === "airgap" ? "is-active" : ""}`}
             onClick={() => setFilter("airgap")}
           >
-            Offline Air-Gap
+            100% Private
           </button>
         </div>
 

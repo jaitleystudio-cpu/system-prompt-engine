@@ -1,9 +1,18 @@
 import { useState } from "react";
 import type { AppView } from "../routing";
+import { copyTextSafe } from "../engine/workflows/clipboard";
 import "./pricing.css";
 
 interface PricingProps {
   onNavigate?: (view: AppView) => void;
+}
+
+function generateLicenseKey(tier: "pro" | "team"): string {
+  const prefix = tier === "team" ? "SPE-TEAM" : "SPE-PRO";
+  const part1 = Math.random().toString(36).substring(2, 6).toUpperCase();
+  const part2 = Math.random().toString(36).substring(2, 6).toUpperCase();
+  const part3 = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `${prefix}-${part1}-${part2}-${part3}`;
 }
 
 export function Pricing({ onNavigate }: PricingProps) {
@@ -11,28 +20,68 @@ export function Pricing({ onNavigate }: PricingProps) {
   const [selectedPlan, setSelectedPlan] = useState<string>("Developer Pro");
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [generatedKey, setGeneratedKey] = useState<string | null>(null);
+  const [copiedKey, setCopiedKey] = useState(false);
+
+  const [currentTier, setCurrentTier] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem("spe-user-tier");
+    } catch {
+      return null;
+    }
+  });
+
+  const [currentLicense, setCurrentLicense] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem("spe-license-key");
+    } catch {
+      return null;
+    }
+  });
 
   const handleOpenPlan = (planName: string) => {
     setSelectedPlan(planName);
     setSubmitted(false);
     setEmail("");
+    setGeneratedKey(null);
     setModalOpen(true);
   };
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
+    const tier = selectedPlan.toLowerCase().includes("team") ? "team" : "pro";
+    const key = generateLicenseKey(tier);
     try {
-      localStorage.setItem("spe-user-tier", selectedPlan.toLowerCase().includes("team") ? "team" : "pro");
+      localStorage.setItem("spe-user-tier", tier);
       localStorage.setItem("spe-user-email", email);
+      localStorage.setItem("spe-license-key", key);
+      setCurrentTier(tier);
+      setCurrentLicense(key);
     } catch {
       // Storage access protected or restricted
     }
+    setGeneratedKey(key);
     setSubmitted(true);
-    setTimeout(() => {
-      setModalOpen(false);
-      setSubmitted(false);
-    }, 2200);
+  };
+
+  const handleCopyKey = async () => {
+    if (!generatedKey) return;
+    await copyTextSafe(generatedKey);
+    setCopiedKey(true);
+    setTimeout(() => setCopiedKey(false), 2000);
+  };
+
+  const handleDeactivate = () => {
+    try {
+      localStorage.removeItem("spe-user-tier");
+      localStorage.removeItem("spe-user-email");
+      localStorage.removeItem("spe-license-key");
+      setCurrentTier(null);
+      setCurrentLicense(null);
+    } catch {
+      // Storage access protected
+    }
   };
 
   return (
@@ -41,9 +90,57 @@ export function Pricing({ onNavigate }: PricingProps) {
         <p className="spe-pricing-kicker">Transparent Value</p>
         <h1>Simple, honest pricing. Pays for itself in your first week.</h1>
         <p className="spe-pricing-subtitle">
-          The core prompt compiler will always be 100% free. Upgrade to Pro or Team to automate multi-step workflows, eliminate all ads, and enforce team guardrails.
+          The core prompt compiler will always be 100% free. Upgrade to Developer Pro for $9/month or Team CI/CD Gate for $99/month.
         </p>
       </header>
+
+      {/* Active Subscription Banner */}
+      {currentTier && (
+        <section
+          className="spe-active-subscription-banner"
+          style={{
+            maxWidth: "760px",
+            margin: "0 auto 2.5rem auto",
+            backgroundColor: "#0d1b33",
+            border: "1px solid #38bdf8",
+            borderRadius: "8px",
+            padding: "1.25rem 1.5rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            boxShadow: "0 0 24px rgba(56, 189, 248, 0.15)",
+          }}
+          aria-label="Active License Status"
+        >
+          <div>
+            <span
+              style={{
+                fontSize: "0.75rem",
+                textTransform: "uppercase",
+                fontWeight: 700,
+                color: "#38bdf8",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Active Subscription
+            </span>
+            <h2 style={{ margin: "0.25rem 0", color: "#f8fafc", fontSize: "1.2rem", fontWeight: 700 }}>
+              {currentTier === "team" ? "Team & CI/CD Gate ($99/mo)" : "Developer Pro ($9/mo)"}
+            </h2>
+            <p style={{ margin: 0, fontSize: "0.8125rem", color: "#94a3b8" }}>
+              License Key: <code style={{ color: "#38bdf8" }}>{currentLicense || "Active on this browser"}</code> · 100% Ad-Free Sanctuary Active
+            </p>
+          </div>
+          <button
+            type="button"
+            className="spe-pricing-cta spe-pricing-cta-secondary"
+            style={{ padding: "0.5rem 1rem", fontSize: "0.8125rem" }}
+            onClick={handleDeactivate}
+          >
+            Deactivate
+          </button>
+        </section>
+      )}
 
       <section className="spe-pricing-grid" aria-label="Subscription Plans">
         {/* Tier 1: Free Community */}
@@ -91,9 +188,9 @@ export function Pricing({ onNavigate }: PricingProps) {
           </button>
         </article>
 
-        {/* Tier 2: Developer Pro */}
+        {/* Tier 2: Developer Pro ($9/mo) */}
         <article className="spe-pricing-card is-featured">
-          <span className="spe-pricing-badge">Most Popular · Pays for itself in 2 days</span>
+          <span className="spe-pricing-badge">Most Popular · Pays for itself in 1 day</span>
           <h2 className="spe-pricing-card-title">Developer Pro</h2>
           <p className="spe-pricing-desc">
             For professional developers who rely on Claude Code, Cursor, and ChatGPT daily.
@@ -115,15 +212,15 @@ export function Pricing({ onNavigate }: PricingProps) {
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>Multi-Turn Session Memory (CWC)</strong>: Automatically continues interrupted agent tasks</span>
+              <span><strong>Crash Recovery</strong>: Automatically continues interrupted agent sessions</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>1-Click Agent Exports</strong>: Format directly for .cursorrules, Claude Code CLAUDE.md, and Windsurf</span>
+              <span><strong>Agent Exporter</strong>: 1-click formats for .cursorrules, CLAUDE.md, and Windsurf</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>Advanced Scope Guardrails</strong>: Automatically detects and locks down forbidden files and API keys</span>
+              <span><strong>Scope Guardrails</strong>: Automatically detects and locks down forbidden files and API keys</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
@@ -136,11 +233,11 @@ export function Pricing({ onNavigate }: PricingProps) {
             className="spe-pricing-cta spe-pricing-cta-primary"
             onClick={() => handleOpenPlan("Developer Pro")}
           >
-            Get Developer Pro
+            {currentTier === "pro" ? "Plan Active ✓" : "Get Developer Pro ($9/mo)"}
           </button>
         </article>
 
-        {/* Tier 3: Team & CI/CD Gate */}
+        {/* Tier 3: Team & CI/CD Gate ($99/mo) */}
         <article className="spe-pricing-card">
           <span className="spe-pricing-badge">For Engineering Teams</span>
           <h2 className="spe-pricing-card-title">Team &amp; CI/CD Gate</h2>
@@ -160,7 +257,7 @@ export function Pricing({ onNavigate }: PricingProps) {
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>Git Pre-Commit Hook</strong>: spe check --pre-commit halts commits with broken prompt invariants</span>
+              <span><strong>CLI Pre-Commit Hook</strong>: spe check --pre-commit halts commits with broken prompt invariants</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
@@ -168,7 +265,7 @@ export function Pricing({ onNavigate }: PricingProps) {
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>Cryptographic Audit Passports</strong>: RFC 8785 signed evidence records for team pull requests</span>
+              <span><strong>Audit Receipts</strong>: RFC 8785 signed evidence records for team pull requests</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
@@ -181,7 +278,7 @@ export function Pricing({ onNavigate }: PricingProps) {
             className="spe-pricing-cta spe-pricing-cta-secondary"
             onClick={() => handleOpenPlan("Team & CI/CD Gate")}
           >
-            Protect Your Team
+            {currentTier === "team" ? "Plan Active ✓" : "Protect Your Team ($99/mo)"}
           </button>
         </article>
       </section>
@@ -221,16 +318,54 @@ export function Pricing({ onNavigate }: PricingProps) {
           aria-modal="true"
           aria-labelledby="modal-plan-title"
         >
-          <div className="spe-pricing-modal">
-            <h3 id="modal-plan-title">{selectedPlan}</h3>
+          <div className="spe-pricing-modal" style={{ maxWidth: "480px" }}>
+            <h3 id="modal-plan-title">{selectedPlan} Checkout</h3>
             {submitted ? (
-              <p style={{ color: "#34d399", fontWeight: 600 }}>
-                ✓ Subscription activated on this browser. Thank you for supporting independent developer tools!
-              </p>
+              <div style={{ textAlign: "left" }}>
+                <p style={{ color: "#34d399", fontWeight: 700, marginBottom: "0.75rem" }}>
+                  ✓ Subscription &amp; License Key Activated!
+                </p>
+                <div style={{ backgroundColor: "#020617", border: "1px solid #1e293b", borderRadius: "6px", padding: "0.75rem", marginBottom: "1rem" }}>
+                  <label style={{ display: "block", fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700, marginBottom: "0.25rem" }}>
+                    Your Activation License Key:
+                  </label>
+                  <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                    <code style={{ color: "#38bdf8", fontWeight: 700, fontSize: "0.9375rem" }}>
+                      {generatedKey}
+                    </code>
+                    <button
+                      type="button"
+                      onClick={handleCopyKey}
+                      style={{
+                        padding: "0.25rem 0.5rem",
+                        backgroundColor: "#1e293b",
+                        border: "1px solid #334155",
+                        borderRadius: "4px",
+                        color: "#f8fafc",
+                        fontSize: "0.75rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {copiedKey ? "Copied!" : "Copy Key"}
+                    </button>
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.8125rem", color: "#94a3b8", lineHeight: 1.5, marginBottom: "1.25rem" }}>
+                  Your browser workspace is now <strong>100% Ad-Free</strong> with Crash Recovery and session continuation unlocked. You can also use this key in the SPE CLI: <code>spe activate {generatedKey}</code>.
+                </p>
+                <button
+                  type="button"
+                  className="spe-pricing-cta spe-pricing-cta-primary"
+                  style={{ width: "100%" }}
+                  onClick={() => setModalOpen(false)}
+                >
+                  Start Using Ad-Free Workspace →
+                </button>
+              </div>
             ) : (
               <form onSubmit={handleSubscribe}>
-                <p>
-                  Enter your developer email to start your 14-day evaluation and unlock your ad-free workspace license key:
+                <p style={{ fontSize: "0.875rem", color: "#94a3b8", marginBottom: "1rem" }}>
+                  Enter your developer email to start your 14-day evaluation and instantly unlock your ad-free workspace license key:
                 </p>
                 <input
                   type="email"
@@ -241,12 +376,12 @@ export function Pricing({ onNavigate }: PricingProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   autoFocus
                 />
-                <div className="spe-pricing-modal-actions">
+                <div className="spe-pricing-modal-actions" style={{ marginTop: "1.25rem" }}>
                   <button
                     type="submit"
                     className="spe-pricing-cta spe-pricing-cta-primary"
                   >
-                    Continue to Checkout
+                    Activate {selectedPlan.includes("Team") ? "$99/mo License" : "$9/mo License"}
                   </button>
                   <button
                     type="button"

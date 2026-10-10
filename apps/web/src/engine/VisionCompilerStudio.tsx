@@ -157,7 +157,7 @@ export const VisionCompilerStudio: React.FC<VisionCompilerStudioProps> = ({
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700 }}>
-                Multimodal Neural Vision-to-Architecture Inverse-Compiler
+                S-Code · Screenshot to Clean Code Studio
               </h3>
               <span
                 style={{
@@ -170,7 +170,7 @@ export const VisionCompilerStudio: React.FC<VisionCompilerStudioProps> = ({
                   border: "1px solid rgba(56, 189, 248, 0.4)",
                 }}
               >
-                Pillar 2 • Visual Inversion
+                S-Code • Visual Layout
               </span>
             </div>
             <p style={{ margin: 0, fontSize: "0.75rem", color: "#94a3b8" }}>

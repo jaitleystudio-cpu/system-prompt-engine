@@ -83,7 +83,7 @@ export const BlindedJudgeArenaStudio: React.FC<BlindedJudgeArenaStudioProps> = (
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700 }}>
-                Game-Theoretic Blinded Multi-Judge Arena (LLM-as-a-Judge)
+                Benchmark Arena · Multi-Model Accuracy Benchmark
               </h3>
               <span
                 style={{
@@ -96,11 +96,11 @@ export const BlindedJudgeArenaStudio: React.FC<BlindedJudgeArenaStudioProps> = (
                   border: "1px solid rgba(245, 158, 11, 0.4)",
                 }}
               >
-                Pillar 5 • Nash Consensus
+                Model Compare • Accuracy Proof
               </span>
             </div>
             <p style={{ margin: 0, fontSize: "0.75rem", color: "#94a3b8" }}>
-              5 Blinded Judges with Active Position & Verbosity Bias Mitigation and Cryptographic Proof-of-Rigor.
+              5 Independent Evaluators with Position Bias Mitigation and Cryptographic Accuracy Receipts.
             </p>
           </div>
         </div>

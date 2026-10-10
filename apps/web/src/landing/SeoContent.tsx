@@ -26,32 +26,42 @@ export function SeoContent({
         <ul className="spe-seo-links">
           <li>
             <InAppLink view="create" onNavigate={onNavigate}>
-              Open the free prompt builder (Create)
+              Open Prompt Studio Free
             </InAppLink>
           </li>
           <li>
             <InAppLink view="code" onNavigate={onNavigate}>
-              Screenshot-to-code prompt engineering tool
+              S-Code: Screenshot to Frontend Code
+            </InAppLink>
+          </li>
+          <li>
+            <InAppLink view="workflows" onNavigate={onNavigate}>
+              Verified Workflows: Ready-to-Run Agent Recipes
+            </InAppLink>
+          </li>
+          <li>
+            <InAppLink view="compare" onNavigate={onNavigate}>
+              Benchmark Arena: Head-to-Head Accuracy Tests
             </InAppLink>
           </li>
           <li>
             <InAppLink view="lab" onNavigate={onNavigate}>
-              Browse Daily Lab prompt ideas
+              Browse Daily Prompt Recipes
             </InAppLink>
           </li>
           <li>
             <InAppLink view="capabilities" onNavigate={onNavigate}>
-              SPE capabilities — local contracts and portability
+              Scope Guardrails &amp; Capabilities
             </InAppLink>
           </li>
           <li>
             <InAppLink view="privacy" onNavigate={onNavigate}>
-              Privacy proof — what stays on this device
+              Privacy proof — zero prompt bytes leave this device
             </InAppLink>
           </li>
           <li>
-            <InAppLink view="my-work" onNavigate={onNavigate}>
-              My Work — prompts saved on device
+            <InAppLink view="pricing" onNavigate={onNavigate}>
+              Plans &amp; Pricing ($9/mo Pro · $99/mo Team)
             </InAppLink>
           </li>
         </ul>

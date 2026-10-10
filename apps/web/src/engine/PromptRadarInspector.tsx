@@ -414,14 +414,14 @@ ${promptText}
           {(
             [
               { id: "radar", label: "📊 Quality Radar" },
-              { id: "proof", label: "🛡️ Ω Proof Lab" },
-              { id: "community", label: "🌐 Prompts.chat" },
-              { id: "evolver", label: "🧬 Genetic Evolver" },
-              { id: "vision", label: "👁️ Vision Compiler" },
-              { id: "rag", label: "⚡ Hybrid RAG" },
-              { id: "quantum", label: "🌌 3D Quantum Field" },
-              { id: "arena", label: "⚖️ Blinded Arena" },
-              { id: "harness", label: "🧠 AGI Brain Harness" },
+              { id: "proof", label: "🛡️ Audit Receipts" },
+              { id: "community", label: "🌐 Workflows" },
+              { id: "evolver", label: "🧬 Attack Gym" },
+              { id: "vision", label: "👁️ S-Code" },
+              { id: "rag", label: "⚡ Private Search" },
+              { id: "quantum", label: "🌌 3D Canvas" },
+              { id: "arena", label: "⚖️ Benchmark Arena" },
+              { id: "harness", label: "🧠 Swarm Consensus" },
               { id: "matrix", label: "⚡ Model Matrix" },
               { id: "markdown", label: "📝 Markdown (.md)" },
               { id: "code", label: "💻 SDK Runners" },
@@ -1613,7 +1613,7 @@ ${promptText}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
             <div>
               <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#f8fafc" }}>
-                ⚡ In-WASM Supersonic Hybrid RAG Retrieval Fabric (BM25 + 384-d Dense RRF)
+                ⚡ Private Local Search &amp; Documentation Grounding (BM25 + Dense Vectors)
               </div>
               <div style={{ fontSize: "0.7rem", color: "#94a3b8" }}>
                 Sub-millisecond retrieval across verified architectural standards with 0 network egress.

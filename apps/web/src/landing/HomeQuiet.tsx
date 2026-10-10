@@ -39,7 +39,7 @@ export function HomeQuiet({
           <p className="spe-home-quiet-kicker">What you can do next</p>
           <h3>Start the task, or open a saved file later.</h3>
           <p>
-            Build a prompt in Create, or start from a screenshot in Code. Saved
+            Build a prompt in Prompt Studio, or start from a screenshot in S-Code. Saved
             work stays on this device unless you export it.
           </p>
           <div className="spe-home-quiet-actions">
@@ -51,7 +51,7 @@ export function HomeQuiet({
                 onCreate();
               }}
             >
-              Build my prompt <span>↗</span>
+              Open Prompt Studio Free <span>↗</span>
             </a>
             <a
               className="spe-ghost"
@@ -61,7 +61,7 @@ export function HomeQuiet({
                 onCode();
               }}
             >
-              Start from a screenshot
+              Start with S-Code <span>↗</span>
             </a>
           </div>
         </article>

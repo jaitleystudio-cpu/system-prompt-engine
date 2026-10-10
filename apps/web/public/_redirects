@@ -20,6 +20,7 @@
 /workflows  /evidence-pages/workflows.html  200
 /build-skill  /evidence-pages/build-skill.html  200
 /compare  /evidence-pages/compare.html  200
+/pricing  /evidence-pages/pricing.html  200
 /models/openai/gpt-4o  /evidence-pages/models_openai_gpt-4o.html  200
 /models/anthropic/claude-3-7-sonnet  /evidence-pages/models_anthropic_claude-3-7-sonnet.html  200
 /failure-genome/SPE-FG-2026-000001  /evidence-pages/failure-genome_SPE-FG-2026-000001.html  200
