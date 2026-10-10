@@ -119,3 +119,14 @@ def test_negative_control_failed_train_is_rejected():
     train, heldout = dataset()
     train = [replace(o, candidate_score=.1, shuffled_score=.9) for o in train]
     assert run_study(protocol(), train, heldout).status == "REJECTED"
+
+
+def test_existing_learning_validator_exposes_v2_research_without_signing():
+    """The canonical LVT owner must own the research adapter; it cannot qualify."""
+    from spe_runtime.research.lvt import LearningValidator
+    train, heldout = dataset()
+    validator = LearningValidator()
+    study = validator.evaluate_research_only_v2(protocol(), train, heldout)
+    assert study.status == "RESEARCH_SUPPORTED_NOT_EXTERNALLY_QUALIFIED"
+    assert study.production_qualified is False
+    assert not hasattr(study, "canonical_receipt_signature")
