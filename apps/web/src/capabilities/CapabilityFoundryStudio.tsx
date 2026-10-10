@@ -161,6 +161,94 @@ export function CapabilityFoundryStudio() {
     setActiveLedgerHash("gen0_baseline_hash_0000000000");
   };
 
+  // Level 5: Autonomous Open-Ended Discovery State
+  const [discoveryEpoch, setDiscoveryEpoch] = useState<number>(1);
+  const [archiveCoverage, setArchiveCoverage] = useState<number>(33.3);
+  const [totalElites, setTotalElites] = useState<number>(9);
+  const [duels, setDuels] = useState<Array<{
+    id: string;
+    proposer: string;
+    falsifier: string;
+    verdict: string;
+    lcb95: string;
+    hash: string;
+  }>>([
+    {
+      id: "duel-01",
+      proposer: "FINANCIAL_RISK: ConditionalClamp",
+      falsifier: "Counter-World: AUTHORITY_REVOKED",
+      verdict: "SURVIVED",
+      lcb95: "+0.88",
+      hash: "8f1a2b3c4d5e",
+    },
+    {
+      id: "duel-02",
+      proposer: "PRIVACY_SHIELD: ZeroPiiMask",
+      falsifier: "Counter-World: MALFORMED_INPUT",
+      verdict: "SURVIVED",
+      lcb95: "+0.92",
+      hash: "3c4d5e6f7a8b",
+    },
+    {
+      id: "duel-03",
+      proposer: "AST_OPTIMIZER: DeadBranchPrune",
+      falsifier: "Counter-World: INVARIANT_VIOLATION",
+      verdict: "SURVIVED",
+      lcb95: "+0.85",
+      hash: "5e6f7a8b9c0d",
+    },
+  ]);
+
+  const [discoveredAxioms, setDiscoveredAxioms] = useState<Array<{
+    id: string;
+    domain: string;
+    statement: string;
+    witness: string;
+  }>>([
+    {
+      id: "ax_01",
+      domain: "FINANCIAL_RISK",
+      statement: "Strict refund clamping under $500 guarantees zero unauthorized financial release.",
+      witness: "Wald_SPRT_LCB95 (+0.88)",
+    },
+    {
+      id: "ax_02",
+      domain: "PRIVACY_SHIELD",
+      statement: "Deterministic token masking prevents sensitive identity leakage across model prompts.",
+      witness: "Dialectical_Wald_SPRT (+0.92)",
+    },
+    {
+      id: "ax_03",
+      domain: "AST_OPTIMIZER",
+      statement: "Pruning unreferenced style clauses maintains semantic equivalence while reducing token cost.",
+      witness: "Dialectical_Wald_SPRT (+0.85)",
+    },
+  ]);
+
+  const handleRunDiscoveryEpoch = () => {
+    setDiscoveryEpoch((prev) => prev + 1);
+    setArchiveCoverage((prev) => Math.min(100.0, +(prev + 11.1).toFixed(1)));
+    setTotalElites((prev) => prev + 3);
+
+    const newDuel = {
+      id: `duel-0${duels.length + 1}`,
+      proposer: "RATE_LIMITER: SlidingTokenBucket",
+      falsifier: "Counter-World: BUDGET_STARVATION",
+      verdict: "SURVIVED",
+      lcb95: "+0.91",
+      hash: Math.random().toString(16).substring(2, 14),
+    };
+    setDuels((prev) => [newDuel, ...prev]);
+
+    const newAxiom = {
+      id: `ax_0${discoveredAxioms.length + 1}`,
+      domain: "RATE_LIMITER",
+      statement: "Sliding token lease prevents burst starvation and protects backend throughput.",
+      witness: "Dialectical_Wald_SPRT (+0.91)",
+    };
+    setDiscoveredAxioms((prev) => [...prev, newAxiom]);
+  };
+
   const capsule = SAMPLE_CAPSULES[selectedIdx] ?? SAMPLE_CAPSULES[0];
 
   const handleExecute = () => {
@@ -508,6 +596,173 @@ export function CapabilityFoundryStudio() {
                 {pass}
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* LEVEL 5: AUTONOMOUS OPEN-ENDED DISCOVERY & MAP-ELITES ARCHIVE */}
+      <div
+        style={{
+          marginTop: "1.25rem",
+          padding: "1rem",
+          borderRadius: "8px",
+          background: "rgba(236, 72, 153, 0.03)",
+          border: "1px solid rgba(236, 72, 153, 0.2)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            flexWrap: "wrap",
+            gap: "8px",
+            marginBottom: "1rem",
+          }}
+        >
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+              <span
+                style={{
+                  fontSize: "0.65rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  background: "rgba(236, 72, 153, 0.2)",
+                  color: "#f472b6",
+                  border: "1px solid rgba(236, 72, 153, 0.35)",
+                }}
+              >
+                LEVEL 5 AGI-TIER DISCOVERY
+              </span>
+              <span style={{ fontSize: "0.75rem", color: "rgba(255, 255, 255, 0.5)" }}>
+                Dialectical Co-Evolution Arena and MAP-Elites Architecture
+              </span>
+            </div>
+            <h4 style={{ margin: 0, fontSize: "1.15rem", color: "#f8fafc" }}>
+              Autonomous Open-Ended Discovery and Ontology Base
+            </h4>
+          </div>
+
+          <div style={{ display: "flex", gap: "8px" }}>
+            <button
+              type="button"
+              onClick={handleRunDiscoveryEpoch}
+              style={{
+                padding: "6px 12px",
+                borderRadius: "6px",
+                background: "rgba(236, 72, 153, 0.25)",
+                color: "#fbcfe8",
+                border: "1px solid rgba(236, 72, 153, 0.4)",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Run Discovery Epoch
+            </button>
+            <div
+              style={{
+                padding: "6px 12px",
+                borderRadius: "6px",
+                background: "rgba(16, 185, 129, 0.15)",
+                color: "#6ee7b7",
+                border: "1px solid rgba(16, 185, 129, 0.3)",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981" }} />
+              Exploration Active
+            </div>
+          </div>
+        </div>
+
+        {/* Level 5 Telemetry Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "10px", marginBottom: "1rem" }}>
+          <div style={{ padding: "10px", borderRadius: "6px", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+            <div style={{ fontSize: "0.7rem", color: "rgba(255, 255, 255, 0.5)" }}>Active Epoch</div>
+            <div style={{ fontSize: "1.15rem", fontWeight: 700, color: "#f8fafc" }}>Epoch #{discoveryEpoch}</div>
+            <div style={{ fontSize: "0.65rem", color: "rgba(255, 255, 255, 0.4)" }}>Curriculum Progression</div>
+          </div>
+          <div style={{ padding: "10px", borderRadius: "6px", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+            <div style={{ fontSize: "0.7rem", color: "rgba(255, 255, 255, 0.5)" }}>Discovered Axioms</div>
+            <div style={{ fontSize: "1.15rem", fontWeight: 700, color: "#ec4899" }}>{discoveredAxioms.length} Proven</div>
+            <div style={{ fontSize: "0.65rem", color: "rgba(255, 255, 255, 0.4)" }}>Ontology Graph Leaves</div>
+          </div>
+          <div style={{ padding: "10px", borderRadius: "6px", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+            <div style={{ fontSize: "0.7rem", color: "rgba(255, 255, 255, 0.5)" }}>MAP-Elites Coverage</div>
+            <div style={{ fontSize: "1.15rem", fontWeight: 700, color: "#a855f7" }}>{archiveCoverage.toFixed(1)}%</div>
+            <div style={{ fontSize: "0.65rem", color: "rgba(255, 255, 255, 0.4)" }}>{totalElites} of 27 Behavioral Niches</div>
+          </div>
+          <div style={{ padding: "10px", borderRadius: "6px", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+            <div style={{ fontSize: "0.7rem", color: "rgba(255, 255, 255, 0.5)" }}>Dialectical Survival</div>
+            <div style={{ fontSize: "1.15rem", fontWeight: 700, color: "#34d399" }}>100% Rate</div>
+            <div style={{ fontSize: "0.65rem", color: "rgba(255, 255, 255, 0.4)" }}>Wald SPRT LCB95 Guard</div>
+          </div>
+        </div>
+
+        {/* Dialectical Duels and Discovered Axioms Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "10px" }}>
+          {/* Duel Stream */}
+          <div style={{ borderRadius: "6px", background: "rgba(0, 0, 0, 0.4)", border: "1px solid rgba(255, 255, 255, 0.08)", padding: "10px" }}>
+            <div style={{ fontSize: "0.75rem", color: "rgba(255, 255, 255, 0.6)", marginBottom: "8px" }}>
+              Dialectical Duel Stream (Proposer vs Adversarial Falsifier)
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              {duels.map((duel) => (
+                <div
+                  key={duel.id}
+                  style={{
+                    padding: "6px 8px",
+                    borderRadius: "4px",
+                    background: "rgba(255, 255, 255, 0.03)",
+                    border: "1px solid rgba(255, 255, 255, 0.06)",
+                    fontSize: "0.75rem",
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
+                    <span style={{ color: "#f472b6", fontWeight: 600 }}>{duel.proposer}</span>
+                    <span style={{ color: "#34d399", fontWeight: 600 }}>{duel.verdict} ({duel.lcb95})</span>
+                  </div>
+                  <div style={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.7rem" }}>
+                    Falsifier: {duel.falsifier} · Hash: {duel.hash}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Discovered Axioms */}
+          <div style={{ borderRadius: "6px", background: "rgba(0, 0, 0, 0.4)", border: "1px solid rgba(255, 255, 255, 0.08)", padding: "10px" }}>
+            <div style={{ fontSize: "0.75rem", color: "rgba(255, 255, 255, 0.6)", marginBottom: "8px" }}>
+              Discovered Domain Axioms (Formal Ontology Base)
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              {discoveredAxioms.map((ax) => (
+                <div
+                  key={ax.id}
+                  style={{
+                    padding: "6px 8px",
+                    borderRadius: "4px",
+                    background: "rgba(255, 255, 255, 0.03)",
+                    border: "1px solid rgba(255, 255, 255, 0.06)",
+                    fontSize: "0.75rem",
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2px" }}>
+                    <span style={{ color: "#c084fc", fontWeight: 600 }}>{ax.domain}</span>
+                    <span style={{ color: "rgba(255, 255, 255, 0.4)", fontSize: "0.7rem" }}>{ax.witness}</span>
+                  </div>
+                  <div style={{ color: "#e2e8f0" }}>{ax.statement}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

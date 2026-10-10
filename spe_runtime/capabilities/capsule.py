@@ -203,3 +203,12 @@ class CapabilityCapsule:
             )
 
         self.admission_state = new_state
+
+
+# Aliases for flexible API usage
+Contracts = CapabilityContracts
+Guards = CapabilityGuards
+WitnessProof = CapabilityWitness
+Interventions = CausalInterventions
+TransferEvidence = TransferMatrix
+Procedure = ProcedurePayload

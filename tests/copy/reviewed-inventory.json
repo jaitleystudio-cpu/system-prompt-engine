@@ -649,6 +649,12 @@
       "text": "Air-Gapped WASM"
     },
     {
+      "id": "06539cecd37de836dcff",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Ontology Graph Leaves"
+    },
+    {
       "id": "065463eefaa15762a52f",
       "file": "apps/web/src/components/ads/ContextualAdSlot.tsx",
       "depth": "PRODUCT",
@@ -1133,6 +1139,12 @@
       "file": "apps/web/src/website-studio/explore/StudioExplore.tsx",
       "depth": "PRODUCT",
       "text": "Primary #3b82f6, Accents #60a5fa/#818cf8"
+    },
+    {
+      "id": "0a14368a28026f53cdd3",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "AST_OPTIMIZER"
     },
     {
       "id": "0a21cfa229b069120311",
@@ -2131,6 +2143,12 @@
       "text": "const hasRail ="
     },
     {
+      "id": "11432ef40c8f9bb0d84f",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "duel-01"
+    },
+    {
       "id": "1171b85d365a145eef84",
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
@@ -2611,6 +2629,12 @@
       "text": "FAIL"
     },
     {
+      "id": "15b0895dc4a580c42cb7",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Pruning unreferenced style clauses maintains semantic equivalence while reducing token cost."
+    },
+    {
       "id": "15b4ee60a3fdfb604800",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PRODUCT",
@@ -2741,6 +2765,12 @@
       "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
       "depth": "PRODUCT",
       "text": "Replace Image"
+    },
+    {
+      "id": "16e2f43ddff474b70c6f",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Curriculum Progression"
     },
     {
       "id": "16f24094e74f6cedeb65",
@@ -3533,6 +3563,12 @@
       "file": "apps/web/src/media/screenshotToCode.ts",
       "depth": "PRODUCT",
       "text": "&gt;"
+    },
+    {
+      "id": "1cef6d458113d209c9a5",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "FINANCIAL_RISK"
     },
     {
       "id": "1cf9ae9b27ce8dd65a27",
@@ -4897,6 +4933,12 @@
       "text": "No side effects authorized"
     },
     {
+      "id": "282aeedc358326949158",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Falsifier:"
+    },
+    {
       "id": "282f16aa75dcf7e17ca4",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -5923,6 +5965,12 @@
       "text": "stable"
     },
     {
+      "id": "2ff4146dbaee7ac30617",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Dialectical Co-Evolution Arena and MAP-Elites Architecture"
+    },
+    {
       "id": "2ff4e6657f659daa9ebe",
       "file": "apps/web/src/pages/WorkflowsCatalog.tsx",
       "depth": "PRODUCT",
@@ -6353,6 +6401,12 @@
       "file": "apps/web/src/composer/ContextProtocolControls.tsx",
       "depth": "PRODUCT",
       "text": "Some saved context may be out of date. Refresh sources when you are ready — your request stays the same."
+    },
+    {
+      "id": "337d12ffb18e06458537",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Deterministic token masking prevents sensitive identity leakage across model prompts."
     },
     {
       "id": "337edd7300e4cba559e9",
@@ -8191,6 +8245,12 @@
       "text": "root credentials"
     },
     {
+      "id": "432dfff3b7e84802a457",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Sliding token lease prevents burst starvation and protects backend throughput."
+    },
+    {
       "id": "433df678c6bb2b73743f",
       "file": "apps/web/src/website-studio/camera/CameraDirectorPanel.tsx",
       "depth": "PRODUCT",
@@ -8561,6 +8621,12 @@
       "file": "apps/web/src/website-studio/explore/InspirationCard.tsx",
       "depth": "PRODUCT",
       "text": "Analyze"
+    },
+    {
+      "id": "4645f43764e3706ca9a0",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "SURVIVED"
     },
     {
       "id": "46504368d8980bc5156a",
@@ -9103,6 +9169,12 @@
       "text": "Hallucinated completion reports that merge broken code into production, forcing costly emergency fixes."
     },
     {
+      "id": "49dce04711664bc344a3",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Discovered Axioms"
+    },
+    {
       "id": "49f0cb1a009f6778a281",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
@@ -9313,6 +9385,12 @@
       "text": "Support reply"
     },
     {
+      "id": "4c2c9a28d7d23f680244",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Wald SPRT LCB95 Guard"
+    },
+    {
       "id": "4c323b3653a30dbdcff4",
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
@@ -9499,6 +9577,12 @@
       "text": "Screenshot to Code"
     },
     {
+      "id": "4d7abaacac070fb68f24",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "RATE_LIMITER"
+    },
+    {
       "id": "4d92af75673833a16539",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -9581,6 +9665,12 @@
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
       "text": "$ spe continue -"
+    },
+    {
+      "id": "4e071f8d5a596f816491",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Strict refund clamping under $500 guarantees zero unauthorized financial release."
     },
     {
       "id": "4e0c977a8ab953bdf612",
@@ -10483,6 +10573,12 @@
       "text": "EXTERNAL PROVIDER"
     },
     {
+      "id": "5586cc1851a463fb70c4",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Dialectical_Wald_SPRT (+0.85)"
+    },
+    {
       "id": "5586d0c222331b3657b3",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -11237,6 +11333,12 @@
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
       "text": "Raw Human English // Unverified"
+    },
+    {
+      "id": "5aa3971793afbc3d7b93",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Dialectical_Wald_SPRT (+0.92)"
     },
     {
       "id": "5aa8787f74ea571e9e81",
@@ -12529,6 +12631,12 @@
       "text": "one step further."
     },
     {
+      "id": "653182f36f9e6ff29877",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "duel-0"
+    },
+    {
       "id": "6531d8a6f00fc1a91127",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -13717,6 +13825,12 @@
       "text": "mobile-lightweight-reveal"
     },
     {
+      "id": "6e5f135617fd080f1d5a",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "RATE_LIMITER: SlidingTokenBucket"
+    },
+    {
       "id": "6e6454c46535c81e0383",
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
@@ -14611,6 +14725,12 @@
       "text": "What you want. What you know. What to avoid."
     },
     {
+      "id": "74fdbdbcc5e98306b96a",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Exploration Active"
+    },
+    {
       "id": "75003705ad4d144d76d1",
       "file": "apps/web/src/pages/SkillBuilderStudio.tsx",
       "depth": "PRODUCT",
@@ -15319,6 +15439,12 @@
       "text": "SUCCESS"
     },
     {
+      "id": "7b2c44c862edcd41c17b",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Active Epoch"
+    },
+    {
       "id": "7b3382df279cc5108d1d",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
@@ -15865,6 +15991,12 @@
       "text": "Next capability card"
     },
     {
+      "id": "8000b0e1b57c177fc519",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "8f1a2b3c4d5e"
+    },
+    {
       "id": "800d7121e9df1cfeb5a8",
       "file": "apps/web/src/landing/UniversalInputShell.tsx",
       "depth": "PRODUCT",
@@ -16303,6 +16435,12 @@
       "text": "80px"
     },
     {
+      "id": "8405201ac44e3587499c",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "PRIVACY_SHIELD: ZeroPiiMask"
+    },
+    {
       "id": "8408084ccc070450d804",
       "file": "apps/web/src/website-studio/repair/qualityRepairLoop.ts",
       "depth": "PRODUCT",
@@ -16319,6 +16457,12 @@
       "file": "apps/web/src/lab/specimens.ts",
       "depth": "PRODUCT",
       "text": "helix"
+    },
+    {
+      "id": "84251197745a768762c5",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "FINANCIAL_RISK: ConditionalClamp"
     },
     {
       "id": "8434fe1798a79d0f56e4",
@@ -17881,6 +18025,12 @@
       "text": "Database Migration"
     },
     {
+      "id": "90a5b3539fded887d569",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Dialectical_Wald_SPRT (+0.91)"
+    },
+    {
       "id": "90b3d132e97c58b810a4",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
@@ -18689,6 +18839,12 @@
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
       "text": "#93c5fd"
+    },
+    {
+      "id": "9760e11dfae305d2861b",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "· Hash:"
     },
     {
       "id": "976c606707c8017fe3aa",
@@ -19855,6 +20011,12 @@
       "text": "transitions,"
     },
     {
+      "id": "9ffd1fca94e602382c6e",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Counter-World: INVARIANT_VIOLATION"
+    },
+    {
       "id": "9ffebe4228cf320d826c",
       "file": "apps/web/src/website-studio/behavior/BehaviorGraphEditor.tsx",
       "depth": "PRODUCT",
@@ -20737,6 +20899,12 @@
       "text": "API Pass-Through"
     },
     {
+      "id": "a70f53d62c146aed7e54",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "ax_03"
+    },
+    {
       "id": "a7142d810e21aef725ec",
       "file": "apps/web/src/media/mediaProductModel.ts",
       "depth": "PRODUCT",
@@ -21001,6 +21169,12 @@
       "text": "Uncertainty:"
     },
     {
+      "id": "a8cdbc0939c365f62614",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "duel-03"
+    },
+    {
       "id": "a8e881e1977f276d068a",
       "file": "apps/web/src/input/SpeechInput.tsx",
       "depth": "PRODUCT",
@@ -21139,10 +21313,22 @@
       "text": "ENGINE_UNAVAILABLE"
     },
     {
+      "id": "a9f697e46c54b61fdf48",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Dialectical Survival"
+    },
+    {
       "id": "a9fa4819b0ddd00b5cc2",
       "file": "apps/web/src/website-studio/Studio.tsx",
       "depth": "PRODUCT",
       "text": "preset"
+    },
+    {
+      "id": "aa0100e1245e292e3d66",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "LEVEL 5 AGI-TIER DISCOVERY"
     },
     {
       "id": "aa11ab5db3367fd77e48",
@@ -21271,10 +21457,22 @@
       "text": "What is SPE?"
     },
     {
+      "id": "aae6068c14aee5c068a0",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Counter-World: BUDGET_STARVATION"
+    },
+    {
       "id": "aae886b90cda4eaf6b57",
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
       "text": "Could not decode this image."
+    },
+    {
+      "id": "aaf00661b999326f4dd8",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "AST_OPTIMIZER: DeadBranchPrune"
     },
     {
       "id": "aafd100550c0bc2e18aa",
@@ -21517,6 +21715,12 @@
       "text": "d3d-09"
     },
     {
+      "id": "acad83ec33f185111ba6",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "of 27 Behavioral Niches"
+    },
+    {
       "id": "acadd8f632d78748be05",
       "file": "apps/web/src/media/imageObserve.ts",
       "depth": "PRODUCT",
@@ -21689,6 +21893,12 @@
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
       "text": "SPE runs locally on your machine for $0. Pipes terminal outputs directly to your local compiler with zero network hops and zero inference bills."
+    },
+    {
+      "id": "ae0c122b35315477c610",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "duel-02"
     },
     {
       "id": "ae0cd430e61ab94d0f40",
@@ -21983,6 +22193,12 @@
       "file": "apps/web/src/landing/ModalModeSelector.tsx",
       "depth": "PRODUCT",
       "text": "Strict request preference. This selector does not enforce output contracts."
+    },
+    {
+      "id": "afc15a90bdd3af9c82fb",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "100% Rate"
     },
     {
       "id": "afd3826f194e5cd865ea",
@@ -22655,6 +22871,12 @@
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
       "text": "Interaction"
+    },
+    {
+      "id": "b4d699aebbe4ae0f4737",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "ax_01"
     },
     {
       "id": "b4db673b5f58a2e2deb6",
@@ -23567,6 +23789,12 @@
       "file": "apps/web/src/website-studio/intent/compileBehaviorIntent.ts",
       "depth": "PRODUCT",
       "text": "selection"
+    },
+    {
+      "id": "bc82d7098c677848769f",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Wald_SPRT_LCB95 (+0.88)"
     },
     {
       "id": "bca46275e83c4b24e293",
@@ -24727,6 +24955,12 @@
       "text": "WebAssembly, ECMAScript 2022+"
     },
     {
+      "id": "c4eba04265edbea61a66",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Counter-World: AUTHORITY_REVOKED"
+    },
+    {
       "id": "c4ebaf858d5f44bba718",
       "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
       "depth": "PRODUCT",
@@ -24821,6 +25055,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "workspace"
+    },
+    {
+      "id": "c5b57499569c459491a0",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "MAP-Elites Coverage"
     },
     {
       "id": "c5e3be25a38e4ced0693",
@@ -25351,6 +25591,12 @@
       "text": "Input: Stripe Payments RFC v2026\nExtracted: 14 mandatory state invariants\nGenerated: Deterministic Horn clauses"
     },
     {
+      "id": "ca60ddaf11d5b18d384c",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "Counter-World: MALFORMED_INPUT"
+    },
+    {
       "id": "ca646654288bccd4f9f3",
       "file": "apps/web/src/library/projectLibraryModel.ts",
       "depth": "PRODUCT",
@@ -25753,6 +25999,12 @@
       "text": "NO_ACQUISITION_GRANT"
     },
     {
+      "id": "cd2ab8afd0ea9aafc423",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "PRIVACY_SHIELD"
+    },
+    {
       "id": "cd353d5ecc0cad12e71b",
       "file": "apps/web/src/website/productFlow.ts",
       "depth": "PRODUCT",
@@ -26099,6 +26351,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "Review the code I provide for correctness, security and maintainability. Rank findings by severity and include the affected code and a concrete fix. Do not invent files, imports, or unverified tests."
+    },
+    {
+      "id": "cfb5c89ba4adad7ff435",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Epoch #"
     },
     {
       "id": "cfc263f5a407812c39c9",
@@ -26809,6 +27067,12 @@
       "text": "React Native"
     },
     {
+      "id": "d54821a3475597cf5b38",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Autonomous Open-Ended Discovery and Ontology Base"
+    },
+    {
       "id": "d556e055eb79e514da91",
       "file": "apps/web/src/library/ProjectLibraryView.tsx",
       "depth": "PRODUCT",
@@ -27047,6 +27311,12 @@
       "file": "apps/web/src/media/urlIngest.ts",
       "depth": "PRODUCT",
       "text": "Font hints:"
+    },
+    {
+      "id": "d7203a469783a4740de5",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "5e6f7a8b9c0d"
     },
     {
       "id": "d7267d04d16bfb483390",
@@ -27791,6 +28061,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "Customer ticket triage & response"
+    },
+    {
+      "id": "dcb9d759e7af53e37399",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Proven"
     },
     {
       "id": "dcbc5a9a59a2dab5804e",
@@ -28993,6 +29269,12 @@
       "text": "Unsupported video type:"
     },
     {
+      "id": "e5f654703cf26e982f73",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "ax_0"
+    },
+    {
       "id": "e5fb3b8817f7dcab15fd",
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
@@ -29851,6 +30133,12 @@
       "text": "bright"
     },
     {
+      "id": "edee86de611b79f9051a",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "3c4d5e6f7a8b"
+    },
+    {
       "id": "edf1351b8b8518fdc622",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -30323,6 +30611,12 @@
       "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
       "depth": "PRODUCT",
       "text": "// Analyzing image layout and extracting UI regions..."
+    },
+    {
+      "id": "f181d5fcab7001cd1f3c",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Dialectical Duel Stream (Proposer vs Adversarial Falsifier)"
     },
     {
       "id": "f18b77be54c70e6696fe",
@@ -30919,6 +31213,12 @@
       "text": "Brief a 3D still-life: brushed metal ring, frosted glass sphere, soft north light, graphite pedestal. Camera 50mm, f/4."
     },
     {
+      "id": "f616629af263c7737267",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Run Discovery Epoch"
+    },
+    {
       "id": "f61713a02318783b4f8b",
       "file": "apps/web/src/pages/HeadToHeadCompare.tsx",
       "depth": "PRODUCT",
@@ -30947,6 +31247,12 @@
       "file": "apps/web/src/input/boundedText.ts",
       "depth": "PRODUCT",
       "text": "were offered; only the first"
+    },
+    {
+      "id": "f642721285b1b373840d",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PRODUCT",
+      "text": "ax_02"
     },
     {
       "id": "f64307a522bd52b540f6",
@@ -31709,6 +32015,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "c"
+    },
+    {
+      "id": "fc33e3574b51f7fa6f5f",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Discovered Domain Axioms (Formal Ontology Base)"
     },
     {
       "id": "fc56443da15b4231ed22",

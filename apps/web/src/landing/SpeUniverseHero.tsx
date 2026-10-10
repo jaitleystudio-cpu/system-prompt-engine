@@ -414,14 +414,13 @@ export function SpeUniverseHero({ onNavigate }: Props) {
             <defs>
               <linearGradient id="spe-beam-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#F5F7FF" stopOpacity="0.95" />
-                <stop offset="35%" stopColor="#3D5AFE" stopOpacity="0.9" />
-                <stop offset="70%" stopColor="#FF2FA3" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#FF8A1E" stopOpacity="0.75" />
+                <stop offset="40%" stopColor="#3D5AFE" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#536DFE" stopOpacity="0.8" />
               </linearGradient>
 
               <filter id="spe-spark-glow" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
-                <feFlood floodColor="#FF2FA3" result="color" />
+                <feFlood floodColor="#3D5AFE" result="color" />
                 <feComposite in2="blur" in="color" operator="in" result="glow" />
                 <feMerge>
                   <feMergeNode in="glow" />

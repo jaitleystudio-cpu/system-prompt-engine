@@ -1016,9 +1016,9 @@ export default function App() {
           />
         ) : view === "home" && (
           <>
-            <SpeCapabilityDeck onNavigate={setView} />
             <SpeUniverseHero onNavigate={setView} />
             <SpeStorytellingCinema onNavigate={setView} />
+            <SpeCapabilityDeck onNavigate={setView} />
             <Hero
               hideTheater
               onReset={() => {

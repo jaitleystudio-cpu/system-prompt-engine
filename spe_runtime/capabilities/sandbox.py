@@ -24,6 +24,9 @@ class ExecutionResult:
     error: Optional[str] = None
 
 
+SandboxExecutionResult = ExecutionResult
+
+
 BLOCKED_MODULES: Set[str] = {
     "os", "sys", "subprocess", "socket", "http", "urllib", "requests", "shutil",
     "ctypes", "posix", "nt", "importlib", "pickle", "pathlib", "builtins"
