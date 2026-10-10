@@ -12,7 +12,7 @@ import re
 from typing import Sequence
 
 VERSION = "SPE-LVT2-RESEARCH-v0.1"
-_DIGEST = re.compile(r"[0-9a-f]{64}\\Z")
+_DIGEST = re.compile(r"[0-9a-f]{64}\Z")
 
 
 class StudyInvalid(ValueError):
