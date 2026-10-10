@@ -359,6 +359,13 @@ class SemanticBridgeVerifier:
             "requirements_digest": reqs_digest,
             "verified_invariants": sorted(verified),
             "violated_invariants": sorted(violated),
+            "original_representation": spec_digest,
+            "transformed_representation": artifact_digest,
+            "protected_requirements": reqs_digest,
+            "transformation_implementation": "spe_runtime.crl.representation_lifter",
+            "qualified_domain": "interactive_ui",
+            "verification_method": "exhaustive_fsm_reachability",
+            "result": status.value,
         }
         bridge_digest = hashlib.sha256(canonical_json_rfc8785(cert_binding).encode()).hexdigest()
 
@@ -444,6 +451,13 @@ class SemanticBridgeVerifier:
             "requirements_digest": reqs_digest,
             "verified_invariants": sorted(verified),
             "violated_invariants": sorted(violated),
+            "original_representation": spec_digest,
+            "transformed_representation": artifact_digest,
+            "protected_requirements": reqs_digest,
+            "transformation_implementation": "spe_runtime.crl.representation_lifter",
+            "qualified_domain": "access_control",
+            "verification_method": "graph_cycle_and_exclusion_check",
+            "result": status.value,
         }
         bridge_digest = hashlib.sha256(canonical_json_rfc8785(cert_binding).encode()).hexdigest()
 
@@ -489,6 +503,13 @@ class SemanticBridgeVerifier:
             "requirements_digest": cert.requirements_digest,
             "verified_invariants": sorted(cert.verified_invariants),
             "violated_invariants": sorted(cert.violated_invariants),
+            "original_representation": cert.source_spec_digest,
+            "transformed_representation": cert.target_artifact_digest,
+            "protected_requirements": cert.requirements_digest,
+            "transformation_implementation": "spe_runtime.crl.representation_lifter",
+            "qualified_domain": "interactive_ui" if cert.target_formalism.value == "FINITE_STATE_MACHINE" else "access_control",
+            "verification_method": "exhaustive_fsm_reachability" if cert.target_formalism.value == "FINITE_STATE_MACHINE" else "graph_cycle_and_exclusion_check",
+            "result": cert.status.value,
         }
         expected_digest = hashlib.sha256(canonical_json_rfc8785(cert_binding).encode()).hexdigest()
         return cert.bridge_digest == expected_digest

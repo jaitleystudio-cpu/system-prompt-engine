@@ -523,6 +523,12 @@
       "text": "Sketch a REST API for a personal notes app: resources, auth assumptions, error shapes. No implementation code yet."
     },
     {
+      "id": "04b6e3d606482fde201f",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "my-work"
+    },
+    {
       "id": "04bb99cdd8705480fefa",
       "file": "apps/web/src/website-studio/agent/commandRegistry.ts",
       "depth": "PRODUCT",
@@ -8437,6 +8443,12 @@
       "text": "Screenshot-to-code prompts"
     },
     {
+      "id": "43cfc8df378b2426d854",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "My Work"
+    },
+    {
       "id": "43e70967f1bd5004ae7b",
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
@@ -8831,6 +8843,12 @@
       "file": "apps/web/src/website-studio/agent/agentCapabilities.ts",
       "depth": "PRODUCT",
       "text": "getAccessibilityReceipt"
+    },
+    {
+      "id": "472ac9784b2866e42c15",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Build my prompt"
     },
     {
       "id": "472e58552d2aeb928ee3",
@@ -10403,6 +10421,12 @@
       "file": "apps/web/src/media/VisualScreenshotWorkspace.tsx",
       "depth": "PRODUCT",
       "text": "fidelity:"
+    },
+    {
+      "id": "52f09444f570baa8e3fd",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Create"
     },
     {
       "id": "531177a5940a4c66491e",
@@ -14461,6 +14485,12 @@
       "text": "ready"
     },
     {
+      "id": "71b2962114e58d47d0f6",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Home"
+    },
+    {
       "id": "71b391fe9bbaec45f969",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -17431,6 +17461,12 @@
       "text": "Canvas is unavailable in this browser."
     },
     {
+      "id": "89f66e6d41ee400a3693",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "home"
+    },
+    {
       "id": "89fc3669bf49dc57466d",
       "file": "apps/web/src/App.tsx",
       "depth": "PRODUCT",
@@ -20173,6 +20209,12 @@
       "text": "ANIMATION_LOOP_LEAK_RISK"
     },
     {
+      "id": "9eeeeabaa502e22034ec",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Privacy"
+    },
+    {
       "id": "9ef5f6993602e1d1cf6b",
       "file": "apps/web/src/lab/gallery/promptGallery.ts",
       "depth": "PRODUCT",
@@ -20519,6 +20561,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "Toolbar control"
+    },
+    {
+      "id": "a1d28cd30c79eb0f4c5a",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Daily Lab"
     },
     {
       "id": "a1e5787567ee587f5470",
@@ -22495,6 +22543,12 @@
       "text": "Clear logic ensures the AI never loops endlessly or gives conflicting answers to customers."
     },
     {
+      "id": "afdd779a3d54add1bfbc",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Account Required"
+    },
+    {
       "id": "affd3c4c01d778f999f6",
       "file": "apps/web/src/builder/websiteSpecModel.ts",
       "depth": "PRODUCT",
@@ -22751,6 +22805,12 @@
       "file": "apps/web/src/media/uiObservation.ts",
       "depth": "PRODUCT",
       "text": "nav-hero-candidate"
+    },
+    {
+      "id": "b1655880cfe478e90451",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Capabilities"
     },
     {
       "id": "b1732bf25c39183c7a02",
@@ -24917,6 +24977,12 @@
       "file": "apps/web/src/website-studio/behavior/validateBehaviorGraph.ts",
       "depth": "PRODUCT",
       "text": "camera-dolly"
+    },
+    {
+      "id": "c296e124963f0a6136d9",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Code"
     },
     {
       "id": "c2a694fab7bd33594300",
@@ -30491,6 +30557,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "WebPage"
+    },
+    {
+      "id": "ee7b2a2be92353c9fc05",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Daily Lab"
     },
     {
       "id": "ee7c41c55d050f4addea",

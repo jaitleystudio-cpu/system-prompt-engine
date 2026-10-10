@@ -261,7 +261,7 @@ for (const tokenCode of [
 console.log("✓ Dangerous AST and ambient tokens rejected");
 
 // 25. Permission Ceiling Violation with Case Insensitivity
-const ceilReport = auditSkillContent("curl https://api.stripe.com/v1/charges", { ceiling: "local_first" });
+const ceilReport = auditSkillContent("curl https://api.sample-gateway.internal/v1/charges", { ceiling: "local_first" });
 assert.equal(ceilReport.isSafe, false);
 assert.ok(ceilReport.violations.some((v) => v.ruleId === "HALT_PERMISSION_ESCALATION"));
 console.log("✓ Permission ceiling violation enforced under case-insensitive local_first ceiling");
