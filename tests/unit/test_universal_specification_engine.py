@@ -18,58 +18,60 @@ from spe_runtime.prompt.universal_specification_engine import (
 
 
 def test_universal_engine_compiles_all_target_models():
-    """Verify that all 8 target models generate target-specific syntax."""
+    """Verify that all 2026 frontier target models generate target-specific syntax."""
     request = "Build a privacy-preserving local offline encrypted vector database."
     
-    # 1. Claude 3.7
+    # 1. Claude 6.2 Sonnet
     pkg_claude = UniversalSpecificationEngine.compile_specification(
         user_request=request,
-        target_model=TargetModel.CLAUDE_3_7,
+        target_model=TargetModel.CLAUDE_6_2,
         volume=SpecificationVolume.DETAIL_5K,
     )
     sec2_claude = pkg_claude.sections[1].content
     assert "<system_instructions>" in sec2_claude
     assert "<strict_invariants>" in sec2_claude
+    assert "Claude 6.2 Sonnet" in sec2_claude
     assert "</system_instructions>" in sec2_claude
 
-    # 2. ChatGPT o3
+    # 2. ChatGPT GPT-6.1 / o4
     pkg_chatgpt = UniversalSpecificationEngine.compile_specification(
         user_request=request,
-        target_model=TargetModel.CHATGPT_O3,
+        target_model=TargetModel.CHATGPT_GPT6,
         volume=SpecificationVolume.DETAIL_5K,
     )
     sec2_gpt = pkg_chatgpt.sections[1].content
-    assert "# SYSTEM POLICY (DEVELOPER ROLE)" in sec2_gpt
+    assert "# SYSTEM POLICY (DEVELOPER ROLE" in sec2_gpt
+    assert "GPT-6.1" in sec2_gpt
     assert "MANDATORY:" in sec2_gpt
 
-    # 3. Grok 3
+    # 3. Grok 4.9
     pkg_grok = UniversalSpecificationEngine.compile_specification(
         user_request=request,
-        target_model=TargetModel.GROK_3,
+        target_model=TargetModel.GROK_4_9,
         volume=SpecificationVolume.DETAIL_5K,
     )
     sec2_grok = pkg_grok.sections[1].content
-    assert "# GROK 3 MATHEMATICAL REASONING KERNEL" in sec2_grok
+    assert "# GROK 4.9 MATHEMATICAL REASONING KERNEL" in sec2_grok
     assert "CONSTITUTIONAL LAWS:" in sec2_grok
 
-    # 4. Gemini 2.0 Flash
+    # 4. Gemini 3.9 Pro
     pkg_gemini = UniversalSpecificationEngine.compile_specification(
         user_request=request,
-        target_model=TargetModel.GEMINI_2_FLASH,
+        target_model=TargetModel.GEMINI_3_9_PRO,
         volume=SpecificationVolume.DETAIL_5K,
     )
     sec2_gemini = pkg_gemini.sections[1].content
-    assert "[GEMINI SYSTEM INSTRUCTIONS - FLASH THINKING]" in sec2_gemini
+    assert "[GEMINI 3.9 PRO SYSTEM INSTRUCTIONS" in sec2_gemini
 
-    # 5. Cursor Rules
+    # 5. Cursor 4.9 Rules
     pkg_cursor = UniversalSpecificationEngine.compile_specification(
         user_request=request,
-        target_model=TargetModel.CURSOR_RULES,
+        target_model=TargetModel.CURSOR_4_9,
         volume=SpecificationVolume.DETAIL_5K,
     )
     sec2_cursor = pkg_cursor.sections[1].content
-    # Must contain valid JSON block
     assert "```json" in sec2_cursor
+    assert "4.9.0" in sec2_cursor
 
     # 6. Antigravity Skills
     pkg_antigravity = UniversalSpecificationEngine.compile_specification(
@@ -81,23 +83,24 @@ def test_universal_engine_compiles_all_target_models():
     assert "# ANTIGRAVITY AGENT CONSTITUTION" in sec2_anti
     assert "<RULE>" in sec2_anti
 
-    # 7. Kimi 128k
+    # 7. Kimi 3.5 (200k)
     pkg_kimi = UniversalSpecificationEngine.compile_specification(
         user_request=request,
-        target_model=TargetModel.KIMI_128K,
+        target_model=TargetModel.KIMI_3_5,
         volume=SpecificationVolume.DETAIL_5K,
     )
     sec2_kimi = pkg_kimi.sections[1].content
-    assert "# KIMI 128K INSTRUCTION HIERARCHY" in sec2_kimi
+    assert "# KIMI 3.5 200K INSTRUCTION HIERARCHY" in sec2_kimi
 
-    # 8. DeepSeek R1
+    # 8. DeepSeek 4.5
     pkg_deepseek = UniversalSpecificationEngine.compile_specification(
         user_request=request,
-        target_model=TargetModel.DEEPSEEK_R1,
+        target_model=TargetModel.DEEPSEEK_4_5,
         volume=SpecificationVolume.DETAIL_5K,
     )
     sec2_ds = pkg_deepseek.sections[1].content
     assert "<|start_header_id|>system<|end_header_id|>" in sec2_ds
+    assert "DeepSeek-4.5" in sec2_ds
 
 
 def test_volume_tiers_and_no_empty_skeletons():

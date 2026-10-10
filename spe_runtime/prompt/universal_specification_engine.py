@@ -4,14 +4,14 @@ SPE Ω — Universal Specification & Prompt Intelligence Engine.
 
 Key Capabilities:
 1. Universal Target Adaptation:
-   - ChatGPT / OpenAI (o3, o3-mini, GPT-4o: Developer-role, Markdown schemas, structured reasoning)
-   - xAI Grok (Grok 3 / Grok 2: direct mathematical reasoning, system directives)
-   - Anthropic Claude (Claude 3.7 Sonnet hybrid reasoning, Claude Code: XML tags <system_instructions>)
-   - Google Gemini (Gemini 2.0 Flash Thinking: bracketed system blocks, function calling contracts)
-   - Cursor / Windsurf (.cursorrules IDE rules & configuration schemas)
+   - ChatGPT / OpenAI (o3-Pro, GPT-6.1: Developer-role, Markdown schemas, structured reasoning)
+   - xAI Grok (Grok 4.9 Heavy: direct mathematical reasoning, constitutional laws, real-time fact-checking)
+   - Anthropic Claude (Claude 6.1 / Claude 6.2 Sonnet: XML tags <system_instructions>)
+   - Google Gemini (Gemini 3.9 Pro: bracketed system blocks, function calling contracts)
+   - Cursor / Windsurf (Cursor 4.9 .cursorrules IDE rules & Windsurf 4.9 configuration schemas)
    - Antigravity Agents (Skills, XML <RULE>, tools binding, subagent delegation laws)
-   - Moonshot Kimi (128k long-context instruction hierarchies, bilingual tokens)
-   - DeepSeek (R1 / V3: ChatML, formal proof verification, math reasoning format)
+   - Moonshot Kimi (Kimi 3.5 200k long-context instruction hierarchies, bilingual tokens)
+   - DeepSeek (DeepSeek 4.5 / R2: ChatML, formal proof verification, math reasoning format)
 
 2. Multi-Volume Modular Specification Packages:
    - DETAIL_5K (~5,000 words)
@@ -47,12 +47,22 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 # ==============================================================================
 
 class TargetModel(str, Enum):
-    CHATGPT_O3 = "chatgpt_o3"
-    GROK_3 = "grok_3"
-    CLAUDE_3_7 = "claude_3_7"
-    GEMINI_2_FLASH = "gemini_2_flash"
-    CURSOR_RULES = "cursor_rules"
+    # 2026 Frontier Models (Primary Targets)
+    CLAUDE_6_2 = "claude_6_2"
+    CHATGPT_GPT6 = "chatgpt_gpt6"
+    GEMINI_3_9_PRO = "gemini_3_9_pro"
+    GROK_4_9 = "grok_4_9"
+    CURSOR_4_9 = "cursor_4_9"
     ANTIGRAVITY_SKILLS = "antigravity_skills"
+    KIMI_3_5 = "kimi_3_5"
+    DEEPSEEK_4_5 = "deepseek_4_5"
+
+    # Compatibility Aliases
+    CLAUDE_3_7 = "claude_3_7"
+    CHATGPT_O3 = "chatgpt_o3"
+    GEMINI_2_FLASH = "gemini_2_flash"
+    GROK_3 = "grok_3"
+    CURSOR_RULES = "cursor_rules"
     KIMI_128K = "kimi_128k"
     DEEPSEEK_R1 = "deepseek_r1"
 
@@ -619,13 +629,13 @@ class UniversalSpecificationEngine:
         user_request: str,
         invariants: List[str]
     ) -> str:
-        if target == TargetModel.CLAUDE_3_7:
+        if target in (TargetModel.CLAUDE_6_2, TargetModel.CLAUDE_3_7):
             inv_xml = "\n".join(f"    <invariant mandatory=\"true\">{inv}</invariant>" for inv in invariants)
-            return f"""## 2.1 Anthropic Claude 3.7 Sonnet Native XML Directives
+            return f"""## 2.1 Anthropic Claude 6.1 / 6.2 Sonnet Native XML Directives
 ```xml
 <system_instructions>
   <role_identity>
-    You are an elite autonomous intelligence engine operating under formal verification laws.
+    You are Claude 6.2 Sonnet operating under formal verification and epistemic safety laws.
   </role_identity>
 
   <primary_objective>
@@ -642,11 +652,11 @@ class UniversalSpecificationEngine:
 </system_instructions>
 ```"""
 
-        elif target == TargetModel.CHATGPT_O3:
+        elif target in (TargetModel.CHATGPT_GPT6, TargetModel.CHATGPT_O3):
             inv_md = "\n".join(f"- **MANDATORY:** {inv}" for inv in invariants)
-            return f"""## 2.1 OpenAI o3 / GPT-4o Developer-Role Markdown Directives
+            return f"""## 2.1 OpenAI GPT-6.1 / o3 / o4 Developer-Role Markdown Directives
 ```markdown
-# SYSTEM POLICY (DEVELOPER ROLE)
+# SYSTEM POLICY (DEVELOPER ROLE - GPT-6.1 / o4 HIGH REASONING)
 You are an expert autonomous software engineer.
 Goal: {user_request}
 
@@ -657,25 +667,25 @@ Goal: {user_request}
 Return structured, fully implemented specifications and code without placeholders or omitted bodies.
 ```"""
 
-        elif target == TargetModel.GEMINI_2_FLASH:
+        elif target in (TargetModel.GEMINI_3_9_PRO, TargetModel.GEMINI_2_FLASH):
             inv_gemini = "\n".join(f"[INVARIANT] {inv}" for inv in invariants)
-            return f"""## 2.1 Google Gemini 2.0 Flash Thinking Bracketed Directives
+            return f"""## 2.1 Google Gemini 3.9 Pro / Flash Thinking Bracketed Directives
 ```text
-[GEMINI SYSTEM INSTRUCTIONS - FLASH THINKING]
+[GEMINI 3.9 PRO SYSTEM INSTRUCTIONS - DEEP THINKING]
 TASK: {user_request}
 BOUNDS:
 {inv_gemini}
 REASONING: Formulate step-by-step causal logic and evaluate constraints prior to execution.
 ```"""
 
-        elif target == TargetModel.CURSOR_RULES:
+        elif target in (TargetModel.CURSOR_4_9, TargetModel.CURSOR_RULES):
             rules_obj = {
-                "version": "2.0.0",
+                "version": "4.9.0",
                 "rules": invariants,
                 "task": user_request,
                 "strictMode": True
             }
-            return f"""## 2.1 Cursor / Windsurf IDE Rules Configuration (.cursorrules)
+            return f"""## 2.1 Cursor 4.9 / Windsurf 4.9 IDE Rules Configuration (.cursorrules)
 ```json
 {json.dumps(rules_obj, indent=2)}
 ```"""
@@ -692,11 +702,11 @@ Objective: {user_request}
 Subagent Delegation Policy: Delegate heavy multi-file edits to specialized subagents; verify results locally before completion.
 ```"""
 
-        elif target == TargetModel.GROK_3:
+        elif target in (TargetModel.GROK_4_9, TargetModel.GROK_3):
             inv_grok = "\n".join(f"• LAW: {inv}" for inv in invariants)
-            return f"""## 2.1 xAI Grok 3 Formal Directives
+            return f"""## 2.1 xAI Grok 4.9 Formal Directives
 ```markdown
-# GROK 3 MATHEMATICAL REASONING KERNEL
+# GROK 4.9 MATHEMATICAL REASONING KERNEL
 Mission: {user_request}
 
 CONSTITUTIONAL LAWS:
@@ -705,21 +715,21 @@ CONSTITUTIONAL LAWS:
 Truth Policy: Maximum truth-seeking; zero hallucination; provide exact proofs for all stated claims.
 ```"""
 
-        elif target == TargetModel.KIMI_128K:
-            return f"""## 2.1 Moonshot Kimi 128k Long-Context Directives
+        elif target in (TargetModel.KIMI_3_5, TargetModel.KIMI_128K):
+            return f"""## 2.1 Moonshot Kimi 3.5 200k Long-Context Directives
 ```markdown
-# KIMI 128K INSTRUCTION HIERARCHY
+# KIMI 3.5 200K INSTRUCTION HIERARCHY
 Target: {user_request}
-Long-Context Policy: Maintain invariant focus across 128k tokens; enforce zero attention decay on initial constraints.
+Long-Context Policy: Maintain invariant focus across 200k tokens; enforce zero attention decay on initial constraints.
 Invariants:
 {chr(10).join(f"- {inv}" for inv in invariants)}
 ```"""
 
-        else: # DeepSeek R1
-            return f"""## 2.1 DeepSeek R1 Formal Mathematical Logic Format
+        else: # DeepSeek 4.5 / R1
+            return f"""## 2.1 DeepSeek 4.5 / R2 Formal Mathematical Logic Format
 ```text
 <|start_header_id|>system<|end_header_id|>
-You are DeepSeek-R1, a formal reasoning and mathematics engine.
+You are DeepSeek-4.5, a formal reasoning and mathematics engine.
 Objective: {user_request}
 Invariants:
 {chr(10).join(f"- {inv}" for inv in invariants)}

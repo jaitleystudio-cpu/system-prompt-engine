@@ -74,8 +74,8 @@ JSON.parse(dialects["cursor-rules"].compiledPrompt);
 console.log("  ✓ Cursor rules confirmed valid JSON configuration.");
 
 // Windsurf must have .windsurfrules header
-if (!dialects["windsurf-rules"].compiledPrompt.includes("# WINDSURF AGENT RULES")) {
-  throw new Error("Windsurf dialect missing # WINDSURF AGENT RULES header!");
+if (!dialects["windsurf-rules"].compiledPrompt.includes("# WINDSURF")) {
+  throw new Error("Windsurf dialect missing # WINDSURF header!");
 }
 
 // Antigravity Skills must have YAML frontmatter and <RULE>
@@ -83,24 +83,24 @@ if (!dialects["antigravity-skills"].compiledPrompt.startsWith("---") || !dialect
   throw new Error("Antigravity Skills dialect missing YAML frontmatter or <RULE> tags!");
 }
 
-// Grok must have truth-kernel directives
-if (!dialects["grok"].compiledPrompt.includes("# GROK 4 MATHEMATICAL REASONING")) {
-  throw new Error("Grok dialect missing truth-kernel header!");
+// Grok must have Grok 4.9 truth-kernel directives
+if (!dialects["grok"].compiledPrompt.includes("# GROK 4.9")) {
+  throw new Error("Grok dialect missing # GROK 4.9 truth-kernel header!");
 }
 
-// Kimi must have anchor markers
-if (!dialects["kimi"].compiledPrompt.includes("[ANCHOR: ROLE_DEFINITION]")) {
-  throw new Error("Kimi dialect missing anchor markers!");
+// Kimi must have Kimi 3.5 anchor markers
+if (!dialects["kimi"].compiledPrompt.includes("# KIMI 3.5") || !dialects["kimi"].compiledPrompt.includes("[ANCHOR: ROLE_DEFINITION]")) {
+  throw new Error("Kimi dialect missing # KIMI 3.5 header or anchor markers!");
 }
 
-// Gemini must have bracketed instructions
-if (!dialects["gemini-agent"].compiledPrompt.includes("[GEMINI SYSTEM INSTRUCTIONS")) {
-  throw new Error("Gemini dialect missing bracketed instruction tags!");
+// Gemini must have Gemini 3.9 Pro bracketed instructions
+if (!dialects["gemini-agent"].compiledPrompt.includes("[GEMINI 3.9 PRO")) {
+  throw new Error("Gemini dialect missing [GEMINI 3.9 PRO instruction tags!");
 }
 
-// Open-Weights must have Llama-3 tokens
-if (!dialects["open-weights"].compiledPrompt.includes("<|start_header_id|>system<|end_header_id|>")) {
-  throw new Error("Open-weights dialect missing Llama-3 header tags!");
+// Open-Weights must have DeepSeek 4.5 and ChatML tokens
+if (!dialects["open-weights"].compiledPrompt.includes("DeepSeek 4.5") || !dialects["open-weights"].compiledPrompt.includes("<|start_header_id|>system<|end_header_id|>")) {
+  throw new Error("Open-weights dialect missing DeepSeek 4.5 or ChatML header tags!");
 }
 
 // Ollama Modelfile must have FROM and SYSTEM

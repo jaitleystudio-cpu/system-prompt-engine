@@ -117,7 +117,7 @@ ${ir.authorityBoundaries.map((auth) => `    <boundary scope="enforced">${auth}</
 
   return {
     dialect: "claude-xml",
-    modelTarget: "Anthropic Claude 3.5 / 3.7 (Sonnet / Opus)",
+    modelTarget: "Anthropic Claude 6.1 / 6.2 (Sonnet / Opus)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Hierarchical XML Strict Tags",
@@ -154,7 +154,7 @@ Emit valid RFC-compliant data without conversational filler.`;
 
   return {
     dialect: "openai-markdown",
-    modelTarget: "OpenAI GPT-4o / o1 / o3",
+    modelTarget: "OpenAI GPT-6.1 / o3 / o4",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Markdown H1-H3 Section Hierarchy & Bold Invariant Directives",
@@ -169,8 +169,8 @@ Emit valid RFC-compliant data without conversational filler.`;
 function transcompileToCursorRules(ir: CanonicalPromptIR): TranscompiledResult {
   const content = JSON.stringify(
     {
-      _comment: "SPE-COMPILED CURSOR/WINDSURF AGENT RULES (.cursorrules)",
-      version: "1.0",
+      _comment: "SPE-COMPILED CURSOR 4.9 / WINDSURF 4.9 AGENT RULES (.cursorrules)",
+      version: "4.9",
       role: ir.role,
       objective: ir.objective,
       execution_rules: ir.hardInvariants,
@@ -187,7 +187,7 @@ function transcompileToCursorRules(ir: CanonicalPromptIR): TranscompiledResult {
 
   return {
     dialect: "cursor-rules",
-    modelTarget: "Cursor IDE (.cursorrules) & Windsurf",
+    modelTarget: "Cursor 4.9 (.cursorrules) & Windsurf 4.9",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "JSON Agent Configuration Schema",
@@ -200,7 +200,7 @@ function transcompileToCursorRules(ir: CanonicalPromptIR): TranscompiledResult {
  * Transcompiles Canonical IR to Google Gemini Agent Dialect.
  */
 function transcompileToGeminiAgent(ir: CanonicalPromptIR): TranscompiledResult {
-  const content = `[GEMINI SYSTEM INSTRUCTIONS - SPE Ω HARDENED]
+  const content = `[GEMINI 3.9 PRO SYSTEM INSTRUCTIONS - SPE Ω HARDENED]
 
 ROLE:
 ${ir.role}
@@ -222,22 +222,22 @@ ${ir.outputContract}`;
 
   return {
     dialect: "gemini-agent",
-    modelTarget: "Google Gemini 1.5 Pro / 2.0 Flash",
+    modelTarget: "Google Gemini 3.9 Pro / Flash Thinking",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Bracketed Directive Blocks with Grounding Tags",
-    delimitersUsed: ["[GEMINI SYSTEM INSTRUCTIONS]", "[INVARIANT]", "[AUTHORITY]"],
+    delimitersUsed: ["[GEMINI 3.9 PRO SYSTEM INSTRUCTIONS]", "[INVARIANT]", "[AUTHORITY]"],
     safetyHardening: "Native Grounding Tagging & Function Calling Scope",
   };
 }
 
 /**
- * Transcompiles Canonical IR to Open-Weights Llama-3 / DeepSeek Dialect.
+ * Transcompiles Canonical IR to Open-Weights DeepSeek 4.5 / Llama-4 Dialect.
  */
 function transcompileToOpenWeights(ir: CanonicalPromptIR): TranscompiledResult {
   const content = `<|begin_of_text|><|start_header_id|>system<|end_header_id|>
 
-You are: ${ir.role}
+You are: ${ir.role} [DeepSeek 4.5 / R2 Reasoning Engine]
 Task: ${ir.objective}
 
 STRICT OPERATIONAL RULES:
@@ -254,7 +254,7 @@ ${ir.outputContract}<|eot_id|>`;
 
   return {
     dialect: "open-weights",
-    modelTarget: "Llama-3.1 / DeepSeek V3 / Qwen 2.5",
+    modelTarget: "DeepSeek 4.5 / R2 & Llama 4 (Open-Weights)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "ChatML Header Framing (<|start_header_id|>)",
@@ -293,7 +293,7 @@ ${ir.outputContract}
 
   return {
     dialect: "claude-code",
-    modelTarget: "Anthropic Claude Code CLI (CLAUDE.md)",
+    modelTarget: "Anthropic Claude Code CLI 6.2 (CLAUDE.md)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Project-Level CLAUDE.md Governance Matrix",
@@ -345,10 +345,10 @@ All outputs must satisfy deterministic verification before returning.`;
 }
 
 /**
- * Transcompiles Canonical IR to Codeium Windsurf IDE Rules (.windsurfrules).
+ * Transcompiles Canonical IR to Codeium Windsurf 4.9 IDE Rules (.windsurfrules).
  */
 function transcompileToWindsurfRules(ir: CanonicalPromptIR): TranscompiledResult {
-  const content = `# WINDSURF AGENT RULES (.windsurfrules)
+  const content = `# WINDSURF 4.9 AGENT RULES (.windsurfrules)
 // SPE Ω Autonomous Engineering Contract
 
 ## IDENTITY & OBJECTIVE
@@ -369,20 +369,20 @@ ${ir.outputContract}`;
 
   return {
     dialect: "windsurf-rules",
-    modelTarget: "Codeium Windsurf IDE (.windsurfrules)",
+    modelTarget: "Codeium Windsurf 4.9 (.windsurfrules)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Markdown AST Directive Rules",
-    delimitersUsed: ["# WINDSURF AGENT RULES", "* [MUST]"],
+    delimitersUsed: ["# WINDSURF 4.9 AGENT RULES", "* [MUST]"],
     safetyHardening: "Deterministic IDE Boundary Guards",
   };
 }
 
 /**
- * Transcompiles Canonical IR to xAI Grok (Truth-Maximizing Mathematical Directives).
+ * Transcompiles Canonical IR to xAI Grok 4.9 (Truth-Maximizing Mathematical Directives).
  */
 function transcompileToGrok(ir: CanonicalPromptIR): TranscompiledResult {
-  const content = `# GROK 4 MATHEMATICAL REASONING & TRUTH KERNEL
+  const content = `# GROK 4.9 MATHEMATICAL REASONING & TRUTH KERNEL
 [Zero-Hallucination Mode | Real-Time Verification Active]
 
 ROLE: ${ir.role}
@@ -403,7 +403,7 @@ ${ir.outputContract}`;
 
   return {
     dialect: "grok",
-    modelTarget: "xAI Grok 3 / Grok 4 (Heavy)",
+    modelTarget: "xAI Grok 4.9 (Heavy Truth Kernel)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Truth-Anchored Mathematical Directives",
@@ -413,10 +413,10 @@ ${ir.outputContract}`;
 }
 
 /**
- * Transcompiles Canonical IR to Moonshot Kimi k1.5 (128k/200k Ultra-Long Context).
+ * Transcompiles Canonical IR to Moonshot Kimi 3.5 (200k Ultra-Long Context).
  */
 function transcompileToKimi(ir: CanonicalPromptIR): TranscompiledResult {
-  const content = `# KIMI 128K/200K INSTRUCTION HIERARCHY & ANCHOR SYSTEM
+  const content = `# KIMI 3.5 200K INSTRUCTION HIERARCHY & ANCHOR SYSTEM
 [Context Depth: Extended Long-Context | Attention Resynchronization: Active]
 
 [ANCHOR: ROLE_DEFINITION]
@@ -443,7 +443,7 @@ ${ir.outputContract}`;
 
   return {
     dialect: "kimi",
-    modelTarget: "Moonshot Kimi k1.5 (128k / 200k Context)",
+    modelTarget: "Moonshot Kimi 3.5 (200k Context)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Bilingual Bracketed Anchor Markers ([ANCHOR:...])",
