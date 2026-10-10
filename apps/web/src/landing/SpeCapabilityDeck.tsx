@@ -178,30 +178,30 @@ const COMMAND_CAPSULES: CommandCapsule[] = [
   {
     id: "capsule-1",
     name: "Claude 3.7 Sonnet",
-    badge: "COMPILER READY",
+    badge: "HYBRID THINKING",
     tier: "Agent",
     desc: "Autonomous reasoning and long-horizon invariant retention.",
   },
   {
     id: "capsule-2",
-    name: "GPT-5 Thinking",
-    badge: "AST TAINT",
-    tier: "Security",
-    desc: "Deep AST taint-tracking and strict JSON schema assurance.",
+    name: "OpenAI o3 / o3-mini",
+    badge: "HIGH-COMPUTE",
+    tier: "Reasoning",
+    desc: "High-compute formal reasoning and strict JSON schema assurance.",
   },
   {
     id: "capsule-3",
     name: "DeepSeek R1",
-    badge: "LOCAL VLLM",
+    badge: "671B LOGIC",
     tier: "Economics",
-    desc: "Open-weight mathematical reasoning with zero API spend.",
+    desc: "Open-weight formal logic reasoning with zero API spend.",
   },
   {
     id: "capsule-4",
-    name: "Cursor Rules",
-    badge: "ZERO REGRESSION",
-    tier: "Editor",
-    desc: "Compile .cursorrules that prevent unwanted codebase drift.",
+    name: "Gemini 2.0 Flash",
+    badge: "FLASH THINKING",
+    tier: "Multimodal",
+    desc: "Massive context reasoning with native multimodal verification.",
   },
   {
     id: "capsule-5",
@@ -269,7 +269,7 @@ export function SpeCapabilityDeck({ onNavigate }: Props) {
         <div className="spe-hero-live-ticker" role="status" aria-live="polite">
           <span className="spe-ticker-live-badge">LIVE NOW</span>
           <span className="spe-ticker-text">
-            ON SPE Ω — CLAUDE 3.7 SONNET &amp; GPT-5 REASONING COMPILER · 100% AIR-GAPPED &amp; FREE.
+            ON SPE Ω — CLAUDE 3.7 SONNET, OPENAI o3, DEEPSEEK R1 &amp; GEMINI 2.0 FLASH REASONING COMPILER · 100% AIR-GAPPED &amp; FREE.
           </span>
         </div>
 

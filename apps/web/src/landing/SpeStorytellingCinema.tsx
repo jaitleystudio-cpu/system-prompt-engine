@@ -156,12 +156,12 @@ Surviving Vectors: 0 / 50 (100% Defense)`,
     badge: "Model Arena",
     title: "Cross-Model Economics & Calibration",
     narrative:
-      "SPE benchmarks the hardened prompt across Claude 3.7 Sonnet, GPT-5, and local DeepSeek R1. It measures real token economics, schema adherence, and latency, finding the most cost-effective provider for each subtask.",
+      "SPE benchmarks the hardened prompt across Claude 3.7 Sonnet (Hybrid Thinking), OpenAI o3 / o3-mini (High-Compute Reasoning), DeepSeek R1 (Open-Weights 671B Formal Logic), and Gemini 2.0 Flash Thinking. It measures real token economics, schema adherence, and latency, finding the most cost-effective provider for each subtask.",
     modelAttribution: "SPE-Bench Arena // Multi-Target",
     inputSnippet: `Target Matrix:
 [Target: Claude 3.7 Sonnet] -> Reasoning: 99.8% | TTFT: 820ms
-[Target: GPT-5 Enterprise] -> Reasoning: 99.4% | TTFT: 610ms
-[Target: DeepSeek R1 Local] -> Reasoning: 98.9% | TTFT: 1.1s ($0.00)`,
+[Target: OpenAI o3 / o3-mini] -> Reasoning: 99.7% | TTFT: 580ms
+[Target: DeepSeek R1 671B] -> Reasoning: 98.9% | TTFT: 1.1s ($0.00)`,
     outputSnippet: `// OPTIMAL HYBRID ROUTING DECISION:
 Simple lookups -> Local Silicon ($0.00 / 0ms)
 Risk scoring -> DeepSeek R1 Local ($0.00)
@@ -351,11 +351,11 @@ export function SpeStorytellingCinema({ onNavigate }: Props) {
               <div className="spe-cinema-telemetry-cluster">
                 <div className="spe-cinema-telemetry-item">
                   <span className="spe-cinema-tel-label">Invariant Status</span>
-                  <span className="spe-cinema-tel-val is-lime">{activeChapter.invariantStatus}</span>
+                  <span className="spe-cinema-tel-val is-gold-bright">{activeChapter.invariantStatus}</span>
                 </div>
                 <div className="spe-cinema-telemetry-item">
                   <span className="spe-cinema-tel-label">Security Grade</span>
-                  <span className="spe-cinema-tel-val is-cyan">{activeChapter.securityScore}</span>
+                  <span className="spe-cinema-tel-val is-platinum">{activeChapter.securityScore}</span>
                 </div>
                 <div className="spe-cinema-telemetry-item">
                   <span className="spe-cinema-tel-label">Token Savings</span>
