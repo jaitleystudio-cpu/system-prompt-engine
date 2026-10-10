@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 380" width="1280" height="380" fill="none">
+  <g fill="currentColor">
+    <path d="M 146.37,84.68 L 164.48,78.89 L 165.95,41.94 L 214.05,41.94 L 215.52,78.89 L 233.63,84.68 L 250.52,93.39 L 277.69,68.30 L 311.70,102.31 L 286.61,129.48 L 295.32,146.37 L 301.11,164.48 L 338.06,165.95 L 338.06,214.05 L 301.11,215.52 L 295.32,233.63 L 286.61,250.52 L 311.70,277.69 L 277.69,311.70 L 250.52,286.61 L 233.63,295.32 L 215.52,301.11 L 214.05,338.06 L 165.95,338.06 L 164.48,301.11 L 146.37,295.32 L 129.48,286.61 L 102.31,311.70 L 68.30,277.69 L 93.39,250.52 L 84.68,233.63 L 78.89,215.52 L 41.94,214.05 L 41.94,165.95 L 78.89,164.48 L 84.68,146.37 L 93.39,129.48 L 68.30,102.31 L 102.31,68.30 L 129.48,93.39 Z M 90 190 A 100 100 0 1 0 290 190 A 100 100 0 1 0 90 190 Z" fill-rule="evenodd"/>
+    <path d="M 114 260 L 114 146 C 114 106 146 82 190 82 C 232 82 264 114 264 158 C 264 202 232 234 190 234 L 145 234 L 145 260 Z M 148 158 A 42 42 0 1 0 232 158 A 42 42 0 1 0 148 158 Z" fill-rule="evenodd"/>
+    <path d="M 161 158 A 29 29 0 1 0 219 158 A 29 29 0 1 0 161 158 Z M 168 158 A 22 22 0 1 0 212 158 A 22 22 0 1 0 168 158 Z" fill-rule="evenodd"/>
+    <path d="M 180 158 A 10 10 0 1 0 200 158 A 10 10 0 1 0 180 158 Z"/>
+  </g>
+  <g fill="currentColor" transform="translate(400, 0)">
+    <text x="0" y="225"
+          font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+          font-size="185"
+          font-weight="800"
+          letter-spacing="5">
+      SPE
+    </text>
+    <text x="6" y="285"
+          font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+          font-size="34"
+          font-weight="600"
+          letter-spacing="8"
+          opacity="0.85">
+      SYSTEM PROMPT ENGINE
+    </text>
+  </g>
+</svg>

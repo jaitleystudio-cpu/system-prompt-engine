@@ -48,7 +48,22 @@ assert(deckCode.includes("multi-export"), "Chamber 4: Multi-Agent Export tabs");
 assert(deckCode.includes("spe-dock-shelf"), "Includes floating command dock");
 assert(deckCode.includes("rotateY"), "Employs 3D CSS rotateY perspective transforms");
 
-// 5. Anti-Jargon Law compliance
+// 5. Storytelling Cinema mechanics
+const cinemaPath = join(webSrc, "landing", "SpeStorytellingCinema.tsx");
+assert(existsSync(cinemaPath), "SpeStorytellingCinema.tsx exists");
+assert(appTsx.includes("<SpeStorytellingCinema"), "SpeStorytellingCinema is mounted on homepage in App.tsx");
+
+const cinemaCode = readFileSync(cinemaPath, "utf8");
+assert(cinemaCode.includes("STORY_CHAPTERS"), "Defines STORY_CHAPTERS collection");
+assert(cinemaCode.includes("chapter-01"), "Stage 01: Raw Ambiguous Intent exists");
+assert(cinemaCode.includes("chapter-04"), "Stage 04: Hostile Attack Gym exists");
+assert(cinemaCode.includes("chapter-06"), "Stage 06: MCP Capability Firewall exists");
+assert(cinemaCode.includes("chapter-08"), "Stage 08: 1-Click CI/CD Merge Gate exists");
+assert(cinemaCode.includes("spe-cinema-scrubber-bar"), "Includes interactive timeline scrubber bar");
+assert(cinemaCode.includes("spe-cinema-stage-body"), "Includes split narrative & terminal view");
+assert(cinemaCode.includes("spe-cinema-telemetry-cluster"), "Includes real-time telemetry gauges");
+
+// 6. Anti-Jargon Law compliance
 const forbiddenHype = [
   "world #1",
   "monopoly",
@@ -61,8 +76,10 @@ const forbiddenHype = [
 for (const word of forbiddenHype) {
   assert(!universeCode.toLowerCase().includes(word), `Anti-Jargon: Universe Hero does not contain "${word}"`);
   assert(!deckCode.toLowerCase().includes(word), `Anti-Jargon: Capability Deck does not contain "${word}"`);
+  assert(!cinemaCode.toLowerCase().includes(word), `Anti-Jargon: Storytelling Cinema does not contain "${word}"`);
 }
 
 console.log("============================================================");
-console.log("🎉 ALL UNIVERSE & 3D CAPABILITY DECK TESTS PASSED! (18/18)");
+console.log("🎉 ALL UNIVERSE, DECK & STORYTELLING TESTS PASSED! (31/31)");
 console.log("============================================================");
+

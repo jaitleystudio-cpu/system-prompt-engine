@@ -104,6 +104,7 @@ import { BeforeAfterDiffSlider } from "./landing/BeforeAfterDiffSlider";
 import { DeveloperRoiCalculator } from "./components/DeveloperRoiCalculator";
 import { SpeUniverseHero } from "./landing/SpeUniverseHero";
 import { SpeCapabilityDeck } from "./landing/SpeCapabilityDeck";
+import { SpeStorytellingCinema } from "./landing/SpeStorytellingCinema";
 import { SubmitWorkflowModal } from "./components/SubmitWorkflowModal";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
@@ -1055,8 +1056,9 @@ export default function App() {
               onExport={onExportSpe}
               onNavigate={setView}
             />
-            <SpeUniverseHero onNavigate={setView} />
             <SpeCapabilityDeck onNavigate={setView} />
+            <SpeUniverseHero onNavigate={setView} />
+            <SpeStorytellingCinema onNavigate={setView} />
             {rendered?.finalPrompt && (
               <div style={{ maxWidth: "1200px", margin: "1.5rem auto", padding: "0 1.5rem" }}>
                 <PromptRadarInspector

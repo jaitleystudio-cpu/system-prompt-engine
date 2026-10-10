@@ -245,7 +245,19 @@ em {
   letter-spacing: -0.09em;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+}
+.spe-nav-logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+  flex-shrink: 0;
+}
+.spe-nav-logo-mark .spe-logo-mark {
+  display: block;
+  width: 32px;
+  height: 32px;
 }
 .brand-mark {
   display: none;

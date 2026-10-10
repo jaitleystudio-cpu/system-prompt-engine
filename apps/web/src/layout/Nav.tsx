@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { pathForView, type AppView } from "../routing";
 import { ThemeToggle } from "../ui/ThemeToggle";
+import { Logo } from "../brand/Logo";
 
 type Props = {
   scrolled: boolean;
@@ -149,11 +150,7 @@ export function Nav(p: Props) {
         }}
         aria-label="SPE — System Prompt Engine home"
       >
-        <span className="brand-mark" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </span>
+        <Logo size="sm" wordmark={false} className="spe-nav-logo-mark" />
         <span>SPE</span>
       </a>
 

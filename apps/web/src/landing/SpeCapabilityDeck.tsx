@@ -1,4 +1,4 @@
-import { useState, useId, useEffect } from "react";
+import { useState, useId } from "react";
 import type { AppView } from "../routing";
 import "./spe-universe-deck.css";
 
@@ -12,6 +12,8 @@ interface CapabilityChamber {
   ctaText: string;
   viewTarget?: AppView;
   hashTarget?: string;
+  slabA: string;
+  slabB: string;
   snippetHeader: string;
   snippetCode: string;
 }
@@ -19,49 +21,57 @@ interface CapabilityChamber {
 const CHAMBERS: CapabilityChamber[] = [
   {
     id: "system-studio",
-    category: "System Studio",
+    category: "Autonomous Coding",
     title: "Zero-Drift System Prompts",
-    tagline: "Compile ambiguous task briefs into deterministic, invariant-hardened prompts for any LLM.",
+    tagline: "Compile ambiguous task briefs into deterministic, invariant-hardened prompts for Claude Code and Cursor.",
     badge: "Bounded Horn Logic",
     isLive: true,
     ctaText: "Launch Studio →",
     hashTarget: "prompt-studio",
+    slabA: "YOUR PROMPT.",
+    slabB: "NOW A COMPILER.",
     snippetHeader: "SPE-COMPILER // VERIFIED_INVARIANTS",
     snippetCode: "ProtectedIntent: preserved\nContradiction scan: 0 errors\nToken bloat pruned: -34%",
   },
   {
     id: "attack-gym",
-    category: "Attack Gym",
+    category: "Financial Compliance",
     title: "In-Browser Jailbreak Gym",
-    tagline: "Stress-test prompts against hostile injection, boundary probing, and authority escalation in real time.",
+    tagline: "Stress-test billing and Stripe agents against hostile injection, boundary probing, and authority escalation.",
     badge: "Zero-Trust AST Sandbox",
     isLive: true,
     ctaText: "Run Attack Test →",
     hashTarget: "prompt-studio",
+    slabA: "ZERO-LEAK.",
+    slabB: "STRIPE FIREWALL.",
     snippetHeader: "HOSTILE_GYM // SIMULATION_LOG",
     snippetCode: "Vector: polyglot bidi override\nDetection: ZERO-WIDTH_PROBE\nResult: ATTACK_HALTED [100% Pass]",
   },
   {
     id: "3d-studio",
-    category: "3D Websites",
+    category: "Spatial WebGL",
     title: "Interactive 3D Web Studio",
-    tagline: "Generate spatial WebGL and Three.js scenes directly in-browser with live lighting and camera controls.",
+    tagline: "Generate spatial Three.js scenes directly in-browser with live lighting, shaders, and camera controls.",
     badge: "100% In-Browser Code Export",
     isLive: true,
     ctaText: "Build 3D Site →",
     viewTarget: "website",
+    slabA: "SPATIAL WEB.",
+    slabB: "ZERO GPU BILLS.",
     snippetHeader: "THREEJS // SPATIAL_PIPELINE",
     snippetCode: "Geometry: Procedural Icosahedron\nShaders: Custom Fresnel GLSL\nBundle: Zero External Servers",
   },
   {
     id: "multi-export",
-    category: "Multi-Agent",
+    category: "Multi-Agent Formats",
     title: "1-Click Multi-Agent Export",
     tagline: "Instantly lower your prompt architecture into CLAUDE.md, .cursorrules, Windsurf, ChatGPT, and promptfoo.",
     badge: "Universal Formats",
     isLive: true,
     ctaText: "Export Agent Configs →",
     hashTarget: "prompt-studio",
+    slabA: "ONE SPEC.",
+    slabB: "EVERY AGENT.",
     snippetHeader: "AGENT_ABI // LOWERING_ENGINE",
     snippetCode: "Targets: CLAUDE.md | .cursorrules\nWindsurf: rules_synced\nPromptfoo: test_matrix_generated",
   },
@@ -74,6 +84,8 @@ const CHAMBERS: CapabilityChamber[] = [
     isLive: false,
     ctaText: "Transcribe Media →",
     viewTarget: "media",
+    slabA: "VOICE BRIEF.",
+    slabB: "ACTIONABLE IR.",
     snippetHeader: "AUDIO_IR // LOCAL_TRANSCRIPTION",
     snippetCode: "Source: Architecture_Review.mp4\nSpeech engine: In-Browser Whisper\nExtracted: 7 hard constraints",
   },
@@ -86,33 +98,104 @@ const CHAMBERS: CapabilityChamber[] = [
     isLive: false,
     ctaText: "Convert UI to Code →",
     viewTarget: "code",
+    slabA: "SCREENSHOT.",
+    slabB: "REACT 19 CODE.",
     snippetHeader: "VISION_AST // REVERSE_SYNTHESIS",
     snippetCode: "Input: Figma mockup screenshot\nSynthesized: React + Tailwind CSS\nAccessibility: WCAG AA Compliant",
   },
   {
-    id: "diff-slider",
-    category: "Before & After",
-    title: "Interactive Token Burn Diff",
-    tagline: "Examine empirical proof showing how unguided agents burn $45.60 in runaway tokens versus SPE's 100% pass rate.",
-    badge: "Empirical Receipts",
-    isLive: true,
-    ctaText: "Inspect Diff Slider →",
-    hashTarget: "before-after-diff",
-    snippetHeader: "DIFF_PROOF // TOKEN_AUDIT",
-    snippetCode: "Unguided: $45.60 / 12 retries / Broken\nSPE Engine: $0.00 / 1 pass / Tests Green\nSavings: 100% API waste eliminated",
+    id: "research-to-prompt",
+    category: "Research Synthesis",
+    title: "Deep Paper & Spec Ingestion",
+    tagline: "Distill complex RFCs, API specifications, and research papers into unambiguous instruction constraints.",
+    badge: "Spec Knowledge Distiller",
+    isLive: false,
+    ctaText: "Ingest Research →",
+    viewTarget: "research",
+    slabA: "RAW SPEC.",
+    slabB: "VERIFIED IR.",
+    snippetHeader: "RESEARCH // KNOWLEDGE_EXTRACTOR",
+    snippetCode: "Input: Stripe Payments RFC v2026\nExtracted: 14 mandatory state invariants\nGenerated: Deterministic Horn clauses",
   },
   {
-    id: "roi-calc",
-    category: "ROI Calculator",
-    title: "Team Savings Calculator",
-    tagline: "Estimate the hours and token budget your team preserves each month.",
-    badge: "Interactive Model",
-    isLive: true,
-    ctaText: "Calculate Your ROI →",
-    hashTarget: "developer-roi-calculator",
-    snippetHeader: "ECONOMIC_KERNEL // WORKSPACE_SAVINGS",
-    snippetCode: "Workflow: Team estimate\nToken waste: Eliminated\nStatus: Instant calculation",
+    id: "drift-sentinel",
+    category: "Model Assurance",
+    title: "Model Drift & Regression Sentinel",
+    tagline: "Continuously audit prompt execution across OpenAI, Anthropic, Gemini, and local models to catch silent regressions.",
+    badge: "Continuous Oracle Guard",
+    isLive: false,
+    ctaText: "Inspect Drift Sentinel →",
+    hashTarget: "prompt-studio",
+    slabA: "MODEL DRIFT.",
+    slabB: "INSTANT DETECT.",
+    snippetHeader: "SENTINEL // TELEMETRY_PROBE",
+    snippetCode: "Target: Claude 3.7 vs Claude 3.5\nDrift Delta: 0 schema regressions\nStatus: QUALIFIED_FOR_DEPLOYMENT",
   },
+];
+
+interface CommandCapsule {
+  id: string;
+  name: string;
+  badge: string;
+  tier: string;
+  desc: string;
+}
+
+const COMMAND_CAPSULES: CommandCapsule[] = [
+  {
+    id: "capsule-1",
+    name: "Claude 3.7 Sonnet",
+    badge: "COMPILER READY",
+    tier: "Agent",
+    desc: "Autonomous reasoning and long-horizon invariant retention.",
+  },
+  {
+    id: "capsule-2",
+    name: "GPT-5 Thinking",
+    badge: "AST TAINT",
+    tier: "Security",
+    desc: "Deep AST taint-tracking and strict JSON schema assurance.",
+  },
+  {
+    id: "capsule-3",
+    name: "DeepSeek R1",
+    badge: "LOCAL VLLM",
+    tier: "Economics",
+    desc: "Open-weight mathematical reasoning with zero API spend.",
+  },
+  {
+    id: "capsule-4",
+    name: "Cursor Rules",
+    badge: "ZERO REGRESSION",
+    tier: "Editor",
+    desc: "Compile .cursorrules that prevent unwanted codebase drift.",
+  },
+  {
+    id: "capsule-5",
+    name: "MCP Firewall",
+    badge: "CAPABILITY GATE",
+    tier: "Runtime",
+    desc: "OS-level tool authority and payment cap enforcement.",
+  },
+  {
+    id: "capsule-6",
+    name: "Failure Genome",
+    badge: "AUTO-REPAIR",
+    tier: "Resilience",
+    desc: "Continuous counterexample minimization and repair vaccines.",
+  },
+];
+
+const CATEGORIES = [
+  { id: "all", label: "All Systems", icon: "✦" },
+  { id: "Autonomous Coding", label: "Coding", icon: "⚡" },
+  { id: "Financial Compliance", label: "Security", icon: "🛡️" },
+  { id: "Spatial WebGL", label: "Spatial 3D", icon: "🪐" },
+  { id: "Multi-Agent Formats", label: "Multi-Agent", icon: "🔄" },
+  { id: "Audio & Video", label: "Media", icon: "🎙️" },
+  { id: "Vision to Code", label: "Vision", icon: "👁️" },
+  { id: "Research Synthesis", label: "Research", icon: "📚" },
+  { id: "Model Assurance", label: "Assurance", icon: "📊" },
 ];
 
 interface Props {
@@ -120,32 +203,26 @@ interface Props {
 }
 
 export function SpeCapabilityDeck({ onNavigate }: Props) {
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [activeChamberIndex, setActiveChamberIndex] = useState<number>(0);
   const headingId = useId();
 
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev > 0 ? prev - 1 : CHAMBERS.length - 1));
-  };
+  const filteredChambers = selectedCategory === "all"
+    ? CHAMBERS
+    : CHAMBERS.filter((c) => c.category === selectedCategory);
+  const activeChamber = filteredChambers[activeChamberIndex] ?? filteredChambers[0] ?? CHAMBERS[0];
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev < CHAMBERS.length - 1 ? prev + 1 : 0));
+    setActiveChamberIndex((prev) => (prev + 1) % filteredChambers.length);
   };
 
-  // Keyboard arrow navigation
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.key === "ArrowLeft") handlePrev();
-      if (e.key === "ArrowRight") handleNext();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  const handlePrev = () => {
+    setActiveChamberIndex((prev) => (prev - 1 + filteredChambers.length) % filteredChambers.length);
+  };
 
-  const handleAction = (chamber: CapabilityChamber) => {
+  const handleCtaClick = (chamber: CapabilityChamber) => {
     if (chamber.viewTarget && onNavigate) {
       onNavigate(chamber.viewTarget);
-      window.scrollTo(0, 0);
     } else if (chamber.hashTarget) {
       const el = document.getElementById(chamber.hashTarget);
       el?.scrollIntoView({ behavior: "smooth" });
@@ -155,141 +232,185 @@ export function SpeCapabilityDeck({ onNavigate }: Props) {
   return (
     <section className="spe-deck-section" aria-labelledby={headingId}>
       <div className="spe-deck-container">
-        {/* Storytelling Header: Act 2 */}
-        <div className="spe-deck-header-row">
-          <div>
-            <div className="spe-deck-kicker">
-              <span>Chapter 02 // Everything SPE Forges</span>
+        {/* Top Ticker: Live Now */}
+        <div className="spe-hero-live-ticker" role="status" aria-live="polite">
+          <span className="spe-ticker-live-badge">LIVE NOW</span>
+          <span className="spe-ticker-text">
+            ON SPE Ω — CLAUDE 3.7 SONNET &amp; GPT-5 REASONING COMPILER · 100% AIR-GAPPED &amp; FREE.
+          </span>
+        </div>
+
+        {/* Monumental Water-Reflective Headline */}
+        <header className="spe-deck-story-header">
+          <div className="spe-hero-reflective-wrap">
+            <h1 id={headingId} className="spe-hero-reflective-h1">
+              ONE COMPILER. EVERY AI AGENT &amp; MODEL
+            </h1>
+            <div className="spe-hero-reflective-mirror" aria-hidden="true">
+              ONE COMPILER. EVERY AI AGENT &amp; MODEL
             </div>
-            <h2 id={headingId} className="spe-deck-title">
-              From Clear Ideas to Working Systems in <em>8 Tactile Chambers.</em>
-            </h2>
+          </div>
+          <p className="spe-deck-subtitle">
+            Cancel your extra $20/month agent subscriptions. SPE is the offline, privacy-first control plane that compiles,
+            fuzzes, and proves AI instructions before they are deployed to production.
+          </p>
+        </header>
+
+        {/* Floating Command Category Dock Shelf */}
+        <div className="spe-dock-wrapper" role="region" aria-label="Capability category navigation">
+          <div className="spe-dock-shelf" role="tablist">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                role="tab"
+                aria-selected={selectedCategory === cat.id}
+                className={`spe-dock-tab-btn ${selectedCategory === cat.id ? "is-active" : ""}`}
+                onClick={() => {
+                  setSelectedCategory(cat.id);
+                  setActiveChamberIndex(0);
+                }}
+              >
+                <span className="spe-dock-tab-icon" aria-hidden="true">{cat.icon}</span>
+                <span>{cat.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Higgsfield-Style 3D Developer Cards Carousel */}
+        <div className="spe-higgs-cards-viewport" role="region" aria-label="Interactive 3D capability cards">
+          <div className="spe-higgs-cards-row">
+            {filteredChambers.map((chamber, idx) => {
+              const isCurrent = idx === activeChamberIndex;
+              return (
+                <div
+                  key={chamber.id}
+                  className={`spe-higgs-card ${isCurrent ? "is-focused" : ""}`}
+                  style={{
+                    transform: isCurrent
+                      ? "perspective(1000px) rotateY(0deg) scale(1.02)"
+                      : "perspective(1000px) rotateY(-3deg)",
+                  }}
+                  onClick={() => setActiveChamberIndex(idx)}
+                >
+                  {/* Viewfinder crosshairs and REC indicator */}
+                  <div className="spe-higgs-card-vf" aria-hidden="true">
+                    <span className="vf-tl">+</span>
+                    <span className="vf-tr">+</span>
+                    <span className="vf-bl">+</span>
+                    <span className="vf-br">+</span>
+                  </div>
+
+                  <div className="spe-higgs-card-topbar">
+                    <span className="spe-higgs-rec-pill">
+                      <span className="rec-dot" aria-hidden="true" />
+                      REC ● {chamber.category.toUpperCase()}
+                    </span>
+                    <span className="spe-higgs-badge">{chamber.badge}</span>
+                  </div>
+
+                  {/* 3D Angled Typography Slabs */}
+                  <div className="spe-higgs-slabs" aria-hidden="true">
+                    <div className="spe-slab-row slab-a">{chamber.slabA}</div>
+                    <div className="spe-slab-row slab-b">{chamber.slabB}</div>
+                  </div>
+
+                  {/* Terminal Simulation Body */}
+                  <div className="spe-higgs-terminal-body">
+                    <div className="spe-higgs-term-header">
+                      <span className="spe-higgs-term-title">{chamber.snippetHeader}</span>
+                    </div>
+                    <pre className="spe-higgs-term-code">
+                      <code>{chamber.snippetCode}</code>
+                    </pre>
+                  </div>
+
+                  {/* Bottom Metadata & Action */}
+                  <div className="spe-higgs-card-footer">
+                    <div>
+                      <h3 className="spe-higgs-footer-title">{chamber.title}</h3>
+                      <p className="spe-higgs-footer-tagline">{chamber.tagline}</p>
+                    </div>
+                    <button
+                      type="button"
+                      className="spe-higgs-cta-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCtaClick(chamber);
+                      }}
+                    >
+                      {chamber.ctaText}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
-          <div className="spe-deck-nav-cluster">
-            <span className="spe-deck-counter" aria-live="polite">
-              <strong>{String(activeIndex + 1).padStart(2, "0")}</strong> / {String(CHAMBERS.length).padStart(2, "0")}
-            </span>
+          {/* Carousel Arrows */}
+          <div className="spe-deck-nav-controls">
             <button
               type="button"
               className="spe-deck-arrow-btn"
               onClick={handlePrev}
-              aria-label="Previous capability chamber"
+              aria-label="Previous capability card"
             >
               ←
             </button>
+            <span className="spe-deck-counter">
+              {String(activeChamberIndex + 1).padStart(2, "0")} / {String(filteredChambers.length).padStart(2, "0")}
+            </span>
             <button
               type="button"
               className="spe-deck-arrow-btn"
               onClick={handleNext}
-              aria-label="Next capability chamber"
+              aria-label="Next capability card"
             >
               →
             </button>
           </div>
         </div>
 
-        {/* 3D Cover Flow Viewport */}
-        <div className="spe-deck-viewport" role="region" aria-label="3D capability cover flow deck">
-          {CHAMBERS.map((chamber, idx) => {
-            const offset = idx - activeIndex;
-            const isActive = offset === 0;
-
-            // 3D Perspective calculation
-            let transform = "translateX(0) translateZ(0) rotateY(0deg) scale(1)";
-            let zIndex = 10;
-            let opacity = 1;
-            let filter = "none";
-
-            if (offset > 0) {
-              const distance = Math.min(offset, 3);
-              transform = `translateX(${distance * 220}px) translateZ(-${distance * 140}px) rotateY(-${Math.min(distance * 24, 38)}deg) scale(${1 - distance * 0.1})`;
-              zIndex = 10 - distance;
-              opacity = Math.max(0.2, 1 - distance * 0.35);
-              filter = `blur(${distance * 1.5}px)`;
-            } else if (offset < 0) {
-              const distance = Math.min(Math.abs(offset), 3);
-              transform = `translateX(-${distance * 220}px) translateZ(-${distance * 140}px) rotateY(${Math.min(distance * 24, 38)}deg) scale(${1 - distance * 0.1})`;
-              zIndex = 10 - distance;
-              opacity = Math.max(0.2, 1 - distance * 0.35);
-              filter = `blur(${distance * 1.5}px)`;
-            }
-
-            return (
-              <article
-                key={chamber.id}
-                className={`spe-deck-card ${isActive ? "is-active" : ""}`}
-                style={{
-                  transform,
-                  zIndex,
-                  opacity,
-                  filter,
-                }}
-                onClick={() => setActiveIndex(idx)}
-                aria-hidden={!isActive}
+        {/* Command Quick-Matrix (Split Hero + 2x3 Capsules) */}
+        <div className="spe-command-matrix-wrap">
+          {/* Left Hero Card */}
+          <div className="spe-command-hero-card">
+            <div className="spe-command-hero-glow" aria-hidden="true" />
+            <div className="spe-command-hero-content">
+              <span className="spe-command-free-pill">100% AIR-GAPPED &amp; FREE</span>
+              <h2 className="spe-command-hero-title">START COMPILING FOR FREE</h2>
+              <ul className="spe-command-feature-list">
+                <li><span aria-hidden="true">✓</span> Free local compilation on your own silicon</li>
+                <li><span aria-hidden="true">✓</span> Zero server inference bills or tracking</li>
+                <li><span aria-hidden="true">✓</span> Every top AI model format in one export</li>
+              </ul>
+              <button
+                type="button"
+                className="spe-command-launch-btn"
+                onClick={() => handleCtaClick(activeChamber)}
               >
-                <div className="spe-card-top-row">
-                  <span className="spe-card-category-pill">{chamber.category}</span>
-                  {chamber.isLive ? (
-                    <div className="spe-card-live-indicator">
-                      <span className="spe-card-live-dot" aria-hidden="true" />
-                      <span>Live</span>
-                    </div>
-                  ) : (
-                    <span style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.4)" }}>Integrated</span>
-                  )}
-                </div>
+                <span>Start Compiling for Free</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
 
-                <div className="spe-card-preview-art">
-                  <span className="spe-card-art-kicker">{chamber.snippetHeader}</span>
-                  <pre className="spe-card-art-snippet">{chamber.snippetCode}</pre>
-                  <span className="spe-card-highlight-badge">{chamber.badge}</span>
-                </div>
-
-                <div className="spe-card-info-cluster">
-                  <div>
-                    <h3 className="spe-card-heading">{chamber.title}</h3>
-                    <p className="spe-card-subtext">{chamber.tagline}</p>
+          {/* Right 2x3 Grid of Interactive Tool Capsules */}
+          <div className="spe-command-grid">
+            {COMMAND_CAPSULES.map((capsule) => (
+              <div key={capsule.id} className="spe-command-capsule-card">
+                <div className="spe-capsule-top">
+                  <span className="spe-capsule-name">{capsule.name}</span>
+                  <div className="spe-capsule-badges">
+                    <span className="spe-capsule-badge">{capsule.badge}</span>
+                    <span className="spe-capsule-tier">{capsule.tier}</span>
                   </div>
-
-                  <button
-                    type="button"
-                    className="spe-card-action-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAction(chamber);
-                    }}
-                    tabIndex={isActive ? 0 : -1}
-                  >
-                    <span>{chamber.ctaText}</span>
-                  </button>
                 </div>
-              </article>
-            );
-          })}
-        </div>
-
-        {/* Floating Tactile Command Dock */}
-        <div className="spe-dock-wrapper">
-          <nav className="spe-dock-shelf" aria-label="Quick jump to capability chamber">
-            {CHAMBERS.map((chamber, idx) => {
-              const isActive = idx === activeIndex;
-              return (
-                <button
-                  key={chamber.id}
-                  type="button"
-                  className={`spe-dock-tab-btn ${isActive ? "is-active" : ""}`}
-                  onClick={() => setActiveIndex(idx)}
-                  aria-pressed={isActive}
-                >
-                  <span className="spe-dock-tab-icon" aria-hidden="true">
-                    {idx === 0 ? "⚡" : idx === 1 ? "🛡️" : idx === 2 ? "🌐" : idx === 3 ? "📦" : idx === 4 ? "🎙️" : idx === 5 ? "📸" : idx === 6 ? "⚖️" : "💰"}
-                  </span>
-                  <span>{chamber.category}</span>
-                </button>
-              );
-            })}
-          </nav>
+                <p className="spe-capsule-desc">{capsule.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
