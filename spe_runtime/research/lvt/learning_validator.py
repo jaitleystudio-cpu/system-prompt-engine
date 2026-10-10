@@ -77,7 +77,12 @@ class LearningValidator:
             results.arm_c_shuffled_control_score,
             results.arm_d_generalization_score,
         ]
-        evidence_authentic = all(0.0 <= s <= 1.0 for s in scores)
+        # LVT-0 FourArmResults stores aggregates only. Even plausible scores
+        # and a true is_statistically_significant flag are not evidence of
+        # paired held-out observations, data custody, or an independent oracle.
+        # Fail closed until a versioned, externally attested LVT-2 admission
+        # path is integrated and independently qualified.
+        evidence_authentic = False
 
         # Independent evaluation: evaluator != generator and not self-type
         eval_independent = (
@@ -139,6 +144,11 @@ class LearningValidator:
             reason = f"LVT admission rule violation: failed conjuncts: {', '.join(failed)}"
             tx.status = QualificationStatus.REJECTED
             tx.rejection_reason = reason
+            # Never retain a stale positive receipt after re-evaluation.
+            tx.artifact_hash = ""
+            tx.canonical_receipt_signature = ""
+            tx.committed_timestamp = None
+            tx.metadata.pop("public_key", None)
             if strict:
                 raise LearningValidityRuleViolation(reason)
             return tx
@@ -184,6 +194,8 @@ class LearningValidator:
         public_key: Optional[bytes] = None,
     ) -> bool:
         """Cryptographically verifies the transaction's Ed25519 receipt signature."""
+        if tx.status != QualificationStatus.QUALIFIED:
+            return False
         if not tx.canonical_receipt_signature or not tx.committed_timestamp:
             return False
 
