@@ -1016,7 +1016,11 @@ export default function App() {
           />
         ) : view === "home" && (
           <>
+            <SpeCapabilityDeck onNavigate={setView} />
+            <SpeUniverseHero onNavigate={setView} />
+            <SpeStorytellingCinema onNavigate={setView} />
             <Hero
+              hideTheater
               onReset={() => {
                 invalidate();
                 setUserRequest("");
@@ -1056,9 +1060,6 @@ export default function App() {
               onExport={onExportSpe}
               onNavigate={setView}
             />
-            <SpeCapabilityDeck onNavigate={setView} />
-            <SpeUniverseHero onNavigate={setView} />
-            <SpeStorytellingCinema onNavigate={setView} />
             {rendered?.finalPrompt && (
               <div style={{ maxWidth: "1200px", margin: "1.5rem auto", padding: "0 1.5rem" }}>
                 <PromptRadarInspector

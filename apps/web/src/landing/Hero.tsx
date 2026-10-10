@@ -37,6 +37,7 @@ type Intent = {
   conflicts: IntentAtom[];
 };
 type Props = {
+  hideTheater?: boolean;
   onReset: () => void;
   value: string;
   onChange: (v: string) => void;
@@ -129,45 +130,47 @@ export function Hero(p: Props) {
     ) : null;
   };
   return (
-    <section className="spe-hero" id="top" aria-labelledby="hero-title">
-      <div className="hero-theater">
-        <DotPattern surface="hero" />
-        <div className="hero-topline">
-          <span className="eyebrow">
-            <i /> YOUR IDEAS. YOUR WORDS.
-          </span>
-          <span className="edition">✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Login Required</span>
-        </div>
-        <div className="hero-copy">
-          <p className="eyebrow">A CLEAR START FOR ANY AI</p>
-          <h1 id="hero-title" data-daily-title={hero.index}>
-            <span className="visually-hidden">
-              Free System Prompt Generator & AI Prompt Builder —{" "}
+    <section className="spe-hero" id={p.hideTheater ? "prompt-studio-wrapper" : "top"} aria-labelledby={p.hideTheater ? "studio-title" : "hero-title"}>
+      {!p.hideTheater && (
+        <div className="hero-theater">
+          <DotPattern surface="hero" />
+          <div className="hero-topline">
+            <span className="eyebrow">
+              <i /> YOUR IDEAS. YOUR WORDS.
             </span>
-            {hero.title}
-            <br />
-            <em>{hero.accent}</em>
-          </h1>
-          <p className="hero-description">
-            Turn your ideas into clear prompts for any AI.
-            Start with a few words. Add what matters.
-          </p>
-          <a
-            className="hero-start"
-            href="#prompt-studio"
-            aria-label="Open System Prompt Studio to build your prompt"
-          >
-            Make my prompt <span aria-hidden="true">↗</span>
-          </a>
+            <span className="edition">✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Login Required</span>
+          </div>
+          <div className="hero-copy">
+            <p className="eyebrow">A CLEAR START FOR ANY AI</p>
+            <h1 id="hero-title" data-daily-title={hero.index}>
+              <span className="visually-hidden">
+                Free System Prompt Generator & AI Prompt Builder —{" "}
+              </span>
+              {hero.title}
+              <br />
+              <em>{hero.accent}</em>
+            </h1>
+            <p className="hero-description">
+              Turn your ideas into clear prompts for any AI.
+              Start with a few words. Add what matters.
+            </p>
+            <a
+              className="hero-start"
+              href="#prompt-studio"
+              aria-label="Open System Prompt Studio to build your prompt"
+            >
+              Make my prompt <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div className="hero-stage">
+            <HeroStory />
+          </div>
+          <div className="theater-bottom">
+            <span>YOUR IDEA → YOUR PROMPT</span>
+            <a href="#prompt-studio">TRY IT BELOW ↓</a>
+          </div>
         </div>
-        <div className="hero-stage">
-          <HeroStory />
-        </div>
-        <div className="theater-bottom">
-          <span>YOUR IDEA → YOUR PROMPT</span>
-          <a href="#prompt-studio">TRY IT BELOW ↓</a>
-        </div>
-      </div>
+      )}
       <ConversionKernel onNavigate={p.onNavigate} />
       <section
         className="prompt-studio"

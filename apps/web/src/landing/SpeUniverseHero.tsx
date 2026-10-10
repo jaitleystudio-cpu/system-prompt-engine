@@ -138,19 +138,19 @@ export function SpeUniverseHero({ onNavigate }: Props) {
   const lastTimeRef = useRef<number>(performance.now());
   const headingId = useId();
 
-  // Continuous Orbital Physics Loop using requestAnimationFrame
+  // Continuous Orbital Physics Loop using requestAnimationFrame (~24 seconds per full revolution)
   useEffect(() => {
     let animId: number;
-    const spinSpeed = (Math.PI * 2) / 80000; // ~80 seconds per full revolution
+    const spinSpeed = (Math.PI * 2) / 24000; // Visible, fluid celestial planetary revolution
 
     const loop = (now: number) => {
       const dt = Math.min(now - lastTimeRef.current, 64);
       lastTimeRef.current = now;
 
-      if (!isHoverPaused) {
-        angleRef.current += dt * spinSpeed;
-        setOrbitAngle(angleRef.current);
-      }
+      // Gracefully slow down by 65% when hovering a specific node so user can click, but NEVER freeze completely
+      const speed = isHoverPaused ? spinSpeed * 0.35 : spinSpeed;
+      angleRef.current += dt * speed;
+      setOrbitAngle(angleRef.current);
 
       animId = requestAnimationFrame(loop);
     };
@@ -322,8 +322,6 @@ export function SpeUniverseHero({ onNavigate }: Props) {
           role="region"
           aria-label="Interactive AI model orbital switchboard"
           onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsHoverPaused(true)}
-          onMouseLeave={() => setIsHoverPaused(false)}
           style={{
             ["--mx" as any]: `${mousePos.x}%`,
             ["--my" as any]: `${mousePos.y}%`,
