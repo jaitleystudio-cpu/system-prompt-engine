@@ -60,10 +60,12 @@ def test_four_arm_experiment_successful_run():
     assert results.delta_improvement == pytest.approx(0.35, abs=1e-4)
     assert results.control_delta == pytest.approx(0.30, abs=1e-4)
     assert results.held_out_retention == pytest.approx(0.35, abs=1e-4)
-    assert results.is_statistically_significant is True
+    # Aggregate score thresholds are descriptive, never a significance claim.
+    assert results.is_statistically_significant is False
 
-    # Total evals: 10 * 4 = 40 evals * 150 nanos = 6000 nanos
-    assert results.total_cost_nanos == 6000
+    # Four arms plus the paired held-out baseline witness: 50 * 150 nanos.
+    assert results.total_cost_nanos == 7500
+    assert results.held_out_baseline_score == pytest.approx(0.60)
 
 
 def test_four_arm_experiment_empty_dataset_raises():
