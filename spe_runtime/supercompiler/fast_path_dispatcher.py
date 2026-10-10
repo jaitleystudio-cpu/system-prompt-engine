@@ -7,11 +7,13 @@ deterministic evaluation and 100% token savings.
 
 from __future__ import annotations
 
+import json
 import time
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from spe_runtime.supercompiler.causal_circuit_synthesizer import (
+    CircuitVerifier,
     ProofCarryingCausalCircuit,
 )
 
@@ -65,13 +67,23 @@ class ZeroEntropyFastPathDispatcher:
         self.telemetry = DispatchTelemetry()
         self.fallback_fn = fallback_deliberation_fn or self._default_fallback
 
-    def register_circuit(self, circuit: ProofCarryingCausalCircuit) -> None:
+    def register_circuit(self, circuit: ProofCarryingCausalCircuit) -> bool:
+        """Registers a proof-carrying circuit, enforcing verification boundary."""
+        is_valid, msg = CircuitVerifier.verify_receipt(circuit)
+        if not is_valid:
+            circuit._verified = False
+            # Still record to dictionary for audit, but flag as unverified
+            self.circuits[circuit.circuit_id] = circuit
+            return False
+
+        circuit._verified = True
         self.circuits[circuit.circuit_id] = circuit
+        return True
 
     def dispatch(
         self,
         domain: str,
-        payload: Dict[str, Any],
+        payload: Any,
         estimated_llm_tokens: int = 1200,
         estimated_llm_cost: float = 0.018,
     ) -> Tuple[str, Dict[str, Any], float]:
@@ -83,13 +95,27 @@ class ZeroEntropyFastPathDispatcher:
         """
         self.telemetry.total_requests += 1
 
+        # Normalize raw JSON string payload if supplied
+        norm_payload = payload
+        if isinstance(payload, str):
+            try:
+                norm_payload = json.loads(payload)
+            except Exception:
+                # If raw string is not valid JSON, pass through to circuit/fallback for explicit denial
+                pass
+
         # Check circuits registered for this domain
         for c_id, circuit in self.circuits.items():
             if circuit.domain == domain:
+                # Security boundary: Only execute verified circuits
+                is_valid, _ = CircuitVerifier.verify_receipt(circuit)
+                if not is_valid or not circuit._verified:
+                    continue
+
                 try:
-                    if circuit.precondition_checker(payload):
+                    if circuit.precondition_checker(norm_payload):
                         # Execute fast-path
-                        success, result, lat_micros = circuit.evaluate(payload)
+                        success, result, lat_micros = circuit.evaluate(norm_payload)
                         if success:
                             self.telemetry.fast_path_hits += 1
                             self.telemetry.latencies_micros.append(lat_micros)
@@ -99,18 +125,23 @@ class ZeroEntropyFastPathDispatcher:
                                 self.telemetry.violations_prevented += 1
                             return "FAST_PATH_CIRCUIT", result, lat_micros
                 except Exception:
-                    # On circuit evaluation error, fall through safely to fallback
+                    # Circuit execution exception falls through safely to fallback
                     pass
 
         # Fallback to slow path
         t0 = time.perf_counter()
-        fallback_result = self.fallback_fn(payload)
+        fallback_result = self.fallback_fn(norm_payload)
         lat_micros = (time.perf_counter() - t0) * 1e6
         self.telemetry.slow_path_fallbacks += 1
         self.telemetry.latencies_micros.append(lat_micros)
         return "SLOW_PATH_DELIBERATION", fallback_result, lat_micros
 
-    def _default_fallback(self, payload: Dict[str, Any]) -> Dict[str, Any]:
-        """Simulated deliberative fallback."""
-        time.sleep(0.001)  # 1ms mock deliberation
-        return {"status": "FALLBACK_EVALUATED", "payload": payload}
+    def _default_fallback(self, payload: Any) -> Dict[str, Any]:
+        """Deny-by-default deliberative fallback."""
+        return {
+            "status": "REJECT",
+            "approval_status": "REJECT",
+            "authorized_amount_cents": 0,
+            "decision": "DENY_BY_DEFAULT",
+            "payload": payload,
+        }

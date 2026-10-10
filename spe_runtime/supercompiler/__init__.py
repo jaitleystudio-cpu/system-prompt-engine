@@ -30,8 +30,12 @@ from spe_runtime.supercompiler.superoptimizer import HarnessSuperoptimizer
 from spe_runtime.supercompiler.causal_circuit_synthesizer import (
     CausalCircuitSynthesizer,
     CircuitProofReceipt,
+    CircuitVerifier,
     HoareContract,
     ProofCarryingCausalCircuit,
+    canonical_json_rfc8785,
+    is_valid_manager_token,
+    validate_amount_cents,
 )
 from spe_runtime.supercompiler.fast_path_dispatcher import (
     DispatchTelemetry,
@@ -78,6 +82,10 @@ __all__ = [
     "ProofCarryingCausalCircuit",
     "HoareContract",
     "CircuitProofReceipt",
+    "CircuitVerifier",
+    "canonical_json_rfc8785",
+    "is_valid_manager_token",
+    "validate_amount_cents",
     "ZeroEntropyFastPathDispatcher",
     "DispatchTelemetry",
 ]
