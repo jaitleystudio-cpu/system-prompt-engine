@@ -122,3 +122,25 @@ def test_distribution_drift_revocation(legacy_tx):
     
     with pytest.raises(TransactionRevokedError):
         LearningTransferProtocol.assert_not_revoked(legacy_tx)
+
+
+def test_forged_legacy_qualified_status_cannot_create_portable_learning_artifact(legacy_tx):
+    """A manually-set enum is not independent learning evidence."""
+    legacy_tx.status = QualificationStatus.QUALIFIED
+    with pytest.raises(ValueError, match="legacy aggregate"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=legacy_tx, refined_prompt_content="Mock only"
+        )
+
+
+def test_forged_legacy_qualified_status_cannot_claim_transfer(legacy_tx):
+    """Legacy aggregate scores must not be relabeled as verified model transfer."""
+    legacy_tx.status = QualificationStatus.QUALIFIED
+    with pytest.raises(ValueError, match="legacy aggregate"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=legacy_tx,
+            target_model_id="different-model",
+            evaluator_fn=lambda prompt, item: 1.0,
+            test_dataset=[{"id": "one"}],
+            base_prompt="base", refined_prompt="refined",
+        )
