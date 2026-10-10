@@ -27,7 +27,7 @@
         /\bshopping\s+(app|site|platform|cart)\b/i,
         /\be-?commerce\s+(app|website|store|platform)\b/i
       ],
-      specificationTemplate: (input, model = "Claude 6.0 / OpenAI 6") => `Act as a Principal Product Architect and Senior Systems Engineer.
+      specificationTemplate: (input, model = "Claude 6.2 / GPT-6.1 / Gemini 3.9 Pro") => `Act as a Principal Product Architect and Senior Systems Engineer.
 Target Model Environment: ${model}
 
 The user has requested: "${input}".
@@ -76,7 +76,7 @@ Tone: Authoritative, pragmatic, human-engineered code architecture with zero gen
         /\b(design|build|create)\s+(me\s+)?(a|an)?\s*([a-z0-9_\-\s]+)?\b(3d|cinematic|interactive|immersive)\s+(website|web\s*site|portfolio|landing\s*page)\b/i,
         /\b(three\.?js|webgl|react-three-fiber|r3f)\s+(website|experience|app)\b/i
       ],
-      specificationTemplate: (input, model = "Claude 6.0 / OpenAI 6") => `Act as an award-winning Creative Technologist and WebGL/Three.js Systems Architect.
+      specificationTemplate: (input, model = "Claude 6.2 / GPT-6.1 / Gemini 3.9 Pro") => `Act as an award-winning Creative Technologist and WebGL/Three.js Systems Architect.
 Target Model Environment: ${model}
 
 The user has requested: "${input}".
@@ -123,7 +123,7 @@ Required Specification Sections:
         /\b(research|investigate|study|validate|test)\s+(this|a|an)?\s*([a-z0-9_\-\s]+)?\b(scientific\s+hypothesis|hypothesis|research\s+protocol|experiment)\b/i,
         /\bscientific\s+(hypothesis|methodology|protocol)\b/i
       ],
-      specificationTemplate: (input, model = "Claude 6.0 / OpenAI 6") => `Act as a Principal Scientific Research Fellow and Empirical Methodologist.
+      specificationTemplate: (input, model = "Claude 6.2 / GPT-6.1 / Gemini 3.9 Pro") => `Act as a Principal Scientific Research Fellow and Empirical Methodologist.
 Target Model Environment: ${model}
 
 The user has proposed: "${input}".
@@ -172,7 +172,7 @@ Required Specification Sections:
         /\b(create|launch|design|plan|build)\s+(me\s+)?(a|an)?\s*([a-z0-9_\-\s]+)?\b(marketing\s+campaign|ad\s+campaign|campaign\s+brief|gtm\s+campaign)\b/i,
         /\bmarketing\s+campaign\b/i
       ],
-      specificationTemplate: (input, model = "Claude 6.0 / OpenAI 6") => `Act as a Chief Marketing Officer and Direct-Response Creative Director.
+      specificationTemplate: (input, model = "Claude 6.2 / GPT-6.1 / Gemini 3.9 Pro") => `Act as a Chief Marketing Officer and Direct-Response Creative Director.
 Target Model Environment: ${model}
 
 The user has requested: "${input}".
@@ -220,7 +220,7 @@ Required Specification Sections:
         /\b(help\s+me\s+learn|teach\s+me|learn|master|study)\s+([a-z0-9_\-\s]+)?\b(mathematics|math|calculus|algebra|physics|statistics)\b/i,
         /\bpersonalized\s+tutoring\b/i
       ],
-      specificationTemplate: (input, model = "Claude 6.0 / OpenAI 6") => `Act as a World-Class Socratic Master Tutor and Cognitive Pedagogist.
+      specificationTemplate: (input, model = "Claude 6.2 / GPT-6.1 / Gemini 3.9 Pro") => `Act as a World-Class Socratic Master Tutor and Cognitive Pedagogist.
 Target Model Environment: ${model}
 
 The user has requested: "${input}".
@@ -267,7 +267,7 @@ Required Specification Sections:
         /\b(create|build|design|develop|architect)\s+(me\s+)?(a|an)?\s*([a-z0-9_\-\s]+)?\b(ai\s+agent|agent|autonomous\s+agent|multi-agent)\b/i,
         /\bagent\s+specification\b/i
       ],
-      specificationTemplate: (input, model = "Claude 6.0 / OpenAI 6") => `Act as a Principal Autonomous AI Agent Architect and Security Systems Engineer.
+      specificationTemplate: (input, model = "Claude 6.2 / GPT-6.1 / Gemini 3.9 Pro") => `Act as a Principal Autonomous AI Agent Architect and Security Systems Engineer.
 Target Model Environment: ${model}
 
 The user has requested: "${input}".
@@ -315,7 +315,7 @@ Required Specification Sections:
         /\b(improve|rewrite|edit|polish|audit|critique|elevate)\s+(this|my)?\s*([a-z0-9_\-\s]+)?\b(document|article|essay|whitepaper|draft|text|memo|post)\b/i,
         /\bwriting\s+(audit|requirements|standards)\b/i
       ],
-      specificationTemplate: (input, model = "Claude 6.0 / OpenAI 6") => `Act as an Award-Winning Senior Editorial Director and Literary Stylist.
+      specificationTemplate: (input, model = "Claude 6.2 / GPT-6.1 / Gemini 3.9 Pro") => `Act as an Award-Winning Senior Editorial Director and Literary Stylist.
 Target Model Environment: ${model}
 
 The user has requested: "${input}".
@@ -365,7 +365,7 @@ Required Specification Sections:
         /\b(create|write|develop)\s+(a\s+)?(business\s+plan|startup\s+business\s+plan)\b/i,
         /\bbusiness-?planning\s+specification\b/i
       ],
-      specificationTemplate: (input, model = "Claude 6.0 / OpenAI 6") => `Act as a Top-Tier Silicon Valley Startup Partner and Commercial Strategist.
+      specificationTemplate: (input, model = "Claude 6.2 / GPT-6.1 / Gemini 3.9 Pro") => `Act as a Top-Tier Silicon Valley Startup Partner and Commercial Strategist.
 Target Model Environment: ${model}
 
 The user has requested: "${input}".
@@ -417,7 +417,7 @@ Required Specification Sections:
         /\b(automate|streamline)\s+([a-z0-9_\-\s]+)?\b(workflow|process|pipeline|onboarding)\b/i,
         /\bworkflow\s+automation\b/i
       ],
-      specificationTemplate: (input, model = "Claude 6.0 / OpenAI 6") => `Act as a Principal Automation Architect and Site Reliability Engineer.
+      specificationTemplate: (input, model = "Claude 6.2 / GPT-6.1 / Gemini 3.9 Pro") => `Act as a Principal Automation Architect and Site Reliability Engineer.
 Target Model Environment: ${model}
 
 The user has requested: "${input}".

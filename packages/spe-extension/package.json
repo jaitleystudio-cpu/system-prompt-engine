@@ -1,19 +1,24 @@
 {
   "name": "@spe/browser-companion",
   "version": "1.0.0",
-  "description": "SPE 1-Click AI Power Prompts & Invariant Shield Browser Extension for ChatGPT, Claude & Gemini",
+  "description": "SPE 1-Click AI Power Prompts & Invariant Shield Universal Browser Companion for Chrome, Safari, Firefox & Edge",
   "type": "module",
   "main": "background.js",
   "scripts": {
+    "build": "node scripts/build-cross-browser.mjs",
+    "build:all": "node scripts/build-cross-browser.mjs",
     "test": "node test/extension.test.mjs"
   },
   "keywords": [
     "chatgpt",
     "claude",
     "gemini",
+    "safari-extension",
+    "firefox-addon",
+    "chrome-extension",
+    "edge-extension",
     "prompt-engineering",
-    "system-prompt",
-    "chrome-extension"
+    "system-prompt"
   ],
   "author": "SPE Team",
   "license": "MIT"

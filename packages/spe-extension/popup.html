@@ -6,28 +6,32 @@
   <title>SPE AI Companion</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: rgba(255, 255, 255, 0.08);
       --accent-grad: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      --pro-grad: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
       --accent: #00d2ff;
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --border: rgba(255, 255, 255, 0.1);
+      --success: #10b981;
     }
     body {
       margin: 0;
-      width: 360px;
-      height: 480px;
+      width: 380px;
+      height: 520px;
       background: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      user-select: none;
     }
     header {
-      padding: 14px 16px;
-      background: var(--card-bg);
+      padding: 12px 16px;
+      background: #0f172a;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -39,45 +43,151 @@
       gap: 8px;
       font-weight: 700;
       font-size: 14px;
+      letter-spacing: -0.3px;
     }
-    .badge {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-size: 10px;
-      font-weight: 600;
+    .tier-badge {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
-    .controls {
-      padding: 12px 16px;
+    .tier-badge.free {
+      background: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .tier-badge.pro {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .pro-banner {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border-bottom: 1px solid var(--card-border);
+      padding: 10px 16px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      border-bottom: 1px solid var(--border);
+      gap: 8px;
+    }
+    .pro-banner-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .pro-tag {
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pro-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-upgrade {
+      flex: 1;
+      background: var(--pro-grad);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+    .btn-upgrade:hover {
+      opacity: 0.95;
+    }
+    .btn-key-toggle {
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .key-form {
+      display: none;
+      margin-top: 4px;
+      gap: 6px;
+    }
+    .key-form.active {
+      display: flex;
+    }
+    .key-input {
+      flex: 1;
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 11px;
+      color: #fff;
+      outline: none;
+      font-family: monospace;
+    }
+    .key-input:focus {
+      border-color: var(--accent);
+    }
+    .btn-submit-key {
+      background: var(--accent);
+      color: #090d16;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .key-status {
+      font-size: 10px;
+      margin-top: 2px;
+      display: none;
+    }
+    .controls {
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-bottom: 1px solid var(--card-border);
+      background: #0d1322;
     }
     .model-selector {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
     }
     select {
-      background: #0f172a;
+      background: #090d16;
       color: var(--text);
       border: 1px solid var(--border);
       padding: 4px 8px;
       border-radius: 6px;
       outline: none;
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
     }
     .search-box {
       width: 100%;
-      background: rgba(30, 41, 59, 0.6);
+      background: rgba(17, 24, 39, 0.8);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 7px 12px;
       font-size: 12px;
       color: #fff;
       box-sizing: border-box;
@@ -88,27 +198,28 @@
     }
     .prompt-list {
       flex: 1;
-      padding: 12px 16px;
+      padding: 10px 16px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
     .card {
       background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 12px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.15s;
     }
     .card:hover {
-      border-color: var(--accent);
+      border-color: rgba(0, 210, 255, 0.4);
+      background: #141d30;
     }
     .card-title {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -121,11 +232,11 @@
     }
     .btn-copy {
       background: var(--accent-grad);
-      color: #0f172a;
+      color: #090d16;
       border: none;
-      border-radius: 6px;
-      padding: 4px 10px;
-      font-size: 11px;
+      border-radius: 5px;
+      padding: 3px 8px;
+      font-size: 10px;
       font-weight: 700;
       cursor: pointer;
     }
@@ -133,13 +244,13 @@
       opacity: 0.9;
     }
     footer {
-      padding: 10px 16px;
-      background: #0b1120;
-      border-top: 1px solid var(--border);
+      padding: 8px 16px;
+      background: #070a12;
+      border-top: 1px solid var(--card-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-muted);
     }
     footer a {
@@ -152,32 +263,52 @@
 <body>
   <header>
     <div class="brand">
-      <span>⚡ System Prompt Engine</span>
+      <span>⚡ SPE AI Companion</span>
     </div>
-    <span class="badge">Shield Active</span>
+    <span class="tier-badge free" id="tier-badge">Free Tier</span>
   </header>
+
+  <!-- Pro Micro-Subscription Banner ($1/mo) -->
+  <div class="pro-banner" id="pro-banner">
+    <div class="pro-banner-header">
+      <span class="pro-tag">⭐ SPE Pro • $1/month</span>
+      <span style="color: #94a3b8; font-size: 10px;">Cancel anytime</span>
+    </div>
+    <div class="pro-actions" id="pro-actions">
+      <a class="btn-upgrade" id="btn-upgrade" href="https://system-prompt-engine.io/checkout/extension?plan=monthly" target="_blank">Upgrade to Pro ($1/mo) 🚀</a>
+      <button class="btn-key-toggle" id="btn-key-toggle">Enter Key</button>
+    </div>
+    <div class="key-form" id="key-form">
+      <input type="text" class="key-input" id="key-input" placeholder="e.g. SPE-PRO-XXXXX-XXXX">
+      <button class="btn-submit-key" id="btn-submit-key">Activate</button>
+    </div>
+    <div class="key-status" id="key-status"></div>
+  </div>
 
   <div class="controls">
     <div class="model-selector">
-      <span>Target Model:</span>
+      <span>Frontier Model Target:</span>
       <select id="model-select">
-        <option value="auto">Auto-Detect</option>
-        <option value="claude-6">Claude 6.0 / Sonnet 4.5</option>
-        <option value="openai-6">OpenAI 6 / o3-Pro</option>
-        <option value="astra-6-1">Astra 6.1 / Gemini 3.0</option>
-        <option value="fable-5">Fable 5.0 Agentic</option>
+        <option value="auto">Auto-Detect Model</option>
+        <option value="claude_6_2">Anthropic Claude 6.2 Sonnet</option>
+        <option value="chatgpt_gpt6">OpenAI GPT-6.1 / o4</option>
+        <option value="gemini_3_9_pro">Google Gemini 3.9 Pro</option>
+        <option value="cursor_4_9">Cursor 4.9 Rules</option>
+        <option value="grok_4_9">xAI Grok 4.9 Truth Kernel</option>
+        <option value="kimi_3_5">Moonshot Kimi 3.5 (200k)</option>
+        <option value="deepseek_4_5">DeepSeek 4.5 / R2</option>
       </select>
     </div>
-    <input type="text" class="search-box" id="search-input" placeholder="Search 1-click power prompts...">
+    <input type="text" class="search-box" id="search-input" placeholder="Search 1-click power prompts & specs...">
   </div>
 
   <div class="prompt-list" id="prompt-list"></div>
 
   <footer>
-    <span>SPE v1.0 • 100% Offline Core</span>
-    <a href="https://github.com/system-prompt-engine" target="_blank">Open Studio ↗</a>
+    <span id="browser-indicator">SPE Universal • Offline Core</span>
+    <a href="https://system-prompt-engine.io" target="_blank">Studio ↗</a>
   </footer>
 
-  <script src="popup.js"></script>
+  <script type="module" src="popup.js"></script>
 </body>
 </html>

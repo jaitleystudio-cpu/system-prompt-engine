@@ -1,5 +1,5 @@
 // SPE Top Power Prompts Catalog
-// Precision-engineered for 2026 frontier models (Claude 6.0, OpenAI 6 / o3, Astra 6.1, Fable 5.0)
+// Precision-engineered for 2026 frontier models (Claude 6.2, GPT-6.1 / o4, Gemini 3.9 Pro, Cursor 4.9, Grok 4.9, Kimi 3.5, DeepSeek 4.5)
 // Zero hallucination, strict output structure, instant 1-click variable replacement.
 
 export const POWER_PROMPTS_VAULT = [
