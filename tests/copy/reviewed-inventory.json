@@ -3211,12 +3211,6 @@
       "text": "/mo in preserved engineering value"
     },
     {
-      "id": "1c75f7b0b5769ecda1f5",
-      "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
-      "depth": "PRODUCT",
-      "text": "See exactly how much debugging time and wasted API budget you preserve with S-Series guardrails."
-    },
-    {
       "id": "310bdb469390adb70d55",
       "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
       "depth": "PRODUCT",
@@ -3227,6 +3221,12 @@
       "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
       "depth": "PRODUCT",
       "text": "per month preserved"
+    },
+    {
+      "id": "43a4090512547042f30a",
+      "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
+      "depth": "PRODUCT",
+      "text": "💡 Based on real benchmarks across Claude Code, Cursor, and ChatGPT. Scope Guardrails prevent prompt drift and eliminate out-of-scope code refactors."
     },
     {
       "id": "48e1b336670176e16a9c",
@@ -3289,16 +3289,16 @@
       "text": "Regular (15h)"
     },
     {
-      "id": "c85c8e69c8629aebe379",
-      "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
-      "depth": "PRODUCT",
-      "text": "💡 Based on real benchmarks across Claude Code, Cursor, and ChatGPT. S-Guard prevents prompt drift and eliminates out-of-scope code refactors."
-    },
-    {
       "id": "cee3e8ae182cd2327837",
       "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
       "depth": "PRODUCT",
       "text": "Developer Pro ($9/mo) Return on Investment:"
+    },
+    {
+      "id": "d971baa08592ab1cb627",
+      "file": "apps/web/src/components/DeveloperRoiCalculator.tsx",
+      "depth": "PRODUCT",
+      "text": "See exactly how much debugging time and wasted API budget you preserve with SPE guardrails."
     },
     {
       "id": "dd198a03cd8030f4cd9d",
@@ -7927,12 +7927,6 @@
       "text": "+ All TypeScript interfaces verified: 0 typecheck errors"
     },
     {
-      "id": "1ae512f7f0e40387b574",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE S-Proof] Guaranteed Test Gate: tsc --noEmit && npm test"
-    },
-    {
       "id": "1c3d1d9317f76749cb28",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
@@ -8125,12 +8119,6 @@
       "text": "Comparison slider between unguided agent and SPE protected run"
     },
     {
-      "id": "55cd4952bf1d2ddb85b7",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE S-Guard] Scope lock: routes/webhooks.ts & handlers/stripe.ts"
-    },
-    {
       "id": "58078b3263ef15446b2b",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
@@ -8153,6 +8141,12 @@
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "[SPE Audit Receipt] Verification: Schema migration dry-run completed in sandbox"
+    },
+    {
+      "id": "626013ba8335c34f6993",
+      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
+      "depth": "PROOF",
+      "text": "[SPE Guardrail] Scope lock: routes/webhooks.ts & handlers/stripe.ts"
     },
     {
       "id": "6a63ef69de8936804fac",
@@ -8209,12 +8203,6 @@
       "text": "ArrowDown"
     },
     {
-      "id": "819e6adedd74d22b68af",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "[SPE S-Guard] Lockfile Locked: Zero package modifications allowed"
-    },
-    {
       "id": "866e7d78084ccbcb0ec9",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
@@ -8245,10 +8233,22 @@
       "text": "Database Migration"
     },
     {
+      "id": "910a8a8257a319775f50",
+      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
+      "depth": "PROOF",
+      "text": "With SPE (Scope Guardrails Active)"
+    },
+    {
       "id": "915defb9c0ba490a3fd2",
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "+ Reused existing timing-safe HMAC utility from internal crypto lib"
+    },
+    {
+      "id": "92ad93d962471a2cc056",
+      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
+      "depth": "PROOF",
+      "text": "[SPE Audit Receipt] Guaranteed Test Gate: tsc --noEmit && npm test"
     },
     {
       "id": "934ea91740e24a6077da",
@@ -8279,12 +8279,6 @@
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "Implementing webhook signature verification across worker handlers and routers."
-    },
-    {
-      "id": "9d89ba9281e90ff317fe",
-      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
-      "depth": "PROOF",
-      "text": "With SPE (S-Guard Active)"
     },
     {
       "id": "9f5b0d85c7166b188476",
@@ -8381,6 +8375,12 @@
       "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
       "depth": "PROOF",
       "text": "[SPE Guardrail] Reversibility Gate: Generating down-migration pairing"
+    },
+    {
+      "id": "c4521225d21b29da1cd5",
+      "file": "apps/web/src/landing/BeforeAfterDiffSlider.tsx",
+      "depth": "PROOF",
+      "text": "[SPE Guardrail] Lockfile Locked: Zero package modifications allowed"
     },
     {
       "id": "c7c5d72cfdf049b06524",
@@ -11491,12 +11491,6 @@
       "text": "WHY DEVELOPERS SWITCH TO SPE"
     },
     {
-      "id": "a521c5c87fbffc083eed",
-      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
-      "depth": "PROOF",
-      "text": "Everyday AI Agent Frustrations vs. The S-Series Fix"
-    },
-    {
       "id": "a948b96f3f2c9db7214e",
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
@@ -11519,6 +11513,12 @@
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
       "text": "test-receipts"
+    },
+    {
+      "id": "b5487aff0cf7dc95e3d0",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Everyday AI Agent Frustrations vs. The SPE Solution"
     },
     {
       "id": "b72e8d04bbf015f38c76",

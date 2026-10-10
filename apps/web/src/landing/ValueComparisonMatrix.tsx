@@ -99,7 +99,7 @@ export function ValueComparisonMatrix({ onNavigate }: ValueComparisonMatrixProps
         <div className="spe-matrix-header">
           <p className="spe-matrix-eyebrow">WHY DEVELOPERS SWITCH TO SPE</p>
           <h2 id="comparison-matrix-heading" className="spe-matrix-title">
-            Everyday AI Agent Frustrations vs. The S-Series Fix
+            Everyday AI Agent Frustrations vs. The SPE Solution
           </h2>
           <p className="spe-matrix-subtitle">
             See why engineers replace broken prompts and expensive cloud wrappers with instant, local, bulletproof guardrails.

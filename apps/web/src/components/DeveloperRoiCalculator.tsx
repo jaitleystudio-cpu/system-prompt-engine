@@ -52,7 +52,7 @@ export const DeveloperRoiCalculator: React.FC<DeveloperRoiCalculatorProps> = ({ 
           Calculate Your Time &amp; Token Savings
         </h2>
         <p style={{ color: "#94a3b8", fontSize: "0.9375rem", maxWidth: "600px", margin: "0 auto" }}>
-          See exactly how much debugging time and wasted API budget you preserve with S-Series guardrails.
+          See exactly how much debugging time and wasted API budget you preserve with SPE guardrails.
         </p>
       </div>
 
