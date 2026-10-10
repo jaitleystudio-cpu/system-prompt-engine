@@ -100,9 +100,13 @@ class FourArmResults:
     arm_d_generalization_score: float # Refined prompt on held-out test
     delta_improvement: float          # arm_b - arm_a
     control_delta: float              # arm_b - arm_c
-    held_out_retention: float         # arm_d - arm_a
+    held_out_retention: float         # arm_d - arm_d_baseline (paired held-out delta)
     is_statistically_significant: bool
     total_cost_nanos: NanoUSD = 0
+    arm_d_baseline_score: float = 0.0 # Baseline prompt on held-out test
+    p_value: float = 0.0              # Paired t-test p-value on training improvement
+    confidence_interval_95: Tuple[float, float] = (0.0, 0.0) # 95% CI of delta improvement
+    held_out_p_value: float = 0.0     # Paired p-value on held-out test
 
     def __post_init__(self) -> None:
         validate_nanos(self.total_cost_nanos, "total_cost_nanos")
