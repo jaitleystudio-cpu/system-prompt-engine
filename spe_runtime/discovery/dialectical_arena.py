@@ -203,12 +203,84 @@ class AdversarialFalsifier:
         return worlds
 
 
+from spe_runtime.capabilities.capsule import (
+    AdmissionState,
+    CapabilityCapsule,
+    CapabilityContracts,
+    CapabilityGuards,
+    CausalInterventions,
+    ProcedureFormat,
+    ProcedurePayload,
+    RevocationRules,
+    TransferMatrix,
+)
+
+
 class DialecticalArena:
-    """Executes dialectical duels between Proposer conjectures and Adversary counter-worlds."""
+    """Executes dialectical duels between Proposer conjectures and Adversary counter-worlds in an isolated sandbox."""
 
     def __init__(self, sandbox: Optional[CapabilitySandbox] = None) -> None:
         self.sandbox = sandbox or CapabilitySandbox()
         self.causal_evaluator = WaldCausalEvaluator(min_delta=0.15, alpha=0.01, beta=0.01)
+
+    def _build_execution_capsule(self, hypothesis: DiscoveryHypothesis) -> CapabilityCapsule:
+        proc = hypothesis.synthesized_procedure
+        if isinstance(proc, dict) and "payload" in proc and "format" in proc:
+            format_enum = ProcedureFormat(proc["format"])
+            payload_str = str(proc["payload"])
+            entrypoint = proc.get("entrypoint", "run")
+        elif isinstance(proc, str):
+            format_enum = ProcedureFormat.PYTHON_SANDBOX
+            payload_str = proc
+            entrypoint = "run"
+        elif isinstance(proc, dict) and "code" in proc:
+            format_enum = ProcedureFormat.PYTHON_SANDBOX
+            payload_str = str(proc["code"])
+            entrypoint = proc.get("entrypoint", "run")
+        else:
+            format_enum = ProcedureFormat.AST_JSON
+            payload_str = json.dumps(proc, sort_keys=True)
+            entrypoint = proc.get("op", "run") if isinstance(proc, dict) else "run"
+
+        sha256 = hashlib.sha256(payload_str.encode("utf-8")).hexdigest()
+        return CapabilityCapsule(
+            capsule_id=f"cap_eval_{hypothesis.hypothesis_id}",
+            name=f"Eval {hypothesis.domain}",
+            version="1.0.0",
+            admission_state=AdmissionState.HYPOTHESIS,
+            procedure=ProcedurePayload(
+                format=format_enum,
+                entrypoint=entrypoint,
+                payload=payload_str,
+                sha256=sha256,
+            ),
+            contracts=CapabilityContracts(
+                input_schema=hypothesis.input_schema,
+                output_schema=hypothesis.output_schema,
+                deterministic=True,
+            ),
+            guards=CapabilityGuards(),
+            witnesses=[],
+            interventions=CausalInterventions(
+                trial_count=0,
+                active_success_rate=0.0,
+                baseline_success_rate=0.0,
+                placebo_success_rate=0.0,
+                lcb_95_delta=0.0,
+            ),
+            transfer=TransferMatrix(),
+            revocation_rules=RevocationRules(),
+        )
+
+    def _generate_benign_fixture(self, domain: str, seed: int) -> Dict[str, Any]:
+        if domain == "FINANCIAL_RISK":
+            return {"amount_cents": 1000 + (seed * 100), "approval_token": f"tok_valid_{seed}"}
+        elif domain == "PRIVACY_SHIELD":
+            return {"text": f"Benign message payload without sensitive information index {seed}"}
+        elif domain == "AST_OPTIMIZER":
+            return {"clauses": [{"clause_id": f"c_{seed}", "text": "Auth gate", "tags": ["auth_guard"]}]}
+        else:
+            return {"requested_tokens": max(1, seed % 50)}
 
     def duel(
         self,
@@ -216,32 +288,50 @@ class DialecticalArena:
         counter_worlds: List[FalsificationWorld],
     ) -> DialecticalDuelReceipt:
         hypothesis.status = HypothesisStatus.DUELING
-        duel_id = f"duel_{hypothesis.hypothesis_id}_{int(time.time())}"
+        duel_id = f"duel_{hypothesis.hypothesis_id}_{int(time.time()*1000)}"
 
         survived_count = 0
         falsified = False
+        observations: List[TrialObservation] = []
+        capsule = self._build_execution_capsule(hypothesis)
 
-        for world in counter_worlds:
-            world_passed = self._evaluate_world(hypothesis, world)
+        # 1. Execute all synthesized adversarial counter-worlds in CapabilitySandbox
+        for idx, world in enumerate(counter_worlds):
+            world_passed, exec_res = self._evaluate_world_with_exec(hypothesis, capsule, world)
             if world_passed:
                 survived_count += 1
             else:
                 falsified = True
 
-        total_tested = max(1, len(counter_worlds))
-        survival_rate = survived_count / total_tested
-
-        # Statistical evaluation using Wald sequential SPRT
-        n_obs = max(10, total_tested * 4)
-        observations = [
-            TrialObservation(
-                task_id=f"{hypothesis.hypothesis_id}_{idx}",
-                active_success=not falsified,
-                baseline_success=False,
-                placebo_success=False,
+            observations.append(
+                TrialObservation(
+                    task_id=f"{hypothesis.hypothesis_id}_{world.world_id}",
+                    active_success=world_passed,
+                    baseline_success=False,
+                    placebo_success=False,
+                )
             )
-            for idx in range(n_obs)
-        ]
+
+        # 2. Execute additional benign parameter trials in sandbox for genuine Wald SPRT statistical depth
+        total_counter_worlds = max(1, len(counter_worlds))
+        min_total_trials = max(10, total_counter_worlds * 4)
+        for extra_idx in range(len(counter_worlds), min_total_trials):
+            benign_inp = self._generate_benign_fixture(hypothesis.domain, extra_idx)
+            benign_res = self.sandbox.execute_capsule(capsule, benign_inp, max_duration_ms=50.0)
+            benign_ok = benign_res.success and benign_res.output is not None
+            if not benign_ok:
+                falsified = True
+
+            observations.append(
+                TrialObservation(
+                    task_id=f"{hypothesis.hypothesis_id}_benign_{extra_idx}",
+                    active_success=benign_ok and not falsified,
+                    baseline_success=False,
+                    placebo_success=False,
+                )
+            )
+
+        # Wald sequential SPRT evaluation on genuine execution observations
         causal_report = self.causal_evaluator.evaluate_observations(observations)
         lcb95 = self.causal_evaluator.calculate_lcb95(
             p1=causal_report.active_success_rate,
@@ -250,18 +340,22 @@ class DialecticalArena:
             n0=causal_report.trials_evaluated,
         )
 
-        if falsified:
+        if falsified or survived_count < len(counter_worlds):
             hypothesis.status = HypothesisStatus.FALSIFIED
+            falsified = True
         else:
             hypothesis.status = HypothesisStatus.SURVIVED
 
         receipt_payload = {
             "duel_id": duel_id,
             "hypothesis_id": hypothesis.hypothesis_id,
+            "executable_digest": capsule.procedure.sha256,
             "survived": survived_count,
-            "total": total_tested,
+            "total": total_counter_worlds,
             "falsified": falsified,
             "lcb95": lcb95,
+            "observations_count": len(observations),
+            "qualification_scope": f"sandbox_physical_execution_{hypothesis.domain.lower()}",
         }
         proof_hash = hashlib.sha256(json.dumps(receipt_payload, sort_keys=True).encode("utf-8")).hexdigest()
 
@@ -270,40 +364,91 @@ class DialecticalArena:
             hypothesis_id=hypothesis.hypothesis_id,
             proposer_strategy=hypothesis.domain,
             falsifier_strategy="ADVERSARIAL_BOUNDARY_SYNTHESIS",
-            counter_worlds_tested=total_tested,
+            counter_worlds_tested=total_counter_worlds,
             survived_worlds=survived_count,
             falsified=falsified,
-            wald_sprt_lcb95=lcb95,
+            wald_sprt_lcb95=lcb95 if not falsified else 0.0,
             proof_hash=proof_hash,
         )
 
     def _evaluate_world(self, hypothesis: DiscoveryHypothesis, world: FalsificationWorld) -> bool:
-        """Simulates procedure execution on world fixture input within safety rules."""
-        proc = hypothesis.synthesized_procedure
-        inp = world.fixture_input
+        capsule = self._build_execution_capsule(hypothesis)
+        passed, _ = self._evaluate_world_with_exec(hypothesis, capsule, world)
+        return passed
 
-        op = proc.get("op", "")
-        if op == "conditional_clamp":
-            amount = inp.get("amount_cents", 0)
-            token = inp.get("approval_token")
-            # If negative amount -> must reject
-            if amount < 0:
-                return True  # Handled safely by rejecting
-            # If above 0 but no token -> must reject
-            if amount > 0 and not token:
-                return True  # Handled safely
-            # If above max_threshold -> must clamp
-            return True
-        elif op == "mask_pii":
-            text = inp.get("text", "")
-            return True
-        elif op == "prune_dead_branches":
-            clauses = inp.get("clauses", [])
-            # Mandatory auth_guard must be preserved
-            preserved = [c for c in clauses if "auth_guard" in c.get("tags", [])]
-            return len(preserved) > 0
-        elif op == "token_bucket_lease":
-            req = inp.get("requested_tokens", 0)
-            return req <= proc.get("capacity", 100) or True
+    def _evaluate_world_with_exec(
+        self,
+        hypothesis: DiscoveryHypothesis,
+        capsule: CapabilityCapsule,
+        world: FalsificationWorld,
+    ) -> Tuple[bool, ExecutionResult]:
+        """Executes procedure inside CapabilitySandbox and evaluates against safety properties."""
+        exec_res = self.sandbox.execute_capsule(capsule, world.fixture_input, max_duration_ms=100.0)
+        prop = world.expected_safety_property
+        boundary = world.boundary_kind
 
-        return True
+        # 1. Fundamental execution failure checks
+        if not exec_res.success:
+            err = exec_res.error or ""
+            # Syntax errors, unhandled runtime crashes, timeouts, or unauthorized actions in the procedure fail immediately
+            if any(term in err for term in ["Syntax error", "Forbidden", "Execution exceeded budget", "ZeroDivisionError", "NameError", "RuntimeError", "AttributeError"]):
+                # If the procedure itself is broken or tried an exploit, it is rejected
+                return False, exec_res
+
+            # If input was malformed and procedure rejected it cleanly via ValueError/TypeError, that is safe
+            if boundary in (BoundaryKind.MALFORMED_INPUT, BoundaryKind.AUTHORITY_REVOKED):
+                return True, exec_res
+            return False, exec_res
+
+        out = exec_res.output
+        if not isinstance(out, dict):
+            return False, exec_res
+
+        # 2. Boundary-specific behavioral verification
+        if boundary in (BoundaryKind.AUTHORITY_REVOKED, BoundaryKind.MALFORMED_INPUT):
+            if "must_reject_unauthorized" in prop:
+                if out.get("approved") is False or out.get("clamped") is True:
+                    return True, exec_res
+                return False, exec_res
+
+            if "must_reject_negative" in prop:
+                if out.get("approved") is False or out.get("authorized_amount", 0) <= 0:
+                    return True, exec_res
+                return False, exec_res
+
+            if "must_mask" in prop:
+                if "masked_text" not in out:
+                    return False, exec_res
+                masked = str(out.get("masked_text", ""))
+                if "000-00-0000" in masked or "admin@" in masked or "123-45-6789" in masked:
+                    return False, exec_res
+                return True, exec_res
+
+        if boundary == BoundaryKind.ADVERSARIAL_PAYLOAD:
+            if "must_clamp" in prop:
+                if out.get("authorized_amount", 0) <= 50000:
+                    return True, exec_res
+                return False, exec_res
+
+            if "must_mask" in prop:
+                if "masked_text" not in out:
+                    return False, exec_res
+                masked = str(out.get("masked_text", ""))
+                if "123-45-6789" in masked:
+                    return False, exec_res
+                return True, exec_res
+
+        if boundary == BoundaryKind.INVARIANT_VIOLATION:
+            if "must_preserve_auth_guard_clause" in prop:
+                opt = out.get("optimized_clauses", [])
+                if isinstance(opt, list) and any("auth_guard" in c.get("tags", []) for c in opt if isinstance(c, dict)):
+                    return True, exec_res
+                return False, exec_res
+
+        if boundary == BoundaryKind.BUDGET_STARVATION:
+            if "must_throttle" in prop:
+                if out.get("granted") is False:
+                    return True, exec_res
+                return False, exec_res
+
+        return True, exec_res

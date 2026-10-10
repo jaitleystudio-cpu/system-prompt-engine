@@ -114,6 +114,58 @@ class CapabilitySandbox:
                         }
                     elif op == "merge" and isinstance(rule.get("static"), dict):
                         result = {**input_data, **rule["static"], "merged": True}
+                    elif op == "conditional_clamp":
+                        amt = input_data.get("amount_cents")
+                        if type(amt) is not int or type(amt) is bool or amt <= 0:
+                            raise ValueError(f"Invalid amount_cents: {amt}")
+                        token = input_data.get("approval_token")
+                        req_field = rule.get("require_field")
+                        if req_field and not input_data.get(req_field):
+                            result = {
+                                "approved": False,
+                                "authorized_amount": 0,
+                                "clamped": True,
+                                "status": "REJECTED_MISSING_REQUIRED_FIELD",
+                            }
+                        else:
+                            max_threshold = int(rule.get("max_threshold", 50000))
+                            if amt > max_threshold:
+                                if not (isinstance(token, str) and token.startswith("tok_") and len(token) > 4):
+                                    result = {
+                                        "approved": False,
+                                        "authorized_amount": max_threshold,
+                                        "clamped": True,
+                                        "status": "CLAMPED",
+                                    }
+                                else:
+                                    result = {"approved": True, "authorized_amount": amt, "status": "APPROVED"}
+                            else:
+                                result = {"approved": True, "authorized_amount": amt, "status": "APPROVED"}
+                    elif op == "mask_pii":
+                        raw_text = input_data.get("text", "")
+                        if not isinstance(raw_text, str):
+                            raise ValueError(f"Expected str for 'text', got {type(raw_text).__name__}")
+                        import re
+                        import unicodedata
+                        text = unicodedata.normalize("NFKC", raw_text)
+                        text = re.sub(r"\b\d{3}[-\s]?\d{2}[-\s]?\d{4}\b", "[REDACTED]", text)
+                        text = re.sub(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b", "[REDACTED]", text)
+                        text = re.sub(r"\b(?:\d{4}[-\s]?){3}\d{4}\b", "[REDACTED]", text)
+                        result = {"masked_text": text}
+                    elif op == "prune_dead_branches":
+                        clauses = input_data.get("clauses")
+                        if not isinstance(clauses, list):
+                            raise ValueError(f"Expected list for 'clauses', got {type(clauses).__name__}")
+                        preserve_tags = set(rule.get("preserve_tags", ["security_critical", "auth_guard"]))
+                        opt = [c for c in clauses if isinstance(c, dict) and any(t in preserve_tags for t in c.get("tags", []))]
+                        result = {"optimized_clauses": opt}
+                    elif op == "token_bucket_lease":
+                        req = input_data.get("requested_tokens")
+                        if type(req) is not int or type(req) is bool or req < 0:
+                            raise ValueError(f"Invalid requested_tokens: {req}")
+                        capacity = int(rule.get("capacity", 100))
+                        granted = req <= capacity
+                        result = {"granted": granted, "requested_tokens": req}
                     else:
                         result = {"input": input_data, "ast": rule, "executed": True}
                 else:

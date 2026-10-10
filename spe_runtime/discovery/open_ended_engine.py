@@ -167,11 +167,14 @@ class OpenEndedDiscoveryEngine:
         proc_payload = json.dumps(hypothesis.synthesized_procedure, sort_keys=True)
         proc_hash = hashlib.sha256(proc_payload.encode("utf-8")).hexdigest()
 
+        is_eligible = (not receipt.falsified) and (receipt.wald_sprt_lcb95 > 0.0) and (receipt.survived_worlds == receipt.counter_worlds_tested)
+        state = AdmissionState.DEPLOYMENT_ELIGIBLE if is_eligible else AdmissionState.REJECTED
+
         return CapabilityCapsule(
             capsule_id=capsule_id,
-            name=f"Autonomous {hypothesis.domain} Capability",
+            name=f"Autonomous {hypothesis.domain} Capability" if is_eligible else f"Autonomous {hypothesis.domain} Capability (REJECTED)",
             version="1.0.0",
-            admission_state=AdmissionState.DEPLOYMENT_ELIGIBLE,
+            admission_state=state,
             procedure=Procedure(
                 format=ProcedureFormat.AST_JSON,
                 entrypoint=hypothesis.synthesized_procedure.get("op", "evaluate"),
@@ -195,13 +198,13 @@ class OpenEndedDiscoveryEngine:
                     proof_type="Dialectical_Wald_SPRT",
                     hash=receipt.proof_hash,
                 )
-            ],
+            ] if is_eligible else [],
             interventions=Interventions(
                 trial_count=receipt.counter_worlds_tested,
-                active_success_rate=1.0,
+                active_success_rate=1.0 if is_eligible else 0.0,
                 baseline_success_rate=0.0,
                 placebo_success_rate=0.0,
-                lcb_95_delta=receipt.wald_sprt_lcb95,
+                lcb_95_delta=receipt.wald_sprt_lcb95 if is_eligible else 0.0,
                 early_stopped=True,
             ),
             transfer=TransferEvidence(

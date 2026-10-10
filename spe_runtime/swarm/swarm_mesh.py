@@ -11,7 +11,8 @@ import json
 import time
 from typing import Any, Dict, List, Optional
 
-from spe_runtime.capabilities.capsule import CapabilityCapsule
+from spe_runtime.capabilities.capsule import AdmissionState, CapabilityCapsule
+from spe_runtime.capabilities.sandbox import CapabilitySandbox
 from spe_runtime.swarm.bft_consensus import BFTConsensusEngine
 from spe_runtime.swarm.models import (
     BFTQuorumReceipt,
@@ -103,9 +104,72 @@ class SwarmMesh:
         self.gossip_log.append(msg)
         return msg
 
+    def _validate_capsule_for_peer(self, capsule: CapabilityCapsule) -> Tuple[bool, str]:
+        """Independent peer verification of candidate capability capsule."""
+        # 1. Exact artifact digest verification
+        if not hasattr(capsule, "procedure") or not capsule.procedure:
+            return False, "REJECTED_MISSING_PROCEDURE"
+        payload_data = capsule.procedure.payload
+        if not isinstance(payload_data, str):
+            return False, "REJECTED_INVALID_PAYLOAD_TYPE"
+        actual_sha = hashlib.sha256(payload_data.encode("utf-8")).hexdigest()
+        if capsule.procedure.sha256 != actual_sha:
+            return False, f"REJECTED_DIGEST_MISMATCH: expected {actual_sha}, declared {capsule.procedure.sha256}"
+
+        # 2. Valid evidence provenance
+        if not hasattr(capsule, "witnesses") or not capsule.witnesses:
+            return False, "REJECTED_NO_WITNESSES"
+        for wit in capsule.witnesses:
+            if not wit.hash or len(wit.hash) != 64 or not wit.proof_type or not wit.verified_at:
+                return False, f"REJECTED_INVALID_WITNESS_PROVENANCE: {getattr(wit, 'witness_id', 'unknown')}"
+
+        # 3. Actual qualification result
+        if not hasattr(capsule, "admission_state") or capsule.admission_state in (
+            AdmissionState.REJECTED,
+            AdmissionState.SUSPENDED,
+            AdmissionState.HYPOTHESIS,
+        ):
+            return False, f"REJECTED_UNQUALIFIED_ADMISSION_STATE: {getattr(capsule, 'admission_state', 'NONE')}"
+
+        if not hasattr(capsule, "interventions") or capsule.interventions.trial_count <= 0 or capsule.interventions.lcb_95_delta <= 0.0:
+            return False, "REJECTED_NO_POSITIVE_CAUSAL_DELTA"
+
+        # 4. Executable-to-evidence binding: Sandbox trial execution
+        fixture = self._build_validation_fixture(capsule)
+        try:
+            exec_res = CapabilitySandbox.execute_capsule(capsule, fixture, max_duration_ms=50.0)
+            if not exec_res.success:
+                return False, f"REJECTED_EXECUTABLE_SANDBOX_FAILURE: {exec_res.error}"
+        except Exception as ex:
+            return False, f"REJECTED_SANDBOX_CRASH: {type(ex).__name__}: {ex}"
+
+        return True, "VERIFIED_VALID_EXECUTABLE_AND_EVIDENCE"
+
+    def _build_validation_fixture(self, capsule: CapabilityCapsule) -> Dict[str, Any]:
+        schema = capsule.contracts.input_schema if hasattr(capsule, "contracts") and capsule.contracts else {}
+        props = schema.get("properties", {}) if isinstance(schema, dict) else {}
+        fixture: Dict[str, Any] = {}
+        for prop_name, prop_spec in props.items():
+            ptype = prop_spec.get("type", "string") if isinstance(prop_spec, dict) else "string"
+            if ptype == "integer":
+                fixture[prop_name] = 1000
+            elif ptype == "array":
+                fixture[prop_name] = [{"clause_id": "c1", "tags": ["auth_guard"]}]
+            else:
+                fixture[prop_name] = "tok_mgr_test" if "token" in prop_name else "sample_input_text"
+        if not fixture:
+            name_lower = str(getattr(capsule, "name", "")).lower()
+            if "financial" in name_lower:
+                fixture = {"amount_cents": 1000, "approval_token": "tok_mgr_valid"}
+            elif "privacy" in name_lower:
+                fixture = {"text": "Clean payload without PII"}
+            else:
+                fixture = {"requested_tokens": 10}
+        return fixture
+
     def run_capsule_consensus(self, capsule: CapabilityCapsule) -> BFTQuorumReceipt:
-        """Executes full BFT validation across all online validator/auditor nodes."""
-        round_id = f"bft_round_{capsule.capsule_id}_{int(time.time())}"
+        """Executes full BFT validation across all online validator/auditor nodes in simulated federation."""
+        round_id = f"bft_round_{capsule.capsule_id}_{int(time.time()*1000)}"
         registered_list = list(self.nodes.values())
 
         # Collect votes from each node
@@ -114,15 +178,7 @@ class SwarmMesh:
             if not node.is_eligible_voter():
                 continue
 
-            # Independent validation rule:
-            # 1. Witnesses must not be empty
-            # 2. Causal delta must be positive
-            # 3. SHA-256 must be valid
-            has_witness = len(capsule.witnesses) > 0
-            has_causal_delta = capsule.interventions.lcb_95_delta > 0.0
-            valid_hash = len(capsule.procedure.sha256) == 64
-
-            is_valid = has_witness and has_causal_delta and valid_hash
+            is_valid, reason = self._validate_capsule_for_peer(capsule)
 
             votes.append(
                 ConsensusVote(
@@ -130,7 +186,7 @@ class SwarmMesh:
                     capsule_id=capsule.capsule_id,
                     vote=is_valid,
                     proof_verified=is_valid,
-                    reason="Independent witness & Wald SPRT verified" if is_valid else "Missing witness or invalid proof",
+                    reason=reason,
                 )
             )
 
@@ -141,11 +197,12 @@ class SwarmMesh:
             votes=votes,
         )
 
-        # Broadcast consensus result
+        # Broadcast consensus result across simulated federation
         self.broadcast_gossip(
             topic=GossipTopic.PROOF_VERIFICATION,
             payload={
                 "capsule_id": capsule.capsule_id,
+                "consensus_model": "SIMULATED_BFT_FEDERATION",
                 "quorum_achieved": receipt.quorum_achieved,
                 "votes_for": receipt.votes_for,
                 "total_nodes": receipt.total_nodes,
