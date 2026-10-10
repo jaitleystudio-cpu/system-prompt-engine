@@ -125,8 +125,8 @@ def test_self_certification_rejection_by_identical_id():
     assert tx.status == QualificationStatus.REJECTED
 
 
-def test_valid_transaction_commitment_and_cryptographic_receipt():
-    """Valid transaction is committed to QUALIFIED and cryptographically verifiable."""
+def test_legacy_aggregate_is_not_valid_qualification_or_cryptographic_proof():
+    """Mock aggregates must not create a signed learning qualification."""
     validator = LearningValidator()
 
     claim = LearningClaim(
@@ -165,13 +165,12 @@ def test_valid_transaction_commitment_and_cryptographic_receipt():
     )
 
     committed_tx = validator.validate_and_commit(tx)
-    assert committed_tx.status == QualificationStatus.QUALIFIED
-    assert committed_tx.committed_timestamp is not None
-    assert len(committed_tx.artifact_hash) == 64  # SHA-256
-    assert len(committed_tx.canonical_receipt_signature) == 128  # Ed25519 hex (64 bytes = 128 chars)
-
-    # Verify cryptographic signature
-    assert validator.verify_transaction_signature(committed_tx) is True
+    assert committed_tx.status == QualificationStatus.REJECTED
+    assert "EvidenceAuthentic" in committed_tx.rejection_reason
+    assert committed_tx.committed_timestamp is None
+    assert committed_tx.artifact_hash == ""
+    assert committed_tx.canonical_receipt_signature == ""
+    assert validator.verify_transaction_signature(committed_tx) is False
 
 
 def test_strict_rule_checking_raises_violation():
