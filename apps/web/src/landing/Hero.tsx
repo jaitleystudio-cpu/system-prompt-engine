@@ -141,15 +141,22 @@ export function Hero(p: Props) {
         <div className="hero-copy">
           <p className="eyebrow">A CLEAR START FOR ANY AI</p>
           <h1 id="hero-title" data-daily-title={hero.index}>
+            <span className="visually-hidden">
+              Free System Prompt Generator & AI Prompt Builder —{" "}
+            </span>
             {hero.title}
             <br />
             <em>{hero.accent}</em>
           </h1>
           <p className="hero-description">
-            Turn rough ideas into bulletproof AI prompts that never hallucinate.
-            Tired of AI agents drifting, inventing fake packages, or ignoring your instructions? SPE shapes your requirements into production-ready system prompts for Claude, Cursor, and ChatGPT — instantly, offline, and free.
+            Turn your ideas into clear prompts for any AI.
+            Start with a few words. Add what matters.
           </p>
-          <a className="hero-start" href="#prompt-studio">
+          <a
+            className="hero-start"
+            href="#prompt-studio"
+            aria-label="Open System Prompt Studio to build your prompt"
+          >
             Make my prompt <span aria-hidden="true">↗</span>
           </a>
         </div>

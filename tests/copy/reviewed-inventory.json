@@ -7501,12 +7501,6 @@
       "text": "e.g. Warm, direct tone. Use the supplied policy document."
     },
     {
-      "id": "0a55e595a6157916c608",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "Turn rough ideas into bulletproof AI prompts that never hallucinate. Tired of AI agents drifting, inventing fake packages, or ignoring your instructions? SPE shapes your requirements into production-ready system prompts for Claude, Cursor, and ChatGPT — instantly, offline, and free."
-    },
-    {
       "id": "0bf8927a61f2fd0ffb84",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -7849,6 +7843,12 @@
       "text": "/ YOUR PROMPT"
     },
     {
+      "id": "9f42c8c63d05154b8c52",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Free System Prompt Generator & AI Prompt Builder —"
+    },
+    {
       "id": "a5a0b5be3d2e7db9cc4e",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -7865,6 +7865,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "e.g. concise replies with one next step"
+    },
+    {
+      "id": "b25ef8728f154891ad40",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Turn your ideas into clear prompts for any AI. Start with a few words. Add what matters."
     },
     {
       "id": "b34b7ada50e893378e10",
@@ -7997,6 +8003,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "Working template"
+    },
+    {
+      "id": "e67667ce9b53585e0dd1",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "Open System Prompt Studio to build your prompt"
     },
     {
       "id": "e8da7ee6c0aa79dd6c65",
