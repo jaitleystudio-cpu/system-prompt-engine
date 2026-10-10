@@ -92,6 +92,8 @@
     "test:seven-journeys": "node --experimental-strip-types scripts/test-seven-acquisition-journeys-qualification.mjs",
     "test:spe-runtime": "node --experimental-strip-types ../../packages/spe-runtime/test/runtime.test.mjs",
     "test:spe-vscode": "node --experimental-strip-types ../../packages/spe-vscode/test/extension.test.mjs",
+    "test:power-prompts": "node --experimental-strip-types scripts/test-power-prompts-vault.mjs",
+    "test:spe-extension": "node ../../packages/spe-extension/test/extension.test.mjs",
     "benchmark:golden-path": "node --experimental-strip-types scripts/benchmark-golden-path-evidence.mjs",
     "manifest:test": "node ../../scripts/generate-test-manifest.mjs"
   },

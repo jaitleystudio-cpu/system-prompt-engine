@@ -23,6 +23,7 @@ import { InAppLink } from "../shell/inAppLink";
 import { useDailyHero } from "./useDailyHero";
 import { HeroStory } from "./HeroStory";
 import { ConversionKernel } from "./ConversionKernel";
+import { PromptVaultPanel } from "./PromptVaultPanel";
 import { MarkdownExportButton } from "../engine/markdownExport";
 import {
   HOME_QUICK_START_MAX_CHARS,
@@ -172,6 +173,12 @@ export function Hero(p: Props) {
         </div>
       )}
       <ConversionKernel onNavigate={p.onNavigate} />
+      <PromptVaultPanel
+        onSelectPrompt={(compiledPrompt, cat) => {
+          p.onChange(compiledPrompt);
+          p.onCategory(cat);
+        }}
+      />
       <section
         className="prompt-studio"
         id="prompt-studio"
