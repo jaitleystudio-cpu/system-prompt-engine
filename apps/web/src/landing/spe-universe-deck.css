@@ -964,8 +964,37 @@
   border-radius: 6px;
 }
 
+.spe-higgs-hero-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0.6rem 0 1rem;
+}
+
+.spe-higgs-clipart-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.spe-higgs-card:hover .spe-higgs-clipart-box,
+.spe-higgs-card.is-focused .spe-higgs-clipart-box {
+  transform: scale(1.08) translateY(-2px);
+  border-color: rgba(209, 254, 23, 0.35);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(209, 254, 23, 0.15);
+}
+
 .spe-higgs-slabs {
-  margin: 0.5rem 0 1rem;
+  margin: 0;
+  flex: 1;
 }
 
 .spe-slab-row {
@@ -1404,11 +1433,43 @@
   padding: 2.2rem;
 }
 
+.spe-cinema-narrative-header-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 0.8rem;
+}
+
+.spe-cinema-scene-clipart-badge {
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.spe-cinema-scene-clipart-badge:hover {
+  transform: scale(1.05);
+  border-color: rgba(209, 254, 23, 0.3);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 25px rgba(209, 254, 23, 0.2);
+}
+
+.spe-cinema-scene-title-col {
+  flex: 1;
+  min-width: 0;
+}
+
 .spe-cinema-chapter-indicator {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
 }
 
 .spe-cinema-chap-num {
@@ -1633,6 +1694,26 @@
   font-weight: 700;
   color: #ffffff;
   line-height: 1.3;
+}
+
+.spe-cinema-kf-content-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.spe-cinema-kf-mini-clipart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.spe-cinema-keyframe-tab.is-active .spe-cinema-kf-mini-clipart {
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 6px rgba(209, 254, 23, 0.45));
 }
 
 .spe-cinema-keyframe-tab.is-active .spe-cinema-kf-name {

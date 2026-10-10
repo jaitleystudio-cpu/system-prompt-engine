@@ -79,7 +79,16 @@ for (const word of forbiddenHype) {
   assert(!cinemaCode.toLowerCase().includes(word), `Anti-Jargon: Storytelling Cinema does not contain "${word}"`);
 }
 
+// 7. Visual Clipart integration
+const clipartsPath = join(webSrc, "landing", "SpeCliparts.tsx");
+assert(existsSync(clipartsPath), "SpeCliparts.tsx exists");
+assert(deckCode.includes("getChamberClipart"), "Capability Deck integrates chamber cliparts");
+assert(cinemaCode.includes("getChapterClipart"), "Storytelling Cinema integrates scene cliparts");
+assert(deckCode.includes("spe-higgs-clipart-box"), "Capability Deck renders clipart box container");
+assert(cinemaCode.includes("spe-cinema-scene-clipart-badge"), "Storytelling Cinema renders scene clipart badge");
+assert(cinemaCode.includes("spe-cinema-kf-mini-clipart"), "Storytelling Cinema scrubber renders mini cliparts");
+
 console.log("============================================================");
-console.log("🎉 ALL UNIVERSE, DECK & STORYTELLING TESTS PASSED! (31/31)");
+console.log("🎉 ALL UNIVERSE, DECK, CINEMA & CLIPART TESTS PASSED! (37/37)");
 console.log("============================================================");
 

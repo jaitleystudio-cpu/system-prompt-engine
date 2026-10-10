@@ -1,6 +1,39 @@
 import { useState, useId, useEffect } from "react";
 import type { AppView } from "../routing";
 import "./spe-universe-deck.css";
+import {
+  TangledKnotClipart,
+  FrozenCrystalClipart,
+  LogicScaleClipart,
+  ForcefieldShieldClipart,
+  OrbitRouterClipart,
+  FirewallGateClipart,
+  WaxSealReceiptClipart,
+  ProductionRocketClipart,
+} from "./SpeCliparts";
+
+function getChapterClipart(stageNumber: string, size = 52) {
+  switch (stageNumber) {
+    case "01":
+      return <TangledKnotClipart size={size} />;
+    case "02":
+      return <FrozenCrystalClipart size={size} />;
+    case "03":
+      return <LogicScaleClipart size={size} />;
+    case "04":
+      return <ForcefieldShieldClipart size={size} />;
+    case "05":
+      return <OrbitRouterClipart size={size} />;
+    case "06":
+      return <FirewallGateClipart size={size} />;
+    case "07":
+      return <WaxSealReceiptClipart size={size} />;
+    case "08":
+      return <ProductionRocketClipart size={size} />;
+    default:
+      return <TangledKnotClipart size={size} />;
+  }
+}
 
 export interface StoryChapter {
   id: string;
@@ -295,12 +328,18 @@ export function SpeStorytellingCinema({ onNavigate }: Props) {
           <div className="spe-cinema-stage-body">
             {/* Left Narrative Column */}
             <div className="spe-cinema-narrative-col">
-              <div className="spe-cinema-chapter-indicator">
-                <span className="spe-cinema-chap-num">STAGE {activeChapter.stageNumber}</span>
-                <span className="spe-cinema-chap-badge">{activeChapter.badge}</span>
+              <div className="spe-cinema-narrative-header-row">
+                <div className="spe-cinema-scene-clipart-badge" aria-hidden="true">
+                  {getChapterClipart(activeChapter.stageNumber, 54)}
+                </div>
+                <div className="spe-cinema-scene-title-col">
+                  <div className="spe-cinema-chapter-indicator">
+                    <span className="spe-cinema-chap-num">STAGE {activeChapter.stageNumber}</span>
+                    <span className="spe-cinema-chap-badge">{activeChapter.badge}</span>
+                  </div>
+                  <h3 className="spe-cinema-chap-title">{activeChapter.title}</h3>
+                </div>
               </div>
-
-              <h3 className="spe-cinema-chap-title">{activeChapter.title}</h3>
               <p className="spe-cinema-chap-text">{activeChapter.narrative}</p>
 
               <div className="spe-cinema-callout-box">
@@ -378,7 +417,12 @@ export function SpeStorytellingCinema({ onNavigate }: Props) {
                     <span className="spe-cinema-kf-num">{chapter.stageNumber}</span>
                     <span className="spe-cinema-kf-badge">{chapter.badge}</span>
                   </div>
-                  <div className="spe-cinema-kf-name">{chapter.stageName}</div>
+                  <div className="spe-cinema-kf-content-row">
+                    <div className="spe-cinema-kf-mini-clipart" aria-hidden="true">
+                      {getChapterClipart(chapter.stageNumber, 20)}
+                    </div>
+                    <span className="spe-cinema-kf-name">{chapter.stageName}</span>
+                  </div>
                   {isActive && <div className="spe-cinema-kf-progress-line" />}
                 </button>
               );

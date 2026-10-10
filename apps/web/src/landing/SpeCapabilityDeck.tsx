@@ -1,6 +1,39 @@
 import { useState, useId } from "react";
 import type { AppView } from "../routing";
 import "./spe-universe-deck.css";
+import {
+  CompilerBotClipart,
+  GuardianShieldClipart,
+  SpatialCubeClipart,
+  MultiAgentSyncClipart,
+  VoiceWaveClipart,
+  VisionScannerClipart,
+  ResearchCodexClipart,
+  RadarSentinelClipart,
+} from "./SpeCliparts";
+
+function getChamberClipart(chamberId: string) {
+  switch (chamberId) {
+    case "system-studio":
+      return <CompilerBotClipart size={50} />;
+    case "attack-gym":
+      return <GuardianShieldClipart size={50} />;
+    case "3d-studio":
+      return <SpatialCubeClipart size={50} />;
+    case "multi-export":
+      return <MultiAgentSyncClipart size={50} />;
+    case "media-to-prompt":
+      return <VoiceWaveClipart size={50} />;
+    case "vision-to-code":
+      return <VisionScannerClipart size={50} />;
+    case "research-to-prompt":
+      return <ResearchCodexClipart size={50} />;
+    case "drift-sentinel":
+      return <RadarSentinelClipart size={50} />;
+    default:
+      return <CompilerBotClipart size={50} />;
+  }
+}
 
 interface CapabilityChamber {
   id: string;
@@ -310,10 +343,15 @@ export function SpeCapabilityDeck({ onNavigate }: Props) {
                     <span className="spe-higgs-badge">{chamber.badge}</span>
                   </div>
 
-                  {/* 3D Angled Typography Slabs */}
-                  <div className="spe-higgs-slabs" aria-hidden="true">
-                    <div className="spe-slab-row slab-a">{chamber.slabA}</div>
-                    <div className="spe-slab-row slab-b">{chamber.slabB}</div>
+                  {/* Clipart Icon + 3D Angled Typography Slabs */}
+                  <div className="spe-higgs-hero-row">
+                    <div className="spe-higgs-clipart-box" aria-hidden="true">
+                      {getChamberClipart(chamber.id)}
+                    </div>
+                    <div className="spe-higgs-slabs" aria-hidden="true">
+                      <div className="spe-slab-row slab-a">{chamber.slabA}</div>
+                      <div className="spe-slab-row slab-b">{chamber.slabB}</div>
+                    </div>
                   </div>
 
                   {/* Terminal Simulation Body */}

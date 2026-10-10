@@ -1,6 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" fill="none">
-  <g transform="translate(3.0, 1010.0) scale(0.100000, -0.100000)" fill="currentColor" stroke="none">
-    <path d="M4575 9989 c-187 -6 -246 -17 -307 -60 -52 -37 -71 -89 -169 -449
+  <style>
+    .spe-icon-path { fill: #000000; }
+    @media (prefers-color-scheme: dark) {
+      .spe-icon-path { fill: #FFFFFF; }
+    }
+  </style>
+  <g transform="translate(3.0, 1010.0) scale(0.100000, -0.100000)" stroke="none">
+    <path class="spe-icon-path" d="M4575 9989 c-187 -6 -246 -17 -307 -60 -52 -37 -71 -89 -169 -449
 -12 -41 -29 -99 -40 -128 -10 -29 -37 -117 -59 -195 -65 -231 -89 -315 -130
 -447 -22 -69 -62 -201 -90 -295 -28 -93 -56 -182 -62 -198 -11 -29 -52 -47
 -73 -31 -110 81 -189 127 -640 374 -243 133 -304 167 -538 298 -211 117 -268

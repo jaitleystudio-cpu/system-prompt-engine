@@ -11,7 +11,7 @@
  */
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -244,6 +244,7 @@ function main() {
   }
 
   rmSync(targetDir, { recursive: true, force: true });
+  mkdirSync(targetDir, { recursive: true });
 
   const home = env.CARGO_HOME;
   const rustflags = `--remap-path-prefix=${repoRoot}/=./ --remap-path-prefix=${home}=./.cargo`;
@@ -254,6 +255,9 @@ function main() {
     RUSTC_WRAPPER: wrapperPath,
     RUSTFLAGS: rustflags,
   };
+  delete buildEnv.CARGO_MAKEFLAGS;
+  delete buildEnv.MAKEFLAGS;
+  delete buildEnv.MFLAGS;
   if (process.env.SPE_WASM_RUSTC_LOG) {
     buildEnv.SPE_WASM_RUSTC_LOG = process.env.SPE_WASM_RUSTC_LOG;
   }

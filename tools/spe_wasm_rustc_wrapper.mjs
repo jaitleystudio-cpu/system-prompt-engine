@@ -97,7 +97,12 @@ if (logPath && crate && PINNED.has(crate)) {
   appendFileSync(logPath, `${JSON.stringify({ crate, metadata: `spe-canonical-v1-${crate}` })}\n`);
 }
 
-const result = spawnSync(rustc, out, { stdio: "inherit" });
+const cleanEnv = { ...process.env };
+delete cleanEnv.CARGO_MAKEFLAGS;
+delete cleanEnv.MAKEFLAGS;
+delete cleanEnv.MFLAGS;
+
+const result = spawnSync(rustc, out, { stdio: "inherit", env: cleanEnv });
 if (result.error) {
   process.stderr.write(`spe-wasm rustc wrapper: ${result.error.message}\n`);
   process.exit(1);
