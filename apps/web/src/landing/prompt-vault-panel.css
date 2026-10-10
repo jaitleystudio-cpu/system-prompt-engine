@@ -309,6 +309,244 @@
   border-color: rgba(255, 255, 255, 0.25);
 }
 
+/* ========================================================================== */
+/* Tab Switcher & Discovery Lift UI                                           */
+/* ========================================================================== */
+.spe-vault-tab-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spe-vault-tab-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.spe-vault-tab-btn:hover {
+  color: #ffffff;
+}
+
+.spe-vault-tab-btn.active {
+  background: linear-gradient(135deg, rgba(0, 210, 255, 0.25), rgba(58, 123, 213, 0.35));
+  color: #00d2ff;
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 210, 255, 0.2);
+}
+
+.spe-discovery-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.spe-discovery-input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: rgba(30, 41, 59, 0.4);
+  padding: 1.25rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.spe-discovery-input-box label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.spe-discovery-input-wrap {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.spe-discovery-text-input {
+  flex: 1;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.spe-discovery-text-input:focus {
+  border-color: #00d2ff;
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.25);
+}
+
+.spe-discovery-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.spe-discovery-chips-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.spe-discovery-chips-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.spe-discovery-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  padding: 0.3rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.spe-discovery-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(0, 210, 255, 0.4);
+}
+
+.spe-discovery-chip.active {
+  background: rgba(0, 210, 255, 0.15);
+  border-color: #00d2ff;
+  color: #00d2ff;
+  font-weight: 600;
+}
+
+/* Result Card */
+.spe-discovery-result-card {
+  padding: 1.5rem;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.spe-discovery-result-card.lift-active {
+  border-color: rgba(0, 210, 255, 0.45);
+  box-shadow: 0 12px 30px rgba(0, 210, 255, 0.12);
+}
+
+.spe-discovery-result-card.lift-pass {
+  border-color: rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.spe-discovery-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.spe-discovery-status-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.spe-discovery-badge-lift {
+  background: rgba(0, 210, 255, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
+}
+
+.spe-discovery-badge-pass {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
+}
+
+.spe-discovery-capability-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.spe-discovery-meta-metrics {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.spe-discovery-meta-metrics strong {
+  color: #f8fafc;
+}
+
+.spe-discovery-reason {
+  font-size: 0.875rem;
+  color: #cbd5e1;
+  margin: 1rem 0 0.75rem;
+}
+
+.spe-discovery-prompt-preview {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.spe-discovery-prompt-preview pre {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.825rem;
+  color: #e2e8f0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.spe-discovery-pass-content {
+  padding: 1.25rem 0 0.5rem;
+}
+
+.spe-discovery-pass-text {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   .spe-vault-panel {
     padding: 1.25rem;
@@ -316,4 +554,8 @@
   .spe-vault-grid {
     grid-template-columns: 1fr;
   }
+  .spe-discovery-input-wrap {
+    flex-direction: column;
+  }
 }
+

@@ -1,4 +1,5 @@
 {
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -6469,12 +6470,6 @@
       "text": "Queue date"
     },
     {
-      "id": "a98533be9c259f12c102",
-      "file": "apps/web/src/lab/DailyLab.tsx",
-      "depth": "PRODUCT",
-      "text": "Daily Recipes"
-    },
-    {
       "id": "ae0cd430e61ab94d0f40",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
@@ -10615,12 +10610,6 @@
       "text": "direction."
     },
     {
-      "id": "480f0e10e0ff39a6306e",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Login Required"
-    },
-    {
       "id": "4e9c1c93899cb007548a",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -11695,16 +11684,28 @@
       "text": "Copy & Open in Claude"
     },
     {
+      "id": "04beadbd071b92174009",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🔬 Research Protocol"
+    },
+    {
+      "id": "06f78b28b1f43760fb69",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "What is the capital of France?"
+    },
+    {
+      "id": "08c060ad0e2049849bb0",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "⚡ SPECIFICATION LIFT TRIGGERED"
+    },
+    {
       "id": "0d0619d07370d97b874a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Copy & Open in ChatGPT"
-    },
-    {
-      "id": "0ddafd43a60eb82f436e",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Claude 3.7 Sonnet"
     },
     {
       "id": "10ad25b109cba76cbd8e",
@@ -11713,10 +11714,16 @@
       "text": "smooth"
     },
     {
-      "id": "15b9a23e1959244bcbd2",
+      "id": "11c9c4698a452847acca",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "claude-3-7"
+      "text": "Design a cinematic 3D website"
+    },
+    {
+      "id": "1328b780a8014bd04037",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🚀 Marketing Campaign"
     },
     {
       "id": "15ba55bd8da682a45193",
@@ -11725,16 +11732,28 @@
       "text": "prompt-studio"
     },
     {
+      "id": "16d252fdcb1e1daa5c3c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "TUTORING_INSTRUCTION_FRAMEWORK"
+    },
+    {
       "id": "17b1b004be8d273e9eaf",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Edit"
     },
     {
-      "id": "1c71f13c1d67e6cda322",
+      "id": "183dc802af7c451cd432",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "General"
+      "text": "SPECIFICATION_LIFT_AVAILABLE"
+    },
+    {
+      "id": "1b8425569929b48440e8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Help me learn mathematics"
     },
     {
       "id": "1d705d150701fc96dfbb",
@@ -11749,10 +11768,46 @@
       "text": "Load into Studio ⚡"
     },
     {
+      "id": "1e42bfda2b6619282099",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "). SPE intentionally suppresses specification synthesis to preserve native ChatGPT/Claude execution speed."
+    },
+    {
+      "id": "1f2289bc5815572d4643",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Direct Answer Query"
+    },
+    {
+      "id": "1ff29b800810c2dfc6b2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Enter User Request to Evaluate Intent & Specification Lift:"
+    },
+    {
+      "id": "21012bf014fbd1a98b7d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Zero Overhead"
+    },
+    {
+      "id": "230ece23b70f7f089532",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🌍 Trivia (Pass-Through)"
+    },
+    {
       "id": "249bd01c066f3bd5dce5",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Marketing"
+    },
+    {
+      "id": "25d48308164d531a2f5a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Confidence:"
     },
     {
       "id": "26327f05e4d806b93d54",
@@ -11767,10 +11822,34 @@
       "text": "ChatGPT ↗"
     },
     {
-      "id": "3871dfe4431759fc8411",
+      "id": "32640674801708eef4a2",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "OpenAI GPT-4o"
+      "text": "⚡ 1-Click Power Vault"
+    },
+    {
+      "id": "376329b5070dbd8c6366",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Outcome Specification Lift Engine"
+    },
+    {
+      "id": "383b9148639dd19ee0a8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Improve this document"
+    },
+    {
+      "id": "38a6f5e3c81ea01aa406",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Benchmark Scenarios:"
+    },
+    {
+      "id": "38fc697b998c807c371c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "MARKETING_CAMPAIGN_BRIEF"
     },
     {
       "id": "392df98e0434fa1a1d63",
@@ -11779,10 +11858,22 @@
       "text": "Coding"
     },
     {
-      "id": "423fdc648e177c58efa6",
+      "id": "3a27c2cfc0a65615ad85",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "1-Click Power Prompts"
+      "text": "👋 Greeting (Pass-Through)"
+    },
+    {
+      "id": "409fb040c9b50dfc20fa",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🛍️ Shopping App"
+    },
+    {
+      "id": "43c2ce8048f43ba9fac1",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "vault"
     },
     {
       "id": "4401341dcfcecc134f54",
@@ -11821,10 +11912,34 @@
       "text": "Search 1-click prompts (SEO, Copywriting, Full-Stack, Sales)..."
     },
     {
+      "id": "56f1fc30f774ab3453e5",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🌐 3D Website"
+    },
+    {
       "id": "57700ee1d3b8f47b0fef",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Claude ↗"
+    },
+    {
+      "id": "5fe46637bd8ea3a93831",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Clear"
+    },
+    {
+      "id": "60e5492ca6868235555a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "✍️ Improve Document"
+    },
+    {
+      "id": "617ea8bd1ffa7a98c906",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Create a marketing campaign"
     },
     {
       "id": "6cbd839e49cae56887dd",
@@ -11833,10 +11948,28 @@
       "text": "Fable 5.0"
     },
     {
+      "id": "86d2b6fd5cebc14cc5cc",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Build me a shopping app"
+    },
+    {
       "id": "8bc9c1884a472b2b129a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Hide"
+    },
+    {
+      "id": "8e7f031af981aadf919f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Turn this business idea into a plan"
+    },
+    {
+      "id": "911fec066631923a10fa",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Good morning"
     },
     {
       "id": "9280922add4ebe8bca3c",
@@ -11845,10 +11978,22 @@
       "text": "Business"
     },
     {
+      "id": "9b720e07f012feb71d36",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "BUSINESS_PLANNING_SPECIFICATION"
+    },
+    {
       "id": "9c8fac15a283ba5463f0",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Copy 📋"
+    },
+    {
+      "id": "a07d47521cb291a66ade",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Make this workflow automatic"
     },
     {
       "id": "a14a1a06bc71c36fcc9c",
@@ -11857,10 +12002,28 @@
       "text": "SEO"
     },
     {
+      "id": "ace533466cb933cb8110",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "What is 2 + 2?"
+    },
+    {
       "id": "b1845cef7e1234541059",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "start"
+    },
+    {
+      "id": "b259f34610ce8d907615",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "This query requires a direct conversational or factual answer ("
+    },
+    {
+      "id": "bd65de3cc3ea55146050",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🤖 AI Agent"
     },
     {
       "id": "c5d346624d5bc2cb8837",
@@ -11869,10 +12032,16 @@
       "text": "Outcome:"
     },
     {
-      "id": "c5ef35d8106fdd4cb9ed",
+      "id": "c603f54aa6054069153a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "Google Gemini 2.0"
+      "text": "🎯 Smart Outcome Lift"
+    },
+    {
+      "id": "c8cc31324d48c39eab5c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Type request (e.g. 'Build me a shopping app' or 'What is 2+2?')..."
     },
     {
       "id": "cac8ed1fcadaa2f008c1",
@@ -11881,22 +12050,94 @@
       "text": "The Curated 1-Click AI Vault"
     },
     {
+      "id": "cb1a2e2ce1613492e68b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🛡️ PASS-THROUGH (TOOL SUPPRESSED)"
+    },
+    {
+      "id": "d532ee5a8b026b0a17ae",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Tool Status:"
+    },
+    {
       "id": "d7185f48a203e9f1f953",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "All"
     },
     {
-      "id": "e084ecec45570ae3b905",
+      "id": "ddb964c879300106cf7d",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "⚡ 1-Click Power Prompts"
+      "text": "🔢 2 + 2 (Pass-Through)"
+    },
+    {
+      "id": "df65143bb60ce6a393c6",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "📐 Math Tutoring"
+    },
+    {
+      "id": "dffebcc0b6035602cea7",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Power Prompts and Discovery Lift"
+    },
+    {
+      "id": "e1c97d8ea189de2f19ca",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Create an AI agent"
+    },
+    {
+      "id": "e4df54151d1a93f91ea5",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Translating casual requests into verified 2026 specifications. Evaluates positive complex outcomes vs negative direct queries to prevent chat latency."
+    },
+    {
+      "id": "e57865db77fafa27a39d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": ". Engineered for"
+    },
+    {
+      "id": "e9b31416d01fea0fea99",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "WRITING_QUALITY_AUDIT"
+    },
+    {
+      "id": "ec5fe0148383e2c3c1d3",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "⚡ Automate Workflow"
+    },
+    {
+      "id": "ed889b06c4bc5b7601b8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "📊 Business Plan"
     },
     {
       "id": "efbfc3b936811d81e5ff",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Copied! ✓"
+    },
+    {
+      "id": "efffa6caeb7ad37c77e5",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Invoked"
+    },
+    {
+      "id": "f3f5bb772ea2195eee1c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Research this scientific hypothesis"
     },
     {
       "id": "f8beccf98a380044c559",
