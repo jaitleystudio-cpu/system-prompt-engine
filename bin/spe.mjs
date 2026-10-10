@@ -104,6 +104,7 @@ ${bold('COMMANDS:')}
   ${green('privacy')}     <file>       Audit data privacy, PII leakage, HIPAA, GDPR & EU AI Act (2024/1689)
   ${green('certify')}     <file>       Generate official SPE Enterprise Certification Seal & Audit Scorecard
   ${green('adopt')}       [path]       Scan repo and adopt instructions into open .spe package
+  ${green('revert')}      [path]       Roll back adopted files and restore pre-adoption baseline
   ${green('check')}       <file>       Evaluate CI/CD evidence gate with Ed25519 signatures (--strict)
   ${green('bench')}                    Run SPE-Bench Ω reproducibility suite with verified oracles
   ${green('passport')}    [model]      Inspect Model Passport & empirical execution provenance
@@ -116,6 +117,9 @@ ${bold('COMMANDS:')}
   ${green('audit-release')}            Run AEQ Independent Release Audit ($1,500 Standard)
   ${green('diagnose')}         [disc]   Run Tri-Origin Counterfactual Diagnosis (G vs W vs V)
   ${green('continue')}         [report] Audit agent report, run T0 verification, and compile next task contract
+  ${green('ztes')}        <file>       Run ZTES-10 Zero-Trust Epistemic Sandbox audit against skill or prompt
+  ${green('aeq')}         <file>       Run AEQ-H10 Hostile Adversarial Mutation testing
+  ${green('utg')}         [topic]      Query Universal Theorem Graph & Epistemic Moat Kernel
 
 ${bold('OPTIONS:')}
   --target <dialect>     Model dialect: claude-xml, openai-markdown, gemini-agent, cursor-rules, open-weights
@@ -217,6 +221,7 @@ function runPythonCli(subcommand, passArgs) {
 try {
   switch (command) {
     case 'adopt':
+    case 'revert':
     case 'check':
     case 'bench':
     case 'passport':
@@ -233,7 +238,10 @@ try {
     case 'diagnose':
     case 'continue':
     case 'continue-task':
-    case 'exchange': {
+    case 'exchange':
+    case 'ztes':
+    case 'aeq':
+    case 'utg': {
       runPythonCli(command, args.slice(1));
       break;
     }

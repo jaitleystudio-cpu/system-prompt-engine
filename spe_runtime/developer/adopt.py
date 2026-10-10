@@ -189,6 +189,11 @@ def adopt_repository(target_path: Path | str, mode: str = "scan") -> dict[str, A
     report = scanner.scan()
 
     if mode == "apply":
+        from spe_runtime.sov.kernel import SOVKernel
+
+        # Sovereign multi-IDE adoption with atomic rollback snapshot
+        sov_res = SOVKernel.adopt_repository(root_dir=target, skill_name=f"spe-{target.name}")
+
         spe_dir = target / ".spe"
         spe_pkg = SpePackage.create_layout(spe_dir, package_id=f"spe.{target.name}.adopted")
         # Write adopted intent
@@ -197,6 +202,7 @@ def adopt_repository(target_path: Path | str, mode: str = "scan") -> dict[str, A
             "adopted_from": str(target),
             "detected_prompts": report.detected_prompts,
             "detected_providers": report.detected_providers,
+            "ides_detected": sov_res.ides_detected,
         }
         (spe_dir / "intent.json").write_text(json.dumps(intent_data, indent=2), encoding="utf-8")
         spe_pkg.update_digests()
@@ -204,6 +210,9 @@ def adopt_repository(target_path: Path | str, mode: str = "scan") -> dict[str, A
             "mode": "apply",
             "status": "APPLIED",
             "package_path": str(spe_dir),
+            "ides_detected": sov_res.ides_detected,
+            "rollback_marker_path": sov_res.rollback_marker_path,
+            "duration_seconds": sov_res.duration_seconds,
             "summary": asdict(report),
         }
     elif mode == "plan":
@@ -217,3 +226,10 @@ def adopt_repository(target_path: Path | str, mode: str = "scan") -> dict[str, A
             "mode": "scan",
             "summary": asdict(report),
         }
+
+
+def revert_repository(target_path: Path | str = ".", dry_run: bool = False) -> dict[str, Any]:
+    from spe_runtime.sov.kernel import SOVKernel
+    res = SOVKernel.revert_adoption(root_dir=target_path, dry_run=dry_run)
+    return asdict(res)
+

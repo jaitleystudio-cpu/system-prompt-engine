@@ -67,6 +67,101 @@ def cmd_adopt(args: argparse.Namespace) -> int:
         if res.get("status"):
             print(f"  Status:               {res['status']}")
             print(f"  Package Created:      {res.get('package_path')}")
+        if res.get("ides_detected"):
+            print(f"  IDEs Configured:      {', '.join(res.get('ides_detected'))}")
+        if res.get("rollback_marker_path"):
+            print(f"  Rollback Snapshot:    {res.get('rollback_marker_path')}")
+    return 0
+
+
+def cmd_revert(args: argparse.Namespace) -> int:
+    from spe_runtime.developer.adopt import revert_repository
+    target = getattr(args, "path", None) or "."
+    dry_run = getattr(args, "dry_run", False)
+    res = revert_repository(target, dry_run=dry_run)
+    if getattr(args, "json", False):
+        print(json.dumps(res, indent=2))
+    else:
+        print("⏪ SPE REVERT [ZERO-BREAKAGE ROLLBACK]")
+        print(f"  Target Root:          {target}")
+        print(f"  Status:               {res.get('status')}")
+        print(f"  Files Restored:       {len(res.get('files_restored', []))}")
+        for f in res.get("files_restored", []):
+            print(f"    - Restored: {f}")
+        print(f"  Files Removed:        {len(res.get('files_deleted', []))}")
+        for f in res.get("files_deleted", []):
+            print(f"    - Removed:  {f}")
+        print(f"  Baseline Clean:       {'YES' if res.get('clean_baseline') else 'NO'}")
+    return 0
+
+
+def cmd_ztes(args: argparse.Namespace) -> int:
+    from spe_runtime.production_bridge import ZTESAdapter
+    target_path = Path(args.file)
+    if not target_path.exists():
+        print(f"Error: File not found: {args.file}", file=sys.stderr)
+        return 1
+    content = target_path.read_text(encoding="utf-8")
+    perms = [p.strip() for p in args.permissions.split(",")] if getattr(args, "permissions", None) else []
+    ceiling = getattr(args, "ceiling", "LOCAL_FIRST") or "LOCAL_FIRST"
+    report = ZTESAdapter.audit_skill(content, requested_permissions=perms, permission_ceiling=ceiling)
+    if getattr(args, "json", False):
+        print(json.dumps(report, indent=2))
+    else:
+        print("🛡️  SPE Ω ZERO-TRUST EPISTEMIC SANDBOX (ZTES-10)")
+        print(f"  Target File:          {args.file}")
+        print(f"  Status:               {report['status']}")
+        print(f"  Taint Cleared:        {report['taint_cleared']}")
+        print(f"  Zero-Width Stripped:  {report['stripped_zero_width_count']}")
+        print(f"  Bidi Overrides:       {report['stripped_bidi_count']}")
+        print(f"  Homoglyphs Found:     {len(report['homoglyphs_detected'])}")
+        print(f"  Polyglot Hard-Gate:   {'FAILED (' + str(report['polyglot_code']) + ')' if report['has_polyglot'] else 'PASS (CLEAN)'}")
+        print(f"  AST Static Safety:    {'PASS' if report['ast_safe'] else 'FAIL'}")
+        print(f"  Ceiling Honored:      {'YES' if report['permission_ceiling_honored'] else 'NO'}")
+        if report['disqualification_reasons']:
+            print("  Disqualification Reasons:")
+            for r in report['disqualification_reasons']:
+                print(f"    - ❌ {r}")
+    if getattr(args, "strict", False) and report["status"] != "QUALIFIED_ZERO_TRUST":
+        return 1
+    return 0
+
+
+def cmd_aeq(args: argparse.Namespace) -> int:
+    from spe_runtime.production_bridge import AEQHostileAdapter
+    target_path = Path(args.file)
+    if not target_path.exists():
+        print(f"Error: File not found: {args.file}", file=sys.stderr)
+        return 1
+    content = target_path.read_text(encoding="utf-8")
+    mutants = AEQHostileAdapter.synthesize_hostile_battery(content)
+    if getattr(args, "json", False):
+        print(json.dumps(mutants, indent=2))
+    else:
+        print("⚔️  SPE Ω HOSTILE ADVERSARIAL MUTATION BATTERY (AEQ-H10)")
+        print(f"  Target File:          {args.file}")
+        print(f"  Synthesized Mutants:  {len(mutants)}")
+        for m in mutants:
+            print(f"    - [{m['operator']}] {m['mutant_id']}: {m['description']}")
+    return 0
+
+
+def cmd_utg(args: argparse.Namespace) -> int:
+    from spe_runtime.production_bridge import UTGMoatAdapter
+    topic = getattr(args, "topic", None) or "execution_state_ledger"
+    capsule = UTGMoatAdapter.bind_theorem(topic)
+    wasm_ok = UTGMoatAdapter.verify_canonical_wasm()
+    if getattr(args, "json", False):
+        print(json.dumps({"capsule": capsule, "canonical_wasm_frozen": wasm_ok}, indent=2))
+    else:
+        print("🧬 SPE Ω UNIVERSAL THEOREM GRAPH & MOAT (UTG-M10)")
+        print(f"  Topic:                {topic}")
+        print(f"  Paper:                {capsule.get('paper_title')}")
+        print(f"  Identifier:           {capsule.get('identifier')}")
+        print(f"  Authors:              {capsule.get('authors')}")
+        print(f"  Core Theorem:         {capsule.get('empirical_theorem')}")
+        print(f"  Operational Invariant:{capsule.get('operational_invariant')}")
+        print(f"  Canonical WASM Hash:  {'ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d' if wasm_ok else 'DRIFT_DETECTED'}")
     return 0
 
 
@@ -1142,10 +1237,35 @@ def main(argv: list[str] | None = None) -> int:
     p_ex_page.add_argument("--trials", type=int, default=150, help="Number of trials")
     p_ex_page.add_argument("--out", help="Output path for HTML page")
 
+    # revert
+    p_revert = subparsers.add_parser("revert", help="Roll back adopted SPE files and restore pre-adoption baseline")
+    p_revert.add_argument("path", nargs="?", default=".", help="Target repository root path")
+    p_revert.add_argument("--dry-run", action="store_true", help="Simulate rollback without modifying files")
+    p_revert.add_argument("--json", action="store_true", help="Output raw JSON")
+
+    # ztes
+    p_ztes = subparsers.add_parser("ztes", help="Run ZTES-10 Zero-Trust Epistemic Sandbox audit against skill or prompt")
+    p_ztes.add_argument("file", help="Target skill or prompt file to audit")
+    p_ztes.add_argument("--ceiling", default="LOCAL_FIRST", choices=["LOCAL_FIRST", "AIR_GAPPED", "SANDBOXED", "FULL"], help="Permission ceiling")
+    p_ztes.add_argument("--permissions", help="Comma-separated requested permissions")
+    p_ztes.add_argument("--strict", action="store_true", help="Fail with exit code 1 if not QUALIFIED_ZERO_TRUST")
+    p_ztes.add_argument("--json", action="store_true", help="Output raw JSON")
+
+    # aeq
+    p_aeq = subparsers.add_parser("aeq", help="Synthesize and evaluate hostile mutants under AEQ-H10")
+    p_aeq.add_argument("file", help="Target code or test file to mutate")
+    p_aeq.add_argument("--json", action="store_true", help="Output raw JSON")
+
+    # utg
+    p_utg = subparsers.add_parser("utg", help="Query Universal Theorem Graph and verify canonical WASM freeze")
+    p_utg.add_argument("topic", nargs="?", default="execution_state_ledger", help="Scientific topic or directive")
+    p_utg.add_argument("--json", action="store_true", help="Output raw JSON")
+
     args = parser.parse_args(argv)
 
     handlers = {
         "adopt": cmd_adopt,
+        "revert": cmd_revert,
         "check": cmd_check,
         "bench": cmd_bench,
         "passport": cmd_passport,
@@ -1164,6 +1284,9 @@ def main(argv: list[str] | None = None) -> int:
         "continue": cmd_continue,
         "continue-task": cmd_continue,
         "exchange": cmd_exchange,
+        "ztes": cmd_ztes,
+        "aeq": cmd_aeq,
+        "utg": cmd_utg,
     }
 
     handler = handlers.get(args.subcommand)

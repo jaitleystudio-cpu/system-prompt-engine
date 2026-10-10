@@ -43,6 +43,16 @@ from spe_runtime.hybrid import (
     TaskRequirement,
 )
 from spe_runtime.runtime_gateway.wire_proxy import ProxyMetrics, WireProxyServer
+from spe_runtime.ztes import ZTESKernel
+from spe_runtime.aeq import AEQKernel
+from spe_runtime.utg import UTGKernel, Kleene4Value
+from spe_runtime.sov import SOVKernel
+from spe_runtime.production_bridge import (
+    ZTESAdapter,
+    AEQHostileAdapter,
+    UTGMoatAdapter,
+    SOVOperationsAdapter,
+)
 
 from spe_runtime.sdk import (
     AuthorityMode,
@@ -126,5 +136,14 @@ __all__ = [
     "BudgetExceededError",
     "ProviderNotAllowlistedError",
     "SensitiveDataLeakageError",
+    "ZTESKernel",
+    "AEQKernel",
+    "UTGKernel",
+    "SOVKernel",
+    "Kleene4Value",
+    "ZTESAdapter",
+    "AEQHostileAdapter",
+    "UTGMoatAdapter",
+    "SOVOperationsAdapter",
 ]
 

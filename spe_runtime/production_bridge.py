@@ -12,6 +12,10 @@ Provides clean, high-level production facades:
 7. ExchangeMeritRankerAdapter: Projects Master Prompt 1 Evidence Passport & Top-3 Merit Ranking.
 8. ExchangeMissionMatcherAdapter: Projects Master Prompt 2 Mission-Fit Skill Selection & Permission Gateway.
 9. ExchangeSeoGovernorAdapter: Projects Master Prompt 3 Programmatic SEO & Ad-Monetization Governor.
+10. ZTESAdapter: Projects Master Prompt 1 Zero-Trust Epistemic Sandbox & AST Taint-Tracking Kernel.
+11. AEQHostileAdapter: Projects Master Prompt 2 Hostile Adversarial Evidence Qualification & Self-Healing Verifier Kernel.
+12. UTGMoatAdapter: Projects Master Prompt 3 Universal Theorem Graph & Epistemic Moat Kernel.
+13. SOVOperationsAdapter: Projects Master Prompt 4 Frictionless Production Adoption & Sovereign Operations Governor.
 """
 
 from dataclasses import dataclass, field
@@ -1083,6 +1087,266 @@ class ExchangeSeoGovernorAdapter:
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(markup, encoding="utf-8")
         return markup
+
+
+class ZTESAdapter:
+    """
+    Production facade for Master Prompt 1:
+    Zero-Trust Epistemic Sandbox & AST Taint-Tracking Kernel (ZTES-10).
+    """
+
+    @staticmethod
+    def audit_skill(
+        content: str,
+        requested_permissions: Optional[List[str]] = None,
+        permission_ceiling: str = "LOCAL_FIRST",
+        language_hint: str = "markdown",
+    ) -> Dict[str, Any]:
+        from spe_runtime.ztes.kernel import ZTESKernel
+        report = ZTESKernel.audit_skill_pipeline(
+            content=content,
+            requested_permissions=requested_permissions,
+            permission_ceiling=permission_ceiling,
+            language_hint=language_hint,
+        )
+        return {
+            "status": report.status,
+            "qualified": report.qualified,
+            "taint_cleared": report.taint_cleared,
+            "stripped_zero_width_count": report.sanitization.stripped_zero_width_count,
+            "stripped_bidi_count": report.sanitization.stripped_bidi_count,
+            "homoglyphs_detected": report.sanitization.homoglyphs_detected,
+            "has_polyglot": report.polyglot_check.has_polyglot,
+            "polyglot_code": report.polyglot_check.error_code,
+            "ast_safe": report.ast_taint.is_safe,
+            "ast_violations": report.ast_taint.violations,
+            "permission_ceiling_honored": report.permission_ceiling_honored,
+            "zero_ambient_authority": report.zero_ambient_authority_verified,
+            "disqualification_reasons": report.disqualification_reasons,
+        }
+
+    @staticmethod
+    def sanitize_unicode(text: str) -> Dict[str, Any]:
+        from spe_runtime.ztes.kernel import ZTESKernel
+        res = ZTESKernel.sanitize_unicode_and_homoglyphs(text)
+        return {
+            "sanitized_text": res.sanitized_text,
+            "stripped_zero_width_count": res.stripped_zero_width_count,
+            "stripped_bidi_count": res.stripped_bidi_count,
+            "homoglyphs_detected": res.homoglyphs_detected,
+            "is_clean": res.is_clean,
+        }
+
+    @staticmethod
+    def detect_polyglot(content: str | bytes) -> Dict[str, Any]:
+        from spe_runtime.ztes.kernel import ZTESKernel
+        res = ZTESKernel.detect_polyglot(content)
+        return {
+            "has_polyglot": res.has_polyglot,
+            "error_code": res.error_code,
+            "description": res.description,
+        }
+
+    @staticmethod
+    def verify_provenance(receipt: Dict[str, Any]) -> bool:
+        from spe_runtime.ztes.kernel import ZTESKernel
+        return ZTESKernel.verify_provenance_signature(receipt)
+
+    @staticmethod
+    def enforce_zero_ambient_authority(env_dict: Optional[Dict[str, str]] = None) -> Dict[str, str]:
+        from spe_runtime.ztes.kernel import ZTESKernel
+        return ZTESKernel.enforce_zero_ambient_authority(env_dict)
+
+
+class AEQHostileAdapter:
+    """
+    Production facade for Master Prompt 2:
+    Hostile Adversarial Evidence Qualification & Self-Healing Verifier Kernel (AEQ-H10).
+    """
+
+    @staticmethod
+    def synthesize_hostile_battery(source_code: str) -> List[Dict[str, Any]]:
+        from spe_runtime.aeq.kernel import AEQKernel
+        mutants = AEQKernel.generate_full_hostile_battery(source_code)
+        return [
+            {
+                "mutant_id": m.mutant_id,
+                "operator": m.operator.value,
+                "description": m.description,
+                "order_k": m.order_k,
+                "diff_snippet": m.diff_snippet,
+            }
+            for m in mutants
+        ]
+
+    @staticmethod
+    def evaluate_verifier(verifier_fn, source_code: str) -> Dict[str, Any]:
+        from spe_runtime.aeq.kernel import AEQKernel
+        mutants = AEQKernel.generate_full_hostile_battery(source_code)
+        res = AEQKernel.evaluate_verifier_adequacy(verifier_fn, mutants)
+        return {
+            "total_mutants": res.total_mutants,
+            "killed_mutants": res.killed_mutants,
+            "survived_mutants": res.survived_mutants,
+            "mutation_score": res.mutation_score,
+            "verdict": res.verdict,
+            "surviving_mutant_ids": res.surviving_mutant_ids,
+            "anti_lucky_pass_passed": res.anti_lucky_pass_passed,
+        }
+
+    @staticmethod
+    def discriminate_tri_origin(
+        baseline_pass: bool,
+        mutant_pass: bool,
+        env_changed: bool = False,
+        req_diverged: bool = False,
+    ) -> Dict[str, Any]:
+        from spe_runtime.aeq.kernel import AEQKernel
+        attr = AEQKernel.discriminate_tri_origin(
+            test_passed_on_baseline=baseline_pass,
+            test_passed_on_mutant=mutant_pass,
+            environment_changed=env_changed,
+            requirement_diverged=req_diverged,
+        )
+        return {
+            "origin": attr.origin.value,
+            "confidence": attr.confidence,
+            "summary": attr.summary,
+            "verdict_badge": attr.verdict_badge,
+            "recommended_action": attr.recommended_action,
+        }
+
+    @staticmethod
+    def causal_bisect_retraction(
+        dependency_dag: Dict[str, List[str]],
+        invalidated_node: str,
+    ) -> Dict[str, Any]:
+        from spe_runtime.aeq.kernel import AEQKernel
+        plan = AEQKernel.causal_bisect_and_retract(dependency_dag, invalidated_node)
+        return {
+            "invalidated_node": plan.invalidated_node,
+            "affected_nodes_topological": plan.affected_nodes_topological,
+            "unaffected_history_count": plan.unaffected_history_count,
+            "retraction_hash": plan.retraction_hash,
+        }
+
+
+class UTGMoatAdapter:
+    """
+    Production facade for Master Prompt 3:
+    Universal Theorem Graph & Epistemic Moat Kernel (UTG-M10).
+    """
+
+    @staticmethod
+    def bind_theorem(topic: str) -> Dict[str, Any]:
+        from spe_runtime.utg.kernel import UTGKernel
+        capsule = UTGKernel.get_capsule_by_topic(topic)
+        if not capsule:
+            return {}
+        return {
+            "paper_title": capsule.paper_title,
+            "identifier": capsule.identifier,
+            "authors": capsule.authors,
+            "empirical_theorem": capsule.empirical_theorem,
+            "operational_invariant": capsule.operational_invariant,
+            "prompt_card": capsule.to_prompt_card(),
+        }
+
+    @staticmethod
+    def join_kleene4(a: str, b: str) -> str:
+        from spe_runtime.utg.kernel import Kleene4Value, UTGKernel
+        k_a = Kleene4Value(a.upper())
+        k_b = Kleene4Value(b.upper())
+        res = UTGKernel.kleene4_join(k_a, k_b)
+        return res.value
+
+    @staticmethod
+    def compute_wilson(successes: int, trials: int, penalty_small_n: bool = True) -> float:
+        from spe_runtime.utg.kernel import UTGKernel
+        return UTGKernel.compute_wilson_lower_bound(
+            successes=successes,
+            trials=trials,
+            penalty_small_n=penalty_small_n,
+        )
+
+    @staticmethod
+    def verify_canonical_wasm(wasm_path: Optional[str] = None) -> bool:
+        from spe_runtime.utg.kernel import CANONICAL_WASM_SHA256, UTGKernel
+        if wasm_path:
+            return UTGKernel.verify_canonical_wasm_freeze(wasm_path)
+        # Check standard repository canonical path
+        repo_root = Path(__file__).resolve().parent.parent
+        canonical_p = repo_root / "portable/spe-wasm/target-canonical/wasm32-unknown-unknown/release/spe_wasm.wasm"
+        if canonical_p.exists():
+            return UTGKernel.verify_canonical_wasm_freeze(canonical_p)
+        return True
+
+    @staticmethod
+    def verify_copy_purity(text: str) -> Dict[str, Any]:
+        from spe_runtime.utg.kernel import UTGKernel
+        rep = UTGKernel.verify_copy_purity(text)
+        return {
+            "is_pure": rep.is_pure,
+            "violations": rep.violations,
+            "total_strings_audited": rep.total_strings_audited,
+        }
+
+
+class SOVOperationsAdapter:
+    """
+    Production facade for Master Prompt 4:
+    Frictionless Production Adoption & Sovereign Operations Governor (SOV-E10).
+    """
+
+    @staticmethod
+    def adopt_repository(
+        root_dir: str = ".",
+        skill_name: str = "spe-core",
+        dry_run: bool = False,
+    ) -> Dict[str, Any]:
+        from spe_runtime.sov.kernel import SOVKernel
+        res = SOVKernel.adopt_repository(root_dir=root_dir, skill_name=skill_name, dry_run=dry_run)
+        return {
+            "status": res.status,
+            "duration_seconds": res.duration_seconds,
+            "guarantee_satisfied": res.guarantee_satisfied,
+            "target_root": res.target_root,
+            "ides_detected": res.ides_detected,
+            "scaffolded_targets": res.scaffolded_targets,
+            "rollback_marker_path": res.rollback_marker_path,
+            "summary_card": res.summary_card,
+        }
+
+    @staticmethod
+    def revert_adoption(root_dir: str = ".", dry_run: bool = False) -> Dict[str, Any]:
+        from spe_runtime.sov.kernel import SOVKernel
+        res = SOVKernel.revert_adoption(root_dir=root_dir, dry_run=dry_run)
+        return {
+            "status": res.status,
+            "files_restored": res.files_restored,
+            "files_deleted": res.files_deleted,
+            "clean_baseline": res.clean_baseline,
+        }
+
+    @staticmethod
+    def render_progressive_disclosure(prompt_data: Dict[str, Any], mode: str = "simple") -> Dict[str, Any]:
+        from spe_runtime.sov.kernel import SOVKernel
+        card = SOVKernel.render_progressive_disclosure(prompt_data, mode=mode)
+        return {
+            "mode": card.mode,
+            "title": card.title,
+            "protected_invariants_count": card.protected_invariants_count,
+            "safety_bounds": card.safety_bounds,
+            "local_token_savings_pct": card.local_token_savings_pct,
+            "rendered_payload": card.rendered_payload,
+            "pro_details": card.pro_details,
+        }
+
+    @staticmethod
+    def evaluate_privacy_and_seo(route_or_run: Dict[str, Any]) -> Dict[str, Any]:
+        from spe_runtime.sov.kernel import SOVKernel
+        return SOVKernel.evaluate_privacy_and_seo_governor(route_or_run)
+
 
 
 

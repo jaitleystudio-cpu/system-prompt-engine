@@ -18,6 +18,9 @@ export interface ClientAuditReport {
   violations: SecurityViolation[];
   detectedPermissions: string[];
   scanTimestamp: string;
+  taintCleared?: boolean;
+  zeroWidthStrippedCount?: number;
+  homoglyphsDetected?: string[];
 }
 
 const DANGEROUS_PATTERNS: Array<{
@@ -74,11 +77,67 @@ const DANGEROUS_PATTERNS: Array<{
     description: "Direct raw block device or disk write",
     pattern: /dd\s+[^|\n]*(of=\/dev\/(sd[a-z]|nvme|disk|rdisk|vda)|if=\/dev\/(sd[a-z]|nvme|disk|rdisk|vda))/i,
   },
+  {
+    ruleId: "ERR_SEC_POLYGLOT",
+    severity: "CRITICAL",
+    description: "HARD_DISQUALIFICATION (ERR-SEC-POLYGLOT): Mixed-syntax polyglot vector detected",
+    pattern: /<!--\s*#!\s*\/bin\/(bash|sh|zsh|dash)|<!--\s*.*(\$\(.*?\)|`.*?`).*-->|<!--\s*(eval|exec|sudo|curl|wget)\b/i,
+  },
+  {
+    ruleId: "UNICODE_BIDI_OVERRIDE",
+    severity: "CRITICAL",
+    description: "Directional Unicode bidi override attack detected",
+    pattern: /[\u202A-\u202E\u2066-\u2069]/,
+  },
+  {
+    ruleId: "AST_TAINT_DANGEROUS_TOKEN",
+    severity: "CRITICAL",
+    description: "Forbidden ambient authority or runtime code execution token detected",
+    pattern: /\b(child_process|WebSocket|XMLHttpRequest)\b|\bprocess\.env\b|\beval\s*\(|\bFunction\s*\(/,
+  },
 ];
 
-export function auditSkillContent(content: string): ClientAuditReport {
+export function auditSkillContent(
+  content: string,
+  options?: { ceiling?: string }
+): ClientAuditReport {
   const violations: SecurityViolation[] = [];
-  const lines = content.split("\n");
+
+  // 1. Unicode NFKC Normalization & Zero-width codepoint detection
+  let zeroWidthStrippedCount = 0;
+  const zeroWidthRegex = /[\u200B-\u200D\uFEFF\u2060]/g;
+  const zwMatches = content.match(zeroWidthRegex);
+  if (zwMatches) {
+    zeroWidthStrippedCount = zwMatches.length;
+    violations.push({
+      ruleId: "UNICODE_ZERO_WIDTH",
+      severity: "HIGH",
+      description: `Invisible zero-width codepoints detected (${zeroWidthStrippedCount} instances)`,
+      matchedText: "[zero-width-codepoints]",
+    });
+  }
+
+  const nfkcContent = content.normalize("NFKC").replace(zeroWidthRegex, "");
+
+  // 2. Homoglyph inspection across tokens
+  const homoglyphsDetected: string[] = [];
+  const tokens = nfkcContent.match(/\b\w+\b/g) || [];
+  const cyrillicHomoglyphs = /[асеорхуіјѕАВСЕНІЈКМОРТХ]/;
+  const greekHomoglyphs = /[αονρυταβγδεζηικλμνξοπρστυφχψωΑΒΕΖΗΙΚΜΝΟΡΤΥΧ]/;
+  for (const tok of tokens) {
+    if (/[a-zA-Z]/.test(tok) && (cyrillicHomoglyphs.test(tok) || greekHomoglyphs.test(tok))) {
+      homoglyphsDetected.push(tok);
+      violations.push({
+        ruleId: "HOMOGLYPH_SPOOFING",
+        severity: "CRITICAL",
+        description: `Mixed Latin/Cyrillic or Greek homoglyph spoofing detected in token '${tok}'`,
+        matchedText: tok,
+      });
+      break;
+    }
+  }
+
+  const lines = nfkcContent.split("\n");
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -97,8 +156,8 @@ export function auditSkillContent(content: string): ClientAuditReport {
   }
 
   // Handle multiline escaped commands (e.g. bash backslash escapes `\`)
-  const normalized = content.replace(/\\\r?\n\s*/g, " ");
-  if (normalized !== content) {
+  const normalized = nfkcContent.replace(/\\\r?\n\s*/g, " ");
+  if (normalized !== nfkcContent) {
     for (const rule of DANGEROUS_PATTERNS) {
       const match = rule.pattern.exec(normalized);
       if (match && !violations.some((v) => v.ruleId === rule.ruleId)) {
@@ -118,14 +177,24 @@ export function auditSkillContent(content: string): ClientAuditReport {
 
   // Detect permission footprints
   const detectedPermissions: string[] = [];
-  if (/(curl|wget|fetch|axios|http:\/\/|https:\/\/)/i.test(content)) {
+  if (/(curl|wget|fetch|axios|http:\/\/|https:\/\/)/i.test(nfkcContent)) {
     detectedPermissions.push("NETWORK_EGRESS");
   }
-  if (/(fs\.|readFile|writeFile|open\(|cat\s+|echo\s+.*>)/i.test(content)) {
+  if (/(fs\.|readFile|writeFile|open\(|cat\s+|echo\s+.*>)/i.test(nfkcContent)) {
     detectedPermissions.push("FILESYSTEM_ACCESS");
   }
-  if (/(exec\(|spawn\(|subprocess|system\()/i.test(content)) {
+  if (/(exec\(|spawn\(|subprocess|system\()/i.test(nfkcContent)) {
     detectedPermissions.push("SUBPROCESS_EXECUTION");
+  }
+
+  // Check permission ceiling
+  if (options?.ceiling === "LOCAL_FIRST" && detectedPermissions.includes("NETWORK_EGRESS")) {
+    violations.push({
+      ruleId: "HALT_PERMISSION_ESCALATION",
+      severity: "CRITICAL",
+      description: "HALT_PERMISSION_ESCALATION: Network egress requested under LOCAL_FIRST ceiling",
+      matchedText: "NETWORK_EGRESS",
+    });
   }
 
   const criticalCount = violations.filter((v) => v.severity === "CRITICAL").length;
@@ -152,5 +221,8 @@ export function auditSkillContent(content: string): ClientAuditReport {
     violations,
     detectedPermissions,
     scanTimestamp: new Date().toISOString(),
+    taintCleared: verdict === "SAFE",
+    zeroWidthStrippedCount,
+    homoglyphsDetected,
   };
 }
