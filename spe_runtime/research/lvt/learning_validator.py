@@ -8,13 +8,19 @@ from __future__ import annotations
 
 import hashlib
 import time
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Sequence, Tuple
 
 from spe_runtime.ci_gate.receipt import (
     ed25519_sign,
     ed25519_verify,
     generate_keypair,
     rfc8785_canonicalize,
+)
+from spe_runtime.research.lvt.paired_gate_v2 import (
+    Observation as LVT2Observation,
+    StudyProtocol as LVT2StudyProtocol,
+    StudyResult as LVT2StudyResult,
+    run_study as evaluate_paired_research,
 )
 from spe_runtime.research.lvt.types import (
     EvaluatorType,
@@ -42,6 +48,19 @@ class LearningValidator:
     @property
     def public_key(self) -> bytes:
         return self._pk
+
+    def evaluate_research_only_v2(
+        self,
+        protocol: LVT2StudyProtocol,
+        train: Sequence[LVT2Observation],
+        heldout: Sequence[LVT2Observation],
+    ) -> LVT2StudyResult:
+        """Compute paired study evidence without signing or committing a claim.
+
+        Caller-supplied evaluator IDs, task digests and score records cannot
+        establish independent provenance. This method NEVER issues QUALIFIED.
+        """
+        return evaluate_paired_research(protocol, train, heldout)
 
     def evaluate_conjuncts(self, tx: LearningValidityTransaction) -> Dict[str, bool]:
         """Evaluates each of the six formal conjuncts of the LVT admission rule."""
