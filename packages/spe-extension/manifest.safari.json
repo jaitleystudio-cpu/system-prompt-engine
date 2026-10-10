@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "SPE — System Prompt Engine (1-Click AI Power Prompts)",
+  "name": "SPE — System Prompt Engine (1-Click AI Power Prompts & QuillBot Killer)",
   "short_name": "SPE AI",
   "version": "1.0.0",
-  "description": "The intelligent 1-click prompt companion for ChatGPT, Claude & Gemini. Instant verified power prompts, zero hallucinations, model switcher.",
+  "description": "Universal AI prompt companion, QuillBot rephraser & Grammarly humanizer for ChatGPT, Claude, Gemini, Google Docs & any website.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -24,11 +24,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://chatgpt.com/*",
-        "https://*.chatgpt.com/*",
-        "https://claude.ai/*",
-        "https://*.claude.ai/*",
-        "https://gemini.google.com/*"
+        "https://*/*",
+        "http://*/*"
       ],
       "js": ["content.js"],
       "css": ["content.css"],
@@ -40,10 +37,7 @@
     "activeTab"
   ],
   "host_permissions": [
-    "https://chatgpt.com/*",
-    "https://*.chatgpt.com/*",
-    "https://claude.ai/*",
-    "https://*.claude.ai/*",
-    "https://gemini.google.com/*"
+    "https://*/*",
+    "http://*/*"
   ]
 }

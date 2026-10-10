@@ -1089,5 +1089,192 @@ Required Specification Sections:
 
   setupInputObserver();
 
-  console.log("⚡ SPE Companion loaded into " + getHostPlatform() + " with Specification Lift Observer");
+  // =========================================================================
+  // 4. SPE Universal Auto-Actions (QuillBot & Grammarly Killer Core)
+  // =========================================================================
+  const AI_CLICHE_MAP = [
+    { regex: /\bdelve(s|d|ing)?\s+into\b/gi, rep: "explore" },
+    { regex: /\ba\s+testament\s+to\b/gi, rep: "proof of" },
+    { regex: /\brich\s+tapestry\b/gi, rep: "mosaic" },
+    { regex: /\bin\s+today's\s+fast-paced\s+(digital\s+)?world\b/gi, rep: "today" },
+    { regex: /\bcrucial\s+role\b/gi, rep: "key role" },
+    { regex: /\bbeacon\s+of\s+hope\b/gi, rep: "promising signal" },
+    { regex: /\brealm\s+of\b/gi, rep: "field of" },
+    { regex: /\bmultifaceted\b/gi, rep: "complex" },
+    { regex: /\bpivotal\b/gi, rep: "critical" },
+    { regex: /\bfoster(s|ed|ing)?\b/gi, rep: "support" },
+    { regex: /\bembark(s|ed|ing)?\s+on\b/gi, rep: "start" },
+    { regex: /\bharness(es|ed|ing)?\s+the\s+power\s+of\b/gi, rep: "use" },
+    { regex: /\bnavigate\s+the\s+complexities\s+of\b/gi, rep: "manage" },
+    { regex: /\bit\s+is\s+worth\s+noting\s+that\b/gi, rep: "notably," },
+    { regex: /\bunleash(es|ed|ing)?\b/gi, rep: "release" },
+    { regex: /\bparamount\b/gi, rep: "essential" },
+    { regex: /\bever-evolving\b/gi, rep: "evolving" },
+    { regex: /\bintricate\s+dance\b/gi, rep: "interplay" },
+    { regex: /\bplethora\s+of\b/gi, rep: "many" },
+    { regex: /\butilize(s|d|ing)?\b/gi, rep: "use" },
+    { regex: /\bleverage(s|d|ing)?\b/gi, rep: "apply" },
+    { regex: /\bseamlessly\b/gi, rep: "smoothly" },
+    { regex: /\bcutting-edge\b/gi, rep: "modern" },
+    { regex: /\bstate-of-the-art\b/gi, rep: "modern" },
+    { regex: /\brobust\b/gi, rep: "reliable" }
+  ];
+
+  function runAutoAction(text, actionType) {
+    if (!text || !text.trim()) return text;
+    let t = text;
+
+    if (actionType === "humanize") {
+      t = t.replace(/\bis\s+utilized\s+by\b/gi, "is used by")
+           .replace(/\bin\s+order\s+to\b/gi, "to")
+           .replace(/\bdue\s+to\s+the\s+fact\s+that\b/gi, "because");
+      for (const item of AI_CLICHE_MAP) {
+        t = t.replace(item.regex, item.rep);
+      }
+      t = t.replace(/\s{2,}/g, " ").trim();
+      return t;
+    }
+
+    if (actionType === "fluent") {
+      t = runAutoAction(t, "humanize");
+      t = t.replace(/\bcommence\b/gi, "begin")
+           .replace(/\bterminate\b/gi, "end")
+           .replace(/\bfacilitate\b/gi, "help")
+           .replace(/\s{2,}/g, " ").trim();
+      return t;
+    }
+
+    if (actionType === "grammar") {
+      // Fix repeated words and weak intensifiers
+      t = t.replace(/\b(\w+)\s+\1\b/gi, "$1");
+      t = t.replace(/\bvery\s+unique\b/gi, "unique")
+           .replace(/\breally\s+important\b/gi, "essential")
+           .replace(/\bextremely\s+crucial\b/gi, "vital")
+           .replace(/\bvery\s+good\b/gi, "strong");
+      t = t.replace(/(^\s*|[.!?]\s+)([a-z])/g, (_, prefix, letter) => prefix + letter.toUpperCase());
+      t = t.replace(/\s+([,.:;?!])/g, "$1").replace(/\s{2,}/g, " ").trim();
+      return t;
+    }
+
+    if (actionType === "executive") {
+      t = runAutoAction(t, "humanize");
+      t = t.replace(/\bi\s+think\s+we\s+should\b/gi, "we recommend")
+           .replace(/\bwe\s+need\s+to\s+make\s+sure\b/gi, "we must verify")
+           .replace(/\bdo\s+it\s+asap\b/gi, "prioritize immediately")
+           .replace(/\bgood\s+results\b/gi, "measurable impact")
+           .replace(/\bbig\s+problem\b/gi, "material risk")
+           .replace(/\s{2,}/g, " ").trim();
+      return t;
+    }
+
+    if (actionType === "promptify") {
+      const clean = runAutoAction(t, "humanize");
+      return `Act as an elite domain authority. Objective: ${clean}. Execute with precision, concrete evidence, step-by-step phased structure, and zero generic filler.`;
+    }
+
+    return t;
+  }
+
+  function setupSelectionActionBar() {
+    let bar = document.getElementById("spe-inline-action-bar");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "spe-inline-action-bar";
+      bar.innerHTML = `
+        <div class="spe-bar-brand">⚡ SPE</div>
+        <button class="spe-action-btn" data-action="humanize">✍️ Humanize</button>
+        <button class="spe-action-btn" data-action="fluent">🔄 Rephrase</button>
+        <button class="spe-action-btn" data-action="grammar">🛡️ Fix Flow</button>
+        <button class="spe-action-btn" data-action="executive">🎯 Executive</button>
+        <button class="spe-action-btn" data-action="promptify">⚡ Promptify</button>
+      `;
+      document.body.appendChild(bar);
+    }
+
+    let activeSelection = "";
+    let activeRange = null;
+
+    function handleSelectionCheck(e) {
+      // Don't hide if clicking inside bar
+      if (bar.contains(e.target)) return;
+
+      const sel = window.getSelection();
+      const selected = sel ? sel.toString().trim() : "";
+
+      if (selected && selected.length >= 4) {
+        activeSelection = selected;
+        activeRange = sel.getRangeAt(0);
+        const rect = activeRange.getBoundingClientRect();
+
+        if (rect.width > 0 && rect.height > 0) {
+          const top = Math.max(10, rect.top + window.scrollY - 44);
+          const left = Math.max(10, Math.min(window.innerWidth - 380, rect.left + window.scrollX));
+          bar.style.top = `${top}px`;
+          bar.style.left = `${left}px`;
+          bar.style.display = "flex";
+          return;
+        }
+      }
+
+      bar.style.display = "none";
+    }
+
+    document.addEventListener("mouseup", handleSelectionCheck);
+    document.addEventListener("keyup", (e) => {
+      if (["Shift", "Control", "Meta", "Alt"].includes(e.key)) return;
+      handleSelectionCheck(e);
+    });
+
+    bar.addEventListener("click", (e) => {
+      const btn = e.target.closest(".spe-action-btn");
+      if (!btn) return;
+      const action = btn.dataset.action;
+      if (!action || !activeSelection) return;
+
+      const transformed = runAutoAction(activeSelection, action);
+      const activeEl = document.activeElement;
+      const isEditable = activeEl && (
+        activeEl.tagName === "TEXTAREA" ||
+        activeEl.tagName === "INPUT" ||
+        activeEl.isContentEditable
+      );
+
+      let replaced = false;
+      if (isEditable) {
+        try {
+          replaced = document.execCommand("insertText", false, transformed);
+        } catch {}
+
+        if (!replaced) {
+          if (activeEl.tagName === "TEXTAREA" || activeEl.tagName === "INPUT") {
+            const start = activeEl.selectionStart;
+            const end = activeEl.selectionEnd;
+            activeEl.value = activeEl.value.slice(0, start) + transformed + activeEl.value.slice(end);
+            activeEl.selectionStart = activeEl.selectionEnd = start + transformed.length;
+            activeEl.dispatchEvent(new Event("input", { bubbles: true }));
+            replaced = true;
+          } else if (activeEl.isContentEditable && activeRange) {
+            activeRange.deleteContents();
+            activeRange.insertNode(document.createTextNode(transformed));
+            activeEl.dispatchEvent(new Event("input", { bubbles: true }));
+            replaced = true;
+          }
+        }
+      }
+
+      if (replaced) {
+        showToast("Auto-Action Applied ✓");
+      } else {
+        navigator.clipboard.writeText(transformed).then(() => {
+          showToast("Polished & Copied to Clipboard! 📋");
+        });
+      }
+
+      bar.style.display = "none";
+    });
+  }
+
+  setupSelectionActionBar();
+
+  console.log("⚡ SPE Companion loaded into " + getHostPlatform() + " with Specification Lift & Universal Auto-Actions Observer");
 })();
