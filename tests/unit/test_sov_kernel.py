@@ -171,3 +171,50 @@ def test_privacy_and_seo_governor():
     gov_pub = SOVKernel.evaluate_privacy_and_seo_governor(public_landing)
     assert gov_pub["crawler_indexable"] is True
     assert gov_pub["robots_directive"] == "index, follow"
+
+
+def test_adopt_apply_full_lifecycle_and_revert_leaves_zero_residue(tmp_path: Path):
+    """Verify adopt apply generates full .spe package and revert completely cleans all files and directories."""
+    from spe_runtime.developer.adopt import adopt_repository, revert_repository
+
+    # 1. Adopt apply on clean directory
+    apply_res = adopt_repository(target_path=tmp_path, mode="apply")
+    assert apply_res["status"] == "APPLIED"
+    assert (tmp_path / ".spe").is_dir()
+    assert (tmp_path / ".spe" / "intent.json").exists()
+    assert (tmp_path / ".spe" / "manifest.json").exists()
+
+    # 2. Revert
+    revert_res = revert_repository(target_path=tmp_path)
+    assert revert_res["status"] == "REVERTED_CLEAN"
+    assert revert_res["clean_baseline"] is True
+
+    # 3. Assert zero residual files or directories left behind
+    remaining = list(tmp_path.iterdir())
+    assert remaining == [], f"Expected clean workspace, found {remaining}"
+
+
+def test_repeated_adoption_preserves_baseline(tmp_path: Path):
+    """Verify running adopt multiple times preserves original baseline snapshot."""
+    from spe_runtime.developer.adopt import adopt_repository, revert_repository
+
+    # Pre-existing file
+    pre_file = tmp_path / ".cursorrules"
+    orig_text = "# original rules\n"
+    pre_file.write_text(orig_text, encoding="utf-8")
+
+    # First adoption
+    adopt_repository(target_path=tmp_path, mode="apply")
+    assert pre_file.read_text(encoding="utf-8") != orig_text
+
+    # Second adoption (repeat)
+    adopt_repository(target_path=tmp_path, mode="apply")
+
+    # Revert should restore pre-existing file exactly
+    revert_res = revert_repository(target_path=tmp_path)
+    assert revert_res["status"] == "REVERTED_CLEAN"
+    assert pre_file.read_text(encoding="utf-8") == orig_text
+
+    # And .spe should be deleted
+    assert not (tmp_path / ".spe").exists()
+

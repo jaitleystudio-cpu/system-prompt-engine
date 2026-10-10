@@ -196,6 +196,30 @@ def test_provenance_lock_verification():
     receipt["digest_sha256"] = true_digest
     assert ZTESKernel.verify_provenance_signature(receipt) is True
 
+    # Invalid non-hex/non-base64 format raises ProvenanceForgeryError
+    receipt_bad_fmt = dict(receipt)
+    receipt_bad_fmt["signature_ed25519"] = "Z" * 128
+    with pytest.raises(ProvenanceForgeryError) as exc_info:
+        ZTESKernel.verify_provenance_signature(receipt_bad_fmt)
+    assert "Invalid Ed25519 signature format" in str(exc_info.value)
+
+    # Cryptographic keypair signing and verification
+    from spe_runtime.ci_gate.receipt import generate_keypair, ed25519_sign
+    sk, pk = generate_keypair()
+    real_sig = ed25519_sign(sk, pk, true_digest.encode("utf-8")).hex()
+    receipt_crypto = dict(payload)
+    receipt_crypto["digest_sha256"] = true_digest
+    receipt_crypto["signature_ed25519"] = real_sig
+
+    # Verified against correct public key
+    assert ZTESKernel.verify_provenance_signature(receipt_crypto, public_key_hex=pk.hex()) is True
+
+    # Tampered public key triggers forgery error
+    fake_pk = ("00" * 32)
+    with pytest.raises(ProvenanceForgeryError) as exc_info:
+        ZTESKernel.verify_provenance_signature(receipt_crypto, public_key_hex=fake_pk)
+    assert "FORGERY_DETECTED" in str(exc_info.value)
+
 
 def test_ztes_audit_pipeline_full():
     """Full operational pipeline integrates all 4 layers into ZTESAuditReport."""

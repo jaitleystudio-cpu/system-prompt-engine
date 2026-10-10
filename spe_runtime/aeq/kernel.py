@@ -47,6 +47,7 @@ class HostileMutant:
     diff_snippet: str
     order_k: int = 1
     target_invariant: str = ""
+    replacement_tuple: Optional[Tuple[str, str]] = None
 
 
 @dataclass
@@ -114,6 +115,7 @@ class AEQKernel:
                     mutated_code=mutated,
                     diff_snippet=f"{old_op.strip()} -> {new_op.strip()}",
                     order_k=1,
+                    replacement_tuple=(old_op, new_op),
                 ))
                 count += 1
         return mutants
@@ -127,6 +129,14 @@ class AEQKernel:
 
         for idx, line in enumerate(lines):
             stripped = line.strip()
+            # Do NOT mutate function headers, class headers, decorators, or comments
+            if (stripped.startswith("def ") or
+                stripped.startswith("async def ") or
+                stripped.startswith("class ") or
+                stripped.startswith("@") or
+                stripped.startswith("#")):
+                continue
+
             # Match state updates, assertions, or validation calls
             if (stripped.startswith("assert ") or
                 stripped.startswith("self.assert") or
@@ -139,7 +149,8 @@ class AEQKernel:
                 # Delete this statement by replacing with pass or comment
                 mutated_lines = list(lines)
                 indent = " " * (len(line) - len(line.lstrip()))
-                mutated_lines[idx] = f"{indent}pass  # SMO-2: Deleted {stripped[:30]}"
+                replacement_line = f"{indent}pass  # SMO-2: Deleted {stripped[:30]}"
+                mutated_lines[idx] = replacement_line
                 m_id = f"MUT-SMO2-{count:03d}"
                 mutants.append(HostileMutant(
                     mutant_id=m_id,
@@ -148,6 +159,7 @@ class AEQKernel:
                     mutated_code="\n".join(mutated_lines),
                     diff_snippet=f"- {stripped}\n+ pass",
                     order_k=1,
+                    replacement_tuple=(line, replacement_line),
                 ))
                 count += 1
 
@@ -177,6 +189,7 @@ class AEQKernel:
                     mutated_code=mutated,
                     diff_snippet=f"{old_val} -> {new_val}",
                     order_k=1,
+                    replacement_tuple=(old_val, new_val),
                 ))
                 count += 1
         return mutants
@@ -193,32 +206,50 @@ class AEQKernel:
         smo3 = cls.synthesize_smo3_mutants(source_code)
 
         mutants: List[HostileMutant] = []
-        # If we have at least k distinct atomic operators, synthesize combinations
+        # Pool of diverse atomic candidates
         pool = smo1 + smo2 + smo3
-        if len(pool) >= k:
-            combined_code = source_code
-            diffs = []
-            for i in range(k):
-                cand = pool[i]
-                if cand.operator == MutationOperatorType.SMO_1_CONDITIONAL_NEGATION:
-                    parts = cand.diff_snippet.split(" -> ")
-                    if len(parts) == 2 and parts[0] in combined_code:
-                        combined_code = combined_code.replace(parts[0], parts[1], 1)
-                        diffs.append(cand.description)
-                elif cand.operator == MutationOperatorType.SMO_3_RETURN_PERTURBATION:
-                    parts = cand.diff_snippet.split(" -> ")
-                    if len(parts) == 2 and parts[0] in combined_code:
-                        combined_code = combined_code.replace(parts[0], parts[1], 1)
-                        diffs.append(cand.description)
+        if not pool:
+            return mutants
 
-            m_id = f"MUT-HOM-K{k}-001"
+        combined_code = source_code
+        diffs: List[str] = []
+
+        for cand in pool:
+            if cand.replacement_tuple:
+                old_t, new_t = cand.replacement_tuple
+                if old_t in combined_code and old_t != new_t:
+                    combined_code = combined_code.replace(old_t, new_t, 1)
+                    diffs.append(cand.description)
+            elif cand.operator == MutationOperatorType.SMO_2_STATEMENT_DELETION:
+                parts = cand.diff_snippet.split("\n+ ")
+                if len(parts) == 2:
+                    old_stmt = parts[0].lstrip("- ").strip()
+                    for line in combined_code.splitlines():
+                        if old_stmt in line:
+                            indent = " " * (len(line) - len(line.lstrip()))
+                            rep = f"{indent}pass  # SMO-2: Deleted {old_stmt[:30]}"
+                            combined_code = combined_code.replace(line, rep, 1)
+                            diffs.append(cand.description)
+                            break
+            elif " -> " in cand.diff_snippet:
+                parts = cand.diff_snippet.split(" -> ")
+                if len(parts) == 2 and parts[0] in combined_code:
+                    combined_code = combined_code.replace(parts[0], parts[1], 1)
+                    diffs.append(cand.description)
+
+            if len(diffs) >= k:
+                break
+
+        actual_k = len(diffs)
+        if actual_k >= 1:
+            m_id = f"MUT-HOM-K{actual_k}-001"
             mutants.append(HostileMutant(
                 mutant_id=m_id,
                 operator=MutationOperatorType.HIGHER_ORDER_K3,
-                description=f"Higher-order composite mutant (k={k}): {'; '.join(diffs)}",
+                description=f"Higher-order composite mutant (k={actual_k}): {'; '.join(diffs)}",
                 mutated_code=combined_code,
                 diff_snippet="\n".join(diffs),
-                order_k=k,
+                order_k=actual_k,
             ))
         return mutants
 
@@ -334,7 +365,7 @@ class AEQKernel:
     def causal_bisect_and_retract(
         dependency_dag: Dict[str, List[str]],
         invalidated_node: str,
-        total_historical_nodes: int = 10,
+        total_historical_nodes: Optional[int] = None,
     ) -> RetractionDAGPlan:
         """
         Law 4: Directed Acyclic Epistemic Dependency Graph (DAEDG) retraction.
@@ -367,10 +398,14 @@ class AEQKernel:
             f"{invalidated_node}:{':'.join(affected)}".encode("utf-8")
         ).hexdigest()
 
+        tot = total_historical_nodes if total_historical_nodes is not None else len(dependency_dag)
+        is_in_dag = 1 if (invalidated_node in dependency_dag or invalidated_node in children_map) else 0
+        unaffected = max(0, tot - len(affected) - is_in_dag)
+
         return RetractionDAGPlan(
             invalidated_node=invalidated_node,
             affected_nodes_topological=affected,
-            unaffected_history_count=max(0, total_historical_nodes - len(affected) - 1),
+            unaffected_history_count=unaffected,
             retraction_hash=retraction_hash,
         )
 

@@ -39,13 +39,23 @@ def test_smo1_conditional_negation_synthesis():
 
 
 def test_smo2_statement_deletion_synthesis():
-    """Operator SMO-2: Deletes critical state updates and assertions."""
+    """Operator SMO-2: Deletes critical state updates and assertions without deleting def/class signatures."""
     mutants = AEQKernel.synthesize_smo2_mutants(SAMPLE_CODE)
     assert len(mutants) >= 1
     m = mutants[0]
     assert m.operator == MutationOperatorType.SMO_2_STATEMENT_DELETION
     assert "assert is_authenticated == True" not in m.mutated_code
     assert "pass  # SMO-2" in m.mutated_code
+
+    # Function headers must never be deleted
+    code_with_def = """
+def check(val):
+    if val < 0:
+        return False
+    return True
+"""
+    mutants_def = AEQKernel.synthesize_smo2_mutants(code_with_def)
+    assert len(mutants_def) == 0  # No assertions or statements to delete; def check(val) must NOT be deleted
 
 
 def test_smo3_return_value_perturbation_synthesis():
@@ -63,6 +73,10 @@ def test_higher_order_mutations_k3():
     m = hom_mutants[0]
     assert m.operator == MutationOperatorType.HIGHER_ORDER_K3
     assert m.order_k == 3
+    # All 3 perturbations must be present in diff_snippet and mutated code
+    diff_lines = [d.strip() for d in m.diff_snippet.splitlines() if d.strip()]
+    assert len(diff_lines) == 3
+    assert m.mutated_code != SAMPLE_CODE
 
 
 def test_anti_lucky_pass_law_evaluation():

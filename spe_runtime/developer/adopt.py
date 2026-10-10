@@ -206,6 +206,23 @@ def adopt_repository(target_path: Path | str, mode: str = "scan") -> dict[str, A
         }
         (spe_dir / "intent.json").write_text(json.dumps(intent_data, indent=2), encoding="utf-8")
         spe_pkg.update_digests()
+
+        # Update rollback marker snapshots to include all files created inside .spe package
+        marker_path = target / ".spe/rollback_marker.json"
+        if marker_path.exists():
+            try:
+                m_data = json.loads(marker_path.read_text(encoding="utf-8"))
+                snaps = m_data.get("snapshots", {})
+                for p in spe_dir.rglob("*"):
+                    if p.is_file() and p.name != "rollback_marker.json":
+                        rel = str(p.relative_to(target))
+                        if rel not in snaps:
+                            snaps[rel] = None
+                m_data["snapshots"] = snaps
+                marker_path.write_text(json.dumps(m_data, indent=2), encoding="utf-8")
+            except Exception:
+                pass
+
         return {
             "mode": "apply",
             "status": "APPLIED",

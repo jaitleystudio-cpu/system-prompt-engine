@@ -164,10 +164,29 @@ class SOVKernel:
                 "- Invariant Conservation: Preserve test assertions and data contracts\n"
             )
 
-        # 2. Record rollback snapshots before writing
+        # 2. Record rollback snapshots before writing (preserve baseline if already adopted)
+        marker_path = root / ROLLBACK_MARKER_FILE
+        existing_marker = None
+        if marker_path.exists():
+            try:
+                existing_marker = json.loads(marker_path.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+
+        spe_dir_existed = (spe_dir.exists() and not existing_marker) or (
+            bool(existing_marker.get("spe_dir_existed", False)) if existing_marker else False
+        )
+        existing_snaps = existing_marker.get("snapshots", {}) if existing_marker else {}
+
         for target_path in targets_to_create:
             rel = str(target_path.relative_to(root))
-            if target_path.exists():
+            if rel in existing_snaps:
+                pre_existing_snapshots[rel] = existing_snaps[rel]
+                if existing_snaps[rel] is not None:
+                    files_modified.append(rel)
+                else:
+                    files_created.append(rel)
+            elif target_path.exists():
                 pre_existing_snapshots[rel] = target_path.read_text(encoding="utf-8")
                 files_modified.append(rel)
             else:
@@ -183,22 +202,23 @@ class SOVKernel:
 
             # Write .spe package metadata
             manifest_file = spe_dir / "manifest.json"
-            if not manifest_file.exists():
+            manifest_rel = str(manifest_file.relative_to(root))
+            if not manifest_file.exists() or manifest_rel not in pre_existing_snapshots:
                 manifest_file.write_text(json.dumps({
                     "package_id": f"spe.{root.name}.sovereign",
                     "version": "1.0.0",
                     "created_at": time.time(),
                     "ides": ides,
                 }, indent=2), encoding="utf-8")
-                files_created.append(str(manifest_file.relative_to(root)))
-                pre_existing_snapshots[str(manifest_file.relative_to(root))] = None
+                files_created.append(manifest_rel)
+                pre_existing_snapshots.setdefault(manifest_rel, None)
 
             # Write atomic rollback marker
-            marker_path = root / ROLLBACK_MARKER_FILE
             marker_data = {
                 "adopted_at": time.time(),
                 "root_dir": str(root),
                 "ides_detected": ides,
+                "spe_dir_existed": spe_dir_existed,
                 "snapshots": pre_existing_snapshots,
             }
             marker_path.parent.mkdir(parents=True, exist_ok=True)
@@ -259,6 +279,7 @@ class SOVKernel:
             )
 
         snapshots = marker_data.get("snapshots", {})
+        spe_dir_existed = marker_data.get("spe_dir_existed", False)
         restored = []
         deleted = []
 
@@ -279,10 +300,30 @@ class SOVKernel:
 
         if not dry_run:
             marker_path.unlink(missing_ok=True)
-            # Clean up empty .spe if only rollback marker was in it
+
+            # Prune empty directories created for newly added files
+            for rel_path in deleted:
+                parent = (root / rel_path).parent
+                while parent != root and parent.exists():
+                    try:
+                        parent.rmdir()
+                        parent = parent.parent
+                    except OSError:
+                        break
+
+            # If .spe did not exist before adoption, clean up any remaining empty dirs and .spe
             spe_dir = root / ".spe"
-            if spe_dir.exists() and not any(spe_dir.iterdir()):
-                spe_dir.rmdir()
+            if not spe_dir_existed and spe_dir.exists():
+                for p in sorted(spe_dir.glob("**/*"), reverse=True):
+                    if p.is_dir():
+                        try:
+                            p.rmdir()
+                        except OSError:
+                            pass
+                try:
+                    spe_dir.rmdir()
+                except OSError:
+                    pass
 
         return RevertResult(
             status="REVERTED_CLEAN",

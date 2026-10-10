@@ -158,3 +158,18 @@ def test_copy_purity_gate():
     assert any("game changer" in v for v in rep_hype.violations)
     assert any("revolutionary" in v for v in rep_hype.violations)
     assert any("silver bullet" in v for v in rep_hype.violations)
+
+
+def test_kleene4_string_type_coercion():
+    """Verify string inputs are accepted and normalized in kleene4_join and assert_valid_lattice_transition."""
+    assert UTGKernel.kleene4_join("unknown", "true") == Kleene4Value.TRUE
+    assert UTGKernel.kleene4_join("TRUE", "false") == Kleene4Value.CONTRADICTION
+    assert UTGKernel.kleene4_join("contradiction", "unknown") == Kleene4Value.CONTRADICTION
+
+    # Transition with string states
+    with pytest.raises(UnverifiedTransitionError):
+        UTGKernel.assert_valid_lattice_transition("unknown", "true", witness_artifact=None)
+
+    assert UTGKernel.assert_valid_lattice_transition("unknown", "true", witness_artifact="sha256:abc") is True
+    assert UTGKernel.assert_valid_lattice_transition("UNKNOWN", "FALSE") is True
+

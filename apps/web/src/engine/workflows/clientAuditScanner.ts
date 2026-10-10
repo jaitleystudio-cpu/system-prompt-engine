@@ -78,12 +78,6 @@ const DANGEROUS_PATTERNS: Array<{
     pattern: /dd\s+[^|\n]*(of=\/dev\/(sd[a-z]|nvme|disk|rdisk|vda)|if=\/dev\/(sd[a-z]|nvme|disk|rdisk|vda))/i,
   },
   {
-    ruleId: "ERR_SEC_POLYGLOT",
-    severity: "CRITICAL",
-    description: "HARD_DISQUALIFICATION (ERR-SEC-POLYGLOT): Mixed-syntax polyglot vector detected",
-    pattern: /<!--\s*#!\s*\/bin\/(bash|sh|zsh|dash)|<!--\s*.*(\$\(.*?\)|`.*?`).*-->|<!--\s*(eval|exec|sudo|curl|wget)\b/i,
-  },
-  {
     ruleId: "UNICODE_BIDI_OVERRIDE",
     severity: "CRITICAL",
     description: "Directional Unicode bidi override attack detected",
@@ -97,13 +91,46 @@ const DANGEROUS_PATTERNS: Array<{
   },
 ];
 
+const BINARY_MAGIC_HEADERS: Array<{ header: string; desc: string }> = [
+  { header: "\x7fELF", desc: "ELF Binary" },
+  { header: "\xfe\xed\xfa\xce", desc: "Mach-O Binary (32-bit)" },
+  { header: "\xfe\xed\xfa\xcf", desc: "Mach-O Binary (64-bit)" },
+  { header: "\xce\xfa\xed\xfe", desc: "Mach-O Binary (reverse 32-bit)" },
+  { header: "\xcf\xfa\xed\xfe", desc: "Mach-O Binary (reverse 64-bit)" },
+  { header: "MZ", desc: "DOS/PE Executable" },
+  { header: "PK\x03\x04", desc: "ZIP Archive" },
+  { header: "\x1f\x8b", desc: "GZIP Compressed" },
+];
+
+const MULTILINE_POLYGLOT_PATTERNS: Array<{ pattern: RegExp; desc: string }> = [
+  { pattern: /<!--[\s\S]*?#!\s*\/bin\/(bash|sh|zsh|dash)/i, desc: "Shell shebang inside HTML comment" },
+  { pattern: /<!--[\s\S]*?(\$\([\s\S]*?\)|\`[\s\S]*?\`)[\s\S]*?-->/i, desc: "Subshell or backtick expansion inside HTML comment" },
+  { pattern: /<!--[\s\S]*?\b(eval|exec|sudo|curl|wget|bash|sh)\b[\s\S]*?-->/i, desc: "Shell command invocation inside HTML comment" },
+  { pattern: /\/\*[\s\S]*?#!\s*\/bin\/(bash|sh|zsh)[\s\S]*?\*\//i, desc: "Shell shebang inside C-style comment" },
+  { pattern: /("""|''')\s*:\s*[\r\n]+\s*(exec|eval|sh|bash)\b/i, desc: "Python docstring polyglot" },
+];
+
 export function auditSkillContent(
   content: string,
   options?: { ceiling?: string }
 ): ClientAuditReport {
   const violations: SecurityViolation[] = [];
 
-  // 1. Unicode NFKC Normalization & Zero-width codepoint detection
+  // 1. Binary Magic Bytes Check (ERR-SEC-POLYGLOT)
+  for (const magic of BINARY_MAGIC_HEADERS) {
+    if (content.startsWith(magic.header)) {
+      violations.push({
+        ruleId: "ERR_SEC_POLYGLOT",
+        severity: "CRITICAL",
+        description: `HARD_DISQUALIFICATION (ERR-SEC-POLYGLOT): Binary magic header detected (${magic.desc})`,
+        matchedText: magic.desc,
+        line: 1,
+      });
+      break;
+    }
+  }
+
+  // 2. Unicode NFKC Normalization & Zero-width codepoint detection
   let zeroWidthStrippedCount = 0;
   const zeroWidthRegex = /[\u200B-\u200D\uFEFF\u2060]/g;
   const zwMatches = content.match(zeroWidthRegex);
@@ -119,9 +146,27 @@ export function auditSkillContent(
 
   const nfkcContent = content.normalize("NFKC").replace(zeroWidthRegex, "");
 
-  // 2. Homoglyph inspection across tokens
+  // 3. Multiline Mixed-Syntax Polyglot Hard-Gate (ERR-SEC-POLYGLOT)
+  for (const { pattern, desc } of MULTILINE_POLYGLOT_PATTERNS) {
+    const match = pattern.exec(nfkcContent);
+    if (match && !violations.some((v) => v.ruleId === "ERR_SEC_POLYGLOT")) {
+      const index = match.index;
+      const prefix = nfkcContent.slice(0, index);
+      const approxLine = prefix.split("\n").length;
+      violations.push({
+        ruleId: "ERR_SEC_POLYGLOT",
+        severity: "CRITICAL",
+        description: `HARD_DISQUALIFICATION (ERR-SEC-POLYGLOT): Mixed-syntax polyglot vector detected (${desc})`,
+        matchedText: match[0].slice(0, 80),
+        line: approxLine,
+      });
+      break;
+    }
+  }
+
+  // 4. Homoglyph inspection across tokens
   const homoglyphsDetected: string[] = [];
-  const tokens = nfkcContent.match(/\b\w+\b/g) || [];
+  const tokens = nfkcContent.match(/[\p{L}\p{N}]+/gu) || [];
   const cyrillicHomoglyphs = /[асеорхуіјѕАВСЕНІЈКМОРТХ]/;
   const greekHomoglyphs = /[αονρυταβγδεζηικλμνξοπρστυφχψωΑΒΕΖΗΙΚΜΝΟΡΤΥΧ]/;
   for (const tok of tokens) {
@@ -188,11 +233,12 @@ export function auditSkillContent(
   }
 
   // Check permission ceiling
-  if (options?.ceiling === "LOCAL_FIRST" && detectedPermissions.includes("NETWORK_EGRESS")) {
+  const ceilingUpper = (options?.ceiling || "").toUpperCase();
+  if (["LOCAL_FIRST", "AIR_GAPPED", "SANDBOXED"].includes(ceilingUpper) && detectedPermissions.includes("NETWORK_EGRESS")) {
     violations.push({
       ruleId: "HALT_PERMISSION_ESCALATION",
       severity: "CRITICAL",
-      description: "HALT_PERMISSION_ESCALATION: Network egress requested under LOCAL_FIRST ceiling",
+      description: `HALT_PERMISSION_ESCALATION: Network egress requested under ${ceilingUpper} ceiling`,
       matchedText: "NETWORK_EGRESS",
     });
   }

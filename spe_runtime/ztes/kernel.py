@@ -400,9 +400,40 @@ class ZTESKernel:
         if expected_digest and expected_digest != digest:
             raise ProvenanceForgeryError(f"FORGERY_DETECTED: Digest mismatch (expected {expected_digest}, computed {digest}).")
 
-        # Basic Ed25519 format validation (64-byte hex string or valid base64)
-        if len(sig) not in (64, 88, 128) and not re.match(r"^[0-9a-fA-F]{64,128}$", sig):
-            raise ProvenanceForgeryError(f"FORGERY_DETECTED: Invalid Ed25519 signature format ({sig[:16]}...).")
+        # Validate Ed25519 signature format (must be valid hex of 64 or 128 chars, or valid base64)
+        is_valid_hex = bool(isinstance(sig, str) and re.fullmatch(r"^[0-9a-fA-F]{64}$|^[0-9a-fA-F]{128}$", sig))
+        is_valid_b64 = False
+        if isinstance(sig, str) and not is_valid_hex:
+            try:
+                raw_b = base64.b64decode(sig, validate=True)
+                if len(raw_b) in (32, 64):
+                    is_valid_b64 = True
+            except Exception:
+                pass
+
+        if not (is_valid_hex or is_valid_b64):
+            raise ProvenanceForgeryError(f"FORGERY_DETECTED: Invalid Ed25519 signature format ({str(sig)[:16]}...).")
+
+        # If public key is supplied, execute cryptographic signature verification
+        if public_key_hex:
+            from spe_runtime.ci_gate.receipt import ed25519_verify
+            try:
+                pk_bytes = bytes.fromhex(public_key_hex)
+                if is_valid_hex:
+                    sig_bytes = bytes.fromhex(sig) if len(sig) == 128 else bytes.fromhex(sig.ljust(128, "0"))
+                elif is_valid_b64:
+                    raw_b = base64.b64decode(sig)
+                    sig_bytes = raw_b if len(raw_b) == 64 else raw_b.ljust(64, b"\x00")
+                else:
+                    sig_bytes = b""
+
+                valid = ed25519_verify(pk_bytes, digest.encode("utf-8"), sig_bytes)
+                if not valid:
+                    raise ProvenanceForgeryError("FORGERY_DETECTED: Ed25519 signature verification failed against public key.")
+            except ProvenanceForgeryError:
+                raise
+            except Exception as e:
+                raise ProvenanceForgeryError(f"FORGERY_DETECTED: Cryptographic signature verification error: {str(e)}")
 
         return True
 

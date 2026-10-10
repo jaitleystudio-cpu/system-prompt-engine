@@ -1148,9 +1148,9 @@ class ZTESAdapter:
         }
 
     @staticmethod
-    def verify_provenance(receipt: Dict[str, Any]) -> bool:
+    def verify_provenance(receipt: Dict[str, Any], public_key_hex: Optional[str] = None) -> bool:
         from spe_runtime.ztes.kernel import ZTESKernel
-        return ZTESKernel.verify_provenance_signature(receipt)
+        return ZTESKernel.verify_provenance_signature(receipt, public_key_hex=public_key_hex)
 
     @staticmethod
     def enforce_zero_ambient_authority(env_dict: Optional[Dict[str, str]] = None) -> Dict[str, str]:

@@ -149,7 +149,7 @@ class UTGKernel:
         )
 
     @staticmethod
-    def kleene4_join(a: Kleene4Value, b: Kleene4Value) -> Kleene4Value:
+    def kleene4_join(a: Kleene4Value | str, b: Kleene4Value | str) -> Kleene4Value:
         r"""
         Law 2: Kleene-4 Monotone Join Lattice L_4 = {TRUE, FALSE, UNKNOWN, CONTRADICTION}.
         
@@ -165,29 +165,35 @@ class UTGKernel:
           TRUE \sqcup FALSE = CONTRADICTION
           CONTRADICTION \sqcup x = CONTRADICTION
         """
-        if a == b:
-            return a
-        if a == Kleene4Value.UNKNOWN:
-            return b
-        if b == Kleene4Value.UNKNOWN:
-            return a
-        if a == Kleene4Value.CONTRADICTION or b == Kleene4Value.CONTRADICTION:
+        k_a = Kleene4Value(a.upper()) if isinstance(a, str) else a
+        k_b = Kleene4Value(b.upper()) if isinstance(b, str) else b
+
+        if k_a == k_b:
+            return k_a
+        if k_a == Kleene4Value.UNKNOWN:
+            return k_b
+        if k_b == Kleene4Value.UNKNOWN:
+            return k_a
+        if k_a == Kleene4Value.CONTRADICTION or k_b == Kleene4Value.CONTRADICTION:
             return Kleene4Value.CONTRADICTION
-        if (a == Kleene4Value.TRUE and b == Kleene4Value.FALSE) or (a == Kleene4Value.FALSE and b == Kleene4Value.TRUE):
+        if (k_a == Kleene4Value.TRUE and k_b == Kleene4Value.FALSE) or (k_a == Kleene4Value.FALSE and k_b == Kleene4Value.TRUE):
             return Kleene4Value.CONTRADICTION
-        return a
+        return k_a
 
     @staticmethod
     def assert_valid_lattice_transition(
-        current_state: Kleene4Value,
-        target_state: Kleene4Value,
+        current_state: Kleene4Value | str,
+        target_state: Kleene4Value | str,
         witness_artifact: Optional[str] = None,
     ) -> bool:
         """
         Law 2: No capability or requirement can transition from UNKNOWN to TRUE
         without an immutable, tangible witness artifact. UNKNOWN is never coerced into TRUE.
         """
-        if current_state == Kleene4Value.UNKNOWN and target_state == Kleene4Value.TRUE:
+        c_state = Kleene4Value(current_state.upper()) if isinstance(current_state, str) else current_state
+        t_state = Kleene4Value(target_state.upper()) if isinstance(target_state, str) else target_state
+
+        if c_state == Kleene4Value.UNKNOWN and t_state == Kleene4Value.TRUE:
             if not witness_artifact:
                 raise UnverifiedTransitionError(
                     "Kleene-4 Invariant Violation: Cannot transition from UNKNOWN to TRUE without a tangible witness artifact."
