@@ -20,6 +20,9 @@ class QualificationStatus(str, Enum):
     QUALIFIED = "QUALIFIED"
     REJECTED = "REJECTED"
     REVOKED = "REVOKED"
+    RESEARCH_SUPPORTED = "RESEARCH_SUPPORTED"
+    RESEARCH_UNQUALIFIED = "RESEARCH_UNQUALIFIED"
+    INCONCLUSIVE = "INCONCLUSIVE"
 
 
 class RequalificationTrigger(str, Enum):
@@ -129,3 +132,6 @@ class LearningValidityTransaction:
     created_timestamp: float = field(default_factory=time.time)
     committed_timestamp: Optional[float] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
+    protocol_version: str = "LVT-1"
+    lvt2_study_result: Optional[Any] = None
+    is_attested_oracle: bool = False

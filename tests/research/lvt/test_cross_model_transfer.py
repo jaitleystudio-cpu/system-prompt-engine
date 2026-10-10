@@ -51,7 +51,55 @@ def qualified_tx():
         evaluator_id="independent-eval",
         evaluator_type=EvaluatorType.FORMAL_TEST_RUNNER,
     )
-    return validator.validate_and_commit(tx)
+    return validator.validate_and_commit(tx, allow_mock_qualification=True)
+
+
+def test_unqualified_tx_cannot_evaluate_cross_model_transfer():
+    """Unqualified / RESEARCH_UNQUALIFIED transaction cannot evaluate cross-model transfer."""
+    validator = LearningValidator()
+    claim = LearningClaim(
+        claim_id="CLM-XFER-UNQ",
+        domain="math",
+        description="Formal steps",
+        generator_id="gpt-4o",
+        base_prompt_ref="prompt_v1",
+        candidate_prompt_ref="prompt_v2",
+        budget_nanos=1000,
+    )
+    protocol = ExperimentProtocol(protocol_id="PROTO-XFER")
+    results = FourArmResults(
+        arm_a_baseline_score=0.60,
+        arm_b_authentic_score=0.90,
+        arm_c_shuffled_control_score=0.65,
+        arm_d_generalization_score=0.88,
+        delta_improvement=0.30,
+        control_delta=0.25,
+        held_out_retention=0.28,
+        is_statistically_significant=True,
+        total_cost_nanos=1000,
+    )
+    tx = LearningValidityTransaction(
+        tx_id="TX-XFER-UNQ",
+        claim=claim,
+        protocol=protocol,
+        results=results,
+        evaluator_id="independent-eval",
+        evaluator_type=EvaluatorType.FORMAL_TEST_RUNNER,
+    )
+    # Default without allow_mock_qualification yields RESEARCH_UNQUALIFIED
+    unq_tx = validator.validate_and_commit(tx)
+    assert unq_tx.status == QualificationStatus.RESEARCH_UNQUALIFIED
+
+    with pytest.raises(ValueError, match="Cannot evaluate cross-model transfer for unqualified transaction"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=unq_tx,
+            target_model_id="claude-3-7-sonnet",
+            evaluator_fn=lambda p, i: 0.8,
+            test_dataset=[{"q": "1+1"}],
+            base_prompt="base",
+            refined_prompt="refined",
+        )
+
 
 def test_successful_cross_model_transfer(qualified_tx):
     def mock_evaluator(prompt, item):

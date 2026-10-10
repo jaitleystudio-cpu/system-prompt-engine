@@ -44,6 +44,9 @@ class LearningTransferProtocol:
         """
         LearningTransferProtocol.assert_not_revoked(tx)
 
+        if tx.status not in (QualificationStatus.QUALIFIED, QualificationStatus.RESEARCH_SUPPORTED):
+            raise ValueError(f"Cannot evaluate cross-model transfer for unqualified transaction (status={tx.status})")
+
         if not test_dataset:
             raise ValueError("test_dataset cannot be empty")
 

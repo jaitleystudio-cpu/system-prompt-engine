@@ -56,7 +56,7 @@ class LearningValidator:
             and protocol.protocol_id
         )
 
-        if not results:
+        if not results and not tx.lvt2_study_result:
             return {
                 "ContractValid": contract_valid,
                 "ExperimentAuthorized": False,
@@ -64,6 +64,24 @@ class LearningValidator:
                 "EvaluationIndependent": False,
                 "ImprovementSupported": False,
                 "NoDisqualifyingRegression": False,
+            }
+
+        # Independent evaluation: evaluator != generator and not self-type
+        eval_independent = (
+            tx.evaluator_type != EvaluatorType.GENERATING_MODEL_SELF
+            and tx.evaluator_id != claim.generator_id
+            and bool(tx.evaluator_id)
+        )
+
+        if tx.lvt2_study_result:
+            study = tx.lvt2_study_result
+            return {
+                "ContractValid": contract_valid,
+                "ExperimentAuthorized": True,
+                "EvidenceAuthentic": 0.0 <= study.holdout_base_mean <= 1.0 and 0.0 <= study.holdout_candidate_mean <= 1.0,
+                "EvaluationIndependent": eval_independent,
+                "ImprovementSupported": study.train_candidate_minus_base > 0.0 and study.train_candidate_minus_shuffled > 0.0,
+                "NoDisqualifyingRegression": study.family_macro_delta >= 0.0 and study.status != "REJECTED",
             }
 
         # Check authorization & budget limits
@@ -78,13 +96,6 @@ class LearningValidator:
             results.arm_d_generalization_score,
         ]
         evidence_authentic = all(0.0 <= s <= 1.0 for s in scores)
-
-        # Independent evaluation: evaluator != generator and not self-type
-        eval_independent = (
-            tx.evaluator_type != EvaluatorType.GENERATING_MODEL_SELF
-            and tx.evaluator_id != claim.generator_id
-            and bool(tx.evaluator_id)
-        )
 
         # Supported improvement: Arm B beats baseline and shuffled control by epsilon
         improvement_supported = (
@@ -113,11 +124,14 @@ class LearningValidator:
         signing_key: Optional[bytes] = None,
         public_key: Optional[bytes] = None,
         strict: bool = False,
+        allow_mock_qualification: bool = False,
     ) -> LearningValidityTransaction:
         """
         Validates learning claim against the formal conjuncts.
         If self-certification is attempted, immediately raises GeneratingModelSelfCertificationError.
-        If valid, signs and commits the transaction into QUALIFIED status.
+        If valid, signs and commits the transaction into QUALIFIED or RESEARCH_SUPPORTED status.
+        If legacy V1 aggregate-only results are supplied without explicit allow_mock_qualification:
+            Fails closed to RESEARCH_UNQUALIFIED (production QUALIFIED cannot be minted).
         """
         # Hard Invariant: Reject self-certification immediately
         if (
@@ -143,29 +157,49 @@ class LearningValidator:
                 raise LearningValidityRuleViolation(reason)
             return tx
 
-        # All conjuncts passed -> Commit into QUALIFIED
-        tx.status = QualificationStatus.QUALIFIED
-        tx.rejection_reason = None
+        # LVT-2 & Custody Gate:
+        # Prevent legacy V1 aggregate-only results from minting production qualification
+        if tx.lvt2_study_result is not None:
+            study = tx.lvt2_study_result
+            if study.status == "REJECTED":
+                tx.status = QualificationStatus.REJECTED
+                tx.rejection_reason = f"LVT-2 study rejected: {', '.join(study.reasons)}"
+                return tx
+            elif study.status == "INCONCLUSIVE":
+                tx.status = QualificationStatus.INCONCLUSIVE
+                tx.rejection_reason = f"LVT-2 study inconclusive: {', '.join(study.reasons)}"
+                return tx
+            elif study.status == "RESEARCH_SUPPORTED_NOT_EXTERNALLY_QUALIFIED":
+                if tx.is_attested_oracle and getattr(study, "production_qualified", False):
+                    tx.status = QualificationStatus.QUALIFIED
+                    tx.rejection_reason = None
+                else:
+                    tx.status = QualificationStatus.RESEARCH_SUPPORTED
+                    tx.rejection_reason = (
+                        "Research supported by family-level exact sign test; "
+                        "external oracle attestation required for production qualification."
+                    )
+            else:
+                tx.status = QualificationStatus.REJECTED
+                tx.rejection_reason = f"Unknown LVT-2 study status: {study.status}"
+                return tx
+        elif not allow_mock_qualification:
+            # Legacy V1 aggregate-only: fail closed to RESEARCH_UNQUALIFIED
+            tx.status = QualificationStatus.RESEARCH_UNQUALIFIED
+            tx.rejection_reason = (
+                "V1 aggregate-only results cannot mint production QUALIFIED receipt. "
+                "LVT-2 family-level evaluation and independent oracle attestation required."
+            )
+            return tx
+        else:
+            # Explicit test harness / mock qualification override for internal receipt serialization
+            tx.status = QualificationStatus.QUALIFIED
+            tx.rejection_reason = None
+
         tx.committed_timestamp = time.time()
 
         # Compute deterministic RFC 8785 artifact hash
-        receipt_dict = {
-            "tx_id": tx.tx_id,
-            "claim_id": tx.claim.claim_id,
-            "domain": tx.claim.domain,
-            "generator_id": tx.claim.generator_id,
-            "evaluator_id": tx.evaluator_id,
-            "evaluator_type": tx.evaluator_type.value,
-            "status": tx.status.value,
-            "results": {
-                "arm_a": tx.results.arm_a_baseline_score if tx.results else 0.0,
-                "arm_b": tx.results.arm_b_authentic_score if tx.results else 0.0,
-                "arm_c": tx.results.arm_c_shuffled_control_score if tx.results else 0.0,
-                "arm_d": tx.results.arm_d_generalization_score if tx.results else 0.0,
-                "delta": tx.results.delta_improvement if tx.results else 0.0,
-            },
-            "timestamp": tx.committed_timestamp,
-        }
+        receipt_dict = self._build_receipt_dict(tx)
         canonical_bytes = rfc8785_canonicalize(receipt_dict)
         tx.artifact_hash = hashlib.sha256(canonical_bytes).hexdigest()
 
@@ -177,6 +211,42 @@ class LearningValidator:
         tx.metadata["public_key"] = pk.hex()
 
         return tx
+
+    @staticmethod
+    def _build_receipt_dict(tx: LearningValidityTransaction) -> Dict[str, Any]:
+        study = tx.lvt2_study_result
+        if study:
+            arm_a = study.holdout_base_mean
+            arm_b = study.holdout_candidate_mean
+            arm_c = study.train_candidate_minus_shuffled
+            arm_d = study.holdout_candidate_mean
+            delta = study.family_macro_delta
+        elif tx.results:
+            arm_a = tx.results.arm_a_baseline_score
+            arm_b = tx.results.arm_b_authentic_score
+            arm_c = tx.results.arm_c_shuffled_control_score
+            arm_d = tx.results.arm_d_generalization_score
+            delta = tx.results.delta_improvement
+        else:
+            arm_a = arm_b = arm_c = arm_d = delta = 0.0
+
+        return {
+            "tx_id": tx.tx_id,
+            "claim_id": tx.claim.claim_id,
+            "domain": tx.claim.domain,
+            "generator_id": tx.claim.generator_id,
+            "evaluator_id": tx.evaluator_id,
+            "evaluator_type": tx.evaluator_type.value,
+            "status": tx.status.value,
+            "results": {
+                "arm_a": arm_a,
+                "arm_b": arm_b,
+                "arm_c": arm_c,
+                "arm_d": arm_d,
+                "delta": delta,
+            },
+            "timestamp": tx.committed_timestamp,
+        }
 
     def verify_transaction_signature(
         self,
@@ -193,23 +263,7 @@ class LearningValidator:
         if not pk:
             pk = self._pk
 
-        receipt_dict = {
-            "tx_id": tx.tx_id,
-            "claim_id": tx.claim.claim_id,
-            "domain": tx.claim.domain,
-            "generator_id": tx.claim.generator_id,
-            "evaluator_id": tx.evaluator_id,
-            "evaluator_type": tx.evaluator_type.value,
-            "status": tx.status.value,
-            "results": {
-                "arm_a": tx.results.arm_a_baseline_score if tx.results else 0.0,
-                "arm_b": tx.results.arm_b_authentic_score if tx.results else 0.0,
-                "arm_c": tx.results.arm_c_shuffled_control_score if tx.results else 0.0,
-                "arm_d": tx.results.arm_d_generalization_score if tx.results else 0.0,
-                "delta": tx.results.delta_improvement if tx.results else 0.0,
-            },
-            "timestamp": tx.committed_timestamp,
-        }
+        receipt_dict = self._build_receipt_dict(tx)
         canonical_bytes = rfc8785_canonicalize(receipt_dict)
         sig_bytes = bytes.fromhex(tx.canonical_receipt_signature)
         return ed25519_verify(pk, canonical_bytes, sig_bytes)
