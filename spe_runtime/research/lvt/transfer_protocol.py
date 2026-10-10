@@ -11,6 +11,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence
 
 from spe_runtime.research.lvt.types import (
     LearningValidityTransaction,
+    FourArmResults,
     QualificationStatus,
     RequalificationTrigger,
     RevocationReason,
@@ -43,6 +44,13 @@ class LearningTransferProtocol:
         Tests whether an admitted learning refinement generalizes to a distinct foundation model.
         """
         LearningTransferProtocol.assert_not_revoked(tx)
+
+        # A score table is not an independently verified learning certificate.
+        # Do not advertise transfer for non-admitted or legacy aggregate claims.
+        if tx.status != QualificationStatus.QUALIFIED:
+            raise ValueError("Cannot evaluate transfer for non-qualified transaction")
+        if isinstance(tx.results, FourArmResults):
+            raise ValueError("Cannot evaluate transfer from legacy aggregate-only learning evidence")
 
         if not test_dataset:
             raise ValueError("test_dataset cannot be empty")
@@ -87,6 +95,8 @@ class LearningTransferProtocol:
 
         if tx.status != QualificationStatus.QUALIFIED:
             raise ValueError(f"Cannot synthesize artifact for non-qualified transaction (status={tx.status})")
+        if isinstance(tx.results, FourArmResults):
+            raise ValueError("Cannot export legacy aggregate-only learning evidence as a verified artifact")
 
         artifact_doc = {
             "spe_version": "1.0",
