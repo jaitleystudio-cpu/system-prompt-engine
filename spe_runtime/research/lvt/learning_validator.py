@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import time
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Set, Tuple
 
 from spe_runtime.ci_gate.receipt import (
     ed25519_sign,
@@ -21,6 +21,7 @@ from spe_runtime.research.lvt.types import (
     GeneratingModelSelfCertificationError,
     LearningValidityRuleViolation,
     LearningValidityTransaction,
+    OracleAttestation,
     QualificationStatus,
 )
 
@@ -32,12 +33,14 @@ class LearningValidator:
         self,
         default_signing_key: Optional[bytes] = None,
         default_public_key: Optional[bytes] = None,
+        trusted_oracle_keys: Optional[Set[str]] = None,
     ) -> None:
         if default_signing_key and default_public_key:
             self._sk = default_signing_key
             self._pk = default_public_key
         else:
             self._sk, self._pk = generate_keypair()
+        self._trusted_oracle_keys = set(trusted_oracle_keys) if trusted_oracle_keys is not None else None
 
     @property
     def public_key(self) -> bytes:
@@ -170,14 +173,19 @@ class LearningValidator:
                 tx.rejection_reason = f"LVT-2 study inconclusive: {', '.join(study.reasons)}"
                 return tx
             elif study.status == "RESEARCH_SUPPORTED_NOT_EXTERNALLY_QUALIFIED":
-                if tx.is_attested_oracle and getattr(study, "production_qualified", False):
+                oracle_ok, oracle_msg = self.verify_oracle_attestation(
+                    tx.oracle_attestation, study.evidence_hash
+                )
+                if oracle_ok:
                     tx.status = QualificationStatus.QUALIFIED
+                    tx.is_attested_oracle = True
                     tx.rejection_reason = None
                 else:
                     tx.status = QualificationStatus.RESEARCH_SUPPORTED
+                    tx.is_attested_oracle = False
                     tx.rejection_reason = (
                         "Research supported by family-level exact sign test; "
-                        "external oracle attestation required for production qualification."
+                        f"external oracle attestation required for production qualification ({oracle_msg})."
                     )
             else:
                 tx.status = QualificationStatus.REJECTED
@@ -267,3 +275,82 @@ class LearningValidator:
         canonical_bytes = rfc8785_canonicalize(receipt_dict)
         sig_bytes = bytes.fromhex(tx.canonical_receipt_signature)
         return ed25519_verify(pk, canonical_bytes, sig_bytes)
+
+    def verify_oracle_attestation(
+        self,
+        attestation: Optional[OracleAttestation],
+        expected_evidence_hash: str,
+    ) -> Tuple[bool, str]:
+        """
+        Cryptographically verifies an independent oracle attestation.
+        Requires valid Ed25519 signature over canonical RFC 8785 attestation dictionary,
+        matching evidence hash, and approved verdict.
+        """
+        if attestation is None:
+            return False, "missing attestation"
+
+        if attestation.verdict != "APPROVED":
+            return False, f"unapproved verdict: {attestation.verdict}"
+
+        if not attestation.evidence_hash or attestation.evidence_hash != expected_evidence_hash:
+            return False, f"evidence hash mismatch ({attestation.evidence_hash} != {expected_evidence_hash})"
+
+        if not attestation.oracle_public_key or len(attestation.oracle_public_key) != 64:
+            return False, "invalid oracle public key format"
+
+        if not attestation.signature or len(attestation.signature) != 128:
+            return False, "invalid signature format"
+
+        if self._trusted_oracle_keys is not None:
+            if attestation.oracle_public_key not in self._trusted_oracle_keys:
+                return False, f"untrusted oracle public key: {attestation.oracle_public_key}"
+
+        try:
+            pk_bytes = bytes.fromhex(attestation.oracle_public_key)
+            sig_bytes = bytes.fromhex(attestation.signature)
+        except ValueError as e:
+            return False, f"hex decoding error: {e}"
+
+        attestation_dict = {
+            "evidence_hash": attestation.evidence_hash,
+            "oracle_id": attestation.oracle_id,
+            "oracle_public_key": attestation.oracle_public_key,
+            "timestamp": attestation.timestamp,
+            "verdict": attestation.verdict,
+        }
+        canonical_bytes = rfc8785_canonicalize(attestation_dict)
+        if not ed25519_verify(pk_bytes, canonical_bytes, sig_bytes):
+            return False, "invalid cryptographic signature"
+
+        return True, "verified"
+
+
+def create_oracle_attestation(
+    signing_key: bytes,
+    public_key: bytes,
+    oracle_id: str,
+    evidence_hash: str,
+    verdict: str = "APPROVED",
+    timestamp: Optional[float] = None,
+) -> OracleAttestation:
+    """Helper to generate a cryptographically valid OracleAttestation for testing/production."""
+    ts = timestamp if timestamp is not None else time.time()
+    pk_hex = public_key.hex()
+    attestation_dict = {
+        "evidence_hash": evidence_hash,
+        "oracle_id": oracle_id,
+        "oracle_public_key": pk_hex,
+        "timestamp": ts,
+        "verdict": verdict,
+    }
+    canonical_bytes = rfc8785_canonicalize(attestation_dict)
+    sig_bytes = ed25519_sign(signing_key, public_key, canonical_bytes)
+    return OracleAttestation(
+        oracle_id=oracle_id,
+        oracle_public_key=pk_hex,
+        evidence_hash=evidence_hash,
+        timestamp=ts,
+        verdict=verdict,
+        signature=sig_bytes.hex(),
+    )
+

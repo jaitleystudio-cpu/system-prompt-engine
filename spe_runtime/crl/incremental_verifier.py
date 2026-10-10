@@ -171,6 +171,27 @@ class IncrementalCanonicalVerifier:
                 if dep not in graph.nodes:
                     return False, f"Root state has missing dependency: {dep} for node {nid}"
 
+        # Check DAG acyclicity
+        visited_nodes: Dict[str, int] = {}
+        def has_cycle(u: str) -> bool:
+            visited_nodes[u] = 1
+            n = graph.nodes.get(u)
+            if n:
+                for v in n.dependencies:
+                    if v in graph.nodes:
+                        st = visited_nodes.get(v, 0)
+                        if st == 1:
+                            return True
+                        if st == 0 and has_cycle(v):
+                            return True
+            visited_nodes[u] = 2
+            return False
+
+        for nid in graph.nodes:
+            if visited_nodes.get(nid, 0) == 0:
+                if has_cycle(nid):
+                    return False, f"Cycle detected in reasoning graph involving node {nid}"
+
         # Invariant consistency check
         seen_invariants: Set[str] = set()
         for node in graph.nodes.values():
@@ -253,19 +274,53 @@ class IncrementalCanonicalVerifier:
                         rejection_reason=f"Node {nid} introduces missing dependency {dep}",
                     )
 
+            # Check for circular dependency induced by nid
+            visited_cycle: Set[str] = set()
+            stack: List[str] = list(node.dependencies)
+            while stack:
+                curr = stack.pop()
+                if curr == nid:
+                    elapsed = (time.perf_counter() - start_time) * 1_000_000.0
+                    return IncrementalVerificationReceipt(
+                        parent_state_hash=p_hash,
+                        child_state_hash=c_hash,
+                        delta_size=delta.total_delta_size,
+                        verification_latency_micros=elapsed,
+                        status=IncrementalVerificationStatus.INVARIANT_VIOLATED,
+                        verified_delta=delta,
+                        rejection_reason=f"Circular dependency detected involving node {nid}",
+                    )
+                if curr not in visited_cycle and curr in child.nodes:
+                    visited_cycle.add(curr)
+                    stack.extend(child.nodes[curr].dependencies)
+
         # 3. Local Invariant Consistency Check (Conflict Detection on Δ)
         existing_untouched_invariants: Set[str] = set()
         for nid, node in parent.nodes.items():
             if nid not in delta.modified_nodes and nid not in delta.removed_nodes:
                 existing_untouched_invariants.update(node.invariants)
 
+        delta_invariants: Set[str] = set()
         for nid in delta.added_nodes + delta.modified_nodes:
             node = child.nodes[nid]
             for inv in node.invariants:
                 # Check mutex/exclusion constraints
+                if inv.startswith("MUTEX_"):
+                    if inv in existing_untouched_invariants or inv in delta_invariants:
+                        elapsed = (time.perf_counter() - start_time) * 1_000_000.0
+                        return IncrementalVerificationReceipt(
+                            parent_state_hash=p_hash,
+                            child_state_hash=c_hash,
+                            delta_size=delta.total_delta_size,
+                            verification_latency_micros=elapsed,
+                            status=IncrementalVerificationStatus.INVARIANT_VIOLATED,
+                            verified_delta=delta,
+                            rejection_reason=f"Mutex invariant conflict: {inv} already held",
+                        )
+
                 if inv.startswith("FORBID_"):
                     forbidden_target = inv[len("FORBID_"):]
-                    if forbidden_target in existing_untouched_invariants:
+                    if forbidden_target in existing_untouched_invariants or forbidden_target in delta_invariants:
                         elapsed = (time.perf_counter() - start_time) * 1_000_000.0
                         return IncrementalVerificationReceipt(
                             parent_state_hash=p_hash,
@@ -276,6 +331,18 @@ class IncrementalCanonicalVerifier:
                             verified_delta=delta,
                             rejection_reason=f"New constraint {inv} contradicts existing invariant {forbidden_target}",
                         )
+
+                if f"FORBID_{inv}" in existing_untouched_invariants:
+                    elapsed = (time.perf_counter() - start_time) * 1_000_000.0
+                    return IncrementalVerificationReceipt(
+                        parent_state_hash=p_hash,
+                        child_state_hash=c_hash,
+                        delta_size=delta.total_delta_size,
+                        verification_latency_micros=elapsed,
+                        status=IncrementalVerificationStatus.INVARIANT_VIOLATED,
+                        verified_delta=delta,
+                        rejection_reason=f"New invariant {inv} contradicts existing FORBID_{inv}",
+                    )
 
                 # Authorization constraint violations
                 if inv == "UNRESTRICTED_ESCALATION":
@@ -289,6 +356,7 @@ class IncrementalCanonicalVerifier:
                         verified_delta=delta,
                         rejection_reason="Unauthorized escalation token introduced in reasoning delta.",
                     )
+                delta_invariants.add(inv)
 
         # Invariant delta is sound! Inherit certification baseline
         child.certified = True

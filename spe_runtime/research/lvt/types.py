@@ -115,6 +115,17 @@ class FourArmResults:
         validate_nanos(self.total_cost_nanos, "total_cost_nanos")
 
 
+@dataclass(frozen=True)
+class OracleAttestation:
+    """Cryptographically verifiable attestation from an independent oracle."""
+    oracle_id: str
+    oracle_public_key: str
+    evidence_hash: str
+    timestamp: float
+    verdict: str  # e.g. "APPROVED"
+    signature: str  # Ed25519 hex signature over canonical attestation dictionary
+
+
 @dataclass
 class LearningValidityTransaction:
     """Ledger transaction recording the formal qualification of a learning claim."""
@@ -135,3 +146,4 @@ class LearningValidityTransaction:
     protocol_version: str = "LVT-1"
     lvt2_study_result: Optional[Any] = None
     is_attested_oracle: bool = False
+    oracle_attestation: Optional[OracleAttestation] = None

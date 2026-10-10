@@ -25,26 +25,82 @@ from spe_runtime.research.lvt.types import (
     validate_nanos,
 )
 
-# Two-tailed Student's t critical values for alpha = 0.05
-T_CRIT_95 = {
-    1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571,
-    6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228,
-    15: 2.131, 20: 2.086, 25: 2.060, 30: 2.042, 40: 2.021,
-    50: 2.009, 60: 2.000, 80: 1.990, 100: 1.984
-}
+def _betacf(a: float, b: float, x: float, max_iter: int = 200, eps: float = 1e-15) -> float:
+    """Evaluates continued fraction for regularized incomplete beta using Lentz's method."""
+    qab = a + b
+    qap = a + 1.0
+    qam = a - 1.0
+    c = 1.0
+    d = 1.0 - qab * x / qap
+    if abs(d) < 1e-30:
+        d = 1e-30
+    d = 1.0 / d
+    h = d
+    for m in range(1, max_iter + 1):
+        m2 = 2 * m
+        # Even step
+        aa = m * (b - m) * x / ((qam + m2) * (a + m2))
+        d = 1.0 + aa * d
+        if abs(d) < 1e-30:
+            d = 1e-30
+        c = 1.0 + aa / c
+        if abs(c) < 1e-30:
+            c = 1e-30
+        d = 1.0 / d
+        h *= d * c
+        # Odd step
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2))
+        d = 1.0 + aa * d
+        if abs(d) < 1e-30:
+            d = 1e-30
+        c = 1.0 + aa / c
+        if abs(c) < 1e-30:
+            c = 1e-30
+        d = 1.0 / d
+        del_h = d * c
+        h *= del_h
+        if abs(del_h - 1.0) < eps:
+            break
+    return h
 
 
-def _get_t_crit(df: int) -> float:
-    """Returns two-tailed critical t-value for 95% confidence."""
+def _incbeta(a: float, b: float, x: float) -> float:
+    """Computes exact regularized incomplete beta function I_x(a, b)."""
+    if x <= 0.0:
+        return 0.0
+    if x >= 1.0:
+        return 1.0
+    lbeta = math.lgamma(a) + math.lgamma(b) - math.lgamma(a + b)
+    front = math.exp(a * math.log(x) + b * math.log(1.0 - x) - lbeta)
+    if x < (a + 1.0) / (a + b + 2.0):
+        return front * _betacf(a, b, x) / a
+    else:
+        return 1.0 - front * _betacf(b, a, 1.0 - x) / b
+
+
+def exact_student_t_pvalue(t_stat: float, df: int) -> float:
+    """Computes exact two-tailed Student's t distribution p-value via incomplete beta."""
     if df <= 0:
-        return 1.960
-    if df in T_CRIT_95:
-        return T_CRIT_95[df]
-    # Closest smaller lookup or default asymptotic standard normal
-    for k in sorted(T_CRIT_95.keys(), reverse=True):
-        if df >= k:
-            return T_CRIT_95[k]
-    return 1.960
+        return 1.0
+    t2 = t_stat * t_stat
+    x = df / (df + t2)
+    return max(0.0, min(1.0, _incbeta(0.5 * df, 0.5, x)))
+
+
+def exact_student_t_crit(alpha: float = 0.05, df: int = 1) -> float:
+    """Computes exact two-tailed Student's t critical value for any degrees of freedom df >= 1."""
+    if df <= 0:
+        return 1.959964
+    low = 0.0
+    high = 1000.0
+    for _ in range(80):
+        mid = (low + high) / 2.0
+        p = exact_student_t_pvalue(mid, df)
+        if p > alpha:
+            low = mid
+        else:
+            high = mid
+    return (low + high) / 2.0
 
 
 class ControlledExperimentRunner:
@@ -58,7 +114,8 @@ class ControlledExperimentRunner:
         scores_base: List[float], scores_cand: List[float]
     ) -> Tuple[float, float, float, Tuple[float, float]]:
         """
-        Computes item-level paired differences, t-statistic, p-value, and 95% Confidence Interval.
+        Computes item-level paired differences, t-statistic, exact Student's t p-value,
+        and exact 95% Confidence Interval.
         Returns: (mean_delta, p_value, t_statistic, (ci_lower, ci_upper))
         """
         if not scores_base or not scores_cand or len(scores_base) != len(scores_cand):
@@ -84,13 +141,12 @@ class ControlledExperimentRunner:
         std_err = math.sqrt(var_d / n)
         t_stat = mean_d / std_err
 
-        # Compute p-value using Student's t approximation via error function with df correction
+        # Compute EXACT p-value and critical value using Student's t incomplete beta distribution
         df = max(1, n - 1)
-        z_approx = t_stat * (1.0 - (1.0 / (4.0 * df)))
-        p_value = math.erfc(abs(z_approx) / math.sqrt(2.0))
+        p_value = exact_student_t_pvalue(t_stat, df)
 
-        # 95% Confidence Interval
-        t_crit = _get_t_crit(df)
+        # Exact 95% Confidence Interval for arbitrary df
+        t_crit = exact_student_t_crit(0.05, df)
         ci_lower = mean_d - t_crit * std_err
         ci_upper = mean_d + t_crit * std_err
 
