@@ -11785,6 +11785,12 @@
       "text": "1-Click Power Prompts"
     },
     {
+      "id": "4401341dcfcecc134f54",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Astra 6.1"
+    },
+    {
       "id": "4914cce95c2e3944437c",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11795,6 +11801,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Writing"
+    },
+    {
+      "id": "4d62fee2365a95feb066",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI 6 / o3"
     },
     {
       "id": "4fe7f4cfc662a1c1a716",
@@ -11813,6 +11825,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Claude ↗"
+    },
+    {
+      "id": "6cbd839e49cae56887dd",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Fable 5.0"
     },
     {
       "id": "8bc9c1884a472b2b129a",
@@ -11879,6 +11897,18 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Copied! ✓"
+    },
+    {
+      "id": "f8beccf98a380044c559",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Claude 6.0"
+    },
+    {
+      "id": "fa84a9ae4267aa08bb5d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "claude-6"
     },
     {
       "id": "0014fed211f55a770c35",

@@ -22,7 +22,7 @@ export interface PowerPrompt {
   verified: boolean;
   upvotes: number;
   uses: number;
-  targetModels: Array<"gpt-4o" | "claude-3-7" | "gemini-2-0" | "local">;
+  targetModels: Array<"openai-6" | "claude-6" | "astra-6-1" | "fable-5" | "local">;
   variables: PromptVariable[];
   template: string;
 }
@@ -40,7 +40,7 @@ export const POWER_PROMPTS_VAULT: PowerPrompt[] = [
     verified: true,
     upvotes: 4892,
     uses: 68420,
-    targetModels: ["gpt-4o", "claude-3-7", "gemini-2-0"],
+    targetModels: ["openai-6", "claude-6", "astra-6-1", "fable-5"],
     variables: [
       { name: "keyword", label: "Target Keyword", placeholder: "e.g. best crm for startups", default: "best crm for small business" },
       { name: "competitor_focus", label: "Competitor Topic / Weakness", placeholder: "e.g. competitor lacks real pricing comparison", default: "focus on hidden fees and real team onboarding" }
@@ -71,7 +71,7 @@ Core Content Requirements:
     verified: true,
     upvotes: 3740,
     uses: 41900,
-    targetModels: ["gpt-4o", "claude-3-7", "gemini-2-0"],
+    targetModels: ["openai-6", "claude-6", "astra-6-1", "fable-5"],
     variables: [
       { name: "seed_topic", label: "Seed Topic / Niche", placeholder: "e.g. cold email automation", default: "b2b lead generation" }
     ],
@@ -98,7 +98,7 @@ Generate:
     verified: true,
     upvotes: 2950,
     uses: 33100,
-    targetModels: ["gpt-4o", "claude-3-7"],
+    targetModels: ["openai-6", "claude-6"],
     variables: [
       { name: "page_topic", label: "Page Topic or Product", placeholder: "e.g. AI Prompt Optimization Tool", default: "System Prompt Engine" },
       { name: "primary_benefit", label: "Main Value Proposition", placeholder: "e.g. 1-click power prompts without hallucinations", default: "Zero-hallucination verified prompts for Claude & ChatGPT" }
@@ -123,7 +123,7 @@ For a page about "{page_topic}" delivering "{primary_benefit}":
     verified: true,
     upvotes: 5610,
     uses: 89100,
-    targetModels: ["gpt-4o", "claude-3-7", "gemini-2-0"],
+    targetModels: ["openai-6", "claude-6", "astra-6-1", "fable-5"],
     variables: [
       { name: "product_name", label: "Product Name", placeholder: "e.g. FlowState", default: "SPE" },
       { name: "target_audience", label: "Target Audience", placeholder: "e.g. busy founders & marketers", default: "marketers, agency owners, and AI creators" },
@@ -164,7 +164,7 @@ Write out each section clearly:
     verified: true,
     upvotes: 4120,
     uses: 57200,
-    targetModels: ["gpt-4o", "claude-3-7"],
+    targetModels: ["openai-6", "claude-6"],
     variables: [
       { name: "core_insight", label: "Core Insight / Story", placeholder: "e.g. why 90% of AI prompts fail in production", default: "why most AI prompt tools are selling 2023 snake oil and how real prompt engineering works" },
       { name: "target_reader", label: "Target Reader", placeholder: "e.g. founders & developers", default: "AI founders, developers, and tech marketers" }
@@ -195,7 +195,7 @@ Requirements:
     verified: true,
     upvotes: 3820,
     uses: 48900,
-    targetModels: ["gpt-4o", "claude-3-7"],
+    targetModels: ["openai-6", "claude-6"],
     variables: [
       { name: "offer", label: "Your Offer / Product", placeholder: "e.g. automated security audit tool", default: "automated AI prompt verification and quality assurance" },
       { name: "prospect_role", label: "Prospect Job Title", placeholder: "e.g. VP of Marketing", default: "Head of AI / Product Lead" },
@@ -228,7 +228,7 @@ Sequence Specifications:
     verified: true,
     upvotes: 6180,
     uses: 92400,
-    targetModels: ["claude-3-7", "gpt-4o"],
+    targetModels: ["claude-6", "openai-6"],
     variables: [
       { name: "feature_desc", label: "Feature Description", placeholder: "e.g. Multi-tenant team invitation system with role-based permissions", default: "Browser extension companion for 1-click prompt injection into ChatGPT and Claude" },
       { name: "tech_stack", label: "Tech Stack", placeholder: "e.g. Next.js 15, PostgreSQL, Drizzle, Tailwind", default: "TypeScript, Chrome Manifest V3, Vite, React" }
@@ -260,7 +260,7 @@ Ensure zero speculative dependencies.`
     verified: true,
     upvotes: 5310,
     uses: 76800,
-    targetModels: ["claude-3-7", "gpt-4o"],
+    targetModels: ["claude-6", "openai-6"],
     variables: [
       { name: "error_or_bug", label: "Error Message / Bug Behavior", placeholder: "e.g. TypeError: Cannot read properties of undefined (reading 'token')", default: "Event listener memory leak when switching tabs in Chrome extension" },
       { name: "code_context", label: "Relevant Code Context", placeholder: "Paste code snippet or component logic", default: "chrome.tabs.onUpdated.addListener(...) without removal on unmount" }
@@ -289,7 +289,7 @@ Provide a disciplined diagnostic report:
     verified: true,
     upvotes: 4420,
     uses: 51200,
-    targetModels: ["claude-3-7", "gpt-4o"],
+    targetModels: ["claude-6", "openai-6"],
     variables: [
       { name: "startup_summary", label: "Startup Elevator Pitch", placeholder: "e.g. AI customer support agent that learns from Slack tickets", default: "System Prompt Engine: the open compiler and browser companion for AI instruction assurance and prompt optimization" },
       { name: "pricing_model", label: "Business Model / Pricing", placeholder: "e.g. Freemium with $29/mo pro and enterprise seats", default: "Free browser companion + $20/mo Pro + Enterprise compliance assurance" }
@@ -318,7 +318,7 @@ Deliver a brutal, high-stakes evaluation:
     verified: true,
     upvotes: 7290,
     uses: 114000,
-    targetModels: ["claude-3-7", "gpt-4o", "gemini-2-0"],
+    targetModels: ["claude-6", "openai-6", "astra-6-1"],
     variables: [
       { name: "draft_text", label: "Text to Humanize", placeholder: "Paste your AI-generated text here", default: "In today's fast-paced digital world, leveraging AI is crucial for businesses seeking to maximize efficiency and unlock unparalleled growth..." }
     ],

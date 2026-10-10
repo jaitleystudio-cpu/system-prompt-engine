@@ -14,7 +14,7 @@ interface Props {
 export function PromptVaultPanel({ onSelectPrompt }: Props) {
   const [search, setSearch] = useState("");
   const [selectedCat, setSelectedCat] = useState<string>("All");
-  const [activeModel, setActiveModel] = useState<string>("claude-3-7");
+  const [activeModel, setActiveModel] = useState<string>("claude-6");
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
   const [varValues, setVarValues] = useState<Record<string, Record<string, string>>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -91,25 +91,32 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
           </span>
           <div className="spe-vault-model-pills">
             <span
-              className={`spe-vault-model-tag ${activeModel === "claude-3-7" ? "active" : ""}`}
-              onClick={() => setActiveModel("claude-3-7")}
+              className={`spe-vault-model-tag ${activeModel === "claude-6" ? "active" : ""}`}
+              onClick={() => setActiveModel("claude-6")}
               style={{ cursor: "pointer" }}
             >
-              Claude 3.7 Sonnet
+              Claude 6.0
             </span>
             <span
-              className={`spe-vault-model-tag ${activeModel === "gpt-4o" ? "active" : ""}`}
-              onClick={() => setActiveModel("gpt-4o")}
+              className={`spe-vault-model-tag ${activeModel === "openai-6" ? "active" : ""}`}
+              onClick={() => setActiveModel("openai-6")}
               style={{ cursor: "pointer" }}
             >
-              OpenAI GPT-4o
+              OpenAI 6 / o3
             </span>
             <span
-              className={`spe-vault-model-tag ${activeModel === "gemini-2-0" ? "active" : ""}`}
-              onClick={() => setActiveModel("gemini-2-0")}
+              className={`spe-vault-model-tag ${activeModel === "astra-6-1" ? "active" : ""}`}
+              onClick={() => setActiveModel("astra-6-1")}
               style={{ cursor: "pointer" }}
             >
-              Google Gemini 2.0
+              Astra 6.1
+            </span>
+            <span
+              className={`spe-vault-model-tag ${activeModel === "fable-5" ? "active" : ""}`}
+              onClick={() => setActiveModel("fable-5")}
+              style={{ cursor: "pointer" }}
+            >
+              Fable 5.0
             </span>
           </div>
         </div>
