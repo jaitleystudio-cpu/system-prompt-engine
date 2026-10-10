@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { AppView } from "../routing";
+import { copyTextSafe } from "../engine/workflows/clipboard";
 import "./conversion-kernel.css";
 
 interface ConversionKernelProps {
@@ -11,19 +12,11 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   const copyToClipboard = async (text: string, key: string) => {
-    try {
-      if (globalThis.navigator?.clipboard) {
-        await globalThis.navigator.clipboard.writeText(text);
-      }
+    const success = await copyTextSafe(text);
+    if (success) {
       setCopiedKey(key);
       setTimeout(() => {
-        setCopiedKey(null);
-      }, 2000);
-    } catch {
-      // Graceful fallback for restricted environments
-      setCopiedKey(key);
-      setTimeout(() => {
-        setCopiedKey(null);
+        setCopiedKey((curr) => (curr === key ? null : curr));
       }, 2000);
     }
   };
@@ -39,8 +32,10 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
         <div className="spe-conversion-tabs" role="tablist" aria-label="Positioning Formulas">
           <button
             type="button"
+            id="tab-formula-a"
             role="tab"
             aria-selected={activeFormula === "A"}
+            aria-controls="panel-formula-a"
             className={`spe-conversion-tab ${activeFormula === "A" ? "is-active" : ""}`}
             onClick={() => setActiveFormula("A")}
           >
@@ -48,8 +43,10 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
           </button>
           <button
             type="button"
+            id="tab-formula-b"
             role="tab"
             aria-selected={activeFormula === "B"}
+            aria-controls="panel-formula-b"
             className={`spe-conversion-tab ${activeFormula === "B" ? "is-active" : ""}`}
             onClick={() => setActiveFormula("B")}
           >
@@ -59,7 +56,12 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
 
         {/* Formula Showcase */}
         {activeFormula === "A" ? (
-          <div className="spe-formula-card">
+          <div
+            id="panel-formula-a"
+            role="tabpanel"
+            aria-labelledby="tab-formula-a"
+            className="spe-formula-card"
+          >
             <div className="spe-formula-header">
               <span className="spe-formula-tag">The $20 Subscription Killer</span>
               <h2 id="conversion-kernel-heading" className="spe-formula-title">
@@ -105,7 +107,12 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
             </div>
           </div>
         ) : (
-          <div className="spe-formula-card">
+          <div
+            id="panel-formula-b"
+            role="tabpanel"
+            aria-labelledby="tab-formula-b"
+            className="spe-formula-card"
+          >
             <div className="spe-formula-header">
               <span className="spe-formula-tag">The Broken Agent &amp; Regression Stopper</span>
               <h2 id="conversion-kernel-heading" className="spe-formula-title">

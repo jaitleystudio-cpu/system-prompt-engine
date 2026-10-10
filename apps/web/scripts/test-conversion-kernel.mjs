@@ -77,7 +77,22 @@ console.log("✓ Developer CLI CTAs and commands verified");
 assert.match(kernel, /data-copy-depth="PROOF"/, "ConversionKernel marked with PROOF depth");
 assert.match(matrix, /data-copy-depth="PROOF"/, "ValueComparisonMatrix marked with PROOF depth");
 
-// 8. Accessibility & High-End Design
+// 8. Safe Clipboard & ARIA Tabpanel Contracts
+assert.match(kernel, /copyTextSafe/, "ConversionKernel must use copyTextSafe helper");
+assert.match(matrix, /copyTextSafe/, "ValueComparisonMatrix must use copyTextSafe helper");
+assert.match(kernel, /role="tabpanel"/, "ConversionKernel must define role=tabpanel");
+assert.match(kernel, /aria-controls="panel-formula-a"/, "Tab A must control panel A");
+assert.match(kernel, /aria-controls="panel-formula-b"/, "Tab B must control panel B");
+console.log("✓ Safe clipboard and ARIA tabpanel contracts verified");
+
+// 9. Anti-Jargon Law Compliance
+for (const jargon of ["Horn logic", "epistemic compilation", "counterfactual witness"]) {
+  assert.ok(!kernel.toLowerCase().includes(jargon.toLowerCase()), `ConversionKernel must not contain forbidden jargon: ${jargon}`);
+  assert.ok(!matrix.toLowerCase().includes(jargon.toLowerCase()), `ValueComparisonMatrix must not contain forbidden jargon: ${jargon}`);
+}
+console.log("✓ Anti-Jargon Law verified (zero forbidden marketing jargon)");
+
+// 10. Accessibility & High-End Design
 assert.match(css, /min-height:\s*44px/, "Touch target minimum 44px");
 assert.match(css, /:focus-visible/, "Focus visible outlines specified");
 assert.match(css, /prefers-reduced-motion:\s*reduce/, "Reduced motion fallbacks specified");

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { AppView } from "../routing";
+import { copyTextSafe } from "../engine/workflows/clipboard";
 import "./conversion-kernel.css";
 
 interface ValueComparisonMatrixProps {
@@ -77,18 +78,11 @@ export function ValueComparisonMatrix({ onNavigate }: ValueComparisonMatrixProps
       : MATRIX_ROWS.filter((row) => row.category === filter);
 
   const copyToClipboard = async (text: string, key: string) => {
-    try {
-      if (globalThis.navigator?.clipboard) {
-        await globalThis.navigator.clipboard.writeText(text);
-      }
+    const success = await copyTextSafe(text);
+    if (success) {
       setCopiedKey(key);
       setTimeout(() => {
-        setCopiedKey(null);
-      }, 2000);
-    } catch {
-      setCopiedKey(key);
-      setTimeout(() => {
-        setCopiedKey(null);
+        setCopiedKey((curr) => (curr === key ? null : curr));
       }, 2000);
     }
   };
@@ -162,7 +156,7 @@ export function ValueComparisonMatrix({ onNavigate }: ValueComparisonMatrixProps
         </div>
 
         {/* Matrix Rows */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "2rem" }}>
+        <div className="spe-matrix-rows">
           {filteredRows.map((row) => (
             <div className="spe-matrix-card-pair" key={row.id}>
               {/* Pain Side */}

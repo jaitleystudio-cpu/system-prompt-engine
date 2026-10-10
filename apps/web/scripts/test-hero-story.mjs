@@ -339,10 +339,12 @@ try {
   await clockContext.close();
 } finally {
   await browser.close();
-  writeFileSync(
-    new URL("../../../proofs/hero_revision/tests.json", import.meta.url),
-    JSON.stringify(results, null, 2),
-  );
+  if (results.length > 0) {
+    writeFileSync(
+      new URL("../../../proofs/hero_revision/tests.json", import.meta.url),
+      JSON.stringify(results, null, 2),
+    );
+  }
 }
 assert.ok(
   results.every((r) => r.pass),
