@@ -8665,12 +8665,6 @@
       "text": "Adopt in Your Repo ($ npx @systempromptengine/cli adopt .)"
     },
     {
-      "id": "3dd9405500834495b0d9",
-      "file": "apps/web/src/landing/ConversionKernel.tsx",
-      "depth": "PROOF",
-      "text": "Produce Comparison Matrix on Demand ↓"
-    },
-    {
       "id": "3fad25f1399ec2451d6a",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
@@ -8717,6 +8711,12 @@
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
       "text": "Review Agent Logs via stdin: spe continue -"
+    },
+    {
+      "id": "65b23ec307ea055f2a16",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Compare Alternatives Below ↓"
     },
     {
       "id": "661f35f15d9056b9f80d",
@@ -21317,6 +21317,12 @@
       "file": "apps/web/src/routing.ts",
       "depth": "PRODUCT",
       "text": "SPE — System Prompt Engine | Free System Prompt Generator"
+    },
+    {
+      "id": "8b2d79c0bca337d74e4e",
+      "file": "apps/web/src/routing.ts",
+      "depth": "PRODUCT",
+      "text": "skill-builder"
     },
     {
       "id": "9cd13dc304d56902c06e",

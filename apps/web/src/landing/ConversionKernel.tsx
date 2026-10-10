@@ -102,7 +102,7 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
                 href="#comparison-matrix"
                 className="spe-btn-cta-secondary"
               >
-                Produce Comparison Matrix on Demand ↓
+                Compare Alternatives Below ↓
               </a>
             </div>
           </div>
@@ -152,7 +152,7 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
                 href="#comparison-matrix"
                 className="spe-btn-cta-secondary"
               >
-                Produce Comparison Matrix on Demand ↓
+                Compare Alternatives Below ↓
               </a>
             </div>
           </div>
