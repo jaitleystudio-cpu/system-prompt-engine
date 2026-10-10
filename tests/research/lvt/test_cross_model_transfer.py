@@ -20,7 +20,7 @@ from spe_runtime.research.lvt import (
 )
 
 @pytest.fixture
-def qualified_tx():
+def legacy_tx():
     validator = LearningValidator()
     claim = LearningClaim(
         claim_id="CLM-XFER-001",
@@ -53,76 +53,72 @@ def qualified_tx():
     )
     return validator.validate_and_commit(tx)
 
-def test_successful_cross_model_transfer(qualified_tx):
+def test_legacy_aggregate_cannot_claim_successful_cross_model_transfer(legacy_tx):
     def mock_evaluator(prompt, item):
         return 0.85 if "refined" in prompt else 0.50
 
     dataset = [{"q": "1+1"}]
     
-    report = LearningTransferProtocol.evaluate_cross_model_transfer(
-        tx=qualified_tx,
-        target_model_id="claude-3-7-sonnet",
-        evaluator_fn=mock_evaluator,
-        test_dataset=dataset,
-        base_prompt="base",
-        refined_prompt="refined",
-    )
-    
-    assert report["transfers_successfully"] is True
-    assert report["transfer_delta"] == 0.35
-    assert "cross_model_transfers" in qualified_tx.metadata
+    assert legacy_tx.status == QualificationStatus.REJECTED
+    with pytest.raises(ValueError, match="non-qualified"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=legacy_tx,
+            target_model_id="claude-3-7-sonnet",
+            evaluator_fn=mock_evaluator,
+            test_dataset=dataset,
+            base_prompt="base",
+            refined_prompt="refined",
+        )
+    assert "cross_model_transfers" not in legacy_tx.metadata
 
-def test_failed_cross_model_transfer(qualified_tx):
+def test_legacy_aggregate_cannot_claim_failed_cross_model_transfer(legacy_tx):
     def mock_evaluator(prompt, item):
         return 0.40 if "refined" in prompt else 0.50
 
     dataset = [{"q": "1+1"}]
     
-    report = LearningTransferProtocol.evaluate_cross_model_transfer(
-        tx=qualified_tx,
-        target_model_id="llama-3-3-70b",
-        evaluator_fn=mock_evaluator,
-        test_dataset=dataset,
-        base_prompt="base",
-        refined_prompt="refined",
-    )
-    
-    assert report["transfers_successfully"] is False
+    with pytest.raises(ValueError, match="non-qualified"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=legacy_tx,
+            target_model_id="llama-3-3-70b",
+            evaluator_fn=mock_evaluator,
+            test_dataset=dataset,
+            base_prompt="base",
+            refined_prompt="refined",
+        )
 
-def test_artifact_synthesis(qualified_tx):
-    artifact_json = LearningTransferProtocol.synthesize_spe_learning_artifact(
-        tx=qualified_tx,
-        refined_prompt_content="Refined rules"
-    )
-    data = json.loads(artifact_json)
-    assert data["spe_version"] == "1.0"
-    assert data["artifact_type"] == "LEARNING_VALIDITY_TRANSACTION"
-    assert data["tx_id"] == "TX-XFER-001"
-    assert "receipt" in data
-    assert data["refined_prompt"] == "Refined rules"
+def test_artifact_synthesis(legacy_tx):
+    assert legacy_tx.status == QualificationStatus.REJECTED
+    with pytest.raises(ValueError, match="non-qualified"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=legacy_tx, refined_prompt_content="Refined rules"
+        )
 
-def test_distribution_drift_revocation(qualified_tx):
+def test_distribution_drift_revocation(legacy_tx):
+    # Direct test of the revocation primitive with a hypothetical pre-qualified
+    # object. This manual assignment is NOT a valid admission proof.
+    legacy_tx.status = QualificationStatus.QUALIFIED
     # Baseline generalization was 0.88.
     # Drift tolerance 0.15 means < 0.73 triggers revocation.
     
     # 0.75 is safe (0.88 - 0.75 = 0.13 <= 0.15)
     revoked_safe = LearningTransferProtocol.check_distribution_drift_and_revoke(
-        tx=qualified_tx,
+        tx=legacy_tx,
         monitored_scores=[0.75, 0.75],
         drift_tolerance=0.15
     )
     assert not revoked_safe
-    assert qualified_tx.status == QualificationStatus.QUALIFIED
+    assert legacy_tx.status == QualificationStatus.QUALIFIED
     
     # 0.70 is failure (0.88 - 0.70 = 0.18 > 0.15)
     revoked_fail = LearningTransferProtocol.check_distribution_drift_and_revoke(
-        tx=qualified_tx,
+        tx=legacy_tx,
         monitored_scores=[0.70, 0.70],
         drift_tolerance=0.15
     )
     assert revoked_fail
-    assert qualified_tx.status == QualificationStatus.REVOKED
-    assert qualified_tx.revocation_reason == RevocationReason.DISTRIBUTION_DRIFT_EXCEEDED
+    assert legacy_tx.status == QualificationStatus.REVOKED
+    assert legacy_tx.revocation_reason == RevocationReason.DISTRIBUTION_DRIFT_EXCEEDED
     
     with pytest.raises(TransactionRevokedError):
-        LearningTransferProtocol.assert_not_revoked(qualified_tx)
+        LearningTransferProtocol.assert_not_revoked(legacy_tx)
