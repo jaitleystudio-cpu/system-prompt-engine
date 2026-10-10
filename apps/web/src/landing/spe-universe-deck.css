@@ -126,10 +126,8 @@
 
 .spe-universe-title em {
   font-style: normal;
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 50%, #FF8A1E 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 30px rgba(255, 47, 163, 0.35));
+  color: var(--spe-color-cobalt);
+  text-shadow: 0 0 28px rgba(61, 90, 254, 0.45);
 }
 
 .spe-universe-subtitle {
@@ -358,9 +356,7 @@
 .spe-passport-metric-value {
   font-size: 0.85rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-pearl);
   margin-top: 2px;
   display: block;
 }
@@ -439,17 +435,18 @@
 
 .spe-brand-company {
   font-weight: 700;
-  color: #ffffff;
+  color: var(--spe-color-pearl);
 }
 
 .spe-brand-divider {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(174, 182, 194, 0.4);
   font-weight: 400;
 }
 
 .spe-brand-model {
-  color: #AEB6C2;
-  font-weight: 600;
+  color: var(--spe-color-pearl);
+  font-weight: 500;
+  opacity: 0.9;
   transition: color 0.25s ease;
 }
 
@@ -469,9 +466,7 @@
 }
 
 .spe-orbit-guidance-pill span {
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-titanium);
 }
 
 /* ============================================================
@@ -534,9 +529,7 @@
 
 .spe-deck-title em {
   font-style: normal;
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 50%, #FF8A1E 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-cobalt);
 }
 
 .spe-deck-nav-cluster {
@@ -554,9 +547,7 @@
 }
 
 .spe-deck-counter strong {
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-pearl);
 }
 
 .spe-deck-arrow-btn {
@@ -935,13 +926,10 @@
   font-size: clamp(2.2rem, 5.2vw, 4rem);
   font-weight: 900;
   line-height: 1.08;
-  color: #ffffff;
+  color: var(--spe-color-pearl);
   letter-spacing: -0.035em;
   text-transform: uppercase;
   margin: 0;
-  background: linear-gradient(180deg, #F5F7FF 40%, rgba(174, 182, 194, 0.72) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .spe-hero-reflective-mirror {
@@ -955,12 +943,10 @@
   margin-top: -4px;
   user-select: none;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(61, 90, 254, 0.35) 0%, rgba(255, 47, 163, 0.15) 30%, transparent 70%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, transparent 60%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, transparent 60%);
-  opacity: 0.45;
+  color: var(--spe-color-titanium);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, transparent 60%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, transparent 60%);
+  opacity: 0.25;
 }
 
 /* Higgsfield 3D Cards Viewport */
@@ -1095,10 +1081,8 @@
 }
 
 .spe-slab-row.slab-b {
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 20px rgba(255, 47, 163, 0.35));
+  color: var(--spe-color-magenta);
+  text-shadow: 0 0 20px rgba(255, 47, 163, 0.4);
 }
 
 .spe-higgs-terminal-body {
@@ -1232,9 +1216,7 @@
 }
 
 .spe-command-feature-list li span {
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-pearl);
   font-weight: bold;
 }
 
@@ -1444,10 +1426,8 @@
 
 .spe-cinema-title em {
   font-style: normal;
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 50%, #FF8A1E 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 35px rgba(255, 47, 163, 0.35));
+  color: var(--spe-color-magenta);
+  text-shadow: 0 0 28px rgba(255, 47, 163, 0.45);
 }
 
 .spe-cinema-subtitle {
@@ -1586,9 +1566,7 @@
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.12em;
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-cobalt);
 }
 
 .spe-cinema-chap-badge {
@@ -1664,29 +1642,21 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.88rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-pearl);
 }
 
 .spe-cinema-tel-val.is-gold-bright,
 .spe-cinema-tel-val.is-lime {
-  background: linear-gradient(135deg, #FF2FA3 0%, #FF8A1E 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-magenta);
 }
 
 .spe-cinema-tel-val.is-platinum,
 .spe-cinema-tel-val.is-cyan {
-  background: linear-gradient(135deg, #F5F7FF 0%, #AEB6C2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-pearl);
 }
 
 .spe-cinema-tel-val.is-gold {
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-amber);
 }
 
 .spe-cinema-terminal-card {
@@ -1818,9 +1788,7 @@
 }
 
 .spe-cinema-keyframe-tab.is-active .spe-cinema-kf-num {
-  background: linear-gradient(135deg, #3D5AFE 0%, #FF2FA3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--spe-color-magenta);
 }
 
 .spe-cinema-kf-badge {
