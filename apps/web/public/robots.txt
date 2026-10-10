@@ -15,6 +15,7 @@ Allow: /build-skill
 Allow: /integrations/
 Allow: /compare/
 Allow: /migrate/
+Allow: /pricing
 Disallow: /workspace
 Disallow: /my-work
 Disallow: /website

@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useMemo } from "react";
+import type { AppView } from "../routing";
 import { ContextualAdSlot } from "../components/ads/ContextualAdSlot";
 import { copyTextSafe } from "../engine/workflows/clipboard";
 
@@ -89,10 +90,26 @@ const SEED_WORKFLOWS: WorkflowItem[] = [
   },
 ];
 
-export const WorkflowsCatalog: React.FC<{ onNavigate?: (view: any) => void }> = () => {
+export interface WorkflowsCatalogProps {
+  onNavigate?: (view: AppView) => void;
+  onRunWorkflow?: (workflow: WorkflowItem) => void;
+}
+
+export const WorkflowsCatalog: React.FC<WorkflowsCatalogProps> = ({
+  onNavigate,
+  onRunWorkflow,
+}) => {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+
+  const handleRunInBrowser = (wf: WorkflowItem) => {
+    if (onRunWorkflow) {
+      onRunWorkflow(wf);
+    } else if (onNavigate) {
+      onNavigate("create");
+    }
+  };
 
   const filteredWorkflows = useMemo(() => {
     return SEED_WORKFLOWS.filter((wf) => {
@@ -222,22 +239,48 @@ export const WorkflowsCatalog: React.FC<{ onNavigate?: (view: any) => void }> = 
               </div>
             </div>
 
-            <div style={{ borderTop: "1px solid #1e293b", paddingTop: "1rem", marginTop: "0.5rem" }}>
+            <div style={{ borderTop: "1px solid #1e293b", paddingTop: "1rem", marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               <button
-                onClick={() => copyToClipboard(wf.sampleInstructions, wf.slug)}
+                type="button"
+                onClick={() => handleRunInBrowser(wf)}
                 style={{
                   width: "100%",
-                  padding: "0.6rem 1rem",
-                  backgroundColor: copiedSlug === wf.slug ? "#059669" : "#2563eb",
+                  padding: "0.65rem 1rem",
+                  backgroundColor: "#2563eb",
                   color: "#ffffff",
                   border: "none",
                   borderRadius: "6px",
                   fontWeight: 600,
                   cursor: "pointer",
                   fontSize: "0.875rem",
+                  minHeight: "44px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "0.5rem",
+                  touchAction: "manipulation",
                 }}
               >
-                {copiedSlug === wf.slug ? "✓ Copied CLI Command!" : "Copy Ready-to-Run Workflow"}
+                <span>⚡ Run in Browser Workspace</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => copyToClipboard(wf.sampleInstructions, wf.slug)}
+                style={{
+                  width: "100%",
+                  padding: "0.55rem 1rem",
+                  backgroundColor: copiedSlug === wf.slug ? "#059669" : "#1e293b",
+                  color: copiedSlug === wf.slug ? "#ffffff" : "#cbd5e1",
+                  border: "1px solid #334155",
+                  borderRadius: "6px",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  fontSize: "0.8125rem",
+                  minHeight: "44px",
+                  touchAction: "manipulation",
+                }}
+              >
+                {copiedSlug === wf.slug ? "✓ Copied CLI Command!" : "Copy CLI Command for Terminal"}
               </button>
             </div>
           </div>

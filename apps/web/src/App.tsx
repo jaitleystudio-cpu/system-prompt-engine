@@ -1,5 +1,5 @@
 import { ui } from "@spe/human-perspective";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
 import { EngineClient } from "./engine/client";
 import {
   requestK3Binding,
@@ -63,14 +63,10 @@ import {
   type AppView,
 } from "./routing";
 import { InAppLink } from "./shell/inAppLink";
-import { MediaRoute } from "./media/MediaRoute";
-import { OcrRoute } from "./media/OcrRoute";
-import { ResearchRoute } from "./research/ResearchRoute";
 import { WEBSITE_MOUNT } from "./shell/mountStatus";
 import { NotFound } from "./shell/NotFound";
 import { SkipLink } from "./shell/SkipLink";
 import { EMPTY_IDEA_MESSAGE } from "./shell/shellGuards";
-import { WebsiteProduct } from "./website/WebsiteProduct";
 import { FeaturesHub } from "./engine/FeaturesHub";
 import { PromptRadarInspector } from "./engine/PromptRadarInspector";
 import { SeoHead } from "./ui/SeoHead";
@@ -91,7 +87,6 @@ import {
   type PublicDepthControl,
   type PublicSourceControl,
 } from "./composer/ContextProtocolControls";
-import { DailyLab } from "./lab/DailyLab";
 import {
   acquisitionSeedFromLabItem,
   type LabAcquisitionSeed,
@@ -99,12 +94,37 @@ import {
 import { MyWork } from "./pages/MyWork";
 import { PrivacyProof } from "./pages/PrivacyProof";
 import { Capabilities } from "./pages/Capabilities";
-import { WorkflowsCatalog } from "./pages/WorkflowsCatalog";
-import { SkillBuilderStudio } from "./pages/SkillBuilderStudio";
-import { HeadToHeadCompare } from "./pages/HeadToHeadCompare";
 import { detectVisualQuality, type VisualQuality } from "./scene/quality";
 import type { SceneState } from "./scene/SpeIntelligence";
 import { registerServiceWorker } from "./pwa";
+
+const WebsiteProduct = lazy(() =>
+  import("./website/WebsiteProduct").then((m) => ({ default: m.WebsiteProduct }))
+);
+const MediaRoute = lazy(() =>
+  import("./media/MediaRoute").then((m) => ({ default: m.MediaRoute }))
+);
+const OcrRoute = lazy(() =>
+  import("./media/OcrRoute").then((m) => ({ default: m.OcrRoute }))
+);
+const ResearchRoute = lazy(() =>
+  import("./research/ResearchRoute").then((m) => ({ default: m.ResearchRoute }))
+);
+const DailyLab = lazy(() =>
+  import("./lab/DailyLab").then((m) => ({ default: m.DailyLab }))
+);
+const WorkflowsCatalog = lazy(() =>
+  import("./pages/WorkflowsCatalog").then((m) => ({ default: m.WorkflowsCatalog }))
+);
+const SkillBuilderStudio = lazy(() =>
+  import("./pages/SkillBuilderStudio").then((m) => ({ default: m.SkillBuilderStudio }))
+);
+const HeadToHeadCompare = lazy(() =>
+  import("./pages/HeadToHeadCompare").then((m) => ({ default: m.HeadToHeadCompare }))
+);
+const Pricing = lazy(() =>
+  import("./pages/Pricing").then((m) => ({ default: m.Pricing }))
+);
 
 type View = AppView;
 type Mode = "simple" | "inspect" | "pro";
@@ -907,6 +927,39 @@ export default function App() {
     }
   };
 
+  const runWorkflowInStudio = (wf: {
+    title: string;
+    summary: string;
+    topSkills: string[];
+    inputs?: string[];
+    outputs?: string[];
+    permissionCeiling?: string;
+  }) => {
+    invalidate();
+    const briefParts = [
+      wf.title,
+      "",
+      wf.summary,
+      "",
+      `Required skills: ${wf.topSkills.map((s) => `@skill/${s}`).join(", ")}`,
+    ];
+    if (wf.inputs && wf.inputs.length > 0) {
+      briefParts.push(`Input files: ${wf.inputs.join(", ")}`);
+    }
+    if (wf.outputs && wf.outputs.length > 0) {
+      briefParts.push(`Expected outputs: ${wf.outputs.join(", ")}`);
+    }
+    if (wf.permissionCeiling) {
+      briefParts.push(`Safety boundary & constraints: ${wf.permissionCeiling}`);
+    }
+    setUserRequest(briefParts.join("\n"));
+    setCategory("Business");
+    setIntent(defaultIntentLens(wf.summary));
+    setIntentProvenance("AUTO_DERIVED_INTENT");
+    setView("create");
+    window.scrollTo(0, 0);
+  };
+
   return (
     <>
       <SkipLink />
@@ -929,6 +982,7 @@ export default function App() {
         onNavigate={setView}
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
+        savedCount={history.length}
       />
 
       <main id="main" tabIndex={-1}>
@@ -1224,23 +1278,25 @@ export default function App() {
         )}
 
         {!notFound && view === "lab" && (
-          <DailyLab
-            onOpenInSpe={(s) => {
-              applyLabAcquisition(s);
-            }}
-            onCopyIdea={async (s) => {
-              try {
-                const idea =
-                  ("buildPrompt" in s && s.buildPrompt) ||
-                  ("seedIdea" in s && s.seedIdea) ||
-                  "";
-                await navigator.clipboard.writeText(String(idea));
-                setNotice("Idea copied.");
-              } catch {
-                setNotice("Copy unavailable. Select the idea text to copy it.");
-              }
-            }}
-          />
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <DailyLab
+              onOpenInSpe={(s) => {
+                applyLabAcquisition(s);
+              }}
+              onCopyIdea={async (s) => {
+                try {
+                  const idea =
+                    ("buildPrompt" in s && s.buildPrompt) ||
+                    ("seedIdea" in s && s.seedIdea) ||
+                    "";
+                  await navigator.clipboard.writeText(String(idea));
+                  setNotice("Idea copied.");
+                } catch {
+                  setNotice("Copy unavailable. Select the idea text to copy it.");
+                }
+              }}
+            />
+          </Suspense>
         )}
 
         {!notFound && view === "website" && (
@@ -1248,13 +1304,27 @@ export default function App() {
             data-shell-mount="website"
             data-shell-mount-sha={WEBSITE_MOUNT.sha}
           >
-            <WebsiteProduct />
+            <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+              <WebsiteProduct />
+            </Suspense>
           </div>
         )}
 
-        {!notFound && view === "media" && <MediaRoute />}
-        {!notFound && view === "ocr" && <OcrRoute />}
-        {!notFound && view === "research" && <ResearchRoute />}
+        {!notFound && view === "media" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <MediaRoute />
+          </Suspense>
+        )}
+        {!notFound && view === "ocr" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <OcrRoute />
+          </Suspense>
+        )}
+        {!notFound && view === "research" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <ResearchRoute />
+          </Suspense>
+        )}
 
         {!notFound && view === "my-work" && (
           <MyWork
@@ -1280,9 +1350,26 @@ export default function App() {
 
         {!notFound && view === "capabilities" && <Capabilities onNavigate={setView} />}
         {!notFound && view === "privacy" && <PrivacyProof />}
-        {!notFound && view === "workflows" && <WorkflowsCatalog onNavigate={setView} />}
-        {!notFound && view === "skill-builder" && <SkillBuilderStudio />}
-        {!notFound && view === "compare" && <HeadToHeadCompare />}
+        {!notFound && view === "workflows" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <WorkflowsCatalog onNavigate={setView} onRunWorkflow={runWorkflowInStudio} />
+          </Suspense>
+        )}
+        {!notFound && view === "skill-builder" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <SkillBuilderStudio />
+          </Suspense>
+        )}
+        {!notFound && view === "compare" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <HeadToHeadCompare />
+          </Suspense>
+        )}
+        {!notFound && view === "pricing" && (
+          <Suspense fallback={<div className="spe-route-loading" style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>Loading…</div>}>
+            <Pricing onNavigate={setView} />
+          </Suspense>
+        )}
 
         {!notFound && view === "workspace" && (
           <>
@@ -1435,28 +1522,41 @@ export default function App() {
         </div>
       )}
       <footer className="spe-footer">
-        <div>
+        <div style={{ marginBottom: "1.5rem" }}>
           <strong>SPE</strong> System Prompt Engine · Your intent, carried
           forward.
         </div>
-        <nav className="spe-footer-links" aria-label="Footer">
-          <InAppLink view="home" onNavigate={setView}>Home</InAppLink>
-          <InAppLink view="create" onNavigate={setView}>Create</InAppLink>
-          <InAppLink view="code" onNavigate={setView}>Code</InAppLink>
-          <InAppLink view="website" onNavigate={setView}>Website</InAppLink>
-          <InAppLink view="lab" onNavigate={setView}>Daily Lab</InAppLink>
-          <InAppLink view="my-work" onNavigate={setView}>My Work</InAppLink>
-          <InAppLink view="capabilities" onNavigate={setView}>
-            Capabilities
-          </InAppLink>
-          <InAppLink view="privacy" onNavigate={setView}>Privacy</InAppLink>
-        </nav>
+        <div className="spe-footer-grid">
+          <div className="spe-footer-col">
+            <h3>Products</h3>
+            <InAppLink view="create" onNavigate={setView}>Prompt Studio</InAppLink>
+            <InAppLink view="workflows" onNavigate={setView}>1-Click Workflows</InAppLink>
+            <InAppLink view="skill-builder" onNavigate={setView}>Skill Builder</InAppLink>
+            <InAppLink view="compare" onNavigate={setView}>Benchmark Arena</InAppLink>
+          </div>
+          <div className="spe-footer-col">
+            <h3>Tools & Labs</h3>
+            <InAppLink view="code" onNavigate={setView}>Design to Code</InAppLink>
+            <InAppLink view="website" onNavigate={setView}>Web Architect</InAppLink>
+            <InAppLink view="media" onNavigate={setView}>Audio & Video</InAppLink>
+            <InAppLink view="ocr" onNavigate={setView}>OCR & Documents</InAppLink>
+            <InAppLink view="research" onNavigate={setView}>Deep Research</InAppLink>
+            <InAppLink view="lab" onNavigate={setView}>Daily Lab</InAppLink>
+          </div>
+          <div className="spe-footer-col">
+            <h3>Trust & Privacy</h3>
+            <InAppLink view="capabilities" onNavigate={setView}>Mathematical Proofs</InAppLink>
+            <InAppLink view="privacy" onNavigate={setView}>Zero-Egress Guarantee</InAppLink>
+            <InAppLink view="my-work" onNavigate={setView}>Local Workspace</InAppLink>
+          </div>
+          <div className="spe-footer-col">
+            <h3>Plans</h3>
+            <InAppLink view="pricing" onNavigate={setView}>Developer Pricing</InAppLink>
+            <InAppLink view="home" onNavigate={setView}>Overview</InAppLink>
+          </div>
+        </div>
         <div className="claim-strip">
           {ui.claim}
-          <details data-copy-depth="PROOF">
-            <summary>About this preview</summary>
-            <p>{ui.claimDetail}</p>
-          </details>
         </div>
       </footer>
     </>

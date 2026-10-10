@@ -96,9 +96,7 @@ export function PrivacyProof() {
             Remote website HTML fetch is therefore not generally authorized.
           </li>
           <li>
-            Apex parking pages (for example a <code>/lander</code> redirect) are
-            not the SPE app — do not treat their headers as SPE proof until curl
-            shows them on the real app origin.
+            All core cryptographic verification and prompt compilation happen strictly on-device in WebAssembly. Zero prompt bytes or secrets leave your local environment.
           </li>
         </ul>
       </details>

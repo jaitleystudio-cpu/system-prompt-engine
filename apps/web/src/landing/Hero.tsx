@@ -62,19 +62,24 @@ type Props = {
 };
 const EXAMPLES = [
   {
-    label: "Launch a product",
-    category: "Business",
-    text: "Plan a four-week launch for an offline writing app. Our team has two people and a $2,000 budget. Prioritize practical steps and avoid paid influencer campaigns.",
-  },
-  {
-    label: "Review code",
+    label: "Review code without hallucinations",
     category: "Coding",
-    text: "Review the code I provide for correctness, security and maintainability. Rank findings by severity and include the affected code and a concrete fix. Do not invent files or executed tests.",
+    text: "Review the code I provide for correctness, security and maintainability. Rank findings by severity and include the affected code and a concrete fix. Do not invent files, imports, or unverified tests.",
   },
   {
-    label: "Teach an idea",
-    category: "Education",
-    text: "Explain how a neural network learns to a curious 14-year-old. Use one everyday analogy, a worked example and three questions to check understanding.",
+    label: "Plan a full-stack feature",
+    category: "Coding",
+    text: "Design a complete end-to-end implementation plan for this full-stack feature. Include database schemas, API contracts, frontend state transitions, and step-by-step verification gates.",
+  },
+  {
+    label: "Executive weekly progress report",
+    category: "Business",
+    text: "Synthesize team achievements, key metrics, active blockers, and high-priority milestones into a concise executive summary formatted for leadership review.",
+  },
+  {
+    label: "Customer ticket triage & response",
+    category: "Business",
+    text: "Analyze customer support inquiries, identify root causes, classify severity, and draft empathetic, accurate response drafts with concrete resolution steps.",
   },
 ] as const;
 export function Hero(p: Props) {
@@ -131,7 +136,7 @@ export function Hero(p: Props) {
           <span className="eyebrow">
             <i /> YOUR IDEAS. YOUR WORDS.
           </span>
-          <span className="edition">A fresh start, every day.</span>
+          <span className="edition">✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Login Required</span>
         </div>
         <div className="hero-copy">
           <p className="eyebrow">A CLEAR START FOR ANY AI</p>
@@ -141,8 +146,8 @@ export function Hero(p: Props) {
             <em>{hero.accent}</em>
           </h1>
           <p className="hero-description">
-            Turn your ideas into clear prompts for any AI.
-            Start with a few words. Add what matters.
+            Turn rough ideas into bulletproof AI prompts that never hallucinate.
+            Tired of AI agents drifting, inventing fake packages, or ignoring your instructions? SPE shapes your requirements into production-ready system prompts for Claude, Cursor, and ChatGPT — instantly, offline, and free.
           </p>
           <a className="hero-start" href="#prompt-studio">
             Make my prompt <span aria-hidden="true">↗</span>

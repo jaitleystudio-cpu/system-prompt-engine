@@ -21,6 +21,7 @@ export const SkillBuilderStudio: React.FC = () => {
   );
   const [allowNetwork, setAllowNetwork] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [platform, setPlatform] = useState<"bash" | "powershell">("bash");
 
   const steps = useMemo(() => stepsText.split("\n").filter((s) => s.trim().length > 0), [stepsText]);
 
@@ -43,12 +44,26 @@ export const SkillBuilderStudio: React.FC = () => {
   }, [compiledMarkdown]);
 
   const slug = skillName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-  const installCmd = `mkdir -p ~/.claude/skills/${slug} && cat << 'EOF' > ~/.claude/skills/${slug}/SKILL.md\n${compiledMarkdown}\nEOF`;
+  const bashCmd = `mkdir -p ~/.claude/skills/${slug} && cat << 'EOF' > ~/.claude/skills/${slug}/SKILL.md\n${compiledMarkdown}\nEOF`;
+  const powershellCmd = `New-Item -ItemType Directory -Force -Path "$HOME\\.claude\\skills\\${slug}"; @'\n${compiledMarkdown}\n'@ | Set-Content -Path "$HOME\\.claude\\skills\\${slug}\\SKILL.md" -Encoding UTF8`;
+  const installCmd = platform === "bash" ? bashCmd : powershellCmd;
 
   const copyInstall = async () => {
     await copyTextSafe(installCmd);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
+  };
+
+  const downloadSkillFile = () => {
+    const blob = new Blob([compiledMarkdown], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${slug || "skill"}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -64,7 +79,7 @@ export const SkillBuilderStudio: React.FC = () => {
 
       <ContextualAdSlot slotId="skillbuilder-top-leaderboard" format="leaderboard" />
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginTop: "2rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", gap: "2rem", marginTop: "2rem" }}>
         {/* Input Form Column */}
         <div style={{ backgroundColor: "#0b1329", border: "1px solid #1e293b", borderRadius: "8px", padding: "1.5rem" }}>
           <h2 style={{ fontSize: "1.25rem", color: "#f8fafc", marginBottom: "1rem" }}>Define Procedure</h2>
@@ -209,29 +224,100 @@ export const SkillBuilderStudio: React.FC = () => {
                 color: "#cbd5e1",
                 height: "220px",
                 overflowY: "auto",
+                overflowX: "auto",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
               }}
             >
               {compiledMarkdown}
             </pre>
           </div>
 
-          <button
-            onClick={copyInstall}
-            disabled={!auditReport.isSafe}
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              backgroundColor: !auditReport.isSafe ? "#475569" : copied ? "#059669" : "#2563eb",
-              color: "#ffffff",
-              border: "none",
-              borderRadius: "6px",
-              fontWeight: 600,
-              cursor: !auditReport.isSafe ? "not-allowed" : "pointer",
-              fontSize: "0.9rem",
-            }}
-          >
-            {copied ? "✓ Copied Claude Code Install Command!" : "Export to Claude Code (~/.claude/skills)"}
-          </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            <button
+              type="button"
+              onClick={downloadSkillFile}
+              disabled={!auditReport.isSafe}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                backgroundColor: !auditReport.isSafe ? "#334155" : "#059669",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "6px",
+                fontWeight: 600,
+                cursor: !auditReport.isSafe ? "not-allowed" : "pointer",
+                fontSize: "0.9rem",
+                minHeight: "44px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.5rem",
+                touchAction: "manipulation",
+              }}
+            >
+              <span>📥 Download SKILL.md</span>
+            </button>
+
+            <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginTop: "0.25rem" }}>
+              <span style={{ fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase" }}>Terminal:</span>
+              <button
+                type="button"
+                onClick={() => setPlatform("bash")}
+                style={{
+                  padding: "0.3rem 0.65rem",
+                  fontSize: "0.75rem",
+                  borderRadius: "4px",
+                  border: platform === "bash" ? "1px solid #3b82f6" : "1px solid #334155",
+                  backgroundColor: platform === "bash" ? "#1e293b" : "#0f172a",
+                  color: platform === "bash" ? "#60a5fa" : "#94a3b8",
+                  cursor: "pointer",
+                  minHeight: "36px",
+                }}
+              >
+                Bash / macOS / Linux
+              </button>
+              <button
+                type="button"
+                onClick={() => setPlatform("powershell")}
+                style={{
+                  padding: "0.3rem 0.65rem",
+                  fontSize: "0.75rem",
+                  borderRadius: "4px",
+                  border: platform === "powershell" ? "1px solid #3b82f6" : "1px solid #334155",
+                  backgroundColor: platform === "powershell" ? "#1e293b" : "#0f172a",
+                  color: platform === "powershell" ? "#60a5fa" : "#94a3b8",
+                  cursor: "pointer",
+                  minHeight: "36px",
+                }}
+              >
+                PowerShell / Windows
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={copyInstall}
+              disabled={!auditReport.isSafe}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                backgroundColor: !auditReport.isSafe ? "#475569" : copied ? "#059669" : "#2563eb",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "6px",
+                fontWeight: 600,
+                cursor: !auditReport.isSafe ? "not-allowed" : "pointer",
+                fontSize: "0.9rem",
+                minHeight: "44px",
+                touchAction: "manipulation",
+              }}
+            >
+              {copied
+                ? `✓ Copied ${platform === "bash" ? "Bash" : "PowerShell"} Command!`
+                : `Copy ${platform === "bash" ? "Bash" : "PowerShell"} Install Command`}
+            </button>
+          </div>
         </div>
       </div>
     </div>

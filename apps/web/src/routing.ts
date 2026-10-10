@@ -15,7 +15,8 @@ export type AppView =
   | "research"
   | "workflows"
   | "skill-builder"
-  | "compare";
+  | "compare"
+  | "pricing";
 
 export const VIEW_PATH: Record<AppView, string> = {
   home: "/",
@@ -33,6 +34,7 @@ export const VIEW_PATH: Record<AppView, string> = {
   workflows: "/workflows",
   "skill-builder": "/build-skill",
   compare: "/compare",
+  pricing: "/pricing",
 };
 
 /** Device-local and tool surfaces. Not advertised to crawlers. */
@@ -182,6 +184,12 @@ export const ROUTE_META: Record<AppView, RouteMeta> = {
     title: "Skill Effectiveness Challenge — Head-to-Head Benchmarks | SPE Ω",
     description:
       "Empirical head-to-head AI agent task performance benchmarks with Wilson 95% confidence intervals and token deltas.",
+  },
+  pricing: {
+    path: "/pricing",
+    title: "Plans & Pricing — System Prompt Engine | SPE",
+    description:
+      "Simple, honest pricing. The core deterministic compiler will always be 100% free and on-device. Upgrade to Developer Pro or Team for advanced workflow automation and team gates.",
   },
 };
 

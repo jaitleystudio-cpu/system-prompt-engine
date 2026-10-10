@@ -29,7 +29,7 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
     >
       <div className="spe-conversion-box">
         {/* Formula Switcher Tabs */}
-        <div className="spe-conversion-tabs" role="tablist" aria-label="Positioning Formulas">
+        <div className="spe-conversion-tabs" role="tablist" aria-label="Use Case Solutions">
           <button
             type="button"
             id="tab-formula-a"
@@ -39,7 +39,7 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
             className={`spe-conversion-tab ${activeFormula === "A" ? "is-active" : ""}`}
             onClick={() => setActiveFormula("A")}
           >
-            Formula A: $20 Subscription Killer
+            Cut Wasted Subscriptions
           </button>
           <button
             type="button"
@@ -50,7 +50,7 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
             className={`spe-conversion-tab ${activeFormula === "B" ? "is-active" : ""}`}
             onClick={() => setActiveFormula("B")}
           >
-            Formula B: Broken Agent Stopper
+            Stop Broken Agent Drift
           </button>
         </div>
 

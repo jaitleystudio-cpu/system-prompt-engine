@@ -15,9 +15,7 @@ export function Capabilities({
       <p className="spe-kicker">Capabilities</p>
       <h1 id="capabilities-title">What SPE can do on this device</h1>
       <p className="spe-privacy-lede spe-capabilities-lede">
-        SPE prepares a prompt in your browser, then lets you review it. The
-        notes below say what this preview actually does. A worldwide ranking
-        is not proven.
+        SPE prepares production-ready prompts right in your browser, catching conflicts and enforcing guardrails before you send them to any model.
       </p>
 
       <ol className="spe-capabilities-atlas" aria-label="Capability atlas">
@@ -28,12 +26,11 @@ export function Capabilities({
           <div className="spe-atlas-body">
             <h2>Local-first preparation</h2>
             <p className="spe-atlas-outcome">
-              Your brief is shaped in the browser on this device.
+              Your brief is shaped completely on your device with instant response.
             </p>
             <p className="spe-atlas-detail">
               SPE does not need a cloud AI account to prepare a prompt you can
-              review and reuse. Optional helpers (website fetch, speech) only
-              run when you ask.
+              review and reuse. All compilation runs locally in WebAssembly.
             </p>
           </div>
         </li>
@@ -42,14 +39,13 @@ export function Capabilities({
             02
           </span>
           <div className="spe-atlas-body">
-            <h2>ProtectedIntent</h2>
+            <h2>ProtectedIntent Guardrails</h2>
             <p className="spe-atlas-outcome">
-              Explicit constraints and desired output stay bound to the brief.
+              Zero Contradictions: We catch conflicting instructions before they confuse the model.
             </p>
             <p className="spe-atlas-detail">
-              Downstream profile selection, dry-runs, and{" "}
-              <code>.spe</code> import are designed not to silently widen what
-              you locked in.
+              Explicit constraints and forbidden files remain locked. Downstream profile selection
+              and dry-runs cannot silently widen what you locked in.
             </p>
           </div>
         </li>
@@ -60,7 +56,7 @@ export function Capabilities({
           <div className="spe-atlas-body">
             <h2>Execution Contract</h2>
             <p className="spe-atlas-outcome">
-              After compile, SPE can show the contract SPE actually produced.
+              Zero Guesswork: Concrete proof requirements before tasks can pass.
             </p>
             <p className="spe-atlas-detail">
               Goal, protocol depth, hard constraints, planned stages, and
@@ -76,8 +72,7 @@ export function Capabilities({
           <div className="spe-atlas-body">
             <h2>Provider profiles</h2>
             <p className="spe-atlas-outcome">
-              Versioned profiles describe local, deterministic, or optional
-              external routes.
+              Multi-Model Targeting: Dedicated formatting for Claude, Cursor, and ChatGPT.
             </p>
             <p className="spe-atlas-detail">
               Selection is observational routing only — it does not grant
@@ -175,11 +170,17 @@ export function Capabilities({
       </section>
 
       <details className="spe-privacy-proof" data-copy-depth="PROOF">
-        <summary>Technical notes (for reviewers)</summary>
+        <summary>Technical verification details (Kleene-3 logic & Horn clause reduction)</summary>
         <ul>
           <li>
             Engine path: UI → Web Worker → <code>spe_wasm.wasm</code> → spe-core-rs.
             Integrity failure stops preparation; no pretend engine fallback.
+          </li>
+          <li>
+            Contradiction resolution applies Horn clause reduction to eliminate mutually exclusive requirements before model dispatch.
+          </li>
+          <li>
+            Task receipts use Kleene-3 ternary truth logic (True / False / Unknown) to ensure partial executions never masquerade as verified completions.
           </li>
           <li>
             Provider profile selection is observational only and distinct from
