@@ -27,6 +27,25 @@ from spe_runtime.supercompiler.models import (
 )
 from spe_runtime.supercompiler.superoptimizer import HarnessSuperoptimizer
 
+from spe_runtime.supercompiler.causal_circuit_synthesizer import (
+    CausalCircuitSynthesizer,
+    CircuitProofReceipt,
+    HoareContract,
+    ProofCarryingCausalCircuit,
+)
+from spe_runtime.supercompiler.fast_path_dispatcher import (
+    DispatchTelemetry,
+    ZeroEntropyFastPathDispatcher,
+)
+from spe_runtime.supercompiler.identifiability_gate import (
+    CausalEdge,
+    CausalStructuralGraph,
+    CausalVariable,
+    IdentifiabilityGate,
+    IdentifiabilityStatus,
+    IdentifiabilityVerdict,
+)
+
 __all__ = [
     "DualCompiler",
     "CEGISEngine",
@@ -49,4 +68,17 @@ __all__ = [
     "MetaCompilerEvolver",
     "PromotionRecord",
     "EvolutionLedger",
+    "IdentifiabilityGate",
+    "IdentifiabilityStatus",
+    "IdentifiabilityVerdict",
+    "CausalStructuralGraph",
+    "CausalVariable",
+    "CausalEdge",
+    "CausalCircuitSynthesizer",
+    "ProofCarryingCausalCircuit",
+    "HoareContract",
+    "CircuitProofReceipt",
+    "ZeroEntropyFastPathDispatcher",
+    "DispatchTelemetry",
 ]
+
