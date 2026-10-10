@@ -547,14 +547,288 @@
   margin: 0;
 }
 
+/* ============================================================================== */
+/* LUXURY UNIVERSAL PLATFORMS & 100K MULTI-VOLUME HARNESS STYLES                 */
+/* ============================================================================== */
+
+.spe-platform-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.spe-platform-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.spe-platform-section-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spe-platform-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 0.75rem;
+}
+
+.spe-platform-choice-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+}
+
+.spe-platform-choice-btn:hover {
+  background: rgba(51, 65, 85, 0.8);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.spe-platform-choice-btn.active {
+  background: radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.2) 0%, rgba(14, 165, 233, 0.05) 90%), #0f172a;
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.25), inset 0 0 8px rgba(56, 189, 248, 0.1);
+}
+
+.spe-platform-choice-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.spe-platform-choice-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.spe-platform-choice-name {
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.spe-platform-choice-file {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+.spe-platform-tier-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.spe-platform-tier-btn {
+  padding: 0.6rem 1.1rem;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  color: #cbd5e1;
+  font-size: 0.825rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.spe-platform-tier-btn:hover {
+  background: rgba(51, 65, 85, 0.8);
+  color: #ffffff;
+}
+
+.spe-platform-tier-btn.active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+}
+
+.spe-platform-tier-badge {
+  font-size: 0.68rem;
+  padding: 0.15rem 0.4rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 9999px;
+  color: #bae6fd;
+}
+
+.spe-platform-auditor-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.spe-platform-stat-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.spe-platform-stat-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #38bdf8;
+}
+
+.spe-platform-stat-value.score-safe {
+  color: #34d399;
+}
+
+.spe-platform-stat-value.score-warning {
+  color: #fbbf24;
+}
+
+.spe-platform-stat-label {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.2rem;
+}
+
+.spe-platform-tools-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+}
+
+.spe-platform-tool-tag {
+  font-size: 0.75rem;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid transparent;
+}
+
+.spe-platform-tool-tag.risk-SAFE {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.spe-platform-tool-tag.risk-MODERATE {
+  background: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.spe-platform-tool-tag.risk-HIGH {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.spe-platform-tool-tag.risk-CRITICAL {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.spe-platform-tool-tag.verdict-REDUNDANT {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.spe-platform-volumes-nav {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.spe-platform-volume-tab {
+  padding: 0.5rem 0.85rem;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.spe-platform-volume-tab:hover {
+  background: rgba(51, 65, 85, 0.8);
+  color: #ffffff;
+}
+
+.spe-platform-volume-tab.active {
+  background: #0284c7;
+  border-color: #38bdf8;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.spe-platform-guarantee-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
+  margin-top: 1.25rem;
+  font-size: 0.825rem;
+  color: #a7f3d0;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.spe-platform-guarantee-text {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+}
+
+.spe-platform-guarantee-badge {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 @media (max-width: 768px) {
-  .spe-vault-panel {
-    padding: 1.25rem;
-  }
-  .spe-vault-grid {
+  .spe-platform-selector-grid {
     grid-template-columns: 1fr;
   }
-  .spe-discovery-input-wrap {
+  .spe-platform-tier-row {
     flex-direction: column;
   }
 }

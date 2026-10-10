@@ -69,6 +69,8 @@
     "test:prompt-mutation": "node --experimental-strip-types scripts/test-prompt-mutation.mjs",
     "test:invariant-coverage": "node --experimental-strip-types scripts/test-invariant-coverage.mjs",
     "test:model-transcompiler": "node --experimental-strip-types scripts/test-model-transcompiler.mjs",
+    "test:universal-shields": "node --experimental-strip-types scripts/test-universal-engine-shields.mjs",
+    "test:deep-spec-scaler": "node --experimental-strip-types scripts/test-deep-specification-scaler.mjs",
     "test:logic-constraint": "node --experimental-strip-types scripts/test-logic-constraint.mjs",
     "test:swarm-topology": "node --experimental-strip-types scripts/test-swarm-topology.mjs",
     "test:kv-cache-aligner": "node --experimental-strip-types scripts/test-kv-cache-aligner.mjs",

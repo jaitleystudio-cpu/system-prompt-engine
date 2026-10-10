@@ -6,14 +6,60 @@ import {
   type PowerPrompt,
 } from "../engine/powerPromptsCatalog";
 import { classifyOutcomeIntent } from "../engine/outcomeIntentClassifier";
+import {
+  compileDeepSpecification,
+  type SpecificationTier,
+  type ScaledSpecificationPackage,
+} from "../engine/deepSpecificationScaler";
+import type { ModelDialect } from "../engine/modelTranscompiler";
 import "./prompt-vault-panel.css";
 
 interface Props {
   onSelectPrompt: (compiledPrompt: string, category: CategoryId) => void;
 }
 
+function downloadTextFile(filename: string, content: string) {
+  const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+const PLATFORMS: { id: ModelDialect; name: string; file: string; icon: string; description: string }[] = [
+  { id: "antigravity-skills", name: "Antigravity Skills", file: "SKILL.md", icon: "🌟", description: "Google DeepMind Skills format with YAML frontmatter & <RULE> invariants" },
+  { id: "claude-code", name: "Claude Code CLI", file: "CLAUDE.md", icon: "💻", description: "Anthropic Claude Code terminal rules, tool limits & build contracts" },
+  { id: "cursor-rules", name: "Cursor IDE", file: ".cursorrules", icon: "🎯", description: "Cursor & Windsurf JSON agent directives & context ceilings" },
+  { id: "windsurf-rules", name: "Windsurf IDE", file: ".windsurfrules", icon: "🌊", description: "Codeium Windsurf AST rules & cascading execution bounds" },
+  { id: "grok", name: "xAI Grok 4", file: "SYSTEM_POLICY.md", icon: "⚡", description: "Truth-maximizing mathematical directives & real-time grounding" },
+  { id: "kimi", name: "Moonshot Kimi", file: "SYSTEM_POLICY.md", icon: "🌙", description: "128k/200k ultra-long context attention anchors & bilingual structure" },
+  { id: "openai-markdown", name: "ChatGPT / OpenAI o3", file: "SYSTEM_POLICY.md", icon: "🤖", description: "Developer role markdown schemas with bold non-negotiable invariants" },
+  { id: "gemini-agent", name: "Google Gemini 2.5", file: "SYSTEM_POLICY.md", icon: "💎", description: "Bracketed directive blocks, function calling contracts & grounding" },
+  { id: "ollama-modelfile", name: "Ollama / Local", file: "Modelfile", icon: "🦙", description: "Docker-like local Modelfile with PARAMETER and SYSTEM blocks" },
+];
+
+const SPEC_TIERS: { id: SpecificationTier; label: string; badge: string; desc: string }[] = [
+  { id: "STANDARD_1_5K", label: "1.5K Standard", badge: "1 Volume", desc: "Core single-file specification" },
+  { id: "DEEP_15K", label: "15K Deep", badge: "3 Volumes", desc: "Intent, interfaces & verification" },
+  { id: "OMEGA_30K", label: "30K Architecture", badge: "5 Volumes", desc: "State dynamics, tools & proofs" },
+  { id: "MASTER_50K", label: "50K Enterprise", badge: "7 Volumes", desc: "Micro-kernels, memory & release gate" },
+  { id: "GOD_MODE_100K", label: "100K Planetary", badge: "10 Volumes", desc: "Complete multi-volume enterprise blueprint" },
+];
+
+const PLATFORM_PRESETS = [
+  { label: "🛡️ Offline Code Auditor", text: "Build an autonomous offline-first AI code auditor with formal verification" },
+  { label: "🌐 3D WebGL Canvas", text: "Design a reactive, WebGL 3D design canvas with accessible controls" },
+  { label: "💳 Financial Risk & Fraud", text: "Autonomous financial risk analyzer with zero-trust payment safeguards" },
+  { label: "🔬 Causal Inference Lab", text: "Empirical causal inference protocol with DAG structural modeling" },
+  { label: "⚡ Distributed Sagas Engine", text: "High-throughput zero-copy event streaming cluster with sagas rollbacks" },
+];
+
 export function PromptVaultPanel({ onSelectPrompt }: Props) {
-  const [panelTab, setPanelTab] = useState<"vault" | "discovery">("vault");
+  const [panelTab, setPanelTab] = useState<"vault" | "discovery" | "platforms">("vault");
   const [search, setSearch] = useState("");
   const [selectedCat, setSelectedCat] = useState<string>("All");
   const [activeModel, setActiveModel] = useState<string>("claude-6");
@@ -24,6 +70,20 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
   // Discovery state
   const [discoveryInput, setDiscoveryInput] = useState("Build me a shopping app");
   const [copiedDiscovery, setCopiedDiscovery] = useState(false);
+
+  // Universal Platform & Deep Scaler state
+  const [platformUserRequest, setPlatformUserRequest] = useState(
+    "Build an autonomous offline-first AI code auditor with formal verification"
+  );
+  const [selectedPlatform, setSelectedPlatform] = useState<ModelDialect>("antigravity-skills");
+  const [selectedTier, setSelectedTier] = useState<SpecificationTier>("DEEP_15K");
+  const [platformCategory, setPlatformCategory] = useState("Coding");
+  const [platformToolsInput, setPlatformToolsInput] = useState(
+    "file_read, file_write, bash, terminal, web_search, database_read"
+  );
+  const [activeVolumeIndex, setActiveVolumeIndex] = useState(1);
+  const [copiedPlatformSpec, setCopiedPlatformSpec] = useState(false);
+  const [downloadNotice, setDownloadNotice] = useState<string | null>(null);
 
   const categories = ["All", "SEO", "Marketing", "Coding", "Business", "Writing"];
 
@@ -138,8 +198,68 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
     { label: "👋 Greeting (Pass-Through)", text: "Good morning" },
   ];
 
+  // Deep Specification computation
+  const platformSpecPackage: ScaledSpecificationPackage = useMemo(() => {
+    return compileDeepSpecification({
+      userRequest: platformUserRequest || "Universal Autonomous AI System Specification",
+      category: platformCategory,
+      tier: selectedTier,
+      targetPlatform: selectedPlatform,
+      declaredTools: platformToolsInput,
+    });
+  }, [platformUserRequest, platformCategory, selectedTier, selectedPlatform, platformToolsInput]);
+
+  const safeActiveVol = useMemo(() => {
+    const found = platformSpecPackage.volumes.find((v) => v.volumeIndex === activeVolumeIndex);
+    return found || platformSpecPackage.volumes[0] || null;
+  }, [platformSpecPackage, activeVolumeIndex]);
+
+  const handleDownloadActiveFile = () => {
+    if (!safeActiveVol) return;
+    downloadTextFile(safeActiveVol.filename, safeActiveVol.content);
+    setDownloadNotice(`Downloaded ${safeActiveVol.filename}`);
+    setTimeout(() => setDownloadNotice(null), 2500);
+  };
+
+  const handleDownloadPlatformPrimary = () => {
+    const primary = platformSpecPackage.exportFiles[0];
+    if (!primary) return;
+    downloadTextFile(primary.filename, primary.content);
+    setDownloadNotice(`Downloaded ${primary.filename}`);
+    setTimeout(() => setDownloadNotice(null), 2500);
+  };
+
+  const handleDownloadManifest = () => {
+    const manifest = platformSpecPackage.exportFiles.find((f) => f.filename === "spe_spec_manifest.json");
+    if (!manifest) return;
+    downloadTextFile(manifest.filename, manifest.content);
+    setDownloadNotice("Downloaded spe_spec_manifest.json");
+    setTimeout(() => setDownloadNotice(null), 2500);
+  };
+
+  const handleCopyPlatformSpec = () => {
+    const fullText = platformSpecPackage.volumes.map((v) => v.content).join("\n\n---\n\n");
+    navigator.clipboard.writeText(fullText).then(() => {
+      setCopiedPlatformSpec(true);
+      setTimeout(() => setCopiedPlatformSpec(false), 2000);
+    });
+  };
+
+  const handleLoadPlatformIntoStudio = () => {
+    const fullText = platformSpecPackage.volumes.map((v) => v.content).join("\n\n---\n\n");
+    let targetCat: CategoryId = "Coding";
+    if (platformCategory === "Business") targetCat = "Business";
+    if (platformCategory === "Writing") targetCat = "Writing";
+    onSelectPrompt(fullText, targetCat);
+
+    const studioEl = document.getElementById("prompt-studio");
+    if (studioEl) {
+      studioEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
-    <section className="spe-vault-panel" id="power-prompts-vault" aria-label="Power Prompts and Discovery Lift">
+    <section className="spe-vault-panel" id="power-prompts-vault" aria-label="Power Prompts and Platform Harness">
       <div className="spe-vault-header">
         <div className="spe-vault-badge-row">
           <div className="spe-vault-tab-switch">
@@ -156,6 +276,13 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
               onClick={() => setPanelTab("discovery")}
             >
               🎯 Smart Outcome Lift
+            </button>
+            <button
+              type="button"
+              className={`spe-vault-tab-btn ${panelTab === "platforms" ? "active" : ""}`}
+              onClick={() => setPanelTab("platforms")}
+            >
+              🌐 Universal Platforms & 100k Harness
             </button>
           </div>
 
@@ -198,17 +325,24 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
               Precision-engineered prompts for modern frontier models. Zero hallucinations, built-in invariants, and instant results.
             </p>
           </>
-        ) : (
+        ) : panelTab === "discovery" ? (
           <>
             <h2 className="spe-vault-title">Outcome Specification Lift Engine</h2>
             <p className="spe-vault-subtitle">
               Translating casual requests into verified 2026 specifications. Evaluates positive complex outcomes vs negative direct queries to prevent chat latency.
             </p>
           </>
+        ) : (
+          <>
+            <h2 className="spe-vault-title">Universal Platform & Multi-Volume Specification Harness</h2>
+            <p className="spe-vault-subtitle">
+              Compile enterprise specifications for Antigravity Skills, Claude Code, Cursor, Grok, Kimi, and ChatGPT up to 100,000 words. 100% offline, zero cloud API fees.
+            </p>
+          </>
         )}
       </div>
 
-      {panelTab === "vault" ? (
+      {panelTab === "vault" && (
         <>
           <div className="spe-vault-toolbar">
             <input
@@ -320,7 +454,9 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
             })}
           </div>
         </>
-      ) : (
+      )}
+
+      {panelTab === "discovery" && (
         <div className="spe-discovery-container">
           <div className="spe-discovery-input-box">
             <label htmlFor="discovery-query-input">
@@ -438,6 +574,247 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
                 </p>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {panelTab === "platforms" && (
+        <div className="spe-platform-container">
+          {/* Platform Selector Grid */}
+          <div className="spe-platform-card">
+            <div className="spe-platform-section-title">
+              <span>🎯 Step 1: Select Target Platform Architecture</span>
+            </div>
+            <div className="spe-platform-selector-grid">
+              {PLATFORMS.map((plat) => (
+                <button
+                  type="button"
+                  key={plat.id}
+                  className={`spe-platform-choice-btn ${selectedPlatform === plat.id ? "active" : ""}`}
+                  onClick={() => setSelectedPlatform(plat.id)}
+                  title={plat.description}
+                >
+                  <span className="spe-platform-choice-icon" aria-hidden="true">{plat.icon}</span>
+                  <div className="spe-platform-choice-text">
+                    <span className="spe-platform-choice-name">{plat.name}</span>
+                    <span className="spe-platform-choice-file">{plat.file}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Scale & Word Budget Tier */}
+          <div className="spe-platform-card">
+            <div className="spe-platform-section-title">
+              <span>📊 Step 2: Select Specification Depth & Modular Volume Scale</span>
+            </div>
+            <div className="spe-platform-tier-row">
+              {SPEC_TIERS.map((tier) => (
+                <button
+                  type="button"
+                  key={tier.id}
+                  className={`spe-platform-tier-btn ${selectedTier === tier.id ? "active" : ""}`}
+                  onClick={() => setSelectedTier(tier.id)}
+                >
+                  <span>{tier.label}</span>
+                  <span className="spe-platform-tier-badge">{tier.badge}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* User Request & Domain Presets */}
+          <div className="spe-platform-card">
+            <div className="spe-platform-section-title">
+              <span>✍️ Step 3: Define System Intent & Capabilities</span>
+            </div>
+            <div className="spe-discovery-input-wrap" style={{ marginBottom: "0.75rem" }}>
+              <input
+                type="text"
+                value={platformUserRequest}
+                onChange={(e) => setPlatformUserRequest(e.target.value)}
+                placeholder="Enter system goal, architecture or agent requirements..."
+                className="spe-discovery-text-input"
+                aria-label="System specification goal"
+              />
+              <button
+                type="button"
+                className="spe-btn-secondary"
+                onClick={() => setPlatformUserRequest("")}
+              >
+                Clear
+              </button>
+            </div>
+
+            <div className="spe-discovery-chips">
+              <span className="spe-discovery-chips-label">Architecture Benchmarks:</span>
+              <div className="spe-discovery-chips-list">
+                {PLATFORM_PRESETS.map((p) => (
+                  <button
+                    type="button"
+                    key={p.label}
+                    className={`spe-discovery-chip ${platformUserRequest === p.text ? "active" : ""}`}
+                    onClick={() => {
+                      setPlatformUserRequest(p.text);
+                      if (p.label.includes("3D")) setPlatformCategory("3D");
+                      else if (p.label.includes("Risk") || p.label.includes("Fraud")) setPlatformCategory("Business");
+                      else if (p.label.includes("Causal")) setPlatformCategory("Research");
+                      else setPlatformCategory("Coding");
+                    }}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Plugin & Skill Safety Auditor */}
+          <div className="spe-platform-card">
+            <div className="spe-platform-section-title">
+              <span>🛡️ Step 4: Active Plugin & Tool Safety Auditor</span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <label htmlFor="tools-audit-input" style={{ fontSize: "0.8rem", color: "#94a3b8" }}>
+                Declared Tools & Plugins (Comma-separated; redundant tools pruned to reduce attention drift):
+              </label>
+              <input
+                id="tools-audit-input"
+                type="text"
+                value={platformToolsInput}
+                onChange={(e) => setPlatformToolsInput(e.target.value)}
+                className="spe-discovery-text-input"
+                placeholder="e.g. file_read, file_write, bash, terminal, web_search, stripe"
+              />
+            </div>
+
+            <div className="spe-platform-auditor-stats">
+              <div className="spe-platform-stat-card">
+                <div className={`spe-platform-stat-value ${platformSpecPackage.pluginAudit.overallSafetyScore >= 75 ? "score-safe" : "score-warning"}`}>
+                  {platformSpecPackage.pluginAudit.overallSafetyScore}/100
+                </div>
+                <div className="spe-platform-stat-label">Safety Score</div>
+              </div>
+              <div className="spe-platform-stat-card">
+                <div className="spe-platform-stat-value">
+                  {platformSpecPackage.pluginAudit.approvedCount} / {platformSpecPackage.pluginAudit.totalAudited}
+                </div>
+                <div className="spe-platform-stat-label">Approved Tools</div>
+              </div>
+              <div className="spe-platform-stat-card">
+                <div className="spe-platform-stat-value">
+                  {platformSpecPackage.pluginAudit.redundantCount}
+                </div>
+                <div className="spe-platform-stat-label">Redundant Pruned</div>
+              </div>
+              <div className="spe-platform-stat-card">
+                <div className="spe-platform-stat-value" style={{ color: "#34d399" }}>
+                  +{platformSpecPackage.pluginAudit.tokensSaved}
+                </div>
+                <div className="spe-platform-stat-label">Tokens Saved</div>
+              </div>
+              <div className="spe-platform-stat-card">
+                <div className="spe-platform-stat-value">
+                  {platformSpecPackage.totalWordCount}
+                </div>
+                <div className="spe-platform-stat-label">Total Words</div>
+              </div>
+            </div>
+
+            <div className="spe-platform-tools-badges">
+              {platformSpecPackage.pluginAudit.auditedTools.map((t) => (
+                <span
+                  key={t.name}
+                  className={`spe-platform-tool-tag risk-${t.riskLevel} verdict-${t.verdict}`}
+                  title={`${t.name}: ${t.reason}`}
+                >
+                  {t.name} • {t.riskLevel} [{t.verdict}]
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Multi-Volume Inspector & Live Preview */}
+          <div className="spe-platform-card">
+            <div className="spe-platform-section-title" style={{ justifyContent: "space-between" }}>
+              <span>📑 Step 5: Multi-Volume Specification Preview</span>
+              <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontFamily: "monospace" }}>
+                Digest: {platformSpecPackage.canonicalDigest.slice(0, 16)}...
+              </span>
+            </div>
+
+            {/* Volume selector tabs */}
+            <div className="spe-platform-volumes-nav">
+              {platformSpecPackage.volumes.map((v) => (
+                <button
+                  type="button"
+                  key={v.volumeIndex}
+                  className={`spe-platform-volume-tab ${activeVolumeIndex === v.volumeIndex ? "active" : ""}`}
+                  onClick={() => setActiveVolumeIndex(v.volumeIndex)}
+                >
+                  Vol {v.volumeIndex}: {v.filename} ({v.wordCount} words)
+                </button>
+              ))}
+            </div>
+
+            {safeActiveVol && (
+              <div className="spe-discovery-prompt-preview" style={{ maxHeight: "380px" }}>
+                <pre>{safeActiveVol.content}</pre>
+              </div>
+            )}
+
+            {downloadNotice && (
+              <div style={{ marginTop: "0.75rem", fontSize: "0.825rem", color: "#34d399", fontWeight: 600 }}>
+                ✓ {downloadNotice}
+              </div>
+            )}
+
+            <div className="spe-card-actions" style={{ marginTop: "1.25rem", flexWrap: "wrap" }}>
+              <button
+                type="button"
+                className="spe-btn-load"
+                onClick={handleDownloadPlatformPrimary}
+              >
+                Download {PLATFORMS.find((p) => p.id === selectedPlatform)?.file || "File"} 📥
+              </button>
+              <button
+                type="button"
+                className="spe-btn-secondary"
+                onClick={handleDownloadActiveFile}
+              >
+                Download Current Volume ({safeActiveVol?.filename}) 📥
+              </button>
+              <button
+                type="button"
+                className="spe-btn-secondary"
+                onClick={handleDownloadManifest}
+              >
+                Download Manifest JSON 📋
+              </button>
+              <button
+                type="button"
+                className="spe-btn-secondary"
+                onClick={handleCopyPlatformSpec}
+              >
+                {copiedPlatformSpec ? "Copied! ✓" : "Copy All Volumes 📋"}
+              </button>
+              <button
+                type="button"
+                className="spe-btn-secondary"
+                onClick={handleLoadPlatformIntoStudio}
+              >
+                Load into Studio ⚡
+              </button>
+            </div>
+
+            <div className="spe-platform-guarantee-banner">
+              <div className="spe-platform-guarantee-text">
+                <span aria-hidden="true">🔒</span>
+                <span>100% Offline Cryptographic Generation • Zero Cloud API Costs • Zero Telemetry Egress</span>
+              </div>
+              <span className="spe-platform-guarantee-badge">SPE Ω CERTIFIED</span>
+            </div>
           </div>
         </div>
       )}

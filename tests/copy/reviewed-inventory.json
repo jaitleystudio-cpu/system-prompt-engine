@@ -1,5 +1,4 @@
 {
-  "gate": "LANGUAGE_PERSPECTIVE_GATE",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -11690,6 +11689,12 @@
       "text": "🔬 Research Protocol"
     },
     {
+      "id": "066ed9a8d9e697565939",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "30K Architecture"
+    },
+    {
       "id": "06f78b28b1f43760fb69",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11702,10 +11707,40 @@
       "text": "⚡ SPECIFICATION LIFT TRIGGERED"
     },
     {
+      "id": "09a0d390947f6eb3cbc7",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "text/plain;charset=utf-8"
+    },
+    {
+      "id": "0a1f487f77000c6e0d38",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OMEGA_30K"
+    },
+    {
+      "id": "0c6d087ac8aa704c71c5",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Modelfile"
+    },
+    {
       "id": "0d0619d07370d97b874a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Copy & Open in ChatGPT"
+    },
+    {
+      "id": "0ed2ed23fe2e71b5467f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "100K Planetary"
+    },
+    {
+      "id": "0f85aac9967e4fc56a35",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "7 Volumes"
     },
     {
       "id": "10ad25b109cba76cbd8e",
@@ -11718,6 +11753,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Design a cinematic 3D website"
+    },
+    {
+      "id": "12a340341534f935889f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "SYSTEM_POLICY.md"
     },
     {
       "id": "1328b780a8014bd04037",
@@ -11736,6 +11777,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "TUTORING_INSTRUCTION_FRAMEWORK"
+    },
+    {
+      "id": "1792cf368316fa447d61",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🛡️ Step 4: Active Plugin & Tool Safety Auditor"
     },
     {
       "id": "17b1b004be8d273e9eaf",
@@ -11792,10 +11839,34 @@
       "text": "Zero Overhead"
     },
     {
+      "id": "2122f3b5f2917f508445",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Download Manifest JSON 📋"
+    },
+    {
       "id": "230ece23b70f7f089532",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🌍 Trivia (Pass-Through)"
+    },
+    {
+      "id": "2322d87ea1a761fd3010",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🌐 Universal Platforms & 100k Harness"
+    },
+    {
+      "id": "2328fe95eb2160dc3d09",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Truth-maximizing mathematical directives & real-time grounding"
+    },
+    {
+      "id": "2437a5bd202628914eca",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Architecture Benchmarks:"
     },
     {
       "id": "249bd01c066f3bd5dce5",
@@ -11816,16 +11887,58 @@
       "text": "Search power prompts"
     },
     {
+      "id": "264e88028d10fd80e4b9",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "cursor-rules"
+    },
+    {
       "id": "2d060ad8ed80659c5eb6",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "ChatGPT ↗"
     },
     {
+      "id": "2d198624001ec9f48c1d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Copy All Volumes 📋"
+    },
+    {
+      "id": "2ffc27a6ca8f9d566165",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "gemini-agent"
+    },
+    {
+      "id": "2fffb433d02dbf85eb84",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Design a reactive, WebGL 3D design canvas with accessible controls"
+    },
+    {
+      "id": "3090fde621371ebcc2fc",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Bracketed directive blocks, function calling contracts & grounding"
+    },
+    {
+      "id": "317a7ec0095ee7633114",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "discovery"
+    },
+    {
       "id": "32640674801708eef4a2",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "⚡ 1-Click Power Vault"
+    },
+    {
+      "id": "36e0970d1697f7067dab",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Total Words"
     },
     {
       "id": "376329b5070dbd8c6366",
@@ -11858,16 +11971,46 @@
       "text": "Coding"
     },
     {
+      "id": "39480b158f99d28b4cea",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "spe_spec_manifest.json"
+    },
+    {
       "id": "3a27c2cfc0a65615ad85",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "👋 Greeting (Pass-Through)"
     },
     {
+      "id": "3c0838c74d2be7c14845",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "a"
+    },
+    {
+      "id": "3fce261c49d38edb180a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Digest:"
+    },
+    {
+      "id": "3feaae2db2207102d8d3",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Core single-file specification"
+    },
+    {
       "id": "409fb040c9b50dfc20fa",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🛍️ Shopping App"
+    },
+    {
+      "id": "41e62e9bc440fa007efd",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🛡️ Offline Code Auditor"
     },
     {
       "id": "43c2ce8048f43ba9fac1",
@@ -11882,10 +12025,28 @@
       "text": "Astra 6.1"
     },
     {
+      "id": "449f14e243ba63844e3e",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "file_read, file_write, bash, terminal, web_search, database_read"
+    },
+    {
+      "id": "46c327f7a6fd34369196",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "antigravity-skills"
+    },
+    {
       "id": "4914cce95c2e3944437c",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "_blank"
+    },
+    {
+      "id": "4960e94045621e6f1a59",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "100% Offline Cryptographic Generation • Zero Cloud API Costs • Zero Telemetry Egress"
     },
     {
       "id": "4c31fdefafafe9160050",
@@ -11894,16 +12055,58 @@
       "text": "Writing"
     },
     {
+      "id": "4d3bcc9587fec2f56a92",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Autonomous financial risk analyzer with zero-trust payment safeguards"
+    },
+    {
       "id": "4d62fee2365a95feb066",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "OpenAI 6 / o3"
     },
     {
+      "id": "4dc66d632c1e11e5dd67",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Universal Platform & Multi-Volume Specification Harness"
+    },
+    {
+      "id": "4f7db262bc33dc32b65a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "ollama-modelfile"
+    },
+    {
       "id": "4fe7f4cfc662a1c1a716",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Precision-engineered prompts for modern frontier models. Zero hallucinations, built-in invariants, and instant results."
+    },
+    {
+      "id": "527be276537b46f94ea1",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🎯 Step 1: Select Target Platform Architecture"
+    },
+    {
+      "id": "543e3148879684c6d915",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "5 Volumes"
+    },
+    {
+      "id": "54e912ac7c0775f5122a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "High-throughput zero-copy event streaming cluster with sagas rollbacks"
+    },
+    {
+      "id": "55835d9f2ac1f59715f7",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Tokens Saved"
     },
     {
       "id": "569e55e1ba001e4e3386",
@@ -11924,10 +12127,40 @@
       "text": "Claude ↗"
     },
     {
+      "id": "590fdb827f9baa2b1dba",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": ".windsurfrules"
+    },
+    {
+      "id": "5c383f43d46b4c74ea65",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Moonshot Kimi"
+    },
+    {
+      "id": "5d90766521961d2f70e8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Google Gemini 2.5"
+    },
+    {
+      "id": "5f4a6ad4e057f3c952d9",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Google DeepMind Skills format with YAML frontmatter & <RULE> invariants"
+    },
+    {
       "id": "5fe46637bd8ea3a93831",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Clear"
+    },
+    {
+      "id": "5ff4d24529290044c1cd",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Complete multi-volume enterprise blueprint"
     },
     {
       "id": "60e5492ca6868235555a",
@@ -11942,10 +12175,94 @@
       "text": "Create a marketing campaign"
     },
     {
+      "id": "62214688215e384a9da2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Micro-kernels, memory & release gate"
+    },
+    {
+      "id": "63f783c1b8e511f07524",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Approved Tools"
+    },
+    {
+      "id": "6417c624511a3cc18170",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "📊 Step 2: Select Specification Depth & Modular Volume Scale"
+    },
+    {
+      "id": "6afed5c885bf578ab7f9",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "State dynamics, tools & proofs"
+    },
+    {
+      "id": "6babef9bb3617b685808",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Compile enterprise specifications for Antigravity Skills, Claude Code, Cursor, Grok, Kimi, and ChatGPT up to 100,000 words. 100% offline, zero cloud API fees."
+    },
+    {
+      "id": "6c27fb9d85e1ef9b7ce8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Ollama / Local"
+    },
+    {
       "id": "6cbd839e49cae56887dd",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Fable 5.0"
+    },
+    {
+      "id": "6cd88dfff844452207e4",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Docker-like local Modelfile with PARAMETER and SYSTEM blocks"
+    },
+    {
+      "id": "72991d42de2b4cfb65c3",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "grok"
+    },
+    {
+      "id": "77f4f6ab2b620449fb61",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "1.5K Standard"
+    },
+    {
+      "id": "78959c8f00334d24d8eb",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "CLAUDE.md"
+    },
+    {
+      "id": "7bb15423a391bf1dc541",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "words)"
+    },
+    {
+      "id": "823c346adf064356b334",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "✍️ Step 3: Define System Intent & Capabilities"
+    },
+    {
+      "id": "8467a9421df31340330c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "e.g. file_read, file_write, bash, terminal, web_search, stripe"
+    },
+    {
+      "id": "859b70dd67ebdd5256f7",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic Claude Code terminal rules, tool limits & build contracts"
     },
     {
       "id": "86d2b6fd5cebc14cc5cc",
@@ -11954,10 +12271,40 @@
       "text": "Build me a shopping app"
     },
     {
+      "id": "88c75e0fc62425e4ab48",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "kimi"
+    },
+    {
+      "id": "8b9518a219b2c292c86a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Claude Code CLI"
+    },
+    {
       "id": "8bc9c1884a472b2b129a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Hide"
+    },
+    {
+      "id": "8c941c650620ff89842f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "⚡ Distributed Sagas Engine"
+    },
+    {
+      "id": "8d016a3b8ee358a3917a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Download Current Volume ("
+    },
+    {
+      "id": "8dafc7bc80b5f0bcda7f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "STANDARD_1_5K"
     },
     {
       "id": "8e7f031af981aadf919f",
@@ -11978,6 +12325,18 @@
       "text": "Business"
     },
     {
+      "id": "9976ce959794f5bdb775",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Windsurf IDE"
+    },
+    {
+      "id": "9a4f187564b93c692e11",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🔬 Causal Inference Lab"
+    },
+    {
       "id": "9b720e07f012feb71d36",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11988,6 +12347,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Copy 📋"
+    },
+    {
+      "id": "9db07113218bed4fe98a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Cursor & Windsurf JSON agent directives & context ceilings"
     },
     {
       "id": "a07d47521cb291a66ade",
@@ -12002,10 +12367,52 @@
       "text": "SEO"
     },
     {
+      "id": "a572c91d3d89d64f59a3",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "15K Deep"
+    },
+    {
+      "id": "a7f54ed6ef4ae806dc19",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "SKILL.md"
+    },
+    {
+      "id": "aa733adaee695254e1b8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Declared Tools & Plugins (Comma-separated; redundant tools pruned to reduce attention drift):"
+    },
+    {
+      "id": "ab2b7e90a36fd890b25a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "1 Volume"
+    },
+    {
+      "id": "ab67cbf9a97424966a96",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Downloaded spe_spec_manifest.json"
+    },
+    {
+      "id": "abaa0c6b4f057da04475",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Codeium Windsurf AST rules & cascading execution bounds"
+    },
+    {
       "id": "ace533466cb933cb8110",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "What is 2 + 2?"
+    },
+    {
+      "id": "ad3c1eb991ddee76128a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Antigravity Skills"
     },
     {
       "id": "b1845cef7e1234541059",
@@ -12014,10 +12421,28 @@
       "text": "start"
     },
     {
+      "id": "b2262be434ae7e700096",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "📑 Step 5: Multi-Volume Specification Preview"
+    },
+    {
       "id": "b259f34610ce8d907615",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "This query requires a direct conversational or factual answer ("
+    },
+    {
+      "id": "baabb89f61d3fe37a079",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Cursor IDE"
+    },
+    {
+      "id": "baf3f5c17a2c473ff389",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "openai-markdown"
     },
     {
       "id": "bd65de3cc3ea55146050",
@@ -12026,16 +12451,58 @@
       "text": "🤖 AI Agent"
     },
     {
+      "id": "be855a117f33df9f27a5",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Enter system goal, architecture or agent requirements..."
+    },
+    {
+      "id": "bf3a5f1319407aed6120",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Redundant Pruned"
+    },
+    {
+      "id": "c39d37f076d3a3893215",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "GOD_MODE_100K"
+    },
+    {
+      "id": "c3f5961035e148023925",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "windsurf-rules"
+    },
+    {
+      "id": "c5329dc10e936bdb7e75",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Build an autonomous offline-first AI code auditor with formal verification"
+    },
+    {
       "id": "c5d346624d5bc2cb8837",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Outcome:"
     },
     {
+      "id": "c5d40f264700687a4b9a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Safety Score"
+    },
+    {
       "id": "c603f54aa6054069153a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🎯 Smart Outcome Lift"
+    },
+    {
+      "id": "c8b5cd40ed31e16a4293",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "DEEP_15K"
     },
     {
       "id": "c8cc31324d48c39eab5c",
@@ -12056,10 +12523,64 @@
       "text": "🛡️ PASS-THROUGH (TOOL SUPPRESSED)"
     },
     {
+      "id": "cd032bbad4ca7a86759d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "xAI Grok 4"
+    },
+    {
+      "id": "cd8cb83c363fe6e6f586",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "10 Volumes"
+    },
+    {
+      "id": "cfbf4286c08ce3135a3c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "50K Enterprise"
+    },
+    {
+      "id": "cfe01e680902cbe8bc80",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Vol"
+    },
+    {
+      "id": "d184358df26bcf782fd7",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "ChatGPT / OpenAI o3"
+    },
+    {
+      "id": "d1c64f15fc2bb4f2afbc",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Downloaded"
+    },
+    {
+      "id": "d25669bbe1b925b17314",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Empirical causal inference protocol with DAG structural modeling"
+    },
+    {
+      "id": "d2f1db727ca9186e0b90",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Power Prompts and Platform Harness"
+    },
+    {
       "id": "d532ee5a8b026b0a17ae",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Tool Status:"
+    },
+    {
+      "id": "d53900428495d97bf0c4",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Developer role markdown schemas with bold non-negotiable invariants"
     },
     {
       "id": "d7185f48a203e9f1f953",
@@ -12080,16 +12601,16 @@
       "text": "📐 Math Tutoring"
     },
     {
-      "id": "dffebcc0b6035602cea7",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Power Prompts and Discovery Lift"
-    },
-    {
       "id": "e1c97d8ea189de2f19ca",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Create an AI agent"
+    },
+    {
+      "id": "e4602eff414782b45421",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "💳 Financial Risk & Fraud"
     },
     {
       "id": "e4df54151d1a93f91ea5",
@@ -12098,10 +12619,28 @@
       "text": "Translating casual requests into verified 2026 specifications. Evaluates positive complex outcomes vs negative direct queries to prevent chat latency."
     },
     {
+      "id": "e4f21e94957cc1fd13f8",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "File"
+    },
+    {
       "id": "e57865db77fafa27a39d",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": ". Engineered for"
+    },
+    {
+      "id": "e75f48e4a679b01c19a4",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Universal Autonomous AI System Specification"
+    },
+    {
+      "id": "e95586a25f3030da4689",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Download"
     },
     {
       "id": "e9b31416d01fea0fea99",
@@ -12134,10 +12673,40 @@
       "text": "Invoked"
     },
     {
+      "id": "f1b04aac65a62d6217ea",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "128k/200k ultra-long context attention anchors & bilingual structure"
+    },
+    {
+      "id": "f33d2fa13c6270719698",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "🌐 3D WebGL Canvas"
+    },
+    {
+      "id": "f3420f13296449560928",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Intent, interfaces & verification"
+    },
+    {
       "id": "f3f5bb772ea2195eee1c",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Research this scientific hypothesis"
+    },
+    {
+      "id": "f4cedd738daa125f1b1d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "System specification goal"
+    },
+    {
+      "id": "f88d00ee37fed82eec7c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE Ω CERTIFIED"
     },
     {
       "id": "f8beccf98a380044c559",
@@ -12146,10 +12715,40 @@
       "text": "Claude 6.0"
     },
     {
+      "id": "f94e2cf2a616b6a86fae",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "3 Volumes"
+    },
+    {
+      "id": "f96c328fb2bccf1ce256",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "claude-code"
+    },
+    {
+      "id": "fa13d1c40f50c068eda4",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "MASTER_50K"
+    },
+    {
       "id": "fa84a9ae4267aa08bb5d",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "claude-6"
+    },
+    {
+      "id": "fb4c91dee9132c17bc38",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": ".cursorrules"
+    },
+    {
+      "id": "fbe278c778fe3aaa0ec0",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "platforms"
     },
     {
       "id": "0014fed211f55a770c35",
