@@ -1,0 +1,803 @@
+/* SPE Ω — Celestial Universe & 3D Capability Deck Stylesheet */
+
+/* ============================================================
+   1. GLOBAL TOKENS & RESET
+   ============================================================ */
+:root {
+  --spe-universe-void: #090a0d;
+  --spe-universe-surface: rgba(15, 17, 23, 0.78);
+  --spe-universe-card: rgba(18, 20, 28, 0.82);
+  --spe-universe-dock: rgba(13, 15, 20, 0.92);
+  --spe-universe-border: rgba(255, 255, 255, 0.08);
+  --spe-universe-border-hover: rgba(209, 254, 23, 0.35);
+  --spe-universe-lime: #d1fe17;
+  --spe-universe-lime-glow: rgba(209, 254, 23, 0.18);
+  --spe-universe-text-muted: rgba(255, 255, 255, 0.58);
+}
+
+/* ============================================================
+   2. CHAPTER 01 — THE CELESTIAL ORBITAL HERO
+   ============================================================ */
+.spe-universe-section {
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
+  margin: 3.5rem auto 4rem;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+}
+
+.spe-universe-container {
+  position: relative;
+  background: radial-gradient(circle at 50% 40%, rgba(209, 254, 23, 0.04) 0%, rgba(13, 15, 20, 0.9) 70%, #090a0d 100%);
+  border: 1px solid var(--spe-universe-border);
+  border-radius: 28px;
+  padding: 3rem 2rem 3.5rem;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.spe-universe-story-header {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 2.5rem;
+  position: relative;
+  z-index: 5;
+}
+
+.spe-universe-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--spe-universe-lime);
+  background: rgba(209, 254, 23, 0.08);
+  border: 1px solid rgba(209, 254, 23, 0.22);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+}
+
+.spe-universe-kicker-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--spe-universe-lime);
+  box-shadow: 0 0 10px var(--spe-universe-lime);
+  animation: spe-pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes spe-pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.6; }
+}
+
+.spe-universe-title {
+  font-size: clamp(1.85rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  letter-spacing: -0.025em;
+  margin: 0 0 1rem;
+}
+
+.spe-universe-title em {
+  font-style: normal;
+  color: var(--spe-universe-lime);
+  text-shadow: 0 0 30px rgba(209, 254, 23, 0.3);
+}
+
+.spe-universe-subtitle {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--spe-universe-text-muted);
+  margin: 0;
+}
+
+/* Celestial Stage & Orbit Canvas */
+.spe-orbit-stage {
+  position: relative;
+  width: 100%;
+  max-width: 980px;
+  height: 520px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Background Elliptical Orbit Rings */
+.spe-orbit-svg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.spe-orbit-ellipse {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-width: 1;
+  stroke-dasharray: 4 6;
+}
+
+.spe-orbit-ellipse.is-inner {
+  stroke: rgba(209, 254, 23, 0.18);
+  stroke-dasharray: 2 4;
+}
+
+.spe-beam-path {
+  fill: none;
+  stroke: url(#spe-beam-gradient);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(209, 254, 23, 0.6));
+  animation: spe-beam-dash 1.5s linear infinite;
+  stroke-dasharray: 6 4;
+}
+
+@keyframes spe-beam-dash {
+  to { stroke-dashoffset: -20; }
+}
+
+/* Center Interactive Input Capsule */
+.spe-center-capsule {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.spe-intent-bar-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: rgba(18, 21, 28, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 7px 8px 7px 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.25s ease;
+}
+
+.spe-intent-bar-wrapper:focus-within {
+  border-color: var(--spe-universe-lime);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(209, 254, 23, 0.25);
+}
+
+.spe-intent-icon {
+  color: var(--spe-universe-lime);
+  margin-right: 12px;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.spe-intent-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.spe-intent-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.spe-intent-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--spe-universe-lime);
+  color: #0b0c10;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.spe-intent-submit-btn:hover {
+  transform: scale(1.08);
+  background: #e2ff4f;
+}
+
+/* Active Execution Passport Card */
+.spe-execution-passport-card {
+  width: 100%;
+  background: rgba(14, 17, 24, 0.94);
+  border: 1px solid rgba(209, 254, 23, 0.3);
+  border-radius: 18px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(209, 254, 23, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.spe-passport-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.spe-passport-badge-cluster {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spe-passport-answering-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--spe-universe-lime);
+  background: rgba(209, 254, 23, 0.12);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(209, 254, 23, 0.25);
+}
+
+.spe-passport-tier-pill {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #090a0d;
+  background: var(--spe-universe-lime);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.spe-passport-model-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spe-passport-model-desc {
+  font-size: 0.85rem;
+  color: var(--spe-universe-text-muted);
+  margin: 0;
+}
+
+.spe-passport-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.spe-passport-metric-cell {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.spe-passport-metric-label {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+}
+
+.spe-passport-metric-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--spe-universe-lime);
+  margin-top: 2px;
+  display: block;
+}
+
+/* Orbiting Satellites */
+.spe-satellite-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 19, 26, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 14px;
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+  white-space: nowrap;
+  z-index: 8;
+}
+
+.spe-satellite-node:hover,
+.spe-satellite-node:focus-visible {
+  color: #ffffff;
+  border-color: rgba(209, 254, 23, 0.5);
+  transform: translate(-50%, -50%) scale(1.08);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(209, 254, 23, 0.25);
+  outline: none;
+}
+
+.spe-satellite-node.is-active {
+  background: rgba(22, 27, 36, 0.98);
+  border-color: var(--spe-universe-lime);
+  color: #ffffff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(209, 254, 23, 0.35);
+  transform: translate(-50%, -50%) scale(1.12);
+  z-index: 12;
+}
+
+.spe-satellite-node.is-local-tier {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.spe-satellite-node.is-local-tier.is-active {
+  border-color: var(--spe-universe-lime);
+}
+
+.spe-satellite-icon {
+  font-size: 0.95rem;
+  color: var(--spe-universe-lime);
+}
+
+.spe-satellite-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(209, 254, 23, 0.15);
+  color: var(--spe-universe-lime);
+}
+
+.spe-orbit-guidance-pill {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spe-orbit-guidance-pill span {
+  color: var(--spe-universe-lime);
+}
+
+/* ============================================================
+   3. CHAPTER 02 — THE 3D COVER FLOW CAPABILITY DECK
+   ============================================================ */
+.spe-deck-section {
+  position: relative;
+  width: 100%;
+  max-width: 1240px;
+  margin: 4.5rem auto 5rem;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+}
+
+.spe-deck-container {
+  position: relative;
+  background: linear-gradient(180deg, rgba(14, 16, 22, 0.88) 0%, rgba(9, 10, 14, 0.98) 100%);
+  border: 1px solid var(--spe-universe-border);
+  border-radius: 28px;
+  padding: 3rem 2rem 3.5rem;
+  box-shadow: 0 35px 90px -20px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.spe-deck-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.spe-deck-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--spe-universe-lime);
+  background: rgba(209, 254, 23, 0.08);
+  border: 1px solid rgba(209, 254, 23, 0.22);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+}
+
+.spe-deck-title {
+  font-size: clamp(1.65rem, 3.5vw, 2.35rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.spe-deck-title em {
+  font-style: normal;
+  color: var(--spe-universe-lime);
+}
+
+.spe-deck-nav-cluster {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.spe-deck-counter {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+}
+
+.spe-deck-counter strong {
+  color: var(--spe-universe-lime);
+}
+
+.spe-deck-arrow-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.spe-deck-arrow-btn:hover {
+  background: rgba(209, 254, 23, 0.12);
+  border-color: var(--spe-universe-lime);
+  color: var(--spe-universe-lime);
+  transform: scale(1.06);
+}
+
+/* 3D Cover Flow Viewport */
+.spe-deck-viewport {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  perspective: 1200px;
+  perspective-origin: center 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+/* Individual 3D Card */
+.spe-deck-card {
+  position: absolute;
+  width: 380px;
+  height: 460px;
+  border-radius: 24px;
+  background: linear-gradient(165deg, rgba(24, 27, 36, 0.94) 0%, rgba(13, 15, 21, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.75rem;
+  box-sizing: border-box;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.2, 0.85, 0.3, 1), opacity 0.45s ease, filter 0.45s ease, border-color 0.45s ease;
+  user-select: none;
+  cursor: pointer;
+}
+
+.spe-deck-card.is-active {
+  border-color: rgba(209, 254, 23, 0.45);
+  box-shadow: 0 35px 80px -10px rgba(0, 0, 0, 0.9), 0 0 40px rgba(209, 254, 23, 0.18);
+  cursor: default;
+}
+
+/* Card Top Tags */
+.spe-card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.spe-card-category-pill {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--spe-universe-lime);
+  background: rgba(209, 254, 23, 0.12);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(209, 254, 23, 0.25);
+}
+
+.spe-card-live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #ef4444;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.spe-card-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: spe-live-blink 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes spe-live-blink {
+  from { opacity: 0.4; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.2); }
+}
+
+/* Card Visual Center Preview */
+.spe-card-preview-art {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 1.25rem 0;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.spe-card-art-kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  color: var(--spe-universe-lime);
+  margin-bottom: 0.5rem;
+}
+
+.spe-card-art-snippet {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+}
+
+.spe-card-highlight-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(209, 254, 23, 0.2);
+  color: var(--spe-universe-lime);
+  border: 1px solid rgba(209, 254, 23, 0.3);
+}
+
+/* Card Bottom Info & CTA */
+.spe-card-info-cluster {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.spe-card-heading {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.spe-card-subtext {
+  font-size: 0.85rem;
+  color: var(--spe-universe-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.spe-card-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 9999px;
+  background: var(--spe-universe-lime);
+  color: #0a0b0d;
+  font-weight: 800;
+  font-size: 0.92rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 10px 25px -5px rgba(209, 254, 23, 0.4);
+  transition: all 0.2s ease;
+}
+
+.spe-card-action-btn:hover {
+  background: #e2ff4f;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -5px rgba(209, 254, 23, 0.55);
+}
+
+/* Floating Tactile Command Dock */
+.spe-dock-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.spe-dock-shelf {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--spe-universe-dock);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 8px;
+  border-radius: 9999px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.spe-dock-shelf::-webkit-scrollbar {
+  display: none;
+}
+
+.spe-dock-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  padding: 8px 14px;
+  color: var(--spe-universe-text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.spe-dock-tab-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.spe-dock-tab-btn.is-active {
+  background: rgba(209, 254, 23, 0.12);
+  border-color: rgba(209, 254, 23, 0.4);
+  color: var(--spe-universe-lime);
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(209, 254, 23, 0.15);
+}
+
+.spe-dock-tab-icon {
+  font-size: 0.95rem;
+}
+
+/* ============================================================
+   4. RESPONSIVENESS & REDUCED MOTION
+   ============================================================ */
+@media (max-width: 900px) {
+  .spe-orbit-stage {
+    height: 480px;
+  }
+  
+  .spe-satellite-node {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+
+  .spe-deck-viewport {
+    height: 440px;
+  }
+
+  .spe-deck-card {
+    width: 320px;
+    height: 420px;
+    padding: 1.4rem;
+  }
+
+  .spe-dock-tab-btn {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .spe-universe-container,
+  .spe-deck-container {
+    padding: 2rem 1rem;
+    border-radius: 20px;
+  }
+
+  .spe-orbit-stage {
+    height: 520px;
+  }
+
+  .spe-center-capsule {
+    max-width: 100%;
+  }
+
+  .spe-intent-bar-wrapper {
+    padding: 5px 6px 5px 14px;
+  }
+
+  .spe-deck-viewport {
+    height: 420px;
+  }
+
+  .spe-deck-card {
+    width: 290px;
+    height: 400px;
+    padding: 1.25rem;
+  }
+
+  .spe-dock-shelf {
+    padding: 4px;
+    border-radius: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spe-beam-path,
+  .spe-pulse-dot,
+  .spe-card-live-dot {
+    animation: none !important;
+  }
+  
+  .spe-deck-card {
+    transition: transform 0.1s linear, opacity 0.1s linear !important;
+  }
+}
