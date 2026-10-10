@@ -47,9 +47,13 @@ export const NOINDEX_VIEWS: ReadonlySet<AppView> = new Set([
   "research",
 ]);
 
-const PATH_VIEW: Record<string, AppView> = Object.fromEntries(
-  Object.entries(VIEW_PATH).map(([view, path]) => [path, view as AppView]),
-) as Record<string, AppView>;
+const PATH_VIEW: Record<string, AppView> = {
+  ...Object.fromEntries(
+    Object.entries(VIEW_PATH).map(([view, path]) => [path, view as AppView]),
+  ),
+  "/skill-builder": "skill-builder",
+  "/skills": "skill-builder",
+} as Record<string, AppView>;
 
 export function pathForView(view: AppView): string {
   return VIEW_PATH[view] ?? "/";
