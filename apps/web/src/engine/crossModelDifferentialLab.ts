@@ -1,8 +1,8 @@
 /**
  * SPE Ω — Cross-Model Differential Testing Lab
  * 
- * Tests a single prompt ABI across frontier LLM architectures (GPT-4o, Claude 3.7, 
- * Gemini 2.5, DeepSeek R1, Llama 3.3 70B) to generate a comparative "Model Behavior Atlas".
+ * Tests a single prompt ABI across frontier LLM architectures (GPT-6.1, Claude 6.2, 
+ * Gemini 3.9 Pro, DeepSeek 4.5, Llama 4 70B) to generate a comparative "Model Behavior Atlas".
  * Evaluates intent preservation, schema compliance, safety bypass delta, latency, and consensus.
  */
 
@@ -53,7 +53,7 @@ const BENCHMARK_MODELS: Array<{
   xml: 'PEDANTIC' | 'RELAXED' | 'UNSUPPORTED';
 }> = [
   {
-    modelId: 'claude-3-7-sonnet',
+    modelId: 'claude-6-2-sonnet',
     provider: 'Anthropic',
     dialectTarget: 'claude-xml',
     baseTtft: 380,
@@ -63,7 +63,7 @@ const BENCHMARK_MODELS: Array<{
     xml: 'PEDANTIC'
   },
   {
-    modelId: 'gpt-4o',
+    modelId: 'gpt-6.1',
     provider: 'OpenAI',
     dialectTarget: 'openai-markdown',
     baseTtft: 290,
@@ -73,7 +73,7 @@ const BENCHMARK_MODELS: Array<{
     xml: 'RELAXED'
   },
   {
-    modelId: 'gemini-2.5-pro',
+    modelId: 'gemini-3.9-pro',
     provider: 'Google',
     dialectTarget: 'gemini-agent',
     baseTtft: 320,
@@ -83,7 +83,7 @@ const BENCHMARK_MODELS: Array<{
     xml: 'RELAXED'
   },
   {
-    modelId: 'deepseek-r1',
+    modelId: 'deepseek-4.5',
     provider: 'DeepSeek',
     dialectTarget: 'open-weights',
     baseTtft: 460,
@@ -93,7 +93,7 @@ const BENCHMARK_MODELS: Array<{
     xml: 'RELAXED'
   },
   {
-    modelId: 'llama-3.3-70b-instruct',
+    modelId: 'llama-4-70b-instruct',
     provider: 'Meta / Groq',
     dialectTarget: 'cursor-rules',
     baseTtft: 110,
@@ -180,17 +180,17 @@ export async function evaluateCrossModelDifferential(
 
   const primaryDivergenceRisks: string[] = [];
   if (hasStrictXml) {
-    primaryDivergenceRisks.push('XML Tagging Variance: Claude enforces strict tag hierarchies, while Llama 3.3 treats XML tags as text.');
+    primaryDivergenceRisks.push('XML Tagging Variance: Claude enforces strict tag hierarchies, while Llama 4 treats XML tags as text.');
   }
   if (!hasStrictRules) {
     primaryDivergenceRisks.push('Adversarial Safety Divergence: Open weights models exhibit 8-12% lower attack resistance without explicit negative rules.');
   }
-  primaryDivergenceRisks.push('Reasoning Token Overhead: DeepSeek R1 consumes 150-400 extra thinking tokens before generating output.');
+  primaryDivergenceRisks.push('Reasoning Token Overhead: DeepSeek 4.5 consumes 150-400 extra thinking tokens before generating output.');
 
   // Recommended model
-  let recommendedModelForPrompt = 'claude-3-7-sonnet';
-  if (!hasStrictXml && hasJsonFormat) recommendedModelForPrompt = 'gpt-4o';
-  if (tokenLength > 1500) recommendedModelForPrompt = 'gemini-2.5-pro';
+  let recommendedModelForPrompt = 'claude-6-2-sonnet';
+  if (!hasStrictXml && hasJsonFormat) recommendedModelForPrompt = 'gpt-6.1';
+  if (tokenLength > 1500) recommendedModelForPrompt = 'gemini-3.9-pro';
 
   const timestamp = new Date().toISOString();
   const markdownAtlas = generateModelBehaviorAtlasMarkdown({

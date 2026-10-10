@@ -14,7 +14,7 @@ export const DeveloperRoiCalculator: React.FC<DeveloperRoiCalculatorProps> = ({ 
   const hoursSavedWeekly = ((weeklyHours * 0.25 * 0.70)).toFixed(1);
   const hoursSavedMonthly = (parseFloat(hoursSavedWeekly) * 4.2).toFixed(1);
 
-  // Typical API spend on Claude 3.5 Sonnet / GPT-4o loops: ~$2.50 per hour of active coding.
+  // Typical API spend on Claude 6.2 Sonnet / GPT-6.1 loops: ~$2.50 per hour of active coding.
   // Wasted prompt drift and retry loops account for ~25% of tokens.
   const tokenDollarsSavedMonthly = Math.round(weeklyHours * 2.5 * 0.25 * 4.2);
 

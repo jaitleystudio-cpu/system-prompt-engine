@@ -162,7 +162,7 @@ const CHAMBERS: CapabilityChamber[] = [
     slabA: "MODEL DRIFT.",
     slabB: "INSTANT DETECT.",
     snippetHeader: "SENTINEL // ACCURACY_CHECK",
-    snippetCode: "Comparison: Claude 6 vs Claude 3.5\nFormat changes: 0 errors detected\nStatus: VERIFIED_SAFE",
+    snippetCode: "Comparison: Claude 6.2 vs Claude 6.1\nFormat changes: 0 errors detected\nStatus: VERIFIED_SAFE",
   },
 ];
 

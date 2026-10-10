@@ -316,7 +316,7 @@ function evaluateJudgeDelta(prompt: string, reversedOrder: boolean): JudgeVerdic
 }
 
 function evaluateJudgeEpsilon(prompt: string, reversedOrder: boolean): JudgeVerdict {
-  // Judge Epsilon: Cross-Model Portability (Claude, GPT-4o, Gemini, Llama, DeepSeek)
+  // Judge Epsilon: Cross-Model Portability (Claude 6.2, GPT-6.1, Gemini 3.9 Pro, Llama 4, DeepSeek 4.5)
   const text = prompt.trim();
 
   const hasXml = text.includes("<") && text.includes(">");
@@ -326,21 +326,21 @@ function evaluateJudgeEpsilon(prompt: string, reversedOrder: boolean): JudgeVerd
   const criteria = [
     {
       id: "claude_compliance",
-      name: "Claude 3.5 Sonnet Tag Parsing",
+      name: "Claude 6.2 Sonnet Tag Parsing",
       weight: 0.35,
       score: hasXml || hasMarkdown ? 95 : 65,
       notes: "High compatibility with Claude's XML and structured markdown parsers.",
     },
     {
       id: "gpt_gemini_compliance",
-      name: "OpenAI GPT-4o & Gemini 2.0 Directives",
+      name: "OpenAI GPT-6.1 & Gemini 3.9 Pro Directives",
       weight: 0.35,
       score: hasMarkdown && hasNumberedSteps ? 95 : 70,
       notes: "Clear semantic section headers and sequential procedural scaffold.",
     },
     {
       id: "open_weights_compliance",
-      name: "Local Models (Llama 3 / DeepSeek R1)",
+      name: "Local Models (Llama 4 / DeepSeek 4.5)",
       weight: 0.30,
       score: text.includes("- ") && text.includes("Objective") ? 90 : 60,
       notes: "Bullet-list acceptance criteria parse reliably on open-weights instruction engines.",
@@ -366,7 +366,7 @@ function evaluateJudgeEpsilon(prompt: string, reversedOrder: boolean): JudgeVerd
     overallScore: rawOverall,
     rubrics,
     confidence: 0.91,
-    rationale: "Tested cross-compatibility across Anthropic Claude, OpenAI GPT-4o, Google Gemini, and Local Llama formats.",
+    rationale: "Tested cross-compatibility across Anthropic Claude 6.2, OpenAI GPT-6.1, Google Gemini 3.9 Pro, and Local Llama 4 formats.",
     positionBiasDelta: 0,
     verbosityBiasDelta: 0,
   };

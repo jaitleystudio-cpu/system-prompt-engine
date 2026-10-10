@@ -19,11 +19,13 @@
 /tools/screenshot-to-code  /evidence-pages/tools_screenshot-to-code.html  200
 /workflows  /evidence-pages/workflows.html  200
 /build-skill  /evidence-pages/build-skill.html  200
-/skill-builder  /evidence-pages/build-skill.html  200
 /compare  /evidence-pages/compare.html  200
-/pricing  /evidence-pages/pricing.html  200
-/models/openai/gpt-4o  /evidence-pages/models_openai_gpt-4o.html  200
-/models/anthropic/claude-3-7-sonnet  /evidence-pages/models_anthropic_claude-3-7-sonnet.html  200
+/models/openai/gpt-6-1  /evidence-pages/models_openai_gpt-6-1.html  200
+/models/anthropic/claude-6-2-sonnet  /evidence-pages/models_anthropic_claude-6-2-sonnet.html  200
+/models/google/gemini-3-9-pro  /evidence-pages/models_google_gemini-3-9-pro.html  200
+/models/deepseek/deepseek-4-5  /evidence-pages/models_deepseek_deepseek-4-5.html  200
+/models/xai/grok-4-9  /evidence-pages/models_xai_grok-4-9.html  200
+/models/moonshot/kimi-3-5  /evidence-pages/models_moonshot_kimi-3-5.html  200
 /failure-genome/SPE-FG-2026-000001  /evidence-pages/failure-genome_SPE-FG-2026-000001.html  200
 /integrations/openai  /evidence-pages/integrations_openai.html  200
 /integrations/anthropic  /evidence-pages/integrations_anthropic.html  200

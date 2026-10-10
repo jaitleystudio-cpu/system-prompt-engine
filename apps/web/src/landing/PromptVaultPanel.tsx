@@ -32,13 +32,14 @@ function downloadTextFile(filename: string, content: string) {
 
 const PLATFORMS: { id: ModelDialect; name: string; file: string; icon: string; description: string }[] = [
   { id: "antigravity-skills", name: "Antigravity Skills", file: "SKILL.md", icon: "🌟", description: "Google DeepMind Skills format with YAML frontmatter & <RULE> invariants" },
-  { id: "claude-code", name: "Claude Code CLI", file: "CLAUDE.md", icon: "💻", description: "Anthropic Claude Code terminal rules, tool limits & build contracts" },
-  { id: "cursor-rules", name: "Cursor IDE", file: ".cursorrules", icon: "🎯", description: "Cursor & Windsurf JSON agent directives & context ceilings" },
-  { id: "windsurf-rules", name: "Windsurf IDE", file: ".windsurfrules", icon: "🌊", description: "Codeium Windsurf AST rules & cascading execution bounds" },
-  { id: "grok", name: "xAI Grok 4", file: "SYSTEM_POLICY.md", icon: "⚡", description: "Truth-maximizing mathematical directives & real-time grounding" },
-  { id: "kimi", name: "Moonshot Kimi", file: "SYSTEM_POLICY.md", icon: "🌙", description: "128k/200k ultra-long context attention anchors & bilingual structure" },
-  { id: "openai-markdown", name: "ChatGPT / OpenAI o3", file: "SYSTEM_POLICY.md", icon: "🤖", description: "Developer role markdown schemas with bold non-negotiable invariants" },
-  { id: "gemini-agent", name: "Google Gemini 2.5", file: "SYSTEM_POLICY.md", icon: "💎", description: "Bracketed directive blocks, function calling contracts & grounding" },
+  { id: "claude-code", name: "Claude 6.2 Code", file: "CLAUDE.md", icon: "💻", description: "Anthropic Claude 6.1/6.2 Code terminal rules, tool limits & build contracts" },
+  { id: "cursor-rules", name: "Cursor 4.9 IDE", file: ".cursorrules", icon: "🎯", description: "Cursor 4.9 & Windsurf 4.9 JSON agent directives & context ceilings" },
+  { id: "windsurf-rules", name: "Windsurf 4.9 IDE", file: ".windsurfrules", icon: "🌊", description: "Codeium Windsurf 4.9 AST rules & cascading execution bounds" },
+  { id: "grok", name: "xAI Grok 4.9", file: "SYSTEM_POLICY.md", icon: "⚡", description: "Grok 4.9 truth-maximizing mathematical directives & real-time grounding" },
+  { id: "kimi", name: "Moonshot Kimi 3.5", file: "SYSTEM_POLICY.md", icon: "🌙", description: "Kimi 3.5 200k ultra-long context attention anchors & bilingual structure" },
+  { id: "openai-markdown", name: "OpenAI 6 / o3-Pro", file: "SYSTEM_POLICY.md", icon: "🤖", description: "OpenAI 6 Developer role markdown schemas with bold non-negotiable invariants" },
+  { id: "gemini-agent", name: "Google Gemini 3.9 Pro", file: "SYSTEM_POLICY.md", icon: "💎", description: "Gemini 3.9 Pro bracketed directive blocks, function calling contracts & grounding" },
+  { id: "open-weights", name: "DeepSeek 4.5 / Llama 4", file: "SYSTEM_POLICY.md", icon: "🧠", description: "DeepSeek 4.5 & Llama 4 token-level ChatML header framing & proof kernel" },
   { id: "ollama-modelfile", name: "Ollama / Local", file: "Modelfile", icon: "🦙", description: "Docker-like local Modelfile with PARAMETER and SYSTEM blocks" },
 ];
 
@@ -292,28 +293,49 @@ export function PromptVaultPanel({ onSelectPrompt }: Props) {
               onClick={() => setActiveModel("claude-6")}
               style={{ cursor: "pointer" }}
             >
-              Claude 6.0
+              Claude 6.2 Sonnet
+            </span>
+            <span
+              className={`spe-vault-model-tag ${activeModel === "gemini-39" ? "active" : ""}`}
+              onClick={() => setActiveModel("gemini-39")}
+              style={{ cursor: "pointer" }}
+            >
+              Gemini 3.9 Pro
+            </span>
+            <span
+              className={`spe-vault-model-tag ${activeModel === "grok-49" ? "active" : ""}`}
+              onClick={() => setActiveModel("grok-49")}
+              style={{ cursor: "pointer" }}
+            >
+              Grok 4.9
+            </span>
+            <span
+              className={`spe-vault-model-tag ${activeModel === "cursor-49" ? "active" : ""}`}
+              onClick={() => setActiveModel("cursor-49")}
+              style={{ cursor: "pointer" }}
+            >
+              Cursor 4.9
+            </span>
+            <span
+              className={`spe-vault-model-tag ${activeModel === "deepseek-45" ? "active" : ""}`}
+              onClick={() => setActiveModel("deepseek-45")}
+              style={{ cursor: "pointer" }}
+            >
+              DeepSeek 4.5
+            </span>
+            <span
+              className={`spe-vault-model-tag ${activeModel === "kimi-35" ? "active" : ""}`}
+              onClick={() => setActiveModel("kimi-35")}
+              style={{ cursor: "pointer" }}
+            >
+              Kimi 3.5
             </span>
             <span
               className={`spe-vault-model-tag ${activeModel === "openai-6" ? "active" : ""}`}
               onClick={() => setActiveModel("openai-6")}
               style={{ cursor: "pointer" }}
             >
-              OpenAI 6 / o3
-            </span>
-            <span
-              className={`spe-vault-model-tag ${activeModel === "astra-6-1" ? "active" : ""}`}
-              onClick={() => setActiveModel("astra-6-1")}
-              style={{ cursor: "pointer" }}
-            >
-              Astra 6.1
-            </span>
-            <span
-              className={`spe-vault-model-tag ${activeModel === "fable-5" ? "active" : ""}`}
-              onClick={() => setActiveModel("fable-5")}
-              style={{ cursor: "pointer" }}
-            >
-              Fable 5.0
+              OpenAI 6 / o3-Pro
             </span>
           </div>
         </div>

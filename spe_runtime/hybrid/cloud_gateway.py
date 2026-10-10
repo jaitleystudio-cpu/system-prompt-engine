@@ -6,7 +6,7 @@ Enforces:
    - Phase 2 (Execution & Stream): Streams tokens and calculates exact consumed NanoUSD.
    - Phase 3 (Commit/Abort): Deducts consumed nanos, immediately refunds unspent nanos.
    - Mathematical Invariant: Balance_final + Spend_exact == Balance_initial ($0 leakage).
-2. Multi-Provider Streaming Adapters: Anthropic SSE (Claude), OpenAI SSE (GPT-4o), Gemini Streaming.
+2. Multi-Provider Streaming Adapters: Anthropic SSE (Claude 6.2 Sonnet), OpenAI SSE (GPT-6.1 / o4), Gemini Streaming (Gemini 3.9 Pro).
 3. Live Dropout & Rate Limit (HTTP 429) Failover:
    - On HTTP 429: Intercepts and triggers automatic failover to next provider.
    - On Network Connection Reset: Intercepts error, synthesizes PCSC minimal continuation cut C* <= 500 tokens,
@@ -197,7 +197,7 @@ class TwoPhaseCommitEscrow:
 # ---------------------------------------------------------------------------
 
 class AnthropicStreamingAdapter:
-    """Parses Anthropic SSE streaming format (Claude 3.7 / 3.5)."""
+    """Parses Anthropic SSE streaming format (Claude 6.2 / 6.1)."""
 
     @staticmethod
     def parse_chunk(raw_sse_line: str) -> Optional[str]:
@@ -222,7 +222,7 @@ class AnthropicStreamingAdapter:
 
 
 class OpenAIStreamingAdapter:
-    """Parses OpenAI SSE streaming format (GPT-4o / o3)."""
+    """Parses OpenAI SSE streaming format (GPT-6.1 / o4 / o3)."""
 
     @staticmethod
     def parse_chunk(raw_sse_line: str) -> Optional[str]:
@@ -243,7 +243,7 @@ class OpenAIStreamingAdapter:
 
 
 class GeminiStreamingAdapter:
-    """Parses Google Gemini streaming format (Gemini 2.5)."""
+    """Parses Google Gemini streaming format (Gemini 3.9 Pro)."""
 
     @staticmethod
     def parse_chunk(raw_line: str) -> Optional[str]:

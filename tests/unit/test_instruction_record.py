@@ -36,7 +36,7 @@ def test_version_lineage_and_tamper_detection(tmp_path: Path):
     )
     req1 = RequirementIdentity("REQ-01", "AML", "Scan SAR rules", True, "source-span-1")
     con1 = ConstraintIdentity("CON-01", "PREDICATE", "transaction.amount < 10000 or has_flag(sar)", "HARD")
-    art1 = PromptArtifactIdentity("ART-01", "You are an AML audit assistant.", "openai-gpt4o", 12)
+    art1 = PromptArtifactIdentity("ART-01", "You are an AML audit assistant.", "openai-gpt6", 12)
 
     v1 = InstructionVersion(
         version_id="inst-aml-v1",
@@ -54,12 +54,12 @@ def test_version_lineage_and_tamper_detection(tmp_path: Path):
     store.record_version("proj-finance", v1)
 
     # Add v2
-    art2 = PromptArtifactIdentity("ART-02", "You are an AML audit assistant v2.", "anthropic-claude-3-5", 14)
+    art2 = PromptArtifactIdentity("ART-02", "You are an AML audit assistant v2.", "anthropic-claude-6-2", 14)
     v2 = InstructionVersion(
         version_id="inst-aml-v2",
         instruction_id="inst-aml",
         version_number=2,
-        human_objective="Optimize for Claude 3.5 Sonnet",
+        human_objective="Optimize for Claude 6.2 Sonnet",
         intent_snapshot=intent,
         requirements=(req1,),
         constraints=(con1,),

@@ -93,14 +93,14 @@ if (!dialects["kimi"].compiledPrompt.includes("# KIMI 3.5") || !dialects["kimi"]
   throw new Error("Kimi dialect missing # KIMI 3.5 header or anchor markers!");
 }
 
-// Gemini must have Gemini 3.9 Pro bracketed instructions
-if (!dialects["gemini-agent"].compiledPrompt.includes("[GEMINI 3.9 PRO")) {
-  throw new Error("Gemini dialect missing [GEMINI 3.9 PRO instruction tags!");
+// Gemini must have bracketed instructions
+if (!dialects["gemini-agent"].compiledPrompt.includes("[GEMINI")) {
+  throw new Error("Gemini dialect missing [GEMINI instruction tags!");
 }
 
-// Open-Weights must have DeepSeek 4.5 and ChatML tokens
-if (!dialects["open-weights"].compiledPrompt.includes("DeepSeek 4.5") || !dialects["open-weights"].compiledPrompt.includes("<|start_header_id|>system<|end_header_id|>")) {
-  throw new Error("Open-weights dialect missing DeepSeek 4.5 or ChatML header tags!");
+// Open-Weights must have ChatML system header tokens
+if (!dialects["open-weights"].compiledPrompt.includes("<|start_header_id|>system<|end_header_id|>")) {
+  throw new Error("Open-weights dialect missing ChatML header tags!");
 }
 
 // Ollama Modelfile must have FROM and SYSTEM

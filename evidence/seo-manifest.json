@@ -1,15 +1,16 @@
 {
   "manifest_version": "1.0",
-  "generated_at": "2026-10-09T22:55:51.101Z",
+  "generated_at": "2026-10-10T21:49:37.726Z",
   "canonical_domain": "https://systempromptengine.com",
-  "total_prerendered_pages": 31,
+  "total_prerendered_pages": 35,
   "zero_placeholder_pages_verified": true,
   "indexing_summary": {
-    "total_indexable": 31,
+    "total_indexable": 35,
     "noindex_count": 0,
     "REAL_PRODUCT": 14,
     "CATEGORY_OWNERSHIP": 8,
-    "HOSTED_MODEL_PASSPORT": 2,
+    "HOSTED_MODEL_PASSPORT": 5,
+    "OPEN_WEIGHTS_MODEL_PASSPORT": 1,
     "REAL_DATA": 1,
     "INTEGRATION_GUIDE": 4,
     "MIGRATION_PATH": 2
@@ -258,25 +259,69 @@
       "schema_type": "SoftwareApplication"
     },
     {
-      "path": "/models/openai/gpt-4o",
-      "title": "OpenAI GPT-4o Empirical Model Passport | SPE Atlas",
+      "path": "/models/openai/gpt-6-1",
+      "title": "OpenAI GPT-6.1 Empirical Model Passport | SPE Atlas",
       "classification": "HOSTED_MODEL_PASSPORT",
       "indexing_status": "INDEXABLE",
       "provenance": "SIMULATED_SPEC_BENCHMARK",
       "has_unique_content": true,
       "word_count": 440,
-      "canonical_url": "https://systempromptengine.com/models/openai/gpt-4o",
+      "canonical_url": "https://systempromptengine.com/models/openai/gpt-6-1",
       "schema_type": "SoftwareApplication"
     },
     {
-      "path": "/models/anthropic/claude-3-7-sonnet",
-      "title": "Anthropic Claude 3.7 Sonnet Model Passport | SPE Atlas",
+      "path": "/models/anthropic/claude-6-2-sonnet",
+      "title": "Anthropic Claude 6.2 Sonnet Model Passport | SPE Atlas",
       "classification": "HOSTED_MODEL_PASSPORT",
       "indexing_status": "INDEXABLE",
       "provenance": "SIMULATED_SPEC_BENCHMARK",
       "has_unique_content": true,
       "word_count": 448,
-      "canonical_url": "https://systempromptengine.com/models/anthropic/claude-3-7-sonnet",
+      "canonical_url": "https://systempromptengine.com/models/anthropic/claude-6-2-sonnet",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/models/google/gemini-3-9-pro",
+      "title": "Google Gemini 3.9 Pro Model Passport | SPE Atlas",
+      "classification": "HOSTED_MODEL_PASSPORT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SIMULATED_SPEC_BENCHMARK",
+      "has_unique_content": true,
+      "word_count": 443,
+      "canonical_url": "https://systempromptengine.com/models/google/gemini-3-9-pro",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/models/deepseek/deepseek-4-5",
+      "title": "DeepSeek 4.5 Model Passport | SPE Atlas",
+      "classification": "OPEN_WEIGHTS_MODEL_PASSPORT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SIMULATED_SPEC_BENCHMARK",
+      "has_unique_content": true,
+      "word_count": 431,
+      "canonical_url": "https://systempromptengine.com/models/deepseek/deepseek-4-5",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/models/xai/grok-4-9",
+      "title": "xAI Grok 4.9 Model Passport | SPE Atlas",
+      "classification": "HOSTED_MODEL_PASSPORT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SIMULATED_SPEC_BENCHMARK",
+      "has_unique_content": true,
+      "word_count": 440,
+      "canonical_url": "https://systempromptengine.com/models/xai/grok-4-9",
+      "schema_type": "SoftwareApplication"
+    },
+    {
+      "path": "/models/moonshot/kimi-3-5",
+      "title": "Moonshot Kimi 3.5 Model Passport | SPE Atlas",
+      "classification": "HOSTED_MODEL_PASSPORT",
+      "indexing_status": "INDEXABLE",
+      "provenance": "SIMULATED_SPEC_BENCHMARK",
+      "has_unique_content": true,
+      "word_count": 441,
+      "canonical_url": "https://systempromptengine.com/models/moonshot/kimi-3-5",
       "schema_type": "SoftwareApplication"
     },
     {

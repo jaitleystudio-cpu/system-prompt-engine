@@ -2485,6 +2485,12 @@
       "text": "BFT_QUORUM_ACHIEVED"
     },
     {
+      "id": "03cc235cb0b40627b920",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "deepseek-4-5"
+    },
+    {
       "id": "05924b3a1222381a238a",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -2501,6 +2507,12 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "DRIFT_DETECTED"
+    },
+    {
+      "id": "0cd595dee1b72d87ad64",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "[ROUND 4] PROPOSE capsule://discovery/rate-limiter#8f1a2b from node-claude-62"
     },
     {
       "id": "0f5d337af2b7f4ae3d4b",
@@ -2551,6 +2563,12 @@
       "text": "Admission State"
     },
     {
+      "id": "1569ef1a67837b9a4181",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "node-claude-62"
+    },
+    {
       "id": "161a64e2b24aa9bb5c64",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -2585,12 +2603,6 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "Execute Capsule ($0 Cost)"
-    },
-    {
-      "id": "1c377ec838e121484601",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "Qwen 2.5 72B"
     },
     {
       "id": "1c75be9eb78e0bc0f661",
@@ -2665,6 +2677,12 @@
       "text": "Meta-Compiler Genetic Optimization and Equivalence Ledger"
     },
     {
+      "id": "2800d8d947fcca9c214c",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "gemini-3-9-pro"
+    },
+    {
       "id": "282aeedc358326949158",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -2689,6 +2707,12 @@
       "text": "Role:"
     },
     {
+      "id": "2ca30cb2c0d26c02c3dd",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "o4 · Claude 6.2 · DeepSeek 4.5 · Gemini 3.9"
+    },
+    {
       "id": "2d00b3ff3954cd2712d4",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -2699,12 +2723,6 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "SPE-Core Rust WASM"
-    },
-    {
-      "id": "2ec0a9e785fe1b0d0602",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "o3 · Claude 3.7 · R1 · Flash"
     },
     {
       "id": "2ff4146dbaee7ac30617",
@@ -2741,12 +2759,6 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "ccf-stripe-guard-02"
-    },
-    {
-      "id": "35026750c8393dc1e9e3",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "node-r1-671b"
     },
     {
       "id": "38b8fba905419e9a8c6f",
@@ -2857,6 +2869,12 @@
       "text": "refund_id"
     },
     {
+      "id": "4cb46691625cc06af254",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "node-llama-4"
+    },
+    {
       "id": "4d6590ea2fbf5e61ed0a",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -2893,10 +2911,10 @@
       "text": "duplicate_charge"
     },
     {
-      "id": "572a2d82cd2ccb587b66",
+      "id": "5707237ec5aaf38d67f7",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
-      "text": "OpenAI o3"
+      "text": "Qwen 3 72B"
     },
     {
       "id": "5a32a455168c02badf16",
@@ -2911,12 +2929,6 @@
       "text": "Adversarial Mutator:"
     },
     {
-      "id": "5b2ac66415b201e84e94",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "Gemini 2.0 Flash"
-    },
-    {
       "id": "5f4310d7cca3f0e8af58",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -2927,12 +2939,6 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "Wald_SPRT_LCB95"
-    },
-    {
-      "id": "658c9354e856344262a7",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "node-o3-high"
     },
     {
       "id": "66754fbfade7d0bb43a2",
@@ -2951,6 +2957,18 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "DEPLOYMENT_ELIGIBLE"
+    },
+    {
+      "id": "67e87351e703fde3515f",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "DeepSeek 4.5 671B"
+    },
+    {
+      "id": "68b8357d1bf34c594c1e",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "with Leader node-claude-62"
     },
     {
       "id": "6b4412548e5d77bdf64a",
@@ -3091,6 +3109,12 @@
       "text": "Dialectical_Wald_SPRT (+0.92)"
     },
     {
+      "id": "84f8f4de36f37542b235",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "OpenAI GPT-6.1"
+    },
+    {
       "id": "86e19f25e568ae640314",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -3121,6 +3145,12 @@
       "text": "duel-02"
     },
     {
+      "id": "8be19a5a46d3fa91edde",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "node-gpt6-high"
+    },
+    {
       "id": "8ca22c2e3a3fdfc3442e",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -3139,22 +3169,10 @@
       "text": "ref_9824_sec"
     },
     {
-      "id": "8f450b45b8721f1452cc",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "node-claude-37"
-    },
-    {
       "id": "8f549f137d74676dcc41",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "Counterfactual Capability Foundry"
-    },
-    {
-      "id": "8f913ad1f30d90eee878",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "DeepSeek R1 671B"
     },
     {
       "id": "8feffc114b6c94babe4d",
@@ -3187,6 +3205,12 @@
       "text": "ROLLED_BACK"
     },
     {
+      "id": "9476b63d034c2dd803e0",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "openai-gpt6"
+    },
+    {
       "id": "948deaa36140bab1cc4b",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -3205,16 +3229,16 @@
       "text": "· Rep:"
     },
     {
+      "id": "9ad7c157fa20ec8b9c73",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "claude-6-2-sonnet"
+    },
+    {
       "id": "9d59546fc72ac2d95f7c",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "Frontier Transfer"
-    },
-    {
-      "id": "9f39769633d6c58407ba",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "with Leader node-claude-37"
     },
     {
       "id": "a0e0615f833a0798cfcd",
@@ -3265,6 +3289,12 @@
       "text": "QUORUM_PENDING"
     },
     {
+      "id": "ab3b4f366d23dee25846",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "node-ds-45"
+    },
+    {
       "id": "ac521d7a280a935b8836",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -3283,10 +3313,16 @@
       "text": "Active"
     },
     {
-      "id": "adb4f26d912c7becd377",
+      "id": "ad8bc16b35777514c36f",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
-      "text": "[ROUND 4] PROPOSE capsule://discovery/rate-limiter#8f1a2b from node-claude-37"
+      "text": "node-gemini-39"
+    },
+    {
+      "id": "ad9a2f5d361396327ea2",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Gemini 3.9 Pro"
     },
     {
       "id": "af4d6a6a0396d8da3680",
@@ -3349,12 +3385,6 @@
       "text": "Counter-World: AUTHORITY_REVOKED"
     },
     {
-      "id": "bfeffa65dec9d5b20ab0",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "node-gemini-flash"
-    },
-    {
       "id": "c53ae6725390f1f7c53f",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -3377,12 +3407,6 @@
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "4 Qualified"
-    },
-    {
-      "id": "c785842310dc37dba19e",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "Llama 3.3 70B"
     },
     {
       "id": "c79f3e9b9a26dff5367d",
@@ -3421,10 +3445,10 @@
       "text": "node-llama-70b"
     },
     {
-      "id": "cea90ab55ab3fdd7bc40",
+      "id": "cf8d5e58fe63d0709927",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
-      "text": "Claude 3.7 Sonnet"
+      "text": "Llama 4"
     },
     {
       "id": "cfb5c89ba4adad7ff435",
@@ -3547,6 +3571,12 @@
       "text": "amount_cents"
     },
     {
+      "id": "e4aeab5d63d0f7ac6474",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "Claude 6.2 Sonnet"
+    },
+    {
       "id": "e6f89b55d5bace620c3a",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
@@ -3661,16 +3691,16 @@
       "text": "Discovered Domain Axioms (Formal Ontology Base)"
     },
     {
+      "id": "fd10c6f633b582e837fe",
+      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
+      "depth": "PROOF",
+      "text": "node-qwen-3"
+    },
+    {
       "id": "fd815b675930075ad604",
       "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
       "depth": "PROOF",
       "text": "] PREVOTE Initiated round"
-    },
-    {
-      "id": "fe0fed004511be14da91",
-      "file": "apps/web/src/capabilities/CapabilityFoundryStudio.tsx",
-      "depth": "PROOF",
-      "text": "node-qwen-72b"
     },
     {
       "id": "fe72faabdfc7e13dd205",
@@ -11677,6 +11707,12 @@
       "text": "Standard request preference. This selector does not change engine behavior."
     },
     {
+      "id": "01f75b23ad0f95d560b6",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "DeepSeek 4.5 / Llama 4"
+    },
+    {
       "id": "036cf9efdeefc72f78be",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11809,6 +11845,12 @@
       "text": "noopener,noreferrer"
     },
     {
+      "id": "1d7c4567eda815c7ed4f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Cursor 4.9 & Windsurf 4.9 JSON agent directives & context ceilings"
+    },
+    {
       "id": "1de82cf93d78aea277a0",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11857,12 +11899,6 @@
       "text": "🌐 Universal Platforms & 100k Harness"
     },
     {
-      "id": "2328fe95eb2160dc3d09",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Truth-maximizing mathematical directives & real-time grounding"
-    },
-    {
       "id": "2437a5bd202628914eca",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11881,6 +11917,12 @@
       "text": "Confidence:"
     },
     {
+      "id": "25e18f746892c4cc7b29",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Anthropic Claude 6.1/6.2 Code terminal rules, tool limits & build contracts"
+    },
+    {
       "id": "26327f05e4d806b93d54",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11891,6 +11933,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "cursor-rules"
+    },
+    {
+      "id": "2a3f067f2046a96af11f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Windsurf 4.9 IDE"
     },
     {
       "id": "2d060ad8ed80659c5eb6",
@@ -11917,12 +11965,6 @@
       "text": "Design a reactive, WebGL 3D design canvas with accessible controls"
     },
     {
-      "id": "3090fde621371ebcc2fc",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Bracketed directive blocks, function calling contracts & grounding"
-    },
-    {
       "id": "317a7ec0095ee7633114",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11933,6 +11975,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "⚡ 1-Click Power Vault"
+    },
+    {
+      "id": "3491d48a8a399640879d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Claude 6.2 Code"
     },
     {
       "id": "36e0970d1697f7067dab",
@@ -11977,6 +12025,12 @@
       "text": "spe_spec_manifest.json"
     },
     {
+      "id": "3a10cd916b9cc3afe49f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Grok 4.9 truth-maximizing mathematical directives & real-time grounding"
+    },
+    {
       "id": "3a27c2cfc0a65615ad85",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12019,12 +12073,6 @@
       "text": "vault"
     },
     {
-      "id": "4401341dcfcecc134f54",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Astra 6.1"
-    },
-    {
       "id": "449f14e243ba63844e3e",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12061,16 +12109,16 @@
       "text": "Autonomous financial risk analyzer with zero-trust payment safeguards"
     },
     {
-      "id": "4d62fee2365a95feb066",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "OpenAI 6 / o3"
-    },
-    {
       "id": "4dc66d632c1e11e5dd67",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Universal Platform & Multi-Volume Specification Harness"
+    },
+    {
+      "id": "4dcce9ad07ea8f493f24",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "DeepSeek 4.5 & Llama 4 token-level ChatML header framing & proof kernel"
     },
     {
       "id": "4f7db262bc33dc32b65a",
@@ -12133,18 +12181,6 @@
       "text": ".windsurfrules"
     },
     {
-      "id": "5c383f43d46b4c74ea65",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Moonshot Kimi"
-    },
-    {
-      "id": "5d90766521961d2f70e8",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Google Gemini 2.5"
-    },
-    {
       "id": "5f4a6ad4e057f3c952d9",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12193,6 +12229,12 @@
       "text": "📊 Step 2: Select Specification Depth & Modular Volume Scale"
     },
     {
+      "id": "67de80e2acb2e5159f16",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Kimi 3.5 200k ultra-long context attention anchors & bilingual structure"
+    },
+    {
       "id": "6afed5c885bf578ab7f9",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12211,16 +12253,16 @@
       "text": "Ollama / Local"
     },
     {
-      "id": "6cbd839e49cae56887dd",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Fable 5.0"
-    },
-    {
       "id": "6cd88dfff844452207e4",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Docker-like local Modelfile with PARAMETER and SYSTEM blocks"
+    },
+    {
+      "id": "70af953dd28b66a1db5c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Moonshot Kimi 3.5"
     },
     {
       "id": "72991d42de2b4cfb65c3",
@@ -12259,12 +12301,6 @@
       "text": "e.g. file_read, file_write, bash, terminal, web_search, stripe"
     },
     {
-      "id": "859b70dd67ebdd5256f7",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Anthropic Claude Code terminal rules, tool limits & build contracts"
-    },
-    {
       "id": "86d2b6fd5cebc14cc5cc",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12277,10 +12313,10 @@
       "text": "kimi"
     },
     {
-      "id": "8b9518a219b2c292c86a",
+      "id": "8a299ad0933f5058f6db",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "Claude Code CLI"
+      "text": "OpenAI 6 / o3-Pro"
     },
     {
       "id": "8bc9c1884a472b2b129a",
@@ -12313,6 +12349,12 @@
       "text": "Turn this business idea into a plan"
     },
     {
+      "id": "905b4b5ede59c440eafc",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Codeium Windsurf 4.9 AST rules & cascading execution bounds"
+    },
+    {
       "id": "911fec066631923a10fa",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12323,12 +12365,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Business"
-    },
-    {
-      "id": "9976ce959794f5bdb775",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Windsurf IDE"
     },
     {
       "id": "9a4f187564b93c692e11",
@@ -12343,16 +12379,16 @@
       "text": "BUSINESS_PLANNING_SPECIFICATION"
     },
     {
+      "id": "9c23e10d9b85643d81ba",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "xAI Grok 4.9"
+    },
+    {
       "id": "9c8fac15a283ba5463f0",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Copy 📋"
-    },
-    {
-      "id": "9db07113218bed4fe98a",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Cursor & Windsurf JSON agent directives & context ceilings"
     },
     {
       "id": "a07d47521cb291a66ade",
@@ -12365,6 +12401,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "SEO"
+    },
+    {
+      "id": "a3ce5e46f56d4186cdba",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "open-weights"
     },
     {
       "id": "a572c91d3d89d64f59a3",
@@ -12397,12 +12439,6 @@
       "text": "Downloaded spe_spec_manifest.json"
     },
     {
-      "id": "abaa0c6b4f057da04475",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Codeium Windsurf AST rules & cascading execution bounds"
-    },
-    {
       "id": "ace533466cb933cb8110",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12413,6 +12449,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Antigravity Skills"
+    },
+    {
+      "id": "ae7b87a38b085eaf790d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "OpenAI 6 Developer role markdown schemas with bold non-negotiable invariants"
     },
     {
       "id": "b1845cef7e1234541059",
@@ -12433,10 +12475,10 @@
       "text": "This query requires a direct conversational or factual answer ("
     },
     {
-      "id": "baabb89f61d3fe37a079",
+      "id": "b7f92ae741ff2e9468c4",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "Cursor IDE"
+      "text": "DeepSeek 4.5"
     },
     {
       "id": "baf3f5c17a2c473ff389",
@@ -12461,6 +12503,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Redundant Pruned"
+    },
+    {
+      "id": "c033ec7bd8ac330c9f4d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Gemini 3.9 Pro bracketed directive blocks, function calling contracts & grounding"
     },
     {
       "id": "c39d37f076d3a3893215",
@@ -12499,6 +12547,12 @@
       "text": "🎯 Smart Outcome Lift"
     },
     {
+      "id": "c680d5298b7135ea4078",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Cursor 4.9 IDE"
+    },
+    {
       "id": "c8b5cd40ed31e16a4293",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12523,12 +12577,6 @@
       "text": "🛡️ PASS-THROUGH (TOOL SUPPRESSED)"
     },
     {
-      "id": "cd032bbad4ca7a86759d",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "xAI Grok 4"
-    },
-    {
       "id": "cd8cb83c363fe6e6f586",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12545,12 +12593,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Vol"
-    },
-    {
-      "id": "d184358df26bcf782fd7",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "ChatGPT / OpenAI o3"
     },
     {
       "id": "d1c64f15fc2bb4f2afbc",
@@ -12577,22 +12619,34 @@
       "text": "Tool Status:"
     },
     {
-      "id": "d53900428495d97bf0c4",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Developer role markdown schemas with bold non-negotiable invariants"
-    },
-    {
       "id": "d7185f48a203e9f1f953",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "All"
     },
     {
+      "id": "dbd707a44ccfff8a2d3e",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Kimi 3.5"
+    },
+    {
+      "id": "dbf92f1806939360956a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Google Gemini 3.9 Pro"
+    },
+    {
       "id": "ddb964c879300106cf7d",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🔢 2 + 2 (Pass-Through)"
+    },
+    {
+      "id": "dee7e7bf37316551ac60",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Grok 4.9"
     },
     {
       "id": "df65143bb60ce6a393c6",
@@ -12605,6 +12659,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Create an AI agent"
+    },
+    {
+      "id": "e1dcb4e635a45164c287",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Cursor 4.9"
     },
     {
       "id": "e4602eff414782b45421",
@@ -12635,6 +12695,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Universal Autonomous AI System Specification"
+    },
+    {
+      "id": "e81dbef41278da82a80f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PRODUCT",
+      "text": "Gemini 3.9 Pro"
     },
     {
       "id": "e95586a25f3030da4689",
@@ -12673,10 +12739,10 @@
       "text": "Invoked"
     },
     {
-      "id": "f1b04aac65a62d6217ea",
+      "id": "f3105019d3cc9d21dcaf",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
-      "text": "128k/200k ultra-long context attention anchors & bilingual structure"
+      "text": "Claude 6.2 Sonnet"
     },
     {
       "id": "f33d2fa13c6270719698",
@@ -12707,12 +12773,6 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "SPE Ω CERTIFIED"
-    },
-    {
-      "id": "f8beccf98a380044c559",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Claude 6.0"
     },
     {
       "id": "f94e2cf2a616b6a86fae",
@@ -13217,12 +13277,6 @@
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "Document Extractor"
-    },
-    {
-      "id": "0b6eb66e1f7edcdbc9c7",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Comparison: Claude 6 vs Claude 3.5\nFormat changes: 0 errors detected\nStatus: VERIFIED_SAFE"
     },
     {
       "id": "0d3b92421c913239c38b",
@@ -13967,6 +14021,12 @@
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "Export Agent Configs →"
+    },
+    {
+      "id": "edb7e017d7a9ec39f39a",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Comparison: Claude 6.2 vs Claude 6.1\nFormat changes: 0 errors detected\nStatus: VERIFIED_SAFE"
     },
     {
       "id": "f0a8814629a983731c0a",

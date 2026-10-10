@@ -1,13 +1,14 @@
 /**
- * SPE Ω Proof-Centric Intelligence Compiler — Ring 3: Polyglot Cross-Model Dialect Transcompiler
+ * SPE Proof-Centric Intelligence Compiler — PRAWIN JAITLEY Engine Generation
  *
  * Compiles a single canonical ProtectedIntent IR into model-native, mathematically
  * hardened instruction dialects:
- * 1. Anthropic Claude (Hierarchical XML Tags & Delimiters)
- * 2. OpenAI GPT-4o / o3 (Structured Markdown & Developer Role Schemas)
- * 3. Google Gemini 2.0 (Multimodal Agent & Function Calling Semantics)
- * 4. Cursor / Windsurf (.cursorrules IDE Engine Rules)
- * 5. Open-Weights Llama-3 / DeepSeek V3 (ChatML / Header Format)
+ * 1. Anthropic Claude (Sonnet 5.5 / 3.7 / 3.5 & Claude 6 XML Tags / CLAUDE.md)
+ * 2. OpenAI GPT-6.1-sol / gpt-6-astra / o3 / o4 (Developer Role Markdown)
+ * 3. Google Gemini (gemini-3.8-flash / 3.1-pro-preview / 2.5 Directives)
+ * 4. Cursor Rules (.cursor/rules/*.mdc & .cursorrules) & Windsurf
+ * 5. Open-Weights Meta Llama 4 / 3.3 & DeepSeek R1/V3 Reasoner
+ * 6. xAI Grok (grok-4.7 / grok-3) & Moonshot Kimi 3.5
  */
 
 export type ModelDialect =
@@ -117,7 +118,7 @@ ${ir.authorityBoundaries.map((auth) => `    <boundary scope="enforced">${auth}</
 
   return {
     dialect: "claude-xml",
-    modelTarget: "Anthropic Claude 6.1 / 6.2 (Sonnet / Opus)",
+    modelTarget: "Anthropic Claude (Sonnet 5.5 / 3.7 / 3.5 & Claude 6)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Hierarchical XML Strict Tags",
@@ -154,7 +155,7 @@ Emit valid RFC-compliant data without conversational filler.`;
 
   return {
     dialect: "openai-markdown",
-    modelTarget: "OpenAI GPT-6.1 / o3 / o4",
+    modelTarget: "OpenAI GPT-6.1-sol / gpt-6-astra / o3 / o4 (Developer Role)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Markdown H1-H3 Section Hierarchy & Bold Invariant Directives",
@@ -164,13 +165,14 @@ Emit valid RFC-compliant data without conversational filler.`;
 }
 
 /**
- * Transcompiles Canonical IR to Cursor / Windsurf IDE Dialect (.cursorrules).
+ * Transcompiles Canonical IR to Cursor / Windsurf IDE Dialect (.cursorrules / .cursor/rules/*.mdc).
  */
 function transcompileToCursorRules(ir: CanonicalPromptIR): TranscompiledResult {
   const content = JSON.stringify(
     {
-      _comment: "SPE-COMPILED CURSOR 4.9 / WINDSURF 4.9 AGENT RULES (.cursorrules)",
-      version: "4.9",
+      _comment: "SPE PRAWIN JAITLEY ENGINE — CURSOR & WINDSURF AGENT RULES",
+      format: ".cursor/rules/*.mdc & .cursorrules",
+      version: "2026.1",
       role: ir.role,
       objective: ir.objective,
       execution_rules: ir.hardInvariants,
@@ -187,7 +189,7 @@ function transcompileToCursorRules(ir: CanonicalPromptIR): TranscompiledResult {
 
   return {
     dialect: "cursor-rules",
-    modelTarget: "Cursor 4.9 (.cursorrules) & Windsurf 4.9",
+    modelTarget: "Cursor Rules (.cursor/rules/*.mdc & .cursorrules) & Windsurf",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "JSON Agent Configuration Schema",
@@ -200,7 +202,7 @@ function transcompileToCursorRules(ir: CanonicalPromptIR): TranscompiledResult {
  * Transcompiles Canonical IR to Google Gemini Agent Dialect.
  */
 function transcompileToGeminiAgent(ir: CanonicalPromptIR): TranscompiledResult {
-  const content = `[GEMINI 3.9 PRO SYSTEM INSTRUCTIONS - SPE Ω HARDENED]
+  const content = `[GEMINI 3.8/3.1 SYSTEM INSTRUCTIONS - SPE HARDENED]
 
 ROLE:
 ${ir.role}
@@ -222,22 +224,22 @@ ${ir.outputContract}`;
 
   return {
     dialect: "gemini-agent",
-    modelTarget: "Google Gemini 3.9 Pro / Flash Thinking",
+    modelTarget: "Google Gemini (gemini-3.8-flash / 3.1-pro-preview / 2.5)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Bracketed Directive Blocks with Grounding Tags",
-    delimitersUsed: ["[GEMINI 3.9 PRO SYSTEM INSTRUCTIONS]", "[INVARIANT]", "[AUTHORITY]"],
+    delimitersUsed: ["[GEMINI", "[INVARIANT]", "[AUTHORITY]"],
     safetyHardening: "Native Grounding Tagging & Function Calling Scope",
   };
 }
 
 /**
- * Transcompiles Canonical IR to Open-Weights DeepSeek 4.5 / Llama-4 Dialect.
+ * Transcompiles Canonical IR to Open-Weights Llama-4 / DeepSeek Dialect.
  */
 function transcompileToOpenWeights(ir: CanonicalPromptIR): TranscompiledResult {
   const content = `<|begin_of_text|><|start_header_id|>system<|end_header_id|>
 
-You are: ${ir.role} [DeepSeek 4.5 / R2 Reasoning Engine]
+You are: ${ir.role} [Meta Llama 4 & DeepSeek Reasoner Compatible]
 Task: ${ir.objective}
 
 STRICT OPERATIONAL RULES:
@@ -254,7 +256,7 @@ ${ir.outputContract}<|eot_id|>`;
 
   return {
     dialect: "open-weights",
-    modelTarget: "DeepSeek 4.5 / R2 & Llama 4 (Open-Weights)",
+    modelTarget: "Meta Llama 4 / 3.3 & DeepSeek R1/V3 Reasoner (Open-Weights)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "ChatML Header Framing (<|start_header_id|>)",
@@ -403,7 +405,7 @@ ${ir.outputContract}`;
 
   return {
     dialect: "grok",
-    modelTarget: "xAI Grok 4.9 (Heavy Truth Kernel)",
+    modelTarget: "xAI Grok (grok-4.7 / grok-3 Heavy Truth Kernel)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Truth-Anchored Mathematical Directives",
@@ -443,7 +445,7 @@ ${ir.outputContract}`;
 
   return {
     dialect: "kimi",
-    modelTarget: "Moonshot Kimi 3.5 (200k Context)",
+    modelTarget: "Moonshot Kimi 3.5 / k1.5 (200k Context)",
     compiledPrompt: content,
     tokenEstimate: Math.ceil(content.length / 4),
     syntaxFlavor: "Bilingual Bracketed Anchor Markers ([ANCHOR:...])",

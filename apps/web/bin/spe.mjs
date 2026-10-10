@@ -563,9 +563,9 @@ try {
       console.log(`  Raw Prompt Tokens:     ${costResult.rawTokenCount}`);
       console.log(`  Pruned Tokens:         ${costResult.prunedTokenCount} (-${costResult.tokenReductionPercent}%)`);
       console.log(`  Estimated Annual Savings (10M req):`);
-      console.log(`    - GPT-4o:            $${costResult.annualSavingsUsdAt10mCalls.gpt4o}`);
-      console.log(`    - Claude 3.7:        $${costResult.annualSavingsUsdAt10mCalls.claude37Sonnet}`);
-      console.log(`    - DeepSeek R1:       $${costResult.annualSavingsUsdAt10mCalls.deepseekR1}`);
+      console.log(`    - GPT-6.1:           $${costResult.annualSavingsUsdAt10mCalls.gpt4o}`);
+      console.log(`    - Claude 6.2:        $${costResult.annualSavingsUsdAt10mCalls.claude37Sonnet}`);
+      console.log(`    - DeepSeek 4.5:      $${costResult.annualSavingsUsdAt10mCalls.deepseekR1}`);
 
       console.log(`\n${bold('FRONTIER MODEL PRICING TABLE:')}`);
       for (const m of costResult.modelEstimates.slice(0, 5)) {

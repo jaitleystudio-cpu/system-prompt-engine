@@ -1,7 +1,7 @@
 """Integration & Fault-Tolerance Tests for SPE Ω Cloud Gateway & 2PC Financial Escrow.
 
 Verifies:
-1. Multi-provider streaming adapters (Anthropic Claude 3.7, OpenAI GPT-4o, Google Gemini 2.5).
+1. Multi-provider streaming adapters (Anthropic Claude 6.2, OpenAI GPT-6.1, Google Gemini 3.9 Pro).
 2. Strict Two-Phase Commit (2PC) financial escrow with zero balance leakage.
 3. 50-thread concurrent escrow operations without race conditions or financial drift.
 4. Simulated HTTP 429 rate limit triggering automatic multi-provider failover.
@@ -35,17 +35,17 @@ from spe_runtime.hybrid import (
 
 def test_multi_provider_streaming_adapters():
     """Validates parsing across Anthropic, OpenAI, and Gemini streaming payloads."""
-    # 1. Anthropic SSE (Claude 3.7 / 3.5)
+    # 1. Anthropic SSE (Claude 6.2 / 6.1)
     anthropic_raw = 'data: {"type": "content_block_delta", "delta": {"text": "Hello from Claude"}}'
     assert AnthropicStreamingAdapter.parse_chunk(anthropic_raw) == "Hello from Claude"
     assert AnthropicStreamingAdapter.parse_chunk("data: [DONE]") is None
 
-    # 2. OpenAI SSE (GPT-4o / o3)
-    openai_raw = 'data: {"choices": [{"delta": {"content": "Hello from GPT-4o"}}]}'
-    assert OpenAIStreamingAdapter.parse_chunk(openai_raw) == "Hello from GPT-4o"
+    # 2. OpenAI SSE (GPT-6.1 / o4 / o3)
+    openai_raw = 'data: {"choices": [{"delta": {"content": "Hello from GPT-6.1"}}]}'
+    assert OpenAIStreamingAdapter.parse_chunk(openai_raw) == "Hello from GPT-6.1"
     assert OpenAIStreamingAdapter.parse_chunk("data: [DONE]") is None
 
-    # 3. Google Gemini (Gemini 2.5)
+    # 3. Google Gemini (Gemini 3.9 Pro)
     gemini_raw = '{"candidates": [{"content": {"parts": [{"text": "Hello from Gemini"}]}}]}'
     assert GeminiStreamingAdapter.parse_chunk(gemini_raw) == "Hello from Gemini"
 
@@ -146,7 +146,7 @@ def test_live_rate_limit_http_429_automatic_failover():
     def successful_openai_stream() -> Iterator[str]:
         yield "Response "
         yield "from "
-        yield "OpenAI GPT-4o."
+        yield "OpenAI GPT-6.1."
 
     stream_generators = {
         "anthropic": failing_anthropic_stream,
@@ -164,7 +164,7 @@ def test_live_rate_limit_http_429_automatic_failover():
     assert result.failed_over is True
     assert "HTTP_429_RATE_LIMIT" in (result.failover_reason or "")
     assert result.provider_used == "openai"
-    assert "OpenAI GPT-4o" in result.text
+    assert "OpenAI GPT-6.1" in result.text
     assert result.tokens_streamed > 0
     assert result.cost_nanos > 0
 

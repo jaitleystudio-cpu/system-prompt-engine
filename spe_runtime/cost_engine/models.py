@@ -9,8 +9,8 @@ from typing import Any, Dict, List, Optional
 
 class CostTier(str, Enum):
     """Model operational cost tier."""
-    FRONTIER = "FRONTIER"          # e.g. Claude 3.5 Sonnet / GPT-4o (~$3-$15 / M tokens)
-    COMPACT = "COMPACT"            # e.g. Claude 3.5 Haiku / GPT-4o-mini (~$0.15-$0.60 / M tokens)
+    FRONTIER = "FRONTIER"          # e.g. Claude 6.2 Sonnet / GPT-6.1 (~$3-$15 / M tokens)
+    COMPACT = "COMPACT"            # e.g. Claude 6.2 Haiku / GPT-6.1-mini (~$0.15-$0.60 / M tokens)
     LOCAL_ZERO = "LOCAL_ZERO"      # Local / Air-Gapped / In-Memory ($0.00 / M tokens)
     DETERMINISTIC = "DETERMINISTIC"# WASM / Python Code ($0.00 / 0 tokens)
 

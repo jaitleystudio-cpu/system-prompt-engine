@@ -64,7 +64,7 @@ export const SAMPLE_DAG_NODES: DagNode[] = [
     id: "node_4_cloud_escalation",
     label: "2PC Financial Escrow & Cloud",
     type: "CLOUD_GATEWAY",
-    targetEngine: "Anthropic Claude 3.5 Sonnet",
+    targetEngine: "Anthropic Claude 6.2 Sonnet",
     status: "ESCRW_COMMITTED",
     costNanos: 1_875_000, // 0.001875 USD
     tokens: 125,

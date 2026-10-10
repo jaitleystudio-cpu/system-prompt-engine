@@ -1,7 +1,7 @@
 /**
  * SPE Ω — Power Prompts Vault & Catalog
  * Curated, verified, drift-resilient 1-click prompts for modern frontier models
- * (Claude 3.7 Sonnet, GPT-4o, Gemini 2.0 Flash)
+ * (Claude 6.2 Sonnet, OpenAI GPT-6.1 / o4, Gemini 3.9 Pro)
  */
 
 export interface PromptVariable {

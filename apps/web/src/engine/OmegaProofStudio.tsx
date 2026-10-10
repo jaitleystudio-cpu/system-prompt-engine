@@ -1614,11 +1614,11 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
               <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
                 {(
                   [
-                    { key: "claude-xml", label: "Claude XML", tag: "Sonnet/Opus" },
-                    { key: "openai-markdown", label: "OpenAI Markdown", tag: "GPT-4o/o3" },
-                    { key: "gemini-agent", label: "Gemini Agent", tag: "Gemini 2.0" },
-                    { key: "cursor-rules", label: "Cursor Rules", tag: ".cursorrules" },
-                    { key: "open-weights", label: "Open-Weights", tag: "Llama-3/DeepSeek" },
+                    { key: "claude-xml", label: "Claude XML", tag: "Claude 6.2 Sonnet" },
+                    { key: "openai-markdown", label: "OpenAI Markdown", tag: "GPT-6.1 / o4" },
+                    { key: "gemini-agent", label: "Gemini Agent", tag: "Gemini 3.9 Pro" },
+                    { key: "cursor-rules", label: "Cursor Rules", tag: "Cursor 4.9" },
+                    { key: "open-weights", label: "Open-Weights", tag: "DeepSeek 4.5 / Llama 4" },
                   ] as const
                 ).map((d) => (
                   <button
@@ -2873,7 +2873,7 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                 </div>
 
                 <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
-                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>GPT-4o Savings (10M req)</div>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>GPT-6.1 Savings (10M req)</div>
                   <div style={{ fontSize: "20px", fontWeight: "700", color: "#38bdf8" }}>
                     ${costReport.annualSavingsUsdAt10mCalls.gpt4o.toLocaleString()}
                   </div>
@@ -2881,7 +2881,7 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                 </div>
 
                 <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
-                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Claude 3.7 Savings (10M req)</div>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>Claude 6.2 Savings (10M req)</div>
                   <div style={{ fontSize: "20px", fontWeight: "700", color: "#38bdf8" }}>
                     ${costReport.annualSavingsUsdAt10mCalls.claude37Sonnet.toLocaleString()}
                   </div>
@@ -2889,7 +2889,7 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                 </div>
 
                 <div style={{ padding: "12px", borderRadius: "6px", backgroundColor: "#111827", border: "1px solid #1e293b" }}>
-                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>DeepSeek R1 Savings</div>
+                  <div style={{ fontSize: "11px", color: "#94a3b8" }}>DeepSeek 4.5 Savings</div>
                   <div style={{ fontSize: "20px", fontWeight: "700", color: "#34d399" }}>
                     ${costReport.annualSavingsUsdAt10mCalls.deepseekR1.toLocaleString()}
                   </div>
@@ -3032,7 +3032,7 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                     </span>
                   </div>
                   <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8" }}>
-                    Differential behavior evaluation across GPT-4o, Claude 3.7 Sonnet, Gemini 2.5 Pro, DeepSeek R1, and Llama 3.3 70B.
+                    Differential behavior evaluation across GPT-6.1, Claude 6.2 Sonnet, Gemini 3.9 Pro, DeepSeek 4.5, and Llama 4 70B.
                   </p>
                 </div>
                 <button
@@ -3447,7 +3447,7 @@ export const OmegaProofStudio: React.FC<OmegaProofStudioProps> = ({
                   >
                     <option value="llama3.2">Model: LLaMA-3.2 (Local)</option>
                     <option value="mistral-7b">Model: Mistral-7B-Instruct</option>
-                    <option value="deepseek-r1-distill">Model: DeepSeek-R1-Distill</option>
+                    <option value="deepseek-4-5">Model: DeepSeek-4.5 (Local)</option>
                   </select>
 
                   <select

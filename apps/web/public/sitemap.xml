@@ -37,30 +37,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://systempromptengine.com/pricing</loc>
-    <lastmod>2026-10-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://systempromptengine.com/workflows</loc>
-    <lastmod>2026-10-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://systempromptengine.com/build-skill</loc>
-    <lastmod>2026-10-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://systempromptengine.com/compare</loc>
-    <lastmod>2026-10-10</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
     <loc>https://systempromptengine.com/ai-instruction-assurance</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>daily</changefreq>
@@ -157,13 +133,37 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://systempromptengine.com/models/openai/gpt-4o</loc>
+    <loc>https://systempromptengine.com/models/openai/gpt-6-1</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://systempromptengine.com/models/anthropic/claude-3-7-sonnet</loc>
+    <loc>https://systempromptengine.com/models/anthropic/claude-6-2-sonnet</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://systempromptengine.com/models/google/gemini-3-9-pro</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://systempromptengine.com/models/deepseek/deepseek-4-5</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://systempromptengine.com/models/xai/grok-4-9</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://systempromptengine.com/models/moonshot/kimi-3-5</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>

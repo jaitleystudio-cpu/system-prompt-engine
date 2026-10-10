@@ -9,7 +9,7 @@
       "id": "UNK-001",
       "claim": "Remote Hosted-Model Behavior & Conformance",
       "status": "UNKNOWN",
-      "evidence_needed": "Live API executions against remote hosted frontier models (GPT-4o, Claude 3.7, Gemini 1.5) with recorded prompt digests and raw response receipts.",
+      "evidence_needed": "Live API executions against remote hosted frontier models (GPT-6.1, Claude 6.2, Gemini 3.9 Pro) with recorded prompt digests and raw response receipts.",
       "owner": "ModelAtlasTeam",
       "blocking_or_nonblocking": "NON_BLOCKING",
       "planned_test": "spe passport --remote (opt-in paid execution harness post-founder authorization)"

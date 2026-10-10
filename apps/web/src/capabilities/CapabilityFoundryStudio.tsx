@@ -45,10 +45,10 @@ const SAMPLE_CAPSULES: CapabilityCapsule[] = [
     },
     transfer: {
       qualified_models: [
-        "claude-3-7-sonnet",
-        "openai-o3",
-        "deepseek-r1",
-        "gemini-2-0-flash",
+        "claude-6-2-sonnet",
+        "openai-gpt6",
+        "deepseek-4-5",
+        "gemini-3-9-pro",
       ],
       rejected_models: [],
     },
@@ -260,17 +260,17 @@ export function CapabilityFoundryStudio() {
     reputation: number;
     state: "ONLINE" | "SLASHED";
   }>>([
-    { id: "node-claude-37", model: "Claude 3.7 Sonnet", role: "LEADER", stake: 2500, reputation: 0.99, state: "ONLINE" },
-    { id: "node-o3-high", model: "OpenAI o3", role: "VALIDATOR", stake: 2200, reputation: 0.98, state: "ONLINE" },
-    { id: "node-r1-671b", model: "DeepSeek R1 671B", role: "VALIDATOR", stake: 2000, reputation: 0.97, state: "ONLINE" },
-    { id: "node-gemini-flash", model: "Gemini 2.0 Flash", role: "VALIDATOR", stake: 1800, reputation: 0.96, state: "ONLINE" },
-    { id: "node-qwen-72b", model: "Qwen 2.5 72B", role: "VALIDATOR", stake: 1500, reputation: 0.94, state: "ONLINE" },
+    { id: "node-claude-62", model: "Claude 6.2 Sonnet", role: "LEADER", stake: 2500, reputation: 0.99, state: "ONLINE" },
+    { id: "node-gpt6-high", model: "OpenAI GPT-6.1", role: "VALIDATOR", stake: 2200, reputation: 0.98, state: "ONLINE" },
+    { id: "node-ds-45", model: "DeepSeek 4.5 671B", role: "VALIDATOR", stake: 2000, reputation: 0.97, state: "ONLINE" },
+    { id: "node-gemini-39", model: "Gemini 3.9 Pro", role: "VALIDATOR", stake: 1800, reputation: 0.96, state: "ONLINE" },
+    { id: "node-qwen-3", model: "Qwen 3 72B", role: "VALIDATOR", stake: 1500, reputation: 0.94, state: "ONLINE" },
     { id: "node-spe-wasm", model: "SPE-Core Rust WASM", role: "VALIDATOR", stake: 3000, reputation: 1.0, state: "ONLINE" },
-    { id: "node-llama-70b", model: "Llama 3.3 70B", role: "WITNESS", stake: 1200, reputation: 0.91, state: "ONLINE" },
+    { id: "node-llama-4", model: "Llama 4", role: "WITNESS", stake: 1200, reputation: 0.91, state: "ONLINE" },
   ]);
 
   const [gossipLogs, setGossipLogs] = useState<string[]>([
-    "[ROUND 4] PROPOSE capsule://discovery/rate-limiter#8f1a2b from node-claude-37",
+    "[ROUND 4] PROPOSE capsule://discovery/rate-limiter#8f1a2b from node-claude-62",
     "[ROUND 4] PREVOTE 6/7 VALIDATOR signatures received across P2P Mesh",
     "[ROUND 4] PRECOMMIT Quorum reached (Threshold: 5, Received: 6)",
     "[ROUND 4] COMMIT Finalized capsule to canonical ledger (Root: 9c0d3e5f...)",
@@ -292,7 +292,7 @@ export function CapabilityFoundryStudio() {
     setGossipLogs((prev) => [
       `[ROUND ${nextRound}] COMMIT Finalized BFT consensus (6/7 votes, 0 equivocation)`,
       `[ROUND ${nextRound}] PRECOMMIT 2f+1 Byzantine quorum reached (Threshold: 5)`,
-      `[ROUND ${nextRound}] PREVOTE Initiated round ${nextRound} with Leader node-claude-37`,
+      `[ROUND ${nextRound}] PREVOTE Initiated round ${nextRound} with Leader node-claude-62`,
       ...prev,
     ]);
   };
@@ -378,7 +378,7 @@ export function CapabilityFoundryStudio() {
         <div style={{ padding: "12px", borderRadius: "8px", background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.06)" }}>
           <div style={{ fontSize: "0.75rem", color: "rgba(255, 255, 255, 0.5)" }}>Frontier Transfer</div>
           <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "#a855f7" }}>4 Qualified</div>
-          <div style={{ fontSize: "0.7rem", color: "rgba(255, 255, 255, 0.5)" }}>o3 · Claude 3.7 · R1 · Flash</div>
+          <div style={{ fontSize: "0.7rem", color: "rgba(255, 255, 255, 0.5)" }}>o4 · Claude 6.2 · DeepSeek 4.5 · Gemini 3.9</div>
         </div>
       </div>
 
