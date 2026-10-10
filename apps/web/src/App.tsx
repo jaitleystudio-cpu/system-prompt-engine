@@ -77,6 +77,7 @@ import { SeoHead } from "./ui/SeoHead";
 import { DotPattern } from "./ui/DotPattern";
 import { SeoContent } from "./landing/SeoContent";
 import { Hero } from "./landing/Hero";
+import { ValueComparisonMatrix } from "./landing/ValueComparisonMatrix";
 import { HomeQuiet } from "./landing/HomeQuiet";
 import { Workspace } from "./workspace/Workspace";
 import { ReconstructionSummary } from "./workspace/ReconstructionSummary";
@@ -996,6 +997,7 @@ export default function App() {
                 />
               </div>
             )}
+            <ValueComparisonMatrix onNavigate={setView} />
             <HomeQuiet
               onCreate={() => {
                 setView("create");

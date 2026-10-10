@@ -22,6 +22,7 @@ import type { AppView } from "../routing";
 import { InAppLink } from "../shell/inAppLink";
 import { useDailyHero } from "./useDailyHero";
 import { HeroStory } from "./HeroStory";
+import { ConversionKernel } from "./ConversionKernel";
 import { MarkdownExportButton } from "../engine/markdownExport";
 import {
   HOME_QUICK_START_MAX_CHARS,
@@ -155,6 +156,7 @@ export function Hero(p: Props) {
           <a href="#prompt-studio">TRY IT BELOW ↓</a>
         </div>
       </div>
+      <ConversionKernel onNavigate={p.onNavigate} />
       <section
         className="prompt-studio"
         id="prompt-studio"

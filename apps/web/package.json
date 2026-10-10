@@ -18,6 +18,7 @@
     "test:execution-contract": "node scripts/test-execution-contract.mjs",
     "test:hero-story": "node scripts/test-hero-story.mjs",
     "test:final-craft": "node scripts/test-final-craft.mjs",
+    "test:conversion-kernel": "node scripts/test-conversion-kernel.mjs",
     "test:theme-routes": "node scripts/test-theme-routes.mjs",
     "test:workflows-audit": "node --experimental-strip-types scripts/test-client-workflows-audit.mjs",
     "test:capabilities-seo": "node scripts/test-capabilities-seo.mjs",

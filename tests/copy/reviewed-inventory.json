@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-09T22:30:37.892Z",
-  "tipNote": "Founder-approved SPE Verified Workflows Exchange copy reviewed; zero superlatives, zero unreviewed copy.",
+  "generated": "2026-10-10T00:47:17.335Z",
+  "tipNote": "Founder-approved SPE Ω Conversion Positioning and Value Comparison Matrix copy reviewed; zero superlatives, zero unreviewed copy.",
   "entries": [
     {
       "id": "999226d405c23398fd44",
@@ -6633,6 +6633,252 @@
       "text": "brown bounce"
     },
     {
+      "id": "011b1a87591cf5b6eca8",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Install Free CLI: npm install -g @systempromptengine/cli"
+    },
+    {
+      "id": "0422f7fdf87101bfad14",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "SPE locks your requirements with ProtectedIntent invariants. If an agent hallucinates, skips tests, or touches forbidden files, SPE blocks the regression before it merges."
+    },
+    {
+      "id": "09989d087864a10305eb",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "ribbon-install"
+    },
+    {
+      "id": "0eb3909aafa22d5d6b17",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "ProtectedIntent invariants block broken code"
+    },
+    {
+      "id": "1a17d8a59352788d59e3",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Cancel $20/month AI subscription bills"
+    },
+    {
+      "id": "1a87518cbda7622d494f",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Copied!"
+    },
+    {
+      "id": "23ce4378891a32c4bd45",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Tedious manual prompt copy-pasting eliminated"
+    },
+    {
+      "id": "266faa971d75d9f01744",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Copy command"
+    },
+    {
+      "id": "29044b77bf67ebb47b51",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Wasted API tokens: $45/month on runaways"
+    },
+    {
+      "id": "3153beee0420b32b7e75",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "$ npm install -g @systempromptengine/cli"
+    },
+    {
+      "id": "3d3fd7c14053aa894baa",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Adopt in Your Repo ($ npx @systempromptengine/cli adopt .)"
+    },
+    {
+      "id": "3dd9405500834495b0d9",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Produce Comparison Matrix on Demand ↓"
+    },
+    {
+      "id": "3fad25f1399ec2451d6a",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Embarrassing regressions in production"
+    },
+    {
+      "id": "49db2478498bac955a56",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "cta-formula-b"
+    },
+    {
+      "id": "4a48fd44c4d2a6afd13e",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Explore 1-Click Business Workflows →"
+    },
+    {
+      "id": "4e0304536fb0de4f5ad9",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "$ spe continue -"
+    },
+    {
+      "id": "564625798d364979ef30",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "ribbon-adopt"
+    },
+    {
+      "id": "58e4b5b24f6523c08184",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "The $20 Subscription Killer"
+    },
+    {
+      "id": "5c1819e581cbc9943594",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "100% browser-local execution, zero server GPU inference bills, zero data tracking, instant speed"
+    },
+    {
+      "id": "5c22c974dfe368bfe3b8",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Review Agent Logs via stdin: spe continue -"
+    },
+    {
+      "id": "661f35f15d9056b9f80d",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Air-Gapped Sandbox"
+    },
+    {
+      "id": "6dfc3d878905b3121dd9",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Monthly SaaS Bill"
+    },
+    {
+      "id": "73273af1d21cb16dc439",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Formula B: Broken Agent Stopper"
+    },
+    {
+      "id": "761b3a50a1bd2ab18823",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "The Broken Agent &amp; Regression Stopper"
+    },
+    {
+      "id": "944f83717fbc50b5ea77",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Positioning Formulas"
+    },
+    {
+      "id": "9a254f26a7777e176a44",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "SPE is the 100% free, offline CLI and browser workspace that reviews agent reports, catches silent regressions, and compiles the next atomic task contract at $0 cost."
+    },
+    {
+      "id": "9d8bf0afb2a57d2bebd1",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "$0.00 / month"
+    },
+    {
+      "id": "9d92cfe6ef004ffce7ea",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Tired of your AI coding agent running in circles and breaking working code?"
+    },
+    {
+      "id": "ae6bfb9924b1244d9e59",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Token Burn Guard"
+    },
+    {
+      "id": "b3e7943e2f1093a96d7e",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Stop paying $20/month just to review AI agent error logs."
+    },
+    {
+      "id": "b6151313678c02a559d1",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Formula A: $20 Subscription Killer"
+    },
+    {
+      "id": "c404a6dce5c4d75f6edb",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "cta-formula-a"
+    },
+    {
+      "id": "c8c4a2d1b70b656f6aff",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Copy continue stdin command"
+    },
+    {
+      "id": "cc2eb0c8bdd6dd2f8de3",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Copy install command"
+    },
+    {
+      "id": "db1392c8ffcdda6b7856",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "$ npx @systempromptengine/cli adopt ."
+    },
+    {
+      "id": "e414641da608b3166f4c",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Copy adopt command"
+    },
+    {
+      "id": "f06883e606e23582342e",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Halt runaway loops before tokens burn"
+    },
+    {
+      "id": "f68c1d80465382a95d48",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Production Safety"
+    },
+    {
+      "id": "f7a26b3efc08865860e3",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "ribbon-continue"
+    },
+    {
+      "id": "f85f716b290dbc32f196",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "cta-continue-pipe"
+    },
+    {
+      "id": "ff274613c8a72e6cb8d1",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "A"
+    },
+    {
       "id": "05d79b52298550ae1ed5",
       "file": "apps/web/src/landing/dailyHero.ts",
       "depth": "PRODUCT",
@@ -9049,6 +9295,318 @@
       "file": "apps/web/src/landing/useDailyHero.ts",
       "depth": "PRODUCT",
       "text": "pageshow"
+    },
+    {
+      "id": "05a9cd9ae12eb6745ca0",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Install Free CLI: npm install -g @systempromptengine/cli"
+    },
+    {
+      "id": "06e73951add3f8bdbaa7",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Pain with Existing Chat Tools vs. SPE Ω Solution"
+    },
+    {
+      "id": "1321013194aff99486f1",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Test Receipts"
+    },
+    {
+      "id": "15ac5ead3e0056888a42",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "spe check prompt.md --strict"
+    },
+    {
+      "id": "17da809dfa3c0c4fb9c4",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Explore 1-Click Business Workflows →"
+    },
+    {
+      "id": "184e2b0c22d799e34cf6",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "cost-bills"
+    },
+    {
+      "id": "20638b52806338293a8e",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "SPE Ω Engine"
+    },
+    {
+      "id": "2df669dc65a9863272d7",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "offline-airgap"
+    },
+    {
+      "id": "2fc8283578e9d6806fbe",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "npx @systempromptengine/cli adopt ."
+    },
+    {
+      "id": "35b9f8ea384a7389ff30",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Cloud tools store your company prompts on their servers"
+    },
+    {
+      "id": "3b53b40ef1b0b47acad1",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Security Invariants"
+    },
+    {
+      "id": "4313c39d0d9fd3394fbc",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Copied!"
+    },
+    {
+      "id": "46504368d8980bc5156a",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Developer CLI Quickstart"
+    },
+    {
+      "id": "49a4bdfe0fa3054217b3",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Cost &amp; Bills"
+    },
+    {
+      "id": "49c9dcbfb1b7245ad2dc",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Invariant Halt"
+    },
+    {
+      "id": "49db61d8e969e6837aa1",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Hallucinated completion reports that merge broken code into production, forcing costly emergency fixes."
+    },
+    {
+      "id": "4b56d8cc8e5376793551",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "cost"
+    },
+    {
+      "id": "4c739e3a928a0a03ddba",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Internal code architecture, confidential schemas, and IP stored on 3rd-party servers without guarantees."
+    },
+    {
+      "id": "50b2c2ab1f7624c4c84f",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "matrix-footer-install"
+    },
+    {
+      "id": "54c2c087412c1d582948",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Produce on demand: See why developers replace expensive cloud prompt wrappers with deterministic offline invariants."
+    },
+    {
+      "id": "593e46b7726665b116e3",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "security"
+    },
+    {
+      "id": "602f1362f2fe7576db56",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "All Invariants"
+    },
+    {
+      "id": "6373416e5cf0029add48",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Offline Air-Gap"
+    },
+    {
+      "id": "64b5c387fa5e92e54c1f",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Cost & Bills"
+    },
+    {
+      "id": "68f3eabfa503796dd704",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Copy CLI command"
+    },
+    {
+      "id": "6920634fbd8a722e22fa",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Paying $20/mo to ChatGPT/Claude just to paste terminal logs"
+    },
+    {
+      "id": "6c8f719c4a3f78378f90",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "receipts"
+    },
+    {
+      "id": "818ba72520568978c09d",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "airgap"
+    },
+    {
+      "id": "92ef60377925f3bb0eea",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "ProtectedIntent compiler halts pull requests on invariant violations"
+    },
+    {
+      "id": "93cb640ac5ec70e8fe62",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "VALUE COMPARISON MATRIX"
+    },
+    {
+      "id": "97a1bc998c4c5b1ad7c2",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Kleene-3 verification: tasks require tangible witness receipts"
+    },
+    {
+      "id": "98c0f74b7a2d7651a6af",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Agent claims \"Task Completed!\" but 4 unit tests are broken"
+    },
+    {
+      "id": "a2642a141368af143b8b",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Wasting subscription fees and pasting terminal logs into hosted web chats with rate limits and data retention."
+    },
+    {
+      "id": "a6ec2b12278e554bb9c2",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Deterministic boundary compilation with zero drift and cryptographically bound invariants."
+    },
+    {
+      "id": "ab2405f6d17a01646be4",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Kleene-3 Receipt"
+    },
+    {
+      "id": "afa062b52c848d5b988a",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Zero cloud telemetry · 100% offline air-gap · $0.00 spend"
+    },
+    {
+      "id": "b06e098fd7340ec87706",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "test-receipts"
+    },
+    {
+      "id": "b14f3343237da92de748",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Three-valued logic (True / False / Unknown) halts PRs unless proof witnesses and test receipts pass."
+    },
+    {
+      "id": "b72e8d04bbf015f38c76",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "security-drift"
+    },
+    {
+      "id": "c0825b12edb5657d7ca8",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "all"
+    },
+    {
+      "id": "cd35ebaac32b77cc4cb9",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "WASM Sandbox"
+    },
+    {
+      "id": "cdd78f39ebae190928b2",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "100% WebAssembly in-browser sandbox — zero prompt bytes leave device"
+    },
+    {
+      "id": "ce617bb0b1da02338310",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Air-gapped client execution with canonical SHA-256 hash and zero telemetry egress."
+    },
+    {
+      "id": "ceada7189541b5bcf251",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Run `spe continue -` locally for $0.00 with instant terminal pipes"
+    },
+    {
+      "id": "d02e492355fd4a4110d2",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "spe continue -"
+    },
+    {
+      "id": "d8231fdca77e8652bbb8",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Pipes stdin directly to the local compiler at $0.00 with zero network hops and zero inference bills."
+    },
+    {
+      "id": "dbe18541b1e8f2d4ee26",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Prompts silently drift, leaking internal keys or system bounds"
+    },
+    {
+      "id": "e2cbb8871ca50f050865",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Existing Chat Tools"
+    },
+    {
+      "id": "ecb91bef7876e5de12d4",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "npm install -g @systempromptengine/cli"
+    },
+    {
+      "id": "f39a5f8b5cf8d33dd882",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Silent prompt drift over model versions, exposing internal boundaries and sensitive system context."
+    },
+    {
+      "id": "fb21f053c49a84c6a517",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Local Pipe"
+    },
+    {
+      "id": "fb4ec2df9b623fec8457",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Matrix Filters"
     },
     {
       "id": "026846b9bf04f026f06d",
