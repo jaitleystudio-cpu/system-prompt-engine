@@ -32,9 +32,9 @@ assert(appTsx.includes("<SpeCapabilityDeck"), "SpeCapabilityDeck is mounted on h
 const universeCode = readFileSync(universePath, "utf8");
 assert(universeCode.includes("ORBIT_MODELS"), "Defines celestial ORBIT_MODELS");
 assert(universeCode.includes("local-engine"), "Includes zero-cost local in-browser engine");
-assert(universeCode.includes("claude-sonnet"), "Includes Claude 3.7 Sonnet node");
-assert(universeCode.includes("gemini-flash"), "Includes Gemini 2.0 Flash node");
-assert(universeCode.includes("deepseek-r1"), "Includes DeepSeek R1 node");
+assert(universeCode.includes("claude-sonnet"), "Includes Claude 6 node");
+assert(universeCode.includes("gemini-flash"), "Includes Astra 6.1 node");
+assert(universeCode.includes("deepseek-r1"), "Includes DeepSeek Frontier node");
 assert(universeCode.includes("spe-beam-path"), "Renders active SVG energy conduit beam");
 assert(universeCode.includes("aria-pressed"), "Satellites have ARIA pressed attributes");
 
@@ -55,10 +55,10 @@ assert(appTsx.includes("<SpeStorytellingCinema"), "SpeStorytellingCinema is moun
 
 const cinemaCode = readFileSync(cinemaPath, "utf8");
 assert(cinemaCode.includes("STORY_CHAPTERS"), "Defines STORY_CHAPTERS collection");
-assert(cinemaCode.includes("chapter-01"), "Stage 01: Raw Ambiguous Intent exists");
-assert(cinemaCode.includes("chapter-04"), "Stage 04: Hostile Attack Gym exists");
-assert(cinemaCode.includes("chapter-06"), "Stage 06: MCP Capability Firewall exists");
-assert(cinemaCode.includes("chapter-08"), "Stage 08: 1-Click CI/CD Merge Gate exists");
+assert(cinemaCode.includes("chapter-01"), "Stage 01: Simple Request exists");
+assert(cinemaCode.includes("chapter-04"), "Stage 04: Stress Testing exists");
+assert(cinemaCode.includes("chapter-06"), "Stage 06: Permission Gates exists");
+assert(cinemaCode.includes("chapter-08"), "Stage 08: Ready to Deploy exists");
 assert(cinemaCode.includes("spe-cinema-scrubber-bar"), "Includes interactive timeline scrubber bar");
 assert(cinemaCode.includes("spe-cinema-stage-body"), "Includes split narrative & terminal view");
 assert(cinemaCode.includes("spe-cinema-telemetry-cluster"), "Includes real-time telemetry gauges");

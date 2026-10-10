@@ -74,7 +74,8 @@ export function inventory() {
         if (
           /ui\/(TrustPanel|PrivacyIndicator)\.tsx$/.test(file) ||
           /landing\/(ConversionKernel|ValueComparisonMatrix|BeforeAfterDiffSlider)\.tsx$/.test(file) ||
-          /components\/(SubmitWorkflowModal)\.tsx$/.test(file)
+          /components\/(SubmitWorkflowModal)\.tsx$/.test(file) ||
+          /capabilities\/CapabilityFoundryStudio\.tsx$/.test(file)
         )
           depth = "PROOF";
         while (p) {

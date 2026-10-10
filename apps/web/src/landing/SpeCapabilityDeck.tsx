@@ -55,114 +55,114 @@ const CHAMBERS: CapabilityChamber[] = [
   {
     id: "system-studio",
     category: "Autonomous Coding",
-    title: "Zero-Drift System Prompts",
-    tagline: "Compile ambiguous task briefs into deterministic, invariant-hardened prompts for Claude Code and Cursor.",
-    badge: "Bounded Horn Logic",
+    title: "Reliable System Prompts",
+    tagline: "Turn everyday instructions into clear, rock-solid prompts for Claude Code, Cursor, and ChatGPT.",
+    badge: "Logic Verification",
     isLive: true,
     ctaText: "Launch Studio →",
     hashTarget: "prompt-studio",
-    slabA: "YOUR PROMPT.",
-    slabB: "NOW A COMPILER.",
-    snippetHeader: "SPE-COMPILER // VERIFIED_INVARIANTS",
-    snippetCode: "ProtectedIntent: preserved\nContradiction scan: 0 errors\nToken bloat pruned: -34%",
+    slabA: "YOUR TASK.",
+    slabB: "SOLID PROMPT.",
+    snippetHeader: "SPE-STUDIO // SAFETY_CHECK",
+    snippetCode: "Core intent: preserved\nContradiction check: 0 conflicts\nPrompt size optimized: -34%",
   },
   {
     id: "attack-gym",
     category: "Financial Compliance",
-    title: "In-Browser Jailbreak Gym",
-    tagline: "Stress-test billing and Stripe agents against hostile injection, boundary probing, and authority escalation.",
-    badge: "Zero-Trust AST Sandbox",
+    title: "Prompt Stress Testing",
+    tagline: "Test customer service and billing agents against prompt injections, trick messages, and unauthorized actions.",
+    badge: "In-Browser Sandbox",
     isLive: true,
     ctaText: "Run Attack Test →",
     hashTarget: "prompt-studio",
-    slabA: "ZERO-LEAK.",
-    slabB: "STRIPE FIREWALL.",
-    snippetHeader: "HOSTILE_GYM // SIMULATION_LOG",
-    snippetCode: "Vector: polyglot bidi override\nDetection: ZERO-WIDTH_PROBE\nResult: ATTACK_HALTED [100% Pass]",
+    slabA: "ZERO LEAKS.",
+    slabB: "SAFETY GUARD.",
+    snippetHeader: "STRESS_TEST // SIMULATION_LOG",
+    snippetCode: "Test: Fake manager override\nCheck: Spending limit validation\nResult: ACTION_STOPPED [100% Safe]",
   },
   {
     id: "3d-studio",
     category: "Spatial WebGL",
     title: "Interactive 3D Web Studio",
-    tagline: "Generate spatial Three.js scenes directly in-browser with live lighting, shaders, and camera controls.",
-    badge: "100% In-Browser Code Export",
+    tagline: "Create interactive 3D web scenes directly in your browser with live lighting and camera controls.",
+    badge: "In-Browser 3D Export",
     isLive: true,
     ctaText: "Build 3D Site →",
     viewTarget: "website",
-    slabA: "SPATIAL WEB.",
-    slabB: "ZERO GPU BILLS.",
-    snippetHeader: "THREEJS // SPATIAL_PIPELINE",
-    snippetCode: "Geometry: Procedural Icosahedron\nShaders: Custom Fresnel GLSL\nBundle: Zero External Servers",
+    slabA: "SPATIAL 3D.",
+    slabB: "ZERO GPU COST.",
+    snippetHeader: "3D_STUDIO // SPATIAL_SCENE",
+    snippetCode: "Geometry: Smooth Icosahedron\nLighting: Natural Studio Environment\nHosting: 100% Free & Private",
   },
   {
     id: "multi-export",
     category: "Multi-Agent Formats",
-    title: "1-Click Multi-Agent Export",
-    tagline: "Instantly lower your prompt architecture into CLAUDE.md, .cursorrules, Windsurf, ChatGPT, and promptfoo.",
+    title: "One-Click Agent Export",
+    tagline: "Export your prompt for Claude Code, Cursor, Windsurf, ChatGPT, and automated test runners with a single click.",
     badge: "Universal Formats",
     isLive: true,
     ctaText: "Export Agent Configs →",
     hashTarget: "prompt-studio",
-    slabA: "ONE SPEC.",
+    slabA: "ONE PROMPT.",
     slabB: "EVERY AGENT.",
-    snippetHeader: "AGENT_ABI // LOWERING_ENGINE",
-    snippetCode: "Targets: CLAUDE.md | .cursorrules\nWindsurf: rules_synced\nPromptfoo: test_matrix_generated",
+    snippetHeader: "EXPORTER // UNIVERSAL_CONFIG",
+    snippetCode: "Targets: CLAUDE.md | .cursorrules\nWindsurf: rules_synced\nAutomated tests: ready_to_run",
   },
   {
     id: "media-to-prompt",
     category: "Audio & Video",
     title: "Meeting & Video Transcriber",
-    tagline: "Turn design recordings, architectural videos, and client calls into clean, actionable AI instructions.",
-    badge: "Local Whisper Processing",
+    tagline: "Turn meeting recordings, product walkthroughs, and audio notes into crisp, actionable AI instructions.",
+    badge: "Private Audio Engine",
     isLive: false,
     ctaText: "Transcribe Media →",
     viewTarget: "media",
-    slabA: "VOICE BRIEF.",
-    slabB: "ACTIONABLE IR.",
-    snippetHeader: "AUDIO_IR // LOCAL_TRANSCRIPTION",
-    snippetCode: "Source: Architecture_Review.mp4\nSpeech engine: In-Browser Whisper\nExtracted: 7 hard constraints",
+    slabA: "VOICE NOTE.",
+    slabB: "CLEAR PROMPT.",
+    snippetHeader: "AUDIO // PRIVATE_TRANSCRIPT",
+    snippetCode: "Source: Product_Planning.mp4\nTranscription: On-Device Speech Engine\nExtracted: 7 key action items",
   },
   {
     id: "vision-to-code",
     category: "Vision to Code",
     title: "Screenshot & URL to Site",
-    tagline: "Decompile visual screenshots or live web URLs into responsive, accessible Tailwind and React components.",
-    badge: "Structural Inverse Compiler",
+    tagline: "Turn design screenshots or web pages into responsive, accessible React and Tailwind CSS components.",
+    badge: "Design to Code",
     isLive: false,
     ctaText: "Convert UI to Code →",
     viewTarget: "code",
     slabA: "SCREENSHOT.",
-    slabB: "REACT 19 CODE.",
-    snippetHeader: "VISION_AST // REVERSE_SYNTHESIS",
-    snippetCode: "Input: Figma mockup screenshot\nSynthesized: React + Tailwind CSS\nAccessibility: WCAG AA Compliant",
+    slabB: "REACT CODE.",
+    snippetHeader: "VISION // UI_TRANSLATION",
+    snippetCode: "Input: Design mockup screenshot\nOutput: React + Tailwind CSS\nAccessibility: Fully Keyboard Navigable",
   },
   {
     id: "research-to-prompt",
     category: "Research Synthesis",
-    title: "Deep Paper & Spec Ingestion",
-    tagline: "Distill complex RFCs, API specifications, and research papers into unambiguous instruction constraints.",
-    badge: "Spec Knowledge Distiller",
+    title: "Research & Document Ingestion",
+    tagline: "Summarize technical manuals, API guides, and policy documents into clear, step-by-step AI instructions.",
+    badge: "Document Extractor",
     isLive: false,
     ctaText: "Ingest Research →",
     viewTarget: "research",
-    slabA: "RAW SPEC.",
-    slabB: "VERIFIED IR.",
-    snippetHeader: "RESEARCH // KNOWLEDGE_EXTRACTOR",
-    snippetCode: "Input: Stripe Payments RFC v2026\nExtracted: 14 mandatory state invariants\nGenerated: Deterministic Horn clauses",
+    slabA: "PDF MANUAL.",
+    slabB: "ACTION STEPS.",
+    snippetHeader: "DOCS // KNOWLEDGE_SUMMARY",
+    snippetCode: "Input: Payment System Guide 2026\nExtracted: 14 business rules\nOutput: Clean instruction set",
   },
   {
     id: "drift-sentinel",
     category: "Model Assurance",
-    title: "Model Drift & Regression Sentinel",
-    tagline: "Continuously audit prompt execution across OpenAI, Anthropic, Gemini, and local models to catch silent regressions.",
-    badge: "Continuous Oracle Guard",
+    title: "Model Drift & Accuracy Sentinel",
+    tagline: "Continuously check your prompts across OpenAI, Anthropic, Google, and local models to catch unexpected changes.",
+    badge: "Accuracy Sentinel",
     isLive: false,
     ctaText: "Inspect Drift Sentinel →",
     hashTarget: "prompt-studio",
     slabA: "MODEL DRIFT.",
     slabB: "INSTANT DETECT.",
-    snippetHeader: "SENTINEL // TELEMETRY_PROBE",
-    snippetCode: "Target: Claude 3.7 vs Claude 3.5\nDrift Delta: 0 schema regressions\nStatus: QUALIFIED_FOR_DEPLOYMENT",
+    snippetHeader: "SENTINEL // ACCURACY_CHECK",
+    snippetCode: "Comparison: Claude 6 vs Claude 3.5\nFormat changes: 0 errors detected\nStatus: VERIFIED_SAFE",
   },
 ];
 
@@ -177,45 +177,45 @@ interface CommandCapsule {
 const COMMAND_CAPSULES: CommandCapsule[] = [
   {
     id: "capsule-1",
-    name: "Claude 3.7 Sonnet",
-    badge: "HYBRID THINKING",
-    tier: "Agent",
-    desc: "Autonomous reasoning and long-horizon invariant retention.",
+    name: "Claude 6",
+    badge: "AGENTIC WORKFLOWS",
+    tier: "Anthropic",
+    desc: "Multi-step reasoning and deep autonomous coding.",
   },
   {
     id: "capsule-2",
-    name: "OpenAI o3 / o3-mini",
-    badge: "HIGH-COMPUTE",
-    tier: "Reasoning",
-    desc: "High-compute formal reasoning and strict JSON schema assurance.",
+    name: "OpenAI 6",
+    badge: "DEEP REASONING",
+    tier: "OpenAI",
+    desc: "Rigorous logical problem solving and strict structured output.",
   },
   {
     id: "capsule-3",
-    name: "DeepSeek R1",
-    badge: "671B LOGIC",
-    tier: "Economics",
-    desc: "Open-weight formal logic reasoning with zero API spend.",
+    name: "Google Astra 6.1",
+    badge: "MULTIMODAL",
+    tier: "Google",
+    desc: "Real-time visual and audio understanding with massive context.",
   },
   {
     id: "capsule-4",
-    name: "Gemini 2.0 Flash",
-    badge: "FLASH THINKING",
-    tier: "Multimodal",
-    desc: "Massive context reasoning with native multimodal verification.",
+    name: "DeepSeek Frontier",
+    badge: "OPEN WEIGHTS",
+    tier: "DeepSeek",
+    desc: "Efficient mathematical reasoning with zero subscription fees.",
   },
   {
     id: "capsule-5",
-    name: "MCP Firewall",
-    badge: "CAPABILITY GATE",
+    name: "Safety Guard",
+    badge: "ACTION GATE",
     tier: "Runtime",
-    desc: "OS-level tool authority and payment cap enforcement.",
+    desc: "Stops unauthorized spending or file access before it occurs.",
   },
   {
     id: "capsule-6",
-    name: "Failure Genome",
-    badge: "AUTO-REPAIR",
-    tier: "Resilience",
-    desc: "Continuous counterexample minimization and repair vaccines.",
+    name: "Self-Healing Prompts",
+    badge: "AUTO REPAIR",
+    tier: "Reliability",
+    desc: "Detects prompt failures and suggests fixes automatically.",
   },
 ];
 
@@ -267,25 +267,21 @@ export function SpeCapabilityDeck({ onNavigate }: Props) {
       <div className="spe-deck-container">
         {/* Top Ticker: Live Now */}
         <div className="spe-hero-live-ticker" role="status" aria-live="polite">
-          <span className="spe-ticker-live-badge">LIVE NOW</span>
+          <span className="spe-ticker-live-badge">FREE &amp; PRIVATE</span>
           <span className="spe-ticker-text">
-            ON SPE Ω — CLAUDE 3.7 SONNET, OPENAI o3, DEEPSEEK R1 &amp; GEMINI 2.0 FLASH REASONING COMPILER · 100% AIR-GAPPED &amp; FREE.
+            SUPPORTS CLAUDE 6, OPENAI 6, ASTRA 6.1, DEEPSEEK &amp; ON-DEVICE SILICON · 100% PRIVATE
           </span>
         </div>
 
-        {/* Monumental Water-Reflective Headline */}
+        {/* Clean Header */}
         <header className="spe-deck-story-header">
           <div className="spe-hero-reflective-wrap">
-            <h1 id={headingId} className="spe-hero-reflective-h1">
-              ONE COMPILER. EVERY AI AGENT &amp; MODEL
-            </h1>
-            <div className="spe-hero-reflective-mirror" aria-hidden="true">
-              ONE COMPILER. EVERY AI AGENT &amp; MODEL
-            </div>
+            <h2 id={headingId} className="spe-hero-reflective-h1">
+              ONE SYSTEM. EVERY AI AGENT &amp; MODEL
+            </h2>
           </div>
           <p className="spe-deck-subtitle">
-            Cancel your extra $20/month agent subscriptions. SPE is the offline, privacy-first control plane that compiles,
-            fuzzes, and proves AI instructions before they are deployed to production.
+            Create reliable instructions for your AI in seconds. Test for hallucinations, stop data leaks, and build safe prompts that work across every model — without spending a dollar.
           </p>
         </header>
 

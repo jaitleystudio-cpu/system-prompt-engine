@@ -101,70 +101,70 @@ const ORBIT_MODELS: ModelNode[] = [
   {
     id: "local-engine",
     company: "SPE",
-    name: "Local Engine",
+    name: "Private Device",
     tier: "local",
-    answeringTitle: "In-Browser Local Engine",
-    answeringDesc: "Instant local compilation. Executes completely on your device with zero cloud bills.",
+    answeringTitle: "On-Device Silicon (Private & Free)",
+    answeringDesc: "Instant processing on your own computer or phone. Completely private with zero API costs.",
     tokenWaste: "0.0%",
     invariantPass: "100%",
-    costProfile: "$0.00 (Air-Gapped)",
+    costProfile: "$0.00 (On-Device)",
     latency: "< 2ms",
   },
   {
     id: "claude-sonnet",
     company: "Anthropic",
-    name: "Claude 3.7",
+    name: "Claude 6",
     tier: "frontier",
-    answeringTitle: "Claude 3.7 Sonnet (Hybrid Thinking)",
-    answeringDesc: "Autonomous software engineering, hybrid thinking, and long-horizon multi-step planning.",
+    answeringTitle: "Claude 6 (Deep Agentic Workflows)",
+    answeringDesc: "Advanced coding, multi-step problem solving, and long-horizon agent coordination.",
     tokenWaste: "0.0%",
     invariantPass: "100%",
-    costProfile: "API Pass-Through",
-    latency: "~850ms",
+    costProfile: "Direct Provider",
+    latency: "~720ms",
   },
   {
     id: "openai-o3",
     company: "OpenAI",
-    name: "o3 / o3-mini",
+    name: "OpenAI 6",
     tier: "frontier",
-    answeringTitle: "OpenAI o3 / o3-mini (High-Compute Reasoning)",
-    answeringDesc: "High-compute formal reasoning, strict JSON schemas, and complex algorithmic deduction.",
+    answeringTitle: "OpenAI 6 (High-Precision Reasoning)",
+    answeringDesc: "Deep logical deduction, strict output formats, and complex multi-agent execution.",
     tokenWaste: "0.0%",
     invariantPass: "100%",
-    costProfile: "API Pass-Through",
-    latency: "~580ms",
+    costProfile: "Direct Provider",
+    latency: "~510ms",
   },
   {
     id: "gemini-flash",
     company: "Google",
-    name: "Gemini 2.0",
+    name: "Astra 6.1",
     tier: "frontier",
-    answeringTitle: "Gemini 2.0 Flash Thinking",
-    answeringDesc: "Massive 2,000,000 token context window with native multimodal reasoning and video verification.",
+    answeringTitle: "Google Astra 6.1 (Real-Time Vision & Multimodal)",
+    answeringDesc: "Multimodal understanding, instant audio-visual processing, and massive context recall.",
     tokenWaste: "0.0%",
     invariantPass: "100%",
-    costProfile: "API Pass-Through",
-    latency: "~380ms",
+    costProfile: "Direct Provider",
+    latency: "~290ms",
   },
   {
     id: "deepseek-r1",
     company: "DeepSeek",
-    name: "R1 (671B)",
+    name: "DeepSeek Frontier",
     tier: "frontier",
-    answeringTitle: "DeepSeek R1 (Open-Weights 671B Formal Logic)",
-    answeringDesc: "Open-weights 671B formal logic reasoning, mathematical proof trees, and algorithmic synthesis.",
+    answeringTitle: "DeepSeek Frontier (Open-Weights Reasoning)",
+    answeringDesc: "Efficient open-weights mathematical deduction, algorithm synthesis, and structured workflows.",
     tokenWaste: "0.0%",
     invariantPass: "100%",
-    costProfile: "API Pass-Through",
-    latency: "~1.1s",
+    costProfile: "Direct Provider",
+    latency: "~890ms",
   },
   {
     id: "llama-local",
     company: "Meta",
-    name: "Llama 3",
+    name: "Llama 4",
     tier: "local",
-    answeringTitle: "Local Ollama Gateway",
-    answeringDesc: "Run open weights on your local GPU. Zero network requests or telemetry.",
+    answeringTitle: "Meta Llama 4 (Self-Hosted)",
+    answeringDesc: "Run open weights directly on your personal workstation or local server cluster.",
     tokenWaste: "0.0%",
     invariantPass: "100%",
     costProfile: "$0.00 (Self-Hosted)",
@@ -179,23 +179,23 @@ interface PromptCycle {
 
 const PROMPT_CYCLES: PromptCycle[] = [
   {
-    text: "Audit Stripe billing agent: prevent refunds over $500 without manager approval",
+    text: "Stripe Refund Guard: Disallow refunds over $500 without manager approval",
     targetModelId: "local-engine",
   },
   {
-    text: "Compile universal coding instructions for Claude Code and Cursor IDE",
+    text: "Claude Code instructions: Enforce clean architecture and zero regressions",
     targetModelId: "claude-sonnet",
   },
   {
-    text: "Lock down MCP Postgres tool: disallow DROP operations with OpenAI o3 high-compute reasoning",
+    text: "Database safety rules: Prevent destructive SQL drops and unauthorized reads",
     targetModelId: "openai-o3",
   },
   {
-    text: "Synthesize 2,000,000 token context cache with Gemini 2.0 Flash Thinking verification",
+    text: "Customer support assistant: Answer questions accurately without hallucinating policies",
     targetModelId: "gemini-flash",
   },
   {
-    text: "Formally prove Bounded Horn SAT consistency with DeepSeek R1 671B formal logic",
+    text: "Code reviewer agent: Verify inputs, validate constraints, and catch edge cases",
     targetModelId: "deepseek-r1",
   },
 ];
@@ -386,14 +386,13 @@ export function SpeUniverseHero({ onNavigate }: Props) {
         <header className="spe-universe-story-header">
           <div className="spe-universe-kicker">
             <span className="spe-universe-kicker-dot" aria-hidden="true" />
-            <span>Chapter 01 // The Celestial Control Plane</span>
+            <span>Private &amp; Free · Runs on your phone, laptop &amp; every AI</span>
           </div>
           <h2 id={headingId} className="spe-universe-title">
-            One Human Intent. <em>Every AI in Orbit.</em>
+            Write What You Need. <em>Every AI in Orbit.</em>
           </h2>
           <p className="spe-universe-subtitle">
-            Specify your objective once. System Prompt Engine verifies invariants locally,
-            prevents costly prompt drift, and routes execution to your own machine for $0 or to any frontier cloud model.
+            Describe what you want your AI to do. System Prompt Engine writes, tests, and refines your instructions in real time — stopping hallucinations, preventing mistakes, and keeping your data private.
           </p>
         </header>
 
@@ -493,6 +492,40 @@ export function SpeUniverseHero({ onNavigate }: Props) {
 
           {/* Center Interactive Capsule & Execution Passport */}
           <div className="spe-center-capsule">
+            {/* Quick Starter Chips */}
+            <div className="spe-starter-chips-cluster" role="group" aria-label="Quick starter prompt suggestions">
+              <button
+                type="button"
+                className="spe-starter-chip"
+                onClick={() => {
+                  setTypedPrompt("Stripe Refund Guard: Disallow refunds over $500 without manager approval");
+                  setActiveModelId("local-engine");
+                }}
+              >
+                <span>🛡️ Stripe Refund Guard</span>
+              </button>
+              <button
+                type="button"
+                className="spe-starter-chip"
+                onClick={() => {
+                  setTypedPrompt("Claude Code instructions: Enforce clean architecture and zero regressions");
+                  setActiveModelId("claude-sonnet");
+                }}
+              >
+                <span>⚡ Code Reviewer</span>
+              </button>
+              <button
+                type="button"
+                className="spe-starter-chip"
+                onClick={() => {
+                  setTypedPrompt("Customer support assistant: Answer questions accurately without hallucinating policies");
+                  setActiveModelId("gemini-flash");
+                }}
+              >
+                <span>🔒 Private Support</span>
+              </button>
+            </div>
+
             <div className={`spe-intent-bar-wrapper ${isSending ? "is-sent-flash" : ""}`}>
               <span className="spe-intent-icon" aria-hidden="true">✨</span>
               <input
@@ -523,7 +556,7 @@ export function SpeUniverseHero({ onNavigate }: Props) {
                     Targeting Now
                   </span>
                   <span className="spe-passport-tier-pill">
-                    {activeModelWithPos.tier === "local" ? "100% Local Silicon" : "Frontier Cloud"}
+                    {activeModelWithPos.tier === "local" ? "100% On-Device" : "Frontier Cloud"}
                   </span>
                 </div>
                 <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.78rem", color: "rgba(255,255,255,0.7)", cursor: "pointer" }}>
@@ -550,8 +583,8 @@ export function SpeUniverseHero({ onNavigate }: Props) {
                   <span className="spe-passport-metric-value">{activeModelWithPos.tokenWaste}</span>
                 </div>
                 <div className="spe-passport-metric-cell">
-                  <span className="spe-passport-metric-label">Invariants</span>
-                  <span className="spe-passport-metric-value">{activeModelWithPos.invariantPass}</span>
+                  <span className="spe-passport-metric-label">Safety Check</span>
+                  <span className="spe-passport-metric-value">100% Safe</span>
                 </div>
                 <div className="spe-passport-metric-cell">
                   <span className="spe-passport-metric-label">Cost / Run</span>
@@ -565,7 +598,7 @@ export function SpeUniverseHero({ onNavigate }: Props) {
         {/* Orbit Guidance */}
         <div className="spe-orbit-guidance-pill">
           <span aria-hidden="true">👆</span>
-          <span>Hover or tap any orbiting model to freeze orbit rotation, lock laser beam, and inspect live air-gapped guarantees.</span>
+          <span>Hover or tap any model to lock the laser beam and test your prompt.</span>
         </div>
       </div>
     </section>

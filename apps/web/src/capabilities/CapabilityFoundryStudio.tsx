@@ -249,6 +249,68 @@ export function CapabilityFoundryStudio() {
     setDiscoveredAxioms((prev) => [...prev, newAxiom]);
   };
 
+  // Level 6: Collective Swarm Intelligence & BFT Federation State
+  const [swarmRound, setSwarmRound] = useState<number>(4);
+  const [bftQuorumStatus, setBftQuorumStatus] = useState<"BFT_QUORUM_ACHIEVED" | "QUORUM_PENDING">("BFT_QUORUM_ACHIEVED");
+  const [swarmNodes, setSwarmNodes] = useState<Array<{
+    id: string;
+    model: string;
+    role: "LEADER" | "VALIDATOR" | "WITNESS";
+    stake: number;
+    reputation: number;
+    state: "ONLINE" | "SLASHED";
+  }>>([
+    { id: "node-claude-37", model: "Claude 3.7 Sonnet", role: "LEADER", stake: 2500, reputation: 0.99, state: "ONLINE" },
+    { id: "node-o3-high", model: "OpenAI o3", role: "VALIDATOR", stake: 2200, reputation: 0.98, state: "ONLINE" },
+    { id: "node-r1-671b", model: "DeepSeek R1 671B", role: "VALIDATOR", stake: 2000, reputation: 0.97, state: "ONLINE" },
+    { id: "node-gemini-flash", model: "Gemini 2.0 Flash", role: "VALIDATOR", stake: 1800, reputation: 0.96, state: "ONLINE" },
+    { id: "node-qwen-72b", model: "Qwen 2.5 72B", role: "VALIDATOR", stake: 1500, reputation: 0.94, state: "ONLINE" },
+    { id: "node-spe-wasm", model: "SPE-Core Rust WASM", role: "VALIDATOR", stake: 3000, reputation: 1.0, state: "ONLINE" },
+    { id: "node-llama-70b", model: "Llama 3.3 70B", role: "WITNESS", stake: 1200, reputation: 0.91, state: "ONLINE" },
+  ]);
+
+  const [gossipLogs, setGossipLogs] = useState<string[]>([
+    "[ROUND 4] PROPOSE capsule://discovery/rate-limiter#8f1a2b from node-claude-37",
+    "[ROUND 4] PREVOTE 6/7 VALIDATOR signatures received across P2P Mesh",
+    "[ROUND 4] PRECOMMIT Quorum reached (Threshold: 5, Received: 6)",
+    "[ROUND 4] COMMIT Finalized capsule to canonical ledger (Root: 9c0d3e5f...)",
+  ]);
+
+  const handleBroadcastCapsule = () => {
+    const newCapsuleId = `capsule://swarm/epoch-${swarmRound}#${Math.random().toString(16).substring(2, 8)}`;
+    setGossipLogs((prev) => [
+      `[ROUND ${swarmRound}] GOSSIP_BROADCAST: New candidate ${newCapsuleId} gossiped to 7 peers`,
+      ...prev,
+    ]);
+    setBftQuorumStatus("QUORUM_PENDING");
+  };
+
+  const handleTriggerBftRound = () => {
+    const nextRound = swarmRound + 1;
+    setSwarmRound(nextRound);
+    setBftQuorumStatus("BFT_QUORUM_ACHIEVED");
+    setGossipLogs((prev) => [
+      `[ROUND ${nextRound}] COMMIT Finalized BFT consensus (6/7 votes, 0 equivocation)`,
+      `[ROUND ${nextRound}] PRECOMMIT 2f+1 Byzantine quorum reached (Threshold: 5)`,
+      `[ROUND ${nextRound}] PREVOTE Initiated round ${nextRound} with Leader node-claude-37`,
+      ...prev,
+    ]);
+  };
+
+  const handleSimulateByzantineSlash = () => {
+    setSwarmNodes((prev) =>
+      prev.map((node) =>
+        node.id === "node-llama-70b"
+          ? { ...node, state: "SLASHED", stake: 0, reputation: 0.0 }
+          : node
+      )
+    );
+    setGossipLogs((prev) => [
+      `[ALERT] BYZANTINE_SLASH: node-llama-70b slashed for equivocating vote! Stake forfeited (1200 -> 0)`,
+      ...prev,
+    ]);
+  };
+
   const capsule = SAMPLE_CAPSULES[selectedIdx] ?? SAMPLE_CAPSULES[0];
 
   const handleExecute = () => {
@@ -760,6 +822,210 @@ export function CapabilityFoundryStudio() {
                     <span style={{ color: "rgba(255, 255, 255, 0.4)", fontSize: "0.7rem" }}>{ax.witness}</span>
                   </div>
                   <div style={{ color: "#e2e8f0" }}>{ax.statement}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* LEVEL 6: COLLECTIVE SWARM INTELLIGENCE & BFT FEDERATION */}
+      <div
+        className="spe-swarm-mesh-panel"
+        data-copy-depth="PROOF"
+        style={{
+          marginTop: "1.25rem",
+          padding: "1rem",
+          borderRadius: "8px",
+          background: "rgba(59, 130, 246, 0.03)",
+          border: "1px solid rgba(59, 130, 246, 0.2)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            flexWrap: "wrap",
+            gap: "8px",
+            marginBottom: "1rem",
+          }}
+        >
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+              <span
+                style={{
+                  fontSize: "0.65rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  background: "rgba(59, 130, 246, 0.2)",
+                  color: "#60a5fa",
+                  border: "1px solid rgba(59, 130, 246, 0.35)",
+                }}
+              >
+                LEVEL 6 SWARM INTELLIGENCE
+              </span>
+              <span style={{ fontSize: "0.75rem", color: "rgba(255, 255, 255, 0.5)" }}>
+                Byzantine-Resilient P2P Mesh and Quorum Consensus
+              </span>
+            </div>
+            <h4 style={{ margin: 0, fontSize: "1.15rem", color: "#f8fafc" }}>
+              Collective Multi-Agent Swarm Federation
+            </h4>
+          </div>
+
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <button
+              type="button"
+              onClick={handleBroadcastCapsule}
+              style={{
+                padding: "6px 12px",
+                borderRadius: "6px",
+                background: "rgba(59, 130, 246, 0.25)",
+                color: "#bfdbfe",
+                border: "1px solid rgba(59, 130, 246, 0.4)",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Broadcast Capsule to Swarm
+            </button>
+            <button
+              type="button"
+              onClick={handleTriggerBftRound}
+              style={{
+                padding: "6px 12px",
+                borderRadius: "6px",
+                background: "rgba(16, 185, 129, 0.25)",
+                color: "#6ee7b7",
+                border: "1px solid rgba(16, 185, 129, 0.4)",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Trigger BFT Consensus Round
+            </button>
+            <button
+              type="button"
+              onClick={handleSimulateByzantineSlash}
+              style={{
+                padding: "6px 12px",
+                borderRadius: "6px",
+                background: "rgba(239, 68, 68, 0.2)",
+                color: "#fca5a5",
+                border: "1px solid rgba(239, 68, 68, 0.35)",
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Simulate Byzantine Slash
+            </button>
+          </div>
+        </div>
+
+        {/* Level 6 Telemetry Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "10px", marginBottom: "1rem" }}>
+          <div style={{ padding: "10px", borderRadius: "6px", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+            <div style={{ fontSize: "0.7rem", color: "rgba(255, 255, 255, 0.5)" }}>Connected Peer Nodes</div>
+            <div style={{ fontSize: "1.15rem", fontWeight: 700, color: "#f8fafc" }}>
+              {swarmNodes.filter((n) => n.state === "ONLINE").length} Online
+            </div>
+            <div style={{ fontSize: "0.65rem", color: "rgba(255, 255, 255, 0.4)" }}>Heterogeneous P2P Cluster</div>
+          </div>
+          <div style={{ padding: "10px", borderRadius: "6px", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+            <div style={{ fontSize: "0.7rem", color: "rgba(255, 255, 255, 0.5)" }}>BFT Quorum Status</div>
+            <div style={{ fontSize: "1.15rem", fontWeight: 700, color: bftQuorumStatus === "BFT_QUORUM_ACHIEVED" ? "#34d399" : "#fbbf24" }}>
+              {bftQuorumStatus === "BFT_QUORUM_ACHIEVED" ? "BFT_QUORUM_ACHIEVED" : "QUORUM_PENDING"}
+            </div>
+            <div style={{ fontSize: "0.65rem", color: "rgba(255, 255, 255, 0.4)" }}>6 of 7 Votes (Threshold: 5)</div>
+          </div>
+          <div style={{ padding: "10px", borderRadius: "6px", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+            <div style={{ fontSize: "0.7rem", color: "rgba(255, 255, 255, 0.5)" }}>Byzantine Fault Tolerance</div>
+            <div style={{ fontSize: "1.15rem", fontWeight: 700, color: "#60a5fa" }}>f = 2 Nodes</div>
+            <div style={{ fontSize: "0.65rem", color: "rgba(255, 255, 255, 0.4)" }}>Mathematical Bound (3f + 1)</div>
+          </div>
+          <div style={{ padding: "10px", borderRadius: "6px", background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+            <div style={{ fontSize: "0.7rem", color: "rgba(255, 255, 255, 0.5)" }}>Sybil Defense Slashing</div>
+            <div style={{ fontSize: "1.15rem", fontWeight: 700, color: "#f87171" }}>
+              {swarmNodes.some((n) => n.state === "SLASHED") ? "SLASHED" : "ONLINE"}
+            </div>
+            <div style={{ fontSize: "0.65rem", color: "rgba(255, 255, 255, 0.4)" }}>Stake-Weighted Penalty</div>
+          </div>
+        </div>
+
+        {/* Swarm Nodes & Gossip Log Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "10px" }}>
+          {/* Swarm Cluster Nodes Topology */}
+          <div style={{ borderRadius: "6px", background: "rgba(0, 0, 0, 0.4)", border: "1px solid rgba(255, 255, 255, 0.08)", padding: "10px" }}>
+            <div style={{ fontSize: "0.75rem", color: "rgba(255, 255, 255, 0.6)", marginBottom: "8px" }}>
+              Swarm Cluster Nodes Topology
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              {swarmNodes.map((node) => (
+                <div
+                  key={node.id}
+                  style={{
+                    padding: "6px 8px",
+                    borderRadius: "4px",
+                    background: "rgba(255, 255, 255, 0.03)",
+                    border: `1px solid ${node.state === "SLASHED" ? "rgba(239, 68, 68, 0.3)" : "rgba(255, 255, 255, 0.06)"}`,
+                    fontSize: "0.75rem",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    <div style={{ color: node.state === "SLASHED" ? "#f87171" : "#93c5fd", fontWeight: 600 }}>
+                      {node.model}
+                    </div>
+                    <div style={{ color: "rgba(255, 255, 255, 0.4)", fontSize: "0.7rem" }}>
+                      Role: {node.role} · Rep: {node.reputation.toFixed(2)} · Stake: {node.stake}
+                    </div>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: "0.7rem",
+                      fontWeight: 600,
+                      padding: "2px 6px",
+                      borderRadius: "4px",
+                      background: node.state === "SLASHED" ? "rgba(239, 68, 68, 0.2)" : "rgba(16, 185, 129, 0.2)",
+                      color: node.state === "SLASHED" ? "#fca5a5" : "#6ee7b7",
+                    }}
+                  >
+                    {node.state === "SLASHED" ? "Slashed" : "Online"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Swarm P2P Gossip Protocol Log */}
+          <div style={{ borderRadius: "6px", background: "rgba(0, 0, 0, 0.4)", border: "1px solid rgba(255, 255, 255, 0.08)", padding: "10px" }}>
+            <div style={{ fontSize: "0.75rem", color: "rgba(255, 255, 255, 0.6)", marginBottom: "8px" }}>
+              Swarm P2P Gossip Protocol Log
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              {gossipLogs.map((log, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    padding: "6px 8px",
+                    borderRadius: "4px",
+                    background: "rgba(255, 255, 255, 0.03)",
+                    border: "1px solid rgba(255, 255, 255, 0.06)",
+                    fontFamily: "monospace",
+                    fontSize: "0.7rem",
+                    color: log.includes("ALERT") ? "#fca5a5" : log.includes("COMMIT") ? "#6ee7b7" : "#e2e8f0",
+                  }}
+                >
+                  {log}
                 </div>
               ))}
             </div>

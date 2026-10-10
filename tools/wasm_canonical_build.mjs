@@ -245,6 +245,8 @@ function main() {
 
   rmSync(targetDir, { recursive: true, force: true });
   mkdirSync(targetDir, { recursive: true });
+  mkdirSync(join(targetDir, "release", "deps"), { recursive: true });
+  mkdirSync(join(targetDir, EXPECTED_TARGET, "release", "deps"), { recursive: true });
 
   const home = env.CARGO_HOME;
   const rustflags = `--remap-path-prefix=${repoRoot}/=./ --remap-path-prefix=${home}=./.cargo`;
