@@ -157,7 +157,12 @@ class LearningTransferProtocol:
         if not ed25519_verify(att_pk, att_canonical, att_sig):
             raise ValueError("Invalid oracle attestation cryptographic signature blocks .spe export")
 
-        # If validator is provided, strictly enforce trusted oracle registry custody
+        # Only the real LVT authority owner can supply export verification.
+        # A duck-typed object or caller-generated default verifier is not
+        # proof of an independently trusted oracle registry.
+        from spe_runtime.research.lvt.learning_validator import LearningValidator
+        if validator is not None and not isinstance(validator, LearningValidator):
+            raise ValueError("Missing trusted LVT validator for .spe export")
         if validator is not None:
             oracle_ok, oracle_msg = validator.verify_oracle_attestation(
                 att,
@@ -170,9 +175,9 @@ class LearningTransferProtocol:
         if not tx.canonical_receipt_signature or not tx.artifact_hash:
             raise ValueError("Missing receipt signature blocks .spe export")
 
-        from spe_runtime.research.lvt.learning_validator import LearningValidator
-        val = validator or LearningValidator()
-        if not val.verify_transaction_signature(tx):
+        if validator is None:
+            raise ValueError("Missing owner-authorized trusted validator for .spe export")
+        if not validator.verify_transaction_signature(tx):
             raise ValueError("Invalid receipt signature blocks .spe export")
 
         # 7. Unverified model transfer cannot be labeled as verified_models
