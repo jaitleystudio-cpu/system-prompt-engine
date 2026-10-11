@@ -429,7 +429,7 @@ export function SpeStorytellingCinema({ onNavigate }: Props) {
         {/* Action Bar */}
         <div className="spe-cinema-action-bar">
           <div className="spe-cinema-cta-text">
-            <span>Ready to compile your first airtight agent with zero hallucinations?</span>
+            <span>Ready to compile your first scope-verified agent contract with cryptographic receipts?</span>
           </div>
           <button
             type="button"

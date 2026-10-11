@@ -5431,6 +5431,12 @@
       "text": "Your idea (with layout notes)"
     },
     {
+      "id": "37ce47b1c788b2a465c1",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Website, Video, or Podcast/Audio URL"
+    },
+    {
       "id": "37edc6a0c79dbad19e23",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -5471,12 +5477,6 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "scaffolds to compare."
-    },
-    {
-      "id": "4a7af6d55a92c5357909",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "https://example.com"
     },
     {
       "id": "4dd18a1a98917cf94676",
@@ -5609,6 +5609,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Image"
+    },
+    {
+      "id": "714f808e663e3b563df6",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "/ 100,000+ characters (1 Lakh+ character input &amp; output supported)"
     },
     {
       "id": "7159bde870b80c472f99",
@@ -5813,6 +5819,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "file"
+    },
+    {
+      "id": "a6ebe9d6cc66fe7a47cf",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "Video / Podcast → Text &amp; Summary"
     },
     {
       "id": "a7bdc0e957c127d4d660",
@@ -6025,12 +6037,6 @@
       "text": "URL → website request:"
     },
     {
-      "id": "daae220e61a07a07136b",
-      "file": "apps/web/src/composer/UnifiedComposer.tsx",
-      "depth": "PRODUCT",
-      "text": "Website URL"
-    },
-    {
       "id": "dcff84e37cbb4671605c",
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
@@ -6059,6 +6065,12 @@
       "file": "apps/web/src/composer/UnifiedComposer.tsx",
       "depth": "PRODUCT",
       "text": "Selected media preview"
+    },
+    {
+      "id": "e60d1298426fab9d2ed7",
+      "file": "apps/web/src/composer/UnifiedComposer.tsx",
+      "depth": "PRODUCT",
+      "text": "https://example.com, YouTube/video link, or podcast/audio URL"
     },
     {
       "id": "e60dd016ae1baf21f2c7",
@@ -6439,6 +6451,12 @@
       "text": "Prefer typing? The transcript box below always works — speech is optional."
     },
     {
+      "id": "1774544efb5920ca0cf2",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Explore an interactive 3D camera-scroll preview and a tested prompt seed you can open in Prompt Studio. The same curated list repeats on a schedule so you can study how lighting, materials, and camera motion work."
+    },
+    {
       "id": "1b8d1f4063a9ed632765",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
@@ -6473,12 +6491,6 @@
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
       "text": "Play preview"
-    },
-    {
-      "id": "91b87f29a69f0d4bda09",
-      "file": "apps/web/src/lab/DailyLab.tsx",
-      "depth": "PRODUCT",
-      "text": "A small preview and a prompt seed you can open in Prompt Studio. The same short list repeats on a schedule. It is not a new random scene each visit."
     },
     {
       "id": "9ba0c1555d3233c0d3d2",
@@ -9865,22 +9877,10 @@
       "text": "ribbon-install"
     },
     {
-      "id": "0eb3909aafa22d5d6b17",
-      "file": "apps/web/src/landing/ConversionKernel.tsx",
-      "depth": "PROOF",
-      "text": "ProtectedIntent invariants block broken code"
-    },
-    {
       "id": "193d01c3cf0a6f1bc18c",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
       "text": "Use Case Solutions"
-    },
-    {
-      "id": "1a17d8a59352788d59e3",
-      "file": "apps/web/src/landing/ConversionKernel.tsx",
-      "depth": "PROOF",
-      "text": "Cancel $20/month AI subscription bills"
     },
     {
       "id": "1a87518cbda7622d494f",
@@ -9889,22 +9889,22 @@
       "text": "Copied!"
     },
     {
-      "id": "23ce4378891a32c4bd45",
+      "id": "1ca8117ef5fd80306181",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
-      "text": "Tedious manual prompt copy-pasting eliminated"
+      "text": "Scope &amp; Test Receipt Checks"
+    },
+    {
+      "id": "1cfd236fb7fac065b845",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Est. ~$45/mo saved on avoided retry loops"
     },
     {
       "id": "266faa971d75d9f01744",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
       "text": "Copy command"
-    },
-    {
-      "id": "29044b77bf67ebb47b51",
-      "file": "apps/web/src/landing/ConversionKernel.tsx",
-      "depth": "PROOF",
-      "text": "Wasted API tokens: $45/month on runaways"
     },
     {
       "id": "3153beee0420b32b7e75",
@@ -9917,12 +9917,6 @@
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
       "text": "Adopt in Your Repo ($ npx @systempromptengine/cli adopt .)"
-    },
-    {
-      "id": "3fad25f1399ec2451d6a",
-      "file": "apps/web/src/landing/ConversionKernel.tsx",
-      "depth": "PROOF",
-      "text": "Embarrassing regressions in production"
     },
     {
       "id": "49db2478498bac955a56",
@@ -9955,12 +9949,6 @@
       "text": "The $20 Subscription Killer"
     },
     {
-      "id": "5c1819e581cbc9943594",
-      "file": "apps/web/src/landing/ConversionKernel.tsx",
-      "depth": "PROOF",
-      "text": "100% browser-local execution, zero server GPU inference bills, zero data tracking, instant speed"
-    },
-    {
       "id": "5c22c974dfe368bfe3b8",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
@@ -9973,16 +9961,16 @@
       "text": "Compare Alternatives Below ↓"
     },
     {
-      "id": "661f35f15d9056b9f80d",
+      "id": "6e4c67dccf1403023810",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
-      "text": "Air-Gapped Sandbox"
+      "text": "$0 Core · Pro $1 first mo (then $9/mo)"
     },
     {
-      "id": "6dfc3d878905b3121dd9",
+      "id": "6ee602fe62d14e9e7531",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
-      "text": "Monthly SaaS Bill"
+      "text": "Projected estimate by catching missing scope rules pre-flight with 60+ research templates"
     },
     {
       "id": "761b3a50a1bd2ab18823",
@@ -9991,10 +9979,22 @@
       "text": "The Broken Agent &amp; Regression Stopper"
     },
     {
+      "id": "7a3cc7e415b25585b9cd",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "95% Free · Public Beta Intro"
+    },
+    {
       "id": "7b38ba77b3f76afe8811",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
       "text": "Cut Wasted Subscriptions"
+    },
+    {
+      "id": "8dc3cb83aa782605b132",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "1.3 MB browser-local WASM compiler · Zero server GPU bills for local checks"
     },
     {
       "id": "8ff0fe4ac3f53b902d01",
@@ -10003,16 +10003,16 @@
       "text": "Stop Broken Agent Drift"
     },
     {
+      "id": "96ab8b5efc370300c3f5",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Pre-Commit Verification"
+    },
+    {
       "id": "9a254f26a7777e176a44",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
       "text": "SPE is the 100% free, offline CLI and browser workspace that reviews agent reports, catches silent regressions, and compiles the next atomic task contract at $0 cost."
-    },
-    {
-      "id": "9d8bf0afb2a57d2bebd1",
-      "file": "apps/web/src/landing/ConversionKernel.tsx",
-      "depth": "PROOF",
-      "text": "$0.00 / month"
     },
     {
       "id": "9d92cfe6ef004ffce7ea",
@@ -10021,10 +10021,10 @@
       "text": "Tired of your AI coding agent running in circles and breaking working code?"
     },
     {
-      "id": "ae6bfb9924b1244d9e59",
+      "id": "9eff1c4d928bf45c9d51",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
-      "text": "Token Burn Guard"
+      "text": "Local WASM Sandbox &amp; Companion Bridge"
     },
     {
       "id": "b3e7943e2f1093a96d7e",
@@ -10037,6 +10037,12 @@
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
       "text": "cta-formula-a"
+    },
+    {
+      "id": "c5db10c27304c57ac452",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Projected Retry Savings &amp; 101 Skills"
     },
     {
       "id": "c8c4a2d1b70b656f6aff",
@@ -10057,22 +10063,28 @@
       "text": "$ npx @systempromptengine/cli adopt ."
     },
     {
+      "id": "dc1dd685438269b8a22c",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "Prompt compilation runs locally in-browser · Optional bridge to standalone AppleAGI macOS app"
+    },
+    {
+      "id": "e21909a46304bee83b3b",
+      "file": "apps/web/src/landing/ConversionKernel.tsx",
+      "depth": "PROOF",
+      "text": "ProtectedIntent invariants check declared file bounds &amp; support 100,000+ (1 Lakh+) chars"
+    },
+    {
       "id": "e414641da608b3166f4c",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
       "text": "Copy adopt command"
     },
     {
-      "id": "f06883e606e23582342e",
+      "id": "f10417819794a9b3ca68",
       "file": "apps/web/src/landing/ConversionKernel.tsx",
       "depth": "PROOF",
-      "text": "Halt runaway loops before tokens burn"
-    },
-    {
-      "id": "f68c1d80465382a95d48",
-      "file": "apps/web/src/landing/ConversionKernel.tsx",
-      "depth": "PROOF",
-      "text": "Production Safety"
+      "text": "Transparent renewal pricing · Team CI/CD Gate $9 first mo (then $99/mo)"
     },
     {
       "id": "f7a26b3efc08865860e3",
@@ -10681,12 +10693,6 @@
       "text": "Role"
     },
     {
-      "id": "5e9b0b106f2a4df6322e",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": ". For longer material, use"
-    },
-    {
       "id": "60491d4b249e67ed2f8b",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -10979,6 +10985,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "Refine the brief"
+    },
+    {
+      "id": "dec33665f064a7a5be53",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": ". For 100,000+ character (1 Lakh+) input &amp; output, use"
     },
     {
       "id": "e19cd6e37f422ab38889",
@@ -11713,16 +11725,16 @@
       "text": "DeepSeek 4.5 / Llama 4"
     },
     {
-      "id": "036cf9efdeefc72f78be",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Copy & Open in Claude"
-    },
-    {
       "id": "04beadbd071b92174009",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🔬 Research Protocol"
+    },
+    {
+      "id": "04d91375e6a82f5e69e6",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Search 1-click prompts (SEO, Copywriting, Full-Stack, Sales)..."
     },
     {
       "id": "066ed9a8d9e697565939",
@@ -11731,16 +11743,22 @@
       "text": "30K Architecture"
     },
     {
+      "id": "06991826e9136c5be1b5",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Confidence:"
+    },
+    {
       "id": "06f78b28b1f43760fb69",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "What is the capital of France?"
     },
     {
-      "id": "08c060ad0e2049849bb0",
+      "id": "0780e01fc52acd42a176",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "⚡ SPECIFICATION LIFT TRIGGERED"
+      "depth": "PROOF",
+      "text": ". Engineered for"
     },
     {
       "id": "09a0d390947f6eb3cbc7",
@@ -11755,16 +11773,16 @@
       "text": "OMEGA_30K"
     },
     {
+      "id": "0bd59576a85d92fc86c2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "vault"
+    },
+    {
       "id": "0c6d087ac8aa704c71c5",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Modelfile"
-    },
-    {
-      "id": "0d0619d07370d97b874a",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Copy & Open in ChatGPT"
     },
     {
       "id": "0ed2ed23fe2e71b5467f",
@@ -11791,6 +11809,12 @@
       "text": "Design a cinematic 3D website"
     },
     {
+      "id": "1245890b4027751f24e5",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "📊 Step 2: Select Specification Depth & Modular Volume Scale"
+    },
+    {
       "id": "12a340341534f935889f",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11803,10 +11827,28 @@
       "text": "🚀 Marketing Campaign"
     },
     {
+      "id": "144eba38e7527c0830aa",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Cursor 4.9"
+    },
+    {
+      "id": "150b086041077fa61f84",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "). SPE intentionally suppresses specification synthesis to preserve native ChatGPT/Claude execution speed."
+    },
+    {
       "id": "15ba55bd8da682a45193",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "prompt-studio"
+    },
+    {
+      "id": "15eb2d555ad44b67a0eb",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Invoked"
     },
     {
       "id": "16d252fdcb1e1daa5c3c",
@@ -11815,22 +11857,10 @@
       "text": "TUTORING_INSTRUCTION_FRAMEWORK"
     },
     {
-      "id": "1792cf368316fa447d61",
+      "id": "196c0c55a563233f8741",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "🛡️ Step 4: Active Plugin & Tool Safety Auditor"
-    },
-    {
-      "id": "17b1b004be8d273e9eaf",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Edit"
-    },
-    {
-      "id": "183dc802af7c451cd432",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "SPECIFICATION_LIFT_AVAILABLE"
+      "depth": "PROOF",
+      "text": "⚡ 10,000+ Ready-Made Prompts"
     },
     {
       "id": "1b8425569929b48440e8",
@@ -11851,40 +11881,16 @@
       "text": "Cursor 4.9 & Windsurf 4.9 JSON agent directives & context ceilings"
     },
     {
-      "id": "1de82cf93d78aea277a0",
+      "id": "1ed93aa594792a684325",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Load into Studio ⚡"
+      "depth": "PROOF",
+      "text": "✍️ Step 3: Define System Intent & Capabilities"
     },
     {
-      "id": "1e42bfda2b6619282099",
+      "id": "20a9b732286593b39a2b",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "). SPE intentionally suppresses specification synthesis to preserve native ChatGPT/Claude execution speed."
-    },
-    {
-      "id": "1f2289bc5815572d4643",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Direct Answer Query"
-    },
-    {
-      "id": "1ff29b800810c2dfc6b2",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Enter User Request to Evaluate Intent & Specification Lift:"
-    },
-    {
-      "id": "21012bf014fbd1a98b7d",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Zero Overhead"
-    },
-    {
-      "id": "2122f3b5f2917f508445",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Download Manifest JSON 📋"
+      "depth": "PROOF",
+      "text": "🌐 100,000+ Char (1 Lakh+) Blueprints &amp; 101 Skills"
     },
     {
       "id": "230ece23b70f7f089532",
@@ -11893,40 +11899,16 @@
       "text": "🌍 Trivia (Pass-Through)"
     },
     {
-      "id": "2322d87ea1a761fd3010",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "🌐 Universal Platforms & 100k Harness"
-    },
-    {
-      "id": "2437a5bd202628914eca",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Architecture Benchmarks:"
-    },
-    {
       "id": "249bd01c066f3bd5dce5",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Marketing"
     },
     {
-      "id": "25d48308164d531a2f5a",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Confidence:"
-    },
-    {
       "id": "25e18f746892c4cc7b29",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Anthropic Claude 6.1/6.2 Code terminal rules, tool limits & build contracts"
-    },
-    {
-      "id": "26327f05e4d806b93d54",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Search power prompts"
     },
     {
       "id": "264e88028d10fd80e4b9",
@@ -11941,18 +11923,6 @@
       "text": "Windsurf 4.9 IDE"
     },
     {
-      "id": "2d060ad8ed80659c5eb6",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "ChatGPT ↗"
-    },
-    {
-      "id": "2d198624001ec9f48c1d",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Copy All Volumes 📋"
-    },
-    {
       "id": "2ffc27a6ca8f9d566165",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -11965,46 +11935,16 @@
       "text": "Design a reactive, WebGL 3D design canvas with accessible controls"
     },
     {
-      "id": "317a7ec0095ee7633114",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "discovery"
-    },
-    {
-      "id": "32640674801708eef4a2",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "⚡ 1-Click Power Vault"
-    },
-    {
       "id": "3491d48a8a399640879d",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Claude 6.2 Code"
     },
     {
-      "id": "36e0970d1697f7067dab",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Total Words"
-    },
-    {
-      "id": "376329b5070dbd8c6366",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Outcome Specification Lift Engine"
-    },
-    {
       "id": "383b9148639dd19ee0a8",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Improve this document"
-    },
-    {
-      "id": "38a6f5e3c81ea01aa406",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Benchmark Scenarios:"
     },
     {
       "id": "38fc697b998c807c371c",
@@ -12037,22 +11977,28 @@
       "text": "👋 Greeting (Pass-Through)"
     },
     {
+      "id": "3bd4a7560f8ddaf4fd4a",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "10,000+ Ready-Made Genuine Prompts &amp; 60+ Research Prompts"
+    },
+    {
       "id": "3c0838c74d2be7c14845",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "a"
     },
     {
-      "id": "3fce261c49d38edb180a",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Digest:"
-    },
-    {
       "id": "3feaae2db2207102d8d3",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Core single-file specification"
+    },
+    {
+      "id": "4002e4cbe0cbab969a58",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "🎯 Step 1: Select Target Platform Architecture"
     },
     {
       "id": "409fb040c9b50dfc20fa",
@@ -12073,10 +12019,22 @@
       "text": "vault"
     },
     {
+      "id": "4409f9f61b7a4440d239",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Type a short request in plain English (or speak in 36+ languages). SPE turns complex tasks into structured instructions while letting simple questions pass through without delay."
+    },
+    {
       "id": "449f14e243ba63844e3e",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "file_read, file_write, bash, terminal, web_search, database_read"
+    },
+    {
+      "id": "44c0aa0eac4ba0dc31d3",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "DeepSeek 4.5"
     },
     {
       "id": "46c327f7a6fd34369196",
@@ -12091,10 +12049,10 @@
       "text": "_blank"
     },
     {
-      "id": "4960e94045621e6f1a59",
+      "id": "4aefdf85a673f2f0003d",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "100% Offline Cryptographic Generation • Zero Cloud API Costs • Zero Telemetry Egress"
+      "depth": "PROOF",
+      "text": "Clear"
     },
     {
       "id": "4c31fdefafafe9160050",
@@ -12103,16 +12061,28 @@
       "text": "Writing"
     },
     {
+      "id": "4c6a3b0596fccbecf951",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "discovery"
+    },
+    {
+      "id": "4ca047cd597804dd6077",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "File"
+    },
+    {
+      "id": "4cd2e9033142280c594c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Pick a proven, ready-made prompt for coding, websites, SEO, business, or writing. Paired with 60+ research-paper prompts and 40+ core skills (101 curated skills total) so your AI follows every rule on the first try."
+    },
+    {
       "id": "4d3bcc9587fec2f56a92",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Autonomous financial risk analyzer with zero-trust payment safeguards"
-    },
-    {
-      "id": "4dc66d632c1e11e5dd67",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Universal Platform & Multi-Volume Specification Harness"
     },
     {
       "id": "4dcce9ad07ea8f493f24",
@@ -12121,22 +12091,34 @@
       "text": "DeepSeek 4.5 & Llama 4 token-level ChatML header framing & proof kernel"
     },
     {
+      "id": "4ec347d257bc08102ec2",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Download Current Volume ("
+    },
+    {
+      "id": "4f0c4818effa9e616253",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Enter User Request to Evaluate Intent & Specification Lift:"
+    },
+    {
       "id": "4f7db262bc33dc32b65a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "ollama-modelfile"
     },
     {
-      "id": "4fe7f4cfc662a1c1a716",
+      "id": "4fab44da5ae7b18abcde",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Precision-engineered prompts for modern frontier models. Zero hallucinations, built-in invariants, and instant results."
+      "depth": "PROOF",
+      "text": "Zero Overhead"
     },
     {
-      "id": "527be276537b46f94ea1",
+      "id": "533ab0efc0496ed6b74a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "🎯 Step 1: Select Target Platform Architecture"
+      "depth": "PROOF",
+      "text": "Edit"
     },
     {
       "id": "543e3148879684c6d915",
@@ -12151,16 +12133,10 @@
       "text": "High-throughput zero-copy event streaming cluster with sagas rollbacks"
     },
     {
-      "id": "55835d9f2ac1f59715f7",
+      "id": "56b5d2f2498ac9dc07dd",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Tokens Saved"
-    },
-    {
-      "id": "569e55e1ba001e4e3386",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Search 1-click prompts (SEO, Copywriting, Full-Stack, Sales)..."
+      "depth": "PROOF",
+      "text": "Power Prompts and Platform Harness"
     },
     {
       "id": "56f1fc30f774ab3453e5",
@@ -12169,10 +12145,16 @@
       "text": "🌐 3D Website"
     },
     {
-      "id": "57700ee1d3b8f47b0fef",
+      "id": "577e0f695ae167ff693d",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Claude ↗"
+      "depth": "PROOF",
+      "text": "Architecture Benchmarks:"
+    },
+    {
+      "id": "587b6f1eff5e0f7c446d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Safety Score"
     },
     {
       "id": "590fdb827f9baa2b1dba",
@@ -12181,22 +12163,34 @@
       "text": ".windsurfrules"
     },
     {
+      "id": "5a02e21dc87e98359189",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Digest:"
+    },
+    {
+      "id": "5e36613e60d7dfdf3bac",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Approved Tools"
+    },
+    {
       "id": "5f4a6ad4e057f3c952d9",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Google DeepMind Skills format with YAML frontmatter & <RULE> invariants"
     },
     {
-      "id": "5fe46637bd8ea3a93831",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Clear"
-    },
-    {
       "id": "5ff4d24529290044c1cd",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Complete multi-volume enterprise blueprint"
+    },
+    {
+      "id": "602c834a754e8bf8bb28",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Grok 4.9"
     },
     {
       "id": "60e5492ca6868235555a",
@@ -12211,22 +12205,34 @@
       "text": "Create a marketing campaign"
     },
     {
+      "id": "61f8a029a436eafbc420",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Benchmark Scenarios:"
+    },
+    {
       "id": "62214688215e384a9da2",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Micro-kernels, memory & release gate"
     },
     {
-      "id": "63f783c1b8e511f07524",
+      "id": "639453cd69ccd36ac185",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Approved Tools"
+      "depth": "PROOF",
+      "text": "Redundant Pruned"
     },
     {
-      "id": "6417c624511a3cc18170",
+      "id": "65ff9741dcca5aa368d9",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "📊 Step 2: Select Specification Depth & Modular Volume Scale"
+      "depth": "PROOF",
+      "text": "Turn Any Simple Idea Into a Clear Step-by-Step Prompt"
+    },
+    {
+      "id": "673110def65fb0559c91",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "🛡️ PASS-THROUGH (TOOL SUPPRESSED)"
     },
     {
       "id": "67de80e2acb2e5159f16",
@@ -12235,16 +12241,28 @@
       "text": "Kimi 3.5 200k ultra-long context attention anchors & bilingual structure"
     },
     {
+      "id": "696847279ad1ae6ee164",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Copy & Open in Claude"
+    },
+    {
+      "id": "6a18bbcba889e92bf462",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Direct Answer Query"
+    },
+    {
+      "id": "6a349d1d94d613a7069f",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "platforms"
+    },
+    {
       "id": "6afed5c885bf578ab7f9",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "State dynamics, tools & proofs"
-    },
-    {
-      "id": "6babef9bb3617b685808",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Compile enterprise specifications for Antigravity Skills, Claude Code, Cursor, Grok, Kimi, and ChatGPT up to 100,000 words. 100% offline, zero cloud API fees."
     },
     {
       "id": "6c27fb9d85e1ef9b7ce8",
@@ -12259,10 +12277,28 @@
       "text": "Docker-like local Modelfile with PARAMETER and SYSTEM blocks"
     },
     {
+      "id": "6cf02d3cc7a7027d5a8c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "SPECIFICATION_LIFT_AVAILABLE"
+    },
+    {
+      "id": "706183bab2a5de0d1d34",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "This query requires a direct conversational or factual answer ("
+    },
+    {
       "id": "70af953dd28b66a1db5c",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Moonshot Kimi 3.5"
+    },
+    {
+      "id": "71d203190e13b6a9ca41",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Declared Tools & Plugins (Comma-separated; redundant tools pruned to reduce attention drift):"
     },
     {
       "id": "72991d42de2b4cfb65c3",
@@ -12271,10 +12307,28 @@
       "text": "grok"
     },
     {
+      "id": "735ea9a93384fa01a52d",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Total Words"
+    },
+    {
+      "id": "749a0c7c1f28e2aacf79",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Vol"
+    },
+    {
       "id": "77f4f6ab2b620449fb61",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "1.5K Standard"
+    },
+    {
+      "id": "7875f971decc21b56274",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Outcome:"
     },
     {
       "id": "78959c8f00334d24d8eb",
@@ -12283,21 +12337,21 @@
       "text": "CLAUDE.md"
     },
     {
-      "id": "7bb15423a391bf1dc541",
+      "id": "7cfda00f49114203a1c4",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "words)"
+      "depth": "PROOF",
+      "text": "Copy 📋"
     },
     {
-      "id": "823c346adf064356b334",
+      "id": "82d57c49ae1b49e75558",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "✍️ Step 3: Define System Intent & Capabilities"
+      "depth": "PROOF",
+      "text": "OpenAI 6 / o3-Pro"
     },
     {
-      "id": "8467a9421df31340330c",
+      "id": "83a83940cb7d89ff0203",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
+      "depth": "PROOF",
       "text": "e.g. file_read, file_write, bash, terminal, web_search, stripe"
     },
     {
@@ -12319,22 +12373,10 @@
       "text": "OpenAI 6 / o3-Pro"
     },
     {
-      "id": "8bc9c1884a472b2b129a",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Hide"
-    },
-    {
       "id": "8c941c650620ff89842f",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "⚡ Distributed Sagas Engine"
-    },
-    {
-      "id": "8d016a3b8ee358a3917a",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Download Current Volume ("
     },
     {
       "id": "8dafc7bc80b5f0bcda7f",
@@ -12347,6 +12389,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Turn this business idea into a plan"
+    },
+    {
+      "id": "8f720ffacb06cf000f11",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "100,000+ Character (1 Lakh+) Blueprints &amp; 1-Click Agent Rules"
     },
     {
       "id": "905b4b5ede59c440eafc",
@@ -12367,10 +12415,22 @@
       "text": "Business"
     },
     {
+      "id": "990720adcd11ac769eec",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Copied! ✓"
+    },
+    {
       "id": "9a4f187564b93c692e11",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🔬 Causal Inference Lab"
+    },
+    {
+      "id": "9a55b1abf95bbd581b2c",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "⚡ SPECIFICATION LIFT TRIGGERED"
     },
     {
       "id": "9b720e07f012feb71d36",
@@ -12385,12 +12445,6 @@
       "text": "xAI Grok 4.9"
     },
     {
-      "id": "9c8fac15a283ba5463f0",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Copy 📋"
-    },
-    {
       "id": "a07d47521cb291a66ade",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12401,6 +12455,12 @@
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "SEO"
+    },
+    {
+      "id": "a382a37cf779b82d0a19",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Download"
     },
     {
       "id": "a3ce5e46f56d4186cdba",
@@ -12421,10 +12481,10 @@
       "text": "SKILL.md"
     },
     {
-      "id": "aa733adaee695254e1b8",
+      "id": "a9fb9ef0666574e00075",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Declared Tools & Plugins (Comma-separated; redundant tools pruned to reduce attention drift):"
+      "depth": "PROOF",
+      "text": "🎯 Simple Idea to Pro Prompt"
     },
     {
       "id": "ab2b7e90a36fd890b25a",
@@ -12433,10 +12493,22 @@
       "text": "1 Volume"
     },
     {
+      "id": "ab380e4aad07e907f043",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Gemini 3.9 Pro"
+    },
+    {
       "id": "ab67cbf9a97424966a96",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Downloaded spe_spec_manifest.json"
+    },
+    {
+      "id": "ac6959e80135e2bb16cd",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "ChatGPT ↗"
     },
     {
       "id": "ace533466cb933cb8110",
@@ -12463,46 +12535,22 @@
       "text": "start"
     },
     {
-      "id": "b2262be434ae7e700096",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "📑 Step 5: Multi-Volume Specification Preview"
-    },
-    {
-      "id": "b259f34610ce8d907615",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "This query requires a direct conversational or factual answer ("
-    },
-    {
-      "id": "b7f92ae741ff2e9468c4",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "DeepSeek 4.5"
-    },
-    {
       "id": "baf3f5c17a2c473ff389",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "openai-markdown"
     },
     {
+      "id": "bbf0ba0f23e8e64184ff",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "100% Offline Cryptographic Generation • Zero Cloud API Costs • Zero Telemetry Egress"
+    },
+    {
       "id": "bd65de3cc3ea55146050",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "🤖 AI Agent"
-    },
-    {
-      "id": "be855a117f33df9f27a5",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Enter system goal, architecture or agent requirements..."
-    },
-    {
-      "id": "bf3a5f1319407aed6120",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Redundant Pruned"
     },
     {
       "id": "c033ec7bd8ac330c9f4d",
@@ -12529,22 +12577,10 @@
       "text": "Build an autonomous offline-first AI code auditor with formal verification"
     },
     {
-      "id": "c5d346624d5bc2cb8837",
+      "id": "c57f1d3301dc595520ea",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Outcome:"
-    },
-    {
-      "id": "c5d40f264700687a4b9a",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Safety Score"
-    },
-    {
-      "id": "c603f54aa6054069153a",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "🎯 Smart Outcome Lift"
+      "depth": "PROOF",
+      "text": "Build up to 100,000+ characters (1 Lakh+) of clean instructions for Antigravity Skills, Claude Code, Cursor, Windsurf, Grok, Kimi, and ChatGPT — 100% free on your device."
     },
     {
       "id": "c680d5298b7135ea4078",
@@ -12559,22 +12595,22 @@
       "text": "DEEP_15K"
     },
     {
-      "id": "c8cc31324d48c39eab5c",
+      "id": "cb048c079b0be1d9625a",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Type request (e.g. 'Build me a shopping app' or 'What is 2+2?')..."
+      "depth": "PROOF",
+      "text": "Tokens Saved"
     },
     {
-      "id": "cac8ed1fcadaa2f008c1",
+      "id": "cb09e8d34ce1634cdd46",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "The Curated 1-Click AI Vault"
+      "depth": "PROOF",
+      "text": "System specification goal"
     },
     {
-      "id": "cb1a2e2ce1613492e68b",
+      "id": "cd6ccda9c431aeaccc09",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "🛡️ PASS-THROUGH (TOOL SUPPRESSED)"
+      "depth": "PROOF",
+      "text": "Download Manifest JSON 📋"
     },
     {
       "id": "cd8cb83c363fe6e6f586",
@@ -12589,10 +12625,10 @@
       "text": "50K Enterprise"
     },
     {
-      "id": "cfe01e680902cbe8bc80",
+      "id": "d00424ecedf64e1d6e83",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Vol"
+      "depth": "PROOF",
+      "text": "📑 Step 5: Multi-Volume Specification Preview"
     },
     {
       "id": "d1c64f15fc2bb4f2afbc",
@@ -12607,16 +12643,16 @@
       "text": "Empirical causal inference protocol with DAG structural modeling"
     },
     {
-      "id": "d2f1db727ca9186e0b90",
+      "id": "d4717a54f617d7fdfea2",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Power Prompts and Platform Harness"
+      "depth": "PROOF",
+      "text": "Copy All Volumes 📋"
     },
     {
-      "id": "d532ee5a8b026b0a17ae",
+      "id": "d4ee0215412b331f6411",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Tool Status:"
+      "depth": "PROOF",
+      "text": "🛡️ Step 4: Active Plugin & Tool Safety Auditor"
     },
     {
       "id": "d7185f48a203e9f1f953",
@@ -12625,10 +12661,10 @@
       "text": "All"
     },
     {
-      "id": "dbd707a44ccfff8a2d3e",
+      "id": "d83fdb19fcd4811a17b0",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Kimi 3.5"
+      "depth": "PROOF",
+      "text": "Enter system goal, architecture or agent requirements..."
     },
     {
       "id": "dbf92f1806939360956a",
@@ -12643,12 +12679,6 @@
       "text": "🔢 2 + 2 (Pass-Through)"
     },
     {
-      "id": "dee7e7bf37316551ac60",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Grok 4.9"
-    },
-    {
       "id": "df65143bb60ce6a393c6",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
@@ -12661,10 +12691,16 @@
       "text": "Create an AI agent"
     },
     {
-      "id": "e1dcb4e635a45164c287",
+      "id": "e1efaa30732f291b9a26",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Cursor 4.9"
+      "depth": "PROOF",
+      "text": "Claude ↗"
+    },
+    {
+      "id": "e24ed7a0f9f6e4b5bf3b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Type request (e.g. 'Build me a shopping app' or 'What is 2+2?')..."
     },
     {
       "id": "e4602eff414782b45421",
@@ -12673,22 +12709,10 @@
       "text": "💳 Financial Risk & Fraud"
     },
     {
-      "id": "e4df54151d1a93f91ea5",
+      "id": "e74dbcb3643fd7fc4bd4",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Translating casual requests into verified 2026 specifications. Evaluates positive complex outcomes vs negative direct queries to prevent chat latency."
-    },
-    {
-      "id": "e4f21e94957cc1fd13f8",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "File"
-    },
-    {
-      "id": "e57865db77fafa27a39d",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": ". Engineered for"
+      "depth": "PROOF",
+      "text": "Load into Studio ⚡"
     },
     {
       "id": "e75f48e4a679b01c19a4",
@@ -12697,16 +12721,10 @@
       "text": "Universal Autonomous AI System Specification"
     },
     {
-      "id": "e81dbef41278da82a80f",
+      "id": "e90725fc3bbc35e42d11",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Gemini 3.9 Pro"
-    },
-    {
-      "id": "e95586a25f3030da4689",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Download"
+      "depth": "PROOF",
+      "text": "Tool Status:"
     },
     {
       "id": "e9b31416d01fea0fea99",
@@ -12727,22 +12745,16 @@
       "text": "📊 Business Plan"
     },
     {
-      "id": "efbfc3b936811d81e5ff",
+      "id": "edaa4d8c3677cee67f78",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Copied! ✓"
+      "depth": "PROOF",
+      "text": "words)"
     },
     {
-      "id": "efffa6caeb7ad37c77e5",
+      "id": "f00812f29c26a7c17aff",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Invoked"
-    },
-    {
-      "id": "f3105019d3cc9d21dcaf",
-      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "Claude 6.2 Sonnet"
+      "depth": "PROOF",
+      "text": "SPE Ω CERTIFIED"
     },
     {
       "id": "f33d2fa13c6270719698",
@@ -12757,22 +12769,34 @@
       "text": "Intent, interfaces & verification"
     },
     {
+      "id": "f3ccbc3d6c3f8b1ed6d1",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Hide"
+    },
+    {
+      "id": "f3ddd4f1f3a2d04be71b",
+      "file": "apps/web/src/landing/PromptVaultPanel.tsx",
+      "depth": "PROOF",
+      "text": "Claude 6.2 Sonnet"
+    },
+    {
       "id": "f3f5bb772ea2195eee1c",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
       "depth": "PRODUCT",
       "text": "Research this scientific hypothesis"
     },
     {
-      "id": "f4cedd738daa125f1b1d",
+      "id": "f4d821b03770e2e85567",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "System specification goal"
+      "depth": "PROOF",
+      "text": "Search power prompts"
     },
     {
-      "id": "f88d00ee37fed82eec7c",
+      "id": "f87e419586066bb47710",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "SPE Ω CERTIFIED"
+      "depth": "PROOF",
+      "text": "Kimi 3.5"
     },
     {
       "id": "f94e2cf2a616b6a86fae",
@@ -12805,10 +12829,10 @@
       "text": ".cursorrules"
     },
     {
-      "id": "fbe278c778fe3aaa0ec0",
+      "id": "fd9e071b68780e5af041",
       "file": "apps/web/src/landing/PromptVaultPanel.tsx",
-      "depth": "PRODUCT",
-      "text": "platforms"
+      "depth": "PROOF",
+      "text": "Copy & Open in ChatGPT"
     },
     {
       "id": "0014fed211f55a770c35",
@@ -13237,16 +13261,10 @@
       "text": "Natural uses: system prompt generator · AI prompt generator · prompt engineering tool · free prompt builder · local prompt compiler."
     },
     {
-      "id": "0099decfc9e732b757db",
+      "id": "014616d3b2f53ef0efad",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Anthropic"
-    },
-    {
-      "id": "013cc8dabbc391ad7b4b",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Multi-Agent"
+      "text": "1-Click Export"
     },
     {
       "id": "029bea77d89ef881995e",
@@ -13255,34 +13273,16 @@
       "text": "capsule-2"
     },
     {
-      "id": "046e946640146680d99b",
+      "id": "04e59843b67e2b1e0bfd",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Spatial 3D"
+      "depth": "PROOF",
+      "text": "EVERYTHING YOU NEED FOR AI, IN SIMPLE ENGLISH"
     },
     {
-      "id": "048c6c54449ddc764dfe",
+      "id": "05becf6a24cd2188204b",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Zero server inference bills or tracking"
-    },
-    {
-      "id": "07aa7c5da55d4b06c25b",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Screenshot & URL to Site"
-    },
-    {
-      "id": "0aa23aa440740e7cf61a",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Document Extractor"
-    },
-    {
-      "id": "0d3b92421c913239c38b",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Run Attack Test →"
+      "text": "VISION // SCREENSHOT_AND_IMAGE"
     },
     {
       "id": "0deeaa2c80829ac2252b",
@@ -13291,70 +13291,70 @@
       "text": "all"
     },
     {
-      "id": "0f2e345b9b660a26fc5e",
+      "id": "0f077d7363a15e81893d",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "AGENTIC WORKFLOWS"
+      "text": "100,000+ Characters"
     },
     {
-      "id": "119336f70caaee963559",
+      "id": "0f4ffce56f23a74ef58b",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Accuracy Sentinel"
+      "text": "In-Browser Safety Gate"
     },
     {
-      "id": "11f6a2b0821421184afd",
+      "id": "1343cea321a362656f4d",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Interactive 3D Web Studio"
+      "depth": "PROOF",
+      "text": "95% FREE · $1 FIRST MONTH PRO (RENEWS $9/MO) · 60+ RESEARCH PROMPTS · 101 SKILLS · 1.3 MB LOCAL WASM"
     },
     {
-      "id": "186c7bf8f880fdc1d723",
+      "id": "14331f6a856daa1c339e",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "In-Browser Sandbox"
+      "text": "3D_STUDIO // CAMERA_SCROLL_SCENE"
     },
     {
-      "id": "187c500f390ee46b0d2f",
+      "id": "159cf0a71a44b7395e1f",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Turn design screenshots or web pages into responsive, accessible React and Tailwind CSS components."
+      "text": "Zero-Drift Verification & Companion Bridge"
     },
     {
-      "id": "208167110eb399ec9991",
+      "id": "2049a332f63d4363c904",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "One-Click Agent Export"
+      "text": "All Features"
     },
     {
-      "id": "23d8a56cc5e0c19b72dd",
+      "id": "20d1c111009c99435efb",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Detects prompt failures and suggests fixes automatically."
+      "text": "Convert Screenshot →"
     },
     {
-      "id": "23fe49d45c3c3d55b288",
+      "id": "2158b25ef926d061a3b3",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Export your prompt for Claude Code, Cursor, Windsurf, ChatGPT, and automated test runners with a single click."
+      "text": "Daily 3D Websites with Camera Scrolling"
     },
     {
-      "id": "2451f7620d19af0b7f13",
+      "id": "21dec5905f9ea8fb87ea",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "DeepSeek Frontier"
+      "text": "lab"
     },
     {
-      "id": "29c885bd775664705020",
+      "id": "24d7d5570bd656bd9b28",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Logic Verification"
+      "text": "Input: UI screenshot or reference photo\nTargets: React, SwiftUI, Compose, HTML/CSS\nOutput: Implementation prompt + starter code"
     },
     {
-      "id": "2aabf3d2c3ff0ba4ff3c",
+      "id": "25cfded900b2674c8458",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "REACT CODE."
+      "depth": "PROOF",
+      "text": "Interactive 3D capability cards"
     },
     {
       "id": "2ad6691341eb12317963",
@@ -13363,46 +13363,76 @@
       "text": "capsule-1"
     },
     {
-      "id": "2cd683313fcef9922426",
+      "id": "2c04c8d48292b0b05ac6",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Inspect Drift Sentinel →"
+      "depth": "PROOF",
+      "text": "Next capability card"
     },
     {
-      "id": "2fc6b3e747460f70e698",
+      "id": "2e2e2d25cc8b1c7d9976",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Turn everyday instructions into clear, rock-solid prompts for Claude Code, Cursor, and ChatGPT."
+      "text": "Turn any plain-English idea (up to 100,000+ characters / 1 Lakh+) into a clear prompt paired with 60+ research-paper prompts and 40+ core zero-drift skills."
     },
     {
-      "id": "31552391d053bdbffdb9",
+      "id": "303855747a9e1eea1a9d",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Self-Healing Prompts"
+      "text": "EXPORTER // ALL_AI_MODELS"
     },
     {
-      "id": "35191adc866a6067e6b3",
+      "id": "323ed8774a732807228e",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Safety Guard"
+      "text": "Prompts & Skills"
     },
     {
-      "id": "3ab0c0d5a0ee05423a32",
+      "id": "3300259308ba9d0a7a08",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "In-Browser 3D Export"
+      "text": "Daily 3D Sites"
     },
     {
-      "id": "3b86485d9c825111931d",
+      "id": "3368b7b48f476e0da339",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "OpenAI 6"
+      "text": "All Coding & AI Models"
+    },
+    {
+      "id": "36e1439bf3ada167bb50",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Verify prompt contracts with RFC 8785 + Ed25519 receipts in SPE, or bridge to our separate AppleAGI macOS companion app — Public Beta intro starting at $1 first month."
+    },
+    {
+      "id": "389467fdf06a54eaac34",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "All Models"
+    },
+    {
+      "id": "38ea98e78c1a7e221944",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Capacity: 100,000+ characters (1 Lakh+)\nExtracted: Key rules, summary & story\nOutput: Ready-to-run system prompt"
+    },
+    {
+      "id": "3a532e0abca2f82faaf3",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "YOUR IDEA."
     },
     {
       "id": "3c7fe46e0c05e07f1e0a",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "Audio & Video"
+    },
+    {
+      "id": "3cbf9f3e9cf519c1b3ba",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Speak in your native language via browser speech APIs and compile an English pro prompt."
     },
     {
       "id": "3e2f85f5c2b3ee826f95",
@@ -13417,10 +13447,22 @@
       "text": "Multi-Agent Formats"
     },
     {
-      "id": "40c3005aee69a802f297",
+      "id": "406b7f708b511052d50b",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Geometry: Smooth Icosahedron\nLighting: Natural Studio Environment\nHosting: 100% Free & Private"
+      "text": "High Capacity"
+    },
+    {
+      "id": "40aba69f4fbbab53b1fe",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PROOF",
+      "text": "START COMPILING FOR FREE"
+    },
+    {
+      "id": "40e617b5e43617d1fabf",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "100k+ Docs"
     },
     {
       "id": "413c6fdcd7f4489f50f9",
@@ -13429,10 +13471,28 @@
       "text": "3d-studio"
     },
     {
-      "id": "44191c7c7bbe9a726ce0",
+      "id": "415f4d932153eb160e90",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Continuously check your prompts across OpenAI, Anthropic, Google, and local models to catch unexpected changes."
+      "text": "Safety & Error Check Before You Run"
+    },
+    {
+      "id": "4344c5d71e24cc18cd70",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Attaches coding, UI, mobile, or SEO skill rules to help reduce scope drift."
+    },
+    {
+      "id": "4347e753f7aa305f9d6d",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "pricing"
+    },
+    {
+      "id": "436003b747626de70719",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Intro: $1 (Pro) / $9 (Team)"
     },
     {
       "id": "44880d07d8ca0aa99ba6",
@@ -13447,16 +13507,16 @@
       "text": "Spatial WebGL"
     },
     {
-      "id": "46c1f5271db60d869b93",
+      "id": "47b7f94de7f3038286c1",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "SUPPORTS CLAUDE 6, OPENAI 6, ASTRA 6.1, DEEPSEEK &amp; ON-DEVICE SILICON · 100% PRIVATE"
+      "text": "Export Agent Rules →"
     },
     {
-      "id": "4806255d79d43e9919be",
+      "id": "4810c8ae855403554e3a",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Ingest Research →"
+      "text": "1 LAKH+ LIMIT"
     },
     {
       "id": "48a5ed5656244b009e3d",
@@ -13465,52 +13525,22 @@
       "text": "SCREENSHOT."
     },
     {
-      "id": "48a6cd4d7af620e012fc",
+      "id": "4958f046fd192a123e02",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "START COMPILING FOR FREE"
+      "text": "40+ Core / 101 Skills"
     },
     {
-      "id": "49c165f3bc173e290e3f",
+      "id": "4afff41462cb45031f1b",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Capability category navigation"
-    },
-    {
-      "id": "4a7272d76ceecc6a8c6a",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Create reliable instructions for your AI in seconds. Test for hallucinations, stop data leaks, and build safe prompts that work across every model — without spending a dollar."
-    },
-    {
-      "id": "4b0eaf7a2e1f56ac2950",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "INSTANT DETECT."
-    },
-    {
-      "id": "4b8d732ea0d2a46a08ab",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "DeepSeek"
-    },
-    {
-      "id": "4c70383904fd6032a90a",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Stops unauthorized spending or file access before it occurs."
+      "text": "Paste and process up to 100,000+ characters of code, books, or transcripts locally."
     },
     {
       "id": "4d23d94a09d47333680d",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "system-studio"
-    },
-    {
-      "id": "4d2c8c1ed757f9223278",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Targets: CLAUDE.md | .cursorrules\nWindsurf: rules_synced\nAutomated tests: ready_to_run"
     },
     {
       "id": "4dff38fa10a685557c8c",
@@ -13531,10 +13561,28 @@
       "text": "multi-export"
     },
     {
-      "id": "578b625e1242a82fe5d8",
+      "id": "5301d5f591b96b2a2823",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Google Astra 6.1"
+      "text": "Zero Drift"
+    },
+    {
+      "id": "535342777c71aaaad28f",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PROOF",
+      "text": "Previous capability card"
+    },
+    {
+      "id": "58142c39bfab6b068595",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "$1 First-Month Intro"
+    },
+    {
+      "id": "58f51d77c503aab6794f",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Targets: CLAUDE.md | .cursorrules | promptfooconfig.yaml\nReady-made vault: Curated prompt templates\nCompanion bridge: Local 127.0.0.1:4319 ready"
     },
     {
       "id": "5a7a236ce15dd610b16f",
@@ -13543,34 +13591,22 @@
       "text": "capsule-5"
     },
     {
-      "id": "5adbb864104f36ee6216",
+      "id": "5f3da035be18bc0d92f2",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Launch Studio →"
+      "text": "Voice & Video Links"
     },
     {
-      "id": "5b45e5da4faa257d6dbb",
+      "id": "627d4578385b2b79c4f6",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "All Systems"
+      "text": "See Public Beta Pricing →"
     },
     {
-      "id": "5ebff4e53dd220dc1546",
+      "id": "6328a53c32dabe88142a",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Design to Code"
-    },
-    {
-      "id": "5f0a932a079eba7fa103",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Meeting & Video Transcriber"
-    },
-    {
-      "id": "62bd8cf5fa0ecf0742de",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "FREE &amp; PRIVATE"
+      "text": "SPE_OMEGA // PUBLIC_BETA_PRICING"
     },
     {
       "id": "6328eb137edbcd08e108",
@@ -13579,28 +13615,34 @@
       "text": "code"
     },
     {
-      "id": "6376d1ef5f8a5a8c694e",
+      "id": "643fee056f2893c8a95a",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Research"
+      "text": "SAFETY_GATE // PRE_FLIGHT_CHECK"
     },
     {
-      "id": "647620caab876e750bdb",
+      "id": "6613e4b36ba3f7b593d5",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Source: Product_Planning.mp4\nTranscription: On-Device Speech Engine\nExtracted: 7 key action items"
+      "text": "Built from 60+ peer-reviewed AI research techniques for structured, verifiable outputs."
     },
     {
-      "id": "64abe8e3f9df387ee6f1",
+      "id": "664f374c53cd412e2e10",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Previous capability card"
+      "text": "Safety Check"
     },
     {
-      "id": "667d033c065376e4ef81",
+      "id": "67e181782aef17891dd9",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Test: Fake manager override\nCheck: Spending limit validation\nResult: ACTION_STOPPED [100% Safe]"
+      "text": "Speak in 36+ native languages, upload audio/video, or paste a transcript/link to get clean structured summaries, storytelling, and English pro prompts."
+    },
+    {
+      "id": "67fccd3fb7eb71c734ff",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "100,000+ Char Capacity"
     },
     {
       "id": "687898fbe8a1c1063080",
@@ -13609,46 +13651,16 @@
       "text": "ZERO LEAKS."
     },
     {
-      "id": "692c29da5498a2c58f2d",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Efficient mathematical reasoning with zero subscription fees."
-    },
-    {
-      "id": "6a464dfbcb0c7093dd0a",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Core intent: preserved\nContradiction check: 0 conflicts\nPrompt size optimized: -34%"
-    },
-    {
-      "id": "6b63a6b9942fefe995cb",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Security"
-    },
-    {
-      "id": "6cfcc7cd0e91872f8966",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Research & Document Ingestion"
-    },
-    {
-      "id": "6d513a6090160bcbe5d6",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Runtime"
-    },
-    {
       "id": "6dc06c951e2ba5ba0759",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "research"
     },
     {
-      "id": "6e2da9062dfc57f6370b",
+      "id": "70383dd2c612eb5517d3",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Assurance"
+      "text": "36+ Languages Voice"
     },
     {
       "id": "7059e4f9e494468a9fee",
@@ -13657,16 +13669,10 @@
       "text": "Financial Compliance"
     },
     {
-      "id": "70fd3a84cb18aea479e5",
+      "id": "7238e277d102a862e92b",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "ACTION STEPS."
-    },
-    {
-      "id": "729d9d397f2416ecf6ea",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "MULTIMODAL"
+      "text": "60+ Research Prompts"
     },
     {
       "id": "732945806d7a1bd3f3cb",
@@ -13681,16 +13687,10 @@
       "text": "smooth"
     },
     {
-      "id": "7653b240e765917d7f6b",
+      "id": "761afe14a4433a761bce",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Turn meeting recordings, product walkthroughs, and audio notes into crisp, actionable AI instructions."
-    },
-    {
-      "id": "771a393d518076ff4467",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Convert UI to Code →"
+      "text": "Camera path: Smooth scroll keyframes\n3D Stage: Interactive WebGL @ 60fps\nRebuild prompt: 1-Click Copy & Export"
     },
     {
       "id": "77e65e3c45e970497e3b",
@@ -13699,40 +13699,28 @@
       "text": "Research Synthesis"
     },
     {
-      "id": "797087456d83486ec9f1",
+      "id": "789633984215642efb38",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Rigorous logical problem solving and strict structured output."
+      "text": "PAPER-BACKED"
     },
     {
-      "id": "7fe51aca2c5d20706cfe",
+      "id": "7f3d9ab8e2c41e44126f",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "SPE-STUDIO // SAFETY_CHECK"
+      "text": "AUTO-APPLIED"
     },
     {
-      "id": "7ff56af1e481343cda82",
+      "id": "7fa88b35e65d5c6f9d9d",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Next capability card"
+      "text": "60+ Research Prompts & 101 Skills"
     },
     {
-      "id": "8001f06f4a3956890755",
+      "id": "8420958a5f92ea9620f3",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "ONE SYSTEM. EVERY AI AGENT &amp; MODEL"
-    },
-    {
-      "id": "81b8ee5f4f2e64579b6b",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "STRESS_TEST // SIMULATION_LOG"
-    },
-    {
-      "id": "83e4b0cb99c9abb7e8de",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Reliable System Prompts"
+      "text": "Input capacity: 100,000+ chars (1 Lakh+)\nAuto-applied skills: 40 core / 101 total\nProjected retry savings: ~42% (est.)"
     },
     {
       "id": "8464ed2df4cd06af9251",
@@ -13741,112 +13729,100 @@
       "text": "media"
     },
     {
-      "id": "859cbff328bf63c06e4b",
+      "id": "8694bb3c8e45fb4c2b37",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "DOCS // KNOWLEDGE_SUMMARY"
+      "text": "Developer Pro: $1 first mo (then $9/mo)\nCompany Gate: $9 first mo (then $99/mo)\n95% of SPE Web Tools: $0 Forever"
     },
     {
-      "id": "887e0e1c7b625fb7cb3d",
+      "id": "8a9a6bcd8821be0d3541",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Test customer service and billing agents against prompt injections, trick messages, and unauthorized actions."
+      "text": "Secret key check: Protected\nForbidden file edits: Blocked\nResult: SAFE_TO_RUN [Verified]"
     },
     {
-      "id": "937e70c14d90fbd9a668",
+      "id": "8bd9d75c68d58555843c",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Start Compiling for Free"
+      "text": "36+ Languages + Links"
     },
     {
-      "id": "958cc08647cd7a783b65",
+      "id": "8cf18a307bbf1a824343",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Create interactive 3D web scenes directly in your browser with live lighting and camera controls."
+      "text": "Image & Screenshot"
     },
     {
-      "id": "98cf3e5f102e1893d224",
+      "id": "8d381a3571a75c4f1508",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "EVERY AGENT."
+      "text": "Explore new interactive 3D websites every day with smooth Noorly-style camera scrolling, lighting controls, and 1-click rebuild prompts."
     },
     {
-      "id": "9a7ea26de7e8204951f5",
+      "id": "8d48d254380f52da50b1",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "SOLID PROMPT."
+      "text": "Structured, ready-to-use prompt templates for coding, 3D sites, SEO, and technical writing."
     },
     {
-      "id": "9ad8c07641952336d398",
+      "id": "90cdfb02928f9fbdd40b",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Build 3D Site →"
+      "text": "ZERO DRIFT."
     },
     {
-      "id": "9aed458c3eba6c40af92",
+      "id": "92574146f2a839eb0624",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Coding"
+      "depth": "PROOF",
+      "text": "PUBLIC BETA · ENGINE BY PRAWIN JAITLEY"
     },
     {
-      "id": "9c31d78b928d4461871c",
+      "id": "9316f73a9be0a06c3a86",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Private Audio Engine"
+      "text": "THEN $9/MO"
     },
     {
-      "id": "9d1f8708844d62a089d6",
+      "id": "95d2568b324f901f8353",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "website"
+      "text": "ENGLISH PROMPT."
     },
     {
-      "id": "9e4c4b7ae6c0f5c1ea15",
+      "id": "9abef5be8c8cc3f6d364",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "AUTO REPAIR"
+      "text": "95% Free"
     },
     {
-      "id": "9eda94cf6ec002fb7c83",
+      "id": "9faf27c1c4576282efa8",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Interactive 3D capability cards"
+      "text": "Drop any UI screenshot, photo, or website link to generate starter code for React, Next.js, SwiftUI, Jetpack Compose, Flutter, or HTML/CSS."
     },
     {
-      "id": "a009d2cded78ff77fbbd",
+      "id": "a61e0bd4bd1f1f1d95eb",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Input: Design mockup screenshot\nOutput: React + Tailwind CSS\nAccessibility: Fully Keyboard Navigable"
+      "text": "ONE CLICK."
     },
     {
-      "id": "a01da2b46954019f24ad",
+      "id": "a7f5b5f66c00a0f48f54",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "DEEP REASONING"
+      "text": "Check your prompts and agent plans locally in your browser before running them so missing scope rules, secret leaks, or test omissions are caught early."
     },
     {
-      "id": "a0d109ab6d1a29d98e44",
+      "id": "a81883f84eb51bddb820",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "PDF MANUAL."
+      "text": "One-Click Export for Every AI Tool"
     },
     {
-      "id": "a1211a54ae348e15ad6f",
+      "id": "a8a1294e23f1984f920c",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "EXPORTER // UNIVERSAL_CONFIG"
-    },
-    {
-      "id": "a67366a61a88de99a560",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "YOUR TASK."
-    },
-    {
-      "id": "a84b01391958cac8b36f",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Model Drift & Accuracy Sentinel"
+      "text": "Zero Drift · 101 Skills"
     },
     {
       "id": "a907effb1ed438032c97",
@@ -13855,94 +13831,118 @@
       "text": "vision-to-code"
     },
     {
-      "id": "a9d03abe5032c6202143",
+      "id": "a9d3fa3ede9af68a099d",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Summarize technical manuals, API guides, and policy documents into clear, step-by-step AI instructions."
+      "depth": "PROOF",
+      "text": "(Engine powered by"
     },
     {
-      "id": "b06ff6bbf7cb82817cbf",
+      "id": "af0f406d927b023e67dd",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Universal Formats"
+      "depth": "PROOF",
+      "text": "Zero server inference bills or tracking"
     },
     {
-      "id": "b0b65cbb2a5f53d5a05b",
+      "id": "af29868eb1be46da34eb",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "ACTION GATE"
+      "text": "12 Categories"
     },
     {
-      "id": "b0c4e2e10e092068707a",
+      "id": "afbd4234da7a15386f00",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "OpenAI"
+      "text": "DOCS // 100K_CHAR_INGESTION"
     },
     {
-      "id": "b21cb5f994144e06e4e8",
+      "id": "b0f27e40c784f119d304",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Media"
+      "text": "SIGNED PROOF."
     },
     {
-      "id": "b2f9d6a050ec28db02a2",
+      "id": "b304deca9a5ca1003e69",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "CLEAR PROMPT."
+      "text": "ANY VOICE/LINK."
     },
     {
-      "id": "b4b4bcf487e9f91ef2b0",
+      "id": "b5825ecfc6e663e1d16c",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "OPEN WEIGHTS"
+      "depth": "PROOF",
+      "text": "): Speak or type in 36+ languages, paste up to 100,000+ characters (1 Lakh+), structure transcripts, explore interactive 3D web templates, and verify prompts locally in WebAssembly — 95% free forever, with Developer Pro at $1 for your first month (renews at $9/month)."
     },
     {
-      "id": "b564ae45895b0696a5dd",
+      "id": "b7a7c885118d49887882",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Google"
+      "text": "Proof & Pricing ($1)"
     },
     {
-      "id": "ba79249b6c0fdf628ce0",
+      "id": "b80d00a15235fa689bf8",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "MODEL DRIFT."
+      "text": "Run Safety Check →"
     },
     {
-      "id": "bba723f1ef9dfb87e1fe",
+      "id": "bb8e45dba5926bc89099",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Real-time visual and audio understanding with massive context."
+      "text": "Explore 3D Websites →"
     },
     {
-      "id": "bbcdfe625193a25c19d2",
+      "id": "bf82748f585b788137d7",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "SPATIAL 3D."
+      "text": "Open Docs & Research →"
     },
     {
-      "id": "bf1bbf9641d249c24abf",
+      "id": "c0576527a15425f9083e",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Input: Payment System Guide 2026\nExtracted: 14 business rules\nOutput: Clean instruction set"
+      "text": "3D CAMERA."
     },
     {
-      "id": "c1356c0497eda75e7fe9",
+      "id": "c0936690a064b8a043f4",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "SAFETY GUARD."
+      "text": "95% of SPE is $0 forever. Developer Pro is $1 first month ($9/mo renewal); Team Gate is $9 first month ($99/mo renewal)."
     },
     {
-      "id": "c561b6b39e86a0de51eb",
+      "id": "c7391a024e508eb1fab9",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "VOICE NOTE."
+      "text": "Input: Native voice, video file, or podcast link\nOutput 1: Native language transcript & story\nOutput 2: English Pro Prompt for any AI"
     },
     {
-      "id": "cd2c1441532e8a87396b",
+      "id": "c7fb28342a770ac0a7b8",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Prompt Stress Testing"
+      "text": "Curated Prompt Vault"
+    },
+    {
+      "id": "c80ad8ccc70113e8dae5",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Daily 3D Camera Scroll"
+    },
+    {
+      "id": "c9be259593cdc82233e9",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PROOF",
+      "text": "Start Compiling for Free"
+    },
+    {
+      "id": "ca01e805b5969096a2f2",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PROOF",
+      "text": "100% AIR-GAPPED &amp; FREE"
+    },
+    {
+      "id": "cd66b77fb15afad17aa0",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PROOF",
+      "text": "SPE — System Prompt Engine"
     },
     {
       "id": "ce3719715ee39a1447dd",
@@ -13951,16 +13951,10 @@
       "text": "media-to-prompt"
     },
     {
-      "id": "d1aa2c24cea03d237d69",
+      "id": "d2a24ca2f7678ba46e23",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "REC ●"
-    },
-    {
-      "id": "d233b6fa298b793b86eb",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Free local compilation on your own silicon"
+      "text": "LONG DOCS."
     },
     {
       "id": "d358aebf5ab555c9dc15",
@@ -13969,16 +13963,46 @@
       "text": "Vision to Code"
     },
     {
-      "id": "d462ee4e1d62663ea738",
+      "id": "d449638441db5bedb61b",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Vision"
+      "text": "CLEAR STEPS."
     },
     {
-      "id": "d4665ac6424d0de30aa9",
+      "id": "d4a817fa51c8cf63e861",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Reliability"
+      "text": "CLEAN CODE."
+    },
+    {
+      "id": "d77391674cb0390607a7",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Image to Prompt & Screenshot to Code"
+    },
+    {
+      "id": "d829074809c4cf1d0c47",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "SAFE CODE."
+    },
+    {
+      "id": "da4cf20b7b663d03b3ff",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Open Prompt Studio →"
+    },
+    {
+      "id": "daadc11657b2d4eacedd",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Global"
+    },
+    {
+      "id": "db5f178464a53f8a5dc2",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Docs, PDFs & Books (1 Lakh+ Chars)"
     },
     {
       "id": "db73794a81ff83b65d96",
@@ -13987,58 +14011,76 @@
       "text": "Model Assurance"
     },
     {
-      "id": "dbc0fdf83b23ff197798",
+      "id": "dc8f1e121a7bcecf1b18",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "VISION // UI_TRANSLATION"
+      "text": "SMOOTH SCROLL."
     },
     {
-      "id": "dcd008f312d41b25448d",
+      "id": "deefa47ba82045b56947",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "100% AIR-GAPPED &amp; FREE"
+      "text": "READY-MADE"
     },
     {
-      "id": "dd98ea17355b4017c6a7",
+      "id": "df80b2fc0973d1f34894",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "AUDIO // PRIVATE_TRANSCRIPT"
-    },
-    {
-      "id": "e4d27465f9b45235180d",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
+      "depth": "PROOF",
       "text": "Every top AI model format in one export"
     },
     {
-      "id": "e721fa3feb5bfa36d318",
+      "id": "e1261227d73c260ed52b",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "3D_STUDIO // SPATIAL_SCENE"
+      "text": "Paste long documents, books, or technical guides up to 100,000+ characters (1 Lakh+) and turn them into clear, step-by-step instructions."
     },
     {
-      "id": "e9bfc2895c298e50f1e6",
+      "id": "e4f42fb7207a7a4ef3b2",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Export Agent Configs →"
+      "text": "MEDIA_ENGINE // VOICE_VIDEO_PODCAST"
     },
     {
-      "id": "edb7e017d7a9ec39f39a",
+      "id": "e504d90d2e3beb1fe955",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Comparison: Claude 6.2 vs Claude 6.1\nFormat changes: 0 errors detected\nStatus: VERIFIED_SAFE"
+      "depth": "PROOF",
+      "text": "Free local compilation on your own silicon"
     },
     {
-      "id": "f0a8814629a983731c0a",
+      "id": "e84584f263a59a10da53",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "ZERO GPU COST."
+      "text": "6 Code Frameworks"
     },
     {
-      "id": "f36eff9be7a4264197a2",
+      "id": "ea4b1b1ca239baa58bf0",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PROOF",
+      "text": "REC ●"
+    },
+    {
+      "id": "ee22e393497e60def77d",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Claude 6"
+      "text": "SPEAK NATIVE"
+    },
+    {
+      "id": "ef02ba3ba0370796b14d",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE-STUDIO // 60_RESEARCH_PROMPTS_40_SKILLS"
+    },
+    {
+      "id": "ef8a2d8d769019e1023e",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "EVERY AI."
+    },
+    {
+      "id": "f10ee55a1ef194d61bc9",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Voice, Video Links & Podcasts to Text"
     },
     {
       "id": "f5309e20c7c99b9ab60b",
@@ -14047,10 +14089,16 @@
       "text": "research-to-prompt"
     },
     {
-      "id": "f85338e171f724fca20a",
+      "id": "f681851d4cc6acecbd24",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "ONE PROMPT."
+      "depth": "PROOF",
+      "text": "Capability category navigation"
+    },
+    {
+      "id": "f6eeb384b7920d0276f0",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PROOF",
+      "text": "Prawin Jaitley"
     },
     {
       "id": "fa943a7a94f3c5f4d584",
@@ -14059,16 +14107,10 @@
       "text": "capsule-4"
     },
     {
-      "id": "fcd14abf4d51b865d482",
+      "id": "fde5585d26ad5e8605dd",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "SENTINEL // ACCURACY_CHECK"
-    },
-    {
-      "id": "fea220fe29036e4ef43d",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Multi-step reasoning and deep autonomous coding."
+      "text": "Open Voice & Media →"
     },
     {
       "id": "fea79cf2b19a5933b54e",
@@ -14077,10 +14119,10 @@
       "text": "drift-sentinel"
     },
     {
-      "id": "feed7baff471a53208b2",
+      "id": "ff8ea2181746a83b6099",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "Transcribe Media →"
+      "text": "Export your compiled prompt, skill constraints, and receipt-gated eval bundles for Claude Code, Cursor, Windsurf, ChatGPT, and Promptfoo in one click."
     },
     {
       "id": "011858dd95441f89efa7",
@@ -14261,12 +14303,6 @@
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
       "text": "Verified Audit"
-    },
-    {
-      "id": "397420e0a57fbf02a43d",
-      "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
-      "depth": "PRODUCT",
-      "text": "Ready to compile your first airtight agent with zero hallucinations?"
     },
     {
       "id": "3a3b47e2ec16c4022ba9",
@@ -14593,6 +14629,12 @@
       "text": "// OPTIMAL EXECUTION ROUTING:\nSimple questions -> On-Device Silicon ($0.00 / 0ms)\nRisk checks -> DeepSeek Frontier ($0.00)\nFinal payment -> Claude 6 (Verified)\nBlended Cost Reduction: 84.2%"
     },
     {
+      "id": "ae5f15baf153dcd1ff28",
+      "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
+      "depth": "PRODUCT",
+      "text": "Ready to compile your first scope-verified agent contract with cryptographic receipts?"
+    },
+    {
       "id": "aea642610415b5f80ad5",
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
@@ -14809,34 +14851,22 @@
       "text": "Deploy AI agents with the same continuous confidence as mission-critical software."
     },
     {
-      "id": "00e2fa22e7b832b1d87e",
+      "id": "0974a9efcc70885252d1",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Code reviewer agent: Verify inputs, validate constraints, and catch edge cases"
+      "text": "xAI"
     },
     {
-      "id": "034e1954687ad290bd8e",
+      "id": "0a86d1055bac38b9637a",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "🔒 Private Support"
+      "text": "Thank you Antigravity for autonomous multi-agent engineering & full-repo verification"
     },
     {
-      "id": "0643e2bfd77f03febeee",
+      "id": "0ab7c8f9e375f256ecce",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Database safety rules: Prevent destructive SQL drops and unauthorized reads"
-    },
-    {
-      "id": "0c68e890382f2f363fc0",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Select"
-    },
-    {
-      "id": "0e27435bc1257d5bcc32",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Private &amp; Free · Runs on your phone, laptop &amp; every AI"
+      "text": "Google DeepMind"
     },
     {
       "id": "0e41466ea5b4d711a5a3",
@@ -14845,130 +14875,100 @@
       "text": "claude-sonnet"
     },
     {
-      "id": "0fdc1b0210a5a38ff317",
+      "id": "1118efbf96647414407f",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "~290ms"
+      "text": "Thank you Grok for red-team counterexample discovery & adversarial truth checks"
     },
     {
-      "id": "11031fc04a0331048b06",
+      "id": "1356228597fa051098c4",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Hardware-Bound"
+      "text": "Reasoning Partner"
     },
     {
-      "id": "16fc5148aafef6200b65",
+      "id": "150c2bbeb1a9d6f1a311",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Human objective input for AI execution routing"
+      "text": "Special thanks to xAI and Grok for ruthless red-team counterexamples, causal graph stress-testing, and truth-first falsification."
     },
     {
-      "id": "17bfb4795342dfea2bd5",
+      "id": "1929ca7719931bf54cf8",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Private Device"
+      "depth": "PROOF",
+      "text": "My Gratitude &amp; Special Thanks."
     },
     {
-      "id": "1b3ecfeab92692b73fab",
+      "id": "1ef7c54d3748672d86ce",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Describe what you want your AI to do. System Prompt Engine writes, tests, and refines your instructions in real time — stopping hallucinations, preventing mistakes, and keeping your data private."
+      "depth": "PROOF",
+      "text": "Built Together With SPE Ω"
     },
     {
-      "id": "1bba45a376799b4414cf",
+      "id": "1f526d656324efc4e979",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "< 2ms"
+      "text": "Thank you Cursor & GitHub for powering daily developer workflows & CI/CD gates"
     },
     {
-      "id": "1d5b639f1f1a24dc120a",
+      "id": "26c9fad91f9ca639568f",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "~510ms"
+      "depth": "PROOF",
+      "text": "Hover or tap any Hero orbiting the 3D SPE Sun — Antigravity, Claude Code, ChatGPT, Grok, Cursor, or GitHub."
     },
     {
-      "id": "207045e019faae2b644b",
+      "id": "299ca50df00337744ac0",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Claude 6"
+      "text": "Thank you ChatGPT for scientific research audits & formal specification reviews"
     },
     {
-      "id": "2543fec43786eb4a879c",
+      "id": "309ce75c81693bb34534",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Stripe Refund Guard: Disallow refunds over $500 without manager approval"
+      "text": "Hero #1"
     },
     {
-      "id": "25953fbce81a242cd28d",
+      "id": "32ea65dd516ee30bf3b8",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "100% Safe"
+      "depth": "PROOF",
+      "text": "Select"
     },
     {
-      "id": "26335932b86a7c80df8e",
+      "id": "38d5ae9254263c5ee276",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Direct Provider"
+      "text": "Hero #4"
     },
     {
-      "id": "274cd924f1695ef02f0b",
+      "id": "402ce967fe8b390be7d1",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "$0.00 (Self-Hosted)"
+      "text": "Claude Code — Deep Architecture & Terminal Craft"
     },
     {
-      "id": "2a9e43d69218a36ed81e",
+      "id": "44972c00b82e6c158635",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Every AI in Orbit."
+      "text": "Platform Partner"
     },
     {
-      "id": "34ab6eb1fd56292de455",
+      "id": "45fc80a00ad4286c46fb",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Meta Llama 4 (Self-Hosted)"
+      "text": "Claude Code"
     },
     {
-      "id": "3892ef0a92569b0473a1",
+      "id": "48196689b3928c34caf9",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Google Astra 6.1 (Real-Time Vision & Multimodal)"
+      "text": "Hero #3"
     },
     {
-      "id": "3f97ed2668c9e531c61d",
+      "id": "4dcfd345671bc1939ec8",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "🛡️ Stripe Refund Guard"
-    },
-    {
-      "id": "400eacbc1c9c00eb8164",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Interactive AI model orbital switchboard"
-    },
-    {
-      "id": "476f171c1087fc0bc557",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Efficient open-weights mathematical deduction, algorithm synthesis, and structured workflows."
-    },
-    {
-      "id": "4ab8264b1978490588dc",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Meta"
-    },
-    {
-      "id": "4b58173821a071263801",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Astra 6.1"
-    },
-    {
-      "id": "4d17073c665f50b9b465",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Hover or tap any model to lock the laser beam and test your prompt."
+      "depth": "PROOF",
+      "text": "Select a Hero platform"
     },
     {
       "id": "4f73a94e9a3222de3df7",
@@ -14977,34 +14977,34 @@
       "text": "openai-o3"
     },
     {
-      "id": "5698a07592583dd5a4ac",
+      "id": "51dcecf37c70785d4b9c",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Customer support assistant: Answer questions accurately without hallucinating policies"
+      "depth": "PROOF",
+      "text": "Select any Hero in orbit to view our gratitude note…"
     },
     {
-      "id": "57d46b8f863534483684",
+      "id": "542ba94ae91af93591d3",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Google"
+      "depth": "PROOF",
+      "text": "SPE 3D Sun and the 6 Hero platforms in orbit"
     },
     {
-      "id": "5cd4caeddf37740c23b4",
+      "id": "54e94811bb89daeb69e4",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Advanced coding, multi-step problem solving, and long-horizon agent coordination."
+      "text": "Special thanks to Anthropic and Claude Code for long-horizon reasoning, clean refactors, and strict compositional rule formats."
     },
     {
-      "id": "5f5cd49fb79d5be8a0aa",
+      "id": "5633f9ce1ef7b27fed21",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "DeepSeek"
+      "text": "Cursor"
     },
     {
-      "id": "602108f9b877926dda0c",
+      "id": "5781424044a7b2f67b5d",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Cost / Run"
+      "text": "Real-Time"
     },
     {
       "id": "6086c12d7cd1d5ae8b86",
@@ -15013,16 +15013,22 @@
       "text": "flying"
     },
     {
-      "id": "63c2079f3be173630ecc",
+      "id": "6706dcedf358c6ecf3be",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Multimodal understanding, instant audio-visual processing, and massive context recall."
+      "text": "GitHub"
     },
     {
-      "id": "6753821ac86b26bce338",
+      "id": "67d13e64c4c0a7fe5e6d",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Instant processing on your own computer or phone. Completely private with zero API costs."
+      "text": "Special thanks to Cursor for pioneering rapid multi-file editing and the .cursorrules workflow that SPE exports to in one click."
+    },
+    {
+      "id": "6aad7ec3e15b0c4f2fe5",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "ChatGPT"
     },
     {
       "id": "6d828a13d14f837fcb6a",
@@ -15031,16 +15037,16 @@
       "text": "gemini-flash"
     },
     {
-      "id": "6ffcfb9b38c5947016a3",
+      "id": "6e21932e0203ad6d2ba7",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Type your objective or select an example…"
+      "text": "Octocat & Actions"
     },
     {
-      "id": "77ed7e9c6aa5ab5b407d",
+      "id": "6f8d173580fde7dad5ce",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "DeepSeek Frontier (Open-Weights Reasoning)"
+      "depth": "PROOF",
+      "text": "Special Thanks &amp; Tribute"
     },
     {
       "id": "783811a4e1b752f85f55",
@@ -15049,34 +15055,22 @@
       "text": "frontier"
     },
     {
+      "id": "7be591974a8468649dca",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PROOF",
+      "text": "System Prompt Engine was crafted, stress-tested, and verified side by side with these six pioneering platforms. With the 3D SPE Sun at the center, we thank Antigravity, Claude Code, ChatGPT, Grok, Cursor, and GitHub."
+    },
+    {
+      "id": "7c275c11ae8c68a045aa",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Antigravity"
+    },
+    {
       "id": "7e8ebc9eae0826501505",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "hold"
-    },
-    {
-      "id": "81854384fd540781b56d",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Token Waste"
-    },
-    {
-      "id": "83d944cd6674d833b262",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Deep logical deduction, strict output formats, and complex multi-agent execution."
-    },
-    {
-      "id": "844f864debdb16fdc2d1",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Targeting Now"
-    },
-    {
-      "id": "850e6abf790dc4f0a402",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "On-Device Silicon (Private & Free)"
     },
     {
       "id": "852d2c7b58f874058e43",
@@ -15085,22 +15079,16 @@
       "text": "deepseek-r1"
     },
     {
-      "id": "883c12969401fbc9ccda",
+      "id": "87c6092a3cdb41c379a6",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Frontier Cloud"
+      "text": "Cursor — AI-Native IDE & .cursorrules Ecosystem"
     },
     {
-      "id": "8848d8ee5c9ca411939a",
+      "id": "91e56aa84dd986e157c0",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Claude Code instructions: Enforce clean architecture and zero regressions"
-    },
-    {
-      "id": "8b4231e1c50b87312237",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Compile prompt in System Prompt Studio"
+      "text": "Grok — Counterexample Discovery & Stress-Testing"
     },
     {
       "id": "9382d3b41698bf351dfb",
@@ -15121,22 +15109,10 @@
       "text": "smooth"
     },
     {
-      "id": "99b7dde9b2bca0851737",
+      "id": "970bd9d5898c6ef4cccf",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "100% On-Device"
-    },
-    {
-      "id": "9ad4eef42afd4f01ca60",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "$0.00 (On-Device)"
-    },
-    {
-      "id": "9b183f0df78b7f59d7f3",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "DeepSeek Frontier"
+      "depth": "PROOF",
+      "text": "Honor Roll"
     },
     {
       "id": "9bd43849b3edd3414f76",
@@ -15145,22 +15121,16 @@
       "text": "OpenAI"
     },
     {
-      "id": "9d877078390bd51df8fa",
+      "id": "a23359419c96142640ff",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Quick starter prompt suggestions"
+      "depth": "PROOF",
+      "text": "MY GRATITUDE &amp; SPECIAL THANKS BY SPE · BUILT WITH ALL HEROES"
     },
     {
-      "id": "9f1e2a99b90b082d14e6",
+      "id": "a42dd2675174106c9a62",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "~720ms"
-    },
-    {
-      "id": "a29032d2ce421f15fb9a",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Run open weights directly on your personal workstation or local server cluster."
+      "text": "SPE Ω 3D CORE"
     },
     {
       "id": "a5691597a10ac988d3c7",
@@ -15169,10 +15139,46 @@
       "text": "typing"
     },
     {
+      "id": "a6ed467273dd3c30810a",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "SPE 3D Sun Core"
+    },
+    {
+      "id": "a7b4ffe0bba064c03090",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "IDE Partner"
+    },
+    {
+      "id": "a9d16812254a90672bbf",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Special thanks to OpenAI and ChatGPT for deep research synthesis, mathematical proof audits, and multi-stage specification reviews."
+    },
+    {
+      "id": "aa4e60403f2d2561cec9",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "AI Code Editor"
+    },
+    {
+      "id": "ac07158e484243c14c97",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PROOF",
+      "text": "Built With All Heroes."
+    },
+    {
       "id": "ac5ea91aff76ec09762e",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "local"
+    },
+    {
+      "id": "ad1dcd5ffb91ac19ce64",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "GitHub — Open Source Custody, PRs & CI/CD Gates"
     },
     {
       "id": "ae80f5edb79a5aa7e076",
@@ -15181,28 +15187,28 @@
       "text": "llama-local"
     },
     {
-      "id": "b28cee7a7a7dd1b028fe",
+      "id": "b83867fde044126d9fa1",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "~890ms"
+      "depth": "PROOF",
+      "text": "Open System Prompt Studio"
     },
     {
-      "id": "b6e0736e1a99ee1d0299",
+      "id": "bc2df0b0b385524c7400",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "Launch System Prompt Studio"
+      "depth": "PROOF",
+      "text": "Gratitude"
     },
     {
-      "id": "b70b822dd2f787b22159",
+      "id": "bcb181f68b16add46f14",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Local-First Priority"
+      "text": "Grok"
     },
     {
-      "id": "c20857dcd4b9cc69db47",
+      "id": "c0b8b2a5543bafdc6c6c",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Safety Check"
+      "text": "Research Partner"
     },
     {
       "id": "c247f66ea033980da866",
@@ -15211,10 +15217,22 @@
       "text": "Anthropic"
     },
     {
-      "id": "c9471602722dab18219d",
+      "id": "c795e69105bac6d22186",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Write What You Need."
+      "text": "Special thanks to Google DeepMind Antigravity for multi-agent orchestration, deep codebase verification, and end-to-end engineering."
+    },
+    {
+      "id": "c9c1349185114fc77791",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Hero #2"
+    },
+    {
+      "id": "cce74de8c666eab3859e",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Red-Team Partner"
     },
     {
       "id": "ce7732369446fd09fe20",
@@ -15223,34 +15241,64 @@
       "text": "local-engine"
     },
     {
+      "id": "cf2b403fab140ad08350",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PROOF",
+      "text": "Contribution"
+    },
+    {
+      "id": "d244fd293883082cd15b",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Special thanks to GitHub for version custody, automated CI/CD verification workflows, and hosting the global developer community."
+    },
+    {
       "id": "d4cd791715b9658e313a",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
       "text": "prompt-studio"
     },
     {
-      "id": "ec185ad253d796b4d766",
+      "id": "dd179443d49dcb62293c",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Claude 6 (Deep Agentic Workflows)"
+      "text": "ChatGPT — Research Design & Adversarial Audits"
     },
     {
-      "id": "ed716edb7c47d13a76d1",
+      "id": "dd54eecbae242b94858b",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "OpenAI 6 (High-Precision Reasoning)"
+      "text": "Antigravity — Autonomous Agentic Engineering Partner"
     },
     {
-      "id": "eed2a6219b56a0c9575d",
+      "id": "e229e961d28af13a5076",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "Llama 4"
+      "text": "Hero #6"
     },
     {
-      "id": "f44ccc06b620c090e22e",
+      "id": "eaa122aab0527c1663e0",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "OpenAI 6"
+      "text": "100% Verified"
+    },
+    {
+      "id": "ec3b75a22c6d00fe924b",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Hero #5"
+    },
+    {
+      "id": "f488e98e26427112acd5",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PRODUCT",
+      "text": "Agentic Core"
+    },
+    {
+      "id": "f83a669649436cd388f0",
+      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
+      "depth": "PROOF",
+      "text": "Gratitude message for SPE Hero platforms"
     },
     {
       "id": "f8873918e7d5ebff8989",
@@ -15259,16 +15307,10 @@
       "text": "SPE"
     },
     {
-      "id": "fbb9052793b5dc35e2c5",
+      "id": "ffae4718220c1aee8ccb",
       "file": "apps/web/src/landing/SpeUniverseHero.tsx",
       "depth": "PRODUCT",
-      "text": "gpt-4o"
-    },
-    {
-      "id": "ff62526bc23c9c0b2c11",
-      "file": "apps/web/src/landing/SpeUniverseHero.tsx",
-      "depth": "PRODUCT",
-      "text": "⚡ Code Reviewer"
+      "text": "Thank you Claude Code for deep architectural craftsmanship & zero-drift skills"
     },
     {
       "id": "0977c7c297e5a4194ef2",
@@ -15697,6 +15739,18 @@
       "text": "Strict Guardrails"
     },
     {
+      "id": "0f0a2f6580eaa63ee1f0",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Opaque enterprise AI evaluation tiers and fragmented prompt rules across IDEs"
+    },
+    {
+      "id": "1314a9de625c53d831e5",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "mac-appleagi-launch"
+    },
+    {
       "id": "1321013194aff99486f1",
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
@@ -15713,6 +15767,12 @@
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
       "text": "Explore 1-Click Business Workflows →"
+    },
+    {
+      "id": "182bae2d459d69a91a6d",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Transparent Public Beta pricing powered by the Prawin Jaitley Engine: 60+ research-paper templates, 101 curated skill packs, RFC 8785 + Ed25519 receipts, and optional loopback bridging to the standalone AppleAGI macOS companion app."
     },
     {
       "id": "184e2b0c22d799e34cf6",
@@ -15737,6 +15797,12 @@
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
       "text": "npx @systempromptengine/cli adopt ."
+    },
+    {
+      "id": "2ff24050d3d53ec1b93b",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Juggling unverified prompt files across repositories without cryptographic receipts or pre-commit invariant checks."
     },
     {
       "id": "35b9f8ea384a7389ff30",
@@ -15961,10 +16027,28 @@
       "text": "All Features"
     },
     {
+      "id": "d40b60867902c927ef11",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "Public Beta Introductory Pricing"
+    },
+    {
       "id": "dbe18541b1e8f2d4ee26",
       "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
       "depth": "PROOF",
       "text": "Prompts silently drift, leaking internal keys or system bounds"
+    },
+    {
+      "id": "de869e1cc1a0f98e35dc",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "95% Free + $1 First Month Pro (then $9/mo) & $9 First Month Team Gate (then $99/mo)"
+    },
+    {
+      "id": "e242453546b14ac5aadb",
+      "file": "apps/web/src/landing/ValueComparisonMatrix.tsx",
+      "depth": "PROOF",
+      "text": "$1 & $9 Intro"
     },
     {
       "id": "e2cbb8871ca50f050865",
@@ -23533,16 +23617,10 @@
       "text": "Quiet shelf"
     },
     {
-      "id": "00de92ca6fb09ac58aba",
+      "id": "02cf7061423e309a38b7",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "100% In-Browser Deterministic Prompt Compiler"
-    },
-    {
-      "id": "05ea1a90c9f10e8e84fb",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Copied!"
+      "depth": "PROOF",
+      "text": "with camera path controls &amp; 1-click rebuild prompts"
     },
     {
       "id": "07271cb6bd7b9cffb6b1",
@@ -23551,100 +23629,220 @@
       "text": "spe-user-email"
     },
     {
-      "id": "0865019098f04e9e3691",
+      "id": "082fa5630242202b3f9d",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": ": Automatically detects and locks down forbidden files and API keys"
+      "depth": "PROOF",
+      "text": ": Automated GitHub Actions check on every pull request"
     },
     {
-      "id": "0e1b721bd818ba82a643",
+      "id": "092b8c86369b2352f452",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Our WebAssembly compiler runs on your device, not our servers. Since it costs us $0 in GPU compute, we pass those savings directly to you."
+      "depth": "PROOF",
+      "text": "local input and output capacity in Create"
     },
     {
-      "id": "1265a04264aa46f94451",
+      "id": "0c8d8c155d37ad79be17",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Enter your developer email to start your 14-day evaluation and instantly unlock your ad-free workspace license key:"
+      "depth": "PROOF",
+      "text": "Projected Estimate:"
     },
     {
-      "id": "15b4ee60a3fdfb604800",
+      "id": "0fe2048dd8b7626816b3",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Simple, honest pricing. Pays for itself in your first week."
+      "depth": "PROOF",
+      "text": "SPE ↔ AppleAGI Local Bridge · Included"
     },
     {
-      "id": "17764f5e4836cfe02804",
+      "id": "10ade289456b6f0693a3",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Why is the core compiler free?"
+      "depth": "PROOF",
+      "text": ": Browser speech/text to structured English prompts"
     },
     {
-      "id": "1985b8494c70aa474748",
+      "id": "131240f20f6d993febba",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Free Community Features"
+      "depth": "PROOF",
+      "text": "macOS Native"
     },
     {
-      "id": "1f3acaa072a41eb0c556",
+      "id": "147eac0946f3ec2e31a8",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
+      "depth": "PROOF",
+      "text": "Intro Offer · $1 First Month"
+    },
+    {
+      "id": "1578caf887abac69d140",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
       "text": "developer@company.com"
     },
     {
-      "id": "2b0b4e6e4f01d8467081",
+      "id": "1722ed115476d383282d",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Portable .spe export and plain text / JSON export"
+      "depth": "PROOF",
+      "text": "with scope checks"
     },
     {
-      "id": "34c717c783e85a9c3c7b",
+      "id": "19e2053d13e1a12c560c",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "CLI Pre-Commit Hook"
+      "depth": "PROOF",
+      "text": ". For teams needing CI/CD pull-request gates and up to 10 seats,"
     },
     {
-      "id": "39d327ee164b01d2eb3f",
+      "id": "1bb9519a33d40b197b8a",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Yes, with one click. No questions asked."
+      "depth": "PROOF",
+      "text": "with Crash Recovery and session continuation unlocked. You can also use this key in the SPE CLI:"
     },
     {
-      "id": "3eded01d1986ade9c903",
+      "id": "1c39fbce332a655da141",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": ": Automatically continues interrupted agent sessions"
+      "depth": "PROOF",
+      "text": "G6-H (Blinded Human Study) &amp; REC-2E (External Multi-Provider Holdout)"
     },
     {
-      "id": "3fa78cf574cba86193a2",
+      "id": "1ea0ecc36a6393e67ceb",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Shared private team prompt library"
+      "depth": "PROOF",
+      "text": "For individual builders who want an ad-free workspace, deterministic session continuation, and pre-flight invariant checks."
     },
     {
-      "id": "468d5f2498dbdc66adfe",
+      "id": "20166b0eb23c3dd56040",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Most Popular · Pays for itself in 1 day"
+      "depth": "PROOF",
+      "text": "CI/CD Compliance Gate"
     },
     {
-      "id": "472e58552d2aeb928ee3",
+      "id": "204482172ebfdafdd024",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "spe activate"
+      "depth": "PROOF",
+      "text": "10 team members"
     },
     {
-      "id": "4930726ab99a9822941d",
+      "id": "2301d678bc606c620574",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Team & CI/CD Gate Features"
+      "depth": "PROOF",
+      "text": "Curated Prompt &amp; Template Catalog"
     },
     {
-      "id": "55e200e09ecba9552508",
+      "id": "23bb3395a76678d6f11c",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "WebAssembly offline execution with zero server logs"
+      "depth": "PROOF",
+      "text": "is a separate, independent native macOS desktop assistant built on the same"
+    },
+    {
+      "id": "2410c35bf8a1153fe1c8",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Subscription Plans"
+    },
+    {
+      "id": "24324848a03fb01ded3b",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "SPE — System Prompt Engine"
+    },
+    {
+      "id": "26f50904db5ff35dd9ff",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": ": `spe check --pre-commit` checks declared scope invariants locally"
+    },
+    {
+      "id": "29f7d4f59bc21504b52f",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "How are token savings and ROI estimates calculated?"
+    },
+    {
+      "id": "309ed4f6342e535b7962",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "/ month forever"
+    },
+    {
+      "id": "353929d7d33fcc61bd6c",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Local Loopback"
+    },
+    {
+      "id": "3a9115557368a8238990",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "License Key:"
+    },
+    {
+      "id": "3be107f57b17fcc9ed57",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Plan Active ✓"
+    },
+    {
+      "id": "3cd01c288a59624222d0",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "across coding, UI, and research tasks"
+    },
+    {
+      "id": "3f099ccd3a4b62991225",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Developer Pro"
+    },
+    {
+      "id": "3fd46aac8bd9a294ce7c",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "team"
+    },
+    {
+      "id": "405541fcb406a101361b",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "For engineering teams that require cryptographic Ed25519 receipts and pre-merge pull request verification gates."
+    },
+    {
+      "id": "457ccc947eebf3cc8d4b",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Active Subscription"
+    },
+    {
+      "id": "4717a0e375b7fbfa5ce7",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Transparent Pricing, Privacy &amp; Qualification FAQ"
+    },
+    {
+      "id": "4aa048e715aa2570ed01",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "/ first month · then $9/mo"
+    },
+    {
+      "id": "4c30eea67031f067597d",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Optional External / Loopback Connections:"
+    },
+    {
+      "id": "4d33ed0b233c55f4266d",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Verified (1.3 MB Local)"
+    },
+    {
+      "id": "4e2b17bf20f391736258",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Pre-Commit Guardrail"
+    },
+    {
+      "id": "56135d3a39e5227d4c00",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "pro"
     },
     {
       "id": "57eb36f032bc4ca0cc58",
@@ -23653,58 +23851,124 @@
       "text": "Developer Pro"
     },
     {
-      "id": "599748e7f8b45c05a3d0",
+      "id": "590a489a57afee6bea46",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Transparent Value"
+      "depth": "PROOF",
+      "text": "Start Free Now →"
     },
     {
-      "id": "59c8d8eb5a2dcde82faa",
+      "id": "5929a81ccc9a884e9496",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Always Free"
+      "depth": "PROOF",
+      "text": "Qualification Status:"
     },
     {
-      "id": "5b05112f71148f171672",
+      "id": "5998b82c8e786d41dc7a",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "· 100% Ad-Free Sanctuary Active"
+      "depth": "PROOF",
+      "text": "AppleAGI for macOS · Standalone Companion App"
     },
     {
-      "id": "602840203758167230b1",
+      "id": "5a9e4c1abf498af77a8d",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Access to public prompt recipes and benchmark data"
+      "depth": "PROOF",
+      "text": "✓ Funded by clean, non-intrusive developer ads on public discovery pages."
     },
     {
-      "id": "691840ec0591122ea2c4",
+      "id": "5ba9dfb784ac9570508f",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Developer Pro ($9/mo)"
+      "depth": "PROOF",
+      "text": "Free Community"
     },
     {
-      "id": "6cbe14bcb3a428abf9a2",
+      "id": "5beddce20f259ab10421",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "For professional developers who rely on Claude Code, Cursor, and ChatGPT daily."
+      "depth": "PROOF",
+      "text": "View AppleAGI Companion Overview →"
     },
     {
-      "id": "721a51e279ddc31dbc2c",
+      "id": "5d8353c17b8bddb04268",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "CI/CD Compliance Gate"
+      "depth": "PROOF",
+      "text": "/ first month · then $99/mo"
     },
     {
-      "id": "74a1e494ec0e3c01c25f",
+      "id": "5f54645fa0b85b4fadc7",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Stop broken AI code before it merges into production."
+      "depth": "PROOF",
+      "text": "Company and CI/CD Gate Features"
     },
     {
-      "id": "76c44342c57201de20c0",
+      "id": "624823f9f9d823d2ec0b",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Cancel"
+      "depth": "PROOF",
+      "text": "95% of SPE · Always Free"
+    },
+    {
+      "id": "624a17eee078e9bf0ec4",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Developer Pro is $1 for your first month (renews at $9/month)"
+    },
+    {
+      "id": "64eb9729438f82d2c335",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Company &amp; CI/CD Gate"
+    },
+    {
+      "id": "658643a8887cebe04214",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Launch objective: demonstrate value through working experiences, transparent pricing, and reproducible evidence. Over 95% of SPE&apos;s browser-local tools remain $0 forever, supported by non-intrusive developer sponsors on public discovery pages. During our Public Beta launch,"
+    },
+    {
+      "id": "65cd464642ae66763478",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Start $9 First-Month Team Intro →"
+    },
+    {
+      "id": "66fb4a70751ef931b27b",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Public Beta"
+    },
+    {
+      "id": "698165cf36a4f1c9814e",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "AppleAGI"
+    },
+    {
+      "id": "6d58e52bba10436efdad",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": ": Resume interrupted agent tasks from local state"
+    },
+    {
+      "id": "6dee8add5319ec69ff3c",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Active License Status"
+    },
+    {
+      "id": "6f8797e2bb4f278f8c07",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Developer Pro Features"
+    },
+    {
+      "id": "74d5ea2d9583b0c7665a",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Which features run 100% locally in my browser vs. external services?"
+    },
+    {
+      "id": "792d912e0df07e3a8aa8",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Maintained as a separate macOS product track with its own evaluation suite (29/29 regression tests, 34-locale command matrix, and explicit hardware/OS permission boundaries)."
     },
     {
       "id": "7957843efff391bd6cf4",
@@ -23713,94 +23977,172 @@
       "text": "SPE-PRO"
     },
     {
-      "id": "7b67375af115561223fe",
+      "id": "7a22e19197079ee571a2",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "💡 Saves ~8 hours of debugging and $35+ in wasted API tokens every week."
+      "depth": "PROOF",
+      "text": "AppKit · Vision OCR · Speech"
     },
     {
-      "id": "7ddc22247c54d8db0cb0",
+      "id": "7ac44b11d79c5d5abf1e",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Active Subscription"
+      "depth": "PROOF",
+      "text": "36+ Languages Voice &amp; Text"
     },
     {
-      "id": "80701383193cc727ed2f",
+      "id": "7b582f627a3ef6b5b351",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "For Engineering Teams"
+      "depth": "PROOF",
+      "text": "modeled on catching missing constraints, schema errors, and scope violations at compile time in local WASM ($0) before dispatching multi-turn cloud LLM retries. Actual savings vary by model provider, prompt length, and workflow complexity."
     },
     {
-      "id": "891cd1d6aae28335d79a",
+      "id": "7b7810a0ece357342ce9",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Can I cancel anytime?"
+      "depth": "PROOF",
+      "text": "SPE — System Prompt Engine · Engine Powered by Prawin Jaitley · Public Beta"
     },
     {
-      "id": "8af6495cb19936b87bf3",
+      "id": "7c73400b0c7e6889b916",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Protect Your Team ($99/mo)"
+      "depth": "PROOF",
+      "text": "100% Ad-Free"
     },
     {
-      "id": "8b7cac9ee1824b79be38",
+      "id": "7c7f1eb23222944af674",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "The core prompt compiler will always be 100% free. Upgrade to Developer Pro for $9/month or Team CI/CD Gate for $99/month."
+      "depth": "PROOF",
+      "text": ": Turn uploaded transcripts, audio, and docs into structured specs"
     },
     {
-      "id": "8c65e61643a6daabf296",
+      "id": "7ec2add2fd70506ae34b",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Team &amp; CI/CD Gate"
+      "depth": "PROOF",
+      "text": "🛡️ Includes up to 10 team seats + local CLI &amp; GitHub Actions verification gates."
     },
     {
-      "id": "8d90dfe511bb985ad74f",
+      "id": "7f2e7e37570ff10c9289",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Never. SPE is strictly air-gapped on your device. Zero prompt bytes leave your machine."
+      "depth": "PROOF",
+      "text": "Shared team prompt contracts and receipt-gated Promptfoo export bundles"
     },
     {
-      "id": "94080ef563b6d80d5431",
+      "id": "805d9c4d1ed1fda29b75",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Priority community support and early access to new workflow templates"
+      "depth": "PROOF",
+      "text": ".spe"
     },
     {
-      "id": "94403544a012b7e92023",
+      "id": "82e6e5eed7d79e540c8a",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": ": Automated GitHub Actions invariant verification"
+      "depth": "PROOF",
+      "text": "How does the $1 and $9 introductory pricing work?"
     },
     {
-      "id": "9607afa7758ed92e2a8f",
+      "id": "8507478e1360946707c5",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Frequently Answered Questions"
+      "depth": "PROOF",
+      "text": "· 100% Ad-Free Sanctuary Active"
     },
     {
-      "id": "97d7d05005dbb0666ddd",
+      "id": "8563b3c36970a09e1ede",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Plan Active ✓"
+      "depth": "PROOF",
+      "text": "Standard renewal price $9"
     },
     {
-      "id": "990268b7914df25b82c2",
+      "id": "8754b4041d5124a1382d",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Start Using Ad-Free Workspace →"
+      "depth": "PROOF",
+      "text": "Session Recovery (`spe continue`)"
     },
     {
-      "id": "9edcf247c84ccfb62ffd",
+      "id": "87fce4f12498a0ba7689",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
+      "depth": "PROOF",
+      "text": "Local In-Browser (Zero Network Egress):"
+    },
+    {
+      "id": "8c5bbaf31cbfd863a76a",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Developer Pro ($1 first month · renews at $9/mo)"
+    },
+    {
+      "id": "8d566049d02ac3fd2182",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": ": Export `.cursorrules`, `CLAUDE.md`, Windsurf, `.spe`, and `promptfooconfig.yaml`"
+    },
+    {
+      "id": "8ef3bb6c2fd898bda097",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Developer Pro is $1 for the first month and renews at $9/month"
+    },
+    {
+      "id": "8f6f4c5cb42415b9c5ab",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Free Community Features"
+    },
+    {
+      "id": "8f937a56eb76ecacc423",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Start $1 First-Month Intro →"
+    },
+    {
+      "id": "8fd1100506f446b0473b",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "across every SPE page and studio workspace"
+    },
+    {
+      "id": "921058a0c0109a804518",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Copied!"
+    },
+    {
+      "id": "92cb5e378316fd76e1b6",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "contracts from the SPE Web Studio directly to a local continuation daemon or IDE workspace (`CLAUDE.md`, `.cursorrules`, Windsurf) on your machine."
+    },
+    {
+      "id": "95785cf4438844c1b793",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Interactive 3D Web Templates"
+    },
+    {
+      "id": "9779b26c09808af9f50b",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "for Apple Silicon users who want local macOS Accessibility, Vision OCR, and sandboxed desktop task automation."
+    },
+    {
+      "id": "98fe781be7087536a46a",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": ": Helps reduce scope drift on declared file boundaries"
+    },
+    {
+      "id": "9b82e172354950334c64",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Standard renewal price $99"
+    },
+    {
+      "id": "9cbca233d9491f2cc615",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
       "text": "Your browser workspace is now"
     },
     {
-      "id": "a22bdc74af73949515a2",
+      "id": "a1102b87d704dde485b2",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "100% Ad-Free"
+      "depth": "PROOF",
+      "text": "60+ Research-Paper Templates &amp; 101 Curated Skill Packs"
     },
     {
       "id": "a342b3dc93c7c2f20ee7",
@@ -23809,82 +24151,64 @@
       "text": "team"
     },
     {
-      "id": "a347fe826e269365b2f9",
+      "id": "a85f904c582cd088f926",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Does SPE ever see my code or secrets?"
+      "depth": "PROOF",
+      "text": "Inspect Local Bridge &amp; Export Studio →"
     },
     {
-      "id": "a362f5a30462b7bf3b17",
+      "id": "ad1cbc7ef0a1a91dbcac",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Scope Guardrails"
+      "depth": "PROOF",
+      "text": "Copy Key"
     },
     {
-      "id": "a6aa306547bf8edae4ee",
+      "id": "ad8da138a503a810039c",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "across the entire platform"
+      "depth": "PROOF",
+      "text": "Enter your email to activate your launch offer and receive your instant ad-free workspace key:"
     },
     {
-      "id": "a80f2f3445f272e3fab2",
+      "id": "ad96e16aec2138e9663c",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "with Crash Recovery and session continuation unlocked. You can also use this key in the SPE CLI:"
+      "depth": "PROOF",
+      "text": "spe activate"
     },
     {
-      "id": "a81cbf787e1e1ee5fdcc",
+      "id": "b2e0f0e5fa9b4345812d",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
+      "depth": "PROOF",
+      "text": "Company & CI/CD Gate ($9 first month · renews at $99/mo)"
+    },
+    {
+      "id": "b3047cb2921e28913fd8",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
       "text": "Your Activation License Key:"
     },
     {
-      "id": "ab6092b3bdbf4ba4aae0",
+      "id": "b35e7965951184cffbb9",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "$99/mo License"
+      "depth": "PROOF",
+      "text": "Activate Launch License →"
     },
     {
-      "id": "aca30eb5185bc0a79468",
+      "id": "b7a5eb246305ec064c7c",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "✓ Subscription &amp; License Key Activated!"
+      "depth": "PROOF",
+      "text": "projected estimates"
     },
     {
-      "id": "ad6517639d473dd13ca9",
+      "id": "b90476b5d33e54c2988a",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Activate"
+      "depth": "PROOF",
+      "text": "All savings figures shown on the site are"
     },
     {
-      "id": "b06176b9b2deeff65567",
+      "id": "bc471a19efff2b80839a",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "License Key:"
-    },
-    {
-      "id": "b104e19036046162eec4",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": ": 1-click formats for .cursorrules, CLAUDE.md, and Windsurf"
-    },
-    {
-      "id": "b1732bf25c39183c7a02",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Get Developer Pro ($9/mo)"
-    },
-    {
-      "id": "b5103893380c92330dc5",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Start Building Free"
-    },
-    {
-      "id": "b7e0d350b86276e8652a",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Everything in Pro for up to"
+      "depth": "PROOF",
+      "text": "and"
     },
     {
       "id": "bea1ef1b6459ce91c42f",
@@ -23893,34 +24217,52 @@
       "text": "pro"
     },
     {
-      "id": "c157790ec779dff0c01f",
+      "id": "c71cd78fe005c5896598",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Ideal for individual developers and creators crafting single prompts."
+      "depth": "PROOF",
+      "text": "Cancel"
     },
     {
-      "id": "c6d521cd83800c2ef09a",
+      "id": "c9159cb77ad3607f3c08",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "10 team members"
+      "depth": "PROOF",
+      "text": "Prawin Jaitley Engine"
     },
     {
-      "id": "c8c4b1a7d1381a44485c",
+      "id": "ca2c320667940d9e9bd4",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": ": RFC 8785 signed evidence records for team pull requests"
+      "depth": "PROOF",
+      "text": "Everything in Developer Pro for up to"
     },
     {
-      "id": "ce6f661cc804b8682058",
+      "id": "ca8faffb5066bce8269b",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Active on this browser"
+      "depth": "PROOF",
+      "text": "1-Click IDE &amp; Eval Export"
     },
     {
-      "id": "d12eb7333d15c8868a2e",
+      "id": "cd6871a70f75c2257065",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Free Community"
+      "depth": "PROOF",
+      "text": "✓ Subscription &amp; License Key Activated!"
+    },
+    {
+      "id": "cf592ef89ccd431e5efd",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Open Ad-Free Workspace →"
+    },
+    {
+      "id": "d00decb48657a75dd175",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Team Intro · $9 First Month"
+    },
+    {
+      "id": "d2c209332165fdffeb8b",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Gates Pending Full Production:"
     },
     {
       "id": "d32609807a2af37dff47",
@@ -23929,16 +24271,16 @@
       "text": "spe-license-key"
     },
     {
-      "id": "d46d49705c12bd59aaff",
+      "id": "d4e9a177460b1fe135b8",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Non-intrusive contextual developer ads on public discovery pages"
+      "depth": "PROOF",
+      "text": "Looking for Native macOS Desktop Automation? Explore AppleAGI (Separate Product)"
     },
     {
-      "id": "d83384b6a00b938ab353",
+      "id": "d86bec226d4a3756b5f5",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Deactivate"
+      "depth": "PROOF",
+      "text": "Designed to reduce wasted retry tokens by catching missing constraints before cloud API calls."
     },
     {
       "id": "d8dda55c9567813157c9",
@@ -23947,58 +24289,76 @@
       "text": "SPE-TEAM"
     },
     {
-      "id": "dae1694f65b4c818ba88",
+      "id": "d9aff39ea19765e91cac",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "$9/mo License"
+      "depth": "PROOF",
+      "text": "Company &amp; CI/CD Gate is $9 for the first month and renews at $99/month"
     },
     {
-      "id": "dbd0b90a025a8effccbc",
+      "id": "dde9d5b1d3a864abeab2",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Copy Key"
+      "depth": "PROOF",
+      "text": "Media &amp; Transcript Structuring"
     },
     {
-      "id": "dd1f85265af45e5c76d7",
+      "id": "ddef4b13c3a4e8173a3f",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "/ month"
+      "depth": "PROOF",
+      "text": "Prompt compilation, AST type-checking, Hostile Gym 32-vector stress testing, counterfactual lint checks, and RFC 8785 / SHA-256 receipt generation execute inside our 1.3 MB client-side WebAssembly engine."
     },
     {
-      "id": "dd69c7453eba7745ebf5",
+      "id": "de968e9ed2e916383e99",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Team & CI/CD Gate ($99/mo)"
+      "depth": "PROOF",
+      "text": "WASM Core:"
     },
     {
-      "id": "e143a36edca844bd0e78",
+      "id": "e07c1814474fa2241ed8",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Audit Receipts"
+      "depth": "PROOF",
+      "text": "Over 95% of SPE&apos;s in-browser tools are $0 forever. For builders who want an ad-free workspace and advanced continuation tools,"
     },
     {
-      "id": "e19bffdf47ef65969470",
+      "id": "e10b18486c86199cc648",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Checkout"
+      "depth": "PROOF",
+      "text": "Connecting to `127.0.0.1:4319` (local continuation daemon) or running live model calls through your own OpenAI/Anthropic API keys sends traffic only to the endpoints you explicitly configure."
     },
     {
-      "id": "e9dc720d4f4af435db98",
+      "id": "e5075974466ae7ac7c33",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Team"
+      "depth": "PROOF",
+      "text": ": Tamper-evident verification logs for engineering review"
     },
     {
-      "id": "ee4cacfef06f851b65f4",
+      "id": "e7654af1e02f93a10be7",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Crash Recovery"
+      "depth": "PROOF",
+      "text": "Active on this browser"
     },
     {
-      "id": "f1d7e640deef7ee5848a",
+      "id": "e998ffa3938f1a0b6fae",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Developer Pro Features"
+      "depth": "PROOF",
+      "text": "🍎 Independent Sister Product · Also Powered by the Prawin Jaitley Engine"
+    },
+    {
+      "id": "ea356da3d6c41f9831b8",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Deactivate"
+    },
+    {
+      "id": "ef4feb6d9e5dc0bbcda1",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "RFC 8785 + Ed25519 Receipts"
+    },
+    {
+      "id": "f0a8c1c17d4e0749d760",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "100,000+ Character (1 Lakh+)"
     },
     {
       "id": "f2ffc25b6b4bf69bc5d2",
@@ -24007,28 +24367,46 @@
       "text": "spe-user-tier"
     },
     {
-      "id": "f6328118e98c97dbcfcc",
+      "id": "f37e8fbff84821729763",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": ": spe check --pre-commit halts commits with broken prompt invariants"
+      "depth": "PROOF",
+      "text": "Product Boundary Note:"
     },
     {
-      "id": "f7f2e1850e8164788656",
+      "id": "f8271a9f14fac50b60c9",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Active License Status"
+      "depth": "PROOF",
+      "text": "Everything you need to compile structured prompts, inspect AST invariants locally in WebAssembly, and explore 3D web templates at $0 cost."
     },
     {
-      "id": "fa47f1746bd6159ff731",
+      "id": "fbadd8faf126324d1d2b",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Agent Exporter"
+      "depth": "PROOF",
+      "text": "Transparent Introductory Pricing. Reproducible Evidence."
     },
     {
-      "id": "fdd0c5618b6d0711b43c",
+      "id": "fc3c4b23abdb0976c989",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "Subscription Plans"
+      "depth": "PROOF",
+      "text": "is our cross-platform web and CLI prompt compilation, evaluation, and verification platform."
+    },
+    {
+      "id": "fc5923dccc947757409a",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Company &amp; CI/CD Gate is $9 for your first month (renews at $99/month)"
+    },
+    {
+      "id": "fd353ba09d1433fa90ac",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Auto-Applied 101 Skill Constraints"
+    },
+    {
+      "id": "fe02ed4f6026a5136908",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Export verified"
     },
     {
       "id": "01add7aedb5f03395401",

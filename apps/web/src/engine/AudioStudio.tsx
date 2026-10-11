@@ -84,7 +84,7 @@ export function transformVoiceToSystemPrompt(
   // Synthesize into a high-tier production system prompt
   const sections = [
     `# System Role & Operational Directives`,
-    `You are an elite, production-grade technical architect and specialist executing the user's voice brief with zero hallucinations, strict verification, and 10/10 precision.`,
+    `You are an elite, production-grade technical architect and specialist executing the user's voice brief with strict provenance grounding, explicit scope verification, and high engineering precision.`,
     ``,
     `# Primary Mission & Objective`,
     cleaned,

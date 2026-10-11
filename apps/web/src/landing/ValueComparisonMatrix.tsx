@@ -66,6 +66,17 @@ const MATRIX_ROWS: MatrixRow[] = [
     solutionPill: "Air-Gapped WASM",
     cliCommand: "npm install -g @systempromptengine/cli",
   },
+  {
+    id: "mac-appleagi-launch",
+    category: "cost",
+    categoryLabel: "Public Beta Introductory Pricing",
+    painTitle: "Opaque enterprise AI evaluation tiers and fragmented prompt rules across IDEs",
+    painDetail: "Juggling unverified prompt files across repositories without cryptographic receipts or pre-commit invariant checks.",
+    solutionTitle: "95% Free + $1 First Month Pro (then $9/mo) & $9 First Month Team Gate (then $99/mo)",
+    solutionDetail: "Transparent Public Beta pricing powered by the Prawin Jaitley Engine: 60+ research-paper templates, 101 curated skill packs, RFC 8785 + Ed25519 receipts, and optional loopback bridging to the standalone AppleAGI macOS companion app.",
+    solutionPill: "$1 & $9 Intro",
+    cliCommand: "npx @systempromptengine/cli adopt .",
+  },
 ];
 
 export function ValueComparisonMatrix({ onNavigate }: ValueComparisonMatrixProps) {

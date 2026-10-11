@@ -6,6 +6,8 @@ import { CognitiveEnergyShader } from "./CognitiveEnergyShader";
 import { BlindedJudgeArenaStudio } from "./BlindedJudgeArenaStudio";
 import { OmegaProofStudio } from "./OmegaProofStudio";
 import { CommunityCatalogStudio } from "./CommunityCatalogStudio";
+import { SpeClickyContinuationHub } from "./SpeClickyContinuationHub";
+import { SpeV5MoonshotNorthStarBrain } from "./SpeV5MoonshotNorthStarBrain";
 import { defaultRagEngine, type SearchResult } from "./hybridRagEngine";
 
 export interface FeaturesHubProps {
@@ -26,96 +28,112 @@ export interface FeatureItem {
 
 export const FEATURES: FeatureItem[] = [
   {
+    id: "spe-v5-moonshot-brain",
+    view: "capabilities",
+    title: "🧠 All-in-One Studio",
+    subtitle: "Text, 1 Lakh+ Docs, Audio, Video Links, Podcasts & 36+ Languages to English Prompts",
+    href: "/capabilities",
+    badge: "v5.0 Ultra",
+  },
+  {
+    id: "spe-clicky-hub",
+    view: "capabilities",
+    title: "🔗 Local Continuation & AppleAGI Bridge",
+    subtitle: "Loopback Session Continuation (127.0.0.1:4319) & Standalone macOS Companion Bridge",
+    href: "/capabilities",
+    badge: "Companion",
+  },
+  {
     id: "omega-proof",
     view: "capabilities",
-    title: "🛡️ Audit Receipts",
-    subtitle: "Signed Verification Receipts for Pull Requests",
+    title: "🛡️ Safety & Proof Check",
+    subtitle: "Verify AI Answers & Create Signed Receipts for Pull Requests",
     href: "/capabilities",
     badge: "Audit",
   },
   {
     id: "community-fortifier",
     view: "capabilities",
-    title: "🌐 Verified Workflows",
-    subtitle: "Curated Agent Templates & Scope Guardrails",
+    title: "🌐 10,000+ Ready Prompts",
+    subtitle: "10,000+ Genuine Prompts, 60+ Research Prompts & 101 Zero-Drift Skills",
     href: "/capabilities",
-    badge: "143k★",
+    badge: "10k+ Vault",
   },
   {
     id: "promptfoo-bridge",
     view: "capabilities",
-    title: "⚡ Agent Exporter",
-    subtitle: "1-Click Export to Cursor, Claude & Windsurf",
+    title: "⚡ 1-Click Agent Export",
+    subtitle: "Export Directly to Cursor, Claude Code, Windsurf, Copilot & Antigravity",
     href: "/capabilities",
     badge: "Export",
   },
   {
     id: "genetic-evolver",
     view: "create",
-    title: "🧬 Attack Gym",
-    subtitle: "Live Stress-Testing Against 32 Jailbreak Attacks",
+    title: "🧬 Safety Stress-Test",
+    subtitle: "Test Your Prompts Against 32 Common Jailbreaks & Bad Inputs",
     href: "/create",
     badge: "Defense",
   },
   {
     id: "vision-compiler",
     view: "ocr",
-    title: "👁️ S-Code",
-    subtitle: "Convert Screenshot Layouts into Clean React/HTML",
+    title: "👁️ Image & UI to Code",
+    subtitle: "Turn Any Photo into a Prompt or Any App Screenshot into Clean React/HTML",
     href: "/ocr",
-    badge: "S-Code",
+    badge: "Vision",
   },
   {
     id: "hybrid-rag",
     view: "research",
-    title: "⚡ Private Search",
-    subtitle: "Local Search & Docs Grounding with Zero Leaks",
+    title: "⚡ Private Local Search",
+    subtitle: "Search Your Own Docs, PDFs & Books (100,000+ Chars) Privately on Your Device",
     href: "/research",
     badge: "Local",
   },
   {
     id: "quantum-shader",
     view: "website",
-    title: "🌌 3D Canvas",
-    subtitle: "Interactive 3D Workspace & Visualizer",
+    title: "🌌 3D Camera Scroll",
+    subtitle: "Interactive 3D Websites with Smooth Camera Scrolling & Lighting Controls",
     href: "/website",
-    badge: "3D",
+    badge: "3D Web",
   },
   {
     id: "blinded-arena",
     view: "capabilities",
-    title: "⚖️ Benchmark Arena",
-    subtitle: "Head-to-Head Multi-Model Accuracy Testing",
+    title: "⚖️ Side-by-Side Test",
+    subtitle: "Compare Raw Prompts vs. SPE Prompts with 60+ Research Rules & 40+ Core Skills",
     href: "/capabilities",
-    badge: "Arena",
+    badge: "Compare",
   },
   {
     id: "3d-studio",
     view: "website",
-    title: "🎮 3D Studio",
-    subtitle: "Three.js WebGL & Motion Editor",
+    title: "🎮 3D Scene Builder",
+    subtitle: "Three.js WebGL, Camera Motion & Interactive 3D Website Builder",
     href: "/website",
     externalHref: "http://localhost:4180",
   },
   {
     id: "lab",
     view: "lab",
-    title: "🔬 Daily Recipes",
-    subtitle: "Tested Prompt Ideas & Daily Inspiration",
+    title: "🔬 Daily 3D Recipes",
+    subtitle: "Daily Interactive 3D Camera-Scroll Previews & Tested Prompt Seeds",
     href: "/daily-lab",
   },
   {
     id: "media",
     view: "media",
-    title: "🎙️ Voice Studio",
-    subtitle: "Speech & Audio to Prompt",
+    title: "🎙️ Voice, Video & Podcast",
+    subtitle: "Speak in 36+ Languages or Paste Video/Podcast Links for Transcripts & Prompts",
     href: "/media",
   },
   {
     id: "capabilities",
     view: "capabilities",
-    title: "⚡ Scope Guardrails",
-    subtitle: "Integrity, Zero-Egress Proofs",
+    title: "⚡ 101 Auto-Skills",
+    subtitle: "40+ Core Zero-Drift Skills & 60+ Research Prompts Built Into Every Run",
     href: "/capabilities",
   },
 ];
@@ -149,7 +167,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
   };
 
   const isOmniBrainFeature = (id: string) =>
-    ["omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
+    ["spe-v5-moonshot-brain", "spe-clicky-hub", "omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
 
   const visibleFeatures = filter.trim()
     ? FEATURES.filter(
@@ -375,6 +393,8 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
             >
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff" }}>
+                  {activeModal === "spe-v5-moonshot-brain" && "🧠 SPE v5.0 Moonshot North-Star Brain"}
+                  {activeModal === "spe-clicky-hub" && "🎯 SPE Clicky Autonomous Continuation Hub"}
                   {activeModal === "omega-proof" && "🛡️ Audit Receipts · Verification & Proof"}
                   {activeModal === "community-fortifier" && "🌐 Verified Workflows · Community Library"}
                   {activeModal === "promptfoo-bridge" && "⚡ Agent Exporter · Multi-Format Bridge"}
@@ -414,6 +434,14 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 ✕ Close
               </button>
             </div>
+
+            {activeModal === "spe-v5-moonshot-brain" && (
+              <SpeV5MoonshotNorthStarBrain onNavigate={onNavigate} />
+            )}
+
+            {activeModal === "spe-clicky-hub" && (
+              <SpeClickyContinuationHub onNavigate={onNavigate} />
+            )}
 
             {activeModal === "omega-proof" && (
               <OmegaProofStudio onClose={() => setActiveModal(null)} />

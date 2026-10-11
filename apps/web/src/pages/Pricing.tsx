@@ -85,13 +85,36 @@ export function Pricing({ onNavigate }: PricingProps) {
   };
 
   return (
-    <div className="spe-pricing-page" data-copy-depth="PRODUCT">
+    <div className="spe-pricing-page" data-copy-depth="PROOF">
       <header className="spe-pricing-hero">
-        <p className="spe-pricing-kicker">Transparent Value</p>
-        <h1>Simple, honest pricing. Pays for itself in your first week.</h1>
-        <p className="spe-pricing-subtitle">
-          The core prompt compiler will always be 100% free. Upgrade to Developer Pro for $9/month or Team CI/CD Gate for $99/month.
+        <p className="spe-pricing-kicker">
+          SPE — System Prompt Engine · Engine Powered by Prawin Jaitley · Public Beta
         </p>
+        <h1>Transparent Introductory Pricing. Reproducible Evidence.</h1>
+        <p className="spe-pricing-subtitle">
+          Launch objective: demonstrate value through working experiences, transparent pricing, and reproducible evidence. Over 95% of SPE&apos;s browser-local tools remain $0 forever, supported by non-intrusive developer sponsors on public discovery pages. During our Public Beta launch, <strong>Developer Pro is $1 for your first month (renews at $9/month)</strong> and <strong>Company &amp; CI/CD Gate is $9 for your first month (renews at $99/month)</strong>.
+        </p>
+        <div
+          style={{
+            marginTop: "0.85rem",
+            display: "inline-flex",
+            flexWrap: "wrap",
+            gap: "0.5rem",
+            justifyContent: "center",
+            fontSize: "0.75rem",
+            color: "#94a3b8",
+            background: "rgba(15, 23, 42, 0.75)",
+            border: "1px solid rgba(56, 189, 248, 0.25)",
+            borderRadius: "999px",
+            padding: "0.35rem 0.9rem",
+          }}
+        >
+          <span><strong>Qualification Status:</strong> Public Beta</span>
+          <span>·</span>
+          <span><strong>WASM Core:</strong> Verified (1.3 MB Local)</span>
+          <span>·</span>
+          <span><strong>Gates Pending Full Production:</strong> G6-H (Blinded Human Study) &amp; REC-2E (External Multi-Provider Holdout)</span>
+        </div>
       </header>
 
       {/* Active Subscription Banner */}
@@ -103,11 +126,13 @@ export function Pricing({ onNavigate }: PricingProps) {
             margin: "0 auto 2.5rem auto",
             backgroundColor: "#0d1b33",
             border: "1px solid #38bdf8",
-            borderRadius: "8px",
+            borderRadius: "12px",
             padding: "1.25rem 1.5rem",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            flexWrap: "wrap",
+            gap: "1rem",
             boxShadow: "0 0 24px rgba(56, 189, 248, 0.15)",
           }}
           aria-label="Active License Status"
@@ -125,7 +150,9 @@ export function Pricing({ onNavigate }: PricingProps) {
               Active Subscription
             </span>
             <h2 style={{ margin: "0.25rem 0", color: "#f8fafc", fontSize: "1.2rem", fontWeight: 700 }}>
-              {currentTier === "team" ? "Team & CI/CD Gate ($99/mo)" : "Developer Pro ($9/mo)"}
+              {currentTier === "team"
+                ? "Company & CI/CD Gate ($9 first month · renews at $99/mo)"
+                : "Developer Pro ($1 first month · renews at $9/mo)"}
             </h2>
             <p style={{ margin: 0, fontSize: "0.8125rem", color: "#94a3b8" }}>
               License Key: <code style={{ color: "#38bdf8" }}>{currentLicense || "Active on this browser"}</code> · 100% Ad-Free Sanctuary Active
@@ -134,7 +161,6 @@ export function Pricing({ onNavigate }: PricingProps) {
           <button
             type="button"
             className="spe-pricing-cta spe-pricing-cta-secondary"
-            style={{ padding: "0.5rem 1rem", fontSize: "0.8125rem" }}
             onClick={handleDeactivate}
           >
             Deactivate
@@ -143,39 +169,43 @@ export function Pricing({ onNavigate }: PricingProps) {
       )}
 
       <section className="spe-pricing-grid" aria-label="Subscription Plans">
-        {/* Tier 1: Free Community */}
+        {/* Tier 1: Free Community (95% Free) */}
         <article className="spe-pricing-card">
-          <span className="spe-pricing-badge">Always Free</span>
+          <span className="spe-pricing-badge">95% of SPE · Always Free</span>
           <h2 className="spe-pricing-card-title">Free Community</h2>
           <p className="spe-pricing-desc">
-            Ideal for individual developers and creators crafting single prompts.
+            Everything you need to compile structured prompts, inspect AST invariants locally in WebAssembly, and explore 3D web templates at $0 cost.
           </p>
 
           <div className="spe-pricing-price-box">
             <span className="spe-pricing-amount">$0</span>
-            <span className="spe-pricing-period">/ month</span>
+            <span className="spe-pricing-period">/ month forever</span>
+          </div>
+
+          <div className="spe-pricing-roi-banner">
+            ✓ Funded by clean, non-intrusive developer ads on public discovery pages.
           </div>
 
           <ul className="spe-pricing-features" aria-label="Free Community Features">
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span>100% In-Browser Deterministic Prompt Compiler</span>
+              <span><strong>100,000+ Character (1 Lakh+)</strong> local input and output capacity in Create</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span>WebAssembly offline execution with zero server logs</span>
+              <span><strong>Curated Prompt &amp; Template Catalog</strong> across coding, UI, and research tasks</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span>Portable .spe export and plain text / JSON export</span>
+              <span><strong>60+ Research-Paper Templates &amp; 101 Curated Skill Packs</strong> with scope checks</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span>Access to public prompt recipes and benchmark data</span>
+              <span><strong>36+ Languages Voice &amp; Text</strong>: Browser speech/text to structured English prompts</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span>Non-intrusive contextual developer ads on public discovery pages</span>
+              <span><strong>Interactive 3D Web Templates</strong> with camera path controls &amp; 1-click rebuild prompts</span>
             </li>
           </ul>
 
@@ -184,127 +214,190 @@ export function Pricing({ onNavigate }: PricingProps) {
             className="spe-pricing-cta spe-pricing-cta-secondary"
             onClick={() => onNavigate?.("create")}
           >
-            Start Building Free
+            Start Free Now →
           </button>
         </article>
 
-        {/* Tier 2: Developer Pro ($9/mo) */}
+        {/* Tier 2: Developer Pro ($1 first month intro, renews at $9/mo) */}
         <article className="spe-pricing-card is-featured">
-          <span className="spe-pricing-badge">Most Popular · Pays for itself in 1 day</span>
+          <span className="spe-pricing-badge">Intro Offer · $1 First Month</span>
           <h2 className="spe-pricing-card-title">Developer Pro</h2>
           <p className="spe-pricing-desc">
-            For professional developers who rely on Claude Code, Cursor, and ChatGPT daily.
+            For individual builders who want an ad-free workspace, deterministic session continuation, and pre-flight invariant checks.
           </p>
 
           <div className="spe-pricing-price-box">
-            <span className="spe-pricing-amount">$9</span>
-            <span className="spe-pricing-period">/ month</span>
+            <s className="spe-pricing-strike" aria-label="Standard renewal price $9">$9</s>
+            <span className="spe-pricing-amount">$1</span>
+            <span className="spe-pricing-period">/ first month · then $9/mo</span>
           </div>
 
           <div className="spe-pricing-roi-banner">
-            💡 Saves ~8 hours of debugging and $35+ in wasted API tokens every week.
+            💡 <strong>Projected Estimate:</strong> Designed to reduce wasted retry tokens by catching missing constraints before cloud API calls.
           </div>
 
           <ul className="spe-pricing-features" aria-label="Developer Pro Features">
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>100% Ad-Free</strong> across the entire platform</span>
+              <span><strong>100% Ad-Free</strong> across every SPE page and studio workspace</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>Crash Recovery</strong>: Automatically continues interrupted agent sessions</span>
+              <span><strong>Auto-Applied 101 Skill Constraints</strong>: Helps reduce scope drift on declared file boundaries</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>Agent Exporter</strong>: 1-click formats for .cursorrules, CLAUDE.md, and Windsurf</span>
+              <span><strong>Session Recovery (`spe continue`)</strong>: Resume interrupted agent tasks from local state</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>Scope Guardrails</strong>: Automatically detects and locks down forbidden files and API keys</span>
+              <span><strong>1-Click IDE &amp; Eval Export</strong>: Export `.cursorrules`, `CLAUDE.md`, Windsurf, `.spe`, and `promptfooconfig.yaml`</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span>Priority community support and early access to new workflow templates</span>
+              <span><strong>Media &amp; Transcript Structuring</strong>: Turn uploaded transcripts, audio, and docs into structured specs</span>
             </li>
           </ul>
 
           <button
             type="button"
             className="spe-pricing-cta spe-pricing-cta-primary"
-            onClick={() => handleOpenPlan("Developer Pro")}
+            onClick={() => handleOpenPlan("Developer Pro ($1 First Month · then $9/mo)")}
           >
-            {currentTier === "pro" ? "Plan Active ✓" : "Get Developer Pro ($9/mo)"}
+            {currentTier === "pro" ? "Plan Active ✓" : "Start $1 First-Month Intro →"}
           </button>
         </article>
 
-        {/* Tier 3: Team & CI/CD Gate ($99/mo) */}
+        {/* Tier 3: Company / Team & CI/CD Gate ($9 first month intro, renews at $99/mo) */}
         <article className="spe-pricing-card">
-          <span className="spe-pricing-badge">For Engineering Teams</span>
-          <h2 className="spe-pricing-card-title">Team &amp; CI/CD Gate</h2>
+          <span className="spe-pricing-badge">Team Intro · $9 First Month</span>
+          <h2 className="spe-pricing-card-title">Company &amp; CI/CD Gate</h2>
           <p className="spe-pricing-desc">
-            Stop broken AI code before it merges into production.
+            For engineering teams that require cryptographic Ed25519 receipts and pre-merge pull request verification gates.
           </p>
 
           <div className="spe-pricing-price-box">
-            <span className="spe-pricing-amount">$99</span>
-            <span className="spe-pricing-period">/ month</span>
+            <s className="spe-pricing-strike" aria-label="Standard renewal price $99">$99</s>
+            <span className="spe-pricing-amount">$9</span>
+            <span className="spe-pricing-period">/ first month · then $99/mo</span>
           </div>
 
-          <ul className="spe-pricing-features" aria-label="Team & CI/CD Gate Features">
+          <div className="spe-pricing-roi-banner">
+            🛡️ Includes up to 10 team seats + local CLI &amp; GitHub Actions verification gates.
+          </div>
+
+          <ul className="spe-pricing-features" aria-label="Company and CI/CD Gate Features">
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span>Everything in Pro for up to <strong>10 team members</strong></span>
+              <span>Everything in Developer Pro for up to <strong>10 team members</strong></span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>CLI Pre-Commit Hook</strong>: spe check --pre-commit halts commits with broken prompt invariants</span>
+              <span><strong>Pre-Commit Guardrail</strong>: `spe check --pre-commit` checks declared scope invariants locally</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>CI/CD Compliance Gate</strong>: Automated GitHub Actions invariant verification</span>
+              <span><strong>CI/CD Compliance Gate</strong>: Automated GitHub Actions check on every pull request</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>Audit Receipts</strong>: RFC 8785 signed evidence records for team pull requests</span>
+              <span><strong>RFC 8785 + Ed25519 Receipts</strong>: Tamper-evident verification logs for engineering review</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span>Shared private team prompt library</span>
+              <span>Shared team prompt contracts and receipt-gated Promptfoo export bundles</span>
             </li>
           </ul>
 
           <button
             type="button"
             className="spe-pricing-cta spe-pricing-cta-secondary"
-            onClick={() => handleOpenPlan("Team & CI/CD Gate")}
+            onClick={() => handleOpenPlan("Company & CI/CD Gate ($9 First Month · then $99/mo)")}
           >
-            {currentTier === "team" ? "Plan Active ✓" : "Protect Your Team ($99/mo)"}
+            {currentTier === "team" ? "Plan Active ✓" : "Start $9 First-Month Team Intro →"}
           </button>
         </article>
+      </section>
+
+      {/* Independent Companion Product Cross-Promotion — AppleAGI for macOS */}
+      <section className="spe-mac-special-section" aria-labelledby="mac-special-title">
+        <span className="spe-pricing-badge" style={{ background: "rgba(16, 185, 129, 0.2)", color: "#34d399" }}>
+          🍎 Independent Sister Product · Also Powered by the Prawin Jaitley Engine
+        </span>
+        <h2 id="mac-special-title" className="spe-pricing-card-title" style={{ marginTop: "0.25rem" }}>
+          Looking for Native macOS Desktop Automation? Explore AppleAGI (Separate Product)
+        </h2>
+        <p className="spe-pricing-subtitle" style={{ textAlign: "left", maxWidth: "78ch" }}>
+          <strong>Product Boundary Note:</strong> <strong>SPE — System Prompt Engine</strong> is our cross-platform web and CLI prompt compilation, evaluation, and verification platform. <strong>AppleAGI</strong> is a separate, independent native macOS desktop assistant built on the same <strong>Prawin Jaitley Engine</strong> for Apple Silicon users who want local macOS Accessibility, Vision OCR, and sandboxed desktop task automation.
+        </p>
+
+        <div className="spe-mac-special-grid">
+          <div className="spe-mac-offer-card">
+            <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#60a5fa", textTransform: "uppercase" }}>
+              SPE ↔ AppleAGI Local Bridge · Included
+            </span>
+            <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
+              <strong style={{ fontSize: "1.5rem", color: "#ffffff" }}>Local Loopback</strong>
+              <span style={{ color: "#94a3b8", fontSize: "0.88rem" }}>127.0.0.1:4319</span>
+            </div>
+            <p style={{ margin: 0, fontSize: "0.88rem", color: "#cbd5e1", lineHeight: 1.5 }}>
+              Export verified <code>.spe</code> contracts from the SPE Web Studio directly to a local continuation daemon or IDE workspace (`CLAUDE.md`, `.cursorrules`, Windsurf) on your machine.
+            </p>
+            <button
+              type="button"
+              className="spe-pricing-cta spe-pricing-cta-secondary"
+              style={{ marginTop: "0.5rem" }}
+              onClick={() => onNavigate?.("capabilities")}
+            >
+              Inspect Local Bridge &amp; Export Studio →
+            </button>
+          </div>
+
+          <div className="spe-mac-offer-card" style={{ borderColor: "rgba(16, 185, 129, 0.45)" }}>
+            <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#34d399", textTransform: "uppercase" }}>
+              AppleAGI for macOS · Standalone Companion App
+            </span>
+            <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
+              <strong style={{ fontSize: "1.5rem", color: "#ffffff" }}>macOS Native</strong>
+              <span style={{ color: "#94a3b8", fontSize: "0.88rem" }}>AppKit · Vision OCR · Speech</span>
+            </div>
+            <p style={{ margin: 0, fontSize: "0.88rem", color: "#cbd5e1", lineHeight: 1.5 }}>
+              Maintained as a separate macOS product track with its own evaluation suite (29/29 regression tests, 34-locale command matrix, and explicit hardware/OS permission boundaries).
+            </p>
+            <button
+              type="button"
+              className="spe-pricing-cta spe-pricing-cta-secondary"
+              style={{ marginTop: "0.5rem", borderColor: "#10b981", color: "#34d399" }}
+              onClick={() => onNavigate?.("capabilities")}
+            >
+              View AppleAGI Companion Overview →
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* Transparent FAQ Section */}
       <section className="spe-pricing-faq-section" aria-labelledby="pricing-faq-title">
         <h2 id="pricing-faq-title" className="spe-pricing-faq-title">
-          Frequently Answered Questions
+          Transparent Pricing, Privacy &amp; Qualification FAQ
         </h2>
         <dl className="spe-pricing-faq-grid">
           <div className="spe-pricing-faq-card">
-            <dt>Why is the core compiler free?</dt>
+            <dt>How does the $1 and $9 introductory pricing work?</dt>
             <dd>
-              Our WebAssembly compiler runs on your device, not our servers. Since it costs us $0 in GPU compute, we pass those savings directly to you.
+              Over 95% of SPE&apos;s in-browser tools are $0 forever. For builders who want an ad-free workspace and advanced continuation tools, <strong>Developer Pro is $1 for the first month and renews at $9/month</strong>. For teams needing CI/CD pull-request gates and up to 10 seats, <strong>Company &amp; CI/CD Gate is $9 for the first month and renews at $99/month</strong>.
             </dd>
           </div>
           <div className="spe-pricing-faq-card">
-            <dt>Does SPE ever see my code or secrets?</dt>
+            <dt>Which features run 100% locally in my browser vs. external services?</dt>
             <dd>
-              Never. SPE is strictly air-gapped on your device. Zero prompt bytes leave your machine.
+              <strong>Local In-Browser (Zero Network Egress):</strong> Prompt compilation, AST type-checking, Hostile Gym 32-vector stress testing, counterfactual lint checks, and RFC 8785 / SHA-256 receipt generation execute inside our 1.3 MB client-side WebAssembly engine. <strong>Optional External / Loopback Connections:</strong> Connecting to `127.0.0.1:4319` (local continuation daemon) or running live model calls through your own OpenAI/Anthropic API keys sends traffic only to the endpoints you explicitly configure.
             </dd>
           </div>
           <div className="spe-pricing-faq-card">
-            <dt>Can I cancel anytime?</dt>
+            <dt>How are token savings and ROI estimates calculated?</dt>
             <dd>
-              Yes, with one click. No questions asked.
+              All savings figures shown on the site are <strong>projected estimates</strong> modeled on catching missing constraints, schema errors, and scope violations at compile time in local WASM ($0) before dispatching multi-turn cloud LLM retries. Actual savings vary by model provider, prompt length, and workflow complexity.
             </dd>
           </div>
         </dl>
@@ -319,7 +412,7 @@ export function Pricing({ onNavigate }: PricingProps) {
           aria-labelledby="modal-plan-title"
         >
           <div className="spe-pricing-modal" style={{ maxWidth: "480px" }}>
-            <h3 id="modal-plan-title">{selectedPlan} Checkout</h3>
+            <h3 id="modal-plan-title">{selectedPlan}</h3>
             {submitted ? (
               <div style={{ textAlign: "left" }}>
                 <p style={{ color: "#34d399", fontWeight: 700, marginBottom: "0.75rem" }}>
@@ -356,16 +449,15 @@ export function Pricing({ onNavigate }: PricingProps) {
                 <button
                   type="button"
                   className="spe-pricing-cta spe-pricing-cta-primary"
-                  style={{ width: "100%" }}
                   onClick={() => setModalOpen(false)}
                 >
-                  Start Using Ad-Free Workspace →
+                  Open Ad-Free Workspace →
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubscribe}>
                 <p style={{ fontSize: "0.875rem", color: "#94a3b8", marginBottom: "1rem" }}>
-                  Enter your developer email to start your 14-day evaluation and instantly unlock your ad-free workspace license key:
+                  Enter your email to activate your launch offer and receive your instant ad-free workspace key:
                 </p>
                 <input
                   type="email"
@@ -381,7 +473,7 @@ export function Pricing({ onNavigate }: PricingProps) {
                     type="submit"
                     className="spe-pricing-cta spe-pricing-cta-primary"
                   >
-                    Activate {selectedPlan.includes("Team") ? "$99/mo License" : "$9/mo License"}
+                    Activate Launch License →
                   </button>
                   <button
                     type="button"

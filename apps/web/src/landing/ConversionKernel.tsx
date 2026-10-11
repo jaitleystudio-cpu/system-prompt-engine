@@ -204,27 +204,27 @@ export function ConversionKernel({ onNavigate }: ConversionKernelProps) {
         {/* Economic Framing & Loss Aversion */}
         <div className="spe-economic-bar">
           <div className="spe-economic-metric">
-            <span className="spe-economic-label">Monthly SaaS Bill</span>
-            <span className="spe-economic-value is-green">$0.00 / month</span>
-            <span className="spe-economic-desc">Cancel $20/month AI subscription bills</span>
+            <span className="spe-economic-label">95% Free · Public Beta Intro</span>
+            <span className="spe-economic-value is-green">$0 Core · Pro $1 first mo (then $9/mo)</span>
+            <span className="spe-economic-desc">Transparent renewal pricing · Team CI/CD Gate $9 first mo (then $99/mo)</span>
           </div>
 
           <div className="spe-economic-metric">
-            <span className="spe-economic-label">Token Burn Guard</span>
-            <span className="spe-economic-value is-amber">Wasted API tokens: $45/month on runaways</span>
-            <span className="spe-economic-desc">Halt runaway loops before tokens burn</span>
+            <span className="spe-economic-label">Projected Retry Savings &amp; 101 Skills</span>
+            <span className="spe-economic-value is-amber">Est. ~$45/mo saved on avoided retry loops</span>
+            <span className="spe-economic-desc">Projected estimate by catching missing scope rules pre-flight with 60+ research templates</span>
           </div>
 
           <div className="spe-economic-metric">
-            <span className="spe-economic-label">Production Safety</span>
-            <span className="spe-economic-value is-cyan">Embarrassing regressions in production</span>
-            <span className="spe-economic-desc">ProtectedIntent invariants block broken code</span>
+            <span className="spe-economic-label">Pre-Commit Verification</span>
+            <span className="spe-economic-value is-cyan">Scope &amp; Test Receipt Checks</span>
+            <span className="spe-economic-desc">ProtectedIntent invariants check declared file bounds &amp; support 100,000+ (1 Lakh+) chars</span>
           </div>
 
           <div className="spe-economic-metric">
-            <span className="spe-economic-label">Air-Gapped Sandbox</span>
-            <span className="spe-economic-value is-green">100% browser-local execution, zero server GPU inference bills, zero data tracking, instant speed</span>
-            <span className="spe-economic-desc">Tedious manual prompt copy-pasting eliminated</span>
+            <span className="spe-economic-label">Local WASM Sandbox &amp; Companion Bridge</span>
+            <span className="spe-economic-value is-green">1.3 MB browser-local WASM compiler · Zero server GPU bills for local checks</span>
+            <span className="spe-economic-desc">Prompt compilation runs locally in-browser · Optional bridge to standalone AppleAGI macOS app</span>
           </div>
         </div>
       </div>
