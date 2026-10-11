@@ -6,6 +6,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { SpeechInput } from "../input/SpeechInput";
+import { UnifiedMultilingualBar } from "../engine/UnifiedMultilingualBar";
 import {
   observeImageFileSemantic,
   semanticToPromptBlock,
@@ -606,6 +607,14 @@ export function UnifiedComposer({
               }}
             />
           </label>
+          <UnifiedMultilingualBar
+            currentText={value}
+            onUpdateText={(next) => {
+              valueRef.current = next;
+              onChange(next);
+            }}
+            disabled={disabled}
+          />
         </div>
       )}
 
@@ -874,6 +883,14 @@ export function UnifiedComposer({
               onChange={(e) => onChange(e.target.value)}
             />
           </label>
+          <UnifiedMultilingualBar
+            currentText={value}
+            onUpdateText={(next) => {
+              valueRef.current = next;
+              onChange(next);
+            }}
+            disabled={disabled}
+          />
         </div>
       )}
 
@@ -967,6 +984,14 @@ export function UnifiedComposer({
               onChange={(e) => onChange(e.target.value)}
             />
           </label>
+          <UnifiedMultilingualBar
+            currentText={value}
+            onUpdateText={(next) => {
+              valueRef.current = next;
+              onChange(next);
+            }}
+            disabled={disabled}
+          />
         </div>
       )}
 

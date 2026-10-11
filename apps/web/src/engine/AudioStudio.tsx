@@ -1,4 +1,21 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  GLOBAL_32_LANGUAGES,
+  compileNativeToEnglishProPrompt,
+  type GlobalLanguage,
+  type TargetFrontierModel,
+} from "./multilingualEngine";
+import {
+  analyzeVideoOrWebLink,
+  PRESET_VIDEO_WEBLINKS,
+  type VideoLinkAnalysis,
+} from "./videoLinkIngest";
+import {
+  parseAndAnalyzeLyrics,
+  PRESET_SONGS,
+  type SongAnalysisResult,
+} from "./songLyricsEngine";
+import { MultimodalBrainStudio } from "./MultimodalBrainStudio";
 
 export type AudioStudioProps = {
   onInsert: (text: string) => void;
@@ -7,22 +24,37 @@ export type AudioStudioProps = {
   onTranscriptChange?: (text: string) => void;
 };
 
-// Preset voice memos for instant 1-click testing & demonstration
+// Preset voice memos for instant 1-click testing & demonstration across major languages
 const PRESET_VOICE_MEMOS = [
   {
-    title: "SaaS Landing Page Voice Note",
+    title: "🇺🇸 English: SaaS Landing Page",
     duration: "0:24",
     raw: "Umm, hey, I need a landing page for our new AI developer tool. Like, it should have a dark cyberpunk theme, with interactive 3D hero cards, a pricing tier table, customer testimonials, and like, make sure it loads in under 1 second with zero layout shifts and clean TypeScript code.",
   },
   {
-    title: "3D Interactive Web App Voice Note",
-    duration: "0:31",
-    raw: "So basically, I want to build a free 3D website studio where users can drag and drop 3D models, edit particle effects, customize camera orbit controls, and export the entire thing as a static standalone HTML bundle with Three.js, with, you know, 60fps performance and mobile touch support.",
+    title: "🇮🇳 Telugu: 3D వెబ్‌సైట్ మరియు యాప్",
+    duration: "0:25",
+    raw: "అత్యుత్తమ వేగం, సున్నా లోపాలు, మరియు పూర్తి సైబర్ సెక్యూరిటీ భద్రతతో కూడిన నూతన 3D వెబ్‌సైట్ మరియు రియాక్టివ్ యాప్‌ను రూపొందించండి.",
   },
   {
-    title: "High-Throughput API Spec Voice Note",
+    title: "🇮🇳 Hindi: सुरक्षित क्लाउड बैकएंड",
+    duration: "0:26",
+    raw: "एक सुरक्षित और तेज़ मोबाइल-फ्रेंडली वेब ऐप्लिकेशन बनाएं जिसमें ज़ीरो-ट्रस्ट सुरक्षा, डेटा एन्क्रिप्शन और सब-50ms लेटेंसी हो।",
+  },
+  {
+    title: "🇪🇸 Spanish: E-Commerce de Alto Rendimiento",
+    duration: "0:27",
+    raw: "Crear una plataforma de comercio electrónico de alto rendimiento con TypeScript, pagos seguros con Stripe y arquitectura de microservicios.",
+  },
+  {
+    title: "🇨🇳 Mandarin: 分布式高并发微服务",
+    duration: "0:29",
+    raw: "构建一个具有高并发处理能力的分布式智能体工作流系统，包含状态机与自动化容错恢复。",
+  },
+  {
+    title: "🚀 Rust: High-Throughput API Spec",
     duration: "0:28",
-    raw: "Uh, write a complete backend specification for a distributed event streaming API in Rust. It needs zero-copy buffer transfers, HTTP/3 QUIC multiplexing, strict rate limiting using token buckets, and, like, full Prometheus metrics and OpenTelemetry distributed tracing.",
+    raw: "Write a complete backend specification for a distributed event streaming API in Rust. It needs zero-copy buffer transfers, HTTP/3 QUIC multiplexing, strict rate limiting using token buckets, and full Prometheus metrics and OpenTelemetry distributed tracing.",
   },
 ];
 
@@ -237,7 +269,35 @@ export function AudioStudio({
   currentTranscript = "",
   onTranscriptChange,
 }: AudioStudioProps) {
-  const [activeTab, setActiveTab] = useState<"mic" | "upload" | "presets">("mic");
+  const [activeTab, setActiveTab] = useState<"mic" | "video-link" | "songs-lyrics" | "upload" | "presets">("mic");
+  const [selectedLanguage, setSelectedLanguage] = useState<GlobalLanguage>(GLOBAL_32_LANGUAGES[0]);
+  const [outputMode, setOutputMode] = useState<"english-pro" | "native">("english-pro");
+  const [targetModel, setTargetModel] = useState<TargetFrontierModel>("claude-3-7-sonnet");
+  const [isMultimodalModalOpen, setIsMultimodalModalOpen] = useState(false);
+
+  // Video Link State
+  const [videoLinkInput, setVideoLinkInput] = useState(PRESET_VIDEO_WEBLINKS[0].url);
+  const [videoAnalysis, setVideoAnalysis] = useState<VideoLinkAnalysis>(() =>
+    analyzeVideoOrWebLink(PRESET_VIDEO_WEBLINKS[0].url)
+  );
+
+  // Songs & Lyrics State
+  const [songLyricsInput, setSongLyricsInput] = useState(PRESET_SONGS[0].lyrics);
+  const [songMeta, setSongMeta] = useState({
+    title: PRESET_SONGS[0].title,
+    genre: PRESET_SONGS[0].genre,
+    bpm: PRESET_SONGS[0].bpm,
+    keySignature: PRESET_SONGS[0].keySignature,
+  });
+  const [songAnalysis, setSongAnalysis] = useState<SongAnalysisResult>(() =>
+    parseAndAnalyzeLyrics(PRESET_SONGS[0].lyrics, {
+      title: PRESET_SONGS[0].title,
+      genre: PRESET_SONGS[0].genre,
+      bpm: PRESET_SONGS[0].bpm,
+      keySignature: PRESET_SONGS[0].keySignature,
+    })
+  );
+
   const [recording, setRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [interimText, setInterimText] = useState("");
@@ -465,7 +525,7 @@ export function AudioStudio({
         const rec = new SpeechRec();
         rec.continuous = true;
         rec.interimResults = true;
-        rec.lang = "en-US";
+        rec.lang = selectedLanguage.bcp47;
 
         rec.onresult = (event: any) => {
           let finalSpoken = "";
@@ -681,6 +741,107 @@ export function AudioStudio({
             {soundEnabled ? "🔊 Sound FX" : "🔇 Muted"}
           </button>
 
+          {/* 32 Languages Dropdown */}
+          <select
+            value={selectedLanguage.id}
+            onChange={(e) => {
+              const found = GLOBAL_32_LANGUAGES.find((l) => l.id === e.target.value);
+              if (found) {
+                setSelectedLanguage(found);
+                setStatusNotice(`Selected language: ${found.flag} ${found.name} (${found.nativeName})`);
+              }
+            }}
+            style={{
+              background: "rgba(0, 0, 0, 0.4)",
+              border: "1px solid rgba(56, 189, 248, 0.3)",
+              borderRadius: "6px",
+              color: "#38bdf8",
+              padding: "4px 8px",
+              fontSize: "0.75rem",
+              fontWeight: 600,
+              outline: "none",
+              cursor: "pointer",
+            }}
+          >
+            {GLOBAL_32_LANGUAGES.map((lang) => (
+              <option key={lang.id} value={lang.id}>
+                {lang.flag} {lang.name} ({lang.nativeName})
+              </option>
+            ))}
+          </select>
+
+          {/* Target Frontier Model */}
+          <select
+            value={targetModel}
+            onChange={(e) => {
+              const model = e.target.value as TargetFrontierModel;
+              setTargetModel(model);
+              setStatusNotice(`Target model set to: ${model}`);
+            }}
+            style={{
+              background: "rgba(0, 0, 0, 0.4)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              borderRadius: "6px",
+              color: "#cbd5e1",
+              padding: "4px 8px",
+              fontSize: "0.75rem",
+              outline: "none",
+              cursor: "pointer",
+            }}
+            title="Frontier Reasoning Model Target"
+          >
+            <option value="claude-3-7-sonnet">Claude 3.7</option>
+            <option value="gpt-4o">GPT-4o</option>
+            <option value="gemini-2-flash-thinking">Gemini 2.0</option>
+            <option value="deepseek-r1">DeepSeek R1</option>
+          </select>
+
+          {/* Dual Mode Switcher */}
+          <button
+            type="button"
+            onClick={() => {
+              triggerClickAudio();
+              const next = outputMode === "english-pro" ? "native" : "english-pro";
+              setOutputMode(next);
+              setStatusNotice(next === "english-pro" ? "🚀 Mode: Frontier English Pro Prompt Compiler" : `🗣️ Mode: Native ${selectedLanguage.name} Transcript`);
+            }}
+            style={{
+              padding: "4px 9px",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              borderRadius: "6px",
+              border: "1px solid rgba(56, 189, 248, 0.4)",
+              cursor: "pointer",
+              background: outputMode === "english-pro" ? "linear-gradient(135deg, #6366f1, #38bdf8)" : "rgba(56, 189, 248, 0.2)",
+              color: "#ffffff",
+            }}
+            title="Toggle between English Pro Prompt and Native Language transcript"
+          >
+            {outputMode === "english-pro" ? "🚀 Pro Prompt" : `🗣️ Native (${selectedLanguage.name})`}
+          </button>
+
+          {/* Fullscreen Omni Studio Button */}
+          <button
+            type="button"
+            onClick={() => {
+              triggerChimeAudio();
+              setIsMultimodalModalOpen(true);
+            }}
+            style={{
+              padding: "4px 9px",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              borderRadius: "6px",
+              border: "1px solid rgba(168, 85, 247, 0.4)",
+              cursor: "pointer",
+              background: "linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(56, 189, 248, 0.25))",
+              color: "#e2e8f0",
+            }}
+            title="Open Fullscreen 8-Modality Multimodal Brain Studio"
+          >
+            🌌 Omni Studio
+          </button>
+
           {/* Studio Tabs */}
           <div style={{ display: "flex", gap: "3px", background: "rgba(15, 23, 42, 0.6)", padding: "3px", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
             <button
@@ -690,8 +851,8 @@ export function AudioStudio({
                 setActiveTab("mic");
               }}
               style={{
-                padding: "4px 11px",
-                fontSize: "0.78rem",
+                padding: "4px 9px",
+                fontSize: "0.75rem",
                 fontWeight: 600,
                 borderRadius: "6px",
                 border: "none",
@@ -706,11 +867,49 @@ export function AudioStudio({
               type="button"
               onClick={() => {
                 triggerClickAudio();
+                setActiveTab("video-link");
+              }}
+              style={{
+                padding: "4px 9px",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                borderRadius: "6px",
+                border: "none",
+                cursor: "pointer",
+                background: activeTab === "video-link" ? "rgba(56, 189, 248, 0.25)" : "transparent",
+                color: activeTab === "video-link" ? "#38bdf8" : "#94a3b8",
+              }}
+            >
+              🎬 Video Links
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                triggerClickAudio();
+                setActiveTab("songs-lyrics");
+              }}
+              style={{
+                padding: "4px 9px",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                borderRadius: "6px",
+                border: "none",
+                cursor: "pointer",
+                background: activeTab === "songs-lyrics" ? "rgba(56, 189, 248, 0.25)" : "transparent",
+                color: activeTab === "songs-lyrics" ? "#38bdf8" : "#94a3b8",
+              }}
+            >
+              🎵 Songs & Lyrics
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                triggerClickAudio();
                 setActiveTab("upload");
               }}
               style={{
-                padding: "4px 11px",
-                fontSize: "0.78rem",
+                padding: "4px 9px",
+                fontSize: "0.75rem",
                 fontWeight: 600,
                 borderRadius: "6px",
                 border: "none",
@@ -728,8 +927,8 @@ export function AudioStudio({
                 setActiveTab("presets");
               }}
               style={{
-                padding: "4px 11px",
-                fontSize: "0.78rem",
+                padding: "4px 9px",
+                fontSize: "0.75rem",
                 fontWeight: 600,
                 borderRadius: "6px",
                 border: "none",
@@ -738,7 +937,7 @@ export function AudioStudio({
                 color: activeTab === "presets" ? "#38bdf8" : "#94a3b8",
               }}
             >
-              Voice Presets
+              Presets
             </button>
           </div>
         </div>
@@ -881,6 +1080,166 @@ export function AudioStudio({
               Hearing: "{interimText}"
             </span>
           )}
+        </div>
+      )}
+
+      {activeTab === "video-link" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1rem" }}>
+          <div style={{ display: "flex", gap: "6px" }}>
+            <input
+              type="text"
+              value={videoLinkInput}
+              onChange={(e) => setVideoLinkInput(e.target.value)}
+              placeholder="Paste YouTube, TikTok, Vimeo, or Web Documentation link..."
+              style={{
+                flex: 1,
+                padding: "8px 12px",
+                borderRadius: "8px",
+                border: "1px solid rgba(56, 189, 248, 0.3)",
+                background: "rgba(15, 23, 42, 0.6)",
+                color: "#f8fafc",
+                fontSize: "0.85rem",
+                outline: "none",
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                triggerClickAudio();
+                const analysis = analyzeVideoOrWebLink(videoLinkInput);
+                setVideoAnalysis(analysis);
+                const nextTranscript = outputMode === "english-pro" ? analysis.compiledProPrompt : analysis.fullTranscriptText;
+                updateTranscript(nextTranscript);
+                setStatusNotice(`Parsed ${analysis.platform.toUpperCase()}: "${analysis.title}" with ${analysis.chapters.length} scene chapters.`);
+              }}
+              style={{
+                padding: "8px 14px",
+                borderRadius: "8px",
+                border: "none",
+                background: "linear-gradient(135deg, #0284c7, #2563eb)",
+                color: "#fff",
+                fontWeight: 700,
+                fontSize: "0.82rem",
+                cursor: "pointer",
+              }}
+            >
+              Parse Video Link
+            </button>
+          </div>
+
+          {/* Preset Demos */}
+          <div style={{ display: "flex", gap: "5px", flexWrap: "wrap", alignItems: "center" }}>
+            <span style={{ fontSize: "0.72rem", color: "#94a3b8" }}>Presets:</span>
+            {PRESET_VIDEO_WEBLINKS.map((preset) => (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => {
+                  triggerClickAudio();
+                  setVideoLinkInput(preset.url);
+                  const analysis = analyzeVideoOrWebLink(preset.url);
+                  setVideoAnalysis(analysis);
+                  const nextTranscript = outputMode === "english-pro" ? analysis.compiledProPrompt : analysis.fullTranscriptText;
+                  updateTranscript(nextTranscript);
+                  setStatusNotice(`Loaded preset: "${preset.title}".`);
+                }}
+                style={{
+                  fontSize: "0.72rem",
+                  padding: "3px 8px",
+                  borderRadius: "6px",
+                  border: videoLinkInput === preset.url ? "1px solid #38bdf8" : "1px solid rgba(255, 255, 255, 0.1)",
+                  background: videoLinkInput === preset.url ? "rgba(56, 189, 248, 0.2)" : "rgba(15, 23, 42, 0.4)",
+                  color: videoLinkInput === preset.url ? "#38bdf8" : "#cbd5e1",
+                  cursor: "pointer",
+                }}
+              >
+                {preset.title}
+              </button>
+            ))}
+          </div>
+
+          {/* Chapter Timeline preview */}
+          {videoAnalysis && (
+            <div style={{ padding: "8px 12px", background: "rgba(0, 0, 0, 0.25)", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.08)", fontSize: "0.78rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", color: "#38bdf8", fontWeight: 700, marginBottom: "4px" }}>
+                <span>🎬 {videoAnalysis.title}</span>
+                <span>{videoAnalysis.durationFormatted} ({videoAnalysis.chapters.length} chapters)</span>
+              </div>
+              <p style={{ margin: 0, color: "#94a3b8", fontSize: "0.75rem" }}>
+                {videoAnalysis.summary}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === "songs-lyrics" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1rem" }}>
+          {/* Preset Songs */}
+          <div style={{ display: "flex", gap: "5px", flexWrap: "wrap", alignItems: "center" }}>
+            <span style={{ fontSize: "0.72rem", color: "#94a3b8" }}>Presets:</span>
+            {PRESET_SONGS.map((song) => (
+              <button
+                key={song.id}
+                type="button"
+                onClick={() => {
+                  triggerClickAudio();
+                  setSongLyricsInput(song.lyrics);
+                  setSongMeta({ title: song.title, genre: song.genre, bpm: song.bpm, keySignature: song.keySignature });
+                  const res = parseAndAnalyzeLyrics(song.lyrics, {
+                    title: song.title,
+                    genre: song.genre,
+                    bpm: song.bpm,
+                    keySignature: song.keySignature,
+                  });
+                  setSongAnalysis(res);
+                  updateTranscript(outputMode === "english-pro" ? res.sunoUdioPrompt : res.fullLyricsText);
+                  setStatusNotice(`Loaded Song: "${song.title}" (${song.genre}, ${song.bpm} BPM, ${song.keySignature}).`);
+                }}
+                style={{
+                  fontSize: "0.72rem",
+                  padding: "3px 8px",
+                  borderRadius: "6px",
+                  border: songMeta.title === song.title ? "1px solid #38bdf8" : "1px solid rgba(255, 255, 255, 0.1)",
+                  background: songMeta.title === song.title ? "rgba(56, 189, 248, 0.2)" : "rgba(15, 23, 42, 0.4)",
+                  color: songMeta.title === song.title ? "#38bdf8" : "#cbd5e1",
+                  cursor: "pointer",
+                }}
+              >
+                🎵 {song.title} ({song.genre})
+              </button>
+            ))}
+          </div>
+
+          {/* Song Lyrics Textarea */}
+          <textarea
+            rows={4}
+            value={songLyricsInput}
+            onChange={(e) => {
+              setSongLyricsInput(e.target.value);
+              const res = parseAndAnalyzeLyrics(e.target.value, songMeta);
+              setSongAnalysis(res);
+              updateTranscript(outputMode === "english-pro" ? res.sunoUdioPrompt : res.fullLyricsText);
+            }}
+            placeholder="Paste song lyrics here with tags ([Verse 1], [Chorus], [Bridge], [Outro])..."
+            style={{
+              width: "100%",
+              boxSizing: "border-box",
+              borderRadius: "8px",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              background: "rgba(15, 23, 42, 0.6)",
+              color: "#f8fafc",
+              padding: "8px",
+              fontSize: "0.82rem",
+              fontFamily: "monospace",
+              resize: "vertical",
+            }}
+          />
+
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "#94a3b8" }}>
+            <span>Tempo: <strong style={{ color: "#38bdf8" }}>{songAnalysis.bpm} BPM</strong> | Key: <strong style={{ color: "#a855f7" }}>{songAnalysis.keySignature}</strong></span>
+            <span>Rhymes: <strong style={{ color: "#10b981" }}>{songAnalysis.rhymeSchemeSummary}</strong></span>
+          </div>
         </div>
       )}
 
@@ -1151,6 +1510,37 @@ export function AudioStudio({
             disabled={disabled || !localTranscript.trim()}
             onClick={() => {
               triggerChimeAudio();
+              const compiled = compileNativeToEnglishProPrompt({
+                nativeText: localTranscript,
+                sourceLanguage: selectedLanguage,
+                targetModel,
+              });
+              onInsert(compiled.proPrompt);
+              setStatusNotice(`🚀 Compiled into Frontier English Pro Prompt (${targetModel}) from ${selectedLanguage.name}!`);
+            }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "8px 16px",
+              borderRadius: "8px",
+              border: "none",
+              background: !localTranscript.trim() ? "rgba(255, 255, 255, 0.1)" : "linear-gradient(135deg, #6366f1, #38bdf8)",
+              color: "#ffffff",
+              fontWeight: 700,
+              fontSize: "0.85rem",
+              cursor: !localTranscript.trim() ? "not-allowed" : "pointer",
+              boxShadow: !localTranscript.trim() ? "none" : "0 4px 14px rgba(99, 102, 241, 0.4)",
+            }}
+          >
+            🚀 Frontier Pro Prompt ({selectedLanguage.flag}→EN)
+          </button>
+
+          <button
+            type="button"
+            disabled={disabled || !localTranscript.trim()}
+            onClick={() => {
+              triggerChimeAudio();
               const synthesized = transformVoiceToSystemPrompt(localTranscript, "system-prompt");
               onInsert(synthesized);
               setStatusNotice("⚡ Successfully synthesized 10/10 production system prompt from voice memo!");
@@ -1171,6 +1561,31 @@ export function AudioStudio({
             }}
           >
             ⚡ Universal System Prompt
+          </button>
+
+          <button
+            type="button"
+            disabled={disabled || !localTranscript.trim()}
+            onClick={() => {
+              triggerClickAudio();
+              onInsert(localTranscript.trim());
+              setStatusNotice(`🗣️ Inserted native transcript in ${selectedLanguage.name} (${selectedLanguage.nativeName}).`);
+            }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "8px 14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(56, 189, 248, 0.4)",
+              background: "rgba(56, 189, 248, 0.15)",
+              color: "#38bdf8",
+              fontWeight: 600,
+              fontSize: "0.82rem",
+              cursor: !localTranscript.trim() ? "not-allowed" : "pointer",
+            }}
+          >
+            🗣️ Native Text ({selectedLanguage.nativeName})
           </button>
 
           <button
@@ -1227,6 +1642,40 @@ export function AudioStudio({
         <div style={{ marginTop: "10px", fontSize: "0.8rem", color: "#38bdf8", display: "flex", alignItems: "center", gap: "6px" }}>
           <span>✨</span>
           <span>{statusNotice}</span>
+        </div>
+      )}
+
+      {/* Interactive Fullscreen Multimodal Brain Studio Modal */}
+      {isMultimodalModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.85)",
+            backdropFilter: "blur(14px)",
+            zIndex: 9999,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "1rem",
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsMultimodalModalOpen(false);
+          }}
+        >
+          <MultimodalBrainStudio
+            initialTranscript={localTranscript}
+            onApplyPrompt={(prompt) => {
+              onInsert(prompt);
+              setIsMultimodalModalOpen(false);
+            }}
+            onClose={() => setIsMultimodalModalOpen(false)}
+          />
         </div>
       )}
     </div>
