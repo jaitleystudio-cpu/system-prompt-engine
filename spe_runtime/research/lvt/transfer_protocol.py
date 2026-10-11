@@ -11,6 +11,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence
 
 from spe_runtime.research.lvt.types import (
     LearningValidityTransaction,
+    FourArmResults,
     QualificationStatus,
     RequalificationTrigger,
     RevocationReason,
@@ -30,6 +31,33 @@ class LearningTransferProtocol:
             )
 
     @staticmethod
+    def _require_verified_qualification(
+        tx: LearningValidityTransaction,
+        validator: Optional[Any],
+    ) -> None:
+        """Authenticate receipt and evidence at every transfer/export boundary."""
+        LearningTransferProtocol.assert_not_revoked(tx)
+        if tx.status != QualificationStatus.QUALIFIED:
+            raise ValueError("Cannot use artifact for non-qualified transaction")
+        if isinstance(tx.results, FourArmResults):
+            raise ValueError("Cannot use legacy aggregate evidence as verified qualification")
+        from spe_runtime.research.lvt.learning_validator import LearningValidator
+        if not isinstance(validator, LearningValidator):
+            raise ValueError("Missing owner-controlled trusted learning verifier")
+        if not validator.verify_transaction_signature(tx):
+            raise ValueError("Missing authenticated verified receipt")
+        study = getattr(tx, "lvt2_study_result", None)
+        if study is None or getattr(tx, "is_attested_oracle", False) is not True:
+            raise ValueError("Missing independently trusted LVT-2 qualification evidence")
+        attestation = getattr(tx, "oracle_attestation", None)
+        verify_attestation = getattr(validator, "verify_oracle_attestation", None)
+        if not callable(verify_attestation) or attestation is None:
+            raise ValueError("Missing owner-authorized independent oracle attestation")
+        trusted, _reason = verify_attestation(attestation, study.evidence_hash)
+        if not trusted:
+            raise ValueError("Invalid or untrusted oracle attestation")
+
+    @staticmethod
     def evaluate_cross_model_transfer(
         tx: LearningValidityTransaction,
         target_model_id: str,
@@ -38,11 +66,12 @@ class LearningTransferProtocol:
         base_prompt: str,
         refined_prompt: str,
         regression_tolerance: float = 0.05,
+        validator: Optional[Any] = None,
     ) -> Dict[str, Any]:
         """
         Tests whether an admitted learning refinement generalizes to a distinct foundation model.
         """
-        LearningTransferProtocol.assert_not_revoked(tx)
+        LearningTransferProtocol._require_verified_qualification(tx, validator)
 
         if not test_dataset:
             raise ValueError("test_dataset cannot be empty")
@@ -78,15 +107,15 @@ class LearningTransferProtocol:
     def synthesize_spe_learning_artifact(
         tx: LearningValidityTransaction,
         refined_prompt_content: str,
-        supported_models: Sequence[str] = ("gpt-4o", "claude-3-7-sonnet", "llama-3-3-70b"),
+        supported_models: Sequence[str] = (),
+        validator: Optional[Any] = None,
     ) -> str:
         """
         Synthesizes a portable, self-contained .spe bundle embedding the verified learning artifact.
         """
-        LearningTransferProtocol.assert_not_revoked(tx)
-
-        if tx.status != QualificationStatus.QUALIFIED:
-            raise ValueError(f"Cannot synthesize artifact for non-qualified transaction (status={tx.status})")
+        LearningTransferProtocol._require_verified_qualification(tx, validator)
+        if supported_models:
+            raise ValueError("Model-specific independent verification required before verified_models export")
 
         artifact_doc = {
             "spe_version": "1.0",
@@ -100,7 +129,7 @@ class LearningTransferProtocol:
                 "signature": tx.canonical_receipt_signature,
                 "committed_timestamp": tx.committed_timestamp,
             },
-            "verified_models": list(supported_models),
+            "verified_models": [],
             "empirical_gain": {
                 "delta_improvement": tx.results.delta_improvement if tx.results else 0.0,
                 "held_out_retention": tx.results.held_out_retention if tx.results else 0.0,

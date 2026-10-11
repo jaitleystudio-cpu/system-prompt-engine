@@ -87,6 +87,8 @@ class ExperimentProtocol:
 
     def __post_init__(self) -> None:
         validate_nanos(self.max_cost_nanos, "max_cost_nanos")
+        if type(self.sample_size) is not int or self.sample_size <= 0:
+            raise ValueError("sample_size must be a positive integer")
         if self.allow_self_certification:
             raise ValueError("LVT Invariant: allow_self_certification can NEVER be True")
 
@@ -103,6 +105,8 @@ class FourArmResults:
     held_out_retention: float         # arm_d - arm_a
     is_statistically_significant: bool
     total_cost_nanos: NanoUSD = 0
+    # Compatibility-only descriptive metric; not an independent qualification.
+    held_out_baseline_score: Optional[float] = None
 
     def __post_init__(self) -> None:
         validate_nanos(self.total_cost_nanos, "total_cost_nanos")

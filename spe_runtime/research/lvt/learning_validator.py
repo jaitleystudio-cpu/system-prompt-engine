@@ -8,13 +8,19 @@ from __future__ import annotations
 
 import hashlib
 import time
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Sequence, Tuple
 
 from spe_runtime.ci_gate.receipt import (
     ed25519_sign,
     ed25519_verify,
     generate_keypair,
     rfc8785_canonicalize,
+)
+from spe_runtime.research.lvt.paired_gate_v2 import (
+    Observation as LVT2Observation,
+    StudyProtocol as LVT2StudyProtocol,
+    StudyResult as LVT2StudyResult,
+    run_study as evaluate_paired_research,
 )
 from spe_runtime.research.lvt.types import (
     EvaluatorType,
@@ -42,6 +48,19 @@ class LearningValidator:
     @property
     def public_key(self) -> bytes:
         return self._pk
+
+    def evaluate_research_only_v2(
+        self,
+        protocol: LVT2StudyProtocol,
+        train: Sequence[LVT2Observation],
+        heldout: Sequence[LVT2Observation],
+    ) -> LVT2StudyResult:
+        """Compute paired study evidence without signing or committing a claim.
+
+        Caller-supplied evaluator IDs, task digests and score records cannot
+        establish independent provenance. This method NEVER issues QUALIFIED.
+        """
+        return evaluate_paired_research(protocol, train, heldout)
 
     def evaluate_conjuncts(self, tx: LearningValidityTransaction) -> Dict[str, bool]:
         """Evaluates each of the six formal conjuncts of the LVT admission rule."""
@@ -77,7 +96,12 @@ class LearningValidator:
             results.arm_c_shuffled_control_score,
             results.arm_d_generalization_score,
         ]
-        evidence_authentic = all(0.0 <= s <= 1.0 for s in scores)
+        # LVT-0 FourArmResults stores aggregates only. Even plausible scores
+        # and a true is_statistically_significant flag are not evidence of
+        # paired held-out observations, data custody, or an independent oracle.
+        # Fail closed until a versioned, externally attested LVT-2 admission
+        # path is integrated and independently qualified.
+        evidence_authentic = False
 
         # Independent evaluation: evaluator != generator and not self-type
         eval_independent = (
@@ -139,6 +163,11 @@ class LearningValidator:
             reason = f"LVT admission rule violation: failed conjuncts: {', '.join(failed)}"
             tx.status = QualificationStatus.REJECTED
             tx.rejection_reason = reason
+            # Never retain a stale positive receipt after re-evaluation.
+            tx.artifact_hash = ""
+            tx.canonical_receipt_signature = ""
+            tx.committed_timestamp = None
+            tx.metadata.pop("public_key", None)
             if strict:
                 raise LearningValidityRuleViolation(reason)
             return tx
@@ -183,33 +212,45 @@ class LearningValidator:
         tx: LearningValidityTransaction,
         public_key: Optional[bytes] = None,
     ) -> bool:
-        """Cryptographically verifies the transaction's Ed25519 receipt signature."""
-        if not tx.canonical_receipt_signature or not tx.committed_timestamp:
+        """Verify an authenticated owner-signed qualification receipt.
+
+        A key supplied in tx.metadata or by a caller is *not* a trust root.
+        The verifier's pinned public key is the sole accepted key. The caller
+        may supply that same key for API compatibility, never a replacement.
+        """
+        if tx.status != QualificationStatus.QUALIFIED:
+            return False
+        if not tx.canonical_receipt_signature or tx.committed_timestamp is None:
+            return False
+        if not tx.artifact_hash:
+            return False
+        if public_key is not None and public_key != self._pk:
+            return False
+        if tx.metadata.get("public_key", self._pk.hex()) != self._pk.hex():
             return False
 
-        pk = public_key
-        if not pk and "public_key" in tx.metadata:
-            pk = bytes.fromhex(tx.metadata["public_key"])
-        if not pk:
-            pk = self._pk
-
-        receipt_dict = {
-            "tx_id": tx.tx_id,
-            "claim_id": tx.claim.claim_id,
-            "domain": tx.claim.domain,
-            "generator_id": tx.claim.generator_id,
-            "evaluator_id": tx.evaluator_id,
-            "evaluator_type": tx.evaluator_type.value,
-            "status": tx.status.value,
-            "results": {
-                "arm_a": tx.results.arm_a_baseline_score if tx.results else 0.0,
-                "arm_b": tx.results.arm_b_authentic_score if tx.results else 0.0,
-                "arm_c": tx.results.arm_c_shuffled_control_score if tx.results else 0.0,
-                "arm_d": tx.results.arm_d_generalization_score if tx.results else 0.0,
-                "delta": tx.results.delta_improvement if tx.results else 0.0,
-            },
-            "timestamp": tx.committed_timestamp,
-        }
-        canonical_bytes = rfc8785_canonicalize(receipt_dict)
-        sig_bytes = bytes.fromhex(tx.canonical_receipt_signature)
-        return ed25519_verify(pk, canonical_bytes, sig_bytes)
+        try:
+            receipt_dict = {
+                "tx_id": tx.tx_id,
+                "claim_id": tx.claim.claim_id,
+                "domain": tx.claim.domain,
+                "generator_id": tx.claim.generator_id,
+                "evaluator_id": tx.evaluator_id,
+                "evaluator_type": tx.evaluator_type.value,
+                "status": tx.status.value,
+                "results": {
+                    "arm_a": tx.results.arm_a_baseline_score if tx.results else 0.0,
+                    "arm_b": tx.results.arm_b_authentic_score if tx.results else 0.0,
+                    "arm_c": tx.results.arm_c_shuffled_control_score if tx.results else 0.0,
+                    "arm_d": tx.results.arm_d_generalization_score if tx.results else 0.0,
+                    "delta": tx.results.delta_improvement if tx.results else 0.0,
+                },
+                "timestamp": tx.committed_timestamp,
+            }
+            canonical_bytes = rfc8785_canonicalize(receipt_dict)
+            if hashlib.sha256(canonical_bytes).hexdigest() != tx.artifact_hash:
+                return False
+            sig_bytes = bytes.fromhex(tx.canonical_receipt_signature)
+        except (ValueError, TypeError, AttributeError):
+            return False
+        return ed25519_verify(self._pk, canonical_bytes, sig_bytes)
