@@ -41,15 +41,21 @@ class LearningTransferProtocol:
             raise ValueError("Cannot use artifact for non-qualified transaction")
         if isinstance(tx.results, FourArmResults):
             raise ValueError("Cannot use legacy aggregate evidence as verified qualification")
-        if validator is None or not callable(getattr(validator, "verify_transaction_signature", None)):
-            raise ValueError("Missing trusted validator and verified receipt")
+        from spe_runtime.research.lvt.learning_validator import LearningValidator
+        if not isinstance(validator, LearningValidator):
+            raise ValueError("Missing owner-controlled trusted learning verifier")
         if not validator.verify_transaction_signature(tx):
             raise ValueError("Missing authenticated verified receipt")
-        if not (
-            getattr(tx, "lvt2_study_result", None) is not None
-            and getattr(tx, "is_attested_oracle", False) is True
-        ):
+        study = getattr(tx, "lvt2_study_result", None)
+        if study is None or getattr(tx, "is_attested_oracle", False) is not True:
             raise ValueError("Missing independently trusted LVT-2 qualification evidence")
+        attestation = getattr(tx, "oracle_attestation", None)
+        verify_attestation = getattr(validator, "verify_oracle_attestation", None)
+        if not callable(verify_attestation) or attestation is None:
+            raise ValueError("Missing owner-authorized independent oracle attestation")
+        trusted, _reason = verify_attestation(attestation, study.evidence_hash)
+        if not trusted:
+            raise ValueError("Invalid or untrusted oracle attestation")
 
     @staticmethod
     def evaluate_cross_model_transfer(
