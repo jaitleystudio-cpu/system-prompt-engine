@@ -360,7 +360,9 @@ def test_21_historical_v1_compatibility():
     # Test fixture mock serialization operates via test-only mechanism
     fixture_committed = LearningValidator.mint_test_fixture_receipt(tx)
     assert fixture_committed.status == QualificationStatus.RESEARCH_UNQUALIFIED
-    assert validator.verify_transaction_signature(fixture_committed) is True
+    # Test-only self-signed mock receipts are structurally serializable but
+    # not independently trusted by an unrelated validator.
+    assert validator.verify_transaction_signature(fixture_committed) is False
 
 
 # 22. Aggregate-only qualification rejection
