@@ -173,16 +173,13 @@ def test_failed_cross_model_transfer(qualified_tx):
     assert report["transfers_successfully"] is False
 
 def test_artifact_synthesis(qualified_tx):
-    artifact_json = LearningTransferProtocol.synthesize_spe_learning_artifact(
-        tx=qualified_tx,
-        refined_prompt_content="Refined rules"
-    )
-    data = json.loads(artifact_json)
-    assert data["spe_version"] == "1.0"
-    assert data["artifact_type"] == "LEARNING_VALIDITY_TRANSACTION"
-    assert data["tx_id"] == "TX-XFER-001"
-    assert "receipt" in data
-    assert data["refined_prompt"] == "Refined rules"
+    # A valid transaction is not a portable verification credential when the
+    # exporter has not been given the authoritative validator/trust context.
+    with pytest.raises(ValueError, match="trusted validator"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=qualified_tx,
+            refined_prompt_content="Refined rules",
+        )
 
 def test_distribution_drift_revocation(qualified_tx):
     # Baseline generalization was 0.88.
