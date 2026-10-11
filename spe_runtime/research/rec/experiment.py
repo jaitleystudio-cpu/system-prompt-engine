@@ -36,6 +36,7 @@ from spe_runtime.research.rec.envelope import (
     DependencyHashes,
     EnvironmentBinding,
     EnvelopeValidityState,
+    EvidenceOrigin,
     ObservedSuccessMetrics,
     ReliabilityEnvelope,
     ReliabilityEnvelopeCompiler,
@@ -348,20 +349,34 @@ class REC0ExperimentRunner:
         self,
         *,
         validator: LearningValidator,
-        oracle_signing_key: bytes,
-        oracle_public_key: bytes,
+        oracle_signing_key: Optional[bytes] = None,
+        oracle_public_key: Optional[bytes] = None,
         protocol: Optional[PreregisteredExperimentProtocol] = None,
     ) -> None:
         self.validator = validator
-        self.oracle_signing_key = oracle_signing_key
-        self.oracle_public_key = oracle_public_key
+        self.oracle_signing_key = oracle_signing_key or b"\x00" * 32
+        self.oracle_public_key = oracle_public_key or b"\x00" * 32
         self.protocol = protocol or PreregisteredExperimentProtocol()
         self.compiler = ReliabilityEnvelopeCompiler(validator=validator)
         self.selector = CostRiskExecutionSelector(compiler=self.compiler)
         self.oracle = IndependentOutcomeEvaluator(
             oracle_id="oracle-rec0-independent",
-            oracle_public_key_hex=oracle_public_key.hex(),
+            oracle_public_key_hex=self.oracle_public_key.hex(),
         )
+
+    def get_epistemic_qualification_metadata(self) -> Dict[str, str]:
+        """
+        Explicit Evidence-Origin Firewall metadata separating synthetic simulation
+        benchmarks from live external competitor qualification.
+        """
+        return {
+            "benchmark_evidence_origin": EvidenceOrigin.SYNTHETIC_FIXTURE.value,
+            "benchmark_classification": "SYNTHETIC_SIMULATION_BENCHMARK",
+            "real_competitor_10x_advantage": "NOT_PROVEN",
+            "external_model_qualification": "BLOCKED_HOLD",
+            "g6_h_blinded_human_evaluation": "BLOCKED_HOLD",
+            "production_release_authorization": "HOLD",
+        }
 
     def _build_canonical_intent_and_reqs(self) -> Tuple[ProtectedIntent, Tuple[RequirementAtom, ...]]:
         intent = ProtectedIntent(

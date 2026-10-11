@@ -1,9 +1,10 @@
 """
-SPE Ω — REC-0: Reliability Envelope Compiler Research Package.
+SPE Ω — REC-0 & REC-1: Reliability Envelope Compiler & Counterfactual Reality Transfer Package.
 
-Exports the 12-field ReliabilityEnvelope contract, 4-state ValidityStateMachine,
-CalibratedRiskEstimator, CostRiskExecutionSelector, AdversarialQualificationSuite,
-REC0ExperimentRunner, and 7-view UX explainers.
+Exports the 12-field ReliabilityEnvelope contract, ValidityStateMachine,
+EvidenceOrigin firewall, CalibratedRiskEstimator (with Fréchet copula bounds),
+CostRiskExecutionSelector, CounterfactualWitnessSearch, RealityTransferEngine,
+AdversarialQualificationSuite, REC0ExperimentRunner, and 7-view UX explainers.
 """
 
 from spe_runtime.research.rec.adversarial import (
@@ -20,6 +21,7 @@ from spe_runtime.research.rec.envelope import (
     EnvelopeEvaluationResult,
     EnvelopeValidityState,
     EvaluatorBinding,
+    EvidenceOrigin,
     ModelRevisionBinding,
     ObservedSuccessMetrics,
     ReliabilityEnvelope,
@@ -36,6 +38,13 @@ from spe_runtime.research.rec.experiment import (
     reproduce_rec0_experiment,
 )
 from spe_runtime.research.rec.explain import explain_rec0_audit_and_ux
+from spe_runtime.research.rec.reality_transfer import (
+    CounterfactualWitnessSearch,
+    DiscriminatingWitnessProbe,
+    RealityTransferEngine,
+    RealityTransferResult,
+    TargetRealitySpec,
+)
 from spe_runtime.research.rec.selector import (
     AuthorizedStrategyCandidate,
     CostRiskExecutionSelector,
@@ -50,14 +59,17 @@ __all__ = [
     "BaselineComparisonMetrics",
     "CalibratedRiskEstimator",
     "CostRiskExecutionSelector",
+    "CounterfactualWitnessSearch",
     "CoverageScope",
     "DatasetCommitment",
     "DependencyHashes",
+    "DiscriminatingWitnessProbe",
     "DriftTrigger",
     "EnvironmentBinding",
     "EnvelopeEvaluationResult",
     "EnvelopeValidityState",
     "EvaluatorBinding",
+    "EvidenceOrigin",
     "ExecutionAction",
     "ExecutionSelectionDecision",
     "IndependentOutcomeEvaluator",
@@ -67,9 +79,12 @@ __all__ = [
     "PreregisteredExperimentProtocol",
     "REC0ExperimentReport",
     "REC0ExperimentRunner",
+    "RealityTransferEngine",
+    "RealityTransferResult",
     "ReliabilityEnvelope",
     "ReliabilityEnvelopeCompiler",
     "RiskBoundEstimate",
+    "TargetRealitySpec",
     "explain_rec0_audit_and_ux",
     "reproduce_rec0_experiment",
 ]

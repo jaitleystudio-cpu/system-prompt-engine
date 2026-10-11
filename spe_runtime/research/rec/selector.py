@@ -161,6 +161,7 @@ class CostRiskExecutionSelector:
         revoked_oracles: Sequence[str] = (),
         upstream_envelopes: Sequence[ReliabilityEnvelope] = (),
         human_escalation_authorized: bool = False,
+        allow_synthetic_calibration_execution: bool = False,
     ) -> ExecutionSelectionDecision:
         if not (0.0 < risk_tolerance_tau < 1.0) or not math.isfinite(risk_tolerance_tau):
             raise ValueError(f"risk_tolerance_tau must be in (0, 1), got {risk_tolerance_tau}")
@@ -179,9 +180,10 @@ class CostRiskExecutionSelector:
             current_time=current_time,
             revoked_oracles=revoked_oracles,
             upstream_envelopes=upstream_envelopes,
+            allow_synthetic_calibration_execution=allow_synthetic_calibration_execution,
         )
 
-        # Generate new verification obligations whenever evidence is STALE or UNKNOWN
+        # Generate new verification obligations whenever evidence is STALE, UNKNOWN, or SYNTHETIC_CALIBRATION_ONLY
         obligations: List[str] = []
         if env_eval.state == EnvelopeValidityState.STALE:
             for trig in env_eval.triggered_drift_events:
@@ -192,6 +194,10 @@ class CostRiskExecutionSelector:
             else:
                 for req in requirements:
                     obligations.append(f"VERIFY_REQ:{req.semantic_key}")
+        elif env_eval.state == EnvelopeValidityState.SYNTHETIC_CALIBRATION_ONLY:
+            obligations.append("REAL_WORLD_INDEPENDENT_EVIDENCE_REQUIRED")
+            for req in requirements:
+                obligations.append(f"VERIFY_REQ:{req.semantic_key}")
         elif env_eval.state == EnvelopeValidityState.UNKNOWN:
             obligations.append("INITIAL_INDEPENDENT_ORACLE_QUALIFICATION")
             for req in requirements:

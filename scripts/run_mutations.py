@@ -326,6 +326,30 @@ MUTANTS = [
         "replacement": "        n_passed = min(n_fam, max(0, observed_success.n_all_runs_passed_tasks))",
         "test": "tests/research/rec/test_rec0_reliability_envelope.py::test_edge_cases_clopper_pearson_and_risk_estimator_boundaries",
     },
+    {
+        "id": "M39",
+        "name": "REC-1: Revert distribution-free Fréchet bound to unsound mixture formula",
+        "file": "spe_runtime/research/rec/envelope.py",
+        "target": "        _, frechet_upper = cls.frechet_joint_failure_bounds([per_run_failure_bound] * k_runs)\n        return frechet_upper",
+        "replacement": "        return cls.correlated_repeated_risk_bound(per_run_failure_bound=per_run_failure_bound, k_runs=k_runs, inter_run_correlation=inter_run_correlation)  # MUTANT M39",
+        "test": "tests/research/rec/test_rec1_counterfactual_transfer.py::test_pairwise_independent_ternary_counterexample_fails_mixture_formula_and_requires_sound_bounds",
+    },
+    {
+        "id": "M40",
+        "name": "REC-1: Bypass Evidence-Origin Firewall allowing SYNTHETIC_FIXTURE to become VALID",
+        "file": "spe_runtime/research/rec/envelope.py",
+        "target": "        if not allow_synthetic_calibration_execution and (",
+        "replacement": "        if False and not allow_synthetic_calibration_execution and (",
+        "test": "tests/research/rec/test_rec1_counterfactual_transfer.py::test_evidence_origin_firewall_blocks_synthetic_fixtures_from_production_valid_state",
+    },
+    {
+        "id": "M41",
+        "name": "REC-1: Authorize counterfactual reality transfer despite failed witness probes",
+        "file": "spe_runtime/research/rec/reality_transfer.py",
+        "target": "        if failed_ids or env_eval.state == EnvelopeValidityState.STALE or not executed_ids:",
+        "replacement": "        if False and (failed_ids or env_eval.state == EnvelopeValidityState.STALE or not executed_ids):",
+        "test": "tests/research/rec/test_rec1_counterfactual_transfer.py::test_reality_transfer_counterfactual_witness_detects_drift_and_invalidates_envelope",
+    },
 ]
 
 

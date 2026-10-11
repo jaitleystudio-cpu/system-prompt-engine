@@ -39,13 +39,24 @@ _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 _HEX128 = re.compile(r"^[0-9a-f]{128}$")
 
 
+class EvidenceOrigin(str, Enum):
+    """Origin and custody classification of evaluation and verification evidence."""
+
+    SYNTHETIC_FIXTURE = "SYNTHETIC_FIXTURE"
+    OBSERVED_UNVERIFIED = "OBSERVED_UNVERIFIED"
+    INDEPENDENTLY_VERIFIED = "INDEPENDENTLY_VERIFIED"
+    STALE = "STALE"
+    REVOKED = "REVOKED"
+
+
 class EnvelopeValidityState(str, Enum):
-    """Four-state validity lattice for ReliabilityEnvelope evaluation."""
+    """Validity lattice for ReliabilityEnvelope evaluation."""
 
     VALID = "VALID"
     STALE = "STALE"
     INVALID = "INVALID"
     UNKNOWN = "UNKNOWN"
+    SYNTHETIC_CALIBRATION_ONLY = "SYNTHETIC_CALIBRATION_ONLY"
 
 
 class DriftTrigger(str, Enum):
@@ -130,6 +141,8 @@ class DatasetCommitment:
     item_digests: Tuple[str, ...] = field(default_factory=tuple)
     family_ids: Tuple[str, ...] = field(default_factory=tuple)
     has_train_holdout_overlap: bool = False
+    is_synthetic: bool = False
+    evidence_origin: EvidenceOrigin = EvidenceOrigin.OBSERVED_UNVERIFIED
 
     @classmethod
     def create_verified(
@@ -153,6 +166,8 @@ class DatasetCommitment:
             }
         )
         ds_hash = hashlib.sha256(canonical_bytes).hexdigest()
+        is_synthetic = dataset_id.startswith("synth-")
+        origin = EvidenceOrigin.SYNTHETIC_FIXTURE if is_synthetic else EvidenceOrigin.INDEPENDENTLY_VERIFIED
         return cls(
             dataset_id=dataset_id,
             dataset_sha256=ds_hash,
@@ -162,6 +177,8 @@ class DatasetCommitment:
             item_digests=tuple(digests),
             family_ids=fams,
             has_train_holdout_overlap=False,
+            is_synthetic=is_synthetic,
+            evidence_origin=origin,
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -170,9 +187,11 @@ class DatasetCommitment:
             "dataset_id": self.dataset_id,
             "dataset_sha256": self.dataset_sha256,
             "distinct_clusters_count": self.distinct_clusters_count,
+            "evidence_origin": self.evidence_origin.value,
             "family_ids": list(self.family_ids),
             "has_train_holdout_overlap": self.has_train_holdout_overlap,
             "independent_families_count": self.independent_families_count,
+            "is_synthetic": self.is_synthetic,
             "item_digests": list(self.item_digests),
         }
 
@@ -345,6 +364,95 @@ class CalibratedRiskEstimator:
         independent_term = (1.0 - inter_run_correlation) * math.pow(per_run_failure_bound, k_runs)
         correlated_term = inter_run_correlation * per_run_failure_bound
         return min(1.0, independent_term + correlated_term)
+
+    @staticmethod
+    def frechet_joint_failure_bounds(per_run_failure_probs: Sequence[float]) -> Tuple[float, float]:
+        """
+        Distribution-free Fréchet-Hoeffding copula bounds on simultaneous joint failure
+        P(F_1 = 1 and ... and F_k = 1):
+            max(0, sum_i p_i - (k - 1)) <= P(cap_{i=1}^k F_i) <= min_i p_i
+        """
+        if not per_run_failure_probs:
+            raise ValueError("per_run_failure_probs must not be empty")
+        probs = [float(p) for p in per_run_failure_probs]
+        for p in probs:
+            if not (0.0 <= p <= 1.0) or not math.isfinite(p):
+                raise ValueError(f"Invalid probability {p}: must be in [0, 1]")
+        k = len(probs)
+        lower = max(0.0, math.fsum(probs) - float(k - 1))
+        upper = min(probs)
+        return (min(1.0, lower), min(1.0, max(lower, upper)))
+
+    @staticmethod
+    def frechet_pass_hat_k_bounds(per_run_failure_probs: Sequence[float]) -> Tuple[float, float]:
+        """
+        Distribution-free Fréchet-Hoeffding bounds on pass^k = P(all k attempts succeed):
+            max(0, sum_i (1 - p_i) - (k - 1)) <= pass^k <= min_i (1 - p_i)
+        """
+        if not per_run_failure_probs:
+            raise ValueError("per_run_failure_probs must not be empty")
+        success_probs = [1.0 - float(p) for p in per_run_failure_probs]
+        for s in success_probs:
+            if not (0.0 <= s <= 1.0) or not math.isfinite(s):
+                raise ValueError("per_run_failure_probs must be in [0, 1]")
+        k = len(success_probs)
+        lower = max(0.0, math.fsum(success_probs) - float(k - 1))
+        upper = min(success_probs)
+        return (min(1.0, lower), min(1.0, max(lower, upper)))
+
+    @classmethod
+    def frechet_pass_at_k_bounds(cls, per_run_failure_probs: Sequence[float]) -> Tuple[float, float]:
+        """
+        Distribution-free Fréchet-Hoeffding bounds on pass@k = 1 - P(all k attempts fail):
+            1 - min_i p_i <= pass@k <= 1 - max(0, sum_i p_i - (k - 1))
+        """
+        jf_lower, jf_upper = cls.frechet_joint_failure_bounds(per_run_failure_probs)
+        return (max(0.0, 1.0 - jf_upper), min(1.0, 1.0 - jf_lower))
+
+    @classmethod
+    def estimate_repeated_execution_risk(
+        cls,
+        *,
+        per_run_failure_bound: float,
+        k_runs: int,
+        inter_run_correlation: float,
+        empirical_joint_failures: Optional[int] = None,
+        n_families: Optional[int] = None,
+        confidence: float = 0.95,
+    ) -> float:
+        """
+        Estimates a statistically sound upper bound on simultaneous joint failure probability
+        P(F_1 = 1 and ... and F_k = 1) across k repeated executions.
+
+        1. If empirical_joint_failures and n_families (>= 1) are provided:
+           Computes exact one-sided Clopper-Pearson upper confidence bound on the joint
+           failure event E_joint = I(all k runs failed) at significance alpha = 1 - confidence.
+        2. Otherwise (when higher-order joint dependence is unobserved):
+           Pairwise correlation rho = 0 does NOT imply mutual independence for k >= 3
+           (ternary counterexample: {111, 100, 010, 001} has p=0.5, rho=0, but joint failure = 0.25 > 0.5^3 = 0.125).
+           Therefore, returns the distribution-free Fréchet-Hoeffding upper copula bound:
+               P(cap_{i=1}^k F_i) <= min_i p_i = per_run_failure_bound.
+        """
+        if not (0.0 <= per_run_failure_bound <= 1.0) or not math.isfinite(per_run_failure_bound):
+            raise ValueError("per_run_failure_bound must be in [0, 1]")
+        if k_runs < 1:
+            raise ValueError("k_runs must be >= 1")
+        if not (0.0 <= inter_run_correlation <= 1.0) or not math.isfinite(inter_run_correlation):
+            raise ValueError("inter_run_correlation must be in [0, 1]")
+        if not (0.0 < confidence < 1.0) or not math.isfinite(confidence):
+            raise ValueError("confidence must be in (0, 1)")
+
+        if empirical_joint_failures is not None and n_families is not None:
+            alpha = 1.0 - confidence
+            cp_bound = cls.clopper_pearson_upper_bound(
+                failures=empirical_joint_failures,
+                n_families=n_families,
+                alpha=alpha,
+            )
+            return min(1.0, max(float(empirical_joint_failures) / float(n_families), cp_bound))
+
+        _, frechet_upper = cls.frechet_joint_failure_bounds([per_run_failure_bound] * k_runs)
+        return frechet_upper
 
     @classmethod
     def estimate_risk_bound(
@@ -831,6 +939,7 @@ class ReliabilityEnvelopeCompiler:
         current_time: Optional[float] = None,
         revoked_oracles: Sequence[str] = (),
         upstream_envelopes: Sequence[ReliabilityEnvelope] = (),
+        allow_synthetic_calibration_execution: bool = False,
     ) -> EnvelopeEvaluationResult:
         if envelope is None:
             return EnvelopeEvaluationResult(
@@ -1177,6 +1286,28 @@ class ReliabilityEnvelopeCompiler:
                 reason=f"Envelope is STALE due to drift triggers: {', '.join(stale_triggers)}",
                 reused_obligations=tuple(reused_obs),
                 altered_obligations=tuple(altered_obs),
+            )
+
+        # 9. Evidence-Origin Firewall (REC-1 P0):
+        # Synthetic datasets, generated synthetic IDs, or SYNTHETIC_FIXTURE origin cannot acquire
+        # production VALID state or authorize reuse unless explicitly in synthetic calibration test mode.
+        ds = envelope.dataset_commitment
+        if not allow_synthetic_calibration_execution and (
+            ds.is_synthetic
+            or ds.evidence_origin == EvidenceOrigin.SYNTHETIC_FIXTURE
+            or ds.dataset_id.lower().startswith("synth-")
+        ):
+            return EnvelopeEvaluationResult(
+                state=EnvelopeValidityState.SYNTHETIC_CALIBRATION_ONLY,
+                can_reuse=False,
+                effective_risk_bound=envelope.risk_bound,
+                triggered_drift_events=(),
+                reason=(
+                    f"Evidence-Origin Firewall: dataset '{ds.dataset_id}' has origin "
+                    f"{ds.evidence_origin.value} (SYNTHETIC_CALIBRATION_ONLY; production reuse blocked)."
+                ),
+                reused_obligations=(),
+                altered_obligations=tuple(req.semantic_key for req in requirements),
             )
 
         return EnvelopeEvaluationResult(
