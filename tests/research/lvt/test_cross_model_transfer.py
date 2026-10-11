@@ -88,7 +88,20 @@ def qualified_tx():
     )
     committed = validator.validate_and_commit(tx)
     committed._test_validator = validator  # type: ignore[attr-defined]
+    committed._test_oracle_sk = sk  # type: ignore[attr-defined]
     return committed
+
+
+def _make_heldout_transfer_dataset(n: int = 24):
+    return [
+        {
+            "item_id": f"xfer-item-{i}",
+            "family_id": f"xfer-fam-{i}",
+            "content_sha256": f"c{i:063x}",
+            "q": f"1+{i}",
+        }
+        for i in range(n)
+    ]
 
 
 def test_unqualified_tx_cannot_evaluate_cross_model_transfer():
@@ -132,9 +145,10 @@ def test_unqualified_tx_cannot_evaluate_cross_model_transfer():
             tx=unq_tx,
             target_model_id="claude-3-7-sonnet",
             evaluator_fn=lambda p, i: 0.8,
-            test_dataset=[{"q": "1+1"}],
+            test_dataset=_make_heldout_transfer_dataset(24),
             base_prompt="base",
             refined_prompt="refined",
+            validator=validator,
         )
 
 
@@ -142,8 +156,8 @@ def test_successful_cross_model_transfer(qualified_tx):
     def mock_evaluator(prompt, item):
         return 0.85 if "refined" in prompt else 0.50
 
-    dataset = [{"q": "1+1"}]
-    
+    dataset = _make_heldout_transfer_dataset(24)
+
     report = LearningTransferProtocol.evaluate_cross_model_transfer(
         tx=qualified_tx,
         target_model_id="claude-3-7-sonnet",
@@ -151,8 +165,10 @@ def test_successful_cross_model_transfer(qualified_tx):
         test_dataset=dataset,
         base_prompt="base",
         refined_prompt="refined",
+        validator=qualified_tx._test_validator,
+        oracle_signing_key=qualified_tx._test_oracle_sk,
     )
-    
+
     assert report["transfers_successfully"] is True
     assert report["transfer_delta"] == 0.35
     assert "cross_model_transfers" in qualified_tx.metadata
@@ -161,8 +177,8 @@ def test_failed_cross_model_transfer(qualified_tx):
     def mock_evaluator(prompt, item):
         return 0.40 if "refined" in prompt else 0.50
 
-    dataset = [{"q": "1+1"}]
-    
+    dataset = _make_heldout_transfer_dataset(24)
+
     report = LearningTransferProtocol.evaluate_cross_model_transfer(
         tx=qualified_tx,
         target_model_id="llama-3-3-70b",
@@ -170,8 +186,10 @@ def test_failed_cross_model_transfer(qualified_tx):
         test_dataset=dataset,
         base_prompt="base",
         refined_prompt="refined",
+        validator=qualified_tx._test_validator,
+        oracle_signing_key=qualified_tx._test_oracle_sk,
     )
-    
+
     assert report["transfers_successfully"] is False
 
 def test_artifact_synthesis(qualified_tx):

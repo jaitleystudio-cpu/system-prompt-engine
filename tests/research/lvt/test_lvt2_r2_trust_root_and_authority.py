@@ -343,6 +343,7 @@ def _make_legitimate_qualified_tx() -> tuple[LearningValidityTransaction, Learni
     )
     tx.oracle_attestation = attestation
     committed = validator.validate_and_commit(tx)
+    committed._test_oracle_sk = sk  # type: ignore[attr-defined]
     assert committed.status == QualificationStatus.QUALIFIED
     assert committed.is_attested_oracle is True
     return committed, validator
@@ -439,8 +440,17 @@ def test_task4_7_unverified_model_transfer_cannot_be_labeled_verified_models():
             validator=validator,
         )
 
-    # Now verify claude-3-7-sonnet via evaluate_cross_model_transfer
-    test_ds = [{"input": "test", "label": "test"}]
+    # Now verify claude-3-7-sonnet via authenticated multi-family evaluate_cross_model_transfer
+    test_ds = [
+        {
+            "item_id": f"xfer-item-{i}",
+            "family_id": f"xfer-fam-{i}",
+            "content_sha256": f"c{i:063x}",
+            "input": f"test-{i}",
+            "label": "test",
+        }
+        for i in range(24)
+    ]
     report = LearningTransferProtocol.evaluate_cross_model_transfer(
         committed,
         target_model_id="claude-3-7-sonnet",
@@ -448,6 +458,8 @@ def test_task4_7_unverified_model_transfer_cannot_be_labeled_verified_models():
         test_dataset=test_ds,
         base_prompt="base",
         refined_prompt="refined",
+        validator=validator,
+        oracle_signing_key=committed._test_oracle_sk,
     )
     assert report["transfers_successfully"] is True
 

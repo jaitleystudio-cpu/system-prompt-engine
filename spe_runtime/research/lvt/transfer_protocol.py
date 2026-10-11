@@ -1,18 +1,34 @@
 """
-SPE Ω — Learning Transfer & Revocation Protocol (LVT-0).
-Evaluates cross-model generalization, synthesizes portable .spe learning artifacts,
-and enforces continuous monitoring with cryptographic revocation upon drift or counterexample.
+SPE Ω — Learning Transfer & Revocation Protocol (LVT-0 / LVT-2 R5).
+Evaluates cross-model generalization with authenticated model-specific receipts,
+synthesizes portable .spe learning artifacts, and enforces continuous monitoring
+with cryptographic revocation upon drift or counterexample.
 """
 
 from __future__ import annotations
 
+from collections import defaultdict
+from dataclasses import asdict
+import hashlib
 import json
+import math
 from typing import Any, Callable, Dict, List, Optional, Sequence
 
+from spe_runtime.ci_gate.receipt import ed25519_verify, rfc8785_canonicalize
+from spe_runtime.research.lvt.paired_gate_v2 import (
+    VERSION,
+    Observation,
+    StudyProtocol,
+    _DIGEST,
+    _finite_score,
+    _valid_alpha,
+    _valid_positive_int,
+    exact_sign_p,
+)
 from spe_runtime.research.lvt.types import (
     LearningValidityTransaction,
+    OracleAttestation,
     QualificationStatus,
-    RequalificationTrigger,
     RevocationReason,
     TransactionRevokedError,
 )
@@ -24,7 +40,7 @@ class LearningTransferProtocol:
     @staticmethod
     def assert_not_revoked(tx: LearningValidityTransaction) -> None:
         """Verifies that a transaction is active and has not been revoked."""
-        if tx.status == QualificationStatus.REVOKED:
+        if tx.status == QualificationStatus.REVOKED or tx.revocation_reason is not None:
             raise TransactionRevokedError(
                 f"LVT Invariant: Transaction '{tx.tx_id}' was revoked. Reason: {tx.revocation_reason}"
             )
@@ -39,15 +55,18 @@ class LearningTransferProtocol:
         refined_prompt: str,
         regression_tolerance: float = 0.05,
         validator: Optional[Any] = None,
+        *,
+        transfer_protocol: Optional[StudyProtocol] = None,
+        target_model_digest: Optional[str] = None,
+        evaluator_id: Optional[str] = None,
+        oracle_attestation: Optional[OracleAttestation] = None,
+        oracle_signing_key: Optional[bytes] = None,
     ) -> Dict[str, Any]:
         """
-        Tests whether an admitted learning refinement generalizes to a distinct foundation model.
+        Tests whether an admitted learning refinement generalizes to a distinct foundation model
+        under a frozen multi-family protocol and produces an authenticated model-transfer receipt.
         """
         LearningTransferProtocol.assert_not_revoked(tx)
-
-        from spe_runtime.research.lvt.learning_validator import LearningValidator
-        if validator is not None and not isinstance(validator, LearningValidator):
-            raise ValueError("Missing trusted verifier: validator must be an authoritative LearningValidator instance")
 
         if tx.status not in (QualificationStatus.QUALIFIED, QualificationStatus.RESEARCH_SUPPORTED):
             raise ValueError(f"Cannot evaluate cross-model transfer for unqualified transaction (status={tx.status})")
@@ -60,40 +79,337 @@ class LearningTransferProtocol:
         ):
             raise ValueError("Cannot evaluate cross-model transfer without verified receipt and trusted qualification evidence")
 
-        if validator is not None and not validator.verify_transaction_signature(tx):
+        from spe_runtime.research.lvt.learning_validator import (
+            LearningValidator,
+            create_oracle_attestation,
+        )
+
+        # PRIORITY 1: Owner-authorized LearningValidator is mandatory
+        if validator is None or not isinstance(validator, LearningValidator):
+            raise ValueError("Missing owner-authorized LearningValidator: cross-model transfer requires a trusted validator instance")
+
+        if not validator._trusted_oracles and not validator._trusted_oracle_keys:
+            raise ValueError("Untrusted LearningValidator: no trusted oracle registry configured for cross-model transfer")
+
+        if not tx.protocol or not getattr(tx.protocol, "protocol_id", None):
+            raise ValueError("Missing experiment protocol on transaction blocks cross-model transfer")
+
+        if "committed_protocol_id" in tx.metadata and tx.protocol.protocol_id != tx.metadata["committed_protocol_id"]:
+            raise ValueError("Replay against a changed protocol blocks cross-model transfer")
+
+        if "committed_evidence_hash" in tx.metadata and tx.lvt2_study_result.evidence_hash != tx.metadata["committed_evidence_hash"]:
+            raise ValueError("Changed parent study evidence hash blocks cross-model transfer")
+
+        if not validator.verify_transaction_signature(tx):
             raise ValueError("Invalid receipt signature blocks cross-model transfer evaluation")
 
+        if tx.status == QualificationStatus.QUALIFIED:
+            parent_ok, parent_msg = validator.verify_oracle_attestation(
+                tx.oracle_attestation,
+                tx.lvt2_study_result.evidence_hash,
+                expected_oracle_id=tx.evaluator_id,
+            )
+            if not parent_ok:
+                raise ValueError(f"Parent transaction oracle attestation failed verification: {parent_msg}")
+
+        # PRIORITY 2 & 3: Model identity and frozen benchmark protocol validation
+        if not isinstance(target_model_id, str) or not target_model_id.strip():
+            raise ValueError("target_model_id must be a non-empty string")
+
+        effective_evaluator_id = evaluator_id if evaluator_id is not None else tx.evaluator_id
+        if not isinstance(effective_evaluator_id, str) or not effective_evaluator_id.strip():
+            raise ValueError("evaluator_id must be a non-empty string")
+        if effective_evaluator_id == target_model_id or effective_evaluator_id == tx.claim.generator_id:
+            raise ValueError("Evaluator self-certification is forbidden in cross-model transfer")
+
+        if transfer_protocol is not None:
+            if not isinstance(transfer_protocol, StudyProtocol):
+                raise ValueError("transfer_protocol must be a StudyProtocol instance")
+            if transfer_protocol.generator_id != target_model_id:
+                raise ValueError(
+                    f"Mismatched model identity: transfer_protocol.generator_id '{transfer_protocol.generator_id}' != target_model_id '{target_model_id}'"
+                )
+            if transfer_protocol.evaluator_id != effective_evaluator_id:
+                raise ValueError(
+                    f"Mismatched evaluator identity: transfer_protocol.evaluator_id '{transfer_protocol.evaluator_id}' != '{effective_evaluator_id}'"
+                )
+            if target_model_digest is not None and transfer_protocol.model_digest != target_model_digest:
+                raise ValueError("Mismatched target_model_digest against transfer_protocol.model_digest")
+            effective_model_digest = transfer_protocol.model_digest
+            proto = transfer_protocol
+        else:
+            effective_model_digest = (
+                target_model_digest
+                if target_model_digest is not None
+                else hashlib.sha256(f"spe-model-v1:{target_model_id}".encode("utf-8")).hexdigest()
+            )
+            oracle_digest = hashlib.sha256(f"spe-oracle-v1:{effective_evaluator_id}".encode("utf-8")).hexdigest()
+            proto = StudyProtocol(
+                study_id=f"XFER-{tx.tx_id}-{target_model_id}",
+                evaluator_id=effective_evaluator_id,
+                generator_id=target_model_id,
+                evaluator_kind="independent_static_oracle",
+                oracle_digest=oracle_digest,
+                model_digest=effective_model_digest,
+                alpha=0.05,
+                primary_effect_floor=0.05,
+                min_heldout_families=20,
+                family_level_significance=True,
+                multiplicity=1,
+            )
+
+        if not isinstance(effective_model_digest, str) or not _DIGEST.fullmatch(effective_model_digest):
+            raise ValueError("Invalid target_model_digest: must be a 64-character lowercase hex SHA-256 digest")
+        if not isinstance(proto.oracle_digest, str) or not _DIGEST.fullmatch(proto.oracle_digest):
+            raise ValueError("Invalid oracle_digest in transfer_protocol")
+        if proto.evaluator_kind != "independent_static_oracle":
+            raise ValueError("transfer_protocol.evaluator_kind must be 'independent_static_oracle'")
+        if not _valid_alpha(proto.alpha) or not _finite_score(proto.primary_effect_floor):
+            raise ValueError("Invalid alpha or primary_effect_floor in transfer_protocol")
+        if not _valid_positive_int(proto.min_heldout_families) or proto.min_heldout_families < 20:
+            raise ValueError("transfer_protocol.min_heldout_families must be >= 20")
+        if not _valid_positive_int(proto.multiplicity) or proto.family_level_significance is not True:
+            raise ValueError("transfer_protocol requires family_level_significance=True and positive multiplicity")
+
+        # PRIORITY 2 & 3: Dataset & family-level provenance validation
         if not test_dataset:
             raise ValueError("test_dataset cannot be empty")
+        if len(test_dataset) < 2:
+            raise ValueError(
+                "One-item mock qualification is forbidden: cross-model transfer requires a multi-family held-out dataset (>= 20 families)"
+            )
 
-        scores_base = [evaluator_fn(base_prompt, item) for item in test_dataset]
-        scores_refined = [evaluator_fn(refined_prompt, item) for item in test_dataset]
+        seen_ids = set()
+        seen_digests = set()
+        observations: List[Observation] = []
+        for idx, raw_item in enumerate(test_dataset):
+            if isinstance(raw_item, Observation):
+                iid = raw_item.item_id
+                fid = raw_item.family_id
+                csha = raw_item.content_sha256
+                eval_input: Dict[str, Any] = {
+                    "item_id": iid,
+                    "family_id": fid,
+                    "content_sha256": csha,
+                }
+            elif isinstance(raw_item, dict):
+                iid = raw_item.get("item_id")
+                fid = raw_item.get("family_id")
+                csha = raw_item.get("content_sha256")
+                eval_input = raw_item
+            else:
+                raise ValueError(f"Invalid test_dataset item at index {idx}: expected dict or Observation")
 
-        avg_base = sum(scores_base) / len(scores_base)
-        avg_refined = sum(scores_refined) / len(scores_refined)
-        transfer_delta = avg_refined - avg_base
+            if not isinstance(iid, str) or not iid.strip():
+                raise ValueError(f"Missing family-level provenance: test_dataset[{idx}] missing valid 'item_id'")
+            if not isinstance(fid, str) or not fid.strip():
+                raise ValueError(f"Missing family-level provenance: test_dataset[{idx}] missing valid 'family_id'")
+            if not isinstance(csha, str) or not _DIGEST.fullmatch(csha):
+                raise ValueError(
+                    f"Missing family-level provenance: test_dataset[{idx}] missing valid 64-char hex 'content_sha256'"
+                )
+            if iid in seen_ids:
+                raise ValueError(f"Duplicate item_id '{iid}' in cross-model transfer test_dataset")
+            if csha in seen_digests:
+                raise ValueError(f"Duplicate content_sha256 '{csha}' in cross-model transfer test_dataset")
+            seen_ids.add(iid)
+            seen_digests.add(csha)
 
-        transfers_successfully = transfer_delta >= -regression_tolerance
+            b_score = float(evaluator_fn(base_prompt, eval_input))
+            c_score = float(evaluator_fn(refined_prompt, eval_input))
+            if not _finite_score(b_score) or not _finite_score(c_score):
+                raise ValueError(f"Invalid non-finite or out-of-range score at item '{iid}'")
 
-        report = {
+            observations.append(
+                Observation(
+                    item_id=iid,
+                    family_id=fid,
+                    content_sha256=csha,
+                    base_score=b_score,
+                    candidate_score=c_score,
+                )
+            )
+
+        sorted_obs = sorted(observations, key=lambda r: r.item_id)
+        grouped: dict[str, list[float]] = defaultdict(list)
+        for obs in sorted_obs:
+            grouped[obs.family_id].append(obs.candidate_score - obs.base_score)
+
+        families = sorted(grouped.keys())
+        min_required_families = max(20, proto.min_heldout_families)
+        if len(families) < min_required_families:
+            raise ValueError(
+                f"Insufficient independent held-out families for cross-model transfer: got {len(families)}, require >= {min_required_families}"
+            )
+
+        family_deltas = [math.fsum(v) / len(v) for _, v in sorted(grouped.items())]
+        macro_delta = math.fsum(family_deltas) / len(family_deltas)
+        avg_base = math.fsum([r.base_score for r in sorted_obs]) / len(sorted_obs)
+        avg_refined = math.fsum([r.candidate_score for r in sorted_obs]) / len(sorted_obs)
+        holdout_delta = avg_refined - avg_base
+
+        positives = sum(d > 1e-12 for d in family_deltas)
+        negatives = sum(d < -1e-12 for d in family_deltas)
+        ties = len(family_deltas) - positives - negatives
+        p_value = exact_sign_p(positives, negatives)
+        alpha_adjusted = proto.alpha / proto.multiplicity
+
+        transfers_successfully = (
+            macro_delta >= proto.primary_effect_floor
+            and macro_delta >= -regression_tolerance
+            and p_value <= alpha_adjusted
+            and len(families) >= min_required_families
+        )
+        statistical_status = (
+            "TRANSFER_SUPPORTED"
+            if transfers_successfully
+            else ("REJECTED" if macro_delta < -regression_tolerance else "INCONCLUSIVE")
+        )
+
+        proto_dict = asdict(proto)
+        protocol_digest = hashlib.sha256(rfc8785_canonicalize(proto_dict)).hexdigest()
+        item_manifest = [
+            {
+                "item_id": r.item_id,
+                "family_id": r.family_id,
+                "content_sha256": r.content_sha256,
+            }
+            for r in sorted_obs
+        ]
+        dataset_digest = hashlib.sha256(rfc8785_canonicalize(item_manifest)).hexdigest()
+        paired_observations = [
+            {
+                "item_id": r.item_id,
+                "family_id": r.family_id,
+                "content_sha256": r.content_sha256,
+                "base_score": r.base_score,
+                "candidate_score": r.candidate_score,
+            }
+            for r in sorted_obs
+        ]
+        observations_digest = hashlib.sha256(rfc8785_canonicalize(paired_observations)).hexdigest()
+
+        evidence_payload = {
+            "version": VERSION,
             "tx_id": tx.tx_id,
-            "source_generator": tx.claim.generator_id,
+            "parent_artifact_hash": tx.artifact_hash,
             "target_model_id": target_model_id,
-            "base_score": round(avg_base, 4),
-            "refined_score": round(avg_refined, 4),
-            "transfer_delta": round(transfer_delta, 4),
+            "target_model_digest": effective_model_digest,
+            "protocol": proto_dict,
+            "protocol_digest": protocol_digest,
+            "dataset_digest": dataset_digest,
+            "family_manifest": families,
+            "observations": paired_observations,
+        }
+        evidence_hash = hashlib.sha256(rfc8785_canonicalize(evidence_payload)).hexdigest()
+
+        # Verify evaluator identity & oracle attestation against validator's trusted registry
+        if oracle_attestation is not None:
+            att = oracle_attestation
+        elif oracle_signing_key is not None:
+            if validator._trusted_oracles and effective_evaluator_id in validator._trusted_oracles:
+                enrolled_pk_hex = validator._trusted_oracles[effective_evaluator_id]
+            else:
+                raise ValueError(
+                    f"Untrusted oracle identity '{effective_evaluator_id}': not enrolled in validator trusted_oracles"
+                )
+            if not isinstance(oracle_signing_key, (bytes, bytearray)) or len(oracle_signing_key) != 32:
+                raise ValueError("Invalid oracle_signing_key: must be 32-byte Ed25519 private key")
+            att = create_oracle_attestation(
+                signing_key=bytes(oracle_signing_key),
+                public_key=bytes.fromhex(enrolled_pk_hex),
+                oracle_id=effective_evaluator_id,
+                evidence_hash=evidence_hash,
+            )
+        else:
+            raise ValueError(
+                "Missing oracle_attestation or approved oracle_signing_key for cross-model transfer evidence"
+            )
+
+        oracle_ok, oracle_msg = validator.verify_oracle_attestation(
+            att,
+            evidence_hash,
+            expected_oracle_id=effective_evaluator_id,
+        )
+        if not oracle_ok:
+            raise ValueError(f"Untrusted or invalid transfer oracle attestation: {oracle_msg}")
+
+        statistical_verdict = {
+            "status": statistical_status,
+            "statistical_method": "ONE_SIDED_EXACT_FAMILY_SIGN_TEST",
+            "family_macro_delta": round(macro_delta, 6),
+            "holdout_candidate_minus_base": round(holdout_delta, 6),
+            "primary_effect_floor": proto.primary_effect_floor,
+            "regression_tolerance": regression_tolerance,
+            "exact_sign_p_value": p_value,
+            "adjusted_alpha": alpha_adjusted,
+            "n_items": len(sorted_obs),
+            "n_families": len(families),
+            "wins": positives,
+            "losses": negatives,
+            "ties": ties,
             "transfers_successfully": transfers_successfully,
-            "sample_count": len(test_dataset),
         }
 
-        # Track transfer qualifications in metadata
-        if "cross_model_transfers" not in tx.metadata:
+        report: Dict[str, Any] = {
+            "tx_id": tx.tx_id,
+            "parent_artifact_hash": tx.artifact_hash,
+            "parent_protocol_id": tx.protocol.protocol_id,
+            "parent_evidence_hash": tx.lvt2_study_result.evidence_hash,
+            "source_generator": tx.claim.generator_id,
+            "target_model_id": target_model_id,
+            "target_model_digest": effective_model_digest,
+            "transfer_protocol": proto_dict,
+            "protocol_digest": protocol_digest,
+            "dataset_digest": dataset_digest,
+            "family_manifest": families,
+            "item_manifest": item_manifest,
+            "paired_observations": paired_observations,
+            "observations_digest": observations_digest,
+            "evaluator_id": effective_evaluator_id,
+            "oracle_public_key": att.oracle_public_key,
+            "oracle_attestation": asdict(att),
+            "evidence_hash": evidence_hash,
+            "statistical_verdict": statistical_verdict,
+            "base_score": round(avg_base, 4),
+            "refined_score": round(avg_refined, 4),
+            "transfer_delta": round(macro_delta, 4),
+            "transfers_successfully": transfers_successfully,
+            "sample_count": len(sorted_obs),
+            "revoked": False,
+        }
+
+        receipt_hash, receipt_sig = validator.sign_model_transfer_receipt(tx, report)
+        report["transfer_receipt_hash"] = receipt_hash
+        report["transfer_receipt_signature"] = receipt_sig
+        report["validator_public_key"] = validator._pk.hex()
+
+        if "cross_model_transfers" not in tx.metadata or not isinstance(tx.metadata["cross_model_transfers"], dict):
             tx.metadata["cross_model_transfers"] = {}
         tx.metadata["cross_model_transfers"][target_model_id] = report
 
         return report
 
     evaluate_transfer = evaluate_cross_model_transfer
+
+    @staticmethod
+    def revoke_model_transfer(
+        tx: LearningValidityTransaction,
+        target_model_id: str,
+        reason: RevocationReason,
+        details: str,
+    ) -> Dict[str, Any]:
+        """Revokes a specific cross-model transfer qualification without revoking the base model study."""
+        transfers = tx.metadata.get("cross_model_transfers", {})
+        if not isinstance(transfers, dict) or target_model_id not in transfers:
+            raise ValueError(f"No cross-model transfer record found for '{target_model_id}'")
+        report = transfers[target_model_id]
+        if not isinstance(report, dict):
+            raise ValueError(f"Malformed transfer record for '{target_model_id}'")
+        report["revoked"] = True
+        report["revocation_reason"] = reason.value
+        report["revocation_details"] = details
+        return report
 
     @staticmethod
     def synthesize_spe_learning_artifact(
@@ -108,10 +424,10 @@ class LearningTransferProtocol:
         1. Non-revoked state
         2. QUALIFIED status
         3. Exclusion of mock/test-only qualifications
-        4. Independent trusted oracle attestation custody
+        4. Independent trusted oracle attestation custody via mandatory owner-authorized validator
         5. Evidence and protocol hash integrity
         6. Valid cryptographic receipt signature
-        7. Model transfer verification for verified_models
+        7. Cryptographically authenticated per-model transfer receipts for verified_models
         """
         LearningTransferProtocol.assert_not_revoked(tx)
 
@@ -119,6 +435,7 @@ class LearningTransferProtocol:
             raise ValueError(f"Cannot synthesize artifact for revoked transaction: {tx.revocation_reason}")
 
         from spe_runtime.research.lvt.learning_validator import LearningValidator
+
         if validator is not None and not isinstance(validator, LearningValidator):
             raise ValueError("Missing trusted verifier: validator must be an authoritative LearningValidator instance")
 
@@ -159,7 +476,6 @@ class LearningTransferProtocol:
         if att.oracle_id != tx.evaluator_id:
             raise ValueError(f"Oracle identity mismatch at export boundary: '{att.oracle_id}' != '{tx.evaluator_id}'")
 
-        from spe_runtime.ci_gate.receipt import ed25519_verify, rfc8785_canonicalize
         try:
             att_pk = bytes.fromhex(att.oracle_public_key)
             att_sig = bytes.fromhex(att.signature)
@@ -177,32 +493,56 @@ class LearningTransferProtocol:
         if not ed25519_verify(att_pk, att_canonical, att_sig):
             raise ValueError("Invalid oracle attestation cryptographic signature blocks .spe export")
 
-        # If validator is provided, strictly enforce trusted oracle registry custody
-        if validator is not None:
-            oracle_ok, oracle_msg = validator.verify_oracle_attestation(
-                att,
-                study.evidence_hash,
-                expected_oracle_id=tx.evaluator_id,
-            )
-            if not oracle_ok:
-                raise ValueError(f"Oracle attestation rejected at export boundary: {oracle_msg}")
+        if validator is None:
+            raise ValueError("Missing owner-authorized trusted validator for .spe export")
+
+        oracle_ok, oracle_msg = validator.verify_oracle_attestation(
+            att,
+            study.evidence_hash,
+            expected_oracle_id=tx.evaluator_id,
+        )
+        if not oracle_ok:
+            raise ValueError(f"Oracle attestation rejected at export boundary: {oracle_msg}")
 
         if not tx.canonical_receipt_signature or not tx.artifact_hash:
             raise ValueError("Missing receipt signature blocks .spe export")
 
-        from spe_runtime.research.lvt.learning_validator import LearningValidator
-        val = validator or LearningValidator()
-        if not val.verify_transaction_signature(tx):
+        if not validator.verify_transaction_signature(tx):
             raise ValueError("Invalid receipt signature blocks .spe export")
 
-        # 7. Unverified model transfer cannot be labeled as verified_models
+        # 7. Cryptographically verify every cross-model transfer entry
         transfers = tx.metadata.get("cross_model_transfers", {})
+        if not isinstance(transfers, dict):
+            raise ValueError("Malformed cross_model_transfers metadata")
+
         verified = set()
+        verified_model_transfers: Dict[str, Any] = {}
         if tx.claim.generator_id:
             verified.add(tx.claim.generator_id)
+
         for model_id, report in transfers.items():
-            if isinstance(report, dict) and report.get("transfers_successfully") is True:
+            is_authentic, is_verified_transfer, reason = validator.verify_model_transfer_receipt(
+                tx, model_id, report
+            )
+            if not is_authentic:
+                raise ValueError(
+                    f"Rejected cross-model transfer evidence for '{model_id}': {reason}"
+                )
+            if is_verified_transfer:
                 verified.add(model_id)
+                verified_model_transfers[model_id] = {
+                    "target_model_id": model_id,
+                    "target_model_digest": report["target_model_digest"],
+                    "evaluator_id": report["evaluator_id"],
+                    "oracle_public_key": report["oracle_public_key"],
+                    "protocol_digest": report["protocol_digest"],
+                    "dataset_digest": report["dataset_digest"],
+                    "observations_digest": report["observations_digest"],
+                    "evidence_hash": report["evidence_hash"],
+                    "transfer_receipt_hash": report["transfer_receipt_hash"],
+                    "transfer_receipt_signature": report["transfer_receipt_signature"],
+                    "statistical_verdict": report["statistical_verdict"],
+                }
 
         if supported_models is not None:
             if len(supported_models) == 0:
@@ -235,6 +575,11 @@ class LearningTransferProtocol:
                 "committed_timestamp": tx.committed_timestamp,
             },
             "verified_models": models_to_export,
+            "verified_model_transfers": {
+                m: verified_model_transfers[m]
+                for m in models_to_export
+                if m in verified_model_transfers
+            },
             "empirical_gain": empirical_gain,
             "refined_prompt": refined_prompt_content,
         }
@@ -252,6 +597,13 @@ class LearningTransferProtocol:
         """
         tx.status = QualificationStatus.REVOKED
         tx.revocation_reason = reason
+
+        transfers = tx.metadata.get("cross_model_transfers", {})
+        if isinstance(transfers, dict):
+            for report in transfers.values():
+                if isinstance(report, dict):
+                    report["revoked"] = True
+                    report["revocation_reason"] = reason.value
 
         if "revocation_history" not in tx.metadata:
             tx.metadata["revocation_history"] = []

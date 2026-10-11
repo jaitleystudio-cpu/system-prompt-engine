@@ -66,7 +66,7 @@ MUTANTS = [
         "id": "M06",
         "name": "Trust QUALIFIED without verified receipt",
         "file": "spe_runtime/research/lvt/transfer_protocol.py",
-        "target": "        from spe_runtime.research.lvt.learning_validator import LearningValidator\n        val = validator or LearningValidator()\n        if not val.verify_transaction_signature(tx):\n            raise ValueError(\"Invalid receipt signature blocks .spe export\")",
+        "target": "        if not validator.verify_transaction_signature(tx):\n            raise ValueError(\"Invalid receipt signature blocks .spe export\")",
         "replacement": "        # MUTANT M06: Trust QUALIFIED without verified receipt\n        pass",
         "test": "tests/research/lvt/test_lvt2_r2_trust_root_and_authority.py::test_task4_4_invalid_receipt_signature_blocks_export",
     },
@@ -102,6 +102,38 @@ MUTANTS = [
         "replacement": "                if study.status == \"INCONCLUSIVE\":\n                    tx.status = QualificationStatus.QUALIFIED  # MUTANT M10\n                    tx.rejection_reason = None",
         "test": "tests/research/lvt/test_lvt2_r2_trust_root_and_authority.py::test_task7_inconclusive_study_cannot_yield_qualified",
     },
+    {
+        "id": "M11",
+        "name": "Allow absent validator in evaluate_cross_model_transfer",
+        "file": "spe_runtime/research/lvt/transfer_protocol.py",
+        "target": "        if validator is None or not isinstance(validator, LearningValidator):\n            raise ValueError(\"Missing owner-authorized LearningValidator: cross-model transfer requires a trusted validator instance\")",
+        "replacement": "        if False:\n            raise ValueError(\"Missing owner-authorized LearningValidator: cross-model transfer requires a trusted validator instance\")",
+        "test": "tests/research/lvt/test_lvt2_r5_authenticated_transfer.py::test_r5_01_absent_validator_rejected",
+    },
+    {
+        "id": "M12",
+        "name": "Skip transfer receipt authentication in synthesize_spe_learning_artifact",
+        "file": "spe_runtime/research/lvt/transfer_protocol.py",
+        "target": "            is_authentic, is_verified_transfer, reason = validator.verify_model_transfer_receipt(\n                tx, model_id, report\n            )",
+        "replacement": "            is_authentic, is_verified_transfer, reason = True, bool(report.get('transfers_successfully')), 'MUTANT M12'",
+        "test": "tests/research/lvt/test_lvt2_r5_authenticated_transfer.py::test_r5_03_forged_transfer_metadata_rejected",
+    },
+    {
+        "id": "M13",
+        "name": "Bypass 20-family minimum in cross-model transfer",
+        "file": "spe_runtime/research/lvt/transfer_protocol.py",
+        "target": "        min_required_families = max(20, proto.min_heldout_families)",
+        "replacement": "        min_required_families = 1  # MUTANT M13",
+        "test": "tests/research/lvt/test_lvt2_r5_authenticated_transfer.py::test_r5_07_one_item_mock_qualification_rejected",
+    },
+    {
+        "id": "M14",
+        "name": "Bypass model identity binding in evaluate_cross_model_transfer",
+        "file": "spe_runtime/research/lvt/transfer_protocol.py",
+        "target": "            if transfer_protocol.generator_id != target_model_id:\n                raise ValueError(\n                    f\"Mismatched model identity: transfer_protocol.generator_id '{transfer_protocol.generator_id}' != target_model_id '{target_model_id}'\"\n                )",
+        "replacement": "            # MUTANT M14: Bypass model identity binding\n            pass",
+        "test": "tests/research/lvt/test_lvt2_r5_authenticated_transfer.py::test_r5_05_mismatched_model_identity_rejected",
+    },
 ]
 
 
@@ -116,6 +148,8 @@ def run_mutation(m: dict) -> dict:
             "name": m["name"],
             "status": "ERROR_TARGET_NOT_FOUND",
             "exit_code": None,
+            "restored_ok": True,
+            "output_summary": "Target substring not found in source file",
             "error": "Target substring not found in source file",
         }
 

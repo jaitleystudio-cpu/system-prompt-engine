@@ -501,6 +501,274 @@ class LearningValidator:
 
         return True, "verified"
 
+    @staticmethod
+    def _build_transfer_receipt_dict(
+        tx: LearningValidityTransaction,
+        report: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        return {
+            "tx_id": report["tx_id"],
+            "parent_artifact_hash": report["parent_artifact_hash"],
+            "parent_protocol_id": report["parent_protocol_id"],
+            "parent_evidence_hash": report["parent_evidence_hash"],
+            "source_generator": report["source_generator"],
+            "target_model_id": report["target_model_id"],
+            "target_model_digest": report["target_model_digest"],
+            "transfer_protocol": report["transfer_protocol"],
+            "protocol_digest": report["protocol_digest"],
+            "dataset_digest": report["dataset_digest"],
+            "family_manifest": report["family_manifest"],
+            "observations_digest": report["observations_digest"],
+            "evaluator_id": report["evaluator_id"],
+            "oracle_public_key": report["oracle_public_key"],
+            "oracle_attestation": report["oracle_attestation"],
+            "evidence_hash": report["evidence_hash"],
+            "statistical_verdict": report["statistical_verdict"],
+            "base_score": report["base_score"],
+            "refined_score": report["refined_score"],
+            "transfer_delta": report["transfer_delta"],
+            "transfers_successfully": report["transfers_successfully"],
+            "sample_count": report["sample_count"],
+            "revoked": report["revoked"],
+        }
+
+    def sign_model_transfer_receipt(
+        self,
+        tx: LearningValidityTransaction,
+        report: Dict[str, Any],
+    ) -> Tuple[str, str]:
+        """Signs a canonical RFC 8785 cross-model transfer receipt under this validator's key."""
+        receipt_dict = self._build_transfer_receipt_dict(tx, report)
+        canonical_bytes = rfc8785_canonicalize(receipt_dict)
+        receipt_hash = hashlib.sha256(canonical_bytes).hexdigest()
+        sig_bytes = ed25519_sign(self._sk, self._pk, canonical_bytes)
+        return receipt_hash, sig_bytes.hex()
+
+    def verify_model_transfer_receipt(
+        self,
+        tx: LearningValidityTransaction,
+        target_model_id: str,
+        report: Any,
+    ) -> Tuple[bool, bool, str]:
+        """
+        Cryptographically verifies an authenticated cross-model transfer report.
+        Returns (is_authentic, is_verified_transfer, reason).
+        """
+        from collections import defaultdict
+        import math
+        from spe_runtime.research.lvt.paired_gate_v2 import (
+            VERSION,
+            StudyProtocol,
+            _DIGEST,
+            _finite_score,
+            exact_sign_p,
+        )
+
+        if not isinstance(report, dict):
+            return False, False, "Forged or malformed transfer metadata: report is not a dict"
+
+        if report.get("revoked") is True:
+            return False, False, f"Cross-model transfer evidence for '{target_model_id}' has been revoked"
+
+        if not self._trusted_oracles and not self._trusted_oracle_keys:
+            return False, False, "Untrusted validator: no trusted oracle registry configured"
+
+        required_keys = (
+            "tx_id",
+            "parent_artifact_hash",
+            "parent_protocol_id",
+            "parent_evidence_hash",
+            "source_generator",
+            "target_model_id",
+            "target_model_digest",
+            "transfer_protocol",
+            "protocol_digest",
+            "dataset_digest",
+            "family_manifest",
+            "item_manifest",
+            "paired_observations",
+            "observations_digest",
+            "evaluator_id",
+            "oracle_public_key",
+            "oracle_attestation",
+            "evidence_hash",
+            "statistical_verdict",
+            "base_score",
+            "refined_score",
+            "transfer_delta",
+            "transfers_successfully",
+            "sample_count",
+            "revoked",
+            "transfer_receipt_hash",
+            "transfer_receipt_signature",
+            "validator_public_key",
+        )
+        for k in required_keys:
+            if k not in report:
+                return False, False, f"Forged or incomplete transfer metadata: missing '{k}'"
+
+        if report.get("tx_id") != tx.tx_id or report.get("parent_artifact_hash") != tx.artifact_hash:
+            return False, False, "Transfer report parent transaction binding mismatch"
+
+        if not tx.protocol or report.get("parent_protocol_id") != tx.protocol.protocol_id:
+            return False, False, "Replay against a changed parent protocol"
+
+        if "committed_protocol_id" in tx.metadata and tx.protocol.protocol_id != tx.metadata["committed_protocol_id"]:
+            return False, False, "Replay against a changed committed parent protocol"
+
+        if not tx.lvt2_study_result or report.get("parent_evidence_hash") != tx.lvt2_study_result.evidence_hash:
+            return False, False, "Transfer report parent study evidence hash mismatch"
+
+        if report.get("target_model_id") != target_model_id:
+            return False, False, f"Mismatched model identity: metadata key '{target_model_id}' != report target_model_id '{report.get('target_model_id')}'"
+
+        model_digest = report.get("target_model_digest")
+        if not isinstance(model_digest, str) or not _DIGEST.fullmatch(model_digest):
+            return False, False, "Invalid target_model_digest in transfer report"
+
+        proto_raw = report.get("transfer_protocol")
+        if not isinstance(proto_raw, dict):
+            return False, False, "Invalid transfer_protocol format"
+        try:
+            proto = StudyProtocol(**proto_raw)
+        except TypeError as exc:
+            return False, False, f"Malformed transfer_protocol fields: {exc}"
+
+        if proto.generator_id != target_model_id:
+            return False, False, f"Mismatched model identity: transfer_protocol.generator_id '{proto.generator_id}' != '{target_model_id}'"
+        if proto.model_digest != model_digest:
+            return False, False, "Mismatched target_model_digest against transfer_protocol.model_digest"
+        if proto.evaluator_id != report.get("evaluator_id"):
+            return False, False, "Mismatched evaluator_id against transfer_protocol.evaluator_id"
+        if proto.min_heldout_families < 20 or proto.family_level_significance is not True:
+            return False, False, "Transfer protocol violates minimum independent family requirements"
+
+        recomputed_proto_digest = hashlib.sha256(rfc8785_canonicalize(proto_raw)).hexdigest()
+        if recomputed_proto_digest != report.get("protocol_digest"):
+            return False, False, "Changed transfer protocol: protocol_digest mismatch"
+
+        item_manifest = report.get("item_manifest")
+        paired_obs = report.get("paired_observations")
+        if not isinstance(item_manifest, list) or not isinstance(paired_obs, list):
+            return False, False, "Invalid item_manifest or paired_observations list"
+        if len(item_manifest) < 2 or len(paired_obs) != len(item_manifest):
+            return False, False, "One-item or mismatched observation count in transfer report"
+
+        seen_ids = set()
+        seen_digests = set()
+        grouped: dict[str, list[float]] = defaultdict(list)
+        base_scores: list[float] = []
+        cand_scores: list[float] = []
+        for idx, obs in enumerate(paired_obs):
+            if not isinstance(obs, dict):
+                return False, False, "Malformed observation entry"
+            iid = obs.get("item_id")
+            fid = obs.get("family_id")
+            csha = obs.get("content_sha256")
+            b_sc = obs.get("base_score")
+            c_sc = obs.get("candidate_score")
+            if not isinstance(iid, str) or not iid.strip() or not isinstance(fid, str) or not fid.strip():
+                return False, False, "Missing family-level provenance in transfer observations"
+            if not isinstance(csha, str) or not _DIGEST.fullmatch(csha):
+                return False, False, "Invalid content_sha256 in transfer observations"
+            if iid in seen_ids or csha in seen_digests:
+                return False, False, "Duplicate item_id or content_sha256 in transfer observations"
+            if not _finite_score(b_sc) or not _finite_score(c_sc):
+                return False, False, "Invalid observation score in transfer report"
+            seen_ids.add(iid)
+            seen_digests.add(csha)
+            grouped[fid].append(float(c_sc) - float(b_sc))
+            base_scores.append(float(b_sc))
+            cand_scores.append(float(c_sc))
+
+        families = sorted(grouped.keys())
+        if families != report.get("family_manifest"):
+            return False, False, "Tampered family_manifest in transfer report"
+        if len(families) < max(20, proto.min_heldout_families):
+            return False, False, "Insufficient independent held-out families in transfer report"
+
+        if hashlib.sha256(rfc8785_canonicalize(item_manifest)).hexdigest() != report.get("dataset_digest"):
+            return False, False, "Tampered dataset_digest in transfer report"
+        if hashlib.sha256(rfc8785_canonicalize(paired_obs)).hexdigest() != report.get("observations_digest"):
+            return False, False, "Tampered observations_digest in transfer report"
+
+        evidence_payload = {
+            "version": VERSION,
+            "tx_id": tx.tx_id,
+            "parent_artifact_hash": tx.artifact_hash,
+            "target_model_id": target_model_id,
+            "target_model_digest": model_digest,
+            "protocol": proto_raw,
+            "protocol_digest": recomputed_proto_digest,
+            "dataset_digest": report["dataset_digest"],
+            "family_manifest": families,
+            "observations": paired_obs,
+        }
+        recomputed_evidence_hash = hashlib.sha256(rfc8785_canonicalize(evidence_payload)).hexdigest()
+        if recomputed_evidence_hash != report.get("evidence_hash"):
+            return False, False, "Tampered evaluation result: evidence_hash mismatch"
+
+        family_deltas = [math.fsum(v) / len(v) for _, v in sorted(grouped.items())]
+        macro_delta = math.fsum(family_deltas) / len(family_deltas)
+        base_mean = math.fsum(base_scores) / len(base_scores)
+        cand_mean = math.fsum(cand_scores) / len(cand_scores)
+        positives = sum(d > 1e-12 for d in family_deltas)
+        negatives = sum(d < -1e-12 for d in family_deltas)
+        p_val = exact_sign_p(positives, negatives)
+        alpha_adj = proto.alpha / proto.multiplicity
+        reg_tol = float(report.get("statistical_verdict", {}).get("regression_tolerance", 0.05))
+        recomputed_success = (
+            macro_delta >= proto.primary_effect_floor
+            and macro_delta >= -reg_tol
+            and p_val <= alpha_adj
+            and len(families) >= max(20, proto.min_heldout_families)
+        )
+
+        if report.get("transfers_successfully") is not recomputed_success:
+            return False, False, "Tampered evaluation result: transfers_successfully does not match recomputed statistical verdict"
+        verdict_dict = report.get("statistical_verdict")
+        if not isinstance(verdict_dict, dict) or verdict_dict.get("transfers_successfully") is not recomputed_success:
+            return False, False, "Tampered statistical_verdict in transfer report"
+
+        if (
+            not math.isclose(float(report.get("transfer_delta", -999.0)), round(macro_delta, 4), abs_tol=1e-4)
+            or not math.isclose(float(report.get("base_score", -999.0)), round(base_mean, 4), abs_tol=1e-4)
+            or not math.isclose(float(report.get("refined_score", -999.0)), round(cand_mean, 4), abs_tol=1e-4)
+        ):
+            return False, False, "Tampered evaluation result: summary scores do not match observations"
+
+        att_raw = report.get("oracle_attestation")
+        if not isinstance(att_raw, dict):
+            return False, False, "Missing or malformed oracle_attestation in transfer report"
+        try:
+            att_obj = OracleAttestation(**att_raw)
+        except TypeError as exc:
+            return False, False, f"Malformed oracle_attestation fields: {exc}"
+
+        oracle_ok, oracle_msg = self.verify_oracle_attestation(
+            att_obj,
+            recomputed_evidence_hash,
+            expected_oracle_id=str(report.get("evaluator_id", "")),
+        )
+        if not oracle_ok:
+            return False, False, f"Transfer oracle attestation failed verification: {oracle_msg}"
+
+        if report.get("validator_public_key") != self._pk.hex():
+            return False, False, "Transfer receipt signed by untrusted or mismatched validator key"
+
+        try:
+            canonical_receipt = rfc8785_canonicalize(self._build_transfer_receipt_dict(tx, report))
+            if hashlib.sha256(canonical_receipt).hexdigest() != report.get("transfer_receipt_hash"):
+                return False, False, "Tampered transfer receipt: transfer_receipt_hash mismatch"
+            sig_bytes = bytes.fromhex(str(report.get("transfer_receipt_signature", "")))
+        except (ValueError, TypeError, KeyError) as exc:
+            return False, False, f"Invalid transfer receipt encoding: {exc}"
+
+        if not ed25519_verify(self._pk, canonical_receipt, sig_bytes):
+            return False, False, "Invalid transfer receipt cryptographic signature"
+
+        return True, bool(recomputed_success), "verified"
+
 
 def create_oracle_attestation(
     signing_key: bytes,
