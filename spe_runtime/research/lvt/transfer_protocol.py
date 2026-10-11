@@ -22,6 +22,7 @@ from spe_runtime.research.lvt.paired_gate_v2 import (
     StudyProtocol,
     _DIGEST,
     _finite_score,
+    _is_synthetic_model_digest,
     _valid_alpha,
     _valid_positive_int,
     exact_sign_p,
@@ -45,6 +46,16 @@ class LearningTransferProtocol:
             raise TransactionRevokedError(
                 f"LVT Invariant: Transaction '{tx.tx_id}' was revoked. Reason: {tx.revocation_reason}"
             )
+
+    @staticmethod
+    def verify_transaction_signature(
+        tx: LearningValidityTransaction,
+        validator: Optional[Any] = None,
+    ) -> bool:
+        """Delegates transaction signature and tombstone verification to the authoritative LearningValidator."""
+        if validator is None:
+            return False
+        return bool(validator.verify_transaction_signature(tx))
 
     @staticmethod
     def evaluate_cross_model_transfer(
@@ -96,6 +107,13 @@ class LearningTransferProtocol:
         if not getattr(validator, "is_owner_authorized", True):
             raise ValueError("Unauthorized LearningValidator: cross-model transfer requires an owner-authorized validator")
 
+        if validator.is_tombstoned(
+            receipt_hash=tx.artifact_hash,
+        ):
+            raise ValueError(
+                f"Cannot evaluate cross-model transfer: parent transaction '{tx.tx_id}' has been revoked (persistent tombstone enforced)"
+            )
+
         if not validator._trusted_oracles and not validator._trusted_oracle_keys:
             raise ValueError("Untrusted LearningValidator: no trusted oracle registry configured for cross-model transfer")
 
@@ -145,8 +163,7 @@ class LearningTransferProtocol:
                 raise ValueError("Mismatched target_model_digest against transfer_protocol.model_digest")
             effective_model_digest = transfer_protocol.model_digest
             proto = transfer_protocol
-            synthetic_hash = hashlib.sha256(f"spe-model-v1:{target_model_id}".encode("utf-8")).hexdigest()
-            if effective_model_digest == synthetic_hash:
+            if _is_synthetic_model_digest(target_model_id, effective_model_digest):
                 if model_digest_type == "VERIFIED_MODEL_REVISION":
                     raise ValueError(
                         f"Synthetic model identifier digest '{effective_model_digest}' cannot be classified as VERIFIED_MODEL_REVISION: "
@@ -159,7 +176,7 @@ class LearningTransferProtocol:
             synthetic_hash = hashlib.sha256(f"spe-model-v1:{target_model_id}".encode("utf-8")).hexdigest()
             if target_model_digest is not None:
                 effective_model_digest = target_model_digest
-                if target_model_digest == synthetic_hash:
+                if _is_synthetic_model_digest(target_model_id, target_model_digest):
                     if model_digest_type == "VERIFIED_MODEL_REVISION":
                         raise ValueError(
                             f"Synthetic model identifier digest '{target_model_digest}' cannot be classified as VERIFIED_MODEL_REVISION: "
@@ -651,6 +668,13 @@ class LearningTransferProtocol:
         if not getattr(validator, "is_owner_authorized", True):
             raise ValueError("Unauthorized LearningValidator: validator lacks owner root-of-trust authorization for production .spe export")
 
+        if validator.is_tombstoned(
+            receipt_hash=tx.artifact_hash,
+        ):
+            raise ValueError(
+                f"Cannot export .spe artifact: parent transaction '{tx.tx_id}' has been revoked (persistent tombstone enforced)"
+            )
+
         oracle_ok, oracle_msg = validator.verify_oracle_attestation(
             att,
             study.evidence_hash,
@@ -673,7 +697,17 @@ class LearningTransferProtocol:
         verified = set()
         verified_model_transfers: Dict[str, Any] = {}
         if tx.claim.generator_id:
-            verified.add(tx.claim.generator_id)
+            parent_digest_type = (
+                tx.metadata.get("parent_model_digest_type")
+                or getattr(study, "model_digest_type", "VERIFIED_MODEL_REVISION")
+            )
+            parent_digest = tx.metadata.get("parent_model_digest", "")
+            parent_is_synthetic = (
+                parent_digest_type in ("SYNTHETIC_NAME_DERIVED", "SYNTHETIC_MODEL_IDENTIFIER")
+                or (isinstance(parent_digest, str) and bool(parent_digest) and _is_synthetic_model_digest(tx.claim.generator_id, parent_digest))
+            )
+            if not parent_is_synthetic or allow_synthetic_models:
+                verified.add(tx.claim.generator_id)
 
         for model_id, report in transfers.items():
             receipt_hash = report.get("transfer_receipt_hash")
@@ -683,8 +717,6 @@ class LearningTransferProtocol:
                 or validator.is_tombstoned(
                     receipt_hash=receipt_hash,
                     evidence_hash=evidence_hash,
-                    tx_id=tx.tx_id,
-                    target_model_id=model_id,
                 )
                 or any(
                     isinstance(t, dict) and (
@@ -707,10 +739,9 @@ class LearningTransferProtocol:
                 )
 
             digest_type = report.get("model_digest_type") or report.get("target_model_digest_type", "VERIFIED_MODEL_REVISION")
-            synthetic_hash = hashlib.sha256(f"spe-model-v1:{model_id}".encode("utf-8")).hexdigest()
             is_synthetic = (
-                digest_type == "SYNTHETIC_MODEL_IDENTIFIER"
-                or report.get("target_model_digest") == synthetic_hash
+                digest_type in ("SYNTHETIC_MODEL_IDENTIFIER", "SYNTHETIC_NAME_DERIVED")
+                or _is_synthetic_model_digest(model_id, str(report.get("target_model_digest", "")))
             )
             if is_synthetic and not allow_synthetic_models:
                 # Synthetic model digests cannot qualify as verified model revisions in production .spe export
@@ -752,6 +783,11 @@ class LearningTransferProtocol:
             models_to_export = list(supported_models)
         else:
             models_to_export = sorted(list(verified))
+            if not models_to_export:
+                raise ValueError(
+                    "Cannot synthesize production .spe learning artifact with zero verified_models: "
+                    "synthetic model identifier digests cannot qualify as verified model revisions unless allow_synthetic_models=True."
+                )
 
         empirical_gain = {
             "delta_improvement": study.family_macro_delta,
@@ -787,19 +823,64 @@ class LearningTransferProtocol:
         tx: LearningValidityTransaction,
         reason: RevocationReason,
         details: str,
+        *,
+        validator: Optional[Any] = None,
     ) -> LearningValidityTransaction:
         """
-        Revokes a previously admitted transaction upon counterexample discovery or drift failure.
+        Revokes a previously admitted transaction upon counterexample discovery or drift failure,
+        and persists durable revocation tombstones for both the parent transaction and all child transfers.
         """
+        from spe_runtime.research.lvt.learning_validator import LearningValidator
+
         tx.status = QualificationStatus.REVOKED
         tx.revocation_reason = reason
 
+        study_ev = tx.lvt2_study_result.evidence_hash if tx.lvt2_study_result else None
+        if validator is not None and hasattr(validator, "record_tombstone"):
+            validator.record_tombstone(
+                receipt_hash=tx.artifact_hash,
+                evidence_hash=study_ev,
+                tx_id=tx.tx_id,
+                target_model_id=None,
+                reason=reason.value,
+                details=details,
+            )
+        else:
+            LearningValidator._record_global_tombstone(
+                receipt_hash=tx.artifact_hash,
+                evidence_hash=study_ev,
+                tx_id=tx.tx_id,
+                target_model_id=None,
+                reason=reason.value,
+                details=details,
+            )
+
         transfers = tx.metadata.get("cross_model_transfers", {})
         if isinstance(transfers, dict):
-            for report in transfers.values():
+            for model_id, report in transfers.items():
                 if isinstance(report, dict):
                     report["revoked"] = True
                     report["revocation_reason"] = reason.value
+                    r_hash = report.get("transfer_receipt_hash")
+                    e_hash = report.get("evidence_hash")
+                    if validator is not None and hasattr(validator, "record_tombstone"):
+                        validator.record_tombstone(
+                            receipt_hash=r_hash,
+                            evidence_hash=e_hash,
+                            tx_id=tx.tx_id,
+                            target_model_id=model_id,
+                            reason=reason.value,
+                            details=details,
+                        )
+                    else:
+                        LearningValidator._record_global_tombstone(
+                            receipt_hash=r_hash,
+                            evidence_hash=e_hash,
+                            tx_id=tx.tx_id,
+                            target_model_id=model_id,
+                            reason=reason.value,
+                            details=details,
+                        )
 
         if "revocation_history" not in tx.metadata:
             tx.metadata["revocation_history"] = []
@@ -817,6 +898,8 @@ class LearningTransferProtocol:
         tx: LearningValidityTransaction,
         monitored_scores: Sequence[float],
         drift_tolerance: float = 0.15,
+        *,
+        validator: Optional[Any] = None,
     ) -> bool:
         """
         Monitors ongoing production outputs. If average performance degrades below
@@ -839,6 +922,7 @@ class LearningTransferProtocol:
                 tx,
                 reason=RevocationReason.DISTRIBUTION_DRIFT_EXCEEDED,
                 details=f"Current score {current_avg:.4f} dropped below generalization baseline {baseline_generalization:.4f} by > {drift_tolerance}",
+                validator=validator,
             )
             return True
         return False

@@ -116,7 +116,7 @@ MUTANTS = [
         "file": "spe_runtime/research/lvt/transfer_protocol.py",
         "target": "            is_authentic, is_verified_transfer, reason = validator.verify_model_transfer_receipt(\n                tx, model_id, report, allow_synthetic_models=allow_synthetic_models\n            )",
         "replacement": "            is_authentic, is_verified_transfer, reason = True, bool(report.get('transfers_successfully')), 'MUTANT M12'",
-        "test": "tests/research/lvt/test_lvt2_r5_authenticated_transfer.py::test_r5_03_forged_transfer_metadata_rejected",
+        "test": "tests/research/lvt/test_lvt2_r5_authenticated_transfer.py::test_r5_04_tampered_evaluation_result_rejected",
     },
     {
         "id": "M13",
@@ -198,6 +198,134 @@ MUTANTS = [
         "replacement": "            # MUTANT M22: Bypass independence assertions validation\n            if False:\n                pass",
         "test": "tests/research/lvt/test_lvt2_r5_adversarial_closure.py::test_finding_d_missing_provenance_and_unsupported_independence_rejected",
     },
+    {
+        "id": "M23",
+        "name": "Bypass persistent parent transaction tombstone check in verify_transaction_signature",
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": "        if self.is_tombstoned(\n            receipt_hash=tx.artifact_hash,\n            evidence_hash=study_ev_hash,\n            tx_id=tx.tx_id,\n        ):\n            return False",
+        "replacement": "        # MUTANT M23: Bypass persistent parent transaction tombstone check\n        if False:\n            return False",
+        "test": "tests/research/lvt/test_lvt2_r5_adversarial_closure.py::test_round3_parent_transaction_revocation_persists_across_restart_and_backup_restore",
+    },
+    {
+        "id": "M24",
+        "name": "Bypass fail-closed tombstone I/O error handling when explicitly configured",
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": "        except OSError as exc:\n            if explicit:\n                raise RuntimeError(f\"Failed to persist revocation tombstone to '{p}': {exc}\") from exc",
+        "replacement": "        except OSError as exc:\n            # MUTANT M24: Silently ignore tombstone persistence failure\n            pass",
+        "test": "tests/research/lvt/test_lvt2_r5_adversarial_closure.py::test_round3_tombstone_io_failure_fails_closed_when_configured",
+    },
+    {
+        "id": "M25",
+        "name": "Bypass parent study synthetic model digest rejection in paired_gate_v2",
+        "file": "spe_runtime/research/lvt/paired_gate_v2.py",
+        "target": "    if p.model_digest_type == 'VERIFIED_MODEL_REVISION' and _is_synthetic_model_digest(p.generator_id, p.model_digest):\n        raise StudyInvalid('synthetic model_digest cannot claim VERIFIED_MODEL_REVISION')",
+        "replacement": "    if False and p.model_digest_type == 'VERIFIED_MODEL_REVISION' and _is_synthetic_model_digest(p.generator_id, p.model_digest):\n        raise StudyInvalid('synthetic model_digest cannot claim VERIFIED_MODEL_REVISION')",
+        "test": "tests/research/lvt/test_lvt2_r5_adversarial_closure.py::test_round3_parent_and_variant_synthetic_model_digests_rejected",
+    },
+    {
+        "id": "M26",
+        "name": "Bypass strict cryptographic owner authority requirement on LearningValidator",
+        "file": "spe_runtime/research/lvt/learning_validator.py",
+        "target": "        if require_cryptographic_owner_authority and not self._has_cryptographic_owner_authority:\n            raise ValueError(\n                \"Unauthorized LearningValidator: cryptographic owner attestation from an enrolled owner root key \"\n                \"is required (validator is unattested or revoked).\"\n            )",
+        "replacement": "        if False and require_cryptographic_owner_authority and not self._has_cryptographic_owner_authority:\n            raise ValueError(\"MUTANT M26\")",
+        "test": "tests/research/lvt/test_lvt2_r5_adversarial_closure.py::test_round3_cryptographic_owner_authority_and_validator_revocation_enforced",
+    },
+    {
+        "id": "M27",
+        "name": "Bypass RBPD RealityBoundEvidenceAsset Ed25519 signature verification",
+        "file": "spe_runtime/research/rbpd/contract.py",
+        "target": "        if val_pk_bytes != self._validator.public_key or not ed25519_verify(val_pk_bytes, canonical_bytes, sig_bytes):\n            return AssetValidationVerdict(\n                status=EpistemicStatus.INVALID,\n                can_reuse=False,\n                reason=\"Cryptographic Ed25519 signature verification failed\",\n            )",
+        "replacement": "        if False:\n            return AssetValidationVerdict(status=EpistemicStatus.INVALID, can_reuse=False, reason=\"MUTANT M27\")",
+        "test": "tests/research/rbpd/test_rbpd_proof_dividend.py::test_phase_a_adversarial_forgery_synthetic_model_and_tombstone_fail_closed",
+    },
+    {
+        "id": "M28",
+        "name": "Permit reuse of STALE obligations during selective invalidation",
+        "file": "spe_runtime/research/rbpd/contract.py",
+        "target": "        if stale_triggers:\n            return AssetValidationVerdict(\n                status=EpistemicStatus.STALE,\n                can_reuse=False,\n                reason=f\"Asset is STALE due to: {', '.join(stale_triggers)}\",\n                triggered_invalidations=tuple(stale_triggers),\n            )",
+        "replacement": "        if False and stale_triggers:\n            return AssetValidationVerdict(status=EpistemicStatus.STALE, can_reuse=False, reason=\"MUTANT M28\")",
+        "test": "tests/research/rbpd/test_rbpd_proof_dividend.py::test_phase_b_selective_invalidation_matrix_all_six_classes",
+    },
+    {
+        "id": "M29",
+        "name": "Disable Channel B sealed reality witness Goodhart divergence detection",
+        "file": "spe_runtime/research/rbpd/witness_selector.py",
+        "target": "        goodhart_detected = gap > self.goodhart_gap_threshold or (\n            mean_a >= self.pass_floor and mean_b < self.pass_floor\n        )",
+        "replacement": "        goodhart_detected = False  # MUTANT M29: Disable Goodhart divergence detection",
+        "test": "tests/research/rbpd/test_rbpd_proof_dividend.py::test_phase_c_dual_channel_witness_selector_catches_goodhart_proxy_overfit",
+    },
+    {
+        "id": "M30",
+        "name": "Falsely claim positive proof dividend on negative control benchmark",
+        "file": "spe_runtime/research/rbpd/dividend_benchmark.py",
+        "target": "        net_positive = rbpd_ledger.total_lifecycle_cost < full_rerun_cost",
+        "replacement": "        net_positive = True  # MUTANT M30: Falsely claim positive dividend on negative control",
+        "test": "tests/research/rbpd/test_rbpd_proof_dividend.py::test_phase_d_lifecycle_proof_dividend_and_negative_control",
+    },
+    {
+        "id": "M31",
+        "name": "REC-0: Accept verbal confidence without independent oracle verification",
+        "file": "spe_runtime/research/rec/envelope.py",
+        "target": "        if not observed_success.independent_oracle_verified:",
+        "replacement": "        if False and not observed_success.independent_oracle_verified:",
+        "test": "tests/research/rec/test_rec0_reliability_envelope.py::test_task1_missing_risk_bound_or_verbal_confidence_remains_unknown",
+    },
+    {
+        "id": "M32",
+        "name": "REC-0: Ignore inter-run correlation in repeated risk bound",
+        "file": "spe_runtime/research/rec/envelope.py",
+        "target": "        correlated_term = inter_run_correlation * per_run_failure_bound",
+        "replacement": "        correlated_term = 0.0  # MUTANT M32: Ignore common-mode correlation",
+        "test": "tests/research/rec/test_rec0_reliability_envelope.py::test_task1_clopper_pearson_and_correlation_aware_risk_bounds",
+    },
+    {
+        "id": "M33",
+        "name": "REC-0: Allow deterministic procedure reuse when envelope is STALE",
+        "file": "spe_runtime/research/rec/selector.py",
+        "target": "                if env_eval.state != EnvelopeValidityState.VALID or not env_eval.can_reuse:",
+        "replacement": "                if False and (env_eval.state != EnvelopeValidityState.VALID or not env_eval.can_reuse):",
+        "test": "tests/research/rec/test_rec0_reliability_envelope.py::test_task2_selector_adds_independent_verification_or_escalates_or_abstains",
+    },
+    {
+        "id": "M34",
+        "name": "REC-0: Bypass risk tolerance tau check in CostRiskExecutionSelector",
+        "file": "spe_runtime/research/rec/selector.py",
+        "target": "            if eff_risk > risk_tolerance_tau:",
+        "replacement": "            if False and eff_risk > risk_tolerance_tau:",
+        "test": "tests/research/rec/test_rec0_reliability_envelope.py::test_task2_selector_adds_independent_verification_or_escalates_or_abstains",
+    },
+    {
+        "id": "M35",
+        "name": "REC-0: Bypass ProtectedIntent digest binding in evaluate_envelope",
+        "file": "spe_runtime/research/rec/envelope.py",
+        "target": "        if envelope.intent_digest != protected_intent.intent_digest:",
+        "replacement": "        if False and envelope.intent_digest != protected_intent.intent_digest:",
+        "test": "tests/research/rec/test_rec0_reliability_envelope.py::test_task3_all_seven_adversarial_fixtures_pass_suite",
+    },
+    {
+        "id": "M36",
+        "name": "REC-0: Accept unattested validator public key in _is_validator_key_authorized",
+        "file": "spe_runtime/research/rec/envelope.py",
+        "target": "            or val_pk_hex in LearningValidator._OWNER_AUTHORIZED_VALIDATORS",
+        "replacement": "            or True  # MUTANT M36: Accept any unrevoked validator public key",
+        "test": "tests/research/rec/test_rec0_reliability_envelope.py::test_edge_cases_untrusted_validator_key_risk_floor_and_compositional_envelopes",
+    },
+    {
+        "id": "M37",
+        "name": "REC-0: Allow candidate risk bound lower than calibrated envelope risk bound",
+        "file": "spe_runtime/research/rec/selector.py",
+        "target": "        if relies_on_envelope_only and envelope_eval.effective_risk_bound is not None:\n            cand_risk = max(cand_risk, float(envelope_eval.effective_risk_bound))",
+        "replacement": "        if False and relies_on_envelope_only and envelope_eval.effective_risk_bound is not None:\n            cand_risk = max(cand_risk, float(envelope_eval.effective_risk_bound))",
+        "test": "tests/research/rec/test_rec0_reliability_envelope.py::test_edge_cases_untrusted_validator_key_risk_floor_and_compositional_envelopes",
+    },
+    {
+        "id": "M38",
+        "name": "REC-0: Ignore proportional failure scaling when n_tasks > n_families",
+        "file": "spe_runtime/research/rec/envelope.py",
+        "target": "        n_passed = min(n_fam, max(0, int(math.floor(n_fam * pass_fraction + 1e-9))))",
+        "replacement": "        n_passed = min(n_fam, max(0, observed_success.n_all_runs_passed_tasks))",
+        "test": "tests/research/rec/test_rec0_reliability_envelope.py::test_edge_cases_clopper_pearson_and_risk_estimator_boundaries",
+    },
 ]
 
 
@@ -225,6 +353,9 @@ def run_mutation(m: dict) -> dict:
     filepath.write_text(mutated_text, encoding="utf-8")
 
     try:
+        tombstone_file = REPO_ROOT / ".spe_tombstones.jsonl"
+        if tombstone_file.exists():
+            tombstone_file.unlink()
         # Run test
         cmd = [str(PYTEST_BIN), m["test"], "-q"]
         proc = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)

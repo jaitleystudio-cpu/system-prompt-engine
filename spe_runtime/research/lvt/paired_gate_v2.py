@@ -66,6 +66,20 @@ class StudyResult:
     production_qualified: bool = False
     statistical_method: str = 'ONE_SIDED_EXACT_FAMILY_SIGN_TEST'
     version: str = VERSION
+    model_digest_type: str = 'VERIFIED_MODEL_REVISION'
+
+
+def _is_synthetic_model_digest(generator_id: str, digest: str) -> bool:
+    candidates = (
+        f'spe-model-v1:{generator_id}',
+        generator_id,
+        f'model:{generator_id}',
+        f'spe-model:{generator_id}',
+    )
+    return any(
+        hashlib.sha256(c.encode('utf-8')).hexdigest() == digest
+        for c in candidates
+    )
 
 
 def _finite_score(x: object) -> bool:
@@ -111,6 +125,10 @@ def _validate(p: StudyProtocol, train: Sequence[Observation],
     for key in ('oracle_digest', 'model_digest'):
         if not isinstance(getattr(p, key), str) or not _DIGEST.fullmatch(getattr(p, key)):
             raise StudyInvalid(f'invalid {key}')
+    if p.model_digest_type not in ('VERIFIED_MODEL_REVISION', 'SYNTHETIC_NAME_DERIVED', 'SYNTHETIC_MODEL_IDENTIFIER'):
+        raise StudyInvalid('invalid model_digest_type')
+    if p.model_digest_type == 'VERIFIED_MODEL_REVISION' and _is_synthetic_model_digest(p.generator_id, p.model_digest):
+        raise StudyInvalid('synthetic model_digest cannot claim VERIFIED_MODEL_REVISION')
     if not _valid_alpha(p.alpha):
         raise StudyInvalid('invalid alpha')
     if not _finite_score(p.primary_effect_floor):
@@ -221,6 +239,7 @@ def run_study(p: StudyProtocol, train: Sequence[Observation],
         train_family_count=len({v.family_id for v in train}),
         holdout_family_count=len(grouped),
         evidence_hash=_hash_evidence(p, train, heldout),
+        model_digest_type=p.model_digest_type,
     )
 
 
