@@ -15,10 +15,23 @@ from typing import Any, Dict, Optional, Set, Tuple
 
 from spe_runtime.ci_gate.receipt import (
     ed25519_sign,
-    ed25519_verify,
+    ed25519_verify as _raw_ed25519_verify,
     generate_keypair,
     rfc8785_canonicalize,
 )
+
+_ED25519_VERIFY_CACHE: Dict[Tuple[bytes, bytes, bytes], bool] = {}
+
+
+def ed25519_verify(public_key: bytes, message: bytes, signature: bytes) -> bool:
+    key = (bytes(public_key), bytes(message), bytes(signature))
+    cached = _ED25519_VERIFY_CACHE.get(key)
+    if cached is not None:
+        return cached
+    res = _raw_ed25519_verify(public_key, message, signature)
+    if len(_ED25519_VERIFY_CACHE) < 4096:
+        _ED25519_VERIFY_CACHE[key] = res
+    return res
 from spe_runtime.research.lvt.types import (
     EvaluatorType,
     GeneratingModelSelfCertificationError,
@@ -64,6 +77,7 @@ class LearningValidator:
 
     _OWNER_ROOT_KEYS: Set[str] = set()
     _OWNER_AUTHORIZED_VALIDATORS: Set[str] = set()
+    _REVOKED_VALIDATORS: Set[str] = set()
     _GLOBAL_TOMBSTONES: Set[str] = set()
     _GLOBAL_REVOCATION_LEDGER: list = []
     _TOMBSTONE_FILE_PATH: Optional[str] = None
@@ -84,6 +98,8 @@ class LearningValidator:
     ) -> None:
         """Enrolls a validator public key with cryptographic attestation from an enrolled owner root key."""
         pk_hex = _normalize_hex_key(validator_public_key, "validator_public_key")
+        if pk_hex in cls._REVOKED_VALIDATORS or f"validator_pk:{pk_hex}" in cls._GLOBAL_TOMBSTONES:
+            raise ValueError(f"Validator public key '{pk_hex}' has been revoked and cannot be re-enrolled")
         if owner_attestation is None or owner_root_public_key is None:
             raise ValueError(
                 "Unauthenticated validator enrollment rejected: requires valid owner attestation "
@@ -95,6 +111,52 @@ class LearningValidator:
         if not cls._verify_owner_attestation_internal(owner_attestation, owner_hex, pk_hex):
             raise ValueError("Invalid owner attestation signature for validator enrollment")
         cls._OWNER_AUTHORIZED_VALIDATORS.add(pk_hex)
+
+    @classmethod
+    def revoke_validator_key(
+        cls,
+        validator_public_key: str | bytes,
+        *,
+        owner_signing_key: str | bytes,
+        owner_public_key: str | bytes,
+        reason: str = "VALIDATOR_KEY_REVOKED",
+    ) -> Dict[str, Any]:
+        """Cryptographically revokes a validator key under an enrolled owner root key and persists a tombstone."""
+        val_hex = _normalize_hex_key(validator_public_key, "validator_public_key")
+        owner_pk_hex = _normalize_hex_key(owner_public_key, "owner_public_key")
+        if not cls._OWNER_ROOT_KEYS or owner_pk_hex not in cls._OWNER_ROOT_KEYS:
+            raise ValueError(f"Unauthorized owner root key '{owner_pk_hex}': cannot revoke validator key")
+        sk_bytes = bytes.fromhex(owner_signing_key) if isinstance(owner_signing_key, str) else owner_signing_key
+        pk_bytes = bytes.fromhex(owner_pk_hex)
+        ts = time.time()
+        payload = {
+            "action": "REVOKE_VALIDATOR_KEY",
+            "owner_public_key": owner_pk_hex,
+            "reason": reason,
+            "timestamp": ts,
+            "validator_public_key": val_hex,
+        }
+        canonical = rfc8785_canonicalize(payload)
+        sig = ed25519_sign(sk_bytes, pk_bytes, canonical)
+        if not ed25519_verify(pk_bytes, canonical, sig):
+            raise ValueError("Invalid owner signature for validator key revocation")
+        cls._OWNER_AUTHORIZED_VALIDATORS.discard(val_hex)
+        cls._REVOKED_VALIDATORS.add(val_hex)
+        cls._GLOBAL_TOMBSTONES.add(f"validator_pk:{val_hex}")
+        entry = {
+            "receipt_hash": None,
+            "evidence_hash": None,
+            "tx_id": None,
+            "target_model_id": None,
+            "revoked_validator_pk": val_hex,
+            "reason": reason,
+            "details": f"Revoked by owner {owner_pk_hex}",
+            "signature": sig.hex(),
+            "timestamp": ts,
+        }
+        cls._GLOBAL_REVOCATION_LEDGER.append(entry)
+        cls._persist_tombstone_entry(entry)
+        return entry
 
     @classmethod
     def set_tombstone_store_path(cls, path: Optional[str | Path]) -> None:
@@ -110,14 +172,16 @@ class LearningValidator:
 
     @classmethod
     def _persist_tombstone_entry(cls, entry: Dict[str, Any]) -> None:
-        """Persists a tombstone record to durable filesystem storage."""
+        """Persists a tombstone record to durable filesystem storage. Fails closed when explicitly configured."""
         p = cls._get_tombstone_path()
+        explicit = bool(cls._TOMBSTONE_FILE_PATH or os.environ.get("SPE_TOMBSTONE_STORE_PATH"))
         try:
             p.parent.mkdir(parents=True, exist_ok=True)
             with p.open("a", encoding="utf-8") as f:
                 f.write(json.dumps(entry) + "\n")
-        except OSError:
-            pass
+        except OSError as exc:
+            if explicit:
+                raise RuntimeError(f"Failed to persist revocation tombstone to '{p}': {exc}") from exc
 
     @classmethod
     def load_tombstones_from_disk(cls, path: Optional[str | Path] = None) -> int:
@@ -138,6 +202,18 @@ class LearningValidator:
                         for k in (entry.get("receipt_hash"), entry.get("evidence_hash")):
                             if k and isinstance(k, str) and k.strip():
                                 cls._GLOBAL_TOMBSTONES.add(k.strip().lower())
+                        tx_id = entry.get("tx_id")
+                        target_model_id = entry.get("target_model_id")
+                        if tx_id and target_model_id:
+                            cls._GLOBAL_TOMBSTONES.add(f"{tx_id}:{target_model_id}")
+                        elif tx_id:
+                            cls._GLOBAL_TOMBSTONES.add(f"tx:{tx_id}")
+                        revoked_vpk = entry.get("revoked_validator_pk")
+                        if revoked_vpk and isinstance(revoked_vpk, str) and revoked_vpk.strip():
+                            vpk = revoked_vpk.strip().lower()
+                            cls._REVOKED_VALIDATORS.add(vpk)
+                            cls._GLOBAL_TOMBSTONES.add(f"validator_pk:{vpk}")
+                            cls._OWNER_AUTHORIZED_VALIDATORS.discard(vpk)
                         loaded += 1
                     except (json.JSONDecodeError, KeyError):
                         continue
@@ -169,12 +245,17 @@ class LearningValidator:
         for key in (receipt_hash, evidence_hash):
             if key and isinstance(key, str) and key.strip():
                 cls._GLOBAL_TOMBSTONES.add(key.strip().lower())
+        if tx_id and target_model_id:
+            cls._GLOBAL_TOMBSTONES.add(f"{tx_id}:{target_model_id}")
+        elif tx_id:
+            cls._GLOBAL_TOMBSTONES.add(f"tx:{tx_id}")
         cls._persist_tombstone_entry(entry)
 
     @classmethod
     def clear_owner_registries(cls) -> None:
         cls._OWNER_ROOT_KEYS.clear()
         cls._OWNER_AUTHORIZED_VALIDATORS.clear()
+        cls._REVOKED_VALIDATORS.clear()
         cls._GLOBAL_TOMBSTONES.clear()
         cls._GLOBAL_REVOCATION_LEDGER.clear()
         cls._TOMBSTONE_FILE_PATH = None
@@ -189,6 +270,7 @@ class LearningValidator:
         owner_root_public_key: Optional[str | bytes] = None,
         owner_attestation: Optional[Dict[str, Any] | str] = None,
         is_owner_authorized: Optional[bool] = None,
+        require_cryptographic_owner_authority: bool = False,
     ) -> None:
         if default_signing_key and default_public_key:
             self._sk = default_signing_key
@@ -205,29 +287,47 @@ class LearningValidator:
         self._revocation_tombstones: Set[str] = set()
         self._revocation_ledger: list = []
 
+        # Automatically load persistent tombstones into global and instance state first
+        self.load_tombstones_from_disk()
+
+        pk_hex = self._pk.hex().lower()
+        is_revoked = pk_hex in self._REVOKED_VALIDATORS or f"validator_pk:{pk_hex}" in self._GLOBAL_TOMBSTONES
+
         if is_owner_authorized is not None:
             raise ValueError(
                 "Caller cannot self-assert owner authorization: 'is_owner_authorized' parameter is forbidden. "
                 "Authority must be cryptographically attested by an enrolled owner root key."
             )
+        elif is_revoked:
+            self._is_owner_authorized = False
+            self._has_cryptographic_owner_authority = False
         elif self._owner_root_public_key is not None:
             if not self._OWNER_ROOT_KEYS or self._owner_root_public_key not in self._OWNER_ROOT_KEYS:
                 self._is_owner_authorized = False
+                self._has_cryptographic_owner_authority = False
             else:
-                self._is_owner_authorized = self._verify_owner_attestation_internal(
+                verified = self._verify_owner_attestation_internal(
                     owner_attestation,
                     self._owner_root_public_key,
-                    self._pk.hex(),
+                    pk_hex,
                 )
-        elif self._pk.hex() in self._OWNER_AUTHORIZED_VALIDATORS:
+                self._is_owner_authorized = verified
+                self._has_cryptographic_owner_authority = verified
+        elif pk_hex in self._OWNER_AUTHORIZED_VALIDATORS:
             self._is_owner_authorized = True
+            self._has_cryptographic_owner_authority = True
         elif self._OWNER_ROOT_KEYS:
             self._is_owner_authorized = False
+            self._has_cryptographic_owner_authority = False
         else:
             self._is_owner_authorized = True
+            self._has_cryptographic_owner_authority = False
 
-        # Automatically load persistent tombstones into global and instance state
-        self.load_tombstones_from_disk()
+        if require_cryptographic_owner_authority and not self._has_cryptographic_owner_authority:
+            raise ValueError(
+                "Unauthorized LearningValidator: cryptographic owner attestation from an enrolled owner root key "
+                "is required (validator is unattested or revoked)."
+            )
 
         # Trusted oracle registry: binds oracle_id -> public_key_hex (64 hex lowercase)
         # Default behavior MUST FAIL CLOSED. No self-reported trust roots.
@@ -280,7 +380,17 @@ class LearningValidator:
 
     @property
     def is_owner_authorized(self) -> bool:
+        pk_hex = self._pk.hex().lower()
+        if pk_hex in self._REVOKED_VALIDATORS or f"validator_pk:{pk_hex}" in self._GLOBAL_TOMBSTONES:
+            return False
         return self._is_owner_authorized
+
+    @property
+    def has_cryptographic_owner_authority(self) -> bool:
+        pk_hex = self._pk.hex().lower()
+        if pk_hex in self._REVOKED_VALIDATORS or f"validator_pk:{pk_hex}" in self._GLOBAL_TOMBSTONES:
+            return False
+        return self._has_cryptographic_owner_authority
 
     @staticmethod
     def _verify_owner_attestation_internal(
@@ -288,15 +398,23 @@ class LearningValidator:
         owner_root_pk_hex: str,
         validator_pk_hex: str,
     ) -> bool:
+        import math
+
         if not attestation or not isinstance(attestation, dict):
+            return False
+        vpk = validator_pk_hex.lower()
+        if vpk in LearningValidator._REVOKED_VALIDATORS or f"validator_pk:{vpk}" in LearningValidator._GLOBAL_TOMBSTONES:
             return False
         if attestation.get("verdict") != "APPROVED":
             return False
         if attestation.get("scope") != "PRODUCTION_LEARNING_VALIDATION":
             return False
-        if str(attestation.get("validator_public_key", "")).lower() != validator_pk_hex.lower():
+        if str(attestation.get("validator_public_key", "")).lower() != vpk:
             return False
         if str(attestation.get("owner_public_key", "")).lower() != owner_root_pk_hex.lower():
+            return False
+        ts = attestation.get("timestamp")
+        if isinstance(ts, bool) or not isinstance(ts, (int, float)) or not math.isfinite(ts) or ts <= 0.0:
             return False
         sig_hex = attestation.get("signature")
         if not sig_hex or not isinstance(sig_hex, str) or len(sig_hex) != 128:
@@ -310,8 +428,8 @@ class LearningValidator:
         canonical_dict = {
             "owner_public_key": owner_root_pk_hex.lower(),
             "scope": attestation["scope"],
-            "timestamp": attestation.get("timestamp"),
-            "validator_public_key": validator_pk_hex.lower(),
+            "timestamp": ts,
+            "validator_public_key": vpk,
             "verdict": attestation["verdict"],
         }
         canonical_bytes = rfc8785_canonicalize(canonical_dict)
@@ -346,9 +464,11 @@ class LearningValidator:
         if tx_id and target_model_id:
             binding_key = f"{tx_id}:{target_model_id}"
             self._revocation_tombstones.add(binding_key)
+            self._GLOBAL_TOMBSTONES.add(binding_key)
         if tx_id and not target_model_id:
             tx_key = f"tx:{tx_id}"
             self._revocation_tombstones.add(tx_key)
+            self._GLOBAL_TOMBSTONES.add(tx_key)
         self._persist_tombstone_entry(entry)
 
     def is_tombstoned(
@@ -364,6 +484,10 @@ class LearningValidator:
             keys_to_check.append(str(receipt_hash).strip().lower())
         if evidence_hash:
             keys_to_check.append(str(evidence_hash).strip().lower())
+        if tx_id and target_model_id:
+            keys_to_check.append(f"{tx_id}:{target_model_id}")
+        if tx_id:
+            keys_to_check.append(f"tx:{tx_id}")
 
         if any(
             k in self._revocation_tombstones or k in self._GLOBAL_TOMBSTONES
@@ -371,17 +495,11 @@ class LearningValidator:
         ):
             return True
 
-        if tx_id and target_model_id:
-            pair = f"{tx_id}:{target_model_id}"
-            if pair in self._revocation_tombstones:
-                return True
-        if tx_id:
-            tx_key = f"tx:{tx_id}"
-            if tx_key in self._revocation_tombstones:
-                return True
-
         self.load_tombstones_from_disk()
-        if any(k in self._GLOBAL_TOMBSTONES for k in keys_to_check):
+        if any(
+            k in self._revocation_tombstones or k in self._GLOBAL_TOMBSTONES
+            for k in keys_to_check
+        ):
             return True
 
         return False
@@ -701,9 +819,17 @@ class LearningValidator:
         public_key: Optional[bytes] = None,
     ) -> bool:
         """Cryptographically verifies the transaction's Ed25519 receipt signature against this validator's pinned public key."""
+        if not self.is_owner_authorized:
+            return False
+        if tx.status == QualificationStatus.REVOKED:
+            return False
         if not tx.canonical_receipt_signature or not tx.committed_timestamp:
             return False
         if not tx.artifact_hash:
+            return False
+        if self.is_tombstoned(
+            receipt_hash=tx.artifact_hash,
+        ):
             return False
         if public_key is not None and public_key != self._pk:
             return False
@@ -833,7 +959,7 @@ class LearningValidator:
         report: Dict[str, Any],
     ) -> Tuple[str, str]:
         """Signs a canonical RFC 8785 cross-model transfer receipt under this validator's key."""
-        if not self._is_owner_authorized:
+        if not self.is_owner_authorized:
             raise ValueError("Unauthorized LearningValidator: cannot sign cross-model transfer receipt without owner authority")
         receipt_dict = self._build_transfer_receipt_dict(tx, report)
         canonical_bytes = rfc8785_canonicalize(receipt_dict)
@@ -860,25 +986,29 @@ class LearningValidator:
             StudyProtocol,
             _DIGEST,
             _finite_score,
+            _is_synthetic_model_digest,
             exact_sign_p,
         )
 
         if not isinstance(report, dict):
             return False, False, "Forged or malformed transfer metadata: report is not a dict"
 
-        if report.get("revoked") is True:
+        if report.get("revoked") is True or tx.status == QualificationStatus.REVOKED:
             return False, False, f"Cross-model transfer evidence for '{target_model_id}' has been revoked"
 
-        if not self._is_owner_authorized:
+        if not self.is_owner_authorized:
             return False, False, "Untrusted validator: validator lacks owner root-of-trust authorization"
 
         receipt_hash = report.get("transfer_receipt_hash")
         evidence_hash = report.get("evidence_hash")
-        if self.is_tombstoned(
-            receipt_hash=receipt_hash,
-            evidence_hash=evidence_hash,
-            tx_id=tx.tx_id,
-            target_model_id=target_model_id,
+        if (
+            self.is_tombstoned(
+                receipt_hash=receipt_hash,
+                evidence_hash=evidence_hash,
+            )
+            or self.is_tombstoned(
+                receipt_hash=tx.artifact_hash,
+            )
         ):
             return False, False, f"Cross-model transfer evidence for '{target_model_id}' has been revoked (persistent tombstone enforced)"
 
@@ -922,8 +1052,6 @@ class LearningValidator:
         if report.get("revoked") is True or self.is_tombstoned(
             receipt_hash=report.get("transfer_receipt_hash"),
             evidence_hash=report.get("evidence_hash"),
-            tx_id=tx.tx_id,
-            target_model_id=target_model_id,
         ):
             return False, False, "Transfer report has been revoked (persistent tombstone enforced)"
 
@@ -946,9 +1074,8 @@ class LearningValidator:
         if not isinstance(model_digest, str) or not _DIGEST.fullmatch(model_digest):
             return False, False, "Invalid target_model_digest in transfer report"
 
-        synthetic_hash = hashlib.sha256(f"spe-model-v1:{target_model_id}".encode("utf-8")).hexdigest()
         digest_type = report.get("model_digest_type") or report.get("target_model_digest_type")
-        if model_digest == synthetic_hash and digest_type == "VERIFIED_MODEL_REVISION":
+        if _is_synthetic_model_digest(target_model_id, model_digest) and digest_type == "VERIFIED_MODEL_REVISION":
             return False, False, (
                 f"Synthetic model identifier digest cannot be classified as VERIFIED_MODEL_REVISION: "
                 f"digest for '{target_model_id}' matches synthetic model name hash"

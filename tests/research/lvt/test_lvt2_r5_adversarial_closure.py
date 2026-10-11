@@ -831,3 +831,308 @@ def test_finding_d_missing_provenance_and_unsupported_independence_rejected():
             },
         )
 
+
+def test_round3_parent_transaction_revocation_persists_across_restart_and_backup_restore(tmp_path):
+    """
+    Round 3 Gap 1: Parent transaction revocation (revoke_transaction / check_distribution_drift_and_revoke)
+    must record durable tombstones and prevent backup-restore replay across a process restart.
+    """
+    tombstone_file = tmp_path / "round3_parent_tombstones.jsonl"
+    LearningValidator.set_tombstone_store_path(tombstone_file)
+
+    tx, validator, oracle_sk, _ = _make_qualified_fixture()
+    dataset = _make_transfer_dataset(24)
+
+    report = LearningTransferProtocol.evaluate_cross_model_transfer(
+        tx=tx,
+        target_model_id="claude-3-7-sonnet",
+        evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+        test_dataset=dataset,
+        base_prompt="base",
+        refined_prompt="refined",
+        validator=validator,
+        target_model_digest="d" * 64,
+        oracle_signing_key=oracle_sk,
+    )
+    assert report["transfers_successfully"] is True
+
+    # Adversary takes a full snapshot of the qualified transaction BEFORE parent revocation
+    pre_revocation_tx = copy.deepcopy(tx)
+
+    # Revoke the parent transaction via drift check
+    revoked = LearningTransferProtocol.check_distribution_drift_and_revoke(
+        tx=tx,
+        monitored_scores=[0.10, 0.12],
+        drift_tolerance=0.15,
+    )
+    assert revoked is True
+    assert tx.status == QualificationStatus.REVOKED
+    assert tombstone_file.exists()
+
+    # SIMULATE PROCESS RESTART and adversary restoring pre-revocation transaction object
+    LearningValidator.clear_owner_registries()
+    LearningValidator.set_tombstone_store_path(tombstone_file)
+    fresh_validator = LearningValidator(
+        trusted_oracles={"oracle-closure-01": validator._trusted_oracles["oracle-closure-01"]},
+        default_signing_key=validator._sk,
+        default_public_key=validator._pk,
+    )
+
+    restored_tx = copy.deepcopy(pre_revocation_tx)
+    assert restored_tx.status == QualificationStatus.QUALIFIED
+
+    # 1. Parent transaction must be recognized as tombstoned by tx_id, artifact_hash, and study evidence_hash
+    assert fresh_validator.is_tombstoned(tx_id=restored_tx.tx_id) is True
+    assert fresh_validator.is_tombstoned(receipt_hash=restored_tx.artifact_hash) is True
+    assert fresh_validator.is_tombstoned(
+        evidence_hash=restored_tx.lvt2_study_result.evidence_hash
+    ) is True
+    assert fresh_validator.is_tombstoned(
+        tx_id=restored_tx.tx_id, target_model_id="claude-3-7-sonnet"
+    ) is True
+
+    # 2. verify_transaction_signature must reject the restored pre-revocation transaction
+    assert LearningTransferProtocol.verify_transaction_signature(
+        restored_tx, validator=fresh_validator
+    ) is False
+
+    # 3. Child transfer receipt verification must also fail because parent tx was revoked
+    is_auth, is_ver, reason = fresh_validator.verify_model_transfer_receipt(
+        restored_tx,
+        "claude-3-7-sonnet",
+        restored_tx.metadata["cross_model_transfers"]["claude-3-7-sonnet"],
+    )
+    assert is_auth is False
+    assert is_ver is False
+    assert "tombstone" in reason.lower() or "revoked" in reason.lower()
+
+    # 4. Synthesizing a .spe artifact from the restored pre-revocation transaction must fail
+    with pytest.raises(ValueError, match="(?i)(revoked|tombstone)"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=restored_tx,
+            refined_prompt_content="refined prompt",
+            supported_models=["gpt-4o"],
+            validator=fresh_validator,
+        )
+
+    # 5. Evaluating a new cross-model transfer on the restored pre-revocation transaction must fail
+    with pytest.raises(ValueError, match="(?i)(revoked|tombstone)"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=restored_tx,
+            target_model_id="gemini-2-5-pro",
+            evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+            test_dataset=dataset,
+            base_prompt="base",
+            refined_prompt="refined",
+            validator=fresh_validator,
+            target_model_digest="e" * 64,
+            oracle_signing_key=oracle_sk,
+        )
+
+
+def test_round3_tombstone_io_failure_fails_closed_when_configured(tmp_path):
+    """
+    Round 3 Gap 1b: If an explicit tombstone file path is configured (or via env var) and cannot be
+    written (e.g., path is a directory or unwriteable), _record_global_tombstone must fail closed
+    instead of silently swallowing OSError.
+    """
+    bad_path = tmp_path / "directory_not_a_file"
+    bad_path.mkdir(parents=True, exist_ok=True)
+    LearningValidator.set_tombstone_store_path(bad_path)
+
+    with pytest.raises(RuntimeError, match="(?i)(tombstone.*persist|failed to persist)"):
+        LearningValidator._record_global_tombstone(
+            receipt_hash="deadbeef" * 8,
+            evidence_hash="cafebabe" * 8,
+            tx_id="tx-io-fail-01",
+            target_model_id="gpt-4o",
+        )
+
+
+def test_round3_parent_and_variant_synthetic_model_digests_rejected():
+    """
+    Round 3 Gap 2: Both parent StudyProtocol and child cross-model transfers must reject
+    all synthetic name-derived digest variants when claiming VERIFIED_MODEL_REVISION, and
+    synthesize_spe_learning_artifact must not silently promote a synthetic parent model when
+    allow_synthetic_models=False.
+    """
+    train = [
+        Observation(f"tr-{i}", f"tr-fam-{i}", f"a{i:063x}", 0.15, 0.90, 0.15)
+        for i in range(24)
+    ]
+    heldout = [
+        Observation(f"ho-{i}", f"ho-fam-{i}", f"b{i:063x}", 0.15, 0.90)
+        for i in range(24)
+    ]
+
+    # 1. Parent study claiming VERIFIED_MODEL_REVISION with raw sha256(generator_id) -> REJECTED
+    raw_synthetic = hashlib.sha256(b"gpt-4o").hexdigest()
+    proto_bad_digest = StudyProtocol(
+        study_id="study-synth-parent",
+        evaluator_id="oracle-closure-01",
+        generator_id="gpt-4o",
+        evaluator_kind="independent_static_oracle",
+        oracle_digest="1" * 64,
+        model_digest=raw_synthetic,
+        alpha=0.05,
+        primary_effect_floor=0.05,
+        min_heldout_families=20,
+        family_level_significance=True,
+        multiplicity=2,
+        model_digest_type="VERIFIED_MODEL_REVISION",
+    )
+    with pytest.raises(ValueError, match="(?i)(synthetic|model_digest)"):
+        run_study(proto_bad_digest, train, heldout)
+
+    # 2. Parent study with invalid model_digest_type -> REJECTED
+    proto_bad_type = StudyProtocol(
+        study_id="study-invalid-type",
+        evaluator_id="oracle-closure-01",
+        generator_id="gpt-4o",
+        evaluator_kind="independent_static_oracle",
+        oracle_digest="1" * 64,
+        model_digest="2" * 64,
+        alpha=0.05,
+        primary_effect_floor=0.05,
+        min_heldout_families=20,
+        family_level_significance=True,
+        multiplicity=2,
+        model_digest_type="FORGED_DIGEST_TYPE",
+    )
+    with pytest.raises(ValueError, match="(?i)(model_digest_type|invalid)"):
+        run_study(proto_bad_type, train, heldout)
+
+    # 3. Parent study explicitly marked SYNTHETIC_NAME_DERIVED cannot be exported as verified
+    # in synthesize_spe_learning_artifact when allow_synthetic_models=False
+    synth_parent_digest = hashlib.sha256(b"spe-model-v1:gpt-4o").hexdigest()
+    proto_synth_parent = StudyProtocol(
+        study_id="study-explicit-synth-parent",
+        evaluator_id="oracle-closure-01",
+        generator_id="gpt-4o",
+        evaluator_kind="independent_static_oracle",
+        oracle_digest="1" * 64,
+        model_digest=synth_parent_digest,
+        alpha=0.05,
+        primary_effect_floor=0.05,
+        min_heldout_families=20,
+        family_level_significance=True,
+        multiplicity=2,
+        model_digest_type="SYNTHETIC_NAME_DERIVED",
+    )
+    study_synth = run_study(proto_synth_parent, train, heldout)
+    tx, validator, oracle_sk, oracle_pk = _make_qualified_fixture()
+    tx.lvt2_study_result = study_synth
+    tx.oracle_attestation = create_oracle_attestation(
+        signing_key=oracle_sk,
+        public_key=oracle_pk,
+        oracle_id="oracle-closure-01",
+        evidence_hash=study_synth.evidence_hash,
+    )
+    tx.metadata["parent_model_digest"] = synth_parent_digest
+    tx.metadata["parent_model_digest_type"] = "SYNTHETIC_NAME_DERIVED"
+    tx = validator.validate_and_commit(tx)
+
+    with pytest.raises(ValueError, match="(?i)(synthetic|unverified|verified_models)"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=tx,
+            refined_prompt_content="refined prompt",
+            supported_models=["gpt-4o"],
+            validator=validator,
+            allow_synthetic_models=False,
+        )
+
+
+def test_round3_cryptographic_owner_authority_and_validator_revocation_enforced(tmp_path):
+    """
+    Round 3 Gap 3:
+    1. has_cryptographic_owner_authority is False when relying on empty-registry legacy fallback,
+       and True ONLY when backed by cryptographic owner root attestation.
+    2. require_cryptographic_owner_authority=True rejects unattested validators even when registry is empty.
+    3. Revoking a validator key via LearningValidator.revoke_validator_key invalidates its authority
+       immediately and across process restarts.
+    4. Malformed attestation timestamps (bool, negative, NaN) are rejected.
+    """
+    tombstone_file = tmp_path / "round3_validator_revocation.jsonl"
+    LearningValidator.clear_owner_registries()
+    LearningValidator.set_tombstone_store_path(tombstone_file)
+
+    oracle_sk, oracle_pk = generate_keypair()
+    val_sk, val_pk = generate_keypair()
+
+    # 1. Legacy fallback validator has is_owner_authorized=True (for legacy tests) but
+    # has_cryptographic_owner_authority=False
+    legacy_val = LearningValidator(
+        default_signing_key=val_sk,
+        default_public_key=val_pk,
+        trusted_oracles={"oracle-closure-01": oracle_pk.hex()},
+    )
+    assert legacy_val.has_cryptographic_owner_authority is False
+
+    # 2. Strict mode (require_cryptographic_owner_authority=True) rejects unattested validator
+    with pytest.raises(ValueError, match="(?i)(cryptographic owner|owner attestation|unauthorized)"):
+        LearningValidator(
+            default_signing_key=val_sk,
+            default_public_key=val_pk,
+            trusted_oracles={"oracle-closure-01": oracle_pk.hex()},
+            require_cryptographic_owner_authority=True,
+        )
+
+    # 3. Enroll owner root key and create valid cryptographic attestation
+    owner_sk, owner_pk = generate_keypair()
+    LearningValidator.register_owner_root_key(owner_pk)
+    attestation = create_owner_validator_attestation(
+        owner_signing_key=owner_sk,
+        owner_public_key=owner_pk,
+        validator_public_key=val_pk,
+    )
+
+    # Malformed timestamp (boolean True is an instance of int in Python!) must be rejected
+    bad_attestation = dict(attestation, timestamp=True)
+    bad_val = LearningValidator(
+        default_signing_key=val_sk,
+        default_public_key=val_pk,
+        trusted_oracles={"oracle-closure-01": oracle_pk.hex()},
+        owner_root_public_key=owner_pk,
+        owner_attestation=bad_attestation,
+    )
+    assert bad_val.is_owner_authorized is False
+    assert bad_val.has_cryptographic_owner_authority is False
+
+    # Valid attestation confers cryptographic owner authority
+    strict_val = LearningValidator(
+        default_signing_key=val_sk,
+        default_public_key=val_pk,
+        trusted_oracles={"oracle-closure-01": oracle_pk.hex()},
+        owner_root_public_key=owner_pk,
+        owner_attestation=attestation,
+        require_cryptographic_owner_authority=True,
+    )
+    assert strict_val.is_owner_authorized is True
+    assert strict_val.has_cryptographic_owner_authority is True
+
+    # 4. Owner revokes the validator key -> authority is immediately revoked and persists across restart
+    LearningValidator.revoke_validator_key(
+        validator_public_key=val_pk,
+        owner_signing_key=owner_sk,
+        owner_public_key=owner_pk,
+        reason="Validator key compromised in Round 3 drill",
+    )
+    assert strict_val.is_owner_authorized is False
+    assert strict_val.has_cryptographic_owner_authority is False
+
+    # Simulate restart and attempt to reuse the pre-signed attestation
+    LearningValidator.clear_owner_registries()
+    LearningValidator.set_tombstone_store_path(tombstone_file)
+    LearningValidator.register_owner_root_key(owner_pk)
+
+    with pytest.raises(ValueError, match="(?i)(revoked|cryptographic owner|unauthorized)"):
+        LearningValidator(
+            default_signing_key=val_sk,
+            default_public_key=val_pk,
+            trusted_oracles={"oracle-closure-01": oracle_pk.hex()},
+            owner_root_public_key=owner_pk,
+            owner_attestation=attestation,
+            require_cryptographic_owner_authority=True,
+        )
+
+
