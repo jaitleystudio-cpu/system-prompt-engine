@@ -354,6 +354,84 @@ class ControlledExperimentRunner:
         item: Dict[str, Any],
     ) -> float:
         score = evaluator_fn(prompt, item)
-        if not (0.0 <= score <= 1.0):
+        if type(score) is bool or not isinstance(score, (int, float)) or not math.isfinite(score) or not (0.0 <= score <= 1.0):
             raise ValueError(f"Evaluator returned out-of-bounds score: {score} (must be in [0.0, 1.0])")
-        return score
+        return float(score)
+
+    def run_lvt2_study(
+        self,
+        protocol: Any,
+        train: Sequence[Any],
+        heldout: Sequence[Any],
+    ) -> Any:
+        """Executes an LVT-2 paired exact sign-test study under StudyProtocol."""
+        from spe_runtime.research.lvt.paired_gate_v2 import run_study
+        return run_study(protocol, train, heldout)
+
+    def run_experiment_lvt2(
+        self,
+        protocol: Any,
+        evaluator_fn: Callable[[str, Dict[str, Any]], float],
+        train_dataset: Sequence[Dict[str, Any]],
+        held_out_dataset: Sequence[Dict[str, Any]],
+        base_prompt: str,
+        refined_prompt: str,
+        shuffled_feedback_prompt: Optional[str] = None,
+    ) -> Any:
+        """
+        Executes end-to-end prompt evaluations and scores them through the LVT-2
+        paired sign-test and family-macro statistical gate.
+        """
+        import hashlib
+        from spe_runtime.research.lvt.paired_gate_v2 import Observation, run_study
+
+        if not train_dataset or not held_out_dataset:
+            raise ValueError("Datasets cannot be empty")
+
+        if shuffled_feedback_prompt is None:
+            shuffled_feedback_prompt = f"{base_prompt}\n# [SHUFFLED_CONTROL_DIRECTIVE]: Permuted feedback applied."
+
+        def _to_digest(content: str) -> str:
+            return hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+        train_obs: List[Observation] = []
+        for idx, item in enumerate(train_dataset):
+            score_base = self._eval_item(evaluator_fn, base_prompt, item)
+            score_cand = self._eval_item(evaluator_fn, refined_prompt, item)
+            score_shuf = self._eval_item(evaluator_fn, shuffled_feedback_prompt, item)
+            item_id = str(item.get("id") or item.get("item_id") or f"train-item-{idx}")
+            fam_id = str(item.get("family_id") or item.get("task_family") or item.get("family") or f"train-fam-{idx}")
+            digest = str(item.get("content_sha256") or item.get("sha256") or item.get("digest") or "")
+            if not digest or len(digest) != 64:
+                digest = _to_digest(repr(sorted(item.items())))
+            train_obs.append(
+                Observation(
+                    item_id=item_id,
+                    family_id=fam_id,
+                    content_sha256=digest,
+                    base_score=score_base,
+                    candidate_score=score_cand,
+                    shuffled_score=score_shuf,
+                )
+            )
+
+        held_obs: List[Observation] = []
+        for idx, item in enumerate(held_out_dataset):
+            score_base = self._eval_item(evaluator_fn, base_prompt, item)
+            score_cand = self._eval_item(evaluator_fn, refined_prompt, item)
+            item_id = str(item.get("id") or item.get("item_id") or f"held-item-{idx}")
+            fam_id = str(item.get("family_id") or item.get("task_family") or item.get("family") or f"held-fam-{idx}")
+            digest = str(item.get("content_sha256") or item.get("sha256") or item.get("digest") or "")
+            if not digest or len(digest) != 64:
+                digest = _to_digest(repr(sorted(item.items())))
+            held_obs.append(
+                Observation(
+                    item_id=item_id,
+                    family_id=fam_id,
+                    content_sha256=digest,
+                    base_score=score_base,
+                    candidate_score=score_cand,
+                )
+            )
+
+        return run_study(protocol, train_obs, held_obs)

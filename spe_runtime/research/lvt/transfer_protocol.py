@@ -91,6 +91,22 @@ class LearningTransferProtocol:
         if tx.status != QualificationStatus.QUALIFIED:
             raise ValueError(f"Cannot synthesize artifact for non-qualified transaction (status={tx.status})")
 
+        if tx.lvt2_study_result:
+            empirical_gain = {
+                "delta_improvement": tx.lvt2_study_result.family_macro_delta,
+                "held_out_retention": tx.lvt2_study_result.holdout_candidate_minus_base,
+            }
+        elif tx.results:
+            empirical_gain = {
+                "delta_improvement": tx.results.delta_improvement,
+                "held_out_retention": tx.results.held_out_retention,
+            }
+        else:
+            empirical_gain = {
+                "delta_improvement": 0.0,
+                "held_out_retention": 0.0,
+            }
+
         artifact_doc = {
             "spe_version": "1.0",
             "artifact_type": "LEARNING_VALIDITY_TRANSACTION",
@@ -104,10 +120,7 @@ class LearningTransferProtocol:
                 "committed_timestamp": tx.committed_timestamp,
             },
             "verified_models": list(supported_models),
-            "empirical_gain": {
-                "delta_improvement": tx.results.delta_improvement if tx.results else 0.0,
-                "held_out_retention": tx.results.held_out_retention if tx.results else 0.0,
-            },
+            "empirical_gain": empirical_gain,
             "refined_prompt": refined_prompt_content,
         }
 
@@ -146,11 +159,17 @@ class LearningTransferProtocol:
         Monitors ongoing production outputs. If average performance degrades below
         held-out generalization baseline by more than drift_tolerance, automatically revokes.
         """
-        if not monitored_scores or not tx.results:
+        if not monitored_scores:
+            return False
+
+        if tx.lvt2_study_result:
+            baseline_generalization = tx.lvt2_study_result.holdout_candidate_mean
+        elif tx.results:
+            baseline_generalization = tx.results.arm_d_generalization_score
+        else:
             return False
 
         current_avg = sum(monitored_scores) / len(monitored_scores)
-        baseline_generalization = tx.results.arm_d_generalization_score
 
         if current_avg < (baseline_generalization - drift_tolerance):
             LearningTransferProtocol.revoke_transaction(

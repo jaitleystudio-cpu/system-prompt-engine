@@ -14,6 +14,7 @@ import math
 from typing import Any, Dict
 import pytest
 
+from spe_runtime.ci_gate.receipt import generate_keypair
 from spe_runtime.research.lvt import (
     ControlledExperimentRunner,
     EvaluatorType,
@@ -21,11 +22,16 @@ from spe_runtime.research.lvt import (
     FourArmResults,
     GeneratingModelSelfCertificationError,
     LearningClaim,
+    LearningTransferProtocol,
+    LearningValidityRuleViolation,
+    LearningValidityTransaction,
     LearningValidator,
     Observation,
     QualificationStatus,
+    RevocationReason,
     StudyInvalid,
     StudyProtocol,
+    TransactionRevokedError,
     run_study,
 )
 from spe_runtime.research.lvt.learning_validator import create_oracle_attestation
@@ -284,3 +290,234 @@ def test_defect_lvt_f06_self_reported_provenance_cannot_mint_production_qualific
     assert committed.status == QualificationStatus.RESEARCH_SUPPORTED
     assert committed.is_attested_oracle is False
     assert "external oracle attestation required" in committed.rejection_reason
+
+
+def test_defect_lvt_f07_runner_run_lvt2_study_and_run_experiment_lvt2():
+    """
+    DEFECT LVT-F07: ControlledExperimentRunner was missing LVT-2 bridge methods.
+    EXPECTED: ControlledExperimentRunner.run_lvt2_study and run_experiment_lvt2
+    bridge directly to paired_gate_v2.run_study and return StudyResult.
+    """
+    runner = ControlledExperimentRunner()
+    train_data = [
+        {"id": f"t_{i}", "family_id": f"tfam_{i}", "content_sha256": f"a{i:063x}"}
+        for i in range(24)
+    ]
+    held_data = [
+        {"id": f"h_{i}", "family_id": f"hfam_{i}", "content_sha256": f"b{i:063x}"}
+        for i in range(24)
+    ]
+    proto = StudyProtocol(
+        study_id="PROTO-F07",
+        evaluator_id="eval-01",
+        generator_id="gen-01",
+        evaluator_kind="independent_static_oracle",
+        oracle_digest="0" * 64,
+        model_digest="1" * 64,
+        alpha=0.05,
+        primary_effect_floor=0.05,
+        min_heldout_families=20,
+        family_level_significance=True,
+        multiplicity=1,
+    )
+
+    def mock_evaluator(prompt: str, item: Dict[str, Any]) -> float:
+        if "REFINED" in prompt:
+            return 0.90
+        elif "[SHUFFLED" in prompt:
+            return 0.15
+        return 0.20
+
+    study_res = runner.run_experiment_lvt2(
+        protocol=proto,
+        evaluator_fn=mock_evaluator,
+        train_dataset=train_data,
+        held_out_dataset=held_data,
+        base_prompt="BASE PROMPT",
+        refined_prompt="REFINED PROMPT",
+    )
+    assert study_res.status == "RESEARCH_SUPPORTED_NOT_EXTERNALLY_QUALIFIED"
+    assert study_res.family_macro_delta == pytest.approx(0.70)
+    assert study_res.holdout_family_count == 24
+    assert len(study_res.evidence_hash) == 64
+
+
+def test_defect_lvt_f08_evaluate_conjuncts_fails_closed_on_inconclusive_lvt2_study():
+    """
+    DEFECT LVT-F08: evaluate_conjuncts previously returned True for ImprovementSupported
+    and NoDisqualifyingRegression on INCONCLUSIVE LVT-2 studies.
+    EXPECTED: Inconclusive studies fail ImprovementSupported and NoDisqualifyingRegression,
+    and strict validate_and_commit raises LearningValidityRuleViolation.
+    """
+    validator = LearningValidator()
+    train_items = [
+        Observation(f"t-{i}", f"tfam-{i}", f"a{i:063x}", 0.2, 0.9, 0.1)
+        for i in range(24)
+    ]
+    heldout_items = [
+        Observation(f"h-{i}", f"hfam-{i}", f"b{i:063x}", 0.80, 0.82)  # delta 0.02 < floor 0.05
+        for i in range(24)
+    ]
+    proto = StudyProtocol(
+        study_id="PROTO-F08",
+        evaluator_id="eval-01",
+        generator_id="gen-01",
+        evaluator_kind="independent_static_oracle",
+        oracle_digest="0" * 64,
+        model_digest="1" * 64,
+        alpha=0.05,
+        primary_effect_floor=0.05,
+        min_heldout_families=20,
+        family_level_significance=True,
+        multiplicity=1,
+    )
+    study_res = run_study(proto, train_items, heldout_items)
+    assert study_res.status == "INCONCLUSIVE"
+    assert "EFFECT_FLOOR_UNMET" in study_res.reasons
+
+    claim = LearningClaim("C-F08", "math", "test", "gen-01", "p1", "p2", budget_nanos=5000)
+    exp_proto = ExperimentProtocol(protocol_id="P-F08")
+    tx = LearningValidityTransaction("TX-F08", claim, exp_proto, evaluator_id="eval-01", lvt2_study_result=study_res)
+
+    conjuncts = validator.evaluate_conjuncts(tx)
+    assert conjuncts["ImprovementSupported"] is False
+    assert conjuncts["NoDisqualifyingRegression"] is False
+
+    with pytest.raises(LearningValidityRuleViolation, match="inconclusive"):
+        validator.validate_and_commit(tx, strict=True)
+
+
+def test_defect_lvt_f09_lvt2_artifact_synthesis_and_drift_monitoring():
+    """
+    DEFECT LVT-F09: synthesize_spe_learning_artifact and check_distribution_drift_and_revoke
+    previously ignored lvt2_study_result, zeroing out empirical gains and disabling drift revocation.
+    EXPECTED: LVT-2 empirical gains are recorded and distribution drift triggers revocation.
+    """
+    validator = LearningValidator()
+    train_items = [
+        Observation(f"t-{i}", f"tfam-{i}", f"a{i:063x}", 0.2, 0.9, 0.1)
+        for i in range(24)
+    ]
+    heldout_items = [
+        Observation(f"h-{i}", f"hfam-{i}", f"b{i:063x}", 0.1, 0.9)
+        for i in range(24)
+    ]
+    proto = StudyProtocol(
+        study_id="PROTO-F09",
+        evaluator_id="eval-01",
+        generator_id="gen-01",
+        evaluator_kind="independent_static_oracle",
+        oracle_digest="0" * 64,
+        model_digest="1" * 64,
+        alpha=0.05,
+        primary_effect_floor=0.05,
+        min_heldout_families=20,
+        family_level_significance=True,
+        multiplicity=1,
+    )
+    study_res = run_study(proto, train_items, heldout_items)
+
+    sk, pk = generate_keypair()
+    attestation = create_oracle_attestation(
+        signing_key=sk,
+        public_key=pk,
+        oracle_id="eval-01",
+        evidence_hash=study_res.evidence_hash,
+        verdict="APPROVED",
+    )
+    claim = LearningClaim("C-F09", "code", "claim", "gen-01", "p1", "p2", budget_nanos=5000)
+    tx = LearningValidityTransaction(
+        "TX-F09", claim, ExperimentProtocol(protocol_id="P-F09"),
+        evaluator_id="eval-01", lvt2_study_result=study_res, oracle_attestation=attestation,
+    )
+    committed = validator.validate_and_commit(tx)
+    assert committed.status == QualificationStatus.QUALIFIED
+
+    # Artifact synthesis MUST embed actual LVT-2 empirical gains (not 0.0)
+    import json
+    artifact_json = LearningTransferProtocol.synthesize_spe_learning_artifact(
+        tx=committed,
+        refined_prompt_content="prompt content",
+    )
+    doc = json.loads(artifact_json)
+    assert doc["empirical_gain"]["delta_improvement"] == pytest.approx(0.80)
+    assert doc["empirical_gain"]["held_out_retention"] == pytest.approx(0.80)
+
+    # Drift monitoring MUST revoke if monitored performance drops below generalization baseline
+    degraded_scores = [0.20] * 50  # 0.20 << 0.90 - 0.15
+    revoked = LearningTransferProtocol.check_distribution_drift_and_revoke(committed, degraded_scores, drift_tolerance=0.15)
+    assert revoked is True
+    assert committed.status == QualificationStatus.REVOKED
+    assert committed.revocation_reason == RevocationReason.DISTRIBUTION_DRIFT_EXCEEDED
+
+
+def test_defect_lvt_f10_boolean_scores_and_parameters_strictly_rejected():
+    """
+    DEFECT LVT-F10: Booleans (True/False) were accepted as int/float scores or thresholds.
+    EXPECTED: Reject bool types at ExperimentProtocol, FourArmResults, and evaluator boundary.
+    """
+    with pytest.raises(ValueError, match="sample_size"):
+        ExperimentProtocol(protocol_id="P-BOOL", sample_size=True)
+
+    with pytest.raises(ValueError, match="significance_threshold_epsilon"):
+        ExperimentProtocol(protocol_id="P-BOOL", significance_threshold_epsilon=True)
+
+    with pytest.raises(ValueError, match="generalization_tolerance_delta"):
+        ExperimentProtocol(protocol_id="P-BOOL", generalization_tolerance_delta=False)
+
+    with pytest.raises(ValueError, match="Score True out of bounds"):
+        FourArmResults(
+            arm_a_baseline_score=True,  # Boolean passed as float!
+            arm_b_authentic_score=0.9,
+            arm_c_shuffled_control_score=0.1,
+            arm_d_generalization_score=0.9,
+            delta_improvement=0.8,
+            control_delta=0.8,
+            held_out_retention=0.8,
+            is_statistically_significant=True,
+        )
+
+    runner = ControlledExperimentRunner()
+    with pytest.raises(ValueError, match="out-of-bounds"):
+        runner._eval_item(lambda p, i: True, "prompt", {"id": "1"})
+
+
+def test_defect_lvt_f11_receipt_dict_binds_evidence_hash_and_protocol_version():
+    """
+    DEFECT LVT-F11: Receipt dictionary generated for LVT-2 study did not bind evidence_hash.
+    EXPECTED: Receipt dictionary includes evidence_hash and protocol_version: 'LVT-2'.
+    """
+    validator = LearningValidator()
+    train_items = [
+        Observation(f"t-{i}", f"tfam-{i}", f"a{i:063x}", 0.2, 0.9, 0.1)
+        for i in range(24)
+    ]
+    heldout_items = [
+        Observation(f"h-{i}", f"hfam-{i}", f"b{i:063x}", 0.1, 0.9)
+        for i in range(24)
+    ]
+    proto = StudyProtocol(
+        study_id="PROTO-F11",
+        evaluator_id="eval-01",
+        generator_id="gen-01",
+        evaluator_kind="independent_static_oracle",
+        oracle_digest="0" * 64,
+        model_digest="1" * 64,
+        alpha=0.05,
+        primary_effect_floor=0.05,
+        min_heldout_families=20,
+        family_level_significance=True,
+        multiplicity=1,
+    )
+    study_res = run_study(proto, train_items, heldout_items)
+    claim = LearningClaim("C-F11", "code", "claim", "gen-01", "p1", "p2", budget_nanos=5000)
+    tx = LearningValidityTransaction(
+        "TX-F11", claim, ExperimentProtocol(protocol_id="P-F11"),
+        evaluator_id="eval-01", lvt2_study_result=study_res,
+    )
+    committed = validator.validate_and_commit(tx)
+    receipt_dict = validator._build_receipt_dict(committed)
+    assert receipt_dict["evidence_hash"] == study_res.evidence_hash
+    assert receipt_dict["protocol_version"] == "LVT-2"
+    assert committed.protocol_version == "LVT-2"
+    assert validator.verify_transaction_signature(committed) is True

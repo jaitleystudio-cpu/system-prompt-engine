@@ -95,17 +95,19 @@ class ExperimentProtocol:
             raise ValueError("LVT Invariant: allow_self_certification can NEVER be True")
         if not isinstance(self.protocol_id, str) or not self.protocol_id.strip():
             raise ValueError("protocol_id must be a non-empty string")
-        if not isinstance(self.sample_size, int) or self.sample_size < 2:
+        if type(self.sample_size) is bool or not isinstance(self.sample_size, int) or self.sample_size < 2:
             raise ValueError("sample_size must be an integer >= 2")
         if (
-            not isinstance(self.significance_threshold_epsilon, (int, float))
+            type(self.significance_threshold_epsilon) is bool
+            or not isinstance(self.significance_threshold_epsilon, (int, float))
             or not math.isfinite(self.significance_threshold_epsilon)
             or self.significance_threshold_epsilon <= 0.0
             or self.significance_threshold_epsilon > 1.0
         ):
             raise ValueError("significance_threshold_epsilon must be a finite float in (0.0, 1.0]")
         if (
-            not isinstance(self.generalization_tolerance_delta, (int, float))
+            type(self.generalization_tolerance_delta) is bool
+            or not isinstance(self.generalization_tolerance_delta, (int, float))
             or not math.isfinite(self.generalization_tolerance_delta)
             or self.generalization_tolerance_delta < 0.0
             or self.generalization_tolerance_delta > 1.0
@@ -140,7 +142,7 @@ class FourArmResults:
             self.arm_d_baseline_score,
         ]
         for s in scores:
-            if not isinstance(s, (int, float)) or not math.isfinite(s) or s < 0.0 or s > 1.0:
+            if type(s) is bool or not isinstance(s, (int, float)) or not math.isfinite(s) or s < 0.0 or s > 1.0:
                 raise ValueError(f"Score {s} out of bounds (must be finite in [0.0, 1.0])")
 
 

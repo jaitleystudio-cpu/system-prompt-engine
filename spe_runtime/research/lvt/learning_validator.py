@@ -78,13 +78,28 @@ class LearningValidator:
 
         if tx.lvt2_study_result:
             study = tx.lvt2_study_result
+            improvement_supported = (
+                study.status == "RESEARCH_SUPPORTED_NOT_EXTERNALLY_QUALIFIED"
+                and study.train_candidate_minus_base > 0.0
+                and study.train_candidate_minus_shuffled > 0.0
+                and study.family_macro_delta >= 0.0
+                and study.p_value <= study.alpha_adjusted
+                and "EFFECT_FLOOR_UNMET" not in study.reasons
+                and "PAIRED_DIRECTIONAL_TEST_INCONCLUSIVE" not in study.reasons
+                and "INSUFFICIENT_INDEPENDENT_FAMILIES" not in study.reasons
+            )
+            no_regression = (
+                study.family_macro_delta >= 0.0
+                and study.status not in ("REJECTED", "INCONCLUSIVE")
+                and "HELDOUT_REGRESSION" not in study.reasons
+            )
             return {
                 "ContractValid": contract_valid,
                 "ExperimentAuthorized": True,
                 "EvidenceAuthentic": 0.0 <= study.holdout_base_mean <= 1.0 and 0.0 <= study.holdout_candidate_mean <= 1.0,
                 "EvaluationIndependent": eval_independent,
-                "ImprovementSupported": study.train_candidate_minus_base > 0.0 and study.train_candidate_minus_shuffled > 0.0,
-                "NoDisqualifyingRegression": study.family_macro_delta >= 0.0 and study.status != "REJECTED",
+                "ImprovementSupported": improvement_supported,
+                "NoDisqualifyingRegression": no_regression,
             }
 
         # Check authorization & budget limits
@@ -171,16 +186,26 @@ class LearningValidator:
         if not all_passed:
             failed = [k for k, v in conjuncts.items() if not v]
             reason = f"LVT admission rule violation: failed conjuncts: {', '.join(failed)}"
-            tx.status = QualificationStatus.REJECTED
-            tx.rejection_reason = reason
+            if tx.lvt2_study_result is not None:
+                study = tx.lvt2_study_result
+                if study.status == "INCONCLUSIVE":
+                    tx.status = QualificationStatus.INCONCLUSIVE
+                    tx.rejection_reason = f"LVT-2 study inconclusive: {', '.join(study.reasons)}"
+                else:
+                    tx.status = QualificationStatus.REJECTED
+                    tx.rejection_reason = f"LVT-2 study rejected: {', '.join(study.reasons)}" if study.reasons else reason
+            else:
+                tx.status = QualificationStatus.REJECTED
+                tx.rejection_reason = reason
             if strict:
-                raise LearningValidityRuleViolation(reason)
+                raise LearningValidityRuleViolation(tx.rejection_reason)
             return tx
 
         # LVT-2 & Custody Gate:
         # Prevent legacy V1 aggregate-only results from minting production qualification
         if tx.lvt2_study_result is not None:
             study = tx.lvt2_study_result
+            tx.protocol_version = "LVT-2"
             if study.status == "REJECTED":
                 tx.status = QualificationStatus.REJECTED
                 tx.rejection_reason = f"LVT-2 study rejected: {', '.join(study.reasons)}"
@@ -255,7 +280,7 @@ class LearningValidator:
         else:
             arm_a = arm_b = arm_c = arm_d = delta = 0.0
 
-        return {
+        receipt: Dict[str, Any] = {
             "tx_id": tx.tx_id,
             "claim_id": tx.claim.claim_id,
             "domain": tx.claim.domain,
@@ -272,6 +297,10 @@ class LearningValidator:
             },
             "timestamp": tx.committed_timestamp,
         }
+        if study:
+            receipt["evidence_hash"] = study.evidence_hash
+            receipt["protocol_version"] = "LVT-2"
+        return receipt
 
     def verify_transaction_signature(
         self,

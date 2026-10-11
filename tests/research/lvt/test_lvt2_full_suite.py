@@ -59,6 +59,7 @@ from spe_runtime.research.lvt import (
     StudyInvalid,
     StudyProtocol,
     StudyResult,
+    TransactionRevokedError,
     exact_sign_p,
     replay_study,
     run_study,
@@ -484,11 +485,16 @@ def test_27_csc_integration_boundary():
     committed = validator.validate_and_commit(tx, allow_mock_qualification=True)
     assert committed.status == QualificationStatus.QUALIFIED
 
-    # Trigger revocation upon CSC counterexample discovery
-    committed.status = QualificationStatus.REVOKED
-    committed.revocation_reason = RevocationReason.COUNTEREXAMPLE_OBSERVED
-    assert committed.status == QualificationStatus.REVOKED
-    assert committed.revocation_reason == RevocationReason.COUNTEREXAMPLE_OBSERVED
+    # Trigger revocation upon CSC counterexample discovery via LearningTransferProtocol
+    revoked_tx = LearningTransferProtocol.revoke_transaction(
+        committed,
+        reason=RevocationReason.COUNTEREXAMPLE_OBSERVED,
+        details="CSC counterexample discovered: invariant violated under adversarial probe",
+    )
+    assert revoked_tx.status == QualificationStatus.REVOKED
+    assert revoked_tx.revocation_reason == RevocationReason.COUNTEREXAMPLE_OBSERVED
+    with pytest.raises(TransactionRevokedError, match="COUNTEREXAMPLE_OBSERVED"):
+        LearningTransferProtocol.assert_not_revoked(revoked_tx)
 
 
 # 28. WDIC-VCT integration boundary
