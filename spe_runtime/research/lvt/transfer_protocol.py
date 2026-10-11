@@ -147,7 +147,12 @@ class LearningTransferProtocol:
             proto = transfer_protocol
             synthetic_hash = hashlib.sha256(f"spe-model-v1:{target_model_id}".encode("utf-8")).hexdigest()
             if effective_model_digest == synthetic_hash:
-                effective_model_digest_type = model_digest_type or "SYNTHETIC_MODEL_IDENTIFIER"
+                if model_digest_type == "VERIFIED_MODEL_REVISION":
+                    raise ValueError(
+                        f"Synthetic model identifier digest '{effective_model_digest}' cannot be classified as VERIFIED_MODEL_REVISION: "
+                        "digest derives from synthetic model name hash and lacks verified model revision provenance."
+                    )
+                effective_model_digest_type = "SYNTHETIC_MODEL_IDENTIFIER"
             else:
                 effective_model_digest_type = model_digest_type or getattr(transfer_protocol, "model_digest_type", "VERIFIED_MODEL_REVISION")
         else:
@@ -155,12 +160,22 @@ class LearningTransferProtocol:
             if target_model_digest is not None:
                 effective_model_digest = target_model_digest
                 if target_model_digest == synthetic_hash:
-                    effective_model_digest_type = model_digest_type or "SYNTHETIC_MODEL_IDENTIFIER"
+                    if model_digest_type == "VERIFIED_MODEL_REVISION":
+                        raise ValueError(
+                            f"Synthetic model identifier digest '{target_model_digest}' cannot be classified as VERIFIED_MODEL_REVISION: "
+                            "digest derives from synthetic model name hash and lacks verified model revision provenance."
+                        )
+                    effective_model_digest_type = "SYNTHETIC_MODEL_IDENTIFIER"
                 else:
                     effective_model_digest_type = model_digest_type or "VERIFIED_MODEL_REVISION"
             else:
+                if model_digest_type == "VERIFIED_MODEL_REVISION":
+                    raise ValueError(
+                        "Synthetic model identifier cannot be classified as VERIFIED_MODEL_REVISION: "
+                        "no verified target_model_digest provided; derived digest is synthetic."
+                    )
                 effective_model_digest = synthetic_hash
-                effective_model_digest_type = model_digest_type or "SYNTHETIC_MODEL_IDENTIFIER"
+                effective_model_digest_type = "SYNTHETIC_MODEL_IDENTIFIER"
 
             oracle_digest = hashlib.sha256(f"spe-oracle-v1:{effective_evaluator_id}".encode("utf-8")).hexdigest()
             proto = StudyProtocol(
@@ -310,6 +325,8 @@ class LearningTransferProtocol:
                 }
 
         if independence_assertions is None:
+            if require_family_provenance:
+                raise ValueError("Missing required independence assertions: production qualification requires documented contamination controls and demonstrated family independence")
             independence_assertions = {
                 "contamination_controlled": True,
                 "independent_task_families": True,
@@ -318,10 +335,12 @@ class LearningTransferProtocol:
         else:
             if not isinstance(independence_assertions, dict):
                 raise ValueError("independence_assertions must be a dictionary")
-            if independence_assertions.get("contamination_controlled") is False:
-                raise ValueError("Task family independence assertions rejected: contamination controls not asserted")
-            if independence_assertions.get("independent_task_families") is False:
-                raise ValueError("Task family independence assertions rejected: task families not independent")
+            if not independence_assertions:
+                raise ValueError("Task family independence assertions rejected: empty assertions dictionary provided")
+            if independence_assertions.get("contamination_controlled") is not True:
+                raise ValueError("Task family independence assertions rejected: contamination controls not asserted as True")
+            if independence_assertions.get("independent_task_families") is not True:
+                raise ValueError("Task family independence assertions rejected: task families independence not asserted as True")
             if "min_independent_clusters" in independence_assertions and independence_assertions["min_independent_clusters"] < min_required_families:
                 raise ValueError("Task family independence assertions rejected: min_independent_clusters < required minimum")
 

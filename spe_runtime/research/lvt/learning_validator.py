@@ -75,9 +75,25 @@ class LearningValidator:
         cls._OWNER_ROOT_KEYS.add(pk_hex)
 
     @classmethod
-    def register_authorized_validator(cls, validator_public_key: str | bytes) -> None:
-        """Enrolls a validator public key directly into the owner-authorized validator registry."""
+    def register_authorized_validator(
+        cls,
+        validator_public_key: str | bytes,
+        *,
+        owner_attestation: Optional[Dict[str, Any] | str] = None,
+        owner_root_public_key: Optional[str | bytes] = None,
+    ) -> None:
+        """Enrolls a validator public key with cryptographic attestation from an enrolled owner root key."""
         pk_hex = _normalize_hex_key(validator_public_key, "validator_public_key")
+        if owner_attestation is None or owner_root_public_key is None:
+            raise ValueError(
+                "Unauthenticated validator enrollment rejected: requires valid owner attestation "
+                "signed by an enrolled owner root key"
+            )
+        owner_hex = _normalize_hex_key(owner_root_public_key, "owner_root_public_key")
+        if not cls._OWNER_ROOT_KEYS or owner_hex not in cls._OWNER_ROOT_KEYS:
+            raise ValueError(f"Unauthorized owner root key '{owner_hex}': not enrolled in owner root keys")
+        if not cls._verify_owner_attestation_internal(owner_attestation, owner_hex, pk_hex):
+            raise ValueError("Invalid owner attestation signature for validator enrollment")
         cls._OWNER_AUTHORIZED_VALIDATORS.add(pk_hex)
 
     @classmethod
@@ -86,45 +102,47 @@ class LearningValidator:
         cls._TOMBSTONE_FILE_PATH = str(path) if path is not None else None
 
     @classmethod
+    def _get_tombstone_path(cls) -> Path:
+        target = cls._TOMBSTONE_FILE_PATH or os.environ.get("SPE_TOMBSTONE_STORE_PATH")
+        if target:
+            return Path(target)
+        return Path.home() / ".spe" / "revocations" / "tombstones.jsonl"
+
+    @classmethod
     def _persist_tombstone_entry(cls, entry: Dict[str, Any]) -> None:
-        """Persists a tombstone record to durable filesystem storage if configured."""
-        path = cls._TOMBSTONE_FILE_PATH or os.environ.get("SPE_TOMBSTONE_STORE_PATH")
-        if path:
-            p = Path(path)
+        """Persists a tombstone record to durable filesystem storage."""
+        p = cls._get_tombstone_path()
+        try:
             p.parent.mkdir(parents=True, exist_ok=True)
             with p.open("a", encoding="utf-8") as f:
                 f.write(json.dumps(entry) + "\n")
+        except OSError:
+            pass
 
     @classmethod
     def load_tombstones_from_disk(cls, path: Optional[str | Path] = None) -> int:
         """Loads persistent tombstones from disk into global validator registries."""
-        target = path or cls._TOMBSTONE_FILE_PATH or os.environ.get("SPE_TOMBSTONE_STORE_PATH")
-        if not target:
-            return 0
-        p = Path(target)
+        p = Path(path) if path else cls._get_tombstone_path()
         if not p.is_file():
             return 0
         loaded = 0
-        with p.open("r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                    cls._GLOBAL_REVOCATION_LEDGER.append(entry)
-                    for k in (entry.get("receipt_hash"), entry.get("evidence_hash")):
-                        if k and isinstance(k, str) and k.strip():
-                            cls._GLOBAL_TOMBSTONES.add(k.strip().lower())
-                    tx_id = entry.get("tx_id")
-                    target_model_id = entry.get("target_model_id")
-                    if tx_id and target_model_id:
-                        cls._GLOBAL_TOMBSTONES.add(f"{tx_id}:{target_model_id}")
-                    if tx_id and not target_model_id:
-                        cls._GLOBAL_TOMBSTONES.add(f"tx:{tx_id}")
-                    loaded += 1
-                except (json.JSONDecodeError, KeyError):
-                    continue
+        try:
+            with p.open("r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        entry = json.loads(line)
+                        cls._GLOBAL_REVOCATION_LEDGER.append(entry)
+                        for k in (entry.get("receipt_hash"), entry.get("evidence_hash")):
+                            if k and isinstance(k, str) and k.strip():
+                                cls._GLOBAL_TOMBSTONES.add(k.strip().lower())
+                        loaded += 1
+                    except (json.JSONDecodeError, KeyError):
+                        continue
+        except OSError:
+            return loaded
         return loaded
 
     @classmethod
@@ -151,10 +169,6 @@ class LearningValidator:
         for key in (receipt_hash, evidence_hash):
             if key and isinstance(key, str) and key.strip():
                 cls._GLOBAL_TOMBSTONES.add(key.strip().lower())
-        if tx_id and target_model_id:
-            cls._GLOBAL_TOMBSTONES.add(f"{tx_id}:{target_model_id}")
-        if tx_id and not target_model_id:
-            cls._GLOBAL_TOMBSTONES.add(f"tx:{tx_id}")
         cls._persist_tombstone_entry(entry)
 
     @classmethod
@@ -192,19 +206,28 @@ class LearningValidator:
         self._revocation_ledger: list = []
 
         if is_owner_authorized is not None:
-            self._is_owner_authorized = bool(is_owner_authorized)
-        elif self._owner_root_public_key is not None:
-            self._is_owner_authorized = self._verify_owner_attestation_internal(
-                owner_attestation,
-                self._owner_root_public_key,
-                self._pk.hex(),
+            raise ValueError(
+                "Caller cannot self-assert owner authorization: 'is_owner_authorized' parameter is forbidden. "
+                "Authority must be cryptographically attested by an enrolled owner root key."
             )
+        elif self._owner_root_public_key is not None:
+            if not self._OWNER_ROOT_KEYS or self._owner_root_public_key not in self._OWNER_ROOT_KEYS:
+                self._is_owner_authorized = False
+            else:
+                self._is_owner_authorized = self._verify_owner_attestation_internal(
+                    owner_attestation,
+                    self._owner_root_public_key,
+                    self._pk.hex(),
+                )
         elif self._pk.hex() in self._OWNER_AUTHORIZED_VALIDATORS:
             self._is_owner_authorized = True
         elif self._OWNER_ROOT_KEYS:
             self._is_owner_authorized = False
         else:
             self._is_owner_authorized = True
+
+        # Automatically load persistent tombstones into global and instance state
+        self.load_tombstones_from_disk()
 
         # Trusted oracle registry: binds oracle_id -> public_key_hex (64 hex lowercase)
         # Default behavior MUST FAIL CLOSED. No self-reported trust roots.
@@ -357,11 +380,9 @@ class LearningValidator:
             if tx_key in self._revocation_tombstones:
                 return True
 
-        disk_path = self._TOMBSTONE_FILE_PATH or os.environ.get("SPE_TOMBSTONE_STORE_PATH")
-        if disk_path and Path(disk_path).is_file():
-            self.load_tombstones_from_disk(disk_path)
-            if any(k in self._GLOBAL_TOMBSTONES for k in keys_to_check):
-                return True
+        self.load_tombstones_from_disk()
+        if any(k in self._GLOBAL_TOMBSTONES for k in keys_to_check):
+            return True
 
         return False
 
@@ -925,6 +946,14 @@ class LearningValidator:
         if not isinstance(model_digest, str) or not _DIGEST.fullmatch(model_digest):
             return False, False, "Invalid target_model_digest in transfer report"
 
+        synthetic_hash = hashlib.sha256(f"spe-model-v1:{target_model_id}".encode("utf-8")).hexdigest()
+        digest_type = report.get("model_digest_type") or report.get("target_model_digest_type")
+        if model_digest == synthetic_hash and digest_type == "VERIFIED_MODEL_REVISION":
+            return False, False, (
+                f"Synthetic model identifier digest cannot be classified as VERIFIED_MODEL_REVISION: "
+                f"digest for '{target_model_id}' matches synthetic model name hash"
+            )
+
         proto_raw = report.get("transfer_protocol")
         if not isinstance(proto_raw, dict):
             return False, False, "Invalid transfer_protocol format"
@@ -1058,11 +1087,11 @@ class LearningValidator:
 
         indep_assert = report.get("independence_assertions")
         if indep_assert is not None:
-            if not isinstance(indep_assert, dict):
-                return False, False, "Malformed independence_assertions in transfer report"
-            if indep_assert.get("contamination_controlled") is False:
+            if not isinstance(indep_assert, dict) or not indep_assert:
+                return False, False, "Malformed or empty independence_assertions in transfer report"
+            if indep_assert.get("contamination_controlled") is not True:
                 return False, False, "Contamination controls not satisfied in transfer report"
-            if indep_assert.get("independent_task_families") is False:
+            if indep_assert.get("independent_task_families") is not True:
                 return False, False, "Task family independence not satisfied in transfer report"
 
         att_raw = report.get("oracle_attestation")

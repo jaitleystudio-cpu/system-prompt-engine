@@ -11,6 +11,7 @@ Finding D: Task family independence and dataset custody (clustering distinction 
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import pytest
 
@@ -38,8 +39,19 @@ from spe_runtime.research.lvt.learning_validator import (
 @pytest.fixture(autouse=True)
 def _clean_owner_registries():
     LearningValidator.clear_owner_registries()
+    default_p = LearningValidator._get_tombstone_path()
+    if default_p.is_file():
+        try:
+            default_p.unlink()
+        except OSError:
+            pass
     yield
     LearningValidator.clear_owner_registries()
+    if default_p.is_file():
+        try:
+            default_p.unlink()
+        except OSError:
+            pass
 
 
 def _make_qualified_fixture():
@@ -525,3 +537,297 @@ def test_finding_d_insufficient_task_clusters_rejected():
     assert valid_report["transfers_successfully"] is True
     assert "family_provenance" in valid_report
     assert "independence_assertions" in valid_report
+
+
+# =============================================================================
+# ROUND 2 ADVERSARIAL GAP CLOSURE TESTS
+# =============================================================================
+
+def test_finding_a_synthetic_digest_misclassified_as_verified_revision_rejected():
+    """
+    Finding A (Adversarial): Synthetic model identifier digest cannot be mislabeled as
+    VERIFIED_MODEL_REVISION by caller-supplied label.
+    """
+    tx, validator, oracle_sk, _ = _make_qualified_fixture()
+    dataset = _make_transfer_dataset(24)
+    synthetic_digest = hashlib.sha256(b"spe-model-v1:claude-3-7-sonnet").hexdigest()
+
+    # Attempt 1: Caller supplies explicit synthetic hash but labels it VERIFIED_MODEL_REVISION
+    with pytest.raises(ValueError, match="(?i)(synthetic.*cannot.*verified|mislabeled|synthetic.*model.*identifier)"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=tx,
+            target_model_id="claude-3-7-sonnet",
+            evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+            test_dataset=dataset,
+            base_prompt="base",
+            refined_prompt="refined",
+            validator=validator,
+            oracle_signing_key=oracle_sk,
+            target_model_digest=synthetic_digest,
+            model_digest_type="VERIFIED_MODEL_REVISION",
+        )
+
+    # Attempt 2: Caller omits target_model_digest (defaulting to synthetic) but requests VERIFIED_MODEL_REVISION
+    with pytest.raises(ValueError, match="(?i)(synthetic.*cannot.*verified|mislabeled|synthetic.*model.*identifier)"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=tx,
+            target_model_id="claude-3-7-sonnet",
+            evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+            test_dataset=dataset,
+            base_prompt="base",
+            refined_prompt="refined",
+            validator=validator,
+            oracle_signing_key=oracle_sk,
+            model_digest_type="VERIFIED_MODEL_REVISION",
+        )
+
+    # Attempt 3: Caller forges report metadata claiming VERIFIED_MODEL_REVISION with synthetic digest
+    # directly against verify_model_transfer_receipt
+    forged_report = {
+        "tx_id": tx.tx_id,
+        "target_model_id": "claude-3-7-sonnet",
+        "target_model_digest": synthetic_digest,
+        "model_digest_type": "VERIFIED_MODEL_REVISION",
+    }
+    is_authentic, is_verified, reason = validator.verify_model_transfer_receipt(
+        tx, "claude-3-7-sonnet", forged_report
+    )
+    assert is_authentic is False
+    assert is_verified is False
+
+
+def test_finding_b_self_asserted_authority_and_unauthorized_root_rejected():
+    """
+    Finding B (Adversarial): Caller cannot self-assert owner authorization via constructor flag,
+    and unauthorized owner roots cannot confer authority to LearningValidator.
+    """
+    authoritative_owner_sk, authoritative_owner_pk = generate_keypair()
+    unauthorized_sk, unauthorized_pk = generate_keypair()
+    oracle_sk, oracle_pk = generate_keypair()
+
+    LearningValidator.register_owner_root_key(authoritative_owner_pk)
+
+    # 1. Caller attempts to self-assert owner authorization using caller-controlled flag
+    with pytest.raises(ValueError, match="(?i)(caller.*self-assert|is_owner_authorized.*forbidden|forbidden|unauthorized)"):
+        LearningValidator(
+            trusted_oracles={"oracle-closure-01": oracle_pk.hex()},
+            is_owner_authorized=True,
+        )
+
+    # 2. Caller supplies an unauthorized root key and attestation signed by unauthorized root
+    val_sk, val_pk = generate_keypair()
+    unauth_attestation = create_owner_validator_attestation(
+        owner_signing_key=unauthorized_sk,
+        owner_public_key=unauthorized_pk,
+        validator_public_key=val_pk,
+    )
+    unauth_val = LearningValidator(
+        default_signing_key=val_sk,
+        default_public_key=val_pk,
+        trusted_oracles={"oracle-closure-01": oracle_pk.hex()},
+        owner_root_public_key=unauthorized_pk,
+        owner_attestation=unauth_attestation,
+    )
+    # Must NOT confer owner authority
+    assert unauth_val.is_owner_authorized is False
+
+    # 3. Caller attempts unauthenticated validator enrollment into registry without valid owner attestation
+    with pytest.raises(ValueError, match="(?i)(unauthenticated.*validator|owner attestation required|unauthorized)"):
+        LearningValidator.register_authorized_validator(val_pk)
+
+
+def test_finding_c_revocation_persists_across_process_restart_and_backup_restore(tmp_path):
+    """
+    Finding C (Adversarial): Revocation tombstones persist durably and resist replay attacks
+    where an adversary restores pre-revocation signed metadata across a simulated process restart.
+    """
+    tombstone_file = tmp_path / "durable_tombstones.jsonl"
+    LearningValidator.set_tombstone_store_path(tombstone_file)
+
+    tx, validator, oracle_sk, _ = _make_qualified_fixture()
+    dataset = _make_transfer_dataset(24)
+
+    report = LearningTransferProtocol.evaluate_cross_model_transfer(
+        tx=tx,
+        target_model_id="claude-3-7-sonnet",
+        evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+        test_dataset=dataset,
+        base_prompt="base",
+        refined_prompt="refined",
+        validator=validator,
+        target_model_digest="d" * 64,
+        oracle_signing_key=oracle_sk,
+    )
+    assert report["transfers_successfully"] is True
+
+    receipt_hash = report["transfer_receipt_hash"]
+    evidence_hash = report["evidence_hash"]
+    pre_revocation_backup = copy.deepcopy(report)
+
+    # Revoke the transfer
+    LearningTransferProtocol.revoke_model_transfer(
+        tx=tx,
+        target_model_id="claude-3-7-sonnet",
+        reason=RevocationReason.DISTRIBUTION_DRIFT_EXCEEDED,
+        details="Post-deployment performance collapse",
+        validator=validator,
+    )
+    assert tombstone_file.exists()
+
+    # Adversary restores transaction metadata to pre-revocation backup and wipes tombstones from tx
+    tx.metadata["cross_model_transfers"]["claude-3-7-sonnet"] = copy.deepcopy(pre_revocation_backup)
+    tx.metadata["revocation_tombstones"] = []
+
+    # SIMULATE COMPLETE PROCESS RESTART
+    # All in-memory state is wiped
+    LearningValidator.clear_owner_registries()
+    assert len(LearningValidator._GLOBAL_TOMBSTONES) == 0
+
+    # Fresh process boots with the persistent tombstone store path configured
+    LearningValidator.set_tombstone_store_path(tombstone_file)
+    fresh_validator = LearningValidator(
+        trusted_oracles={"oracle-closure-01": validator._trusted_oracles["oracle-closure-01"]},
+        default_signing_key=validator._sk,
+        default_public_key=validator._pk,
+    )
+
+    # 1. Fresh validator must detect tombstone from durable store
+    assert fresh_validator.is_tombstoned(receipt_hash=receipt_hash, evidence_hash=evidence_hash) is True
+
+    # 2. Fresh validator must reject restored pre-revocation receipt
+    is_authentic, is_verified, reason = fresh_validator.verify_model_transfer_receipt(
+        tx, "claude-3-7-sonnet", tx.metadata["cross_model_transfers"]["claude-3-7-sonnet"]
+    )
+    assert is_authentic is False
+    assert is_verified is False
+    assert "tombstone" in reason.lower() or "revoked" in reason.lower()
+
+    # 3. Artifact export using fresh validator must fail
+    with pytest.raises(ValueError, match="(?i)(revoked|tombstone)"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=tx,
+            refined_prompt_content="refined prompt",
+            supported_models=["gpt-4o", "claude-3-7-sonnet"],
+            validator=fresh_validator,
+        )
+
+    # 4. Process restart / registry reset with default persistent store (no manual path configured)
+    LearningValidator.set_tombstone_store_path(None)
+    tx2, val2, oracle_sk2, _ = _make_qualified_fixture()
+    report2 = LearningTransferProtocol.evaluate_cross_model_transfer(
+        tx=tx2,
+        target_model_id="claude-3-7-sonnet",
+        evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+        test_dataset=dataset,
+        base_prompt="base",
+        refined_prompt="refined",
+        validator=val2,
+        target_model_digest="d" * 64,
+        oracle_signing_key=oracle_sk2,
+    )
+    pre_rev2 = copy.deepcopy(report2)
+    LearningTransferProtocol.revoke_model_transfer(
+        tx=tx2,
+        target_model_id="claude-3-7-sonnet",
+        reason=RevocationReason.DISTRIBUTION_DRIFT_EXCEEDED,
+        details="Default persistent storage test",
+        validator=val2,
+    )
+    # Simulate process restart without manual path setting
+    LearningValidator.clear_owner_registries()
+    tx2.metadata["cross_model_transfers"]["claude-3-7-sonnet"] = copy.deepcopy(pre_rev2)
+    tx2.metadata["revocation_tombstones"] = []
+    val2_fresh = LearningValidator(
+        trusted_oracles={"oracle-closure-01": val2._trusted_oracles["oracle-closure-01"]},
+        default_signing_key=val2._sk,
+        default_public_key=val2._pk,
+    )
+    assert val2_fresh.is_tombstoned(receipt_hash=pre_rev2["transfer_receipt_hash"]) is True
+    is_auth2, is_ver2, reason2 = val2_fresh.verify_model_transfer_receipt(
+        tx2, "claude-3-7-sonnet", tx2.metadata["cross_model_transfers"]["claude-3-7-sonnet"]
+    )
+    assert is_auth2 is False
+    assert is_ver2 is False
+    assert "tombstone" in reason2.lower() or "revoked" in reason2.lower()
+
+
+
+def test_finding_d_missing_provenance_and_unsupported_independence_rejected():
+    """
+    Finding D (Adversarial): Production qualification rejects missing task-family provenance
+    and unsupported declarations of independence.
+    """
+    tx, validator, oracle_sk, _ = _make_qualified_fixture()
+    dataset = _make_transfer_dataset(24)
+
+    # 1. Missing family provenance when require_family_provenance=True -> REJECTED
+    with pytest.raises(ValueError, match="(?i)(missing.*family provenance|family.*custody)"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=tx,
+            target_model_id="claude-3-7-sonnet",
+            evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+            test_dataset=dataset,
+            base_prompt="base",
+            refined_prompt="refined",
+            validator=validator,
+            oracle_signing_key=oracle_sk,
+            require_family_provenance=True,
+            family_provenance=None,
+        )
+
+    distinct_provenance = {
+        f"closure-fam-{i}": {
+            "source_cluster": f"unique-cluster-{i}",
+            "task_type": "reasoning",
+        }
+        for i in range(24)
+    }
+
+    # 2a. Empty independence assertions dict -> REJECTED
+    with pytest.raises(ValueError, match="(?i)(independence.*assertions|unsupported|contamination)"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=tx,
+            target_model_id="claude-3-7-sonnet",
+            evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+            test_dataset=dataset,
+            base_prompt="base",
+            refined_prompt="refined",
+            validator=validator,
+            oracle_signing_key=oracle_sk,
+            family_provenance=distinct_provenance,
+            independence_assertions={},
+        )
+
+    # 2b. Missing contamination_controlled assertion -> REJECTED
+    with pytest.raises(ValueError, match="(?i)(independence.*assertions|unsupported|contamination)"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=tx,
+            target_model_id="claude-3-7-sonnet",
+            evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+            test_dataset=dataset,
+            base_prompt="base",
+            refined_prompt="refined",
+            validator=validator,
+            oracle_signing_key=oracle_sk,
+            family_provenance=distinct_provenance,
+            independence_assertions={"independent_task_families": True},
+        )
+
+    # 2c. Non-boolean / unverified contamination assertion -> REJECTED
+    with pytest.raises(ValueError, match="(?i)(independence.*assertions|unsupported|contamination)"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=tx,
+            target_model_id="claude-3-7-sonnet",
+            evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+            test_dataset=dataset,
+            base_prompt="base",
+            refined_prompt="refined",
+            validator=validator,
+            oracle_signing_key=oracle_sk,
+            family_provenance=distinct_provenance,
+            independence_assertions={
+                "contamination_controlled": "unverified",
+                "independent_task_families": True,
+            },
+        )
+
