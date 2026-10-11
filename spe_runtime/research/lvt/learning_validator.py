@@ -7,6 +7,9 @@ rejects generating model self-certification, and generates Ed25519 transaction r
 from __future__ import annotations
 
 import hashlib
+import json
+import os
+from pathlib import Path
 import time
 from typing import Any, Dict, Optional, Set, Tuple
 
@@ -63,6 +66,7 @@ class LearningValidator:
     _OWNER_AUTHORIZED_VALIDATORS: Set[str] = set()
     _GLOBAL_TOMBSTONES: Set[str] = set()
     _GLOBAL_REVOCATION_LEDGER: list = []
+    _TOMBSTONE_FILE_PATH: Optional[str] = None
 
     @classmethod
     def register_owner_root_key(cls, owner_public_key: str | bytes) -> None:
@@ -77,11 +81,89 @@ class LearningValidator:
         cls._OWNER_AUTHORIZED_VALIDATORS.add(pk_hex)
 
     @classmethod
+    def set_tombstone_store_path(cls, path: Optional[str | Path]) -> None:
+        """Sets the persistent file path for durable revocation tombstones."""
+        cls._TOMBSTONE_FILE_PATH = str(path) if path is not None else None
+
+    @classmethod
+    def _persist_tombstone_entry(cls, entry: Dict[str, Any]) -> None:
+        """Persists a tombstone record to durable filesystem storage if configured."""
+        path = cls._TOMBSTONE_FILE_PATH or os.environ.get("SPE_TOMBSTONE_STORE_PATH")
+        if path:
+            p = Path(path)
+            p.parent.mkdir(parents=True, exist_ok=True)
+            with p.open("a", encoding="utf-8") as f:
+                f.write(json.dumps(entry) + "\n")
+
+    @classmethod
+    def load_tombstones_from_disk(cls, path: Optional[str | Path] = None) -> int:
+        """Loads persistent tombstones from disk into global validator registries."""
+        target = path or cls._TOMBSTONE_FILE_PATH or os.environ.get("SPE_TOMBSTONE_STORE_PATH")
+        if not target:
+            return 0
+        p = Path(target)
+        if not p.is_file():
+            return 0
+        loaded = 0
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                    cls._GLOBAL_REVOCATION_LEDGER.append(entry)
+                    for k in (entry.get("receipt_hash"), entry.get("evidence_hash")):
+                        if k and isinstance(k, str) and k.strip():
+                            cls._GLOBAL_TOMBSTONES.add(k.strip().lower())
+                    tx_id = entry.get("tx_id")
+                    target_model_id = entry.get("target_model_id")
+                    if tx_id and target_model_id:
+                        cls._GLOBAL_TOMBSTONES.add(f"{tx_id}:{target_model_id}")
+                    if tx_id and not target_model_id:
+                        cls._GLOBAL_TOMBSTONES.add(f"tx:{tx_id}")
+                    loaded += 1
+                except (json.JSONDecodeError, KeyError):
+                    continue
+        return loaded
+
+    @classmethod
+    def _record_global_tombstone(
+        cls,
+        receipt_hash: Optional[str] = None,
+        evidence_hash: Optional[str] = None,
+        tx_id: Optional[str] = None,
+        target_model_id: Optional[str] = None,
+        reason: Optional[str] = None,
+        details: Optional[str] = None,
+    ) -> None:
+        """Class-level recording of durable revocation tombstones."""
+        entry = {
+            "receipt_hash": receipt_hash,
+            "evidence_hash": evidence_hash,
+            "tx_id": tx_id,
+            "target_model_id": target_model_id,
+            "reason": reason,
+            "details": details,
+            "timestamp": time.time(),
+        }
+        cls._GLOBAL_REVOCATION_LEDGER.append(entry)
+        for key in (receipt_hash, evidence_hash):
+            if key and isinstance(key, str) and key.strip():
+                cls._GLOBAL_TOMBSTONES.add(key.strip().lower())
+        if tx_id and target_model_id:
+            cls._GLOBAL_TOMBSTONES.add(f"{tx_id}:{target_model_id}")
+        if tx_id and not target_model_id:
+            cls._GLOBAL_TOMBSTONES.add(f"tx:{tx_id}")
+        cls._persist_tombstone_entry(entry)
+
+    @classmethod
     def clear_owner_registries(cls) -> None:
         cls._OWNER_ROOT_KEYS.clear()
         cls._OWNER_AUTHORIZED_VALIDATORS.clear()
         cls._GLOBAL_TOMBSTONES.clear()
         cls._GLOBAL_REVOCATION_LEDGER.clear()
+        cls._TOMBSTONE_FILE_PATH = None
 
     def __init__(
         self,
@@ -242,7 +324,9 @@ class LearningValidator:
             binding_key = f"{tx_id}:{target_model_id}"
             self._revocation_tombstones.add(binding_key)
         if tx_id and not target_model_id:
-            self._revocation_tombstones.add(f"tx:{tx_id}")
+            tx_key = f"tx:{tx_id}"
+            self._revocation_tombstones.add(tx_key)
+        self._persist_tombstone_entry(entry)
 
     def is_tombstoned(
         self,
@@ -265,10 +349,19 @@ class LearningValidator:
             return True
 
         if tx_id and target_model_id:
-            if f"{tx_id}:{target_model_id}" in self._revocation_tombstones:
+            pair = f"{tx_id}:{target_model_id}"
+            if pair in self._revocation_tombstones:
                 return True
-        if tx_id and f"tx:{tx_id}" in self._revocation_tombstones:
-            return True
+        if tx_id:
+            tx_key = f"tx:{tx_id}"
+            if tx_key in self._revocation_tombstones:
+                return True
+
+        disk_path = self._TOMBSTONE_FILE_PATH or os.environ.get("SPE_TOMBSTONE_STORE_PATH")
+        if disk_path and Path(disk_path).is_file():
+            self.load_tombstones_from_disk(disk_path)
+            if any(k in self._GLOBAL_TOMBSTONES for k in keys_to_check):
+                return True
 
         return False
 

@@ -459,6 +459,7 @@ def test_task4_7_unverified_model_transfer_cannot_be_labeled_verified_models():
         base_prompt="base",
         refined_prompt="refined",
         validator=validator,
+        target_model_digest="c" * 64,
         oracle_signing_key=committed._test_oracle_sk,
     )
     assert report["transfers_successfully"] is True

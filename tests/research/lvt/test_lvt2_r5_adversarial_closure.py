@@ -168,7 +168,28 @@ def test_finding_a_synthetic_model_digest_rejected_for_export():
     artifact = json.loads(artifact_str)
     assert "claude-3-7-sonnet" in artifact["verified_models"]
 
-    # 2. When evaluated with an explicit verified model revision digest, it exports cleanly without allow_synthetic_models
+    # 2. When evaluated without target_model_digest or model_digest_type, it automatically defaults to SYNTHETIC_MODEL_IDENTIFIER
+    tx_auto, validator_auto, auto_sk, _ = _make_qualified_fixture()
+    auto_report = LearningTransferProtocol.evaluate_cross_model_transfer(
+        tx=tx_auto,
+        target_model_id="claude-3-7-sonnet",
+        evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+        test_dataset=dataset,
+        base_prompt="base",
+        refined_prompt="refined",
+        validator=validator_auto,
+        oracle_signing_key=auto_sk,
+    )
+    assert auto_report["model_digest_type"] == "SYNTHETIC_MODEL_IDENTIFIER"
+    with pytest.raises(ValueError, match="(?i)(unverified.*model|synthetic)"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=tx_auto,
+            refined_prompt_content="refined prompt content",
+            supported_models=["gpt-4o", "claude-3-7-sonnet"],
+            validator=validator_auto,
+        )
+
+    # 3. When evaluated with an explicit verified model revision digest, it exports cleanly without allow_synthetic_models
     verified_tx, verified_validator, verified_sk, _ = _make_qualified_fixture()
     verified_report = LearningTransferProtocol.evaluate_cross_model_transfer(
         tx=verified_tx,
@@ -307,7 +328,7 @@ def test_finding_b_unauthorized_validator_rejected():
 # FINDING C: REVOCATION REPLAY RESISTANCE / TOMBSTONE PERSISTENCE
 # =============================================================================
 
-def test_finding_c_revocation_tombstone_prevents_metadata_restore_replay():
+def test_finding_c_revocation_tombstone_prevents_metadata_restore_replay(tmp_path):
     """
     Finding C: Durable revocation tombstones recorded in the validator prevent replay
     attacks where an adversary restores pre-revocation mutable transaction metadata.
@@ -367,6 +388,39 @@ def test_finding_c_revocation_tombstone_prevents_metadata_restore_replay():
     assert is_authentic is False
     assert is_verified is False
     assert "tombstone" in reason.lower() or "revoked" in reason.lower()
+
+    # Attempt 3: Cross-validator instance must observe tombstone recorded by another validator
+    other_validator = LearningValidator(
+        trusted_oracles={"oracle-closure-01": validator._trusted_oracles["oracle-closure-01"]},
+        default_signing_key=validator._sk,
+        default_public_key=validator._pk,
+    )
+    assert other_validator.is_tombstoned(receipt_hash=receipt_hash, evidence_hash=evidence_hash) is True
+
+    # Attempt 4: Durable disk store persistence across simulated process restart (cleared in-memory state)
+    tombstone_file = tmp_path / "revocation_tombstones.jsonl"
+    LearningValidator.set_tombstone_store_path(tombstone_file)
+
+    # Record a new tombstone to disk
+    LearningValidator._record_global_tombstone(
+        receipt_hash="0123" * 16,
+        evidence_hash="4567" * 16,
+        tx_id="tx-disk-test",
+        target_model_id="deepseek-r1",
+        reason=RevocationReason.DISTRIBUTION_DRIFT_EXCEEDED.value,
+        details="Disk persistence test",
+    )
+    assert tombstone_file.exists()
+
+    # Simulate fresh process: clear in-memory registries completely
+    LearningValidator.clear_owner_registries()
+    assert LearningValidator._GLOBAL_TOMBSTONES == set()
+
+    # Configure disk path in the fresh process and verify detection
+    LearningValidator.set_tombstone_store_path(tombstone_file)
+    fresh_validator = LearningValidator()
+    assert fresh_validator.is_tombstoned(receipt_hash="0123" * 16) is True
+    assert fresh_validator.is_tombstoned(evidence_hash="4567" * 16) is True
 
 
 # =============================================================================
@@ -428,7 +482,30 @@ def test_finding_d_insufficient_task_clusters_rejected():
             },
         )
 
-    # 3. Legitimate distinct family clustering (24 distinct clusters) and controlled contamination -> ACCEPTED
+    # 3. Collapsed clustering embedded in dataset items even when family_provenance argument is omitted -> REJECTED
+    collapsed_item_dataset = [
+        {
+            "item_id": f"closure-item-{i}",
+            "family_id": f"closure-fam-{i}",
+            "source_cluster": f"shared-cluster-{i % 3}",
+            "content_sha256": f"c{i:063x}",
+            "prompt": f"problem-{i}",
+        }
+        for i in range(24)
+    ]
+    with pytest.raises(ValueError, match="(?i)(clustering.*distinction|dataset items map to only)"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=tx,
+            target_model_id="claude-3-7-sonnet",
+            evaluator_fn=lambda p, item: 0.92 if "refined" in p else 0.20,
+            test_dataset=collapsed_item_dataset,
+            base_prompt="base",
+            refined_prompt="refined",
+            validator=validator,
+            oracle_signing_key=oracle_sk,
+        )
+
+    # 4. Legitimate distinct family clustering (24 distinct clusters) and controlled contamination -> ACCEPTED
     valid_report = LearningTransferProtocol.evaluate_cross_model_transfer(
         tx=tx,
         target_model_id="claude-3-7-sonnet",

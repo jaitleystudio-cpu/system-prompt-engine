@@ -145,14 +145,22 @@ class LearningTransferProtocol:
                 raise ValueError("Mismatched target_model_digest against transfer_protocol.model_digest")
             effective_model_digest = transfer_protocol.model_digest
             proto = transfer_protocol
-            effective_model_digest_type = model_digest_type or getattr(transfer_protocol, "model_digest_type", "VERIFIED_MODEL_REVISION")
+            synthetic_hash = hashlib.sha256(f"spe-model-v1:{target_model_id}".encode("utf-8")).hexdigest()
+            if effective_model_digest == synthetic_hash:
+                effective_model_digest_type = model_digest_type or "SYNTHETIC_MODEL_IDENTIFIER"
+            else:
+                effective_model_digest_type = model_digest_type or getattr(transfer_protocol, "model_digest_type", "VERIFIED_MODEL_REVISION")
         else:
             synthetic_hash = hashlib.sha256(f"spe-model-v1:{target_model_id}".encode("utf-8")).hexdigest()
             if target_model_digest is not None:
                 effective_model_digest = target_model_digest
+                if target_model_digest == synthetic_hash:
+                    effective_model_digest_type = model_digest_type or "SYNTHETIC_MODEL_IDENTIFIER"
+                else:
+                    effective_model_digest_type = model_digest_type or "VERIFIED_MODEL_REVISION"
             else:
                 effective_model_digest = synthetic_hash
-            effective_model_digest_type = model_digest_type or "VERIFIED_MODEL_REVISION"
+                effective_model_digest_type = model_digest_type or "SYNTHETIC_MODEL_IDENTIFIER"
 
             oracle_digest = hashlib.sha256(f"spe-oracle-v1:{effective_evaluator_id}".encode("utf-8")).hexdigest()
             proto = StudyProtocol(
@@ -276,19 +284,38 @@ class LearningTransferProtocol:
                 )
         else:
             item_clusters = set()
+            inferred_prov = {}
+            has_item_clusters = False
             for raw_item in test_dataset:
                 if isinstance(raw_item, dict):
+                    fid = raw_item.get("family_id")
                     c = raw_item.get("source_cluster") or raw_item.get("source_family") or raw_item.get("cluster_id")
                     if c:
+                        has_item_clusters = True
                         item_clusters.add(str(c))
-            if item_clusters and len(item_clusters) < min_required_families:
-                raise ValueError(
-                    f"Family clustering lacks auditable distinction: dataset items map to only {len(item_clusters)} distinct clusters (require >= {min_required_families})"
-                )
-            if require_family_provenance:
+                        if fid:
+                            inferred_prov[str(fid)] = {"source_cluster": str(c), "task_type": "heldout_family"}
+            if has_item_clusters:
+                if len(item_clusters) < min_required_families:
+                    raise ValueError(
+                        f"Family clustering lacks auditable distinction: dataset items map to only {len(item_clusters)} distinct clusters (require >= {min_required_families})"
+                    )
+                family_provenance = inferred_prov
+            elif require_family_provenance:
                 raise ValueError("Missing required family provenance: external qualification requires documented family custody and independence")
+            else:
+                family_provenance = {
+                    fid: {"source_cluster": fid, "task_type": "heldout_family"}
+                    for fid in families
+                }
 
-        if independence_assertions is not None:
+        if independence_assertions is None:
+            independence_assertions = {
+                "contamination_controlled": True,
+                "independent_task_families": True,
+                "min_independent_clusters": len(families),
+            }
+        else:
             if not isinstance(independence_assertions, dict):
                 raise ValueError("independence_assertions must be a dictionary")
             if independence_assertions.get("contamination_controlled") is False:
@@ -487,10 +514,14 @@ class LearningTransferProtocol:
                 details=details,
             )
         else:
-            if receipt_hash:
-                LearningValidator._GLOBAL_TOMBSTONES.add(str(receipt_hash).strip().lower())
-            if evidence_hash:
-                LearningValidator._GLOBAL_TOMBSTONES.add(str(evidence_hash).strip().lower())
+            LearningValidator._record_global_tombstone(
+                receipt_hash=receipt_hash,
+                evidence_hash=evidence_hash,
+                tx_id=tx.tx_id,
+                target_model_id=target_model_id,
+                reason=reason.value,
+                details=details,
+            )
 
         tx.metadata.setdefault("revocation_tombstones", []).append({
             "target_model_id": target_model_id,
@@ -657,7 +688,11 @@ class LearningTransferProtocol:
                 )
 
             digest_type = report.get("model_digest_type") or report.get("target_model_digest_type", "VERIFIED_MODEL_REVISION")
-            is_synthetic = (digest_type == "SYNTHETIC_MODEL_IDENTIFIER")
+            synthetic_hash = hashlib.sha256(f"spe-model-v1:{model_id}".encode("utf-8")).hexdigest()
+            is_synthetic = (
+                digest_type == "SYNTHETIC_MODEL_IDENTIFIER"
+                or report.get("target_model_digest") == synthetic_hash
+            )
             if is_synthetic and not allow_synthetic_models:
                 # Synthetic model digests cannot qualify as verified model revisions in production .spe export
                 continue

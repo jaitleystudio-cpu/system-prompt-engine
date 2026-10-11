@@ -257,6 +257,7 @@ def test_r5_04_tampered_evaluation_result_rejected():
         base_prompt="base",
         refined_prompt="refined",
         validator=validator2,
+        target_model_digest="e" * 64,
         oracle_signing_key=oracle_sk2,
     )
     assert pos_report["transfers_successfully"] is True
@@ -414,6 +415,7 @@ def test_r5_08_revoked_evidence_rejected():
         base_prompt="base",
         refined_prompt="refined",
         validator=validator,
+        target_model_digest="e" * 64,
         oracle_signing_key=oracle_sk,
     )
     assert report["transfers_successfully"] is True
