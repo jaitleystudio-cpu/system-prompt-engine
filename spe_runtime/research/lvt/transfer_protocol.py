@@ -115,8 +115,57 @@ class LearningTransferProtocol:
         if not study or not getattr(study, "evidence_hash", None):
             raise ValueError("Invalid LVT-2 study evidence")
 
+        # 5. Protocol and evidence integrity
+        if not tx.protocol or not getattr(tx.protocol, "protocol_id", None):
+            raise ValueError("Missing experiment protocol blocks .spe export")
+
+        if "committed_protocol_id" in tx.metadata and tx.protocol.protocol_id != tx.metadata["committed_protocol_id"]:
+            raise ValueError("Changed protocol invalidates qualification")
+
         if tx.oracle_attestation.evidence_hash != study.evidence_hash:
             raise ValueError("Changed evidence hash invalidates qualification")
+
+        if "committed_evidence_hash" in tx.metadata and study.evidence_hash != tx.metadata["committed_evidence_hash"]:
+            raise ValueError("Changed evidence hash invalidates qualification")
+
+        # 4. Independent oracle attestation verification at export boundary
+        att = tx.oracle_attestation
+        if not att.oracle_public_key or len(att.oracle_public_key) != 64:
+            raise ValueError("Invalid oracle public key format blocks .spe export")
+        if not att.signature or len(att.signature) != 128:
+            raise ValueError("Invalid oracle signature format blocks .spe export")
+        if att.verdict != "APPROVED":
+            raise ValueError(f"Unapproved oracle verdict blocks .spe export: {att.verdict}")
+        if att.oracle_id != tx.evaluator_id:
+            raise ValueError(f"Oracle identity mismatch at export boundary: '{att.oracle_id}' != '{tx.evaluator_id}'")
+
+        from spe_runtime.ci_gate.receipt import ed25519_verify, rfc8785_canonicalize
+        try:
+            att_pk = bytes.fromhex(att.oracle_public_key)
+            att_sig = bytes.fromhex(att.signature)
+        except ValueError as e:
+            raise ValueError(f"Hex decoding error in oracle attestation: {e}")
+
+        att_dict = {
+            "evidence_hash": att.evidence_hash,
+            "oracle_id": att.oracle_id,
+            "oracle_public_key": att.oracle_public_key,
+            "timestamp": att.timestamp,
+            "verdict": att.verdict,
+        }
+        att_canonical = rfc8785_canonicalize(att_dict)
+        if not ed25519_verify(att_pk, att_canonical, att_sig):
+            raise ValueError("Invalid oracle attestation cryptographic signature blocks .spe export")
+
+        # If validator is provided, strictly enforce trusted oracle registry custody
+        if validator is not None:
+            oracle_ok, oracle_msg = validator.verify_oracle_attestation(
+                att,
+                study.evidence_hash,
+                expected_oracle_id=tx.evaluator_id,
+            )
+            if not oracle_ok:
+                raise ValueError(f"Oracle attestation rejected at export boundary: {oracle_msg}")
 
         if not tx.canonical_receipt_signature or not tx.artifact_hash:
             raise ValueError("Missing receipt signature blocks .spe export")
@@ -136,7 +185,12 @@ class LearningTransferProtocol:
                 verified.add(model_id)
 
         if supported_models is not None:
-            unverified = [m for m in supported_models if m not in verified]
+            if len(supported_models) == 0:
+                raise ValueError("supported_models cannot be empty")
+            unverified = [
+                m for m in supported_models
+                if not isinstance(m, str) or not m.strip() or m not in verified
+            ]
             if unverified:
                 raise ValueError(f"Unverified model transfer cannot be labeled as verified_models: {unverified}")
             models_to_export = list(supported_models)

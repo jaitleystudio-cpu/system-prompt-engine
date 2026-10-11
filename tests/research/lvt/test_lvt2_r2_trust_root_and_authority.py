@@ -8,10 +8,16 @@ Task 4: Receipt and .spe Artifact Export Authority enforcement (1 through 7)
 """
 
 import copy
+import hashlib
 import json
+import time
 import pytest
 
-from spe_runtime.ci_gate.receipt import generate_keypair
+from spe_runtime.ci_gate.receipt import (
+    ed25519_sign,
+    generate_keypair,
+    rfc8785_canonicalize,
+)
 from spe_runtime.research.lvt import (
     EvaluatorType,
     ExperimentProtocol,
@@ -21,6 +27,7 @@ from spe_runtime.research.lvt import (
     LearningValidityTransaction,
     LearningValidator,
     Observation,
+    OracleAttestation,
     QualificationStatus,
     RevocationReason,
     StudyProtocol,
@@ -548,4 +555,134 @@ def test_task7_inconclusive_study_cannot_yield_qualified():
     committed = validator.validate_and_commit(tx, strict=False)
     assert committed.status == QualificationStatus.INCONCLUSIVE
     assert committed.status != QualificationStatus.QUALIFIED
+
+
+# ==============================================================================
+# ADDITIONAL HARDENED VERIFICATION TESTS (R2 REVIEW FIXES)
+# ==============================================================================
+
+def test_task4_export_boundary_rejects_untrusted_oracle_with_validator():
+    """Export boundary with configured validator strictly enforces trusted oracle registry."""
+    study_res = _make_study_result()
+    tx = _make_base_tx(study_res)
+
+    # Official validator has oracle "eval-oracle-official"
+    official_sk, official_pk = generate_keypair()
+    official_val = LearningValidator(trusted_oracles={"eval-oracle-official": official_pk.hex()})
+
+    # Attacker crafts attestation signed by rogue key
+    rogue_sk, rogue_pk = generate_keypair()
+    attestation = create_oracle_attestation(
+        signing_key=rogue_sk,
+        public_key=rogue_pk,
+        oracle_id="eval-oracle-official",
+        evidence_hash=study_res.evidence_hash,
+    )
+    tx.oracle_attestation = attestation
+    tx.is_attested_oracle = True
+    tx.status = QualificationStatus.QUALIFIED
+    tx.protocol_version = "LVT-2"
+    tx.committed_timestamp = time.time()
+
+    # Sign transaction receipt with official_val key
+    receipt_dict = official_val._build_receipt_dict(tx)
+    canonical = rfc8785_canonicalize(receipt_dict)
+    tx.artifact_hash = hashlib.sha256(canonical).hexdigest()
+    tx.canonical_receipt_signature = ed25519_sign(official_val._sk, official_val._pk, canonical).hex()
+    tx.metadata["public_key"] = official_val._pk.hex()
+
+    with pytest.raises(ValueError, match="(?i)(oracle attestation rejected|untrusted|mismatch)"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=tx,
+            refined_prompt_content="refined prompt",
+            validator=official_val,
+        )
+
+
+def test_task4_export_boundary_rejects_forged_attestation_signature():
+    """Export boundary rejects invalid attestation cryptographic signature even without validator."""
+    committed, _ = _make_legitimate_qualified_tx()
+
+    tampered_tx = copy.deepcopy(committed)
+    # Corrupt oracle attestation signature
+    bad_att = OracleAttestation(
+        oracle_id=tampered_tx.oracle_attestation.oracle_id,
+        oracle_public_key=tampered_tx.oracle_attestation.oracle_public_key,
+        evidence_hash=tampered_tx.oracle_attestation.evidence_hash,
+        timestamp=tampered_tx.oracle_attestation.timestamp,
+        verdict=tampered_tx.oracle_attestation.verdict,
+        signature="0" * 128,
+    )
+    tampered_tx.oracle_attestation = bad_att
+
+    with pytest.raises(ValueError, match="(?i)(invalid.*oracle.*signature|cryptographic)"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=tampered_tx,
+            refined_prompt_content="refined prompt",
+        )
+
+
+def test_task4_export_boundary_rejects_changed_protocol_id():
+    """Tampering with experiment protocol after commitment invalidates qualification at export."""
+    committed, validator = _make_legitimate_qualified_tx()
+
+    tampered_tx = copy.deepcopy(committed)
+    tampered_tx.protocol = ExperimentProtocol(protocol_id="PROTO-TAMPERED-AFTER-COMMIT")
+
+    with pytest.raises(ValueError, match="(?i)(changed.*protocol|protocol)"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=tampered_tx,
+            refined_prompt_content="refined prompt",
+            validator=validator,
+        )
+
+
+def test_task4_export_boundary_rejects_empty_supported_models():
+    """Export boundary rejects empty supported_models list."""
+    committed, validator = _make_legitimate_qualified_tx()
+
+    with pytest.raises(ValueError, match="(?i)(supported_models.*empty)"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=committed,
+            refined_prompt_content="refined prompt",
+            supported_models=[],
+            validator=validator,
+        )
+
+
+def test_validator_rejects_rogue_public_key_in_metadata():
+    """Configured validator rejects receipt where attacker injected rogue public key in metadata."""
+    val_sk, val_pk = generate_keypair()
+    official_val = LearningValidator(default_signing_key=val_sk, default_public_key=val_pk)
+
+    study_res = _make_study_result()
+    tx = _make_base_tx(study_res)
+    tx.status = QualificationStatus.QUALIFIED
+    tx.committed_timestamp = time.time()
+
+    # Attacker self-signs receipt with rogue key
+    rogue_sk, rogue_pk = generate_keypair()
+    receipt_dict = official_val._build_receipt_dict(tx)
+    canonical = rfc8785_canonicalize(receipt_dict)
+    tx.artifact_hash = hashlib.sha256(canonical).hexdigest()
+    tx.canonical_receipt_signature = ed25519_sign(rogue_sk, rogue_pk, canonical).hex()
+    tx.metadata["public_key"] = rogue_pk.hex()
+
+    # Official validator must reject because tx metadata public_key does NOT match official_val._pk
+    assert official_val.verify_transaction_signature(tx) is False
+
+
+def test_learning_validator_init_eager_pubkey_validation():
+    """LearningValidator raises ValueError on malformed hex or length != 64 in trusted oracle keys."""
+    # Malformed length
+    with pytest.raises(ValueError, match="(?i)(64 hex characters)"):
+        LearningValidator(trusted_oracles={"eval-01": "abcdef"})
+
+    # Non-hex characters
+    with pytest.raises(ValueError, match="(?i)(invalid hex|64 hex characters)"):
+        LearningValidator(trusted_oracles={"eval-01": "z" * 64})
+
+    # Empty oracle ID
+    with pytest.raises(ValueError, match="(?i)(cannot be empty)"):
+        LearningValidator(trusted_oracles={"": "0" * 64})
 

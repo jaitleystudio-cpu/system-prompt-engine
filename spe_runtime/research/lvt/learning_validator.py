@@ -26,6 +26,21 @@ from spe_runtime.research.lvt.types import (
 )
 
 
+def _validate_oracle_key(pkey: Any, oid: str = "") -> str:
+    if not isinstance(pkey, str):
+        raise ValueError(f"Trusted oracle public key must be a string, got {type(pkey).__name__}")
+    cleaned = pkey.strip().lower()
+    if len(cleaned) != 64:
+        raise ValueError(
+            f"Trusted oracle public key must be 64 hex characters (32 bytes), got {len(cleaned)} for oracle '{oid}': {pkey}"
+        )
+    try:
+        bytes.fromhex(cleaned)
+    except ValueError as e:
+        raise ValueError(f"Invalid hex characters in trusted oracle public key for oracle '{oid}': {e}")
+    return cleaned
+
+
 class LearningValidator:
     """Formal verifier and transaction gatekeeper for AI learning validity claims."""
 
@@ -39,8 +54,10 @@ class LearningValidator:
         if default_signing_key and default_public_key:
             self._sk = default_signing_key
             self._pk = default_public_key
+            self._is_configured_key = True
         else:
             self._sk, self._pk = generate_keypair()
+            self._is_configured_key = False
 
         # Trusted oracle registry: binds oracle_id -> public_key_hex (64 hex lowercase)
         # Default behavior MUST FAIL CLOSED. No self-reported trust roots.
@@ -57,26 +74,35 @@ class LearningValidator:
             if isinstance(src, dict):
                 for oid, pkey in src.items():
                     oid_str = str(oid).strip()
-                    pkey_str = str(pkey).strip().lower()
+                    if not oid_str:
+                        raise ValueError("Oracle ID in trusted_oracles cannot be empty")
+                    pkey_str = _validate_oracle_key(pkey, oid_str)
                     self._trusted_oracles[oid_str] = pkey_str
                     self._trusted_oracle_keys.add(pkey_str)
             elif isinstance(src, (set, list, tuple)):
                 for item in src:
                     if isinstance(item, tuple) and len(item) == 2:
                         oid_str = str(item[0]).strip()
-                        pkey_str = str(item[1]).strip().lower()
+                        if not oid_str:
+                            raise ValueError("Oracle ID in trusted_oracles tuple cannot be empty")
+                        pkey_str = _validate_oracle_key(item[1], oid_str)
                         self._trusted_oracles[oid_str] = pkey_str
                         self._trusted_oracle_keys.add(pkey_str)
                     elif isinstance(item, str):
                         item_str = item.strip()
+                        if not item_str:
+                            continue
                         if ":" in item_str:
                             oid_str, pkey_str = item_str.split(":", 1)
                             oid_str = oid_str.strip()
-                            pkey_str = pkey_str.strip().lower()
+                            if not oid_str:
+                                raise ValueError("Oracle ID in trusted_oracles entry cannot be empty")
+                            pkey_str = _validate_oracle_key(pkey_str, oid_str)
                             self._trusted_oracles[oid_str] = pkey_str
                             self._trusted_oracle_keys.add(pkey_str)
                         else:
-                            self._trusted_oracle_keys.add(item_str.lower())
+                            pkey_str = _validate_oracle_key(item_str, "")
+                            self._trusted_oracle_keys.add(pkey_str)
 
     @property
     def public_key(self) -> bytes:
@@ -294,6 +320,12 @@ class LearningValidator:
 
         if tx.status in (QualificationStatus.QUALIFIED, QualificationStatus.RESEARCH_SUPPORTED):
             tx.committed_timestamp = time.time()
+            tx.metadata["committed_protocol_id"] = tx.protocol.protocol_id
+            if tx.lvt2_study_result is not None:
+                tx.metadata["committed_evidence_hash"] = tx.lvt2_study_result.evidence_hash
+            if tx.oracle_attestation is not None:
+                tx.metadata["trusted_oracle_id"] = tx.oracle_attestation.oracle_id
+                tx.metadata["trusted_oracle_public_key"] = tx.oracle_attestation.oracle_public_key.lower()
             receipt_dict = self._build_receipt_dict(tx)
             canonical_bytes = rfc8785_canonicalize(receipt_dict)
             tx.artifact_hash = hashlib.sha256(canonical_bytes).hexdigest()
@@ -383,13 +415,22 @@ class LearningValidator:
 
         pk = public_key
         if not pk and "public_key" in tx.metadata:
-            pk = bytes.fromhex(tx.metadata["public_key"])
+            try:
+                meta_pk = bytes.fromhex(tx.metadata["public_key"])
+            except ValueError:
+                return False
+            if self._is_configured_key and meta_pk != self._pk:
+                return False
+            pk = meta_pk
         if not pk:
             pk = self._pk
 
         receipt_dict = self._build_receipt_dict(tx)
         canonical_bytes = rfc8785_canonicalize(receipt_dict)
-        sig_bytes = bytes.fromhex(tx.canonical_receipt_signature)
+        try:
+            sig_bytes = bytes.fromhex(tx.canonical_receipt_signature)
+        except ValueError:
+            return False
         return ed25519_verify(pk, canonical_bytes, sig_bytes)
 
     def verify_oracle_attestation(
@@ -405,6 +446,9 @@ class LearningValidator:
         """
         if attestation is None:
             return False, "missing attestation"
+
+        if not attestation.oracle_id or not attestation.oracle_id.strip():
+            return False, "missing or empty oracle identity"
 
         if attestation.verdict != "APPROVED":
             return False, f"unapproved verdict: {attestation.verdict}"

@@ -119,6 +119,9 @@ def run_mutation(m: dict) -> dict:
             "error": "Target substring not found in source file",
         }
 
+    backup_path = filepath.with_suffix(filepath.suffix + ".orig_backup")
+    backup_path.write_bytes(orig_bytes)
+
     # Apply mutation
     mutated_text = orig_text.replace(m["target"], m["replacement"], 1)
     filepath.write_text(mutated_text, encoding="utf-8")
@@ -131,8 +134,12 @@ def run_mutation(m: dict) -> dict:
         stdout = proc.stdout.strip()
         stderr = proc.stderr.strip()
     finally:
-        # Restore original bytes
-        filepath.write_bytes(orig_bytes)
+        # Restore original bytes from backup
+        if backup_path.exists():
+            filepath.write_bytes(backup_path.read_bytes())
+            backup_path.unlink()
+        else:
+            filepath.write_bytes(orig_bytes)
 
     # Verify restoration
     restored_bytes = filepath.read_bytes()
@@ -156,6 +163,13 @@ def main():
     print("=" * 70)
     print("SPE Ω — Genuine LVT-2 Source Mutation Verification Harness")
     print("=" * 70)
+
+    # Recover any dangling backups from aborted runs
+    for bak in REPO_ROOT.rglob("*.orig_backup"):
+        orig_target = bak.with_suffix("")
+        if orig_target.exists():
+            orig_target.write_bytes(bak.read_bytes())
+        bak.unlink()
 
     results = []
     all_killed = True

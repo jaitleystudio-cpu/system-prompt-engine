@@ -16,6 +16,7 @@ from .types import (
     LearningValidityRuleViolation,
     LearningValidityTransaction,
     NanoUSD,
+    OracleAttestation,
     QualificationStatus,
     RequalificationTrigger,
     RevocationReason,
@@ -34,6 +35,7 @@ from .paired_gate_v2 import (
 )
 
 __all__ = [
+    "OracleAttestation",
     "QualificationStatus",
     "RequalificationTrigger",
     "RevocationReason",
