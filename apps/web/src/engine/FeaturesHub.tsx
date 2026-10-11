@@ -6,6 +6,7 @@ import { CognitiveEnergyShader } from "./CognitiveEnergyShader";
 import { BlindedJudgeArenaStudio } from "./BlindedJudgeArenaStudio";
 import { OmegaProofStudio } from "./OmegaProofStudio";
 import { CommunityCatalogStudio } from "./CommunityCatalogStudio";
+import { MultimodalBrainStudio } from "./MultimodalBrainStudio";
 import { defaultRagEngine, type SearchResult } from "./hybridRagEngine";
 
 export interface FeaturesHubProps {
@@ -105,6 +106,14 @@ export const FEATURES: FeatureItem[] = [
     href: "/daily-lab",
   },
   {
+    id: "multimodal-brain",
+    view: "media",
+    title: "🎙️ Multimodal Brain",
+    subtitle: "32 Languages, Live Audio, Video Links & Songs",
+    href: "/media",
+    badge: "32-Lang",
+  },
+  {
     id: "media",
     view: "media",
     title: "🎙️ Voice Studio",
@@ -149,7 +158,7 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
   };
 
   const isOmniBrainFeature = (id: string) =>
-    ["omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena"].includes(id);
+    ["omega-proof", "community-fortifier", "promptfoo-bridge", "genetic-evolver", "vision-compiler", "hybrid-rag", "quantum-shader", "blinded-arena", "multimodal-brain", "media"].includes(id);
 
   const visibleFeatures = filter.trim()
     ? FEATURES.filter(
@@ -414,6 +423,16 @@ export const FeaturesHub: React.FC<FeaturesHubProps> = ({ currentView, onNavigat
                 ✕ Close
               </button>
             </div>
+
+            {(activeModal === "multimodal-brain" || activeModal === "media") && (
+              <MultimodalBrainStudio
+                onClose={() => setActiveModal(null)}
+                onApplyPrompt={(_prompt) => {
+                  if (onNavigate) onNavigate("create");
+                  setActiveModal(null);
+                }}
+              />
+            )}
 
             {activeModal === "omega-proof" && (
               <OmegaProofStudio onClose={() => setActiveModal(null)} />
