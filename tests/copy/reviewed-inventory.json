@@ -5227,16 +5227,16 @@
       "text": "Loading stage…"
     },
     {
+      "id": "a1d28cd30c79eb0f4c5a",
+      "file": "apps/web/src/lab/DailyLab.tsx",
+      "depth": "PRODUCT",
+      "text": "Daily Lab"
+    },
+    {
       "id": "a3e2bd1bd685765d0eb7",
       "file": "apps/web/src/lab/DailyLab.tsx",
       "depth": "PRODUCT",
       "text": "Queue date"
-    },
-    {
-      "id": "a98533be9c259f12c102",
-      "file": "apps/web/src/lab/DailyLab.tsx",
-      "depth": "PRODUCT",
-      "text": "Daily Recipes"
     },
     {
       "id": "ae0cd430e61ab94d0f40",
@@ -9379,12 +9379,6 @@
       "text": "direction."
     },
     {
-      "id": "480f0e10e0ff39a6306e",
-      "file": "apps/web/src/landing/Hero.tsx",
-      "depth": "PRODUCT",
-      "text": "✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Login Required"
-    },
-    {
       "id": "4e9c1c93899cb007548a",
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
@@ -9599,6 +9593,12 @@
       "file": "apps/web/src/landing/Hero.tsx",
       "depth": "PRODUCT",
       "text": "e.g. concise replies with one next step"
+    },
+    {
+      "id": "afdd779a3d54add1bfbc",
+      "file": "apps/web/src/landing/Hero.tsx",
+      "depth": "PRODUCT",
+      "text": "✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Account Required"
     },
     {
       "id": "b25ef8728f154891ad40",
@@ -11881,12 +11881,6 @@
       "text": "Bounded Horn SAT"
     },
     {
-      "id": "312bc8b48a16b5b051f6",
-      "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
-      "depth": "PRODUCT",
-      "text": "// CANONICAL REGISTERS FROZEN:\nv0 = [HardConstraint: max_refund_cents = 50000]\nv1 = [ApprovalGate: manager_2fa_signature_required]\nv2 = [CapabilityScope: [api.stripe.com/v1/refunds]]\nSTATUS: IMMUTABLE_FREEZE_PASS"
-    },
-    {
       "id": "34a016b94b69b0c538c9",
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
@@ -12131,6 +12125,12 @@
       "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
       "depth": "PRODUCT",
       "text": "// HOSTILE FUZZING RESULT:\n⚠️ RISK: Prompt injection can override manager threshold.\n⚠️ RISK: Ambiguous authority on $500 limit.\n⚠️ TOKENS BURNED: 1,420 runaway tokens / incident"
+    },
+    {
+      "id": "6dc151660e0bc6bbb91d",
+      "file": "apps/web/src/landing/SpeStorytellingCinema.tsx",
+      "depth": "PRODUCT",
+      "text": "// CANONICAL REGISTERS FROZEN:\nv0 = [HardConstraint: max_refund_cents = 50000]\nv1 = [ApprovalGate: manager_2fa_signature_required]\nv2 = [CapabilityScope: [api.payments.internal/v1/refunds]]\nSTATUS: IMMUTABLE_FREEZE_PASS"
     },
     {
       "id": "6e6454c46535c81e0383",
@@ -13603,6 +13603,12 @@
       "text": "Build & compile bulletproof prompts for any AI"
     },
     {
+      "id": "04b6e3d606482fde201f",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "my-work"
+    },
+    {
       "id": "054500356f5f42566edc",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -13613,6 +13619,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "tools"
+    },
+    {
+      "id": "1964c89c71583b41fe41",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "daily-lab"
     },
     {
       "id": "210366aaef3628f335c4",
@@ -13657,6 +13669,18 @@
       "text": "number"
     },
     {
+      "id": "43cfc8df378b2426d854",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "My Work"
+    },
+    {
+      "id": "472ac9784b2866e42c15",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Build my prompt"
+    },
+    {
       "id": "4a768de57aaedc3c9719",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -13673,6 +13697,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "SPE"
+    },
+    {
+      "id": "52f09444f570baa8e3fd",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Create"
     },
     {
       "id": "54a9cac98ed5436bcc32",
@@ -13735,6 +13765,12 @@
       "text": "Verified Workflows"
     },
     {
+      "id": "71b2962114e58d47d0f6",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Home"
+    },
+    {
       "id": "749ae760f3e702db398f",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -13777,6 +13813,12 @@
       "text": "Scope Guardrails"
     },
     {
+      "id": "89f66e6d41ee400a3693",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "home"
+    },
+    {
       "id": "9787deb15b8e52f36a46",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
@@ -13801,10 +13843,22 @@
       "text": "compare"
     },
     {
+      "id": "9eeeeabaa502e22034ec",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Privacy"
+    },
+    {
       "id": "a3bea554e755166608e7",
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Token & Cost Proof"
+    },
+    {
+      "id": "b1655880cfe478e90451",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Capabilities"
     },
     {
       "id": "b854e1fb76b581a7b497",
@@ -13817,6 +13871,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Daily Recipes"
+    },
+    {
+      "id": "c296e124963f0a6136d9",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Code"
     },
     {
       "id": "ccdba8f15ddab1f5f467",
@@ -13883,6 +13943,12 @@
       "file": "apps/web/src/layout/Nav.tsx",
       "depth": "PRODUCT",
       "text": "Create & security-scan custom agent skills"
+    },
+    {
+      "id": "ee7b2a2be92353c9fc05",
+      "file": "apps/web/src/layout/Nav.tsx",
+      "depth": "PRODUCT",
+      "text": "Daily Lab"
     },
     {
       "id": "f43dbdb3b8c29c96c90a",

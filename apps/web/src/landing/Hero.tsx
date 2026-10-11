@@ -138,7 +138,7 @@ export function Hero(p: Props) {
             <span className="eyebrow">
               <i /> YOUR IDEAS. YOUR WORDS.
             </span>
-            <span className="edition">✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Login Required</span>
+            <span className="edition">✦ 100% In-Browser · ✦ Zero Data Leaves Your Machine · ✦ No Account Required</span>
           </div>
           <div className="hero-copy">
             <p className="eyebrow">A CLEAR START FOR ANY AI</p>

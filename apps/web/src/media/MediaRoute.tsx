@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { MEDIA_PRODUCT_MOUNT } from "./mount-contract";
 import { MediaProductPanel } from "./MediaProductPanel";
 import { pinnedWhisperRuntime } from "./pinnedWhisperRuntime";
+import { MultimodalBrainStudio } from "../engine/MultimodalBrainStudio";
 
 /**
  * /media. The route owns the runtime. Callers do not pass another one.
@@ -48,6 +49,9 @@ export function MediaRoute() {
       data-claim-source={source}
       data-runtime-owner="route"
     >
+      <div style={{ maxWidth: "1280px", margin: "0 auto 2rem", padding: "1rem" }}>
+        <MultimodalBrainStudio />
+      </div>
       <MediaProductPanel runtime={pinnedWhisperRuntime} />
     </div>
   );

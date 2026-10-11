@@ -16,6 +16,7 @@ from .types import (
     LearningValidityRuleViolation,
     LearningValidityTransaction,
     NanoUSD,
+    OracleAttestation,
     QualificationStatus,
     RequalificationTrigger,
     RevocationReason,
@@ -23,7 +24,18 @@ from .types import (
     validate_nanos,
 )
 
+from .paired_gate_v2 import (
+    Observation,
+    StudyInvalid,
+    StudyProtocol,
+    StudyResult,
+    exact_sign_p,
+    replay_study,
+    run_study,
+)
+
 __all__ = [
+    "OracleAttestation",
     "QualificationStatus",
     "RequalificationTrigger",
     "RevocationReason",
@@ -40,4 +52,11 @@ __all__ = [
     "ControlledExperimentRunner",
     "LearningValidator",
     "LearningTransferProtocol",
+    "Observation",
+    "StudyInvalid",
+    "StudyProtocol",
+    "StudyResult",
+    "exact_sign_p",
+    "run_study",
+    "replay_study",
 ]

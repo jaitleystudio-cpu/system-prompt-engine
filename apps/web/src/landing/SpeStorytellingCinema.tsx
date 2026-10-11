@@ -95,7 +95,7 @@ Be helpful and flexible."`,
     outputSnippet: `// CANONICAL REGISTERS FROZEN:
 v0 = [HardConstraint: max_refund_cents = 50000]
 v1 = [ApprovalGate: manager_2fa_signature_required]
-v2 = [CapabilityScope: [api.stripe.com/v1/refunds]]
+v2 = [CapabilityScope: [api.payments.internal/v1/refunds]]
 STATUS: IMMUTABLE_FREEZE_PASS`,
     invariantStatus: "100% Frozen",
     securityScore: "A- (AST Sandboxed)",

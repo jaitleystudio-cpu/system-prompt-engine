@@ -6,6 +6,7 @@ Verifies multi-model portability checking, .spe artifact synthesis, and drift re
 import json
 import pytest
 
+from spe_runtime.ci_gate.receipt import generate_keypair
 from spe_runtime.research.lvt import (
     EvaluatorType,
     ExperimentProtocol,
@@ -14,14 +15,41 @@ from spe_runtime.research.lvt import (
     LearningTransferProtocol,
     LearningValidityTransaction,
     LearningValidator,
+    Observation,
     QualificationStatus,
     RevocationReason,
+    StudyProtocol,
     TransactionRevokedError,
+    run_study,
 )
+from spe_runtime.research.lvt.learning_validator import create_oracle_attestation
 
 @pytest.fixture
 def qualified_tx():
-    validator = LearningValidator()
+    sk, pk = generate_keypair()
+    validator = LearningValidator(trusted_oracles={"eval-oracle-01": pk.hex()})
+    train = [
+        Observation(f"t-{i}", f"tfam-{i}", f"a{i:063x}", 0.1, 0.9, 0.1)
+        for i in range(24)
+    ]
+    heldout = [
+        Observation(f"h-{i}", f"hfam-{i}", f"b{i:063x}", 0.1, 0.9)
+        for i in range(24)
+    ]
+    proto = StudyProtocol(
+        study_id="STUDY-XFER",
+        evaluator_id="eval-oracle-01",
+        generator_id="gpt-4o",
+        evaluator_kind="independent_static_oracle",
+        oracle_digest="0" * 64,
+        model_digest="1" * 64,
+        primary_effect_floor=0.05,
+        alpha=0.05,
+        min_heldout_families=20,
+        family_level_significance=True,
+        multiplicity=2,
+    )
+    study_res = run_study(proto, train, heldout)
     claim = LearningClaim(
         claim_id="CLM-XFER-001",
         domain="math",
@@ -48,17 +76,88 @@ def qualified_tx():
         claim=claim,
         protocol=protocol,
         results=results,
+        evaluator_id="eval-oracle-01",
+        evaluator_type=EvaluatorType.INDEPENDENT_STATIC_ORACLE,
+        lvt2_study_result=study_res,
+        oracle_attestation=create_oracle_attestation(
+            signing_key=sk,
+            public_key=pk,
+            oracle_id="eval-oracle-01",
+            evidence_hash=study_res.evidence_hash,
+        ),
+    )
+    committed = validator.validate_and_commit(tx)
+    committed._test_validator = validator  # type: ignore[attr-defined]
+    committed._test_oracle_sk = sk  # type: ignore[attr-defined]
+    return committed
+
+
+def _make_heldout_transfer_dataset(n: int = 24):
+    return [
+        {
+            "item_id": f"xfer-item-{i}",
+            "family_id": f"xfer-fam-{i}",
+            "content_sha256": f"c{i:063x}",
+            "q": f"1+{i}",
+        }
+        for i in range(n)
+    ]
+
+
+def test_unqualified_tx_cannot_evaluate_cross_model_transfer():
+    """Unqualified / RESEARCH_UNQUALIFIED transaction cannot evaluate cross-model transfer."""
+    validator = LearningValidator()
+    claim = LearningClaim(
+        claim_id="CLM-XFER-UNQ",
+        domain="math",
+        description="Formal steps",
+        generator_id="gpt-4o",
+        base_prompt_ref="prompt_v1",
+        candidate_prompt_ref="prompt_v2",
+        budget_nanos=1000,
+    )
+    protocol = ExperimentProtocol(protocol_id="PROTO-XFER")
+    results = FourArmResults(
+        arm_a_baseline_score=0.60,
+        arm_b_authentic_score=0.90,
+        arm_c_shuffled_control_score=0.65,
+        arm_d_generalization_score=0.88,
+        delta_improvement=0.30,
+        control_delta=0.25,
+        held_out_retention=0.28,
+        is_statistically_significant=True,
+        total_cost_nanos=1000,
+    )
+    tx = LearningValidityTransaction(
+        tx_id="TX-XFER-UNQ",
+        claim=claim,
+        protocol=protocol,
+        results=results,
         evaluator_id="independent-eval",
         evaluator_type=EvaluatorType.FORMAL_TEST_RUNNER,
     )
-    return validator.validate_and_commit(tx)
+    # Default yields RESEARCH_UNQUALIFIED
+    unq_tx = validator.validate_and_commit(tx)
+    assert unq_tx.status == QualificationStatus.RESEARCH_UNQUALIFIED
+
+    with pytest.raises(ValueError, match="Cannot evaluate cross-model transfer for unqualified transaction"):
+        LearningTransferProtocol.evaluate_cross_model_transfer(
+            tx=unq_tx,
+            target_model_id="claude-3-7-sonnet",
+            evaluator_fn=lambda p, i: 0.8,
+            test_dataset=_make_heldout_transfer_dataset(24),
+            base_prompt="base",
+            refined_prompt="refined",
+            validator=validator,
+        )
+
 
 def test_successful_cross_model_transfer(qualified_tx):
     def mock_evaluator(prompt, item):
         return 0.85 if "refined" in prompt else 0.50
 
-    dataset = [{"q": "1+1"}]
-    
+    dataset = _make_heldout_transfer_dataset(24)
+
     report = LearningTransferProtocol.evaluate_cross_model_transfer(
         tx=qualified_tx,
         target_model_id="claude-3-7-sonnet",
@@ -66,8 +165,10 @@ def test_successful_cross_model_transfer(qualified_tx):
         test_dataset=dataset,
         base_prompt="base",
         refined_prompt="refined",
+        validator=qualified_tx._test_validator,
+        oracle_signing_key=qualified_tx._test_oracle_sk,
     )
-    
+
     assert report["transfers_successfully"] is True
     assert report["transfer_delta"] == 0.35
     assert "cross_model_transfers" in qualified_tx.metadata
@@ -76,8 +177,8 @@ def test_failed_cross_model_transfer(qualified_tx):
     def mock_evaluator(prompt, item):
         return 0.40 if "refined" in prompt else 0.50
 
-    dataset = [{"q": "1+1"}]
-    
+    dataset = _make_heldout_transfer_dataset(24)
+
     report = LearningTransferProtocol.evaluate_cross_model_transfer(
         tx=qualified_tx,
         target_model_id="llama-3-3-70b",
@@ -85,14 +186,17 @@ def test_failed_cross_model_transfer(qualified_tx):
         test_dataset=dataset,
         base_prompt="base",
         refined_prompt="refined",
+        validator=qualified_tx._test_validator,
+        oracle_signing_key=qualified_tx._test_oracle_sk,
     )
-    
+
     assert report["transfers_successfully"] is False
 
 def test_artifact_synthesis(qualified_tx):
     artifact_json = LearningTransferProtocol.synthesize_spe_learning_artifact(
         tx=qualified_tx,
-        refined_prompt_content="Refined rules"
+        refined_prompt_content="Refined rules",
+        validator=qualified_tx._test_validator,
     )
     data = json.loads(artifact_json)
     assert data["spe_version"] == "1.0"
