@@ -62,8 +62,8 @@ def test_four_arm_experiment_successful_run():
     assert results.held_out_retention == pytest.approx(0.35, abs=1e-4)
     assert results.is_statistically_significant is True
 
-    # Total evals: 10 * 4 = 40 evals * 150 nanos = 6000 nanos
-    assert results.total_cost_nanos == 6000
+    # Total evals: (10 train * 3 arms + 10 held-out * 2 paired arms) = 50 evals * 150 nanos = 7500 nanos
+    assert results.total_cost_nanos == 7500
 
 
 def test_four_arm_experiment_empty_dataset_raises():
@@ -102,7 +102,7 @@ def test_four_arm_experiment_invalid_oracle_score_raises():
             protocol=protocol,
             evaluator_fn=lambda p, i: 1.5,  # Invalid!
             train_dataset=[{"a": 1}],
-            held_out_dataset=[{"a": 1}],
+            held_out_dataset=[{"a": 2}],
             base_prompt="base",
             refined_prompt="refined",
         )

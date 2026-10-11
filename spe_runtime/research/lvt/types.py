@@ -6,10 +6,11 @@ NanoUSD escrow accounting, and qualification life-cycles.
 
 from __future__ import annotations
 
+import math
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from spe_runtime.research.wdes.types import NanoUSD, validate_nanos
 
@@ -20,6 +21,9 @@ class QualificationStatus(str, Enum):
     QUALIFIED = "QUALIFIED"
     REJECTED = "REJECTED"
     REVOKED = "REVOKED"
+    RESEARCH_SUPPORTED = "RESEARCH_SUPPORTED"
+    RESEARCH_UNQUALIFIED = "RESEARCH_UNQUALIFIED"
+    INCONCLUSIVE = "INCONCLUSIVE"
 
 
 class RequalificationTrigger(str, Enum):
@@ -89,6 +93,26 @@ class ExperimentProtocol:
         validate_nanos(self.max_cost_nanos, "max_cost_nanos")
         if self.allow_self_certification:
             raise ValueError("LVT Invariant: allow_self_certification can NEVER be True")
+        if not isinstance(self.protocol_id, str) or not self.protocol_id.strip():
+            raise ValueError("protocol_id must be a non-empty string")
+        if type(self.sample_size) is bool or not isinstance(self.sample_size, int) or self.sample_size < 2:
+            raise ValueError("sample_size must be an integer >= 2")
+        if (
+            type(self.significance_threshold_epsilon) is bool
+            or not isinstance(self.significance_threshold_epsilon, (int, float))
+            or not math.isfinite(self.significance_threshold_epsilon)
+            or self.significance_threshold_epsilon <= 0.0
+            or self.significance_threshold_epsilon > 1.0
+        ):
+            raise ValueError("significance_threshold_epsilon must be a finite float in (0.0, 1.0]")
+        if (
+            type(self.generalization_tolerance_delta) is bool
+            or not isinstance(self.generalization_tolerance_delta, (int, float))
+            or not math.isfinite(self.generalization_tolerance_delta)
+            or self.generalization_tolerance_delta < 0.0
+            or self.generalization_tolerance_delta > 1.0
+        ):
+            raise ValueError("generalization_tolerance_delta must be a finite float in [0.0, 1.0]")
 
 
 @dataclass(frozen=True)
@@ -100,12 +124,37 @@ class FourArmResults:
     arm_d_generalization_score: float # Refined prompt on held-out test
     delta_improvement: float          # arm_b - arm_a
     control_delta: float              # arm_b - arm_c
-    held_out_retention: float         # arm_d - arm_a
+    held_out_retention: float         # arm_d - arm_d_baseline (paired held-out delta)
     is_statistically_significant: bool
     total_cost_nanos: NanoUSD = 0
+    arm_d_baseline_score: float = 0.0 # Baseline prompt on held-out test
+    p_value: float = 0.0              # Paired t-test p-value on training improvement
+    confidence_interval_95: Tuple[float, float] = (0.0, 0.0) # 95% CI of delta improvement
+    held_out_p_value: float = 0.0     # Paired p-value on held-out test
 
     def __post_init__(self) -> None:
         validate_nanos(self.total_cost_nanos, "total_cost_nanos")
+        scores = [
+            self.arm_a_baseline_score,
+            self.arm_b_authentic_score,
+            self.arm_c_shuffled_control_score,
+            self.arm_d_generalization_score,
+            self.arm_d_baseline_score,
+        ]
+        for s in scores:
+            if type(s) is bool or not isinstance(s, (int, float)) or not math.isfinite(s) or s < 0.0 or s > 1.0:
+                raise ValueError(f"Score {s} out of bounds (must be finite in [0.0, 1.0])")
+
+
+@dataclass(frozen=True)
+class OracleAttestation:
+    """Cryptographically verifiable attestation from an independent oracle."""
+    oracle_id: str
+    oracle_public_key: str
+    evidence_hash: str
+    timestamp: float
+    verdict: str  # e.g. "APPROVED"
+    signature: str  # Ed25519 hex signature over canonical attestation dictionary
 
 
 @dataclass
@@ -125,3 +174,7 @@ class LearningValidityTransaction:
     created_timestamp: float = field(default_factory=time.time)
     committed_timestamp: Optional[float] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
+    protocol_version: str = "LVT-1"
+    lvt2_study_result: Optional[Any] = None
+    is_attested_oracle: bool = False
+    oracle_attestation: Optional[OracleAttestation] = None
