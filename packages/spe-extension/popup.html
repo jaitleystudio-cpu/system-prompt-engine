@@ -6,49 +6,76 @@
   <title>SPE AI Companion</title>
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: #111827;
-      --card-border: rgba(255, 255, 255, 0.08);
+      --bg: #070a13;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --card-border: rgba(255, 255, 255, 0.09);
       --accent-grad: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      --emerald-grad: linear-gradient(135deg, #10b981 0%, #059669 100%);
       --pro-grad: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
       --accent: #00d2ff;
       --text: #f8fafc;
       --text-muted: #94a3b8;
-      --border: rgba(255, 255, 255, 0.1);
+      --border: rgba(255, 255, 255, 0.12);
       --success: #10b981;
     }
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      width: 380px;
-      height: 520px;
-      background: var(--bg);
+      padding: 0;
+    }
+    body {
+      width: 400px;
+      height: 590px;
+      background: radial-gradient(circle at 50% 0%, #0f1c3f 0%, var(--bg) 70%);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       user-select: none;
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
     }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+
     header {
       padding: 12px 16px;
-      background: #0f172a;
+      background: rgba(11, 18, 33, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
     }
     .brand {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 14px;
       letter-spacing: -0.3px;
+    }
+    .brand-icon {
+      font-size: 16px;
+      color: #00d2ff;
+      filter: drop-shadow(0 0 6px rgba(0, 210, 255, 0.6));
     }
     .tier-badge {
       padding: 3px 8px;
       border-radius: 999px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -65,31 +92,39 @@
       background: rgba(245, 158, 11, 0.2);
       color: #fbbf24;
       border: 1px solid rgba(245, 158, 11, 0.4);
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
     }
-    .pro-banner {
-      background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+
+    /* Founder Value Pledge Banner */
+    .pledge-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
       border-bottom: 1px solid var(--card-border);
-      padding: 10px 16px;
+      padding: 10px 14px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
+      position: relative;
     }
-    .pro-banner-header {
+    .pledge-title-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
     }
-    .pro-tag {
+    .pledge-highlight {
       color: #fbbf24;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
     }
-    .pro-actions {
+    .pledge-subtext {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+    .pledge-actions {
       display: flex;
       gap: 8px;
+      margin-top: 2px;
     }
     .btn-upgrade {
       flex: 1;
@@ -105,6 +140,7 @@
       text-decoration: none;
       display: inline-block;
       box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+      transition: opacity 0.15s;
     }
     .btn-upgrade:hover {
       opacity: 0.95;
@@ -118,6 +154,10 @@
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-key-toggle:hover {
+      background: rgba(255, 255, 255, 0.14);
     }
     .key-form {
       display: none;
@@ -156,13 +196,197 @@
       margin-top: 2px;
       display: none;
     }
-    .controls {
-      padding: 10px 16px;
+
+    /* Live 10x ROI Telemetry Dashboard */
+    .roi-dashboard {
+      background: rgba(13, 19, 34, 0.65);
+      border-bottom: 1px solid var(--card-border);
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .roi-stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 6px 4px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .roi-stat-value {
+      font-size: 13px;
+      font-weight: 800;
+      color: #00d2ff;
+    }
+    .roi-stat-value.gold {
+      color: #fbbf24;
+    }
+    .roi-stat-label {
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* Tabs & Content */
+    .tab-nav {
+      display: flex;
+      background: rgba(10, 16, 30, 0.95);
+      border-bottom: 1px solid var(--card-border);
+    }
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab-btn.active {
+      color: #00d2ff;
+      border-bottom-color: #00d2ff;
+      background: rgba(0, 210, 255, 0.05);
+    }
+
+    .tab-pane {
+      display: none;
+      flex: 1;
+      overflow-y: auto;
+      flex-direction: column;
+    }
+    .tab-pane.active {
+      display: flex;
+    }
+
+    /* Sandbox Polish Tab */
+    .sandbox-container {
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
       gap: 8px;
+    }
+    .sandbox-textarea {
+      width: 100%;
+      height: 75px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: #f1f5f9;
+      resize: none;
+      outline: none;
+      font-family: inherit;
+    }
+    .sandbox-textarea:focus {
+      border-color: var(--accent);
+    }
+    .sandbox-quick-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .sandbox-sample-link {
+      font-size: 10px;
+      color: var(--accent);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .sandbox-action-buttons {
+      display: flex;
+      gap: 5px;
+    }
+    .btn-sandbox-act {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: #fff;
+      padding: 4px 8px;
+      font-size: 10.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-sandbox-act:hover {
+      background: rgba(0, 210, 255, 0.2);
+      border-color: #00d2ff;
+    }
+
+    /* Sandbox Diff Output Viewer */
+    .sandbox-diff-box {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 4px;
+    }
+    .sandbox-diff-text {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #e2e8f0;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+    .spe-diff-del {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      text-decoration: line-through;
+      padding: 1px 4px;
+      border-radius: 3px;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      margin: 0 1px;
+    }
+    .spe-diff-ins {
+      background: rgba(16, 185, 129, 0.22);
+      color: #6ee7b7;
+      font-weight: 600;
+      padding: 1px 4px;
+      border-radius: 3px;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      margin: 0 1px;
+    }
+    .sandbox-diff-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 4px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .sandbox-metric-pill {
+      font-size: 10px;
+      color: #6ee7b7;
+      font-weight: 700;
+    }
+    .btn-copy-sandbox {
+      background: var(--accent-grad);
+      color: #090d16;
+      border: none;
+      border-radius: 5px;
+      padding: 3px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Vault Tab */
+    .controls {
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(13, 19, 34, 0.8);
       border-bottom: 1px solid var(--card-border);
-      background: #0d1322;
     }
     .model-selector {
       display: flex;
@@ -184,21 +408,21 @@
     }
     .search-box {
       width: 100%;
-      background: rgba(17, 24, 39, 0.8);
+      background: rgba(17, 24, 39, 0.85);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 7px 12px;
-      font-size: 12px;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 11.5px;
       color: #fff;
-      box-sizing: border-box;
       outline: none;
     }
     .search-box:focus {
       border-color: var(--accent);
     }
+
     .prompt-list {
       flex: 1;
-      padding: 10px 16px;
+      padding: 8px 14px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -208,15 +432,15 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 8px;
-      padding: 10px 12px;
+      padding: 9px 11px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
       transition: all 0.15s;
     }
     .card:hover {
       border-color: rgba(0, 210, 255, 0.4);
-      background: #141d30;
+      background: rgba(20, 29, 48, 0.95);
     }
     .card-title {
       font-size: 12px;
@@ -226,7 +450,7 @@
       justify-content: space-between;
     }
     .card-tagline {
-      font-size: 11px;
+      font-size: 10.5px;
       color: var(--text-muted);
       line-height: 1.3;
     }
@@ -240,12 +464,10 @@
       font-weight: 700;
       cursor: pointer;
     }
-    .btn-copy:hover {
-      opacity: 0.9;
-    }
+
     footer {
-      padding: 8px 16px;
-      background: #070a12;
+      padding: 8px 14px;
+      background: #060911;
       border-top: 1px solid var(--card-border);
       display: flex;
       align-items: center;
@@ -263,19 +485,23 @@
 <body>
   <header>
     <div class="brand">
-      <span>⚡ SPE AI Companion</span>
+      <span class="brand-icon">⚡</span>
+      <span>SPE AI Companion</span>
     </div>
-    <span class="tier-badge free" id="tier-badge">Free Tier</span>
+    <span class="tier-badge free" id="tier-badge">15 Free Actions</span>
   </header>
 
-  <!-- Pro Micro-Subscription Banner ($1/mo) -->
-  <div class="pro-banner" id="pro-banner">
-    <div class="pro-banner-header">
-      <span class="pro-tag">⭐ SPE Pro • $1/month</span>
-      <span style="color: #94a3b8; font-size: 10px;">Cancel anytime</span>
+  <!-- Founder Value Pledge Banner -->
+  <div class="pledge-banner" id="pro-banner">
+    <div class="pledge-title-row">
+      <span class="pledge-highlight">⭐ Pay only $1 if you get 10x return benefit</span>
+      <span style="color: #94a3b8; font-size: 10px;">100% Offline Privacy</span>
     </div>
-    <div class="pro-actions" id="pro-actions">
-      <a class="btn-upgrade" id="btn-upgrade" href="https://system-prompt-engine.io/checkout/extension?plan=monthly" target="_blank">Upgrade to Pro ($1/mo) 🚀</a>
+    <div class="pledge-subtext">
+      15 free actions daily. If SPE saves hours of editing and purges hundreds of AI clichés, support us for $1/mo (or $10/yr). Zero lock-in.
+    </div>
+    <div class="pledge-actions" id="pro-actions">
+      <a class="btn-upgrade" id="btn-upgrade" href="https://system-prompt-engine.io/checkout/extension?plan=monthly" target="_blank">Get SPE Pro ($1/mo) 🚀</a>
       <button class="btn-key-toggle" id="btn-key-toggle">Enter Key</button>
     </div>
     <div class="key-form" id="key-form">
@@ -285,27 +511,79 @@
     <div class="key-status" id="key-status"></div>
   </div>
 
-  <div class="controls">
-    <div class="model-selector">
-      <span>Frontier Model Target:</span>
-      <select id="model-select">
-        <option value="auto">Auto-Detect Model</option>
-        <option value="claude_6_2">Anthropic Claude 6.2 Sonnet</option>
-        <option value="chatgpt_gpt6">OpenAI GPT-6.1 / o4</option>
-        <option value="gemini_3_9_pro">Google Gemini 3.9 Pro</option>
-        <option value="cursor_4_9">Cursor 4.9 Rules</option>
-        <option value="grok_4_9">xAI Grok 4.9 Truth Kernel</option>
-        <option value="kimi_3_5">Moonshot Kimi 3.5 (200k)</option>
-        <option value="deepseek_4_5">DeepSeek 4.5 / R2</option>
-      </select>
+  <!-- Live 10x ROI Telemetry Dashboard -->
+  <div class="roi-dashboard">
+    <div class="roi-stat-card">
+      <span class="roi-stat-value" id="stat-cliches">0</span>
+      <span class="roi-stat-label">Clichés Purged</span>
     </div>
-    <input type="text" class="search-box" id="search-input" placeholder="Search 1-click power prompts & specs...">
+    <div class="roi-stat-card">
+      <span class="roi-stat-value" id="stat-words">0</span>
+      <span class="roi-stat-label">Words Pruned</span>
+    </div>
+    <div class="roi-stat-card">
+      <span class="roi-stat-value" id="stat-time">0m</span>
+      <span class="roi-stat-label">Time Saved</span>
+    </div>
+    <div class="roi-stat-card">
+      <span class="roi-stat-value gold" id="stat-value">$0.00</span>
+      <span class="roi-stat-label">Editor Value</span>
+    </div>
   </div>
 
-  <div class="prompt-list" id="prompt-list"></div>
+  <!-- Tabs Navigation -->
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="sandbox">✍️ Live Test Sandbox</button>
+    <button class="tab-btn" data-tab="vault">⚡ Power Prompts Vault</button>
+  </div>
+
+  <!-- Tab 1: Interactive Live Polish Sandbox -->
+  <div class="tab-pane active" id="pane-sandbox">
+    <div class="sandbox-container">
+      <textarea class="sandbox-textarea" id="sandbox-input" placeholder="Paste text here to instantly test Humanize, Rephrase, or Polish..."></textarea>
+      <div class="sandbox-quick-actions">
+        <span class="sandbox-sample-link" id="btn-insert-sample">Try Sample with AI Clichés 💡</span>
+        <div class="sandbox-action-buttons">
+          <button class="btn-sandbox-act" data-action="humanize">✍️ Humanize</button>
+          <button class="btn-sandbox-act" data-action="fluent">🔄 Rephrase</button>
+          <button class="btn-sandbox-act" data-action="grammar">🛡️ Polish</button>
+          <button class="btn-sandbox-act" data-action="executive">🎯 Executive</button>
+        </div>
+      </div>
+      <div class="sandbox-diff-box" id="sandbox-diff-box">
+        <div class="sandbox-diff-text" id="sandbox-diff-text"></div>
+        <div class="sandbox-diff-actions">
+          <span class="sandbox-metric-pill" id="sandbox-metric-pill">100% Human Cadence</span>
+          <button class="btn-copy-sandbox" id="btn-copy-sandbox">Copy Result 📋</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: 1-Click Power Prompts Vault -->
+  <div class="tab-pane" id="pane-vault">
+    <div class="controls">
+      <div class="model-selector">
+        <span>Target Model:</span>
+        <select id="model-select">
+          <option value="auto">Auto-Detect Model</option>
+          <option value="claude_6_2">Anthropic Claude 6.2 Sonnet</option>
+          <option value="chatgpt_gpt6">OpenAI GPT-6.1 / o4</option>
+          <option value="gemini_3_9_pro">Google Gemini 3.9 Pro</option>
+          <option value="cursor_4_9">Cursor 4.9 Rules</option>
+          <option value="grok_4_9">xAI Grok 4.9 Truth Kernel</option>
+          <option value="kimi_3_5">Moonshot Kimi 3.5 (200k)</option>
+          <option value="deepseek_4_5">DeepSeek 4.5 / R2</option>
+        </select>
+      </div>
+      <input type="text" class="search-box" id="search-input" placeholder="Search power prompts & specs...">
+    </div>
+    <div class="prompt-list" id="prompt-list"></div>
+  </div>
 
   <footer>
-    <span id="browser-indicator">SPE Universal • Offline Core</span>
+    <span id="browser-indicator">Universal WebExtension • Offline Core</span>
+    <span style="font-size: 9.5px; color: #64748b;">Cmd+Shift+S Polish Hotkey</span>
     <a href="https://system-prompt-engine.io" target="_blank">Studio ↗</a>
   </footer>
 

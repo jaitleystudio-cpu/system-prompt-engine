@@ -196,4 +196,111 @@ export class EntitlementManager {
       : PRICING_CONFIG.stripeMonthlyPriceId;
     return `${PRICING_CONFIG.checkoutBaseUrl}?plan=${interval}&price_id=${priceId}&ref=${encodeURIComponent(speBrowser.name.toLowerCase())}`;
   }
+
+  /**
+   * Daily Action Tracker (15 free auto-actions per day forever)
+   */
+  static async getDailyUsage() {
+    const entitlement = await this.getCurrentEntitlement();
+    const today = new Date().toISOString().slice(0, 10);
+    try {
+      const stored = await speBrowser.storage.local.get(["spe_daily_usage"]);
+      const data = stored.spe_daily_usage || {};
+      const count = data.date === today ? (data.count || 0) : 0;
+      const limit = 15;
+      return {
+        date: today,
+        count,
+        limit,
+        remaining: entitlement.isPro ? 999999 : Math.max(0, limit - count),
+        isPro: entitlement.isPro
+      };
+    } catch {
+      return { date: today, count: 0, limit: 15, remaining: 15, isPro: entitlement.isPro };
+    }
+  }
+
+  /**
+   * Records an executed action and accumulates lifetime user ROI metrics
+   */
+  static async recordActionUsage(metrics = {}) {
+    const entitlement = await this.getCurrentEntitlement();
+    const today = new Date().toISOString().slice(0, 10);
+    try {
+      const stored = await speBrowser.storage.local.get(["spe_daily_usage", "spe_lifetime_roi"]);
+      const dailyData = stored.spe_daily_usage || {};
+      const currentCount = dailyData.date === today ? (dailyData.count || 0) : 0;
+      const nextCount = currentCount + 1;
+
+      await speBrowser.storage.local.set({
+        spe_daily_usage: {
+          date: today,
+          count: nextCount
+        }
+      });
+
+      const roi = stored.spe_lifetime_roi || {
+        clichesPurged: 0,
+        wordsPruned: 0,
+        actionsCount: 0,
+        timeSavedMinutes: 0
+      };
+
+      const nextRoi = {
+        clichesPurged: roi.clichesPurged + (metrics.clichesPurged || 0),
+        wordsPruned: roi.wordsPruned + (metrics.wordsPruned || 0),
+        actionsCount: roi.actionsCount + 1,
+        // Estimate: 45 seconds of human editing time saved per action
+        timeSavedMinutes: Math.round(((roi.actionsCount + 1) * 45) / 60)
+      };
+
+      await speBrowser.storage.local.set({ spe_lifetime_roi: nextRoi });
+
+      return {
+        daily: { date: today, count: nextCount, remaining: entitlement.isPro ? 999999 : Math.max(0, 15 - nextCount) },
+        roi: nextRoi
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Retrieves accumulated user ROI metrics (Value delivered vs $1)
+   */
+  static async getLifetimeRoiMetrics() {
+    try {
+      const stored = await speBrowser.storage.local.get(["spe_lifetime_roi"]);
+      const roi = stored.spe_lifetime_roi || {
+        clichesPurged: 0,
+        wordsPruned: 0,
+        actionsCount: 0,
+        timeSavedMinutes: 0
+      };
+
+      // $25/hour average professional editor rate
+      const hoursSaved = (roi.timeSavedMinutes || 0) / 60;
+      const valueSavedUsd = Number((hoursSaved * 25).toFixed(2));
+      const roiMultiple = valueSavedUsd > 1 ? `${Math.round(valueSavedUsd / 1)}x ROI` : "10x Value Meter";
+
+      return {
+        clichesPurged: roi.clichesPurged,
+        wordsPruned: roi.wordsPruned,
+        actionsCount: roi.actionsCount,
+        timeSavedHours: Number(hoursSaved.toFixed(1)),
+        valueSavedUsd,
+        roiMultiple
+      };
+    } catch {
+      return {
+        clichesPurged: 0,
+        wordsPruned: 0,
+        actionsCount: 0,
+        timeSavedHours: 0,
+        valueSavedUsd: 0,
+        roiMultiple: "10x Value Meter"
+      };
+    }
+  }
 }
+

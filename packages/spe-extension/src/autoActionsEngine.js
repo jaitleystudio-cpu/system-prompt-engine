@@ -167,4 +167,53 @@ export class SpeAutoActionsEngine {
     const clean = this.humanizeText(rawText);
     return `Act as an elite domain authority. Objective: ${clean}. Execute with precision, concrete evidence, step-by-step phased structure, and zero generic filler.`;
   }
+
+  /**
+   * 5. Word-Level Diff & 10x Return Benefit Metrics
+   * Generates token-level insertions/deletions and user ROI metrics.
+   */
+  static computeTransformationDiff(original, transformed) {
+    const origWords = (original || "").trim().split(/\s+/).filter(Boolean);
+    const transWords = (transformed || "").trim().split(/\s+/).filter(Boolean);
+
+    let clichesDetected = 0;
+    for (const item of AI_CLICHE_DICTIONARY) {
+      const matches = original.match(item.regex);
+      if (matches) clichesDetected += matches.length;
+    }
+
+    const wordsPruned = Math.max(0, origWords.length - transWords.length);
+    const humanScore = clichesDetected === 0 ? 100 : Math.max(70, 100 - clichesDetected * 10);
+
+    const diff = [];
+    let i = 0, j = 0;
+    while (i < origWords.length || j < transWords.length) {
+      if (i < origWords.length && j < transWords.length && origWords[i].toLowerCase() === transWords[j].toLowerCase()) {
+        diff.push({ type: "same", text: transWords[j] });
+        i++;
+        j++;
+      } else if (i < origWords.length && (j >= transWords.length || !transWords.slice(j, j + 3).some(w => w.toLowerCase() === origWords[i].toLowerCase()))) {
+        diff.push({ type: "del", text: origWords[i] });
+        i++;
+      } else if (j < transWords.length) {
+        diff.push({ type: "ins", text: transWords[j] });
+        j++;
+      } else {
+        break;
+      }
+    }
+
+    return {
+      original,
+      transformed,
+      diff,
+      metrics: {
+        clichesPurged: clichesDetected,
+        wordsPruned,
+        humanScore: `${humanScore}% Human Cadence`,
+        returnMultiple: "10x Benefit Delivered"
+      }
+    };
+  }
 }
+

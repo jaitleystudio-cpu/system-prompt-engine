@@ -1120,37 +1120,102 @@ Required Specification Sections:
     { regex: /\brobust\b/gi, rep: "reliable" }
   ];
 
+  const WEAK_INTENSIFIERS_MAP = [
+    { regex: /\bvery\s+unique\b/gi, rep: "unique" },
+    { regex: /\breally\s+important\b/gi, rep: "essential" },
+    { regex: /\bextremely\s+crucial\b/gi, rep: "vital" },
+    { regex: /\bvery\s+helpful\b/gi, rep: "valuable" },
+    { regex: /\bvery\s+good\b/gi, rep: "strong" },
+    { regex: /\breally\s+great\b/gi, rep: "excellent" },
+    { regex: /\bbasically\b/gi, rep: "" },
+    { regex: /\bactually\b/gi, rep: "" },
+    { regex: /\bliterally\b/gi, rep: "" }
+  ];
+
+  const extStorage = (typeof browser !== "undefined" && browser.storage) 
+    ? browser.storage 
+    : (typeof chrome !== "undefined" && chrome.storage) 
+      ? chrome.storage 
+      : null;
+
+  async function getDailyUsageStats() {
+    const today = new Date().toISOString().slice(0, 10);
+    if (!extStorage || !extStorage.local) {
+      return { count: 0, limit: 15, remaining: 15, isPro: false };
+    }
+    return new Promise((resolve) => {
+      extStorage.local.get(["spe_daily_usage", "spe_license_data"], (res) => {
+        const isPro = Boolean(res && res.spe_license_data && res.spe_license_data.valid && new Date(res.spe_license_data.expiresAt) > new Date());
+        const daily = (res && res.spe_daily_usage) || {};
+        const count = daily.date === today ? (daily.count || 0) : 0;
+        resolve({
+          date: today,
+          count,
+          limit: 15,
+          remaining: isPro ? 999999 : Math.max(0, 15 - count),
+          isPro
+        });
+      });
+    });
+  }
+
+  function recordActionUsageStats(metrics = {}) {
+    const today = new Date().toISOString().slice(0, 10);
+    if (!extStorage || !extStorage.local) return;
+    try {
+      extStorage.local.get(["spe_daily_usage", "spe_lifetime_roi"], (res) => {
+        const daily = (res && res.spe_daily_usage) || {};
+        const count = daily.date === today ? (daily.count || 0) : 0;
+        const nextCount = count + 1;
+        const roi = (res && res.spe_lifetime_roi) || { clichesPurged: 0, wordsPruned: 0, actionsCount: 0, timeSavedMinutes: 0 };
+        const nextRoi = {
+          clichesPurged: (roi.clichesPurged || 0) + (metrics.clichesPurged || 0),
+          wordsPruned: (roi.wordsPruned || 0) + (metrics.wordsPruned || 0),
+          actionsCount: (roi.actionsCount || 0) + 1,
+          timeSavedMinutes: Math.round(((roi.actionsCount || 0 + 1) * 45) / 60)
+        };
+        extStorage.local.set({
+          spe_daily_usage: { date: today, count: nextCount },
+          spe_lifetime_roi: nextRoi
+        });
+      });
+    } catch {}
+  }
+
   function runAutoAction(text, actionType) {
     if (!text || !text.trim()) return text;
     let t = text;
 
     if (actionType === "humanize") {
       t = t.replace(/\bis\s+utilized\s+by\b/gi, "is used by")
+           .replace(/\bhas\s+been\s+demonstrated\s+by\b/gi, "was shown by")
+           .replace(/\bcan\s+be\s+observed\b/gi, "appears")
            .replace(/\bin\s+order\s+to\b/gi, "to")
-           .replace(/\bdue\s+to\s+the\s+fact\s+that\b/gi, "because");
+           .replace(/\bdue\s+to\s+the\s+fact\s+that\b/gi, "because")
+           .replace(/\bat\s+this\s+point\s+in\s+time\b/gi, "now");
       for (const item of AI_CLICHE_MAP) {
         t = t.replace(item.regex, item.rep);
       }
-      t = t.replace(/\s{2,}/g, " ").trim();
+      t = t.replace(/\s{2,}/g, " ").replace(/,\s*,/g, ",").trim();
       return t;
     }
 
     if (actionType === "fluent") {
       t = runAutoAction(t, "humanize");
-      t = t.replace(/\bcommence\b/gi, "begin")
+      t = t.replace(/\butilize\b/gi, "use")
+           .replace(/\bcommence\b/gi, "begin")
            .replace(/\bterminate\b/gi, "end")
            .replace(/\bfacilitate\b/gi, "help")
+           .replace(/\ssubsequently\s/gi, " then ")
            .replace(/\s{2,}/g, " ").trim();
       return t;
     }
 
     if (actionType === "grammar") {
-      // Fix repeated words and weak intensifiers
       t = t.replace(/\b(\w+)\s+\1\b/gi, "$1");
-      t = t.replace(/\bvery\s+unique\b/gi, "unique")
-           .replace(/\breally\s+important\b/gi, "essential")
-           .replace(/\bextremely\s+crucial\b/gi, "vital")
-           .replace(/\bvery\s+good\b/gi, "strong");
+      for (const item of WEAK_INTENSIFIERS_MAP) {
+        t = t.replace(item.regex, item.rep);
+      }
       t = t.replace(/(^\s*|[.!?]\s+)([a-z])/g, (_, prefix, letter) => prefix + letter.toUpperCase());
       t = t.replace(/\s+([,.:;?!])/g, "$1").replace(/\s{2,}/g, " ").trim();
       return t;
@@ -1163,6 +1228,7 @@ Required Specification Sections:
            .replace(/\bdo\s+it\s+asap\b/gi, "prioritize immediately")
            .replace(/\bgood\s+results\b/gi, "measurable impact")
            .replace(/\bbig\s+problem\b/gi, "material risk")
+           .replace(/\bfix\s+the\s+issue\b/gi, "remediate the defect")
            .replace(/\s{2,}/g, " ").trim();
       return t;
     }
@@ -1175,48 +1241,125 @@ Required Specification Sections:
     return t;
   }
 
+  function computeTransformationDiff(original, transformed) {
+    const origWords = (original || "").trim().split(/\s+/).filter(Boolean);
+    const transWords = (transformed || "").trim().split(/\s+/).filter(Boolean);
+
+    let clichesDetected = 0;
+    for (const item of AI_CLICHE_MAP) {
+      const matches = original.match(item.regex);
+      if (matches) clichesDetected += matches.length;
+    }
+
+    const wordsPruned = Math.max(0, origWords.length - transWords.length);
+    const humanScore = clichesDetected === 0 ? 100 : Math.max(70, 100 - clichesDetected * 10);
+
+    const diff = [];
+    let i = 0, j = 0;
+    while (i < origWords.length || j < transWords.length) {
+      if (i < origWords.length && j < transWords.length && origWords[i].toLowerCase() === transWords[j].toLowerCase()) {
+        diff.push({ type: "same", text: transWords[j] });
+        i++;
+        j++;
+      } else if (i < origWords.length && (j >= transWords.length || !transWords.slice(j, j + 3).some(w => w.toLowerCase() === origWords[i].toLowerCase()))) {
+        diff.push({ type: "del", text: origWords[i] });
+        i++;
+      } else if (j < transWords.length) {
+        diff.push({ type: "ins", text: transWords[j] });
+        j++;
+      } else {
+        break;
+      }
+    }
+
+    return {
+      original,
+      transformed,
+      diff,
+      metrics: {
+        clichesPurged: clichesDetected,
+        wordsPruned,
+        humanScore: `${humanScore}% Human Cadence`,
+        returnMultiple: "10x Benefit Delivered"
+      }
+    };
+  }
+
+  // =========================================================================
+  // 5. Interactive Selection HUD & 10/10 Live Diff Hologram
+  // =========================================================================
   function setupSelectionActionBar() {
     let bar = document.getElementById("spe-inline-action-bar");
     if (!bar) {
       bar = document.createElement("div");
       bar.id = "spe-inline-action-bar";
       bar.innerHTML = `
-        <div class="spe-bar-brand">⚡ SPE</div>
-        <button class="spe-action-btn" data-action="humanize">✍️ Humanize</button>
-        <button class="spe-action-btn" data-action="fluent">🔄 Rephrase</button>
-        <button class="spe-action-btn" data-action="grammar">🛡️ Fix Flow</button>
-        <button class="spe-action-btn" data-action="executive">🎯 Executive</button>
-        <button class="spe-action-btn" data-action="promptify">⚡ Promptify</button>
+        <div class="spe-bar-brand">⚡ SPE <span class="spe-bar-usage" id="spe-bar-usage">15 Free</span></div>
+        <button class="spe-action-btn" data-action="humanize">✍️ Humanize <span class="spe-btn-key">H</span></button>
+        <button class="spe-action-btn" data-action="fluent">🔄 Rephrase <span class="spe-btn-key">R</span></button>
+        <button class="spe-action-btn" data-action="grammar">🛡️ Polish <span class="spe-btn-key">F</span></button>
+        <button class="spe-action-btn" data-action="executive">🎯 Executive <span class="spe-btn-key">E</span></button>
+        <button class="spe-action-btn" data-action="promptify">⚡ Promptify <span class="spe-btn-key">P</span></button>
       `;
       document.body.appendChild(bar);
     }
 
+    let diffModal = document.getElementById("spe-diff-modal");
+    if (!diffModal) {
+      diffModal = document.createElement("div");
+      diffModal.id = "spe-diff-modal";
+      document.body.appendChild(diffModal);
+    }
+
     let activeSelection = "";
     let activeRange = null;
+    let currentDiffData = null;
+
+    async function refreshUsageBadge() {
+      const stats = await getDailyUsageStats();
+      const badge = bar.querySelector("#spe-bar-usage");
+      if (badge) {
+        badge.textContent = stats.isPro ? "Pro ⚡" : `${stats.remaining}/15 Free`;
+      }
+    }
+    refreshUsageBadge();
+
+    function positionElementNearRange(element, range) {
+      if (!range) return;
+      const rect = range.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) return;
+
+      const top = Math.max(16, rect.bottom + window.scrollY + 8);
+      const left = Math.max(16, Math.min(window.innerWidth - 536, rect.left + window.scrollX));
+      element.style.top = `${top}px`;
+      element.style.left = `${left}px`;
+    }
 
     function handleSelectionCheck(e) {
-      // Don't hide if clicking inside bar
-      if (bar.contains(e.target)) return;
+      if (bar.contains(e.target) || diffModal.contains(e.target)) return;
 
       const sel = window.getSelection();
       const selected = sel ? sel.toString().trim() : "";
 
-      if (selected && selected.length >= 4) {
+      if (selected && selected.length >= 3) {
         activeSelection = selected;
         activeRange = sel.getRangeAt(0);
         const rect = activeRange.getBoundingClientRect();
 
         if (rect.width > 0 && rect.height > 0) {
-          const top = Math.max(10, rect.top + window.scrollY - 44);
-          const left = Math.max(10, Math.min(window.innerWidth - 380, rect.left + window.scrollX));
+          const top = Math.max(10, rect.top + window.scrollY - 46);
+          const left = Math.max(10, Math.min(window.innerWidth - 490, rect.left + window.scrollX));
           bar.style.top = `${top}px`;
           bar.style.left = `${left}px`;
           bar.style.display = "flex";
+          refreshUsageBadge();
           return;
         }
       }
 
-      bar.style.display = "none";
+      if (!diffModal.contains(e.target) && diffModal.style.display !== "flex") {
+        bar.style.display = "none";
+      }
     }
 
     document.addEventListener("mouseup", handleSelectionCheck);
@@ -1225,13 +1368,160 @@ Required Specification Sections:
       handleSelectionCheck(e);
     });
 
-    bar.addEventListener("click", (e) => {
-      const btn = e.target.closest(".spe-action-btn");
-      if (!btn) return;
-      const action = btn.dataset.action;
-      if (!action || !activeSelection) return;
+    // Global Hotkey: Cmd+Shift+S (Mac) / Ctrl+Shift+S (Win/Linux)
+    document.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        const sel = window.getSelection();
+        const selected = sel ? sel.toString().trim() : "";
+        if (selected && selected.length >= 3) {
+          activeSelection = selected;
+          activeRange = sel.getRangeAt(0);
+          showDiffHologram(activeSelection, "humanize", "✍️ Humanized & De-AI'd");
+        } else {
+          const activeEl = document.activeElement;
+          if (activeEl && (activeEl.tagName === "TEXTAREA" || activeEl.tagName === "INPUT" || activeEl.isContentEditable)) {
+            const val = activeEl.value || activeEl.innerText || "";
+            if (val.trim()) {
+              activeSelection = val.trim();
+              activeRange = null;
+              showDiffHologram(activeSelection, "humanize", "✍️ Humanized & De-AI'd");
+            }
+          }
+        }
+      }
 
-      const transformed = runAutoAction(activeSelection, action);
+      // Keys inside open diff modal
+      if (diffModal.style.display === "flex") {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          dismissDiffModal();
+        } else if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          applyDiffTransformation();
+        }
+      }
+    });
+
+    const runtimeApi = (typeof browser !== "undefined" && browser.runtime) 
+      ? browser.runtime 
+      : (typeof chrome !== "undefined" && chrome.runtime) 
+        ? chrome.runtime 
+        : null;
+
+    if (runtimeApi && runtimeApi.onMessage) {
+      runtimeApi.onMessage.addListener((msg) => {
+        if (msg && msg.type === "TRIGGER_SPE_QUICK_ACTION") {
+          const sel = window.getSelection();
+          const selected = sel ? sel.toString().trim() : "";
+          if (selected && selected.length >= 3) {
+            activeSelection = selected;
+            activeRange = sel.getRangeAt(0);
+            showDiffHologram(activeSelection, "humanize", "✍️ Humanized & De-AI'd");
+          } else {
+            const activeEl = document.activeElement;
+            if (activeEl && (activeEl.tagName === "TEXTAREA" || activeEl.tagName === "INPUT" || activeEl.isContentEditable)) {
+              const val = activeEl.value || activeEl.innerText || "";
+              if (val.trim()) {
+                activeSelection = val.trim();
+                activeRange = null;
+                showDiffHologram(activeSelection, "humanize", "✍️ Humanized & De-AI'd");
+              }
+            }
+          }
+        }
+      });
+    }
+
+    async function showDiffHologram(text, actionType, actionLabel) {
+      bar.style.display = "none";
+      const transformed = runAutoAction(text, actionType);
+      const diffResult = computeTransformationDiff(text, transformed);
+      currentDiffData = diffResult;
+
+      const usage = await getDailyUsageStats();
+      const usagePledge = usage.isPro 
+        ? "⚡ SPE Pro Active • Unlimited Specifications"
+        : `⚡ Free Action (${usage.count + 1}/${usage.limit} Today)`;
+
+      const diffHtml = diffResult.diff.map(tok => {
+        if (tok.type === "del") {
+          return `<span class="spe-diff-del">${escapeHtml(tok.text)}</span>`;
+        }
+        if (tok.type === "ins") {
+          return `<span class="spe-diff-ins">${escapeHtml(tok.text)}</span>`;
+        }
+        return `<span class="spe-diff-same">${escapeHtml(tok.text)} </span>`;
+      }).join("");
+
+      diffModal.innerHTML = `
+        <div class="spe-diff-header">
+          <div class="spe-diff-title-row">
+            <span class="spe-diff-title">⚡ SPE Transformation Hologram</span>
+            <span class="spe-diff-mode-badge">${actionLabel}</span>
+          </div>
+          <button class="spe-diff-close" id="spe-diff-close-btn" title="Discard (Esc)">✕</button>
+        </div>
+        <div class="spe-diff-metrics">
+          <div class="spe-diff-metric-pill cliches">🚫 ${diffResult.metrics.clichesPurged} Clichés Purged</div>
+          <div class="spe-diff-metric-pill pruned">✂️ ${diffResult.metrics.wordsPruned} Words Pruned</div>
+          <div class="spe-diff-metric-pill cadence">❤️ ${diffResult.metrics.humanScore}</div>
+          <div class="spe-diff-metric-pill roi">💎 10x Value Meter</div>
+        </div>
+        <div class="spe-diff-body" id="spe-diff-tokens-body">
+          ${diffHtml}
+        </div>
+        <div class="spe-diff-footer">
+          <div class="spe-diff-pledge">
+            <span>⭐ <span class="spe-diff-pledge-highlight">${usagePledge}</span></span>
+            <span>Pay only $1/mo if you get 10x return benefit from SPE</span>
+          </div>
+          <div class="spe-diff-actions">
+            <button class="spe-diff-btn-copy" id="spe-diff-btn-copy">📋 Copy</button>
+            <button class="spe-diff-btn-apply" id="spe-diff-btn-apply">⏎ Apply</button>
+          </div>
+        </div>
+      `;
+
+      if (activeRange) {
+        positionElementNearRange(diffModal, activeRange);
+      } else {
+        diffModal.style.top = "15%";
+        diffModal.style.left = "calc(50% - 260px)";
+      }
+
+      diffModal.style.display = "flex";
+
+      // Bind Modal Buttons
+      diffModal.querySelector("#spe-diff-close-btn")?.addEventListener("click", dismissDiffModal);
+      diffModal.querySelector("#spe-diff-btn-apply")?.addEventListener("click", applyDiffTransformation);
+      diffModal.querySelector("#spe-diff-btn-copy")?.addEventListener("click", copyDiffTransformation);
+    }
+
+    function escapeHtml(str) {
+      return (str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function dismissDiffModal() {
+      diffModal.style.display = "none";
+      currentDiffData = null;
+    }
+
+    function copyDiffTransformation() {
+      if (!currentDiffData) return;
+      navigator.clipboard.writeText(currentDiffData.transformed).then(() => {
+        showToast("Polished & Copied to Clipboard! 📋");
+        recordActionUsageStats(currentDiffData.metrics);
+        dismissDiffModal();
+      });
+    }
+
+    function applyDiffTransformation() {
+      if (!currentDiffData) return;
+      const transformed = currentDiffData.transformed;
       const activeEl = document.activeElement;
       const isEditable = activeEl && (
         activeEl.tagName === "TEXTAREA" ||
@@ -1260,21 +1550,48 @@ Required Specification Sections:
             replaced = true;
           }
         }
+      } else if (activeRange) {
+        try {
+          activeRange.deleteContents();
+          activeRange.insertNode(document.createTextNode(transformed));
+          replaced = true;
+        } catch {}
       }
 
+      recordActionUsageStats(currentDiffData.metrics);
+
       if (replaced) {
-        showToast("Auto-Action Applied ✓");
+        showToast("Auto-Action Applied ✓ (10x Return Delivered)");
       } else {
         navigator.clipboard.writeText(transformed).then(() => {
           showToast("Polished & Copied to Clipboard! 📋");
         });
       }
 
-      bar.style.display = "none";
+      dismissDiffModal();
+    }
+
+    // Bind Bar Click Actions
+    bar.addEventListener("click", (e) => {
+      const btn = e.target.closest(".spe-action-btn");
+      if (!btn) return;
+      const action = btn.dataset.action;
+      if (!action || !activeSelection) return;
+
+      const labels = {
+        humanize: "✍️ Humanized & De-AI'd",
+        fluent: "🔄 Fluent Rephrase",
+        grammar: "🛡️ Flow & Grammar Polish",
+        executive: "🎯 Executive Polish",
+        promptify: "⚡ SPE Promptify"
+      };
+
+      showDiffHologram(activeSelection, action, labels[action] || "⚡ Auto-Action");
     });
   }
 
   setupSelectionActionBar();
 
-  console.log("⚡ SPE Companion loaded into " + getHostPlatform() + " with Specification Lift & Universal Auto-Actions Observer");
+  console.log("⚡ SPE Companion loaded into " + getHostPlatform() + " with Specification Lift & 10/10 Live Diff Hologram");
 })();
+

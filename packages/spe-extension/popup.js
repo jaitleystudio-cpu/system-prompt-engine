@@ -1,6 +1,7 @@
 // SPE Extension Popup Controller
 import { speBrowser } from "./src/browserCompat.js";
 import { EntitlementManager, SUBSCRIPTION_TIERS } from "./src/entitlementManager.js";
+import { SpeAutoActionsEngine } from "./src/autoActionsEngine.js";
 import { POWER_PROMPTS_VAULT } from "./src/promptsData.js";
 
 const VAULT = Array.isArray(POWER_PROMPTS_VAULT) && POWER_PROMPTS_VAULT.length > 0
@@ -57,24 +58,73 @@ document.addEventListener("DOMContentLoaded", async () => {
   const keyStatus = document.getElementById("key-status");
   const proBanner = document.getElementById("pro-banner");
 
+  // ROI Dashboard elements
+  const statCliches = document.getElementById("stat-cliches");
+  const statWords = document.getElementById("stat-words");
+  const statTime = document.getElementById("stat-time");
+  const statValue = document.getElementById("stat-value");
+
+  // Sandbox elements
+  const sandboxInput = document.getElementById("sandbox-input");
+  const btnInsertSample = document.getElementById("btn-insert-sample");
+  const sandboxDiffBox = document.getElementById("sandbox-diff-box");
+  const sandboxDiffText = document.getElementById("sandbox-diff-text");
+  const sandboxMetricPill = document.getElementById("sandbox-metric-pill");
+  const btnCopySandbox = document.getElementById("btn-copy-sandbox");
+  let lastSandboxTransformed = "";
+
+  // Tab switching
+  const tabBtns = document.querySelectorAll(".tab-btn");
+  const tabPanes = {
+    sandbox: document.getElementById("pane-sandbox"),
+    vault: document.getElementById("pane-vault")
+  };
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const target = btn.dataset.tab;
+      Object.entries(tabPanes).forEach(([k, pane]) => {
+        if (pane) {
+          pane.classList.toggle("active", k === target);
+        }
+      });
+    });
+  });
+
   // Display detected browser runtime
-  browserIndicator.textContent = `Running on ${speBrowser.name} • Offline Core`;
+  browserIndicator.textContent = `${speBrowser.name} • Offline Core`;
 
   // Update checkout URL with browser attribution
   if (btnUpgrade) {
     btnUpgrade.href = EntitlementManager.getCheckoutUrl("monthly");
   }
 
-  // Render subscription tier
+  // Refresh ROI Telemetry Stats
+  async function refreshRoiStats() {
+    const roi = await EntitlementManager.getLifetimeRoiMetrics();
+    if (statCliches) statCliches.textContent = (roi.clichesPurged || 0).toLocaleString();
+    if (statWords) statWords.textContent = (roi.wordsPruned || 0).toLocaleString();
+    if (statTime) {
+      const mins = Math.round((roi.timeSavedHours || 0) * 60);
+      statTime.textContent = mins < 60 ? `${mins}m` : `${roi.timeSavedHours}h`;
+    }
+    if (statValue) statValue.textContent = `$${(roi.valueSavedUsd || 0).toFixed(2)}`;
+  }
+
+  // Render subscription tier and daily usage
   async function updateTierDisplay() {
     const entitlement = await EntitlementManager.getCurrentEntitlement();
+    const usage = await EntitlementManager.getDailyUsage();
+
     if (entitlement.isPro) {
       tierBadge.className = "tier-badge pro";
-      tierBadge.textContent = "⚡ PRO ($1/MO)";
+      tierBadge.textContent = "⚡ PRO ACTIVE";
       proBanner.innerHTML = `
-        <div class="pro-banner-header">
-          <span class="pro-tag">⭐ SPE Pro Active</span>
-          <span style="color: #10b981; font-size: 10px;">Unlimited 100k Specs Active</span>
+        <div class="pledge-title-row">
+          <span class="pledge-highlight">⭐ SPE Pro Active • $1/mo</span>
+          <span style="color: #10b981; font-size: 10px;">Unlimited 100k Specs</span>
         </div>
         <div style="font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
           <span>Key: <code style="color: #cbd5e1;">${entitlement.key ? entitlement.key.slice(0, 14) + "..." : "Active"}</code></span>
@@ -90,8 +140,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     } else {
       tierBadge.className = "tier-badge free";
-      tierBadge.textContent = "Free Tier";
+      tierBadge.textContent = `${usage.remaining}/15 Free Today`;
     }
+
+    await refreshRoiStats();
   }
 
   await updateTierDisplay();
@@ -121,7 +173,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (res.success) {
         keyStatus.style.color = "#10b981";
         keyStatus.textContent = "✓ Pro Activated!";
-        setTimeout(() => window.location.reload(), 800);
+        setTimeout(() => window.location.reload(), 700);
       } else {
         keyStatus.style.color = "#ef4444";
         keyStatus.textContent = res.error || "Activation failed";
@@ -145,8 +197,83 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Render prompt cards
-  function render(query = "") {
+  // =========================================================================
+  // Interactive Live Polish Sandbox
+  // =========================================================================
+  if (btnInsertSample && sandboxInput) {
+    btnInsertSample.addEventListener("click", () => {
+      sandboxInput.value = "In today's fast-paced digital world, leveraging AI is a testament to innovation and plays a crucial role to delve into new opportunities.";
+      sandboxInput.focus();
+    });
+  }
+
+  document.querySelectorAll(".btn-sandbox-act").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const text = sandboxInput ? sandboxInput.value.trim() : "";
+      if (!text) {
+        if (sandboxInput) sandboxInput.focus();
+        return;
+      }
+
+      const action = btn.dataset.action;
+      let transformed = text;
+
+      if (action === "humanize") {
+        transformed = SpeAutoActionsEngine.humanizeText(text);
+      } else if (action === "fluent") {
+        transformed = SpeAutoActionsEngine.paraphraseText(text, "fluent");
+      } else if (action === "grammar") {
+        transformed = SpeAutoActionsEngine.fixGrammarAndFlow(text);
+      } else if (action === "executive") {
+        transformed = SpeAutoActionsEngine.paraphraseText(text, "executive");
+      }
+
+      const diffResult = SpeAutoActionsEngine.computeTransformationDiff(text, transformed);
+      lastSandboxTransformed = transformed;
+
+      // Render Token Diff
+      const html = diffResult.diff.map(tok => {
+        if (tok.type === "del") {
+          return `<span class="spe-diff-del">${escapeHtml(tok.text)}</span>`;
+        }
+        if (tok.type === "ins") {
+          return `<span class="spe-diff-ins">${escapeHtml(tok.text)}</span>`;
+        }
+        return `<span>${escapeHtml(tok.text)} </span>`;
+      }).join("");
+
+      sandboxDiffText.innerHTML = html;
+      sandboxMetricPill.textContent = `✓ ${diffResult.metrics.clichesPurged} Clichés Purged • ${diffResult.metrics.humanScore}`;
+      sandboxDiffBox.style.display = "flex";
+
+      // Record Action Usage and update ROI stats
+      await EntitlementManager.recordActionUsage(diffResult.metrics);
+      await updateTierDisplay();
+    });
+  });
+
+  if (btnCopySandbox) {
+    btnCopySandbox.addEventListener("click", () => {
+      if (!lastSandboxTransformed) return;
+      navigator.clipboard.writeText(lastSandboxTransformed).then(() => {
+        const orig = btnCopySandbox.textContent;
+        btnCopySandbox.textContent = "Copied! ✓";
+        setTimeout(() => btnCopySandbox.textContent = orig, 1500);
+      });
+    });
+  }
+
+  function escapeHtml(str) {
+    return (str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  // =========================================================================
+  // 1-Click Power Prompts Vault
+  // =========================================================================
+  function renderVault(query = "") {
     const q = query.toLowerCase();
     const filtered = VAULT.filter(p => 
       p.title.toLowerCase().includes(q) || 
@@ -180,9 +307,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (searchInput) {
     searchInput.addEventListener("input", (e) => {
-      render(e.target.value);
+      renderVault(e.target.value);
     });
   }
 
-  render();
+  renderVault();
 });

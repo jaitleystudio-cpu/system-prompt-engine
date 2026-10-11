@@ -29,14 +29,21 @@ export const speBrowser = (function () {
     return "Universal WebExtension";
   }
 
+  const memoryStore = {};
+
   // Promise-based wrapper around chrome / browser storage
   const storage = {
     local: {
       get: (keys) => {
         return new Promise((resolve, reject) => {
           if (!rawApi || !rawApi.storage || !rawApi.storage.local) {
-            // Memory fallback if storage API is absent (e.g. testing)
-            return resolve({});
+            if (!keys) return resolve({ ...memoryStore });
+            const keyList = Array.isArray(keys) ? keys : [keys];
+            const out = {};
+            for (const k of keyList) {
+              if (memoryStore[k] !== undefined) out[k] = memoryStore[k];
+            }
+            return resolve(out);
           }
           if (hasBrowser && typeof globalThis.browser.storage.local.get(keys)?.then === "function") {
             return globalThis.browser.storage.local.get(keys).then(resolve, reject);
@@ -56,6 +63,7 @@ export const speBrowser = (function () {
       set: (items) => {
         return new Promise((resolve, reject) => {
           if (!rawApi || !rawApi.storage || !rawApi.storage.local) {
+            Object.assign(memoryStore, items);
             return resolve();
           }
           if (hasBrowser && typeof globalThis.browser.storage.local.set(items)?.then === "function") {
@@ -78,7 +86,15 @@ export const speBrowser = (function () {
       get: (keys) => {
         return new Promise((resolve) => {
           const syncStore = rawApi?.storage?.sync || rawApi?.storage?.local;
-          if (!syncStore) return resolve({});
+          if (!syncStore) {
+            if (!keys) return resolve({ ...memoryStore });
+            const keyList = Array.isArray(keys) ? keys : [keys];
+            const out = {};
+            for (const k of keyList) {
+              if (memoryStore[k] !== undefined) out[k] = memoryStore[k];
+            }
+            return resolve(out);
+          }
           try {
             syncStore.get(keys, (res) => resolve(res || {}));
           } catch {
@@ -89,7 +105,10 @@ export const speBrowser = (function () {
       set: (items) => {
         return new Promise((resolve) => {
           const syncStore = rawApi?.storage?.sync || rawApi?.storage?.local;
-          if (!syncStore) return resolve();
+          if (!syncStore) {
+            Object.assign(memoryStore, items);
+            return resolve();
+          }
           try {
             syncStore.set(items, () => resolve());
           } catch {

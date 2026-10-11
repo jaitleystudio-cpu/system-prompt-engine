@@ -205,6 +205,42 @@ assert(!polished.includes("very unique"), "Grammarly polish must eliminate weak 
 assert(polished.endsWith("."), "Grammarly polish must preserve valid punctuation");
 console.log("  ✓ Auto-Action Grammarly Polish: Grammar hygiene, capitalization, and redundancy pruning verified.");
 
+// Test Manifest Commands (Global Hotkey Cmd+Shift+S / Ctrl+Shift+S)
+for (const m of manifests) {
+  const manifest = JSON.parse(readFileSync(resolve(pkgRoot, m.file), "utf8"));
+  assert(manifest.commands?.spe_quick_action, `${m.target} manifest must declare spe_quick_action command`);
+  assert.equal(manifest.commands.spe_quick_action.suggested_key.mac, "Command+Shift+S");
+}
+console.log("  ✓ All 4 browser manifests declare global hotkey command (Cmd+Shift+S / Ctrl+Shift+S).");
+
+// Test Word-Level Diff & 10x ROI Telemetry Calculation
+console.log("\n[9/9] Testing 10/10 Live Transformation Diff & 10x ROI Telemetry Engine...");
+const diffSample = "In today's fast-paced world, it is a testament to innovation and plays a crucial role to delve into new horizons.";
+const transformedSample = SpeAutoActionsEngine.humanizeText(diffSample);
+const diffData = SpeAutoActionsEngine.computeTransformationDiff(diffSample, transformedSample);
+
+assert(Array.isArray(diffData.diff), "Diff must be an array of token objects");
+assert(diffData.diff.some(tok => tok.type === "del"), "Diff must detect deleted tokens");
+assert(diffData.metrics.clichesPurged >= 3, "Diff must detect at least 3 purged cliches in test phrase");
+assert(diffData.metrics.humanScore.includes("Human Cadence"), "Human cadence score must be computed");
+assert.equal(diffData.metrics.returnMultiple, "10x Benefit Delivered");
+console.log(`  ✓ Word-Level Diff Hologram: ${diffData.metrics.clichesPurged} clichés purged, diff tokens calculated, ${diffData.metrics.humanScore}.`);
+
+// Test Daily Usage & Lifetime ROI Accounting
+const initialDaily = await EntitlementManager.getDailyUsage();
+assert.equal(initialDaily.limit, 15, "Free tier must offer 15 daily actions");
+
+await EntitlementManager.recordActionUsage({ clichesPurged: 3, wordsPruned: 8 });
+const postUsage = await EntitlementManager.getDailyUsage();
+assert(postUsage.count >= 1, "Recorded action must increment daily usage count");
+
+const roiMetrics = await EntitlementManager.getLifetimeRoiMetrics();
+assert(roiMetrics.clichesPurged >= 3, "Lifetime cliches purged must accumulate");
+assert(roiMetrics.timeSavedHours !== undefined, "Time saved in hours must be computed");
+assert(roiMetrics.valueSavedUsd !== undefined, "Monetary value saved vs $1 must be computed");
+console.log(`  ✓ 10x ROI Telemetry Accounting: Accumulated ${roiMetrics.clichesPurged} clichés purged, $${roiMetrics.valueSavedUsd} editor value delivered.`);
+
 console.log("\n==================================================================");
 console.log("🎉 ALL UNIVERSAL CROSS-BROWSER & AUTO-ACTION TESTS PASSED (100% SOUND)!");
 console.log("==================================================================\n");
+

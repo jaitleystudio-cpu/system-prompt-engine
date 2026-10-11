@@ -45,3 +45,16 @@ if (api && api.runtime && api.runtime.onMessage) {
     }
   });
 }
+
+if (api && api.commands && api.commands.onCommand) {
+  api.commands.onCommand.addListener((command) => {
+    if (command === "spe_quick_action") {
+      api.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs && tabs[0] && tabs[0].id) {
+          api.tabs.sendMessage(tabs[0].id, { type: "TRIGGER_SPE_QUICK_ACTION" });
+        }
+      });
+    }
+  });
+}
+

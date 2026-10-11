@@ -40,5 +40,14 @@
   "host_permissions": [
     "https://*/*",
     "http://*/*"
-  ]
+  ],
+  "commands": {
+    "spe_quick_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Trigger SPE Auto-Action on selected text"
+    }
+  }
 }
