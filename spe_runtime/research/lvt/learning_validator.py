@@ -413,25 +413,31 @@ class LearningValidator:
         if not tx.canonical_receipt_signature or not tx.committed_timestamp:
             return False
 
-        pk = public_key
-        if not pk and "public_key" in tx.metadata:
+        # A receipt is not authorized by the key it carries. The
+        # verifier's own trusted key is the only accepted signing identity.
+        # An explicit caller key may confirm this identity, not replace it.
+        if public_key is not None and public_key != self._pk:
+            return False
+        if "public_key" in tx.metadata:
             try:
                 meta_pk = bytes.fromhex(tx.metadata["public_key"])
-            except ValueError:
+            except (ValueError, TypeError):
                 return False
-            if self._is_configured_key and meta_pk != self._pk:
+            if meta_pk != self._pk:
                 return False
-            pk = meta_pk
-        if not pk:
-            pk = self._pk
 
-        receipt_dict = self._build_receipt_dict(tx)
-        canonical_bytes = rfc8785_canonicalize(receipt_dict)
         try:
+            receipt_dict = self._build_receipt_dict(tx)
+            canonical_bytes = rfc8785_canonicalize(receipt_dict)
+            if (
+                not tx.artifact_hash
+                or hashlib.sha256(canonical_bytes).hexdigest() != tx.artifact_hash
+            ):
+                return False
             sig_bytes = bytes.fromhex(tx.canonical_receipt_signature)
-        except ValueError:
+        except (ValueError, TypeError, AttributeError):
             return False
-        return ed25519_verify(pk, canonical_bytes, sig_bytes)
+        return ed25519_verify(self._pk, canonical_bytes, sig_bytes)
 
     def verify_oracle_attestation(
         self,
