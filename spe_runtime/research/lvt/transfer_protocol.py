@@ -12,6 +12,7 @@ from dataclasses import asdict
 import hashlib
 import json
 import math
+import time
 from typing import Any, Callable, Dict, List, Optional, Sequence
 
 from spe_runtime.ci_gate.receipt import ed25519_verify, rfc8785_canonicalize
@@ -58,9 +59,13 @@ class LearningTransferProtocol:
         *,
         transfer_protocol: Optional[StudyProtocol] = None,
         target_model_digest: Optional[str] = None,
+        model_digest_type: Optional[str] = None,
         evaluator_id: Optional[str] = None,
         oracle_attestation: Optional[OracleAttestation] = None,
         oracle_signing_key: Optional[bytes] = None,
+        family_provenance: Optional[Dict[str, Any]] = None,
+        independence_assertions: Optional[Dict[str, Any]] = None,
+        require_family_provenance: bool = False,
     ) -> Dict[str, Any]:
         """
         Tests whether an admitted learning refinement generalizes to a distinct foundation model
@@ -87,6 +92,9 @@ class LearningTransferProtocol:
         # PRIORITY 1: Owner-authorized LearningValidator is mandatory
         if validator is None or not isinstance(validator, LearningValidator):
             raise ValueError("Missing owner-authorized LearningValidator: cross-model transfer requires a trusted validator instance")
+
+        if not getattr(validator, "is_owner_authorized", True):
+            raise ValueError("Unauthorized LearningValidator: cross-model transfer requires an owner-authorized validator")
 
         if not validator._trusted_oracles and not validator._trusted_oracle_keys:
             raise ValueError("Untrusted LearningValidator: no trusted oracle registry configured for cross-model transfer")
@@ -137,12 +145,15 @@ class LearningTransferProtocol:
                 raise ValueError("Mismatched target_model_digest against transfer_protocol.model_digest")
             effective_model_digest = transfer_protocol.model_digest
             proto = transfer_protocol
+            effective_model_digest_type = model_digest_type or getattr(transfer_protocol, "model_digest_type", "VERIFIED_MODEL_REVISION")
         else:
-            effective_model_digest = (
-                target_model_digest
-                if target_model_digest is not None
-                else hashlib.sha256(f"spe-model-v1:{target_model_id}".encode("utf-8")).hexdigest()
-            )
+            synthetic_hash = hashlib.sha256(f"spe-model-v1:{target_model_id}".encode("utf-8")).hexdigest()
+            if target_model_digest is not None:
+                effective_model_digest = target_model_digest
+            else:
+                effective_model_digest = synthetic_hash
+            effective_model_digest_type = model_digest_type or "VERIFIED_MODEL_REVISION"
+
             oracle_digest = hashlib.sha256(f"spe-oracle-v1:{effective_evaluator_id}".encode("utf-8")).hexdigest()
             proto = StudyProtocol(
                 study_id=f"XFER-{tx.tx_id}-{target_model_id}",
@@ -156,6 +167,7 @@ class LearningTransferProtocol:
                 min_heldout_families=20,
                 family_level_significance=True,
                 multiplicity=1,
+                model_digest_type=effective_model_digest_type,
             )
 
         if not isinstance(effective_model_digest, str) or not _DIGEST.fullmatch(effective_model_digest):
@@ -241,6 +253,50 @@ class LearningTransferProtocol:
             raise ValueError(
                 f"Insufficient independent held-out families for cross-model transfer: got {len(families)}, require >= {min_required_families}"
             )
+
+        # Finding D: Task family independence and dataset custody assertions
+        if family_provenance is not None:
+            if not isinstance(family_provenance, dict):
+                raise ValueError("family_provenance must be a dictionary")
+            clusters = set()
+            for fid in families:
+                if fid not in family_provenance:
+                    raise ValueError(f"Missing family provenance for family '{fid}': all held-out families must have documented provenance")
+                entry = family_provenance[fid]
+                if isinstance(entry, dict):
+                    cluster_id = entry.get("source_cluster") or entry.get("source_family") or entry.get("cluster_id") or fid
+                elif isinstance(entry, str):
+                    cluster_id = entry
+                else:
+                    cluster_id = str(entry)
+                clusters.add(cluster_id)
+            if len(clusters) < min_required_families:
+                raise ValueError(
+                    f"Family clustering lacks auditable distinction: got {len(clusters)} distinct clusters across {len(families)} nominal family IDs (require >= {min_required_families})"
+                )
+        else:
+            item_clusters = set()
+            for raw_item in test_dataset:
+                if isinstance(raw_item, dict):
+                    c = raw_item.get("source_cluster") or raw_item.get("source_family") or raw_item.get("cluster_id")
+                    if c:
+                        item_clusters.add(str(c))
+            if item_clusters and len(item_clusters) < min_required_families:
+                raise ValueError(
+                    f"Family clustering lacks auditable distinction: dataset items map to only {len(item_clusters)} distinct clusters (require >= {min_required_families})"
+                )
+            if require_family_provenance:
+                raise ValueError("Missing required family provenance: external qualification requires documented family custody and independence")
+
+        if independence_assertions is not None:
+            if not isinstance(independence_assertions, dict):
+                raise ValueError("independence_assertions must be a dictionary")
+            if independence_assertions.get("contamination_controlled") is False:
+                raise ValueError("Task family independence assertions rejected: contamination controls not asserted")
+            if independence_assertions.get("independent_task_families") is False:
+                raise ValueError("Task family independence assertions rejected: task families not independent")
+            if "min_independent_clusters" in independence_assertions and independence_assertions["min_independent_clusters"] < min_required_families:
+                raise ValueError("Task family independence assertions rejected: min_independent_clusters < required minimum")
 
         family_deltas = [math.fsum(v) / len(v) for _, v in sorted(grouped.items())]
         macro_delta = math.fsum(family_deltas) / len(family_deltas)
@@ -359,6 +415,8 @@ class LearningTransferProtocol:
             "source_generator": tx.claim.generator_id,
             "target_model_id": target_model_id,
             "target_model_digest": effective_model_digest,
+            "model_digest_type": effective_model_digest_type,
+            "target_model_digest_type": effective_model_digest_type,
             "transfer_protocol": proto_dict,
             "protocol_digest": protocol_digest,
             "dataset_digest": dataset_digest,
@@ -378,6 +436,10 @@ class LearningTransferProtocol:
             "sample_count": len(sorted_obs),
             "revoked": False,
         }
+        if family_provenance is not None:
+            report["family_provenance"] = family_provenance
+        if independence_assertions is not None:
+            report["independence_assertions"] = independence_assertions
 
         receipt_hash, receipt_sig = validator.sign_model_transfer_receipt(tx, report)
         report["transfer_receipt_hash"] = receipt_hash
@@ -398,6 +460,7 @@ class LearningTransferProtocol:
         target_model_id: str,
         reason: RevocationReason,
         details: str,
+        validator: Optional[Any] = None,
     ) -> Dict[str, Any]:
         """Revokes a specific cross-model transfer qualification without revoking the base model study."""
         transfers = tx.metadata.get("cross_model_transfers", {})
@@ -409,6 +472,35 @@ class LearningTransferProtocol:
         report["revoked"] = True
         report["revocation_reason"] = reason.value
         report["revocation_details"] = details
+
+        receipt_hash = report.get("transfer_receipt_hash")
+        evidence_hash = report.get("evidence_hash")
+
+        from spe_runtime.research.lvt.learning_validator import LearningValidator
+        if validator is not None and hasattr(validator, "record_tombstone"):
+            validator.record_tombstone(
+                receipt_hash=receipt_hash,
+                evidence_hash=evidence_hash,
+                tx_id=tx.tx_id,
+                target_model_id=target_model_id,
+                reason=reason.value,
+                details=details,
+            )
+        else:
+            if receipt_hash:
+                LearningValidator._GLOBAL_TOMBSTONES.add(str(receipt_hash).strip().lower())
+            if evidence_hash:
+                LearningValidator._GLOBAL_TOMBSTONES.add(str(evidence_hash).strip().lower())
+
+        tx.metadata.setdefault("revocation_tombstones", []).append({
+            "target_model_id": target_model_id,
+            "transfer_receipt_hash": receipt_hash,
+            "evidence_hash": evidence_hash,
+            "reason": reason.value,
+            "details": details,
+            "timestamp": time.time(),
+        })
+
         return report
 
     @staticmethod
@@ -417,6 +509,8 @@ class LearningTransferProtocol:
         refined_prompt_content: str,
         supported_models: Optional[Sequence[str]] = None,
         validator: Optional[Any] = None,
+        *,
+        allow_synthetic_models: bool = False,
     ) -> str:
         """
         Synthesizes a portable, self-contained .spe bundle embedding the verified learning artifact.
@@ -429,15 +523,18 @@ class LearningTransferProtocol:
         6. Valid cryptographic receipt signature
         7. Cryptographically authenticated per-model transfer receipts for verified_models
         """
-        LearningTransferProtocol.assert_not_revoked(tx)
-
-        if tx.status == QualificationStatus.REVOKED or tx.revocation_reason is not None:
-            raise ValueError(f"Cannot synthesize artifact for revoked transaction: {tx.revocation_reason}")
-
         from spe_runtime.research.lvt.learning_validator import LearningValidator
 
         if validator is not None and not isinstance(validator, LearningValidator):
             raise ValueError("Missing trusted verifier: validator must be an authoritative LearningValidator instance")
+
+        if validator is not None and not getattr(validator, "is_owner_authorized", True):
+            raise ValueError("Unauthorized LearningValidator: validator lacks owner root-of-trust authorization for production .spe export")
+
+        LearningTransferProtocol.assert_not_revoked(tx)
+
+        if tx.status == QualificationStatus.REVOKED or tx.revocation_reason is not None:
+            raise ValueError(f"Cannot synthesize artifact for revoked transaction: {tx.revocation_reason}")
 
         if tx.status != QualificationStatus.QUALIFIED:
             raise ValueError(f"Cannot synthesize artifact for non-qualified transaction (status={tx.status})")
@@ -493,8 +590,16 @@ class LearningTransferProtocol:
         if not ed25519_verify(att_pk, att_canonical, att_sig):
             raise ValueError("Invalid oracle attestation cryptographic signature blocks .spe export")
 
+        from spe_runtime.research.lvt.learning_validator import LearningValidator
+
         if validator is None:
             raise ValueError("Missing owner-authorized trusted validator for .spe export")
+
+        if not isinstance(validator, LearningValidator):
+            raise ValueError("Missing owner-authorized trusted verifier: validator must be an authoritative LearningValidator instance")
+
+        if not getattr(validator, "is_owner_authorized", True):
+            raise ValueError("Unauthorized LearningValidator: validator lacks owner root-of-trust authorization for production .spe export")
 
         oracle_ok, oracle_msg = validator.verify_oracle_attestation(
             att,
@@ -521,18 +626,48 @@ class LearningTransferProtocol:
             verified.add(tx.claim.generator_id)
 
         for model_id, report in transfers.items():
+            receipt_hash = report.get("transfer_receipt_hash")
+            evidence_hash = report.get("evidence_hash")
+            if (
+                report.get("revoked") is True
+                or validator.is_tombstoned(
+                    receipt_hash=receipt_hash,
+                    evidence_hash=evidence_hash,
+                    tx_id=tx.tx_id,
+                    target_model_id=model_id,
+                )
+                or any(
+                    isinstance(t, dict) and (
+                        t.get("target_model_id") == model_id
+                        or (receipt_hash and t.get("transfer_receipt_hash") == receipt_hash)
+                    )
+                    for t in tx.metadata.get("revocation_tombstones", [])
+                )
+            ):
+                raise ValueError(
+                    f"Rejected cross-model transfer evidence for '{model_id}': transfer has been revoked (persistent tombstone enforced)"
+                )
+
             is_authentic, is_verified_transfer, reason = validator.verify_model_transfer_receipt(
-                tx, model_id, report
+                tx, model_id, report, allow_synthetic_models=allow_synthetic_models
             )
             if not is_authentic:
                 raise ValueError(
                     f"Rejected cross-model transfer evidence for '{model_id}': {reason}"
                 )
+
+            digest_type = report.get("model_digest_type") or report.get("target_model_digest_type", "VERIFIED_MODEL_REVISION")
+            is_synthetic = (digest_type == "SYNTHETIC_MODEL_IDENTIFIER")
+            if is_synthetic and not allow_synthetic_models:
+                # Synthetic model digests cannot qualify as verified model revisions in production .spe export
+                continue
+
             if is_verified_transfer:
                 verified.add(model_id)
                 verified_model_transfers[model_id] = {
                     "target_model_id": model_id,
                     "target_model_digest": report["target_model_digest"],
+                    "model_digest_type": report.get("model_digest_type", "VERIFIED_MODEL_REVISION"),
                     "evaluator_id": report["evaluator_id"],
                     "oracle_public_key": report["oracle_public_key"],
                     "protocol_digest": report["protocol_digest"],
@@ -543,6 +678,10 @@ class LearningTransferProtocol:
                     "transfer_receipt_signature": report["transfer_receipt_signature"],
                     "statistical_verdict": report["statistical_verdict"],
                 }
+                if "family_provenance" in report:
+                    verified_model_transfers[model_id]["family_provenance"] = report["family_provenance"]
+                if "independence_assertions" in report:
+                    verified_model_transfers[model_id]["independence_assertions"] = report["independence_assertions"]
 
         if supported_models is not None:
             if len(supported_models) == 0:
@@ -552,7 +691,10 @@ class LearningTransferProtocol:
                 if not isinstance(m, str) or not m.strip() or m not in verified
             ]
             if unverified:
-                raise ValueError(f"Unverified model transfer cannot be labeled as verified_models: {unverified}")
+                raise ValueError(
+                    f"Unverified model transfer cannot be labeled as verified_models: {unverified}. "
+                    "Synthetic model identifier digests cannot qualify as verified model revisions unless allow_synthetic_models=True."
+                )
             models_to_export = list(supported_models)
         else:
             models_to_export = sorted(list(verified))

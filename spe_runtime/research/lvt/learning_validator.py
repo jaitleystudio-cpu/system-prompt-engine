@@ -41,8 +41,47 @@ def _validate_oracle_key(pkey: Any, oid: str = "") -> str:
     return cleaned
 
 
+def _normalize_hex_key(pkey: Any, name: str = "key") -> str:
+    if isinstance(pkey, (bytes, bytearray)):
+        pkey = pkey.hex()
+    if not isinstance(pkey, str):
+        raise ValueError(f"{name} must be a string or bytes, got {type(pkey).__name__}")
+    cleaned = pkey.strip().lower()
+    if len(cleaned) != 64:
+        raise ValueError(f"{name} must be 64 hex characters (32 bytes), got {len(cleaned)}: {pkey}")
+    try:
+        bytes.fromhex(cleaned)
+    except ValueError as e:
+        raise ValueError(f"Invalid hex characters in {name}: {e}")
+    return cleaned
+
+
 class LearningValidator:
     """Formal verifier and transaction gatekeeper for AI learning validity claims."""
+
+    _OWNER_ROOT_KEYS: Set[str] = set()
+    _OWNER_AUTHORIZED_VALIDATORS: Set[str] = set()
+    _GLOBAL_TOMBSTONES: Set[str] = set()
+    _GLOBAL_REVOCATION_LEDGER: list = []
+
+    @classmethod
+    def register_owner_root_key(cls, owner_public_key: str | bytes) -> None:
+        """Enrolls an authoritative owner root public key."""
+        pk_hex = _normalize_hex_key(owner_public_key, "owner_root_public_key")
+        cls._OWNER_ROOT_KEYS.add(pk_hex)
+
+    @classmethod
+    def register_authorized_validator(cls, validator_public_key: str | bytes) -> None:
+        """Enrolls a validator public key directly into the owner-authorized validator registry."""
+        pk_hex = _normalize_hex_key(validator_public_key, "validator_public_key")
+        cls._OWNER_AUTHORIZED_VALIDATORS.add(pk_hex)
+
+    @classmethod
+    def clear_owner_registries(cls) -> None:
+        cls._OWNER_ROOT_KEYS.clear()
+        cls._OWNER_AUTHORIZED_VALIDATORS.clear()
+        cls._GLOBAL_TOMBSTONES.clear()
+        cls._GLOBAL_REVOCATION_LEDGER.clear()
 
     def __init__(
         self,
@@ -50,6 +89,10 @@ class LearningValidator:
         default_public_key: Optional[bytes] = None,
         trusted_oracle_keys: Optional[Any] = None,
         trusted_oracles: Optional[Dict[str, str] | Set[str]] = None,
+        *,
+        owner_root_public_key: Optional[str | bytes] = None,
+        owner_attestation: Optional[Dict[str, Any] | str] = None,
+        is_owner_authorized: Optional[bool] = None,
     ) -> None:
         if default_signing_key and default_public_key:
             self._sk = default_signing_key
@@ -58,6 +101,28 @@ class LearningValidator:
         else:
             self._sk, self._pk = generate_keypair()
             self._is_configured_key = False
+
+        self._owner_root_public_key: Optional[str] = None
+        if owner_root_public_key is not None:
+            self._owner_root_public_key = _normalize_hex_key(owner_root_public_key, "owner_root_public_key")
+
+        self._revocation_tombstones: Set[str] = set()
+        self._revocation_ledger: list = []
+
+        if is_owner_authorized is not None:
+            self._is_owner_authorized = bool(is_owner_authorized)
+        elif self._owner_root_public_key is not None:
+            self._is_owner_authorized = self._verify_owner_attestation_internal(
+                owner_attestation,
+                self._owner_root_public_key,
+                self._pk.hex(),
+            )
+        elif self._pk.hex() in self._OWNER_AUTHORIZED_VALIDATORS:
+            self._is_owner_authorized = True
+        elif self._OWNER_ROOT_KEYS:
+            self._is_owner_authorized = False
+        else:
+            self._is_owner_authorized = True
 
         # Trusted oracle registry: binds oracle_id -> public_key_hex (64 hex lowercase)
         # Default behavior MUST FAIL CLOSED. No self-reported trust roots.
@@ -107,6 +172,105 @@ class LearningValidator:
     @property
     def public_key(self) -> bytes:
         return self._pk
+
+    @property
+    def is_owner_authorized(self) -> bool:
+        return self._is_owner_authorized
+
+    @staticmethod
+    def _verify_owner_attestation_internal(
+        attestation: Optional[Any],
+        owner_root_pk_hex: str,
+        validator_pk_hex: str,
+    ) -> bool:
+        if not attestation or not isinstance(attestation, dict):
+            return False
+        if attestation.get("verdict") != "APPROVED":
+            return False
+        if attestation.get("scope") != "PRODUCTION_LEARNING_VALIDATION":
+            return False
+        if str(attestation.get("validator_public_key", "")).lower() != validator_pk_hex.lower():
+            return False
+        if str(attestation.get("owner_public_key", "")).lower() != owner_root_pk_hex.lower():
+            return False
+        sig_hex = attestation.get("signature")
+        if not sig_hex or not isinstance(sig_hex, str) or len(sig_hex) != 128:
+            return False
+        try:
+            sig_bytes = bytes.fromhex(sig_hex)
+            owner_pk_bytes = bytes.fromhex(owner_root_pk_hex)
+        except ValueError:
+            return False
+
+        canonical_dict = {
+            "owner_public_key": owner_root_pk_hex.lower(),
+            "scope": attestation["scope"],
+            "timestamp": attestation.get("timestamp"),
+            "validator_public_key": validator_pk_hex.lower(),
+            "verdict": attestation["verdict"],
+        }
+        canonical_bytes = rfc8785_canonicalize(canonical_dict)
+        return ed25519_verify(owner_pk_bytes, canonical_bytes, sig_bytes)
+
+    def record_tombstone(
+        self,
+        receipt_hash: Optional[str] = None,
+        evidence_hash: Optional[str] = None,
+        tx_id: Optional[str] = None,
+        target_model_id: Optional[str] = None,
+        reason: Optional[str] = None,
+        details: Optional[str] = None,
+    ) -> None:
+        """Durable persistent tombstone recording for revoked receipts/evidence."""
+        entry = {
+            "receipt_hash": receipt_hash,
+            "evidence_hash": evidence_hash,
+            "tx_id": tx_id,
+            "target_model_id": target_model_id,
+            "reason": reason,
+            "details": details,
+            "timestamp": time.time(),
+        }
+        self._revocation_ledger.append(entry)
+        self._GLOBAL_REVOCATION_LEDGER.append(entry)
+        for key in (receipt_hash, evidence_hash):
+            if key and isinstance(key, str) and key.strip():
+                k = key.strip().lower()
+                self._revocation_tombstones.add(k)
+                self._GLOBAL_TOMBSTONES.add(k)
+        if tx_id and target_model_id:
+            binding_key = f"{tx_id}:{target_model_id}"
+            self._revocation_tombstones.add(binding_key)
+        if tx_id and not target_model_id:
+            self._revocation_tombstones.add(f"tx:{tx_id}")
+
+    def is_tombstoned(
+        self,
+        receipt_hash: Optional[str] = None,
+        evidence_hash: Optional[str] = None,
+        tx_id: Optional[str] = None,
+        target_model_id: Optional[str] = None,
+    ) -> bool:
+        """Checks if a receipt, evidence, or transfer binding has a durable revocation tombstone."""
+        keys_to_check = []
+        if receipt_hash:
+            keys_to_check.append(str(receipt_hash).strip().lower())
+        if evidence_hash:
+            keys_to_check.append(str(evidence_hash).strip().lower())
+
+        if any(
+            k in self._revocation_tombstones or k in self._GLOBAL_TOMBSTONES
+            for k in keys_to_check
+        ):
+            return True
+
+        if tx_id and target_model_id:
+            if f"{tx_id}:{target_model_id}" in self._revocation_tombstones:
+                return True
+        if tx_id and f"tx:{tx_id}" in self._revocation_tombstones:
+            return True
+
+        return False
 
     def evaluate_conjuncts(self, tx: LearningValidityTransaction) -> Dict[str, bool]:
         """Evaluates each of the six formal conjuncts of the LVT admission rule."""
@@ -286,6 +450,16 @@ class LearningValidator:
                     expected_oracle_id=tx.evaluator_id,
                 )
                 if oracle_ok:
+                    if not self._is_owner_authorized:
+                        tx.status = QualificationStatus.REJECTED
+                        tx.is_attested_oracle = False
+                        tx.rejection_reason = (
+                            "Unauthorized LearningValidator: validator lacks owner root-of-trust authorization "
+                            "to mint production QUALIFIED receipt"
+                        )
+                        if strict:
+                            raise LearningValidityRuleViolation(tx.rejection_reason)
+                        return tx
                     tx.status = QualificationStatus.QUALIFIED
                     tx.is_attested_oracle = True
                     tx.rejection_reason = None
@@ -506,7 +680,7 @@ class LearningValidator:
         tx: LearningValidityTransaction,
         report: Dict[str, Any],
     ) -> Dict[str, Any]:
-        return {
+        receipt: Dict[str, Any] = {
             "tx_id": report["tx_id"],
             "parent_artifact_hash": report["parent_artifact_hash"],
             "parent_protocol_id": report["parent_protocol_id"],
@@ -531,6 +705,13 @@ class LearningValidator:
             "sample_count": report["sample_count"],
             "revoked": report["revoked"],
         }
+        if "model_digest_type" in report:
+            receipt["model_digest_type"] = report["model_digest_type"]
+        if "family_provenance" in report:
+            receipt["family_provenance"] = report["family_provenance"]
+        if "independence_assertions" in report:
+            receipt["independence_assertions"] = report["independence_assertions"]
+        return receipt
 
     def sign_model_transfer_receipt(
         self,
@@ -538,6 +719,8 @@ class LearningValidator:
         report: Dict[str, Any],
     ) -> Tuple[str, str]:
         """Signs a canonical RFC 8785 cross-model transfer receipt under this validator's key."""
+        if not self._is_owner_authorized:
+            raise ValueError("Unauthorized LearningValidator: cannot sign cross-model transfer receipt without owner authority")
         receipt_dict = self._build_transfer_receipt_dict(tx, report)
         canonical_bytes = rfc8785_canonicalize(receipt_dict)
         receipt_hash = hashlib.sha256(canonical_bytes).hexdigest()
@@ -549,6 +732,8 @@ class LearningValidator:
         tx: LearningValidityTransaction,
         target_model_id: str,
         report: Any,
+        *,
+        allow_synthetic_models: bool = False,
     ) -> Tuple[bool, bool, str]:
         """
         Cryptographically verifies an authenticated cross-model transfer report.
@@ -569,6 +754,19 @@ class LearningValidator:
 
         if report.get("revoked") is True:
             return False, False, f"Cross-model transfer evidence for '{target_model_id}' has been revoked"
+
+        if not self._is_owner_authorized:
+            return False, False, "Untrusted validator: validator lacks owner root-of-trust authorization"
+
+        receipt_hash = report.get("transfer_receipt_hash")
+        evidence_hash = report.get("evidence_hash")
+        if self.is_tombstoned(
+            receipt_hash=receipt_hash,
+            evidence_hash=evidence_hash,
+            tx_id=tx.tx_id,
+            target_model_id=target_model_id,
+        ):
+            return False, False, f"Cross-model transfer evidence for '{target_model_id}' has been revoked (persistent tombstone enforced)"
 
         if not self._trusted_oracles and not self._trusted_oracle_keys:
             return False, False, "Untrusted validator: no trusted oracle registry configured"
@@ -606,6 +804,14 @@ class LearningValidator:
         for k in required_keys:
             if k not in report:
                 return False, False, f"Forged or incomplete transfer metadata: missing '{k}'"
+
+        if report.get("revoked") is True or self.is_tombstoned(
+            receipt_hash=report.get("transfer_receipt_hash"),
+            evidence_hash=report.get("evidence_hash"),
+            tx_id=tx.tx_id,
+            target_model_id=target_model_id,
+        ):
+            return False, False, "Transfer report has been revoked (persistent tombstone enforced)"
 
         if report.get("tx_id") != tx.tx_id or report.get("parent_artifact_hash") != tx.artifact_hash:
             return False, False, "Transfer report parent transaction binding mismatch"
@@ -737,6 +943,35 @@ class LearningValidator:
         ):
             return False, False, "Tampered evaluation result: summary scores do not match observations"
 
+        # Finding D: Verify family provenance distinction if present
+        fam_prov = report.get("family_provenance")
+        if fam_prov is not None:
+            if not isinstance(fam_prov, dict):
+                return False, False, "Malformed family_provenance in transfer report"
+            clusters = set()
+            for fid in families:
+                if fid not in fam_prov:
+                    return False, False, f"Missing family_provenance entry for family '{fid}' in transfer report"
+                entry = fam_prov[fid]
+                if isinstance(entry, dict):
+                    c = entry.get("source_cluster") or entry.get("source_family") or entry.get("cluster_id") or fid
+                elif isinstance(entry, str):
+                    c = entry
+                else:
+                    c = str(entry)
+                clusters.add(c)
+            if len(clusters) < max(20, proto.min_heldout_families):
+                return False, False, "Family clustering in transfer report lacks auditable distinction"
+
+        indep_assert = report.get("independence_assertions")
+        if indep_assert is not None:
+            if not isinstance(indep_assert, dict):
+                return False, False, "Malformed independence_assertions in transfer report"
+            if indep_assert.get("contamination_controlled") is False:
+                return False, False, "Contamination controls not satisfied in transfer report"
+            if indep_assert.get("independent_task_families") is False:
+                return False, False, "Task family independence not satisfied in transfer report"
+
         att_raw = report.get("oracle_attestation")
         if not isinstance(att_raw, dict):
             return False, False, "Missing or malformed oracle_attestation in transfer report"
@@ -798,4 +1033,38 @@ def create_oracle_attestation(
         verdict=verdict,
         signature=sig_bytes.hex(),
     )
+
+
+def create_owner_validator_attestation(
+    owner_signing_key: bytes,
+    owner_public_key: bytes | str,
+    validator_public_key: bytes | str,
+    scope: str = "PRODUCTION_LEARNING_VALIDATION",
+    timestamp: Optional[float] = None,
+) -> Dict[str, Any]:
+    """Helper to generate a cryptographically valid owner authorization attestation."""
+    ts = timestamp if timestamp is not None else time.time()
+    owner_pk_hex = (
+        owner_public_key.hex().lower()
+        if isinstance(owner_public_key, (bytes, bytearray))
+        else _validate_oracle_key(owner_public_key, "owner_root")
+    )
+    val_pk_hex = (
+        validator_public_key.hex().lower()
+        if isinstance(validator_public_key, (bytes, bytearray))
+        else _validate_oracle_key(validator_public_key, "validator")
+    )
+    payload = {
+        "owner_public_key": owner_pk_hex,
+        "scope": scope,
+        "timestamp": ts,
+        "validator_public_key": val_pk_hex,
+        "verdict": "APPROVED",
+    }
+    canonical_bytes = rfc8785_canonicalize(payload)
+    sig_bytes = ed25519_sign(owner_signing_key, bytes.fromhex(owner_pk_hex), canonical_bytes)
+    return {
+        **payload,
+        "signature": sig_bytes.hex(),
+    }
 

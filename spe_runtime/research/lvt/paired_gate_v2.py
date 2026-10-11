@@ -45,6 +45,7 @@ class StudyProtocol:
     min_heldout_families: int
     family_level_significance: bool
     multiplicity: int
+    model_digest_type: str = "VERIFIED_MODEL_REVISION"
 
 
 @dataclass(frozen=True)
