@@ -212,35 +212,45 @@ class LearningValidator:
         tx: LearningValidityTransaction,
         public_key: Optional[bytes] = None,
     ) -> bool:
-        """Cryptographically verifies the transaction's Ed25519 receipt signature."""
+        """Verify an authenticated owner-signed qualification receipt.
+
+        A key supplied in tx.metadata or by a caller is *not* a trust root.
+        The verifier's pinned public key is the sole accepted key. The caller
+        may supply that same key for API compatibility, never a replacement.
+        """
         if tx.status != QualificationStatus.QUALIFIED:
             return False
-        if not tx.canonical_receipt_signature or not tx.committed_timestamp:
+        if not tx.canonical_receipt_signature or tx.committed_timestamp is None:
+            return False
+        if not tx.artifact_hash:
+            return False
+        if public_key is not None and public_key != self._pk:
+            return False
+        if tx.metadata.get("public_key", self._pk.hex()) != self._pk.hex():
             return False
 
-        pk = public_key
-        if not pk and "public_key" in tx.metadata:
-            pk = bytes.fromhex(tx.metadata["public_key"])
-        if not pk:
-            pk = self._pk
-
-        receipt_dict = {
-            "tx_id": tx.tx_id,
-            "claim_id": tx.claim.claim_id,
-            "domain": tx.claim.domain,
-            "generator_id": tx.claim.generator_id,
-            "evaluator_id": tx.evaluator_id,
-            "evaluator_type": tx.evaluator_type.value,
-            "status": tx.status.value,
-            "results": {
-                "arm_a": tx.results.arm_a_baseline_score if tx.results else 0.0,
-                "arm_b": tx.results.arm_b_authentic_score if tx.results else 0.0,
-                "arm_c": tx.results.arm_c_shuffled_control_score if tx.results else 0.0,
-                "arm_d": tx.results.arm_d_generalization_score if tx.results else 0.0,
-                "delta": tx.results.delta_improvement if tx.results else 0.0,
-            },
-            "timestamp": tx.committed_timestamp,
-        }
-        canonical_bytes = rfc8785_canonicalize(receipt_dict)
-        sig_bytes = bytes.fromhex(tx.canonical_receipt_signature)
-        return ed25519_verify(pk, canonical_bytes, sig_bytes)
+        try:
+            receipt_dict = {
+                "tx_id": tx.tx_id,
+                "claim_id": tx.claim.claim_id,
+                "domain": tx.claim.domain,
+                "generator_id": tx.claim.generator_id,
+                "evaluator_id": tx.evaluator_id,
+                "evaluator_type": tx.evaluator_type.value,
+                "status": tx.status.value,
+                "results": {
+                    "arm_a": tx.results.arm_a_baseline_score if tx.results else 0.0,
+                    "arm_b": tx.results.arm_b_authentic_score if tx.results else 0.0,
+                    "arm_c": tx.results.arm_c_shuffled_control_score if tx.results else 0.0,
+                    "arm_d": tx.results.arm_d_generalization_score if tx.results else 0.0,
+                    "delta": tx.results.delta_improvement if tx.results else 0.0,
+                },
+                "timestamp": tx.committed_timestamp,
+            }
+            canonical_bytes = rfc8785_canonicalize(receipt_dict)
+            if hashlib.sha256(canonical_bytes).hexdigest() != tx.artifact_hash:
+                return False
+            sig_bytes = bytes.fromhex(tx.canonical_receipt_signature)
+        except (ValueError, TypeError, AttributeError):
+            return False
+        return ed25519_verify(self._pk, canonical_bytes, sig_bytes)
