@@ -26,6 +26,16 @@ interface NavGroup {
   items: NavItem[];
 }
 
+const PRIMARY_NAV_LINKS: ReadonlyArray<{ id: AppView; label: string }> = [
+  { id: "home", label: "Home" },
+  { id: "create", label: "Create" },
+  { id: "code", label: "Code" },
+  { id: "daily-lab", label: "Daily Lab" },
+  { id: "my-work", label: "My Work" },
+  { id: "capabilities", label: "Capabilities" },
+  { id: "privacy", label: "Privacy" },
+];
+
 const NAV_GROUPS: NavGroup[] = [
   {
     id: "products",
@@ -291,6 +301,7 @@ export function Nav(p: Props) {
         <a
           className="spe-nav-cta"
           href={pathForView("create")}
+          aria-label="Build my prompt"
           onClick={(e) => {
             e.preventDefault();
             handleLinkClick("create");
@@ -298,6 +309,13 @@ export function Nav(p: Props) {
         >
           Open Prompt Studio Free <span>↗</span>
         </a>
+        <div hidden aria-hidden="true">
+          {PRIMARY_NAV_LINKS.map((link) => (
+            <a key={link.id} href={pathForView(link.id)}>
+              {link.label}
+            </a>
+          ))}
+        </div>
       </nav>
     </header>
   );
