@@ -165,13 +165,58 @@ def test_valid_transaction_commitment_and_cryptographic_receipt():
     )
 
     committed_tx = validator.validate_and_commit(tx)
-    assert committed_tx.status == QualificationStatus.QUALIFIED
-    assert committed_tx.committed_timestamp is not None
-    assert len(committed_tx.artifact_hash) == 64  # SHA-256
-    assert len(committed_tx.canonical_receipt_signature) == 128  # Ed25519 hex (64 bytes = 128 chars)
+    assert committed_tx.status == QualificationStatus.RESEARCH_UNQUALIFIED
+
+    # Separately scoped test-only mechanism for test fixture mock receipt serialization
+    fixture_tx = LearningValidator.mint_test_fixture_receipt(tx)
+    assert fixture_tx.status == QualificationStatus.RESEARCH_UNQUALIFIED
+    assert fixture_tx.committed_timestamp is not None
+    assert len(fixture_tx.artifact_hash) == 64  # SHA-256
+    assert len(fixture_tx.canonical_receipt_signature) == 128  # Ed25519 hex (64 bytes = 128 chars)
 
     # Verify cryptographic signature
-    assert validator.verify_transaction_signature(committed_tx) is True
+    assert validator.verify_transaction_signature(fixture_tx) is True
+
+
+def test_v1_aggregate_only_defaults_to_research_unqualified():
+    """V1 aggregate-only results fail closed by default to RESEARCH_UNQUALIFIED."""
+    validator = LearningValidator()
+
+    claim = LearningClaim(
+        claim_id="CLM-V1-FAILCLOSE",
+        domain="math_reasoning",
+        description="V1 aggregate claim without LVT-2 study",
+        generator_id="gen-A",
+        base_prompt_ref="prompt_v1",
+        candidate_prompt_ref="prompt_v2",
+        budget_nanos=5000,
+    )
+    protocol = ExperimentProtocol(protocol_id="PROTO-V1")
+    results = FourArmResults(
+        arm_a_baseline_score=0.72,
+        arm_b_authentic_score=0.92,
+        arm_c_shuffled_control_score=0.74,
+        arm_d_generalization_score=0.91,
+        delta_improvement=0.20,
+        control_delta=0.18,
+        held_out_retention=0.19,
+        is_statistically_significant=True,
+        total_cost_nanos=2000,
+    )
+
+    tx = LearningValidityTransaction(
+        tx_id="TX-V1-001",
+        claim=claim,
+        protocol=protocol,
+        results=results,
+        evaluator_id="independent-eval",
+        evaluator_type=EvaluatorType.FORMAL_TEST_RUNNER,
+    )
+
+    # Default: must fail closed to RESEARCH_UNQUALIFIED
+    committed_tx = validator.validate_and_commit(tx)
+    assert committed_tx.status == QualificationStatus.RESEARCH_UNQUALIFIED
+    assert "V1 aggregate-only results cannot mint production QUALIFIED receipt" in committed_tx.rejection_reason
 
 
 def test_strict_rule_checking_raises_violation():
