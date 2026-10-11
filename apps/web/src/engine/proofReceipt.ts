@@ -54,8 +54,26 @@ export interface ProofReceiptPayload {
     defenseGainPct: number;
   };
 
+  // Explicit Provenance & Experimental Validity Classification (Risk A Closure)
+  evidenceProvenance: {
+    measurementClass: "DETERMINISTIC_STATIC_AND_RULE_MATRIX" | "LIVE_MODEL_EMPIRICAL_EVAL";
+    liveModelCallsExecuted: number;
+    selfGeneratedAssertionOnly: boolean;
+    independentVerificationRequiredForLiveModels: boolean;
+    producerKeyId: string;
+    producerPublicKeyHex?: string;
+    producerSignatureHex?: string;
+  };
+
   // Content Digest (RFC 8785 JCS -> SHA-256)
   receiptDigest: string;
+}
+
+export interface ProofReceiptAuthOptions {
+  requireAuthenticatedProducer?: boolean;
+  trustedProducerKeys?: Record<string, string>;
+  verifySignatureFn?: (canonicalDigestHex: string, signatureHex: string, publicKeyHex: string) => boolean;
+  requireLiveModelEmpiricalEval?: boolean;
 }
 
 /**
@@ -138,6 +156,13 @@ export function generateProofReceipt(
       violationsDelta: twinReport.delta.violationsDelta,
       defenseGainPct: parseFloat((twinReport.delta.defenseRateGain * 100).toFixed(2)),
     },
+    evidenceProvenance: {
+      measurementClass: "DETERMINISTIC_STATIC_AND_RULE_MATRIX",
+      liveModelCallsExecuted: 0,
+      selfGeneratedAssertionOnly: false,
+      independentVerificationRequiredForLiveModels: true,
+      producerKeyId: "spe-local-unauthenticated-digest",
+    },
   };
 
   const canonicalJson = canonicalizeJson(receiptData);
@@ -148,3 +173,120 @@ export function generateProofReceipt(
     receiptDigest,
   };
 }
+
+/**
+ * Attaches an asymmetric producer signature (e.g., Ed25519) over the canonical receipt payload
+ * and recomputes the outer receiptDigest.
+ */
+export function attachProducerSignature(
+  receipt: ProofReceiptPayload,
+  producerKeyId: string,
+  producerPublicKeyHex: string,
+  signDigestFn: (canonicalDigestHex: string) => string,
+): ProofReceiptPayload {
+  const { receiptDigest: _oldDigest, ...unsigned } = receipt;
+  const unsignedWithoutSig: Omit<ProofReceiptPayload, "receiptDigest"> = {
+    ...unsigned,
+    evidenceProvenance: {
+      ...unsigned.evidenceProvenance,
+      producerKeyId,
+      producerPublicKeyHex,
+    },
+  };
+  delete (unsignedWithoutSig.evidenceProvenance as Record<string, unknown>).producerSignatureHex;
+  const signingTargetDigest = computeSha256(canonicalizeJson(unsignedWithoutSig));
+  const signatureHex = signDigestFn(signingTargetDigest);
+
+  const signedBody: Omit<ProofReceiptPayload, "receiptDigest"> = {
+    ...unsignedWithoutSig,
+    evidenceProvenance: {
+      ...unsignedWithoutSig.evidenceProvenance,
+      producerSignatureHex: signatureHex,
+    },
+  };
+  return {
+    ...signedBody,
+    receiptDigest: computeSha256(canonicalizeJson(signedBody)),
+  };
+}
+
+/**
+ * Verifies both (1) SHA-256 JCS structural integrity, (2) asymmetric producer authentication,
+ * and (3) whether the receipt represents deterministic local checks vs. live model evaluation.
+ */
+export function verifyProofReceiptAuthenticity(
+  receipt: ProofReceiptPayload,
+  options: ProofReceiptAuthOptions = {},
+): {
+  integrityVerified: boolean;
+  producerAuthenticated: boolean;
+  experimentalValidityVerified: boolean;
+  reasons: string[];
+} {
+  const reasons: string[] = [];
+  const { receiptDigest, ...unsigned } = receipt;
+  const recomputedDigest = computeSha256(canonicalizeJson(unsigned));
+  const integrityVerified = receiptDigest === recomputedDigest;
+  if (!integrityVerified) {
+    reasons.push(`Receipt SHA-256 digest mismatch: expected ${recomputedDigest}, got ${receiptDigest}`);
+  }
+
+  let producerAuthenticated = false;
+  const prov = receipt.evidenceProvenance;
+  if (!prov) {
+    reasons.push("Missing evidenceProvenance block.");
+  } else if (prov.producerPublicKeyHex && prov.producerSignatureHex && options.verifySignatureFn) {
+    const trustedKey = options.trustedProducerKeys?.[prov.producerKeyId];
+    if (!trustedKey || trustedKey !== prov.producerPublicKeyHex) {
+      reasons.push(`Untrusted or unregistered producerKeyId: ${prov.producerKeyId}`);
+    } else {
+      const unsignedWithoutSig: Omit<ProofReceiptPayload, "receiptDigest"> = {
+        ...unsigned,
+        evidenceProvenance: {
+          ...prov,
+        },
+      };
+      delete (unsignedWithoutSig.evidenceProvenance as Record<string, unknown>).producerSignatureHex;
+      const signingTargetDigest = computeSha256(canonicalizeJson(unsignedWithoutSig));
+      producerAuthenticated = options.verifySignatureFn(
+        signingTargetDigest,
+        prov.producerSignatureHex,
+        prov.producerPublicKeyHex,
+      );
+      if (!producerAuthenticated) {
+        reasons.push("Asymmetric producer signature verification failed.");
+      }
+    }
+  } else if (options.requireAuthenticatedProducer) {
+    reasons.push("Receipt has only an unauthenticated SHA-256 digest; producer signature required.");
+  }
+
+  let experimentalValidityVerified = true;
+  if (!receipt.hardGates.protectedIntentPreserved || !receipt.hardGates.authorityNotExpanded) {
+    experimentalValidityVerified = false;
+    reasons.push("Hard gates failed on receipt (intent or authority violation).");
+  }
+  if (options.requireLiveModelEmpiricalEval) {
+    if (
+      !prov ||
+      prov.measurementClass !== "LIVE_MODEL_EMPIRICAL_EVAL" ||
+      prov.liveModelCallsExecuted <= 0
+    ) {
+      experimentalValidityVerified = false;
+      reasons.push(
+        "Receipt represents DETERMINISTIC_STATIC_AND_RULE_MATRIX (0 live model calls), not a live model empirical evaluation.",
+      );
+    }
+  }
+
+  return {
+    integrityVerified,
+    producerAuthenticated,
+    experimentalValidityVerified:
+      integrityVerified &&
+      experimentalValidityVerified &&
+      (!options.requireAuthenticatedProducer || producerAuthenticated),
+    reasons,
+  };
+}
+

@@ -385,7 +385,7 @@ def test_rfc8785_canonicalize_published_standard_vectors() -> None:
 
 
 def test_unified_web_promptfoo_exporter_measured_proofs() -> None:
-    """Executes the TypeScript Promptfoo Exporter verification suite (5/5 checks) from pytest."""
+    """Executes the TypeScript Promptfoo Exporter verification suite (7/7 checks) from pytest."""
     repo_root = Path(__file__).resolve().parents[2]
     script_path = repo_root / "apps" / "web" / "scripts" / "test-promptfoo-exporter.mjs"
     assert script_path.exists(), f"Missing {script_path}"
@@ -398,4 +398,22 @@ def test_unified_web_promptfoo_exporter_measured_proofs() -> None:
         check=False,
     )
     assert proc.returncode == 0, f"Promptfoo exporter verification failed:\n{proc.stdout}\n{proc.stderr}"
-    assert "ALL PROMPTFOO BRIDGE EXPORTER TESTS PASSED! (5/5)" in proc.stdout
+    assert "ALL PROMPTFOO BRIDGE EXPORTER TESTS PASSED! (7/7)" in proc.stdout
+
+
+def test_unified_web_customer_journey_suite() -> None:
+    """Executes the Full Web-App Customer Journey verification suite (4/4 checks) from pytest."""
+    repo_root = Path(__file__).resolve().parents[2]
+    script_path = repo_root / "apps" / "web" / "scripts" / "test-rc-customer-journey.mjs"
+    assert script_path.exists(), f"Missing {script_path}"
+
+    proc = subprocess.run(
+        ["node", "--experimental-strip-types", str(script_path)],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, f"Customer journey verification failed:\n{proc.stdout}\n{proc.stderr}"
+    assert "FULL WEB-APP CUSTOMER JOURNEY SUITE PASSED! (4/4)" in proc.stdout
+

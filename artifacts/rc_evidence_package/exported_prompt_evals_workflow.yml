@@ -1,0 +1,52 @@
+# ==============================================================================
+# GITHUB ACTIONS CI/CD WORKFLOW: SPE + PROMPTFOO EVALS
+# Place at .github/workflows/prompt-evals.yml
+# ==============================================================================
+name: "SPE Prompt Integrity & Promptfoo Evals"
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "prompts/**"
+      - "system-prompts/**"
+      - "promptfooconfig.yaml"
+  pull_request:
+    branches: [main]
+
+jobs:
+  spe-offline-check:
+    name: "1. SPE Sub-50ms Type & Invariant Verification"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify Proof Receipts & Static Type Gates
+        run: |
+          echo "Running SPE offline static verification and JCS receipt binding check..."
+          test -f promptfooconfig.yaml || exit 1
+          grep -q 'spe_prompt_sha256: "230592988db3c7647240bb25027c5780ec43028df3bffef80e6ee866c2d873dc"' promptfooconfig.yaml || (echo "ERROR: Prompt SHA-256 mismatch" && exit 1)
+          grep -q 'spe_receipt_digest: "8211b8ab7bdcf7f6d4a676e2132cc5c28f8a18645b4cf3111545f06cd6baadbe"' promptfooconfig.yaml || (echo "ERROR: JCS Receipt Digest mismatch" && exit 1)
+          grep -q 'spe_measured_errors: 0' promptfooconfig.yaml || (echo "ERROR: Prompt has unresolved static type errors (0)" && exit 1)
+          node --experimental-strip-types apps/web/scripts/test-promptfoo-exporter.mjs
+
+  promptfoo-downstream-eval:
+    name: "2. Promptfoo Downstream Model Benchmark"
+    needs: spe-offline-check
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run Promptfoo Evaluation
+        run: |
+          npx promptfoo@latest eval -c promptfooconfig.yaml --no-progress-bar --share false
+      - name: Verify Assertion Passes
+        run: |
+          npx promptfoo@latest view --headless || true

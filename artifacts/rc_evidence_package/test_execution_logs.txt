@@ -1,0 +1,93 @@
+=== 1. PROMPTFOO EXPORTER & PROVENANCE SUITE (7/7) ===
+==================================================================
+🧪 TESTING: SPE Promptfoo CI/CD Bridge Exporter (Measured Proofs)
+==================================================================
+
+[1/7] Generating Promptfoo evaluation bundle with measured SPE proofs...
+
+[2/7] Validating promptfooconfig.yaml structure, {{user_input}} binding, and SHA-256 digests...
+✓ promptfooconfig.yaml structure, {{user_input}} binding, and cryptographic metadata validated.
+
+[3/7] Validating GitHub Actions CI/CD workflow & measured JSON telemetry...
+✓ GitHub Actions workflow and measured JSON artifact verified.
+
+[4/7] Validating cryptographic tamper rejection & unfortified prompt measurement...
+✓ Cryptographic tamper rejection and honest weak-prompt measurement verified.
+
+[5/7] Validating invalid receipt halts downstream evaluation before any provider call...
+✓ Invalid receipt stops downstream evaluation with 0 provider calls; valid receipt passes each input to model.
+
+[6/7] Risk A Closure: Validating Ed25519 producer authentication & static-vs-live experimental validity...
+✓ Ed25519 producer signature verification and static-vs-live experimental validity separation verified.
+
+[7/7] Risk B Closure: Writing & executing assertions from the actual exported promptfooconfig.yaml file...
+✓ Exported promptfooconfig.yaml written to disk, parsed, and verified against passing and failing model outputs.
+
+==================================================================
+🎉 ALL PROMPTFOO BRIDGE EXPORTER TESTS PASSED! (7/7)
+==================================================================
+
+=== 2. FULL WEB-APP CUSTOMER JOURNEY SUITE (4/4) ===
+==================================================================
+🧭 TESTING: SPE Ω Full Web-App Customer Journey (Risk C Closure)
+==================================================================
+
+[1/4] Verifying Pricing, License Entitlements, Ad-Free Toggle & 1-Click Cancellation...
+✓ Pricing tiers ($0 / $1->$9 / $9->$99), entitlements, and 1-click cancellation verified.
+
+[2/4] Verifying all 6 customer export formats via formatForAgent()...
+✓ All 6 customer export artifacts generated, verified, and saved to artifacts/rc_evidence_package/customer_exports/.
+
+[3/4] Verifying Canonical WebAssembly Zero-Import Sandbox & Live Execution...
+✓ Canonical WASM verified (1,339,691 bytes, imports=0, sha256=ac3f0c3ecb19a756...).
+
+[4/4] Verifying all 9 SPE Web Platform Pillars exist and compile cleanly...
+✓ All 9 SPE Web Platform pillars verified.
+
+==================================================================
+🎉 FULL WEB-APP CUSTOMER JOURNEY SUITE PASSED! (4/4)
+==================================================================
+
+=== 3. SPE OMEGA PROOF ENGINE SUITE (5/5) ===
+================================================================================
+🔬 SPE Ω Proof-Centric Intelligence Compiler — Verification Suite
+================================================================================
+
+[1/5] Validating Prompt Type System & Compiler Diagnostics...
+  ✓ Type system verified: Detected 2 errors in naive prompt; 0 errors in hardened prompt.
+
+[2/5] Validating Adversarial Retrieval Firewall...
+  ✓ Retrieval Firewall verified: Sandboxed 2 chunks with 2 neutralized threats.
+
+[3/5] Validating Counterfactual Prompt Twin...
+  ✓ Counterfactual Twin verified: Candidate reduced constraint violations by 8 (from 36 to 28) with +12.5% defense gain; zero intent degradation.
+
+[4/5] Validating Hostile Gym Ω (1,024 attacks) & Metamorphic Lab...
+  ✓ Hostile baseline confirmed: Naive prompt killed only 34.4% of attacks.
+  ✓ Hostile Gym Ω verified: Fortified Mutation Kill Rate = 1024/1024 (100.0%) across 16 attack families.
+  ✓ Metamorphic Lab verified: 31/31 relations satisfied (0 critical failures).
+
+[5/5] Validating Proof Receipt Protocol & JCS Canonicalization...
+  ✓ Proof Receipt verified: Digest = 96d00382e965442fd938fc363a95b808c67dd00514f72975369f8c0a2370a875
+  ✓ JCS Canonicalization verified: RFC 8785 invariant order preserved.
+
+================================================================================
+🌟 ALL SPE Ω PROOF-CENTRIC MODULES PASSED WITH 100% SUCCESS!
+================================================================================
+
+=== 4. UNIFIED PYTHON + NODE RELEASE CANDIDATE PIPELINE (6/6) ===
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine
+configfile: pyproject.toml
+collecting ... collected 6 items
+
+tests/unit/test_unified_release_candidate_pipeline.py::test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline PASSED [ 16%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_default_wire_proxy_rejects_unsigned_grant PASSED [ 33%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_default_learning_validator_rejects_unregistered_oracle PASSED [ 50%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_rfc8785_canonicalize_published_standard_vectors PASSED [ 66%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_promptfoo_exporter_measured_proofs PASSED [ 83%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_customer_journey_suite PASSED [100%]
+
+============================== 6 passed in 4.33s ===============================

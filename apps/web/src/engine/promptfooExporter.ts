@@ -115,6 +115,187 @@ export function executeReceiptGatedPromptfooEval(
   };
 }
 
+export interface ExportedYamlAssertionRule {
+  type: string;
+  value?: string;
+  threshold?: number;
+}
+
+export interface ExportedYamlTestCase {
+  description: string;
+  userInput: string;
+  assertions: ExportedYamlAssertionRule[];
+}
+
+export interface ExportedYamlValidationResult {
+  validYamlStructure: boolean;
+  extractedPromptTemplate: string;
+  extractedProviders: string[];
+  extractedTests: ExportedYamlTestCase[];
+  allAssertionsPassed: boolean;
+  caseResults: Array<{
+    description: string;
+    userInput: string;
+    renderedPrompt: string;
+    modelOutput: string;
+    passed: boolean;
+    failedAssertions: string[];
+  }>;
+}
+
+/**
+ * Risk B Closure: Parses the customer's actual exported `promptfooconfig.yaml` artifact,
+ * extracts its prompt template, providers, test inputs, and assertion rules, and executes
+ * those exact YAML assertions against candidate model outputs and latencies.
+ */
+export function validateExportedPromptfooYamlArtifact(
+  yamlConfig: string,
+  modelResponder: (renderedPrompt: string, userInput: string, testDescription: string) => {
+    output: string;
+    latencyMs: number;
+  },
+): ExportedYamlValidationResult {
+  const lines = yamlConfig.split("\n");
+  const promptLines: string[] = [];
+  const extractedProviders: string[] = [];
+  const extractedTests: ExportedYamlTestCase[] = [];
+
+  let section: "none" | "prompts" | "providers" | "tests" | "redteam" = "none";
+  let currentTest: ExportedYamlTestCase | null = null;
+  let currentAssertion: ExportedYamlAssertionRule | null = null;
+
+  for (const rawLine of lines) {
+    const trimmed = rawLine.trim();
+    if (trimmed.startsWith("#")) continue;
+
+    if (rawLine.startsWith("prompts:")) {
+      section = "prompts";
+      continue;
+    }
+    if (rawLine.startsWith("providers:")) {
+      section = "providers";
+      continue;
+    }
+    if (rawLine.startsWith("defaultTest:")) {
+      section = "none";
+      continue;
+    }
+    if (rawLine.startsWith("tests:")) {
+      section = "tests";
+      continue;
+    }
+    if (rawLine.startsWith("redteam:")) {
+      section = "redteam";
+      continue;
+    }
+
+    if (section === "prompts") {
+      if (trimmed === "- |") continue;
+      if (rawLine.startsWith("    ")) {
+        promptLines.push(rawLine.slice(4));
+      }
+    } else if (section === "providers") {
+      const m = trimmed.match(/^-\s*id:\s*"([^"]+)"/);
+      if (m) extractedProviders.push(m[1]);
+    } else if (section === "tests") {
+      const descMatch = rawLine.match(/^\s{2}-\s*description:\s*"([^"]+)"/);
+      if (descMatch) {
+        if (currentAssertion && currentTest) {
+          currentTest.assertions.push(currentAssertion);
+          currentAssertion = null;
+        }
+        if (currentTest) extractedTests.push(currentTest);
+        currentTest = {
+          description: descMatch[1],
+          userInput: "",
+          assertions: [],
+        };
+        continue;
+      }
+      const inputMatch = rawLine.match(/^\s{6}user_input:\s*"([^"]+)"/);
+      if (inputMatch && currentTest) {
+        currentTest.userInput = inputMatch[1];
+        continue;
+      }
+      const assertTypeMatch = rawLine.match(/^\s{6}-\s*type:\s*(\S+)/);
+      if (assertTypeMatch && currentTest) {
+        if (currentAssertion) currentTest.assertions.push(currentAssertion);
+        currentAssertion = { type: assertTypeMatch[1] };
+        continue;
+      }
+      const thresholdMatch = rawLine.match(/^\s{8}threshold:\s*(\d+)/);
+      if (thresholdMatch && currentAssertion) {
+        currentAssertion.threshold = Number(thresholdMatch[1]);
+        continue;
+      }
+      const valueMatch = rawLine.match(/^\s{8}value:\s*"([^"]+)"/);
+      if (valueMatch && currentAssertion) {
+        currentAssertion.value = valueMatch[1];
+        continue;
+      }
+    }
+  }
+  if (currentAssertion && currentTest) {
+    currentTest.assertions.push(currentAssertion);
+  }
+  if (currentTest) {
+    extractedTests.push(currentTest);
+  }
+
+  const extractedPromptTemplate = promptLines.join("\n").trim();
+  const validYamlStructure =
+    extractedPromptTemplate.includes("{{user_input}}") &&
+    extractedProviders.length > 0 &&
+    extractedTests.length >= 3;
+
+  const caseResults = extractedTests.map((tc) => {
+    const renderedPrompt = extractedPromptTemplate.replace("{{user_input}}", tc.userInput);
+    const { output, latencyMs } = modelResponder(renderedPrompt, tc.userInput, tc.description);
+    const trimmedOutput = output.trim();
+    const failedAssertions: string[] = [];
+
+    for (const rule of tc.assertions) {
+      if (rule.type === "not-empty") {
+        if (trimmedOutput.length === 0) {
+          failedAssertions.push("Assertion failed: not-empty");
+        }
+      } else if (rule.type === "latency") {
+        if (typeof rule.threshold === "number" && latencyMs > rule.threshold) {
+          failedAssertions.push(`Assertion failed: latency ${latencyMs}ms > ${rule.threshold}ms`);
+        }
+      } else if (rule.type === "is-json") {
+        try {
+          JSON.parse(trimmedOutput);
+        } catch {
+          failedAssertions.push("Assertion failed: is-json (output is not valid JSON)");
+        }
+      } else if (rule.type === "not-contains") {
+        if (rule.value && trimmedOutput.includes(rule.value)) {
+          failedAssertions.push(`Assertion failed: not-contains "${rule.value}"`);
+        }
+      }
+    }
+
+    return {
+      description: tc.description,
+      userInput: tc.userInput,
+      renderedPrompt,
+      modelOutput: trimmedOutput,
+      passed: failedAssertions.length === 0,
+      failedAssertions,
+    };
+  });
+
+  return {
+    validYamlStructure,
+    extractedPromptTemplate,
+    extractedProviders,
+    extractedTests,
+    allAssertionsPassed: validYamlStructure && caseResults.every((r) => r.passed),
+    caseResults,
+  };
+}
+
 export function generatePromptfooConfig(
   promptText: string,
   options: PromptfooExportOptions = {},

@@ -24349,6 +24349,12 @@
       "text": "Deactivate"
     },
     {
+      "id": "ebe4c684fc6ce6433209",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "company"
+    },
+    {
       "id": "ef4feb6d9e5dc0bbcda1",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",

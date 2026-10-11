@@ -50,7 +50,8 @@ export function Pricing({ onNavigate }: PricingProps) {
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    const tier = selectedPlan.toLowerCase().includes("team") ? "team" : "pro";
+    const lowerPlan = selectedPlan.toLowerCase();
+    const tier = lowerPlan.includes("team") || lowerPlan.includes("company") ? "team" : "pro";
     const key = generateLicenseKey(tier);
     try {
       localStorage.setItem("spe-user-tier", tier);
