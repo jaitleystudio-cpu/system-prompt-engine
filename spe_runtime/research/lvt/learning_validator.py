@@ -175,7 +175,7 @@ class LearningValidator:
             results.arm_c_shuffled_control_score,
             results.arm_d_generalization_score,
         ]
-        evidence_authentic = all(0.0 <= s <= 1.0 for s in scores)
+        evidence_authentic = protocol.sample_size >= 2 and all(0.0 <= s <= 1.0 for s in scores)
 
         # Supported improvement: Arm B beats baseline and shuffled control by epsilon
         improvement_supported = (
@@ -221,13 +221,12 @@ class LearningValidator:
         signing_key: Optional[bytes] = None,
         public_key: Optional[bytes] = None,
         strict: bool = False,
-        allow_mock_qualification: bool = False,
     ) -> LearningValidityTransaction:
         """
         Validates learning claim against the formal conjuncts.
         If self-certification is attempted, immediately raises GeneratingModelSelfCertificationError.
         If valid, signs and commits the transaction into QUALIFIED or RESEARCH_SUPPORTED status.
-        If legacy V1 aggregate-only results are supplied without explicit allow_mock_qualification:
+        If legacy V1 aggregate-only results are supplied:
             Fails closed to RESEARCH_UNQUALIFIED (production QUALIFIED cannot be minted).
         """
         # Hard Invariant: Reject self-certification immediately
@@ -259,6 +258,10 @@ class LearningValidator:
             else:
                 tx.status = QualificationStatus.REJECTED
                 tx.rejection_reason = reason
+            tx.artifact_hash = ""
+            tx.canonical_receipt_signature = ""
+            tx.committed_timestamp = None
+            tx.metadata.pop("public_key", None)
             if strict:
                 raise LearningValidityRuleViolation(tx.rejection_reason)
             return tx
@@ -409,29 +412,25 @@ class LearningValidator:
         tx: LearningValidityTransaction,
         public_key: Optional[bytes] = None,
     ) -> bool:
-        """Cryptographically verifies the transaction's Ed25519 receipt signature."""
+        """Cryptographically verifies the transaction's Ed25519 receipt signature against this validator's pinned public key."""
         if not tx.canonical_receipt_signature or not tx.committed_timestamp:
             return False
-
-        pk = public_key
-        if not pk and "public_key" in tx.metadata:
-            try:
-                meta_pk = bytes.fromhex(tx.metadata["public_key"])
-            except ValueError:
-                return False
-            if self._is_configured_key and meta_pk != self._pk:
-                return False
-            pk = meta_pk
-        if not pk:
-            pk = self._pk
+        if not tx.artifact_hash:
+            return False
+        if public_key is not None and public_key != self._pk:
+            return False
+        if tx.metadata.get("public_key", self._pk.hex()) != self._pk.hex():
+            return False
 
         receipt_dict = self._build_receipt_dict(tx)
         canonical_bytes = rfc8785_canonicalize(receipt_dict)
+        if hashlib.sha256(canonical_bytes).hexdigest() != tx.artifact_hash:
+            return False
         try:
             sig_bytes = bytes.fromhex(tx.canonical_receipt_signature)
         except ValueError:
             return False
-        return ed25519_verify(pk, canonical_bytes, sig_bytes)
+        return ed25519_verify(self._pk, canonical_bytes, sig_bytes)
 
     def verify_oracle_attestation(
         self,

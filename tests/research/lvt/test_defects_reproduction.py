@@ -186,8 +186,16 @@ def test_defect_lvt_f04_invalid_sample_size_at_protocol_boundary_rejected():
     with pytest.raises(ValueError, match="sample_size"):
         ExperimentProtocol(protocol_id="PROTO-BAD-N", sample_size=-5)
 
-    with pytest.raises(ValueError, match="sample_size"):
-        ExperimentProtocol(protocol_id="PROTO-BAD-N", sample_size=1)
+    # sample_size == 1 rejected at evaluate_conjuncts / validate_and_commit
+    proto_one = ExperimentProtocol(protocol_id="PROTO-BAD-N", sample_size=1)
+    tx_one = LearningValidityTransaction(
+        tx_id="TX-ONE",
+        claim=LearningClaim("C-ONE", "dom", "desc", "gen", "p1", "p2", budget_nanos=1000),
+        protocol=proto_one,
+        results=FourArmResults(0.1, 0.9, 0.2, 0.9, 0.8, 0.7, 0.8, True, 400),
+        evaluator_id="eval-01",
+    )
+    assert LearningValidator().evaluate_conjuncts(tx_one)["EvidenceAuthentic"] is False
 
     # NaN / Inf parameters
     with pytest.raises(ValueError, match="significance_threshold_epsilon"):
@@ -341,6 +349,26 @@ def test_defect_lvt_f07_runner_run_lvt2_study_and_run_experiment_lvt2():
     assert study_res.holdout_family_count == 24
     assert len(study_res.evidence_hash) == 64
 
+    # Missing provenance metadata MUST fail closed (never fabricate item_id, family_id, or content_sha256)
+    with pytest.raises(ValueError, match="family_id"):
+        runner.run_experiment_lvt2(
+            protocol=proto,
+            evaluator_fn=mock_evaluator,
+            train_dataset=[{"id": "t_0", "content_sha256": "a" * 64}],
+            held_out_dataset=held_data,
+            base_prompt="BASE PROMPT",
+            refined_prompt="REFINED PROMPT",
+        )
+    with pytest.raises(ValueError, match="content_sha256"):
+        runner.run_experiment_lvt2(
+            protocol=proto,
+            evaluator_fn=mock_evaluator,
+            train_dataset=[{"id": "t_0", "family_id": "tfam_0"}],
+            held_out_dataset=held_data,
+            base_prompt="BASE PROMPT",
+            refined_prompt="REFINED PROMPT",
+        )
+
 
 def test_defect_lvt_f08_evaluate_conjuncts_fails_closed_on_inconclusive_lvt2_study():
     """
@@ -439,6 +467,7 @@ def test_defect_lvt_f09_lvt2_artifact_synthesis_and_drift_monitoring():
     artifact_json = LearningTransferProtocol.synthesize_spe_learning_artifact(
         tx=committed,
         refined_prompt_content="prompt content",
+        validator=validator,
     )
     doc = json.loads(artifact_json)
     assert doc["empirical_gain"]["delta_improvement"] == pytest.approx(0.80)

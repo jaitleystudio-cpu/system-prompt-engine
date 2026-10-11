@@ -391,19 +391,37 @@ class ControlledExperimentRunner:
         if shuffled_feedback_prompt is None:
             shuffled_feedback_prompt = f"{base_prompt}\n# [SHUFFLED_CONTROL_DIRECTIVE]: Permuted feedback applied."
 
-        def _to_digest(content: str) -> str:
-            return hashlib.sha256(content.encode("utf-8")).hexdigest()
+        def _extract_provenance(item: Dict[str, Any], split_name: str, idx: int) -> Tuple[str, str, str]:
+            raw_id = item.get("id") if item.get("id") is not None else item.get("item_id")
+            raw_fam = (
+                item.get("family_id")
+                if item.get("family_id") is not None
+                else (item.get("task_family") if item.get("task_family") is not None else item.get("family"))
+            )
+            raw_digest = (
+                item.get("content_sha256")
+                if item.get("content_sha256") is not None
+                else (item.get("sha256") if item.get("sha256") is not None else item.get("digest"))
+            )
+            if not isinstance(raw_id, str) or not raw_id.strip():
+                raise ValueError(f"Missing or invalid item_id in {split_name} dataset at index {idx} (fail closed)")
+            if not isinstance(raw_fam, str) or not raw_fam.strip():
+                raise ValueError(f"Missing or invalid family_id in {split_name} dataset at index {idx} (fail closed)")
+            if not isinstance(raw_digest, str) or len(raw_digest.strip()) != 64:
+                raise ValueError(f"Missing or invalid 64-char hex content_sha256 in {split_name} dataset at index {idx} (fail closed)")
+            digest_clean = raw_digest.strip().lower()
+            try:
+                bytes.fromhex(digest_clean)
+            except ValueError as e:
+                raise ValueError(f"Invalid hex in content_sha256 in {split_name} dataset at index {idx}: {e}")
+            return raw_id.strip(), raw_fam.strip(), digest_clean
 
         train_obs: List[Observation] = []
         for idx, item in enumerate(train_dataset):
+            item_id, fam_id, digest = _extract_provenance(item, "train", idx)
             score_base = self._eval_item(evaluator_fn, base_prompt, item)
             score_cand = self._eval_item(evaluator_fn, refined_prompt, item)
             score_shuf = self._eval_item(evaluator_fn, shuffled_feedback_prompt, item)
-            item_id = str(item.get("id") or item.get("item_id") or f"train-item-{idx}")
-            fam_id = str(item.get("family_id") or item.get("task_family") or item.get("family") or f"train-fam-{idx}")
-            digest = str(item.get("content_sha256") or item.get("sha256") or item.get("digest") or "")
-            if not digest or len(digest) != 64:
-                digest = _to_digest(repr(sorted(item.items())))
             train_obs.append(
                 Observation(
                     item_id=item_id,
@@ -417,13 +435,9 @@ class ControlledExperimentRunner:
 
         held_obs: List[Observation] = []
         for idx, item in enumerate(held_out_dataset):
+            item_id, fam_id, digest = _extract_provenance(item, "held_out", idx)
             score_base = self._eval_item(evaluator_fn, base_prompt, item)
             score_cand = self._eval_item(evaluator_fn, refined_prompt, item)
-            item_id = str(item.get("id") or item.get("item_id") or f"held-item-{idx}")
-            fam_id = str(item.get("family_id") or item.get("task_family") or item.get("family") or f"held-fam-{idx}")
-            digest = str(item.get("content_sha256") or item.get("sha256") or item.get("digest") or "")
-            if not digest or len(digest) != 64:
-                digest = _to_digest(repr(sorted(item.items())))
             held_obs.append(
                 Observation(
                     item_id=item_id,

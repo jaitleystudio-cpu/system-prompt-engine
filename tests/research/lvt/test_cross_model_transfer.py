@@ -86,7 +86,9 @@ def qualified_tx():
             evidence_hash=study_res.evidence_hash,
         ),
     )
-    return validator.validate_and_commit(tx)
+    committed = validator.validate_and_commit(tx)
+    committed._test_validator = validator  # type: ignore[attr-defined]
+    return committed
 
 
 def test_unqualified_tx_cannot_evaluate_cross_model_transfer():
@@ -121,7 +123,7 @@ def test_unqualified_tx_cannot_evaluate_cross_model_transfer():
         evaluator_id="independent-eval",
         evaluator_type=EvaluatorType.FORMAL_TEST_RUNNER,
     )
-    # Default without allow_mock_qualification yields RESEARCH_UNQUALIFIED
+    # Default yields RESEARCH_UNQUALIFIED
     unq_tx = validator.validate_and_commit(tx)
     assert unq_tx.status == QualificationStatus.RESEARCH_UNQUALIFIED
 
@@ -175,7 +177,8 @@ def test_failed_cross_model_transfer(qualified_tx):
 def test_artifact_synthesis(qualified_tx):
     artifact_json = LearningTransferProtocol.synthesize_spe_learning_artifact(
         tx=qualified_tx,
-        refined_prompt_content="Refined rules"
+        refined_prompt_content="Refined rules",
+        validator=qualified_tx._test_validator,
     )
     data = json.loads(artifact_json)
     assert data["spe_version"] == "1.0"

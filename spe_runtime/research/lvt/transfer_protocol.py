@@ -38,14 +38,30 @@ class LearningTransferProtocol:
         base_prompt: str,
         refined_prompt: str,
         regression_tolerance: float = 0.05,
+        validator: Optional[Any] = None,
     ) -> Dict[str, Any]:
         """
         Tests whether an admitted learning refinement generalizes to a distinct foundation model.
         """
         LearningTransferProtocol.assert_not_revoked(tx)
 
+        from spe_runtime.research.lvt.learning_validator import LearningValidator
+        if validator is not None and not isinstance(validator, LearningValidator):
+            raise ValueError("Missing trusted verifier: validator must be an authoritative LearningValidator instance")
+
         if tx.status not in (QualificationStatus.QUALIFIED, QualificationStatus.RESEARCH_SUPPORTED):
             raise ValueError(f"Cannot evaluate cross-model transfer for unqualified transaction (status={tx.status})")
+
+        if (
+            not tx.canonical_receipt_signature
+            or not tx.artifact_hash
+            or tx.lvt2_study_result is None
+            or (tx.status == QualificationStatus.QUALIFIED and (not tx.is_attested_oracle or tx.oracle_attestation is None))
+        ):
+            raise ValueError("Cannot evaluate cross-model transfer without verified receipt and trusted qualification evidence")
+
+        if validator is not None and not validator.verify_transaction_signature(tx):
+            raise ValueError("Invalid receipt signature blocks cross-model transfer evaluation")
 
         if not test_dataset:
             raise ValueError("test_dataset cannot be empty")
@@ -101,6 +117,10 @@ class LearningTransferProtocol:
 
         if tx.status == QualificationStatus.REVOKED or tx.revocation_reason is not None:
             raise ValueError(f"Cannot synthesize artifact for revoked transaction: {tx.revocation_reason}")
+
+        from spe_runtime.research.lvt.learning_validator import LearningValidator
+        if validator is not None and not isinstance(validator, LearningValidator):
+            raise ValueError("Missing trusted verifier: validator must be an authoritative LearningValidator instance")
 
         if tx.status != QualificationStatus.QUALIFIED:
             raise ValueError(f"Cannot synthesize artifact for non-qualified transaction (status={tx.status})")

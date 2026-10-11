@@ -95,8 +95,8 @@ class ExperimentProtocol:
             raise ValueError("LVT Invariant: allow_self_certification can NEVER be True")
         if not isinstance(self.protocol_id, str) or not self.protocol_id.strip():
             raise ValueError("protocol_id must be a non-empty string")
-        if type(self.sample_size) is bool or not isinstance(self.sample_size, int) or self.sample_size < 2:
-            raise ValueError("sample_size must be an integer >= 2")
+        if type(self.sample_size) is bool or not isinstance(self.sample_size, int) or self.sample_size <= 0:
+            raise ValueError("sample_size must be a positive integer")
         if (
             type(self.significance_threshold_epsilon) is bool
             or not isinstance(self.significance_threshold_epsilon, (int, float))

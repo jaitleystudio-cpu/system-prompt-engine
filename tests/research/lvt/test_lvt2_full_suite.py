@@ -358,7 +358,9 @@ def test_21_historical_v1_compatibility():
     assert committed.canonical_receipt_signature == ""
 
     # Test fixture mock serialization operates via test-only mechanism
-    fixture_committed = LearningValidator.mint_test_fixture_receipt(tx)
+    fixture_committed = LearningValidator.mint_test_fixture_receipt(
+        tx, signing_key=validator._sk, public_key=validator._pk
+    )
     assert fixture_committed.status == QualificationStatus.RESEARCH_UNQUALIFIED
     assert validator.verify_transaction_signature(fixture_committed) is True
 
@@ -383,7 +385,7 @@ def test_22_aggregate_only_qualification_rejection():
     tx = LearningValidityTransaction("TX-AGG", claim, proto, results=results, evaluator_id="eval-01")
 
     # By default, aggregate-only results without LVT-2 FAIL CLOSED
-    committed = validator.validate_and_commit(tx, allow_mock_qualification=False)
+    committed = validator.validate_and_commit(tx)
     assert committed.status == QualificationStatus.RESEARCH_UNQUALIFIED
     assert "V1 aggregate-only results cannot mint production QUALIFIED receipt" in committed.rejection_reason
 

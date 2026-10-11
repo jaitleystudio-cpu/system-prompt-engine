@@ -168,7 +168,9 @@ def test_valid_transaction_commitment_and_cryptographic_receipt():
     assert committed_tx.status == QualificationStatus.RESEARCH_UNQUALIFIED
 
     # Separately scoped test-only mechanism for test fixture mock receipt serialization
-    fixture_tx = LearningValidator.mint_test_fixture_receipt(tx)
+    fixture_tx = LearningValidator.mint_test_fixture_receipt(
+        tx, signing_key=validator._sk, public_key=validator._pk
+    )
     assert fixture_tx.status == QualificationStatus.RESEARCH_UNQUALIFIED
     assert fixture_tx.committed_timestamp is not None
     assert len(fixture_tx.artifact_hash) == 64  # SHA-256

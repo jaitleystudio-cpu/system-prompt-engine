@@ -3,13 +3,14 @@ name: SPE LVT-2 Independent Regression Gate
 on:
   push:
     branches:
-      - 'antigravity/lvt2-evidence-integrity-r1-20261011'
+      - 'antigravity/lvt2-*'
   pull_request:
     branches:
       - 'candidate/2026-10-26'
     paths:
       - 'spe_runtime/research/lvt/**'
       - 'tests/research/lvt/**'
+      - 'scripts/run_mutations.py'
       - '.github/workflows/lvt2-regression.yml'
   workflow_dispatch:
 
@@ -29,6 +30,9 @@ jobs:
         run: python -m pip install -e '.[dev]'
       - name: LVT learning validity regression
         run: python -m pytest tests/research/lvt -q --tb=short
+      - name: LVT-2 On-Disk Source Mutation Gate
+        if: success()
+        run: python scripts/run_mutations.py
       - name: Full Python repository regression
         if: success()
         run: python -m pytest tests -q --tb=short
