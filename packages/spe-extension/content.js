@@ -13,7 +13,6 @@
       id: "PRODUCT_APP_SPECIFICATION",
       name: "Product specification and implementation prompt",
       category: "Engineering",
-      icon: "🛍️",
       userFacingLabel: "Product Spec & Code Blueprint",
       description: "Transforms casual app requests into production-ready software architectures, schemas, API contracts, and TDD plans.",
       sampleTrigger: "Build me a shopping app",
@@ -64,7 +63,6 @@ Tone: Authoritative, pragmatic, human-engineered code architecture with zero gen
       id: "INTERACTIVE_3D_WEB_SPECIFICATION",
       name: "Interactive website specification",
       category: "Design",
-      icon: "🌐",
       userFacingLabel: "Interactive 3D Website Specification",
       description: "Transforms website design ideas into Three.js/WebGL scene graphs, shader architectures, 60fps performance budgets, and accessible DOM fallbacks.",
       sampleTrigger: "Design a cinematic 3D website",
@@ -110,7 +108,6 @@ Required Specification Sections:
       id: "SCIENTIFIC_RESEARCH_PROTOCOL",
       name: "Research protocol and evidence plan",
       category: "Science",
-      icon: "🔬",
       userFacingLabel: "Scientific Research Protocol & Evidence Plan",
       description: "Elevates hypotheses into formal null hypothesis protocols, empirical variable controls, statistical power calculations, and reproducibility checklists.",
       sampleTrigger: "Research this scientific hypothesis",
@@ -159,7 +156,6 @@ Required Specification Sections:
       id: "MARKETING_CAMPAIGN_BRIEF",
       name: "Campaign brief and structured creative instructions",
       category: "Marketing",
-      icon: "🚀",
       userFacingLabel: "Marketing Campaign Brief & Creative Instructions",
       description: "Transforms high-level campaign concepts into structured creative briefs, multi-stage funnel copy, audience psychographics, and KPI models.",
       sampleTrigger: "Create a marketing campaign",
@@ -207,7 +203,6 @@ Required Specification Sections:
       id: "TUTORING_INSTRUCTION_FRAMEWORK",
       name: "Personalized tutoring instruction framework",
       category: "Education",
-      icon: "📐",
       userFacingLabel: "Personalized Tutoring Instruction Framework",
       description: "Elevates learning requests into Socratic diagnostic plans, first-principles scaffolding, worked proofs, and spaced-repetition retention drills.",
       sampleTrigger: "Help me learn mathematics",
@@ -254,7 +249,6 @@ Required Specification Sections:
       id: "AGENT_SPECIFICATION_PLAN",
       name: "Agent specification, constraints, and evaluation plan",
       category: "AI Systems",
-      icon: "🤖",
       userFacingLabel: "AI Agent Specification & Safeguards Plan",
       description: "Transforms agent concepts into formal role definitions, MCP tool contracts, capability firewalls, state memory models, and evaluation suites.",
       sampleTrigger: "Create an AI agent",
@@ -302,7 +296,6 @@ Required Specification Sections:
       id: "WRITING_QUALITY_AUDIT",
       name: "Writing requirements and quality audit",
       category: "Writing",
-      icon: "✍️",
       userFacingLabel: "Writing Requirements & Quality Audit",
       description: "Elevates document rewrite requests into structural flow audits, tone calibrations, argumentation checks, and line-by-line human rewrites.",
       sampleTrigger: "Improve this document",
@@ -351,7 +344,6 @@ Required Specification Sections:
       id: "BUSINESS_PLANNING_SPECIFICATION",
       name: "Structured business-planning specification",
       category: "Business",
-      icon: "📊",
       userFacingLabel: "Structured Business-Planning Specification",
       description: "Transforms business ideas into investor-grade lean canvases, unit economics breakdowns, CAC/LTV payback models, and 90-day execution roadmaps.",
       sampleTrigger: "Turn this business idea into a plan",
@@ -403,7 +395,6 @@ Required Specification Sections:
       id: "WORKFLOW_AUTOMATION_SAFEGUARDS",
       name: "Automation requirements and safeguards",
       category: "Automation",
-      icon: "⚡",
       userFacingLabel: "Workflow Automation & Safeguards Spec",
       description: "Transforms workflow automation requests into event-driven topologies, idempotency guarantees, dead-letter recovery queues, and human approval gates.",
       sampleTrigger: "Make this workflow automatic",
@@ -589,7 +580,7 @@ Required Specification Sections:
         reason: `COMPLEX_OUTCOME_BENEFITS_FROM_SPECIFICATION [${bestMatch.id}]`,
         capabilityId: bestMatch.id,
         capabilityName: bestMatch.name,
-        badgeLabel: `⚡ SPE Lift: ${bestMatch.userFacingLabel}`,
+        badgeLabel: `SPE Lift: ${bestMatch.userFacingLabel}`,
         liftedSpecificationPrompt: liftedPrompt,
         suggestedAction: `Enhance into verified ${bestMatch.userFacingLabel}`,
         matchedKeywords
@@ -613,7 +604,6 @@ Required Specification Sections:
       title: "#1 Google Outranking Blueprint",
       tagline: "Outrank competitor content with full E-E-A-T depth & zero fluff",
       category: "SEO",
-      icon: "🎯",
       upvotes: 4892,
       variables: [
         { name: "keyword", label: "Target Keyword", placeholder: "e.g. best crm for startups", default: "best crm for small business" },
@@ -626,7 +616,6 @@ Required Specification Sections:
       title: "Semantic Keyword & Topic Cluster Architect",
       tagline: "Turn 1 keyword into a complete 30-day topical authority blueprint",
       category: "SEO",
-      icon: "🗺️",
       upvotes: 3740,
       variables: [
         { name: "seed_topic", label: "Seed Topic / Niche", placeholder: "e.g. cold email automation", default: "b2b lead generation" }
@@ -638,7 +627,6 @@ Required Specification Sections:
       title: "High-Converting SaaS Landing Page Copy",
       tagline: "Direct-response landing page copy: Hero, PAS agitation, benefits & CTA",
       category: "Marketing",
-      icon: "💎",
       upvotes: 5610,
       variables: [
         { name: "product_name", label: "Product Name", placeholder: "e.g. SPE", default: "SPE" },
@@ -653,7 +641,6 @@ Required Specification Sections:
       title: "Viral Social Hook & Thought Leadership Post",
       tagline: "Turn any complex insight into a high-engagement LinkedIn & X post",
       category: "Marketing",
-      icon: "🚀",
       upvotes: 4120,
       variables: [
         { name: "core_insight", label: "Core Insight", placeholder: "e.g. why 90% of AI prompts fail", default: "why static 2023 prompt templates fail and how real prompt compilation works" }
@@ -665,7 +652,6 @@ Required Specification Sections:
       title: "Full-Stack Feature Architecture Blueprint",
       tagline: "Architect complete features with typed schemas, API contracts & tests",
       category: "Coding",
-      icon: "🛠️",
       upvotes: 6180,
       variables: [
         { name: "feature_desc", label: "Feature Description", placeholder: "e.g. Team permissions", default: "Browser extension companion for 1-click prompt injection" },
@@ -678,7 +664,6 @@ Required Specification Sections:
       title: "Production Root-Cause Debugger & Fixer",
       tagline: "Diagnose errors, explain root causes & produce minimal clean diffs",
       category: "Coding",
-      icon: "🩺",
       upvotes: 5310,
       variables: [
         { name: "error_msg", label: "Error Message / Bug", placeholder: "e.g. TypeError in event listener", default: "Memory leak or unbounded re-renders on active chat tab change" }
@@ -690,7 +675,6 @@ Required Specification Sections:
       title: "YC Pitch Deck Scrutinizer & Moat Tester",
       tagline: "Stress-test your startup pitch against ruthless venture partner critiques",
       category: "Business",
-      icon: "🏛️",
       upvotes: 4420,
       variables: [
         { name: "pitch", label: "Startup Pitch", placeholder: "e.g. AI Prompt Engine", default: "SPE: 1-click prompt companion & assurance compiler for ChatGPT and Claude" }
@@ -702,7 +686,6 @@ Required Specification Sections:
       title: "100% Human Style Rewriter (AI Fluff Stripper)",
       tagline: "Strip generic robotic AI prose and rewrite in authentic, punchy human cadence",
       category: "Writing",
-      icon: "✍️",
       upvotes: 7290,
       variables: [
         { name: "draft_text", label: "Draft Text to Humanize", placeholder: "Paste your AI draft here", default: "In today's fast-paced digital world, leveraging AI is crucial for unlocking unparalleled growth..." }
@@ -762,7 +745,7 @@ Required Specification Sections:
       input.dispatchEvent(new InputEvent("input", { inputType: "insertText", data: text, bubbles: true }));
     }
 
-    showToast("Prompt Injected & Ready! ⚡");
+    showToast("Prompt injected successfully");
     return true;
   }
 
@@ -772,15 +755,18 @@ Required Specification Sections:
       position: fixed;
       bottom: 90px;
       right: 32px;
-      background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-      color: #0f172a;
-      font-weight: 700;
-      font-size: 13px;
-      padding: 10px 18px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,210,255,0.5);
+      background: #18181b;
+      color: #f4f4f5;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Geist", system-ui, sans-serif;
+      font-weight: 500;
+      font-size: 12.5px;
+      letter-spacing: -0.01em;
+      padding: 9px 16px;
+      border-radius: 10px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       z-index: 10000000;
-      transition: all 0.3s;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     `;
     toast.textContent = msg;
     document.body.appendChild(toast);
@@ -801,8 +787,8 @@ Required Specification Sections:
   const pill = document.createElement("div");
   pill.className = "spe-trigger-pill";
   pill.innerHTML = `
-    <span>⚡ SPE Prompts</span>
-    <span class="spe-badge">1-Click</span>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+    <span>SPE Prompts</span>
   `;
 
   // Drawer Panel
@@ -824,10 +810,13 @@ Required Specification Sections:
     drawer.innerHTML = `
       <div class="spe-header">
         <div class="spe-header-title">
-          <span>⚡ System Prompt Engine</span>
-          <span class="spe-shield-badge">🛡️ Hallucination Shield</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          <span>System Prompt Engine</span>
+          <span class="spe-shield-badge">Invariant Shield</span>
         </div>
-        <button class="spe-close-btn" id="spe-close-btn">✕</button>
+        <button class="spe-close-btn" id="spe-close-btn">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
 
       <div class="spe-filter-bar">
@@ -858,7 +847,6 @@ Required Specification Sections:
             <div class="spe-prompt-card" data-id="${p.id}">
               <div class="spe-card-top">
                 <div class="spe-card-title">
-                  <span>${p.icon}</span>
                   <span>${p.title}</span>
                 </div>
                 <div class="spe-card-actions">
@@ -866,7 +854,7 @@ Required Specification Sections:
                     ${isOpen ? "Hide" : "Edit"}
                   </button>
                   <button class="spe-btn-insert" data-action="insert" data-id="${p.id}">
-                    Inject ⚡
+                    Inject
                   </button>
                 </div>
               </div>
@@ -888,18 +876,18 @@ Required Specification Sections:
                     </div>
                   `).join("")}
                   <button class="spe-btn-insert" style="width: 100%; margin-top: 4px;" data-action="insert-with-vars" data-id="${p.id}">
-                    Compile & Inject to ${platform} 🚀
+                    Compile & Inject to ${platform}
                   </button>
                 </div>
               ` : ''}
 
               <div class="spe-card-meta">
                 <div class="spe-card-stats">
-                  <span>👍 ${p.upvotes.toLocaleString()}</span>
+                  <span>${p.upvotes.toLocaleString()} verified</span>
                   <span>•</span>
                   <span>${p.category}</span>
                 </div>
-                <span style="font-size: 11px; color: #34d399;">✓ Invariant Sound</span>
+                <span style="font-size: 11px; color: #10b981;">Sound</span>
               </div>
             </div>
           `;
@@ -1023,20 +1011,20 @@ Required Specification Sections:
     }
 
     currentLiftResult = result;
-    const icon = OUTCOME_CAPABILITIES[result.capabilityId]?.icon || "⚡";
-
-    liftContainer.innerHTML = `
+        liftContainer.innerHTML = `
       <div class="spe-lift-badge">
         <div class="spe-lift-info">
-          <span class="spe-lift-icon">${icon}</span>
+          <span class="spe-lift-icon">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          </span>
           <span class="spe-lift-label">${result.capabilityName}</span>
-          <span class="spe-lift-desc">• Elevate into verified 2026 specification</span>
+          <span class="spe-lift-desc">• Compile into verified specification</span>
         </div>
         <button class="spe-lift-action-btn" id="spe-lift-apply-btn">
-          Enhance 1-Click 🚀
+          Enhance Specification
         </button>
         <button class="spe-lift-dismiss-btn" id="spe-lift-dismiss-btn" title="Dismiss">
-          ✕
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
     `;
@@ -1046,7 +1034,7 @@ Required Specification Sections:
       if (currentLiftResult && currentLiftResult.liftedSpecificationPrompt) {
         injectPromptText(currentLiftResult.liftedSpecificationPrompt);
         liftContainer.classList.remove("spe-lift-visible");
-        showToast(`⚡ Elevated into ${result.capabilityName}!`);
+        showToast(`Specification elevated: ${result.capabilityName}`);
       }
     });
 
@@ -1294,12 +1282,14 @@ Required Specification Sections:
       bar = document.createElement("div");
       bar.id = "spe-inline-action-bar";
       bar.innerHTML = `
-        <div class="spe-bar-brand">⚡ SPE <span class="spe-bar-usage" id="spe-bar-usage">15 Free</span></div>
-        <button class="spe-action-btn" data-action="humanize">✍️ Humanize <span class="spe-btn-key">H</span></button>
-        <button class="spe-action-btn" data-action="fluent">🔄 Rephrase <span class="spe-btn-key">R</span></button>
-        <button class="spe-action-btn" data-action="grammar">🛡️ Polish <span class="spe-btn-key">F</span></button>
-        <button class="spe-action-btn" data-action="executive">🎯 Executive <span class="spe-btn-key">E</span></button>
-        <button class="spe-action-btn" data-action="promptify">⚡ Promptify <span class="spe-btn-key">P</span></button>
+        <div class="spe-bar-brand">
+          <svg class="spe-bar-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          <span>SPE</span>
+        </div>
+        <button class="spe-action-btn" data-action="humanize">Humanize <span class="spe-btn-key">⌥1</span></button>
+        <button class="spe-action-btn" data-action="executive">Executive <span class="spe-btn-key">⌥2</span></button>
+        <button class="spe-action-btn" data-action="grammar">Polish <span class="spe-btn-key">⌥3</span></button>
+        <button class="spe-action-btn" data-action="promptify">Prompt Lift <span class="spe-btn-key">⌥4</span></button>
       `;
       document.body.appendChild(bar);
     }
@@ -1319,7 +1309,7 @@ Required Specification Sections:
       const stats = await getDailyUsageStats();
       const badge = bar.querySelector("#spe-bar-usage");
       if (badge) {
-        badge.textContent = stats.isPro ? "Pro ⚡" : `${stats.remaining}/15 Free`;
+        badge.textContent = stats.isPro ? "Pro" : `${stats.remaining}/15 Free`;
       }
     }
     refreshUsageBadge();
@@ -1377,7 +1367,7 @@ Required Specification Sections:
         if (selected && selected.length >= 3) {
           activeSelection = selected;
           activeRange = sel.getRangeAt(0);
-          showDiffHologram(activeSelection, "humanize", "✍️ Humanized & De-AI'd");
+          showDiffHologram(activeSelection, "humanize", "Editorial Polish");
         } else {
           const activeEl = document.activeElement;
           if (activeEl && (activeEl.tagName === "TEXTAREA" || activeEl.tagName === "INPUT" || activeEl.isContentEditable)) {
@@ -1385,7 +1375,7 @@ Required Specification Sections:
             if (val.trim()) {
               activeSelection = val.trim();
               activeRange = null;
-              showDiffHologram(activeSelection, "humanize", "✍️ Humanized & De-AI'd");
+              showDiffHologram(activeSelection, "humanize", "Editorial Polish");
             }
           }
         }
@@ -1417,7 +1407,7 @@ Required Specification Sections:
           if (selected && selected.length >= 3) {
             activeSelection = selected;
             activeRange = sel.getRangeAt(0);
-            showDiffHologram(activeSelection, "humanize", "✍️ Humanized & De-AI'd");
+            showDiffHologram(activeSelection, "humanize", "Editorial Polish");
           } else {
             const activeEl = document.activeElement;
             if (activeEl && (activeEl.tagName === "TEXTAREA" || activeEl.tagName === "INPUT" || activeEl.isContentEditable)) {
@@ -1425,7 +1415,7 @@ Required Specification Sections:
               if (val.trim()) {
                 activeSelection = val.trim();
                 activeRange = null;
-                showDiffHologram(activeSelection, "humanize", "✍️ Humanized & De-AI'd");
+                showDiffHologram(activeSelection, "humanize", "Editorial Polish");
               }
             }
           }
@@ -1441,8 +1431,8 @@ Required Specification Sections:
 
       const usage = await getDailyUsageStats();
       const usagePledge = usage.isPro 
-        ? "⚡ SPE Pro Active • Unlimited Specifications"
-        : `⚡ Free Action (${usage.count + 1}/${usage.limit} Today)`;
+        ? "SPE Pro Active • Unlimited Specifications"
+        : `Free Action (${usage.count + 1}/${usage.limit} Today)`;
 
       const diffHtml = diffResult.diff.map(tok => {
         if (tok.type === "del") {
@@ -1457,28 +1447,40 @@ Required Specification Sections:
       diffModal.innerHTML = `
         <div class="spe-diff-header">
           <div class="spe-diff-title-row">
-            <span class="spe-diff-title">⚡ SPE Transformation Hologram</span>
-            <span class="spe-diff-mode-badge">${actionLabel}</span>
+            <div class="spe-diff-icon">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+            </div>
+            <span class="spe-diff-title">Editorial Polish</span>
+            <span class="spe-diff-mode-badge">${escapeHtml(diffResult.metrics.humanScore || "Refined")}</span>
           </div>
-          <button class="spe-diff-close" id="spe-diff-close-btn" title="Discard (Esc)">✕</button>
+          <button class="spe-diff-close" id="spe-diff-close-btn" title="Discard (Esc)">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
         </div>
-        <div class="spe-diff-metrics">
-          <div class="spe-diff-metric-pill cliches">🚫 ${diffResult.metrics.clichesPurged} Clichés Purged</div>
-          <div class="spe-diff-metric-pill pruned">✂️ ${diffResult.metrics.wordsPruned} Words Pruned</div>
-          <div class="spe-diff-metric-pill cadence">❤️ ${diffResult.metrics.humanScore}</div>
-          <div class="spe-diff-metric-pill roi">💎 10x Value Meter</div>
+        <div class="spe-diff-stats-strip">
+          <span class="spe-stat-tag">${diffResult.metrics.clichesPurged} Clichés Purged</span>
+          <span class="spe-stat-sep">•</span>
+          <span class="spe-stat-tag">${diffResult.metrics.wordsPruned} Words Pruned</span>
+          <span class="spe-stat-sep">•</span>
+          <span class="spe-stat-tag emerald">Zero AI Drift</span>
         </div>
         <div class="spe-diff-body" id="spe-diff-tokens-body">
           ${diffHtml}
         </div>
         <div class="spe-diff-footer">
-          <div class="spe-diff-pledge">
-            <span>⭐ <span class="spe-diff-pledge-highlight">${usagePledge}</span></span>
-            <span>Pay only $1/mo if you get 10x return benefit from SPE</span>
+          <div class="spe-diff-meta">
+            <span class="spe-status-dot"></span>
+            <span>100% Offline Core</span>
           </div>
           <div class="spe-diff-actions">
-            <button class="spe-diff-btn-copy" id="spe-diff-btn-copy">📋 Copy</button>
-            <button class="spe-diff-btn-apply" id="spe-diff-btn-apply">⏎ Apply</button>
+            <button class="spe-diff-btn-copy" id="spe-diff-btn-copy">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              Copy
+            </button>
+            <button class="spe-diff-btn-apply" id="spe-diff-btn-apply">
+              Replace
+              <kbd>↵</kbd>
+            </button>
           </div>
         </div>
       `;
@@ -1513,7 +1515,7 @@ Required Specification Sections:
     function copyDiffTransformation() {
       if (!currentDiffData) return;
       navigator.clipboard.writeText(currentDiffData.transformed).then(() => {
-        showToast("Polished & Copied to Clipboard! 📋");
+        showToast("Copied to clipboard");
         recordActionUsageStats(currentDiffData.metrics);
         dismissDiffModal();
       });
@@ -1561,10 +1563,10 @@ Required Specification Sections:
       recordActionUsageStats(currentDiffData.metrics);
 
       if (replaced) {
-        showToast("Auto-Action Applied ✓ (10x Return Delivered)");
+        showToast("Specification applied");
       } else {
         navigator.clipboard.writeText(transformed).then(() => {
-          showToast("Polished & Copied to Clipboard! 📋");
+          showToast("Copied to clipboard");
         });
       }
 
@@ -1579,19 +1581,19 @@ Required Specification Sections:
       if (!action || !activeSelection) return;
 
       const labels = {
-        humanize: "✍️ Humanized & De-AI'd",
-        fluent: "🔄 Fluent Rephrase",
-        grammar: "🛡️ Flow & Grammar Polish",
-        executive: "🎯 Executive Polish",
-        promptify: "⚡ SPE Promptify"
+        humanize: "Editorial Polish",
+        fluent: "Fluent Rephrase",
+        grammar: "Flow Polish",
+        executive: "Executive Tone",
+        promptify: "Specification Lift"
       };
 
-      showDiffHologram(activeSelection, action, labels[action] || "⚡ Auto-Action");
+      showDiffHologram(activeSelection, action, labels[action] || "Auto-Action");
     });
   }
 
   setupSelectionActionBar();
 
-  console.log("⚡ SPE Companion loaded into " + getHostPlatform() + " with Specification Lift & 10/10 Live Diff Hologram");
+  console.log("SPE Companion active on " + getHostPlatform());
 })();
 
