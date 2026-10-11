@@ -30,7 +30,7 @@ const PRIMARY_NAV_LINKS: ReadonlyArray<{ id: AppView; label: string }> = [
   { id: "home", label: "Home" },
   { id: "create", label: "Create" },
   { id: "code", label: "Code" },
-  { id: "daily-lab", label: "Daily Lab" },
+  { id: "lab", label: "Daily Lab" },
   { id: "my-work", label: "My Work" },
   { id: "capabilities", label: "Capabilities" },
   { id: "privacy", label: "Privacy" },
@@ -187,6 +187,25 @@ export function Nav(p: Props) {
         className={`spe-nav-links ${p.menuOpen ? "open" : ""}`}
         aria-label="Primary"
       >
+        {/* Visible, keyboard-focusable, screen-reader-accessible primary links */}
+        {PRIMARY_NAV_LINKS.map((link) => (
+          <a
+            key={link.id}
+            href={pathForView(link.id)}
+            className={`spe-nav-direct-link ${p.view === link.id ? "is-active" : ""}`}
+            aria-current={p.view === link.id ? "page" : undefined}
+            onClick={(e) => {
+              e.preventDefault();
+              handleLinkClick(link.id);
+            }}
+          >
+            <span>{link.label}</span>
+            {link.id === "my-work" && typeof p.savedCount === "number" && p.savedCount > 0 && (
+              <span className="spe-nav-badge">{p.savedCount}</span>
+            )}
+          </a>
+        ))}
+
         {/* Dropdown Groups */}
         {NAV_GROUPS.map((group) => {
           const isOpen = openDropdown === group.id;
@@ -229,12 +248,14 @@ export function Nav(p: Props) {
                 className={`spe-nav-dropdown-menu ${isOpen ? "is-visible" : ""}`}
                 role="menu"
                 aria-label={group.label}
+                aria-hidden={!isOpen}
               >
                 {group.items.map((item) => (
                   <a
                     key={`${group.id}-${item.id}-${item.label}`}
                     href={pathForView(item.id)}
                     role="menuitem"
+                    tabIndex={isOpen ? 0 : -1}
                     className={`spe-nav-dropdown-item ${p.view === item.id ? "is-active" : ""}`}
                     aria-current={p.view === item.id ? "page" : undefined}
                     onClick={(e) => {
@@ -264,22 +285,6 @@ export function Nav(p: Props) {
           Pricing
         </a>
 
-        {/* Direct Link: Saved Prompts */}
-        <a
-          href={pathForView("my-work")}
-          className={`spe-nav-direct-link ${p.view === "my-work" ? "is-active" : ""}`}
-          aria-current={p.view === "my-work" ? "page" : undefined}
-          onClick={(e) => {
-            e.preventDefault();
-            handleLinkClick("my-work");
-          }}
-        >
-          <span>Saved</span>
-          {typeof p.savedCount === "number" && p.savedCount > 0 && (
-            <span className="spe-nav-badge">{p.savedCount}</span>
-          )}
-        </a>
-
         {/* Direct Link: Submit Workflow (GitHub PR) */}
         <button
           type="button"
@@ -307,15 +312,8 @@ export function Nav(p: Props) {
             handleLinkClick("create");
           }}
         >
-          Open Prompt Studio Free <span>↗</span>
+          Build my prompt <span aria-hidden="true">↗</span>
         </a>
-        <div hidden aria-hidden="true">
-          {PRIMARY_NAV_LINKS.map((link) => (
-            <a key={link.id} href={pathForView(link.id)}>
-              {link.label}
-            </a>
-          ))}
-        </div>
       </nav>
     </header>
   );

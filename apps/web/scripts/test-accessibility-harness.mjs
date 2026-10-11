@@ -83,4 +83,12 @@ assert(combinedCss.includes("@media (max-width: 360px)") || combinedCss.includes
 assert(indexHtml.includes('viewport-fit=cover'), "Viewport-fit meta tag missing");
 console.log("✓ 200% zoom and small-screen reflow rules verified.");
 
+// 8. Real Primary Navigation Accessibility (No hidden/aria-hidden primary link blocks)
+const navTsx = readFileSync(join(webRoot, "src/layout/Nav.tsx"), "utf8");
+assert(!navTsx.includes("<div hidden"), "Nav.tsx must not hide primary navigation links in a <div hidden> wrapper");
+assert(navTsx.includes('{ id: "lab", label: "Daily Lab" }'), "Nav.tsx must bind Daily Lab to valid AppView id 'lab'");
+assert(navTsx.includes("tabIndex={isOpen ? 0 : -1}"), "Closed dropdown items must have tabIndex=-1 for clean keyboard Tab traversal");
+assert(navTsx.includes("Build my prompt <span"), "Primary CTA visible text must match accessible name 'Build my prompt'");
+console.log("✓ Primary navigation links verified as visible, keyboard-focusable, and screen-reader accessible.");
+
 console.log("\nALL WCAG 2.1 AA ACCESSIBILITY AUDIT CHECKS PASSED (100%).");
