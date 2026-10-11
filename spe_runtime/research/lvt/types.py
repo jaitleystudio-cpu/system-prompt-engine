@@ -6,10 +6,11 @@ NanoUSD escrow accounting, and qualification life-cycles.
 
 from __future__ import annotations
 
+import math
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from spe_runtime.research.wdes.types import NanoUSD, validate_nanos
 
@@ -92,6 +93,24 @@ class ExperimentProtocol:
         validate_nanos(self.max_cost_nanos, "max_cost_nanos")
         if self.allow_self_certification:
             raise ValueError("LVT Invariant: allow_self_certification can NEVER be True")
+        if not isinstance(self.protocol_id, str) or not self.protocol_id.strip():
+            raise ValueError("protocol_id must be a non-empty string")
+        if not isinstance(self.sample_size, int) or self.sample_size < 2:
+            raise ValueError("sample_size must be an integer >= 2")
+        if (
+            not isinstance(self.significance_threshold_epsilon, (int, float))
+            or not math.isfinite(self.significance_threshold_epsilon)
+            or self.significance_threshold_epsilon <= 0.0
+            or self.significance_threshold_epsilon > 1.0
+        ):
+            raise ValueError("significance_threshold_epsilon must be a finite float in (0.0, 1.0]")
+        if (
+            not isinstance(self.generalization_tolerance_delta, (int, float))
+            or not math.isfinite(self.generalization_tolerance_delta)
+            or self.generalization_tolerance_delta < 0.0
+            or self.generalization_tolerance_delta > 1.0
+        ):
+            raise ValueError("generalization_tolerance_delta must be a finite float in [0.0, 1.0]")
 
 
 @dataclass(frozen=True)
@@ -113,6 +132,16 @@ class FourArmResults:
 
     def __post_init__(self) -> None:
         validate_nanos(self.total_cost_nanos, "total_cost_nanos")
+        scores = [
+            self.arm_a_baseline_score,
+            self.arm_b_authentic_score,
+            self.arm_c_shuffled_control_score,
+            self.arm_d_generalization_score,
+            self.arm_d_baseline_score,
+        ]
+        for s in scores:
+            if not isinstance(s, (int, float)) or not math.isfinite(s) or s < 0.0 or s > 1.0:
+                raise ValueError(f"Score {s} out of bounds (must be finite in [0.0, 1.0])")
 
 
 @dataclass(frozen=True)

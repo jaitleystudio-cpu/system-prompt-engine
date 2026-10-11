@@ -123,15 +123,23 @@ class ControlledExperimentRunner:
 
         deltas = [c - b for b, c in zip(scores_base, scores_cand)]
         n = len(deltas)
+        if n < 2:
+            mean_d = sum(deltas) / n if n == 1 else 0.0
+            return mean_d, 1.0, 0.0, (0.0, 0.0)
+
         mean_d = sum(deltas) / n
 
         # Check for zero-variance edge cases
         var_d = (sum((x - mean_d) ** 2 for x in deltas) / (n - 1)) if n > 1 else 0.0
 
         if var_d == 0.0:
+            if n < 2:
+                return mean_d, 1.0, 0.0, (0.0, 0.0)
             if mean_d > 0.0:
-                # Deterministic uniform positive improvement
-                return mean_d, 0.0001, float("inf"), (mean_d, mean_d)
+                # Deterministic uniform positive improvement across n independent units:
+                # Under H0 with fair sign flips, one-sided exact sign probability is 0.5**n
+                p_val_sign = 0.5 ** n
+                return mean_d, p_val_sign, float("inf"), (mean_d, mean_d)
             elif mean_d < 0.0:
                 # Deterministic uniform regression
                 return mean_d, 1.0, float("-inf"), (mean_d, mean_d)
@@ -182,14 +190,86 @@ class ControlledExperimentRunner:
         sample_train = list(train_dataset[: protocol.sample_size])
         sample_held_out = list(held_out_dataset[: protocol.sample_size])
 
-        # Strict anti-contamination check: Ensure no item overlap between train and held-out
-        train_identifiers = {
-            repr(sorted(item.items())) if isinstance(item, dict) else repr(item)
-            for item in sample_train
-        }
-        for item in sample_held_out:
-            item_id = repr(sorted(item.items())) if isinstance(item, dict) else repr(item)
-            if item_id in train_identifiers:
+        # Strict anti-contamination & duplicate checks:
+        # Check within-set duplicates and across-set leakage for:
+        # 1. item identity (id, item_id)
+        # 2. declared content digest (content_sha256, sha256, content_digest, digest)
+        # 3. task family (family_id, task_family, family)
+        # 4. applicable provenance identity (provenance_id, provenance, source_id)
+        # 5. full item representation
+        def _extract_attrs(item: Any) -> Dict[str, Optional[str]]:
+            if isinstance(item, dict):
+                return {
+                    "item_id": str(item.get("id") or item.get("item_id") or ""),
+                    "digest": str(item.get("content_sha256") or item.get("sha256") or item.get("content_digest") or item.get("digest") or ""),
+                    "family": str(item.get("family_id") or item.get("task_family") or item.get("family") or ""),
+                    "provenance": str(item.get("provenance_id") or item.get("provenance") or item.get("source_id") or ""),
+                    "repr": repr(sorted(item.items())),
+                }
+            return {
+                "item_id": getattr(item, "item_id", getattr(item, "id", "")),
+                "digest": getattr(item, "content_sha256", getattr(item, "digest", "")),
+                "family": getattr(item, "family_id", getattr(item, "task_family", getattr(item, "family", ""))),
+                "provenance": getattr(item, "provenance_id", getattr(item, "provenance", "")),
+                "repr": repr(item),
+            }
+
+        train_item_ids: set[str] = set()
+        train_digests: set[str] = set()
+        train_families: set[str] = set()
+        train_provenances: set[str] = set()
+        train_reprs: set[str] = set()
+
+        for it in sample_train:
+            attrs = _extract_attrs(it)
+            if attrs["item_id"]:
+                if attrs["item_id"] in train_item_ids:
+                    raise ValueError(f"Duplicate item detected in training set: duplicate item_id '{attrs['item_id']}'")
+                train_item_ids.add(attrs["item_id"])
+            if attrs["digest"]:
+                if attrs["digest"] in train_digests:
+                    raise ValueError(f"Duplicate item detected in training set: duplicate content digest '{attrs['digest']}'")
+                train_digests.add(attrs["digest"])
+            if attrs["family"]:
+                train_families.add(attrs["family"])
+            if attrs["provenance"]:
+                train_provenances.add(attrs["provenance"])
+            if attrs["repr"] in train_reprs:
+                raise ValueError("Duplicate item detected in training set")
+            train_reprs.add(attrs["repr"])
+
+        held_item_ids: set[str] = set()
+        held_digests: set[str] = set()
+        held_families: set[str] = set()
+        held_provenances: set[str] = set()
+        held_reprs: set[str] = set()
+
+        for it in sample_held_out:
+            attrs = _extract_attrs(it)
+            if attrs["item_id"]:
+                if attrs["item_id"] in held_item_ids:
+                    raise ValueError(f"Duplicate item detected in held-out set: duplicate item_id '{attrs['item_id']}'")
+                held_item_ids.add(attrs["item_id"])
+                if attrs["item_id"] in train_item_ids:
+                    raise ValueError(f"Data contamination detected: held-out set shares item identity '{attrs['item_id']}' with training set")
+            if attrs["digest"]:
+                if attrs["digest"] in held_digests:
+                    raise ValueError(f"Duplicate item detected in held-out set: duplicate content digest '{attrs['digest']}'")
+                held_digests.add(attrs["digest"])
+                if attrs["digest"] in train_digests:
+                    raise ValueError(f"Data contamination detected: held-out set shares content digest '{attrs['digest']}' with training set")
+            if attrs["family"]:
+                held_families.add(attrs["family"])
+                if attrs["family"] in train_families:
+                    raise ValueError(f"Data contamination detected: held-out set shares task family '{attrs['family']}' with training set")
+            if attrs["provenance"]:
+                held_provenances.add(attrs["provenance"])
+                if attrs["provenance"] in train_provenances:
+                    raise ValueError(f"Data contamination detected: held-out set shares provenance identity '{attrs['provenance']}' with training set")
+            if attrs["repr"] in held_reprs:
+                raise ValueError("Duplicate item detected in held-out set")
+            held_reprs.add(attrs["repr"])
+            if attrs["repr"] in train_reprs:
                 raise ValueError("Data contamination detected: held-out set contains items from training set")
 
         # If no explicit shuffled prompt was provided, synthesize a deterministic permuted variation
@@ -231,12 +311,17 @@ class ControlledExperimentRunner:
         # PAIRED held-out delta: Evaluated on the SAME held-out population
         held_out_retention = score_d - score_d_base
 
+        # Minimum sample size requirement: n >= 2 required to establish statistical significance
+        has_min_sample_size = len(sample_train) >= 2 and len(sample_held_out) >= 2
+
         # Formal Statistical Significance Criteria:
-        # 1. Delta improvement >= epsilon and statistically significant at alpha = 0.05 (CI lower bound > 0)
-        # 2. Authentic feedback beats shuffled control by >= epsilon
-        # 3. Held-out paired retention does not drop below tolerance on the SAME test population
+        # 1. Minimum sample size satisfied (n >= 2)
+        # 2. Delta improvement >= epsilon and statistically significant at alpha = 0.05 (CI lower bound > 0)
+        # 3. Authentic feedback beats shuffled control by >= epsilon
+        # 4. Held-out paired retention does not drop below tolerance on the SAME test population
         is_sig = (
-            delta_improvement >= protocol.significance_threshold_epsilon
+            has_min_sample_size
+            and delta_improvement >= protocol.significance_threshold_epsilon
             and p_val_train <= 0.05
             and ci_train_low > 0.0
             and control_delta >= protocol.significance_threshold_epsilon

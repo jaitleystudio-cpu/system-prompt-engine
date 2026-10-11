@@ -107,8 +107,25 @@ class LearningValidator:
         )
 
         # No disqualifying regression: Held-out Arm D retention within tolerance and statistically significant
+        # Ensure held-out delta is strictly paired with arm_d_baseline_score, NOT arm_a_baseline_score!
+        unpaired_mismatch = False
+        if results.arm_d_baseline_score > 0.0 and abs(results.arm_d_baseline_score - results.arm_a_baseline_score) > 1e-4:
+            if (
+                abs(results.held_out_retention - (results.arm_d_generalization_score - results.arm_a_baseline_score)) < 1e-4
+                and abs(results.held_out_retention - (results.arm_d_generalization_score - results.arm_d_baseline_score)) > 1e-4
+            ):
+                unpaired_mismatch = True
+
+        paired_retention = (
+            (results.arm_d_generalization_score - results.arm_d_baseline_score)
+            if results.arm_d_baseline_score > 0.0
+            else results.held_out_retention
+        )
+
         no_regression = (
-            results.held_out_retention >= -protocol.generalization_tolerance_delta
+            not unpaired_mismatch
+            and results.held_out_retention >= -protocol.generalization_tolerance_delta
+            and paired_retention >= -protocol.generalization_tolerance_delta
             and results.is_statistically_significant
         )
 
