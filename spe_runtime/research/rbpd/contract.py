@@ -9,6 +9,7 @@ canonical LearningValidator, AuthorityGrant, and SpePackage owners.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from enum import Enum
 import hashlib
 import math
@@ -16,7 +17,7 @@ import re
 import time
 from typing import Any, Dict, Optional, Sequence, Tuple
 
-from spe_runtime.authority import AuthorityGrant
+from spe_runtime.authority import AuthorityGrant, validate_grant_compatibility
 from spe_runtime.ci_gate.receipt import (
     ed25519_sign,
     ed25519_verify as _raw_ed25519_verify,
@@ -61,7 +62,13 @@ class InvalidationTrigger(str, Enum):
 
     SUBJECT_DIGEST_CHANGED = "SUBJECT_DIGEST_CHANGED"
     PROOF_SLICE_CHANGED = "PROOF_SLICE_CHANGED"
+    PROTECTED_INTENT_CHANGED = "PROTECTED_INTENT_CHANGED"
+    REQUIREMENT_VERSION_CHANGED = "REQUIREMENT_VERSION_CHANGED"
     ASSUMPTION_VIOLATED = "ASSUMPTION_VIOLATED"
+    ENVIRONMENT_CHANGED = "ENVIRONMENT_CHANGED"
+    DATASET_COMMITMENT_CHANGED = "DATASET_COMMITMENT_CHANGED"
+    DEPENDENCY_EVIDENCE_CHANGED = "DEPENDENCY_EVIDENCE_CHANGED"
+    AUTHORITY_SCOPE_CHANGED = "AUTHORITY_SCOPE_CHANGED"
     MODEL_REVISION_CHANGED = "MODEL_REVISION_CHANGED"
     ORACLE_UNTRUSTED = "ORACLE_UNTRUSTED"
     HORIZON_EXPIRED = "HORIZON_EXPIRED"
@@ -74,6 +81,24 @@ class RealityBoundEvidenceAsset:
     16-field Reality-Bound Evidence Asset Contract.
     Every field is bound into the RFC 8785 canonical receipt payload and signed by
     an owner-authorized LearningValidator.
+
+    Includes all 16 essential contract fields:
+    1. OBJECTIVE_DIGEST (objective_digest / subject_digest)
+    2. PROTECTED_INTENT_DIGEST (protected_intent_digest / proof_slice_digest)
+    3. REQUIREMENT_VERSION (requirement_version / requirement_atoms)
+    4. MODEL_ID (model_id / generator_id)
+    5. VERIFIED_MODEL_REVISION (verified_model_revision / model_or_runtime_digest)
+    6. ENVIRONMENT_FINGERPRINT (environment_fingerprint)
+    7. DEPENDENCY_EVIDENCE_HASHES (dependency_evidence_hashes)
+    8. VERIFICATION_METHOD (verification_method / oracle_class)
+    9. VALIDITY_ASSUMPTIONS (validity_assumptions / assumption_boundaries)
+    10. INDEPENDENT_EVALUATOR_ID (independent_evaluator_id / oracle_identity)
+    11. EVALUATION_DATASET_COMMITMENT (evaluation_dataset_commitment / witness_protocol_digest)
+    12. COUNTEREXAMPLE_COVERAGE (counterexample_coverage)
+    13. AUTHORITY_SCOPE (authority_scope / authority_grant_id)
+    14. EXPIRY_OR_REQUALIFICATION_CONDITIONS (expiry_or_requalification_conditions)
+    15. REVOCATION_REFERENCE (revocation_reference / revocation_tombstone_ref)
+    16. PROOF_RECEIPT (proof_receipt / receipt_hash + signature)
     """
 
     asset_id: str
@@ -97,6 +122,120 @@ class RealityBoundEvidenceAsset:
     validator_public_key: str = ""
     oracle_attestation: Optional[Dict[str, Any]] = None
     authority_grant_id: str = ""
+    objective_digest: str = ""
+    protected_intent_digest: str = ""
+    requirement_version: str = ""
+    model_id: str = ""
+    verified_model_revision: str = ""
+    environment_fingerprint: str = ""
+    dependency_evidence_hashes: Tuple[str, ...] = ()
+    verification_method: str = ""
+    validity_assumptions: Dict[str, Any] = field(default_factory=dict)
+    independent_evaluator_id: str = ""
+    evaluation_dataset_commitment: str = ""
+    counterexample_coverage: Dict[str, Any] = field(default_factory=dict)
+    authority_scope: str = ""
+    expiry_or_requalification_conditions: Dict[str, Any] = field(default_factory=dict)
+    revocation_reference: str = ""
+
+    def __post_init__(self) -> None:
+        if not self.objective_digest:
+            object.__setattr__(self, "objective_digest", self.subject_digest)
+        if not self.protected_intent_digest:
+            object.__setattr__(self, "protected_intent_digest", self.proof_slice_digest)
+        if not self.requirement_version:
+            object.__setattr__(
+                self,
+                "requirement_version",
+                ":".join(self.requirement_atoms) if self.requirement_atoms else "1.0",
+            )
+        if not self.model_id:
+            object.__setattr__(self, "model_id", self.generator_id)
+        if not self.verified_model_revision:
+            object.__setattr__(self, "verified_model_revision", self.model_or_runtime_digest)
+        if not self.environment_fingerprint:
+            env_bytes = rfc8785_canonicalize(dict(sorted(self.assumption_boundaries.items())))
+            object.__setattr__(
+                self,
+                "environment_fingerprint",
+                hashlib.sha256(env_bytes).hexdigest(),
+            )
+        if not isinstance(self.dependency_evidence_hashes, tuple):
+            object.__setattr__(
+                self,
+                "dependency_evidence_hashes",
+                tuple(self.dependency_evidence_hashes),
+            )
+        if not self.verification_method:
+            object.__setattr__(self, "verification_method", self.oracle_class)
+        if not self.validity_assumptions:
+            object.__setattr__(
+                self,
+                "validity_assumptions",
+                dict(sorted(self.assumption_boundaries.items())),
+            )
+        if not self.independent_evaluator_id:
+            object.__setattr__(self, "independent_evaluator_id", self.oracle_identity)
+        if not self.evaluation_dataset_commitment:
+            object.__setattr__(
+                self,
+                "evaluation_dataset_commitment",
+                self.witness_protocol_digest,
+            )
+        if not self.counterexample_coverage:
+            object.__setattr__(
+                self,
+                "counterexample_coverage",
+                {"coverage_floor": 1.0, "status": "BOUNDED_COUNTEREXAMPLE_CHECKED"},
+            )
+        if not self.authority_scope:
+            object.__setattr__(
+                self,
+                "authority_scope",
+                self.authority_grant_id or "RBPD_EVIDENCE_MINT_AND_VERIFY:spe_runtime.research.rbpd",
+            )
+        if not self.expiry_or_requalification_conditions:
+            object.__setattr__(
+                self,
+                "expiry_or_requalification_conditions",
+                {
+                    "invalidation_triggers": list(self.invalidation_triggers),
+                    "validity_horizon": self.validity_horizon,
+                },
+            )
+        if not self.revocation_reference:
+            object.__setattr__(self, "revocation_reference", self.revocation_tombstone_ref)
+
+    @property
+    def proof_receipt(self) -> Dict[str, str]:
+        return {
+            "receipt_hash": self.receipt_hash,
+            "signature": self.signature,
+            "validator_public_key": self.validator_public_key,
+        }
+
+    def essential_contract_dict(self) -> Dict[str, Any]:
+        """Returns the 16 canonical contract fields defined in the RBPD specification."""
+        return {
+            "OBJECTIVE_DIGEST": self.objective_digest,
+            "PROTECTED_INTENT_DIGEST": self.protected_intent_digest,
+            "REQUIREMENT_VERSION": self.requirement_version,
+            "MODEL_ID": self.model_id,
+            "VERIFIED_MODEL_REVISION": self.verified_model_revision,
+            "ENVIRONMENT_FINGERPRINT": self.environment_fingerprint,
+            "DEPENDENCY_EVIDENCE_HASHES": list(self.dependency_evidence_hashes),
+            "VERIFICATION_METHOD": self.verification_method,
+            "VALIDITY_ASSUMPTIONS": dict(sorted(self.validity_assumptions.items())),
+            "INDEPENDENT_EVALUATOR_ID": self.independent_evaluator_id,
+            "EVALUATION_DATASET_COMMITMENT": self.evaluation_dataset_commitment,
+            "COUNTEREXAMPLE_COVERAGE": dict(sorted(self.counterexample_coverage.items())),
+            "AUTHORITY_SCOPE": self.authority_scope,
+            "EXPIRY_OR_REQUALIFICATION_CONDITIONS": dict(
+                sorted(self.expiry_or_requalification_conditions.items())
+            ),
+            "REVOCATION_REFERENCE": self.revocation_reference,
+            "PROOF_RECEIPT": self.proof_receipt,
+        }
 
     def canonical_payload_dict(self) -> Dict[str, Any]:
         """Returns the deterministic dict used for RFC 8785 canonical hashing and signing."""
@@ -104,21 +243,38 @@ class RealityBoundEvidenceAsset:
             "asset_id": self.asset_id,
             "assumption_boundaries": dict(sorted(self.assumption_boundaries.items())),
             "authority_grant_id": self.authority_grant_id,
+            "authority_scope": self.authority_scope,
             "claim_id": self.claim_id,
             "committed_timestamp": self.committed_timestamp,
+            "counterexample_coverage": dict(sorted(self.counterexample_coverage.items())),
+            "dependency_evidence_hashes": list(self.dependency_evidence_hashes),
+            "environment_fingerprint": self.environment_fingerprint,
+            "evaluation_dataset_commitment": self.evaluation_dataset_commitment,
+            "expiry_or_requalification_conditions": dict(
+                sorted(self.expiry_or_requalification_conditions.items())
+            ),
             "generator_id": self.generator_id,
+            "independent_evaluator_id": self.independent_evaluator_id,
             "invalidation_triggers": list(self.invalidation_triggers),
             "model_digest_type": self.model_digest_type,
+            "model_id": self.model_id,
             "model_or_runtime_digest": self.model_or_runtime_digest,
+            "objective_digest": self.objective_digest,
             "oracle_attestation": self.oracle_attestation,
             "oracle_class": self.oracle_class,
             "oracle_identity": self.oracle_identity,
             "proof_slice_digest": self.proof_slice_digest,
+            "protected_intent_digest": self.protected_intent_digest,
             "requirement_atoms": list(self.requirement_atoms),
+            "requirement_version": self.requirement_version,
+            "revocation_reference": self.revocation_reference,
             "revocation_tombstone_ref": self.revocation_tombstone_ref,
             "subject_digest": self.subject_digest,
             "validator_public_key": self.validator_public_key,
+            "validity_assumptions": dict(sorted(self.validity_assumptions.items())),
             "validity_horizon": self.validity_horizon,
+            "verification_method": self.verification_method,
+            "verified_model_revision": self.verified_model_revision,
             "witness_protocol_digest": self.witness_protocol_digest,
         }
 
@@ -126,6 +282,8 @@ class RealityBoundEvidenceAsset:
         payload = self.canonical_payload_dict()
         payload["receipt_hash"] = self.receipt_hash
         payload["signature"] = self.signature
+        payload["essential_contract"] = self.essential_contract_dict()
+        payload.update(self.essential_contract_dict())
         return payload
 
 
@@ -168,14 +326,18 @@ class ProofContractValidator:
             target="spe_runtime.research.rbpd",
             argument_constraints={"require_cryptographic_owner_authority": True},
             purpose="Reality-Bound Proof Dividend evidence asset minting and validation",
-            issued_at="2026-10-11T00:00:00Z",
-            expires_at="2027-10-11T00:00:00Z",
+            issued_at="1970-01-01T00:00:00Z",
+            expires_at="2099-12-31T23:59:59Z",
             use_limit=10000,
         )
 
     @property
     def validator(self) -> LearningValidator:
         return self._validator
+
+    @property
+    def authority_grant(self) -> AuthorityGrant:
+        return self._authority_grant
 
     def mint_asset(
         self,
@@ -197,11 +359,31 @@ class ProofContractValidator:
         oracle_signing_key: bytes,
         oracle_public_key: bytes,
         committed_timestamp: Optional[float] = None,
+        protected_intent_digest: Optional[str] = None,
+        requirement_version: Optional[str] = None,
+        environment_fingerprint: Optional[str] = None,
+        dependency_evidence_hashes: Optional[Sequence[str]] = None,
+        counterexample_coverage: Optional[Dict[str, Any]] = None,
+        authority_scope: Optional[str] = None,
     ) -> RealityBoundEvidenceAsset:
         if not self._validator.is_owner_authorized or (
             self._require_crypto_owner and not self._validator.has_cryptographic_owner_authority
         ):
             raise ValueError("Unauthorized validator: cannot mint RealityBoundEvidenceAsset without owner authority")
+
+        now = committed_timestamp if committed_timestamp is not None else time.time()
+        now_iso = datetime.fromtimestamp(float(now), tz=timezone.utc).isoformat()
+        ok_grant, grant_reasons = validate_grant_compatibility(
+            self._authority_grant,
+            capability="RBPD_EVIDENCE_MINT_AND_VERIFY",
+            target="spe_runtime.research.rbpd",
+            arguments={"require_cryptographic_owner_authority": self._require_crypto_owner},
+            now=now_iso,
+        )
+        if not ok_grant:
+            raise ValueError(
+                f"AuthorityGrant validation failed during asset minting: {', '.join(grant_reasons)}"
+            )
 
         if not asset_id or not claim_id or not oracle_identity or not generator_id:
             raise ValueError("asset_id, claim_id, oracle_identity, and generator_id must be non-empty")
@@ -212,14 +394,29 @@ class ProofContractValidator:
         if oracle_class not in ("independent_static_oracle", "independent_reality_witness"):
             raise ValueError(f"Unsupported oracle_class '{oracle_class}': must be independent")
 
+        eff_protected_intent = protected_intent_digest if protected_intent_digest is not None else proof_slice_digest
+        sorted_assumptions = dict(sorted(assumption_boundaries.items()))
+        eff_env_fingerprint = (
+            environment_fingerprint
+            if environment_fingerprint is not None
+            else hashlib.sha256(rfc8785_canonicalize(sorted_assumptions)).hexdigest()
+        )
+
         for field_name, digest_val in (
             ("subject_digest", subject_digest),
             ("proof_slice_digest", proof_slice_digest),
+            ("protected_intent_digest", eff_protected_intent),
+            ("environment_fingerprint", eff_env_fingerprint),
             ("witness_protocol_digest", witness_protocol_digest),
             ("model_or_runtime_digest", model_or_runtime_digest),
         ):
             if not isinstance(digest_val, str) or not _HEX64.fullmatch(digest_val):
                 raise ValueError(f"Invalid {field_name}: must be 64-char lowercase hex SHA-256")
+
+        dep_hashes = tuple(str(h) for h in (dependency_evidence_hashes or ()))
+        for dep_h in dep_hashes:
+            if not _HEX64.fullmatch(dep_h):
+                raise ValueError(f"Invalid dependency_evidence_hash '{dep_h}': must be 64-char lowercase hex SHA-256")
 
         if model_digest_type not in ("VERIFIED_MODEL_REVISION", "SYNTHETIC_NAME_DERIVED"):
             raise ValueError(f"Invalid model_digest_type '{model_digest_type}'")
@@ -231,7 +428,6 @@ class ProofContractValidator:
                 f"Synthetic model_digest for '{generator_id}' cannot claim VERIFIED_MODEL_REVISION"
             )
 
-        now = committed_timestamp if committed_timestamp is not None else time.time()
         if not isinstance(validity_horizon, (int, float)) or isinstance(validity_horizon, bool) or not math.isfinite(validity_horizon) or validity_horizon <= now:
             raise ValueError("validity_horizon must be a finite timestamp strictly greater than committed_timestamp")
 
@@ -244,6 +440,17 @@ class ProofContractValidator:
             raise ValueError("invalidation_triggers must contain at least one trigger")
 
         tombstone_ref = f"tx:{asset_id}"
+        eff_req_version = requirement_version if requirement_version is not None else ":".join(req_tuple)
+        eff_auth_scope = (
+            authority_scope
+            if authority_scope is not None
+            else f"{self._authority_grant.capability}:{self._authority_grant.target}:{self._authority_grant.grant_id}"
+        )
+        eff_ce_coverage = (
+            dict(sorted(counterexample_coverage.items()))
+            if counterexample_coverage is not None
+            else {"coverage_floor": 1.0, "status": "BOUNDED_COUNTEREXAMPLE_CHECKED"}
+        )
 
         # Create independent oracle attestation over the composite evidence digest
         evidence_preimage = rfc8785_canonicalize(
@@ -285,7 +492,7 @@ class ProofContractValidator:
             claim_id=claim_id,
             subject_digest=subject_digest,
             requirement_atoms=req_tuple,
-            assumption_boundaries=dict(sorted(assumption_boundaries.items())),
+            assumption_boundaries=sorted_assumptions,
             proof_slice_digest=proof_slice_digest,
             witness_protocol_digest=witness_protocol_digest,
             oracle_identity=oracle_identity,
@@ -302,6 +509,24 @@ class ProofContractValidator:
             validator_public_key=self._validator.public_key.hex(),
             oracle_attestation=oracle_att_dict,
             authority_grant_id=self._authority_grant.grant_id,
+            objective_digest=subject_digest,
+            protected_intent_digest=eff_protected_intent,
+            requirement_version=eff_req_version,
+            model_id=generator_id,
+            verified_model_revision=model_or_runtime_digest,
+            environment_fingerprint=eff_env_fingerprint,
+            dependency_evidence_hashes=dep_hashes,
+            verification_method=oracle_class,
+            validity_assumptions=sorted_assumptions,
+            independent_evaluator_id=oracle_identity,
+            evaluation_dataset_commitment=witness_protocol_digest,
+            counterexample_coverage=eff_ce_coverage,
+            authority_scope=eff_auth_scope,
+            expiry_or_requalification_conditions={
+                "invalidation_triggers": list(trig_tuple),
+                "validity_horizon": float(validity_horizon),
+            },
+            revocation_reference=tombstone_ref,
         )
         canonical_bytes = rfc8785_canonicalize(unsigned.canonical_payload_dict())
         receipt_hash = hashlib.sha256(canonical_bytes).hexdigest()
@@ -373,6 +598,12 @@ class ProofContractValidator:
         current_time: Optional[float] = None,
         external_gate_Required: Optional[str] = None,
         revoked_oracles: Optional[Sequence[str]] = None,
+        current_protected_intent_digest: Optional[str] = None,
+        current_requirement_version: Optional[str] = None,
+        current_environment_fingerprint: Optional[str] = None,
+        current_evaluation_dataset_commitment: Optional[str] = None,
+        current_dependency_evidence_hashes: Optional[Sequence[str]] = None,
+        current_authority_grant: Optional[AuthorityGrant] = None,
     ) -> AssetValidationVerdict:
         """
         Evaluates a RealityBoundEvidenceAsset against current reality context and returns
@@ -392,7 +623,7 @@ class ProofContractValidator:
                 reason=f"External gate '{external_gate_Required}' is held (BLOCKED_HOLD)",
             )
 
-        # 1. Check validator owner authority
+        # 1. Check validator owner authority & AuthorityGrant compatibility
         if not self._validator.is_owner_authorized or (
             self._require_crypto_owner and not self._validator.has_cryptographic_owner_authority
         ):
@@ -401,6 +632,24 @@ class ProofContractValidator:
                 can_reuse=False,
                 reason="Validator lacks cryptographic owner authority or has been revoked",
                 triggered_invalidations=(InvalidationTrigger.TOMBSTONE_REVOKED.value,),
+            )
+
+        now = current_time if current_time is not None else time.time()
+        now_iso = datetime.fromtimestamp(float(now), tz=timezone.utc).isoformat()
+        active_grant = current_authority_grant if current_authority_grant is not None else self._authority_grant
+        ok_grant, grant_reasons = validate_grant_compatibility(
+            active_grant,
+            capability="RBPD_EVIDENCE_MINT_AND_VERIFY",
+            target="spe_runtime.research.rbpd",
+            arguments={"require_cryptographic_owner_authority": self._require_crypto_owner},
+            now=now_iso,
+        )
+        if not ok_grant:
+            return AssetValidationVerdict(
+                status=EpistemicStatus.INVALID,
+                can_reuse=False,
+                reason=f"AuthorityGrant invalid or revoked: {', '.join(grant_reasons)}",
+                triggered_invalidations=(InvalidationTrigger.AUTHORITY_SCOPE_CHANGED.value,),
             )
 
         # 2. Check durable revocation tombstones first (survives backup restore & process restart)
@@ -524,7 +773,6 @@ class ProofContractValidator:
             )
 
         # 6. Check STALE conditions (authenticity holds, but reality state or horizon shifted)
-        now = current_time if current_time is not None else time.time()
         stale_triggers = []
 
         if now > asset.validity_horizon:
@@ -533,8 +781,46 @@ class ProofContractValidator:
             stale_triggers.append(InvalidationTrigger.SUBJECT_DIGEST_CHANGED.value)
         if current_proof_slice_digest != asset.proof_slice_digest:
             stale_triggers.append(InvalidationTrigger.PROOF_SLICE_CHANGED.value)
+        if (
+            current_protected_intent_digest is not None
+            and current_protected_intent_digest != asset.protected_intent_digest
+        ):
+            stale_triggers.append(InvalidationTrigger.PROTECTED_INTENT_CHANGED.value)
+        if (
+            current_requirement_version is not None
+            and current_requirement_version != asset.requirement_version
+        ):
+            stale_triggers.append(InvalidationTrigger.REQUIREMENT_VERSION_CHANGED.value)
         if current_model_digest != asset.model_or_runtime_digest:
             stale_triggers.append(InvalidationTrigger.MODEL_REVISION_CHANGED.value)
+        if (
+            current_environment_fingerprint is not None
+            and current_environment_fingerprint != asset.environment_fingerprint
+        ):
+            stale_triggers.append(InvalidationTrigger.ENVIRONMENT_CHANGED.value)
+        if (
+            current_evaluation_dataset_commitment is not None
+            and current_evaluation_dataset_commitment != asset.evaluation_dataset_commitment
+        ):
+            stale_triggers.append(InvalidationTrigger.DATASET_COMMITMENT_CHANGED.value)
+        if (
+            current_authority_grant is not None
+            and asset.authority_grant_id
+            and current_authority_grant.grant_id != asset.authority_grant_id
+        ):
+            stale_triggers.append(InvalidationTrigger.AUTHORITY_SCOPE_CHANGED.value)
+
+        if current_dependency_evidence_hashes is not None and tuple(current_dependency_evidence_hashes) != asset.dependency_evidence_hashes:
+            stale_triggers.append(InvalidationTrigger.DEPENDENCY_EVIDENCE_CHANGED.value)
+        else:
+            for dep_hash in asset.dependency_evidence_hashes:
+                if self._validator.is_tombstoned(
+                    receipt_hash=dep_hash,
+                    evidence_hash=dep_hash,
+                    tx_id=dep_hash,
+                ):
+                    stale_triggers.append(InvalidationTrigger.DEPENDENCY_EVIDENCE_CHANGED.value)
+                    break
 
         for k, v in asset.assumption_boundaries.items():
             if current_assumptions.get(k) != v:

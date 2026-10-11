@@ -202,7 +202,7 @@ MUTANTS = [
         "id": "M23",
         "name": "Bypass persistent parent transaction tombstone check in verify_transaction_signature",
         "file": "spe_runtime/research/lvt/learning_validator.py",
-        "target": "        if self.is_tombstoned(\n            receipt_hash=tx.artifact_hash,\n        ):\n            return False",
+        "target": "        if self.is_tombstoned(\n            receipt_hash=tx.artifact_hash,\n            evidence_hash=study_ev_hash,\n            tx_id=tx.tx_id,\n        ):\n            return False",
         "replacement": "        # MUTANT M23: Bypass persistent parent transaction tombstone check\n        if False:\n            return False",
         "test": "tests/research/lvt/test_lvt2_r5_adversarial_closure.py::test_round3_parent_transaction_revocation_persists_across_restart_and_backup_restore",
     },

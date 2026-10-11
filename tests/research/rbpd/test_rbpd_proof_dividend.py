@@ -610,3 +610,200 @@ def test_product_human_interface_explain_and_cli():
     cli_json_out = run_rbpd_cli(["--json", "--modules", "6", "--steps", "4"])
     parsed = json.loads(cli_json_out)
     assert parsed["sections"]["UNKNOWN_OR_HELD"]["held_external_gates"]["G6_H_BLINDED_HUMAN_EVALUATION"] == "BLOCKED_HOLD"
+
+
+def test_adversarial_review_closures_contract_diamond_invalidation_and_sealed_floor():
+    """
+    Regression suite verifying fixes for all adversarial review findings:
+    1. All 16 canonical Section 5 contract fields present and bound; AuthorityGrant revocation/expiry enforced.
+    2. Protected intent, environment fingerprint, dataset commitment, and dependency evidence tombstones enforced.
+    3. Transitive invalidation propagates INVALID (tombstone/oracle revocation) and STALE across multi-hop
+       diamond graphs, and marks obligations with unregistered upstream dependencies as UNKNOWN.
+    4. All 6 change classes (requirements, models, tools, datasets, permissions, environmental assumptions)
+       selectively invalidate affected obligations.
+    5. DualChannelWitnessSelector preserves sealed_fraction >= 0.25 even when len(stale_obligations) > total_budget_probes.
+    6. ProofDividendBenchmark dynamically computes escaped defects, false rejections, and failed attempt recovery cost.
+    """
+    from spe_runtime.authority import AuthorityGrant
+    from spe_runtime.proof_graph.models import CausalEdge, CausalNode, EdgeType, NodeType
+    from spe_runtime.research.wdes.witness_hypergraph import ObligationNode
+
+    validator, _, _, oracle_sk, oracle_pk = _make_attested_validator_and_oracle()
+    contract_validator = ProofContractValidator(validator=validator)
+    now = time.time()
+
+    dep_hash = "7" * 64
+    asset = contract_validator.mint_asset(
+        asset_id="ASSET-CANONICAL-16",
+        claim_id="CLAIM-CANONICAL-16",
+        subject_digest="a" * 64,
+        requirement_atoms=("REQ-101",),
+        assumption_boundaries={"env": "prod", "tool": "z3-solver", "permission": "perm:verify"},
+        proof_slice_digest="b" * 64,
+        witness_protocol_digest="c" * 64,
+        oracle_identity="oracle-rbpd-01",
+        oracle_class="independent_static_oracle",
+        model_or_runtime_digest="d" * 64,
+        model_digest_type="VERIFIED_MODEL_REVISION",
+        validity_horizon=now + 3600.0,
+        invalidation_triggers=(InvalidationTrigger.SUBJECT_DIGEST_CHANGED.value,),
+        generator_id="gpt-4o",
+        oracle_signing_key=oracle_sk,
+        oracle_public_key=oracle_pk,
+        dependency_evidence_hashes=(dep_hash,),
+    )
+
+    canonical_16_keys = {
+        "OBJECTIVE_DIGEST",
+        "PROTECTED_INTENT_DIGEST",
+        "REQUIREMENT_VERSION",
+        "MODEL_ID",
+        "VERIFIED_MODEL_REVISION",
+        "ENVIRONMENT_FINGERPRINT",
+        "DEPENDENCY_EVIDENCE_HASHES",
+        "VERIFICATION_METHOD",
+        "VALIDITY_ASSUMPTIONS",
+        "INDEPENDENT_EVALUATOR_ID",
+        "EVALUATION_DATASET_COMMITMENT",
+        "COUNTEREXAMPLE_COVERAGE",
+        "AUTHORITY_SCOPE",
+        "EXPIRY_OR_REQUALIFICATION_CONDITIONS",
+        "REVOCATION_REFERENCE",
+        "PROOF_RECEIPT",
+    }
+    assert canonical_16_keys == set(asset.essential_contract_dict().keys())
+    assert canonical_16_keys.issubset(set(asset.to_dict().keys()))
+
+    # Revoked AuthorityGrant -> INVALID
+    revoked_grant = AuthorityGrant(
+        grant_id="GRANT-REVOKED-01",
+        principal="validator:test",
+        capability="RBPD_EVIDENCE_MINT_AND_VERIFY",
+        target="spe_runtime.research.rbpd",
+        argument_constraints={"require_cryptographic_owner_authority": True},
+        purpose="Test revoked grant",
+        issued_at="1970-01-01T00:00:00Z",
+        expires_at="2099-12-31T23:59:59Z",
+        use_limit=100,
+        revocation_state="REVOKED",
+    )
+    v_revoked_grant = contract_validator.validate_asset(
+        asset,
+        current_subject_digest="a" * 64,
+        current_proof_slice_digest="b" * 64,
+        current_assumptions={"env": "prod", "tool": "z3-solver", "permission": "perm:verify"},
+        current_model_digest="d" * 64,
+        current_time=now + 10.0,
+        current_authority_grant=revoked_grant,
+    )
+    assert v_revoked_grant.status == EpistemicStatus.INVALID
+    assert v_revoked_grant.can_reuse is False
+
+    # Protected intent change -> STALE
+    v_intent = contract_validator.validate_asset(
+        asset,
+        current_subject_digest="a" * 64,
+        current_proof_slice_digest="b" * 64,
+        current_assumptions={"env": "prod", "tool": "z3-solver", "permission": "perm:verify"},
+        current_model_digest="d" * 64,
+        current_time=now + 10.0,
+        current_protected_intent_digest="e" * 64,
+    )
+    assert v_intent.status == EpistemicStatus.STALE
+    assert v_intent.can_reuse is False
+
+    # Tombstoning upstream dependency_evidence_hash -> STALE
+    validator.record_tombstone(receipt_hash=dep_hash, reason="UPSTREAM_REVOKED")
+    v_dep_tomb = contract_validator.validate_asset(
+        asset,
+        current_subject_digest="a" * 64,
+        current_proof_slice_digest="b" * 64,
+        current_assumptions={"env": "prod", "tool": "z3-solver", "permission": "perm:verify"},
+        current_model_digest="d" * 64,
+        current_time=now + 10.0,
+    )
+    assert v_dep_tomb.status == EpistemicStatus.STALE
+    assert v_dep_tomb.can_reuse is False
+
+    # Multi-hop diamond graph + transitive propagation of INVALID & UNKNOWN + 6 change classes
+    engine = SelectiveRequalificationEngine.build_modular_benchmark_graph(
+        validator=validator,
+        oracle_signing_key=oracle_sk,
+        oracle_public_key=oracle_pk,
+        num_modules=6,
+    )
+    # Create diamond: OBL-00 -> {OBL-01, OBL-02} -> OBL-03 via CausalProofGraph edges
+    engine.proof_graph.add_edge(
+        CausalEdge(edge_id="EDGE-00-02", source_id="OBL-00", target_id="OBL-02", edge_type=EdgeType.DERIVES_FROM)
+    )
+    engine.proof_graph.add_edge(
+        CausalEdge(edge_id="EDGE-01-03", source_id="OBL-01", target_id="OBL-03", edge_type=EdgeType.DERIVES_FROM)
+    )
+    engine.proof_graph.add_edge(
+        CausalEdge(edge_id="EDGE-02-03", source_id="OBL-02", target_id="OBL-03", edge_type=EdgeType.DERIVES_FROM)
+    )
+    engine.base_assumptions["OBL-04"]["tool"] = "tool-alpha"
+    engine.base_assumptions["OBL-05"]["permission"] = "perm-admin"
+
+    # Tool change on tool-alpha -> OBL-04 STALE
+    plan_tool = engine.compute_requalification_plan(
+        InvalidationEvent(event_type="TOOL_CHANGED", touched_tools=("tool-alpha",))
+    )
+    assert "OBL-04" in plan_tool.stale_obligations
+    assert len(plan_tool.reused_obligations) == 5
+
+    # Dataset commitment change -> all obligations STALE
+    plan_dataset = engine.compute_requalification_plan(
+        InvalidationEvent(event_type="DATASET_CHANGED", new_dataset_commitment="8" * 64)
+    )
+    assert len(plan_dataset.stale_obligations) == 6
+
+    # Permission revocation on perm-admin -> OBL-05 INVALID
+    plan_perm = engine.compute_requalification_plan(
+        InvalidationEvent(event_type="PERMISSION_REVOKED", revoked_permissions=("perm-admin",))
+    )
+    assert "OBL-05" in plan_perm.invalid_obligations
+    assert len(plan_perm.reused_obligations) == 5
+
+    # Revoking OBL-00 (root of diamond) makes OBL-00 INVALID and transitively makes OBL-01, OBL-02, OBL-03 STALE!
+    engine.revoke_obligation_asset("OBL-00", reason="ROOT_COMPROMISED")
+    plan_diamond = engine.compute_requalification_plan(InvalidationEvent(event_type="NO_OP"))
+    assert "OBL-00" in plan_diamond.invalid_obligations
+    assert {"OBL-01", "OBL-02", "OBL-03"}.issubset(set(plan_diamond.stale_obligations))
+    assert set(plan_diamond.reused_obligations) == {"OBL-04", "OBL-05"}
+
+    # Registering an obligation with an unknown upstream dependency -> conservative UNKNOWN
+    engine.obligation_dependencies["OBL-04"].add("OBL-UNREGISTERED-99")
+    plan_unknown = engine.compute_requalification_plan(InvalidationEvent(event_type="NO_OP"))
+    assert "OBL-04" in plan_unknown.unknown_obligations
+    assert plan_unknown.verdicts_by_obligation["OBL-04"].can_reuse is False
+
+    # Phase C: 25% sealed witness floor holds even when len(stale_obligations)=10 > total_budget_probes=8
+    sampler = SealedIndependentSampler(
+        sealed_families=[f"sealed-fam-{i:02d}" for i in range(12)],
+        items_per_family=4,
+        min_sealed_fraction=0.25,
+        min_sealed_families=3,
+    )
+    selector = DualChannelWitnessSelector(sampler=sampler)
+    sel_large = selector.select_witnesses(
+        stale_obligations=[f"OBL-{i:02d}" for i in range(10)],
+        parent_receipt_hash="a" * 64,
+        edit_commit_digest="b" * 64,
+        epoch_nonce="epoch-large",
+        total_budget_probes=8,
+    )
+    assert sel_large.sealed_fraction >= 0.25
+
+    # Phase D: Benchmark tracks recovery cost and false acceptance/rejection rates
+    benchmark = ProofDividendBenchmark(
+        validator=validator,
+        oracle_signing_key=oracle_sk,
+        oracle_public_key=oracle_pk,
+    )
+    bench_rep = benchmark.run_lifecycle_comparison(num_modules=20, num_incremental_steps=6)
+    assert bench_rep.strategy_results["RBPD_DUAL_CHANNEL"].ledger.failed_attempt_recovery_cost == 0.0
+    assert bench_rep.strategy_results["RBPD_DUAL_CHANNEL"].false_rejection_rate == 0.0
+    assert bench_rep.strategy_results["RANDOM_ONLY"].ledger.failed_attempt_recovery_cost > 0.0
+    assert bench_rep.strategy_results["ACTIVE_ONLY"].ledger.failed_attempt_recovery_cost > 0.0
+

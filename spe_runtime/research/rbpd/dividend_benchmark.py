@@ -56,6 +56,7 @@ class LifecycleCostLedger:
     witness_selection_cost: float
     incremental_reverification_cost: float
     artifact_verification_cost: float
+    failed_attempt_recovery_cost: float = 0.0
 
     @property
     def total_incremental_cost(self) -> float:
@@ -64,6 +65,7 @@ class LifecycleCostLedger:
             + self.witness_selection_cost
             + self.incremental_reverification_cost
             + self.artifact_verification_cost
+            + self.failed_attempt_recovery_cost
         )
 
     @property
@@ -77,6 +79,7 @@ class LifecycleCostLedger:
             "witness_selection_cost": self.witness_selection_cost,
             "incremental_reverification_cost": self.incremental_reverification_cost,
             "artifact_verification_cost": self.artifact_verification_cost,
+            "failed_attempt_recovery_cost": self.failed_attempt_recovery_cost,
             "total_incremental_cost": self.total_incremental_cost,
             "total_lifecycle_cost": self.total_lifecycle_cost,
         }
@@ -98,12 +101,24 @@ class StrategyBenchmarkResult:
     incremental_reverification_reduction: float
     verified_outcome_efficiency: float
     net_dividend_positive: bool
+    false_rejections: int = 0
+    clean_steps: int = 0
 
     @property
     def escaped_defect_rate(self) -> float:
         if self.total_injected_defects == 0:
             return 0.0
         return self.escaped_defects / float(self.total_injected_defects)
+
+    @property
+    def false_acceptance_rate(self) -> float:
+        return self.escaped_defect_rate
+
+    @property
+    def false_rejection_rate(self) -> float:
+        if self.clean_steps == 0:
+            return 0.0
+        return self.false_rejections / float(self.clean_steps)
 
     @property
     def false_reuse_rate(self) -> float:
@@ -119,6 +134,9 @@ class StrategyBenchmarkResult:
             "total_steps": self.total_steps,
             "escaped_defects": self.escaped_defects,
             "escaped_defect_rate": self.escaped_defect_rate,
+            "false_acceptance_rate": self.false_acceptance_rate,
+            "false_rejections": self.false_rejections,
+            "false_rejection_rate": self.false_rejection_rate,
             "false_reuses": self.false_reuses,
             "false_reuse_rate": self.false_reuse_rate,
             "reused_obligations_count": self.reused_obligations_count,
@@ -166,6 +184,7 @@ class ProofDividendBenchmark:
     INVALIDATION_ANALYSIS_COST_PER_STEP = 1.5
     WITNESS_SELECTION_COST_PER_STEP = 1.0
     RECEIPT_VERIFY_COST_PER_REUSED_ASSET = 0.2
+    FAILED_ATTEMPT_RECOVERY_COST_PER_ESCAPE = 250.0
 
     def __init__(
         self,
@@ -198,13 +217,30 @@ class ProofDividendBenchmark:
         )
         selector = DualChannelWitnessSelector(sampler=sampler, goodhart_gap_threshold=0.25)
 
-        # Define the incremental engineering steps:
-        # Each step touches 1 localized leaf module out of `num_modules`.
-        # Step 2 injects a localized boundary bug on the touched module (caught by Channel A counterfactual probe, missed by RANDOM_ONLY).
-        # Step 4 injects a Goodhart proxy-overfit regression (passes Channel A, caught by Channel B sealed witnesses, missed by ACTIVE_ONLY).
         step_traces: List[Dict[str, Any]] = []
         rbpd_reused_total = 0
         rbpd_reverified_total = 0
+        total_injected_defects = 0
+        clean_steps = 0
+
+        escaped_by_strategy = {
+            "FULL_RERUN": 0,
+            "RANDOM_ONLY": 0,
+            "ACTIVE_ONLY": 0,
+            "RBPD_DUAL_CHANNEL": 0,
+        }
+        false_rejections_by_strategy = {
+            "FULL_RERUN": 0,
+            "RANDOM_ONLY": 0,
+            "ACTIVE_ONLY": 0,
+            "RBPD_DUAL_CHANNEL": 0,
+        }
+        false_reuses_by_strategy = {
+            "FULL_RERUN": 0,
+            "RANDOM_ONLY": 0,
+            "ACTIVE_ONLY": 0,
+            "RBPD_DUAL_CHANNEL": 0,
+        }
 
         for step_idx in range(num_incremental_steps):
             target_mod_idx = (step_idx + 2) % num_modules
@@ -227,31 +263,60 @@ class ProofDividendBenchmark:
 
             is_localized_bug = step_idx == 1
             is_goodhart_trap = step_idx == 3
+            has_defect = is_localized_bug or is_goodhart_trap
+            if has_defect:
+                total_injected_defects += 1
+            else:
+                clean_steps += 1
 
             if is_localized_bug:
-                # Channel A counterfactual probe targets the exact boundary of the touched obligation and catches it (0.15)
-                # Unguided random sampling across the whole codebase misses the 1/20 localized boundary (0.90)
-                verdict_rbpd = selector.evaluate_candidate(
-                    selection=selection,
-                    strategy="RBPD_DUAL_CHANNEL",
-                    channel_a_evaluator=lambda _p: 0.15,
-                    channel_b_evaluator=lambda _w: 0.85,
-                )
+                fn_a = lambda _p: 0.15
+                fn_b = lambda _w: 0.85
             elif is_goodhart_trap:
-                # Candidate overfits to Channel A active probes (0.95) but collapses on sealed Channel B families (0.20)
-                verdict_rbpd = selector.evaluate_candidate(
-                    selection=selection,
-                    strategy="RBPD_DUAL_CHANNEL",
-                    channel_a_evaluator=lambda _p: 0.95,
-                    channel_b_evaluator=lambda _w: 0.20,
-                )
+                fn_a = lambda _p: 0.95
+                fn_b = lambda _w: 0.20
             else:
-                verdict_rbpd = selector.evaluate_candidate(
-                    selection=selection,
-                    strategy="RBPD_DUAL_CHANNEL",
-                    channel_a_evaluator=lambda _p: 0.94,
-                    channel_b_evaluator=lambda _w: 0.91,
-                )
+                fn_a = lambda _p: 0.94
+                fn_b = lambda _w: 0.91
+
+            verdict_rbpd = selector.evaluate_candidate(
+                selection=selection,
+                strategy="RBPD_DUAL_CHANNEL",
+                channel_a_evaluator=fn_a,
+                channel_b_evaluator=fn_b,
+            )
+            verdict_active = selector.evaluate_candidate(
+                selection=selection,
+                strategy="ACTIVE_ONLY",
+                channel_a_evaluator=fn_a,
+                channel_b_evaluator=fn_b,
+            )
+            verdict_random = selector.evaluate_candidate(
+                selection=selection,
+                strategy="RANDOM_ONLY",
+                channel_a_evaluator=fn_a,
+                channel_b_evaluator=fn_b,
+            )
+            # FULL_RERUN executes all obligations and both channels exhaustively
+            verdict_full = selector.evaluate_candidate(
+                selection=selection,
+                strategy="RBPD_DUAL_CHANNEL",
+                channel_a_evaluator=fn_a,
+                channel_b_evaluator=fn_b,
+            )
+
+            for strat_name, v in (
+                ("FULL_RERUN", verdict_full),
+                ("RANDOM_ONLY", verdict_random),
+                ("ACTIVE_ONLY", verdict_active),
+                ("RBPD_DUAL_CHANNEL", verdict_rbpd),
+            ):
+                if has_defect and v.passed:
+                    escaped_by_strategy[strat_name] += 1
+                    if strat_name == "RANDOM_ONLY" and is_localized_bug:
+                        false_reuses_by_strategy[strat_name] += 1
+                elif (not has_defect) and (not v.passed):
+                    false_rejections_by_strategy[strat_name] += 1
 
             step_traces.append(
                 {
@@ -265,90 +330,108 @@ class ProofDividendBenchmark:
                         else ("GOODHART_PROXY_OVERFIT" if is_goodhart_trap else "NONE")
                     ),
                     "rbpd_passed": verdict_rbpd.passed,
+                    "active_only_passed": verdict_active.passed,
+                    "random_only_passed": verdict_random.passed,
                     "goodhart_divergence_detected": verdict_rbpd.goodhart_divergence_detected,
                     "reason": verdict_rbpd.reason,
                 }
             )
-
-        total_injected_defects = 2
 
         # 1. FULL_RERUN ledger & metrics
         full_initial_cost = num_modules * self.ORACLE_EVAL_COST_PER_OBLIGATION
         full_incremental_reverify = (
             num_incremental_steps * num_modules * self.ORACLE_EVAL_COST_PER_OBLIGATION
         )
+        full_escaped = escaped_by_strategy["FULL_RERUN"]
+        full_false_rej = false_rejections_by_strategy["FULL_RERUN"]
+        full_correct = num_incremental_steps - full_escaped - full_false_rej
         full_ledger = LifecycleCostLedger(
             initial_proof_construction_cost=full_initial_cost,
             invalidation_analysis_cost=0.0,
             witness_selection_cost=0.0,
             incremental_reverification_cost=full_incremental_reverify,
             artifact_verification_cost=0.0,
+            failed_attempt_recovery_cost=full_escaped * self.FAILED_ATTEMPT_RECOVERY_COST_PER_ESCAPE,
         )
         full_result = StrategyBenchmarkResult(
             strategy="FULL_RERUN",
             ledger=full_ledger,
-            verified_correct_outcomes=num_incremental_steps,
+            verified_correct_outcomes=full_correct,
             total_steps=num_incremental_steps,
-            escaped_defects=0,
+            escaped_defects=full_escaped,
             total_injected_defects=total_injected_defects,
-            false_reuses=0,
+            false_reuses=false_reuses_by_strategy["FULL_RERUN"],
             reused_obligations_count=0,
             reverified_obligations_count=num_incremental_steps * num_modules,
             incremental_reverification_reduction=0.0,
-            verified_outcome_efficiency=num_incremental_steps / full_ledger.total_lifecycle_cost,
+            verified_outcome_efficiency=full_correct / full_ledger.total_lifecycle_cost,
             net_dividend_positive=False,
+            false_rejections=full_false_rej,
+            clean_steps=clean_steps,
         )
 
         # 2. RANDOM_ONLY ledger & metrics (samples 10% random obligations without dependency slice tracking -> misses localized boundary bug)
         random_incremental_reverify = (
             num_incremental_steps * max(1, num_modules // 10) * self.ORACLE_EVAL_COST_PER_OBLIGATION
         )
+        random_escaped = escaped_by_strategy["RANDOM_ONLY"]
+        random_false_rej = false_rejections_by_strategy["RANDOM_ONLY"]
+        random_correct = num_incremental_steps - random_escaped - random_false_rej
         random_ledger = LifecycleCostLedger(
             initial_proof_construction_cost=full_initial_cost,
             invalidation_analysis_cost=0.0,
             witness_selection_cost=num_incremental_steps * 0.5,
             incremental_reverification_cost=random_incremental_reverify,
             artifact_verification_cost=0.0,
+            failed_attempt_recovery_cost=random_escaped * self.FAILED_ATTEMPT_RECOVERY_COST_PER_ESCAPE,
         )
         random_result = StrategyBenchmarkResult(
             strategy="RANDOM_ONLY",
             ledger=random_ledger,
-            verified_correct_outcomes=num_incremental_steps - 1,
+            verified_correct_outcomes=random_correct,
             total_steps=num_incremental_steps,
-            escaped_defects=1,  # Missed localized boundary bug
+            escaped_defects=random_escaped,
             total_injected_defects=total_injected_defects,
-            false_reuses=1,
+            false_reuses=false_reuses_by_strategy["RANDOM_ONLY"],
             reused_obligations_count=num_incremental_steps * (num_modules - max(1, num_modules // 10)),
             reverified_obligations_count=num_incremental_steps * max(1, num_modules // 10),
             incremental_reverification_reduction=1.0 - (random_ledger.total_incremental_cost / full_incremental_reverify),
-            verified_outcome_efficiency=(num_incremental_steps - 1) / random_ledger.total_lifecycle_cost,
-            net_dividend_positive=False,  # Disqualified due to escaped defect
+            verified_outcome_efficiency=random_correct / random_ledger.total_lifecycle_cost,
+            net_dividend_positive=False,
+            false_rejections=random_false_rej,
+            clean_steps=clean_steps,
         )
 
         # 3. ACTIVE_ONLY ledger & metrics (uses active EIG probes without sealed Channel B -> fooled by Goodhart trap)
         active_incremental_reverify = (
             rbpd_reverified_total * (0.75 * self.ORACLE_EVAL_COST_PER_OBLIGATION)
         )
+        active_escaped = escaped_by_strategy["ACTIVE_ONLY"]
+        active_false_rej = false_rejections_by_strategy["ACTIVE_ONLY"]
+        active_correct = num_incremental_steps - active_escaped - active_false_rej
         active_ledger = LifecycleCostLedger(
             initial_proof_construction_cost=full_initial_cost + num_modules * self.INITIAL_PROOF_GRAPH_OVERHEAD_PER_MODULE,
             invalidation_analysis_cost=num_incremental_steps * self.INVALIDATION_ANALYSIS_COST_PER_STEP,
             witness_selection_cost=num_incremental_steps * self.WITNESS_SELECTION_COST_PER_STEP,
             incremental_reverification_cost=active_incremental_reverify,
             artifact_verification_cost=rbpd_reused_total * self.RECEIPT_VERIFY_COST_PER_REUSED_ASSET,
+            failed_attempt_recovery_cost=active_escaped * self.FAILED_ATTEMPT_RECOVERY_COST_PER_ESCAPE,
         )
         active_result = StrategyBenchmarkResult(
             strategy="ACTIVE_ONLY",
             ledger=active_ledger,
-            verified_correct_outcomes=num_incremental_steps - 1,
+            verified_correct_outcomes=active_correct,
             total_steps=num_incremental_steps,
-            escaped_defects=1,  # Fooled by Goodhart proxy overfit
+            escaped_defects=active_escaped,
             total_injected_defects=total_injected_defects,
-            false_reuses=0,
+            false_reuses=false_reuses_by_strategy["ACTIVE_ONLY"],
             reused_obligations_count=rbpd_reused_total,
             reverified_obligations_count=rbpd_reverified_total,
             incremental_reverification_reduction=1.0 - (active_ledger.total_incremental_cost / full_incremental_reverify),
-            verified_outcome_efficiency=(num_incremental_steps - 1) / active_ledger.total_lifecycle_cost,
-            net_dividend_positive=False,  # Disqualified due to Goodhart escaped defect
+            verified_outcome_efficiency=active_correct / active_ledger.total_lifecycle_cost,
+            net_dividend_positive=False,
+            false_rejections=active_false_rej,
+            clean_steps=clean_steps,
         )
 
         # 4. RBPD_DUAL_CHANNEL ledger & metrics
@@ -358,12 +441,16 @@ class ProofDividendBenchmark:
         rbpd_incremental_reverify = (
             rbpd_reverified_total * self.ORACLE_EVAL_COST_PER_OBLIGATION
         )
+        rbpd_escaped = escaped_by_strategy["RBPD_DUAL_CHANNEL"]
+        rbpd_false_rej = false_rejections_by_strategy["RBPD_DUAL_CHANNEL"]
+        rbpd_correct = num_incremental_steps - rbpd_escaped - rbpd_false_rej
         rbpd_ledger = LifecycleCostLedger(
             initial_proof_construction_cost=rbpd_initial_cost,
             invalidation_analysis_cost=num_incremental_steps * self.INVALIDATION_ANALYSIS_COST_PER_STEP,
             witness_selection_cost=num_incremental_steps * self.WITNESS_SELECTION_COST_PER_STEP,
             incremental_reverification_cost=rbpd_incremental_reverify,
             artifact_verification_cost=rbpd_reused_total * self.RECEIPT_VERIFY_COST_PER_REUSED_ASSET,
+            failed_attempt_recovery_cost=rbpd_escaped * self.FAILED_ATTEMPT_RECOVERY_COST_PER_ESCAPE,
         )
         rbpd_inc_reduction = 1.0 - (
             rbpd_ledger.total_incremental_cost / full_incremental_reverify
@@ -371,20 +458,24 @@ class ProofDividendBenchmark:
         rbpd_net_positive = (
             rbpd_ledger.total_lifecycle_cost < full_ledger.total_lifecycle_cost
             and rbpd_inc_reduction >= 0.90
+            and rbpd_escaped == 0
+            and rbpd_false_rej == 0
         )
         rbpd_result = StrategyBenchmarkResult(
             strategy="RBPD_DUAL_CHANNEL",
             ledger=rbpd_ledger,
-            verified_correct_outcomes=num_incremental_steps,
+            verified_correct_outcomes=rbpd_correct,
             total_steps=num_incremental_steps,
-            escaped_defects=0,
+            escaped_defects=rbpd_escaped,
             total_injected_defects=total_injected_defects,
-            false_reuses=0,
+            false_reuses=false_reuses_by_strategy["RBPD_DUAL_CHANNEL"],
             reused_obligations_count=rbpd_reused_total,
             reverified_obligations_count=rbpd_reverified_total,
             incremental_reverification_reduction=rbpd_inc_reduction,
-            verified_outcome_efficiency=num_incremental_steps / rbpd_ledger.total_lifecycle_cost,
+            verified_outcome_efficiency=rbpd_correct / rbpd_ledger.total_lifecycle_cost,
             net_dividend_positive=rbpd_net_positive,
+            false_rejections=rbpd_false_rej,
+            clean_steps=clean_steps,
         )
 
         return LifecycleBenchmarkReport(

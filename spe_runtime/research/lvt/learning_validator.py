@@ -81,6 +81,8 @@ class LearningValidator:
     _GLOBAL_TOMBSTONES: Set[str] = set()
     _GLOBAL_REVOCATION_LEDGER: list = []
     _TOMBSTONE_FILE_PATH: Optional[str] = None
+    _LAST_LOADED_TOMBSTONE_STAT: Optional[Tuple[str, int, int]] = None
+    _LOADED_LEDGER_KEYS: Set[str] = set()
 
     @classmethod
     def register_owner_root_key(cls, owner_public_key: str | bytes) -> None:
@@ -162,6 +164,7 @@ class LearningValidator:
     def set_tombstone_store_path(cls, path: Optional[str | Path]) -> None:
         """Sets the persistent file path for durable revocation tombstones."""
         cls._TOMBSTONE_FILE_PATH = str(path) if path is not None else None
+        cls._LAST_LOADED_TOMBSTONE_STAT = None
 
     @classmethod
     def _get_tombstone_path(cls) -> Path:
@@ -172,13 +175,34 @@ class LearningValidator:
 
     @classmethod
     def _persist_tombstone_entry(cls, entry: Dict[str, Any]) -> None:
-        """Persists a tombstone record to durable filesystem storage. Fails closed when explicitly configured."""
+        """Persists a tombstone record to durable filesystem storage with advisory file locking. Fails closed when explicitly configured."""
+        import fcntl
+
         p = cls._get_tombstone_path()
         explicit = bool(cls._TOMBSTONE_FILE_PATH or os.environ.get("SPE_TOMBSTONE_STORE_PATH"))
         try:
             p.parent.mkdir(parents=True, exist_ok=True)
+            serialized_line = json.dumps(entry, sort_keys=True)
+            dedup_key = hashlib.sha256(serialized_line.encode("utf-8")).hexdigest()
+            cls._LOADED_LEDGER_KEYS.add(dedup_key)
             with p.open("a", encoding="utf-8") as f:
-                f.write(json.dumps(entry) + "\n")
+                try:
+                    fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+                except OSError:
+                    pass
+                try:
+                    f.write(serialized_line + "\n")
+                    f.flush()
+                finally:
+                    try:
+                        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+                    except OSError:
+                        pass
+            try:
+                st = p.stat()
+                cls._LAST_LOADED_TOMBSTONE_STAT = (str(p), st.st_mtime_ns, st.st_size)
+            except OSError:
+                cls._LAST_LOADED_TOMBSTONE_STAT = None
         except OSError as exc:
             if explicit:
                 raise RuntimeError(f"Failed to persist revocation tombstone to '{p}': {exc}") from exc
@@ -189,34 +213,58 @@ class LearningValidator:
         p = Path(path) if path else cls._get_tombstone_path()
         if not p.is_file():
             return 0
+        try:
+            st = p.stat()
+            stat_sig = (str(p), st.st_mtime_ns, st.st_size)
+            if path is None and cls._LAST_LOADED_TOMBSTONE_STAT == stat_sig:
+                return 0
+        except OSError:
+            stat_sig = None
+
+        import fcntl
         loaded = 0
         try:
             with p.open("r", encoding="utf-8") as f:
-                for line in f:
-                    line = line.strip()
-                    if not line:
-                        continue
+                try:
+                    fcntl.flock(f.fileno(), fcntl.LOCK_SH)
+                except OSError:
+                    pass
+                try:
+                    for line in f:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        try:
+                            entry = json.loads(line)
+                            dedup_key = hashlib.sha256(line.encode("utf-8")).hexdigest()
+                            if dedup_key not in cls._LOADED_LEDGER_KEYS:
+                                cls._LOADED_LEDGER_KEYS.add(dedup_key)
+                                cls._GLOBAL_REVOCATION_LEDGER.append(entry)
+                            for k in (entry.get("receipt_hash"), entry.get("evidence_hash")):
+                                if k and isinstance(k, str) and k.strip():
+                                    cls._GLOBAL_TOMBSTONES.add(k.strip().lower())
+                            tx_id = entry.get("tx_id")
+                            target_model_id = entry.get("target_model_id")
+                            if tx_id and target_model_id:
+                                cls._GLOBAL_TOMBSTONES.add(f"{tx_id}:{target_model_id}")
+                            elif tx_id:
+                                cls._GLOBAL_TOMBSTONES.add(f"tx:{tx_id}")
+                            revoked_vpk = entry.get("revoked_validator_pk")
+                            if revoked_vpk and isinstance(revoked_vpk, str) and revoked_vpk.strip():
+                                vpk = revoked_vpk.strip().lower()
+                                cls._REVOKED_VALIDATORS.add(vpk)
+                                cls._GLOBAL_TOMBSTONES.add(f"validator_pk:{vpk}")
+                                cls._OWNER_AUTHORIZED_VALIDATORS.discard(vpk)
+                            loaded += 1
+                        except (json.JSONDecodeError, KeyError):
+                            continue
+                finally:
                     try:
-                        entry = json.loads(line)
-                        cls._GLOBAL_REVOCATION_LEDGER.append(entry)
-                        for k in (entry.get("receipt_hash"), entry.get("evidence_hash")):
-                            if k and isinstance(k, str) and k.strip():
-                                cls._GLOBAL_TOMBSTONES.add(k.strip().lower())
-                        tx_id = entry.get("tx_id")
-                        target_model_id = entry.get("target_model_id")
-                        if tx_id and target_model_id:
-                            cls._GLOBAL_TOMBSTONES.add(f"{tx_id}:{target_model_id}")
-                        elif tx_id:
-                            cls._GLOBAL_TOMBSTONES.add(f"tx:{tx_id}")
-                        revoked_vpk = entry.get("revoked_validator_pk")
-                        if revoked_vpk and isinstance(revoked_vpk, str) and revoked_vpk.strip():
-                            vpk = revoked_vpk.strip().lower()
-                            cls._REVOKED_VALIDATORS.add(vpk)
-                            cls._GLOBAL_TOMBSTONES.add(f"validator_pk:{vpk}")
-                            cls._OWNER_AUTHORIZED_VALIDATORS.discard(vpk)
-                        loaded += 1
-                    except (json.JSONDecodeError, KeyError):
-                        continue
+                        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+                    except OSError:
+                        pass
+            if path is None and stat_sig is not None:
+                cls._LAST_LOADED_TOMBSTONE_STAT = stat_sig
         except OSError:
             return loaded
         return loaded
@@ -259,6 +307,8 @@ class LearningValidator:
         cls._GLOBAL_TOMBSTONES.clear()
         cls._GLOBAL_REVOCATION_LEDGER.clear()
         cls._TOMBSTONE_FILE_PATH = None
+        cls._LAST_LOADED_TOMBSTONE_STAT = None
+        cls._LOADED_LEDGER_KEYS.clear()
 
     def __init__(
         self,
@@ -380,6 +430,7 @@ class LearningValidator:
 
     @property
     def is_owner_authorized(self) -> bool:
+        self.load_tombstones_from_disk()
         pk_hex = self._pk.hex().lower()
         if pk_hex in self._REVOKED_VALIDATORS or f"validator_pk:{pk_hex}" in self._GLOBAL_TOMBSTONES:
             return False
@@ -387,6 +438,7 @@ class LearningValidator:
 
     @property
     def has_cryptographic_owner_authority(self) -> bool:
+        self.load_tombstones_from_disk()
         pk_hex = self._pk.hex().lower()
         if pk_hex in self._REVOKED_VALIDATORS or f"validator_pk:{pk_hex}" in self._GLOBAL_TOMBSTONES:
             return False
@@ -682,6 +734,7 @@ class LearningValidator:
                     expected_oracle_id=tx.evaluator_id,
                 )
                 if oracle_ok:
+                    self._is_owner_authorized = self.is_owner_authorized
                     if not self._is_owner_authorized:
                         tx.status = QualificationStatus.REJECTED
                         tx.is_attested_oracle = False
@@ -827,8 +880,11 @@ class LearningValidator:
             return False
         if not tx.artifact_hash:
             return False
+        study_ev_hash = tx.lvt2_study_result.evidence_hash if tx.lvt2_study_result else None
         if self.is_tombstoned(
             receipt_hash=tx.artifact_hash,
+            evidence_hash=study_ev_hash,
+            tx_id=tx.tx_id,
         ):
             return False
         if public_key is not None and public_key != self._pk:
@@ -1001,13 +1057,18 @@ class LearningValidator:
 
         receipt_hash = report.get("transfer_receipt_hash")
         evidence_hash = report.get("evidence_hash")
+        parent_study_ev = tx.lvt2_study_result.evidence_hash if tx.lvt2_study_result else None
         if (
             self.is_tombstoned(
                 receipt_hash=receipt_hash,
                 evidence_hash=evidence_hash,
+                tx_id=tx.tx_id,
+                target_model_id=target_model_id,
             )
             or self.is_tombstoned(
                 receipt_hash=tx.artifact_hash,
+                evidence_hash=parent_study_ev,
+                tx_id=tx.tx_id,
             )
         ):
             return False, False, f"Cross-model transfer evidence for '{target_model_id}' has been revoked (persistent tombstone enforced)"
@@ -1052,6 +1113,8 @@ class LearningValidator:
         if report.get("revoked") is True or self.is_tombstoned(
             receipt_hash=report.get("transfer_receipt_hash"),
             evidence_hash=report.get("evidence_hash"),
+            tx_id=tx.tx_id,
+            target_model_id=target_model_id,
         ):
             return False, False, "Transfer report has been revoked (persistent tombstone enforced)"
 

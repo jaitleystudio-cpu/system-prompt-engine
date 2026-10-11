@@ -783,6 +783,11 @@ class LearningTransferProtocol:
             models_to_export = list(supported_models)
         else:
             models_to_export = sorted(list(verified))
+            if not models_to_export:
+                raise ValueError(
+                    "Cannot synthesize production .spe learning artifact with zero verified_models: "
+                    "synthetic model identifier digests cannot qualify as verified model revisions unless allow_synthetic_models=True."
+                )
 
         empirical_gain = {
             "delta_improvement": study.family_macro_delta,

@@ -1041,6 +1041,16 @@ def test_round3_parent_and_variant_synthetic_model_digests_rejected():
             allow_synthetic_models=False,
         )
 
+    # Also when supported_models=None is omitted, zero verified_models must fail closed
+    with pytest.raises(ValueError, match="(?i)(synthetic|zero verified_models|verified_models)"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx=tx,
+            refined_prompt_content="refined prompt",
+            supported_models=None,
+            validator=validator,
+            allow_synthetic_models=False,
+        )
+
 
 def test_round3_cryptographic_owner_authority_and_validator_revocation_enforced(tmp_path):
     """
@@ -1049,7 +1059,7 @@ def test_round3_cryptographic_owner_authority_and_validator_revocation_enforced(
        and True ONLY when backed by cryptographic owner root attestation.
     2. require_cryptographic_owner_authority=True rejects unattested validators even when registry is empty.
     3. Revoking a validator key via LearningValidator.revoke_validator_key invalidates its authority
-       immediately and across process restarts.
+       immediately (including in validate_and_commit) and across process restarts.
     4. Malformed attestation timestamps (bool, negative, NaN) are rejected.
     """
     tombstone_file = tmp_path / "round3_validator_revocation.jsonl"
@@ -1120,6 +1130,41 @@ def test_round3_cryptographic_owner_authority_and_validator_revocation_enforced(
     assert strict_val.is_owner_authorized is False
     assert strict_val.has_cryptographic_owner_authority is False
 
+    # Calling validate_and_commit on the already-instantiated strict_val must now REJECT
+    train = [Observation(f"tr-{i}", f"tr-fam-{i}", f"a{i:063x}", 0.15, 0.90, 0.15) for i in range(24)]
+    heldout = [Observation(f"ho-{i}", f"ho-fam-{i}", f"b{i:063x}", 0.15, 0.90) for i in range(24)]
+    proto = StudyProtocol(
+        study_id="STUDY-REVOKED-VAL",
+        evaluator_id="oracle-closure-01",
+        generator_id="gpt-4o",
+        evaluator_kind="independent_static_oracle",
+        oracle_digest="1" * 64,
+        model_digest="2" * 64,
+        alpha=0.05,
+        primary_effect_floor=0.05,
+        min_heldout_families=20,
+        family_level_significance=True,
+        multiplicity=2,
+    )
+    study_res = run_study(proto, train, heldout)
+    tx_revoked_val = LearningValidityTransaction(
+        tx_id="TX-REVOKED-VAL",
+        claim=LearningClaim("CLM-RV", "formal_verification", "Revoked val test", "gpt-4o", "b1", "c1", 5000),
+        protocol=ExperimentProtocol("PROTO-RV"),
+        results=FourArmResults(0.15, 0.90, 0.15, 0.90, 0.75, 0.75, 0.75, True, 5000),
+        evaluator_id="oracle-closure-01",
+        evaluator_type=EvaluatorType.INDEPENDENT_STATIC_ORACLE,
+        lvt2_study_result=study_res,
+        oracle_attestation=create_oracle_attestation(
+            signing_key=oracle_sk,
+            public_key=oracle_pk,
+            oracle_id="oracle-closure-01",
+            evidence_hash=study_res.evidence_hash,
+        ),
+    )
+    rejected_tx = strict_val.validate_and_commit(tx_revoked_val)
+    assert rejected_tx.status == QualificationStatus.REJECTED
+
     # Simulate restart and attempt to reuse the pre-signed attestation
     LearningValidator.clear_owner_registries()
     LearningValidator.set_tombstone_store_path(tombstone_file)
@@ -1134,5 +1179,12 @@ def test_round3_cryptographic_owner_authority_and_validator_revocation_enforced(
             owner_attestation=attestation,
             require_cryptographic_owner_authority=True,
         )
+
+    # Verify repeated load_tombstones_from_disk calls do not duplicate _GLOBAL_REVOCATION_LEDGER entries
+    ledger_len_before = len(LearningValidator._GLOBAL_REVOCATION_LEDGER)
+    LearningValidator.load_tombstones_from_disk(tombstone_file)
+    LearningValidator.load_tombstones_from_disk(tombstone_file)
+    assert len(LearningValidator._GLOBAL_REVOCATION_LEDGER) == ledger_len_before
+
 
 

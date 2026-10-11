@@ -46,12 +46,17 @@ from spe_runtime.research.wdes.witness_hypergraph import (
 
 @dataclass(frozen=True)
 class InvalidationEvent:
-    """Describes a code/prompt edit, environment assumption drift, model update, or revocation."""
+    """Describes a code/prompt edit, requirement/tool/dataset/permission change, environment drift, model update, or revocation."""
 
     event_type: str
     touched_modules: Tuple[str, ...] = field(default_factory=tuple)
+    touched_requirements: Tuple[str, ...] = field(default_factory=tuple)
+    touched_tools: Tuple[str, ...] = field(default_factory=tuple)
     violated_assumptions: Dict[str, Any] = field(default_factory=dict)
     new_model_digest: Optional[str] = None
+    new_dataset_commitment: Optional[str] = None
+    new_environment_fingerprint: Optional[str] = None
+    revoked_permissions: Tuple[str, ...] = field(default_factory=tuple)
     revoked_oracle_id: Optional[str] = None
     evaluation_time: Optional[float] = None
 
@@ -128,13 +133,23 @@ class SelectiveRequalificationEngine:
             raise KeyError(f"Unknown obligation_id '{obligation_id}'")
         self.contract_validator.revoke_asset(asset, reason=reason, details=f"Revoked {obligation_id}")
 
+    def _get_upstream_obligations(self, obl_id: str) -> Set[str]:
+        """Returns all upstream obligation IDs from explicit bindings and CausalProofGraph edges."""
+        upstream = set(self.obligation_dependencies.get(obl_id, set()))
+        for edge in self.proof_graph.edges.values():
+            if edge.target_id == obl_id and edge.source_id != obl_id:
+                upstream.add(edge.source_id)
+        return upstream
+
     def _compute_downstream_cone(self, directly_touched: Set[str]) -> Set[str]:
         """Computes transitive closure of obligations depending on directly_touched obligations."""
+        all_obl_ids = set(self.hypergraph.obligations.keys()) | set(self.obligation_dependencies.keys())
         cone = set(directly_touched)
         changed = True
         while changed:
             changed = False
-            for obl_id, upstream_set in self.obligation_dependencies.items():
+            for obl_id in all_obl_ids:
+                upstream_set = self._get_upstream_obligations(obl_id)
                 if obl_id not in cone and (upstream_set & cone):
                     cone.add(obl_id)
                     changed = True
@@ -144,10 +159,38 @@ class SelectiveRequalificationEngine:
         """
         Evaluates all registered obligations under the given InvalidationEvent and partitions
         them into reused (VALID), stale (STALE), invalid (INVALID), and unknown (UNKNOWN).
+        Enforces sound transitive propagation over multi-hop and diamond dependency graphs.
         """
         directly_touched_obls: Set[str] = set()
         for mod in event.touched_modules:
             directly_touched_obls.update(self.module_to_obligations.get(mod, set()))
+
+        if event.touched_requirements:
+            req_set = set(event.touched_requirements)
+            for obl_id, asset in self.assets_by_obligation.items():
+                if set(asset.requirement_atoms) & req_set:
+                    directly_touched_obls.add(obl_id)
+
+        if event.touched_tools:
+            tool_set = set(event.touched_tools)
+            for obl_id, base_assump in self.base_assumptions.items():
+                bound_tool = base_assump.get("tool")
+                bound_tools = base_assump.get("tools", ())
+                if (bound_tool and str(bound_tool) in tool_set) or (
+                    isinstance(bound_tools, (list, tuple, set)) and (set(str(t) for t in bound_tools) & tool_set)
+                ) or (self.obligation_to_modules.get(obl_id, set()) & tool_set):
+                    directly_touched_obls.add(obl_id)
+
+        if event.revoked_permissions:
+            perm_set = set(event.revoked_permissions)
+            for obl_id, asset in self.assets_by_obligation.items():
+                base_assump = self.base_assumptions.get(obl_id, {})
+                if (
+                    asset.authority_grant_id in perm_set
+                    or asset.authority_scope in perm_set
+                    or str(base_assump.get("permission", "")) in perm_set
+                ):
+                    directly_touched_obls.add(obl_id)
 
         # Also check if any obligation's assumptions are directly violated by event.violated_assumptions
         for obl_id, base_assump in self.base_assumptions.items():
@@ -157,32 +200,28 @@ class SelectiveRequalificationEngine:
 
         transitive_cone = self._compute_downstream_cone(directly_touched_obls)
 
-        reused: List[str] = []
-        stale: List[str] = []
-        invalid: List[str] = []
-        unknown: List[str] = []
         verdicts: Dict[str, AssetValidationVerdict] = {}
-
         revoked_oracles = (event.revoked_oracle_id,) if event.revoked_oracle_id else ()
 
         for obl_id in sorted(self.hypergraph.obligations.keys()):
             asset = self.assets_by_obligation.get(obl_id)
             if asset is None:
-                v = AssetValidationVerdict(
+                verdicts[obl_id] = AssetValidationVerdict(
                     status=EpistemicStatus.UNKNOWN,
                     can_reuse=False,
                     reason="No asset registered for obligation",
                 )
-                unknown.append(obl_id)
-                verdicts[obl_id] = v
                 continue
 
             # Determine current subject, slice, assumptions, and model digest for this obligation
-            if obl_id in directly_touched_obls and any(
-                m in self.obligation_to_modules.get(obl_id, set()) for m in event.touched_modules
+            if obl_id in directly_touched_obls and (
+                any(m in self.obligation_to_modules.get(obl_id, set()) for m in event.touched_modules)
+                or (event.touched_requirements and (set(asset.requirement_atoms) & set(event.touched_requirements)))
             ):
                 curr_subject = hashlib.sha256(
-                    f"mutated-subject:{obl_id}:{','.join(event.touched_modules)}".encode("utf-8")
+                    f"mutated-subject:{obl_id}:{','.join(event.touched_modules)}:{','.join(event.touched_requirements)}".encode(
+                        "utf-8"
+                    )
                 ).hexdigest()
             else:
                 curr_subject = self.base_subject_digests[obl_id]
@@ -199,6 +238,12 @@ class SelectiveRequalificationEngine:
                 if k in curr_assumptions:
                     curr_assumptions[k] = v
 
+            if event.touched_tools and obl_id in directly_touched_obls:
+                if "tool" in curr_assumptions:
+                    curr_assumptions["tool"] = f"mutated:{','.join(event.touched_tools)}"
+                if "tools" in curr_assumptions:
+                    curr_assumptions["tools"] = [f"mutated:{t}" for t in event.touched_tools]
+
             curr_model = (
                 event.new_model_digest
                 if event.new_model_digest is not None
@@ -213,13 +258,69 @@ class SelectiveRequalificationEngine:
                 current_model_digest=curr_model,
                 current_time=event.evaluation_time,
                 revoked_oracles=revoked_oracles,
+                current_environment_fingerprint=event.new_environment_fingerprint,
+                current_evaluation_dataset_commitment=event.new_dataset_commitment,
             )
+
+            if event.revoked_permissions and obl_id in directly_touched_obls and verdict.status != EpistemicStatus.INVALID:
+                verdict = AssetValidationVerdict(
+                    status=EpistemicStatus.INVALID,
+                    can_reuse=False,
+                    reason=f"Authority/permission revoked for '{obl_id}': {', '.join(event.revoked_permissions)}",
+                    triggered_invalidations=(InvalidationTrigger.AUTHORITY_SCOPE_CHANGED.value,),
+                )
+
             verdicts[obl_id] = verdict
-            if verdict.status == EpistemicStatus.VALID:
+
+        # Fixed-point transitive propagation across multi-hop and diamond dependency graphs:
+        # 1. Any obligation with an unregistered or UNKNOWN upstream dependency becomes UNKNOWN.
+        # 2. Any VALID obligation with an INVALID or STALE upstream dependency becomes STALE.
+        changed = True
+        while changed:
+            changed = False
+            for obl_id in sorted(self.hypergraph.obligations.keys()):
+                current_verdict = verdicts[obl_id]
+                if current_verdict.status != EpistemicStatus.VALID:
+                    continue
+                upstream_ids = self._get_upstream_obligations(obl_id)
+                for up_id in sorted(upstream_ids):
+                    up_verdict = verdicts.get(up_id)
+                    if up_verdict is None or up_verdict.status == EpistemicStatus.UNKNOWN:
+                        verdicts[obl_id] = AssetValidationVerdict(
+                            status=EpistemicStatus.UNKNOWN,
+                            can_reuse=False,
+                            reason=f"Conservative UNKNOWN: upstream dependency '{up_id}' is UNKNOWN or unregistered",
+                            triggered_invalidations=(InvalidationTrigger.DEPENDENCY_EVIDENCE_CHANGED.value,),
+                        )
+                        changed = True
+                        break
+                    if up_verdict.status in (EpistemicStatus.INVALID, EpistemicStatus.STALE):
+                        verdicts[obl_id] = AssetValidationVerdict(
+                            status=EpistemicStatus.STALE,
+                            can_reuse=False,
+                            reason=(
+                                f"Asset is STALE due to transitive upstream invalidation from '{up_id}' "
+                                f"({up_verdict.status.value})"
+                            ),
+                            triggered_invalidations=(
+                                InvalidationTrigger.PROOF_SLICE_CHANGED.value,
+                                InvalidationTrigger.DEPENDENCY_EVIDENCE_CHANGED.value,
+                            ),
+                        )
+                        changed = True
+                        break
+
+        reused: List[str] = []
+        stale: List[str] = []
+        invalid: List[str] = []
+        unknown: List[str] = []
+        for obl_id in sorted(self.hypergraph.obligations.keys()):
+            v = verdicts[obl_id]
+            if v.status == EpistemicStatus.VALID:
                 reused.append(obl_id)
-            elif verdict.status == EpistemicStatus.STALE:
+            elif v.status == EpistemicStatus.STALE:
                 stale.append(obl_id)
-            elif verdict.status == EpistemicStatus.INVALID:
+            elif v.status == EpistemicStatus.INVALID:
                 invalid.append(obl_id)
             else:
                 unknown.append(obl_id)

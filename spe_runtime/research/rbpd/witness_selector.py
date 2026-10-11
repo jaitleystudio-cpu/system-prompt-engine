@@ -226,6 +226,16 @@ class DualChannelWitnessSelector:
         )
         selected_a = tuple(ranked_probes[:active_budget])
 
+        if self.sampler.min_sealed_fraction < 1.0:
+            min_sealed_for_ratio = math.ceil(
+                len(selected_a)
+                * self.sampler.min_sealed_fraction
+                / (1.0 - self.sampler.min_sealed_fraction)
+            )
+        else:
+            min_sealed_for_ratio = max(1, len(selected_a))
+        sealed_count = max(sealed_count, min_sealed_for_ratio)
+
         # Channel B: Draw stratified random witnesses from sealed held-out families
         selected_b, seed_hmac = self.sampler.sample_stratified(
             parent_receipt_hash=parent_receipt_hash,
@@ -233,6 +243,15 @@ class DualChannelWitnessSelector:
             epoch_nonce=epoch_nonce,
             count=sealed_count,
         )
+
+        if self.sampler.min_sealed_fraction < 1.0 and len(selected_a) > 0:
+            max_active_for_pool = math.floor(
+                len(selected_b)
+                * (1.0 - self.sampler.min_sealed_fraction)
+                / self.sampler.min_sealed_fraction
+            )
+            if len(selected_a) > max_active_for_pool:
+                selected_a = selected_a[:max_active_for_pool]
 
         total_selected = len(selected_a) + len(selected_b)
         sealed_frac = len(selected_b) / float(total_selected) if total_selected > 0 else 0.0
