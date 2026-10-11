@@ -439,6 +439,7 @@ def test_defect_lvt_f09_lvt2_artifact_synthesis_and_drift_monitoring():
     artifact_json = LearningTransferProtocol.synthesize_spe_learning_artifact(
         tx=committed,
         refined_prompt_content="prompt content",
+        validator=validator,  # previously untrusted implicit verifier is forbidden
     )
     doc = json.loads(artifact_json)
     assert doc["empirical_gain"]["delta_improvement"] == pytest.approx(0.80)
