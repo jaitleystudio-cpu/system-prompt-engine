@@ -99,3 +99,18 @@ def test_attacker_signed_receipt_cannot_export_verified_models():
             tx, refined_prompt_content="forged prompt",
             supported_models=("model-never-tested",),
         )
+
+
+def test_duck_typed_fake_verifier_cannot_authorize_portable_export():
+    tx, _ = _attacker_signed_tx()
+    tx.lvt2_study_result = object()
+    tx.is_attested_oracle = True
+
+    class FakeVerifier:
+        def verify_transaction_signature(self, other):
+            return True
+
+    with pytest.raises(ValueError, match="(trusted|verifier|receipt|evidence)"):
+        LearningTransferProtocol.synthesize_spe_learning_artifact(
+            tx, refined_prompt_content="fake attestation", validator=FakeVerifier()
+        )
