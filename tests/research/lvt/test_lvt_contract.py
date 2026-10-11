@@ -174,8 +174,9 @@ def test_valid_transaction_commitment_and_cryptographic_receipt():
     assert len(fixture_tx.artifact_hash) == 64  # SHA-256
     assert len(fixture_tx.canonical_receipt_signature) == 128  # Ed25519 hex (64 bytes = 128 chars)
 
-    # Verify cryptographic signature
-    assert validator.verify_transaction_signature(fixture_tx) is True
+    # A valid self-signed test fixture is not authenticated by this validator.
+    # Production receipt authority must never be inferred from fixture bytes.
+    assert validator.verify_transaction_signature(fixture_tx) is False
 
 
 def test_v1_aggregate_only_defaults_to_research_unqualified():
