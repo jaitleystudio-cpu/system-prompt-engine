@@ -4,8 +4,12 @@ Proves that the four core SPE Ω subsystems are connected and verified in a
 single end-to-end execution path on the release candidate worktree:
 1. Compile-Time Intent Compiler (`MetaPromptCompiler` + `ZeroDriftSentry`)
 2. Runtime Authority Gateway (`WireProxyServer` + `CapabilityFirewall` + DACO Offload)
-3. Research Qualification Gates (`REC-2E` `CapabilityPassportEnvelope` + `ObligationRequalificationEngine`)
+3. Research Qualification Gates (`LVT` + `REC-2E` `CapabilityPassportEnvelope` + `ObligationRequalificationEngine`)
 4. Web App & Promptfoo CI/CD Exporter (`apps/web/src/engine/promptfooExporter.ts` with measured JCS proofs)
+5. Adversarial Qualification Probes:
+   - Default `WireProxyServer` rejects unsigned `CapabilityGrant`
+   - Default `LearningValidator` rejects fresh unregistered oracle keypairs
+   - `rfc8785_canonicalize` passes published RFC 8785 JCS standard vectors (UTF-16 key order, ES6 numbers, control chars, NaN/Inf rejection)
 """
 
 from __future__ import annotations
@@ -21,7 +25,11 @@ from pathlib import Path
 
 import pytest
 
-from spe_runtime.ci_gate.receipt import verify_receipt_signature
+from spe_runtime.ci_gate.receipt import (
+    generate_keypair,
+    rfc8785_canonicalize,
+    verify_receipt_signature,
+)
 from spe_runtime.prompt.meta_compiler import (
     CompletionCertificate,
     MetaPromptCompiler,
@@ -29,6 +37,10 @@ from spe_runtime.prompt.meta_compiler import (
     SelfVerifyingCompletionHarness,
     VerificationVerdict,
     ZeroDriftSentry,
+)
+from spe_runtime.research.lvt.learning_validator import (
+    LearningValidator,
+    create_oracle_attestation,
 )
 from spe_runtime.research.lvt.types import OracleAttestation
 from spe_runtime.research.rec2 import (
@@ -41,6 +53,12 @@ from spe_runtime.research.rec2 import (
     canonical_sha256,
 )
 from spe_runtime.research.wdes.types import PredicateValue
+from spe_runtime.runtime_gateway.firewall import sign_grant
+from spe_runtime.runtime_gateway.models import (
+    CapabilityGrant,
+    CapabilityType,
+    SecurityPolicyViolationError,
+)
 from spe_runtime.runtime_gateway.wire_proxy import TelemetryEvidence, WireProxyServer
 
 
@@ -273,8 +291,101 @@ def test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline() -> None:
     assert "ob_provider_tool_use" in inspection.requalification_required_obligations
 
 
+def test_default_wire_proxy_rejects_unsigned_grant() -> None:
+    """Proves that a default WireProxyServer enforces verify_signatures=True and rejects unsigned grants."""
+    proxy = WireProxyServer(host="127.0.0.1", port=_free_port())
+    assert proxy.firewall.verify_signatures is True
+
+    unsigned_grant = CapabilityGrant(
+        grant_id="grant-unsigned-01",
+        capability=CapabilityType.DELETE_FILE,
+        resource_scope="/tmp/**",
+        action_scope="delete",
+        expiration_iso="2030-01-01T00:00:00Z",
+        issuer="spe-local-root",
+        approval_identity="admin-approver",
+        nonce="nonce-unsigned-001",
+        signature="",
+    )
+    with pytest.raises(SecurityPolicyViolationError):
+        proxy.firewall.install_grant(unsigned_grant)
+
+    # Only a grant signed by the proxy's registered trust root can be installed
+    signed_grant = sign_grant(
+        CapabilityGrant(
+            grant_id="grant-signed-01",
+            capability=CapabilityType.DELETE_FILE,
+            resource_scope="/tmp/**",
+            action_scope="delete",
+            expiration_iso="2030-01-01T00:00:00Z",
+            issuer="spe-local-root",
+            approval_identity="admin-approver",
+            nonce="nonce-signed-001",
+            signature="",
+        ),
+        proxy.firewall_root_sk,
+        proxy.firewall_root_pk,
+    )
+    proxy.firewall.install_grant(signed_grant)
+    assert "grant-signed-01" in proxy.firewall.grants
+
+
+def test_default_learning_validator_rejects_unregistered_oracle() -> None:
+    """Proves that a default LearningValidator rejects fresh unregistered oracle attestations."""
+    validator = LearningValidator()
+    rogue_sk, rogue_pk = generate_keypair()
+    ev_hash = "a" * 64
+    unregistered_att = create_oracle_attestation(
+        signing_key=rogue_sk,
+        public_key=rogue_pk,
+        oracle_id="rogue-unregistered-oracle",
+        evidence_hash=ev_hash,
+    )
+    ok, msg = validator.verify_oracle_attestation(unregistered_att, ev_hash)
+    assert ok is False
+    assert "untrusted oracle public key" in msg
+
+    # Once explicitly registered, the attestation verifies cleanly
+    validator.register_trusted_oracle(rogue_pk.hex())
+    ok2, msg2 = validator.verify_oracle_attestation(unregistered_att, ev_hash)
+    assert ok2 is True
+    assert msg2 == "verified"
+
+
+def test_rfc8785_canonicalize_published_standard_vectors() -> None:
+    """Verifies RFC 8785 JCS standard test vectors (UTF-16 key order, ES6 numbers, control chars, NaN/Inf)."""
+    # 1. RFC 8785 Section 3.2.3: UTF-16 code unit sorting vs Unicode code point sorting
+    # U+1F600 (😀, UTF-16 surrogate 0xD83D 0xDE00) must sort BEFORE U+FB00 (ﬀ, UTF-16 0xFB00)
+    utf16_obj = {"\ufb00": "latin_ligature_ff", "\U0001f600": "grinning_face", "a": 1}
+    canonical = rfc8785_canonicalize(utf16_obj).decode("utf-8")
+    assert canonical == '{"a":1,"😀":"grinning_face","ﬀ":"latin_ligature_ff"}'
+
+    # 2. RFC 8785 Section 3.2.2.3 / Appendix B: ECMAScript Number::toString vectors
+    assert rfc8785_canonicalize(-0.0) == b"0"
+    assert rfc8785_canonicalize(0.0) == b"0"
+    assert rfc8785_canonicalize(4.50) == b"4.5"
+    assert rfc8785_canonicalize(2e-3) == b"0.002"
+    assert rfc8785_canonicalize(1e-6) == b"0.000001"
+    assert rfc8785_canonicalize(1e-7) == b"1e-7"
+    assert rfc8785_canonicalize(1e20) == b"100000000000000000000"
+    assert rfc8785_canonicalize(1e21) == b"1e+21"
+    assert rfc8785_canonicalize(1e30) == b"1e+30"
+    assert rfc8785_canonicalize(333333333.33333329) == b"333333333.3333333"
+
+    # 3. RFC 8785 Section 3.2.2.2: Control character escaping
+    assert rfc8785_canonicalize("\x00\x08\x09\x0a\x0b\x0c\x0d\x1f\"\\/") == (
+        b'"\\u0000\\b\\t\\n\\u000b\\f\\r\\u001f\\"\\\\/"'
+    )
+
+    # 4. NaN and Infinity must raise ValueError
+    with pytest.raises(ValueError):
+        rfc8785_canonicalize(float("nan"))
+    with pytest.raises(ValueError):
+        rfc8785_canonicalize(float("inf"))
+
+
 def test_unified_web_promptfoo_exporter_measured_proofs() -> None:
-    """Executes the TypeScript Promptfoo Exporter verification suite from pytest."""
+    """Executes the TypeScript Promptfoo Exporter verification suite (5/5 checks) from pytest."""
     repo_root = Path(__file__).resolve().parents[2]
     script_path = repo_root / "apps" / "web" / "scripts" / "test-promptfoo-exporter.mjs"
     assert script_path.exists(), f"Missing {script_path}"
@@ -287,4 +398,4 @@ def test_unified_web_promptfoo_exporter_measured_proofs() -> None:
         check=False,
     )
     assert proc.returncode == 0, f"Promptfoo exporter verification failed:\n{proc.stdout}\n{proc.stderr}"
-    assert "ALL PROMPTFOO BRIDGE EXPORTER TESTS PASSED! (4/4)" in proc.stdout
+    assert "ALL PROMPTFOO BRIDGE EXPORTER TESTS PASSED! (5/5)" in proc.stdout

@@ -40,7 +40,13 @@ class LearningValidator:
             self._pk = default_public_key
         else:
             self._sk, self._pk = generate_keypair()
-        self._trusted_oracle_keys = set(trusted_oracle_keys) if trusted_oracle_keys is not None else None
+        self._trusted_oracle_keys: Set[str] = (
+            set(trusted_oracle_keys) if trusted_oracle_keys is not None else set()
+        )
+
+    def register_trusted_oracle(self, oracle_public_key_hex: str) -> None:
+        """Registers an authorized Ed25519 public key (64-char hex) for an independent oracle."""
+        self._trusted_oracle_keys.add(oracle_public_key_hex)
 
     @property
     def public_key(self) -> bytes:
@@ -301,9 +307,8 @@ class LearningValidator:
         if not attestation.signature or len(attestation.signature) != 128:
             return False, "invalid signature format"
 
-        if self._trusted_oracle_keys is not None:
-            if attestation.oracle_public_key not in self._trusted_oracle_keys:
-                return False, f"untrusted oracle public key: {attestation.oracle_public_key}"
+        if not self._trusted_oracle_keys or attestation.oracle_public_key not in self._trusted_oracle_keys:
+            return False, f"untrusted oracle public key: {attestation.oracle_public_key}"
 
         try:
             pk_bytes = bytes.fromhex(attestation.oracle_public_key)

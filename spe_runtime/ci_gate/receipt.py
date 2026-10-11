@@ -12,6 +12,78 @@ from typing import Any
 # 1. RFC 8785 JSON Canonicalization Scheme (JCS)
 # ==============================================================================
 
+from decimal import Decimal
+import math
+
+
+def _rfc8785_format_number(val: int | float) -> bytes:
+    """Format finite numbers per RFC 8785 Section 3.2.2.3 (ECMAScript Number::toString)."""
+    if isinstance(val, int) and not isinstance(val, bool):
+        return str(val).encode("utf-8")
+    fval = float(val)
+    if math.isnan(fval) or math.isinf(fval):
+        raise ValueError("RFC 8785 forbids NaN and Infinity in canonical JSON")
+    if fval == 0.0:
+        return b"0"
+
+    sign = "-" if fval < 0 else ""
+    abs_val = abs(fval)
+    # Use Python's shortest round-trip IEEE-754 representation via repr()
+    dec = Decimal(repr(abs_val)).normalize()
+    sign_dec, digit_tuple, exponent = dec.as_tuple()
+    digits = "".join(str(d) for d in digit_tuple)
+    # Remove trailing zeros if any remain
+    digits = digits.rstrip("0") or "0"
+    k = len(digits)
+    # Value is (digits as integer) * 10**exponent = 0.<digits> * 10**(k + exponent)
+    # Wait: dec = int(digits) * 10**(exponent + (len(digit_tuple) - k))
+    adj_exp = int(exponent) + (len(digit_tuple) - k)
+    n = k + adj_exp  # Scientific exponent + 1 (so 10**(n-1) <= abs_val < 10**n)
+
+    if k <= n <= 21:
+        formatted = digits + ("0" * (n - k))
+    elif 0 < n < k:
+        formatted = digits[:n] + "." + digits[n:]
+    elif -5 <= n <= 0:
+        formatted = "0." + ("0" * (-n)) + digits
+    else:
+        mantissa = digits[0] if k == 1 else (digits[0] + "." + digits[1:])
+        exp_val = n - 1
+        exp_sign = "+" if exp_val >= 0 else "-"
+        formatted = f"{mantissa}e{exp_sign}{abs(exp_val)}"
+
+    return (sign + formatted).encode("utf-8")
+
+
+def _rfc8785_format_string(s: str) -> bytes:
+    """Escape string per RFC 8785 Section 3.2.2.2."""
+    out: list[str] = ['"']
+    for ch in s:
+        code = ord(ch)
+        if code == 0x22:
+            out.append('\\"')
+        elif code == 0x5C:
+            out.append("\\\\")
+        elif code == 0x08:
+            out.append("\\b")
+        elif code == 0x09:
+            out.append("\\t")
+        elif code == 0x0A:
+            out.append("\\n")
+        elif code == 0x0C:
+            out.append("\\f")
+        elif code == 0x0D:
+            out.append("\\r")
+        elif code < 0x20:
+            out.append(f"\\u{code:04x}")
+        elif 0xD800 <= code <= 0xDFFF:
+            raise ValueError(f"RFC 8785 forbids lone UTF-16 surrogate U+{code:04X}")
+        else:
+            out.append(ch)
+    out.append('"')
+    return "".join(out).encode("utf-8")
+
+
 def rfc8785_canonicalize(data: Any) -> bytes:
     """Canonicalize Python data structure per RFC 8785 (JCS)."""
     if data is None:
@@ -19,30 +91,27 @@ def rfc8785_canonicalize(data: Any) -> bytes:
     elif isinstance(data, bool):
         return b"true" if data else b"false"
     elif isinstance(data, (int, float)):
-        # Format finite numbers canonically
-        if isinstance(data, float):
-            if data.is_integer():
-                return str(int(data)).encode("utf-8")
-            s = f"{data:.14g}"
-            return s.encode("utf-8")
-        return str(data).encode("utf-8")
+        return _rfc8785_format_number(data)
     elif isinstance(data, str):
-        # Escape string according to JSON specification
-        return json.dumps(data, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    elif isinstance(data, list):
+        return _rfc8785_format_string(data)
+    elif isinstance(data, (list, tuple)):
         items = [rfc8785_canonicalize(x) for x in data]
         return b"[" + b",".join(items) + b"]"
     elif isinstance(data, dict):
-        # Keys sorted lexicographically by UTF-16 code units (standard in Python UTF-8/unicode)
-        sorted_keys = sorted(data.keys())
+        # RFC 8785 Section 3.2.3: Sort keys lexicographically by UTF-16 code units
+        for k in data.keys():
+            if not isinstance(k, str):
+                raise TypeError(f"RFC 8785 requires string object keys, got {type(k)}")
+        sorted_keys = sorted(data.keys(), key=lambda k: k.encode("utf-16-be"))
         entries = []
         for k in sorted_keys:
-            key_bytes = json.dumps(k, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+            key_bytes = _rfc8785_format_string(k)
             val_bytes = rfc8785_canonicalize(data[k])
             entries.append(key_bytes + b":" + val_bytes)
         return b"{" + b",".join(entries) + b"}"
     else:
         raise TypeError(f"Unsupported type for RFC 8785 canonicalization: {type(data)}")
+
 
 
 # ==============================================================================

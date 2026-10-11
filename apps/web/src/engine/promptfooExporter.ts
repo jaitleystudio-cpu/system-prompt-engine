@@ -57,9 +57,61 @@ export function verifyPromptfooExportBundle(bundle: PromptfooExportBundle, expec
   if (!bundle.yamlConfig.includes(`spe_receipt_digest: "${recomputedReceiptDigest}"`)) {
     reasons.push("YAML config missing bound spe_receipt_digest metadata.");
   }
+  if (!bundle.yamlConfig.includes("{{user_input}}")) {
+    reasons.push("YAML config prompt template missing {{user_input}} interpolation variable.");
+  }
   return {
     verified: reasons.length === 0,
     reasons,
+  };
+}
+
+export function executeReceiptGatedPromptfooEval(
+  bundle: PromptfooExportBundle,
+  expectedPromptText: string,
+  testInputs: string[],
+  providerCallFn: (renderedPrompt: string, userInput: string) => string,
+): {
+  haltedBeforeProviderCall: boolean;
+  providerCallsCount: number;
+  outputs: string[];
+  haltReasons: string[];
+} {
+  const check = verifyPromptfooExportBundle(bundle, expectedPromptText);
+  if (!check.verified) {
+    return {
+      haltedBeforeProviderCall: true,
+      providerCallsCount: 0,
+      outputs: [],
+      haltReasons: check.reasons,
+    };
+  }
+  if (!bundle.measuredDiagnostics.passed || bundle.measuredDiagnostics.errorCount > 0) {
+    return {
+      haltedBeforeProviderCall: true,
+      providerCallsCount: 0,
+      outputs: [],
+      haltReasons: [`Static type check failed with ${bundle.measuredDiagnostics.errorCount} error(s).`],
+    };
+  }
+
+  let calls = 0;
+  const outputs: string[] = [];
+  const baseTemplate = expectedPromptText.includes("{{user_input}}")
+    ? expectedPromptText
+    : `${expectedPromptText}\n\n# User Input Under Evaluation\n{{user_input}}`;
+
+  for (const input of testInputs) {
+    calls += 1;
+    const rendered = baseTemplate.replace("{{user_input}}", input);
+    outputs.push(providerCallFn(rendered, input));
+  }
+
+  return {
+    haltedBeforeProviderCall: false,
+    providerCallsCount: calls,
+    outputs,
+    haltReasons: [],
   };
 }
 
@@ -87,7 +139,11 @@ export function generatePromptfooConfig(
   // Detect output schema expectations
   const expectsJson = promptText.includes("```json") || promptText.toLowerCase().includes("json schema");
 
-  const escapedPrompt = promptText
+  const promptWithInputVar = promptText.includes("{{user_input}}")
+    ? promptText
+    : `${promptText.trimEnd()}\n\n# User Input Under Evaluation\n{{user_input}}`;
+
+  const escapedPrompt = promptWithInputVar
     .split("\n")
     .map((line) => `    ${line}`)
     .join("\n");

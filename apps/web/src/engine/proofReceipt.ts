@@ -63,6 +63,15 @@ export interface ProofReceiptPayload {
  * Sorts object keys recursively to ensure bit-identical serializations.
  */
 export function canonicalizeJson(obj: unknown): string {
+  if (typeof obj === "number") {
+    if (!Number.isFinite(obj)) {
+      throw new Error("RFC 8785 forbids NaN and Infinity in canonical JSON");
+    }
+    if (Object.is(obj, -0)) {
+      return "0";
+    }
+    return obj.toString();
+  }
   if (obj === null || typeof obj !== "object") {
     return JSON.stringify(obj);
   }

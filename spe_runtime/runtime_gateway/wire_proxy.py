@@ -965,7 +965,12 @@ class WireProxyServer:
         self.metrics = ProxyMetrics()
         self.offloader = DeterministicOffloader()
         self.kv_aligner = PagedAttentionKVAligner(block_size=32)
-        self.firewall = firewall or CapabilityFirewall(verify_signatures=False)
+        from spe_runtime.ci_gate.receipt import generate_keypair
+        self.firewall_root_sk, self.firewall_root_pk = generate_keypair()
+        self.firewall = firewall or CapabilityFirewall(
+            trusted_roots={"spe-local-root": self.firewall_root_pk.hex()},
+            verify_signatures=True,
+        )
         self.switchboard = switchboard or HybridSwitchboard(
             cloud_gate=CloudGate(policy=hybrid_policy, max_budget_usd=max_cloud_budget_usd),
             offloader=self.offloader,
