@@ -1,0 +1,24 @@
+A {'verified_success': 0.9867, 'false_success': 0.0133, 'abstain': 0.0, 'transfer_success': 0.9883, 'trap_success': 0.9825, 'cost_per_verified': 891.5452, 'dev_verified_success': 0.9917, 'reuse_rate': 0.0}
+B {'verified_success': 0.995, 'false_success': 0.005, 'abstain': 0.0, 'transfer_success': 0.9983, 'trap_success': 0.99, 'cost_per_verified': 131.7411, 'dev_verified_success': 0.9967, 'reuse_rate': 0.9283}
+C {'verified_success': 0.9917, 'false_success': 0.0083, 'abstain': 0.0, 'transfer_success': 1.0, 'trap_success': 0.98, 'cost_per_verified': 609.6693, 'dev_verified_success': 1.0, 'reuse_rate': 0.5033}
+D {'verified_success': 0.9917, 'false_success': 0.0083, 'abstain': 0.0, 'transfer_success': 1.0, 'trap_success': 0.98, 'cost_per_verified': 609.6693, 'dev_verified_success': 1.0, 'reuse_rate': 0.5033}
+E {'verified_success': 0.9983, 'false_success': 0.0017, 'abstain': 0.0, 'transfer_success': 1.0, 'trap_success': 0.9975, 'cost_per_verified': 2135.5757, 'dev_verified_success': 1.0, 'reuse_rate': 0.5}
+E_shuf {'verified_success': 0.0, 'false_success': 0.8, 'abstain': 0.9725, 'transfer_success': 0.0, 'trap_success': 0.0, 'cost_per_verified': inf, 'dev_verified_success': 0.0, 'reuse_rate': 0.0}
+E-A:verified_success {'mean': 0.0117, 't_lo': 0.0066, 't_hi': 0.0167, 'boot_lo': 0.0075, 'boot_hi': 0.0158}
+E-A:false_success {'mean': -0.0117, 't_lo': -0.0167, 't_hi': -0.0066, 'boot_lo': -0.0158, 'boot_hi': -0.0075}
+E-A:transfer_success {'mean': 0.0117, 't_lo': 0.0036, 't_hi': 0.0197, 'boot_lo': 0.005, 'boot_hi': 0.0183}
+E-B:verified_success {'mean': 0.0033, 't_lo': -0.0008, 't_hi': 0.0075, 'boot_lo': 0.0, 'boot_hi': 0.0075}
+E-B:false_success {'mean': -0.0033, 't_lo': -0.0075, 't_hi': 0.0008, 'boot_lo': -0.0075, 'boot_hi': 0.0}
+E-B:transfer_success {'mean': 0.0017, 't_lo': -0.0021, 't_hi': 0.0054, 'boot_lo': 0.0, 'boot_hi': 0.005}
+E-C:verified_success {'mean': 0.0067, 't_lo': 0.002, 't_hi': 0.0114, 'boot_lo': 0.0033, 'boot_hi': 0.0108}
+E-C:false_success {'mean': -0.0067, 't_lo': -0.0114, 't_hi': -0.002, 'boot_lo': -0.0108, 'boot_hi': -0.0033}
+E-C:transfer_success {'mean': 0.0, 't_lo': 0.0, 't_hi': 0.0, 'boot_lo': 0.0, 'boot_hi': 0.0}
+E-D:verified_success {'mean': 0.0067, 't_lo': 0.002, 't_hi': 0.0114, 'boot_lo': 0.0033, 'boot_hi': 0.0108}
+E-D:false_success {'mean': -0.0067, 't_lo': -0.0114, 't_hi': -0.002, 'boot_lo': -0.0108, 'boot_hi': -0.0033}
+E-D:transfer_success {'mean': 0.0, 't_lo': 0.0, 't_hi': 0.0, 'boot_lo': 0.0, 'boot_hi': 0.0}
+E-E_shuf:verified_success {'mean': 0.9983, 't_lo': 0.9958, 't_hi': 1.0008, 'boot_lo': 0.9958, 'boot_hi': 1.0}
+E-E_shuf:false_success {'mean': -0.7983, 't_lo': -1.1009, 't_hi': -0.4958, 'boot_lo': -1.0, 'boot_hi': -0.4983}
+E-E_shuf:transfer_success {'mean': 1.0, 't_lo': 1.0, 't_hi': 1.0, 'boot_lo': 1.0, 'boot_hi': 1.0}
+D-C:verified_success {'mean': 0.0, 't_lo': 0.0, 't_hi': 0.0, 'boot_lo': 0.0, 'boot_hi': 0.0}
+D-C:false_success {'mean': 0.0, 't_lo': 0.0, 't_hi': 0.0, 'boot_lo': 0.0, 'boot_hi': 0.0}
+runtime_s 8.1

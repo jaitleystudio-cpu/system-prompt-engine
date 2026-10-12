@@ -1,0 +1,3493 @@
+{
+ "per_seed": {
+  "A": {
+   "0": {
+    "verified_success": 0.975,
+    "false_success": 0.025,
+    "abstain": 0.0,
+    "transfer_success": 0.9833333333333333,
+    "trap_success": 0.975,
+    "cost_per_verified": 1007.5213675213676,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.0
+   },
+   "1": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 0.9666666666666667,
+    "trap_success": 1.0,
+    "cost_per_verified": 961.9830508474577,
+    "dev_verified_success": 0.9833333333333333,
+    "reuse_rate": 0.0
+   },
+   "2": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 0.9833333333333333,
+    "trap_success": 0.975,
+    "cost_per_verified": 933.8050847457627,
+    "dev_verified_success": 0.9833333333333333,
+    "reuse_rate": 0.0
+   },
+   "3": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 0.9833333333333333,
+    "trap_success": 0.975,
+    "cost_per_verified": 849.8474576271186,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.0
+   },
+   "4": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 848.675,
+    "dev_verified_success": 0.9833333333333333,
+    "reuse_rate": 0.0
+   },
+   "5": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.95,
+    "cost_per_verified": 886.1694915254237,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.0
+   },
+   "6": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 749.8083333333333,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.0
+   },
+   "7": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 0.9833333333333333,
+    "trap_success": 1.0,
+    "cost_per_verified": 913.2016806722689,
+    "dev_verified_success": 0.9833333333333333,
+    "reuse_rate": 0.0
+   },
+   "8": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.95,
+    "cost_per_verified": 920.1779661016949,
+    "dev_verified_success": 0.9833333333333333,
+    "reuse_rate": 0.0
+   },
+   "9": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 0.9833333333333333,
+    "trap_success": 1.0,
+    "cost_per_verified": 844.2627118644068,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.0
+   }
+  },
+  "B": {
+   "0": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 141.36974789915968,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.925
+   },
+   "1": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 131.60833333333332,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.925
+   },
+   "2": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 142.0252100840336,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.925
+   },
+   "3": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 149.50833333333333,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.925
+   },
+   "4": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 109.91666666666667,
+    "dev_verified_success": 0.9833333333333333,
+    "reuse_rate": 0.925
+   },
+   "5": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 0.9833333333333333,
+    "trap_success": 0.975,
+    "cost_per_verified": 115.19491525423729,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.9333333333333333
+   },
+   "6": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 98.5,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.9416666666666667
+   },
+   "7": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 161.775,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.925
+   },
+   "8": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 163.85714285714286,
+    "dev_verified_success": 0.9833333333333333,
+    "reuse_rate": 0.925
+   },
+   "9": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 103.65546218487395,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.9333333333333333
+   }
+  },
+  "C": {
+   "0": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 648.3305084745763,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "1": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 685.075,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "2": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 667.1848739495798,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5083333333333333
+   },
+   "3": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 591.4201680672269,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "4": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 566.25,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "5": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.95,
+    "cost_per_verified": 583.1779661016949,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5083333333333333
+   },
+   "6": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 547.9,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "7": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 595.1083333333333,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "8": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.95,
+    "cost_per_verified": 633.0508474576271,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5083333333333333
+   },
+   "9": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 579.1949152542373,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5083333333333333
+   }
+  },
+  "D": {
+   "0": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 648.3305084745763,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "1": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 685.075,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "2": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 667.1848739495798,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5083333333333333
+   },
+   "3": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 591.4201680672269,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "4": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 566.25,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "5": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.95,
+    "cost_per_verified": 583.1779661016949,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5083333333333333
+   },
+   "6": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 547.9,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "7": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 595.1083333333333,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "8": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.95,
+    "cost_per_verified": 633.0508474576271,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5083333333333333
+   },
+   "9": {
+    "verified_success": 0.9833333333333333,
+    "false_success": 0.016666666666666666,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 579.1949152542373,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5083333333333333
+   }
+  },
+  "E": {
+   "0": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 2168.016806722689,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "1": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 2315.266666666667,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "2": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 2273.7083333333335,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "3": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 2179.866666666667,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "4": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 1902.9583333333333,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "5": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 2195.6833333333334,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "6": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 2067.9333333333334,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "7": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 2056.25,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "8": {
+    "verified_success": 1.0,
+    "false_success": 0.0,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 1.0,
+    "cost_per_verified": 2114.275,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   },
+   "9": {
+    "verified_success": 0.9916666666666667,
+    "false_success": 0.008333333333333333,
+    "abstain": 0.0,
+    "transfer_success": 1.0,
+    "trap_success": 0.975,
+    "cost_per_verified": 2081.798319327731,
+    "dev_verified_success": 1.0,
+    "reuse_rate": 0.5
+   }
+  },
+  "E_shuf": {
+   "0": {
+    "verified_success": 0.0,
+    "false_success": 0.0,
+    "abstain": 1.0,
+    "transfer_success": 0.0,
+    "trap_success": 0.0,
+    "cost_per_verified": Infinity,
+    "dev_verified_success": 0.0,
+    "reuse_rate": 0.0
+   },
+   "1": {
+    "verified_success": 0.0,
+    "false_success": 1.0,
+    "abstain": 0.9416666666666667,
+    "transfer_success": 0.0,
+    "trap_success": 0.0,
+    "cost_per_verified": Infinity,
+    "dev_verified_success": 0.0,
+    "reuse_rate": 0.0
+   },
+   "2": {
+    "verified_success": 0.0,
+    "false_success": 1.0,
+    "abstain": 0.975,
+    "transfer_success": 0.0,
+    "trap_success": 0.0,
+    "cost_per_verified": Infinity,
+    "dev_verified_success": 0.0,
+    "reuse_rate": 0.0
+   },
+   "3": {
+    "verified_success": 0.0,
+    "false_success": 1.0,
+    "abstain": 0.9833333333333333,
+    "transfer_success": 0.0,
+    "trap_success": 0.0,
+    "cost_per_verified": Infinity,
+    "dev_verified_success": 0.0,
+    "reuse_rate": 0.0
+   },
+   "4": {
+    "verified_success": 0.0,
+    "false_success": 0.0,
+    "abstain": 1.0,
+    "transfer_success": 0.0,
+    "trap_success": 0.0,
+    "cost_per_verified": Infinity,
+    "dev_verified_success": 0.0,
+    "reuse_rate": 0.0
+   },
+   "5": {
+    "verified_success": 0.0,
+    "false_success": 1.0,
+    "abstain": 0.9833333333333333,
+    "transfer_success": 0.0,
+    "trap_success": 0.0,
+    "cost_per_verified": Infinity,
+    "dev_verified_success": 0.0,
+    "reuse_rate": 0.0
+   },
+   "6": {
+    "verified_success": 0.0,
+    "false_success": 1.0,
+    "abstain": 0.9583333333333334,
+    "transfer_success": 0.0,
+    "trap_success": 0.0,
+    "cost_per_verified": Infinity,
+    "dev_verified_success": 0.0,
+    "reuse_rate": 0.0
+   },
+   "7": {
+    "verified_success": 0.0,
+    "false_success": 1.0,
+    "abstain": 0.9666666666666667,
+    "transfer_success": 0.0,
+    "trap_success": 0.0,
+    "cost_per_verified": Infinity,
+    "dev_verified_success": 0.0,
+    "reuse_rate": 0.0
+   },
+   "8": {
+    "verified_success": 0.0,
+    "false_success": 1.0,
+    "abstain": 0.9833333333333333,
+    "transfer_success": 0.0,
+    "trap_success": 0.0,
+    "cost_per_verified": Infinity,
+    "dev_verified_success": 0.0,
+    "reuse_rate": 0.0
+   },
+   "9": {
+    "verified_success": 0.0,
+    "false_success": 1.0,
+    "abstain": 0.9333333333333333,
+    "transfer_success": 0.0,
+    "trap_success": 0.0,
+    "cost_per_verified": Infinity,
+    "dev_verified_success": 0.0,
+    "reuse_rate": 0.0
+   }
+  }
+ },
+ "summary": {
+  "A": {
+   "verified_success": {
+    "mean": 0.9866666666666666,
+    "sd": 0.008050764858994152
+   },
+   "false_success": {
+    "mean": 0.013333333333333332,
+    "sd": 0.008050764858994133
+   },
+   "abstain": {
+    "mean": 0.0,
+    "sd": 0.0
+   },
+   "transfer_success": {
+    "mean": 0.9883333333333333,
+    "sd": 0.011249142628509226
+   },
+   "trap_success": {
+    "mean": 0.9824999999999999,
+    "sd": 0.02058181505871413
+   },
+   "cost_per_verified": {
+    "mean": 891.5452144238834,
+    "sd": 72.5849124503575
+   },
+   "dev_verified_success": {
+    "mean": 0.9916666666666667,
+    "sd": 0.00878410461157886
+   },
+   "reuse_rate": {
+    "mean": 0.0,
+    "sd": 0.0
+   }
+  },
+  "B": {
+   "verified_success": {
+    "mean": 0.995,
+    "sd": 0.005826715823167513
+   },
+   "false_success": {
+    "mean": 0.005,
+    "sd": 0.005826715823167508
+   },
+   "abstain": {
+    "mean": 0.0,
+    "sd": 0.0
+   },
+   "transfer_success": {
+    "mean": 0.9983333333333333,
+    "sd": 0.005270462766947316
+   },
+   "trap_success": {
+    "mean": 0.99,
+    "sd": 0.012909944487358068
+   },
+   "cost_per_verified": {
+    "mean": 131.74108116127806,
+    "sd": 23.78490942350294
+   },
+   "dev_verified_success": {
+    "mean": 0.9966666666666667,
+    "sd": 0.007027283689263086
+   },
+   "reuse_rate": {
+    "mean": 0.9283333333333333,
+    "sd": 0.005826715823167488
+   }
+  },
+  "C": {
+   "verified_success": {
+    "mean": 0.9916666666666667,
+    "sd": 0.007856742013183886
+   },
+   "false_success": {
+    "mean": 0.008333333333333333,
+    "sd": 0.007856742013183862
+   },
+   "abstain": {
+    "mean": 0.0,
+    "sd": 0.0
+   },
+   "transfer_success": {
+    "mean": 1.0,
+    "sd": 0.0
+   },
+   "trap_success": {
+    "mean": 0.98,
+    "sd": 0.019720265943665403
+   },
+   "cost_per_verified": {
+    "mean": 609.6692612638276,
+    "sd": 45.839890610137445
+   },
+   "dev_verified_success": {
+    "mean": 1.0,
+    "sd": 0.0
+   },
+   "reuse_rate": {
+    "mean": 0.5033333333333333,
+    "sd": 0.004303314829119337
+   }
+  },
+  "D": {
+   "verified_success": {
+    "mean": 0.9916666666666667,
+    "sd": 0.007856742013183886
+   },
+   "false_success": {
+    "mean": 0.008333333333333333,
+    "sd": 0.007856742013183862
+   },
+   "abstain": {
+    "mean": 0.0,
+    "sd": 0.0
+   },
+   "transfer_success": {
+    "mean": 1.0,
+    "sd": 0.0
+   },
+   "trap_success": {
+    "mean": 0.98,
+    "sd": 0.019720265943665403
+   },
+   "cost_per_verified": {
+    "mean": 609.6692612638276,
+    "sd": 45.839890610137445
+   },
+   "dev_verified_success": {
+    "mean": 1.0,
+    "sd": 0.0
+   },
+   "reuse_rate": {
+    "mean": 0.5033333333333333,
+    "sd": 0.004303314829119337
+   }
+  },
+  "E": {
+   "verified_success": {
+    "mean": 0.9983333333333333,
+    "sd": 0.0035136418446315197
+   },
+   "false_success": {
+    "mean": 0.0016666666666666666,
+    "sd": 0.0035136418446315323
+   },
+   "abstain": {
+    "mean": 0.0,
+    "sd": 0.0
+   },
+   "transfer_success": {
+    "mean": 1.0,
+    "sd": 0.0
+   },
+   "trap_success": {
+    "mean": 0.9975,
+    "sd": 0.007905694150420955
+   },
+   "cost_per_verified": {
+    "mean": 2135.575679271709,
+    "sd": 118.47228125315763
+   },
+   "dev_verified_success": {
+    "mean": 1.0,
+    "sd": 0.0
+   },
+   "reuse_rate": {
+    "mean": 0.5,
+    "sd": 0.0
+   }
+  },
+  "E_shuf": {
+   "verified_success": {
+    "mean": 0.0,
+    "sd": 0.0
+   },
+   "false_success": {
+    "mean": 0.8,
+    "sd": 0.4216370213557839
+   },
+   "abstain": {
+    "mean": 0.9725,
+    "sd": 0.02258386291575315
+   },
+   "transfer_success": {
+    "mean": 0.0,
+    "sd": 0.0
+   },
+   "trap_success": {
+    "mean": 0.0,
+    "sd": 0.0
+   },
+   "cost_per_verified": {
+    "mean": Infinity,
+    "sd": NaN
+   },
+   "dev_verified_success": {
+    "mean": 0.0,
+    "sd": 0.0
+   },
+   "reuse_rate": {
+    "mean": 0.0,
+    "sd": 0.0
+   }
+  }
+ },
+ "comparisons": {
+  "E-A:verified_success": {
+   "mean": 0.011666666666666704,
+   "t_lo": 0.006640000000000023,
+   "t_hi": 0.016693333333333386,
+   "boot_lo": 0.007500000000000018,
+   "boot_hi": 0.015833333333333376
+  },
+  "E-A:false_success": {
+   "mean": -0.011666666666666667,
+   "t_lo": -0.016693333333333334,
+   "t_hi": -0.00664,
+   "boot_lo": -0.015833333333333335,
+   "boot_hi": -0.0075
+  },
+  "E-A:transfer_success": {
+   "mean": 0.011666666666666691,
+   "t_lo": 0.003620073874959405,
+   "t_hi": 0.019713259458373978,
+   "boot_lo": 0.005000000000000016,
+   "boot_hi": 0.018333333333333368
+  },
+  "E-B:verified_success": {
+   "mean": 0.0033333333333333327,
+   "t_lo": -0.0008345584865466255,
+   "t_hi": 0.007501225153213291,
+   "boot_lo": 0.0,
+   "boot_hi": 0.007499999999999995
+  },
+  "E-B:false_success": {
+   "mean": -0.003333333333333333,
+   "t_lo": -0.007501225153213285,
+   "t_hi": 0.000834558486546619,
+   "boot_lo": -0.0075,
+   "boot_hi": 0.0
+  },
+  "E-B:transfer_success": {
+   "mean": 0.0016666666666666718,
+   "t_lo": -0.0021033333333333394,
+   "t_hi": 0.005436666666666683,
+   "boot_lo": 0.0,
+   "boot_hi": 0.005000000000000016
+  },
+  "E-C:verified_success": {
+   "mean": 0.006666666666666687,
+   "t_lo": 0.001964650550620753,
+   "t_hi": 0.011368682782712622,
+   "boot_lo": 0.0033333333333333214,
+   "boot_hi": 0.010833333333333361
+  },
+  "E-C:false_success": {
+   "mean": -0.006666666666666666,
+   "t_lo": -0.011368682782712585,
+   "t_hi": -0.001964650550620747,
+   "boot_lo": -0.010833333333333334,
+   "boot_hi": -0.003333333333333333
+  },
+  "E-C:transfer_success": {
+   "mean": 0.0,
+   "t_lo": 0.0,
+   "t_hi": 0.0,
+   "boot_lo": 0.0,
+   "boot_hi": 0.0
+  },
+  "E-D:verified_success": {
+   "mean": 0.006666666666666687,
+   "t_lo": 0.001964650550620753,
+   "t_hi": 0.011368682782712622,
+   "boot_lo": 0.0033333333333333214,
+   "boot_hi": 0.010833333333333361
+  },
+  "E-D:false_success": {
+   "mean": -0.006666666666666666,
+   "t_lo": -0.011368682782712585,
+   "t_hi": -0.001964650550620747,
+   "boot_lo": -0.010833333333333334,
+   "boot_hi": -0.003333333333333333
+  },
+  "E-D:transfer_success": {
+   "mean": 0.0,
+   "t_lo": 0.0,
+   "t_hi": 0.0,
+   "boot_lo": 0.0,
+   "boot_hi": 0.0
+  },
+  "E-E_shuf:verified_success": {
+   "mean": 0.9983333333333333,
+   "t_lo": 0.9958199999999999,
+   "t_hi": 1.0008466666666667,
+   "boot_lo": 0.9958333333333333,
+   "boot_hi": 1.0
+  },
+  "E-E_shuf:false_success": {
+   "mean": -0.7983333333333333,
+   "t_lo": -1.1008848047302586,
+   "t_hi": -0.49578186193640816,
+   "boot_lo": -1.0,
+   "boot_hi": -0.49833333333333335
+  },
+  "E-E_shuf:transfer_success": {
+   "mean": 1.0,
+   "t_lo": 1.0,
+   "t_hi": 1.0,
+   "boot_lo": 1.0,
+   "boot_hi": 1.0
+  },
+  "D-C:verified_success": {
+   "mean": 0.0,
+   "t_lo": 0.0,
+   "t_hi": 0.0,
+   "boot_lo": 0.0,
+   "boot_hi": 0.0
+  },
+  "D-C:false_success": {
+   "mean": 0.0,
+   "t_lo": 0.0,
+   "t_hi": 0.0,
+   "boot_lo": 0.0,
+   "boot_hi": 0.0
+  }
+ },
+ "capabilities": {
+  "A/0": [],
+  "B/0": [],
+  "C/0": [
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rev|add",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 1,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|rot",
+    "s": 17,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 17,
+    "f": 2,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 19,
+    "dev_f": 0
+   }
+  ],
+  "D/0": [
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rev|add",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 1,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|rot",
+    "s": 17,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 17,
+    "f": 2,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 19,
+    "dev_f": 0
+   }
+  ],
+  "E/0": [
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rev|add",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 1,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|rot",
+    "s": 17,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 19,
+    "dev_f": 0
+   }
+  ],
+  "E_shuf/0": [],
+  "A/1": [],
+  "B/1": [],
+  "C/1": [
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rev|add",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 17,
+    "f": 2,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|rot",
+    "s": 17,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "cumsum|mul",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 3,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 17,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 17,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "D/1": [
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rev|add",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 17,
+    "f": 2,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|rot",
+    "s": 17,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "cumsum|mul",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 3,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 17,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 17,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E/1": [
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rev|add",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|rot",
+    "s": 17,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "cumsum|mul",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 3,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 17,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 17,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E_shuf/1": [],
+  "A/2": [],
+  "B/2": [],
+  "C/2": [
+   {
+    "cap": "rev|add",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 2,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 16,
+    "f": 2,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rot",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 18,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "D/2": [
+   {
+    "cap": "rev|add",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 2,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 16,
+    "f": 2,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rot",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 18,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E/2": [
+   {
+    "cap": "rev|add",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 2,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rot",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 18,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E_shuf/2": [],
+  "A/3": [],
+  "B/3": [],
+  "C/3": [
+   {
+    "cap": "cumsum|mul",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 1,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rot",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 13,
+    "f": 2,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 19,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "D/3": [
+   {
+    "cap": "cumsum|mul",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 1,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rot",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 13,
+    "f": 2,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 19,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E/3": [
+   {
+    "cap": "cumsum|mul",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 1,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rot",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 19,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E_shuf/3": [],
+  "A/4": [],
+  "B/4": [],
+  "C/4": [
+   {
+    "cap": "rev|add",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 16,
+    "f": 3,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot|mul",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "D/4": [
+   {
+    "cap": "rev|add",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 16,
+    "f": 3,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot|mul",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E/4": [
+   {
+    "cap": "rev|add",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot|mul",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E_shuf/4": [],
+  "A/5": [],
+  "B/5": [],
+  "C/5": [
+   {
+    "cap": "sort|fgt",
+    "s": 15,
+    "f": 4,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "D/5": [
+   {
+    "cap": "sort|fgt",
+    "s": 15,
+    "f": 4,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E/5": [
+   {
+    "cap": "sort|fgt",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E_shuf/5": [],
+  "A/6": [],
+  "B/6": [],
+  "C/6": [
+   {
+    "cap": "cumsum|mul",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot|mul",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 13,
+    "f": 1,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "D/6": [
+   {
+    "cap": "cumsum|mul",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot|mul",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 13,
+    "f": 1,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E/6": [
+   {
+    "cap": "cumsum|mul",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot|mul",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 15,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E_shuf/6": [],
+  "A/7": [],
+  "B/7": [],
+  "C/7": [
+   {
+    "cap": "fgt|sort",
+    "s": 15,
+    "f": 3,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "cumsum|mul",
+    "s": 23,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 5,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot|rot",
+    "s": 14,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot",
+    "s": 5,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 15,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 15,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "D/7": [
+   {
+    "cap": "fgt|sort",
+    "s": 15,
+    "f": 3,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "cumsum|mul",
+    "s": 23,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 5,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot|rot",
+    "s": 14,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot",
+    "s": 5,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 15,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 15,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E/7": [
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "cumsum|mul",
+    "s": 23,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 5,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 17,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot|rot",
+    "s": 14,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rot",
+    "s": 5,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 15,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 15,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E_shuf/7": [],
+  "A/8": [],
+  "B/8": [],
+  "C/8": [
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rot",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 15,
+    "f": 5,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 2,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 18,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "D/8": [
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rot",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 15,
+    "f": 5,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 2,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 18,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E/8": [
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rev",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|rot",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "fgt|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 21,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 2,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 18,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 18,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   }
+  ],
+  "E_shuf/8": [],
+  "A/9": [],
+  "B/9": [],
+  "C/9": [
+   {
+    "cap": "mul|rot",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rev|add",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 17,
+    "f": 2,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 1,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 19,
+    "dev_f": 0
+   }
+  ],
+  "D/9": [
+   {
+    "cap": "mul|rot",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rev|add",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 17,
+    "f": 2,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 1,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 19,
+    "dev_f": 0
+   }
+  ],
+  "E/9": [
+   {
+    "cap": "mul|rot",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "rev|add",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|fgt",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mod|dedup",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "sort|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 0,
+    "dev_f": 0
+   },
+   {
+    "cap": "mul|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 1,
+    "dev_f": 0
+   },
+   {
+    "cap": "abs|sort",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "sortd|take",
+    "s": 20,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 20,
+    "dev_f": 0
+   },
+   {
+    "cap": "add|cumsum",
+    "s": 19,
+    "f": 0,
+    "admitted": true,
+    "revoked": false,
+    "dev_s": 19,
+    "dev_f": 0
+   }
+  ],
+  "E_shuf/9": []
+ },
+ "runtime_s": 8.061636924743652
+}

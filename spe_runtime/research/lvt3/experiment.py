@@ -14,6 +14,13 @@ SEEDS = list(range(10))
 T975_DF9 = 2.262
 
 
+def _sd(xs):
+    xs = [float(x) for x in xs]; n = len(xs)
+    if n < 2: return 0.0
+    m = sum(xs) / n
+    return (sum((x - m) ** 2 for x in xs) / (n - 1)) ** 0.5
+
+
 def run_config(args):
     seed, config = args
     tasks = stream(seed)
@@ -66,7 +73,7 @@ def metrics(rows: List[Dict]) -> Dict[str, float]:
 
 
 def ci_t(d: List[float]):
-    m = statistics.mean(d); sd = statistics.stdev(d) if len(d) > 1 else 0.0
+    m = statistics.mean(d); sd = _sd(d)
     hw = T975_DF9 * sd / math.sqrt(len(d))
     return m, m - hw, m + hw
 
@@ -91,7 +98,7 @@ def main(out_dir: str):
             for r in rows: fh.write(json.dumps({"seed": seed, "config": c, **r}) + "\n")
     keys = list(next(iter(per["A"].values())).keys())
     summary = {c: {k: {"mean": statistics.mean(per[c][s][k] for s in SEEDS),
-                       "sd": statistics.stdev(per[c][s][k] for s in SEEDS)} for k in keys} for c in CONFIGS}
+                       "sd": _sd([per[c][s][k] for s in SEEDS])} for k in keys} for c in CONFIGS}
     def diff(a, b, k):
         d = [per[a][s][k] - per[b][s][k] for s in SEEDS]
         m, lo, hi = ci_t(d); blo, bhi = ci_boot(d)
