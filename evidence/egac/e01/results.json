@@ -1,0 +1,113 @@
+{
+ "model": "qwen2.5:0.5b",
+ "model_digest": "a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
+ "options": {
+  "temperature": 0,
+  "seed": 1729,
+  "num_predict": 48,
+  "num_ctx": 4096
+ },
+ "n_tasks": 120,
+ "repeats": 3,
+ "n_calls": 720,
+ "task_manifest_sha256": "c4895f2410acebdefc4068b9d5705aa8b09f439022fc3b521ede70f5e8aa2dae",
+ "gate_refusals": [],
+ "canary": {
+  "n_valid": 12,
+  "n_malformed": 6,
+  "critical_failures": []
+ },
+ "prompt_tokens": {
+  "control_mean": 226.675,
+  "diff_mean": -60.375,
+  "ci95": [
+   -62.825,
+   -57.9
+  ],
+  "pct": -26.635050181978603
+ },
+ "latency_total_ms": {
+  "control_mean": 280.76247211388886,
+  "diff_mean": -24.783809830555548,
+  "ci95": [
+   -33.95636213888888,
+   -16.279511202777773
+  ]
+ },
+ "success": {
+  "control_rate": 0.8916666666666667,
+  "treatment_rate": 0.825,
+  "diff": -0.06666666666666667,
+  "ci95": [
+   -0.125,
+   -0.016666666666666666
+  ],
+  "ni_margin": -0.05,
+  "mcnemar": {
+   "b_ctrl_only": 10,
+   "c_treat_only": 2,
+   "both": 97,
+   "neither": 11,
+   "p_exact": 0.03857421875
+  }
+ },
+ "per_category": {
+  "unicode_escapes": {
+   "n": 15,
+   "ctrl_ok": 15,
+   "treat_ok": 15,
+   "tok_ctrl": 2921.0,
+   "tok_treat": 2253.0
+  },
+  "nested_records": {
+   "n": 15,
+   "ctrl_ok": 14,
+   "treat_ok": 12,
+   "tok_ctrl": 3594.0,
+   "tok_treat": 2484.0
+  },
+  "deep_nesting": {
+   "n": 15,
+   "ctrl_ok": 15,
+   "treat_ok": 15,
+   "tok_ctrl": 2609.0,
+   "tok_treat": 1904.0
+  },
+  "whitespace_in_strings": {
+   "n": 15,
+   "ctrl_ok": 14,
+   "treat_ok": 14,
+   "tok_ctrl": 3510.0,
+   "tok_treat": 2655.0
+  },
+  "api_response": {
+   "n": 15,
+   "ctrl_ok": 14,
+   "treat_ok": 9,
+   "tok_ctrl": 3785.0,
+   "tok_treat": 2570.0
+  },
+  "numeric_arrays": {
+   "n": 15,
+   "ctrl_ok": 5,
+   "treat_ok": 4,
+   "tok_ctrl": 3820.0,
+   "tok_treat": 2703.0
+  },
+  "config": {
+   "n": 15,
+   "ctrl_ok": 15,
+   "treat_ok": 15,
+   "tok_ctrl": 3314.0,
+   "tok_treat": 2414.0
+  },
+  "big_ints": {
+   "n": 15,
+   "ctrl_ok": 15,
+   "treat_ok": 15,
+   "tok_ctrl": 3648.0,
+   "tok_treat": 2973.0
+  }
+ },
+ "verdict": "NOT_PROVEN"
+}

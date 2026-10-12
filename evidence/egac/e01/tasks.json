@@ -1,0 +1,842 @@
+[
+ {
+  "task_id": "config-00",
+  "category": "config",
+  "pretty": "{\n  \"version\": 0,\n  \"services\": {\n    \"nova\": {\n      \"host\": \"nova.internal\",\n      \"port\": 54557,\n      \"tls\": false\n    },\n    \"alpha\": {\n      \"host\": \"alpha.internal\",\n      \"port\": 44854,\n      \"tls\": true\n    },\n    \"bravo\": {\n      \"host\": \"bravo.internal\",\n      \"port\": 15610,\n      \"tls\": true\n    },\n    \"sierra\": {\n      \"host\": \"sierra.internal\",\n      \"port\": 12217,\n      \"tls\": true\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"alpha\"?",
+  "answer": "44854"
+ },
+ {
+  "task_id": "config-01",
+  "category": "config",
+  "pretty": "{\n  \"version\": 1,\n  \"services\": {\n    \"cedar\": {\n      \"host\": \"cedar.internal\",\n      \"port\": 36388,\n      \"tls\": true\n    },\n    \"raven\": {\n      \"host\": \"raven.internal\",\n      \"port\": 58519,\n      \"tls\": true\n    },\n    \"kilo\": {\n      \"host\": \"kilo.internal\",\n      \"port\": 19135,\n      \"tls\": false\n    },\n    \"nova\": {\n      \"host\": \"nova.internal\",\n      \"port\": 47453,\n      \"tls\": false\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"cedar\"?",
+  "answer": "36388"
+ },
+ {
+  "task_id": "config-02",
+  "category": "config",
+  "pretty": "{\n  \"version\": 2,\n  \"services\": {\n    \"jade\": {\n      \"host\": \"jade.internal\",\n      \"port\": 57905,\n      \"tls\": false\n    },\n    \"delta\": {\n      \"host\": \"delta.internal\",\n      \"port\": 5729,\n      \"tls\": true\n    },\n    \"cedar\": {\n      \"host\": \"cedar.internal\",\n      \"port\": 3245,\n      \"tls\": true\n    },\n    \"maple\": {\n      \"host\": \"maple.internal\",\n      \"port\": 49426,\n      \"tls\": true\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"cedar\"?",
+  "answer": "3245"
+ },
+ {
+  "task_id": "config-03",
+  "category": "config",
+  "pretty": "{\n  \"version\": 3,\n  \"services\": {\n    \"sierra\": {\n      \"host\": \"sierra.internal\",\n      \"port\": 60069,\n      \"tls\": true\n    },\n    \"quartz\": {\n      \"host\": \"quartz.internal\",\n      \"port\": 55507,\n      \"tls\": false\n    },\n    \"ember\": {\n      \"host\": \"ember.internal\",\n      \"port\": 58934,\n      \"tls\": true\n    },\n    \"nova\": {\n      \"host\": \"nova.internal\",\n      \"port\": 62508,\n      \"tls\": true\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"sierra\"?",
+  "answer": "60069"
+ },
+ {
+  "task_id": "config-04",
+  "category": "config",
+  "pretty": "{\n  \"version\": 4,\n  \"services\": {\n    \"harbor\": {\n      \"host\": \"harbor.internal\",\n      \"port\": 29295,\n      \"tls\": false\n    },\n    \"kilo\": {\n      \"host\": \"kilo.internal\",\n      \"port\": 47158,\n      \"tls\": true\n    },\n    \"gamma\": {\n      \"host\": \"gamma.internal\",\n      \"port\": 23542,\n      \"tls\": false\n    },\n    \"bravo\": {\n      \"host\": \"bravo.internal\",\n      \"port\": 28035,\n      \"tls\": true\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"bravo\"?",
+  "answer": "28035"
+ },
+ {
+  "task_id": "config-05",
+  "category": "config",
+  "pretty": "{\n  \"version\": 5,\n  \"services\": {\n    \"pearl\": {\n      \"host\": \"pearl.internal\",\n      \"port\": 34454,\n      \"tls\": true\n    },\n    \"gamma\": {\n      \"host\": \"gamma.internal\",\n      \"port\": 22067,\n      \"tls\": false\n    },\n    \"cedar\": {\n      \"host\": \"cedar.internal\",\n      \"port\": 16148,\n      \"tls\": true\n    },\n    \"maple\": {\n      \"host\": \"maple.internal\",\n      \"port\": 31894,\n      \"tls\": true\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"pearl\"?",
+  "answer": "34454"
+ },
+ {
+  "task_id": "config-06",
+  "category": "config",
+  "pretty": "{\n  \"version\": 6,\n  \"services\": {\n    \"ember\": {\n      \"host\": \"ember.internal\",\n      \"port\": 1851,\n      \"tls\": true\n    },\n    \"harbor\": {\n      \"host\": \"harbor.internal\",\n      \"port\": 48855,\n      \"tls\": false\n    },\n    \"nova\": {\n      \"host\": \"nova.internal\",\n      \"port\": 53404,\n      \"tls\": true\n    },\n    \"alpha\": {\n      \"host\": \"alpha.internal\",\n      \"port\": 2081,\n      \"tls\": true\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"harbor\"?",
+  "answer": "48855"
+ },
+ {
+  "task_id": "config-07",
+  "category": "config",
+  "pretty": "{\n  \"version\": 7,\n  \"services\": {\n    \"nova\": {\n      \"host\": \"nova.internal\",\n      \"port\": 37066,\n      \"tls\": false\n    },\n    \"fjord\": {\n      \"host\": \"fjord.internal\",\n      \"port\": 12357,\n      \"tls\": false\n    },\n    \"pearl\": {\n      \"host\": \"pearl.internal\",\n      \"port\": 15885,\n      \"tls\": false\n    },\n    \"alpha\": {\n      \"host\": \"alpha.internal\",\n      \"port\": 54684,\n      \"tls\": false\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"alpha\"?",
+  "answer": "54684"
+ },
+ {
+  "task_id": "config-08",
+  "category": "config",
+  "pretty": "{\n  \"version\": 8,\n  \"services\": {\n    \"iris\": {\n      \"host\": \"iris.internal\",\n      \"port\": 7393,\n      \"tls\": true\n    },\n    \"lotus\": {\n      \"host\": \"lotus.internal\",\n      \"port\": 2062,\n      \"tls\": false\n    },\n    \"onyx\": {\n      \"host\": \"onyx.internal\",\n      \"port\": 53360,\n      \"tls\": true\n    },\n    \"ember\": {\n      \"host\": \"ember.internal\",\n      \"port\": 36676,\n      \"tls\": false\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"lotus\"?",
+  "answer": "2062"
+ },
+ {
+  "task_id": "config-09",
+  "category": "config",
+  "pretty": "{\n  \"version\": 9,\n  \"services\": {\n    \"kilo\": {\n      \"host\": \"kilo.internal\",\n      \"port\": 38963,\n      \"tls\": false\n    },\n    \"sierra\": {\n      \"host\": \"sierra.internal\",\n      \"port\": 27202,\n      \"tls\": false\n    },\n    \"nova\": {\n      \"host\": \"nova.internal\",\n      \"port\": 23550,\n      \"tls\": false\n    },\n    \"onyx\": {\n      \"host\": \"onyx.internal\",\n      \"port\": 45455,\n      \"tls\": true\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"onyx\"?",
+  "answer": "45455"
+ },
+ {
+  "task_id": "config-10",
+  "category": "config",
+  "pretty": "{\n  \"version\": 10,\n  \"services\": {\n    \"fjord\": {\n      \"host\": \"fjord.internal\",\n      \"port\": 27285,\n      \"tls\": true\n    },\n    \"harbor\": {\n      \"host\": \"harbor.internal\",\n      \"port\": 27273,\n      \"tls\": true\n    },\n    \"onyx\": {\n      \"host\": \"onyx.internal\",\n      \"port\": 7088,\n      \"tls\": true\n    },\n    \"alpha\": {\n      \"host\": \"alpha.internal\",\n      \"port\": 1333,\n      \"tls\": true\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"fjord\"?",
+  "answer": "27285"
+ },
+ {
+  "task_id": "config-11",
+  "category": "config",
+  "pretty": "{\n  \"version\": 11,\n  \"services\": {\n    \"sierra\": {\n      \"host\": \"sierra.internal\",\n      \"port\": 3261,\n      \"tls\": false\n    },\n    \"ember\": {\n      \"host\": \"ember.internal\",\n      \"port\": 60166,\n      \"tls\": true\n    },\n    \"onyx\": {\n      \"host\": \"onyx.internal\",\n      \"port\": 14932,\n      \"tls\": false\n    },\n    \"lotus\": {\n      \"host\": \"lotus.internal\",\n      \"port\": 1964,\n      \"tls\": true\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"sierra\"?",
+  "answer": "3261"
+ },
+ {
+  "task_id": "config-12",
+  "category": "config",
+  "pretty": "{\n  \"version\": 12,\n  \"services\": {\n    \"iris\": {\n      \"host\": \"iris.internal\",\n      \"port\": 11745,\n      \"tls\": false\n    },\n    \"quartz\": {\n      \"host\": \"quartz.internal\",\n      \"port\": 38642,\n      \"tls\": false\n    },\n    \"onyx\": {\n      \"host\": \"onyx.internal\",\n      \"port\": 56133,\n      \"tls\": false\n    },\n    \"bravo\": {\n      \"host\": \"bravo.internal\",\n      \"port\": 37526,\n      \"tls\": false\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"iris\"?",
+  "answer": "11745"
+ },
+ {
+  "task_id": "config-13",
+  "category": "config",
+  "pretty": "{\n  \"version\": 13,\n  \"services\": {\n    \"harbor\": {\n      \"host\": \"harbor.internal\",\n      \"port\": 15096,\n      \"tls\": false\n    },\n    \"alpha\": {\n      \"host\": \"alpha.internal\",\n      \"port\": 6271,\n      \"tls\": false\n    },\n    \"lotus\": {\n      \"host\": \"lotus.internal\",\n      \"port\": 54479,\n      \"tls\": false\n    },\n    \"fjord\": {\n      \"host\": \"fjord.internal\",\n      \"port\": 21119,\n      \"tls\": false\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"lotus\"?",
+  "answer": "54479"
+ },
+ {
+  "task_id": "config-14",
+  "category": "config",
+  "pretty": "{\n  \"version\": 14,\n  \"services\": {\n    \"delta\": {\n      \"host\": \"delta.internal\",\n      \"port\": 51525,\n      \"tls\": true\n    },\n    \"iris\": {\n      \"host\": \"iris.internal\",\n      \"port\": 30510,\n      \"tls\": false\n    },\n    \"sierra\": {\n      \"host\": \"sierra.internal\",\n      \"port\": 37326,\n      \"tls\": true\n    },\n    \"tango\": {\n      \"host\": \"tango.internal\",\n      \"port\": 36279,\n      \"tls\": false\n    }\n  }\n}",
+  "question": "What is the \"port\" of service \"sierra\"?",
+  "answer": "37326"
+ },
+ {
+  "task_id": "api_response-00",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1000,\n      \"name\": \"quartz\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": 1007,\n      \"name\": \"iris\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": 1014,\n      \"name\": \"cedar\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": 1021,\n      \"name\": \"pearl\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1028,\n      \"name\": \"kilo\",\n      \"status\": \"deleted\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1028?",
+  "answer": "deleted"
+ },
+ {
+  "task_id": "api_response-01",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1001,\n      \"name\": \"nova\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1008,\n      \"name\": \"kilo\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": 1015,\n      \"name\": \"onyx\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": 1022,\n      \"name\": \"raven\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": 1029,\n      \"name\": \"fjord\",\n      \"status\": \"deleted\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1029?",
+  "answer": "deleted"
+ },
+ {
+  "task_id": "api_response-02",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1002,\n      \"name\": \"kilo\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1009,\n      \"name\": \"ember\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1016,\n      \"name\": \"quartz\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1023,\n      \"name\": \"fjord\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1030,\n      \"name\": \"pearl\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1002?",
+  "answer": "active"
+ },
+ {
+  "task_id": "api_response-03",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1003,\n      \"name\": \"bravo\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1010,\n      \"name\": \"kilo\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1017,\n      \"name\": \"sierra\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1024,\n      \"name\": \"ember\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1031,\n      \"name\": \"lotus\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1010?",
+  "answer": "paused"
+ },
+ {
+  "task_id": "api_response-04",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1004,\n      \"name\": \"tango\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1011,\n      \"name\": \"cedar\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1018,\n      \"name\": \"jade\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1025,\n      \"name\": \"onyx\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1032,\n      \"name\": \"sierra\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1025?",
+  "answer": "active"
+ },
+ {
+  "task_id": "api_response-05",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1005,\n      \"name\": \"cedar\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1012,\n      \"name\": \"raven\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1019,\n      \"name\": \"bravo\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1026,\n      \"name\": \"harbor\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1033,\n      \"name\": \"lotus\",\n      \"status\": \"paused\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1026?",
+  "answer": "active"
+ },
+ {
+  "task_id": "api_response-06",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1006,\n      \"name\": \"raven\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1013,\n      \"name\": \"fjord\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1020,\n      \"name\": \"onyx\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1027,\n      \"name\": \"quartz\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1034,\n      \"name\": \"bravo\",\n      \"status\": \"paused\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1034?",
+  "answer": "paused"
+ },
+ {
+  "task_id": "api_response-07",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1007,\n      \"name\": \"alpha\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1014,\n      \"name\": \"tango\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1021,\n      \"name\": \"iris\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1028,\n      \"name\": \"quartz\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1035,\n      \"name\": \"fjord\",\n      \"status\": \"paused\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1007?",
+  "answer": "active"
+ },
+ {
+  "task_id": "api_response-08",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1008,\n      \"name\": \"cedar\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1015,\n      \"name\": \"gamma\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1022,\n      \"name\": \"onyx\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1029,\n      \"name\": \"iris\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": 1036,\n      \"name\": \"harbor\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1008?",
+  "answer": "active"
+ },
+ {
+  "task_id": "api_response-09",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1009,\n      \"name\": \"nova\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1016,\n      \"name\": \"alpha\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1023,\n      \"name\": \"raven\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1030,\n      \"name\": \"jade\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1037,\n      \"name\": \"bravo\",\n      \"status\": \"deleted\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1009?",
+  "answer": "deleted"
+ },
+ {
+  "task_id": "api_response-10",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1010,\n      \"name\": \"cedar\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1017,\n      \"name\": \"kilo\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1024,\n      \"name\": \"tango\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1031,\n      \"name\": \"lotus\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1038,\n      \"name\": \"delta\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1010?",
+  "answer": "active"
+ },
+ {
+  "task_id": "api_response-11",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1011,\n      \"name\": \"bravo\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1018,\n      \"name\": \"harbor\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1025,\n      \"name\": \"fjord\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1032,\n      \"name\": \"ember\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1039,\n      \"name\": \"onyx\",\n      \"status\": \"paused\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1011?",
+  "answer": "deleted"
+ },
+ {
+  "task_id": "api_response-12",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1012,\n      \"name\": \"pearl\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1019,\n      \"name\": \"raven\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1026,\n      \"name\": \"harbor\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": 1033,\n      \"name\": \"gamma\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1040,\n      \"name\": \"iris\",\n      \"status\": \"active\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1040?",
+  "answer": "active"
+ },
+ {
+  "task_id": "api_response-13",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1013,\n      \"name\": \"ember\",\n      \"status\": \"deleted\"\n    },\n    {\n      \"id\": 1020,\n      \"name\": \"bravo\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1027,\n      \"name\": \"jade\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1034,\n      \"name\": \"iris\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": 1041,\n      \"name\": \"quartz\",\n      \"status\": \"deleted\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1027?",
+  "answer": "paused"
+ },
+ {
+  "task_id": "api_response-14",
+  "category": "api_response",
+  "pretty": "{\n  \"data\": [\n    {\n      \"id\": 1014,\n      \"name\": \"harbor\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1021,\n      \"name\": \"onyx\",\n      \"status\": \"paused\"\n    },\n    {\n      \"id\": 1028,\n      \"name\": \"raven\",\n      \"status\": \"active\"\n    },\n    {\n      \"id\": 1035,\n      \"name\": \"fjord\",\n      \"status\": \"pending\"\n    },\n    {\n      \"id\": 1042,\n      \"name\": \"maple\",\n      \"status\": \"deleted\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 1,\n    \"total\": 5\n  }\n}",
+  "question": "What is the \"status\" of the item with \"id\" 1021?",
+  "answer": "paused"
+ },
+ {
+  "task_id": "nested_records-00",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"pearl\",\n      \"address\": {\n        \"city\": \"Lotusville\",\n        \"zip\": \"62691\"\n      }\n    },\n    {\n      \"name\": \"alpha\",\n      \"address\": {\n        \"city\": \"Alphaville\",\n        \"zip\": \"76746\"\n      }\n    },\n    {\n      \"name\": \"bravo\",\n      \"address\": {\n        \"city\": \"Emberville\",\n        \"zip\": \"93858\"\n      }\n    },\n    {\n      \"name\": \"kilo\",\n      \"address\": {\n        \"city\": \"Cedarville\",\n        \"zip\": \"64487\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"bravo\"?",
+  "answer": "Emberville"
+ },
+ {
+  "task_id": "nested_records-01",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"nova\",\n      \"address\": {\n        \"city\": \"Fjordville\",\n        \"zip\": \"73048\"\n      }\n    },\n    {\n      \"name\": \"tango\",\n      \"address\": {\n        \"city\": \"Irisville\",\n        \"zip\": \"11717\"\n      }\n    },\n    {\n      \"name\": \"sierra\",\n      \"address\": {\n        \"city\": \"Tangoville\",\n        \"zip\": \"28745\"\n      }\n    },\n    {\n      \"name\": \"kilo\",\n      \"address\": {\n        \"city\": \"Emberville\",\n        \"zip\": \"15107\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"tango\"?",
+  "answer": "Irisville"
+ },
+ {
+  "task_id": "nested_records-02",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"delta\",\n      \"address\": {\n        \"city\": \"Jadeville\",\n        \"zip\": \"29378\"\n      }\n    },\n    {\n      \"name\": \"ember\",\n      \"address\": {\n        \"city\": \"Mapleville\",\n        \"zip\": \"10455\"\n      }\n    },\n    {\n      \"name\": \"iris\",\n      \"address\": {\n        \"city\": \"Bravoville\",\n        \"zip\": \"61294\"\n      }\n    },\n    {\n      \"name\": \"quartz\",\n      \"address\": {\n        \"city\": \"Tangoville\",\n        \"zip\": \"94835\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"iris\"?",
+  "answer": "Bravoville"
+ },
+ {
+  "task_id": "nested_records-03",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"raven\",\n      \"address\": {\n        \"city\": \"Lotusville\",\n        \"zip\": \"59511\"\n      }\n    },\n    {\n      \"name\": \"cedar\",\n      \"address\": {\n        \"city\": \"Pearlville\",\n        \"zip\": \"82836\"\n      }\n    },\n    {\n      \"name\": \"iris\",\n      \"address\": {\n        \"city\": \"Deltaville\",\n        \"zip\": \"38511\"\n      }\n    },\n    {\n      \"name\": \"gamma\",\n      \"address\": {\n        \"city\": \"Mapleville\",\n        \"zip\": \"91061\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"gamma\"?",
+  "answer": "Mapleville"
+ },
+ {
+  "task_id": "nested_records-04",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"harbor\",\n      \"address\": {\n        \"city\": \"Lotusville\",\n        \"zip\": \"58920\"\n      }\n    },\n    {\n      \"name\": \"iris\",\n      \"address\": {\n        \"city\": \"Mapleville\",\n        \"zip\": \"72417\"\n      }\n    },\n    {\n      \"name\": \"bravo\",\n      \"address\": {\n        \"city\": \"Bravoville\",\n        \"zip\": \"33573\"\n      }\n    },\n    {\n      \"name\": \"maple\",\n      \"address\": {\n        \"city\": \"Jadeville\",\n        \"zip\": \"42388\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"maple\"?",
+  "answer": "Jadeville"
+ },
+ {
+  "task_id": "nested_records-05",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"quartz\",\n      \"address\": {\n        \"city\": \"Emberville\",\n        \"zip\": \"88796\"\n      }\n    },\n    {\n      \"name\": \"raven\",\n      \"address\": {\n        \"city\": \"Harborville\",\n        \"zip\": \"10447\"\n      }\n    },\n    {\n      \"name\": \"fjord\",\n      \"address\": {\n        \"city\": \"Ravenville\",\n        \"zip\": \"48009\"\n      }\n    },\n    {\n      \"name\": \"maple\",\n      \"address\": {\n        \"city\": \"Jadeville\",\n        \"zip\": \"19797\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"quartz\"?",
+  "answer": "Emberville"
+ },
+ {
+  "task_id": "nested_records-06",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"quartz\",\n      \"address\": {\n        \"city\": \"Emberville\",\n        \"zip\": \"49031\"\n      }\n    },\n    {\n      \"name\": \"ember\",\n      \"address\": {\n        \"city\": \"Irisville\",\n        \"zip\": \"11691\"\n      }\n    },\n    {\n      \"name\": \"lotus\",\n      \"address\": {\n        \"city\": \"Bravoville\",\n        \"zip\": \"71051\"\n      }\n    },\n    {\n      \"name\": \"nova\",\n      \"address\": {\n        \"city\": \"Irisville\",\n        \"zip\": \"25378\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"quartz\"?",
+  "answer": "Emberville"
+ },
+ {
+  "task_id": "nested_records-07",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"nova\",\n      \"address\": {\n        \"city\": \"Quartzville\",\n        \"zip\": \"28395\"\n      }\n    },\n    {\n      \"name\": \"raven\",\n      \"address\": {\n        \"city\": \"Deltaville\",\n        \"zip\": \"64179\"\n      }\n    },\n    {\n      \"name\": \"jade\",\n      \"address\": {\n        \"city\": \"Harborville\",\n        \"zip\": \"54585\"\n      }\n    },\n    {\n      \"name\": \"alpha\",\n      \"address\": {\n        \"city\": \"Irisville\",\n        \"zip\": \"63666\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"raven\"?",
+  "answer": "Deltaville"
+ },
+ {
+  "task_id": "nested_records-08",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"cedar\",\n      \"address\": {\n        \"city\": \"Tangoville\",\n        \"zip\": \"48197\"\n      }\n    },\n    {\n      \"name\": \"onyx\",\n      \"address\": {\n        \"city\": \"Novaville\",\n        \"zip\": \"41747\"\n      }\n    },\n    {\n      \"name\": \"ember\",\n      \"address\": {\n        \"city\": \"Kiloville\",\n        \"zip\": \"23507\"\n      }\n    },\n    {\n      \"name\": \"iris\",\n      \"address\": {\n        \"city\": \"Jadeville\",\n        \"zip\": \"62342\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"ember\"?",
+  "answer": "Kiloville"
+ },
+ {
+  "task_id": "nested_records-09",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"alpha\",\n      \"address\": {\n        \"city\": \"Harborville\",\n        \"zip\": \"34914\"\n      }\n    },\n    {\n      \"name\": \"ember\",\n      \"address\": {\n        \"city\": \"Onyxville\",\n        \"zip\": \"24432\"\n      }\n    },\n    {\n      \"name\": \"fjord\",\n      \"address\": {\n        \"city\": \"Sierraville\",\n        \"zip\": \"22607\"\n      }\n    },\n    {\n      \"name\": \"raven\",\n      \"address\": {\n        \"city\": \"Bravoville\",\n        \"zip\": \"34448\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"fjord\"?",
+  "answer": "Sierraville"
+ },
+ {
+  "task_id": "nested_records-10",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"fjord\",\n      \"address\": {\n        \"city\": \"Sierraville\",\n        \"zip\": \"58048\"\n      }\n    },\n    {\n      \"name\": \"gamma\",\n      \"address\": {\n        \"city\": \"Sierraville\",\n        \"zip\": \"49155\"\n      }\n    },\n    {\n      \"name\": \"sierra\",\n      \"address\": {\n        \"city\": \"Onyxville\",\n        \"zip\": \"37673\"\n      }\n    },\n    {\n      \"name\": \"alpha\",\n      \"address\": {\n        \"city\": \"Fjordville\",\n        \"zip\": \"13036\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"fjord\"?",
+  "answer": "Sierraville"
+ },
+ {
+  "task_id": "nested_records-11",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"iris\",\n      \"address\": {\n        \"city\": \"Irisville\",\n        \"zip\": \"72830\"\n      }\n    },\n    {\n      \"name\": \"gamma\",\n      \"address\": {\n        \"city\": \"Jadeville\",\n        \"zip\": \"94313\"\n      }\n    },\n    {\n      \"name\": \"cedar\",\n      \"address\": {\n        \"city\": \"Kiloville\",\n        \"zip\": \"16241\"\n      }\n    },\n    {\n      \"name\": \"nova\",\n      \"address\": {\n        \"city\": \"Emberville\",\n        \"zip\": \"38519\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"nova\"?",
+  "answer": "Emberville"
+ },
+ {
+  "task_id": "nested_records-12",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"raven\",\n      \"address\": {\n        \"city\": \"Jadeville\",\n        \"zip\": \"24623\"\n      }\n    },\n    {\n      \"name\": \"sierra\",\n      \"address\": {\n        \"city\": \"Kiloville\",\n        \"zip\": \"73944\"\n      }\n    },\n    {\n      \"name\": \"jade\",\n      \"address\": {\n        \"city\": \"Bravoville\",\n        \"zip\": \"41512\"\n      }\n    },\n    {\n      \"name\": \"lotus\",\n      \"address\": {\n        \"city\": \"Deltaville\",\n        \"zip\": \"92306\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"jade\"?",
+  "answer": "Bravoville"
+ },
+ {
+  "task_id": "nested_records-13",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"tango\",\n      \"address\": {\n        \"city\": \"Mapleville\",\n        \"zip\": \"64634\"\n      }\n    },\n    {\n      \"name\": \"alpha\",\n      \"address\": {\n        \"city\": \"Ravenville\",\n        \"zip\": \"55843\"\n      }\n    },\n    {\n      \"name\": \"harbor\",\n      \"address\": {\n        \"city\": \"Jadeville\",\n        \"zip\": \"74976\"\n      }\n    },\n    {\n      \"name\": \"delta\",\n      \"address\": {\n        \"city\": \"Onyxville\",\n        \"zip\": \"80290\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"harbor\"?",
+  "answer": "Jadeville"
+ },
+ {
+  "task_id": "nested_records-14",
+  "category": "nested_records",
+  "pretty": "{\n  \"users\": [\n    {\n      \"name\": \"delta\",\n      \"address\": {\n        \"city\": \"Gammaville\",\n        \"zip\": \"61510\"\n      }\n    },\n    {\n      \"name\": \"bravo\",\n      \"address\": {\n        \"city\": \"Fjordville\",\n        \"zip\": \"35025\"\n      }\n    },\n    {\n      \"name\": \"alpha\",\n      \"address\": {\n        \"city\": \"Bravoville\",\n        \"zip\": \"68594\"\n      }\n    },\n    {\n      \"name\": \"quartz\",\n      \"address\": {\n        \"city\": \"Tangoville\",\n        \"zip\": \"83886\"\n      }\n    }\n  ]\n}",
+  "question": "What is the \"city\" in the address of user \"delta\"?",
+  "answer": "Gammaville"
+ },
+ {
+  "task_id": "big_ints-00",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"kilo\",\n      \"balance\": 7720221551862600101304\n    },\n    {\n      \"owner\": \"sierra\",\n      \"balance\": 9757375730367707613376\n    },\n    {\n      \"owner\": \"raven\",\n      \"balance\": 1095461889800554553298\n    },\n    {\n      \"owner\": \"ember\",\n      \"balance\": 6062538960062314293250\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"ember\"? Give all digits.",
+  "answer": "6062538960062314293250"
+ },
+ {
+  "task_id": "big_ints-01",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"cedar\",\n      \"balance\": 9464040734831080192598\n    },\n    {\n      \"owner\": \"kilo\",\n      \"balance\": 2919254174958432175126\n    },\n    {\n      \"owner\": \"ember\",\n      \"balance\": 2271556143496187439829\n    },\n    {\n      \"owner\": \"onyx\",\n      \"balance\": 4775226764337471406627\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"ember\"? Give all digits.",
+  "answer": "2271556143496187439829"
+ },
+ {
+  "task_id": "big_ints-02",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"onyx\",\n      \"balance\": 7625979185153511612568\n    },\n    {\n      \"owner\": \"delta\",\n      \"balance\": 1695508702495412332203\n    },\n    {\n      \"owner\": \"bravo\",\n      \"balance\": 8312661034561891982800\n    },\n    {\n      \"owner\": \"lotus\",\n      \"balance\": 9250293922560062120375\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"bravo\"? Give all digits.",
+  "answer": "8312661034561891982800"
+ },
+ {
+  "task_id": "big_ints-03",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"tango\",\n      \"balance\": 4189705852380307495433\n    },\n    {\n      \"owner\": \"quartz\",\n      \"balance\": 8669143847830132274216\n    },\n    {\n      \"owner\": \"delta\",\n      \"balance\": 991027353795074996973\n    },\n    {\n      \"owner\": \"bravo\",\n      \"balance\": 8231699500299321345633\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"bravo\"? Give all digits.",
+  "answer": "8231699500299321345633"
+ },
+ {
+  "task_id": "big_ints-04",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"nova\",\n      \"balance\": 4103994755890485107331\n    },\n    {\n      \"owner\": \"cedar\",\n      \"balance\": 6067198221794429303948\n    },\n    {\n      \"owner\": \"iris\",\n      \"balance\": 2018960265808630373122\n    },\n    {\n      \"owner\": \"maple\",\n      \"balance\": 5260609779422138356979\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"cedar\"? Give all digits.",
+  "answer": "6067198221794429303948"
+ },
+ {
+  "task_id": "big_ints-05",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"lotus\",\n      \"balance\": 3257150314758582395129\n    },\n    {\n      \"owner\": \"cedar\",\n      \"balance\": 2251525028246311501384\n    },\n    {\n      \"owner\": \"iris\",\n      \"balance\": 9503866352222129294921\n    },\n    {\n      \"owner\": \"raven\",\n      \"balance\": 8858293570798499150206\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"raven\"? Give all digits.",
+  "answer": "8858293570798499150206"
+ },
+ {
+  "task_id": "big_ints-06",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"gamma\",\n      \"balance\": 8683093976657738280209\n    },\n    {\n      \"owner\": \"ember\",\n      \"balance\": 857988320883457100398\n    },\n    {\n      \"owner\": \"jade\",\n      \"balance\": 6536186725203803554972\n    },\n    {\n      \"owner\": \"raven\",\n      \"balance\": 2595258663787771503899\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"ember\"? Give all digits.",
+  "answer": "857988320883457100398"
+ },
+ {
+  "task_id": "big_ints-07",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"lotus\",\n      \"balance\": 3662256257383496993821\n    },\n    {\n      \"owner\": \"sierra\",\n      \"balance\": 9356595850106585977361\n    },\n    {\n      \"owner\": \"kilo\",\n      \"balance\": 5362014945150327337479\n    },\n    {\n      \"owner\": \"gamma\",\n      \"balance\": 2199754980188744435824\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"kilo\"? Give all digits.",
+  "answer": "5362014945150327337479"
+ },
+ {
+  "task_id": "big_ints-08",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"cedar\",\n      \"balance\": 284320182693372936699\n    },\n    {\n      \"owner\": \"maple\",\n      \"balance\": 5892759876491170216008\n    },\n    {\n      \"owner\": \"ember\",\n      \"balance\": 8230859994141861955039\n    },\n    {\n      \"owner\": \"fjord\",\n      \"balance\": 9244558342226304312353\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"fjord\"? Give all digits.",
+  "answer": "9244558342226304312353"
+ },
+ {
+  "task_id": "big_ints-09",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"iris\",\n      \"balance\": 369027073160753673197\n    },\n    {\n      \"owner\": \"ember\",\n      \"balance\": 9033130637110029140846\n    },\n    {\n      \"owner\": \"sierra\",\n      \"balance\": 4250507666876089467100\n    },\n    {\n      \"owner\": \"alpha\",\n      \"balance\": 4992542090206149691371\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"ember\"? Give all digits.",
+  "answer": "9033130637110029140846"
+ },
+ {
+  "task_id": "big_ints-10",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"lotus\",\n      \"balance\": 344081442447616541063\n    },\n    {\n      \"owner\": \"tango\",\n      \"balance\": 9441809553484076640976\n    },\n    {\n      \"owner\": \"nova\",\n      \"balance\": 4863640322150799182864\n    },\n    {\n      \"owner\": \"quartz\",\n      \"balance\": 8539188472414128818478\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"tango\"? Give all digits.",
+  "answer": "9441809553484076640976"
+ },
+ {
+  "task_id": "big_ints-11",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"sierra\",\n      \"balance\": 8167320246013572595618\n    },\n    {\n      \"owner\": \"ember\",\n      \"balance\": 2325749409258670545269\n    },\n    {\n      \"owner\": \"alpha\",\n      \"balance\": 5135083578912561231692\n    },\n    {\n      \"owner\": \"kilo\",\n      \"balance\": 3644424178598731329365\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"sierra\"? Give all digits.",
+  "answer": "8167320246013572595618"
+ },
+ {
+  "task_id": "big_ints-12",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"cedar\",\n      \"balance\": 8118762938765804923580\n    },\n    {\n      \"owner\": \"sierra\",\n      \"balance\": 7799069253496544068845\n    },\n    {\n      \"owner\": \"ember\",\n      \"balance\": 1742389020603792161817\n    },\n    {\n      \"owner\": \"quartz\",\n      \"balance\": 8584916935779107794312\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"quartz\"? Give all digits.",
+  "answer": "8584916935779107794312"
+ },
+ {
+  "task_id": "big_ints-13",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"raven\",\n      \"balance\": 6200152457850874719252\n    },\n    {\n      \"owner\": \"bravo\",\n      \"balance\": 8935372129214158652464\n    },\n    {\n      \"owner\": \"quartz\",\n      \"balance\": 9905988459759168817269\n    },\n    {\n      \"owner\": \"fjord\",\n      \"balance\": 6535554127867205119382\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"quartz\"? Give all digits.",
+  "answer": "9905988459759168817269"
+ },
+ {
+  "task_id": "big_ints-14",
+  "category": "big_ints",
+  "pretty": "{\n  \"accounts\": [\n    {\n      \"owner\": \"ember\",\n      \"balance\": 3026269017769715939095\n    },\n    {\n      \"owner\": \"delta\",\n      \"balance\": 7380445592176777735136\n    },\n    {\n      \"owner\": \"cedar\",\n      \"balance\": 7859326927685015663570\n    },\n    {\n      \"owner\": \"harbor\",\n      \"balance\": 8374614152726556270498\n    }\n  ]\n}",
+  "question": "What is the exact \"balance\" of owner \"ember\"? Give all digits.",
+  "answer": "3026269017769715939095"
+ },
+ {
+  "task_id": "unicode_escapes-00",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Fran\\u00e7ois\",\n      \"sku\": \"SKU-541\"\n    },\n    {\n      \"name\": \"Zo\\u00eb\",\n      \"sku\": \"SKU-627\"\n    },\n    {\n      \"name\": \"Ren\\u00e9e\",\n      \"sku\": \"SKU-694\"\n    },\n    {\n      \"name\": \"Jos\\u00e9\",\n      \"sku\": \"SKU-563\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Renée\"?",
+  "answer": "SKU-694"
+ },
+ {
+  "task_id": "unicode_escapes-01",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Ren\\u00e9e\",\n      \"sku\": \"SKU-350\"\n    },\n    {\n      \"name\": \"M\\u00fcller\",\n      \"sku\": \"SKU-859\"\n    },\n    {\n      \"name\": \"Bj\\u00f6rk\",\n      \"sku\": \"SKU-833\"\n    },\n    {\n      \"name\": \"Fran\\u00e7ois\",\n      \"sku\": \"SKU-633\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Renée\"?",
+  "answer": "SKU-350"
+ },
+ {
+  "task_id": "unicode_escapes-02",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Ren\\u00e9e\",\n      \"sku\": \"SKU-441\"\n    },\n    {\n      \"name\": \"Zo\\u00eb\",\n      \"sku\": \"SKU-245\"\n    },\n    {\n      \"name\": \"M\\u00fcller\",\n      \"sku\": \"SKU-961\"\n    },\n    {\n      \"name\": \"Fran\\u00e7ois\",\n      \"sku\": \"SKU-672\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"François\"?",
+  "answer": "SKU-672"
+ },
+ {
+  "task_id": "unicode_escapes-03",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Fran\\u00e7ois\",\n      \"sku\": \"SKU-128\"\n    },\n    {\n      \"name\": \"Bj\\u00f6rk\",\n      \"sku\": \"SKU-305\"\n    },\n    {\n      \"name\": \"Jos\\u00e9\",\n      \"sku\": \"SKU-468\"\n    },\n    {\n      \"name\": \"M\\u00fcller\",\n      \"sku\": \"SKU-424\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Björk\"?",
+  "answer": "SKU-305"
+ },
+ {
+  "task_id": "unicode_escapes-04",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Jos\\u00e9\",\n      \"sku\": \"SKU-366\"\n    },\n    {\n      \"name\": \"\\u00c5sa\",\n      \"sku\": \"SKU-685\"\n    },\n    {\n      \"name\": \"Bj\\u00f6rk\",\n      \"sku\": \"SKU-866\"\n    },\n    {\n      \"name\": \"Ren\\u00e9e\",\n      \"sku\": \"SKU-429\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Renée\"?",
+  "answer": "SKU-429"
+ },
+ {
+  "task_id": "unicode_escapes-05",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"\\u00c5sa\",\n      \"sku\": \"SKU-768\"\n    },\n    {\n      \"name\": \"Jos\\u00e9\",\n      \"sku\": \"SKU-934\"\n    },\n    {\n      \"name\": \"Fran\\u00e7ois\",\n      \"sku\": \"SKU-352\"\n    },\n    {\n      \"name\": \"Zo\\u00eb\",\n      \"sku\": \"SKU-178\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Zoë\"?",
+  "answer": "SKU-178"
+ },
+ {
+  "task_id": "unicode_escapes-06",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Fran\\u00e7ois\",\n      \"sku\": \"SKU-458\"\n    },\n    {\n      \"name\": \"Jos\\u00e9\",\n      \"sku\": \"SKU-273\"\n    },\n    {\n      \"name\": \"Zo\\u00eb\",\n      \"sku\": \"SKU-738\"\n    },\n    {\n      \"name\": \"\\u00c5sa\",\n      \"sku\": \"SKU-202\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Zoë\"?",
+  "answer": "SKU-738"
+ },
+ {
+  "task_id": "unicode_escapes-07",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Ren\\u00e9e\",\n      \"sku\": \"SKU-529\"\n    },\n    {\n      \"name\": \"Jos\\u00e9\",\n      \"sku\": \"SKU-853\"\n    },\n    {\n      \"name\": \"Bj\\u00f6rk\",\n      \"sku\": \"SKU-759\"\n    },\n    {\n      \"name\": \"M\\u00fcller\",\n      \"sku\": \"SKU-471\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Björk\"?",
+  "answer": "SKU-759"
+ },
+ {
+  "task_id": "unicode_escapes-08",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Ren\\u00e9e\",\n      \"sku\": \"SKU-174\"\n    },\n    {\n      \"name\": \"Bj\\u00f6rk\",\n      \"sku\": \"SKU-960\"\n    },\n    {\n      \"name\": \"Fran\\u00e7ois\",\n      \"sku\": \"SKU-184\"\n    },\n    {\n      \"name\": \"M\\u00fcller\",\n      \"sku\": \"SKU-272\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Müller\"?",
+  "answer": "SKU-272"
+ },
+ {
+  "task_id": "unicode_escapes-09",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Zo\\u00eb\",\n      \"sku\": \"SKU-610\"\n    },\n    {\n      \"name\": \"M\\u00fcller\",\n      \"sku\": \"SKU-545\"\n    },\n    {\n      \"name\": \"Ren\\u00e9e\",\n      \"sku\": \"SKU-705\"\n    },\n    {\n      \"name\": \"Jos\\u00e9\",\n      \"sku\": \"SKU-233\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Müller\"?",
+  "answer": "SKU-545"
+ },
+ {
+  "task_id": "unicode_escapes-10",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"\\u00c5sa\",\n      \"sku\": \"SKU-371\"\n    },\n    {\n      \"name\": \"Bj\\u00f6rk\",\n      \"sku\": \"SKU-275\"\n    },\n    {\n      \"name\": \"Jos\\u00e9\",\n      \"sku\": \"SKU-204\"\n    },\n    {\n      \"name\": \"M\\u00fcller\",\n      \"sku\": \"SKU-554\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Müller\"?",
+  "answer": "SKU-554"
+ },
+ {
+  "task_id": "unicode_escapes-11",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Fran\\u00e7ois\",\n      \"sku\": \"SKU-574\"\n    },\n    {\n      \"name\": \"\\u00c5sa\",\n      \"sku\": \"SKU-800\"\n    },\n    {\n      \"name\": \"Bj\\u00f6rk\",\n      \"sku\": \"SKU-335\"\n    },\n    {\n      \"name\": \"M\\u00fcller\",\n      \"sku\": \"SKU-913\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Åsa\"?",
+  "answer": "SKU-800"
+ },
+ {
+  "task_id": "unicode_escapes-12",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"M\\u00fcller\",\n      \"sku\": \"SKU-587\"\n    },\n    {\n      \"name\": \"Fran\\u00e7ois\",\n      \"sku\": \"SKU-439\"\n    },\n    {\n      \"name\": \"\\u00c5sa\",\n      \"sku\": \"SKU-305\"\n    },\n    {\n      \"name\": \"Jos\\u00e9\",\n      \"sku\": \"SKU-676\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"François\"?",
+  "answer": "SKU-439"
+ },
+ {
+  "task_id": "unicode_escapes-13",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Fran\\u00e7ois\",\n      \"sku\": \"SKU-725\"\n    },\n    {\n      \"name\": \"Bj\\u00f6rk\",\n      \"sku\": \"SKU-243\"\n    },\n    {\n      \"name\": \"\\u00c5sa\",\n      \"sku\": \"SKU-466\"\n    },\n    {\n      \"name\": \"Jos\\u00e9\",\n      \"sku\": \"SKU-453\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Björk\"?",
+  "answer": "SKU-243"
+ },
+ {
+  "task_id": "unicode_escapes-14",
+  "category": "unicode_escapes",
+  "pretty": "{\n  \"items\": [\n    {\n      \"name\": \"Ren\\u00e9e\",\n      \"sku\": \"SKU-750\"\n    },\n    {\n      \"name\": \"M\\u00fcller\",\n      \"sku\": \"SKU-732\"\n    },\n    {\n      \"name\": \"Zo\\u00eb\",\n      \"sku\": \"SKU-876\"\n    },\n    {\n      \"name\": \"Bj\\u00f6rk\",\n      \"sku\": \"SKU-856\"\n    }\n  ]\n}",
+  "question": "What is the \"sku\" of the item named \"Müller\"?",
+  "answer": "SKU-732"
+ },
+ {
+  "task_id": "numeric_arrays-00",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"tango\": [\n      199,\n      196,\n      -384,\n      -123,\n      -470,\n      -417,\n      171\n    ],\n    \"bravo\": [\n      -278,\n      -231,\n      211,\n      -370,\n      -188\n    ],\n    \"nova\": [\n      110,\n      191,\n      -113,\n      209,\n      216,\n      34\n    ],\n    \"cedar\": [\n      -247,\n      317,\n      -445,\n      161,\n      446,\n      -492\n    ]\n  }\n}",
+  "question": "What is the last number in series \"cedar\"?",
+  "answer": "-492"
+ },
+ {
+  "task_id": "numeric_arrays-01",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"lotus\": [\n      -149,\n      229,\n      222,\n      -110,\n      -169,\n      110\n    ],\n    \"onyx\": [\n      -119,\n      413,\n      -212,\n      332,\n      97,\n      -210,\n      326\n    ],\n    \"alpha\": [\n      6,\n      -493,\n      -130,\n      413,\n      233\n    ],\n    \"kilo\": [\n      492,\n      -52,\n      205,\n      305,\n      459\n    ]\n  }\n}",
+  "question": "What is the last number in series \"lotus\"?",
+  "answer": "110"
+ },
+ {
+  "task_id": "numeric_arrays-02",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"maple\": [\n      -368,\n      -103,\n      133,\n      -243\n    ],\n    \"raven\": [\n      387,\n      59,\n      416,\n      99,\n      107,\n      148,\n      -230,\n      -312\n    ],\n    \"delta\": [\n      -139,\n      84,\n      -6,\n      -451,\n      193\n    ],\n    \"bravo\": [\n      241,\n      -289,\n      183,\n      -348,\n      -315,\n      172,\n      78\n    ]\n  }\n}",
+  "question": "What is the last number in series \"delta\"?",
+  "answer": "193"
+ },
+ {
+  "task_id": "numeric_arrays-03",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"tango\": [\n      -178,\n      303,\n      178,\n      -247,\n      167,\n      -145,\n      225,\n      -11\n    ],\n    \"ember\": [\n      -170,\n      315,\n      -105,\n      384,\n      -111,\n      245\n    ],\n    \"delta\": [\n      478,\n      -255,\n      -465,\n      186\n    ],\n    \"kilo\": [\n      -37,\n      -259,\n      85,\n      314\n    ]\n  }\n}",
+  "question": "What is the last number in series \"ember\"?",
+  "answer": "245"
+ },
+ {
+  "task_id": "numeric_arrays-04",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"cedar\": [\n      -245,\n      428,\n      -424,\n      196,\n      -178\n    ],\n    \"iris\": [\n      -171,\n      -166,\n      168,\n      -104,\n      -467,\n      -404\n    ],\n    \"pearl\": [\n      392,\n      283,\n      339,\n      -95,\n      -463\n    ],\n    \"sierra\": [\n      106,\n      324,\n      303,\n      207,\n      254,\n      -364,\n      -302\n    ]\n  }\n}",
+  "question": "What is the last number in series \"pearl\"?",
+  "answer": "-463"
+ },
+ {
+  "task_id": "numeric_arrays-05",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"maple\": [\n      46,\n      340,\n      -429,\n      -167,\n      -434,\n      138,\n      -132\n    ],\n    \"alpha\": [\n      -290,\n      -221,\n      177,\n      -288\n    ],\n    \"nova\": [\n      405,\n      228,\n      271,\n      321,\n      145,\n      -393\n    ],\n    \"lotus\": [\n      24,\n      428,\n      111,\n      248,\n      -284\n    ]\n  }\n}",
+  "question": "What is the last number in series \"alpha\"?",
+  "answer": "-288"
+ },
+ {
+  "task_id": "numeric_arrays-06",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"alpha\": [\n      -240,\n      485,\n      248,\n      -41,\n      -31,\n      -482\n    ],\n    \"onyx\": [\n      -161,\n      -323,\n      461,\n      -346,\n      233\n    ],\n    \"raven\": [\n      231,\n      151,\n      13,\n      385,\n      292,\n      -296\n    ],\n    \"nova\": [\n      110,\n      212,\n      -93,\n      424\n    ]\n  }\n}",
+  "question": "What is the last number in series \"alpha\"?",
+  "answer": "-482"
+ },
+ {
+  "task_id": "numeric_arrays-07",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"kilo\": [\n      -166,\n      63,\n      -39,\n      130,\n      -79,\n      67,\n      -43,\n      472\n    ],\n    \"onyx\": [\n      237,\n      259,\n      67,\n      100,\n      -348,\n      300\n    ],\n    \"fjord\": [\n      228,\n      488,\n      -218,\n      -439,\n      -180,\n      -358,\n      -226\n    ],\n    \"delta\": [\n      203,\n      234,\n      -13,\n      48,\n      -179\n    ]\n  }\n}",
+  "question": "What is the last number in series \"delta\"?",
+  "answer": "-179"
+ },
+ {
+  "task_id": "numeric_arrays-08",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"onyx\": [\n      30,\n      -100,\n      298,\n      338,\n      -363,\n      -492,\n      -337,\n      171\n    ],\n    \"nova\": [\n      192,\n      33,\n      170,\n      -398,\n      170,\n      -258\n    ],\n    \"gamma\": [\n      125,\n      167,\n      291,\n      360,\n      -440,\n      -190,\n      -447\n    ],\n    \"iris\": [\n      112,\n      243,\n      -80,\n      241,\n      -298,\n      -462,\n      282,\n      -160\n    ]\n  }\n}",
+  "question": "What is the last number in series \"nova\"?",
+  "answer": "-258"
+ },
+ {
+  "task_id": "numeric_arrays-09",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"onyx\": [\n      -30,\n      236,\n      -61,\n      -158,\n      -77\n    ],\n    \"tango\": [\n      -397,\n      -18,\n      -100,\n      -423,\n      -348,\n      -440\n    ],\n    \"bravo\": [\n      357,\n      208,\n      -488,\n      -234,\n      477,\n      -85,\n      34,\n      358\n    ],\n    \"lotus\": [\n      -139,\n      55,\n      214,\n      472,\n      84,\n      127,\n      340,\n      -266\n    ]\n  }\n}",
+  "question": "What is the last number in series \"lotus\"?",
+  "answer": "-266"
+ },
+ {
+  "task_id": "numeric_arrays-10",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"lotus\": [\n      -369,\n      144,\n      -258,\n      6,\n      -372\n    ],\n    \"tango\": [\n      196,\n      -202,\n      -180,\n      253,\n      -439,\n      338,\n      379\n    ],\n    \"quartz\": [\n      -140,\n      -428,\n      -95,\n      128,\n      412,\n      362,\n      -32,\n      198\n    ],\n    \"alpha\": [\n      -110,\n      -377,\n      -142,\n      37,\n      56,\n      -345,\n      374,\n      -393\n    ]\n  }\n}",
+  "question": "What is the last number in series \"lotus\"?",
+  "answer": "-372"
+ },
+ {
+  "task_id": "numeric_arrays-11",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"kilo\": [\n      -168,\n      418,\n      -199,\n      -335,\n      464,\n      500\n    ],\n    \"iris\": [\n      233,\n      -427,\n      -171,\n      273\n    ],\n    \"maple\": [\n      -213,\n      247,\n      -231,\n      -142,\n      162,\n      -83,\n      -307,\n      3\n    ],\n    \"fjord\": [\n      322,\n      210,\n      -199,\n      -121,\n      -98,\n      -425\n    ]\n  }\n}",
+  "question": "What is the last number in series \"maple\"?",
+  "answer": "3"
+ },
+ {
+  "task_id": "numeric_arrays-12",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"maple\": [\n      -466,\n      -409,\n      497,\n      334,\n      487,\n      -289\n    ],\n    \"fjord\": [\n      -45,\n      -85,\n      85,\n      65,\n      -179\n    ],\n    \"pearl\": [\n      -467,\n      -184,\n      -258,\n      19,\n      266,\n      115,\n      471,\n      -352\n    ],\n    \"tango\": [\n      94,\n      465,\n      -324,\n      105,\n      157,\n      -349\n    ]\n  }\n}",
+  "question": "What is the last number in series \"tango\"?",
+  "answer": "-349"
+ },
+ {
+  "task_id": "numeric_arrays-13",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"ember\": [\n      -213,\n      -290,\n      497,\n      260,\n      -290,\n      -38,\n      69\n    ],\n    \"jade\": [\n      220,\n      488,\n      62,\n      355,\n      399,\n      313,\n      404\n    ],\n    \"cedar\": [\n      220,\n      343,\n      -94,\n      459,\n      -142,\n      156\n    ],\n    \"onyx\": [\n      74,\n      353,\n      379,\n      473,\n      -486,\n      -457,\n      175,\n      -269\n    ]\n  }\n}",
+  "question": "What is the last number in series \"cedar\"?",
+  "answer": "156"
+ },
+ {
+  "task_id": "numeric_arrays-14",
+  "category": "numeric_arrays",
+  "pretty": "{\n  \"series\": {\n    \"ember\": [\n      441,\n      200,\n      214,\n      -193,\n      -93,\n      -190,\n      -437\n    ],\n    \"bravo\": [\n      -23,\n      390,\n      118,\n      282,\n      162,\n      238,\n      308\n    ],\n    \"pearl\": [\n      -24,\n      339,\n      -431,\n      94,\n      334\n    ],\n    \"fjord\": [\n      -230,\n      -319,\n      -22,\n      250,\n      185,\n      394\n    ]\n  }\n}",
+  "question": "What is the last number in series \"bravo\"?",
+  "answer": "308"
+ },
+ {
+  "task_id": "deep_nesting-00",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"alpha\": {\n    \"tango\": {\n      \"lotus\": {\n        \"pearl\": {\n          \"onyx\": {\n            \"value\": \"lotus-77\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 1\n        },\n        \"other\": 1\n      },\n      \"other\": 2\n    },\n    \"other\": 6\n  },\n  \"other\": 7\n}",
+  "question": "What is the \"value\" at path alpha.tango.lotus.pearl.onyx.value?",
+  "answer": "lotus-77"
+ },
+ {
+  "task_id": "deep_nesting-01",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"maple\": {\n    \"jade\": {\n      \"kilo\": {\n        \"gamma\": {\n          \"delta\": {\n            \"value\": \"harbor-18\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 8\n        },\n        \"other\": 8\n      },\n      \"other\": 3\n    },\n    \"other\": 0\n  },\n  \"other\": 5\n}",
+  "question": "What is the \"value\" at path maple.jade.kilo.gamma.delta.value?",
+  "answer": "harbor-18"
+ },
+ {
+  "task_id": "deep_nesting-02",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"tango\": {\n    \"harbor\": {\n      \"bravo\": {\n        \"pearl\": {\n          \"jade\": {\n            \"value\": \"raven-74\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 1\n        },\n        \"other\": 4\n      },\n      \"other\": 6\n    },\n    \"other\": 5\n  },\n  \"other\": 7\n}",
+  "question": "What is the \"value\" at path tango.harbor.bravo.pearl.jade.value?",
+  "answer": "raven-74"
+ },
+ {
+  "task_id": "deep_nesting-03",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"iris\": {\n    \"lotus\": {\n      \"ember\": {\n        \"quartz\": {\n          \"onyx\": {\n            \"value\": \"cedar-81\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 8\n        },\n        \"other\": 9\n      },\n      \"other\": 8\n    },\n    \"other\": 4\n  },\n  \"other\": 4\n}",
+  "question": "What is the \"value\" at path iris.lotus.ember.quartz.onyx.value?",
+  "answer": "cedar-81"
+ },
+ {
+  "task_id": "deep_nesting-04",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"fjord\": {\n    \"ember\": {\n      \"bravo\": {\n        \"maple\": {\n          \"raven\": {\n            \"value\": \"ember-32\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 7\n        },\n        \"other\": 3\n      },\n      \"other\": 3\n    },\n    \"other\": 3\n  },\n  \"other\": 0\n}",
+  "question": "What is the \"value\" at path fjord.ember.bravo.maple.raven.value?",
+  "answer": "ember-32"
+ },
+ {
+  "task_id": "deep_nesting-05",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"iris\": {\n    \"delta\": {\n      \"nova\": {\n        \"lotus\": {\n          \"ember\": {\n            \"value\": \"sierra-73\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 3\n        },\n        \"other\": 3\n      },\n      \"other\": 0\n    },\n    \"other\": 2\n  },\n  \"other\": 8\n}",
+  "question": "What is the \"value\" at path iris.delta.nova.lotus.ember.value?",
+  "answer": "sierra-73"
+ },
+ {
+  "task_id": "deep_nesting-06",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"maple\": {\n    \"sierra\": {\n      \"bravo\": {\n        \"harbor\": {\n          \"pearl\": {\n            \"value\": \"bravo-66\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 9\n        },\n        \"other\": 7\n      },\n      \"other\": 2\n    },\n    \"other\": 9\n  },\n  \"other\": 6\n}",
+  "question": "What is the \"value\" at path maple.sierra.bravo.harbor.pearl.value?",
+  "answer": "bravo-66"
+ },
+ {
+  "task_id": "deep_nesting-07",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"lotus\": {\n    \"jade\": {\n      \"nova\": {\n        \"delta\": {\n          \"ember\": {\n            \"value\": \"fjord-18\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 4\n        },\n        \"other\": 4\n      },\n      \"other\": 2\n    },\n    \"other\": 5\n  },\n  \"other\": 8\n}",
+  "question": "What is the \"value\" at path lotus.jade.nova.delta.ember.value?",
+  "answer": "fjord-18"
+ },
+ {
+  "task_id": "deep_nesting-08",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"maple\": {\n    \"ember\": {\n      \"bravo\": {\n        \"jade\": {\n          \"quartz\": {\n            \"value\": \"ember-47\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 4\n        },\n        \"other\": 7\n      },\n      \"other\": 7\n    },\n    \"other\": 3\n  },\n  \"other\": 9\n}",
+  "question": "What is the \"value\" at path maple.ember.bravo.jade.quartz.value?",
+  "answer": "ember-47"
+ },
+ {
+  "task_id": "deep_nesting-09",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"pearl\": {\n    \"jade\": {\n      \"harbor\": {\n        \"kilo\": {\n          \"cedar\": {\n            \"value\": \"lotus-62\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 3\n        },\n        \"other\": 8\n      },\n      \"other\": 3\n    },\n    \"other\": 6\n  },\n  \"other\": 2\n}",
+  "question": "What is the \"value\" at path pearl.jade.harbor.kilo.cedar.value?",
+  "answer": "lotus-62"
+ },
+ {
+  "task_id": "deep_nesting-10",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"raven\": {\n    \"iris\": {\n      \"sierra\": {\n        \"ember\": {\n          \"nova\": {\n            \"value\": \"cedar-41\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 8\n        },\n        \"other\": 5\n      },\n      \"other\": 3\n    },\n    \"other\": 4\n  },\n  \"other\": 9\n}",
+  "question": "What is the \"value\" at path raven.iris.sierra.ember.nova.value?",
+  "answer": "cedar-41"
+ },
+ {
+  "task_id": "deep_nesting-11",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"cedar\": {\n    \"raven\": {\n      \"tango\": {\n        \"jade\": {\n          \"harbor\": {\n            \"value\": \"nova-33\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 9\n        },\n        \"other\": 1\n      },\n      \"other\": 0\n    },\n    \"other\": 9\n  },\n  \"other\": 2\n}",
+  "question": "What is the \"value\" at path cedar.raven.tango.jade.harbor.value?",
+  "answer": "nova-33"
+ },
+ {
+  "task_id": "deep_nesting-12",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"onyx\": {\n    \"sierra\": {\n      \"raven\": {\n        \"fjord\": {\n          \"cedar\": {\n            \"value\": \"quartz-66\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 2\n        },\n        \"other\": 8\n      },\n      \"other\": 8\n    },\n    \"other\": 6\n  },\n  \"other\": 6\n}",
+  "question": "What is the \"value\" at path onyx.sierra.raven.fjord.cedar.value?",
+  "answer": "quartz-66"
+ },
+ {
+  "task_id": "deep_nesting-13",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"pearl\": {\n    \"nova\": {\n      \"bravo\": {\n        \"delta\": {\n          \"harbor\": {\n            \"value\": \"pearl-33\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 1\n        },\n        \"other\": 0\n      },\n      \"other\": 4\n    },\n    \"other\": 7\n  },\n  \"other\": 4\n}",
+  "question": "What is the \"value\" at path pearl.nova.bravo.delta.harbor.value?",
+  "answer": "pearl-33"
+ },
+ {
+  "task_id": "deep_nesting-14",
+  "category": "deep_nesting",
+  "pretty": "{\n  \"onyx\": {\n    \"raven\": {\n      \"delta\": {\n        \"sierra\": {\n          \"cedar\": {\n            \"value\": \"sierra-58\",\n            \"decoy\": \"x\"\n          },\n          \"other\": 1\n        },\n        \"other\": 2\n      },\n      \"other\": 2\n    },\n    \"other\": 8\n  },\n  \"other\": 1\n}",
+  "question": "What is the \"value\" at path onyx.raven.delta.sierra.cedar.value?",
+  "answer": "sierra-58"
+ },
+ {
+  "task_id": "whitespace_in_strings-00",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"cedar\",\n      \"text\": \"  kilo   onyx   jade  \",\n      \"code\": \"C6306\"\n    },\n    {\n      \"key\": \"quartz\",\n      \"text\": \"  sierra   harbor   fjord  \",\n      \"code\": \"C7416\"\n    },\n    {\n      \"key\": \"ember\",\n      \"text\": \"  lotus   delta   tango  \",\n      \"code\": \"C4039\"\n    },\n    {\n      \"key\": \"sierra\",\n      \"text\": \"  fjord   ember   harbor  \",\n      \"code\": \"C9915\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"quartz\"?",
+  "answer": "C7416"
+ },
+ {
+  "task_id": "whitespace_in_strings-01",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"harbor\",\n      \"text\": \"  ember   raven   iris  \",\n      \"code\": \"C4467\"\n    },\n    {\n      \"key\": \"cedar\",\n      \"text\": \"  ember   bravo   iris  \",\n      \"code\": \"C5194\"\n    },\n    {\n      \"key\": \"quartz\",\n      \"text\": \"  sierra   quartz   alpha  \",\n      \"code\": \"C1221\"\n    },\n    {\n      \"key\": \"ember\",\n      \"text\": \"  delta   raven   kilo  \",\n      \"code\": \"C8761\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"quartz\"?",
+  "answer": "C1221"
+ },
+ {
+  "task_id": "whitespace_in_strings-02",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"harbor\",\n      \"text\": \"  kilo   quartz   bravo  \",\n      \"code\": \"C7782\"\n    },\n    {\n      \"key\": \"gamma\",\n      \"text\": \"  lotus   harbor   delta  \",\n      \"code\": \"C9517\"\n    },\n    {\n      \"key\": \"nova\",\n      \"text\": \"  onyx   gamma   quartz  \",\n      \"code\": \"C6852\"\n    },\n    {\n      \"key\": \"pearl\",\n      \"text\": \"  sierra   jade   tango  \",\n      \"code\": \"C2658\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"pearl\"?",
+  "answer": "C2658"
+ },
+ {
+  "task_id": "whitespace_in_strings-03",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"harbor\",\n      \"text\": \"  maple   fjord   gamma  \",\n      \"code\": \"C2452\"\n    },\n    {\n      \"key\": \"jade\",\n      \"text\": \"  pearl   sierra   gamma  \",\n      \"code\": \"C8170\"\n    },\n    {\n      \"key\": \"quartz\",\n      \"text\": \"  harbor   onyx   gamma  \",\n      \"code\": \"C1997\"\n    },\n    {\n      \"key\": \"iris\",\n      \"text\": \"  cedar   alpha   sierra  \",\n      \"code\": \"C5030\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"harbor\"?",
+  "answer": "C2452"
+ },
+ {
+  "task_id": "whitespace_in_strings-04",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"maple\",\n      \"text\": \"  quartz   delta   lotus  \",\n      \"code\": \"C4055\"\n    },\n    {\n      \"key\": \"ember\",\n      \"text\": \"  iris   sierra   pearl  \",\n      \"code\": \"C8710\"\n    },\n    {\n      \"key\": \"lotus\",\n      \"text\": \"  alpha   iris   onyx  \",\n      \"code\": \"C6538\"\n    },\n    {\n      \"key\": \"harbor\",\n      \"text\": \"  onyx   alpha   ember  \",\n      \"code\": \"C2558\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"lotus\"?",
+  "answer": "C6538"
+ },
+ {
+  "task_id": "whitespace_in_strings-05",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"maple\",\n      \"text\": \"  jade   nova   quartz  \",\n      \"code\": \"C9022\"\n    },\n    {\n      \"key\": \"cedar\",\n      \"text\": \"  cedar   sierra   delta  \",\n      \"code\": \"C5424\"\n    },\n    {\n      \"key\": \"gamma\",\n      \"text\": \"  fjord   bravo   iris  \",\n      \"code\": \"C9001\"\n    },\n    {\n      \"key\": \"kilo\",\n      \"text\": \"  fjord   lotus   pearl  \",\n      \"code\": \"C1366\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"cedar\"?",
+  "answer": "C5424"
+ },
+ {
+  "task_id": "whitespace_in_strings-06",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"sierra\",\n      \"text\": \"  tango   pearl   raven  \",\n      \"code\": \"C2974\"\n    },\n    {\n      \"key\": \"ember\",\n      \"text\": \"  kilo   quartz   pearl  \",\n      \"code\": \"C9701\"\n    },\n    {\n      \"key\": \"cedar\",\n      \"text\": \"  nova   kilo   fjord  \",\n      \"code\": \"C7360\"\n    },\n    {\n      \"key\": \"pearl\",\n      \"text\": \"  lotus   maple   pearl  \",\n      \"code\": \"C2376\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"cedar\"?",
+  "answer": "C7360"
+ },
+ {
+  "task_id": "whitespace_in_strings-07",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"harbor\",\n      \"text\": \"  jade   tango   ember  \",\n      \"code\": \"C9870\"\n    },\n    {\n      \"key\": \"bravo\",\n      \"text\": \"  quartz   lotus   bravo  \",\n      \"code\": \"C4994\"\n    },\n    {\n      \"key\": \"nova\",\n      \"text\": \"  bravo   fjord   quartz  \",\n      \"code\": \"C6437\"\n    },\n    {\n      \"key\": \"onyx\",\n      \"text\": \"  harbor   maple   tango  \",\n      \"code\": \"C2917\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"nova\"?",
+  "answer": "C6437"
+ },
+ {
+  "task_id": "whitespace_in_strings-08",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"onyx\",\n      \"text\": \"  jade   cedar   ember  \",\n      \"code\": \"C4695\"\n    },\n    {\n      \"key\": \"cedar\",\n      \"text\": \"  alpha   tango   delta  \",\n      \"code\": \"C8590\"\n    },\n    {\n      \"key\": \"gamma\",\n      \"text\": \"  delta   tango   gamma  \",\n      \"code\": \"C8672\"\n    },\n    {\n      \"key\": \"tango\",\n      \"text\": \"  kilo   iris   onyx  \",\n      \"code\": \"C7381\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"tango\"?",
+  "answer": "C7381"
+ },
+ {
+  "task_id": "whitespace_in_strings-09",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"fjord\",\n      \"text\": \"  iris   tango   bravo  \",\n      \"code\": \"C5293\"\n    },\n    {\n      \"key\": \"gamma\",\n      \"text\": \"  quartz   cedar   raven  \",\n      \"code\": \"C1376\"\n    },\n    {\n      \"key\": \"ember\",\n      \"text\": \"  ember   harbor   gamma  \",\n      \"code\": \"C8701\"\n    },\n    {\n      \"key\": \"alpha\",\n      \"text\": \"  lotus   fjord   quartz  \",\n      \"code\": \"C4540\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"gamma\"?",
+  "answer": "C1376"
+ },
+ {
+  "task_id": "whitespace_in_strings-10",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"kilo\",\n      \"text\": \"  tango   onyx   jade  \",\n      \"code\": \"C8176\"\n    },\n    {\n      \"key\": \"nova\",\n      \"text\": \"  cedar   jade   alpha  \",\n      \"code\": \"C7605\"\n    },\n    {\n      \"key\": \"alpha\",\n      \"text\": \"  fjord   raven   gamma  \",\n      \"code\": \"C7282\"\n    },\n    {\n      \"key\": \"fjord\",\n      \"text\": \"  nova   quartz   jade  \",\n      \"code\": \"C9247\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"fjord\"?",
+  "answer": "C9247"
+ },
+ {
+  "task_id": "whitespace_in_strings-11",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"jade\",\n      \"text\": \"  lotus   alpha   tango  \",\n      \"code\": \"C9089\"\n    },\n    {\n      \"key\": \"fjord\",\n      \"text\": \"  gamma   ember   raven  \",\n      \"code\": \"C4047\"\n    },\n    {\n      \"key\": \"ember\",\n      \"text\": \"  nova   cedar   pearl  \",\n      \"code\": \"C3936\"\n    },\n    {\n      \"key\": \"onyx\",\n      \"text\": \"  bravo   jade   lotus  \",\n      \"code\": \"C1538\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"onyx\"?",
+  "answer": "C1538"
+ },
+ {
+  "task_id": "whitespace_in_strings-12",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"lotus\",\n      \"text\": \"  maple   tango   iris  \",\n      \"code\": \"C3409\"\n    },\n    {\n      \"key\": \"raven\",\n      \"text\": \"  bravo   harbor   pearl  \",\n      \"code\": \"C4296\"\n    },\n    {\n      \"key\": \"onyx\",\n      \"text\": \"  lotus   maple   kilo  \",\n      \"code\": \"C3864\"\n    },\n    {\n      \"key\": \"quartz\",\n      \"text\": \"  pearl   lotus   onyx  \",\n      \"code\": \"C2315\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"raven\"?",
+  "answer": "C4296"
+ },
+ {
+  "task_id": "whitespace_in_strings-13",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"jade\",\n      \"text\": \"  harbor   quartz   fjord  \",\n      \"code\": \"C3957\"\n    },\n    {\n      \"key\": \"sierra\",\n      \"text\": \"  nova   alpha   kilo  \",\n      \"code\": \"C3636\"\n    },\n    {\n      \"key\": \"harbor\",\n      \"text\": \"  harbor   maple   iris  \",\n      \"code\": \"C9189\"\n    },\n    {\n      \"key\": \"lotus\",\n      \"text\": \"  pearl   delta   ember  \",\n      \"code\": \"C2639\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"sierra\"?",
+  "answer": "C3636"
+ },
+ {
+  "task_id": "whitespace_in_strings-14",
+  "category": "whitespace_in_strings",
+  "pretty": "{\n  \"notes\": [\n    {\n      \"key\": \"iris\",\n      \"text\": \"  harbor   ember   quartz  \",\n      \"code\": \"C3012\"\n    },\n    {\n      \"key\": \"cedar\",\n      \"text\": \"  iris   cedar   sierra  \",\n      \"code\": \"C9243\"\n    },\n    {\n      \"key\": \"harbor\",\n      \"text\": \"  onyx   kilo   tango  \",\n      \"code\": \"C2124\"\n    },\n    {\n      \"key\": \"pearl\",\n      \"text\": \"  fjord   jade   tango  \",\n      \"code\": \"C4135\"\n    }\n  ]\n}",
+  "question": "What is the \"code\" of the note with \"key\" \"pearl\"?",
+  "answer": "C4135"
+ }
+]
