@@ -1,0 +1,18 @@
+{
+ "split": "r3val",
+ "configs": [
+  "A",
+  "U",
+  "R",
+  "RR",
+  "U_guard"
+ ],
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "budget": 4118.6,
+ "manifest_sha256": "fc9b648c72da697f3f6f821b7d9856864ac3e5d7eff64ed2ba2ad2b51f469483",
+ "runtime_s": 14.1
+}
