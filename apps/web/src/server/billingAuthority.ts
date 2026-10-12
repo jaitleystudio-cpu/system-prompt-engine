@@ -29,6 +29,7 @@ import {
   utf8ToHex,
   type AuthoritativeReceiptRecord,
   type EntitlementTokenPayload,
+  type SignedReceiptStatusAttestation,
 } from "../engine/entitlementVerifier.ts";
 
 export interface PaymentWebhookEvent {
@@ -225,6 +226,65 @@ export class AuthoritativeBillingAuthority {
     const payloadHex = utf8ToHex(canonical);
     const sigHex = sign(null, Buffer.from(canonical, "utf8"), this.#privateKey).toString("hex");
     return `spe_entitlement.v1.${payloadHex}.${sigHex}`;
+  }
+
+  /**
+   * Issues an Ed25519-signed receipt status attestation reflecting the current authoritative
+   * state of `paymentReceiptId` in the server ledger.
+   */
+  issueSignedReceiptStatusAttestation(
+    paymentReceiptId: string,
+    currentEpochMs: number = Date.now(),
+  ): SignedReceiptStatusAttestation {
+    const record = this.#receiptLedger.get(paymentReceiptId);
+    if (!record) {
+      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${paymentReceiptId}`);
+    }
+    const attestationPayload: Omit<SignedReceiptStatusAttestation, "signatureHex"> = {
+      schema: "spe.receipt_status_attestation.v1",
+      paymentReceiptId,
+      subscriptionId: record.subscriptionId,
+      exists: record.exists,
+      paid: record.paid,
+      subscriptionStatus: record.subscriptionStatus,
+      tier: record.tier,
+      email: record.email,
+      expiresAtMs: record.expiresAtMs,
+      revoked: Boolean(record.revoked),
+      attestedAtMs: currentEpochMs,
+      issuerKeyId: this.issuerKeyId,
+    };
+    const canonical = canonicalizeJson(attestationPayload);
+    const signatureHex = sign(
+      null,
+      Buffer.from(canonical, "utf8"),
+      this.#privateKey,
+    ).toString("hex");
+    return {
+      ...attestationPayload,
+      signatureHex,
+    };
+  }
+
+  /**
+   * Issues a 6-part composite checkout bundle containing both the Ed25519 entitlement token
+   * and an embedded Ed25519 receipt status attestation (`spe_entitlement.v1.<payloadHex>.<sigHex>.<receiptAttHex>.<receiptSigHex>`).
+   */
+  issueSignedCheckoutBundleForPaidReceipt(
+    paymentReceiptId: string,
+    currentEpochMs: number = Date.now(),
+  ): string {
+    const baseToken = this.issueSignedEntitlementTokenForPaidReceipt(
+      paymentReceiptId,
+      currentEpochMs,
+    );
+    const receiptAttestation = this.issueSignedReceiptStatusAttestation(
+      paymentReceiptId,
+      currentEpochMs,
+    );
+    const { signatureHex, ...unsignedAttestation } = receiptAttestation;
+    const attHex = utf8ToHex(canonicalizeJson(unsignedAttestation));
+    return `${baseToken}.${attHex}.${signatureHex}`;
   }
 
   /**

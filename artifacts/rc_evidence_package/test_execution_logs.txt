@@ -1,6 +1,6 @@
 === 1. PYTHON UNIFIED RELEASE-CANDIDATE & REC-2E ED25519 PASSPORT TESTS ===
 ============================= test session starts ==============================
-platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/.venv/bin/python
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/.venv/bin/python3
 cachedir: .pytest_cache
 rootdir: /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine
 configfile: pyproject.toml
@@ -27,7 +27,7 @@ tests/research/rec2/test_rec2_capability_passport.py::test_edge_cases_boundary_v
 tests/research/rec2/test_rec2_capability_passport.py::test_adversarial_round2_audit_regressions PASSED [ 95%]
 tests/research/rec2/test_rec2_capability_passport.py::test_audit_finding_b_rec2_key_hygiene_pinning_and_envelope_field_binding PASSED [100%]
 
-============================= 20 passed in 19.73s ==============================
+============================= 20 passed in 21.03s ==============================
 
 === 2. WEB PROOF ENGINE & PRODUCER SIGNATURE TESTS ===
 ================================================================================
@@ -49,7 +49,7 @@ tests/research/rec2/test_rec2_capability_passport.py::test_audit_finding_b_rec2_
   ✓ Metamorphic Lab verified: 31/31 relations satisfied (0 critical failures).
 
 [5/5] Validating Proof Receipt Protocol, Cryptographic Attestations & JCS Canonicalization...
-  ✓ Proof Receipt verified: Digest = 2edd6c8c615f5a7bb6f673dbad59d2d40df5f38a43f8e7fcf940a1f296130d92
+  ✓ Proof Receipt verified: Digest = 090492a45e926b9935b28a2b03a7b53c89ebed94b2ab4fc1b17e4190b781993a
   ✓ Signed NetworkObservationAttestation, LiveEvaluationAttestation & Ed25519 Producer Verification passed.
   ✓ JCS Canonicalization verified: RFC 8785 invariant order preserved.
 
@@ -108,12 +108,13 @@ tests/research/rec2/test_rec2_capability_passport.py::test_audit_finding_b_rec2_
 ==================================================================
 
 === 5. COPY CHECK GATE ===
+
 > spe-web@0.3.0 spe:copy-check
 > node ../../tools/copy-check.mjs
 
 {
   "gate": "LANGUAGE_PERSPECTIVE_GATE",
-  "candidateCount": 5724,
+  "candidateCount": 5722,
   "unreviewed": 0,
   "violations": [],
   "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."

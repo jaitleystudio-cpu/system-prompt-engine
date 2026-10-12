@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { synthesizeSystemPrompt } from "./promptSynthesizer.mjs";
+import {
+  synthesizeSystemPrompt,
+  enforceTierOutputLimit,
+} from "./promptSynthesizer.mjs";
 import type { DepthTier } from "./promptSynthesizer";
+import {
+  resolveBrowserVerifiedEntitlement,
+  type EntitlementVerificationResult,
+} from "./entitlementVerifier";
 
 export interface MarkdownConstructOptions {
   title?: string;
@@ -8,6 +15,10 @@ export interface MarkdownConstructOptions {
   depthTier?: DepthTier;
   includeFrontmatter?: boolean;
   sha256?: string | null;
+  subscriptionTier?: "free" | "pro" | "team";
+  entitlement?: EntitlementVerificationResult | null;
+  enforceTierLimit?: boolean;
+  currentEpochMs?: number;
 }
 
 /**
@@ -25,17 +36,47 @@ export function constructMarkdownSystemPrompt(
     depthTier = "normal",
     includeFrontmatter = false,
     sha256 = null,
+    subscriptionTier,
+    entitlement,
+    enforceTierLimit,
+    currentEpochMs,
   } = options;
+
+  const shouldEnforce =
+    Boolean(enforceTierLimit) ||
+    subscriptionTier !== undefined ||
+    entitlement !== undefined;
+  const resolvedEntitlement =
+    subscriptionTier === "free"
+      ? null
+      : entitlement !== undefined
+        ? entitlement
+        : shouldEnforce
+          ? resolveBrowserVerifiedEntitlement({ currentEpochMs })
+          : undefined;
 
   // Synthesize Markdown structure via universal synthesizer
   const mdBody = synthesizeSystemPrompt(irOrPrompt, {
     target: "chatgpt", // Standard GFM Markdown spec
     category,
     depthTier,
+    ...(shouldEnforce
+      ? {
+          subscriptionTier,
+          entitlement: resolvedEntitlement,
+          currentEpochMs,
+        }
+      : {}),
   });
 
   if (!includeFrontmatter) {
-    return mdBody;
+    return shouldEnforce
+      ? enforceTierOutputLimit(mdBody, {
+          subscriptionTier,
+          entitlement: resolvedEntitlement,
+          currentEpochMs,
+        })
+      : mdBody;
   }
 
   const frontmatter = [
@@ -54,7 +95,14 @@ export function constructMarkdownSystemPrompt(
     .filter((line) => line !== null)
     .join("\n");
 
-  return frontmatter + mdBody;
+  const fullMarkdown = frontmatter + mdBody;
+  return shouldEnforce
+    ? enforceTierOutputLimit(fullMarkdown, {
+        subscriptionTier,
+        entitlement: resolvedEntitlement,
+        currentEpochMs,
+      })
+    : fullMarkdown;
 }
 
 /**
@@ -109,6 +157,8 @@ export const MarkdownExportButton: React.FC<MarkdownExportButtonProps> = ({
         depthTier,
         includeFrontmatter,
         sha256,
+        entitlement: resolveBrowserVerifiedEntitlement(),
+        enforceTierLimit: true,
       });
       const timestamp = new Date().toISOString().slice(0, 10);
       downloadMarkdownFile(`spe-system-prompt-${timestamp}.md`, mdContent);

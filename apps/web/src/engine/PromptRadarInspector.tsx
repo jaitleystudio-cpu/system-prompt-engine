@@ -10,12 +10,17 @@ import { BlindedJudgeArenaStudio } from "./BlindedJudgeArenaStudio";
 import { defaultRagEngine } from "./hybridRagEngine";
 import { OmegaProofStudio } from "./OmegaProofStudio";
 import { CommunityCatalogStudio } from "./CommunityCatalogStudio";
+import {
+  resolveBrowserVerifiedEntitlement,
+  type EntitlementVerificationResult,
+} from "./entitlementVerifier";
 
 export interface PromptRadarInspectorProps {
   promptText: string;
   rawIrPrompt?: unknown;
   activeTarget?: TargetId;
   activeDepthTier?: DepthTier;
+  entitlement?: EntitlementVerificationResult | null;
   onSelectTarget?: (target: TargetId) => void;
   onSelectDepthTier?: (tier: DepthTier) => void;
   onNavigate?: (view: any) => void;
@@ -76,6 +81,7 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
   rawIrPrompt,
   activeTarget = "any",
   activeDepthTier = "normal",
+  entitlement,
   onSelectTarget,
   onSelectDepthTier,
   onNavigate,
@@ -142,7 +148,7 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
     }
   };
 
-  // Generate Multi-Model Prompts via universal synthesizer
+  // Generate Multi-Model Prompts via universal synthesizer with verified entitlement enforcement
   const irSource = useMemo(() => {
     if (typeof rawIrPrompt === "string" && rawIrPrompt.trim()) return rawIrPrompt;
     if (rawIrPrompt && typeof rawIrPrompt === "object") {
@@ -154,16 +160,36 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
     }
     return currentPrompt;
   }, [rawIrPrompt, currentPrompt]);
-  const claudePrompt = synthesizeSystemPrompt(irSource, { target: "claude", depthTier: activeDepthTier });
-  const gptPrompt = synthesizeSystemPrompt(irSource, { target: "chatgpt", depthTier: activeDepthTier });
-  const geminiPrompt = synthesizeSystemPrompt(irSource, { target: "gemini", depthTier: activeDepthTier });
-  const localPrompt = synthesizeSystemPrompt(irSource, { target: "local", depthTier: activeDepthTier });
+  const resolvedEntitlement =
+    entitlement !== undefined ? entitlement : resolveBrowserVerifiedEntitlement();
+  const claudePrompt = synthesizeSystemPrompt(irSource, {
+    target: "claude",
+    depthTier: activeDepthTier,
+    entitlement: resolvedEntitlement,
+  });
+  const gptPrompt = synthesizeSystemPrompt(irSource, {
+    target: "chatgpt",
+    depthTier: activeDepthTier,
+    entitlement: resolvedEntitlement,
+  });
+  const geminiPrompt = synthesizeSystemPrompt(irSource, {
+    target: "gemini",
+    depthTier: activeDepthTier,
+    entitlement: resolvedEntitlement,
+  });
+  const localPrompt = synthesizeSystemPrompt(irSource, {
+    target: "local",
+    depthTier: activeDepthTier,
+    entitlement: resolvedEntitlement,
+  });
   const markdownPrompt = useMemo(() => {
     return constructMarkdownSystemPrompt(irSource, {
       depthTier: activeDepthTier,
       includeFrontmatter,
+      entitlement: resolvedEntitlement,
+      enforceTierLimit: true,
     });
-  }, [irSource, activeDepthTier, includeFrontmatter]);
+  }, [irSource, activeDepthTier, includeFrontmatter, resolvedEntitlement]);
 
   // Code Export Snippets
   const pythonSnippet = `# SPE Ω Python Production Runner

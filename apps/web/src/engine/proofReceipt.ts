@@ -246,6 +246,14 @@ export function verifyNetworkObservationAttestation(
       reason: "NetworkObservationAttestation reports non-zero outbound network activity.",
     };
   }
+  const startMs = Date.parse(attestation.captureWindowStartIso || "");
+  const endMs = Date.parse(attestation.captureWindowEndIso || "");
+  if (!Number.isFinite(startMs) || !Number.isFinite(endMs) || endMs < startMs) {
+    return {
+      verified: false,
+      reason: "NetworkObservationAttestation has invalid or inverted captureWindow timestamps.",
+    };
+  }
   const normalizedPubHex = normalizeEd25519PublicKeyHex(attestation.observerPublicKeyHex);
   if (!normalizedPubHex) {
     return { verified: false, reason: "Invalid observerPublicKeyHex format." };
@@ -633,7 +641,10 @@ export function verifyProofReceiptAuthenticity(
       }
 
       let keyTrusted = true;
-      if (options.trustedProducerKeys) {
+      if (!prov.producerKeyId || typeof prov.producerKeyId !== "string" || !prov.producerKeyId.trim()) {
+        keyTrusted = false;
+        reasons.push("Missing producerKeyId in receipt evidenceProvenance.");
+      } else if (options.trustedProducerKeys) {
         const pinnedKey = options.trustedProducerKeys[prov.producerKeyId];
         if (!pinnedKey) {
           keyTrusted = false;

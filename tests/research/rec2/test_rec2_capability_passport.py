@@ -1484,6 +1484,12 @@ def test_audit_finding_b_rec2_key_hygiene_pinning_and_envelope_field_binding() -
         assert not hasattr(rec2_mod, forbidden_symbol), f"{forbidden_symbol} must not be exported"
         assert not hasattr(passport_mod, forbidden_symbol), f"{forbidden_symbol} must not exist in passport.py"
 
+    # 1b. Verify generate_ephemeral_ed25519_keypair produces distinct CSPRNG 32-byte keypairs
+    eph_sk1, eph_pk1 = passport_mod.generate_ephemeral_ed25519_keypair()
+    eph_sk2, eph_pk2 = rec2_mod.generate_ephemeral_ed25519_keypair()
+    assert len(eph_sk1) == 32 and len(eph_pk1) == 32
+    assert eph_sk1 != eph_sk2 and eph_pk1 != eph_pk2
+
     # 2. Verify sign_passport_evaluator_attestation rejects missing or invalid keys
     with pytest.raises(ValueError, match="Explicit 32-byte Ed25519 signing_key and public_key are required"):
         sign_passport_evaluator_attestation(evidence_hash="a" * 64)
@@ -1557,13 +1563,16 @@ def test_audit_finding_b_rec2_key_hygiene_pinning_and_envelope_field_binding() -
         ),
         # Mutate is_synthetic
         CapabilityPassportEnvelope(**{**valid_passport.__dict__, "is_synthetic": True}),
+        # Mutate revocation_state (e.g. reviving a REVOKED envelope to ACTIVE or vice versa)
+        CapabilityPassportEnvelope(**{**valid_passport.__dict__, "revocation_state": "REVOKED"}),
     ]
 
     for mutated in mutated_envelopes:
         rep_mut = ObligationRequalificationEngine.inspect_passport(mutated, ctx_valid)
         assert rep_mut.content_hash_valid is False
-        assert rep_mut.status == PassportQualificationStatus.REJECTED
+        assert rep_mut.status in (PassportQualificationStatus.REJECTED, PassportQualificationStatus.REVOKED)
         assert any("CONTENT_HASH_MISMATCH" in r for r in rep_mut.rejection_reasons)
+
 
 
 

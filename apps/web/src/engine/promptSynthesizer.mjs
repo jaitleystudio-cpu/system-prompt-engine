@@ -758,20 +758,28 @@ export function synthesizeSystemPrompt(raw, opts) {
 
   const target = typeof opts === "string" ? opts : (opts && opts.target ? opts.target : "any");
   const depthTier = (opts && typeof opts === "object" && opts.depthTier) || "normal";
-  const entitlement = opts && typeof opts === "object" ? opts.entitlement : null;
-  const hasVerifiedPaidEntitlement = Boolean(
-    entitlement &&
-      entitlement.verified === true &&
-      (entitlement.tier === "pro" || entitlement.tier === "team"),
+  const hasTierOption = Boolean(
+    opts &&
+      typeof opts === "object" &&
+      (opts.subscriptionTier !== undefined ||
+        opts.entitlement !== undefined ||
+        opts.enforceFreeTierLimit),
   );
-  const subscriptionTier =
-    opts && typeof opts === "object" && opts.subscriptionTier
-      ? opts.subscriptionTier
-      : entitlement
-        ? hasVerifiedPaidEntitlement
-          ? entitlement.tier
-          : "free"
-        : null;
+  const currentEpochMs =
+    opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
+      ? opts.currentEpochMs
+      : Date.now();
+  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
+    opts && typeof opts === "object" ? opts.entitlement : null,
+    currentEpochMs,
+  );
+  const subscriptionTier = hasTierOption
+    ? opts && typeof opts === "object" && opts.subscriptionTier === "free"
+      ? "free"
+      : hasVerifiedPaidEntitlement
+        ? opts.entitlement.tier
+        : "free"
+    : null;
   const isFreeTier =
     subscriptionTier === "free" ||
     depthTier === "free" ||
@@ -1079,6 +1087,40 @@ Follow the explicit brief wherever it differs from these default working suggest
 }
 
 /**
+ * Validates that an entitlement object is a genuine, unexpired, active paid
+ * EntitlementVerificationResult with a signed payload and 64-byte Ed25519 signature.
+ * Bare `{ subscriptionTier: "pro" }` strings or shallow `{ verified: true, tier: "pro" }`
+ * objects without a valid `EntitlementTokenPayload` and `signatureHex` are rejected.
+ */
+export function isVerifiedPaidEntitlementResult(entitlement, currentEpochMs = Date.now()) {
+  if (!entitlement || typeof entitlement !== "object") return false;
+  if (entitlement.verified !== true) return false;
+  if (entitlement.tier !== "pro" && entitlement.tier !== "team") return false;
+  if (
+    typeof entitlement.signatureHex !== "string" ||
+    !/^[0-9a-fA-F]{128}$/.test(entitlement.signatureHex)
+  ) {
+    return false;
+  }
+  const payload = entitlement.payload;
+  if (!payload || typeof payload !== "object") return false;
+  if (payload.schema !== "spe.entitlement.v1") return false;
+  if (payload.tier !== entitlement.tier) return false;
+  if (payload.paymentStatus !== "PAID") return false;
+  if (payload.subscriptionStatus !== "ACTIVE") return false;
+  if (typeof payload.paymentReceiptId !== "string" || !payload.paymentReceiptId.trim()) {
+    return false;
+  }
+  if (typeof payload.subscriptionId !== "string" || !payload.subscriptionId.trim()) {
+    return false;
+  }
+  if (typeof payload.expiresAtMs !== "number" || payload.expiresAtMs <= currentEpochMs) {
+    return false;
+  }
+  return true;
+}
+
+/**
  * Runtime tier output boundary enforcement.
  * Guarantees that Free-tier users (or any caller without a verified Pro/Team entitlement)
  * never receive an output exceeding FREE_TIER_MAX_OUTPUT_CHARS (5,000 characters),
@@ -1087,14 +1129,17 @@ Follow the explicit brief wherever it differs from these default working suggest
 export function enforceTierOutputLimit(promptText, opts = {}) {
   if (!promptText || typeof promptText !== "string") return "";
   const entitlement = opts && typeof opts === "object" ? opts.entitlement : null;
-  const hasVerifiedPaidEntitlement = Boolean(
-    entitlement &&
-      entitlement.verified === true &&
-      (entitlement.tier === "pro" || entitlement.tier === "team"),
+  const currentEpochMs =
+    opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
+      ? opts.currentEpochMs
+      : Date.now();
+  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
+    entitlement,
+    currentEpochMs,
   );
   const subscriptionTier =
-    opts && typeof opts === "object" && opts.subscriptionTier
-      ? opts.subscriptionTier
+    opts && typeof opts === "object" && opts.subscriptionTier === "free"
+      ? "free"
       : hasVerifiedPaidEntitlement
         ? entitlement.tier
         : "free";
@@ -1125,16 +1170,20 @@ export function enforceTierOutputLimit(promptText, opts = {}) {
  */
 export function compilePromptWithTierEnforcement(raw, opts = {}) {
   const entitlement = opts && typeof opts === "object" ? opts.entitlement : null;
-  const hasVerifiedPaidEntitlement = Boolean(
-    entitlement &&
-      entitlement.verified === true &&
-      (entitlement.tier === "pro" || entitlement.tier === "team"),
+  const currentEpochMs =
+    opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
+      ? opts.currentEpochMs
+      : Date.now();
+  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
+    entitlement,
+    currentEpochMs,
   );
-  const effectiveSubscriptionTier = hasVerifiedPaidEntitlement
-    ? entitlement.tier
-    : (opts && typeof opts === "object" && (opts.subscriptionTier === "pro" || opts.subscriptionTier === "team") && !entitlement)
-      ? opts.subscriptionTier
-      : "free";
+  const effectiveSubscriptionTier =
+    opts && typeof opts === "object" && opts.subscriptionTier === "free"
+      ? "free"
+      : hasVerifiedPaidEntitlement
+        ? entitlement.tier
+        : "free";
   const effectiveDepthTier =
     effectiveSubscriptionTier === "free"
       ? "free"
@@ -1142,6 +1191,8 @@ export function compilePromptWithTierEnforcement(raw, opts = {}) {
   const synthesized = synthesizeSystemPrompt(raw, {
     ...(opts && typeof opts === "object" ? opts : {}),
     subscriptionTier: effectiveSubscriptionTier,
+    entitlement: effectiveSubscriptionTier === "free" ? null : entitlement,
+    currentEpochMs,
     depthTier: effectiveDepthTier,
     maxOutputChars:
       effectiveSubscriptionTier === "free"
@@ -1150,7 +1201,8 @@ export function compilePromptWithTierEnforcement(raw, opts = {}) {
   });
   return enforceTierOutputLimit(synthesized, {
     subscriptionTier: effectiveSubscriptionTier,
-    entitlement,
+    entitlement: effectiveSubscriptionTier === "free" ? null : entitlement,
+    currentEpochMs,
   });
 }
 

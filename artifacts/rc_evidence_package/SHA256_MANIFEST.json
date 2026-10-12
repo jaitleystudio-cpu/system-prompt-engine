@@ -1,6 +1,6 @@
 {
   "package": "SPE_OMEGA_RELEASE_CANDIDATE_EVIDENCE_PACKAGE",
-  "generatedAt": "2026-10-12T01:04:53.409Z",
+  "generatedAt": "2026-10-12T01:35:06.324Z",
   "canonicalWasmSha256": "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
   "files": [
     {
@@ -26,7 +26,7 @@
     {
       "path": "artifacts/rc_evidence_package/customer_exports/promptfooconfig.yaml",
       "bytes": 3332,
-      "sha256": "9c2fb330d1fe4f95eb12d3aca4c7c89080350f8dff9b20864f79efde1c844fc2"
+      "sha256": "5b1fab337509e306ada70367a337d507467b61defd71e9763b8e1a73e87502bf"
     },
     {
       "path": "artifacts/rc_evidence_package/customer_exports/system-prompt.md",
@@ -36,32 +36,32 @@
     {
       "path": "artifacts/rc_evidence_package/exported_eval_summary.md",
       "bytes": 985,
-      "sha256": "93bb279f46375ec8db53e97d7dc655c790c85085dd1d144b9673e445872e3cec"
+      "sha256": "655ea032b52f361306de87b4228fe49a56036a71f9863e66f8fef8c5480157d0"
     },
     {
       "path": "artifacts/rc_evidence_package/exported_prompt_evals_workflow.yml",
       "bytes": 2149,
-      "sha256": "61804bb64e8cafe0c8263ba279bdd3a88f5cb46677c4d92d54e6f6801bae21ce"
+      "sha256": "95832b16cd4da3555ae0f73d6f5503da7cdfd49643e09811b615e5625dbfadd4"
     },
     {
       "path": "artifacts/rc_evidence_package/exported_promptfooconfig.yaml",
       "bytes": 4383,
-      "sha256": "2f4e569cbdaf974bbd538d17a768fb35bac1c3bd9b2444c146010b7a66f55b77"
+      "sha256": "aff487c34d435e8717c9a8560071a3b4808fe41eaf9e03b26edb76c6a5546b81"
     },
     {
       "path": "artifacts/rc_evidence_package/exported_spe_receipt.json",
       "bytes": 2626,
-      "sha256": "63509afc768aac38cd1618e6f31786a7794da15419e1bdc5626ce3262e3f31fd"
+      "sha256": "ea07438f20107d72495ff4dcf1ec848e3d6816052379dece5d6106068124a620"
     },
     {
       "path": "artifacts/rc_evidence_package/rc_complete_git.diff",
-      "bytes": 149375,
-      "sha256": "4c83cc44b2cee1073040798dc1ab9e3073f4d1ad3d69e709d441ae3729e2422b"
+      "bytes": 183213,
+      "sha256": "806add9a44d5e120091f0db747936f1c28870a41ea742b63d6399ea20c88dd1d"
     },
     {
       "path": "artifacts/rc_evidence_package/test_execution_logs.txt",
-      "bytes": 8253,
-      "sha256": "c1b7adc8e234c6db5d67cf86957cbefedaa782070d611ac40a99073ae3d2a0f4"
+      "bytes": 8255,
+      "sha256": "1f5a177cc66be2848967e55e7cf266ad0fd8f0e6624658f186c228d553ecddcc"
     }
   ]
 }

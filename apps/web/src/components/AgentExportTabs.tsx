@@ -1,7 +1,15 @@
 import React, { useState, useMemo } from "react";
 import { copyTextSafe } from "../engine/workflows/clipboard";
 import { generatePromptfooConfig } from "../engine/promptfooExporter";
-import { enforceTierOutputLimit } from "../engine/promptSynthesizer.mjs";
+import {
+  FREE_TIER_MAX_OUTPUT_CHARS,
+  enforceTierOutputLimit,
+  isVerifiedPaidEntitlementResult,
+} from "../engine/promptSynthesizer.mjs";
+import {
+  resolveExportEntitlement,
+  type EntitlementVerificationResult,
+} from "../engine/entitlementVerifier";
 
 export type AgentFormatId =
   | "standard"
@@ -29,8 +37,9 @@ export const AGENT_FORMATS: AgentFormatMeta[] = [
 
 export interface AgentFormatOptions {
   subscriptionTier?: "free" | "pro" | "team";
-  entitlement?: { verified: boolean; tier: "free" | "pro" | "team" } | null;
+  entitlement?: EntitlementVerificationResult | null;
   enforceTierLimit?: boolean;
+  currentEpochMs?: number;
 }
 
 export function formatForAgent(
@@ -39,33 +48,36 @@ export function formatForAgent(
   category = "General",
   options: AgentFormatOptions = {},
 ): { content: string; filename: string } {
-  const shouldEnforceLimit =
-    Boolean(options.enforceTierLimit) ||
-    Boolean(options.subscriptionTier) ||
-    Boolean(options.entitlement);
+  const shouldEnforceLimit = options.enforceTierLimit !== false;
+  const resolvedEntitlement = resolveExportEntitlement(options);
+  const effectiveOptions = {
+    subscriptionTier: options.subscriptionTier,
+    entitlement: resolvedEntitlement,
+    currentEpochMs: options.currentEpochMs,
+  };
   const boundedPrompt = shouldEnforceLimit
-    ? enforceTierOutputLimit(rawPrompt, options)
+    ? enforceTierOutputLimit(rawPrompt, effectiveOptions)
     : rawPrompt;
 
   switch (format) {
     case "claude": {
       const content = `# CLAUDE.md — Agent System Directives\n> Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\n## Role & Core Guidelines\n${boundedPrompt}\n\n## Non-Negotiable Operational Guardrails\n- Scope Invariant: Do not modify files outside explicitly declared boundaries.\n- Verification Receipt: Run project test suite and verify zero regressions before reporting task completion.\n- Zero Hallucination: Do not invent nonexistent packages, CLI flags, or mock endpoints.\n`;
       return {
-        content: shouldEnforceLimit ? enforceTierOutputLimit(content, options) : content,
+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
         filename: "CLAUDE.md",
       };
     }
     case "cursor": {
       const content = `# .cursorrules — Project AI Directives & Guardrails\n# Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\nYou are an expert developer operating under strict zero-drift guidelines.\n\n${boundedPrompt}\n\n## Project Invariants:\n1. Never introduce unverified dependencies.\n2. Ensure all types pass TypeScript/strict typechecking.\n3. Always verify changes with unit tests before declaring completion.\n`;
       return {
-        content: shouldEnforceLimit ? enforceTierOutputLimit(content, options) : content,
+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
         filename: ".cursorrules",
       };
     }
     case "windsurf": {
       const content = `# .windsurfrules — Cascade Agent Directives\n# Compiled by System Prompt Engine (SPE Ω)\n\n${boundedPrompt}\n`;
       return {
-        content: shouldEnforceLimit ? enforceTierOutputLimit(content, options) : content,
+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
         filename: ".windsurfrules",
       };
     }
@@ -73,8 +85,25 @@ export function formatForAgent(
       return { content: boundedPrompt, filename: "custom-gpt-instructions.txt" };
     }
     case "promptfoo": {
-      const bundle = generatePromptfooConfig(boundedPrompt, { projectName: `spe-${category.toLowerCase()}-eval` });
-      return { content: bundle.yamlConfig, filename: "promptfooconfig.yaml" };
+      const projectName = `spe-${category.toLowerCase()}-eval`;
+      let promptForYaml = boundedPrompt;
+      if (
+        shouldEnforceLimit &&
+        !isVerifiedPaidEntitlementResult(resolvedEntitlement, options.currentEpochMs)
+      ) {
+        const emptyOverhead = generatePromptfooConfig("", { projectName }).yamlConfig.length;
+        const maxPromptForYaml = Math.max(400, FREE_TIER_MAX_OUTPUT_CHARS - emptyOverhead - 32);
+        if (promptForYaml.length > maxPromptForYaml) {
+          promptForYaml = promptForYaml.slice(0, maxPromptForYaml);
+        }
+      }
+      const bundle = generatePromptfooConfig(promptForYaml, { projectName });
+      return {
+        content: shouldEnforceLimit
+          ? enforceTierOutputLimit(bundle.yamlConfig, effectiveOptions)
+          : bundle.yamlConfig,
+        filename: "promptfooconfig.yaml",
+      };
     }
     case "standard":
     default: {

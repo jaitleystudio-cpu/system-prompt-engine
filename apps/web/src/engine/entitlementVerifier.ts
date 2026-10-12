@@ -43,9 +43,27 @@ export interface AuthoritativeReceiptRecord {
   revoked: boolean;
 }
 
+export interface SignedReceiptStatusAttestation {
+  schema: "spe.receipt_status_attestation.v1" | "spe.receipt_status.v1";
+  paymentReceiptId: string;
+  subscriptionId: string;
+  exists?: boolean;
+  paid: boolean;
+  subscriptionStatus: "ACTIVE" | "CANCELED" | "PAST_DUE" | "EXPIRED" | "REVOKED";
+  tier: "pro" | "team";
+  email: string;
+  expiresAtMs: number;
+  revoked: boolean;
+  attestedAtMs: number;
+  issuerKeyId: string;
+  signatureHex?: string;
+}
+
 export interface EntitlementVerificationOptions {
   expectedEmail?: string;
   currentEpochMs?: number;
+  issuerPublicKeyHex?: string;
+  token?: string;
   /**
    * Explicit map of `issuerKeyId -> ed25519_public_key_hex` (64-hex raw or 88-hex SPKI DER).
    * Every trusted issuer MUST have a pinned Ed25519 public key.
@@ -63,8 +81,14 @@ export interface EntitlementVerificationOptions {
     payload: EntitlementTokenPayload,
   ) => AuthoritativeReceiptRecord | null | undefined;
   /**
+   * Optional Ed25519-signed receipt status attestation (`SignedReceiptStatusAttestation` or `spe_receipt_status.v1.<hex>.<sig>`)
+   * issued by the server billing authority for browser/offline receipt verification.
+   */
+  signedReceiptAttestation?: SignedReceiptStatusAttestation | string;
+  /**
    * Defaults to `true`. When `true`, `verifySignedEntitlementToken` rejects any token
-   * whose `paymentReceiptId` is not confirmed by `authoritativeReceiptVerifier`.
+   * whose `paymentReceiptId` is not confirmed by `authoritativeReceiptVerifier` or a
+   * cryptographically verified server `SignedReceiptStatusAttestation`.
    */
   requireAuthoritativeReceiptCheck?: boolean;
   /**
@@ -82,6 +106,7 @@ export interface EntitlementVerificationResult {
   verified: boolean;
   tier: "pro" | "team" | null;
   payload: EntitlementTokenPayload | null;
+  signatureHex?: string | null;
   rejectionReason: string | null;
 }
 
@@ -122,6 +147,97 @@ export function utf8ToHex(text: string): string {
 }
 
 /**
+ * Cryptographically verifies an Ed25519-signed receipt status attestation
+ * (`SignedReceiptStatusAttestation` object, JSON string, or `spe_receipt_status.v1.<attestation_hex>.<ed25519_sig_hex>`)
+ * against pinned issuer public keys.
+ */
+export function verifySignedReceiptStatusAttestation(
+  rawAttestation: SignedReceiptStatusAttestation | string,
+  options: Pick<EntitlementVerificationOptions, "trustedIssuerPublicKeys" | "verifySignatureFn"> = {},
+): (AuthoritativeReceiptRecord & { paymentReceiptId: string }) | null {
+  if (!rawAttestation) return null;
+  let parsed: SignedReceiptStatusAttestation;
+  let sigHex: string | undefined;
+
+  if (typeof rawAttestation === "string") {
+    const trimmed = rawAttestation.trim();
+    if (!trimmed) return null;
+    if (trimmed.startsWith("spe_receipt_status.v1.")) {
+      const parts = trimmed.split(".");
+      if (parts.length !== 4) return null;
+      const [, , attHex, embeddedSigHex] = parts;
+      sigHex = embeddedSigHex;
+      try {
+        parsed = JSON.parse(hexToUtf8(attHex)) as SignedReceiptStatusAttestation;
+      } catch {
+        return null;
+      }
+    } else {
+      try {
+        parsed = JSON.parse(trimmed) as SignedReceiptStatusAttestation;
+        sigHex = parsed.signatureHex;
+      } catch {
+        return null;
+      }
+    }
+  } else if (typeof rawAttestation === "object") {
+    parsed = rawAttestation;
+    sigHex = parsed.signatureHex;
+  } else {
+    return null;
+  }
+
+  if (!sigHex || sigHex.length !== 128 || !/^[0-9a-fA-F]{128}$/.test(sigHex)) {
+    return null;
+  }
+  if (
+    !parsed ||
+    (parsed.schema !== "spe.receipt_status_attestation.v1" &&
+      parsed.schema !== "spe.receipt_status.v1") ||
+    !parsed.paymentReceiptId ||
+    !parsed.subscriptionId ||
+    (parsed.tier !== "pro" && parsed.tier !== "team") ||
+    !parsed.email ||
+    !parsed.issuerKeyId ||
+    typeof parsed.paid !== "boolean" ||
+    typeof parsed.revoked !== "boolean" ||
+    typeof parsed.expiresAtMs !== "number" ||
+    typeof parsed.attestedAtMs !== "number"
+  ) {
+    return null;
+  }
+
+  const pinnedKeyMap: Record<string, string> = options.trustedIssuerPublicKeys ?? {
+    [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]: SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
+  };
+  const rawPinnedKey = pinnedKeyMap[parsed.issuerKeyId];
+  const normalizedPinnedKey = rawPinnedKey ? normalizeEd25519PublicKeyHex(rawPinnedKey) : null;
+  if (!normalizedPinnedKey) {
+    return null;
+  }
+
+  const { signatureHex: _omittedSig, ...unsignedPayload } = parsed;
+  const canonical = canonicalizeJson(unsignedPayload);
+  const sigValid = options.verifySignatureFn
+    ? options.verifySignatureFn(canonical, sigHex, normalizedPinnedKey, parsed.issuerKeyId)
+    : verifyEd25519Signature(canonical, sigHex, normalizedPinnedKey);
+  if (!sigValid) {
+    return null;
+  }
+
+  return {
+    paymentReceiptId: parsed.paymentReceiptId,
+    exists: parsed.exists ?? true,
+    paid: parsed.paid,
+    subscriptionStatus: parsed.subscriptionStatus,
+    tier: parsed.tier,
+    email: parsed.email,
+    expiresAtMs: parsed.expiresAtMs,
+    revoked: parsed.revoked,
+  };
+}
+
+/**
  * Verifies a server-issued, Ed25519-signed entitlement token using ONLY pinned public keys
  * and authoritative payment/subscription status verification.
  */
@@ -135,6 +251,7 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason: "EMPTY_ENTITLEMENT_TOKEN",
     };
   }
@@ -144,28 +261,35 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason:
         "SELF_MINTED_UNVERIFIED_KEY_REJECTED: Client-generated license strings cannot unlock paid tiers.",
     };
   }
 
   const parts = trimmed.split(".");
-  if (parts.length !== 4 || parts[0] !== "spe_entitlement" || parts[1] !== "v1") {
+  if (
+    (parts.length !== 4 && parts.length !== 6) ||
+    parts[0] !== "spe_entitlement" ||
+    parts[1] !== "v1"
+  ) {
     return {
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason:
         "INVALID_TOKEN_ENVELOPE: Expected spe_entitlement.v1.<payload_hex>.<ed25519_signature_hex>",
     };
   }
 
-  const [, , payloadHex, signatureHex] = parts;
+  const [, , payloadHex, signatureHex, embeddedReceiptAttHex, embeddedReceiptSigHex] = parts;
   if (!signatureHex || signatureHex.length !== 128 || !/^[0-9a-fA-F]{128}$/.test(signatureHex)) {
     return {
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason: "INVALID_ENTITLEMENT_SIGNATURE_FORMAT: Expected 64-byte (128-hex) Ed25519 signature",
     };
   }
@@ -179,6 +303,7 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason: "MALFORMED_ENTITLEMENT_PAYLOAD",
     };
   }
@@ -197,25 +322,28 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason: "INCOMPLETE_ENTITLEMENT_CLAIMS",
     };
   }
 
-  if (parsed.paymentStatus !== undefined && parsed.paymentStatus !== "PAID") {
+  if (parsed.paymentStatus !== "PAID") {
     return {
       verified: false,
       tier: null,
       payload: null,
-      rejectionReason: `UNPAID_OR_INVALID_PAYMENT_STATUS:${parsed.paymentStatus}`,
+      signatureHex: null,
+      rejectionReason: `UNPAID_OR_INVALID_PAYMENT_STATUS:${String(parsed.paymentStatus ?? "MISSING")}`,
     };
   }
 
-  if (parsed.subscriptionStatus !== undefined && parsed.subscriptionStatus !== "ACTIVE") {
+  if (parsed.subscriptionStatus !== "ACTIVE") {
     return {
       verified: false,
       tier: null,
       payload: null,
-      rejectionReason: `INACTIVE_SUBSCRIPTION_STATUS:${parsed.subscriptionStatus}`,
+      signatureHex: null,
+      rejectionReason: `INACTIVE_SUBSCRIPTION_STATUS:${String(parsed.subscriptionStatus ?? "MISSING")}`,
     };
   }
 
@@ -229,6 +357,7 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason: "REVOKED_ENTITLEMENT_TOKEN",
     };
   }
@@ -239,6 +368,7 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason: "EXPIRED_ENTITLEMENT_TOKEN",
     };
   }
@@ -247,6 +377,7 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason: "INVALID_ISSUANCE_TIMESTAMP",
     };
   }
@@ -259,6 +390,7 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason: "ENTITLEMENT_EMAIL_MISMATCH",
     };
   }
@@ -274,6 +406,7 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason: `UNTRUSTED_ENTITLEMENT_ISSUER:${parsed.issuerKeyId}`,
     };
   }
@@ -289,6 +422,7 @@ export function verifySignedEntitlementToken(
       verified: false,
       tier: null,
       payload: null,
+      signatureHex: null,
       rejectionReason: "INVALID_ENTITLEMENT_SIGNATURE",
     };
   }
@@ -296,21 +430,48 @@ export function verifySignedEntitlementToken(
   // Enforce authoritative payment receipt, subscription status, expiration, and revocation check
   const requireAuthoritative = options.requireAuthoritativeReceiptCheck ?? true;
   if (requireAuthoritative) {
-    if (!options.authoritativeReceiptVerifier) {
+    let effectiveVerifier = options.authoritativeReceiptVerifier;
+    if (!effectiveVerifier) {
+      const candidateAttestation =
+        options.signedReceiptAttestation ||
+        (parts.length === 6 && embeddedReceiptAttHex && embeddedReceiptSigHex
+          ? `spe_receipt_status.v1.${embeddedReceiptAttHex}.${embeddedReceiptSigHex}`
+          : undefined);
+      if (candidateAttestation) {
+        effectiveVerifier = (requestedReceiptId: string) => {
+          const verifiedAtt = verifySignedReceiptStatusAttestation(candidateAttestation, {
+            trustedIssuerPublicKeys: pinnedKeyMap,
+            verifySignatureFn: options.verifySignatureFn,
+          });
+          if (
+            !verifiedAtt ||
+            verifiedAtt.paymentReceiptId !== requestedReceiptId ||
+            verifiedAtt.email.trim().toLowerCase() !== parsed.email.trim().toLowerCase()
+          ) {
+            return null;
+          }
+          return verifiedAtt;
+        };
+      }
+    }
+
+    if (!effectiveVerifier) {
       return {
         verified: false,
         tier: null,
         payload: null,
+        signatureHex: null,
         rejectionReason:
           "AUTHORITATIVE_RECEIPT_VERIFICATION_REQUIRED: Claimed paymentReceiptId cannot be accepted without authoritative server confirmation.",
       };
     }
-    const record = options.authoritativeReceiptVerifier(parsed.paymentReceiptId, parsed);
+    const record = effectiveVerifier(parsed.paymentReceiptId, parsed);
     if (!record || !record.exists) {
       return {
         verified: false,
         tier: null,
         payload: null,
+        signatureHex: null,
         rejectionReason: `UNKNOWN_PAYMENT_RECEIPT_ID:${parsed.paymentReceiptId}`,
       };
     }
@@ -319,6 +480,7 @@ export function verifySignedEntitlementToken(
         verified: false,
         tier: null,
         payload: null,
+        signatureHex: null,
         rejectionReason: `UNPAID_PAYMENT_RECEIPT:${parsed.paymentReceiptId}`,
       };
     }
@@ -327,6 +489,7 @@ export function verifySignedEntitlementToken(
         verified: false,
         tier: null,
         payload: null,
+        signatureHex: null,
         rejectionReason: `REVOKED_OR_CANCELED_SUBSCRIPTION:${record.subscriptionStatus}`,
       };
     }
@@ -335,6 +498,7 @@ export function verifySignedEntitlementToken(
         verified: false,
         tier: null,
         payload: null,
+        signatureHex: null,
         rejectionReason: "EXPIRED_AUTHORITATIVE_SUBSCRIPTION",
       };
     }
@@ -346,6 +510,7 @@ export function verifySignedEntitlementToken(
         verified: false,
         tier: null,
         payload: null,
+        signatureHex: null,
         rejectionReason: "AUTHORITATIVE_RECEIPT_CLAIM_MISMATCH",
       };
     }
@@ -355,8 +520,124 @@ export function verifySignedEntitlementToken(
     verified: true,
     tier: parsed.tier,
     payload: parsed,
+    signatureHex,
     rejectionReason: null,
   };
+}
+
+/**
+ * Resolves and cryptographically verifies any stored browser entitlement token from `localStorage`.
+ * If absent, tampered, expired, or unverified, clears stale localStorage keys and returns `{ verified: false, tier: null }`.
+ */
+export function resolveBrowserVerifiedEntitlement(
+  options: EntitlementVerificationOptions = {},
+): EntitlementVerificationResult {
+  try {
+    if (typeof localStorage === "undefined" && !options.token) {
+      return {
+        verified: false,
+        tier: null,
+        payload: null,
+        signatureHex: null,
+        rejectionReason: "NO_BROWSER_STORAGE",
+      };
+    }
+    const storedToken =
+      options.token ??
+      (typeof localStorage !== "undefined" ? localStorage.getItem("spe-license-key") : null);
+    if (!storedToken) {
+      return {
+        verified: false,
+        tier: null,
+        payload: null,
+        signatureHex: null,
+        rejectionReason: "NO_STORED_ENTITLEMENT_TOKEN",
+      };
+    }
+    const storedAttestation =
+      typeof localStorage !== "undefined"
+        ? localStorage.getItem("spe-receipt-attestation") || undefined
+        : undefined;
+    const hostVerifier =
+      typeof window !== "undefined"
+        ? (
+            window as unknown as {
+              __SPE_AUTHORITATIVE_RECEIPT_VERIFIER__?: EntitlementVerificationOptions["authoritativeReceiptVerifier"];
+            }
+          ).__SPE_AUTHORITATIVE_RECEIPT_VERIFIER__
+        : undefined;
+    const trustedIssuerPublicKeys = options.trustedIssuerPublicKeys ?? {
+      [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]:
+        options.issuerPublicKeyHex ?? SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
+    };
+    const check = verifySignedEntitlementToken(storedToken, {
+      ...options,
+      trustedIssuerPublicKeys,
+      authoritativeReceiptVerifier: options.authoritativeReceiptVerifier ?? hostVerifier,
+      signedReceiptAttestation: options.signedReceiptAttestation ?? storedAttestation,
+    });
+    if (!check.verified || !check.tier) {
+      if (typeof localStorage !== "undefined") {
+        localStorage.removeItem("spe-user-tier");
+        localStorage.removeItem("spe-license-key");
+        localStorage.removeItem("spe-receipt-attestation");
+      }
+      return check;
+    }
+    return check;
+  } catch {
+    return {
+      verified: false,
+      tier: null,
+      payload: null,
+      signatureHex: null,
+      rejectionReason: "STORAGE_ACCESS_ERROR",
+    };
+  }
+}
+
+export function persistBrowserVerifiedEntitlement(
+  email: string,
+  token: string,
+  verification: EntitlementVerificationResult,
+  signedReceiptAttestation?: SignedReceiptStatusAttestation | string,
+): void {
+  if (typeof localStorage === "undefined" || !verification.verified || !verification.tier) {
+    return;
+  }
+  localStorage.setItem("spe-user-tier", verification.tier);
+  localStorage.setItem("spe-user-email", email.trim());
+  localStorage.setItem("spe-license-key", token.trim());
+  if (signedReceiptAttestation) {
+    localStorage.setItem(
+      "spe-receipt-attestation",
+      typeof signedReceiptAttestation === "string"
+        ? signedReceiptAttestation
+        : JSON.stringify(signedReceiptAttestation),
+    );
+  }
+}
+
+export function clearBrowserVerifiedEntitlement(): void {
+  if (typeof localStorage === "undefined") return;
+  localStorage.removeItem("spe-user-tier");
+  localStorage.removeItem("spe-user-email");
+  localStorage.removeItem("spe-license-key");
+  localStorage.removeItem("spe-receipt-attestation");
+}
+
+export function resolveExportEntitlement(options: {
+  subscriptionTier?: "free" | "pro" | "team";
+  entitlement?: EntitlementVerificationResult | null;
+  currentEpochMs?: number;
+} = {}): EntitlementVerificationResult | null {
+  if (options.subscriptionTier === "free") {
+    return null;
+  }
+  if (options.entitlement !== undefined) {
+    return options.entitlement;
+  }
+  return resolveBrowserVerifiedEntitlement({ currentEpochMs: options.currentEpochMs });
 }
 
 /**

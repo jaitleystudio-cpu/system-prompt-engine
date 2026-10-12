@@ -274,6 +274,12 @@ export function verifyEd25519Signature(
   const A = decodePoint(pkBytes);
   if (!R || !A) return false;
 
+  // Reject small-order / torsion public keys and nonce points (8 * P == identity [0, 1])
+  const eightA = scalarMult(A, 8n);
+  if (eightA[0] === 0n && eightA[1] === 1n) return false;
+  const eightR = scalarMult(R, 8n);
+  if (eightR[0] === 0n && eightR[1] === 1n && S === 0n) return false;
+
   const msgBytes = new TextEncoder().encode(messageUtf8);
   const hashInput = new Uint8Array(32 + 32 + msgBytes.length);
   hashInput.set(rBytes, 0);

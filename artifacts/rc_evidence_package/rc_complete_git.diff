@@ -110,7 +110,7 @@ index d1ae9258..69a78906 100644
  // Risk B Closure: Write & Validate the Customer's Actual Exported Artifact Files
  console.log("\n[7/7] Risk B Closure: Writing & executing assertions from the actual exported promptfooconfig.yaml file...");
 diff --git a/apps/web/scripts/test-rc-customer-journey.mjs b/apps/web/scripts/test-rc-customer-journey.mjs
-index d962848a..43c9dbc0 100644
+index d962848a..3e7b8648 100644
 --- a/apps/web/scripts/test-rc-customer-journey.mjs
 +++ b/apps/web/scripts/test-rc-customer-journey.mjs
 @@ -23,11 +23,18 @@ import { dirname, join } from "node:path";
@@ -177,7 +177,7 @@ index d962848a..43c9dbc0 100644
    const selfMintedCheck = verifySignedEntitlementToken("SPE-PRO-9A8B-7C6D-5E4F");
    assert.equal(selfMintedCheck.verified, false, "Self-minted random license string must be rejected");
    assert(
-@@ -113,29 +143,81 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
+@@ -113,29 +143,96 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
      "Rejection reason must identify self-minted unverified key",
    );
  
@@ -257,6 +257,21 @@ index d962848a..43c9dbc0 100644
    assert.equal(verifiedPro.tier, "pro");
  
 -  // Step D: Forged signature on entitlement token MUST be rejected
++  // Verifying 6-part composite server checkout bundle (`spe_entitlement.v1.<payloadHex>.<sigHex>.<receiptAttHex>.<receiptSigHex>`)
++  // succeeds in browser without requiring an out-of-band callback
++  const validCheckoutBundle = billingAuthority.issueSignedCheckoutBundleForPaidReceipt(
++    "pay_rcpt_2026_pro_001",
++    1_791_750_000_000,
++  );
++  assert.equal(validCheckoutBundle.split(".").length, 6, "Composite checkout bundle must have 6 dot-separated segments");
++  const verifiedBundle = verifySignedEntitlementToken(validCheckoutBundle, {
++    expectedEmail: "dev@example.com",
++    currentEpochMs: 1_791_760_000_000,
++    trustedIssuerPublicKeys: authorityPubKeys,
++  });
++  assert.equal(verifiedBundle.verified, true, "6-part server checkout bundle with embedded Ed25519 receipt attestation must verify in browser");
++  assert.equal(verifiedBundle.tier, "pro");
++
 +  // Step D: Forged signature on entitlement token MUST be rejected by Ed25519 verifier
    const forgedToken = validProToken.slice(0, -4) + (validProToken.endsWith("0000") ? "ffff" : "0000");
    const forgedCheck = verifySignedEntitlementToken(forgedToken, {
@@ -267,7 +282,7 @@ index d962848a..43c9dbc0 100644
    });
    assert.equal(forgedCheck.verified, false, "Forged entitlement token signature must be rejected");
    assert.equal(forgedCheck.rejectionReason, "INVALID_ENTITLEMENT_SIGNATURE");
-@@ -144,17 +226,42 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
+@@ -144,17 +241,57 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
    const expiredCheck = verifySignedEntitlementToken(validProToken, {
      expectedEmail: "dev@example.com",
      currentEpochMs: 1_991_760_000_000,
@@ -300,6 +315,21 @@ index d962848a..43c9dbc0 100644
 +    canceledCheck.rejectionReason?.includes("REVOKED_OR_CANCELED_SUBSCRIPTION:CANCELED"),
 +    "Canceled subscription rejection reason must be explicit",
 +  );
++  const canceledReceiptAttestation = billingAuthority.issueSignedReceiptStatusAttestation(
++    "pay_rcpt_2026_pro_001",
++    1_791_760_000_000,
++  );
++  const canceledAttestationCheck = verifySignedEntitlementToken(validProToken, {
++    expectedEmail: "dev@example.com",
++    currentEpochMs: 1_791_760_000_000,
++    trustedIssuerPublicKeys: authorityPubKeys,
++    signedReceiptAttestation: canceledReceiptAttestation,
++  });
++  assert.equal(canceledAttestationCheck.verified, false, "Signed receipt attestation for canceled subscription must invalidate token");
++  assert(
++    canceledAttestationCheck.rejectionReason?.includes("REVOKED_OR_CANCELED_SUBSCRIPTION:CANCELED"),
++    "Canceled signed receipt attestation must report REVOKED_OR_CANCELED_SUBSCRIPTION:CANCELED",
++  );
 +
 +  console.log("✓ Pricing tiers ($0 / $1->$9 / $9->$99), Ed25519 server entitlement authority, and webhook revocation verified.");
  }
@@ -313,7 +343,7 @@ index d962848a..43c9dbc0 100644
  {
    const bundle = await build({
      entryPoints: [join(webRoot, "src/components/AgentExportTabs.tsx")],
-@@ -171,6 +278,85 @@ console.log("\n[2/4] Verifying all 6 customer export formats via formatForAgent(
+@@ -171,6 +308,120 @@ console.log("\n[2/4] Verifying all 6 customer export formats via formatForAgent(
      `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`
    );
  
@@ -338,6 +368,28 @@ index d962848a..43c9dbc0 100644
 +  assert(
 +    freeTierCompiled.length <= 5000,
 +    `Free-tier compiled output length (${freeTierCompiled.length}) must be <= 5,000 chars`,
++  );
++
++  // Bare subscriptionTier='pro' WITHOUT a cryptographically verified entitlement MUST still be capped at <= 5,000 chars
++  const unverifiedStringProAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
++    category: "Backend",
++    depthTier: "deep",
++    subscriptionTier: "pro",
++  });
++  assert(
++    unverifiedStringProAttempt.length <= 5000,
++    `Bare subscriptionTier='pro' without verified entitlement (${unverifiedStringProAttempt.length}) must be capped at <= 5,000 chars`,
++  );
++
++  // Shallow fake entitlement `{ verified: true, tier: 'pro' }` without payload & 128-hex signature MUST still be capped at <= 5,000 chars
++  const forgedShallowEntitlementAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
++    category: "Backend",
++    depthTier: "deep",
++    entitlement: { verified: true, tier: "pro" },
++  });
++  assert(
++    forgedShallowEntitlementAttempt.length <= 5000,
++    `Shallow fake entitlement without signed payload (${forgedShallowEntitlementAttempt.length}) must be capped at <= 5,000 chars`,
 +  );
 +
 +  // Direct synthesizeSystemPrompt with subscriptionTier: 'free' also enforces <= 5,000 characters
@@ -381,13 +433,19 @@ index d962848a..43c9dbc0 100644
 +    category: "Backend",
 +    depthTier: "deep",
 +    entitlement: verifiedProEnt,
++    currentEpochMs: 1_791_760_000_000,
 +  });
 +  assert(
 +    proTierCompiled.length > 5000 && proTierCompiled.length <= 30000,
 +    `Verified Pro output length (${proTierCompiled.length}) must exceed 5,000 and be <= 30,000 chars`,
 +  );
 +
-+  // Verify formatForAgent also enforces <= 5,000 chars on Free tier when given an oversized prompt
++  // Verify formatForAgent enforces <= 5,000 chars by default (even when options are omitted!) and across promptfoo YAML
++  const defaultExportOnFree = exportMod.formatForAgent(proTierCompiled, "standard", "Backend");
++  assert(
++    defaultExportOnFree.content.length <= 5000,
++    `formatForAgent with default options (${defaultExportOnFree.content.length}) must enforce <= 5,000 chars on Free tier`,
++  );
 +  const oversizedExportOnFree = exportMod.formatForAgent(proTierCompiled, "standard", "Backend", {
 +    subscriptionTier: "free",
 +  });
@@ -395,16 +453,26 @@ index d962848a..43c9dbc0 100644
 +    oversizedExportOnFree.content.length <= 5000,
 +    `formatForAgent with subscriptionTier='free' (${oversizedExportOnFree.content.length}) must be <= 5,000 chars`,
 +  );
++  const promptfooExportOnFree = exportMod.formatForAgent(proTierCompiled, "promptfoo", "Backend", {
++    subscriptionTier: "free",
++  });
++  assert(
++    promptfooExportOnFree.content.length <= 5000,
++    `formatForAgent promptfoo export on Free tier (${promptfooExportOnFree.content.length}) must be <= 5,000 chars`,
++  );
 +
    const customerPrompt = `# System Role & Persona
  You are a fortified enterprise AI specialist: Backend API Architect.
  
-@@ -207,12 +393,12 @@ Design and validate REST APIs returning strict JSON schemas.
+@@ -207,12 +458,15 @@ Design and validate REST APIs returning strict JSON schemas.
    ];
  
    for (const fmt of expectedFormats) {
 -    const out = exportMod.formatForAgent(customerPrompt, fmt.id, "Backend");
-+    const out = exportMod.formatForAgent(customerPrompt, fmt.id, "Backend", { subscriptionTier: "pro" });
++    const out = exportMod.formatForAgent(customerPrompt, fmt.id, "Backend", {
++      entitlement: verifiedProEnt,
++      currentEpochMs: 1_791_760_000_000,
++    });
      assert.equal(out.filename, fmt.filename, `Filename mismatch for ${fmt.id}`);
      assert(out.content.includes(fmt.mustContain), `Export ${fmt.id} missing expected content: ${fmt.mustContain}`);
      writeFileSync(join(customerExportsDir, out.filename), out.content, "utf8");
@@ -415,7 +483,7 @@ index d962848a..43c9dbc0 100644
  
  // -----------------------------------------------------------------------------
 diff --git a/apps/web/scripts/test-spe-omega-proof-engine.mjs b/apps/web/scripts/test-spe-omega-proof-engine.mjs
-index b22a42e4..7d1a2a1d 100644
+index b22a42e4..8eb39ae4 100644
 --- a/apps/web/scripts/test-spe-omega-proof-engine.mjs
 +++ b/apps/web/scripts/test-spe-omega-proof-engine.mjs
 @@ -3,7 +3,15 @@ import { typeCheckPrompt, DIAGNOSTIC_CODES } from "../src/engine/promptTypeSyste
@@ -446,7 +514,7 @@ index b22a42e4..7d1a2a1d 100644
  const receipt = generateProofReceipt(vulnerablePrompt, fortifiedPrompt, twinReport, gymReport);
  assert(receipt.receiptDigest.length === 64, "Receipt digest must be valid SHA-256 hex string");
  assert.strictEqual(receipt.hardGates.protectedIntentPreserved, true, "Hard gates: intent preserved");
-@@ -110,24 +118,120 @@ assert.strictEqual(receipt.hardGates.zeroEgressObserved, false, "Hard gates: zer
+@@ -110,24 +118,147 @@ assert.strictEqual(receipt.hardGates.zeroEgressObserved, false, "Hard gates: zer
  assert.strictEqual(receipt.hardGates.zeroEgressStatus, "STATIC_IN_PROCESS_ONLY_UNOBSERVED", "Hard gates: honest static unobserved status");
  assert.strictEqual(receipt.evidenceProvenance.selfGeneratedAssertionOnly, true, "Unsigned local receipt must mark selfGeneratedAssertionOnly: true");
  
@@ -556,6 +624,33 @@ index b22a42e4..7d1a2a1d 100644
 +assert.strictEqual(fullAuthReport.integrityVerified, true);
 +assert.strictEqual(fullAuthReport.producerAuthenticated, true);
 +assert.strictEqual(fullAuthReport.experimentalValidityVerified, true);
++
++// Finding C4: Small-order / identity point (0, 1) universal forgery MUST be rejected
++const identityPointPubHex = "01" + "00".repeat(31);
++const identityPointSigHex = "01" + "00".repeat(63);
++assert.throws(
++  () =>
++    attachProducerSignature(
++      observedReceipt,
++      "spe-ci-authority",
++      identityPointPubHex,
++      () => identityPointSigHex,
++    ),
++  /signature failed RFC 8032 Ed25519/,
++  "Small-order identity point (0, 1) public key / signature forgery must be rejected",
++);
++const emptyKeyIdReceipt = {
++  ...signedObservedReceipt,
++  producerKeyId: "",
++};
++const emptyKeyIdReport = verifyProofReceiptAuthenticity(emptyKeyIdReceipt, {
++  requireAuthenticatedProducer: true,
++});
++assert.strictEqual(
++  emptyKeyIdReport.producerAuthenticated,
++  false,
++  "Receipt with empty producerKeyId must be rejected by verifyProofReceiptAuthenticity",
++);
  
  // Verify JCS Canonicalization key sorting
  const testObj1 = { z: 1, a: 2, m: { y: 3, b: 4 } };
@@ -570,25 +665,34 @@ index b22a42e4..7d1a2a1d 100644
  console.log("================================================================================");
 +
 diff --git a/apps/web/src/components/AgentExportTabs.tsx b/apps/web/src/components/AgentExportTabs.tsx
-index 4e3c61b6..b9679df6 100644
+index 4e3c61b6..db43b537 100644
 --- a/apps/web/src/components/AgentExportTabs.tsx
 +++ b/apps/web/src/components/AgentExportTabs.tsx
-@@ -1,6 +1,7 @@
+@@ -1,6 +1,15 @@
  import React, { useState, useMemo } from "react";
  import { copyTextSafe } from "../engine/workflows/clipboard";
  import { generatePromptfooConfig } from "../engine/promptfooExporter";
-+import { enforceTierOutputLimit } from "../engine/promptSynthesizer.mjs";
++import {
++  FREE_TIER_MAX_OUTPUT_CHARS,
++  enforceTierOutputLimit,
++  isVerifiedPaidEntitlementResult,
++} from "../engine/promptSynthesizer.mjs";
++import {
++  resolveExportEntitlement,
++  type EntitlementVerificationResult,
++} from "../engine/entitlementVerifier";
  
  export type AgentFormatId =
    | "standard"
-@@ -26,34 +27,58 @@ export const AGENT_FORMATS: AgentFormatMeta[] = [
+@@ -26,34 +35,79 @@ export const AGENT_FORMATS: AgentFormatMeta[] = [
    { id: "promptfoo", label: "promptfoo.yaml", filename: "promptfooconfig.yaml", badge: "CI/CD Eval" },
  ];
  
 +export interface AgentFormatOptions {
 +  subscriptionTier?: "free" | "pro" | "team";
-+  entitlement?: { verified: boolean; tier: "free" | "pro" | "team" } | null;
++  entitlement?: EntitlementVerificationResult | null;
 +  enforceTierLimit?: boolean;
++  currentEpochMs?: number;
 +}
 +
  export function formatForAgent(
@@ -598,12 +702,15 @@ index 4e3c61b6..b9679df6 100644
 +  category = "General",
 +  options: AgentFormatOptions = {},
  ): { content: string; filename: string } {
-+  const shouldEnforceLimit =
-+    Boolean(options.enforceTierLimit) ||
-+    Boolean(options.subscriptionTier) ||
-+    Boolean(options.entitlement);
++  const shouldEnforceLimit = options.enforceTierLimit !== false;
++  const resolvedEntitlement = resolveExportEntitlement(options);
++  const effectiveOptions = {
++    subscriptionTier: options.subscriptionTier,
++    entitlement: resolvedEntitlement,
++    currentEpochMs: options.currentEpochMs,
++  };
 +  const boundedPrompt = shouldEnforceLimit
-+    ? enforceTierOutputLimit(rawPrompt, options)
++    ? enforceTierOutputLimit(rawPrompt, effectiveOptions)
 +    : rawPrompt;
 +
    switch (format) {
@@ -612,7 +719,7 @@ index 4e3c61b6..b9679df6 100644
 -      return { content, filename: "CLAUDE.md" };
 +      const content = `# CLAUDE.md — Agent System Directives\n> Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\n## Role & Core Guidelines\n${boundedPrompt}\n\n## Non-Negotiable Operational Guardrails\n- Scope Invariant: Do not modify files outside explicitly declared boundaries.\n- Verification Receipt: Run project test suite and verify zero regressions before reporting task completion.\n- Zero Hallucination: Do not invent nonexistent packages, CLI flags, or mock endpoints.\n`;
 +      return {
-+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, options) : content,
++        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
 +        filename: "CLAUDE.md",
 +      };
      }
@@ -621,7 +728,7 @@ index 4e3c61b6..b9679df6 100644
 -      return { content, filename: ".cursorrules" };
 +      const content = `# .cursorrules — Project AI Directives & Guardrails\n# Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\nYou are an expert developer operating under strict zero-drift guidelines.\n\n${boundedPrompt}\n\n## Project Invariants:\n1. Never introduce unverified dependencies.\n2. Ensure all types pass TypeScript/strict typechecking.\n3. Always verify changes with unit tests before declaring completion.\n`;
 +      return {
-+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, options) : content,
++        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
 +        filename: ".cursorrules",
 +      };
      }
@@ -630,7 +737,7 @@ index 4e3c61b6..b9679df6 100644
 -      return { content, filename: ".windsurfrules" };
 +      const content = `# .windsurfrules — Cascade Agent Directives\n# Compiled by System Prompt Engine (SPE Ω)\n\n${boundedPrompt}\n`;
 +      return {
-+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, options) : content,
++        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
 +        filename: ".windsurfrules",
 +      };
      }
@@ -640,8 +747,26 @@ index 4e3c61b6..b9679df6 100644
      }
      case "promptfoo": {
 -      const bundle = generatePromptfooConfig(rawPrompt, { projectName: `spe-${category.toLowerCase()}-eval` });
-+      const bundle = generatePromptfooConfig(boundedPrompt, { projectName: `spe-${category.toLowerCase()}-eval` });
-       return { content: bundle.yamlConfig, filename: "promptfooconfig.yaml" };
+-      return { content: bundle.yamlConfig, filename: "promptfooconfig.yaml" };
++      const projectName = `spe-${category.toLowerCase()}-eval`;
++      let promptForYaml = boundedPrompt;
++      if (
++        shouldEnforceLimit &&
++        !isVerifiedPaidEntitlementResult(resolvedEntitlement, options.currentEpochMs)
++      ) {
++        const emptyOverhead = generatePromptfooConfig("", { projectName }).yamlConfig.length;
++        const maxPromptForYaml = Math.max(400, FREE_TIER_MAX_OUTPUT_CHARS - emptyOverhead - 32);
++        if (promptForYaml.length > maxPromptForYaml) {
++          promptForYaml = promptForYaml.slice(0, maxPromptForYaml);
++        }
++      }
++      const bundle = generatePromptfooConfig(promptForYaml, { projectName });
++      return {
++        content: shouldEnforceLimit
++          ? enforceTierOutputLimit(bundle.yamlConfig, effectiveOptions)
++          : bundle.yamlConfig,
++        filename: "promptfooconfig.yaml",
++      };
      }
      case "standard":
      default: {
@@ -651,7 +776,7 @@ index 4e3c61b6..b9679df6 100644
    }
  }
 diff --git a/apps/web/src/engine/PromptRadarInspector.tsx b/apps/web/src/engine/PromptRadarInspector.tsx
-index bc10dd73..2cf7cae2 100644
+index bc10dd73..2f5e9ffd 100644
 --- a/apps/web/src/engine/PromptRadarInspector.tsx
 +++ b/apps/web/src/engine/PromptRadarInspector.tsx
 @@ -1,5 +1,6 @@
@@ -661,24 +786,93 @@ index bc10dd73..2cf7cae2 100644
  import { constructMarkdownSystemPrompt, downloadMarkdownFile } from "./markdownExport";
  import type { TargetId } from "@spe/web-runtime";
  import { GeneticEvolverStudio } from "./GeneticEvolverStudio";
-@@ -14,9 +15,9 @@ export interface PromptRadarInspectorProps {
+@@ -9,14 +10,19 @@ import { BlindedJudgeArenaStudio } from "./BlindedJudgeArenaStudio";
+ import { defaultRagEngine } from "./hybridRagEngine";
+ import { OmegaProofStudio } from "./OmegaProofStudio";
+ import { CommunityCatalogStudio } from "./CommunityCatalogStudio";
++import {
++  resolveBrowserVerifiedEntitlement,
++  type EntitlementVerificationResult,
++} from "./entitlementVerifier";
+ 
+ export interface PromptRadarInspectorProps {
    promptText: string;
    rawIrPrompt?: unknown;
    activeTarget?: TargetId;
 -  activeDepthTier?: "normal" | "mid" | "deep";
 +  activeDepthTier?: DepthTier;
++  entitlement?: EntitlementVerificationResult | null;
    onSelectTarget?: (target: TargetId) => void;
 -  onSelectDepthTier?: (tier: "normal" | "mid" | "deep") => void;
 +  onSelectDepthTier?: (tier: DepthTier) => void;
    onNavigate?: (view: any) => void;
    onAutoOptimize?: (optimizedPrompt: string) => void;
  }
+@@ -75,6 +81,7 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
+   rawIrPrompt,
+   activeTarget = "any",
+   activeDepthTier = "normal",
++  entitlement,
+   onSelectTarget,
+   onSelectDepthTier,
+   onNavigate,
+@@ -141,7 +148,7 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
+     }
+   };
+ 
+-  // Generate Multi-Model Prompts via universal synthesizer
++  // Generate Multi-Model Prompts via universal synthesizer with verified entitlement enforcement
+   const irSource = useMemo(() => {
+     if (typeof rawIrPrompt === "string" && rawIrPrompt.trim()) return rawIrPrompt;
+     if (rawIrPrompt && typeof rawIrPrompt === "object") {
+@@ -153,16 +160,36 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
+     }
+     return currentPrompt;
+   }, [rawIrPrompt, currentPrompt]);
+-  const claudePrompt = synthesizeSystemPrompt(irSource, { target: "claude", depthTier: activeDepthTier });
+-  const gptPrompt = synthesizeSystemPrompt(irSource, { target: "chatgpt", depthTier: activeDepthTier });
+-  const geminiPrompt = synthesizeSystemPrompt(irSource, { target: "gemini", depthTier: activeDepthTier });
+-  const localPrompt = synthesizeSystemPrompt(irSource, { target: "local", depthTier: activeDepthTier });
++  const resolvedEntitlement =
++    entitlement !== undefined ? entitlement : resolveBrowserVerifiedEntitlement();
++  const claudePrompt = synthesizeSystemPrompt(irSource, {
++    target: "claude",
++    depthTier: activeDepthTier,
++    entitlement: resolvedEntitlement,
++  });
++  const gptPrompt = synthesizeSystemPrompt(irSource, {
++    target: "chatgpt",
++    depthTier: activeDepthTier,
++    entitlement: resolvedEntitlement,
++  });
++  const geminiPrompt = synthesizeSystemPrompt(irSource, {
++    target: "gemini",
++    depthTier: activeDepthTier,
++    entitlement: resolvedEntitlement,
++  });
++  const localPrompt = synthesizeSystemPrompt(irSource, {
++    target: "local",
++    depthTier: activeDepthTier,
++    entitlement: resolvedEntitlement,
++  });
+   const markdownPrompt = useMemo(() => {
+     return constructMarkdownSystemPrompt(irSource, {
+       depthTier: activeDepthTier,
+       includeFrontmatter,
++      entitlement: resolvedEntitlement,
++      enforceTierLimit: true,
+     });
+-  }, [irSource, activeDepthTier, includeFrontmatter]);
++  }, [irSource, activeDepthTier, includeFrontmatter, resolvedEntitlement]);
+ 
+   // Code Export Snippets
+   const pythonSnippet = `# SPE Ω Python Production Runner
 diff --git a/apps/web/src/engine/ed25519Verifier.ts b/apps/web/src/engine/ed25519Verifier.ts
 new file mode 100644
-index 00000000..580a5247
+index 00000000..abbe458d
 --- /dev/null
 +++ b/apps/web/src/engine/ed25519Verifier.ts
-@@ -0,0 +1,289 @@
+@@ -0,0 +1,295 @@
 +/**
 + * SPE Ω Pure RFC 8032 Ed25519 Public-Key Signature Verifier (Browser & Node Compatible)
 + *
@@ -955,6 +1149,12 @@ index 00000000..580a5247
 +  const A = decodePoint(pkBytes);
 +  if (!R || !A) return false;
 +
++  // Reject small-order / torsion public keys and nonce points (8 * P == identity [0, 1])
++  const eightA = scalarMult(A, 8n);
++  if (eightA[0] === 0n && eightA[1] === 1n) return false;
++  const eightR = scalarMult(R, 8n);
++  if (eightR[0] === 0n && eightR[1] === 1n && S === 0n) return false;
++
 +  const msgBytes = new TextEncoder().encode(messageUtf8);
 +  const hashInput = new Uint8Array(32 + 32 + msgBytes.length);
 +  hashInput.set(rBytes, 0);
@@ -969,7 +1169,7 @@ index 00000000..580a5247
 +  return lhs[0] === rhs[0] && lhs[1] === rhs[1];
 +}
 diff --git a/apps/web/src/engine/entitlementVerifier.ts b/apps/web/src/engine/entitlementVerifier.ts
-index 29f983dd..197fa214 100644
+index 29f983dd..bee3d303 100644
 --- a/apps/web/src/engine/entitlementVerifier.ts
 +++ b/apps/web/src/engine/entitlementVerifier.ts
 @@ -1,16 +1,23 @@
@@ -1003,7 +1203,7 @@ index 29f983dd..197fa214 100644
  
  export interface EntitlementTokenPayload {
    schema: "spe.entitlement.v1";
-@@ -18,11 +25,59 @@ export interface EntitlementTokenPayload {
+@@ -18,15 +25,88 @@ export interface EntitlementTokenPayload {
    planName: string;
    email: string;
    paymentReceiptId: string;
@@ -1025,9 +1225,27 @@ index 29f983dd..197fa214 100644
 +  revoked: boolean;
 +}
 +
++export interface SignedReceiptStatusAttestation {
++  schema: "spe.receipt_status_attestation.v1" | "spe.receipt_status.v1";
++  paymentReceiptId: string;
++  subscriptionId: string;
++  exists?: boolean;
++  paid: boolean;
++  subscriptionStatus: "ACTIVE" | "CANCELED" | "PAST_DUE" | "EXPIRED" | "REVOKED";
++  tier: "pro" | "team";
++  email: string;
++  expiresAtMs: number;
++  revoked: boolean;
++  attestedAtMs: number;
++  issuerKeyId: string;
++  signatureHex?: string;
++}
++
 +export interface EntitlementVerificationOptions {
 +  expectedEmail?: string;
 +  currentEpochMs?: number;
++  issuerPublicKeyHex?: string;
++  token?: string;
 +  /**
 +   * Explicit map of `issuerKeyId -> ed25519_public_key_hex` (64-hex raw or 88-hex SPKI DER).
 +   * Every trusted issuer MUST have a pinned Ed25519 public key.
@@ -1045,8 +1263,14 @@ index 29f983dd..197fa214 100644
 +    payload: EntitlementTokenPayload,
 +  ) => AuthoritativeReceiptRecord | null | undefined;
 +  /**
++   * Optional Ed25519-signed receipt status attestation (`SignedReceiptStatusAttestation` or `spe_receipt_status.v1.<hex>.<sig>`)
++   * issued by the server billing authority for browser/offline receipt verification.
++   */
++  signedReceiptAttestation?: SignedReceiptStatusAttestation | string;
++  /**
 +   * Defaults to `true`. When `true`, `verifySignedEntitlementToken` rejects any token
-+   * whose `paymentReceiptId` is not confirmed by `authoritativeReceiptVerifier`.
++   * whose `paymentReceiptId` is not confirmed by `authoritativeReceiptVerifier` or a
++   * cryptographically verified server `SignedReceiptStatusAttestation`.
 +   */
 +  requireAuthoritativeReceiptCheck?: boolean;
 +  /**
@@ -1063,7 +1287,12 @@ index 29f983dd..197fa214 100644
  export interface EntitlementVerificationResult {
    verified: boolean;
    tier: "pro" | "team" | null;
-@@ -39,8 +94,14 @@ export interface PublicBetaReservationRecord {
+   payload: EntitlementTokenPayload | null;
++  signatureHex?: string | null;
+   rejectionReason: string | null;
+ }
+ 
+@@ -39,8 +119,14 @@ export interface PublicBetaReservationRecord {
    paidEntitlementGranted: false;
  }
  
@@ -1080,7 +1309,7 @@ index 29f983dd..197fa214 100644
  
  function hexToUtf8(hex: string): string {
    if (hex.length % 2 !== 0 || !/^[0-9a-fA-F]+$/.test(hex)) {
-@@ -53,7 +114,7 @@ function hexToUtf8(hex: string): string {
+@@ -53,7 +139,7 @@ function hexToUtf8(hex: string): string {
    return new TextDecoder().decode(bytes);
  }
  
@@ -1089,21 +1318,31 @@ index 29f983dd..197fa214 100644
    const bytes = new TextEncoder().encode(text);
    return Array.from(bytes)
      .map((b) => b.toString(16).padStart(2, "0"))
-@@ -61,47 +122,12 @@ function utf8ToHex(text: string): string {
+@@ -61,47 +147,103 @@ function utf8ToHex(text: string): string {
  }
  
  /**
 - * Default deterministic signature verifier used when no external asymmetric verifier callback
 - * is injected. Uses domain-separated SHA-256 commitment over the RFC 8785 canonical JSON payload
 - * and pinned authority secret (for server/test issuance).
-- */
++ * Cryptographically verifies an Ed25519-signed receipt status attestation
++ * (`SignedReceiptStatusAttestation` object, JSON string, or `spe_receipt_status.v1.<attestation_hex>.<ed25519_sig_hex>`)
++ * against pinned issuer public keys.
+  */
 -export function computeEntitlementCommitmentSignature(
 -  canonicalPayloadJson: string,
 -  authoritySecret: string = DEFAULT_DEV_AUTHORITY_DOMAIN_SALT,
 -): string {
 -  return computeSha256(`${authoritySecret}:${canonicalPayloadJson}`);
 -}
--
++export function verifySignedReceiptStatusAttestation(
++  rawAttestation: SignedReceiptStatusAttestation | string,
++  options: Pick<EntitlementVerificationOptions, "trustedIssuerPublicKeys" | "verifySignatureFn"> = {},
++): (AuthoritativeReceiptRecord & { paymentReceiptId: string }) | null {
++  if (!rawAttestation) return null;
++  let parsed: SignedReceiptStatusAttestation;
++  let sigHex: string | undefined;
+ 
 -/**
 - * Issues a signed entitlement token (used by server-side billing webhooks and verification suites).
 - */
@@ -1115,9 +1354,85 @@ index 29f983dd..197fa214 100644
 -  const payloadHex = utf8ToHex(canonical);
 -  const sigHex = signFn ? signFn(canonical) : computeEntitlementCommitmentSignature(canonical);
 -  return `spe_entitlement.v1.${payloadHex}.${sigHex}`;
--}
--
--/**
++  if (typeof rawAttestation === "string") {
++    const trimmed = rawAttestation.trim();
++    if (!trimmed) return null;
++    if (trimmed.startsWith("spe_receipt_status.v1.")) {
++      const parts = trimmed.split(".");
++      if (parts.length !== 4) return null;
++      const [, , attHex, embeddedSigHex] = parts;
++      sigHex = embeddedSigHex;
++      try {
++        parsed = JSON.parse(hexToUtf8(attHex)) as SignedReceiptStatusAttestation;
++      } catch {
++        return null;
++      }
++    } else {
++      try {
++        parsed = JSON.parse(trimmed) as SignedReceiptStatusAttestation;
++        sigHex = parsed.signatureHex;
++      } catch {
++        return null;
++      }
++    }
++  } else if (typeof rawAttestation === "object") {
++    parsed = rawAttestation;
++    sigHex = parsed.signatureHex;
++  } else {
++    return null;
++  }
++
++  if (!sigHex || sigHex.length !== 128 || !/^[0-9a-fA-F]{128}$/.test(sigHex)) {
++    return null;
++  }
++  if (
++    !parsed ||
++    (parsed.schema !== "spe.receipt_status_attestation.v1" &&
++      parsed.schema !== "spe.receipt_status.v1") ||
++    !parsed.paymentReceiptId ||
++    !parsed.subscriptionId ||
++    (parsed.tier !== "pro" && parsed.tier !== "team") ||
++    !parsed.email ||
++    !parsed.issuerKeyId ||
++    typeof parsed.paid !== "boolean" ||
++    typeof parsed.revoked !== "boolean" ||
++    typeof parsed.expiresAtMs !== "number" ||
++    typeof parsed.attestedAtMs !== "number"
++  ) {
++    return null;
++  }
++
++  const pinnedKeyMap: Record<string, string> = options.trustedIssuerPublicKeys ?? {
++    [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]: SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
++  };
++  const rawPinnedKey = pinnedKeyMap[parsed.issuerKeyId];
++  const normalizedPinnedKey = rawPinnedKey ? normalizeEd25519PublicKeyHex(rawPinnedKey) : null;
++  if (!normalizedPinnedKey) {
++    return null;
++  }
++
++  const { signatureHex: _omittedSig, ...unsignedPayload } = parsed;
++  const canonical = canonicalizeJson(unsignedPayload);
++  const sigValid = options.verifySignatureFn
++    ? options.verifySignatureFn(canonical, sigHex, normalizedPinnedKey, parsed.issuerKeyId)
++    : verifyEd25519Signature(canonical, sigHex, normalizedPinnedKey);
++  if (!sigValid) {
++    return null;
++  }
++
++  return {
++    paymentReceiptId: parsed.paymentReceiptId,
++    exists: parsed.exists ?? true,
++    paid: parsed.paid,
++    subscriptionStatus: parsed.subscriptionStatus,
++    tier: parsed.tier,
++    email: parsed.email,
++    expiresAtMs: parsed.expiresAtMs,
++    revoked: parsed.revoked,
++  };
+ }
+ 
+ /**
 - * Verifies a server-issued signed entitlement token.
 - * Explicitly rejects self-minted random strings (`SPE-PRO-XXXX...`), tampered payloads,
 - * expired tokens, missing payment receipt IDs, or invalid signatures.
@@ -1140,50 +1455,93 @@ index 29f983dd..197fa214 100644
  ): EntitlementVerificationResult {
    const trimmed = (rawToken || "").trim();
    if (!trimmed) {
-@@ -129,17 +155,18 @@ export function verifySignedEntitlementToken(
+@@ -109,6 +251,7 @@ export function verifySignedEntitlementToken(
+       verified: false,
+       tier: null,
+       payload: null,
++      signatureHex: null,
+       rejectionReason: "EMPTY_ENTITLEMENT_TOKEN",
+     };
+   }
+@@ -118,28 +261,36 @@ export function verifySignedEntitlementToken(
+       verified: false,
+       tier: null,
+       payload: null,
++      signatureHex: null,
+       rejectionReason:
+         "SELF_MINTED_UNVERIFIED_KEY_REJECTED: Client-generated license strings cannot unlock paid tiers.",
+     };
+   }
+ 
+   const parts = trimmed.split(".");
+-  if (parts.length !== 4 || parts[0] !== "spe_entitlement" || parts[1] !== "v1") {
++  if (
++    (parts.length !== 4 && parts.length !== 6) ||
++    parts[0] !== "spe_entitlement" ||
++    parts[1] !== "v1"
++  ) {
+     return {
        verified: false,
        tier: null,
        payload: null,
 -      rejectionReason: "INVALID_TOKEN_ENVELOPE: Expected spe_entitlement.v1.<payload_hex>.<signature_hex>",
++      signatureHex: null,
 +      rejectionReason:
 +        "INVALID_TOKEN_ENVELOPE: Expected spe_entitlement.v1.<payload_hex>.<ed25519_signature_hex>",
      };
    }
  
-   const [, , payloadHex, signatureHex] = parts;
+-  const [, , payloadHex, signatureHex] = parts;
 -  if (!signatureHex || signatureHex.length < 64 || !/^[0-9a-fA-F]+$/.test(signatureHex)) {
++  const [, , payloadHex, signatureHex, embeddedReceiptAttHex, embeddedReceiptSigHex] = parts;
 +  if (!signatureHex || signatureHex.length !== 128 || !/^[0-9a-fA-F]{128}$/.test(signatureHex)) {
      return {
        verified: false,
        tier: null,
        payload: null,
 -      rejectionReason: "INVALID_ENTITLEMENT_SIGNATURE_FORMAT",
++      signatureHex: null,
 +      rejectionReason: "INVALID_ENTITLEMENT_SIGNATURE_FORMAT: Expected 64-byte (128-hex) Ed25519 signature",
      };
    }
  
-@@ -174,13 +201,35 @@ export function verifySignedEntitlementToken(
+@@ -152,6 +303,7 @@ export function verifySignedEntitlementToken(
+       verified: false,
+       tier: null,
+       payload: null,
++      signatureHex: null,
+       rejectionReason: "MALFORMED_ENTITLEMENT_PAYLOAD",
+     };
+   }
+@@ -170,17 +322,43 @@ export function verifySignedEntitlementToken(
+       verified: false,
+       tier: null,
+       payload: null,
++      signatureHex: null,
+       rejectionReason: "INCOMPLETE_ENTITLEMENT_CLAIMS",
      };
    }
  
 -  const allowedIssuers = options.trustedIssuerKeyIds ?? [DEFAULT_DEV_AUTHORITY_KEY_ID];
 -  if (!allowedIssuers.includes(parsed.issuerKeyId)) {
-+  if (parsed.paymentStatus !== undefined && parsed.paymentStatus !== "PAID") {
++  if (parsed.paymentStatus !== "PAID") {
      return {
        verified: false,
        tier: null,
        payload: null,
 -      rejectionReason: `UNTRUSTED_ENTITLEMENT_ISSUER:${parsed.issuerKeyId}`,
-+      rejectionReason: `UNPAID_OR_INVALID_PAYMENT_STATUS:${parsed.paymentStatus}`,
++      signatureHex: null,
++      rejectionReason: `UNPAID_OR_INVALID_PAYMENT_STATUS:${String(parsed.paymentStatus ?? "MISSING")}`,
 +    };
 +  }
 +
-+  if (parsed.subscriptionStatus !== undefined && parsed.subscriptionStatus !== "ACTIVE") {
++  if (parsed.subscriptionStatus !== "ACTIVE") {
 +    return {
 +      verified: false,
 +      tier: null,
 +      payload: null,
-+      rejectionReason: `INACTIVE_SUBSCRIPTION_STATUS:${parsed.subscriptionStatus}`,
++      signatureHex: null,
++      rejectionReason: `INACTIVE_SUBSCRIPTION_STATUS:${String(parsed.subscriptionStatus ?? "MISSING")}`,
 +    };
 +  }
 +
@@ -1197,11 +1555,16 @@ index 29f983dd..197fa214 100644
 +      verified: false,
 +      tier: null,
 +      payload: null,
++      signatureHex: null,
 +      rejectionReason: "REVOKED_ENTITLEMENT_TOKEN",
      };
    }
  
-@@ -193,6 +242,14 @@ export function verifySignedEntitlementToken(
+@@ -190,9 +368,19 @@ export function verifySignedEntitlementToken(
+       verified: false,
+       tier: null,
+       payload: null,
++      signatureHex: null,
        rejectionReason: "EXPIRED_ENTITLEMENT_TOKEN",
      };
    }
@@ -1210,13 +1573,19 @@ index 29f983dd..197fa214 100644
 +      verified: false,
 +      tier: null,
 +      payload: null,
++      signatureHex: null,
 +      rejectionReason: "INVALID_ISSUANCE_TIMESTAMP",
 +    };
 +  }
  
    if (
      options.expectedEmail &&
-@@ -206,11 +263,26 @@ export function verifySignedEntitlementToken(
+@@ -202,33 +390,256 @@ export function verifySignedEntitlementToken(
+       verified: false,
+       tier: null,
+       payload: null,
++      signatureHex: null,
+       rejectionReason: "ENTITLEMENT_EMAIL_MISMATCH",
      };
    }
  
@@ -1231,6 +1600,7 @@ index 29f983dd..197fa214 100644
 +      verified: false,
 +      tier: null,
 +      payload: null,
++      signatureHex: null,
 +      rejectionReason: `UNTRUSTED_ENTITLEMENT_ISSUER:${parsed.issuerKeyId}`,
 +    };
 +  }
@@ -1246,28 +1616,59 @@ index 29f983dd..197fa214 100644
  
    if (!sigValid) {
      return {
-@@ -221,6 +293,64 @@ export function verifySignedEntitlementToken(
+       verified: false,
+       tier: null,
+       payload: null,
++      signatureHex: null,
+       rejectionReason: "INVALID_ENTITLEMENT_SIGNATURE",
      };
    }
  
 +  // Enforce authoritative payment receipt, subscription status, expiration, and revocation check
 +  const requireAuthoritative = options.requireAuthoritativeReceiptCheck ?? true;
 +  if (requireAuthoritative) {
-+    if (!options.authoritativeReceiptVerifier) {
++    let effectiveVerifier = options.authoritativeReceiptVerifier;
++    if (!effectiveVerifier) {
++      const candidateAttestation =
++        options.signedReceiptAttestation ||
++        (parts.length === 6 && embeddedReceiptAttHex && embeddedReceiptSigHex
++          ? `spe_receipt_status.v1.${embeddedReceiptAttHex}.${embeddedReceiptSigHex}`
++          : undefined);
++      if (candidateAttestation) {
++        effectiveVerifier = (requestedReceiptId: string) => {
++          const verifiedAtt = verifySignedReceiptStatusAttestation(candidateAttestation, {
++            trustedIssuerPublicKeys: pinnedKeyMap,
++            verifySignatureFn: options.verifySignatureFn,
++          });
++          if (
++            !verifiedAtt ||
++            verifiedAtt.paymentReceiptId !== requestedReceiptId ||
++            verifiedAtt.email.trim().toLowerCase() !== parsed.email.trim().toLowerCase()
++          ) {
++            return null;
++          }
++          return verifiedAtt;
++        };
++      }
++    }
++
++    if (!effectiveVerifier) {
 +      return {
 +        verified: false,
 +        tier: null,
 +        payload: null,
++        signatureHex: null,
 +        rejectionReason:
 +          "AUTHORITATIVE_RECEIPT_VERIFICATION_REQUIRED: Claimed paymentReceiptId cannot be accepted without authoritative server confirmation.",
 +      };
 +    }
-+    const record = options.authoritativeReceiptVerifier(parsed.paymentReceiptId, parsed);
++    const record = effectiveVerifier(parsed.paymentReceiptId, parsed);
 +    if (!record || !record.exists) {
 +      return {
 +        verified: false,
 +        tier: null,
 +        payload: null,
++        signatureHex: null,
 +        rejectionReason: `UNKNOWN_PAYMENT_RECEIPT_ID:${parsed.paymentReceiptId}`,
 +      };
 +    }
@@ -1276,6 +1677,7 @@ index 29f983dd..197fa214 100644
 +        verified: false,
 +        tier: null,
 +        payload: null,
++        signatureHex: null,
 +        rejectionReason: `UNPAID_PAYMENT_RECEIPT:${parsed.paymentReceiptId}`,
 +      };
 +    }
@@ -1284,6 +1686,7 @@ index 29f983dd..197fa214 100644
 +        verified: false,
 +        tier: null,
 +        payload: null,
++        signatureHex: null,
 +        rejectionReason: `REVOKED_OR_CANCELED_SUBSCRIPTION:${record.subscriptionStatus}`,
 +      };
 +    }
@@ -1292,6 +1695,7 @@ index 29f983dd..197fa214 100644
 +        verified: false,
 +        tier: null,
 +        payload: null,
++        signatureHex: null,
 +        rejectionReason: "EXPIRED_AUTHORITATIVE_SUBSCRIPTION",
 +      };
 +    }
@@ -1303,6 +1707,7 @@ index 29f983dd..197fa214 100644
 +        verified: false,
 +        tier: null,
 +        payload: null,
++        signatureHex: null,
 +        rejectionReason: "AUTHORITATIVE_RECEIPT_CLAIM_MISMATCH",
 +      };
 +    }
@@ -1311,7 +1716,131 @@ index 29f983dd..197fa214 100644
    return {
      verified: true,
      tier: parsed.tier,
-@@ -239,7 +369,9 @@ export function createPublicBetaWaitlistReservation(
+     payload: parsed,
++    signatureHex,
+     rejectionReason: null,
+   };
+ }
+ 
++/**
++ * Resolves and cryptographically verifies any stored browser entitlement token from `localStorage`.
++ * If absent, tampered, expired, or unverified, clears stale localStorage keys and returns `{ verified: false, tier: null }`.
++ */
++export function resolveBrowserVerifiedEntitlement(
++  options: EntitlementVerificationOptions = {},
++): EntitlementVerificationResult {
++  try {
++    if (typeof localStorage === "undefined" && !options.token) {
++      return {
++        verified: false,
++        tier: null,
++        payload: null,
++        signatureHex: null,
++        rejectionReason: "NO_BROWSER_STORAGE",
++      };
++    }
++    const storedToken =
++      options.token ??
++      (typeof localStorage !== "undefined" ? localStorage.getItem("spe-license-key") : null);
++    if (!storedToken) {
++      return {
++        verified: false,
++        tier: null,
++        payload: null,
++        signatureHex: null,
++        rejectionReason: "NO_STORED_ENTITLEMENT_TOKEN",
++      };
++    }
++    const storedAttestation =
++      typeof localStorage !== "undefined"
++        ? localStorage.getItem("spe-receipt-attestation") || undefined
++        : undefined;
++    const hostVerifier =
++      typeof window !== "undefined"
++        ? (
++            window as unknown as {
++              __SPE_AUTHORITATIVE_RECEIPT_VERIFIER__?: EntitlementVerificationOptions["authoritativeReceiptVerifier"];
++            }
++          ).__SPE_AUTHORITATIVE_RECEIPT_VERIFIER__
++        : undefined;
++    const trustedIssuerPublicKeys = options.trustedIssuerPublicKeys ?? {
++      [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]:
++        options.issuerPublicKeyHex ?? SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
++    };
++    const check = verifySignedEntitlementToken(storedToken, {
++      ...options,
++      trustedIssuerPublicKeys,
++      authoritativeReceiptVerifier: options.authoritativeReceiptVerifier ?? hostVerifier,
++      signedReceiptAttestation: options.signedReceiptAttestation ?? storedAttestation,
++    });
++    if (!check.verified || !check.tier) {
++      if (typeof localStorage !== "undefined") {
++        localStorage.removeItem("spe-user-tier");
++        localStorage.removeItem("spe-license-key");
++        localStorage.removeItem("spe-receipt-attestation");
++      }
++      return check;
++    }
++    return check;
++  } catch {
++    return {
++      verified: false,
++      tier: null,
++      payload: null,
++      signatureHex: null,
++      rejectionReason: "STORAGE_ACCESS_ERROR",
++    };
++  }
++}
++
++export function persistBrowserVerifiedEntitlement(
++  email: string,
++  token: string,
++  verification: EntitlementVerificationResult,
++  signedReceiptAttestation?: SignedReceiptStatusAttestation | string,
++): void {
++  if (typeof localStorage === "undefined" || !verification.verified || !verification.tier) {
++    return;
++  }
++  localStorage.setItem("spe-user-tier", verification.tier);
++  localStorage.setItem("spe-user-email", email.trim());
++  localStorage.setItem("spe-license-key", token.trim());
++  if (signedReceiptAttestation) {
++    localStorage.setItem(
++      "spe-receipt-attestation",
++      typeof signedReceiptAttestation === "string"
++        ? signedReceiptAttestation
++        : JSON.stringify(signedReceiptAttestation),
++    );
++  }
++}
++
++export function clearBrowserVerifiedEntitlement(): void {
++  if (typeof localStorage === "undefined") return;
++  localStorage.removeItem("spe-user-tier");
++  localStorage.removeItem("spe-user-email");
++  localStorage.removeItem("spe-license-key");
++  localStorage.removeItem("spe-receipt-attestation");
++}
++
++export function resolveExportEntitlement(options: {
++  subscriptionTier?: "free" | "pro" | "team";
++  entitlement?: EntitlementVerificationResult | null;
++  currentEpochMs?: number;
++} = {}): EntitlementVerificationResult | null {
++  if (options.subscriptionTier === "free") {
++    return null;
++  }
++  if (options.entitlement !== undefined) {
++    return options.entitlement;
++  }
++  return resolveBrowserVerifiedEntitlement({ currentEpochMs: options.currentEpochMs });
++}
++
+ /**
+  * Records a Public Beta checkout waitlist reservation without granting paid tier entitlements.
+  */
+@@ -239,7 +650,9 @@ export function createPublicBetaWaitlistReservation(
    const lowerPlan = selectedPlan.toLowerCase();
    const requestedTier: "pro" | "team" =
      lowerPlan.includes("team") || lowerPlan.includes("company") ? "team" : "pro";
@@ -1322,8 +1851,112 @@ index 29f983dd..197fa214 100644
    return {
      status: "PUBLIC_BETA_WAITLIST_RESERVED",
      requestedPlan: selectedPlan,
+diff --git a/apps/web/src/engine/markdownExport.tsx b/apps/web/src/engine/markdownExport.tsx
+index 96848c40..26fe086a 100644
+--- a/apps/web/src/engine/markdownExport.tsx
++++ b/apps/web/src/engine/markdownExport.tsx
+@@ -1,6 +1,13 @@
+ import React, { useState } from "react";
+-import { synthesizeSystemPrompt } from "./promptSynthesizer.mjs";
++import {
++  synthesizeSystemPrompt,
++  enforceTierOutputLimit,
++} from "./promptSynthesizer.mjs";
+ import type { DepthTier } from "./promptSynthesizer";
++import {
++  resolveBrowserVerifiedEntitlement,
++  type EntitlementVerificationResult,
++} from "./entitlementVerifier";
+ 
+ export interface MarkdownConstructOptions {
+   title?: string;
+@@ -8,6 +15,10 @@ export interface MarkdownConstructOptions {
+   depthTier?: DepthTier;
+   includeFrontmatter?: boolean;
+   sha256?: string | null;
++  subscriptionTier?: "free" | "pro" | "team";
++  entitlement?: EntitlementVerificationResult | null;
++  enforceTierLimit?: boolean;
++  currentEpochMs?: number;
+ }
+ 
+ /**
+@@ -25,17 +36,47 @@ export function constructMarkdownSystemPrompt(
+     depthTier = "normal",
+     includeFrontmatter = false,
+     sha256 = null,
++    subscriptionTier,
++    entitlement,
++    enforceTierLimit,
++    currentEpochMs,
+   } = options;
+ 
++  const shouldEnforce =
++    Boolean(enforceTierLimit) ||
++    subscriptionTier !== undefined ||
++    entitlement !== undefined;
++  const resolvedEntitlement =
++    subscriptionTier === "free"
++      ? null
++      : entitlement !== undefined
++        ? entitlement
++        : shouldEnforce
++          ? resolveBrowserVerifiedEntitlement({ currentEpochMs })
++          : undefined;
++
+   // Synthesize Markdown structure via universal synthesizer
+   const mdBody = synthesizeSystemPrompt(irOrPrompt, {
+     target: "chatgpt", // Standard GFM Markdown spec
+     category,
+     depthTier,
++    ...(shouldEnforce
++      ? {
++          subscriptionTier,
++          entitlement: resolvedEntitlement,
++          currentEpochMs,
++        }
++      : {}),
+   });
+ 
+   if (!includeFrontmatter) {
+-    return mdBody;
++    return shouldEnforce
++      ? enforceTierOutputLimit(mdBody, {
++          subscriptionTier,
++          entitlement: resolvedEntitlement,
++          currentEpochMs,
++        })
++      : mdBody;
+   }
+ 
+   const frontmatter = [
+@@ -54,7 +95,14 @@ export function constructMarkdownSystemPrompt(
+     .filter((line) => line !== null)
+     .join("\n");
+ 
+-  return frontmatter + mdBody;
++  const fullMarkdown = frontmatter + mdBody;
++  return shouldEnforce
++    ? enforceTierOutputLimit(fullMarkdown, {
++        subscriptionTier,
++        entitlement: resolvedEntitlement,
++        currentEpochMs,
++      })
++    : fullMarkdown;
+ }
+ 
+ /**
+@@ -109,6 +157,8 @@ export const MarkdownExportButton: React.FC<MarkdownExportButtonProps> = ({
+         depthTier,
+         includeFrontmatter,
+         sha256,
++        entitlement: resolveBrowserVerifiedEntitlement(),
++        enforceTierLimit: true,
+       });
+       const timestamp = new Date().toISOString().slice(0, 10);
+       downloadMarkdownFile(`spe-system-prompt-${timestamp}.md`, mdContent);
 diff --git a/apps/web/src/engine/promptSynthesizer.mjs b/apps/web/src/engine/promptSynthesizer.mjs
-index 4d65939c..4a921eed 100644
+index 4d65939c..d8507f3f 100644
 --- a/apps/web/src/engine/promptSynthesizer.mjs
 +++ b/apps/web/src/engine/promptSynthesizer.mjs
 @@ -32,6 +32,8 @@
@@ -1335,25 +1968,33 @@ index 4d65939c..4a921eed 100644
  
  const CATEGORY_RECIPES = {
    "AI Assistant": {
-@@ -756,7 +758,48 @@ export function synthesizeSystemPrompt(raw, opts) {
+@@ -756,7 +758,56 @@ export function synthesizeSystemPrompt(raw, opts) {
  
    const target = typeof opts === "string" ? opts : (opts && opts.target ? opts.target : "any");
    const depthTier = (opts && typeof opts === "object" && opts.depthTier) || "normal";
 -  const targetChars = depthTier === "deep" ? 30000 : depthTier === "mid" ? 15000 : 5555;
-+  const entitlement = opts && typeof opts === "object" ? opts.entitlement : null;
-+  const hasVerifiedPaidEntitlement = Boolean(
-+    entitlement &&
-+      entitlement.verified === true &&
-+      (entitlement.tier === "pro" || entitlement.tier === "team"),
++  const hasTierOption = Boolean(
++    opts &&
++      typeof opts === "object" &&
++      (opts.subscriptionTier !== undefined ||
++        opts.entitlement !== undefined ||
++        opts.enforceFreeTierLimit),
 +  );
-+  const subscriptionTier =
-+    opts && typeof opts === "object" && opts.subscriptionTier
-+      ? opts.subscriptionTier
-+      : entitlement
-+        ? hasVerifiedPaidEntitlement
-+          ? entitlement.tier
-+          : "free"
-+        : null;
++  const currentEpochMs =
++    opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
++      ? opts.currentEpochMs
++      : Date.now();
++  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
++    opts && typeof opts === "object" ? opts.entitlement : null,
++    currentEpochMs,
++  );
++  const subscriptionTier = hasTierOption
++    ? opts && typeof opts === "object" && opts.subscriptionTier === "free"
++      ? "free"
++      : hasVerifiedPaidEntitlement
++        ? opts.entitlement.tier
++        : "free"
++    : null;
 +  const isFreeTier =
 +    subscriptionTier === "free" ||
 +    depthTier === "free" ||
@@ -1385,7 +2026,7 @@ index 4d65939c..4a921eed 100644
  
    const sections = {};
    const effectList = [];
-@@ -776,13 +819,23 @@ export function synthesizeSystemPrompt(raw, opts) {
+@@ -776,13 +827,23 @@ export function synthesizeSystemPrompt(raw, opts) {
      }
    }
  
@@ -1411,10 +2052,44 @@ index 4d65939c..4a921eed 100644
  
    const is3D = /3d|three\.js|webgl|shader|canvas|depth_composite|2_5d|css_motion/i.test(objective);
    const isTeaching = /curious|14-year-old|teach|explain.*to.*(?:child|kid|teen|student|curious|learner)|analogy.*worked example|questions to check understanding/i.test(objective);
-@@ -1024,3 +1077,80 @@ Follow the explicit brief wherever it differs from these default working suggest
+@@ -1024,3 +1085,124 @@ Follow the explicit brief wherever it differs from these default working suggest
  
    return padToTarget(md.trim(), targetChars, false, false);
  }
++
++/**
++ * Validates that an entitlement object is a genuine, unexpired, active paid
++ * EntitlementVerificationResult with a signed payload and 64-byte Ed25519 signature.
++ * Bare `{ subscriptionTier: "pro" }` strings or shallow `{ verified: true, tier: "pro" }`
++ * objects without a valid `EntitlementTokenPayload` and `signatureHex` are rejected.
++ */
++export function isVerifiedPaidEntitlementResult(entitlement, currentEpochMs = Date.now()) {
++  if (!entitlement || typeof entitlement !== "object") return false;
++  if (entitlement.verified !== true) return false;
++  if (entitlement.tier !== "pro" && entitlement.tier !== "team") return false;
++  if (
++    typeof entitlement.signatureHex !== "string" ||
++    !/^[0-9a-fA-F]{128}$/.test(entitlement.signatureHex)
++  ) {
++    return false;
++  }
++  const payload = entitlement.payload;
++  if (!payload || typeof payload !== "object") return false;
++  if (payload.schema !== "spe.entitlement.v1") return false;
++  if (payload.tier !== entitlement.tier) return false;
++  if (payload.paymentStatus !== "PAID") return false;
++  if (payload.subscriptionStatus !== "ACTIVE") return false;
++  if (typeof payload.paymentReceiptId !== "string" || !payload.paymentReceiptId.trim()) {
++    return false;
++  }
++  if (typeof payload.subscriptionId !== "string" || !payload.subscriptionId.trim()) {
++    return false;
++  }
++  if (typeof payload.expiresAtMs !== "number" || payload.expiresAtMs <= currentEpochMs) {
++    return false;
++  }
++  return true;
++}
 +
 +/**
 + * Runtime tier output boundary enforcement.
@@ -1425,14 +2100,17 @@ index 4d65939c..4a921eed 100644
 +export function enforceTierOutputLimit(promptText, opts = {}) {
 +  if (!promptText || typeof promptText !== "string") return "";
 +  const entitlement = opts && typeof opts === "object" ? opts.entitlement : null;
-+  const hasVerifiedPaidEntitlement = Boolean(
-+    entitlement &&
-+      entitlement.verified === true &&
-+      (entitlement.tier === "pro" || entitlement.tier === "team"),
++  const currentEpochMs =
++    opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
++      ? opts.currentEpochMs
++      : Date.now();
++  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
++    entitlement,
++    currentEpochMs,
 +  );
 +  const subscriptionTier =
-+    opts && typeof opts === "object" && opts.subscriptionTier
-+      ? opts.subscriptionTier
++    opts && typeof opts === "object" && opts.subscriptionTier === "free"
++      ? "free"
 +      : hasVerifiedPaidEntitlement
 +        ? entitlement.tier
 +        : "free";
@@ -1463,16 +2141,20 @@ index 4d65939c..4a921eed 100644
 + */
 +export function compilePromptWithTierEnforcement(raw, opts = {}) {
 +  const entitlement = opts && typeof opts === "object" ? opts.entitlement : null;
-+  const hasVerifiedPaidEntitlement = Boolean(
-+    entitlement &&
-+      entitlement.verified === true &&
-+      (entitlement.tier === "pro" || entitlement.tier === "team"),
++  const currentEpochMs =
++    opts && typeof opts === "object" && typeof opts.currentEpochMs === "number"
++      ? opts.currentEpochMs
++      : Date.now();
++  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
++    entitlement,
++    currentEpochMs,
 +  );
-+  const effectiveSubscriptionTier = hasVerifiedPaidEntitlement
-+    ? entitlement.tier
-+    : (opts && typeof opts === "object" && (opts.subscriptionTier === "pro" || opts.subscriptionTier === "team") && !entitlement)
-+      ? opts.subscriptionTier
-+      : "free";
++  const effectiveSubscriptionTier =
++    opts && typeof opts === "object" && opts.subscriptionTier === "free"
++      ? "free"
++      : hasVerifiedPaidEntitlement
++        ? entitlement.tier
++        : "free";
 +  const effectiveDepthTier =
 +    effectiveSubscriptionTier === "free"
 +      ? "free"
@@ -1480,6 +2162,8 @@ index 4d65939c..4a921eed 100644
 +  const synthesized = synthesizeSystemPrompt(raw, {
 +    ...(opts && typeof opts === "object" ? opts : {}),
 +    subscriptionTier: effectiveSubscriptionTier,
++    entitlement: effectiveSubscriptionTier === "free" ? null : entitlement,
++    currentEpochMs,
 +    depthTier: effectiveDepthTier,
 +    maxOutputChars:
 +      effectiveSubscriptionTier === "free"
@@ -1488,21 +2172,23 @@ index 4d65939c..4a921eed 100644
 +  });
 +  return enforceTierOutputLimit(synthesized, {
 +    subscriptionTier: effectiveSubscriptionTier,
-+    entitlement,
++    entitlement: effectiveSubscriptionTier === "free" ? null : entitlement,
++    currentEpochMs,
 +  });
 +}
 +
 diff --git a/apps/web/src/engine/promptSynthesizer.ts b/apps/web/src/engine/promptSynthesizer.ts
-index 3d27c40d..2a68f3f9 100644
+index 3d27c40d..fc2f6397 100644
 --- a/apps/web/src/engine/promptSynthesizer.ts
 +++ b/apps/web/src/engine/promptSynthesizer.ts
-@@ -1,3 +1,9 @@
+@@ -1,3 +1,10 @@
 -export { synthesizeSystemPrompt } from "./promptSynthesizer.mjs";
 -export type DepthTier = "normal" | "mid" | "deep";
 +export {
 +  synthesizeSystemPrompt,
 +  FREE_TIER_MAX_OUTPUT_CHARS,
 +  PRO_TIER_MAX_OUTPUT_CHARS,
++  isVerifiedPaidEntitlementResult,
 +  enforceTierOutputLimit,
 +  compilePromptWithTierEnforcement,
 +} from "./promptSynthesizer.mjs";
@@ -1589,7 +2275,7 @@ index f8e8f31c..8ee267c0 100644
      },
    );
 diff --git a/apps/web/src/engine/proofReceipt.ts b/apps/web/src/engine/proofReceipt.ts
-index 4f03357b..d9762395 100644
+index 4f03357b..6f661972 100644
 --- a/apps/web/src/engine/proofReceipt.ts
 +++ b/apps/web/src/engine/proofReceipt.ts
 @@ -2,10 +2,15 @@
@@ -1695,7 +2381,7 @@ index 4f03357b..d9762395 100644
    verifySignatureFn?: (canonicalDigestHex: string, signatureHex: string, publicKeyHex: string) => boolean;
    requireLiveModelEmpiricalEval?: boolean;
  }
-@@ -115,11 +173,266 @@ export function canonicalizeJson(obj: unknown): string {
+@@ -115,11 +173,274 @@ export function canonicalizeJson(obj: unknown): string {
    return "{" + entries.join(",") + "}";
  }
  
@@ -1770,6 +2456,14 @@ index 4f03357b..d9762395 100644
 +    return {
 +      verified: false,
 +      reason: "NetworkObservationAttestation reports non-zero outbound network activity.",
++    };
++  }
++  const startMs = Date.parse(attestation.captureWindowStartIso || "");
++  const endMs = Date.parse(attestation.captureWindowEndIso || "");
++  if (!Number.isFinite(startMs) || !Number.isFinite(endMs) || endMs < startMs) {
++    return {
++      verified: false,
++      reason: "NetworkObservationAttestation has invalid or inverted captureWindow timestamps.",
 +    };
 +  }
 +  const normalizedPubHex = normalizeEd25519PublicKeyHex(attestation.observerPublicKeyHex);
@@ -1965,7 +2659,7 @@ index 4f03357b..d9762395 100644
   */
  export function generateProofReceipt(
    baselinePrompt: string,
-@@ -134,8 +447,24 @@ export function generateProofReceipt(
+@@ -134,8 +455,24 @@ export function generateProofReceipt(
    const intentHash = computeSha256("spe.protected-intent.v1:" + candidatePrompt.slice(0, 500));
    const suiteHash = computeSha256(gymReport.suiteId + ":1024_attacks");
    const metaHash = computeSha256("metamorphic_31_relations");
@@ -1992,7 +2686,7 @@ index 4f03357b..d9762395 100644
  
    const hardGates: ProofReceiptHardGates = {
      protectedIntentPreserved: twinReport.delta.intentPreserved,
-@@ -182,6 +511,12 @@ export function generateProofReceipt(
+@@ -182,6 +519,12 @@ export function generateProofReceipt(
        selfGeneratedAssertionOnly: true,
        independentVerificationRequiredForLiveModels: liveCalls === 0,
        producerKeyId: "spe-local-unauthenticated-digest",
@@ -2005,7 +2699,7 @@ index 4f03357b..d9762395 100644
      },
    };
  
-@@ -206,8 +541,9 @@ export function generateProofReceipt(
+@@ -206,8 +549,9 @@ export function generateProofReceipt(
  }
  
  /**
@@ -2017,7 +2711,7 @@ index 4f03357b..d9762395 100644
   */
  export function attachProducerSignature(
    receipt: ProofReceiptPayload,
-@@ -215,6 +551,13 @@ export function attachProducerSignature(
+@@ -215,6 +559,13 @@ export function attachProducerSignature(
    producerPublicKeyHex: string,
    signDigestFn: (canonicalDigestHex: string) => string,
  ): ProofReceiptPayload {
@@ -2031,7 +2725,7 @@ index 4f03357b..d9762395 100644
    const { receiptDigest: _oldDigest, ...unsigned } = receipt;
    const unsignedWithoutSig: Omit<ProofReceiptPayload, "receiptDigest"> = {
      ...unsigned,
-@@ -222,13 +565,19 @@ export function attachProducerSignature(
+@@ -222,13 +573,19 @@ export function attachProducerSignature(
        ...unsigned.evidenceProvenance,
        selfGeneratedAssertionOnly: false,
        producerKeyId,
@@ -2052,7 +2746,7 @@ index 4f03357b..d9762395 100644
    const signedBody: Omit<ProofReceiptPayload, "receiptDigest"> = {
      ...unsignedWithoutSig,
      evidenceProvenance: {
-@@ -243,8 +592,11 @@ export function attachProducerSignature(
+@@ -243,8 +600,11 @@ export function attachProducerSignature(
  }
  
  /**
@@ -2066,7 +2760,7 @@ index 4f03357b..d9762395 100644
   */
  export function verifyProofReceiptAuthenticity(
    receipt: ProofReceiptPayload,
-@@ -264,36 +616,116 @@ export function verifyProofReceiptAuthenticity(
+@@ -264,36 +624,119 @@ export function verifyProofReceiptAuthenticity(
    }
  
    let producerAuthenticated = false;
@@ -2104,7 +2798,10 @@ index 4f03357b..d9762395 100644
 +      }
 +
 +      let keyTrusted = true;
-+      if (options.trustedProducerKeys) {
++      if (!prov.producerKeyId || typeof prov.producerKeyId !== "string" || !prov.producerKeyId.trim()) {
++        keyTrusted = false;
++        reasons.push("Missing producerKeyId in receipt evidenceProvenance.");
++      } else if (options.trustedProducerKeys) {
 +        const pinnedKey = options.trustedProducerKeys[prov.producerKeyId];
 +        if (!pinnedKey) {
 +          keyTrusted = false;
@@ -2205,17 +2902,146 @@ index 4f03357b..d9762395 100644
    if (!receipt.hardGates.protectedIntentPreserved || !receipt.hardGates.authorityNotExpanded) {
      experimentalValidityVerified = false;
      reasons.push("Hard gates failed on receipt (intent or authority violation).");
-@@ -321,4 +753,3 @@ export function verifyProofReceiptAuthenticity(
+@@ -321,4 +764,3 @@ export function verifyProofReceiptAuthenticity(
      reasons,
    };
  }
 -
+diff --git a/apps/web/src/pages/Pricing.tsx b/apps/web/src/pages/Pricing.tsx
+index b5b08515..098b10fb 100644
+--- a/apps/web/src/pages/Pricing.tsx
++++ b/apps/web/src/pages/Pricing.tsx
+@@ -3,16 +3,33 @@ import type { AppView } from "../routing";
+ import { copyTextSafe } from "../engine/workflows/clipboard";
+ import {
+   verifySignedEntitlementToken,
++  resolveBrowserVerifiedEntitlement,
++  persistBrowserVerifiedEntitlement,
++  clearBrowserVerifiedEntitlement,
+   createPublicBetaWaitlistReservation,
++  type AuthoritativeReceiptRecord,
++  type EntitlementTokenPayload,
+   type PublicBetaReservationRecord,
++  type SignedReceiptStatusAttestation,
+ } from "../engine/entitlementVerifier";
+ import "./pricing.css";
+ 
+ interface PricingProps {
+   onNavigate?: (view: AppView) => void;
++  issuerPublicKeyHex?: string;
++  authoritativeReceiptVerifier?: (
++    paymentReceiptId: string,
++    payload: EntitlementTokenPayload,
++  ) => AuthoritativeReceiptRecord | null;
++  signedReceiptAttestation?: SignedReceiptStatusAttestation | string;
+ }
+ 
+-export function Pricing({ onNavigate }: PricingProps) {
++export function Pricing({
++  onNavigate,
++  issuerPublicKeyHex,
++  authoritativeReceiptVerifier,
++  signedReceiptAttestation,
++}: PricingProps) {
+   const [modalOpen, setModalOpen] = useState(false);
+   const [selectedPlan, setSelectedPlan] = useState<string>("Developer Pro");
+   const [email, setEmail] = useState("");
+@@ -24,27 +41,24 @@ export function Pricing({ onNavigate }: PricingProps) {
+   const [copiedKey, setCopiedKey] = useState(false);
+ 
+   const [currentTier, setCurrentTier] = useState<string | null>(() => {
+-    try {
+-      const storedTier = localStorage.getItem("spe-user-tier");
+-      const storedToken = localStorage.getItem("spe-license-key");
+-      if (!storedTier || !storedToken) return null;
+-      const check = verifySignedEntitlementToken(storedToken);
+-      if (!check.verified || check.tier !== storedTier) {
+-        localStorage.removeItem("spe-user-tier");
+-        localStorage.removeItem("spe-license-key");
+-        return null;
+-      }
+-      return check.tier;
+-    } catch {
+-      return null;
+-    }
++    const check = resolveBrowserVerifiedEntitlement({
++      issuerPublicKeyHex,
++      authoritativeReceiptVerifier,
++      signedReceiptAttestation,
++    });
++    return check.verified ? check.tier : null;
+   });
+ 
+   const [currentLicense, setCurrentLicense] = useState<string | null>(() => {
+     try {
+       const storedToken = localStorage.getItem("spe-license-key");
+       if (!storedToken) return null;
+-      const check = verifySignedEntitlementToken(storedToken);
++      const check = resolveBrowserVerifiedEntitlement({
++        token: storedToken,
++        issuerPublicKeyHex,
++        authoritativeReceiptVerifier,
++        signedReceiptAttestation,
++      });
+       return check.verified ? storedToken : null;
+     } catch {
+       return null;
+@@ -68,19 +82,33 @@ export function Pricing({ onNavigate }: PricingProps) {
+     setVerificationError(null);
+ 
+     if (signedTokenInput.trim()) {
+-      const verification = verifySignedEntitlementToken(signedTokenInput.trim(), {
++      const verification = resolveBrowserVerifiedEntitlement({
++        token: signedTokenInput.trim(),
+         expectedEmail: email.trim(),
++        issuerPublicKeyHex,
++        authoritativeReceiptVerifier,
++        signedReceiptAttestation,
+       });
+       if (!verification.verified || !verification.tier) {
++        const directCheck = verifySignedEntitlementToken(signedTokenInput.trim(), {
++          expectedEmail: email.trim(),
++           authoritativeReceiptVerifier,
++          signedReceiptAttestation,
++        });
+         setVerificationError(
+-          verification.rejectionReason || "Invalid or unverified server entitlement token.",
++          verification.rejectionReason ||
++            directCheck.rejectionReason ||
++            "Invalid or unverified server entitlement token.",
+         );
+         return;
+       }
+       try {
+-        localStorage.setItem("spe-user-tier", verification.tier);
+-        localStorage.setItem("spe-user-email", email.trim());
+-        localStorage.setItem("spe-license-key", signedTokenInput.trim());
++        persistBrowserVerifiedEntitlement(
++          email.trim(),
++          signedTokenInput.trim(),
++          verification,
++          signedReceiptAttestation,
++        );
+         setCurrentTier(verification.tier);
+         setCurrentLicense(signedTokenInput.trim());
+       } catch {
+@@ -112,9 +140,7 @@ export function Pricing({ onNavigate }: PricingProps) {
+ 
+   const handleDeactivate = () => {
+     try {
+-      localStorage.removeItem("spe-user-tier");
+-      localStorage.removeItem("spe-user-email");
+-      localStorage.removeItem("spe-license-key");
++      clearBrowserVerifiedEntitlement();
+       setCurrentTier(null);
+       setCurrentLicense(null);
+     } catch {
 diff --git a/apps/web/src/server/billingAuthority.ts b/apps/web/src/server/billingAuthority.ts
 new file mode 100644
-index 00000000..66cae8ea
+index 00000000..c53fe5ce
 --- /dev/null
 +++ b/apps/web/src/server/billingAuthority.ts
-@@ -0,0 +1,272 @@
+@@ -0,0 +1,332 @@
 +/**
 + * SPE Ω Authoritative Server-Side Billing Webhook & Ed25519 Entitlement Issuer
 + *
@@ -2247,6 +3073,7 @@ index 00000000..66cae8ea
 +  utf8ToHex,
 +  type AuthoritativeReceiptRecord,
 +  type EntitlementTokenPayload,
++  type SignedReceiptStatusAttestation,
 +} from "../engine/entitlementVerifier.ts";
 +
 +export interface PaymentWebhookEvent {
@@ -2446,6 +3273,65 @@ index 00000000..66cae8ea
 +  }
 +
 +  /**
++   * Issues an Ed25519-signed receipt status attestation reflecting the current authoritative
++   * state of `paymentReceiptId` in the server ledger.
++   */
++  issueSignedReceiptStatusAttestation(
++    paymentReceiptId: string,
++    currentEpochMs: number = Date.now(),
++  ): SignedReceiptStatusAttestation {
++    const record = this.#receiptLedger.get(paymentReceiptId);
++    if (!record) {
++      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${paymentReceiptId}`);
++    }
++    const attestationPayload: Omit<SignedReceiptStatusAttestation, "signatureHex"> = {
++      schema: "spe.receipt_status_attestation.v1",
++      paymentReceiptId,
++      subscriptionId: record.subscriptionId,
++      exists: record.exists,
++      paid: record.paid,
++      subscriptionStatus: record.subscriptionStatus,
++      tier: record.tier,
++      email: record.email,
++      expiresAtMs: record.expiresAtMs,
++      revoked: Boolean(record.revoked),
++      attestedAtMs: currentEpochMs,
++      issuerKeyId: this.issuerKeyId,
++    };
++    const canonical = canonicalizeJson(attestationPayload);
++    const signatureHex = sign(
++      null,
++      Buffer.from(canonical, "utf8"),
++      this.#privateKey,
++    ).toString("hex");
++    return {
++      ...attestationPayload,
++      signatureHex,
++    };
++  }
++
++  /**
++   * Issues a 6-part composite checkout bundle containing both the Ed25519 entitlement token
++   * and an embedded Ed25519 receipt status attestation (`spe_entitlement.v1.<payloadHex>.<sigHex>.<receiptAttHex>.<receiptSigHex>`).
++   */
++  issueSignedCheckoutBundleForPaidReceipt(
++    paymentReceiptId: string,
++    currentEpochMs: number = Date.now(),
++  ): string {
++    const baseToken = this.issueSignedEntitlementTokenForPaidReceipt(
++      paymentReceiptId,
++      currentEpochMs,
++    );
++    const receiptAttestation = this.issueSignedReceiptStatusAttestation(
++      paymentReceiptId,
++      currentEpochMs,
++    );
++    const { signatureHex, ...unsignedAttestation } = receiptAttestation;
++    const attHex = utf8ToHex(canonicalizeJson(unsignedAttestation));
++    return `${baseToken}.${attHex}.${signatureHex}`;
++  }
++
++  /**
 +   * Authoritative server-side cancellation, revocation, or expiration mutators.
 +   */
 +  cancelSubscription(paymentReceiptId: string): void {
@@ -2489,7 +3375,7 @@ index 00000000..66cae8ea
 +  }
 +}
 diff --git a/spe_runtime/research/rec2/__init__.py b/spe_runtime/research/rec2/__init__.py
-index 800fa00a..6b7e7195 100644
+index 800fa00a..f22ef24f 100644
 --- a/spe_runtime/research/rec2/__init__.py
 +++ b/spe_runtime/research/rec2/__init__.py
 @@ -32,7 +32,6 @@ from .passport import (
@@ -2500,16 +3386,17 @@ index 800fa00a..6b7e7195 100644
      REC2EQualificationMatrixRunner,
      REC2EQualificationReport,
      RecipientEnvironmentContext,
-@@ -44,7 +43,7 @@ from .passport import (
+@@ -44,7 +43,8 @@ from .passport import (
      UntrustedMCPImportAdapter,
      canonical_sha256,
      compute_wilson_interval_95,
 -    derive_deterministic_ed25519_keypair,
++    generate_ephemeral_ed25519_keypair,
 +    generate_keypair,
      sign_passport_evaluator_attestation,
      verify_passport_evaluator_attestation,
  )
-@@ -79,7 +78,6 @@ __all__ = [
+@@ -79,7 +79,6 @@ __all__ = [
      "REC0DriftTrigger",
      "REC0EnvelopeValidityState",
      "REC2_DEFAULT_ORACLE_ID",
@@ -2517,17 +3404,18 @@ index 800fa00a..6b7e7195 100644
      "REC2EQualificationMatrixRunner",
      "REC2EQualificationReport",
      "RecipientEnvironmentContext",
-@@ -91,7 +89,7 @@ __all__ = [
+@@ -91,7 +90,8 @@ __all__ = [
      "UntrustedMCPImportAdapter",
      "canonical_sha256",
      "compute_wilson_interval_95",
 -    "derive_deterministic_ed25519_keypair",
++    "generate_ephemeral_ed25519_keypair",
 +    "generate_keypair",
      "sign_passport_evaluator_attestation",
      "verify_passport_evaluator_attestation",
  ]
 diff --git a/spe_runtime/research/rec2/passport.py b/spe_runtime/research/rec2/passport.py
-index 9b798d81..c0767f5c 100644
+index 9b798d81..317198e3 100644
 --- a/spe_runtime/research/rec2/passport.py
 +++ b/spe_runtime/research/rec2/passport.py
 @@ -41,12 +41,10 @@ import urllib.parse
@@ -2544,7 +3432,7 @@ index 9b798d81..c0767f5c 100644
  )
  from spe_runtime.research.exchange.merit_ranker import compute_wilson_lower_bound
  from spe_runtime.research.lvt.types import OracleAttestation
-@@ -185,22 +183,7 @@ def canonical_sha256(payload: Dict[str, Any]) -> str:
+@@ -185,22 +183,15 @@ def canonical_sha256(payload: Dict[str, Any]) -> str:
      return hashlib.sha256(encoded).hexdigest()
  
  
@@ -2557,17 +3445,24 @@ index 9b798d81..c0767f5c 100644
 -    a |= (1 << 254)
 -    pk = encodepoint(scalarmult(B, a))
 -    return sk, pk
--
--
- REC2_DEFAULT_ORACLE_ID = "spe-independent-oracle-v1"
++REC2_DEFAULT_ORACLE_ID = "spe-independent-oracle-v1"
+ 
+ 
+-REC2_DEFAULT_ORACLE_ID = "spe-independent-oracle-v1"
 -REC2_DEFAULT_ORACLE_SK, REC2_DEFAULT_ORACLE_PK = derive_deterministic_ed25519_keypair(
 -    b"spe-rec2-independent-oracle-v1-authority-key"
 -)
 -REC2_DEFAULT_ORACLE_PK_HEX = REC2_DEFAULT_ORACLE_PK.hex()
++def generate_ephemeral_ed25519_keypair() -> Tuple[bytes, bytes]:
++    """
++    Generates a fresh, non-deterministic 32-byte Ed25519 (signing_key, public_key) tuple
++    from OS CSPRNG entropy for isolated test and harness evaluation runs.
++    """
++    return generate_keypair()
  
  
  def sign_passport_evaluator_attestation(
-@@ -211,9 +194,25 @@ def sign_passport_evaluator_attestation(
+@@ -211,9 +202,25 @@ def sign_passport_evaluator_attestation(
      signing_key: Optional[bytes] = None,
      public_key: Optional[bytes] = None,
  ) -> OracleAttestation:
@@ -2596,7 +3491,7 @@ index 9b798d81..c0767f5c 100644
      pk_hex = pk.hex()
      attestation_payload = {
          "evidence_hash": evidence_hash,
-@@ -241,8 +240,10 @@ def verify_passport_evaluator_attestation(
+@@ -241,8 +248,10 @@ def verify_passport_evaluator_attestation(
  ) -> Tuple[bool, str]:
      """
      Cryptographically verifies an evaluator's Ed25519 attestation signature over the canonical
@@ -2609,7 +3504,7 @@ index 9b798d81..c0767f5c 100644
      """
      if attestation.verdict != "APPROVED":
          return False, f"UNAPPROVED_EVALUATOR_VERDICT:{attestation.oracle_id}:{attestation.verdict}"
-@@ -263,14 +264,18 @@ def verify_passport_evaluator_attestation(
+@@ -263,14 +272,18 @@ def verify_passport_evaluator_attestation(
      except ValueError:
          return False, f"INVALID_EVALUATOR_SIGNATURE_FORMAT:{attestation.oracle_id}"
  
@@ -2621,19 +3516,19 @@ index 9b798d81..c0767f5c 100644
 +            if isinstance(k_val, str) and k_val.strip():
 +                cleaned = k_val.strip()
 +                pinned_keys[k_id] = cleaned[8:] if cleaned.startswith("ed25519:") else cleaned
++
++    if attestation.oracle_id not in pinned_keys:
++        return False, f"UNPINNED_EVALUATOR_AUTHORITY:{attestation.oracle_id}"
  
 -    if attestation.oracle_id in pinned_keys:
 -        if pk_hex.lower() != pinned_keys[attestation.oracle_id].lower():
 -            return False, f"UNPINNED_EVALUATOR_PUBLIC_KEY:{attestation.oracle_id}"
-+    if attestation.oracle_id not in pinned_keys:
-+        return False, f"UNPINNED_EVALUATOR_AUTHORITY:{attestation.oracle_id}"
-+
 +    if pk_hex.lower() != pinned_keys[attestation.oracle_id].lower():
 +        return False, f"UNPINNED_EVALUATOR_PUBLIC_KEY:{attestation.oracle_id}"
  
      attestation_payload = {
          "evidence_hash": attestation.evidence_hash,
-@@ -393,10 +398,21 @@ class CapabilityPassportEnvelope:
+@@ -393,13 +406,33 @@ class CapabilityPassportEnvelope:
  
      def compute_canonical_content_hash(self) -> str:
          payload: Dict[str, Any] = {
@@ -2647,6 +3542,7 @@ index 9b798d81..c0767f5c 100644
 +            "origin_environment": self.origin_environment,
 +            "origin_network_policy": self.origin_network_policy,
 +            "origin_tool_surface_digest": self.origin_tool_surface_digest,
++            "revocation_state": self.revocation_state,
 +            "issued_at_epoch": float(self.issued_at_epoch),
 +            "evidence_origin": self.evidence_origin.value,
 +            "is_synthetic": bool(self.is_synthetic),
@@ -2654,8 +3550,20 @@ index 9b798d81..c0767f5c 100644
 +            "obligation_claims": [c.to_dict() for c in self.obligation_claims],
          }
          if self.nested_skills:
-             payload["nested_skill_hashes"] = [ns.compute_canonical_content_hash() for ns in self.nested_skills]
-@@ -654,11 +670,12 @@ class REC0CompatibilityAdapter:
+-            payload["nested_skill_hashes"] = [ns.compute_canonical_content_hash() for ns in self.nested_skills]
++            payload["nested_skill_hashes"] = [
++                {
++                    "content_sha256": ns.compute_canonical_content_hash(),
++                    "oracle_id": ns.evaluator_attestation.oracle_id,
++                    "verdict": ns.evaluator_attestation.verdict,
++                    "signature": ns.evaluator_attestation.signature,
++                }
++                for ns in self.nested_skills
++            ]
+         return canonical_sha256(payload)
+ 
+     def with_computed_hash(self) -> CapabilityPassportEnvelope:
+@@ -654,11 +687,12 @@ class REC0CompatibilityAdapter:
              "model_revision_binding": {
                  "model_id": passport.origin_model_id,
                  "model_or_runtime_digest": model_digest,
@@ -2669,7 +3577,7 @@ index 9b798d81..c0767f5c 100644
                  "network_policy": passport.origin_network_policy,
                  "schema_version": passport.schema_version,
                  "assumption_predicates": {
-@@ -878,7 +895,9 @@ class REC0CompatibilityAdapter:
+@@ -878,7 +912,9 @@ class REC0CompatibilityAdapter:
              ),
              revocation_state=revocation_state,
              issued_at_epoch=issued_at_epoch,
@@ -2680,7 +3588,7 @@ index 9b798d81..c0767f5c 100644
              origin_network_policy=network_policy,
              origin_tool_surface_digest=tool_surface,
              evidence_origin=ev_origin,
-@@ -1097,24 +1116,6 @@ class UntrustedMCPImportAdapter:
+@@ -1097,24 +1133,6 @@ class UntrustedMCPImportAdapter:
          skill_identifier = str(raw_package["skill_identifier"])
          schema_version = str(raw_package.get("schema_version", "rec2-0.1"))
  
@@ -2705,7 +3613,7 @@ index 9b798d81..c0767f5c 100644
          attestation_raw = raw_package.get("evaluator_attestation", {})
          attestation = OracleAttestation(
              oracle_id=str(attestation_raw.get("oracle_id", "unverified-origin")),
-@@ -1168,7 +1169,7 @@ class UntrustedMCPImportAdapter:
+@@ -1168,7 +1186,7 @@ class UntrustedMCPImportAdapter:
                  )
              )
  
@@ -2714,7 +3622,7 @@ index 9b798d81..c0767f5c 100644
              passport_id=str(raw_package["passport_id"]),
              skill_identifier=skill_identifier,
              schema_version=schema_version,
-@@ -1179,7 +1180,7 @@ class UntrustedMCPImportAdapter:
+@@ -1179,7 +1197,7 @@ class UntrustedMCPImportAdapter:
              obligation_claims=tuple(claims),
              requested_permissions=parent_perms,
              evaluator_attestation=attestation,
@@ -2723,7 +3631,7 @@ index 9b798d81..c0767f5c 100644
              revocation_state=str(raw_package.get("revocation_state", "ACTIVE")),
              issued_at_epoch=float(raw_package.get("issued_at_epoch", 0.0)),
              origin_model_digest=str(raw_package.get("origin_model_digest", "")),
-@@ -1189,6 +1190,17 @@ class UntrustedMCPImportAdapter:
+@@ -1189,6 +1207,17 @@ class UntrustedMCPImportAdapter:
              is_synthetic=pkg_is_synthetic,
              nested_skills=tuple(nested_envelopes),
          )
@@ -2741,7 +3649,7 @@ index 9b798d81..c0767f5c 100644
          return envelope, PassportQualificationStatus.UNTRUSTED_CANDIDATE
  
  
-@@ -1322,7 +1334,7 @@ class ObligationRequalificationEngine:
+@@ -1322,7 +1351,7 @@ class ObligationRequalificationEngine:
              c_att = child.evaluator_attestation
              c_sig_ok, c_sig_reason = verify_passport_evaluator_attestation(
                  c_att,
@@ -2750,7 +3658,7 @@ index 9b798d81..c0767f5c 100644
                  context.trusted_evaluator_public_keys,
              )
              child_trusted = (
-@@ -1339,7 +1351,7 @@ class ObligationRequalificationEngine:
+@@ -1339,7 +1368,7 @@ class ObligationRequalificationEngine:
  
          root_sig_ok, root_sig_reason = verify_passport_evaluator_attestation(
              att,
@@ -2759,7 +3667,7 @@ index 9b798d81..c0767f5c 100644
              context.trusted_evaluator_public_keys,
          )
          evaluator_authority_trusted = (
-@@ -2993,6 +3005,8 @@ class REC2EQualificationMatrixRunner:
+@@ -2993,6 +3022,8 @@ class REC2EQualificationMatrixRunner:
      def run_qualification_matrix(cls) -> REC2EQualificationReport:
          det_schemas = {"output_schema": {"type": "object", "required": ["html", "aria_landmarks"]}}
          det_hash = canonical_sha256(det_schemas)
@@ -2768,7 +3676,7 @@ index 9b798d81..c0767f5c 100644
  
          # Build canonical source passport on Model A
          draft = CapabilityPassportEnvelope(
-@@ -3041,6 +3055,8 @@ class REC2EQualificationMatrixRunner:
+@@ -3041,6 +3072,8 @@ class REC2EQualificationMatrixRunner:
                  oracle_id=REC2_DEFAULT_ORACLE_ID,
                  timestamp=1_791_755_000.0,
                  verdict="APPROVED",
@@ -2777,7 +3685,7 @@ index 9b798d81..c0767f5c 100644
              ),
              issued_at_epoch=1_791_755_000.0,
          ).with_computed_hash()
-@@ -3053,6 +3069,8 @@ class REC2EQualificationMatrixRunner:
+@@ -3053,6 +3086,8 @@ class REC2EQualificationMatrixRunner:
                      oracle_id=REC2_DEFAULT_ORACLE_ID,
                      timestamp=1_791_755_000.0,
                      verdict="APPROVED",
@@ -2786,7 +3694,7 @@ index 9b798d81..c0767f5c 100644
                  ),
              }
          )
-@@ -3063,6 +3081,7 @@ class REC2EQualificationMatrixRunner:
+@@ -3063,6 +3098,7 @@ class REC2EQualificationMatrixRunner:
              recipient_host="macOS-15-AppleSilicon-WebKit",
              allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
              trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
@@ -2794,7 +3702,7 @@ index 9b798d81..c0767f5c 100644
              expected_deterministic_Hashes={"ob_json_schema": det_hash},
          )
          insp_b = ObligationRequalificationEngine.inspect_passport(source_passport, ctx_model_b)
-@@ -3126,6 +3145,7 @@ class REC2EQualificationMatrixRunner:
+@@ -3126,6 +3162,7 @@ class REC2EQualificationMatrixRunner:
              recipient_host="macOS-15-AppleSilicon-WebKit",
              allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
              trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
@@ -2802,7 +3710,7 @@ index 9b798d81..c0767f5c 100644
              revoked_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
              expected_deterministic_Hashes={"ob_json_schema": det_hash},
          )
-@@ -3138,6 +3158,7 @@ class REC2EQualificationMatrixRunner:
+@@ -3138,6 +3175,7 @@ class REC2EQualificationMatrixRunner:
              recipient_host="macOS-15-AppleSilicon-WebKit",
              allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
              trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
@@ -2811,7 +3719,7 @@ index 9b798d81..c0767f5c 100644
              distribution_shift_distance=0.35,
              max_distribution_shift_tolerance=0.15,
 diff --git a/tests/research/rec2/test_rec2_capability_passport.py b/tests/research/rec2/test_rec2_capability_passport.py
-index 8808a94d..aa7486c5 100644
+index 8808a94d..fa0a9585 100644
 --- a/tests/research/rec2/test_rec2_capability_passport.py
 +++ b/tests/research/rec2/test_rec2_capability_passport.py
 @@ -35,6 +35,7 @@ import base64
@@ -3068,7 +3976,7 @@ index 8808a94d..aa7486c5 100644
          expected_deterministic_Hashes={"ob_json_schema": det_hash},
          recipient_network_policy="PUBLIC_EGRESS",
      )
-@@ -1415,3 +1459,111 @@ def test_adversarial_round2_audit_regressions() -> None:
+@@ -1415,3 +1459,120 @@ def test_adversarial_round2_audit_regressions() -> None:
      assert verbal_default.production_qualified is False
  
  
@@ -3096,6 +4004,12 @@ index 8808a94d..aa7486c5 100644
 +    ):
 +        assert not hasattr(rec2_mod, forbidden_symbol), f"{forbidden_symbol} must not be exported"
 +        assert not hasattr(passport_mod, forbidden_symbol), f"{forbidden_symbol} must not exist in passport.py"
++
++    # 1b. Verify generate_ephemeral_ed25519_keypair produces distinct CSPRNG 32-byte keypairs
++    eph_sk1, eph_pk1 = passport_mod.generate_ephemeral_ed25519_keypair()
++    eph_sk2, eph_pk2 = rec2_mod.generate_ephemeral_ed25519_keypair()
++    assert len(eph_sk1) == 32 and len(eph_pk1) == 32
++    assert eph_sk1 != eph_sk2 and eph_pk1 != eph_pk2
 +
 +    # 2. Verify sign_passport_evaluator_attestation rejects missing or invalid keys
 +    with pytest.raises(ValueError, match="Explicit 32-byte Ed25519 signing_key and public_key are required"):
@@ -3170,13 +4084,16 @@ index 8808a94d..aa7486c5 100644
 +        ),
 +        # Mutate is_synthetic
 +        CapabilityPassportEnvelope(**{**valid_passport.__dict__, "is_synthetic": True}),
++        # Mutate revocation_state (e.g. reviving a REVOKED envelope to ACTIVE or vice versa)
++        CapabilityPassportEnvelope(**{**valid_passport.__dict__, "revocation_state": "REVOKED"}),
 +    ]
 +
 +    for mutated in mutated_envelopes:
 +        rep_mut = ObligationRequalificationEngine.inspect_passport(mutated, ctx_valid)
 +        assert rep_mut.content_hash_valid is False
-+        assert rep_mut.status == PassportQualificationStatus.REJECTED
++        assert rep_mut.status in (PassportQualificationStatus.REJECTED, PassportQualificationStatus.REVOKED)
 +        assert any("CONTENT_HASH_MISMATCH" in r for r in rep_mut.rejection_reasons)
++
 +
 +
 +
@@ -3317,16 +4234,3 @@ index c146b1cd..b339e9b0 100644
  
  def test_default_wire_proxy_rejects_unsigned_grant() -> None:
      """Proves that a default WireProxyServer enforces verify_signatures=True and rejects unsigned grants."""
-diff --git a/tools/copy-inventory.mjs b/tools/copy-inventory.mjs
-index 86b9668b..f1f7b322 100644
---- a/tools/copy-inventory.mjs
-+++ b/tools/copy-inventory.mjs
-@@ -10,7 +10,7 @@ function walk(dir) {
- }
- export function inventory() {
-   const paths = walk(`${root}/apps/web/src`).filter(
--    (p) => /\.[jt]sx?$/.test(p) && !p.includes("/engine/"),
-+    (p) => /\.[jt]sx?$/.test(p) && !p.includes("/engine/") && !p.includes("/server/"),
-   );
-   paths.push(`${root}/packages/human-perspective/src/copy.ts`);
-   const entries = new Map();

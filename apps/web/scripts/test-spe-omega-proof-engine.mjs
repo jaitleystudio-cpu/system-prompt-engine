@@ -223,6 +223,33 @@ assert.strictEqual(fullAuthReport.integrityVerified, true);
 assert.strictEqual(fullAuthReport.producerAuthenticated, true);
 assert.strictEqual(fullAuthReport.experimentalValidityVerified, true);
 
+// Finding C4: Small-order / identity point (0, 1) universal forgery MUST be rejected
+const identityPointPubHex = "01" + "00".repeat(31);
+const identityPointSigHex = "01" + "00".repeat(63);
+assert.throws(
+  () =>
+    attachProducerSignature(
+      observedReceipt,
+      "spe-ci-authority",
+      identityPointPubHex,
+      () => identityPointSigHex,
+    ),
+  /signature failed RFC 8032 Ed25519/,
+  "Small-order identity point (0, 1) public key / signature forgery must be rejected",
+);
+const emptyKeyIdReceipt = {
+  ...signedObservedReceipt,
+  producerKeyId: "",
+};
+const emptyKeyIdReport = verifyProofReceiptAuthenticity(emptyKeyIdReceipt, {
+  requireAuthenticatedProducer: true,
+});
+assert.strictEqual(
+  emptyKeyIdReport.producerAuthenticated,
+  false,
+  "Receipt with empty producerKeyId must be rejected by verifyProofReceiptAuthenticity",
+);
+
 // Verify JCS Canonicalization key sorting
 const testObj1 = { z: 1, a: 2, m: { y: 3, b: 4 } };
 const testObj2 = { a: 2, z: 1, m: { b: 4, y: 3 } };

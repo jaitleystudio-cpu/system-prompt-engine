@@ -211,6 +211,21 @@ console.log("\n[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security,
   assert.equal(verifiedPro.verified, true, "Valid server-signed Ed25519 Pro token with active payment receipt must verify");
   assert.equal(verifiedPro.tier, "pro");
 
+  // Verifying 6-part composite server checkout bundle (`spe_entitlement.v1.<payloadHex>.<sigHex>.<receiptAttHex>.<receiptSigHex>`)
+  // succeeds in browser without requiring an out-of-band callback
+  const validCheckoutBundle = billingAuthority.issueSignedCheckoutBundleForPaidReceipt(
+    "pay_rcpt_2026_pro_001",
+    1_791_750_000_000,
+  );
+  assert.equal(validCheckoutBundle.split(".").length, 6, "Composite checkout bundle must have 6 dot-separated segments");
+  const verifiedBundle = verifySignedEntitlementToken(validCheckoutBundle, {
+    expectedEmail: "dev@example.com",
+    currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: authorityPubKeys,
+  });
+  assert.equal(verifiedBundle.verified, true, "6-part server checkout bundle with embedded Ed25519 receipt attestation must verify in browser");
+  assert.equal(verifiedBundle.tier, "pro");
+
   // Step D: Forged signature on entitlement token MUST be rejected by Ed25519 verifier
   const forgedToken = validProToken.slice(0, -4) + (validProToken.endsWith("0000") ? "ffff" : "0000");
   const forgedCheck = verifySignedEntitlementToken(forgedToken, {
@@ -253,6 +268,21 @@ console.log("\n[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security,
   assert(
     canceledCheck.rejectionReason?.includes("REVOKED_OR_CANCELED_SUBSCRIPTION:CANCELED"),
     "Canceled subscription rejection reason must be explicit",
+  );
+  const canceledReceiptAttestation = billingAuthority.issueSignedReceiptStatusAttestation(
+    "pay_rcpt_2026_pro_001",
+    1_791_760_000_000,
+  );
+  const canceledAttestationCheck = verifySignedEntitlementToken(validProToken, {
+    expectedEmail: "dev@example.com",
+    currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: authorityPubKeys,
+    signedReceiptAttestation: canceledReceiptAttestation,
+  });
+  assert.equal(canceledAttestationCheck.verified, false, "Signed receipt attestation for canceled subscription must invalidate token");
+  assert(
+    canceledAttestationCheck.rejectionReason?.includes("REVOKED_OR_CANCELED_SUBSCRIPTION:CANCELED"),
+    "Canceled signed receipt attestation must report REVOKED_OR_CANCELED_SUBSCRIPTION:CANCELED",
   );
 
   console.log("✓ Pricing tiers ($0 / $1->$9 / $9->$99), Ed25519 server entitlement authority, and webhook revocation verified.");
@@ -301,6 +331,28 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
     `Free-tier compiled output length (${freeTierCompiled.length}) must be <= 5,000 chars`,
   );
 
+  // Bare subscriptionTier='pro' WITHOUT a cryptographically verified entitlement MUST still be capped at <= 5,000 chars
+  const unverifiedStringProAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
+    category: "Backend",
+    depthTier: "deep",
+    subscriptionTier: "pro",
+  });
+  assert(
+    unverifiedStringProAttempt.length <= 5000,
+    `Bare subscriptionTier='pro' without verified entitlement (${unverifiedStringProAttempt.length}) must be capped at <= 5,000 chars`,
+  );
+
+  // Shallow fake entitlement `{ verified: true, tier: 'pro' }` without payload & 128-hex signature MUST still be capped at <= 5,000 chars
+  const forgedShallowEntitlementAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
+    category: "Backend",
+    depthTier: "deep",
+    entitlement: { verified: true, tier: "pro" },
+  });
+  assert(
+    forgedShallowEntitlementAttempt.length <= 5000,
+    `Shallow fake entitlement without signed payload (${forgedShallowEntitlementAttempt.length}) must be capped at <= 5,000 chars`,
+  );
+
   // Direct synthesizeSystemPrompt with subscriptionTier: 'free' also enforces <= 5,000 characters
   const directFreePrompt = synthesizeSystemPrompt(oneLakhContextInput, {
     category: "Backend",
@@ -342,19 +394,32 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
     category: "Backend",
     depthTier: "deep",
     entitlement: verifiedProEnt,
+    currentEpochMs: 1_791_760_000_000,
   });
   assert(
     proTierCompiled.length > 5000 && proTierCompiled.length <= 30000,
     `Verified Pro output length (${proTierCompiled.length}) must exceed 5,000 and be <= 30,000 chars`,
   );
 
-  // Verify formatForAgent also enforces <= 5,000 chars on Free tier when given an oversized prompt
+  // Verify formatForAgent enforces <= 5,000 chars by default (even when options are omitted!) and across promptfoo YAML
+  const defaultExportOnFree = exportMod.formatForAgent(proTierCompiled, "standard", "Backend");
+  assert(
+    defaultExportOnFree.content.length <= 5000,
+    `formatForAgent with default options (${defaultExportOnFree.content.length}) must enforce <= 5,000 chars on Free tier`,
+  );
   const oversizedExportOnFree = exportMod.formatForAgent(proTierCompiled, "standard", "Backend", {
     subscriptionTier: "free",
   });
   assert(
     oversizedExportOnFree.content.length <= 5000,
     `formatForAgent with subscriptionTier='free' (${oversizedExportOnFree.content.length}) must be <= 5,000 chars`,
+  );
+  const promptfooExportOnFree = exportMod.formatForAgent(proTierCompiled, "promptfoo", "Backend", {
+    subscriptionTier: "free",
+  });
+  assert(
+    promptfooExportOnFree.content.length <= 5000,
+    `formatForAgent promptfoo export on Free tier (${promptfooExportOnFree.content.length}) must be <= 5,000 chars`,
   );
 
   const customerPrompt = `# System Role & Persona
@@ -393,7 +458,10 @@ Design and validate REST APIs returning strict JSON schemas.
   ];
 
   for (const fmt of expectedFormats) {
-    const out = exportMod.formatForAgent(customerPrompt, fmt.id, "Backend", { subscriptionTier: "pro" });
+    const out = exportMod.formatForAgent(customerPrompt, fmt.id, "Backend", {
+      entitlement: verifiedProEnt,
+      currentEpochMs: 1_791_760_000_000,
+    });
     assert.equal(out.filename, fmt.filename, `Filename mismatch for ${fmt.id}`);
     assert(out.content.includes(fmt.mustContain), `Export ${fmt.id} missing expected content: ${fmt.mustContain}`);
     writeFileSync(join(customerExportsDir, out.filename), out.content, "utf8");

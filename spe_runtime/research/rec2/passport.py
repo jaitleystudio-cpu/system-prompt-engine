@@ -186,6 +186,14 @@ def canonical_sha256(payload: Dict[str, Any]) -> str:
 REC2_DEFAULT_ORACLE_ID = "spe-independent-oracle-v1"
 
 
+def generate_ephemeral_ed25519_keypair() -> Tuple[bytes, bytes]:
+    """
+    Generates a fresh, non-deterministic 32-byte Ed25519 (signing_key, public_key) tuple
+    from OS CSPRNG entropy for isolated test and harness evaluation runs.
+    """
+    return generate_keypair()
+
+
 def sign_passport_evaluator_attestation(
     evidence_hash: str,
     oracle_id: str = REC2_DEFAULT_ORACLE_ID,
@@ -408,6 +416,7 @@ class CapabilityPassportEnvelope:
             "origin_environment": self.origin_environment,
             "origin_network_policy": self.origin_network_policy,
             "origin_tool_surface_digest": self.origin_tool_surface_digest,
+            "revocation_state": self.revocation_state,
             "issued_at_epoch": float(self.issued_at_epoch),
             "evidence_origin": self.evidence_origin.value,
             "is_synthetic": bool(self.is_synthetic),
@@ -415,7 +424,15 @@ class CapabilityPassportEnvelope:
             "obligation_claims": [c.to_dict() for c in self.obligation_claims],
         }
         if self.nested_skills:
-            payload["nested_skill_hashes"] = [ns.compute_canonical_content_hash() for ns in self.nested_skills]
+            payload["nested_skill_hashes"] = [
+                {
+                    "content_sha256": ns.compute_canonical_content_hash(),
+                    "oracle_id": ns.evaluator_attestation.oracle_id,
+                    "verdict": ns.evaluator_attestation.verdict,
+                    "signature": ns.evaluator_attestation.signature,
+                }
+                for ns in self.nested_skills
+            ]
         return canonical_sha256(payload)
 
     def with_computed_hash(self) -> CapabilityPassportEnvelope:

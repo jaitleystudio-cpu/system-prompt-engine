@@ -3,16 +3,33 @@ import type { AppView } from "../routing";
 import { copyTextSafe } from "../engine/workflows/clipboard";
 import {
   verifySignedEntitlementToken,
+  resolveBrowserVerifiedEntitlement,
+  persistBrowserVerifiedEntitlement,
+  clearBrowserVerifiedEntitlement,
   createPublicBetaWaitlistReservation,
+  type AuthoritativeReceiptRecord,
+  type EntitlementTokenPayload,
   type PublicBetaReservationRecord,
+  type SignedReceiptStatusAttestation,
 } from "../engine/entitlementVerifier";
 import "./pricing.css";
 
 interface PricingProps {
   onNavigate?: (view: AppView) => void;
+  issuerPublicKeyHex?: string;
+  authoritativeReceiptVerifier?: (
+    paymentReceiptId: string,
+    payload: EntitlementTokenPayload,
+  ) => AuthoritativeReceiptRecord | null;
+  signedReceiptAttestation?: SignedReceiptStatusAttestation | string;
 }
 
-export function Pricing({ onNavigate }: PricingProps) {
+export function Pricing({
+  onNavigate,
+  issuerPublicKeyHex,
+  authoritativeReceiptVerifier,
+  signedReceiptAttestation,
+}: PricingProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string>("Developer Pro");
   const [email, setEmail] = useState("");
@@ -24,27 +41,24 @@ export function Pricing({ onNavigate }: PricingProps) {
   const [copiedKey, setCopiedKey] = useState(false);
 
   const [currentTier, setCurrentTier] = useState<string | null>(() => {
-    try {
-      const storedTier = localStorage.getItem("spe-user-tier");
-      const storedToken = localStorage.getItem("spe-license-key");
-      if (!storedTier || !storedToken) return null;
-      const check = verifySignedEntitlementToken(storedToken);
-      if (!check.verified || check.tier !== storedTier) {
-        localStorage.removeItem("spe-user-tier");
-        localStorage.removeItem("spe-license-key");
-        return null;
-      }
-      return check.tier;
-    } catch {
-      return null;
-    }
+    const check = resolveBrowserVerifiedEntitlement({
+      issuerPublicKeyHex,
+      authoritativeReceiptVerifier,
+      signedReceiptAttestation,
+    });
+    return check.verified ? check.tier : null;
   });
 
   const [currentLicense, setCurrentLicense] = useState<string | null>(() => {
     try {
       const storedToken = localStorage.getItem("spe-license-key");
       if (!storedToken) return null;
-      const check = verifySignedEntitlementToken(storedToken);
+      const check = resolveBrowserVerifiedEntitlement({
+        token: storedToken,
+        issuerPublicKeyHex,
+        authoritativeReceiptVerifier,
+        signedReceiptAttestation,
+      });
       return check.verified ? storedToken : null;
     } catch {
       return null;
@@ -68,19 +82,33 @@ export function Pricing({ onNavigate }: PricingProps) {
     setVerificationError(null);
 
     if (signedTokenInput.trim()) {
-      const verification = verifySignedEntitlementToken(signedTokenInput.trim(), {
+      const verification = resolveBrowserVerifiedEntitlement({
+        token: signedTokenInput.trim(),
         expectedEmail: email.trim(),
+        issuerPublicKeyHex,
+        authoritativeReceiptVerifier,
+        signedReceiptAttestation,
       });
       if (!verification.verified || !verification.tier) {
+        const directCheck = verifySignedEntitlementToken(signedTokenInput.trim(), {
+          expectedEmail: email.trim(),
+           authoritativeReceiptVerifier,
+          signedReceiptAttestation,
+        });
         setVerificationError(
-          verification.rejectionReason || "Invalid or unverified server entitlement token.",
+          verification.rejectionReason ||
+            directCheck.rejectionReason ||
+            "Invalid or unverified server entitlement token.",
         );
         return;
       }
       try {
-        localStorage.setItem("spe-user-tier", verification.tier);
-        localStorage.setItem("spe-user-email", email.trim());
-        localStorage.setItem("spe-license-key", signedTokenInput.trim());
+        persistBrowserVerifiedEntitlement(
+          email.trim(),
+          signedTokenInput.trim(),
+          verification,
+          signedReceiptAttestation,
+        );
         setCurrentTier(verification.tier);
         setCurrentLicense(signedTokenInput.trim());
       } catch {
@@ -112,9 +140,7 @@ export function Pricing({ onNavigate }: PricingProps) {
 
   const handleDeactivate = () => {
     try {
-      localStorage.removeItem("spe-user-tier");
-      localStorage.removeItem("spe-user-email");
-      localStorage.removeItem("spe-license-key");
+      clearBrowserVerifiedEntitlement();
       setCurrentTier(null);
       setCurrentLicense(null);
     } catch {
