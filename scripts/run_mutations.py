@@ -7,19 +7,44 @@ executes regression tests, proves test failure (exit code != 0 -> KILLED),
 restores original file bytes, and verifies restoration.
 """
 
+import atexit
+import json
 import os
+import signal
 import subprocess
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-MAIN_VENV = Path("/Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/.venv/bin/pytest")
-if MAIN_VENV.exists():
-    PYTEST_BIN = MAIN_VENV
-elif (REPO_ROOT / ".venv" / "bin" / "pytest").exists():
-    PYTEST_BIN = REPO_ROOT / ".venv" / "bin" / "pytest"
-else:
-    PYTEST_BIN = Path(sys.executable).parent / "pytest"
+# REPAIR (grok/lvt2-mutation-harness-repair):
+# Root cause of the M01 "crash": the harness had no signal handling and no subprocess
+# timeout; restoration lived only in a `finally` block, which does not run on SIGTERM/SIGHUP
+# (e.g. when the launching shell/session is reaped). The mutant then stayed on disk and a
+# stray *.orig_backup was left behind, with no Python traceback. Secondary defect: the
+# harness preferred a hard-coded pytest from another checkout's venv, so tests could run under
+# a different interpreter/site-packages than the code under test (custody hazard).
+REPO_ROOT = Path(os.environ.get("SPE_MUTATION_REPO_ROOT") or Path(__file__).resolve().parent.parent)
+PYTEST_CMD = [sys.executable, "-m", "pytest"]  # always the interpreter running the harness
+TEST_TIMEOUT_S = float(os.environ.get("SPE_MUTATION_TEST_TIMEOUT_S", "600"))
+
+_ACTIVE = {}  # filepath -> original bytes, for emergency restoration
+
+
+def _restore_active():
+    for fp, data in list(_ACTIVE.items()):
+        try:
+            fp.write_bytes(data)
+            bak = fp.with_suffix(fp.suffix + ".orig_backup")
+            if bak.exists() and bak.read_bytes() == data:
+                bak.unlink()
+        finally:
+            _ACTIVE.pop(fp, None)
+
+
+def _on_signal(signum, _frame):
+    _restore_active()
+    sys.stderr.write(f"\nmutation harness interrupted by signal {signum}; sources restored\n")
+    sys.exit(128 + signum)
+
 
 MUTANTS = [
     {
@@ -283,6 +308,7 @@ def run_mutation(m: dict) -> dict:
 
     backup_path = filepath.with_suffix(filepath.suffix + ".orig_backup")
     backup_path.write_bytes(orig_bytes)
+    _ACTIVE[filepath] = orig_bytes
 
     # Apply mutation
     mutated_text = orig_text.replace(m["target"], m["replacement"], 1)
@@ -290,11 +316,15 @@ def run_mutation(m: dict) -> dict:
 
     try:
         # Run test
-        cmd = [str(PYTEST_BIN), m["test"], "-q"]
-        proc = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True)
-        exit_code = proc.returncode
-        stdout = proc.stdout.strip()
-        stderr = proc.stderr.strip()
+        cmd = PYTEST_CMD + [m["test"], "-q", "-p", "no:cacheprovider"]
+        try:
+            proc = subprocess.run(cmd, cwd=str(REPO_ROOT), capture_output=True, text=True,
+                                  timeout=TEST_TIMEOUT_S)
+            exit_code = proc.returncode
+            stdout = proc.stdout.strip()
+            stderr = proc.stderr.strip()
+        except subprocess.TimeoutExpired:
+            exit_code, stdout, stderr = None, "", f"TIMEOUT after {TEST_TIMEOUT_S}s"
     finally:
         # Restore original bytes from backup
         if backup_path.exists():
@@ -302,14 +332,25 @@ def run_mutation(m: dict) -> dict:
             backup_path.unlink()
         else:
             filepath.write_bytes(orig_bytes)
+        _ACTIVE.pop(filepath, None)
 
     # Verify restoration
     restored_bytes = filepath.read_bytes()
     restored_ok = (restored_bytes == orig_bytes)
 
     # Mutant is KILLED if test fails (exit_code != 0)
-    killed = (exit_code != 0)
-    status = "KILLED" if killed else "SURVIVED"
+    # exit 1 = tests failed (KILLED). Collection/usage/internal errors (2-5), timeouts and
+    # missing pytest are NOT counted as kills: the gate must not be satisfied by a broken run.
+    if exit_code is None:
+        status = "ERROR_TIMEOUT"
+    elif exit_code == 1:
+        status = "KILLED"
+    elif exit_code == 0:
+        status = "SURVIVED"
+    else:
+        status = f"ERROR_PYTEST_EXIT_{exit_code}"
+    if not restored_ok:
+        status = "ERROR_RESTORE_FAILED"
 
     return {
         "id": m["id"],
@@ -322,6 +363,10 @@ def run_mutation(m: dict) -> dict:
 
 
 def main():
+    for sig in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):
+        signal.signal(sig, _on_signal)
+    atexit.register(_restore_active)
+    only = [x for x in sys.argv[1:] if x.startswith("M")]
     print("=" * 70)
     print("SPE Ω — Genuine LVT-2 Source Mutation Verification Harness")
     print("=" * 70)
@@ -336,7 +381,8 @@ def main():
     results = []
     all_killed = True
 
-    for m in MUTANTS:
+    selected = [m for m in MUTANTS if not only or m["id"] in only]
+    for m in selected:
         print(f"Testing mutant {m['id']}: {m['name']}...", end=" ", flush=True)
         res = run_mutation(m)
         results.append(res)
@@ -348,12 +394,15 @@ def main():
 
     print("=" * 70)
     killed_count = sum(1 for r in results if r["status"] == "KILLED")
-    print(f"MUTATION TESTING SUMMARY: {killed_count}/{len(MUTANTS)} mutants KILLED")
+    print(f"MUTATION TESTING SUMMARY: {killed_count}/{len(selected)} mutants KILLED")
     for r in results:
         print(f"  [{r['id']}] {r['status']}: {r['name']} | test summary: {r['output_summary']}")
     print("=" * 70)
 
-    if not all_killed:
+    log = os.environ.get("SPE_MUTATION_JSON_LOG")
+    if log:
+        Path(log).write_text(json.dumps(results, indent=2))
+    if not all_killed or not all(r["restored_ok"] for r in results):
         sys.exit(1)
 
 

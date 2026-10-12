@@ -1,0 +1,4 @@
+======================================================================
+SPE Ω — Genuine LVT-2 Source Mutation Verification Harness
+======================================================================
+Testing mutant M01: Ignore oracle key allowlist... 

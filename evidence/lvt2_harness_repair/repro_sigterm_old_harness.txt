@@ -1,0 +1,5 @@
+======================================================================
+SPE Ω — Genuine LVT-2 Source Mutation Verification Harness
+======================================================================
+Testing mutant M01: Ignore oracle key allowlist... KILLED (exit_code=1, restored=True)
+Testing mutant M02: Allow missing trust registry... 
