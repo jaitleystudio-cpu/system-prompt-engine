@@ -276,6 +276,12 @@
    "el": "p",
    "text": "Preview build. Not released.",
    "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p#founder-note",
+   "text": "Built by Prawin Naidu, with thanks to the AI assistants, including spe (Grok Bot), that helped design, test and audit SPE.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED",
+   "note": "Founder thank-you note, drafted by the assistant in the founder's voice. Founder must approve wording and the assistant name before release."
   }
  ]
 }

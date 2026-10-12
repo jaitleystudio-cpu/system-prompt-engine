@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="robots" content="noindex, nofollow">
+<title>Prompt Regression Lab · Pro preview · System Prompt Engine</title>
+<meta name="description" content="Save test cases for a prompt and compare two versions side by side.">
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/redesign/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/redesign/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../redesign/style.css">
+<link rel="stylesheet" href="../pro.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav nav--pro">
+  <div class="wrap nav__in">
+    <a class="brand" href="/redesign/"><span class="brand__mark" aria-hidden="true"></span>System Prompt Engine</a>
+    <nav aria-label="Pro previews"><ul class="nav__links">
+      <li><a href="/pro/regression-lab/" aria-current="page">Regression Lab</a></li>
+      <li><a href="/pro/releases/">Releases</a></li>
+      <li><a href="/pro/blueprint/">Blueprint</a></li>
+    </ul></nav>
+    <span class="badge">Pro preview</span>
+  </div>
+</header>
+<main id="main">
+<section class="phead" aria-labelledby="t">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="wrap hero__in">
+    <div class="phead__row"><span class="badge">Pro preview</span><span class="badge badge--sim">Demo runner: simulated</span></div>
+    <h1 id="t" class="h1">Test your prompt before your users do.</h1>
+    <p class="lead">Write test cases once. Change the prompt. See exactly which cases got fixed and which broke.</p>
+  </div>
+</section>
+
+<div class="wrap pgrid">
+  <section class="panel" aria-labelledby="v-t">
+    <h2 id="v-t" class="h2">Two versions</h2>
+    <p class="panel__sub">The demo runner understands four lines: <code class="mono">Always include: …</code>, <code class="mono">Never say: …</code>, <code class="mono">Format: json</code> or <code class="mono">bullets</code>, and <code class="mono">Max words: N</code>.</p>
+    <div class="field"><label for="pa">Version A (current)</label><textarea class="ta" id="pa" spellcheck="false"></textarea></div>
+    <div class="field"><label for="pb">Version B (proposed)</label><textarea class="ta" id="pb" spellcheck="false"></textarea></div>
+  </section>
+
+  <section class="panel" aria-labelledby="c-t">
+    <h2 id="c-t" class="h2">Test cases</h2>
+    <p class="panel__sub">Each case is a user message plus what a good answer must, and must not, contain.</p>
+    <ul class="list" id="cases" aria-live="polite"></ul>
+    <form id="add" novalidate>
+      <fieldset><legend>Add a test case</legend>
+        <div class="field"><label for="cn">Name</label><input class="inp" id="cn" required aria-describedby="cn-err" autocomplete="off"><p class="hint bad" id="cn-err" hidden>Give the case a name.</p></div>
+        <div class="field"><label for="ci">User message</label><input class="inp" id="ci" autocomplete="off"></div>
+        <div class="field"><label for="cy">Must include</label><input class="inp" id="cy" aria-describedby="list-h" autocomplete="off"></div>
+        <div class="field"><label for="cx">Must not include</label><input class="inp" id="cx" aria-describedby="list-h" autocomplete="off"><p class="hint" id="list-h">Separate several phrases with commas. Matching ignores case.</p></div>
+        <div class="field"><label for="cf">Format</label><select class="sel" id="cf"><option value="any">Any</option><option value="json">Valid JSON</option><option value="bullets">Bullet list</option></select></div>
+        <div class="field"><label for="cw">Max words (optional)</label><input class="inp" id="cw" type="number" min="1" inputmode="numeric"></div>
+        <button class="btn btn--ghost" type="submit">Add case</button>
+      </fieldset>
+    </form>
+  </section>
+
+  <section class="panel panel--full" aria-labelledby="r-t">
+    <h2 id="r-t" class="h2">Run and compare</h2>
+    <fieldset><legend>Runner</legend>
+      <label class="opt"><input type="radio" name="runner" value="demo" checked><span><b>Demo runner (simulated)</b><span class="hint">A small, predictable stand-in written for this preview. It is not an AI model, and its answers are scripted.</span></span></label>
+      <label class="opt opt--off"><input type="radio" name="runner" value="byok" disabled aria-describedby="byok-h"><span><b>Your own API key</b><span class="hint" id="byok-h">Not available in this preview. When built, calls would go from your browser straight to the provider you choose.</span></span></label>
+    </fieldset>
+    <div class="row"><button class="btn" id="run" type="button">Run both versions</button><button class="btn btn--ghost" id="reset" type="button">Restore the example</button></div>
+    <p class="status" id="status" role="status"></p>
+    <div id="report" hidden>
+      <h3 class="h3">Report</h3>
+      <div class="summary" id="sum"></div>
+      <div class="tablewrap"><table><caption class="sr-only">Result of each test case for version A and version B</caption>
+        <thead><tr><th scope="col">Case</th><th scope="col">Version A</th><th scope="col">Version B</th><th scope="col">Change</th></tr></thead>
+        <tbody id="rows"></tbody></table></div>
+    </div>
+  </section>
+</div>
+</main>
+<footer class="foot">
+  <div class="wrap foot__in">
+    <p class="brand"><span class="brand__mark" aria-hidden="true"></span>System Prompt Engine</p>
+    <p class="small">Pro preview. Not released. Plans and pricing are not decided. Everything on this page runs in your browser; nothing you type is sent anywhere.</p>
+  </div>
+</footer>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

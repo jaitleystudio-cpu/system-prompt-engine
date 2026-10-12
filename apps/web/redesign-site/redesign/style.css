@@ -132,3 +132,6 @@ mark[data-k=out],.slot[data-k=out]{--c:var(--k-out)}
   .slot{opacity:1;transform:none}.slot span{color:var(--tx)}
   .caret{display:none}.motion-toggle{display:none}
 }
+
+/* founder thank-you note (HUMAN_COPY_REVIEW_REQUIRED) */
+.founder{color:var(--mu);font-size:15px;line-height:1.6;max-width:60ch;flex-basis:100%;margin:0}

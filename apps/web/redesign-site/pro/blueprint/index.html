@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="robots" content="noindex, nofollow">
+<title>Agent Blueprint Builder · Pro preview · System Prompt Engine</title>
+<meta name="description" content="Lay out agents, their tools, limits and handoffs, then export a draft config.">
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/redesign/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/redesign/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../redesign/style.css">
+<link rel="stylesheet" href="../pro.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav nav--pro">
+  <div class="wrap nav__in">
+    <a class="brand" href="/redesign/"><span class="brand__mark" aria-hidden="true"></span>System Prompt Engine</a>
+    <nav aria-label="Pro previews"><ul class="nav__links">
+      <li><a href="/pro/regression-lab/">Regression Lab</a></li>
+      <li><a href="/pro/releases/">Releases</a></li>
+      <li><a href="/pro/blueprint/" aria-current="page">Blueprint</a></li>
+    </ul></nav>
+    <span class="badge">Pro preview</span>
+  </div>
+</header>
+<main id="main">
+<section class="phead" aria-labelledby="t">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="wrap hero__in">
+    <div class="phead__row"><span class="badge">Pro preview</span><span class="badge badge--sim">Exports are drafts</span></div>
+    <h1 id="t" class="h1">Design the team before you write the code.</h1>
+    <p class="lead">Place each agent, decide what it may touch, and draw who hands off to whom. Then export a starting config.</p>
+  </div>
+</section>
+<div class="wrap pgrid pgrid--wide">
+  <section class="panel" aria-labelledby="c-t">
+    <h2 id="c-t" class="h2">Canvas</h2>
+    <p class="panel__sub" id="canvas-h">Select an agent to edit it. With an agent focused, arrow keys move it; hold Shift to move further.</p>
+    <div class="canvas" id="canvas" role="group" aria-label="Agent canvas" aria-describedby="canvas-h"><div class="canvas__inner" id="inner"><svg id="edges" aria-hidden="true"><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8EF0C6"/></marker></defs></svg></div></div>
+    <div class="row row--gap"><button class="btn btn--ghost" id="addagent" type="button">Add agent</button><button class="btn btn--ghost" id="reset" type="button">Restore the example</button></div>
+    <p class="status" id="status" role="status"></p>
+  </section>
+  <section class="panel" aria-labelledby="e-t">
+    <h2 id="e-t" class="h2">Edit agent</h2>
+    <form id="edit" novalidate>
+      <div class="field"><label for="an">Name</label><input class="inp" id="an" autocomplete="off"></div>
+      <div class="field"><label for="ar">Role</label><input class="inp" id="ar" autocomplete="off"></div>
+      <div class="field"><label for="ai">Instructions</label><textarea class="ta" id="ai"></textarea></div>
+      <fieldset id="tools"><legend>Tools it may use</legend></fieldset>
+      <fieldset><legend>Limits</legend>
+        <div class="field"><label for="am">Step limit</label><input class="inp" id="am" type="number" min="1" max="100" inputmode="numeric"></div>
+        <label class="opt"><input type="checkbox" id="aa"><span><b>Ask a human before any tool that changes things</b><span class="hint">Writing files, running code and sending email.</span></span></label>
+      </fieldset>
+      <button class="btn btn--danger" id="del" type="button">Remove this agent</button>
+    </form>
+  </section>
+  <section class="panel" aria-labelledby="h-t">
+    <h2 id="h-t" class="h2">Handoffs</h2>
+    <ul class="list" id="hlist"></ul>
+    <form id="hform" novalidate><fieldset><legend>Add a handoff</legend>
+      <div class="field"><label for="hf">From</label><select class="sel" id="hf"></select></div>
+      <div class="field"><label for="ht">To</label><select class="sel" id="ht"></select></div>
+      <div class="field"><label for="hw">When</label><input class="inp" id="hw" autocomplete="off" value="the question is about billing"></div>
+      <button class="btn btn--ghost" type="submit">Add handoff</button></fieldset></form>
+    <h3 class="h3">Checks</h3>
+    <ul class="list" id="checks" aria-live="polite"></ul>
+  </section>
+  <section class="panel" aria-labelledby="x-t">
+    <h2 id="x-t" class="h2">Export</h2>
+    <p class="panel__sub"><strong>Draft format, verify before use.</strong> These follow the general shape of each platform's config. They are not official schemas.</p>
+    <fieldset><legend>Format</legend>
+      <label class="opt"><input type="radio" name="fmt" value="mcp" checked><span><b>MCP-style</b></span></label>
+      <label class="opt"><input type="radio" name="fmt" value="openai"><span><b>OpenAI-style</b></span></label>
+      <label class="opt"><input type="radio" name="fmt" value="anthropic"><span><b>Anthropic-style</b></span></label>
+    </fieldset>
+    <div class="field"><label for="exp">Draft config</label><textarea class="ta ta--out" id="exp" readonly spellcheck="false"></textarea></div>
+    <div class="row"><button class="btn btn--ghost" id="copy" type="button">Copy</button><button class="btn btn--ghost" id="dl" type="button">Download .json</button></div>
+  </section>
+</div>
+</main>
+<footer class="foot">
+  <div class="wrap foot__in">
+    <p class="brand"><span class="brand__mark" aria-hidden="true"></span>System Prompt Engine</p>
+    <p class="small">Pro preview. Not released. Plans and pricing are not decided. Everything on this page runs in your browser; nothing you type is sent anywhere.</p>
+  </div>
+</footer>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

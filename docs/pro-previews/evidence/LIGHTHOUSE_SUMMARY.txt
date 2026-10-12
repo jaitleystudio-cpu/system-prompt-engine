@@ -1,0 +1,7 @@
+load: 20:06  up 3 days, 6 hrs, 1 user, load averages: 5.99 7.98 7.50
+lh-mobile-blueprint-run1.report.json perf/a11y/bp/seo 98 100 100 54 LCP 1.7 s TBT 0 ms CLS 0 lh 12.8.2
+lh-mobile-blueprint-run2.report.json perf/a11y/bp/seo 98 100 100 54 LCP 1.7 s TBT 0 ms CLS 0 lh 12.8.2
+lh-mobile-regression-lab-run1.report.json perf/a11y/bp/seo 100 100 100 54 LCP 1.4 s TBT 0 ms CLS 0 lh 12.8.2
+lh-mobile-regression-lab-run2.report.json perf/a11y/bp/seo 99 100 100 54 LCP 1.6 s TBT 0 ms CLS 0 lh 12.8.2
+lh-mobile-releases-run1.report.json perf/a11y/bp/seo 99 100 100 54 LCP 1.6 s TBT 0 ms CLS 0 lh 12.8.2
+lh-mobile-releases-run2.report.json perf/a11y/bp/seo 99 100 100 54 LCP 1.6 s TBT 0 ms CLS 0 lh 12.8.2

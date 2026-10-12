@@ -1,0 +1,239 @@
+{
+ "browser": "155.0.8059.39",
+ "regression-lab": {
+  "390": {
+   "axe": {
+    "violations": [],
+    "passes": 51,
+    "incomplete": [
+     "color-contrast"
+    ]
+   },
+   "ext": [],
+   "errs": [],
+   "small": [],
+   "heads": [
+    "H1: Test your prompt before your users do.",
+    "H2: Two versions",
+    "H2: Test cases",
+    "H3: Refund request",
+    "H3: Mentions the shop",
+    "H3: Stays short",
+    "H3: Bullet answer",
+    "H2: Run and compare",
+    "H3: Report"
+   ],
+   "hscroll": false,
+   "shotBytes": 501416
+  },
+  "1440": {
+   "axe": {
+    "violations": [],
+    "passes": 50,
+    "incomplete": [
+     "color-contrast"
+    ]
+   },
+   "ext": [],
+   "errs": [],
+   "small": [],
+   "heads": [
+    "H1: Test your prompt before your users do.",
+    "H2: Two versions",
+    "H2: Test cases",
+    "H3: Refund request",
+    "H3: Mentions the shop",
+    "H3: Stays short",
+    "H3: Bullet answer",
+    "H2: Run and compare",
+    "H3: Report"
+   ],
+   "hscroll": false,
+   "shotBytes": 269765
+  }
+ },
+ "releases": {
+  "390": {
+   "axe": {
+    "violations": [],
+    "passes": 43,
+    "incomplete": [
+     "color-contrast"
+    ]
+   },
+   "ext": [],
+   "errs": [],
+   "small": [],
+   "heads": [
+    "H1: Ship prompts you can prove.",
+    "H2: Sign a release",
+    "H2: Verify a pack",
+    "H3: Valid. The pack is unchanged since it was signed.",
+    "H2: Release history",
+    "H3: Bike shop support 1.1.0"
+   ],
+   "hscroll": false,
+   "shotBytes": 412758
+  },
+  "1440": {
+   "axe": {
+    "violations": [],
+    "passes": 43,
+    "incomplete": [
+     "color-contrast"
+    ]
+   },
+   "ext": [],
+   "errs": [],
+   "small": [],
+   "heads": [
+    "H1: Ship prompts you can prove.",
+    "H2: Sign a release",
+    "H2: Verify a pack",
+    "H3: Valid. The pack is unchanged since it was signed.",
+    "H2: Release history",
+    "H3: Bike shop support 1.1.0"
+   ],
+   "hscroll": false,
+   "shotBytes": 222658
+  }
+ },
+ "blueprint": {
+  "390": {
+   "axe": {
+    "violations": [],
+    "passes": 46,
+    "incomplete": [
+     "color-contrast"
+    ]
+   },
+   "ext": [],
+   "errs": [],
+   "small": [],
+   "heads": [
+    "H1: Design the team before you write the code.",
+    "H2: Canvas",
+    "H2: Edit agent",
+    "H2: Handoffs",
+    "H3: Checks",
+    "H2: Export"
+   ],
+   "hscroll": false,
+   "shotBytes": 432489
+  },
+  "1440": {
+   "axe": {
+    "violations": [],
+    "passes": 46,
+    "incomplete": [
+     "color-contrast"
+    ]
+   },
+   "ext": [],
+   "errs": [],
+   "small": [],
+   "heads": [
+    "H1: Design the team before you write the code.",
+    "H2: Canvas",
+    "H2: Edit agent",
+    "H2: Handoffs",
+    "H3: Checks",
+    "H2: Export"
+   ],
+   "hscroll": false,
+   "shotBytes": 246307
+  }
+ },
+ "redesign": {
+  "390": {
+   "axe": {
+    "violations": [],
+    "passes": 39,
+    "incomplete": [
+     "color-contrast"
+    ]
+   },
+   "ext": [],
+   "errs": [],
+   "small": [],
+   "heads": [
+    "H1: Say it plainly.Get a prompt that holds.",
+    "H2: Three steps from idea to instruction.",
+    "H3: Describe it",
+    "H3: See the structure",
+    "H3: Copy and use it",
+    "H2: Same request. Clearer instructions.",
+    "H3: What SPE helps you write",
+    "H2: Your words stay on your device.",
+    "H3: Runs in the browser",
+    "H3: No sign-up",
+    "H3: No analytics scripts",
+    "H2: Made for the prompts you actually write.",
+    "H3: System prompts",
+    "H3: Speak your brief",
+    "H3: Start from a screenshot",
+    "H3: Many languages",
+    "H2: Good questions.",
+    "H3: Is SPE free?",
+    "H3: Does SPE send my prompts to a server?",
+    "H3: Which AI tools does the output work with?",
+    "H3: Do I need to know prompt engineering?",
+    "H2: Start with one sentence."
+   ],
+   "hscroll": false,
+   "shotBytes": 637214
+  },
+  "1440": {
+   "axe": {
+    "violations": [],
+    "passes": 39,
+    "incomplete": [
+     "color-contrast"
+    ]
+   },
+   "ext": [],
+   "errs": [],
+   "small": [],
+   "heads": [
+    "H1: Say it plainly.Get a prompt that holds.",
+    "H2: Three steps from idea to instruction.",
+    "H3: Describe it",
+    "H3: See the structure",
+    "H3: Copy and use it",
+    "H2: Same request. Clearer instructions.",
+    "H3: What SPE helps you write",
+    "H2: Your words stay on your device.",
+    "H3: Runs in the browser",
+    "H3: No sign-up",
+    "H3: No analytics scripts",
+    "H2: Made for the prompts you actually write.",
+    "H3: System prompts",
+    "H3: Speak your brief",
+    "H3: Start from a screenshot",
+    "H3: Many languages",
+    "H2: Good questions.",
+    "H3: Is SPE free?",
+    "H3: Does SPE send my prompts to a server?",
+    "H3: Which AI tools does the output work with?",
+    "H3: Do I need to know prompt engineering?",
+    "H2: Start with one sentence."
+   ],
+   "hscroll": false,
+   "shotBytes": 365878
+  }
+ },
+ "cryptoE2E": {
+  "chrome": {
+   "version": "155.0.8059.39",
+   "signedThenVerified": "Valid. The pack is unchanged since it was signed.Signed by key b215bcb67d0fa562.Add the author's fingerprint to confirm who signed it.",
+   "tampered": "Not valid.Hash does not match the content. The pack was changed after signing.Signature does not match this content and key."
+  },
+  "webkit": {
+   "version": "18.2",
+   "signedThenVerified": "Valid. The pack is unchanged since it was signed.Signed by key 1b68de17dfae6f05.Add the author's fingerprint to confirm who signed it.",
+   "tampered": "Not valid.Hash does not match the content. The pack was changed after signing.Signature does not match this content and key."
+  },
+  "chromium131": "This browser does not support Ed25519 in WebCrypto yet, so signing is off. Verification also needs it."
+ },
+ "reducedMotionTransition": "0s"
+}

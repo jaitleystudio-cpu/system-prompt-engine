@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="robots" content="noindex, nofollow">
+<title>Signed Prompt Releases · Pro preview · System Prompt Engine</title>
+<meta name="description" content="Version a prompt, sign it in your browser, and let anyone check it has not been changed.">
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/redesign/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/redesign/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../redesign/style.css">
+<link rel="stylesheet" href="../pro.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav nav--pro">
+  <div class="wrap nav__in">
+    <a class="brand" href="/redesign/"><span class="brand__mark" aria-hidden="true"></span>System Prompt Engine</a>
+    <nav aria-label="Pro previews"><ul class="nav__links">
+      <li><a href="/pro/regression-lab/">Regression Lab</a></li>
+      <li><a href="/pro/releases/" aria-current="page">Releases</a></li>
+      <li><a href="/pro/blueprint/">Blueprint</a></li>
+    </ul></nav>
+    <span class="badge">Pro preview</span>
+  </div>
+</header>
+<main id="main">
+<section class="phead" aria-labelledby="t">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="wrap hero__in">
+    <div class="phead__row"><span class="badge">Pro preview</span><span class="badge">Real Ed25519 signatures</span></div>
+    <h1 id="t" class="h1">Ship prompts you can prove.</h1>
+    <p class="lead">Give each prompt a version and a changelog, then sign it. Anyone with the pack can check that not one character has changed since.</p>
+  </div>
+</section>
+<div class="wrap pgrid">
+  <section class="panel" aria-labelledby="s-t">
+    <h2 id="s-t" class="h2">Sign a release</h2>
+    <p class="panel__sub">Your signing key is made in this tab and cannot be exported. Reloading the page makes a new key.</p>
+    <p class="status" id="support" role="status"></p>
+    <form id="sign" novalidate>
+      <div class="field"><label for="rn">Prompt name</label><input class="inp" id="rn" autocomplete="off" value="Bike shop support"></div>
+      <div class="field"><label for="rv">Version</label><input class="inp" id="rv" autocomplete="off" value="1.1.0" aria-describedby="rv-h"><p class="hint" id="rv-h">Use three numbers, like 1.2.0.</p></div>
+      <div class="field"><label for="rc">Changelog</label><textarea class="ta" id="rc">Stop promising refunds. Point billing questions to staff.</textarea></div>
+      <div class="field"><label for="rp">Prompt</label><textarea class="ta" id="rp" spellcheck="false">You are the support assistant for an independent bike repair shop.
+Help the customer choose the right repair.
+Never say: refund
+Max words: 80</textarea></div>
+      <div class="row"><button class="btn" type="submit" id="signbtn">Sign release</button></div>
+    </form>
+    <p class="status" id="sstat" role="status"></p>
+    <div id="out" hidden>
+      <div class="field"><label for="pack">Release pack</label><textarea class="ta ta--out" id="pack" readonly spellcheck="false"></textarea></div>
+      <p class="mono" id="meta"></p>
+      <div class="row"><button class="btn btn--ghost" type="button" id="copy">Copy pack</button><button class="btn btn--ghost" type="button" id="dl">Download .json</button><button class="btn btn--ghost" type="button" id="toverify">Check it</button></div>
+    </div>
+  </section>
+  <section class="panel" aria-labelledby="v-t">
+    <h2 id="v-t" class="h2">Verify a pack</h2>
+    <p class="panel__sub">Paste any release pack. The check runs here, offline.</p>
+    <form id="verify" novalidate>
+      <div class="field"><label for="vp">Release pack</label><textarea class="ta" id="vp" spellcheck="false"></textarea></div>
+      <div class="field"><label for="vf">Expected key fingerprint (optional)</label><input class="inp" id="vf" autocomplete="off" aria-describedby="vf-h"><p class="hint" id="vf-h">A valid signature proves the pack is unchanged. Only a fingerprint you got from the author, by another route, proves who signed it.</p></div>
+      <div class="row"><button class="btn" type="submit">Verify</button><button class="btn btn--ghost" type="button" id="tamper">Try a tampered copy</button></div>
+    </form>
+    <div id="verdict" class="verdict" role="status" aria-live="polite" hidden></div>
+  </section>
+  <section class="panel panel--full" aria-labelledby="h-t">
+    <h2 id="h-t" class="h2">Release history</h2>
+    <p class="panel__sub">Saved in this browser only. Private keys are never saved.</p>
+    <ul class="list" id="hist"></ul>
+    <button class="btn btn--ghost" type="button" id="clear">Clear history</button>
+  </section>
+</div>
+</main>
+<footer class="foot">
+  <div class="wrap foot__in">
+    <p class="brand"><span class="brand__mark" aria-hidden="true"></span>System Prompt Engine</p>
+    <p class="small">Pro preview. Not released. Plans and pricing are not decided. Everything on this page runs in your browser; nothing you type is sent anywhere.</p>
+  </div>
+</footer>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

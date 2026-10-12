@@ -1,0 +1,1063 @@
+{
+ "status": "HUMAN_COPY_REVIEW_REQUIRED",
+ "note": "Extracted from the rendered pages (Chrome 155) after interaction, plus dynamic strings from main.ts. 'Pro preview' only: no prices, plans or checkout.",
+ "banned": [
+  "100%",
+  "zero",
+  "guaranteed",
+  "air-gapped",
+  "live",
+  "savings $",
+  "no. 1",
+  "best",
+  "world"
+ ],
+ "bannedHits": [],
+ "items": [
+  {
+   "route": "/pro/regression-lab/",
+   "text": "title: Prompt Regression Lab · Pro preview · System Prompt Engine",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Skip to content",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "System Prompt Engine",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Regression Lab",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Releases",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Blueprint",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Pro preview",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Demo runner: simulated",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Test your prompt before your users do.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Write test cases once. Change the prompt. See exactly which cases got fixed and which broke.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Two versions",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "The demo runner understands four lines: Always include: …, Never say: …, Format: json or bullets, and Max words: N.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Always include: …",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Never say: …",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Format: json",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "bullets",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Max words: N",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Version A (current)",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Version B (proposed)",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Test cases",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Each case is a user message plus what a good answer must, and must not, contain.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Refund request",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Remove",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "“My brakes squeal. Can I get a refund?”",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Mentions the shop",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "“How much is a new chain?”",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Stays short",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "“What should I do about a flat tyre?”",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Bullet answer",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "“List what a tune-up covers”",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Add a test case",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Name",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Give the case a name.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "User message",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Must include",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Must not include",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Separate several phrases with commas. Matching ignores case.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Format",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Any",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Valid JSON",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Bullet list",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Max words (optional)",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Add case",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Run and compare",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Runner",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Demo runner (simulated)A small, predictable stand-in written for this preview. It is not an AI model, and its answers are scripted.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "A small, predictable stand-in written for this preview. It is not an AI model, and its answers are scripted.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Your own API keyNot available in this preview. When built, calls would go from your browser straight to the provider you choose.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Not available in this preview. When built, calls would go from your browser straight to the provider you choose.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Run both versions",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Restore the example",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Simulated run finished. Version B fixed 2 and broke 0 of 4 cases.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Report",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Case",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Version A",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Version B",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Change",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Refund request Show answers and checksVersion A (simulated answer)Here is help with: My brakes squeal. Can I get a refund. We will refund you in full today. Let me know if you need anything else. ✗ must not include: refund youVersion B (simulated answer)Let me know if you need anything else. Our staff can confirm the price in store. ✓ must not include: refund you",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Show answers and checks",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Version A (simulated answer)",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Here is help with: My brakes squeal. Can I get a refund. We will refund you in full today. Let me know if you need anything else.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "✗ must not include: refund you",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Version B (simulated answer)",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Let me know if you need anything else. Our staff can confirm the price in store.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "✓ must not include: refund you",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Mentions the shop Show answers and checksVersion A (simulated answer)Here is help with: How much is a new chain. Let me know if you need anything else. ✗ must include: staffVersion B (simulated answer)Here is help with: How much is a new chain. Let me know if you need anything else. Our staff can confirm the price in store. ✓ must include: staff",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Here is help with: How much is a new chain. Let me know if you need anything else.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "✗ must include: staff",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Here is help with: How much is a new chain. Let me know if you need anything else. Our staff can confirm the price in store.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "✓ must include: staff",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Stays short Show answers and checksVersion A (simulated answer)Here is help with: What should I do about a flat tyre. Let me know if you need anything else. ✓ max words: 20 of 40Version B (simulated answer)Here is help with: What should I do about a flat tyre. Let me know if you need anything else. Our staff can confirm the price in store. ✓ max words: 28 of 40",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Here is help with: What should I do about a flat tyre. Let me know if you need anything else.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "✓ max words: 20 of 40",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Here is help with: What should I do about a flat tyre. Let me know if you need anything else. Our staff can confirm the price in store.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "✓ max words: 28 of 40",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Bullet answer Show answers and checksVersion A (simulated answer)Here is help with: List what a tune-up covers. Let me know if you need anything else. ✗ format: every line is a bulletVersion B (simulated answer)Here is help with: List what a tune-up covers. Let me know if you need anything else. Our staff can confirm the price in store. ✗ format: every line is a bullet",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Here is help with: List what a tune-up covers. Let me know if you need anything else.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "✗ format: every line is a bullet",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Here is help with: List what a tune-up covers. Let me know if you need anything else. Our staff can confirm the price in store.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/regression-lab/",
+   "text": "Pro preview. Not released. Plans and pricing are not decided. Everything on this page runs in your browser; nothing you type is sent anywhere.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "title: Signed Prompt Releases · Pro preview · System Prompt Engine",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Skip to content",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "System Prompt Engine",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Regression Lab",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Releases",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Blueprint",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Pro preview",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Real Ed25519 signatures",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Ship prompts you can prove.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Give each prompt a version and a changelog, then sign it. Anyone with the pack can check that not one character has changed since.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Sign a release",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Your signing key is made in this tab and cannot be exported. Reloading the page makes a new key.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Prompt name",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Version",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Use three numbers, like 1.2.0.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Changelog",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Prompt",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Sign release",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Signed Bike shop support 1.1.0.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Release pack",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Key fingerprint 14572ba4a4140f30 · sha256 51c838196f9825bc901fea13d54d3046bcda1c553e8ac8254bcaca7f4dd7b23d",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Copy pack",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Download .json",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Check it",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Verify a pack",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Paste any release pack. The check runs here, offline.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Expected key fingerprint (optional)",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "A valid signature proves the pack is unchanged. Only a fingerprint you got from the author, by another route, proves who signed it.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Verify",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Try a tampered copy",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Valid. The pack is unchanged since it was signed.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Release history",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Saved in this browser only. Private keys are never saved.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Bike shop support 1.1.0",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Check",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Stop promising refunds. Point billing questions to staff.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "sha256 51c838196f9825bc901fea13…",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Clear history",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/releases/",
+   "text": "Pro preview. Not released. Plans and pricing are not decided. Everything on this page runs in your browser; nothing you type is sent anywhere.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "title: Agent Blueprint Builder · Pro preview · System Prompt Engine",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Skip to content",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "System Prompt Engine",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Regression Lab",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Releases",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Blueprint",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Pro preview",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Exports are drafts",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Design the team before you write the code.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Place each agent, decide what it may touch, and draw who hands off to whom. Then export a starting config.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Canvas",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Select an agent to edit it. With an agent focused, arrow keys move it; hold Shift to move further.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Triage. 0 tools, step limit 4.Reads each message and decides who should answer.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Repair advisor. 2 tools, step limit 8.Suggests the right repair and a price range. read_fileweb_search",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Billing. 2 tools, step limit 6, asks a human first.Drafts replies about invoices. read_filesend_email",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Staff member. 0 tools, step limit 1.A person who approves refunds.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Add agent",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Restore the example",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Billing at 232, 376.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Edit agent",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Name",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Role",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Instructions",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Tools it may use",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "web_searchSearch the web and return result snippets.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Search the web and return result snippets.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "read_fileRead a file from an allowed folder.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Read a file from an allowed folder.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "write_fileWrite a file to an allowed folder.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Write a file to an allowed folder.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "run_codeRun code in a sandbox.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Run code in a sandbox.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "send_emailSend an email on the user's behalf.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Send an email on the user's behalf.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Limits",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Step limit",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Ask a human before any tool that changes thingsWriting files, running code and sending email.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Writing files, running code and sending email.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Remove this agent",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Handoffs",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Triage → Repair advisor",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Remove",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "When the question is about a repair",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Triage → Billing",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "When the question is about billing",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Billing → Staff member",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "When a refund is requested",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Add a handoff",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "From",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Triage",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Repair advisor",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Billing",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Staff member",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "To",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "When",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Add handoff",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Checks",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Export",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Draft format, verify before use. These follow the general shape of each platform's config. They are not official schemas.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Format",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "MCP-style",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "OpenAI-style",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Anthropic-style",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Draft config",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Copy",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Download .json",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/blueprint/",
+   "text": "Pro preview. Not released. Plans and pricing are not decided. Everything on this page runs in your browser; nothing you type is sent anywhere.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Simulated run finished. Version B fixed {n} and broke {n} of {n} cases.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Version {A|B} (simulated answer)",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Fixed",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Broke",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Still passing",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Still failing",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Valid. The pack is unchanged since it was signed.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Not valid.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Hash does not match the content. The pack was changed after signing.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Signature does not match this content and key.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Public key or signature is malformed.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Signed by key {fp}, not the expected key {fp}.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Add the author's fingerprint to confirm who signed it.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "This browser does not support Ed25519 in WebCrypto yet, so signing is off. Verification also needs it.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "No problems found.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "{agent}: has a tool that changes things, so it should require human approval.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "Draft format, verify before use.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/pro/*",
+   "text": "MCP defines servers and tools, not agents; this is an SPE-specific layout.",
+   "kind": "dynamic",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "route": "/redesign/",
+   "el": "p#founder-note",
+   "text": "Built by Prawin Naidu, with thanks to the AI assistants, including spe (Grok Bot), that helped design, test and audit SPE.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED",
+   "note": "Drafted by the assistant in the founder's voice; founder must approve wording and naming."
+  }
+ ]
+}
