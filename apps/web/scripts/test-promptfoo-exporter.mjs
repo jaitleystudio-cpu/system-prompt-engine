@@ -153,6 +153,11 @@ console.log("✓ Invalid receipt stops downstream evaluation with 0 provider cal
 
 // Risk A Closure: Producer Authentication (Ed25519) & Experimental Validity Classification
 console.log("\n[6/7] Risk A Closure: Validating Ed25519 producer authentication & static-vs-live experimental validity...");
+assert.equal(bundle.proofReceipt.evidenceProvenance.selfGeneratedAssertionOnly, true, "Unsigned local receipt must mark selfGeneratedAssertionOnly: true");
+assert.equal(bundle.proofReceipt.hardGates.zeroEgressObserved, false, "Unsigned static receipt without telemetry observer must mark zeroEgressObserved: false");
+assert.equal(bundle.proofReceipt.hardGates.zeroEgressStatus, "STATIC_IN_PROCESS_ONLY_UNOBSERVED", "Static unobserved status must be explicit");
+assert(bundle.yamlConfig.includes('spe_receipt_authenticity: "SELF_GENERATED_SHA256_DIGEST"'), "Unsigned YAML must label receipt as SELF_GENERATED_SHA256_DIGEST");
+
 const unauthCheck = verifyProofReceiptAuthenticity(bundle.proofReceipt, {
   requireAuthenticatedProducer: true,
 });
@@ -167,16 +172,34 @@ assert.equal(liveModelCheck.experimentalValidityVerified, false, "Static/rule-ma
 const { publicKey, privateKey } = generateKeyPairSync("ed25519");
 const pubDerHex = publicKey.export({ type: "spki", format: "der" }).toString("hex");
 const privDerHex = privateKey.export({ type: "pkcs8", format: "der" }).toString("hex");
+const signDigestFn = (canonicalDigestHex) => {
+  const keyObj = createPrivateKey({ key: Buffer.from(privDerHex, "hex"), format: "der", type: "pkcs8" });
+  return sign(null, Buffer.from(canonicalDigestHex, "utf8"), keyObj).toString("hex");
+};
 
 const signedReceipt = attachProducerSignature(
   bundle.proofReceipt,
   "spe-ci-authority-ed25519",
   pubDerHex,
-  (canonicalDigestHex) => {
-    const keyObj = createPrivateKey({ key: Buffer.from(privDerHex, "hex"), format: "der", type: "pkcs8" });
-    return sign(null, Buffer.from(canonicalDigestHex, "utf8"), keyObj).toString("hex");
-  },
+  signDigestFn,
 );
+assert.equal(signedReceipt.evidenceProvenance.selfGeneratedAssertionOnly, false, "Producer-signed receipt transitions selfGeneratedAssertionOnly to false");
+
+const signedExportBundle = generatePromptfooConfig(fortifiedPrompt, {
+  projectName: "spe-unit-test-eval",
+  providers: ["openai:gpt-4o", "anthropic:claude-3-5-sonnet"],
+  maxLatencyMs: 2000,
+  includeRedteam: true,
+  zeroEgressNetworkObserved: true,
+  producerSigner: {
+    producerKeyId: "spe-ci-authority-ed25519",
+    producerPublicKeyHex: pubDerHex,
+    signDigestFn,
+  },
+});
+assert.equal(signedExportBundle.proofReceipt.evidenceProvenance.selfGeneratedAssertionOnly, false);
+assert.equal(signedExportBundle.proofReceipt.hardGates.zeroEgressObserved, true);
+assert(signedExportBundle.yamlConfig.includes('spe_receipt_authenticity: "PRODUCER_SIGNED_AUTHENTICATED"'));
 
 const verifyEd25519Fn = (canonicalDigestHex, signatureHex, publicKeyHex) => {
   const pubObj = createPublicKey({ key: Buffer.from(publicKeyHex, "hex"), format: "der", type: "spki" });
@@ -209,10 +232,10 @@ const exportedWorkflowPath = join(evidenceDir, "exported_prompt_evals_workflow.y
 const exportedReceiptPath = join(evidenceDir, "exported_spe_receipt.json");
 const exportedSummaryPath = join(evidenceDir, "exported_eval_summary.md");
 
-writeFileSync(exportedYamlPath, bundle.yamlConfig, "utf8");
-writeFileSync(exportedWorkflowPath, bundle.githubActionsWorkflow, "utf8");
-writeFileSync(exportedReceiptPath, JSON.stringify(signedReceipt, null, 2) + "\n", "utf8");
-writeFileSync(exportedSummaryPath, bundle.markdownSummary, "utf8");
+writeFileSync(exportedYamlPath, signedExportBundle.yamlConfig, "utf8");
+writeFileSync(exportedWorkflowPath, signedExportBundle.githubActionsWorkflow, "utf8");
+writeFileSync(exportedReceiptPath, JSON.stringify(signedExportBundle.proofReceipt, null, 2) + "\n", "utf8");
+writeFileSync(exportedSummaryPath, signedExportBundle.markdownSummary, "utf8");
 
 const customerYamlFromDisk = readFileSync(exportedYamlPath, "utf8");
 const passingArtifactRun = validateExportedPromptfooYamlArtifact(

@@ -13291,12 +13291,6 @@
       "text": "all"
     },
     {
-      "id": "0f077d7363a15e81893d",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "100,000+ Characters"
-    },
-    {
       "id": "0f4ffce56f23a74ef58b",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
@@ -13423,6 +13417,12 @@
       "text": "YOUR IDEA."
     },
     {
+      "id": "3a6b0230d761a0699d26",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "Paste up to 100,000+ characters of context input locally (up to 5,000-char prompt output in Free; 30,000+ in Pro)."
+    },
+    {
       "id": "3c7fe46e0c05e07f1e0a",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
@@ -13513,10 +13513,10 @@
       "text": "Export Agent Rules →"
     },
     {
-      "id": "4810c8ae855403554e3a",
+      "id": "47fe60cee49854726699",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
-      "text": "1 LAKH+ LIMIT"
+      "text": "Context input: 100,000+ chars (1 Lakh+)\nPrompt output: 5,000 Free / 30,000+ Pro\nProjected retry savings: ~42% (est.)"
     },
     {
       "id": "48a5ed5656244b009e3d",
@@ -13529,12 +13529,6 @@
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "40+ Core / 101 Skills"
-    },
-    {
-      "id": "4afff41462cb45031f1b",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Paste and process up to 100,000+ characters of code, books, or transcripts locally."
     },
     {
       "id": "4d23d94a09d47333680d",
@@ -13717,12 +13711,6 @@
       "text": "60+ Research Prompts & 101 Skills"
     },
     {
-      "id": "8420958a5f92ea9620f3",
-      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
-      "depth": "PRODUCT",
-      "text": "Input capacity: 100,000+ chars (1 Lakh+)\nAuto-applied skills: 40 core / 101 total\nProjected retry savings: ~42% (est.)"
-    },
-    {
       "id": "8464ed2df4cd06af9251",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
@@ -13879,6 +13867,12 @@
       "text": "Proof & Pricing ($1)"
     },
     {
+      "id": "b7cd9287936c4e7d9552",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "1 LAKH+ INPUT"
+    },
+    {
       "id": "b80d00a15235fa689bf8",
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
@@ -13949,6 +13943,12 @@
       "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
       "depth": "PRODUCT",
       "text": "media-to-prompt"
+    },
+    {
+      "id": "cfc954b1dc3e0f1b6333",
+      "file": "apps/web/src/landing/SpeCapabilityDeck.tsx",
+      "depth": "PRODUCT",
+      "text": "100,000+ Char Input"
     },
     {
       "id": "d2a24ca2f7678ba46e23",
@@ -23635,12 +23635,6 @@
       "text": ": Automated GitHub Actions check on every pull request"
     },
     {
-      "id": "092b8c86369b2352f452",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "local input and output capacity in Create"
-    },
-    {
       "id": "0c8d8c155d37ad79be17",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -23663,6 +23657,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "macOS Native"
+    },
+    {
+      "id": "142ba018423868dbb4e5",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "✓ Signed Server Entitlement Token Verified & Activated!"
     },
     {
       "id": "147eac0946f3ec2e31a8",
@@ -23689,10 +23689,10 @@
       "text": ". For teams needing CI/CD pull-request gates and up to 10 seats,"
     },
     {
-      "id": "1bb9519a33d40b197b8a",
+      "id": "1c1466fb971292803587",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
-      "text": "with Crash Recovery and session continuation unlocked. You can also use this key in the SPE CLI:"
+      "text": "spe_entitlement.v1..."
     },
     {
       "id": "1c39fbce332a655da141",
@@ -23717,6 +23717,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "10 team members"
+    },
+    {
+      "id": "20dc4f0ff8ac075a0e37",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "Invalid or unverified server entitlement token."
     },
     {
       "id": "2301d678bc606c620574",
@@ -23755,6 +23761,12 @@
       "text": "How are token savings and ROI estimates calculated?"
     },
     {
+      "id": "2c3e5c33db8729da002c",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "100,000+ Character (1 Lakh+) Context Input"
+    },
+    {
       "id": "309ed4f6342e535b7962",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -23767,12 +23779,6 @@
       "text": "Local Loopback"
     },
     {
-      "id": "3a9115557368a8238990",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "License Key:"
-    },
-    {
       "id": "3be107f57b17fcc9ed57",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -23783,6 +23789,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "across coding, UI, and research tasks"
+    },
+    {
+      "id": "3e8c29adf6b21f7d225b",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Your Public Beta reservation for"
     },
     {
       "id": "3f099ccd3a4b62991225",
@@ -23803,10 +23815,10 @@
       "text": "For engineering teams that require cryptographic Ed25519 receipts and pre-merge pull request verification gates."
     },
     {
-      "id": "457ccc947eebf3cc8d4b",
+      "id": "4194065326af869e64d0",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
-      "text": "Active Subscription"
+      "text": "· 100% Ad-Free Sanctuary Active (Deactivating removes local token; recurring billing is managed via server checkout)"
     },
     {
       "id": "4717a0e375b7fbfa5ce7",
@@ -23819,6 +23831,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "/ first month · then $9/mo"
+    },
+    {
+      "id": "4ac438277171e2af9d66",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": ") are never self-minted in the browser and activate only after server payment confirmation and signed token verification ("
     },
     {
       "id": "4c30eea67031f067597d",
@@ -23899,6 +23917,12 @@
       "text": "Company and CI/CD Gate Features"
     },
     {
+      "id": "5fedf302ab272110250b",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Return to Workspace →"
+    },
+    {
       "id": "624823f9f9d823d2ec0b",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -23935,6 +23959,12 @@
       "text": "Public Beta"
     },
     {
+      "id": "68753d85ee7690f37a10",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Your cryptographic server entitlement token has been verified. Your browser workspace is now"
+    },
+    {
       "id": "698165cf36a4f1c9814e",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -23965,16 +23995,16 @@
       "text": "Which features run 100% locally in my browser vs. external services?"
     },
     {
+      "id": "78d25956131a191d8fe6",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Enter your email to reserve your Public Beta introductory rate, or paste a server-issued signed entitlement token ("
+    },
+    {
       "id": "792d912e0df07e3a8aa8",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Maintained as a separate macOS product track with its own evaluation suite (29/29 regression tests, 34-locale command matrix, and explicit hardware/OS permission boundaries)."
-    },
-    {
-      "id": "7957843efff391bd6cf4",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "SPE-PRO"
     },
     {
       "id": "7a22e19197079ee571a2",
@@ -24037,12 +24067,6 @@
       "text": "How does the $1 and $9 introductory pricing work?"
     },
     {
-      "id": "8507478e1360946707c5",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "· 100% Ad-Free Sanctuary Active"
-    },
-    {
       "id": "8563b3c36970a09e1ede",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
@@ -24059,6 +24083,12 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Local In-Browser (Zero Network Egress):"
+    },
+    {
+      "id": "8bb484ec64fafbac87e7",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Active Signed Entitlement"
     },
     {
       "id": "8c5bbaf31cbfd863a76a",
@@ -24109,10 +24139,22 @@
       "text": "contracts from the SPE Web Studio directly to a local continuation daemon or IDE workspace (`CLAUDE.md`, `.cursorrules`, Windsurf) on your machine."
     },
     {
+      "id": "93835d04ef2322f06a11",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Verified Token:"
+    },
+    {
       "id": "95785cf4438844c1b793",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Interactive 3D Web Templates"
+    },
+    {
+      "id": "96142c0aad2544f971ce",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Reserve Public Beta Rate →"
     },
     {
       "id": "9779b26c09808af9f50b",
@@ -24127,16 +24169,22 @@
       "text": ": Helps reduce scope drift on declared file boundaries"
     },
     {
+      "id": "995ed4f108a9436dcc20",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Verify Signed Token →"
+    },
+    {
       "id": "9b82e172354950334c64",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Standard renewal price $99"
     },
     {
-      "id": "9cbca233d9491f2cc615",
+      "id": "9dab57e0715c8f9694b9",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
-      "text": "Your browser workspace is now"
+      "text": "Optional: spe_entitlement.v1.<payload>.<signature>"
     },
     {
       "id": "a1102b87d704dde485b2",
@@ -24145,10 +24193,10 @@
       "text": "60+ Research-Paper Templates &amp; 101 Curated Skill Packs"
     },
     {
-      "id": "a342b3dc93c7c2f20ee7",
+      "id": "a143f82fe2e037f1091c",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "team"
+      "depth": "PROOF",
+      "text": "Deactivate Local Token"
     },
     {
       "id": "a85f904c582cd088f926",
@@ -24157,40 +24205,22 @@
       "text": "Inspect Local Bridge &amp; Export Studio →"
     },
     {
-      "id": "ad1cbc7ef0a1a91dbcac",
+      "id": "a9fa67ffcbfff32633bd",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
-      "text": "Copy Key"
+      "text": "Verified"
     },
     {
-      "id": "ad8da138a503a810039c",
+      "id": "ae5f1add1692ced5fb00",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
-      "text": "Enter your email to activate your launch offer and receive your instant ad-free workspace key:"
-    },
-    {
-      "id": "ad96e16aec2138e9663c",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "spe activate"
+      "text": "✓ Public Beta Checkout Reservation Recorded"
     },
     {
       "id": "b2e0f0e5fa9b4345812d",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Company & CI/CD Gate ($9 first month · renews at $99/mo)"
-    },
-    {
-      "id": "b3047cb2921e28913fd8",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Your Activation License Key:"
-    },
-    {
-      "id": "b35e7965951184cffbb9",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Activate Launch License →"
     },
     {
       "id": "b7a5eb246305ec064c7c",
@@ -24211,10 +24241,10 @@
       "text": "and"
     },
     {
-      "id": "bea1ef1b6459ce91c42f",
+      "id": "c1884c80a6cbb6b49b6d",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "pro"
+      "depth": "PROOF",
+      "text": ") to verify and activate a paid tier:"
     },
     {
       "id": "c71cd78fe005c5896598",
@@ -24241,28 +24271,34 @@
       "text": "1-Click IDE &amp; Eval Export"
     },
     {
-      "id": "cd6871a70f75c2257065",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "✓ Subscription &amp; License Key Activated!"
-    },
-    {
-      "id": "cf592ef89ccd431e5efd",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PROOF",
-      "text": "Open Ad-Free Workspace →"
-    },
-    {
       "id": "d00decb48657a75dd175",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Team Intro · $9 First Month"
     },
     {
+      "id": "d133afbff30bb3bb7d73",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "with paid tier features unlocked."
+    },
+    {
+      "id": "d2372b17e2a1e13161a1",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PROOF",
+      "text": "Copy"
+    },
+    {
       "id": "d2c209332165fdffeb8b",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Gates Pending Full Production:"
+    },
+    {
+      "id": "d2f711d18bcd978565cb",
+      "file": "apps/web/src/pages/Pricing.tsx",
+      "depth": "PRODUCT",
+      "text": "spe-beta-reservation"
     },
     {
       "id": "d32609807a2af37dff47",
@@ -24281,12 +24317,6 @@
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
       "text": "Designed to reduce wasted retry tokens by catching missing constraints before cloud API calls."
-    },
-    {
-      "id": "d8dda55c9567813157c9",
-      "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "SPE-TEAM"
     },
     {
       "id": "d9aff39ea19765e91cac",
@@ -24331,10 +24361,10 @@
       "text": ": Tamper-evident verification logs for engineering review"
     },
     {
-      "id": "e7654af1e02f93a10be7",
+      "id": "e6f04fdb7d0a14926d5a",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
-      "text": "Active on this browser"
+      "text": "is saved. Paid tier entitlements ("
     },
     {
       "id": "e998ffa3938f1a0b6fae",
@@ -24343,16 +24373,16 @@
       "text": "🍎 Independent Sister Product · Also Powered by the Prawin Jaitley Engine"
     },
     {
-      "id": "ea356da3d6c41f9831b8",
+      "id": "eb1c2316623250412f33",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
-      "text": "Deactivate"
+      "text": "(up to 5,000-char prompt output in Free; 30,000+ in Pro)"
     },
     {
-      "id": "ebe4c684fc6ce6433209",
+      "id": "ec27d1d1846d633751c6",
       "file": "apps/web/src/pages/Pricing.tsx",
-      "depth": "PRODUCT",
-      "text": "company"
+      "depth": "PROOF",
+      "text": "Waitlist Reference ID:"
     },
     {
       "id": "ef4feb6d9e5dc0bbcda1",
@@ -24361,10 +24391,10 @@
       "text": "RFC 8785 + Ed25519 Receipts"
     },
     {
-      "id": "f0a8c1c17d4e0749d760",
+      "id": "f17a9b98ef74ec07624c",
       "file": "apps/web/src/pages/Pricing.tsx",
       "depth": "PROOF",
-      "text": "100,000+ Character (1 Lakh+)"
+      "text": "Verified Entitlement Token:"
     },
     {
       "id": "f2ffc25b6b4bf69bc5d2",

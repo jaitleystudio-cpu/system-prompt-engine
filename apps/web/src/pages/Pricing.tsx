@@ -1,31 +1,40 @@
 import { useState } from "react";
 import type { AppView } from "../routing";
 import { copyTextSafe } from "../engine/workflows/clipboard";
+import {
+  verifySignedEntitlementToken,
+  createPublicBetaWaitlistReservation,
+  type PublicBetaReservationRecord,
+} from "../engine/entitlementVerifier";
 import "./pricing.css";
 
 interface PricingProps {
   onNavigate?: (view: AppView) => void;
 }
 
-function generateLicenseKey(tier: "pro" | "team"): string {
-  const prefix = tier === "team" ? "SPE-TEAM" : "SPE-PRO";
-  const part1 = Math.random().toString(36).substring(2, 6).toUpperCase();
-  const part2 = Math.random().toString(36).substring(2, 6).toUpperCase();
-  const part3 = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `${prefix}-${part1}-${part2}-${part3}`;
-}
-
 export function Pricing({ onNavigate }: PricingProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string>("Developer Pro");
   const [email, setEmail] = useState("");
+  const [signedTokenInput, setSignedTokenInput] = useState("");
+  const [verificationError, setVerificationError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [generatedKey, setGeneratedKey] = useState<string | null>(null);
+  const [waitlistReservation, setWaitlistReservation] = useState<PublicBetaReservationRecord | null>(null);
   const [copiedKey, setCopiedKey] = useState(false);
 
   const [currentTier, setCurrentTier] = useState<string | null>(() => {
     try {
-      return localStorage.getItem("spe-user-tier");
+      const storedTier = localStorage.getItem("spe-user-tier");
+      const storedToken = localStorage.getItem("spe-license-key");
+      if (!storedTier || !storedToken) return null;
+      const check = verifySignedEntitlementToken(storedToken);
+      if (!check.verified || check.tier !== storedTier) {
+        localStorage.removeItem("spe-user-tier");
+        localStorage.removeItem("spe-license-key");
+        return null;
+      }
+      return check.tier;
     } catch {
       return null;
     }
@@ -33,7 +42,10 @@ export function Pricing({ onNavigate }: PricingProps) {
 
   const [currentLicense, setCurrentLicense] = useState<string | null>(() => {
     try {
-      return localStorage.getItem("spe-license-key");
+      const storedToken = localStorage.getItem("spe-license-key");
+      if (!storedToken) return null;
+      const check = verifySignedEntitlementToken(storedToken);
+      return check.verified ? storedToken : null;
     } catch {
       return null;
     }
@@ -43,26 +55,51 @@ export function Pricing({ onNavigate }: PricingProps) {
     setSelectedPlan(planName);
     setSubmitted(false);
     setEmail("");
+    setSignedTokenInput("");
+    setVerificationError(null);
     setGeneratedKey(null);
+    setWaitlistReservation(null);
     setModalOpen(true);
   };
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    const lowerPlan = selectedPlan.toLowerCase();
-    const tier = lowerPlan.includes("team") || lowerPlan.includes("company") ? "team" : "pro";
-    const key = generateLicenseKey(tier);
+    setVerificationError(null);
+
+    if (signedTokenInput.trim()) {
+      const verification = verifySignedEntitlementToken(signedTokenInput.trim(), {
+        expectedEmail: email.trim(),
+      });
+      if (!verification.verified || !verification.tier) {
+        setVerificationError(
+          verification.rejectionReason || "Invalid or unverified server entitlement token.",
+        );
+        return;
+      }
+      try {
+        localStorage.setItem("spe-user-tier", verification.tier);
+        localStorage.setItem("spe-user-email", email.trim());
+        localStorage.setItem("spe-license-key", signedTokenInput.trim());
+        setCurrentTier(verification.tier);
+        setCurrentLicense(signedTokenInput.trim());
+      } catch {
+        // Storage access protected or restricted
+      }
+      setGeneratedKey(signedTokenInput.trim());
+      setWaitlistReservation(null);
+      setSubmitted(true);
+      return;
+    }
+
+    const reservation = createPublicBetaWaitlistReservation(selectedPlan, email);
     try {
-      localStorage.setItem("spe-user-tier", tier);
-      localStorage.setItem("spe-user-email", email);
-      localStorage.setItem("spe-license-key", key);
-      setCurrentTier(tier);
-      setCurrentLicense(key);
+      localStorage.setItem("spe-beta-reservation", JSON.stringify(reservation));
     } catch {
       // Storage access protected or restricted
     }
-    setGeneratedKey(key);
+    setWaitlistReservation(reservation);
+    setGeneratedKey(reservation.reservationId);
     setSubmitted(true);
   };
 
@@ -148,7 +185,7 @@ export function Pricing({ onNavigate }: PricingProps) {
                 letterSpacing: "0.05em",
               }}
             >
-              Active Subscription
+              Active Signed Entitlement
             </span>
             <h2 style={{ margin: "0.25rem 0", color: "#f8fafc", fontSize: "1.2rem", fontWeight: 700 }}>
               {currentTier === "team"
@@ -156,7 +193,7 @@ export function Pricing({ onNavigate }: PricingProps) {
                 : "Developer Pro ($1 first month · renews at $9/mo)"}
             </h2>
             <p style={{ margin: 0, fontSize: "0.8125rem", color: "#94a3b8" }}>
-              License Key: <code style={{ color: "#38bdf8" }}>{currentLicense || "Active on this browser"}</code> · 100% Ad-Free Sanctuary Active
+              Verified Token: <code style={{ color: "#38bdf8" }}>{currentLicense ? `${currentLicense.slice(0, 36)}...` : "Verified"}</code> · 100% Ad-Free Sanctuary Active (Deactivating removes local token; recurring billing is managed via server checkout)
             </p>
           </div>
           <button
@@ -164,7 +201,7 @@ export function Pricing({ onNavigate }: PricingProps) {
             className="spe-pricing-cta spe-pricing-cta-secondary"
             onClick={handleDeactivate}
           >
-            Deactivate
+            Deactivate Local Token
           </button>
         </section>
       )}
@@ -190,7 +227,7 @@ export function Pricing({ onNavigate }: PricingProps) {
           <ul className="spe-pricing-features" aria-label="Free Community Features">
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
-              <span><strong>100,000+ Character (1 Lakh+)</strong> local input and output capacity in Create</span>
+              <span><strong>100,000+ Character (1 Lakh+) Context Input</strong> (up to 5,000-char prompt output in Free; 30,000+ in Pro)</span>
             </li>
             <li className="spe-pricing-feature-item">
               <span className="spe-pricing-feature-icon" aria-hidden="true">✓</span>
@@ -412,19 +449,21 @@ export function Pricing({ onNavigate }: PricingProps) {
           aria-modal="true"
           aria-labelledby="modal-plan-title"
         >
-          <div className="spe-pricing-modal" style={{ maxWidth: "480px" }}>
+          <div className="spe-pricing-modal" style={{ maxWidth: "520px" }}>
             <h3 id="modal-plan-title">{selectedPlan}</h3>
             {submitted ? (
               <div style={{ textAlign: "left" }}>
                 <p style={{ color: "#34d399", fontWeight: 700, marginBottom: "0.75rem" }}>
-                  ✓ Subscription &amp; License Key Activated!
+                  {waitlistReservation
+                    ? "✓ Public Beta Checkout Reservation Recorded"
+                    : "✓ Signed Server Entitlement Token Verified & Activated!"}
                 </p>
                 <div style={{ backgroundColor: "#020617", border: "1px solid #1e293b", borderRadius: "6px", padding: "0.75rem", marginBottom: "1rem" }}>
                   <label style={{ display: "block", fontSize: "0.75rem", color: "#64748b", textTransform: "uppercase", fontWeight: 700, marginBottom: "0.25rem" }}>
-                    Your Activation License Key:
+                    {waitlistReservation ? "Waitlist Reference ID:" : "Verified Entitlement Token:"}
                   </label>
                   <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                    <code style={{ color: "#38bdf8", fontWeight: 700, fontSize: "0.9375rem" }}>
+                    <code style={{ color: "#38bdf8", fontWeight: 700, fontSize: "0.85rem", wordBreak: "break-all" }}>
                       {generatedKey}
                     </code>
                     <button
@@ -438,27 +477,36 @@ export function Pricing({ onNavigate }: PricingProps) {
                         color: "#f8fafc",
                         fontSize: "0.75rem",
                         cursor: "pointer",
+                        flexShrink: 0,
                       }}
                     >
-                      {copiedKey ? "Copied!" : "Copy Key"}
+                      {copiedKey ? "Copied!" : "Copy"}
                     </button>
                   </div>
                 </div>
                 <p style={{ fontSize: "0.8125rem", color: "#94a3b8", lineHeight: 1.5, marginBottom: "1.25rem" }}>
-                  Your browser workspace is now <strong>100% Ad-Free</strong> with Crash Recovery and session continuation unlocked. You can also use this key in the SPE CLI: <code>spe activate {generatedKey}</code>.
+                  {waitlistReservation ? (
+                    <>
+                      Your Public Beta reservation for <strong>{waitlistReservation.requestedPlan}</strong> is saved. Paid tier entitlements (<code>pro</code> / <code>team</code>) are never self-minted in the browser and activate only after server payment confirmation and signed token verification (<code>spe_entitlement.v1...</code>).
+                    </>
+                  ) : (
+                    <>
+                      Your cryptographic server entitlement token has been verified. Your browser workspace is now <strong>100% Ad-Free</strong> with paid tier features unlocked.
+                    </>
+                  )}
                 </p>
                 <button
                   type="button"
                   className="spe-pricing-cta spe-pricing-cta-primary"
                   onClick={() => setModalOpen(false)}
                 >
-                  Open Ad-Free Workspace →
+                  Return to Workspace →
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubscribe}>
-                <p style={{ fontSize: "0.875rem", color: "#94a3b8", marginBottom: "1rem" }}>
-                  Enter your email to activate your launch offer and receive your instant ad-free workspace key:
+                <p style={{ fontSize: "0.875rem", color: "#94a3b8", marginBottom: "0.75rem" }}>
+                  Enter your email to reserve your Public Beta introductory rate, or paste a server-issued signed entitlement token (<code>spe_entitlement.v1...</code>) to verify and activate a paid tier:
                 </p>
                 <input
                   type="email"
@@ -469,12 +517,25 @@ export function Pricing({ onNavigate }: PricingProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   autoFocus
                 />
+                <input
+                  type="text"
+                  placeholder="Optional: spe_entitlement.v1.<payload>.<signature>"
+                  className="spe-pricing-input"
+                  style={{ marginTop: "0.65rem", fontFamily: "monospace", fontSize: "0.8rem" }}
+                  value={signedTokenInput}
+                  onChange={(e) => setSignedTokenInput(e.target.value)}
+                />
+                {verificationError && (
+                  <p style={{ color: "#f87171", fontSize: "0.78rem", marginTop: "0.5rem", marginBottom: 0 }}>
+                    {verificationError}
+                  </p>
+                )}
                 <div className="spe-pricing-modal-actions" style={{ marginTop: "1.25rem" }}>
                   <button
                     type="submit"
                     className="spe-pricing-cta spe-pricing-cta-primary"
                   >
-                    Activate Launch License →
+                    {signedTokenInput.trim() ? "Verify Signed Token →" : "Reserve Public Beta Rate →"}
                   </button>
                   <button
                     type="button"

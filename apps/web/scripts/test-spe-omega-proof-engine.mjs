@@ -106,7 +106,20 @@ const receipt = generateProofReceipt(vulnerablePrompt, fortifiedPrompt, twinRepo
 assert(receipt.receiptDigest.length === 64, "Receipt digest must be valid SHA-256 hex string");
 assert.strictEqual(receipt.hardGates.protectedIntentPreserved, true, "Hard gates: intent preserved");
 assert.strictEqual(receipt.hardGates.authorityNotExpanded, true, "Hard gates: authority not expanded");
-assert.strictEqual(receipt.hardGates.zeroEgressObserved, true, "Hard gates: zero egress observed");
+assert.strictEqual(receipt.hardGates.zeroEgressObserved, false, "Hard gates: zeroEgressObserved defaults to false without telemetry observer");
+assert.strictEqual(receipt.hardGates.zeroEgressStatus, "STATIC_IN_PROCESS_ONLY_UNOBSERVED", "Hard gates: honest static unobserved status");
+assert.strictEqual(receipt.evidenceProvenance.selfGeneratedAssertionOnly, true, "Unsigned local receipt must mark selfGeneratedAssertionOnly: true");
+
+const observedReceipt = generateProofReceipt(
+  vulnerablePrompt,
+  fortifiedPrompt,
+  twinReport,
+  gymReport,
+  "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+  { zeroEgressNetworkObserved: true },
+);
+assert.strictEqual(observedReceipt.hardGates.zeroEgressObserved, true, "Hard gates: zero egress observed when telemetry observer confirms");
+assert.strictEqual(observedReceipt.hardGates.zeroEgressStatus, "OBSERVED_ZERO_EGRESS", "Hard gates: observed zero egress status");
 
 // Verify JCS Canonicalization key sorting
 const testObj1 = { z: 1, a: 2, m: { y: 3, b: 4 } };

@@ -51,6 +51,7 @@ from spe_runtime.research.rec2 import (
     PassportQualificationStatus,
     RecipientEnvironmentContext,
     canonical_sha256,
+    sign_passport_evaluator_attestation,
 )
 from spe_runtime.research.wdes.types import PredicateValue
 from spe_runtime.runtime_gateway.firewall import sign_grant
@@ -238,13 +239,11 @@ def test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline() -> None:
             ),
         ),
         requested_permissions=("FILESYSTEM_SCOPED_READ",),
-        evaluator_attestation=OracleAttestation(
-            oracle_id="spe-independent-oracle-v1",
-            oracle_public_key=f"ed25519:{cert.public_key_hex}",
+        evaluator_attestation=sign_passport_evaluator_attestation(
             evidence_hash="",
+            oracle_id="spe-independent-oracle-v1",
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
-            signature=f"ed25519:{cert.signature_ed25519[:32]}",
         ),
         revocation_state="ACTIVE",
         issued_at_epoch=1_791_755_000.0,
@@ -260,13 +259,11 @@ def test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline() -> None:
         origin_environment=draft_passport.origin_environment,
         obligation_claims=draft_passport.obligation_claims,
         requested_permissions=draft_passport.requested_permissions,
-        evaluator_attestation=OracleAttestation(
-            oracle_id="spe-independent-oracle-v1",
-            oracle_public_key=f"ed25519:{cert.public_key_hex}",
+        evaluator_attestation=sign_passport_evaluator_attestation(
             evidence_hash=draft_passport.content_sha256,
+            oracle_id="spe-independent-oracle-v1",
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
-            signature=f"ed25519:{cert.signature_ed25519[:32]}",
         ),
         content_sha256=draft_passport.content_sha256,
         revocation_state=draft_passport.revocation_state,
@@ -289,6 +286,105 @@ def test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline() -> None:
     assert inspection.status == PassportQualificationStatus.REQUALIFICATION_REQUIRED
     assert "ob_security" in inspection.reusable_obligations
     assert "ob_provider_tool_use" in inspection.requalification_required_obligations
+
+
+def test_rec2_passport_rejects_truncated_forged_or_unpinned_evaluator_signature() -> None:
+    """Proves REC-2 inspect_passport cryptographically verifies Ed25519 evaluator signatures and rejects truncated/forged/unpinned signatures."""
+    det_schemas = {"schema": "v1"}
+    det_hash = canonical_sha256(det_schemas)
+    draft = CapabilityPassportEnvelope(
+        passport_id="passport-crypto-audit-01",
+        skill_identifier="spe.security.signature_audit",
+        schema_version="rec2-0.1",
+        skill_instructions="Enforce strict Ed25519 signature verification on evaluator attestations.",
+        deterministic_schemas=det_schemas,
+        origin_model_id="local-qwen-coder",
+        origin_environment="macOS-15-AppleSilicon",
+        obligation_claims=(
+            ObligationEvidenceClaim(
+                obligation_id="ob_det",
+                scope_type=ObligationScopeType.DETERMINISTIC_CONTRACT,
+                description="Deterministic contract",
+                source_model_id="local-qwen-coder",
+                source_environment="macOS-15-AppleSilicon",
+                trials_n=100,
+                successes_k=100,
+                deterministic_contract_hash=det_hash,
+            ),
+        ),
+        requested_permissions=("FILESYSTEM_SCOPED_READ",),
+        evaluator_attestation=sign_passport_evaluator_attestation(evidence_hash=""),
+        revocation_state="ACTIVE",
+        issued_at_epoch=1_791_755_000.0,
+    ).with_computed_hash()
+
+    ctx = RecipientEnvironmentContext(
+        recipient_model_id="local-qwen-coder",
+        recipient_host="macOS-15-AppleSilicon",
+        allowed_permissions=frozenset({"FILESYSTEM_SCOPED_READ"}),
+        trusted_evaluator_ids=frozenset({"spe-independent-oracle-v1"}),
+        expected_deterministic_Hashes={"ob_det": det_hash},
+    )
+
+    # 1. Truncated signature string (e.g. 32 hex chars instead of 128 hex chars) MUST be rejected
+    truncated_passport = CapabilityPassportEnvelope(
+        **{
+            **draft.__dict__,
+            "evaluator_attestation": OracleAttestation(
+                oracle_id="spe-independent-oracle-v1",
+                oracle_public_key="ed25519:" + ("a" * 64),
+                evidence_hash=draft.content_sha256,
+                timestamp=1_791_755_000.0,
+                verdict="APPROVED",
+                signature="ed25519:" + ("b" * 32),
+            ),
+        }
+    )
+    rep_trunc = ObligationRequalificationEngine.inspect_passport(truncated_passport, ctx)
+    assert rep_trunc.evaluator_authority_trusted is False
+    assert rep_trunc.status == PassportQualificationStatus.REJECTED
+    assert any("INVALID_EVALUATOR_SIGNATURE_FORMAT" in r for r in rep_trunc.rejection_reasons)
+
+    # 2. Forged 64-byte (128-hex-char) signature with valid pinned public key MUST be rejected
+    valid_att = sign_passport_evaluator_attestation(evidence_hash=draft.content_sha256)
+    flipped_last_nibble = "0" if valid_att.signature[-1] != "0" else "1"
+    forged_sig = valid_att.signature[:-1] + flipped_last_nibble
+    forged_passport = CapabilityPassportEnvelope(
+        **{
+            **draft.__dict__,
+            "evaluator_attestation": OracleAttestation(
+                oracle_id=valid_att.oracle_id,
+                oracle_public_key=valid_att.oracle_public_key,
+                evidence_hash=valid_att.evidence_hash,
+                timestamp=valid_att.timestamp,
+                verdict=valid_att.verdict,
+                signature=forged_sig,
+            ),
+        }
+    )
+    rep_forged = ObligationRequalificationEngine.inspect_passport(forged_passport, ctx)
+    assert rep_forged.evaluator_authority_trusted is False
+    assert rep_forged.status == PassportQualificationStatus.REJECTED
+    assert any("INVALID_EVALUATOR_SIGNATURE:" in r for r in rep_forged.rejection_reasons)
+
+    # 3. Unpinned rogue keypair claiming oracle_id='spe-independent-oracle-v1' MUST be rejected
+    rogue_sk, rogue_pk = generate_keypair()
+    rogue_att = sign_passport_evaluator_attestation(
+        evidence_hash=draft.content_sha256,
+        oracle_id="spe-independent-oracle-v1",
+        signing_key=rogue_sk,
+        public_key=rogue_pk,
+    )
+    rogue_passport = CapabilityPassportEnvelope(
+        **{
+            **draft.__dict__,
+            "evaluator_attestation": rogue_att,
+        }
+    )
+    rep_rogue = ObligationRequalificationEngine.inspect_passport(rogue_passport, ctx)
+    assert rep_rogue.evaluator_authority_trusted is False
+    assert rep_rogue.status == PassportQualificationStatus.REJECTED
+    assert any("UNPINNED_EVALUATOR_PUBLIC_KEY" in r for r in rep_rogue.rejection_reasons)
 
 
 def test_default_wire_proxy_rejects_unsigned_grant() -> None:

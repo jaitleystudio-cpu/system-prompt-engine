@@ -1,4 +1,61 @@
-=== 1. PROMPTFOO EXPORTER & PROVENANCE SUITE (7/7) ===
+=== 1. PYTHON UNIFIED RELEASE-CANDIDATE & REC-2E ED25519 PASSPORT TESTS ===
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine
+configfile: pyproject.toml
+collecting ... collected 19 items
+
+tests/unit/test_unified_release_candidate_pipeline.py::test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline PASSED [  5%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_rec2_passport_rejects_truncated_forged_or_unpinned_evaluator_signature PASSED [ 10%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_default_wire_proxy_rejects_unsigned_grant PASSED [ 15%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_default_learning_validator_rejects_unregistered_oracle PASSED [ 21%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_rfc8785_canonicalize_published_standard_vectors PASSED [ 26%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_promptfoo_exporter_measured_proofs PASSED [ 31%]
+tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_customer_journey_suite PASSED [ 36%]
+tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_1_valid_hash_untrusted_authority_or_privilege_escalation_rejected PASSED [ 42%]
+tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_2_no_inherited_success_across_models_without_requalification PASSED [ 47%]
+tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_3_canarybench_blocks_private_material_and_planted_secrets PASSED [ 52%]
+tests/research/rec2/test_rec2_capability_passport.py::test_untrusted_mcp_import_containment_and_digest_verification PASSED [ 57%]
+tests/research/rec2/test_rec2_capability_passport.py::test_protected_intent_preservation_and_offline_revocation_horizon PASSED [ 63%]
+tests/research/rec2/test_rec2_capability_passport.py::test_expected_cost_gate_abstains_on_trivial_and_identifies_10x_workload PASSED [ 68%]
+tests/research/rec2/test_rec2_capability_passport.py::test_p0_security_real_activation_prompt_injection_nested_skills_manifest_and_post_qual_drift PASSED [ 73%]
+tests/research/rec2/test_rec2_capability_passport.py::test_p0_privacy_bounded_threat_model_encoded_transformed_paraphrased_multistep_and_unapproved_hold PASSED [ 78%]
+tests/research/rec2/test_rec2_capability_passport.py::test_p0_evidence_integrity_granular_privacy_transfer_and_synthetic_caller_firewall PASSED [ 84%]
+tests/research/rec2/test_rec2_capability_passport.py::test_p1_cost_model_projected_vs_measured_lifecycle_and_rec0_rec2e_qualification PASSED [ 89%]
+tests/research/rec2/test_rec2_capability_passport.py::test_edge_cases_boundary_values_and_error_paths PASSED [ 94%]
+tests/research/rec2/test_rec2_capability_passport.py::test_adversarial_round2_audit_regressions PASSED [100%]
+
+============================= 19 passed in 20.18s ==============================
+
+=== 2. WEB PROOF ENGINE & PRODUCER SIGNATURE TESTS ===
+================================================================================
+🔬 SPE Ω Proof-Centric Intelligence Compiler — Verification Suite
+================================================================================
+
+[1/5] Validating Prompt Type System & Compiler Diagnostics...
+  ✓ Type system verified: Detected 2 errors in naive prompt; 0 errors in hardened prompt.
+
+[2/5] Validating Adversarial Retrieval Firewall...
+  ✓ Retrieval Firewall verified: Sandboxed 2 chunks with 2 neutralized threats.
+
+[3/5] Validating Counterfactual Prompt Twin...
+  ✓ Counterfactual Twin verified: Candidate reduced constraint violations by 8 (from 36 to 28) with +12.5% defense gain; zero intent degradation.
+
+[4/5] Validating Hostile Gym Ω (1,024 attacks) & Metamorphic Lab...
+  ✓ Hostile baseline confirmed: Naive prompt killed only 34.4% of attacks.
+  ✓ Hostile Gym Ω verified: Fortified Mutation Kill Rate = 1024/1024 (100.0%) across 16 attack families.
+  ✓ Metamorphic Lab verified: 31/31 relations satisfied (0 critical failures).
+
+[5/5] Validating Proof Receipt Protocol & JCS Canonicalization...
+  ✓ Proof Receipt verified: Digest = b4eab3672f6496087add9fee97630eb04578e0012b4f752981cb0bdd7e9f9e55
+  ✓ JCS Canonicalization verified: RFC 8785 invariant order preserved.
+
+================================================================================
+🌟 ALL SPE Ω PROOF-CENTRIC MODULES PASSED WITH 100% SUCCESS!
+================================================================================
+
+=== 3. PROMPTFOO EXPORTER & PROVENANCE HONESTY TESTS ===
 ==================================================================
 🧪 TESTING: SPE Promptfoo CI/CD Bridge Exporter (Measured Proofs)
 ==================================================================
@@ -27,13 +84,13 @@
 🎉 ALL PROMPTFOO BRIDGE EXPORTER TESTS PASSED! (7/7)
 ==================================================================
 
-=== 2. FULL WEB-APP CUSTOMER JOURNEY SUITE (4/4) ===
+=== 4. FULL WEB-APP CUSTOMER JOURNEY & SIGNED ENTITLEMENT TESTS ===
 ==================================================================
 🧭 TESTING: SPE Ω Full Web-App Customer Journey (Risk C Closure)
 ==================================================================
 
-[1/4] Verifying Pricing, License Entitlements, Ad-Free Toggle & 1-Click Cancellation...
-✓ Pricing tiers ($0 / $1->$9 / $9->$99), entitlements, and 1-click cancellation verified.
+[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist & 100k/5k Copy Reconciliation...
+✓ Pricing tiers ($0 / $1->$9 / $9->$99), signed entitlement token security, and 100k/5k copy verified.
 
 [2/4] Verifying all 6 customer export formats via formatForAgent()...
 ✓ All 6 customer export artifacts generated, verified, and saved to artifacts/rc_evidence_package/customer_exports/.
@@ -48,46 +105,15 @@
 🎉 FULL WEB-APP CUSTOMER JOURNEY SUITE PASSED! (4/4)
 ==================================================================
 
-=== 3. SPE OMEGA PROOF ENGINE SUITE (5/5) ===
-================================================================================
-🔬 SPE Ω Proof-Centric Intelligence Compiler — Verification Suite
-================================================================================
+=== 5. COPY CHECK GATE ===
 
-[1/5] Validating Prompt Type System & Compiler Diagnostics...
-  ✓ Type system verified: Detected 2 errors in naive prompt; 0 errors in hardened prompt.
+> spe-web@0.3.0 spe:copy-check
+> node ../../tools/copy-check.mjs
 
-[2/5] Validating Adversarial Retrieval Firewall...
-  ✓ Retrieval Firewall verified: Sandboxed 2 chunks with 2 neutralized threats.
-
-[3/5] Validating Counterfactual Prompt Twin...
-  ✓ Counterfactual Twin verified: Candidate reduced constraint violations by 8 (from 36 to 28) with +12.5% defense gain; zero intent degradation.
-
-[4/5] Validating Hostile Gym Ω (1,024 attacks) & Metamorphic Lab...
-  ✓ Hostile baseline confirmed: Naive prompt killed only 34.4% of attacks.
-  ✓ Hostile Gym Ω verified: Fortified Mutation Kill Rate = 1024/1024 (100.0%) across 16 attack families.
-  ✓ Metamorphic Lab verified: 31/31 relations satisfied (0 critical failures).
-
-[5/5] Validating Proof Receipt Protocol & JCS Canonicalization...
-  ✓ Proof Receipt verified: Digest = 96d00382e965442fd938fc363a95b808c67dd00514f72975369f8c0a2370a875
-  ✓ JCS Canonicalization verified: RFC 8785 invariant order preserved.
-
-================================================================================
-🌟 ALL SPE Ω PROOF-CENTRIC MODULES PASSED WITH 100% SUCCESS!
-================================================================================
-
-=== 4. UNIFIED PYTHON + NODE RELEASE CANDIDATE PIPELINE (6/6) ===
-============================= test session starts ==============================
-platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/.venv/bin/python3
-cachedir: .pytest_cache
-rootdir: /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine
-configfile: pyproject.toml
-collecting ... collected 6 items
-
-tests/unit/test_unified_release_candidate_pipeline.py::test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline PASSED [ 16%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_default_wire_proxy_rejects_unsigned_grant PASSED [ 33%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_default_learning_validator_rejects_unregistered_oracle PASSED [ 50%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_rfc8785_canonicalize_published_standard_vectors PASSED [ 66%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_promptfoo_exporter_measured_proofs PASSED [ 83%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_customer_journey_suite PASSED [100%]
-
-============================== 6 passed in 4.33s ===============================
+{
+  "gate": "LANGUAGE_PERSPECTIVE_GATE",
+  "candidateCount": 5724,
+  "unreviewed": 0,
+  "violations": [],
+  "scope": "Static UI copy and shared catalog. Dynamic user text/generated professional prompts are deliberately excluded. Editorial review is not a human study."
+}

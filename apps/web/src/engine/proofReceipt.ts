@@ -15,6 +15,17 @@ export interface ProofReceiptHardGates {
   privacyNotWeakened: boolean;
   budgetValid: boolean;
   zeroEgressObserved: boolean;
+  zeroEgressStatus: "OBSERVED_ZERO_EGRESS" | "STATIC_IN_PROCESS_ONLY_UNOBSERVED";
+}
+
+export interface GenerateProofReceiptOptions {
+  zeroEgressNetworkObserved?: boolean;
+  liveModelCallsExecuted?: number;
+  producerSigner?: {
+    producerKeyId: string;
+    producerPublicKeyHex: string;
+    signDigestFn: (canonicalDigestHex: string) => string;
+  };
 }
 
 export interface ProofReceiptPayload {
@@ -106,6 +117,9 @@ export function canonicalizeJson(obj: unknown): string {
 
 /**
  * Generates an immutable, tamper-evident Proof Receipt from empirical evaluation evidence.
+ * By default, an unsigned local receipt marks `selfGeneratedAssertionOnly: true` and
+ * `zeroEgressObserved: false` (`STATIC_IN_PROCESS_ONLY_UNOBSERVED`) unless explicit
+ * network-observation telemetry or an independent producer signature is supplied.
  */
 export function generateProofReceipt(
   baselinePrompt: string,
@@ -113,19 +127,25 @@ export function generateProofReceipt(
   twinReport: CounterfactualTwinReport,
   gymReport: HostileGymOmegaReport,
   wasmHash = "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+  options: GenerateProofReceiptOptions = {},
 ): ProofReceiptPayload {
   const baseHash = computeSha256(baselinePrompt);
   const candHash = computeSha256(candidatePrompt);
   const intentHash = computeSha256("spe.protected-intent.v1:" + candidatePrompt.slice(0, 500));
   const suiteHash = computeSha256(gymReport.suiteId + ":1024_attacks");
   const metaHash = computeSha256("metamorphic_31_relations");
+  const egressObserved = Boolean(options.zeroEgressNetworkObserved);
+  const liveCalls = Math.max(0, options.liveModelCallsExecuted ?? 0);
 
   const hardGates: ProofReceiptHardGates = {
     protectedIntentPreserved: twinReport.delta.intentPreserved,
     authorityNotExpanded: gymReport.criticalFailures === 0,
     privacyNotWeakened: twinReport.candidate.errorCount === 0,
     budgetValid: candidatePrompt.length > 0,
-    zeroEgressObserved: true,
+    zeroEgressObserved: egressObserved,
+    zeroEgressStatus: egressObserved
+      ? "OBSERVED_ZERO_EGRESS"
+      : "STATIC_IN_PROCESS_ONLY_UNOBSERVED",
   };
 
   const receiptData: Omit<ProofReceiptPayload, "receiptDigest"> = {
@@ -157,10 +177,10 @@ export function generateProofReceipt(
       defenseGainPct: parseFloat((twinReport.delta.defenseRateGain * 100).toFixed(2)),
     },
     evidenceProvenance: {
-      measurementClass: "DETERMINISTIC_STATIC_AND_RULE_MATRIX",
-      liveModelCallsExecuted: 0,
-      selfGeneratedAssertionOnly: false,
-      independentVerificationRequiredForLiveModels: true,
+      measurementClass: liveCalls > 0 ? "LIVE_MODEL_EMPIRICAL_EVAL" : "DETERMINISTIC_STATIC_AND_RULE_MATRIX",
+      liveModelCallsExecuted: liveCalls,
+      selfGeneratedAssertionOnly: true,
+      independentVerificationRequiredForLiveModels: liveCalls === 0,
       producerKeyId: "spe-local-unauthenticated-digest",
     },
   };
@@ -168,15 +188,26 @@ export function generateProofReceipt(
   const canonicalJson = canonicalizeJson(receiptData);
   const receiptDigest = computeSha256(canonicalJson);
 
-  return {
+  const unsignedReceipt: ProofReceiptPayload = {
     ...receiptData,
     receiptDigest,
   };
+
+  if (options.producerSigner) {
+    return attachProducerSignature(
+      unsignedReceipt,
+      options.producerSigner.producerKeyId,
+      options.producerSigner.producerPublicKeyHex,
+      options.producerSigner.signDigestFn,
+    );
+  }
+
+  return unsignedReceipt;
 }
 
 /**
- * Attaches an asymmetric producer signature (e.g., Ed25519) over the canonical receipt payload
- * and recomputes the outer receiptDigest.
+ * Attaches an asymmetric producer signature (e.g., Ed25519) over the canonical receipt payload,
+ * transitions `selfGeneratedAssertionOnly` to `false`, and recomputes the outer receiptDigest.
  */
 export function attachProducerSignature(
   receipt: ProofReceiptPayload,
@@ -189,6 +220,7 @@ export function attachProducerSignature(
     ...unsigned,
     evidenceProvenance: {
       ...unsigned.evidenceProvenance,
+      selfGeneratedAssertionOnly: false,
       producerKeyId,
       producerPublicKeyHex,
     },

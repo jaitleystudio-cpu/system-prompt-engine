@@ -12,7 +12,12 @@ import { computeSha256 } from "./hashUtils.ts";
 import { typeCheckPrompt, type DiagnosticReport } from "./promptTypeSystem.ts";
 import { runHostileGymOmega, type HostileGymOmegaReport } from "./hostileGymOmega.ts";
 import { evaluateCounterfactualTwin } from "./counterfactualTwin.ts";
-import { generateProofReceipt, canonicalizeJson, type ProofReceiptPayload } from "./proofReceipt.ts";
+import {
+  generateProofReceipt,
+  canonicalizeJson,
+  type ProofReceiptPayload,
+  type GenerateProofReceiptOptions,
+} from "./proofReceipt.ts";
 
 export interface PromptfooExportOptions {
   projectName?: string;
@@ -21,6 +26,8 @@ export interface PromptfooExportOptions {
   maxLatencyMs?: number;
   outputFormat?: "json" | "markdown" | "text";
   baselinePrompt?: string;
+  zeroEgressNetworkObserved?: boolean;
+  producerSigner?: GenerateProofReceiptOptions["producerSigner"];
 }
 
 export interface PromptfooExportBundle {
@@ -313,8 +320,21 @@ export function generatePromptfooConfig(
   const measuredDiagnostics = typeCheckPrompt(promptText);
   const measuredHostileGym = runHostileGymOmega(promptText);
   const twinReport = evaluateCounterfactualTwin(baselinePrompt, promptText, 42);
-  const proofReceipt = generateProofReceipt(baselinePrompt, promptText, twinReport, measuredHostileGym);
+  const proofReceipt = generateProofReceipt(
+    baselinePrompt,
+    promptText,
+    twinReport,
+    measuredHostileGym,
+    "ac3f0c3ecb19a7563068c903065ec90b8bb38bfcf4f0465a0c8f097e82e7de7d",
+    {
+      zeroEgressNetworkObserved: options.zeroEgressNetworkObserved,
+      producerSigner: options.producerSigner,
+    },
+  );
   const receiptDigest = proofReceipt.receiptDigest;
+  const receiptAuthenticity = proofReceipt.evidenceProvenance.selfGeneratedAssertionOnly
+    ? "SELF_GENERATED_SHA256_DIGEST"
+    : "PRODUCER_SIGNED_AUTHENTICATED";
   const mkrPercent = (measuredHostileGym.mutationKillRate * 100).toFixed(1);
 
   // Detect output schema expectations
@@ -335,6 +355,7 @@ export function generatePromptfooConfig(
 # Zero-Egress Upstream Compiler: System Prompt Engine (SPE)
 # spe_prompt_sha256: "${promptHash}"
 # spe_receipt_digest: "${receiptDigest}"
+# spe_receipt_authenticity: "${receiptAuthenticity}"
 # spe_type_check_passed: ${measuredDiagnostics.passed}
 # spe_measured_errors: ${measuredDiagnostics.errorCount}
 # spe_measured_mkr_pct: ${mkrPercent}

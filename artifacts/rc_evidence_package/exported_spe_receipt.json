@@ -2,7 +2,7 @@
   "schemaVersion": "spe.proof-receipt.v1",
   "compilerVersion": "1.4.0-omega",
   "executionMode": "strict-wasm",
-  "timestampIso": "2026-10-11T23:45:28.635Z",
+  "timestampIso": "2026-10-12T00:14:05.074Z",
   "protectedIntentHash": "232abb64cd2293be878ae36f30e504aa478f8a643de41cfd91204a2c5aecfa4b",
   "candidateHash": "230592988db3c7647240bb25027c5780ec43028df3bffef80e6ee866c2d873dc",
   "baselineHash": "fac7c1186a83fb3c57551b3a770babaf52e61f0388257dee7d0fb6d84a80b9ff",
@@ -15,7 +15,8 @@
     "authorityNotExpanded": true,
     "privacyNotWeakened": true,
     "budgetValid": true,
-    "zeroEgressObserved": true
+    "zeroEgressObserved": true,
+    "zeroEgressStatus": "OBSERVED_ZERO_EGRESS"
   },
   "counters": {
     "deterministicTypeChecks": 0,
@@ -38,8 +39,8 @@
     "selfGeneratedAssertionOnly": false,
     "independentVerificationRequiredForLiveModels": true,
     "producerKeyId": "spe-ci-authority-ed25519",
-    "producerPublicKeyHex": "302a300506032b65700321007f52357b0cdc0641f4604d2e198ff46591d4c2ff756dd9a4c9703873e82bab54",
-    "producerSignatureHex": "8c3ccf9f1c5af332e404d7d26550cbb15f9a36381885b9e70b8a972d96d3c95a45cc5394d2f684968f04b3106a9cebff3cc11ddc40b3173a8abb26a76e617703"
+    "producerPublicKeyHex": "302a300506032b65700321000c8e1fd24f934e06c68341d9d46e83b1cd78f3a4d2710384344073e60131deae",
+    "producerSignatureHex": "8a97a156afdf498ba0aaedee939cb1c6b2dc970b64669e75f0ed5c26d3cea38e1f47d4705cec515524a5aa55fff51f9c66aa51fad39d23ec62649dec3243fa0d"
   },
-  "receiptDigest": "5b2315794f6283323c34a115f4a5086ebcb8906903755b38d93d67ecb8a6deb0"
+  "receiptDigest": "85a7165940d8f1910a9d91517631e63f721eb8cfcd041ec6cc134572bdd73a23"
 }

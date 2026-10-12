@@ -66,6 +66,7 @@ from spe_runtime.research.rec2 import (
     UntrustedExecutionContainmentError,
     UntrustedMCPImportAdapter,
     canonical_sha256,
+    sign_passport_evaluator_attestation,
 )
 from spe_runtime.research.wdes.types import PredicateValue
 
@@ -138,13 +139,11 @@ def _make_sample_passport(
             ),
         ),
         requested_permissions=requested_permissions,
-        evaluator_attestation=OracleAttestation(
-            oracle_id=oracle_id,
-            oracle_public_key="ed25519:pk_spe_independent_v1",
+        evaluator_attestation=sign_passport_evaluator_attestation(
             evidence_hash="",
+            oracle_id=oracle_id,
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
-            signature="ed25519:sig_valid_88f901a",
         ),
         revocation_state=revocation_state,
         issued_at_epoch=1_791_755_000.0,
@@ -161,13 +160,11 @@ def _make_sample_passport(
         origin_environment=draft.origin_environment,
         obligation_claims=draft.obligation_claims,
         requested_permissions=draft.requested_permissions,
-        evaluator_attestation=OracleAttestation(
-            oracle_id=oracle_id,
-            oracle_public_key="ed25519:pk_spe_independent_v1",
+        evaluator_attestation=sign_passport_evaluator_attestation(
             evidence_hash=draft.content_sha256,
+            oracle_id=oracle_id,
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
-            signature="ed25519:sig_valid_88f901a",
         ),
         content_sha256=draft.content_sha256,
         revocation_state=draft.revocation_state,
@@ -820,26 +817,22 @@ def test_p0_evidence_integrity_granular_privacy_transfer_and_synthetic_caller_fi
             ),
         ),
         requested_permissions=("FILESYSTEM_SCOPED_READ",),
-        evaluator_attestation=OracleAttestation(
-            oracle_id="spe-independent-oracle-v1",
-            oracle_public_key="ed25519:pk_spe_independent_v1",
+        evaluator_attestation=sign_passport_evaluator_attestation(
             evidence_hash="",
+            oracle_id="spe-independent-oracle-v1",
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
-            signature="ed25519:sig_valid_88f901a",
         ),
     ).with_computed_hash()
 
     passport = CapabilityPassportEnvelope(
         **{
             **draft.__dict__,
-            "evaluator_attestation": OracleAttestation(
-                oracle_id="spe-independent-oracle-v1",
-                oracle_public_key="ed25519:pk_spe_independent_v1",
+            "evaluator_attestation": sign_passport_evaluator_attestation(
                 evidence_hash=draft.content_sha256,
+                oracle_id="spe-independent-oracle-v1",
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
-                signature="ed25519:sig_valid_88f901a",
             ),
         }
     )
@@ -1163,13 +1156,11 @@ def test_adversarial_round2_audit_regressions() -> None:
     synth_passport = CapabilityPassportEnvelope(
         **{
             **synth_raw.__dict__,
-            "evaluator_attestation": OracleAttestation(
-                oracle_id="spe-independent-oracle-v1",
-                oracle_public_key="ed25519:pk_spe_independent_v1",
+            "evaluator_attestation": sign_passport_evaluator_attestation(
                 evidence_hash=synth_raw.content_sha256,
+                oracle_id="spe-independent-oracle-v1",
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
-                signature="ed25519:sig_valid_88f901a",
             ),
         }
     )
@@ -1226,25 +1217,21 @@ def test_adversarial_round2_audit_regressions() -> None:
         origin_environment="macOS-15-AppleSilicon-WebKit",
         obligation_claims=(),
         requested_permissions=("FILESYSTEM_SCOPED_READ",),
-        evaluator_attestation=OracleAttestation(
-            oracle_id="spe-independent-oracle-v1",
-            oracle_public_key="ed25519:pk",
+        evaluator_attestation=sign_passport_evaluator_attestation(
             evidence_hash="",
+            oracle_id="spe-independent-oracle-v1",
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
-            signature="ed25519:sig",
         ),
     ).with_computed_hash()
     grandchild = CapabilityPassportEnvelope(
         **{
             **grandchild_raw.__dict__,
-            "evaluator_attestation": OracleAttestation(
-                oracle_id="spe-independent-oracle-v1",
-                oracle_public_key="ed25519:pk",
+            "evaluator_attestation": sign_passport_evaluator_attestation(
                 evidence_hash=grandchild_raw.content_sha256,
+                oracle_id="spe-independent-oracle-v1",
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
-                signature="ed25519:sig",
             ),
         }
     )
@@ -1258,26 +1245,22 @@ def test_adversarial_round2_audit_regressions() -> None:
         origin_environment="macOS-15-AppleSilicon-WebKit",
         obligation_claims=(),
         requested_permissions=("FILESYSTEM_SCOPED_READ",),
-        evaluator_attestation=OracleAttestation(
-            oracle_id="spe-independent-oracle-v1",
-            oracle_public_key="ed25519:pk",
+        evaluator_attestation=sign_passport_evaluator_attestation(
             evidence_hash="",
+            oracle_id="spe-independent-oracle-v1",
             timestamp=1_791_755_000.0,
             verdict="APPROVED",
-            signature="ed25519:sig",
         ),
         nested_skills=(grandchild,),
     ).with_computed_hash()
     child = CapabilityPassportEnvelope(
         **{
             **child_raw.__dict__,
-            "evaluator_attestation": OracleAttestation(
-                oracle_id="spe-independent-oracle-v1",
-                oracle_public_key="ed25519:pk",
+            "evaluator_attestation": sign_passport_evaluator_attestation(
                 evidence_hash=child_raw.content_sha256,
+                oracle_id="spe-independent-oracle-v1",
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
-                signature="ed25519:sig",
             ),
         }
     )
@@ -1290,13 +1273,11 @@ def test_adversarial_round2_audit_regressions() -> None:
     root_with_grandchild = CapabilityPassportEnvelope(
         **{
             **root_with_grandchild_raw.__dict__,
-            "evaluator_attestation": OracleAttestation(
-                oracle_id="spe-independent-oracle-v1",
-                oracle_public_key="ed25519:pk",
+            "evaluator_attestation": sign_passport_evaluator_attestation(
                 evidence_hash=root_with_grandchild_raw.content_sha256,
+                oracle_id="spe-independent-oracle-v1",
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
-                signature="ed25519:sig",
             ),
         }
     )

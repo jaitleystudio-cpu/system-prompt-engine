@@ -23,6 +23,12 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build } from "../node_modules/esbuild/lib/main.js";
 
+import {
+  issueSignedEntitlementToken,
+  verifySignedEntitlementToken,
+  createPublicBetaWaitlistReservation,
+} from "../src/engine/entitlementVerifier.ts";
+
 const webRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = join(webRoot, "../..");
 const customerExportsDir = join(repoRoot, "artifacts", "rc_evidence_package", "customer_exports");
@@ -33,11 +39,33 @@ console.log("🧭 TESTING: SPE Ω Full Web-App Customer Journey (Risk C Closure)
 console.log("==================================================================");
 
 // -----------------------------------------------------------------------------
-// 1. Pricing, Entitlements, Activation & 1-Click Cancellation Journey
+// 1. Pricing, Signed Entitlement Verification & Waitlist Security Journey
 // -----------------------------------------------------------------------------
-console.log("\n[1/4] Verifying Pricing, License Entitlements, Ad-Free Toggle & 1-Click Cancellation...");
+console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist & 100k/5k Copy Reconciliation...");
 {
   const pricingSource = readFileSync(join(webRoot, "src/pages/Pricing.tsx"), "utf8");
+  const deckSource = readFileSync(join(webRoot, "src/landing/SpeCapabilityDeck.tsx"), "utf8");
+
+  // Finding 1 Closure: Ensure Pricing.tsx NEVER self-mints paid licenses via Math.random()
+  assert(
+    !pricingSource.includes("Math.random()") && !pricingSource.includes("generateLicenseKey"),
+    "Pricing.tsx must NEVER self-mint paid licenses in the browser via Math.random()",
+  );
+  assert(
+    pricingSource.includes("verifySignedEntitlementToken"),
+    "Pricing.tsx must verify server-issued signed entitlement tokens before granting paid tiers",
+  );
+
+  // Finding 4 Closure: Ensure Free-tier copy distinguishes 100k context input from 5k Free output / 30k+ Pro output
+  assert(
+    pricingSource.includes("100,000+ Character (1 Lakh+) Context Input") &&
+      pricingSource.includes("up to 5,000-char prompt output in Free; 30,000+ in Pro"),
+    "Pricing.tsx must distinguish 100,000+ char context input from 5,000-char Free output limit",
+  );
+  assert(
+    deckSource.includes("Prompt output: 5,000 Free / 30,000+ Pro"),
+    "SpeCapabilityDeck.tsx must distinguish 100k context input from 5,000 Free / 30,000+ Pro output",
+  );
 
   // Verify standardized intro + renewal pricing
   assert(
@@ -69,51 +97,58 @@ console.log("\n[1/4] Verifying Pricing, License Entitlements, Ad-Free Toggle & 1
     "Pricing page must separate AppleAGI as an independent companion product",
   );
 
-  // Simulate full customer subscription activation -> entitlement check -> 1-click cancellation
-  const storage = new Map();
-  const mockLocalStorage = {
-    getItem: (k) => (storage.has(k) ? storage.get(k) : null),
-    setItem: (k, v) => storage.set(k, String(v)),
-    removeItem: (k) => storage.delete(k),
-  };
+  // Step A: Email-only waitlist submission MUST NOT grant paid entitlement
+  const reservation = createPublicBetaWaitlistReservation(
+    "Developer Pro ($1 First Month · then $9/mo)",
+    "dev@example.com",
+  );
+  assert.equal(reservation.status, "PUBLIC_BETA_WAITLIST_RESERVED");
+  assert.equal(reservation.paidEntitlementGranted, false, "Waitlist reservation must never grant paid entitlement");
 
-  function activateSubscription(selectedPlan, email) {
-    const lowerPlan = selectedPlan.toLowerCase();
-    const tier = lowerPlan.includes("team") || lowerPlan.includes("company") ? "team" : "pro";
-    const prefix = tier === "team" ? "SPE-TEAM" : "SPE-PRO";
-    const key = `${prefix}-TEST-2026-ABCD`;
-    mockLocalStorage.setItem("spe-user-tier", tier);
-    mockLocalStorage.setItem("spe-user-email", email);
-    mockLocalStorage.setItem("spe-license-key", key);
-    return { tier, key };
-  }
+  // Step B: Self-minted browser random string (`SPE-PRO-XXXX-XXXX-XXXX`) MUST be rejected
+  const selfMintedCheck = verifySignedEntitlementToken("SPE-PRO-9A8B-7C6D-5E4F");
+  assert.equal(selfMintedCheck.verified, false, "Self-minted random license string must be rejected");
+  assert(
+    selfMintedCheck.rejectionReason?.includes("SELF_MINTED_UNVERIFIED_KEY_REJECTED"),
+    "Rejection reason must identify self-minted unverified key",
+  );
 
-  function cancelSubscription() {
-    mockLocalStorage.removeItem("spe-user-tier");
-    mockLocalStorage.removeItem("spe-user-email");
-    mockLocalStorage.removeItem("spe-license-key");
-  }
+  // Step C: Valid server-issued signed entitlement token for Developer Pro verifies cleanly
+  const validProToken = issueSignedEntitlementToken({
+    schema: "spe.entitlement.v1",
+    tier: "pro",
+    planName: "Developer Pro ($1 First Month · then $9/mo)",
+    email: "dev@example.com",
+    paymentReceiptId: "pay_rcpt_2026_pro_001",
+    issuedAtMs: 1_791_750_000_000,
+    expiresAtMs: 1_891_750_000_000,
+    issuerKeyId: "spe-billing-authority-v1",
+  });
+  const verifiedPro = verifySignedEntitlementToken(validProToken, {
+    expectedEmail: "dev@example.com",
+    currentEpochMs: 1_791_760_000_000,
+  });
+  assert.equal(verifiedPro.verified, true, "Valid server-signed Pro token must verify");
+  assert.equal(verifiedPro.tier, "pro");
 
-  // Step A: Activate Developer Pro ($1 first month)
-  const proSub = activateSubscription("Developer Pro ($1 First Month · then $9/mo)", "dev@example.com");
-  assert.equal(proSub.tier, "pro");
-  assert.equal(mockLocalStorage.getItem("spe-user-tier"), "pro");
-  assert.equal(mockLocalStorage.getItem("spe-user-email"), "dev@example.com");
-  assert(mockLocalStorage.getItem("spe-license-key").startsWith("SPE-PRO-"));
+  // Step D: Forged signature on entitlement token MUST be rejected
+  const forgedToken = validProToken.slice(0, -4) + (validProToken.endsWith("0000") ? "ffff" : "0000");
+  const forgedCheck = verifySignedEntitlementToken(forgedToken, {
+    expectedEmail: "dev@example.com",
+    currentEpochMs: 1_791_760_000_000,
+  });
+  assert.equal(forgedCheck.verified, false, "Forged entitlement token signature must be rejected");
+  assert.equal(forgedCheck.rejectionReason, "INVALID_ENTITLEMENT_SIGNATURE");
 
-  // Step B: Upgrade to Company & CI/CD Gate ($9 first month)
-  const teamSub = activateSubscription("Company & CI/CD Gate ($9 First Month · then $99/mo)", "team@example.com");
-  assert.equal(teamSub.tier, "team");
-  assert.equal(mockLocalStorage.getItem("spe-user-tier"), "team");
-  assert(mockLocalStorage.getItem("spe-license-key").startsWith("SPE-TEAM-"));
+  // Step E: Expired entitlement token MUST be rejected
+  const expiredCheck = verifySignedEntitlementToken(validProToken, {
+    expectedEmail: "dev@example.com",
+    currentEpochMs: 1_991_760_000_000,
+  });
+  assert.equal(expiredCheck.verified, false, "Expired entitlement token must be rejected");
+  assert.equal(expiredCheck.rejectionReason, "EXPIRED_ENTITLEMENT_TOKEN");
 
-  // Step C: 1-Click Cancellation / Deactivation
-  cancelSubscription();
-  assert.equal(mockLocalStorage.getItem("spe-user-tier"), null, "Tier must be null after cancellation");
-  assert.equal(mockLocalStorage.getItem("spe-user-email"), null, "Email must be null after cancellation");
-  assert.equal(mockLocalStorage.getItem("spe-license-key"), null, "License key must be null after cancellation");
-
-  console.log("✓ Pricing tiers ($0 / $1->$9 / $9->$99), entitlements, and 1-click cancellation verified.");
+  console.log("✓ Pricing tiers ($0 / $1->$9 / $9->$99), signed entitlement token security, and 100k/5k copy verified.");
 }
 
 // -----------------------------------------------------------------------------

@@ -40,6 +40,14 @@ import re
 import urllib.parse
 from typing import Any, Callable, Dict, FrozenSet, List, Optional, Sequence, Set, Tuple, Union
 
+from spe_runtime.ci_gate.receipt import (
+    B,
+    ed25519_sign,
+    ed25519_verify,
+    encodepoint,
+    rfc8785_canonicalize,
+    scalarmult,
+)
 from spe_runtime.research.exchange.merit_ranker import compute_wilson_lower_bound
 from spe_runtime.research.lvt.types import OracleAttestation
 from spe_runtime.research.wdes.types import NanoUSD, PredicateValue, validate_nanos
@@ -175,6 +183,107 @@ def canonical_sha256(payload: Dict[str, Any]) -> str:
     """Computes deterministic SHA-256 over canonical JSON representation."""
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
+
+
+def derive_deterministic_ed25519_keypair(seed_phrase: bytes) -> Tuple[bytes, bytes]:
+    """Derives a deterministic RFC 8032 Ed25519 (secret_key_32B, public_key_32B) from a seed."""
+    sk = hashlib.sha256(seed_phrase).digest()
+    h = hashlib.sha512(sk).digest()
+    a = int.from_bytes(h[:32], "little")
+    a &= (1 << 254) - 8
+    a |= (1 << 254)
+    pk = encodepoint(scalarmult(B, a))
+    return sk, pk
+
+
+REC2_DEFAULT_ORACLE_ID = "spe-independent-oracle-v1"
+REC2_DEFAULT_ORACLE_SK, REC2_DEFAULT_ORACLE_PK = derive_deterministic_ed25519_keypair(
+    b"spe-rec2-independent-oracle-v1-authority-key"
+)
+REC2_DEFAULT_ORACLE_PK_HEX = REC2_DEFAULT_ORACLE_PK.hex()
+
+
+def sign_passport_evaluator_attestation(
+    evidence_hash: str,
+    oracle_id: str = REC2_DEFAULT_ORACLE_ID,
+    timestamp: float = 1_791_755_000.0,
+    verdict: str = "APPROVED",
+    signing_key: Optional[bytes] = None,
+    public_key: Optional[bytes] = None,
+) -> OracleAttestation:
+    """Generates a real RFC 8032 Ed25519-signed OracleAttestation over RFC 8785 canonical JSON."""
+    sk = signing_key if signing_key is not None else REC2_DEFAULT_ORACLE_SK
+    pk = public_key if public_key is not None else REC2_DEFAULT_ORACLE_PK
+    pk_hex = pk.hex()
+    attestation_payload = {
+        "evidence_hash": evidence_hash,
+        "oracle_id": oracle_id,
+        "oracle_public_key": pk_hex,
+        "timestamp": timestamp,
+        "verdict": verdict,
+    }
+    canonical_bytes = rfc8785_canonicalize(attestation_payload)
+    sig_bytes = ed25519_sign(sk, pk, canonical_bytes)
+    return OracleAttestation(
+        oracle_id=oracle_id,
+        oracle_public_key=f"ed25519:{pk_hex}",
+        evidence_hash=evidence_hash,
+        timestamp=timestamp,
+        verdict=verdict,
+        signature=f"ed25519:{sig_bytes.hex()}",
+    )
+
+
+def verify_passport_evaluator_attestation(
+    attestation: OracleAttestation,
+    expected_evidence_hash: str,
+    trusted_evaluator_public_keys: Optional[Dict[str, str]] = None,
+) -> Tuple[bool, str]:
+    """
+    Cryptographically verifies an evaluator's Ed25519 attestation signature over the canonical
+    RFC 8785 attestation dictionary and enforces pinned authority public keys.
+    Rejects truncated strings, malformed hex, unpinned keys, or forged signatures.
+    """
+    if attestation.verdict != "APPROVED":
+        return False, f"UNAPPROVED_EVALUATOR_VERDICT:{attestation.oracle_id}:{attestation.verdict}"
+    if not attestation.evidence_hash or attestation.evidence_hash != expected_evidence_hash:
+        return False, f"EVALUATOR_EVIDENCE_HASH_MISMATCH:{attestation.oracle_id}"
+
+    raw_pk = (attestation.oracle_public_key or "").strip()
+    raw_sig = (attestation.signature or "").strip()
+    pk_hex = raw_pk[8:] if raw_pk.startswith("ed25519:") else raw_pk
+    sig_hex = raw_sig[8:] if raw_sig.startswith("ed25519:") else raw_sig
+
+    if len(pk_hex) != 64 or len(sig_hex) != 128:
+        return False, f"INVALID_EVALUATOR_SIGNATURE_FORMAT:{attestation.oracle_id}"
+
+    try:
+        pk_bytes = bytes.fromhex(pk_hex)
+        sig_bytes = bytes.fromhex(sig_hex)
+    except ValueError:
+        return False, f"INVALID_EVALUATOR_SIGNATURE_FORMAT:{attestation.oracle_id}"
+
+    pinned_keys: Dict[str, str] = {REC2_DEFAULT_ORACLE_ID: REC2_DEFAULT_ORACLE_PK_HEX}
+    if trusted_evaluator_public_keys:
+        for k_id, k_val in trusted_evaluator_public_keys.items():
+            pinned_keys[k_id] = k_val[8:] if k_val.startswith("ed25519:") else k_val
+
+    if attestation.oracle_id in pinned_keys:
+        if pk_hex.lower() != pinned_keys[attestation.oracle_id].lower():
+            return False, f"UNPINNED_EVALUATOR_PUBLIC_KEY:{attestation.oracle_id}"
+
+    attestation_payload = {
+        "evidence_hash": attestation.evidence_hash,
+        "oracle_id": attestation.oracle_id,
+        "oracle_public_key": pk_hex,
+        "timestamp": attestation.timestamp,
+        "verdict": attestation.verdict,
+    }
+    canonical_bytes = rfc8785_canonicalize(attestation_payload)
+    if not ed25519_verify(pk_bytes, canonical_bytes, sig_bytes):
+        return False, f"INVALID_EVALUATOR_SIGNATURE:{attestation.oracle_id}"
+
+    return True, "VERIFIED"
 
 
 def compute_wilson_interval_95(successes: int, trials: int, z: float = 1.96) -> Tuple[float, float]:
@@ -368,6 +477,7 @@ class RecipientEnvironmentContext:
     current_epoch: float = 1_791_760_000.0
     last_revocation_sync_epoch: float = 1_791_758_000.0
     max_offline_staleness_seconds: float = 86_400.0  # 24 hours
+    trusted_evaluator_public_keys: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -1210,36 +1320,42 @@ class ObligationRequalificationEngine:
         nested_authorities_trusted = True
         for _, child in nested_pairs:
             c_att = child.evaluator_attestation
+            c_sig_ok, c_sig_reason = verify_passport_evaluator_attestation(
+                c_att,
+                child.content_sha256,
+                context.trusted_evaluator_public_keys,
+            )
             child_trusted = (
                 not cls._is_self_or_caller_authority(c_att.oracle_id, child.origin_model_id)
                 and c_att.oracle_id not in context.revoked_evaluator_ids
                 and c_att.oracle_id in context.trusted_evaluator_ids
-                and c_att.verdict == "APPROVED"
-                and bool(c_att.signature)
-                and bool(c_att.oracle_public_key)
-                and c_att.evidence_hash == child.content_sha256
+                and c_sig_ok
             )
             if not child_trusted:
                 nested_authorities_trusted = False
                 rejection_reasons.append(
-                    f"UNTRUSTED_NESTED_EVALUATOR_AUTHORITY:{child.skill_identifier}:{c_att.oracle_id}"
+                    f"UNTRUSTED_NESTED_EVALUATOR_AUTHORITY:{child.skill_identifier}:{c_att.oracle_id}:{c_sig_reason}"
                 )
 
+        root_sig_ok, root_sig_reason = verify_passport_evaluator_attestation(
+            att,
+            passport.content_sha256,
+            context.trusted_evaluator_public_keys,
+        )
         evaluator_authority_trusted = (
             not is_self_or_caller
             and oracle_not_revoked
             and att.oracle_id in context.trusted_evaluator_ids
-            and att.verdict == "APPROVED"
-            and bool(att.signature)
-            and bool(att.oracle_public_key)
-            and att.evidence_hash == passport.content_sha256
+            and root_sig_ok
             and nested_authorities_trusted
         )
+        if not root_sig_ok:
+            rejection_reasons.append(root_sig_reason)
         if not evaluator_authority_trusted and not any(
             r.startswith("UNTRUSTED_") for r in rejection_reasons
         ):
             rejection_reasons.append(
-                f"UNTRUSTED_EVALUATOR_AUTHORITY: oracle_id='{att.oracle_id}' is not a verified trusted authority"
+                f"UNTRUSTED_EVALUATOR_AUTHORITY: oracle_id='{att.oracle_id}' is not a verified trusted authority ({root_sig_reason})"
             )
 
         # 4. Permission Containment check (Law 2 & Law 4: cannot escalate privileges, recursively across nested skills)
@@ -2920,13 +3036,11 @@ class REC2EQualificationMatrixRunner:
                 ),
             ),
             requested_permissions=("FILESYSTEM_SCOPED_READ",),
-            evaluator_attestation=OracleAttestation(
-                oracle_id="spe-independent-oracle-v1",
-                oracle_public_key="ed25519:pk_spe_independent_v1",
+            evaluator_attestation=sign_passport_evaluator_attestation(
                 evidence_hash="",
+                oracle_id=REC2_DEFAULT_ORACLE_ID,
                 timestamp=1_791_755_000.0,
                 verdict="APPROVED",
-                signature="ed25519:sig_valid_88f901a",
             ),
             issued_at_epoch=1_791_755_000.0,
         ).with_computed_hash()
@@ -2934,13 +3048,11 @@ class REC2EQualificationMatrixRunner:
         source_passport = CapabilityPassportEnvelope(
             **{
                 **draft.__dict__,
-                "evaluator_attestation": OracleAttestation(
-                    oracle_id="spe-independent-oracle-v1",
-                    oracle_public_key="ed25519:pk_spe_independent_v1",
+                "evaluator_attestation": sign_passport_evaluator_attestation(
                     evidence_hash=draft.content_sha256,
+                    oracle_id=REC2_DEFAULT_ORACLE_ID,
                     timestamp=1_791_755_000.0,
                     verdict="APPROVED",
-                    signature="ed25519:sig_valid_88f901a",
                 ),
             }
         )
