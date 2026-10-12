@@ -1,0 +1,281 @@
+{
+ "status": "HUMAN_COPY_REVIEW_REQUIRED",
+ "route": "/redesign/",
+ "note": "Privacy and capability lines must be verified against the product-truth ledger (PH-001) before any release.",
+ "banned": [
+  "100%",
+  "zero",
+  "guaranteed",
+  "air-gapped",
+  "live",
+  "savings $",
+  "No. 1"
+ ],
+ "items": [
+  {
+   "el": "p",
+   "text": "System Prompt Engine",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h1",
+   "text": "Say it plainly. Get a prompt that holds.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "Describe what you need in your own words. SPE structures it into role, goal, constraints and output format, right in your browser. Free, and no account.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "a",
+   "text": "Write your first prompt",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "a",
+   "text": "See a before and after",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "Your words",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "I need a support assistant for my bike shop that helps people pick the right repair . Never promise refunds , and keep answers short, with a price range .",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "Structured prompt",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "Role Support assistant for an independent bike repair shop.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "Goal Help the customer choose the right repair for their problem.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "Constraint Do not promise or imply refunds. Refer billing questions to staff.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "Output Two to four sentences. End with an estimated price range.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "button",
+   "text": "Pause animation",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "How it works",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h2",
+   "text": "Three steps from idea to instruction.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "01 Describe it Type or paste what you want the AI to do. Messy is fine.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "02 See the structure SPE separates role, goal, constraints and output, so gaps are easy to spot.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "03 Copy and use it Paste the result into the assistant you already use.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "Before and after",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h2",
+   "text": "Same request. Clearer instructions.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "button",
+   "text": "Before",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "button",
+   "text": "After",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h3",
+   "text": "What people usually type",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "pre",
+   "text": "write emails for my sales team, make them good and not too pushy",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h3",
+   "text": "What SPE helps you write",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "pre",
+   "text": "Role Sales email writer for a B2B team. Goal Draft a first-touch email that earns a reply. Tone Warm and direct. No pressure language. Limits Under 120 words. One clear question. Output Subject line, then the email body.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "Example for illustration. Results depend on your input.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "Privacy",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h2",
+   "text": "Your words stay on your device.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "The core engine runs in your browser tab. You don't need an account to use it.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "Runs in the browser Prompts are structured on your device by the local engine.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "No sign-up Open the page and start. No email asked.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "No analytics scripts This page loads no tracking or advertising code.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "Capabilities",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h2",
+   "text": "Made for the prompts you actually write.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "System prompts Structured instructions you can paste into ChatGPT, Claude, Gemini and similar assistants.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "Speak your brief Dictate an idea instead of typing it, where your browser supports it.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "Start from a screenshot Turn a UI screenshot into a starting brief.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "Many languages Write your brief in the language you think in.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "FAQ",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h2",
+   "text": "Good questions.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h3",
+   "text": "Is SPE free?",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "Yes. The core engine is free to use without an account.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h3",
+   "text": "Does SPE send my prompts to a server?",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "The core engine runs in your browser. Some optional features may work differently; each one says so where it applies.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h3",
+   "text": "Which AI tools does the output work with?",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "The result is plain text, so you can paste it into any chat assistant or API that accepts a system prompt.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h3",
+   "text": "Do I need to know prompt engineering?",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "No. Write the way you'd brief a colleague. SPE adds the structure.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "h2",
+   "text": "Start with one sentence.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "a",
+   "text": "Open the engine",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "li",
+   "text": "Back to top",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  },
+  {
+   "el": "p",
+   "text": "Preview build. Not released.",
+   "status": "HUMAN_COPY_REVIEW_REQUIRED"
+  }
+ ]
+}

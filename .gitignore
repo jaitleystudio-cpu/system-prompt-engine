@@ -255,3 +255,4 @@ qualification/*_receipt.json
 /ocr-pack/lib/
 /ocr-pack/.bottle/
 /.ocr-scratch/
+apps/web/dist-redesign/

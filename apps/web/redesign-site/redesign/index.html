@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#08090B" />
+<meta name="description" content="Preview only. Redesign proposal for System Prompt Engine. Copy pending human review." />
+<title>SPE redesign preview (not for release)</title>
+<link rel="preload" href="/redesign/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="icon" type="image/svg+xml" href="/redesign/icon.svg" />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav" role="banner">
+  <div class="wrap nav__in">
+    <a class="brand" href="#top"><span class="brand__mark" aria-hidden="true"></span>SPE</a>
+    <nav aria-label="Sections">
+      <ul class="nav__links">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#demo">Demo</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn--sm" href="/create">Open the engine</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="wrap hero__in">
+    <p class="eyebrow">System Prompt Engine</p>
+    <h1 id="hero-title" class="h1">Say it plainly.<br /><span class="h1__accent">Get a prompt that holds.</span></h1>
+    <p class="lead">Describe what you need in your own words. SPE structures it into role, goal, constraints and output format, right in your browser. Free, and no account.</p>
+    <div class="hero__cta">
+      <a class="btn" href="/create">Write your first prompt</a>
+      <a class="btn btn--ghost" href="#demo">See a before and after</a>
+    </div>
+
+    <figure class="stage" aria-labelledby="stage-cap">
+      <figcaption id="stage-cap" class="sr-only">Illustration: a rough request is split into a structured system prompt with four labeled parts.</figcaption>
+      <div class="stage__bar" aria-hidden="true"><i></i><i></i><i></i><span>brief.txt → system-prompt.md</span></div>
+      <div class="stage__grid" aria-hidden="true">
+        <div class="pane pane--in">
+          <p class="pane__label">Your words</p>
+          <p class="raw" id="raw">I need a <mark data-k="role">support assistant for my bike shop</mark> that <mark data-k="goal">helps people pick the right repair</mark>. <mark data-k="rule">Never promise refunds</mark>, and <mark data-k="out">keep answers short, with a price range</mark>.</p>
+          <span class="caret" id="caret"></span>
+        </div>
+        <div class="pane pane--out">
+          <p class="pane__label">Structured prompt</p>
+          <ol class="slots">
+            <li class="slot" data-k="role"><b>Role</b><span>Support assistant for an independent bike repair shop.</span></li>
+            <li class="slot" data-k="goal"><b>Goal</b><span>Help the customer choose the right repair for their problem.</span></li>
+            <li class="slot" data-k="rule"><b>Constraint</b><span>Do not promise or imply refunds. Refer billing questions to staff.</span></li>
+            <li class="slot" data-k="out"><b>Output</b><span>Two to four sentences. End with an estimated price range.</span></li>
+          </ol>
+        </div>
+      </div>
+    </figure>
+    <button class="motion-toggle" id="motion" type="button" aria-pressed="false">Pause animation</button>
+  </div>
+</section>
+
+<section class="sec" id="how" aria-labelledby="how-title">
+  <div class="wrap">
+    <p class="eyebrow">How it works</p>
+    <h2 id="how-title" class="h2">Three steps from idea to instruction.</h2>
+    <ol class="steps">
+      <li class="card"><span class="num" aria-hidden="true">01</span><h3 class="h3">Describe it</h3><p>Type or paste what you want the AI to do. Messy is fine.</p></li>
+      <li class="card"><span class="num" aria-hidden="true">02</span><h3 class="h3">See the structure</h3><p>SPE separates role, goal, constraints and output, so gaps are easy to spot.</p></li>
+      <li class="card"><span class="num" aria-hidden="true">03</span><h3 class="h3">Copy and use it</h3><p>Paste the result into the assistant you already use.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec sec--alt" id="demo" aria-labelledby="demo-title">
+  <div class="wrap">
+    <p class="eyebrow">Before and after</p>
+    <h2 id="demo-title" class="h2">Same request. Clearer instructions.</h2>
+    <div class="seg" role="group" aria-label="Choose version">
+      <button type="button" class="seg__b" data-v="before" aria-pressed="false">Before</button>
+      <button type="button" class="seg__b" data-v="after" aria-pressed="true">After</button>
+    </div>
+    <div class="compare" aria-live="polite">
+      <article class="doc" data-v="before" hidden>
+        <h3 class="h3">What people usually type</h3>
+        <pre class="code">write emails for my sales team, make them good and not too pushy</pre>
+      </article>
+      <article class="doc" data-v="after">
+        <h3 class="h3">What SPE helps you write</h3>
+<pre class="code"><span class="k">Role</span>     Sales email writer for a B2B team.
+<span class="k">Goal</span>     Draft a first-touch email that earns a reply.
+<span class="k">Tone</span>     Warm and direct. No pressure language.
+<span class="k">Limits</span>   Under 120 words. One clear question.
+<span class="k">Output</span>   Subject line, then the email body.</pre>
+      </article>
+    </div>
+    <p class="note">Example for illustration. Results depend on your input.</p>
+  </div>
+</section>
+
+<section class="sec" id="privacy" aria-labelledby="privacy-title">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">Privacy</p>
+      <h2 id="privacy-title" class="h2">Your words stay on your device.</h2>
+      <p class="lead lead--sm">The core engine runs in your browser tab. You don't need an account to use it.</p>
+    </div>
+    <ul class="ticks">
+      <li><h3 class="h3">Runs in the browser</h3><p>Prompts are structured on your device by the local engine.</p></li>
+      <li><h3 class="h3">No sign-up</h3><p>Open the page and start. No email asked.</p></li>
+      <li><h3 class="h3">No analytics scripts</h3><p>This page loads no tracking or advertising code.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec sec--alt" id="capabilities" aria-labelledby="cap-title">
+  <div class="wrap">
+    <p class="eyebrow">Capabilities</p>
+    <h2 id="cap-title" class="h2">Made for the prompts you actually write.</h2>
+    <ul class="bento">
+      <li class="card card--wide"><h3 class="h3">System prompts</h3><p>Structured instructions you can paste into ChatGPT, Claude, Gemini and similar assistants.</p></li>
+      <li class="card"><h3 class="h3">Speak your brief</h3><p>Dictate an idea instead of typing it, where your browser supports it.</p></li>
+      <li class="card"><h3 class="h3">Start from a screenshot</h3><p>Turn a UI screenshot into a starting brief.</p></li>
+      <li class="card card--wide"><h3 class="h3">Many languages</h3><p>Write your brief in the language you think in.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec" id="faq" aria-labelledby="faq-title">
+  <div class="wrap narrow">
+    <p class="eyebrow">FAQ</p>
+    <h2 id="faq-title" class="h2">Good questions.</h2>
+    <div class="faq">
+      <details><summary><h3 class="h3">Is SPE free?</h3></summary><p>Yes. The core engine is free to use without an account.</p></details>
+      <details><summary><h3 class="h3">Does SPE send my prompts to a server?</h3></summary><p>The core engine runs in your browser. Some optional features may work differently; each one says so where it applies.</p></details>
+      <details><summary><h3 class="h3">Which AI tools does the output work with?</h3></summary><p>The result is plain text, so you can paste it into any chat assistant or API that accepts a system prompt.</p></details>
+      <details><summary><h3 class="h3">Do I need to know prompt engineering?</h3></summary><p>No. Write the way you'd brief a colleague. SPE adds the structure.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="sec cta" aria-labelledby="cta-title">
+  <div class="wrap center">
+    <h2 id="cta-title" class="h2">Start with one sentence.</h2>
+    <a class="btn" href="/create">Open the engine</a>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <p class="brand"><span class="brand__mark" aria-hidden="true"></span>System Prompt Engine</p>
+    <nav aria-label="Footer"><ul class="foot__links"><li><a href="/privacy">Privacy</a></li><li><a href="/capabilities">Capabilities</a></li><li><a href="#top">Back to top</a></li></ul></nav>
+    <p class="small">Preview build. Not released.</p>
+  </div>
+</footer>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

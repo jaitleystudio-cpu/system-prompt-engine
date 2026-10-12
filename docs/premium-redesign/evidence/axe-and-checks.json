@@ -1,0 +1,78 @@
+{
+  "390": {
+    "axe": {
+      "violations": [],
+      "passes": 39,
+      "incomplete": [
+        "color-contrast"
+      ]
+    },
+    "ext": [],
+    "small": [],
+    "heads": [
+      "H1: Say it plainly.Get a prompt that holds.",
+      "H2: Three steps from idea to instruction.",
+      "H3: Describe it",
+      "H3: See the structure",
+      "H3: Copy and use it",
+      "H2: Same request. Clearer instructions.",
+      "H3: What people usually type",
+      "H3: What SPE helps you write",
+      "H2: Your words stay on your device.",
+      "H3: Runs in the browser",
+      "H3: No sign-up",
+      "H3: No analytics scripts",
+      "H2: Made for the prompts you actually write.",
+      "H3: System prompts",
+      "H3: Speak your brief",
+      "H3: Start from a screenshot",
+      "H3: Many languages",
+      "H2: Good questions.",
+      "H3: Is SPE free?",
+      "H3: Does SPE send my prompts to a server?",
+      "H3: Which AI tools does the output work with?",
+      "H3: Do I need to know prompt engineering?",
+      "H2: Start with one sentence."
+    ]
+  },
+  "1440": {
+    "axe": {
+      "violations": [],
+      "passes": 39,
+      "incomplete": [
+        "color-contrast"
+      ]
+    },
+    "ext": [],
+    "small": [],
+    "heads": [
+      "H1: Say it plainly.Get a prompt that holds.",
+      "H2: Three steps from idea to instruction.",
+      "H3: Describe it",
+      "H3: See the structure",
+      "H3: Copy and use it",
+      "H2: Same request. Clearer instructions.",
+      "H3: What people usually type",
+      "H3: What SPE helps you write",
+      "H2: Your words stay on your device.",
+      "H3: Runs in the browser",
+      "H3: No sign-up",
+      "H3: No analytics scripts",
+      "H2: Made for the prompts you actually write.",
+      "H3: System prompts",
+      "H3: Speak your brief",
+      "H3: Start from a screenshot",
+      "H3: Many languages",
+      "H2: Good questions.",
+      "H3: Is SPE free?",
+      "H3: Does SPE send my prompts to a server?",
+      "H3: Which AI tools does the output work with?",
+      "H3: Do I need to know prompt engineering?",
+      "H2: Start with one sentence."
+    ]
+  },
+  "reduced": {
+    "slotsOn": 4,
+    "caretDisplay": "none"
+  }
+}
