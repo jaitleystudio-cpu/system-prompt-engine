@@ -1,0 +1,4 @@
+control_unsandboxed_fetch_status 200
+control_sandboxed_fetch_blocked EPERM
+{"control_unsandboxed_exit":0,"control_sandboxed_exit":4,"gate_in_sandbox_exit":1,"eval_in_sandbox_exit":0,"eval_status":"VALID"}
+{"gate_total":58,"gate_failed":3,"failed_names":["malformed_nul_bytes_fails_closed","malformed_empty_object_fails_closed","malformed_schemaless_object_fails_closed"],"tripwires":[],"boundary_cases":45,"boundary_ok":45,"engine_unavailable":0}

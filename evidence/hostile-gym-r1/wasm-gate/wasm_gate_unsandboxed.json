@@ -1,0 +1,448 @@
+{
+ "suite": "wasm-gate-r1",
+ "wasm_sha256": "95cf51ceab7b51ab2a459ec8a32d51e182749f8f3b51cf29c69de675a2fd0a80",
+ "ui_char_limit": 20000,
+ "total": 58,
+ "failed": 3,
+ "results": [
+  {
+   "name": "sha256_matches_manifest",
+   "ok": true,
+   "sha": "95cf51ceab7b51ab2a459ec8a32d51e182749f8f3b51cf29c69de675a2fd0a80"
+  },
+  {
+   "name": "zero_host_imports",
+   "ok": true,
+   "imports": []
+  },
+  {
+   "name": "exports_exact",
+   "ok": true
+  },
+  {
+   "name": "tampered_bytes_refused",
+   "ok": true
+  },
+  {
+   "name": "boundary_ascii_1",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1062
+  },
+  {
+   "name": "boundary_ascii_2",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1065
+  },
+  {
+   "name": "boundary_ascii_255",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1410
+  },
+  {
+   "name": "boundary_ascii_256",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1411
+  },
+  {
+   "name": "boundary_ascii_1023",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 2178
+  },
+  {
+   "name": "boundary_ascii_1024",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 2179
+  },
+  {
+   "name": "boundary_ascii_4095",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 5250
+  },
+  {
+   "name": "boundary_ascii_4096",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 5251
+  },
+  {
+   "name": "boundary_ascii_19999",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 21154
+  },
+  {
+   "name": "boundary_ascii_20000",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 21155
+  },
+  {
+   "name": "boundary_ascii_20001",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 21156
+  },
+  {
+   "name": "boundary_ascii_65535",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 66690
+  },
+  {
+   "name": "boundary_ascii_65536",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 66691
+  },
+  {
+   "name": "boundary_ascii_262144",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 263299
+  },
+  {
+   "name": "boundary_ascii_1048576",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1049731
+  },
+  {
+   "name": "boundary_telugu_1",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1079
+  },
+  {
+   "name": "boundary_telugu_2",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1085
+  },
+  {
+   "name": "boundary_telugu_255",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 2603
+  },
+  {
+   "name": "boundary_telugu_256",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 2609
+  },
+  {
+   "name": "boundary_telugu_1023",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 7211
+  },
+  {
+   "name": "boundary_telugu_1024",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 7217
+  },
+  {
+   "name": "boundary_telugu_4095",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 25643
+  },
+  {
+   "name": "boundary_telugu_4096",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 25649
+  },
+  {
+   "name": "boundary_telugu_19999",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 121067
+  },
+  {
+   "name": "boundary_telugu_20000",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 121073
+  },
+  {
+   "name": "boundary_telugu_20001",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 121079
+  },
+  {
+   "name": "boundary_telugu_65535",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 394283
+  },
+  {
+   "name": "boundary_telugu_65536",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 394289
+  },
+  {
+   "name": "boundary_telugu_262144",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1573937
+  },
+  {
+   "name": "boundary_telugu_1048576",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 6292529
+  },
+  {
+   "name": "boundary_emoji_1",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1077
+  },
+  {
+   "name": "boundary_emoji_2",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1081
+  },
+  {
+   "name": "boundary_emoji_255",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 2093
+  },
+  {
+   "name": "boundary_emoji_256",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 2097
+  },
+  {
+   "name": "boundary_emoji_1023",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 5165
+  },
+  {
+   "name": "boundary_emoji_1024",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 5169
+  },
+  {
+   "name": "boundary_emoji_4095",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 17453
+  },
+  {
+   "name": "boundary_emoji_4096",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 17457
+  },
+  {
+   "name": "boundary_emoji_19999",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 81069
+  },
+  {
+   "name": "boundary_emoji_20000",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 81073
+  },
+  {
+   "name": "boundary_emoji_20001",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 81077
+  },
+  {
+   "name": "boundary_emoji_65535",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 263213
+  },
+  {
+   "name": "boundary_emoji_65536",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 263217
+  },
+  {
+   "name": "boundary_emoji_262144",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 1049649
+  },
+  {
+   "name": "boundary_emoji_1048576",
+   "ok": true,
+   "status": "VALID",
+   "deterministic": true,
+   "goal_preserved": true,
+   "input_bytes": 4195377
+  },
+  {
+   "name": "malformed_empty_fails_closed",
+   "ok": true,
+   "status": "INVALID",
+   "disposition": "INVALID",
+   "reason": "PORTABILITY_INVALID_FIXTURE"
+  },
+  {
+   "name": "malformed_not_json_fails_closed",
+   "ok": true,
+   "status": "INVALID",
+   "disposition": "INVALID",
+   "reason": "PORTABILITY_INVALID_FIXTURE"
+  },
+  {
+   "name": "malformed_null_fails_closed",
+   "ok": true,
+   "status": "INVALID",
+   "disposition": "INVALID",
+   "reason": "PORTABILITY_INVALID_FIXTURE"
+  },
+  {
+   "name": "malformed_array_fails_closed",
+   "ok": true,
+   "status": "INVALID",
+   "disposition": "INVALID",
+   "reason": "PORTABILITY_INVALID_FIXTURE"
+  },
+  {
+   "name": "malformed_deep_nesting_fails_closed",
+   "ok": true,
+   "status": "INVALID",
+   "disposition": "INVALID",
+   "reason": "PORTABILITY_INVALID_FIXTURE"
+  },
+  {
+   "name": "malformed_nul_bytes_fails_closed",
+   "ok": false,
+   "status": "VALID",
+   "disposition": "VALID",
+   "reason": null
+  },
+  {
+   "name": "malformed_empty_object_fails_closed",
+   "ok": false,
+   "status": "VALID",
+   "disposition": "VALID",
+   "reason": null
+  },
+  {
+   "name": "malformed_schemaless_object_fails_closed",
+   "ok": false,
+   "status": "VALID",
+   "disposition": "VALID",
+   "reason": null
+  },
+  {
+   "name": "zero_network_tripwires",
+   "ok": true,
+   "trips": []
+  }
+ ]
+}
