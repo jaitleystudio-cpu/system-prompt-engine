@@ -1,0 +1,66 @@
+{
+ "E": {
+  "tasks": 1200,
+  "declared": 742,
+  "false_success": 19,
+  "verified": 723,
+  "abstain": 458,
+  "fs_per_declared": 0.025606469002695417,
+  "fs_per_declared_wilson95": [
+   0.01645319013427249,
+   0.039646657340043766
+  ],
+  "fs_per_task": 0.015833333333333335,
+  "fs_per_task_wilson95": [
+   0.010159421687809539,
+   0.024597310427113224
+  ],
+  "exec_total": 21111749,
+  "exec_per_task": 17593.12416666667
+ },
+ "E_randprobe": {
+  "tasks": 1200,
+  "declared": 777,
+  "false_success": 109,
+  "verified": 668,
+  "abstain": 423,
+  "fs_per_declared": 0.1402831402831403,
+  "fs_per_declared_wilson95": [
+   0.11762992475171317,
+   0.16647584010507724
+  ],
+  "fs_per_task": 0.09083333333333334,
+  "fs_per_task_wilson95": [
+   0.07585297213164412,
+   0.10842509235790335
+  ],
+  "exec_total": 13311607,
+  "exec_per_task": 11093.005833333333
+ },
+ "paired_false_success_2x2": {
+  "both_fs": 16,
+  "E_only_fs": 3,
+  "randprobe_only_fs": 93,
+  "neither": 1088,
+  "mcnemar_exact_two_sided_p": 3.7243574839549574e-24
+ },
+ "paired_state_table": {
+  "E=abstain | E_randprobe=abstain": 380,
+  "E=abstain | E_randprobe=false_success": 49,
+  "E=abstain | E_randprobe=verified": 29,
+  "E=false_success | E_randprobe=abstain": 3,
+  "E=false_success | E_randprobe=false_success": 16,
+  "E=verified | E_randprobe=abstain": 40,
+  "E=verified | E_randprobe=false_success": 44,
+  "E=verified | E_randprobe=verified": 639
+ },
+ "family_level_fs_per_task_diff_E_minus_randprobe": {
+  "n": 80,
+  "mean": -0.075,
+  "sd": 0.11877243662495272,
+  "ci_lo": -0.10142553259359466,
+  "ci_hi": -0.048574467406405336,
+  "p_one_sided": 1.0
+ },
+ "note": "fs_per_declared has different denominators per arm (declared counts differ); fs_per_task and the paired/family analyses use a common denominator (1200 tasks = 80 families x 5 tasks x 3 seeds)."
+}
