@@ -14,6 +14,7 @@ import {
   resolveBrowserVerifiedEntitlement,
   type EntitlementVerificationResult,
 } from "./entitlementVerifier";
+import { DualLanguagePromptStudio } from "./DualLanguagePromptStudio";
 
 export interface PromptRadarInspectorProps {
   promptText: string;
@@ -26,6 +27,27 @@ export interface PromptRadarInspectorProps {
   onNavigate?: (view: any) => void;
   onAutoOptimize?: (optimizedPrompt: string) => void;
 }
+
+export const CANONICAL_REFERENCE_SYSTEM_PROMPT = `# System Role & Persona
+You are a senior technical systems architect specializing in clean, robust, and maintainable software with strict verification and zero hallucinated dependencies.
+
+# Objective & Boundary Scope
+Execute the primary deliverable with zero hallucinated dependencies, preserving all supplied user constraints, performance budgets, and error recovery contracts.
+
+# Approach & Methodological Plan
+1. Inspect supplied requirements, dependencies, and environment constraints before proposing changes.
+2. Implement the smallest complete, robust solution adhering strictly to architectural contracts.
+3. Consider failure modes, memory bounds, and defensive error boundaries explicitly.
+4. Validate against deterministic verification criteria before completion.
+
+# Handling Missing Information
+Use only supplied facts, context and requirements. Never assume outside network tools or uncited documents. Ask a focused question only when missing information blocks progress; otherwise proceed with clearly labeled, limited assumptions.
+
+# Acceptance Checks & Verification Battery
+- Are setup, behavior changes, and verification reproducible without guessing missing steps?
+- Are memory limits, error recovery paths, and boundary conditions enforced?
+- Is every explicit requirement addressed, with no unrelated obligations added?
+- Have unsupported claims and contradictory instructions been removed?`;
 
 /** 1-Click Auto-Optimizer: Injects missing invariant pillars to reach 100/100 score */
 export function autoOptimizeSystemPrompt(prompt: string): string {
@@ -88,7 +110,7 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
   onAutoOptimize,
 }) => {
   const [activeTab, setActiveTab] = useState<
-    "radar" | "proof" | "community" | "evolver" | "vision" | "rag" | "quantum" | "arena" | "harness" | "matrix" | "markdown" | "code" | "rules"
+    "radar" | "proof" | "community" | "evolver" | "vision" | "rag" | "quantum" | "arena" | "harness" | "matrix" | "markdown" | "code" | "rules" | "multilingual"
   >("radar");
   const [ragQuery, setRagQuery] = useState<string>("");
   const [activeCodeLang, setActiveCodeLang] = useState<"python" | "typescript" | "curl" | "rules">("python");
@@ -378,14 +400,19 @@ ${promptText}
               downloadMarkdownFile(`spe-system-prompt-${timestamp}.md`, content);
             }}
             style={{
-              fontSize: "0.68rem",
-              padding: "0.2rem 0.55rem",
-              borderRadius: "4px",
+              fontSize: "0.76rem",
+              minHeight: "36px",
+              padding: "6px 14px",
+              borderRadius: "9999px",
               background: "rgba(56, 189, 248, 0.15)",
               color: "#38bdf8",
               border: "1px solid rgba(56, 189, 248, 0.35)",
               fontWeight: 700,
               cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              transition: "all 0.18s ease",
             }}
             title="Download calibrated system prompt in Markdown (.md) format"
           >
@@ -398,14 +425,14 @@ ${promptText}
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "0.3rem",
+            gap: "0.4rem",
             background: "rgba(0, 0, 0, 0.4)",
-            padding: "0.2rem 0.4rem",
-            borderRadius: "6px",
+            padding: "4px 8px",
+            borderRadius: "9999px",
             border: "1px solid rgba(255, 255, 255, 0.08)",
           }}
         >
-          <span style={{ fontSize: "0.62rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>DEPTH:</span>
+          <span style={{ fontSize: "0.68rem", color: "#64748b", fontWeight: 700, textTransform: "uppercase" }}>DEPTH:</span>
           {(
             [
               { id: "normal", label: "🎯 Normal (5,555c)", badge: "5,555" },
@@ -418,14 +445,17 @@ ${promptText}
               type="button"
               onClick={() => onSelectDepthTier && onSelectDepthTier(tier.id)}
               style={{
-                fontSize: "0.65rem",
-                padding: "0.2rem 0.45rem",
-                borderRadius: "4px",
+                fontSize: "0.76rem",
+                minHeight: "36px",
+                padding: "6px 14px",
+                borderRadius: "9999px",
                 border: activeDepthTier === tier.id ? "1px solid #38bdf8" : "1px solid transparent",
                 cursor: "pointer",
                 background: activeDepthTier === tier.id ? "rgba(56, 189, 248, 0.25)" : "transparent",
                 color: activeDepthTier === tier.id ? "#38bdf8" : "#94a3b8",
                 fontWeight: activeDepthTier === tier.id ? 700 : 500,
+                display: "inline-flex",
+                alignItems: "center",
                 transition: "all 0.15s ease",
               }}
               title={`Calibrate prompt depth to ${tier.badge} characters`}
@@ -436,7 +466,7 @@ ${promptText}
         </div>
 
         {/* Tab Controls */}
-        <div style={{ display: "flex", gap: "0.25rem", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", alignItems: "center" }}>
           {(
             [
               { id: "radar", label: "📊 Quality Radar" },
@@ -452,6 +482,7 @@ ${promptText}
               { id: "markdown", label: "📝 Markdown (.md)" },
               { id: "code", label: "💻 SDK Runners" },
               { id: "rules", label: "📁 IDE Rules" },
+              { id: "multilingual", label: "🌍 Multilingual Studio" },
             ] as const
           ).map((tab) => (
             <button
@@ -459,14 +490,17 @@ ${promptText}
               type="button"
               onClick={() => setActiveTab(tab.id)}
               style={{
-                fontSize: "0.7rem",
-                padding: "0.3rem 0.65rem",
-                borderRadius: "6px",
-                border: "none",
+                fontSize: "0.76rem",
+                minHeight: "36px",
+                padding: "6px 14px",
+                borderRadius: "9999px",
+                border: activeTab === tab.id ? "1px solid rgba(56, 189, 248, 0.5)" : "1px solid transparent",
                 cursor: "pointer",
                 background: activeTab === tab.id ? "rgba(56, 189, 248, 0.2)" : "transparent",
                 color: activeTab === tab.id ? "#38bdf8" : "#94a3b8",
                 fontWeight: activeTab === tab.id ? 700 : 500,
+                display: "inline-flex",
+                alignItems: "center",
                 transition: "all 0.15s ease",
               }}
             >
@@ -478,14 +512,18 @@ ${promptText}
               type="button"
               onClick={() => onNavigate("website")}
               style={{
-                fontSize: "0.7rem",
-                padding: "0.3rem 0.65rem",
-                borderRadius: "6px",
+                fontSize: "0.76rem",
+                minHeight: "36px",
+                padding: "6px 14px",
+                borderRadius: "9999px",
                 border: "1px solid rgba(99, 102, 241, 0.4)",
                 background: "rgba(99, 102, 241, 0.15)",
                 color: "#a5b4fc",
                 fontWeight: 600,
                 cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                transition: "all 0.15s ease",
               }}
             >
               3D Studio →
@@ -701,48 +739,61 @@ ${promptText}
 
                   {/* 1-Click Auto-Optimize Button */}
                   {!isOptimized ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsOptimized(true);
-                        const opt = autoOptimizeSystemPrompt(promptText);
-                        onAutoOptimize?.(opt);
-                      }}
-                      style={{
-                        width: "100%",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "8px",
-                        padding: "9px 16px",
-                        borderRadius: "8px",
-                        border: "none",
-                        background: "linear-gradient(135deg, #0284c7, #2563eb, #7c3aed)",
-                        color: "#ffffff",
-                        fontWeight: 700,
-                        fontSize: "0.82rem",
-                        cursor: "pointer",
-                        boxShadow: "0 4px 14px rgba(37, 99, 235, 0.4)",
-                        transition: "all 0.15s ease",
-                      }}
-                    >
-                      <span>⚡</span> Auto-Optimize to 100% Score
-                    </button>
+                    <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsOptimized(true);
+                          const opt = autoOptimizeSystemPrompt(promptText);
+                          onAutoOptimize?.(opt);
+                        }}
+                        style={{
+                          width: "auto",
+                          minWidth: "240px",
+                          maxWidth: "320px",
+                          minHeight: "44px",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "8px",
+                          padding: "10px 24px",
+                          borderRadius: "9999px",
+                          border: "none",
+                          background: "linear-gradient(135deg, #0284c7, #2563eb, #7c3aed)",
+                          color: "#ffffff",
+                          fontWeight: 700,
+                          fontSize: "0.85rem",
+                          cursor: "pointer",
+                          boxShadow: "0 4px 14px rgba(37, 99, 235, 0.4)",
+                          transition: "all 0.18s cubic-bezier(0.16, 1, 0.3, 1)",
+                        }}
+                      >
+                        <span>⚡</span> Auto-Optimize to 100% Score
+                      </button>
+                    </div>
                   ) : (
-                    <div style={{ display: "flex", gap: "6px" }}>
+                    <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "10px", width: "100%" }}>
                       <button
                         type="button"
                         onClick={() => copyToClipboard(currentPrompt, "optimized-copy")}
                         style={{
-                          flex: 1,
-                          padding: "8px 12px",
-                          borderRadius: "6px",
+                          width: "auto",
+                          minWidth: "180px",
+                          minHeight: "42px",
+                          padding: "10px 20px",
+                          borderRadius: "9999px",
                           border: "none",
                           background: "#10b981",
                           color: "#ffffff",
                           fontWeight: 700,
-                          fontSize: "0.78rem",
+                          fontSize: "0.82rem",
                           cursor: "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "6px",
+                          boxShadow: "0 2px 10px rgba(16, 185, 129, 0.35)",
+                          transition: "all 0.18s ease",
                         }}
                       >
                         {copiedKey === "optimized-copy" ? "✓ Copied 100% Prompt!" : "📋 Copy 100% Prompt"}
@@ -754,14 +805,20 @@ ${promptText}
                           downloadMarkdownFile(`spe-system-prompt-100-${timestamp}.md`, constructMarkdownSystemPrompt(currentPrompt, { depthTier: activeDepthTier, includeFrontmatter: true }));
                         }}
                         style={{
-                          padding: "8px 10px",
-                          borderRadius: "6px",
-                          border: "1px solid rgba(56, 189, 248, 0.35)",
+                          minHeight: "42px",
+                          padding: "10px 18px",
+                          borderRadius: "9999px",
+                          border: "1px solid rgba(56, 189, 248, 0.4)",
                           background: "rgba(56, 189, 248, 0.15)",
                           color: "#38bdf8",
                           fontWeight: 700,
-                          fontSize: "0.74rem",
+                          fontSize: "0.82rem",
                           cursor: "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "6px",
+                          transition: "all 0.18s ease",
                         }}
                       >
                         📥 .MD
@@ -770,13 +827,19 @@ ${promptText}
                         type="button"
                         onClick={() => setIsOptimized(false)}
                         style={{
-                          padding: "8px 10px",
-                          borderRadius: "6px",
+                          minHeight: "42px",
+                          padding: "10px 18px",
+                          borderRadius: "9999px",
                           border: "1px solid rgba(255, 255, 255, 0.2)",
                           background: "transparent",
                           color: "#94a3b8",
-                          fontSize: "0.74rem",
+                          fontWeight: 650,
+                          fontSize: "0.82rem",
                           cursor: "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          transition: "all 0.18s ease",
                         }}
                       >
                         Reset
@@ -903,7 +966,7 @@ ${promptText}
                   </div>
                 )}
 
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", fontSize: "0.65rem" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", alignItems: "center" }}>
                   {diagnosticsList.map((diag) => {
                     const isSelected = selectedDiagnostic === diag.id;
                     return (
@@ -912,8 +975,9 @@ ${promptText}
                         type="button"
                         onClick={() => setSelectedDiagnostic(isSelected ? null : diag.id)}
                         style={{
-                          padding: "0.25rem 0.6rem",
-                          borderRadius: "5px",
+                          minHeight: "36px",
+                          padding: "6px 14px",
+                          borderRadius: "9999px",
                           border: isSelected
                             ? `1px solid ${diag.passed ? "#10b981" : "#ef4444"}`
                             : `1px solid ${diag.passed ? "rgba(16, 185, 129, 0.25)" : "rgba(239, 68, 68, 0.3)"}`,
@@ -923,15 +987,16 @@ ${promptText}
                           color: diag.passed ? "#10b981" : "#ef4444",
                           cursor: "pointer",
                           fontWeight: 600,
+                          fontSize: "0.78rem",
                           display: "inline-flex",
                           alignItems: "center",
-                          gap: "0.3rem",
+                          gap: "0.35rem",
                           transition: "all 0.15s ease",
                         }}
                         title={`Click to inspect details and remediation for ${diag.title}`}
                       >
                         <span>{diag.passed ? diag.passedLabel : diag.failedLabel}</span>
-                        <span style={{ fontSize: "0.6rem", opacity: 0.75 }}>ⓘ</span>
+                        <span style={{ fontSize: "0.65rem", opacity: 0.75 }}>ⓘ</span>
                       </button>
                     );
                   })}
@@ -1343,37 +1408,37 @@ ${promptText}
       {/* Tab 2: Model Matrix */}
       {activeTab === "matrix" && (
         <div style={{ padding: "1rem" }}>
-          <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.75rem", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.75rem", flexWrap: "wrap", alignItems: "center" }}>
             <button
               type="button"
               onClick={() => onSelectTarget && onSelectTarget("claude")}
-              style={{ padding: "0.3rem 0.6rem", borderRadius: "4px", fontSize: "0.7rem", cursor: "pointer", background: activeTarget === "claude" ? "#d97706" : "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ minHeight: "38px", padding: "8px 16px", borderRadius: "9999px", fontSize: "0.8rem", fontWeight: 650, cursor: "pointer", background: activeTarget === "claude" ? "#d97706" : "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)", display: "inline-flex", alignItems: "center", transition: "all 0.18s ease" }}
             >
               Claude XML ({claudePrompt.length.toLocaleString()}c)
             </button>
             <button
               type="button"
               onClick={() => onSelectTarget && onSelectTarget("chatgpt")}
-              style={{ padding: "0.3rem 0.6rem", borderRadius: "4px", fontSize: "0.7rem", cursor: "pointer", background: activeTarget === "chatgpt" ? "#10b981" : "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ minHeight: "38px", padding: "8px 16px", borderRadius: "9999px", fontSize: "0.8rem", fontWeight: 650, cursor: "pointer", background: activeTarget === "chatgpt" ? "#10b981" : "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)", display: "inline-flex", alignItems: "center", transition: "all 0.18s ease" }}
             >
               ChatGPT / GPT-6.1 ({gptPrompt.length.toLocaleString()}c)
             </button>
             <button
               type="button"
               onClick={() => onSelectTarget && onSelectTarget("gemini")}
-              style={{ padding: "0.3rem 0.6rem", borderRadius: "4px", fontSize: "0.7rem", cursor: "pointer", background: activeTarget === "gemini" ? "#3b82f6" : "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ minHeight: "38px", padding: "8px 16px", borderRadius: "9999px", fontSize: "0.8rem", fontWeight: 650, cursor: "pointer", background: activeTarget === "gemini" ? "#3b82f6" : "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)", display: "inline-flex", alignItems: "center", transition: "all 0.18s ease" }}
             >
               Google Gemini ({geminiPrompt.length.toLocaleString()}c)
             </button>
             <button
               type="button"
               onClick={() => onSelectTarget && onSelectTarget("local")}
-              style={{ padding: "0.3rem 0.6rem", borderRadius: "4px", fontSize: "0.7rem", cursor: "pointer", background: activeTarget === "local" ? "#8b5cf6" : "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)" }}
+              style={{ minHeight: "38px", padding: "8px 16px", borderRadius: "9999px", fontSize: "0.8rem", fontWeight: 650, cursor: "pointer", background: activeTarget === "local" ? "#8b5cf6" : "rgba(255,255,255,0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)", display: "inline-flex", alignItems: "center", transition: "all 0.18s ease" }}
             >
               Local Llama/Mistral ({localPrompt.length.toLocaleString()}c)
             </button>
           </div>
-          <p style={{ fontSize: "0.7rem", color: "#94a3b8", lineHeight: "1.4" }}>
+          <p style={{ fontSize: "0.74rem", color: "#94a3b8", lineHeight: "1.4" }}>
             The prompt automatically adapts to each target provider’s architecture: Claude receives explicit XML tag bounds; ChatGPT receives structured developer headers; Gemini receives grounded multimodal constraints; Local models receive instruction token delimiters.
           </p>
         </div>
@@ -1382,26 +1447,26 @@ ${promptText}
       {/* Tab 3: SDK Code Runners */}
       {activeTab === "code" && (
         <div style={{ padding: "1rem" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-            <div style={{ display: "flex", gap: "0.25rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem", flexWrap: "wrap", gap: "0.5rem" }}>
+            <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
               <button
                 type="button"
                 onClick={() => setActiveCodeLang("python")}
-                style={{ fontSize: "0.65rem", padding: "0.2rem 0.5rem", borderRadius: "4px", border: "none", cursor: "pointer", background: activeCodeLang === "python" ? "#3b82f6" : "transparent", color: "#fff" }}
+                style={{ fontSize: "0.78rem", minHeight: "36px", padding: "6px 14px", borderRadius: "9999px", border: activeCodeLang === "python" ? "1px solid #3b82f6" : "1px solid rgba(255,255,255,0.1)", cursor: "pointer", background: activeCodeLang === "python" ? "#3b82f6" : "transparent", color: "#fff", fontWeight: 650, display: "inline-flex", alignItems: "center", transition: "all 0.15s ease" }}
               >
                 Python
               </button>
               <button
                 type="button"
                 onClick={() => setActiveCodeLang("typescript")}
-                style={{ fontSize: "0.65rem", padding: "0.2rem 0.5rem", borderRadius: "4px", border: "none", cursor: "pointer", background: activeCodeLang === "typescript" ? "#3b82f6" : "transparent", color: "#fff" }}
+                style={{ fontSize: "0.78rem", minHeight: "36px", padding: "6px 14px", borderRadius: "9999px", border: activeCodeLang === "typescript" ? "1px solid #3b82f6" : "1px solid rgba(255,255,255,0.1)", cursor: "pointer", background: activeCodeLang === "typescript" ? "#3b82f6" : "transparent", color: "#fff", fontWeight: 650, display: "inline-flex", alignItems: "center", transition: "all 0.15s ease" }}
               >
                 TypeScript
               </button>
               <button
                 type="button"
                 onClick={() => setActiveCodeLang("curl")}
-                style={{ fontSize: "0.65rem", padding: "0.2rem 0.5rem", borderRadius: "4px", border: "none", cursor: "pointer", background: activeCodeLang === "curl" ? "#3b82f6" : "transparent", color: "#fff" }}
+                style={{ fontSize: "0.78rem", minHeight: "36px", padding: "6px 14px", borderRadius: "9999px", border: activeCodeLang === "curl" ? "1px solid #3b82f6" : "1px solid rgba(255,255,255,0.1)", cursor: "pointer", background: activeCodeLang === "curl" ? "#3b82f6" : "transparent", color: "#fff", fontWeight: 650, display: "inline-flex", alignItems: "center", transition: "all 0.15s ease" }}
               >
                 cURL API
               </button>
@@ -1412,7 +1477,7 @@ ${promptText}
                 const code = activeCodeLang === "python" ? pythonSnippet : activeCodeLang === "typescript" ? typescriptSnippet : curlSnippet;
                 copyToClipboard(code, "sdk-code");
               }}
-              style={{ fontSize: "0.65rem", padding: "0.2rem 0.6rem", borderRadius: "4px", background: "rgba(56, 189, 248, 0.2)", color: "#38bdf8", border: "1px solid rgba(56, 189, 248, 0.4)", cursor: "pointer" }}
+              style={{ fontSize: "0.78rem", minHeight: "36px", padding: "6px 14px", borderRadius: "9999px", background: "rgba(56, 189, 248, 0.2)", color: "#38bdf8", border: "1px solid rgba(56, 189, 248, 0.4)", cursor: "pointer", fontWeight: 650, display: "inline-flex", alignItems: "center", transition: "all 0.15s ease" }}
             >
               {copiedKey === "sdk-code" ? "✓ Copied!" : "Copy Code"}
             </button>
@@ -1470,18 +1535,23 @@ ${promptText}
                 YAML Frontmatter
               </label>
             </div>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
               <button
                 type="button"
                 onClick={() => copyToClipboard(markdownPrompt, "markdown-copy")}
                 style={{
-                  fontSize: "0.65rem",
-                  padding: "0.25rem 0.65rem",
-                  borderRadius: "4px",
+                  fontSize: "0.8rem",
+                  minHeight: "38px",
+                  padding: "8px 18px",
+                  borderRadius: "9999px",
                   background: "rgba(56, 189, 248, 0.2)",
                   color: "#38bdf8",
                   border: "1px solid rgba(56, 189, 248, 0.4)",
                   cursor: "pointer",
+                  fontWeight: 650,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  transition: "all 0.15s ease",
                 }}
               >
                 {copiedKey === "markdown-copy" ? "✓ Copied MD!" : "Copy Markdown"}
@@ -1493,14 +1563,19 @@ ${promptText}
                   downloadMarkdownFile(`spe-system-prompt-${timestamp}.md`, markdownPrompt);
                 }}
                 style={{
-                  fontSize: "0.65rem",
-                  padding: "0.25rem 0.65rem",
-                  borderRadius: "4px",
+                  fontSize: "0.8rem",
+                  minHeight: "38px",
+                  padding: "8px 18px",
+                  borderRadius: "9999px",
                   background: "rgba(16, 185, 129, 0.2)",
                   color: "#10b981",
                   border: "1px solid rgba(16, 185, 129, 0.4)",
                   cursor: "pointer",
-                  fontWeight: 700,
+                  fontWeight: 650,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  transition: "all 0.15s ease",
                 }}
               >
                 📥 Download .md File
@@ -1551,7 +1626,7 @@ ${promptText}
             <button
               type="button"
               onClick={() => copyToClipboard(ideRulesSnippet, "ide-rules")}
-              style={{ fontSize: "0.65rem", padding: "0.2rem 0.6rem", borderRadius: "4px", background: "rgba(16, 185, 129, 0.2)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.4)", cursor: "pointer" }}
+              style={{ fontSize: "0.78rem", minHeight: "36px", padding: "6px 16px", borderRadius: "9999px", background: "rgba(16, 185, 129, 0.2)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.4)", cursor: "pointer", fontWeight: 650, display: "inline-flex", alignItems: "center", transition: "all 0.15s ease" }}
             >
               {copiedKey === "ide-rules" ? "✓ Copied Rules!" : "Copy Rules"}
             </button>
@@ -1675,14 +1750,18 @@ ${promptText}
                 }
               }}
               style={{
-                fontSize: "0.75rem",
+                fontSize: "0.8rem",
                 fontWeight: 700,
-                padding: "0.45rem 0.9rem",
-                borderRadius: "6px",
+                minHeight: "38px",
+                padding: "8px 18px",
+                borderRadius: "9999px",
                 background: "linear-gradient(135deg, #0ea5e9, #6366f1)",
                 color: "#fff",
                 border: "none",
                 cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                transition: "all 0.15s ease",
               }}
             >
               ⚡ Inject Top Standards into Prompt
@@ -1753,6 +1832,70 @@ ${promptText}
           <BlindedJudgeArenaStudio promptText={currentPrompt} />
         </div>
       )}
+
+      {/* Tab 10: Multilingual Dual-Prompt Studio */}
+      {activeTab === "multilingual" && (
+        <div style={{ padding: "0.5rem" }}>
+          <DualLanguagePromptStudio
+            initialInput={currentPrompt}
+            onApplyPrompt={(prompt) => {
+              if (onAutoOptimize) {
+                onAutoOptimize(prompt);
+              }
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
+
+export interface AutoOptimizeCTAButtonProps {
+  disabled?: boolean;
+  busy?: boolean;
+  onOptimize?: () => void;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export const AutoOptimizeCTAButton: React.FC<AutoOptimizeCTAButtonProps> = ({
+  disabled,
+  busy,
+  onOptimize,
+  className = "spe-auto-opt-button",
+  style,
+}) => {
+  return (
+    <button
+      type="button"
+      className={className}
+      disabled={disabled || busy}
+      onClick={onOptimize}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "6px",
+        minHeight: "44px",
+        minWidth: "160px",
+        maxWidth: "230px",
+        padding: "10px 20px",
+        borderRadius: "9999px",
+        background: "linear-gradient(135deg, rgba(229, 213, 176, 0.16) 0%, rgba(183, 200, 255, 0.18) 100%)",
+        border: "1px solid rgba(229, 213, 176, 0.45)",
+        color: "#f8fafc",
+        fontWeight: 650,
+        fontSize: "0.82rem",
+        cursor: disabled || busy ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.6 : 1,
+        transition: "all 0.2s cubic-bezier(0.22, 1, 0.36, 1)",
+        boxShadow: "0 4px 16px rgba(217, 197, 154, 0.15)",
+        ...style,
+      }}
+    >
+      <span style={{ color: "#e5d5b0", fontSize: "0.85rem" }}>⚡</span>
+      <span>Auto-Optimize (100%)</span>
+    </button>
+  );
+};
+
