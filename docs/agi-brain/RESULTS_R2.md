@@ -1,6 +1,7 @@
 # AGI-BRAIN R2 Results — held-out families, plain vs established CEGIS vs SPE world model
 
 - Contract `CONTRACT_R2.md` sha256 `1911d6af…b735`, committed in `8a58ccff` before the run. Frozen starts `evidence/agi-brain/r2/starts.json` (`f1623f25…59cb735`... see file).
+- Raw sha256: rows.jsonl `5be45c5a93797ae8771dcb5482ff623968b1f24f29d80a0221199996f3b03bd9`, results.json `6ec04546eababd2e3736b77a0e5b90007b95258f1b0155108cd9caa374f4b345`.
 - Command: `python3 -m spe_runtime.research.agi_brain.experiment_r2 evidence/agi-brain/r2` → `evidence/agi-brain/r2/{rows.jsonl,results.json}`, stdout `evidence/agi-brain/r2_stdout.txt`. 300 runs (10 families × 3 conditions × 10 seeds), 8.0 CPU-s each (measured 8.12–8.14 mean), 4 workers, wall 791.5 s, peak worker RSS ≈ 37.9 MB for all conditions. ₹0.
 - Process note: a first launch at ~21:30 IST was killed by the shell harness before writing any output (empty stdout, no rows); the run reported here is the first and only completed run.
 
