@@ -1,0 +1,148 @@
+{
+ "split": "holdout",
+ "configs": [
+  "A",
+  "B",
+  "E",
+  "E_CAPPED",
+  "E_noguard",
+  "E_randprobe",
+  "E_shufv"
+ ],
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "budget": 3335.8,
+ "manifest_sha256": "cb07aaad7dc4fe11574adaab9d16a0b64783a7ba0e8818bedb18a744ab2b2a99",
+ "agents": [
+  {
+   "seed": 0,
+   "config": "A",
+   "library_size": 0,
+   "revoked": 0
+  },
+  {
+   "seed": 1,
+   "config": "A",
+   "library_size": 0,
+   "revoked": 0
+  },
+  {
+   "seed": 2,
+   "config": "A",
+   "library_size": 0,
+   "revoked": 0
+  },
+  {
+   "seed": 0,
+   "config": "B",
+   "library_size": 99,
+   "revoked": 0
+  },
+  {
+   "seed": 1,
+   "config": "B",
+   "library_size": 95,
+   "revoked": 0
+  },
+  {
+   "seed": 2,
+   "config": "B",
+   "library_size": 92,
+   "revoked": 0
+  },
+  {
+   "seed": 0,
+   "config": "E",
+   "library_size": 40,
+   "revoked": 0
+  },
+  {
+   "seed": 1,
+   "config": "E",
+   "library_size": 34,
+   "revoked": 0
+  },
+  {
+   "seed": 2,
+   "config": "E",
+   "library_size": 46,
+   "revoked": 0
+  },
+  {
+   "seed": 0,
+   "config": "E_CAPPED",
+   "library_size": 26,
+   "revoked": 0
+  },
+  {
+   "seed": 1,
+   "config": "E_CAPPED",
+   "library_size": 28,
+   "revoked": 0
+  },
+  {
+   "seed": 2,
+   "config": "E_CAPPED",
+   "library_size": 21,
+   "revoked": 0
+  },
+  {
+   "seed": 0,
+   "config": "E_noguard",
+   "library_size": 39,
+   "revoked": 0
+  },
+  {
+   "seed": 1,
+   "config": "E_noguard",
+   "library_size": 37,
+   "revoked": 0
+  },
+  {
+   "seed": 2,
+   "config": "E_noguard",
+   "library_size": 44,
+   "revoked": 0
+  },
+  {
+   "seed": 0,
+   "config": "E_randprobe",
+   "library_size": 37,
+   "revoked": 0
+  },
+  {
+   "seed": 1,
+   "config": "E_randprobe",
+   "library_size": 32,
+   "revoked": 0
+  },
+  {
+   "seed": 2,
+   "config": "E_randprobe",
+   "library_size": 45,
+   "revoked": 0
+  },
+  {
+   "seed": 0,
+   "config": "E_shufv",
+   "library_size": 0,
+   "revoked": 0
+  },
+  {
+   "seed": 1,
+   "config": "E_shufv",
+   "library_size": 0,
+   "revoked": 0
+  },
+  {
+   "seed": 2,
+   "config": "E_shufv",
+   "library_size": 0,
+   "revoked": 0
+  }
+ ],
+ "runtime_s": 50.2
+}

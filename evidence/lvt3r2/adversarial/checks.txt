@@ -1,0 +1,13 @@
+C1 seed0 E_CAPPED-B mean=-0.0250 CI=[-0.0956,0.0456]
+C1 seed1 E_CAPPED-B mean=-0.0100 CI=[-0.0705,0.0505]
+C1 seed2 E_CAPPED-B mean=-0.0950 CI=[-0.1668,-0.0232]
+C2 B budget_hit_rate=0.587 lib_source_rate=0.237
+C2 E_CAPPED budget_hit_rate=0.868 lib_source_rate=0.181
+C3 dsl-vs-evaluator disagreements=0/20000
+C4 A declared=505 false=71
+C4 B declared=496 false=58
+C4 E declared=742 false=19
+C4 E_CAPPED declared=472 false=86
+C4 E_noguard declared=841 false=18
+C4 E_randprobe declared=777 false=109
+C4 E_shufv declared=464 false=20

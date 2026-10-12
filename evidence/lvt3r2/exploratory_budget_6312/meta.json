@@ -1,0 +1,53 @@
+{
+ "split": "holdout",
+ "configs": [
+  "B",
+  "E_CAPPED"
+ ],
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "budget": 6312.0,
+ "manifest_sha256": "cb07aaad7dc4fe11574adaab9d16a0b64783a7ba0e8818bedb18a744ab2b2a99",
+ "agents": [
+  {
+   "seed": 0,
+   "config": "B",
+   "library_size": 120,
+   "revoked": 0
+  },
+  {
+   "seed": 1,
+   "config": "B",
+   "library_size": 102,
+   "revoked": 0
+  },
+  {
+   "seed": 2,
+   "config": "B",
+   "library_size": 110,
+   "revoked": 0
+  },
+  {
+   "seed": 0,
+   "config": "E_CAPPED",
+   "library_size": 37,
+   "revoked": 0
+  },
+  {
+   "seed": 1,
+   "config": "E_CAPPED",
+   "library_size": 36,
+   "revoked": 0
+  },
+  {
+   "seed": 2,
+   "config": "E_CAPPED",
+   "library_size": 37,
+   "revoked": 0
+  }
+ ],
+ "runtime_s": 11.7
+}
