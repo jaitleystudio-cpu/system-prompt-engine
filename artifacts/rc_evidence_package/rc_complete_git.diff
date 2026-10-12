@@ -110,10 +110,17 @@ index d1ae9258..69a78906 100644
  // Risk B Closure: Write & Validate the Customer's Actual Exported Artifact Files
  console.log("\n[7/7] Risk B Closure: Writing & executing assertions from the actual exported promptfooconfig.yaml file...");
 diff --git a/apps/web/scripts/test-rc-customer-journey.mjs b/apps/web/scripts/test-rc-customer-journey.mjs
-index d962848a..3e7b8648 100644
+index d962848a..bd62eac0 100644
 --- a/apps/web/scripts/test-rc-customer-journey.mjs
 +++ b/apps/web/scripts/test-rc-customer-journey.mjs
-@@ -23,11 +23,18 @@ import { dirname, join } from "node:path";
+@@ -17,17 +17,28 @@
+  */
+ 
+ import assert from "node:assert/strict";
+-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
++import { readFileSync, writeFileSync, mkdirSync, existsSync, unlinkSync } from "node:fs";
+ import { createHash } from "node:crypto";
+ import { dirname, join } from "node:path";
  import { fileURLToPath } from "node:url";
  import { build } from "../node_modules/esbuild/lib/main.js";
  
@@ -121,9 +128,13 @@ index d962848a..3e7b8648 100644
  import {
 -  issueSignedEntitlementToken,
    verifySignedEntitlementToken,
++  verifySignedReceiptStatusAttestation,
    createPublicBetaWaitlistReservation,
  } from "../src/engine/entitlementVerifier.ts";
-+import { AuthoritativeBillingAuthority } from "../src/server/billingAuthority.ts";
++import {
++  AuthoritativeBillingAuthority,
++  FileBillingStorageAdapter,
++} from "../src/server/billingAuthority.ts";
 +import {
 +  FREE_TIER_MAX_OUTPUT_CHARS,
 +  PRO_TIER_MAX_OUTPUT_CHARS,
@@ -133,7 +144,7 @@ index d962848a..3e7b8648 100644
  
  const webRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
  const repoRoot = join(webRoot, "../..");
-@@ -41,10 +48,33 @@ console.log("=================================================================="
+@@ -41,10 +52,33 @@ console.log("=================================================================="
  // -----------------------------------------------------------------------------
  // 1. Pricing, Signed Entitlement Verification & Waitlist Security Journey
  // -----------------------------------------------------------------------------
@@ -168,7 +179,7 @@ index d962848a..3e7b8648 100644
  
    // Finding 1 Closure: Ensure Pricing.tsx NEVER self-mints paid licenses via Math.random()
    assert(
-@@ -105,7 +135,7 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
+@@ -105,7 +139,7 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
    assert.equal(reservation.status, "PUBLIC_BETA_WAITLIST_RESERVED");
    assert.equal(reservation.paidEntitlementGranted, false, "Waitlist reservation must never grant paid entitlement");
  
@@ -177,7 +188,7 @@ index d962848a..3e7b8648 100644
    const selfMintedCheck = verifySignedEntitlementToken("SPE-PRO-9A8B-7C6D-5E4F");
    assert.equal(selfMintedCheck.verified, false, "Self-minted random license string must be rejected");
    assert(
-@@ -113,29 +143,96 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
+@@ -113,29 +147,96 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
      "Rejection reason must identify self-minted unverified key",
    );
  
@@ -282,7 +293,7 @@ index d962848a..3e7b8648 100644
    });
    assert.equal(forgedCheck.verified, false, "Forged entitlement token signature must be rejected");
    assert.equal(forgedCheck.rejectionReason, "INVALID_ENTITLEMENT_SIGNATURE");
-@@ -144,17 +241,57 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
+@@ -144,17 +245,253 @@ console.log("\n[1/4] Verifying Pricing, Signed Entitlement Security, Waitlist &
    const expiredCheck = verifySignedEntitlementToken(validProToken, {
      expectedEmail: "dev@example.com",
      currentEpochMs: 1_991_760_000_000,
@@ -331,6 +342,202 @@ index d962848a..3e7b8648 100644
 +    "Canceled signed receipt attestation must report REVOKED_OR_CANCELED_SUBSCRIPTION:CANCELED",
 +  );
 +
++  // Step G: Offline Attestation Freshness Window (24h Max Age Enforcement)
++  const freshnessAuthority = new AuthoritativeBillingAuthority();
++  const freshnessKeys = { [freshnessAuthority.issuerKeyId]: freshnessAuthority.publicKeyHex };
++  const freshPaymentEvent = {
++    eventId: "evt_fresh_001",
++    eventType: "payment.succeeded",
++    paymentReceiptId: "pay_rcpt_fresh_001",
++    subscriptionId: "sub_fresh_001",
++    tier: "pro",
++    planName: "Developer Pro ($1 First Month · then $9/mo)",
++    email: "fresh@example.com",
++    amountCents: 100,
++    currency: "USD",
++    occurredAtMs: 1_791_750_000_000,
++    expiresAtMs: 1_891_750_000_000,
++  };
++  freshnessAuthority.processVerifiedPaymentWebhook(
++    freshPaymentEvent,
++    freshnessAuthority.signWebhookPayload(freshPaymentEvent),
++  );
++  const freshCheckoutBundle = freshnessAuthority.issueSignedCheckoutBundleForPaidReceipt(
++    "pay_rcpt_fresh_001",
++    1_791_750_000_000,
++  );
++
++  // Fresh attestation within 24h window (e.g. 1 hour later) succeeds
++  const freshWithinWindowCheck = verifySignedEntitlementToken(freshCheckoutBundle, {
++    expectedEmail: "fresh@example.com",
++    currentEpochMs: 1_791_750_000_000 + 3_600_000,
++    trustedIssuerPublicKeys: freshnessKeys,
++  });
++  assert.equal(freshWithinWindowCheck.verified, true, "Fresh checkout bundle within 24h window must verify");
++
++  // Attestation exceeding 24h window (86,400,000 ms + 1,000 ms) is strictly rejected as stale
++  const staleTimestamp = 1_791_750_000_000 + 86_400_000 + 1_000;
++  const staleAttestationCheck = verifySignedEntitlementToken(freshCheckoutBundle, {
++    expectedEmail: "fresh@example.com",
++    currentEpochMs: staleTimestamp,
++    trustedIssuerPublicKeys: freshnessKeys,
++  });
++  assert.equal(staleAttestationCheck.verified, false, "Stale attestation older than 24h must be rejected");
++  assert(
++    staleAttestationCheck.rejectionReason?.includes("STALE_RECEIPT_ATTESTATION"),
++    "Stale attestation must return STALE_RECEIPT_ATTESTATION rejection reason",
++  );
++
++  // Direct attestation verification exceeding custom maxAttestationAgeMs (e.g. 5 minutes) is also rejected
++  const directAttestation = freshnessAuthority.issueSignedReceiptStatusAttestation(
++    "pay_rcpt_fresh_001",
++    1_791_750_000_000,
++  );
++  const directStaleCheck = verifySignedReceiptStatusAttestation(directAttestation, {
++    currentEpochMs: 1_791_750_000_000 + 301_000,
++    maxAttestationAgeMs: 300_000, // 5 min
++    trustedIssuerPublicKeys: freshnessKeys,
++  });
++  assert.equal(directStaleCheck, null, "Attestation older than maxAttestationAgeMs must return null");
++
++  // Future timestamp clock skew (> 60s) is also rejected
++  const clockSkewCheck = verifySignedReceiptStatusAttestation(directAttestation, {
++    currentEpochMs: 1_791_750_000_000 - 61_000,
++    trustedIssuerPublicKeys: freshnessKeys,
++  });
++  assert.equal(clockSkewCheck, null, "Future attestation beyond 60s clock skew must return null");
++
++  // Step H: Durable Billing Ledger Persistence & Reload Recovery (`FileBillingStorageAdapter`)
++  const durableLedgerPath = join(customerExportsDir, "durable-billing-ledger.test.json");
++  if (existsSync(durableLedgerPath)) {
++    unlinkSync(durableLedgerPath);
++  }
++  const durableAuthority1 = new AuthoritativeBillingAuthority({
++    storageFilePath: durableLedgerPath,
++  });
++  const durableEvent = {
++    eventId: "evt_durable_101",
++    eventType: "payment.succeeded",
++    paymentReceiptId: "pay_rcpt_durable_101",
++    subscriptionId: "sub_durable_101",
++    tier: "team",
++    planName: "Company & CI/CD Gate ($9 First Month · then $99/mo)",
++    email: "team@example.com",
++    amountCents: 900,
++    currency: "USD",
++    occurredAtMs: 1_791_750_000_000,
++    expiresAtMs: 1_891_750_000_000,
++  };
++  durableAuthority1.processVerifiedPaymentWebhook(
++    durableEvent,
++    durableAuthority1.signWebhookPayload(durableEvent),
++  );
++  assert(existsSync(durableLedgerPath), "FileBillingStorageAdapter must write ledger file to disk");
++
++  // Recover state in a completely new authority instance reading the same file
++  const durableAuthority2 = new AuthoritativeBillingAuthority({
++    storageFilePath: durableLedgerPath,
++  });
++  const recoveredRecord = durableAuthority2.getLedgerRecord("pay_rcpt_durable_101");
++  assert(recoveredRecord, "Recovered authority must find existing ledger record");
++  assert.equal(recoveredRecord.paid, true);
++  assert.equal(recoveredRecord.subscriptionStatus, "ACTIVE");
++  assert.equal(recoveredRecord.tier, "team");
++  assert(durableAuthority2.getProcessedEventIds().has("evt_durable_101"), "Processed event IDs must be restored");
++  if (existsSync(durableLedgerPath)) {
++    unlinkSync(durableLedgerPath);
++  }
++
++  // Step I: Idempotent Webhook Replay Deduplication (Replay Protection)
++  const initialProcessedCount = durableAuthority1.getProcessedEventIds().size;
++  const duplicateWebhookResult = durableAuthority1.processVerifiedPaymentWebhook(
++    durableEvent,
++    durableAuthority1.signWebhookPayload(durableEvent),
++  );
++  assert.equal(duplicateWebhookResult.paymentReceiptId, "pay_rcpt_durable_101");
++  assert.equal(
++    durableAuthority1.getProcessedEventIds().size,
++    initialProcessedCount,
++    "Replayed webhook must not duplicate processed event IDs",
++  );
++
++  // Missing eventId in webhook MUST throw
++  assert.throws(
++    () => {
++      const invalidEvent = { ...durableEvent, eventId: "" };
++      durableAuthority1.processVerifiedPaymentWebhook(
++        invalidEvent,
++        durableAuthority1.signWebhookPayload(invalidEvent),
++      );
++    },
++    /MISSING_WEBHOOK_EVENT_ID/,
++    "Webhook without eventId must be rejected",
++  );
++
++  // Step J: Complete Subscription Lifecycle Transitions
++  const lifecycleAuthority = new AuthoritativeBillingAuthority();
++  const lifecycleKeys = { [lifecycleAuthority.issuerKeyId]: lifecycleAuthority.publicKeyHex };
++  const baseLifecycleEvent = {
++    eventId: "evt_lifecycle_001",
++    eventType: "payment.succeeded",
++    paymentReceiptId: "pay_rcpt_lifecycle_001",
++    subscriptionId: "sub_lifecycle_001",
++    tier: "pro",
++    planName: "Developer Pro ($1 First Month · then $9/mo)",
++    email: "lifecycle@example.com",
++    amountCents: 100,
++    currency: "USD",
++    occurredAtMs: 1_791_750_000_000,
++    expiresAtMs: 1_891_750_000_000,
++  };
++  lifecycleAuthority.processVerifiedPaymentWebhook(
++    baseLifecycleEvent,
++    lifecycleAuthority.signWebhookPayload(baseLifecycleEvent),
++  );
++  const lifecycleToken = lifecycleAuthority.issueSignedEntitlementTokenForPaidReceipt(
++    "pay_rcpt_lifecycle_001",
++    1_791_750_000_000,
++  );
++
++  // 1. Transition: Past Due
++  lifecycleAuthority.markPastDue("pay_rcpt_lifecycle_001");
++  const pastDueRecord = lifecycleAuthority.getLedgerRecord("pay_rcpt_lifecycle_001");
++  assert.equal(pastDueRecord?.subscriptionStatus, "PAST_DUE");
++  assert.equal(pastDueRecord?.revoked, true);
++  const pastDueVerify = verifySignedEntitlementToken(lifecycleToken, {
++    expectedEmail: "lifecycle@example.com",
++    currentEpochMs: 1_791_760_000_000,
++    trustedIssuerPublicKeys: lifecycleKeys,
++    authoritativeReceiptVerifier: lifecycleAuthority.createAuthoritativeReceiptVerifier(),
++  });
++  assert.equal(pastDueVerify.verified, false, "Past-due subscription must not verify");
++  assert(pastDueVerify.rejectionReason?.includes("REVOKED_OR_CANCELED_SUBSCRIPTION:PAST_DUE"));
++
++  // 2. Transition: Refunded via Webhook
++  const refundEvent = {
++    ...baseLifecycleEvent,
++    eventId: "evt_lifecycle_refund_002",
++    eventType: "payment.refunded",
++    occurredAtMs: 1_791_765_000_000,
++  };
++  lifecycleAuthority.processVerifiedPaymentWebhook(
++    refundEvent,
++    lifecycleAuthority.signWebhookPayload(refundEvent),
++  );
++  const refundedRecord = lifecycleAuthority.getLedgerRecord("pay_rcpt_lifecycle_001");
++  assert.equal(refundedRecord?.paid, false);
++  assert.equal(refundedRecord?.paymentStatus, "REFUNDED");
++  assert.equal(refundedRecord?.subscriptionStatus, "CANCELED");
++  assert.equal(refundedRecord?.revoked, true);
++
++  // 3. Transition: Disputed via Authority Mutator
++  lifecycleAuthority.markDisputed("pay_rcpt_lifecycle_001");
++  const disputedRecord = lifecycleAuthority.getLedgerRecord("pay_rcpt_lifecycle_001");
++  assert.equal(disputedRecord?.paid, false);
++  assert.equal(disputedRecord?.paymentStatus, "DISPUTED");
++  assert.equal(disputedRecord?.subscriptionStatus, "REVOKED");
++  assert.equal(disputedRecord?.revoked, true);
++
 +  console.log("✓ Pricing tiers ($0 / $1->$9 / $9->$99), Ed25519 server entitlement authority, and webhook revocation verified.");
  }
  
@@ -343,7 +550,7 @@ index d962848a..3e7b8648 100644
  {
    const bundle = await build({
      entryPoints: [join(webRoot, "src/components/AgentExportTabs.tsx")],
-@@ -171,6 +308,120 @@ console.log("\n[2/4] Verifying all 6 customer export formats via formatForAgent(
+@@ -171,6 +508,149 @@ console.log("\n[2/4] Verifying all 6 customer export formats via formatForAgent(
      `data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString("base64")}`
    );
  
@@ -392,6 +599,34 @@ index d962848a..3e7b8648 100644
 +    `Shallow fake entitlement without signed payload (${forgedShallowEntitlementAttempt.length}) must be capped at <= 5,000 chars`,
 +  );
 +
++  // Forged complete entitlement object with fake 128-hex signature ("00".repeat(64)) MUST still be capped at <= 5,000 chars
++  const forgedCompleteEntitlementAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
++    category: "Backend",
++    depthTier: "deep",
++    entitlement: {
++      verified: true,
++      tier: "pro",
++      signatureHex: "00".repeat(64),
++      payload: {
++        schema: "spe.entitlement.v1",
++        tier: "pro",
++        planName: "Developer Pro",
++        email: "hacker@example.com",
++        paymentReceiptId: "pay_rcpt_fake",
++        subscriptionId: "sub_fake",
++        paymentStatus: "PAID",
++        subscriptionStatus: "ACTIVE",
++        issuedAtMs: 1_791_750_000_000,
++        expiresAtMs: 1_891_750_000_000,
++        issuerKeyId: "spe-billing-authority-ed25519-prod-v1",
++      },
++    },
++  });
++  assert(
++    forgedCompleteEntitlementAttempt.length <= 5000,
++    `Forged complete entitlement with dummy signature (${forgedCompleteEntitlementAttempt.length}) must be capped at <= 5,000 chars`,
++  );
++
 +  // Direct synthesizeSystemPrompt with subscriptionTier: 'free' also enforces <= 5,000 characters
 +  const directFreePrompt = synthesizeSystemPrompt(oneLakhContextInput, {
 +    category: "Backend",
@@ -434,6 +669,7 @@ index d962848a..3e7b8648 100644
 +    depthTier: "deep",
 +    entitlement: verifiedProEnt,
 +    currentEpochMs: 1_791_760_000_000,
++    trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
 +  });
 +  assert(
 +    proTierCompiled.length > 5000 && proTierCompiled.length <= 30000,
@@ -464,7 +700,7 @@ index d962848a..3e7b8648 100644
    const customerPrompt = `# System Role & Persona
  You are a fortified enterprise AI specialist: Backend API Architect.
  
-@@ -207,12 +458,15 @@ Design and validate REST APIs returning strict JSON schemas.
+@@ -207,12 +687,16 @@ Design and validate REST APIs returning strict JSON schemas.
    ];
  
    for (const fmt of expectedFormats) {
@@ -472,6 +708,7 @@ index d962848a..3e7b8648 100644
 +    const out = exportMod.formatForAgent(customerPrompt, fmt.id, "Backend", {
 +      entitlement: verifiedProEnt,
 +      currentEpochMs: 1_791_760_000_000,
++      trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
 +    });
      assert.equal(out.filename, fmt.filename, `Filename mismatch for ${fmt.id}`);
      assert(out.content.includes(fmt.mustContain), `Export ${fmt.id} missing expected content: ${fmt.mustContain}`);
@@ -483,10 +720,10 @@ index d962848a..3e7b8648 100644
  
  // -----------------------------------------------------------------------------
 diff --git a/apps/web/scripts/test-spe-omega-proof-engine.mjs b/apps/web/scripts/test-spe-omega-proof-engine.mjs
-index b22a42e4..8eb39ae4 100644
+index b22a42e4..e0c78b00 100644
 --- a/apps/web/scripts/test-spe-omega-proof-engine.mjs
 +++ b/apps/web/scripts/test-spe-omega-proof-engine.mjs
-@@ -3,7 +3,15 @@ import { typeCheckPrompt, DIAGNOSTIC_CODES } from "../src/engine/promptTypeSyste
+@@ -3,7 +3,17 @@ import { typeCheckPrompt, DIAGNOSTIC_CODES } from "../src/engine/promptTypeSyste
  import { buildSandboxedRetrievalBlock } from "../src/engine/retrievalFirewall.ts";
  import { evaluateCounterfactualTwin } from "../src/engine/counterfactualTwin.ts";
  import { runHostileGymOmega, immunizeAgainstHostileGrammar } from "../src/engine/hostileGymOmega.ts";
@@ -496,6 +733,8 @@ index b22a42e4..8eb39ae4 100644
 +  canonicalizeJson,
 +  issueNetworkObservationAttestation,
 +  issueLiveEvaluationAttestation,
++  verifyNetworkObservationAttestation,
++  verifyLiveEvaluationAttestation,
 +  attachProducerSignature,
 +  verifyProofReceiptAuthenticity,
 +} from "../src/engine/proofReceipt.ts";
@@ -503,7 +742,7 @@ index b22a42e4..8eb39ae4 100644
  import { readFileSync } from "node:fs";
  import { resolve } from "node:path";
  
-@@ -100,8 +108,8 @@ assert.strictEqual(gymReport.criticalFailures, 0, "Hardened prompt must have 0 c
+@@ -100,8 +110,8 @@ assert.strictEqual(gymReport.criticalFailures, 0, "Hardened prompt must have 0 c
  console.log(`  ✓ Hostile Gym Ω verified: Fortified Mutation Kill Rate = ${gymReport.totalKilledCount}/${gymReport.totalAttacksEvaluated} (${(gymReport.mutationKillRate * 100).toFixed(1)}%) across 16 attack families.`);
  console.log(`  ✓ Metamorphic Lab verified: ${gymReport.metamorphicPassCount}/31 relations satisfied (0 critical failures).`);
  
@@ -514,7 +753,7 @@ index b22a42e4..8eb39ae4 100644
  const receipt = generateProofReceipt(vulnerablePrompt, fortifiedPrompt, twinReport, gymReport);
  assert(receipt.receiptDigest.length === 64, "Receipt digest must be valid SHA-256 hex string");
  assert.strictEqual(receipt.hardGates.protectedIntentPreserved, true, "Hard gates: intent preserved");
-@@ -110,24 +118,147 @@ assert.strictEqual(receipt.hardGates.zeroEgressObserved, false, "Hard gates: zer
+@@ -110,24 +120,172 @@ assert.strictEqual(receipt.hardGates.zeroEgressObserved, false, "Hard gates: zer
  assert.strictEqual(receipt.hardGates.zeroEgressStatus, "STATIC_IN_PROCESS_ONLY_UNOBSERVED", "Hard gates: honest static unobserved status");
  assert.strictEqual(receipt.evidenceProvenance.selfGeneratedAssertionOnly, true, "Unsigned local receipt must mark selfGeneratedAssertionOnly: true");
  
@@ -651,6 +890,31 @@ index b22a42e4..8eb39ae4 100644
 +  false,
 +  "Receipt with empty producerKeyId must be rejected by verifyProofReceiptAuthenticity",
 +);
++
++// Audit 4727aa62 Finding C Remediation: Unpinned or missing observer/evaluator keys MUST be rejected
++const unpinnedObsMissing = verifyNetworkObservationAttestation(netAttestation, receipt.candidateHash);
++assert.strictEqual(unpinnedObsMissing.verified, false, "verifyNetworkObservationAttestation without trustedObserverKeys must reject");
++assert(unpinnedObsMissing.reason.includes("REJECTED_UNPINNED_OBSERVER_REGISTRY"), "Must report REJECTED_UNPINNED_OBSERVER_REGISTRY");
++
++const unpinnedObsEmpty = verifyNetworkObservationAttestation(netAttestation, receipt.candidateHash, {});
++assert.strictEqual(unpinnedObsEmpty.verified, false, "verifyNetworkObservationAttestation with empty trustedObserverKeys must reject");
++assert(unpinnedObsEmpty.reason.includes("REJECTED_UNPINNED_OBSERVER_REGISTRY"), "Must report REJECTED_UNPINNED_OBSERVER_REGISTRY on empty map");
++
++const unpinnedObsRogue = verifyNetworkObservationAttestation(netAttestation, receipt.candidateHash, { "other-harness": pubDerHex });
++assert.strictEqual(unpinnedObsRogue.verified, false, "verifyNetworkObservationAttestation with unpinned harness must reject");
++assert(unpinnedObsRogue.reason.includes("Untrusted network observer harnessId"), "Must reject unknown harnessId");
++
++const unpinnedEvalMissing = verifyLiveEvaluationAttestation(liveAttestation, receipt.candidateHash);
++assert.strictEqual(unpinnedEvalMissing.verified, false, "verifyLiveEvaluationAttestation without trustedEvaluatorKeys must reject");
++assert(unpinnedEvalMissing.reason.includes("REJECTED_UNPINNED_EVALUATOR_REGISTRY"), "Must report REJECTED_UNPINNED_EVALUATOR_REGISTRY");
++
++const unpinnedEvalEmpty = verifyLiveEvaluationAttestation(liveAttestation, receipt.candidateHash, {});
++assert.strictEqual(unpinnedEvalEmpty.verified, false, "verifyLiveEvaluationAttestation with empty trustedEvaluatorKeys must reject");
++assert(unpinnedEvalEmpty.reason.includes("REJECTED_UNPINNED_EVALUATOR_REGISTRY"), "Must report REJECTED_UNPINNED_EVALUATOR_REGISTRY on empty map");
++
++const unpinnedEvalRogue = verifyLiveEvaluationAttestation(liveAttestation, receipt.candidateHash, { "other-eval": pubDerHex });
++assert.strictEqual(unpinnedEvalRogue.verified, false, "verifyLiveEvaluationAttestation with unpinned harness must reject");
++assert(unpinnedEvalRogue.reason.includes("Untrusted live evaluator harnessId"), "Must reject unknown evaluator harnessId");
  
  // Verify JCS Canonicalization key sorting
  const testObj1 = { z: 1, a: 2, m: { y: 3, b: 4 } };
@@ -665,7 +929,7 @@ index b22a42e4..8eb39ae4 100644
  console.log("================================================================================");
 +
 diff --git a/apps/web/src/components/AgentExportTabs.tsx b/apps/web/src/components/AgentExportTabs.tsx
-index 4e3c61b6..db43b537 100644
+index 4e3c61b6..a8cf83b1 100644
 --- a/apps/web/src/components/AgentExportTabs.tsx
 +++ b/apps/web/src/components/AgentExportTabs.tsx
 @@ -1,6 +1,15 @@
@@ -684,15 +948,20 @@ index 4e3c61b6..db43b537 100644
  
  export type AgentFormatId =
    | "standard"
-@@ -26,34 +35,79 @@ export const AGENT_FORMATS: AgentFormatMeta[] = [
+@@ -26,34 +35,83 @@ export const AGENT_FORMATS: AgentFormatMeta[] = [
    { id: "promptfoo", label: "promptfoo.yaml", filename: "promptfooconfig.yaml", badge: "CI/CD Eval" },
  ];
  
 +export interface AgentFormatOptions {
 +  subscriptionTier?: "free" | "pro" | "team";
 +  entitlement?: EntitlementVerificationResult | null;
-+  enforceTierLimit?: boolean;
++  /**
++   * @deprecated Removed in audit 4727aa62 remediation; Free tier output limits are strictly
++   * enforced at production boundaries and cannot be bypassed via options.
++   */
++  enforceTierLimit?: never;
 +  currentEpochMs?: number;
++  trustedIssuerPublicKeys?: Record<string, string>;
 +}
 +
  export function formatForAgent(
@@ -702,16 +971,14 @@ index 4e3c61b6..db43b537 100644
 +  category = "General",
 +  options: AgentFormatOptions = {},
  ): { content: string; filename: string } {
-+  const shouldEnforceLimit = options.enforceTierLimit !== false;
 +  const resolvedEntitlement = resolveExportEntitlement(options);
 +  const effectiveOptions = {
 +    subscriptionTier: options.subscriptionTier,
 +    entitlement: resolvedEntitlement,
 +    currentEpochMs: options.currentEpochMs,
++    trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
 +  };
-+  const boundedPrompt = shouldEnforceLimit
-+    ? enforceTierOutputLimit(rawPrompt, effectiveOptions)
-+    : rawPrompt;
++  const boundedPrompt = enforceTierOutputLimit(rawPrompt, effectiveOptions);
 +
    switch (format) {
      case "claude": {
@@ -719,7 +986,7 @@ index 4e3c61b6..db43b537 100644
 -      return { content, filename: "CLAUDE.md" };
 +      const content = `# CLAUDE.md — Agent System Directives\n> Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\n## Role & Core Guidelines\n${boundedPrompt}\n\n## Non-Negotiable Operational Guardrails\n- Scope Invariant: Do not modify files outside explicitly declared boundaries.\n- Verification Receipt: Run project test suite and verify zero regressions before reporting task completion.\n- Zero Hallucination: Do not invent nonexistent packages, CLI flags, or mock endpoints.\n`;
 +      return {
-+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
++        content: enforceTierOutputLimit(content, effectiveOptions),
 +        filename: "CLAUDE.md",
 +      };
      }
@@ -728,7 +995,7 @@ index 4e3c61b6..db43b537 100644
 -      return { content, filename: ".cursorrules" };
 +      const content = `# .cursorrules — Project AI Directives & Guardrails\n# Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\nYou are an expert developer operating under strict zero-drift guidelines.\n\n${boundedPrompt}\n\n## Project Invariants:\n1. Never introduce unverified dependencies.\n2. Ensure all types pass TypeScript/strict typechecking.\n3. Always verify changes with unit tests before declaring completion.\n`;
 +      return {
-+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
++        content: enforceTierOutputLimit(content, effectiveOptions),
 +        filename: ".cursorrules",
 +      };
      }
@@ -737,7 +1004,7 @@ index 4e3c61b6..db43b537 100644
 -      return { content, filename: ".windsurfrules" };
 +      const content = `# .windsurfrules — Cascade Agent Directives\n# Compiled by System Prompt Engine (SPE Ω)\n\n${boundedPrompt}\n`;
 +      return {
-+        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
++        content: enforceTierOutputLimit(content, effectiveOptions),
 +        filename: ".windsurfrules",
 +      };
      }
@@ -751,8 +1018,11 @@ index 4e3c61b6..db43b537 100644
 +      const projectName = `spe-${category.toLowerCase()}-eval`;
 +      let promptForYaml = boundedPrompt;
 +      if (
-+        shouldEnforceLimit &&
-+        !isVerifiedPaidEntitlementResult(resolvedEntitlement, options.currentEpochMs)
++        !isVerifiedPaidEntitlementResult(
++          resolvedEntitlement,
++          options.currentEpochMs,
++          effectiveOptions,
++        )
 +      ) {
 +        const emptyOverhead = generatePromptfooConfig("", { projectName }).yamlConfig.length;
 +        const maxPromptForYaml = Math.max(400, FREE_TIER_MAX_OUTPUT_CHARS - emptyOverhead - 32);
@@ -762,9 +1032,7 @@ index 4e3c61b6..db43b537 100644
 +      }
 +      const bundle = generatePromptfooConfig(promptForYaml, { projectName });
 +      return {
-+        content: shouldEnforceLimit
-+          ? enforceTierOutputLimit(bundle.yamlConfig, effectiveOptions)
-+          : bundle.yamlConfig,
++        content: enforceTierOutputLimit(bundle.yamlConfig, effectiveOptions),
 +        filename: "promptfooconfig.yaml",
 +      };
      }
@@ -776,7 +1044,7 @@ index 4e3c61b6..db43b537 100644
    }
  }
 diff --git a/apps/web/src/engine/PromptRadarInspector.tsx b/apps/web/src/engine/PromptRadarInspector.tsx
-index bc10dd73..2f5e9ffd 100644
+index bc10dd73..e4febbdd 100644
 --- a/apps/web/src/engine/PromptRadarInspector.tsx
 +++ b/apps/web/src/engine/PromptRadarInspector.tsx
 @@ -1,5 +1,6 @@
@@ -825,7 +1093,7 @@ index bc10dd73..2f5e9ffd 100644
    const irSource = useMemo(() => {
      if (typeof rawIrPrompt === "string" && rawIrPrompt.trim()) return rawIrPrompt;
      if (rawIrPrompt && typeof rawIrPrompt === "object") {
-@@ -153,16 +160,36 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
+@@ -153,16 +160,35 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
      }
      return currentPrompt;
    }, [rawIrPrompt, currentPrompt]);
@@ -860,7 +1128,6 @@ index bc10dd73..2f5e9ffd 100644
        depthTier: activeDepthTier,
        includeFrontmatter,
 +      entitlement: resolvedEntitlement,
-+      enforceTierLimit: true,
      });
 -  }, [irSource, activeDepthTier, includeFrontmatter]);
 +  }, [irSource, activeDepthTier, includeFrontmatter, resolvedEntitlement]);
@@ -1169,7 +1436,7 @@ index 00000000..abbe458d
 +  return lhs[0] === rhs[0] && lhs[1] === rhs[1];
 +}
 diff --git a/apps/web/src/engine/entitlementVerifier.ts b/apps/web/src/engine/entitlementVerifier.ts
-index 29f983dd..bee3d303 100644
+index 29f983dd..0ce94580 100644
 --- a/apps/web/src/engine/entitlementVerifier.ts
 +++ b/apps/web/src/engine/entitlementVerifier.ts
 @@ -1,16 +1,23 @@
@@ -1203,7 +1470,7 @@ index 29f983dd..bee3d303 100644
  
  export interface EntitlementTokenPayload {
    schema: "spe.entitlement.v1";
-@@ -18,15 +25,88 @@ export interface EntitlementTokenPayload {
+@@ -18,15 +25,109 @@ export interface EntitlementTokenPayload {
    planName: string;
    email: string;
    paymentReceiptId: string;
@@ -1218,6 +1485,7 @@ index 29f983dd..bee3d303 100644
 +export interface AuthoritativeReceiptRecord {
 +  exists: boolean;
 +  paid: boolean;
++  paymentStatus?: "PAID" | "UNPAID" | "REFUNDED" | "DISPUTED";
 +  subscriptionStatus: "ACTIVE" | "CANCELED" | "PAST_DUE" | "EXPIRED" | "REVOKED";
 +  tier: "pro" | "team";
 +  email: string;
@@ -1231,6 +1499,7 @@ index 29f983dd..bee3d303 100644
 +  subscriptionId: string;
 +  exists?: boolean;
 +  paid: boolean;
++  paymentStatus?: "PAID" | "UNPAID" | "REFUNDED" | "DISPUTED";
 +  subscriptionStatus: "ACTIVE" | "CANCELED" | "PAST_DUE" | "EXPIRED" | "REVOKED";
 +  tier: "pro" | "team";
 +  email: string;
@@ -1239,6 +1508,20 @@ index 29f983dd..bee3d303 100644
 +  attestedAtMs: number;
 +  issuerKeyId: string;
 +  signatureHex?: string;
++}
++
++export const DEFAULT_MAX_ATTESTATION_AGE_MS = 24 * 60 * 60 * 1000; // 86,400,000 ms (24 hours)
++
++export interface ReceiptStatusAttestationVerificationOptions {
++  trustedIssuerPublicKeys?: Record<string, string>;
++  verifySignatureFn?: (
++    canonicalPayloadJson: string,
++    signatureHex: string,
++    pinnedPublicKeyHex: string,
++    issuerKeyId: string,
++  ) => boolean;
++  currentEpochMs?: number;
++  maxAttestationAgeMs?: number;
 +}
 +
 +export interface EntitlementVerificationOptions {
@@ -1253,6 +1536,11 @@ index 29f983dd..bee3d303 100644
 +  trustedIssuerPublicKeys?: Record<string, string>;
 +  revokedReceiptIds?: Iterable<string>;
 +  revokedSubscriptionIds?: Iterable<string>;
++  /**
++   * Maximum acceptable age in milliseconds for offline signed receipt attestations.
++   * Defaults to 24 hours (86,400,000 ms).
++   */
++  maxAttestationAgeMs?: number;
 +  /**
 +   * Authoritative server receipt & subscription status verifier.
 +   * Confirms that `paymentReceiptId` exists, was actually paid, is currently ACTIVE,
@@ -1292,7 +1580,7 @@ index 29f983dd..bee3d303 100644
    rejectionReason: string | null;
  }
  
-@@ -39,8 +119,14 @@ export interface PublicBetaReservationRecord {
+@@ -39,8 +140,14 @@ export interface PublicBetaReservationRecord {
    paidEntitlementGranted: false;
  }
  
@@ -1309,7 +1597,7 @@ index 29f983dd..bee3d303 100644
  
  function hexToUtf8(hex: string): string {
    if (hex.length % 2 !== 0 || !/^[0-9a-fA-F]+$/.test(hex)) {
-@@ -53,7 +139,7 @@ function hexToUtf8(hex: string): string {
+@@ -53,7 +160,7 @@ function hexToUtf8(hex: string): string {
    return new TextDecoder().decode(bytes);
  }
  
@@ -1318,7 +1606,7 @@ index 29f983dd..bee3d303 100644
    const bytes = new TextEncoder().encode(text);
    return Array.from(bytes)
      .map((b) => b.toString(16).padStart(2, "0"))
-@@ -61,47 +147,103 @@ function utf8ToHex(text: string): string {
+@@ -61,47 +168,115 @@ function utf8ToHex(text: string): string {
  }
  
  /**
@@ -1337,8 +1625,8 @@ index 29f983dd..bee3d303 100644
 -}
 +export function verifySignedReceiptStatusAttestation(
 +  rawAttestation: SignedReceiptStatusAttestation | string,
-+  options: Pick<EntitlementVerificationOptions, "trustedIssuerPublicKeys" | "verifySignatureFn"> = {},
-+): (AuthoritativeReceiptRecord & { paymentReceiptId: string }) | null {
++  options: ReceiptStatusAttestationVerificationOptions = {},
++): (AuthoritativeReceiptRecord & { paymentReceiptId: string; attestedAtMs: number }) | null {
 +  if (!rawAttestation) return null;
 +  let parsed: SignedReceiptStatusAttestation;
 +  let sigHex: string | undefined;
@@ -1402,6 +1690,16 @@ index 29f983dd..bee3d303 100644
 +    return null;
 +  }
 +
++  // Enforce attestation freshness window (default: 24h) and prevent clock-skew future timestamps
++  const nowMs = options.currentEpochMs ?? Date.now();
++  const maxAgeMs = options.maxAttestationAgeMs ?? DEFAULT_MAX_ATTESTATION_AGE_MS;
++  if (parsed.attestedAtMs + maxAgeMs < nowMs) {
++    return null; // Expired / stale offline attestation window
++  }
++  if (parsed.attestedAtMs > nowMs + 60_000) {
++    return null; // Future timestamp clock skew rejected
++  }
++
 +  const pinnedKeyMap: Record<string, string> = options.trustedIssuerPublicKeys ?? {
 +    [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]: SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
 +  };
@@ -1424,11 +1722,13 @@ index 29f983dd..bee3d303 100644
 +    paymentReceiptId: parsed.paymentReceiptId,
 +    exists: parsed.exists ?? true,
 +    paid: parsed.paid,
++    paymentStatus: parsed.paymentStatus ?? (parsed.paid ? "PAID" : "UNPAID"),
 +    subscriptionStatus: parsed.subscriptionStatus,
 +    tier: parsed.tier,
 +    email: parsed.email,
 +    expiresAtMs: parsed.expiresAtMs,
 +    revoked: parsed.revoked,
++    attestedAtMs: parsed.attestedAtMs,
 +  };
  }
  
@@ -1455,7 +1755,7 @@ index 29f983dd..bee3d303 100644
  ): EntitlementVerificationResult {
    const trimmed = (rawToken || "").trim();
    if (!trimmed) {
-@@ -109,6 +251,7 @@ export function verifySignedEntitlementToken(
+@@ -109,6 +284,7 @@ export function verifySignedEntitlementToken(
        verified: false,
        tier: null,
        payload: null,
@@ -1463,7 +1763,7 @@ index 29f983dd..bee3d303 100644
        rejectionReason: "EMPTY_ENTITLEMENT_TOKEN",
      };
    }
-@@ -118,28 +261,36 @@ export function verifySignedEntitlementToken(
+@@ -118,28 +294,36 @@ export function verifySignedEntitlementToken(
        verified: false,
        tier: null,
        payload: null,
@@ -1505,7 +1805,7 @@ index 29f983dd..bee3d303 100644
      };
    }
  
-@@ -152,6 +303,7 @@ export function verifySignedEntitlementToken(
+@@ -152,6 +336,7 @@ export function verifySignedEntitlementToken(
        verified: false,
        tier: null,
        payload: null,
@@ -1513,7 +1813,7 @@ index 29f983dd..bee3d303 100644
        rejectionReason: "MALFORMED_ENTITLEMENT_PAYLOAD",
      };
    }
-@@ -170,17 +322,43 @@ export function verifySignedEntitlementToken(
+@@ -170,17 +355,43 @@ export function verifySignedEntitlementToken(
        verified: false,
        tier: null,
        payload: null,
@@ -1560,7 +1860,7 @@ index 29f983dd..bee3d303 100644
      };
    }
  
-@@ -190,9 +368,19 @@ export function verifySignedEntitlementToken(
+@@ -190,9 +401,19 @@ export function verifySignedEntitlementToken(
        verified: false,
        tier: null,
        payload: null,
@@ -1580,7 +1880,7 @@ index 29f983dd..bee3d303 100644
  
    if (
      options.expectedEmail &&
-@@ -202,33 +390,256 @@ export function verifySignedEntitlementToken(
+@@ -202,33 +423,285 @@ export function verifySignedEntitlementToken(
        verified: false,
        tier: null,
        payload: null,
@@ -1639,6 +1939,8 @@ index 29f983dd..bee3d303 100644
 +          const verifiedAtt = verifySignedReceiptStatusAttestation(candidateAttestation, {
 +            trustedIssuerPublicKeys: pinnedKeyMap,
 +            verifySignatureFn: options.verifySignatureFn,
++            currentEpochMs: nowMs,
++            maxAttestationAgeMs: options.maxAttestationAgeMs,
 +          });
 +          if (
 +            !verifiedAtt ||
@@ -1664,6 +1966,29 @@ index 29f983dd..bee3d303 100644
 +    }
 +    const record = effectiveVerifier(parsed.paymentReceiptId, parsed);
 +    if (!record || !record.exists) {
++      const candidateAttestation =
++        options.signedReceiptAttestation ||
++        (parts.length === 6 && embeddedReceiptAttHex && embeddedReceiptSigHex
++          ? `spe_receipt_status.v1.${embeddedReceiptAttHex}.${embeddedReceiptSigHex}`
++          : undefined);
++      if (candidateAttestation) {
++        const withoutFreshnessLimit = verifySignedReceiptStatusAttestation(candidateAttestation, {
++          trustedIssuerPublicKeys: pinnedKeyMap,
++          verifySignatureFn: options.verifySignatureFn,
++          currentEpochMs: nowMs,
++          maxAttestationAgeMs: Number.MAX_SAFE_INTEGER,
++        });
++        if (withoutFreshnessLimit) {
++          return {
++            verified: false,
++            tier: null,
++            payload: null,
++            signatureHex: null,
++            rejectionReason:
++              "STALE_RECEIPT_ATTESTATION: Signed receipt attestation exceeds maximum freshness window (maxAttestationAgeMs). Offline attestation expired.",
++          };
++        }
++      }
 +      return {
 +        verified: false,
 +        tier: null,
@@ -1827,6 +2152,7 @@ index 29f983dd..bee3d303 100644
 +  subscriptionTier?: "free" | "pro" | "team";
 +  entitlement?: EntitlementVerificationResult | null;
 +  currentEpochMs?: number;
++  trustedIssuerPublicKeys?: Record<string, string>;
 +} = {}): EntitlementVerificationResult | null {
 +  if (options.subscriptionTier === "free") {
 +    return null;
@@ -1834,13 +2160,16 @@ index 29f983dd..bee3d303 100644
 +  if (options.entitlement !== undefined) {
 +    return options.entitlement;
 +  }
-+  return resolveBrowserVerifiedEntitlement({ currentEpochMs: options.currentEpochMs });
++  return resolveBrowserVerifiedEntitlement({
++    currentEpochMs: options.currentEpochMs,
++    trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
++  });
 +}
 +
  /**
   * Records a Public Beta checkout waitlist reservation without granting paid tier entitlements.
   */
-@@ -239,7 +650,9 @@ export function createPublicBetaWaitlistReservation(
+@@ -239,7 +712,9 @@ export function createPublicBetaWaitlistReservation(
    const lowerPlan = selectedPlan.toLowerCase();
    const requestedTier: "pro" | "team" =
      lowerPlan.includes("team") || lowerPlan.includes("company") ? "team" : "pro";
@@ -1852,7 +2181,7 @@ index 29f983dd..bee3d303 100644
      status: "PUBLIC_BETA_WAITLIST_RESERVED",
      requestedPlan: selectedPlan,
 diff --git a/apps/web/src/engine/markdownExport.tsx b/apps/web/src/engine/markdownExport.tsx
-index 96848c40..26fe086a 100644
+index 96848c40..0999dba2 100644
 --- a/apps/web/src/engine/markdownExport.tsx
 +++ b/apps/web/src/engine/markdownExport.tsx
 @@ -1,6 +1,13 @@
@@ -1870,105 +2199,114 @@ index 96848c40..26fe086a 100644
  
  export interface MarkdownConstructOptions {
    title?: string;
-@@ -8,6 +15,10 @@ export interface MarkdownConstructOptions {
+@@ -8,6 +15,14 @@ export interface MarkdownConstructOptions {
    depthTier?: DepthTier;
    includeFrontmatter?: boolean;
    sha256?: string | null;
 +  subscriptionTier?: "free" | "pro" | "team";
 +  entitlement?: EntitlementVerificationResult | null;
-+  enforceTierLimit?: boolean;
++  /**
++   * @deprecated Removed in audit 4727aa62 remediation; Free tier output limits are strictly
++   * enforced at production boundaries and cannot be bypassed via options.
++   */
++  enforceTierLimit?: never;
 +  currentEpochMs?: number;
  }
  
  /**
-@@ -25,17 +36,47 @@ export function constructMarkdownSystemPrompt(
+@@ -17,7 +32,7 @@ export interface MarkdownConstructOptions {
+  */
+ export function constructMarkdownSystemPrompt(
+   irOrPrompt: string,
+-  options: MarkdownConstructOptions = {}
++  options: MarkdownConstructOptions = {},
+ ): string {
+   const {
+     title = "SPE Calibrated System Prompt",
+@@ -25,17 +40,34 @@ export function constructMarkdownSystemPrompt(
      depthTier = "normal",
      includeFrontmatter = false,
      sha256 = null,
 +    subscriptionTier,
 +    entitlement,
-+    enforceTierLimit,
 +    currentEpochMs,
    } = options;
  
-+  const shouldEnforce =
-+    Boolean(enforceTierLimit) ||
-+    subscriptionTier !== undefined ||
-+    entitlement !== undefined;
 +  const resolvedEntitlement =
 +    subscriptionTier === "free"
 +      ? null
 +      : entitlement !== undefined
 +        ? entitlement
-+        : shouldEnforce
-+          ? resolveBrowserVerifiedEntitlement({ currentEpochMs })
-+          : undefined;
++        : resolveBrowserVerifiedEntitlement({ currentEpochMs });
 +
    // Synthesize Markdown structure via universal synthesizer
    const mdBody = synthesizeSystemPrompt(irOrPrompt, {
      target: "chatgpt", // Standard GFM Markdown spec
      category,
      depthTier,
-+    ...(shouldEnforce
-+      ? {
-+          subscriptionTier,
-+          entitlement: resolvedEntitlement,
-+          currentEpochMs,
-+        }
-+      : {}),
++    subscriptionTier,
++    entitlement: resolvedEntitlement,
++    currentEpochMs,
    });
  
    if (!includeFrontmatter) {
 -    return mdBody;
-+    return shouldEnforce
-+      ? enforceTierOutputLimit(mdBody, {
-+          subscriptionTier,
-+          entitlement: resolvedEntitlement,
-+          currentEpochMs,
-+        })
-+      : mdBody;
++    return enforceTierOutputLimit(mdBody, {
++      subscriptionTier,
++      entitlement: resolvedEntitlement,
++      currentEpochMs,
++    });
    }
  
    const frontmatter = [
-@@ -54,7 +95,14 @@ export function constructMarkdownSystemPrompt(
+@@ -54,7 +86,12 @@ export function constructMarkdownSystemPrompt(
      .filter((line) => line !== null)
      .join("\n");
  
 -  return frontmatter + mdBody;
 +  const fullMarkdown = frontmatter + mdBody;
-+  return shouldEnforce
-+    ? enforceTierOutputLimit(fullMarkdown, {
-+        subscriptionTier,
-+        entitlement: resolvedEntitlement,
-+        currentEpochMs,
-+      })
-+    : fullMarkdown;
++  return enforceTierOutputLimit(fullMarkdown, {
++    subscriptionTier,
++    entitlement: resolvedEntitlement,
++    currentEpochMs,
++  });
  }
  
  /**
-@@ -109,6 +157,8 @@ export const MarkdownExportButton: React.FC<MarkdownExportButtonProps> = ({
+@@ -109,6 +146,7 @@ export const MarkdownExportButton: React.FC<MarkdownExportButtonProps> = ({
          depthTier,
          includeFrontmatter,
          sha256,
 +        entitlement: resolveBrowserVerifiedEntitlement(),
-+        enforceTierLimit: true,
        });
        const timestamp = new Date().toISOString().slice(0, 10);
        downloadMarkdownFile(`spe-system-prompt-${timestamp}.md`, mdContent);
 diff --git a/apps/web/src/engine/promptSynthesizer.mjs b/apps/web/src/engine/promptSynthesizer.mjs
-index 4d65939c..d8507f3f 100644
+index 4d65939c..fadf9828 100644
 --- a/apps/web/src/engine/promptSynthesizer.mjs
 +++ b/apps/web/src/engine/promptSynthesizer.mjs
-@@ -32,6 +32,8 @@
+@@ -31,7 +31,20 @@
+  * 6. ZERO DUPLICATE LINES GUARANTEE: Every line, heading, invariant, and table entry is unique across all tiers.
   */
  
++import { canonicalizeJson } from "./proofReceipt.ts";
++import {
++  normalizeEd25519PublicKeyHex,
++  verifyEd25519Signature,
++} from "./ed25519Verifier.ts";
++import {
++  SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID,
++  SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
++  verifySignedEntitlementToken,
++} from "./entitlementVerifier.ts";
++
  export const DEFAULT_DEPTH_TIER = "normal";
 +export const FREE_TIER_MAX_OUTPUT_CHARS = 5000;
 +export const PRO_TIER_MAX_OUTPUT_CHARS = 30000;
  
  const CATEGORY_RECIPES = {
    "AI Assistant": {
-@@ -756,7 +758,56 @@ export function synthesizeSystemPrompt(raw, opts) {
+@@ -756,7 +769,57 @@ export function synthesizeSystemPrompt(raw, opts) {
  
    const target = typeof opts === "string" ? opts : (opts && opts.target ? opts.target : "any");
    const depthTier = (opts && typeof opts === "object" && opts.depthTier) || "normal";
@@ -1987,6 +2325,7 @@ index 4d65939c..d8507f3f 100644
 +  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
 +    opts && typeof opts === "object" ? opts.entitlement : null,
 +    currentEpochMs,
++    opts,
 +  );
 +  const subscriptionTier = hasTierOption
 +    ? opts && typeof opts === "object" && opts.subscriptionTier === "free"
@@ -2026,7 +2365,7 @@ index 4d65939c..d8507f3f 100644
  
    const sections = {};
    const effectList = [];
-@@ -776,13 +827,23 @@ export function synthesizeSystemPrompt(raw, opts) {
+@@ -776,13 +839,23 @@ export function synthesizeSystemPrompt(raw, opts) {
      }
    }
  
@@ -2052,20 +2391,57 @@ index 4d65939c..d8507f3f 100644
  
    const is3D = /3d|three\.js|webgl|shader|canvas|depth_composite|2_5d|css_motion/i.test(objective);
    const isTeaching = /curious|14-year-old|teach|explain.*to.*(?:child|kid|teen|student|curious|learner)|analogy.*worked example|questions to check understanding/i.test(objective);
-@@ -1024,3 +1085,124 @@ Follow the explicit brief wherever it differs from these default working suggest
+@@ -1024,3 +1097,188 @@ Follow the explicit brief wherever it differs from these default working suggest
  
    return padToTarget(md.trim(), targetChars, false, false);
  }
 +
 +/**
 + * Validates that an entitlement object is a genuine, unexpired, active paid
-+ * EntitlementVerificationResult with a signed payload and 64-byte Ed25519 signature.
-+ * Bare `{ subscriptionTier: "pro" }` strings or shallow `{ verified: true, tier: "pro" }`
-+ * objects without a valid `EntitlementTokenPayload` and `signatureHex` are rejected.
++ * EntitlementVerificationResult with a cryptographically verified Ed25519 signature
++ * over its canonical payload against pinned billing authority public keys, OR a raw
++ * signed entitlement token string (spe_entitlement.v1...).
++ *
++ * Bare `{ subscriptionTier: "pro" }` strings, shallow `{ verified: true, tier: "pro" }`
++ * objects, or adversary-constructed objects with invalid or unpinned signatures
++ * (e.g. `{ verified: true, signatureHex: "00".repeat(64), payload: { ... } }`)
++ * are cryptographically rejected at this boundary.
 + */
-+export function isVerifiedPaidEntitlementResult(entitlement, currentEpochMs = Date.now()) {
-+  if (!entitlement || typeof entitlement !== "object") return false;
-+  if (entitlement.verified !== true) return false;
++export function isVerifiedPaidEntitlementResult(
++  entitlement,
++  currentEpochMs = Date.now(),
++  opts = {},
++) {
++  const options =
++    typeof currentEpochMs === "object" && currentEpochMs !== null
++      ? currentEpochMs
++      : typeof opts === "object" && opts !== null
++        ? opts
++        : {};
++  const effectiveEpochMs =
++    typeof currentEpochMs === "number"
++      ? currentEpochMs
++      : typeof options.currentEpochMs === "number"
++        ? options.currentEpochMs
++        : Date.now();
++
++  if (!entitlement) return false;
++
++  // Case 1: Raw signed entitlement token string (`spe_entitlement.v1...`)
++  if (typeof entitlement === "string") {
++    const trimmed = entitlement.trim();
++    if (!trimmed.startsWith("spe_entitlement.v1.")) return false;
++    const tokenCheck = verifySignedEntitlementToken(trimmed, {
++      ...options,
++      currentEpochMs: effectiveEpochMs,
++    });
++    return Boolean(
++      tokenCheck.verified && (tokenCheck.tier === "pro" || tokenCheck.tier === "team"),
++    );
++  }
++
++  // Case 2: EntitlementVerificationResult object
++  if (typeof entitlement !== "object") return false;
 +  if (entitlement.tier !== "pro" && entitlement.tier !== "team") return false;
 +  if (
 +    typeof entitlement.signatureHex !== "string" ||
@@ -2085,10 +2461,34 @@ index 4d65939c..d8507f3f 100644
 +  if (typeof payload.subscriptionId !== "string" || !payload.subscriptionId.trim()) {
 +    return false;
 +  }
-+  if (typeof payload.expiresAtMs !== "number" || payload.expiresAtMs <= currentEpochMs) {
++  if (typeof payload.expiresAtMs !== "number" || payload.expiresAtMs <= effectiveEpochMs) {
 +    return false;
 +  }
-+  return true;
++  if (typeof payload.issuerKeyId !== "string" || !payload.issuerKeyId.trim()) {
++    return false;
++  }
++
++  // Cryptographic re-verification against pinned billing authority public keys:
++  // MUST NOT trust caller-asserted `verified: true` or unverified signature formatting!
++  const trustedKeys = options.trustedIssuerPublicKeys ?? {
++    [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]: SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
++  };
++  const rawPinnedKey = trustedKeys[payload.issuerKeyId];
++  if (!rawPinnedKey) return false;
++  const normalizedPinnedKey = normalizeEd25519PublicKeyHex(rawPinnedKey);
++  if (!normalizedPinnedKey) return false;
++
++  const canonicalPayload = canonicalizeJson(payload);
++  const sigValid = options.verifySignatureFn
++    ? options.verifySignatureFn(
++        canonicalPayload,
++        entitlement.signatureHex,
++        normalizedPinnedKey,
++        payload.issuerKeyId,
++      )
++    : verifyEd25519Signature(canonicalPayload, entitlement.signatureHex, normalizedPinnedKey);
++
++  return sigValid === true;
 +}
 +
 +/**
@@ -2107,6 +2507,7 @@ index 4d65939c..d8507f3f 100644
 +  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
 +    entitlement,
 +    currentEpochMs,
++    opts,
 +  );
 +  const subscriptionTier =
 +    opts && typeof opts === "object" && opts.subscriptionTier === "free"
@@ -2148,6 +2549,7 @@ index 4d65939c..d8507f3f 100644
 +  const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
 +    entitlement,
 +    currentEpochMs,
++    opts,
 +  );
 +  const effectiveSubscriptionTier =
 +    opts && typeof opts === "object" && opts.subscriptionTier === "free"
@@ -2171,6 +2573,7 @@ index 4d65939c..d8507f3f 100644
 +        : PRO_TIER_MAX_OUTPUT_CHARS,
 +  });
 +  return enforceTierOutputLimit(synthesized, {
++    ...(opts && typeof opts === "object" ? opts : {}),
 +    subscriptionTier: effectiveSubscriptionTier,
 +    entitlement: effectiveSubscriptionTier === "free" ? null : entitlement,
 +    currentEpochMs,
@@ -2275,7 +2678,7 @@ index f8e8f31c..8ee267c0 100644
      },
    );
 diff --git a/apps/web/src/engine/proofReceipt.ts b/apps/web/src/engine/proofReceipt.ts
-index 4f03357b..6f661972 100644
+index 4f03357b..76ebcb7d 100644
 --- a/apps/web/src/engine/proofReceipt.ts
 +++ b/apps/web/src/engine/proofReceipt.ts
 @@ -2,10 +2,15 @@
@@ -2381,7 +2784,7 @@ index 4f03357b..6f661972 100644
    verifySignatureFn?: (canonicalDigestHex: string, signatureHex: string, publicKeyHex: string) => boolean;
    requireLiveModelEmpiricalEval?: boolean;
  }
-@@ -115,11 +173,274 @@ export function canonicalizeJson(obj: unknown): string {
+@@ -115,11 +173,293 @@ export function canonicalizeJson(obj: unknown): string {
    return "{" + entries.join(",") + "}";
  }
  
@@ -2470,24 +2873,33 @@ index 4f03357b..6f661972 100644
 +  if (!normalizedPubHex) {
 +    return { verified: false, reason: "Invalid observerPublicKeyHex format." };
 +  }
-+  if (trustedObserverKeys) {
-+    const pinnedKey = trustedObserverKeys[attestation.harnessId];
-+    if (!pinnedKey) {
-+      return {
-+        verified: false,
-+        reason: `Untrusted network observer harnessId: ${attestation.harnessId}`,
-+      };
-+    }
-+    const normalizedPinned = normalizeEd25519PublicKeyHex(pinnedKey);
-+    if (!normalizedPinned) {
-+      return { verified: false, reason: "Malformed pinned observer public key." };
-+    }
-+    if (normalizedPinned !== normalizedPubHex) {
-+      return {
-+        verified: false,
-+        reason: `Observer public key mismatch for harnessId: ${attestation.harnessId}`,
-+      };
-+    }
++  if (
++    !trustedObserverKeys ||
++    typeof trustedObserverKeys !== "object" ||
++    Object.keys(trustedObserverKeys).length === 0
++  ) {
++    return {
++      verified: false,
++      reason:
++        "REJECTED_UNPINNED_OBSERVER_REGISTRY: Missing or empty trustedObserverKeys registry. Independent evidence requires explicitly pinned observer keys.",
++    };
++  }
++  const pinnedKey = trustedObserverKeys[attestation.harnessId];
++  if (!pinnedKey) {
++    return {
++      verified: false,
++      reason: `Untrusted network observer harnessId: ${attestation.harnessId}`,
++    };
++  }
++  const normalizedPinned = normalizeEd25519PublicKeyHex(pinnedKey);
++  if (!normalizedPinned) {
++    return { verified: false, reason: "Malformed pinned observer public key." };
++  }
++  if (normalizedPinned !== normalizedPubHex) {
++    return {
++      verified: false,
++      reason: `Observer public key mismatch for harnessId: ${attestation.harnessId}`,
++    };
 +  }
 +  const unsignedBody = {
 +    schemaVersion: attestation.schemaVersion,
@@ -2599,26 +3011,36 @@ index 4f03357b..6f661972 100644
 +  if (!normalizedPubHex) {
 +    return { verified: false, liveCallsCount: 0, reason: "Invalid evaluatorPublicKeyHex format." };
 +  }
-+  if (trustedEvaluatorKeys) {
-+    const pinnedKey = trustedEvaluatorKeys[attestation.harnessId];
-+    if (!pinnedKey) {
-+      return {
-+        verified: false,
-+        liveCallsCount: 0,
-+        reason: `Untrusted live evaluator harnessId: ${attestation.harnessId}`,
-+      };
-+    }
-+    const normalizedPinned = normalizeEd25519PublicKeyHex(pinnedKey);
-+    if (!normalizedPinned) {
-+      return { verified: false, liveCallsCount: 0, reason: "Malformed pinned evaluator public key." };
-+    }
-+    if (normalizedPinned !== normalizedPubHex) {
-+      return {
-+        verified: false,
-+        liveCallsCount: 0,
-+        reason: `Evaluator public key mismatch for harnessId: ${attestation.harnessId}`,
-+      };
-+    }
++  if (
++    !trustedEvaluatorKeys ||
++    typeof trustedEvaluatorKeys !== "object" ||
++    Object.keys(trustedEvaluatorKeys).length === 0
++  ) {
++    return {
++      verified: false,
++      liveCallsCount: 0,
++      reason:
++        "REJECTED_UNPINNED_EVALUATOR_REGISTRY: Missing or empty trustedEvaluatorKeys registry. Independent evidence requires explicitly pinned evaluator keys.",
++    };
++  }
++  const pinnedKey = trustedEvaluatorKeys[attestation.harnessId];
++  if (!pinnedKey) {
++    return {
++      verified: false,
++      liveCallsCount: 0,
++      reason: `Untrusted live evaluator harnessId: ${attestation.harnessId}`,
++    };
++  }
++  const normalizedPinned = normalizeEd25519PublicKeyHex(pinnedKey);
++  if (!normalizedPinned) {
++    return { verified: false, liveCallsCount: 0, reason: "Malformed pinned evaluator public key." };
++  }
++  if (normalizedPinned !== normalizedPubHex) {
++    return {
++      verified: false,
++      liveCallsCount: 0,
++      reason: `Evaluator public key mismatch for harnessId: ${attestation.harnessId}`,
++    };
 +  }
 +  const unsignedBody = {
 +    schemaVersion: attestation.schemaVersion,
@@ -2659,7 +3081,7 @@ index 4f03357b..6f661972 100644
   */
  export function generateProofReceipt(
    baselinePrompt: string,
-@@ -134,8 +455,24 @@ export function generateProofReceipt(
+@@ -134,8 +474,24 @@ export function generateProofReceipt(
    const intentHash = computeSha256("spe.protected-intent.v1:" + candidatePrompt.slice(0, 500));
    const suiteHash = computeSha256(gymReport.suiteId + ":1024_attacks");
    const metaHash = computeSha256("metamorphic_31_relations");
@@ -2686,7 +3108,7 @@ index 4f03357b..6f661972 100644
  
    const hardGates: ProofReceiptHardGates = {
      protectedIntentPreserved: twinReport.delta.intentPreserved,
-@@ -182,6 +519,12 @@ export function generateProofReceipt(
+@@ -182,6 +538,12 @@ export function generateProofReceipt(
        selfGeneratedAssertionOnly: true,
        independentVerificationRequiredForLiveModels: liveCalls === 0,
        producerKeyId: "spe-local-unauthenticated-digest",
@@ -2699,7 +3121,7 @@ index 4f03357b..6f661972 100644
      },
    };
  
-@@ -206,8 +549,9 @@ export function generateProofReceipt(
+@@ -206,8 +568,9 @@ export function generateProofReceipt(
  }
  
  /**
@@ -2711,7 +3133,7 @@ index 4f03357b..6f661972 100644
   */
  export function attachProducerSignature(
    receipt: ProofReceiptPayload,
-@@ -215,6 +559,13 @@ export function attachProducerSignature(
+@@ -215,6 +578,13 @@ export function attachProducerSignature(
    producerPublicKeyHex: string,
    signDigestFn: (canonicalDigestHex: string) => string,
  ): ProofReceiptPayload {
@@ -2725,7 +3147,7 @@ index 4f03357b..6f661972 100644
    const { receiptDigest: _oldDigest, ...unsigned } = receipt;
    const unsignedWithoutSig: Omit<ProofReceiptPayload, "receiptDigest"> = {
      ...unsigned,
-@@ -222,13 +573,19 @@ export function attachProducerSignature(
+@@ -222,13 +592,19 @@ export function attachProducerSignature(
        ...unsigned.evidenceProvenance,
        selfGeneratedAssertionOnly: false,
        producerKeyId,
@@ -2746,7 +3168,7 @@ index 4f03357b..6f661972 100644
    const signedBody: Omit<ProofReceiptPayload, "receiptDigest"> = {
      ...unsignedWithoutSig,
      evidenceProvenance: {
-@@ -243,8 +600,11 @@ export function attachProducerSignature(
+@@ -243,8 +619,11 @@ export function attachProducerSignature(
  }
  
  /**
@@ -2760,7 +3182,7 @@ index 4f03357b..6f661972 100644
   */
  export function verifyProofReceiptAuthenticity(
    receipt: ProofReceiptPayload,
-@@ -264,36 +624,119 @@ export function verifyProofReceiptAuthenticity(
+@@ -264,36 +643,119 @@ export function verifyProofReceiptAuthenticity(
    }
  
    let producerAuthenticated = false;
@@ -2902,7 +3324,7 @@ index 4f03357b..6f661972 100644
    if (!receipt.hardGates.protectedIntentPreserved || !receipt.hardGates.authorityNotExpanded) {
      experimentalValidityVerified = false;
      reasons.push("Hard gates failed on receipt (intent or authority violation).");
-@@ -321,4 +764,3 @@ export function verifyProofReceiptAuthenticity(
+@@ -321,4 +783,3 @@ export function verifyProofReceiptAuthenticity(
      reasons,
    };
  }
@@ -3038,10 +3460,10 @@ index b5b08515..098b10fb 100644
      } catch {
 diff --git a/apps/web/src/server/billingAuthority.ts b/apps/web/src/server/billingAuthority.ts
 new file mode 100644
-index 00000000..c53fe5ce
+index 00000000..e6fe5143
 --- /dev/null
 +++ b/apps/web/src/server/billingAuthority.ts
-@@ -0,0 +1,332 @@
+@@ -0,0 +1,539 @@
 +/**
 + * SPE Ω Authoritative Server-Side Billing Webhook & Ed25519 Entitlement Issuer
 + *
@@ -3067,6 +3489,8 @@ index 00000000..c53fe5ce
 +  timingSafeEqual,
 +  type KeyObject,
 +} from "node:crypto";
++import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
++import { dirname } from "node:path";
 +import { canonicalizeJson } from "../engine/proofReceipt.ts";
 +import { normalizeEd25519PublicKeyHex } from "../engine/ed25519Verifier.ts";
 +import {
@@ -3076,12 +3500,97 @@ index 00000000..c53fe5ce
 +  type SignedReceiptStatusAttestation,
 +} from "../engine/entitlementVerifier.ts";
 +
++export type AuthoritativeLedgerRecord = AuthoritativeReceiptRecord & {
++  paymentReceiptId: string;
++  subscriptionId: string;
++  planName: string;
++  issuedAtMs: number;
++  amountCents: number;
++  paymentStatus: "PAID" | "UNPAID" | "REFUNDED" | "DISPUTED";
++};
++
++export interface BillingLedgerState {
++  records: Record<string, AuthoritativeLedgerRecord>;
++  processedEventIds: string[];
++}
++
++export interface BillingStorageAdapter {
++  load(): BillingLedgerState;
++  save(state: BillingLedgerState): void;
++}
++
++export class InMemoryBillingStorageAdapter implements BillingStorageAdapter {
++  #state: BillingLedgerState = { records: {}, processedEventIds: [] };
++
++  load(): BillingLedgerState {
++    return {
++      records: { ...this.#state.records },
++      processedEventIds: [...this.#state.processedEventIds],
++    };
++  }
++
++  save(state: BillingLedgerState): void {
++    this.#state = {
++      records: { ...state.records },
++      processedEventIds: [...state.processedEventIds],
++    };
++  }
++}
++
++export class FileBillingStorageAdapter implements BillingStorageAdapter {
++  readonly filePath: string;
++
++  constructor(filePath: string) {
++    this.filePath = filePath;
++  }
++
++  load(): BillingLedgerState {
++    if (!existsSync(this.filePath)) {
++      return { records: {}, processedEventIds: [] };
++    }
++    try {
++      const raw = readFileSync(this.filePath, "utf8");
++      const parsed = JSON.parse(raw);
++      return {
++        records: (parsed && typeof parsed.records === "object" ? parsed.records : {}) as Record<
++          string,
++          AuthoritativeLedgerRecord
++        >,
++        processedEventIds: Array.isArray(parsed?.processedEventIds) ? parsed.processedEventIds : [],
++      };
++    } catch (err) {
++      throw new Error(
++        `FAILED_TO_LOAD_BILLING_LEDGER from ${this.filePath}: ${
++          err instanceof Error ? err.message : String(err)
++        }`,
++      );
++    }
++  }
++
++  save(state: BillingLedgerState): void {
++    const dir = dirname(this.filePath);
++    if (!existsSync(dir)) {
++      mkdirSync(dir, { recursive: true });
++    }
++    const tmpPath = `${this.filePath}.${randomBytes(6).toString("hex")}.tmp`;
++    const serialized = JSON.stringify(state, null, 2);
++    writeFileSync(tmpPath, serialized, "utf8");
++    renameSync(tmpPath, this.filePath);
++  }
++}
++
 +export interface PaymentWebhookEvent {
 +  eventId: string;
++  eventNonce?: string;
 +  eventType:
 +    | "payment.succeeded"
++    | "subscription.past_due"
 +    | "subscription.canceled"
 +    | "subscription.expired"
++    | "payment.refunded"
++    | "charge.refunded"
++    | "payment.disputed"
++    | "charge.dispute.created"
 +    | "entitlement.revoked";
 +  paymentReceiptId: string;
 +  subscriptionId: string;
@@ -3098,6 +3607,8 @@ index 00000000..c53fe5ce
 +  issuerKeyId?: string;
 +  ed25519PrivateKeyPemOrDerHex?: string;
 +  webhookHmacSecret?: string;
++  storageAdapter?: BillingStorageAdapter;
++  storageFilePath?: string;
 +}
 +
 +export class AuthoritativeBillingAuthority {
@@ -3105,15 +3616,9 @@ index 00000000..c53fe5ce
 +  readonly publicKeyHex: string;
 +  readonly #privateKey: KeyObject;
 +  readonly #webhookSecret: Buffer;
-+  readonly #receiptLedger = new Map<
-+    string,
-+    AuthoritativeReceiptRecord & {
-+      subscriptionId: string;
-+      planName: string;
-+      issuedAtMs: number;
-+      amountCents: number;
-+    }
-+  >();
++  readonly #storageAdapter: BillingStorageAdapter;
++  readonly #receiptLedger = new Map<string, AuthoritativeLedgerRecord>();
++  readonly #processedEventIds = new Set<string>();
 +
 +  constructor(options: ServerBillingAuthorityOptions = {}) {
 +    this.issuerKeyId = options.issuerKeyId ?? "spe-billing-authority-ed25519-prod-v1";
@@ -3149,6 +3654,53 @@ index 00000000..c53fe5ce
 +    this.#webhookSecret = options.webhookHmacSecret
 +      ? Buffer.from(options.webhookHmacSecret, "utf8")
 +      : randomBytes(32);
++
++    this.#storageAdapter =
++      options.storageAdapter ??
++      (options.storageFilePath
++        ? new FileBillingStorageAdapter(options.storageFilePath)
++        : new InMemoryBillingStorageAdapter());
++
++    this.reloadLedger();
++  }
++
++  /**
++   * Reloads authoritative state from the durable storage adapter.
++   */
++  reloadLedger(): void {
++    const loaded = this.#storageAdapter.load();
++    this.#receiptLedger.clear();
++    for (const [id, rec] of Object.entries(loaded.records || {})) {
++      this.#receiptLedger.set(id, { ...rec });
++    }
++    this.#processedEventIds.clear();
++    for (const eventId of loaded.processedEventIds || []) {
++      this.#processedEventIds.add(eventId);
++    }
++  }
++
++  flush(): void {
++    this.#saveLedger();
++  }
++
++  #saveLedger(): void {
++    const records: Record<string, AuthoritativeLedgerRecord> = {};
++    for (const [id, rec] of this.#receiptLedger.entries()) {
++      records[id] = { ...rec };
++    }
++    this.#storageAdapter.save({
++      records,
++      processedEventIds: Array.from(this.#processedEventIds),
++    });
++  }
++
++  getProcessedEventIds(): Set<string> {
++    return new Set(this.#processedEventIds);
++  }
++
++  getLedgerRecord(paymentReceiptId: string): AuthoritativeLedgerRecord | undefined {
++    const rec = this.#receiptLedger.get(paymentReceiptId);
++    return rec ? { ...rec } : undefined;
 +  }
 +
 +  /**
@@ -3161,6 +3713,7 @@ index 00000000..c53fe5ce
 +
 +  /**
 +   * Verifies a payment webhook signature and updates the authoritative server receipt & subscription ledger.
++   * Enforces replay protection and event deduplication via eventId.
 +   */
 +  processVerifiedPaymentWebhook(
 +    event: PaymentWebhookEvent,
@@ -3178,8 +3731,20 @@ index 00000000..c53fe5ce
 +      throw new Error("INVALID_PAYMENT_WEBHOOK_SIGNATURE: Webhook failed HMAC-SHA256 verification");
 +    }
 +
++    if (!event.eventId || typeof event.eventId !== "string" || !event.eventId.trim()) {
++      throw new Error("MISSING_WEBHOOK_EVENT_ID: Webhook eventId is required for replay protection");
++    }
++
 +    if (!event.paymentReceiptId || !event.email || !event.subscriptionId) {
 +      throw new Error("INCOMPLETE_PAYMENT_WEBHOOK_EVENT");
++    }
++
++    // Idempotent webhook replay deduplication: safe replay without state corruption
++    if (this.#processedEventIds.has(event.eventId)) {
++      const existing = this.#receiptLedger.get(event.paymentReceiptId);
++      if (existing) {
++        return { ...existing };
++      }
 +    }
 +
 +    if (event.eventType === "payment.succeeded") {
@@ -3189,10 +3754,12 @@ index 00000000..c53fe5ce
 +          `INSUFFICIENT_PAYMENT_AMOUNT: tier=${event.tier} requires >= ${minRequiredCents} cents`,
 +        );
 +      }
-+      const record = {
++      const record: AuthoritativeLedgerRecord = {
++        paymentReceiptId: event.paymentReceiptId,
 +        exists: true,
 +        paid: true,
-+        subscriptionStatus: "ACTIVE" as const,
++        paymentStatus: "PAID",
++        subscriptionStatus: "ACTIVE",
 +        tier: event.tier,
 +        planName: event.planName,
 +        email: event.email.trim(),
@@ -3203,6 +3770,8 @@ index 00000000..c53fe5ce
 +        revoked: false,
 +      };
 +      this.#receiptLedger.set(event.paymentReceiptId, record);
++      this.#processedEventIds.add(event.eventId);
++      this.#saveLedger();
 +      return { ...record };
 +    }
 +
@@ -3211,18 +3780,37 @@ index 00000000..c53fe5ce
 +      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${event.paymentReceiptId}`);
 +    }
 +
-+    if (event.eventType === "subscription.canceled") {
++    if (event.eventType === "subscription.past_due") {
++      existing.subscriptionStatus = "PAST_DUE";
++      existing.revoked = true;
++    } else if (event.eventType === "subscription.canceled") {
 +      existing.subscriptionStatus = "CANCELED";
 +      existing.revoked = true;
 +    } else if (event.eventType === "subscription.expired") {
 +      existing.subscriptionStatus = "EXPIRED";
 +      existing.expiresAtMs = Math.min(existing.expiresAtMs, event.occurredAtMs);
++      existing.revoked = true;
++    } else if (event.eventType === "payment.refunded" || event.eventType === "charge.refunded") {
++      existing.paid = false;
++      existing.paymentStatus = "REFUNDED";
++      existing.subscriptionStatus = "CANCELED";
++      existing.revoked = true;
++    } else if (
++      event.eventType === "payment.disputed" ||
++      event.eventType === "charge.dispute.created"
++    ) {
++      existing.paid = false;
++      existing.paymentStatus = "DISPUTED";
++      existing.subscriptionStatus = "REVOKED";
++      existing.revoked = true;
 +    } else if (event.eventType === "entitlement.revoked") {
 +      existing.subscriptionStatus = "REVOKED";
 +      existing.revoked = true;
 +    }
 +
 +    this.#receiptLedger.set(event.paymentReceiptId, existing);
++    this.#processedEventIds.add(event.eventId);
++    this.#saveLedger();
 +    return { ...existing };
 +  }
 +
@@ -3332,7 +3920,7 @@ index 00000000..c53fe5ce
 +  }
 +
 +  /**
-+   * Authoritative server-side cancellation, revocation, or expiration mutators.
++   * Authoritative server-side lifecycle mutators.
 +   */
 +  cancelSubscription(paymentReceiptId: string): void {
 +    const existing = this.#receiptLedger.get(paymentReceiptId);
@@ -3341,6 +3929,8 @@ index 00000000..c53fe5ce
 +    }
 +    existing.subscriptionStatus = "CANCELED";
 +    existing.revoked = true;
++    this.#receiptLedger.set(paymentReceiptId, existing);
++    this.#saveLedger();
 +  }
 +
 +  revokeEntitlement(paymentReceiptId: string): void {
@@ -3350,6 +3940,45 @@ index 00000000..c53fe5ce
 +    }
 +    existing.subscriptionStatus = "REVOKED";
 +    existing.revoked = true;
++    this.#receiptLedger.set(paymentReceiptId, existing);
++    this.#saveLedger();
++  }
++
++  markPastDue(paymentReceiptId: string): void {
++    const existing = this.#receiptLedger.get(paymentReceiptId);
++    if (!existing) {
++      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${paymentReceiptId}`);
++    }
++    existing.subscriptionStatus = "PAST_DUE";
++    existing.revoked = true;
++    this.#receiptLedger.set(paymentReceiptId, existing);
++    this.#saveLedger();
++  }
++
++  markRefunded(paymentReceiptId: string): void {
++    const existing = this.#receiptLedger.get(paymentReceiptId);
++    if (!existing) {
++      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${paymentReceiptId}`);
++    }
++    existing.paid = false;
++    existing.paymentStatus = "REFUNDED";
++    existing.subscriptionStatus = "CANCELED";
++    existing.revoked = true;
++    this.#receiptLedger.set(paymentReceiptId, existing);
++    this.#saveLedger();
++  }
++
++  markDisputed(paymentReceiptId: string): void {
++    const existing = this.#receiptLedger.get(paymentReceiptId);
++    if (!existing) {
++      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${paymentReceiptId}`);
++    }
++    existing.paid = false;
++    existing.paymentStatus = "DISPUTED";
++    existing.subscriptionStatus = "REVOKED";
++    existing.revoked = true;
++    this.#receiptLedger.set(paymentReceiptId, existing);
++    this.#saveLedger();
 +  }
 +
 +  /**

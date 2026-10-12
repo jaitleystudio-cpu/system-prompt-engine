@@ -187,7 +187,6 @@ export const PromptRadarInspector: React.FC<PromptRadarInspectorProps> = ({
       depthTier: activeDepthTier,
       includeFrontmatter,
       entitlement: resolvedEntitlement,
-      enforceTierLimit: true,
     });
   }, [irSource, activeDepthTier, includeFrontmatter, resolvedEntitlement]);
 

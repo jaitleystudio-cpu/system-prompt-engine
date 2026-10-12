@@ -23,6 +23,8 @@ import {
   timingSafeEqual,
   type KeyObject,
 } from "node:crypto";
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 import { canonicalizeJson } from "../engine/proofReceipt.ts";
 import { normalizeEd25519PublicKeyHex } from "../engine/ed25519Verifier.ts";
 import {
@@ -32,12 +34,97 @@ import {
   type SignedReceiptStatusAttestation,
 } from "../engine/entitlementVerifier.ts";
 
+export type AuthoritativeLedgerRecord = AuthoritativeReceiptRecord & {
+  paymentReceiptId: string;
+  subscriptionId: string;
+  planName: string;
+  issuedAtMs: number;
+  amountCents: number;
+  paymentStatus: "PAID" | "UNPAID" | "REFUNDED" | "DISPUTED";
+};
+
+export interface BillingLedgerState {
+  records: Record<string, AuthoritativeLedgerRecord>;
+  processedEventIds: string[];
+}
+
+export interface BillingStorageAdapter {
+  load(): BillingLedgerState;
+  save(state: BillingLedgerState): void;
+}
+
+export class InMemoryBillingStorageAdapter implements BillingStorageAdapter {
+  #state: BillingLedgerState = { records: {}, processedEventIds: [] };
+
+  load(): BillingLedgerState {
+    return {
+      records: { ...this.#state.records },
+      processedEventIds: [...this.#state.processedEventIds],
+    };
+  }
+
+  save(state: BillingLedgerState): void {
+    this.#state = {
+      records: { ...state.records },
+      processedEventIds: [...state.processedEventIds],
+    };
+  }
+}
+
+export class FileBillingStorageAdapter implements BillingStorageAdapter {
+  readonly filePath: string;
+
+  constructor(filePath: string) {
+    this.filePath = filePath;
+  }
+
+  load(): BillingLedgerState {
+    if (!existsSync(this.filePath)) {
+      return { records: {}, processedEventIds: [] };
+    }
+    try {
+      const raw = readFileSync(this.filePath, "utf8");
+      const parsed = JSON.parse(raw);
+      return {
+        records: (parsed && typeof parsed.records === "object" ? parsed.records : {}) as Record<
+          string,
+          AuthoritativeLedgerRecord
+        >,
+        processedEventIds: Array.isArray(parsed?.processedEventIds) ? parsed.processedEventIds : [],
+      };
+    } catch (err) {
+      throw new Error(
+        `FAILED_TO_LOAD_BILLING_LEDGER from ${this.filePath}: ${
+          err instanceof Error ? err.message : String(err)
+        }`,
+      );
+    }
+  }
+
+  save(state: BillingLedgerState): void {
+    const dir = dirname(this.filePath);
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true });
+    }
+    const tmpPath = `${this.filePath}.${randomBytes(6).toString("hex")}.tmp`;
+    const serialized = JSON.stringify(state, null, 2);
+    writeFileSync(tmpPath, serialized, "utf8");
+    renameSync(tmpPath, this.filePath);
+  }
+}
+
 export interface PaymentWebhookEvent {
   eventId: string;
+  eventNonce?: string;
   eventType:
     | "payment.succeeded"
+    | "subscription.past_due"
     | "subscription.canceled"
     | "subscription.expired"
+    | "payment.refunded"
+    | "charge.refunded"
+    | "payment.disputed"
+    | "charge.dispute.created"
     | "entitlement.revoked";
   paymentReceiptId: string;
   subscriptionId: string;
@@ -54,6 +141,8 @@ export interface ServerBillingAuthorityOptions {
   issuerKeyId?: string;
   ed25519PrivateKeyPemOrDerHex?: string;
   webhookHmacSecret?: string;
+  storageAdapter?: BillingStorageAdapter;
+  storageFilePath?: string;
 }
 
 export class AuthoritativeBillingAuthority {
@@ -61,15 +150,9 @@ export class AuthoritativeBillingAuthority {
   readonly publicKeyHex: string;
   readonly #privateKey: KeyObject;
   readonly #webhookSecret: Buffer;
-  readonly #receiptLedger = new Map<
-    string,
-    AuthoritativeReceiptRecord & {
-      subscriptionId: string;
-      planName: string;
-      issuedAtMs: number;
-      amountCents: number;
-    }
-  >();
+  readonly #storageAdapter: BillingStorageAdapter;
+  readonly #receiptLedger = new Map<string, AuthoritativeLedgerRecord>();
+  readonly #processedEventIds = new Set<string>();
 
   constructor(options: ServerBillingAuthorityOptions = {}) {
     this.issuerKeyId = options.issuerKeyId ?? "spe-billing-authority-ed25519-prod-v1";
@@ -105,6 +188,53 @@ export class AuthoritativeBillingAuthority {
     this.#webhookSecret = options.webhookHmacSecret
       ? Buffer.from(options.webhookHmacSecret, "utf8")
       : randomBytes(32);
+
+    this.#storageAdapter =
+      options.storageAdapter ??
+      (options.storageFilePath
+        ? new FileBillingStorageAdapter(options.storageFilePath)
+        : new InMemoryBillingStorageAdapter());
+
+    this.reloadLedger();
+  }
+
+  /**
+   * Reloads authoritative state from the durable storage adapter.
+   */
+  reloadLedger(): void {
+    const loaded = this.#storageAdapter.load();
+    this.#receiptLedger.clear();
+    for (const [id, rec] of Object.entries(loaded.records || {})) {
+      this.#receiptLedger.set(id, { ...rec });
+    }
+    this.#processedEventIds.clear();
+    for (const eventId of loaded.processedEventIds || []) {
+      this.#processedEventIds.add(eventId);
+    }
+  }
+
+  flush(): void {
+    this.#saveLedger();
+  }
+
+  #saveLedger(): void {
+    const records: Record<string, AuthoritativeLedgerRecord> = {};
+    for (const [id, rec] of this.#receiptLedger.entries()) {
+      records[id] = { ...rec };
+    }
+    this.#storageAdapter.save({
+      records,
+      processedEventIds: Array.from(this.#processedEventIds),
+    });
+  }
+
+  getProcessedEventIds(): Set<string> {
+    return new Set(this.#processedEventIds);
+  }
+
+  getLedgerRecord(paymentReceiptId: string): AuthoritativeLedgerRecord | undefined {
+    const rec = this.#receiptLedger.get(paymentReceiptId);
+    return rec ? { ...rec } : undefined;
   }
 
   /**
@@ -117,6 +247,7 @@ export class AuthoritativeBillingAuthority {
 
   /**
    * Verifies a payment webhook signature and updates the authoritative server receipt & subscription ledger.
+   * Enforces replay protection and event deduplication via eventId.
    */
   processVerifiedPaymentWebhook(
     event: PaymentWebhookEvent,
@@ -134,8 +265,20 @@ export class AuthoritativeBillingAuthority {
       throw new Error("INVALID_PAYMENT_WEBHOOK_SIGNATURE: Webhook failed HMAC-SHA256 verification");
     }
 
+    if (!event.eventId || typeof event.eventId !== "string" || !event.eventId.trim()) {
+      throw new Error("MISSING_WEBHOOK_EVENT_ID: Webhook eventId is required for replay protection");
+    }
+
     if (!event.paymentReceiptId || !event.email || !event.subscriptionId) {
       throw new Error("INCOMPLETE_PAYMENT_WEBHOOK_EVENT");
+    }
+
+    // Idempotent webhook replay deduplication: safe replay without state corruption
+    if (this.#processedEventIds.has(event.eventId)) {
+      const existing = this.#receiptLedger.get(event.paymentReceiptId);
+      if (existing) {
+        return { ...existing };
+      }
     }
 
     if (event.eventType === "payment.succeeded") {
@@ -145,10 +288,12 @@ export class AuthoritativeBillingAuthority {
           `INSUFFICIENT_PAYMENT_AMOUNT: tier=${event.tier} requires >= ${minRequiredCents} cents`,
         );
       }
-      const record = {
+      const record: AuthoritativeLedgerRecord = {
+        paymentReceiptId: event.paymentReceiptId,
         exists: true,
         paid: true,
-        subscriptionStatus: "ACTIVE" as const,
+        paymentStatus: "PAID",
+        subscriptionStatus: "ACTIVE",
         tier: event.tier,
         planName: event.planName,
         email: event.email.trim(),
@@ -159,6 +304,8 @@ export class AuthoritativeBillingAuthority {
         revoked: false,
       };
       this.#receiptLedger.set(event.paymentReceiptId, record);
+      this.#processedEventIds.add(event.eventId);
+      this.#saveLedger();
       return { ...record };
     }
 
@@ -167,18 +314,37 @@ export class AuthoritativeBillingAuthority {
       throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${event.paymentReceiptId}`);
     }
 
-    if (event.eventType === "subscription.canceled") {
+    if (event.eventType === "subscription.past_due") {
+      existing.subscriptionStatus = "PAST_DUE";
+      existing.revoked = true;
+    } else if (event.eventType === "subscription.canceled") {
       existing.subscriptionStatus = "CANCELED";
       existing.revoked = true;
     } else if (event.eventType === "subscription.expired") {
       existing.subscriptionStatus = "EXPIRED";
       existing.expiresAtMs = Math.min(existing.expiresAtMs, event.occurredAtMs);
+      existing.revoked = true;
+    } else if (event.eventType === "payment.refunded" || event.eventType === "charge.refunded") {
+      existing.paid = false;
+      existing.paymentStatus = "REFUNDED";
+      existing.subscriptionStatus = "CANCELED";
+      existing.revoked = true;
+    } else if (
+      event.eventType === "payment.disputed" ||
+      event.eventType === "charge.dispute.created"
+    ) {
+      existing.paid = false;
+      existing.paymentStatus = "DISPUTED";
+      existing.subscriptionStatus = "REVOKED";
+      existing.revoked = true;
     } else if (event.eventType === "entitlement.revoked") {
       existing.subscriptionStatus = "REVOKED";
       existing.revoked = true;
     }
 
     this.#receiptLedger.set(event.paymentReceiptId, existing);
+    this.#processedEventIds.add(event.eventId);
+    this.#saveLedger();
     return { ...existing };
   }
 
@@ -288,7 +454,7 @@ export class AuthoritativeBillingAuthority {
   }
 
   /**
-   * Authoritative server-side cancellation, revocation, or expiration mutators.
+   * Authoritative server-side lifecycle mutators.
    */
   cancelSubscription(paymentReceiptId: string): void {
     const existing = this.#receiptLedger.get(paymentReceiptId);
@@ -297,6 +463,8 @@ export class AuthoritativeBillingAuthority {
     }
     existing.subscriptionStatus = "CANCELED";
     existing.revoked = true;
+    this.#receiptLedger.set(paymentReceiptId, existing);
+    this.#saveLedger();
   }
 
   revokeEntitlement(paymentReceiptId: string): void {
@@ -306,6 +474,45 @@ export class AuthoritativeBillingAuthority {
     }
     existing.subscriptionStatus = "REVOKED";
     existing.revoked = true;
+    this.#receiptLedger.set(paymentReceiptId, existing);
+    this.#saveLedger();
+  }
+
+  markPastDue(paymentReceiptId: string): void {
+    const existing = this.#receiptLedger.get(paymentReceiptId);
+    if (!existing) {
+      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${paymentReceiptId}`);
+    }
+    existing.subscriptionStatus = "PAST_DUE";
+    existing.revoked = true;
+    this.#receiptLedger.set(paymentReceiptId, existing);
+    this.#saveLedger();
+  }
+
+  markRefunded(paymentReceiptId: string): void {
+    const existing = this.#receiptLedger.get(paymentReceiptId);
+    if (!existing) {
+      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${paymentReceiptId}`);
+    }
+    existing.paid = false;
+    existing.paymentStatus = "REFUNDED";
+    existing.subscriptionStatus = "CANCELED";
+    existing.revoked = true;
+    this.#receiptLedger.set(paymentReceiptId, existing);
+    this.#saveLedger();
+  }
+
+  markDisputed(paymentReceiptId: string): void {
+    const existing = this.#receiptLedger.get(paymentReceiptId);
+    if (!existing) {
+      throw new Error(`UNKNOWN_PAYMENT_RECEIPT_ID:${paymentReceiptId}`);
+    }
+    existing.paid = false;
+    existing.paymentStatus = "DISPUTED";
+    existing.subscriptionStatus = "REVOKED";
+    existing.revoked = true;
+    this.#receiptLedger.set(paymentReceiptId, existing);
+    this.#saveLedger();
   }
 
   /**

@@ -38,8 +38,13 @@ export const AGENT_FORMATS: AgentFormatMeta[] = [
 export interface AgentFormatOptions {
   subscriptionTier?: "free" | "pro" | "team";
   entitlement?: EntitlementVerificationResult | null;
-  enforceTierLimit?: boolean;
+  /**
+   * @deprecated Removed in audit 4727aa62 remediation; Free tier output limits are strictly
+   * enforced at production boundaries and cannot be bypassed via options.
+   */
+  enforceTierLimit?: never;
   currentEpochMs?: number;
+  trustedIssuerPublicKeys?: Record<string, string>;
 }
 
 export function formatForAgent(
@@ -48,36 +53,34 @@ export function formatForAgent(
   category = "General",
   options: AgentFormatOptions = {},
 ): { content: string; filename: string } {
-  const shouldEnforceLimit = options.enforceTierLimit !== false;
   const resolvedEntitlement = resolveExportEntitlement(options);
   const effectiveOptions = {
     subscriptionTier: options.subscriptionTier,
     entitlement: resolvedEntitlement,
     currentEpochMs: options.currentEpochMs,
+    trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
   };
-  const boundedPrompt = shouldEnforceLimit
-    ? enforceTierOutputLimit(rawPrompt, effectiveOptions)
-    : rawPrompt;
+  const boundedPrompt = enforceTierOutputLimit(rawPrompt, effectiveOptions);
 
   switch (format) {
     case "claude": {
       const content = `# CLAUDE.md — Agent System Directives\n> Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\n## Role & Core Guidelines\n${boundedPrompt}\n\n## Non-Negotiable Operational Guardrails\n- Scope Invariant: Do not modify files outside explicitly declared boundaries.\n- Verification Receipt: Run project test suite and verify zero regressions before reporting task completion.\n- Zero Hallucination: Do not invent nonexistent packages, CLI flags, or mock endpoints.\n`;
       return {
-        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
+        content: enforceTierOutputLimit(content, effectiveOptions),
         filename: "CLAUDE.md",
       };
     }
     case "cursor": {
       const content = `# .cursorrules — Project AI Directives & Guardrails\n# Compiled by System Prompt Engine (SPE) · Scope Guardrail Protected\n\nYou are an expert developer operating under strict zero-drift guidelines.\n\n${boundedPrompt}\n\n## Project Invariants:\n1. Never introduce unverified dependencies.\n2. Ensure all types pass TypeScript/strict typechecking.\n3. Always verify changes with unit tests before declaring completion.\n`;
       return {
-        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
+        content: enforceTierOutputLimit(content, effectiveOptions),
         filename: ".cursorrules",
       };
     }
     case "windsurf": {
       const content = `# .windsurfrules — Cascade Agent Directives\n# Compiled by System Prompt Engine (SPE Ω)\n\n${boundedPrompt}\n`;
       return {
-        content: shouldEnforceLimit ? enforceTierOutputLimit(content, effectiveOptions) : content,
+        content: enforceTierOutputLimit(content, effectiveOptions),
         filename: ".windsurfrules",
       };
     }
@@ -88,8 +91,11 @@ export function formatForAgent(
       const projectName = `spe-${category.toLowerCase()}-eval`;
       let promptForYaml = boundedPrompt;
       if (
-        shouldEnforceLimit &&
-        !isVerifiedPaidEntitlementResult(resolvedEntitlement, options.currentEpochMs)
+        !isVerifiedPaidEntitlementResult(
+          resolvedEntitlement,
+          options.currentEpochMs,
+          effectiveOptions,
+        )
       ) {
         const emptyOverhead = generatePromptfooConfig("", { projectName }).yamlConfig.length;
         const maxPromptForYaml = Math.max(400, FREE_TIER_MAX_OUTPUT_CHARS - emptyOverhead - 32);
@@ -99,9 +105,7 @@ export function formatForAgent(
       }
       const bundle = generatePromptfooConfig(promptForYaml, { projectName });
       return {
-        content: shouldEnforceLimit
-          ? enforceTierOutputLimit(bundle.yamlConfig, effectiveOptions)
-          : bundle.yamlConfig,
+        content: enforceTierOutputLimit(bundle.yamlConfig, effectiveOptions),
         filename: "promptfooconfig.yaml",
       };
     }

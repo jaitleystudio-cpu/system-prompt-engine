@@ -36,6 +36,7 @@ export interface EntitlementTokenPayload {
 export interface AuthoritativeReceiptRecord {
   exists: boolean;
   paid: boolean;
+  paymentStatus?: "PAID" | "UNPAID" | "REFUNDED" | "DISPUTED";
   subscriptionStatus: "ACTIVE" | "CANCELED" | "PAST_DUE" | "EXPIRED" | "REVOKED";
   tier: "pro" | "team";
   email: string;
@@ -49,6 +50,7 @@ export interface SignedReceiptStatusAttestation {
   subscriptionId: string;
   exists?: boolean;
   paid: boolean;
+  paymentStatus?: "PAID" | "UNPAID" | "REFUNDED" | "DISPUTED";
   subscriptionStatus: "ACTIVE" | "CANCELED" | "PAST_DUE" | "EXPIRED" | "REVOKED";
   tier: "pro" | "team";
   email: string;
@@ -57,6 +59,20 @@ export interface SignedReceiptStatusAttestation {
   attestedAtMs: number;
   issuerKeyId: string;
   signatureHex?: string;
+}
+
+export const DEFAULT_MAX_ATTESTATION_AGE_MS = 24 * 60 * 60 * 1000; // 86,400,000 ms (24 hours)
+
+export interface ReceiptStatusAttestationVerificationOptions {
+  trustedIssuerPublicKeys?: Record<string, string>;
+  verifySignatureFn?: (
+    canonicalPayloadJson: string,
+    signatureHex: string,
+    pinnedPublicKeyHex: string,
+    issuerKeyId: string,
+  ) => boolean;
+  currentEpochMs?: number;
+  maxAttestationAgeMs?: number;
 }
 
 export interface EntitlementVerificationOptions {
@@ -71,6 +87,11 @@ export interface EntitlementVerificationOptions {
   trustedIssuerPublicKeys?: Record<string, string>;
   revokedReceiptIds?: Iterable<string>;
   revokedSubscriptionIds?: Iterable<string>;
+  /**
+   * Maximum acceptable age in milliseconds for offline signed receipt attestations.
+   * Defaults to 24 hours (86,400,000 ms).
+   */
+  maxAttestationAgeMs?: number;
   /**
    * Authoritative server receipt & subscription status verifier.
    * Confirms that `paymentReceiptId` exists, was actually paid, is currently ACTIVE,
@@ -153,8 +174,8 @@ export function utf8ToHex(text: string): string {
  */
 export function verifySignedReceiptStatusAttestation(
   rawAttestation: SignedReceiptStatusAttestation | string,
-  options: Pick<EntitlementVerificationOptions, "trustedIssuerPublicKeys" | "verifySignatureFn"> = {},
-): (AuthoritativeReceiptRecord & { paymentReceiptId: string }) | null {
+  options: ReceiptStatusAttestationVerificationOptions = {},
+): (AuthoritativeReceiptRecord & { paymentReceiptId: string; attestedAtMs: number }) | null {
   if (!rawAttestation) return null;
   let parsed: SignedReceiptStatusAttestation;
   let sigHex: string | undefined;
@@ -207,6 +228,16 @@ export function verifySignedReceiptStatusAttestation(
     return null;
   }
 
+  // Enforce attestation freshness window (default: 24h) and prevent clock-skew future timestamps
+  const nowMs = options.currentEpochMs ?? Date.now();
+  const maxAgeMs = options.maxAttestationAgeMs ?? DEFAULT_MAX_ATTESTATION_AGE_MS;
+  if (parsed.attestedAtMs + maxAgeMs < nowMs) {
+    return null; // Expired / stale offline attestation window
+  }
+  if (parsed.attestedAtMs > nowMs + 60_000) {
+    return null; // Future timestamp clock skew rejected
+  }
+
   const pinnedKeyMap: Record<string, string> = options.trustedIssuerPublicKeys ?? {
     [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]: SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
   };
@@ -229,11 +260,13 @@ export function verifySignedReceiptStatusAttestation(
     paymentReceiptId: parsed.paymentReceiptId,
     exists: parsed.exists ?? true,
     paid: parsed.paid,
+    paymentStatus: parsed.paymentStatus ?? (parsed.paid ? "PAID" : "UNPAID"),
     subscriptionStatus: parsed.subscriptionStatus,
     tier: parsed.tier,
     email: parsed.email,
     expiresAtMs: parsed.expiresAtMs,
     revoked: parsed.revoked,
+    attestedAtMs: parsed.attestedAtMs,
   };
 }
 
@@ -442,6 +475,8 @@ export function verifySignedEntitlementToken(
           const verifiedAtt = verifySignedReceiptStatusAttestation(candidateAttestation, {
             trustedIssuerPublicKeys: pinnedKeyMap,
             verifySignatureFn: options.verifySignatureFn,
+            currentEpochMs: nowMs,
+            maxAttestationAgeMs: options.maxAttestationAgeMs,
           });
           if (
             !verifiedAtt ||
@@ -467,6 +502,29 @@ export function verifySignedEntitlementToken(
     }
     const record = effectiveVerifier(parsed.paymentReceiptId, parsed);
     if (!record || !record.exists) {
+      const candidateAttestation =
+        options.signedReceiptAttestation ||
+        (parts.length === 6 && embeddedReceiptAttHex && embeddedReceiptSigHex
+          ? `spe_receipt_status.v1.${embeddedReceiptAttHex}.${embeddedReceiptSigHex}`
+          : undefined);
+      if (candidateAttestation) {
+        const withoutFreshnessLimit = verifySignedReceiptStatusAttestation(candidateAttestation, {
+          trustedIssuerPublicKeys: pinnedKeyMap,
+          verifySignatureFn: options.verifySignatureFn,
+          currentEpochMs: nowMs,
+          maxAttestationAgeMs: Number.MAX_SAFE_INTEGER,
+        });
+        if (withoutFreshnessLimit) {
+          return {
+            verified: false,
+            tier: null,
+            payload: null,
+            signatureHex: null,
+            rejectionReason:
+              "STALE_RECEIPT_ATTESTATION: Signed receipt attestation exceeds maximum freshness window (maxAttestationAgeMs). Offline attestation expired.",
+          };
+        }
+      }
       return {
         verified: false,
         tier: null,
@@ -630,6 +688,7 @@ export function resolveExportEntitlement(options: {
   subscriptionTier?: "free" | "pro" | "team";
   entitlement?: EntitlementVerificationResult | null;
   currentEpochMs?: number;
+  trustedIssuerPublicKeys?: Record<string, string>;
 } = {}): EntitlementVerificationResult | null {
   if (options.subscriptionTier === "free") {
     return null;
@@ -637,7 +696,10 @@ export function resolveExportEntitlement(options: {
   if (options.entitlement !== undefined) {
     return options.entitlement;
   }
-  return resolveBrowserVerifiedEntitlement({ currentEpochMs: options.currentEpochMs });
+  return resolveBrowserVerifiedEntitlement({
+    currentEpochMs: options.currentEpochMs,
+    trustedIssuerPublicKeys: options.trustedIssuerPublicKeys,
+  });
 }
 
 /**

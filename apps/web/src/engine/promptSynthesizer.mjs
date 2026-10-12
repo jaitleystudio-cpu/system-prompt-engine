@@ -31,6 +31,17 @@
  * 6. ZERO DUPLICATE LINES GUARANTEE: Every line, heading, invariant, and table entry is unique across all tiers.
  */
 
+import { canonicalizeJson } from "./proofReceipt.ts";
+import {
+  normalizeEd25519PublicKeyHex,
+  verifyEd25519Signature,
+} from "./ed25519Verifier.ts";
+import {
+  SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID,
+  SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
+  verifySignedEntitlementToken,
+} from "./entitlementVerifier.ts";
+
 export const DEFAULT_DEPTH_TIER = "normal";
 export const FREE_TIER_MAX_OUTPUT_CHARS = 5000;
 export const PRO_TIER_MAX_OUTPUT_CHARS = 30000;
@@ -772,6 +783,7 @@ export function synthesizeSystemPrompt(raw, opts) {
   const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
     opts && typeof opts === "object" ? opts.entitlement : null,
     currentEpochMs,
+    opts,
   );
   const subscriptionTier = hasTierOption
     ? opts && typeof opts === "object" && opts.subscriptionTier === "free"
@@ -1088,13 +1100,50 @@ Follow the explicit brief wherever it differs from these default working suggest
 
 /**
  * Validates that an entitlement object is a genuine, unexpired, active paid
- * EntitlementVerificationResult with a signed payload and 64-byte Ed25519 signature.
- * Bare `{ subscriptionTier: "pro" }` strings or shallow `{ verified: true, tier: "pro" }`
- * objects without a valid `EntitlementTokenPayload` and `signatureHex` are rejected.
+ * EntitlementVerificationResult with a cryptographically verified Ed25519 signature
+ * over its canonical payload against pinned billing authority public keys, OR a raw
+ * signed entitlement token string (spe_entitlement.v1...).
+ *
+ * Bare `{ subscriptionTier: "pro" }` strings, shallow `{ verified: true, tier: "pro" }`
+ * objects, or adversary-constructed objects with invalid or unpinned signatures
+ * (e.g. `{ verified: true, signatureHex: "00".repeat(64), payload: { ... } }`)
+ * are cryptographically rejected at this boundary.
  */
-export function isVerifiedPaidEntitlementResult(entitlement, currentEpochMs = Date.now()) {
-  if (!entitlement || typeof entitlement !== "object") return false;
-  if (entitlement.verified !== true) return false;
+export function isVerifiedPaidEntitlementResult(
+  entitlement,
+  currentEpochMs = Date.now(),
+  opts = {},
+) {
+  const options =
+    typeof currentEpochMs === "object" && currentEpochMs !== null
+      ? currentEpochMs
+      : typeof opts === "object" && opts !== null
+        ? opts
+        : {};
+  const effectiveEpochMs =
+    typeof currentEpochMs === "number"
+      ? currentEpochMs
+      : typeof options.currentEpochMs === "number"
+        ? options.currentEpochMs
+        : Date.now();
+
+  if (!entitlement) return false;
+
+  // Case 1: Raw signed entitlement token string (`spe_entitlement.v1...`)
+  if (typeof entitlement === "string") {
+    const trimmed = entitlement.trim();
+    if (!trimmed.startsWith("spe_entitlement.v1.")) return false;
+    const tokenCheck = verifySignedEntitlementToken(trimmed, {
+      ...options,
+      currentEpochMs: effectiveEpochMs,
+    });
+    return Boolean(
+      tokenCheck.verified && (tokenCheck.tier === "pro" || tokenCheck.tier === "team"),
+    );
+  }
+
+  // Case 2: EntitlementVerificationResult object
+  if (typeof entitlement !== "object") return false;
   if (entitlement.tier !== "pro" && entitlement.tier !== "team") return false;
   if (
     typeof entitlement.signatureHex !== "string" ||
@@ -1114,10 +1163,34 @@ export function isVerifiedPaidEntitlementResult(entitlement, currentEpochMs = Da
   if (typeof payload.subscriptionId !== "string" || !payload.subscriptionId.trim()) {
     return false;
   }
-  if (typeof payload.expiresAtMs !== "number" || payload.expiresAtMs <= currentEpochMs) {
+  if (typeof payload.expiresAtMs !== "number" || payload.expiresAtMs <= effectiveEpochMs) {
     return false;
   }
-  return true;
+  if (typeof payload.issuerKeyId !== "string" || !payload.issuerKeyId.trim()) {
+    return false;
+  }
+
+  // Cryptographic re-verification against pinned billing authority public keys:
+  // MUST NOT trust caller-asserted `verified: true` or unverified signature formatting!
+  const trustedKeys = options.trustedIssuerPublicKeys ?? {
+    [SPE_PRODUCTION_BILLING_AUTHORITY_KEY_ID]: SPE_PRODUCTION_BILLING_PUBLIC_KEY_HEX,
+  };
+  const rawPinnedKey = trustedKeys[payload.issuerKeyId];
+  if (!rawPinnedKey) return false;
+  const normalizedPinnedKey = normalizeEd25519PublicKeyHex(rawPinnedKey);
+  if (!normalizedPinnedKey) return false;
+
+  const canonicalPayload = canonicalizeJson(payload);
+  const sigValid = options.verifySignatureFn
+    ? options.verifySignatureFn(
+        canonicalPayload,
+        entitlement.signatureHex,
+        normalizedPinnedKey,
+        payload.issuerKeyId,
+      )
+    : verifyEd25519Signature(canonicalPayload, entitlement.signatureHex, normalizedPinnedKey);
+
+  return sigValid === true;
 }
 
 /**
@@ -1136,6 +1209,7 @@ export function enforceTierOutputLimit(promptText, opts = {}) {
   const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
     entitlement,
     currentEpochMs,
+    opts,
   );
   const subscriptionTier =
     opts && typeof opts === "object" && opts.subscriptionTier === "free"
@@ -1177,6 +1251,7 @@ export function compilePromptWithTierEnforcement(raw, opts = {}) {
   const hasVerifiedPaidEntitlement = isVerifiedPaidEntitlementResult(
     entitlement,
     currentEpochMs,
+    opts,
   );
   const effectiveSubscriptionTier =
     opts && typeof opts === "object" && opts.subscriptionTier === "free"
@@ -1200,6 +1275,7 @@ export function compilePromptWithTierEnforcement(raw, opts = {}) {
         : PRO_TIER_MAX_OUTPUT_CHARS,
   });
   return enforceTierOutputLimit(synthesized, {
+    ...(opts && typeof opts === "object" ? opts : {}),
     subscriptionTier: effectiveSubscriptionTier,
     entitlement: effectiveSubscriptionTier === "free" ? null : entitlement,
     currentEpochMs,

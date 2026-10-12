@@ -17,7 +17,7 @@
  */
 
 import assert from "node:assert/strict";
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, unlinkSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -26,9 +26,13 @@ import { build } from "../node_modules/esbuild/lib/main.js";
 import * as entitlementVerifierMod from "../src/engine/entitlementVerifier.ts";
 import {
   verifySignedEntitlementToken,
+  verifySignedReceiptStatusAttestation,
   createPublicBetaWaitlistReservation,
 } from "../src/engine/entitlementVerifier.ts";
-import { AuthoritativeBillingAuthority } from "../src/server/billingAuthority.ts";
+import {
+  AuthoritativeBillingAuthority,
+  FileBillingStorageAdapter,
+} from "../src/server/billingAuthority.ts";
 import {
   FREE_TIER_MAX_OUTPUT_CHARS,
   PRO_TIER_MAX_OUTPUT_CHARS,
@@ -285,6 +289,202 @@ console.log("\n[1/4] Verifying Pricing, Asymmetric Ed25519 Entitlement Security,
     "Canceled signed receipt attestation must report REVOKED_OR_CANCELED_SUBSCRIPTION:CANCELED",
   );
 
+  // Step G: Offline Attestation Freshness Window (24h Max Age Enforcement)
+  const freshnessAuthority = new AuthoritativeBillingAuthority();
+  const freshnessKeys = { [freshnessAuthority.issuerKeyId]: freshnessAuthority.publicKeyHex };
+  const freshPaymentEvent = {
+    eventId: "evt_fresh_001",
+    eventType: "payment.succeeded",
+    paymentReceiptId: "pay_rcpt_fresh_001",
+    subscriptionId: "sub_fresh_001",
+    tier: "pro",
+    planName: "Developer Pro ($1 First Month · then $9/mo)",
+    email: "fresh@example.com",
+    amountCents: 100,
+    currency: "USD",
+    occurredAtMs: 1_791_750_000_000,
+    expiresAtMs: 1_891_750_000_000,
+  };
+  freshnessAuthority.processVerifiedPaymentWebhook(
+    freshPaymentEvent,
+    freshnessAuthority.signWebhookPayload(freshPaymentEvent),
+  );
+  const freshCheckoutBundle = freshnessAuthority.issueSignedCheckoutBundleForPaidReceipt(
+    "pay_rcpt_fresh_001",
+    1_791_750_000_000,
+  );
+
+  // Fresh attestation within 24h window (e.g. 1 hour later) succeeds
+  const freshWithinWindowCheck = verifySignedEntitlementToken(freshCheckoutBundle, {
+    expectedEmail: "fresh@example.com",
+    currentEpochMs: 1_791_750_000_000 + 3_600_000,
+    trustedIssuerPublicKeys: freshnessKeys,
+  });
+  assert.equal(freshWithinWindowCheck.verified, true, "Fresh checkout bundle within 24h window must verify");
+
+  // Attestation exceeding 24h window (86,400,000 ms + 1,000 ms) is strictly rejected as stale
+  const staleTimestamp = 1_791_750_000_000 + 86_400_000 + 1_000;
+  const staleAttestationCheck = verifySignedEntitlementToken(freshCheckoutBundle, {
+    expectedEmail: "fresh@example.com",
+    currentEpochMs: staleTimestamp,
+    trustedIssuerPublicKeys: freshnessKeys,
+  });
+  assert.equal(staleAttestationCheck.verified, false, "Stale attestation older than 24h must be rejected");
+  assert(
+    staleAttestationCheck.rejectionReason?.includes("STALE_RECEIPT_ATTESTATION"),
+    "Stale attestation must return STALE_RECEIPT_ATTESTATION rejection reason",
+  );
+
+  // Direct attestation verification exceeding custom maxAttestationAgeMs (e.g. 5 minutes) is also rejected
+  const directAttestation = freshnessAuthority.issueSignedReceiptStatusAttestation(
+    "pay_rcpt_fresh_001",
+    1_791_750_000_000,
+  );
+  const directStaleCheck = verifySignedReceiptStatusAttestation(directAttestation, {
+    currentEpochMs: 1_791_750_000_000 + 301_000,
+    maxAttestationAgeMs: 300_000, // 5 min
+    trustedIssuerPublicKeys: freshnessKeys,
+  });
+  assert.equal(directStaleCheck, null, "Attestation older than maxAttestationAgeMs must return null");
+
+  // Future timestamp clock skew (> 60s) is also rejected
+  const clockSkewCheck = verifySignedReceiptStatusAttestation(directAttestation, {
+    currentEpochMs: 1_791_750_000_000 - 61_000,
+    trustedIssuerPublicKeys: freshnessKeys,
+  });
+  assert.equal(clockSkewCheck, null, "Future attestation beyond 60s clock skew must return null");
+
+  // Step H: Durable Billing Ledger Persistence & Reload Recovery (`FileBillingStorageAdapter`)
+  const durableLedgerPath = join(customerExportsDir, "durable-billing-ledger.test.json");
+  if (existsSync(durableLedgerPath)) {
+    unlinkSync(durableLedgerPath);
+  }
+  const durableAuthority1 = new AuthoritativeBillingAuthority({
+    storageFilePath: durableLedgerPath,
+  });
+  const durableEvent = {
+    eventId: "evt_durable_101",
+    eventType: "payment.succeeded",
+    paymentReceiptId: "pay_rcpt_durable_101",
+    subscriptionId: "sub_durable_101",
+    tier: "team",
+    planName: "Company & CI/CD Gate ($9 First Month · then $99/mo)",
+    email: "team@example.com",
+    amountCents: 900,
+    currency: "USD",
+    occurredAtMs: 1_791_750_000_000,
+    expiresAtMs: 1_891_750_000_000,
+  };
+  durableAuthority1.processVerifiedPaymentWebhook(
+    durableEvent,
+    durableAuthority1.signWebhookPayload(durableEvent),
+  );
+  assert(existsSync(durableLedgerPath), "FileBillingStorageAdapter must write ledger file to disk");
+
+  // Recover state in a completely new authority instance reading the same file
+  const durableAuthority2 = new AuthoritativeBillingAuthority({
+    storageFilePath: durableLedgerPath,
+  });
+  const recoveredRecord = durableAuthority2.getLedgerRecord("pay_rcpt_durable_101");
+  assert(recoveredRecord, "Recovered authority must find existing ledger record");
+  assert.equal(recoveredRecord.paid, true);
+  assert.equal(recoveredRecord.subscriptionStatus, "ACTIVE");
+  assert.equal(recoveredRecord.tier, "team");
+  assert(durableAuthority2.getProcessedEventIds().has("evt_durable_101"), "Processed event IDs must be restored");
+  if (existsSync(durableLedgerPath)) {
+    unlinkSync(durableLedgerPath);
+  }
+
+  // Step I: Idempotent Webhook Replay Deduplication (Replay Protection)
+  const initialProcessedCount = durableAuthority1.getProcessedEventIds().size;
+  const duplicateWebhookResult = durableAuthority1.processVerifiedPaymentWebhook(
+    durableEvent,
+    durableAuthority1.signWebhookPayload(durableEvent),
+  );
+  assert.equal(duplicateWebhookResult.paymentReceiptId, "pay_rcpt_durable_101");
+  assert.equal(
+    durableAuthority1.getProcessedEventIds().size,
+    initialProcessedCount,
+    "Replayed webhook must not duplicate processed event IDs",
+  );
+
+  // Missing eventId in webhook MUST throw
+  assert.throws(
+    () => {
+      const invalidEvent = { ...durableEvent, eventId: "" };
+      durableAuthority1.processVerifiedPaymentWebhook(
+        invalidEvent,
+        durableAuthority1.signWebhookPayload(invalidEvent),
+      );
+    },
+    /MISSING_WEBHOOK_EVENT_ID/,
+    "Webhook without eventId must be rejected",
+  );
+
+  // Step J: Complete Subscription Lifecycle Transitions
+  const lifecycleAuthority = new AuthoritativeBillingAuthority();
+  const lifecycleKeys = { [lifecycleAuthority.issuerKeyId]: lifecycleAuthority.publicKeyHex };
+  const baseLifecycleEvent = {
+    eventId: "evt_lifecycle_001",
+    eventType: "payment.succeeded",
+    paymentReceiptId: "pay_rcpt_lifecycle_001",
+    subscriptionId: "sub_lifecycle_001",
+    tier: "pro",
+    planName: "Developer Pro ($1 First Month · then $9/mo)",
+    email: "lifecycle@example.com",
+    amountCents: 100,
+    currency: "USD",
+    occurredAtMs: 1_791_750_000_000,
+    expiresAtMs: 1_891_750_000_000,
+  };
+  lifecycleAuthority.processVerifiedPaymentWebhook(
+    baseLifecycleEvent,
+    lifecycleAuthority.signWebhookPayload(baseLifecycleEvent),
+  );
+  const lifecycleToken = lifecycleAuthority.issueSignedEntitlementTokenForPaidReceipt(
+    "pay_rcpt_lifecycle_001",
+    1_791_750_000_000,
+  );
+
+  // 1. Transition: Past Due
+  lifecycleAuthority.markPastDue("pay_rcpt_lifecycle_001");
+  const pastDueRecord = lifecycleAuthority.getLedgerRecord("pay_rcpt_lifecycle_001");
+  assert.equal(pastDueRecord?.subscriptionStatus, "PAST_DUE");
+  assert.equal(pastDueRecord?.revoked, true);
+  const pastDueVerify = verifySignedEntitlementToken(lifecycleToken, {
+    expectedEmail: "lifecycle@example.com",
+    currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: lifecycleKeys,
+    authoritativeReceiptVerifier: lifecycleAuthority.createAuthoritativeReceiptVerifier(),
+  });
+  assert.equal(pastDueVerify.verified, false, "Past-due subscription must not verify");
+  assert(pastDueVerify.rejectionReason?.includes("REVOKED_OR_CANCELED_SUBSCRIPTION:PAST_DUE"));
+
+  // 2. Transition: Refunded via Webhook
+  const refundEvent = {
+    ...baseLifecycleEvent,
+    eventId: "evt_lifecycle_refund_002",
+    eventType: "payment.refunded",
+    occurredAtMs: 1_791_765_000_000,
+  };
+  lifecycleAuthority.processVerifiedPaymentWebhook(
+    refundEvent,
+    lifecycleAuthority.signWebhookPayload(refundEvent),
+  );
+  const refundedRecord = lifecycleAuthority.getLedgerRecord("pay_rcpt_lifecycle_001");
+  assert.equal(refundedRecord?.paid, false);
+  assert.equal(refundedRecord?.paymentStatus, "REFUNDED");
+  assert.equal(refundedRecord?.subscriptionStatus, "CANCELED");
+  assert.equal(refundedRecord?.revoked, true);
+
+  // 3. Transition: Disputed via Authority Mutator
+  lifecycleAuthority.markDisputed("pay_rcpt_lifecycle_001");
+  const disputedRecord = lifecycleAuthority.getLedgerRecord("pay_rcpt_lifecycle_001");
+  assert.equal(disputedRecord?.paid, false);
+  assert.equal(disputedRecord?.paymentStatus, "DISPUTED");
+  assert.equal(disputedRecord?.subscriptionStatus, "REVOKED");
+  assert.equal(disputedRecord?.revoked, true);
+
   console.log("✓ Pricing tiers ($0 / $1->$9 / $9->$99), Ed25519 server entitlement authority, and webhook revocation verified.");
 }
 
@@ -353,6 +553,34 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
     `Shallow fake entitlement without signed payload (${forgedShallowEntitlementAttempt.length}) must be capped at <= 5,000 chars`,
   );
 
+  // Forged complete entitlement object with fake 128-hex signature ("00".repeat(64)) MUST still be capped at <= 5,000 chars
+  const forgedCompleteEntitlementAttempt = compilePromptWithTierEnforcement(oneLakhContextInput, {
+    category: "Backend",
+    depthTier: "deep",
+    entitlement: {
+      verified: true,
+      tier: "pro",
+      signatureHex: "00".repeat(64),
+      payload: {
+        schema: "spe.entitlement.v1",
+        tier: "pro",
+        planName: "Developer Pro",
+        email: "hacker@example.com",
+        paymentReceiptId: "pay_rcpt_fake",
+        subscriptionId: "sub_fake",
+        paymentStatus: "PAID",
+        subscriptionStatus: "ACTIVE",
+        issuedAtMs: 1_791_750_000_000,
+        expiresAtMs: 1_891_750_000_000,
+        issuerKeyId: "spe-billing-authority-ed25519-prod-v1",
+      },
+    },
+  });
+  assert(
+    forgedCompleteEntitlementAttempt.length <= 5000,
+    `Forged complete entitlement with dummy signature (${forgedCompleteEntitlementAttempt.length}) must be capped at <= 5,000 chars`,
+  );
+
   // Direct synthesizeSystemPrompt with subscriptionTier: 'free' also enforces <= 5,000 characters
   const directFreePrompt = synthesizeSystemPrompt(oneLakhContextInput, {
     category: "Backend",
@@ -395,6 +623,7 @@ console.log("\n[2/4] Verifying all 6 customer export formats and runtime 5,000-c
     depthTier: "deep",
     entitlement: verifiedProEnt,
     currentEpochMs: 1_791_760_000_000,
+    trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
   });
   assert(
     proTierCompiled.length > 5000 && proTierCompiled.length <= 30000,
@@ -461,6 +690,7 @@ Design and validate REST APIs returning strict JSON schemas.
     const out = exportMod.formatForAgent(customerPrompt, fmt.id, "Backend", {
       entitlement: verifiedProEnt,
       currentEpochMs: 1_791_760_000_000,
+      trustedIssuerPublicKeys: { [proBilling.issuerKeyId]: proBilling.publicKeyHex },
     });
     assert.equal(out.filename, fmt.filename, `Filename mismatch for ${fmt.id}`);
     assert(out.content.includes(fmt.mustContain), `Export ${fmt.id} missing expected content: ${fmt.mustContain}`);

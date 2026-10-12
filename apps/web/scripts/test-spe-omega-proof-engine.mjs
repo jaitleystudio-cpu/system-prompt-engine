@@ -8,6 +8,8 @@ import {
   canonicalizeJson,
   issueNetworkObservationAttestation,
   issueLiveEvaluationAttestation,
+  verifyNetworkObservationAttestation,
+  verifyLiveEvaluationAttestation,
   attachProducerSignature,
   verifyProofReceiptAuthenticity,
 } from "../src/engine/proofReceipt.ts";
@@ -249,6 +251,31 @@ assert.strictEqual(
   false,
   "Receipt with empty producerKeyId must be rejected by verifyProofReceiptAuthenticity",
 );
+
+// Audit 4727aa62 Finding C Remediation: Unpinned or missing observer/evaluator keys MUST be rejected
+const unpinnedObsMissing = verifyNetworkObservationAttestation(netAttestation, receipt.candidateHash);
+assert.strictEqual(unpinnedObsMissing.verified, false, "verifyNetworkObservationAttestation without trustedObserverKeys must reject");
+assert(unpinnedObsMissing.reason.includes("REJECTED_UNPINNED_OBSERVER_REGISTRY"), "Must report REJECTED_UNPINNED_OBSERVER_REGISTRY");
+
+const unpinnedObsEmpty = verifyNetworkObservationAttestation(netAttestation, receipt.candidateHash, {});
+assert.strictEqual(unpinnedObsEmpty.verified, false, "verifyNetworkObservationAttestation with empty trustedObserverKeys must reject");
+assert(unpinnedObsEmpty.reason.includes("REJECTED_UNPINNED_OBSERVER_REGISTRY"), "Must report REJECTED_UNPINNED_OBSERVER_REGISTRY on empty map");
+
+const unpinnedObsRogue = verifyNetworkObservationAttestation(netAttestation, receipt.candidateHash, { "other-harness": pubDerHex });
+assert.strictEqual(unpinnedObsRogue.verified, false, "verifyNetworkObservationAttestation with unpinned harness must reject");
+assert(unpinnedObsRogue.reason.includes("Untrusted network observer harnessId"), "Must reject unknown harnessId");
+
+const unpinnedEvalMissing = verifyLiveEvaluationAttestation(liveAttestation, receipt.candidateHash);
+assert.strictEqual(unpinnedEvalMissing.verified, false, "verifyLiveEvaluationAttestation without trustedEvaluatorKeys must reject");
+assert(unpinnedEvalMissing.reason.includes("REJECTED_UNPINNED_EVALUATOR_REGISTRY"), "Must report REJECTED_UNPINNED_EVALUATOR_REGISTRY");
+
+const unpinnedEvalEmpty = verifyLiveEvaluationAttestation(liveAttestation, receipt.candidateHash, {});
+assert.strictEqual(unpinnedEvalEmpty.verified, false, "verifyLiveEvaluationAttestation with empty trustedEvaluatorKeys must reject");
+assert(unpinnedEvalEmpty.reason.includes("REJECTED_UNPINNED_EVALUATOR_REGISTRY"), "Must report REJECTED_UNPINNED_EVALUATOR_REGISTRY on empty map");
+
+const unpinnedEvalRogue = verifyLiveEvaluationAttestation(liveAttestation, receipt.candidateHash, { "other-eval": pubDerHex });
+assert.strictEqual(unpinnedEvalRogue.verified, false, "verifyLiveEvaluationAttestation with unpinned harness must reject");
+assert(unpinnedEvalRogue.reason.includes("Untrusted live evaluator harnessId"), "Must reject unknown evaluator harnessId");
 
 // Verify JCS Canonicalization key sorting
 const testObj1 = { z: 1, a: 2, m: { y: 3, b: 4 } };

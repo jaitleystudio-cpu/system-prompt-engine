@@ -258,24 +258,33 @@ export function verifyNetworkObservationAttestation(
   if (!normalizedPubHex) {
     return { verified: false, reason: "Invalid observerPublicKeyHex format." };
   }
-  if (trustedObserverKeys) {
-    const pinnedKey = trustedObserverKeys[attestation.harnessId];
-    if (!pinnedKey) {
-      return {
-        verified: false,
-        reason: `Untrusted network observer harnessId: ${attestation.harnessId}`,
-      };
-    }
-    const normalizedPinned = normalizeEd25519PublicKeyHex(pinnedKey);
-    if (!normalizedPinned) {
-      return { verified: false, reason: "Malformed pinned observer public key." };
-    }
-    if (normalizedPinned !== normalizedPubHex) {
-      return {
-        verified: false,
-        reason: `Observer public key mismatch for harnessId: ${attestation.harnessId}`,
-      };
-    }
+  if (
+    !trustedObserverKeys ||
+    typeof trustedObserverKeys !== "object" ||
+    Object.keys(trustedObserverKeys).length === 0
+  ) {
+    return {
+      verified: false,
+      reason:
+        "REJECTED_UNPINNED_OBSERVER_REGISTRY: Missing or empty trustedObserverKeys registry. Independent evidence requires explicitly pinned observer keys.",
+    };
+  }
+  const pinnedKey = trustedObserverKeys[attestation.harnessId];
+  if (!pinnedKey) {
+    return {
+      verified: false,
+      reason: `Untrusted network observer harnessId: ${attestation.harnessId}`,
+    };
+  }
+  const normalizedPinned = normalizeEd25519PublicKeyHex(pinnedKey);
+  if (!normalizedPinned) {
+    return { verified: false, reason: "Malformed pinned observer public key." };
+  }
+  if (normalizedPinned !== normalizedPubHex) {
+    return {
+      verified: false,
+      reason: `Observer public key mismatch for harnessId: ${attestation.harnessId}`,
+    };
   }
   const unsignedBody = {
     schemaVersion: attestation.schemaVersion,
@@ -387,26 +396,36 @@ export function verifyLiveEvaluationAttestation(
   if (!normalizedPubHex) {
     return { verified: false, liveCallsCount: 0, reason: "Invalid evaluatorPublicKeyHex format." };
   }
-  if (trustedEvaluatorKeys) {
-    const pinnedKey = trustedEvaluatorKeys[attestation.harnessId];
-    if (!pinnedKey) {
-      return {
-        verified: false,
-        liveCallsCount: 0,
-        reason: `Untrusted live evaluator harnessId: ${attestation.harnessId}`,
-      };
-    }
-    const normalizedPinned = normalizeEd25519PublicKeyHex(pinnedKey);
-    if (!normalizedPinned) {
-      return { verified: false, liveCallsCount: 0, reason: "Malformed pinned evaluator public key." };
-    }
-    if (normalizedPinned !== normalizedPubHex) {
-      return {
-        verified: false,
-        liveCallsCount: 0,
-        reason: `Evaluator public key mismatch for harnessId: ${attestation.harnessId}`,
-      };
-    }
+  if (
+    !trustedEvaluatorKeys ||
+    typeof trustedEvaluatorKeys !== "object" ||
+    Object.keys(trustedEvaluatorKeys).length === 0
+  ) {
+    return {
+      verified: false,
+      liveCallsCount: 0,
+      reason:
+        "REJECTED_UNPINNED_EVALUATOR_REGISTRY: Missing or empty trustedEvaluatorKeys registry. Independent evidence requires explicitly pinned evaluator keys.",
+    };
+  }
+  const pinnedKey = trustedEvaluatorKeys[attestation.harnessId];
+  if (!pinnedKey) {
+    return {
+      verified: false,
+      liveCallsCount: 0,
+      reason: `Untrusted live evaluator harnessId: ${attestation.harnessId}`,
+    };
+  }
+  const normalizedPinned = normalizeEd25519PublicKeyHex(pinnedKey);
+  if (!normalizedPinned) {
+    return { verified: false, liveCallsCount: 0, reason: "Malformed pinned evaluator public key." };
+  }
+  if (normalizedPinned !== normalizedPubHex) {
+    return {
+      verified: false,
+      liveCallsCount: 0,
+      reason: `Evaluator public key mismatch for harnessId: ${attestation.harnessId}`,
+    };
   }
   const unsignedBody = {
     schemaVersion: attestation.schemaVersion,

@@ -17,7 +17,11 @@ export interface MarkdownConstructOptions {
   sha256?: string | null;
   subscriptionTier?: "free" | "pro" | "team";
   entitlement?: EntitlementVerificationResult | null;
-  enforceTierLimit?: boolean;
+  /**
+   * @deprecated Removed in audit 4727aa62 remediation; Free tier output limits are strictly
+   * enforced at production boundaries and cannot be bypassed via options.
+   */
+  enforceTierLimit?: never;
   currentEpochMs?: number;
 }
 
@@ -28,7 +32,7 @@ export interface MarkdownConstructOptions {
  */
 export function constructMarkdownSystemPrompt(
   irOrPrompt: string,
-  options: MarkdownConstructOptions = {}
+  options: MarkdownConstructOptions = {},
 ): string {
   const {
     title = "SPE Calibrated System Prompt",
@@ -38,45 +42,32 @@ export function constructMarkdownSystemPrompt(
     sha256 = null,
     subscriptionTier,
     entitlement,
-    enforceTierLimit,
     currentEpochMs,
   } = options;
 
-  const shouldEnforce =
-    Boolean(enforceTierLimit) ||
-    subscriptionTier !== undefined ||
-    entitlement !== undefined;
   const resolvedEntitlement =
     subscriptionTier === "free"
       ? null
       : entitlement !== undefined
         ? entitlement
-        : shouldEnforce
-          ? resolveBrowserVerifiedEntitlement({ currentEpochMs })
-          : undefined;
+        : resolveBrowserVerifiedEntitlement({ currentEpochMs });
 
   // Synthesize Markdown structure via universal synthesizer
   const mdBody = synthesizeSystemPrompt(irOrPrompt, {
     target: "chatgpt", // Standard GFM Markdown spec
     category,
     depthTier,
-    ...(shouldEnforce
-      ? {
-          subscriptionTier,
-          entitlement: resolvedEntitlement,
-          currentEpochMs,
-        }
-      : {}),
+    subscriptionTier,
+    entitlement: resolvedEntitlement,
+    currentEpochMs,
   });
 
   if (!includeFrontmatter) {
-    return shouldEnforce
-      ? enforceTierOutputLimit(mdBody, {
-          subscriptionTier,
-          entitlement: resolvedEntitlement,
-          currentEpochMs,
-        })
-      : mdBody;
+    return enforceTierOutputLimit(mdBody, {
+      subscriptionTier,
+      entitlement: resolvedEntitlement,
+      currentEpochMs,
+    });
   }
 
   const frontmatter = [
@@ -96,13 +87,11 @@ export function constructMarkdownSystemPrompt(
     .join("\n");
 
   const fullMarkdown = frontmatter + mdBody;
-  return shouldEnforce
-    ? enforceTierOutputLimit(fullMarkdown, {
-        subscriptionTier,
-        entitlement: resolvedEntitlement,
-        currentEpochMs,
-      })
-    : fullMarkdown;
+  return enforceTierOutputLimit(fullMarkdown, {
+    subscriptionTier,
+    entitlement: resolvedEntitlement,
+    currentEpochMs,
+  });
 }
 
 /**
@@ -158,7 +147,6 @@ export const MarkdownExportButton: React.FC<MarkdownExportButtonProps> = ({
         includeFrontmatter,
         sha256,
         entitlement: resolveBrowserVerifiedEntitlement(),
-        enforceTierLimit: true,
       });
       const timestamp = new Date().toISOString().slice(0, 10);
       downloadMarkdownFile(`spe-system-prompt-${timestamp}.md`, mdContent);

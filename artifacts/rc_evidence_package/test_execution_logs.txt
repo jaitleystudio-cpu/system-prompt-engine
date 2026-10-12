@@ -1,33 +1,14 @@
 === 1. PYTHON UNIFIED RELEASE-CANDIDATE & REC-2E ED25519 PASSPORT TESTS ===
 ============================= test session starts ==============================
-platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine/.venv/bin/python3
-cachedir: .pytest_cache
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
 rootdir: /Volumes/4TB-WD/offloaded-mac-storage/home-projects/system-prompt-engine
 configfile: pyproject.toml
-collecting ... collected 20 items
+collected 20 items
 
-tests/unit/test_unified_release_candidate_pipeline.py::test_unified_compiler_to_wire_proxy_to_rec2_passport_pipeline PASSED [  5%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_rec2_passport_rejects_truncated_forged_or_unpinned_evaluator_signature PASSED [ 10%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_default_wire_proxy_rejects_unsigned_grant PASSED [ 15%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_default_learning_validator_rejects_unregistered_oracle PASSED [ 20%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_rfc8785_canonicalize_published_standard_vectors PASSED [ 25%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_promptfoo_exporter_measured_proofs PASSED [ 30%]
-tests/unit/test_unified_release_candidate_pipeline.py::test_unified_web_customer_journey_suite PASSED [ 35%]
-tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_1_valid_hash_untrusted_authority_or_privilege_escalation_rejected PASSED [ 40%]
-tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_2_no_inherited_success_across_models_without_requalification PASSED [ 45%]
-tests/research/rec2/test_rec2_capability_passport.py::test_falsification_target_3_canarybench_blocks_private_material_and_planted_secrets PASSED [ 50%]
-tests/research/rec2/test_rec2_capability_passport.py::test_untrusted_mcp_import_containment_and_digest_verification PASSED [ 55%]
-tests/research/rec2/test_rec2_capability_passport.py::test_protected_intent_preservation_and_offline_revocation_horizon PASSED [ 60%]
-tests/research/rec2/test_rec2_capability_passport.py::test_expected_cost_gate_abstains_on_trivial_and_identifies_10x_workload PASSED [ 65%]
-tests/research/rec2/test_rec2_capability_passport.py::test_p0_security_real_activation_prompt_injection_nested_skills_manifest_and_post_qual_drift PASSED [ 70%]
-tests/research/rec2/test_rec2_capability_passport.py::test_p0_privacy_bounded_threat_model_encoded_transformed_paraphrased_multistep_and_unapproved_hold PASSED [ 75%]
-tests/research/rec2/test_rec2_capability_passport.py::test_p0_evidence_integrity_granular_privacy_transfer_and_synthetic_caller_firewall PASSED [ 80%]
-tests/research/rec2/test_rec2_capability_passport.py::test_p1_cost_model_projected_vs_measured_lifecycle_and_rec0_rec2e_qualification PASSED [ 85%]
-tests/research/rec2/test_rec2_capability_passport.py::test_edge_cases_boundary_values_and_error_paths PASSED [ 90%]
-tests/research/rec2/test_rec2_capability_passport.py::test_adversarial_round2_audit_regressions PASSED [ 95%]
-tests/research/rec2/test_rec2_capability_passport.py::test_audit_finding_b_rec2_key_hygiene_pinning_and_envelope_field_binding PASSED [100%]
+tests/unit/test_unified_release_candidate_pipeline.py .......            [ 35%]
+tests/research/rec2/test_rec2_capability_passport.py .............       [100%]
 
-============================= 20 passed in 21.03s ==============================
+============================= 20 passed in 24.26s ==============================
 
 === 2. WEB PROOF ENGINE & PRODUCER SIGNATURE TESTS ===
 ================================================================================
@@ -49,7 +30,7 @@ tests/research/rec2/test_rec2_capability_passport.py::test_audit_finding_b_rec2_
   ✓ Metamorphic Lab verified: 31/31 relations satisfied (0 critical failures).
 
 [5/5] Validating Proof Receipt Protocol, Cryptographic Attestations & JCS Canonicalization...
-  ✓ Proof Receipt verified: Digest = 090492a45e926b9935b28a2b03a7b53c89ebed94b2ab4fc1b17e4190b781993a
+  ✓ Proof Receipt verified: Digest = dc4fcae7183cb2b725132009ea8bb0a7f2eb948c62f9ee7229b5763adaf9fb65
   ✓ Signed NetworkObservationAttestation, LiveEvaluationAttestation & Ed25519 Producer Verification passed.
   ✓ JCS Canonicalization verified: RFC 8785 invariant order preserved.
 
